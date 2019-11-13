@@ -498,7 +498,7 @@ class CurrencyCore extends ObjectModel
      */
     public function getPatternTransformation($idLang)
     {
-        return !empty($this->localizedTransformations[$idLang]) ? $this->localizedTransformations[$idLang] : '';
+        return $this->localizedTransformations[$idLang] ?? '';
     }
 
     /**

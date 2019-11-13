@@ -346,14 +346,7 @@ class ValidateCore
      */
     public static function isCurrencyPatternTransformation(string $transformation)
     {
-        $allowedTransformations = [
-            PatternTransformer::TYPE_LEFT_SYMBOL_WITH_SPACE,
-            PatternTransformer::TYPE_LEFT_SYMBOL_WITHOUT_SPACE,
-            PatternTransformer::TYPE_RIGHT_SYMBOL_WITH_SPACE,
-            PatternTransformer::TYPE_RIGHT_SYMBOL_WITHOUT_SPACE,
-        ];
-
-        return in_array($transformation, $allowedTransformations);
+        return in_array($transformation, PatternTransformer::ALLOWED_TRANSFORMATIONS);
     }
 
     /**

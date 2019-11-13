@@ -131,10 +131,7 @@ class CurrencyData
         }
 
         if ($currencyData->getSymbols() !== null) {
-            if (null === $this->symbols) {
-                $this->symbols = [];
-            }
-            $this->symbols = array_merge($this->symbols, $currencyData->getSymbols());
+            $this->symbols = array_merge($this->symbols ?? [], $currencyData->getSymbols());
         }
 
         if ($currencyData->getPrecision() !== null) {
@@ -142,17 +139,11 @@ class CurrencyData
         }
 
         if ($currencyData->getNames() !== null) {
-            if (null === $this->names) {
-                $this->names = [];
-            }
-            $this->names = array_merge($this->names, $currencyData->getNames());
+            $this->names = array_merge($this->names ?? [], $currencyData->getNames());
         }
 
         if ($currencyData->getPatterns() !== null) {
-            if (null === $this->patterns) {
-                $this->patterns = [];
-            }
-            $this->patterns = array_merge($this->patterns, $currencyData->getPatterns());
+            $this->patterns = array_merge($this->patterns ?? [], $currencyData->getPatterns());
         }
 
         return $this;
