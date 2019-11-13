@@ -87,9 +87,7 @@ describe('Create, Update and Delete Brand and Address', async () => {
     it('should create brand', async function () {
       const result = await this.pageObjects.addBrandPage.createEditBrand(createBrandData);
       await expect(result).to.equal(this.pageObjects.brandsPage.successfulCreationMessage);
-      const numberOfBrandsAfterCreation = await this.pageObjects.brandsPage.getNumberFromText(
-        this.pageObjects.brandsPage.gridHeaderTitle.replace('%TABLE', 'manufacturer'),
-      );
+      const numberOfBrandsAfterCreation = await this.pageObjects.brandsPage.getNumberOfElementInGrid('manufacturer');
       await expect(numberOfBrandsAfterCreation).to.be.equal(numberOfBrands + 1);
     });
   });
@@ -104,8 +102,8 @@ describe('Create, Update and Delete Brand and Address', async () => {
     it('should create brand address', async function () {
       const result = await this.pageObjects.addBrandAddressPage.createEditBrandAddress(createBrandAddressData);
       await expect(result).to.equal(this.pageObjects.brandsPage.successfulCreationMessage);
-      const numberOfBrandsAddressesAfterCreation = await this.pageObjects.brandsPage.getNumberFromText(
-        this.pageObjects.brandsPage.gridHeaderTitle.replace('%TABLE', 'manufacturer_address'),
+      const numberOfBrandsAddressesAfterCreation = await this.pageObjects.brandsPage.getNumberOfElementInGrid(
+        'manufacturer_address',
       );
       createBrandData.addresses += 1;
       await expect(numberOfBrandsAddressesAfterCreation).to.be.equal(numberOfBrandsAddresses + 1);
@@ -115,16 +113,9 @@ describe('Create, Update and Delete Brand and Address', async () => {
   describe('View Brand and check Address Value in list', async () => {
     it('should filter Brand list by name of brand created', async function () {
       await this.pageObjects.brandsPage.filterBrands('input', 'name', createBrandData.name);
-      const numberOfBrandsAfterFilter = await this.pageObjects.brandsPage.getNumberFromText(
-        this.pageObjects.brandsPage.gridHeaderTitle.replace('%TABLE', 'manufacturer'),
-      );
+      const numberOfBrandsAfterFilter = await this.pageObjects.brandsPage.getNumberOfElementInGrid('manufacturer');
       await expect(numberOfBrandsAfterFilter).to.be.at.most(numberOfBrands);
-      const textColumn = await this.pageObjects.brandsPage.getTextContent(
-        this.pageObjects.brandsPage.tableColumn
-          .replace('%TABLE', 'manufacturer')
-          .replace('%ROW', 1)
-          .replace('%COLUMN', 'name'),
-      );
+      const textColumn = await this.pageObjects.brandsPage.getTextColumnFromTableBrands(1, 'name');
       await expect(textColumn).to.contains(createBrandData.name);
     });
 
@@ -139,9 +130,7 @@ describe('Create, Update and Delete Brand and Address', async () => {
         this.pageObjects.viewBrandPage.addressesGridHeader,
       );
       await expect(numberOfAddressesInGrid).to.equal(createBrandData.addresses);
-      const textColumn = await this.pageObjects.viewBrandPage.getTextContent(
-        this.pageObjects.viewBrandPage.addressesTableColumn.replace('%ROW', '1').replace('%COLUMN', '1'),
-      );
+      const textColumn = await this.pageObjects.viewBrandPage.getTextColumnFromTableAddresses(1, 1);
       await expect(textColumn).to.contains(`${createBrandAddressData.firstName} ${createBrandAddressData.lastName}`);
     });
 
@@ -162,16 +151,9 @@ describe('Create, Update and Delete Brand and Address', async () => {
   describe('Update Brand And Verify Brand in Address List', async () => {
     it('should filter Brand list by name of brand created', async function () {
       await this.pageObjects.brandsPage.filterBrands('input', 'name', createBrandData.name);
-      const numberOfBrandsAfterFilter = await this.pageObjects.brandsPage.getNumberFromText(
-        this.pageObjects.brandsPage.gridHeaderTitle.replace('%TABLE', 'manufacturer'),
-      );
+      const numberOfBrandsAfterFilter = await this.pageObjects.brandsPage.getNumberOfElementInGrid('manufacturer');
       await expect(numberOfBrandsAfterFilter).to.be.at.most(numberOfBrands);
-      const textColumn = await this.pageObjects.brandsPage.getTextContent(
-        this.pageObjects.brandsPage.tableColumn
-          .replace('%TABLE', 'manufacturer')
-          .replace('%ROW', 1)
-          .replace('%COLUMN', 'name'),
-      );
+      const textColumn = await this.pageObjects.brandsPage.getTextColumnFromTableBrands(1, 'name');
       await expect(textColumn).to.contains(createBrandData.name);
     });
 
@@ -189,12 +171,7 @@ describe('Create, Update and Delete Brand and Address', async () => {
 
     it('should check the update in Brand Address List', async function () {
       await this.pageObjects.brandsPage.filterAddresses('input', 'name', editBrandData.name);
-      const textColumn = await this.pageObjects.brandsPage.getTextContent(
-        this.pageObjects.brandsPage.tableColumn
-          .replace('%TABLE', 'manufacturer_address')
-          .replace('%ROW', 1)
-          .replace('%COLUMN', 'name'),
-      );
+      const textColumn = await this.pageObjects.brandsPage.getTextColumnFromTableAddresses(1, 'name');
       await expect(textColumn).to.contains(editBrandData.name);
     });
 
@@ -213,17 +190,12 @@ describe('Create, Update and Delete Brand and Address', async () => {
   describe('Update Address', async () => {
     it('should filter Brand Address list by name of edited brand', async function () {
       await this.pageObjects.brandsPage.filterAddresses('input', 'name', editBrandData.name);
-      const textColumn = await this.pageObjects.brandsPage.getTextContent(
-        this.pageObjects.brandsPage.tableColumn
-          .replace('%TABLE', 'manufacturer_address')
-          .replace('%ROW', 1)
-          .replace('%COLUMN', 'name'),
-      );
+      const textColumn = await this.pageObjects.brandsPage.getTextColumnFromTableAddresses(1, 'name');
       await expect(textColumn).to.contains(editBrandData.name);
     });
 
     it('should go to edit brand address page', async function () {
-      await this.pageObjects.brandsPage.goToEditBrandAddressPage('1');
+      await this.pageObjects.brandsPage.goToEditBrandAddressPage(1);
       const pageTitle = await this.pageObjects.addBrandPage.getPageTitle();
       await expect(pageTitle).to.contains(this.pageObjects.brandsPage.pageTitle);
     });
@@ -244,33 +216,22 @@ describe('Create, Update and Delete Brand and Address', async () => {
   describe('View Brand and check Address Value in list', async () => {
     it('should filter Brand list by name of brand created', async function () {
       await this.pageObjects.brandsPage.filterBrands('input', 'name', editBrandData.name);
-      const numberOfBrandsAfterFilter = await this.pageObjects.brandsPage.getNumberFromText(
-        this.pageObjects.brandsPage.gridHeaderTitle.replace('%TABLE', 'manufacturer'),
-      );
+      const numberOfBrandsAfterFilter = await this.pageObjects.brandsPage.getNumberOfElementInGrid('manufacturer');
       await expect(numberOfBrandsAfterFilter).to.be.at.most(numberOfBrands);
-      const textColumn = await this.pageObjects.brandsPage.getTextContent(
-        this.pageObjects.brandsPage.tableColumn
-          .replace('%TABLE', 'manufacturer')
-          .replace('%ROW', 1)
-          .replace('%COLUMN', 'name'),
-      );
+      const textColumn = await this.pageObjects.brandsPage.getTextColumnFromTableBrands(1, 'name');
       await expect(textColumn).to.contains(editBrandData.name);
     });
 
     it('should view brand', async function () {
-      await this.pageObjects.brandsPage.viewBrand('1');
+      await this.pageObjects.brandsPage.viewBrand(1);
       const pageTitle = await this.pageObjects.viewBrandPage.getPageTitle();
       await expect(pageTitle).to.contains(editBrandData.name);
     });
 
     it('should check existence of the associated address', async function () {
-      const numberOfAddressesInGrid = await this.pageObjects.viewBrandPage.getNumberFromText(
-        this.pageObjects.viewBrandPage.addressesGridHeader,
-      );
+      const numberOfAddressesInGrid = await this.pageObjects.viewBrandPage.getNumberOfAddressesInGrid();
       await expect(numberOfAddressesInGrid).to.equal(editBrandData.addresses);
-      const textColumn = await this.pageObjects.viewBrandPage.getTextContent(
-        this.pageObjects.viewBrandPage.addressesTableColumn.replace('%ROW', '1').replace('%COLUMN', '1'),
-      );
+      const textColumn = await this.pageObjects.viewBrandPage.getTextColumnFromTableAddresses(1, 1);
       await expect(textColumn).to.contains(`${editBrandAddressData.firstName} ${editBrandAddressData.lastName}`);
     });
 
@@ -289,16 +250,9 @@ describe('Create, Update and Delete Brand and Address', async () => {
   describe('Delete Brand And Verify that Address has no Brand associated', async () => {
     it('should filter Brand list by name of edited brand', async function () {
       await this.pageObjects.brandsPage.filterBrands('input', 'name', editBrandData.name);
-      const numberOfBrandsAfterFilter = await this.pageObjects.brandsPage.getNumberFromText(
-        this.pageObjects.brandsPage.gridHeaderTitle.replace('%TABLE', 'manufacturer'),
-      );
+      const numberOfBrandsAfterFilter = await this.pageObjects.brandsPage.getNumberOfElementInGrid('manufacturer');
       await expect(numberOfBrandsAfterFilter).to.be.at.most(numberOfBrands);
-      const textColumn = await this.pageObjects.brandsPage.getTextContent(
-        this.pageObjects.brandsPage.tableColumn
-          .replace('%TABLE', 'manufacturer')
-          .replace('%ROW', 1)
-          .replace('%COLUMN', 'name'),
-      );
+      const textColumn = await this.pageObjects.brandsPage.getTextColumnFromTableBrands(1, 'name');
       await expect(textColumn).to.contains(editBrandData.name);
     });
 
@@ -310,12 +264,7 @@ describe('Create, Update and Delete Brand and Address', async () => {
     it('should check the delete in Brand Address List', async function () {
       await this.pageObjects.brandsPage.filterAddresses('input', 'firstname', editBrandAddressData.firstName);
       await this.pageObjects.brandsPage.filterAddresses('input', 'lastname', editBrandAddressData.lastName);
-      const textColumn = await this.pageObjects.brandsPage.getTextContent(
-        this.pageObjects.brandsPage.tableColumn
-          .replace('%TABLE', 'manufacturer_address')
-          .replace('%ROW', 1)
-          .replace('%COLUMN', 'name'),
-      );
+      const textColumn = await this.pageObjects.brandsPage.getTextColumnFromTableAddresses(1, 'name');
       await expect(textColumn).to.contains('--');
     });
 
@@ -329,19 +278,9 @@ describe('Create, Update and Delete Brand and Address', async () => {
     it('should filter Brand Address list by firstName and lastName', async function () {
       await this.pageObjects.brandsPage.filterAddresses('input', 'firstname', editBrandAddressData.firstName);
       await this.pageObjects.brandsPage.filterAddresses('input', 'lastname', editBrandAddressData.lastName);
-      const textColumnFirstName = await this.pageObjects.brandsPage.getTextContent(
-        this.pageObjects.brandsPage.tableColumn
-          .replace('%TABLE', 'manufacturer_address')
-          .replace('%ROW', 1)
-          .replace('%COLUMN', 'firstname'),
-      );
+      const textColumnFirstName = await this.pageObjects.brandsPage.getTextColumnFromTableAddresses(1, 'firstname');
       await expect(textColumnFirstName).to.contains(editBrandAddressData.firstName);
-      const textColumnLastName = await this.pageObjects.brandsPage.getTextContent(
-        this.pageObjects.brandsPage.tableColumn
-          .replace('%TABLE', 'manufacturer_address')
-          .replace('%ROW', 1)
-          .replace('%COLUMN', 'lastname'),
-      );
+      const textColumnLastName = await this.pageObjects.brandsPage.getTextColumnFromTableAddresses(1, 'lastname');
       await expect(textColumnLastName).to.contains(editBrandAddressData.lastName);
     });
 

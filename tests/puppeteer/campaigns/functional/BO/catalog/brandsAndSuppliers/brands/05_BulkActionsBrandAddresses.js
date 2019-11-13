@@ -69,8 +69,8 @@ describe('Create 2 brand Addresses and delete with bulk actions', async () => {
     it('should create first brand', async function () {
       const result = await this.pageObjects.addBrandAddressPage.createEditBrandAddress(firstAddressData);
       await expect(result).to.equal(this.pageObjects.brandsPage.successfulCreationMessage);
-      const numberOfBrandAddressesAfterCreation = await this.pageObjects.brandsPage.getNumberFromText(
-        this.pageObjects.brandsPage.gridHeaderTitle.replace('%TABLE', 'manufacturer_address'),
+      const numberOfBrandAddressesAfterCreation = await this.pageObjects.brandsPage.getNumberOfElementInGrid(
+        'manufacturer_address',
       );
       await expect(numberOfBrandAddressesAfterCreation).to.be.equal(numberOfBrandAddresses + 1);
     });
@@ -84,8 +84,8 @@ describe('Create 2 brand Addresses and delete with bulk actions', async () => {
     it('should create second brand', async function () {
       const result = await this.pageObjects.addBrandAddressPage.createEditBrandAddress(secondAddressData);
       await expect(result).to.equal(this.pageObjects.brandsPage.successfulCreationMessage);
-      const numberOfBrandAddressesAfterCreation = await this.pageObjects.brandsPage.getNumberFromText(
-        this.pageObjects.brandsPage.gridHeaderTitle.replace('%TABLE', 'manufacturer_address'),
+      const numberOfBrandAddressesAfterCreation = await this.pageObjects.brandsPage.getNumberOfElementInGrid(
+        'manufacturer_address',
       );
       await expect(numberOfBrandAddressesAfterCreation).to.be.equal(numberOfBrandAddresses + 2);
     });
@@ -94,21 +94,14 @@ describe('Create 2 brand Addresses and delete with bulk actions', async () => {
   describe('Delete Addresses with Bulk Actions', async () => {
     it('should filter Addresses list by firstName', async function () {
       await this.pageObjects.brandsPage.filterAddresses('input', 'firstname', 'AddressToDelete');
-      const numberOfBrandAddressesAfterFilter = await this.pageObjects.brandsPage.getNumberFromText(
-        this.pageObjects.brandsPage.gridHeaderTitle.replace('%TABLE', 'manufacturer_address'),
+      const numberOfBrandAddressesAfterFilter = await this.pageObjects.brandsPage.getNumberOfElementInGrid(
+        'manufacturer_address',
       );
       await expect(numberOfBrandAddressesAfterFilter).to.be.at.most(numberOfBrandAddresses);
-      /* eslint-disable no-await-in-loop */
       for (let i = 1; i <= numberOfBrandAddressesAfterFilter; i++) {
-        const textColumn = await this.pageObjects.brandsPage.getTextContent(
-          this.pageObjects.brandsPage.tableColumn
-            .replace('%TABLE', 'manufacturer_address')
-            .replace('%ROW', i)
-            .replace('%COLUMN', 'firstname'),
-        );
+        const textColumn = await this.pageObjects.brandsPage.getTextColumnFromTableAddresses(i, 'firstname');
         await expect(textColumn).to.contains('AddressToDelete');
       }
-      /* eslint-enable no-await-in-loop */
     });
 
     it('should delete Addresses with Bulk Actions and check Result', async function () {
