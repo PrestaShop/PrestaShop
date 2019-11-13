@@ -241,8 +241,8 @@ class CurrencyFeatureContext extends AbstractDomainFeatureContext
                 throw new RuntimeException(sprintf(
                     'Invalid currency data field %s: %s expected %s',
                     $key,
-                    is_array($apiData[$key]) ? json_encode($apiData[$key]) : $apiData[$key],
-                    is_array($expectedValue) ? json_encode($expectedValue) : $expectedValue
+                    json_encode($apiData[$key]),
+                    json_encode($expectedValue)
                 ));
             }
         }
