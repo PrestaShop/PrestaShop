@@ -110,7 +110,6 @@ module.exports = class Categories extends BOBasePage {
   /**
    * Quick edit toggle column value
    * @param row, row in table
-   * @param column, column to update
    * @param valueWanted, Value wanted in column
    * @return {Promise<boolean>} return true if action is done, false otherwise
    */
@@ -118,12 +117,12 @@ module.exports = class Categories extends BOBasePage {
     if (await this.getToggleColumnValue(row, column) !== valueWanted) {
       this.page.click(this.categoriesListTableColumn.replace('%ROW', row).replace('%COLUMN', column));
       if (valueWanted) {
-        await this.page.waitForSelector(this.categoriesListColumnValidIcon
-          .replace('%ROW', 1).replace('%COLUMN', 'active'),
+        await this.page.waitForSelector(
+          this.categoriesListColumnValidIcon.replace('%ROW', 1).replace('%COLUMN', column),
         );
       } else {
         await this.page.waitForSelector(
-          this.categoriesListColumnNotValidIcon.replace('%ROW', 1).replace('%COLUMN', 'active'),
+          this.categoriesListColumnNotValidIcon.replace('%ROW', 1).replace('%COLUMN', column),
         );
       }
       return true;
