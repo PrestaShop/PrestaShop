@@ -568,7 +568,7 @@ class AdminControllerCore extends Controller
      */
     public function initBreadcrumbs($tab_id = null, $tabs = null)
     {
-        if (is_array($tabs)) {
+        if (!is_array($tabs)) {
             $tabs = array();
         }
 

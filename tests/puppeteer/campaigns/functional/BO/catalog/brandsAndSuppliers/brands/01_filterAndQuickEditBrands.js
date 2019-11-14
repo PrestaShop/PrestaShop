@@ -58,16 +58,9 @@ describe('Filter And Quick Edit brands', async () => {
   describe('Filter brands', async () => {
     it('should filter by Id', async function () {
       await this.pageObjects.brandsPage.filterBrands('input', 'id_manufacturer', demoBrands.first.id);
-      const numberOfBrandsAfterFilter = await this.pageObjects.brandsPage.getNumberFromText(
-        this.pageObjects.brandsPage.gridHeaderTitle.replace('%TABLE', 'manufacturer'),
-      );
+      const numberOfBrandsAfterFilter = await this.pageObjects.brandsPage.getNumberOfElementInGrid('manufacturer');
       await expect(numberOfBrandsAfterFilter).to.be.at.most(numberOfBrands);
-      const textColumn = await this.pageObjects.brandsPage.getTextContent(
-        this.pageObjects.brandsPage.tableColumn
-          .replace('%TABLE', 'manufacturer')
-          .replace('%ROW', 1)
-          .replace('%COLUMN', 'id_manufacturer'),
-      );
+      const textColumn = await this.pageObjects.brandsPage.getTextColumnFromTableBrands(1, 'id_manufacturer');
       await expect(textColumn).to.contains(demoBrands.first.id);
     });
 
@@ -78,16 +71,9 @@ describe('Filter And Quick Edit brands', async () => {
 
     it('should filter by brand name', async function () {
       await this.pageObjects.brandsPage.filterBrands('input', 'name', demoBrands.first.name);
-      const numberOfBrandsAfterFilter = await this.pageObjects.brandsPage.getNumberFromText(
-        this.pageObjects.brandsPage.gridHeaderTitle.replace('%TABLE', 'manufacturer'),
-      );
+      const numberOfBrandsAfterFilter = await this.pageObjects.brandsPage.getNumberOfElementInGrid('manufacturer');
       await expect(numberOfBrandsAfterFilter).to.be.at.most(numberOfBrands);
-      const textColumn = await this.pageObjects.brandsPage.getTextContent(
-        this.pageObjects.brandsPage.tableColumn
-          .replace('%TABLE', 'manufacturer')
-          .replace('%ROW', 1)
-          .replace('%COLUMN', 'name'),
-      );
+      const textColumn = await this.pageObjects.brandsPage.getTextColumnFromTableBrands(1, 'name');
       await expect(textColumn).to.contains(demoBrands.first.name);
     });
 
@@ -102,21 +88,12 @@ describe('Filter And Quick Edit brands', async () => {
         'active',
         demoBrands.first.enabled,
       );
-      const numberOfBrandsAfterFilter = await this.pageObjects.brandsPage.getNumberFromText(
-        this.pageObjects.brandsPage.gridHeaderTitle.replace('%TABLE', 'manufacturer'),
-      );
+      const numberOfBrandsAfterFilter = await this.pageObjects.brandsPage.getNumberOfElementInGrid('manufacturer');
       await expect(numberOfBrandsAfterFilter).to.be.at.most(numberOfBrands);
-      /* eslint-disable no-await-in-loop */
       for (let i = 1; i <= numberOfBrandsAfterFilter; i++) {
-        const textColumn = await this.pageObjects.brandsPage.getTextContent(
-          this.pageObjects.brandsPage.tableColumn
-            .replace('%TABLE', 'manufacturer')
-            .replace('%ROW', i)
-            .replace('%COLUMN', 'active'),
-        );
+        const textColumn = await this.pageObjects.brandsPage.getTextColumnFromTableBrands(i, 'active');
         await expect(textColumn).to.contains('check');
       }
-      /* eslint-enable no-await-in-loop */
     });
 
     it('should reset all filters', async function () {
@@ -128,49 +105,33 @@ describe('Filter And Quick Edit brands', async () => {
   describe('Quick Edit brands', async () => {
     it('should filter by brand name', async function () {
       await this.pageObjects.brandsPage.filterBrands('input', 'name', demoBrands.first.name);
-      const numberOfBrandsAfterFilter = await this.pageObjects.brandsPage.getNumberFromText(
-        this.pageObjects.brandsPage.gridHeaderTitle.replace('%TABLE', 'manufacturer'),
-      );
+      const numberOfBrandsAfterFilter = await this.pageObjects.brandsPage.getNumberOfElementInGrid('manufacturer');
       await expect(numberOfBrandsAfterFilter).to.be.at.most(numberOfBrands);
-      const textColumn = await this.pageObjects.brandsPage.getTextContent(
-        this.pageObjects.brandsPage.tableColumn
-          .replace('%TABLE', 'manufacturer')
-          .replace('%ROW', 1)
-          .replace('%COLUMN', 'name'),
-      );
+      const textColumn = await this.pageObjects.brandsPage.getTextColumnFromTableBrands(1, 'name');
       await expect(textColumn).to.contains(demoBrands.first.name);
     });
 
     it('should disable first brand', async function () {
-      const isActionPerformed = await this.pageObjects.brandsPage.updateEnabledValue(
-        '1',
-        false,
-      );
+      const isActionPerformed = await this.pageObjects.brandsPage.updateEnabledValue(1, false);
       if (isActionPerformed) {
         const resultMessage = await this.pageObjects.brandsPage.getTextContent(
           this.pageObjects.brandsPage.alertSuccessBlockParagraph,
         );
         await expect(resultMessage).to.contains(this.pageObjects.brandsPage.successfulUpdateStatusMessage);
       }
-      const isStatusChanged = await this.pageObjects.brandsPage.elementVisible(
-        this.pageObjects.brandsPage.brandsEnableColumnNotValidIcon.replace('%ROW', 1),
-        100,
-      );
-      await expect(isStatusChanged).to.be.true;
+      const isStatusChanged = await this.pageObjects.brandsPage.getToggleColumnValue(1);
+      await expect(isStatusChanged).to.be.false;
     });
 
     it('should enable first brand', async function () {
-      const isActionPerformed = await this.pageObjects.brandsPage.updateEnabledValue('1', true);
+      const isActionPerformed = await this.pageObjects.brandsPage.updateEnabledValue(1, true);
       if (isActionPerformed) {
         const resultMessage = await this.pageObjects.brandsPage.getTextContent(
           this.pageObjects.brandsPage.alertSuccessBlockParagraph,
         );
         await expect(resultMessage).to.contains(this.pageObjects.brandsPage.successfulUpdateStatusMessage);
       }
-      const isStatusChanged = await this.pageObjects.brandsPage.elementVisible(
-        this.pageObjects.brandsPage.brandsEnableColumnValidIcon.replace('%ROW', 1),
-        100,
-      );
+      const isStatusChanged = await this.pageObjects.brandsPage.getToggleColumnValue(1);
       await expect(isStatusChanged).to.be.true;
     });
 

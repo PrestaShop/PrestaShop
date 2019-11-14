@@ -30,7 +30,7 @@ use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyConstraintExcep
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\ExchangeRate;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
-use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\AlphaIsoCode;
+use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\Precision;
 
 /**
  * Class EditCurrencyCommand
@@ -43,14 +43,24 @@ class EditCurrencyCommand
     private $currencyId;
 
     /**
-     * @var AlphaIsoCode
-     */
-    private $isoCode;
-
-    /**
-     * @var ExchangeRate
+     * @var ExchangeRate|null
      */
     private $exchangeRate;
+
+    /**
+     * @var Precision|null
+     */
+    private $precision;
+
+    /**
+     * @var string[]
+     */
+    private $localizedNames = [];
+
+    /**
+     * @var string[]
+     */
+    private $localizedSymbols = [];
 
     /**
      * @var bool
@@ -60,7 +70,7 @@ class EditCurrencyCommand
     /**
      * @var int[]
      */
-    private $shopIds;
+    private $shopIds = [];
 
     /**
      * @param int $currencyId
@@ -81,29 +91,7 @@ class EditCurrencyCommand
     }
 
     /**
-     * @return AlphaIsoCode
-     */
-    public function getIsoCode()
-    {
-        return $this->isoCode;
-    }
-
-    /**
-     * @param string $isoCode
-     *
-     * @return self
-     *
-     * @throws CurrencyConstraintException
-     */
-    public function setIsoCode($isoCode)
-    {
-        $this->isoCode = new AlphaIsoCode($isoCode);
-
-        return $this;
-    }
-
-    /**
-     * @return ExchangeRate
+     * @return ExchangeRate|null
      */
     public function getExchangeRate()
     {
@@ -120,6 +108,86 @@ class EditCurrencyCommand
     public function setExchangeRate($exchangeRate)
     {
         $this->exchangeRate = new ExchangeRate($exchangeRate);
+
+        return $this;
+    }
+
+    /**
+     * @return Precision|null
+     */
+    public function getPrecision(): ?Precision
+    {
+        return $this->precision;
+    }
+
+    /**
+     * @param int|string $precision
+     *
+     * @return self
+     *
+     * @throws CurrencyConstraintException
+     */
+    public function setPrecision($precision): EditCurrencyCommand
+    {
+        $this->precision = new Precision($precision);
+
+        return $this;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getLocalizedNames(): array
+    {
+        return $this->localizedNames;
+    }
+
+    /**
+     * @param string[] $localizedNames currency's localized names, indexed by language id
+     *
+     * @return $this
+     *
+     * @throws CurrencyConstraintException
+     */
+    public function setLocalizedNames(array $localizedNames): EditCurrencyCommand
+    {
+        if (empty($localizedNames)) {
+            throw new CurrencyConstraintException(
+                'Currency name cannot be empty',
+                CurrencyConstraintException::EMPTY_NAME
+            );
+        }
+
+        $this->localizedNames = $localizedNames;
+
+        return $this;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getLocalizedSymbols()
+    {
+        return $this->localizedSymbols;
+    }
+
+    /**
+     * @param string[] $localizedSymbols currency's localized symbols, indexed by language id
+     *
+     * @return $this
+     *
+     * @throws CurrencyConstraintException
+     */
+    public function setLocalizedSymbols(array $localizedSymbols): EditCurrencyCommand
+    {
+        if (empty($localizedSymbols)) {
+            throw new CurrencyConstraintException(
+                'Currency symbol cannot be empty',
+                CurrencyConstraintException::EMPTY_SYMBOL
+            );
+        }
+
+        $this->localizedSymbols = $localizedSymbols;
 
         return $this;
     }

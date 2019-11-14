@@ -1,6 +1,6 @@
 const faker = require('faker');
 
-const countries = ['France', 'Netherlands', 'United Kingdom', 'Germany'];
+const {countries} = require('@data/demo/countries');
 
 module.exports = class Supplier {
   constructor(supplierToCreate = {}) {

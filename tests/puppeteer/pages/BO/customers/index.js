@@ -55,12 +55,20 @@ module.exports = class Customers extends BOBasePage {
   }
 
   /**
+   * get number of elements in grid
+   * @return {Promise<integer>}
+   */
+  async getNumberOfElementInGrid() {
+    return this.getNumberFromText(this.customerGridTitle);
+  }
+
+  /**
    * Reset Filter And get number of elements in list
    * @return {Promise<integer>}
    */
   async resetAndGetNumberOfLines() {
     await this.resetFilter();
-    return this.getNumberFromText(this.customerGridTitle);
+    return this.getNumberOfElementInGrid();
   }
 
   /**
@@ -109,13 +117,10 @@ module.exports = class Customers extends BOBasePage {
    * @return {Promise<boolean|true>}
    */
   async getToggleColumnValue(row, column) {
-    if (
-      await this.elementVisible(
-        this.customersListColumnValidIcon.replace('%ROW', row).replace('%COLUMN', column),
-        100,
-      )
-    ) return true;
-    return false;
+    return this.elementVisible(
+      this.customersListColumnValidIcon.replace('%ROW', row).replace('%COLUMN', column),
+      100,
+    );
   }
 
   /**
@@ -133,6 +138,20 @@ module.exports = class Customers extends BOBasePage {
       return true;
     }
     return false;
+  }
+
+  /**
+   * get text from a column
+   * @param row, row in table
+   * @param column, which column
+   * @return {Promise<textContent>}
+   */
+  async getTextColumnFromTableCustomers(row, column) {
+    return this.getTextContent(
+      this.customersListTableColumn
+        .replace('%ROW', row)
+        .replace('%COLUMN', column),
+    );
   }
 
   /**

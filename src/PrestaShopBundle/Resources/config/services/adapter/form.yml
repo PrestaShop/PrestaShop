@@ -54,3 +54,6 @@ services:
 
   prestashop.adapter.form.choice.provider.carrier_for_order_choice_provider:
     class: 'PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\CarrierForOrderChoiceProvider'
+
+  prestashop.adapter.form.choice_provider.shop_name_by_id:
+    class: 'PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\ShopNameByIdChoiceProvider'

@@ -28,35 +28,69 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 use Behat\Gherkin\Node\TableNode;
 use Currency;
-use DbQuery;
-use Db;
-use PrestaShop\PrestaShop\Core\Domain\Currency\Command\AddCurrencyCommand;
+use Configuration;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyException;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyNotFoundException;
+use RuntimeException;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Command\AddOfficialCurrencyCommand;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Command\AddUnofficialCurrencyCommand;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\DeleteCurrencyCommand;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\EditCurrencyCommand;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Command\EditUnofficialCurrencyCommand;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\ToggleCurrencyStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotDeleteDefaultCurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotDisableDefaultCurrencyException;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\InvalidUnofficialCurrencyException;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Query\GetReferenceCurrency;
+use PrestaShop\PrestaShop\Core\Domain\Currency\QueryResult\ReferenceCurrency;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
-use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 
 class CurrencyFeatureContext extends AbstractDomainFeatureContext
 {
     /**
+     * @var ReferenceCurrency
+     */
+    private $currencyAPIData;
+
+    /**
      * @When I add new currency :reference with following properties:
      */
     public function addCurrency($reference, TableNode $node)
     {
+        $defaultLangId = Configuration::get('PS_LANG_DEFAULT');
+
         $data = $node->getRowsHash();
         /** @var \Shop $shop */
         $shop = SharedStorage::getStorage()->get($data['shop_association']);
 
-        $command = new AddCurrencyCommand(
-            $data['iso_code'],
-            (float) $data['exchange_rate'],
-            (bool) $data['is_enabled']
-        );
+        if ($data['is_unofficial']) {
+            $command = new AddUnofficialCurrencyCommand(
+                $data['iso_code'],
+                (float) $data['exchange_rate'],
+                (bool) $data['is_enabled']
+            );
+        } else {
+            $command = new AddOfficialCurrencyCommand(
+                $data['iso_code'],
+                (float) $data['exchange_rate'],
+                (bool) $data['is_enabled']
+            );
+        }
+
+        if (isset($data['precision'])) {
+            $command->setPrecision((int) $data['precision']);
+        }
+
+        if (isset($data['name'])) {
+            $command->setLocalizedNames([$defaultLangId => $data['name']]);
+        }
+
+        if (isset($data['symbol'])) {
+            $command->setLocalizedSymbols([$defaultLangId => $data['symbol']]);
+        }
 
         $command->setShopIds([
             (int) $shop->id,
@@ -78,18 +112,27 @@ class CurrencyFeatureContext extends AbstractDomainFeatureContext
      */
     public function editCurrency($reference, TableNode $node)
     {
+        $defaultLangId = Configuration::get('PS_LANG_DEFAULT');
+
         $data = $node->getRowsHash();
         /** @var Currency $currency */
         $currency = SharedStorage::getStorage()->get($reference);
 
-        $command = new EditCurrencyCommand((int) $currency->id);
-
-        if (isset($data['iso_code'])) {
-            $command->setIsoCode($data['iso_code']);
+        if (!empty($data['is_unofficial'])) {
+            $command = new EditUnofficialCurrencyCommand((int) $currency->id);
+            if (isset($data['iso_code'])) {
+                $command->setIsoCode($data['iso_code']);
+            }
+        } else {
+            $command = new EditCurrencyCommand((int) $currency->id);
         }
 
         if (isset($data['exchange_rate'])) {
             $command->setExchangeRate((float) $data['exchange_rate']);
+        }
+
+        if (isset($data['precision'])) {
+            $command->setPrecision((int) $data['precision']);
         }
 
         if (isset($data['is_enabled'])) {
@@ -98,6 +141,14 @@ class CurrencyFeatureContext extends AbstractDomainFeatureContext
 
         if (isset($data['shop_association'])) {
             $command->setShopIds([(int) $data['shop_association']]);
+        }
+
+        if (isset($data['name'])) {
+            $command->setLocalizedNames([$defaultLangId => $data['name']]);
+        }
+
+        if (isset($data['symbol'])) {
+            $command->setLocalizedSymbols([$defaultLangId => $data['symbol']]);
         }
 
         try {
@@ -143,118 +194,47 @@ class CurrencyFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Then currency :reference precision should be :precision
+     * @When I request API data for :currencyIsoCode
      */
-    public function assertCurrencyPrecision($reference, $precision)
+    public function getCurrencyAPIData($currencyIsoCode)
     {
-        /** @var Currency $currency */
-        $currency = SharedStorage::getStorage()->get($reference);
-
-        if ((int) $currency->precision != (int) $precision) {
-            throw new RuntimeException(sprintf(
-                'Currency "%s" has "%s" precision, but "%s" was expected.',
-                $reference,
-                $currency->precision,
-                $precision
-            ));
+        try {
+            $this->lastException = null;
+            $this->currencyAPIData = $this->getCommandBus()->handle(new GetReferenceCurrency($currencyIsoCode));
+        } catch (CurrencyException $e) {
+            $this->lastException = $e;
         }
     }
 
     /**
-     * @Given currency with :isoCode has been deleted
+     * @Then I should get API data:
      */
-    public function assertCurrencyHasBeenDeleted($isoCode)
+    public function checkAPIData(TableNode $node)
     {
-        $query = new DbQuery();
-        $query->select('c.id_currency');
-        $query->from('currency', 'c');
-        $query->where('deleted = 1');
-        $query->where('iso_code = \'' . pSQL($isoCode) . '\'');
+        $apiData = [
+            'iso_code' => $this->currencyAPIData->getIsoCode(),
+            'numeric_iso_code' => $this->currencyAPIData->getNumericIsoCode(),
+            'precision' => $this->currencyAPIData->getPrecision(),
+            'names' => $this->currencyAPIData->getNames(),
+            'symbols' => $this->currencyAPIData->getSymbols(),
+        ];
+        $expectedData = $node->getRowsHash();
+        $expectedData['names'] = $this->parseLocalizedArray($expectedData['names']);
+        $expectedData['symbols'] = $this->parseLocalizedArray($expectedData['symbols']);
 
-        $currencyId = (int) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query->build());
+        foreach ($expectedData as $key => $expectedValue) {
+            if ($expectedValue === 'null') {
+                $expectedValue = null;
+            }
 
-        if (!$currencyId) {
-            throw new RuntimeException(sprintf('Currency with ISO Code "%s" should be deleted in database', $isoCode));
-        }
-    }
-
-    /**
-     * @Given currency with :isoCode has been deactivated
-     */
-    public function assertCurrencyHasBeenDeactivated($isoCode)
-    {
-        $query = new DbQuery();
-        $query->select('c.id_currency');
-        $query->from('currency', 'c');
-        $query->where('active = 0');
-        $query->where('iso_code = \'' . pSQL($isoCode) . '\'');
-
-        $currencyId = (int) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query->build());
-
-        if (!$currencyId) {
-            throw new RuntimeException(sprintf('Currency with ISO Code "%s" should be deactivated in database', $isoCode));
-        }
-    }
-
-    /**
-     * @Then currency :reference numeric iso code should be :numericIsoCode
-     */
-    public function assertCurrencyNumericIsoCode($reference, $numericIsoCode)
-    {
-        /** @var Currency $currency */
-        $currency = SharedStorage::getStorage()->get($reference);
-
-        if ('valid' === $numericIsoCode) {
-            if ((int) $currency->numeric_iso_code <= 0) {
+            if ($expectedValue != $apiData[$key]) {
                 throw new RuntimeException(sprintf(
-                    'Currency "%s" has invalid numeric iso code "%s".',
-                    $reference,
-                    $currency->numeric_iso_code
+                    'Invalid API data field %s: %s expected %s',
+                    $key,
+                    $apiData[$key],
+                    $expectedValue
                 ));
             }
-        } elseif ((int) $currency->numeric_iso_code !== (int) $numericIsoCode) {
-            throw new RuntimeException(sprintf(
-                'Currency "%s" has "%s" numeric iso code, but "%s" was expected.',
-                $reference,
-                $currency->numeric_iso_code,
-                $numericIsoCode
-            ));
-        }
-    }
-
-    /**
-     * @Then currency :reference name should be :name
-     */
-    public function assertCurrencyName($reference, $name)
-    {
-        /** @var Currency $currency */
-        $currency = SharedStorage::getStorage()->get($reference);
-
-        if ($currency->name !== $name) {
-            throw new RuntimeException(sprintf(
-                'Currency "%s" has "%s" name, but "%s" was expected.',
-                $reference,
-                $currency->name,
-                $name
-            ));
-        }
-    }
-
-    /**
-     * @Then currency :reference symbol should be :symbol
-     */
-    public function assertCurrencySymbol($reference, $symbol)
-    {
-        /** @var Currency $currency */
-        $currency = SharedStorage::getStorage()->get($reference);
-
-        if ($currency->symbol !== $symbol) {
-            throw new RuntimeException(sprintf(
-                'Currency "%s" has "%s" symbol, but "%s" was expected.',
-                $reference,
-                $currency->symbol,
-                $symbol
-            ));
         }
     }
 
@@ -272,5 +252,45 @@ class CurrencyFeatureContext extends AbstractDomainFeatureContext
     public function assertLastErrorIsDefaultCurrencyCannotBeDeleted()
     {
         $this->assertLastErrorIs(CannotDeleteDefaultCurrencyException::class);
+    }
+
+    /**
+     * @Then /^I should get error that unofficial currency is invalid$/
+     */
+    public function assertLastErrorIsInvalidUnofficialCurrency()
+    {
+        $this->assertLastErrorIs(InvalidUnofficialCurrencyException::class);
+    }
+
+    /**
+     * @Then I should get error that currency already exists
+     */
+    public function assertLastErrorIsCurrencyAlreadyExists()
+    {
+        $this->assertLastErrorIs(CurrencyConstraintException::class, CurrencyConstraintException::CURRENCY_ALREADY_EXISTS);
+    }
+
+    /**
+     * @Then I should get error that currency iso codes don't match
+     */
+    public function assertLastErrorIsMismatchingIsoCodes()
+    {
+        $this->assertLastErrorIs(CurrencyConstraintException::class, CurrencyConstraintException::ISO_CODES_MISMATCH);
+    }
+
+    /**
+     * @Then I should get error that currency was not found
+     */
+    public function assertLastErrorIsNotFound()
+    {
+        $this->assertLastErrorIs(CurrencyNotFoundException::class);
+    }
+
+    /**
+     * @Then I should get no currency error
+     */
+    public function assertNoCurrencyError()
+    {
+        $this->assertLastErrorIsNull();
     }
 }

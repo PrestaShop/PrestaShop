@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -24,20 +24,17 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\CommandHandler;
+
+use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Command\BulkSetTaxRulesGroupStatusCommand;
 
 /**
- * Is thrown when catalog price rule cannot be deleted
+ * Defines contract for bulk toggle tax rules group status handler
  */
-class DeleteCatalogPriceRuleException extends CatalogPriceRuleException
+interface BulkToggleTaxRulesGroupStatusHandlerInterface
 {
     /**
-     * When fails to delete single catalog price rule
+     * @param BulkSetTaxRulesGroupStatusCommand $command
      */
-    const FAILED_DELETE = 10;
-
-    /**
-     * When fails to delete catalog price rule in bulk action
-     */
-    const FAILED_BULK_DELETE = 20;
+    public function handle(BulkSetTaxRulesGroupStatusCommand $command): void;
 }
