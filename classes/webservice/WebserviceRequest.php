@@ -1798,6 +1798,9 @@ class WebserviceRequestCore
         return $ret;
     }
 
+    /**
+     * @return array|bool
+     */
     public function filterLanguage()
     {
         $arr_languages = array();
