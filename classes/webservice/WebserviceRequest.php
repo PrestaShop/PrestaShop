@@ -216,11 +216,19 @@ class WebserviceRequestCore
      */
     public $params;
 
+    /**
+     * @return bool
+     */
     public function getOutputEnabled()
     {
         return $this->_outputEnabled;
     }
 
+    /**
+     * @param bool $bool
+     *
+     * @return $this
+     */
     public function setOutputEnabled($bool)
     {
         if (Validate::isBool($bool)) {
@@ -244,19 +252,11 @@ class WebserviceRequestCore
         return self::$_instance;
     }
 
-    /*
-    protected function getOutputObject($type)
-    {
-        switch ($type)
-        {
-            case 'XML' :
-            default :
-                $obj_render = new WebserviceOutputXML();
-                break;
-        }
-        return $obj_render;
-    }
-    */
+    /**
+     * @param string $type Requested output type
+     *
+     * @return WebserviceOutputJSON|WebserviceOutputXML
+     */
     protected function getOutputObject($type)
     {
         // set header param in header or as get param
@@ -287,6 +287,11 @@ class WebserviceRequestCore
         return $obj_render;
     }
 
+    /**
+     * @return array[]
+     *
+     * @throws PrestaShopException
+     */
     public static function getResources()
     {
         $resources = array(
@@ -400,7 +405,7 @@ class WebserviceRequestCore
     /**
      * This method is used for calculate the price for products on a virtual fields.
      *
-     * @param $entity_object
+     * @param ObjectModel $entity_object
      * @param array $parameters
      *
      * @return array
@@ -413,6 +418,24 @@ class WebserviceRequestCore
         return $this->specificPriceCalculation($parameters);
     }
 
+    /**
+     * @param array[] $parameters Array of parameter sets, indexed by name. Sets are composed of:
+     *     - int object_id (required)
+     *     - int country
+     *     - int state
+     *     - int currency
+     *     - int group
+     *     - int quantity
+     *     - int use_tax
+     *     - int decimals
+     *     - int product_attribute
+     *     - int only_reduction
+     *     - int use_reduction
+     *     - int use_ecotax
+     *     - int county
+     *
+     * @return array
+     */
     public function specificPriceCalculation($parameters)
     {
         $arr_return = array();
@@ -460,7 +483,7 @@ class WebserviceRequestCore
     /**
      * This method is used for calculate the price for products on a virtual fields.
      *
-     * @param $entity_object
+     * @param ObjectModel $entity_object
      * @param array $parameters
      *
      * @return array
@@ -485,11 +508,12 @@ class WebserviceRequestCore
      * Execute the action
      * Display the result.
      *
-     * @param string $key
-     * @param string $method
-     * @param string $url
-     * @param string $params
-     * @param string $inputXml
+     * @param string $key Webservice access key
+     * @param string $method Request method (GET, POST, PUT...)
+     * @param string $url Request path (eg. `addresses/1`)
+     * @param string[] $params Request parameters
+     * @param string|false $bad_class_name Invalid WebServiceRequest class name that was attempted to be loaded, if applicable
+     * @param string|null $inputXml POST/PUT data, if any
      *
      * @return array Returns an array of results (headers, content, type of resource...)
      */
@@ -509,7 +533,7 @@ class WebserviceRequestCore
         $display_errors = strtolower(ini_get('display_errors')) != 'off';
         // __PS_BASE_URI__ is from Shop::$current_base_uri
         $this->wsUrl = Tools::getHttpHost(true) . __PS_BASE_URI__ . 'api/';
-        // set the output object which manage the content and header structure and informations
+        // set the output object which manage the content and header structure and information
         $this->objOutput = new WebserviceOutputBuilder($this->wsUrl);
 
         $this->_key = trim($key);
@@ -531,7 +555,7 @@ class WebserviceRequestCore
             $this->depth = isset($this->urlFragments['depth']) ? (int) $this->urlFragments['depth'] : $this->depth;
 
             try {
-                // Method below set a particular fonction to use on the price field for products entity
+                // Method below sets a particular function to use on the price field for products entity
                 // @see WebserviceRequest::getPriceForProduct() method
                 // @see WebserviceOutputBuilder::setSpecificField() method
                 //$this->objOutput->setSpecificField($this, 'getPriceForProduct', 'price', 'products');
@@ -631,9 +655,16 @@ class WebserviceRequestCore
         return $return;
     }
 
+    /**
+     * @return bool
+     */
     protected function webserviceChecks()
     {
-        return $this->isActivated() && $this->authenticate() && $this->groupShopExists($this->params) && $this->shopExists($this->params) && $this->shopHasRight($this->_key);
+        return $this->isActivated()
+            && $this->authenticate()
+            && $this->groupShopExists($this->params)
+            && $this->shopExists($this->params)
+            && $this->shopHasRight($this->_key);
     }
 
     /**
@@ -660,8 +691,8 @@ class WebserviceRequestCore
      *
      * @param int $num
      * @param string $label
-     * @param array $value
-     * @param array $values
+     * @param string $value
+     * @param array $available_values
      * @param int $code
      */
     public function setErrorDidYouMean($num, $label, $value, $available_values, $code)
@@ -699,10 +730,10 @@ class WebserviceRequestCore
     /**
      * Used to replace the default PHP error handler, in order to display PHP errors in a XML format.
      *
-     * @param string $errno contains the level of the error raised, as an integer
-     * @param array $errstr contains the error message, as a string
-     * @param array $errfile errfile, which contains the filename that the error was raised in, as a string
-     * @param array $errline errline, which contains the line number the error was raised at, as an integer
+     * @param int $errno Level of the error raised
+     * @param string $errstr Error message
+     * @param string $errfile Filename where the error was raised
+     * @param int $errline Line number where the error was raised
      *
      * @return bool Always return true to avoid the default PHP error handler
      */
@@ -858,10 +889,16 @@ class WebserviceRequestCore
         return true;
     }
 
+    /**
+     * @param string $key
+     *
+     * @return bool
+     */
     protected function shopHasRight($key)
     {
         $sql = 'SELECT 1
-				FROM ' . _DB_PREFIX_ . 'webservice_account wsa LEFT JOIN ' . _DB_PREFIX_ . 'webservice_account_shop wsas ON (wsa.id_webservice_account = wsas.id_webservice_account)
+				FROM ' . _DB_PREFIX_ . 'webservice_account wsa 
+				LEFT JOIN ' . _DB_PREFIX_ . 'webservice_account_shop wsas ON (wsa.id_webservice_account = wsas.id_webservice_account)
 				WHERE wsa.key = \'' . pSQL($key) . '\'';
 
         foreach (self::$shopIDs as $id_shop) {
@@ -877,6 +914,12 @@ class WebserviceRequestCore
         return true;
     }
 
+    /**
+     * @param array $params
+     *
+     * @return bool
+     * @throws PrestaShopException
+     */
     protected function shopExists($params)
     {
         if (is_countable(self::$shopIDs) && count(self::$shopIDs)) {
@@ -905,6 +948,12 @@ class WebserviceRequestCore
         return false;
     }
 
+    /**
+     * @param array $params
+     *
+     * @return bool
+     * @throws PrestaShopException
+     */
     protected function groupShopExists($params)
     {
         if (isset($params['id_group_shop']) && is_numeric($params['id_group_shop'])) {
@@ -967,6 +1016,9 @@ class WebserviceRequestCore
         return true;
     }
 
+    /**
+     * @deprecated Since 1.7.7, no longer used
+     */
     protected function setObjects()
     {
         $objects = array();
@@ -997,6 +1049,11 @@ class WebserviceRequestCore
         }
     }
 
+    /**
+     * @param string $str
+     *
+     * @return array
+     */
     protected function parseDisplayFields($str)
     {
         $bracket_level = 0;
@@ -1041,9 +1098,13 @@ class WebserviceRequestCore
         return $fields;
     }
 
+    /**
+     * Sets the fields to display in the list: "full", "minimum", "field_1", "field_1,field_2,field_3"
+     *
+     * @return bool
+     */
     public function setFieldsToDisplay()
     {
-        // set the fields to display in the list : "full", "minimum", "field_1", "field_1,field_2,field_3"
         if (isset($this->urlFragments['display'])) {
             $this->fieldsToDisplay = $this->urlFragments['display'];
             if ($this->fieldsToDisplay != 'full' && $this->fieldsToDisplay != 'minimum') {
@@ -1088,6 +1149,9 @@ class WebserviceRequestCore
         return true;
     }
 
+    /**
+     * @return bool
+     */
     protected function manageFilters()
     {
         // filtered fields which can not use filters : hidden_fields
@@ -1235,12 +1299,10 @@ class WebserviceRequestCore
                 }
                 if ($delimiterPosition === false || !in_array($direction, array('ASC', 'DESC'))) {
                     $this->setError(400, 'The "sort" value has to be formed as this example: "field_ASC" or \'[field_1_DESC,field_2_ASC,field_3_ASC,...]\' ("field" has to be an available field)', 37);
-
                     return false;
                 }
                 if (!in_array($fieldName, $available_filters) && !in_array($fieldName, $i18n_available_filters)) {
                     $this->setError(400, 'Unable to filter by this field. However, these are available: ' . implode(', ', $available_filters) . ', for i18n fields:' . implode(', ', $i18n_available_filters), 38);
-
                     return false;
                 }
                 if (in_array($fieldName, $i18n_available_filters)) {
@@ -1283,6 +1345,9 @@ class WebserviceRequestCore
         return $filters;
     }
 
+    /**
+     * @return array
+     */
     public function getFilteredObjectList()
     {
         $objects = array();
@@ -1316,6 +1381,9 @@ class WebserviceRequestCore
         }
     }
 
+    /**
+     * @return array|false
+     */
     public function getFilteredObjectDetails()
     {
         $objects = array();
@@ -1415,8 +1483,6 @@ class WebserviceRequestCore
 
     /**
      * Execute DELETE method on a PrestaShop entity.
-     *
-     * @return bool
      */
     protected function executeEntityDelete()
     {
@@ -1887,6 +1953,9 @@ class WebserviceRequestCore
         return $return;
     }
 
+    /**
+     * @return string[]
+     */
     public static function getallheaders()
     {
         $retarr = array();
