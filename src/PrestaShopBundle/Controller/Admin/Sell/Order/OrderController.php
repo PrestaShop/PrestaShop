@@ -646,7 +646,7 @@ class OrderController extends FrameworkBundleAdminController
                 $this->getCommandBus()->handle(new AddOrderCustomerMessageCommand(
                     $orderId,
                     $data['message'],
-                    $data['is_displayed_to_customer']
+                    !$data['is_displayed_to_customer']
                 ));
 
                 $this->addFlash(
