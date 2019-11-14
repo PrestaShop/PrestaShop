@@ -1671,62 +1671,63 @@ class WebserviceRequestCore
                     $this->setError(400, 'Validation error: "' . $retValidateFieldsLang . '"', 84);
 
                     return false;
-                } elseif (($retValidateFields = $object->validateFields(false, true)) !== true) {
+                }
+                if (($retValidateFields = $object->validateFields(false, true)) !== true) {
                     $this->setError(400, 'Validation error: "' . $retValidateFields . '"', 85);
 
                     return false;
-                } else {
-                    // Call alternative method for add/update
-                    $objectMethod = ($this->method == 'POST' ? 'add' : 'update');
-                    if (isset($this->resourceConfiguration['objectMethods']) && array_key_exists($objectMethod, $this->resourceConfiguration['objectMethods'])) {
-                        $objectMethod = $this->resourceConfiguration['objectMethods'][$objectMethod];
-                    }
-                    $result = $object->{$objectMethod}();
-                    if ($result) {
-                        if (isset($attributes->associations)) {
-                            foreach ($attributes->associations->children() as $association) {
-                                /** @var SimpleXMLElement $association */
-                                // associations
-                                if (isset($this->resourceConfiguration['associations'][$association->getName()])) {
-                                    $assocItems = $association->children();
-                                    $values = array();
-                                    foreach ($assocItems as $assocItem) {
-                                        /** @var SimpleXMLElement $assocItem */
-                                        $fields = $assocItem->children();
-                                        $entry = array();
-                                        foreach ($fields as $fieldName => $fieldValue) {
-                                            $entry[$fieldName] = (string) $fieldValue;
-                                        }
-                                        $values[] = $entry;
-                                    }
-                                    $setter = $this->resourceConfiguration['associations'][$association->getName()]['setter'];
-                                    if (null !== $setter && $setter && method_exists($object, $setter) && !$object->$setter($values)) {
-                                        $this->setError(500, 'Error occurred while setting the ' . $association->getName() . ' value', 85);
+                }
 
-                                        return false;
+                // Call alternative method for add/update
+                $objectMethod = ($this->method == 'POST' ? 'add' : 'update');
+                if (isset($this->resourceConfiguration['objectMethods']) && array_key_exists($objectMethod, $this->resourceConfiguration['objectMethods'])) {
+                    $objectMethod = $this->resourceConfiguration['objectMethods'][$objectMethod];
+                }
+                $result = $object->{$objectMethod}();
+                if ($result) {
+                    if (isset($attributes->associations)) {
+                        foreach ($attributes->associations->children() as $association) {
+                            /** @var SimpleXMLElement $association */
+                            // associations
+                            if (isset($this->resourceConfiguration['associations'][$association->getName()])) {
+                                $assocItems = $association->children();
+                                $values = array();
+                                foreach ($assocItems as $assocItem) {
+                                    /** @var SimpleXMLElement $assocItem */
+                                    $fields = $assocItem->children();
+                                    $entry = array();
+                                    foreach ($fields as $fieldName => $fieldValue) {
+                                        $entry[$fieldName] = (string) $fieldValue;
                                     }
-                                } elseif ($association->getName() != 'i18n') {
-                                    $this->setError(400, 'The association "' . $association->getName() . '" does not exists', 86);
+                                    $values[] = $entry;
+                                }
+                                $setter = $this->resourceConfiguration['associations'][$association->getName()]['setter'];
+                                if (null !== $setter && $setter && method_exists($object, $setter) && !$object->$setter($values)) {
+                                    $this->setError(500, 'Error occurred while setting the ' . $association->getName() . ' value', 85);
 
                                     return false;
                                 }
+                            } elseif ($association->getName() != 'i18n') {
+                                $this->setError(400, 'The association "' . $association->getName() . '" does not exists', 86);
+
+                                return false;
                             }
                         }
-                        $assoc = Shop::getAssoTable($this->resourceConfiguration['retrieveData']['table']);
-                        if ($assoc !== false && $assoc['type'] != 'fk_shop') {
-                            // PUT nor POST is destructive, no deletion
-                            $sql = 'INSERT IGNORE INTO `' . bqSQL(_DB_PREFIX_ . $this->resourceConfiguration['retrieveData']['table'] . '_' . $assoc['type']) . '` (id_shop, `' . bqSQL($this->resourceConfiguration['fields']['id']['sqlId']) . '`) VALUES ';
-                            foreach (self::$shopIDs as $id) {
-                                $sql .= '(' . (int) $id . ',' . (int) $object->id . ')';
-                                if ($id != end(self::$shopIDs)) {
-                                    $sql .= ', ';
-                                }
-                            }
-                            Db::getInstance()->execute($sql);
-                        }
-                    } else {
-                        $this->setError(500, 'Unable to save resource', 46);
                     }
+                    $assoc = Shop::getAssoTable($this->resourceConfiguration['retrieveData']['table']);
+                    if ($assoc !== false && $assoc['type'] != 'fk_shop') {
+                        // PUT nor POST is destructive, no deletion
+                        $sql = 'INSERT IGNORE INTO `' . bqSQL(_DB_PREFIX_ . $this->resourceConfiguration['retrieveData']['table'] . '_' . $assoc['type']) . '` (id_shop, `' . bqSQL($this->resourceConfiguration['fields']['id']['sqlId']) . '`) VALUES ';
+                        foreach (self::$shopIDs as $id) {
+                            $sql .= '(' . (int) $id . ',' . (int) $object->id . ')';
+                            if ($id != end(self::$shopIDs)) {
+                                $sql .= ', ';
+                            }
+                        }
+                        Db::getInstance()->execute($sql);
+                    }
+                } else {
+                    $this->setError(500, 'Unable to save resource', 46);
                 }
             }
         }
