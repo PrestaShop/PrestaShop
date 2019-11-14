@@ -91,7 +91,9 @@
       {{ form_rest(orderMessageForm) }}
     {% endblock %}
 
-    <button type="submit" class="btn btn-primary">{{ 'Send message'|trans({}, 'Admin.Orderscustomers.Feature') }}</button>
+    <div class="text-right">
+      <button type="submit" class="btn btn-primary">{{ 'Send message'|trans({}, 'Admin.Orderscustomers.Feature') }}</button>
+    </div>
 
     {{ form_end(orderMessageForm) }}
   </div>
