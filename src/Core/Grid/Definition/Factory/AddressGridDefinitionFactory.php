@@ -244,10 +244,9 @@ final class AddressGridDefinitionFactory extends AbstractGridDefinitionFactory
                 (new Filter('actions', SearchAndResetType::class))
                     ->setAssociatedColumn('actions')
                     ->setTypeOptions([
-                        'reset_route' => 'admin_common_reset_search',
+                        'reset_route' => 'admin_common_reset_search_by_filter_id',
                         'reset_route_params' => [
-                            'controller' => 'address',
-                            'action' => 'index',
+                            'filterId' => self::GRID_ID,
                         ],
                         'redirect_route' => 'admin_addresses_index',
                     ])

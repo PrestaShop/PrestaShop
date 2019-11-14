@@ -6,15 +6,13 @@ admin_addresses_index:
     _legacy_controller: AdminAddresses
 #    _legacy_link: AdminAddresses
 
-admin_addresses_filter:
+admin_addresses_search:
   path: /
   methods: [POST]
   defaults:
-    _controller: PrestaShopBundle:Admin\Common:searchGrid
+    _controller: PrestaShopBundle:Admin\Sell\Address\Address:search
     _legacy_controller: AdminAddresses
-    gridDefinitionFactoryServiceId: prestashop.core.grid.definition.factory.address
-    redirectRoute: admin_addresses_index
-    #_legacy_link: AdminAddresses:submitFilteraddress
+#    _legacy_link: AdminAddresses:submitFilteraddress
 
 admin_addresses_create:
   path: /new
