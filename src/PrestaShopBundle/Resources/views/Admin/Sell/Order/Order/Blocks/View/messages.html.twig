@@ -54,7 +54,9 @@
   {% endif %}
 
   <div class="card-body">
-    {{ form_start(orderMessageForm) }}
+    {{ form_start(orderMessageForm, {
+      'action': path('admin_orders_send_message', { orderId: orderForViewing.id })
+    }) }}
 
     {{ ps.form_group_row(orderMessageForm.order_message, {}, {
       'label': 'Choose your order message'|trans({}, 'Admin.Orderscustomers.Feature'),
