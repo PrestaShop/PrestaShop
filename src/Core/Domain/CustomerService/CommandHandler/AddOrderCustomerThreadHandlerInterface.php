@@ -24,37 +24,17 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\CustomerService\ValueObject;
+namespace PrestaShop\PrestaShop\Core\Domain\CustomerService\CommandHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\CustomerService\Exception\CustomerServiceException;
+use PrestaShop\PrestaShop\Core\Domain\CustomerService\Command\AddOrderCustomerThreadCommand;
+use PrestaShop\PrestaShop\Core\Domain\CustomerService\ValueObject\CustomerThreadId;
 
-/**
- * Defines customer thread id
- */
-class CustomerThreadId
+interface AddOrderCustomerThreadHandlerInterface
 {
     /**
-     * @var int
+     * @param AddOrderCustomerThreadCommand $command
+     *
+     * @return CustomerThreadId
      */
-    private $customerThreadId;
-
-    /**
-     * @param int $customerThreadId
-     */
-    public function __construct($customerThreadId)
-    {
-        if (!is_int($customerThreadId) || 0 > $customerThreadId) {
-            throw new CustomerServiceException('CustomerThreadId must be of type int and greater than zero.');
-        }
-
-        $this->customerThreadId = $customerThreadId;
-    }
-
-    /**
-     * @return int
-     */
-    public function getValue(): int
-    {
-        return $this->customerThreadId;
-    }
+    public function handle(AddOrderCustomerThreadCommand $command): CustomerThreadId;
 }

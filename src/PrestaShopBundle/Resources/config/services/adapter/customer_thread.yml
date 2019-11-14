@@ -1,0 +1,12 @@
+services:
+  _defaults:
+    public: true
+
+  prestashop.adapter.customer_thread.command_handler.add_order_customer_thread:
+    class: 'PrestaShop\PrestaShop\Adapter\CustomerThread\CommandHandler\AddOrderCustomerThreadHandler'
+    arguments:
+      - "@=service('prestashop.adapter.legacy.context').getContext().shop.id"
+      - "@=service('prestashop.adapter.legacy.context').getContext().language.id"
+    tags:
+      - name: tactician.handler
+        command: PrestaShop\PrestaShop\Core\Domain\CustomerService\Command\AddOrderCustomerThreadCommand

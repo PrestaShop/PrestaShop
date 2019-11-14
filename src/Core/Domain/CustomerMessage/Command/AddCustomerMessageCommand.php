@@ -24,37 +24,14 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\CustomerService\ValueObject;
-
-use PrestaShop\PrestaShop\Core\Domain\CustomerService\Exception\CustomerServiceException;
+namespace PrestaShop\PrestaShop\Core\Domain\CustomerMessage\Command;
 
 /**
- * Defines customer thread id
+ * This command adds/sends message to the customer.
  */
-class CustomerThreadId
+class AddCustomerMessageCommand
 {
-    /**
-     * @var int
-     */
-    private $customerThreadId;
-
-    /**
-     * @param int $customerThreadId
-     */
-    public function __construct($customerThreadId)
+    public function __construct()
     {
-        if (!is_int($customerThreadId) || 0 > $customerThreadId) {
-            throw new CustomerServiceException('CustomerThreadId must be of type int and greater than zero.');
-        }
-
-        $this->customerThreadId = $customerThreadId;
-    }
-
-    /**
-     * @return int
-     */
-    public function getValue(): int
-    {
-        return $this->customerThreadId;
     }
 }
