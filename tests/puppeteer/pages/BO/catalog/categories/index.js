@@ -98,13 +98,10 @@ module.exports = class Categories extends BOBasePage {
    * @return {Promise<boolean|true>}
    */
   async getToggleColumnValue(row, column) {
-    if (
-      await this.elementVisible(
-        this.categoriesListColumnValidIcon.replace('%ROW', row).replace('%COLUMN', column),
-        100,
-      )
-    ) return true;
-    return false;
+    return this.elementVisible(
+      this.categoriesListColumnValidIcon.replace('%ROW', row).replace('%COLUMN', column),
+      100,
+    );
   }
 
   /**
@@ -118,12 +115,12 @@ module.exports = class Categories extends BOBasePage {
     if (await this.getToggleColumnValue(row, column) !== valueWanted) {
       this.page.click(this.categoriesListTableColumn.replace('%ROW', row).replace('%COLUMN', column));
       if (valueWanted) {
-        await this.page.waitForSelector(this.categoriesListColumnValidIcon
-          .replace('%ROW', 1).replace('%COLUMN', 'active'),
+        await this.page.waitForSelector(
+          this.categoriesListColumnValidIcon.replace('%ROW', 1).replace('%COLUMN', column),
         );
       } else {
         await this.page.waitForSelector(
-          this.categoriesListColumnNotValidIcon.replace('%ROW', 1).replace('%COLUMN', 'active'),
+          this.categoriesListColumnNotValidIcon.replace('%ROW', 1).replace('%COLUMN', column),
         );
       }
       return true;
