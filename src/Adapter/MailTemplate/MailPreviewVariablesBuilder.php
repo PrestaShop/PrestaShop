@@ -229,6 +229,7 @@ final class MailPreviewVariablesBuilder
             )),
             '{date}' => Tools::displayDate($order->date_add, null, 1),
             '{order_name}' => $order->getUniqReference(),
+            '{id_order}' => $order->id,
             '{payment}' => Tools::substr($order->payment, 0, 255),
             '{total_products}' => count($order->getProducts()),
             '{total_discounts}' => $this->locale->formatPrice($order->total_discounts, $this->context->currency->iso_code),
