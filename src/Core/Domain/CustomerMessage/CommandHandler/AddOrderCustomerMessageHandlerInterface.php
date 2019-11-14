@@ -24,35 +24,16 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\CustomerService\Command;
+namespace PrestaShop\PrestaShop\Core\Domain\CustomerMessage\CommandHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
-use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
+use PrestaShop\PrestaShop\Core\Domain\CustomerMessage\Command\AddOrderCustomerMessageCommand;
 
 /**
- * Creates new customer thread related with order.
+ * Interface AddOrderCustomerMessageHandlerInterface
+ *
+ * @package PrestaShop\PrestaShop\Core\Domain\CustomerMessage\CommandHandler
  */
-class AddOrderCustomerThreadCommand
+interface AddOrderCustomerMessageHandlerInterface
 {
-    /**
-     * @var OrderId
-     */
-    private $orderId;
-
-    /**
-     * @param int $orderId
-     * @throws OrderException
-     */
-    public function __construct(int $orderId) {
-
-        $this->orderId = new OrderId($orderId);
-    }
-
-    /**
-     * @return OrderId
-     */
-    public function getOrderId(): OrderId
-    {
-        return $this->orderId;
-    }
+    public function handle(AddOrderCustomerMessageCommand $command);
 }
