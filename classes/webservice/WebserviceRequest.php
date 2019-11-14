@@ -1176,31 +1176,35 @@ class WebserviceRequestCore
                                     $language_filter = '[' . implode('|', $this->_available_languages) . ']';
                                     $sql_filter .= $this->getSQLRetrieveFilter('id_lang', $language_filter, 'main_i18n.');
                                 }
-                            } elseif (is_array($url_param)) {
-                                // if there are filters on linked tables but there are no linked table
-                                if (isset($this->resourceConfiguration['linked_tables'])) {
-                                    $this->setErrorDidYouMean(400, 'This linked table does not exist', $field, array_keys($this->resourceConfiguration['linked_tables']), 30);
-                                } else {
-                                    $this->setError(400, 'There is no existing linked table for this resource', 31);
-                                }
-                                return false;
                             } else {
+                                if (is_array($url_param)) {
+                                    // if there are filters on linked tables but there are no linked table
+                                    if (isset($this->resourceConfiguration['linked_tables'])) {
+                                        $this->setErrorDidYouMean(400, 'This linked table does not exist', $field, array_keys($this->resourceConfiguration['linked_tables']), 30);
+                                    } else {
+                                        $this->setError(400, 'There is no existing linked table for this resource', 31);
+                                    }
+                                    return false;
+                                }
+
                                 $this->setErrorDidYouMean(400, 'This filter does not exist', $field, $available_filters, 32);
                                 return false;
                             }
-                        } elseif ($url_param == '') {
-                            $this->setError(400, 'The filter "' . $field . '" is malformed.', 33);
-                            return false;
                         } else {
+                            if ($url_param == '') {
+                                $this->setError(400, 'The filter "' . $field . '" is malformed.', 33);
+                                return false;
+                            }
+
                             if (isset($this->resourceConfiguration['fields'][$field]['getter'])) {
                                 $this->setError(400, 'The field "' . $field . '" is dynamic. It is not possible to filter GET query with this field.', 34);
                                 return false;
+                            }
+
+                            if (isset($this->resourceConfiguration['retrieveData']['tableAlias'])) {
+                                $sql_filter .= $this->getSQLRetrieveFilter($this->resourceConfiguration['fields'][$field]['sqlId'], $url_param, $this->resourceConfiguration['retrieveData']['tableAlias'] . '.');
                             } else {
-                                if (isset($this->resourceConfiguration['retrieveData']['tableAlias'])) {
-                                    $sql_filter .= $this->getSQLRetrieveFilter($this->resourceConfiguration['fields'][$field]['sqlId'], $url_param, $this->resourceConfiguration['retrieveData']['tableAlias'] . '.');
-                                } else {
-                                    $sql_filter .= $this->getSQLRetrieveFilter($this->resourceConfiguration['fields'][$field]['sqlId'], $url_param);
-                                }
+                                $sql_filter .= $this->getSQLRetrieveFilter($this->resourceConfiguration['fields'][$field]['sqlId'], $url_param);
                             }
                         }
                     }
