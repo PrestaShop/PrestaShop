@@ -47,7 +47,7 @@
 
   {% if orderForViewing.messages.messages is not empty %}
     <ul class="list-unstyled p-4 messages-block">
-      {% for message in orderForViewing.messages.messages|slice(0, 2) %}
+      {% for message in orderForViewing.messages.messages|slice(0, 2)|reverse %}
         {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/msg_list_item.html.twig' %}
       {% endfor %}
     </ul>

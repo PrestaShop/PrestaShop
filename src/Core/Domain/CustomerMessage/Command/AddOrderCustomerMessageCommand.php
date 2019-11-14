@@ -35,13 +35,31 @@ use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
 class AddOrderCustomerMessageCommand
 {
     /**
+     * @var string
+     */
+    private $message;
+
+    /**
+     * @var OrderId
+     */
+    private $orderId;
+    /**
+     * @var bool
+     */
+    private $isPrivate;
+
+    /**
      *
      * @param int $orderId
+     * @param string $message
+     * @param bool $isPrivate
      * @throws OrderException
      */
-    public function __construct(int $orderId)
+    public function __construct(int $orderId, string $message, bool $isPrivate)
     {
         $this->orderId = new OrderId($orderId);
+        $this->message = $message;
+        $this->isPrivate = $isPrivate;
     }
 
     /**
@@ -50,5 +68,21 @@ class AddOrderCustomerMessageCommand
     public function getOrderId(): OrderId
     {
         return $this->orderId;
+    }
+
+    /**
+     * @return string
+     */
+    public function getMessage(): string
+    {
+        return $this->message;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isPrivate(): bool
+    {
+        return $this->isPrivate;
     }
 }
