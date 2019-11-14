@@ -1137,13 +1137,10 @@ class WebserviceRequestCore
             if (isset($this->urlFragments[$schema])) {
                 if ($this->urlFragments[$schema] == 'blank' || $this->urlFragments[$schema] == 'synopsis') {
                     $this->schemaToDisplay = $this->urlFragments[$schema];
-
                     return true;
-                } else {
-                    $this->setError(400, 'Please select a schema of type \'synopsis\' to get the whole schema informations (which fields are required, which kind of content...) or \'blank\' to get an empty schema to fill before using POST request', 28);
-
-                    return false;
                 }
+                $this->setError(400, 'Please select a schema of type \'synopsis\' to get the whole schema informations (which fields are required, which kind of content...) or \'blank\' to get an empty schema to fill before using POST request', 28);
+                return false;
             } else {
                 // if there are filters
                 if (isset($this->urlFragments['filter'])) {
