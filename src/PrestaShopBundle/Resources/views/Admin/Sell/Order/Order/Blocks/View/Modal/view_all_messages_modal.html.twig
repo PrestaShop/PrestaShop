@@ -33,6 +33,13 @@
               {{ 'Message history with %name%'|trans({'%name%': orderForViewing.customer.firstName ~ ' ' ~ orderForViewing.customer.lastName}, 'Admin.Global') }} ({{ orderForViewing.messages.messages|length }})
             </h3>
           </div>
+          <div class="col">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <i class="material-icons">
+                close
+              </i>
+            </button>
+          </div>
         </div>
       </div>
       <div class="modal-body">
