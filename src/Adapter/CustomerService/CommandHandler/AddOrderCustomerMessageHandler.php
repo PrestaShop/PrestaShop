@@ -35,6 +35,9 @@ use Mail;
 use Order;
 use PrestaShop\PrestaShop\Core\Domain\CustomerMessage\Command\AddOrderCustomerMessageCommand;
 use PrestaShop\PrestaShop\Core\Domain\CustomerMessage\CommandHandler\AddOrderCustomerMessageHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\CustomerMessage\Exception\CannotSendEmailException;
+use PrestaShop\PrestaShop\Core\Domain\CustomerMessage\Exception\CustomerMessageException;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderNotFoundException;
 use Symfony\Component\Translation\TranslatorInterface;
 use Tools;
 
@@ -79,11 +82,29 @@ final class AddOrderCustomerMessageHandler implements AddOrderCustomerMessageHan
 
     /**
      * {@inheritdoc}
+     *
+     * @throws CustomerMessageException
+     * @throws OrderNotFoundException
      */
-    public function handle(AddOrderCustomerMessageCommand $command)
+    public function handle(AddOrderCustomerMessageCommand $command): void
     {
         $order = new Order($command->getOrderId()->getValue());
+
+        if (0 >= $order->id) {
+            throw new OrderNotFoundException(
+                $command->getOrderId(),
+                "Order with id {$command->getOrderId()->getValue()} was not found"
+            );
+        }
+
         $customer = new Customer($order->id_customer);
+
+        if (0 >= $customer->id) {
+            throw new CustomerMessageException(
+                "Associated order customer with id {$command->getOrderId()->getValue()} was not found",
+                CustomerMessageException::ORDER_CUSTOMER_NOT_FOUND
+            );
+        }
 
         $customerServiceThreadId = CustomerThread::getIdCustomerThreadByEmailAndIdOrder(
             $customer->email,
@@ -91,14 +112,55 @@ final class AddOrderCustomerMessageHandler implements AddOrderCustomerMessageHan
         );
 
         if (!$customerServiceThreadId) {
-            $customerServiceThreadId = $this->createCustomerMessageThread($order);
+            try {
+                $customerServiceThreadId = $this->createCustomerMessageThread($order);
+            } catch (\PrestaShopException $e) {
+                throw new CustomerMessageException(
+                    'An unexpected error occurred when creating customer message thread',
+                    0,
+                    $e
+                );
+            }
         }
 
-        $this->createMessage($customerServiceThreadId, $command);
-        $this->sendMail($customer, $order, $command);
+        try {
+            $this->createMessage($customerServiceThreadId, $command);
+        } catch (\PrestaShopException $e) {
+            throw new CustomerMessageException(
+                'An unexpected error occurred when creating customer message',
+                0,
+                $e
+            );
+        }
+
+        $failedMailSentMessage = 'An unexpected error occurred when sending the email';
+
+        try {
+            $isSent = $this->sendMail($customer, $order, $command);
+
+            if (!$isSent) {
+                throw new CannotSendEmailException($failedMailSentMessage);
+            }
+        } catch (\PrestaShopException $e) {
+            throw new CannotSendEmailException(
+                $failedMailSentMessage,
+                0,
+                $e
+            );
+        }
     }
 
-    private function createCustomerMessageThread(Order $order)
+    /**
+     * Creates customer message thread which groups customer message in an order group.
+     *
+     * @param Order $order
+     *
+     * @return int
+     *
+     * @throws \PrestaShopDatabaseException
+     * @throws \PrestaShopException
+     */
+    private function createCustomerMessageThread(Order $order): int
     {
         $orderCustomer = new Customer($order->id_customer);
 
@@ -116,7 +178,16 @@ final class AddOrderCustomerMessageHandler implements AddOrderCustomerMessageHan
         return $customerThread->id;
     }
 
-    private function createMessage(int $customerServiceThreadId, AddOrderCustomerMessageCommand $command)
+    /**
+     * Creates actual message.
+     *
+     * @param int $customerServiceThreadId
+     * @param AddOrderCustomerMessageCommand $command
+     *
+     * @throws \PrestaShopDatabaseException
+     * @throws \PrestaShopException
+     */
+    private function createMessage(int $customerServiceThreadId, AddOrderCustomerMessageCommand $command): void
     {
         $customerMessage = new CustomerMessage();
         $customerMessage->id_customer_thread = $customerServiceThreadId;
@@ -126,8 +197,24 @@ final class AddOrderCustomerMessageHandler implements AddOrderCustomerMessageHan
         $customerMessage->add();
     }
 
-    private function sendMail(Customer $customer, Order $order, AddOrderCustomerMessageCommand $command)
+    /**
+     * Sends email to customer
+     *
+     * @param Customer $customer
+     * @param Order $order
+     * @param AddOrderCustomerMessageCommand $command
+     *
+     * @return bool
+     *
+     * @throws \PrestaShopDatabaseException
+     * @throws \PrestaShopException
+     */
+    private function sendMail(Customer $customer, Order $order, AddOrderCustomerMessageCommand $command): bool
     {
+        if ($command->isPrivate()) {
+            return true;
+        }
+
         $message = $command->getMessage();
 
         if (Configuration::get('PS_MAIL_TYPE', null, null, $order->id_shop) != Mail::TYPE_TEXT) {
@@ -143,7 +230,7 @@ final class AddOrderCustomerMessageHandler implements AddOrderCustomerMessageHan
             '{message}' => $message,
         );
 
-        @Mail::Send(
+        return @Mail::Send(
             (int) $order->id_lang,
             'order_merchant_comment',
             $this->translator->trans(
