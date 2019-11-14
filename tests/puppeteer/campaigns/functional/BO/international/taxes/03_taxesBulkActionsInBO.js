@@ -14,8 +14,8 @@ const TaxFaker = require('@data/faker/tax');
 let browser;
 let page;
 let numberOfTaxes = 0;
-let firstTaxData;
-let secondTaxData;
+const firstTaxData = new TaxFaker({name: 'TVA to delete'});
+const secondTaxData = new TaxFaker({name: 'TVA to delete2'});
 
 // Init objects needed
 const init = async function () {
@@ -35,8 +35,6 @@ describe('Create Taxes, Then disable / Enable and Delete with Bulk actions', asy
     browser = await helper.createBrowser();
     page = await helper.newTab(browser);
     this.pageObjects = await init();
-    firstTaxData = await (new TaxFaker({name: 'TVA to delete'}));
-    secondTaxData = await (new TaxFaker({name: 'TVA to delete2'}));
   });
   after(async () => {
     await helper.closeBrowser(browser);
@@ -59,30 +57,24 @@ describe('Create Taxes, Then disable / Enable and Delete with Bulk actions', asy
   });
   // 1 : Create 2 taxes with data from faker
   describe('Create 2 Taxes in BO', async () => {
-    it('should go to add new tax page', async function () {
-      await this.pageObjects.taxesPage.goToAddNewTaxPage();
-      const pageTitle = await this.pageObjects.addTaxPage.getPageTitle();
-      await expect(pageTitle).to.contains(this.pageObjects.addTaxPage.pageTitleCreate);
-    });
+    const tests = [
+      {args: {taxToCreate: firstTaxData}},
+      {args: {taxToCreate: secondTaxData}},
+    ];
 
-    it('should create first tax and check result', async function () {
-      const textResult = await this.pageObjects.addTaxPage.createEditTax(firstTaxData);
-      await expect(textResult).to.equal(this.pageObjects.taxesPage.successfulCreationMessage);
-      const numberOfTaxesAfterCreation = await this.pageObjects.taxesPage.getNumberOfElementInGrid();
-      await expect(numberOfTaxesAfterCreation).to.be.equal(numberOfTaxes + 1);
-    });
+    tests.forEach((test, index) => {
+      it('should go to add new tax page', async function () {
+        await this.pageObjects.taxesPage.goToAddNewTaxPage();
+        const pageTitle = await this.pageObjects.addTaxPage.getPageTitle();
+        await expect(pageTitle).to.contains(this.pageObjects.addTaxPage.pageTitleCreate);
+      });
 
-    it('should go to add new tax page', async function () {
-      await this.pageObjects.taxesPage.goToAddNewTaxPage();
-      const pageTitle = await this.pageObjects.addTaxPage.getPageTitle();
-      await expect(pageTitle).to.contains(this.pageObjects.addTaxPage.pageTitleCreate);
-    });
-
-    it('should create second tax and check result', async function () {
-      const textResult = await this.pageObjects.addTaxPage.createEditTax(secondTaxData);
-      await expect(textResult).to.equal(this.pageObjects.taxesPage.successfulCreationMessage);
-      const numberOfTaxesAfterCreation = await this.pageObjects.taxesPage.getNumberOfElementInGrid();
-      await expect(numberOfTaxesAfterCreation).to.be.equal(numberOfTaxes + 2);
+      it('should create first tax and check result', async function () {
+        const textResult = await this.pageObjects.addTaxPage.createEditTax(test.args.taxToCreate);
+        await expect(textResult).to.equal(this.pageObjects.taxesPage.successfulCreationMessage);
+        const numberOfTaxesAfterCreation = await this.pageObjects.taxesPage.getNumberOfElementInGrid();
+        await expect(numberOfTaxesAfterCreation).to.be.equal(numberOfTaxes + index + 1);
+      });
     });
   });
   // 2 : Enable/Disable with bulk actions
@@ -97,26 +89,23 @@ describe('Create Taxes, Then disable / Enable and Delete with Bulk actions', asy
       await expect(textResult).to.contains('TVA to delete');
     });
 
-    it('should disable Taxes with Bulk Actions and check Result', async function () {
-      const disableTextResult = await this.pageObjects.taxesPage.changeTaxesEnabledColumnBulkActions(false);
-      await expect(disableTextResult).to.be.equal(this.pageObjects.taxesPage.successfulUpdateStatusMessage);
-      const numberOfTaxesInGrid = await this.pageObjects.taxesPage.getNumberOfElementInGrid();
-      await expect(numberOfTaxesInGrid).to.be.at.most(numberOfTaxes);
-      for (let i = 1; i <= numberOfTaxesInGrid; i++) {
-        const textColumn = await this.pageObjects.taxesPage.getTextColumnFromTableTaxes(1, 'active');
-        await expect(textColumn).to.contains('clear');
-      }
-    });
-
-    it('should enable Taxes with Bulk Actions and check Result', async function () {
-      const enableTextResult = await this.pageObjects.taxesPage.changeTaxesEnabledColumnBulkActions(true);
-      await expect(enableTextResult).to.be.equal(this.pageObjects.taxesPage.successfulUpdateStatusMessage);
-      const numberOfTaxesInGrid = await this.pageObjects.taxesPage.getNumberOfElementInGrid();
-      await expect(numberOfTaxesInGrid).to.be.at.most(numberOfTaxes);
-      for (let i = 1; i <= numberOfTaxesInGrid; i++) {
-        const textColumn = await this.pageObjects.taxesPage.getTextColumnFromTableTaxes(1, 'active');
-        await expect(textColumn).to.contains('check');
-      }
+    const tests = [
+      {args: {action: 'disable', enabledValue: false}, expected: 'clear'},
+      {args: {action: 'enable', enabledValue: true}, expected: 'check'},
+    ];
+    tests.forEach((test) => {
+      it(`should ${test.args.action} taxes with bulk actions and check Result`, async function () {
+        const textResult = await this.pageObjects.taxesPage.changeTaxesEnabledColumnBulkActions(
+          test.args.enabledValue,
+        );
+        await expect(textResult).to.be.equal(this.pageObjects.taxesPage.successfulUpdateStatusMessage);
+        const numberOfTaxesInGrid = await this.pageObjects.taxesPage.getNumberOfElementInGrid();
+        await expect(numberOfTaxesInGrid).to.be.at.most(numberOfTaxes);
+        for (let i = 1; i <= numberOfTaxesInGrid; i++) {
+          const textColumn = await this.pageObjects.taxesPage.getTextColumnFromTableTaxes(1, 'active');
+          await expect(textColumn).to.contains(test.expected);
+        }
+      });
     });
 
     it('should reset all filters', async function () {
