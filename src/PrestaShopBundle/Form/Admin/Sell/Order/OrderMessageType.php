@@ -35,6 +35,8 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
+use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 /**
  * Helps to render messages block in orders view page.
@@ -72,7 +74,23 @@ class OrderMessageType extends AbstractType
                 'required' => false,
                 'label' => $this->trans('Display to customer?', [], 'Admin.Orderscustomers.Feature'),
             ])
-            ->add('message', TextareaType::class)
+            ->add('message', TextareaType::class, [
+                'constraints' => [
+                    new NotBlank([
+                        'message' => $this->translator->trans(
+                            'This field cannot be empty', [], 'Admin.Notifications.Error'
+                        ),
+                    ]),
+                    new Length([
+                        'max' => 255,
+                        'maxMessage' => $this->trans(
+                            'This field cannot be longer than %limit% characters',
+                            'Admin.Notifications.Error',
+                            ['%limit%' => 255]
+                        ),
+                    ]),
+                ]
+            ])
         ;
     }
 

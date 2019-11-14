@@ -24,37 +24,35 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\CustomerService\ValueObject;
+namespace PrestaShop\PrestaShop\Core\Domain\CustomerService\Command;
 
-use PrestaShop\PrestaShop\Core\Domain\CustomerService\Exception\CustomerServiceException;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
+use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
 
 /**
- * Defines customer thread id
+ * Creates new customer thread related with order.
  */
-class CustomerThreadId
+class AddOrderCustomerThreadCommand
 {
     /**
-     * @var int
+     * @var OrderId
      */
-    private $customerThreadId;
+    private $orderId;
 
     /**
-     * @param int $customerThreadId
+     * @param int $orderId
+     * @throws OrderException
      */
-    public function __construct($customerThreadId)
-    {
-        if (!is_int($customerThreadId) || 0 > $customerThreadId) {
-            throw new CustomerServiceException('CustomerThreadId must be of type int and greater than zero.');
-        }
+    public function __construct(int $orderId) {
 
-        $this->customerThreadId = $customerThreadId;
+        $this->orderId = new OrderId($orderId);
     }
 
     /**
-     * @return int
+     * @return OrderId
      */
-    public function getValue(): int
+    public function getOrderId(): OrderId
     {
-        return $this->customerThreadId;
+        return $this->orderId;
     }
 }
