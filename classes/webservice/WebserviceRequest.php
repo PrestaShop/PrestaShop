@@ -405,9 +405,7 @@ class WebserviceRequestCore
         foreach (array_keys($parameters) as $name) {
             $parameters[$name]['object_id'] = $entity_object->id;
         }
-        $arr_return = $this->specificPriceCalculation($parameters);
-
-        return $arr_return;
+        return $this->specificPriceCalculation($parameters);
     }
 
     public function specificPriceCalculation($parameters)
