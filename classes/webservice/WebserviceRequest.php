@@ -355,9 +355,9 @@ class WebserviceRequestCore
             'customizations' => ['description' => 'Customization values', 'class' => 'Customization'],
         ];
         $extra_resources = Hook::exec('addWebserviceResources', ['resources' => $resources], null, true, false);
-        if (is_countable($extra_resources) && count($extra_resources)) {
+        if (is_array($extra_resources) && count($extra_resources)) {
             foreach ($extra_resources as $new_resources) {
-                if (is_countable($new_resources) && count($new_resources)) {
+                if (is_array($new_resources) && count($new_resources)) {
                     $resources = array_merge($resources, $new_resources);
                 }
             }
