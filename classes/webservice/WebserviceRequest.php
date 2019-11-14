@@ -372,6 +372,8 @@ class WebserviceRequestCore
     /**
      * This method is used for calculate the price for products on the output details.
      *
+     * @deprecated Since 1.6.0.10
+     *
      * @param $field
      * @param $entity_object
      * @param $ws_params
