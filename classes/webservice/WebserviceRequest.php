@@ -415,24 +415,27 @@ class WebserviceRequestCore
         foreach (array_keys($parameters) as $name) {
             $parameters[$name]['object_id'] = $entity_object->id;
         }
+
         return $this->specificPriceCalculation($parameters);
     }
 
     /**
-     * @param array[] $parameters Array of parameter sets, indexed by name. Sets are composed of:
-     *     - int object_id (required)
-     *     - int country
-     *     - int state
-     *     - int currency
-     *     - int group
-     *     - int quantity
-     *     - int use_tax
-     *     - int decimals
-     *     - int product_attribute
-     *     - int only_reduction
-     *     - int use_reduction
-     *     - int use_ecotax
-     *     - int county
+     * @param array[] $parameters Array of parameter sets, indexed by name.
+     *
+     * Sets are composed of:
+     *   - int object_id (required)
+     *   - int country
+     *   - int state
+     *   - int currency
+     *   - int group
+     *   - int quantity
+     *   - int use_tax
+     *   - int decimals
+     *   - int product_attribute
+     *   - int only_reduction
+     *   - int use_reduction
+     *   - int use_ecotax
+     *   - int county
      *
      * @return array
      */
@@ -918,6 +921,7 @@ class WebserviceRequestCore
      * @param array $params
      *
      * @return bool
+     *
      * @throws PrestaShopException
      */
     protected function shopExists($params)
@@ -952,6 +956,7 @@ class WebserviceRequestCore
      * @param array $params
      *
      * @return bool
+     *
      * @throws PrestaShopException
      */
     protected function groupShopExists($params)
@@ -1201,9 +1206,11 @@ class WebserviceRequestCore
             if (isset($this->urlFragments[$schema])) {
                 if ($this->urlFragments[$schema] == 'blank' || $this->urlFragments[$schema] == 'synopsis') {
                     $this->schemaToDisplay = $this->urlFragments[$schema];
+
                     return true;
                 }
                 $this->setError(400, 'Please select a schema of type \'synopsis\' to get the whole schema informations (which fields are required, which kind of content...) or \'blank\' to get an empty schema to fill before using POST request', 28);
+
                 return false;
             }
 
@@ -1248,20 +1255,24 @@ class WebserviceRequestCore
                                     } else {
                                         $this->setError(400, 'There is no existing linked table for this resource', 31);
                                     }
+
                                     return false;
                                 }
 
                                 $this->setErrorDidYouMean(400, 'This filter does not exist', $field, $available_filters, 32);
+
                                 return false;
                             }
                         } else {
                             if ($url_param == '') {
                                 $this->setError(400, 'The filter "' . $field . '" is malformed.', 33);
+
                                 return false;
                             }
 
                             if (isset($this->resourceConfiguration['fields'][$field]['getter'])) {
                                 $this->setError(400, 'The field "' . $field . '" is dynamic. It is not possible to filter GET query with this field.', 34);
+
                                 return false;
                             }
 
@@ -1299,10 +1310,12 @@ class WebserviceRequestCore
                 }
                 if ($delimiterPosition === false || !in_array($direction, array('ASC', 'DESC'))) {
                     $this->setError(400, 'The "sort" value has to be formed as this example: "field_ASC" or \'[field_1_DESC,field_2_ASC,field_3_ASC,...]\' ("field" has to be an available field)', 37);
+
                     return false;
                 }
                 if (!in_array($fieldName, $available_filters) && !in_array($fieldName, $i18n_available_filters)) {
                     $this->setError(400, 'Unable to filter by this field. However, these are available: ' . implode(', ', $available_filters) . ', for i18n fields:' . implode(', ', $i18n_available_filters), 38);
+
                     return false;
                 }
                 if (in_array($fieldName, $i18n_available_filters)) {
@@ -1811,9 +1824,9 @@ class WebserviceRequestCore
         } else {
             // if a range or a list is asked
             if (strpos($this->urlFragments['language'], '[') !== 0
-                || strpos($this->urlFragments['language'], ']') !== $length_values - 1)
-            {
+                || strpos($this->urlFragments['language'], ']') !== $length_values - 1) {
                 $this->setError(400, 'language value is wrong', 79);
+
                 return false;
             }
 
