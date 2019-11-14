@@ -1492,7 +1492,7 @@ class WebserviceRequestCore
         } catch (Exception $error) {
             $this->setError(500, 'XML error : ' . $error->getMessage() . "\n" . 'XML length : ' . strlen($this->_inputXml) . "\n" . 'Original XML : ' . $this->_inputXml, 127);
 
-            return;
+            return false;
         }
 
         /** @var SimpleXMLElement|Countable $xmlEntities */
@@ -1507,7 +1507,6 @@ class WebserviceRequestCore
             }
         }
         if ($this->method == 'PUT') {
-            $ids2 = array();
             $ids2 = array_unique($ids);
             if (count($ids2) != count($ids)) {
                 $this->setError(400, 'id is duplicate in request', 89);
@@ -1564,9 +1563,8 @@ class WebserviceRequestCore
                             $this->setError(400, 'parameter "' . $fieldName . '" not writable. Please remove this attribute of this XML', 93);
 
                             return false;
-                        } else {
-                            $object->{$fieldProperties['setter']}((string) $attributes->$fieldName);
                         }
+                        $object->{$fieldProperties['setter']}((string) $attributes->$fieldName);
                     } elseif (property_exists($object, $sqlId)) {
                         $object->$sqlId = (string) $attributes->$fieldName;
                     } else {
