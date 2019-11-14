@@ -1805,11 +1805,18 @@ class WebserviceRequestCore
         // if just one language is asked
         if (is_numeric($this->urlFragments['language'])) {
             $arr_languages[] = (int) $this->urlFragments['language'];
-        } elseif (strpos($this->urlFragments['language'], '[') === 0
+        } else {
             // if a range or a list is asked
-            && strpos($this->urlFragments['language'], ']') === $length_values - 1) {
+            if (strpos($this->urlFragments['language'], '[') !== 0
+                || strpos($this->urlFragments['language'], ']') !== $length_values - 1)
+            {
+                $this->setError(400, 'language value is wrong', 79);
+                return false;
+            }
+
             if (strpos($this->urlFragments['language'], '|') !== false
-                xor strpos($this->urlFragments['language'], ',') !== false) {
+                xor strpos($this->urlFragments['language'], ',') !== false
+            ) {
                 $params_values = str_replace(array(']', '['), '', $this->urlFragments['language']);
                 // it's a list
                 if (strpos($params_values, '|') !== false) {
@@ -1830,10 +1837,6 @@ class WebserviceRequestCore
             } elseif (preg_match('#\[(\d)+\]#Ui', $this->urlFragments['language'], $match_lang)) {
                 $arr_languages[] = $match_lang[1];
             }
-        } else {
-            $this->setError(400, 'language value is wrong', 79);
-
-            return false;
         }
 
         $result = array_map('is_numeric', $arr_languages);
