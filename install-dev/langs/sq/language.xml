@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <language>
 	<name><![CDATA[Shqip (Albanian)]]></name>
-	<locale>sq_AL</locale>
+	<locale>sq-AL</locale>
 	<language_code>sq</language_code>
 	<date_format_lite>dd-mm-yyyy</date_format_lite>
 	<date_format_full>dd-mm-yyyy H:i:s</date_format_full>
