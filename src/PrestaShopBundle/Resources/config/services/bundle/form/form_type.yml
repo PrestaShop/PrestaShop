@@ -994,3 +994,10 @@ services:
         - '@prestashop.adapter.form.choice.provider.carrier_for_order_choice_provider'
       tags:
         - { name: form.type }
+
+    form.type.address.required_fields:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Address\RequiredFieldsAddressType'
+        arguments:
+          - '@prestashop.core.form.choice_provider.address_required_fields'
+        tags:
+          - { name: form.type }
