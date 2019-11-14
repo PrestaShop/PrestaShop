@@ -680,13 +680,12 @@ class WebserviceRequestCore
     protected function getClosest($input, $words)
     {
         $shortest = -1;
+        $closest = '';
+
         foreach ($words as $word) {
             $lev = levenshtein($input, $word);
             if ($lev == 0) {
-                $closest = $word;
-                $shortest = 0;
-
-                break;
+                return $word;
             }
             if ($lev <= $shortest || $shortest < 0) {
                 $closest = $word;
