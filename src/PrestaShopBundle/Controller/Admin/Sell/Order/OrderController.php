@@ -30,6 +30,7 @@ use Exception;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartInformation;
 use PrestaShop\PrestaShop\Core\Domain\CustomerMessage\Command\AddOrderCustomerMessageCommand;
+use PrestaShop\PrestaShop\Core\Domain\CustomerMessage\Exception\CannotSendEmailException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\AddCartRuleToOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\BulkChangeOrderStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\ChangeOrderCurrencyCommand;
@@ -652,6 +653,19 @@ class OrderController extends FrameworkBundleAdminController
                     'success',
                     $this->trans('Comment successfully added.', 'Admin.Notifications.Success')
                 );
+            } catch (CannotSendEmailException $exception) {
+                $this->addFlash(
+                    'success',
+                    $this->trans('Comment successfully added.', 'Admin.Notifications.Success')
+                );
+
+                $this->addFlash(
+                    'error',
+                    $this->trans(
+                        'An error occurred while sending an email to the customer.',
+                        'Admin.Orderscustomers.Notification'
+                    )
+                );
             } catch (Exception $exception) {
                 $this->addFlash(
                     'error',
@@ -870,8 +884,15 @@ class OrderController extends FrameworkBundleAdminController
         }
     }
 
-    private function getCustomerMessageErrorMapping(Exception $exception)
+    private function getCustomerMessageErrorMapping(Exception $exception): array
     {
-        return [];
+        return [
+            OrderNotFoundException::class => $exception instanceof OrderNotFoundException ?
+                $this->trans(
+                    'Order #%d cannot be loaded',
+                    'Admin.Orderscustomers.Notification',
+                    ['#%d' => $exception->getOrderId()->getValue()]
+                ) : '',
+        ];
     }
 }
