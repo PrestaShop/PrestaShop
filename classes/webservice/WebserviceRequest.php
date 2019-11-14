@@ -1636,12 +1636,15 @@ class WebserviceRequestCore
                     } else {
                         $this->setError(400, 'Parameter "' . $fieldName . '" can\'t be set to the object "' . $this->resourceConfiguration['retrieveData']['className'] . '"', 123);
                     }
-                } elseif (isset($fieldProperties['required']) && $fieldProperties['required'] && !$fieldProperties['i18n']) {
-                    $this->setError(400, 'parameter "' . $fieldName . '" required', 41);
+                } else {
+                    if (isset($fieldProperties['required']) && $fieldProperties['required'] && !$fieldProperties['i18n']) {
+                        $this->setError(400, 'parameter "' . $fieldName . '" required', 41);
 
-                    return false;
-                } elseif ((!isset($fieldProperties['required']) || !$fieldProperties['required']) && property_exists($object, $sqlId)) {
-                    $object->$sqlId = null;
+                        return false;
+                    }
+                    if ((!isset($fieldProperties['required']) || !$fieldProperties['required']) && property_exists($object, $sqlId)) {
+                        $object->$sqlId = null;
+                    }
                 }
                 if (isset($fieldProperties['i18n']) && $fieldProperties['i18n']) {
                     $i18n = true;
