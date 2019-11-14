@@ -1141,69 +1141,65 @@ class WebserviceRequestCore
                 }
                 $this->setError(400, 'Please select a schema of type \'synopsis\' to get the whole schema informations (which fields are required, which kind of content...) or \'blank\' to get an empty schema to fill before using POST request', 28);
                 return false;
-            } else {
-                // if there are filters
-                if (isset($this->urlFragments['filter'])) {
-                    foreach ($this->urlFragments['filter'] as $field => $url_param) {
-                        if ($field != 'sort' && $field != 'limit') {
-                            if (!in_array($field, $available_filters)) {
-                                // if there are linked tables
-                                if (isset($this->resourceConfiguration['linked_tables'][$field])) {
-                                    // contruct SQL join for linked tables
-                                    $sql_join .= 'LEFT JOIN `' . bqSQL(_DB_PREFIX_ . $this->resourceConfiguration['linked_tables'][$field]['table']) . '` `' . bqSQL($field) . '` ON (main.`' . bqSQL($this->resourceConfiguration['fields']['id']['sqlId']) . '` = `' . bqSQL($field) . '`.`' . bqSQL($this->resourceConfiguration['fields']['id']['sqlId']) . '`)' . "\n";
+            }
 
-                                    // construct SQL filter for linked tables
-                                    foreach ($url_param as $field2 => $value) {
-                                        if (isset($this->resourceConfiguration['linked_tables'][$field]['fields'][$field2])) {
-                                            $linked_field = $this->resourceConfiguration['linked_tables'][$field]['fields'][$field2];
-                                            $sql_filter .= $this->getSQLRetrieveFilter($linked_field['sqlId'], $value, $field . '.');
-                                        } else {
-                                            $list = array_keys($this->resourceConfiguration['linked_tables'][$field]['fields']);
-                                            $this->setErrorDidYouMean(400, 'This filter does not exist for this linked table', $field2, $list, 29);
+            // if there are filters
+            if (isset($this->urlFragments['filter'])) {
+                foreach ($this->urlFragments['filter'] as $field => $url_param) {
+                    if ($field != 'sort' && $field != 'limit') {
+                        if (!in_array($field, $available_filters)) {
+                            // if there are linked tables
+                            if (isset($this->resourceConfiguration['linked_tables'][$field])) {
+                                // contruct SQL join for linked tables
+                                $sql_join .= 'LEFT JOIN `' . bqSQL(_DB_PREFIX_ . $this->resourceConfiguration['linked_tables'][$field]['table']) . '` `' . bqSQL($field) . '` ON (main.`' . bqSQL($this->resourceConfiguration['fields']['id']['sqlId']) . '` = `' . bqSQL($field) . '`.`' . bqSQL($this->resourceConfiguration['fields']['id']['sqlId']) . '`)' . "\n";
 
-                                            return false;
-                                        }
-                                    }
-                                } elseif ($url_param != '' && in_array($field, $i18n_available_filters)) {
-                                    if (!is_array($url_param)) {
-                                        $url_param = array($url_param);
-                                    }
-                                    $sql_join .= 'LEFT JOIN `' . bqSQL(_DB_PREFIX_ . $this->resourceConfiguration['retrieveData']['table']) . '_lang` AS main_i18n ON (main.`' . bqSQL($this->resourceConfiguration['fields']['id']['sqlId']) . '` = main_i18n.`' . bqSQL($this->resourceConfiguration['fields']['id']['sqlId']) . '`)' . "\n";
-                                    foreach ($url_param as $field2 => $value) {
-                                        $linked_field = $this->resourceConfiguration['fields'][$field];
-                                        $sql_filter .= $this->getSQLRetrieveFilter($linked_field['sqlId'], $value, 'main_i18n.');
-                                        $language_filter = '[' . implode('|', $this->_available_languages) . ']';
-                                        $sql_filter .= $this->getSQLRetrieveFilter('id_lang', $language_filter, 'main_i18n.');
-                                    }
-                                } elseif (is_array($url_param)) {
-                                    // if there are filters on linked tables but there are no linked table
-                                    if (isset($this->resourceConfiguration['linked_tables'])) {
-                                        $this->setErrorDidYouMean(400, 'This linked table does not exist', $field, array_keys($this->resourceConfiguration['linked_tables']), 30);
+                                // construct SQL filter for linked tables
+                                foreach ($url_param as $field2 => $value) {
+                                    if (isset($this->resourceConfiguration['linked_tables'][$field]['fields'][$field2])) {
+                                        $linked_field = $this->resourceConfiguration['linked_tables'][$field]['fields'][$field2];
+                                        $sql_filter .= $this->getSQLRetrieveFilter($linked_field['sqlId'], $value, $field . '.');
                                     } else {
-                                        $this->setError(400, 'There is no existing linked table for this resource', 31);
+                                        $list = array_keys($this->resourceConfiguration['linked_tables'][$field]['fields']);
+                                        $this->setErrorDidYouMean(400, 'This filter does not exist for this linked table', $field2, $list, 29);
+
+                                        return false;
                                     }
-
-                                    return false;
-                                } else {
-                                    $this->setErrorDidYouMean(400, 'This filter does not exist', $field, $available_filters, 32);
-
-                                    return false;
                                 }
-                            } elseif ($url_param == '') {
-                                $this->setError(400, 'The filter "' . $field . '" is malformed.', 33);
-
+                            } elseif ($url_param != '' && in_array($field, $i18n_available_filters)) {
+                                if (!is_array($url_param)) {
+                                    $url_param = array($url_param);
+                                }
+                                $sql_join .= 'LEFT JOIN `' . bqSQL(_DB_PREFIX_ . $this->resourceConfiguration['retrieveData']['table']) . '_lang` AS main_i18n ON (main.`' . bqSQL($this->resourceConfiguration['fields']['id']['sqlId']) . '` = main_i18n.`' . bqSQL($this->resourceConfiguration['fields']['id']['sqlId']) . '`)' . "\n";
+                                foreach ($url_param as $field2 => $value) {
+                                    $linked_field = $this->resourceConfiguration['fields'][$field];
+                                    $sql_filter .= $this->getSQLRetrieveFilter($linked_field['sqlId'], $value, 'main_i18n.');
+                                    $language_filter = '[' . implode('|', $this->_available_languages) . ']';
+                                    $sql_filter .= $this->getSQLRetrieveFilter('id_lang', $language_filter, 'main_i18n.');
+                                }
+                            } elseif (is_array($url_param)) {
+                                // if there are filters on linked tables but there are no linked table
+                                if (isset($this->resourceConfiguration['linked_tables'])) {
+                                    $this->setErrorDidYouMean(400, 'This linked table does not exist', $field, array_keys($this->resourceConfiguration['linked_tables']), 30);
+                                } else {
+                                    $this->setError(400, 'There is no existing linked table for this resource', 31);
+                                }
                                 return false;
                             } else {
-                                if (isset($this->resourceConfiguration['fields'][$field]['getter'])) {
-                                    $this->setError(400, 'The field "' . $field . '" is dynamic. It is not possible to filter GET query with this field.', 34);
-
-                                    return false;
+                                $this->setErrorDidYouMean(400, 'This filter does not exist', $field, $available_filters, 32);
+                                return false;
+                            }
+                        } elseif ($url_param == '') {
+                            $this->setError(400, 'The filter "' . $field . '" is malformed.', 33);
+                            return false;
+                        } else {
+                            if (isset($this->resourceConfiguration['fields'][$field]['getter'])) {
+                                $this->setError(400, 'The field "' . $field . '" is dynamic. It is not possible to filter GET query with this field.', 34);
+                                return false;
+                            } else {
+                                if (isset($this->resourceConfiguration['retrieveData']['tableAlias'])) {
+                                    $sql_filter .= $this->getSQLRetrieveFilter($this->resourceConfiguration['fields'][$field]['sqlId'], $url_param, $this->resourceConfiguration['retrieveData']['tableAlias'] . '.');
                                 } else {
-                                    if (isset($this->resourceConfiguration['retrieveData']['tableAlias'])) {
-                                        $sql_filter .= $this->getSQLRetrieveFilter($this->resourceConfiguration['fields'][$field]['sqlId'], $url_param, $this->resourceConfiguration['retrieveData']['tableAlias'] . '.');
-                                    } else {
-                                        $sql_filter .= $this->getSQLRetrieveFilter($this->resourceConfiguration['fields'][$field]['sqlId'], $url_param);
-                                    }
+                                    $sql_filter .= $this->getSQLRetrieveFilter($this->resourceConfiguration['fields'][$field]['sqlId'], $url_param);
                                 }
                             }
                         }
