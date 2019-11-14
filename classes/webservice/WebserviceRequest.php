@@ -570,31 +570,23 @@ class WebserviceRequestCore
                             $this->resourceConfiguration = $object->getWebserviceParameters();
                         }
                     }
-                    $success = false;
                     // execute the action
                     switch ($this->method) {
                         case 'GET':
                         case 'HEAD':
-                            if ($this->executeEntityGetAndHead()) {
-                                $success = true;
-                            }
-
+                            $this->executeEntityGetAndHead();
                             break;
+
                         case 'POST':
-                            if ($this->executeEntityPost()) {
-                                $success = true;
-                            }
-
+                            $this->executeEntityPost();
                             break;
+
                         case 'PUT':
-                            if ($this->executeEntityPut()) {
-                                $success = true;
-                            }
-
+                            $this->executeEntityPut();
                             break;
+
                         case 'DELETE':
                             $this->executeEntityDelete();
-
                             break;
                     }
                     // Need to set an object for the WebserviceOutputBuilder object in any case
