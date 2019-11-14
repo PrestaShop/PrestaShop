@@ -32,15 +32,6 @@
         <h3 class="card-header">
           {{ 'Thread'|trans({}, 'Admin.Orderscustomers.Feature') }}
           <strong>#{{ customerThreadView.customerThreadId.value }}</strong>
-
-          <div class="d-inline-block float-right">
-            <a href="{{ path('admin_customer_threads_view', {'customerThreadId': customerThreadView.nextCustomerThreadId.value}) }}"
-               class="btn btn-outline-secondary btn-sm"
-            >
-              {{ 'Reply to the next unanswered message in this thread'|trans({}, 'Admin.Catalog.Feature') }}
-              <i class="material-icons">navigate_next</i>
-            </a>
-          </div>
         </h3>
         <div class="card-body">
           {% block customer_thread_actions %}

@@ -84,11 +84,8 @@ final class GetCustomerThreadForViewingHandler implements GetCustomerThreadForVi
 
         $messages = CustomerThread::getMessageCustomerThreads($query->getCustomerThreadId()->getValue());
 
-        $customerThreadId = CustomerThread::getNextThread((int) $customerThread->id);
-
         return new CustomerThreadView(
             $query->getCustomerThreadId(),
-            new CustomerThreadId((int) $customerThreadId),
             new LanguageId((int) $customerThread->id_lang),
             $this->getAvailableActions($customerThread),
             $this->getCustomerInformation($customerThread),
@@ -117,9 +114,9 @@ final class GetCustomerThreadForViewingHandler implements GetCustomerThreadForVi
 
             $attachmentFile = null;
 
-            if (isset($message['file_name'])
+            if (!empty($message['file_name'])
                 && $message['file_name'] !== ''
-                && file_exists(_THEME_PROD_PIC_DIR_ . $message['file_name'])
+                && file_exists(_PS_ROOT_DIR_ . _THEME_PROD_PIC_DIR_ . $message['file_name'])
             ) {
                 $attachmentFile = _THEME_PROD_PIC_DIR_ . $message['file_name'];
             }

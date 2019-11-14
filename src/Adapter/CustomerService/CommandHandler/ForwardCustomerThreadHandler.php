@@ -133,10 +133,11 @@ final class ForwardCustomerThreadHandler implements ForwardCustomerThreadHandler
         if ($forwardEmailSent) {
             $customerMessage->private = 1;
             $customerMessage->message = sprintf(
-                '%s %s %s \\n %s %s',
+                '%s %s %s %s %s %s',
                 $this->translator->trans('Message forwarded to', [], 'Admin.Catalog.Feature'),
                 $employee->firstname,
                 $employee->lastname,
+                PHP_EOL . PHP_EOL,
                 $this->translator->trans('Comment:', [], 'Admin.Catalog.Feature'),
                 $command->getComment()
             );
