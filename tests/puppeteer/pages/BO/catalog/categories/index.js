@@ -98,18 +98,16 @@ module.exports = class Categories extends BOBasePage {
    * @return {Promise<boolean|true>}
    */
   async getToggleColumnValue(row, column) {
-    if (
-      await this.elementVisible(
-        this.categoriesListColumnValidIcon.replace('%ROW', row).replace('%COLUMN', column),
-        100,
-      )
-    ) return true;
-    return false;
+    return this.elementVisible(
+      this.categoriesListColumnValidIcon.replace('%ROW', row).replace('%COLUMN', column),
+      100,
+    );
   }
 
   /**
    * Quick edit toggle column value
    * @param row, row in table
+   * @param column, column to update
    * @param valueWanted, Value wanted in column
    * @return {Promise<boolean>} return true if action is done, false otherwise
    */
