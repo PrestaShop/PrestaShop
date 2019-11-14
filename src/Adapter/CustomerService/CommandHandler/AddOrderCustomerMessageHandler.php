@@ -24,21 +24,16 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Adapter\CustomerThread\CommandHandler;
+namespace PrestaShop\PrestaShop\Adapter\CustomerService\CommandHandler;
 
 use Customer;
 use CustomerThread;
 use Order;
-use PrestaShop\PrestaShop\Core\Domain\CustomerService\Command\AddOrderCustomerThreadCommand;
-use PrestaShop\PrestaShop\Core\Domain\CustomerService\CommandHandler\AddOrderCustomerThreadHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\CustomerService\Exception\CustomerServiceException;
-use PrestaShop\PrestaShop\Core\Domain\CustomerService\ValueObject\CustomerThreadId;
+use PrestaShop\PrestaShop\Core\Domain\CustomerMessage\Command\AddOrderCustomerMessageCommand;
+use PrestaShop\PrestaShop\Core\Domain\CustomerMessage\CommandHandler\AddOrderCustomerMessageHandlerInterface;
 use Tools;
 
-/**
- * Handles adding customer thread which is related with order.
- */
-final class AddOrderCustomerThreadHandler implements AddOrderCustomerThreadHandlerInterface
+final class AddOrderCustomerMessageHandler implements AddOrderCustomerMessageHandlerInterface
 {
     /**
      * @var int
@@ -58,25 +53,27 @@ final class AddOrderCustomerThreadHandler implements AddOrderCustomerThreadHandl
 
     /**
      * {@inheritdoc}
-     * @throws CustomerServiceException
      */
-    public function handle(AddOrderCustomerThreadCommand $command): CustomerThreadId
+    public function handle(AddOrderCustomerMessageCommand $command)
     {
         $order = new Order($command->getOrderId()->getValue());
+    }
 
+    private function createCustomerMessageThread(Order $order)
+    {
         $orderCustomer = new Customer($order->id_customer);
 
-        $customer_thread = new CustomerThread();
-        $customer_thread->id_contact = 0;
-        $customer_thread->id_customer = (int) $order->id_customer;
-        $customer_thread->id_shop = $this->contextShopId;
-        $customer_thread->id_order = $command->getOrderId()->getValue();
-        $customer_thread->id_lang = $this->contextLanguageId;
-        $customer_thread->email = $orderCustomer->email;
-        $customer_thread->status = 'open';
-        $customer_thread->token = Tools::passwdGen(12);
-        $customer_thread->add();
+        $customerThread = new CustomerThread();
+        $customerThread->id_contact = 0;
+        $customerThread->id_customer = (int) $order->id_customer;
+        $customerThread->id_shop = $this->contextShopId;
+        $customerThread->id_order = $order->id;
+        $customerThread->id_lang = $this->contextLanguageId;
+        $customerThread->email = $orderCustomer->email;
+        $customerThread->status = 'open';
+        $customerThread->token = Tools::passwdGen(12);
+        $customerThread->add();
 
-        return new CustomerThreadId($customer_thread->id);
+        return $customerThread->id;
     }
 }
