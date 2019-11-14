@@ -1022,13 +1022,13 @@ class WebserviceRequestCore
         }
         $fields = array();
         foreach ($part as $str) {
-            $field_name = trim(substr($str, 0, (strpos($str, '[') === false ? strlen($str) : strpos($str, '['))));
+            $openingBracketPosition = strpos($str, '[');
+            $field_name = trim(substr($str, 0, ($openingBracketPosition === false ? strlen($str) : $openingBracketPosition)));
             if (!isset($fields[$field_name])) {
                 $fields[$field_name] = null;
             }
-            if (strpos($str, '[') !== false) {
-                $sub_fields = substr($str, strpos($str, '[') + 1, strlen($str) - strpos($str, '[') - 2);
-                $tmp_array = array();
+            if ($openingBracketPosition !== false) {
+                $sub_fields = substr($str, $openingBracketPosition + 1, strlen($str) - $openingBracketPosition - 2);
                 if (strpos($sub_fields, ',') !== false) {
                     $tmp_array = explode(',', $sub_fields);
                 } else {
