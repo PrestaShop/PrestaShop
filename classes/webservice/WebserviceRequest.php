@@ -211,6 +211,11 @@ class WebserviceRequestCore
      */
     public static $shopIDs = [];
 
+    /**
+     * @var string[]
+     */
+    public $params;
+
     public function getOutputEnabled()
     {
         return $this->_outputEnabled;
