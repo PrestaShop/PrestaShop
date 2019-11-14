@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -28,40 +28,44 @@ namespace PrestaShop\PrestaShop\Adapter\Currency\CommandHandler;
 
 use Currency;
 use Language;
-use PrestaShop\PrestaShop\Core\Domain\Currency\Command\AddCurrencyCommand;
-use PrestaShop\PrestaShop\Core\Domain\Currency\CommandHandler\AddCurrencyHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Command\AddUnofficialCurrencyCommand;
+use PrestaShop\PrestaShop\Core\Domain\Currency\CommandHandler\AddUnofficialCurrencyHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotCreateCurrencyException;
-use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
+use PrestaShop\PrestaShop\Core\Language\LanguageInterface;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleRepository;
 use PrestaShopException;
 
 /**
- * Class AddCurrencyHandler is responsible for adding new currency.
+ * Adds a new unofficial currency.
  *
  * @internal
  */
-final class AddCurrencyHandler extends AbstractCurrencyHandler implements AddCurrencyHandlerInterface
+final class AddUnofficialCurrencyHandler extends AbstractCurrencyHandler implements AddUnofficialCurrencyHandlerInterface
 {
-    /**
-     * @var LocaleRepository
-     */
-    private $localeRepoCLDR;
-
     /**
      * @var Language
      */
     private $defaultLanguage;
 
     /**
-     * @param LocaleRepository $localeRepoCLDR
-     * @param Language $defaultLanguage
+     * @var CurrencyCommandValidator
      */
-    public function __construct(LocaleRepository $localeRepoCLDR, $defaultLanguageId)
-    {
-        $this->localeRepoCLDR = $localeRepoCLDR;
-        $this->defaultLanguage = new Language((int) $defaultLanguageId);
+    private $validator;
+
+    /**
+     * @param LocaleRepository $localeRepoCLDR
+     * @param LanguageInterface[] $languages
+     * @param CurrencyCommandValidator $validator
+     */
+    public function __construct(
+        LocaleRepository $localeRepoCLDR,
+        array $languages,
+        CurrencyCommandValidator $validator
+    ) {
+        parent::__construct($localeRepoCLDR, $languages);
+        $this->validator = $validator;
     }
 
     /**
@@ -69,29 +73,34 @@ final class AddCurrencyHandler extends AbstractCurrencyHandler implements AddCur
      *
      * @throws CurrencyException
      */
-    public function handle(AddCurrencyCommand $command)
+    public function handle(AddUnofficialCurrencyCommand $command)
     {
-        $this->assertCurrencyWithIsoCodeDoesNotExist($command->getIsoCode()->getValue());
+        $this->validator->assertCurrencyIsNotInReference($command->getIsoCode()->getValue());
+        $this->validator->assertCurrencyIsNotAvailableInDatabase($command->getIsoCode()->getValue());
 
         try {
             $entity = new Currency();
 
             $entity->iso_code = $command->getIsoCode()->getValue();
             $entity->active = $command->isEnabled();
+            $entity->unofficial = true;
             $entity->conversion_rate = $command->getExchangeRate()->getValue();
-            // CLDR locale give us the CLDR reference specification
-            $cldrLocale = $this->localeRepoCLDR->getLocale($this->defaultLanguage->getLocale());
-            // CLDR currency gives data from CLDR reference, for the given language
-            $cldrCurrency = $cldrLocale->getCurrency($entity->iso_code);
-            if (!empty($cldrCurrency)) {
-                // The currency may not be declared in the locale, eg with custom iso code
-                $entity->precision = (int) $cldrCurrency->getDecimalDigits();
-                $entity->numeric_iso_code = $cldrCurrency->getNumericIsoCode();
+            $entity->numeric_iso_code = null;
+            if (null !== $command->getPrecision()) {
+                $entity->precision = $command->getPrecision()->getValue();
             }
 
-            $entity->refreshLocalizedCurrencyData(Language::getLanguages(), $this->localeRepoCLDR);
+            if (!empty($command->getLocalizedNames())) {
+                $entity->setLocalizedNames($command->getLocalizedNames());
+            }
+            if (!empty($command->getLocalizedSymbols())) {
+                $entity->setLocalizedSymbols($command->getLocalizedSymbols());
+            }
 
-            if (false === $entity->add()) {
+            $this->refreshLocalizedData($entity);
+
+            //IMPORTANT: specify that we want to save null values
+            if (false === $entity->add(true, true)) {
                 throw new CannotCreateCurrencyException('Failed to create new currency');
             }
 
@@ -102,23 +111,5 @@ final class AddCurrencyHandler extends AbstractCurrencyHandler implements AddCur
         }
 
         return new CurrencyId((int) $entity->id);
-    }
-
-    /**
-     * @param string $isoCode
-     *
-     * @throws CurrencyConstraintException
-     */
-    private function assertCurrencyWithIsoCodeDoesNotExist($isoCode)
-    {
-        if (Currency::exists($isoCode)) {
-            throw new CurrencyConstraintException(
-                sprintf(
-                    'Currency with iso code "%s" already exist and cannot be created',
-                    $isoCode
-                ),
-                CurrencyConstraintException::CURRENCY_ALREADY_EXISTS
-            );
-        }
     }
 }

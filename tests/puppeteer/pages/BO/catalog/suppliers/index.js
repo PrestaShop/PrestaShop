@@ -134,6 +134,20 @@ module.exports = class Suppliers extends BOBasePage {
     return false;
   }
 
+  /**
+   * get text from a column
+   * @param row, row in table
+   * @param column, which column
+   * @return {Promise<textContent>}
+   */
+  async getTextColumnFromTableSupplier(row, column) {
+    return this.getTextContent(
+      this.tableColumn
+        .replace('%ROW', row)
+        .replace('%COLUMN', column),
+    );
+  }
+
   /* Reset Methods */
   /**
    * Reset filters in table
@@ -146,12 +160,20 @@ module.exports = class Suppliers extends BOBasePage {
   }
 
   /**
+   * get number of elements in grid
+   * @return {Promise<integer>}
+   */
+  async getNumberOfElementInGrid() {
+    return this.getNumberFromText(this.gridHeaderTitle);
+  }
+
+  /**
    * Reset Filter And get number of elements in list
    * @return {Promise<integer>}
    */
   async resetAndGetNumberOfLines() {
     await this.resetFilter();
-    return this.getNumberFromText(this.gridHeaderTitle);
+    return this.getNumberOfElementInGrid();
   }
 
   /* filter Methods */

@@ -149,8 +149,7 @@ class ControllerTest extends TestCase
 
     protected function declareRequiredConstants()
     {
-        $configDirectory = __DIR__ . '/../../../app/config';
-        $configuration = require_once $configDirectory . '/parameters.php';
+        $configuration = require_once _PS_CACHE_DIR_ . 'appParameters.php';
 
         if (defined('_PS_BO_ALL_THEMES_DIR_')) {
             return;

@@ -263,3 +263,20 @@ services:
             - '@prestashop.core.query.doctrine_search_criteria_applicator'
             - "@=service('prestashop.adapter.legacy.context').getContext().language.id"
             - "@=service('prestashop.adapter.shop.context').getContextListShopID()"
+
+    prestashop.core.grid.query_builder.tax_rules_group:
+      class: 'PrestaShop\PrestaShop\Core\Grid\Query\TaxRulesGroupQueryBuilder'
+      parent: 'prestashop.core.grid.abstract_query_builder'
+      arguments:
+        - '@prestashop.core.query.doctrine_search_criteria_applicator'
+        - "@=service('prestashop.adapter.shop.context').getContextListShopID()"
+      public: true
+
+    prestashop.core.grid.query_builder.address:
+      class: 'PrestaShop\PrestaShop\Core\Grid\Query\AddressQueryBuilder'
+      parent: 'prestashop.core.grid.abstract_query_builder'
+      public: true
+      arguments:
+        - '@prestashop.core.query.doctrine_search_criteria_applicator'
+        - "@=service('prestashop.adapter.legacy.context').getContext().language.id"
+        - '@=service("prestashop.adapter.shop.context").getContextListShopID()'

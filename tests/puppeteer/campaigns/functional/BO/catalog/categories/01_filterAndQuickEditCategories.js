@@ -55,127 +55,43 @@ describe('Filter And Quick Edit Categories', async () => {
   });
   // 1 : Filter Categories with all inputs and selects in grid table
   describe('Filter Categories', async () => {
-    it('should filter by Id \'9\'', async function () {
-      await this.pageObjects.categoriesPage.filterCategories(
-        'input',
-        'id_category',
-        Categories.art.id,
-      );
-      const numberOfCategoriesAfterFilter = await this.pageObjects.categoriesPage.getNumberFromText(
-        this.pageObjects.categoriesPage.categoryGridTitle);
-      await expect(numberOfCategoriesAfterFilter).to.be.at.most(numberOfCategories);
-      /* eslint-disable no-await-in-loop */
-      for (let i = 1; i <= numberOfCategoriesAfterFilter; i++) {
-        const textColumn = await this.pageObjects.categoriesPage.getTextContent(
-          this.pageObjects.categoriesPage.categoriesListTableColumn.replace('%ROW', i).replace(
-            '%COLUMN',
-            'id_category'),
+    const tests = [
+      {args: {filterType: 'input', filterBy: 'id_category', filterValue: Categories.art.id}},
+      {args: {filterType: 'input', filterBy: 'name', filterValue: Categories.accessories.name}},
+      {args: {filterType: 'input', filterBy: 'description', filterValue: Categories.accessories.description}},
+      {args: {filterType: 'input', filterBy: 'position', filterValue: Categories.art.position}},
+      {
+        args: {filterType: 'select', filterBy: 'active', filterValue: Categories.accessories.displayed},
+        expected: 'check',
+      },
+    ];
+
+    tests.forEach((test) => {
+      it(`should filter by ${test.args.filterBy} '${test.args.filterValue}'`, async function () {
+        await this.pageObjects.categoriesPage.filterCategories(
+          test.args.filterType,
+          test.args.filterBy,
+          test.args.filterValue,
         );
-        await expect(textColumn).to.contains(Categories.art.id);
-      }
-      /* eslint-enable no-await-in-loop */
-    });
+        const numberOfCategoriesAfterFilter = await this.pageObjects.categoriesPage.getNumberOfElementInGrid();
+        await expect(numberOfCategoriesAfterFilter).to.be.at.most(numberOfCategories);
+        for (let i = 1; i <= numberOfCategoriesAfterFilter; i++) {
+          const textColumn = await this.pageObjects.categoriesPage.getTextColumnFromTableCategories(
+            i,
+            test.args.filterBy,
+          );
+          if (test.expected !== undefined) {
+            await expect(textColumn).to.contains(test.expected);
+          } else {
+            await expect(textColumn).to.contains(test.args.filterValue);
+          }
+        }
+      });
 
-    it('should reset all filters', async function () {
-      const numberOfCategoriesAfterReset = await this.pageObjects.categoriesPage.resetAndGetNumberOfLines();
-      await expect(numberOfCategoriesAfterReset).to.equal(numberOfCategories);
-    });
-
-    it('should filter by Name \'Accessories\'', async function () {
-      await this.pageObjects.categoriesPage.filterCategories(
-        'input',
-        'name',
-        Categories.accessories.name,
-      );
-      const numberOfCategoriesAfterFilter = await this.pageObjects.categoriesPage.getNumberFromText(
-        this.pageObjects.categoriesPage.categoryGridTitle);
-      await expect(numberOfCategoriesAfterFilter).to.be.at.most(numberOfCategories);
-      /* eslint-disable no-await-in-loop */
-      for (let i = 1; i <= numberOfCategoriesAfterFilter; i++) {
-        const textColumn = await this.pageObjects.categoriesPage.getTextContent(
-          this.pageObjects.categoriesPage.categoriesListTableColumn.replace('%ROW', i).replace('%COLUMN', 'name'),
-        );
-        await expect(textColumn).to.contains(Categories.accessories.name);
-      }
-      /* eslint-enable no-await-in-loop */
-    });
-
-    it('should reset all filters', async function () {
-      const numberOfCategoriesAfterReset = await this.pageObjects.categoriesPage.resetAndGetNumberOfLines();
-      await expect(numberOfCategoriesAfterReset).to.equal(numberOfCategories);
-    });
-
-    it('should filter by Description', async function () {
-      await this.pageObjects.categoriesPage.filterCategories(
-        'input',
-        'description',
-        Categories.accessories.description,
-      );
-      const numberOfCategoriesAfterFilter = await this.pageObjects.categoriesPage.getNumberFromText(
-        this.pageObjects.categoriesPage.categoryGridTitle);
-      await expect(numberOfCategoriesAfterFilter).to.be.at.most(numberOfCategories);
-      /* eslint-disable no-await-in-loop */
-      for (let i = 1; i <= numberOfCategoriesAfterFilter; i++) {
-        const textColumn = await this.pageObjects.categoriesPage.getTextContent(
-          this.pageObjects.categoriesPage.categoriesListTableColumn
-            .replace('%ROW', i).replace('%COLUMN', 'description'),
-        );
-        await expect(textColumn).to.contains(Categories.accessories.description);
-      }
-      /* eslint-enable no-await-in-loop */
-    });
-
-    it('should reset all filters', async function () {
-      const numberOfCategoriesAfterReset = await this.pageObjects.categoriesPage.resetAndGetNumberOfLines();
-      await expect(numberOfCategoriesAfterReset).to.equal(numberOfCategories);
-    });
-
-    it('should filter by Position \'3\'', async function () {
-      await this.pageObjects.categoriesPage.filterCategories(
-        'input',
-        'position',
-        Categories.art.position,
-      );
-      const numberOfCategoriesAfterFilter = await this.pageObjects.categoriesPage.getNumberFromText(
-        this.pageObjects.categoriesPage.categoryGridTitle);
-      await expect(numberOfCategoriesAfterFilter).to.be.at.most(numberOfCategories);
-      /* eslint-disable no-await-in-loop */
-      for (let i = 1; i <= numberOfCategoriesAfterFilter; i++) {
-        const textColumn = await this.pageObjects.categoriesPage.getTextContent(
-          this.pageObjects.categoriesPage.categoriesListTableColumn.replace('%ROW', i).replace('%COLUMN', 'position'),
-        );
-        await expect(textColumn).to.contains(Categories.art.position);
-      }
-      /* eslint-enable no-await-in-loop */
-    });
-
-    it('should reset all filters', async function () {
-      const numberOfCategoriesAfterReset = await this.pageObjects.categoriesPage.resetAndGetNumberOfLines();
-      await expect(numberOfCategoriesAfterReset).to.equal(numberOfCategories);
-    });
-
-    it('should filter by Displayed \'Yes\'', async function () {
-      await this.pageObjects.categoriesPage.filterCategories(
-        'select',
-        'active',
-        Categories.art.displayed,
-      );
-      const numberOfCategoriesAfterFilter = await this.pageObjects.categoriesPage.getNumberFromText(
-        this.pageObjects.categoriesPage.categoryGridTitle);
-      await expect(numberOfCategoriesAfterFilter).to.be.at.most(numberOfCategories);
-      /* eslint-disable no-await-in-loop */
-      for (let i = 1; i <= numberOfCategoriesAfterFilter; i++) {
-        const textColumn = await this.pageObjects.categoriesPage.getTextContent(
-          this.pageObjects.categoriesPage.categoriesListTableColumn.replace('%ROW', i).replace('%COLUMN', 'active'),
-        );
-        await expect(textColumn).to.contains('check');
-      }
-      /* eslint-enable no-await-in-loop */
-    });
-
-    it('should reset all filters', async function () {
-      const numberOfCategoriesAfterReset = await this.pageObjects.categoriesPage.resetAndGetNumberOfLines();
-      await expect(numberOfCategoriesAfterReset).to.equal(numberOfCategories);
+      it('should reset all filters', async function () {
+        const numberOfCategoriesAfterReset = await this.pageObjects.categoriesPage.resetAndGetNumberOfLines();
+        await expect(numberOfCategoriesAfterReset).to.equal(numberOfCategories);
+      });
     });
   });
   // 2 : Editing categories from grid table
@@ -187,46 +103,29 @@ describe('Filter And Quick Edit Categories', async () => {
         'name',
         Categories.art.name,
       );
-      const numberOfCategoriesAfterFilter = await this.pageObjects.categoriesPage.getNumberFromText(
-        this.pageObjects.categoriesPage.categoryGridTitle);
+      const numberOfCategoriesAfterFilter = await this.pageObjects.categoriesPage.getNumberOfElementInGrid();
       await expect(numberOfCategoriesAfterFilter).to.be.at.above(0);
     });
-
-    it('should disable the Category', async function () {
-      const isActionPerformed = await this.pageObjects.categoriesPage.updateToggleColumnValue(
-        '1',
-        'active',
-        false,
-      );
-      if (isActionPerformed) {
-        const resultMessage = await this.pageObjects.categoriesPage.getTextContent(
-          this.pageObjects.categoriesPage.growlDefaultMessageBloc);
-        await expect(resultMessage).to.contains(this.pageObjects.categoriesPage.successfulUpdateStatusMessage);
-      }
-      const isStatusChanged = await this.pageObjects.categoriesPage.elementVisible(
-        this.pageObjects.categoriesPage.categoriesListColumnNotValidIcon
-          .replace('%ROW', 1).replace('%COLUMN', 'active'),
-        100,
-      );
-      await expect(isStatusChanged).to.be.true;
-    });
-
-    it('should enable the Category', async function () {
-      const isActionPerformed = await this.pageObjects.categoriesPage.updateToggleColumnValue(
-        '1',
-        'active',
-      );
-      if (isActionPerformed) {
-        const resultMessage = await this.pageObjects.categoriesPage.getTextContent(
-          this.pageObjects.categoriesPage.growlDefaultMessageBloc);
-        await expect(resultMessage).to.contains(this.pageObjects.categoriesPage.successfulUpdateStatusMessage);
-      }
-      const isStatusChanged = await this.pageObjects.categoriesPage.elementVisible(
-        this.pageObjects.categoriesPage.categoriesListColumnValidIcon
-          .replace('%ROW', 1).replace('%COLUMN', 'active'),
-        100,
-      );
-      await expect(isStatusChanged).to.be.true;
+    const tests = [
+      {args: {action: 'disable', enabledValue: false}},
+      {args: {action: 'enable', enabledValue: true}},
+    ];
+    tests.forEach((test) => {
+      it(`should ${test.args.action} first Category`, async function () {
+        const isActionPerformed = await this.pageObjects.categoriesPage.updateToggleColumnValue(
+          1,
+          'active',
+          test.args.enabledValue,
+        );
+        if (isActionPerformed) {
+          const resultMessage = await this.pageObjects.categoriesPage.getTextContent(
+            this.pageObjects.categoriesPage.growlDefaultMessageBloc,
+          );
+          await expect(resultMessage).to.contains(this.pageObjects.categoriesPage.successfulUpdateStatusMessage);
+        }
+        const isStatusChanged = await this.pageObjects.categoriesPage.getToggleColumnValue(1, 'active');
+        await expect(isStatusChanged).to.be.equal(test.args.enabledValue);
+      });
     });
 
     it('should reset all filters', async function () {

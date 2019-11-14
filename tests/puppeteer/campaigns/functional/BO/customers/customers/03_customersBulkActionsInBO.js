@@ -14,8 +14,8 @@ const CustomerFaker = require('@data/faker/customer');
 let browser;
 let page;
 let numberOfCustomers = 0;
-let firstCustomerData;
-let secondCustomerData;
+const firstCustomerData = new CustomerFaker({firstName: 'todelete'});
+const secondCustomerData = new CustomerFaker({firstName: 'todelete'});
 
 // Init objects needed
 const init = async function () {
@@ -35,8 +35,6 @@ describe('Create Customers, Then disable / Enable and Delete with Bulk actions',
     browser = await helper.createBrowser();
     page = await helper.newTab(browser);
     this.pageObjects = await init();
-    firstCustomerData = await (new CustomerFaker({firstName: 'todelete'}));
-    secondCustomerData = await (new CustomerFaker({firstName: 'todelete'}));
   });
   after(async () => {
     await helper.closeBrowser(browser);
@@ -59,34 +57,24 @@ describe('Create Customers, Then disable / Enable and Delete with Bulk actions',
   });
   // 1 : Create 2 customers In BO
   describe('Create  2 customers in BO', async () => {
-    it('should go to add new customer page', async function () {
-      await this.pageObjects.customersPage.goToAddNewCustomerPage();
-      const pageTitle = await this.pageObjects.addCustomerPage.getPageTitle();
-      await expect(pageTitle).to.contains(this.pageObjects.addCustomerPage.pageTitleCreate);
-    });
+    const tests = [
+      {args: {customerToCreate: firstCustomerData}},
+      {args: {customerToCreate: secondCustomerData}},
+    ];
 
-    it('should create first customer and check result', async function () {
-      const textResult = await this.pageObjects.addCustomerPage.createEditCustomer(firstCustomerData);
-      await expect(textResult).to.equal(this.pageObjects.customersPage.successfulCreationMessage);
-      const numberOfCustomersAfterCreation = await this.pageObjects.customersPage.getNumberFromText(
-        this.pageObjects.customersPage.customerGridTitle,
-      );
-      await expect(numberOfCustomersAfterCreation).to.be.equal(numberOfCustomers + 1);
-    });
+    tests.forEach((test, index) => {
+      it('should go to add new customer page', async function () {
+        await this.pageObjects.customersPage.goToAddNewCustomerPage();
+        const pageTitle = await this.pageObjects.addCustomerPage.getPageTitle();
+        await expect(pageTitle).to.contains(this.pageObjects.addCustomerPage.pageTitleCreate);
+      });
 
-    it('should go to add new customer page', async function () {
-      await this.pageObjects.customersPage.goToAddNewCustomerPage();
-      const pageTitle = await this.pageObjects.addCustomerPage.getPageTitle();
-      await expect(pageTitle).to.contains(this.pageObjects.addCustomerPage.pageTitleCreate);
-    });
-
-    it('should create second customer and check result', async function () {
-      const textResult = await this.pageObjects.addCustomerPage.createEditCustomer(secondCustomerData);
-      await expect(textResult).to.equal(this.pageObjects.customersPage.successfulCreationMessage);
-      const numberOfCustomersAfterCreation = await this.pageObjects.customersPage.getNumberFromText(
-        this.pageObjects.customersPage.customerGridTitle,
-      );
-      await expect(numberOfCustomersAfterCreation).to.be.equal(numberOfCustomers + 2);
+      it('should create customer and check result', async function () {
+        const textResult = await this.pageObjects.addCustomerPage.createEditCustomer(test.args.customerToCreate);
+        await expect(textResult).to.equal(this.pageObjects.customersPage.successfulCreationMessage);
+        const numberOfCustomersAfterCreation = await this.pageObjects.customersPage.getNumberOfElementInGrid();
+        await expect(numberOfCustomersAfterCreation).to.be.equal(numberOfCustomers + index + 1);
+      });
     });
   });
   // 2 : Enable/Disable customers created with bulk actions
@@ -97,44 +85,27 @@ describe('Create Customers, Then disable / Enable and Delete with Bulk actions',
         'firstname',
         'todelete',
       );
-      const textResult = await this.pageObjects.customersPage.getTextContent(
-        this.pageObjects.customersPage.customersListTableColumn.replace('%ROW', '1').replace('%COLUMN', 'firstname'),
-      );
+      const textResult = await this.pageObjects.customersPage.getTextColumnFromTableCustomers(1, 'firstname');
       await expect(textResult).to.contains('todelete');
     });
 
-    it('should disable customers with Bulk Actions and check Result', async function () {
-      const disableTextResult = await this.pageObjects.customersPage.changeCustomersEnabledColumnBulkActions(false);
-      await expect(disableTextResult).to.be.equal(this.pageObjects.customersPage.successfulUpdateMessage);
-      const numberOfCustomersInGrid = await this.pageObjects.customersPage.getNumberFromText(
-        this.pageObjects.customersPage.customerGridTitle,
-      );
-      await expect(numberOfCustomersInGrid).to.be.at.most(numberOfCustomers);
-      /* eslint-disable no-await-in-loop */
-      for (let i = 1; i <= numberOfCustomersInGrid; i++) {
-        const textColumn = await this.pageObjects.customersPage.getTextContent(
-          this.pageObjects.customersPage.customersListTableColumn.replace('%ROW', i).replace('%COLUMN', 'active'),
+    const tests = [
+      {args: {action: 'disable', enabledValue: false}, expected: 'clear'},
+      {args: {action: 'enable', enabledValue: true}, expected: 'check'},
+    ];
+    tests.forEach((test) => {
+      it(`should ${test.args.action} customers with bulk actions and check Result`, async function () {
+        const textResult = await this.pageObjects.customersPage.changeCustomersEnabledColumnBulkActions(
+          test.args.enabledValue,
         );
-        await expect(textColumn).to.contains('clear');
-      }
-      /* eslint-enable no-await-in-loop */
-    });
-
-    it('should enable customers with Bulk Actions and check Result', async function () {
-      const enableTextResult = await this.pageObjects.customersPage.changeCustomersEnabledColumnBulkActions(true);
-      await expect(enableTextResult).to.be.equal(this.pageObjects.customersPage.successfulUpdateMessage);
-      const numberOfCustomersInGrid = await this.pageObjects.customersPage.getNumberFromText(
-        this.pageObjects.customersPage.customerGridTitle,
-      );
-      await expect(numberOfCustomersInGrid).to.be.at.most(numberOfCustomers);
-      /* eslint-disable no-await-in-loop */
-      for (let i = 1; i <= numberOfCustomersInGrid; i++) {
-        const textColumn = await this.pageObjects.customersPage.getTextContent(
-          this.pageObjects.customersPage.customersListTableColumn.replace('%ROW', i).replace('%COLUMN', 'active'),
-        );
-        await expect(textColumn).to.contains('check');
-      }
-      /* eslint-enable no-await-in-loop */
+        await expect(textResult).to.be.equal(this.pageObjects.customersPage.successfulUpdateMessage);
+        const numberOfCustomersInGrid = await this.pageObjects.customersPage.getNumberOfElementInGrid();
+        await expect(numberOfCustomersInGrid).to.be.at.most(numberOfCustomers);
+        for (let i = 1; i <= numberOfCustomersInGrid; i++) {
+          const textColumn = await this.pageObjects.customersPage.getTextColumnFromTableCustomers(1, 'active');
+          await expect(textColumn).to.contains(test.expected);
+        }
+      });
     });
   });
   // 3 : Delete Customers created with bulk actions
@@ -145,9 +116,7 @@ describe('Create Customers, Then disable / Enable and Delete with Bulk actions',
         'firstname',
         'todelete',
       );
-      const textResult = await this.pageObjects.customersPage.getTextContent(
-        this.pageObjects.customersPage.customersListTableColumn.replace('%ROW', '1').replace('%COLUMN', 'firstname'),
-      );
+      const textResult = await this.pageObjects.customersPage.getTextColumnFromTableCustomers(1, 'firstname');
       await expect(textResult).to.contains('todelete');
     });
 

@@ -31,3 +31,15 @@ services:
     tags:
       - name: tactician.handler
         command: 'PrestaShop\PrestaShop\Core\Domain\Address\Query\GetManufacturerAddressForEditing'
+
+  prestashop.adapter.address.query_handler.get_required_fields_for_address:
+    class: 'PrestaShop\PrestaShop\Adapter\Address\QueryHandler\GetRequiredFieldsForAddressHandler'
+    tags:
+      - name: tactician.handler
+        command: 'PrestaShop\PrestaShop\Core\Domain\Address\Query\GetRequiredFieldsForAddress'
+
+  prestashop.adapter.address.command_handler.set_required_fields_for_address:
+    class: 'PrestaShop\PrestaShop\Adapter\Address\CommandHandler\SetRequiredFieldsForAddressHandler'
+    tags:
+      - name: tactician.handler
+        command: 'PrestaShop\PrestaShop\Core\Domain\Address\Command\SetRequiredFieldsForAddressCommand'

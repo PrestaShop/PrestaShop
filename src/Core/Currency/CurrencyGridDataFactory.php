@@ -31,6 +31,7 @@ use PrestaShop\PrestaShop\Core\Grid\Data\GridData;
 use PrestaShop\PrestaShop\Core\Grid\Record\RecordCollection;
 use PrestaShop\PrestaShop\Core\Grid\Record\RecordCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Class CurrencyGridDataFactory is responsible for providing modified currency list grid data.
@@ -43,14 +44,22 @@ final class CurrencyGridDataFactory implements GridDataFactoryInterface
     private $gridDataFactory;
 
     /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
+    /**
      * CurrencyGridDataFactory constructor.
      *
      * @param GridDataFactoryInterface $gridDataFactory
+     * @param TranslatorInterface $translator
      */
     public function __construct(
-        GridDataFactoryInterface $gridDataFactory
+        GridDataFactoryInterface $gridDataFactory,
+        TranslatorInterface $translator
     ) {
         $this->gridDataFactory = $gridDataFactory;
+        $this->translator = $translator;
     }
 
     /**
@@ -81,10 +90,37 @@ final class CurrencyGridDataFactory implements GridDataFactoryInterface
         $result = [];
         foreach ($records as $key => $record) {
             $result[$key] = $record;
-            $result[$key]['currency'] = ucfirst($result[$key]['name']);
-            $result[$key]['conversion_rate'] = (float) $result[$key]['conversion_rate'];
+            $result[$key]['currency'] = $this->buildCurrencyName($result[$key]);
         }
 
         return new RecordCollection($result);
+    }
+
+    /**
+     * @param array $currency
+     *
+     * @return string
+     */
+    private function buildCurrencyName(array $currency)
+    {
+        $currencyName = mb_ucfirst($currency['name']);
+
+        if (!empty($currency['unofficial'])) {
+            return sprintf(
+                '%s %s',
+                $currencyName,
+                '<i class="material-icons unofficial">person</i>'
+            );
+        }
+
+        if (!empty($currency['modified'])) {
+            return sprintf(
+                '%s (%s)',
+                $currencyName,
+                $this->translator->trans('Edited', [], 'Admin.International.Feature')
+            );
+        }
+
+        return $currencyName;
     }
 }

@@ -126,7 +126,7 @@ class HookExtension extends \Twig_Extension
         ob_start();
         $renderedHook = $this->hookDispatcher->dispatchRenderingWithParameters($hookName, $hookParameters);
         $renderedHook->outputContent();
-        ob_clean();
+        ob_end_clean();
 
         $render = [];
         foreach ($renderedHook->getContent() as $module => $hookRender) {

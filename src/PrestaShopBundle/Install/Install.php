@@ -102,10 +102,10 @@ class Install extends AbstractInstall
         static $logger = null;
 
         if (null === $logger) {
-            $cacheDir = _PS_ROOT_DIR_ . '/var/logs/';
-            $file = $cacheDir . (_PS_MODE_DEV_ ? 'dev' : 'prod') . '_' . @date('Ymd') . '_installation.log';
             $logger = new FileLogger();
-            $logger->setFilename($file);
+            $logger->setFilename(
+                _PS_ROOT_DIR_ . '/var/logs/' . _PS_ENV_ . '_' . @date('Ymd') . '_installation.log'
+            );
             $this->logger = $logger;
         }
 
@@ -864,20 +864,24 @@ class Install extends AbstractInstall
             $modules = array(
                 'contactform',
                 'dashactivity',
-                'dashtrends',
                 'dashgoals',
                 'dashproducts',
+                'dashtrends',
                 'graphnvd3',
                 'gridhtml',
                 'gsitemap',
+                'pagesnotfound',
+                'productcomments',
                 'ps_banner',
                 'ps_categorytree',
                 'ps_checkpayment',
                 'ps_contactinfo',
+                'ps_crossselling',
                 'ps_currencyselector',
                 'ps_customeraccountlinks',
                 'ps_customersignin',
                 'ps_customtext',
+                'ps_dataprivacy',
                 'ps_emailsubscription',
                 'ps_facetedsearch',
                 'ps_faviconnotificationbo',
@@ -892,7 +896,6 @@ class Install extends AbstractInstall
                 'ps_socialfollow',
                 'ps_themecusto',
                 'ps_wirepayment',
-                'pagesnotfound',
                 'sekeywords',
                 'statsbestcategories',
                 'statsbestcustomers',
@@ -969,7 +972,6 @@ class Install extends AbstractInstall
             'homeslider',
             'onboarding',
             'productscategory',
-            'productcomments',
             'producttooltip',
             'sendtoafriend',
             'socialsharing',

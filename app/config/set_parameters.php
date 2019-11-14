@@ -52,9 +52,6 @@ if (!defined('_PS_IN_TEST_') && isset($_SERVER['argv'])) {
 
 if ($container instanceof \Symfony\Component\DependencyInjection\Container) {
     foreach ($parameters['parameters'] as $key => $value) {
-        if (defined('_PS_IN_TEST_') && $key === 'database_name') {
-            $value = 'test_'.$value;
-        }
         $container->setParameter($key, $value);
     }
 
