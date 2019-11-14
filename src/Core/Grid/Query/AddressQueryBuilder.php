@@ -114,7 +114,8 @@ final class AddressQueryBuilder extends AbstractDoctrineQueryBuilder
         $qb = $this->connection
             ->createQueryBuilder()
             ->from($this->dbPrefix . 'address', 'a')
-            ->where('a.`id_customer` != 0');
+            ->where('a.`id_customer` != 0')
+            ->andWhere('a.`deleted` = 0');
 
         $qb->leftJoin(
             'a',
