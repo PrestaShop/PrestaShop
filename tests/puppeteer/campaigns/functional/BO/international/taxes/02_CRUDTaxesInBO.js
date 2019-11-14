@@ -67,9 +67,7 @@ describe('Create, Update and Delete Tax in BO', async () => {
     it('should create Tax and check result', async function () {
       const textResult = await this.pageObjects.addTaxPage.createEditTax(createTaxData);
       await expect(textResult).to.equal(this.pageObjects.addTaxPage.successfulCreationMessage);
-      const numberOfTaxesAfterCreation = await this.pageObjects.addTaxPage.getNumberFromText(
-        this.pageObjects.taxesPage.gridHeaderTitle,
-      );
+      const numberOfTaxesAfterCreation = await this.pageObjects.taxesPage.getNumberOfElementInGrid();
       await expect(numberOfTaxesAfterCreation).to.be.equal(numberOfTaxes + 1);
     });
   });
@@ -90,9 +88,7 @@ describe('Create, Update and Delete Tax in BO', async () => {
         'name',
         createTaxData.name,
       );
-      const textName = await this.pageObjects.taxesPage.getTextContent(
-        this.pageObjects.taxesPage.taxesGridColumn.replace('%ROW', '1').replace('%COLUMN', 'name'),
-      );
+      const textName = await this.pageObjects.taxesPage.getTextColumnFromTableTaxes(1, 'name');
       await expect(textName).to.contains(createTaxData.name);
     });
 
@@ -102,10 +98,8 @@ describe('Create, Update and Delete Tax in BO', async () => {
         'rate',
         createTaxData.rate,
       );
-      const textName = await this.pageObjects.taxesPage.getTextContent(
-        this.pageObjects.taxesPage.taxesGridColumn.replace('%ROW', '1').replace('%COLUMN', 'rate'),
-      );
-      await expect(textName).to.contains(createTaxData.rate);
+      const textRate = await this.pageObjects.taxesPage.getTextColumnFromTableTaxes(1, 'rate');
+      await expect(textRate).to.contains(createTaxData.rate);
     });
 
     it('should go to edit tax page', async function () {
@@ -118,9 +112,7 @@ describe('Create, Update and Delete Tax in BO', async () => {
       const textResult = await this.pageObjects.addTaxPage.createEditTax(editTaxData);
       await expect(textResult).to.equal(this.pageObjects.taxesPage.successfulUpdateMessage);
       await this.pageObjects.taxesPage.resetAndGetNumberOfLines();
-      const numberOfTaxesAfterUpdate = await this.pageObjects.taxesPage.getNumberFromText(
-        this.pageObjects.taxesPage.gridHeaderTitle,
-      );
+      const numberOfTaxesAfterUpdate = await this.pageObjects.taxesPage.getNumberOfElementInGrid();
       await expect(numberOfTaxesAfterUpdate).to.be.equal(numberOfTaxes + 1);
     });
 
@@ -146,9 +138,7 @@ describe('Create, Update and Delete Tax in BO', async () => {
         'name',
         editTaxData.name,
       );
-      const textName = await this.pageObjects.taxesPage.getTextContent(
-        this.pageObjects.taxesPage.taxesGridColumn.replace('%ROW', '1').replace('%COLUMN', 'name'),
-      );
+      const textName = await this.pageObjects.taxesPage.getTextColumnFromTableTaxes(1, 'name');
       await expect(textName).to.contains(editTaxData.name);
     });
 
@@ -158,10 +148,8 @@ describe('Create, Update and Delete Tax in BO', async () => {
         'rate',
         editTaxData.rate,
       );
-      const textName = await this.pageObjects.taxesPage.getTextContent(
-        this.pageObjects.taxesPage.taxesGridColumn.replace('%ROW', '1').replace('%COLUMN', 'rate'),
-      );
-      await expect(textName).to.contains(editTaxData.rate);
+      const textRate = await this.pageObjects.taxesPage.getTextColumnFromTableTaxes(1, 'rate');
+      await expect(textRate).to.contains(editTaxData.rate);
     });
 
     it('should delete Tax', async function () {

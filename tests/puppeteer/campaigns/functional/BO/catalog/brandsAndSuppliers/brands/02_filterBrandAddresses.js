@@ -57,14 +57,11 @@ describe('Filter And Quick Edit Addresses', async () => {
   describe('Filter brands addresses', async () => {
     it('should filter by Id', async function () {
       await this.pageObjects.brandsPage.filterAddresses('input', 'id_address', demoAddresses.first.id);
-      const numberOfBrandsAddressesAfterFilter = await this.pageObjects.brandsPage.getNumberFromText(
-        this.pageObjects.brandsPage.gridHeaderTitle.replace('%TABLE', 'manufacturer_address'),
+      const numberOfBrandsAddressesAfterFilter = await this.pageObjects.brandsPage.getNumberOfElementInGrid(
+        'manufacturer_address',
       );
       await expect(numberOfBrandsAddressesAfterFilter).to.be.at.most(numberOfBrandsAddresses);
-      const textColumn = await this.pageObjects.brandsPage.getTextContent(
-        this.pageObjects.brandsPage.tableColumn.replace('%TABLE', 'manufacturer_address')
-          .replace('%ROW', 1).replace('%COLUMN', 'id_address'),
-      );
+      const textColumn = await this.pageObjects.brandsPage.getTextColumnFromTableAddresses(1, 'id_address');
       await expect(textColumn).to.contains(demoAddresses.first.id);
     });
 
@@ -77,16 +74,11 @@ describe('Filter And Quick Edit Addresses', async () => {
 
     it('should filter by brand name', async function () {
       await this.pageObjects.brandsPage.filterAddresses('input', 'name', demoAddresses.first.brand);
-      const numberOfBrandsAddressesAfterFilter = await this.pageObjects.brandsPage.getNumberFromText(
-        this.pageObjects.brandsPage.gridHeaderTitle.replace('%TABLE', 'manufacturer_address'),
+      const numberOfBrandsAddressesAfterFilter = await this.pageObjects.brandsPage.getNumberOfElementInGrid(
+        'manufacturer_address',
       );
       await expect(numberOfBrandsAddressesAfterFilter).to.be.at.most(numberOfBrandsAddresses);
-      const textColumn = await this.pageObjects.brandsPage.getTextContent(
-        this.pageObjects.brandsPage.tableColumn
-          .replace('%TABLE', 'manufacturer_address')
-          .replace('%ROW', 1)
-          .replace('%COLUMN', 'name'),
-      );
+      const textColumn = await this.pageObjects.brandsPage.getTextColumnFromTableAddresses(1, 'name');
       await expect(textColumn).to.contains(demoAddresses.first.brand);
     });
 
@@ -99,16 +91,11 @@ describe('Filter And Quick Edit Addresses', async () => {
 
     it('should filter by Manufacturer firstname', async function () {
       await this.pageObjects.brandsPage.filterAddresses('input', 'firstname', demoAddresses.first.firstName);
-      const numberOfBrandsAddressesAfterFilter = await this.pageObjects.brandsPage.getNumberFromText(
-        this.pageObjects.brandsPage.gridHeaderTitle.replace('%TABLE', 'manufacturer_address'),
+      const numberOfBrandsAddressesAfterFilter = await this.pageObjects.brandsPage.getNumberOfElementInGrid(
+        'manufacturer_address',
       );
       await expect(numberOfBrandsAddressesAfterFilter).to.be.at.most(numberOfBrandsAddresses);
-      const textColumn = await this.pageObjects.brandsPage.getTextContent(
-        this.pageObjects.brandsPage.tableColumn
-          .replace('%TABLE', 'manufacturer_address')
-          .replace('%ROW', 1)
-          .replace('%COLUMN', 'firstname'),
-      );
+      const textColumn = await this.pageObjects.brandsPage.getTextColumnFromTableAddresses(1, 'firstname');
       await expect(textColumn).to.contains(demoAddresses.first.firstName);
     });
 
@@ -121,16 +108,11 @@ describe('Filter And Quick Edit Addresses', async () => {
 
     it('should filter by Manufacturer lastname', async function () {
       await this.pageObjects.brandsPage.filterAddresses('input', 'lastname', demoAddresses.first.lastName);
-      const numberOfBrandsAddressesAfterFilter = await this.pageObjects.brandsPage.getNumberFromText(
-        this.pageObjects.brandsPage.gridHeaderTitle.replace('%TABLE', 'manufacturer_address'),
+      const numberOfBrandsAddressesAfterFilter = await this.pageObjects.brandsPage.getNumberOfElementInGrid(
+        'manufacturer_address',
       );
       await expect(numberOfBrandsAddressesAfterFilter).to.be.at.most(numberOfBrandsAddresses);
-      const textColumn = await this.pageObjects.brandsPage.getTextContent(
-        this.pageObjects.brandsPage.tableColumn
-          .replace('%TABLE', 'manufacturer_address')
-          .replace('%ROW', 1)
-          .replace('%COLUMN', 'lastname'),
-      );
+      const textColumn = await this.pageObjects.brandsPage.getTextColumnFromTableAddresses(1, 'lastname');
       await expect(textColumn).to.contains(demoAddresses.first.lastName);
     });
 
@@ -143,16 +125,11 @@ describe('Filter And Quick Edit Addresses', async () => {
 
     it('should filter by Address postal code', async function () {
       await this.pageObjects.brandsPage.filterAddresses('input', 'postcode', demoAddresses.first.postalCode);
-      const numberOfBrandsAddressesAfterFilter = await this.pageObjects.brandsPage.getNumberFromText(
-        this.pageObjects.brandsPage.gridHeaderTitle.replace('%TABLE', 'manufacturer_address'),
+      const numberOfBrandsAddressesAfterFilter = await this.pageObjects.brandsPage.getNumberOfElementInGrid(
+        'manufacturer_address',
       );
       await expect(numberOfBrandsAddressesAfterFilter).to.be.at.most(numberOfBrandsAddresses);
-      const textColumn = await this.pageObjects.brandsPage.getTextContent(
-        this.pageObjects.brandsPage.tableColumn
-          .replace('%TABLE', 'manufacturer_address')
-          .replace('%ROW', 1)
-          .replace('%COLUMN', 'postcode'),
-      );
+      const textColumn = await this.pageObjects.brandsPage.getTextColumnFromTableAddresses(1, 'postcode');
       await expect(textColumn).to.contains(demoAddresses.first.postalCode);
     });
 
@@ -165,16 +142,11 @@ describe('Filter And Quick Edit Addresses', async () => {
 
     it('should filter by City', async function () {
       await this.pageObjects.brandsPage.filterAddresses('input', 'city', demoAddresses.first.city);
-      const numberOfBrandsAddressesAfterFilter = await this.pageObjects.brandsPage.getNumberFromText(
-        this.pageObjects.brandsPage.gridHeaderTitle.replace('%TABLE', 'manufacturer_address'),
+      const numberOfBrandsAddressesAfterFilter = await this.pageObjects.brandsPage.getNumberOfElementInGrid(
+        'manufacturer_address',
       );
       await expect(numberOfBrandsAddressesAfterFilter).to.be.at.most(numberOfBrandsAddresses);
-      const textColumn = await this.pageObjects.brandsPage.getTextContent(
-        this.pageObjects.brandsPage.tableColumn
-          .replace('%TABLE', 'manufacturer_address')
-          .replace('%ROW', 1)
-          .replace('%COLUMN', 'city'),
-      );
+      const textColumn = await this.pageObjects.brandsPage.getTextColumnFromTableAddresses(1, 'city');
       await expect(textColumn).to.contains(demoAddresses.first.city);
     });
 
@@ -187,16 +159,11 @@ describe('Filter And Quick Edit Addresses', async () => {
 
     it('should filter by Country', async function () {
       await this.pageObjects.brandsPage.filterAddresses('select', 'country', demoAddresses.first.country);
-      const numberOfBrandsAddressesAfterFilter = await this.pageObjects.brandsPage.getNumberFromText(
-        this.pageObjects.brandsPage.gridHeaderTitle.replace('%TABLE', 'manufacturer_address'),
+      const numberOfBrandsAddressesAfterFilter = await this.pageObjects.brandsPage.getNumberOfElementInGrid(
+        'manufacturer_address',
       );
       await expect(numberOfBrandsAddressesAfterFilter).to.be.at.most(numberOfBrandsAddresses);
-      const textColumn = await this.pageObjects.brandsPage.getTextContent(
-        this.pageObjects.brandsPage.tableColumn
-          .replace('%TABLE', 'manufacturer_address')
-          .replace('%ROW', 1)
-          .replace('%COLUMN', 'country'),
-      );
+      const textColumn = await this.pageObjects.brandsPage.getTextColumnFromTableAddresses(1, 'country');
       await expect(textColumn).to.contains(demoAddresses.first.country);
     });
 

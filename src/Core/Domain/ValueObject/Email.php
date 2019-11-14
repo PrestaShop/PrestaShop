@@ -74,7 +74,7 @@ class Email
      */
     public function isEqualTo(Email $email)
     {
-        return $email->getValue() === $this->getValue();
+        return strtolower($email->getValue()) === strtolower($this->getValue());
     }
 
     /**

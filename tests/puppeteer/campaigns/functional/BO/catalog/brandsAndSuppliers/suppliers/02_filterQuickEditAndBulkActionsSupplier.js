@@ -106,16 +106,10 @@ describe('Create, Update and Delete Brand and Address', async () => {
         firstSupplierData.name,
       );
       // Check number od suppliers
-      const numberOfSuppliersAfterFilter = await this.pageObjects.suppliersPage.getNumberFromText(
-        this.pageObjects.suppliersPage.gridHeaderTitle,
-      );
+      const numberOfSuppliersAfterFilter = await this.pageObjects.suppliersPage.getNumberOfElementInGrid();
       await expect(numberOfSuppliersAfterFilter).to.be.at.most(numberOfSuppliers);
       // check text column of first row after filter
-      const textColumn = await this.pageObjects.suppliersPage.getTextContent(
-        this.pageObjects.suppliersPage.tableColumn
-          .replace('%ROW', 1)
-          .replace('%COLUMN', 'name'),
-      );
+      const textColumn = await this.pageObjects.suppliersPage.getTextColumnFromTableSupplier(1, 'name');
       await expect(textColumn).to.contains(firstSupplierData.name);
     });
 
@@ -131,16 +125,10 @@ describe('Create, Update and Delete Brand and Address', async () => {
         firstSupplierData.products.toString(),
       );
       // Check number od suppliers
-      const numberOfSuppliersAfterFilter = await this.pageObjects.suppliersPage.getNumberFromText(
-        this.pageObjects.suppliersPage.gridHeaderTitle,
-      );
+      const numberOfSuppliersAfterFilter = await this.pageObjects.suppliersPage.getNumberOfElementInGrid();
       await expect(numberOfSuppliersAfterFilter).to.be.at.most(numberOfSuppliers);
       // check text column of first row after filter
-      const textColumn = await this.pageObjects.suppliersPage.getTextContent(
-        this.pageObjects.suppliersPage.tableColumn
-          .replace('%ROW', 1)
-          .replace('%COLUMN', 'products_count'),
-      );
+      const textColumn = await this.pageObjects.suppliersPage.getTextColumnFromTableSupplier(1, 'products_count');
       await expect(textColumn).to.contains(firstSupplierData.products.toString());
     });
 
@@ -152,16 +140,10 @@ describe('Create, Update and Delete Brand and Address', async () => {
     it('should filter supplier by enabled', async function () {
       await this.pageObjects.suppliersPage.filterSupplierEnabled(firstSupplierData.enabled);
       // Check number od suppliers
-      const numberOfSuppliersAfterFilter = await this.pageObjects.suppliersPage.getNumberFromText(
-        this.pageObjects.suppliersPage.gridHeaderTitle,
-      );
+      const numberOfSuppliersAfterFilter = await this.pageObjects.suppliersPage.getNumberOfElementInGrid();
       await expect(numberOfSuppliersAfterFilter).to.be.at.most(numberOfSuppliers);
       // check text column of first row after filter
-      const textColumn = await this.pageObjects.suppliersPage.getTextContent(
-        this.pageObjects.suppliersPage.tableColumn
-          .replace('%ROW', 1)
-          .replace('%COLUMN', 'active'),
-      );
+      const textColumn = await this.pageObjects.suppliersPage.getTextColumnFromTableSupplier(1, 'active');
       await expect(textColumn).to.contains('check');
     });
 
@@ -179,16 +161,10 @@ describe('Create, Update and Delete Brand and Address', async () => {
         firstSupplierData.name,
       );
       // Check number od suppliers
-      const numberOfSuppliersAfterFilter = await this.pageObjects.suppliersPage.getNumberFromText(
-        this.pageObjects.suppliersPage.gridHeaderTitle,
-      );
+      const numberOfSuppliersAfterFilter = await this.pageObjects.suppliersPage.getNumberOfElementInGrid();
       await expect(numberOfSuppliersAfterFilter).to.be.at.most(numberOfSuppliers);
       // check text column of first row after filter
-      const textColumn = await this.pageObjects.suppliersPage.getTextContent(
-        this.pageObjects.suppliersPage.tableColumn
-          .replace('%ROW', 1)
-          .replace('%COLUMN', 'name'),
-      );
+      const textColumn = await this.pageObjects.suppliersPage.getTextColumnFromTableSupplier(1, 'name');
       await expect(textColumn).to.contains(firstSupplierData.name);
     });
 
@@ -200,11 +176,8 @@ describe('Create, Update and Delete Brand and Address', async () => {
         );
         await expect(resultMessage).to.contains(this.pageObjects.suppliersPage.successfulUpdateStatusMessage);
       }
-      const isStatusChanged = await this.pageObjects.suppliersPage.elementVisible(
-        this.pageObjects.suppliersPage.enableColumnNotValidIcon.replace('%ROW', 1),
-        100,
-      );
-      await expect(isStatusChanged).to.be.true;
+      const isStatusChanged = await this.pageObjects.suppliersPage.getToggleColumnValue(1);
+      await expect(isStatusChanged).to.be.false;
     });
 
     it('should enable first supplier', async function () {
@@ -215,10 +188,7 @@ describe('Create, Update and Delete Brand and Address', async () => {
         );
         await expect(resultMessage).to.contains(this.pageObjects.suppliersPage.successfulUpdateStatusMessage);
       }
-      const isStatusChanged = await this.pageObjects.suppliersPage.elementVisible(
-        this.pageObjects.suppliersPage.enableColumnValidIcon.replace('%ROW', 1),
-        100,
-      );
+      const isStatusChanged = await this.pageObjects.suppliersPage.getToggleColumnValue(1);
       await expect(isStatusChanged).to.be.true;
     });
 
@@ -233,16 +203,10 @@ describe('Create, Update and Delete Brand and Address', async () => {
       const disableTextResult = await this.pageObjects.suppliersPage.changeSuppliersEnabledColumnBulkActions(false);
       await expect(disableTextResult).to.be.equal(this.pageObjects.suppliersPage.successfulUpdateStatusMessage);
       // Check that element in grid are disabled
-      const numberOfSuppliersInGrid = await this.pageObjects.suppliersPage.getNumberFromText(
-        this.pageObjects.suppliersPage.gridHeaderTitle,
-      );
+      const numberOfSuppliersInGrid = await this.pageObjects.suppliersPage.getNumberOfElementInGrid();
       await expect(numberOfSuppliersInGrid).to.be.at.most(numberOfSuppliers);
       for (let i = 1; i <= numberOfSuppliersInGrid; i++) {
-        const textColumn = await this.pageObjects.suppliersPage.getTextContent(
-          this.pageObjects.suppliersPage.tableColumn
-            .replace('%ROW', i)
-            .replace('%COLUMN', 'active'),
-        );
+        const textColumn = await this.pageObjects.suppliersPage.getTextColumnFromTableSupplier(1, 'active');
         await expect(textColumn).to.contains('clear');
       }
     });
@@ -251,16 +215,10 @@ describe('Create, Update and Delete Brand and Address', async () => {
       const disableTextResult = await this.pageObjects.suppliersPage.changeSuppliersEnabledColumnBulkActions(true);
       await expect(disableTextResult).to.be.equal(this.pageObjects.suppliersPage.successfulUpdateStatusMessage);
       // Check that element in grid are enabled
-      const numberOfSuppliersInGrid = await this.pageObjects.suppliersPage.getNumberFromText(
-        this.pageObjects.suppliersPage.gridHeaderTitle,
-      );
+      const numberOfSuppliersInGrid = await this.pageObjects.suppliersPage.getNumberOfElementInGrid();
       await expect(numberOfSuppliersInGrid).to.be.at.most(numberOfSuppliers);
       for (let i = 1; i <= numberOfSuppliersInGrid; i++) {
-        const textColumn = await this.pageObjects.suppliersPage.getTextContent(
-          this.pageObjects.suppliersPage.tableColumn
-            .replace('%ROW', i)
-            .replace('%COLUMN', 'active'),
-        );
+        const textColumn = await this.pageObjects.suppliersPage.getTextColumnFromTableSupplier(1, 'active');
         await expect(textColumn).to.contains('check');
       }
     });

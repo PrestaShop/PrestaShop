@@ -68,9 +68,7 @@ describe('Create Taxes, Then disable / Enable and Delete with Bulk actions', asy
     it('should create first tax and check result', async function () {
       const textResult = await this.pageObjects.addTaxPage.createEditTax(firstTaxData);
       await expect(textResult).to.equal(this.pageObjects.taxesPage.successfulCreationMessage);
-      const numberOfTaxesAfterCreation = await this.pageObjects.taxesPage.getNumberFromText(
-        this.pageObjects.taxesPage.gridHeaderTitle,
-      );
+      const numberOfTaxesAfterCreation = await this.pageObjects.taxesPage.getNumberOfElementInGrid();
       await expect(numberOfTaxesAfterCreation).to.be.equal(numberOfTaxes + 1);
     });
 
@@ -83,9 +81,7 @@ describe('Create Taxes, Then disable / Enable and Delete with Bulk actions', asy
     it('should create second tax and check result', async function () {
       const textResult = await this.pageObjects.addTaxPage.createEditTax(secondTaxData);
       await expect(textResult).to.equal(this.pageObjects.taxesPage.successfulCreationMessage);
-      const numberOfTaxesAfterCreation = await this.pageObjects.taxesPage.getNumberFromText(
-        this.pageObjects.taxesPage.gridHeaderTitle,
-      );
+      const numberOfTaxesAfterCreation = await this.pageObjects.taxesPage.getNumberOfElementInGrid();
       await expect(numberOfTaxesAfterCreation).to.be.equal(numberOfTaxes + 2);
     });
   });
@@ -97,44 +93,30 @@ describe('Create Taxes, Then disable / Enable and Delete with Bulk actions', asy
         'name',
         'TVA to delete',
       );
-      const textResult = await this.pageObjects.taxesPage.getTextContent(
-        this.pageObjects.taxesPage.taxesGridColumn.replace('%ROW', '1').replace('%COLUMN', 'name'),
-      );
+      const textResult = await this.pageObjects.taxesPage.getTextColumnFromTableTaxes(1, 'name');
       await expect(textResult).to.contains('TVA to delete');
     });
 
     it('should disable Taxes with Bulk Actions and check Result', async function () {
       const disableTextResult = await this.pageObjects.taxesPage.changeTaxesEnabledColumnBulkActions(false);
       await expect(disableTextResult).to.be.equal(this.pageObjects.taxesPage.successfulUpdateStatusMessage);
-      const numberOfTaxesInGrid = await this.pageObjects.taxesPage.getNumberFromText(
-        this.pageObjects.taxesPage.gridHeaderTitle,
-      );
+      const numberOfTaxesInGrid = await this.pageObjects.taxesPage.getNumberOfElementInGrid();
       await expect(numberOfTaxesInGrid).to.be.at.most(numberOfTaxes);
-      /* eslint-disable no-await-in-loop */
       for (let i = 1; i <= numberOfTaxesInGrid; i++) {
-        const textColumn = await this.pageObjects.taxesPage.getTextContent(
-          this.pageObjects.taxesPage.taxesGridColumn.replace('%ROW', i).replace('%COLUMN', 'active'),
-        );
+        const textColumn = await this.pageObjects.taxesPage.getTextColumnFromTableTaxes(1, 'active');
         await expect(textColumn).to.contains('clear');
       }
-      /* eslint-enable no-await-in-loop */
     });
 
     it('should enable Taxes with Bulk Actions and check Result', async function () {
       const enableTextResult = await this.pageObjects.taxesPage.changeTaxesEnabledColumnBulkActions(true);
       await expect(enableTextResult).to.be.equal(this.pageObjects.taxesPage.successfulUpdateStatusMessage);
-      const numberOfTaxesInGrid = await this.pageObjects.taxesPage.getNumberFromText(
-        this.pageObjects.taxesPage.gridHeaderTitle,
-      );
+      const numberOfTaxesInGrid = await this.pageObjects.taxesPage.getNumberOfElementInGrid();
       await expect(numberOfTaxesInGrid).to.be.at.most(numberOfTaxes);
-      /* eslint-disable no-await-in-loop */
       for (let i = 1; i <= numberOfTaxesInGrid; i++) {
-        const textColumn = await this.pageObjects.taxesPage.getTextContent(
-          this.pageObjects.taxesPage.taxesGridColumn.replace('%ROW', i).replace('%COLUMN', 'active'),
-        );
+        const textColumn = await this.pageObjects.taxesPage.getTextColumnFromTableTaxes(1, 'active');
         await expect(textColumn).to.contains('check');
       }
-      /* eslint-enable no-await-in-loop */
     });
 
     it('should reset all filters', async function () {
@@ -150,9 +132,7 @@ describe('Create Taxes, Then disable / Enable and Delete with Bulk actions', asy
         'name',
         'TVA to delete',
       );
-      const textResult = await this.pageObjects.taxesPage.getTextContent(
-        this.pageObjects.taxesPage.taxesGridColumn.replace('%ROW', '1').replace('%COLUMN', 'name'),
-      );
+      const textResult = await this.pageObjects.taxesPage.getTextColumnFromTableTaxes(1, 'name');
       await expect(textResult).to.contains('TVA to delete');
     });
 

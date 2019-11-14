@@ -59,12 +59,20 @@ module.exports = class Taxes extends BOBasePage {
   }
 
   /**
+   * get number of elements in grid
+   * @return {Promise<integer>}
+   */
+  async getNumberOfElementInGrid() {
+    return this.getNumberFromText(this.gridHeaderTitle);
+  }
+
+  /**
    * Reset Filter And get number of elements in list
    * @return {Promise<integer>}
    */
   async resetAndGetNumberOfLines() {
     await this.resetFilter();
-    return this.getNumberFromText(this.gridHeaderTitle);
+    return this.getNumberOfElementInGrid();
   }
 
   /**
@@ -116,6 +124,20 @@ module.exports = class Taxes extends BOBasePage {
       return true;
     }
     return false;
+  }
+
+  /**
+   * get text from a column
+   * @param row, row in table
+   * @param column, which column
+   * @return {Promise<textContent>}
+   */
+  async getTextColumnFromTableTaxes(row, column) {
+    return this.getTextContent(
+      this.taxesGridColumn
+        .replace('%ROW', row)
+        .replace('%COLUMN', column),
+    );
   }
 
   /**

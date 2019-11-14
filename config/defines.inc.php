@@ -70,16 +70,29 @@ define('_PS_ALL_THEMES_DIR_', _PS_ROOT_DIR_.'/themes/');
 if (defined('_PS_ADMIN_DIR_')) {
     define('_PS_BO_ALL_THEMES_DIR_', _PS_ADMIN_DIR_.'/themes/');
 }
-if (!defined('_PS_CACHE_DIR_')) {
-    if (defined('_PS_IN_TEST_')) {
-        $env = 'test';
-    } else {
-        $env = (_PS_MODE_DEV_) ? 'dev' : 'prod';
-    }
 
-    $prestashopCacheDir =  _PS_ROOT_DIR_.'/var/cache/'.$env. DIRECTORY_SEPARATOR;
-    define('_PS_CACHE_DIR_', $prestashopCacheDir);
+// Find if we are running under a Symfony command
+$cliEnvValue = null;
+if (isset($argv) && is_array($argv)) {
+    if (in_array('--env', $argv)) {
+        $cliEnvValue = $argv[array_search('--env', $argv) + 1];
+    } elseif (in_array('-e', $argv)) {
+        $cliEnvValue = $argv[array_search('-e', $argv) + 1];
+    }
 }
+
+if ((defined('_PS_IN_TEST_') && _PS_IN_TEST_)
+    || $cliEnvValue === 'test'
+) {
+    define('_PS_ENV_', 'test');
+} else {
+    define('_PS_ENV_', _PS_MODE_DEV_ ? 'dev': 'prod');
+}
+
+if (!defined('_PS_CACHE_DIR_')) {
+    define('_PS_CACHE_DIR_', _PS_ROOT_DIR_.'/var/cache/' . _PS_ENV_ . DIRECTORY_SEPARATOR);
+}
+
 define('_PS_CONFIG_DIR_', _PS_CORE_DIR_.'/config/');
 define('_PS_CUSTOM_CONFIG_FILE_', _PS_CONFIG_DIR_.'settings_custom.inc.php');
 define('_PS_CLASS_DIR_', _PS_CORE_DIR_.'/classes/');

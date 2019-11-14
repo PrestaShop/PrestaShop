@@ -334,7 +334,7 @@ class LocaleData
     }
 
     /**
-     * @return \PrestaShop\PrestaShop\Core\Localization\CLDR\CurrencyData[]
+     * @return CurrencyData[]
      */
     public function getCurrencies()
     {
@@ -342,7 +342,23 @@ class LocaleData
     }
 
     /**
-     * @param \PrestaShop\PrestaShop\Core\Localization\CLDR\CurrencyData[] $currencies
+     * @param string $currencyIsoCode
+     *
+     * @return CurrencyData|null
+     */
+    public function getCurrencyByIsoCode($currencyIsoCode)
+    {
+        foreach ($this->getCurrencies() as $currencyData) {
+            if ($currencyData->getIsoCode() == $currencyIsoCode) {
+                return $currencyData;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * @param CurrencyData[] $currencies
      *
      * @return LocaleData
      */

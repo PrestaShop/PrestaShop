@@ -3415,11 +3415,7 @@ exit;
     public static function clearSf2Cache($env = null)
     {
         if (null === $env) {
-            if (defined('_PS_IN_TEST_')) {
-                $env = 'test';
-            } else {
-                $env = (_PS_MODE_DEV_) ? 'dev' : 'prod';
-            }
+            $env = _PS_ENV_;
         }
 
         $dir = _PS_ROOT_DIR_ . '/var/cache/' . $env . '/';

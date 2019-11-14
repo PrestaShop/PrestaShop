@@ -109,8 +109,8 @@ module.exports = class Install extends CommonPage {
   async fillInformationForm() {
     await this.page.type(this.shopNameInput, global.INSTALL.SHOPNAME);
     await this.page.select(this.countrySelect, global.INSTALL.COUNTRY);
-    await this.page.type(this.firstNameInput, 'demo');
-    await this.page.type(this.lastNameInput, 'demo');
+    await this.page.type(this.firstNameInput, global.BO.FIRSTNAME);
+    await this.page.type(this.lastNameInput, global.BO.LASTNAME);
     await this.page.type(this.emailInput, global.BO.EMAIL);
     await this.page.type(this.passwordInput, global.BO.PASSWD);
     await this.page.type(this.repeatPasswordInput, global.BO.PASSWD);
@@ -120,10 +120,8 @@ module.exports = class Install extends CommonPage {
    * Fill Database Form in step 5
    */
   async fillDatabaseForm() {
-    await this.page.click(this.dbLoginInput, {clickCount: 3});
-    await this.page.type(this.dbLoginInput, global.INSTALL.DB_USER);
-    await this.page.click(this.dbPasswordInput, {clickCount: 3});
-    await this.page.type(this.dbPasswordInput, global.INSTALL.DB_PASSWD);
+    await this.setValue(this.dbLoginInput, global.INSTALL.DB_USER);
+    await this.setValue(this.dbPasswordInput, global.INSTALL.DB_PASSWD);
   }
 
   /**
