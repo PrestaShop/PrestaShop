@@ -26,11 +26,16 @@
 
 namespace PrestaShop\PrestaShop\Adapter\CustomerService\CommandHandler;
 
+use Configuration;
 use Customer;
+use CustomerMessage;
 use CustomerThread;
+use Language;
+use Mail;
 use Order;
 use PrestaShop\PrestaShop\Core\Domain\CustomerMessage\Command\AddOrderCustomerMessageCommand;
 use PrestaShop\PrestaShop\Core\Domain\CustomerMessage\CommandHandler\AddOrderCustomerMessageHandlerInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 use Tools;
 
 final class AddOrderCustomerMessageHandler implements AddOrderCustomerMessageHandlerInterface
@@ -45,10 +50,31 @@ final class AddOrderCustomerMessageHandler implements AddOrderCustomerMessageHan
      */
     private $contextLanguageId;
 
-    public function __construct(int $contextShopId, int $contextLanguageId)
-    {
+    /**
+     * @var int
+     */
+    private $contextEmployeeId;
+    /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
+    /**
+     * @param TranslatorInterface $translator
+     * @param int $contextShopId
+     * @param int $contextLanguageId
+     * @param int $contextEmployeeId
+     */
+    public function __construct(
+        TranslatorInterface $translator,
+        int $contextShopId,
+        int $contextLanguageId,
+        int $contextEmployeeId
+    ) {
         $this->contextShopId = $contextShopId;
         $this->contextLanguageId = $contextLanguageId;
+        $this->contextEmployeeId = $contextEmployeeId;
+        $this->translator = $translator;
     }
 
     /**
@@ -57,6 +83,19 @@ final class AddOrderCustomerMessageHandler implements AddOrderCustomerMessageHan
     public function handle(AddOrderCustomerMessageCommand $command)
     {
         $order = new Order($command->getOrderId()->getValue());
+        $customer = new Customer($order->id_customer);
+
+        $customerServiceThreadId = CustomerThread::getIdCustomerThreadByEmailAndIdOrder(
+            $customer->email,
+            $order->id
+        );
+
+        if (!$customerServiceThreadId) {
+            $customerServiceThreadId = $this->createCustomerMessageThread($order);
+        }
+
+        $this->createMessage($customerServiceThreadId, $command);
+        $this->sendMail($customer, $order, $command);
     }
 
     private function createCustomerMessageThread(Order $order)
@@ -75,5 +114,54 @@ final class AddOrderCustomerMessageHandler implements AddOrderCustomerMessageHan
         $customerThread->add();
 
         return $customerThread->id;
+    }
+
+    private function createMessage(int $customerServiceThreadId, AddOrderCustomerMessageCommand $command)
+    {
+        $customerMessage = new CustomerMessage();
+        $customerMessage->id_customer_thread = $customerServiceThreadId;
+        $customerMessage->id_employee = $this->contextEmployeeId;
+        $customerMessage->message = $command->getMessage();
+        $customerMessage->private = $command->isPrivate();
+        $customerMessage->add();
+    }
+
+    private function sendMail(Customer $customer, Order $order, AddOrderCustomerMessageCommand $command)
+    {
+        $message = $command->getMessage();
+
+        if (Configuration::get('PS_MAIL_TYPE', null, null, $order->id_shop) != Mail::TYPE_TEXT) {
+            $message = Tools::nl2br($command->getMessage());
+        }
+
+        $orderLanguage = new Language((int) $order->id_lang);
+        $varsTpl = array(
+            '{lastname}' => $customer->lastname,
+            '{firstname}' => $customer->firstname,
+            '{id_order}' => $order->id,
+            '{order_name}' => $order->getUniqReference(),
+            '{message}' => $message,
+        );
+
+        @Mail::Send(
+            (int) $order->id_lang,
+            'order_merchant_comment',
+            $this->translator->trans(
+                'New message regarding your order',
+                [],
+                'Emails.Subject',
+                $orderLanguage->locale
+            ),
+            $varsTpl,
+            $customer->email,
+            $customer->firstname . ' ' . $customer->lastname,
+            null,
+            null,
+            null,
+            null,
+            _PS_MAIL_DIR_,
+            true,
+            (int) $order->id_shop
+        );
     }
 }

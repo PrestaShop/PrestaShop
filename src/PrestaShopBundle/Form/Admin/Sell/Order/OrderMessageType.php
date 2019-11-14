@@ -77,18 +77,19 @@ class OrderMessageType extends AbstractType
             ->add('message', TextareaType::class, [
                 'constraints' => [
                     new NotBlank([
-                        'message' => $this->translator->trans(
+                        'message' => $this->trans(
                             'This field cannot be empty', [], 'Admin.Notifications.Error'
                         ),
                     ]),
-                    new Length([
-                        'max' => 255,
-                        'maxMessage' => $this->trans(
-                            'This field cannot be longer than %limit% characters',
-                            'Admin.Notifications.Error',
-                            ['%limit%' => 255]
-                        ),
-                    ]),
+// todo: different limit
+//                    new Length([
+//                        'max' => 255,
+//                        'maxMessage' => $this->trans(
+//                            'This field cannot be longer than %limit% characters',
+//                            ['%limit%' => 255],
+//                            'Admin.Notifications.Error'
+//                        ),
+//                    ]),
                 ]
             ])
         ;

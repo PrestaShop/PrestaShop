@@ -29,6 +29,7 @@ namespace PrestaShopBundle\Controller\Admin\Sell\Order;
 use Exception;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartInformation;
+use PrestaShop\PrestaShop\Core\Domain\CustomerMessage\Command\AddOrderCustomerMessageCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\AddCartRuleToOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\BulkChangeOrderStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\ChangeOrderCurrencyCommand;
@@ -636,8 +637,27 @@ class OrderController extends FrameworkBundleAdminController
         $orderMessageForm = $this->createForm(OrderMessageType::class);
 
         $orderMessageForm->handleRequest($request);
+
         if ($orderMessageForm->isSubmitted() && $orderMessageForm->isValid()) {
-            //@todo: send message command
+            $data = $orderMessageForm->getData();
+
+            try {
+                $this->getCommandBus()->handle(new AddOrderCustomerMessageCommand(
+                    $orderId,
+                    $data['message'],
+                    $data['is_displayed_to_customer']
+                ));
+
+                $this->addFlash(
+                    'success',
+                    $this->trans('Comment successfully added.', 'Admin.Notifications.Success')
+                );
+            } catch (Exception $exception) {
+                $this->addFlash(
+                    'error',
+                    $this->getErrorMessageForException($exception, $this->getCustomerMessageErrorMapping($exception))
+                );
+            }
         }
 
         return $this->redirectToRoute('admin_orders_view', [
@@ -848,5 +868,10 @@ class OrderController extends FrameworkBundleAdminController
                 )
             );
         }
+    }
+
+    private function getCustomerMessageErrorMapping(Exception $exception)
+    {
+        return [];
     }
 }
