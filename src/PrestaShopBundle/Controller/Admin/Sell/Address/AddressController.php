@@ -27,7 +27,6 @@
 namespace PrestaShopBundle\Controller\Admin\Sell\Address;
 
 use Exception;
-use PrestaShop\PrestaShop\Adapter\Country\CountryNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Address\Command\BulkDeleteAddressCommand;
 use PrestaShop\PrestaShop\Core\Domain\Address\Command\DeleteAddressCommand;
 use PrestaShop\PrestaShop\Core\Domain\Address\Command\SetRequiredFieldsForAddressCommand;
@@ -39,6 +38,7 @@ use PrestaShop\PrestaShop\Core\Domain\Address\Exception\CannotSetRequiredFieldsF
 use PrestaShop\PrestaShop\Core\Domain\Address\Exception\DeleteAddressException;
 use PrestaShop\PrestaShop\Core\Domain\Address\Exception\InvalidAddressRequiredFieldsException;
 use PrestaShop\PrestaShop\Core\Domain\Address\Query\GetRequiredFieldsForAddress;
+use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryNotFoundException;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AddressGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters\AddressFilters;
 use PrestaShop\PrestaShop\Core\Domain\Address\Exception\CannotAddAddressException;
@@ -320,11 +320,11 @@ class AddressController extends FrameworkBundleAdminController
 
         try {
             $addressFormBuilder = $this->get(
-                    'prestashop.core.form.identifiable_object.builder.address_form_builder'
-                );
+                'prestashop.core.form.identifiable_object.builder.address_form_builder'
+            );
             $addressFormHandler = $this->get(
-                    'prestashop.core.form.identifiable_object.handler.address_form_handler'
-                );
+                'prestashop.core.form.identifiable_object.handler.address_form_handler'
+            );
 
             $addressForm = $addressFormBuilder->getFormFor($addressId);
             $addressForm->handleRequest($request);

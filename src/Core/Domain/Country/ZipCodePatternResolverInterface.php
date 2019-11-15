@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -24,36 +24,26 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Country\Query;
-
-use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
+namespace PrestaShop\PrestaShop\Core\Domain\Country;
 
 /**
- * Query for getting country zip code requirements
+ * Call responsible for resolving country zip code format and returning it as other usable patterns
  */
-class GetCountryZipCodeRequirements
+interface ZipCodePatternResolverInterface
 {
     /**
-     * @var CountryId
-     */
-    private $countryId;
-
-    /**
-     * @param int $countryId
+     * @param string $format
+     * @param string $isoCode
      *
-     * @throws CountryConstraintException
+     * @return string
      */
-    public function __construct(int $countryId)
-    {
-        $this->countryId = new CountryId($countryId);
-    }
+    public function getRegexPattern(string $format, string $isoCode): string;
 
     /**
-     * @return CountryId
+     * @param string $format
+     * @param string $isoCode
+     *
+     * @return string
      */
-    public function getCountryId(): CountryId
-    {
-        return $this->countryId;
-    }
+    public function getHumanReadablePattern(string $format, string $isoCode): string;
 }

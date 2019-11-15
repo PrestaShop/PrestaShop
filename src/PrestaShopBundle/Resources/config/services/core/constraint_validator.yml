@@ -41,7 +41,7 @@ services:
     class: 'PrestaShop\PrestaShop\Core\ConstraintValidator\CustomerAddressZipCodeValidator'
     arguments:
       - '@translator'
-      - '@prestashop.core.query_bus'
+      - '@prestashop.adapter.country.country_zip_code_requirements_provider'
     tags:
       - { name: validator.constraint_validator }
 
