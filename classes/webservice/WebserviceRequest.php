@@ -1655,7 +1655,7 @@ class WebserviceRequestCore
                             foreach ($attributes->associations->children() as $association) {
                                 /**
  * @var SimpleXMLElement $association 
-*/
+                                */
                                 // associations
                                 if (isset($this->resourceConfiguration['associations'][$association->getName()])) {
                                     $assocItems = $association->children();
