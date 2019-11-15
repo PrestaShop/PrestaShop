@@ -36,7 +36,7 @@ use Symfony\Component\Validator\ConstraintValidator;
 /**
  * Validates customer address state choice by selected country value
  */
-class CustomerAddressCountryRequiredFieldsValidator extends ConstraintValidator
+final class CustomerAddressCountryRequiredFieldsValidator extends ConstraintValidator
 {
     /**
      * @var CommandBusInterface

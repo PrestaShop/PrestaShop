@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Country;
 
 use Country;
+use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
 use PrestaShopException;
 

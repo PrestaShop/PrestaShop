@@ -37,7 +37,7 @@ use PrestaShopDatabaseException;
 /**
  * Handles finding customer by email
  */
-class GetCustomerForAddressCreationHandler implements GetCustomerForAddressCreationHandlerInterface
+final class GetCustomerForAddressCreationHandler implements GetCustomerForAddressCreationHandlerInterface
 {
     /**
      * {@inheritdoc}
