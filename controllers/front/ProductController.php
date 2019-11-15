@@ -977,21 +977,25 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
     }
 
     /**
-     * Return id_product_attribute by id_product_attribute request parameter
-     * or by the group request parameter.
+     * Return id_product_attribute by id_product_attribute group parameter,
+     * or request parameter, or the default attribute as a fallback.
      *
      * @return int|null
      *
      * @throws PrestaShopException
      */
-    private function getIdProductAttributeByRequestOrGroup()
+    private function getIdProductAttributeByGroupOrRequestOrDefault()
     {
-        $requestedIdProductAttribute = (int) Tools::getValue('id_product_attribute');
+        $idProductAttribute = $this->getIdProductAttributeByGroup();
+        if (null === $idProductAttribute) {
+            $idProductAttribute = (int) Tools::getValue('id_product_attribute');
+        }
 
-        $groupIdProductAttribute = $this->getIdProductAttributeByGroup();
-        $requestedIdProductAttribute = null !== $groupIdProductAttribute ? $groupIdProductAttribute : $requestedIdProductAttribute;
+        if (0 === $idProductAttribute) {
+            $idProductAttribute = (int) Product::getDefaultAttribute($this->product->id);
+        }
 
-        return $this->tryToGetAvailableIdProductAttribute($requestedIdProductAttribute);
+        return $this->tryToGetAvailableIdProductAttribute($idProductAttribute);
     }
 
     /**
