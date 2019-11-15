@@ -31,6 +31,7 @@ use Exception;
 use PrestaShop\PrestaShop\Adapter\Product\ListParametersUpdater;
 use PrestaShop\PrestaShop\Adapter\Tax\TaxRuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Warehouse\WarehouseDataProvider;
+use PrestaShop\PrestaShop\Core\Currency\CurrencyDataProviderInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
@@ -1311,16 +1312,19 @@ class ProductController extends FrameworkBundleAdminController
         try {
             $searchPhrase = $request->query->get('search_phrase');
             $currencyId = $request->query->get('currency_id');
+            $currencyIsoCode = $currencyId !== null
+                ? Currency::getIsoCodeById((int) $currencyId)
+                : Currency::getIsoCodeById((int) Configuration::get('PS_CURRENCY_DEFAULT'));
 
             /** @var FoundProduct[] $foundProducts */
-            $foundProducts = $this->getQueryBus()->handle(new SearchProducts($searchPhrase, 10, $currencyId));
+            $foundProducts = $this->getQueryBus()->handle(new SearchProducts($searchPhrase, 10, $currencyIsoCode));
 
             return $this->json([
                 'products' => $foundProducts,
             ]);
         } catch (Exception $e) {
             return $this->json(
-                ['message' => $this->getErrorMessageForException($e, [])],
+                [$e, 'message' => $this->getErrorMessageForException($e, [])],
                 Response::HTTP_INTERNAL_SERVER_ERROR
             );
         }

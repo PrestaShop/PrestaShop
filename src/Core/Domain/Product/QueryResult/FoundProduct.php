@@ -47,6 +47,16 @@ class FoundProduct
     private $formattedPrice;
 
     /**
+     * @var float
+     */
+    private $priceTaxIncl;
+
+    /**
+     * @var float
+     */
+    private $priceTaxExcl;
+
+    /**
      * @var int
      */
     private $stock;
@@ -65,6 +75,8 @@ class FoundProduct
      * @param int $productId
      * @param string $name
      * @param string $formattedPrice
+     * @param float $priceTaxIncl
+     * @param float $priceTaxExcl
      * @param int $stock
      * @param ProductCombination[] $combinations
      * @param ProductCustomizationField[] $customizationFields
@@ -73,6 +85,8 @@ class FoundProduct
         int $productId,
         string $name,
         string $formattedPrice,
+        float $priceTaxIncl,
+        float $priceTaxExcl,
         int $stock,
         array $combinations = [],
         array $customizationFields = []
@@ -80,6 +94,8 @@ class FoundProduct
         $this->productId = $productId;
         $this->name = $name;
         $this->formattedPrice = $formattedPrice;
+        $this->priceTaxIncl = $priceTaxIncl;
+        $this->priceTaxExcl = $priceTaxExcl;
         $this->stock = $stock;
         $this->combinations = $combinations;
         $this->customizationFields = $customizationFields;
@@ -107,6 +123,22 @@ class FoundProduct
     public function getFormattedPrice(): string
     {
         return $this->formattedPrice;
+    }
+
+    /**
+     * @return float
+     */
+    public function getPriceTaxIncl(): float
+    {
+        return $this->priceTaxIncl;
+    }
+
+    /**
+     * @return float
+     */
+    public function getPriceTaxExcl(): float
+    {
+        return $this->priceTaxExcl;
     }
 
     /**
