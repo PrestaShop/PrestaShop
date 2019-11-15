@@ -237,7 +237,7 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
         if (0 !== $combinationId) {
             $combination = new Combination($combinationId);
 
-            if (Validate::isLoadedObject($combination)) {
+            if (!Validate::isLoadedObject($combination)) {
                 throw new OrderException('Product combination not found.');
             }
         }
