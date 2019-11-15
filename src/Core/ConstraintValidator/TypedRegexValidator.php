@@ -104,7 +104,7 @@ class TypedRegexValidator extends ConstraintValidator
             TypedRegex::TYPE_LANGUAGE_ISO_CODE => IsoCode::PATTERN,
             TypedRegex::TYPE_LANGUAGE_CODE => '/^[a-zA-Z]{2}(-[a-zA-Z]{2})?$/',
             TypedRegex::TYPE_CURRENCY_ISO_CODE => AlphaIsoCode::PATTERN,
-            'dni_lite' => AddressConstraint::DNI_LITE_PATTERN,
+            TypedRegex::TYPE_DNI_LITE => AddressConstraint::DNI_LITE_PATTERN,
         ];
 
         if (isset($typePatterns[$type])) {

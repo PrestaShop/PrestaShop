@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Country\QueryResult;
+namespace PrestaShop\PrestaShop\Core\Country;
 
 /**
  * Holds information about country zip code requirements
@@ -45,6 +45,11 @@ class CountryZipCodeRequirements
      * @var string|null
      */
     private $humanReadablePattern;
+
+    /**
+     * @var string|null
+     */
+    private $countryName;
 
     /**
      * @param bool $isRequired
@@ -90,5 +95,25 @@ class CountryZipCodeRequirements
     public function getHumanReadablePattern(): ?string
     {
         return $this->humanReadablePattern;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getCountryName(): ?string
+    {
+        return $this->countryName;
+    }
+
+    /**
+     * @param string $countryName
+     *
+     * @return CountryZipCodeRequirements
+     */
+    public function setCountryName(string $countryName): CountryZipCodeRequirements
+    {
+        $this->countryName = $countryName;
+
+        return $this;
     }
 }

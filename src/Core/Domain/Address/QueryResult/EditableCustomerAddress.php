@@ -128,6 +128,11 @@ class EditableCustomerAddress
     private $other;
 
     /**
+     * @var string[]
+     */
+    private $requiredFields;
+
+    /**
      * @param AddressId $addressId
      * @param CustomerId $customerId
      * @param string $customerEmail
@@ -137,6 +142,7 @@ class EditableCustomerAddress
      * @param string $address
      * @param string $city
      * @param CountryId $countryId
+     * @param string[] $requiredFields
      */
     public function __construct(
         AddressId $addressId,
@@ -147,7 +153,8 @@ class EditableCustomerAddress
         string $lastName,
         string $address,
         string $city,
-        CountryId $countryId
+        CountryId $countryId,
+        array $requiredFields
     ) {
         $this->addressId = $addressId;
         $this->customerId = $customerId;
@@ -158,6 +165,7 @@ class EditableCustomerAddress
         $this->address = $address;
         $this->city = $city;
         $this->countryId = $countryId;
+        $this->requiredFields = $requiredFields;
     }
 
     /**
@@ -230,6 +238,14 @@ class EditableCustomerAddress
     public function getCountryId(): CountryId
     {
         return $this->countryId;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getRequiredFields(): array
+    {
+        return $this->requiredFields;
     }
 
     /**
