@@ -74,7 +74,7 @@ class GetCustomerForAddressCreationHandler implements GetCustomerForAddressCreat
         );
 
         if (null !== $customer['company']) {
-            $customerInformation->setCompany($customer);
+            $customerInformation->setCompany($customer['company']);
         }
 
         return $customerInformation;

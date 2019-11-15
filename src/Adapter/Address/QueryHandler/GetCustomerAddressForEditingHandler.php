@@ -84,7 +84,8 @@ final class GetCustomerAddressForEditingHandler extends AbstractAddressHandler i
             $address->lastname,
             $address->address1,
             $address->city,
-            new CountryId((int) $address->id_country)
+            new CountryId((int) $address->id_country),
+            $this->getRequiredFields()
         );
 
         if (null !== $address->postcode) {
