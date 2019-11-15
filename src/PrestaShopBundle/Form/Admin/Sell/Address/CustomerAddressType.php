@@ -62,8 +62,6 @@ class CustomerAddressType extends AbstractType
      */
     private $stateChoiceProvider;
 
-    private $requiredFieldsProvider;
-
     /**
      * @param TranslatorInterface $translator
      * @param ConfigurableFormChoiceProviderInterface $stateChoiceProvider
