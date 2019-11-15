@@ -140,6 +140,20 @@ final class LogGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ])
             )
             ->add(
+                (new DataColumn('id_shop'))
+                ->setName($this->trans('Shop', [], 'Admin.Global'))
+                ->setOptions([
+                    'field' => 'id_shop',
+                ])
+            )
+            ->add(
+                (new DataColumn('id_lang'))
+                ->setName($this->trans('Language', [], 'Admin.Global'))
+                ->setOptions([
+                    'field' => 'id_lang',
+                ])
+            )
+            ->add(
                 (new DataColumn('error_code'))
                 ->setName($this->trans('Error code', [], 'Admin.Advparameters.Feature'))
                 ->setOptions([
@@ -207,6 +221,20 @@ final class LogGridDefinitionFactory extends AbstractGridDefinitionFactory
                     'required' => false,
                 ])
                 ->setAssociatedColumn('object_id')
+            )
+            ->add(
+                (new Filter('id_shop', TextType::class))
+                ->setTypeOptions([
+                    'required' => false,
+                ])
+                ->setAssociatedColumn('id_shop')
+            )
+            ->add(
+                (new Filter('id_lang', TextType::class))
+                ->setTypeOptions([
+                    'required' => false,
+                ])
+                ->setAssociatedColumn('id_lang')
             )
             ->add(
                 (new Filter('error_code', TextType::class))
