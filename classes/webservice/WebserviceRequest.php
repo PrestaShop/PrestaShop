@@ -1306,7 +1306,6 @@ class WebserviceRequestCore
                 $sql_offset .= ' OFFSET '.(int)($offsetArgs[0]).(isset($offsetArgs[1]) ? ', '.(int)($offsetArgs[1]) : '')."\n";// 
             }
         }
-
         $filters['sql_join'] = $sql_join;
         $filters['sql_filter'] = $sql_filter;
         $filters['sql_sort'] = $sql_sort;
