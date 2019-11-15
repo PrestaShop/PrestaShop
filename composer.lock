@@ -1531,15 +1531,15 @@
             "authors": [
                 {
                     "name": "André Rothe",
+                    "role": "Committer",
                     "email": "phosco@gmx.de",
-                    "homepage": "https://www.phosco.info",
-                    "role": "Committer"
+                    "homepage": "https://www.phosco.info"
                 },
                 {
                     "name": "Justin Swanhart",
+                    "role": "Owner",
                     "email": "greenlion@gmail.com",
-                    "homepage": "http://code.google.com/u/greenlion@gmail.com/",
-                    "role": "Owner"
+                    "homepage": "http://code.google.com/u/greenlion@gmail.com/"
                 }
             ],
             "description": "A pure PHP SQL (non validating) parser w/ focus on MySQL dialect of SQL",
@@ -5895,20 +5895,23 @@
         },
         {
             "name": "smarty/smarty",
-            "version": "v3.1.33",
+            "version": "v3.1.34",
             "source": {
                 "type": "git",
                 "url": "https://github.com/smarty-php/smarty.git",
-                "reference": "dd55b23121e55a3b4f1af90a707a6c4e5969530f"
+                "reference": "c9f0de05f41b9e52798b268ab1e625fac3b8578c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/smarty-php/smarty/zipball/dd55b23121e55a3b4f1af90a707a6c4e5969530f",
-                "reference": "dd55b23121e55a3b4f1af90a707a6c4e5969530f",
+                "url": "https://api.github.com/repos/smarty-php/smarty/zipball/c9f0de05f41b9e52798b268ab1e625fac3b8578c",
+                "reference": "c9f0de05f41b9e52798b268ab1e625fac3b8578c",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.2"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "6.4.1"
             },
             "type": "library",
             "extra": {
@@ -5917,8 +5920,8 @@
                 }
             },
             "autoload": {
-                "files": [
-                    "libs/bootstrap.php"
+                "classmap": [
+                    "libs/"
                 ]
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -5944,7 +5947,7 @@
             "keywords": [
                 "templating"
             ],
-            "time": "2018-09-12T20:54:16+00:00"
+            "time": "2019-02-28T06:42:20+00:00"
         },
         {
             "name": "soundasleep/html2text",
@@ -6936,19 +6939,19 @@
             "authors": [
                 {
                     "name": "Fabien Potencier",
+                    "role": "Lead Developer",
                     "email": "fabien@symfony.com",
-                    "homepage": "http://fabien.potencier.org",
-                    "role": "Lead Developer"
+                    "homepage": "http://fabien.potencier.org"
                 },
                 {
                     "name": "Armin Ronacher",
-                    "email": "armin.ronacher@active-4.com",
-                    "role": "Project Founder"
+                    "role": "Project Founder",
+                    "email": "armin.ronacher@active-4.com"
                 },
                 {
                     "name": "Twig Team",
-                    "homepage": "https://twig.symfony.com/contributors",
-                    "role": "Contributors"
+                    "role": "Contributors",
+                    "homepage": "https://twig.symfony.com/contributors"
                 }
             ],
             "description": "Twig, the flexible, fast, and secure template language for PHP",
@@ -7492,8 +7495,8 @@
             "authors": [
                 {
                     "name": "Frank Kleine",
-                    "homepage": "http://frankkleine.de/",
-                    "role": "Developer"
+                    "role": "Developer",
+                    "homepage": "http://frankkleine.de/"
                 }
             ],
             "description": "Virtual file system to mock the real file system in unit tests.",
