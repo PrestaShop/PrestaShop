@@ -14,8 +14,8 @@ const PagesPage = require('@pages/BO/design/pages/index');
 let browser;
 let page;
 let numberOfCategories = 0;
-let createFirstCategoryData;
-let createSecondCategoryData;
+const firstCategoryData = new CategoryPageFaker();
+const secondCategoryData = new CategoryPageFaker();
 
 // Init objects needed
 const init = async function () {
@@ -35,8 +35,6 @@ describe('Filter And Quick Edit Categories', async () => {
     browser = await helper.createBrowser();
     page = await helper.newTab(browser);
     this.pageObjects = await init();
-    createFirstCategoryData = await (new CategoryPageFaker());
-    createSecondCategoryData = await (new CategoryPageFaker());
   });
   after(async () => {
     await helper.closeBrowser(browser);
@@ -59,75 +57,86 @@ describe('Filter And Quick Edit Categories', async () => {
   describe('Create 2 categories then filter the table', async () => {
     // Create 2 categories
     describe('Create Categories', async () => {
-      it('should go to add new page category', async function () {
-        await this.pageObjects.pagesPage.goToAddNewPageCategory();
-        const pageTitle = await this.pageObjects.addPageCategoryPage.getPageTitle();
-        await expect(pageTitle).to.contains(this.pageObjects.addPageCategoryPage.pageTitleCreate);
-      });
+      const categoriesToCreate = [firstCategoryData, secondCategoryData];
+      categoriesToCreate.forEach((categoryToCreate) => {
+        it('should go to add new page category', async function () {
+          await this.pageObjects.pagesPage.goToAddNewPageCategory();
+          const pageTitle = await this.pageObjects.addPageCategoryPage.getPageTitle();
+          await expect(pageTitle).to.contains(this.pageObjects.addPageCategoryPage.pageTitleCreate);
+        });
 
-      it('should create the first category ', async function () {
-        const textResult = await this.pageObjects.addPageCategoryPage.createEditPageCategory(createFirstCategoryData);
-        await expect(textResult).to.equal(this.pageObjects.pagesPage.successfulCreationMessage);
-      });
+        it('should create category ', async function () {
+          const textResult = await this.pageObjects.addPageCategoryPage.createEditPageCategory(categoryToCreate);
+          await expect(textResult).to.equal(this.pageObjects.pagesPage.successfulCreationMessage);
+        });
 
-      it('should go back to categories list', async function () {
-        await this.pageObjects.pagesPage.backToList();
-        const pageTitle = await this.pageObjects.pagesPage.getPageTitle();
-        await expect(pageTitle).to.contains(this.pageObjects.pagesPage.pageTitle);
-      });
-
-      it('should go to add new page category', async function () {
-        await this.pageObjects.pagesPage.goToAddNewPageCategory();
-        const pageTitle = await this.pageObjects.addPageCategoryPage.getPageTitle();
-        await expect(pageTitle).to.contains(this.pageObjects.addPageCategoryPage.pageTitleCreate);
-      });
-
-      it('should create the second category ', async function () {
-        const textResult = await this.pageObjects.addPageCategoryPage.createEditPageCategory(createSecondCategoryData);
-        await expect(textResult).to.equal(this.pageObjects.pagesPage.successfulCreationMessage);
-      });
-
-      it('should go back to categories list', async function () {
-        await this.pageObjects.pagesPage.backToList();
-        const pageTitle = await this.pageObjects.pagesPage.getPageTitle();
-        await expect(pageTitle).to.contains(this.pageObjects.pagesPage.pageTitle);
+        it('should go back to categories list', async function () {
+          await this.pageObjects.pagesPage.backToList();
+          const pageTitle = await this.pageObjects.pagesPage.getPageTitle();
+          await expect(pageTitle).to.contains(this.pageObjects.pagesPage.pageTitle);
+        });
       });
     });
-
     // Filter categories table
     describe('Filter Categories', async () => {
       it('should reset filter and get number of categories in BO', async function () {
         numberOfCategories = await this.pageObjects.pagesPage.resetAndGetNumberOfLines('cms_page_category');
         await expect(numberOfCategories).to.be.above(0);
       });
+      const tests = [
+        {args: {filterType: 'input', filterBy: 'id_cms_category', filterValue: 1}},
+        {args: {filterType: 'input', filterBy: 'name', filterValue: firstCategoryData.name}},
+        {args: {filterType: 'input', filterBy: 'description', filterValue: secondCategoryData.description}},
+        {args: {filterType: 'input', filterBy: 'position', filterValue: 5}},
+        {
+          args: {filterType: 'select', filterBy: 'active', filterValue: secondCategoryData.displayed},
+          expected: 'check',
+        },
+      ];
+      tests.forEach((test) => {
+        it(`should filter by ${test.args.filterBy} '${test.args.filterValue}'`, async function () {
+          await this.pageObjects.pagesPage.filterTable(
+            'cms_page_category',
+            test.args.filterType,
+            test.args.filterBy,
+            test.args.filterValue,
+          );
+          const numberOfCategoriesAfterFilter = await this.pageObjects.pagesPage.getNumberOfElementInGrid(
+            'cms_page_category',
+          );
+          await expect(numberOfCategoriesAfterFilter).to.be.at.most(numberOfCategories);
+          for (let i = 1; i <= numberOfCategoriesAfterFilter; i++) {
+            const textColumn = await this.pageObjects.pagesPage.getTextColumnFromTable(
+              'cms_page_category',
+              i,
+              test.args.filterBy,
+            );
+            if (test.expected !== undefined) {
+              await expect(textColumn).to.contains(test.expected);
+            } else {
+              await expect(textColumn).to.contains(test.args.filterValue);
+            }
+          }
+        });
 
-      it('should filter by Id \'5\'', async function () {
-        await this.pageObjects.pagesPage.filterTable('cms_page_category', 'input', 'id_cms_category', '5');
-        const numberOfCategoriesAfterFilter = await this.pageObjects.pagesPage.getNumberOfElementInGrid(
-          'cms_page_category',
-        );
-        await expect(numberOfCategoriesAfterFilter).to.be.at.most(numberOfCategories);
-        const textColumn = await this.pageObjects.pagesPage.getTextColumnFromTable(
-          'cms_page_category',
-          1,
-          'id_cms_category',
-        );
-        await expect(textColumn).to.contains(5);
+        it('should reset all filters', async function () {
+          const numberOfCategoriesAfterFilter = await this.pageObjects.pagesPage.resetAndGetNumberOfLines(
+            'cms_page_category',
+          );
+          await expect(numberOfCategoriesAfterFilter).to.be.equal(numberOfCategories);
+        });
       });
+    });
 
-      it('should reset all filters', async function () {
-        const numberOfCategoriesAfterFilter = await this.pageObjects.pagesPage.resetAndGetNumberOfLines(
-          'cms_page_category',
-        );
-        await expect(numberOfCategoriesAfterFilter).to.be.equal(numberOfCategories);
-      });
-
+    // 2 : Editing Categories from grid table
+    describe('Quick Edit Categories', async () => {
       it('should filter by category name', async function () {
         await this.pageObjects.pagesPage.filterTable(
           'cms_page_category',
           'input',
           'name',
-          createFirstCategoryData.name);
+          firstCategoryData.name,
+        );
         const numberOfCategoriesAfterFilter = await this.pageObjects.pagesPage.getNumberOfElementInGrid(
           'cms_page_category',
         );
@@ -137,84 +146,38 @@ describe('Filter And Quick Edit Categories', async () => {
           1,
           'name',
         );
-        await expect(textColumn).to.contains(createFirstCategoryData.name);
+        await expect(textColumn).to.contains(firstCategoryData.name);
       });
 
-      it('should reset all filters', async function () {
-        const numberOfCategoriesAfterFilter = await this.pageObjects.pagesPage.resetAndGetNumberOfLines(
-          'cms_page_category',
-        );
-        await expect(numberOfCategoriesAfterFilter).to.be.equal(numberOfCategories);
-      });
-
-      it('should filter by Description', async function () {
-        await this.pageObjects.pagesPage.filterTable(
-          'cms_page_category',
-          'input',
-          'description',
-          createSecondCategoryData.description,
-        );
-        const numberOfCategoriesAfterFilter = await this.pageObjects.pagesPage.getNumberOfElementInGrid(
-          'cms_page_category',
-        );
-        await expect(numberOfCategoriesAfterFilter).to.be.at.most(numberOfCategories);
-        const textColumn = await this.pageObjects.pagesPage.getTextColumnFromTable(
+      it('should disable the Category', async function () {
+        const isActionPerformed = await this.pageObjects.pagesPage.updateToggleColumnValue(
           'cms_page_category',
           1,
-          'description',
+          false,
         );
-        await expect(textColumn).to.contains(createSecondCategoryData.description);
-      });
-
-      it('should reset all filters', async function () {
-        const numberOfCategoriesAfterFilter = await this.pageObjects.pagesPage.resetAndGetNumberOfLines(
-          'cms_page_category',
-        );
-        await expect(numberOfCategoriesAfterFilter).to.be.equal(numberOfCategories);
-      });
-
-      it('should filter by Position \'1\'', async function () {
-        await this.pageObjects.pagesPage.filterTable('cms_page_category', 'input', 'position', 1);
-        const numberOfCategoriesAfterFilter = await this.pageObjects.pagesPage.getNumberOfElementInGrid(
-          'cms_page_category',
-        );
-        await expect(numberOfCategoriesAfterFilter).to.be.at.most(numberOfCategories);
-        const textColumn = await this.pageObjects.pagesPage.getTextColumnFromTable(
-          'cms_page_category',
-          1,
-          'position',
-        );
-        await expect(textColumn).to.contains(1);
-      });
-
-      it('should reset all filters', async function () {
-        const numberOfCategoriesAfterFilter = await this.pageObjects.pagesPage.resetAndGetNumberOfLines(
-          'cms_page_category',
-        );
-        await expect(numberOfCategoriesAfterFilter).to.be.equal(numberOfCategories);
-      });
-
-      it('should filter by Displayed \'Yes\'', async function () {
-        await this.pageObjects.pagesPage.filterTable(
-          'cms_page_category',
-          'select',
-          'active',
-          createSecondCategoryData.displayed,
-        );
-        const numberOfCategoriesAfterFilter = await this.pageObjects.pagesPage.getNumberOfElementInGrid(
-          'cms_page_category',
-        );
-        await expect(numberOfCategoriesAfterFilter).to.be.at.most(numberOfCategories);
-        /* eslint-disable no-await-in-loop */
-        for (let i = 1; i <= numberOfCategoriesAfterFilter; i++) {
-          const textColumn = await this.pageObjects.pagesPage.getTextColumnFromTable(
-            'cms_page_category',
-            i,
-            'active',
+        if (isActionPerformed) {
+          const resultMessage = await this.pageObjects.pagesPage.getTextContent(
+            this.pageObjects.pagesPage.alertSuccessBlockParagraph,
           );
-          await expect(textColumn).to.contains('check');
+          await expect(resultMessage).to.contains(this.pageObjects.pagesPage.successfulUpdateStatusMessage);
         }
-        /* eslint-enable no-await-in-loop */
+        const isStatusChanged = await this.pageObjects.pagesPage.getToggleColumnValue('cms_page_category', 1);
+        await expect(isStatusChanged).to.be.false;
+      });
+
+      it('should enable the Category', async function () {
+        const isActionPerformed = await this.pageObjects.pagesPage.updateToggleColumnValue(
+          'cms_page_category',
+          1,
+        );
+        if (isActionPerformed) {
+          const resultMessage = await this.pageObjects.pagesPage.getTextContent(
+            this.pageObjects.pagesPage.alertSuccessBlockParagraph,
+          );
+          await expect(resultMessage).to.contains(this.pageObjects.pagesPage.successfulUpdateStatusMessage);
+        }
+        const isStatusChanged = await this.pageObjects.pagesPage.getToggleColumnValue('cms_page_category', 1);
+        await expect(isStatusChanged).to.be.true;
       });
 
       it('should reset all filters', async function () {
@@ -223,70 +186,11 @@ describe('Filter And Quick Edit Categories', async () => {
         );
         await expect(numberOfCategoriesAfterFilter).to.be.equal(numberOfCategories);
       });
-    });
-  });
-  // 2 : Editing Categories from grid table
-  describe('Quick Edit Categories', async () => {
-    it('should filter by category name', async function () {
-      await this.pageObjects.pagesPage.filterTable(
-        'cms_page_category',
-        'input',
-        'name',
-        createFirstCategoryData.name,
-      );
-      const numberOfCategoriesAfterFilter = await this.pageObjects.pagesPage.getNumberOfElementInGrid(
-        'cms_page_category',
-      );
-      await expect(numberOfCategoriesAfterFilter).to.be.at.most(numberOfCategories);
-      const textColumn = await this.pageObjects.pagesPage.getTextColumnFromTable(
-        'cms_page_category',
-        1,
-        'name',
-      );
-      await expect(textColumn).to.contains(createFirstCategoryData.name);
-    });
 
-    it('should disable the Category', async function () {
-      const isActionPerformed = await this.pageObjects.pagesPage.updateToggleColumnValue(
-        'cms_page_category',
-        1,
-        false,
-      );
-      if (isActionPerformed) {
-        const resultMessage = await this.pageObjects.pagesPage.getTextContent(
-          this.pageObjects.pagesPage.alertSuccessBlockParagraph,
-        );
-        await expect(resultMessage).to.contains(this.pageObjects.pagesPage.successfulUpdateStatusMessage);
-      }
-      const isStatusChanged = await this.pageObjects.pagesPage.getToggleColumnValue('cms_page_category', 1);
-      await expect(isStatusChanged).to.be.false;
-    });
-
-    it('should enable the Category', async function () {
-      const isActionPerformed = await this.pageObjects.pagesPage.updateToggleColumnValue(
-        'cms_page_category',
-        1,
-      );
-      if (isActionPerformed) {
-        const resultMessage = await this.pageObjects.pagesPage.getTextContent(
-          this.pageObjects.pagesPage.alertSuccessBlockParagraph,
-        );
-        await expect(resultMessage).to.contains(this.pageObjects.pagesPage.successfulUpdateStatusMessage);
-      }
-      const isStatusChanged = await this.pageObjects.pagesPage.getToggleColumnValue('cms_page_category', 1);
-      await expect(isStatusChanged).to.be.true;
-    });
-
-    it('should reset all filters', async function () {
-      const numberOfCategoriesAfterFilter = await this.pageObjects.pagesPage.resetAndGetNumberOfLines(
-        'cms_page_category',
-      );
-      await expect(numberOfCategoriesAfterFilter).to.be.equal(numberOfCategories);
-    });
-
-    it('should delete categories with Bulk Actions and check Result', async function () {
-      const deleteTextResult = await this.pageObjects.pagesPage.deleteRowInTableBulkActions('cms_page_category');
-      await expect(deleteTextResult).to.be.equal(this.pageObjects.pagesPage.successfulMultiDeleteMessage);
+      it('should delete categories with Bulk Actions and check Result', async function () {
+        const deleteTextResult = await this.pageObjects.pagesPage.deleteRowInTableBulkActions('cms_page_category');
+        await expect(deleteTextResult).to.be.equal(this.pageObjects.pagesPage.successfulMultiDeleteMessage);
+      });
     });
   });
 });
