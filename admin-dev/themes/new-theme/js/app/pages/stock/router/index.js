@@ -24,8 +24,8 @@
  */
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-import Overview from 'app/pages/stock/components/overview/index';
-import Movements from 'app/pages/stock/components/movements/index';
+import Overview from '@app/pages/stock/components/overview/index';
+import Movements from '@app/pages/stock/components/movements/index';
 
 Vue.use(VueRouter);
 

@@ -59,10 +59,10 @@
 
 <script>
   import Filters from './filters';
-  import PSTags from 'app/widgets/ps-tags';
-  import PSButton from 'app/widgets/ps-button';
-  import PSAlert from 'app/widgets/ps-alert';
-  import { EventBus } from 'app/utils/event-bus';
+  import PSTags from '@app/widgets/ps-tags';
+  import PSButton from '@app/widgets/ps-button';
+  import PSAlert from '@app/widgets/ps-alert';
+  import { EventBus } from '@app/utils/event-bus';
 
   export default {
     components: {

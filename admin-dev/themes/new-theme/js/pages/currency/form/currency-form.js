@@ -23,7 +23,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-import { showGrowl } from '../../../app/utils/growl';
+import {showGrowl} from '@app/utils/growl';
 
 export default class CurrencyForm {
   /**

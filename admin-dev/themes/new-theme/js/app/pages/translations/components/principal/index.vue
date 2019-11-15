@@ -96,10 +96,10 @@
 
 <script>
   import TranslationInput from './translation-input';
-  import PSButton from 'app/widgets/ps-button';
-  import PSPagination from 'app/widgets/ps-pagination';
-  import PSAlert from 'app/widgets/ps-alert';
-  import { EventBus } from 'app/utils/event-bus';
+  import PSButton from '@app/widgets/ps-button';
+  import PSPagination from '@app/widgets/ps-pagination';
+  import PSAlert from '@app/widgets/ps-alert';
+  import { EventBus } from '@app/utils/event-bus';
 
   export default {
     props: [

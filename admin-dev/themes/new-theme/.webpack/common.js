@@ -108,7 +108,12 @@ module.exports = {
     extensions: ['.js', '.vue', '.json'],
     alias: {
       vue$: 'vue/dist/vue.common.js',
-      app: path.resolve(__dirname, '../js/app'),
+      '@app': path.resolve(__dirname, '../js/app'),
+      '@js': path.resolve(__dirname, '../js'),
+      '@pages': path.resolve(__dirname, '../js/pages'),
+      '@components': path.resolve(__dirname, '../js/components'),
+      '@scss': path.resolve(__dirname, '../scss'),
+      '@node_modules': path.resolve(__dirname, '../node_modules'),
     },
   },
   module: {
