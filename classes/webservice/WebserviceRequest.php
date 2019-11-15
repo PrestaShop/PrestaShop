@@ -1562,7 +1562,7 @@ class WebserviceRequestCore
         foreach ($xmlEntities as $xmlEntity) {
             /**
          * @var SimpleXMLElement $xmlEntity 
-*/
+        */
             $attributes = $xmlEntity->children();
 
             /* @var ObjectModel $object */
