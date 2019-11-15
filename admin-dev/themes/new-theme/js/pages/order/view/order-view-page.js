@@ -40,20 +40,32 @@ export default class OrderViewPage {
   }
 
   listenForProductDelete() {
-    $(OrderViewPageMap.productDeleteBtn).on('click', event => this.orderProductManager.handleDeleteProductEvent(event));
+    $(OrderViewPageMap.productDeleteBtn).unbind('click').on('click', event => this.orderProductManager.handleDeleteProductEvent(event));
 
-    EventEmitter.on(OrderViewEventMap.productDeletedFromOrder, (event) => {
+    const callback = (event) => {
       this.orderProductRenderer.removeProductFromList(event.oldOrderDetailId);
       this.orderPricesRefresher.refresh(event.orderId);
-    });
+    };
+
+    EventEmitter.off(OrderViewEventMap.productDeletedFromOrder, callback)
+      .on(OrderViewEventMap.productDeletedFromOrder, callback);
   }
 
   listenForProductEdit() {
-    $(OrderViewPageMap.productEditBtn).on('click', event => this.orderProductManager.handleUpdateModalFormData(event));
+    const callback = event => this.orderProductManager.handleUpdateModalFormData(event);
+    $(OrderViewPageMap.productEditBtn).off('click', callback).on('click', callback);
   }
 
   listenForProductAdd() {
     $(OrderViewPageMap.productAddBtn).on('click', event => this.orderProductRenderer.moveProductsPanelToModificationPosition());
     $(OrderViewPageMap.productCancelAddBtn).on('click', event => this.orderProductRenderer.moveProductPanelToOriginalPosition());
+
+    EventEmitter.on(OrderViewEventMap.productAddedToOrder, (event) => {
+      this.orderProductRenderer.addOrUpdateProductFromToList(event.orderProductId, event.newRow);
+      this.orderPricesRefresher.refresh(event.orderId);
+      this.orderProductRenderer.moveProductPanelToOriginalPosition();
+      this.listenForProductDelete();
+      this.listenForProductEdit();
+    });
   }
 }

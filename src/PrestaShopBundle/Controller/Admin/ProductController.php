@@ -31,6 +31,7 @@ use Exception;
 use PrestaShop\PrestaShop\Adapter\Product\ListParametersUpdater;
 use PrestaShop\PrestaShop\Adapter\Tax\TaxRuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Warehouse\WarehouseDataProvider;
+use PrestaShop\PrestaShop\Core\Currency\CurrencyDataProviderInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
@@ -1310,16 +1311,26 @@ class ProductController extends FrameworkBundleAdminController
     {
         try {
             $searchPhrase = $request->query->get('search_phrase');
+            $currencyId = $request->query->get('search_currency');
+            $currency = null;
+
+            /** @var CurrencyDataProviderInterface $currencyDataProvider */
+            $currencyDataProvider = $this->container->get('prestashop.adapter.data_provider.currency');
+            if ($currencyId !== null) {
+                $currency = $currencyDataProvider->getCurrencyById((int) $currencyId);
+            } else {
+                $currency = $currencyDataProvider->getCurrencyByIsoCode($currencyDataProvider->getDefaultCurrencyIsoCode());
+            }
 
             /** @var FoundProduct[] $foundProducts */
-            $foundProducts = $this->getQueryBus()->handle(new SearchProducts($searchPhrase, 10));
+            $foundProducts = $this->getQueryBus()->handle(new SearchProducts($searchPhrase, 10, $currency));
 
             $serializer = $this->get('prestashop.bundle.snake_case_serializer_json');
 
-            return new Response($serializer->serialize($foundProducts, 'json'));
+            return new Response($serializer->serialize($foundProducts, 'json'), 200, ['Content-Type' => 'application/json']);
         } catch (Exception $e) {
             return $this->json(
-                ['message' => $this->getErrorMessageForException($e, [])],
+                [$e, 'message' => $this->getErrorMessageForException($e, [])],
                 Response::HTTP_INTERNAL_SERVER_ERROR
             );
         }
