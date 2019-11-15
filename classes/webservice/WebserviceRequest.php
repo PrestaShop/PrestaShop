@@ -1561,7 +1561,7 @@ class WebserviceRequestCore
         $postponeNTreeRegeneration = false;
         foreach ($xmlEntities as $xmlEntity) {
             /**
- * @var SimpleXMLElement $xmlEntity 
+         * @var SimpleXMLElement $xmlEntity 
 */
             $attributes = $xmlEntity->children();
 
