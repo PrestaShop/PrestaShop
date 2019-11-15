@@ -673,7 +673,7 @@ class WebserviceRequestCore
      *
      * @param int    $num
      * @param string $label
-     * @param array  $value
+     * @param array $value
      * @param array  $values
      * @param int $code
      */
