@@ -46,8 +46,14 @@ class PrestaShopLoggerCore extends ObjectModel
 
     /** @var int Object ID */
     public $object_id;
+    
+    /** @var int Shop ID */
+    public $id_shop;
+    
+    /** @var int Language ID */
+    public $id_lang;
 
-    /** @var int Object ID */
+    /** @var int Employee ID */
     public $id_employee;
 
     /** @var string Object creation date */
@@ -67,6 +73,8 @@ class PrestaShopLoggerCore extends ObjectModel
             'error_code' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
             'message' => array('type' => self::TYPE_STRING, 'validate' => 'isString', 'required' => true),
             'object_id' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
+            'id_shop' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
+            'id_lang' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
             'id_employee' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
             'object_type' => array('type' => self::TYPE_STRING, 'validate' => 'isName'),
             'date_add' => array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
@@ -133,6 +141,8 @@ class PrestaShopLoggerCore extends ObjectModel
         if (!empty($objectType) && !empty($objectId)) {
             $log->object_type = pSQL($objectType);
             $log->object_id = (int) $objectId;
+            $log->id_shop = (int) Context::getContext()->shop->id;
+            $log->id_lang = (int) Context::getContext()->language->id;
         }
 
         if ($objectType != 'Swift_Message') {
@@ -152,14 +162,14 @@ class PrestaShopLoggerCore extends ObjectModel
     }
 
     /**
-     * this function md5($this->message.$this->severity.$this->error_code.$this->object_type.$this->object_id).
+     * this function md5($this->message.$this->severity.$this->error_code.$this->object_type.$this->object_id.$this->id_shop.$this->id_lang).
      *
      * @return string hash
      */
     public function getHash()
     {
         if (empty($this->hash)) {
-            $this->hash = md5($this->message . $this->severity . $this->error_code . $this->object_type . $this->object_id);
+            $this->hash = md5($this->message . $this->severity . $this->error_code . $this->object_type . $this->object_id . $this->id_shop . $this->id_lang);
         }
 
         return $this->hash;
@@ -196,6 +206,8 @@ class PrestaShopLoggerCore extends ObjectModel
 					AND `error_code` = \'' . $this->error_code . '\'
 					AND `object_type` = \'' . $this->object_type . '\'
 					AND `object_id` = \'' . $this->object_id . '\'
+                    AND `id_shop` = \'' . $this->id_shop . '\'
+                    AND `id_lang` = \'' . $this->id_lang . '\'
 				');
         }
 
