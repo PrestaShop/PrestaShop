@@ -1112,7 +1112,7 @@ class WebserviceRequestCore
             if ((!isset($this->resourceConfiguration['hidden_fields']) 
                 || (isset($this->resourceConfiguration['hidden_fields']) && !in_array($fieldName, $this->resourceConfiguration['hidden_fields'])))
             ) {
-                if ((!isset($field['i18n'])
+                if ((!isset($field['i18n']) 
                     || (isset($field['i18n']) && !$field['i18n']))
                 ) {
                     $available_filters[] = $fieldName;
