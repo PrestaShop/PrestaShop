@@ -222,6 +222,17 @@ admin_orders_send_process_order_email:
     _controller: PrestaShopBundle:Admin/Sell/Order/Order:sendProcessOrderEmail
     _legacy_controller: AdminOrders
 
+admin_orders_add_product:
+  path: /{orderId}/products
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Order/Order:addProduct
+    _legacy_controller: AdminOrders
+  requirements:
+    orderId: \d+
+  options:
+    expose: true
+
 admin_orders_delete_product:
   path: /{orderId}/products/{orderDetailId}/delete
   methods: [POST]

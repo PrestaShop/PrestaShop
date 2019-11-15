@@ -51,8 +51,8 @@ services:
         class: PrestaShop\PrestaShop\Adapter\Product\QueryHandler\SearchProductsHandler
         arguments:
             - '@=service("prestashop.adapter.legacy.context").getContext().language.id'
-            - '@=service("prestashop.adapter.legacy.context").getContext().currency.iso_code'
             - '@prestashop.core.localization.locale.context_locale'
+            - '@prestashop.adapter.context_state_manager'
         tags:
             - name: tactician.handler
               command: PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProducts
