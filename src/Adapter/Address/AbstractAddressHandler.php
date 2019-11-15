@@ -27,9 +27,11 @@
 namespace PrestaShop\PrestaShop\Adapter\Address;
 
 use Address;
+use CustomerAddress;
 use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressException;
 use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Address\ValueObject\AddressId;
+use PrestaShopDatabaseException;
 use PrestaShopException;
 
 /**
@@ -38,11 +40,12 @@ use PrestaShopException;
 abstract class AbstractAddressHandler
 {
     /**
-     * Gets legacy address
-     *
      * @param AddressId $addressId
      *
      * @return Address
+     *
+     * @throws AddressException
+     * @throws AddressNotFoundException
      */
     protected function getAddress(AddressId $addressId)
     {
@@ -80,5 +83,31 @@ abstract class AbstractAddressHandler
                 $address->id
             ));
         }
+    }
+
+    /**
+     * @return array
+     *
+     * @throws AddressException
+     */
+    protected function getRequiredFields()
+    {
+        try {
+            $requiredFields = (new CustomerAddress())->getFieldsRequiredDatabase();
+        } catch (PrestaShopDatabaseException $e) {
+            throw new AddressException('Something went wrong while retrieving required fields for address', 0, $e);
+        }
+
+        if (empty($requiredFields)) {
+            return [];
+        }
+
+        $fields = [];
+
+        foreach ($requiredFields as $field) {
+            $fields[] = $field['field_name'];
+        }
+
+        return $fields;
     }
 }

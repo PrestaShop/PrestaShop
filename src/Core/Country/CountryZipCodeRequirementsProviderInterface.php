@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -24,20 +24,11 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Country\QueryHandler;
+namespace PrestaShop\PrestaShop\Core\Country;
 
-use PrestaShop\PrestaShop\Core\Domain\Country\Query\GetCountryZipCodeRequirements;
-use PrestaShop\PrestaShop\Core\Domain\Country\QueryResult\CountryZipCodeRequirements;
+use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
 
-/**
- * Defines contract for country zip requirements providing handler
- */
-interface GetCountryZipCodeRequirementsHandlerInterface
+interface CountryZipCodeRequirementsProviderInterface
 {
-    /**
-     * @param GetCountryZipCodeRequirements $query
-     *
-     * @return CountryZipCodeRequirements
-     */
-    public function handle(GetCountryZipCodeRequirements $query): CountryZipCodeRequirements;
+    public function getCountryZipCodeRequirements(CountryId $countryId): CountryZipCodeRequirements;
 }
