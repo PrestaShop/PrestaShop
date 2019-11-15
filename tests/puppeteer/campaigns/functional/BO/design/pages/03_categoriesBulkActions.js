@@ -15,8 +15,8 @@ const AddPagePage = require('@pages/BO/design/pages/add');
 let browser;
 let page;
 let numberOfCategories = 0;
-let firstCategoryData;
-let secondCategoryData;
+let firstCategoryData = new CategoryFaker({name: 'todelete'});
+let secondCategoryData = new CategoryFaker({name: 'todelete'});
 
 // Init objects needed
 const init = async function () {
@@ -37,8 +37,6 @@ describe('Create Categories, Then disable / Enable and Delete with Bulk actions'
     browser = await helper.createBrowser();
     page = await helper.newTab(browser);
     this.pageObjects = await init();
-    firstCategoryData = await (new CategoryFaker({name: 'todelete'}));
-    secondCategoryData = await (new CategoryFaker({name: 'todelete'}));
   });
   after(async () => {
     await helper.closeBrowser(browser);
@@ -64,38 +62,24 @@ describe('Create Categories, Then disable / Enable and Delete with Bulk actions'
 
   // 1 : Create 2 categories In BO
   describe('Create 2 categories', async () => {
-    it('should go to add new page category', async function () {
-      await this.pageObjects.pagesPage.goToAddNewPageCategory();
-      const pageTitle = await this.pageObjects.addPageCategoryPage.getPageTitle();
-      await expect(pageTitle).to.contains(this.pageObjects.addPageCategoryPage.pageTitleCreate);
-    });
+    const categoriesToCreate = [firstCategoryData, secondCategoryData];
+    categoriesToCreate.forEach((categoryToCreate) => {
+      it('should go to add new page category', async function () {
+        await this.pageObjects.pagesPage.goToAddNewPageCategory();
+        const pageTitle = await this.pageObjects.addPageCategoryPage.getPageTitle();
+        await expect(pageTitle).to.contains(this.pageObjects.addPageCategoryPage.pageTitleCreate);
+      });
 
-    it('should create the first category ', async function () {
-      const textResult = await this.pageObjects.addPageCategoryPage.createEditPageCategory(firstCategoryData);
-      await expect(textResult).to.equal(this.pageObjects.pagesPage.successfulCreationMessage);
-    });
+      it('should create the first category ', async function () {
+        const textResult = await this.pageObjects.addPageCategoryPage.createEditPageCategory(categoryToCreate);
+        await expect(textResult).to.equal(this.pageObjects.pagesPage.successfulCreationMessage);
+      });
 
-    it('should go back to categories list', async function () {
-      await this.pageObjects.pagesPage.backToList();
-      const pageTitle = await this.pageObjects.pagesPage.getPageTitle();
-      await expect(pageTitle).to.contains(this.pageObjects.pagesPage.pageTitle);
-    });
-
-    it('should go to add new page category', async function () {
-      await this.pageObjects.pagesPage.goToAddNewPageCategory();
-      const pageTitle = await this.pageObjects.addPageCategoryPage.getPageTitle();
-      await expect(pageTitle).to.contains(this.pageObjects.addPageCategoryPage.pageTitleCreate);
-    });
-
-    it('should create the second category ', async function () {
-      const textResult = await this.pageObjects.addPageCategoryPage.createEditPageCategory(secondCategoryData);
-      await expect(textResult).to.equal(this.pageObjects.pagesPage.successfulCreationMessage);
-    });
-
-    it('should go back to categories list', async function () {
-      await this.pageObjects.pagesPage.backToList();
-      const pageTitle = await this.pageObjects.pagesPage.getPageTitle();
-      await expect(pageTitle).to.contains(this.pageObjects.pagesPage.pageTitle);
+      it('should go back to categories list', async function () {
+        await this.pageObjects.pagesPage.backToList();
+        const pageTitle = await this.pageObjects.pagesPage.getPageTitle();
+        await expect(pageTitle).to.contains(this.pageObjects.pagesPage.pageTitle);
+      });
     });
   });
   // 2 : Enable/Disable categories created with bulk actions
@@ -114,42 +98,29 @@ describe('Create Categories, Then disable / Enable and Delete with Bulk actions'
       );
       await expect(textResult).to.contains('todelete');
     });
-
-    it('should disable categories with Bulk Actions and check Result', async function () {
-      const disableTextResult = await this.pageObjects.pagesPage.changeEnabledColumnBulkActions(
-        'cms_page_category',
-        false,
-      );
-      await expect(disableTextResult).to.be.equal(this.pageObjects.pagesPage.successfulUpdateStatusMessage);
-      const numberOfCategoriesInGrid = await this.pageObjects.pagesPage.getNumberOfElementInGrid(
-        'cms_page_category',
-      );
-      /* eslint-disable no-await-in-loop */
-      for (let i = 1; i <= numberOfCategoriesInGrid; i++) {
-        const textColumn = await this.pageObjects.pagesPage.getTextColumnFromTable(
+    const statuses = [
+      {args: {status: 'disable', enable: false}, expected: 'clear'},
+      {args: {status: 'enable', enable: true}, expected: 'check'},
+    ];
+    statuses.forEach((categoryStatus) => {
+      it(`should ${categoryStatus.args.status} categories with Bulk Actions and check Result`, async function () {
+        const textResult = await this.pageObjects.pagesPage.changeEnabledColumnBulkActions(
           'cms_page_category',
-          i,
-          'active',
+          categoryStatus.args.enable,
         );
-        await expect(textColumn).to.contains('clear');
-      }
-      /* eslint-enable no-await-in-loop */
-    });
-
-    it('should enable categories with Bulk Actions and check Result', async function () {
-      const enableTextResult = await this.pageObjects.pagesPage.changeEnabledColumnBulkActions('cms_page_category');
-      await expect(enableTextResult).to.be.equal(this.pageObjects.pagesPage.successfulUpdateStatusMessage);
-      const numberOfCategoriesInGrid = await this.pageObjects.pagesPage.getNumberOfElementInGrid('cms_page_category');
-      /* eslint-disable no-await-in-loop */
-      for (let i = 1; i <= numberOfCategoriesInGrid; i++) {
-        const textColumn = await this.pageObjects.pagesPage.getTextColumnFromTable(
+        await expect(textResult).to.be.equal(this.pageObjects.pagesPage.successfulUpdateStatusMessage);
+        const numberOfCategoriesInGrid = await this.pageObjects.pagesPage.getNumberOfElementInGrid(
           'cms_page_category',
-          i,
-          'active',
         );
-        await expect(textColumn).to.contains('check');
-      }
-      /* eslint-enable no-await-in-loop */
+        for (let i = 1; i <= numberOfCategoriesInGrid; i++) {
+          const textColumn = await this.pageObjects.pagesPage.getTextColumnFromTable(
+            'cms_page_category',
+            i,
+            'active',
+          );
+          await expect(textColumn).to.contains(categoryStatus.expected);
+        }
+      });
     });
   });
   // 3 : Delete Categories created with bulk actions

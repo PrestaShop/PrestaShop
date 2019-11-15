@@ -22,8 +22,6 @@ module.exports = class Pages extends BOBasePage {
     this.listTableColumn = `${this.listTableRow} td.column-%COLUMN`;
     this.columnValidIcon = `${this.listTableColumn.replace('%COLUMN', 'active')} i.grid-toggler-icon-valid`;
     this.columnNotValidIcon = `${this.listTableColumn.replace('%COLUMN', 'active')} i.grid-toggler-icon-not-valid`;
-    this.listTableToggleDropDown = `${this.listTableColumn.replace('%COLUMN', 'actions')} a[data-toggle='dropdown']`;
-    this.listTableEditLink = `${this.listTableColumn.replace('%COLUMN', 'actions')} a[href*='edit']`;
     // Bulk Actions
     this.selectAllRowsLabel = `${this.listForm} .md-checkbox label`;
     this.bulkActionsToggleButton = `${this.listForm} button.js-bulk-actions-btn`;
@@ -35,10 +33,9 @@ module.exports = class Pages extends BOBasePage {
     this.filterSearchButton = `${this.gridTable} button[name='%TABLE[actions][search]']`;
     this.filterResetButton = `${this.gridTable} button[name='%TABLE[actions][reset]']`;
     // Actions buttons in Row
-    this.actionsColumn = `${this.listTableRow} td.column-actions`;
-    this.dropdownToggleButton = `${this.actionsColumn} a.dropdown-toggle`;
-    this.dropdownToggleMenu = `${this.actionsColumn} div.dropdown-menu`;
-    this.deleteRowLink = `${this.dropdownToggleMenu} a[data-method="DELETE"]`;
+    this.listTableToggleDropDown = `${this.listTableColumn.replace('%COLUMN', 'actions')} a[data-toggle='dropdown']`;
+    this.listTableEditLink = `${this.listTableColumn.replace('%COLUMN', 'actions')} a[href*='edit']`;
+    this.deleteRowLink = `${this.listTableColumn.replace('%COLUMN', 'actions')} a[data-method="DELETE"]`;
 
     // Categories selectors
     this.backToListButton = '#cms_page_category_grid_panel div.card-footer a';
@@ -100,19 +97,18 @@ module.exports = class Pages extends BOBasePage {
    * @return {Promise<textContent>}
    */
   async deleteRowInTable(table, row) {
-    const dropdownToggleButton = await this.replaceAll(this.dropdownToggleButton, '%TABLE', table);
+    const listTableToggleDropDown = await this.replaceAll(this.listTableToggleDropDown, '%TABLE', table);
     const deleteRowLink = await this.replaceAll(this.deleteRowLink, '%TABLE', table);
     // Click on dropDown
     await Promise.all([
-      this.page.click(dropdownToggleButton.replace('%ROW', row).replace('%COLUMN', 'actions')),
-      this.page.waitForSelector(`${dropdownToggleButton
-        .replace('%ROW', row)
-        .replace('%COLUMN', 'actions')}[aria-expanded='true']`, {visible: true},
+      this.page.click(listTableToggleDropDown.replace('%ROW', row)),
+      this.page.waitForSelector(`${listTableToggleDropDown
+        .replace('%ROW', row)}[aria-expanded='true']`, {visible: true},
       ),
     ]);
     // Click on delete and wait for modal
     await Promise.all([
-      this.page.click(deleteRowLink.replace('%ROW', row).replace('%COLUMN', 'actions')),
+      this.page.click(deleteRowLink.replace('%ROW', row)),
       this.dialogListener(),
     ]);
     return this.getTextContent(this.alertSuccessBlockParagraph);
