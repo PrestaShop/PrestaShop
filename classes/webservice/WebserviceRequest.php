@@ -457,7 +457,7 @@ class WebserviceRequestCore
     }
 
     /**
-     * @todo : set this method out 
+     * @todo : set this method out
      */
 
     /**
