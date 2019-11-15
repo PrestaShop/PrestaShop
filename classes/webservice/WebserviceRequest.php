@@ -713,7 +713,7 @@ class WebserviceRequestCore
     /**
      * Used to replace the default PHP error handler, in order to display PHP errors in a XML format.
      *
-     * @param string $errno   contains the level of the error raised, as an integer
+     * @param string $errno contains the level of the error raised, as an integer
      * @param array  $errstr  contains the error message, as a string
      * @param array  $errfile errfile, which contains the filename that the error was raised in, as a string
      * @param array  $errline errline, which contains the line number the error was raised at, as an integer
