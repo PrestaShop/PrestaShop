@@ -88,7 +88,7 @@ class Admin
 
         // in case of exception handler sub request, avoid infinite redirection
         if ($event->getRequestType() === HttpKernelInterface::SUB_REQUEST
-            && isset($event->getRequest()->attributes['exception'])
+            && $event->getRequest()->attributes->has('exception')
         ) {
             return true;
         }

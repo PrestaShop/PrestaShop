@@ -73,3 +73,10 @@ admin_currencies_refresh_exchange_rates:
         _legacy_controller: AdminCurrencies
         _legacy_link: AdminCurrencies:SubmitExchangesRates
 
+admin_currencies_get_reference_data:
+  path: /reference-data/{currencyIsoCode}
+  methods: GET
+  defaults:
+    _controller: 'PrestaShopBundle:Admin\Improve\International\Currency:getReferenceData'
+    _legacy_controller: AdminCurrencies
+    _legacy_link: AdminCurrencies:getCLDRDataAction

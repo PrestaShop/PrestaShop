@@ -163,6 +163,7 @@ final class EmployeeGridDefinitionFactory extends AbstractGridDefinitionFactory
                                 'route' => 'admin_employees_edit',
                                 'route_param_name' => 'employeeId',
                                 'route_param_field' => 'id_employee',
+                                'clickable_row' => true,
                             ])
                         )
                         ->add(

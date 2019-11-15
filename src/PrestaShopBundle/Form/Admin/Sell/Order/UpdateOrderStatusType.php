@@ -50,6 +50,8 @@ class UpdateOrderStatusType extends AbstractType
     {
         $builder
             ->add('new_order_status_id', ChoiceType::class, [
+                'required' => false,
+                'placeholder' => false,
                 'choices' => $this->orderStatusChoiceProvider->getChoices(),
                 'translation_domain' => false,
             ])

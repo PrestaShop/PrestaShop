@@ -5,6 +5,7 @@ window.jQuery = $;
 
 import 'jquery-migrate';
 import 'jquery.browser';
+import '@prestashop-core/jquery.live-polyfill';
 import './cart';
 import './checkout';
 import './facets';

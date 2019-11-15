@@ -150,6 +150,7 @@ final class WebserviceKeyDefinitionFactory extends AbstractGridDefinitionFactory
                                 'route' => 'admin_webservice_keys_edit',
                                 'route_param_name' => 'webserviceKeyId',
                                 'route_param_field' => 'id_webservice_account',
+                                'clickable_row' => true,
                             ])
                         )
                         ->add(

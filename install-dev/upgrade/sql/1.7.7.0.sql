@@ -14,9 +14,21 @@ ALTER TABLE `PREFIX_product_attribute` ADD `mpn` VARCHAR(40) NULL AFTER `upc`;
 ALTER TABLE `PREFIX_product` ADD `mpn` VARCHAR(40) NULL AFTER `upc`;
 
 /* Delete price display precision configuration */
+
 DELETE `PREFIX_configuration` WHERE name = 'PS_PRICE_DISPLAY_PRECISION';
 
 # improve performance of lookup by product reference/product_supplier avoiding full table scan
 ALTER TABLE PREFIX_product
     ADD INDEX reference_idx(reference),
     ADD INDEX supplier_reference_idx(supplier_reference);
+
+DELETE FROM `PREFIX_configuration` WHERE name = 'PS_PRICE_DISPLAY_PRECISION';
+
+/* Set optin field value to 0 in employee table */
+ALTER TABLE `PREFIX_employee` MODIFY COLUMN `optin` tinyint(1) unsigned DEFAULT NULL;
+
+/* Increase column size */
+ALTER TABLE `PREFIX_hook` CHANGE `name` `name` VARCHAR(191) NOT NULL;
+ALTER TABLE `PREFIX_hook` CHANGE `title` `title` VARCHAR(255) NOT NULL;
+ALTER TABLE `PREFIX_hook_alias` CHANGE `name` `name` VARCHAR(191) NOT NULL;
+ALTER TABLE `PREFIX_hook_alias` CHANGE `alias` `alias` VARCHAR(191) NOT NULL;

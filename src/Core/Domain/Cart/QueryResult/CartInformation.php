@@ -29,6 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult;
 use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation\CartAddress;
 use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation\CartProduct;
 use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation\CartRule;
+use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation\CartShipping;
 
 class CartInformation
 {
@@ -64,7 +65,7 @@ class CartInformation
     private $addresses;
 
     /**
-     * @var array
+     * @var CartShipping|null
      */
     private $shipping;
 
@@ -80,7 +81,7 @@ class CartInformation
      * @param int $langId
      * @param CartRule[] $cartRules
      * @param CartAddress[] $addresses
-     * @param array $shipping
+     * @param CartShipping $shipping
      * @param array $summary
      */
     public function __construct(
@@ -90,8 +91,8 @@ class CartInformation
         int $langId,
         array $cartRules,
         array $addresses,
-        array $shipping,
-        array $summary
+        CartShipping $shipping = null,
+        array $summary = null
     ) {
         $this->cartId = $cartId;
         $this->products = $products;
@@ -152,9 +153,9 @@ class CartInformation
     }
 
     /**
-     * @return array
+     * @return CartShipping|null
      */
-    public function getShipping(): array
+    public function getShipping(): ?CartShipping
     {
         return $this->shipping;
     }

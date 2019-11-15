@@ -16,6 +16,8 @@ npm install
 | URL_FO              | URL of your PrestaShop website Front Office (default to **`http://localhost:8080/`**) |
 | URL_BO              | URL of your PrestaShop website Back Office (default to **`URL_FO + admin-dev/`**) |
 | URL_INSTALL         | URL of the Install folder (default to **`URL_FO + install-dev/`**) |
+| FIRSTNAME           | Firstname of your admin employee (default to **`demo`**) |
+| LASTNAME            | Lastname of your admin employee (default to **`demo`**) |
 | LOGIN               | LOGIN of your PrestaShop website (default to **`demo@prestashop.com`**) |
 | PASSWD              | PASSWD of your PrestaShop website (default to **`prestashop_demo`**) |
 | SHOPNAME            | Shop Name of tour PrestaShop (default to **`Prestashop`**) |
@@ -68,7 +70,14 @@ This script will detect not found and erroneous pages, by crawling your back off
 
 
 ### Launch script
-If you want to run the links checker test you can run the script **`campaigns/linkchecker.js`**
+If you want to run the links checker test you can run the script **`tools/linkchecker.js`**.
+It uses a `urls.js` file describing all the URLs it can crawl.
+
+You **must** disable the Security Token before running this script ! Add this line in your `.htaccess` file:
+
+```bash
+SetEnv _TOKEN_ disabled
+``` 
 
 #### With default values
 

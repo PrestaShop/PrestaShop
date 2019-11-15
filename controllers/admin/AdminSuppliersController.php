@@ -232,6 +232,14 @@ class AdminSuppliersControllerCore extends AdminController
                     ),
                 ),
                 array(
+                    'type' => 'text',
+                    'label' => $this->trans('DNI', array(), 'Admin.Global'),
+                    'name' => 'dni',
+                    'maxlength' => 16,
+                    'col' => 4,
+                    'required' => true, // Only required in case of specifics countries
+                ),
+                array(
                     'type' => 'file',
                     'label' => $this->trans('Logo', array(), 'Admin.Global'),
                     'name' => 'logo',
@@ -315,6 +323,7 @@ class AdminSuppliersControllerCore extends AdminController
                 'city' => $address->city,
                 'id_country' => $address->id_country,
                 'id_state' => $address->id_state,
+                'dni' => $address->dni,
             );
         } else {
             $this->fields_value = array(
@@ -371,7 +380,7 @@ class AdminSuppliersControllerCore extends AdminController
                     $combination['id_product_attribute']
                 );
                 $comb_array[$combination['id_product_attribute']]['product_supplier_reference'] = $comb_infos['product_supplier_reference'];
-                $comb_array[$combination['id_product_attribute']]['product_supplier_price_te'] = Tools::displayPrice($comb_infos['product_supplier_price_te'], new Currency($comb_infos['id_currency']));
+                $comb_array[$combination['id_product_attribute']]['product_supplier_price_te'] = $this->context->getCurrentLocale()->formatPrice($comb_infos['product_supplier_price_te'], Currency::getIsoCodeById((int) $comb_infos['id_currency']));
                 $comb_array[$combination['id_product_attribute']]['reference'] = $combination['reference'];
                 $comb_array[$combination['id_product_attribute']]['ean13'] = $combination['ean13'];
                 $comb_array[$combination['id_product_attribute']]['upc'] = $combination['upc'];
@@ -402,7 +411,7 @@ class AdminSuppliersControllerCore extends AdminController
                 );
                 $products[$i]->product_supplier_reference = $product_infos['product_supplier_reference'];
                 $currencyId = $product_infos['id_currency'] ?: Currency::getDefaultCurrency()->id;
-                $products[$i]->product_supplier_price_te = Tools::displayPrice($product_infos['product_supplier_price_te'], new Currency($currencyId));
+                $products[$i]->product_supplier_price_te = $this->context->getCurrentLocale()->formatPrice($product_infos['product_supplier_price_te'], Currency::getIsoCodeById((int) $currencyId));
             }
         }
 
@@ -486,8 +495,23 @@ class AdminSuppliersControllerCore extends AdminController
             $address->id_country = Tools::getValue('id_country', null);
             $address->id_state = Tools::getValue('id_state', null);
             $address->city = Tools::getValue('city', null);
+            $address->dni = Tools::getValue('dni', null);
 
             $validation = $address->validateController();
+
+            /*
+             * Make sure dni is checked without raising an exception.
+             * This field is mandatory for some countries.
+             */
+            if ($address->validateField('dni', $address->dni) !== true) {
+                $validation['dni'] = $this->trans(
+                    '%s is invalid.',
+                    array(
+                        '<b>dni</b>',
+                    ),
+                    'Admin.Notifications.Error'
+                );
+            }
 
             // checks address validity
             if (count($validation) > 0) {

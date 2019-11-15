@@ -1,10 +1,11 @@
+require('module-alias/register');
 // Using chai
 const {expect} = require('chai');
-const helper = require('../../utils/helpers');
+const helper = require('@utils/helpers');
 
 // Importing pages
-const HomePage = require('../../../pages/FO/home');
-const {Categories} = require('../../data/demo/categories');
+const HomePage = require('@pages/FO/home');
+const {Categories} = require('@data/demo/categories');
 
 let browser;
 let page;
@@ -33,21 +34,26 @@ describe('Filter Products by categories in Home page', async () => {
   after(async () => {
     await helper.closeBrowser(browser);
   });
+
   // Steps
   it('should open the shop page', async () => {
     await this.pageObjects.homePage.goTo(global.FO.URL);
-    await this.pageObjects.homePage.checkHomePage();
+    const result = await this.pageObjects.homePage.isHomePage();
+    await expect(result).to.be.true;
   });
+
   it('should check and get the products number', async () => {
     await this.pageObjects.homePage.waitForSelectorAndClick(this.pageObjects.homePage.allProductLink);
     allProductsNumber = await this.pageObjects.homePage.getNumberFromText(this.pageObjects.homePage.totalProducts);
     await expect(allProductsNumber).to.be.above(0);
   });
+
   it('should filter products by the category "Accessories" and check result', async () => {
     await this.pageObjects.homePage.goToCategory(Categories.accessories.id);
     const numberOfProducts = await this.pageObjects.homePage.getNumberFromText(this.pageObjects.homePage.totalProducts);
     await expect(numberOfProducts).to.be.below(allProductsNumber);
   });
+
   it('should filter products by the subcategory "Stationery" and check result', async () => {
     await this.pageObjects.homePage.goToSubCategory(Categories.accessories.id, Categories.stationery.id);
     const numberOfProducts = await this.pageObjects.homePage.getNumberFromText(this.pageObjects.homePage.totalProducts);

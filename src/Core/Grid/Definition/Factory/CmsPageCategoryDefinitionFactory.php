@@ -157,6 +157,7 @@ final class CmsPageCategoryDefinitionFactory extends AbstractGridDefinitionFacto
                                 'route' => 'admin_cms_pages_index',
                                 'route_param_name' => 'id_cms_category',
                                 'route_param_field' => 'id_cms_category',
+                                'clickable_row' => true,
                             ])
                         )
                         ->add((new LinkRowAction('edit'))

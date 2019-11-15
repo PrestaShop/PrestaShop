@@ -48,14 +48,12 @@ $(document).ready(function() {
 	        e.preventDefault();
 		}
 	});
-
-	$("#addons-search-box").live('blur', function() {
+	$(document).on('blur', '#addons-search-box', function(e) {
 		setTimeout(function(){
 			$("#addons-search-results").remove()
 		}, 200);
 	});
-
-	$(".addons-style-view-product").live('click', function() {
+	$(document).on('click', '.addons-style-view-product', function(e) {
 		goToProduct($(this).find('p').html())
 	});
 

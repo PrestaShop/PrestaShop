@@ -152,9 +152,6 @@ final class EmployeeType extends AbstractType
         }
 
         $builder
-            ->add('optin', SwitchType::class, [
-                'required' => false,
-            ])
             ->add('default_page', ChoiceType::class, [
                 'choices' => $this->tabChoices,
             ])

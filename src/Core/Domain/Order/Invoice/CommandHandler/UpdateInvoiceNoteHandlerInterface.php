@@ -36,5 +36,5 @@ interface UpdateInvoiceNoteHandlerInterface
     /**
      * @param UpdateInvoiceNoteCommand $command
      */
-    public function handle(UpdateInvoiceNoteCommand $command);
+    public function handle(UpdateInvoiceNoteCommand $command): void;
 }

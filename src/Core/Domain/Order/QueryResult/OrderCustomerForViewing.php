@@ -71,6 +71,11 @@ class OrderCustomerForViewing
     private $validOrdersPlaced;
 
     /**
+     * @var string
+     */
+    private $privateNote;
+
+    /**
      * @param int $id
      * @param string $firstName
      * @param string $lastName
@@ -79,6 +84,7 @@ class OrderCustomerForViewing
      * @param DateTimeImmutable $accountRegistrationDate
      * @param string $totalSpentSinceRegistration
      * @param int $validOrdersPlaced
+     * @param string|null $privateNote
      */
     public function __construct(
         int $id,
@@ -88,7 +94,8 @@ class OrderCustomerForViewing
         string $email,
         DateTimeImmutable $accountRegistrationDate,
         string $totalSpentSinceRegistration,
-        int $validOrdersPlaced
+        int $validOrdersPlaced,
+        ?string $privateNote
     ) {
         $this->id = $id;
         $this->firstName = $firstName;
@@ -98,6 +105,7 @@ class OrderCustomerForViewing
         $this->accountRegistrationDate = $accountRegistrationDate;
         $this->totalSpentSinceRegistration = $totalSpentSinceRegistration;
         $this->validOrdersPlaced = $validOrdersPlaced;
+        $this->privateNote = $privateNote;
     }
 
     /**
@@ -162,5 +170,13 @@ class OrderCustomerForViewing
     public function getValidOrdersPlaced(): int
     {
         return $this->validOrdersPlaced;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getPrivateNote(): ?string
+    {
+        return $this->privateNote;
     }
 }

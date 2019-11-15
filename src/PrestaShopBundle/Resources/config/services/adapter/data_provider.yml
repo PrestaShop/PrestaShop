@@ -75,7 +75,8 @@ services:
 
     prestashop.adapter.data_provider.combination:
         class: PrestaShop\PrestaShop\Adapter\CombinationDataProvider
-        arguments: ['@prestashop.core.localization.locale.repository']
+        arguments:
+            - "@prestashop.core.localization.locale.context_locale"
 
     prestashop.adapter.data_provider.cms:
         class: PrestaShop\PrestaShop\Adapter\CMS\CMSDataProvider

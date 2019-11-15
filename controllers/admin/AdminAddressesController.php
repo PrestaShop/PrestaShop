@@ -517,6 +517,11 @@ class AdminAddressesControllerCore extends AdminController
                 echo json_encode(array('infos' => pSQL($customer['firstname']) . '_' . pSQL($customer['lastname']) . '_' . pSQL($customer['company'])));
             }
         }
+
+        if (Tools::isSubmit('dni_required')) {
+            echo json_encode(['dni_required' => Address::dniRequired((int) Tools::getValue('id_country'))]);
+        }
+
         die;
     }
 

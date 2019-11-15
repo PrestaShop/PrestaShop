@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Grid\Column\Type\Common;
 
 use PrestaShop\PrestaShop\Core\Grid\Column\AbstractColumn;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\PreviewColumn;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
@@ -55,11 +56,15 @@ final class IdentifierColumn extends AbstractColumn
                 'sortable' => true,
                 'with_bulk_field' => false,
                 'bulk_field' => null,
+                'preview' => null,
             ])
             ->setAllowedTypes('identifier_field', 'string')
             ->setAllowedTypes('sortable', 'bool')
             ->setAllowedTypes('with_bulk_field', 'bool')
             ->setAllowedTypes('bulk_field', ['string', 'null'])
+            ->setAllowedValues('preview', function ($previewColumn) {
+                return $previewColumn instanceof PreviewColumn || $previewColumn === null;
+            })
         ;
     }
 }

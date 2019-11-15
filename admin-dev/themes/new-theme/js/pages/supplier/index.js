@@ -35,6 +35,7 @@ import ReloadListExtension from '../../components/grid/extension/reload-list-ext
 import ExportToSqlManagerExtension from '../../components/grid/extension/export-to-sql-manager-extension';
 import FiltersSubmitButtonEnablerExtension
   from '../../components/grid/extension/filters-submit-button-enabler-extension';
+import LinkRowActionExtension from '../../components/grid/extension/link-row-action-extension';
 
 const $ = window.$;
 
@@ -50,4 +51,5 @@ $(() => {
   supplierGrid.addExtension(new ReloadListExtension());
   supplierGrid.addExtension(new ExportToSqlManagerExtension());
   supplierGrid.addExtension(new FiltersSubmitButtonEnablerExtension());
+  supplierGrid.addExtension(new LinkRowActionExtension());
 });

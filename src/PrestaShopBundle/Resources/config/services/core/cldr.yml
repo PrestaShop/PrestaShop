@@ -21,6 +21,11 @@ services:
             - '@prestashop.core.localization.cldr.locale_repository'
             - '@prestashop.core.localization.currency.repository'
 
+    prestashop.core.localization.locale.context_locale:
+        factory: ['@prestashop.core.localization.locale.repository', 'getLocale']
+        class: PrestaShop\PrestaShop\Core\Localization\Locale
+        arguments: ['@=service("prestashop.adapter.legacy.context").getContext().language.getLocale()']
+
     prestashop.core.localization.currency.repository:
         class: PrestaShop\PrestaShop\Core\Localization\Currency\Repository
         arguments:

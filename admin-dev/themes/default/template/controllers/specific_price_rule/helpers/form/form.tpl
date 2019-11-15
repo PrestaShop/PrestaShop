@@ -215,8 +215,7 @@ $(document).ready(function() {
 		else
 			$('#price').removeAttr('disabled');
 	});
-
-	$('#specific_price_rule_form').live('submit', function(e) {
+	$(document).on('submit', '#specific_price_rule_form', function(e) {
 		var html = '';
 		for (i in conditions)
 			html += '<input type="hidden" name="condition_group_'+conditions[i].id_condition_group+'[]" value="'+conditions[i].type+'_'+conditions[i].value+'" />';
@@ -292,8 +291,7 @@ $(document).ready(function() {
 		new_condition_group();
 		return false;
 	});
-
-	$('.condition_group').live('click', function() {
+	$(document).on('click', '.condition_group', function(e) {
 		var id = this.id.split('_');
 		toggle_condition_group(id[2]);
 		return false;

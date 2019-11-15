@@ -384,7 +384,14 @@ class CustomerController extends AbstractAdminController
         $phrases = explode(' ', $query);
         $isRequestFromLegacyPage = !$request->query->has('sf2');
 
-        $customers = $this->getQueryBus()->handle(new SearchCustomers($phrases));
+        try {
+            $customers = $this->getQueryBus()->handle(new SearchCustomers($phrases));
+        } catch (Exception $e) {
+            return $this->json(
+                ['message' => $this->getErrorMessageForException($e, $this->getErrorMessages($e))],
+                Response::HTTP_INTERNAL_SERVER_ERROR
+            );
+        }
 
         // if call is made from legacy page
         // it will return response so legacy can understand it
@@ -688,8 +695,8 @@ class CustomerController extends AbstractAdminController
                 'id_customer' => $record['id_customer'],
                 'social_title' => '--' === $record['social_title'] ? '' : $record['social_title'],
                 'firstname' => $record['firstname'],
-                'lastname' => $record['firstname'],
-                'email' => $record['firstname'],
+                'lastname' => $record['lastname'],
+                'email' => $record['email'],
                 'company' => '--' === $record['company'] ? '' : $record['company'],
                 'total_spent' => '--' === $record['total_spent'] ? '' : $record['total_spent'],
                 'enabled' => $record['active'],
@@ -707,6 +714,7 @@ class CustomerController extends AbstractAdminController
     }
 
     /**
+     * @todo: check access for order create page as its used there (customer OR order access)
      * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))")
      *
      * @param int $customerId
@@ -715,7 +723,14 @@ class CustomerController extends AbstractAdminController
      */
     public function getCartsAction(int $customerId)
     {
-        $carts = $this->getQueryBus()->handle(new GetCustomerCarts($customerId));
+        try {
+            $carts = $this->getQueryBus()->handle(new GetCustomerCarts($customerId));
+        } catch (Exception $e) {
+            return $this->json(
+                ['message' => $this->getErrorMessageForException($e, $this->getErrorMessages($e))],
+                Response::HTTP_INTERNAL_SERVER_ERROR
+            );
+        }
 
         return $this->json([
             'carts' => $carts,
@@ -723,6 +738,7 @@ class CustomerController extends AbstractAdminController
     }
 
     /**
+     * @todo: check access for order create page as its used there (customer OR order access)
      * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))")
      *
      * @param int $customerId
@@ -731,7 +747,14 @@ class CustomerController extends AbstractAdminController
      */
     public function getOrdersAction(int $customerId)
     {
-        $orders = $this->getQueryBus()->handle(new GetCustomerOrders($customerId));
+        try {
+            $orders = $this->getQueryBus()->handle(new GetCustomerOrders($customerId));
+        } catch (Exception $e) {
+            return $this->json(
+                ['message' => $this->getErrorMessageForException($e, $this->getErrorMessages($e))],
+                Response::HTTP_INTERNAL_SERVER_ERROR
+            );
+        }
 
         return $this->json([
             'orders' => $orders,

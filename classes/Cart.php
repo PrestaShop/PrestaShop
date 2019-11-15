@@ -1565,10 +1565,11 @@ class CartCore extends ObjectModel
      * @param int $type Customization type can be Product::CUSTOMIZE_FILE or Product::CUSTOMIZE_TEXTFIELD
      * @param string $value Customization value
      * @param int $quantity Quantity value
+     * @param bool $returnId if true - returns the customization record id
      *
      * @return bool Success
      */
-    public function _addCustomization($id_product, $id_product_attribute, $index, $type, $value, $quantity)
+    public function _addCustomization($id_product, $id_product_attribute, $index, $type, $value, $quantity, $returnId = false)
     {
         $exising_customization = Db::getInstance()->executeS(
             'SELECT cu.`id_customization`, cd.`index`, cd.`value`, cd.`type` FROM `' . _DB_PREFIX_ . 'customization` cu
@@ -1610,6 +1611,10 @@ class CartCore extends ObjectModel
 
         if (!Db::getInstance()->execute($query)) {
             return false;
+        }
+
+        if (true === $returnId) {
+            return (int) $id_customization;
         }
 
         return true;
@@ -1804,7 +1809,8 @@ class CartCore extends ObjectModel
 
             // Delete customization picture if necessary
             if (isset($cust_data['type']) && $cust_data['type'] == Product::CUSTOMIZE_FILE) {
-                $result &= (@unlink(_PS_UPLOAD_DIR_ . $cust_data['value']) && @unlink(_PS_UPLOAD_DIR_ . $cust_data['value'] . '_small'));
+                $result &= file_exists(_PS_UPLOAD_DIR_ . $cust_data['value']) ? @unlink(_PS_UPLOAD_DIR_ . $cust_data['value']) : true;
+                $result &= file_exists(_PS_UPLOAD_DIR_ . $cust_data['value'] . '_small') ? @unlink(_PS_UPLOAD_DIR_ . $cust_data['value'] . '_small') : true;
             }
 
             $result &= Db::getInstance()->execute(
@@ -1849,7 +1855,7 @@ class CartCore extends ObjectModel
 
         $with_taxes = $use_tax_display ? $cart->_taxCalculationMethod != PS_TAX_EXC : true;
 
-        return Tools::displayPrice($cart->getOrderTotal($with_taxes, $type), Currency::getCurrencyInstance((int) $cart->id_currency), false);
+        return Context::getContext()->getCurrentLocale()->formatPrice($cart->getOrderTotal($with_taxes, $type), Currency::getIsoCodeById((int) $cart->id_currency), false);
     }
 
     /**
@@ -1955,6 +1961,7 @@ class CartCore extends ObjectModel
         if (in_array($type, [Cart::BOTH, Cart::BOTH_WITHOUT_SHIPPING, Cart::ONLY_DISCOUNTS])) {
             $cartRules = $this->getTotalCalculationCartRules($type, $type == Cart::BOTH);
         }
+
         $calculator = $this->newCalculator($products, $cartRules, $id_carrier);
         $computePrecision = Context::getContext()->getComputingPrecision();
         switch ($type) {
@@ -2122,9 +2129,9 @@ class CartCore extends ObjectModel
         if ($withShipping || $type == Cart::ONLY_DISCOUNTS) {
             $cartRules = $this->getCartRules(CartRule::FILTER_ACTION_ALL);
         } else {
-            $cartRules = $this->getCartRules(CartRule::FILTER_ACTION_REDUCTION);
+            $cartRules = $this->getCartRules(CartRule::FILTER_ACTION_REDUCTION, false);
             // Cart Rules array are merged manually in order to avoid doubles
-            foreach ($this->getCartRules(CartRule::FILTER_ACTION_GIFT) as $cartRuleCandidate) {
+            foreach ($this->getCartRules(CartRule::FILTER_ACTION_GIFT, false) as $cartRuleCandidate) {
                 $alreadyAddedCartRule = false;
                 foreach ($cartRules as $cartRule) {
                     if ($cartRuleCandidate['id_cart_rule'] == $cartRule['id_cart_rule']) {
@@ -3793,7 +3800,7 @@ class CartCore extends ObjectModel
 
             if ($product['reduction_type'] == 'amount') {
                 $reduction = (!Product::getTaxCalculationMethod() ? (float) $product['price_wt'] : (float) $product['price']) - (float) $product['price_without_quantity_discount'];
-                $product['reduction_formatted'] = Tools::displayPrice($reduction);
+                $product['reduction_formatted'] = Tools::getContextLocale($context)->formatPrice($reduction, $context->currency->iso_code);
             }
         }
 
@@ -4107,12 +4114,21 @@ class CartCore extends ObjectModel
      * @param int $index Customization field identifier as id_customization_field in table customization_field
      * @param int $type Customization type can be Product::CUSTOMIZE_FILE or Product::CUSTOMIZE_TEXTFIELD
      * @param string $text_value
+     * @param bool $returnCustomizationId if true - returns the customizationId
      *
      * @return bool Always true
      */
-    public function addTextFieldToProduct($id_product, $index, $type, $text_value)
+    public function addTextFieldToProduct($id_product, $index, $type, $text_value, $returnCustomizationId = false)
     {
-        return $this->_addCustomization($id_product, 0, $index, $type, $text_value, 0);
+        return $this->_addCustomization(
+            $id_product,
+            0,
+            $index,
+            $type,
+            $text_value,
+            0,
+            $returnCustomizationId
+        );
     }
 
     /**
@@ -4122,12 +4138,21 @@ class CartCore extends ObjectModel
      * @param int $index Customization field identifier as id_customization_field in table customization_field
      * @param int $type Customization type can be Product::CUSTOMIZE_FILE or Product::CUSTOMIZE_TEXTFIELD
      * @param string $file Filename
+     * @param bool $returnCustomizationId if true - returns the customizationId
      *
      * @return bool Always true
      */
-    public function addPictureToProduct($id_product, $index, $type, $file)
+    public function addPictureToProduct($id_product, $index, $type, $file, $returnCustomizationId = false)
     {
-        return $this->_addCustomization($id_product, 0, $index, $type, $file, 0);
+        return $this->_addCustomization(
+            $id_product,
+            0,
+            $index,
+            $type,
+            $file,
+            0,
+            $returnCustomizationId
+        );
     }
 
     /**
@@ -4168,8 +4193,9 @@ class CartCore extends ObjectModel
         );
 
         // Delete customization picture if necessary
-        if ($cust_data['type'] == Product::CUSTOMIZE_FILE) {
-            $result &= (@unlink(_PS_UPLOAD_DIR_ . $cust_data['value']) && @unlink(_PS_UPLOAD_DIR_ . $cust_data['value'] . '_small'));
+        if (isset($cust_data['type']) && $cust_data['type'] == Product::CUSTOMIZE_FILE) {
+            $result &= file_exists(_PS_UPLOAD_DIR_ . $cust_data['value']) ? @unlink(_PS_UPLOAD_DIR_ . $cust_data['value']) : true;
+            $result &= file_exists(_PS_UPLOAD_DIR_ . $cust_data['value'] . '_small') ? @unlink(_PS_UPLOAD_DIR_ . $cust_data['value'] . '_small') : true;
         }
 
         $result &= Db::getInstance()->execute(
@@ -4906,6 +4932,23 @@ class CartCore extends ObjectModel
                 if ($productInStock > 0 && $productOutOfStock > 0) {
                     return false;
                 }
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Checks that all products in cart have minimal required quantities
+     *
+     * @return bool
+     */
+    public function checkAllProductsHaveMinimalQuantities()
+    {
+        $productList = $this->getProducts(true);
+        foreach ($productList as $product) {
+            if ($product['minimal_quantity'] > $product['cart_quantity']) {
+                return false;
             }
         }
 

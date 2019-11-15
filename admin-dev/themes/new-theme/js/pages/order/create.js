@@ -27,11 +27,5 @@ import CreateOrderPage from './create/create-order-page';
 const $ = window.$;
 
 $(document).ready(() => {
-  const createOrderPage = new CreateOrderPage();
-
-  createOrderPage.listenForCustomerSearch();
-  createOrderPage.listenForCustomerSelect();
-  createOrderPage.listenForCartSelect();
-  createOrderPage.listenForOrderSelect();
-  createOrderPage.listenForCartUpdate();
+  new CreateOrderPage();
 });

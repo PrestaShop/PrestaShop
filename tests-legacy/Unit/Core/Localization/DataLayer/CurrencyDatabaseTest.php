@@ -121,7 +121,7 @@ class CurrencyDatabaseTest extends TestCase
     {
         $someCurrencyData = new CurrencyData();
 
-        $this->fakeDataProvider->expects($this->once())
+        $this->fakeDataProvider->expects($this->never())
             ->method('saveCurrency')
             ->with($this->isInstanceOf(Currency::class));
 

@@ -88,9 +88,6 @@ class EmployeeCore extends ObjectModel
     /** @var bool Status */
     public $active = 1;
 
-    /** @var bool Optin status */
-    public $optin = 1;
-
     public $remote_addr;
 
     /* employee notifications */
@@ -118,7 +115,6 @@ class EmployeeCore extends ObjectModel
             'passwd' => array('type' => self::TYPE_STRING, 'validate' => 'isPasswd', 'required' => true, 'size' => 255),
             'last_passwd_gen' => array('type' => self::TYPE_STRING),
             'active' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-            'optin' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
             'id_profile' => array('type' => self::TYPE_INT, 'validate' => 'isInt', 'required' => true),
             'bo_color' => array('type' => self::TYPE_STRING, 'validate' => 'isColor', 'size' => 32),
             'default_tab' => array('type' => self::TYPE_INT, 'validate' => 'isInt'),
@@ -216,7 +212,6 @@ class EmployeeCore extends ObjectModel
     public function add($autoDate = true, $nullValues = true)
     {
         $this->last_passwd_gen = date('Y-m-d H:i:s', strtotime('-' . Configuration::get('PS_PASSWD_TIME_BACK') . 'minutes'));
-        $this->saveOptin();
         $this->updateTextDirection();
 
         return parent::add($autoDate, $nullValues);
@@ -244,28 +239,9 @@ class EmployeeCore extends ObjectModel
 
         $currentEmployee = new Employee((int) $this->id);
 
-        if ($currentEmployee->optin != $this->optin) {
-            $this->saveOptin();
-        }
-
         $this->updateTextDirection();
 
         return parent::update($nullValues);
-    }
-
-    protected function saveOptin()
-    {
-        if ($this->optin && !defined('PS_INSTALLATION_IN_PROGRESS')) {
-            $language = new Language($this->id_lang);
-            $params = http_build_query(array(
-                'email' => $this->email,
-                'method' => 'addMemberToNewsletter',
-                'language' => $language->iso_code,
-                'visitorType' => 1,
-                'source' => 'backoffice',
-            ));
-            Tools::file_get_contents('https://www.prestashop.com/ajax/controller.php?' . $params);
-        }
     }
 
     /**

@@ -1,8 +1,17 @@
-const CommonPage = require('../commonPage');
+require('module-alias/register');
+const CommonPage = require('@pages/commonPage');
+const fs = require('fs');
+const imgGen = require('js-image-generator');
 
 module.exports = class BOBasePage extends CommonPage {
   constructor(page) {
     super(page);
+
+    // Successful Messages
+    this.successfulCreationMessage = 'Successful creation.';
+    this.successfulUpdateMessage = 'Successful update.';
+    this.successfulDeleteMessage = 'Successful deletion.';
+    this.successfulMultiDeleteMessage = 'The selection has been successfully deleted.';
 
     // top navbar
     this.headerLogoImage = '#header_logo';
@@ -16,9 +25,16 @@ module.exports = class BOBasePage extends CommonPage {
     this.ordersParentLink = 'li#subtab-AdminParentOrders';
     this.ordersLink = '#subtab-AdminOrders';
 
-    this.productsParentLink = 'li#subtab-AdminCatalog';
+    // Catalog
+    this.catalogParentLink = 'li#subtab-AdminCatalog';
+    // Products
     this.productsLink = '#subtab-AdminProducts';
+    // Categories
+    this.categoriesLink = '#subtab-AdminCategories';
+    // Brands And Suppliers
+    this.brandsAndSuppliersLink = '#subtab-AdminParentManufacturers';
 
+    // Customers
     this.customersParentLink = 'li#subtab-AdminParentCustomer';
     this.customersLink = '#subtab-AdminCustomers';
 
@@ -26,6 +42,10 @@ module.exports = class BOBasePage extends CommonPage {
     this.modulesParentLink = '#subtab-AdminParentModulesSf';
     this.moduleCatalogueLink = '#subtab-AdminParentModulesCatalog';
     this.moduleManagerLink = '#subtab-AdminModulesSf';
+
+    // International
+    this.internationalParentLink = '#subtab-AdminInternational';
+    this.taxesLink = '#subtab-AdminParentTaxes';
 
     // Shop Parameters
     this.shopParametersParentLink = '#subtab-ShopParameters';
@@ -37,6 +57,7 @@ module.exports = class BOBasePage extends CommonPage {
 
     // Growls
     this.growlMessageBloc = '#growls .growl-message';
+    this.growlDefaultMessageBloc = '#growls-default .growl-message';
 
     // Alert Text
     this.alertSuccessBloc = 'div.alert.alert-success:not([style=\'display: none;\'])';
@@ -102,8 +123,7 @@ module.exports = class BOBasePage extends CommonPage {
    * @return FOPage, page opened
    */
   async viewMyShop() {
-    const FOPage = await this.openLinkWithTargetBlank(this.page, this.headerShopNameLink);
-    return FOPage;
+    return this.openLinkWithTargetBlank(this.page, this.headerShopNameLink, false);
   }
 
   /**
@@ -125,5 +145,30 @@ module.exports = class BOBasePage extends CommonPage {
     if (await this.elementVisible(`${this.sfToolbarMainContentDiv}[style='display: block;']`, 1000)) {
       await this.page.click(this.sfCloseToolbarLink);
     }
+  }
+
+  /**
+   * Generate an image then upload it
+   * @param selector
+   * @param imageName
+   * @return {Promise<void>}
+   */
+  async generateAndUploadImage(selector, imageName) {
+    await imgGen.generateImage(200, 200, 1, (err, image) => {
+      fs.writeFileSync(imageName, image.data);
+    });
+    const input = await this.page.$(selector);
+    await input.uploadFile(imageName);
+  }
+
+  /**
+   * Delete a file from the project
+   * @param file
+   * @param wait
+   * @return {Promise<void>}
+   */
+  async deleteFile(file, wait = 0) {
+    fs.unlinkSync(file);
+    await this.page.waitFor(wait);
   }
 };

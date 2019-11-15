@@ -31,6 +31,7 @@ use PrestaShop\PrestaShop\Adapter\Cart\AbstractCartHandler;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\SetFreeShippingToCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\CommandHandler\SetFreeShippingToCartHandlerInterface;
+use PrestaShopException;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
@@ -61,7 +62,7 @@ final class SetFreeShippingToCartHandler extends AbstractCartHandler implements 
     /**
      * {@inheritdoc}
      */
-    public function handle(SetFreeShippingToCartCommand $command)
+    public function handle(SetFreeShippingToCartCommand $command): void
     {
         $cart = $this->getCart($command->getCartId());
 
@@ -69,7 +70,7 @@ final class SetFreeShippingToCartHandler extends AbstractCartHandler implements 
 
         $freeShippingCartRule = $this->getCartRuleForBackOfficeFreeShipping($backOfficeOrderCode);
 
-        if (false === $freeShippingCartRule) {
+        if (null === $freeShippingCartRule) {
             $freeShippingCartRule = new CartRule();
             $freeShippingCartRule->code = $backOfficeOrderCode;
             $freeShippingCartRule->name = [
@@ -101,14 +102,16 @@ final class SetFreeShippingToCartHandler extends AbstractCartHandler implements 
     /**
      * @param string $code
      *
-     * @return false|CartRule
+     * @return CartRule|null
+     *
+     * @throws PrestaShopException
      */
-    private function getCartRuleForBackOfficeFreeShipping($code)
+    private function getCartRuleForBackOfficeFreeShipping($code): ?CartRule
     {
         $cartRuleId = CartRule::getIdByCode($code);
 
         if (!$cartRuleId) {
-            return false;
+            return null;
         }
 
         return new CartRule((int) $cartRuleId);

@@ -11,6 +11,7 @@ admin_orders_create:
   defaults:
     _controller: PrestaShopBundle:Admin\Sell\Order\Order:create
     _legacy_controller: AdminOrders
+#    _legacy_link: AdminOrders:addorder
 
 admin_orders_search:
   path: /
@@ -55,6 +56,9 @@ admin_orders_view:
   path: /{orderId}/view
   defaults:
     _controller: PrestaShopBundle:Admin/Sell/Order/Order:view
+    _legacy_controller: AdminOrders
+  options:
+    expose: true
 
 admin_orders_add_cart_rule:
   path: /{orderId}/cart-rules
@@ -64,11 +68,21 @@ admin_orders_add_cart_rule:
   requirements:
     orderId: \d+
 
+admin_orders_list_update_status:
+  path: /list/{orderId}/status
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Order/Order:updateStatusFromList
+    _legacy_controller: AdminOrders
+  requirements:
+    orderId: \d+
+
 admin_orders_update_status:
   path: /{orderId}/status
   methods: [POST]
   defaults:
     _controller: PrestaShopBundle:Admin/Sell/Order/Order:updateStatus
+    _legacy_controller: AdminOrders
   requirements:
     orderId: \d+
 
@@ -89,3 +103,84 @@ admin_orders_duplicate_cart:
     orderId: \d+
   options:
     expose: true
+
+admin_orders_change_currency:
+  path: /{orderId}/currency/change
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Order/Order:changeCurrency
+  requirements:
+    orderId: \d+
+
+admin_orders_update_product:
+  path: /{orderId}/products/{orderDetailId}
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Order/Order:updateProduct
+  requirements:
+    orderId: \d+
+    orderDetailId: \d+
+
+admin_orders_remove_cart_rule:
+  path: /{orderId}/cart-rules/{orderCartRuleId}/delete
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Order/Order:removeCartRule
+  requirements:
+    orderId: \d+
+    orderCartRuleId: \d+
+
+admin_orders_resend_email:
+  path: /{orderId}/history/{orderHistoryId}/statuses/{orderStatusId}/resend-email
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Order/Order:resendEmail
+  requirements:
+    orderId: \d+
+    orderHistoryId: \d+
+    orderStatusId: \d+
+
+admin_orders_preview:
+  path: /{orderId}/preview
+  methods: [GET]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Order/Order:preview
+    _legacy_controller: AdminOrders
+  requirements:
+    orderId: \d+
+
+admin_search_product_for_order_creation:
+  path: /search
+  methods: [GET]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Order/Order:searchProducts
+
+admin_orders_update_shipping:
+  path: /{orderId}/shipping
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Order/Order:updateShipping
+    _legacy_controller: AdminOrders
+  requirements:
+    orderId: \d+
+
+admin_orders_update_invoice_note:
+  path: /{orderId}/invoice/{orderInvoiceId}/note
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Order/Order:updateInvoiceNote
+  requirements:
+    orderId: \d+
+    orderInvoiceId: \d+
+
+admin_search_product_for_order_creation:
+  path: /search
+  methods: [GET]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Order/Order:searchProducts
+
+admin_orders_generate_invoice:
+  path: /{orderId}/invoice
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Order/Order:generateInvoice

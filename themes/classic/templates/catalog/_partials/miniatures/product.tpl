@@ -31,7 +31,7 @@
         {if $product.cover}
           {assign var='coverImage' value=Product::getCover($product->id)}
           {assign var='coverImageId' value="{$product->id}-{$coverImage.id_image}"}
-          <a href="{$product.canonical_url}" class="thumbnail product-thumbnail">
+          <a href="{$product.url}" class="thumbnail product-thumbnail">
             <img
               src="{$link->getImageLink($product.link_rewrite, $coverImageId)}"
               alt="{if !empty($product.cover.legend)}{$product.cover.legend}{else}{$product.name|truncate:30:'...'}{/if}"

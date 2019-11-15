@@ -43,7 +43,7 @@
           </h2>
         </div>
         <div class="col-md-6 text-right">
-          <a href="{{ path('admin_customers_view', {'customerId': orderForViewing.customer.id }) }}" class="">
+          <a href="{{ path('admin_customers_view', {'customerId': orderForViewing.customer.id }) }}">
             {{ 'View full details'|trans({}, 'Admin.Actions') }}
           </a>
         </div>
@@ -87,7 +87,14 @@
           <p>
             <strong>{{ 'Shipping address'|trans({}, 'Admin.Orderscustomers.Feature') }}</strong>
 
-            <a href="#"
+            <a href="{{ getAdminLink('AdminAddresses', true, {
+              'realedit': 1,
+              'addaddress': 1,
+              'address_type': 1,
+              'id_order': orderForViewing.id,
+              'id_address': orderForViewing.shippingAddress.addressId,
+              'back': path('admin_orders_view', {'orderId': orderForViewing.id})
+            }) }}"
                class="float-right tooltip-link"
                data-toggle="pstooltip"
                data-placement="top"
@@ -122,7 +129,14 @@
           <p>
             <strong>{{ 'Invoice address'|trans({}, 'Admin.Orderscustomers.Feature') }}</strong>
 
-            <a href="#"
+            <a href="{{ getAdminLink('AdminAddresses', true, {
+              'realedit': 1,
+              'addaddress': 1,
+              'address_type': 2,
+              'id_order': orderForViewing.id,
+              'id_address': orderForViewing.invoiceAddress.addressId,
+              'back': path('admin_orders_view', {'orderId': orderForViewing.id})
+            }) }}"
                class="float-right tooltip-link"
                data-toggle="pstooltip"
                data-placement="top"
@@ -163,14 +177,41 @@
           </h3>
         </div>
         <div class="col-md-6 text-right">
+          {% set isPrivateNoteOpen = not orderForViewing.customer.privateNote is empty %}
+
           <a href="#"
-             class="float-right tooltip-link"
-             data-toggle="pstooltip"
-             data-placement="top"
-             data-original-title="{{ 'Add'|trans({}, 'Admin.Actions') }}"
+             class="float-right tooltip-link js-private-note-toggle-btn {% if isPrivateNoteOpen %}is-opened{% endif %}"
           >
-            <i class="material-icons">add</i>
+            {% if isPrivateNoteOpen %}
+              <i class="material-icons">remove</i>
+            {% else %}
+              <i class="material-icons">add</i>
+            {% endif %}
           </a>
+        </div>
+
+        <div class="col-md-12 mt-3 js-private-note-block {% if not isPrivateNoteOpen %}d-none{% endif %}">
+          {{ form_start(privateNoteForm, {
+            'action': path('admin_customers_set_private_note', {
+              'customerId': orderForViewing.customer.id,
+              'back': path('admin_orders_view', {'orderId': orderForViewing.id})
+            })
+          }) }}
+
+          {{ form_widget(privateNoteForm.note) }}
+            <div class="d-none">
+              {{ form_rest(privateNoteForm) }}
+            </div>
+
+            <div class="mt-2 text-right">
+              <button type="submit"
+                      class="btn btn-primary btn-sm js-private-note-btn"
+                      {% if orderForViewing.customer.privateNote is empty %}disabled{% endif %}
+              >
+                {{ 'Save'|trans({}, 'Admin.Actions') }}
+              </button>
+            </div>
+          {{ form_end(privateNoteForm) }}
         </div>
       </div>
     </div>

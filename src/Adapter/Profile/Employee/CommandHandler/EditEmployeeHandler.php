@@ -122,7 +122,6 @@ final class EditEmployeeHandler extends AbstractEmployeeHandler implements EditE
         $employee->firstname = $command->getFirstName()->getValue();
         $employee->lastname = $command->getLastName()->getValue();
         $employee->email = $command->getEmail()->getValue();
-        $employee->optin = $command->isSubscribedToNewsletter();
         $employee->default_tab = $command->getDefaultPageId();
         $employee->id_lang = $command->getLanguageId();
         $employee->id_last_order = $employee->getLastElementsForNotify('order');
