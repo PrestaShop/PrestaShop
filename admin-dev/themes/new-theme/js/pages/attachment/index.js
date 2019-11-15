@@ -32,6 +32,7 @@ import BulkActionCheckboxExtension from '@components/grid/extension/bulk-action-
 import SubmitBulkExtension from '@components/grid/extension/submit-bulk-action-extension';
 import SubmitRowActionExtension from '@components/grid/extension/action/row/submit-row-action-extension';
 import LinkRowActionExtension from '@components/grid/extension/link-row-action-extension';
+import TranslatableInput from '@components/translatable-input';
 
 const $ = window.$;
 
@@ -46,4 +47,6 @@ $(() => {
   attachmentGrid.addExtension(new SubmitBulkExtension());
   attachmentGrid.addExtension(new SubmitRowActionExtension());
   attachmentGrid.addExtension(new LinkRowActionExtension());
+
+  new TranslatableInput();
 });
