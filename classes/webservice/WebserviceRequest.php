@@ -654,7 +654,7 @@ class WebserviceRequestCore
      *
      * @param int $status
      * @param string $label
-     * @param int $code
+     * @param int    $code
      */
     public function setError($status, $label, $code)
     {
