@@ -999,6 +999,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
      * if $checkedIdProductAttribute is available.
      * If not try to return the first available attribute, if none are available
      * simply returns the input.
+     * If no attribute are found, use the default attribute.
      *
      * @param int $checkedIdProductAttribute
      *
@@ -1024,6 +1025,10 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             if (empty($availableProductAttribute) && count($availableProductAttributes)) {
                 return (int) array_shift($availableProductAttributes)['id_product_attribute'];
             }
+        }
+
+        if ($checkedIdProductAttribute === 0) {
+            return $this->product->getDefaultAttribute($this->product->id);
         }
 
         return $checkedIdProductAttribute;
