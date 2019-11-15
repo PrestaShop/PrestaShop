@@ -652,7 +652,7 @@ class WebserviceRequestCore
     /**
      * Set a webservice error.
      *
-     * @param int    $status
+     * @param int $status
      * @param string $label
      * @param int    $code
      */
