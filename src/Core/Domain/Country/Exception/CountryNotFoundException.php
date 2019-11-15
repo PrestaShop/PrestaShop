@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -24,9 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Adapter\Country;
-
-use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryException;
+namespace PrestaShop\PrestaShop\Core\Domain\Country\Exception;
 
 /**
  * Is thrown on failure to find existing country

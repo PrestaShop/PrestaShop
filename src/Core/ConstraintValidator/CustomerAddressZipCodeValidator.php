@@ -26,10 +26,10 @@
 
 namespace PrestaShop\PrestaShop\Core\ConstraintValidator;
 
-use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
+use PrestaShop\PrestaShop\Core\Country\CountryZipCodeRequirements;
+use PrestaShop\PrestaShop\Core\Country\CountryZipCodeRequirementsProviderInterface;
 use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Country\Query\GetCountryZipCodeRequirements;
-use PrestaShop\PrestaShop\Core\Domain\Country\QueryResult\CountryZipCodeRequirements;
+use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
@@ -45,18 +45,20 @@ class CustomerAddressZipCodeValidator extends ConstraintValidator
     private $translator;
 
     /**
-     * @var CommandBusInterface
+     * @var CountryZipCodeRequirementsProviderInterface
      */
-    private $queryBus;
+    private $requirementsProvider;
 
     /**
      * @param TranslatorInterface $translator
-     * @param CommandBusInterface $queryBus
+     * @param CountryZipCodeRequirementsProviderInterface $requirementsProvider
      */
-    public function __construct(TranslatorInterface $translator, CommandBusInterface $queryBus)
-    {
+    public function __construct(
+        TranslatorInterface $translator,
+        CountryZipCodeRequirementsProviderInterface $requirementsProvider
+    ) {
         $this->translator = $translator;
-        $this->queryBus = $queryBus;
+        $this->requirementsProvider = $requirementsProvider;
     }
 
     /**
@@ -70,7 +72,7 @@ class CustomerAddressZipCodeValidator extends ConstraintValidator
         $postcode = $value['postcode'];
 
         /** @var CountryZipCodeRequirements $requirements */
-        $requirements = $this->queryBus->handle(new GetCountryZipCodeRequirements($countryId));
+        $requirements = $this->requirementsProvider->getCountryZipCodeRequirements(new CountryId($countryId));
 
         if ($requirements->isRequired() && null === $postcode) {
             $this->context->buildViolation($constraint->requiredMessage)

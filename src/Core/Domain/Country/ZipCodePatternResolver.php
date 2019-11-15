@@ -24,28 +24,32 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Adapter\Address\QueryHandler;
-
-use Address;
-use PrestaShop\PrestaShop\Adapter\Address\AbstractAddressHandler;
-use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressException;
-use PrestaShop\PrestaShop\Core\Domain\Address\Query\GetRequiredFieldsForAddress;
-use PrestaShop\PrestaShop\Core\Domain\Address\QueryHandler\GetRequiredFieldsForAddressHandlerInterface;
+namespace PrestaShop\PrestaShop\Core\Domain\Country;
 
 /**
- * Handles query which gets required fields for address
- *
- * @internal
+ * Call responsible for resolving country zip code format and returning it as other usable patterns
  */
-final class GetRequiredFieldsForAddressHandler extends AbstractAddressHandler implements GetRequiredFieldsForAddressHandlerInterface
+final class ZipCodePatternResolver implements ZipCodePatternResolverInterface
 {
     /**
-     * {@inheritdoc}
+     * @param string $format
+     * @param string $isoCode
      *
-     * @throws AddressException
+     * @return string
      */
-    public function handle(GetRequiredFieldsForAddress $query): array
+    public function getRegexPattern(string $format, string $isoCode): string
     {
-        return $this->getRequiredFields();
+        return str_replace(['N', 'L', 'C'], ['[0-9]', '[a-zA-Z]', $isoCode], '/^' . $format . '$/ui');
+    }
+
+    /**
+     * @param string $format
+     * @param string $isoCode
+     *
+     * @return string
+     */
+    public function getHumanReadablePattern(string $format, string $isoCode): string
+    {
+        return str_replace(['N', 'L',  'C'], ['0', 'A', $isoCode], $format);
     }
 }
