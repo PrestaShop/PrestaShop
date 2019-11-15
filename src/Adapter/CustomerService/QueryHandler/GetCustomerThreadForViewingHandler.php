@@ -115,7 +115,6 @@ final class GetCustomerThreadForViewingHandler implements GetCustomerThreadForVi
             $attachmentFile = null;
 
             if (!empty($message['file_name'])
-                && $message['file_name'] !== ''
                 && file_exists(_PS_ROOT_DIR_ . _THEME_PROD_PIC_DIR_ . $message['file_name'])
             ) {
                 $attachmentFile = _THEME_PROD_PIC_DIR_ . $message['file_name'];

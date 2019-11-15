@@ -137,7 +137,7 @@ final class ForwardCustomerThreadHandler implements ForwardCustomerThreadHandler
                 $this->translator->trans('Message forwarded to', [], 'Admin.Catalog.Feature'),
                 $employee->firstname,
                 $employee->lastname,
-                PHP_EOL . PHP_EOL,
+                PHP_EOL,
                 $this->translator->trans('Comment:', [], 'Admin.Catalog.Feature'),
                 $command->getComment()
             );
