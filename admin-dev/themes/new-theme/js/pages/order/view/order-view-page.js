@@ -137,13 +137,4 @@ export default class OrderViewPage {
   getActivePage() {
     return $(OrderViewPageMap.productsTablePagination).find('.active span').get(0);
   }
-
-  listenForProductEdit() {
-    $(OrderViewPageMap.productEditBtn).on('click', event => this.orderProductManager.handleUpdateModalFormData(event));
-  }
-
-  listenForProductAdd() {
-    $(OrderViewPageMap.productAddBtn).on('click', event => this.orderProductRenderer.moveProductsPanelToModificationPosition());
-    $(OrderViewPageMap.productCancelAddBtn).on('click', event => this.orderProductRenderer.moveProductPanelToOriginalPosition());
-  }
 }
