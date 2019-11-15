@@ -35,7 +35,7 @@ use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
 use PrestaShop\PrestaShop\Core\Domain\Country\ZipCodePatternResolver;
 use PrestaShopException;
 
-class CountryZipCodeRequirementsProvider implements CountryZipCodeRequirementsProviderInterface
+final class CountryZipCodeRequirementsProvider implements CountryZipCodeRequirementsProviderInterface
 {
     /**
      * @var int

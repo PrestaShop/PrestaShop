@@ -47,7 +47,7 @@ abstract class AbstractAddressHandler
      * @throws AddressException
      * @throws AddressNotFoundException
      */
-    protected function getAddress(AddressId $addressId)
+    protected function getAddress(AddressId $addressId): Address
     {
         try {
             $address = new Address($addressId->getValue());
@@ -73,7 +73,7 @@ abstract class AbstractAddressHandler
      *
      * @throws AddressException
      */
-    protected function deleteAddress(Address $address)
+    protected function deleteAddress(Address $address): bool
     {
         try {
             return $address->delete();
@@ -86,11 +86,11 @@ abstract class AbstractAddressHandler
     }
 
     /**
-     * @return array
+     * @return string[]
      *
      * @throws AddressException
      */
-    protected function getRequiredFields()
+    protected function getRequiredFields(): array
     {
         try {
             $requiredFields = (new CustomerAddress())->getFieldsRequiredDatabase();
