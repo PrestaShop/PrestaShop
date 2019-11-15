@@ -686,7 +686,7 @@ class WebserviceRequestCore
      * Return the nearest value picked in the values list.
      *
      * @param string $input
-     * @param array  $words
+     * @param array $words
      *
      * @return string
      */
