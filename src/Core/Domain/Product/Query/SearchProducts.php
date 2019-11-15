@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Query;
 
+use Currency;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 
 /**
@@ -44,14 +45,20 @@ class SearchProducts
     private $resultsLimit;
 
     /**
+     * @var Currency
+     */
+    private $currency;
+
+    /**
      * @param string $phrase
      * @param int $resultsLimit
      */
-    public function __construct(string $phrase, int $resultsLimit)
+    public function __construct(string $phrase, int $resultsLimit, Currency $currency)
     {
         $this->assertIsNotEmptyString($phrase);
         $this->phrase = $phrase;
         $this->resultsLimit = $resultsLimit;
+        $this->currency = $currency;
     }
 
     /**
@@ -68,6 +75,11 @@ class SearchProducts
     public function getResultsLimit(): int
     {
         return $this->resultsLimit;
+    }
+
+    public function getCurrency(): Currency
+    {
+        return $this->currency;
     }
 
     /**
