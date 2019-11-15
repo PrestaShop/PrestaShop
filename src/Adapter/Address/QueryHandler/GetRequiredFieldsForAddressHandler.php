@@ -26,7 +26,6 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Address\QueryHandler;
 
-use Address;
 use PrestaShop\PrestaShop\Adapter\Address\AbstractAddressHandler;
 use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressException;
 use PrestaShop\PrestaShop\Core\Domain\Address\Query\GetRequiredFieldsForAddress;
