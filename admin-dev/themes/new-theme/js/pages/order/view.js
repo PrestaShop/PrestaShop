@@ -27,6 +27,8 @@ import OrderViewPageMap from './OrderViewPageMap';
 import OrderShippingManager from './order-shipping-manager';
 import InvoiceNoteManager from './invoice-note-manager';
 import OrderViewPage from './view/order-view-page';
+import OrderProductAutocomplete from './view/order-product-add-autocomplete';
+import OrderProductAdd from './view/order-product-add';
 
 const $ = window.$;
 
@@ -37,10 +39,15 @@ $(() => {
 
   new OrderShippingManager();
   const orderViewPage = new OrderViewPage();
+  const orderAddAutocomplete = new OrderProductAutocomplete($(OrderViewPageMap.productSearchInput));
+  const orderAdd = new OrderProductAdd();
 
   orderViewPage.listenForProductDelete();
   orderViewPage.listenForProductEdit();
   orderViewPage.listenForProductAdd();
+
+  orderAddAutocomplete.listenForSearch();
+  orderAddAutocomplete.onItemClickedCallback = product => orderAdd.setProduct(product);
 
   handlePaymentDetailsToggle();
   handlePrivateNoteChange();
