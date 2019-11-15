@@ -1662,7 +1662,7 @@ class WebserviceRequestCore
                                     $values = array();
                                     foreach ($assocItems as $assocItem) {
                                         /**
- * @var SimpleXMLElement $assocItem 
+                                        * @var SimpleXMLElement $assocItem 
                                        */
                                         $fields = $assocItem->children();
                                         $entry = array();
