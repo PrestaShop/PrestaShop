@@ -1269,7 +1269,7 @@ class WebserviceRequestCore
                 } else {
                     /**
  * @var ObjectModel $object 
-*/
+                    */
                     $object = new $this->resourceConfiguration['retrieveData']['className']();
                     $assoc = Shop::getAssoTable($this->resourceConfiguration['retrieveData']['table']);
                     if ($assoc !== false && $assoc['type'] == 'shop' && ($object->isMultiShopField($this->resourceConfiguration['fields'][$fieldName]['sqlId']) || $fieldName == 'id')) {
