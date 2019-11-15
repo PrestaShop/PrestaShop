@@ -1268,7 +1268,7 @@ class WebserviceRequestCore
                     $sql_sort .= 'main_i18n.`' . bqSQL($this->resourceConfiguration['fields'][$fieldName]['sqlId']) . '` ' . $direction . ', '; // ORDER BY main_i18n.`field` ASC|DESC
                 } else {
                     /**
-                     * @var ObjectModel $object 
+ * @var ObjectModel $object 
                     */
                     $object = new $this->resourceConfiguration['retrieveData']['className']();
                     $assoc = Shop::getAssoTable($this->resourceConfiguration['retrieveData']['table']);
