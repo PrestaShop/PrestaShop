@@ -675,7 +675,7 @@ class WebserviceRequestCore
      * @param string $label
      * @param array  $value
      * @param array  $values
-     * @param int    $code
+     * @param int $code
      */
     public function setErrorDidYouMean($num, $label, $value, $available_values, $code)
     {
