@@ -1719,7 +1719,7 @@ class WebserviceRequestCore
      *
      * @param string $sqlId
      * @param string $filterValue
-     * @param string $tableAlias  = 'main.'
+     * @param string $tableAlias = 'main.'
      *
      * @return string
      */
