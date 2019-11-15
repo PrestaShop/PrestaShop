@@ -671,7 +671,7 @@ class WebserviceRequestCore
     /**
      * Set a webservice error and propose a new value near from the available values.
      *
-     * @param int $num
+     * @param int    $num
      * @param string $label
      * @param array $value
      * @param array  $values
