@@ -15,3 +15,8 @@ ALTER TABLE `PREFIX_product` ADD `mpn` VARCHAR(40) NULL AFTER `upc`;
 
 /* Delete price display precision configuration */
 DELETE `PREFIX_configuration` WHERE name = 'PS_PRICE_DISPLAY_PRECISION';
+
+# improve performance of lookup by product reference/product_supplier avoiding full table scan
+ALTER TABLE PREFIX_product
+    ADD INDEX reference_idx(reference),
+    ADD INDEX supplier_reference_idx(supplier_reference);
