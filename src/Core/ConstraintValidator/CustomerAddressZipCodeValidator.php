@@ -37,7 +37,7 @@ use Symfony\Component\Validator\ConstraintValidator;
 /**
  * Validator for customer address zip code value
  */
-class CustomerAddressZipCodeValidator extends ConstraintValidator
+final class CustomerAddressZipCodeValidator extends ConstraintValidator
 {
     /**
      * @var TranslatorInterface
