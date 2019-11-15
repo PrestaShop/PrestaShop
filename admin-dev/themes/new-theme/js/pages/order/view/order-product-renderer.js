@@ -34,6 +34,15 @@ export default class OrderProductRenderer {
     $productRow.hide('fast', () => $productRow.remove());
   }
 
+  addOrUpdateProductFromToList(orderProductId, newRow) {
+    const $productRow = $(`#orderProduct_${orderProductId}`);
+    if ($productRow.length > 0) {
+      $productRow.html($(newRow).html());
+    } else {
+      $(OrderViewPageMap.productAddRow).before($(newRow).hide().fadeIn());
+    }
+  }
+
   moveProductsPanelToModificationPosition() {
     const $modificationPosition = $(OrderViewPageMap.productModificationPosition);
 
@@ -43,6 +52,7 @@ export default class OrderProductRenderer {
 
     $(OrderViewPageMap.productActionBtn).addClass('d-none');
     $(OrderViewPageMap.productAddActionBtn).removeClass('d-none');
+    $(OrderViewPageMap.productAddRow).removeClass('d-none');
   }
 
   moveProductPanelToOriginalPosition() {
@@ -52,5 +62,6 @@ export default class OrderProductRenderer {
 
     $(OrderViewPageMap.productActionBtn).removeClass('d-none');
     $(OrderViewPageMap.productAddActionBtn).addClass('d-none');
+    $(OrderViewPageMap.productAddRow).addClass('d-none');
   }
 }
