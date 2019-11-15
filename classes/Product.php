@@ -417,6 +417,7 @@ class ProductCore extends ObjectModel
             'tax_rules_group' => array('type' => self::HAS_ONE),
             'categories' => array('type' => self::HAS_MANY, 'field' => 'id_category', 'object' => 'Category', 'association' => 'category_product'),
             'stock_availables' => array('type' => self::HAS_MANY, 'field' => 'id_stock_available', 'object' => 'StockAvailable', 'association' => 'stock_availables'),
+            'specific_prices' =>    array('type' => self::HAS_MANY, 'field' => 'id_specific_price', 'object' => 'SpecificPrice', 'association' => 'specific_prices'),
         ),
     );
 
@@ -536,6 +537,14 @@ class ProductCore extends ObjectModel
                     'id_product_attribute' => array(),
                     'quantity' => array(),
                 ),
+            ),
+            'specific_prices' => array(
+                'resource' => 'specific_price',
+                'fields' => array(
+                    'id' => array('required' => true),
+                    'id_product_attribute' => array('required' => true),
+                ),
+                'setter' => false
             ),
         ),
     );
@@ -6259,6 +6268,13 @@ class ProductCore extends ObjectModel
     {
         return Manufacturer::getNameById((int) $this->id_manufacturer);
     }
+
+	public function getWsSpecificPrices()
+	{
+		return Db::getInstance()->executeS('SELECT `id_specific_price` id, `id_product_attribute`
+		FROM `'._DB_PREFIX_.'specific_price`
+		WHERE `id_product`='.(int)$this->id);
+	}
 
     public static function resetEcoTax()
     {
