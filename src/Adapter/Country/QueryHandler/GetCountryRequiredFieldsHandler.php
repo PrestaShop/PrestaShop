@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Country\QueryHandler;
 
 use PrestaShop\PrestaShop\Adapter\Country\AbstractCountryHandler;
-use PrestaShop\PrestaShop\Adapter\Country\CountryNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Country\Query\GetCountryRequiredFields;
 use PrestaShop\PrestaShop\Core\Domain\Country\QueryHandler\GetCountryRequiredFieldsHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Country\QueryResult\CountryRequiredFields;
