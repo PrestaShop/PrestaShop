@@ -61,7 +61,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                 unset($_GET['id_product_attribute']);
             } else {
                 //Only redirect to canonical (parent product without combination) when the requested combination is not valid
-                //In this case we are in a valid combination url and we must display it with redirection for SEO purpose
+                //In this case we are in a valid combination url and we must display it without redirection for SEO purpose
                 return;
             }
 
