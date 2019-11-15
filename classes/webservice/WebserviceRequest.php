@@ -715,7 +715,7 @@ class WebserviceRequestCore
      *
      * @param string $errno contains the level of the error raised, as an integer
      * @param array $errstr contains the error message, as a string
-     * @param array  $errfile errfile, which contains the filename that the error was raised in, as a string
+     * @param array $errfile errfile, which contains the filename that the error was raised in, as a string
      * @param array  $errline errline, which contains the line number the error was raised at, as an integer
      *
      * @return bool Always return true to avoid the default PHP error handler
