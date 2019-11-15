@@ -23,7 +23,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-import MultipleChoiceTable from '../../components/multiple-choice-table';
+import MultipleChoiceTable from '@components/multiple-choice-table';
 
 const $ = window.$;
 

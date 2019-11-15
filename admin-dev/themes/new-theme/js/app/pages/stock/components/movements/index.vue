@@ -79,10 +79,10 @@
 </template>
 
 <script>
-  import PSTable from 'app/widgets/ps-table/ps-table';
-  import PSSort from 'app/widgets/ps-table/ps-sort';
-  import PSAlert from 'app/widgets/ps-alert';
-  import PSLoader from 'app/widgets/ps-loader';
+  import PSTable from '@app/widgets/ps-table/ps-table';
+  import PSSort from '@app/widgets/ps-table/ps-sort';
+  import PSAlert from '@app/widgets/ps-alert';
+  import PSLoader from '@app/widgets/ps-loader';
   import MovementLine from './movement-line';
 
   const DEFAULT_SORT = 'desc';

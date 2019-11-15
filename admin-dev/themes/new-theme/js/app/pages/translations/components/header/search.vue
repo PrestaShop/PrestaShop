@@ -40,8 +40,8 @@
 </template>
 
 <script>
-  import PSTags from 'app/widgets/ps-tags';
-  import PSButton from 'app/widgets/ps-button';
+  import PSTags from '@app/widgets/ps-tags';
+  import PSButton from '@app/widgets/ps-button';
 
   export default {
     components: {
