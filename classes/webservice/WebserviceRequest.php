@@ -268,7 +268,7 @@ class WebserviceRequestCore
         $this->outputFormat = $type;
         switch ($type) {
         case 'JSON':
-            require_once __DIR__ . '/WebserviceOutputJSON.php';
+            include_once __DIR__ . '/WebserviceOutputJSON.php';
             $obj_render = new WebserviceOutputJSON();
 
             break;
