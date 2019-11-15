@@ -367,7 +367,7 @@ class WebserviceRequestCore
     }
 
     /**
-     * @todo Check how get parameters 
+     * @todo Check how get parameters
      */
     /**
      * @todo : set this method out 
