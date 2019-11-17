@@ -1529,7 +1529,7 @@ class WebserviceRequestCore
 
         /**
          * @var SimpleXMLElement|Countable $xmlEntities 
-*/
+        */
         $xmlEntities = $xml->children();
         $object = null;
 
