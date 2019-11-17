@@ -714,9 +714,12 @@ class WebserviceRequestCore
      * Used to replace the default PHP error handler, in order to display PHP errors in a XML format.
      *
 <<<<<<< HEAD
+<<<<<<< HEAD
      * @param string $errno contains the level of the error raised, as an integer
      * @param array $errstr contains the error message, as a string
 =======
+=======
+>>>>>>> parent of 0b3d66e... Update classes/webservice/WebserviceRequest.php
      * @param string $errno   contains the level of the error raised, as an integer
      * @param array  $errstr  contains the error message, as a string
 >>>>>>> parent of 0b3d66e... Update classes/webservice/WebserviceRequest.php
