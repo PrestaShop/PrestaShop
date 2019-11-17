@@ -1303,13 +1303,14 @@ class WebserviceRequestCore
                 $this->setError(400, 'The "offset" value has to be formed as this example: 10"', 39);
                 return false;
             } else {
-                $sql_offset .= ' OFFSET ' . (int) ($offsetArgs[0]) . (isset($offsetArgs[1]) ? ', ' . (int) ($offsetArgs[1]) : '') . "\n"; 
+                $sql_offset .= ' OFFSET '.(int)($offsetArgs[0]).(isset($offsetArgs[1]) ? ', '.(int)($offsetArgs[1]) : '')."\n";// 
             }
         }
+
         $filters['sql_join'] = $sql_join;
         $filters['sql_filter'] = $sql_filter;
         $filters['sql_sort'] = $sql_sort;
-        $filters['sql_limit'] = $sql_limit . $sql_offset;
+        $filters['sql_limit'] = $sql_limit;
 
         return $filters;
     }
