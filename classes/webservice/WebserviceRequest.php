@@ -1528,8 +1528,13 @@ class WebserviceRequestCore
         }
 
         /**
+<<<<<<< HEAD
          * @var SimpleXMLElement|Countable $xmlEntities 
         */
+=======
+ * @var SimpleXMLElement|Countable $xmlEntities 
+*/
+>>>>>>> parent of e5e6a4f... Update classes/webservice/WebserviceRequest.php
         $xmlEntities = $xml->children();
         $object = null;
 
