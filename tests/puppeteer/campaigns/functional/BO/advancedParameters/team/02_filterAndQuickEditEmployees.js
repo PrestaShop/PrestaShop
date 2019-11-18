@@ -123,36 +123,32 @@ describe('Filter And Quick Edit Employees', async () => {
           this.pageObjects.employeesPage.employeeGridTitle,
         );
         await expect(numberOfEmployeesAfterFilter).to.be.at.most(numberOfEmployees);
-        /* eslint-disable no-await-in-loop */
         for (let i = 1; i <= numberOfEmployeesAfterFilter; i++) {
           const textColumn = await this.pageObjects.employeesPage.getTextColumnFromTable(i, 'email');
           await expect(textColumn).to.contains(createEmployeeData.email);
         }
-        /* eslint-enable no-await-in-loop */
       });
 
-      it('should disable the employee', async function () {
-        const isActionPerformed = await this.pageObjects.employeesPage.updateToggleColumnValue(1, false);
-        if (isActionPerformed) {
-          const resultMessage = await this.pageObjects.employeesPage.getTextContent(
-            this.pageObjects.employeesPage.alertSuccessBlockParagraph,
+      const statuses = [
+        {args: {status: 'disable', enable: false}},
+        {args: {status: 'enable', enable: true}},
+      ];
+      statuses.forEach((employeeStatus) => {
+        it(`should ${employeeStatus.args.status} the employee`, async function () {
+          const isActionPerformed = await this.pageObjects.employeesPage.updateToggleColumnValue(
+            1,
+            employeeStatus.enable,
           );
-          await expect(resultMessage).to.contains(this.pageObjects.employeesPage.successfulUpdateStatusMessage);
-        }
-        const isStatusChanged = await this.pageObjects.employeesPage.getToggleColumnValue(1);
-        await expect(isStatusChanged).to.be.false;
-      });
-
-      it('should enable the employee', async function () {
-        const isActionPerformed = await this.pageObjects.employeesPage.updateToggleColumnValue(1);
-        if (isActionPerformed) {
-          const resultMessage = await this.pageObjects.employeesPage.getTextContent(
-            this.pageObjects.employeesPage.alertSuccessBlockParagraph,
-          );
-          await expect(resultMessage).to.contains(this.pageObjects.employeesPage.successfulUpdateStatusMessage);
-        }
-        const isStatusChanged = await this.pageObjects.employeesPage.getToggleColumnValue(1);
-        await expect(isStatusChanged).to.be.true;
+          if (isActionPerformed) {
+            const resultMessage = await this.pageObjects.employeesPage.getTextContent(
+              this.pageObjects.employeesPage.alertSuccessBlockParagraph,
+            );
+            await expect(resultMessage).to.contains(this.pageObjects.employeesPage.successfulUpdateStatusMessage);
+          }
+          const isStatusChanged = await this.pageObjects.employeesPage.getToggleColumnValue(1);
+          if (employeeStatus.enable) await expect(isStatusChanged).to.be.false;
+          else await expect(isStatusChanged).to.be.true;
+        });
       });
     });
 
