@@ -145,7 +145,7 @@ export default class ProductRenderer {
   renderProductMetadata(product) {
     this.renderStock(product.stock);
     this._renderCombinations(product.combinations);
-    this._renderCustomizations(product.customization_fields);
+    this._renderCustomizations(product.customizationFields);
   }
 
   /**
@@ -171,10 +171,10 @@ export default class ProductRenderer {
 
       let name = product.name;
       if (product.combinations.length === 0) {
-        name += ` - ${product.formatted_price}`;
+        name += ` - ${product.formattedPrice}`;
       }
 
-      $(createOrderMap.productSelect).append(`<option value="${product.product_id}">${name}</option>`);
+      $(createOrderMap.productSelect).append(`<option value="${product.productId}">${name}</option>`);
     }
   }
 
@@ -210,8 +210,8 @@ export default class ProductRenderer {
 
       $(createOrderMap.combinationsSelect).append(
         `<option
-          value="${combination.attribute_combination_id}">
-          ${combination.attribute} - ${combination.formatted_price}
+          value="${combination.attributeCombinationId}">
+          ${combination.attribute} - ${combination.formattedPrice}
         </option>`,
       );
     }
@@ -253,9 +253,9 @@ export default class ProductRenderer {
       const $template = templateTypeMap[customField.type].clone();
 
       $template.find(createOrderMap.productCustomInput)
-        .attr('name', `customizations[${customField.customization_field_id}]`);
+        .attr('name', `customizations[${customField.customizationFieldId}]`);
       $template.find(createOrderMap.productCustomInputLabel)
-        .attr('for', `customizations[${customField.customization_field_id}]`)
+        .attr('for', `customizations[${customField.customizationFieldId}]`)
         .text(customField.name);
 
       $customFieldsContainer.append($template);
