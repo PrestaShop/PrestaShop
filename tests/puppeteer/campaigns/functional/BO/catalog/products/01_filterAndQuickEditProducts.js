@@ -127,28 +127,27 @@ describe('Filter Products', async () => {
       }
     });
 
-    it('should disable the product', async function () {
-      const isActionPerformed = await this.pageObjects.productsPage.updateToggleColumnValue(1, false);
-      if (isActionPerformed) {
-        const resultMessage = await this.pageObjects.productsPage.getTextContent(
-          this.pageObjects.productsPage.alertSuccessBlockParagraph,
-        );
-        await expect(resultMessage).to.contains(this.pageObjects.productsPage.productDeactivatedSuccessfulMessage);
-      }
-      const isStatusChanged = await this.pageObjects.productsPage.getToggleColumnValue(1);
-      await expect(isStatusChanged).to.be.false;
-    });
-
-    it('should enable the product', async function () {
-      const isActionPerformed = await this.pageObjects.productsPage.updateToggleColumnValue(1);
-      if (isActionPerformed) {
-        const resultMessage = await this.pageObjects.productsPage.getTextContent(
-          this.pageObjects.productsPage.alertSuccessBlockParagraph,
-        );
-        await expect(resultMessage).to.contains(this.pageObjects.productsPage.productActivatedSuccessfulMessage);
-      }
-      const isStatusChanged = await this.pageObjects.productsPage.getToggleColumnValue(1);
-      await expect(isStatusChanged).to.be.true;
+    const statuses = [
+      {args: {status: 'disable', enable: false}},
+      {args: {status: 'enable', enable: true}},
+    ];
+    statuses.forEach((productStatus) => {
+      it(`should ${productStatus.args.status} the product`, async function () {
+        const isActionPerformed = await this.pageObjects.productsPage.updateToggleColumnValue(1, false);
+        if (isActionPerformed) {
+          const resultMessage = await this.pageObjects.productsPage.getTextContent(
+            this.pageObjects.productsPage.alertSuccessBlockParagraph,
+          );
+          if (productStatus.enable) {
+            await expect(resultMessage).to.contains(this.pageObjects.productsPage.productActivatedSuccessfulMessage);
+          } else {
+            await expect(resultMessage).to.contains(this.pageObjects.productsPage.productDeactivatedSuccessfulMessage);
+          }
+        }
+        const isStatusChanged = await this.pageObjects.productsPage.getToggleColumnValue(1);
+        if (productStatus.enable) await expect(isStatusChanged).to.be.true;
+        else await expect(isStatusChanged).to.be.false;
+      });
     });
   });
 });
