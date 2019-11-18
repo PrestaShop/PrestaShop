@@ -8,7 +8,7 @@ const {Products} = require('@data/demo/products');
 const BOBasePage = require('@pages/BO/BObasePage');
 const LoginPage = require('@pages/BO/login');
 const DashboardPage = require('@pages/BO/dashboard');
-const StocksPage = require('@pages/BO/stocks');
+const StocksPage = require('@pages/BO/catalog/stocks');
 
 let browser;
 let page;
