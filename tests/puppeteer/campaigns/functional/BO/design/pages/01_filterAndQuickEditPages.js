@@ -120,7 +120,7 @@ describe('Filter And Quick Edit Pages', async () => {
         const isActionPerformed = await this.pageObjects.pagesPage.updateToggleColumnValue(
           'cms_page',
           1,
-          pageStatus.enable,
+          pageStatus.args.enable,
         );
         if (isActionPerformed) {
           const resultMessage = await this.pageObjects.pagesPage.getTextContent(
@@ -129,8 +129,7 @@ describe('Filter And Quick Edit Pages', async () => {
           await expect(resultMessage).to.contains(this.pageObjects.pagesPage.successfulUpdateStatusMessage);
         }
         const isStatusChanged = await this.pageObjects.pagesPage.getToggleColumnValue('cms_page', 1);
-        if (pageStatus.enable) await expect(isStatusChanged).to.be.false;
-        else await expect(isStatusChanged).to.be.true;
+        await expect(isStatusChanged).to.be.equal(pageStatus.args.enable);
       });
     });
 

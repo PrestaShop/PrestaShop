@@ -158,7 +158,7 @@ describe('Filter And Quick Edit Categories', async () => {
           const isActionPerformed = await this.pageObjects.pagesPage.updateToggleColumnValue(
             'cms_page_category',
             1,
-            categoryStatus.enable,
+            categoryStatus.args.enable,
           );
           if (isActionPerformed) {
             const resultMessage = await this.pageObjects.pagesPage.getTextContent(
@@ -167,8 +167,7 @@ describe('Filter And Quick Edit Categories', async () => {
             await expect(resultMessage).to.contains(this.pageObjects.pagesPage.successfulUpdateStatusMessage);
           }
           const isStatusChanged = await this.pageObjects.pagesPage.getToggleColumnValue('cms_page_category', 1);
-          if (categoryStatus.enable) await expect(isStatusChanged).to.be.false;
-          else await expect(isStatusChanged).to.be.true;
+          await expect(isStatusChanged).to.be.equal(categoryStatus.args.enable);
         });
 
         it('should reset all filters', async function () {
