@@ -46,10 +46,8 @@ module.exports = class Stocks extends BOBasePage {
    * @returns {Promise<*>}
    */
   async getNumberOfProductsFromList() {
-    //await this.page.waitForSelector(this.productListLoading, {timeout: 500});
-    await this.page.waitFor(500);
-    await this.page.waitFor(() => !document.querySelector(this.productListLoading));
-    return (await this.page.$$(this.productRow)).length;
+    await this.page.waitForSelector(this.productListLoading, {hidden: true});
+    return (await this.page.$$(this.productRow.replace('%ROW', 1))).length;
   }
 
   /**
@@ -58,9 +56,11 @@ module.exports = class Stocks extends BOBasePage {
    */
   async resetFilter() {
     const closeButtons = await this.page.$$(this.searchTagsListCloseSpan);
+    /* eslint-disable no-restricted-syntax */
     for (const closeButton of closeButtons) {
       await closeButton.click();
     }
+    /* eslint-enable no-restricted-syntax */
     return this.getNumberOfProductsFromList();
   }
 
@@ -75,6 +75,25 @@ module.exports = class Stocks extends BOBasePage {
       this.page.click(this.searchButton),
       this.page.waitForSelector(this.productListLoading),
     ]);
-    await this.page.waitFor(() => !document.querySelector(this.productListLoading));
+    await this.page.waitForSelector(this.productListLoading, {hidden: true});
+  }
+
+  /**
+   * get text from column in table
+   * @param row
+   * @param column, only 3 column are implemented : name, reference, supplier
+   * @return {Promise<textContent>}
+   */
+  async getTextColumnFromTableStocks(row, column) {
+    switch (column) {
+      case 'name':
+        return this.getTextContent(this.productRowNameColumn.replace('%ROW', row));
+      case 'reference':
+        return this.getTextContent(this.productRowReferenceColumn.replace('%ROW', row));
+      case 'supplier':
+        return this.getTextContent(this.productRowSupplierColumn.replace('%ROW', row));
+      default:
+        throw new Error(`${column} was not find as column in this table`);
+    }
   }
 };
