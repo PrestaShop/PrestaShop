@@ -24,20 +24,15 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Customization\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Customization;
 
 /**
- * Thrown when customization constraints are violated
+ * Defines settings for customizations
  */
-class CustomizationConstraintException extends CustomizationException
+final class CustomizationSettings
 {
     /**
-     * When customization field is required to be filled
+     * Maximum allowed length for customization text field value
      */
-    const FIELD_IS_REQUIRED = 1;
-
-    /**
-     * When customization field value length is exceeded
-     */
-    const FIELD_IS_TOO_LONG = 2;
+    const MAX_TEXT_LENGTH = 2;
 }

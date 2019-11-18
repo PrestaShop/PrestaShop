@@ -55,6 +55,8 @@ export default {
   productSearched: 'productSearched',
   // when product is added to cart
   productAddedToCart: 'productAddedToCart',
+  // when adding product to cart fails
+  productAddToCartFailed: 'productAddToCartFailed',
   // when product is removed from cart
   productRemovedFromCart: 'productRemovedFromCart',
   // when product in cart price has been changed
