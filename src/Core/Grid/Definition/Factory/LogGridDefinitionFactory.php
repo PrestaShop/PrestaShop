@@ -147,6 +147,13 @@ final class LogGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ])
             )
             ->add(
+                (new DataColumn('id_shop_group'))
+                ->setName($this->trans('Shop group', [], 'Admin.Global'))
+                ->setOptions([
+                    'field' => 'id_shop_group',
+                ])
+            )
+            ->add(
                 (new DataColumn('id_lang'))
                 ->setName($this->trans('Language', [], 'Admin.Global'))
                 ->setOptions([
@@ -228,6 +235,13 @@ final class LogGridDefinitionFactory extends AbstractGridDefinitionFactory
                     'required' => false,
                 ])
                 ->setAssociatedColumn('id_shop')
+            )
+            ->add(
+                (new Filter('id_shop_group', TextType::class))
+                ->setTypeOptions([
+                    'required' => false,
+                ])
+                ->setAssociatedColumn('id_shop_group')
             )
             ->add(
                 (new Filter('id_lang', TextType::class))
