@@ -18,7 +18,11 @@ const FOBasePage = require('@pages/FO/FObasePage');
 let browser;
 let page;
 let numberOfEmployees = 0;
-let createEmployeeData;
+const createEmployeeData = new EmployeeFaker({
+  defaultPage: 'Orders',
+  permissionProfile: 'Logistician',
+  active: false,
+});
 
 // Init objects needed
 const init = async function () {
@@ -41,11 +45,6 @@ describe('Filter And Quick Edit Employees', async () => {
     browser = await helper.createBrowser();
     page = await helper.newTab(browser);
     this.pageObjects = await init();
-    createEmployeeData = await (new EmployeeFaker({
-      defaultPage: 'Orders',
-      permissionProfile: 'Logistician',
-      active: false,
-    }));
   });
   after(async () => {
     await helper.closeBrowser(browser);
@@ -71,6 +70,13 @@ describe('Filter And Quick Edit Employees', async () => {
 
   // 1 : Create employee and Filter with all inputs and selects in grid table in BO
   describe('Create employee then filter the table', async () => {
+    const tests = [
+      {args: {filterType: 'input', filterBy: 'id_employee', filterValue: 1}},
+      {args: {filterType: 'input', filterBy: 'firstname', filterValue: createEmployeeData.firstName}},
+      {args: {filterType: 'input', filterBy: 'lastname', filterValue: DefaultAccount.lastName}},
+      {args: {filterType: 'input', filterBy: 'email', filterValue: createEmployeeData.email}},
+      {args: {filterType: 'select', filterBy: 'active', filterValue: createEmployeeData.active}, expected: 'clear'},
+    ];
     it('should go to add new employee page', async function () {
       await this.pageObjects.employeesPage.goToAddNewEmployeePage();
       const pageTitle = await this.pageObjects.addEmployeePage.getPageTitle();
@@ -82,164 +88,95 @@ describe('Filter And Quick Edit Employees', async () => {
       await expect(textResult).to.equal(this.pageObjects.employeesPage.successfulCreationMessage);
     });
 
-    it('should reset all filters', async function () {
-      const numberOfEmployeesAfterCreation = await this.pageObjects.employeesPage.resetAndGetNumberOfLines();
-      await expect(numberOfEmployeesAfterCreation).to.be.equal(numberOfEmployees + 1);
-    });
-
-    it('should filter by Id \'1\'', async function () {
-      await this.pageObjects.employeesPage.filterEmployees('input', 'id_employee', 1);
-      const numberOfEmployeesAfterFilter = await this.pageObjects.employeesPage.getNumberFromText(
-        this.pageObjects.employeesPage.employeeGridTitle,
-      );
-      await expect(numberOfEmployeesAfterFilter).to.be.equal(1);
-      const textColumn = await this.pageObjects.employeesPage.getTextColumnFromTable(1, 'id_employee');
-      await expect(textColumn).to.contains(1);
-    });
-
-    it('should reset all filters', async function () {
-      const numberOfEmployeesAfterCreation = await this.pageObjects.employeesPage.resetAndGetNumberOfLines();
-      await expect(numberOfEmployeesAfterCreation).to.be.equal(numberOfEmployees + 1);
-    });
-
-    it('should filter by First name', async function () {
-      await this.pageObjects.employeesPage.filterEmployees('input', 'firstname', createEmployeeData.firstName);
-      const numberOfEmployeesAfterFilter = await this.pageObjects.employeesPage.getNumberFromText(
-        this.pageObjects.employeesPage.employeeGridTitle,
-      );
-      await expect(numberOfEmployeesAfterFilter).to.be.at.most(numberOfEmployees);
-      /* eslint-disable no-await-in-loop */
-      for (let i = 1; i <= numberOfEmployeesAfterFilter; i++) {
-        const textColumn = await this.pageObjects.employeesPage.getTextColumnFromTable(i, 'firstname');
-        await expect(textColumn).to.contains(createEmployeeData.firstName);
-      }
-      /* eslint-enable no-await-in-loop */
-    });
-
-    it('should reset all filters', async function () {
-      const numberOfEmployeesAfterCreation = await this.pageObjects.employeesPage.resetAndGetNumberOfLines();
-      await expect(numberOfEmployeesAfterCreation).to.be.above(numberOfEmployees);
-    });
-
-    it('should filter by Last name', async function () {
-      await this.pageObjects.employeesPage.filterEmployees('input', 'lastname', DefaultAccount.lastName);
-      const numberOfEmployeesAfterFilter = await this.pageObjects.employeesPage.getNumberFromText(
-        this.pageObjects.employeesPage.employeeGridTitle,
-      );
-      await expect(numberOfEmployeesAfterFilter).to.be.at.most(numberOfEmployees);
-      /* eslint-disable no-await-in-loop */
-      for (let i = 1; i <= numberOfEmployeesAfterFilter; i++) {
-        const textColumn = await this.pageObjects.employeesPage.getTextColumnFromTable(i, 'lastname');
-        await expect(textColumn).to.contains(DefaultAccount.lastName);
-      }
-      /* eslint-enable no-await-in-loop */
-    });
-
-    it('should reset all filters', async function () {
-      const numberOfEmployeesAfterCreation = await this.pageObjects.employeesPage.resetAndGetNumberOfLines();
-      await expect(numberOfEmployeesAfterCreation).to.be.above(numberOfEmployees);
-    });
-
-    it('should filter by Email address', async function () {
-      await this.pageObjects.employeesPage.filterEmployees('input', 'email', createEmployeeData.email);
-      const numberOfEmployeesAfterFilter = await this.pageObjects.employeesPage.getNumberFromText(
-        this.pageObjects.employeesPage.employeeGridTitle,
-      );
-      await expect(numberOfEmployeesAfterFilter).to.be.at.most(numberOfEmployees);
-      /* eslint-disable no-await-in-loop */
-      for (let i = 1; i <= numberOfEmployeesAfterFilter; i++) {
-        const textColumn = await this.pageObjects.employeesPage.getTextColumnFromTable(i, 'email');
-        await expect(textColumn).to.contains(createEmployeeData.email);
-      }
-      /* eslint-enable no-await-in-loop */
-    });
-
-    it('should reset all filters', async function () {
-      const numberOfEmployeesAfterCreation = await this.pageObjects.employeesPage.resetAndGetNumberOfLines();
-      await expect(numberOfEmployeesAfterCreation).to.be.above(numberOfEmployees);
-    });
-
-    it('should filter by Active \'No\'', async function () {
-      await this.pageObjects.employeesPage.filterEmployees('select', 'active', createEmployeeData.active);
-      const numberOfEmployeesAfterFilter = await this.pageObjects.employeesPage.getNumberFromText(
-        this.pageObjects.employeesPage.employeeGridTitle,
-      );
-      await expect(numberOfEmployeesAfterFilter).to.be.at.most(numberOfEmployees);
-      /* eslint-disable no-await-in-loop */
-      for (let i = 1; i <= numberOfEmployeesAfterFilter; i++) {
-        const textColumn = await this.pageObjects.employeesPage.getTextColumnFromTable(i, 'active');
-        await expect(textColumn).to.contains('clear');
-      }
-      /* eslint-enable no-await-in-loop */
-    });
-
-    it('should reset all filters', async function () {
-      const numberOfEmployeesAfterCreation = await this.pageObjects.employeesPage.resetAndGetNumberOfLines();
-      await expect(numberOfEmployeesAfterCreation).to.be.above(numberOfEmployees);
-    });
-  });
-
-  // 2 : Editing Employees from grid table
-  describe('Quick Edit Employees', async () => {
-    it('should filter by Email address', async function () {
-      await this.pageObjects.employeesPage.filterEmployees('input', 'email', createEmployeeData.email);
-      const numberOfEmployeesAfterFilter = await this.pageObjects.employeesPage.getNumberFromText(
-        this.pageObjects.employeesPage.employeeGridTitle,
-      );
-      await expect(numberOfEmployeesAfterFilter).to.be.at.most(numberOfEmployees);
-      /* eslint-disable no-await-in-loop */
-      for (let i = 1; i <= numberOfEmployeesAfterFilter; i++) {
-        const textColumn = await this.pageObjects.employeesPage.getTextColumnFromTable(i, 'email');
-        await expect(textColumn).to.contains(createEmployeeData.email);
-      }
-      /* eslint-enable no-await-in-loop */
-    });
-
-    it('should disable the employee', async function () {
-      const isActionPerformed = await this.pageObjects.employeesPage.updateToggleColumnValue(1, false);
-      if (isActionPerformed) {
-        const resultMessage = await this.pageObjects.employeesPage.getTextContent(
-          this.pageObjects.employeesPage.alertSuccessBlockParagraph,
+    tests.forEach((test) => {
+      it(`should filter by ${test.args.filterBy} '${test.args.filterValue}'`, async function () {
+        await this.pageObjects.employeesPage.filterEmployees(
+          test.args.filterType,
+          test.args.filterBy,
+          test.args.filterValue,
         );
-        await expect(resultMessage).to.contains(this.pageObjects.employeesPage.successfulUpdateStatusMessage);
-      }
-      const isStatusChanged = await this.pageObjects.employeesPage.getToggleColumnValue(1);
-      await expect(isStatusChanged).to.be.false;
-    });
-
-    it('should enable the employee', async function () {
-      const isActionPerformed = await this.pageObjects.employeesPage.updateToggleColumnValue(1);
-      if (isActionPerformed) {
-        const resultMessage = await this.pageObjects.employeesPage.getTextContent(
-          this.pageObjects.employeesPage.alertSuccessBlockParagraph,
+        const numberOfEmployeesAfterFilter = await this.pageObjects.employeesPage.getNumberFromText(
+          this.pageObjects.employeesPage.employeeGridTitle,
         );
-        await expect(resultMessage).to.contains(this.pageObjects.employeesPage.successfulUpdateStatusMessage);
-      }
-      const isStatusChanged = await this.pageObjects.employeesPage.getToggleColumnValue(1);
-      await expect(isStatusChanged).to.be.true;
-    });
-  });
+        await expect(numberOfEmployeesAfterFilter).to.be.at.most(numberOfEmployees);
+        for (let i = 1; i <= numberOfEmployeesAfterFilter; i++) {
+          const textColumn = await this.pageObjects.employeesPage.getTextColumnFromTable(i, test.args.filterBy);
+          if (test.expected !== undefined) {
+            await expect(textColumn).to.contains(test.expected);
+          } else {
+            await expect(textColumn).to.contains(test.args.filterValue);
+          }
+        }
+      });
 
-  // 3 : Delete employee
-  describe('Delete employee', async () => {
-    it('should filter list by email', async function () {
-      await this.pageObjects.employeesPage.filterEmployees(
-        'input',
-        'email',
-        createEmployeeData.email,
-      );
-      const textEmail = await this.pageObjects.employeesPage.getTextColumnFromTable(1, 'email');
-      await expect(textEmail).to.contains(createEmployeeData.email);
+      it('should reset all filters', async function () {
+        const numberOfEmployeesAfterCreation = await this.pageObjects.employeesPage.resetAndGetNumberOfLines();
+        await expect(numberOfEmployeesAfterCreation).to.be.above(numberOfEmployees);
+      });
     });
 
-    it('should delete employee', async function () {
-      const textResult = await this.pageObjects.employeesPage.deleteEmployee(1);
-      await expect(textResult).to.equal(this.pageObjects.employeesPage.successfulDeleteMessage);
+    // 2 : Editing Employees from grid table
+    describe('Quick Edit Employees', async () => {
+      it('should filter by Email address', async function () {
+        await this.pageObjects.employeesPage.filterEmployees('input', 'email', createEmployeeData.email);
+        const numberOfEmployeesAfterFilter = await this.pageObjects.employeesPage.getNumberFromText(
+          this.pageObjects.employeesPage.employeeGridTitle,
+        );
+        await expect(numberOfEmployeesAfterFilter).to.be.at.most(numberOfEmployees);
+        /* eslint-disable no-await-in-loop */
+        for (let i = 1; i <= numberOfEmployeesAfterFilter; i++) {
+          const textColumn = await this.pageObjects.employeesPage.getTextColumnFromTable(i, 'email');
+          await expect(textColumn).to.contains(createEmployeeData.email);
+        }
+        /* eslint-enable no-await-in-loop */
+      });
+
+      it('should disable the employee', async function () {
+        const isActionPerformed = await this.pageObjects.employeesPage.updateToggleColumnValue(1, false);
+        if (isActionPerformed) {
+          const resultMessage = await this.pageObjects.employeesPage.getTextContent(
+            this.pageObjects.employeesPage.alertSuccessBlockParagraph,
+          );
+          await expect(resultMessage).to.contains(this.pageObjects.employeesPage.successfulUpdateStatusMessage);
+        }
+        const isStatusChanged = await this.pageObjects.employeesPage.getToggleColumnValue(1);
+        await expect(isStatusChanged).to.be.false;
+      });
+
+      it('should enable the employee', async function () {
+        const isActionPerformed = await this.pageObjects.employeesPage.updateToggleColumnValue(1);
+        if (isActionPerformed) {
+          const resultMessage = await this.pageObjects.employeesPage.getTextContent(
+            this.pageObjects.employeesPage.alertSuccessBlockParagraph,
+          );
+          await expect(resultMessage).to.contains(this.pageObjects.employeesPage.successfulUpdateStatusMessage);
+        }
+        const isStatusChanged = await this.pageObjects.employeesPage.getToggleColumnValue(1);
+        await expect(isStatusChanged).to.be.true;
+      });
     });
 
-    it('should reset filter and check the number of employees', async function () {
-      const numberOfEmployeesAfterDelete = await this.pageObjects.employeesPage.resetAndGetNumberOfLines();
-      await expect(numberOfEmployeesAfterDelete).to.be.equal(numberOfEmployees);
+    // 3 : Delete employee
+    describe('Delete employee', async () => {
+      it('should filter list by email', async function () {
+        await this.pageObjects.employeesPage.filterEmployees(
+          'input',
+          'email',
+          createEmployeeData.email,
+        );
+        const textEmail = await this.pageObjects.employeesPage.getTextColumnFromTable(1, 'email');
+        await expect(textEmail).to.contains(createEmployeeData.email);
+      });
+
+      it('should delete employee', async function () {
+        const textResult = await this.pageObjects.employeesPage.deleteEmployee(1);
+        await expect(textResult).to.equal(this.pageObjects.employeesPage.successfulDeleteMessage);
+      });
+
+      it('should reset filter and check the number of employees', async function () {
+        const numberOfEmployeesAfterDelete = await this.pageObjects.employeesPage.resetAndGetNumberOfLines();
+        await expect(numberOfEmployeesAfterDelete).to.be.equal(numberOfEmployees);
+      });
     });
   });
 });
