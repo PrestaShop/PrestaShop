@@ -111,28 +111,27 @@ describe('Filter And Quick Edit Pages', async () => {
       await expect(textColumn).to.contains(Pages.termsAndCondition.title);
     });
 
-    it('should disable the Page', async function () {
-      const isActionPerformed = await this.pageObjects.pagesPage.updateToggleColumnValue('cms_page', '1', false);
-      if (isActionPerformed) {
-        const resultMessage = await this.pageObjects.pagesPage.getTextContent(
-          this.pageObjects.pagesPage.alertSuccessBlockParagraph,
+    const statuses = [
+      {args: {status: 'disable', enable: false}},
+      {args: {status: 'enable', enable: true}},
+    ];
+    statuses.forEach((pageStatus) => {
+      it('should disable the Page', async function () {
+        const isActionPerformed = await this.pageObjects.pagesPage.updateToggleColumnValue(
+          'cms_page',
+          1,
+          pageStatus.enable,
         );
-        await expect(resultMessage).to.contains(this.pageObjects.pagesPage.successfulUpdateStatusMessage);
-      }
-      const isStatusChanged = await this.pageObjects.pagesPage.getToggleColumnValue('cms_page', 1);
-      await expect(isStatusChanged).to.be.false;
-    });
-
-    it('should enable the Page', async function () {
-      const isActionPerformed = await this.pageObjects.pagesPage.updateToggleColumnValue('cms_page', '1');
-      if (isActionPerformed) {
-        const resultMessage = await this.pageObjects.pagesPage.getTextContent(
-          this.pageObjects.pagesPage.alertSuccessBlockParagraph,
-        );
-        await expect(resultMessage).to.contains(this.pageObjects.pagesPage.successfulUpdateStatusMessage);
-      }
-      const isStatusChanged = await this.pageObjects.pagesPage.getToggleColumnValue('cms_page', 1);
-      await expect(isStatusChanged).to.be.true;
+        if (isActionPerformed) {
+          const resultMessage = await this.pageObjects.pagesPage.getTextContent(
+            this.pageObjects.pagesPage.alertSuccessBlockParagraph,
+          );
+          await expect(resultMessage).to.contains(this.pageObjects.pagesPage.successfulUpdateStatusMessage);
+        }
+        const isStatusChanged = await this.pageObjects.pagesPage.getToggleColumnValue('cms_page', 1);
+        if (pageStatus.enable) await expect(isStatusChanged).to.be.false;
+        else await expect(isStatusChanged).to.be.true;
+      });
     });
 
     it('should reset all filters', async function () {
