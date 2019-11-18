@@ -116,7 +116,7 @@ describe('Filter And Quick Edit Pages', async () => {
       {args: {status: 'enable', enable: true}},
     ];
     statuses.forEach((pageStatus) => {
-      it('should disable the Page', async function () {
+      it(`should ${pageStatus.args.status} the page`, async function () {
         const isActionPerformed = await this.pageObjects.pagesPage.updateToggleColumnValue(
           'cms_page',
           1,

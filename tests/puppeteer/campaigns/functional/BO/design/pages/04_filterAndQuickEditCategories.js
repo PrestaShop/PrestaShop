@@ -149,42 +149,34 @@ describe('Filter And Quick Edit Categories', async () => {
         await expect(textColumn).to.contains(firstCategoryData.name);
       });
 
-      it('should disable the Category', async function () {
-        const isActionPerformed = await this.pageObjects.pagesPage.updateToggleColumnValue(
-          'cms_page_category',
-          1,
-          false,
-        );
-        if (isActionPerformed) {
-          const resultMessage = await this.pageObjects.pagesPage.getTextContent(
-            this.pageObjects.pagesPage.alertSuccessBlockParagraph,
+      const statuses = [
+        {args: {status: 'disable', enable: false}},
+        {args: {status: 'enable', enable: true}},
+      ];
+      statuses.forEach((categoryStatus) => {
+        it(`should ${categoryStatus.args.status} the category`, async function () {
+          const isActionPerformed = await this.pageObjects.pagesPage.updateToggleColumnValue(
+            'cms_page_category',
+            1,
+            categoryStatus.enable,
           );
-          await expect(resultMessage).to.contains(this.pageObjects.pagesPage.successfulUpdateStatusMessage);
-        }
-        const isStatusChanged = await this.pageObjects.pagesPage.getToggleColumnValue('cms_page_category', 1);
-        await expect(isStatusChanged).to.be.false;
-      });
+          if (isActionPerformed) {
+            const resultMessage = await this.pageObjects.pagesPage.getTextContent(
+              this.pageObjects.pagesPage.alertSuccessBlockParagraph,
+            );
+            await expect(resultMessage).to.contains(this.pageObjects.pagesPage.successfulUpdateStatusMessage);
+          }
+          const isStatusChanged = await this.pageObjects.pagesPage.getToggleColumnValue('cms_page_category', 1);
+          if (categoryStatus.enable) await expect(isStatusChanged).to.be.false;
+          else await expect(isStatusChanged).to.be.true;
+        });
 
-      it('should enable the Category', async function () {
-        const isActionPerformed = await this.pageObjects.pagesPage.updateToggleColumnValue(
-          'cms_page_category',
-          1,
-        );
-        if (isActionPerformed) {
-          const resultMessage = await this.pageObjects.pagesPage.getTextContent(
-            this.pageObjects.pagesPage.alertSuccessBlockParagraph,
+        it('should reset all filters', async function () {
+          const numberOfCategoriesAfterFilter = await this.pageObjects.pagesPage.resetAndGetNumberOfLines(
+            'cms_page_category',
           );
-          await expect(resultMessage).to.contains(this.pageObjects.pagesPage.successfulUpdateStatusMessage);
-        }
-        const isStatusChanged = await this.pageObjects.pagesPage.getToggleColumnValue('cms_page_category', 1);
-        await expect(isStatusChanged).to.be.true;
-      });
-
-      it('should reset all filters', async function () {
-        const numberOfCategoriesAfterFilter = await this.pageObjects.pagesPage.resetAndGetNumberOfLines(
-          'cms_page_category',
-        );
-        await expect(numberOfCategoriesAfterFilter).to.be.equal(numberOfCategories);
+          await expect(numberOfCategoriesAfterFilter).to.be.equal(numberOfCategories);
+        });
       });
 
       it('should delete categories with Bulk Actions and check Result', async function () {
