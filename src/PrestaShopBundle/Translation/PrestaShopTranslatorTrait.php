@@ -131,6 +131,16 @@ trait PrestaShopTranslatorTrait
     }
 
     /**
+     * @param $locale
+     *
+     * @return bool
+     */
+    public function isCatalogLoaded($locale)
+    {
+        return isset($this->catalogues[$locale]);
+    }
+
+    /**
      * @param string $string
      *
      * @return bool
