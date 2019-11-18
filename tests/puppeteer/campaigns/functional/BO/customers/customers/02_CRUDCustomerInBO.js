@@ -8,8 +8,8 @@ const BOBasePage = require('@pages/BO/BObasePage');
 const LoginPage = require('@pages/BO/login');
 const DashboardPage = require('@pages/BO/dashboard');
 const CustomersPage = require('@pages/BO/customers');
-const AddCustomerPage = require('@pages/BO/addCustomer');
-const ViewCustomerPage = require('@pages/BO/viewCustomer');
+const AddCustomerPage = require('@pages/BO/customers/add');
+const ViewCustomerPage = require('@pages/BO/customers/view');
 const FOLoginPage = require('@pages/FO/login');
 const FOBasePage = require('@pages/FO/FObasePage');
 const CustomerFaker = require('@data/faker/customer');
@@ -49,6 +49,7 @@ describe('Create, Read, Update and Delete Customer in BO', async () => {
   });
   // Login into BO and go to customers page
   loginCommon.loginBO();
+
   it('should go to customers page', async function () {
     await this.pageObjects.boBasePage.goToSubMenu(
       this.pageObjects.boBasePage.customersParentLink,
@@ -57,13 +58,9 @@ describe('Create, Read, Update and Delete Customer in BO', async () => {
     const pageTitle = await this.pageObjects.customersPage.getPageTitle();
     await expect(pageTitle).to.contains(this.pageObjects.customersPage.pageTitle);
   });
+
   it('should reset all filters', async function () {
-    if (await this.pageObjects.customersPage.elementVisible(this.pageObjects.customersPage.filterResetButton, 2000)) {
-      await this.pageObjects.customersPage.resetFilter();
-    }
-    numberOfCustomers = await this.pageObjects.customersPage.getNumberFromText(
-      this.pageObjects.customersPage.customerGridTitle,
-    );
+    numberOfCustomers = await this.pageObjects.customersPage.resetAndGetNumberOfLines();
     await expect(numberOfCustomers).to.be.above(0);
   });
   // 1 : Create customer and go to FO to check sign in is OK
@@ -73,14 +70,14 @@ describe('Create, Read, Update and Delete Customer in BO', async () => {
       const pageTitle = await this.pageObjects.addCustomerPage.getPageTitle();
       await expect(pageTitle).to.contains(this.pageObjects.addCustomerPage.pageTitleCreate);
     });
+
     it('should create customer and check result', async function () {
       const textResult = await this.pageObjects.addCustomerPage.createEditCustomer(createCustomerData);
       await expect(textResult).to.equal(this.pageObjects.customersPage.successfulCreationMessage);
-      const numberOfCustomersAfterCreation = await this.pageObjects.customersPage.getNumberFromText(
-        this.pageObjects.customersPage.customerGridTitle,
-      );
+      const numberOfCustomersAfterCreation = await this.pageObjects.customersPage.getNumberOfElementInGrid();
       await expect(numberOfCustomersAfterCreation).to.be.equal(numberOfCustomers + 1);
     });
+
     it('should go to FO and check sign in with new account', async function () {
       page = await this.pageObjects.boBasePage.viewMyShop();
       this.pageObjects = await init();
@@ -102,20 +99,18 @@ describe('Create, Read, Update and Delete Customer in BO', async () => {
         'email',
         createCustomerData.email,
       );
-      const textEmail = await this.pageObjects.customersPage.getTextContent(
-        this.pageObjects.customersPage.customersListTableColumn.replace('%ROW', '1').replace('%COLUMN', 'email'),
-      );
+      const textEmail = await this.pageObjects.customersPage.getTextColumnFromTableCustomers(1, 'email');
       await expect(textEmail).to.contains(createCustomerData.email);
     });
+
     it('should click on view customer', async function () {
       await this.pageObjects.customersPage.goToViewCustomerPage('1');
       const pageTitle = await this.pageObjects.viewCustomerPage.getPageTitle();
       await expect(pageTitle).to.contains(this.pageObjects.viewCustomerPage.pageTitle);
     });
+
     it('should check customer personal information', async function () {
-      const cardHeaderText = await this.pageObjects.viewCustomerPage.getTextContent(
-        this.pageObjects.viewCustomerPage.cardHeaderDiv.replace('%ID', '1'),
-      );
+      const cardHeaderText = await this.pageObjects.viewCustomerPage.getTextFromCardHeader(1);
       await expect(cardHeaderText).to.contains(createCustomerData.firstName);
       await expect(cardHeaderText).to.contains(createCustomerData.lastName);
       await expect(cardHeaderText).to.contains(createCustomerData.email);
@@ -131,31 +126,30 @@ describe('Create, Read, Update and Delete Customer in BO', async () => {
       const pageTitle = await this.pageObjects.customersPage.getPageTitle();
       await expect(pageTitle).to.contains(this.pageObjects.customersPage.pageTitle);
     });
+
     it('should filter list by email', async function () {
       await this.pageObjects.customersPage.filterCustomers(
         'input',
         'email',
         createCustomerData.email,
       );
-      const textEmail = await this.pageObjects.customersPage.getTextContent(
-        this.pageObjects.customersPage.customersListTableColumn.replace('%ROW', '1').replace('%COLUMN', 'email'),
-      );
+      const textEmail = await this.pageObjects.customersPage.getTextColumnFromTableCustomers(1, 'email');
       await expect(textEmail).to.contains(createCustomerData.email);
     });
+
     it('should go to edit customer page', async function () {
       await this.pageObjects.customersPage.goToEditCustomerPage('1');
       const pageTitle = await this.pageObjects.addCustomerPage.getPageTitle();
       await expect(pageTitle).to.contains(this.pageObjects.addCustomerPage.pageTitleEdit);
     });
+
     it('should update customer', async function () {
       const textResult = await this.pageObjects.addCustomerPage.createEditCustomer(editCustomerData);
       await expect(textResult).to.equal(this.pageObjects.customersPage.successfulUpdateMessage);
-      await this.pageObjects.customersPage.resetFilter();
-      const numberOfCustomersAfterUpdate = await this.pageObjects.customersPage.getNumberFromText(
-        this.pageObjects.customersPage.customerGridTitle,
-      );
+      const numberOfCustomersAfterUpdate = await this.pageObjects.customersPage.resetAndGetNumberOfLines();
       await expect(numberOfCustomersAfterUpdate).to.be.equal(numberOfCustomers + 1);
     });
+
     it('should go to FO and check sign in with edited account', async function () {
       page = await this.pageObjects.boBasePage.viewMyShop();
       this.pageObjects = await init();
@@ -175,20 +169,18 @@ describe('Create, Read, Update and Delete Customer in BO', async () => {
         'email',
         editCustomerData.email,
       );
-      const textEmail = await this.pageObjects.customersPage.getTextContent(
-        this.pageObjects.customersPage.customersListTableColumn.replace('%ROW', '1').replace('%COLUMN', 'email'),
-      );
+      const textEmail = await this.pageObjects.customersPage.getTextColumnFromTableCustomers(1, 'email');
       await expect(textEmail).to.contains(editCustomerData.email);
     });
+
     it('should click on view customer', async function () {
       await this.pageObjects.customersPage.goToViewCustomerPage('1');
       const pageTitle = await this.pageObjects.viewCustomerPage.getPageTitle();
       await expect(pageTitle).to.contains(this.pageObjects.viewCustomerPage.pageTitle);
     });
+
     it('should check customer personal information', async function () {
-      const cardHeaderText = await this.pageObjects.viewCustomerPage.getTextContent(
-        this.pageObjects.viewCustomerPage.cardHeaderDiv.replace('%ID', '1'),
-      );
+      const cardHeaderText = await this.pageObjects.viewCustomerPage.getTextFromCardHeader(1);
       await expect(cardHeaderText).to.contains(editCustomerData.firstName);
       await expect(cardHeaderText).to.contains(editCustomerData.lastName);
       await expect(cardHeaderText).to.contains(editCustomerData.email);
@@ -204,24 +196,21 @@ describe('Create, Read, Update and Delete Customer in BO', async () => {
       const pageTitle = await this.pageObjects.customersPage.getPageTitle();
       await expect(pageTitle).to.contains(this.pageObjects.customersPage.pageTitle);
     });
+
     it('should filter list by email', async function () {
       await this.pageObjects.customersPage.filterCustomers(
         'input',
         'email',
         editCustomerData.email,
       );
-      const textEmail = await this.pageObjects.customersPage.getTextContent(
-        this.pageObjects.customersPage.customersListTableColumn.replace('%ROW', '1').replace('%COLUMN', 'email'),
-      );
+      const textEmail = await this.pageObjects.customersPage.getTextColumnFromTableCustomers(1, 'email');
       await expect(textEmail).to.contains(editCustomerData.email);
     });
+
     it('should delete customer', async function () {
       const textResult = await this.pageObjects.customersPage.deleteCustomer('1');
       await expect(textResult).to.equal(this.pageObjects.customersPage.successfulDeleteMessage);
-      await this.pageObjects.customersPage.resetFilter();
-      const numberOfCustomersAfterDelete = await this.pageObjects.customersPage.getNumberFromText(
-        this.pageObjects.customersPage.customerGridTitle,
-      );
+      const numberOfCustomersAfterDelete = await this.pageObjects.customersPage.resetAndGetNumberOfLines();
       await expect(numberOfCustomersAfterDelete).to.be.equal(numberOfCustomers);
     });
   });

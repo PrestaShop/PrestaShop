@@ -640,14 +640,32 @@ class AdminCartRulesControllerCore extends AdminController
         $groups = $current_object->getAssociatedRestrictions('group', false, true);
         $shops = $current_object->getAssociatedRestrictions('shop', false, false);
         $cart_rules = $current_object->getAssociatedRestrictions('cart_rule', false, true, 0, $limit);
-        $carriers = $current_object->getAssociatedRestrictions('carrier', true, false);
+        $carriers = $current_object->getAssociatedRestrictions('carrier', true, true);
+
         foreach ($carriers as &$carriers2) {
-            foreach ($carriers2 as &$carrier) {
+            $prev_id_carrier = 0;
+
+            foreach ($carriers2 as $key => &$carrier) {
+                if ($prev_id_carrier == $carrier['id_carrier']) {
+                    unset($carriers2[$key]);
+
+                    continue;
+                }
+
                 foreach ($carrier as $field => &$value) {
-                    if ($field == 'name' && $value == '0') {
-                        $value = Configuration::get('PS_SHOP_NAME');
+                    if ($field == 'name') {
+                        if ($value == '0') {
+                            $value = $carrier['id_carrier'] . ' - ' . Configuration::get('PS_SHOP_NAME');
+                        } else {
+                            $value = $carrier['id_carrier'] . ' - ' . $carrier['name'];
+                            if ($carrier['name']) {
+                                $value .= ' (' . $carrier['delay'] . ')';
+                            }
+                        }
                     }
                 }
+
+                $prev_id_carrier = $carrier['id_carrier'];
             }
         }
 

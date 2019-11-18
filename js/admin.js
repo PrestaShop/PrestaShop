@@ -750,21 +750,24 @@ $(document).ready(function()
       return copyMeta2friendlyURL()
   });
 
-  $('#ajax_running').ajaxStart(function() {
-    ajax_running_timeout = setTimeout(function() {showAjaxOverlay()}, 1000);
-  });
-
-  $('#ajax_running').ajaxStop(function() {
-    var element = $(this)
-    setTimeout(function(){element.hide()}, 1000);
-    clearTimeout(ajax_running_timeout);
-  });
-
-  $('#ajax_running').ajaxError(function() {
-    var element = $(this)
-    setTimeout(function(){element.hide()}, 1000);
-    clearTimeout(ajax_running_timeout);
-  });
+  $(document)
+    .ajaxStart(function() {
+      ajax_running_timeout = setTimeout(function() {
+        showAjaxOverlay()
+      }, 1000);
+    })
+    .ajaxStop(function() {
+      setTimeout(function() {
+        $('#ajax_running').hide()
+      }, 1000);
+      clearTimeout(ajax_running_timeout);
+    })
+    .ajaxError(function() {
+      setTimeout(function() {
+        $('#ajax_running').hide()
+      }, 1000);
+      clearTimeout(ajax_running_timeout);
+    });
 
   bindTabModuleListAction();
 

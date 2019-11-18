@@ -24,6 +24,8 @@
  */
 
 import OrderViewPageMap from './OrderViewPageMap';
+import OrderShippingManager from './order-shipping-manager';
+import InvoiceNoteManager from './invoice-note-manager';
 
 const $ = window.$;
 
@@ -32,9 +34,13 @@ $(() => {
   const DISCOUNT_TYPE_PERCENT = 'percent';
   const DISCOUNT_TYPE_FREE_SHIPPING = 'free_shipping';
 
+  new OrderShippingManager();
+
   handlePaymentDetailsToggle();
   handlePrivateNoteChange();
   handleUpdateOrderStatusButton();
+
+  new InvoiceNoteManager();
 
   $(OrderViewPageMap.privateNoteToggleBtn).on('click', (event) => {
     event.preventDefault();

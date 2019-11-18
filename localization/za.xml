@@ -7,10 +7,10 @@
 		<language iso_code="en" />
 	</languages>
 	<taxes>
-		<tax id="1" name="TVA ZA 14%" rate="14" />
+		<tax id="1" name="TVA ZA 15%" rate="15" />
 		<tax id="2" name="TVA ZA 0%" rate="0" />
 
-		<taxRulesGroup name="ZA Standard Rate (14%)">
+		<taxRulesGroup name="ZA Standard Rate (15%)">
 			<taxRule iso_code_country="za" id_tax="1" />
 		</taxRulesGroup>
 

@@ -598,6 +598,8 @@ CREATE TABLE `PREFIX_currency` (
   `conversion_rate` decimal(13,6) NOT NULL,
   `deleted` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `active` tinyint(1) unsigned NOT NULL DEFAULT '1',
+  `unofficial` tinyint(1) unsigned NOT NULL DEFAULT '0',
+  `modified` tinyint(1) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id_currency`),
   KEY `currency_iso_code` (`iso_code`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
@@ -979,8 +981,8 @@ CREATE TABLE `PREFIX_guest` (
 /* Store hook description */
 CREATE TABLE `PREFIX_hook` (
   `id_hook` int(10) unsigned NOT NULL auto_increment,
-  `name` varchar(64) NOT NULL,
-  `title` varchar(64) NOT NULL,
+  `name` varchar(191) NOT NULL,
+  `title` varchar(255) NOT NULL,
   `description` text,
   `position` tinyint(1) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id_hook`),
@@ -990,8 +992,8 @@ CREATE TABLE `PREFIX_hook` (
 /* Hook alias name */
 CREATE TABLE `PREFIX_hook_alias` (
   `id_hook_alias` int(10) unsigned NOT NULL auto_increment,
-  `alias` varchar(64) NOT NULL,
-  `name` varchar(64) NOT NULL,
+  `alias` varchar(191) NOT NULL,
+  `name` varchar(191) NOT NULL,
   PRIMARY KEY (`id_hook_alias`),
   UNIQUE KEY `alias` (`alias`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;

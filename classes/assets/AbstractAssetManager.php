@@ -50,10 +50,15 @@ abstract class AbstractAssetManagerCore
 
     abstract protected function getList();
 
-    protected function getFullPath($relativePath)
+    /**
+     * @param string $relativePath
+     *
+     * @return bool|string
+     */
+    public function getFullPath(string $relativePath)
     {
         foreach ($this->getDirectories() as $baseDir) {
-            $fullPath = $baseDir . ltrim($relativePath, '/'); // not DIRECTORY_SEPARATOR because, it's path included manualy
+            $fullPath = $baseDir . ltrim($relativePath, '/'); // not DIRECTORY_SEPARATOR because, it's path included manually
             if (file_exists($this->getPathFromUri($fullPath))) {
                 return $fullPath;
             }

@@ -31,7 +31,7 @@ class OrderDiscountForViewing
     /**
      * @var int
      */
-    private $cartRuleId;
+    private $orderCartRuleId;
 
     /**
      * @var string
@@ -49,12 +49,12 @@ class OrderDiscountForViewing
     private $amountRaw;
 
     public function __construct(
-        int $cartRuleId,
+        int $orderCartRuleId,
         string $name,
         float $amountRaw,
         string $amountFormatted
     ) {
-        $this->cartRuleId = $cartRuleId;
+        $this->orderCartRuleId = $orderCartRuleId;
         $this->name = $name;
         $this->amountFormatted = $amountFormatted;
         $this->amountRaw = $amountRaw;
@@ -63,9 +63,9 @@ class OrderDiscountForViewing
     /**
      * @return int
      */
-    public function getCartRuleId(): int
+    public function getOrderCartRuleId(): int
     {
-        return $this->cartRuleId;
+        return $this->orderCartRuleId;
     }
 
     /**

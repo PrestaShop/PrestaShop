@@ -613,9 +613,10 @@ abstract class PaymentModuleCore extends Module
                             '{invoice_phone}' => ($invoice->phone) ? $invoice->phone : $invoice->phone_mobile,
                             '{invoice_other}' => $invoice->other,
                             '{order_name}' => $order->getUniqReference(),
+                            '{id_order}' => $order->id,
                             '{date}' => Tools::displayDate(date('Y-m-d H:i:s'), null, 1),
                             '{carrier}' => ($virtual_product || !isset($carrier->name)) ? $this->trans('No carrier', array(), 'Admin.Payment.Notification') : $carrier->name,
-                            '{payment}' => Tools::substr($order->payment, 0, 255),
+                            '{payment}' => Tools::substr($order->payment, 0, 255) . ($order->hasBeenPaid() ? '' : '&nbsp;' . $this->trans('(waiting for validation)', array(), 'Emails.Body')),
                             '{products}' => $product_list_html,
                             '{products_txt}' => $product_list_txt,
                             '{discounts}' => $cart_rules_list_html,
@@ -1134,7 +1135,7 @@ abstract class PaymentModuleCore extends Module
                         '{voucher_num}' => $voucher->code,
                         '{firstname}' => $this->context->customer->firstname,
                         '{lastname}' => $this->context->customer->lastname,
-                        '{id_order}' => $order->reference,
+                        '{id_order}' => $order->id,
                         '{order_name}' => $order->getUniqReference(),
                     );
                     Mail::Send(

@@ -1,6 +1,6 @@
 const faker = require('faker');
 
-const groupAccess = ['Visitor', 'Guest', 'Customer'];
+const {groupAccess} = require('@data/demo/groupAccess');
 
 module.exports = class Category {
   constructor(categoryToCreate = {}) {
