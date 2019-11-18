@@ -133,7 +133,10 @@ describe('Filter Products', async () => {
     ];
     statuses.forEach((productStatus) => {
       it(`should ${productStatus.args.status} the product`, async function () {
-        const isActionPerformed = await this.pageObjects.productsPage.updateToggleColumnValue(1, false);
+        const isActionPerformed = await this.pageObjects.productsPage.updateToggleColumnValue(
+          1,
+          productStatus.args.enable,
+        );
         if (isActionPerformed) {
           const resultMessage = await this.pageObjects.productsPage.getTextContent(
             this.pageObjects.productsPage.alertSuccessBlockParagraph,
@@ -145,8 +148,7 @@ describe('Filter Products', async () => {
           }
         }
         const isStatusChanged = await this.pageObjects.productsPage.getToggleColumnValue(1);
-        if (productStatus.enable) await expect(isStatusChanged).to.be.true;
-        else await expect(isStatusChanged).to.be.false;
+        await expect(isStatusChanged).to.be.equal((productStatus.args.enable));
       });
     });
   });
