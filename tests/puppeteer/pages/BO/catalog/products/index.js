@@ -176,7 +176,19 @@ module.exports = class Product extends BOBasePage {
   async filterProducts(filterBy, value = '', filterType = 'input') {
     switch (filterType) {
       case 'input':
-        await this.page.type(this.productFilterInput.replace('%FILTERBY', filterBy), value);
+        switch (filterBy) {
+          case 'product_id':
+            await this.filterIDProducts(value.min, value.max);
+            break;
+          case 'price':
+            await this.filterPriceProducts(value.min, value.max);
+            break;
+          case 'quantity':
+            await this.filterQuantityProducts(value.min, value.max);
+            break;
+          default:
+            await this.page.type(this.productFilterInput.replace('%FILTERBY', filterBy), value);
+        }
         break;
       case 'select':
         await this.selectByVisibleText(this.productFilterSelect.replace('%FILTERBY', filterBy),
@@ -188,6 +200,34 @@ module.exports = class Product extends BOBasePage {
     }
     // click on search
     await this.clickAndWaitForNavigation(this.filterSearchButton);
+  }
+
+  /**
+   * Get Text Column
+   * @param columnName
+   * @param row
+   * @return {Promise<void>, Float}
+   */
+  async getTextColumn(columnName, row) {
+    switch (columnName) {
+      case 'product_id':
+        return this.getProductIDFromList(row);
+      case 'name':
+        return this.getProductNameFromList(row);
+      case 'reference':
+        return this.getProductReferenceFromList(row);
+      case 'name_category':
+        return this.getProductCategoryFromList(row);
+      case 'price':
+        return this.getProductPriceFromList(row);
+      case 'quantity':
+        return this.getProductQuantityFromList(row);
+      case 'active':
+        return this.getProductStatusFromList(row);
+      default:
+      // Do nothing
+    }
+    throw new Error(`${columnName} was not found as column`);
   }
 
   /**
