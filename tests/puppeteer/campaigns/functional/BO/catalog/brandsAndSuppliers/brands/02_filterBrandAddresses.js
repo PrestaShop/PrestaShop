@@ -35,10 +35,10 @@ describe('Filter And Quick Edit Addresses', async () => {
   after(async () => {
     await helper.closeBrowser(browser);
   });
-  // Login into BO and go to brands page
+  // Login into BO
   loginCommon.loginBO();
 
-  // GO to Brands Page
+  // Go to brands page
   it('should go to brands page', async function () {
     await this.pageObjects.boBasePage.goToSubMenu(
       this.pageObjects.boBasePage.catalogParentLink,
@@ -55,156 +55,38 @@ describe('Filter And Quick Edit Addresses', async () => {
   });
   // 1 : Filter brands
   describe('Filter brands addresses', async () => {
-    it('should filter by Id', async function () {
-      await this.pageObjects.brandsPage.filterAddresses('input', 'id_address', demoAddresses.first.id);
-      const numberOfBrandsAddressesAfterFilter = await this.pageObjects.brandsPage.getNumberFromText(
-        this.pageObjects.brandsPage.gridHeaderTitle.replace('%TABLE', 'manufacturer_address'),
-      );
-      await expect(numberOfBrandsAddressesAfterFilter).to.be.at.most(numberOfBrandsAddresses);
-      const textColumn = await this.pageObjects.brandsPage.getTextContent(
-        this.pageObjects.brandsPage.tableColumn.replace('%TABLE', 'manufacturer_address')
-          .replace('%ROW', 1).replace('%COLUMN', 'id_address'),
-      );
-      await expect(textColumn).to.contains(demoAddresses.first.id);
-    });
+    const tests = [
+      {args: {filterType: 'input', filterBy: 'id_address', filterValue: demoAddresses.first.id}},
+      {args: {filterType: 'input', filterBy: 'name', filterValue: demoAddresses.first.brand}},
+      {args: {filterType: 'input', filterBy: 'firstname', filterValue: demoAddresses.first.firstName}},
+      {args: {filterType: 'input', filterBy: 'lastname', filterValue: demoAddresses.first.lastName}},
+      {args: {filterType: 'input', filterBy: 'postcode', filterValue: demoAddresses.first.postalCode}},
+      {args: {filterType: 'input', filterBy: 'city', filterValue: demoAddresses.first.city}},
+      {args: {filterType: 'select', filterBy: 'country', filterValue: demoAddresses.first.country}},
+    ];
+    tests.forEach((test) => {
+      it(`should filter by ${test.args.filterBy} '${test.args.filterValue}'`, async function () {
+        await this.pageObjects.brandsPage.filterAddresses(
+          test.args.filterType,
+          test.args.filterBy,
+          test.args.filterValue,
+        );
+        const numberOfBrandsAddressesAfterFilter = await this.pageObjects.brandsPage.getNumberOfElementInGrid(
+          'manufacturer_address',
+        );
+        await expect(numberOfBrandsAddressesAfterFilter).to.be.at.most(numberOfBrandsAddresses);
+        for (let i = 1; i <= numberOfBrandsAddressesAfterFilter; i++) {
+          const textColumn = await this.pageObjects.brandsPage.getTextColumnFromTableAddresses(i, test.args.filterBy);
+          await expect(textColumn).to.contains(test.args.filterValue);
+        }
+      });
 
-    it('should reset all filters', async function () {
-      const numberOfBrandsAddressesAfterReset = await this.pageObjects.brandsPage.resetAndGetNumberOfLines(
-        'manufacturer_address',
-      );
-      await expect(numberOfBrandsAddressesAfterReset).to.equal(numberOfBrandsAddresses);
-    });
-
-    it('should filter by brand name', async function () {
-      await this.pageObjects.brandsPage.filterAddresses('input', 'name', demoAddresses.first.brand);
-      const numberOfBrandsAddressesAfterFilter = await this.pageObjects.brandsPage.getNumberFromText(
-        this.pageObjects.brandsPage.gridHeaderTitle.replace('%TABLE', 'manufacturer_address'),
-      );
-      await expect(numberOfBrandsAddressesAfterFilter).to.be.at.most(numberOfBrandsAddresses);
-      const textColumn = await this.pageObjects.brandsPage.getTextContent(
-        this.pageObjects.brandsPage.tableColumn
-          .replace('%TABLE', 'manufacturer_address')
-          .replace('%ROW', 1)
-          .replace('%COLUMN', 'name'),
-      );
-      await expect(textColumn).to.contains(demoAddresses.first.brand);
-    });
-
-    it('should reset all filters', async function () {
-      const numberOfBrandsAddressesAfterReset = await this.pageObjects.brandsPage.resetAndGetNumberOfLines(
-        'manufacturer_address',
-      );
-      await expect(numberOfBrandsAddressesAfterReset).to.equal(numberOfBrandsAddresses);
-    });
-
-    it('should filter by Manufacturer firstname', async function () {
-      await this.pageObjects.brandsPage.filterAddresses('input', 'firstname', demoAddresses.first.firstName);
-      const numberOfBrandsAddressesAfterFilter = await this.pageObjects.brandsPage.getNumberFromText(
-        this.pageObjects.brandsPage.gridHeaderTitle.replace('%TABLE', 'manufacturer_address'),
-      );
-      await expect(numberOfBrandsAddressesAfterFilter).to.be.at.most(numberOfBrandsAddresses);
-      const textColumn = await this.pageObjects.brandsPage.getTextContent(
-        this.pageObjects.brandsPage.tableColumn
-          .replace('%TABLE', 'manufacturer_address')
-          .replace('%ROW', 1)
-          .replace('%COLUMN', 'firstname'),
-      );
-      await expect(textColumn).to.contains(demoAddresses.first.firstName);
-    });
-
-    it('should reset all filters', async function () {
-      const numberOfBrandsAddressesAfterReset = await this.pageObjects.brandsPage.resetAndGetNumberOfLines(
-        'manufacturer_address',
-      );
-      await expect(numberOfBrandsAddressesAfterReset).to.equal(numberOfBrandsAddresses);
-    });
-
-    it('should filter by Manufacturer lastname', async function () {
-      await this.pageObjects.brandsPage.filterAddresses('input', 'lastname', demoAddresses.first.lastName);
-      const numberOfBrandsAddressesAfterFilter = await this.pageObjects.brandsPage.getNumberFromText(
-        this.pageObjects.brandsPage.gridHeaderTitle.replace('%TABLE', 'manufacturer_address'),
-      );
-      await expect(numberOfBrandsAddressesAfterFilter).to.be.at.most(numberOfBrandsAddresses);
-      const textColumn = await this.pageObjects.brandsPage.getTextContent(
-        this.pageObjects.brandsPage.tableColumn
-          .replace('%TABLE', 'manufacturer_address')
-          .replace('%ROW', 1)
-          .replace('%COLUMN', 'lastname'),
-      );
-      await expect(textColumn).to.contains(demoAddresses.first.lastName);
-    });
-
-    it('should reset all filters', async function () {
-      const numberOfBrandsAddressesAfterReset = await this.pageObjects.brandsPage.resetAndGetNumberOfLines(
-        'manufacturer_address',
-      );
-      await expect(numberOfBrandsAddressesAfterReset).to.equal(numberOfBrandsAddresses);
-    });
-
-    it('should filter by Address postal code', async function () {
-      await this.pageObjects.brandsPage.filterAddresses('input', 'postcode', demoAddresses.first.postalCode);
-      const numberOfBrandsAddressesAfterFilter = await this.pageObjects.brandsPage.getNumberFromText(
-        this.pageObjects.brandsPage.gridHeaderTitle.replace('%TABLE', 'manufacturer_address'),
-      );
-      await expect(numberOfBrandsAddressesAfterFilter).to.be.at.most(numberOfBrandsAddresses);
-      const textColumn = await this.pageObjects.brandsPage.getTextContent(
-        this.pageObjects.brandsPage.tableColumn
-          .replace('%TABLE', 'manufacturer_address')
-          .replace('%ROW', 1)
-          .replace('%COLUMN', 'postcode'),
-      );
-      await expect(textColumn).to.contains(demoAddresses.first.postalCode);
-    });
-
-    it('should reset all filters', async function () {
-      const numberOfBrandsAddressesAfterReset = await this.pageObjects.brandsPage.resetAndGetNumberOfLines(
-        'manufacturer_address',
-      );
-      await expect(numberOfBrandsAddressesAfterReset).to.equal(numberOfBrandsAddresses);
-    });
-
-    it('should filter by City', async function () {
-      await this.pageObjects.brandsPage.filterAddresses('input', 'city', demoAddresses.first.city);
-      const numberOfBrandsAddressesAfterFilter = await this.pageObjects.brandsPage.getNumberFromText(
-        this.pageObjects.brandsPage.gridHeaderTitle.replace('%TABLE', 'manufacturer_address'),
-      );
-      await expect(numberOfBrandsAddressesAfterFilter).to.be.at.most(numberOfBrandsAddresses);
-      const textColumn = await this.pageObjects.brandsPage.getTextContent(
-        this.pageObjects.brandsPage.tableColumn
-          .replace('%TABLE', 'manufacturer_address')
-          .replace('%ROW', 1)
-          .replace('%COLUMN', 'city'),
-      );
-      await expect(textColumn).to.contains(demoAddresses.first.city);
-    });
-
-    it('should reset all filters', async function () {
-      const numberOfBrandsAddressesAfterReset = await this.pageObjects.brandsPage.resetAndGetNumberOfLines(
-        'manufacturer_address',
-      );
-      await expect(numberOfBrandsAddressesAfterReset).to.equal(numberOfBrandsAddresses);
-    });
-
-    it('should filter by Country', async function () {
-      await this.pageObjects.brandsPage.filterAddresses('select', 'country', demoAddresses.first.country);
-      const numberOfBrandsAddressesAfterFilter = await this.pageObjects.brandsPage.getNumberFromText(
-        this.pageObjects.brandsPage.gridHeaderTitle.replace('%TABLE', 'manufacturer_address'),
-      );
-      await expect(numberOfBrandsAddressesAfterFilter).to.be.at.most(numberOfBrandsAddresses);
-      const textColumn = await this.pageObjects.brandsPage.getTextContent(
-        this.pageObjects.brandsPage.tableColumn
-          .replace('%TABLE', 'manufacturer_address')
-          .replace('%ROW', 1)
-          .replace('%COLUMN', 'country'),
-      );
-      await expect(textColumn).to.contains(demoAddresses.first.country);
-    });
-
-    it('should reset all filters', async function () {
-      const numberOfBrandsAddressesAfterReset = await this.pageObjects.brandsPage.resetAndGetNumberOfLines(
-        'manufacturer_address',
-      );
-      await expect(numberOfBrandsAddressesAfterReset).to.equal(numberOfBrandsAddresses);
+      it('should reset all filters', async function () {
+        const numberOfBrandsAddressesAfterReset = await this.pageObjects.brandsPage.resetAndGetNumberOfLines(
+          'manufacturer_address',
+        );
+        await expect(numberOfBrandsAddressesAfterReset).to.equal(numberOfBrandsAddresses);
+      });
     });
   });
 });

@@ -25,6 +25,7 @@
  */
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CustomerName;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Factory\CustomerNameValidatorFactory;
+use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\NumericIsoCode;
 use PrestaShop\PrestaShop\Core\String\CharacterCleaner;
 use Symfony\Component\Validator\Validation;
 
@@ -330,7 +331,7 @@ class ValidateCore
 
     public static function isNumericIsoCode($iso_code)
     {
-        return preg_match('/^[0-9]{2,3}$/', $iso_code);
+        return preg_match(NumericIsoCode::PATTERN, $iso_code);
     }
 
     /**

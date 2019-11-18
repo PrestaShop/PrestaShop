@@ -704,11 +704,11 @@ services:
 
     form.type.currency:
         class: 'PrestaShopBundle\Form\Admin\Improve\International\Currencies\CurrencyType'
+        parent: 'form.type.translatable.aware'
+        public: true
         arguments:
             - '@=service("prestashop.core.form.choice_provider.currency_name_by_iso_code").getChoices()'
             - '@=service("prestashop.adapter.multistore_feature").isUsed()'
-        calls:
-            - { method: setTranslator, arguments: ['@translator'] }
         tags:
             - { name: form.type }
 
@@ -994,3 +994,27 @@ services:
         - '@prestashop.adapter.form.choice.provider.carrier_for_order_choice_provider'
       tags:
         - { name: form.type }
+
+    form.type.address.required_fields:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Address\RequiredFieldsAddressType'
+        arguments:
+          - '@prestashop.core.form.choice_provider.address_required_fields'
+        tags:
+          - { name: form.type }
+
+    form.type.customer_service.reply_to_customer_thread:
+        class: 'PrestaShopBundle\Form\Admin\Sell\CustomerService\ReplyToCustomerThreadType'
+        public: true
+        arguments:
+          - '@translator'
+        tags:
+          - { name: form.type }
+
+    form.type.customer_service.forward_customer_thread:
+        class: 'PrestaShopBundle\Form\Admin\CustomerService\CustomerThread\ForwardCustomerThreadType'
+        public: true
+        arguments:
+            - '@translator'
+            - '@prestashop.adapter.form.choice_provider.employee_name_by_id'
+        tags:
+            - { name: form.type }

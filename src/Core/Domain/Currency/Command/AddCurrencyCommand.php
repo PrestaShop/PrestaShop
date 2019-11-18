@@ -29,31 +29,49 @@ namespace PrestaShop\PrestaShop\Core\Domain\Currency\Command;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\ExchangeRate;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\AlphaIsoCode;
+use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\Precision;
 
 /**
- * Class AddCurrencyCommand
+ * Base class for both add commands this class is abstract because it must not be used
+ * as is since no handler is expecting it. Instead use AddOfficialCurrencyCommand or
+ * AddUnofficialCurrencyCommand.
  */
-class AddCurrencyCommand
+abstract class AddCurrencyCommand
 {
     /**
      * @var AlphaIsoCode
      */
-    private $isoCode;
+    protected $isoCode;
 
     /**
      * @var ExchangeRate
      */
-    private $exchangeRate;
+    protected $exchangeRate;
+
+    /**
+     * @var Precision|null
+     */
+    protected $precision;
+
+    /**
+     * @var string[]
+     */
+    protected $localizedNames = [];
+
+    /**
+     * @var string[]
+     */
+    protected $localizedSymbols = [];
 
     /**
      * @var bool
      */
-    private $isEnabled;
+    protected $isEnabled;
 
     /**
      * @var int[]
      */
-    private $shopIds;
+    protected $shopIds = [];
 
     /**
      * @param string $isoCode
@@ -62,8 +80,11 @@ class AddCurrencyCommand
      *
      * @throws CurrencyConstraintException
      */
-    public function __construct($isoCode, $exchangeRate, $isEnabled)
-    {
+    public function __construct(
+        $isoCode,
+        $exchangeRate,
+        $isEnabled
+    ) {
         $this->isoCode = new AlphaIsoCode($isoCode);
         $this->exchangeRate = new ExchangeRate($exchangeRate);
         $this->isEnabled = $isEnabled;
@@ -78,11 +99,91 @@ class AddCurrencyCommand
     }
 
     /**
+     * @return Precision|null
+     */
+    public function getPrecision(): ?Precision
+    {
+        return $this->precision;
+    }
+
+    /**
+     * @param int|string $precision
+     *
+     * @return self
+     *
+     * @throws CurrencyConstraintException
+     */
+    public function setPrecision($precision): AddCurrencyCommand
+    {
+        $this->precision = new Precision($precision);
+
+        return $this;
+    }
+
+    /**
      * @return ExchangeRate
      */
     public function getExchangeRate()
     {
         return $this->exchangeRate;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getLocalizedNames(): array
+    {
+        return $this->localizedNames;
+    }
+
+    /**
+     * @param string[] $localizedNames currency's localized names, indexed by language id
+     *
+     * @return $this
+     *
+     * @throws CurrencyConstraintException
+     */
+    public function setLocalizedNames(array $localizedNames): AddCurrencyCommand
+    {
+        if (empty($localizedNames)) {
+            throw new CurrencyConstraintException(
+                'Currency name cannot be empty',
+                CurrencyConstraintException::EMPTY_NAME
+            );
+        }
+
+        $this->localizedNames = $localizedNames;
+
+        return $this;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getLocalizedSymbols(): array
+    {
+        return $this->localizedSymbols;
+    }
+
+    /**
+     * @param string[] $localizedSymbols currency's localized symbols, indexed by language id
+     *
+     * @return $this
+     *
+     * @throws CurrencyConstraintException
+     */
+    public function setLocalizedSymbols(array $localizedSymbols): AddCurrencyCommand
+    {
+        if (empty($localizedSymbols)) {
+            throw new CurrencyConstraintException(
+                'Currency symbol cannot be empty',
+                CurrencyConstraintException::EMPTY_SYMBOL
+            );
+        }
+
+        $this->localizedSymbols = $localizedSymbols;
+
+        return $this;
     }
 
     /**

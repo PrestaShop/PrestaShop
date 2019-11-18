@@ -53,12 +53,20 @@ module.exports = class Categories extends BOBasePage {
   }
 
   /**
+   * get number of elements in grid
+   * @return {Promise<integer>}
+   */
+  async getNumberOfElementInGrid() {
+    return this.getNumberFromText(this.categoryGridTitle);
+  }
+
+  /**
    * Reset Filter And get number of elements in list
    * @return {Promise<integer>}
    */
   async resetAndGetNumberOfLines() {
     await this.resetFilter();
-    return this.getNumberFromText(this.categoryGridTitle);
+    return this.getNumberOfElementInGrid();
   }
 
   /**
@@ -90,13 +98,10 @@ module.exports = class Categories extends BOBasePage {
    * @return {Promise<boolean|true>}
    */
   async getToggleColumnValue(row, column) {
-    if (
-      await this.elementVisible(
-        this.categoriesListColumnValidIcon.replace('%ROW', row).replace('%COLUMN', column),
-        100,
-      )
-    ) return true;
-    return false;
+    return this.elementVisible(
+      this.categoriesListColumnValidIcon.replace('%ROW', row).replace('%COLUMN', column),
+      100,
+    );
   }
 
   /**
@@ -110,17 +115,31 @@ module.exports = class Categories extends BOBasePage {
     if (await this.getToggleColumnValue(row, column) !== valueWanted) {
       this.page.click(this.categoriesListTableColumn.replace('%ROW', row).replace('%COLUMN', column));
       if (valueWanted) {
-        await this.page.waitForSelector(this.categoriesListColumnValidIcon
-          .replace('%ROW', 1).replace('%COLUMN', 'active'),
+        await this.page.waitForSelector(
+          this.categoriesListColumnValidIcon.replace('%ROW', 1).replace('%COLUMN', column),
         );
       } else {
         await this.page.waitForSelector(
-          this.categoriesListColumnNotValidIcon.replace('%ROW', 1).replace('%COLUMN', 'active'),
+          this.categoriesListColumnNotValidIcon.replace('%ROW', 1).replace('%COLUMN', column),
         );
       }
       return true;
     }
     return false;
+  }
+
+  /**
+   * get text from a column
+   * @param row, row in table
+   * @param column, which column
+   * @return {Promise<textContent>}
+   */
+  async getTextColumnFromTableCategories(row, column) {
+    return this.getTextContent(
+      this.categoriesListTableColumn
+        .replace('%ROW', row)
+        .replace('%COLUMN', column),
+    );
   }
 
   /**
