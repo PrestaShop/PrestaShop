@@ -1001,3 +1001,20 @@ services:
           - '@prestashop.core.form.choice_provider.address_required_fields'
         tags:
           - { name: form.type }
+
+    form.type.customer_service.reply_to_customer_thread:
+        class: 'PrestaShopBundle\Form\Admin\Sell\CustomerService\ReplyToCustomerThreadType'
+        public: true
+        arguments:
+          - '@translator'
+        tags:
+          - { name: form.type }
+
+    form.type.customer_service.forward_customer_thread:
+        class: 'PrestaShopBundle\Form\Admin\CustomerService\CustomerThread\ForwardCustomerThreadType'
+        public: true
+        arguments:
+            - '@translator'
+            - '@prestashop.adapter.form.choice_provider.employee_name_by_id'
+        tags:
+            - { name: form.type }

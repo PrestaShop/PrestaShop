@@ -57,3 +57,6 @@ services:
 
   prestashop.adapter.form.choice_provider.shop_name_by_id:
     class: 'PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\ShopNameByIdChoiceProvider'
+
+  prestashop.adapter.form.choice_provider.employee_name_by_id:
+    class: 'PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\EmployeeNameByIdChoiceProvider'
