@@ -134,7 +134,7 @@ final class AddCustomizationFieldsHandler extends AbstractCartHandler implements
         if (!($tmpName = tempnam(_PS_TMP_IMG_DIR_, 'PS')) || !copy($file->getPathname(), $tmpName)) {
             throw new FileUploadException('An error occurred during the image upload process.');
         }
-        $fileName = md5(uniqid(mt_rand(0, mt_getrandmax()), true));
+        $fileName = md5(uniqid('', true));
         $resized = ImageManager::resize($tmpName, _PS_UPLOAD_DIR_ . $fileName) &&
             ImageManager::resize(
                 $tmpName,
@@ -145,11 +145,11 @@ final class AddCustomizationFieldsHandler extends AbstractCartHandler implements
 
         if (!$resized) {
             throw new FileUploadException('An error occurred when resizing the uploaded image');
-        } else {
-            unlink($tmpName);
-
-            return $fileName;
         }
+
+        unlink($tmpName);
+
+        return $fileName;
     }
 
     /**

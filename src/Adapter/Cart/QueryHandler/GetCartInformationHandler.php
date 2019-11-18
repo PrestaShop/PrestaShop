@@ -308,7 +308,11 @@ final class GetCartInformationHandler extends AbstractCartHandler implements Get
                 'order',
                 false,
                 (int) $cart->id_lang,
-        'step=3&recover_cart=' . $cart->id . '&token_cart=' . md5(_COOKIE_KEY_ . 'recover_cart_' . $cart->id)
+                http_build_query([
+                    'step' => 3,
+                    'recover_cart' => $cartId,
+                    'token_cart' => md5(_COOKIE_KEY_ . 'recover_cart_' . $cartId),
+                ])
             )
         );
     }
