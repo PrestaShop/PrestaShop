@@ -189,11 +189,11 @@ export default class CartEditor {
    * Changes cart language
    *
    * @param {Number} cartId
-   * @param {Number} langId
+   * @param {Number} languageId
    */
-  changeCartLanguage(cartId, langId) {
+  changeCartLanguage(cartId, languageId) {
     $.post(this.router.generate('admin_carts_edit_language', {cartId}), {
-      languageId: langId,
+      languageId,
     }).then(cartInfo => EventEmitter.emit(eventMap.cartLanguageChanged, cartInfo))
       .catch(response => showErrorMessage(response.responseJSON.message));
   }
