@@ -872,6 +872,6 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
     {
         $customer = new Customer($order->id_customer);
 
-        return Group::getPriceDisplayMethod((int)$customer->id_default_group);
+        return Group::getPriceDisplayMethod((int) $customer->id_default_group);
     }
 }

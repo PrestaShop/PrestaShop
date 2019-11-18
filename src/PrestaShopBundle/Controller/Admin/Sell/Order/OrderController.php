@@ -683,8 +683,7 @@ class OrderController extends FrameworkBundleAdminController
         if (
             null !== $routesCollection &&
             !$orderMessageForm->isValid() &&
-            $viewRoute = $routesCollection->get('admin_orders_view'))
-        {
+            $viewRoute = $routesCollection->get('admin_orders_view')) {
             return $this->forward(
                 $viewRoute->getDefault('_controller'),
                 [
@@ -914,23 +913,21 @@ class OrderController extends FrameworkBundleAdminController
                     ['#%d' => $exception->getOrderId()->getValue()]
                 ) : '',
             CustomerMessageConstraintException::class => [
-                CustomerMessageConstraintException::MISSING_MESSAGE =>
-                    $this->trans(
+                CustomerMessageConstraintException::MISSING_MESSAGE => $this->trans(
                         'The %s field is not valid',
                         'Admin.Notifications.Error',
                         [
                             sprintf('"%s"', $this->trans('Message', 'Admin.Global')),
                         ]
                     ),
-                CustomerMessageConstraintException::INVALID_MESSAGE =>
-                    $this->trans(
+                CustomerMessageConstraintException::INVALID_MESSAGE => $this->trans(
                         'The %s field is not valid',
                         'Admin.Notifications.Error',
                         [
                             sprintf('"%s"', $this->trans('Message', 'Admin.Global')),
                         ]
                     ),
-            ]
+            ],
         ];
     }
 }
