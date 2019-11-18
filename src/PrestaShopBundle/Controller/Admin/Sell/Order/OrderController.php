@@ -304,9 +304,12 @@ class OrderController extends FrameworkBundleAdminController
         ], [
             'id_order' => $orderId,
         ]);
+
         $orderMessageForm = $this->createForm(OrderMessageType::class, [], [
             'action' => $this->generateUrl('admin_orders_send_message', ['orderId' => $orderId]),
         ]);
+
+        $orderMessageForm->handleRequest($request);
 
         $changeOrderCurrencyForm = $this->createForm(ChangeOrderCurrencyType::class, [], [
             'current_currency_id' => $orderForViewing->getCurrencyId(),
@@ -673,6 +676,22 @@ class OrderController extends FrameworkBundleAdminController
                     $this->getErrorMessageForException($exception, $this->getCustomerMessageErrorMapping($exception))
                 );
             }
+        }
+
+        $routesCollection = $this->get('router')->getRouteCollection();
+
+        if (
+            null !== $routesCollection &&
+            !$orderMessageForm->isValid() &&
+            $viewRoute = $routesCollection->get('admin_orders_view'))
+        {
+            return $this->forward(
+                $viewRoute->getDefault('_controller'),
+                [
+                    'orderId' => $orderId,
+                ],
+                $viewRoute->getDefaults()
+            );
         }
 
         return $this->redirectToRoute('admin_orders_view', [

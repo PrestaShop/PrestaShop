@@ -54,7 +54,7 @@ admin_orders_export:
 
 admin_orders_view:
   path: /{orderId}/view
-  methods: [GET]
+  methods: [GET, POST]
   defaults:
     _controller: PrestaShopBundle:Admin/Sell/Order/Order:view
     _legacy_controller: AdminOrders
