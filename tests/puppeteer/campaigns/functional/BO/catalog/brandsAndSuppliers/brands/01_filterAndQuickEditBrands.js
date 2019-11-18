@@ -100,28 +100,23 @@ describe('Filter And Quick Edit brands', async () => {
       await expect(textColumn).to.contains(demoBrands.first.name);
     });
 
-    it('should disable first brand', async function () {
-      const isActionPerformed = await this.pageObjects.brandsPage.updateEnabledValue(1, false);
-      if (isActionPerformed) {
-        const resultMessage = await this.pageObjects.brandsPage.getTextContent(
-          this.pageObjects.brandsPage.alertSuccessBlockParagraph,
-        );
-        await expect(resultMessage).to.contains(this.pageObjects.brandsPage.successfulUpdateStatusMessage);
-      }
-      const isStatusChanged = await this.pageObjects.brandsPage.getToggleColumnValue(1);
-      await expect(isStatusChanged).to.be.false;
-    });
+    const tests = [
+      {args: {action: 'disable', enabledValue: false}},
+      {args: {action: 'enable', enabledValue: true}},
+    ];
 
-    it('should enable first brand', async function () {
-      const isActionPerformed = await this.pageObjects.brandsPage.updateEnabledValue(1, true);
-      if (isActionPerformed) {
-        const resultMessage = await this.pageObjects.brandsPage.getTextContent(
-          this.pageObjects.brandsPage.alertSuccessBlockParagraph,
-        );
-        await expect(resultMessage).to.contains(this.pageObjects.brandsPage.successfulUpdateStatusMessage);
-      }
-      const isStatusChanged = await this.pageObjects.brandsPage.getToggleColumnValue(1);
-      await expect(isStatusChanged).to.be.true;
+    tests.forEach((test) => {
+      it(`should ${test.args.action} first brand`, async function () {
+        const isActionPerformed = await this.pageObjects.brandsPage.updateEnabledValue(1, test.args.enabledValue);
+        if (isActionPerformed) {
+          const resultMessage = await this.pageObjects.brandsPage.getTextContent(
+            this.pageObjects.brandsPage.alertSuccessBlockParagraph,
+          );
+          await expect(resultMessage).to.contains(this.pageObjects.brandsPage.successfulUpdateStatusMessage);
+        }
+        const isStatusChanged = await this.pageObjects.brandsPage.getToggleColumnValue(1);
+        await expect(isStatusChanged).to.be.equal(test.args.enabledValue);
+      });
     });
 
     it('should reset all filters', async function () {
