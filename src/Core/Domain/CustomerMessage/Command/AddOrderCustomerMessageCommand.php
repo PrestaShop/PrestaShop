@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\CustomerMessage\Command;
 
+use PrestaShop\PrestaShop\Core\Domain\CustomerMessage\Exception\CustomerMessageConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
 
@@ -54,11 +55,12 @@ class AddOrderCustomerMessageCommand
      * @param string $message
      * @param bool $isPrivate
      * @throws OrderException
+     * @throws CustomerMessageConstraintException
      */
     public function __construct(int $orderId, string $message, bool $isPrivate)
     {
         $this->orderId = new OrderId($orderId);
-        $this->message = $message;
+        $this->setMessage($message);
         $this->isPrivate = $isPrivate;
     }
 
@@ -84,5 +86,23 @@ class AddOrderCustomerMessageCommand
     public function isPrivate(): bool
     {
         return $this->isPrivate;
+    }
+
+    /**
+     * @param string $message
+     *
+     * @throws CustomerMessageConstraintException
+     */
+    private function setMessage(string $message): void
+    {
+        if (!$message) {
+            throw new CustomerMessageConstraintException(
+                'Missing required message',
+
+                CustomerMessageConstraintException::MISSING_MESSAGE
+            );
+        }
+
+        $this->message = $message;
     }
 }

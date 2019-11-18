@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Form\Admin\Sell\Order;
 
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CleanHtml;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use PrestaShopBundle\Translation\TranslatorAwareTrait;
 use Symfony\Component\Form\AbstractType;
@@ -81,15 +82,24 @@ class OrderMessageType extends AbstractType
                             'This field cannot be empty', [], 'Admin.Notifications.Error'
                         ),
                     ]),
-// todo: different limit
-//                    new Length([
-//                        'max' => 255,
-//                        'maxMessage' => $this->trans(
-//                            'This field cannot be longer than %limit% characters',
-//                            ['%limit%' => 255],
-//                            'Admin.Notifications.Error'
-//                        ),
-//                    ]),
+                    new CleanHtml([
+                            'message' => $this->trans(
+                                'The %s field is not valid',
+                                [
+                                    sprintf('"%s"', $this->trans('Message', 'Admin.Global')),
+                                ],
+                                'Admin.Notifications.Error'
+                            )
+                        ]
+                    ),
+                    new Length([
+                        'max' => 16777216,
+                        'maxMessage' => $this->trans(
+                            'This field cannot be longer than %limit% characters',
+                            ['%limit%' => 16777216],
+                            'Admin.Notifications.Error'
+                        ),
+                    ]),
                 ]
             ])
         ;

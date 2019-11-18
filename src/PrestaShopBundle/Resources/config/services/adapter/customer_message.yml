@@ -6,6 +6,7 @@ services:
     class: PrestaShop\PrestaShop\Adapter\CustomerService\CommandHandler\AddOrderCustomerMessageHandler
     arguments:
       - '@translator'
+      - '@validator'
       - '@=service("prestashop.adapter.legacy.context").getContext().shop.id'
       - '@=service("prestashop.adapter.legacy.context").getContext().language.id'
       - '@=service("prestashop.adapter.legacy.context").getContext().employee.id'
