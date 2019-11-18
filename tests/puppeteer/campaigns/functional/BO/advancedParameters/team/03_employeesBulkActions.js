@@ -72,8 +72,8 @@ describe('Create Employees, Then disable / Enable and Delete with Bulk actions',
     await expect(numberOfEmployees).to.be.above(0);
   });
 
-  // 1 : Create employee and Filter with all inputs and selects in grid table in BO
-  describe('Create employee then filter the table', async () => {
+  // 1 : Create employees and Filter with all inputs and selects in grid table in BO
+  describe('Create employees then filter the table', async () => {
     const employeesToCreate = [firstEmployeeData, secondEmployeeData];
     employeesToCreate.forEach((employeeToCreate) => {
       it('should go to add new employee page', async function () {

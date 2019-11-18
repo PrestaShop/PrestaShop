@@ -64,7 +64,7 @@ describe('Create, Read, Update and Delete Employee in BO', async () => {
     await helper.closeBrowser(browser);
   });
 
-  // Login into BO and go to "Advanced parameters>Team" page
+  // Login from BO and go to "Advanced parameters>Team" page
   loginCommon.loginBO();
 
   it('should go to "Advanced parameters>Team" page', async function () {
