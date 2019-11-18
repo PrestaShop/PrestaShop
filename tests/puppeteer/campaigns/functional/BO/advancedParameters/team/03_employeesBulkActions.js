@@ -82,7 +82,7 @@ describe('Create Employees, Then disable / Enable and Delete with Bulk actions',
         await expect(pageTitle).to.contains(this.pageObjects.addEmployeePage.pageTitleCreate);
       });
 
-      it('should create the first employee', async function () {
+      it('should create employee', async function () {
         const textResult = await this.pageObjects.addEmployeePage.createEditEmployee(employeeToCreate);
         await expect(textResult).to.equal(this.pageObjects.employeesPage.successfulCreationMessage);
       });

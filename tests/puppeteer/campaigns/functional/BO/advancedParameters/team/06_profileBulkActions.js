@@ -18,8 +18,8 @@ const FOBasePage = require('@pages/FO/FObasePage');
 let browser;
 let page;
 let numberOfProfiles = 0;
-let firstProfileData;
-let secondProfileData;
+const firstProfileData = new ProfileFaker({name: 'todelete'});
+const secondProfileData = new ProfileFaker({name: 'todelete2'});
 
 // Init objects needed
 const init = async function () {
@@ -43,12 +43,6 @@ describe('Create profiles then Delete with Bulk actions', async () => {
     browser = await helper.createBrowser();
     page = await helper.newTab(browser);
     this.pageObjects = await init();
-    firstProfileData = await (new ProfileFaker({
-      name: 'todelete',
-    }));
-    secondProfileData = await (new ProfileFaker({
-      name: 'todelete2',
-    }));
   });
   after(async () => {
     await helper.closeBrowser(browser);
@@ -80,26 +74,18 @@ describe('Create profiles then Delete with Bulk actions', async () => {
 
   // 1 : Create two profiles
   describe('Create profile then filter the table', async () => {
-    it('should go to add new profile page', async function () {
-      await this.pageObjects.profilesPage.goToAddNewProfilePage();
-      const pageTitle = await this.pageObjects.addProfile.getPageTitle();
-      await expect(pageTitle).to.contains(this.pageObjects.addProfile.pageTitleCreate);
-    });
+    const profilesToCreate = [firstProfileData, secondProfileData];
+    profilesToCreate.forEach((profileToCreate) => {
+      it('should go to add new profile page', async function () {
+        await this.pageObjects.profilesPage.goToAddNewProfilePage();
+        const pageTitle = await this.pageObjects.addProfile.getPageTitle();
+        await expect(pageTitle).to.contains(this.pageObjects.addProfile.pageTitleCreate);
+      });
 
-    it('should create the first profile', async function () {
-      const textResult = await this.pageObjects.addProfile.createEditProfile(firstProfileData);
-      await expect(textResult).to.equal(this.pageObjects.profilesPage.successfulCreationMessage);
-    });
-
-    it('should go to add new profile page', async function () {
-      await this.pageObjects.profilesPage.goToAddNewProfilePage();
-      const pageTitle = await this.pageObjects.addProfile.getPageTitle();
-      await expect(pageTitle).to.contains(this.pageObjects.addProfile.pageTitleCreate);
-    });
-
-    it('should create the second profile', async function () {
-      const textResult = await this.pageObjects.addProfile.createEditProfile(secondProfileData);
-      await expect(textResult).to.equal(this.pageObjects.profilesPage.successfulCreationMessage);
+      it('should create profile', async function () {
+        const textResult = await this.pageObjects.addProfile.createEditProfile(profileToCreate);
+        await expect(textResult).to.equal(this.pageObjects.profilesPage.successfulCreationMessage);
+      });
     });
   });
 
