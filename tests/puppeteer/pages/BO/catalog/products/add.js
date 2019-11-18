@@ -40,7 +40,7 @@ module.exports = class AddProduct extends BOBasePage {
     // Growls : override value from BObasePage
     this.growlDefaultDiv = '#growls-default';
     this.growlMessageBloc = `${this.growlDefaultDiv} .growl-message`;
-    this.growlCloseButton =  `${this.growlDefaultDiv} .growl-close`;
+    this.growlCloseButton = `${this.growlDefaultDiv} .growl-close`;
   }
 
   /*
@@ -123,7 +123,7 @@ module.exports = class AddProduct extends BOBasePage {
     await Promise.all([
       this.page.waitForSelector(`${this.productCombinationsBulkForm}:not(.inactive)`, {visible: true}),
       this.page.waitForSelector(
-        `${this.productCombinationTableRow.replace('%ID',1)}[style='display: table-row;']`,
+        `${this.productCombinationTableRow.replace('%ID', 1)}[style='display: table-row;']`,
         {visible: true},
       ),
       this.page.click(this.generateCombinationsButton),
@@ -246,7 +246,7 @@ module.exports = class AddProduct extends BOBasePage {
    * @return {Promise<void>}
    */
   async closeCombinationsForm() {
-    if(!(await this.elementVisible(`${this.productCombinationsBulkFormTitle}[aria-expanded='false']`, 1000))) {
+    if (!(await this.elementVisible(`${this.productCombinationsBulkFormTitle}[aria-expanded='false']`, 1000))) {
       await Promise.all([
         this.page.click(this.productCombinationsBulkFormTitle),
         this.page.waitForSelector(`${this.productCombinationsBulkFormTitle}[aria-expanded='false']`, {visible: true}),

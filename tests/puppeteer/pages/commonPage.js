@@ -249,7 +249,7 @@ module.exports = class CommonPage {
    * @return {Promise<void>}
    */
   async changeCheckboxValue(checkboxSelector, valueWanted = true) {
-    if(valueWanted !== (await this.isCheckboxSelected(checkboxSelector))) {
+    if (valueWanted !== (await this.isCheckboxSelected(checkboxSelector))) {
       await this.page.click(checkboxSelector);
     }
   }
