@@ -50,6 +50,9 @@ class PrestaShopLoggerCore extends ObjectModel
     /** @var int Shop ID */
     public $id_shop;
 
+    /** @var int Shop group ID */
+    public $id_shop_group;
+
     /** @var int Language ID */
     public $id_lang;
 
@@ -74,6 +77,7 @@ class PrestaShopLoggerCore extends ObjectModel
             'message' => array('type' => self::TYPE_STRING, 'validate' => 'isString', 'required' => true),
             'object_id' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
             'id_shop' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
+            'id_shop_group' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
             'id_lang' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
             'id_employee' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
             'object_type' => array('type' => self::TYPE_STRING, 'validate' => 'isName'),
@@ -141,8 +145,16 @@ class PrestaShopLoggerCore extends ObjectModel
         if (!empty($objectType) && !empty($objectId)) {
             $log->object_type = pSQL($objectType);
             $log->object_id = (int) $objectId;
-            $log->id_shop = (int) Context::getContext()->shop->id;
+        }
+
+        if (!empty($objectType)) {
             $log->id_lang = (int) Context::getContext()->language->id;
+            
+            if (Shop::getContext() == Shop::CONTEXT_SHOP) {
+                $log->id_shop = (int) Context::getContext()->shop->getContextualShopId();
+            } else if (Shop::getContext() == Shop::CONTEXT_GROUP) {
+                $log->id_shop_group = (int) Context::getContext()->shop->getContextShopGroupID();
+            }
         }
 
         if ($objectType != 'Swift_Message') {
@@ -162,14 +174,14 @@ class PrestaShopLoggerCore extends ObjectModel
     }
 
     /**
-     * this function md5($this->message.$this->severity.$this->error_code.$this->object_type.$this->object_id.$this->id_shop.$this->id_lang).
+     * this function md5($this->message.$this->severity.$this->error_code.$this->object_type.$this->object_id.$this->id_shop.$this->id_shop_group.$this->id_lang).
      *
      * @return string hash
      */
     public function getHash()
     {
         if (empty($this->hash)) {
-            $this->hash = md5($this->message . $this->severity . $this->error_code . $this->object_type . $this->object_id . $this->id_shop . $this->id_lang);
+            $this->hash = md5($this->message . $this->severity . $this->error_code . $this->object_type . $this->object_id . $this->id_shop . $this->id_shop_group . $this->id_lang);
         }
 
         return $this->hash;
@@ -207,6 +219,7 @@ class PrestaShopLoggerCore extends ObjectModel
                     AND `object_type` = \'' . $this->object_type . '\'
                     AND `object_id` = \'' . $this->object_id . '\'
                     AND `id_shop` = \'' . $this->id_shop . '\'
+                    AND `id_shop_group` = \'' . $this->id_shop_group . '\'
                     AND `id_lang` = \'' . $this->id_lang . '\'
                 ');
         }
