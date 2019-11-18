@@ -181,7 +181,7 @@ class PrestaShopLoggerCore extends ObjectModel
     public function getHash()
     {
         if (empty($this->hash)) {
-            $this->hash = md5($this->message. $this->severity. $this->error_code. $this->object_type. $this->object_id. $this->id_shop. $this->id_shop_group. $this->id_lang);
+            $this->hash = md5($this->message . $this->severity . $this->error_code . $this->object_type . $this->object_id . $this->id_shop . $this->id_shop_group . $this->id_lang);
         }
 
         return $this->hash;
