@@ -51,7 +51,7 @@ export default {
   orderMessagesContainer: '.js-order-messages-container',
   orderMessage: '#order_message_message',
   orderMessageChangeWarning: '.js-message-change-warning',
-  allMessagesModal: '#viewAllMessagesModal',
+  allMessagesModal: '#view_all_messages_modal',
   allMessagesList: '#all-messages-list',
   openAllMessagesBtn: '.js-open-all-messages-btn',
 };
