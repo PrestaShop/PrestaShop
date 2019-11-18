@@ -17,8 +17,16 @@ const FOBasePage = require('@pages/FO/FObasePage');
 let browser;
 let page;
 let numberOfEmployees = 0;
-let firstEmployeeData;
-let secondEmployeeData;
+const firstEmployeeData = new EmployeeFaker({
+  firstName: 'todelete',
+  defaultPage: 'Orders',
+  permissionProfile: 'Logistician',
+});
+const secondEmployeeData = new EmployeeFaker({
+  firstName: 'todelete',
+  defaultPage: 'Orders',
+  permissionProfile: 'Logistician',
+});
 
 // Init objects needed
 const init = async function () {
@@ -41,16 +49,6 @@ describe('Create Employees, Then disable / Enable and Delete with Bulk actions',
     browser = await helper.createBrowser();
     page = await helper.newTab(browser);
     this.pageObjects = await init();
-    firstEmployeeData = await (new EmployeeFaker({
-      firstName: 'todelete',
-      defaultPage: 'Orders',
-      permissionProfile: 'Logistician',
-    }));
-    secondEmployeeData = await (new EmployeeFaker({
-      firstName: 'todelete',
-      defaultPage: 'Orders',
-      permissionProfile: 'Logistician',
-    }));
   });
   after(async () => {
     await helper.closeBrowser(browser);
@@ -76,26 +74,18 @@ describe('Create Employees, Then disable / Enable and Delete with Bulk actions',
 
   // 1 : Create employee and Filter with all inputs and selects in grid table in BO
   describe('Create employee then filter the table', async () => {
-    it('should go to add new employee page', async function () {
-      await this.pageObjects.employeesPage.goToAddNewEmployeePage();
-      const pageTitle = await this.pageObjects.addEmployeePage.getPageTitle();
-      await expect(pageTitle).to.contains(this.pageObjects.addEmployeePage.pageTitleCreate);
-    });
+    const employeesToCreate = [firstEmployeeData, secondEmployeeData];
+    employeesToCreate.forEach((employeeToCreate) => {
+      it('should go to add new employee page', async function () {
+        await this.pageObjects.employeesPage.goToAddNewEmployeePage();
+        const pageTitle = await this.pageObjects.addEmployeePage.getPageTitle();
+        await expect(pageTitle).to.contains(this.pageObjects.addEmployeePage.pageTitleCreate);
+      });
 
-    it('should create the first employee', async function () {
-      const textResult = await this.pageObjects.addEmployeePage.createEditEmployee(firstEmployeeData);
-      await expect(textResult).to.equal(this.pageObjects.employeesPage.successfulCreationMessage);
-    });
-
-    it('should go to add new employee page', async function () {
-      await this.pageObjects.employeesPage.goToAddNewEmployeePage();
-      const pageTitle = await this.pageObjects.addEmployeePage.getPageTitle();
-      await expect(pageTitle).to.contains(this.pageObjects.addEmployeePage.pageTitleCreate);
-    });
-
-    it('should create the second employee', async function () {
-      const textResult = await this.pageObjects.addEmployeePage.createEditEmployee(secondEmployeeData);
-      await expect(textResult).to.equal(this.pageObjects.employeesPage.successfulCreationMessage);
+      it('should create the first employee', async function () {
+        const textResult = await this.pageObjects.addEmployeePage.createEditEmployee(employeeToCreate);
+        await expect(textResult).to.equal(this.pageObjects.employeesPage.successfulCreationMessage);
+      });
     });
   });
 
@@ -107,53 +97,42 @@ describe('Create Employees, Then disable / Enable and Delete with Bulk actions',
         this.pageObjects.employeesPage.employeeGridTitle,
       );
       await expect(numberOfEmployeesAfterFilter).to.be.at.most(numberOfEmployees);
-      /* eslint-disable no-await-in-loop */
       for (let i = 1; i <= numberOfEmployeesAfterFilter; i++) {
         const textColumn = await this.pageObjects.employeesPage.getTextColumnFromTable(i, 'firstname');
         await expect(textColumn).to.contains(firstEmployeeData.firstName);
       }
-      /* eslint-enable no-await-in-loop */
+    });
+    const statuses = [
+      {args: {status: 'disable', enable: false}, expected: 'clear'},
+      {args: {status: 'enable', enable: true}, expected: 'check'},
+    ];
+    statuses.forEach((employeeStatus) => {
+      it(`should ${employeeStatus.args.status} employees with Bulk Actions and check Result`, async function () {
+        const disableTextResult = await this.pageObjects.employeesPage.changeEnabledColumnBulkActions(
+          employeeStatus.args.enable,
+        );
+        await expect(disableTextResult).to.be.equal(this.pageObjects.employeesPage.successfulUpdateStatusMessage);
+        const numberOfEmployeesInGrid = await this.pageObjects.employeesPage.getNumberFromText(
+          this.pageObjects.employeesPage.employeeGridTitle,
+        );
+        for (let i = 1; i <= numberOfEmployeesInGrid; i++) {
+          const textColumn = await this.pageObjects.employeesPage.getTextColumnFromTable(i, 'active');
+          await expect(textColumn).to.contains(employeeStatus.expected);
+        }
+      });
     });
 
-    it('should disable employees with Bulk Actions and check Result', async function () {
-      const disableTextResult = await this.pageObjects.employeesPage.changeEnabledColumnBulkActions(false);
-      await expect(disableTextResult).to.be.equal(this.pageObjects.employeesPage.successfulUpdateStatusMessage);
-      const numberOfEmployeesInGrid = await this.pageObjects.employeesPage.getNumberFromText(
-        this.pageObjects.employeesPage.employeeGridTitle,
-      );
-      /* eslint-disable no-await-in-loop */
-      for (let i = 1; i <= numberOfEmployeesInGrid; i++) {
-        const textColumn = await this.pageObjects.employeesPage.getTextColumnFromTable(i, 'active');
-        await expect(textColumn).to.contains('clear');
-      }
-      /* eslint-enable no-await-in-loop */
-    });
+    // 3 : Delete employee with bulk actions
+    describe.skip('Delete employees with Bulk Actions', async () => {
+      it('should delete employees with Bulk Actions and check Result', async function () {
+        const deleteTextResult = await this.pageObjects.employeesPage.deleteBulkActions();
+        await expect(deleteTextResult).to.be.equal(this.pageObjects.employeesPage.successfulMultiDeleteMessage);
+      });
 
-    it('should enable employees with Bulk Actions and check Result', async function () {
-      const enableTextResult = await this.pageObjects.employeesPage.changeEnabledColumnBulkActions();
-      await expect(enableTextResult).to.be.equal(this.pageObjects.employeesPage.successfulUpdateStatusMessage);
-      const numberOfEmployeesInGrid = await this.pageObjects.employeesPage.getNumberFromText(
-        this.pageObjects.employeesPage.employeeGridTitle,
-      );
-      /* eslint-disable no-await-in-loop */
-      for (let i = 1; i <= numberOfEmployeesInGrid; i++) {
-        const textColumn = await this.pageObjects.employeesPage.getTextColumnFromTable(i, 'active');
-        await expect(textColumn).to.contains('check');
-      }
-      /* eslint-enable no-await-in-loop */
-    });
-  });
-
-  // 3 : Delete employee with bulk actions
-  describe.skip('Delete employees with Bulk Actions', async () => {
-    it('should delete employees with Bulk Actions and check Result', async function () {
-      const deleteTextResult = await this.pageObjects.employeesPage.deleteBulkActions();
-      await expect(deleteTextResult).to.be.equal(this.pageObjects.employeesPage.successfulMultiDeleteMessage);
-    });
-
-    it('should reset all filters', async function () {
-      const numberOfEmployeesAfterDelete = await this.pageObjects.employeesPage.resetAndGetNumberOfLines();
-      await expect(numberOfEmployeesAfterDelete).to.be.equal(numberOfEmployees);
+      it('should reset all filters', async function () {
+        const numberOfEmployeesAfterDelete = await this.pageObjects.employeesPage.resetAndGetNumberOfLines();
+        await expect(numberOfEmployeesAfterDelete).to.be.equal(numberOfEmployees);
+      });
     });
   });
 });
