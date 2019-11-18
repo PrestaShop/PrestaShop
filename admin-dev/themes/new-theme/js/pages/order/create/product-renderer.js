@@ -228,9 +228,9 @@ export default class ProductRenderer {
    */
   _renderCustomizations(customizationFields) {
     // represents customization field type "file".
-    const fieldTypeFile = 0;
+    const fieldTypeFile = createOrderMap.productCustomizationFieldTypeFile;
     // represents customization field type "text".
-    const fieldTypeText = 1;
+    const fieldTypeText = createOrderMap.productCustomizationFieldTypeText;
 
     this._cleanCustomizations();
     if (customizationFields.length === 0) {
@@ -257,6 +257,10 @@ export default class ProductRenderer {
       $template.find(createOrderMap.productCustomInputLabel)
         .attr('for', `customizations[${customField.customizationFieldId}]`)
         .text(customField.name);
+
+      if (customField.required === true) {
+        $template.find(createOrderMap.requiredFieldMark).removeClass('d-none');
+      }
 
       $customFieldsContainer.append($template);
     }

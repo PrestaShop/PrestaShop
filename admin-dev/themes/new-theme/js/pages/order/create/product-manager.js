@@ -99,8 +99,15 @@ export default class ProductManager {
    * @private
    */
   _onAddProductToCart() {
+    // on success
     EventEmitter.on(eventMap.productAddedToCart, (cartInfo) => {
       EventEmitter.emit(eventMap.cartLoaded, cartInfo);
+    });
+
+    // on failure
+    EventEmitter.on(eventMap.productAddToCartFailed, (errorMessage) => {
+      this.productRenderer.cleanCartBlockAlerts();
+      this.productRenderer.renderCartBlockErrorAlert(errorMessage);
     });
   }
 
@@ -208,7 +215,7 @@ export default class ProductManager {
     this._unsetProduct();
 
     if (this.products.length !== 0) {
-      this._selectProduct(this.products[0].product_id);
+      this._selectProduct(this.products[0].productId);
     }
   }
 
@@ -223,7 +230,7 @@ export default class ProductManager {
     this._unsetCombination();
 
     for (const key in this.products) {
-      if (this.products[key].product_id === productId) {
+      if (this.products[key].productId === productId) {
         this.selectedProduct = this.products[key];
       }
     }
