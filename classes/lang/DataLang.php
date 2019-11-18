@@ -24,6 +24,8 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 use PrestaShopBundle\Translation\TranslatorComponent as Translator;
+use Symfony\Component\Finder\Finder;
+use Symfony\Component\Translation\Loader\XliffFileLoader;
 
 class DataLangCore
 {
@@ -46,22 +48,13 @@ class DataLangCore
     {
         $this->locale = $locale;
 
-        $legacyTranslator = Context::getContext()->getTranslator();
-        $legacyLocale = $legacyTranslator->getLocale();
+        $this->translator = Context::getContext()->getTranslator();
+        $translatorLocale = $this->translator->getLocale();
 
-        if ($legacyLocale === $this->locale) {
-            $this->translator = $legacyTranslator;
-        } else {
-            $this->translator = new Translator(
-                $this->locale,
-                null,
-                _PS_CACHE_DIR_ . '/translations/' . $this->locale,
-                false
-            );
+        if ($translatorLocale !== $this->locale) {
+            $this->translator->addLoader('xlf', new XliffFileLoader());
 
-            $this->translator->addLoader('xlf', new \Symfony\Component\Translation\Loader\XliffFileLoader());
-
-            $finder = \Symfony\Component\Finder\Finder::create()
+            $finder = Finder::create()
                 ->files()
                 ->name('*.' . $this->locale . '.xlf')
                 ->in((_PS_ROOT_DIR_ . '/app/Resources/translations'));
