@@ -25,6 +25,13 @@
  */
 use PrestaShopBundle\Translation\TranslatorComponent as Translator;
 
+/**
+ * DataLang classes are used by Language
+ * to update existing entities in the database whenever a new language is installed.
+ * Each *Lang subclass corresponds to a database table.
+ *
+ * @see Language::updateMultilangFromClass()
+ */
 class DataLangCore
 {
     /** @var Translator */
