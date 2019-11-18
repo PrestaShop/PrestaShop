@@ -13,7 +13,7 @@ const ProductsPage = require('@pages/BO/catalog/products/index');
 let browser;
 let page;
 let numberOfProducts = 0;
-let filterBy = '';
+let filterValue = '';
 
 // Init objects needed
 const init = async function () {
@@ -86,9 +86,9 @@ describe('Filter Products', async () => {
     ];
     tests.forEach((test) => {
       if (test.args.filterValue.min !== undefined) {
-        filterBy = `'${test.args.filterValue.min}-${test.args.filterValue.max}'`;
-      } else filterBy = `'${test.args.filterValue}`;
-      it(`should filter by ${test.args.filterBy} ${filterBy}`, async function () {
+        filterValue = `'${test.args.filterValue.min}-${test.args.filterValue.max}'`;
+      } else filterValue = `'${test.args.filterValue}`;
+      it(`should filter by ${test.args.filterBy} ${filterValue}`, async function () {
         await this.pageObjects.productsPage.filterProducts(
           test.args.filterBy,
           test.args.filterValue,
