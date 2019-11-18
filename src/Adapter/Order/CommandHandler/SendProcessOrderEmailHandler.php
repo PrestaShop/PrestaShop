@@ -182,7 +182,11 @@ class SendProcessOrderEmailHandler implements SendProcessOrderEmailHandlerInterf
             'order',
             false,
             $cartLanguage->id,
-            'step=3&recover_cart=' . $cartId . '&token_cart=' . md5(_COOKIE_KEY_ . 'recover_cart_' . $cartId)
+            http_build_query([
+                'step' => 3,
+                'recover_cart' => $cartId,
+                'token_cart' => md5(_COOKIE_KEY_ . 'recover_cart_' . $cartId),
+            ])
         );
 
         return [

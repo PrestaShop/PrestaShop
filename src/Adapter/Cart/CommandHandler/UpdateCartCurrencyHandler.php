@@ -44,11 +44,12 @@ final class UpdateCartCurrencyHandler extends AbstractCartHandler implements Upd
     /**
      * {@inheritdoc}
      */
-    public function handle(UpdateCartCurrencyCommand $command)
+    public function handle(UpdateCartCurrencyCommand $command): void
     {
         $currency = $this->getCurrencyObject($command->getNewCurrencyId());
 
-        $this->assertCurrencyCantBeUsedInCart($currency);
+        $this->assertCurrencyIsNotDeleted($currency);
+        $this->assertCurrencyIsActive($currency);
 
         $cart = $this->getCart($command->getCartId());
         $cart->id_currency = (int) $currency->id;
@@ -72,7 +73,7 @@ final class UpdateCartCurrencyHandler extends AbstractCartHandler implements Upd
      *
      * @throws CurrencyNotFoundException
      */
-    private function getCurrencyObject(CurrencyId $currencyId)
+    private function getCurrencyObject(CurrencyId $currencyId): Currency
     {
         $currency = new Currency($currencyId->getValue());
 
@@ -87,14 +88,37 @@ final class UpdateCartCurrencyHandler extends AbstractCartHandler implements Upd
 
     /**
      * @param Currency $currency
+     *
+     * @throws CurrencyException
      */
-    private function assertCurrencyCantBeUsedInCart(Currency $currency)
+    private function assertCurrencyIsActive(Currency $currency): void
     {
-        if ($currency->deleted || !$currency->active) {
-            throw new CurrencyException(sprintf(
-                'Currency "%s" cannot be used in cart because it is either deleted or disabled',
-                $currency->iso_code
-            ));
+        if (!$currency->active) {
+            throw new CurrencyException(
+                sprintf(
+                    'Currency "%s" cannot be used in cart because it is disabled',
+                    $currency->iso_code
+                ),
+                CurrencyException::IS_DISABLED
+            );
+        }
+    }
+
+    /**
+     * @param Currency $currency
+     *
+     * @throws CurrencyException
+     */
+    private function assertCurrencyIsNotDeleted(Currency $currency): void
+    {
+        if (!$currency->deleted) {
+            throw new CurrencyException(
+                sprintf(
+                    'Currency "%s" cannot be used in cart because it is deleted',
+                    $currency->iso_code
+                ),
+                CurrencyException::IS_DELETED
+            );
         }
     }
 }

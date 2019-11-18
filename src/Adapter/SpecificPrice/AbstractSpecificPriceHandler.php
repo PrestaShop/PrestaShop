@@ -56,7 +56,7 @@ abstract class AbstractSpecificPriceHandler
         try {
             $specificPrice = new SpecificPrice($specificPriceIdValue);
         } catch (PrestaShopException $e) {
-            throw new SpecificPriceException('Failed to create new specific price', 0, $e);
+            throw new SpecificPriceException('Failed to fetch new specific price', 0, $e);
         }
 
         if ($specificPrice->id !== $specificPriceIdValue) {
