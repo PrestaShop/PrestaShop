@@ -137,7 +137,7 @@ describe('Filter And Quick Edit Employees', async () => {
         it(`should ${employeeStatus.args.status} the employee`, async function () {
           const isActionPerformed = await this.pageObjects.employeesPage.updateToggleColumnValue(
             1,
-            employeeStatus.enable,
+            employeeStatus.args.enable,
           );
           if (isActionPerformed) {
             const resultMessage = await this.pageObjects.employeesPage.getTextContent(
@@ -146,8 +146,7 @@ describe('Filter And Quick Edit Employees', async () => {
             await expect(resultMessage).to.contains(this.pageObjects.employeesPage.successfulUpdateStatusMessage);
           }
           const isStatusChanged = await this.pageObjects.employeesPage.getToggleColumnValue(1);
-          if (employeeStatus.enable) await expect(isStatusChanged).to.be.false;
-          else await expect(isStatusChanged).to.be.true;
+          await expect(isStatusChanged).to.be.equal(employeeStatus.args.enable);
         });
       });
     });
