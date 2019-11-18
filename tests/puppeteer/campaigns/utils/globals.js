@@ -22,7 +22,7 @@ global.INSTALL = {
 global.BROWSER_CONFIG = {
   headless: JSON.parse(process.env.HEADLESS || true),
   timeout: 0,
-  slowMo: process.env.SLOWMO || 5,
+  slowMo: parseInt(process.env.SLOWMO) || 5,
   args: ['--start-maximized', '--no-sandbox', '--lang=en-GB'],
   defaultViewport: {
     width: 1680,
