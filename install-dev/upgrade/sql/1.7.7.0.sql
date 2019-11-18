@@ -24,3 +24,9 @@ ALTER TABLE `PREFIX_hook` CHANGE `name` `name` VARCHAR(191) NOT NULL;
 ALTER TABLE `PREFIX_hook` CHANGE `title` `title` VARCHAR(255) NOT NULL;
 ALTER TABLE `PREFIX_hook_alias` CHANGE `name` `name` VARCHAR(191) NOT NULL;
 ALTER TABLE `PREFIX_hook_alias` CHANGE `alias` `alias` VARCHAR(191) NOT NULL;
+
+/* Add lang and shops fields to log table */
+ALTER TABLE `PREFIX__log`
+  ADD `id_shop` INT(10) NULL DEFAULT NULL after `object_id`,
+  ADD `id_shop_group` INT(10) NULL DEFAULT NULL after `id_shop`,
+  ADD `id_lang` INT(10) NULL DEFAULT NULL after `id_shop_group`;
