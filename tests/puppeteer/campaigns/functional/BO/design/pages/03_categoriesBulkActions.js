@@ -15,8 +15,8 @@ const AddPagePage = require('@pages/BO/design/pages/add');
 let browser;
 let page;
 let numberOfCategories = 0;
-let firstCategoryData = new CategoryFaker({name: 'todelete'});
-let secondCategoryData = new CategoryFaker({name: 'todelete'});
+const firstCategoryData = new CategoryFaker({name: 'todelete'});
+const secondCategoryData = new CategoryFaker({name: 'todelete'});
 
 // Init objects needed
 const init = async function () {

@@ -15,8 +15,8 @@ const AddPagePage = require('@pages/BO/design/pages/add');
 let browser;
 let page;
 let numberOfPages = 0;
-let firstPageData = new PageFaker({title: 'todelete'});
-let secondPageData = new PageFaker({title: 'todelete'});
+const firstPageData = new PageFaker({title: 'todelete'});
+const secondPageData = new PageFaker({title: 'todelete'});
 
 // Init objects needed
 const init = async function () {

@@ -32,4 +32,13 @@ module.exports = class SiteMap extends FOBasePage {
   async isVisibleCategory(categoryID) {
     return this.elementVisible(this.categoryNameSelect.replace('%ID', categoryID));
   }
+
+  /**
+   *
+   * @param pageCategoryID
+   * @return {Promise<void>}
+   */
+  async getPageCategoryName(pageCategoryID) {
+    return this.getTextContent(this.categoryPageNameSelect.replace('%ID', pageCategoryID));
+  }
 };

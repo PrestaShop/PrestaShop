@@ -130,7 +130,7 @@ describe('Create, Read, Update and Delete Page Category and Page', async () => {
       await this.pageObjects.foBasePage.clickAndWaitForNavigation(this.pageObjects.foBasePage.siteMapLink);
       const pageTitle = await this.pageObjects.siteMapPage.getPageTitle();
       await expect(pageTitle).to.equal(this.pageObjects.siteMapPage.pageTitle);
-      const pageCategoryName = await this.pageObjects.siteMapPage.getCategoryName(pageCategoryID);
+      const pageCategoryName = await this.pageObjects.siteMapPage.getPageCategoryName(pageCategoryID);
       await expect(pageCategoryName).to.contains(createCategoryData.name);
       page = await this.pageObjects.foBasePage.closePage(browser, 1);
       this.pageObjects = await init();
@@ -260,7 +260,7 @@ describe('Create, Read, Update and Delete Page Category and Page', async () => {
       await this.pageObjects.foBasePage.clickAndWaitForNavigation(this.pageObjects.foBasePage.siteMapLink);
       const pageTitle = await this.pageObjects.siteMapPage.getPageTitle();
       await expect(pageTitle).to.equal(this.pageObjects.siteMapPage.pageTitle);
-      const pageCategoryName = await this.pageObjects.siteMapPage.getCategoryName(pageCategoryID);
+      const pageCategoryName = await this.pageObjects.siteMapPage.getPageCategoryName(pageCategoryID);
       await expect(pageCategoryName).to.contains(editCategoryData.name);
       page = await this.pageObjects.foBasePage.closePage(browser, 1);
       this.pageObjects = await init();
