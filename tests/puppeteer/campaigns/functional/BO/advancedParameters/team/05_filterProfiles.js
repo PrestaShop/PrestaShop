@@ -71,48 +71,30 @@ describe('Create, Read, Update and Delete profile in BO', async () => {
 
   // 1 : Filter profiles table
   describe('Filter profile in BO', async () => {
-    it('should filter list by Id', async function () {
-      await this.pageObjects.profilesPage.filterProfiles(
-        'input',
-        'id_profile',
-        4,
-      );
-      const numberOfProfilesAfterFilter = await this.pageObjects.profilesPage.getNumberFromText(
-        this.pageObjects.profilesPage.profileGridTitle);
-      await expect(numberOfProfilesAfterFilter).to.be.at.most(numberOfProfiles);
-      /* eslint-disable no-await-in-loop */
-      for (let i = 1; i <= numberOfProfilesAfterFilter; i++) {
-        const textName = await this.pageObjects.profilesPage.getTextColumnFromTable(i, 'id_profile');
-        await expect(textName).to.contains(4);
-      }
-      /* eslint-enable no-await-in-loop */
-    });
+    const tests = [
+      {args: {filterType: 'input', filterBy: 'id_profile', filterValue: 4}},
+      {args: {filterType: 'input', filterBy: 'name', filterValue: 'Logistician'}},
+    ];
+    tests.forEach((test) => {
+      it('should filter list by Id', async function () {
+        await this.pageObjects.profilesPage.filterProfiles(
+          test.args.filterType,
+          test.args.filterBy,
+          test.args.filterValue,
+        );
+        const numberOfProfilesAfterFilter = await this.pageObjects.profilesPage.getNumberFromText(
+          this.pageObjects.profilesPage.profileGridTitle);
+        await expect(numberOfProfilesAfterFilter).to.be.at.most(numberOfProfiles);
+        for (let i = 1; i <= numberOfProfilesAfterFilter; i++) {
+          const textName = await this.pageObjects.profilesPage.getTextColumnFromTable(i, test.args.filterBy);
+          await expect(textName).to.contains(test.args.filterValue);
+        }
+      });
 
-    it('should reset filter', async function () {
-      const numberOfProfilesAfterDelete = await this.pageObjects.profilesPage.resetAndGetNumberOfLines();
-      await expect(numberOfProfilesAfterDelete).to.be.equal(numberOfProfiles);
-    });
-
-    it('should filter list by name', async function () {
-      await this.pageObjects.profilesPage.filterProfiles(
-        'input',
-        'name',
-        'Logistician',
-      );
-      const numberOfProfilesAfterFilter = await this.pageObjects.profilesPage.getNumberFromText(
-        this.pageObjects.profilesPage.profileGridTitle);
-      await expect(numberOfProfilesAfterFilter).to.be.at.most(numberOfProfiles);
-      /* eslint-disable no-await-in-loop */
-      for (let i = 1; i <= numberOfProfilesAfterFilter; i++) {
-        const textName = await this.pageObjects.profilesPage.getTextColumnFromTable(i, 'name');
-        await expect(textName).to.contains('Logistician');
-      }
-      /* eslint-enable no-await-in-loop */
-    });
-
-    it('should reset filter', async function () {
-      const numberOfProfilesAfterDelete = await this.pageObjects.profilesPage.resetAndGetNumberOfLines();
-      await expect(numberOfProfilesAfterDelete).to.be.equal(numberOfProfiles);
+      it('should reset filter', async function () {
+        const numberOfProfilesAfterDelete = await this.pageObjects.profilesPage.resetAndGetNumberOfLines();
+        await expect(numberOfProfilesAfterDelete).to.be.equal(numberOfProfiles);
+      });
     });
   });
 });
