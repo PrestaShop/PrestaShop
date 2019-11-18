@@ -13,8 +13,8 @@ const AddBrandAddressPage = require('@pages/BO/catalog/brands/addresses/add');
 let browser;
 let page;
 let numberOfBrandAddresses = 0;
-let firstAddressData;
-let secondAddressData;
+let firstAddressData = new BrandAddressFaker({firstName: 'AddressToDelete'});
+let secondAddressData = new BrandAddressFaker({firstName: 'AddressToDeleteTwo'});
 
 // Init objects needed
 const init = async function () {
@@ -34,8 +34,6 @@ describe('Create 2 brand Addresses and delete with bulk actions', async () => {
     browser = await helper.createBrowser();
     page = await helper.newTab(browser);
     this.pageObjects = await init();
-    firstAddressData = await (new BrandAddressFaker({firstName: 'AddressToDelete'}));
-    secondAddressData = await (new BrandAddressFaker({firstName: 'AddressToDeleteTwo'}));
   });
   after(async () => {
     await helper.closeBrowser(browser);
@@ -60,34 +58,22 @@ describe('Create 2 brand Addresses and delete with bulk actions', async () => {
   });
   // 1: Create 2 Addresses
   describe('Create 2 Addresses', async () => {
-    it('should go to new brand Address page', async function () {
-      await this.pageObjects.brandsPage.goToAddNewBrandAddressPage();
-      const pageTitle = await this.pageObjects.addBrandAddressPage.getPageTitle();
-      await expect(pageTitle).to.contains(this.pageObjects.addBrandAddressPage.pageTitle);
-    });
+    const addressesToCreate = [firstAddressData, secondAddressData];
+    addressesToCreate.forEach((addressToCreate, index) => {
+      it('should go to new brand Address page', async function () {
+        await this.pageObjects.brandsPage.goToAddNewBrandAddressPage();
+        const pageTitle = await this.pageObjects.addBrandAddressPage.getPageTitle();
+        await expect(pageTitle).to.contains(this.pageObjects.addBrandAddressPage.pageTitle);
+      });
 
-    it('should create first brand', async function () {
-      const result = await this.pageObjects.addBrandAddressPage.createEditBrandAddress(firstAddressData);
-      await expect(result).to.equal(this.pageObjects.brandsPage.successfulCreationMessage);
-      const numberOfBrandAddressesAfterCreation = await this.pageObjects.brandsPage.getNumberOfElementInGrid(
-        'manufacturer_address',
-      );
-      await expect(numberOfBrandAddressesAfterCreation).to.be.equal(numberOfBrandAddresses + 1);
-    });
-
-    it('should go to new brand Address page', async function () {
-      await this.pageObjects.brandsPage.goToAddNewBrandAddressPage();
-      const pageTitle = await this.pageObjects.addBrandAddressPage.getPageTitle();
-      await expect(pageTitle).to.contains(this.pageObjects.addBrandAddressPage.pageTitle);
-    });
-
-    it('should create second brand', async function () {
-      const result = await this.pageObjects.addBrandAddressPage.createEditBrandAddress(secondAddressData);
-      await expect(result).to.equal(this.pageObjects.brandsPage.successfulCreationMessage);
-      const numberOfBrandAddressesAfterCreation = await this.pageObjects.brandsPage.getNumberOfElementInGrid(
-        'manufacturer_address',
-      );
-      await expect(numberOfBrandAddressesAfterCreation).to.be.equal(numberOfBrandAddresses + 2);
+      it('should create new brand Address', async function () {
+        const result = await this.pageObjects.addBrandAddressPage.createEditBrandAddress(addressToCreate);
+        await expect(result).to.equal(this.pageObjects.brandsPage.successfulCreationMessage);
+        const numberOfBrandAddressesAfterCreation = await this.pageObjects.brandsPage.getNumberOfElementInGrid(
+          'manufacturer_address',
+        );
+        await expect(numberOfBrandAddressesAfterCreation).to.be.equal(numberOfBrandAddresses + index + 1);
+      });
     });
   });
   // 2 : Delete Brand Addresses created with bulk actions

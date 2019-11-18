@@ -451,8 +451,19 @@ class ModuleSelfConfigurator
             if (empty($sql)) {
                 continue;
             }
+
             // Set _DB_PREFIX_
-            $sql = str_replace('PREFIX_', $this->configuration->get('_DB_PREFIX_'), $sql);
+            $sql = str_replace(
+                [
+                    'PREFIX_',
+                    'DB_NAME',
+                ],
+                [
+                    $this->configuration->get('_DB_PREFIX_'),
+                    $this->configuration->get('_DB_NAME_'),
+                ],
+                $sql
+            );
 
             $stmt = $this->connection->prepare($sql);
             $stmt->execute();

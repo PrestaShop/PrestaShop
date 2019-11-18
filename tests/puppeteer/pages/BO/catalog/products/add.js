@@ -27,7 +27,7 @@ module.exports = class AddProduct extends BOBasePage {
     this.forNavlistItemLink = `${this.formNavList} #tab_step%ID a`;
 
     // Selector of Step 3 : Combinations
-    this.AddCombinationsInput = '#form_step3_attributes-tokenfield';
+    this.addCombinationsInput = '#form_step3_attributes-tokenfield';
     this.generateCombinationsButton = '#create-combinations';
     this.productCombinationBulkQuantityInput = '#product_combination_bulk_quantity';
     this.productCombinationSelectAllCheckbox = 'input#toggle-all-combinations';
@@ -38,7 +38,9 @@ module.exports = class AddProduct extends BOBasePage {
     this.productCombinationsBulkFormTitle = `${this.productCombinationsBulkForm} p[aria-controls]`;
 
     // Growls : override value from BObasePage
-    this.growlMessageBloc = '#growls-default .growl-message';
+    this.growlDefaultDiv = '#growls-default';
+    this.growlMessageBloc = `${this.growlDefaultDiv} .growl-message`;
+    this.growlCloseButton = `${this.growlDefaultDiv} .growl-close`;
   }
 
   /*
@@ -95,33 +97,71 @@ module.exports = class AddProduct extends BOBasePage {
     await this.goToFormStep(3);
     // Delete All combinations if exists
     await this.deleteAllCombinations();
-    // set Combinations
-    const keys = Object.keys(productData.combinations);
+    // Add combinations
+    await this.addCombinations(productData.combinations);
+    // Set quantity
+    await this.setCombinationsQuantity(productData.quantity);
+    // GOTO Basic settings Tab : id = 1
+    await this.goToFormStep(1);
+  }
+
+  /**
+   * Generate combinations in input
+   * @param combinations
+   * @return {Promise<void>}
+   */
+  async addCombinations(combinations) {
+    const keys = Object.keys(combinations);
     /*eslint-disable*/
     for (const key of keys) {
-      for (const value of productData.combinations[key]) {
-        await this.page.type(this.AddCombinationsInput, `${key} : ${value}`);
-        await this.page.keyboard.press('ArrowDown');
-        await this.page.keyboard.press('Enter');
+      for (const value of combinations[key]) {
+        await this.addCombination(`${key} : ${value}`);
       }
     }
     /* eslint-enable */
+    await this.scrollTo(this.generateCombinationsButton);
     await Promise.all([
-      this.page.waitForSelector(this.productCombinationTableRow.replace('%ID', '1'), {visible: true}),
+      this.page.waitForSelector(`${this.productCombinationsBulkForm}:not(.inactive)`, {visible: true}),
+      this.page.waitForSelector(
+        `${this.productCombinationTableRow.replace('%ID', 1)}[style='display: table-row;']`,
+        {visible: true},
+      ),
       this.page.click(this.generateCombinationsButton),
+      this.waitForSelectorAndClick(this.growlMessageBloc),
     ]);
-    // Set Quantity in Combination
+    await this.closeCombinationsForm();
+  }
+
+  /**
+   * add one combination
+   * @param combination
+   * @return {Promise<void>}
+   */
+  async addCombination(combination) {
+    await this.page.type(this.addCombinationsInput, combination);
+    await this.page.keyboard.press('ArrowDown');
+    await this.page.keyboard.press('Enter');
+  }
+
+  /**
+   * Set quantity for all combinations
+   * @param quantity
+   * @return {Promise<void>}
+   */
+  async setCombinationsQuantity(quantity) {
+    // Unselect all
+    await this.changeCheckboxValue(this.productCombinationSelectAllCheckbox, false);
     await Promise.all([
       this.page.waitForSelector(`${this.productCombinationsBulkFormTitle}[aria-expanded='true']`, {visible: true}),
-      this.page.click(this.productCombinationSelectAllCheckbox),
+      await this.changeCheckboxValue(this.productCombinationSelectAllCheckbox, true),
     ]);
-    await this.page.type(this.productCombinationBulkQuantityInput, productData.quantity);
+    // Edit quantity
+    await this.page.waitForSelector(this.applyOnCombinationsButton, {visible: true});
+    await this.scrollTo(this.productCombinationBulkQuantityInput);
+    await this.page.type(this.productCombinationBulkQuantityInput, quantity);
     await this.scrollTo(this.applyOnCombinationsButton);
     await this.page.click(this.applyOnCombinationsButton);
-    await this.page.waitForSelector(`${this.productCombinationsBulkFormTitle}[aria-expanded='false']`, {visible: true});
-    await this.page.waitFor(10000);
-    // GOTO Basic settings Tab : id = 1
-    await this.goToFormStep(1);
+    await this.closeCombinationsForm();
   }
 
   /**
@@ -175,26 +215,41 @@ module.exports = class AddProduct extends BOBasePage {
    * @return {Promise<void>}
    */
   async deleteAllCombinations() {
-    if (await this.elementVisible(this.productCombinationTableRow.replace('%ID', '1'), 2000)) {
+    if (await this.elementVisible(this.productCombinationTableRow.replace('%ID', 1), 2000)) {
+      // Unselect all
+      await this.changeCheckboxValue(this.productCombinationSelectAllCheckbox, false);
+      // Select all and delete combinations
       await Promise.all([
+        this.changeCheckboxValue(this.productCombinationSelectAllCheckbox, true),
+        this.page.waitForSelector(`${this.productCombinationsBulkFormTitle}[aria-expanded='true']`, {visible: true}),
         this.page.waitForSelector(this.deleteCombinationsButton, {visible: true}),
-        this.page.click(this.productCombinationSelectAllCheckbox),
       ]);
+      await this.page.waitFor(250);
       await this.scrollTo(this.deleteCombinationsButton);
       await Promise.all([
-        this.page.waitForSelector(this.modalDialog, {visible: true}),
         this.page.click(this.deleteCombinationsButton),
+        this.page.waitForSelector(this.modalDialog, {visible: true}),
       ]);
       await this.page.waitFor(250);
       await Promise.all([
-        this.page.waitForSelector(this.growlMessageBloc, {visible: true}),
         this.page.click(this.modalDialogYesButton),
+        this.waitForSelectorAndClick(this.growlCloseButton),
       ]);
-      // unSelect checkbox
-      await this.page.click(this.productCombinationSelectAllCheckbox);
+      // Unselect all
+      await this.changeCheckboxValue(this.productCombinationSelectAllCheckbox, false);
+      await this.closeCombinationsForm();
+    }
+  }
+
+  /**
+   * Close combinations form if open
+   * @return {Promise<void>}
+   */
+  async closeCombinationsForm() {
+    if (!(await this.elementVisible(`${this.productCombinationsBulkFormTitle}[aria-expanded='false']`, 1000))) {
       await Promise.all([
+        this.page.click(this.productCombinationsBulkFormTitle),
         this.page.waitForSelector(`${this.productCombinationsBulkFormTitle}[aria-expanded='false']`, {visible: true}),
-        this.page.click(`${this.productCombinationsBulkFormTitle}[aria-expanded='true']`),
       ]);
     }
   }

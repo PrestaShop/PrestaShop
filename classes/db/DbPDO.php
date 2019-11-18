@@ -79,9 +79,18 @@ class DbPDOCore extends Db
         } else {
             $dsn .= 'host=' . $host;
         }
-        $dsn .= ';charset=utf8';
+        $dsn .= ';charset=utf8mb4';
 
-        return new PDO($dsn, $user, $password, array(PDO::ATTR_TIMEOUT => $timeout, PDO::MYSQL_ATTR_USE_BUFFERED_QUERY => true));
+        return new PDO(
+            $dsn,
+            $user,
+            $password,
+            [
+                PDO::ATTR_TIMEOUT => $timeout,
+                PDO::MYSQL_ATTR_USE_BUFFERED_QUERY => true,
+                PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8mb4',
+            ]
+        );
     }
 
     /**
@@ -459,7 +468,7 @@ class DbPDOCore extends Db
         } catch (PDOException $e) {
             return false;
         }
-        $result = $link->exec('SET NAMES \'utf8\'');
+        $result = $link->exec('SET NAMES utf8mb4');
         unset($link);
 
         return ($result === false) ? false : true;

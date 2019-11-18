@@ -1356,6 +1356,15 @@ class LanguageCore extends ObjectModel implements LanguageInterface
         }
     }
 
+    /**
+     * Updates multilang tables using DataLang classes
+     *
+     * @param string $table
+     * @param string $className
+     * @param string $lang
+     *
+     * @throws PrestaShopDatabaseException
+     */
     public static function updateMultilangFromClass($table, $className, $lang)
     {
         if (!class_exists($className)) {
