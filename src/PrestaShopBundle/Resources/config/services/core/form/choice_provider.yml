@@ -215,8 +215,6 @@ services:
     arguments:
       - '@translator'
 
-<<<<<<< HEAD
-
   prestashop.core.form.choice_provider.tax_inclusion:
     class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\TaxInclusionChoiceProvider'
     arguments:
