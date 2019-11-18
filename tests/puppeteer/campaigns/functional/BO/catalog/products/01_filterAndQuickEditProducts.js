@@ -141,14 +141,14 @@ describe('Filter Products', async () => {
           const resultMessage = await this.pageObjects.productsPage.getTextContent(
             this.pageObjects.productsPage.alertSuccessBlockParagraph,
           );
-          if (productStatus.enable) {
+          if (productStatus.args.enable) {
             await expect(resultMessage).to.contains(this.pageObjects.productsPage.productActivatedSuccessfulMessage);
           } else {
             await expect(resultMessage).to.contains(this.pageObjects.productsPage.productDeactivatedSuccessfulMessage);
           }
         }
         const isStatusChanged = await this.pageObjects.productsPage.getToggleColumnValue(1);
-        await expect(isStatusChanged).to.be.equal((productStatus.args.enable));
+        await expect(isStatusChanged).to.be.equal(productStatus.args.enable);
       });
     });
   });
