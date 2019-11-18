@@ -86,7 +86,7 @@ class OrderMessageType extends AbstractType
                             'message' => $this->trans(
                                 'The %s field is not valid',
                                 [
-                                    sprintf('"%s"', $this->trans('Message', 'Admin.Global')),
+                                    sprintf('"%s"', $this->trans('Message', [],  'Admin.Global')),
                                 ],
                                 'Admin.Notifications.Error'
                             )
