@@ -121,11 +121,11 @@ class AddSpecificPriceCommand
 
     /**
      * @param int $productId
-     * @param float $price
-     * @param int $fromQuantity
      * @param string $reductionType
      * @param float $reductionValue
      * @param bool $includeTax
+     * @param float $price
+     * @param int $fromQuantity
      *
      * @throws DomainConstraintException
      */

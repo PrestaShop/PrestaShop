@@ -378,6 +378,9 @@ class CartController extends FrameworkBundleAdminController
     }
 
     /**
+     * Modifying a price for a product in the cart is actually performed by using generated specific prices,
+     * that are used only for this cart and this product.
+     *
      * @AdminSecurity("is_granted('update', request.get('_legacy_controller')) || is_granted('create', 'AdminOrders')")
      *
      * @param Request $request
@@ -501,6 +504,8 @@ class CartController extends FrameworkBundleAdminController
     }
 
     /**
+     * @param Exception $e
+     *
      * @return array
      */
     private function getErrorMessages(Exception $e)
