@@ -1,7 +1,6 @@
 <?php
-
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -27,12 +26,22 @@
 
 namespace PrestaShopBundle\Translation;
 
-use Symfony\Component\Translation\Translator as BaseTranslatorComponent;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
- * Translator used by Context
+ * Interface PrestaShopTranslatorInterface used by PrestaShop translators
  */
-class TranslatorComponent extends BaseTranslatorComponent implements PrestaShopTranslatorInterface
+interface PrestaShopTranslatorInterface extends TranslatorInterface
 {
-    use PrestaShopTranslatorTrait;
+    /**
+     * @param string $locale
+     *
+     * @return bool
+     */
+    public function isCatalogLoaded($locale);
+
+    /**
+     * @param $locale
+     */
+    public function resetCatalogue($locale);
 }
