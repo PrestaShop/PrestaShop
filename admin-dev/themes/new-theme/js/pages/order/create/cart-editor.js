@@ -116,7 +116,7 @@ export default class CartEditor {
       processData: false,
       contentType: false,
     }).then(cartInfo => EventEmitter.emit(eventMap.productAddedToCart, cartInfo))
-      .catch(response => showErrorMessage(response.responseJSON.message));
+      .catch(response => EventEmitter.emit(eventMap.productAddToCartFailed, response.responseJSON.message));
   }
 
   /**

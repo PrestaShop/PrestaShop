@@ -27,12 +27,14 @@
 namespace PrestaShop\PrestaShop\Adapter\Cart\CommandHandler;
 
 use Configuration;
+use CustomizationField;
 use ImageManager;
 use PrestaShop\PrestaShop\Adapter\Cart\AbstractCartHandler;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\AddCustomizationFieldsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\CommandHandler\AddCustomizationFieldsHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Exception\FileUploadException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Customization\CustomizationSettings;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Exception\CustomizationConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Exception\CustomizationException;
 use PrestaShopException;
@@ -74,6 +76,8 @@ final class AddCustomizationFieldsHandler extends AbstractCartHandler implements
 
             try {
                 if (Product::CUSTOMIZE_TEXTFIELD == $customizationField['type']) {
+                    $this->assertCustomTextField($customizationFieldId, $customizations[$customizationFieldId]);
+
                     $customizationId = $cart->addTextFieldToProduct(
                         $productId,
                         $customizationFieldId,
@@ -183,6 +187,31 @@ final class AddCustomizationFieldsHandler extends AbstractCartHandler implements
 
         if ($file->getError()) {
             throw new FileUploadException('Error while uploading image', $file->getError());
+        }
+    }
+
+    /**
+     * @param int $customFieldId
+     * @param string $value
+     *
+     * @throws CustomizationConstraintException
+     */
+    private function assertCustomTextField(int $customFieldId, string $value)
+    {
+        $customization = new CustomizationField($customFieldId);
+
+        if ($customization->required && '' === $value) {
+            throw new CustomizationConstraintException(
+                sprintf('Customization field #%s is required', $customFieldId),
+                CustomizationConstraintException::FIELD_IS_REQUIRED
+            );
+        }
+
+        if (strlen($value) > CustomizationSettings::MAX_TEXT_LENGTH) {
+            throw new CustomizationConstraintException(
+                sprintf('Customization field #%s value is too long', $customFieldId),
+                CustomizationConstraintException::FIELD_IS_TOO_LONG
+            );
         }
     }
 }
