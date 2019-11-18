@@ -31,6 +31,7 @@ export default {
   productCustomizationFieldTypeText: 1,
 
   orderCreationContainer: '#order-creation-container',
+  requiredFieldMark: '.js-required-field-mark',
 
   // selectors related to customer block
   customerSearchInput: '#customer-search-input',

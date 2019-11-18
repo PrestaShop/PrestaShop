@@ -172,9 +172,14 @@
   </div>
 </div>
 
+{% set requiredFieldMarkTemplate %}
+  <span class="js-required-field-mark text-danger d-none">*</span>
+{% endset %}
+
 <script id="js-product-custom-text-template" type="text/template">
   <div class="row mt-3">
     <div class="col">
+      {{ requiredFieldMarkTemplate }}
       <label for="" class="js-product-custom-input-label"></label>
       <input name="" type="text" class="form-control js-product-custom-input">
     </div>
@@ -184,6 +189,7 @@
 <script id="js-product-custom-file-template" type="text/template">
   <div class="row mt-3">
     <div class="col">
+      {{ requiredFieldMarkTemplate }}
       <label for="" class="js-product-custom-input-label"></label>
       <div class="custom-file">
         <input name="" type="file" class="custom-file-input js-product-custom-input">

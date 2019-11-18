@@ -47,6 +47,8 @@ use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleValidityExcepti
 use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\QuantityAction;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Language\Exception\LanguageException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Customization\CustomizationSettings;
+use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Exception\CustomizationConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Command\AddSpecificPriceCommand;
 use PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Command\DeleteSpecificPriceByCartProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\Reduction;
@@ -527,6 +529,17 @@ class CartController extends FrameworkBundleAdminController
                 CurrencyException::IS_DISABLED => $this->trans(
                     'Selected currency cannot be used because it is disabled',
                     'Admin.Notifications.Error'
+                ),
+            ],
+            CustomizationConstraintException::class => [
+                CustomizationConstraintException::FIELD_IS_REQUIRED => $this->trans(
+                    'Please fill in all the required fields.',
+                    'Admin.Notifications.Error'
+                ),
+                CustomizationConstraintException::FIELD_IS_TOO_LONG => $this->trans(
+                    'Custom field text cannot be longer than %limit% characters',
+                    'Admin.Notifications.Error',
+                    ['%limit%' => CustomizationSettings::MAX_TEXT_LENGTH]
                 ),
             ],
         ];
