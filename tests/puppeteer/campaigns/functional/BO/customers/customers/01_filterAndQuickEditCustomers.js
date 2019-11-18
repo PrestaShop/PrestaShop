@@ -81,7 +81,10 @@ describe('Filter And Quick Edit Customers', async () => {
         const numberOfCustomersAfterFilter = await this.pageObjects.customersPage.getNumberOfElementInGrid();
         await expect(numberOfCustomersAfterFilter).to.be.at.most(numberOfCustomers);
         for (let i = 1; i <= numberOfCustomersAfterFilter; i++) {
-          const textColumn = await this.pageObjects.customersPage.getTextColumnFromTableCustomers(i, test.args.filterBy);
+          const textColumn = await this.pageObjects.customersPage.getTextColumnFromTableCustomers(
+            i,
+            test.args.filterBy,
+          );
           if (test.expected !== undefined) {
             await expect(textColumn).to.contains(test.expected);
           } else {
