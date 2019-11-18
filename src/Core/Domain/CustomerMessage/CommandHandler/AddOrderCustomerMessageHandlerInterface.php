@@ -30,8 +30,6 @@ use PrestaShop\PrestaShop\Core\Domain\CustomerMessage\Command\AddOrderCustomerMe
 
 /**
  * Interface AddOrderCustomerMessageHandlerInterface
- *
- * @package PrestaShop\PrestaShop\Core\Domain\CustomerMessage\CommandHandler
  */
 interface AddOrderCustomerMessageHandlerInterface
 {

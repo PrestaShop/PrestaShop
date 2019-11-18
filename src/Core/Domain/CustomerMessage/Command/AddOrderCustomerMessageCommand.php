@@ -50,10 +50,10 @@ class AddOrderCustomerMessageCommand
     private $isPrivate;
 
     /**
-     *
      * @param int $orderId
      * @param string $message
      * @param bool $isPrivate
+     *
      * @throws OrderException
      * @throws CustomerMessageConstraintException
      */
