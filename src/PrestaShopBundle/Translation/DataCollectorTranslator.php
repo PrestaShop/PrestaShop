@@ -29,7 +29,7 @@ namespace PrestaShopBundle\Translation;
 
 use Symfony\Component\Translation\DataCollectorTranslator as BaseTranslator;
 
-class DataCollectorTranslator extends BaseTranslator
+class DataCollectorTranslator extends BaseTranslator implements PrestaShopTranslatorInterface
 {
     use PrestaShopTranslatorTrait;
 }

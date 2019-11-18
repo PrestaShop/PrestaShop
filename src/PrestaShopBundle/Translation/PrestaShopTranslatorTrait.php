@@ -131,6 +131,22 @@ trait PrestaShopTranslatorTrait
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function isCatalogueLoaded($locale)
+    {
+        return !empty($this->catalogues[$locale]);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function resetCatalogue($locale)
+    {
+        unset($this->catalogues[$locale]);
+    }
+
+    /**
      * @param string $string
      *
      * @return bool
