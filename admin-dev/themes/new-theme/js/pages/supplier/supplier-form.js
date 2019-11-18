@@ -28,6 +28,7 @@ import SupplierMap from './supplier-map';
 import TranslatableInput from '../../components/translatable-input';
 import TaggableField from '../../components/taggable-field';
 import ChoiceTree from '../../components/form/choice-tree';
+import TinyMCEEditor from '../../components/tinymce-editor';
 
 const $ = window.$;
 
@@ -41,6 +42,7 @@ $(document).ready(() => {
     SupplierMap.supplierStateBlock,
   );
 
+  new TinyMCEEditor();
   new TranslatableInput();
   new TaggableField({
     tokenFieldSelector: 'input.js-taggable-field',
