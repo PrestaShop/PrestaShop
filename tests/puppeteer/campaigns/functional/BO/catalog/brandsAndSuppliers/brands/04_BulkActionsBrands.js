@@ -14,8 +14,8 @@ const AddBrandPage = require('@pages/BO/catalog/brands/add');
 let browser;
 let page;
 let numberOfBrands = 0;
-let firstBrandData;
-let secondBrandData;
+const firstBrandData = new BrandFaker({name: 'BrandToDelete'});
+const secondBrandData = new BrandFaker({name: 'BrandToDelete2'});
 
 // Init objects needed
 const init = async function () {
@@ -35,8 +35,6 @@ describe('Create 2 brands, Enable, disable and delete with bulk actions', async 
     browser = await helper.createBrowser();
     page = await helper.newTab(browser);
     this.pageObjects = await init();
-    firstBrandData = await (new BrandFaker({name: 'BrandToDelete'}));
-    secondBrandData = await (new BrandFaker({name: 'BrandToDelete2'}));
   });
   after(async () => {
     await helper.closeBrowser(browser);
@@ -65,30 +63,20 @@ describe('Create 2 brands, Enable, disable and delete with bulk actions', async 
   });
   // 1: Create 2 Brands
   describe('Create 2 Brands', async () => {
-    it('should go to new brand page', async function () {
-      await this.pageObjects.brandsPage.goToAddNewBrandPage();
-      const pageTitle = await this.pageObjects.addBrandPage.getPageTitle();
-      await expect(pageTitle).to.contains(this.pageObjects.addBrandPage.pageTitle);
-    });
+    const brandsToCreate = [firstBrandData, secondBrandData];
+    brandsToCreate.forEach((brandToCreate, index) => {
+      it('should go to new brand page', async function () {
+        await this.pageObjects.brandsPage.goToAddNewBrandPage();
+        const pageTitle = await this.pageObjects.addBrandPage.getPageTitle();
+        await expect(pageTitle).to.contains(this.pageObjects.addBrandPage.pageTitle);
+      });
 
-    it('should create first brand', async function () {
-      const result = await this.pageObjects.addBrandPage.createEditBrand(firstBrandData);
-      await expect(result).to.equal(this.pageObjects.brandsPage.successfulCreationMessage);
-      const numberOfBrandsAfterCreation = await this.pageObjects.brandsPage.getNumberOfElementInGrid('manufacturer');
-      await expect(numberOfBrandsAfterCreation).to.be.equal(numberOfBrands + 1);
-    });
-
-    it('should go to new brand page', async function () {
-      await this.pageObjects.brandsPage.goToAddNewBrandPage();
-      const pageTitle = await this.pageObjects.addBrandPage.getPageTitle();
-      await expect(pageTitle).to.contains(this.pageObjects.addBrandPage.pageTitle);
-    });
-
-    it('should create second brand', async function () {
-      const result = await this.pageObjects.addBrandPage.createEditBrand(secondBrandData);
-      await expect(result).to.equal(this.pageObjects.brandsPage.successfulCreationMessage);
-      const numberOfBrandsAfterCreation = await this.pageObjects.brandsPage.getNumberOfElementInGrid('manufacturer');
-      await expect(numberOfBrandsAfterCreation).to.be.equal(numberOfBrands + 2);
+      it('should create new brand', async function () {
+        const result = await this.pageObjects.addBrandPage.createEditBrand(brandToCreate);
+        await expect(result).to.equal(this.pageObjects.brandsPage.successfulCreationMessage);
+        const numberOfBrandsAfterCreation = await this.pageObjects.brandsPage.getNumberOfElementInGrid('manufacturer');
+        await expect(numberOfBrandsAfterCreation).to.be.equal(numberOfBrands + index + 1);
+      });
     });
   });
   // 2 : Disable, enable Brands
@@ -103,26 +91,23 @@ describe('Create 2 brands, Enable, disable and delete with bulk actions', async 
       }
     });
 
-    it('should disable brands', async function () {
-      const disableTextResult = await this.pageObjects.brandsPage.changeBrandsEnabledColumnBulkActions(false);
-      await expect(disableTextResult).to.be.equal(this.pageObjects.brandsPage.successfulUpdateStatusMessage);
-      const numberOfBrandsInGrid = await this.pageObjects.brandsPage.getNumberOfElementInGrid('manufacturer');
-      await expect(numberOfBrandsInGrid).to.be.at.most(numberOfBrands);
-      for (let i = 1; i <= numberOfBrandsInGrid; i++) {
-        const textColumn = await this.pageObjects.brandsPage.getTextColumnFromTableBrands(i, 'active');
-        await expect(textColumn).to.contains('clear');
-      }
-    });
-
-    it('should enable brands', async function () {
-      const disableTextResult = await this.pageObjects.brandsPage.changeBrandsEnabledColumnBulkActions(true);
-      await expect(disableTextResult).to.be.equal(this.pageObjects.brandsPage.successfulUpdateStatusMessage);
-      const numberOfBrandsInGrid = await this.pageObjects.brandsPage.getNumberOfElementInGrid('manufacturer');
-      await expect(numberOfBrandsInGrid).to.be.at.most(numberOfBrands);
-      for (let i = 1; i <= numberOfBrandsInGrid; i++) {
-        const textColumn = await this.pageObjects.brandsPage.getTextColumnFromTableBrands(i, 'active');
-        await expect(textColumn).to.contains('check');
-      }
+    const tests = [
+      {args: {action: 'disable', enabledValue: false}, expected: 'clear'},
+      {args: {action: 'enable', enabledValue: true}, expected: 'check'},
+    ];
+    tests.forEach((test) => {
+      it(`should ${test.args.action} brands`, async function () {
+        const textResult = await this.pageObjects.brandsPage.changeBrandsEnabledColumnBulkActions(
+          test.args.enabledValue,
+        );
+        await expect(textResult).to.be.equal(this.pageObjects.brandsPage.successfulUpdateStatusMessage);
+        const numberOfBrandsInGrid = await this.pageObjects.brandsPage.getNumberOfElementInGrid('manufacturer');
+        await expect(numberOfBrandsInGrid).to.be.at.most(numberOfBrands);
+        for (let i = 1; i <= numberOfBrandsInGrid; i++) {
+          const textColumn = await this.pageObjects.brandsPage.getTextColumnFromTableBrands(i, 'active');
+          await expect(textColumn).to.contains(test.expected);
+        }
+      });
     });
 
     it('should reset Brand filters', async function () {
