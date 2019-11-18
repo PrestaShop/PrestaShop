@@ -205,7 +205,7 @@ class SupplierType extends TranslatorAwareType
                 'constraints' => [
                     new NotBlank([
                         'message' => $this->trans(
-                            'This field cannot be empty','Admin.Notifications.Error'
+                            'This field cannot be empty', 'Admin.Notifications.Error'
                         ),
                     ]),
                 ],
