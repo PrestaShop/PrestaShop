@@ -9,6 +9,8 @@ module.exports = class Product extends BOBasePage {
     this.pageTitle = 'Products •';
     this.productDeletedSuccessfulMessage = 'Product successfully deleted.';
     this.productMultiDeletedSuccessfulMessage = 'Product(s) successfully deleted.';
+    this.productDeactivatedSuccessfulMessage = 'Product successfully deactivated.';
+    this.productActivatedSuccessfulMessage = 'Product successfully activated.';
 
     // Selectors
     // List of products
@@ -24,9 +26,27 @@ module.exports = class Product extends BOBasePage {
     this.productBulkDropdownMenu = 'div.bulk-catalog div.dropdown-menu.show';
     this.productBulkDeleteLink = `${this.productBulkDropdownMenu} a[onclick*='delete_all']`;
     // Filters input
+    this.productFilterIDMinInput = `${this.productListForm} #filter_column_id_product_min`;
+    this.productFilterIDMaxInput = `${this.productListForm} #filter_column_id_product_max`;
     this.productFilterInput = `${this.productListForm} input[name='filter_column_%FILTERBY']`;
+    this.productFilterSelect = `${this.productListForm} select[name='filter_column_%FILTERBY']`;
+    this.productFilterPriceMinInput = `${this.productListForm} #filter_column_price_min`;
+    this.productFilterPriceMaxInput = `${this.productListForm} #filter_column_price_max`;
+    this.productFilterQuantityMinInput = `${this.productListForm} #filter_column_sav_quantity_min`;
+    this.productFilterQuantityMaxInput = `${this.productListForm} #filter_column_sav_quantity_max`;
     this.filterSearchButton = `${this.productListForm} button[name='products_filter_submit']`;
     this.filterResetButton = `${this.productListForm} button[name='products_filter_reset']`;
+    // Products list
+    this.productsListTableRow = `${this.productRow}:nth-child(%ROW)`;
+    this.productsListTableColumnID = `${this.productsListTableRow}[data-product-id]`;
+    this.productsListTableColumnName = `${this.productsListTableRow} td:nth-child(4)`;
+    this.productsListTableColumnReference = `${this.productsListTableRow} td:nth-child(5)`;
+    this.productsListTableColumnCategory = `${this.productsListTableRow} td:nth-child(6)`;
+    this.productsListTableColumnPrice = `${this.productsListTableRow} td:nth-child(7)`;
+    this.productsListTableColumnQuantity = `${this.productsListTableRow} td.product-sav-quantity`;
+    this.productsListTableColumnStatus = `${this.productsListTableRow} td:nth-child(10)`;
+    this.productsListTableColumnStatusEnabled = `${this.productsListTableColumnStatus} .action-enabled`;
+    this.productsListTableColumnStatusDisabled = `${this.productsListTableColumnStatus} .action-disabled`;
     // Filter Category
     this.treeCategoriesBloc = '#tree-categories';
     this.filterByCategoriesButton = '#product_catalog_category_tree_filter button';
@@ -45,16 +65,169 @@ module.exports = class Product extends BOBasePage {
   /*
   Methods
    */
-
   /**
-   * Filter products from inputs : Name, reference and Category
-   * @param filterBy
-   * @param value
+   * Filter products Min - Max
+   * @param min
+   * @param max
    * @return {Promise<void>}
    */
-  async filterProducts(filterBy, value = '') {
-    await this.page.type(this.productFilterInput.replace('%FILTERBY', filterBy), value);
+  async filterIDProducts(min, max) {
+    await this.page.type(this.productFilterIDMinInput, min.toString());
+    await this.page.type(this.productFilterIDMaxInput, max.toString());
     await this.clickAndWaitForNavigation(this.filterSearchButton);
+  }
+
+  /**
+   * Get Product ID
+   * @param row
+   * @return {Promise<textContent>}
+   */
+  async getProductIDFromList(row) {
+    return this.getNumberFromText(this.productsListTableColumnID.replace('%ROW', row));
+  }
+
+  /**
+   * Get Product Name
+   * @param row
+   * @return {Promise<textContent>}
+   */
+  async getProductNameFromList(row) {
+    return this.getTextContent(this.productsListTableColumnName.replace('%ROW', row));
+  }
+
+  /**
+   * Get Product Reference
+   * @param row
+   * @return {Promise<textContent>}
+   */
+  async getProductReferenceFromList(row) {
+    return this.getTextContent(this.productsListTableColumnReference.replace('%ROW', row));
+  }
+
+  /**
+   * Get Product Category
+   * @param row
+   * @return {Promise<textContent>}
+   */
+  async getProductCategoryFromList(row) {
+    return this.getTextContent(this.productsListTableColumnCategory.replace('%ROW', row));
+  }
+
+  /**
+   * Filter price Min - Max
+   * @param min
+   * @param max
+   * @return {Promise<void>}
+   */
+  async filterPriceProducts(min, max) {
+    await this.page.type(this.productFilterPriceMinInput, min.toString());
+    await this.page.type(this.productFilterPriceMaxInput, max.toString());
+    await this.clickAndWaitForNavigation(this.filterSearchButton);
+  }
+
+  /**
+   * Get Product Price
+   * @param row
+   * @return Float
+   */
+  async getProductPriceFromList(row) {
+    const text = await this.getTextContent(this.productsListTableColumnPrice.replace('%ROW', row));
+    const price = /\d+(\.\d+)?/g.exec(text).toString();
+    return parseFloat(price);
+  }
+
+  /**
+   * Filter Quantity Min - Max
+   * @param min
+   * @param max
+   * @return {Promise<void>}
+   */
+  async filterQuantityProducts(min, max) {
+    await this.page.type(this.productFilterQuantityMinInput, min.toString());
+    await this.page.type(this.productFilterQuantityMaxInput, max.toString());
+    await this.clickAndWaitForNavigation(this.filterSearchButton);
+  }
+
+  /**
+   * Get Product Quantity
+   * @param row
+   * @return {Promise<textContent>}
+   */
+  async getProductQuantityFromList(row) {
+    return this.getNumberFromText(this.productsListTableColumnQuantity.replace('%ROW', row));
+  }
+
+  /**
+   * Get Product Status
+   * @param row
+   * @return {Promise<textContent>}
+   */
+  async getProductStatusFromList(row) {
+    return this.getTextContent(this.productsListTableColumnStatus.replace('%ROW', row));
+  }
+
+  /**
+   * Filter products
+   * @param filterBy
+   * @param value
+   * @param filterType
+   * @return {Promise<void>}
+   */
+  async filterProducts(filterBy, value = '', filterType = 'input') {
+    switch (filterType) {
+      case 'input':
+        switch (filterBy) {
+          case 'product_id':
+            await this.filterIDProducts(value.min, value.max);
+            break;
+          case 'price':
+            await this.filterPriceProducts(value.min, value.max);
+            break;
+          case 'quantity':
+            await this.filterQuantityProducts(value.min, value.max);
+            break;
+          default:
+            await this.page.type(this.productFilterInput.replace('%FILTERBY', filterBy), value);
+        }
+        break;
+      case 'select':
+        await this.selectByVisibleText(this.productFilterSelect.replace('%FILTERBY', filterBy),
+          value ? 'Active' : 'Inactive',
+        );
+        break;
+      default:
+      // Do nothing
+    }
+    // click on search
+    await this.clickAndWaitForNavigation(this.filterSearchButton);
+  }
+
+  /**
+   * Get Text Column
+   * @param columnName
+   * @param row
+   * @return {Promise<void>, Float}
+   */
+  async getTextColumn(columnName, row) {
+    switch (columnName) {
+      case 'product_id':
+        return this.getProductIDFromList(row);
+      case 'name':
+        return this.getProductNameFromList(row);
+      case 'reference':
+        return this.getProductReferenceFromList(row);
+      case 'name_category':
+        return this.getProductCategoryFromList(row);
+      case 'price':
+        return this.getProductPriceFromList(row);
+      case 'quantity':
+        return this.getProductQuantityFromList(row);
+      case 'active':
+        return this.getProductStatusFromList(row);
+      default:
+      // Do nothing
+    }
+    throw new Error(`${columnName} was not found as column`);
   }
 
   /**
@@ -185,5 +358,38 @@ module.exports = class Product extends BOBasePage {
       this.page.click(this.modalDialogDeleteNowButton),
     ]);
     return this.getTextContent(this.alertSuccessBlockParagraph);
+  }
+
+  /**
+   * Get Value of column Displayed
+   * @param row, row in table
+   * @return {Promise<boolean|true>}
+   */
+  async getToggleColumnValue(row) {
+    return this.elementVisible(
+      this.productsListTableColumnStatusEnabled.replace('%ROW', row),
+      100,
+    );
+  }
+
+  /**
+   * Quick edit toggle column value
+   * @param row, row in table
+   * @param valueWanted, Value wanted in column
+   * @return {Promise<boolean>} return true if action is done, false otherwise
+   */
+  async updateToggleColumnValue(row, valueWanted = true) {
+    if (await this.getToggleColumnValue(row) !== valueWanted) {
+      this.page.click(this.productsListTableColumnStatus.replace('%ROW', row));
+      if (valueWanted) {
+        await this.page.waitForSelector(this.productsListTableColumnStatusEnabled.replace('%ROW', row));
+      } else {
+        await this.page.waitForSelector(
+          this.productsListTableColumnStatusDisabled.replace('%ROW', row),
+        );
+      }
+      return true;
+    }
+    return false;
   }
 };
