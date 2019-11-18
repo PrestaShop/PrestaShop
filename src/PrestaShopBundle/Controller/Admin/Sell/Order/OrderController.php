@@ -31,6 +31,7 @@ use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartInformation;
 use PrestaShop\PrestaShop\Core\Domain\CustomerMessage\Command\AddOrderCustomerMessageCommand;
 use PrestaShop\PrestaShop\Core\Domain\CustomerMessage\Exception\CannotSendEmailException;
+use PrestaShop\PrestaShop\Core\Domain\CustomerMessage\Exception\CustomerMessageConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\AddCartRuleToOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\BulkChangeOrderStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\ChangeOrderCurrencyCommand;
@@ -893,6 +894,24 @@ class OrderController extends FrameworkBundleAdminController
                     'Admin.Orderscustomers.Notification',
                     ['#%d' => $exception->getOrderId()->getValue()]
                 ) : '',
+            CustomerMessageConstraintException::class => [
+                CustomerMessageConstraintException::MISSING_MESSAGE =>
+                    $this->trans(
+                        'The %s field is not valid',
+                        'Admin.Notifications.Error',
+                        [
+                            sprintf('"%s"', $this->trans('Message', 'Admin.Global')),
+                        ]
+                    ),
+                CustomerMessageConstraintException::INVALID_MESSAGE =>
+                    $this->trans(
+                        'The %s field is not valid',
+                        'Admin.Notifications.Error',
+                        [
+                            sprintf('"%s"', $this->trans('Message', 'Admin.Global')),
+                        ]
+                    ),
+            ]
         ];
     }
 }

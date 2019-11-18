@@ -33,12 +33,16 @@ use CustomerThread;
 use Language;
 use Mail;
 use Order;
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CleanHtml;
+use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CmsPageCategoryConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\CustomerMessage\Command\AddOrderCustomerMessageCommand;
 use PrestaShop\PrestaShop\Core\Domain\CustomerMessage\CommandHandler\AddOrderCustomerMessageHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\CustomerMessage\Exception\CannotSendEmailException;
+use PrestaShop\PrestaShop\Core\Domain\CustomerMessage\Exception\CustomerMessageConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\CustomerMessage\Exception\CustomerMessageException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderNotFoundException;
 use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Tools;
 
 final class AddOrderCustomerMessageHandler implements AddOrderCustomerMessageHandlerInterface
@@ -57,19 +61,27 @@ final class AddOrderCustomerMessageHandler implements AddOrderCustomerMessageHan
      * @var int
      */
     private $contextEmployeeId;
+
     /**
      * @var TranslatorInterface
      */
     private $translator;
 
     /**
+     * @var ValidatorInterface
+     */
+    private $validator;
+
+    /**
      * @param TranslatorInterface $translator
+     * @param ValidatorInterface $validator
      * @param int $contextShopId
      * @param int $contextLanguageId
      * @param int $contextEmployeeId
      */
     public function __construct(
         TranslatorInterface $translator,
+        ValidatorInterface $validator,
         int $contextShopId,
         int $contextLanguageId,
         int $contextEmployeeId
@@ -78,6 +90,7 @@ final class AddOrderCustomerMessageHandler implements AddOrderCustomerMessageHan
         $this->contextLanguageId = $contextLanguageId;
         $this->contextEmployeeId = $contextEmployeeId;
         $this->translator = $translator;
+        $this->validator = $validator;
     }
 
     /**
@@ -88,6 +101,8 @@ final class AddOrderCustomerMessageHandler implements AddOrderCustomerMessageHan
      */
     public function handle(AddOrderCustomerMessageCommand $command): void
     {
+        $this->assertIsValidMessage($command->getMessage());
+
         $order = new Order($command->getOrderId()->getValue());
 
         if (0 >= $order->id) {
@@ -146,6 +161,26 @@ final class AddOrderCustomerMessageHandler implements AddOrderCustomerMessageHan
                 $failedMailSentMessage,
                 0,
                 $e
+            );
+        }
+    }
+
+    /**
+     * @param string $message
+     *
+     * @throws CustomerMessageConstraintException
+     */
+    private function assertIsValidMessage(string $message): void
+    {
+        $errors = $this->validator->validate($message, new CleanHtml());
+
+        if (0 !== \count($errors)) {
+            throw new CustomerMessageConstraintException(
+                sprintf(
+                    'Given message "%s" contains javascript events or script tags',
+                    $message
+                ),
+                CustomerMessageConstraintException::INVALID_MESSAGE
             );
         }
     }
