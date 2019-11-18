@@ -33,7 +33,6 @@ use PrestaShopBundle\Translation\TranslatorAwareTrait;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
@@ -90,10 +89,10 @@ class OrderMessageType extends AbstractType
                             'message' => $this->trans(
                                 'The %s field is not valid',
                                 [
-                                    sprintf('"%s"', $this->trans('Message', [],  'Admin.Global')),
+                                    sprintf('"%s"', $this->trans('Message', [], 'Admin.Global')),
                                 ],
                                 'Admin.Notifications.Error'
-                            )
+                            ),
                         ]
                     ),
                     new Length([
@@ -104,7 +103,7 @@ class OrderMessageType extends AbstractType
                             'Admin.Notifications.Error'
                         ),
                     ]),
-                ]
+                ],
             ])
         ;
     }
