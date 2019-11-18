@@ -9,33 +9,24 @@ module.exports = class Stocks extends BOBasePage {
 
     // Selectors
     this.MovementNavItemLink = '#head_tabs li:nth-child(2) > a';
-    this.searchInput = 'form.search-form input.input';
-    this.searchButton = 'form.search-form button.search-button';
-    //tags
+    this.searchForm = 'form.search-form';
+    this.searchInput = `${this.searchForm} input.input`;
+    this.searchButton = `${this.searchForm} button.search-button`;
+    // tags
     this.searchTagsList = 'form.search-form div.tags-wrapper span.tag';
-    this.searchTagsListCloseSpan = 'form.search-form div.tags-wrapper span.tag i';
+    this.searchTagsListCloseSpan = `${this.searchTagsList} i`;
 
-    // bulk
-    this.bulkCheckbox = 'input#bulk-action';
-    this.bulkEditQuantityInput = '#app > div.card.container-fluid.pa-2.clearfix > section > ' +
-      'div.row.product-actions > div.col-md-8.qty.d-flex.align-items-center > div.ml-2 > div > input';
 
     this.productList = 'table.table';
-    this.productRow = `${this.productList} tbody tr`;
-    this.productRowNameColumn = `${this.productList} tbody tr:nth-child(%ROW) td:nth-child(1) div.media-body p`;
-    this.productRowReferenceColumn = `${this.productList} tbody tr:nth-child(%ROW) td:nth-child(2)`;
-    this.productRowSupplierColumn = `${this.productList} tbody tr:nth-child(%ROW) td:nth-child(3)`;
+    this.productRow = `${this.productList} tbody tr:nth-child(%ROW)`;
+    this.productRowNameColumn = `${this.productRow} td:nth-child(1) div.media-body p`;
+    this.productRowReferenceColumn = `${this.productRow} td:nth-child(2)`;
+    this.productRowSupplierColumn = `${this.productRow} td:nth-child(3)`;
+    this.productRowPhysicalColumn = `${this.productRow} td:nth-child(5)`;
+    this.productRowAvailableColumn = `${this.productRow} td:nth-child(7)`;
 
-    this.productRowPhysicalColumn = `${this.productList} tbody tr:nth-child(%ROW) td:nth-child(5)`;
-    this.productRowPhysicalQuantityUpdateColumn = `${this.productRowPhysicalColumn} span.qty-update`;
-
-    this.productRowAvailableColumn = `${this.productList} tbody tr:nth-child(%ROW) td:nth-child(7)`;
-    this.productRowAvailableQuantityUpdateColumn = `${this.productRowAvailableColumn} span.qty-update`;
-
-    this.productRowQuantityInput = `${this.productList} tbody tr:nth-child(%ROW) td:nth-child(8) form.qty input`;
-
-    //loader
-    this.productListLoading = `${this.productList} tbody tr:nth-child(1) td:nth-child(1) div.ps-loader`;
+    // loader
+    this.productListLoading = `${this.productRow.replace('%ROW', 1)} td:nth-child(1) div.ps-loader`;
   }
 
   /*
