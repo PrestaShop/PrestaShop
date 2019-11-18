@@ -47,7 +47,7 @@ class LanguageImageManager
     /**
      * Path where flags are copied to
      */
-    const FLAGS_DESTINATION = self::IMG_PATH . "%d.jpg";
+    const FLAGS_DESTINATION = self::IMG_PATH . '%d.jpg';
 
     /**
      * Default flag
@@ -63,7 +63,7 @@ class LanguageImageManager
 
     const PLACEHOLDER_IMAGE_NAME_PATTERNS = [
         '%s.jpg',
-        '%s-default-%s.jpg'
+        '%s-default-%s.jpg',
     ];
 
     const DEFAULT_LANGUAGE_CODE = 'en';
@@ -100,7 +100,7 @@ class LanguageImageManager
     public function setupDefaultImagePlaceholder(string $isoCode): void
     {
         $filesToCopy = [
-            $this->getPlaceholderImageFilename(static::DEFAULT_LANGUAGE_CODE) => $this->getPlaceholderImageFilename($isoCode)
+            $this->getPlaceholderImageFilename(static::DEFAULT_LANGUAGE_CODE) => $this->getPlaceholderImageFilename($isoCode),
         ];
 
         $imageTypes = ImageType::getAll();
@@ -200,5 +200,4 @@ class LanguageImageManager
 
         return sprintf(static::PLACEHOLDER_IMAGE_NAME_PATTERNS[0], $isoCode);
     }
-
 }
