@@ -86,7 +86,8 @@
 
     {{ ps.form_group_row(orderMessageForm.message, {'attr': { 'cols':30, 'rows':3 }}, {
       'label': 'Message'|trans({}, 'Admin.Global'),
-      'label_on_top': true
+      'label_on_top': true,
+      'class': 'js-text-with-length-counter'
     }) }}
 
     {% block order_message_form_rest %}
