@@ -28,6 +28,7 @@ namespace PrestaShopBundle\Form\Admin\Sell\Order;
 
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CleanHtml;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
+use PrestaShopBundle\Form\Admin\Type\TextWithLengthCounterType;
 use PrestaShopBundle\Translation\TranslatorAwareTrait;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -75,7 +76,10 @@ class OrderMessageType extends AbstractType
                 'required' => false,
                 'label' => $this->trans('Display to customer?', [], 'Admin.Orderscustomers.Feature'),
             ])
-            ->add('message', TextareaType::class, [
+            ->add('message', TextWithLengthCounterType::class, [
+                'input' => 'textarea',
+                'max_length' => 600,
+                'position' => 'after',
                 'constraints' => [
                     new NotBlank([
                         'message' => $this->trans(
@@ -93,10 +97,10 @@ class OrderMessageType extends AbstractType
                         ]
                     ),
                     new Length([
-                        'max' => 16777216,
+                        'max' => 600,
                         'maxMessage' => $this->trans(
                             'This field cannot be longer than %limit% characters',
-                            ['%limit%' => 16777216],
+                            ['%limit%' => 600],
                             'Admin.Notifications.Error'
                         ),
                     ]),
