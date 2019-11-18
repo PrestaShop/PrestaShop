@@ -45,6 +45,8 @@ use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartInformation;
 use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleValidityException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\QuantityAction;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyException;
+use PrestaShop\PrestaShop\Core\Domain\Language\Exception\LanguageException;
 use PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Command\AddSpecificPriceCommand;
 use PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Command\DeleteSpecificPriceByCartProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\Reduction;
@@ -506,6 +508,22 @@ class CartController extends FrameworkBundleAdminController
         return [
             CartNotFoundException::class => $this->trans('The object cannot be loaded (or found)', 'Admin.Notifications.Error'),
             CartRuleValidityException::class => $e->getMessage(),
+            LanguageException::class => [
+                LanguageException::NOT_ACTIVE => $this->trans(
+                    'Selected language cannot be used because is disabled',
+                    'Admin.Notifications.Error'
+                ),
+            ],
+            CurrencyException::class => [
+                CurrencyException::IS_DELETED => $this->trans(
+                    'Selected currency cannot be used because it is deleted',
+                    'Admin.Notifications.Error'
+                ),
+                CurrencyException::IS_DISABLED => $this->trans(
+                    'Selected currency cannot be used because it is disabled',
+                    'Admin.Notifications.Error'
+                ),
+            ],
         ];
     }
 }

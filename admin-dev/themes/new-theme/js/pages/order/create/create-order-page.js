@@ -114,7 +114,7 @@ export default class CreateOrderPage {
     );
 
     this.$container.on('change', createOrderMap.cartLanguageSelect, (e) =>
-      this.cartEditor.changeCartCurrency(this.cartId, e.currentTarget.value)
+      this.cartEditor.changeCartLanguage(this.cartId, e.currentTarget.value)
     );
 
     this.$container.on('click', createOrderMap.sendProcessOrderEmailBtn, () =>
@@ -200,7 +200,7 @@ export default class CreateOrderPage {
    */
   _onCartCurrencyChanged() {
     EventEmitter.on(eventMap.cartCurrencyChanged, (cartInfo) => {
-      this._preselectCartLanguage(cartInfo.currencyId);
+      this._preselectCartCurrency(cartInfo.currencyId);
     });
   }
 
