@@ -129,7 +129,7 @@ class TranslationsController extends FrameworkBundleAdminController
             $route = $routeFinder->findRoute($request->query);
             $routeParameters = $routeFinder->findRouteParameters($request->query);
         } catch (InvalidModuleException $e) {
-            $this->addFlash('error',$this->trans('An error has occurred, this module does not exist: %s', 'Admin.International.Notification',array($e->getMessage())));
+            $this->addFlash('error', $this->trans('An error has occurred, this module does not exist: %s', 'Admin.International.Notification',array($e->getMessage())));
 
             return $this->redirectToRoute('admin_international_translations_show_settings');
         }
