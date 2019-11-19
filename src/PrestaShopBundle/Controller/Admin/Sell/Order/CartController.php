@@ -421,6 +421,8 @@ class CartController extends FrameworkBundleAdminController
     /**
      * Changes product in cart quantity
      *
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller')) || is_granted('create', 'AdminOrders')")
+     *
      * @param Request $request
      * @param int $cartId
      * @param int $productId
