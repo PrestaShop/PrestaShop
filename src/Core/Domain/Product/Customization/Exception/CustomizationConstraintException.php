@@ -40,4 +40,9 @@ class CustomizationConstraintException extends CustomizationException
      * When customization field value length is exceeded
      */
     const FIELD_IS_TOO_LONG = 2;
+
+    /**
+     * When customization id is invalid
+     */
+    const INVALID_ID = 3;
 }

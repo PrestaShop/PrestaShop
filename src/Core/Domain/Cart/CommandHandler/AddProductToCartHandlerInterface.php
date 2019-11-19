@@ -24,15 +24,17 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Cart\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\Cart\CommandHandler;
+
+use PrestaShop\PrestaShop\Core\Domain\Cart\Command\AddProductToCartCommand;
 
 /**
- * Thrown when cart constraints are violated
+ * Interface for handling addProductToCart command
  */
-class CartConstraintException extends CartException
+interface AddProductToCartHandlerInterface
 {
     /**
-     * When cart product quantity is invalid
+     * @param AddProductToCartCommand $command
      */
-    const INVALID_QUANTITY = 1;
+    public function handle(AddProductToCartCommand $command): void;
 }

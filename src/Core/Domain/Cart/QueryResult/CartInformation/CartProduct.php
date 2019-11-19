@@ -81,14 +81,6 @@ class CartProduct
     private $customization;
 
     /**
-     * @return int
-     */
-    public function getProductId(): int
-    {
-        return $this->productId;
-    }
-
-    /**
      * CartProduct constructor.
      *
      * @param int $productId
@@ -124,6 +116,14 @@ class CartProduct
         $this->price = $price;
         $this->imageLink = $imageLink;
         $this->customization = $customization;
+    }
+
+    /**
+     * @return int
+     */
+    public function getProductId(): int
+    {
+        return $this->productId;
     }
 
     /**
