@@ -24,25 +24,51 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Customization\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject;
+
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CombinationConstraintException;
 
 /**
- * Thrown when customization constraints are violated
+ *  Holds product combination identification data
  */
-class CustomizationConstraintException extends CustomizationException
+class CombinationId
 {
     /**
-     * When customization field is required to be filled
+     * @var int
      */
-    const FIELD_IS_REQUIRED = 1;
+    private $combinationId;
 
     /**
-     * When customization field value length is exceeded
+     * @param int $combinationId
+     *
+     * @throws CombinationConstraintException
      */
-    const FIELD_IS_TOO_LONG = 2;
+    public function __construct(int $combinationId)
+    {
+        $this->assertValueIsPositive($combinationId);
+        $this->combinationId = $combinationId;
+    }
 
     /**
-     * When customization id is invalid
+     * @return int
      */
-    const INVALID_ID = 3;
+    public function getValue(): int
+    {
+        return $this->combinationId;
+    }
+
+    /**
+     * @param int $value
+     *
+     * @throws CombinationConstraintException
+     */
+    private function assertValueIsPositive(int $value)
+    {
+        if (0 >= $value) {
+            throw new CombinationConstraintException(
+                sprintf('Combination id must be positive integer. "%s" given', $value),
+                CombinationConstraintException::INVALID_ID
+            );
+        }
+    }
 }
