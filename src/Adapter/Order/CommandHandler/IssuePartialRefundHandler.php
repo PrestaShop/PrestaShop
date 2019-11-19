@@ -103,6 +103,12 @@ final class IssuePartialRefundHandler extends AbstractOrderCommandHandler implem
                     $orderDetailList[$orderDetailId]['amount'] / $orderDetailList[$orderDetailId]['quantity'];
             }
 
+            // add missing fields
+            $orderDetailList[$orderDetailId]['unit_price_tax_excl'] = $orderDetail->unit_price_tax_excl;
+            $orderDetailList[$orderDetailId]['unit_price_tax_incl'] = $orderDetail->unit_price_tax_incl;
+            $orderDetailList[$orderDetailId]['total_price_tax_excl'] = $orderDetail->unit_price_tax_excl * $orderDetailList[$orderDetailId]['quantity'];
+            $orderDetailList[$orderDetailId]['total_price_tax_incl'] = $orderDetail->unit_price_tax_incl * $orderDetailList[$orderDetailId]['quantity'];
+
             $amount += $orderDetailList[$orderDetailId]['amount'];
 
             if (!$order->hasBeenDelivered()
@@ -156,7 +162,7 @@ final class IssuePartialRefundHandler extends AbstractOrderCommandHandler implem
         }
 
         if ($amount > 0) {
-            $orderSlipCreated = !OrderSlip::create(
+            $orderSlipCreated = OrderSlip::create(
                 $order,
                 $orderDetailList,
                 $shippingCostAmount,
