@@ -132,3 +132,46 @@ $order-block-background-color: #F8F8F8;
     }
   } 
 }
+
+.partial-refund {
+  display: none;
+}
+
+.partial-refund label {
+  height: 30px;
+  line-height: 30px;
+  padding: 0;
+}
+
+.partial-refund .form-group {
+  display: inline-flex;
+}
+
+.partial-refund .form-group .input-group {
+  display: flex;
+  flex: wrap;
+}
+
+.partial-refund.refund-checkboxes-container {
+  max-width: 90px;
+  margin: 16px auto;
+}
+
+.partial-refund .shipping-price-container {
+  display: flex;
+  margin-top: 8px;
+}
+
+.partial-refund .form-group {
+  width: max-content;
+}
+
+input.refund-quantity {
+  max-width: 160px;
+  margin-left: 20px;
+}
+
+input.refund-amount, input#partial_refund_shipping {
+  max-width: 80px;
+  margin-left: 20px;
+}
