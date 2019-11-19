@@ -66,20 +66,8 @@ export default class LinkRowActionExtension {
       $('.js-link-row-action[data-clickable-row=1]:first', $parentRow).each(function propagateFirstLinkAction() {
         const $rowAction = $(this);
         const $parentCell = $rowAction.closest('td');
-
-        /*
-         * Only search for cells with non clickable contents to avoid conflicts with
-         * previous cell behaviour (action, toggle, ...)
-         *
-         * @todo: only td.clickable should be in this list,
-         *  you could remove all the rest and it would work,
-         *  we keep it in 1.7.7 for retrocompatibilty purpose,
-         *  just in case some people extend the template and won't have td.clickable
-         *  (only td.indentifier-type was removed)
-         *
-         * Columns are know specified as clickable in the grid definitions
-         */
-        const clickableCells = $('td.data-type, td.identifier-type:not(:has(input)), td.badge-type, td.position-type', $parentRow)
+        
+        const clickableCells = $('td.clickable', $parentRow)
           .not($parentCell)
         ;
 
