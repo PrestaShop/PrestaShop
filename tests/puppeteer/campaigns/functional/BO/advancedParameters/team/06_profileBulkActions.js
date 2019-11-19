@@ -73,9 +73,9 @@ describe('Create profiles then Delete with Bulk actions', async () => {
   });
 
   // 1 : Create two profiles
-  describe('Create profile then filter the table', async () => {
+  describe('Create profiles then filter the table', async () => {
     const profilesToCreate = [firstProfileData, secondProfileData];
-    profilesToCreate.forEach((profileToCreate) => {
+    profilesToCreate.forEach((profileToCreate, index) => {
       it('should go to add new profile page', async function () {
         await this.pageObjects.profilesPage.goToAddNewProfilePage();
         const pageTitle = await this.pageObjects.addProfile.getPageTitle();
@@ -86,7 +86,7 @@ describe('Create profiles then Delete with Bulk actions', async () => {
         const textResult = await this.pageObjects.addProfile.createEditProfile(profileToCreate);
         await expect(textResult).to.equal(this.pageObjects.profilesPage.successfulCreationMessage);
         const numberOfProfilesAfterCreation = await this.pageObjects.profilesPage.getNumberOfElementInGrid();
-        await expect(numberOfProfilesAfterCreation).to.be.equal(numberOfProfiles + 1);
+        await expect(numberOfProfilesAfterCreation).to.be.equal(numberOfProfiles + index + 1);
       });
     });
   });
