@@ -97,9 +97,7 @@ describe('Filter And Quick Edit Employees', async () => {
           test.args.filterBy,
           test.args.filterValue,
         );
-        const numberOfEmployeesAfterFilter = await this.pageObjects.employeesPage.getNumberFromText(
-          this.pageObjects.employeesPage.employeeGridTitle,
-        );
+        const numberOfEmployeesAfterFilter = await this.pageObjects.employeesPage.getNumberOfElementInGrid();
         await expect(numberOfEmployeesAfterFilter).to.be.at.most(numberOfEmployees);
         for (let i = 1; i <= numberOfEmployeesAfterFilter; i++) {
           const textColumn = await this.pageObjects.employeesPage.getTextColumnFromTable(i, test.args.filterBy);

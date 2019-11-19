@@ -51,6 +51,14 @@ module.exports = class Employees extends BOBasePage {
   }
 
   /**
+   * get number of elements in grid
+   * @return {Promise<integer>}
+   */
+  async getNumberOfElementInGrid() {
+    return this.getNumberFromText(this.employeeGridTitle);
+  }
+
+  /**
    * Reset input filters
    * @return {Promise<integer>}
    */
@@ -58,15 +66,7 @@ module.exports = class Employees extends BOBasePage {
     if (await this.elementVisible(this.filterResetButton, 2000)) {
       await this.clickAndWaitForNavigation(this.filterResetButton);
     }
-    return this.getNumberFromText(this.employeeGridTitle);
-  }
-
-  /**
-   * get number of elements in grid
-   * @return {Promise<integer>}
-   */
-  async getNumberOfElementInGrid() {
-    return this.getNumberFromText(this.employeeGridTitle);
+    return this.getNumberOfElementInGrid();
   }
 
   /**

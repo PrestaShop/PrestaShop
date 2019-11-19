@@ -85,6 +85,8 @@ describe('Create profiles then Delete with Bulk actions', async () => {
       it('should create profile', async function () {
         const textResult = await this.pageObjects.addProfile.createEditProfile(profileToCreate);
         await expect(textResult).to.equal(this.pageObjects.profilesPage.successfulCreationMessage);
+        const numberOfProfilesAfterCreation = await this.pageObjects.profilesPage.getNumberOfElementInGrid();
+        await expect(numberOfProfilesAfterCreation).to.be.equal(numberOfProfiles + 1);
       });
     });
   });
