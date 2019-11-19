@@ -25,6 +25,5 @@ module.exports = class Invoice extends BOBasePage {
       await this.setValue(this.dateToInput, dateTo);
     }
     await this.page.click(this.generatePdfByDateButton);
-    await this.page.waitFor(5000);
   }
 };

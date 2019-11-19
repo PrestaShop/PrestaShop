@@ -16,6 +16,10 @@ const ViewOrderPage = require('@pages/BO/orders/view');
 
 let browser;
 let page;
+const today = new Date();
+// Create a start and end date that there is no invoices
+const dateFrom = `${today.getFullYear() + 1}-${today.getMonth() + 1}-${today.getDate() - 1}`;
+const dateTo = `${today.getFullYear() + 1}-${today.getMonth() + 1}-${today.getDate()}`;
 
 // Init objects needed
 const init = async function () {
@@ -35,11 +39,13 @@ describe('Filter And Quick Edit invoices', async () => {
   before(async function () {
     browser = await helper.createBrowser();
     page = await helper.newTab(browser);
+    await helper.setDownloadBehavior(page);
     this.pageObjects = await init();
   });
   after(async () => {
     await helper.closeBrowser(browser);
   });
+
   // Login into BO
   loginCommon.loginBO();
 
@@ -99,30 +105,29 @@ describe('Filter And Quick Edit invoices', async () => {
 
       it('should generate PDF file by date and check the file existence', async function () {
         await this.pageObjects.invoicesPage.generatePDFByDate();
-        await files.waitForFileToDownload(global.BO.DOWNLOADSPATH);
-        const exist = await files.checkFileExistence(
+        const exist = await this.pageObjects.boBasePage.checkFileExistence(
           global.BO.DOWNLOADSPATH,
           Invoices.moreThanAnInvoice.fileName,
         );
-        await expect(exist, 'The file does not exist!').to.be.true;
+        await expect(exist).to.be.true;
       });
 
-      it('should delete the invoice', async function () {
+      it('should delete the invoice', async () => {
         await files.deleteFile(`${global.BO.DOWNLOADSPATH}/${Invoices.moreThanAnInvoice.fileName}`);
-        const exist = await files.checkFileExistence(
+        const exist = await files.isFileExist(
           global.BO.DOWNLOADSPATH,
           Invoices.moreThanAnInvoice.fileName,
         );
-        await expect(exist, 'The file exist!').to.be.false;
+        await expect(exist).to.be.false;
       });
 
-      /*it('should check the error message when there is no invoice in the entered date', async function () {
-        await this.pageObjects.invoicesPage.generatePDFByDate('2020-08-04', '2020-08-10');
+      it('should check the error message when there is no invoice in the entered date', async function () {
+        await this.pageObjects.invoicesPage.generatePDFByDate(dateFrom, dateTo);
         const textMessage = await this.pageObjects.invoicesPage.getTextContent(
           this.pageObjects.invoicesPage.alertTextBlock,
         );
         await expect(textMessage).to.equal(this.pageObjects.invoicesPage.errorMessageWhenGenerateFileByDate);
-      });*/
+      });
     });
   });
 });

@@ -1,3 +1,5 @@
+const fs = require('fs');
+
 module.exports = class CommonPage {
   constructor(page) {
     this.page = page;
@@ -17,6 +19,7 @@ module.exports = class CommonPage {
    * @return textContent
    */
   async getTextContent(selector) {
+    await this.page.waitForSelector(selector, {visible: true});
     const textContent = await this.page.$eval(selector, el => el.textContent);
     return textContent.replace(/\s+/g, ' ').trim();
   }
@@ -252,5 +255,22 @@ module.exports = class CommonPage {
     if (valueWanted !== (await this.isCheckboxSelected(checkboxSelector))) {
       await this.page.click(checkboxSelector);
     }
+  }
+
+  /**
+   * Check File existence
+   * @param downloadPath
+   * @param fileName
+   * @param timeDelay
+   * @return boolean, true if exist, false if not
+   */
+  async checkFileExistence(downloadPath, fileName, timeDelay = 5000) {
+    for (let i = 0; i < timeDelay; i++) {
+      await this.page.waitFor(1);
+      if (fs.existsSync(`${downloadPath}/${fileName}`)) {
+        break;
+      }
+    }
+    return fs.existsSync(`${downloadPath}/${fileName}`);
   }
 };

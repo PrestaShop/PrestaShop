@@ -16,16 +16,7 @@ module.exports = {
    * @param fileName
    * @return boolean, true if exist, false if not
    */
-  async checkFileExistence(downloadPath, fileName) {
+  async isFileExist(downloadPath, fileName) {
     return fs.existsSync(`${downloadPath}/${fileName}`);
-  },
-
-  async waitForFileToDownload(downloadPath) {
-    console.log('Waiting to download file...');
-    let fileName;
-    while (!fileName || fileName.endsWith('.crdownload')) {
-      fileName = fs.readdirSync(downloadPath);
-    }
-    return fileName;
   },
 };
