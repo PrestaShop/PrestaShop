@@ -95,7 +95,7 @@ describe('Create Employees, Then disable / Enable and Delete with Bulk actions',
   /**
    * The test is skipped because of the issue described in this ticket
    * https://github.com/PrestaShop/PrestaShop/issues/16246
-   **/
+   * */
   describe.skip('Enable and Disable employees with Bulk Actions', async () => {
     it('should filter by First name', async function () {
       await this.pageObjects.employeesPage.filterEmployees('input', 'firstname', firstEmployeeData.firstName);
