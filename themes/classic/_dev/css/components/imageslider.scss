@@ -68,6 +68,14 @@
   }
 }
 
+@include media-breakpoint-up(lg) {
+  .carousel {
+    .carousel-indicators {
+      display: none;
+    }
+  }
+}
+
 @include media-breakpoint-down(lg) {
   .carousel {
     .carousel-inner {
