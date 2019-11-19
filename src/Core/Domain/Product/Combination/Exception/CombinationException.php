@@ -24,15 +24,13 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Cart\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception;
+
+use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
 
 /**
- * Thrown when cart constraints are violated
+ * Base exception for product combination subdomain
  */
-class CartConstraintException extends CartException
+class CombinationException extends DomainException
 {
-    /**
-     * When cart product quantity is invalid
-     */
-    const INVALID_QUANTITY = 1;
 }
