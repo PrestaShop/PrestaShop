@@ -105,7 +105,8 @@ export default class ProductRenderer {
         $customizationTemplate.find(createOrderMap.listedProductCustomizationName).text(customizedData.name);
         $customizationTemplate
           .find(`${createOrderMap.listedProductCustomizationValue} img`)
-          .prop('src', customizedData.value);
+          .prop('src', customizedData.value)
+        ;
 
       } else {
         $customizationTemplate.find(createOrderMap.listedProductCustomizationName).text(customizedData.name);

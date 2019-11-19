@@ -232,6 +232,8 @@ export default class ProductManager {
     for (const key in this.products) {
       if (this.products[key].productId === productId) {
         this.selectedProduct = this.products[key];
+
+        break;
       }
     }
 

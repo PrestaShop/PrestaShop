@@ -118,7 +118,8 @@ export default class CreateOrderPage {
     );
 
     this.$container.on('click', createOrderMap.sendProcessOrderEmailBtn, () =>
-      this.summaryManager.sendProcessOrderEmail(this.cartId));
+      this.summaryManager.sendProcessOrderEmail(this.cartId)
+    );
 
     this.$container.on('change', createOrderMap.listedProductUnitPriceInput, (e) => this._initProductChangePrice(e));
     this.$container.on('change', createOrderMap.listedProductQtyInput, e => this._initProductChangeQty(e));
@@ -212,7 +213,8 @@ export default class CreateOrderPage {
    * @private
    */
   _initCustomerSearch(event) {
-    setTimeout(() => this.customerManager.search($(event.currentTarget).val()), 300);
+    clearTimeout(this.timeoutId);
+    this.timeoutId = setTimeout(() => this.customerManager.search($(event.currentTarget).val()), 300);
   }
 
   /**
@@ -258,7 +260,8 @@ export default class CreateOrderPage {
   _initCartRuleSearch(event) {
     const searchPhrase = event.currentTarget.value;
 
-    setTimeout(() => this.cartRuleManager.search(searchPhrase), 300);
+    clearTimeout(this.timeoutId);
+    this.timeoutId = setTimeout(() => this.cartRuleManager.search(searchPhrase), 300);
   }
 
   /**
@@ -300,8 +303,9 @@ export default class CreateOrderPage {
   _initProductSearch(event) {
     const $productSearchInput = $(event.currentTarget);
     const searchPhrase = $productSearchInput.val();
+    clearTimeout(this.timeoutId);
 
-    setTimeout(() => this.productManager.search(searchPhrase), 300);
+    this.timeoutId = setTimeout(() => this.productManager.search(searchPhrase), 300);
   }
 
   /**
