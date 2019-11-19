@@ -433,6 +433,8 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
             $imagePath = isset($product['image_tag']) ?
                 $this->imageTagSourceParser->parse($product['image_tag']) :
                 null;
+            $product['product_quantity_refunded'] = $product['product_quantity_refunded'] ?: false;
+            $product['amount_refund'] = $product['amount_refund']?: 0;
 
             $productsForViewing[] = new OrderProductForViewing(
                 $product['id_order_detail'],
@@ -446,7 +448,9 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
                 $product['current_stock'],
                 $imagePath,
                 Tools::ps_round($product['unit_price_tax_excl'], 2),
-                Tools::ps_round($product['unit_price_tax_incl'], 2)
+                Tools::ps_round($product['unit_price_tax_incl'], 2),
+                $product['amount_refund'],
+                $product['product_quantity_refunded']
             );
         }
 
@@ -583,13 +587,12 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
                     $currency->iso_code
                 );
             }
-
             $documentsForViewing[] = new OrderDocumentForViewing(
                 $document->id,
                 $type,
                 new DateTimeImmutable($document->date_add),
                 $number,
-                $document->total_paid_tax_incl,
+                isset($document->total_paid_tax_incl) ? $document->total_paid_tax_incl : null,
                 $amount,
                 $amountMismatch,
                 $document instanceof OrderInvoice ? $document->note : null,
@@ -804,6 +807,7 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
 
         $shipping_refundable_tax_excl = $order->total_shipping_tax_excl;
         $shipping_refundable_tax_incl = $order->total_shipping_tax_incl;
+
         $slips = OrderSlip::getOrdersSlip($customer->id, $order->id);
         foreach ($slips as $slip) {
             $shipping_refundable_tax_excl -= $slip['total_shipping_tax_excl'];

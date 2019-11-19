@@ -183,6 +183,7 @@ class OrderSlipCore extends ObjectModel
      * Get resume of all refund for one product line.
      *
      * @param $id_order_detail
+     *
      */
     public static function getProductSlipResume($id_order_detail)
     {
@@ -307,22 +308,22 @@ class OrderSlipCore extends ObjectModel
         $order_slip->amount = 0;
         $order_slip->{'total_products_tax_' . $inc_or_ex_1} = 0;
         $order_slip->{'total_products_tax_' . $inc_or_ex_2} = 0;
-
+        $total_products = [];
         foreach ($product_list as &$product) {
             $order_detail = new OrderDetail((int) $product['id_order_detail']);
             $price = (float) $product['unit_price'];
             $quantity = (int) $product['quantity'];
             $order_slip_resume = OrderSlip::getProductSlipResume((int) $order_detail->id);
-
             if ($quantity + $order_slip_resume['product_quantity'] > $order_detail->product_quantity) {
                 $quantity = $order_detail->product_quantity - $order_slip_resume['product_quantity'];
+                // $quantity = $order_detail->product_quantity - $product['quantity'];
             }
 
             if ($quantity == 0) {
                 continue;
             }
 
-            if (!Tools::isSubmit('cancelProduct') && $order->hasBeenPaid()) {
+            if ($order->hasBeenPaid()) {
                 $order_detail->product_quantity_refunded += $quantity;
             }
 
