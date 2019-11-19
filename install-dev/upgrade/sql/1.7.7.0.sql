@@ -1,7 +1,7 @@
 SET SESSION sql_mode='';
 SET NAMES 'utf8';
 
-ALTER DATABASE `DB_NAME` CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci;
+/* PHP:ps_1770_update_charset(); */;
 
 INSERT INTO `PREFIX_configuration` (`name`, `value`, `date_add`, `date_upd`) VALUES ('PS_DISPLAY_MANUFACTURERS', '1', NOW(), NOW());
 
@@ -514,4 +514,4 @@ ALTER TABLE `PREFIX_web_browser` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb
 ALTER TABLE `PREFIX_zone` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 ALTER TABLE `PREFIX_zone_shop` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 
-/* PHP:ps_1770_preset_tab_enabled(); */
+/* PHP:ps_1770_preset_tab_enabled(); */;
