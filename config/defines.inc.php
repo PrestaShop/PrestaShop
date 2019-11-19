@@ -67,9 +67,7 @@ if (!defined('_PS_CORE_DIR_')) {
 
 define('_PS_ALL_THEMES_DIR_', _PS_ROOT_DIR_.'/themes/');
 /* BO THEMES */
-if (defined('_PS_ADMIN_DIR_')) {
-    define('_PS_BO_ALL_THEMES_DIR_', _PS_ADMIN_DIR_.'/themes/');
-}
+define('_PS_BO_ALL_THEMES_DIR_', _PS_ADMIN_DIR_.'/themes/');
 
 // Find if we are running under a Symfony command
 $cliEnvValue = null;
