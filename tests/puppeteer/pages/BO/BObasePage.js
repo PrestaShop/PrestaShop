@@ -15,7 +15,7 @@ module.exports = class BOBasePage extends CommonPage {
 
     // top navbar
     this.headerLogoImage = '#header_logo';
-    this.userProfileIcon = '#employee_infos';
+    this.userProfileIcon = '#employee_infos,#header_infos #header-employee-container';
     this.userProfileLogoutLink = 'a#header_logout';
     this.shopVersionBloc = '#shop_version';
     this.headerShopNameLink = '#header_shopname';
@@ -52,6 +52,11 @@ module.exports = class BOBasePage extends CommonPage {
     // Shop Parameters
     this.shopParametersParentLink = '#subtab-ShopParameters';
     this.shopParametersGeneralLink = '#subtab-AdminParentPreferences';
+
+    // Advanced Parameters
+    this.advancedParametersLink = '#subtab-AdminAdvancedParameters';
+    // Team
+    this.teamLink = '#subtab-AdminParentEmployees';
 
     // welcome module
     this.onboardingCloseButton = 'button.onboarding-button-shut-down';
