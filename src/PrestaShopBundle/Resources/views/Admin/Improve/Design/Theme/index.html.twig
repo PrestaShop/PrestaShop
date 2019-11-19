@@ -87,6 +87,7 @@
               'themeName': currentlyUsedTheme.get('display_name'),
               'themeVersion': currentlyUsedTheme.get('version'),
               'themeAuthor': currentlyUsedTheme.get('author.name'),
+              'themeAuthorUrl': theme.get('author.url'),
               'isActive': true
               } %}
               {% block image %}
@@ -106,6 +107,7 @@
                   'themeName': theme.get('display_name'),
                   'themeVersion': theme.get('version'),
                   'themeAuthor': theme.get('author.name'),
+                  'themeAuthorUrl': theme.get('author.url'),
                   'isActive': false
                   }  %}
                   {% block image %}
