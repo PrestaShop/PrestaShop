@@ -80,6 +80,8 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use PrestaShop\PrestaShop\Core\Domain\Order\Command\IssuePartialRefundCommand;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 
 /**
  * Manages "Sell > Orders" page
@@ -291,7 +293,10 @@ class OrderController extends FrameworkBundleAdminController
         /** @var OrderForViewing $orderForViewing */
         $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
 
-        // var_dump($orderForViewing); exit;
+        $orderDetailIds = [];
+        foreach($orderForViewing->getProducts()->getProducts() as $product) {
+            $orderDetailIds[] = $product->getOrderDetailId();
+        }
 
         $addOrderCartRuleForm = $this->createForm(AddOrderCartRuleType::class, [], [
             'order_id' => $orderId,
@@ -343,8 +348,11 @@ class OrderController extends FrameworkBundleAdminController
             'actionGetAdminOrderButtons',
             $hookParameters
         );
+        $translator = $this->get('translator');
         $partialRefundForm = $this->createForm(PartialRefundType::class, [
-            'products' => $orderForViewing->getProducts()->getProducts()
+            'products' => $orderForViewing->getProducts()->getProducts(),
+            'taxMethod' => $orderForViewing->getTaxMethod(),
+            'translator' => $translator,
         ]);
 
         return $this->render('@PrestaShop/Admin/Sell/Order/Order/view.html.twig', [
@@ -371,12 +379,13 @@ class OrderController extends FrameworkBundleAdminController
 
     public function partialRefundAction(int $orderId, Request $request)
     {
-        /*$orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
+        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
         $form = $this->createForm(PartialRefundType::class, [
-            'products' => $orderForViewing->getProducts()->getProducts()
+            'products' => $orderForViewing->getProducts()->getProducts(),
+            'taxMethod' => $orderForViewing->getTaxMethod(),
+            'translator' => $this->get('translator'),
         ]);
         $form->handleRequest($request);
-
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
             $refunds = [];
@@ -391,8 +400,31 @@ class OrderController extends FrameworkBundleAdminController
                 }
             }
 
+            $status = 'success';
+            $message = $this->trans('A partial refund was successfully created.', 'Admin.Orderscustomers.Notification');
+            $command = new issuePartialRefundCommand(
+                $orderId,
+                $refunds,
+                $data['shipping'],
+                $data['restock'],
+                $data['voucher'],
+                $orderForViewing->isTaxIncluded(),
+                1
+            );
+            try {
+                $this->getCommandBus()->handle($command);
+            } catch (OrderException $e) {
+                $status = 'error';
+                $message = $e->getMessage();
+            }
+
+            $this->addFlash($status, $message);
         }
-        echo 'nope'; exit; */
+
+
+        return $this->redirectToRoute('admin_orders_view', [
+            'orderId' => $orderId,
+        ]);
     }
 
     /**
