@@ -709,6 +709,8 @@ class OrderController extends FrameworkBundleAdminController
     /**
      * Duplicates cart from specified order
      *
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller')) || is_granted('create', 'AdminOrders')")
+     *
      * @param int $orderId
      *
      * @return JsonResponse
@@ -949,6 +951,8 @@ class OrderController extends FrameworkBundleAdminController
 
     /**
      * Sends email with process order link to customer
+     *
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller')) || is_granted('create', 'AdminOrders')")
      *
      * @param Request $request
      *

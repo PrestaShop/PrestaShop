@@ -24,15 +24,29 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Cart\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception;
 
 /**
- * Thrown when cart constraints are violated
+ * Thrown when combination constraints are violated
  */
-class CartConstraintException extends CartException
+class CombinationConstraintException extends CombinationException
 {
-    /**
-     * When cart product quantity is invalid
-     */
-    const INVALID_QUANTITY = 1;
+    const INVALID_ID = 1;
 }
+
+{% block content %}
+    {% block carts_listing %}
+      <div class="row">
+        <div class="col-12">
+          {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': cartGrid} %}
+        </div>
+      </div>
+    {% endblock %}
+{% endblock %}
+
+{% block javascripts %}
+  {{ parent() }}
+
+  <script src="{{ asset('themes/default/js/bundle/pagination.js') }}"></script>
+  <script src="{{ asset('themes/new-theme/public/cart.bundle.js') }}"></script>
+{% endblock %}

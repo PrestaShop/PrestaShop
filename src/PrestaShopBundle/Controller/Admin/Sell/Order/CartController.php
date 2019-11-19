@@ -28,7 +28,7 @@ namespace PrestaShopBundle\Controller\Admin\Sell\Order;
 
 use Exception;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\AddCartRuleToCartCommand;
-use PrestaShop\PrestaShop\Core\Domain\Cart\Command\AddCustomizationFieldsCommand;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Command\AddProductToCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\CreateEmptyCustomerCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\RemoveCartRuleFromCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\RemoveProductFromCartCommand;
@@ -458,7 +458,6 @@ class CartController extends FrameworkBundleAdminController
         $productId = $request->request->getInt('product_id');
         $quantity = $request->request->getInt('product_quantity');
         $combinationId = $request->request->getInt('combination_id');
-        $customizationId = null;
 
         $textCustomizations = $request->request->get('customizations') ?: [];
         $fileCustomizations = $request->files->get('customizations') ?: [];
@@ -466,21 +465,12 @@ class CartController extends FrameworkBundleAdminController
         $customizations = $textCustomizations + $fileCustomizations;
 
         try {
-            if (!empty($customizations)) {
-                $customizationId = $this->getCommandBus()->handle(new AddCustomizationFieldsCommand(
-                    $cartId,
-                    $productId,
-                    $customizations
-                ));
-            }
-
-            $this->getCommandBus()->handle(new UpdateProductQuantityInCartCommand(
+            $this->getCommandBus()->handle(new AddProductToCartCommand(
                 $cartId,
-                (int) $productId,
-                (int) $quantity,
-                QuantityAction::INCREASE_PRODUCT_QUANTITY,
+                $productId,
+                $quantity,
                 $combinationId ?: null,
-                $customizationId
+                $customizations
             ));
 
             return $this->json($this->getCartInfo($cartId));
@@ -541,24 +531,34 @@ class CartController extends FrameworkBundleAdminController
         }
     }
 
+    /**
+     * Changes product in cart quantity
+     *
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller')) || is_granted('create', 'AdminOrders')")
+     *
+     * @param Request $request
+     * @param int $cartId
+     * @param int $productId
+     *
+     * @return JsonResponse
+     */
     public function editProductQuantityAction(Request $request, int $cartId, int $productId)
     {
         $previousQty = $request->request->getInt('previousQty');
         $newQty = $request->request->getInt('newQty');
+        $qtyDiff = abs($newQty - $previousQty);
 
         if ($previousQty < $newQty) {
             $action = QuantityAction::INCREASE_PRODUCT_QUANTITY;
-            $qty = $newQty - $previousQty;
         } else {
             $action = QuantityAction::DECREASE_PRODUCT_QUANTITY;
-            $qty = $previousQty - $newQty;
         }
 
         try {
             $this->getCommandBus()->handle(new UpdateProductQuantityInCartCommand(
                 $cartId,
                 $productId,
-                $qty,
+                $qtyDiff,
                 $action,
                 $request->request->getInt('attributeId') ?: null,
                 $request->request->getInt('customizationId') ?: null
@@ -668,6 +668,12 @@ class CartController extends FrameworkBundleAdminController
                 ),
                 $e instanceof BulkDeleteCartException ? implode(', ', $e->getCartIds()) : ''
             ),
+            CartConstraintException::class => [
+                CartConstraintException::INVALID_QUANTITY => $this->trans(
+                    'Positive product quantity is required',
+                    'Admin.Notifications.Error'
+                ),
+            ],
             LanguageException::class => [
                 LanguageException::NOT_ACTIVE => $this->trans(
                     'Selected language cannot be used because is disabled',

@@ -24,25 +24,51 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject;
+
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CombinationConstraintException;
 
 /**
- * Thrown when specific price constraints are violated
+ *  Holds product combination identification data
  */
-class SpecificPriceConstraintException extends SpecificPriceException
+class CombinationId
 {
     /**
-     * When catalog price rule id is not valid
+     * @var int
      */
-    const INVALID_ID = 1;
+    private $combinationId;
 
     /**
-     * When date-time format is invalid
+     * @param int $combinationId
+     *
+     * @throws CombinationConstraintException
      */
-    const INVALID_DATETIME = 2;
+    public function __construct(int $combinationId)
+    {
+        $this->assertValueIsPositive($combinationId);
+        $this->combinationId = $combinationId;
+    }
 
     /**
-     * When date range is not valid
+     * @return int
      */
-    const INVALID_DATE_RANGE = 3;
+    public function getValue(): int
+    {
+        return $this->combinationId;
+    }
+
+    /**
+     * @param int $value
+     *
+     * @throws CombinationConstraintException
+     */
+    private function assertValueIsPositive(int $value)
+    {
+        if (0 >= $value) {
+            throw new CombinationConstraintException(
+                sprintf('Combination id must be positive integer. "%s" given', $value),
+                CombinationConstraintException::INVALID_ID
+            );
+        }
+    }
 }

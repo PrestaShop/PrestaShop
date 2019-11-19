@@ -37,6 +37,7 @@ use PrestaShop\PrestaShop\Core\Domain\Exception\FileUploadException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\CustomizationSettings;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Exception\CustomizationConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Exception\CustomizationException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationId;
 use PrestaShopException;
 use Product;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -57,7 +58,7 @@ final class AddCustomizationFieldsHandler extends AbstractCartHandler implements
      * @throws PrestaShopException
      * @throws FileUploadException
      */
-    public function handle(AddCustomizationFieldsCommand $command): int
+    public function handle(AddCustomizationFieldsCommand $command): CustomizationId
     {
         $productId = $command->getProductId()->getValue();
 
@@ -69,7 +70,7 @@ final class AddCustomizationFieldsHandler extends AbstractCartHandler implements
 
         foreach ($customizationFields as $customizationField) {
             $customizationFieldId = (int) $customizationField['id_customization_field'];
-            //@todo fields validation ?
+
             if (!isset($customizations[$customizationFieldId])) {
                 continue;
             }
@@ -88,7 +89,7 @@ final class AddCustomizationFieldsHandler extends AbstractCartHandler implements
                 } else {
                     $fileName = $this->uploadImage($customizations[$customizationFieldId]);
 
-                    return $cart->addPictureToProduct(
+                    $customizationId = $cart->addPictureToProduct(
                         $productId,
                         $customizationFieldId,
                         Product::CUSTOMIZE_FILE,
@@ -118,7 +119,7 @@ final class AddCustomizationFieldsHandler extends AbstractCartHandler implements
             );
         }
 
-        return $customizationId;
+        return new CustomizationId($customizationId);
     }
 
     /**
@@ -135,6 +136,7 @@ final class AddCustomizationFieldsHandler extends AbstractCartHandler implements
         $this->validateUpload($file);
 
         //@todo: check if copy is okay to use instead of move_uploaded_file(this fails creating new request from global later)
+        //@todo: implement UploadedFile::move() instead of copy();
         if (!($tmpName = tempnam(_PS_TMP_IMG_DIR_, 'PS')) || !copy($file->getPathname(), $tmpName)) {
             throw new FileUploadException('An error occurred during the image upload process.');
         }
