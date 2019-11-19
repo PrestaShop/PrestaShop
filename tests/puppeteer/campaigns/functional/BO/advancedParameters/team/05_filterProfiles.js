@@ -82,8 +82,7 @@ describe('Create, Read, Update and Delete profile in BO', async () => {
           test.args.filterBy,
           test.args.filterValue,
         );
-        const numberOfProfilesAfterFilter = await this.pageObjects.profilesPage.getNumberFromText(
-          this.pageObjects.profilesPage.profileGridTitle);
+        const numberOfProfilesAfterFilter = await this.pageObjects.profilesPage.getNumberOfElementInGrid();
         await expect(numberOfProfilesAfterFilter).to.be.at.most(numberOfProfiles);
         for (let i = 1; i <= numberOfProfilesAfterFilter; i++) {
           const textName = await this.pageObjects.profilesPage.getTextColumnFromTable(i, test.args.filterBy);

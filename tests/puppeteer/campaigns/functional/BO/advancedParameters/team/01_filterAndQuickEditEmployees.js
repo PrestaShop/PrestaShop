@@ -86,6 +86,8 @@ describe('Filter And Quick Edit Employees', async () => {
     it('should create employee', async function () {
       const textResult = await this.pageObjects.addEmployeePage.createEditEmployee(createEmployeeData);
       await expect(textResult).to.equal(this.pageObjects.employeesPage.successfulCreationMessage);
+      const numberOfEmployeesAfterCreation = await this.pageObjects.employeesPage.getNumberOfElementInGrid();
+      await expect(numberOfEmployeesAfterCreation).to.be.equal(numberOfEmployees + 1);
     });
 
     tests.forEach((test) => {
@@ -119,9 +121,7 @@ describe('Filter And Quick Edit Employees', async () => {
     describe('Quick Edit Employees', async () => {
       it('should filter by Email address', async function () {
         await this.pageObjects.employeesPage.filterEmployees('input', 'email', createEmployeeData.email);
-        const numberOfEmployeesAfterFilter = await this.pageObjects.employeesPage.getNumberFromText(
-          this.pageObjects.employeesPage.employeeGridTitle,
-        );
+        const numberOfEmployeesAfterFilter = await this.pageObjects.employeesPage.getNumberOfElementInGrid();
         await expect(numberOfEmployeesAfterFilter).to.be.at.most(numberOfEmployees);
         for (let i = 1; i <= numberOfEmployeesAfterFilter; i++) {
           const textColumn = await this.pageObjects.employeesPage.getTextColumnFromTable(i, 'email');

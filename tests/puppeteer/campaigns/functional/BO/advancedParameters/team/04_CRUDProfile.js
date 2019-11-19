@@ -94,9 +94,7 @@ describe('Create, Read, Update and Delete profile in BO', async () => {
     it('should create profile and check result', async function () {
       const textResult = await this.pageObjects.addProfilePage.createEditProfile(profileData);
       await expect(textResult).to.equal(this.pageObjects.profilesPage.successfulCreationMessage);
-      const numberOfProfilesAfterCreation = await this.pageObjects.profilesPage.getNumberFromText(
-        this.pageObjects.profilesPage.profileGridTitle,
-      );
+      const numberOfProfilesAfterCreation = await this.pageObjects.profilesPage.getNumberOfElementInGrid();
       await expect(numberOfProfilesAfterCreation).to.be.equal(numberOfProfiles + 1);
     });
   });

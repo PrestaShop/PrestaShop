@@ -64,6 +64,14 @@ module.exports = class Profiles extends BOBasePage {
   }
 
   /**
+   * get number of elements in grid
+   * @return {Promise<integer>}
+   */
+  async getNumberOfElementInGrid() {
+    return this.getNumberFromText(this.profileGridTitle);
+  }
+
+  /**
    * Go to Edit profile page
    * @param row, row in table
    * @return {Promise<void>}

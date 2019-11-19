@@ -93,9 +93,7 @@ describe('Create, Read, Update and Delete Employee in BO', async () => {
     it('should create employee and check result', async function () {
       const textResult = await this.pageObjects.addEmployeePage.createEditEmployee(createEmployeeData);
       await expect(textResult).to.equal(this.pageObjects.employeesPage.successfulCreationMessage);
-      const numberOfEmployeesAfterCreation = await this.pageObjects.employeesPage.getNumberFromText(
-        this.pageObjects.employeesPage.employeeGridTitle,
-      );
+      const numberOfEmployeesAfterCreation = await this.pageObjects.employeesPage.getNumberOfElementInGrid();
       await expect(numberOfEmployeesAfterCreation).to.be.equal(numberOfEmployees + 1);
     });
 

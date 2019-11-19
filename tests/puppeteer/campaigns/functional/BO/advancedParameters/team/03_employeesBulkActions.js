@@ -75,7 +75,7 @@ describe('Create Employees, Then disable / Enable and Delete with Bulk actions',
   // 1 : Create employees and Filter with all inputs and selects in grid table in BO
   describe('Create employees then filter the table', async () => {
     const employeesToCreate = [firstEmployeeData, secondEmployeeData];
-    employeesToCreate.forEach((employeeToCreate) => {
+    employeesToCreate.forEach((employeeToCreate, index) => {
       it('should go to add new employee page', async function () {
         await this.pageObjects.employeesPage.goToAddNewEmployeePage();
         const pageTitle = await this.pageObjects.addEmployeePage.getPageTitle();
@@ -85,17 +85,21 @@ describe('Create Employees, Then disable / Enable and Delete with Bulk actions',
       it('should create employee', async function () {
         const textResult = await this.pageObjects.addEmployeePage.createEditEmployee(employeeToCreate);
         await expect(textResult).to.equal(this.pageObjects.employeesPage.successfulCreationMessage);
+        const numberOfEmployeesAfterCreation = await this.pageObjects.employeesPage.getNumberOfElementInGrid();
+        await expect(numberOfEmployeesAfterCreation).to.be.equal(numberOfEmployees + index + 1);
       });
     });
   });
 
   // 2 : Enable/Disable employees created with bulk actions
+  /**
+   * The test is skipped because of the issue described in this ticket
+   * https://github.com/PrestaShop/PrestaShop/issues/16246
+   **/
   describe.skip('Enable and Disable employees with Bulk Actions', async () => {
     it('should filter by First name', async function () {
       await this.pageObjects.employeesPage.filterEmployees('input', 'firstname', firstEmployeeData.firstName);
-      const numberOfEmployeesAfterFilter = await this.pageObjects.employeesPage.getNumberFromText(
-        this.pageObjects.employeesPage.employeeGridTitle,
-      );
+      const numberOfEmployeesAfterFilter = await this.pageObjects.employeesPage.getNumberOfElementInGrid();
       await expect(numberOfEmployeesAfterFilter).to.be.at.most(numberOfEmployees);
       for (let i = 1; i <= numberOfEmployeesAfterFilter; i++) {
         const textColumn = await this.pageObjects.employeesPage.getTextColumnFromTable(i, 'firstname');
@@ -112,9 +116,7 @@ describe('Create Employees, Then disable / Enable and Delete with Bulk actions',
           employeeStatus.args.enable,
         );
         await expect(disableTextResult).to.be.equal(this.pageObjects.employeesPage.successfulUpdateStatusMessage);
-        const numberOfEmployeesInGrid = await this.pageObjects.employeesPage.getNumberFromText(
-          this.pageObjects.employeesPage.employeeGridTitle,
-        );
+        const numberOfEmployeesInGrid = await this.pageObjects.employeesPage.getNumberOfElementInGrid();
         for (let i = 1; i <= numberOfEmployeesInGrid; i++) {
           const textColumn = await this.pageObjects.employeesPage.getTextColumnFromTable(i, 'active');
           await expect(textColumn).to.contains(employeeStatus.expected);
