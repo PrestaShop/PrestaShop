@@ -80,7 +80,7 @@ class IssuePartialRefundCommand
      * @param int $shippingCostRefund
      * @param bool $restockRefundedProducts
      * @param bool $generateCartRule
-     * @param int $taxMethod
+     * @param bool $taxMethod
      * @param int $cartRuleRefundType
      * @param float|null $cartRuleRefundAmount
      */
@@ -94,10 +94,6 @@ class IssuePartialRefundCommand
         $cartRuleRefundType,
         $cartRuleRefundAmount = null
     ) {
-        if (empty($orderDetailRefunds)) {
-            throw new OrderException('The partial refund data is incorrect.');
-        }
-
         $this->orderId = new OrderId($orderId);
         $this->orderDetailRefunds = $orderDetailRefunds;
         $this->shippingCostRefund = $shippingCostRefund;
@@ -125,7 +121,7 @@ class IssuePartialRefundCommand
     }
 
     /**
-     * @return int
+     * @return bool
      */
     public function getTaxMethod()
     {
