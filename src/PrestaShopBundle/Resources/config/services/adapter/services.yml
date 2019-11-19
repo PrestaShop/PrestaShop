@@ -116,7 +116,6 @@ services:
             - '@prestashop.service.translation'
             - '@=service("prestashop.adapter.legacy.context").getContext().link'
             - '@prestashop.core.admin.module.repository'
-            - '@translator'
 
     prestashop.adapter.shop.shop_url:
         class: 'PrestaShop\PrestaShop\Adapter\Shop\ShopUrlDataProvider'

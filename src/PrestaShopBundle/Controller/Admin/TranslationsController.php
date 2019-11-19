@@ -33,6 +33,7 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
+use PrestaShopBundle\Exception\InvalidModuleException;
 
 /**
  * Admin controller for the International pages.
@@ -123,9 +124,15 @@ class TranslationsController extends FrameworkBundleAdminController
      */
     public function modifyTranslationsAction(Request $request)
     {
-        $routeFinder = $this->get('prestashop.adapter.translation_route_finder');
-        $route = $routeFinder->findRoute($request->query);
-        $routeParameters = $routeFinder->findRouteParameters($request->query);
+        try {
+            $routeFinder = $this->get('prestashop.adapter.translation_route_finder');
+            $route = $routeFinder->findRoute($request->query);
+            $routeParameters = $routeFinder->findRouteParameters($request->query);
+        } catch (InvalidModuleException $e) {
+            $this->addFlash('error',$this->trans('An error has occurred, this module does not exist: %s', 'Admin.International.Notification',array($e->getMessage())));
+
+            return $this->redirectToRoute('admin_international_translations_show_settings');
+        }
 
         // If route parameters are empty we are redirecting to a legacy route
         return empty($routeParameters) ? $this->redirect($route) : $this->redirectToRoute($route, $routeParameters);
