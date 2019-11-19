@@ -24,15 +24,48 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Cart\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject;
+
+use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Exception\CustomizationConstraintException;
 
 /**
- * Thrown when cart constraints are violated
+ * Holds product customization identification data
  */
-class CartConstraintException extends CartException
+class CustomizationId
 {
     /**
-     * When cart product quantity is invalid
+     * @var int
      */
-    const INVALID_QUANTITY = 1;
+    private $customizationId;
+
+    /**
+     * @param int $customizationId
+     */
+    public function __construct(int $customizationId)
+    {
+        $this->customizationId = $customizationId;
+    }
+
+    /**
+     * @return int
+     */
+    public function getValue(): int
+    {
+        return $this->customizationId;
+    }
+
+    /**
+     * @param int $value
+     *
+     * @throws CustomizationConstraintException
+     */
+    private function assertValueIsPositive(int $value)
+    {
+        if (0 >= $value) {
+            throw new CustomizationConstraintException(
+                sprintf('Customization id must be positive integer. "%s" given', $value),
+                CustomizationConstraintException::INVALID_ID
+            );
+        }
+    }
 }

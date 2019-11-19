@@ -99,6 +99,8 @@ export default class ProductManager {
    * @private
    */
   _onAddProductToCart() {
+    this.productRenderer.cleanCartBlockAlerts();
+
     // on success
     EventEmitter.on(eventMap.productAddedToCart, (cartInfo) => {
       EventEmitter.emit(eventMap.cartLoaded, cartInfo);
@@ -106,7 +108,6 @@ export default class ProductManager {
 
     // on failure
     EventEmitter.on(eventMap.productAddToCartFailed, (errorMessage) => {
-      this.productRenderer.cleanCartBlockAlerts();
       this.productRenderer.renderCartBlockErrorAlert(errorMessage);
     });
   }
@@ -128,7 +129,6 @@ export default class ProductManager {
    * @private
    */
   _onProductPriceChange() {
-    // on success
     EventEmitter.on(eventMap.productPriceChanged, (cartInfo) => {
       this.productRenderer.cleanCartBlockAlerts();
       EventEmitter.emit(eventMap.cartLoaded, cartInfo);
@@ -232,6 +232,8 @@ export default class ProductManager {
     for (const key in this.products) {
       if (this.products[key].productId === productId) {
         this.selectedProduct = this.products[key];
+
+        break;
       }
     }
 

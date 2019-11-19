@@ -60,6 +60,8 @@ final class UpdateProductQuantityInCartHandler extends AbstractCartHandler imple
         $this->assertOrderDoesNotExistForCart($cart);
 
         $product = $this->getProductObject($command->getProductId());
+        $combinationIdValue = $command->getCombinationId() ? $command->getCombinationId()->getValue() : 0;
+        $customizationId = $command->getCustomizationId();
 
         $this->assertProductIsInStock($product, $command);
         $this->assertProductCustomization($product, $command);
@@ -67,8 +69,8 @@ final class UpdateProductQuantityInCartHandler extends AbstractCartHandler imple
         $updateResult = $cart->updateQty(
             $command->getQuantity(),
             $command->getProductId()->getValue(),
-            $command->getCombinationId() ?: 0,
-            $command->getCustomizationId() ?: 0,
+            $combinationIdValue,
+            $customizationId ? $customizationId->getValue() : false,
             $this->getLegacyQuantityOperator($command->getAction())
         );
 
@@ -80,7 +82,7 @@ final class UpdateProductQuantityInCartHandler extends AbstractCartHandler imple
         // when adding product with less quantity than minimum required.
         if ($updateResult < 0) {
             $minQuantity = $command->getCustomizationId() ?
-                Attribute::getAttributeMinimalQty($command->getCombinationId()) :
+                Attribute::getAttributeMinimalQty($combinationIdValue) :
                 $product->minimal_quantity
             ;
 
@@ -133,7 +135,7 @@ final class UpdateProductQuantityInCartHandler extends AbstractCartHandler imple
         if (null !== $command->getCombinationId()) {
             $isAvailableWhenOutOfStock = Product::isAvailableWhenOutOfStock($product->out_of_stock);
             $isEnoughQuantity = Attribute::checkAttributeQty(
-                $command->getCombinationId(),
+                $command->getCombinationId()->getValue(),
                 $command->getQuantity()
             );
 

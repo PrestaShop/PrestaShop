@@ -111,6 +111,7 @@ admin_orders_duplicate_cart:
   methods: [POST]
   defaults:
     _controller: PrestaShopBundle:Admin/Sell/Order/Order:duplicateOrderCart
+    _legacy_controller: AdminOrders
   requirements:
     orderId: \d+
   options:
@@ -121,6 +122,7 @@ admin_orders_change_currency:
   methods: [POST]
   defaults:
     _controller: PrestaShopBundle:Admin/Sell/Order/Order:changeCurrency
+    _legacy_controller: AdminOrders
   requirements:
     orderId: \d+
 
@@ -129,6 +131,7 @@ admin_orders_update_product:
   methods: [POST]
   defaults:
     _controller: PrestaShopBundle:Admin/Sell/Order/Order:updateProduct
+    _legacy_controller: AdminOrders
   requirements:
     orderId: \d+
     orderDetailId: \d+
@@ -217,5 +220,6 @@ admin_orders_send_process_order_email:
   methods: [POST]
   defaults:
     _controller: PrestaShopBundle:Admin/Sell/Order/Order:sendProcessOrderEmail
+    _legacy_controller: AdminOrders
   options:
     expose: true
