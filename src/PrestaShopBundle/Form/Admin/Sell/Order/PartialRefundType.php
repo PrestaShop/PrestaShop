@@ -37,43 +37,47 @@ class PartialRefundType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $products = $options['data']['products'];
-        // var_dump($products); exit;
-        foreach ($products as $product) {
+        $taxMethod = $options['data']['taxMethod'];
+        $translator = $options['data']['translator'];
 
+        foreach ($products as $product) {
             $builder
                 ->add('quantity_' . $product->getOrderDetailId(), NumberType::class, [
-                    'attr' => ['max' => $product->getQuantity(), 'class' => 'refund_form'],
-                    'label' => 'quantity',
+                    'attr' => ['max' => $product->getQuantity(), 'class' => 'refund-quantity'],
+                    'label' => $translator->trans('Qty', [], 'Admin.Orderscustomers.Feature'),
                     'required' => false,
                 ])
                 ->add('amount_' . $product->getOrderDetailId(), NumberType::class, [
-                    'attr' => ['max' => $product->getTotalPrice(), 'class' => 'refund_form'],
-                    'label' => 'Amount (tax included)',
+                    'attr' => ['max' => $product->getTotalPrice(), 'class' => 'refund-amount'],
+                    'label' => sprintf(
+                        '%s (%s)',
+                        $translator->trans('Amount', [], 'Admin.Global'),
+                        $taxMethod
+                    ),
                     'required' => false,
                 ]);
         }
         $builder
             ->add('shipping', NumberType::class,
                 [
-                    'attr' => ['class' => 'refund_form'],
                     'label' => 'shipping',
                     'required' => false,
                 ]
             )
             ->add('restock', CheckboxType::class,
                 [
-                    'attr' => ['class' => 'refund_form'],
                     'required' => false,
+                    'label' => $translator->trans('Re-stock products', [], 'Admin.Orderscustomers.Feature'),
                 ]
             )
             ->add('voucher', CheckboxType::class,
                 [
-                    'attr' => ['class' => 'refund_form'],
                     'required' => false,
+                    'label' => $translator->trans('Generate a voucher', [], 'Admin.Orderscustomers.Feature'),
                 ]
             )
             ->add('save', SubmitType::class, [
-                'attr' => ['class' => 'partial_refund save btn btn-primary ml-3'],
+                'attr' => ['class' => 'partial-refund save btn btn-primary ml-3'],
             ]);
     }
 }
