@@ -224,15 +224,37 @@ body#checkout {
         }
       }
     }
-    .delivery-option {
-      background: $gray-lighter;
-      padding: 0.9375rem 0;
-      margin-bottom: 0.9375rem;
-      label {
-        text-align: inherit;
+    .delivery-options {
+      > .row {
+        border-right: .1rem solid darken($gray-lighter, 20%);
       }
-      img {
-        width: 3.125rem;
+      .delivery-option {
+        background: $gray-lighter;
+        padding: 0.9375rem 0;
+        margin-bottom: 0.9375rem;
+        min-height: 80px;
+        &, 
+        label > .row, 
+        .carrier {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          flex-wrap: wrap;
+        }
+        label {
+          text-align: inherit;
+          margin-bottom: 0;
+          .carrier {
+            > .col-xs-12 {
+              &:not(.col-md-5):not(.col-md-7) {
+                padding-left: calc(33.33333% + 30px);
+              }
+            }
+          }
+        }
+        img {
+          width: 3.125rem;
+        }
       }
     }
     .carrier-delay,
@@ -240,6 +262,7 @@ body#checkout {
       display: inline-block;
       word-break: break-word;
       text-align: left;
+      margin-bottom: 0;
     }
     #customer-form,
     #delivery-address,
@@ -372,6 +395,12 @@ body#checkout {
     background: white;
     color: $gray;
   }
+
+  #delivery {
+    > label {
+      text-align: left;
+    }
+  }
 }
 /**** ORDER CONFIRMATION *****/
 #order-details {
@@ -480,6 +509,13 @@ body#checkout {
       width: 100%;
     }
   }
+  body#checkout section.checkout-step .delivery-options .delivery-option {
+    .carrier {
+      > .col-xs-12 {
+        padding-left: 15px;
+      }
+    }
+  } 
 }
 
 @include media-breakpoint-down(sm) {
@@ -525,7 +561,13 @@ body#checkout {
       padding-bottom: 1rem;
     }
   }
-
+  body#checkout section.checkout-step .delivery-options .delivery-option {
+    label .carrier {
+      > .col-xs-12, .col-xs-12:not(.col-md-5):not(.col-md-7){
+        padding-left: 0;
+      }
+    }
+  } 
 }
 
 @include media-breakpoint-down(xs) {
@@ -546,11 +588,6 @@ body#checkout {
   }
 }
 
-
-.cart-empty {
-  .cart-summary {
-  }
-}
 .js-payment-binary {
   display: none;
   .accept-cgv {
