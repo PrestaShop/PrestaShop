@@ -143,6 +143,6 @@ $(() => {
 
   $('a.partial-refund-display, a.partial_refund_cancel').on('click', (event) => {
     event.preventDefault();
-    $('td.product_actions, th.product_actions, .partial-refund:not(.hidden), .shipping-price').toggle();
+    $('td.product_actions, th.product_actions, .partial-refund:not(.hidden), .shipping-price, .refund-checkboxes-container').toggle();
   });
 });

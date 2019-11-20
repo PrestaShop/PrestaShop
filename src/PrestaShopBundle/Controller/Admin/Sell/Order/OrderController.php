@@ -364,7 +364,6 @@ class OrderController extends FrameworkBundleAdminController
             $this->addFlash($status, $message);
         }
 
-
         return $this->redirectToRoute('admin_orders_view', [
             'orderId' => $orderId,
         ]);
