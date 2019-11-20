@@ -22,6 +22,7 @@ module.exports = class BOBasePage extends CommonPage {
 
     // left navbar
     // SELL
+    // Orders
     this.ordersParentLink = 'li#subtab-AdminParentOrders';
     this.ordersLink = '#subtab-AdminOrders';
 
@@ -40,10 +41,16 @@ module.exports = class BOBasePage extends CommonPage {
     this.customersParentLink = 'li#subtab-AdminParentCustomer';
     this.customersLink = '#subtab-AdminCustomers';
 
+    // Improve
     // Modules
     this.modulesParentLink = '#subtab-AdminParentModulesSf';
     this.moduleCatalogueLink = '#subtab-AdminParentModulesCatalog';
     this.moduleManagerLink = '#subtab-AdminModulesSf';
+
+    // Design
+    this.designParentLink = '#subtab-AdminParentThemes';
+    // Pages
+    this.pagesLink = '#subtab-AdminCmsContent';
 
     // International
     this.internationalParentLink = '#subtab-AdminInternational';
