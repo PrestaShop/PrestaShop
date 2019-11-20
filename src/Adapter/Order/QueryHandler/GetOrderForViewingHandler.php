@@ -414,7 +414,7 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
                 $this->imageTagSourceParser->parse($product['image_tag']) :
                 null;
             $product['product_quantity_refunded'] = $product['product_quantity_refunded'] ?: false;
-            $product['amount_refund'] = $product['amount_refund']?: 0;
+            $product['amount_refund'] = $product['amount_refund'] ?: 0;
 
             $productsForViewing[] = new OrderProductForViewing(
                 $product['id_order_detail'],
