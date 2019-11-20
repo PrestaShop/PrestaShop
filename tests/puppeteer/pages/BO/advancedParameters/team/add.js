@@ -5,7 +5,7 @@ module.exports = class AddPageEmployee extends BOBasePage {
   constructor(page) {
     super(page);
 
-    this.pageTitleCreate = 'Add new • prestashop';
+    this.pageTitleCreate = 'Add new •';
     this.pageTitleEdit = 'Edit:';
 
     // Selectors
@@ -14,6 +14,7 @@ module.exports = class AddPageEmployee extends BOBasePage {
     this.emailInput = '#employee_email';
     this.passwordInput = '#employee_password';
     this.defaultPageSelect = '#employee_default_page';
+    this.defaultPageSpan = '.select2-selection[aria-labelledby=\'select2-employee_default_page-container\']';
     this.languageSelect = '#employee_language';
     this.activeSwitchlabel = 'label[for=\'employee_active_%ID\']';
     this.permissionProfileSelect = '#employee_profile';
@@ -37,13 +38,27 @@ module.exports = class AddPageEmployee extends BOBasePage {
     await this.setValue(this.passwordInput, employeeData.password);
     await this.selectByVisibleText(this.permissionProfileSelect, employeeData.permissionProfile);
     await this.selectByVisibleText(this.languageSelect, employeeData.language);
-    await this.selectByVisibleText(this.defaultPageSelect, employeeData.defaultPage);
+    await this.selectDefaultPage(employeeData.defaultPage);
     // replace %ID by 1 in the selector if active = YES / 0 if active = NO
     if (employeeData.active) await this.page.click(this.activeSwitchlabel.replace('%ID', '1'));
     else await this.page.click(this.activeSwitchlabel.replace('%ID', '0'));
     await this.clickAndWaitForNavigation(this.saveButton);
     await this.page.waitForSelector(this.alertSuccessBlockParagraph, {visible: true});
     return this.getTextContent(this.alertSuccessBlockParagraph);
+  }
+
+  /**
+   * Select default Page
+   * @param defaultPage
+   * @return {Promise<void>}
+   */
+  async selectDefaultPage(defaultPage) {
+    await Promise.all([
+      this.page.click(this.defaultPageSpan),
+      this.page.waitForSelector(`${this.defaultPageSpan}[aria-expanded='true']`, {visible: true}),
+    ]);
+    await this.page.keyboard.type(defaultPage);
+    await this.page.keyboard.press('Enter');
   }
 
   /**
