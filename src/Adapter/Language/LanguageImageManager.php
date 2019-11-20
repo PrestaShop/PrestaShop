@@ -42,7 +42,7 @@ class LanguageImageManager
     /**
      * Path where flags are stored
      */
-    const FLAGS_SOURCE = _PS_BO_ALL_THEMES_DIR_ . 'new-theme/static/flags/%s.jpg';
+    const FLAGS_SOURCE = _PS_IMG_DIR_ . 'flags/%s.jpg';
 
     /**
      * Path where flags are copied to
