@@ -62,19 +62,16 @@ class PatternTransformer
     private $currencyPattern;
 
     /**
-     * @var string
+     * @var string[]
      */
-    private $trimmedPattern;
+    private $trimmedPatterns;
 
     /**
-     * @param string $currencyPattern Initial currency pattern (ex: #,##0.00¤, ¤#,##,##0.00)
+     * @param string $currencyPattern Initial currency pattern (ex: #,##0.00¤, ¤#,##,##0.00, ¤#,##0.00;¤-#,##0.00)
      */
     public function __construct(string $currencyPattern)
     {
-        $this->currencyPattern = $currencyPattern;
-
-        $trimmedCharacters = implode('', self::TRIMMED_CHARACTERS);
-        $this->trimmedPattern = trim($currencyPattern, $trimmedCharacters);
+        $this->setCurrencyPattern($currencyPattern);
     }
 
     /**
@@ -94,17 +91,58 @@ class PatternTransformer
             ));
         }
 
-        switch ($transformationType) {
-            case self::TYPE_LEFT_SYMBOL_WITH_SPACE:
-                return self::CURRENCY_SYMBOL . self::NO_BREAK_SPACE . $this->trimmedPattern;
-            case self::TYPE_LEFT_SYMBOL_WITHOUT_SPACE:
-                return self::CURRENCY_SYMBOL . $this->trimmedPattern;
-            case self::TYPE_RIGHT_SYMBOL_WITH_SPACE:
-                return $this->trimmedPattern . self::NO_BREAK_SPACE . self::CURRENCY_SYMBOL;
-            case self::TYPE_RIGHT_SYMBOL_WITHOUT_SPACE:
-                return $this->trimmedPattern . self::CURRENCY_SYMBOL;
+        $transformedPatterns = [];
+        foreach ($this->trimmedPatterns as $trimmedPattern) {
+            $transformedPatterns[] = $this->transformPattern($trimmedPattern, $transformationType);
         }
 
+        return implode(';', $transformedPatterns);
+    }
+
+    /**
+     * @param string $pattern
+     * @param string $transformationType
+     *
+     * @return string
+     */
+    private function transformPattern(string $pattern, string $transformationType)
+    {
+        switch ($transformationType) {
+            case self::TYPE_LEFT_SYMBOL_WITH_SPACE:
+                return self::CURRENCY_SYMBOL . self::NO_BREAK_SPACE . $pattern;
+            case self::TYPE_LEFT_SYMBOL_WITHOUT_SPACE:
+                return self::CURRENCY_SYMBOL . $pattern;
+            case self::TYPE_RIGHT_SYMBOL_WITH_SPACE:
+                return $pattern . self::NO_BREAK_SPACE . self::CURRENCY_SYMBOL;
+            case self::TYPE_RIGHT_SYMBOL_WITHOUT_SPACE:
+                return $pattern . self::CURRENCY_SYMBOL;
+        }
+    }
+
+    /**
+     * @return string
+     */
+    public function getCurrencyPattern(): string
+    {
         return $this->currencyPattern;
+    }
+
+    /**
+     * @param string $currencyPattern
+     *
+     * @return PatternTransformer
+     */
+    public function setCurrencyPattern(string $currencyPattern): PatternTransformer
+    {
+        $this->currencyPattern = $currencyPattern;
+
+        $currencyPatterns = explode(';', $this->currencyPattern);
+        $this->trimmedPatterns = [];
+        foreach ($currencyPatterns as $pattern) {
+            $trimmedCharacters = implode('', self::TRIMMED_CHARACTERS);
+            $this->trimmedPatterns[] = trim($pattern, $trimmedCharacters);
+        }
+
+        return $this;
     }
 }
