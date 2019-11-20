@@ -264,7 +264,7 @@ final class AddOrderCustomerMessageHandler implements AddOrderCustomerMessageHan
             '{message}' => $message,
         );
 
-        return @Mail::Send(
+        return Mail::Send(
             (int) $order->id_lang,
             'order_merchant_comment',
             $this->translator->trans(
