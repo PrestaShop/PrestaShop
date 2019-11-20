@@ -279,7 +279,7 @@ class OrderController extends FrameworkBundleAdminController
         $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
 
         $orderDetailIds = [];
-        foreach($orderForViewing->getProducts()->getProducts() as $product) {
+        foreach ($orderForViewing->getProducts()->getProducts() as $product) {
             $orderDetailIds[] = $product->getOrderDetailId();
         }
 
@@ -350,8 +350,7 @@ class OrderController extends FrameworkBundleAdminController
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
             $refunds = [];
-            foreach ($data['products'] as $product)
-            {
+            foreach ($data['products'] as $product) {
                 $orderDetailId = $product->getOrderDetailId();
                 if (!empty($data['quantity_' . $orderDetailId])) {
                     $refunds[$orderDetailId]['quantity'] = $data['quantity_' . $orderDetailId];

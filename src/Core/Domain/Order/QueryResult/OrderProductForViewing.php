@@ -268,7 +268,8 @@ class OrderProductForViewing
     /**
      * @return bool
      */
-    public function isRefundable(): bool {
+    public function isRefundable(): bool
+    {
         if ($this->quantity <= $this->quantityRefunded) {
             return false;
         }
