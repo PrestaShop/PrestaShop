@@ -73,6 +73,7 @@ export default {
   productAddRow: '#addProductTableRow',
   productSearchInput: '#addProductSearch',
   productAddIdInput: '#addProductId',
+  productAddTaxRateInput: '#addProductTaxRate',
   productAddCombinationsBlock: '#addProductCombinations',
   productAddCombinationsSelect: '#addProductCombinationId',
   productAddPriceTaxExclInput: '#addProductPriceTaxExcl',
