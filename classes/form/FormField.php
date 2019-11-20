@@ -30,6 +30,7 @@ class FormFieldCore
     private $required = false;
     private $label = '';
     private $value = null;
+    private $attributes = [];
     private $availableValues = [];
     private $maxLength = null;
     private $errors = [];
@@ -43,6 +44,7 @@ class FormFieldCore
             'required' => $this->isRequired(),
             'label' => $this->getLabel(),
             'value' => $this->getValue(),
+            'attributes' => $this->getAttributes(),
             'availableValues' => $this->getAvailableValues(),
             'maxLength' => $this->getMaxLength(),
             'errors' => $this->getErrors(),
@@ -180,5 +182,24 @@ class FormFieldCore
     public function getConstraints()
     {
         return $this->constraints;
+    }
+
+    public function setAttributes(array $attributes)
+    {
+        $this->attributes = $attributes;
+
+        return $this;
+    }
+
+    public function addAttribute($attribute)
+    {
+        $this->attributes[] = $attribute;
+
+        return $this;
+    }
+
+    public function getAttributes()
+    {
+        return $this->attributes;
     }
 }
