@@ -430,7 +430,8 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
                 Tools::ps_round($product['unit_price_tax_excl'], 2),
                 Tools::ps_round($product['unit_price_tax_incl'], 2),
                 $product['amount_refund'],
-                $product['product_quantity_refunded']
+                $product['product_quantity_refunded'],
+                $this->locale->formatPrice($product['amount_refundable'], $currency->iso_code)
             );
         }
 
