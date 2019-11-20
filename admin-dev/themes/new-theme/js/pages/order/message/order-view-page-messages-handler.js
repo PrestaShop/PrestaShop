@@ -55,7 +55,7 @@ export default class OrderViewPageMessagesHandler {
         return;
       }
 
-      // todo: check size if is over then max not allow?
+      // @todo: check size if is over then max not allow?
       const message = this.$messagesContainer.find(`div[data-id=${valueId}]`).text().trim();
       const $orderMessage = $(OrderViewPageMap.orderMessage);
       const isSameMessage = $orderMessage.val().trim() === message;
