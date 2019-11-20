@@ -43,7 +43,7 @@
             <small class="text-muted">{{ orderForViewing.taxMethod }}</small>
           </th>
           <th>
-            <p>{{ 'Qty'|trans({}, 'Admin.Orderscustomers.Feature') }}</p>
+            <p>{{ 'Quantity'|trans({}, 'Admin.Global') }}</p>
           </th>
           <th>
             <p>{{ 'Refunded'|trans({}, 'Admin.Orderscustomers.Feature') }}</p>
@@ -97,7 +97,7 @@
               {% endif %}
             </td>
             <td>
-              <p>{{ product.quantityRefunded }}{% if product.amountRefund() %} ({{ product.amountRefund() }} {{ 'Refunded'|trans({}, 'Admin.Orderscustomers.Feature') }}){% endif %}</p>
+              <p>{{ product.quantityRefunded }}{% if product.amountRefund %} ({{ product.amountRefund }} {{ 'Refunded'|trans({}, 'Admin.Orderscustomers.Feature') }}){% endif %}</p>
             </td>
             <td>{{ product.totalPrice }}</td>
             {% if not orderForViewing.delivered %}
@@ -130,27 +130,29 @@
               </td>
             {% endif %}
 
-            <td class="text-right partial-refund{% if product.isRefundable() == false %} hidden{% endif %}">
-              <div class="form-group">
-                <div class="col-lg-4">
-
-                  <div class="input-group">
-                    <strong>{{ form_label(partialRefundForm['quantity_' ~ product.orderDetailId]) }}</strong>
-                    {{ form_widget(partialRefundForm['quantity_' ~ product.orderDetailId]) }}
-                    <div class="input-group-append"><div class="input-group-text">/ {{ product.quantityRefundable }}</div></div>
+            <td class="text-right">
+              <span class="partial-refund{% if product.refundable == false %} hidden{% endif %}">
+                <div class="form-group">
+                  <div class="col-lg-4">
+                    <div class="input-group">
+                      <strong>{{ form_label(partialRefundForm['quantity_' ~ product.orderDetailId]) }}</strong>
+                      {{ form_widget(partialRefundForm['quantity_' ~ product.orderDetailId]) }}
+                      <div class="input-group-append"><div class="input-group-text">/ {{ product.quantityRefundable }}</div></div>
+                    </div>
+                  </div>
+                  <div class="col-lg-8">
+                    <div class="input-group">
+                      <strong>{{ form_label(partialRefundForm['amount_' ~ product.orderDetailId]) }}</strong>
+                      {{ form_widget(partialRefundForm['amount_' ~ product.orderDetailId]) }}
+                      <div class="input-group-append"><div class="input-group-text">{{ orderCurrency.symbol }}</div></div>
+                    </div>
+                    <p class="text-center">{{ '(Max %amount_refundable% %tax_method%)'|trans({
+                        '%amount_refundable%': product.amountRefundable,
+                        '%tax_method%': orderForViewing.taxMethod
+                      }, 'Admin.Orderscustomers.Help')|raw }}</p>
                   </div>
                 </div>
-                <div class="col-lg-8">
-                  <div class="input-group">
-                    <strong>{{ form_label(partialRefundForm['amount_' ~ product.orderDetailId]) }}</strong>
-                    {{ form_widget(partialRefundForm['amount_' ~ product.orderDetailId]) }}
-                    <div class="input-group-append"><div class="input-group-text">€</div></div>
-                  </div>
-                </div>
-              </div>
-            </td>
-            <td class="partial-refund">
-
+              </span>
             </td>
           </tr>
         {% endfor %}
@@ -237,10 +239,12 @@
 
             <span class="partial-refund">
               <p class="text-muted mb-0 text-center"><strong>{{ 'Shipping'|trans({}, 'Admin.Catalog.Feature') }}</strong></p>
-              <div class="col-sm text-center shipping-price-container" >
-                    <strong>{{ orderForViewing.prices.shippingPriceFormatted }}</strong>
-                    {{ form_widget(partialRefundForm.shipping) }}
-                    <div class="input-group-append"><div class="input-group-text">€</div></div>
+              <div class="col-sm text-center shipping-price-container">
+                <strong>{{ orderForViewing.prices.shippingPriceFormatted }}</strong>
+                {{ form_widget(partialRefundForm.shipping) }}
+                <div class="input-group-append">
+                  <div class="input-group-text">{{ orderCurrency.symbol }}</div>
+                </div>
               </div>
               <p class="text-center">(max {{ orderForViewing.prices.shippingPriceFormatted }} tax included)</p>
             </span>
@@ -274,31 +278,19 @@
             {% endif %}
           </small>
         </p>
-        <div class="partial-refund refund-checkboxes-container">
+        <div class="refund-checkboxes-container">
           <div class="form-group">
-            <div class="md-checkbox">
-              <label>
-                {{ form_widget(partialRefundForm.restock) }}
-                <i class="md-checkbox-control"></i>
-
-              </label>
-            </div>
+            {{ form_widget(partialRefundForm.restock) }}
           </div>
           <div class="form-group">
-            <div class="md-checkbox">
-              <label>
-                {{ form_widget(partialRefundForm.voucher) }}
-                <i class="md-checkbox-control"></i>
-
-              </label>
-            </div>
+            {{ form_widget(partialRefundForm.voucher) }}
           </div>
         </div>
       </div>
-      <span class="partial-refund">
-      <a href="#" class="partial-refund partial_refund_cancel btn btn-outline-dark">Cancel</a>
-      {{ form_widget(partialRefundForm.save) }}
-        </span>
+      <div class="partial-refund form-submit text-right">
+        <button class="partial-refund partial-refund-cancel btn btn-outline-secondary" type="button">Cancel</button>
+        {{ form_widget(partialRefundForm.save) }}
+      </div>
     </div>
   </div>
 </div>
