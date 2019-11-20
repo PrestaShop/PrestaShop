@@ -81,5 +81,4 @@ describe('Filter the Orders table by ID, REFERENCE, STATUS', async () => {
 
   // Logout from BO
   loginCommon.logoutBO();
-  
 });
