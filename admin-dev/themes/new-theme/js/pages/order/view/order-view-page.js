@@ -62,6 +62,7 @@ export default class OrderViewPage {
 
     EventEmitter.on(OrderViewEventMap.productAddedToOrder, (event) => {
       this.orderProductRenderer.addOrUpdateProductFromToList(event.orderProductId, event.newRow);
+      this.orderProductRenderer.resetAddRow();
       this.orderPricesRefresher.refresh(event.orderId);
       this.orderProductRenderer.moveProductPanelToOriginalPosition();
       this.listenForProductDelete();
