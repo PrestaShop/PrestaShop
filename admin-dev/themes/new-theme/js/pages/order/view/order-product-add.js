@@ -39,6 +39,7 @@ export default class OrderProductAdd {
     this.combinationsSelect = $(OrderViewPageMap.productAddCombinationsSelect);
     this.priceTaxIncludedInput = $(OrderViewPageMap.productAddPriceTaxInclInput);
     this.priceTaxExcludedInput = $(OrderViewPageMap.productAddPriceTaxExclInput);
+    this.taxRateInput = $(OrderViewPageMap.productAddTaxRateInput);
     this.quantityInput = $(OrderViewPageMap.productAddQuantityInput);
     this.availableText = $(OrderViewPageMap.productAddAvailableText);
     this.available = null;
@@ -65,8 +66,22 @@ export default class OrderProductAdd {
     this.productIdInput.on('change', () => {
       this.productAddActionBtn.removeAttr('disabled');
     });
-    this.priceTaxIncludedInput.on('change keyup', (event) => { this.priceTaxExcludedInput.val(event.target.value); });
-    this.priceTaxExcludedInput.on('change keyup', (event) => { this.priceTaxIncludedInput.val(event.target.value); });
+    this.priceTaxIncludedInput.on('change keyup', (event) => {
+      let priceTaxIncl = parseFloat(event.target.value);
+      if (priceTaxIncl < 0 || isNaN(priceTaxIncl)) {
+        priceTaxIncl = 0;
+      }
+      const taxRate = this.taxRateInput.val() / 100 + 1;
+      this.priceTaxExcludedInput.val(ps_round(priceTaxIncl / taxRate, 2));
+    });
+    this.priceTaxExcludedInput.on('change keyup', (event) => {
+      let priceTaxExcl = parseFloat(event.target.value);
+      if (priceTaxExcl < 0 || isNaN(priceTaxExcl)) {
+        priceTaxExcl = 0;
+      }
+      const taxRate = this.taxRateInput.val() / 100 + 1;
+      this.priceTaxIncludedInput.val(ps_round(priceTaxExcl * taxRate, 2));
+    });
     this.productAddActionBtn.on('click', event => this.addProduct($(event.currentTarget).data('order-id')));
   }
 
@@ -74,6 +89,7 @@ export default class OrderProductAdd {
     this.productIdInput.val(product.product_id).trigger('change');
     this.priceTaxExcludedInput.val(product.price_tax_excl);
     this.priceTaxIncludedInput.val(product.price_tax_incl);
+    this.taxRateInput.val(product.tax_rate);
     this.available = product.stock;
     this.quantityInput.trigger('change');
     this.setCombinations(product.combinations);
