@@ -60,7 +60,7 @@ class PartialRefundType extends AbstractType
         $builder
             ->add('shipping', NumberType::class,
                 [
-                    'label' => 'shipping',
+                    'label' => $translator->trans('Shipping', [], 'Admin.Catalog.Feature'),
                     'required' => false,
                 ]
             )
