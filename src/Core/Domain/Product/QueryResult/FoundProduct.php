@@ -42,6 +42,11 @@ class FoundProduct
     private $name;
 
     /**
+     * @var float
+     */
+    private $taxRate;
+
+    /**
      * @var string
      */
     private $formattedPrice;
@@ -77,6 +82,7 @@ class FoundProduct
      * @param string $formattedPrice
      * @param float $priceTaxIncl
      * @param float $priceTaxExcl
+     * @param float $taxRate
      * @param int $stock
      * @param ProductCombination[] $combinations
      * @param ProductCustomizationField[] $customizationFields
@@ -87,6 +93,7 @@ class FoundProduct
         string $formattedPrice,
         float $priceTaxIncl,
         float $priceTaxExcl,
+        float $taxRate,
         int $stock,
         array $combinations = [],
         array $customizationFields = []
@@ -96,6 +103,7 @@ class FoundProduct
         $this->formattedPrice = $formattedPrice;
         $this->priceTaxIncl = $priceTaxIncl;
         $this->priceTaxExcl = $priceTaxExcl;
+        $this->taxRate = $taxRate;
         $this->stock = $stock;
         $this->combinations = $combinations;
         $this->customizationFields = $customizationFields;
@@ -147,6 +155,14 @@ class FoundProduct
     public function getStock(): int
     {
         return $this->stock;
+    }
+
+    /**
+     * @return float
+     */
+    public function getTaxRate(): float
+    {
+        return $this->taxRate;
     }
 
     /**
