@@ -76,11 +76,11 @@ final class IssuePartialRefundHandler extends AbstractOrderCommandHandler implem
         $fullQuantityList = [];
 
         foreach ($refunds as $orderDetailId => $refund) {
-            $quantity = $refund['quantity'];
-
-            if (!$quantity) {
+            if (empty($refund['quantity'])) {
                 continue;
             }
+
+            $quantity = $refund['quantity'];
 
             $fullQuantityList[$orderDetailId] = $quantity;
 
@@ -90,18 +90,22 @@ final class IssuePartialRefundHandler extends AbstractOrderCommandHandler implem
             ];
 
             $orderDetail = new OrderDetail($orderDetailId);
+            $taxCalculator = $this->getTaxCaculator($order->carrier_tax_rate);
 
             if (empty($refund['amount'])) {
-                $orderDetailList[$orderDetailId]['unit_price'] = $command->getTaxMethod() ?
+                $refund['amount'] = $command->getTaxMethod() ?
                     $orderDetail->unit_price_tax_excl :
                     $orderDetail->unit_price_tax_incl;
-                $orderDetailList[$orderDetailId]['amount'] =
-                    $orderDetail->unit_price_tax_incl * $orderDetailId[$orderDetailId]['quantity'];
+                $refund['amount'] *= $quantity;
             } else {
-                $orderDetailList[$orderDetailId]['amount'] = (float) str_replace(',', '.', $refund['amount']);
-                $orderDetailList[$orderDetailId]['unit_price'] =
-                    $orderDetailList[$orderDetailId]['amount'] / $orderDetailList[$orderDetailId]['quantity'];
+                $refund['amount'] = $command->getTaxMethod() ?
+                    $taxCalculator->removeTaxes($refund['amount']) :
+                    $taxCalculator->addTaxes($refund['amount']);
             }
+
+            $orderDetailList[$orderDetailId]['amount'] = (float) str_replace(',', '.', $refund['amount']);
+            $orderDetailList[$orderDetailId]['unit_price'] =
+                    $orderDetailList[$orderDetailId]['amount'] / $orderDetailList[$orderDetailId]['quantity'];
 
             // add missing fields
             $orderDetailList[$orderDetailId]['unit_price_tax_excl'] = $orderDetail->unit_price_tax_excl;
@@ -144,9 +148,6 @@ final class IssuePartialRefundHandler extends AbstractOrderCommandHandler implem
         if ($shippingCostAmount > 0) {
             if (!$command->getTaxMethod()) {
                 // @todo: use https://github.com/PrestaShop/decimal for price computations
-                $tax = new Tax();
-                $tax->rate = $order->carrier_tax_rate;
-                $taxCalculator = new TaxCalculator([$tax]);
                 $amount += $taxCalculator->addTaxes($shippingCostAmount);
             } else {
                 $amount += $shippingCostAmount;
@@ -168,7 +169,7 @@ final class IssuePartialRefundHandler extends AbstractOrderCommandHandler implem
                 $shippingCostAmount,
                 $voucher,
                 $chosen,
-                $command->getTaxMethod() ? false : true
+                $command->getTaxMethod()
             );
 
             if (!$orderSlipCreated) {
@@ -315,5 +316,18 @@ final class IssuePartialRefundHandler extends AbstractOrderCommandHandler implem
                 (int) $order->id_shop
             );
         }
+    }
+
+    /**
+     * @param float $taxRate
+     *
+     * @return TaxCalculator
+     */
+    private function getTaxCaculator(float $taxRate)
+    {
+        $tax = new Tax();
+        $tax->rate = $taxRate;
+
+        return new TaxCalculator([$tax]);
     }
 }
