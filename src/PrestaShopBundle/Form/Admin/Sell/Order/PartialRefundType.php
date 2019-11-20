@@ -29,8 +29,8 @@ namespace PrestaShopBundle\Form\Admin\Sell\Order;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use PrestaShopBundle\Form\Type\StyledCheckboxType;
 
 class PartialRefundType extends AbstractType
 {
@@ -64,13 +64,13 @@ class PartialRefundType extends AbstractType
                     'required' => false,
                 ]
             )
-            ->add('restock', CheckboxType::class,
+            ->add('restock', StyledCheckboxType::class,
                 [
                     'required' => false,
                     'label' => $translator->trans('Re-stock products', [], 'Admin.Orderscustomers.Feature'),
                 ]
             )
-            ->add('voucher', CheckboxType::class,
+            ->add('voucher', StyledCheckboxType::class,
                 [
                     'required' => false,
                     'label' => $translator->trans('Generate a voucher', [], 'Admin.Orderscustomers.Feature'),

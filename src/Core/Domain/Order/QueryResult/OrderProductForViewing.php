@@ -98,6 +98,11 @@ class OrderProductForViewing
      */
     private $quantityRefunded;
 
+    /**
+     * @var string
+     */
+    private $amountRefundable;
+
     public function __construct(
         int $orderDetailId,
         int $id,
@@ -112,7 +117,8 @@ class OrderProductForViewing
         float $unitPriceTaxExclRaw,
         float $unitPriceTaxInclRaw,
         string $amountRefund,
-        int $quantityRefunded
+        int $quantityRefunded,
+        string $amountRefundable
     ) {
         $this->id = $id;
         $this->name = $name;
@@ -128,6 +134,7 @@ class OrderProductForViewing
         $this->orderDetailId = $orderDetailId;
         $this->amountRefund = $amountRefund;
         $this->quantityRefunded = $quantityRefunded;
+        $this->amountRefundable = $amountRefundable;
     }
 
     /**
@@ -240,6 +247,14 @@ class OrderProductForViewing
     public function getQuantityRefunded(): int
     {
         return $this->quantityRefunded;
+    }
+
+    /**
+     * @return float
+     */
+    public function getAmountRefundable(): string
+    {
+        return $this->amountRefundable;
     }
 
     /**

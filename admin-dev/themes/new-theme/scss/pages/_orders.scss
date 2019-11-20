@@ -65,9 +65,14 @@
   flex: wrap;
 }
 
-.partial-refund.refund-checkboxes-container {
+.refund-checkboxes-container {
   max-width: 90px;
   margin: 16px auto;
+  display: none;
+}
+
+.refund-checkboxes-container .form-group {
+  width: max-content;
 }
 
 .partial-refund .shipping-price-container {
