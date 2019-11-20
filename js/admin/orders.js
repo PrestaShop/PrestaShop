@@ -251,12 +251,22 @@ function refreshProductLineView(element, view)
 
 function updateAmounts(order)
 {
+  var display_tax_separately = $('#total_taxes').length;
 	$('#total_products td.amount').fadeOut('slow', function() {
-		formatCurrencyCldr(parseFloat(order.total_products_wt), function(value) {
+		formatCurrencyCldr(parseFloat(display_tax_separately ? order.total_products : order.total_products_wt), function(value) {
 			$('#total_products td.amount').html(value);
 			$('#total_products td.amount').fadeIn('slow');
 		});
 	});
+
+  if (display_tax_separately) {
+		$('#total_taxes td.amount').fadeOut('slow', function () {
+			formatCurrencyCldr(parseFloat(order.total_products_wt - order.total_products), function (value) {
+				$('#total_taxes td.amount').html(value);
+				$('#total_taxes td.amount').fadeIn('slow');
+			});
+		});
+	}
 
 	$('#total_discounts td.amount').fadeOut('slow', function() {
 		formatCurrencyCldr(parseFloat(order.total_discounts_tax_incl), function(value) {
