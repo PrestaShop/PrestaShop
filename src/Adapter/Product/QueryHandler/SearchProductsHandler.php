@@ -163,12 +163,15 @@ final class SearchProductsHandler implements SearchProductsHandlerInterface
                 }
 
                 $priceTaxExcluded = Product::getPriceStatic((int) $product->id, false, $productAttributeId);
+                $priceTaxIncluded = Product::getPriceStatic((int) $product->id, true, $productAttributeId);
 
                 $productCombination = new ProductCombination(
                     $productAttributeId,
                     $attribute,
                     $combination['quantity'],
-                    $this->contextLocale->formatPrice($priceTaxExcluded, $currencyIsoCode)
+                    $this->contextLocale->formatPrice($priceTaxExcluded, $currencyIsoCode),
+                    $priceTaxExcluded,
+                    $priceTaxIncluded
                 );
 
                 $productCombinations[$productCombination->getAttributeCombinationId()] = $productCombination;
