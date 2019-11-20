@@ -43,6 +43,15 @@ export default class OrderProductRenderer {
     }
   }
 
+  resetAddRow() {
+    $(OrderViewPageMap.productSearchInput).val('');
+    $(OrderViewPageMap.productAddCombinationsSelect).val('');
+    $(OrderViewPageMap.productAddPriceTaxExclInput).val('');
+    $(OrderViewPageMap.productAddPriceTaxInclInput).val('');
+    $(OrderViewPageMap.productAddQuantityInput).val('');
+    $(OrderViewPageMap.productAddAvailableText).html('');
+  }
+
   moveProductsPanelToModificationPosition() {
     const $modificationPosition = $(OrderViewPageMap.productModificationPosition);
 
