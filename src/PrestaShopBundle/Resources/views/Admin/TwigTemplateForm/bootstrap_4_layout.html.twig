@@ -825,3 +825,13 @@
     </datalist>
   {% endif %}
 {% endblock text_widget %}
+
+{% block styled_checkbox_widget -%}
+  <div class="md-checkbox">
+    <label>
+      <input type="checkbox" name="{{ full_name }}"/>
+      <i class="md-checkbox-control"></i>
+      {{ label }}
+    </label>
+  </div>
+{%- endblock styled_checkbox_widget %}
