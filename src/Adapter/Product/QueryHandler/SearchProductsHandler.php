@@ -120,6 +120,7 @@ final class SearchProductsHandler implements SearchProductsHandlerInterface
             $this->contextLocale->formatPrice($priceTaxExcluded, $query->getCurrency()->iso_code),
             $priceTaxIncluded,
             $priceTaxExcluded,
+            $product->getTaxesRate(),
             Product::getQuantity($product->id),
             $this->getProductCombinations($product, $query->getCurrency()->iso_code),
             $this->getProductCustomizationFields($product)
