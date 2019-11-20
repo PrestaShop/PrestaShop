@@ -47,6 +47,16 @@ class ProductCombination
     private $stock;
 
     /**
+     * @var float
+     */
+    private $priceTaxExcluded;
+
+    /**
+     * @var float
+     */
+    private $priceTaxIncluded;
+
+    /**
      * @var string
      */
     private $formattedPrice;
@@ -56,13 +66,23 @@ class ProductCombination
      * @param string $attribute
      * @param int $stock
      * @param string $formattedPrice
+     * @param float $priceTaxExcluded
+     * @param float $priceTaxIncluded
      */
-    public function __construct(int $attributeCombinationId, string $attribute, int $stock, string $formattedPrice)
-    {
+    public function __construct(
+        int $attributeCombinationId,
+        string $attribute,
+        int $stock,
+        string $formattedPrice,
+        float $priceTaxExcluded,
+        float $priceTaxIncluded
+    ) {
         $this->attributeCombinationId = $attributeCombinationId;
         $this->attribute = $attribute;
         $this->stock = $stock;
         $this->formattedPrice = $formattedPrice;
+        $this->priceTaxExcluded = $priceTaxExcluded;
+        $this->priceTaxIncluded = $priceTaxIncluded;
     }
 
     /**
@@ -79,6 +99,22 @@ class ProductCombination
     public function getAttribute(): string
     {
         return $this->attribute;
+    }
+
+    /**
+     * @return float
+     */
+    public function getPriceTaxExcluded(): float
+    {
+        return $this->priceTaxExcluded;
+    }
+
+    /**
+     * @return float
+     */
+    public function getPriceTaxIncluded(): float
+    {
+        return $this->priceTaxIncluded;
     }
 
     /**
