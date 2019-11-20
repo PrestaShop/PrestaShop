@@ -183,7 +183,6 @@ class OrderSlipCore extends ObjectModel
      * Get resume of all refund for one product line.
      *
      * @param $id_order_detail
-     *
      */
     public static function getProductSlipResume($id_order_detail)
     {
