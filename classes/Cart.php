@@ -745,43 +745,47 @@ class CartCore extends ObjectModel
         Product::cacheProductsFeatures($products_ids);
         Cart::cacheSomeAttributesLists($pa_ids, $this->id_lang);
 
-        $this->_products = array();
         if (empty($result)) {
+            $this->_products = array();
+
             return array();
         }
 
         if ($fullInfos) {
-            $ecotax_rate = (float) Tax::getProductEcotaxRate($this->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
-            $apply_eco_tax = Product::$_taxCalculationMethod == PS_TAX_INC && (int) Configuration::get('PS_TAX');
             $cart_shop_context = Context::getContext()->cloneContext();
 
-            $gifts = $this->getCartRules(CartRule::FILTER_ACTION_GIFT);
             $givenAwayProductsIds = array();
 
-            if ($this->shouldSplitGiftProductsQuantity && count($gifts) > 0) {
-                foreach ($gifts as $gift) {
-                    foreach ($result as $rowIndex => $row) {
-                        if (!array_key_exists('is_gift', $result[$rowIndex])) {
-                            $result[$rowIndex]['is_gift'] = false;
+            // Do not recalculate in case of refresh
+            if ($this->shouldSplitGiftProductsQuantity && !$refresh) {
+                $gifts = $this->getCartRules(CartRule::FILTER_ACTION_GIFT, false);
+                if (count($gifts) > 0) {
+                    foreach ($gifts as $gift) {
+                        foreach ($result as $rowIndex => $row) {
+                            if (!array_key_exists('is_gift', $result[$rowIndex])) {
+                                $result[$rowIndex]['is_gift'] = false;
+                            }
+
+                            if (
+                                $row['id_product'] == $gift['gift_product'] &&
+                                $row['id_product_attribute'] == $gift['gift_product_attribute']
+                            ) {
+                                $row['is_gift'] = true;
+                                $result[$rowIndex] = $row;
+                            }
                         }
 
-                        if (
-                            $row['id_product'] == $gift['gift_product'] &&
-                            $row['id_product_attribute'] == $gift['gift_product_attribute']
-                        ) {
-                            $row['is_gift'] = true;
-                            $result[$rowIndex] = $row;
+                        $index = $gift['gift_product'] . '-' . $gift['gift_product_attribute'];
+                        if (!array_key_exists($index, $givenAwayProductsIds)) {
+                            $givenAwayProductsIds[$index] = 1;
+                        } else {
+                            ++$givenAwayProductsIds[$index];
                         }
-                    }
-
-                    $index = $gift['gift_product'] . '-' . $gift['gift_product_attribute'];
-                    if (!array_key_exists($index, $givenAwayProductsIds)) {
-                        $givenAwayProductsIds[$index] = 1;
-                    } else {
-                        ++$givenAwayProductsIds[$index];
                     }
                 }
             }
+
+            $this->_products = array();
 
             foreach ($result as &$row) {
                 if (!array_key_exists('is_gift', $row)) {
@@ -4211,7 +4215,7 @@ class CartCore extends ObjectModel
 
         if (!$hasRemainingCustomData) {
             $result &= Db::getInstance()->execute(
-                'DELETE FROM `' . _DB_PREFIX_ . 'customization` 
+                'DELETE FROM `' . _DB_PREFIX_ . 'customization`
             WHERE `id_customization` = ' . (int) $cust_data['id_customization']
             );
         }

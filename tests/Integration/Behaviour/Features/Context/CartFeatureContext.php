@@ -40,6 +40,40 @@ class CartFeatureContext extends AbstractPrestaShopFeatureContext
     protected $cart;
 
     /**
+     * @Then there is no delivery options available for my cart
+     */
+    public function noDeliveryOptions()
+    {
+        if ($this->getCurrentCart() === null) {
+            throw new \RuntimeException('No current cart, cannot check available delivery options');
+        }
+
+        $deliveryOptions = $this->getCurrentCart()->getDeliveryOptionList();
+
+        if (!empty($deliveryOptions)) {
+            throw new \RuntimeException('Expected no available delivery options, but there are some !');
+        }
+    }
+
+    /**
+     * @Then there are available delivery options for my cart
+     *
+     * @todo: improve this to assert the content of delivery options
+     */
+    public function deliveryOptionsAreAvailable()
+    {
+        if ($this->getCurrentCart() === null) {
+            throw new \RuntimeException('No current cart, cannot check available delivery options');
+        }
+
+        $deliveryOptions = $this->getCurrentCart()->getDeliveryOptionList();
+
+        if (empty($deliveryOptions)) {
+            throw new \RuntimeException('Expected available delivery options, but there are none !');
+        }
+    }
+
+    /**
      * @Given /^I have an empty default cart$/
      */
     public function iHaveAnEmptyDefaultCart()
