@@ -315,7 +315,6 @@ class OrderSlipCore extends ObjectModel
             $order_slip_resume = OrderSlip::getProductSlipResume((int) $order_detail->id);
             if ($quantity + $order_slip_resume['product_quantity'] > $order_detail->product_quantity) {
                 $quantity = $order_detail->product_quantity - $order_slip_resume['product_quantity'];
-                // $quantity = $order_detail->product_quantity - $product['quantity'];
             }
 
             if ($quantity == 0) {
