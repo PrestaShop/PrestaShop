@@ -89,5 +89,5 @@ The Code of Conduct is intended to apply equally to each member of the community
 
 ---
 
-This code of conduct is based on the [template](https://github.com/todogroup/opencodeofconduct/blob/gh-pages/codeofconduct_redo.md) established by the [TODO Group](http://todogroup.org/) and used by numerous other large communities (e.g., [Yahoo](https://yahoo.github.io/codeofconduct), [GitHub](http://todogroup.org/opencodeofconduct/#opensource@github.com)), and is influenced by other large online communities like [Stackoverflow](https://stackoverflow.com/conduct). Like the template, this text is shared under the [CC-BY-4.0 license](https://creativecommons.org/licenses/by/4.0/).
+This code of conduct is based on the [template](https://github.com/todogroup/opencodeofconduct/blob/gh-pages/codeofconduct_redo.md) established by the [TODO Group](http://todogroup.org/) and used by numerous other large communities (e.g., [Yahoo](https://yahoo.github.io/codeofconduct), [GitHub](http://todogroup.org/opencodeofconduct/#opensource@github.com)), and is influenced by other large online communities like [Stack Overflow](https://stackoverflow.com/conduct). Like the template, this text is shared under the [CC-BY-4.0 license](https://creativecommons.org/licenses/by/4.0/).
 
