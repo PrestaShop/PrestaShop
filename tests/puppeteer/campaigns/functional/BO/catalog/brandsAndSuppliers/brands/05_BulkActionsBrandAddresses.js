@@ -13,8 +13,8 @@ const AddBrandAddressPage = require('@pages/BO/catalog/brands/addresses/add');
 let browser;
 let page;
 let numberOfBrandAddresses = 0;
-let firstAddressData = new BrandAddressFaker({firstName: 'AddressToDelete'});
-let secondAddressData = new BrandAddressFaker({firstName: 'AddressToDeleteTwo'});
+const firstAddressData = new BrandAddressFaker({firstName: 'AddressToDelete'});
+const secondAddressData = new BrandAddressFaker({firstName: 'AddressToDeleteTwo'});
 
 // Init objects needed
 const init = async function () {
