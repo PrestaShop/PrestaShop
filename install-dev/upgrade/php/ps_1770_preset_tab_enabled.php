@@ -28,11 +28,8 @@
  * Preset enabled new column in tabs to true for all (except for disabled modules)
  */
 function ps_1770_preset_tab_enabled() {
-    // Doctrine schema update is launched after this script so we need to, at least, add this field in database manually
-    $result = Db::getInstance()->execute('ALTER TABLE `' . _DB_PREFIX_ . 'tab` ADD enabled TINYINT(1) NOT NULL');
-
     //First set all tabs enabled
-    $result &= Db::getInstance()->execute(
+    $result = Db::getInstance()->execute(
         'UPDATE `'._DB_PREFIX_.'tab` SET `enabled` = 1'
     );
 

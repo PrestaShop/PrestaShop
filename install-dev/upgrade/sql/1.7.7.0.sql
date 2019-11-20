@@ -1,7 +1,7 @@
 SET SESSION sql_mode='';
 SET NAMES 'utf8';
 
-/* PHP:ps_1770_update_charset(); */;
+ALTER DATABASE `DB_NAME` CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci;
 
 INSERT INTO `PREFIX_configuration` (`name`, `value`, `date_add`, `date_upd`) VALUES ('PS_DISPLAY_MANUFACTURERS', '1', NOW(), NOW());
 
@@ -23,7 +23,6 @@ ALTER TABLE `PREFIX_hook` CHANGE `name` `name` VARCHAR(191) NOT NULL;
 ALTER TABLE `PREFIX_hook` CHANGE `title` `title` VARCHAR(255) NOT NULL;
 ALTER TABLE `PREFIX_hook_alias` CHANGE `name` `name` VARCHAR(191) NOT NULL;
 ALTER TABLE `PREFIX_hook_alias` CHANGE `alias` `alias` VARCHAR(191) NOT NULL;
-
 
 /* Utf8mb4 conversion */
 ALTER TABLE `PREFIX_access` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
@@ -514,4 +513,6 @@ ALTER TABLE `PREFIX_web_browser` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb
 ALTER TABLE `PREFIX_zone` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 ALTER TABLE `PREFIX_zone_shop` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 
+/* Doctrine update happens too late to update the new enabled field, so we preset everything here */
+ALTER TABLE `PREFIX_tab` ADD enabled TINYINT(1) NOT NULL;
 /* PHP:ps_1770_preset_tab_enabled(); */;

@@ -110,6 +110,7 @@ namespace PrestaShopBundle\Install {
 
         const FILE_PREFIX = 'PREFIX_';
         const ENGINE_TYPE = 'ENGINE_TYPE';
+        const DB_NAME = 'DB_NAME';
 
         private static $classes14 = ['Cache', 'CacheFS', 'CarrierModule', 'Db', 'FrontController', 'Helper', 'ImportModule',
             'MCached', 'Module', 'ModuleGraph', 'ModuleGraphEngine', 'ModuleGrid', 'ModuleGridEngine',
@@ -420,7 +421,7 @@ namespace PrestaShopBundle\Install {
                         $this->logError('Error while loading SQL upgrade file "%file%.sql".', 33, array('%file%' => $version));
                     }
                     $sqlContent .= "\n";
-                    $sqlContent = str_replace(array(self::FILE_PREFIX, self::ENGINE_TYPE), array(_DB_PREFIX_, $mysqlEngine), $sqlContent);
+                    $sqlContent = str_replace(array(self::FILE_PREFIX, self::ENGINE_TYPE, self::DB_NAME), array(_DB_PREFIX_, $mysqlEngine, _DB_NAME_), $sqlContent);
                     $sqlContent = preg_split("/;\s*[\r\n]+/", $sqlContent);
 
                     $sqlContentVersion[$version] = $sqlContent;
