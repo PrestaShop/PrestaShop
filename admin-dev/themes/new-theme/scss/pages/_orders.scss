@@ -152,9 +152,20 @@ $order-block-background-color: #F8F8F8;
   flex: wrap;
 }
 
-.partial-refund.refund-checkboxes-container {
+.partial-refund.form-submit {
+  width: 100%;
+  margin-right: 20px;
+  margin-top: -10px;
+}
+
+.refund-checkboxes-container {
   max-width: 90px;
   margin: 16px auto;
+  display: none;
+}
+
+.refund-checkboxes-container .form-group {
+  width: max-content;
 }
 
 .partial-refund .shipping-price-container {

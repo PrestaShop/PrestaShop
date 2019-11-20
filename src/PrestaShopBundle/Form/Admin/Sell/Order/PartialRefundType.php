@@ -26,54 +26,63 @@
 
 namespace PrestaShopBundle\Form\Admin\Sell\Order;
 
-use Symfony\Component\Form\AbstractType;
+use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 
-class PartialRefundType extends AbstractType
+class PartialRefundType extends TranslatorAwareType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $products = $options['data']['products'];
         $taxMethod = $options['data']['taxMethod'];
-        $translator = $options['data']['translator'];
 
         foreach ($products as $product) {
             $builder
                 ->add('quantity_' . $product->getOrderDetailId(), NumberType::class, [
                     'attr' => ['max' => $product->getQuantity(), 'class' => 'refund-quantity'],
-                    'label' => $translator->trans('Qty', [], 'Admin.Orderscustomers.Feature'),
+                    'label' => $this->trans('Quantity', 'Global', []),
+                    'invalid_message' => $this->trans('This field is invalid, it must contain numeric values', 'Admin.Notifications.Error', []),
                     'required' => false,
+                    'data' => 0,
                 ])
                 ->add('amount_' . $product->getOrderDetailId(), NumberType::class, [
                     'attr' => ['max' => $product->getTotalPrice(), 'class' => 'refund-amount'],
                     'label' => sprintf(
                         '%s (%s)',
-                        $translator->trans('Amount', [], 'Admin.Global'),
+                        $this->trans('Amount', 'Admin.Global', []),
                         $taxMethod
                     ),
+                    'invalid_message' => $this->trans('This field is invalid, it must contain numeric values', 'Admin.Notifications.Error', []),
                     'required' => false,
                 ]);
         }
         $builder
             ->add('shipping', NumberType::class,
                 [
-                    'label' => 'shipping',
+                    'label' => $this->trans('Shipping', 'Admin.Catalog.Feature', []),
+                    'invalid_message' => $this->trans('The "shipping" field must be a valid number', 'Admin.Orderscustomers.Feature', []),
                     'required' => false,
                 ]
             )
             ->add('restock', CheckboxType::class,
                 [
                     'required' => false,
-                    'label' => $translator->trans('Re-stock products', [], 'Admin.Orderscustomers.Feature'),
+                    'label' => $this->trans('Re-stock products', 'Admin.Orderscustomers.Feature', []),
+                    'attr' => [
+                        'material_design' => true,
+                    ],
                 ]
             )
             ->add('voucher', CheckboxType::class,
                 [
                     'required' => false,
-                    'label' => $translator->trans('Generate a voucher', [], 'Admin.Orderscustomers.Feature'),
+                    'label' => $this->trans('Generate a voucher', 'Admin.Orderscustomers.Feature', []),
+                    'attr' => [
+                        'material_design' => true,
+                    ],
                 ]
             )
             ->add('save', SubmitType::class, [

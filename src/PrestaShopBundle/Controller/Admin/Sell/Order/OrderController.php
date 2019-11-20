@@ -69,7 +69,6 @@ use PrestaShopBundle\Form\Admin\Sell\Order\ChangeOrderCurrencyType;
 use PrestaShopBundle\Form\Admin\Sell\Order\ChangeOrdersStatusType;
 use PrestaShopBundle\Form\Admin\Sell\Order\OrderMessageType;
 use PrestaShopBundle\Form\Admin\Sell\Order\OrderPaymentType;
-use PrestaShopBundle\Form\Admin\Sell\Order\PartialRefundType;
 use PrestaShopBundle\Form\Admin\Sell\Order\UpdateOrderShippingType;
 use PrestaShopBundle\Form\Admin\Sell\Order\UpdateOrderStatusType;
 use PrestaShopBundle\Form\Admin\Sell\Order\UpdateProductInOrderType;
@@ -80,8 +79,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use PrestaShop\PrestaShop\Core\Domain\Order\Command\IssuePartialRefundCommand;
-use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 
 /**
  * Manages "Sell > Orders" page
@@ -292,11 +289,8 @@ class OrderController extends FrameworkBundleAdminController
     {
         /** @var OrderForViewing $orderForViewing */
         $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
-
-        $orderDetailIds = [];
-        foreach($orderForViewing->getProducts()->getProducts() as $product) {
-            $orderDetailIds[] = $product->getOrderDetailId();
-        }
+        $currencyDataProvider = $this->container->get('prestashop.adapter.data_provider.currency');
+        $orderCurrency = $currencyDataProvider->getCurrencyById($orderForViewing->getCurrencyId());
 
         $addOrderCartRuleForm = $this->createForm(AddOrderCartRuleType::class, [], [
             'order_id' => $orderId,
@@ -348,12 +342,9 @@ class OrderController extends FrameworkBundleAdminController
             'actionGetAdminOrderButtons',
             $hookParameters
         );
-        $translator = $this->get('translator');
-        $partialRefundForm = $this->createForm(PartialRefundType::class, [
-            'products' => $orderForViewing->getProducts()->getProducts(),
-            'taxMethod' => $orderForViewing->getTaxMethod(),
-            'translator' => $translator,
-        ]);
+
+        $formBuilder = $this->get('prestashop.core.form.identifiable_object.builder.partial_refund_form_builder');
+        $partialRefundForm = $formBuilder->getFormFor($orderId);
 
         return $this->render('@PrestaShop/Admin/Sell/Order/Order/view.html.twig', [
             'showContentHeader' => true,
@@ -374,53 +365,32 @@ class OrderController extends FrameworkBundleAdminController
             'changeOrderAddressForm' => $changeOrderAddressForm->createView(),
             'orderMessageForm' => $orderMessageForm->createView(),
             'backOfficeOrderButtons' => $backOfficeOrderButtons,
+            'orderCurrency' => $orderCurrency,
         ]);
     }
 
+    /***
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
+     *
+     * @param int $orderId
+     * @param Request $request
+     * @return RedirectResponse
+     */
     public function partialRefundAction(int $orderId, Request $request)
     {
-        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
-        $form = $this->createForm(PartialRefundType::class, [
-            'products' => $orderForViewing->getProducts()->getProducts(),
-            'taxMethod' => $orderForViewing->getTaxMethod(),
-            'translator' => $this->get('translator'),
-        ]);
-        $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            $data = $form->getData();
-            $refunds = [];
-            foreach ($data['products'] as $product)
-            {
-                $orderDetailId = $product->getOrderDetailId();
-                if (!empty($data['quantity_' . $orderDetailId])) {
-                    $refunds[$orderDetailId]['quantity'] = $data['quantity_' . $orderDetailId];
-                }
-                if (!empty($data['amount_' . $orderDetailId])) {
-                    $refunds[$orderDetailId]['amount'] = $data['amount_' . $orderDetailId];
-                }
-            }
+        $formBuilder = $this->get('prestashop.core.form.identifiable_object.builder.partial_refund_form_builder');
+        $formHandler = $this->get('prestashop.core.form.identifiable_object.partial_refund_form_handler');
+        $form = $formBuilder->getFormFor($orderId);
 
-            $status = 'success';
-            $message = $this->trans('A partial refund was successfully created.', 'Admin.Orderscustomers.Notification');
-            $command = new issuePartialRefundCommand(
-                $orderId,
-                $refunds,
-                $data['shipping'],
-                $data['restock'],
-                $data['voucher'],
-                $orderForViewing->isTaxIncluded(),
-                1
-            );
-            try {
-                $this->getCommandBus()->handle($command);
-            } catch (OrderException $e) {
-                $status = 'error';
-                $message = $e->getMessage();
+        try {
+            $form->handleRequest($request);
+            $result = $formHandler->handleFor($orderId, $form);
+            if ($result->isSubmitted() && $result->isValid()) {
+                $this->addFlash('success', $this->trans('A partial refund was successfully created.', 'Admin.Orderscustomers.Notification'));
             }
-
-            $this->addFlash($status, $message);
+        } catch (Exception $e) {
+            $this->addFlash('error', $e->getMessage());
         }
-
 
         return $this->redirectToRoute('admin_orders_view', [
             'orderId' => $orderId,

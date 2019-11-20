@@ -205,5 +205,6 @@ admin_orders_partial_refund:
   methods: [POST]
   defaults:
     _controller: PrestaShopBundle:Admin/Sell/Order/Order:partialRefund
+    _legacy_controller: AdminOrders
   requirements:
     orderId: \d+

@@ -26,7 +26,6 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Order\Command;
 
-use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
 
 /**
@@ -60,7 +59,7 @@ class IssuePartialRefundCommand
     private $generateCartRule;
 
     /**
-     * @var int
+     * @var bool
      */
     private $taxMethod;
 
