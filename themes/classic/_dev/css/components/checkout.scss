@@ -1,3 +1,6 @@
+
+$carrierComponent: 'carrier';
+
 body#checkout {
   color: $gray-darker;
   #header .header-nav {
@@ -244,10 +247,13 @@ body#checkout {
         label {
           text-align: inherit;
           margin-bottom: 0;
-          .carrier {
-            > .col-xs-12 {
-              &:not(.col-md-5):not(.col-md-7) {
-                padding-left: calc(33.33333% + 30px);
+          
+          .#{$carrierComponent} {
+            margin-left: 0;
+
+            &:not(.#{$carrierComponent}-hasLogo) {
+              > .col-xs-12 {
+                padding-left: calc(33.33333% + 15px);
               }
             }
           }
@@ -512,7 +518,7 @@ body#checkout {
   body#checkout section.checkout-step .delivery-options .delivery-option {
     .carrier {
       > .col-xs-12 {
-        padding-left: 15px;
+        padding-left: 0;
       }
     }
   } 
@@ -562,9 +568,11 @@ body#checkout {
     }
   }
   body#checkout section.checkout-step .delivery-options .delivery-option {
-    label .carrier {
-      > .col-xs-12, .col-xs-12:not(.col-md-5):not(.col-md-7){
-        padding-left: 0;
+    label .#{$carrierComponent} {
+      &:not(.#{$carrierComponent}-hasLogo) {
+        .col-xs-12 {
+          padding-left: 0;
+        }
       }
     }
   } 
