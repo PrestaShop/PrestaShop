@@ -41,6 +41,12 @@ services:
         tags:
             - { name: tactician.handler, command: PrestaShop\PrestaShop\Core\Domain\Product\Command\AssignProductToCategoryCommand }
 
+    prestashop.adapter.product.command_handler.update_product_status_handler:
+        class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\UpdateProductStatusCommandHandler
+        tags:
+          - name: tactician.handler
+            command: PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductStatusCommand
+
     prestashop.adapter.product.query_handler.search_products:
         class: PrestaShop\PrestaShop\Adapter\Product\QueryHandler\SearchProductsHandler
         arguments:
@@ -50,3 +56,9 @@ services:
         tags:
             - name: tactician.handler
               command: PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProducts
+
+    prestashop.adapter.product.command_handler.get_product_is_enabled_handler:
+        class: PrestaShop\PrestaShop\Adapter\Product\QueryHandler\GetProductIsEnabledHandler
+        tags:
+            - name: tactician.handler
+              command: PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductIsEnabled

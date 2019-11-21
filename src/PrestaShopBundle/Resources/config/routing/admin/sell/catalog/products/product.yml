@@ -96,3 +96,13 @@ admin_products_search:
     _controller: PrestaShopBundle:Admin/Product:searchProducts
   options:
     expose: true
+
+admin_product_toggle_status:
+  path:     /{productId}/toggle-status
+  methods:  [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Product:toggleStatus
+    _legacy_controller: AdminTracking
+    _legacy_link: AdminTracking:statusproduct
+    _legacy_parameters:
+      id_product: productId
