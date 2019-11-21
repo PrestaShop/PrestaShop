@@ -140,4 +140,9 @@ $(() => {
       $btn.prop('disabled', parseInt(selectedOrderStatusId, 10) === $btn.data('order-status-id'));
     });
   }
+
+  $('a.partial-refund, a.partial_refund_cancel').on('click', function(e) {
+    e.preventDefault();
+    $('td.product_actions, th.product_actions, .partial_refund, .shipping-price').toggle();
+  });
 });
