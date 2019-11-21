@@ -106,8 +106,8 @@
                 {{ 'Edit address'|trans({}, 'Admin.Orderscustomers.Feature') }}
               </a>
 
-              <a href=""
-                class=" dropdown-item"
+              <a href="#"
+                class="dropdown-item"
                 data-toggle="modal"
                 data-target="#updateCustomerAddressModal"
               >
@@ -138,25 +138,36 @@
           </p>
         </div>
         <div class="col-md-6">
-          <p>
+          <div class="row justify-content-between no-gutters">
             <strong>{{ 'Invoice address'|trans({}, 'Admin.Orderscustomers.Feature') }}</strong>
 
-            <a href="{{ getAdminLink('AdminAddresses', true, {
-              'realedit': 1,
-              'addaddress': 1,
-              'address_type': 2,
-              'id_order': orderForViewing.id,
-              'id_address': orderForViewing.invoiceAddress.addressId,
-              'back': path('admin_orders_view', {'orderId': orderForViewing.id})
-            }) }}"
-               class="float-right tooltip-link"
-               data-toggle="pstooltip"
-               data-placement="top"
-               data-original-title="{{ 'Edit'|trans({}, 'Admin.Actions') }}"
-            >
+            <a class="tooltip-link" href="#" data-toggle="dropdown">
               <i class="material-icons">more_vert</i>
             </a>
-          </p>
+
+            <div class="dropdown-menu dropdown-menu-right">
+              <a class="dropdown-item"
+                href="{{ getAdminLink('AdminAddresses', true, {
+                  'realedit': 1,
+                  'addaddress': 1,
+                  'address_type': 2,
+                  'id_order': orderForViewing.id,
+                  'id_address': orderForViewing.invoiceAddress.addressId,
+                  'back': path('admin_orders_view', {'orderId': orderForViewing.id})
+                }) }}"
+              >
+                {{ 'Edit address'|trans({}, 'Admin.Orderscustomers.Feature') }}
+              </a>
+
+              <a href="#"
+                class="dropdown-item"
+                data-toggle="modal"
+                data-target="#updateCustomerAddressModal"
+              >
+                {{ 'Change address'|trans({}, 'Admin.Orderscustomers.Feature') }}
+              </a>
+            </div>
+          </div>
 
           <p class="mb-0">{{ orderForViewing.invoiceAddress.fullName }}</p>
           {% if orderForViewing.invoiceAddress.companyName is not empty %}
