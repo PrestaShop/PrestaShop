@@ -33,6 +33,10 @@
       max-width: 100%;
     }
   }
+  ul {
+    @extend p;
+    list-style: disc inside none;
+  }
 }
 @include media-breakpoint-down(md) {
   #block-cmsinfo {
