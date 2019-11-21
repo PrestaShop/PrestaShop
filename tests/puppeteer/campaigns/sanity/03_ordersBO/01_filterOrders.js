@@ -56,63 +56,29 @@ describe('Filter the Orders table by ID, REFERENCE, STATUS', async () => {
     await expect(numberOfOrders).to.be.above(0);
   });
 
-  it('should filter the Orders table by ID and check the result', async function () {
-    await this.pageObjects.ordersPage.filterOrders(
-      'input',
-      'id_order',
-      Orders.firstOrder.id,
-    );
-    const result = await this.pageObjects.ordersPage.checkTextValue(
-      this.pageObjects.ordersPage.orderfirstLineIdTD.replace('%ROW', '1'),
-      Orders.firstOrder.id,
-    );
-    await expect(result).to.be.true;
+  const tests = [
+    {args: {filterType: 'input', filterBy: 'id_order', filterValue: Orders.firstOrder.id}},
+    {args: {filterType: 'input', filterBy: 'reference', filterValue: Orders.fourthOrder.ref}},
+    {args: {filterType: 'select', filterBy: 'order_state', filterValue: Statuses.paymentError.status}},
+  ];
+
+  tests.forEach((test) => {
+    it('should filter the Orders table by ID and check the result', async function () {
+      await this.pageObjects.ordersPage.filterOrders(
+        test.args.filterType,
+        test.args.filterBy,
+        test.args.filterValue,
+      );
+      const textColumn = await this.pageObjects.ordersPage.getTextColumn(test.args.filterBy, 1);
+      await expect(textColumn).to.contains(test.args.filterValue);
+    });
+
+    it('should reset all filters', async function () {
+      const numberOfOrdersAfterReset = await this.pageObjects.ordersPage.resetAndGetNumberOfLines();
+      await expect(numberOfOrdersAfterReset).to.be.equal(numberOfOrders);
+    });
   });
 
-  it('should reset all filters', async function () {
-    const numberOfOrdersAfterReset = await this.pageObjects.ordersPage.resetAndGetNumberOfLines();
-    await expect(numberOfOrdersAfterReset).to.be.equal(numberOfOrders);
-  });
-
-  it('should filter the Orders table by REFERENCE and check the result', async function () {
-    await this.pageObjects.ordersPage.filterOrders(
-      'input',
-      'reference',
-      Orders.fourthOrder.ref,
-    );
-    const result = await this.pageObjects.boBasePage.checkTextValue(
-      this.pageObjects.ordersPage.orderfirstLineReferenceTD.replace('%ROW', '1'),
-      Orders.fourthOrder.ref,
-    );
-    await expect(result).to.be.true;
-  });
-
-  it('should reset all filters', async function () {
-    const numberOfOrdersAfterReset = await this.pageObjects.ordersPage.resetAndGetNumberOfLines();
-    await expect(numberOfOrdersAfterReset).to.be.equal(numberOfOrders);
-  });
-
-  it('should filter the Orders table by STATUS and check the result', async function () {
-    await this.pageObjects.ordersPage.filterOrders(
-      'select',
-      'order_state',
-      Statuses.paymentError.status,
-    );
-    const result = await this.pageObjects.ordersPage.checkTextValue(
-      this.pageObjects.ordersPage.orderfirstLineStatusTD.replace('%ROW', '1'),
-      Statuses.paymentError.status,
-    );
-    await expect(result).to.be.true;
-  });
-
-  it('should reset all filters', async function () {
-    const numberOfOrdersAfterReset = await this.pageObjects.ordersPage.resetAndGetNumberOfLines();
-    await expect(numberOfOrdersAfterReset).to.be.equal(numberOfOrders);
-  });
-
-  it('should logout from the BO', async function () {
-    await this.pageObjects.boBasePage.logoutBO();
-    const pageTitle = await this.pageObjects.loginPage.getPageTitle();
-    await expect(pageTitle).to.contains(this.pageObjects.loginPage.pageTitle);
-  });
+  // Logout from BO
+  loginCommon.logoutBO();
 });

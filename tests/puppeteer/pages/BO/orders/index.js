@@ -84,4 +84,24 @@ module.exports = class Order extends BOBasePage {
       this.page.click(this.orderfirstLineIdTD.replace('%ROW', orderRow)),
     ]);
   }
+
+  /**
+   * Get text from Column
+   * @param columnName
+   * @param row
+   * @return {Promise<textContent>}
+   */
+  async getTextColumn(columnName, row) {
+    switch (columnName) {
+      case 'id_order':
+        return this.getTextContent(this.orderfirstLineIdTD.replace('%ROW', row));
+      case 'reference':
+        return this.getTextContent(this.orderfirstLineReferenceTD.replace('%ROW', row));
+      case 'order_state':
+        return this.getTextContent(this.orderfirstLineStatusTD.replace('%ROW', row));
+      default:
+      // Do nothing
+    }
+    throw new Error(`${columnName} was not found as column`);
+  }
 };
