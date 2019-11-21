@@ -199,5 +199,11 @@ admin_orders_send_message:
   defaults:
     _controller: PrestaShopBundle:Admin/Sell/Order/Order:sendMessage
     _legacy_controller: AdminOrders
+
+admin_orders_partial_refund:
+  path: /{orderId}/partial-refund
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Order/Order:partialRefund
   requirements:
     orderId: \d+
