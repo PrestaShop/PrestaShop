@@ -6,7 +6,6 @@
 	<languages>
 		<language iso_code="tw" />
 		<language iso_code="zh" />
-		<language iso_code="ug" />
 	</languages>
 	<taxes>
     <tax id="1" name="增值税 CN 13%" rate="13"/>
