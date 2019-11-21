@@ -37,7 +37,7 @@ export default function () {
     let $deliveryMethodForm = $(deliveryFormSelector);
     let requestData = $deliveryMethodForm.serialize();
     let $inputChecked = $(event.currentTarget);
-    let $newDeliveryOption = $inputChecked.parents("div.delivery-option");
+    let $newDeliveryOption = $inputChecked.parents(".delivery-option");
 
     $.post($deliveryMethodForm.data('url-update'), requestData).then((resp) => {
       $(summarySelector).replaceWith(resp.preview);
