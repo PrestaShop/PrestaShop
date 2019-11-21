@@ -361,6 +361,10 @@ class OrderController extends FrameworkBundleAdminController
             }
 
             $this->addFlash($status, $message);
+        } else {
+            foreach ($form->getErrors(true) as $error) {
+                $this->addFlash('error', $error->getMessage());
+            }
         }
 
         return $this->redirectToRoute('admin_orders_view', [

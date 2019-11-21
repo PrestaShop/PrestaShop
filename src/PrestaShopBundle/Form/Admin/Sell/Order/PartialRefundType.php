@@ -29,8 +29,10 @@ namespace PrestaShopBundle\Form\Admin\Sell\Order;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use PrestaShopBundle\Form\Type\StyledCheckboxType;
+use Symfony\Component\Validator\Constraints\Type;
 
 class PartialRefundType extends AbstractType
 {
@@ -45,6 +47,7 @@ class PartialRefundType extends AbstractType
                 ->add('quantity_' . $product->getOrderDetailId(), NumberType::class, [
                     'attr' => ['max' => $product->getQuantity(), 'class' => 'refund-quantity'],
                     'label' => $translator->trans('Qty', [], 'Admin.Orderscustomers.Feature'),
+                    'invalid_message' => $translator->trans('The "quantity" field must be a valid number', [], 'Admin.Orderscustomers.Feature'),
                     'required' => false,
                 ])
                 ->add('amount_' . $product->getOrderDetailId(), NumberType::class, [
@@ -54,6 +57,7 @@ class PartialRefundType extends AbstractType
                         $translator->trans('Amount', [], 'Admin.Global'),
                         $taxMethod
                     ),
+                    'invalid_message' => $translator->trans('The "amount" field must be a valid number', [], 'Admin.Orderscustomers.Feature'),
                     'required' => false,
                 ]);
         }
@@ -61,6 +65,7 @@ class PartialRefundType extends AbstractType
             ->add('shipping', NumberType::class,
                 [
                     'label' => $translator->trans('Shipping', [], 'Admin.Catalog.Feature'),
+                    'invalid_message' => $translator->trans('The "shipping" field must be a valid number', [], 'Admin.Orderscustomers.Feature'),
                     'required' => false,
                 ]
             )
