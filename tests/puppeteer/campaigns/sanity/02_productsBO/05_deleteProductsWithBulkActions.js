@@ -14,8 +14,14 @@ const ProductFaker = require('@data/faker/product');
 
 let browser;
 let page;
-let firstProductData;
-let secondProductData;
+const productToCreate = {
+  name: 'product To Delete 1',
+  type: 'Standard product',
+  productHasCombinations: false,
+};
+const firstProductData = new ProductFaker(productToCreate);
+productToCreate.name = 'product To Delete 2';
+const secondProductData = new ProductFaker(productToCreate);
 
 // creating pages objects in a function
 const init = async function () {
@@ -35,14 +41,6 @@ describe('Create Standard product in BO and Delete it with Bulk Actions', async 
     browser = await helper.createBrowser();
     page = await helper.newTab(browser);
     this.pageObjects = await init();
-    const productToCreate = {
-      name: 'product To Delete 1',
-      type: 'Standard product',
-      productHasCombinations: false,
-    };
-    firstProductData = await (new ProductFaker(productToCreate));
-    productToCreate.name = 'product To Delete 2';
-    secondProductData = await (new ProductFaker(productToCreate));
   });
   after(async () => {
     await helper.closeBrowser(browser);
@@ -65,30 +63,20 @@ describe('Create Standard product in BO and Delete it with Bulk Actions', async 
     await expect(numberOfProducts).to.be.above(0);
   });
 
-  it('should create First Product', async function () {
-    await this.pageObjects.productsPage.goToAddProductPage();
-    const createProductMessage = await this.pageObjects.addProductPage.createEditProduct(firstProductData);
-    await expect(createProductMessage).to.equal(this.pageObjects.addProductPage.settingUpdatedMessage);
-  });
+  const productsData = [firstProductData, secondProductData];
+  productsData.forEach((productData) => {
+    it('should create new product', async function () {
+      await this.pageObjects.productsPage.goToAddProductPage();
+      const createProductMessage = await this.pageObjects.addProductPage.createEditProduct(productData);
+      await expect(createProductMessage).to.equal(this.pageObjects.addProductPage.settingUpdatedMessage);
+    });
 
-  it('should go to Products page', async function () {
-    await this.pageObjects.boBasePage.goToSubMenu(this.pageObjects.boBasePage.catalogParentLink,
-      this.pageObjects.boBasePage.productsLink);
-    const pageTitle = await this.pageObjects.productsPage.getPageTitle();
-    await expect(pageTitle).to.contains(this.pageObjects.productsPage.pageTitle);
-  });
-
-  it('should create Second Product', async function () {
-    await this.pageObjects.productsPage.goToAddProductPage();
-    const createProductMessage = await this.pageObjects.addProductPage.createEditProduct(secondProductData);
-    await expect(createProductMessage).to.equal(this.pageObjects.addProductPage.settingUpdatedMessage);
-  });
-
-  it('should go to Products page', async function () {
-    await this.pageObjects.boBasePage.goToSubMenu(this.pageObjects.boBasePage.catalogParentLink,
-      this.pageObjects.boBasePage.productsLink);
-    const pageTitle = await this.pageObjects.productsPage.getPageTitle();
-    await expect(pageTitle).to.contains(this.pageObjects.productsPage.pageTitle);
+    it('should go to Products page', async function () {
+      await this.pageObjects.boBasePage.goToSubMenu(this.pageObjects.boBasePage.catalogParentLink,
+        this.pageObjects.boBasePage.productsLink);
+      const pageTitle = await this.pageObjects.productsPage.getPageTitle();
+      await expect(pageTitle).to.contains(this.pageObjects.productsPage.pageTitle);
+    });
   });
 
   it('should delete products with bulk Actions', async function () {
