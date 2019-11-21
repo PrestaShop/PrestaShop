@@ -5,12 +5,10 @@
 	</currencies>
 	<languages>
 		<language iso_code="ro" />
-		<language iso_code="ru" />
-		<language iso_code="uk" />
 	</languages>
 	<taxes>
 		<tax id="1" name="TVA MD 20%" rate="20" />
-		
+
 		<taxRulesGroup name="MD Standard Rate (20%)">
 			<taxRule iso_code_country="md" id_tax="1" />
 		</taxRulesGroup>
