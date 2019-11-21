@@ -110,6 +110,7 @@ module.exports = class Pages extends BOBasePage {
     await Promise.all([
       this.page.click(deleteRowLink.replace('%ROW', row)),
       this.dialogListener(),
+      this.page.waitForSelector(this.alertSuccessBlockParagraph, {visible: true}),
     ]);
     return this.getTextContent(this.alertSuccessBlockParagraph);
   }
