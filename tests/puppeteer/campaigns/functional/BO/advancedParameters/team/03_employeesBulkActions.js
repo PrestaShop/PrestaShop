@@ -42,8 +42,12 @@ const init = async function () {
   };
 };
 
+/**
+ * The test is skipped because of the issue described in this ticket
+ * https://github.com/PrestaShop/PrestaShop/issues/16246
+ * */
 // Create Employees, Then disable / Enable and Delete with Bulk actions
-describe('Create Employees, Then disable / Enable and Delete with Bulk actions', async () => {
+describe.skip('Create Employees, Then disable / Enable and Delete with Bulk actions (issue #16246)', async () => {
   // before and after functions
   before(async function () {
     browser = await helper.createBrowser();
@@ -92,11 +96,7 @@ describe('Create Employees, Then disable / Enable and Delete with Bulk actions',
   });
 
   // 2 : Enable/Disable employees created with bulk actions
-  /**
-   * The test is skipped because of the issue described in this ticket
-   * https://github.com/PrestaShop/PrestaShop/issues/16246
-   * */
-  describe.skip('Enable and Disable employees with Bulk Actions', async () => {
+  describe('Enable and Disable employees with Bulk Actions', async () => {
     it('should filter by First name', async function () {
       await this.pageObjects.employeesPage.filterEmployees('input', 'firstname', firstEmployeeData.firstName);
       const numberOfEmployeesAfterFilter = await this.pageObjects.employeesPage.getNumberOfElementInGrid();
@@ -125,7 +125,7 @@ describe('Create Employees, Then disable / Enable and Delete with Bulk actions',
     });
 
     // 3 : Delete employee with bulk actions
-    describe.skip('Delete employees with Bulk Actions', async () => {
+    describe('Delete employees with Bulk Actions', async () => {
       it('should delete employees with Bulk Actions and check Result', async function () {
         const deleteTextResult = await this.pageObjects.employeesPage.deleteBulkActions();
         await expect(deleteTextResult).to.be.equal(this.pageObjects.employeesPage.successfulMultiDeleteMessage);
