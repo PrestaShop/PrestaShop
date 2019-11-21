@@ -1924,7 +1924,7 @@ abstract class ModuleCore implements ModuleInterface
      */
     public static function getPaymentModules($context = null)
     {
-        if(!$context){
+        if (!$context){
             $context = Context::getContext();
         }
         if (isset($context->cart)) {
