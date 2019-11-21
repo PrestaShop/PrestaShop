@@ -62,6 +62,7 @@ use PrestaShopBundle\Form\Admin\Sell\Order\AddProductToOrderType;
 use PrestaShopBundle\Form\Admin\Sell\Order\ChangeOrderCurrencyType;
 use PrestaShopBundle\Form\Admin\Sell\Order\ChangeOrdersStatusType;
 use PrestaShopBundle\Form\Admin\Sell\Order\OrderPaymentType;
+use PrestaShopBundle\Form\Admin\Sell\Order\PartialRefundType;
 use PrestaShopBundle\Form\Admin\Sell\Order\UpdateOrderShippingType;
 use PrestaShopBundle\Form\Admin\Sell\Order\UpdateOrderStatusType;
 use PrestaShopBundle\Form\Admin\Sell\Order\UpdateProductInOrderType;
@@ -275,6 +276,8 @@ class OrderController extends FrameworkBundleAdminController
         /** @var OrderForViewing $orderForViewing */
         $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
 
+        // var_dump($orderForViewing); exit;
+
         $addOrderCartRuleForm = $this->createForm(AddOrderCartRuleType::class, [], [
             'order_id' => $orderId,
         ]);
@@ -304,6 +307,10 @@ class OrderController extends FrameworkBundleAdminController
             'order_id' => $orderId,
         ]);
 
+        $partialRefundForm = $this->createForm(PartialRefundType::class, [
+            'products' => $orderForViewing->getProducts()->getProducts()
+        ]);
+
         return $this->render('@PrestaShop/Admin/Sell/Order/Order/view.html.twig', [
             'showContentHeader' => true,
             'meta_title' => $this->trans('Orders', 'Admin.Orderscustomers.Feature'),
@@ -318,8 +325,35 @@ class OrderController extends FrameworkBundleAdminController
             'addProductToOrderForm' => $addProductToOrderForm->createView(),
             'updateOrderProductForm' => $updateOrderProductForm->createView(),
             'updateOrderShippingForm' => $updateOrderShippingForm->createView(),
+            'partialRefundForm' => $partialRefundForm->createView(),
             'invoiceManagementIsEnabled' => $orderForViewing->isInvoiceManagementIsEnabled(),
         ]);
+    }
+
+    public function partialRefundAction(int $orderId, Request $request)
+    {
+        /*$orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
+        $form = $this->createForm(PartialRefundType::class, [
+            'products' => $orderForViewing->getProducts()->getProducts()
+        ]);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $data = $form->getData();
+            $refunds = [];
+            foreach ($data['products'] as $product)
+            {
+                $orderDetailId = $product->getOrderDetailId();
+                if (!empty($data['quantity_' . $orderDetailId])) {
+                    $refunds[$orderDetailId]['quantity'] = $data['quantity_' . $orderDetailId];
+                }
+                if (!empty($data['amount_' . $orderDetailId])) {
+                    $refunds[$orderDetailId]['amount'] = $data['amount_' . $orderDetailId];
+                }
+            }
+
+        }
+        echo 'nope'; exit; */
     }
 
     /**
