@@ -87,7 +87,8 @@
     "date_format_full": "Y-m-d H:i:s",
     "is_rtl": "0",
     "language_code": "ca-es",
-    "locale": "ca-ES"
+    "locale": "ca-ES",
+    "flag": "catalonia"
   },
   "cb": {
     "name": "Español CO ( Spanish)",
@@ -609,7 +610,8 @@
     "date_format_full": "m/d/Y H:i:s",
     "is_rtl": "0",
     "language_code": "en-ud",
-    "locale": "en-UD"
+    "locale": "en-UD",
+    "flag": "gb"
   },
   "ug": {
     "name": "ئۇيغۇر (Uyghur)",
