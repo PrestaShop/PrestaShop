@@ -26,6 +26,7 @@ services:
       PS_DOMAIN: localhost:8001
       PS_FOLDER_INSTALL: install-dev
       PS_FOLDER_ADMIN: admin-dev
+    command: ["/tmp/wait-for-it.sh", "--timeout=60", "--strict", "mysql:3306", "--", "/tmp/docker_run_git.sh"]
     ports:
       - "8001:80"
     volumes:
