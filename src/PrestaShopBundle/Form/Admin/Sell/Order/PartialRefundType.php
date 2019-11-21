@@ -29,10 +29,8 @@ namespace PrestaShopBundle\Form\Admin\Sell\Order;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use PrestaShopBundle\Form\Type\StyledCheckboxType;
-use Symfony\Component\Validator\Constraints\Type;
 
 class PartialRefundType extends AbstractType
 {
