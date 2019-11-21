@@ -40,7 +40,7 @@
     "eslint-config-prestashop": "0.0.2",
     "js-image-generator": "^1.0.2",
     "mocha": "^6.1.4",
-    "mochawesome": "^2.3.1",
+    "mochawesome": "^2.3.0",
     "puppeteer": "^1.18.1",
     "faker": "^4.1.0",
     "module-alias": "^2.2.2"
