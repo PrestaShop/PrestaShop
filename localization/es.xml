@@ -4,10 +4,7 @@
     <currency name="Euro" iso_code="EUR" iso_code_num="978" sign="€" blank="1" conversion_rate="1.00" format="2" decimals="1"/>
   </currencies>
   <languages>
-    <language iso_code="ca"/>
     <language iso_code="es"/>
-    <language iso_code="gl"/>
-    <language iso_code="eu"/>
   </languages>
   <taxes>
     <tax id="1" name="IVA ES 21%" rate="21" eu-tax-group="virtual"/>
