@@ -1,3 +1,4 @@
+<?php
 /**
  * 2007-2019 PrestaShop SA and Contributors
  *
@@ -23,21 +24,11 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-import CountryStateSelectionToggler from '../../components/country-state-selection-toggler';
-import ManufacturerAddressMap from './manufacturer-address-map';
-import CountryDniRequiredToggler from '../../components/country-dni-required-toggler';
+namespace PrestaShop\PrestaShop\Core\Domain\Address\Exception;
 
-const $ = window.$;
-
-$(document).ready(() => {
-  new CountryStateSelectionToggler(
-    ManufacturerAddressMap.manufacturerAddressCountrySelect,
-    ManufacturerAddressMap.manufacturerAddressStateSelect,
-    ManufacturerAddressMap.manufacturerAddressStateBlock
-  );
-  new CountryDniRequiredToggler(
-    ManufacturerAddressMap.manufacturerAddressCountrySelect,
-    ManufacturerAddressMap.manufacturerAddressDniInput,
-    ManufacturerAddressMap.manufacturerAddressDniInputLabel
-  );
-});
+/**
+ * Is thrown when address has invalid fields on saving/updating
+ */
+class InvalidAddressFieldException extends AddressException
+{
+}

@@ -1,5 +1,6 @@
+<?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -23,21 +24,18 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-import CountryStateSelectionToggler from '../../components/country-state-selection-toggler';
-import ManufacturerAddressMap from './manufacturer-address-map';
-import CountryDniRequiredToggler from '../../components/country-dni-required-toggler';
+namespace PrestaShop\PrestaShop\Core\Form;
 
-const $ = window.$;
-
-$(document).ready(() => {
-  new CountryStateSelectionToggler(
-    ManufacturerAddressMap.manufacturerAddressCountrySelect,
-    ManufacturerAddressMap.manufacturerAddressStateSelect,
-    ManufacturerAddressMap.manufacturerAddressStateBlock
-  );
-  new CountryDniRequiredToggler(
-    ManufacturerAddressMap.manufacturerAddressCountrySelect,
-    ManufacturerAddressMap.manufacturerAddressDniInput,
-    ManufacturerAddressMap.manufacturerAddressDniInputLabel
-  );
-});
+/**
+ * Interface FormChoiceProviderInterface defines contract for choice attribute providers.
+ */
+interface FormChoiceAttributeProviderInterface
+{
+    /**
+     * Get choices attributes.
+     *  return [{choice_value} => [...$attributes]]
+     *
+     * @return array
+     */
+    public function getChoicesAttributes();
+}
