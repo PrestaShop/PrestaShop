@@ -84,6 +84,11 @@ class OrderProductForViewing
     private $unitPriceTaxInclRaw;
 
     /**
+     * @var float
+     */
+    private $taxRate;
+
+    /**
      * @var int
      */
     private $orderDetailId;
@@ -100,7 +105,8 @@ class OrderProductForViewing
         int $availableQuantity,
         ?string $imagePath,
         float $unitPriceTaxExclRaw,
-        float $unitPriceTaxInclRaw
+        float $unitPriceTaxInclRaw,
+        float $taxRate
     ) {
         $this->id = $id;
         $this->name = $name;
@@ -113,6 +119,7 @@ class OrderProductForViewing
         $this->imagePath = $imagePath;
         $this->unitPriceTaxExclRaw = $unitPriceTaxExclRaw;
         $this->unitPriceTaxInclRaw = $unitPriceTaxInclRaw;
+        $this->taxRate = $taxRate;
         $this->orderDetailId = $orderDetailId;
     }
 
@@ -154,6 +161,14 @@ class OrderProductForViewing
     public function getSupplierReference(): string
     {
         return $this->supplierReference;
+    }
+
+    /**
+     * @return float
+     */
+    public function getTaxRate(): float
+    {
+        return $this->taxRate;
     }
 
     /**
