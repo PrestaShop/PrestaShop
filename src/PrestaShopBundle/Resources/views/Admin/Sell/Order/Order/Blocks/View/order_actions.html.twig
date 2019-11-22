@@ -31,38 +31,76 @@
       'id': 'update_order_status_action_form'
     }
   }) }}
+
   <div class="input-group">
     {{ form_widget(updateOrderStatusActionBarForm.new_order_status_id, {'attr': {'class': 'mr-1'}, 'id': 'update_order_status_action_input'}) }}
 
-    <button class="btn btn-action ml-3"
+    <button class="btn btn-action ml-2"
             id="update_order_status_action_btn"
             disabled
             data-order-status-id="{{ orderForViewing.history.currentOrderStatusId }}"
     >
       {{ 'Update status'|trans({}, 'Admin.Orderscustomers.Feature') }}
     </button>
+  </div>
 
-    {# Rendering of hook actionGetBackOfficeOrderButtons, see ActionsBarButtonsCollection #}
-    {% if (backOfficeOrderButtons.isEmpty() != true) %}
+  <div class="d-none">
+    {{ form_rest(updateOrderStatusActionBarForm) }}
+  </div>
+  {{ form_end(updateOrderStatusActionBarForm) }}
 
-        {% set buttons = backOfficeOrderButtons.getButtons() %}
-        {% if buttons|length > 2 %}
+  {% if orderForViewing.documents.canGenerateInvoice %}
+    <form class="form-inline d-inline-block form-horizontal ml-2">
+      <div class="input-group">
+        <a href="{{ path('admin_orders_generate_invoice_pdf', {'orderId': orderForViewing.id}) }}"
+           class="btn btn-action">
+          <i class="material-icons">receipt</i>
+          {{ 'View invoice'|trans({}, 'Admin.Orderscustomers.Feature') }}
+        </a>
+      </div>
+    </form>
+  {% endif %}
 
-          {% set firstButton = buttons|first %}
+  {% if orderForViewing.documents.canGenerateDeliverySlip %}
+    <form class="form-inline d-inline-block form-horizontal ml-2">
+      <div class="input-group">
+        <a href="{{ path('admin_orders_generate_delivery_slip_pdf', {'orderId': orderForViewing.id}) }}"
+           class="btn btn-action">
+          <i class="material-icons">local_shipping</i>
+          {{ 'View delivery slip'|trans({}, 'Admin.Orderscustomers.Feature') }}
+        </a>
+      </div>
+    </form>
+  {% endif %}
 
-          <button class="btn btn-action ml-3 {{ firstButton.class }}"
+  {# Rendering of hook actionGetBackOfficeOrderButtons, see ActionsBarButtonsCollection #}
+  {% if (backOfficeOrderButtons.isEmpty() != true) %}
+
+    {% set buttons = backOfficeOrderButtons.getButtons() %}
+    {% if buttons|length > 2 %}
+
+      {% set firstButton = buttons|first %}
+      <div class="d-inline-block ml-2">
+        <div class="input-group">
+          <a class="btn {{ firstButton.class }}"
           {% for tagName, tagContent in firstButton.tags %}
             {{ tagName }}="{{ tagContent }}"
           {% endfor %}
           >
           {{ firstButton.content|raw }}
-          </button>
+          </a>
+        </div>
+      </div>
 
-          {# Display other buttons into a dropdown #}
-          {% set buttons = buttons|slice(1, buttons|length) %}
+      {# Display other buttons into a dropdown #}
+      {% set buttons = buttons|slice(1, buttons|length) %}
 
-          <div class="dropdown ml-3">
-            <button class="btn btn-action dropdown-toggle" type="button" id="dropdownOrderActionBar" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      <div class="d-inline-block ml-2">
+        <div class="input-group">
+          <div class="dropdown">
+            <button class="btn btn-action dropdown-toggle" type="button" id="dropdownOrderActionBar"
+                    data-toggle="dropdown"
+                    aria-haspopup="true" aria-expanded="false">
               <i class="material-icons form-error-icon">more_horiz</i>
 
               {{ 'More actions'|trans({}, 'Admin.Global') }}
@@ -78,50 +116,27 @@
                 </a>
               {% endfor %}
             </div>
-
           </div>
-        {% else %}
-          {# If only 2 buttons, display them like this #}
+        </div>
+      </div>
+    {% else %}
+      {# If only 2 buttons, display them like this #}
 
-          {% for button in buttons %}
-            <button class="btn btn-action ml-3 {{ button.class }}"
+      {% for button in buttons %}
+        <div class="d-inline-block ml-2">
+          <div class="input-group">
+            <a class="btn {{ button.class }}"
             {% for tagName, tagContent in button.tags %}
               {{ tagName }}="{{ tagContent }}"
             {% endfor %}
             >
             {{ button.content|raw }}
-            </button>
-          {% endfor %}
-        {% endif %}
-
+            </a>
+          </div>
+        </div>
+      {% endfor %}
     {% endif %}
 
-  </div>
-
-  {% if orderForViewing.documents.canGenerateInvoice %}
-    <form class="form-inline d-inline-block form-horizontal ml-2">
-      <div class="input-group">
-        <a href="{{ path('admin_orders_generate_invoice_pdf', {'orderId': orderForViewing.id}) }}" class="btn btn-action">
-          <i class="material-icons">receipt</i>
-          {{ 'View invoice'|trans({}, 'Admin.Orderscustomers.Feature') }}
-        </a>
-      </div>
-    </form>
   {% endif %}
 
-  {% if orderForViewing.documents.canGenerateDeliverySlip %}
-    <form class="form-inline d-inline-block form-horizontal ml-2">
-      <div class="input-group">
-        <a href="{{ path('admin_orders_generate_delivery_slip_pdf', {'orderId': orderForViewing.id}) }}" class="btn btn-action">
-          <i class="material-icons">local_shipping</i>
-          {{ 'View delivery slip'|trans({}, 'Admin.Orderscustomers.Feature') }}
-        </a>
-      </div>
-    </form>
-  {% endif %}
-
-  <div class="d-none">
-    {{ form_rest(updateOrderStatusActionBarForm) }}
-  </div>
-  {{ form_end(updateOrderStatusActionBarForm) }}
 </div>
