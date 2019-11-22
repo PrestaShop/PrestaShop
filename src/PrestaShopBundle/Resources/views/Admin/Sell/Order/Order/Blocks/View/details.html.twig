@@ -27,6 +27,7 @@
   <ul class="nav nav nav-tabs" role="tablist">
     <li class="nav-item">
       <a class="nav-link active show" id="historyTab" data-toggle="tab" href="#historyTabContent" role="tab" aria-controls="historyTabContent" aria-expanded="true" aria-selected="false">
+        <i class="material-icons">history</i>
         {{ 'Status'|trans({}, 'Admin.Global') }} ({{ orderForViewing.history.statuses|length }})
       </a>
     </li>
@@ -38,6 +39,7 @@
     </li>
     <li class="nav-item">
       <a class="nav-link" id="orderShippingTab" data-toggle="tab" href="#orderShippingTabContent" role="tab" aria-controls="orderShippingTabContent" aria-expanded="true" aria-selected="false">
+        <i class="material-icons">local_shipping</i>
         {{ 'Shipping'|trans({}, 'Admin.Catalog.Feature') }} ({{ orderForViewing.shipping.carriers|length }})
       </a>
     </li>
