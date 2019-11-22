@@ -72,13 +72,11 @@
          data-original-title="{{ 'Edit'|trans({}, 'Admin.Actions') }}"
       >
         <i class="material-icons js-order-product-edit-btn"
-           data-update-url="{{ path('admin_orders_update_product', {'orderId': orderForViewing.id, 'orderDetailId': product.orderDetailId}) }}"
-           data-product-name="{{ product.name }}"
+           data-order-detail-id="{{ product.orderDetailId }}"
            data-product-quantity="{{ product.quantity }}"
            data-product-price-tax-incl="{{ product.unitPriceTaxInclRaw }}"
            data-product-price-tax-excl="{{ product.unitPriceTaxExclRaw }}"
-           data-toggle="modal"
-           data-target="#updateOrderProductModal"
+           data-tax-rate="{{ product.taxRate }}"
         >edit</i>
       </a>
 
