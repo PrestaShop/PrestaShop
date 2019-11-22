@@ -277,6 +277,8 @@ class OrderController extends FrameworkBundleAdminController
     {
         /** @var OrderForViewing $orderForViewing */
         $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
+        $currencyDataProvider = $this->container->get('prestashop.adapter.data_provider.currency');
+        $orderCurrency = $currencyDataProvider->getCurrencyById($orderForViewing->getCurrencyId());
 
         $orderDetailIds = [];
         foreach ($orderForViewing->getProducts()->getProducts() as $product) {
@@ -335,6 +337,7 @@ class OrderController extends FrameworkBundleAdminController
             'updateOrderShippingForm' => $updateOrderShippingForm->createView(),
             'partialRefundForm' => $partialRefundForm->createView(),
             'invoiceManagementIsEnabled' => $orderForViewing->isInvoiceManagementIsEnabled(),
+            'orderCurrency' => $orderCurrency,
         ]);
     }
 
