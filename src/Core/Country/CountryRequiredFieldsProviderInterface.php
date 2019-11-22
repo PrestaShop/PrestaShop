@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -24,35 +24,23 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Customer\Query;
+namespace PrestaShop\PrestaShop\Core\Country;
 
-use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\Email;
+use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
 
-/**
- * Gets customer information for address creation.
- */
-class GetCustomerForAddressCreation
+interface CountryRequiredFieldsProviderInterface
 {
     /**
-     * @var string
-     */
-    private $customerEmail;
-
-    /**
-     * Query is used for customer search so email string might not be complete so no email validation
+     * @param CountryId $countryId
      *
-     * @param string $customerEmail
+     * @return bool
      */
-    public function __construct(string $customerEmail)
-    {
-        $this->customerEmail = $customerEmail;
-    }
+    public function isStatesRequired(CountryId $countryId): bool;
 
     /**
-     * @return Email
+     * @param CountryId $countryId
+     *
+     * @return bool
      */
-    public function getCustomerEmail(): string
-    {
-        return $this->customerEmail;
-    }
+    public function isDniRequired(CountryId $countryId): bool;
 }

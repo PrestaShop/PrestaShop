@@ -26,10 +26,9 @@
 
 namespace PrestaShop\PrestaShop\Core\ConstraintValidator;
 
-use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
+use PrestaShop\PrestaShop\Core\Country\CountryRequiredFieldsProviderInterface;
 use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Country\Query\GetCountryRequiredFields;
-use PrestaShop\PrestaShop\Core\Domain\Country\QueryResult\CountryRequiredFields;
+use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 
@@ -39,16 +38,16 @@ use Symfony\Component\Validator\ConstraintValidator;
 final class CustomerAddressCountryRequiredFieldsValidator extends ConstraintValidator
 {
     /**
-     * @var CommandBusInterface
+     * @var CountryRequiredFieldsProviderInterface
      */
-    private $queryBus;
+    private $countryRequiredFieldsProvider;
 
     /**
-     * @param CommandBusInterface $queryBus
+     * @param CountryRequiredFieldsProviderInterface $countryRequiredFieldsProvider
      */
-    public function __construct(CommandBusInterface $queryBus)
+    public function __construct(CountryRequiredFieldsProviderInterface $countryRequiredFieldsProvider)
     {
-        $this->queryBus = $queryBus;
+        $this->countryRequiredFieldsProvider = $countryRequiredFieldsProvider;
     }
 
     /**
@@ -62,10 +61,9 @@ final class CustomerAddressCountryRequiredFieldsValidator extends ConstraintVali
         $stateId = isset($value['id_state']) ? $value['id_state'] : null;
         $dni = isset($value['dni']) ? $value['dni'] : null;
 
-        /** @var CountryRequiredFields $requiredFields */
-        $requiredFields = $this->queryBus->handle(new GetCountryRequiredFields($countryId));
+        $countryIdVo = new CountryId($countryId);
 
-        if ($requiredFields->isStateRequired() && null === $stateId) {
+        if ($this->countryRequiredFieldsProvider->isStatesRequired($countryIdVo) && null === $stateId) {
             $this->context->buildViolation($constraint->stateRequiredMessage)
                 ->atPath('[id_state]')
                 ->setTranslationDomain('Admin.Orderscustomers.Notification')
@@ -73,7 +71,7 @@ final class CustomerAddressCountryRequiredFieldsValidator extends ConstraintVali
             ;
         }
 
-        if (!$requiredFields->isStateRequired() && null !== $stateId) {
+        if (!$this->countryRequiredFieldsProvider->isStatesRequired($countryIdVo) && null !== $stateId) {
             $this->context->buildViolation($constraint->countryStateMessage)
                 ->atPath('[id_state]')
                 ->setTranslationDomain('Admin.Orderscustomers.Notification')
@@ -81,7 +79,7 @@ final class CustomerAddressCountryRequiredFieldsValidator extends ConstraintVali
             ;
         }
 
-        if ($requiredFields->isDniRequired() && null !== $dni) {
+        if ($this->countryRequiredFieldsProvider->isDniRequired($countryIdVo) && null !== $dni) {
             $this->context->buildViolation($constraint->message)
                 ->atPath('[dni]')
                 ->setTranslationDomain('Admin.Notifications.Error')

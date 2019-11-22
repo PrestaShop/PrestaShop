@@ -48,6 +48,6 @@ services:
   prestashop.core.constraint_validator.customer_address_country_state_validator:
     class: 'PrestaShop\PrestaShop\Core\ConstraintValidator\CustomerAddressCountryRequiredFieldsValidator'
     arguments:
-      - '@prestashop.core.query_bus'
+      - '@prestashop.adapter.country.country_required_fields_provider'
     tags:
       - { name: validator.constraint_validator }
