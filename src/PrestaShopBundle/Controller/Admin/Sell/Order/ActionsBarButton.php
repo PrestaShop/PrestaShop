@@ -30,6 +30,9 @@ namespace PrestaShopBundle\Controller\Admin\Sell\Order;
  * This class represents buttons to be rendered in Twig
  *
  * They will be rendered following this structure:
+ *
+ * If this is the 1st button or there are only 2 buttons displayed:
+ *
  * <button class="btn btn-action ml-3 {{ button.class }}"
  *   {% for tagName, tagContent in button.tags %}
  *     {{ tagName }}="{{ tagContent }}"
@@ -37,6 +40,15 @@ namespace PrestaShopBundle\Controller\Admin\Sell\Order;
  * >
  *   {{ button.content|raw }}
  * </button>
+ *
+ * However if there is more than 2 buttons displayed, then they are rendered into a drop-down list:
+ *
+ * <a class="dropdown-item btn btn-action {{ button.class }}"
+ *   {% for tagName, tagContent in button.tags %}
+ *     {{ tagName }}="{{ tagContent }}"
+ *   {% endfor %}>
+ *   {{ button.content|raw }}
+ * </a>
  *
  */
 class ActionsBarButton

@@ -516,3 +516,6 @@ ALTER TABLE `PREFIX_zone_shop` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_
 /* Doctrine update happens too late to update the new enabled field, so we preset everything here */
 ALTER TABLE `PREFIX_tab` ADD enabled TINYINT(1) NOT NULL;
 /* PHP:ps_1770_preset_tab_enabled(); */;
+
+INSERT INTO `PREFIX_hook_alias` (`name`, `alias`) VALUES ('displayAdminOrderSide', 'displayAdminOrderRight');
+INSERT INTO `PREFIX_hook_alias` (`name`, `alias`) VALUES ('displayAdminOrderMain', 'displayAdminOrderLeft');
