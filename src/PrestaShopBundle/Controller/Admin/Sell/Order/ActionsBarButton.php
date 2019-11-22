@@ -49,7 +49,6 @@ namespace PrestaShopBundle\Controller\Admin\Sell\Order;
  *   {% endfor %}>
  *   {{ button.content|raw }}
  * </a>
- *
  */
 class ActionsBarButton
 {
