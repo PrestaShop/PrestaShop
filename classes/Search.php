@@ -254,8 +254,12 @@ class SearchCore
                 $sql = 'SELECT DISTINCT si.id_product
                             FROM ' . _DB_PREFIX_ . 'search_word sw
                             LEFT JOIN ' . _DB_PREFIX_ . 'search_index si ON sw.id_word = si.id_word
+                            LEFT JOIN ' . _DB_PREFIX_ . 'product_shop product_shop ON (product_shop.`id_product` = si.`id_product`)
                             WHERE sw.id_lang = ' . (int) $id_lang . '
                                 AND sw.id_shop = ' . $context->shop->id . '
+                                AND product_shop.`active` = 1
+                                AND product_shop.`visibility` IN ("both", "search")
+                                AND product_shop.indexed = 1
                                 AND sw.word LIKE ';
 
                 while (!($result = $db->executeS($sql . "'" . $sql_param_search . "';", true, false))) {
@@ -1045,10 +1049,14 @@ class SearchCore
         $sql = 'SELECT null as levenshtein, -SUM(weight) as weight, sw.`word`
                     FROM `' . _DB_PREFIX_ . 'search_word` sw
                     LEFT JOIN `' . _DB_PREFIX_ . 'search_index` si ON (sw.`id_word` = si.`id_word`)
+                    LEFT JOIN `' . _DB_PREFIX_ . 'product_shop` product_shop ON (product_shop.`id_product` = si.`id_product`)
                     WHERE sw.`id_lang` = ' . (int) $context->language->id . '
                     AND sw.`id_shop` = ' . (int) $context->shop->id . '
                     AND LENGTH(sw.`word`) >= ' . self::$targetLengthMin . '
                     AND LENGTH(sw.`word`) <= ' . self::$targetLengthMax . '
+                    AND product_shop.`active` = 1
+		            AND product_shop.`visibility` IN ("both", "search")
+		            AND product_shop.indexed = 1
                     GROUP BY sw.`word`;';
 
         $selectedWords = Db::getInstance()->executeS($sql);
