@@ -35,6 +35,7 @@ use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 class PatternTransformer
 {
     const NO_BREAK_SPACE = "\u{00A0}";
+    const RTL_CHARACTER = "\u{200F}";
     const REGULAR_SPACE = ' ';
     const CURRENCY_SYMBOL = '¤';
 
@@ -54,6 +55,7 @@ class PatternTransformer
         self::CURRENCY_SYMBOL,
         self::NO_BREAK_SPACE,
         self::REGULAR_SPACE,
+        self::RTL_CHARACTER,
     ];
 
     /**
@@ -65,6 +67,11 @@ class PatternTransformer
      * @var string[]
      */
     private $trimmedPatterns;
+
+    /**
+     * @var bool
+     */
+    private $rtlPattern = false;
 
     /**
      * @param string $currencyPattern Initial currency pattern (ex: #,##0.00¤, ¤#,##,##0.00, ¤#,##0.00;¤-#,##0.00)
@@ -107,15 +114,17 @@ class PatternTransformer
      */
     private function transformPattern(string $pattern, string $transformationType)
     {
+        $rtlCharacter = $this->rtlPattern ? self::RTL_CHARACTER : '';
+
         switch ($transformationType) {
             case self::TYPE_LEFT_SYMBOL_WITH_SPACE:
-                return self::CURRENCY_SYMBOL . self::NO_BREAK_SPACE . $pattern;
+                return $rtlCharacter . self::CURRENCY_SYMBOL . self::NO_BREAK_SPACE . $pattern;
             case self::TYPE_LEFT_SYMBOL_WITHOUT_SPACE:
-                return self::CURRENCY_SYMBOL . $pattern;
+                return $rtlCharacter . self::CURRENCY_SYMBOL . $pattern;
             case self::TYPE_RIGHT_SYMBOL_WITH_SPACE:
-                return $pattern . self::NO_BREAK_SPACE . self::CURRENCY_SYMBOL;
+                return $rtlCharacter . $pattern . self::NO_BREAK_SPACE . self::CURRENCY_SYMBOL;
             case self::TYPE_RIGHT_SYMBOL_WITHOUT_SPACE:
-                return $pattern . self::CURRENCY_SYMBOL;
+                return $rtlCharacter . $pattern . self::CURRENCY_SYMBOL;
         }
     }
 
@@ -135,6 +144,7 @@ class PatternTransformer
     public function setCurrencyPattern(string $currencyPattern): PatternTransformer
     {
         $this->currencyPattern = $currencyPattern;
+        $this->rtlPattern = preg_match('/' . self::RTL_CHARACTER . '/', $this->currencyPattern);
 
         $currencyPatterns = explode(';', $this->currencyPattern);
         $this->trimmedPatterns = [];

@@ -41,7 +41,7 @@ class PatternTransformerTest extends TestCase
     {
         $transformer = new PatternTransformer($pattern);
         foreach ($transformations as $transformationType => $expectedPattern) {
-            $this->assertEquals($expectedPattern, $transformer->transform($transformationType));
+            $this->assertEquals($expectedPattern, $transformer->transform($transformationType), 'Invalid transformation ' . $transformationType);
         }
     }
 
@@ -109,6 +109,16 @@ class PatternTransformerTest extends TestCase
                     PatternTransformer::TYPE_LEFT_SYMBOL_WITHOUT_SPACE => '¤#,##0.00;¤-#,##0.00',
                     PatternTransformer::TYPE_RIGHT_SYMBOL_WITH_SPACE => "#,##0.00\u{00A0}¤;-#,##0.00\u{00A0}¤",
                     PatternTransformer::TYPE_RIGHT_SYMBOL_WITHOUT_SPACE => '#,##0.00¤;-#,##0.00¤',
+                ],
+            ],
+            'he' => [
+                // RTL pattern
+                "\u{200F}¤\u{00A0}#,##0.00;\u{200F}¤\u{00A0}-#,##0.00",
+                [
+                    PatternTransformer::TYPE_LEFT_SYMBOL_WITH_SPACE => "\u{200F}¤\u{00A0}#,##0.00;\u{200F}¤\u{00A0}-#,##0.00",
+                    PatternTransformer::TYPE_LEFT_SYMBOL_WITHOUT_SPACE => "\u{200F}¤#,##0.00;\u{200F}¤-#,##0.00",
+                    PatternTransformer::TYPE_RIGHT_SYMBOL_WITH_SPACE => "\u{200F}#,##0.00\u{00A0}¤;\u{200F}-#,##0.00\u{00A0}¤",
+                    PatternTransformer::TYPE_RIGHT_SYMBOL_WITHOUT_SPACE => "\u{200F}#,##0.00¤;\u{200F}-#,##0.00¤",
                 ],
             ],
         ];

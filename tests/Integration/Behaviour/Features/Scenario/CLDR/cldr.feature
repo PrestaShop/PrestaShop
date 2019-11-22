@@ -11,6 +11,8 @@ Feature: CLDR display for prices
       And language "language3" with locale "hi-IN" exists
       And language "language4" with locale "sg-CF" exists
       And language "language5" with locale "nl-NL" exists
+      And language "language6" with locale "he-IL" exists
+      And language "language7" with locale "ar-EG" exists
       And currency "currency1" with ISO code "USD" exists
       And currency "currency2" with ISO code "EUR" exists
       And currency "currency3" with ISO code "AUD" exists
@@ -25,6 +27,7 @@ Feature: CLDR display for prices
       And I set the pattern "¤ #,##0.00" for currency "currency6" in locale "fr-FR"
       And I set the pattern "¤ #,##0.00;¤ -#,##0.00" for currency "currency3" in locale "fr-FR"
       And I set the pattern "¤#,##0.00;¤#,##0.00-" for currency "currency5" in locale "nl-NL"
+      And I set the pattern "‏#,##0.00¤;‏-#,##0.00¤" for currency "currency2" in locale "he-IL"
       And I delete currency "currency2"
       And I disable currency "currency3"
       And I delete currency "currency5"
@@ -91,3 +94,11 @@ Feature: CLDR display for prices
     Then a price of "-14789.5426" using "USD" in locale "nl-NL" should look like "$ -14.789,54"
     Then a price of "-14789.5426" using "AUD" in locale "fr-FR" should look like "$ -14 789,54"
     Then a price of "-14789.5426" using "YYY" in locale "nl-NL" should look like "YYY14.789,54-"
+
+  Scenario: Display RTL prices
+    Then a price of 14789.5426 using "USD" in locale "he-IL" should look like "‏14,789.54 $"
+    Then a price of 14789.5426 using "USD" in locale "ar-EG" should look like "14,789.54 $"
+    Then a price of 14789.5426 using "EUR" in locale "he-IL" should look like "‏14,789.54€"
+    Then a price of 14789.5426 using "EUR" in locale "ar-EG" should look like "14,789.54 €"
+    Then a price of 14789.5426 using "YYY" in locale "he-IL" should look like "‏14,789.54 YYY"
+    Then a price of 14789.5426 using "YYY" in locale "ar-EG" should look like "14,789.54 YYY"
