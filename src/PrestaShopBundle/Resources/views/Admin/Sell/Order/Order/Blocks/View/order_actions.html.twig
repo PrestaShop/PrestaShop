@@ -108,7 +108,7 @@
 
             <div class="dropdown-menu" aria-labelledby="dropdownOrderActionBar">
               {% for button in buttons %}
-                <a class="dropdown-item btn btn-action {{ button.class }}"
+                <a class="dropdown-item btn {{ button.class }}"
                 {% for tagName, tagContent in button.tags %}
                   {{ tagName }}="{{ tagContent }}"
                 {% endfor %}>
