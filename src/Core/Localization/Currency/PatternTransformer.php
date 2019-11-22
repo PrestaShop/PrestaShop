@@ -34,7 +34,7 @@ use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
  */
 class PatternTransformer
 {
-    const NO_BREAK_SPACE = ' ';
+    const NO_BREAK_SPACE = "\u{00A0}";
     const REGULAR_SPACE = ' ';
     const CURRENCY_SYMBOL = '¤';
 

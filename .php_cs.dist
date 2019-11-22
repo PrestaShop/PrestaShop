@@ -26,7 +26,7 @@ return PhpCsFixer\Config::create()
         ],
         'function_to_constant' => false,
         'no_alias_functions' => false,
-        'non_printable_character' => false,
+        'non_printable_character' => true,
         'phpdoc_summary' => false,
         'phpdoc_align' => [
             'align' => 'left',
