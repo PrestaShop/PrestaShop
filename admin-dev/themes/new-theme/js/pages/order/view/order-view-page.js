@@ -52,8 +52,31 @@ export default class OrderViewPage {
   }
 
   listenForProductEdit() {
-    const callback = event => this.orderProductManager.handleUpdateModalFormData(event);
-    $(OrderViewPageMap.productEditBtn).off('click', callback).on('click', callback);
+    $(OrderViewPageMap.productEditBtn).on('click', event => {
+      const $btn = $(event.currentTarget);
+      this.orderProductRenderer.moveProductsPanelToModificationPosition();
+      this.orderProductRenderer.editProductFromToList(
+        $btn.attr('data-order-detail-id'),
+        $btn.attr('data-product-quantity'),
+        $btn.attr('data-product-price-tax-incl'),
+        $btn.attr('data-product-price-tax-excl'),
+        $btn.attr('data-tax-rate'),
+      );
+    });
+    $(OrderViewPageMap.productCancelEditBtn).on('click', event => {
+      const $btn = $(event.currentTarget);
+      this.orderProductRenderer.resetEditRow($btn.attr('data-order-detail-id'));
+      this.orderProductRenderer.moveProductPanelToOriginalPosition();
+    });
+
+    EventEmitter.on(OrderViewEventMap.productEditedToOrder, (event) => {
+      this.orderProductRenderer.addOrUpdateProductFromToList(event.orderDetailId, event.newRow);
+      this.orderProductRenderer.resetEditRow(event.orderDetailId);
+      this.orderPricesRefresher.refresh(event.orderId);
+      this.orderProductRenderer.moveProductPanelToOriginalPosition();
+      this.listenForProductDelete();
+      this.listenForProductEdit();
+    });
   }
 
   listenForProductAdd() {

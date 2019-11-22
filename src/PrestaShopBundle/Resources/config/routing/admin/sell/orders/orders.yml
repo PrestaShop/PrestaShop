@@ -135,6 +135,8 @@ admin_orders_update_product:
   requirements:
     orderId: \d+
     orderDetailId: \d+
+  options:
+    expose: true
 
 admin_orders_remove_cart_rule:
   path: /{orderId}/cart-rules/{orderCartRuleId}/delete
