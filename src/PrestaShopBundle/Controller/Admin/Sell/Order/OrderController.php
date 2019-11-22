@@ -32,7 +32,6 @@ use Exception;
 use Language;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartInformation;
-use PrestaShop\PrestaShop\Core\Domain\Currency\Query\GetReferenceCurrency;
 use PrestaShop\PrestaShop\Core\Domain\CustomerMessage\Command\AddOrderCustomerMessageCommand;
 use PrestaShop\PrestaShop\Core\Domain\CustomerMessage\Exception\CannotSendEmailException;
 use PrestaShop\PrestaShop\Core\Domain\CustomerMessage\Exception\CustomerMessageConstraintException;
@@ -63,9 +62,7 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderPreview;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderPreview;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderProductForViewing;
-use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderProductsForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\OrderGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters\OrderFilters;
 use PrestaShopBundle\Component\CsvResponse;
@@ -406,7 +403,6 @@ class OrderController extends FrameworkBundleAdminController
         ]);
     }
 
-
     /**
      * @param int $orderId
      * @param Request $request
@@ -522,32 +518,38 @@ class OrderController extends FrameworkBundleAdminController
         ]);
     }
 
-    public function updateProductAction(int $orderId, int $orderDetailId, Request $request): RedirectResponse
+    /**
+     * @param int $orderId
+     * @param int $orderDetailId
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function updateProductAction(int $orderId, int $orderDetailId, Request $request): Response
     {
-        $updateOrderProductForm = $this->createForm(UpdateProductInOrderType::class, [], [
-            'order_id' => $orderId,
-        ]);
-        $updateOrderProductForm->handleRequest($request);
+        $this->getCommandBus()->handle(
+            new UpdateProductInOrderCommand(
+                $orderId,
+                $orderDetailId,
+                $request->get('price_tax_incl'),
+                $request->get('price_tax_excl'),
+                $request->get('quantity')
+            )
+        );
 
-        if ($updateOrderProductForm->isSubmitted() && $updateOrderProductForm->isValid()) {
-            $data = $updateOrderProductForm->getData();
+        /** @var OrderForViewing $orderForViewing */
+        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
 
-            $this->getCommandBus()->handle(
-                new UpdateProductInOrderCommand(
-                    $orderId,
-                    $orderDetailId,
-                    $data['price_tax_excl'],
-                    $data['price_tax_incl'],
-                    $data['quantity']
-                )
-            );
+        $products = $orderForViewing->getProducts()->getProducts();
+        $product = array_reduce($products, function ($result, OrderProductForViewing $item) use ($orderDetailId) {
+            return $item->getOrderDetailId() == $orderDetailId ? $item : $result;
+        });
 
-            $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
-        }
-
-        return $this->redirectToRoute('admin_orders_view', [
-            'orderId' => $orderId,
-        ]);
+        return $this->render('@PrestaShop/Admin/Sell/Order/Order/Blocks/View/product.html.twig', [
+                'orderForViewing' => $orderForViewing,
+                'product' => $product,
+            ]
+        );
     }
 
     /**
