@@ -64,13 +64,11 @@ use PrestaShopBundle\Component\CsvResponse;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Form\Admin\Sell\Customer\PrivateNoteType;
 use PrestaShopBundle\Form\Admin\Sell\Order\AddOrderCartRuleType;
-use PrestaShopBundle\Form\Admin\Sell\Order\AddProductToOrderType;
 use PrestaShopBundle\Form\Admin\Sell\Order\ChangeOrderCurrencyType;
 use PrestaShopBundle\Form\Admin\Sell\Order\ChangeOrdersStatusType;
 use PrestaShopBundle\Form\Admin\Sell\Order\OrderPaymentType;
 use PrestaShopBundle\Form\Admin\Sell\Order\UpdateOrderShippingType;
 use PrestaShopBundle\Form\Admin\Sell\Order\UpdateOrderStatusType;
-use PrestaShopBundle\Form\Admin\Sell\Order\UpdateProductInOrderType;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Service\Grid\ResponseBuilder;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -302,9 +300,6 @@ class OrderController extends FrameworkBundleAdminController
         $privateNoteForm = $this->createForm(PrivateNoteType::class, [
             'note' => $orderForViewing->getCustomer()->getPrivateNote(),
         ]);
-        $updateOrderProductForm = $this->createForm(UpdateProductInOrderType::class, [], [
-            'order_id' => $orderId,
-        ]);
         $updateOrderShippingForm = $this->createForm(UpdateOrderShippingType::class, [
             'new_carrier_id' => $orderForViewing->getCarrierId(),
         ], [
@@ -326,7 +321,6 @@ class OrderController extends FrameworkBundleAdminController
             'addOrderPaymentForm' => $addOrderPaymentForm->createView(),
             'changeOrderCurrencyForm' => $changeOrderCurrencyForm->createView(),
             'privateNoteForm' => $privateNoteForm->createView(),
-            'updateOrderProductForm' => $updateOrderProductForm->createView(),
             'updateOrderShippingForm' => $updateOrderShippingForm->createView(),
             'invoiceManagementIsEnabled' => $orderForViewing->isInvoiceManagementIsEnabled(),
         ]);
