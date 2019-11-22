@@ -57,12 +57,12 @@
       }) }}
 
       {{ ps.form_group_row(addressForm.first_name, {}, {
-        'label': 'First Name'|trans({}, 'Admin.Global'),
+        'label': 'First name'|trans({}, 'Admin.Global'),
         'help' : 'Invalid characters:'|trans({}, 'Admin.Notifications.Info') ~ ' 0-9!<>,;?=+()@#"�{}_$%:'
       }) }}
 
       {{ ps.form_group_row(addressForm.last_name, {}, {
-        'label': 'Last Name'|trans({}, 'Admin.Global'),
+        'label': 'Last name'|trans({}, 'Admin.Global'),
         'help' : 'Invalid characters:'|trans({}, 'Admin.Notifications.Info') ~ ' 0-9!<>,;?=+()@#"�{}_$%:'
       }) }}
 
@@ -80,7 +80,7 @@
       }) }}
 
       {{ ps.form_group_row(addressForm.address2, {}, {
-        'label': 'Address'|trans({}, 'Admin.Global') ~ ' (2)',
+        'label': 'Address (2)'|trans({}, 'Admin.Global'),
       }) }}
 
       {{ ps.form_group_row(addressForm.postcode, {}, {
@@ -107,7 +107,7 @@
       }) }}
 
       {{ ps.form_group_row(addressForm.phone, {}, {
-        'label': 'Home phone'|trans({}, 'Admin.Global')
+        'label': 'Phone'|trans({}, 'Admin.Global')
       }) }}
 
       {% if addressForm.phone_mobile is defined %}
@@ -117,7 +117,7 @@
       {% endif %}
 
       {{ ps.form_group_row(addressForm.other, {}, {
-        'label': 'Other'|trans({}, 'Admin.Notifications.Info'),
+        'label': 'Other'|trans({}, 'Admin.Global'),
         'help' : 'Invalid characters:'|trans({}, 'Admin.Notifications.Info') ~ ' <>;=#{}'
       }) }}
 
