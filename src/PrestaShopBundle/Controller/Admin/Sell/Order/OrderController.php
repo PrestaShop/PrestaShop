@@ -329,6 +329,18 @@ class OrderController extends FrameworkBundleAdminController
             'order_id' => $orderId,
         ]);
 
+        $backOfficeOrderButtons = new ActionsBarButtonsCollection();
+        $hookParameters = [
+            'controller' => $this,
+            'id_order' => $orderId,
+            'actions_bar_buttons_collection' => $backOfficeOrderButtons,
+        ];
+
+        $this->dispatchHook(
+            'actionGetBackOfficeOrderButtons',
+            $hookParameters
+        );
+
         return $this->render('@PrestaShop/Admin/Sell/Order/Order/view.html.twig', [
             'showContentHeader' => true,
             'meta_title' => $this->trans('Orders', 'Admin.Orderscustomers.Feature'),
@@ -391,6 +403,7 @@ class OrderController extends FrameworkBundleAdminController
 
         return $this->redirectToRoute('admin_orders_view', [
             'orderId' => $orderId,
+            'backOfficeOrderButtons' => $backOfficeOrderButtons,
         ]);
     }
 
