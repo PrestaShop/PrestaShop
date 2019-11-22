@@ -37,6 +37,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Country;
 
 /**
  * Defines form for address create/edit actions (Sell > Catalog > Brands & Suppliers)
@@ -52,6 +53,11 @@ class ManufacturerAddressType extends AbstractType
      * @var array
      */
     private $countryChoices;
+
+    /**
+     * @var array
+     */
+    private $countryChoicesAttributes;
 
     /**
      * @var ConfigurableFormChoiceProviderInterface
@@ -74,19 +80,22 @@ class ManufacturerAddressType extends AbstractType
      * @param ConfigurableFormChoiceProviderInterface $statesChoiceProvider
      * @param int $contextCountryId
      * @param TranslatorInterface $translator
+     * @param array $countryChoicesAttributes
      */
     public function __construct(
         array $manufacturerChoices,
         array $countryChoices,
         ConfigurableFormChoiceProviderInterface $statesChoiceProvider,
         $contextCountryId,
-        TranslatorInterface $translator
+        TranslatorInterface $translator,
+        array $countryChoicesAttributes
     ) {
         $this->manufacturerChoices = $manufacturerChoices;
         $this->countryChoices = $countryChoices;
         $this->statesChoiceProvider = $statesChoiceProvider;
         $this->contextCountryId = $contextCountryId;
         $this->translator = $translator;
+        $this->countryChoicesAttributes = $countryChoicesAttributes;
     }
 
     /**
@@ -94,11 +103,8 @@ class ManufacturerAddressType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        if ($options['country_id'] !== 0) {
-            $countryIdForStateChoices = $options['country_id'];
-        } else {
-            $countryIdForStateChoices = $this->contextCountryId;
-        }
+        $countryId = 0 !== $options['country_id'] ? $options['country_id'] : $this->contextCountryId;
+        $dniRequired = Country::isNeedDniByCountryId($countryId);
 
         $builder
             ->add('id_manufacturer', ChoiceType::class, [
@@ -164,6 +170,7 @@ class ManufacturerAddressType extends AbstractType
             ])
             ->add('address2', TextType::class, [
                 'required' => false,
+                'empty_data' => '',
                 'constraints' => [
                     new TypedRegex([
                         'type' => 'address',
@@ -180,6 +187,7 @@ class ManufacturerAddressType extends AbstractType
             ])
             ->add('post_code', TextType::class, [
                 'required' => false,
+                'empty_data' => '',
                 'constraints' => [
                     new TypedRegex([
                         'type' => 'post_code',
@@ -217,6 +225,7 @@ class ManufacturerAddressType extends AbstractType
             ->add('id_country', ChoiceType::class, [
                 'required' => true,
                 'choices' => $this->countryChoices,
+                'choice_attr' => $this->countryChoicesAttributes,
                 'translation_domain' => false,
                 'constraints' => [
                     new NotBlank([
@@ -228,13 +237,15 @@ class ManufacturerAddressType extends AbstractType
             ])
             ->add('id_state', ChoiceType::class, [
                 'required' => false,
+                'empty_data' => '',
                 'translation_domain' => false,
                 'choices' => $this->statesChoiceProvider->getChoices([
-                    'id_country' => $countryIdForStateChoices,
+                    'id_country' => $countryId,
                 ]),
             ])
             ->add('home_phone', TextType::class, [
                 'required' => false,
+                'empty_data' => '',
                 'constraints' => [
                     new TypedRegex([
                         'type' => 'phone_number',
@@ -251,6 +262,7 @@ class ManufacturerAddressType extends AbstractType
             ])
             ->add('mobile_phone', TextType::class, [
                 'required' => false,
+                'empty_data' => '',
                 'constraints' => [
                     new TypedRegex([
                         'type' => 'phone_number',
@@ -265,8 +277,26 @@ class ManufacturerAddressType extends AbstractType
                     ]),
                 ],
             ])
+            ->add('dni', TextType::class, [
+                'required' => $dniRequired,
+                'empty_data' => '',
+                'constraints' => [
+                    new TypedRegex([
+                        'type' => 'dni_lite',
+                    ]),
+                    new Length([
+                        'max' => 16,
+                        'maxMessage' => $this->translator->trans(
+                            'This field cannot be longer than %limit% characters',
+                            ['%limit%' => 16],
+                            'Admin.Notifications.Error'
+                        ),
+                    ]),
+                ],
+            ])
             ->add('other', TextType::class, [
                 'required' => false,
+                'empty_data' => '',
                 'constraints' => [
                     new TypedRegex([
                         'type' => 'message',

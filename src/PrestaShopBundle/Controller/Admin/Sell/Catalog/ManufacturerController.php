@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
 use Exception;
+use PrestaShop\PrestaShop\Core\Domain\Address\Exception\InvalidAddressFieldException;
 use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
 use PrestaShop\PrestaShop\Core\Domain\Address\Command\BulkDeleteAddressCommand;
 use PrestaShop\PrestaShop\Core\Domain\Address\Command\DeleteAddressCommand;
@@ -599,11 +600,11 @@ class ManufacturerController extends FrameworkBundleAdminController
         $addressFormBuilder = $this->getAddressFormBuilder();
         $addressFormHandler = $this->getAddressFormHandler();
 
+        /** @var EditableManufacturerAddress $address */
+        $address = $this->getQueryBus()->handle(new GetManufacturerAddressForEditing($addressId));
         if ($request->request->has('manufacturer_address') && isset($request->request->get('manufacturer_address')['id_country'])) {
             $formCountryId = (int) $request->request->get('manufacturer_address')['id_country'];
         } else {
-            /** @var EditableManufacturerAddress $address */
-            $address = $this->getQueryBus()->handle(new GetManufacturerAddressForEditing($addressId));
             $formCountryId = $address->getCountryId();
         }
 
@@ -627,6 +628,7 @@ class ManufacturerController extends FrameworkBundleAdminController
             if ($e instanceof AddressNotFoundException || $e instanceof AddressConstraintException) {
                 return $this->redirectToRoute('admin_manufacturers_index');
             }
+            $editableAddress = $address;
         }
 
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Manufacturer/Address/edit.html.twig', [
@@ -709,6 +711,10 @@ class ManufacturerController extends FrameworkBundleAdminController
             ],
             AddressNotFoundException::class => $this->trans(
                 'The object cannot be loaded (or found)',
+                'Admin.Notifications.Error'
+            ),
+            InvalidAddressFieldException::class => $this->trans(
+                'Address contains invalid field values',
                 'Admin.Notifications.Error'
             ),
         ];

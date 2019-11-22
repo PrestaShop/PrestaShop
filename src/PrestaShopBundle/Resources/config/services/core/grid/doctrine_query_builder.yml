@@ -58,7 +58,7 @@ services:
         arguments:
             - '@prestashop.core.query.doctrine_search_criteria_applicator'
             - "@=service('prestashop.adapter.legacy.context').getContext().language.id"
-            - '@=service("prestashop.adapter.shop.context").getContextListShopID()'
+            - '@=service("prestashop.adapter.shop.context").getContextListShopIDUsingCustomerSharingSettings()'
         public: true
 
     prestashop.core.grid.quer_.builder.language:
