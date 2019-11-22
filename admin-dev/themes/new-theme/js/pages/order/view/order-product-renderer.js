@@ -24,6 +24,7 @@
  */
 
 import OrderViewPageMap from '../OrderViewPageMap';
+import OrderProductEdit from "./order-product-edit";
 
 const $ = window.$;
 
@@ -43,13 +44,14 @@ export default class OrderProductRenderer {
     }
   }
 
-  resetAddRow() {
-    $(OrderViewPageMap.productSearchInput).val('');
-    $(OrderViewPageMap.productAddCombinationsSelect).val('');
-    $(OrderViewPageMap.productAddPriceTaxExclInput).val('');
-    $(OrderViewPageMap.productAddPriceTaxInclInput).val('');
-    $(OrderViewPageMap.productAddQuantityInput).val('');
-    $(OrderViewPageMap.productAddAvailableText).html('');
+  editProductFromToList(orderProductId, quantity, priceTaxIncl, priceTaxExcl, taxRate) {
+    const $orderEdit = new OrderProductEdit(orderProductId);
+    $orderEdit.displayProduct({
+      price_tax_excl: priceTaxExcl,
+      price_tax_incl: priceTaxIncl,
+      tax_rate: taxRate,
+      quantity
+    });
   }
 
   moveProductsPanelToModificationPosition() {
@@ -72,5 +74,21 @@ export default class OrderProductRenderer {
     $(OrderViewPageMap.productActionBtn).removeClass('d-none');
     $(OrderViewPageMap.productAddActionBtn).addClass('d-none');
     $(OrderViewPageMap.productAddRow).addClass('d-none');
+  }
+
+  resetAddRow() {
+    $(OrderViewPageMap.productSearchInput).val('');
+    $(OrderViewPageMap.productAddCombinationsSelect).val('');
+    $(OrderViewPageMap.productAddPriceTaxExclInput).val('');
+    $(OrderViewPageMap.productAddPriceTaxInclInput).val('');
+    $(OrderViewPageMap.productAddQuantityInput).val('');
+    $(OrderViewPageMap.productAddAvailableText).html('');
+  }
+
+  resetEditRow(orderProductId) {
+    const $productRow = $(`#orderProduct_${orderProductId}`);
+    const $productEditRow = $(`#orderProduct_${orderProductId}_edit`);
+    $productEditRow.remove();
+    $productRow.removeClass('d-none');
   }
 }

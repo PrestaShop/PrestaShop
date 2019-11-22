@@ -426,7 +426,8 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
                 $product['current_stock'],
                 $imagePath,
                 Tools::ps_round($product['unit_price_tax_excl'], 2),
-                Tools::ps_round($product['unit_price_tax_incl'], 2)
+                Tools::ps_round($product['unit_price_tax_incl'], 2),
+                $product['tax_rate']
             );
         }
 
