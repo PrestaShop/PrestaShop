@@ -55,7 +55,7 @@
 
       {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/messages.html.twig' %}
 
-      {{ renderhook('displayAdminOrderRight', {'id_order': orderForViewing.id}) }}
+      {{ renderhook('displayAdminOrderSide', {'id_order': orderForViewing.id}) }}
     </div>
 
     <div class="col-md-8">
@@ -63,7 +63,7 @@
 
       {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/details.html.twig' %}
 
-      {{ renderhook('displayAdminOrderLeft', {'id_order': orderForViewing.id}) }}
+      {{ renderhook('displayAdminOrderMain', {'id_order': orderForViewing.id}) }}
 
       {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/payments.html.twig' %}
     </div>

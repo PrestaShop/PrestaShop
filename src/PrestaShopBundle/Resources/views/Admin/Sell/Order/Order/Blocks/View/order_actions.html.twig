@@ -44,15 +44,56 @@
 
     {# Rendering of hook actionGetBackOfficeOrderButtons, see ActionsBarButtonsCollection #}
     {% if (backOfficeOrderButtons.isEmpty() != true) %}
-        {% for button in backOfficeOrderButtons.getButtons() %}
-          <button class="btn btn-action ml-3 {{ button.class }}"
-              {% for tagName, tagContent in button.tags %}
-                {{ tagName }}="{{ tagContent }}"
-              {% endfor %}
+
+        {% set buttons = backOfficeOrderButtons.getButtons() %}
+        {% if buttons|length > 2 %}
+
+          {% set firstButton = buttons|first %}
+
+          <button class="btn btn-action ml-3 {{ firstButton.class }}"
+          {% for tagName, tagContent in firstButton.tags %}
+            {{ tagName }}="{{ tagContent }}"
+          {% endfor %}
           >
-            {{ button.content|raw }}
+          {{ firstButton.content|raw }}
           </button>
-        {% endfor %}
+
+          {# Display other buttons into a dropdown #}
+          {% set buttons = buttons|slice(1, buttons|length) %}
+
+          <div class="dropdown ml-3">
+            <button class="btn btn-action dropdown-toggle" type="button" id="dropdownOrderActionBar" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <i class="material-icons form-error-icon">more_horiz</i>
+
+              {{ 'More actions'|trans({}, 'Admin.Global') }}
+            </button>
+
+            <div class="dropdown-menu" aria-labelledby="dropdownOrderActionBar">
+              {% for button in buttons %}
+                <a class="dropdown-item btn btn-action {{ button.class }}"
+                {% for tagName, tagContent in button.tags %}
+                  {{ tagName }}="{{ tagContent }}"
+                {% endfor %}>
+                {{ button.content|raw }}
+                </a>
+              {% endfor %}
+            </div>
+
+          </div>
+        {% else %}
+          {# If only 2 buttons, display them like this #}
+
+          {% for button in buttons %}
+            <button class="btn btn-action ml-3 {{ button.class }}"
+            {% for tagName, tagContent in button.tags %}
+              {{ tagName }}="{{ tagContent }}"
+            {% endfor %}
+            >
+            {{ button.content|raw }}
+            </button>
+          {% endfor %}
+        {% endif %}
+
     {% endif %}
 
   </div>
