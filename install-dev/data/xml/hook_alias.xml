@@ -337,5 +337,14 @@
       <alias>actionAfterDeleteProductInCart</alias>
       <name>actionDeleteProductInCartAfter</name>
     </hook_alias>
+
+    <hook_alias id="adminOrderLeft">
+      <alias>displayAdminOrderLeft</alias>
+      <name>displayAdminOrderMain</name>
+    </hook_alias>
+    <hook_alias id="adminOrderRight">
+      <alias>displayAdminOrderRight</alias>
+      <name>displayAdminOrderSide</name>
+    </hook_alias>
   </entities>
 </entity_hook_alias>

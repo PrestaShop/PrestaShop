@@ -515,3 +515,6 @@ ALTER TABLE `PREFIX_zone` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_gener
 ALTER TABLE `PREFIX_zone_shop` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 
 /* PHP:ps_1770_preset_tab_enabled(); */
+
+INSERT INTO `PREFIX_hook_alias` (`name`, `alias`) VALUES ('displayAdminOrderSide', 'displayAdminOrderRight');
+INSERT INTO `PREFIX_hook_alias` (`name`, `alias`) VALUES ('displayAdminOrderMain', 'displayAdminOrderLeft');
