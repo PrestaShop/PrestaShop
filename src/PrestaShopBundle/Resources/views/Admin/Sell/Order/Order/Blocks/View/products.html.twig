@@ -74,7 +74,8 @@
           <td colspan="2" class="pr-5">
             <input type="hidden" id="addProductId">
             <input type="hidden" id="addProductTaxRate">
-            <input type="text" class="form-control" id="addProductSearch">
+            <label for="addProductSearch">{{ 'Add product'|trans({}, 'Admin.Orderscustomers.Feature') }}</label>
+            <input type="text" class="form-control" id="addProductSearch" placeholder="{{ 'Search product'|trans({}, 'Admin.Orderscustomers.Feature') }}">
             <div class="input-group mt-2 d-none" id="addProductCombinations">
               <div class="input-group-prepend">
                 <div class="input-group-text">{{ 'Combinations'|trans({}, 'Admin.Global') }}</div>
