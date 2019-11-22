@@ -31,22 +31,31 @@
       'id': 'update_order_status_action_form'
     }
   }) }}
-    <div class="input-group">
-      {{ form_widget(updateOrderStatusActionBarForm.new_order_status_id, {'attr': {'class': 'mr-1'}, 'id': 'update_order_status_action_input'}) }}
+  <div class="input-group">
+    {{ form_widget(updateOrderStatusActionBarForm.new_order_status_id, {'attr': {'class': 'mr-1'}, 'id': 'update_order_status_action_input'}) }}
 
-      <button class="btn btn-action"
-              id="update_order_status_action_btn"
-              disabled
-              data-order-status-id="{{ orderForViewing.history.currentOrderStatusId }}"
-      >
-        {{ 'Update status'|trans({}, 'Admin.Orderscustomers.Feature') }}
-      </button>
-    </div>
+    <button class="btn btn-action ml-3"
+            id="update_order_status_action_btn"
+            disabled
+            data-order-status-id="{{ orderForViewing.history.currentOrderStatusId }}"
+    >
+      {{ 'Update status'|trans({}, 'Admin.Orderscustomers.Feature') }}
+    </button>
 
-    <div class="d-none">
-      {{ form_rest(updateOrderStatusActionBarForm) }}
-    </div>
-  {{ form_end(updateOrderStatusActionBarForm) }}
+    {# Rendering of hook actionGetBackOfficeOrderButtons, see ActionsBarButtonsCollection #}
+    {% if (backOfficeOrderButtons.isEmpty() != true) %}
+        {% for button in backOfficeOrderButtons.getButtons() %}
+          <button class="btn btn-action ml-3 {{ button.class }}"
+              {% for tagName, tagContent in button.tags %}
+                {{ tagName }}="{{ tagContent }}"
+              {% endfor %}
+          >
+            {{ button.content|raw }}
+          </button>
+        {% endfor %}
+    {% endif %}
+
+  </div>
 
   {% if orderForViewing.documents.canGenerateInvoice %}
     <form class="form-inline d-inline-block form-horizontal ml-2">
@@ -70,5 +79,8 @@
     </form>
   {% endif %}
 
-  {{ renderhook('displayBackOfficeOrderActions', {'id_order': orderForViewing.id}) }}
+  <div class="d-none">
+    {{ form_rest(updateOrderStatusActionBarForm) }}
+  </div>
+  {{ form_end(updateOrderStatusActionBarForm) }}
 </div>
