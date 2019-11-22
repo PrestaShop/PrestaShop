@@ -49,65 +49,65 @@ class PatternTransformerTest extends TestCase
     {
         return [
             'fr' => [
-                '#,##0.00 ¤',
+                "#,##0.00\u{00A0}¤",
                 [
-                    PatternTransformer::TYPE_LEFT_SYMBOL_WITH_SPACE => '¤ #,##0.00',
+                    PatternTransformer::TYPE_LEFT_SYMBOL_WITH_SPACE => "¤\u{00A0}#,##0.00",
                     PatternTransformer::TYPE_LEFT_SYMBOL_WITHOUT_SPACE => '¤#,##0.00',
-                    PatternTransformer::TYPE_RIGHT_SYMBOL_WITH_SPACE => '#,##0.00 ¤',
+                    PatternTransformer::TYPE_RIGHT_SYMBOL_WITH_SPACE => "#,##0.00\u{00A0}¤",
                     PatternTransformer::TYPE_RIGHT_SYMBOL_WITHOUT_SPACE => '#,##0.00¤',
                 ],
             ],
             'rn' => [
                 '#,##0.00¤',
                 [
-                    PatternTransformer::TYPE_LEFT_SYMBOL_WITH_SPACE => '¤ #,##0.00',
+                    PatternTransformer::TYPE_LEFT_SYMBOL_WITH_SPACE => "¤\u{00A0}#,##0.00",
                     PatternTransformer::TYPE_LEFT_SYMBOL_WITHOUT_SPACE => '¤#,##0.00',
-                    PatternTransformer::TYPE_RIGHT_SYMBOL_WITH_SPACE => '#,##0.00 ¤',
+                    PatternTransformer::TYPE_RIGHT_SYMBOL_WITH_SPACE => "#,##0.00\u{00A0}¤",
                     PatternTransformer::TYPE_RIGHT_SYMBOL_WITHOUT_SPACE => '#,##0.00¤',
                 ],
             ],
             'en' => [
                 '¤#,##0.00',
                 [
-                    PatternTransformer::TYPE_LEFT_SYMBOL_WITH_SPACE => '¤ #,##0.00',
+                    PatternTransformer::TYPE_LEFT_SYMBOL_WITH_SPACE => "¤\u{00A0}#,##0.00",
                     PatternTransformer::TYPE_LEFT_SYMBOL_WITHOUT_SPACE => '¤#,##0.00',
-                    PatternTransformer::TYPE_RIGHT_SYMBOL_WITH_SPACE => '#,##0.00 ¤',
+                    PatternTransformer::TYPE_RIGHT_SYMBOL_WITH_SPACE => "#,##0.00\u{00A0}¤",
                     PatternTransformer::TYPE_RIGHT_SYMBOL_WITHOUT_SPACE => '#,##0.00¤',
                 ],
             ],
             'pt' => [
-                '¤ #,##0.00',
+                "¤\u{00A0}#,##0.00",
                 [
-                    PatternTransformer::TYPE_LEFT_SYMBOL_WITH_SPACE => '¤ #,##0.00',
+                    PatternTransformer::TYPE_LEFT_SYMBOL_WITH_SPACE => "¤\u{00A0}#,##0.00",
                     PatternTransformer::TYPE_LEFT_SYMBOL_WITHOUT_SPACE => '¤#,##0.00',
-                    PatternTransformer::TYPE_RIGHT_SYMBOL_WITH_SPACE => '#,##0.00 ¤',
+                    PatternTransformer::TYPE_RIGHT_SYMBOL_WITH_SPACE => "#,##0.00\u{00A0}¤",
                     PatternTransformer::TYPE_RIGHT_SYMBOL_WITHOUT_SPACE => '#,##0.00¤',
                 ],
             ],
             'hi' => [
                 '¤#,##,##0.00',
                 [
-                    PatternTransformer::TYPE_LEFT_SYMBOL_WITH_SPACE => '¤ #,##,##0.00',
+                    PatternTransformer::TYPE_LEFT_SYMBOL_WITH_SPACE => "¤\u{00A0}#,##,##0.00",
                     PatternTransformer::TYPE_LEFT_SYMBOL_WITHOUT_SPACE => '¤#,##,##0.00',
-                    PatternTransformer::TYPE_RIGHT_SYMBOL_WITH_SPACE => '#,##,##0.00 ¤',
+                    PatternTransformer::TYPE_RIGHT_SYMBOL_WITH_SPACE => "#,##,##0.00\u{00A0}¤",
                     PatternTransformer::TYPE_RIGHT_SYMBOL_WITHOUT_SPACE => '#,##,##0.00¤',
                 ],
             ],
             'sg' => [
                 '¤#,##0.00;¤-#,##0.00',
                 [
-                    PatternTransformer::TYPE_LEFT_SYMBOL_WITH_SPACE => '¤ #,##0.00;¤ -#,##0.00',
+                    PatternTransformer::TYPE_LEFT_SYMBOL_WITH_SPACE => "¤\u{00A0}#,##0.00;¤\u{00A0}-#,##0.00",
                     PatternTransformer::TYPE_LEFT_SYMBOL_WITHOUT_SPACE => '¤#,##0.00;¤-#,##0.00',
-                    PatternTransformer::TYPE_RIGHT_SYMBOL_WITH_SPACE => '#,##0.00 ¤;-#,##0.00 ¤',
+                    PatternTransformer::TYPE_RIGHT_SYMBOL_WITH_SPACE => "#,##0.00\u{00A0}¤;-#,##0.00\u{00A0}¤",
                     PatternTransformer::TYPE_RIGHT_SYMBOL_WITHOUT_SPACE => '#,##0.00¤;-#,##0.00¤',
                 ],
             ],
             'nl' => [
-                '¤ #,##0.00;¤ -#,##0.00',
+                "¤\u{00A0}#,##0.00;¤\u{00A0}-#,##0.00",
                 [
-                    PatternTransformer::TYPE_LEFT_SYMBOL_WITH_SPACE => '¤ #,##0.00;¤ -#,##0.00',
+                    PatternTransformer::TYPE_LEFT_SYMBOL_WITH_SPACE => "¤\u{00A0}#,##0.00;¤\u{00A0}-#,##0.00",
                     PatternTransformer::TYPE_LEFT_SYMBOL_WITHOUT_SPACE => '¤#,##0.00;¤-#,##0.00',
-                    PatternTransformer::TYPE_RIGHT_SYMBOL_WITH_SPACE => '#,##0.00 ¤;-#,##0.00 ¤',
+                    PatternTransformer::TYPE_RIGHT_SYMBOL_WITH_SPACE => "#,##0.00\u{00A0}¤;-#,##0.00\u{00A0}¤",
                     PatternTransformer::TYPE_RIGHT_SYMBOL_WITHOUT_SPACE => '#,##0.00¤;-#,##0.00¤',
                 ],
             ],
