@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Country\QueryHandler;
 
 use PrestaShop\PrestaShop\Adapter\Country\AbstractCountryHandler;
-use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryNotFoundException;
+use PrestaShop\PrestaShop\Core\Country\CountryRequiredFieldsProviderInterface;
 use PrestaShop\PrestaShop\Core\Domain\Country\Query\GetCountryRequiredFields;
 use PrestaShop\PrestaShop\Core\Domain\Country\QueryHandler\GetCountryRequiredFieldsHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Country\QueryResult\CountryRequiredFields;
@@ -37,15 +37,25 @@ use PrestaShop\PrestaShop\Core\Domain\Country\QueryResult\CountryRequiredFields;
  */
 final class GetCountryRequiredFieldsHandler extends AbstractCountryHandler implements GetCountryRequiredFieldsHandlerInterface
 {
+    /** @var CountryRequiredFieldsProviderInterface */
+    private $requiredFieldsProvider;
+
+    /**
+     * @param CountryRequiredFieldsProviderInterface $requiredFieldsProvider
+     */
+    public function __construct(CountryRequiredFieldsProviderInterface $requiredFieldsProvider)
+    {
+        $this->requiredFieldsProvider = $requiredFieldsProvider;
+    }
+
     /**
      * {@inheritdoc}
-     *
-     * @throws CountryNotFoundException
      */
     public function handle(GetCountryRequiredFields $query): CountryRequiredFields
     {
-        $country = $this->getCountry($query->getCountryId());
-
-        return new CountryRequiredFields($country->contains_states, $country->need_identification_number);
+        return new CountryRequiredFields(
+            $this->requiredFieldsProvider->isStatesRequired($query->getCountryId()),
+            $this->requiredFieldsProvider->isDniRequired($query->getCountryId())
+        );
     }
 }

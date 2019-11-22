@@ -4,6 +4,8 @@ services:
 
   prestashop.adapter.country.query_handler.get_country_required_fields:
     class: 'PrestaShop\PrestaShop\Adapter\Country\QueryHandler\GetCountryRequiredFieldsHandler'
+    arguments:
+      - '@prestashop.adapter.country.country_required_fields_provider'
     tags:
       - name: tactician.handler
         command: 'PrestaShop\PrestaShop\Core\Domain\Country\Query\GetCountryRequiredFields'
@@ -13,3 +15,6 @@ services:
     arguments:
       - '@prestashop.adapter.legacy.context'
       - '@prestashop.core.domain.country.zip_code_format_resolver'
+
+  prestashop.adapter.country.country_required_fields_provider:
+    class: 'PrestaShop\PrestaShop\Adapter\Country\CountryRequiredFieldsProvider'
