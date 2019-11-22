@@ -358,6 +358,7 @@ class OrderController extends FrameworkBundleAdminController
             'invoiceManagementIsEnabled' => $orderForViewing->isInvoiceManagementIsEnabled(),
             'changeOrderAddressForm' => $changeOrderAddressForm->createView(),
             'orderMessageForm' => $orderMessageForm->createView(),
+            'backOfficeOrderButtons' => $backOfficeOrderButtons,
         ]);
     }
 
@@ -403,7 +404,6 @@ class OrderController extends FrameworkBundleAdminController
 
         return $this->redirectToRoute('admin_orders_view', [
             'orderId' => $orderId,
-            'backOfficeOrderButtons' => $backOfficeOrderButtons,
         ]);
     }
 
