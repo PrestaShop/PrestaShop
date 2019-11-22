@@ -321,6 +321,9 @@ class OrderController extends FrameworkBundleAdminController
         $privateNoteForm = $this->createForm(PrivateNoteType::class, [
             'note' => $orderForViewing->getCustomer()->getPrivateNote(),
         ]);
+        $updateOrderProductForm = $this->createForm(UpdateProductInOrderType::class, [], [
+            'order_id' => $orderId,
+        ]);
         $updateOrderShippingForm = $this->createForm(UpdateOrderShippingType::class, [
             'new_carrier_id' => $orderForViewing->getCarrierId(),
         ], [
