@@ -31,12 +31,6 @@ export default {
   privateNoteBlock: '.js-private-note-block',
   privateNoteInput: '#private_note_note',
   privateNoteSubmitBtn: '.js-private-note-btn',
-  // Product update modal
-  updateOrderProductModal: '#updateOrderProductModal',
-  updateOrderProductModalName: '.js-update-product-name',
-  updateOrderProductPriceTaxExclInput: '#update_product_in_order_price_tax_excl',
-  updateOrderProductPriceTaxInclInput: '#update_product_in_order_price_tax_incl',
-  updateOrderProductQuantityInput: '#update_product_in_order_quantity',
   addCartRuleModal: '#addOrderDiscountModal',
   addCartRuleApplyOnAllInvoicesCheckbox: '#add_order_cart_rule_apply_on_all_invoices',
   addCartRuleInvoiceIdSelect: '#add_order_cart_rule_invoice_id',
