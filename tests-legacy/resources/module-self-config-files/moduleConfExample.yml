@@ -14,7 +14,7 @@ configuration:
     delete:
         - "PAYPAL_ONBOARDING"
 
-# SQL files to execute 
+# SQL files to execute
 sql:
     - file: "path/to/file1.sql"
     # But key is optionnal
@@ -25,7 +25,7 @@ sql:
 files:
     - source: "/path/to/source/file.txt"
       dest: "module/path/docs/file.txt"
-      
+
     - source: "https://www.prestashop.com"
       dest: "modules/ganalytics/webpage.html"
 

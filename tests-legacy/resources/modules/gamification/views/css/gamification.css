@@ -9,7 +9,7 @@
   top: 4px;
   top: -.3rem;
   right: .2rem;
-  color: #fff; 
+  color: #fff;
   background: #25b9d7;
   font-size: 10px;
   font-size: .625rem;
@@ -43,7 +43,7 @@
   pointer-events: none;
 }
 
-.gamification-component #gamification_notif .dropdown-menu:before, 
+.gamification-component #gamification_notif .dropdown-menu:before,
 .gamification-component #gamification_notif .dropdown-menu:after{
   right: 9px;
 }
@@ -132,8 +132,8 @@
   padding: 20px 20px 10px 20px;
 }
 
-#gamification_notif_wrapper .notifs_panel_header p{font-weight: bold;}     
-#gamification_notif_wrapper .notifs_panel_header p span.notifs-level{color: #25b9d7; float: right;}     
+#gamification_notif_wrapper .notifs_panel_header p{font-weight: bold;}
+#gamification_notif_wrapper .notifs_panel_header p span.notifs-level{color: #25b9d7; float: right;}
 
 .gamification_badges_title {
   margin-top: 10px

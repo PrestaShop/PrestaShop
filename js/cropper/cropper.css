@@ -4,7 +4,7 @@
 }
 
 .imgCrop_wrap.opera8 .imgCrop_overlay,
-.imgCrop_wrap.opera8 .imgCrop_clickArea { 
+.imgCrop_wrap.opera8 .imgCrop_clickArea {
 	background-color: transparent;
 }
 
@@ -82,7 +82,7 @@
 	cursor: n-resize;
 }
 
-.imgCrop_handleNE { 
+.imgCrop_handleNE {
 	top: -3px;
 	right: -3px;
 	cursor: ne-resize;

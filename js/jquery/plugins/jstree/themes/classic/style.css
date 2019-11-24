@@ -4,7 +4,7 @@
  * Supported plugins: ui (hovered, clicked), checkbox, contextmenu, search
  */
 
-.jstree-classic li, 
+.jstree-classic li,
 .jstree-classic ins { background-image:url("d.png"); background-repeat:no-repeat; background-color:transparent; }
 .jstree-classic li { background-position:-90px 0; background-repeat:repeat-y;  }
 .jstree-classic li.jstree-last { background:transparent; }
@@ -20,7 +20,7 @@
 
 .jstree-classic.jstree-focused { background:white; }
 
-.jstree-classic .jstree-no-dots li, 
+.jstree-classic .jstree-no-dots li,
 .jstree-classic .jstree-no-dots .jstree-leaf > ins { background:transparent; }
 .jstree-classic .jstree-no-dots .jstree-open > ins { background-position:-18px 0; }
 .jstree-classic .jstree-no-dots .jstree-closed > ins { background-position:0 0; }
@@ -46,22 +46,22 @@
 .jstree-classic a.jstree-search { color:aqua; }
 .jstree-classic .jstree-locked a { color:silver; cursor:default; }
 
-#vakata-contextmenu.jstree-classic-context, 
+#vakata-contextmenu.jstree-classic-context,
 #vakata-contextmenu.jstree-classic-context li ul { background:#f0f0f0; border:1px solid #979797; -moz-box-shadow: 1px 1px 2px #999; -webkit-box-shadow: 1px 1px 2px #999; box-shadow: 1px 1px 2px #999; }
 #vakata-contextmenu.jstree-classic-context li { }
 #vakata-contextmenu.jstree-classic-context a { color:black; }
-#vakata-contextmenu.jstree-classic-context a:hover, 
+#vakata-contextmenu.jstree-classic-context a:hover,
 #vakata-contextmenu.jstree-classic-context .vakata-hover > a { padding:0 5px; background:#e8eff7; border:1px solid #aecff7; color:black; -moz-border-radius:2px; -webkit-border-radius:2px; border-radius:2px; }
-#vakata-contextmenu.jstree-classic-context li.jstree-contextmenu-disabled a, 
+#vakata-contextmenu.jstree-classic-context li.jstree-contextmenu-disabled a,
 #vakata-contextmenu.jstree-classic-context li.jstree-contextmenu-disabled a:hover { color:silver; background:transparent; border:0; padding:1px 4px; }
 #vakata-contextmenu.jstree-classic-context li.vakata-separator { background:white; border-top:1px solid #e0e0e0; margin:0; }
 #vakata-contextmenu.jstree-classic-context li ul { margin-left:-4px; }
 
 /* IE6 BEGIN */
-.jstree-classic li, 
+.jstree-classic li,
 .jstree-classic ins,
-#vakata-dragged.jstree-classic .jstree-invalid, 
-#vakata-dragged.jstree-classic .jstree-ok, 
+#vakata-dragged.jstree-classic .jstree-invalid,
+#vakata-dragged.jstree-classic .jstree-ok,
 #jstree-marker.jstree-classic { _background-image:url("d.gif"); }
 .jstree-classic .jstree-open ins { _background-position:-72px 0; }
 .jstree-classic .jstree-closed ins { _background-position:-54px 0; }

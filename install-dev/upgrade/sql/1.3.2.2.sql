@@ -12,7 +12,7 @@ ALTER TABLE `PREFIX_search_index` CHANGE `weight` `weight` SMALLINT(4) unsigned 
 
 ALTER TABLE `PREFIX_image` DROP INDEX `product_position`, ADD UNIQUE `product_position` (`id_product`, `position`);
 
-ALTER TABLE `PREFIX_zone` DROP `enabled`; 
+ALTER TABLE `PREFIX_zone` DROP `enabled`;
 
 SET @id_hook = (SELECT id_hook FROM PREFIX_hook WHERE name = 'backOfficeHeader');
 SET @position = (SELECT IFNULL(MAX(position),0)+1 FROM PREFIX_hook_module WHERE id_hook = @id_hook);

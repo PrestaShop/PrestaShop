@@ -10,15 +10,15 @@
 		<tax id="1" name="TVA CH 8%" rate="8" />
 		<tax id="2" name="TVA CH 3.8%" rate="3.8" />
 		<tax id="3" name="TVA CH 2.5%" rate="2.5" />
-		
+
 		<taxRulesGroup name="CH Standard Rate (8%)">
 			<taxRule iso_code_country="li" id_tax="1" />
 		</taxRulesGroup>
-		
+
 		<taxRulesGroup name="CH Reduced Rate (3.8%)">
 			<taxRule iso_code_country="li" id_tax="2" />
 		</taxRulesGroup>
-		
+
 		<taxRulesGroup name="CH Super Reduced Rate (2.5%)">
 			<taxRule iso_code_country="li" id_tax="3" />
 		</taxRulesGroup>

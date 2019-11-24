@@ -58,7 +58,7 @@ $(document).ready(function() {
 			}
 		}
 	});
-	
+
 	$("#reset_password_form").validate({
 		rules: {
 			"reset_passwd": {

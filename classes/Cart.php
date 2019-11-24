@@ -4211,7 +4211,7 @@ class CartCore extends ObjectModel
 
         if (!$hasRemainingCustomData) {
             $result &= Db::getInstance()->execute(
-                'DELETE FROM `' . _DB_PREFIX_ . 'customization` 
+                'DELETE FROM `' . _DB_PREFIX_ . 'customization`
             WHERE `id_customization` = ' . (int) $cust_data['id_customization']
             );
         }

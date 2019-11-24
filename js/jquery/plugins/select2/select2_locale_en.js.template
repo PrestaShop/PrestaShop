@@ -1,6 +1,6 @@
 /**
  * Select2 <Language> translation.
- * 
+ *
  * Author: Your Name <your@email>
  */
 (function ($) {

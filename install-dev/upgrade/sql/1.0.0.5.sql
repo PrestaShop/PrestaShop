@@ -6,10 +6,10 @@ ALTER TABLE PREFIX_orders
 
 ALTER TABLE PREFIX_carrier
 	ADD range_behavior TINYINT(1) UNSIGNED NOT NULL DEFAULT 0 AFTER shipping_handling;
-	
+
 ALTER TABLE PREFIX_order_detail
 	ADD product_supplier_reference VARCHAR(32) NULL AFTER product_reference;
-	
+
 ALTER TABLE PREFIX_product
 	ADD supplier_reference VARCHAR(32) NULL AFTER reference;
 

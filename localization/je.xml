@@ -9,7 +9,7 @@
 	</languages>
 	<taxes>
 		<tax id="1" name="GST JE 5%" rate="5" />
-		
+
 		<taxRulesGroup name="JE Standard Rate (5%)">
 			<taxRule iso_code_country="je" id_tax="1" />
 		</taxRulesGroup>

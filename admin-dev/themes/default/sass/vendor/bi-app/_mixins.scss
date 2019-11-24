@@ -1,9 +1,9 @@
 // ------------------------------------------
 // bi app mixins
-// authors: 
+// authors:
 // twitter.com/anasnakawa
 // twitter.com/victorzamfir
-// licensed under the MIT license 
+// licensed under the MIT license
 // http://www.opensource.org/licenses/mit-license.php
 // ------------------------------------------
 
@@ -206,7 +206,7 @@
 
 @mixin border-bottom-left-radius($radius) {
   -webkit-border-bottom-#{$bi-app-left}-radius: $radius;
-          border-bottom-#{$bi-app-left}-radius: $radius; 
+          border-bottom-#{$bi-app-left}-radius: $radius;
 }
 
 @mixin border-bottom-right-radius($radius) {

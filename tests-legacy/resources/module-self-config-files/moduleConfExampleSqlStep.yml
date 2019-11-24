@@ -1,4 +1,4 @@
-# SQL files to execute 
+# SQL files to execute
 sql:
     - file: "sql/file1.sql"
     # But key is optionnal

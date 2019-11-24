@@ -26,9 +26,9 @@ CREATE TABLE IF NOT EXISTS `PREFIX_shop` (
   KEY `id_theme` (`id_theme`)
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
 
-INSERT INTO `PREFIX_shop` 
-	(`id_shop`, `id_group_shop`, `name`, `id_category`, `id_theme`, `active`, `deleted`) 
-	VALUES 
+INSERT INTO `PREFIX_shop`
+	(`id_shop`, `id_group_shop`, `name`, `id_category`, `id_theme`, `active`, `deleted`)
+	VALUES
 	(1, 1, (SELECT value FROM `PREFIX_configuration` WHERE name = 'PS_SHOP_NAME'), 1, 1, 1, 0);
 
 ALTER TABLE `PREFIX_configuration` ADD `id_group_shop` INT(11) UNSIGNED  DEFAULT  NULL AFTER `id_configuration` , ADD `id_shop` INT(11) UNSIGNED DEFAULT NULL AFTER `id_group_shop`;
@@ -139,7 +139,7 @@ ALTER TABLE `PREFIX_orders` ADD `id_group_shop` INT(11) UNSIGNED NOT NULL DEFAUL
 
 ALTER TABLE `PREFIX_customer_thread` ADD `id_shop` INT(11) UNSIGNED NOT NULL DEFAULT '1' AFTER `id_customer_thread`;
 ALTER TABLE `PREFIX_customer_thread` ADD INDEX `id_shop` (`id_shop`), ADD INDEX `id_lang` (`id_lang`), ADD INDEX `id_contact` (`id_contact`), ADD INDEX `id_customer` (`id_customer`), ADD INDEX `id_order` (`id_order`),	ADD INDEX `id_product` (`id_product`);
-	
+
 ALTER TABLE `PREFIX_customer_message` ADD INDEX `id_employee` (`id_employee`);
 
 ALTER TABLE `PREFIX_meta_lang` ADD `id_shop` INT(11) UNSIGNED NOT NULL DEFAULT '1' AFTER `id_meta`;
@@ -256,7 +256,7 @@ ALTER TABLE `PREFIX_hook_module_exceptions` ADD `id_shop` INT(11) UNSIGNED NOT N
 
 ALTER TABLE `PREFIX_connections` ADD `id_group_shop` INT(11) UNSIGNED NOT NULL DEFAULT '1', ADD `id_shop` INT(11) UNSIGNED NOT NULL DEFAULT '1';
 ALTER TABLE `PREFIX_page_viewed` ADD `id_group_shop` INT UNSIGNED NOT NULL DEFAULT '1' AFTER `id_page`, ADD `id_shop` INT UNSIGNED NOT NULL DEFAULT '1' AFTER `id_group_shop`;
-ALTER TABLE `PREFIX_page_viewed` DROP PRIMARY KEY, ADD PRIMARY KEY (`id_page`, `id_date_range`, `id_shop`); 
+ALTER TABLE `PREFIX_page_viewed` DROP PRIMARY KEY, ADD PRIMARY KEY (`id_page`, `id_date_range`, `id_shop`);
 
 CREATE TABLE `PREFIX_module_shop` (
 `id_module` INT( 11 ) UNSIGNED NOT NULL,

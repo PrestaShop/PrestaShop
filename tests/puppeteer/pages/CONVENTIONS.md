@@ -13,7 +13,7 @@ They should be named following this convention:
 
 \*action\*()
 
-For example, the method allowing a user to login in the BO should be named: `login()`. Since it's belonging to the `Login` page, it's obvious that it targets the form in the login page. However, at the test level, we don't need to know what's happening exactly in the page to allow us to `login`. All the low-level logic is handled by the page object. 
+For example, the method allowing a user to login in the BO should be named: `login()`. Since it's belonging to the `Login` page, it's obvious that it targets the form in the login page. However, at the test level, we don't need to know what's happening exactly in the page to allow us to `login`. All the low-level logic is handled by the page object.
 
 ### Pages
 Pages names are the first hint you get when browsing pages lists, so it's really **important** that the name conveys the most information.

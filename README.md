@@ -18,7 +18,7 @@ About the 'develop' branch
 --------
 
 The 'develop' branch of this repository contains the work in progress source code for the next version of PrestaShop 1.7.
- 
+
 For more information on our branch system, read our guide on [installing PrestaShop for development][install-guide-dev].
 
 The first stable version of PrestaShop 1.7, 1.7.0.0, was released on November 7th, 2016. Further updates have been released since then. Learn more about it on [the Build devblog](https://build.prestashop.com/tag/1.7/).
@@ -55,7 +55,7 @@ Docker will bind your port 8001 to the web server. If you want to use other port
 MySQL credentials can also be found and modified in this file if needed.
 
 **Note:**  Before auto-installing PrestaShop, this container checks the file *config/settings.inc.php* does not exist on startup.
-If you expect the container to (re)install your shop, remove this file if it exists. And make sure the container user `www-data` 
+If you expect the container to (re)install your shop, remove this file if it exists. And make sure the container user `www-data`
 as write access to the whole workspace.
 
 Documentation

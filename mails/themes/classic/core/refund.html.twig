@@ -23,7 +23,7 @@
               <p style="border-bottom:1px solid #D6D4D4;">
                 {{ 'Order {order_name}'|trans({}, 'Emails.Body', locale) }}&nbsp;-&nbsp;{{ 'Refund processed'|trans({}, 'Emails.Body', locale)|raw }}
               </p>
-            
+
 {% endif %}
             <span>
               {{ 'We have processed your <strong><span>{shop_name}</span></strong> refund for order with the reference <strong><span>{order_name}</span></strong>.'|trans({}, 'Emails.Body', locale)|raw }}

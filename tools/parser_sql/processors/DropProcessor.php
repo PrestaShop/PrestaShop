@@ -35,11 +35,11 @@ require_once dirname(__FILE__) . '/../utils/ExpressionType.php';
 require_once dirname(__FILE__) . '/AbstractProcessor.php';
 
 /**
- * 
+ *
  * This class processes the DROP statements.
- * 
+ *
  * @author arothe
- * 
+ *
  */
 class DropProcessor extends AbstractProcessor {
     // TODO: we should enhance it to get the positions for the IF EXISTS keywords

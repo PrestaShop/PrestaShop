@@ -9,7 +9,7 @@
 	</languages>
 	<taxes>
 		<tax id="1" name="VAT TW 5%" rate="5" />
-		
+
 		<taxRulesGroup name="TW Standard Rate (5%)">
 			<taxRule iso_code_country="tw" id_tax="1" />
 		</taxRulesGroup>

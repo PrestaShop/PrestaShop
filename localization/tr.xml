@@ -10,15 +10,15 @@
 		<tax id="1" name="KDV TR 18%" rate="18" />
 		<tax id="2" name="KDV TR 8%" rate="8" />
 		<tax id="3" name="KDV TR 1%" rate="1" />
-		
+
 		<taxRulesGroup name="TR Standard Rate (18%)">
 			<taxRule iso_code_country="tr" id_tax="1" />
 		</taxRulesGroup>
-		
+
 		<taxRulesGroup name="TR Reduced Rate (8%)">
 			<taxRule iso_code_country="tr" id_tax="2" />
 		</taxRulesGroup>
-		
+
 		<taxRulesGroup name="TR Super Reduced Rate (1%)">
 			<taxRule iso_code_country="tr" id_tax="3" />
 		</taxRulesGroup>

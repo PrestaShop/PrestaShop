@@ -35,7 +35,7 @@ UPDATE `PREFIX_address_format` set `format`='firstname lastname
 company
 address1
 address2
-city State:name postcode 
+city State:name postcode
 country
 phone' where `id_country`=21;
 

@@ -29,11 +29,11 @@ ALTER IGNORE TABLE `PREFIX_cart` CHANGE `delivery_option` `delivery_option` TEXT
 ALTER TABLE `PREFIX_currency_shop` ADD `conversion_rate` DECIMAL( 13, 6 ) NOT NULL;
 UPDATE `PREFIX_currency_shop` a SET `conversion_rate` = (SELECT `conversion_rate` FROM `PREFIX_currency` b WHERE a.id_currency = b.id_currency);
 
-INSERT INTO `PREFIX_configuration`(`name`, `value`, `id_shop`, `id_shop_group`, `date_add`, `date_upd`) 
+INSERT INTO `PREFIX_configuration`(`name`, `value`, `id_shop`, `id_shop_group`, `date_add`, `date_upd`)
 	(SELECT 'PS_GIFT_WRAPPING_TAX_RULES_GROUP', b.`id_tax_rules_group`, a.`id_shop`, a.`id_shop_group`, NOW(), NOW()
 		FROM `PREFIX_configuration` a
 		JOIN `PREFIX_tax_rule` b ON (a.value = b.id_tax)
-		WHERE a.name='PS_GIFT_WRAPPING_TAX' 
+		WHERE a.name='PS_GIFT_WRAPPING_TAX'
 		GROUP BY a.`id_shop`, a.`id_shop_group`
 	);
 

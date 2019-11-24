@@ -441,7 +441,7 @@ var AdminModuleController = function() {
     var self = this;
     var body = $('body');
     var dropzone = $('.dropzone');
-    
+
     // Reset modal when click on Retry in case of failure
     body.on('click', this.moduleImportFailureRetrySelector, function() {
       $(self.moduleImportSuccessSelector + ', ' + self.moduleImportFailureSelector + ', ' + self.moduleImportProcessingSelector).fadeOut(function() {
@@ -541,7 +541,7 @@ var AdminModuleController = function() {
       }
     };
     dropzone.dropzone($.extend(dropzoneOptions));
-    
+
     this.animateStartUpload = function() {
         // State that we start module upload
         self.isUploadStarted = true;
@@ -549,14 +549,14 @@ var AdminModuleController = function() {
         dropzone.css('border', 'none');
         $(self.moduleImportProcessingSelector).fadeIn();
     };
-    
+
     this.animateEndUpload = function(callback) {
         $(self.moduleImportProcessingSelector).finish().fadeOut(callback);
     };
-    
+
     /**
      * Method to call for upload modal, when the ajax call went well.
-     * 
+     *
      * @param object result containing the server response
      */
     this.displayOnUploadDone = function(result) {
@@ -581,7 +581,7 @@ var AdminModuleController = function() {
     /**
      * Method to call for upload modal, when the ajax call went wrong or when the action requested could not
      * succeed for some reason.
-     * 
+     *
      * @param string message explaining the error.
      */
     this.displayOnUploadError = function(message) {
@@ -595,7 +595,7 @@ var AdminModuleController = function() {
      * If PrestaTrust needs to be confirmed, we ask for the confirmation modal content and we display it in the
      * currently displayed one. We also generate the ajax call to trigger once we confirm we want to install
      * the module.
-     * 
+     *
      * @param Previous server response result
      */
     this.displayPrestaTrustStep = function (result) {
@@ -605,11 +605,11 @@ var AdminModuleController = function() {
           $(this.moduleImportConfirmSelector).html(modal.find('.modal-body').html()).fadeIn();
           $(this.dropZoneModalFooterSelector).html(modal.find('.modal-footer').html()).fadeIn();
           $(this.dropZoneModalFooterSelector).find(".pstrust-install").off('click').on('click', function() {
-            
+
             $(self.moduleImportConfirmSelector).hide();
             $(self.dropZoneModalFooterSelector).html('');
             self.animateStartUpload();
-            
+
             // Install ajax call
             $.post(result.module.attributes.urls.install, { 'actionParams[confirmPrestaTrust]': "1"})
               .done(function(data) {
@@ -647,7 +647,7 @@ var AdminModuleController = function() {
       ? this.moduleItemGridSelector
       : this.moduleItemListSelector;
   };
-  
+
   /**
    * Get the module notifications count and displays it as a badge on the notification tab
    * @return void
@@ -662,13 +662,13 @@ var AdminModuleController = function() {
         console.error('Could not retrieve module notifications count.');
     });
   };
-  
+
   this.updateNotificationsCount = function(badge) {
     var destinationTabs = {
         'to_configure': $("#subtab-AdminModulesNotifications"),
         'to_update': $("#subtab-AdminModulesUpdates"),
     };
-    
+
     for (var key in destinationTabs) {
         if (destinationTabs[key].length === 0) {
             continue;

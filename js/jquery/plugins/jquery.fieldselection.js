@@ -10,7 +10,7 @@
 		getSelection: function() {
 
 			var e = this.jquery ? this[0] : this;
-			
+
 			return (
 
 				/* mozilla / dom 3.0 */

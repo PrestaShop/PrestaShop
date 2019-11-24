@@ -8,7 +8,7 @@
   </languages>
   <taxes>
   	<tax id="1" name="VAT TH 7%" rate="7" />
-  	
+
   	<taxRulesGroup name="TH Standard Rate (7%)">
   		<taxRule iso_code_country="th" id_tax="1" />
   	</taxRulesGroup>

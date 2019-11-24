@@ -923,7 +923,7 @@ class OrderCore extends ObjectModel
             $indexedOrderStates[$orderState['id_order_state']] = $orderState;
         }
         $res = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-        SELECT o.*, 
+        SELECT o.*,
           (SELECT SUM(od.`product_quantity`) FROM `' . _DB_PREFIX_ . 'order_detail` od WHERE od.`id_order` = o.`id_order`) nb_products,
           (SELECT oh.`id_order_state` FROM `' . _DB_PREFIX_ . 'order_history` oh
            LEFT JOIN `' . _DB_PREFIX_ . 'order_state` os ON (os.`id_order_state` = oh.`id_order_state`)
@@ -1158,7 +1158,7 @@ class OrderCore extends ObjectModel
      */
     public static function getIdByCartId($id_cart)
     {
-        $sql = 'SELECT `id_order` 
+        $sql = 'SELECT `id_order`
             FROM `' . _DB_PREFIX_ . 'orders`
             WHERE `id_cart` = ' . (int) $id_cart .
             Shop::addSqlRestriction();

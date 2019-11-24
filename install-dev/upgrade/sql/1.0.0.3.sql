@@ -241,7 +241,7 @@ INSERT IGNORE INTO `PREFIX_discount_lang` (`id_discount`, `id_lang`, `descriptio
             FROM `PREFIX_configuration` c
             WHERE c.`name` = 'PS_LANG_DEFAULT' LIMIT 1) AND tl.`id_discount`=`PREFIX_discount`.`id_discount`)
     FROM `PREFIX_lang` CROSS JOIN `PREFIX_discount`);
-	
+
 INSERT IGNORE INTO `PREFIX_discount_type_lang` (`id_discount_type`, `id_lang`, `name`)
     (SELECT `id_discount_type`, id_lang, (SELECT tl.`name`
         FROM `PREFIX_discount_type_lang` tl
@@ -371,7 +371,7 @@ INSERT IGNORE INTO `PREFIX_product_lang` (`id_product`, `id_lang`, `description`
             FROM `PREFIX_configuration` c
             WHERE c.`name` = 'PS_LANG_DEFAULT' LIMIT 1) AND tl.`id_product`=`PREFIX_product`.`id_product`)
 	FROM `PREFIX_lang` CROSS JOIN `PREFIX_product`);
-	
+
 /* categories */
 INSERT IGNORE INTO `PREFIX_category_lang` (`id_category`, `id_lang`, `description`, `link_rewrite`, `meta_description`, `meta_keywords`, `meta_title`, `name`)
     (SELECT `id_category`, id_lang,

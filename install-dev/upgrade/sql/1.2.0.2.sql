@@ -594,7 +594,7 @@ INSERT INTO `PREFIX_timezone` (`name`) VALUES
 	('WET'),
 	('Zulu');
 
-DELETE FROM  `PREFIX_discount_category` 
+DELETE FROM  `PREFIX_discount_category`
 WHERE `id_discount` IN (
 	SELECT `id_discount` FROM (
 		SELECT dc.`id_discount`
@@ -607,4 +607,4 @@ WHERE `id_discount` IN (
 DELETE FROM `PREFIX_configuration` WHERE `name` = 'PS_DISPLAY_WITHOUT_TAX';
 
 INSERT INTO PREFIX_hook (`name`, `title`, `description`, `position`) VALUES
-	('updateCarrier', 'Carrier update', 'This hook is called when a carrier is updated', 0);	
+	('updateCarrier', 'Carrier update', 'This hook is called when a carrier is updated', 0);

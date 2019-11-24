@@ -219,7 +219,7 @@
                    {$extra.content nofilter}
                  </div>
                  {/foreach}
-              </div>  
+              </div>
             </div>
           {/block}
         </div>

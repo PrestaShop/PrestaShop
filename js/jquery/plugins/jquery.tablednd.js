@@ -168,7 +168,7 @@ jQuery.tableDnD = {
 	        }
 
 	    }
-		    
+
 		if (mousePos.y-yOffset < config.scrollAmount) {
 	    	window.scrollBy(0, -config.scrollAmount);
 	    } else {

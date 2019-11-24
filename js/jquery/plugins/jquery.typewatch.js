@@ -2,11 +2,11 @@
  *	TypeWatch 2.0 - Original by Denny Ferrassoli / Refactored by Charles Christolini
  *
  *	Examples/Docs: www.dennydotnet.com
- *	
+ *
  *  Copyright(c) 2007 Denny Ferrassoli - DennyDotNet.com
  *  Coprright(c) 2008 Charles Christolini - BinaryPie.com
  *  Modified by Lucas CHERIFI @ PrestaShop : now this plugin works with the Dean Edward's JS Packer
- *  
+ *
  *  Dual licensed under the MIT and GPL licenses:
  *  http://www.opensource.org/licenses/mit-license.php
  *  http://www.gnu.org/licenses/gpl.html
@@ -21,28 +21,28 @@
 			highlight : true,
 			captureLength : 2
 		}, o);
-			
+
 		function checkElement(timer, override) {
 			var elTxt = jQuery(timer.el).val();
-		
+
 			// Fire if text > options.captureLength AND text != saved txt OR if override AND text > options.captureLength
-			if ((elTxt.length > options.captureLength && elTxt.toUpperCase() != timer.text) 
+			if ((elTxt.length > options.captureLength && elTxt.toUpperCase() != timer.text)
 			|| (override && elTxt.length > options.captureLength)) {
 				timer.text = elTxt.toUpperCase();
 				timer.cb(elTxt);
 			}
 		};
-		
-		function watchElement(elem) {			
+
+		function watchElement(elem) {
 			// Must be text or textarea
 			if (elem.type.toUpperCase() == "TEXT" || elem.nodeName.toUpperCase() == "TEXTAREA") {
 
 				// Allocate timer element
 				var timer = {
-					timer : null, 
+					timer : null,
 					text : jQuery(elem).val().toUpperCase(),
-					cb : options.callback, 
-					el : elem, 
+					cb : options.callback,
+					el : elem,
 					wait : options.wait
 				};
 
@@ -58,32 +58,32 @@
 				var startWatch = function(evt) {
 					var timerWait = timer.wait;
 					var overrideBool = false;
-					
+
 					if (evt.keyCode == 13 && this.type.toUpperCase() == "TEXT") {
 						timerWait = 1;
 						overrideBool = true;
 					}
-					
+
 					var timerCallbackFx = function()
 					{
 						checkElement(timer, overrideBool);
 					}
-					
-					// Clear timer					
+
+					// Clear timer
 					clearTimeout(timer.timer);
-					timer.timer = setTimeout(timerCallbackFx, timerWait);				
-										
+					timer.timer = setTimeout(timerCallbackFx, timerWait);
+
 				};
-				
+
 				jQuery(elem).keydown(startWatch);
 			}
 		};
-		
+
 		// Watch Each Element
 		return this.each(function(index){
 			watchElement(this);
 		});
-		
+
 	};
 
 })(jQuery);

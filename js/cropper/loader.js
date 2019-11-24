@@ -1,6 +1,6 @@
 var CropImageManager = {
 	curCrop: null,
-	
+
 	init: function()
 	{
 		this.attachCropper();
@@ -11,7 +11,7 @@ var CropImageManager = {
 		var vals = $F(Event.element(e)).split('|');
 		this.setImage(vals[0], vals[1], vals[2]);
 	},
-	
+
 	setImage: function(imgSrc, w, h)
 	{
 		$('testImage').src = imgSrc;
@@ -41,13 +41,13 @@ var CropImageManager = {
 			this.curCrop.reset(maxW, maxH, maxW, maxH);
 		this.curCrop.aeraCoords = 0;
 	},
-	
+
 	removeCropper: function()
 	{
 		if (this.curCrop != null)
 			this.curCrop.remove();
 	},
-	
+
 	resetCropper: function()
 	{
 		this.attachCropper();

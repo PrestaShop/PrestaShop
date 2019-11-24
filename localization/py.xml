@@ -9,11 +9,11 @@
 	<taxes>
 		<tax id="1" name="IVA PY 10%" rate="10" />
 		<tax id="2" name="IVA PY 5%" rate="5" />
-		
+
 		<taxRulesGroup name="PY Standard Rate (10%)">
 			<taxRule iso_code_country="py" id_tax="1" />
 		</taxRulesGroup>
-		
+
 		<taxRulesGroup name="PY Reduced Rate (5%)">
 			<taxRule iso_code_country="py" id_tax="2" />
 		</taxRulesGroup>

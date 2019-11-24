@@ -32,7 +32,7 @@
 			{/foreach}
 		</select>
 	</div>
-{/if}	
+{/if}
 	<div>{l s='Status:' mod='gamification'}
 		<select id="status_select_{$type}" onchange="filterBadge('{$type}');">
 			<option value="badge_all">{l s='All' mod='gamification'}</option>

@@ -1,5 +1,5 @@
 /* =========================================================
- * bootstrap-datepicker.js 
+ * bootstrap-datepicker.js
  * http://www.eyecon.ro/bootstrap-datepicker
  * =========================================================
  * Copyright 2012 Stefan Petre
@@ -386,7 +386,7 @@
 									$("#date-start").val(DPGlobal.formatDate(new Date(start), DPGlobal.parseFormat('Y-m-d')));
 									$('#date-start').trigger('change');
 								}
-																	
+
 								if(!switched) {click = 1;} else {click = 2;}
 								if(!switched) {
 									if (compare) {
@@ -583,7 +583,7 @@
 				else if (!start) {
 					$(".start-selected").removeClass("start-selected");
 				}
-			}			
+			}
 		},
 
 		mousedown: function(e){

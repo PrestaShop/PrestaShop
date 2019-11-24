@@ -10,8 +10,8 @@ INSERT INTO `PREFIX_configuration` (`name`, `value`, `date_add`, `date_upd`) VAL
 ALTER TABLE `PREFIX_address` ADD `dni` VARCHAR(16) NULL AFTER `vat_number`;
 
 UPDATE `PREFIX_address` a SET `dni` = (
-	SELECT `dni` 
-	FROM `PREFIX_customer` c 
+	SELECT `dni`
+	FROM `PREFIX_customer` c
 	WHERE c.`id_customer` = a.`id_customer`
 );
 

@@ -19,7 +19,7 @@ DELETE FROM `PREFIX_tab_lang` WHERE `id_tab` NOT IN (SELECT id_tab FROM `PREFIX_
 DELETE FROM `PREFIX_access` WHERE `id_tab` NOT IN (SELECT id_tab FROM `PREFIX_tab`);
 
 INSERT INTO `PREFIX_module` (`name`, `active`) VALUES ('statsforecast', 1);
-INSERT INTO `PREFIX_hook_module` (`id_module`, `id_hook` , `position`) (SELECT id_module, 32, (SELECT max_position from (SELECT MAX(position)+1 as max_position FROM `PREFIX_hook_module` WHERE `id_hook` = 32) tmp) FROM `PREFIX_module` WHERE `name` = 'statsforecast'); 
+INSERT INTO `PREFIX_hook_module` (`id_module`, `id_hook` , `position`) (SELECT id_module, 32, (SELECT max_position from (SELECT MAX(position)+1 as max_position FROM `PREFIX_hook_module` WHERE `id_hook` = 32) tmp) FROM `PREFIX_module` WHERE `name` = 'statsforecast');
 
 INSERT INTO `PREFIX_configuration` (`name`, `value`, `date_add`, `date_upd`) VALUES
 ('PS_GEOLOCATION_ENABLED', '0', NOW(), NOW()),

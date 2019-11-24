@@ -254,7 +254,7 @@ a.jp-volume-max {
 
 div.jp-audio div.jp-type-single a.jp-mute,
 div.jp-audio div.jp-type-single a.jp-unmute {
-	margin-left: 210px;	
+	margin-left: 210px;
 }
 div.jp-audio div.jp-type-playlist a.jp-mute,
 div.jp-audio div.jp-type-playlist a.jp-unmute {
@@ -268,7 +268,7 @@ div.jp-audio-stream div.jp-type-single a.jp-unmute {
 
 div.jp-audio a.jp-volume-max,
 div.jp-audio-stream a.jp-volume-max {
-	margin-left: 56px;	
+	margin-left: 56px;
 }
 
 div.jp-video a.jp-mute,

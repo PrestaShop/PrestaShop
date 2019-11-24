@@ -23,7 +23,7 @@
               <p style="border-bottom:1px solid #D6D4D4;">
                 {{ 'Order {order_name}'|trans({}, 'Emails.Body', locale) }}&nbsp;-&nbsp;{{ 'Payment processing error'|trans({}, 'Emails.Body', locale)|raw }}
               </p>
-            
+
 {% endif %}
             <span>
               {{ 'There is a problem with your payment for <strong><span>{shop_name}</span></strong> order with the reference <strong><span>{order_name}</span></strong>. Please contact us at your earliest convenience.'|trans({}, 'Emails.Body', locale)|raw }}<br/>

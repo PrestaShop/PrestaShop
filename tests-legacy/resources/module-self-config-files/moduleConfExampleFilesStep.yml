@@ -2,6 +2,6 @@
 files:
     - source: "../modules/ganalytics/ganalytics.php"
       dest: "../modules/ganalytics/ganalytics_copy.php"
-      
+
     - source: "http://localhost/img/logo.png"
       dest: "../modules/ganalytics/another-logo.png"

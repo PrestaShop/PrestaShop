@@ -734,7 +734,7 @@ class OrderInvoiceCore extends ObjectModel
         $query->innerJoin(
             'order_invoice_payment',
             'oip2',
-            'oip2.id_order_payment = oip1.id_order_payment 
+            'oip2.id_order_payment = oip1.id_order_payment
                 AND oip2.id_order_invoice <> oip1.id_order_invoice
                 AND oip2.id_order = oip1.id_order'
         );
@@ -771,7 +771,7 @@ class OrderInvoiceCore extends ObjectModel
         $query->innerJoin(
             'order_invoice_payment',
             'oip2',
-            'oip2.id_order_payment = oip1.id_order_payment 
+            'oip2.id_order_payment = oip1.id_order_payment
                 AND oip2.id_order_invoice <> oip1.id_order_invoice
                 AND oip2.id_order = oip1.id_order'
         );

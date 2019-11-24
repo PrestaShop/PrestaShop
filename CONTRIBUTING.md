@@ -5,7 +5,7 @@ PrestaShop is an open-source e-commerce solution. Everyone is welcome and even e
 
 PrestaShop 1.7 is written mostly in PHP. Other languages used throughout are JavaScript, HTML, CSS, the Smarty & Twig templating languages, SQL, and XML.
 
-To contribute to the project, you should ideally be familiar with Git, the source code management system that PrestaShop uses, with the official repository being hosted on Github: 
+To contribute to the project, you should ideally be familiar with Git, the source code management system that PrestaShop uses, with the official repository being hosted on Github:
 * You can learn more about Git here: http://try.github.io/ (there are many tutorials available on the Web).
 * You can get help on Github here: https://help.github.com/.
 * Windows users can get a nice interface for Git by installing TortoiseGit: https://tortoisegit.org/

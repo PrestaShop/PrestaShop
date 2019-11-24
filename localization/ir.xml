@@ -41,7 +41,7 @@
 	</languages>
 	<taxes>
 		<tax id="1" name="8% مالیات بر ارزش افزوده" rate="8" />
-		
+
 		<taxRulesGroup name="IR VAT(8%)">
 			<taxRule iso_code_country="ir" id_tax="1" />
 		</taxRulesGroup>

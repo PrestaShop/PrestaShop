@@ -34,11 +34,11 @@ require_once dirname(__FILE__) . '/../utils/ExpressionType.php';
 require_once dirname(__FILE__) . '/../lexer/PHPSQLLexer.php';
 
 /**
- * 
+ *
  * This class processes contains some general functions for a processor.
- * 
+ *
  * @author arothe
- * 
+ *
  */
 abstract class AbstractProcessor {
     /**
@@ -165,7 +165,7 @@ abstract class AbstractProcessor {
     }
 
     protected function isCommentToken($token) {
-        return isset($token[0], $token[1])  
+        return isset($token[0], $token[1])
             && (($token[0] === '-' && $token[1] === '-') || ($token[0] === '/' && $token[1] === '*'));
     }
 

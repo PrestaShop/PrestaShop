@@ -179,7 +179,7 @@
 
 					// Figure out how jPlayer will play it.
 					// This may not work properly when both audio and video is supplied. ie., A media player. But it should return truethy and jPlayer can figure it out.
-					
+
 					var solution = srcObj.options.solution.toLowerCase().split(","), // Create the solution array, with prority based on the order of the solution string.
 					supplied = srcObj.options.supplied.toLowerCase().split(","); // Create the supplied formats array, with prority based on the order of the supplied formats string.
 

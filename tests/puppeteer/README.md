@@ -27,7 +27,7 @@ npm install
 
 Before running tests, you should install your shop manually or run the install script **`campaigns/sanity/01_installShop/*`** with the [`specific-test` command](README.md#specific-test).
 
-## Sanity tests 
+## Sanity tests
 This campaign includes a non-exhaustive set of tests and will ensure that the most important functions work.
 
 ### Launch all scripts
@@ -40,7 +40,7 @@ npm run sanity-tests
 ```
 
 #### With custom values
-You can add parameters that you need in the beginning of your command 
+You can add parameters that you need in the beginning of your command
 ```bash
 HEADLESS=false URL_BO="Your_Shop_URL_BO" URL_FO="Your_Shop_URL_FO" npm run sanity-tests
 ```
@@ -52,7 +52,7 @@ If you want to run all sanity tests "safely", you can use the Travis-specific co
 npm run sanity-travis
 ```
 
-## Specific test 
+## Specific test
 If you want to run only one test from the campaign or a couple of tests in the same folder, you can use **`specific-test`** command.
 
 To specify which test to run, you can add the **`TEST_PATH`** parameter in the beginning of the command
@@ -60,7 +60,7 @@ To specify which test to run, you can add the **`TEST_PATH`** parameter in the b
 ```bash
 # To run the **Filter Products** test from sanity campaign
 TEST_PATH="sanity/02_productsBO/01_filterProducts" URL_FO="Your_Shop_URL_FO" npm run specific-test
-# To run all **Products BO** tests 
+# To run all **Products BO** tests
 TEST_PATH="sanity/02_productsBO/*" URL_FO="Your_Shop_URL_FO" npm run specific-test
 ```
 
@@ -77,7 +77,7 @@ You **must** disable the Security Token before running this script ! Add this li
 
 ```bash
 SetEnv _TOKEN_ disabled
-``` 
+```
 
 #### With default values
 
@@ -95,7 +95,7 @@ If you want to run this test, you can use command **specific-test**
 #### With default values
 
 ```bash
-# You need to set PS_VERSION to check after upgrade, default to 1.7.6.0 
+# You need to set PS_VERSION to check after upgrade, default to 1.7.6.0
 PS_VERSION=1.7.6.0 TEST_PATH="upgrade/upgradeShop" npm run specific-test
 ```
 

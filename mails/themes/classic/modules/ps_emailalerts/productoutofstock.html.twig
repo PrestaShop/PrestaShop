@@ -23,7 +23,7 @@
               <p style="border-bottom:1px solid #D6D4D4;">
                 {{ '{product} is nearly out of stock.'|trans({}, 'Emails.Body', locale) }}
               </p>
-            
+
 {% endif %}
             <span>
               {{ 'The remaining stock is now less than the specified minimum of'|trans({}, 'Emails.Body', locale)|raw }} <strong><span>{last_qty}.</span></strong><br/><br/>

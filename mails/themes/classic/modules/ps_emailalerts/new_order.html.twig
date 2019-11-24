@@ -30,7 +30,7 @@
               <p style="border-bottom:1px solid #D6D4D4;">
                 {{ 'Order details'|trans({}, 'Emails.Body', locale)|raw }}
               </p>
-            
+
 {% endif %}
             <span>
               <span><strong>{{ 'Order:'|trans({}, 'Emails.Body', locale)|raw }}</strong></span> {order_name} {{ 'Placed on'|trans({}, 'Emails.Body', locale)|raw }} {date}<br/><br/>
@@ -243,7 +243,7 @@
               <p style="border-bottom:1px solid #D6D4D4;">
                 {{ 'Carrier:'|trans({}, 'Emails.Body', locale)|raw }}
               </p>
-            
+
 {% endif %}
             <span>
               {carrier}
@@ -273,7 +273,7 @@
                     <p style="border-bottom:1px solid #D6D4D4;">
                       {{ 'Delivery address'|trans({}, 'Emails.Body', locale)|raw }}
                     </p>
-                  
+
 {% endif %}
                   <span>
                     {delivery_block_html}
@@ -296,7 +296,7 @@
                     <p style="border-bottom:1px solid #D6D4D4;">
                       {{ 'Billing address'|trans({}, 'Emails.Body', locale)|raw }}
                     </p>
-                  
+
 {% endif %}
                   <span>
                     {invoice_block_html}
@@ -326,7 +326,7 @@
               <p style="border-bottom:1px solid #D6D4D4;">
                 {{ 'Customer message:'|trans({}, 'Emails.Body', locale)|raw }}
               </p>
-            
+
 {% endif %}
             <span>
               {message}

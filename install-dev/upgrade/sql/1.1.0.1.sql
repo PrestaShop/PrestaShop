@@ -66,7 +66,7 @@ ALTER TABLE PREFIX_customer
 ALTER TABLE PREFIX_image_type
 	ADD scenes TINYINT(1) NOT NULL DEFAULT 1;
 ALTER TABLE PREFIX_image_lang
-	CHANGE legend legend VARCHAR(128) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL; 
+	CHANGE legend legend VARCHAR(128) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL;
 
 /* CMS */
 CREATE TABLE  PREFIX_cms (
@@ -246,7 +246,7 @@ Un des éléments de votre commande est actuellement en réapprovisionnement, ce
 
 Merci de votre compréhension.
 
-Cordialement, 
+Cordialement,
 ');
 
 /* META */

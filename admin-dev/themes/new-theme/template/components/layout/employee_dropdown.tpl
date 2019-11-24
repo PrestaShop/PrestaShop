@@ -29,7 +29,7 @@
   </div>
   <div class="dropdown-menu dropdown-menu-right">
     <div class="employee-wrapper-avatar">
-      
+
       <span class="employee_avatar"><img class="avatar rounded-circle" src="{$employee->getImage()}" /></span>
       <span class="employee_profile">{l s='Welcome back %name%' sprintf=['%name%' => $employee->firstname] d='Admin.Navigation.Header'}</span>
       <a class="dropdown-item employee-link profile-link" href="{$link->getAdminLink('AdminEmployees', true, [], ['id_employee' => $employee->id|intval, 'updateemployee' => 1])|escape:'html':'UTF-8'}">
@@ -37,7 +37,7 @@
       {l s='Your profile' d='Admin.Navigation.Header'}
     </a>
     </div>
-    
+
     <p class="divider"></p>
     <a class="dropdown-item" href="{l s='https://www.prestashop.com/en/resources/documentations?utm_source=back-office&utm_medium=profile&utm_campaign=resources-en&utm_content=download17' d='Admin.Navigation.Header'}" target="_blank"><i class="material-icons">book</i> {l s='Resources' d='Admin.Navigation.Header'}</a>
     <a class="dropdown-item" href="{l s='https://www.prestashop.com/en/training?utm_source=back-office&utm_medium=profile&utm_campaign=training-en&utm_content=download17' d='Admin.Navigation.Header'}" target="_blank"><i class="material-icons">school</i> {l s='Training' d='Admin.Navigation.Header'}</a>

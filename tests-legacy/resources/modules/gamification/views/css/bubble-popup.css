@@ -2,19 +2,19 @@
 
 	jQuery Bubble Popup v.3.0
 	http://www.maxvergelli.com/jquery-bubble-popup/
-	
+
 	Copyright (c) 2012 Max Vergelli
-	
+
 	Permission is hereby granted, free of charge, to any person obtaining a copy
 	of this software and associated documentation files (the "Software"), to deal
 	in the Software without restriction, including without limitation the rights
 	to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 	copies of the Software, and to permit persons to whom the Software is
 	furnished to do so, subject to the following conditions:
-	
+
 	The above copyright notice and this permission notice shall be included in
 	all copies or substantial portions of the Software.
-	
+
 	THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 	IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 	FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -37,13 +37,13 @@
 	.jquerybubblepopup-middle-left, .jquerybubblepopup-middle-right{overflow:hidden;background-repeat:repeat-y;}
 	.jquerybubblepopup-tail{border:0px;margin:0px;padding:0px;display:inline;}
 
-/*  
+/*
 	Themes:
 
-	The plugin adds the class of the theme (for example ".jquerybubblepopup-azure") 
-	to the main <DIV> container, then you can edit the style of any element inside the 
+	The plugin adds the class of the theme (for example ".jquerybubblepopup-azure")
+	to the main <DIV> container, then you can edit the style of any element inside the
 	Bubble Popup markup for each theme.
-	
+
 	The following code defines fonts and backgrounds of the "innerHtml" for each theme:
 */
 	.jquerybubblepopup-azure  .jquerybubblepopup-innerHtml,
@@ -52,7 +52,7 @@
 	.jquerybubblepopup-green  .jquerybubblepopup-innerHtml,
 	.jquerybubblepopup-grey   .jquerybubblepopup-innerHtml,
 	.jquerybubblepopup-orange .jquerybubblepopup-innerHtml,
-	.jquerybubblepopup-violet .jquerybubblepopup-innerHtml, 
+	.jquerybubblepopup-violet .jquerybubblepopup-innerHtml,
 	.jquerybubblepopup-yellow .jquerybubblepopup-innerHtml
 	{
 		font-family:'Trebuchet MS',Arial;
@@ -62,12 +62,12 @@
 		background-color:#FFFFFF;
 	}
 	.jquerybubblepopup-all-azure  .jquerybubblepopup-innerHtml,
-	.jquerybubblepopup-all-black  .jquerybubblepopup-innerHtml, 
+	.jquerybubblepopup-all-black  .jquerybubblepopup-innerHtml,
 	.jquerybubblepopup-all-blue   .jquerybubblepopup-innerHtml,
-	.jquerybubblepopup-all-green  .jquerybubblepopup-innerHtml, 
-	.jquerybubblepopup-all-grey   .jquerybubblepopup-innerHtml, 
+	.jquerybubblepopup-all-green  .jquerybubblepopup-innerHtml,
+	.jquerybubblepopup-all-grey   .jquerybubblepopup-innerHtml,
 	.jquerybubblepopup-all-orange .jquerybubblepopup-innerHtml,
-	.jquerybubblepopup-all-violet .jquerybubblepopup-innerHtml, 
+	.jquerybubblepopup-all-violet .jquerybubblepopup-innerHtml,
 	.jquerybubblepopup-all-yellow .jquerybubblepopup-innerHtml
 	{
 		font-family:'Trebuchet MS',Arial;
@@ -76,10 +76,10 @@
 		color:#FFFFFF;
 	}
 	.jquerybubblepopup-all-azure  .jquerybubblepopup-innerHtml{background-color:#0099FF;}
-	.jquerybubblepopup-all-black  .jquerybubblepopup-innerHtml{background-color:#000000;} 
+	.jquerybubblepopup-all-black  .jquerybubblepopup-innerHtml{background-color:#000000;}
 	.jquerybubblepopup-all-blue   .jquerybubblepopup-innerHtml{background-color:#0066CC;}
-	.jquerybubblepopup-all-green  .jquerybubblepopup-innerHtml{background-color:#66FF00;} 
+	.jquerybubblepopup-all-green  .jquerybubblepopup-innerHtml{background-color:#66FF00;}
 	.jquerybubblepopup-all-grey   .jquerybubblepopup-innerHtml{background-color:#666666;}
 	.jquerybubblepopup-all-orange .jquerybubblepopup-innerHtml{background-color:#FF9933;}
-	.jquerybubblepopup-all-violet .jquerybubblepopup-innerHtml{background-color:#FF33FF;} 
+	.jquerybubblepopup-all-violet .jquerybubblepopup-innerHtml{background-color:#FF33FF;}
 	.jquerybubblepopup-all-yellow .jquerybubblepopup-innerHtml{background-color:#FFCC00;}

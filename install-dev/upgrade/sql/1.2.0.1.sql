@@ -7,14 +7,14 @@ SET NAMES 'utf8';
 DROP TABLE IF EXISTS PREFIX_order_customization_return;
 
 ALTER TABLE PREFIX_cart
-	ADD id_guest INT UNSIGNED NULL AFTER id_customer; 
+	ADD id_guest INT UNSIGNED NULL AFTER id_customer;
 
 ALTER TABLE PREFIX_tab
 	ADD `module` varchar(64) NULL AFTER class_name;
 
 ALTER TABLE PREFIX_product
 	ADD `indexed` tinyint(1) NOT NULL default '0' AFTER `active`;
-	
+
 ALTER TABLE PREFIX_orders
 	DROP INDEX `orders_customer`;
 ALTER TABLE PREFIX_orders
@@ -42,7 +42,7 @@ ALTER TABLE PREFIX_carrier
 
 ALTER TABLE PREFIX_state
 	CHANGE iso_code `iso_code` char(4) NOT NULL;
-	
+
 ALTER TABLE PREFIX_order_detail
 	CHANGE product_quantity_cancelled product_quantity_refunded INT(10) UNSIGNED NOT NULL DEFAULT '0';
 ALTER TABLE PREFIX_order_detail
@@ -61,7 +61,7 @@ ALTER TABLE PREFIX_block_cms
 /* IGNORE because can raise error data truncated */
 ALTER IGNORE TABLE PREFIX_connections
 	CHANGE `http_referer` `http_referer` VARCHAR(255) DEFAULT NULL;
-	
+
 ALTER TABLE PREFIX_connections
 	ADD INDEX `date_add` (`date_add`);
 
@@ -101,7 +101,7 @@ ALTER TABLE PREFIX_page_type
 	CHANGE `name` `name` VARCHAR(255) NOT NULL;
 ALTER TABLE PREFIX_page_type
 	ADD INDEX `name` (`name`);
-	
+
 ALTER TABLE PREFIX_product_attribute
 	ADD INDEX reference (reference);
 ALTER TABLE PREFIX_product_attribute
@@ -115,7 +115,7 @@ ALTER TABLE PREFIX_product_lang
 	ADD INDEX `name` (`name`);
 ALTER TABLE PREFIX_product_lang
 	ADD FULLTEXT KEY ftsname (`name`);
-	
+
 ALTER TABLE PREFIX_cart_discount
 	ADD INDEX `id_discount` (`id_discount`);
 
@@ -149,8 +149,8 @@ ALTER TABLE PREFIX_range_weight
 
 ALTER TABLE PREFIX_scene_products
 	ADD PRIMARY KEY (`id_scene`, `id_product`, `x_axis`, `y_axis`);
-	
-ALTER TABLE PREFIX_product_lang DROP INDEX fts; 
+
+ALTER TABLE PREFIX_product_lang DROP INDEX fts;
 ALTER TABLE PREFIX_product_lang DROP INDEX ftsname ;
 
 /* KEY management */
@@ -495,7 +495,7 @@ UPDATE `PREFIX_tab_lang` SET `name` = 'Statuts'
 	WHERE `id_tab` = (SELECT `id_tab` FROM `PREFIX_tab` t WHERE t.class_name = 'AdminStatuses')
 	AND `id_lang` = (SELECT `id_lang` FROM `PREFIX_lang` l WHERE l.iso_code = 'fr');
 
-INSERT IGNORE INTO PREFIX_product_attribute_image (id_image, id_product_attribute) 
+INSERT IGNORE INTO PREFIX_product_attribute_image (id_image, id_product_attribute)
 	(SELECT id_image, id_product_attribute FROM PREFIX_product_attribute WHERE id_image IS NOT NULL);
 /* ALTER query must stay here (right after the INSERT INTO PREFIX_product_attribute_image)! */
 ALTER TABLE PREFIX_product_attribute DROP id_image;

@@ -12,13 +12,13 @@ ALTER TABLE `PREFIX_image_type`
 
 ALTER TABLE `PREFIX_address`
 	ADD `id_manufacturer` INT( 10 ) UNSIGNED NOT NULL AFTER `id_customer` ;
-	
+
 ALTER TABLE `PREFIX_address`
 	ADD `id_supplier` INT( 10 ) UNSIGNED NOT NULL AFTER `id_manufacturer` ;
-	
+
 ALTER TABLE `PREFIX_order_discount`
 	ADD `id_discount` INT( 10 ) UNSIGNED NOT NULL AFTER `id_order` ;
-	
+
 ALTER TABLE `PREFIX_discount`
 	ADD `quantity_per_user` INT( 10 ) UNSIGNED NOT NULL DEFAULT '1' AFTER `quantity` ;
 

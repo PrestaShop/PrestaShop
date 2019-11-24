@@ -47,14 +47,14 @@ ALTER TABLE `PREFIX_orders` ADD `total_products_wt` DECIMAL(10, 2) NOT NULL AFTE
 
 UPDATE IGNORE `PREFIX_group` SET `price_display_method` = IFNULL((SELECT `value` FROM `PREFIX_configuration` WHERE `name` = 'PS_PRICE_DISPLAY'), 0);
 
-UPDATE `PREFIX_configuration` 
+UPDATE `PREFIX_configuration`
 SET `value` = ROUND(value / (1 + (
 	SELECT rate FROM (
 		SELECT t.`rate`, COUNT(*) n
 		FROM `PREFIX_orders` o
-		LEFT JOIN `PREFIX_carrier` c ON (o.`id_carrier` = c.`id_carrier`) 
+		LEFT JOIN `PREFIX_carrier` c ON (o.`id_carrier` = c.`id_carrier`)
 		LEFT JOIN `PREFIX_tax` t ON (t.`id_tax` = c.`id_tax`)
-		WHERE c.`deleted` = 0 
+		WHERE c.`deleted` = 0
 		AND c.`shipping_handling` = 1
 		GROUP BY o.`id_carrier`
 		ORDER BY n DESC

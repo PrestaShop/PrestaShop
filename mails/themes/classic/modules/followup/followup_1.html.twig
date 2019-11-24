@@ -23,7 +23,7 @@
               <p style="border-bottom:1px solid #D6D4D4;">
                 {{ 'Your cart at {shop_name}'|trans({}, 'Emails.Body', locale) }}
               </p>
-            
+
 {% endif %}
             <span>
               {{ 'We noticed that during your last visit on {shop_name}, you did not complete the order you had started.'|trans({}, 'Emails.Body', locale) }}<br/> <br/>
@@ -52,7 +52,7 @@
               <p style="border-bottom:1px solid #D6D4D4;">
                 {{ 'Your {shop_name} login details'|trans({}, 'Emails.Body', locale) }}
               </p>
-            
+
 {% endif %}
             <span>
               <span><strong>{{ 'Here is your coupon:'|trans({}, 'Emails.Body', locale)|raw }}</strong></span> {voucher_num}<br/>

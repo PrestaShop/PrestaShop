@@ -24,7 +24,7 @@
               <p style="border-bottom:1px solid #D6D4D4;">
                 {{ 'Order details'|trans({}, 'Emails.Body', locale)|raw }}
               </p>
-            
+
 {% endif %}
             <span>
               <span><strong>{{ 'Order:'|trans({}, 'Emails.Body', locale)|raw }}</strong></span> {order_name} {{ 'Placed on'|trans({}, 'Emails.Body', locale)|raw }} {date}<br/><br/>
@@ -230,7 +230,7 @@
             </table>
           </td>
         </tr>
-        
+
       </table>
     </font>
   </td>
@@ -247,7 +247,7 @@
               <p style="border-bottom:1px solid #D6D4D4;">
                 {{ 'Shipping'|trans({}, 'Emails.Body', locale)|raw }}
               </p>
-            
+
 {% endif %}
             <span>
               <span><strong>{{ 'Carrier:'|trans({}, 'Emails.Body', locale)|raw }}</strong></span> {carrier}<br/><br/>
@@ -281,7 +281,7 @@
                     <span>
                       {delivery_block_html}
                     </span>
-                  
+
 {% endif %}
                   <span data-text-only="1">
                     {delivery_block_txt}
@@ -307,7 +307,7 @@
                     <span>
                       {invoice_block_html}
                     </span>
-                  
+
 {% endif %}
                   <span data-text-only="1">
                     {invoice_block_txt}

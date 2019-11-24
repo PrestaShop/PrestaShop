@@ -1,8 +1,8 @@
 Original article can be found at [https://opensource.org/links](https://opensource.org/links) and is available under [Creative Commons Attribution 4.0 International License](http://creativecommons.org/licenses/by/4.0/).
 
-#Open Source Bibliography 
+#Open Source Bibliography
 
-There are many resources (good and bad) on the web offering information, advice, and interpretation concerning Open Source. The following are references that we, the OSI Board, have found useful, either for informing ourselves or for helping others begin their education about open source. And as you explore these links, be mindful of these words attributed to the Buddha, 
+There are many resources (good and bad) on the web offering information, advice, and interpretation concerning Open Source. The following are references that we, the OSI Board, have found useful, either for informing ourselves or for helping others begin their education about open source. And as you explore these links, be mindful of these words attributed to the Buddha,
 
 > "Believe nothing, no matter where you read it, or who said it, no matter if I have said it, unless it agrees with your own reason and your own common sense..."
 

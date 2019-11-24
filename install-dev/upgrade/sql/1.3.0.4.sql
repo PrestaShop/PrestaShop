@@ -5,8 +5,8 @@ DELETE FROM `PREFIX_tax_state` WHERE `id_tax` NOT IN (SELECT `id_tax` FROM `PREF
 ALTER TABLE `PREFIX_product` CHANGE `reduction_from` `reduction_from` DATETIME NOT NULL DEFAULT '1970-01-01 00:00:00',
 CHANGE `reduction_to` `reduction_to` DATETIME NOT NULL DEFAULT '1970-01-01 00:00:00';
 
-UPDATE `PREFIX_product` 
-SET `reduction_to` = DATE_ADD(reduction_to, INTERVAL 1 DAY) 
+UPDATE `PREFIX_product`
+SET `reduction_to` = DATE_ADD(reduction_to, INTERVAL 1 DAY)
 WHERE `reduction_from` != `reduction_to`;
 
 ALTER TABLE `PREFIX_discount` ADD `id_currency` INT UNSIGNED NOT NULL DEFAULT 0 AFTER `id_customer`;
@@ -61,9 +61,9 @@ ALTER TABLE `PREFIX_state` ADD INDEX (id_zone);
 ALTER TABLE `PREFIX_tab` ADD INDEX (id_parent);
 ALTER TABLE `PREFIX_cart` ADD INDEX (id_guest);
 
-INSERT INTO `PREFIX_configuration` (`name`, `value`, `date_add`, `date_upd`) 
+INSERT INTO `PREFIX_configuration` (`name`, `value`, `date_add`, `date_upd`)
 (
-	SELECT 'MA_LAST_QTIES', '3', NOW(), NOW() 
+	SELECT 'MA_LAST_QTIES', '3', NOW(), NOW()
 	FROM `PREFIX_module` WHERE `name` = 'mailalerts'
 );
 

@@ -2,7 +2,7 @@
 /**
  * ExpressionType.php
  *
- * Defines all values, which are possible for the [expr_type] field 
+ * Defines all values, which are possible for the [expr_type] field
  * within the parser output.
  *
  * PHP version 5
@@ -32,16 +32,16 @@
  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- * 
+ *
  * @author    André Rothe <andre.rothe@phosco.info>
  * @copyright 2010-2014 Justin Swanhart and André Rothe
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  * @version   SVN: $Id: ExpressionType.php 836 2013-12-20 05:31:55Z phosco@gmx.de $
- * 
+ *
  */
 
 /**
- * This class defines all values, which are possible for the [expr_type] field 
+ * This class defines all values, which are possible for the [expr_type] field
  * within the parser output.
  *
  * @author  André Rothe <andre.rothe@phosco.info>

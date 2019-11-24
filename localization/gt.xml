@@ -8,7 +8,7 @@
 	</languages>
 	<taxes>
 		<tax id="1" name="IVA GT 12%" rate="12" />
-		
+
 		<taxRulesGroup name="GT Standard Rate (12%)">
 			<taxRule iso_code_country="gt" id_tax="1" />
 		</taxRulesGroup>

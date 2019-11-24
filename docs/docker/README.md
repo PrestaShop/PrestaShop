@@ -17,7 +17,7 @@ To understand the differences between the two approachs you can read those artic
 
 # Warning
 After installation the name of your admin dir must be 'admin'.
-You can edit this value in the nginx config file (nginx_fpm/prestashop-nginx/prestashop-nginx.conf) 
+You can edit this value in the nginx config file (nginx_fpm/prestashop-nginx/prestashop-nginx.conf)
 
 To test:
 ```

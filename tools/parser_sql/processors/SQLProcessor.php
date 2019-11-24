@@ -34,15 +34,15 @@ require_once dirname(__FILE__) . '/AbstractProcessor.php';
 require_once dirname(__FILE__) . '/SQLChunkProcessor.php';
 
 /**
- * 
+ *
  * This class processes the base SQL statements.
- * 
+ *
  * @author arothe
- * 
+ *
  */
 class SQLProcessor extends SQLChunkProcessor {
     /*
-     * This function breaks up the SQL statement into logical sections. 
+     * This function breaks up the SQL statement into logical sections.
      * Some sections are then further handled by specialized processors.
      */
     public function process($tokens) {

@@ -26,7 +26,7 @@
 	var current_level_percent_tab = {$current_level_percent|intval};
 	var current_level_tab = '{$current_level|intval}';
 	var gamification_level_tab = '{l s='Level' mod='gamification' js=1}';
-	$(document).ready( function () {	
+	$(document).ready( function () {
 		$('#gamification_progressbar_tab').progressbar({
 			change: function() {
 		        if ({$current_level_percent})

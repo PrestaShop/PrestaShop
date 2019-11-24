@@ -271,6 +271,6 @@
     <access id="access_5_84" id_profile="Salesman"  id_authorization_role="TAB_ADMINADVANCEDPARAMETERS_READ"/>
     <access id="access_5_85" id_profile="Salesman"  id_authorization_role="TAB_ADMINADVANCEDPARAMETERS_UPDATE"/>
     <access id="access_5_86" id_profile="Salesman"  id_authorization_role="TAB_ADMINADVANCEDPARAMETERS_DELETE"/>
-	
+
   </entities>
 </entity_access>

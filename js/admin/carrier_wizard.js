@@ -486,7 +486,7 @@ function validateRange(index)
 	var $currentRangeInf = $('tr.range_inf td:eq(' + index + ')').find('div.input-group input:text');
 	var rangeSup = parseFloat($currentRangeSup.val().trim());
 	var rangeInf = parseFloat($currentRangeInf.val().trim());
-	
+
 	//reset css error
 	$currentRangeSup.closest('div.input-group').removeClass('has-error');
 	$currentRangeInf.closest('div.input-group').removeClass('has-error');
@@ -789,7 +789,7 @@ var carriersRangeInputs = {
 			$this.off();
 			var index = $this.closest('td').index();
 			var hasError = $('tr.range_sup td:eq(' + index + ') .has-error, tr.range_inf td:eq(' + index + ') .has-error');
-			
+
 			if ($('.wizard_error').length === 0 || hasError.length !== 0) {
 				carriersRangeInputs.checkCarriersRangeValidation(index);
 			}

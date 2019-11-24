@@ -35,11 +35,11 @@ require_once dirname(__FILE__) . '/ExpressionListProcessor.php';
 require_once dirname(__FILE__) . '/../utils/ExpressionType.php';
 
 /**
- * 
+ *
  * This class processes the SELECT expressions.
- * 
+ *
  * @author arothe
- * 
+ *
  */
 class SelectExpressionProcessor extends AbstractProcessor {
     private $expressionListProcessor;
@@ -61,8 +61,8 @@ class SelectExpressionProcessor extends AbstractProcessor {
         }
 
         /*
-         * Determine if there is an explicit alias after the AS clause. 
-         * If AS is found, then the next non-whitespace token is captured as the alias. 
+         * Determine if there is an explicit alias after the AS clause.
+         * If AS is found, then the next non-whitespace token is captured as the alias.
          * The tokens after (and including) the AS are removed.
          */
         $base_expr = "";

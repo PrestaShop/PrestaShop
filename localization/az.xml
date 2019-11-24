@@ -11,11 +11,11 @@
 	<taxes>
 		<tax id="1" name="ƏDV AZ 18%" rate="18" />
 		<tax id="2" name="ƏDV AZ 0%" rate="0" />
-		
+
 		<taxRulesGroup name="AZ Standard Rate (18%)">
 			<taxRule iso_code_country="az" id_tax="1" />
 		</taxRulesGroup>
-		
+
 		<taxRulesGroup name="AZ Zero Rate (0%)">
 			<taxRule iso_code_country="az" id_tax="2" />
 		</taxRulesGroup>

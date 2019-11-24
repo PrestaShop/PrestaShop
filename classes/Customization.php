@@ -417,8 +417,8 @@ class CustomizationCore extends ObjectModel
      */
     public static function deleteCustomizationFieldLangByShop($idCustomizationField, $shopList)
     {
-        $return = Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . 'customization_field_lang` 
-                WHERE `id_customization_field` = ' . (int) $idCustomizationField . ' 
+        $return = Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . 'customization_field_lang`
+                WHERE `id_customization_field` = ' . (int) $idCustomizationField . '
                 AND `id_shop` IN (' . implode(',', $shopList) . ')');
 
         if (!$return) {

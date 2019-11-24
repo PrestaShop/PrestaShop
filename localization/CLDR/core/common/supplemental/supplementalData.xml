@@ -4726,7 +4726,7 @@ XXX Code for transations where no currency is involved
 		<weekendEnd day="fri" territories="AF IR"/>
 		<weekendEnd day="sat" territories="AE BH DZ EG IL IQ JO KW LY OM QA SA SD SY YE"/>
 		<weekendEnd day="sun" territories="001"/>
-		
+
 		<weekOfPreference ordering="weekOfYear" locales="und"/>
 		<weekOfPreference ordering="weekOfYear weekOfMonth" locales="am az bs cs cy da el et hi ky lt mk sk ta th"/>
 		<weekOfPreference ordering="weekOfYear weekOfMonth weekOfInterval" locales="is mn no sv vi"/>

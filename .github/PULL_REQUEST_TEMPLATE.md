@@ -1,5 +1,5 @@
 <!--
-Thank you for contributing to the PrestaShop project! 
+Thank you for contributing to the PrestaShop project!
 
 Please take the time to edit the "Answers" rows with the necessary information.
 
