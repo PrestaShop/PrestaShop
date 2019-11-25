@@ -283,11 +283,25 @@ export default class ProductManager {
   /**
    * Retrieves product data from product search result block fields
    *
-   * @returns {FormData}
+   * @returns {Object}
    *
    * @private
    */
   _getProductData() {
-    return new FormData(document.querySelector(createOrderMap.productAddForm));
+    const $fileInputs = $(createOrderMap.productCustomizationContainer).find('input[type="file"]');
+    const formData = new FormData(document.querySelector(createOrderMap.productAddForm));
+    const fileSizes = {};
+
+    // adds key value pairs {input name: file size} of each file in separate object in case formData size exceeds server settings.
+    $.each($fileInputs, (key, input) => {
+      if (input.files !== null && typeof input.files !== 'undefined') {
+        fileSizes[$(input).data('customization-field-id')] = input.files[0].size;
+      }
+    });
+
+    return {
+      product: formData,
+      fileSizes,
+    };
   }
 }
