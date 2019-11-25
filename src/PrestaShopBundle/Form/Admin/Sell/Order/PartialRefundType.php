@@ -44,8 +44,8 @@ class PartialRefundType extends AbstractType
             $builder
                 ->add('quantity_' . $product->getOrderDetailId(), NumberType::class, [
                     'attr' => ['max' => $product->getQuantity(), 'class' => 'refund-quantity'],
-                    'label' => $translator->trans('Qty', [], 'Admin.Orderscustomers.Feature'),
-                    'invalid_message' => $translator->trans('The "quantity" field must be a valid number', [], 'Admin.Orderscustomers.Feature'),
+                    'label' => $translator->trans('Quantity', [], 'Global'),
+                    'invalid_message' => $translator->trans('This field is invalid, it must contain numeric values', [], 'Admin.Notifications.Error'),
                     'required' => false,
                 ])
                 ->add('amount_' . $product->getOrderDetailId(), NumberType::class, [
@@ -55,7 +55,7 @@ class PartialRefundType extends AbstractType
                         $translator->trans('Amount', [], 'Admin.Global'),
                         $taxMethod
                     ),
-                    'invalid_message' => $translator->trans('The "amount" field must be a valid number', [], 'Admin.Orderscustomers.Feature'),
+                    'invalid_message' => $translator->trans('This field is invalid, it must contain numeric values', [], 'Admin.Notifications.Error'),
                     'required' => false,
                 ]);
         }

@@ -59,7 +59,7 @@ class IssuePartialRefundCommand
     private $generateCartRule;
 
     /**
-     * @var int
+     * @var bool
      */
     private $taxMethod;
 

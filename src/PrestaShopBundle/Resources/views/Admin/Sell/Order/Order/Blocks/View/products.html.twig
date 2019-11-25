@@ -44,7 +44,7 @@
             <small class="text-muted">{{ orderForViewing.taxMethod }}</small>
           </th>
           <th>
-            <p>{{ 'Qty'|trans({}, 'Admin.Orderscustomers.Feature') }}</p>
+            <p>{{ 'Quantity'|trans({}, 'Admin.Global') }}</p>
           </th>
           <th>
             <p>{{ 'Refunded'|trans({}, 'Admin.Orderscustomers.Feature') }}</p>
@@ -149,7 +149,7 @@
                   <p class="text-center">{{ '(Max %amount_refundable% %tax_method%)'|trans({
                       '%amount_refundable%': product.amountRefundable,
                       '%tax_method%': orderForViewing.taxMethod
-                    }, 'Admin.Orderscustomers.Notification')|raw }}</p>
+                    }, 'Admin.Orderscustomers.Help')|raw }}</p>
                 </div>
               </div>
             </td>
@@ -241,10 +241,12 @@
 
             <span class="partial-refund">
               <p class="text-muted mb-0 text-center"><strong>{{ 'Shipping'|trans({}, 'Admin.Catalog.Feature') }}</strong></p>
-              <div class="col-sm text-center shipping-price-container" >
-                    <strong>{{ orderForViewing.prices.shippingPriceFormatted }}</strong>
-                    {{ form_widget(partialRefundForm.shipping) }}
-                    <div class="input-group-append"><div class="input-group-text">{{ orderCurrency.symbol }}</div></div>
+              <div class="col-sm text-center shipping-price-container">
+                <strong>{{ orderForViewing.prices.shippingPriceFormatted }}</strong>
+                {{ form_widget(partialRefundForm.shipping) }}
+                <div class="input-group-append">
+                  <div class="input-group-text">{{ orderCurrency.symbol }}</div>
+                </div>
               </div>
               <p class="text-center">(max {{ orderForViewing.prices.shippingPriceFormatted }} tax included)</p>
             </span>
