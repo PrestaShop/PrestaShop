@@ -85,9 +85,24 @@ $order-block-background-color: #F8F8F8;
     color: $private-message-color;
   }
 }
-.messages-block#all-messages-list {
-  height: 80vh;
-  overflow-y: scroll;
+
+.messages-block {
+  &#all-messages-list {
+    height: 80vh;
+    overflow-y: scroll;
+  }
+
+  li {
+    .row {
+      .col-md-1 {
+
+      }
+
+      .col-md-11 {
+
+      }
+    }
+  }
 }
 
 #view_all_messages_modal {
@@ -98,4 +113,22 @@ $order-block-background-color: #F8F8F8;
   .modal-body {
     padding: 0;
   }
+}
+
+
+@media only screen and (max-width: map-get($grid-breakpoints, xxl)) {
+  .messages-block {  
+    li {
+      .row {
+        .col-md-1 {
+          order: 1;
+          margin-bottom: 5px;
+        }
+  
+        .col-md-11 {
+          order: 2;
+        }
+      }
+    }
+  } 
 }
