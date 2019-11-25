@@ -131,7 +131,11 @@ class SupplierController extends FrameworkBundleAdminController
     public function createAction(Request $request)
     {
         try {
-            $supplierForm = $this->getFormBuilder()->getForm();
+            $supplierData = $request->request->get('supplier');
+            $supplierForm = $this->getFormBuilder()->getForm(
+                [],
+                isset($supplierData['id_country']) ? ['country_id' => (int) $supplierData['id_country']] : []
+            );
             $supplierForm->handleRequest($request);
 
             $result = $this->getFormHandler()->handle($supplierForm);
