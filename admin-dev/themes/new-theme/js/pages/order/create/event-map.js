@@ -35,6 +35,8 @@ export default {
   cartLoaded: 'cartLoaded',
   // when cart currency has been changed
   cartCurrencyChanged: 'cartCurrencyChanged',
+  // when cart currency changing fails
+  cartCurrencyChangeFailed: 'cartCurrencyChangeFailed',
   // when cart language has been changed
   cartLanguageChanged: 'cartLanguageChanged',
   // when cart addresses information has been changed

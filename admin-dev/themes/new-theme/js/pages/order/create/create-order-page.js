@@ -228,9 +228,16 @@ export default class CreateOrderPage {
    * @private
    */
   _onCartCurrencyChanged() {
+    // on success
     EventEmitter.on(eventMap.cartCurrencyChanged, (cartInfo) => {
+      this.productRenderer.cleanCartBlockAlerts();
       this._preselectCartCurrency(cartInfo.currencyId);
     });
+
+    // on failure
+    EventEmitter.on(eventMap.cartCurrencyChangeFailed, (response) => {
+      this.productRenderer.renderCartBlockErrorAlert(response.responseJSON.message)
+    })
   }
 
   /**
