@@ -55,6 +55,7 @@ use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CartGridDefinitionFactory
 use PrestaShop\PrestaShop\Core\Search\Filters\CartFilters;
 use PrestaShopBundle\Component\CsvResponse;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyException;
+use PrestaShop\PrestaShop\Core\Domain\Exception\FileUploadException;
 use PrestaShop\PrestaShop\Core\Domain\Language\Exception\LanguageException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\CustomizationSettings;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Exception\CustomizationConstraintException;
@@ -467,6 +468,8 @@ class CartController extends FrameworkBundleAdminController
         $customizations = $textCustomizations + $fileCustomizations;
 
         try {
+            $this->assertAllUploadedFilesReachedRequest($request->headers->get('file-sizes'), $fileCustomizations);
+
             $this->getCommandBus()->handle(new AddProductToCartCommand(
                 $cartId,
                 $productId,
@@ -655,12 +658,40 @@ class CartController extends FrameworkBundleAdminController
     }
 
     /**
+     * Checks if all submitted files reached the request.
+     * If submitted form size exceeds php.ini post_max_size setting the $_FILES global doesn't contain the file.
+     * For this reason custom headers where passed containing submitted file sizes
+     *  to check if request contains all files that were submitted in browser
+     *
+     * @param string $fileSizeHeaders
+     * @param array $fileCustomizations
+     *
+     * @throws FileUploadException
+     */
+    private function assertAllUploadedFilesReachedRequest(string $fileSizeHeaders, array $fileCustomizations): void
+    {
+        if (!empty($fileSizeHeaders)) {
+            $fileSizesByInputName = json_decode($fileSizeHeaders, true);
+            foreach ($fileSizesByInputName as $name => $size) {
+                if (!isset($fileCustomizations[$name])) {
+                    throw new FileUploadException(
+                        'Some files were possible not uploaded due to post_max_size limit',
+                        UPLOAD_ERR_INI_SIZE
+                    );
+                }
+            }
+        }
+    }
+
+    /**
      * @param Exception $e
      *
      * @return array
      */
     private function getErrorMessages(Exception $e)
     {
+        $iniConfig = $this->get('prestashop.core.configuration.ini_configuration');
+
         return [
             CartRuleValidityException::class => $e->getMessage(),
             CartNotFoundException::class => $this->trans(
@@ -716,6 +747,16 @@ class CartController extends FrameworkBundleAdminController
                 'There are not enough products in stock',
                 'Admin.Notifications.Error'
             ),
+            FileUploadException::class => [
+                UPLOAD_ERR_INI_SIZE => $this->trans(
+                    'Max file size allowed is "%s" bytes.', 'Admin.Notifications.Error', [
+                    $iniConfig->getUploadMaxSizeInBytes(),
+                ]),
+                UPLOAD_ERR_EXTENSION => $this->trans(
+                    'Image format not recognized, allowed formats are: .gif, .jpg, .png',
+                    'Admin.Notifications.Error'
+                ),
+            ],
         ];
     }
 }
