@@ -110,7 +110,6 @@ class SearchCore
     const PS_SEARCH_ABSCISSA_MAX = 2;
     const PS_DISTANCE_MAX = 8;
 
-
     public static function extractKeyWords($string, $id_lang, $indexation = false, $iso_code = false)
     {
         $sanitizedString = Search::sanitize($string, $id_lang, $indexation, $iso_code, false);
