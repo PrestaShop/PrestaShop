@@ -42,6 +42,7 @@ use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartInformation;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetProductQuantityInCart;
 use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleValidityException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\QuantityAction;
@@ -49,6 +50,7 @@ use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Language\Exception\LanguageException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\CustomizationSettings;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Exception\CustomizationConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductOutOfStockException;
 use PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Command\AddSpecificPriceCommand;
 use PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Command\DeleteSpecificPriceByCartProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\Reduction;
@@ -423,17 +425,26 @@ class CartController extends FrameworkBundleAdminController
      */
     public function editProductQuantityAction(Request $request, int $cartId, int $productId)
     {
-        $previousQty = $request->request->getInt('previousQty');
-        $newQty = $request->request->getInt('newQty');
-        $qtyDiff = abs($newQty - $previousQty);
-
-        if ($previousQty < $newQty) {
-            $action = QuantityAction::INCREASE_PRODUCT_QUANTITY;
-        } else {
-            $action = QuantityAction::DECREASE_PRODUCT_QUANTITY;
-        }
-
         try {
+            $combinationId = $request->request->getInt('productAttributeId');
+            $customizationId = $request->request->getInt('customizationId');
+
+            $previousQty = $this->getQueryBus()->handle(new GetProductQuantityInCart(
+                $cartId,
+                $productId,
+                $combinationId ? $combinationId : null,
+                $customizationId ? $customizationId : null
+            ));
+
+            $newQty = $request->request->getInt('newQty');
+            $qtyDiff = abs($newQty - $previousQty);
+
+            if ($previousQty < $newQty) {
+                $action = QuantityAction::INCREASE_PRODUCT_QUANTITY;
+            } else {
+                $action = QuantityAction::DECREASE_PRODUCT_QUANTITY;
+            }
+
             $this->getCommandBus()->handle(new UpdateProductQuantityInCartCommand(
                 $cartId,
                 $productId,
@@ -540,6 +551,10 @@ class CartController extends FrameworkBundleAdminController
                     ['%limit%' => CustomizationSettings::MAX_TEXT_LENGTH]
                 ),
             ],
+            ProductOutOfStockException::class => $this->trans(
+                'There are not enough products in stock',
+                'Admin.Notifications.Error'
+            ),
         ];
     }
 }

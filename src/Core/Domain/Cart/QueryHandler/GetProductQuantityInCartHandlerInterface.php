@@ -24,15 +24,19 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Customization;
+namespace PrestaShop\PrestaShop\Core\Domain\Cart\QueryHandler;
+
+use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetProductQuantityInCart;
 
 /**
- * Defines settings for customizations
+ * Interface for handling GetProductQuantityInCart query
  */
-final class CustomizationSettings
+interface GetProductQuantityInCartHandlerInterface
 {
     /**
-     * Maximum allowed length for customization text field value
+     * @param GetProductQuantityInCart $query
+     *
+     * @return int
      */
-    const MAX_TEXT_LENGTH = 255;
+    public function handle(GetProductQuantityInCart $query): int;
 }
