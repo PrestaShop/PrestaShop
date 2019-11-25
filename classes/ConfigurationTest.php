@@ -158,7 +158,7 @@ class ConfigurationTestCore
 
     public static function test_new_phpversion()
     {
-        return version_compare(PHP_VERSION, '7.1.3', '>=');
+        return static::test_phpversion();
     }
 
     public static function test_mysql_support()
