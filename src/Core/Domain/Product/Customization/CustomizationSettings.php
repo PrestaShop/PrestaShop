@@ -34,5 +34,5 @@ final class CustomizationSettings
     /**
      * Maximum allowed length for customization text field value
      */
-    const MAX_TEXT_LENGTH = 2;
+    const MAX_TEXT_LENGTH = 255;
 }
