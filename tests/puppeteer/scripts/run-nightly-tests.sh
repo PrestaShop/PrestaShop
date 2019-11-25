@@ -7,6 +7,7 @@ CURRENT_DATE=$([ -z "$1" ] && date +%Y-%m-%d || echo $1)
 DIR_PATH="/var/ps-reports/${CURRENT_DATE}"
 REPORT_NAME="${CURRENT_DATE}-${BRANCH}"
 REPORT_PATH="${DIR_PATH}/campaigns"
+TESTS_DIR="${DIR_PATH}/prestashop/tests/puppeteer"
 
 exec &> >(tee -a "/var/log/ps-${REPORT_NAME}.log")
 
@@ -23,7 +24,7 @@ docker system prune -a -f
 docker image prune -f
 docker volume prune -f
 
-cd "${DIR_PATH}/prestashop/tests/puppeteer/"
+cd "${TESTS_DIR}"
 
 for command in "sanity-tests" "functional-tests"; do
   if [ -z "$(docker ps -qa)" ]; then
@@ -43,8 +44,8 @@ for command in "sanity-tests" "functional-tests"; do
   docker-compose -f docker-compose.nightly.yml -f docker-compose.tests.yml exec -e COMMAND="${command}" tests bash /tmp/run-tests.sh
 
   # Rename mochawesome Report
-  if [ -f "mochawesome-report/mochawesome.json" ]; then
-    cp mochawesome-report/mochawesome.json "${REPORT_PATH}/${command}.json"
+  if [ -f "${TESTS_DIR}/mochawesome-report/mochawesome.json" ]; then
+    cp "${TESTS_DIR}/mochawesome-report/mochawesome.json" "${REPORT_PATH}/${command}.json"
   fi
 
   echo "Try to clear docker-compose instances..."

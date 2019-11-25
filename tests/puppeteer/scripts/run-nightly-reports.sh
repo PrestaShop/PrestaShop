@@ -15,6 +15,7 @@ NO_SHUTDOWN=$([ -z "$2" ] && echo "" || echo "yes")
 DIR_PATH="/var/ps-reports/${CURRENT_DATE}"
 REPORT_NAME="${CURRENT_DATE}-${BRANCH}"
 REPORT_PATH="${DIR_PATH}/campaigns"
+TESTS_DIR="${DIR_PATH}/prestashop/tests/puppeteer"
 
 exec &> >(tee -a "/var/log/ps-${REPORT_NAME}.log")
 
@@ -24,7 +25,7 @@ if [ ! -d $DIR_PATH ]; then
   exit 0
 fi
 
-cd "${DIR_PATH}/prestashop/tests/E2E"
+cd "${TESTS_DIR}"
 
 echo "Check for reports..."
 if [ -n "$(ls ${REPORT_PATH})" ]; then
