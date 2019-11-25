@@ -254,7 +254,8 @@ export default class ProductRenderer {
       const $template = templateTypeMap[customField.type].clone();
 
       $template.find(createOrderMap.productCustomInput)
-        .attr('name', `customizations[${customField.customizationFieldId}]`);
+        .attr('name', `customizations[${customField.customizationFieldId}]`)
+        .data('customization-field-id', customField.customizationFieldId);
       $template.find(createOrderMap.productCustomInputLabel)
         .attr('for', `customizations[${customField.customizationFieldId}]`)
         .text(customField.name);
