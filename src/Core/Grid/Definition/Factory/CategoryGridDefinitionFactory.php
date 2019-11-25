@@ -129,6 +129,7 @@ final class CategoryGridDefinitionFactory extends AbstractGridDefinitionFactory
                     'identifier_field' => 'id_category',
                     'bulk_field' => 'id_category',
                     'with_bulk_field' => true,
+                    'clickable' => false,
                 ])
             )
             ->add(
