@@ -47,9 +47,9 @@ class OrderFeatureContext extends AbstractPrestaShopFeatureContext
      */
     protected $orders = [];
 
-
     /**
      * @BeforeScenario
+     *
      * @throws PrestaShopExceptionCore
      */
     public function before()
