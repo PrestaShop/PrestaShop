@@ -193,7 +193,7 @@ export default class CartEditor {
     $.post(this.router.generate('admin_carts_edit_currency', {cartId}), {
       currencyId,
     }).then(cartInfo => EventEmitter.emit(eventMap.cartCurrencyChanged, cartInfo))
-      .catch(response => showErrorMessage(response.responseJSON.message));
+      .catch(response => EventEmitter.emit(eventMap.cartCurrencyChangeFailed, response));
   }
 
   /**
