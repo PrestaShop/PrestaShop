@@ -40,7 +40,6 @@ for command in "sanity-tests" "functional-tests"; do
 
   # Running command
   echo "Run ${command}"
-
   docker-compose -f docker-compose.nightly.yml -f docker-compose.tests.yml exec -e COMMAND="${command}" tests bash /tmp/run-tests.sh
 
   # Rename mochawesome Report
