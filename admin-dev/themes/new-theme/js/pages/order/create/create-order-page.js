@@ -355,7 +355,6 @@ export default class CreateOrderPage {
       productId: $(event.currentTarget).data('product-id'),
       attributeId: $(event.currentTarget).data('attribute-id'),
       customizationId: $(event.currentTarget).data('customization-id'),
-      previousQty: $(event.currentTarget).data('prev-qty'),
       newQty: $(event.currentTarget).val(),
     };
 

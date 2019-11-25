@@ -99,10 +99,9 @@ export default class ProductManager {
    * @private
    */
   _onAddProductToCart() {
-    this.productRenderer.cleanCartBlockAlerts();
-
     // on success
     EventEmitter.on(eventMap.productAddedToCart, (cartInfo) => {
+      this.productRenderer.cleanCartBlockAlerts();
       EventEmitter.emit(eventMap.cartLoaded, cartInfo);
     });
 
@@ -143,6 +142,7 @@ export default class ProductManager {
   _onProductQtyChange() {
     // on success
     EventEmitter.on(eventMap.productQtyChanged, (cartInfo) => {
+      this.productRenderer.cleanCartBlockAlerts();
       EventEmitter.emit(eventMap.cartLoaded, cartInfo);
     });
 
