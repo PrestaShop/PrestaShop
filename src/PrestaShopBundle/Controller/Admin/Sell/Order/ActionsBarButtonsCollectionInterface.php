@@ -26,56 +26,20 @@
 
 namespace PrestaShopBundle\Controller\Admin\Sell\Order;
 
-class ActionsBarButton implements ActionsBarButtonInterface
+interface ActionsBarButtonsCollectionInterface
 {
     /**
-     * @var string
+     * @return bool
      */
-    protected $class;
+    public function isEmpty();
 
     /**
-     * @var string[]
+     * @param ActionsBarButtonInterface $button
      */
-    protected $properties;
+    public function addButton(ActionsBarButtonInterface $button);
 
     /**
-     * @var string
+     * @return ActionsBarButton[]
      */
-    protected $content;
-
-    /**
-     * @param string $class
-     * @param string[] $properties
-     * @param string $content
-     */
-    public function __construct(string $class = '', array $properties = [], string $content = '')
-    {
-        $this->class = $class;
-        $this->properties = $properties;
-        $this->content = $content;
-    }
-
-    /**
-     * @return string
-     */
-    public function getClass(): string
-    {
-        return $this->class;
-    }
-
-    /**
-     * @return string[]
-     */
-    public function getProperties(): array
-    {
-        return $this->properties;
-    }
-
-    /**
-     * @return string
-     */
-    public function getContent(): string
-    {
-        return $this->content;
-    }
+    public function getButtons(): array;
 }
