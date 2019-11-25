@@ -236,6 +236,11 @@ class AdminSearchConfControllerCore extends AdminController
                             array(),
                             'Admin.Shopparameters.Help'
                         ),
+                        'desc' => $this->trans(
+                            'This parameter will only be used if fuzzy search is activated, the lower the value, the more tolerant your research will be.',
+                            [],
+                            'Admin.Shopparameters.Help'
+                        ),
                         'validation' => 'isUnsignedInt',
                         'type' => 'text',
                         'cast' => 'intval',
