@@ -76,7 +76,7 @@ abstract class AddCurrencyCommand
     /**
      * @var string[]
      */
-    protected $localizedPatterns = [];
+    protected $localizedTransformations = [];
 
     /**
      * @param string $isoCode
@@ -220,23 +220,23 @@ abstract class AddCurrencyCommand
     }
 
     /**
-     * Returns the currency's localized patterns, indexed by language id
+     * Returns the currency's localized transformations, indexed by language id
      *
      * @return string[]
      */
-    public function getLocalizedPatterns(): array
+    public function getLocalizedTransformations(): array
     {
-        return $this->localizedPatterns;
+        return $this->localizedTransformations;
     }
 
     /**
-     * @param string[] $localizedPatterns currency's localized patterns, indexed by language id
+     * @param string[] $localizedTransformations currency's localized transformations, indexed by language id
      *
      * @return $this
      */
-    public function setLocalizedPatterns(array $localizedPatterns): AddCurrencyCommand
+    public function setLocalizedTransformations(array $localizedTransformations): AddCurrencyCommand
     {
-        $this->localizedPatterns = $localizedPatterns;
+        $this->localizedTransformations = $localizedTransformations;
 
         return $this;
     }

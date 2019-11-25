@@ -92,8 +92,8 @@ class CurrencyFeatureContext extends AbstractDomainFeatureContext
             $command->setLocalizedSymbols([$defaultLangId => $data['symbol']]);
         }
 
-        if (isset($data['patterns'])) {
-            $command->setLocalizedPatterns($this->parseLocalizedArray($data['patterns']));
+        if (isset($data['transformations'])) {
+            $command->setLocalizedTransformations($this->parseLocalizedArray($data['transformations']));
         }
 
         $command->setShopIds([
@@ -155,8 +155,8 @@ class CurrencyFeatureContext extends AbstractDomainFeatureContext
             $command->setLocalizedSymbols([$defaultLangId => $data['symbol']]);
         }
 
-        if (isset($data['patterns'])) {
-            $command->setLocalizedPatterns($this->parseLocalizedArray($data['patterns']));
+        if (isset($data['transformations'])) {
+            $command->setLocalizedTransformations($this->parseLocalizedArray($data['transformations']));
         }
 
         try {
