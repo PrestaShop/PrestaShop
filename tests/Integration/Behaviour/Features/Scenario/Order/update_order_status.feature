@@ -9,11 +9,13 @@ Feature: Orders statuses from Back Office
     Given the current currency is "EUR"
 
   Scenario: Update multiple orders statuses using Bulk actions
-    Given there are 2 existing orders
-    When I update 2 orders to status "Delivered"
-    Then each of 2 orders should contain status "Delivered"
+    Given there is existing order with reference "XKBKNABJK"
+    And there is existing order with reference "OHSATSERP"
+    When I update orders "XKBKNABJK,OHSATSERP" to status "Delivered"
+    Then order "XKBKNABJK" has status "Delivered"
+    And order "OHSATSERP" has status "Delivered"
 
-  Scenario: Update order status by clicking on Status column and choosing the status
-    Given there are 1 existing orders
-    When I update order 1 to status "Awaiting bank wire payment"
-    Then each of 1 orders should contain status "Awaiting bank wire payment"
+  Scenario: Update order status
+    Given there is existing order with reference "XKBKNABJK"
+    When I update order "XKBKNABJK" to status "Awaiting bank wire payment"
+    Then order "XKBKNABJK" has status "Awaiting bank wire payment"
