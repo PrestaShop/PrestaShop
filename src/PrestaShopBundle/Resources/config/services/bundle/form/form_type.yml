@@ -842,6 +842,7 @@ services:
             - '@prestashop.adapter.form.choice_provider.country_state_by_id'
             - '@=service("prestashop.adapter.legacy.context").getContext().country.id'
             - '@translator'
+            - '@=service("prestashop.core.form.choice_provider.country_by_id").getChoicesAttributes()'
         tags:
             - { name: form.type }
 
@@ -904,6 +905,7 @@ services:
             - '@=service("prestashop.adapter.legacy.context").getContext().country.id'
             - '@translator'
             - '@=service("prestashop.adapter.multistore_feature").isActive()'
+            - "@=service('prestashop.adapter.legacy.context').getLanguages()"
         tags:
           - { name: form.type }
 

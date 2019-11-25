@@ -46,7 +46,7 @@
       {{ 'Version'|trans({}, 'Admin.Global') }} {{ themeVersion }}
     </span>
     <div class="theme-author">
-      {{ 'Designed by %s'|trans({'%s': themeAuthor}, 'Admin.Design.Feature') }}
+      <a href="{{ themeAuthorUrl }}" target="_blank">{{ 'Designed by %s'|trans({'%s': themeAuthor}, 'Admin.Design.Feature') }}</a>
     </div>
   </div>
 {% endblock %}

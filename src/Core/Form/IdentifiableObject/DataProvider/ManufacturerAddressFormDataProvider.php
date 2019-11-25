@@ -82,6 +82,7 @@ final class ManufacturerAddressFormDataProvider implements FormDataProviderInter
             'home_phone' => $editableAddress->getHomePhone(),
             'mobile_phone' => $editableAddress->getMobilePhone(),
             'other' => $editableAddress->getOther(),
+            'dni' => $editableAddress->getDni(),
         ];
     }
 

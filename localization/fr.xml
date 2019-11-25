@@ -5,7 +5,6 @@
   </currencies>
   <languages>
     <language iso_code="fr"/>
-    <language iso_code="bz"/>
   </languages>
   <accounting>
     <conf name="customer_prefix" value="411"/>

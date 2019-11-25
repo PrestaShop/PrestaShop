@@ -53,3 +53,9 @@ services:
           'es': 'https://doc.prestashop.com/display/PS17/Gestionar+Atributos+del+Producto'
           'it': 'https://doc.prestashop.com/display/PS17/Gestire+gli+Attributi+dei+Prodotti'
           '_fallback': 'https://doc.prestashop.com/display/PS17/Managing+Product+Attributes'
+        'monitoring':
+          'en': 'https://doc.prestashop.com/display/PS17/Monitoring+your+Catalog'
+          'fr': 'https://doc.prestashop.com/display/PS17/Faire+le+suivi+de+votre+catalogue'
+          'es': 'https://doc.prestashop.com/display/PS17/Monitorear+el+catalogo'
+          'it': 'https://doc.prestashop.com/display/PS17/Monitorare+il+Catalogo'
+          '_fallback': 'https://doc.prestashop.com/display/PS17/Monitoring+your+Catalog'
