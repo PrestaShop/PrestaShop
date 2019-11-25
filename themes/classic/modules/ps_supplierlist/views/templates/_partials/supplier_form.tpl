@@ -31,7 +31,7 @@
     aria-haspopup="true"
     aria-expanded="false">
     {l s='All suppliers' d='Shop.Theme.Catalog'}
-    <i class="material-icons float-xs-right">&#xE5C5;</i>
+    <i class="material-icons float-xs-right">arrow_drop_down</i>
   </button>
   <div class="dropdown-menu">
     {foreach from=$suppliers item=supplier}
