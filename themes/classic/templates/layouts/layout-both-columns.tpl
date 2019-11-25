@@ -61,9 +61,11 @@
 
           {block name="left_column"}
             <div id="left-column" class="col-xs-12 col-sm-4 col-md-3">
+              {block name="column_contact"}{/block}
+
               {if $page.page_name == 'product'}
                 {hook h='displayLeftColumnProduct'}
-              {else}
+              {else if $page.page_name != 'contact'}
                 {hook h="displayLeftColumn"}
               {/if}
             </div>
@@ -81,6 +83,8 @@
 
           {block name="right_column"}
             <div id="right-column" class="col-xs-12 col-sm-4 col-md-3">
+              {block name="right_column_contact"}{/block}
+
               {if $page.page_name == 'product'}
                 {hook h='displayRightColumnProduct'}
               {else}

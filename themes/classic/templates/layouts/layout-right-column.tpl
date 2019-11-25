@@ -35,3 +35,9 @@
     {hook h="displayContentWrapperBottom"}
   </div>
 {/block}
+
+{if $page.page_name == 'contact'}
+  {block name="right_column_contact"}
+    {widget name="ps_contactinfo" hook='displayLeftColumn'}
+  {/block}
+{/if}
