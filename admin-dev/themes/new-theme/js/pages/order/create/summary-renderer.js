@@ -24,6 +24,7 @@
  */
 
 import createOrderMap from './create-order-map';
+import CreateOrderPage from "./create-order-page";
 
 const $ = window.$;
 
@@ -47,12 +48,12 @@ export default class SummaryRenderer {
    * Renders summary block
    *
    * @param {Object} cartInfo
-   * @param {boolean} addressesAreValid
    */
-  render(cartInfo, addressesAreValid) {
+  render(cartInfo) {
     this._cleanSummary();
     const noProducts = cartInfo.products.length === 0;
     const noShippingOptions = cartInfo.shipping === null;
+    const addressesAreValid = CreateOrderPage.validateSelectedAddresses(cartInfo.addresses);
 
     if (noProducts || noShippingOptions || !addressesAreValid) {
       this._hideSummaryBlock();
