@@ -262,6 +262,8 @@ class CurrencyData
     }
 
     /**
+     * Currency patterns, indexed by locale code
+     *
      * @return string[]|null
      */
     public function getPatterns(): ?array
@@ -270,6 +272,8 @@ class CurrencyData
     }
 
     /**
+     * Currency patterns, indexed by locale code
+     *
      * @param string[] $patterns
      */
     public function setPatterns(array $patterns)

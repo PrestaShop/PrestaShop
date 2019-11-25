@@ -58,37 +58,22 @@ class PatternTransformer
         self::RTL_CHARACTER,
     ];
 
-    /**
-     * @var string
-     */
-    private $currencyPattern;
+    const TRANSFORM_DICTIONARY = [
+        self::TYPE_LEFT_SYMBOL_WITH_SPACE => '$rtl$currencySymbol$nbsp$pattern',
+        self::TYPE_LEFT_SYMBOL_WITHOUT_SPACE => '$rtl$currencySymbol$pattern',
+        self::TYPE_RIGHT_SYMBOL_WITH_SPACE => '$rtl$pattern$nbsp$currencySymbol',
+        self::TYPE_RIGHT_SYMBOL_WITHOUT_SPACE => '$rtl$pattern$currencySymbol',
+    ];
 
     /**
-     * @var string[]
-     */
-    private $trimmedPatterns;
-
-    /**
-     * @var bool
-     */
-    private $rtlPattern = false;
-
-    /**
-     * @param string $currencyPattern Initial currency pattern (ex: #,##0.00¤, ¤#,##,##0.00, ¤#,##0.00;¤-#,##0.00)
-     */
-    public function __construct(string $currencyPattern)
-    {
-        $this->setCurrencyPattern($currencyPattern);
-    }
-
-    /**
+     * @param string $currencyPattern
      * @param string $transformationType
      *
      * @return string
      *
      * @throws InvalidArgumentException
      */
-    public function transform(string $transformationType): string
+    public function transform(string $currencyPattern, string $transformationType): string
     {
         if (!in_array($transformationType, self::ALLOWED_TRANSFORMATIONS)) {
             throw new InvalidArgumentException(sprintf(
@@ -98,61 +83,50 @@ class PatternTransformer
             ));
         }
 
+        $currencyPatterns = explode(';', $currencyPattern);
+        $trimmedPatterns = [];
+        foreach ($currencyPatterns as $pattern) {
+            $trimmedCharacters = implode('', self::TRIMMED_CHARACTERS);
+            $trimmedPatterns[] = trim($pattern, $trimmedCharacters);
+        }
+
         $transformedPatterns = [];
-        foreach ($this->trimmedPatterns as $trimmedPattern) {
-            $transformedPatterns[] = $this->transformPattern($trimmedPattern, $transformationType);
+        foreach ($trimmedPatterns as $trimmedPattern) {
+            $transformedPatterns[] = $this->transformPattern($currencyPattern, $trimmedPattern, $transformationType);
         }
 
         return implode(';', $transformedPatterns);
     }
 
     /**
-     * @param string $pattern
+     * @param string $basePattern
+     * @param string $trimmedPattern
      * @param string $transformationType
      *
      * @return string
      */
-    private function transformPattern(string $pattern, string $transformationType)
+    private function transformPattern(string $basePattern, string $trimmedPattern, string $transformationType)
     {
-        $rtlCharacter = $this->rtlPattern ? self::RTL_CHARACTER : '';
+        $rtlCharacter = $this->getRtlCharacter($basePattern);
 
-        switch ($transformationType) {
-            case self::TYPE_LEFT_SYMBOL_WITH_SPACE:
-                return $rtlCharacter . self::CURRENCY_SYMBOL . self::NO_BREAK_SPACE . $pattern;
-            case self::TYPE_LEFT_SYMBOL_WITHOUT_SPACE:
-                return $rtlCharacter . self::CURRENCY_SYMBOL . $pattern;
-            case self::TYPE_RIGHT_SYMBOL_WITH_SPACE:
-                return $rtlCharacter . $pattern . self::NO_BREAK_SPACE . self::CURRENCY_SYMBOL;
-            case self::TYPE_RIGHT_SYMBOL_WITHOUT_SPACE:
-                return $rtlCharacter . $pattern . self::CURRENCY_SYMBOL;
-        }
-    }
-
-    /**
-     * @return string
-     */
-    public function getCurrencyPattern(): string
-    {
-        return $this->currencyPattern;
+        return strtr(
+            self::TRANSFORM_DICTIONARY[$transformationType],
+            [
+                '$rtl' => $rtlCharacter,
+                '$currencySymbol' => self::CURRENCY_SYMBOL,
+                '$nbsp' => self::NO_BREAK_SPACE,
+                '$pattern' => $trimmedPattern,
+            ]
+        );
     }
 
     /**
      * @param string $currencyPattern
      *
-     * @return PatternTransformer
+     * @return string
      */
-    public function setCurrencyPattern(string $currencyPattern): PatternTransformer
+    private function getRtlCharacter(string $currencyPattern): string
     {
-        $this->currencyPattern = $currencyPattern;
-        $this->rtlPattern = preg_match('/' . self::RTL_CHARACTER . '/', $this->currencyPattern);
-
-        $currencyPatterns = explode(';', $this->currencyPattern);
-        $this->trimmedPatterns = [];
-        foreach ($currencyPatterns as $pattern) {
-            $trimmedCharacters = implode('', self::TRIMMED_CHARACTERS);
-            $this->trimmedPatterns[] = trim($pattern, $trimmedCharacters);
-        }
-
-        return $this;
+        return false !== strpos($currencyPattern, self::RTL_CHARACTER) ? self::RTL_CHARACTER : '';
     }
 }

@@ -77,7 +77,6 @@ services:
         class: PrestaShop\PrestaShop\Core\Localization\Currency\DataLayer\CurrencyDatabase
         arguments:
             - '@prestashop.adapter.data_provider.currency'
-            - '@prestashop.core.localization.cldr.locale_repository'
         calls:
             - [ 'setLowerLayer', ["@prestashop.core.localization.currency.middleware.reference"]]
 
