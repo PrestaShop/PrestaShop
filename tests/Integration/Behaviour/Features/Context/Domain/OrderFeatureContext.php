@@ -166,7 +166,6 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
         }
     }
 
-
     /**
      * @Given there is existing order with reference :reference
      */
@@ -208,9 +207,8 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
         if ($reference) {
             $orderId = (int)$reference->id;
             return $orderId;
-        } else {
-            throw new RuntimeException('Order with reference [' . $reference . '] does not exist');
         }
+        throw new RuntimeException('Order with reference [' . $reference . '] does not exist');
     }
 
     /**
@@ -224,9 +222,8 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
             /** @var int $statusId */
             $statusId = $orderStatusMapFlipped[$status];
             return $statusId;
-        } else {
-            throw new RuntimeException('Invalid status ['.$status.']');
         }
+        throw new RuntimeException('Invalid status ['.$status.']');
     }
 
 }
