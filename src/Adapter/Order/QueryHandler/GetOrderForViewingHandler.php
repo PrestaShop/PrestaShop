@@ -338,6 +338,7 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
             $product['quantity_refundable'] = $product['product_quantity'] - $resume['product_quantity'];
             $product['amount_refundable'] = $product['total_price_tax_excl'] - $resume['amount_tax_excl'];
             $product['amount_refundable_tax_incl'] = $product['total_price_tax_incl'] - $resume['amount_tax_incl'];
+            $product['displayed_max_refundable'] = $order->getTaxCalculationMethod() ? $product['amount_refundable'] : $product['amount_refundable_tax_incl'];
             $resumeAmount = $order->getTaxCalculationMethod() ? 'amount_tax_excl' : 'amount_tax_incl';
             $product['amount_refund'] = !is_null($resume[$resumeAmount]) ? $this->locale->formatPrice($resume[$resumeAmount], $currency->iso_code) : null;
             $product['refund_history'] = OrderSlip::getProductSlipDetail($product['id_order_detail']);
@@ -431,7 +432,7 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
                 Tools::ps_round($product['unit_price_tax_incl'], 2),
                 $product['amount_refund'],
                 $product['product_quantity_refunded'],
-                $this->locale->formatPrice($product['amount_refundable'], $currency->iso_code)
+                $this->locale->formatPrice($product['displayed_max_refundable'], $currency->iso_code)
             );
         }
 
