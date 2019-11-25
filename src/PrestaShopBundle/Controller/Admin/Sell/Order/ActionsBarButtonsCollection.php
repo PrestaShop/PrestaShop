@@ -26,10 +26,10 @@
 
 namespace PrestaShopBundle\Controller\Admin\Sell\Order;
 
-class ActionsBarButtonsCollection
+class ActionsBarButtonsCollection implements ActionsBarButtonsCollectionInterface
 {
     /**
-     * @var ActionsBarButton[]
+     * @var ActionsBarButtonInterface[]
      */
     protected $buttons = [];
 
@@ -42,9 +42,9 @@ class ActionsBarButtonsCollection
     }
 
     /**
-     * @param ActionsBarButton $button
+     * @param ActionsBarButtonInterface $button
      */
-    public function addButton(ActionsBarButton $button)
+    public function addButton(ActionsBarButtonInterface $button)
     {
         $this->buttons[] = $button;
     }
