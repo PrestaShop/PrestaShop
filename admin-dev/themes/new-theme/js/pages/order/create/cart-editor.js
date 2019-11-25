@@ -107,12 +107,21 @@ export default class CartEditor {
    * Adds product to cart
    *
    * @param {Number} cartId
-   * @param {FormData} product
+   * @param {Object} data
    */
-  addProduct(cartId, product) {
+  addProduct(cartId, data) {
+    let fileSizeHeader = '';
+    if (!$.isEmptyObject(data.fileSizes)) {
+      fileSizeHeader = JSON.stringify(data.fileSizes);
+    }
+
     $.ajax(this.router.generate('admin_carts_add_product', {cartId}), {
+      headers: {
+        // Adds custom headers with submitted file sizes, to track if all files reached server side.
+        'file-sizes': fileSizeHeader,
+      },
       method: 'POST',
-      data: product,
+      data: data.product,
       processData: false,
       contentType: false,
     }).then(cartInfo => EventEmitter.emit(eventMap.productAddedToCart, cartInfo))
