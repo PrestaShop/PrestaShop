@@ -59,6 +59,7 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderPreview;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderPreview;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\OrderGridDefinitionFactory;
+use PrestaShop\PrestaShop\Core\Multistore\MultistoreContextCheckerInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\OrderFilters;
 use PrestaShopBundle\Component\CsvResponse;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
@@ -179,6 +180,18 @@ class OrderController extends FrameworkBundleAdminController
      */
     public function createAction()
     {
+        /** @var MultistoreContextCheckerInterface $shopContextChecker */
+        $shopContextChecker = $this->container->get('prestashop.adapter.shop.context');
+
+        if (!$shopContextChecker->isSingleShopContext()) {
+            $this->addFlash('error', $this->trans(
+                'You have to select a shop before creating new orders.',
+                'Admin.Orderscustomers.Notification'
+            ));
+
+            return $this->redirectToRoute('admin_orders_index');
+        }
+
         $summaryForm = $this->createForm(CartSummaryType::class);
         $languages = $this->get('prestashop.core.form.choice_provider.language_by_id')->getChoices();
         $currencies = $this->get('prestashop.core.form.choice_provider.currency_by_id')->getChoices();
