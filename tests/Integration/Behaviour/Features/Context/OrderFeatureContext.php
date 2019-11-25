@@ -212,6 +212,7 @@ class OrderFeatureContext extends AbstractPrestaShopFeatureContext
      */
     public function assertOrderProductsQuantity($reference, $quantity)
     {
+        /** @var Order $order */
         $order = SharedStorage::getStorage()->get($reference);
         $orderProducts = $order->getProductsDetail();
 

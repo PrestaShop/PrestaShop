@@ -26,19 +26,16 @@
 
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
-use Exception;
 use Order;
 use OrderState;
-use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\InvalidEmployeeIdException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\AddOrderFromBackOfficeCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\BulkChangeOrderStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\UpdateOrderStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\AddProductToOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
-use PrestaShopDatabaseException;
-use PrestaShopException;
+use PrestaShopCollection;
+use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 use PrestaShop\PrestaShop\Core\Domain\Order\Invoice\Command\GenerateInvoiceCommand;
 use Product;
@@ -46,21 +43,12 @@ use Context;
 
 class OrderFeatureContext extends AbstractDomainFeatureContext
 {
-    const ORDER_STATUS_MAP = [
-        'Awaiting bank wire payment' => 1,
-        'Delivered' => 5,
+    private const ORDER_STATUS_MAP = [
+        1 => 'Awaiting bank wire payment',
+        5 => 'Delivered'
     ];
 
     /**
-     * @param $orderReference
-     * @param $cartReference
-     * @param $paymentModuleName
-     * @param $orderStatus
-     * @throws CartConstraintException
-     * @throws InvalidEmployeeIdException
-     * @throws OrderException
-     * @throws PrestaShopDatabaseException
-     * @throws PrestaShopException
      * @When I add order :orderReference from cart :cartReference with :paymentModuleName payment method and :orderStatus order status
      */
     public function placeOrderWithPaymentMethodAndOrderStatus(
@@ -135,79 +123,101 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Given there are :countOfOrders existing orders
-     * @throws Exception
+     * @When I update orders :references to status :status
+     * @throws OrderException
      */
-    public function thereAreExistingOrders(int $countOfOrders)
+    public function iUpdateOrdersToStatus(string $references, string $status)
     {
-        /** @var array $ordersWithInformations */
-        $ordersWithInformations = Order::getOrdersWithInformations($countOfOrders);
-        $countOfOrdersFromDb = count($ordersWithInformations);
-        if ($countOfOrders !== $countOfOrdersFromDb) {
-            throw new Exception(
-                'There are less orders than expected ['.$countOfOrders.'] actual ['.$countOfOrdersFromDb.']'
+        /** @var string[] $references */
+        $references = explode(',', $references);
+        $ordersIds = [];
+        foreach ($references as $orderReference) {
+            $orderId = $this->getOrderId($orderReference);
+            if ($orderId) {
+                $ordersIds[] = $orderId;
+            }
+        }
+
+        $statusId = $this->getOrderStatusId($status);
+        $this->getCommandBus()->handle(
+            new BulkChangeOrderStatusCommand(
+                $ordersIds, $statusId
+            )
+        );
+    }
+
+
+    /**
+     * @Then order :reference has status :status
+     */
+    public function orderHasStatus(string $reference, string $status)
+    {
+        /** @var PrestaShopCollection|Order[] $orderDetails */
+        $orders = Order::getByReference($reference);
+        /** @var Order $order */
+        $order = $orders->getFirst();
+        /** @var OrderState $currentOrderState */
+        $currentOrderStateId = (int) $order->getCurrentState();
+        $statusId = $this->getOrderStatusId($status);
+        if ($currentOrderStateId !== $statusId) {
+            throw new RuntimeException(
+                'After changing order status id should be ['.$statusId.'] but received ['.$currentOrderStateId.']'
+            );
+        }
+    }
+
+
+    /**
+     * @Given there is existing order with reference :reference
+     */
+    public function thereIsExistingOrderWithReference(string $reference)
+    {
+        /** @var PrestaShopCollection $orders */
+        $orders = Order::getByReference($reference);
+        if ($orders->count() === 0) {
+            throw new RuntimeException(
+                'There is no order with reference ['.$reference.']'
             );
         }
     }
 
     /**
-     * @When I update :countOfOrders orders to status :status
-     * @throws OrderException
+     * @When I update order :reference to status :status
      */
-    public function iUpdateOrdersToStatus(string $status, int $countOfOrders)
+    public function iUpdateOrderToStatus(string $reference, string $status)
     {
-        /** @var array $ordersWithInformations */
-        $ordersWithInformations = Order::getOrdersWithInformations($countOfOrders);
-
-        $orderIds = [];
-        foreach ($ordersWithInformations as $orderWithInformations) {
-            $orderIds[] = (int) $orderWithInformations['id_order'];
-        }
-
-        $statusId = self::ORDER_STATUS_MAP[$status];
-
-        $this->getCommandBus()->handle(
-            new BulkChangeOrderStatusCommand(
-                $orderIds, $statusId
-            )
-        );
-    }
-
-    /**
-     * @Then each of :countOfOrders orders should contain status :status
-     * @param int $countOfOrders
-     * @param string $status
-     * @throws Exception
-     */
-    public function eachOfOrdersShouldContainStatus(int $countOfOrders, string $status)
-    {
-        /** @var array $ordersWithInformations */
-        $ordersWithInformations = Order::getOrdersWithInformations($countOfOrders);
-
-        foreach ($ordersWithInformations as $orderWithInformation) {
-            $currentOrderStateId = $orderWithInformation['current_state'];
-            $currentOrderState = array_search($currentOrderStateId, self::ORDER_STATUS_MAP);
-            if ($currentOrderState !== $status) {
-                throw new Exception(
-                    'After changing order status id should be ['.$status.'] but received ['.$currentOrderState.']'
-                );
-            }
-        }
-    }
-
-    /**
-     * @When I update order :orderId to status :status
-     */
-    public function iUpdateOrderToStatus(int $orderId, string $status)
-    {
-        $statusId = self::ORDER_STATUS_MAP[$status];
-
+        $statusId = $this->getOrderStatusId($status);
+        $orderId = $this->getOrderId($reference);
         $this->getCommandBus()->handle(
             new UpdateOrderStatusCommand(
                 $orderId,
                 $statusId
             )
         );
+    }
+
+    /**
+     * @param string $reference
+     * @return bool|int
+     */
+    private function getOrderId(string $reference)
+    {
+        /** @var PrestaShopCollection $ordersCollection */
+        $ordersCollection = Order::getByReference($reference);
+        $reference = $ordersCollection->getFirst();
+        $orderId = $reference ? (int) $reference->id : false;
+        return $orderId;
+    }
+
+    /**
+     * @param string $status
+     * @return mixed
+     */
+    private function getOrderStatusId(string $status)
+    {
+        $orderStatusMapFlipped = array_flip(self::ORDER_STATUS_MAP);
+        $statusId = $orderStatusMapFlipped[$status];
+        return $statusId;
     }
 
 }
