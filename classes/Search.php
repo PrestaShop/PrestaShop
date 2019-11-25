@@ -103,11 +103,13 @@ class SearchCore
     public static $targetLengthMax;
 
     const PS_SEARCH_MAX_WORDS_IN_TABLE = 100000; /* Max numer of words in ps_search_word, above which $coefs for target length will be everytime equal to 1 */
+    const PS_DEFAULT_SEARCH_MAX_WORD_LENGTH = 30; /* default max word length, for when we are not in fuzzy search mode */
     const PS_SEARCH_ORDINATE_MIN = 0.5;
     const PS_SEARCH_ORDINATE_MAX = -1;
     const PS_SEARCH_ABSCISSA_MIN = 0.5;
     const PS_SEARCH_ABSCISSA_MAX = 2;
     const PS_DISTANCE_MAX = 8;
+
 
     public static function extractKeyWords($string, $id_lang, $indexation = false, $iso_code = false)
     {
@@ -645,13 +647,11 @@ class SearchCore
      */
     protected static function fillProductArray(&$product_array, $weight_array, $key, $value, $id_lang, $iso_code)
     {
-        $psSearchMawWordLenth = (int) Configuration::get('PS_SEARCH_MAX_WORD_LENGTH');
-
         if (strncmp($key, 'id_', 3) && isset($weight_array[$key])) {
             $words = Search::extractKeyWords($value, (int) $id_lang, true, $iso_code);
             foreach ($words as $word) {
                 if (!empty($word)) {
-                    $word = Tools::substr($word, 0, $psSearchMawWordLenth);
+                    $word = Tools::substr($word, 0, self::getMaximumWordLength());
 
                     if (!isset($product_array[$word])) {
                         $product_array[$word] = 0;
@@ -977,7 +977,7 @@ class SearchCore
         $word = str_replace(array('%', '_'), array('\\%', '\\_'), $word);
         $start_search = Configuration::get('PS_SEARCH_START') ? '%' : '';
         $end_search = Configuration::get('PS_SEARCH_END') ? '' : '%';
-        $psSearchMawWordLenth = Configuration::get('PS_SEARCH_MAX_WORD_LENGTH');
+        $psSearchMawWordLenth = self::getMaximumWordLength();
         $start_pos = (int) ($word[0] == '-');
 
         return $start_search . pSQL(Tools::substr($word, $start_pos, $psSearchMawWordLenth)) . $end_search;
@@ -1072,5 +1072,20 @@ class SearchCore
         }, array('word' => 'initial', 'weight' => 0, 'levenshtein' => 100));
 
         return $closestWord['levenshtein'] < static::PS_DISTANCE_MAX ? $closestWord['word'] : '';
+    }
+
+    /**
+     * Get the maximum word length value from configuration or default value
+     * depending on the activation of the fuzzy search mechanism
+     *
+     * @return int|string
+     */
+    public static function getMaximumWordLength()
+    {
+        if (Configuration::get('PS_SEARCH_FUZZY')) {
+            return Configuration::get('PS_SEARCH_MAX_WORD_LENGTH');
+        }
+
+        return self::PS_DEFAULT_SEARCH_MAX_WORD_LENGTH;
     }
 }
