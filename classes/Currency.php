@@ -446,6 +446,8 @@ class CurrencyCore extends ObjectModel
     }
 
     /**
+     * Names indexed by language id
+     *
      * @return string[]
      */
     public function getLocalizedNames()
@@ -470,6 +472,8 @@ class CurrencyCore extends ObjectModel
     }
 
     /**
+     * Symbols indexed by language id
+     *
      * @return string[]
      */
     public function getLocalizedSymbols()
@@ -502,6 +506,8 @@ class CurrencyCore extends ObjectModel
     }
 
     /**
+     * Patterns indexed by language id
+     *
      * @return string[]
      */
     public function getLocalizedPatterns()
@@ -1051,7 +1057,7 @@ class CurrencyCore extends ObjectModel
             $namesByLang[$language->id] = $name;
         }
 
-        $this->localizedNames = $this->name = $namesByLang;
-        $this->localizedSymbols = $this->symbol = $symbolsByLang;
+        $this->setLocalizedNames($namesByLang);
+        $this->setLocalizedSymbols($symbolsByLang);
     }
 }

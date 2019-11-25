@@ -29,7 +29,6 @@ namespace LegacyTests\Unit\Core\Localization\DataLayer;
 use Currency;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\Currency\CurrencyDataProvider;
-use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleRepository as CldrLocaleRepository;
 use PrestaShop\PrestaShop\Core\Localization\Currency\CurrencyData;
 use PrestaShop\PrestaShop\Core\Localization\Currency\LocalizedCurrencyId;
 use PrestaShop\PrestaShop\Core\Localization\Currency\DataLayer\CurrencyDatabase as CurrencyDatabaseDataLayer;
@@ -56,11 +55,6 @@ class CurrencyDatabaseTest extends TestCase
      */
     protected $fakeDataProvider;
 
-    /**
-     * @var CldrLocaleRepository
-     */
-    protected $cldrLocaleRepository;
-
     protected function setUp()
     {
         $this->fakeFrEuro                   = $this->createMock(Currency::class);
@@ -79,9 +73,8 @@ class CurrencyDatabaseTest extends TestCase
             ->willReturnMap([
                 ['FOO', 'fr-FR', $this->createMock(Currency::class)],
             ]);
-        $this->cldrLocaleRepository = $this->createMock(CldrLocaleRepository::class);
 
-        $this->layer = new CurrencyDatabaseDataLayer($this->fakeDataProvider, $this->cldrLocaleRepository);
+        $this->layer = new CurrencyDatabaseDataLayer($this->fakeDataProvider);
     }
 
     /**
@@ -130,7 +123,7 @@ class CurrencyDatabaseTest extends TestCase
             ->method('saveCurrency')
             ->with($this->isInstanceOf(Currency::class));
 
-        $writableLayer = new CurrencyDatabaseDataLayer($this->fakeDataProvider, $this->cldrLocaleRepository);
+        $writableLayer = new CurrencyDatabaseDataLayer($this->fakeDataProvider);
         $writableLayer->write(
             new LocalizedCurrencyId('FOO', 'fr-FR'),
             $someCurrencyData

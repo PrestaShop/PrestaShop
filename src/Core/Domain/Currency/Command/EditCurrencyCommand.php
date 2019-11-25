@@ -238,6 +238,8 @@ class EditCurrencyCommand
     }
 
     /**
+     * Returns the currency's localized patterns, indexed by language id
+     *
      * @return string[]
      */
     public function getLocalizedPatterns(): array

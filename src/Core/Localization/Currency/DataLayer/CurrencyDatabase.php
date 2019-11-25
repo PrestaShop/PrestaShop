@@ -31,7 +31,6 @@ use Language;
 use PrestaShop\PrestaShop\Core\Currency\CurrencyDataProviderInterface;
 use PrestaShop\PrestaShop\Core\Data\Layer\AbstractDataLayer;
 use PrestaShop\PrestaShop\Core\Data\Layer\DataLayerException;
-use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleRepository as CldrLocaleRepository;
 use PrestaShop\PrestaShop\Core\Localization\Currency\CurrencyData;
 use PrestaShop\PrestaShop\Core\Localization\Currency\LocalizedCurrencyId;
 use PrestaShop\PrestaShop\Core\Localization\Currency\CurrencyDataLayerInterface;
@@ -45,30 +44,24 @@ use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 class CurrencyDatabase extends AbstractDataLayer implements CurrencyDataLayerInterface
 {
     /**
-     * CLDR locale repository.
-     *
-     * Provides LocaleData objects
-     *
-     * @var CldrLocaleRepository
-     */
-    protected $cldrLocaleRepository;
-
-    /**
      * @var CurrencyDataProviderInterface
      */
     protected $dataProvider;
 
     /**
+     * This layer must be ready only, displaying a price should not change the database data
+     *
+     * @var bool
+     */
+    protected $isWritable = false;
+
+    /**
      * @param CurrencyDataProviderInterface $dataProvider
-     * @param CldrLocaleRepository $cldrLocaleRepository
      */
     public function __construct(
-        CurrencyDataProviderInterface $dataProvider,
-        CldrLocaleRepository $cldrLocaleRepository
+        CurrencyDataProviderInterface $dataProvider
     ) {
         $this->dataProvider = $dataProvider;
-        $this->cldrLocaleRepository = $cldrLocaleRepository;
-        $this->isWritable = false;
     }
 
     /**

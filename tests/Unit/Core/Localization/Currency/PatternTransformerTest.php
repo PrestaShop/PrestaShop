@@ -34,14 +34,14 @@ class PatternTransformerTest extends TestCase
     /**
      * @dataProvider getPatterns
      *
-     * @param string $pattern
+     * @param string $basePattern
      * @param array $transformations
      */
-    public function testTransform(string $pattern, array $transformations)
+    public function testTransform(string $basePattern, array $transformations)
     {
-        $transformer = new PatternTransformer($pattern);
+        $transformer = new PatternTransformer();
         foreach ($transformations as $transformationType => $expectedPattern) {
-            $this->assertEquals($expectedPattern, $transformer->transform($transformationType), 'Invalid transformation ' . $transformationType);
+            $this->assertEquals($expectedPattern, $transformer->transform($basePattern, $transformationType), 'Invalid transformation ' . $transformationType);
         }
     }
 

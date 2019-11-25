@@ -65,7 +65,7 @@ class Repository implements CurrencyRepositoryInterface
                 new LocalizedCurrencyId($currencyCode, $localeCode)
             );
 
-            $this->currencies[$currencyCode] = $this->formatCurrency($data);
+            $this->currencies[$currencyCode] = $this->createCurrencyFromData($data);
         }
 
         return $this->currencies[$currencyCode];
@@ -76,7 +76,7 @@ class Repository implements CurrencyRepositoryInterface
      */
     public function getAvailableCurrencies($localeCode)
     {
-        return $this->formatCurrencies($this->dataSource->getAvailableCurrenciesData($localeCode));
+        return $this->createCurrenciesFromData($this->dataSource->getAvailableCurrenciesData($localeCode));
     }
 
     /**
@@ -84,7 +84,7 @@ class Repository implements CurrencyRepositoryInterface
      */
     public function getAllInstalledCurrencies($localeCode)
     {
-        return $this->formatCurrencies($this->dataSource->getAllInstalledCurrenciesData($localeCode));
+        return $this->createCurrenciesFromData($this->dataSource->getAllInstalledCurrenciesData($localeCode));
     }
 
     /**
@@ -92,12 +92,12 @@ class Repository implements CurrencyRepositoryInterface
      *
      * @return CurrencyCollection
      */
-    private function formatCurrencies(array $currenciesData)
+    private function createCurrenciesFromData(array $currenciesData)
     {
         $currencies = new CurrencyCollection();
         /** @var CurrencyData $currencyDatum */
         foreach ($currenciesData as $currencyDatum) {
-            $currencies->add($this->formatCurrency($currencyDatum));
+            $currencies->add($this->createCurrencyFromData($currencyDatum));
         }
 
         return $currencies;
@@ -108,7 +108,7 @@ class Repository implements CurrencyRepositoryInterface
      *
      * @return Currency
      */
-    private function formatCurrency(CurrencyData $currencyData)
+    private function createCurrencyFromData(CurrencyData $currencyData)
     {
         return new Currency(
             $currencyData->isActive(),
