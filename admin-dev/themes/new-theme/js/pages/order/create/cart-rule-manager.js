@@ -31,6 +31,7 @@ import eventMap from './event-map';
 import Router from '../../../components/router';
 import SummaryRenderer from './summary-renderer';
 import ShippingRenderer from './shipping-renderer';
+import CreateOrderPage from "./create-order-page";
 
 const $ = window.$;
 
