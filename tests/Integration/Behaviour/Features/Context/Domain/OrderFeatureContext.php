@@ -26,19 +26,41 @@
 
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
-use Context;
+use Exception;
 use Order;
 use OrderState;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\InvalidEmployeeIdException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\AddOrderFromBackOfficeCommand;
+use PrestaShop\PrestaShop\Core\Domain\Order\Command\BulkChangeOrderStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\Order\Command\UpdateOrderStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\AddProductToOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
+use PrestaShopDatabaseException;
+use PrestaShopException;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 use PrestaShop\PrestaShop\Core\Domain\Order\Invoice\Command\GenerateInvoiceCommand;
 use Product;
+use Context;
 
 class OrderFeatureContext extends AbstractDomainFeatureContext
 {
+    const ORDER_STATUS_MAP = [
+        'Awaiting bank wire payment' => 1,
+        'Delivered' => 5,
+    ];
+
     /**
+     * @param $orderReference
+     * @param $cartReference
+     * @param $paymentModuleName
+     * @param $orderStatus
+     * @throws CartConstraintException
+     * @throws InvalidEmployeeIdException
+     * @throws OrderException
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
      * @When I add order :orderReference from cart :cartReference with :paymentModuleName payment method and :orderStatus order status
      */
     public function placeOrderWithPaymentMethodAndOrderStatus(
@@ -111,4 +133,81 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
             new GenerateInvoiceCommand((int) $order->id)
         );
     }
+
+    /**
+     * @Given there are :countOfOrders existing orders
+     * @throws Exception
+     */
+    public function thereAreExistingOrders(int $countOfOrders)
+    {
+        /** @var array $ordersWithInformations */
+        $ordersWithInformations = Order::getOrdersWithInformations($countOfOrders);
+        $countOfOrdersFromDb = count($ordersWithInformations);
+        if ($countOfOrders !== $countOfOrdersFromDb) {
+            throw new Exception(
+                'There are less orders than expected ['.$countOfOrders.'] actual ['.$countOfOrdersFromDb.']'
+            );
+        }
+    }
+
+    /**
+     * @When I update :countOfOrders orders to status :status
+     * @throws OrderException
+     */
+    public function iUpdateOrdersToStatus(string $status, int $countOfOrders)
+    {
+        /** @var array $ordersWithInformations */
+        $ordersWithInformations = Order::getOrdersWithInformations($countOfOrders);
+
+        $orderIds = [];
+        foreach ($ordersWithInformations as $orderWithInformations) {
+            $orderIds[] = (int) $orderWithInformations['id_order'];
+        }
+
+        $statusId = self::ORDER_STATUS_MAP[$status];
+
+        $this->getCommandBus()->handle(
+            new BulkChangeOrderStatusCommand(
+                $orderIds, $statusId
+            )
+        );
+    }
+
+    /**
+     * @Then each of :countOfOrders orders should contain status :status
+     * @param int $countOfOrders
+     * @param string $status
+     * @throws Exception
+     */
+    public function eachOfOrdersShouldContainStatus(int $countOfOrders, string $status)
+    {
+        /** @var array $ordersWithInformations */
+        $ordersWithInformations = Order::getOrdersWithInformations($countOfOrders);
+
+        foreach ($ordersWithInformations as $orderWithInformation) {
+            $currentOrderStateId = $orderWithInformation['current_state'];
+            $currentOrderState = array_search($currentOrderStateId, self::ORDER_STATUS_MAP);
+            if ($currentOrderState !== $status) {
+                throw new Exception(
+                    'After changing order status id should be ['.$status.'] but received ['.$currentOrderState.']'
+                );
+            }
+        }
+    }
+
+    /**
+     * @When I update order :orderId to status :status
+     */
+    public function iUpdateOrderToStatus(int $orderId, string $status)
+    {
+        $statusId = self::ORDER_STATUS_MAP[$status];
+
+        $this->getCommandBus()->handle(
+            new UpdateOrderStatusCommand(
+                $orderId,
+                $statusId
+            )
+        );
+    }
+
 }

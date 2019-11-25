@@ -26,12 +26,16 @@
 
 namespace Tests\Integration\Behaviour\Features\Context;
 
+use AppKernel;
 use Configuration;
 use Exception;
 use LegacyTests\Unit\Core\Cart\CartToOrder\PaymentModuleFake;
 use Order;
 use OrderCartRule;
+use PrestaShopExceptionCore;
 use Product;
+use RuntimeException;
+use Shop;
 
 class OrderFeatureContext extends AbstractPrestaShopFeatureContext
 {
@@ -41,6 +45,19 @@ class OrderFeatureContext extends AbstractPrestaShopFeatureContext
      * @var Order[]
      */
     protected $orders = [];
+
+
+    /**
+     * @BeforeScenario
+     * @throws PrestaShopExceptionCore
+     */
+    public function before()
+    {
+        $defaultShopId = Configuration::get('PS_SHOP_DEFAULT');
+        Shop::setContext(Shop::CONTEXT_SHOP, $defaultShopId);
+        // needed because if no controller defined then CONTEXT_ALL is selected and exception is thrown
+        \Context::getContext()->controller = 'test';
+    }
 
     /**
      * @When /^I validate my cart using payment module (fake)$/
@@ -58,7 +75,7 @@ class OrderFeatureContext extends AbstractPrestaShopFeatureContext
         // need to boot kernel for usage in $paymentModule->validateOrder()
         global $kernel;
         $previousKernel = $kernel;
-        $kernel = new \AppKernel('test', true);
+        $kernel = new AppKernel('test', true);
         $kernel->boot();
 
         // need to update secret_key in order to get payment working
@@ -91,7 +108,7 @@ class OrderFeatureContext extends AbstractPrestaShopFeatureContext
         $withTaxes = $taxes == ' tax excluded' ? false : true;
         $total = $withTaxes ? $order->total_products_wt : $order->total_products;
         if ((float) $expectedTotal != (float) $total) {
-            throw new \RuntimeException(
+            throw new RuntimeException(
                 sprintf(
                     'Expects %s, got %s instead',
                     $expectedTotal,
@@ -110,7 +127,7 @@ class OrderFeatureContext extends AbstractPrestaShopFeatureContext
         $withTaxes = $taxes == ' tax excluded' ? false : true;
         $total = $withTaxes ? $order->total_discounts_tax_incl : $order->total_discounts_tax_excl;
         if ((float) $expectedTotal != (float) $total) {
-            throw new \RuntimeException(
+            throw new RuntimeException(
                 sprintf(
                     'Expects %s, got %s instead',
                     $expectedTotal,
@@ -129,7 +146,7 @@ class OrderFeatureContext extends AbstractPrestaShopFeatureContext
         $withTaxes = $taxes == ' tax excluded' ? false : true;
         $total = $withTaxes ? $order->total_shipping_tax_incl : $order->total_shipping_tax_excl;
         if ((float) $expectedTotal != (float) $total) {
-            throw new \RuntimeException(
+            throw new RuntimeException(
                 sprintf(
                     'Expects %s, got %s instead',
                     $expectedTotal,
@@ -147,7 +164,7 @@ class OrderFeatureContext extends AbstractPrestaShopFeatureContext
         $order = $this->getCurrentCartOrder();
         $count = count($order->getCartRules());
         if ($expectedCount != $count) {
-            throw new \RuntimeException(
+            throw new RuntimeException(
                 sprintf(
                     'Expects %s, got %s instead',
                     $expectedCount,
@@ -171,7 +188,7 @@ class OrderFeatureContext extends AbstractPrestaShopFeatureContext
         }
         $orderCartRule = new OrderCartRule($orderCartRulesData[$position - 1]['id_order_cart_rule']);
         if ((float) $discountTaxIncluded != (float) $orderCartRule->value) {
-            throw new \RuntimeException(
+            throw new RuntimeException(
                 sprintf(
                     'Expects %s, got %s instead',
                     $discountTaxIncluded,
@@ -180,7 +197,7 @@ class OrderFeatureContext extends AbstractPrestaShopFeatureContext
             );
         }
         if ((float) $discountTaxExcluded != (float) $orderCartRule->value_tax_excl) {
-            throw new \RuntimeException(
+            throw new RuntimeException(
                 sprintf(
                     'Expects %s, got %s instead',
                     $discountTaxExcluded,
@@ -221,7 +238,7 @@ class OrderFeatureContext extends AbstractPrestaShopFeatureContext
         $orders = Order::getByReference($orderReference);
 
         if (0 === $orders->count()) {
-            throw new \Exception(sprintf('Order with reference "%s" does not exist.', $orderReference));
+            throw new Exception(sprintf('Order with reference "%s" does not exist.', $orderReference));
         }
     }
 
@@ -269,7 +286,7 @@ class OrderFeatureContext extends AbstractPrestaShopFeatureContext
         $productId = Product::getIdByReference($productReference);
 
         if ($order->orderContainProduct($productId)) {
-            throw new \RuntimeException(
+            throw new RuntimeException(
                 sprintf(
                     'Order with reference "%s" contains product with reference "%s".',
                     $orderReference,
@@ -291,7 +308,7 @@ class OrderFeatureContext extends AbstractPrestaShopFeatureContext
         $productId = (int) Product::getIdByReference($productReference);
 
         if (!$order->orderContainProduct($productId)) {
-            throw new \RuntimeException(
+            throw new RuntimeException(
                 sprintf(
                     'Order with reference "%s" does not contain product with reference "%s".',
                     $orderReference,
@@ -310,7 +327,7 @@ class OrderFeatureContext extends AbstractPrestaShopFeatureContext
             }
         }
 
-        throw new \RuntimeException(
+        throw new RuntimeException(
             sprintf('Order was expected to have "%d" products "%s" in it.', $quantity, $productReference)
         );
     }
@@ -325,7 +342,7 @@ class OrderFeatureContext extends AbstractPrestaShopFeatureContext
         $order = $orders->getFirst();
 
         if ($order->hasInvoice()) {
-            throw new \RuntimeException('Order should not have any invoices');
+            throw new RuntimeException('Order should not have any invoices');
         }
     }
 
@@ -339,7 +356,7 @@ class OrderFeatureContext extends AbstractPrestaShopFeatureContext
         $order = $orders->getFirst();
 
         if (false === $order->hasInvoice()) {
-            throw new \RuntimeException(sprintf('Order "%s" should have invoice', $orderReference));
+            throw new RuntimeException(sprintf('Order "%s" should have invoice', $orderReference));
         }
     }
 
