@@ -45,7 +45,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
 {
     private const ORDER_STATUS_MAP = [
         1 => 'Awaiting bank wire payment',
-        5 => 'Delivered'
+        5 => 'Delivered',
     ];
 
     /**
@@ -124,6 +124,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
 
     /**
      * @When I update orders :references to status :status
+     *
      * @throws OrderException
      */
     public function iUpdateOrdersToStatus(string $references, string $status)
@@ -146,7 +147,6 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
         );
     }
 
-
     /**
      * @Then order :reference has status :status
      */
@@ -161,7 +161,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
         $statusId = $this->getOrderStatusId($status);
         if ($currentOrderStateId !== $statusId) {
             throw new RuntimeException(
-                'After changing order status id should be ['.$statusId.'] but received ['.$currentOrderStateId.']'
+                'After changing order status id should be [' . $statusId . '] but received [' . $currentOrderStateId . ']'
             );
         }
     }
@@ -175,7 +175,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
         $orders = Order::getByReference($reference);
         if ($orders->count() === 0) {
             throw new RuntimeException(
-                'There is no order with reference ['.$reference.']'
+                'There is no order with reference [' . $reference . ']'
             );
         }
     }
@@ -197,6 +197,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
 
     /**
      * @param string $reference
+     *
      * @return int
      */
     private function getOrderId(string $reference)
@@ -205,7 +206,8 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
         $ordersCollection = Order::getByReference($reference);
         $reference = $ordersCollection->getFirst();
         if ($reference) {
-            $orderId = (int)$reference->id;
+            $orderId = (int) $reference->id;
+
             return $orderId;
         }
         throw new RuntimeException('Order with reference [' . $reference . '] does not exist');
@@ -213,6 +215,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
 
     /**
      * @param string $status
+     *
      * @return int
      */
     private function getOrderStatusId(string $status)
@@ -221,9 +224,9 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
         if (isset($orderStatusMapFlipped[$status])) {
             /** @var int $statusId */
             $statusId = $orderStatusMapFlipped[$status];
+
             return $statusId;
         }
-        throw new RuntimeException('Invalid status ['.$status.']');
+        throw new RuntimeException('Invalid status [' . $status . ']');
     }
-
 }
