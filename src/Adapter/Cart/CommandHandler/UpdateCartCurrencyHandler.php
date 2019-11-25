@@ -111,7 +111,7 @@ final class UpdateCartCurrencyHandler extends AbstractCartHandler implements Upd
      */
     private function assertCurrencyIsNotDeleted(Currency $currency): void
     {
-        if (!$currency->deleted) {
+        if ($currency->deleted) {
             throw new CurrencyException(
                 sprintf(
                     'Currency "%s" cannot be used in cart because it is deleted',
