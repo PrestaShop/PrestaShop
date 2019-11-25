@@ -26,6 +26,7 @@ import 'expose-loader?Tether!tether';
 import 'bootstrap/dist/js/bootstrap.min';
 import 'flexibility';
 import 'bootstrap-touchspin';
+import 'jquery-touchswipe';
 
 import './responsive';
 import './checkout';
@@ -47,6 +48,7 @@ import './lib/bootstrap-filestyle.min';
 import './lib/jquery.scrollbox.min';
 
 import './components/block-cart';
+import $ from "jquery";
 
 // "inherit" EventEmitter
 for (var i in EventEmitter.prototype) {
@@ -66,4 +68,16 @@ $(document).ready(() => {
   topMenu.init();
   productMinitature.init();
   productSelect.init();
+
+  $('.carousel[data-touch="true"]').swipe({
+    swipe(event, direction, distance, duration, fingerCount, fingerData) {
+      if (direction == 'left') {
+        $(this).carousel('next');
+      }
+      if (direction == 'right') {
+        $(this).carousel('prev');
+      }
+    },
+    allowPageScroll: 'vertical',
+  });
 });
