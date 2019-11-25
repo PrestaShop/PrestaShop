@@ -127,8 +127,8 @@ final class EditUnofficialCurrencyHandler extends AbstractCurrencyHandler implem
         if (!empty($command->getLocalizedSymbols())) {
             $entity->setLocalizedSymbols($command->getLocalizedSymbols());
         }
-        if (!empty($command->getLocalizedPatterns())) {
-            $entity->setLocalizedPatterns($command->getLocalizedPatterns());
+        if (!empty($command->getLocalizedTransformations())) {
+            $this->applyPatternTransformations($entity, $command->getLocalizedTransformations());
         }
 
         $this->refreshLocalizedData($entity);

@@ -75,7 +75,7 @@ class EditCurrencyCommand
     /**
      * @var string[]
      */
-    protected $localizedPatterns = [];
+    protected $localizedTransformations = [];
 
     /**
      * @param int $currencyId
@@ -238,23 +238,23 @@ class EditCurrencyCommand
     }
 
     /**
-     * Returns the currency's localized patterns, indexed by language id
+     * Returns the currency's localized transformations, indexed by language id
      *
      * @return string[]
      */
-    public function getLocalizedPatterns(): array
+    public function getLocalizedTransformations(): array
     {
-        return $this->localizedPatterns;
+        return $this->localizedTransformations;
     }
 
     /**
-     * @param string[] $localizedPatterns currency's localized patterns, indexed by language id
+     * @param string[] $localizedTransformations currency's localized transformations, indexed by language id
      *
      * @return $this
      */
-    public function setLocalizedPatterns(array $localizedPatterns): EditCurrencyCommand
+    public function setLocalizedTransformations(array $localizedTransformations): EditCurrencyCommand
     {
-        $this->localizedPatterns = $localizedPatterns;
+        $this->localizedTransformations = $localizedTransformations;
 
         return $this;
     }
