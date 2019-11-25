@@ -33,7 +33,6 @@ use PrestaShop\PrestaShop\Core\Domain\Cart\CommandHandler\AddCustomizationFields
 use PrestaShop\PrestaShop\Core\Domain\Cart\CommandHandler\AddProductToCartHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Cart\CommandHandler\UpdateProductQuantityInCartHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\QuantityAction;
 
 /**
  * Handles add product to cart command
@@ -86,7 +85,6 @@ final class AddProductToCartHandler implements AddProductToCartHandlerInterface
             $cartIdValue,
             $productIdValue,
             $quantity,
-            QuantityAction::INCREASE_PRODUCT_QUANTITY,
             $combinationId ? $combinationId->getValue() : null,
             isset($customizationId) ? $customizationId->getValue() : null
         ));

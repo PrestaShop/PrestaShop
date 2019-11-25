@@ -171,5 +171,6 @@ export default class SummaryRenderer {
     this.$totalWithTax.empty();
     this.$processOrderLink.prop('href', '');
     this.$orderMessageField.text('');
+    this.cleanAlerts();
   }
 }

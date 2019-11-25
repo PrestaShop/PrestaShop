@@ -38,9 +38,9 @@ use PrestaShop\PrestaShop\Core\Domain\Cart\Command\SetFreeShippingToCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartAddressesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateProductQuantityInCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\CartId;
-use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\QuantityAction;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProducts;
 use RuntimeException;
+use Product;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 
 class CartFeatureContext extends AbstractDomainFeatureContext
@@ -104,8 +104,7 @@ class CartFeatureContext extends AbstractDomainFeatureContext
             new UpdateProductQuantityInCartCommand(
                 SharedStorage::getStorage()->get($cartReference),
                 $productId,
-                (int) $quantity,
-                QuantityAction::INCREASE_PRODUCT_QUANTITY
+                (int) $quantity
             )
         );
 

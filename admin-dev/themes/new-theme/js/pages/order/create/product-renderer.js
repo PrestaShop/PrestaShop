@@ -282,10 +282,8 @@ export default class ProductRenderer {
 
   /**
    * Cleans cart block alerts content and hides them
-   *
-   * @param message
    */
-  cleanCartBlockAlerts(message) {
+  cleanCartBlockAlerts() {
     $(createOrderMap.cartErrorAlertText).text('');
     this._hideCartBlockError();
   }
