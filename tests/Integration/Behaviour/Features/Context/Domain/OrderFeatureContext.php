@@ -198,26 +198,35 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
 
     /**
      * @param string $reference
-     * @return bool|int
+     * @return int
      */
     private function getOrderId(string $reference)
     {
         /** @var PrestaShopCollection $ordersCollection */
         $ordersCollection = Order::getByReference($reference);
         $reference = $ordersCollection->getFirst();
-        $orderId = $reference ? (int) $reference->id : false;
-        return $orderId;
+        if ($reference) {
+            $orderId = (int)$reference->id;
+            return $orderId;
+        } else {
+            throw new RuntimeException('Order with reference [' . $reference . '] does not exist');
+        }
     }
 
     /**
      * @param string $status
-     * @return mixed
+     * @return int
      */
     private function getOrderStatusId(string $status)
     {
         $orderStatusMapFlipped = array_flip(self::ORDER_STATUS_MAP);
-        $statusId = $orderStatusMapFlipped[$status];
-        return $statusId;
+        if (isset($orderStatusMapFlipped[$status])) {
+            /** @var int $statusId */
+            $statusId = $orderStatusMapFlipped[$status];
+            return $statusId;
+        } else {
+            throw new RuntimeException('Invalid status ['.$status.']');
+        }
     }
 
 }
