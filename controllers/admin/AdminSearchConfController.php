@@ -239,6 +239,7 @@ class AdminSearchConfControllerCore extends AdminController
                         'validation' => 'isUnsignedInt',
                         'type' => 'text',
                         'cast' => 'intval',
+                        'required' => true,
                     ),
                     'PS_SEARCH_MINWORDLEN' => array(
                         'title' => $this->trans(
