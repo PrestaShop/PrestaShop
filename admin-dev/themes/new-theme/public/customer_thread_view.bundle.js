@@ -1,10 +1,18 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 window.customer_thread_view=function(e){function r(t){if(o[t])return o[t].exports;var n=o[t]={i:t,l:!1,exports:{}};return e[t].call(n.exports,n,n.exports,r),n.l=!0,n.exports}var o={};return r.m=e,r.c=o,r.i=function(e){return e},r.d=function(e,o,t){r.o(e,o)||Object.defineProperty(e,o,{configurable:!1,enumerable:!0,get:t})},r.n=function(e){var o=e&&e.__esModule?function(){return e.default}:function(){return e};return r.d(o,"a",o),o},r.o=function(e,r){return Object.prototype.hasOwnProperty.call(e,r)},r.p="",r(r.s=353)}({272:function(e,r,o){"use strict";Object.defineProperty(r,"__esModule",{value:!0}),/**
 =======
+=======
+>>>>>>> Rebuilds assets
 <<<<<<< HEAD
 window.customer_thread_view=function(e){function r(t){if(o[t])return o[t].exports;var n=o[t]={i:t,l:!1,exports:{}};return e[t].call(n.exports,n,n.exports,r),n.l=!0,n.exports}var o={};return r.m=e,r.c=o,r.i=function(e){return e},r.d=function(e,o,t){r.o(e,o)||Object.defineProperty(e,o,{configurable:!1,enumerable:!0,get:t})},r.n=function(e){var o=e&&e.__esModule?function(){return e.default}:function(){return e};return r.d(o,"a",o),o},r.o=function(e,r){return Object.prototype.hasOwnProperty.call(e,r)},r.p="",r(r.s=348)}({268:function(e,r,o){"use strict";Object.defineProperty(r,"__esModule",{value:!0}),/**
 =======
 window.customer_thread_view=function(e){function r(t){if(o[t])return o[t].exports;var n=o[t]={i:t,l:!1,exports:{}};return e[t].call(n.exports,n,n.exports,r),n.l=!0,n.exports}var o={};return r.m=e,r.c=o,r.i=function(e){return e},r.d=function(e,o,t){r.o(e,o)||Object.defineProperty(e,o,{configurable:!1,enumerable:!0,get:t})},r.n=function(e){var o=e&&e.__esModule?function(){return e.default}:function(){return e};return r.d(o,"a",o),o},r.o=function(e,r){return Object.prototype.hasOwnProperty.call(e,r)},r.p="",r(r.s=349)}({269:function(e,r,o){"use strict";Object.defineProperty(r,"__esModule",{value:!0}),/**
+>>>>>>> Rebuilds assets
+<<<<<<< HEAD
+=======
+=======
+window.customer_thread_view=function(e){function r(t){if(o[t])return o[t].exports;var n=o[t]={i:t,l:!1,exports:{}};return e[t].call(n.exports,n,n.exports,r),n.l=!0,n.exports}var o={};return r.m=e,r.c=o,r.i=function(e){return e},r.d=function(e,o,t){r.o(e,o)||Object.defineProperty(e,o,{configurable:!1,enumerable:!0,get:t})},r.n=function(e){var o=e&&e.__esModule?function(){return e.default}:function(){return e};return r.d(o,"a",o),o},r.o=function(e,r){return Object.prototype.hasOwnProperty.call(e,r)},r.p="",r(r.s=349)}({270:function(e,r,o){"use strict";Object.defineProperty(r,"__esModule",{value:!0}),/**
 >>>>>>> Rebuilds assets
 >>>>>>> Rebuilds assets
  * 2007-2019 PrestaShop SA and Contributors
@@ -31,12 +39,20 @@ window.customer_thread_view=function(e){function r(t){if(o[t])return o[t].export
  * International Registered Trademark & Property of PrestaShop SA
  */
 <<<<<<< HEAD
+<<<<<<< HEAD
 r.default={forwardCustomerThreadModal:"#forwardThreadModal",forwardSomeoneElseEmailInput:"#forward_customer_thread_someone_else_email",forwardEmployeeInput:"#forward_customer_thread_employee_id"}},353:function(e,r,o){"use strict";var t=o(272),n=function(e){return e&&e.__esModule?e:{default:e}}(t),u=window.$;/**
 =======
+=======
+>>>>>>> Rebuilds assets
 <<<<<<< HEAD
 r.default={forwardCustomerThreadModal:"#forwardThreadModal",forwardSomeoneElseEmailInput:"#forward_customer_thread_someone_else_email",forwardEmployeeInput:"#forward_customer_thread_employee_id"}},348:function(e,r,o){"use strict";var t=o(268),n=function(e){return e&&e.__esModule?e:{default:e}}(t),u=window.$;/**
 =======
 r.default={forwardCustomerThreadModal:"#forwardThreadModal",forwardSomeoneElseEmailInput:"#forward_customer_thread_someone_else_email",forwardEmployeeInput:"#forward_customer_thread_employee_id"}},349:function(e,r,o){"use strict";var t=o(269),n=function(e){return e&&e.__esModule?e:{default:e}}(t),u=window.$;/**
+>>>>>>> Rebuilds assets
+<<<<<<< HEAD
+=======
+=======
+r.default={forwardCustomerThreadModal:"#forwardThreadModal",forwardSomeoneElseEmailInput:"#forward_customer_thread_someone_else_email",forwardEmployeeInput:"#forward_customer_thread_employee_id"}},349:function(e,r,o){"use strict";var t=o(270),n=function(e){return e&&e.__esModule?e:{default:e}}(t),u=window.$;/**
 >>>>>>> Rebuilds assets
 >>>>>>> Rebuilds assets
                    * 2007-2019 PrestaShop SA and Contributors
