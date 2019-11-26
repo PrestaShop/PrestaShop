@@ -27,4 +27,5 @@ export default {
   productDeletedFromOrder: 'productDeletedFromOrder',
   productAddedToOrder: 'productAddedToOrder',
   productEditedToOrder: 'productEditedToOrder',
+  productListPaginated: 'productListPaginated',
 };
