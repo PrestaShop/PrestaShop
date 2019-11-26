@@ -49,6 +49,9 @@ export default {
   productsPanel: '#orderProductsPanel',
   productDeleteBtn: '.js-order-product-delete-btn',
   productsTable: '#orderProductsTable',
+  productsTablePagination: '#orderProductsTablePagination',
+  productsTablePaginationNext: '#orderProductsTablePaginationNext',
+  productsTablePaginationPrev: '#orderProductsTablePaginationPrev',
   productEditBtn: '.js-order-product-edit-btn',
   productAddBtn: '#addProductBtn',
   productActionBtn: '.js-product-action-btn',
@@ -72,6 +75,7 @@ export default {
   productEditPriceTaxExclInput: '.editProductPriceTaxExcl',
   productEditPriceTaxInclInput: '.editProductPriceTaxIncl',
   productEditQuantityInput: '.editProductQuantity',
+  productTemplateRow: '#templateProductTableRow',
   // Order price elements
   orderProductsTotal: '#orderProductsTotal',
   orderDiscountsTotal: '#orderDiscountsTotal',
