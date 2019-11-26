@@ -704,6 +704,10 @@ class ProductController extends FrameworkBundleAdminController
             }
         }
 
+        $this->dispatchHook('actionProductFormBuilderModifier', [
+            'formBuilder' => &$formBuilder
+        ]);
+        
         return $formBuilder->getForm();
     }
 
