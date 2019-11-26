@@ -76,20 +76,6 @@ class FrameworkBundleAdminController extends Controller
         ];
     }
 
-    public function hashUpdateJsAction($hash)
-    {
-        $contents = file_get_contents('http://localhost:8080/' . $hash . '.hot-update.js');
-
-        return new Response($contents);
-    }
-
-    public function hashUpdateJsonAction($hash)
-    {
-        $contents = file_get_contents('http://localhost:8080/' . $hash . '.hot-update.json');
-
-        return new Response($contents);
-    }
-
     /**
      * Returns form errors for JS implementation.
      *
