@@ -25,10 +25,15 @@
 
 import OrderViewPageMap from '../OrderViewPageMap';
 import OrderProductEdit from "./order-product-edit";
+import Router from "../../../components/router";
 
 const $ = window.$;
 
 export default class OrderProductRenderer {
+  constructor() {
+    this.router = new Router();
+  }
+
   removeProductFromList(orderDetailId) {
     const $productRow = $(`#orderProduct_${orderDetailId}`);
 
@@ -52,6 +57,8 @@ export default class OrderProductRenderer {
       tax_rate: taxRate,
       quantity
     });
+    $(OrderViewPageMap.productAddActionBtn).addClass('d-none');
+    $(OrderViewPageMap.productAddRow).addClass('d-none');
   }
 
   moveProductsPanelToModificationPosition() {
@@ -90,5 +97,72 @@ export default class OrderProductRenderer {
     const $productEditRow = $(`#orderProduct_${orderProductId}_edit`);
     $productEditRow.remove();
     $productRow.removeClass('d-none');
+  }
+
+  paginate(orderId, numPage, results) {
+    const totalPage = $(OrderViewPageMap.productsTablePagination).find('li.page-item').length - 2;
+    $(OrderViewPageMap.productsTablePagination).find('.active').removeClass('active');
+    $(OrderViewPageMap.productsTablePagination).find(`li:has(> [data-page="${numPage}"])`).addClass('active');
+    $(OrderViewPageMap.productsTablePaginationPrev).removeClass('disabled');
+    if (numPage == 1) {
+      $(OrderViewPageMap.productsTablePaginationPrev).addClass('disabled');
+    }
+    $(OrderViewPageMap.productsTablePaginationNext).removeClass('disabled');
+    if (numPage == totalPage) {
+      $(OrderViewPageMap.productsTablePaginationNext).addClass('disabled');
+    }
+    $(OrderViewPageMap.productsTable).find('tr[id^="orderProduct_"]').remove();
+    results.products.forEach(result => {
+      const $productRow = $(OrderViewPageMap.productTemplateRow).clone();
+      $productRow.attr('id', `orderProduct_${result.orderDetailId}`);
+      // Cell 1
+      if (result.imagePath) {
+        $productRow.find('td:nth-child(1) img').attr('src', result.imagePath);
+        $productRow.find('td:nth-child(1) img').attr('alt', result.name);
+      } else {
+        $productRow.find('td:nth-child(1) img').remove();
+      }
+      // Cell 2
+      $productRow.find('td:nth-child(2) a').attr('href', this.router.generate('admin_product_form', {orderId: result.id}));
+      $productRow.find('td:nth-child(2) p:nth-child(1)').html(result.name);
+      if (result.supplierReference) {
+        $productRow.find('td:nth-child(2) p:nth-child(3)').append(result.supplierReference);
+      } else {
+        $productRow.find('td:nth-child(2) p:nth-child(3)').remove();
+      }
+      if (result.reference) {
+        $productRow.find('td:nth-child(2) p:nth-child(2)').append(result.reference);
+      } else {
+        $productRow.find('td:nth-child(2) p:nth-child(2)').remove();
+      }
+      // Cell 3
+      $productRow.find('td:nth-child(3)').html(result.unitPrice);
+      // Cell 4
+      if (result.quantity > 1) {
+        $productRow.find('td:nth-child(4) span.badge').html(result.quantity);
+      } else {
+        $productRow.find('td:nth-child(4) span.badge').replaceWith(result.quantity);
+      }
+      $productRow.find('td:nth-child(4) input').val(result.quantity);
+      // Cell 5
+      $productRow.find('td:nth-child(5)').html(result.availableQuantity);
+      // Cell 6
+      $productRow.find('td:nth-child(6)').html(result.totalPrice);
+      // Cell 7
+      if (!result.delivered) {
+        $productRow.find('td:nth-child(7) a:nth-child(1) i')
+          .attr('data-order-detail-id', result.orderDetailId)
+          .attr('data-product-quantity', result.quantity)
+          .attr('data-product-price-tax-incl', result.unitPriceTaxInclRaw)
+          .attr('data-product-price-tax-excl', result.unitPriceTaxExclRaw)
+          .attr('data-tax-rate', result.taxRate);
+        $productRow.find('td:nth-child(7) a:nth-child(2)')
+          .attr('data-order-id', orderId)
+          .attr('data-order-detail-id', result.orderDetailId);
+      } else {
+        $productRow.find('td:nth-child(7)').remove();
+      }
+      $(OrderViewPageMap.productAddRow).before($productRow.removeClass('d-none'));
+    });
   }
 }
