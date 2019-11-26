@@ -28,8 +28,7 @@
     <i class="material-icons">chevron_left</i>
   </span>
 
-  <ul class="main-menu">
-
+  <ul class="main-menu{if $collapse_menu} sidebar-closed{/if}">
     {foreach $tabs as $level1}
       {if $level1.active}
 
@@ -44,7 +43,6 @@
         {/if}
 
         {if $level1.icon != ''}
-
           <li class="link-levelone {if $level1.current}-active{/if}" data-submenu="{$level1.id_tab}" id="tab-{$level1.class_name}">
             <a href="{$level1Href}" class="link" >
               <i class="material-icons">{$level1.icon}</i> <span>{$level1Name}</span>

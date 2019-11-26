@@ -24,13 +24,12 @@
  */
 
 import PerfectScrollbar from 'perfect-scrollbar';
-import '../node_modules/perfect-scrollbar/css/perfect-scrollbar.css';
+import 'perfect-scrollbar/css/perfect-scrollbar.css';
 
 const $ = window.$;
 
 export default class NavBar {
   constructor() {
-
     $(() => {
       const $navBar = $('.nav-bar');
       new PerfectScrollbar($navBar.get(0));
@@ -41,7 +40,7 @@ export default class NavBar {
         },
         function onMouseLeave() {
           $(this).removeClass('-hover');
-        }
+        },
       );
 
       $('.nav-bar li.link-levelone.has_submenu > a').on(
@@ -91,6 +90,9 @@ export default class NavBar {
         '.menu-collapse',
         function onNavBarClick() {
           $('body').toggleClass('page-sidebar-closed');
+          setTimeout(() => {
+            $('.main-menu').toggleClass('sidebar-closed');
+          }, 400)
 
           $('.popover.show').remove();
           $('.help-box[aria-describedby]').removeAttr('aria-describedby');

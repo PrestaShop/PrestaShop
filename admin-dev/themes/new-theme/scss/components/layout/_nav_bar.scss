@@ -213,6 +213,10 @@
         border-left: .25rem solid #25b9d7;
         padding-left: .638rem;
 
+        @at-root .sidebar-closed .link-levelone .link > span {
+          display: none;
+        }
+
         .material-icons {
           &:first-child {
             color: #25b9d7;
@@ -285,6 +289,10 @@
       display: none;
       white-space: nowrap;
       padding-left: 2.75rem;
+
+      @at-root .nav-bar .main-menu.sidebar-closed .link-levelone > .submenu {
+        display: none;
+      }
 
       & > li {
         @include media-breakpoint-down(md) {
@@ -374,6 +382,10 @@
   & > .title {
     color: white;
     background: $gray-dark;
+
+    @at-root .sidebar-closed & {
+      display: none;
+    }
   }
 }
 
@@ -402,7 +414,6 @@
 }
 
 .page-sidebar-closed:not(.mobile) {
-
   .menu-collapse {
     transform: rotate(180deg);
     padding-right: .8rem;
