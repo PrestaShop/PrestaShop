@@ -979,6 +979,32 @@ class OrderController extends FrameworkBundleAdminController
     }
 
     /**
+     * Returns products for given order
+     *
+     * @param int $orderId
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function getProductsAction(int $orderId, Request $request): JsonResponse
+    {
+        $offset = $request->get('offset');
+        $limit = $request->get('limit');
+
+        /** @var OrderForViewing $orderForViewing */
+        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
+
+        $products = $orderForViewing->getProducts()->getProducts();
+        if (null !== $limit && null !== $offset) {
+            $products = array_slice($products, (int) $offset, (int) $limit);
+        }
+
+        return $this->json([
+            'products' => $products,
+        ]);
+    }
+
+    /**
      * Generates invoice for given order
      *
      * @param int $orderId

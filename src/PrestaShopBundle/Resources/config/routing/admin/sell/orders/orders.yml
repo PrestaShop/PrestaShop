@@ -257,3 +257,13 @@ admin_orders_get_prices:
     orderId: \d+
   options:
     expose: true
+
+admin_orders_get_products:
+  path: /{orderId}/products
+  methods: [GET]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Order/Order:getProducts
+  requirements:
+    orderId: \d+
+  options:
+    expose: true
