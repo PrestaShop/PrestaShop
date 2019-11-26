@@ -90,6 +90,9 @@ export default class NavBar {
         '.menu-collapse',
         function onNavBarClick() {
           $('body').toggleClass('page-sidebar-closed');
+          setTimeout(() => {
+            $('.main-menu').toggleClass('sidebar-closed');
+          }, 400)
 
           $('.popover.show').remove();
           $('.help-box[aria-describedby]').removeAttr('aria-describedby');
