@@ -315,7 +315,7 @@ class MailCore extends ObjectModel
                           self::mimeEncode($addrName);
                 $message->addTo(self::toPunycode($addr), $addrName);
             }
-            $toPlugin = self::toPunycode($to[0]);
+            $toPlugin = $to[0];
         } else {
             /* Simple recipient, one address */
             self::toPunycode($to);
