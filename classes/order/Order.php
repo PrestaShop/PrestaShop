@@ -53,6 +53,7 @@ class OrderCore extends ObjectModel
     /** @var int Customer id */
     public $id_customer;
 
+    // todo: string received instead of int
     /** @var int Carrier id */
     public $id_carrier;
 
