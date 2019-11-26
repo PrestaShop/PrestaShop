@@ -58,4 +58,22 @@ export default class OrderProductManager {
       });
     });
   }
+
+  paginate(orderId, numPage) {
+    const offset = (numPage - 1) * 2;
+    const limit = 8;
+    $.ajax(this.router.generate('admin_orders_get_products', {orderId}), {
+      method: 'GET',
+      data: {
+        offset,
+        limit,
+      },
+    }).then((results) => {
+      EventEmitter.emit(OrderViewEventMap.productListPaginated, {
+        orderId,
+        numPage,
+        results,
+      });
+    });
+  }
 }
