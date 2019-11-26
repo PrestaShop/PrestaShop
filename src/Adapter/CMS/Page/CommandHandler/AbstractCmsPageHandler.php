@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\CMS\Page\CommandHandler;
 
 use CMS;
+use CMSCategory;
 use PrestaShop\PrestaShop\Adapter\Domain\AbstractObjectModelHandler;
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\Exception\CmsPageException;
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\Exception\CmsPageNotFoundException;
@@ -79,8 +80,7 @@ abstract class AbstractCmsPageHandler extends AbstractObjectModelHandler
     protected function assertCmsCategoryExists($cmsCategoryId)
     {
         try {
-            $cmsCategory = new CMS($cmsCategoryId);
-
+            $cmsCategory = new CMSCategory($cmsCategoryId);
             if (0 >= $cmsCategory->id) {
                 throw new CmsPageCategoryNotFoundException(
                     sprintf('Cms page category with id "%s" not found', $cmsCategoryId)
