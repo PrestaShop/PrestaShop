@@ -438,7 +438,7 @@ class AdminProductWrapper
                 if ($specific_price['reduction_type'] == 'percentage') {
                     $impact = '- ' . ($specific_price['reduction'] * 100) . ' %';
                 } elseif ($specific_price['reduction'] > 0) {
-                    $impact = '- ' . $this->locale->formatPrice($specific_price['reduction'], $current_specific_currency->iso_code) . ' ';
+                    $impact = '- ' . $this->locale->formatPrice($specific_price['reduction'], $current_specific_currency['iso_code']) . ' ';
                     if ($specific_price['reduction_tax']) {
                         $impact .= '(' . $this->translator->trans('Tax incl.', array(), 'Admin.Global') . ')';
                     } else {
@@ -483,7 +483,7 @@ class AdminProductWrapper
                     }
 
                     $price = Tools::ps_round($specific_price['price'], 2);
-                    $fixed_price = (($price == Tools::ps_round($product->price, 2) && $current_specific_currency['id_currency'] == $defaultCurrency->id) || $specific_price['price'] == -1) ? '--' : $this->locale->formatPrice($price, $current_specific_currency->iso_code);
+                    $fixed_price = (($price == Tools::ps_round($product->price, 2) && $current_specific_currency['id_currency'] == $defaultCurrency->id) || $specific_price['price'] == -1) ? '--' : $this->locale->formatPrice($price, $current_specific_currency['iso_code']);
 
                     $content[] = [
                         'id_specific_price' => $specific_price['id_specific_price'],
