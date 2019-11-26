@@ -23,6 +23,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 
+{% set paginationNum = 8 %}
 <div class="card" id="orderProductsPanel">
   <div class="card-header">
     <h3 class="card-header-title">
@@ -67,7 +68,7 @@
       </thead>
       <tbody>
       {{ form_start(partialRefundForm, {'action': path('admin_orders_partial_refund', {'orderId': orderForViewing.id})}) }}
-        {% for product in orderForViewing.products.products %}
+        {% for product in orderForViewing.products.products|slice(0, paginationNum) %}
           {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/product.html.twig' with {'product': product} %}
         {% endfor %}
         <tr id="addProductTableRow" class="d-none">
@@ -138,11 +139,88 @@
             </button>
           </td>
         </tr>
+        <tr id="templateProductTableRow" class="d-none">
+          <td>
+              <img alt="">
+          </td>
+          <td>
+            <a href="">
+              <p class="mb-0"></p>
+              <p class="mb-0">
+                {{ 'Reference number:'|trans({}, 'Admin.Orderscustomers.Feature') }}
+              </p>
+              <p class="mb-0">
+               {{ 'Supplier reference:'|trans({}, 'Admin.Orderscustomers.Feature') }}
+              </p>
+            </a>
+          </td>
+          <td></td>
+          <td>
+            <span class="badge badge-secondary rounded-circle"></span>
+            <div class="d-none js-product-quantity">
+              <input type="text" value="" class="form-control">
+            </div>
+          </td>
+          <td></td>
+          <td></td>
+            <td class="text-right">
+              <a href="#"
+                 class="tooltip-link"
+                 data-toggle="pstooltip"
+                 data-placement="top"
+                 data-original-title="{{ 'Edit'|trans({}, 'Admin.Actions') }}"
+              >
+                <i class="material-icons js-order-product-edit-btn"
+                   data-order-detail-id=""
+                   data-product-quantity=""
+                   data-product-price-tax-incl=""
+                   data-product-price-tax-excl=""
+                   data-tax-rate=""
+                >edit</i>
+              </a>
+
+              <a href="#"
+                 class="ml-2 tooltip-link js-order-product-delete-btn"
+                 data-toggle="pstooltip"
+                 data-placement="top"
+                 data-order-id=""
+                 data-order-detail-id=""
+                 data-delete-message="{{ 'Are you sure?'|trans({}, 'Admin.Notifications.Warning') }}"
+                 data-original-title="{{ 'Delete'|trans({}, 'Admin.Actions') }}"
+              >
+                <i class="material-icons">delete</i>
+              </a>
+            </td>
+        </tr>
       </tbody>
     </table>
 
     <div class="row mb-3">
-      <div class="col-md-12 text-right">
+      <div class="col-md-6 text-left">
+        {% if orderForViewing.products.products|length > paginationNum %}
+          {% set paginationNum = (orderForViewing.products.products|length / paginationNum)|round(0, 'floor') + 1%}
+          <nav aria-label="Products Navigation">
+            <ul class="pagination" id="orderProductsTablePagination">
+              <li class="page-item disabled" id="orderProductsTablePaginationPrev">
+                <a class="page-link" href="#" aria-label="Previous">
+                  <span aria-hidden="true">&laquo;</span>
+                  <span class="sr-only">Previous</span>
+                </a>
+              </li>
+              {% for numPage in 1..paginationNum %}
+                <li class="page-item{% if numPage==1 %} active{% endif %}"><span class="page-link" data-order-id="{{ orderForViewing.id }}" data-page="{{ numPage }}">{{ numPage }}</span></li>
+              {% endfor %}
+              <li class="page-item" id="orderProductsTablePaginationNext">
+                <a class="page-link" href="#" aria-label="Next">
+                  <span aria-hidden="true">&raquo;</span>
+                  <span class="sr-only">Next</span>
+                </a>
+              </li>
+            </ul>
+          </nav>
+        {% endif %}
+      </div>
+      <div class="col-md-6 text-right">
         {% if not orderForViewing.delivered %}
           <button type="button" class="btn btn-outline-secondary js-product-action-btn mr-3" id="addProductBtn">
             <i class="material-icons">add_circle_outline</i>
