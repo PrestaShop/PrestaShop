@@ -28,15 +28,12 @@ namespace Tests\Integration\Behaviour\Features\Context;
 
 use AppKernel;
 use Configuration;
-use Context;
 use Exception;
 use LegacyTests\Unit\Core\Cart\CartToOrder\PaymentModuleFake;
 use Order;
 use OrderCartRule;
-use PrestaShopExceptionCore;
 use Product;
 use RuntimeException;
-use Shop;
 
 class OrderFeatureContext extends AbstractPrestaShopFeatureContext
 {
@@ -46,19 +43,6 @@ class OrderFeatureContext extends AbstractPrestaShopFeatureContext
      * @var Order[]
      */
     protected $orders = [];
-
-    /**
-     * @BeforeScenario
-     *
-     * @throws PrestaShopExceptionCore
-     */
-    public function before()
-    {
-        $defaultShopId = Configuration::get('PS_SHOP_DEFAULT');
-        Shop::setContext(Shop::CONTEXT_SHOP, $defaultShopId);
-        // needed because if no controller defined then CONTEXT_ALL is selected and exception is thrown
-        Context::getContext()->controller = 'test';
-    }
 
     /**
      * @When /^I validate my cart using payment module (fake)$/

@@ -7,15 +7,14 @@ Feature: Orders statuses from Back Office
 
   Background:
     Given the current currency is "EUR"
+    Given there is existing order with reference "XKBKNABJK"
 
   Scenario: Update multiple orders statuses using Bulk actions
-    Given there is existing order with reference "XKBKNABJK"
-    And there is existing order with reference "OHSATSERP"
+    Given there is existing order with reference "OHSATSERP"
     When I update orders "XKBKNABJK,OHSATSERP" to status "Delivered"
     Then order "XKBKNABJK" has status "Delivered"
     And order "OHSATSERP" has status "Delivered"
 
   Scenario: Update order status
-    Given there is existing order with reference "XKBKNABJK"
     When I update order "XKBKNABJK" to status "Awaiting bank wire payment"
     Then order "XKBKNABJK" has status "Awaiting bank wire payment"
