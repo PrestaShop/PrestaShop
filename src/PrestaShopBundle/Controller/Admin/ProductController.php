@@ -709,7 +709,7 @@ class ProductController extends FrameworkBundleAdminController
             'data' => $product,
             'id_product' => $product->id,
         ]);
-        
+
         return $formBuilder->getForm();
     }
 
