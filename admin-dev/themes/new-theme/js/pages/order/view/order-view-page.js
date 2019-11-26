@@ -92,4 +92,42 @@ export default class OrderViewPage {
       this.listenForProductEdit();
     });
   }
+
+  listenForProductPagination() {
+    $(OrderViewPageMap.productsTablePagination).on('click', '.page-link', (event) => {
+      const $btn = $(event.currentTarget);
+      this.orderProductManager.paginate(
+        $btn.attr('data-order-id'),
+        $btn.attr('data-page')
+      );
+    });
+    $(OrderViewPageMap.productsTablePaginationNext).on('click', (event) => {
+      const $btn = $(event.currentTarget);
+      if ($btn.hasClass('disabled')) {
+        return;
+      }
+      const activePage = $(OrderViewPageMap.productsTablePagination).find('.active span').get(0);
+      this.orderProductManager.paginate(
+        $(activePage).attr('data-order-id'),
+        parseInt($(activePage).html(), 10) + 1
+      );
+    });
+    $(OrderViewPageMap.productsTablePaginationPrev).on('click', (event) => {
+      const $btn = $(event.currentTarget);
+      if ($btn.hasClass('disabled')) {
+        return;
+      }
+      const activePage = $(OrderViewPageMap.productsTablePagination).find('.active span').get(0);
+      this.orderProductManager.paginate(
+        $(activePage).attr('data-order-id'),
+        parseInt($(activePage).html(), 10) - 1
+      );
+    });
+
+    EventEmitter.on(OrderViewEventMap.productListPaginated, (event) => {
+      this.orderProductRenderer.paginate(event.orderId, event.numPage, event.results);
+      this.listenForProductDelete();
+      this.listenForProductEdit();
+    });
+  }
 }
