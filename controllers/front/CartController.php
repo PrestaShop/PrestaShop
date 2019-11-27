@@ -297,6 +297,8 @@ class CartControllerCore extends FrontController
             . ' WHERE `id_cart` = ' . (int) $this->context->cart->id
             . ' AND `id_product` = ' . (int) $this->id_product
             . ' AND `id_customization` != ' . (int) $this->customization_id
+            . ' AND `in_cart` = 1'
+            . ' AND `quantity` > 0'
         );
 
         if (count($customization_product)) {
