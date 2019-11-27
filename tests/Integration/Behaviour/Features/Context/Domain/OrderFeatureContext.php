@@ -35,10 +35,13 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Command\BulkChangeOrderStatusCommand
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\UpdateOrderShippingDetailsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\UpdateOrderStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
+use PrestaShop\PrestaShop\Core\Domain\Order\Payment\Command\AddPaymentCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\AddProductToOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderCarrierForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderForViewing;
+use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderPaymentForViewing;
+use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderPaymentsForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
 use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
@@ -220,11 +223,11 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     /**
      * @When I update order :reference Tracking number to :trackingNumber and Carrier to :carrier
      *
-     * @param string $orderId
+     * @param int $orderId
      * @param string $trackingNumber
      * @param string $carrier
      */
-    public function iUpdateOrderTrackingNumberToAndCarrierTo(string $orderId, string $trackingNumber, string $carrier)
+    public function iUpdateOrderTrackingNumberToAndCarrierTo(int $orderId, string $trackingNumber, string $carrier)
     {
         $oldOrderCarrierId = $this->getCarrierIdFromMap($carrier);
         $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
@@ -313,19 +316,117 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @When I add payment to order with id :arg1 with the following properties:
+     * @When I add payment to order with id :orderId with the following properties:
+     * @param int $orderId
+     * @param TableNode $table
      */
-    public function iAddPaymentToOrderWithIdWithTheFollowingProperties($arg1, TableNode $table)
+    public function iAddPaymentToOrderWithIdWithTheFollowingProperties(int $orderId, TableNode $table)
     {
-        throw new PendingException();
+        /** @var array $hash */
+        $hash = $table->getHash();
+        if (count($hash) != 1) {
+            throw new RuntimeException('Payment details are invalid');
+        }
+        /** @var array $data */
+        $data = $hash[0];
+
+        $this->getCommandBus()->handle(
+            new AddPaymentCommand(
+                $orderId,
+                $data['date'],
+                $data['payment_method'],
+                $data['amount'],
+                (int) $data['id_currency'],
+                $data['id_invoice'],
+                $data['transaction_id']
+            )
+        );
     }
 
     /**
-     * @Then if I query order with id :arg1 payments I should get an Order with properties:
+     * @Then if I query order with id :orderId payments I should get an Order with properties:
+     * @param int $orderId
+     * @param TableNode $table
      */
-    public function ifIQueryOrderWithIdPaymentsIShouldGetAnOrderWithProperties($arg1, TableNode $table)
+    public function ifIQueryOrderWithIdPaymentsIShouldGetAnOrderWithProperties(int $orderId, TableNode $table)
     {
-        throw new PendingException();
+        /** @var OrderForViewing $orderForViewing */
+        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
+        /** @var OrderPaymentsForViewing $orderPaymentsForViewing */
+        $orderPaymentsForViewing = $orderForViewing->getPayments();
+        /** @var OrderPaymentForViewing[] $orderPaymentForViewingArray */
+        $orderPaymentForViewingArray = $orderPaymentsForViewing->getPayments();
+
+        if (count($orderPaymentForViewingArray) == 0) {
+            throw new RuntimeException('Order [' . $orderId . '] has no payments for viewing');
+        }
+
+        /** @var OrderPaymentForViewing $orderPaymentForViewing */
+        $orderPaymentForViewing = $orderPaymentForViewingArray[0];
+
+        /** @var array $hash */
+        $hash = $table->getHash();
+        if (count($hash) != 1) {
+            throw new RuntimeException('Payment details are invalid');
+        }
+        /** @var array $data */
+        $data = $hash[0];
+
+        $orderPaymentDateFromDb = $orderPaymentForViewing->getDate()->format("Y-m-d H:i:s");
+        $orderPaymentDate = $data['date'];
+        if ($orderPaymentDate !== $orderPaymentDateFromDb) {
+            throw new RuntimeException(sprintf(
+                'Order "%s" payment date is not the same as "%s", but "%s" was expected',
+                $orderId,
+                $orderPaymentDateFromDb,
+                $orderPaymentDate
+            ));
+        }
+
+        $paymentMethodFromDb = $orderPaymentForViewing->getPaymentMethod();
+        $orderPaymentMethod = $data['payment_method'];
+        if ($orderPaymentMethod !== $paymentMethodFromDb) {
+            throw new RuntimeException(sprintf(
+                'Order "%s" payment method is not the same as "%s", but "%s" was expected',
+                $orderId,
+                $paymentMethodFromDb,
+                $orderPaymentMethod
+            ));
+        }
+
+        $transactionIdFromDb = $orderPaymentForViewing->getTransactionId();
+        $transactionId = $data['transaction_id'];
+        if ($transactionId  !== $transactionIdFromDb) {
+            throw new RuntimeException(sprintf(
+                'Order "%s" transaction id is not the same as "%s", but "%s" was expected',
+                $orderId,
+                $transactionIdFromDb,
+                $transactionId
+            ));
+        }
+
+        //       | date                | payment_method    | transaction_id              | id_currency | amount | id_invoice |\
+        $amountFromDb = $orderPaymentForViewing->getAmount();
+        $amount = $data['amount'];
+        if ($amount !== $amountFromDb) {
+            throw new RuntimeException(sprintf(
+                'Order "%s" amount is not the same as "%s", but "%s" was expected',
+                $orderId,
+                $amountFromDb,
+                $amount
+            ));
+        }
+
+        $invoiceNumberFromDb = $orderPaymentForViewing->getInvoiceNumber();
+        $invoiceId = $data['id_invoice'];
+        if ($invoiceId !== $invoiceNumberFromDb && $invoiceNumberFromDb != "") {
+            throw new RuntimeException(sprintf(
+                'Order "%s" invoice id is not the same as "%s", but "%s" was expected',
+                $orderId,
+                $invoiceNumberFromDb,
+                $invoiceId
+            ));
+        }
     }
 
     /**
