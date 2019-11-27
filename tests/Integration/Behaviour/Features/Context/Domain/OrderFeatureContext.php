@@ -132,9 +132,9 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     /**
      * @When I generate invoice for :invoiceReference order
      *
-     * @param $orderReference
+     * @param string $orderReference
      */
-    public function generateOrderInvoice($orderReference)
+    public function generateOrderInvoice(string $orderReference)
     {
         $orders = Order::getByReference($orderReference);
         /** @var Order $order */
