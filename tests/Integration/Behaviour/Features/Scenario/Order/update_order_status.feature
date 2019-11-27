@@ -6,6 +6,7 @@ Feature: Orders statuses from Back Office
   I need to be able to select order/orders and change status
 
   Background:
+    Given email sending is disabled
     Given the current currency is "EUR"
     Given there is existing order with id 1
 

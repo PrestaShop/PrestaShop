@@ -6,6 +6,7 @@ Feature: Order shipping details from Back Office
   I need to be able to go to order view, select Shipping and Edit->Update shipping details
 
   Background:
+    Given email sending is disabled
     Given the current currency is "USD"
     Given there is existing order with id 1
 
