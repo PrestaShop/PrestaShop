@@ -153,6 +153,8 @@ class LayoutExtension extends \Twig_Extension implements \Twig_Extension_Globals
      * @param array|string $headerTabContent Tabs labels
      * @param bool $enableSidebar Allow to use right sidebar to display docs for instance
      * @param string $helpLink If specified, will be used instead of legacy one
+     * @param string $metaTitle
+     * @param bool $useRegularH1Structure allows complex <h1> structure if set to false
      *
      * @throws Exception if legacy layout has no $content var replacement
      *
@@ -167,7 +169,9 @@ class LayoutExtension extends \Twig_Extension implements \Twig_Extension_Globals
         $headerTabContent = '',
         $enableSidebar = false,
         $helpLink = '',
-        $jsRouterMetadata = []
+        $jsRouterMetadata = [],
+        $metaTitle = '',
+        $useRegularH1Structure = true
     ) {
         if ($this->environment == 'test') {
             return <<<'EOF'
@@ -197,7 +201,9 @@ EOF;
             $headerTabContent,
             $enableSidebar,
             $helpLink,
-            $jsRouterMetadata
+            $jsRouterMetadata,
+            $metaTitle,
+            $useRegularH1Structure
         );
 
         //test if legacy template from "content.tpl" has '{$content}'

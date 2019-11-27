@@ -23,11 +23,13 @@
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 
+{% set use_regular_h1_structure = false %}
+{% set layoutTitle %}
+  {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/header.html.twig' %}
+{% endset %}
+
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 
-{% block page_header_toolbar %}
-  {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/header.html.twig' %}
-{% endblock %}
 
 {% block content %}
   <div class="row">
