@@ -227,3 +227,10 @@ services:
 
   prestashop.core.form.choice_provider.address_required_fields:
     class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\AddressRequiredFieldsChoiceProvider'
+
+  prestashop.core.form.choice_provider.customer_addresses_by_id:
+    class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CustomerAddressesChoiceProvider'
+    arguments:
+      - '@prestashop.adapter.data_provider.customer'
+      - '@=service("prestashop.adapter.legacy.context").getLanguage().id'
+

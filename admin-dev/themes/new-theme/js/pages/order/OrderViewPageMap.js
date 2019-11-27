@@ -47,4 +47,7 @@ export default {
   showOrderShippingUpdateModalBtn: '.js-update-shipping-btn',
   updateOrderShippingTrackingNumberInput: '#update_order_shipping_tracking_number',
   updateOrderShippingCurrentOrderCarrierIdInput: '#update_order_shipping_current_order_carrier_id',
+  updateCustomerAddressModal: '#updateCustomerAddressModal',
+  openOrderAddressUpdateModalBtn: '.js-update-customer-address-modal-btn',
+  updateOrderAddressTypeInput: '#change_order_address_address_type'
 };

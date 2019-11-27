@@ -24,7 +24,8 @@
  *#}
 
 <div class="modal fade" id="updateCustomerAddressModal">
-  {{ form_start(addOrderCartRuleForm, {'action': path('admin_orders_add_cart_rule', {'orderId': orderForViewing.id})}) }}
+  {{ form_start(changeOrderAddressForm,
+    {'action': path('admin_orders_change_customer_address', {'orderId': orderForViewing.id, 'customerId': orderForViewing.customer.id})}) }}
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
@@ -40,10 +41,12 @@
         <div class="modal-body">
           <div class="row">
             <div class="form-group">
-              {{ form_widget(addOrderCartRuleForm.type) }}
+              {{ form_widget(changeOrderAddressForm.new_address_id) }}
             </div>
           </div>
         </div>
+
+        {{ form_widget(changeOrderAddressForm.address_type) }}
 
         <div class="modal-footer">
           <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">
@@ -56,5 +59,5 @@
         </div>
       </div>
     </div>
-  {{ form_end(addOrderCartRuleForm) }}
+  {{ form_end(changeOrderAddressForm) }}
 </div>

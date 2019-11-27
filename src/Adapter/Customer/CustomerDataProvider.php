@@ -35,8 +35,6 @@ use Symfony\Component\Process\Exception\LogicException;
 class CustomerDataProvider
 {
     /**
-     * Get a customer.
-     *
      * @param int $id
      *
      * @throws LogicException If the customer id is not set
@@ -52,6 +50,19 @@ class CustomerDataProvider
         $customer = new Customer($id);
 
         return $customer;
+    }
+
+    /**
+     * @param int $customerId
+     * @param int $langId
+     *
+     * @return array
+     */
+    public function getCustomerAddresses($customerId, $langId)
+    {
+        $customer = $this->getCustomer($customerId);
+
+        return $customer->getAddresses($langId);
     }
 
     /**
