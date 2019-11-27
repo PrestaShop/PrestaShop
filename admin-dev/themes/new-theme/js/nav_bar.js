@@ -33,7 +33,6 @@ export default class NavBar {
   constructor() {
     $(() => {
       const $navBar = $('.nav-bar');
-      const navBar = document.querySelector('.nav-bar'); 
       new PerfectScrollbar($navBar.get(0));
       let endTransitionEvent = getAnimationEvent('transition', 'end');
       let transitionFired = false;
@@ -91,7 +90,7 @@ export default class NavBar {
 
       function showNavBarContent(event) {
         if (event.propertyName == 'width') {
-          navBar.removeEventListener(endTransitionEvent, showNavBarContent);
+          $navBar[0].removeEventListener(endTransitionEvent, showNavBarContent);
 
           $('.main-menu').toggleClass('sidebar-closed');
 
@@ -107,9 +106,9 @@ export default class NavBar {
 
           if(!transitionFired) {
             transitionFired = true;
-            navBar.addEventListener(endTransitionEvent, showNavBarContent);
+            $navBar[0].addEventListener(endTransitionEvent, showNavBarContent);
           }else {
-            navBar.removeEventListener(endTransitionEvent, showNavBarContent);
+            $navBar[0].removeEventListener(endTransitionEvent, showNavBarContent);
             transitionFired = false;
           }
 
