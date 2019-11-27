@@ -3,7 +3,7 @@
 Feature: Order shipping details from Back Office
   PrestaShop allows to Update shipping details of the chosen order
   As a BO user
-  I need to be able to go to order view, select Shipping and Edit->Update shipping details
+  I need to be able to Update order shipping details
 
   Background:
     Given email sending is disabled
