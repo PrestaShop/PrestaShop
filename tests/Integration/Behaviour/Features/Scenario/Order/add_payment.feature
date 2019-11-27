@@ -5,6 +5,7 @@ Feature: Order payment from Back Office
   I need to be able to add payment for the chosen order
 
   Background:
+    Given email sending is disabled
     Given the current currency is "USD"
     Given there is existing order with id 1
 
