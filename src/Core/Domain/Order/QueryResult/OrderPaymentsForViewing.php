@@ -29,6 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Order\QueryResult;
 class OrderPaymentsForViewing
 {
     /**
+     * hint - collection would be better
      * @var OrderPaymentForViewing[]
      */
     private $payments = [];
