@@ -40,6 +40,7 @@ $(() => {
   handlePrivateNoteChange();
   handleUpdateOrderStatusButton();
 
+
   new InvoiceNoteManager();
 
   $(OrderViewPageMap.privateNoteToggleBtn).on('click', (event) => {
@@ -49,6 +50,8 @@ $(() => {
 
   initAddCartRuleFormHandler();
   initAddProductFormHandler();
+  initChangeAddressFormHandler();
+
 
   function handlePaymentDetailsToggle() {
     $(OrderViewPageMap.orderPaymentDetailsBtn).on('click', (event) => {
@@ -138,6 +141,15 @@ $(() => {
       const selectedOrderStatusId = $(event.currentTarget).val();
 
       $btn.prop('disabled', parseInt(selectedOrderStatusId, 10) === $btn.data('order-status-id'));
+    });
+  }
+
+  function initChangeAddressFormHandler() {
+    const $modal = $(OrderViewPageMap.updateCustomerAddressModal);
+
+    $(OrderViewPageMap.openOrderAddressUpdateModalBtn).on('click', (event) => {
+      const $btn = $(event.currentTarget);
+      $modal.find(OrderViewPageMap.updateOrderAddressTypeInput).val($btn.data('address-type'));
     });
   }
 });

@@ -107,9 +107,10 @@
               </a>
 
               <a href="#"
-                class="dropdown-item"
+                class="dropdown-item js-update-customer-address-modal-btn"
                 data-toggle="modal"
                 data-target="#updateCustomerAddressModal"
+                data-address-type="shipping"
               >
                 {{ 'Change address'|trans({}, 'Admin.Orderscustomers.Feature') }}
               </a>
@@ -160,9 +161,10 @@
               </a>
 
               <a href="#"
-                class="dropdown-item"
+                class="dropdown-item js-update-customer-address-modal-btn"
                 data-toggle="modal"
                 data-target="#updateCustomerAddressModal"
+                data-address-type="invoice"
               >
                 {{ 'Change address'|trans({}, 'Admin.Orderscustomers.Feature') }}
               </a>

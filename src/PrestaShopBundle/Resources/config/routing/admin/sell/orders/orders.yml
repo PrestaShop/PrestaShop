@@ -184,3 +184,10 @@ admin_orders_generate_invoice:
   methods: [POST]
   defaults:
     _controller: PrestaShopBundle:Admin/Sell/Order/Order:generateInvoice
+
+admin_orders_change_customer_address:
+  path: /change-customer-address
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Order/Order:changeCustomerAddress
+    _legacy_controller: AdminOrders

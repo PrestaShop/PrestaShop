@@ -1038,3 +1038,10 @@ services:
         public: true
         tags:
             - { name: form.type }
+
+    form.type.order.change_order_address:
+      class: 'PrestaShopBundle\Form\Admin\Sell\Order\ChangeOrderAddressType'
+      arguments:
+        - '@prestashop.core.form.choice_provider.customer_addresses_by_id'
+      tags:
+        - { name: form.type }
