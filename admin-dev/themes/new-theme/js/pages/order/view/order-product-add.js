@@ -58,7 +58,7 @@ export default class OrderProductAdd {
       if (this.available === null) {
         return;
       }
-      const quantity = parseInt(event.target.value ? event.target.value : 0);
+      const quantity = parseInt(event.target.value ? event.target.value : 0, 10);
       const available = this.available - quantity;
       this.availableText.text(available);
       this.availableText.toggleClass('text-danger font-weight-bold', available < 0);
@@ -91,6 +91,7 @@ export default class OrderProductAdd {
     this.priceTaxIncludedInput.val(product.price_tax_incl);
     this.taxRateInput.val(product.tax_rate);
     this.available = product.stock;
+    this.quantityInput.val(1);
     this.quantityInput.trigger('change');
     this.setCombinations(product.combinations);
   }
