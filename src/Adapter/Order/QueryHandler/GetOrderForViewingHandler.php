@@ -462,7 +462,8 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
                 $product['tax_rate'],
                 $this->locale->formatPrice($product['amount_refund'], $currency->iso_code),
                 $product['product_quantity_refunded'],
-                $this->locale->formatPrice($product['displayed_max_refundable'], $currency->iso_code)
+                $this->locale->formatPrice($product['displayed_max_refundable'], $currency->iso_code),
+                $product['location']
             );
         }
 

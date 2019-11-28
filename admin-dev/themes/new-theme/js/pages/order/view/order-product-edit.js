@@ -27,6 +27,7 @@ import Router from '../../../components/router';
 import OrderViewPageMap from '../OrderViewPageMap';
 import {EventEmitter} from '../../../components/event-emitter';
 import OrderViewEventMap from './order-view-event-map';
+import OrderPricesTax from "./order-prices-tax";
 
 const $ = window.$;
 
@@ -47,20 +48,22 @@ export default class OrderProductEdit {
 
   setupListener() {
     this.productRowEdit.find(OrderViewPageMap.productEditPriceTaxInclInput).on('change keyup', (event) => {
-      let priceTaxIncl = parseFloat(event.target.value);
-      if (priceTaxIncl < 0 || isNaN(priceTaxIncl)) {
-        priceTaxIncl = 0;
-      }
-      const taxRate = this.productRowEdit.find(OrderViewPageMap.productEditTaxRateInput).val() / 100 + 1;
-      this.productRowEdit.find(OrderViewPageMap.productEditPriceTaxExclInput).val(ps_round(priceTaxIncl / taxRate, 2));
+      const priceTaxCalculator = new OrderPricesTax();
+      this.productRowEdit.find(OrderViewPageMap.productEditPriceTaxExclInput).val(
+        priceTaxCalculator.calculateTaxExcluded(
+          event.target.value,
+          this.productRowEdit.find(OrderViewPageMap.productEditTaxRateInput).val()
+        )
+      );
     });
     this.productRowEdit.find(OrderViewPageMap.productEditPriceTaxExclInput).on('change keyup', (event) => {
-      let priceTaxExcl = parseFloat(event.target.value);
-      if (priceTaxExcl < 0 || isNaN(priceTaxExcl)) {
-        priceTaxExcl = 0;
-      }
-      const taxRate = this.productRowEdit.find(OrderViewPageMap.productEditTaxRateInput).val() / 100 + 1;
-      this.productRowEdit.find(OrderViewPageMap.productEditPriceTaxInclInput).val(ps_round(priceTaxExcl * taxRate, 2));
+      const priceTaxCalculator = new OrderPricesTax();
+      this.productRowEdit.find(OrderViewPageMap.productEditPriceTaxInclInput).val(
+        priceTaxCalculator.calculateTaxIncluded(
+          event.target.value,
+          this.productRowEdit.find(OrderViewPageMap.productEditTaxRateInput).val()
+        )
+      );
     });
     this.productRowEdit.find(OrderViewPageMap.productEditActionBtn).on('click', (event) => {
       this.editProduct(
