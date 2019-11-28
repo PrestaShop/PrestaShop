@@ -88,6 +88,7 @@ export default class OrderViewPage {
       this.orderProductRenderer.resetAddRow();
       this.orderPricesRefresher.refresh(event.orderId);
       this.orderProductRenderer.moveProductPanelToOriginalPosition();
+      this.orderProductRenderer.toggleColumnLocation();
       this.listenForProductDelete();
       this.listenForProductEdit();
     });
@@ -127,6 +128,7 @@ export default class OrderViewPage {
 
     EventEmitter.on(OrderViewEventMap.productListPaginated, (event) => {
       this.orderProductRenderer.paginate(event.orderId, event.numPage, event.results);
+      this.orderProductRenderer.toggleColumnLocation();
       this.listenForProductDelete();
       this.listenForProductEdit();
     });

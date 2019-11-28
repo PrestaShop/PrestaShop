@@ -173,4 +173,14 @@ export default class OrderProductRenderer {
       $(OrderViewPageMap.productAddRow).before($productRow.removeClass('d-none'));
     });
   }
+
+  toggleColumnLocation() {
+    let isColumnLocationDisplayed = false;
+    $(OrderViewPageMap.productsCellLocation).filter('td').each(function() {
+      if ($(this).html() !== '') {
+        isColumnLocationDisplayed = true;
+      }
+    });
+    $(OrderViewPageMap.productsCellLocation).toggleClass('d-none', !isColumnLocationDisplayed);
+  }
 }

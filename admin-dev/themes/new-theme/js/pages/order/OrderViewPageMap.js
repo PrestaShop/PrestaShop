@@ -53,6 +53,7 @@ export default {
   productsTablePagination: '#orderProductsTablePagination',
   productsTablePaginationNext: '#orderProductsTablePaginationNext',
   productsTablePaginationPrev: '#orderProductsTablePaginationPrev',
+  productsCellLocation: '.orderProductsCellLocation',
   productEditBtn: '.js-order-product-edit-btn',
   productAddBtn: '#addProductBtn',
   productActionBtn: '.js-product-action-btn',

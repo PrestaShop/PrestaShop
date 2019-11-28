@@ -22,7 +22,9 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *#}
-
+{% if isColumnLocationDisplayed is not defined %}
+  {% set isColumnLocationDisplayed=(product.availableQuantity is empty) %}
+{% endif %}
 <tr id="orderProduct_{{ product.orderDetailId }}">
   <td>
     {% if product.imagePath %}
@@ -58,7 +60,7 @@
       <input type="text" value="{{ product.quantity }}" class="form-control">
     </div>
   </td>
-  <td>{{ product.location }}</td>
+  <td class="orderProductsCellLocation{% if not isColumnLocationDisplayed %} d-none{% endif %}">{{ product.location }}</td>
   <td>{{ product.availableQuantity }}</td>
   <td>{{ product.totalPrice }}</td>
   {% if not orderForViewing.delivered %}

@@ -219,7 +219,7 @@ admin_orders_get_paginated_products:
   path: /{orderId}/products
   methods: [GET]
   defaults:
-    _controller: PrestaShopBundle:Admin/Sell/Order/Order:getPaginatedProductsAction
+    _controller: PrestaShopBundle:Admin/Sell/Order/Order:getPaginatedProducts
   requirements:
     orderId: \d+
   options:

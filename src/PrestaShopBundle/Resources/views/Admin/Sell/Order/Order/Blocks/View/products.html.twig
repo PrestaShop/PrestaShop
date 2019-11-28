@@ -24,6 +24,12 @@
  *#}
 
 {% set paginationNum = 8 %}
+{% set isColumnLocationDisplayed = false %}
+{% for product in orderForViewing.products.products|slice(0, paginationNum) %}
+  {% if product.location is not empty %}
+    {% set isColumnLocationDisplayed = true %}
+  {% endif %}
+{% endfor %}
 <div class="card" id="orderProductsPanel">
   <div class="card-header">
     <h3 class="card-header-title">
@@ -46,7 +52,7 @@
           <th>
             <p>{{ 'Quantity'|trans({}, 'Admin.Global') }}</p>
           </th>
-          <th>
+          <th class="orderProductsCellLocation{% if not isColumnLocationDisplayed %} d-none{% endif %}">
             <p>{{ 'Stock Location'|trans({}, 'Admin.Global') }}</p>
           </th>
           <th>
@@ -66,7 +72,7 @@
       <tbody>
         {#  @todo Optimize this by using a GetPartialOrderForViewing query which loads only the relevant products #}
         {% for product in orderForViewing.products.products|slice(0, paginationNum) %}
-          {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/product.html.twig' with {'product': product} %}
+          {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/product.html.twig' with {'product': product, 'isColumnLocationDisplayed': isColumnLocationDisplayed} %}
         {% endfor %}
         <tr id="addProductTableRow" class="d-none">
           <td colspan="2" class="pr-5">
@@ -152,43 +158,43 @@
             </a>
           </td>
           <td></td>
-          <td></td>
           <td>
             <span class="badge badge-secondary rounded-circle"></span>
             <div class="d-none js-product-quantity">
               <input type="text" value="" class="form-control">
             </div>
           </td>
+          <td class="orderProductsCellLocation{% if not isColumnLocationDisplayed %} d-none{% endif %}"></td>
           <td></td>
           <td></td>
-            <td class="text-right">
-              <a href="#"
-                 class="tooltip-link"
-                 data-toggle="pstooltip"
-                 data-placement="top"
-                 data-original-title="{{ 'Edit'|trans({}, 'Admin.Actions') }}"
-              >
-                <i class="material-icons js-order-product-edit-btn"
-                   data-order-detail-id=""
-                   data-product-quantity=""
-                   data-product-price-tax-incl=""
-                   data-product-price-tax-excl=""
-                   data-tax-rate=""
-                >edit</i>
-              </a>
-
-              <a href="#"
-                 class="ml-2 tooltip-link js-order-product-delete-btn"
-                 data-toggle="pstooltip"
-                 data-placement="top"
-                 data-order-id=""
+          <td class="text-right">
+            <a href="#"
+               class="tooltip-link"
+               data-toggle="pstooltip"
+               data-placement="top"
+               data-original-title="{{ 'Edit'|trans({}, 'Admin.Actions') }}"
+            >
+              <i class="material-icons js-order-product-edit-btn"
                  data-order-detail-id=""
-                 data-delete-message="{{ 'Are you sure?'|trans({}, 'Admin.Notifications.Warning') }}"
-                 data-original-title="{{ 'Delete'|trans({}, 'Admin.Actions') }}"
-              >
-                <i class="material-icons">delete</i>
-              </a>
-            </td>
+                 data-product-quantity=""
+                 data-product-price-tax-incl=""
+                 data-product-price-tax-excl=""
+                 data-tax-rate=""
+              >edit</i>
+            </a>
+
+            <a href="#"
+               class="ml-2 tooltip-link js-order-product-delete-btn"
+               data-toggle="pstooltip"
+               data-placement="top"
+               data-order-id=""
+               data-order-detail-id=""
+               data-delete-message="{{ 'Are you sure?'|trans({}, 'Admin.Notifications.Warning') }}"
+               data-original-title="{{ 'Delete'|trans({}, 'Admin.Actions') }}"
+            >
+              <i class="material-icons">delete</i>
+            </a>
+          </td>
         </tr>
       </tbody>
     </table>
