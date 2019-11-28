@@ -6,6 +6,7 @@ module.exports = class Stocks extends BOBasePage {
     super(page);
 
     this.pageTitle = 'Stock •';
+    this.successfulUpdateMessage = 'Stock successfully updated';
 
     // Selectors
     this.MovementNavItemLink = '#head_tabs li:nth-child(2) > a';
@@ -23,7 +24,12 @@ module.exports = class Stocks extends BOBasePage {
     this.productRowReferenceColumn = `${this.productRow} td:nth-child(2)`;
     this.productRowSupplierColumn = `${this.productRow} td:nth-child(3)`;
     this.productRowPhysicalColumn = `${this.productRow} td:nth-child(5)`;
+    this.productRowReservedColumn = `${this.productRow} td:nth-child(6)`;
     this.productRowAvailableColumn = `${this.productRow} td:nth-child(7)`;
+    // Quantity column
+    this.productRowQuantityColumn = `${this.productRow} td.qty-spinner`;
+    this.productRowQuantityColumnInput = `${this.productRowQuantityColumn} div.edit-qty input`;
+    this.productRowQuantityUpdateButton = `${this.productRowQuantityColumn} button.check-button`;
 
     // loader
     this.productListLoading = `${this.productRow.replace('%ROW', 1)} td:nth-child(1) div.ps-loader`;
@@ -82,7 +88,7 @@ module.exports = class Stocks extends BOBasePage {
    * get text from column in table
    * @param row
    * @param column, only 3 column are implemented : name, reference, supplier
-   * @return {Promise<textContent>}
+   * @return {Promise<integer|textContent>}
    */
   async getTextColumnFromTableStocks(row, column) {
     switch (column) {
@@ -92,8 +98,45 @@ module.exports = class Stocks extends BOBasePage {
         return this.getTextContent(this.productRowReferenceColumn.replace('%ROW', row));
       case 'supplier':
         return this.getTextContent(this.productRowSupplierColumn.replace('%ROW', row));
+      case 'physical':
+        return this.getNumberFromText(this.productRowPhysicalColumn.replace('%ROW', row));
+      case 'reserved':
+        return this.getNumberFromText(this.productRowReservedColumn.replace('%ROW', row));
+      case 'available':
+        return this.getNumberFromText(this.productRowAvailableColumn.replace('%ROW', row));
       default:
         throw new Error(`${column} was not find as column in this table`);
     }
+  }
+
+  /**
+   * Get
+   * @param row, row in table
+   * @return {Promise<{reserved: (integer), available: (integer), physical: (integer)}>}
+   */
+  async getStockQuantityForProduct(row) {
+    return {
+      physical: await (this.getTextColumnFromTableStocks(row, 'physical')),
+      reserved: await (this.getTextColumnFromTableStocks(row, 'reserved')),
+      available: await (this.getTextColumnFromTableStocks(row, 'available')),
+    };
+  }
+
+  /**
+   * Update Stock value by setting input value
+   * @param row, row in table
+   * @param value, value to add/subtract from quantity
+   * @return {Promise<textContent>}
+   */
+  async updateRowQuantityWithInput(row, value) {
+    await this.setValue(this.productRowQuantityColumnInput.replace('%ROW', row), value.toString());
+    await this.waitForSelectorAndClick(this.productRowQuantityUpdateButton.replace('%ROW', row));
+    await Promise.all([
+      this.page.waitForSelector(this.productListLoading, {hidden: true}),
+      this.page.waitForSelector(this.alertBoxTextSpan, {visible: true}),
+    ]);
+    const textContent = await this.getTextContent(this.alertBoxTextSpan);
+    await this.page.click(this.alertBoxButtonClose);
+    return textContent;
   }
 };
