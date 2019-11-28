@@ -26,7 +26,6 @@
 
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
-use Behat\Behat\Tester\Exception\PendingException;
 use Behat\Gherkin\Node\TableNode;
 use Order;
 use OrderState;
@@ -317,6 +316,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
 
     /**
      * @When I add payment to order with id :orderId with the following properties:
+     *
      * @param int $orderId
      * @param TableNode $table
      */
@@ -345,6 +345,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
 
     /**
      * @Then if I query order with id :orderId payments I should get an Order with properties:
+     *
      * @param int $orderId
      * @param TableNode $table
      */
@@ -372,7 +373,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
         /** @var array $data */
         $data = $hash[0];
 
-        $orderPaymentDateFromDb = $orderPaymentForViewing->getDate()->format("Y-m-d H:i:s");
+        $orderPaymentDateFromDb = $orderPaymentForViewing->getDate()->format('Y-m-d H:i:s');
         $orderPaymentDate = $data['date'];
         if ($orderPaymentDate !== $orderPaymentDateFromDb) {
             throw new RuntimeException(sprintf(
@@ -396,7 +397,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
 
         $transactionIdFromDb = $orderPaymentForViewing->getTransactionId();
         $transactionId = $data['transaction_id'];
-        if ($transactionId  !== $transactionIdFromDb) {
+        if ($transactionId !== $transactionIdFromDb) {
             throw new RuntimeException(sprintf(
                 'Order "%s" transaction id is not the same as "%s", but "%s" was expected',
                 $orderId,
@@ -419,7 +420,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
 
         $invoiceNumberFromDb = $orderPaymentForViewing->getInvoiceNumber();
         $invoiceId = $data['id_invoice'];
-        if ($invoiceId !== $invoiceNumberFromDb && $invoiceNumberFromDb != "") {
+        if ($invoiceId !== $invoiceNumberFromDb && $invoiceNumberFromDb != '') {
             throw new RuntimeException(sprintf(
                 'Order "%s" invoice id is not the same as "%s", but "%s" was expected',
                 $orderId,
