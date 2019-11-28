@@ -36,8 +36,10 @@ export default class OrderProductRenderer {
 
   removeProductFromList(orderDetailId) {
     const $productRow = $(`#orderProduct_${orderDetailId}`);
-
     $productRow.hide('fast', () => $productRow.remove());
+
+    const numProducts = parseInt($(OrderViewPageMap.productsCount).html(), 10);
+    $(OrderViewPageMap.productsCount).html(numProducts - 1);
   }
 
   addOrUpdateProductFromToList(orderProductId, newRow) {
@@ -47,6 +49,9 @@ export default class OrderProductRenderer {
     } else {
       $(OrderViewPageMap.productAddRow).before($(newRow).hide().fadeIn());
     }
+
+    const numProducts = parseInt($(OrderViewPageMap.productsCount).html(), 10);
+    $(OrderViewPageMap.productsCount).html(numProducts + 1);
   }
 
   editProductFromToList(orderProductId, quantity, priceTaxIncl, priceTaxExcl, taxRate) {
@@ -71,6 +76,7 @@ export default class OrderProductRenderer {
     $(OrderViewPageMap.productActionBtn).addClass('d-none');
     $(OrderViewPageMap.productAddActionBtn).removeClass('d-none');
     $(OrderViewPageMap.productAddRow).removeClass('d-none');
+    $('html,body').animate({scrollTop: 0}, 'slow');
   }
 
   moveProductPanelToOriginalPosition() {
@@ -145,22 +151,24 @@ export default class OrderProductRenderer {
       }
       $productRow.find('td:nth-child(4) input').val(result.quantity);
       // Cell 5
-      $productRow.find('td:nth-child(5)').html(result.availableQuantity);
+      $productRow.find('td:nth-child(5)').html(result.location);
       // Cell 6
-      $productRow.find('td:nth-child(6)').html(result.totalPrice);
+      $productRow.find('td:nth-child(6)').html(result.availableQuantity);
       // Cell 7
+      $productRow.find('td:nth-child(7)').html(result.totalPrice);
+      // Cell 8
       if (!result.delivered) {
-        $productRow.find('td:nth-child(7) a:nth-child(1) i')
+        $productRow.find('td:nth-child(8) a:nth-child(1) i')
           .attr('data-order-detail-id', result.orderDetailId)
           .attr('data-product-quantity', result.quantity)
           .attr('data-product-price-tax-incl', result.unitPriceTaxInclRaw)
           .attr('data-product-price-tax-excl', result.unitPriceTaxExclRaw)
           .attr('data-tax-rate', result.taxRate);
-        $productRow.find('td:nth-child(7) a:nth-child(2)')
+        $productRow.find('td:nth-child(8) a:nth-child(2)')
           .attr('data-order-id', orderId)
           .attr('data-order-detail-id', result.orderDetailId);
       } else {
-        $productRow.find('td:nth-child(7)').remove();
+        $productRow.find('td:nth-child(8)').remove();
       }
       $(OrderViewPageMap.productAddRow).before($productRow.removeClass('d-none'));
     });

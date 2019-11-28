@@ -27,6 +27,7 @@ import Router from '../../../components/router';
 import OrderViewPageMap from '../OrderViewPageMap';
 import {EventEmitter} from '../../../components/event-emitter';
 import OrderViewEventMap from './order-view-event-map';
+import OrderPricesTax from "./order-prices-tax";
 
 const $ = window.$;
 
@@ -58,7 +59,7 @@ export default class OrderProductAdd {
       if (this.available === null) {
         return;
       }
-      const quantity = parseInt(event.target.value ? event.target.value : 0);
+      const quantity = parseInt(event.target.value ? event.target.value : 0, 10);
       const available = this.available - quantity;
       this.availableText.text(available);
       this.availableText.toggleClass('text-danger font-weight-bold', available < 0);
@@ -67,20 +68,16 @@ export default class OrderProductAdd {
       this.productAddActionBtn.removeAttr('disabled');
     });
     this.priceTaxIncludedInput.on('change keyup', (event) => {
-      let priceTaxIncl = parseFloat(event.target.value);
-      if (priceTaxIncl < 0 || isNaN(priceTaxIncl)) {
-        priceTaxIncl = 0;
-      }
-      const taxRate = this.taxRateInput.val() / 100 + 1;
-      this.priceTaxExcludedInput.val(ps_round(priceTaxIncl / taxRate, 2));
+      const priceTaxCalculator = new OrderPricesTax();
+      this.priceTaxExcludedInput.val(
+        priceTaxCalculator.calculateTaxExcluded(event.target.value, this.taxRateInput.val())
+      );
     });
     this.priceTaxExcludedInput.on('change keyup', (event) => {
-      let priceTaxExcl = parseFloat(event.target.value);
-      if (priceTaxExcl < 0 || isNaN(priceTaxExcl)) {
-        priceTaxExcl = 0;
-      }
-      const taxRate = this.taxRateInput.val() / 100 + 1;
-      this.priceTaxIncludedInput.val(ps_round(priceTaxExcl * taxRate, 2));
+      const priceTaxCalculator = new OrderPricesTax();
+      this.priceTaxIncludedInput.val(
+        priceTaxCalculator.calculateTaxIncluded(event.target.value, this.taxRateInput.val())
+      );
     });
     this.productAddActionBtn.on('click', event => this.addProduct($(event.currentTarget).data('order-id')));
   }
@@ -91,6 +88,7 @@ export default class OrderProductAdd {
     this.priceTaxIncludedInput.val(product.price_tax_incl);
     this.taxRateInput.val(product.tax_rate);
     this.available = product.stock;
+    this.quantityInput.val(1);
     this.quantityInput.trigger('change');
     this.setCombinations(product.combinations);
   }
@@ -121,6 +119,10 @@ export default class OrderProductAdd {
         orderProductId: params.product_id,
         newRow: response,
       });
+    }, (response) => {
+      if (response.message) {
+        $.growl.error({message: response.message});
+      }
     });
   }
 }

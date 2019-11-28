@@ -58,6 +58,7 @@
       <input type="text" value="{{ product.quantity }}" class="form-control">
     </div>
   </td>
+  <td>{{ product.location }}</td>
   <td>
     <p>{{ product.quantityRefunded }}{% if product.amountRefund %} ({{ product.amountRefund }} {{ 'Refunded'|trans({}, 'Admin.Orderscustomers.Feature') }}){% endif %}</p>
   </td>
