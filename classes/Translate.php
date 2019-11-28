@@ -177,7 +177,8 @@ class TranslateCore
         $sprintf = null,
         $js = false,
         $locale = null,
-        $fallback = true
+        $fallback = true,
+        $escape = true
     ) {
         global $_MODULES, $_MODULE, $_LANGADM;
 
@@ -256,7 +257,7 @@ class TranslateCore
 
             if ($js) {
                 $ret = addslashes($ret);
-            } else {
+            } elseif ($escape) {
                 $ret = htmlspecialchars($ret, ENT_COMPAT, 'UTF-8');
             }
 
