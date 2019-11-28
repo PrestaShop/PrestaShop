@@ -42,7 +42,9 @@ use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderPaymentForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderPaymentsForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
+use PrestaShopException;
 use RuntimeException;
+use stdClass;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 use PrestaShop\PrestaShop\Core\Domain\Order\Invoice\Command\GenerateInvoiceCommand;
 use Product;
@@ -66,7 +68,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     public function before()
     {
         // needed because if no controller defined then CONTEXT_ALL is selected and exception is thrown
-        $adminControllerTestDouble = new \stdClass();
+        $adminControllerTestDouble = new stdClass();
         $adminControllerTestDouble->controller_type = 'admin';
         Context::getContext()->controller = $adminControllerTestDouble;
     }
@@ -341,6 +343,43 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
                 $data['transaction_id']
             )
         );
+    }
+
+    /**
+     * @When I add payment to order id :orderId exception is thrown with the following properties:
+     */
+    public function iAddPaymentToOrderIdExceptionIsThrownWithTheFollowingProperties(int $orderId, TableNode $table)
+    {
+        /** @var array $hash */
+        $hash = $table->getHash();
+        if (count($hash) != 1) {
+            throw new RuntimeException('Payment details are invalid');
+        }
+        /** @var array $data */
+        $data = $hash[0];
+
+        try {
+            $this->getCommandBus()->handle(
+                new AddPaymentCommand(
+                    $orderId,
+                    $data['date'],
+                    $data['payment_method'],
+                    $data['amount'],
+                    (int) $data['id_currency'],
+                    $data['id_invoice'],
+                    $data['transaction_id']
+                )
+            );
+        } catch (PrestaShopException $exception) {
+            $msg = $exception->getMessage();
+            $expectedMsg = 'Property Order->total_paid_real is not valid';
+            if ($msg !== 'Property Order->total_paid_real is not valid') {
+                throw new RuntimeException(sprintf(
+                    'Not expected exception is thrown "%s" but "%s" was expected',
+                    $msg,
+                    $expectedMsg));
+            }
+        }
     }
 
     /**
