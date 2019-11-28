@@ -317,12 +317,12 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @When I add payment to order with id :orderId with the following properties:
+     * @When I add payment to order id :orderId with the following properties:
      *
      * @param int $orderId
      * @param TableNode $table
      */
-    public function iAddPaymentToOrderWithIdWithTheFollowingProperties(int $orderId, TableNode $table)
+    public function iAddPaymentToOrderIdTheFollowingProperties(int $orderId, TableNode $table)
     {
         /** @var array $hash */
         $hash = $table->getHash();
@@ -383,12 +383,35 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Then if I query order with id :orderId payments I should get an Order with properties:
+     * @Then if I query order id :orderId payments I should get :numberOfPayments payments
+     */
+    public function ifIQueryOrderIdPaymentsIShouldGetOrders(int $orderId, int $numberOfPayments)
+    {
+        /** @var OrderForViewing $orderForViewing */
+        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
+        /** @var OrderPaymentsForViewing $orderPaymentsForViewing */
+        $orderPaymentsForViewing = $orderForViewing->getPayments();
+        /** @var OrderPaymentForViewing[] $orderPaymentForViewingArray */
+        $orderPaymentForViewingArray = $orderPaymentsForViewing->getPayments();
+
+        $countOfOrderPaymentsFromDb = count($orderPaymentForViewingArray);
+        if (count($orderPaymentForViewingArray) !== $numberOfPayments) {
+            throw new RuntimeException(sprintf(
+                'Order "%s" number of payments "%s" is wrong , but "%s" was expected',
+                $orderId,
+                $countOfOrderPaymentsFromDb,
+                $numberOfPayments
+            ));
+        }
+    }
+
+    /**
+     * @Then if I query order id :orderId payments I should get an Order with properties:
      *
      * @param int $orderId
      * @param TableNode $table
      */
-    public function ifIQueryOrderWithIdPaymentsIShouldGetAnOrderWithProperties(int $orderId, TableNode $table)
+    public function ifIQueryOrderIdPaymentsIShouldGetAnOrderWithProperties(int $orderId, TableNode $table)
     {
         /** @var OrderForViewing $orderForViewing */
         $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
@@ -406,7 +429,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
 
         /** @var array $hash */
         $hash = $table->getHash();
-        if (count($hash) != 1) {
+        if (count($hash) == 0) {
             throw new RuntimeException('Payment details are invalid');
         }
         /** @var array $data */
