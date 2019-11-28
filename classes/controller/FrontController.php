@@ -1205,14 +1205,12 @@ class FrontControllerCore extends Controller
         }
 
         foreach ($component as $ui) {
-
             $ui_path = Media::getJqueryUIPath($ui, $theme, $check_dependencies);
 
             //Css array is an array of media types indexed by path in order: ui-theme-css, ui-component-css, ui-dependency-css
             foreach ($ui_path['css'] as $css_path => $css_media) {
                 $css_name = basename($css_path);
                 $css_id = str_replace('.', '-', $css_name);
-
                 $css_path_min = str_replace($css_name, 'minified/' . $css_name, $css_path);
                 $css_path_min = str_replace('.css', '.min.css', $css_path_min);
                 
