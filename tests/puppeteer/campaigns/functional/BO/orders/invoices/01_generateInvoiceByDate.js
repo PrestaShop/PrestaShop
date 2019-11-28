@@ -44,6 +44,8 @@ describe('Filter And Quick Edit invoices', async () => {
   });
   after(async () => {
     await helper.closeBrowser(browser);
+    /* Delete the generated invoice */
+    files.deleteFile(`${global.BO.DOWNLOADSPATH}/${Invoices.moreThanAnInvoice.fileName}`);
   });
 
   // Login into BO
@@ -105,20 +107,11 @@ describe('Filter And Quick Edit invoices', async () => {
 
       it('should generate PDF file by date and check the file existence', async function () {
         await this.pageObjects.invoicesPage.generatePDFByDate();
-        const exist = await this.pageObjects.boBasePage.checkFileExistence(
+        const exist = await files.checkFileExistence(
           global.BO.DOWNLOADSPATH,
           Invoices.moreThanAnInvoice.fileName,
         );
         await expect(exist).to.be.true;
-      });
-
-      it('should delete the invoice', async () => {
-        await files.deleteFile(`${global.BO.DOWNLOADSPATH}/${Invoices.moreThanAnInvoice.fileName}`);
-        const exist = await files.isFileExist(
-          global.BO.DOWNLOADSPATH,
-          Invoices.moreThanAnInvoice.fileName,
-        );
-        await expect(exist).to.be.false;
       });
 
       it('should check the error message when there is no invoice in the entered date', async function () {
