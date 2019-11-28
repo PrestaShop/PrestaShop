@@ -24,7 +24,7 @@ npm install
 | DB_USER             | Login user of your MySql (default to **`root`**) |
 | DB_PASSWD           | Password for your MySql (default to **`empty`**) |
 | HEADLESS            | Boolean to run tests in headless or not (default to **`true`**) |
-| DOWNLOADSPATH       | PATH of your download folder (default to **`empty`**)|
+| DOWNLOAD_PATH       | PATH of your download folder (default to **`empty`**)|
 
 Before running tests, you should install your shop manually or run the install script **`campaigns/sanity/01_installShop/*`** with the [`specific-test` command](README.md#specific-test).
 

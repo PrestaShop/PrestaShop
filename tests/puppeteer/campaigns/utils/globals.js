@@ -9,7 +9,7 @@ global.BO = {
   PASSWD: process.env.PASSWD || DefaultAccount.password,
   FIRSTNAME: process.env.FIRSTNAME || DefaultAccount.firstName,
   LASTNAME: process.env.LASTNAME || DefaultAccount.lastName,
-  DOWNLOADSPATH: process.env.DOWNLOADSPATH || '',
+  DOWNLOAD_PATH: process.env.DOWNLOAD_PATH || '',
 };
 global.INSTALL = {
   URL: process.env.URL_INSTALL || `${global.FO.URL}install-dev/`,

@@ -15,7 +15,7 @@ module.exports = {
   async setDownloadBehavior(browser) {
     await browser._client.send('Page.setDownloadBehavior', {
       behavior: 'allow',
-      downloadPath: global.BO.DOWNLOADSPATH,
+      downloadPath: global.BO.DOWNLOAD_PATH,
     });
   },
 };
