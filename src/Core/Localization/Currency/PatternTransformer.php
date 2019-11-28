@@ -51,12 +51,12 @@ class PatternTransformer
         self::TYPE_RIGHT_SYMBOL_WITHOUT_SPACE,
     ];
 
-    const TRIMMED_CHARACTERS = [
-        self::CURRENCY_SYMBOL,
-        self::NO_BREAK_SPACE,
-        self::REGULAR_SPACE,
-        self::RTL_CHARACTER,
-    ];
+    const CHARACTERS_TO_TRIM =
+        self::CURRENCY_SYMBOL .
+        self::NO_BREAK_SPACE .
+        self::REGULAR_SPACE .
+        self::RTL_CHARACTER
+    ;
 
     const TRANSFORM_DICTIONARY = [
         self::TYPE_LEFT_SYMBOL_WITH_SPACE => '$rtl$currencySymbol$nbsp$pattern',
@@ -83,16 +83,10 @@ class PatternTransformer
             ));
         }
 
-        $currencyPatterns = explode(';', $currencyPattern);
-        $trimmedPatterns = [];
-        foreach ($currencyPatterns as $pattern) {
-            $trimmedCharacters = implode('', self::TRIMMED_CHARACTERS);
-            $trimmedPatterns[] = trim($pattern, $trimmedCharacters);
-        }
-
         $transformedPatterns = [];
-        foreach ($trimmedPatterns as $trimmedPattern) {
-            $transformedPatterns[] = $this->transformPattern($currencyPattern, $trimmedPattern, $transformationType);
+        $currencyPatterns = explode(';', $currencyPattern);
+        foreach ($currencyPatterns as $pattern) {
+            $transformedPatterns[] = $this->transformPattern($pattern, $transformationType);
         }
 
         return implode(';', $transformedPatterns);
@@ -100,14 +94,14 @@ class PatternTransformer
 
     /**
      * @param string $basePattern
-     * @param string $trimmedPattern
      * @param string $transformationType
      *
      * @return string
      */
-    private function transformPattern(string $basePattern, string $trimmedPattern, string $transformationType)
+    private function transformPattern(string $basePattern, string $transformationType)
     {
         $rtlCharacter = $this->getRtlCharacter($basePattern);
+        $trimmedPattern = trim($basePattern, self::CHARACTERS_TO_TRIM);
 
         return strtr(
             self::TRANSFORM_DICTIONARY[$transformationType],
@@ -127,6 +121,6 @@ class PatternTransformer
      */
     private function getRtlCharacter(string $currencyPattern): string
     {
-        return false !== strpos($currencyPattern, self::RTL_CHARACTER) ? self::RTL_CHARACTER : '';
+        return (false !== strpos($currencyPattern, self::RTL_CHARACTER)) ? self::RTL_CHARACTER : '';
     }
 }
