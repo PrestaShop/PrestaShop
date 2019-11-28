@@ -30,6 +30,7 @@ class OrderPaymentsForViewing
 {
     /**
      * hint - collection would be better
+     *
      * @var OrderPaymentForViewing[]
      */
     private $payments = [];
