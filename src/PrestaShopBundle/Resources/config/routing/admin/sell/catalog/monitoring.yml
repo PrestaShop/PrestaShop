@@ -4,6 +4,7 @@ admin_monitoring_index:
   defaults:
     _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Monitoring:index'
     _legacy_controller: AdminTracking
+    _legacy_link: AdminTracking
 
 admin_monitoring_search:
   path: /
