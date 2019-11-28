@@ -66,7 +66,7 @@ describe('Simple filter stocks', async () => {
         const numberOfProductsAfterFilter = await this.pageObjects.stocksPage.getNumberOfProductsFromList();
         await expect(numberOfProductsAfterFilter).to.be.at.most(numberOfProducts);
         for (let i = 1; i <= numberOfProductsAfterFilter; i++) {
-          const textColumn = await this.pageObjects.stocksPage.getTextColumnFromTableStocks(1, test.args.filterBy);
+          const textColumn = await this.pageObjects.stocksPage.getTextColumnFromTableStocks(i, test.args.filterBy);
           await expect(textColumn).to.contains(test.args.filterValue);
         }
       });
