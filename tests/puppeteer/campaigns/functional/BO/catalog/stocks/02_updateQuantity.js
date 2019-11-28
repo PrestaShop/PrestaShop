@@ -25,8 +25,8 @@ const init = async function () {
   };
 };
 
-// Simple filter stocks
-describe('Simple filter stocks', async () => {
+// Update Quantity
+describe('Update Quantity', async () => {
   // before and after functions
   before(async function () {
     browser = await helper.createBrowser();
@@ -54,14 +54,15 @@ describe('Simple filter stocks', async () => {
     await expect(numberOfProducts).to.be.above(0);
   });
 
-  // Update Quantity
-  describe('Update Quantity', async () => {
+  // Update quantity by setting input value
+  describe('Update quantity by setting input value', async () => {
     it(`should filter by name '${Products.demo_1.name}'`, async function () {
       await this.pageObjects.stocksPage.simpleFilter(productStock.name);
       const numberOfProductsAfterFilter = await this.pageObjects.stocksPage.getNumberOfProductsFromList();
       await expect(numberOfProductsAfterFilter).to.be.at.most(numberOfProducts);
       const textColumn = await this.pageObjects.stocksPage.getTextColumnFromTableStocks(1, 'name');
       await expect(textColumn).to.contains(productStock.name);
+      // Get physical and available quantities of product
       productStock.stocks = {
         physical: await this.pageObjects.stocksPage.getTextColumnFromTableStocks(1, 'physical'),
         available: await this.pageObjects.stocksPage.getTextColumnFromTableStocks(1, 'available'),
@@ -71,13 +72,15 @@ describe('Simple filter stocks', async () => {
     });
 
     const tests = [
-      {args: {action: 'add', updateValue: 5, method: 'setting input value'}},
-      {args: {action: 'subtract', updateValue: -5, method: 'setting input value'}},
+      {args: {action: 'add', updateValue: 5}},
+      {args: {action: 'subtract', updateValue: -5}},
     ];
     tests.forEach((test) => {
-      it(`should ${test.args.action} quantity by ${test.args.method}`, async function () {
+      it(`should ${test.args.action} quantity by setting input value`, async function () {
+        // Update Quantity and check successful message
         const updateMessage = await this.pageObjects.stocksPage.updateRowQuantityWithInput(1, test.args.updateValue);
         await expect(updateMessage).to.contains(this.pageObjects.stocksPage.successfulUpdateMessage);
+        // Check physical and available quantities of product after update
         const quantityToCheck = await this.pageObjects.stocksPage.getStockQuantityForProduct(1);
         await expect(quantityToCheck.physical).to.be.equal(productStock.stocks.physical + test.args.updateValue);
         productStock.stocks.physical = quantityToCheck.physical;

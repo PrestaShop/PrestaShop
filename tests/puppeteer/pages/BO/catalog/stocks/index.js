@@ -129,12 +129,12 @@ module.exports = class Stocks extends BOBasePage {
    * @return {Promise<textContent>}
    */
   async updateRowQuantityWithInput(row, value) {
+
     await this.setValue(this.productRowQuantityColumnInput.replace('%ROW', row), value.toString());
+    // Wait for check button before click
     await this.waitForSelectorAndClick(this.productRowQuantityUpdateButton.replace('%ROW', row));
-    await Promise.all([
-      this.page.waitForSelector(this.productListLoading, {hidden: true}),
-      this.page.waitForSelector(this.alertBoxTextSpan, {visible: true}),
-    ]);
+    // Wait for alert-Box after update quantity and close alert-Box
+    await this.page.waitForSelector(this.alertBoxTextSpan, {visible: true});
     const textContent = await this.getTextContent(this.alertBoxTextSpan);
     await this.page.click(this.alertBoxButtonClose);
     return textContent;
