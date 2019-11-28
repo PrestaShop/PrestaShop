@@ -26,7 +26,9 @@
 
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
+use AdminController;
 use Behat\Gherkin\Node\TableNode;
+use FrontController;
 use Order;
 use OrderState;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\AddOrderFromBackOfficeCommand;
@@ -68,8 +70,10 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     public function before()
     {
         // needed because if no controller defined then CONTEXT_ALL is selected and exception is thrown
+        /** @var AdminController|FrontController $adminControllerTestDouble */
         $adminControllerTestDouble = new stdClass();
         $adminControllerTestDouble->controller_type = 'admin';
+        $adminControllerTestDouble->php_self = 'dummyTestDouble';
         Context::getContext()->controller = $adminControllerTestDouble;
     }
 
@@ -397,7 +401,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
         $countOfOrderPaymentsFromDb = count($orderPaymentForViewingArray);
         if (count($orderPaymentForViewingArray) !== $numberOfPayments) {
             throw new RuntimeException(sprintf(
-                'Order "%s" number of payments "%s" is wrong , but "%s" was expected',
+                'Order "%s" number of payments  is "%s", but "%s" was expected',
                 $orderId,
                 $countOfOrderPaymentsFromDb,
                 $numberOfPayments
