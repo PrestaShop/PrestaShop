@@ -36,6 +36,11 @@ class OrderProductForViewing
     /**
      * @var string
      */
+    private $location;
+
+    /**
+     * @var string
+     */
     private $name;
 
     /**
@@ -124,7 +129,8 @@ class OrderProductForViewing
         float $taxRate,
         string $amountRefund,
         int $quantityRefunded,
-        string $amountRefundable
+        string $amountRefundable,
+        string $location
     ) {
         $this->id = $id;
         $this->name = $name;
@@ -142,6 +148,7 @@ class OrderProductForViewing
         $this->amountRefund = $amountRefund;
         $this->quantityRefunded = $quantityRefunded;
         $this->amountRefundable = $amountRefundable;
+        $this->location = $location;
     }
 
     /**
@@ -190,6 +197,14 @@ class OrderProductForViewing
     public function getTaxRate(): float
     {
         return $this->taxRate;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLocation(): string
+    {
+        return $this->location;
     }
 
     /**
