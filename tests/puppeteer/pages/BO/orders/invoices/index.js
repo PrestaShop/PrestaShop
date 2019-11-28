@@ -19,6 +19,12 @@ module.exports = class Invoice extends BOBasePage {
   Methods
    */
 
+  /**
+   * Generate PDF by date
+   * @param dateFrom
+   * @param dateTo
+   * @return {Promise<void>}
+   */
   async generatePDFByDate(dateFrom = '', dateTo = '') {
     if (dateFrom) {
       await this.setValue(this.dateFromInput, dateFrom);
