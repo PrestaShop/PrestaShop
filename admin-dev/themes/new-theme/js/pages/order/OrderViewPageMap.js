@@ -57,6 +57,7 @@ export default {
   productOriginalPosition: '#orderProductsOriginalPosition',
   productModificationPosition: '#orderProductsModificationPosition',
   productsPanel: '#orderProductsPanel',
+  productsCount: '#orderProductsPanelCount',
   productDeleteBtn: '.js-order-product-delete-btn',
   productsTable: '#orderProductsTable',
   productsTablePagination: '#orderProductsTablePagination',
