@@ -1210,21 +1210,19 @@ class FrontControllerCore extends Controller
 
             //Css array is an array of media types indexed by path in order: ui-theme-css, ui-component-css, ui-dependency-css
             foreach ($ui_path['css'] as $css_path => $css_media) {
-
                 $css_name = basename($css_path);
-                $css_id  = str_replace(".", "-", $css_name);
+                $css_id  = str_replace('.', '-', $css_name);
 
-                $css_path_min = str_replace($css_name,'minified/' . $css_name, $css_path);
-                $css_path_min = str_replace('.css','.min.css', $css_path_min);
+                $css_path_min = str_replace($css_name, 'minified/' . $css_name, $css_path);
+                $css_path_min = str_replace('.css', '.min.css', $css_path_min);
                 
                 $this->registerStylesheet($css_id, $css_path_min, ['media' => $css_media, 'priority' => 51]);
             }
 
             //Js array is an indexed array of paths in order of dependency
             foreach ($ui_path['js'] as $js_path) {
-
-                $js_id = basename($js_path,".js");
-                $js_id  = str_replace(".", "-", $js_id);
+                $js_id = basename($js_path, '.js');
+                $js_id  = str_replace('.', '-', $js_id);
 
                 $this->registerJavascript($js_id, $js_path, ['position' => 'bottom', 'priority' => 51]);
             }
