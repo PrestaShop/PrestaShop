@@ -7,8 +7,8 @@ Feature: Order shipping details from Back Office
 
   Background:
     Given email sending is disabled
-    Given the current currency is "USD"
-    Given there is existing order with id 1
+    And the current currency is "USD"
+    And there is existing order with id 1
 
   Scenario: Update order shipping details
     When I update order 1 Tracking number to "TEST1234" and Carrier to "My carrier"
