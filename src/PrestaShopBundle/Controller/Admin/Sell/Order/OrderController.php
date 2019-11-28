@@ -963,7 +963,7 @@ class OrderController extends FrameworkBundleAdminController
      *
      * @return JsonResponse
      */
-    public function getProductsAction(int $orderId, Request $request): JsonResponse
+    public function getPaginatedProductsAction(int $orderId, Request $request): JsonResponse
     {
         $offset = $request->get('offset');
         $limit = $request->get('limit');
@@ -973,6 +973,7 @@ class OrderController extends FrameworkBundleAdminController
 
         $products = $orderForViewing->getProducts()->getProducts();
         if (null !== $limit && null !== $offset) {
+            // @todo Optimize this by using a GetPartialOrderForViewing query which loads only the relevant products
             $products = array_slice($products, (int) $offset, (int) $limit);
         }
 
