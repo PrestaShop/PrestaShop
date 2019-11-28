@@ -436,8 +436,8 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
         $data = $hash[0];
 
         $orderPaymentDateFromDb = $orderPaymentForViewing->getDate()->format('Y-m-d H:i:s');
-        $orderPaymentDate = $data['date'];
-        if ($orderPaymentDate !== $orderPaymentDateFromDb) {
+        $orderPaymentDate = isset($data['date']) ? $data['date'] : false;
+        if ($orderPaymentDate && $orderPaymentDate !== $orderPaymentDateFromDb) {
             throw new RuntimeException(sprintf(
                 'Order "%s" payment date is not the same as "%s", but "%s" was expected',
                 $orderId,
@@ -447,8 +447,8 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
         }
 
         $paymentMethodFromDb = $orderPaymentForViewing->getPaymentMethod();
-        $orderPaymentMethod = $data['payment_method'];
-        if ($orderPaymentMethod !== $paymentMethodFromDb) {
+        $orderPaymentMethod = isset($data['payment_method']) ? $data['payment_method'] : false;
+        if ($orderPaymentMethod && $orderPaymentMethod !== $paymentMethodFromDb) {
             throw new RuntimeException(sprintf(
                 'Order "%s" payment method is not the same as "%s", but "%s" was expected',
                 $orderId,
@@ -458,8 +458,8 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
         }
 
         $transactionIdFromDb = $orderPaymentForViewing->getTransactionId();
-        $transactionId = $data['transaction_id'];
-        if ($transactionId !== $transactionIdFromDb) {
+        $transactionId = isset($data['transaction_id']) ? $data['transaction_id'] : false;
+        if ($transactionId && $transactionId !== $transactionIdFromDb) {
             throw new RuntimeException(sprintf(
                 'Order "%s" transaction id is not the same as "%s", but "%s" was expected',
                 $orderId,
@@ -468,10 +468,9 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
             ));
         }
 
-        //       | date                | payment_method    | transaction_id              | id_currency | amount | id_invoice |\
         $amountFromDb = $orderPaymentForViewing->getAmount();
-        $amount = $data['amount'];
-        if ($amount !== $amountFromDb) {
+        $amount = isset($data['amount']) ? $data['amount'] : false;
+        if ($amount && $amount !== $amountFromDb) {
             throw new RuntimeException(sprintf(
                 'Order "%s" amount is not the same as "%s", but "%s" was expected',
                 $orderId,
@@ -481,8 +480,8 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
         }
 
         $invoiceNumberFromDb = $orderPaymentForViewing->getInvoiceNumber();
-        $invoiceId = $data['id_invoice'];
-        if ($invoiceId !== $invoiceNumberFromDb && $invoiceNumberFromDb != '') {
+        $invoiceId = isset($data['id_invoice']) ? $data['id_invoice'] : false;
+        if ($invoiceId && $invoiceId !== $invoiceNumberFromDb && $invoiceNumberFromDb != '') {
             throw new RuntimeException(sprintf(
                 'Order "%s" invoice id is not the same as "%s", but "%s" was expected',
                 $orderId,
