@@ -27,7 +27,7 @@
 <div class="card" id="orderProductsPanel">
   <div class="card-header">
     <h3 class="card-header-title">
-      {{ 'Products'|trans({}, 'Admin.Global') }} ({{ orderForViewing.products.products|length }})
+      {{ 'Products'|trans({}, 'Admin.Global') }} (<span id="orderProductsPanelCount">{{ orderForViewing.products.products|length }}</span>)
     </h3>
   </div>
 
@@ -45,6 +45,9 @@
           </th>
           <th>
             <p>{{ 'Quantity'|trans({}, 'Admin.Global') }}</p>
+          </th>
+          <th>
+            <p>{{ 'Stock Location'|trans({}, 'Admin.Global') }}</p>
           </th>
           <th>
             <p>{{ 'Refunded'|trans({}, 'Admin.Orderscustomers.Feature') }}</p>
@@ -68,6 +71,7 @@
       </thead>
       <tbody>
       {{ form_start(partialRefundForm, {'action': path('admin_orders_partial_refund', {'orderId': orderForViewing.id})}) }}
+        {#  @todo Optimize this by using a GetPartialOrderForViewing query which loads only the relevant products #}
         {% for product in orderForViewing.products.products|slice(0, paginationNum) %}
           {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/product.html.twig' with {'product': product} %}
         {% endfor %}
@@ -98,9 +102,9 @@
               </div>
             </div>
           </td>
-          <td class="pr-5"><input type="number" id="addProductQuantity" min="1" value="1"></td>
+          <td class="pr-5"><input type="number" id="addProductQuantity" min="1" value="1" class="form-control"></td>
           <td id="addProductAvailable"></td>
-          <td colspan="2">
+          <td colspan="3">
             <button type="button" class="btn btn-sm btn-secondary js-product-add-action-btn mr-2 d-inline" id="cancelAddProductBtn">
               {{ 'Cancel'|trans({}, 'Admin.Actions') }}
             </button>
@@ -128,9 +132,9 @@
               </div>
             </div>
           </td>
-          <td class="pr-5"><input type="number" class="editProductQuantity" min="1" value="1"></td>
+          <td class="pr-5"><input type="number" class="editProductQuantity form-control" min="1" value="1"></td>
           <td class="editProductAvailable"></td>
-          <td colspan="2">
+          <td colspan="3">
             <button type="button" class="btn btn-sm btn-secondary js-product-edit-action-btn mr-2 d-inline cancelEditProductBtn">
               {{ 'Cancel'|trans({}, 'Admin.Actions') }}
             </button>
@@ -154,6 +158,7 @@
               </p>
             </a>
           </td>
+          <td></td>
           <td></td>
           <td>
             <span class="badge badge-secondary rounded-circle"></span>
