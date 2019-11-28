@@ -60,13 +60,13 @@ export default class OrderProductManager {
   }
 
   paginate(orderId, numPage) {
-    const offset = (numPage - 1) * 2;
-    const limit = 8;
-    $.ajax(this.router.generate('admin_orders_get_products', {orderId}), {
+    const numRows = 8;
+    const offset = (numPage - 1) * numRows;
+    $.ajax(this.router.generate('admin_orders_get_paginated_products', {orderId}), {
       method: 'GET',
       data: {
         offset,
-        limit,
+        limit: numRows,
       },
     }).then((results) => {
       EventEmitter.emit(OrderViewEventMap.productListPaginated, {

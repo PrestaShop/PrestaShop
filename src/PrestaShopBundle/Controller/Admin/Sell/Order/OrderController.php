@@ -275,7 +275,6 @@ class OrderController extends FrameworkBundleAdminController
     {
         /** @var OrderForViewing $orderForViewing */
         $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
-        dump($orderForViewing);
         $addOrderCartRuleForm = $this->createForm(AddOrderCartRuleType::class, [], [
             'order_id' => $orderId,
         ]);
@@ -335,9 +334,9 @@ class OrderController extends FrameworkBundleAdminController
             $orderId,
             (int) $request->get('product_id'),
             (int) $request->get('combination_id'),
-            $request->get('price_tax_incl'),
-            $request->get('price_tax_excl'),
-            $request->get('quantity'),
+            (float) $request->get('price_tax_incl'),
+            (float) $request->get('price_tax_excl'),
+            (int) $request->get('quantity'),
             false
         ));
 
@@ -451,9 +450,9 @@ class OrderController extends FrameworkBundleAdminController
             new UpdateProductInOrderCommand(
                 $orderId,
                 $orderDetailId,
-                $request->get('price_tax_incl'),
-                $request->get('price_tax_excl'),
-                $request->get('quantity')
+                (float) $request->get('price_tax_incl'),
+                (float) $request->get('price_tax_excl'),
+                (int) $request->get('quantity')
             )
         );
 
@@ -593,7 +592,7 @@ class OrderController extends FrameworkBundleAdminController
         ]);
     }
 
-    public function previewAction(int $orderId): Response
+    public function previewAction(int $orderId): JsonResponse
     {
         try {
             /** @var OrderPreview $orderPreview */
@@ -710,13 +709,26 @@ class OrderController extends FrameworkBundleAdminController
         ]);
     }
 
+    /**
+     * @param int $orderId
+     * @param int $orderDetailId
+     *
+     * @return JsonResponse
+     */
     public function deleteProductAction(int $orderId, int $orderDetailId): JsonResponse
     {
-        $this->getCommandBus()->handle(
-            new DeleteProductFromOrderCommand($orderId, $orderDetailId)
-        );
+        try {
+            $this->getCommandBus()->handle(
+                new DeleteProductFromOrderCommand($orderId, $orderDetailId)
+            );
 
-        return $this->json(null);
+            return $this->json(null);
+        } catch (Exception $e) {
+            return $this->json(
+                ['message' => $this->getErrorMessageForException($e, $this->getErrorMessages($e))],
+                Response::HTTP_BAD_REQUEST
+            );
+        }
     }
 
     public function getPricesAction(int $orderId): JsonResponse
@@ -740,7 +752,7 @@ class OrderController extends FrameworkBundleAdminController
      *
      * @return JsonResponse
      */
-    public function getProductsAction(int $orderId, Request $request): JsonResponse
+    public function getPaginatedProductsAction(int $orderId, Request $request): JsonResponse
     {
         $offset = $request->get('offset');
         $limit = $request->get('limit');
@@ -750,6 +762,7 @@ class OrderController extends FrameworkBundleAdminController
 
         $products = $orderForViewing->getProducts()->getProducts();
         if (null !== $limit && null !== $offset) {
+            // @todo Optimize this by using a GetPartialOrderForViewing query which loads only the relevant products
             $products = array_slice($products, (int) $offset, (int) $limit);
         }
 
