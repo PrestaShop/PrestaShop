@@ -95,6 +95,7 @@ export default class OrderViewPage {
 
   listenForProductPagination() {
     $(OrderViewPageMap.productsTablePagination).on('click', '.page-link', (event) => {
+      event.preventDefault();
       const $btn = $(event.currentTarget);
       this.orderProductManager.paginate(
         $btn.attr('data-order-id'),
