@@ -1200,13 +1200,35 @@ class FrontControllerCore extends Controller
      */
     public function addJqueryUI($component, $theme = 'base', $check_dependencies = true)
     {
-        $css_theme_path = '/js/jquery/ui/themes/' . $theme . '/minified/jquery.ui.theme.min.css';
-        $css_path = '/js/jquery/ui/themes/' . $theme . '/minified/jquery-ui.min.css';
-        $js_path = '/js/jquery/ui/jquery-ui.min.js';
+        if (!is_array($component)) {
+            $component = array($component);
+        }
 
-        $this->registerStylesheet('jquery-ui-theme', $css_theme_path, ['media' => 'all', 'priority' => 95]);
-        $this->registerStylesheet('jquery-ui', $css_path, ['media' => 'all', 'priority' => 90]);
-        $this->registerJavascript('jquery-ui', $js_path, ['position' => 'bottom', 'priority' => 90]);
+        foreach ($component as $ui) {
+
+            $ui_path = Media::getJqueryUIPath($ui, $theme, $check_dependencies);
+
+            //Css array is an array of media types indexed by path in order: ui-theme-css, ui-component-css, ui-dependency-css
+            foreach ($ui_path['css'] as $css_path => $css_media) {
+
+                $css_name = basename($css_path);
+                $css_id  = str_replace(".", "-", $css_name);
+
+                $css_path_min = str_replace($css_name,'minified/' . $css_name, $css_path);
+                $css_path_min = str_replace('.css','.min.css', $css_path_min);
+                
+                $this->registerStylesheet($css_id, $css_path_min, ['media' => $css_media, 'priority' => 51]);
+            }
+
+            //Js array is an indexed array of paths in order of dependency
+            foreach ($ui_path['js'] as $js_path) {
+
+                $js_id = basename($js_path,".js");
+                $js_id  = str_replace(".", "-", $js_id);
+
+                $this->registerJavascript($js_id, $js_path, ['position' => 'bottom', 'priority' => 51]);
+            }
+        }
     }
 
     /**
