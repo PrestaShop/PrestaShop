@@ -17,15 +17,13 @@ Feature: Order payment from Back Office
     Then if I query order with id 1 payments I should get an Order with properties:
       | date                | payment_method    | transaction_id              | amount | id_invoice |
       | 2019-11-26 13:56:22 | Payments by check | test123                     | $5.54  |            |
-#  todo: finish the tests below not to fail
-
-#    When I add payment to order with id 1 with the following properties:
-#      | date                | payment_method    | transaction_id              | id_currency | amount | id_invoice |
-#      | 2019-11-26 13:56:23 | Payments by check | test!@#$%%^^&* OR 1=1 _     | 1           | -5.548 | 0          |
-#    Then if I query order with id 1 payments I should get an Order with properties:
-#      | date                | payment_method    | transaction_id              | amount | id_invoice |
-#      | 2019-11-26 13:56:22 | Payments by check | test123                     | $5.54  |            |
-#      | 2019-11-26 13:56:23 | Payments by check | test!@#$%%^^&*_ OR 1=1      | -$5.548|            |
+#  todo: finish the tests below not to fail or fail with the reason
+    When I add payment to order id 1 exception is thrown with the following properties:
+      | date                | payment_method    | transaction_id              | id_currency | amount | id_invoice |
+      | 2019-11-26 13:56:23 | Payments by check | test!@#$%%^^&* OR 1=1 _     | 1           | -5.548 | 0          |
+    Then if I query order with id 1 payments I should get an Order with properties:
+      | date                | payment_method    | transaction_id              | amount | id_invoice |
+      | 2019-11-26 13:56:22 | Payments by check | test123                     | $5.54  |            |
 #    When I add payment to order with id 1 with the following properties:
 #      | date                | payment_method    | transaction_id              | id_currency | amount | id_invoice |
 #      | 2019-11-26 13:56:24 | Bank transfer     | SELECT id, login FROM users | 1           | 0.00   | 0          |
