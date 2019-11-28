@@ -25,6 +25,54 @@ Release Notes for PrestaShop 1.7
 --------------------------------
 
 ####################################
+#   v1.7.6.2 - (2019-11-28)
+####################################
+- Back Office:
+  - Bug fix:
+    - #16365: Viewed products - the date is showing product id - not a  date (by @khouloudbelguith)
+    - #16265: Fix category checkbox redirect (Backport #16159) (by @atomiix)
+    - #16153: Add missing field type DNI in brand address form (by @jolelievre)
+    - #16158: Fix filter not being taken into account in grid export (by @matthieu-rolland)
+    - #16172: Remove constraint on siret in CustomerType (by @matthieu-rolland)
+    - #16047: Handle multistore customers sharing in customers listing at group level (by @matks)
+    - #16036: Add redirect routes on security annotation of Category pages (by @jolelievre)
+    - #15643: Allow CLDR to display deleted/inactive currencies (by @jolelievre)
+    - #15859: Add clickable row option for grid actions (by @jolelievre)
+    - #15880: Fix wrong data mapping in export (by @eternoendless)
+    - #15855: Allow anonymous mode for AdminController (by @PierreRambaud)
+    - #15856: Must use min-with instead max-widght for the Profile button (by @PierreRambaud)
+    - #15685: Unable to create new supplier when VAT identification number is mandatory (by @PierreRambaud)
+    - #15665: Wrong selector expression, unable to move parent category (by @PierreRambaud)
+    - #15660: Fix tracking url in Theme and Logo page (by @jolelievre)
+    - #15658: Use empty legacy action parameter (by @jolelievre)
+    - #15382: Remove useless and buggy identifier computation (by @jolelievre)
+- Front Office:
+  - Bug fix:
+    - #16423: Use default attribute when no one are passed in front page (by @PierreRambaud)
+    - #16274: Fix contact us email display (by @atomiix)
+    - #15964: Use product url (including combination) rather than canonical one in the miniatures (by @jolelievre)
+    - #15963: Add rel="nofollow" to prestashop website link (by @matks)
+    - #15930: Fix on product-flags class for product cards (by @Progi1984)
+- Core:
+  - Improvement:
+    - #16203: Update version to 1.7.6.2 (by @atomiix)
+  - Bug fix:
+    - #16500: Incorrect email subject and template variable {shop_name} (by @PierreRambaud)
+    - #16335: Update id_order_state at the right place (by @atomiix)
+    - #16258: Remove unnecessary require_once config.inc (by @matks)
+    - #16026: Remove final keyword from Lang entity (by @jolelievre)
+    - #15917: Define use_debug_toolbar even if it's not set in parameters.php (by @PierreRambaud)
+    - #15691: Cart rules mustn't be auto added automatically in some cases (by @PierreRambaud)
+    - #15621: Revert "Fix lang table multi-store data issue" (by @matks)
+    - #15731: Webservices shouldn't display warning when running with fpm or Nginx (by @PierreRambaud)
+    - #15515: SqlTranslator must throw a NotFoundResourceException (by @PierreRambaud)
+- Tests:
+  - Bug fix:
+    - #15847: Npm is not anymore in the nodejs package (by @PierreRambaud)
+    - #15895: Add management of an env var to disable debug toolbar in travis tests (by @jolelievre)
+    - #15590: Remove selenium tests (by @PierreRambaud)
+
+####################################
 #   v1.7.6.1 - (2019-08-26)
 ####################################
 - Back Office:
