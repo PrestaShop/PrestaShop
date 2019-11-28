@@ -116,6 +116,11 @@ $(() => {
     const $valueInput = $form.find(OrderViewPageMap.addCartRuleValueInput);
     const $valueFormGroup = $valueInput.closest('.form-group');
 
+    $valueInput.on('change', (event) => {
+      const value = $(event.currentTarget).val();
+      $(event.currentTarget).val(value.replace(/,/g, '.'));
+    });
+
     $form.find(OrderViewPageMap.addCartRuleApplyOnAllInvoicesCheckbox).on('change', (event) => {
       const isChecked = $(event.currentTarget).is(':checked');
 

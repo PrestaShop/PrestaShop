@@ -36,6 +36,11 @@ class OrderProductForViewing
     /**
      * @var string
      */
+    private $location;
+
+    /**
+     * @var string
+     */
     private $name;
 
     /**
@@ -106,7 +111,8 @@ class OrderProductForViewing
         ?string $imagePath,
         float $unitPriceTaxExclRaw,
         float $unitPriceTaxInclRaw,
-        float $taxRate
+        float $taxRate,
+        string $location
     ) {
         $this->id = $id;
         $this->name = $name;
@@ -121,6 +127,7 @@ class OrderProductForViewing
         $this->unitPriceTaxInclRaw = $unitPriceTaxInclRaw;
         $this->taxRate = $taxRate;
         $this->orderDetailId = $orderDetailId;
+        $this->location = $location;
     }
 
     /**
@@ -169,6 +176,14 @@ class OrderProductForViewing
     public function getTaxRate(): float
     {
         return $this->taxRate;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLocation(): string
+    {
+        return $this->location;
     }
 
     /**
