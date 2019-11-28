@@ -531,6 +531,7 @@ GitHub contributors:
 - Priyank Desai
 - ProBackup-nl
 - Profileo
+- Progi1984
 - Pronux
 - proydsl
 - psandmore
@@ -650,6 +651,7 @@ GitHub contributors:
 - Thoma
 - thoma202
 - Thomas
+- Thomas Baccelli
 - Thomas Blanc
 - Thomas Ferney
 - Thomas Leviandier
