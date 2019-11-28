@@ -32,17 +32,17 @@ Feature: Order payment from Back Office
       | 2019-11-26 13:56:22 | Payments by check | test!@#$%%^^&* OR 1=1 _     | $10.00 |            |
 
   Scenario: change order state to Delivered to be able to add valid invoice to new Payment
-    When if I query order id 2 payments I should get 0 payments
-    And I update order 2 to status "Delivered"
-    Then if I query order id 2 payments I should get an Order with properties:
+    When if I query order id 3 payments I should get 0 payments
+    And I update order 3 to status "Delivered"
+    Then if I query order id 3 payments I should get an Order with properties:
     | payment_method    | amount | id_invoice |
-    | Payments by check | $69.90 | #IN000001  |
-    When I add payment to order id 1 with the following properties:
+    | Payments by check | $14.90 | #IN000001  |
+    When I add payment to order id 3 with the following properties:
     | date                | payment_method    | transaction_id              | id_currency | amount | id_invoice |
     | 2019-11-26 13:56:24 | Payments by check | test!@#$%^&*()_+~/*-<{}     | 1           | 100.00 | 1          |
-    Then if I query order id 2 payments I should get an Order with properties:
+    Then if I query order id 3 payments I should get an Order with properties:
     | date                | payment_method    | transaction_id              | amount  | id_invoice |
-    |                     | Payments by check |                             | $69.90  | #IN000001  |
+    |                     | Payments by check |                             | $14.90  | #IN000001  |
     | 2019-11-26 13:56:24 | Payments by check | test!@#$%^&*()_+~/*-<{}     | $100.00 | #IN000001  |
 
 
