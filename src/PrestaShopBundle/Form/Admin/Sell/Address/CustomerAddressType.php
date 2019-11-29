@@ -131,7 +131,7 @@ class CustomerAddressType extends AbstractType
             ->add('dni', TextType::class, [
                 'required' => $this->isRequired(RequiredFields::REQUIRED_FIELD_DNI, $requiredFields),
                 'constraints' => [
-                    $this->getNotBlackOrNull(RequiredFields::REQUIRED_FIELD_DNI, $requiredFields),
+                    $this->getNotBlankOrNull(RequiredFields::REQUIRED_FIELD_DNI, $requiredFields),
                     new CleanHtml(),
                     new TypedRegex([
                         'type' => 'dni_lite',
@@ -223,7 +223,7 @@ class CustomerAddressType extends AbstractType
             ->add('company', TextType::class, [
                 'required' => $this->isRequired(RequiredFields::REQUIRED_FIELD_COMPANY, $requiredFields),
                 'constraints' => [
-                    $this->getNotBlackOrNull(RequiredFields::REQUIRED_FIELD_COMPANY, $requiredFields),
+                    $this->getNotBlankOrNull(RequiredFields::REQUIRED_FIELD_COMPANY, $requiredFields),
                     new CleanHtml(),
                     new TypedRegex([
                         'type' => 'generic_name',
@@ -243,7 +243,7 @@ class CustomerAddressType extends AbstractType
             ->add('vat_number', TextType::class, [
                 'required' => $this->isRequired(RequiredFields::REQUIRED_FIELD_VAT_NUMBER, $requiredFields),
                 'constraints' => [
-                    $this->getNotBlackOrNull(RequiredFields::REQUIRED_FIELD_VAT_NUMBER, $requiredFields),
+                    $this->getNotBlankOrNull(RequiredFields::REQUIRED_FIELD_VAT_NUMBER, $requiredFields),
                     new CleanHtml(),
                     new TypedRegex([
                         'type' => 'generic_name',
@@ -287,7 +287,7 @@ class CustomerAddressType extends AbstractType
             ->add('address2', TextType::class, [
                 'required' => $this->isRequired(RequiredFields::REQUIRED_FIELD_ADDRESS_2, $requiredFields),
                 'constraints' => [
-                    $this->getNotBlackOrNull(RequiredFields::REQUIRED_FIELD_ADDRESS_2, $requiredFields),
+                    $this->getNotBlankOrNull(RequiredFields::REQUIRED_FIELD_ADDRESS_2, $requiredFields),
                     new CleanHtml(),
                     new TypedRegex([
                         'type' => 'address',
@@ -331,7 +331,7 @@ class CustomerAddressType extends AbstractType
             ->add('postcode', TextType::class, [
                 'required' => $this->isRequired(RequiredFields::REQUIRED_FIELD_POST_CODE, $requiredFields),
                 'constraints' => [
-                    $this->getNotBlackOrNull(RequiredFields::REQUIRED_FIELD_POST_CODE, $requiredFields),
+                    $this->getNotBlankOrNull(RequiredFields::REQUIRED_FIELD_POST_CODE, $requiredFields),
                     new CleanHtml(),
                     new TypedRegex([
                         'type' => 'post_code',
@@ -361,7 +361,7 @@ class CustomerAddressType extends AbstractType
             ->add('phone', TextType::class, [
                 'required' => $this->isRequired(RequiredFields::REQUIRED_FIELD_PHONE, $requiredFields),
                 'constraints' => [
-                    $this->getNotBlackOrNull(RequiredFields::REQUIRED_FIELD_PHONE, $requiredFields),
+                    $this->getNotBlankOrNull(RequiredFields::REQUIRED_FIELD_PHONE, $requiredFields),
                     new CleanHtml(),
                     new TypedRegex([
                         'type' => 'phone_number',
@@ -381,7 +381,7 @@ class CustomerAddressType extends AbstractType
             ->add('other', TextareaType::class, [
                 'required' => $this->isRequired(RequiredFields::REQUIRED_FIELD_OTHER, $requiredFields),
                 'constraints' => [
-                    $this->getNotBlackOrNull(RequiredFields::REQUIRED_FIELD_OTHER, $requiredFields),
+                    $this->getNotBlankOrNull(RequiredFields::REQUIRED_FIELD_OTHER, $requiredFields),
                     new CleanHtml(),
                     new TypedRegex([
                         'type' => 'message',
@@ -423,7 +423,7 @@ class CustomerAddressType extends AbstractType
      *
      * @return NotBlank|null
      */
-    private function getNotBlackOrNull(string $field, array $requiredFields): ?NotBlank
+    private function getNotBlankOrNull(string $field, array $requiredFields): ?NotBlank
     {
         return $this->isRequired($field, $requiredFields) ?
             new NotBlank(
