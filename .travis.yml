@@ -130,7 +130,7 @@ after_deploy:
       gcloud compute instances stop --zone $GC_ZONE "${GC_INSTANCE_NAME}-${INSTANCE_TYPE}";
       gcloud compute instances add-metadata "${GC_INSTANCE_NAME}-${INSTANCE_TYPE}" --zone $GC_ZONE --metadata=NIGHTLY_TOKEN=$NIGHTLY_TOKEN && \
       gcloud compute instances add-metadata "${GC_INSTANCE_NAME}-${INSTANCE_TYPE}" --zone $GC_ZONE --metadata=TRAVIS_BRANCH=$TRAVIS_BRANCH && \
-      gcloud compute instances add-metadata "${GC_INSTANCE_NAME}-${INSTANCE_TYPE}" --zone $GC_ZONE --metadata-from-file startup-tests-script=tests/E2E/scripts/run-nightly-tests.sh && \
-      gcloud compute instances add-metadata "${GC_INSTANCE_NAME}-${INSTANCE_TYPE}" --zone $GC_ZONE --metadata-from-file startup-reports-script=tests/E2E/scripts/run-nightly-reports.sh && \
+      gcloud compute instances add-metadata "${GC_INSTANCE_NAME}-${INSTANCE_TYPE}" --zone $GC_ZONE --metadata-from-file startup-tests-script=tests/puppeteer/scripts/run-nightly-tests.sh && \
+      gcloud compute instances add-metadata "${GC_INSTANCE_NAME}-${INSTANCE_TYPE}" --zone $GC_ZONE --metadata-from-file startup-reports-script=tests/puppeteer/scripts/run-nightly-reports.sh && \
       gcloud compute instances start --zone $GC_ZONE "${GC_INSTANCE_NAME}-${INSTANCE_TYPE}"
     fi
