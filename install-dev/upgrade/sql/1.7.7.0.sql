@@ -24,6 +24,11 @@ ALTER TABLE `PREFIX_hook` CHANGE `title` `title` VARCHAR(255) NOT NULL;
 ALTER TABLE `PREFIX_hook_alias` CHANGE `name` `name` VARCHAR(191) NOT NULL;
 ALTER TABLE `PREFIX_hook_alias` CHANGE `alias` `alias` VARCHAR(191) NOT NULL;
 
+/* Add fields for currencies */
+ALTER TABLE `PREFIX_currency` ADD `unofficial` TINYINT(1) UNSIGNED NOT NULL DEFAULT '0' AFTER `active`;
+ALTER TABLE `PREFIX_currency` ADD `modified` TINYINT(1) UNSIGNED NOT NULL DEFAULT '0' AFTER `unofficial`;
+ALTER TABLE `PREFIX_currency_lang` ADD `pattern` varchar(255) DEFAULT NULL AFTER `symbol`;
+
 /* Utf8mb4 conversion */
 ALTER TABLE `PREFIX_access` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 ALTER TABLE `PREFIX_accessory` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;

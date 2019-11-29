@@ -179,7 +179,7 @@ class Number implements NumberInterface
      *
      * @throws LocalizationException
      */
-    public function getSymbolsByNumberingSystem($numberingSystem = null)
+    public function getSymbolsByNumberingSystem($numberingSystem = NumberInterface::NUMBERING_SYSTEM_LATIN)
     {
         if (!isset($this->symbols[$numberingSystem])) {
             throw new LocalizationException('Unknown or invalid numbering system');

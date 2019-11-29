@@ -26,6 +26,7 @@
 
 namespace Tests\Integration\Behaviour\Features\Context;
 
+use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleRepository;
 use PrestaShop\PrestaShop\Core\Localization\Locale\RepositoryInterface;
 use RuntimeException;
 use Currency;

@@ -40,37 +40,42 @@ class EditCurrencyCommand
     /**
      * @var CurrencyId
      */
-    private $currencyId;
+    protected $currencyId;
 
     /**
      * @var ExchangeRate|null
      */
-    private $exchangeRate;
+    protected $exchangeRate;
 
     /**
      * @var Precision|null
      */
-    private $precision;
+    protected $precision;
 
     /**
      * @var string[]
      */
-    private $localizedNames = [];
+    protected $localizedNames = [];
 
     /**
      * @var string[]
      */
-    private $localizedSymbols = [];
+    protected $localizedSymbols = [];
 
     /**
      * @var bool
      */
-    private $isEnabled;
+    protected $isEnabled;
 
     /**
      * @var int[]
      */
-    private $shopIds = [];
+    protected $shopIds = [];
+
+    /**
+     * @var string[]
+     */
+    protected $localizedTransformations = [];
 
     /**
      * @param int $currencyId
@@ -228,6 +233,28 @@ class EditCurrencyCommand
     public function setShopIds(array $shopIds)
     {
         $this->shopIds = $shopIds;
+
+        return $this;
+    }
+
+    /**
+     * Returns the currency's localized transformations, indexed by language id
+     *
+     * @return string[]
+     */
+    public function getLocalizedTransformations(): array
+    {
+        return $this->localizedTransformations;
+    }
+
+    /**
+     * @param string[] $localizedTransformations currency's localized transformations, indexed by language id
+     *
+     * @return $this
+     */
+    public function setLocalizedTransformations(array $localizedTransformations): EditCurrencyCommand
+    {
+        $this->localizedTransformations = $localizedTransformations;
 
         return $this;
     }

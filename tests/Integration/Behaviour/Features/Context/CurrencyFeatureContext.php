@@ -33,6 +33,7 @@ use Db;
 use DbQuery;
 use RuntimeException;
 use Cache;
+use Language;
 
 class CurrencyFeatureContext extends AbstractPrestaShopFeatureContext
 {
@@ -120,6 +121,27 @@ class CurrencyFeatureContext extends AbstractPrestaShopFeatureContext
         $this->checkCurrencyWithNameExists($currencyName);
         $this->getCurrentCart()->id_currency = $this->currencies[$currencyName]->id;
         Context::getContext()->currency = $this->currencies[$currencyName];
+    }
+
+    /**
+     * @When I set the pattern :pattern for currency :reference in locale :localeIsoCode
+     */
+    public function setCurrencyPattern($pattern, $reference, $localeIsoCode)
+    {
+        $languageId = Language::getIdByLocale($localeIsoCode, true);
+        /** @var Currency $currency */
+        $currency = SharedStorage::getStorage()->get($reference);
+        $patterns = $currency->pattern;
+        if (is_array($patterns)) {
+            $patterns[$languageId] = $pattern;
+        } else {
+            $patterns = [$languageId => $pattern];
+        }
+        $currency->setLocalizedPatterns($patterns);
+
+        if (!$currency->save(true, true)) {
+            throw new RuntimeException('Could not save format modification');
+        }
     }
 
     /**
@@ -419,6 +441,30 @@ class CurrencyFeatureContext extends AbstractPrestaShopFeatureContext
                 $reference,
                 $currency->modified,
                 (int) $expectedModified
+            ));
+        }
+    }
+
+    /**
+     * @Then currency :reference should have pattern :pattern for language :localeCode
+     */
+    public function assertCurrencyPattern($reference, $pattern, $localeCode)
+    {
+        /** @var Currency $currency */
+        $currency = SharedStorage::getStorage()->get($reference);
+        $langId = Language::getIdByLocale($localeCode, true);
+        $currencyPattern = $currency->getPattern($langId);
+        if ('empty' === $pattern) {
+            $pattern = '';
+        }
+
+        if ($currencyPattern !== $pattern) {
+            throw new RuntimeException(sprintf(
+                'Currency "%s" has "%s" pattern for language %s, but "%s" was expected.',
+                $reference,
+                $currencyPattern,
+                $localeCode,
+                $pattern
             ));
         }
     }
