@@ -40,7 +40,6 @@ $(() => {
   handlePrivateNoteChange();
   handleUpdateOrderStatusButton();
 
-
   new InvoiceNoteManager();
 
   $(OrderViewPageMap.privateNoteToggleBtn).on('click', (event) => {
@@ -51,8 +50,7 @@ $(() => {
   initAddCartRuleFormHandler();
   initAddProductFormHandler();
   initChangeAddressFormHandler();
-
-
+  
   function handlePaymentDetailsToggle() {
     $(OrderViewPageMap.orderPaymentDetailsBtn).on('click', (event) => {
       const $paymentDetailRow = $(event.currentTarget).closest('tr').next(':first');
