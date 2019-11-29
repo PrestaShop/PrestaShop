@@ -25,7 +25,7 @@
 {extends file='page_header_toolbar.tpl'}
 
 {block name=pageTitle}
-  {if isset($use_regular_h1_structure) == false}
+  {if !isset($use_regular_h1_structure)}
     {assign var="use_regular_h1_structure" value=true}
   {/if}
 
