@@ -30,6 +30,14 @@ module.exports = class Invoice extends BOBasePage {
       await this.setValue(this.dateFromInput, dateFrom);
       await this.setValue(this.dateToInput, dateTo);
     }
+  }
+
+  /** Generate PDF by status
+   * @param statuses
+   * @return {Promise<void>}
+   */
+  async generatePDFByStatus(status) {
+    await this.page.click()
     await this.page.click(this.generatePdfByDateButton);
   }
 };

@@ -7,4 +7,9 @@ module.exports = {
     fifth: {fileName: '#IN000005.pdf'},
     moreThanAnInvoice: {fileName: 'invoices.pdf'},
   },
+
+  Statuses: {
+    paymentAccepted:{id: 9, value: 2},
+    shipped:{id: 14, value: 4},
+  },
 };
