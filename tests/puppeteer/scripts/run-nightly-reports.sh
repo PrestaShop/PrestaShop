@@ -38,7 +38,7 @@ if [ -n "$(ls ${REPORT_PATH})" ]; then
   gsutil cp -r "${DIR_PATH}/reports" gs://prestashop-core-nightly
 
   # Trigger event on nightly board
-  curl "https://nightly.prestashop.com/hook/add?token=${TOKEN}&filename=${REPORT_NAME}.json"
+  curl -v "https://nightly.prestashop.com/hook/add?token=${TOKEN}&filename=${REPORT_NAME}.json"
 
   if [ -z "${NO_SHUTDOWN}" ]; then
     rm -rf $DIR_PATH
