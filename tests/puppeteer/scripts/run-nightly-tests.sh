@@ -37,7 +37,7 @@ for command in "sanity-tests" "functional-tests"; do
 
   echo "Wait for docker-compose..."
   sleep 10
-  docker-compose -f docker-compose.nightly.yml -f docker-compose.tests.yml exec /tmp/wait-for-it.sh --timeout=720 --strict prestashop-web:80
+  docker-compose -f docker-compose.nightly.yml -f docker-compose.tests.yml exec tests /tmp/wait-for-it.sh --timeout=720 --strict prestashop-web:80
 
   # Running command
   echo "Run ${command}"
