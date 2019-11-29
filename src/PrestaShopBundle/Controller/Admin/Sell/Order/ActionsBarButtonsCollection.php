@@ -26,34 +26,15 @@
 
 namespace PrestaShopBundle\Controller\Admin\Sell\Order;
 
-class ActionsBarButtonsCollection implements ActionsBarButtonsCollectionInterface
+use PrestaShop\PrestaShop\Core\Data\AbstractTypedCollection;
+
+class ActionsBarButtonsCollection extends AbstractTypedCollection
 {
     /**
-     * @var ActionsBarButtonInterface[]
+     * {@inheritdoc}
      */
-    protected $buttons = [];
-
-    /**
-     * @return bool
-     */
-    public function isEmpty()
+    protected function getType()
     {
-        return empty($this->buttons);
-    }
-
-    /**
-     * @param ActionsBarButtonInterface $button
-     */
-    public function addButton(ActionsBarButtonInterface $button)
-    {
-        $this->buttons[] = $button;
-    }
-
-    /**
-     * @return ActionsBarButton[]
-     */
-    public function getButtons(): array
-    {
-        return $this->buttons;
+        return ActionsBarButtonInterface::class;
     }
 }

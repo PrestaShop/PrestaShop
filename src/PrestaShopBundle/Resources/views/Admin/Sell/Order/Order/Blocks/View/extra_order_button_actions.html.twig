@@ -26,7 +26,7 @@
 {# Rendering of hook actionGetBackOfficeOrderButtons, see ActionsBarButtonsCollection #}
 {% if (backOfficeOrderButtons.isEmpty() != true) %}
 
-  {% set buttons = backOfficeOrderButtons.getButtons() %}
+  {% set buttons = backOfficeOrderButtons.toArray() %}
   {% if buttons|length > 2 %}
 
     {% set firstButton = buttons|first %}
