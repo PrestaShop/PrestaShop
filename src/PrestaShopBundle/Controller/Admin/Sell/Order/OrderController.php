@@ -102,8 +102,25 @@ class OrderController extends FrameworkBundleAdminController
                 'enableSidebar' => true,
                 'changeOrderStatusesForm' => $changeOrderStatusesForm->createView(),
                 'orderKpi' => $orderKpiFactory->build(),
+                'layoutHeaderToolbarBtn' => $this->getOrderToolbarButtons(),
             ]
         );
+    }
+
+    /**
+     * @return array
+     */
+    private function getOrderToolbarButtons(): array
+    {
+        $toolbarButtons = [];
+
+        $toolbarButtons['add'] = [
+            'href' => $this->generateUrl('admin_orders_create'),
+            'desc' => $this->trans('Add new order', 'Admin.Orderscustomers.Feature'),
+            'icon' => 'add_circle_outline',
+        ];
+
+        return $toolbarButtons;
     }
 
     //@todo: wip
@@ -289,6 +306,7 @@ class OrderController extends FrameworkBundleAdminController
 
         return $this->render('@PrestaShop/Admin/Sell/Order/Order/view.html.twig', [
             'showContentHeader' => true,
+            'meta_title' => $this->trans('Orders', 'Admin.Orderscustomers.Feature'),
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'orderForViewing' => $orderForViewing,
             'addOrderCartRuleForm' => $addOrderCartRuleForm->createView(),
