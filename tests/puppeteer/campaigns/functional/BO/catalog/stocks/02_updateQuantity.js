@@ -59,7 +59,7 @@ describe('Update Quantity', async () => {
   by writing in input and not using the number up/down buttons
    */
   describe('Update quantity by setting input value', async () => {
-    it(`should filter by name '${Products.demo_1.name}'`, async function () {
+    it(`should filter by name '${productStock.name}'`, async function () {
       await this.pageObjects.stocksPage.simpleFilter(productStock.name);
       const numberOfProductsAfterFilter = await this.pageObjects.stocksPage.getNumberOfProductsFromList();
       await expect(numberOfProductsAfterFilter).to.be.at.most(numberOfProducts);
