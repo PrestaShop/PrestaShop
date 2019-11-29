@@ -37,11 +37,11 @@ for command in "sanity-tests" "functional-tests"; do
 
   echo "Wait for docker-compose..."
   sleep 10
-  docker-compose -f docker-compose.nightly.yml -f docker-compose.tests.yml exec tests /tmp/wait-for-it.sh --timeout=720 --strict prestashop-web:80
+  docker-compose -f docker-compose.nightly.yml -f docker-compose.tests.yml exec -T tests /tmp/wait-for-it.sh --timeout=720 --strict prestashop-web:80
 
   # Running command
   echo "Run ${command}"
-  docker-compose -f docker-compose.nightly.yml -f docker-compose.tests.yml exec -e COMMAND="${command}" tests bash /tmp/run-tests.sh
+  docker-compose -f docker-compose.nightly.yml -f docker-compose.tests.yml exec -T -e COMMAND="${command}" tests bash /tmp/run-tests.sh
 
   # Rename mochawesome Report
   if [ -f "${TESTS_DIR}/mochawesome-report/mochawesome.json" ]; then
