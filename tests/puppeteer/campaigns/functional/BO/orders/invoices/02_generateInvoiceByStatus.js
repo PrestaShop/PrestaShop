@@ -5,6 +5,7 @@ const helper = require('@utils/helpers');
 const loginCommon = require('@commonTests/loginBO');
 const {Statuses} = require('@data/demo/orders');
 const {Invoices} = require('@data/demo/invoices');
+const {OrderStatuses} = require('@data/demo/invoices');
 const files = require('@utils/files');
 // Importing pages
 const BOBasePage = require('@pages/BO/BObasePage');
@@ -16,10 +17,6 @@ const ViewOrderPage = require('@pages/BO/orders/view');
 
 let browser;
 let page;
-const today = new Date();
-// Create a start and end date that there is no invoices
-const dateFrom = `${today.getFullYear() + 1}-${today.getMonth() + 1}-${today.getDate() - 1}`;
-const dateTo = `${today.getFullYear() + 1}-${today.getMonth() + 1}-${today.getDate()}`;
 
 // Init objects needed
 const init = async function () {
@@ -87,25 +84,37 @@ describe('Filter And Quick Edit invoices', async () => {
           this.pageObjects.boBasePage.ordersParentLink,
           this.pageObjects.boBasePage.invoicesLink,
         );
+        await this.pageObjects.boBasePage.closeSfToolBar();
         const pageTitle = await this.pageObjects.invoicesPage.getPageTitle();
         await expect(pageTitle).to.contains(this.pageObjects.invoicesPage.pageTitle);
       });
 
-      it('should generate PDF file by status and check the file existence', async function () {
-        await this.pageObjects.invoicesPage.generatePDFByDate();
+      it('should check the error message when we don\'t select a status', async function () {
+        await this.pageObjects.invoicesPage.generatePDFByStatus();
+        const textMessage = await this.pageObjects.invoicesPage.getTextContent(
+          this.pageObjects.invoicesPage.alertTextBlock,
+        );
+        await expect(textMessage).to.equal(this.pageObjects.invoicesPage.errorMessageWhenNotSelectStatus);
+      });
+
+      it('should check the error message when there is no invoice in the status selected', async function () {
+        await this.pageObjects.invoicesPage.chooseStatus(OrderStatuses.canceled.id);
+        await this.pageObjects.invoicesPage.generatePDFByStatus();
+        const textMessage = await this.pageObjects.invoicesPage.getTextContent(
+          this.pageObjects.invoicesPage.alertTextBlock,
+        );
+        await expect(textMessage).to.equal(this.pageObjects.invoicesPage.errorMessageWhenGenerateFileByStatus);
+      });
+
+      it('should choose the statuses, generate the invoice and check the file existence', async function () {
+        await this.pageObjects.invoicesPage.chooseStatus(OrderStatuses.paymentAccepted.id);
+        await this.pageObjects.invoicesPage.chooseStatus(OrderStatuses.shipped.id);
+        await this.pageObjects.invoicesPage.generatePDFByStatus();
         const exist = await files.checkFileExistence(
           global.BO.DOWNLOAD_PATH,
           Invoices.moreThanAnInvoice.fileName,
         );
         await expect(exist).to.be.true;
-      });
-
-      it('should check the error message when there is no invoice in the status selected', async function () {
-        await this.pageObjects.invoicesPage.generatePDFByDate(dateFrom, dateTo);
-        const textMessage = await this.pageObjects.invoicesPage.getTextContent(
-          this.pageObjects.invoicesPage.alertTextBlock,
-        );
-        await expect(textMessage).to.equal(this.pageObjects.invoicesPage.errorMessageWhenGenerateFileByDate);
       });
     });
   });

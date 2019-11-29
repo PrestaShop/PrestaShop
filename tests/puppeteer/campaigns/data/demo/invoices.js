@@ -8,8 +8,9 @@ module.exports = {
     moreThanAnInvoice: {fileName: 'invoices.pdf'},
   },
 
-  Statuses: {
-    paymentAccepted:{id: 9, value: 2},
-    shipped:{id: 14, value: 4},
+  OrderStatuses: {
+    canceled: {id: 4, name: 'Canceled'},
+    paymentAccepted: {id: 9, name: 'Payment accepted'},
+    shipped: {id: 14, name: 'Shipped'},
   },
 };
