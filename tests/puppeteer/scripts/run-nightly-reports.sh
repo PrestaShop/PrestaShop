@@ -29,6 +29,7 @@ cd "${TESTS_DIR}"
 
 echo "Check for reports..."
 if [ -n "$(ls ${REPORT_PATH})" ]; then
+  npm install --unsafe-perm=true --allow-root
   mkdir -p "${DIR_PATH}/reports"
   ./scripts/combine-reports.py "${REPORT_PATH}" "${DIR_PATH}/reports/${REPORT_NAME}.json"
   nodejs ./node_modules/mochawesome-report-generator/bin/cli.js "${DIR_PATH}/reports/${REPORT_NAME}.json" -o "${DIR_PATH}/reports" -f "${REPORT_NAME}.html"
