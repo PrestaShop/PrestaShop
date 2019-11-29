@@ -53,6 +53,7 @@ final class LinkColumn extends AbstractColumn
                 'icon' => null,
                 'button_template' => false,
                 'color_template' => 'primary',
+                'clickable' => false,
             ])
             ->setRequired([
                 'field',
@@ -69,6 +70,7 @@ final class LinkColumn extends AbstractColumn
             ->setAllowedTypes('route', 'string')
             ->setAllowedTypes('route_param_name', 'string')
             ->setAllowedTypes('route_param_field', 'string')
+            ->setAllowedTypes('clickable', 'bool')
             ->setAllowedValues('color_template', [
                 'primary',
                 'secondary',
@@ -82,6 +84,7 @@ final class LinkColumn extends AbstractColumn
                 'outline',
                 'normal',
             ])
+
         ;
     }
 }

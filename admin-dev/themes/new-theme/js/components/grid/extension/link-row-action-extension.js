@@ -66,12 +66,8 @@ export default class LinkRowActionExtension {
       $('.js-link-row-action[data-clickable-row=1]:first', $parentRow).each(function propagateFirstLinkAction() {
         const $rowAction = $(this);
         const $parentCell = $rowAction.closest('td');
-
-        /*
-         * Only search for cells with non clickable contents to avoid conflicts with
-         * previous cell behaviour (action, toggle, ...)
-         */
-        const clickableCells = $('td.data-type, td.identifier-type:not(:has(input)), td.badge-type, td.position-type', $parentRow)
+        
+        const clickableCells = $('td.clickable', $parentRow)
           .not($parentCell)
         ;
 
