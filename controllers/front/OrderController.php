@@ -238,10 +238,13 @@ class OrderControllerCore extends FrontController
             $checksum = $this->cartChecksum->generateChecksum($cart);
         }
 
-        // Prepare all other addresses' warning messages (if relevant).
-        // These messages are displayed when changing the selected address.
-        $allInvalidAddressIds = $addressValidator->validateCustomerAddresses($customer, $this->context->language);
-        $this->checkoutWarning['invalid_addresses'] = $allInvalidAddressIds;
+        // Prevent check for guests
+        if($customer->id) {
+            // Prepare all other addresses' warning messages (if relevant).
+            // These messages are displayed when changing the selected address.
+            $allInvalidAddressIds = $addressValidator->validateCustomerAddresses($customer, $this->context->language);
+            $this->checkoutWarning['invalid_addresses'] = $allInvalidAddressIds;
+        }
 
         if (isset($data['checksum']) && $data['checksum'] === $checksum) {
             $process->restorePersistedData($data);
