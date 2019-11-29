@@ -70,12 +70,9 @@ class CountryRequiredFieldsProvider implements CountryRequiredFieldsProviderInte
         try {
             $country = new Country($countryIdValue);
         } catch (PrestaShopException $e) {
-            throw new CountryNotFoundException(
-                sprintf('Country with id "%s" was not found.', $countryIdValue)
-            );
         }
 
-        if ($country->id !== $countryIdValue) {
+        if (empty($country->id) || $country->id !== $countryIdValue) {
             throw new CountryNotFoundException(
                 sprintf('Country with id "%s" was not found.', $countryIdValue)
             );

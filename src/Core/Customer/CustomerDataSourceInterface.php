@@ -24,16 +24,14 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Country;
+namespace PrestaShop\PrestaShop\Core\Customer;
 
-use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
-
-interface CountryZipCodeRequirementsProviderInterface
+interface CustomerDataSourceInterface
 {
     /**
-     * @param CountryId $countryId
+     * @param string $email
      *
-     * @return CountryZipCodeRequirements
+     * @return bool
      */
-    public function getCountryZipCodeRequirements(CountryId $countryId): CountryZipCodeRequirements;
+    public function hasCustomerByEmail(string $email): bool;
 }

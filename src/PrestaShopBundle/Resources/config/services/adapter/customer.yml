@@ -110,3 +110,6 @@ services:
     tags:
       - name: tactician.handler
         command: 'PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerForAddressCreation'
+
+  prestashop.adapter.customer.customer_data_source:
+    class: 'PrestaShop\PrestaShop\Adapter\Customer\CustomerDataSource'
