@@ -13,7 +13,7 @@ ALTER TABLE `PREFIX_product_attribute` ADD `mpn` VARCHAR(40) NULL AFTER `upc`;
 ALTER TABLE `PREFIX_product` ADD `mpn` VARCHAR(40) NULL AFTER `upc`;
 
 /* Delete price display precision configuration */
-DELETE FROM `PREFIX_configuration` WHERE name = 'PS_PRICE_DISPLAY_PRECISION';
+DELETE FROM `PREFIX_configuration` WHERE `name` = 'PS_PRICE_DISPLAY_PRECISION';
 
 /* Set optin field value to 0 in employee table */
 ALTER TABLE `PREFIX_employee` MODIFY COLUMN `optin` tinyint(1) unsigned DEFAULT NULL;
@@ -516,3 +516,5 @@ ALTER TABLE `PREFIX_zone_shop` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_
 /* Doctrine update happens too late to update the new enabled field, so we preset everything here */
 ALTER TABLE `PREFIX_tab` ADD enabled TINYINT(1) NOT NULL;
 /* PHP:ps_1770_preset_tab_enabled(); */;
+
+/* PHP:ps_1770_update_order_status_colors(); */;
