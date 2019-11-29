@@ -21,7 +21,7 @@
         "defuse/php-encryption": "~2.0.1",
         "doctrine/cache": "^1.8",
         "doctrine/doctrine-bundle": "^1.6",
-        "doctrine/orm": "^2.5.11",
+        "doctrine/orm": "^2.7",
         "ezyang/htmlpurifier": "^4.10",
         "friendsofsymfony/jsrouting-bundle": "^2.4",
         "geoip2/geoip2": "~2.4.2",
