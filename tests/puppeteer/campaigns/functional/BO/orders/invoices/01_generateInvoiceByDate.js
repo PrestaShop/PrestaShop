@@ -54,44 +54,30 @@ describe('Filter And Quick Edit invoices', async () => {
   // 1 : Generate PDF file by date
   describe('Generate PDF file by date', async () => {
     describe('Create invoice', async () => {
-      it('should go to the orders page', async function () {
-        await this.pageObjects.boBasePage.goToSubMenu(
-          this.pageObjects.boBasePage.ordersParentLink,
-          this.pageObjects.boBasePage.ordersLink,
-        );
-        const pageTitle = await this.pageObjects.ordersPage.getPageTitle();
-        await expect(pageTitle).to.contains(this.pageObjects.ordersPage.pageTitle);
-      });
+      const tests = [
+        {args: {orderRow: 1, status: Statuses.shipped.status}},
+        {args: {orderRow: 2, status: Statuses.paymentAccepted.status}},
+      ];
+      tests.forEach((orderToEdit) => {
+        it('should go to the orders page', async function () {
+          await this.pageObjects.boBasePage.goToSubMenu(
+            this.pageObjects.boBasePage.ordersParentLink,
+            this.pageObjects.boBasePage.ordersLink,
+          );
+          const pageTitle = await this.pageObjects.ordersPage.getPageTitle();
+          await expect(pageTitle).to.contains(this.pageObjects.ordersPage.pageTitle);
+        });
 
-      it('should go to the first order', async function () {
-        await this.pageObjects.ordersPage.goToOrder(1);
-        const pageTitle = await this.pageObjects.viewOrderPage.getPageTitle();
-        await expect(pageTitle).to.contains(this.pageObjects.viewOrderPage.pageTitle);
-      });
+        it(`should go to the order page number '${orderToEdit.args.orderRow}'`, async function () {
+          await this.pageObjects.ordersPage.goToOrder(orderToEdit.args.orderRow);
+          const pageTitle = await this.pageObjects.viewOrderPage.getPageTitle();
+          await expect(pageTitle).to.contains(this.pageObjects.viewOrderPage.pageTitle);
+        });
 
-      it('should change the order status to \'Shipped\' and check the validation', async function () {
-        const result = await this.pageObjects.viewOrderPage.modifyOrderStatus(Statuses.shipped.status);
-        await expect(result).to.be.true;
-      });
-
-      it('should go to the orders page', async function () {
-        await this.pageObjects.boBasePage.goToSubMenu(
-          this.pageObjects.boBasePage.ordersParentLink,
-          this.pageObjects.boBasePage.ordersLink,
-        );
-        const pageTitle = await this.pageObjects.ordersPage.getPageTitle();
-        await expect(pageTitle).to.contains(this.pageObjects.ordersPage.pageTitle);
-      });
-
-      it('should go to the second order', async function () {
-        await this.pageObjects.ordersPage.goToOrder(2);
-        const pageTitle = await this.pageObjects.viewOrderPage.getPageTitle();
-        await expect(pageTitle).to.contains(this.pageObjects.viewOrderPage.pageTitle);
-      });
-
-      it('should change the order status to \'Payment accepted\' and check the validation', async function () {
-        const result = await this.pageObjects.viewOrderPage.modifyOrderStatus(Statuses.paymentAccepted.status);
-        await expect(result).to.be.true;
+        it(`should change the order status to '${orderToEdit.args.status}' and check it`, async function () {
+          const result = await this.pageObjects.viewOrderPage.modifyOrderStatus(orderToEdit.args.status);
+          await expect(result).to.be.true;
+        });
       });
     });
 
