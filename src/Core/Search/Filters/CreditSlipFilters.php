@@ -1,5 +1,6 @@
-{#**
- * 2007-2019 PrestaShop SA and Contributors
+<?php
+/**
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -21,23 +22,32 @@
  * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *#}
+ */
 
-{% set color = column.options.color_template%}
-{% set class = "text-" ~ color %}
+namespace PrestaShop\PrestaShop\Core\Search\Filters;
 
-{% if column.options.button_template %}
-  {% set style = column.options.button_template %}
-  {% if style == 'normal' %}
-    {% set class = "btn btn-" ~ color %}
-  {% elseif style == 'outline' %}
-    {% set class = "btn btn-outline-" ~ color %}
-  {% endif %}
-{% endif %}
+use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CreditSlipGridDefinitionFactory;
+use PrestaShop\PrestaShop\Core\Search\Filters;
 
-<a class="{{ class }}" href="{{ path(column.options.route, { (column.options.route_param_name) : record[column.options.route_param_field]}) }}">
-  {% if column.options.icon is defined %}
-    <i class="material-icons">{{ column.options.icon }}</i>
-  {% endif %}
-  {{ record[column.options.field] }}
-</a>
+/**
+ * Provides default filters for credit slip list
+ */
+final class CreditSlipFilters extends Filters
+{
+    /** @var string */
+    protected $filterId = CreditSlipGridDefinitionFactory::GRID_ID;
+
+    /**
+     * {@inheritdoc}
+     */
+    public static function getDefaults()
+    {
+        return [
+            'limit' => 50,
+            'offset' => 0,
+            'orderBy' => 'id_order_slip',
+            'sortOrder' => 'asc',
+            'filters' => [],
+        ];
+    }
+}

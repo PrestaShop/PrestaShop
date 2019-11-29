@@ -1,5 +1,6 @@
-{#**
- * 2007-2019 PrestaShop SA and Contributors
+<?php
+/**
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -21,23 +22,13 @@
  * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *#}
+ */
 
-{% set color = column.options.color_template%}
-{% set class = "text-" ~ color %}
+namespace PrestaShop\PrestaShop\Core\PDF\Exception;
 
-{% if column.options.button_template %}
-  {% set style = column.options.button_template %}
-  {% if style == 'normal' %}
-    {% set class = "btn btn-" ~ color %}
-  {% elseif style == 'outline' %}
-    {% set class = "btn btn-outline-" ~ color %}
-  {% endif %}
-{% endif %}
-
-<a class="{{ class }}" href="{{ path(column.options.route, { (column.options.route_param_name) : record[column.options.route_param_field]}) }}">
-  {% if column.options.icon is defined %}
-    <i class="material-icons">{{ column.options.icon }}</i>
-  {% endif %}
-  {{ record[column.options.field] }}
-</a>
+/**
+ * Thrown when required data for pdf generating is missing
+ */
+class MissingDataException extends PdfException
+{
+}

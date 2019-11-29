@@ -49,6 +49,7 @@ module.exports = {
     cms_page: './js/pages/cms-page',
     cms_page_form: './js/pages/cms-page/form',
     contacts: './js/pages/contacts',
+    credit_slip: './js/pages/credit-slip',
     currency: './js/pages/currency',
     currency_form: './js/pages/currency/form',
     customer: './js/pages/customer',

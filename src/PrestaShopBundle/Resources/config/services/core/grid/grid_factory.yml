@@ -286,3 +286,11 @@ services:
         - '@prestashop.core.grid.data.factory.address'
         - '@prestashop.core.grid.filter.form_factory'
         - '@prestashop.core.hook.dispatcher'
+
+    prestashop.core.grid.factory.credit_slip:
+        class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
+        arguments:
+            - '@prestashop.core.grid.definition.factory.credit_slip'
+            - '@prestashop.core.grid.data.factory.credit_slip_decorator'
+            - '@prestashop.core.grid.filter.credit_slip_form_factory'
+            - '@prestashop.core.hook.dispatcher'

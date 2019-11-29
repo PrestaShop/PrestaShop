@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -24,55 +24,44 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints;
+namespace PrestaShopBundle\Form\Admin\Sell\Order\CreditSlip;
 
-use PrestaShop\PrestaShop\Core\ConstraintValidator\TypedRegexValidator;
-use Symfony\Component\Validator\Constraint;
+use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 
 /**
- * Provides regex validation by type
+ * Provides data for credit slip options form
  */
-class TypedRegex extends Constraint
+final class CreditSlipOptionsFormDataProvider implements FormDataProviderInterface
 {
     /**
-     * Available types
+     * @var DataConfigurationInterface
      */
-    const TYPE_NAME = 'name';
-    const TYPE_CATALOG_NAME = 'catalog_name';
-    const TYPE_GENERIC_NAME = 'generic_name';
-    const TYPE_CITY_NAME = 'city_name';
-    const TYPE_ADDRESS = 'address';
-    const TYPE_POST_CODE = 'post_code';
-    const TYPE_PHONE_NUMBER = 'phone_number';
-    const TYPE_MESSAGE = 'message';
-    const TYPE_LANGUAGE_ISO_CODE = 'language_iso_code';
-    const TYPE_LANGUAGE_CODE = 'language_code';
-    const TYPE_CURRENCY_ISO_CODE = 'currency_iso_code';
-    const TYPE_FILE_NAME = 'file_name';
+    private $creditSlipOptionsConfiguration;
 
     /**
-     * @var string
+     * @param DataConfigurationInterface $creditSlipOptionsConfiguration
      */
-    public $message = '%s is invalid';
-
-    /**
-     * @var string
-     */
-    public $type;
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getRequiredOptions()
+    public function __construct(DataConfigurationInterface $creditSlipOptionsConfiguration)
     {
-        return ['type'];
+        $this->creditSlipOptionsConfiguration = $creditSlipOptionsConfiguration;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function validatedBy()
+    public function getData()
     {
-        return TypedRegexValidator::class;
+        return [
+            'options' => $this->creditSlipOptionsConfiguration->getConfiguration(),
+        ];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setData(array $data)
+    {
+        return $this->creditSlipOptionsConfiguration->updateConfiguration($data['options']);
     }
 }

@@ -1020,3 +1020,21 @@ services:
             - '@prestashop.adapter.form.choice_provider.employee_name_by_id'
         tags:
             - { name: form.type }
+
+    form.type.order.credit_slip.generate_pdf_by_date:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Order\CreditSlip\GeneratePdfByDateType'
+        parent: 'form.type.common_type'
+        arguments:
+            - '@translator'
+        public: true
+        tags:
+            - { name: form.type }
+
+    form.type.order.credit_slip.credit_slip_options:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Order\CreditSlip\CreditSlipOptionsType'
+        parent: 'form.type.common_type'
+        arguments:
+            - '@translator'
+        public: true
+        tags:
+            - { name: form.type }
