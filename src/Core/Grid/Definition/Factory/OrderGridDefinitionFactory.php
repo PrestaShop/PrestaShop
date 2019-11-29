@@ -30,6 +30,7 @@ use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollection;
+use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\Type\ButtonBulkAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\Type\ModalFormSubmitBulkAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\AccessibilityChecker\AccessibilityCheckerInterface;
@@ -435,6 +436,21 @@ final class OrderGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ->setOptions([
                     'submit_route' => 'admin_orders_change_orders_status',
                     'modal_id' => 'changeOrdersStatusModal',
+                ])
+            )
+            ->add((new ButtonBulkAction('open_tabs'))
+                ->setName($this->trans('Open in new tabs', [], 'Admin.Orderscustomers.Feature'))
+                ->setOptions([
+                    'class' => 'open_tabs',
+                    'attributes' => [
+                        'data-route' => 'admin_orders_view',
+                        'data-route-param-name' => 'orderId',
+                        'data-tabs-blocked-message' => $this->trans(
+                            'It looks like you have exceeded the number of tabs allowed. Check your browser settings to open multiple tabs.',
+                            [],
+                            'Admin.Orderscustomers.Feature'
+                        ),
+                    ],
                 ])
             )
         ;
