@@ -26,11 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Core\ConstraintValidator;
 
-use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\ExistingCustomerEmail;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerByEmailNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerException;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerForAddressCreation;
+use PrestaShop\PrestaShop\Core\Customer\CustomerDataSourceInterface;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 use Symfony\Component\Validator\Exception\UnexpectedTypeException;
@@ -41,16 +38,16 @@ use Symfony\Component\Validator\Exception\UnexpectedTypeException;
 final class ExistingCustomerEmailValidator extends ConstraintValidator
 {
     /**
-     * @var CommandBusInterface
+     * @var CustomerDataSourceInterface
      */
-    private $queryBus;
+    private $customerDataSource;
 
     /**
-     * @param CommandBusInterface $queryBus
+     * @param CustomerDataSourceInterface $customerDataSource
      */
-    public function __construct(CommandBusInterface $queryBus)
+    public function __construct(CustomerDataSourceInterface $customerDataSource)
     {
-        $this->queryBus = $queryBus;
+        $this->customerDataSource = $customerDataSource;
     }
 
     /**
@@ -62,15 +59,11 @@ final class ExistingCustomerEmailValidator extends ConstraintValidator
             throw new UnexpectedTypeException($constraint, ExistingCustomerEmail::class);
         }
 
-        try {
-            $this->queryBus->handle(new GetCustomerForAddressCreation($value));
-        } catch (CustomerException $e) {
-            if ($e instanceof CustomerByEmailNotFoundException) {
-                $this->context->buildViolation($constraint->message)
-                    ->setTranslationDomain('Admin.Orderscustomers.Notification')
-                    ->addViolation()
-                ;
-            }
+        if (!$this->customerDataSource->hasCustomerByEmail($value)) {
+            $this->context->buildViolation($constraint->message)
+                ->setTranslationDomain('Admin.Orderscustomers.Notification')
+                ->addViolation()
+            ;
         }
     }
 }

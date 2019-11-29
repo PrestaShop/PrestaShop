@@ -33,7 +33,7 @@ services:
   prestashop.core.constraint_validator.existing_customer_email_validator:
     class: 'PrestaShop\PrestaShop\Core\ConstraintValidator\ExistingCustomerEmailValidator'
     arguments:
-      - '@prestashop.core.query_bus'
+      - '@prestashop.adapter.customer.customer_data_source'
     tags:
       - { name: validator.constraint_validator }
 
