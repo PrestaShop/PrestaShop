@@ -36,7 +36,7 @@ describe('Update Quantity', async () => {
   after(async () => {
     await helper.closeBrowser(browser);
   });
-  // Login into BO and go to categories page
+  // Login into BO and go to stocks page
   loginCommon.loginBO();
 
   it('should go to "Catalog>Stocks" page', async function () {
@@ -54,7 +54,10 @@ describe('Update Quantity', async () => {
     await expect(numberOfProducts).to.be.above(0);
   });
 
-  // Update quantity by setting input value
+  /*
+  Add/Subtract stocks quantity from product
+  by writing in input and not using the number up/down buttons
+   */
   describe('Update quantity by setting input value', async () => {
     it(`should filter by name '${Products.demo_1.name}'`, async function () {
       await this.pageObjects.stocksPage.simpleFilter(productStock.name);

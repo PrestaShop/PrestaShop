@@ -35,7 +35,7 @@ describe('Simple filter stocks', async () => {
   after(async () => {
     await helper.closeBrowser(browser);
   });
-  // Login into BO and go to categories page
+  // Login into BO and go to stocks page
   loginCommon.loginBO();
 
   it('should go to "Catalog>Stocks" page', async function () {
