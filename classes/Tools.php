@@ -47,6 +47,7 @@ class ToolsCore
     protected static $_user_browser;
     protected static $request;
     protected static $cldr_cache = [];
+    private static $_tempFiles = false;
 
     public static $round_mode = null;
 
@@ -4307,6 +4308,38 @@ exit;
             die('Error: "install" directory is missing');
         }
         exit;
+    }
+
+    public static function createTempFilePath(): string
+    {
+        if (self::$_tempFiles === false) {
+            self::$_tempFiles = [];
+            register_shutdown_function(function() {
+                foreach (self::$_tempFiles as $f => $ignore) {
+                    @static::unlinkTempFile($f);
+                }
+            });
+        }
+
+        $tempFilePath = sys_get_temp_dir() . '/ps__' . time() . '__'
+                . substr(bin2hex(hash('sha256', microtime(true) . random_bytes(32))), 0, 64) . '.bin';
+        if (!is_dir(dirname($tempFilePath)) || file_exists($tempFilePath)) {
+            throw new PrestaShopException('Failed to create temporary file path');
+        }
+        self::$_tempFiles[$tempFilePath] = true;
+        return $tempFilePath;
+    }
+
+    public static function unlinkTempFile(string $tempFilePath): bool
+    {
+        if (self::$_tempFiles === false || !isset(self::$_tempFiles[$tempFilePath])) {
+            trigger_error('Temporary file path "' . $tempFilePath . '" was never created'
+                    . ' or it was already unlinked.', E_USER_WARNING);
+            return false;
+        } else {
+            unset(self::$_tempFiles[$tempFilePath]);
+            return unlink($tempFilePath);
+        }
     }
 }
 
