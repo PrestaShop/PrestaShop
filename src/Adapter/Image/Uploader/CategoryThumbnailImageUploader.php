@@ -62,7 +62,7 @@ final class CategoryThumbnailImageUploader extends AbstractImageUploader
                 throw new ImageUploadException('Failed to create temporary category thumbnail image file');
             }
 
-            if (!move_uploaded_file($uploadedImage->getPathname(), $tmpName)) {
+            if (!\Uploader::moveUploadedFile($uploadedImage->getPathname(), $tmpName, -2)) {
                 throw new ImageUploadException('Failed to upload category thumbnail image');
             }
 

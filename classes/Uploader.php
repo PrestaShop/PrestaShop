@@ -233,23 +233,25 @@ class UploaderCore
      */
     public function process($dest = null)
     {
-        $upload = isset($_FILES[$this->getName()]) ? $_FILES[$this->getName()] : null;
+        if (isset($_FILES[$this->getName()])) {
+            $upload = $_FILES[$this->getName()];
 
-        if ($upload && is_array($upload['tmp_name'])) {
-            $tmp = array();
-            foreach ($upload['tmp_name'] as $index => $value) {
-                $tmp[$index] = array(
-                    'tmp_name' => $upload['tmp_name'][$index],
-                    'name' => $upload['name'][$index],
-                    'size' => $upload['size'][$index],
-                    'type' => $upload['type'][$index],
-                    'error' => $upload['error'][$index],
-                );
+            if (is_array($upload['tmp_name'])) {
+                $tmp = array();
+                foreach ($upload['tmp_name'] as $index => $value) {
+                    $tmp[$index] = array(
+                        'tmp_name' => $upload['tmp_name'][$index],
+                        'name' => $upload['name'][$index],
+                        'size' => $upload['size'][$index],
+                        'type' => $upload['type'][$index],
+                        'error' => $upload['error'][$index],
+                    );
 
-                $this->files[] = $this->upload($tmp[$index], $dest);
+                    $this->files[] = $this->upload($tmp[$index], $dest);
+                }
+            } else {
+                $this->files[] = $this->upload($upload, $dest);
             }
-        } elseif ($upload) {
-            $this->files[] = $this->upload($upload, $dest);
         }
 
         return $this->files;
@@ -270,8 +272,8 @@ class UploaderCore
                 $filePath = $this->getFilePath(isset($dest) ? $dest : $file['name']);
             }
 
-            if ($file['tmp_name'] && is_uploaded_file($file['tmp_name'])) {
-                move_uploaded_file($file['tmp_name'], $filePath);
+            if (static::isUploadedFile($file['tmp_name'], -2)) {
+                static::moveUploadedFile($file['tmp_name'], $file_path, -2);
             } else {
                 // Non-multipart uploads (PUT method support)
                 file_put_contents($filePath, fopen('php://input', 'rb'));
@@ -298,33 +300,33 @@ class UploaderCore
      */
     protected function checkUploadError($error_code)
     {
-        $error = 0;
+        $error = UPLOAD_ERR_OK;
         switch ($error_code) {
-            case 1:
+            case UPLOAD_ERR_INI_SIZE:
                 $error = Context::getContext()->getTranslator()->trans('The uploaded file exceeds %s', array(ini_get('upload_max_filesize')), 'Admin.Notifications.Error');
 
                 break;
-            case 2:
+            case UPLOAD_ERR_FORM_SIZE:
                 $error = Context::getContext()->getTranslator()->trans('The uploaded file exceeds %s', array(ini_get('post_max_size')), 'Admin.Notifications.Error');
 
                 break;
-            case 3:
+            case UPLOAD_ERR_PARTIAL:
                 $error = Context::getContext()->getTranslator()->trans('The uploaded file was only partially uploaded', array(), 'Admin.Notifications.Error');
 
                 break;
-            case 4:
+            case UPLOAD_ERR_NO_FILE:
                 $error = Context::getContext()->getTranslator()->trans('No file was uploaded', array(), 'Admin.Notifications.Error');
 
                 break;
-            case 6:
+            case UPLOAD_ERR_NO_TMP_DIR:
                 $error = Context::getContext()->getTranslator()->trans('Missing temporary folder', array(), 'Admin.Notifications.Error');
 
                 break;
-            case 7:
+            case UPLOAD_ERR_CANT_WRITE:
                 $error = Context::getContext()->getTranslator()->trans('Failed to write file to disk', array(), 'Admin.Notifications.Error');
 
                 break;
-            case 8:
+            case UPLOAD_ERR_EXTENSION:
                 $error = Context::getContext()->getTranslator()->trans('A PHP extension stopped the file upload', array(), 'Admin.Notifications.Error');
 
                 break;
@@ -343,9 +345,11 @@ class UploaderCore
     protected function validate(&$file)
     {
         $file['error'] = $this->checkUploadError($file['error']);
+        if ($file['error'] !== UPLOAD_ERR_OK) {
+            return false;
+        }
 
         $postMaxSize = $this->getPostMaxSizeBytes();
-
         if ($postMaxSize && ($this->_getServerVars('CONTENT_LENGTH') > $postMaxSize)) {
             $file['error'] = Context::getContext()->getTranslator()->trans('The uploaded file exceeds the post_max_size directive in php.ini', array(), 'Admin.Notifications.Error');
 
@@ -358,9 +362,8 @@ class UploaderCore
             return false;
         }
 
-        $types = $this->getAcceptTypes();
-
         //TODO check mime type.
+        $types = $this->getAcceptTypes();
         if (isset($types) && !in_array(Tools::strtolower(pathinfo($file['name'], PATHINFO_EXTENSION)), $types)) {
             $file['error'] = Context::getContext()->getTranslator()->trans('Filetype not allowed', array(), 'Admin.Notifications.Error');
 
@@ -462,5 +465,148 @@ class UploaderCore
         $directory .= DIRECTORY_SEPARATOR;
 
         return $directory;
+    }
+
+    /**
+     * Check if the file was uploaded via HTTP POST, move it to a temporary directory
+     * and return the new path.
+     *
+     * This method is needed if the file needs to be accessed before it is moved
+     * to the final destination and the "upload_tmp_dir" in not within the "open_basedir".
+     *
+     * @param string $uploadName POST name or PHP "tmp_name" if $uploadIndex === -2
+     *
+     * @return string|false
+     */
+    public static function getUploadedFilePath(string $uploadName, int $uploadIndex = -1)
+    {
+        if ($uploadIndex === -2) {
+            $found = false;
+            foreach ($_FILES as $k => $fArr) {
+                if (!empty($fArr['tmp_name'])) {
+                    if ($fArr['tmp_name'] === $uploadName) {
+                        $uploadName = $k;
+                        $uploadIndex = -1;
+                        $found = true;
+                    } else {
+                        foreach ($fArr['tmp_name'] as $k2 => $v) {
+                            if ($v === $uploadName) {
+                                $uploadName = $k;
+                                $uploadIndex = $k2;
+                                $found = true;
+                            }
+                        }
+                    }
+                }
+            }
+            if (!$found) {
+                return false;
+            }
+        }
+
+        if (empty($_FILES[$uploadName]) || empty($_FILES[$uploadName]['tmp_name'])) {
+            return false;
+        } elseif ($uploadIndex === -1) {
+            if (!is_string($_FILES[$uploadName]['tmp_name'])) {
+                return false;
+            } else {
+                $uploadFileArr = $_FILES[$uploadName];
+            }
+        } else {
+            if (empty($_FILES[$uploadName]['tmp_name'][$uploadIndex]) || !is_string($_FILES[$uploadName]['tmp_name'][$uploadIndex])) {
+                return false;
+            } else {
+                $uploadFileArr = [];
+                foreach ($_FILES[$uploadName] as $k => $vArr) {
+                    if (isset($vArr[$uploadIndex])) {
+                        $uploadFileArr[$k] = $vArr[$uploadIndex];
+                    }
+                }
+            }
+        }
+
+        if (!isset($uploadFileArr['ps_upload__tmp_name'])) {
+            if ($uploadIndex === -1) {
+                $uploadFileArr['ps_upload__tmp_name'] = &$_FILES[$uploadName]['ps_upload__tmp_name'];
+            } else {
+                if (!isset($_FILES[$uploadName]['ps_upload__tmp_name'])) {
+                    $_FILES[$uploadName]['ps_upload__tmp_name'] = [];
+                }
+                $uploadFileArr['ps_upload__tmp_name'] = &$_FILES[$uploadName]['ps_upload__tmp_name'][$uploadIndex];
+            }
+
+            $uploadFileArr['ps_upload__tmp_name'] = false;
+            if (!is_uploaded_file($uploadFileArr['tmp_name'])) {
+                return false;
+            }
+
+            $tempFilePath = Tools::createTempFilePath();
+            if (!move_uploaded_file($uploadFileArr['tmp_name'], $tempFilePath)
+                    || !isset($uploadFileArr['name']) || preg_match('~^\s*(?:|\.{1,2})\s*$|[/\\\\\x00-\x1f\x7f"\'*:<>?|]~s', $uploadFileArr['name'])
+                    || !isset($uploadFileArr['error']) || $uploadFileArr['error'] !== UPLOAD_ERR_OK) {
+                Tools::unlinkTempFile($tempFilePath);
+            } else {
+                chmod($tempFilePath, 0600);
+                $uploadFileArr['ps_upload__tmp_name'] = $tempFilePath;
+            }
+        }
+
+        if ($uploadFileArr['ps_upload__tmp_name'] !== false && is_file($uploadFileArr['ps_upload__tmp_name'])) {
+            return $uploadFileArr['ps_upload__tmp_name'];
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Check if the file was uploaded via HTTP POST and move it to a temporary directory.
+     *
+     * This method is needed if the file needs to be accessed before it is moved
+     * to the final destination and the "upload_tmp_dir" in not within the "open_basedir".
+     *
+     * @param string $uploadName POST name or PHP "tmp_name" if $uploadIndex === -2
+     */
+    public static function isUploadedFile(string $uploadName, int $uploadIndex = -1): bool
+    {
+        return static::getUploadedFilePath($uploadName, $uploadIndex) !== false;
+    }
+
+    /**
+     * Check if the file was uploaded via HTTP POST and move it to the destination path.
+     *
+     * This method is needed if the file needs to be accessed before it is moved
+     * to the final destination and the "upload_tmp_dir" in not within the "open_basedir".
+     *
+     * @param string $uploadName POST name or PHP "tmp_name" if $uploadIndex === -2
+     */
+    public static function moveUploadedFile(string $uploadName, string $destinationPath, int $uploadIndex = -1): bool
+    {
+        $tempFilePath = static::getUploadedFilePath($uploadName, $uploadIndex);
+        if ($tempFilePath !== false && $destinationPath !== '') {
+            $res = rename($tempFilePath, $destinationPath);
+            static::unlinkUploadedFile($uploadName, $uploadIndex);
+
+            return $res;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Check if the file was uploaded via HTTP POST and delete it.
+     *
+     * This method is needed if the file needs to be accessed before it is moved
+     * to the final destination and the "upload_tmp_dir" in not within the "open_basedir".
+     *
+     * @param string $uploadName POST name or PHP "tmp_name" if $uploadIndex === -2
+     */
+    public static function unlinkUploadedFile(string $uploadName, int $uploadIndex = -1): bool
+    {
+        $tempFilePath = static::getUploadedFilePath($uploadName, $uploadIndex);
+        if ($tempFilePath !== false) {
+            return @Tools::unlinkTempFile($tempFilePath);
+        } else {
+            return false;
+        }
     }
 }

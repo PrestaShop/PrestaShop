@@ -771,7 +771,7 @@ class AdminImportControllerCore extends AdminController
     {
         $filename_prefix = date('YmdHis') . '-';
 
-        if (isset($_FILES['file']) && !empty($_FILES['file']['error'])) {
+        if (isset($_FILES['file']) && $_FILES['file']['error'] !== UPLOAD_ERR_OK) {
             switch ($_FILES['file']['error']) {
                 case UPLOAD_ERR_INI_SIZE:
                     $_FILES['file']['error'] = $this->trans('The uploaded file exceeds the upload_max_filesize directive in php.ini. If your server configuration allows it, you may add a directive in your .htaccess.', array(), 'Admin.Advparameters.Notification');
@@ -801,8 +801,8 @@ class AdminImportControllerCore extends AdminController
             }
         } elseif (!preg_match('#([^\.]*?)\.(csv|xls[xt]?|o[dt]s)$#is', $_FILES['file']['name'])) {
             $_FILES['file']['error'] = $this->trans('The extension of your file should be .csv.', array(), 'Admin.Advparameters.Notification');
-        } elseif (!@filemtime($_FILES['file']['tmp_name']) ||
-            !@move_uploaded_file($_FILES['file']['tmp_name'], AdminImportController::getPath() . $filename_prefix . str_replace("\0", '', $_FILES['file']['name']))) {
+        } elseif (!@filemtime(Uploader::getUploadedFilePath('file')) ||
+            !@Uploader::moveUploadedFile('file', AdminImportController::getPath() . $filename_prefix . str_replace("\0", '', $_FILES['file']['name']))) {
             $_FILES['file']['error'] = $this->trans('An error occurred while uploading / copying the file.', array(), 'Admin.Advparameters.Notification');
         } else {
             @chmod(AdminImportController::getPath() . $filename_prefix . $_FILES['file']['name'], 0664);

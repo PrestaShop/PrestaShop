@@ -105,15 +105,14 @@ class Ps_Banner extends Module implements WidgetInterface
             $update_images_values = false;
 
             foreach ($languages as $lang) {
-                if (isset($_FILES['BANNER_IMG_' . $lang['id_lang']], $_FILES['BANNER_IMG_' . $lang['id_lang']]['tmp_name'])
-                    && !empty($_FILES['BANNER_IMG_' . $lang['id_lang']]['tmp_name'])) {
+                if (Uploader::isUploadedFile('BANNER_IMG_' . $lang['id_lang'])) {
                     if ($error = ImageManager::validateUpload($_FILES['BANNER_IMG_' . $lang['id_lang']], 4000000)) {
                         return $error;
                     } else {
                         $ext = substr($_FILES['BANNER_IMG_' . $lang['id_lang']]['name'], strrpos($_FILES['BANNER_IMG_' . $lang['id_lang']]['name'], '.') + 1);
                         $file_name = md5($_FILES['BANNER_IMG_' . $lang['id_lang']]['name']) . '.' . $ext;
 
-                        if (!move_uploaded_file($_FILES['BANNER_IMG_' . $lang['id_lang']]['tmp_name'], __DIR__ . DIRECTORY_SEPARATOR . 'img' . DIRECTORY_SEPARATOR . $file_name)) {
+                        if (!Uploader::moveUploadedFile('BANNER_IMG_' . $lang['id_lang'], __DIR__ . DIRECTORY_SEPARATOR . 'img' . DIRECTORY_SEPARATOR . $file_name)) {
                             return $this->displayError($this->trans('An error occurred while attempting to upload the file.', array(), 'Admin.Notifications.Error'));
                         } else {
                             if (Configuration::hasContext('BANNER_IMG', $lang['id_lang'], Shop::getContext())

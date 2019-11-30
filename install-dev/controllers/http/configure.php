@@ -138,12 +138,11 @@ class InstallControllerHttpConfigure extends InstallControllerHttp implements Ht
     public function processUploadLogo()
     {
         $error = '';
-        if (isset($_FILES['fileToUpload']['tmp_name']) && $_FILES['fileToUpload']['tmp_name']) {
-            $file = $_FILES['fileToUpload'];
-            $error = ImageManager::validateUpload($file, 300000);
+        if (Uploader::isUploadedFile('fileToUpload')) {
+            $error = ImageManager::validateUpload($_FILES['fileToUpload'], 300000);
             if (!strlen($error)) {
                 $tmp_name = tempnam(_PS_TMP_IMG_DIR_, 'PS');
-                if (!$tmp_name || !move_uploaded_file($file['tmp_name'], $tmp_name)) {
+                if (!$tmp_name || !Uploader::moveUploadedFile('fileToUpload', $tmp_name)) {
                     return false;
                 }
 

@@ -409,7 +409,7 @@ class AdminCartsControllerCore extends AdminController
                         }
                         $this->context->cart->addTextFieldToProduct((int) $product->id, (int) $customization_field['id_customization_field'], Product::CUSTOMIZE_TEXTFIELD, Tools::getValue($field_id));
                     } elseif ($customization_field['type'] == Product::CUSTOMIZE_FILE) {
-                        if (!isset($_FILES[$field_id]) || !isset($_FILES[$field_id]['tmp_name']) || empty($_FILES[$field_id]['tmp_name'])) {
+                        if (!Uploader::isUploadedFile($field_id)) {
                             if ($customization_field['required']) {
                                 $errors[] = $this->trans('Please fill in all the required fields.', array(), 'Admin.Notifications.Error');
                             }
@@ -419,7 +419,7 @@ class AdminCartsControllerCore extends AdminController
                         if ($error = ImageManager::validateUpload($_FILES[$field_id], (int) Configuration::get('PS_PRODUCT_PICTURE_MAX_SIZE'))) {
                             $errors[] = $error;
                         }
-                        if (!($tmp_name = tempnam(_PS_TMP_IMG_DIR_, 'PS')) || !move_uploaded_file($_FILES[$field_id]['tmp_name'], $tmp_name)) {
+                        if (!($tmp_name = tempnam(_PS_TMP_IMG_DIR_, 'PS')) || !Uploader::moveUploadedFile($field_id, $tmp_name)) {
                             $errors[] = $this->trans('An error occurred during the image upload process.', array(), 'Admin.Catalog.Notification');
                         }
                         $file_name = md5(uniqid(mt_rand(0, mt_getrandmax()), true));

@@ -4043,7 +4043,7 @@ class AdminControllerCore extends Controller
      */
     protected function uploadImage($id, $name, $dir, $ext = false, $width = null, $height = null)
     {
-        if (isset($_FILES[$name]['tmp_name']) && !empty($_FILES[$name]['tmp_name'])) {
+        if (Uploader::isUploadedFile($name)) {
             // Delete old image
             if (Validate::isLoadedObject($object = $this->loadObject())) {
                 $object->deleteImage();
@@ -4062,7 +4062,7 @@ class AdminControllerCore extends Controller
                 return false;
             }
 
-            if (!move_uploaded_file($_FILES[$name]['tmp_name'], $tmp_name)) {
+            if (!Uploader::moveUploadedFile($name, $tmp_name)) {
                 return false;
             }
 

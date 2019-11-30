@@ -94,7 +94,7 @@ abstract class AbstractImageUploader implements ImageUploaderInterface
     {
         $temporaryImageName = tempnam(_PS_TMP_IMG_DIR_, 'PS');
 
-        if (!$temporaryImageName || !move_uploaded_file($image->getPathname(), $temporaryImageName)) {
+        if (!$temporaryImageName || !\Uploader::moveUploadedFile($image->getPathname(), $temporaryImageName, -2)) {
             throw new ImageUploadException('Failed to create temporary image file');
         }
 

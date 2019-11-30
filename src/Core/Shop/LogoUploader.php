@@ -84,23 +84,20 @@ class LogoUploader
      *
      * @param $fieldName
      * @param $logoPrefix
-     * @param $files[] the array of files to avoid use $_POST
      *
      * @return bool
      *
      * @throws PrestaShopException in case of upload failure
      */
-    public function update($fieldName, $logoPrefix, array $files = [])
+    public function update($fieldName, $logoPrefix)
     {
-        $files = empty($files) ? $_FILES : $files;
-
-        if (isset($files[$fieldName]['tmp_name'], $files[$fieldName]['tmp_name'], $files[$fieldName]['size'])) {
-            if ($error = ImageManager::validateUpload($files[$fieldName], Tools::getMaxUploadSize())) {
+        if (\Uploader::isUploadedFile($fieldName)) {
+            if ($error = ImageManager::validateUpload($_FILES[$fieldName], Tools::getMaxUploadSize())) {
                 throw new PrestaShopException($error);
             }
             $tmpName = tempnam(_PS_TMP_IMG_DIR_, 'PS');
 
-            if (!$tmpName || !move_uploaded_file($files[$fieldName]['tmp_name'], $tmpName)) {
+            if (!$tmpName || !\Uploader::moveUploadedFile($fieldName, $tmpName)) {
                 throw new PrestaShopException(sprintf('%Upload of temporary file to %s has failed.', $tmpName));
             }
 
@@ -162,19 +159,17 @@ class LogoUploader
         }
     }
 
-    public function uploadIco($name, $destination, $files = [])
+    public function uploadIco($name, $destination)
     {
-        $files = empty($files) ? $_FILES : $files;
-
-        if (isset($files[$name]['tmp_name']) && !empty($files[$name]['tmp_name'])) {
-            if ($error = ImageManager::validateIconUpload($files[$name])) {
+        if (\Uploader::isUploadedFile($name)) {
+            if ($error = ImageManager::validateIconUpload($_FILES[$name])) {
                 throw new PrestaShopException($error);
-            } elseif (!copy($_FILES[$name]['tmp_name'], $destination)) {
+            } elseif (!\Uploader::moveUploadedFile($name, $destination)) {
                 throw new PrestaShopException(
                     Context::getContext()->getTranslator()->trans(
                         'An error occurred while uploading the favicon: cannot copy file "%s" to folder "%s".',
                         array(
-                            $files[$name]['tmp_name'],
+                            $_FILES[$name]['tmp_name'],
                             $destination,
                         ),
                         'Admin.Design.Notification'

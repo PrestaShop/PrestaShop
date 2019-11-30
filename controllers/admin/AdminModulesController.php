@@ -598,12 +598,12 @@ class AdminModulesControllerCore extends AdminController
 
                         break;
                 }
-            } elseif (!isset($_FILES['file']['tmp_name']) || empty($_FILES['file']['tmp_name'])) {
+            } elseif (!Uploader::isUploadedFile('file')) {
                 $this->errors[] = $this->trans('No file has been selected', array(), 'Admin.Notifications.Error');
             } elseif (substr($_FILES['file']['name'], -4) != '.tar' && substr($_FILES['file']['name'], -4) != '.zip'
                 && substr($_FILES['file']['name'], -4) != '.tgz' && substr($_FILES['file']['name'], -7) != '.tar.gz') {
                 $this->errors[] = $this->trans('Unknown archive type.', array(), 'Admin.Modules.Notification');
-            } elseif (!move_uploaded_file($_FILES['file']['tmp_name'], _PS_MODULE_DIR_ . $_FILES['file']['name'])) {
+            } elseif (!Uploader::moveUploadedFile('file', _PS_MODULE_DIR_ . $_FILES['file']['name'])) {
                 $this->errors[] = $this->trans('An error occurred while copying the archive to the module directory.', array(), 'Admin.Modules.Notification');
             } else {
                 $this->extractArchive(_PS_MODULE_DIR_ . $_FILES['file']['name']);

@@ -764,10 +764,10 @@ class AdminTranslationsControllerCore extends AdminController
 
     public function submitImportLang()
     {
-        if (!isset($_FILES['file']['tmp_name']) || !$_FILES['file']['tmp_name']) {
+        if (!Uploader::isUploadedFile('file')) {
             $this->errors[] = $this->trans('No file has been selected.', array(), 'Admin.Notifications.Error');
         } else {
-            $gz = new Archive_Tar($_FILES['file']['tmp_name'], true);
+            $gz = new Archive_Tar(Uploader::getUploadedFilePath('file'), true);
             $filename = $_FILES['file']['name'];
             $iso_code = str_replace(array('.tar.gz', '.gzip'), '', $filename);
 

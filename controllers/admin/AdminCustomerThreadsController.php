@@ -439,12 +439,12 @@ class AdminCustomerThreadsControllerCore extends AdminController
                 $cm->message = Tools::getValue('reply_message');
                 if (($error = $cm->validateField('message', $cm->message, null, array(), true)) !== true) {
                     $this->errors[] = $error;
-                } elseif (isset($_FILES) && !empty($_FILES['joinFile']['name']) && $_FILES['joinFile']['error'] != 0) {
+                } elseif (isset($_FILES['joinFile']) && !empty($_FILES['joinFile']['name']) && !Uploader::isUploadedFile('joinFile')) {
                     $this->errors[] = $this->trans('An error occurred during the file upload process.', array(), 'Admin.Notifications.Error');
                 } elseif ($cm->add()) {
                     $file_attachment = null;
                     if (!empty($_FILES['joinFile']['name'])) {
-                        $file_attachment['content'] = file_get_contents($_FILES['joinFile']['tmp_name']);
+                        $file_attachment['content'] = file_get_contents(Uploader::getUploadedFilePath('joinFile'));
                         $file_attachment['name'] = $_FILES['joinFile']['name'];
                         $file_attachment['mime'] = $_FILES['joinFile']['type'];
                     }

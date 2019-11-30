@@ -85,7 +85,7 @@ final class CategoryCoverImageUploader extends AbstractImageUploader
             throw new ImageUploadException('Failed to create temporary image file');
         }
 
-        if (!move_uploaded_file($image->getPathname(), $temporaryImageName)) {
+        if (!\Uploader::moveUploadedFile($image->getPathname(), $temporaryImageName, -2)) {
             throw new ImageUploadException('Failed to upload image');
         }
 

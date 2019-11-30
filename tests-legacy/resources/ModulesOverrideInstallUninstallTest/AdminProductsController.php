@@ -249,7 +249,7 @@ class AdminProductsController extends AdminProductsControllerCore
     public function ajaxProcessAddAttachment()
     {
         if (isset($_FILES['attachment_file'])) {
-            if ((int)$_FILES['attachment_file']['error'] === 1) {
+            if ($_FILES['attachment_file']['error'] === UPLOAD_ERR_INI_SIZE) {
                 $_FILES['attachment_file']['error'] = array();
                 $max_upload = (int)ini_get('upload_max_filesize');
                 $max_post = (int)ini_get('post_max_size');
@@ -259,8 +259,10 @@ class AdminProductsController extends AdminProductsControllerCore
                     '<b>'.$_FILES['attachment_file']['name'].'</b> ',
                     '<b>'.$upload_mb.'</b>'
                 );
+            } else {
+                $_FILES['attachment_file']['error'] = array();
             }
-            $_FILES['attachment_file']['error'] = array();
+
             $is_attachment_name_valid = false;
             $attachment_names = Tools::getValue('attachment_name');
             $attachment_descriptions = Tools::getValue('attachment_description');
@@ -290,64 +292,63 @@ class AdminProductsController extends AdminProductsControllerCore
             if (!$is_attachment_name_valid) {
                 $_FILES['attachment_file']['error'][] = Tools::displayError('An attachment name is required.');
             }
-            if (empty($_FILES['attachment_file']['error'])) {
-                if (is_uploaded_file($_FILES['attachment_file']['tmp_name'])) {
-                    if ($_FILES['attachment_file']['size'] > (Configuration::get('PS_ATTACHMENT_MAXIMUM_SIZE') * 1024 * 1024)) {
-                        $_FILES['attachment_file']['error'][] = sprintf(
-                            $this->l('The file is too large. Maximum size allowed is: %1$d kB. The file you are trying to upload is %2$d kB.'),
-                            (Configuration::get('PS_ATTACHMENT_MAXIMUM_SIZE') * 1024),
-                            number_format(($_FILES['attachment_file']['size'] / 1024), 2, '.', '')
-                        );
+
+            if (Uploader::isUploadedFile('attachment_file')) {
+                if ($_FILES['attachment_file']['size'] > (Configuration::get('PS_ATTACHMENT_MAXIMUM_SIZE') * 1024 * 1024)) {
+                    $_FILES['attachment_file']['error'][] = sprintf(
+                        $this->l('The file is too large. Maximum size allowed is: %1$d kB. The file you are trying to upload is %2$d kB.'),
+                        (Configuration::get('PS_ATTACHMENT_MAXIMUM_SIZE') * 1024),
+                        number_format(($_FILES['attachment_file']['size'] / 1024), 2, '.', '')
+                    );
+                } else {
+                    do {
+                        $uniqid = sha1(microtime());
+                    } while (file_exists(_PS_DOWNLOAD_DIR_.$uniqid));
+                    if (!Uploader::moveUploadedFile('attachment_file', _PS_DOWNLOAD_DIR_.$uniqid)) {
+                        $_FILES['attachment_file']['error'][] = $this->l('File copy failed');
+                    }
+                }
+            } else {
+                $_FILES['attachment_file']['error'][] = Tools::displayError('The file is missing.');
+            }
+            if (count($_FILES['attachment_file']['error']) === 0 && isset($uniqid)) {
+                $attachment = new Attachment();
+                foreach ($attachment_names as $lang => $name) {
+                    $attachment->name[(int)$lang] = $name;
+                }
+                foreach ($attachment_descriptions as $lang => $description) {
+                    $attachment->description[(int)$lang] = $description;
+                }
+                $attachment->file = $uniqid;
+                $attachment->mime = $_FILES['attachment_file']['type'];
+                $attachment->file_name = $_FILES['attachment_file']['name'];
+                if (empty($attachment->mime) || Tools::strlen($attachment->mime) > 128) {
+                    $_FILES['attachment_file']['error'][] = Tools::displayError('Invalid file extension');
+                }
+                if (!Validate::isGenericName($attachment->file_name)) {
+                    $_FILES['attachment_file']['error'][] = Tools::displayError('Invalid file name');
+                }
+                if (Tools::strlen($attachment->file_name) > 128) {
+                    $_FILES['attachment_file']['error'][] = Tools::displayError('The file name is too long.');
+                }
+                if (empty($this->errors)) {
+                    $res = $attachment->add();
+                    if (!$res) {
+                        $_FILES['attachment_file']['error'][] = Tools::displayError('This attachment was unable to be loaded into the database.');
                     } else {
-                        do {
-                            $uniqid = sha1(microtime());
-                        } while (file_exists(_PS_DOWNLOAD_DIR_.$uniqid));
-                        if (!copy($_FILES['attachment_file']['tmp_name'], _PS_DOWNLOAD_DIR_.$uniqid)) {
-                            $_FILES['attachment_file']['error'][] = $this->l('File copy failed');
+                        $_FILES['attachment_file']['id_attachment'] = $attachment->id;
+                        $_FILES['attachment_file']['filename'] = $attachment->name[$this->context->employee->id_lang];
+                        $id_product = (int)Tools::getValue($this->identifier);
+                        $res = $attachment->attachProduct($id_product);
+                        if (!$res) {
+                            $_FILES['attachment_file']['error'][] = Tools::displayError('We were unable to associate this attachment to a product.');
                         }
-                        @unlink($_FILES['attachment_file']['tmp_name']);
                     }
                 } else {
-                    $_FILES['attachment_file']['error'][] = Tools::displayError('The file is missing.');
-                }
-                if (empty($_FILES['attachment_file']['error']) && isset($uniqid)) {
-                    $attachment = new Attachment();
-                    foreach ($attachment_names as $lang => $name) {
-                        $attachment->name[(int)$lang] = $name;
-                    }
-                    foreach ($attachment_descriptions as $lang => $description) {
-                        $attachment->description[(int)$lang] = $description;
-                    }
-                    $attachment->file = $uniqid;
-                    $attachment->mime = $_FILES['attachment_file']['type'];
-                    $attachment->file_name = $_FILES['attachment_file']['name'];
-                    if (empty($attachment->mime) || Tools::strlen($attachment->mime) > 128) {
-                        $_FILES['attachment_file']['error'][] = Tools::displayError('Invalid file extension');
-                    }
-                    if (!Validate::isGenericName($attachment->file_name)) {
-                        $_FILES['attachment_file']['error'][] = Tools::displayError('Invalid file name');
-                    }
-                    if (Tools::strlen($attachment->file_name) > 128) {
-                        $_FILES['attachment_file']['error'][] = Tools::displayError('The file name is too long.');
-                    }
-                    if (empty($this->errors)) {
-                        $res = $attachment->add();
-                        if (!$res) {
-                            $_FILES['attachment_file']['error'][] = Tools::displayError('This attachment was unable to be loaded into the database.');
-                        } else {
-                            $_FILES['attachment_file']['id_attachment'] = $attachment->id;
-                            $_FILES['attachment_file']['filename'] = $attachment->name[$this->context->employee->id_lang];
-                            $id_product = (int)Tools::getValue($this->identifier);
-                            $res = $attachment->attachProduct($id_product);
-                            if (!$res) {
-                                $_FILES['attachment_file']['error'][] = Tools::displayError('We were unable to associate this attachment to a product.');
-                            }
-                        }
-                    } else {
-                        $_FILES['attachment_file']['error'][] = Tools::displayError('Invalid file');
-                    }
+                    $_FILES['attachment_file']['error'][] = Tools::displayError('Invalid file');
                 }
             }
+
             die(json_encode($_FILES));
         }
     }
@@ -1449,7 +1450,7 @@ class AdminProductsController extends AdminProductsControllerCore
                 $this->copyFromPost($image, 'image');
                 if (count($this->errors) || !$image->update()) {
                     $this->errors[] = Tools::displayError('An error occurred while updating the image.');
-                } elseif (isset($_FILES['image_product']['tmp_name']) && $_FILES['image_product']['tmp_name'] != null) {
+                } elseif (Uploader::isUploadedFile('image_product')) {
                     $this->copyImage($product->id, $image->id, $method);
                 }
             }
@@ -1472,7 +1473,7 @@ class AdminProductsController extends AdminProductsControllerCore
     */
     public function copyImage($id_product, $id_image, $method = 'auto')
     {
-        if (!isset($_FILES['image_product']['tmp_name'])) {
+        if (!Uploader::isUploadedFile('image_product')) {
             return false;
         }
         if ($error = ImageManager::validateUpload($_FILES['image_product'])) {
@@ -1482,7 +1483,7 @@ class AdminProductsController extends AdminProductsControllerCore
             if (!$new_path = $image->getPathForCreation()) {
                 $this->errors[] = Tools::displayError('An error occurred while attempting to create a new folder.');
             }
-            if (!($tmpName = tempnam(_PS_TMP_IMG_DIR_, 'PS')) || !move_uploaded_file($_FILES['image_product']['tmp_name'], $tmpName)) {
+            if (!($tmpName = tempnam(_PS_TMP_IMG_DIR_, 'PS')) || !Uploader::moveUploadedFile('image_product', $tmpName)) {
                 $this->errors[] = Tools::displayError('An error occurred during the image upload process.');
             } elseif (!ImageManager::resize($tmpName, $new_path.'.'.$image->image_format)) {
                 $this->errors[] = Tools::displayError('An error occurred while copying the image.');

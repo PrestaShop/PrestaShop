@@ -38,14 +38,14 @@ while ($cycle && $i < $max_cycles) {
     $path = fix_dirname($path).'/';
 }
 
-if (!empty($_FILES) && isset($_FILES['file']) && $_FILES['file']['size']) {
+if (!empty($_FILES['file']) && !empty($_FILES['file']['name']) && !empty($_FILES['file']['size'])
+        && is_uploaded_file($_FILES['file']['tmp_name'])) {
     $info = pathinfo($_FILES['file']['name']);
-    if (isset($info['extension'])
-            && in_array(fix_strtolower($info['extension']), $ext)
-            && in_array(mime_content_type($_FILES['file']['tmp_name']), $mime)
-    ) {
-        $tempFile = $_FILES['file']['tmp_name'];
-
+    $tempFile = sys_get_temp_dir() . '/ps__filemanager__' . time() . '__'
+            . substr(bin2hex(hash('sha256', microtime(true) . random_bytes(32))), 0, 64) . '.bin';
+    if (!empty($info['extension']) && in_array(fix_strtolower($info['extension']), $ext)
+            && move_uploaded_file($_FILES['file']['tmp_name'], $tempFile)
+            && in_array(mime_content_type($tempFile), $mime)) {
         $targetPath = $storeFolder;
         $targetPathThumb = $storeFolderThumb;
         $_FILES['file']['name'] = fix_filename($_FILES['file']['name'], $transliteration);
@@ -65,16 +65,12 @@ if (!empty($_FILES) && isset($_FILES['file']) && $_FILES['file']['size']) {
         $targetFile = $targetPath.$_FILES['file']['name'];
         $targetFileThumb = $targetPathThumb.$_FILES['file']['name'];
 
-        if (in_array(fix_strtolower($info['extension']), $ext_img) && @getimagesize($tempFile) != false) {
-            $is_img = true;
-        } else {
-            $is_img = false;
+        if (!rename($tempFile, $targetFile) || !chmod($targetFile, 0644)) {
+            @unlink($tempFile);
+            @unlink($targetFile);
         }
 
-        if ($is_img) {
-            move_uploaded_file($tempFile, $targetFile);
-            chmod($targetFile, 0755);
-
+        if (in_array(fix_strtolower($info['extension']), $ext_img) && !empty(@getimagesize($targetFile))) {
             $memory_error = false;
             if (!create_img_gd($targetFile, $targetFileThumb, 122, 91)) {
                 $memory_error = false;
@@ -124,11 +120,10 @@ if (!empty($_FILES) && isset($_FILES['file']) && $_FILES['file']['size']) {
                 header('HTTP/1.1 406 Not enought Memory', true, 406);
                 exit();
             }
-        } else {
-            move_uploaded_file($tempFile, $targetFile);
-            chmod($targetFile, 0755);
         }
     } else {
+        @unlink($_FILES['file']['tmp_name']);
+        @unlink($tempFile);
         header('HTTP/1.1 406 file not permitted', true, 406);
         exit();
     }

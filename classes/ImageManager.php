@@ -473,10 +473,10 @@ class ImageManagerCore
         if ((int) $maxFileSize > 0 && $file['size'] > (int) $maxFileSize) {
             return Context::getContext()->getTranslator()->trans('Image is too large (%1$d kB). Maximum allowed: %2$d kB', array($file['size'] / 1024, $maxFileSize / 1024), 'Admin.Notifications.Error');
         }
-        if (!ImageManager::isRealImage($file['tmp_name'], $file['type'], $mimeTypeList) || !ImageManager::isCorrectImageFileExt($file['name'], $types) || preg_match('/\%00/', $file['name'])) {
+        if (!ImageManager::isRealImage(Uploader::getUploadedFilePath($file['tmp_name'], -2), $file['type'], $mimeTypeList) || !ImageManager::isCorrectImageFileExt($file['name'], $types) || preg_match('/\%00/', $file['name'])) {
             return Context::getContext()->getTranslator()->trans('Image format not recognized, allowed formats are: .gif, .jpg, .png', array(), 'Admin.Notifications.Error');
         }
-        if ($file['error']) {
+        if ($file['error'] !== UPLOAD_ERR_OK) {
             return Context::getContext()->getTranslator()->trans('Error while uploading image; please change your server\'s settings. (Error code: %s)', array($file['error']), 'Admin.Notifications.Error');
         }
 
@@ -499,7 +499,7 @@ class ImageManagerCore
         if (substr($file['name'], -4) != '.ico') {
             return Context::getContext()->getTranslator()->trans('Image format not recognized, allowed formats are: .ico', array(), 'Admin.Notifications.Error');
         }
-        if ($file['error']) {
+        if ($file['error'] !== UPLOAD_ERR_OK) {
             return Context::getContext()->getTranslator()->trans('Error while uploading image; please change your server\'s settings.', array(), 'Admin.Notifications.Error');
         }
 

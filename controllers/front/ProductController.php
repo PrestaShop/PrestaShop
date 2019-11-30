@@ -816,7 +816,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         }
         $indexes = array_flip($authorized_file_fields);
         foreach ($_FILES as $field_name => $file) {
-            if (in_array($field_name, $authorized_file_fields) && isset($file['tmp_name']) && !empty($file['tmp_name'])) {
+            if (in_array($field_name, $authorized_file_fields) && Uploader::isUploadedFile($field_name)) {
                 $file_name = md5(uniqid(mt_rand(0, mt_getrandmax()), true));
                 if ($error = ImageManager::validateUpload($file, (int) Configuration::get('PS_PRODUCT_PICTURE_MAX_SIZE'))) {
                     $this->errors[] = $error;
@@ -825,7 +825,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                 $product_picture_width = (int) Configuration::get('PS_PRODUCT_PICTURE_WIDTH');
                 $product_picture_height = (int) Configuration::get('PS_PRODUCT_PICTURE_HEIGHT');
                 $tmp_name = tempnam(_PS_TMP_IMG_DIR_, 'PS');
-                if ($error || (!$tmp_name || !move_uploaded_file($file['tmp_name'], $tmp_name))) {
+                if ($error || (!$tmp_name || !Uploader::moveUploadedFile($field_name, $tmp_name))) {
                     return false;
                 }
                 /* Original file */

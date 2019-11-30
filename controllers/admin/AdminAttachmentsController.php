@@ -214,7 +214,7 @@ class AdminAttachmentsControllerCore extends AdminController
                 $_POST['mime'] = $a->mime;
             }
             if (!count($this->errors)) {
-                if (isset($_FILES['file']) && is_uploaded_file($_FILES['file']['tmp_name'])) {
+                if (Uploader::isUploadedFile('file')) {
                     if ($_FILES['file']['size'] > (Configuration::get('PS_ATTACHMENT_MAXIMUM_SIZE') * 1024 * 1024)) {
                         $this->errors[] = $this->trans(
                             'The file is too large. Maximum size allowed is: %1$d kB. The file you are trying to upload is %2$d kB.',
@@ -228,18 +228,17 @@ class AdminAttachmentsControllerCore extends AdminController
                         do {
                             $uniqid = sha1(microtime());
                         } while (file_exists(_PS_DOWNLOAD_DIR_ . $uniqid));
-                        if (!move_uploaded_file($_FILES['file']['tmp_name'], _PS_DOWNLOAD_DIR_ . $uniqid)) {
+                        if (!Uploader::moveUploadedFile('file', _PS_DOWNLOAD_DIR_ . $uniqid)) {
                             $this->errors[] = $this->trans('Failed to copy the file.', array(), 'Admin.Catalog.Notification');
                         }
                         $_POST['file_name'] = $_FILES['file']['name'];
-                        @unlink($_FILES['file']['tmp_name']);
                         if (!count($this->errors) && isset($a) && file_exists(_PS_DOWNLOAD_DIR_ . $a->file)) {
                             unlink(_PS_DOWNLOAD_DIR_ . $a->file);
                         }
                         $_POST['file'] = $uniqid;
                         $_POST['mime'] = $_FILES['file']['type'];
                     }
-                } elseif (array_key_exists('file', $_FILES) && (int) $_FILES['file']['error'] === 1) {
+                } elseif (isset($_FILES['file']) && $_FILES['file']['error'] === UPLOAD_ERR_INI_SIZE) {
                     $max_upload = (int) ini_get('upload_max_filesize');
                     $max_post = (int) ini_get('post_max_size');
                     $upload_mb = min($max_upload, $max_post);

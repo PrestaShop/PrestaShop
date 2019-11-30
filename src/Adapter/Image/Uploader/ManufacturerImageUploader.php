@@ -54,7 +54,7 @@ final class ManufacturerImageUploader extends AbstractImageUploader
             );
         }
 
-        if (!move_uploaded_file($image->getPathname(), $temporaryImageName)) {
+        if (!\Uploader::moveUploadedFile($image->getPathname(), $temporaryImageName, -2)) {
             throw new ImageUploadException(
                 'An error occurred while uploading the image. Check your directory permissions.'
             );
@@ -88,8 +88,7 @@ final class ManufacturerImageUploader extends AbstractImageUploader
 
         try {
             /* Generate images with different size */
-            if (isset($_FILES) &&
-                count($_FILES) &&
+            if (count($_FILES) &&
                 file_exists(_PS_MANU_IMG_DIR_ . $manufacturerId . '.jpg')
             ) {
                 $imageTypes = ImageType::getImagesTypes('manufacturers');

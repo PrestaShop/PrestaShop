@@ -1065,7 +1065,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
     protected function writePostedImageOnDisk($reception_path, $dest_width = null, $dest_height = null, $image_types = null, $parent_path = null)
     {
         if ($this->wsObject->method == 'PUT') {
-            if (isset($_FILES['image']['tmp_name']) && $_FILES['image']['tmp_name']) {
+            if (Uploader::isUploadedFile('image')) {
                 $file = $_FILES['image'];
                 if ($file['size'] > $this->imgMaxUploadSize) {
                     throw new WebserviceException(sprintf('The image size is too large (maximum allowed is %d KB)', ($this->imgMaxUploadSize / 1000)), array(72, 400));
@@ -1075,12 +1075,12 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
                 if (Tools::isCallable('finfo_open')) {
                     $const = defined('FILEINFO_MIME_TYPE') ? FILEINFO_MIME_TYPE : FILEINFO_MIME;
                     $finfo = finfo_open($const);
-                    $mime_type = finfo_file($finfo, $file['tmp_name']);
+                    $mime_type = finfo_file($finfo, Uploader::getUploadedFilePath('image'));
                     finfo_close($finfo);
                 } elseif (Tools::isCallable('mime_content_type')) {
-                    $mime_type = mime_content_type($file['tmp_name']);
+                    $mime_type = mime_content_type(Uploader::getUploadedFilePath('image'));
                 } elseif (Tools::isCallable('exec')) {
-                    $mime_type = trim(exec('file -b --mime-type ' . escapeshellarg($file['tmp_name'])));
+                    $mime_type = trim(exec('file -b --mime-type ' . escapeshellarg(Uploader::getUploadedFilePath('image'))));
                 }
                 if (empty($mime_type) || $mime_type == 'regular file') {
                     $mime_type = $file['type'];
@@ -1098,7 +1098,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
                 }
 
                 // Try to copy image file to a temporary file
-                if (!($tmp_name = tempnam(_PS_TMP_IMG_DIR_, 'PS')) || !move_uploaded_file($_FILES['image']['tmp_name'], $tmp_name)) {
+                if (!($tmp_name = tempnam(_PS_TMP_IMG_DIR_, 'PS')) || !Uploader::moveUploadedFile('image', $tmp_name)) {
                     throw new WebserviceException('Error while copying image to the temporary directory', array(75, 400));
                 } else {
                     // Try to copy image file to the image directory
@@ -1112,7 +1112,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
                 throw new WebserviceException('Please set an "image" parameter with image data for value', array(76, 400));
             }
         } elseif ($this->wsObject->method == 'POST') {
-            if (isset($_FILES['image']['tmp_name']) && $_FILES['image']['tmp_name']) {
+            if (Uploader::isUploadedFile('image')) {
                 $file = $_FILES['image'];
                 if ($file['size'] > $this->imgMaxUploadSize) {
                     throw new WebserviceException(sprintf('The image size is too large (maximum allowed is %d KB)', ($this->imgMaxUploadSize / 1000)), array(72, 400));
@@ -1121,105 +1121,100 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
                     throw new WebserviceException('Image upload error : ' . $error, array(76, 400));
                 }
 
-                if (isset($file['tmp_name']) && $file['tmp_name'] != null) {
-                    if ($this->imageType == 'products') {
-                        $product = new Product((int) $this->wsObject->urlSegment[2]);
-                        if (!Validate::isLoadedObject($product)) {
-                            throw new WebserviceException('Product ' . (int) $this->wsObject->urlSegment[2] . ' does not exist', array(76, 400));
-                        }
-                        $image = new Image();
-                        $image->id_product = (int) ($product->id);
-                        $image->position = Image::getHighestPosition($product->id) + 1;
+                if ($this->imageType == 'products') {
+                    $product = new Product((int) $this->wsObject->urlSegment[2]);
+                    if (!Validate::isLoadedObject($product)) {
+                        throw new WebserviceException('Product ' . (int) $this->wsObject->urlSegment[2] . ' does not exist', array(76, 400));
+                    }
+                    $image = new Image();
+                    $image->id_product = (int) ($product->id);
+                    $image->position = Image::getHighestPosition($product->id) + 1;
 
-                        if (!Image::getCover((int) $product->id)) {
-                            $image->cover = 1;
-                        } else {
-                            $image->cover = 0;
-                        }
-
-                        if (!$image->add()) {
-                            throw new WebserviceException('Error while creating image', array(76, 400));
-                        }
-                        if (!Validate::isLoadedObject($product)) {
-                            throw new WebserviceException('Product ' . (int) $this->wsObject->urlSegment[2] . ' does not exist', array(76, 400));
-                        }
-                        Hook::exec('updateProduct', array('id_product' => (int) $this->wsObject->urlSegment[2]));
+                    if (!Image::getCover((int) $product->id)) {
+                        $image->cover = 1;
+                    } else {
+                        $image->cover = 0;
                     }
 
-                    // copy image
-                    if (!isset($file['tmp_name'])) {
-                        return false;
+                    if (!$image->add()) {
+                        throw new WebserviceException('Error while creating image', array(76, 400));
                     }
-                    if ($error = ImageManager::validateUpload($file, $this->imgMaxUploadSize)) {
-                        throw new WebserviceException('Bad image : ' . $error, array(76, 400));
+                    if (!Validate::isLoadedObject($product)) {
+                        throw new WebserviceException('Product ' . (int) $this->wsObject->urlSegment[2] . ' does not exist', array(76, 400));
+                    }
+                    Hook::exec('updateProduct', array('id_product' => (int) $this->wsObject->urlSegment[2]));
+                }
+
+                // copy image
+                if ($error = ImageManager::validateUpload($file, $this->imgMaxUploadSize)) {
+                    throw new WebserviceException('Bad image : ' . $error, array(76, 400));
+                }
+
+                if ($this->imageType == 'products') {
+                    $image = new Image($image->id);
+                    if (!(Configuration::get('PS_OLD_FILESYSTEM') && file_exists(_PS_PROD_IMG_DIR_ . $product->id . '-' . $image->id . '.jpg'))) {
+                        $image->createImgFolder();
                     }
 
-                    if ($this->imageType == 'products') {
-                        $image = new Image($image->id);
-                        if (!(Configuration::get('PS_OLD_FILESYSTEM') && file_exists(_PS_PROD_IMG_DIR_ . $product->id . '-' . $image->id . '.jpg'))) {
-                            $image->createImgFolder();
-                        }
-
-                        if (!($tmp_name = tempnam(_PS_TMP_IMG_DIR_, 'PS')) || !move_uploaded_file($file['tmp_name'], $tmp_name)) {
-                            throw new WebserviceException('An error occurred during the image upload', array(76, 400));
-                        } elseif (!ImageManager::resize($tmp_name, _PS_PROD_IMG_DIR_ . $image->getExistingImgPath() . '.' . $image->image_format)) {
-                            throw new WebserviceException('An error occurred while copying image', array(76, 400));
-                        } else {
-                            $images_types = ImageType::getImagesTypes('products');
-                            foreach ($images_types as $imageType) {
-                                if (!ImageManager::resize($tmp_name, _PS_PROD_IMG_DIR_ . $image->getExistingImgPath() . '-' . stripslashes($imageType['name']) . '.' . $image->image_format, $imageType['width'], $imageType['height'], $image->image_format)) {
-                                    $this->_errors[] = Context::getContext()->getTranslator()->trans('An error occurred while copying this image: %s', array(stripslashes($imageType['name'])), 'Admin.Notifications.Error');
-                                }
-                            }
-                        }
-                        @unlink($tmp_name);
-
-                        Hook::exec('actionWatermark', array('id_image' => $image->id, 'id_product' => $image->id_product));
-
-                        $this->imgToDisplay = _PS_PROD_IMG_DIR_ . $image->getExistingImgPath() . '.' . $image->image_format;
-                        $this->objOutput->setFieldsToDisplay('full');
-                        $this->output = $this->objOutput->renderEntity($image, 1);
-                        $image_content = array('sqlId' => 'content', 'value' => base64_encode(file_get_contents($this->imgToDisplay)), 'encode' => 'base64');
-                        $this->output .= $this->objOutput->objectRender->renderField($image_content);
-                    } elseif (in_array($this->imageType, array('categories', 'manufacturers', 'suppliers', 'stores'))) {
-                        if (!($tmp_name = tempnam(_PS_TMP_IMG_DIR_, 'PS')) || !move_uploaded_file($file['tmp_name'], $tmp_name)) {
-                            throw new WebserviceException('An error occurred during the image upload', array(76, 400));
-                        } elseif (!ImageManager::resize($tmp_name, $reception_path)) {
-                            throw new WebserviceException('An error occurred while copying image', array(76, 400));
-                        }
-                        $images_types = ImageType::getImagesTypes($this->imageType);
+                    if (!($tmp_name = tempnam(_PS_TMP_IMG_DIR_, 'PS')) || !Uploader::moveUploadedFile('image', $tmp_name)) {
+                        throw new WebserviceException('An error occurred during the image upload', array(76, 400));
+                    } elseif (!ImageManager::resize($tmp_name, _PS_PROD_IMG_DIR_ . $image->getExistingImgPath() . '.' . $image->image_format)) {
+                        throw new WebserviceException('An error occurred while copying image', array(76, 400));
+                    } else {
+                        $images_types = ImageType::getImagesTypes('products');
                         foreach ($images_types as $imageType) {
-                            if (!ImageManager::resize($tmp_name, $parent_path . $this->wsObject->urlSegment[2] . '-' . stripslashes($imageType['name']) . '.jpg', $imageType['width'], $imageType['height'])) {
+                            if (!ImageManager::resize($tmp_name, _PS_PROD_IMG_DIR_ . $image->getExistingImgPath() . '-' . stripslashes($imageType['name']) . '.' . $image->image_format, $imageType['width'], $imageType['height'], $image->image_format)) {
                                 $this->_errors[] = Context::getContext()->getTranslator()->trans('An error occurred while copying this image: %s', array(stripslashes($imageType['name'])), 'Admin.Notifications.Error');
                             }
                         }
-                        @unlink(_PS_TMP_IMG_DIR_ . $tmp_name);
-                        $this->imgToDisplay = $reception_path;
-                    } elseif ($this->imageType == 'customizations') {
-                        $filename = md5(uniqid(mt_rand(0, mt_getrandmax()), true));
-                        $this->imgToDisplay = _PS_UPLOAD_DIR_ . $filename;
-                        if (!($tmp_name = tempnam(_PS_TMP_IMG_DIR_, 'PS')) || !move_uploaded_file($file['tmp_name'], $tmp_name)) {
-                            throw new WebserviceException('An error occurred during the image upload', array(76, 400));
-                        } elseif (!ImageManager::resize($tmp_name, $this->imgToDisplay)) {
-                            throw new WebserviceException('An error occurred while copying image', array(76, 400));
-                        }
-                        $product_picture_width = (int) Configuration::get('PS_PRODUCT_PICTURE_WIDTH');
-                        $product_picture_height = (int) Configuration::get('PS_PRODUCT_PICTURE_HEIGHT');
-                        if (!ImageManager::resize($this->imgToDisplay, $this->imgToDisplay . '_small', $product_picture_width, $product_picture_height)) {
-                            throw new WebserviceException('An error occurred while resizing image', array(76, 400));
-                        }
-                        @unlink(_PS_TMP_IMG_DIR_ . $tmp_name);
+                    }
+                    @unlink($tmp_name);
 
-                        $query = 'INSERT INTO `' . _DB_PREFIX_ . 'customized_data` (`id_customization`, `type`, `index`, `value`)
-							VALUES (' . (int) $this->wsObject->urlSegment[3] . ', 0, ' . (int) $this->wsObject->urlSegment[4] . ', \'' . $filename . '\')';
+                    Hook::exec('actionWatermark', array('id_image' => $image->id, 'id_product' => $image->id_product));
 
-                        if (!Db::getInstance()->execute($query)) {
-                            return false;
+                    $this->imgToDisplay = _PS_PROD_IMG_DIR_ . $image->getExistingImgPath() . '.' . $image->image_format;
+                    $this->objOutput->setFieldsToDisplay('full');
+                    $this->output = $this->objOutput->renderEntity($image, 1);
+                    $image_content = array('sqlId' => 'content', 'value' => base64_encode(file_get_contents($this->imgToDisplay)), 'encode' => 'base64');
+                    $this->output .= $this->objOutput->objectRender->renderField($image_content);
+                } elseif (in_array($this->imageType, array('categories', 'manufacturers', 'suppliers', 'stores'))) {
+                    if (!($tmp_name = tempnam(_PS_TMP_IMG_DIR_, 'PS')) || !Uploader::moveUploadedFile('image', $tmp_name)) {
+                        throw new WebserviceException('An error occurred during the image upload', array(76, 400));
+                    } elseif (!ImageManager::resize($tmp_name, $reception_path)) {
+                        throw new WebserviceException('An error occurred while copying image', array(76, 400));
+                    }
+                    $images_types = ImageType::getImagesTypes($this->imageType);
+                    foreach ($images_types as $imageType) {
+                        if (!ImageManager::resize($tmp_name, $parent_path . $this->wsObject->urlSegment[2] . '-' . stripslashes($imageType['name']) . '.jpg', $imageType['width'], $imageType['height'])) {
+                            $this->_errors[] = Context::getContext()->getTranslator()->trans('An error occurred while copying this image: %s', array(stripslashes($imageType['name'])), 'Admin.Notifications.Error');
                         }
                     }
+                    @unlink(_PS_TMP_IMG_DIR_ . $tmp_name);
+                    $this->imgToDisplay = $reception_path;
+                } elseif ($this->imageType == 'customizations') {
+                    $filename = md5(uniqid(mt_rand(0, mt_getrandmax()), true));
+                    $this->imgToDisplay = _PS_UPLOAD_DIR_ . $filename;
+                    if (!($tmp_name = tempnam(_PS_TMP_IMG_DIR_, 'PS')) || !Uploader::moveUploadedFile('image', $tmp_name)) {
+                        throw new WebserviceException('An error occurred during the image upload', array(76, 400));
+                    } elseif (!ImageManager::resize($tmp_name, $this->imgToDisplay)) {
+                        throw new WebserviceException('An error occurred while copying image', array(76, 400));
+                    }
+                    $product_picture_width = (int) Configuration::get('PS_PRODUCT_PICTURE_WIDTH');
+                    $product_picture_height = (int) Configuration::get('PS_PRODUCT_PICTURE_HEIGHT');
+                    if (!ImageManager::resize($this->imgToDisplay, $this->imgToDisplay . '_small', $product_picture_width, $product_picture_height)) {
+                        throw new WebserviceException('An error occurred while resizing image', array(76, 400));
+                    }
+                    @unlink(_PS_TMP_IMG_DIR_ . $tmp_name);
 
-                    return true;
+                    $query = 'INSERT INTO `' . _DB_PREFIX_ . 'customized_data` (`id_customization`, `type`, `index`, `value`)
+                                                    VALUES (' . (int) $this->wsObject->urlSegment[3] . ', 0, ' . (int) $this->wsObject->urlSegment[4] . ', \'' . $filename . '\')';
+
+                    if (!Db::getInstance()->execute($query)) {
+                        return false;
+                    }
                 }
+
+                return true;
             }
         } else {
             throw new WebserviceException('Method ' . $this->wsObject->method . ' is not allowed for an image resource', array(77, 405));

@@ -59,7 +59,7 @@ function isPicture($file, $types = null)
 {
     Tools::displayAsDeprecated();
 
-    return ImageManager::isRealImage($file['tmp_name'], $file['type'], $types);
+    return ImageManager::isRealImage(Uploader::getUploadedFilePath($file['tmp_name'], -2), $file['type'], $types);
 }
 
 /**
@@ -88,8 +88,8 @@ function imageResize($sourceFile, $destFile, $destWidth = null, $destHeight = nu
 function imageCut($srcFile, $destFile, $destWidth = null, $destHeight = null, $fileType = 'jpg', $destX = 0, $destY = 0)
 {
     Tools::displayAsDeprecated();
-    if (isset($srcFile['tmp_name'])) {
-        return ImageManager::cut($srcFile['tmp_name'], $destFile, $destWidth, $destHeight, $fileType, $destX, $destY);
+    if (Uploader::isUploadedFile($srcFile['tmp_name'], -2)) {
+        return ImageManager::cut(Uploader::getUploadedFilePath($srcFile['tmp_name'], -2), $destFile, $destWidth, $destHeight, $fileType, $destX, $destY);
     }
 
     return false;

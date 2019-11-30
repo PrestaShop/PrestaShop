@@ -119,13 +119,8 @@ final class CategoryMenuThumbnailUploader implements ImageUploaderInterface
             }
 
             // Necessary to prevent hacking
-            if (isset($uploadedFile['save_path'])) {
-                unset($uploadedFile['save_path']);
-            }
-
-            if (isset($uploadedFile['tmp_name'])) {
-                unset($uploadedFile['tmp_name']);
-            }
+            unset($uploadedFile['save_path']);
+            unset($uploadedFile['tmp_name']);
         }
 
         $this->cacheClearer->clearSmartyCache();

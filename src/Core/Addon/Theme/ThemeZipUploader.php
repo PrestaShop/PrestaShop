@@ -63,10 +63,7 @@ final class ThemeZipUploader implements ThemeUploaderInterface
             $destination = $themesDir . sha1_file($uploadedTheme->getPathname()) . '.zip';
         }
 
-        move_uploaded_file(
-            $uploadedTheme->getPathname(),
-            $destination
-        );
+        \Uploader::moveUploadedFile($uploadedTheme->getPathname(), $destination, -2);
 
         return $destination;
     }

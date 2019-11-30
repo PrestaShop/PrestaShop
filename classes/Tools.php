@@ -3916,16 +3916,17 @@ exit;
     public static function fileAttachment($input = 'fileUpload', $return_content = true)
     {
         $file_attachment = null;
-        if (isset($_FILES[$input]['name']) && !empty($_FILES[$input]['name']) && !empty($_FILES[$input]['tmp_name'])) {
+        if (Uploader::isUploadedFile($input)) {
             $file_attachment['rename'] = uniqid() . Tools::strtolower(substr($_FILES[$input]['name'], -5));
             if ($return_content) {
-                $file_attachment['content'] = file_get_contents($_FILES[$input]['tmp_name']);
+                $file_attachment['content'] = file_get_contents(Uploader::getUploadedFilePath($input));
             }
             $file_attachment['tmp_name'] = $_FILES[$input]['tmp_name'];
             $file_attachment['name'] = $_FILES[$input]['name'];
             $file_attachment['mime'] = $_FILES[$input]['type'];
             $file_attachment['error'] = $_FILES[$input]['error'];
             $file_attachment['size'] = $_FILES[$input]['size'];
+            $file_attachment['ps_upload__tmp_name'] = Uploader::getUploadedFilePath($input);
         }
 
         return $file_attachment;
@@ -4314,7 +4315,7 @@ exit;
     {
         if (self::$_tempFiles === false) {
             self::$_tempFiles = [];
-            register_shutdown_function(function() {
+            register_shutdown_function(function () {
                 foreach (self::$_tempFiles as $f => $ignore) {
                     @static::unlinkTempFile($f);
                 }
@@ -4327,6 +4328,7 @@ exit;
             throw new PrestaShopException('Failed to create temporary file path');
         }
         self::$_tempFiles[$tempFilePath] = true;
+
         return $tempFilePath;
     }
 
@@ -4335,9 +4337,11 @@ exit;
         if (self::$_tempFiles === false || !isset(self::$_tempFiles[$tempFilePath])) {
             trigger_error('Temporary file path "' . $tempFilePath . '" was never created'
                     . ' or it was already unlinked.', E_USER_WARNING);
+
             return false;
         } else {
             unset(self::$_tempFiles[$tempFilePath]);
+
             return unlink($tempFilePath);
         }
     }
