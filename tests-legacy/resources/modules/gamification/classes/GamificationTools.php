@@ -35,11 +35,11 @@ class GamificationTools
         $content = str_replace(array_keys($meta_data), array_values($meta_data), $content);
 
         //replace meta data
-        $content = preg_replace_callback('#\{config\}([a-zA-Z0-9_-]*)\{/config\}#', create_function('$matches', 'return Configuration::get($matches[1]);'), $content);
-        $content = preg_replace_callback('#\{link\}(.*)\{/link\}#', create_function('$matches', 'return Context::getContext()->link->getAdminLink($matches[1]);'), $content);
-        $content = preg_replace_callback('#\{employee\}(.*)\{/employee\}#', create_function('$matches', 'return Context::getContext()->employee->$matches[1];'), $content);
-        $content = preg_replace_callback('#\{language\}(.*)\{/language\}#', create_function('$matches', 'return Context::getContext()->language->$matches[1];'), $content);
-        $content = preg_replace_callback('#\{country\}(.*)\{/country\}#', create_function('$matches', 'return Context::getContext()->country->$matches[1];'), $content);
+        $content = preg_replace_callback('#\{config\}([a-zA-Z0-9_-]*)\{/config\}#', function($matches) { return Configuration::get($matches[1]); }, $content);
+        $content = preg_replace_callback('#\{link\}(.*)\{/link\}#', function($matches) { return Context::getContext()->link->getAdminLink($matches[1]); }, $content);
+        $content = preg_replace_callback('#\{employee\}(.*)\{/employee\}#', function($matches) { return Context::getContext()->employee->{$matches[1]}; }, $content);
+        $content = preg_replace_callback('#\{language\}(.*)\{/language\}#', function($matches) { return Context::getContext()->language->{$matches[1]}; }, $content);
+        $content = preg_replace_callback('#\{country\}(.*)\{/country\}#', function($matches) { return Context::getContext()->country->{$matches[1]}; }, $content);
 
         return $content;
     }
