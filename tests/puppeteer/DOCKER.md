@@ -16,6 +16,15 @@ docker-compose -f docker-compose.nightly.yml -f docker-compose.tests.yml exec -e
 docker-compose -f docker-compose.nightly.yml -f docker-compose.tests.yml up --build
 docker-compose -f docker-compose.nightly.yml -f docker-compose.tests.yml exec -e COMMAND="sanity-tests" tests bash /tmp/run-tests.sh
 ```
+
+### Functional tests
+
+```bash
+# Create Shop and running test
+docker-compose -f docker-compose.nightly.yml -f docker-compose.tests.yml up --build
+docker-compose -f docker-compose.nightly.yml -f docker-compose.tests.yml exec -e COMMAND="functional-tests" tests bash /tmp/run-tests.sh
+```
+
 ### Upgrade test
 For this specific test you need to specify which Prestashop Version you need to install.
 
