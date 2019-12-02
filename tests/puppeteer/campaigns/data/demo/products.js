@@ -45,5 +45,14 @@ module.exports = {
       quantity: 300,
       status: true,
     },
+    demo_18: {
+      id: 12,
+      name: 'Mountain fox - Vector graphics',
+      reference: 'demo_18',
+      category: 'Art',
+      price: 9,
+      quantity: 300,
+      status: true,
+    },
   },
 };
