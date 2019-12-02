@@ -17,6 +17,7 @@ module.exports = class CommonPage {
    * @return textContent
    */
   async getTextContent(selector) {
+    await this.page.waitForSelector(selector, {visible: true});
     const textContent = await this.page.$eval(selector, el => el.textContent);
     return textContent.replace(/\s+/g, ' ').trim();
   }

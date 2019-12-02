@@ -12,4 +12,10 @@ module.exports = {
   async closeBrowser(browser) {
     return browser.close();
   },
+  async setDownloadBehavior(browser) {
+    await browser._client.send('Page.setDownloadBehavior', {
+      behavior: 'allow',
+      downloadPath: global.BO.DOWNLOAD_PATH,
+    });
+  },
 };
