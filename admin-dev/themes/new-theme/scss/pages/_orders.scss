@@ -116,7 +116,7 @@ $order-block-background-color: #F8F8F8;
 }
 
 
-@media only screen and (max-width: map-get($grid-breakpoints, xxl)) {
+@media only screen and (max-width: 1475px) {
   .messages-block {  
     li {
       .row {
