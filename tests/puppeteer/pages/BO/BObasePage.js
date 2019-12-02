@@ -121,11 +121,11 @@ module.exports = class BOBasePage extends CommonPage {
    * @returns {Promise<void>}
    */
   async logoutBO() {
-    await this.page.click(this.headerLogoImage);
-    await this.page.waitForSelector(this.userProfileIcon);
+    await this.clickAndWaitForNavigation(this.headerLogoImage);
+    await this.page.waitForSelector(this.userProfileIcon, {visible: true});
     await this.page.click(this.userProfileIcon);
-    await this.page.waitForSelector(this.userProfileLogoutLink);
-    await this.page.click(this.userProfileLogoutLink);
+    await this.page.waitForSelector(this.userProfileLogoutLink, {visible: true});
+    await this.clickAndWaitForNavigation(this.userProfileLogoutLink);
   }
 
   /**
