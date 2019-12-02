@@ -58,7 +58,7 @@ This campaign verifies that each function of the software application, operates 
 Each and every functionality of the system is tested by providing appropriate input, verifying the output, and comparing the actual results with the expected results.
 
 ### Launch all scripts
-If you want to run all functional tests, you need to specify **`DOWNLOAD_PATH`** env Param.
+If you want to run all functional tests, you need to specify **`DOWNLOAD_PATH`** env param.
 
 ```bash
 DOWNLOAD_PATH="/home/user/Downloads" URL_FO="Your_Shop_URL_FO" npm run functional-tests
