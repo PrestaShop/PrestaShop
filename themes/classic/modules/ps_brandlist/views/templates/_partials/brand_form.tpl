@@ -23,11 +23,25 @@
  * International Registered Trademark & Property of PrestaShop SA
  *}
 
-<form action="#">
-  <select onchange="this.options[this.selectedIndex].value && (window.location = this.options[this.selectedIndex].value);">
-    <option value="">{l s='All brands' d='Shop.Theme.Catalog'}</option>
+<div class="brands-sort dropdown">
+  <button
+    class="btn-unstyle select-title"
+    rel="nofollow"
+    data-toggle="dropdown"
+    aria-haspopup="true"
+    aria-expanded="false">
+    {l s='All brands' d='Shop.Theme.Catalog'}
+    <i class="material-icons float-xs-right">arrow_drop_down</i>
+  </button>
+  <div class="dropdown-menu">
     {foreach from=$brands item=brand}
-      <option value="{$brand['link']}">{$brand['name']}</option>
+      <a
+        rel="nofollow"
+        href="{$brand['link']}"
+        class="select-list js-search-link"
+      >
+        {$brand['name']}
+      </a>
     {/foreach}
-  </select>
-</form>
+  </div>
+</div>
