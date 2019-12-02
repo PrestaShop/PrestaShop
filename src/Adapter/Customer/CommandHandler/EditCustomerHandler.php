@@ -82,7 +82,7 @@ final class EditCustomerHandler extends AbstractCustomerHandler implements EditC
         // to check if required fields are set
         if ($command->isPartnerOffersSubscribed() !== null) {
             $_POST[RequiredField::PARTNER_OFFERS] = $command->isPartnerOffersSubscribed();
-        } else if ($command->isNewsletterSubscribed() !== null) {
+        } elseif ($command->isNewsletterSubscribed() !== null) {
             $_POST[RequiredField::NEWSLETTER] = $command->isNewsletterSubscribed();
         }
 
