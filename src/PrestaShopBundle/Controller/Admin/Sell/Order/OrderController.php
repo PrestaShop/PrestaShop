@@ -58,6 +58,7 @@ use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderPreview;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderPreview;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductOutOfStockException;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\OrderGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Multistore\MultistoreContextCheckerInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\OrderFilters;
@@ -988,6 +989,10 @@ class OrderController extends FrameworkBundleAdminController
             OrderEmailSendException::class => $this->trans(
                 'An error occurred while sending the e-mail to the customer.',
                 'Admin.Orderscustomers.Notification'
+            ),
+            ProductOutOfStockException::class => $this->trans(
+                'There are not enough products in stock',
+                'Admin.Notifications.Error'
             ),
         ];
     }
