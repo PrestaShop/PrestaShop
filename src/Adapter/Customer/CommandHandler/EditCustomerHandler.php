@@ -80,7 +80,20 @@ final class EditCustomerHandler extends AbstractCustomerHandler implements EditC
 
         // validateFieldsRequiredDatabase() below is using $_POST
         // to check if required fields are set
-        $_POST[RequiredField::PARTNER_OFFERS] = $command->isPartnerOffersSubscribed();
+        if ($command->isPartnerOffersSubscribed() !== null) {
+            $_POST[RequiredField::PARTNER_OFFERS] = $command->isPartnerOffersSubscribed();
+        } else if ($command->isNewsletterSubscribed() !== null) {
+            $_POST[RequiredField::NEWSLETTER] = $command->isNewsletterSubscribed();
+        }
+
+        // before validation, we need to get the list of customer mandatory fields from the database
+        // and set their current values (only if it is not being modified: if it is not in $_POST)
+        $requiredFields = $customer->getFieldsRequiredDatabase();
+        foreach ($requiredFields as $field) {
+            if (!array_key_exists($field['field_name'], $_POST)) {
+                $_POST[$field['field_name']] = $customer->{$field['field_name']};
+            }
+        }
 
         $this->assertRequiredFieldsAreNotMissing($customer);
 

@@ -48,5 +48,4 @@ class RequiredField
         self::PARTNER_OFFERS,
         self::NEWSLETTER,
     ];
-
 }
