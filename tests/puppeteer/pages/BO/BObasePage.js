@@ -25,6 +25,8 @@ module.exports = class BOBasePage extends CommonPage {
     // Orders
     this.ordersParentLink = 'li#subtab-AdminParentOrders';
     this.ordersLink = '#subtab-AdminOrders';
+    // Invoices
+    this.invoicesLink = '#subtab-AdminInvoices';
 
     // Catalog
     this.catalogParentLink = 'li#subtab-AdminCatalog';
@@ -76,6 +78,12 @@ module.exports = class BOBasePage extends CommonPage {
     // Alert Text
     this.alertSuccessBloc = 'div.alert.alert-success:not([style=\'display: none;\'])';
     this.alertSuccessBlockParagraph = `${this.alertSuccessBloc} div.alert-text p`;
+    this.alertTextBlock = '.alert-text';
+
+    // Alert Box
+    this.alertBoxBloc = 'div.alert-box';
+    this.alertBoxTextSpan = `${this.alertBoxBloc} p.alert-text span`;
+    this.alertBoxButtonClose = `${this.alertBoxBloc} button.close`;
 
     // Modal dialog
     this.modalDialog = '#confirmation_modal.show .modal-dialog';
