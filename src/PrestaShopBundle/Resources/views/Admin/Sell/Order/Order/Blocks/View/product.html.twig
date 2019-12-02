@@ -45,6 +45,9 @@
         </p>
       {% endif %}
     </a>
+    {% if product.type == constant('PrestaShop\\PrestaShop\\Core\\Domain\\Order\\QueryResult\\OrderProductForViewing::TYPE_PACK') %}
+      <span class="button">hello</span>
+    {% endif %}
   </td>
   <td class="cellProductUnitPrice">{{ product.unitPrice }}</td>
   <td class="cellProductQuantity">

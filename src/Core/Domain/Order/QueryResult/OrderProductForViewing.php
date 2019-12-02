@@ -28,6 +28,10 @@ namespace PrestaShop\PrestaShop\Core\Domain\Order\QueryResult;
 
 class OrderProductForViewing
 {
+    const TYPE_PACK = 'pack';
+    const TYPE_PRODUCT_WITH_COMBINATIONS = 'product_with_combinations';
+    const TYPE_PRODUCT_WITHOUT_COMBINATIONS = 'product_without_combinations';
+
     /**
      * @var int
      */
@@ -44,6 +48,11 @@ class OrderProductForViewing
     private $name;
 
     /**
+     * @var array<OrderProductForViewing>
+     */
+    private $packItems;
+
+    /**
      * @var string
      */
     private $reference;
@@ -52,6 +61,11 @@ class OrderProductForViewing
      * @var string
      */
     private $supplierReference;
+
+    /**
+     * @var string
+     */
+    private $type;
 
     /**
      * @var int
@@ -99,7 +113,7 @@ class OrderProductForViewing
     private $orderDetailId;
 
     public function __construct(
-        int $orderDetailId,
+        ?int $orderDetailId,
         int $id,
         string $name,
         string $reference,
@@ -112,7 +126,9 @@ class OrderProductForViewing
         float $unitPriceTaxExclRaw,
         float $unitPriceTaxInclRaw,
         float $taxRate,
-        string $location
+        string $location,
+        string $type,
+        array $packItems = []
     ) {
         $this->id = $id;
         $this->name = $name;
@@ -128,12 +144,14 @@ class OrderProductForViewing
         $this->taxRate = $taxRate;
         $this->orderDetailId = $orderDetailId;
         $this->location = $location;
+        $this->packItems = $packItems;
+        $this->type = $type;
     }
 
     /**
      * @return int
      */
-    public function getOrderDetailId(): int
+    public function getOrderDetailId(): ?int
     {
         return $this->orderDetailId;
     }
@@ -152,6 +170,14 @@ class OrderProductForViewing
     public function getName(): string
     {
         return $this->name;
+    }
+
+    /**
+     * @return array<OrderProductForViewing>
+     */
+    public function getPackItems(): array
+    {
+        return $this->packItems;
     }
 
     /**
@@ -176,6 +202,14 @@ class OrderProductForViewing
     public function getTaxRate(): float
     {
         return $this->taxRate;
+    }
+
+    /**
+     * @return string
+     */
+    public function getType(): string
+    {
+        return $this->type;
     }
 
     /**

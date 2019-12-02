@@ -436,6 +436,37 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
                 $this->imageTagSourceParser->parse($product['image_tag']) :
                 null;
 
+            $productType = !empty($product['pack_items']) ? OrderProductForViewing::TYPE_PACK :
+                OrderProductForViewing::TYPE_PRODUCT_WITHOUT_COMBINATIONS;
+
+            $packItems = [];
+            foreach ($product['pack_items'] as $pack_item) {
+                $packItemType = !empty($pack_item['pack_items']) ? OrderProductForViewing::TYPE_PACK :
+                    OrderProductForViewing::TYPE_PRODUCT_WITHOUT_COMBINATIONS;
+
+                $packItemImagePath = isset($pack_item['image_tag']) ?
+                    $this->imageTagSourceParser->parse($pack_item['image_tag']) :
+                    null;
+
+                $packItems[] = new OrderProductForViewing(
+                    null,
+                    $pack_item['id_product'],
+                    $pack_item['name'],
+                    $pack_item['reference'],
+                    $pack_item['supplier_reference'],
+                    $pack_item['out_of_stock'],
+                    0,
+                    0,
+                    $pack_item['current_stock'],
+                    $packItemImagePath,
+                    Tools::ps_round(0, 2),
+                    Tools::ps_round(0, 2),
+                    0,
+                    $pack_item['location'],
+                    $packItemType
+                );
+            }
+
             $productsForViewing[] = new OrderProductForViewing(
                 $product['id_order_detail'],
                 $product['product_id'],
@@ -450,10 +481,11 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
                 Tools::ps_round($product['unit_price_tax_excl'], 2),
                 Tools::ps_round($product['unit_price_tax_incl'], 2),
                 $product['tax_rate'],
-                $product['location']
+                $product['location'],
+                $productType,
+                $packItems
             );
         }
-
         return new OrderProductsForViewing($productsForViewing);
     }
 

@@ -321,9 +321,6 @@ class OrderController extends FrameworkBundleAdminController
         $privateNoteForm = $this->createForm(PrivateNoteType::class, [
             'note' => $orderForViewing->getCustomer()->getPrivateNote(),
         ]);
-        $updateOrderProductForm = $this->createForm(UpdateProductInOrderType::class, [], [
-            'order_id' => $orderId,
-        ]);
         $updateOrderShippingForm = $this->createForm(UpdateOrderShippingType::class, [
             'new_carrier_id' => $orderForViewing->getCarrierId(),
         ], [
@@ -917,46 +914,6 @@ class OrderController extends FrameworkBundleAdminController
      * Returns products for given order
      *
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", redirectRoute="admin_orders_index")
-     *
-     * @param int $orderId
-     * @param Request $request
-     *
-     * @return JsonResponse
-     */
-    public function getPaginatedProductsAction(int $orderId, Request $request): JsonResponse
-    {
-        $offset = $request->get('offset');
-        $limit = $request->get('limit');
-
-        /** @var OrderForViewing $orderForViewing */
-        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
-
-        $products = $orderForViewing->getProducts()->getProducts();
-        if (null !== $limit && null !== $offset) {
-            // @todo Optimize this by using a GetPartialOrderForViewing query which loads only the relevant products
-            $products = array_slice($products, (int) $offset, (int) $limit);
-        }
-
-        return $this->json([
-            'products' => $products,
-        ]);
-    }
-
-    public function getPricesAction(int $orderId): JsonResponse
-    {
-        /** @var OrderForViewing $orderForViewing */
-        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
-
-        return $this->json([
-            'orderTotalFormatted' => $orderForViewing->getPrices()->getTotalAmountFormatted(),
-            'productsTotalFormatted' => $orderForViewing->getPrices()->getProductsPriceFormatted(),
-            'shippingTotalFormatted' => $orderForViewing->getPrices()->getShippingPriceFormatted(),
-            'taxesTotalFormatted' => $orderForViewing->getPrices()->getTaxesAmountFormatted(),
-        ]);
-    }
-
-    /**
-     * Returns products for given order
      *
      * @param int $orderId
      * @param Request $request
