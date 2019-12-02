@@ -25,14 +25,6 @@ module.exports = class Invoice extends BOBasePage {
   /*
   Methods
    */
-  /**
-   * Click on the Status
-   * @param statusID
-   * @return {Promise<void>}
-   */
-  async chooseStatus(statusID) {
-    await this.page.click(this.statusCheckbox.replace('%ID', statusID));
-  }
 
   /**
    * Generate PDF by date
@@ -45,6 +37,16 @@ module.exports = class Invoice extends BOBasePage {
       await this.setValue(this.dateFromInput, dateFrom);
       await this.setValue(this.dateToInput, dateTo);
     }
+    await this.page.click(this.generatePdfByDateButton);
+  }
+
+  /**
+   * Click on the Status
+   * @param statusID
+   * @return {Promise<void>}
+   */
+  async chooseStatus(statusID) {
+    await this.page.click(this.statusCheckbox.replace('%ID', statusID));
   }
 
   /** Generate PDF by status
