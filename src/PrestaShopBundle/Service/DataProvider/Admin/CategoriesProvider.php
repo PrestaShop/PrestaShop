@@ -26,10 +26,7 @@
 
 namespace PrestaShopBundle\Service\DataProvider\Admin;
 
-use GuzzleHttp\Exception\RequestException;
 use PrestaShop\PrestaShop\Adapter\Module\Module as ApiModule;
-use PrestaShopBundle\Service\DataProvider\Marketplace\ApiClient;
-use Psr\Log\LoggerInterface;
 use stdClass;
 
 /**
@@ -46,39 +43,26 @@ class CategoriesProvider
     const CATEGORY_MY_MODULES = 'my_modules';
     const CATEGORY_MY_MODULES_NAME = 'My Modules';
 
-    private $apiClient;
-    private $logger;
+    /**
+     * @var array
+     */
     private $modulesTheme;
 
-    public static $categories;
-    public static $categoriesFromApi;
-
-    public function __construct(ApiClient $apiClient, LoggerInterface $logger, array $addonsCategories, array $modulesTheme)
-    {
-        $this->apiClient = $apiClient;
-        $this->logger = $logger;
-        $this->modulesTheme = $modulesTheme;
-        // We now avoid calling the API. This data is loaded from a local YML file
-        self::$categoriesFromApi = empty($addonsCategories) ? null : $this->sortCategories($addonsCategories);
-    }
+    /**
+     * @var array
+     */
+    private $categories;
 
     /**
-     * Get categories from API.
-     *
-     * @return array
+     * @var array
      */
-    public function getCategories()
-    {
-        if (null === self::$categoriesFromApi) {
-            try {
-                self::$categoriesFromApi = $this->apiClient->getCategories();
-            } catch (RequestException $e) {
-                $this->logger->error('Modules categories could not be loaded from marketplace API');
-                self::$categoriesFromApi = [];
-            }
-        }
+    private $categoriesFromSource;
 
-        return self::$categoriesFromApi;
+    public function __construct(array $addonsCategories, array $modulesTheme)
+    {
+        $this->modulesTheme = $modulesTheme;
+        // We now avoid calling the API. This data is loaded from a local YML file
+        $this->categoriesFromSource = $this->sortCategories($addonsCategories);
     }
 
     /**
@@ -88,19 +72,13 @@ class CategoriesProvider
      *
      * @return array the list of categories
      */
-    public function getCategoriesMenu($modules)
+    public function getCategoriesMenu($modules): array
     {
-        if (null === self::$categories) {
+        if (null === $this->categories) {
             // The Root category is "Categories"
-            $categoriesListing = $this->getCategories();
-            $categories = $this->initializeCategories($categoriesListing);
+            $categories = $this->initializeCategories($this->categoriesFromSource);
             foreach ($modules as $module) {
-                if (empty($categoriesListing)) {
-                    // No result from Addons, check module type
-                    $category = $this->findModuleType($module, $this->modulesTheme);
-                } else {
-                    $category = $this->findModuleCategory($module, $categories);
-                }
+                $category = $this->findModuleCategory($module, $categories);
 
                 $categories['categories']->subMenu[$category]->modules[] = $module;
             }
@@ -112,10 +90,10 @@ class CategoriesProvider
                 }
             }
 
-            self::$categories = $categories;
+            $this->categories = $categories;
         }
 
-        return self::$categories;
+        return $this->categories;
     }
 
     /**
@@ -181,9 +159,9 @@ class CategoriesProvider
      *
      * @return string the category
      */
-    public function getParentCategory($categoryName)
+    public function getParentCategory(string $categoryName): string
     {
-        foreach ($this->getCategories() as $parentCategory) {
+        foreach ($this->categoriesFromSource as $parentCategory) {
             foreach ($parentCategory->categories as $childCategory) {
                 if ($childCategory->name === $categoryName) {
                     return $parentCategory->name;
@@ -197,14 +175,14 @@ class CategoriesProvider
     /**
      * Re-organize category data into a Menu item.
      *
-     * @param $menu
-     * @param $name
+     * @param string $menu
+     * @param string $name
      * @param array $moduleIds
-     * @param null $tab
+     * @param string $tab
      *
      * @return object
      */
-    private function createMenuObject($menu, $name, $moduleIds = [], $tab = null)
+    private function createMenuObject(string $menu, string $name, array $moduleIds = [], ?string $tab = null): object
     {
         return (object) array(
             'tab' => $tab,
@@ -220,6 +198,8 @@ class CategoriesProvider
      *
      * @param ApiModule $installedProduct Installed product
      * @param array $modulesTheme Modules theme
+     *
+     * @return string
      */
     private function findModuleType(ApiModule $installedProduct, array $modulesTheme)
     {
@@ -236,14 +216,14 @@ class CategoriesProvider
      * @param ApiModule $installedProduct Installed product
      * @param array $categories Available categories
      */
-    private function findModuleCategory(ApiModule $installedProduct, array $categories)
+    private function findModuleCategory(ApiModule $installedProduct, array $categories): string
     {
         $moduleCategoryParent = $installedProduct->attributes->get('categoryParentEnglishName');
         if (!isset($categories['categories']->subMenu[$moduleCategoryParent])) {
             if (in_array($installedProduct->attributes->get('name'), $this->modulesTheme)) {
                 $moduleCategoryParent = self::CATEGORY_THEME;
             } else {
-                $moduleCategoryParent = self::CATEGORY_OTHER;
+                $moduleCategoryParent = $this->getParentCategoryFromTabAttribute($installedProduct);
             }
         }
 
@@ -258,8 +238,10 @@ class CategoriesProvider
      * Sort addons categories by order field.
      *
      * @param array $categories
+     *
+     * @return object
      */
-    private function sortCategories(array $categories)
+    private function sortCategories(array $categories): object
     {
         uasort(
             $categories,
@@ -279,5 +261,26 @@ class CategoriesProvider
         $categories = json_decode(json_encode($categories));
 
         return $categories;
+    }
+
+    /**
+     * Try to find the parent category depending on
+     * the module's tab attribute.
+     *
+     * @param ApiModule $module
+     *
+     * @return string
+     */
+    private function getParentCategoryFromTabAttribute(ApiModule $module): string
+    {
+        foreach ($this->categoriesFromSource as $parentCategory) {
+            foreach ($parentCategory->categories as $category) {
+                if (isset($category->tab) && $category->tab === $module->attributes->get('tab')) {
+                    return $parentCategory->name;
+                }
+            }
+        }
+
+        return self::CATEGORY_OTHER;
     }
 }
