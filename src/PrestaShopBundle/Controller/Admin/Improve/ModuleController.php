@@ -520,7 +520,7 @@ class ModuleController extends ModuleAbstractController
                 new Assert\NotNull(),
                 new Assert\File(
                     [
-                        'maxSize' => ini_get('upload_max_filesize'),
+                        'maxSize' => Tools::getMaxUploadSize(),
                         'mimeTypes' => [
                             'application/zip',
                             'application/x-gzip',

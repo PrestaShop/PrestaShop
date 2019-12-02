@@ -727,28 +727,8 @@ class AdminImportControllerCore extends AdminController
             $multiple_value_separator_selected = urldecode($this->context->cookie->multiple_value_separator_selected);
         }
 
-        //get post max size
-        $post_max_size = ini_get('post_max_size');
-        $bytes = (int) trim($post_max_size);
-        $last = strtolower($post_max_size[strlen($post_max_size) - 1]);
-
-        switch ($last) {
-            case 'g':
-                $bytes *= 1024;
-                // no break to fall-through
-            case 'm':
-                $bytes *= 1024;
-                // no break to fall-through
-            case 'k':
-                $bytes *= 1024;
-        }
-
-        if (!isset($bytes) || $bytes == '') {
-            $bytes = 20971520;
-        } // 20Mb
-
         $this->tpl_form_vars = array(
-            'post_max_size' => (int) $bytes,
+            'post_max_size' => Tools::getMaxUploadSize(),
             'module_confirmation' => Tools::isSubmit('import') && (isset($this->warnings) && !count($this->warnings)),
             'path_import' => AdminImportController::getPath(),
             'entities' => $this->entities,

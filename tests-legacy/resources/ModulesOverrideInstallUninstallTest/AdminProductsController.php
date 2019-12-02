@@ -251,13 +251,12 @@ class AdminProductsController extends AdminProductsControllerCore
         if (isset($_FILES['attachment_file'])) {
             if ($_FILES['attachment_file']['error'] === UPLOAD_ERR_INI_SIZE) {
                 $_FILES['attachment_file']['error'] = array();
-                $max_upload = (int)ini_get('upload_max_filesize');
-                $max_post = (int)ini_get('post_max_size');
-                $upload_mb = min($max_upload, $max_post);
+
+                $max_upload_size_mb = round(Tools::getMaxUploadSize() / 1024 / 1024, 2);
                 $_FILES['attachment_file']['error'][] = sprintf(
                     $this->l('File %1$s exceeds the size allowed by the server. The limit is set to %2$d MB.'),
                     '<b>'.$_FILES['attachment_file']['name'].'</b> ',
-                    '<b>'.$upload_mb.'</b>'
+                    '<b>'.$max_upload_size_mb.'</b>'
                 );
             } else {
                 $_FILES['attachment_file']['error'] = array();
@@ -1924,8 +1923,7 @@ class AdminProductsController extends AdminProductsControllerCore
             if (isset($_FILES['virtual_product_file_uploader']) && $_FILES['virtual_product_file_uploader']['size'] > 0) {
                 $virtual_product_filename = ProductDownload::getNewFilename();
                 $helper = new HelperUploader('virtual_product_file_uploader');
-                $helper->setPostMaxSize(Tools::getOctets(ini_get('upload_max_filesize')))
-                    ->setSavePath(_PS_DOWNLOAD_DIR_)->upload($_FILES['virtual_product_file_uploader'], $virtual_product_filename);
+                $helper->setSavePath(_PS_DOWNLOAD_DIR_)->upload($_FILES['virtual_product_file_uploader'], $virtual_product_filename);
             } else {
                 $virtual_product_filename = Tools::getValue('virtual_product_filename', ProductDownload::getNewFilename());
             }
@@ -2394,9 +2392,7 @@ class AdminProductsController extends AdminProductsControllerCore
         }
         $this->tpl_form_vars['form_action'] = $this->context->link->getAdminLink('AdminProducts').'&'.($id_product ? 'id_product='.(int)$id_product : 'addproduct');
         $this->tpl_form_vars['id_product'] = $id_product;
-        $upload_max_filesize = Tools::getOctets(ini_get('upload_max_filesize'));
-        $upload_max_filesize = ($upload_max_filesize / 1024) / 1024;
-        $this->tpl_form_vars['upload_max_filesize'] = $upload_max_filesize;
+        $this->tpl_form_vars['upload_max_filesize'] = Tools::convertBytes(ini_get('upload_max_filesize')) / (1024 * 1024);
         $this->tpl_form_vars['country_display_tax_label'] = $this->context->country->display_tax_label;
         $this->tpl_form_vars['has_combinations'] = $this->object->hasAttributes();
         $this->product_exists_in_shop = true;
@@ -2965,8 +2961,7 @@ class AdminProductsController extends AdminProductsControllerCore
         $virtual_product_file_uploader->setMultiple(false)->setUrl(
             Context::getContext()->link->getAdminLink('AdminProducts').'&ajax=1&id_product='.(int)$product->id
             .'&action=AddVirtualProductFile'
-        )->setPostMaxSize(Tools::getOctets(ini_get('upload_max_filesize')))
-            ->setTemplate('virtual_product.tpl');
+        )->setTemplate('virtual_product.tpl');
         $data->assign(array(
             'download_product_file_missing' => $msg,
             'download_dir_writable' => ProductDownload::checkWritableDir(),
@@ -3338,7 +3333,7 @@ class AdminProductsController extends AdminProductsControllerCore
                 $attachment_uploader->setMultiple(false)->setUseAjax(true)->setUrl(
                     Context::getContext()->link->getAdminLink('AdminProducts').'&ajax=1&id_product='.(int)$obj->id
                     .'&action=AddAttachment'
-                )->setPostMaxSize((Configuration::get('PS_ATTACHMENT_MAXIMUM_SIZE') * 1024 * 1024))
+                )->setMaxSize(Configuration::get('PS_ATTACHMENT_MAXIMUM_SIZE') * 1024 * 1024)
                     ->setTemplate('attachment_ajax.tpl');
                 $data->assign(array(
                     'obj' => $obj,

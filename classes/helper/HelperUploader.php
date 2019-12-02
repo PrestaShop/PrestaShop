@@ -39,7 +39,6 @@ class HelperUploaderCore extends Uploader
     private $_name;
     private $_max_files;
     private $_multiple;
-    private $_post_max_size;
     protected $_template;
     private $_template_directory;
     private $_title;
@@ -139,23 +138,6 @@ class HelperUploaderCore extends Uploader
     public function getName()
     {
         return $this->_name;
-    }
-
-    public function setPostMaxSize($value)
-    {
-        $this->_post_max_size = $value;
-        $this->setMaxSize($value);
-
-        return $this;
-    }
-
-    public function getPostMaxSize()
-    {
-        if (!isset($this->_post_max_size)) {
-            $this->_post_max_size = parent::getPostMaxSize();
-        }
-
-        return $this->_post_max_size;
     }
 
     public function setTemplate($value)

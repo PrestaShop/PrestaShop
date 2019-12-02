@@ -298,7 +298,7 @@ class InstallControllerHttpProcess extends InstallControllerHttp implements Http
     {
         $memoryLimit = Tools::getMemoryLimit();
         // The installer SHOULD take less than 32M, but may take up to 35/36M sometimes. So 42M is a good value :)
-        $lowMemory = ($memoryLimit != '-1' && $memoryLimit < Tools::getOctets('42M'));
+        $lowMemory = ($memoryLimit != '-1' && $memoryLimit < Tools::convertBytes('42M'));
 
         // We fill the process step used for Ajax queries
         $this->process_steps[] = array('key' => 'generateSettingsFile', 'lang' => $this->translator->trans('Create file parameters', array(), 'Install'));
@@ -383,7 +383,7 @@ class InstallControllerHttpProcess extends InstallControllerHttp implements Http
             closedir($dh);
         }
 
-        return $size > Tools::getOctets('10M');
+        return $size > Tools::convertBytes('10M');
     }
 
     private function clearConfigXML()

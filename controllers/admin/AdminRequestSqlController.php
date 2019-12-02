@@ -358,8 +358,7 @@ class AdminRequestSqlControllerCore extends AdminController
                 }
                 if (file_exists($export_dir . $file)) {
                     $filesize = filesize($export_dir . $file);
-                    $upload_max_filesize = Tools::convertBytes(ini_get('upload_max_filesize'));
-                    if ($filesize < $upload_max_filesize) {
+                    if ($filesize < Tools::getMaxUploadSize()) {
                         if (Configuration::get('PS_ENCODING_FILE_MANAGER_SQL')) {
                             $charset = Configuration::get('PS_ENCODING_FILE_MANAGER_SQL');
                         } else {

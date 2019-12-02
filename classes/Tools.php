@@ -3266,12 +3266,8 @@ exit;
 
     /**
      * Convert a shorthand byte value from a PHP configuration directive to an integer value.
-     *
-     * @param string $value value to convert
-     *
-     * @return int
      */
-    public static function convertBytes($value)
+    public static function convertBytes(string $value): int
     {
         if (is_numeric($value)) {
             return $value;
@@ -3447,41 +3443,26 @@ exit;
     }
 
     /**
-     * getMemoryLimit allow to get the memory limit in octet.
+     * getMemoryLimit allow to get the memory limit in bytes.
      *
      * @since 1.4.5.0
-     *
-     * @return int the memory limit value in octet
      */
-    public static function getMemoryLimit()
+    public static function getMemoryLimit(): int
     {
-        $memory_limit = @ini_get('memory_limit');
-
-        return Tools::getOctets($memory_limit);
+        return self::convertBytes(@ini_get('memory_limit'));
     }
 
     /**
-     * getOctet allow to gets the value of a configuration option in octet.
+     * DEPRECATED, use Tools::convertBytes() method instead
      *
      * @since 1.5.0
-     *
-     * @return int the value of a configuration option in octet
+     * @deprecated 1.7.6
      */
     public static function getOctets($option)
     {
-        if (preg_match('/[0-9]+k/i', $option)) {
-            return 1024 * (int) $option;
-        }
+        Tools::displayAsDeprecated();
 
-        if (preg_match('/[0-9]+m/i', $option)) {
-            return 1024 * 1024 * (int) $option;
-        }
-
-        if (preg_match('/[0-9]+g/i', $option)) {
-            return 1024 * 1024 * 1024 * (int) $option;
-        }
-
-        return $option;
+        return self::convertBytes($option);
     }
 
     /**
@@ -3522,20 +3503,17 @@ exit;
      *
      * @return int max file size in bytes
      */
-    public static function getMaxUploadSize($max_size = 0)
+    public static function getMaxUploadSize(int $max_size = 0): int
     {
-        $values = array(Tools::convertBytes(ini_get('upload_max_filesize')));
-
-        if ($max_size > 0) {
-            $values[] = $max_size;
-        }
-
         $post_max_size = Tools::convertBytes(ini_get('post_max_size'));
-        if ($post_max_size > 0) {
-            $values[] = $post_max_size;
-        }
+        $upload_max_filesize = Tools::convertBytes(ini_get('upload_max_filesize'));
 
-        return min($values);
+        return min(
+            $post_max_size > 0 ? $post_max_size : PHP_INT_MAX,
+            $upload_max_filesize > 0 ? $upload_max_filesize : PHP_INT_MAX,
+            $max_size > 0 ? $max_size : PHP_INT_MAX,
+            1024 * 1024 * 1024 // 1 GB
+        );
     }
 
     /**

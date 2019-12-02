@@ -25,7 +25,7 @@
  */
  $this->displayTemplate('header') ?>
 
-<?php if (Tools::getMemoryLimit() < Tools::getOctets('32M')): ?>
+<?php if (Tools::getMemoryLimit() < Tools::convertBytes('32M')): ?>
 	<div class="warnBlock"><?php echo $this->translator->trans('PrestaShop requires at least 32 MB of memory to run: please check the memory_limit directive in your php.ini file or contact your host provider about this.', array(), 'Install'); ?></div>
 <?php endif; ?>
 

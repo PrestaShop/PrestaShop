@@ -239,12 +239,10 @@ class AdminAttachmentsControllerCore extends AdminController
                         $_POST['mime'] = $_FILES['file']['type'];
                     }
                 } elseif (isset($_FILES['file']) && $_FILES['file']['error'] === UPLOAD_ERR_INI_SIZE) {
-                    $max_upload = (int) ini_get('upload_max_filesize');
-                    $max_post = (int) ini_get('post_max_size');
-                    $upload_mb = min($max_upload, $max_post);
+                    $max_upload_size_mb = round(Tools::getMaxUploadSize() / 1024 / 1024, 2);
                     $this->errors[] = $this->trans(
                         'The file %file% exceeds the size allowed by the server. The limit is set to %size% MB.',
-                        array('%file%' => '<b>' . $_FILES['file']['name'] . '</b> ', '%size%' => '<b>' . $upload_mb . '</b>'),
+                        array('%file%' => '<b>' . $_FILES['file']['name'] . '</b> ', '%size%' => '<b>' . $max_upload_size_mb . '</b>'),
                         'Admin.Catalog.Notification'
                     );
                 } elseif (!isset($a) || (isset($a) && !file_exists(_PS_DOWNLOAD_DIR_ . $a->file))) {

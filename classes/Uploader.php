@@ -29,12 +29,9 @@
  */
 class UploaderCore
 {
-    const DEFAULT_MAX_SIZE = 10485760;
-
-    private $_check_file_size;
     private $_accept_types;
     private $_files;
-    private $_max_size;
+    private $_max_size = 0;
     private $_name;
     private $_save_path;
 
@@ -46,7 +43,6 @@ class UploaderCore
     public function __construct($name = null)
     {
         $this->setName($name);
-        $this->setCheckFileSize(true);
         $this->files = array();
     }
 
@@ -68,18 +64,6 @@ class UploaderCore
     public function getAcceptTypes()
     {
         return $this->_accept_types;
-    }
-
-    /**
-     * @param $value
-     *
-     * @return $this
-     */
-    public function setCheckFileSize($value)
-    {
-        $this->_check_file_size = $value;
-
-        return $this;
     }
 
     /**
@@ -114,27 +98,18 @@ class UploaderCore
     }
 
     /**
-     * @param $value
-     *
      * @return $this
      */
     public function setMaxSize($value)
     {
-        $this->_max_size = (int) $value;
+        $this->_max_size = (int) max(0, $value);
 
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getMaxSize()
+    public function getMaxSize(): int
     {
-        if (!isset($this->_max_size) || empty($this->_max_size)) {
-            $this->setMaxSize(self::DEFAULT_MAX_SIZE);
-        }
-
-        return $this->_max_size;
+        return min($this->_max_size > 0 ? $this->_max_size : PHP_INT_MAX, $this->getPostMaxSizeBytes());
     }
 
     /**
@@ -169,31 +144,9 @@ class UploaderCore
         return $this;
     }
 
-    /**
-     * @return int|null
-     */
-    public function getPostMaxSizeBytes()
+    public function getPostMaxSizeBytes(): int
     {
-        $postMaxSize = ini_get('post_max_size');
-        $bytes = (int) trim($postMaxSize);
-        $last = strtolower($postMaxSize[strlen($postMaxSize) - 1]);
-
-        switch ($last) {
-            case 'g':
-                $bytes *= 1024;
-                // no break
-            case 'm':
-                $bytes *= 1024;
-                // no break
-            case 'k':
-                $bytes *= 1024;
-        }
-
-        if ($bytes == '') {
-            $bytes = null;
-        }
-
-        return $bytes;
+        return Tools::getMaxUploadSize();
     }
 
     /**
@@ -216,14 +169,6 @@ class UploaderCore
     public function getUniqueFileName($prefix = 'PS')
     {
         return uniqid($prefix, true);
-    }
-
-    /**
-     * @return bool
-     */
-    public function checkFileSize()
-    {
-        return isset($this->_check_file_size) && $this->_check_file_size;
     }
 
     /**
@@ -303,11 +248,10 @@ class UploaderCore
         $error = UPLOAD_ERR_OK;
         switch ($error_code) {
             case UPLOAD_ERR_INI_SIZE:
-                $error = Context::getContext()->getTranslator()->trans('The uploaded file exceeds %s', array(ini_get('upload_max_filesize')), 'Admin.Notifications.Error');
-
-                break;
             case UPLOAD_ERR_FORM_SIZE:
-                $error = Context::getContext()->getTranslator()->trans('The uploaded file exceeds %s', array(ini_get('post_max_size')), 'Admin.Notifications.Error');
+                $error = Context::getContext()->getTranslator()->trans('The uploaded file exceeds %s',
+                        array(round($this->getPostMaxSizeBytes() / 1024 / 1024, 2) . ' MB'),
+                        'Admin.Notifications.Error');
 
                 break;
             case UPLOAD_ERR_PARTIAL:
@@ -364,14 +308,16 @@ class UploaderCore
 
         //TODO check mime type.
         $types = $this->getAcceptTypes();
-        if (isset($types) && !in_array(Tools::strtolower(pathinfo($file['name'], PATHINFO_EXTENSION)), $types)) {
+        if ($types !== null && !in_array(Tools::strtolower(pathinfo($file['name'], PATHINFO_EXTENSION)), $types)) {
             $file['error'] = Context::getContext()->getTranslator()->trans('Filetype not allowed', array(), 'Admin.Notifications.Error');
 
             return false;
         }
 
-        if ($this->checkFileSize() && $file['size'] > $this->getMaxSize()) {
-            $file['error'] = Context::getContext()->getTranslator()->trans('File is too big. Current size is %1s, maximum size is %2s.', array($file['size'], $this->getMaxSize()), 'Admin.Notifications.Error');
+        if ($file['size'] > $this->getMaxSize()) {
+            $file['error'] = Context::getContext()->getTranslator()->trans('File is too big. Current size is %1s, maximum size is %2s.',
+                    array(round($file['size'] / 1024 / 1024, 2) . ' MB', round($this->getMaxSize() / 1024 / 1024, 2) . ' MB'),
+                    'Admin.Notifications.Error');
 
             return false;
         }

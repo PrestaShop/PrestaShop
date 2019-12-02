@@ -47,24 +47,6 @@ class FileUploaderCore
         }
     }
 
-    protected function toBytes($str)
-    {
-        $val = trim($str);
-        $last = strtolower($str[strlen($str) - 1]);
-        switch ($last) {
-            case 'g':
-                $val *= 1024;
-                // no break
-            case 'm':
-                $val *= 1024;
-                // no break
-            case 'k':
-                $val *= 1024;
-        }
-
-        return $val;
-    }
-
     /**
      * Returns array('success'=>true) or array('error'=>'error message').
      */
