@@ -239,7 +239,7 @@ class OrderControllerCore extends FrontController
         }
 
         // Prevent check for guests
-        if($customer->id) {
+        if ($customer->id) {
             // Prepare all other addresses' warning messages (if relevant).
             // These messages are displayed when changing the selected address.
             $allInvalidAddressIds = $addressValidator->validateCustomerAddresses($customer, $this->context->language);
