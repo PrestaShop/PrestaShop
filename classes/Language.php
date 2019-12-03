@@ -29,6 +29,7 @@ use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Domain\MailTemplate\Command\GenerateThemeMailTemplatesCommand;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
+use PrestaShopBundle\Translation\TranslatorLanguageLoader;
 
 class LanguageCore extends ObjectModel
 {
@@ -1391,7 +1392,11 @@ class LanguageCore extends ObjectModel
     {
         $shopDefaultLangId = Configuration::get('PS_LANG_DEFAULT', null, $shop->id_shop_group, $shop->id);
         $shopDefaultLanguage = new Language($shopDefaultLangId);
-        $translatorDefaultShopLanguage = Context::getContext()->getTranslatorFromLocale($shopDefaultLanguage->locale);
+
+        $translator = SymfonyContainer::getInstance()->get('translator');
+        if (!$translator->isLanguageLoaded($shopDefaultLanguage->locale)) {
+            (new TranslatorLanguageLoader(true))->loadLanguage($translator, $shopDefaultLanguage->locale);
+        }
 
         $shopFieldExists = $primary_key_exists = false;
         $columns = Db::getInstance()->executeS('SHOW COLUMNS FROM `' . $tableName . '`');
@@ -1430,7 +1435,7 @@ class LanguageCore extends ObjectModel
                         continue;
                     }
 
-                    $untranslated = $translatorDefaultShopLanguage->getSourceString($data[$toUpdate], $classObject->getDomain());
+                    $untranslated = $translator->getSourceString($data[$toUpdate], $classObject->getDomain());
                     $translatedField = $classObject->getFieldValue($toUpdate, $untranslated);
 
                     if (!empty($translatedField) && $translatedField != $data[$toUpdate]) {
