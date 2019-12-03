@@ -56,21 +56,21 @@ export default class OrderViewPage {
       const $btn = $(event.currentTarget);
       this.orderProductRenderer.moveProductsPanelToModificationPosition();
       this.orderProductRenderer.editProductFromToList(
-        $btn.attr('data-order-detail-id'),
-        $btn.attr('data-product-quantity'),
-        $btn.attr('data-product-price-tax-incl'),
-        $btn.attr('data-product-price-tax-excl'),
-        $btn.attr('data-tax-rate'),
+        $btn.data('orderDetailId'),
+        $btn.data('productQuantity'),
+        $btn.data('productPriceTaxIncl'),
+        $btn.data('productPriceTaxExcl'),
+        $btn.data('taxRate'),
       );
     });
     $(OrderViewPageMap.productCancelEditBtn).on('click', event => {
       const $btn = $(event.currentTarget);
-      this.orderProductRenderer.resetEditRow($btn.attr('data-order-detail-id'));
+      this.orderProductRenderer.resetEditRow($btn.data('orderDetailId'));
       this.orderProductRenderer.moveProductPanelToOriginalPosition();
     });
 
     EventEmitter.on(OrderViewEventMap.productEditedToOrder, (event) => {
-      this.orderProductRenderer.addOrUpdateProductFromToList(event.orderDetailId, event.newRow);
+      this.orderProductRenderer.addOrUpdateProductToList(event.orderDetailId, event.newRow);
       this.orderProductRenderer.resetEditRow(event.orderDetailId);
       this.orderPricesRefresher.refresh(event.orderId);
       this.orderProductRenderer.moveProductPanelToOriginalPosition();
@@ -84,7 +84,7 @@ export default class OrderViewPage {
     $(OrderViewPageMap.productCancelAddBtn).on('click', event => this.orderProductRenderer.moveProductPanelToOriginalPosition());
 
     EventEmitter.on(OrderViewEventMap.productAddedToOrder, (event) => {
-      this.orderProductRenderer.addOrUpdateProductFromToList(event.orderProductId, event.newRow);
+      this.orderProductRenderer.addOrUpdateProductToList(event.orderProductId, event.newRow);
       this.orderProductRenderer.resetAddRow();
       this.orderPricesRefresher.refresh(event.orderId);
       this.orderProductRenderer.moveProductPanelToOriginalPosition();
@@ -94,33 +94,35 @@ export default class OrderViewPage {
   }
 
   listenForProductPagination() {
-    $(OrderViewPageMap.productsTablePagination).on('click', '.page-link', (event) => {
+    $(OrderViewPageMap.productsTablePagination).on('click', OrderViewPageMap.productsTablePaginationLink, (event) => {
       event.preventDefault();
       const $btn = $(event.currentTarget);
       this.orderProductManager.paginate(
-        $btn.attr('data-order-id'),
-        $btn.attr('data-page')
+        $btn.data('orderId'),
+        $btn.data('page')
       );
     });
     $(OrderViewPageMap.productsTablePaginationNext).on('click', (event) => {
+      event.preventDefault();
       const $btn = $(event.currentTarget);
       if ($btn.hasClass('disabled')) {
         return;
       }
-      const activePage = $(OrderViewPageMap.productsTablePagination).find('.active span').get(0);
+      const activePage = this.getActivePage();
       this.orderProductManager.paginate(
-        $(activePage).attr('data-order-id'),
+        $(activePage).data('orderId'),
         parseInt($(activePage).html(), 10) + 1
       );
     });
     $(OrderViewPageMap.productsTablePaginationPrev).on('click', (event) => {
+      event.preventDefault();
       const $btn = $(event.currentTarget);
       if ($btn.hasClass('disabled')) {
         return;
       }
-      const activePage = $(OrderViewPageMap.productsTablePagination).find('.active span').get(0);
+      const activePage = this.getActivePage();
       this.orderProductManager.paginate(
-        $(activePage).attr('data-order-id'),
+        $(activePage).data('orderId'),
         parseInt($(activePage).html(), 10) - 1
       );
     });
@@ -130,5 +132,9 @@ export default class OrderViewPage {
       this.listenForProductDelete();
       this.listenForProductEdit();
     });
+  }
+
+  getActivePage() {
+    return $(OrderViewPageMap.productsTablePagination).find('.active span').get(0);
   }
 }

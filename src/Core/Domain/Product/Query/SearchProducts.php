@@ -26,7 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Query;
 
-use Currency;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\AlphaIsoCode;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 
 /**
@@ -45,22 +46,32 @@ class SearchProducts
     private $resultsLimit;
 
     /**
-     * @var Currency
+     * @var AlphaIsoCode
      */
-    private $currency;
+    private $alphaIsoCode;
 
     /**
      * @param string $phrase
      * @param int $resultsLimit
+     * @param string $isoCode
      *
      * @throws ProductException
+     * @throws CurrencyConstraintException
      */
-    public function __construct(string $phrase, int $resultsLimit, Currency $currency)
+    public function __construct(string $phrase, int $resultsLimit, string $isoCode)
     {
         $this->assertIsNotEmptyString($phrase);
         $this->phrase = $phrase;
         $this->resultsLimit = $resultsLimit;
-        $this->currency = $currency;
+        $this->alphaIsoCode = new AlphaIsoCode($isoCode);
+    }
+
+    /**
+     * @return AlphaIsoCode
+     */
+    public function getIsoCode(): AlphaIsoCode
+    {
+        return $this->isoCode;
     }
 
     /**
@@ -77,11 +88,6 @@ class SearchProducts
     public function getResultsLimit(): int
     {
         return $this->resultsLimit;
-    }
-
-    public function getCurrency(): Currency
-    {
-        return $this->currency;
     }
 
     /**

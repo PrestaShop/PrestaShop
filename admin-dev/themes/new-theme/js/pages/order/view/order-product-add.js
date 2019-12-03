@@ -50,9 +50,9 @@ export default class OrderProductAdd {
 
   setupListener() {
     this.combinationsSelect.on('change', (event) => {
-      this.priceTaxExcludedInput.val($(event.currentTarget).find(':selected').attr('data-price-tax-excluded'));
-      this.priceTaxIncludedInput.val($(event.currentTarget).find(':selected').attr('data-price-tax-included'));
-      this.available = $(event.currentTarget).find(':selected').attr('data-stock');
+      this.priceTaxExcludedInput.val($(event.currentTarget).find(':selected').data('priceTaxExcluded'));
+      this.priceTaxIncludedInput.val($(event.currentTarget).find(':selected').data('priceTaxIncluded'));
+      this.available = $(event.currentTarget).find(':selected').data('stock');
       this.quantityInput.trigger('change');
     });
     this.quantityInput.on('change keyup', (event) => {
@@ -79,7 +79,7 @@ export default class OrderProductAdd {
         priceTaxCalculator.calculateTaxIncluded(event.target.value, this.taxRateInput.val())
       );
     });
-    this.productAddActionBtn.on('click', event => this.addProduct($(event.currentTarget).data('order-id')));
+    this.productAddActionBtn.on('click', event => this.addProduct($(event.currentTarget).data('orderId')));
   }
 
   setProduct(product) {
@@ -102,6 +102,8 @@ export default class OrderProductAdd {
   }
 
   addProduct(orderId) {
+    this.productAddActionBtn.attr('disabled', 'disabled');
+
     const params = {
       product_id: this.productIdInput.val(),
       combination_id: $(':selected', this.combinationsSelect).val(),
