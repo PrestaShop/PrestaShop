@@ -17,7 +17,7 @@ RUN  wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-ke
 COPY ["./.docker/prestashop/wait-for-it.sh", "./.docker/run-tests.sh", "/tmp/"]
 
 # Create folder for tests and another for downloaded files
-RUN mkdir -p tests/reports \
+RUN mkdir -p /tests/reports \
     && mkdir -p /downloads
 
 WORKDIR /tests/
