@@ -18,7 +18,7 @@ COPY ["./.docker/prestashop/wait-for-it.sh", "./.docker/run-tests.sh", "/tmp/"]
 
 # Create folder for tests and another for downloaded files
 RUN mkdir -p tests/reports \
-    && mkdir -p /home/pptruser/Downloads
+    && mkdir -p /downloads
 
 WORKDIR /tests/
 COPY ["./", "./"]
