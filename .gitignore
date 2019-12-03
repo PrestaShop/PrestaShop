@@ -130,6 +130,7 @@ modules/*
 override/*
 themes/*/
 !themes/classic
+themes/classic/assets
 !themes/_core
 !themes/_libraries
 themes/classic/assets/css/*_rtl.css
