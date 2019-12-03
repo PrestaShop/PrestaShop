@@ -26,7 +26,11 @@
 
 namespace PrestaShopBundle\Controller\Admin\Sell\Order;
 
+use Context;
+use Currency;
 use Exception;
+use Language;
+use LogicException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartInformation;
 use PrestaShop\PrestaShop\Core\Domain\CustomerMessage\Command\AddOrderCustomerMessageCommand;
@@ -96,6 +100,8 @@ class OrderController extends FrameworkBundleAdminController
      * @param OrderFilters $filters
      *
      * @return Response
+     *
+     * @throws LogicException
      */
     public function indexAction(Request $request, OrderFilters $filters)
     {
@@ -137,8 +143,8 @@ class OrderController extends FrameworkBundleAdminController
     public function createAction()
     {
         return $this->render('@PrestaShop/Admin/Sell/Order/Order/create.html.twig', [
-            'currencies' => \Currency::getCurrenciesByIdShop(\Context::getContext()->shop->id),
-            'languages' => \Language::getLanguages(true, \Context::getContext()->shop->id),
+            'currencies' => Currency::getCurrenciesByIdShop(Context::getContext()->shop->id),
+            'languages' => Language::getLanguages(true, Context::getContext()->shop->id),
         ]);
     }
 
