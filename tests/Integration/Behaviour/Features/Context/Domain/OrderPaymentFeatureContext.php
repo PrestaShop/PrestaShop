@@ -8,6 +8,7 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderPaymentForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderPaymentsForViewing;
+use PrestaShopException;
 use RuntimeException;
 
 class OrderPaymentFeatureContext extends AbstractDomainFeatureContext
@@ -17,6 +18,8 @@ class OrderPaymentFeatureContext extends AbstractDomainFeatureContext
      *
      * @param int $orderId
      * @param TableNode $table
+     *
+     * @throws RuntimeException
      */
     public function iAddPaymentToOrderIdTheFollowingProperties(int $orderId, TableNode $table)
     {
@@ -46,6 +49,8 @@ class OrderPaymentFeatureContext extends AbstractDomainFeatureContext
      *
      * @param int $orderId
      * @param int $numberOfPayments
+     *
+     * @throws RuntimeException
      */
     public function ifIQueryOrderIdPaymentsIShouldGetOrders(int $orderId, int $numberOfPayments)
     {
@@ -72,6 +77,8 @@ class OrderPaymentFeatureContext extends AbstractDomainFeatureContext
      *
      * @param int $orderId
      * @param TableNode $table
+     *
+     * @throws RuntimeException
      */
     public function ifIQueryOrderIdPaymentsIShouldGetAnOrderWithProperties(int $orderId, TableNode $table)
     {
@@ -158,6 +165,8 @@ class OrderPaymentFeatureContext extends AbstractDomainFeatureContext
      *
      * @param int $orderId
      * @param TableNode $table
+     *
+     * @throws RuntimeException
      */
     public function iAddPaymentToOrderIdExceptionIsThrownWithTheFollowingProperties(int $orderId, TableNode $table)
     {

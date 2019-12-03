@@ -7,7 +7,7 @@ Feature: Orders statuses from Back Office
 
   Background:
     Given email sending is disabled
-    And the current currency is "EUR"
+    And the current currency is "USD"
     And there is existing order with id 1
 
   Scenario: Update multiple orders statuses using Bulk actions
