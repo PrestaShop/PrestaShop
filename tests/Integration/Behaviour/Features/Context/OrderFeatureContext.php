@@ -305,16 +305,24 @@ class OrderFeatureContext extends AbstractPrestaShopFeatureContext
 
         $orderDetails = $order->getOrderDetailList();
 
+        $totalProductQuantity = 0;
         foreach ($orderDetails as $orderDetail) {
-            if ((int) $orderDetail['product_id'] === $productId &&
-                (int) $orderDetail['product_quantity'] === (int) $quantity
-            ) {
-                return;
+            if ((int) $orderDetail['product_id'] === $productId) {
+                $totalProductQuantity += $orderDetail['product_quantity'];
             }
         }
 
+        if ((int) $totalProductQuantity === (int) $quantity) {
+            return;
+        }
+
         throw new RuntimeException(
-            sprintf('Order was expected to have "%d" products "%s" in it.', $quantity, $productReference)
+            sprintf(
+                'Order was expected to have "%d" products "%s" in it. Instead got "%s"',
+                $quantity,
+                $productReference,
+                $totalProductQuantity
+            )
         );
     }
 
