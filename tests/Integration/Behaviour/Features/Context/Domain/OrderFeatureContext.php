@@ -27,22 +27,23 @@
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 use AdminController;
+use Behat\Gherkin\Node\TableNode;
 use Context;
 use FrontController;
 use Order;
 use OrderState;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\AddOrderFromBackOfficeCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\BulkChangeOrderStatusCommand;
-use PrestaShop\PrestaShop\Core\Domain\Order\Command\UpdateOrderShippingDetailsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\UpdateOrderStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Invoice\Command\GenerateInvoiceCommand;
+use PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\AddProductToOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderForViewing;
-use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderCarrierForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
 use PrestaShopDatabaseException;
 use PrestaShopException;
+use Product;
 use RuntimeException;
 use stdClass;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
@@ -52,11 +53,6 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     private const ORDER_STATUS_MAP = [
         1 => 'Awaiting bank wire payment',
         5 => 'Delivered',
-    ];
-
-    private const CARRIER_MAP = [
-        1 => '0',
-        2 => 'My carrier',
     ];
 
     /**
@@ -75,19 +71,20 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     /**
      * @When I add order :orderReference from cart :cartReference with :paymentModuleName payment method and :orderStatus order status
      *
-     * @param $orderReference
-     * @param $cartReference
-     * @param $paymentModuleName
-     * @param $orderStatus
+     * @param string $orderReference
+     * @param string $cartReference
+     * @param string $paymentModuleName
+     * @param string $orderStatus
      *
-     * @throws PrestaShopException
+     * @throws RuntimeException
      * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
      */
     public function placeOrderWithPaymentMethodAndOrderStatus(
-        $orderReference,
-        $cartReference,
-        $paymentModuleName,
-        $orderStatus
+        string $orderReference,
+        string $cartReference,
+        string $paymentModuleName,
+        string $orderStatus
     ) {
         $orderStates = OrderState::getOrderStates(Context::getContext()->language->id);
         $orderStatusId = null;
@@ -113,6 +110,63 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @When I add :quantity products with reference :productReference, price :price and free shipping to order :orderReference with new invoice
+     *
+     * @param int $quantity
+     * @param string $productReference
+     * @param int $price
+     * @param string $orderReference
+     */
+    public function addProductsToOrderWithFreeShippingAndNewInvoice(
+        int $quantity,
+        string $productReference,
+        int $price,
+        string $orderReference
+    ) {
+        $orders = Order::getByReference($orderReference);
+        /** @var Order $order */
+        $order = $orders->getFirst();
+
+        $productId = Product::getIdByReference($productReference);
+
+        $this->getCommandBus()->handle(
+            AddProductToOrderCommand::withNewInvoice(
+                (int) $order->id,
+                (int) $productId,
+                0,
+                (float) $price,
+                (float) $price,
+                (int) $quantity,
+                true
+            )
+        );
+    }
+
+    /**
+     * @When I add products with new invoice and the following properties:
+     *
+     * @param TableNode $table
+     *
+     * @throws RuntimeException
+     */
+    public function iAddProductsWithNewInvoiceAndTheFollowingProperties(TableNode $table)
+    {
+        $data = $this->extractFirstRowFromProperties($table);
+
+        $this->getCommandBus()->handle(
+            AddProductToOrderCommand::withNewInvoice(
+                (int) $data['id_order'],
+                (int) $data['id_product'],
+                0,
+                (float) $data['price'],
+                (float) $data['price'],
+                (int) $data['amount'],
+                $data['free_shipping']
+            )
+        );
+    }
+
+    /**
      * @When I generate invoice for :invoiceReference order
      *
      * @param string $orderReference
@@ -135,6 +189,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
      * @param string $status
      *
      * @throws OrderException
+     * @throws RuntimeException
      */
     public function iUpdateOrdersToStatus(string $orderIdsString, string $status)
     {
@@ -158,6 +213,8 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
      *
      * @param int $orderId
      * @param string $status
+     *
+     * @throws RuntimeException
      */
     public function orderHasStatus(int $orderId, string $status)
     {
@@ -188,6 +245,8 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
      *
      * @param int $orderId
      * @param string $status
+     *
+     * @throws RuntimeException
      */
     public function iUpdateOrderToStatus(int $orderId, string $status)
     {
@@ -201,70 +260,11 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @When I update order :reference Tracking number to :trackingNumber and Carrier to :carrier
-     *
-     * @param int $orderId
-     * @param string $trackingNumber
-     * @param string $carrier
-     */
-    public function iUpdateOrderTrackingNumberToAndCarrierTo(int $orderId, string $trackingNumber, string $carrier)
-    {
-        $oldOrderCarrierId = $this->getCarrierIdFromMap($carrier);
-        $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
-        $newCarrierId = $this->getCarrierIdFromMap($carrier);
-
-        $this->getCommandBus()->handle(
-            new UpdateOrderShippingDetailsCommand(
-                $orderId,
-                $oldOrderCarrierId,
-                $newCarrierId,
-                $trackingNumber
-            )
-        );
-    }
-
-    /**
-     * @Then order :orderId has Tracking number :trackingNumber
-     *
-     * @param int $orderId
-     * @param string $trackingNumber
-     */
-    public function orderHasTrackingNumber(int $orderId, string $trackingNumber)
-    {
-        $orderCarriersForViewing = $this->getOrderCarriersForViewing($orderId);
-        $orderTrackingNumberFromDb = $orderCarriersForViewing[0]->getTrackingNumber();
-
-        if ($trackingNumber !== $orderTrackingNumberFromDb) {
-            $msg = 'Order [' . $orderId . '] tracking number is not equal to [' . $trackingNumber . '] ';
-            $msg .= 'Received [' . $orderTrackingNumberFromDb . '] ';
-            throw new RuntimeException($msg);
-        }
-    }
-
-    /**
-     * @Then order :orderId has Carrier :carrier
-     *
-     * @param string $orderId
-     * @param string $carrier
-     */
-    public function orderHasCarrier(string $orderId, string $carrier)
-    {
-        $carrierId = $this->getCarrierIdFromMap($carrier);
-        /** @var OrderCarrierForViewing[] $orderCarriersForViewing */
-        $orderCarriersForViewing = $this->getOrderCarriersForViewing($orderId);
-        $carrierIdFromDb = $orderCarriersForViewing[0]->getCarrierId();
-
-        if ($carrierId !== $carrierIdFromDb) {
-            $msg = 'Order [' . $orderId . '] carrier id is not equal to [' . $carrierId . '] ';
-            $msg .= 'Received [' . $carrierIdFromDb . '] ';
-            throw new RuntimeException($msg);
-        }
-    }
-
-    /**
      * @param string $status
      *
      * @return int
+     *
+     * @throws RuntimeException
      */
     private function getOrderStatusIdFromMap(string $status)
     {
@@ -279,39 +279,21 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @param string $carrier
+     * @param TableNode $table
      *
-     * @return int
-     */
-    private function getCarrierIdFromMap(string $carrier)
-    {
-        $carrierMapFlipped = array_flip(self::CARRIER_MAP);
-        if (isset($carrierMapFlipped[$carrier])) {
-            /** @var int $carrierId */
-            $carrierId = $carrierMapFlipped[$carrier];
-
-            return $carrierId;
-        }
-        throw new RuntimeException('Invalid carrier [' . $carrier . ']');
-    }
-
-    /**
-     * @param int $orderId
+     * @return array
      *
-     * @return array|OrderCarrierForViewing[]
+     * @throws RuntimeException
      */
-    private function getOrderCarriersForViewing(int $orderId)
+    private function extractFirstRowFromProperties(TableNode $table): array
     {
-        /** @var OrderForViewing $orderForViewing */
-        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
-        /** @var OrderCarrierForViewing[] $orderCarriers */
-        $orderCarriersForViewing = $orderForViewing->getShipping()->getCarriers();
-
-        if (count($orderCarriersForViewing) == 0) {
-            $msg = 'Order [' . $orderId . '] has no carriers';
-            throw new RuntimeException($msg);
+        $hash = $table->getHash();
+        if (count($hash) != 1) {
+            throw new RuntimeException('Properties are invalid');
         }
+        /** @var array $data */
+        $data = $hash[0];
 
-        return $orderCarriersForViewing;
+        return $data;
     }
 }
