@@ -108,6 +108,9 @@ tests-legacy/resources/modules/referralprogram/
 /admin-dev/themes/new-theme/public
 
 themes/*/cache/*
+themes/core.js.map
+themes/core.js
+
 
 # Config
 
