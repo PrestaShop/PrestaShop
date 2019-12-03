@@ -907,6 +907,7 @@ class AdminOrdersControllerCore extends AdminController
                     }
 
                     $customizationList = Tools::getValue('id_customization');
+
                     if ($customizationList) {
                         $customizationList = array_map('intval', $customizationList);
                     }
@@ -917,6 +918,7 @@ class AdminOrdersControllerCore extends AdminController
                     }
 
                     $customizationQtyList = Tools::getValue('cancelCustomizationQuantity');
+
                     if ($customizationQtyList) {
                         $customizationQtyList = array_map('intval', $customizationQtyList);
                     }
@@ -937,7 +939,6 @@ class AdminOrdersControllerCore extends AdminController
                         if ($productList) {
                             $id_cart = Cart::getCartIdByOrderId($order->id);
                             $customization_quantities = Customization::countQuantityByCart($id_cart);
-
                             foreach ($productList as $key => $id_order_detail) {
                                 $qtyCancelProduct = abs($qtyList[$key]);
                                 if (!$qtyCancelProduct) {
@@ -949,7 +950,6 @@ class AdminOrdersControllerCore extends AdminController
                                 if (array_key_exists($order_detail->product_id, $customization_quantities) && array_key_exists($order_detail->product_attribute_id, $customization_quantities[$order_detail->product_id])) {
                                     $customization_quantity = (int) $customization_quantities[$order_detail->product_id][$order_detail->product_attribute_id];
                                 }
-
                                 if (($order_detail->product_quantity - $customization_quantity - $order_detail->product_quantity_refunded - $order_detail->product_quantity_return) < $qtyCancelProduct) {
                                     $this->errors[] = $this->trans('An invalid quantity was selected for this product.', array(), 'Admin.Orderscustomers.Notification');
                                 }
@@ -1001,6 +1001,7 @@ class AdminOrdersControllerCore extends AdminController
                                 Hook::exec('actionProductCancel', array('order' => $order, 'id_order_detail' => (int) $id_order_detail), null, false, true, false, $order->id_shop);
                             }
                         }
+                        // @todo !  !
                         if (!count($this->errors) && $customizationList) {
                             foreach ($customizationList as $id_customization => $id_order_detail) {
                                 $order_detail = new OrderDetail((int) ($id_order_detail));

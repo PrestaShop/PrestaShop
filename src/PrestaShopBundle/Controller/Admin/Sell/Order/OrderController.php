@@ -31,6 +31,7 @@ use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartInformation;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\AddCartRuleToOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\BulkChangeOrderStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\Order\Command\CancelOrderProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\ChangeOrderCurrencyCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\DeleteCartRuleFromOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\DuplicateOrderCartCommand;
@@ -63,6 +64,7 @@ use PrestaShopBundle\Form\Admin\Sell\Order\ChangeOrderCurrencyType;
 use PrestaShopBundle\Form\Admin\Sell\Order\ChangeOrdersStatusType;
 use PrestaShopBundle\Form\Admin\Sell\Order\OrderPaymentType;
 use PrestaShopBundle\Form\Admin\Sell\Order\PartialRefundType;
+use PrestaShopBundle\Form\Admin\Sell\Order\CancellationType;
 use PrestaShopBundle\Form\Admin\Sell\Order\UpdateOrderShippingType;
 use PrestaShopBundle\Form\Admin\Sell\Order\UpdateOrderStatusType;
 use PrestaShopBundle\Form\Admin\Sell\Order\UpdateProductInOrderType;
@@ -320,6 +322,10 @@ class OrderController extends FrameworkBundleAdminController
             'taxMethod' => $orderForViewing->getTaxMethod(),
             'translator' => $translator,
         ]);
+        $cancellationTypeForm = $this->createForm(CancellationType::class, [
+            'products' => $orderForViewing->getProducts()->getProducts(),
+            'translator' => $translator,
+        ]);
 
         return $this->render('@PrestaShop/Admin/Sell/Order/Order/view.html.twig', [
             'showContentHeader' => true,
@@ -338,6 +344,7 @@ class OrderController extends FrameworkBundleAdminController
             'partialRefundForm' => $partialRefundForm->createView(),
             'invoiceManagementIsEnabled' => $orderForViewing->isInvoiceManagementIsEnabled(),
             'orderCurrency' => $orderCurrency,
+            'cancellationForm' => $cancellationTypeForm->createView(),
         ]);
     }
 
@@ -386,6 +393,46 @@ class OrderController extends FrameworkBundleAdminController
             foreach ($form->getErrors(true) as $error) {
                 $this->addFlash('error', $error->getMessage());
             }
+        }
+
+        return $this->redirectToRoute('admin_orders_view', [
+            'orderId' => $orderId,
+        ]);
+    }
+
+    public function cancellationAction(int $orderId, Request $request)
+    {
+        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
+        $form = $this->createForm(CancellationType::class, [
+            'products' => $orderForViewing->getProducts()->getProducts(),
+            'translator' => $this->get('translator'),
+        ]);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $data = $form->getData();
+            $toBeCanceledProducts = [];
+            foreach ($data['products'] as $product) {
+                if ($data['cancellation_' . $product->getOrderDetailId()]) {
+                    $toBeCanceledProducts[$product->getOrderDetailId()] = $data['cancellation_number_' . $product->getOrderDetailId()];
+                }
+            }
+            $command = new CancelOrderProductCommand(
+                $data['products'],
+                $toBeCanceledProducts,
+                $orderForViewing
+            );
+
+            $status = 'success';
+            $message = $this->trans('The discount was successfully generated.', 'Admin.Catalog.Notification');
+
+            try {
+                $this->getCommandBus()->handle($command);
+            } catch (OrderException $e) {
+                $status = 'error';
+                $message = $e->getMessage();
+            }
+
+            $this->addFlash($status, $message);
         }
 
         return $this->redirectToRoute('admin_orders_view', [

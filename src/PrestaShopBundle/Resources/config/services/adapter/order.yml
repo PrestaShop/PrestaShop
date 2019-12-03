@@ -96,6 +96,14 @@ services:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Order\Command\IssuePartialRefundCommand
 
+  prestashop.adapter.order.command_handler.cancel_order_product_handler:
+    class: PrestaShop\PrestaShop\Adapter\Order\CommandHandler\CancelOrderProductHandler
+    arguments:
+      - "@prestashop.core.localization.locale.context_locale"
+    tags:
+      - name: tactician.handler
+        command: PrestaShop\PrestaShop\Core\Domain\Order\Command\CancelOrderProductCommand
+
   prestashop.adapter.order.command_handler.delete_product_from_order_handler:
     class: PrestaShop\PrestaShop\Adapter\Order\CommandHandler\DeleteProductFromOrderHandler
     tags:
