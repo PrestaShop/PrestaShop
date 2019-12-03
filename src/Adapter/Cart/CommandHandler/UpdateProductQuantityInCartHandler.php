@@ -33,8 +33,8 @@ use Customer;
 use PrestaShop\PrestaShop\Adapter\Cart\AbstractCartHandler;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateProductQuantityInCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\CommandHandler\UpdateProductQuantityInCartHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartException;
-use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\QuantityAction;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductOutOfStockException;
@@ -52,6 +52,15 @@ final class UpdateProductQuantityInCartHandler extends AbstractCartHandler imple
     public function handle(UpdateProductQuantityInCartCommand $command)
     {
         $cart = $this->getCart($command->getCartId());
+        $previousQty = $this->findPreviousQuantityInCart($cart, $command);
+        $qtyDiff = abs($command->getNewQuantity() - $previousQty);
+
+        if ($qtyDiff === 0) {
+            throw new CartConstraintException(
+                sprintf('Cart quantity is already %d', $command->getNewQuantity()),
+                CartConstraintException::UNCHANGED_QUANTITY
+            );
+        }
 
         // $cart::updateQty needs customer context
         $customer = new Customer($cart->id_customer);
@@ -66,12 +75,18 @@ final class UpdateProductQuantityInCartHandler extends AbstractCartHandler imple
         $this->assertProductIsInStock($product, $command);
         $this->assertProductCustomization($product, $command);
 
+        if ($previousQty < $command->getNewQuantity()) {
+            $action = 'up';
+        } else {
+            $action = 'down';
+        }
+
         $updateResult = $cart->updateQty(
-            $command->getQuantity(),
+            $qtyDiff,
             $command->getProductId()->getValue(),
             $combinationIdValue,
             $customizationId ? $customizationId->getValue() : false,
-            $this->getLegacyQuantityOperator($command->getAction())
+            $action
         );
 
         if (!$updateResult) {
@@ -83,8 +98,7 @@ final class UpdateProductQuantityInCartHandler extends AbstractCartHandler imple
         if ($updateResult < 0) {
             $minQuantity = $command->getCustomizationId() ?
                 Attribute::getAttributeMinimalQty($combinationIdValue) :
-                $product->minimal_quantity
-            ;
+                $product->minimal_quantity;
 
             throw new CartException(
                 sprintf('Minimum quantity of %d must be added to cart.', $minQuantity)
@@ -136,7 +150,7 @@ final class UpdateProductQuantityInCartHandler extends AbstractCartHandler imple
             $isAvailableWhenOutOfStock = Product::isAvailableWhenOutOfStock($product->out_of_stock);
             $isEnoughQuantity = Attribute::checkAttributeQty(
                 $command->getCombinationId()->getValue(),
-                $command->getQuantity()
+                $command->getNewQuantity()
             );
 
             if (!$isAvailableWhenOutOfStock && !$isEnoughQuantity) {
@@ -148,7 +162,7 @@ final class UpdateProductQuantityInCartHandler extends AbstractCartHandler imple
             return;
         }
 
-        if (!$product->checkQty($command->getQuantity())) {
+        if (!$product->checkQty($command->getNewQuantity())) {
             throw new ProductOutOfStockException(
                 sprintf('Product with id "%s" is out of stock, thus cannot be added to cart', $product->id)
             );
@@ -172,12 +186,34 @@ final class UpdateProductQuantityInCartHandler extends AbstractCartHandler imple
     }
 
     /**
-     * @param QuantityAction $action
+     * @param Cart $cart
+     * @param UpdateProductQuantityInCartCommand $command
      *
-     * @return string
+     * @return int
+     *
+     * @throws CartException
      */
-    private function getLegacyQuantityOperator(QuantityAction $action)
+    private function findPreviousQuantityInCart(Cart $cart, UpdateProductQuantityInCartCommand $command)
     {
-        return $action->isIncrease() ? 'up' : 'down';
+        $products = $cart->getProducts();
+
+        $isItACombination = ($command->getCombinationId() !== null);
+
+        if ($isItACombination) {
+            foreach ($products as $cartProduct) {
+                if ((int) $cartProduct['id_product'] === $command->getProductId()->getValue()
+                    && (int) $cartProduct['id_product_attribute'] === $command->getCombinationId()->getValue()) {
+                    return (int) $cartProduct['quantity'];
+                }
+            }
+        } else {
+            foreach ($products as $cartProduct) {
+                if ((int) $cartProduct['id_product'] === $command->getProductId()->getValue()) {
+                    return (int) $cartProduct['quantity'];
+                }
+            }
+        }
+
+        throw new CartException('Could not find cart line');
     }
 }
