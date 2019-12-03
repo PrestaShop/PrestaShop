@@ -32,6 +32,7 @@ use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -104,7 +105,10 @@ class AddOrderCartRuleType extends AbstractType
             ->add('type', ChoiceType::class, [
                 'choices' => $this->orderDiscountTypeChoiceProvider->getChoices(),
             ])
-            ->add('value', TextType::class, [
+            ->add('value', NumberType::class, [
+                'attr' => [
+                    'step' => 0.01,
+                ],
                 'constraints' => new Type([
                     'type' => 'numeric',
                     'message' => $this->translator->trans('Discount value must be a number', [], 'Admin.Notifications.Error'),

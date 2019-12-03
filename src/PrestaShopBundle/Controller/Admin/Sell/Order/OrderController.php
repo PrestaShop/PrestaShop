@@ -404,6 +404,8 @@ class OrderController extends FrameworkBundleAdminController
     }
 
     /**
+     * @AdminSecurity("is_granted(['create'], request.get('_legacy_controller'))", redirectRoute="admin_orders_index")
+     *
      * @param int $orderId
      * @param Request $request
      *
@@ -428,9 +430,8 @@ class OrderController extends FrameworkBundleAdminController
 
         return $this->render('@PrestaShop/Admin/Sell/Order/Order/Blocks/View/product.html.twig', [
             'orderForViewing' => $orderForViewing,
-            'product' => end($products),
-            ]
-        );
+            'product' => $products[array_key_last($products)],
+        ]);
     }
 
     /**
@@ -930,7 +931,7 @@ class OrderController extends FrameworkBundleAdminController
                 new DeleteProductFromOrderCommand($orderId, $orderDetailId)
             );
 
-            return $this->json(null);
+            return $this->json(null, Response::HTTP_NO_CONTENT);
         } catch (Exception $e) {
             return $this->json(
                 ['message' => $this->getErrorMessageForException($e, $this->getErrorMessages($e))],
