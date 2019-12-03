@@ -54,7 +54,7 @@ npm run sanity-travis
 ```
 
 ## Functional tests 
-This campaign verifies that each function of the software application, operates in conformance with the functional requirements. 
+This campaign verifies that each function of the software application operate in conformance with the functional requirements. 
 Each and every functionality of the system is tested by providing appropriate input, verifying the output, and comparing the actual results with the expected results.
 
 ### Launch all scripts
