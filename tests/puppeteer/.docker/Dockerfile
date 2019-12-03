@@ -16,17 +16,12 @@ RUN  wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-ke
 # Copy scripts wait-for-it and run-tests
 COPY ["./.docker/prestashop/wait-for-it.sh", "./.docker/run-tests.sh", "/tmp/"]
 
-# Create folder for tests and folder for reports and copy scripts into it
-RUN mkdir -p tests/reports
+# Create folder for tests and another for downloaded files
+RUN mkdir -p tests/reports \
+    && mkdir -p /home/pptruser/Downloads
+
 WORKDIR /tests/
 COPY ["./", "./"]
 
 # Install dependencies
-RUN npm install \
-    && groupadd -r pptruser && useradd -r -g pptruser -G audio,video pptruser \
-    && mkdir -p /home/pptruser/Downloads \
-    && chown -R pptruser:pptruser /home/pptruser \
-    && chown -R pptruser:pptruser /tests
-
-# Run everything after as non-privileged user.
-USER pptruser
+RUN npm install
