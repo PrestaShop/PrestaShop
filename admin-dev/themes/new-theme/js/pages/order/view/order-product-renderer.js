@@ -35,15 +35,15 @@ export default class OrderProductRenderer {
   }
 
   removeProductFromList(orderDetailId) {
-    const $productRow = $(`#orderProduct_${orderDetailId}`);
+    const $productRow = $(OrderViewPageMap.productsTableRow(orderDetailId));
     $productRow.hide('fast', () => $productRow.remove());
 
     const numProducts = parseInt($(OrderViewPageMap.productsCount).html(), 10);
     $(OrderViewPageMap.productsCount).html(numProducts - 1);
   }
 
-  addOrUpdateProductFromToList(orderProductId, newRow) {
-    const $productRow = $(`#orderProduct_${orderProductId}`);
+  addOrUpdateProductToList(orderProductId, newRow) {
+    const $productRow = $(OrderViewPageMap.productsTableRow(orderProductId));
     if ($productRow.length > 0) {
       $productRow.html($(newRow).html());
     } else {
@@ -90,17 +90,19 @@ export default class OrderProductRenderer {
   }
 
   resetAddRow() {
+    $(OrderViewPageMap.productAddIdInput).val('');
     $(OrderViewPageMap.productSearchInput).val('');
     $(OrderViewPageMap.productAddCombinationsSelect).val('');
     $(OrderViewPageMap.productAddPriceTaxExclInput).val('');
     $(OrderViewPageMap.productAddPriceTaxInclInput).val('');
     $(OrderViewPageMap.productAddQuantityInput).val('');
     $(OrderViewPageMap.productAddAvailableText).html('');
+    $(OrderViewPageMap.productAddActionBtn).attr('disabled', 'disabled');
   }
 
   resetEditRow(orderProductId) {
-    const $productRow = $(`#orderProduct_${orderProductId}`);
-    const $productEditRow = $(`#orderProduct_${orderProductId}_edit`);
+    const $productRow = $(OrderViewPageMap.productsTableRow(orderProductId));
+    const $productEditRow = $(OrderViewPageMap.productsTableRowEdited(orderProductId));
     $productEditRow.remove();
     $productRow.removeClass('d-none');
   }
@@ -118,59 +120,53 @@ export default class OrderProductRenderer {
       $(OrderViewPageMap.productsTablePaginationNext).addClass('disabled');
     }
     $(OrderViewPageMap.productsTable).find('tr[id^="orderProduct_"]').remove();
-    results.products.forEach(result => {
-      const $productRow = $(OrderViewPageMap.productTemplateRow).clone();
-      $productRow.attr('id', `orderProduct_${result.orderDetailId}`);
-      // Cell 1
-      if (result.imagePath) {
-        $productRow.find('td:nth-child(1) img').attr('src', result.imagePath);
-        $productRow.find('td:nth-child(1) img').attr('alt', result.name);
-      } else {
-        $productRow.find('td:nth-child(1) img').remove();
-      }
-      // Cell 2
-      $productRow.find('td:nth-child(2) a').attr('href', this.router.generate('admin_product_form', {orderId: result.id}));
-      $productRow.find('td:nth-child(2) p:nth-child(1)').html(result.name);
-      if (result.supplierReference) {
-        $productRow.find('td:nth-child(2) p:nth-child(3)').append(result.supplierReference);
-      } else {
-        $productRow.find('td:nth-child(2) p:nth-child(3)').remove();
-      }
-      if (result.reference) {
-        $productRow.find('td:nth-child(2) p:nth-child(2)').append(result.reference);
-      } else {
-        $productRow.find('td:nth-child(2) p:nth-child(2)').remove();
-      }
-      // Cell 3
-      $productRow.find('td:nth-child(3)').html(result.unitPrice);
-      // Cell 4
-      if (result.quantity > 1) {
-        $productRow.find('td:nth-child(4) span.badge').html(result.quantity);
-      } else {
-        $productRow.find('td:nth-child(4) span.badge').replaceWith(result.quantity);
-      }
-      $productRow.find('td:nth-child(4) input').val(result.quantity);
-      // Cell 5
-      $productRow.find('td:nth-child(5)').html(result.location);
-      // Cell 6
-      $productRow.find('td:nth-child(6)').html(result.availableQuantity);
-      // Cell 7
-      $productRow.find('td:nth-child(7)').html(result.totalPrice);
-      // Cell 8
-      if (!result.delivered) {
-        $productRow.find('td:nth-child(8) a:nth-child(1) i')
-          .attr('data-order-detail-id', result.orderDetailId)
-          .attr('data-product-quantity', result.quantity)
-          .attr('data-product-price-tax-incl', result.unitPriceTaxInclRaw)
-          .attr('data-product-price-tax-excl', result.unitPriceTaxExclRaw)
-          .attr('data-tax-rate', result.taxRate);
-        $productRow.find('td:nth-child(8) a:nth-child(2)')
-          .attr('data-order-id', orderId)
-          .attr('data-order-detail-id', result.orderDetailId);
-      } else {
-        $productRow.find('td:nth-child(8)').remove();
-      }
-      $(OrderViewPageMap.productAddRow).before($productRow.removeClass('d-none'));
-    });
+    results.products.forEach(result => this.paginateRowCreate(result, orderId));
+  }
+
+  paginateRowCreate(result, orderId) {
+    const $productRow = $(OrderViewPageMap.productTemplateRow).clone();
+    $productRow.attr('id', `orderProduct_${result.orderDetailId}`);
+    if (result.imagePath) {
+      $productRow.find('td.cellProductImg img').attr('src', result.imagePath);
+      $productRow.find('td.cellProductImg img').attr('alt', result.name);
+    } else {
+      $productRow.find('td.cellProductImg img').remove();
+    }
+    $productRow.find('td.cellProductName a').attr('href', this.router.generate('admin_product_form', {orderId: result.id}));
+    $productRow.find('td.cellProductName p.productName').html(result.name);
+    if (result.supplierReference) {
+      $productRow.find('td.cellProductName p.productSupplierReference').append(result.supplierReference);
+    } else {
+      $productRow.find('td.cellProductName p:nth-child(3)').remove();
+    }
+    if (result.reference) {
+      $productRow.find('td.cellProductName p.productReference').append(result.reference);
+    } else {
+      $productRow.find('td.cellProductName p.productReference').remove();
+    }
+    $productRow.find('td.cellProductUnitPrice').html(result.unitPrice);
+    if (result.quantity > 1) {
+      $productRow.find('td.cellProductQuantity span.badge').html(result.quantity);
+    } else {
+      $productRow.find('td.cellProductQuantity span.badge').replaceWith(result.quantity);
+    }
+    $productRow.find('td.cellProductQuantity input').val(result.quantity);
+    $productRow.find('td.cellProductLocation').html(result.location);
+    $productRow.find('td.cellProductAvailableQuantity').html(result.availableQuantity);
+    $productRow.find('td.cellProductTotalPrice').html(result.totalPrice);
+    if (!result.delivered) {
+      $productRow.find('td.cellProductActions a.js-order-product-edit-btn i')
+        .attr('data-order-detail-id', result.orderDetailId)
+        .attr('data-product-quantity', result.quantity)
+        .attr('data-product-price-tax-incl', result.unitPriceTaxInclRaw)
+        .attr('data-product-price-tax-excl', result.unitPriceTaxExclRaw)
+        .attr('data-tax-rate', result.taxRate);
+      $productRow.find('td.cellProductActions a.js-order-product-delete-btn')
+        .attr('data-order-id', orderId)
+        .attr('data-order-detail-id', result.orderDetailId);
+    } else {
+      $productRow.find('td.cellProductActions').remove();
+    }
+    $(OrderViewPageMap.productAddRow).before($productRow.removeClass('d-none'));
   }
 }

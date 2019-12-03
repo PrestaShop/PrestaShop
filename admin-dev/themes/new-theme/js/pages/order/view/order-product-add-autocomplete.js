@@ -23,6 +23,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 import Router from '../../../components/router';
+import OrderViewPageMap from "../OrderViewPageMap";
 
 const $ = window.$;
 
@@ -31,10 +32,10 @@ export default class OrderProductAutocomplete {
     this.router = new Router();
     this.input = input;
     this.results = {};
-    this.dropdown = $('<div class="dropdown"></div>');
-    this.dropdownMenu = $('<div class="dropdown-menu"></div>');
-    this.dropdown.html(this.dropdownMenu);
-    this.input.after(this.dropdown);
+    this.dropdownMenu = $(OrderViewPageMap.productSearchInputAutocompleteMenu);
+    /**
+     * Permit to link to each value of dropdown a callback after item is clicked
+     */
     this.onItemClickedCallback = () => {};
   }
 
@@ -58,7 +59,7 @@ export default class OrderProductAutocomplete {
     this.dropdownMenu.empty();
     Object.entries(this.results).forEach((val) => {
       const link = $(`<a class="dropdown-item" data-id="${val[1].product_id}" href="#">${val[1].name}</a>`);
-      link.on('click', event => this.onItemClicked($(event.target).attr('data-id')));
+      link.on('click', event => this.onItemClicked($(event.target).data('id')));
       this.dropdownMenu.append(link);
     });
     this.dropdownMenu.toggle(Object.keys(this.results).length > 0);
