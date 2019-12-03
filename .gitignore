@@ -102,8 +102,10 @@ tests-legacy/resources/modules/referralprogram/
 /admin-dev/themes/default/css/vendor/nv.d3_rtl.css
 /admin-dev/themes/default/css/vendor/titatoggle-min_rtl.css
 /admin-dev/themes/default/public/theme_rtl.css
+/admin-dev/themes/default/public
 /admin-dev/themes/new-theme/css/module/drop_rtl.css
 /admin-dev/themes/new-theme/css/right-sidebar_rtl.css
+/admin-dev/themes/new-theme/public
 
 themes/*/cache/*
 
