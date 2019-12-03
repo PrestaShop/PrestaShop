@@ -29,7 +29,6 @@ namespace PrestaShop\PrestaShop\Core\Domain\Cart\Command;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\CartId;
-use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\QuantityAction;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
@@ -52,12 +51,7 @@ class UpdateProductQuantityInCartCommand
     /**
      * @var int
      */
-    private $quantity;
-
-    /**
-     * @var QuantityAction
-     */
-    private $action;
+    private $newQuantity;
 
     /**
      * @var CombinationId|null
@@ -73,7 +67,6 @@ class UpdateProductQuantityInCartCommand
      * @param int $cartId
      * @param int $productId
      * @param int $quantity
-     * @param string $action
      * @param int|null $combinationId
      * @param int|null $customizationId
      *
@@ -84,7 +77,6 @@ class UpdateProductQuantityInCartCommand
         $cartId,
         $productId,
         $quantity,
-        $action,
         $combinationId = null,
         $customizationId = null
     ) {
@@ -94,8 +86,7 @@ class UpdateProductQuantityInCartCommand
 
         $this->cartId = new CartId($cartId);
         $this->productId = new ProductId($productId);
-        $this->quantity = $quantity;
-        $this->action = new QuantityAction($action);
+        $this->newQuantity = $quantity;
     }
 
     /**
@@ -117,17 +108,9 @@ class UpdateProductQuantityInCartCommand
     /**
      * @return int
      */
-    public function getQuantity()
+    public function getNewQuantity()
     {
-        return $this->quantity;
-    }
-
-    /**
-     * @return QuantityAction
-     */
-    public function getAction()
-    {
-        return $this->action;
+        return $this->newQuantity;
     }
 
     /**

@@ -45,7 +45,6 @@ use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartInformation;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetProductQuantityInCart;
 use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleValidityException;
-use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\QuantityAction;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Exception\FileUploadException;
 use PrestaShop\PrestaShop\Core\Domain\Language\Exception\LanguageException;
@@ -440,25 +439,21 @@ class CartController extends FrameworkBundleAdminController
             ));
 
             $newQty = $request->request->getInt('newQty');
-            $qtyDiff = abs($newQty - $previousQty);
-
-            if ($previousQty < $newQty) {
-                $action = QuantityAction::INCREASE_PRODUCT_QUANTITY;
-            } else {
-                $action = QuantityAction::DECREASE_PRODUCT_QUANTITY;
-            }
 
             $this->getCommandBus()->handle(new UpdateProductQuantityInCartCommand(
                 $cartId,
                 $productId,
-                $qtyDiff,
-                $action,
+                $newQty,
                 $request->request->getInt('attributeId') ?: null,
                 $request->request->getInt('customizationId') ?: null
             ));
 
             return $this->json($this->getCartInfo($cartId));
         } catch (Exception $e) {
+            if ($e instanceof CartConstraintException && $e->getCode() === CartConstraintException::UNCHANGED_QUANTITY) {
+                return $this->json($this->getCartInfo($cartId));
+            }
+
             return $this->json(
                 ['message' => $this->getErrorMessageForException($e, $this->getErrorMessages($e))],
                 Response::HTTP_INTERNAL_SERVER_ERROR
