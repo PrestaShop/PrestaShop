@@ -81,6 +81,9 @@
             <input type="hidden" id="addProductTaxRate">
             <label for="addProductSearch">{{ 'Add a product'|trans({}, 'Admin.Orderscustomers.Feature') }}</label>
             <input type="text" class="form-control" id="addProductSearch" placeholder="{{ 'Search for a product'|trans({}, 'Admin.Orderscustomers.Feature') }}">
+            <div class="dropdown">
+              <div class="dropdown-menu"></div>
+            </div>
             <div class="input-group mt-2 d-none" id="addProductCombinations">
               <div class="input-group-prepend">
                 <div class="input-group-text">{{ 'Combinations'|trans({}, 'Admin.Global') }}</div>
@@ -144,58 +147,58 @@
           </td>
         </tr>
         <tr id="templateProductTableRow" class="d-none">
-          <td>
+          <td class="cellProductImg">
               <img alt="">
           </td>
-          <td>
+          <td class="cellProductName">
             <a href="">
-              <p class="mb-0"></p>
-              <p class="mb-0">
+              <p class="mb-0 productName"></p>
+              <p class="mb-0 productReference">
                 {{ 'Reference number:'|trans({}, 'Admin.Orderscustomers.Feature') }}
               </p>
-              <p class="mb-0">
+              <p class="mb-0 productSupplierReference">
                {{ 'Supplier reference:'|trans({}, 'Admin.Orderscustomers.Feature') }}
               </p>
             </a>
           </td>
-          <td></td>
-          <td></td>
-          <td>
+          <td class="cellProductUnitPrice"></td>
+          <td class="cellProductQuantity"></td>
+          <td class="cellProductLocation">
             <span class="badge badge-secondary rounded-circle"></span>
             <div class="d-none js-product-quantity">
               <input type="text" value="" class="form-control">
             </div>
           </td>
-          <td></td>
-          <td></td>
-            <td class="text-right">
-              <a href="#"
-                 class="tooltip-link"
-                 data-toggle="pstooltip"
-                 data-placement="top"
-                 data-original-title="{{ 'Edit'|trans({}, 'Admin.Actions') }}"
-              >
-                <i class="material-icons js-order-product-edit-btn"
-                   data-order-detail-id=""
-                   data-product-quantity=""
-                   data-product-price-tax-incl=""
-                   data-product-price-tax-excl=""
-                   data-tax-rate=""
-                >edit</i>
-              </a>
-
-              <a href="#"
-                 class="ml-2 tooltip-link js-order-product-delete-btn"
-                 data-toggle="pstooltip"
-                 data-placement="top"
-                 data-order-id=""
+          <td class="cellProductAvailableQuantity"></td>
+          <td class="cellProductTotalPrice"></td>
+          <td class="text-right cellProductActions">
+            <a href="javascript:void(0);"
+               class="tooltip-link js-order-product-edit-btn"
+               data-toggle="pstooltip"
+               data-placement="top"
+               data-original-title="{{ 'Edit'|trans({}, 'Admin.Actions') }}"
+            >
+              <i class="material-icons js-order-product-edit-btn"
                  data-order-detail-id=""
-                 data-delete-message="{{ 'Are you sure?'|trans({}, 'Admin.Notifications.Warning') }}"
-                 data-original-title="{{ 'Delete'|trans({}, 'Admin.Actions') }}"
-              >
-                <i class="material-icons">delete</i>
-              </a>
-            </td>
+                 data-product-quantity=""
+                 data-product-price-tax-incl=""
+                 data-product-price-tax-excl=""
+                 data-tax-rate=""
+              >edit</i>
+            </a>
+
+            <a href="javascript:void(0);"
+               class="ml-2 tooltip-link js-order-product-delete-btn"
+               data-toggle="pstooltip"
+               data-placement="top"
+               data-order-id=""
+               data-order-detail-id=""
+               data-delete-message="{{ 'Are you sure?'|trans({}, 'Admin.Notifications.Warning') }}"
+               data-original-title="{{ 'Delete'|trans({}, 'Admin.Actions') }}"
+            >
+              <i class="material-icons">delete</i>
+            </a>
+          </td>
         </tr>
       </tbody>
     </table>
@@ -207,7 +210,7 @@
           <nav aria-label="Products Navigation">
             <ul class="pagination" id="orderProductsTablePagination">
               <li class="page-item disabled" id="orderProductsTablePaginationPrev">
-                <a class="page-link" href="#" aria-label="Previous">
+                <a class="page-link" href="javascript:void(0);" aria-label="Previous">
                   <span aria-hidden="true">&laquo;</span>
                   <span class="sr-only">Previous</span>
                 </a>
@@ -216,7 +219,7 @@
                 <li class="page-item{% if numPage==1 %} active{% endif %}"><span class="page-link" data-order-id="{{ orderForViewing.id }}" data-page="{{ numPage }}">{{ numPage }}</span></li>
               {% endfor %}
               <li class="page-item" id="orderProductsTablePaginationNext">
-                <a class="page-link" href="#" aria-label="Next">
+                <a class="page-link" href="javascript:void(0);" aria-label="Next">
                   <span aria-hidden="true">&raquo;</span>
                   <span class="sr-only">Next</span>
                 </a>

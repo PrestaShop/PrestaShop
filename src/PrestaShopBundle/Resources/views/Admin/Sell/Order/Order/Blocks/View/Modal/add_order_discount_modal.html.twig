@@ -64,7 +64,7 @@
                   {{ 'Value'|trans({}, 'Admin.Global') }}
                 </label>
 
-                {{ form_widget(addOrderCartRuleForm.value) }}
+                {{ form_widget(addOrderCartRuleForm.value, {'type':'number'}) }}
                 <small class="text-muted js-cart-rule-value-help d-none">
                   {{ 'This value must include taxes.'|trans({}, 'Admin.Orderscustomers.Notification') }}
                 </small>
