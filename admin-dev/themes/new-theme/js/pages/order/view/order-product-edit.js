@@ -36,7 +36,6 @@ export default class OrderProductEdit {
     this.router = new Router();
     this.orderProductId = orderProductId;
     this.productRow = $(`#orderProduct_${this.orderProductId}`);
-    this.productRowEdit;
     this.productEditActionBtn = $(OrderViewPageMap.productEditActionBtn);
     this.productIdInput = $(OrderViewPageMap.productEditOrderDetailInput);
     this.priceTaxIncludedInput = $(OrderViewPageMap.productEditPriceTaxInclInput);
@@ -67,8 +66,8 @@ export default class OrderProductEdit {
     });
     this.productRowEdit.find(OrderViewPageMap.productEditActionBtn).on('click', (event) => {
       this.editProduct(
-        $(event.currentTarget).attr('data-order-id'),
-        $(event.currentTarget).attr('data-order-detail-id')
+        $(event.currentTarget).data('orderId'),
+        $(event.currentTarget).data('orderDetailId'),
       );
     });
   }
@@ -95,7 +94,7 @@ export default class OrderProductEdit {
     const params = {
       price_tax_incl: this.productRowEdit.find(OrderViewPageMap.productEditPriceTaxInclInput).val(),
       price_tax_excl: this.productRowEdit.find(OrderViewPageMap.productEditPriceTaxInclInput).val(),
-      quantity: this.productRowEdit.find(OrderViewPageMap.productEditQuantityInput).val()
+      quantity: this.productRowEdit.find(OrderViewPageMap.productEditQuantityInput).val(),
     };
     $.ajax({
       url: this.router.generate('admin_orders_update_product', {orderId, orderDetailId}),
@@ -107,6 +106,10 @@ export default class OrderProductEdit {
         orderDetailId,
         newRow: response
       });
+    }, (response) => {
+      if (response.message) {
+        $.growl.error({message: response.message});
+      }
     });
   }
 }
