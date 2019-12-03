@@ -39,13 +39,14 @@ export default class OrderProductManager {
 
     const $btn = $(event.currentTarget);
 
-    const confirmed = confirm($btn.data('delete-message'));
+    const confirmed = confirm($btn.data('deleteMessage'));
 
     if (!confirmed) {
       return;
     }
 
-    this.deleteProduct($btn.data('order-id'), $btn.data('order-detail-id'));
+    $btn.attr('disabled', 'disabled');
+    this.deleteProduct($btn.data('orderId'), $btn.data('orderDetailId'));
   }
 
   deleteProduct(orderId, orderDetailId) {
@@ -56,6 +57,10 @@ export default class OrderProductManager {
         oldOrderDetailId: orderDetailId,
         orderId,
       });
+    }, (response) => {
+      if (response.message) {
+        $.growl.error({message: response.message});
+      }
     });
   }
 

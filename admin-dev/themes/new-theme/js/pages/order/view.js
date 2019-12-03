@@ -116,11 +116,6 @@ $(() => {
     const $valueInput = $form.find(OrderViewPageMap.addCartRuleValueInput);
     const $valueFormGroup = $valueInput.closest('.form-group');
 
-    $valueInput.on('change', (event) => {
-      const value = $(event.currentTarget).val();
-      $(event.currentTarget).val(value.replace(/,/g, '.'));
-    });
-
     $form.find(OrderViewPageMap.addCartRuleApplyOnAllInvoicesCheckbox).on('change', (event) => {
       const isChecked = $(event.currentTarget).is(':checked');
 
@@ -152,7 +147,7 @@ $(() => {
     $(OrderViewPageMap.updateOrderStatusActionInput).on('change', (event) => {
       const selectedOrderStatusId = $(event.currentTarget).val();
 
-      $btn.prop('disabled', parseInt(selectedOrderStatusId, 10) === $btn.data('order-status-id'));
+      $btn.prop('disabled', parseInt(selectedOrderStatusId, 10) === $btn.data('orderStatusId'));
     });
   }
 

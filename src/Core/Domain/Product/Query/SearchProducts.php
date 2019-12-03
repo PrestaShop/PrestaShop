@@ -26,9 +26,9 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Query;
 
-use Currency;
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\AlphaIsoCode;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 
 /**
  * Queries for products by provided search phrase
@@ -56,7 +56,8 @@ class SearchProducts
      * @param string $isoCode
      *
      * @throws ProductException
-     */
+     * @throws CurrencyConstraintException
+-     */
     public function __construct(string $phrase, int $resultsLimit, string $isoCode)
     {
         $this->assertIsNotEmptyString($phrase);
