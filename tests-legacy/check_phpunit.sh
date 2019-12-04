@@ -1,10 +1,10 @@
 #!/bin/bash
 
-composer run-script phpunit-legacy --timeout=0;
-LEGACY=$?
-
 composer run-script phpunit-admin --timeout=0;
 ADMIN=$?
+
+composer run-script phpunit-legacy --timeout=0;
+LEGACY=$?
 
 composer run-script phpunit-routing --timeout=0;
 ROUTING=$?
