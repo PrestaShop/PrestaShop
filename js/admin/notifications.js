@@ -138,7 +138,7 @@ function getPush()
 				// Add messages notifications to the list
 				html = "";
 				$.each(json.customer_message.results, function(property, value) {
-					html += "<a class='notif' href='"+baseAdminDir+"index.php?tab=AdminCustomerThreads&token=" + token_admin_customer_threads + "&viewcustomer_thread&id_customer_thread=" + parseInt(value.id_customer_thread) + "'>";
+          html += "<a class='notif' href='" + value.customer_thread_view_url + "'>";
 					html += "<span class='message-notification-status " + value.status + "'><i class='material-icons'>fiber_manual_record</i> " + value.status + "</span> - ";
           html += "<strong>" + value.customer_name + "</strong>";
           if (value.company !== "") {
