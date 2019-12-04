@@ -14,14 +14,14 @@ use RuntimeException;
 class OrderPaymentFeatureContext extends AbstractDomainFeatureContext
 {
     /**
-     * @When I add payment to order id :orderId with the following properties:
+     * @When I add payment to order with id :orderId with the following properties:
      *
      * @param int $orderId
      * @param TableNode $table
      *
      * @throws RuntimeException
      */
-    public function iAddPaymentToOrderIdTheFollowingProperties(int $orderId, TableNode $table)
+    public function iAddPaymentToWithIdOrderWithIdTheFollowingProperties(int $orderId, TableNode $table)
     {
         /** @var array $hash */
         $hash = $table->getHash();
@@ -45,14 +45,14 @@ class OrderPaymentFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Then if I query order id :orderId payments I should get :numberOfPayments payments
+     * @Then if I query order with id :orderId payments I should get :numberOfPayments payments
      *
      * @param int $orderId
      * @param int $numberOfPayments
      *
      * @throws RuntimeException
      */
-    public function ifIQueryOrderIdPaymentsIShouldGetOrders(int $orderId, int $numberOfPayments)
+    public function ifIQueryOrderWithIdPaymentsIShouldGetPayments(int $orderId, int $numberOfPayments)
     {
         /** @var OrderForViewing $orderForViewing */
         $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
@@ -73,14 +73,14 @@ class OrderPaymentFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Then if I query order id :orderId payments I should get an Order with properties:
+     * @Then if I query order with id :orderId payments I should get an Order with properties:
      *
      * @param int $orderId
      * @param TableNode $table
      *
      * @throws RuntimeException
      */
-    public function ifIQueryOrderIdPaymentsIShouldGetAnOrderWithProperties(int $orderId, TableNode $table)
+    public function ifIQueryOrderWithIdPaymentsIShouldGetAnOrderWithProperties(int $orderId, TableNode $table)
     {
         /** @var OrderForViewing $orderForViewing */
         $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
@@ -161,14 +161,14 @@ class OrderPaymentFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @When I add payment to order id :orderId exception is thrown with the following properties:
+     * @When I add payment to order with id :orderId exception is thrown with the following properties:
      *
      * @param int $orderId
      * @param TableNode $table
      *
      * @throws RuntimeException
      */
-    public function iAddPaymentToOrderIdExceptionIsThrownWithTheFollowingProperties(int $orderId, TableNode $table)
+    public function iAddPaymentToOrderWithIdExceptionIsThrownWithTheFollowingProperties(int $orderId, TableNode $table)
     {
         /** @var array $hash */
         $hash = $table->getHash();

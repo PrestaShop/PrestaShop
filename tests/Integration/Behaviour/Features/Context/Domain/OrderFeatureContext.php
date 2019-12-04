@@ -32,6 +32,8 @@ use Context;
 use FrontController;
 use Order;
 use OrderState;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\InvalidEmployeeIdException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\AddOrderFromBackOfficeCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\BulkChangeOrderStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\UpdateOrderStatusCommand;
@@ -76,9 +78,12 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
      * @param string $paymentModuleName
      * @param string $orderStatus
      *
-     * @throws RuntimeException
+     * @throws OrderException
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
+     * @throws RuntimeException
+     * @throws CartConstraintException
+     * @throws InvalidEmployeeIdException
      */
     public function placeOrderWithPaymentMethodAndOrderStatus(
         string $orderReference,
@@ -183,7 +188,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @When I update orders :references to status :status
+     * @When I update orders with ids :references status to :status
      *
      * @param string $orderIdsString
      * @param string $status
@@ -191,7 +196,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
      * @throws OrderException
      * @throws RuntimeException
      */
-    public function iUpdateOrdersToStatus(string $orderIdsString, string $status)
+    public function iUpdateOrdersWithIdsStatusTo(string $orderIdsString, string $status)
     {
         /** @var string[] $orderIdsString */
         $orderIdsString = explode(',', $orderIdsString);
@@ -209,14 +214,14 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Then order :orderId has status :status
+     * @Then order with id :orderId has status :status
      *
      * @param int $orderId
      * @param string $status
      *
      * @throws RuntimeException
      */
-    public function orderHasStatus(int $orderId, string $status)
+    public function orderWithIdHasStatus(int $orderId, string $status)
     {
         /** @var OrderForViewing $orderForViewing */
         $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
@@ -241,14 +246,14 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @When I update order :orderId to status :status
+     * @When I update order with id :orderId to status :status
      *
      * @param int $orderId
      * @param string $status
      *
      * @throws RuntimeException
      */
-    public function iUpdateOrderToStatus(int $orderId, string $status)
+    public function iUpdateOrderWithIdToStatus(int $orderId, string $status)
     {
         $statusId = $this->getOrderStatusIdFromMap($status);
         $this->getCommandBus()->handle(
