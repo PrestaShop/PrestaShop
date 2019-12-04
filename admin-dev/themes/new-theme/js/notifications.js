@@ -62,6 +62,11 @@ const refreshNotifications = function () {
   clearTimeout(timer);
 }
 
+let replaceGlobally = function (original, searchTxt, replaceTxt) {
+  const regex = new RegExp(searchTxt, 'g');
+  return original.replace(regex, replaceTxt) ;
+}
+
 let fillTpl = function (results, eltAppendTo, tpl) {
   eltAppendTo.children('.notification-elements').empty();
   if (results.length > 0) {
@@ -72,7 +77,7 @@ let fillTpl = function (results, eltAppendTo, tpl) {
         return;
       }
 
-      var tplReplaced = tpl.replace(/_id_order_/g, parseInt(value.id_order))
+      let tplReplaced = tpl.replace(/_id_order_/g, parseInt(value.id_order))
         .replace(/_customer_name_/g, value.customer_name)
         .replace(/_iso_code_/g, value.iso_code)
         .replace(/_carrier_/g, (value.carrier !== "" ? ` - ${value.carrier}` : ""))
@@ -82,11 +87,17 @@ let fillTpl = function (results, eltAppendTo, tpl) {
         .replace(/_date_add_/g, value.date_add)
         .replace(/_status_/g, value.status)
         .replace(/order_url/g, `${baseAdminDir}index.php?tab=AdminOrders&token=${token_admin_orders}&vieworder&id_order=${value.id_order}`)
-        .replace(/customer_url/g, `${baseAdminDir}index.php?tab=AdminCustomers&token=${token_admin_customers}&viewcustomer&id_customer=${value.id_customer}`);
 
       let customerThreadId = parseInt(value.id_customer_thread);
-      if (customerThreadId && tpl.search('message_url') > -1) {
-        tplReplaced = tplReplaced.replace(/message_url/g, router.generate('admin_customer_threads_view', {customerThreadId: customerThreadId}));
+      if (customerThreadId) {
+        let route = router.generate('admin_customer_threads_view', {customerThreadId});
+        tplReplaced = replaceGlobally(tplReplaced, 'message_url', route);
+      }
+
+      let customerId = parseInt(value.id_customer);
+      if (customerId) {
+        let route = router.generate('admin_customers_view', {customerId});
+        tplReplaced = replaceGlobally(tplReplaced, 'customer_url', route);
       }
 
       eltAppendTo.children('.notification-elements').append(tplReplaced);
@@ -95,7 +106,6 @@ let fillTpl = function (results, eltAppendTo, tpl) {
     eltAppendTo.addClass('empty');
   }
 }
-
 let setNotificationsNumber = function (id, number) {
   if (number > 0) {
     $(`#${id}`).text(` (${number})`);
