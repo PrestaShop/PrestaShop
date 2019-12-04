@@ -67,7 +67,7 @@ let fillTpl = function (results, eltAppendTo, tpl) {
   if (results.length > 0) {
     eltAppendTo.removeClass('empty');
 
-    let router = new Router();
+    const router = new Router();
     let tplReplaced = '';
     let route = '';
 
