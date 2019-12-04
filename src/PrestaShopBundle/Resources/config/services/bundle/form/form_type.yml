@@ -1048,8 +1048,6 @@ services:
 
     form.type.order.message:
         class: 'PrestaShopBundle\Form\Admin\Sell\CustomerService\OrderMessageType'
-        calls:
-            - { method: setTranslator, arguments: ['@translator'] }
         tags:
             - { name: form.type }
 
