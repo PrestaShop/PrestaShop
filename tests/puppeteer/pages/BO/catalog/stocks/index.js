@@ -129,7 +129,6 @@ module.exports = class Stocks extends BOBasePage {
    * @return {Promise<textContent>}
    */
   async updateRowQuantityWithInput(row, value) {
-
     await this.setValue(this.productRowQuantityColumnInput.replace('%ROW', row), value.toString());
     // Wait for check button before click
     await this.waitForSelectorAndClick(this.productRowQuantityUpdateButton.replace('%ROW', row));
