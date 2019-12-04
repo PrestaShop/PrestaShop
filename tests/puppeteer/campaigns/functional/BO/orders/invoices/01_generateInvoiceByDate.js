@@ -33,8 +33,8 @@ const init = async function () {
   };
 };
 
-// Generate PDF file by date
-describe('Generate PDF file by date', async () => {
+// Filter And Quick Edit invoices
+describe('Filter And Quick Edit invoices', async () => {
   // before and after functions
   before(async function () {
     browser = await helper.createBrowser();
@@ -51,59 +51,62 @@ describe('Generate PDF file by date', async () => {
   // Login into BO
   loginCommon.loginBO();
 
-  describe('Create invoice', async () => {
-    const tests = [
-      {args: {orderRow: 1, status: Statuses.shipped.status}},
-      {args: {orderRow: 2, status: Statuses.paymentAccepted.status}},
-    ];
-    tests.forEach((orderToEdit) => {
-      it('should go to the orders page', async function () {
+  // 1 : Generate PDF file by date
+  describe('Generate PDF file by date', async () => {
+    describe('Create invoice', async () => {
+      const tests = [
+        {args: {orderRow: 1, status: Statuses.shipped.status}},
+        {args: {orderRow: 2, status: Statuses.paymentAccepted.status}},
+      ];
+      tests.forEach((orderToEdit) => {
+        it('should go to the orders page', async function () {
+          await this.pageObjects.boBasePage.goToSubMenu(
+            this.pageObjects.boBasePage.ordersParentLink,
+            this.pageObjects.boBasePage.ordersLink,
+          );
+          const pageTitle = await this.pageObjects.ordersPage.getPageTitle();
+          await expect(pageTitle).to.contains(this.pageObjects.ordersPage.pageTitle);
+        });
+
+        it(`should go to the order page number '${orderToEdit.args.orderRow}'`, async function () {
+          await this.pageObjects.ordersPage.goToOrder(orderToEdit.args.orderRow);
+          const pageTitle = await this.pageObjects.viewOrderPage.getPageTitle();
+          await expect(pageTitle).to.contains(this.pageObjects.viewOrderPage.pageTitle);
+        });
+
+        it(`should change the order status to '${orderToEdit.args.status}' and check it`, async function () {
+          const result = await this.pageObjects.viewOrderPage.modifyOrderStatus(orderToEdit.args.status);
+          await expect(result).to.be.true;
+        });
+      });
+    });
+
+    describe('Generate PDF file by date', async () => {
+      it('should go to invoices page', async function () {
         await this.pageObjects.boBasePage.goToSubMenu(
           this.pageObjects.boBasePage.ordersParentLink,
-          this.pageObjects.boBasePage.ordersLink,
+          this.pageObjects.boBasePage.invoicesLink,
         );
-        const pageTitle = await this.pageObjects.ordersPage.getPageTitle();
-        await expect(pageTitle).to.contains(this.pageObjects.ordersPage.pageTitle);
+        const pageTitle = await this.pageObjects.invoicesPage.getPageTitle();
+        await expect(pageTitle).to.contains(this.pageObjects.invoicesPage.pageTitle);
       });
 
-      it(`should go to the order page number '${orderToEdit.args.orderRow}'`, async function () {
-        await this.pageObjects.ordersPage.goToOrder(orderToEdit.args.orderRow);
-        const pageTitle = await this.pageObjects.viewOrderPage.getPageTitle();
-        await expect(pageTitle).to.contains(this.pageObjects.viewOrderPage.pageTitle);
+      it('should generate PDF file by date and check the file existence', async function () {
+        await this.pageObjects.invoicesPage.generatePDFByDate();
+        const exist = await files.checkFileExistence(
+          global.BO.DOWNLOAD_PATH,
+          Invoices.moreThanAnInvoice.fileName,
+        );
+        await expect(exist).to.be.true;
       });
 
-      it(`should change the order status to '${orderToEdit.args.status}' and check it`, async function () {
-        const result = await this.pageObjects.viewOrderPage.modifyOrderStatus(orderToEdit.args.status);
-        await expect(result).to.be.true;
+      it('should check the error message when there is no invoice in the entered date', async function () {
+        await this.pageObjects.invoicesPage.generatePDFByDate(dateFrom, dateTo);
+        const textMessage = await this.pageObjects.invoicesPage.getTextContent(
+          this.pageObjects.invoicesPage.alertTextBlock,
+        );
+        await expect(textMessage).to.equal(this.pageObjects.invoicesPage.errorMessageWhenGenerateFileByDate);
       });
-    });
-  });
-
-  describe('Generate invoice by date', async () => {
-    it('should go to invoices page', async function () {
-      await this.pageObjects.boBasePage.goToSubMenu(
-        this.pageObjects.boBasePage.ordersParentLink,
-        this.pageObjects.boBasePage.invoicesLink,
-      );
-      const pageTitle = await this.pageObjects.invoicesPage.getPageTitle();
-      await expect(pageTitle).to.contains(this.pageObjects.invoicesPage.pageTitle);
-    });
-
-    it('should generate PDF file by date and check the file existence', async function () {
-      await this.pageObjects.invoicesPage.generatePDFByDate();
-      const exist = await files.checkFileExistence(
-        global.BO.DOWNLOAD_PATH,
-        Invoices.moreThanAnInvoice.fileName,
-      );
-      await expect(exist).to.be.true;
-    });
-
-    it('should check the error message when there is no invoice in the entered date', async function () {
-      await this.pageObjects.invoicesPage.generatePDFByDate(dateFrom, dateTo);
-      const textMessage = await this.pageObjects.invoicesPage.getTextContent(
-        this.pageObjects.invoicesPage.alertTextBlock,
-      );
-      await expect(textMessage).to.equal(this.pageObjects.invoicesPage.errorMessageWhenGenerateFileByDate);
     });
   });
 });
