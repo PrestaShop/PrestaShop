@@ -79,7 +79,7 @@ let fillTpl = function (results, eltAppendTo, tpl) {
       return;
     }
 
-    let router = new Router();
+    const router = new Router();
     let tplReplaced = '';
     let route = '';
 
