@@ -77,7 +77,7 @@ module.exports = class Invoice extends BOBasePage {
    * @return {Promise<void>}
    */
   async saveInvoiceOptions() {
-    await this.waitForSelectorAndClick(this.saveInvoiceOptionsButton);
+    await this.clickAndWaitForNavigation(this.saveInvoiceOptionsButton);
     return this.getTextContent(this.alertSuccessBlockParagraph);
   }
 };
