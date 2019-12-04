@@ -22,6 +22,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+import Router from "./components/router";
+
 const refreshNotifications = function () {
   let timer = null;
 
@@ -69,29 +71,33 @@ let fillTpl = function (results, eltAppendTo, tpl) {
     eltAppendTo.addClass('empty');
     return;
   }
-
+  let router = new Router();
   eltAppendTo.removeClass('empty');
-  $.each(results, (property, value) => {
+  $.each(results, function (property, value) {
     if (undefined === tpl) {
       return;
     }
 
     /* eslint-disable max-len */
-    eltAppendTo.children('.notification-elements').append(
-      tpl.replace(/_id_order_/g, parseInt(value.id_order, 10))
-        .replace(/_customer_name_/g, value.customer_name)
-        .replace(/_iso_code_/g, value.iso_code)
-        .replace(/_carrier_/g, (value.carrier !== '' ? ` - ${value.carrier}` : ''))
-        .replace(/_total_paid_/g, value.total_paid)
-        .replace(/_id_customer_/g, parseInt(value.id_customer, 10))
-        .replace(/_company_/g, (value.company !== '' ? ` (${value.company}) ` : ''))
-        .replace(/_date_add_/g, value.date_add)
-        .replace(/_status_/g, value.status)
-        .replace(/order_url/g, `${window.baseAdminDir}index.php?tab=AdminOrders&token=${window.tokenAdminOrders}&vieworder&id_order=${value.id_order}`)
-        .replace(/customer_url/g, `${window.baseAdminDir}index.php?tab=AdminCustomers&token=${window.tokenAdminCustomers}&viewcustomer&id_customer=${value.id_customer}`)
-        .replace(/message_url/g, `${window.baseAdminDir}index.php?tab=AdminCustomerThreads&token=${window.tokenAdminCustomerThreads}&viewcustomer_thread&id_customer_thread=${value.id_customer_thread}`),
-    );
+    var tplReplaced = tpl
+      .replace(/_id_order_/g, parseInt(value.id_order))
+      .replace(/_customer_name_/g, value.customer_name, 10)
+      .replace(/_iso_code_/g, value.iso_code)
+      .replace(/_carrier_/g, (value.carrier !== "" ? ` - ${value.carrier}` : ""))
+      .replace(/_total_paid_/g, value.total_paid)
+      .replace(/_id_customer_/g, parseInt(value.id_customer))
+      .replace(/_company_/g, (value.company !== "" ? ` (${value.company}) ` : ""))
+      .replace(/_date_add_/g, value.date_add)
+      .replace(/_status_/g, value.status)
+      .replace(/order_url/g, `${baseAdminDir}index.php?tab=AdminOrders&token=${token_admin_orders}&vieworder&id_order=${value.id_order}`)
+      .replace(/customer_url/g, `${baseAdminDir}index.php?tab=AdminCustomers&token=${token_admin_customers}&viewcustomer&id_customer=${value.id_customer}`);
+
+    let customerThreadId = parseInt(value.id_customer_thread);
+    if (customerThreadId && tpl.search('message_url') > -1) {
+      tplReplaced = tplReplaced.replace(/message_url/g, router.generate('admin_customer_threads_view', {customerThreadId: customerThreadId}));
+    };
     /* eslint-ensable max-len */
+      eltAppendTo.children('.notification-elements').append(tplReplaced);
   });
 };
 

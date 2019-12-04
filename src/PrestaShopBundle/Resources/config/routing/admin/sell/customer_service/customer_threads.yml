@@ -7,6 +7,8 @@ admin_customer_threads_view:
 #    _legacy_link: AdminCustomerThreads
   requirements:
     customerThreadId: \d+
+  options:
+    expose: true
 
 admin_customer_threads_reply:
   path: /{customerThreadId}/reply
