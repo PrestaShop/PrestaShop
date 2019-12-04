@@ -33,8 +33,10 @@
   <div class="card-body">
     <div class="info-block">
       <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-7">
           <h2 class="mb-0">
+            <i class="material-icons">account_box</i>
+            
             {{ orderForViewing.customer.gender }}
             {{ orderForViewing.customer.firstName }}
             {{ orderForViewing.customer.lastName }}
@@ -42,7 +44,7 @@
             <strong class="text-muted ml-2">#{{ orderForViewing.customer.id }}</strong>
           </h2>
         </div>
-        <div class="col-md-6 text-right">
+        <div class="col-md-5 text-right">
           <a href="{{ path('admin_customers_view', {'customerId': orderForViewing.customer.id }) }}">
             {{ 'View full details'|trans({}, 'Admin.Actions') }}
           </a>
@@ -84,25 +86,36 @@
     <div class="mt-2 info-block">
       <div class="row">
         <div class="col-md-6">
-          <p>
+          <div class="row justify-content-between no-gutters">
             <strong>{{ 'Shipping address'|trans({}, 'Admin.Orderscustomers.Feature') }}</strong>
-
-            <a href="{{ getAdminLink('AdminAddresses', true, {
-              'realedit': 1,
-              'addaddress': 1,
-              'address_type': 1,
-              'id_order': orderForViewing.id,
-              'id_address': orderForViewing.shippingAddress.addressId,
-              'back': path('admin_orders_view', {'orderId': orderForViewing.id})
-            }) }}"
-               class="float-right tooltip-link"
-               data-toggle="pstooltip"
-               data-placement="top"
-               data-original-title="{{ 'Edit'|trans({}, 'Admin.Actions') }}"
-            >
-              <i class="material-icons">edit</i>
+            <a class="tooltip-link" href="#" data-toggle="dropdown">
+              <i class="material-icons">more_vert</i>
             </a>
-          </p>
+
+            <div class="dropdown-menu dropdown-menu-right">
+              <a class="dropdown-item"
+                href="{{ getAdminLink('AdminAddresses', true, {
+                  'realedit': 1,
+                  'addaddress': 1,
+                  'address_type': 1,
+                  'id_order': orderForViewing.id,
+                  'id_address': orderForViewing.shippingAddress.addressId,
+                  'back': path('admin_orders_view', {'orderId': orderForViewing.id})
+                }) }}"
+              >
+                {{ 'Edit address'|trans({}, 'Admin.Actions') }}
+              </a>
+
+              <a href="#"
+                class="dropdown-item js-update-customer-address-modal-btn"
+                data-toggle="modal"
+                data-target="#updateCustomerAddressModal"
+                data-address-type="shipping"
+              >
+                {{ 'Change address'|trans({}, 'Admin.Actions') }}
+              </a>
+            </div>
+          </div>
 
           <p class="mb-0">{{ orderForViewing.shippingAddress.fullName }}</p>
           {% if orderForViewing.shippingAddress.companyName is not empty %}
@@ -126,25 +139,37 @@
           </p>
         </div>
         <div class="col-md-6">
-          <p>
+          <div class="row justify-content-between no-gutters">
             <strong>{{ 'Invoice address'|trans({}, 'Admin.Orderscustomers.Feature') }}</strong>
 
-            <a href="{{ getAdminLink('AdminAddresses', true, {
-              'realedit': 1,
-              'addaddress': 1,
-              'address_type': 2,
-              'id_order': orderForViewing.id,
-              'id_address': orderForViewing.invoiceAddress.addressId,
-              'back': path('admin_orders_view', {'orderId': orderForViewing.id})
-            }) }}"
-               class="float-right tooltip-link"
-               data-toggle="pstooltip"
-               data-placement="top"
-               data-original-title="{{ 'Edit'|trans({}, 'Admin.Actions') }}"
-            >
-              <i class="material-icons">edit</i>
+            <a class="tooltip-link" href="#" data-toggle="dropdown">
+              <i class="material-icons">more_vert</i>
             </a>
-          </p>
+
+            <div class="dropdown-menu dropdown-menu-right">
+              <a class="dropdown-item"
+                href="{{ getAdminLink('AdminAddresses', true, {
+                  'realedit': 1,
+                  'addaddress': 1,
+                  'address_type': 2,
+                  'id_order': orderForViewing.id,
+                  'id_address': orderForViewing.invoiceAddress.addressId,
+                  'back': path('admin_orders_view', {'orderId': orderForViewing.id})
+                }) }}"
+              >
+                {{ 'Edit address'|trans({}, 'Admin.Actions') }}
+              </a>
+
+              <a href="#"
+                class="dropdown-item js-update-customer-address-modal-btn"
+                data-toggle="modal"
+                data-target="#updateCustomerAddressModal"
+                data-address-type="invoice"
+              >
+                {{ 'Change address'|trans({}, 'Admin.Actions') }}
+              </a>
+            </div>
+          </div>
 
           <p class="mb-0">{{ orderForViewing.invoiceAddress.fullName }}</p>
           {% if orderForViewing.invoiceAddress.companyName is not empty %}

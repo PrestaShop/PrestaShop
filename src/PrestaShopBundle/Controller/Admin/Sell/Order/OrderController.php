@@ -32,6 +32,8 @@ use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartInformation;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\AddCartRuleToOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\BulkChangeOrderStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\ChangeOrderCurrencyCommand;
+use PrestaShop\PrestaShop\Core\Domain\Order\Command\ChangeOrderDeliveryAddressCommand;
+use PrestaShop\PrestaShop\Core\Domain\Order\Command\ChangeOrderInvoiceAddressCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\DeleteCartRuleFromOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\DuplicateOrderCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\ResendOrderEmailCommand;
@@ -59,6 +61,7 @@ use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Form\Admin\Sell\Customer\PrivateNoteType;
 use PrestaShopBundle\Form\Admin\Sell\Order\AddOrderCartRuleType;
 use PrestaShopBundle\Form\Admin\Sell\Order\AddProductToOrderType;
+use PrestaShopBundle\Form\Admin\Sell\Order\ChangeOrderAddressType;
 use PrestaShopBundle\Form\Admin\Sell\Order\ChangeOrderCurrencyType;
 use PrestaShopBundle\Form\Admin\Sell\Order\ChangeOrdersStatusType;
 use PrestaShopBundle\Form\Admin\Sell\Order\OrderPaymentType;
@@ -293,6 +296,10 @@ class OrderController extends FrameworkBundleAdminController
         $changeOrderCurrencyForm = $this->createForm(ChangeOrderCurrencyType::class, [], [
             'current_currency_id' => $orderForViewing->getCurrencyId(),
         ]);
+        $changeOrderAddressForm = $this->createForm(ChangeOrderAddressType::class, [], [
+            'customer_id' => $orderForViewing->getCustomer()->getId(),
+        ]);
+
         $privateNoteForm = $this->createForm(PrivateNoteType::class, [
             'note' => $orderForViewing->getCustomer()->getPrivateNote(),
         ]);
@@ -319,6 +326,7 @@ class OrderController extends FrameworkBundleAdminController
             'updateOrderProductForm' => $updateOrderProductForm->createView(),
             'updateOrderShippingForm' => $updateOrderShippingForm->createView(),
             'invoiceManagementIsEnabled' => $orderForViewing->isInvoiceManagementIsEnabled(),
+            'changeOrderAddressForm' => $changeOrderAddressForm->createView(),
         ]);
     }
 
@@ -615,6 +623,55 @@ class OrderController extends FrameworkBundleAdminController
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    public function changeCustomerAddressAction(Request $request): RedirectResponse
+    {
+        $orderId = $request->query->get('orderId');
+        if (!$orderId) {
+            return $this->redirectToRoute('admin_orders_index');
+        }
+
+        $customerId = $request->query->get('customerId');
+        if (!$customerId) {
+            return $this->redirectToRoute('admin_orders_index');
+        }
+
+        $changeOrderAddressForm = $this->createForm(ChangeOrderAddressType::class, [], [
+            'customer_id' => (int) $request->query->get('customerId'),
+        ]);
+        $changeOrderAddressForm->handleRequest($request);
+
+        if (!$changeOrderAddressForm->isSubmitted() || !$changeOrderAddressForm->isValid()) {
+            return $this->redirectToRoute('admin_orders_view', [
+                'orderId' => $orderId,
+            ]);
+        }
+
+        $data = $changeOrderAddressForm->getData();
+
+        try {
+            if ($data['address_type'] === ChangeOrderAddressType::SHIPPING_TYPE) {
+                $command = new ChangeOrderDeliveryAddressCommand((int) $orderId, (int) $data['new_address_id']);
+            } else {
+                $command = new ChangeOrderInvoiceAddressCommand((int) $orderId, (int) $data['new_address_id']);
+            }
+
+            $this->getCommandBus()->handle($command);
+
+            $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+        } catch (Exception $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+        }
+
+        return $this->redirectToRoute('admin_orders_view', [
+            'orderId' => $orderId,
+        ]);
     }
 
     /**
