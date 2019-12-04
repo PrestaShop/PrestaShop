@@ -8,6 +8,7 @@
         "ext-fileinfo": "*",
         "ext-intl": "*",
         "ext-zip": "*",
+        "ext-iconv": "*",
         "beberlei/doctrineextensions": "^1.0",
         "composer/ca-bundle": "^1.0",
         "composer/installers": "^1.0.21",
