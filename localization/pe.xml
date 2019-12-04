@@ -12,7 +12,7 @@
       <taxRule iso_code_country="pe" behavior="1" id_tax="53"/>
       <taxRule iso_code_country="pe" behavior="1" id_tax="54"/>
     </taxRulesGroup>
-    <tax id="53" name="Impuesto General a la Ventas" rate="18.000"/>
+    <tax id="53" name="Impuesto General a la Ventas" rate="16.000"/>
     <tax id="54" name="Impuesto de Promocion Municipal" rate="2.000"/>
   </taxes>
   <units>

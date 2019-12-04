@@ -55,27 +55,30 @@ require_once dirname(__FILE__) . '/FunctionBuilder.php';
  *  
  */
 class SetExpressionBuilder {
-
     protected function buildColRef($parsed) {
         $builder = new ColumnReferenceBuilder();
+
         return $builder->build($parsed);
     }
 
     protected function buildConstant($parsed) {
         $builder = new ConstantBuilder();
+
         return $builder->build($parsed);
     }
-    
+
     protected function buildOperator($parsed) {
         $builder = new OperatorBuilder();
+
         return $builder->build($parsed);
     }
-    
+
     protected function buildFunction($parsed) {
         $builder = new FunctionBuilder();
+
         return $builder->build($parsed);
     }
-    
+
     public function build($parsed) {
         if ($parsed['expr_type'] !== ExpressionType::EXPRESSION) {
             return "";
@@ -95,7 +98,7 @@ class SetExpressionBuilder {
             $sql .= " ";
         }
         $sql = substr($sql, 0, -1);
+
         return $sql;
     }
 }
-?>

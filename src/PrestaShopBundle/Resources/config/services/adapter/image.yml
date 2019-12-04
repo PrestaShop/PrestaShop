@@ -1,0 +1,20 @@
+services:
+    _defaults:
+        public: true
+
+    prestashop.adapter.image.uploader.category_cover_image_uploader:
+        class: 'PrestaShop\PrestaShop\Adapter\Image\Uploader\CategoryCoverImageUploader'
+
+    prestashop.adapter.image.uploader.category_thumbnail_image_uploader:
+        class: 'PrestaShop\PrestaShop\Adapter\Image\Uploader\CategoryThumbnailImageUploader'
+
+    prestashop.adapter.image.uploader.category_menu_thumbnail_image_uploader:
+        class: 'PrestaShop\PrestaShop\Adapter\Image\Uploader\CategoryMenuThumbnailUploader'
+        arguments:
+            - '@prestashop.adapter.cache_clearer'
+
+    prestashop.adapter.image.uploader.manufacturer_image_uploader:
+      class: 'PrestaShop\PrestaShop\Adapter\Image\Uploader\ManufacturerImageUploader'
+
+    prestashop.adapter.image.uploader.supplier_image_uploader:
+      class: 'PrestaShop\PrestaShop\Adapter\Image\Uploader\SupplierImageUploader'

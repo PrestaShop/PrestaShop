@@ -1,4 +1,0 @@
---require ./test/helpers.js
---timeout 400000
---slow 45000
---reporter mochawesome

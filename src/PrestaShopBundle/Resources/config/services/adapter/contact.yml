@@ -1,0 +1,30 @@
+services:
+  _defaults:
+    public: true
+
+  prestashop.adapter.contact.repository:
+    class: 'PrestaShop\PrestaShop\Adapter\Support\ContactRepository'
+
+  prestashop.adapter.contact.deleter:
+    class: 'PrestaShop\PrestaShop\Adapter\Support\ContactDeleter'
+
+  prestashop.adapter.contact.query_handler.get_contact_for_editing:
+    class: 'PrestaShop\PrestaShop\Adapter\Contact\QueryHandler\GetContactForEditingHandler'
+    arguments:
+      - '@prestashop.bundle.form.data_transformer.string_array_to_integer_array'
+    tags:
+      - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Contact\Query\GetContactForEditing' }
+
+  prestashop.adapter.contact.command_handler.edit_contact:
+    class: 'PrestaShop\PrestaShop\Adapter\Contact\CommandHandler\EditContactHandler'
+    arguments:
+      - '@validator'
+    tags:
+      - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Contact\Command\EditContactCommand' }
+
+  prestashop.adapter.contact.command_handler.add_contact:
+    class: 'PrestaShop\PrestaShop\Adapter\Contact\CommandHandler\AddContactHandler'
+    arguments:
+      - '@validator'
+    tags:
+      - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Contact\Command\AddContactCommand' }

@@ -1,5 +1,5 @@
 {#**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -15,10 +15,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *#}
@@ -51,8 +51,15 @@
                 </div>
               </fieldset>
 
-              <h2>{{ 'Stock alerts'|trans({}, 'Admin.Catalog.Feature') }}</h2>
+              <h2>{{ 'Stock'|trans({}, 'Admin.Catalog.Feature') }}</h2>
               <fieldset class="form-group">
+                <div class="row">
+                  <div class="col-md-4">
+                    <label class="form-control-label">{{ formLocation.vars.label }}</label>
+                    {{ form_errors(formLocation) }}
+                    {{ form_widget(formLocation) }}
+                  </div>
+                </div>
                 <div class="row">
                   <div class="col-md-4">
                     <label class="form-control-label">{{ formLowStockThreshold.vars.label }}</label>

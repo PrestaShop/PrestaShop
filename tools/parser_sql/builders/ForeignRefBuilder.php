@@ -55,19 +55,21 @@ require_once dirname(__FILE__) . '/ColumnListBuilder.php';
  *  
  */
 class ForeignRefBuilder {
-
     protected function buildTable($parsed) {
         $builder = new TableBuilder();
+
         return $builder->build($parsed, 0);
     }
 
     protected function buildColumnList($parsed) {
         $builder = new ColumnListBuilder();
+
         return $builder->build($parsed);
     }
 
     protected function buildReserved($parsed) {
         $builder = new ReservedBuilder();
+
         return $builder->build($parsed);
     }
 
@@ -88,7 +90,7 @@ class ForeignRefBuilder {
 
             $sql .= " ";
         }
+
         return substr($sql, 0, -1);
     }
 }
-?>

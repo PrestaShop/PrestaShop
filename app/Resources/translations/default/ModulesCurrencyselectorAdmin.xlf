@@ -5,14 +5,12 @@
       <trans-unit id="f7a31ae8f776597d4282bd3b1013f08b">
         <source>Currency block</source>
         <target>Currency block</target>
-        <note>Context:
-File: modules/ps_currencyselector/ps_currencyselector.php:47</note>
+        <note>Line: 47</note>
       </trans-unit>
       <trans-unit id="80ed40ee905b534ee85ce49a54380107">
         <source>Adds a block allowing customers to choose their preferred shopping currency.</source>
         <target>Adds a block allowing customers to choose their preferred shopping currency.</target>
-        <note>Context:
-File: modules/ps_currencyselector/ps_currencyselector.php:48</note>
+        <note>Line: 48</note>
       </trans-unit>
     </body>
   </file>

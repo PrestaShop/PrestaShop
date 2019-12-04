@@ -1,11 +1,13 @@
 <?php
-include('config/config.php');
+
+include 'config/config.php';
+
 if ($_SESSION['verify'] != 'RESPONSIVEfilemanager') {
     die('Forbidden');
 }
-include('include/utils.php');
+include 'include/utils.php';
 
-$_POST['path'] = $current_path.str_replace('\0', '', $_POST['path']);
+$_POST['path'] = $current_path.str_replace("\0", '', $_POST['path']);
 $_POST['path_thumb'] = $thumbs_base_path.str_replace("\0", '', $_POST['path_thumb']);
 
 $storeFolder = $_POST['path'];
@@ -30,7 +32,7 @@ while ($cycle && $i < $max_cycles) {
         $cycle = false;
     }
     if (file_exists($path.'config.php')) {
-        require_once($path.'config.php');
+        require_once $path.'config.php';
         $cycle = false;
     }
     $path = fix_dirname($path).'/';
@@ -38,7 +40,10 @@ while ($cycle && $i < $max_cycles) {
 
 if (!empty($_FILES) && isset($_FILES['file']) && $_FILES['file']['size']) {
     $info = pathinfo($_FILES['file']['name']);
-    if (isset($info['extension']) && in_array(fix_strtolower($info['extension']), $ext)) {
+    if (isset($info['extension'])
+            && in_array(fix_strtolower($info['extension']), $ext)
+            && in_array(mime_content_type($_FILES['file']['tmp_name']), $mime)
+    ) {
         $tempFile = $_FILES['file']['tmp_name'];
 
         $targetPath = $storeFolder;

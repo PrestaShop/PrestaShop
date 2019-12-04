@@ -1,0 +1,33 @@
+# circuit_breaker.yml
+services:
+  _defaults:
+    public: true
+
+  prestashop.core.circuit_breaker.doctrine_cache:
+    class: Doctrine\Common\Cache\FilesystemCache
+    arguments:
+      - '@=service("prestashop.adapter.environment").getCacheDir() ~ "/circuit_breaker"'
+
+  prestashop.core.circuit_breaker.guzzle.cache_storage:
+    class: GuzzleHttp\Subscriber\Cache\CacheStorage
+    arguments:
+      - "@prestashop.core.circuit_breaker.doctrine_cache"
+      - "circuit_breaker_"
+      - 86400
+
+  prestashop.core.circuit_breaker.guzzle.cache_subscriber_factory:
+    class: PrestaShopBundle\Cache\Factory\CacheSubscriberFactory
+
+  prestashop.core.circuit_breaker.guzzle.cache_subscriber:
+    class: GuzzleHttp\Subscriber\Cache\CacheSubscriber
+    factory: ['@prestashop.core.circuit_breaker.guzzle.cache_subscriber_factory', 'create']
+    arguments:
+      - "@prestashop.core.circuit_breaker.guzzle.cache_storage"
+
+  prestashop.core.circuit_breaker.storage:
+    class: PrestaShop\CircuitBreaker\Storage\DoctrineCache
+    arguments:
+      - "@prestashop.core.circuit_breaker.doctrine_cache"
+
+  prestashop.core.circuit_breaker.advanced_factory:
+    class: PrestaShop\CircuitBreaker\AdvancedCircuitBreakerFactory

@@ -15,7 +15,7 @@
                    &&&&&&&&&*****%%%%%%%%%%%%%#/, @@ %&&%%%%#**&&&&/#%%&&&&&&&&&
                    &&&&&&&&&***&@@@@@@@@@@#/////      @@%%%% ****@@  *@&&&&&&&&&
                    &&&&&&&&&**%@@@@@@@@@@@@@@@@@@#  /@@@%%%  *****/@@@@&&&&&&&&&
-                   #&&&&&&&*@@@@@@@@@@@@@@@@@@@@@@@@@%%#   *******@@&&&&&&&&
+                   #&&&&&&&*@@@@@@@@@@@@@@@@@@@@@@@@@%%#     *******@@&&&&&&&&&&
                     &&&&&&&&&@@@@@@@@@@@@@@@@@@@@@@@@@%%    *********(&&&&&&&&&
                     &&&&&&&&&&@@@@@@@@@@@@@@@&@@@@@@@%     ************%&&&&&&%
                      &&&&&&&&&&@@@@@@@@@@@@@@@@ (@@@.     **************(&&&&&
@@ -46,16 +46,9 @@
 
 === Prerequirements
 
-You will need:
+To install PrestaShop 1.7, you need a web server running PHP 7.1.3+ and any flavor of MySQL 5.5+ (MySQL, MariaDB, Percona Server, etc.).
 
-* PHP 5.4+, with:
-  * allow_url_fopen set to On,
-  * register_globals set to Off,
-  * upload_max_filesize set to "16M" (or more).
-* MySQL 5.0+, with:
-  * A database where PrestaShop can store its data tables.
-* At least 128 Mb of RAM for the PHP process.
-
+You can find more information on our System requirements (https://devdocs.prestashop.com/1.7/basics/installation/system-requirements/) page and on the System Administrator Guide (https://doc.prestashop.com/display/PS16/System+Administrator+Guide).
 
 === Installing PrestaShop
 
@@ -66,15 +59,15 @@ Here is the content of this archive:
 * This INSTALL.txt file
 * The prestashop.zip archive, which contains all the necessary files.
 * The index.php file, which will automatically unzip the prestashop.zip archive for you.
-* The Install_PrestaShop.html file, which redirects you to http://doc.prestashop.com/display/PS17/Installing+PrestaShop
+* The Install_PrestaShop.html file, which redirects you to https://doc.prestashop.com/display/PS17/Installing+PrestaShop
 
 From there on, follow these instructions:
 
 1. Upload at least index.php and prestashop.zip on your web server.
-2. From your web browser, go to the folder where index.html and prestashop.zip have been uploaded. The Zip archive should unzip automatically.
-3. You are redirected to the PrestaShop installer. Simply follow the instructions.
+2. From your web browser, go to the folder where index.html and prestashop.zip have been uploaded and browse index.html. The Zip archive should unzip automatically.
+3. You are redirected to the PrestaShop installer. Follow the instructions.
 
-After PrestaShop has successfuly been installed, delete the /install/ folder from your server!
+After PrestaShop has successfuly been installed, delete the /install/ folder from your server.
 
 Enjoy your store :)
 
@@ -83,11 +76,11 @@ Enjoy your store :)
 
 Essential links about PrestaShop:
 
-* User Guide: http://doc.prestashop.com/display/PS17/User+Guide
-* Tech docs (modules & themes): https://developers.prestashop.com/
-* Official blog: https://www.prestashop.com/blog/en/
-* Devteam blog: http://build.prestashop.com/
-* Get community support: http://www.prestashop.com/forums/
+* User Guide: https://doc.prestashop.com/display/PS17/User+Guide
+* Tech docs (modules & themes): https://devdocs.prestashop.com/
+* Official blog: https://www.prestashop.com/en/blog
+* Developer blog: https://build.prestashop.com/
+* Get community support: https://www.prestashop.com/forums/
 * Get paid support: https://www.prestashop.com/en/support
 * Find modules and themes: https://addons.prestashop.com/
 * Contribute with code: https://github.com/PrestaShop/PrestaShop
@@ -97,9 +90,3 @@ Essential links about PrestaShop:
 
 
                        PrestaShop - WeCommerce Is Better eCommerce
-
-
-
-
-
-

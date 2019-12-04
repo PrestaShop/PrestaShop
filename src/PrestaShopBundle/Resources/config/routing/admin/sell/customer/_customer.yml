@@ -1,0 +1,7 @@
+_catalog:
+  resource: "customers.yml"
+  prefix: /customers/
+
+_addresses:
+  resource: "addresses.yml"
+  prefix: /addresses/

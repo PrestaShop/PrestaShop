@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE ldml SYSTEM "../../common/dtd/ldml.dtd">
-<!-- Copyright © 1991-2017 Unicode, Inc.
+<!-- Copyright © 1991-2019 Unicode, Inc.
 For terms of use, see http://www.unicode.org/copyright.html
 Unicode and the Unicode Logo are registered trademarks of Unicode, Inc. in the U.S. and other countries.
 CLDR data files are interpreted according to the LDML specification (http://unicode.org/reports/tr35/)
 -->
 <ldml>
 	<identity>
-		<version number="$Revision: 13133 $"/>
+		<version number="$Revision$"/>
 		<language type="naq"/>
 	</identity>
 	<localeDisplayNames>
@@ -184,7 +184,6 @@ CLDR data files are interpreted according to the LDML specification (http://unic
 			<territory type="MD">Moldova</territory>
 			<territory type="MG">Madagascari</territory>
 			<territory type="MH">Marshall Islands</territory>
-			<territory type="MK">Macedoniab</territory>
 			<territory type="ML">Malib</territory>
 			<territory type="MM">Myanmar</territory>
 			<territory type="MN">Mongolia</territory>
@@ -717,6 +716,9 @@ CLDR data files are interpreted according to the LDML specification (http://unic
 				<displayName>Malagasy Franc</displayName>
 			</currency>
 			<currency type="MRO">
+				<displayName>Mauritania Ouguiya (1973–2017)</displayName>
+			</currency>
+			<currency type="MRU">
 				<displayName>Mauritania Ouguiya</displayName>
 			</currency>
 			<currency type="MUR">
@@ -760,6 +762,9 @@ CLDR data files are interpreted according to the LDML specification (http://unic
 				<displayName>Somali Shillings</displayName>
 			</currency>
 			<currency type="STD">
+				<displayName>Sao Tome and Principe Dobra (1977–2017)</displayName>
+			</currency>
+			<currency type="STN">
 				<displayName>Sao Tome and Principe Dobra</displayName>
 			</currency>
 			<currency type="SZL">

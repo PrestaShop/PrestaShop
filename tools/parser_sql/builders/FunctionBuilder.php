@@ -59,44 +59,51 @@ require_once dirname(__FILE__) . '/DirectionBuilder.php';
  *  
  */
 class FunctionBuilder {
-
     protected function buildDirection($parsed) {
         $builder = new DirectionBuilder();
+
         return $builder->build($parsed);
     }
-    
+
     protected function buildAlias($parsed) {
         $builder = new AliasBuilder();
+
         return $builder->build($parsed);
     }
 
     protected function buildColRef($parsed) {
         $builder = new ColumnReferenceBuilder();
+
         return $builder->build($parsed);
     }
 
     protected function buildConstant($parsed) {
         $builder = new ConstantBuilder();
+
         return $builder->build($parsed);
     }
 
     protected function buildReserved($parsed) {
         $builder = new ReservedBuilder();
+
         return $builder->build($parsed);
     }
 
     protected function isReserved($parsed) {
         $builder = new ReservedBuilder();
+
         return $builder->isReserved($parsed);
     }
-    
+
     protected function buildSelectExpression($parsed) {
         $builder = new SelectExpressionBuilder();
+
         return $builder->build($parsed);
     }
 
     protected function buildSelectBracketExpression($parsed) {
         $builder = new SelectBracketExpressionBuilder();
+
         return $builder->build($parsed);
     }
 
@@ -126,8 +133,7 @@ class FunctionBuilder {
 
             $sql .= ($this->isReserved($v) ? " " : ",");
         }
+
         return $parsed['base_expr'] . "(" . substr($sql, 0, -1) . ")" . $this->buildAlias($parsed) . $this->buildDirection($parsed);
     }
-
 }
-?>

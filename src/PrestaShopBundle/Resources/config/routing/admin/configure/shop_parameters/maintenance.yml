@@ -4,6 +4,7 @@ admin_maintenance:
     defaults:
         _controller: 'PrestaShopBundle:Admin\Configure\ShopParameters\Maintenance:index'
         _legacy_controller: AdminMaintenance
+        _legacy_link: AdminMaintenance
 
 admin_maintenance_save:
     path: /
@@ -11,3 +12,4 @@ admin_maintenance_save:
     defaults:
         _controller: 'PrestaShopBundle:Admin\Configure\ShopParameters\Maintenance:processForm'
         _legacy_controller: AdminMaintenance
+        _legacy_link: AdminMaintenance:update

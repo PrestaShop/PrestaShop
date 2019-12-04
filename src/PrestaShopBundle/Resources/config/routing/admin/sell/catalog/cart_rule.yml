@@ -1,0 +1,8 @@
+admin_cart_rules_search:
+    path: /search
+    methods: GET
+    defaults:
+        _controller: 'PrestaShopBundle:Admin/Sell/Catalog/CartRule:search'
+        _legacy_controller: AdminCartRules
+    options:
+      expose: true

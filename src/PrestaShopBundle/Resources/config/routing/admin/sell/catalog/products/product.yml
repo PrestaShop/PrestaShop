@@ -33,6 +33,14 @@ admin_product_virtual_remove_file_action:
     requirements:
         idProduct: \d+
 
+admin_product_virtual_download_file_action:
+    path:     /virtual/download-file/{idProduct}
+    defaults:
+        _controller: PrestaShopBundle:Admin/VirtualProduct:downloadFile
+        idProduct: 0
+    requirements:
+        idProduct: \d+
+
 admin_product_virtual_remove_action:
     path:     /virtual/remove/{idProduct}
     defaults:
@@ -80,3 +88,21 @@ admin_product_image_delete:
         idImage: 0
     requirements:
         idImage: \d+
+
+admin_products_search:
+  path: /search
+  methods: [GET]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Product:searchProducts
+  options:
+    expose: true
+
+admin_product_toggle_status:
+  path:     /{productId}/toggle-status
+  methods:  [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Product:toggleStatus
+    _legacy_controller: AdminTracking
+    _legacy_link: AdminTracking:statusproduct
+    _legacy_parameters:
+      id_product: productId

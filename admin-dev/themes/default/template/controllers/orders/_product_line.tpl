@@ -1,5 +1,5 @@
 {**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -15,10 +15,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
@@ -125,6 +125,7 @@
 			{/if}
 		</td>
 	{/if}
+	{if $stock_location_is_available}<td class="productQuantity location text-center">{$product['location']}</td>{/if}
 	{if $stock_management}<td class="productQuantity product_stock text-center">{$product['current_stock']}</td>{/if}
 	<td class="total_product">
 		{displayPrice price=(Tools::ps_round($product_price, 2) * ($product['product_quantity'] - $product['customizationQuantityTotal'])) currency=$currency->id}
@@ -188,7 +189,10 @@
 					<input onchange="checkPartialRefundProductAmount(this)" type="text" name="partialRefundProduct[{$product['id_order_detail']}]" />
 					{if !$currencySymbolBeforeAmount}<div class="input-group-addon">{$currency->sign}</div>{/if}
 				</div>
-        <p class="help-block"><i class="icon-warning-sign"></i> {l s='(Max %amount_refundable% %tax_method%)' sprintf=[ '%amount_refundable%' => Tools::displayPrice(Tools::ps_round($amount_refundable, 2), $currency->id), '%tax_method%' => $smarty.capture.TaxMethod] d='Admin.Orderscustomers.Help'}</p>
+        <p class="help-block"><i class="icon-warning-sign"></i> {if !is_null($amount_refundable)}{l
+            s='(Max %amount_refundable% %tax_method%)'
+            sprintf=['%amount_refundable%' => Context::getContext()->getCurrentLocale()->formatPrice($amount_refundable, Currency::getIsoCodeById((int) $currency->id)), '%tax_method%' => $smarty.capture.TaxMethod]
+            d='Admin.Orderscustomers.Help'}{/if}</p>
 			</div>
 		</div>
 		{/if}

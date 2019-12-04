@@ -13,7 +13,7 @@ services:
         class: PrestaShop\PrestaShop\Adapter\Module\PrestaTrust\ModuleEventSubscriber
         arguments:
             - "@prestashop.adapter.module.prestatrust.checker"
-        properties:
-             enabled: '%prestashop.addons.prestatrust.enabled%'
+        calls:
+            - [ setEnabled, ['%prestashop.addons.prestatrust.enabled%']]
         tags:
             - { name: kernel.event_subscriber }

@@ -58,7 +58,7 @@
                       <div class="modal-dialog" role="document">
                         <div class="modal-content">
                           <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="{l s='Close' d='Shop.Theme.Global'}">
                               <span aria-hidden="true">&times;</span>
                             </button>
                             <h4 class="modal-title">{l s='Product customization' d='Shop.Theme.Catalog'}</h4>
@@ -90,13 +90,7 @@
                 {/if}
               </td>
               <td>
-                {if $product.customizations}
-                  {$product.product_quantity}
-                {else}
-                  {foreach $product.customizations as $customization}
-                    {$customization.quantity}
-                  {/foreach}
-                {/if}
+                {$product.product_quantity}
               </td>
             </tr>
           {/foreach}

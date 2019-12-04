@@ -53,22 +53,24 @@ require_once dirname(__FILE__) . '/FunctionBuilder.php';
  *  
  */
 class GroupByBuilder {
-
     protected function buildColRef($parsed) {
         $builder = new ColumnReferenceBuilder();
+
         return $builder->build($parsed);
     }
 
     protected function buildPosition($parsed) {
         $builder = new PositionBuilder();
+
         return $builder->build($parsed);
     }
 
     protected function buildFunction($parsed) {
         $builder = new FunctionBuilder();
+
         return $builder->build($parsed);
     }
-        
+
     public function build($parsed) {
         $sql = "";
         foreach ($parsed as $k => $v) {
@@ -84,8 +86,7 @@ class GroupByBuilder {
             $sql .= ", ";
         }
         $sql = substr($sql, 0, -2);
+
         return "GROUP BY " . $sql;
     }
-    
 }
-?>

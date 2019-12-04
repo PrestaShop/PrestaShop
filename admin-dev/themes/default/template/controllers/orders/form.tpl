@@ -1,5 +1,5 @@
 {**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -15,10 +15,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
@@ -125,17 +125,16 @@
 			setupCustomer({$cart->id_customer|intval});
 			useCart('{$cart->id|intval}');
 		{/if}
-
-		$('.delete_product').live('click', function(e) {
+		$(document).on('click', '.delete_product', function(e) {
 			e.preventDefault();
 			var to_delete = $(this).attr('rel').split('_');
 			deleteProduct(to_delete[1], to_delete[2], to_delete[3]);
 		});
-		$('.delete_discount').live('click', function(e) {
+		$(document).on('click', '.delete_discount', function(e) {
 			e.preventDefault();
 			deleteVoucher($(this).attr('rel'));
 		});
-		$('.use_cart').live('click', function(e) {
+		$(document).on('click', '.use_cart', function(e) {
 			e.preventDefault();
 			useCart($(this).attr('rel'));
 			return false;
@@ -163,12 +162,11 @@
 				}
 			});
 		});
-
-		$('.duplicate_order').live('click', function(e) {
+		$(document).on('click', '.duplicate_order', function(e) {
 			e.preventDefault();
 			duplicateOrder($(this).attr('rel'));
 		});
-		$('.cart_quantity').live('change', function(e) {
+		$(document).on('change', '.cart_quantity', function(e) {
 			e.preventDefault();
 			if ($(this).val() != cart_quantity[$(this).attr('rel')])
 			{
@@ -176,7 +174,7 @@
 				updateQty(product[0], product[1], product[2], $(this).val() - cart_quantity[$(this).attr('rel')]);
 			}
 		});
-		$('.increaseqty_product, .decreaseqty_product').live('click', function(e) {
+		$(document).on('click', '.increaseqty_product, .decreaseqty_product', function(e) {
 			e.preventDefault();
 			var product = $(this).attr('rel').split('_');
 			var sign = '';
@@ -184,24 +182,24 @@
 				sign = '-';
 			updateQty(product[0], product[1],product[2], sign+1);
 		});
-		$('#id_product').live('keydown', function(e) {
+		$(document).on('keydown', '#id_product', function(e) {
 			$(this).click();
 			return true;
 		});
-		$('#id_product, .id_product_attribute').live('change', function(e) {
+		$(document).on('change', '#id_product, .id_product_attribute', function(e) {
 			e.preventDefault();
 			displayQtyInStock(this.id);
 		});
-		$('#id_product, .id_product_attribute').live('keydown', function(e) {
+		$(document).on('keydown', '#id_product, .id_product_attribute', function(e) {
 			$(this).change();
 			return true;
 		});
-		$('.product_unit_price').live('change', function(e) {
+		$(document).on('change', '.product_unit_price', function(e) {
 			e.preventDefault();
 			var product = $(this).attr('rel').split('_');
 			updateProductPrice(product[0], product[1], $(this).val());
 		});
-		$('#order_message').live('change', function(e) {
+		$(document).on('change', '#order_message', function(e) {
 			e.preventDefault();
 			$.ajax({
 				type:"POST",
@@ -475,10 +473,18 @@
 
 	function searchCustomers()
 	{
-    var customer_search = $('#customer').val();
+	  var $customer_search_input = $('#customer');
+    var customer_search = $customer_search_input.val();
+    var customer_search_url = $customer_search_input.data('customers-search-url');
+
+    // id_customer parameter is required to generate url
+    // in this case id_customer is dynamic
+    // so 0 is used as placeholder and later replaced with actual id_customer
+    var customer_view_url_template = '{$link->getAdminLink('AdminCustomers', true, [], ['viewcustomer' => 1, 'liteDisplaying' => 1, 'id_customer' => 0])}';
+
 		$.ajax({
-			type:"POST",
-			url : "{$link->getAdminLink('AdminCustomers')}",
+			type:"GET",
+			url : customer_search_url,
 			async: true,
 			dataType: "json",
 			data : {
@@ -491,6 +497,8 @@
         if (res.found) {
           var html = '';
           $.each(res.customers, function () {
+            var customer_view_url = customer_view_url_template.replace('/0/', '/' + this.id_customer + '/');
+
             html += '<div class="customerCard col-lg-4">';
             html += '<div class="panel">';
             html += '<div class="panel-heading">' + this.firstname + ' ' + this.lastname;
@@ -498,7 +506,7 @@
             html += '<span>' + this.email + '</span><br/>';
             html += '<span class="text-muted">' + ((this.birthday != '0000-00-00') ? this.birthday : '') + '</span><br/>';
             html += '<div class="panel-footer">';
-            html += '<a href="{$link->getAdminLink('AdminCustomers')}&id_customer=' + this.id_customer + '&viewcustomer&liteDisplaying=1" class="btn btn-default fancybox"><i class="icon-search"></i> {l s='Details' d='Admin.Global' js=1}</a>';
+            html += '<a href="' + customer_view_url + '" class="btn btn-default fancybox"><i class="icon-search"></i> {l s='Details' d='Admin.Global' js=1}</a>';
             html += '<button type="button" data-customer="' + this.id_customer + '" class="setup-customer btn btn-default pull-right" id="choose_customer_btn"><i class="icon-arrow-right"></i> {l s='Choose' d='Admin.Actions' js=1}</button>';
             html += '</div>';
             html += '</div>';
@@ -568,7 +576,7 @@
 						html_orders += '<tr>';
 						html_orders += '<td>'+this.id_order+'</td><td>'+this.date_add+'</td><td>'+(this.nb_products ? this.nb_products : '0')+'</td><td>'+this.total_paid_real+'</span></td><td>'+this.payment+'</td><td>'+this.order_state+'</td>';
 						html_orders += '<td class="text-right">';
-						html_orders += '<a href="{$link->getAdminLink('AdminOrders')}&id_order='+this.id_order+'&vieworder&liteDisplaying=1#" title="{l s='View this order' d='Admin.Orderscustomers.Feature' js=1}" class="fancybox btn btn-default"><i class="icon-search"></i>&nbsp;{l s="Details" d='Admin.Global' js=1}</a>';
+						html_orders += '<a href="{$link->getAdminLink('AdminOrders', true, [], ['vieworder' => 1, 'liteDisplaying' => 1])}&id_order='+this.id_order+'#" title="{l s='View this order' d='Admin.Orderscustomers.Feature' js=1}" class="fancybox btn btn-default"><i class="icon-search"></i>&nbsp;{l s="Details" d='Admin.Global' js=1}</a>';
 						html_orders += '&nbsp;<a href="#" "title="{l s='Duplicate this order' d='Admin.Orderscustomers.Feature' js=1}" class="duplicate_order btn btn-default" rel="'+this.id_order+'"><i class="icon-arrow-right"></i>&nbsp;{l s="Use" d='Admin.Orderscustomers.Feature' js=1}</a>';
 						html_orders += '</td>';
 						html_orders += '</tr>';
@@ -623,7 +631,7 @@
 				action: "searchProducts",
 				id_cart: id_cart,
 				id_customer: id_customer,
-				id_currency: id_currency,
+				id_currency: $('#id_currency option:selected').val(),
 				product_search: $('#product').val()},
 			success : function(res)
 			{
@@ -1040,13 +1048,13 @@
 			if (this.id_address == id_address_invoice)
 			{
 				address_invoice_detail = this.formated_address;
-				invoice_address_edit_link = "{$link->getAdminLink('AdminAddresses')}&id_address="+this.id_address+"&updateaddress&realedit=1&liteDisplaying=1&submitFormAjax=1#";
+				invoice_address_edit_link = "{$link->getAdminLink('AdminAddresses', true, [], ['updateaddress' => 1, 'realedit' => 1, 'liteDisplaying' => 1, 'submitFormAjax' => 1])}&id_address="+this.id_address+"#";
 			}
 
 			if(this.id_address == id_address_delivery)
 			{
 				address_delivery_detail = this.formated_address;
-				delivery_address_edit_link = "{$link->getAdminLink('AdminAddresses')}&id_address="+this.id_address+"&updateaddress&realedit=1&liteDisplaying=1&submitFormAjax=1#";
+				delivery_address_edit_link = "{$link->getAdminLink('AdminAddresses', true, [], ['updateaddress' => 1, 'realedit' => 1, 'liteDisplaying' => 1, 'submitFormAjax' => 1])}&id_address="+this.id_address+"#";
 			}
 
 			addresses_delivery_options += '<option value="'+this.id_address+'" '+(this.id_address == id_address_delivery ? 'selected="selected"' : '')+'>'+this.alias+'</option>';
@@ -1112,7 +1120,7 @@
 				<div class="row">
 					<div class="col-lg-6">
 						<div class="input-group">
-							<input type="text" id="customer" value="" />
+							<input type="text" id="customer" value="" data-customers-search-url="{$customersSearchUrl|escape:'html':'UTF-8'}" />
 							<span class="input-group-addon">
 								<i class="icon-search"></i>
 							</span>
@@ -1120,7 +1128,7 @@
 					</div>
 					<div class="col-lg-6">
 						<span class="form-control-static">{l s='Or' d='Admin.Global'}&nbsp;</span>
-						<a class="fancybox_customer btn btn-default" href="{$link->getAdminLink('AdminCustomers')|escape:'html':'UTF-8'}&amp;addcustomer&amp;liteDisplaying=1&amp;submitFormAjax=1#">
+						<a class="fancybox_customer btn btn-default" href="{$link->getAdminLink('AdminCustomers', true, [], ['addcustomer' => 1, 'liteDisplaying' => 1, 'submitFormAjax' => 1])|escape:'html':'UTF-8'}#">
 							<i class="icon-plus-sign-alt"></i>
 							{l s='Add new customer' d='Admin.Orderscustomers.Feature'}
 						</a>
@@ -1186,8 +1194,8 @@
 		</div>
 	</div>
 
-
-<form class="form-horizontal" action="{$link->getAdminLink('AdminOrders')|escape:'html':'UTF-8'}&amp;submitAdd{$table|escape:'html':'UTF-8'}=1" method="post" autocomplete="off">
+{capture name=order_action_name assign=order_action_name}submitAdd{$table|escape:'html':'UTF-8'}{/capture}
+<form class="form-horizontal" action="{$link->getAdminLink('AdminOrders', true, [], [$order_action_name => 1])|escape:'html':'UTF-8'}" method="post" autocomplete="off">
 	<div class="panel" id="products_part" style="display:none;">
 		<div class="panel-heading">
 			<i class="icon-shopping-cart"></i>
@@ -1330,7 +1338,7 @@
 					</div>
 					<div class="col-lg-6">
 						<span class="form-control-static">{l s='Or' d='Admin.Global'}&nbsp;</span>
-						<a class="fancybox btn btn-default" href="{$link->getAdminLink('AdminCartRules')|escape:'html':'UTF-8'}&amp;addcart_rule&amp;liteDisplaying=1&amp;submitFormAjax=1#">
+						<a class="fancybox btn btn-default" href="{$link->getAdminLink('AdminCartRules', true, [], ['addcart_rule' => 1, 'liteDisplaying' => 1, 'submitFormAjax' => 1])|escape:'html':'UTF-8'}#">
 							<i class="icon-plus-sign-alt"></i>
 							{l s='Add new voucher' d='Admin.Orderscustomers.Feature'}
 						</a>
@@ -1392,7 +1400,7 @@
 		</div>
 		<div class="row">
 			<div class="col-lg-12">
-				<a class="fancybox btn btn-default" id="new_address" href="{$link->getAdminLink('AdminAddresses')|escape:'html':'UTF-8'}&amp;addaddress&amp;id_customer=42&amp;liteDisplaying=1&amp;submitFormAjax=1#">
+				<a class="fancybox btn btn-default" id="new_address" href="{$link->getAdminLink('AdminAddresses', true, [], ['addaddress' => 1, 'id_customer' => 42, 'liteDisplaying' => 1, 'submitFormAjax' => 1])|escape:'html':'UTF-8'}#">
 					<i class="icon-plus-sign-alt"></i>
 					{l s='Add a new address' d='Admin.Orderscustomers.Feature'}
 				</a>

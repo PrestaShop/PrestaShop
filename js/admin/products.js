@@ -1,5 +1,5 @@
 /**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -15,10 +15,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -290,6 +290,7 @@ product_tabs['Combinations'] = new function(){
 					var default_attribute = data[0]['default_on'];
 					var eco_tax = data[0]['ecotax'];
 					var upc = data[0]['upc'];
+					var mpn = data[0]['mpn'];
 					var minimal_quantity = data[0]['minimal_quantity'];
 					var low_stock_threshold = data[0]['low_stock_threshold'];
 					var low_stock_alert = data[0]['low_stock_alert'];
@@ -319,6 +320,7 @@ product_tabs['Combinations'] = new function(){
             default_attribute,
             eco_tax,
             upc,
+            mpn,
             minimal_quantity,
             available_date,
             low_stock_threshold,
@@ -436,7 +438,7 @@ product_tabs['Combinations'] = new function(){
 	};
 
 	this.fillCombination = function(wholesale_price, price_impact, weight_impact, unit_impact, reference,
-	ean, quantity, image, old_attr, id_product_attribute, default_attribute, eco_tax, upc, minimal_quantity, available_date, low_stock_threshold, low_stock_alert)
+	ean, quantity, image, old_attr, id_product_attribute, default_attribute, eco_tax, upc, mpn, minimal_quantity, available_date, low_stock_threshold, low_stock_alert)
 	{
 		var link = '';
 		self.init_elems();
@@ -454,6 +456,7 @@ product_tabs['Combinations'] = new function(){
 
 		getE('attribute_ean13').value = ean;
 		getE('attribute_upc').value = upc;
+		getE('attribute_mpn').value = mpn;
 		getE('attribute_wholesale_price').value = Math.abs(wholesale_price);
 		getE('attribute_price').value = ps_round(Math.abs(price_impact), 2);
 		getE('attribute_priceTEReal').value = Math.abs(price_impact);
@@ -1262,7 +1265,8 @@ product_tabs['Pack'] = new function() {
 				dataType: 'json',
 				data: function (term) {
 					return {
-						q: term
+						q: term,
+						token: window.token
 					};
 				},
 				results: function (data) {

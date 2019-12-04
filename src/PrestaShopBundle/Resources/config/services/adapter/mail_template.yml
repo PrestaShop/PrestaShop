@@ -1,0 +1,32 @@
+services:
+  _defaults:
+    public: true
+
+  prestashop.adapter.mail_template.twig_renderer:
+    class: 'PrestaShop\PrestaShop\Adapter\MailTemplate\MailTemplateTwigRenderer'
+    arguments:
+      - '@templating.engine.twig'
+      - '@prestashop.core.mail_template.variables_builder'
+      - '@prestashop.core.hook.dispatcher'
+    calls:
+      - method: 'addTransformation'
+        arguments:
+          - '@prestashop.core.mail_template.transformation.css_inline'
+      - method: 'addTransformation'
+        arguments:
+          - '@prestashop.core.mail_template.transformation.html_textify'
+
+  prestashop.adapter.mail_template.partial_template_renderer:
+    class: 'PrestaShop\PrestaShop\Adapter\MailTemplate\MailPartialTemplateRenderer'
+    arguments:
+      - "@=service('prestashop.adapter.legacy.context').getSmarty()"
+
+  prestashop.adapter.mail_template.preview_variables_builder:
+    class: 'PrestaShop\PrestaShop\Adapter\MailTemplate\MailPreviewVariablesBuilder'
+    arguments:
+      - '@prestashop.adapter.legacy.configuration'
+      - '@prestashop.adapter.legacy.context'
+      - '@prestashop.adapter.data_provider.employee'
+      - "@prestashop.adapter.mail_template.partial_template_renderer"
+      - "@prestashop.core.localization.locale.context_locale"
+      - "@translator"

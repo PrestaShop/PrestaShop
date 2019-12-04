@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE ldml SYSTEM "../../common/dtd/ldml.dtd">
-<!-- Copyright © 1991-2017 Unicode, Inc.
+<!-- Copyright © 1991-2019 Unicode, Inc.
 For terms of use, see http://www.unicode.org/copyright.html
 Unicode and the Unicode Logo are registered trademarks of Unicode, Inc. in the U.S. and other countries.
 CLDR data files are interpreted according to the LDML specification (http://unicode.org/reports/tr35/)
 -->
 <ldml>
 	<identity>
-		<version number="$Revision: 13133 $"/>
+		<version number="$Revision$"/>
 		<language type="lag"/>
 	</identity>
 	<localeDisplayNames>
@@ -184,7 +184,6 @@ CLDR data files are interpreted according to the LDML specification (http://unic
 			<territory type="MD">Molidóova</territory>
 			<territory type="MG">Bukíini</territory>
 			<territory type="MH">Visíiwa vya Marisháali</territory>
-			<territory type="MK">Masedónia</territory>
 			<territory type="ML">Máali</territory>
 			<territory type="MM">Miáama</territory>
 			<territory type="MN">Mongólia</territory>
@@ -711,6 +710,9 @@ CLDR data files are interpreted according to the LDML specification (http://unic
 				<displayName>Mpía ya bukini</displayName>
 			</currency>
 			<currency type="MRO">
+				<displayName>Ungwíiya ya Moritánia (1973–2017)</displayName>
+			</currency>
+			<currency type="MRU">
 				<displayName>Ungwíiya ya Moritánia</displayName>
 			</currency>
 			<currency type="MUR">
@@ -750,6 +752,9 @@ CLDR data files are interpreted according to the LDML specification (http://unic
 				<displayName>Shilíingi ya Somália</displayName>
 			</currency>
 			<currency type="STD">
+				<displayName>Dóbura ya SaoTóome na Pirínsipe (1977–2017)</displayName>
+			</currency>
+			<currency type="STN">
 				<displayName>Dóbura ya SaoTóome na Pirínsipe</displayName>
 			</currency>
 			<currency type="SZL">

@@ -1,3 +1,17 @@
+admin_common_notifications:
+    path:     /notifications
+    methods:  [POST]
+    defaults:
+        _controller: 'PrestaShopBundle\Controller\Admin\CommonController::notificationsAction'
+        _legacy_controller: AdminCommon
+        _legacy_link: AdminCommon
+
+admin_common_notifications_ack:
+    path:     /notifications/ack
+    methods:  [POST]
+    defaults:
+        _controller: 'PrestaShopBundle\Controller\Admin\CommonController::notificationsAckAction'
+
 admin_common_pagination:
     path:     /pagination/{offset}/{limit}/{total}/{view}
     methods:  [GET]
@@ -37,3 +51,12 @@ admin_common_reset_search:
     methods: [POST]
     defaults:
         _controller: 'PrestaShopBundle\Controller\Admin\CommonController::resetSearchAction'
+        filterId: ''
+
+admin_common_reset_search_by_filter_id:
+  path: /reset_search/{filterId}
+  methods: [POST]
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\CommonController::resetSearchAction'
+    controller: ''
+    action: ''

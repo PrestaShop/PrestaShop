@@ -30,34 +30,34 @@
  * DAMAGE.
  */
 
-require_once(dirname(__FILE__) . '/AbstractProcessor.php');
-require_once(dirname(__FILE__) . '/FromProcessor.php');
-require_once(dirname(__FILE__) . '/RecordProcessor.php');
-require_once(dirname(__FILE__) . '/UpdateProcessor.php');
-require_once(dirname(__FILE__) . '/DeleteProcessor.php');
-require_once(dirname(__FILE__) . '/GroupByProcessor.php');
-require_once(dirname(__FILE__) . '/RenameProcessor.php');
-require_once(dirname(__FILE__) . '/UsingProcessor.php');
-require_once(dirname(__FILE__) . '/DescribeProcessor.php');
-require_once(dirname(__FILE__) . '/DescProcessor.php');
-require_once(dirname(__FILE__) . '/HavingProcessor.php');
-require_once(dirname(__FILE__) . '/ReplaceProcessor.php');
-require_once(dirname(__FILE__) . '/ValuesProcessor.php');
-require_once(dirname(__FILE__) . '/DropProcessor.php');
-require_once(dirname(__FILE__) . '/InsertProcessor.php');
-require_once(dirname(__FILE__) . '/SelectExpressionProcessor.php');
-require_once(dirname(__FILE__) . '/WhereProcessor.php');
-require_once(dirname(__FILE__) . '/DuplicateProcessor.php');
-require_once(dirname(__FILE__) . '/IntoProcessor.php');
-require_once(dirname(__FILE__) . '/SelectProcessor.php');
-require_once(dirname(__FILE__) . '/ExplainProcessor.php');
-require_once(dirname(__FILE__) . '/LimitProcessor.php');
-require_once(dirname(__FILE__) . '/SetProcessor.php');
-require_once(dirname(__FILE__) . '/ExpressionListProcessor.php');
-require_once(dirname(__FILE__) . '/OrderByProcessor.php');
-require_once(dirname(__FILE__) . '/ShowProcessor.php');
-require_once(dirname(__FILE__) . '/CreateProcessor.php');
-require_once(dirname(__FILE__) . '/TableProcessor.php');
+require_once dirname(__FILE__) . '/AbstractProcessor.php';
+require_once dirname(__FILE__) . '/FromProcessor.php';
+require_once dirname(__FILE__) . '/RecordProcessor.php';
+require_once dirname(__FILE__) . '/UpdateProcessor.php';
+require_once dirname(__FILE__) . '/DeleteProcessor.php';
+require_once dirname(__FILE__) . '/GroupByProcessor.php';
+require_once dirname(__FILE__) . '/RenameProcessor.php';
+require_once dirname(__FILE__) . '/UsingProcessor.php';
+require_once dirname(__FILE__) . '/DescribeProcessor.php';
+require_once dirname(__FILE__) . '/DescProcessor.php';
+require_once dirname(__FILE__) . '/HavingProcessor.php';
+require_once dirname(__FILE__) . '/ReplaceProcessor.php';
+require_once dirname(__FILE__) . '/ValuesProcessor.php';
+require_once dirname(__FILE__) . '/DropProcessor.php';
+require_once dirname(__FILE__) . '/InsertProcessor.php';
+require_once dirname(__FILE__) . '/SelectExpressionProcessor.php';
+require_once dirname(__FILE__) . '/WhereProcessor.php';
+require_once dirname(__FILE__) . '/DuplicateProcessor.php';
+require_once dirname(__FILE__) . '/IntoProcessor.php';
+require_once dirname(__FILE__) . '/SelectProcessor.php';
+require_once dirname(__FILE__) . '/ExplainProcessor.php';
+require_once dirname(__FILE__) . '/LimitProcessor.php';
+require_once dirname(__FILE__) . '/SetProcessor.php';
+require_once dirname(__FILE__) . '/ExpressionListProcessor.php';
+require_once dirname(__FILE__) . '/OrderByProcessor.php';
+require_once dirname(__FILE__) . '/ShowProcessor.php';
+require_once dirname(__FILE__) . '/CreateProcessor.php';
+require_once dirname(__FILE__) . '/TableProcessor.php';
 
 /**
  * 
@@ -67,7 +67,6 @@ require_once(dirname(__FILE__) . '/TableProcessor.php');
  * 
  */
 class SQLChunkProcessor extends AbstractProcessor {
-
     protected function moveLIKE(&$out) {
         if (!isset($out['TABLE']['like'])) {
             return;
@@ -180,7 +179,7 @@ class SQLChunkProcessor extends AbstractProcessor {
             $processor = new ShowProcessor();
             $out['SHOW'] = $processor->process($out['SHOW']);
         }
+
         return $out;
     }
 }
-?>

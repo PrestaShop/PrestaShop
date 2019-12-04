@@ -58,9 +58,6 @@ ul.category-tree {
       padding-left: 20px;
       padding-top: 0;
     }
-    > ul {
-      display: none;
-    }
   }
 }
 
@@ -92,6 +89,13 @@ ul.category-tree {
       }
       color: $gray-medium;
     }
+  }
+
+  label.form-control-label {
+    color: $gray-medium;
+    width: 100%;
+    padding-left: 15px;
+    padding-right: 15px;
   }
 
   #choice_tree {

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE ldml SYSTEM "../../common/dtd/ldml.dtd">
-<!-- Copyright © 1991-2017 Unicode, Inc.
+<!-- Copyright © 1991-2019 Unicode, Inc.
 For terms of use, see http://www.unicode.org/copyright.html
 Unicode and the Unicode Logo are registered trademarks of Unicode, Inc. in the U.S. and other countries.
 CLDR data files are interpreted according to the LDML specification (http://unicode.org/reports/tr35/)
@@ -9,7 +9,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 -->
 <ldml>
 	<identity>
-		<version number="$Revision: 13705 $"/>
+		<version number="$Revision$"/>
 		<language type="sk"/>
 	</identity>
 	<localeDisplayNames>
@@ -43,6 +43,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<language type="arc">aramejčina</language>
 			<language type="arn">mapudungun</language>
 			<language type="arp">arapažština</language>
+			<language type="ars">arabčina (nadždská)</language>
 			<language type="arw">arawačtina</language>
 			<language type="as">ásamčina</language>
 			<language type="asa">asu</language>
@@ -89,6 +90,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<language type="car">karibčina</language>
 			<language type="cay">kajugčina</language>
 			<language type="cch">atsam</language>
+			<language type="ccp">čakma</language>
 			<language type="ce">čečenčina</language>
 			<language type="ceb">cebuánčina</language>
 			<language type="cgg">kiga</language>
@@ -349,7 +351,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<language type="nap">neapolčina</language>
 			<language type="naq">nama</language>
 			<language type="nb">nórčina (bokmal)</language>
-			<language type="nd">severná ndebelčina</language>
+			<language type="nd">ndebelčina (severná)</language>
 			<language type="nds">dolná nemčina</language>
 			<language type="nds_NL">dolná saština</language>
 			<language type="ne">nepálčina</language>
@@ -366,8 +368,8 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<language type="nog">nogajčina</language>
 			<language type="non">stará nórčina</language>
 			<language type="nqo">n’ko</language>
-			<language type="nr">južná ndebelčina</language>
-			<language type="nso">severná sothčina</language>
+			<language type="nr">ndebelčina (južná)</language>
+			<language type="nso">sothčina (severná)</language>
 			<language type="nus">nuer</language>
 			<language type="nv">navaho</language>
 			<language type="nwc">klasická nevárčina</language>
@@ -431,7 +433,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<language type="sco">škótčina</language>
 			<language type="sd">sindhčina</language>
 			<language type="sdh">južná kurdčina</language>
-			<language type="se">severná saamčina</language>
+			<language type="se">saamčina (severná)</language>
 			<language type="see">senekčina</language>
 			<language type="seh">sena</language>
 			<language type="sel">selkupčina</language>
@@ -447,10 +449,10 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<language type="sk">slovenčina</language>
 			<language type="sl">slovinčina</language>
 			<language type="sm">samojčina</language>
-			<language type="sma">južná saamčina</language>
-			<language type="smj">lulská saamčina</language>
-			<language type="smn">inarijská saamčina</language>
-			<language type="sms">skoltská saamčina</language>
+			<language type="sma">saamčina (južná)</language>
+			<language type="smj">saamčina (lulská)</language>
+			<language type="smn">saamčina (inarijská)</language>
+			<language type="sms">saamčina (skoltská)</language>
 			<language type="sn">šončina</language>
 			<language type="snk">soninke</language>
 			<language type="so">somálčina</language>
@@ -461,7 +463,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<language type="srr">sererčina</language>
 			<language type="ss">svazijčina</language>
 			<language type="ssy">saho</language>
-			<language type="st">južná sothčina</language>
+			<language type="st">sothčina (južná)</language>
 			<language type="su">sundčina</language>
 			<language type="suk">sukuma</language>
 			<language type="sus">susu</language>
@@ -504,7 +506,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<language type="twq">tasawaq</language>
 			<language type="ty">tahitčina</language>
 			<language type="tyv">tuviančina</language>
-			<language type="tzm">stredomarocká tuaregčina</language>
+			<language type="tzm">tuaregčina (stredomarocká)</language>
 			<language type="udm">udmurtčina</language>
 			<language type="ug">ujgurčina</language>
 			<language type="uga">ugaritčina</language>
@@ -536,14 +538,18 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<language type="yi">jidiš</language>
 			<language type="yo">jorubčina</language>
 			<language type="yue">kantončina</language>
+			<language type="yue" alt="menu">čínština (kantonská)</language>
 			<language type="za">čuangčina</language>
 			<language type="zap">zapotéčtina</language>
 			<language type="zbl">systém Bliss</language>
 			<language type="zen">zenaga</language>
-			<language type="zgh">tuaregčina (štandardná marocká)</language>
+			<language type="zgh">tuaregčina (marocká štandardná)</language>
 			<language type="zh">čínština</language>
+			<language type="zh" alt="menu">čínština (mandarínska)</language>
 			<language type="zh_Hans">čínština (zjednodušená)</language>
+			<language type="zh_Hans" alt="long">čínština (mandarínska zjednodušená)</language>
 			<language type="zh_Hant">čínština (tradičná)</language>
+			<language type="zh_Hant" alt="long">čínština (mandarínska tradičná)</language>
 			<language type="zu">zuluština</language>
 			<language type="zun">zuniština</language>
 			<language type="zxx">bez jazykového obsahu</language>
@@ -637,6 +643,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<territory type="151">východná Európa</territory>
 			<territory type="154">severná Európa</territory>
 			<territory type="155">západná Európa</territory>
+			<territory type="202">subsaharská Afrika</territory>
 			<territory type="419">Latinská Amerika</territory>
 			<territory type="AC">Ascension</territory>
 			<territory type="AD">Andorra</territory>
@@ -679,8 +686,10 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<territory type="CA">Kanada</territory>
 			<territory type="CC">Kokosové ostrovy</territory>
 			<territory type="CD">Konžská demokratická republika</territory>
+			<territory type="CD" alt="variant">Kongo (DRK)</territory>
 			<territory type="CF">Stredoafrická republika</territory>
 			<territory type="CG">Konžská republika</territory>
+			<territory type="CG" alt="variant">Kongo (republika)</territory>
 			<territory type="CH">Švajčiarsko</territory>
 			<territory type="CI">Pobrežie Slonoviny</territory>
 			<territory type="CK">Cookove ostrovy</territory>
@@ -792,8 +801,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<territory type="MF">Svätý Martin (fr.)</territory>
 			<territory type="MG">Madagaskar</territory>
 			<territory type="MH">Marshallove ostrovy</territory>
-			<territory type="MK">Macedónsko</territory>
-			<territory type="MK" alt="variant">Macedónsko (BJRM)</territory>
+			<territory type="MK">Severné Macedónsko</territory>
 			<territory type="ML">Mali</territory>
 			<territory type="MM">Mjanmarsko</territory>
 			<territory type="MN">Mongolsko</territory>
@@ -865,7 +873,8 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<territory type="SV">Salvádor</territory>
 			<territory type="SX">Svätý Martin (hol.)</territory>
 			<territory type="SY">Sýria</territory>
-			<territory type="SZ">Svazijsko</territory>
+			<territory type="SZ">Eswatini</territory>
+			<territory type="SZ" alt="variant">Svazijsko</territory>
 			<territory type="TA">Tristan da Cunha</territory>
 			<territory type="TC">Turks a Caicos</territory>
 			<territory type="TD">Čad</territory>
@@ -901,6 +910,8 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<territory type="VU">Vanuatu</territory>
 			<territory type="WF">Wallis a Futuna</territory>
 			<territory type="WS">Samoa</territory>
+			<territory type="XA">falošná diakritika</territory>
+			<territory type="XB">obrátenie sprava doľava</territory>
 			<territory type="XK">Kosovo</territory>
 			<territory type="YE">Jemen</territory>
 			<territory type="YT">Mayotte</territory>
@@ -917,22 +928,22 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 		<keys>
 			<key type="calendar">kalendár</key>
 			<key type="cf">formát meny</key>
-			<key type="colAlternate" draft="contributed">Ignorovať radenie symbolov</key>
-			<key type="colBackwards" draft="contributed">Obrátené radenie akcentov</key>
-			<key type="colCaseFirst" draft="contributed">Radenie veľkých a malých písmen</key>
-			<key type="colCaseLevel" draft="contributed">Rozlišovanie veľkých a malých písmen pri radení</key>
+			<key type="colAlternate">ignorovať radenie symbolov</key>
+			<key type="colBackwards">obrátené radenie diakritiky</key>
+			<key type="colCaseFirst">radenie veľkých a malých písmen</key>
+			<key type="colCaseLevel">rozlišovanie veľkých a malých písmen pri radení</key>
 			<key type="collation">zoradenie</key>
-			<key type="colNormalization" draft="contributed">Normalizované radenie</key>
-			<key type="colNumeric" draft="contributed">Číselné radenie</key>
-			<key type="colStrength" draft="contributed">Sila radenia</key>
+			<key type="colNormalization">normálne radenie</key>
+			<key type="colNumeric">číselné radenie</key>
+			<key type="colStrength">sila radenia</key>
 			<key type="currency">mena</key>
 			<key type="hc">hodinový cyklus (12 vs 24)</key>
 			<key type="lb">štýl koncov riadka</key>
 			<key type="ms">merná sústava</key>
 			<key type="numbers">čísla</key>
-			<key type="timezone" draft="contributed">Časové pásmo</key>
-			<key type="va" draft="contributed">Variant miestneho nastavenia</key>
-			<key type="x" draft="contributed">Súkromné použitie</key>
+			<key type="timezone">časové pásmo</key>
+			<key type="va">variant miestneho nastavenia</key>
+			<key type="x">súkromné použitie</key>
 		</keys>
 		<types>
 			<type key="calendar" type="buddhist">buddhistický kalendár</type>
@@ -1073,11 +1084,11 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 		</contextTransformUsage>
 	</contextTransforms>
 	<characters>
-		<exemplarCharacters>[a á ä b c č d ď e é f g h {ch} i í j k l ĺ ľ m n ň o ó ô p q r ŕ s š t ť u ú v w x y ý z ž]</exemplarCharacters>
-		<exemplarCharacters type="auxiliary" draft="contributed">[à ă â å ā æ ç è ĕ ê ë ē ì ĭ î ï ī ñ ò ŏ ö ø ō œ ř ù ŭ û ü ū ÿ]</exemplarCharacters>
+		<exemplarCharacters>[a á ä b c č d ď {dz} {dž} e é f g h {ch} i í j k l ĺ ľ m n ň o ó ô p q r ŕ s š t ť u ú v w x y ý z ž]</exemplarCharacters>
+		<exemplarCharacters type="auxiliary">[à ă â å ā æ ç è ĕ ê ë ē ì ĭ î ï ī ñ ò ŏ ö ő ø ō œ ř ù ŭ û ü ű ū ÿ]</exemplarCharacters>
 		<exemplarCharacters type="index" draft="contributed">[A Ä B C Č D Ď E F G H {CH} I J K L Ľ M N O Ô P Q R S Š T Ť U V W X Y Z Ž]</exemplarCharacters>
-		<exemplarCharacters type="numbers">[  \- , % ‰ + 0 1 2 3 4 5 6 7 8 9]</exemplarCharacters>
-		<exemplarCharacters type="punctuation">[\- ‐ – , ; \: ! ? . … ‘ ‚ “ „ ( ) \[ \] § @ * / \&amp;]</exemplarCharacters>
+		<exemplarCharacters type="numbers">[  \- ‑ , % ‰ + 0 1 2 3 4 5 6 7 8 9]</exemplarCharacters>
+		<exemplarCharacters type="punctuation">[\- ‐ ‑ – , ; \: ! ? . … ‘ ‚ “ „ ( ) \[ \] § @ * / \&amp;]</exemplarCharacters>
 		<ellipsis type="final">{0}…</ellipsis>
 		<ellipsis type="initial">…{0}</ellipsis>
 		<ellipsis type="medial">{0}…{1}</ellipsis>
@@ -1085,6 +1096,25 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 		<ellipsis type="word-initial">… {0}</ellipsis>
 		<ellipsis type="word-medial">{0} … {1}</ellipsis>
 		<moreInformation>?</moreInformation>
+		<parseLenients scope="date" level="lenient">
+			<parseLenient sample="-" draft="contributed">[\--/]</parseLenient>
+			<parseLenient sample=":" draft="contributed">[\:∶]</parseLenient>
+		</parseLenients>
+		<parseLenients scope="general" level="lenient">
+			<parseLenient sample="." draft="contributed">[.․。︒﹒．｡]</parseLenient>
+			<parseLenient sample="$" draft="contributed">[\$﹩＄$]</parseLenient>
+			<parseLenient sample="£" draft="contributed">[£₤]</parseLenient>
+			<parseLenient sample="₹" draft="contributed">[₨₹{Rp}{Rs}]</parseLenient>
+		</parseLenients>
+		<parseLenients scope="number" level="lenient">
+			<parseLenient sample="-" draft="contributed">[\-‒⁻₋−➖﹣－]</parseLenient>
+			<parseLenient sample="," draft="contributed">[,،٫、︐︑﹐﹑，､]</parseLenient>
+			<parseLenient sample="+" draft="contributed">[+⁺₊➕﬩﹢＋]</parseLenient>
+		</parseLenients>
+		<parseLenients scope="number" level="stricter">
+			<parseLenient sample="," draft="contributed">[,٫︐﹐，]</parseLenient>
+			<parseLenient sample="." draft="contributed">[.․﹒．｡]</parseLenient>
+		</parseLenients>
 	</characters>
 	<delimiters>
 		<quotationStart>„</quotationStart>
@@ -1364,8 +1394,53 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 					</availableFormats>
 					<intervalFormats>
 						<intervalFormatFallback>{0} – {1}</intervalFormatFallback>
+						<intervalFormatItem id="Bh">
+							<greatestDifference id="h">h – h B</greatestDifference>
+						</intervalFormatItem>
+						<intervalFormatItem id="Bhm">
+							<greatestDifference id="h">h:mm – h:mm B</greatestDifference>
+							<greatestDifference id="m">h:mm – h:mm B</greatestDifference>
+						</intervalFormatItem>
 						<intervalFormatItem id="d">
 							<greatestDifference id="d">d. – d.</greatestDifference>
+						</intervalFormatItem>
+						<intervalFormatItem id="Gy">
+							<greatestDifference id="G">y G – y G</greatestDifference>
+							<greatestDifference id="y">y – y G</greatestDifference>
+						</intervalFormatItem>
+						<intervalFormatItem id="GyM">
+							<greatestDifference id="G">M/y GGGGG – M/y GGGGG</greatestDifference>
+							<greatestDifference id="M">M/y – M/y GGGGG</greatestDifference>
+							<greatestDifference id="y">M/y – M/y GGGGG</greatestDifference>
+						</intervalFormatItem>
+						<intervalFormatItem id="GyMd">
+							<greatestDifference id="d">d. M. y – d. M. y GGGGG</greatestDifference>
+							<greatestDifference id="G">d. M. y GGGGG – d. M. y GGGGG</greatestDifference>
+							<greatestDifference id="M">d. M. y – d. M. y GGGGG</greatestDifference>
+							<greatestDifference id="y">d. M. y – d. M. y GGGGG</greatestDifference>
+						</intervalFormatItem>
+						<intervalFormatItem id="GyMEd">
+							<greatestDifference id="d">E d. M. y – E d. M. y GGGGG</greatestDifference>
+							<greatestDifference id="G">E d. M. y GGGGG – E d. M. y GGGGG</greatestDifference>
+							<greatestDifference id="M">E d. M. y – E d. M. y GGGGG</greatestDifference>
+							<greatestDifference id="y">E d. M. y – E d. M. y GGGGG</greatestDifference>
+						</intervalFormatItem>
+						<intervalFormatItem id="GyMMM">
+							<greatestDifference id="G">LLL y G – LLL y G</greatestDifference>
+							<greatestDifference id="M">LLL – LLL y G</greatestDifference>
+							<greatestDifference id="y">LLL y – LLL y G</greatestDifference>
+						</intervalFormatItem>
+						<intervalFormatItem id="GyMMMd">
+							<greatestDifference id="d">d. – d. M. y G</greatestDifference>
+							<greatestDifference id="G">d. M. y G – d. M. y G</greatestDifference>
+							<greatestDifference id="M">d. M. – d. M. y G</greatestDifference>
+							<greatestDifference id="y">d. M. y – d. M. y G</greatestDifference>
+						</intervalFormatItem>
+						<intervalFormatItem id="GyMMMEd">
+							<greatestDifference id="d">E d. M. – E d. M. y G</greatestDifference>
+							<greatestDifference id="G">E d. M. y G – E d. M. y G</greatestDifference>
+							<greatestDifference id="M">E d. M. – E d. M. y G</greatestDifference>
+							<greatestDifference id="y">E d. M. y – E d. M. y G</greatestDifference>
 						</intervalFormatItem>
 						<intervalFormatItem id="h">
 							<greatestDifference id="a">h a – h a</greatestDifference>
@@ -1677,9 +1752,9 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 					<dayPeriodContext type="format">
 						<dayPeriodWidth type="abbreviated">
 							<dayPeriod type="midnight">o poln.</dayPeriod>
-							<dayPeriod type="am">AM</dayPeriod>
+							<dayPeriod type="am" draft="contributed">AM</dayPeriod>
 							<dayPeriod type="noon">napol.</dayPeriod>
-							<dayPeriod type="pm">PM</dayPeriod>
+							<dayPeriod type="pm" draft="contributed">PM</dayPeriod>
 							<dayPeriod type="morning1">ráno</dayPeriod>
 							<dayPeriod type="morning2">dopol.</dayPeriod>
 							<dayPeriod type="afternoon1">popol.</dayPeriod>
@@ -1688,9 +1763,9 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 						</dayPeriodWidth>
 						<dayPeriodWidth type="narrow">
 							<dayPeriod type="midnight">o poln.</dayPeriod>
-							<dayPeriod type="am">AM</dayPeriod>
+							<dayPeriod type="am" draft="contributed">AM</dayPeriod>
 							<dayPeriod type="noon">nap.</dayPeriod>
-							<dayPeriod type="pm">PM</dayPeriod>
+							<dayPeriod type="pm" draft="contributed">PM</dayPeriod>
 							<dayPeriod type="morning1">ráno</dayPeriod>
 							<dayPeriod type="morning2">dop.</dayPeriod>
 							<dayPeriod type="afternoon1">pop.</dayPeriod>
@@ -1699,9 +1774,9 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 						</dayPeriodWidth>
 						<dayPeriodWidth type="wide">
 							<dayPeriod type="midnight">o polnoci</dayPeriod>
-							<dayPeriod type="am">AM</dayPeriod>
+							<dayPeriod type="am" draft="contributed">AM</dayPeriod>
 							<dayPeriod type="noon">napoludnie</dayPeriod>
-							<dayPeriod type="pm">PM</dayPeriod>
+							<dayPeriod type="pm" draft="contributed">PM</dayPeriod>
 							<dayPeriod type="morning1">ráno</dayPeriod>
 							<dayPeriod type="morning2">dopoludnia</dayPeriod>
 							<dayPeriod type="afternoon1">popoludní</dayPeriod>
@@ -1860,10 +1935,10 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 						<dateFormatItem id="MMMEd">E d. M.</dateFormatItem>
 						<dateFormatItem id="MMMMd">d. MMMM</dateFormatItem>
 						<dateFormatItem id="MMMMEd">E d. MMMM</dateFormatItem>
-						<dateFormatItem id="MMMMW" count="one">W. 'týždeň' 'v' MMM</dateFormatItem>
-						<dateFormatItem id="MMMMW" count="few">W. 'týždeň' 'v' MMM</dateFormatItem>
-						<dateFormatItem id="MMMMW" count="many">W. 'týždeň' 'v' MMM</dateFormatItem>
-						<dateFormatItem id="MMMMW" count="other">W. 'týždeň' 'v' MMM</dateFormatItem>
+						<dateFormatItem id="MMMMW" count="one">W. 'týždeň' MMMM</dateFormatItem>
+						<dateFormatItem id="MMMMW" count="few">W. 'týždeň' MMMM</dateFormatItem>
+						<dateFormatItem id="MMMMW" count="many">W. 'týždeň' MMMM</dateFormatItem>
+						<dateFormatItem id="MMMMW" count="other">W. 'týždeň' MMMM</dateFormatItem>
 						<dateFormatItem id="mmss">mm:ss</dateFormatItem>
 						<dateFormatItem id="ms">mm:ss</dateFormatItem>
 						<dateFormatItem id="y">y</dateFormatItem>
@@ -1877,18 +1952,63 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 						<dateFormatItem id="yMMMMd">d. MMMM y</dateFormatItem>
 						<dateFormatItem id="yQQQ">QQQ y</dateFormatItem>
 						<dateFormatItem id="yQQQQ">QQQQ y</dateFormatItem>
-						<dateFormatItem id="yw" count="one">w. 'týždeň' 'v' 'roku' Y</dateFormatItem>
-						<dateFormatItem id="yw" count="few">w. 'týždeň' 'v' 'roku' Y</dateFormatItem>
-						<dateFormatItem id="yw" count="many">w. 'týždeň' 'v' 'roku' Y</dateFormatItem>
-						<dateFormatItem id="yw" count="other">w. 'týždeň' 'v' 'roku' Y</dateFormatItem>
+						<dateFormatItem id="yw" count="one">w. 'týždeň' 'roka' Y</dateFormatItem>
+						<dateFormatItem id="yw" count="few">w. 'týždeň' 'roka' Y</dateFormatItem>
+						<dateFormatItem id="yw" count="many">w. 'týždeň' 'roka' Y</dateFormatItem>
+						<dateFormatItem id="yw" count="other">w. 'týždeň' 'roka' Y</dateFormatItem>
 					</availableFormats>
 					<appendItems>
 						<appendItem request="Timezone">{0} {1}</appendItem>
 					</appendItems>
 					<intervalFormats>
 						<intervalFormatFallback>{0} – {1}</intervalFormatFallback>
+						<intervalFormatItem id="Bh">
+							<greatestDifference id="h">h – h B</greatestDifference>
+						</intervalFormatItem>
+						<intervalFormatItem id="Bhm">
+							<greatestDifference id="h">h:mm – h:mm B</greatestDifference>
+							<greatestDifference id="m">h:mm – h:mm B</greatestDifference>
+						</intervalFormatItem>
 						<intervalFormatItem id="d">
 							<greatestDifference id="d">d. – d.</greatestDifference>
+						</intervalFormatItem>
+						<intervalFormatItem id="Gy">
+							<greatestDifference id="G">y G – y G</greatestDifference>
+							<greatestDifference id="y">y – y G</greatestDifference>
+						</intervalFormatItem>
+						<intervalFormatItem id="GyM">
+							<greatestDifference id="G">M/y GGGGG – M/y GGGGG</greatestDifference>
+							<greatestDifference id="M">M/y – M/y GGGGG</greatestDifference>
+							<greatestDifference id="y">M/y – M/y GGGGG</greatestDifference>
+						</intervalFormatItem>
+						<intervalFormatItem id="GyMd">
+							<greatestDifference id="d">d. M. y – d. M. y GGGGG</greatestDifference>
+							<greatestDifference id="G">d. M. y GGGGG – d. M. y GGGGG</greatestDifference>
+							<greatestDifference id="M">d. M. y – d. M. y GGGGG</greatestDifference>
+							<greatestDifference id="y">d. M. y – d. M. y GGGGG</greatestDifference>
+						</intervalFormatItem>
+						<intervalFormatItem id="GyMEd">
+							<greatestDifference id="d">E d. M. y – E d. M. y GGGGG</greatestDifference>
+							<greatestDifference id="G">E d. M. y GGGGG – E d. M. y GGGGG</greatestDifference>
+							<greatestDifference id="M">E d. M. y – E d. M. y GGGGG</greatestDifference>
+							<greatestDifference id="y">E d. M. y – E d. M. y GGGGG</greatestDifference>
+						</intervalFormatItem>
+						<intervalFormatItem id="GyMMM">
+							<greatestDifference id="G">LLLL y G – LLLL y G</greatestDifference>
+							<greatestDifference id="M">LLLL – LLLL y G</greatestDifference>
+							<greatestDifference id="y">LLLL y – LLLL y G</greatestDifference>
+						</intervalFormatItem>
+						<intervalFormatItem id="GyMMMd">
+							<greatestDifference id="d">d. – d. M. y G</greatestDifference>
+							<greatestDifference id="G">d. M. y G – d. M. y G</greatestDifference>
+							<greatestDifference id="M">d. M. – d. M. y G</greatestDifference>
+							<greatestDifference id="y">d. M. y – d. M. y G</greatestDifference>
+						</intervalFormatItem>
+						<intervalFormatItem id="GyMMMEd">
+							<greatestDifference id="d">E d. M. – E d. M. y G</greatestDifference>
+							<greatestDifference id="G">E d. M. y G – E d. M. y G</greatestDifference>
+							<greatestDifference id="M">E d. M. – E d. M. y G</greatestDifference>
+							<greatestDifference id="y">E d. M. y – E d. M. y G</greatestDifference>
 						</intervalFormatItem>
 						<intervalFormatItem id="h">
 							<greatestDifference id="a">h a – h a</greatestDifference>
@@ -2340,9 +2460,9 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			</field>
 			<field type="year-short">
 				<displayName>r.</displayName>
-				<relative type="-1" draft="contributed">minulý rok</relative>
-				<relative type="0" draft="contributed">tento rok</relative>
-				<relative type="1" draft="contributed">budúci rok</relative>
+				<relative type="-1">minulý rok</relative>
+				<relative type="0">tento rok</relative>
+				<relative type="1">budúci rok</relative>
 				<relativeTime type="future">
 					<relativeTimePattern count="one">o {0} r.</relativeTimePattern>
 					<relativeTimePattern count="few">o {0} r.</relativeTimePattern>
@@ -2358,9 +2478,9 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			</field>
 			<field type="year-narrow">
 				<displayName>r.</displayName>
-				<relative type="-1" draft="contributed">minulý rok</relative>
-				<relative type="0" draft="contributed">tento rok</relative>
-				<relative type="1" draft="contributed">budúci rok</relative>
+				<relative type="-1">minulý rok</relative>
+				<relative type="0">tento rok</relative>
+				<relative type="1">budúci rok</relative>
 				<relativeTime type="future">
 					<relativeTimePattern count="one">o {0} r.</relativeTimePattern>
 					<relativeTimePattern count="few">o {0} r.</relativeTimePattern>
@@ -2448,9 +2568,9 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			</field>
 			<field type="month-short">
 				<displayName>mes.</displayName>
-				<relative type="-1" draft="contributed">minulý mes.</relative>
-				<relative type="0" draft="contributed">tento mes.</relative>
-				<relative type="1" draft="contributed">budúci mes.</relative>
+				<relative type="-1">minulý mes.</relative>
+				<relative type="0">tento mes.</relative>
+				<relative type="1">budúci mes.</relative>
 				<relativeTime type="future">
 					<relativeTimePattern count="one">o {0} mes.</relativeTimePattern>
 					<relativeTimePattern count="few">o {0} mes.</relativeTimePattern>
@@ -2500,9 +2620,9 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			</field>
 			<field type="week-short">
 				<displayName>týž.</displayName>
-				<relative type="-1" draft="contributed">minulý týž.</relative>
-				<relative type="0" draft="contributed">tento týž.</relative>
-				<relative type="1" draft="contributed">budúci týž.</relative>
+				<relative type="-1">minulý týž.</relative>
+				<relative type="0">tento týž.</relative>
+				<relative type="1">budúci týž.</relative>
 				<relativeTime type="future">
 					<relativeTimePattern count="one">o {0} týž.</relativeTimePattern>
 					<relativeTimePattern count="few">o {0} týž.</relativeTimePattern>
@@ -2564,6 +2684,11 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			</field>
 			<field type="day-short">
 				<displayName>d.</displayName>
+				<relative type="-2" draft="contributed">predvčerom</relative>
+				<relative type="-1">včera</relative>
+				<relative type="0">dnes</relative>
+				<relative type="1">zajtra</relative>
+				<relative type="2" draft="contributed">pozajtra</relative>
 				<relativeTime type="future">
 					<relativeTimePattern count="one">o {0} d.</relativeTimePattern>
 					<relativeTimePattern count="few">o {0} d.</relativeTimePattern>
@@ -2579,6 +2704,11 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			</field>
 			<field type="day-narrow">
 				<displayName>d.</displayName>
+				<relative type="-2" draft="contributed">predvčerom</relative>
+				<relative type="-1">včera</relative>
+				<relative type="0">dnes</relative>
+				<relative type="1">zajtra</relative>
+				<relative type="2" draft="contributed">pozajtra</relative>
 				<relativeTime type="future">
 					<relativeTimePattern count="one">o {0} d.</relativeTimePattern>
 					<relativeTimePattern count="few">o {0} d.</relativeTimePattern>
@@ -3825,6 +3955,9 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			</zone>
 			<zone type="Asia/Aqtobe">
 				<exemplarCity>Aktobe</exemplarCity>
+			</zone>
+			<zone type="Asia/Qostanay">
+				<exemplarCity>Kostanaj</exemplarCity>
 			</zone>
 			<zone type="Asia/Qyzylorda">
 				<exemplarCity>Kyzylorda</exemplarCity>
@@ -5421,8 +5554,8 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<group> </group>
 			<list>;</list>
 			<percentSign>%</percentSign>
-			<plusSign>+</plusSign>
-			<minusSign>-</minusSign>
+			<plusSign draft="contributed">+</plusSign>
+			<minusSign draft="contributed">-</minusSign>
 			<exponential>e</exponential>
 			<superscriptingExponent>×</superscriptingExponent>
 			<perMille>‰</perMille>
@@ -5433,7 +5566,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 		<decimalFormats numberSystem="latn">
 			<decimalFormatLength>
 				<decimalFormat>
-					<pattern>#,##0.###</pattern>
+					<pattern draft="contributed">#,##0.###</pattern>
 				</decimalFormat>
 			</decimalFormatLength>
 			<decimalFormatLength type="long">
@@ -5636,7 +5769,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">SAE dirhamy</displayName>
 				<displayName count="many">SAE dirhamu</displayName>
 				<displayName count="other">SAE dirhamov</displayName>
-				<symbol>AED</symbol>
+				<symbol draft="contributed">AED</symbol>
 			</currency>
 			<currency type="AFA">
 				<displayName draft="contributed">afganský afgání (1927 – 2002)</displayName>
@@ -5652,7 +5785,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">afganské afgání</displayName>
 				<displayName count="many">afganského afgání</displayName>
 				<displayName count="other">afganských afgání</displayName>
-				<symbol>AFN</symbol>
+				<symbol draft="contributed">AFN</symbol>
 			</currency>
 			<currency type="ALK">
 				<displayName draft="contributed">albánsky lek (1946 – 1965)</displayName>
@@ -5668,7 +5801,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">albánske leky</displayName>
 				<displayName count="many">albánskeho leku</displayName>
 				<displayName count="other">albánskych lekov</displayName>
-				<symbol>ALL</symbol>
+				<symbol draft="contributed">ALL</symbol>
 			</currency>
 			<currency type="AMD">
 				<displayName>arménsky dram</displayName>
@@ -5676,7 +5809,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">arménske dramy</displayName>
 				<displayName count="many">arménskeho dramu</displayName>
 				<displayName count="other">arménskych dramov</displayName>
-				<symbol>AMD</symbol>
+				<symbol draft="contributed">AMD</symbol>
 			</currency>
 			<currency type="ANG">
 				<displayName>antilský gulden</displayName>
@@ -5684,7 +5817,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">antilské guldeny</displayName>
 				<displayName count="many">antilského guldena</displayName>
 				<displayName count="other">antilských guldenov</displayName>
-				<symbol>ANG</symbol>
+				<symbol draft="contributed">ANG</symbol>
 			</currency>
 			<currency type="AOA">
 				<displayName>angolská kwanza</displayName>
@@ -5692,7 +5825,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">angolské kwanzy</displayName>
 				<displayName count="many">angolskej kwanzy</displayName>
 				<displayName count="other">angolských kwánz</displayName>
-				<symbol>AOA</symbol>
+				<symbol draft="contributed">AOA</symbol>
 				<symbol alt="narrow" draft="contributed">Kz</symbol>
 			</currency>
 			<currency type="AOK">
@@ -5757,7 +5890,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">argentínske pesos</displayName>
 				<displayName count="many">argentínskeho pesa</displayName>
 				<displayName count="other">argentínskych pesos</displayName>
-				<symbol>ARS</symbol>
+				<symbol draft="contributed">ARS</symbol>
 				<symbol alt="narrow" draft="contributed">$</symbol>
 			</currency>
 			<currency type="ATS">
@@ -5783,7 +5916,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">arubské guldeny</displayName>
 				<displayName count="many">arubského guldena</displayName>
 				<displayName count="other">arubských guldenov</displayName>
-				<symbol>AWG</symbol>
+				<symbol draft="contributed">AWG</symbol>
 			</currency>
 			<currency type="AZM">
 				<displayName>azerbajdžanský manat (1993–2006)</displayName>
@@ -5799,7 +5932,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">azerbajdžanské manaty</displayName>
 				<displayName count="many">azerbajdžanského manatu</displayName>
 				<displayName count="other">azerbajdžanských manatov</displayName>
-				<symbol>AZN</symbol>
+				<symbol draft="contributed">AZN</symbol>
 			</currency>
 			<currency type="BAD">
 				<displayName>bosniansko-hercegovinský dinár (1992 – 1994)</displayName>
@@ -5815,7 +5948,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">bosniansko-hercegovinské konvertibilné marky</displayName>
 				<displayName count="many">bosniansko-hercegovinskej konvertibilnej marky</displayName>
 				<displayName count="other">bosniansko-hercegovinských konvertibilných mariek</displayName>
-				<symbol>BAM</symbol>
+				<symbol draft="contributed">BAM</symbol>
 				<symbol alt="narrow" draft="contributed">KM</symbol>
 			</currency>
 			<currency type="BAN">
@@ -5832,7 +5965,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">barbadoské doláre</displayName>
 				<displayName count="many">barbadoského dolára</displayName>
 				<displayName count="other">barbadoských dolárov</displayName>
-				<symbol>BBD</symbol>
+				<symbol draft="contributed">BBD</symbol>
 				<symbol alt="narrow" draft="contributed">$</symbol>
 			</currency>
 			<currency type="BDT">
@@ -5841,7 +5974,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">bangladéšske taky</displayName>
 				<displayName count="many">bangladéšskej taky</displayName>
 				<displayName count="other">bangladéšskych ták</displayName>
-				<symbol>BDT</symbol>
+				<symbol draft="contributed">BDT</symbol>
 				<symbol alt="narrow" draft="contributed">৳</symbol>
 			</currency>
 			<currency type="BEC">
@@ -5890,7 +6023,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">bulharské leva</displayName>
 				<displayName count="many">bulharského leva</displayName>
 				<displayName count="other">bulharských leva</displayName>
-				<symbol>BGN</symbol>
+				<symbol draft="contributed">BGN</symbol>
 			</currency>
 			<currency type="BGO">
 				<displayName draft="contributed">bulharský lev (1879 – 1952)</displayName>
@@ -5906,7 +6039,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">bahrajnské dináre</displayName>
 				<displayName count="many">bahrajnského dinára</displayName>
 				<displayName count="other">bahrajnských dinárov</displayName>
-				<symbol>BHD</symbol>
+				<symbol draft="contributed">BHD</symbol>
 			</currency>
 			<currency type="BIF">
 				<displayName>burundský frank</displayName>
@@ -5914,7 +6047,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">burundské franky</displayName>
 				<displayName count="many">burundského franku</displayName>
 				<displayName count="other">burundských frankov</displayName>
-				<symbol>BIF</symbol>
+				<symbol draft="contributed">BIF</symbol>
 			</currency>
 			<currency type="BMD">
 				<displayName>bermudský dolár</displayName>
@@ -5922,7 +6055,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">bermudské doláre</displayName>
 				<displayName count="many">bermudského dolára</displayName>
 				<displayName count="other">bermudských dolárov</displayName>
-				<symbol>BMD</symbol>
+				<symbol draft="contributed">BMD</symbol>
 				<symbol alt="narrow" draft="contributed">$</symbol>
 			</currency>
 			<currency type="BND">
@@ -5931,7 +6064,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">brunejské doláre</displayName>
 				<displayName count="many">brunejského dolára</displayName>
 				<displayName count="other">brunejských dolárov</displayName>
-				<symbol>BND</symbol>
+				<symbol draft="contributed">BND</symbol>
 				<symbol alt="narrow" draft="contributed">$</symbol>
 			</currency>
 			<currency type="BOB">
@@ -5940,7 +6073,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">bolívijské boliviana</displayName>
 				<displayName count="many">bolívijského boliviana</displayName>
 				<displayName count="other">bolívijských bolivian</displayName>
-				<symbol>BOB</symbol>
+				<symbol draft="contributed">BOB</symbol>
 				<symbol alt="narrow" draft="contributed">Bs</symbol>
 			</currency>
 			<currency type="BOL">
@@ -6030,7 +6163,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">bahamské doláre</displayName>
 				<displayName count="many">bahamského dolára</displayName>
 				<displayName count="other">bahamských dolárov</displayName>
-				<symbol>BSD</symbol>
+				<symbol draft="contributed">BSD</symbol>
 				<symbol alt="narrow" draft="contributed">$</symbol>
 			</currency>
 			<currency type="BTN">
@@ -6039,7 +6172,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">bhutánske ngultrumy</displayName>
 				<displayName count="many">bhutánskeho ngultrumu</displayName>
 				<displayName count="other">bhutánskych ngultrumov</displayName>
-				<symbol>BTN</symbol>
+				<symbol draft="contributed">BTN</symbol>
 			</currency>
 			<currency type="BUK">
 				<displayName>barmský kyat</displayName>
@@ -6055,7 +6188,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">botswanské puly</displayName>
 				<displayName count="many">botswanskej puly</displayName>
 				<displayName count="other">botswanských púl</displayName>
-				<symbol>BWP</symbol>
+				<symbol draft="contributed">BWP</symbol>
 				<symbol alt="narrow" draft="contributed">P</symbol>
 			</currency>
 			<currency type="BYB">
@@ -6072,7 +6205,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">bieloruské ruble</displayName>
 				<displayName count="many">bieloruského rubľa</displayName>
 				<displayName count="other">bieloruských rubľov</displayName>
-				<symbol>BYN</symbol>
+				<symbol draft="contributed">BYN</symbol>
 				<symbol alt="narrow" draft="contributed">р.</symbol>
 			</currency>
 			<currency type="BYR">
@@ -6081,7 +6214,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">bieloruské ruble (2000–2016)</displayName>
 				<displayName count="many">bieloruského rubľa (2000–2016)</displayName>
 				<displayName count="other">bieloruských rubľov (2000–2016)</displayName>
-				<symbol>BYR</symbol>
+				<symbol draft="contributed">BYR</symbol>
 			</currency>
 			<currency type="BZD">
 				<displayName>belizský dolár</displayName>
@@ -6089,7 +6222,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">belizské doláre</displayName>
 				<displayName count="many">belizského dolára</displayName>
 				<displayName count="other">belizských dolárov</displayName>
-				<symbol>BZD</symbol>
+				<symbol draft="contributed">BZD</symbol>
 				<symbol alt="narrow" draft="contributed">$</symbol>
 			</currency>
 			<currency type="CAD">
@@ -6107,7 +6240,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">konžské franky</displayName>
 				<displayName count="many">konžského franku</displayName>
 				<displayName count="other">konžských frankov</displayName>
-				<symbol>CDF</symbol>
+				<symbol draft="contributed">CDF</symbol>
 			</currency>
 			<currency type="CHE">
 				<displayName draft="contributed">švajčiarske WIR euro</displayName>
@@ -6123,7 +6256,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">švajčiarske franky</displayName>
 				<displayName count="many">švajčiarskeho franku</displayName>
 				<displayName count="other">švajčiarskych frankov</displayName>
-				<symbol>CHF</symbol>
+				<symbol draft="contributed">CHF</symbol>
 			</currency>
 			<currency type="CHW">
 				<displayName draft="contributed">švajčiarsky WIR frank</displayName>
@@ -6155,7 +6288,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">čilské pesos</displayName>
 				<displayName count="many">čilského pesa</displayName>
 				<displayName count="other">čilských pesos</displayName>
-				<symbol>CLP</symbol>
+				<symbol draft="contributed">CLP</symbol>
 				<symbol alt="narrow" draft="contributed">$</symbol>
 			</currency>
 			<currency type="CNH">
@@ -6189,7 +6322,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">kolumbijské pesos</displayName>
 				<displayName count="many">kolumbijského pesa</displayName>
 				<displayName count="other">kolumbijských pesos</displayName>
-				<symbol>COP</symbol>
+				<symbol draft="contributed">COP</symbol>
 				<symbol alt="narrow" draft="contributed">$</symbol>
 			</currency>
 			<currency type="COU">
@@ -6206,7 +6339,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">kostarické colóny</displayName>
 				<displayName count="many">kostarického colóna</displayName>
 				<displayName count="other">kostarických colónov</displayName>
-				<symbol>CRC</symbol>
+				<symbol draft="contributed">CRC</symbol>
 				<symbol alt="narrow" draft="contributed">₡</symbol>
 			</currency>
 			<currency type="CSD">
@@ -6231,7 +6364,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">kubánske konvertibilné pesos</displayName>
 				<displayName count="many">kubánskeho konvertibilného pesa</displayName>
 				<displayName count="other">kubánskych konvertibilných pesos</displayName>
-				<symbol>CUC</symbol>
+				<symbol draft="contributed">CUC</symbol>
 				<symbol alt="narrow" draft="contributed">$</symbol>
 			</currency>
 			<currency type="CUP">
@@ -6240,7 +6373,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">kubánske pesos</displayName>
 				<displayName count="many">kubánskeho pesa</displayName>
 				<displayName count="other">kubánskych pesos</displayName>
-				<symbol>CUP</symbol>
+				<symbol draft="contributed">CUP</symbol>
 				<symbol alt="narrow" draft="contributed">$</symbol>
 			</currency>
 			<currency type="CVE">
@@ -6249,7 +6382,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">kapverdské escudá</displayName>
 				<displayName count="many">kapverdského escuda</displayName>
 				<displayName count="other">kapverdských escúd</displayName>
-				<symbol>CVE</symbol>
+				<symbol draft="contributed">CVE</symbol>
 			</currency>
 			<currency type="CYP">
 				<displayName>cyperská libra</displayName>
@@ -6265,7 +6398,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">české koruny</displayName>
 				<displayName count="many">českej koruny</displayName>
 				<displayName count="other">českých korún</displayName>
-				<symbol>CZK</symbol>
+				<symbol draft="contributed">CZK</symbol>
 				<symbol alt="narrow" draft="contributed">Kč</symbol>
 			</currency>
 			<currency type="DDM">
@@ -6290,7 +6423,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">džibutské franky</displayName>
 				<displayName count="many">džibutského franku</displayName>
 				<displayName count="other">džibutských frankov</displayName>
-				<symbol>DJF</symbol>
+				<symbol draft="contributed">DJF</symbol>
 			</currency>
 			<currency type="DKK">
 				<displayName>dánska koruna</displayName>
@@ -6298,7 +6431,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">dánske koruny</displayName>
 				<displayName count="many">dánskej koruny</displayName>
 				<displayName count="other">dánskych korún</displayName>
-				<symbol>DKK</symbol>
+				<symbol draft="contributed">DKK</symbol>
 				<symbol alt="narrow" draft="contributed">kr</symbol>
 			</currency>
 			<currency type="DOP">
@@ -6307,7 +6440,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">dominikánske pesos</displayName>
 				<displayName count="many">dominikánskeho pesa</displayName>
 				<displayName count="other">dominikánske pesos</displayName>
-				<symbol>DOP</symbol>
+				<symbol draft="contributed">DOP</symbol>
 				<symbol alt="narrow" draft="contributed">$</symbol>
 			</currency>
 			<currency type="DZD">
@@ -6316,7 +6449,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">alžírske dináre</displayName>
 				<displayName count="many">alžírskeho dinára</displayName>
 				<displayName count="other">alžírskych dinárov</displayName>
-				<symbol>DZD</symbol>
+				<symbol draft="contributed">DZD</symbol>
 			</currency>
 			<currency type="ECS">
 				<displayName>ekvádorský sucre</displayName>
@@ -6348,7 +6481,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">egyptské libry</displayName>
 				<displayName count="many">egyptskej libry</displayName>
 				<displayName count="other">egyptských libier</displayName>
-				<symbol>EGP</symbol>
+				<symbol draft="contributed">EGP</symbol>
 				<symbol alt="narrow" draft="contributed">E£</symbol>
 			</currency>
 			<currency type="ERN">
@@ -6357,7 +6490,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">eritrejské nakfy</displayName>
 				<displayName count="many">eritrejskej nakfy</displayName>
 				<displayName count="other">eritrejských nakief</displayName>
-				<symbol>ERN</symbol>
+				<symbol draft="contributed">ERN</symbol>
 			</currency>
 			<currency type="ESA">
 				<displayName draft="contributed">španielska peseta (účet A)</displayName>
@@ -6390,7 +6523,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">etiópske birry</displayName>
 				<displayName count="many">etiópskeho birru</displayName>
 				<displayName count="other">etiópskych birrov</displayName>
-				<symbol>ETB</symbol>
+				<symbol draft="contributed">ETB</symbol>
 			</currency>
 			<currency type="EUR">
 				<displayName>euro</displayName>
@@ -6398,8 +6531,8 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">eurá</displayName>
 				<displayName count="many">eura</displayName>
 				<displayName count="other">eur</displayName>
-				<symbol>€</symbol>
-				<symbol alt="narrow">€</symbol>
+				<symbol draft="contributed">€</symbol>
+				<symbol alt="narrow" draft="contributed">€</symbol>
 			</currency>
 			<currency type="FIM">
 				<displayName>fínska marka</displayName>
@@ -6415,7 +6548,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">fidžijské doláre</displayName>
 				<displayName count="many">fidžijského dolára</displayName>
 				<displayName count="other">fidžijských dolárov</displayName>
-				<symbol>FJD</symbol>
+				<symbol draft="contributed">FJD</symbol>
 				<symbol alt="narrow" draft="contributed">$</symbol>
 			</currency>
 			<currency type="FKP">
@@ -6424,7 +6557,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">falklandské libry</displayName>
 				<displayName count="many">falklandskej libry</displayName>
 				<displayName count="other">falklandských libier</displayName>
-				<symbol>FKP</symbol>
+				<symbol draft="contributed">FKP</symbol>
 				<symbol alt="narrow" draft="contributed">£</symbol>
 			</currency>
 			<currency type="FRF">
@@ -6458,7 +6591,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">gruzínske lari</displayName>
 				<displayName count="many">gruzínskeho lari</displayName>
 				<displayName count="other">gruzínskych lari</displayName>
-				<symbol>GEL</symbol>
+				<symbol draft="contributed">GEL</symbol>
 				<symbol alt="narrow" draft="contributed">₾</symbol>
 				<symbol alt="variant" draft="contributed">₾</symbol>
 			</currency>
@@ -6476,7 +6609,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">ghanské cedi</displayName>
 				<displayName count="many">ghanského cedi</displayName>
 				<displayName count="other">ghanských cedi</displayName>
-				<symbol>GHS</symbol>
+				<symbol draft="contributed">GHS</symbol>
 			</currency>
 			<currency type="GIP">
 				<displayName>gibraltárska libra</displayName>
@@ -6484,7 +6617,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">gibraltárske libry</displayName>
 				<displayName count="many">gibraltárskej libry</displayName>
 				<displayName count="other">gibraltárskych libier</displayName>
-				<symbol>GIP</symbol>
+				<symbol draft="contributed">GIP</symbol>
 				<symbol alt="narrow" draft="contributed">£</symbol>
 			</currency>
 			<currency type="GMD">
@@ -6493,7 +6626,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">gambijské dalasi</displayName>
 				<displayName count="many">gambijského dalasi</displayName>
 				<displayName count="other">gambijských dalasi</displayName>
-				<symbol>GMD</symbol>
+				<symbol draft="contributed">GMD</symbol>
 			</currency>
 			<currency type="GNF">
 				<displayName>guinejský frank</displayName>
@@ -6501,7 +6634,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">guinejské franky</displayName>
 				<displayName count="many">guinejského franku</displayName>
 				<displayName count="other">guinejských frankov</displayName>
-				<symbol>GNF</symbol>
+				<symbol draft="contributed">GNF</symbol>
 				<symbol alt="narrow" draft="contributed">FG</symbol>
 			</currency>
 			<currency type="GNS">
@@ -6534,7 +6667,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">guatemalské quetzaly</displayName>
 				<displayName count="many">guatemalského quetzala</displayName>
 				<displayName count="other">guatemalských quetzalov</displayName>
-				<symbol>GTQ</symbol>
+				<symbol draft="contributed">GTQ</symbol>
 				<symbol alt="narrow" draft="contributed">Q</symbol>
 			</currency>
 			<currency type="GWE">
@@ -6559,7 +6692,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">guyanské doláre</displayName>
 				<displayName count="many">guyanského dolára</displayName>
 				<displayName count="other">guyanských dolárov</displayName>
-				<symbol>GYD</symbol>
+				<symbol draft="contributed">GYD</symbol>
 				<symbol alt="narrow" draft="contributed">$</symbol>
 			</currency>
 			<currency type="HKD">
@@ -6577,7 +6710,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">honduraské lempiry</displayName>
 				<displayName count="many">honduraskej lempiry</displayName>
 				<displayName count="other">honduraských lempír</displayName>
-				<symbol>HNL</symbol>
+				<symbol draft="contributed">HNL</symbol>
 				<symbol alt="narrow" draft="contributed">L</symbol>
 			</currency>
 			<currency type="HRD">
@@ -6594,7 +6727,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">chorvátske kuny</displayName>
 				<displayName count="many">chorvátskej kuny</displayName>
 				<displayName count="other">chorvátskych kún</displayName>
-				<symbol>HRK</symbol>
+				<symbol draft="contributed">HRK</symbol>
 				<symbol alt="narrow" draft="contributed">kn</symbol>
 			</currency>
 			<currency type="HTG">
@@ -6603,7 +6736,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">haitské gourde</displayName>
 				<displayName count="many">haitského gourde</displayName>
 				<displayName count="other">haitských gourde</displayName>
-				<symbol>HTG</symbol>
+				<symbol draft="contributed">HTG</symbol>
 			</currency>
 			<currency type="HUF">
 				<displayName>maďarský forint</displayName>
@@ -6611,7 +6744,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">maďarské forinty</displayName>
 				<displayName count="many">maďarského forinta</displayName>
 				<displayName count="other">maďarských forintov</displayName>
-				<symbol>HUF</symbol>
+				<symbol draft="contributed">HUF</symbol>
 				<symbol alt="narrow" draft="contributed">Ft</symbol>
 			</currency>
 			<currency type="IDR">
@@ -6620,7 +6753,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">indonézske rupie</displayName>
 				<displayName count="many">indonézskej rupie</displayName>
 				<displayName count="other">indonézskych rupií</displayName>
-				<symbol>IDR</symbol>
+				<symbol draft="contributed">IDR</symbol>
 				<symbol alt="narrow" draft="contributed">Rp</symbol>
 			</currency>
 			<currency type="IEP">
@@ -6671,7 +6804,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">iracké dináre</displayName>
 				<displayName count="many">irackého dinára</displayName>
 				<displayName count="other">irackých dinárov</displayName>
-				<symbol>IQD</symbol>
+				<symbol draft="contributed">IQD</symbol>
 			</currency>
 			<currency type="IRR">
 				<displayName>iránsky rial</displayName>
@@ -6679,7 +6812,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">iránske rialy</displayName>
 				<displayName count="many">iránskeho rialu</displayName>
 				<displayName count="other">iránskych rialov</displayName>
-				<symbol>IRR</symbol>
+				<symbol draft="contributed">IRR</symbol>
 			</currency>
 			<currency type="ISJ">
 				<displayName draft="contributed">islandská koruna (1918 – 1981)</displayName>
@@ -6695,7 +6828,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">islandské koruny</displayName>
 				<displayName count="many">islandskej koruny</displayName>
 				<displayName count="other">islandských korún</displayName>
-				<symbol>ISK</symbol>
+				<symbol draft="contributed">ISK</symbol>
 				<symbol alt="narrow" draft="contributed">kr</symbol>
 			</currency>
 			<currency type="ITL">
@@ -6712,7 +6845,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">jamajské doláre</displayName>
 				<displayName count="many">jamajského dolára</displayName>
 				<displayName count="other">jamajských dolárov</displayName>
-				<symbol>JMD</symbol>
+				<symbol draft="contributed">JMD</symbol>
 				<symbol alt="narrow" draft="contributed">$</symbol>
 			</currency>
 			<currency type="JOD">
@@ -6721,7 +6854,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">jordánske dináre</displayName>
 				<displayName count="many">jordánskeho dinára</displayName>
 				<displayName count="other">jordánskych dinárov</displayName>
-				<symbol>JOD</symbol>
+				<symbol draft="contributed">JOD</symbol>
 			</currency>
 			<currency type="JPY">
 				<displayName>japonský jen</displayName>
@@ -6738,7 +6871,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">kenské šilingy</displayName>
 				<displayName count="many">kenského šilingu</displayName>
 				<displayName count="other">kenských šilingov</displayName>
-				<symbol>KES</symbol>
+				<symbol draft="contributed">KES</symbol>
 			</currency>
 			<currency type="KGS">
 				<displayName>kirgizský som</displayName>
@@ -6746,7 +6879,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">kirgizské somy</displayName>
 				<displayName count="many">kirgizského somu</displayName>
 				<displayName count="other">kirgizských somov</displayName>
-				<symbol>KGS</symbol>
+				<symbol draft="contributed">KGS</symbol>
 			</currency>
 			<currency type="KHR">
 				<displayName>kambodžský riel</displayName>
@@ -6754,7 +6887,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">kambodžské riely</displayName>
 				<displayName count="many">kambodžského rielu</displayName>
 				<displayName count="other">kambodžských rielov</displayName>
-				<symbol>KHR</symbol>
+				<symbol draft="contributed">KHR</symbol>
 				<symbol alt="narrow" draft="contributed">៛</symbol>
 			</currency>
 			<currency type="KMF">
@@ -6763,7 +6896,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">komorské franky</displayName>
 				<displayName count="many">komorského franku</displayName>
 				<displayName count="other">komorských frankov</displayName>
-				<symbol>KMF</symbol>
+				<symbol draft="contributed">KMF</symbol>
 				<symbol alt="narrow" draft="contributed">CF</symbol>
 			</currency>
 			<currency type="KPW">
@@ -6772,7 +6905,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">severokórejské wony</displayName>
 				<displayName count="many">severokórejskeho wonu</displayName>
 				<displayName count="other">severokórejských wonov</displayName>
-				<symbol>KPW</symbol>
+				<symbol draft="contributed">KPW</symbol>
 				<symbol alt="narrow" draft="contributed">₩</symbol>
 			</currency>
 			<currency type="KRH">
@@ -6806,7 +6939,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">kuvajtské dináre</displayName>
 				<displayName count="many">kuvajtského dinára</displayName>
 				<displayName count="other">kuvajtských dinárov</displayName>
-				<symbol>KWD</symbol>
+				<symbol draft="contributed">KWD</symbol>
 			</currency>
 			<currency type="KYD">
 				<displayName>kajmanský dolár</displayName>
@@ -6814,7 +6947,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">kajmanské doláre</displayName>
 				<displayName count="many">kajmanského dolára</displayName>
 				<displayName count="other">kajmanských dolárov</displayName>
-				<symbol>KYD</symbol>
+				<symbol draft="contributed">KYD</symbol>
 				<symbol alt="narrow" draft="contributed">$</symbol>
 			</currency>
 			<currency type="KZT">
@@ -6823,7 +6956,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">kazašské tenge</displayName>
 				<displayName count="many">kazašského tenge</displayName>
 				<displayName count="other">kazašských tenge</displayName>
-				<symbol>KZT</symbol>
+				<symbol draft="contributed">KZT</symbol>
 				<symbol alt="narrow" draft="contributed">₸</symbol>
 			</currency>
 			<currency type="LAK">
@@ -6832,7 +6965,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">laoské kipy</displayName>
 				<displayName count="many">laoského kipu</displayName>
 				<displayName count="other">laoských kipov</displayName>
-				<symbol>LAK</symbol>
+				<symbol draft="contributed">LAK</symbol>
 				<symbol alt="narrow" draft="contributed">₭</symbol>
 			</currency>
 			<currency type="LBP">
@@ -6841,7 +6974,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">libanonské libry</displayName>
 				<displayName count="many">libanonskej libry</displayName>
 				<displayName count="other">libanonských libier</displayName>
-				<symbol>LBP</symbol>
+				<symbol draft="contributed">LBP</symbol>
 				<symbol alt="narrow" draft="contributed">L£</symbol>
 			</currency>
 			<currency type="LKR">
@@ -6850,7 +6983,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">srílanské rupie</displayName>
 				<displayName count="many">srílanskej rupie</displayName>
 				<displayName count="other">srílanských rupií</displayName>
-				<symbol>LKR</symbol>
+				<symbol draft="contributed">LKR</symbol>
 				<symbol alt="narrow" draft="contributed">Rs</symbol>
 			</currency>
 			<currency type="LRD">
@@ -6859,7 +6992,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">libérijské doláre</displayName>
 				<displayName count="many">libérijského dolára</displayName>
 				<displayName count="other">libérijských dolárov</displayName>
-				<symbol>LRD</symbol>
+				<symbol draft="contributed">LRD</symbol>
 				<symbol alt="narrow" draft="contributed">$</symbol>
 			</currency>
 			<currency type="LSL">
@@ -6876,7 +7009,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">litovské lity</displayName>
 				<displayName count="many">litovského litu</displayName>
 				<displayName count="other">litovských litov</displayName>
-				<symbol>LTL</symbol>
+				<symbol draft="contributed">LTL</symbol>
 				<symbol alt="narrow" draft="contributed">Lt</symbol>
 			</currency>
 			<currency type="LTT">
@@ -6917,7 +7050,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">lotyšské laty</displayName>
 				<displayName count="many">lotyšského latu</displayName>
 				<displayName count="other">lotyšských latov</displayName>
-				<symbol>LVL</symbol>
+				<symbol draft="contributed">LVL</symbol>
 				<symbol alt="narrow" draft="contributed">Ls</symbol>
 			</currency>
 			<currency type="LVR">
@@ -6934,7 +7067,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">líbyjské dináre</displayName>
 				<displayName count="many">líbyjského dinára</displayName>
 				<displayName count="other">líbyjských dinárov</displayName>
-				<symbol>LYD</symbol>
+				<symbol draft="contributed">LYD</symbol>
 			</currency>
 			<currency type="MAD">
 				<displayName>marocký dirham</displayName>
@@ -6942,7 +7075,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">marocké dirhamy</displayName>
 				<displayName count="many">marockého dirhamu</displayName>
 				<displayName count="other">marockých dirhamov</displayName>
-				<symbol>MAD</symbol>
+				<symbol draft="contributed">MAD</symbol>
 			</currency>
 			<currency type="MAF">
 				<displayName>marocký frank</displayName>
@@ -6974,7 +7107,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">moldavské lei</displayName>
 				<displayName count="many">moldavského lei</displayName>
 				<displayName count="other">moldavských lei</displayName>
-				<symbol>MDL</symbol>
+				<symbol draft="contributed">MDL</symbol>
 			</currency>
 			<currency type="MGA">
 				<displayName>malgašský ariary</displayName>
@@ -6982,7 +7115,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">malgašské ariary</displayName>
 				<displayName count="many">malgašského ariary</displayName>
 				<displayName count="other">malgašských ariary</displayName>
-				<symbol>MGA</symbol>
+				<symbol draft="contributed">MGA</symbol>
 				<symbol alt="narrow" draft="contributed">Ar</symbol>
 			</currency>
 			<currency type="MGF">
@@ -6999,7 +7132,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">macedónske denáre</displayName>
 				<displayName count="many">macedónskeho denára</displayName>
 				<displayName count="other">macedónskych denárov</displayName>
-				<symbol>MKD</symbol>
+				<symbol draft="contributed">MKD</symbol>
 			</currency>
 			<currency type="MKN">
 				<displayName draft="contributed">macedónsky denár (1992 – 1993)</displayName>
@@ -7023,7 +7156,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">mjanmarské kyaty</displayName>
 				<displayName count="many">mjanmarského kyatu</displayName>
 				<displayName count="other">mjanmarských kyatov</displayName>
-				<symbol>MMK</symbol>
+				<symbol draft="contributed">MMK</symbol>
 				<symbol alt="narrow" draft="contributed">K</symbol>
 			</currency>
 			<currency type="MNT">
@@ -7032,7 +7165,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">mongolské tugriky</displayName>
 				<displayName count="many">mongolského tugrika</displayName>
 				<displayName count="other">mongolských tugrikov</displayName>
-				<symbol>MNT</symbol>
+				<symbol draft="contributed">MNT</symbol>
 				<symbol alt="narrow" draft="contributed">₮</symbol>
 			</currency>
 			<currency type="MOP">
@@ -7041,15 +7174,23 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">macajské patacy</displayName>
 				<displayName count="many">macajskej patacy</displayName>
 				<displayName count="other">macajských patác</displayName>
-				<symbol>MOP</symbol>
+				<symbol draft="contributed">MOP</symbol>
 			</currency>
 			<currency type="MRO">
+				<displayName>mauritánska ukija (1973–2017)</displayName>
+				<displayName count="one">mauritánska ukija (1973–2017)</displayName>
+				<displayName count="few">mauritánske ukije (1973–2017)</displayName>
+				<displayName count="many">mauritánskej ukije (1973–2017)</displayName>
+				<displayName count="other">mauritánskych ukijí (1973–2017)</displayName>
+				<symbol draft="contributed">MRO</symbol>
+			</currency>
+			<currency type="MRU">
 				<displayName>mauritánska ukija</displayName>
 				<displayName count="one">mauritánska ukija</displayName>
 				<displayName count="few">mauritánske ukije</displayName>
 				<displayName count="many">mauritánskej ukije</displayName>
 				<displayName count="other">mauritánskych ukijí</displayName>
-				<symbol>MRO</symbol>
+				<symbol draft="contributed">MRU</symbol>
 			</currency>
 			<currency type="MTL">
 				<displayName>maltská líra</displayName>
@@ -7073,7 +7214,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">maurícijské rupie</displayName>
 				<displayName count="many">maurícijskej rupie</displayName>
 				<displayName count="other">maurícijských rupií</displayName>
-				<symbol>MUR</symbol>
+				<symbol draft="contributed">MUR</symbol>
 				<symbol alt="narrow" draft="contributed">Rs</symbol>
 			</currency>
 			<currency type="MVP">
@@ -7090,7 +7231,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">maldivské rupie</displayName>
 				<displayName count="many">maldivskej rupie</displayName>
 				<displayName count="other">maldivských rupií</displayName>
-				<symbol>MVR</symbol>
+				<symbol draft="contributed">MVR</symbol>
 			</currency>
 			<currency type="MWK">
 				<displayName>malawijská kwacha</displayName>
@@ -7098,7 +7239,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">malawijské kwachy</displayName>
 				<displayName count="many">malawijskej kwachy</displayName>
 				<displayName count="other">malawijských kwách</displayName>
-				<symbol>MWK</symbol>
+				<symbol draft="contributed">MWK</symbol>
 			</currency>
 			<currency type="MXN">
 				<displayName>mexické peso</displayName>
@@ -7106,7 +7247,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">mexické pesos</displayName>
 				<displayName count="many">mexického pesa</displayName>
 				<displayName count="other">mexických pesos</displayName>
-				<symbol>MX$</symbol>
+				<symbol draft="contributed">MX$</symbol>
 				<symbol alt="narrow" draft="contributed">$</symbol>
 			</currency>
 			<currency type="MXP">
@@ -7131,7 +7272,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">malajzijské ringgity</displayName>
 				<displayName count="many">malajzijského ringgitu</displayName>
 				<displayName count="other">malajzijských ringgitov</displayName>
-				<symbol>MYR</symbol>
+				<symbol draft="contributed">MYR</symbol>
 				<symbol alt="narrow" draft="contributed">RM</symbol>
 			</currency>
 			<currency type="MZE">
@@ -7156,7 +7297,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">mozambické meticaly</displayName>
 				<displayName count="many">mozambického meticalu</displayName>
 				<displayName count="other">mozambických meticalov</displayName>
-				<symbol>MZN</symbol>
+				<symbol draft="contributed">MZN</symbol>
 			</currency>
 			<currency type="NAD">
 				<displayName>namíbijský dolár</displayName>
@@ -7164,7 +7305,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">namíbijské doláre</displayName>
 				<displayName count="many">namíbijského dolára</displayName>
 				<displayName count="other">namíbijských dolárov</displayName>
-				<symbol>NAD</symbol>
+				<symbol draft="contributed">NAD</symbol>
 				<symbol alt="narrow" draft="contributed">$</symbol>
 			</currency>
 			<currency type="NGN">
@@ -7173,7 +7314,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">nigérijské nairy</displayName>
 				<displayName count="many">nigérijskej nairy</displayName>
 				<displayName count="other">nigérijských nair</displayName>
-				<symbol>NGN</symbol>
+				<symbol draft="contributed">NGN</symbol>
 				<symbol alt="narrow" draft="contributed">₦</symbol>
 			</currency>
 			<currency type="NIC">
@@ -7190,7 +7331,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">nikaragujské córdoby</displayName>
 				<displayName count="many">nikaragujskej córdoby</displayName>
 				<displayName count="other">nikaragujských córdob</displayName>
-				<symbol>NIO</symbol>
+				<symbol draft="contributed">NIO</symbol>
 				<symbol alt="narrow" draft="contributed">C$</symbol>
 			</currency>
 			<currency type="NLG">
@@ -7207,7 +7348,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">nórske koruny</displayName>
 				<displayName count="many">nórskej koruny</displayName>
 				<displayName count="other">nórskych korún</displayName>
-				<symbol>NOK</symbol>
+				<symbol draft="contributed">NOK</symbol>
 				<symbol alt="narrow" draft="contributed">kr</symbol>
 			</currency>
 			<currency type="NPR">
@@ -7216,7 +7357,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">nepálske rupie</displayName>
 				<displayName count="many">nepálskej rupie</displayName>
 				<displayName count="other">nepálskych rupií</displayName>
-				<symbol>NPR</symbol>
+				<symbol draft="contributed">NPR</symbol>
 				<symbol alt="narrow" draft="contributed">Rs</symbol>
 			</currency>
 			<currency type="NZD">
@@ -7234,7 +7375,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">ománske rialy</displayName>
 				<displayName count="many">ománskeho rialu</displayName>
 				<displayName count="other">ománskych rialov</displayName>
-				<symbol>OMR</symbol>
+				<symbol draft="contributed">OMR</symbol>
 			</currency>
 			<currency type="PAB">
 				<displayName>panamská balboa</displayName>
@@ -7242,7 +7383,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">panamské balboy</displayName>
 				<displayName count="many">panamskej balboy</displayName>
 				<displayName count="other">panamských balboí</displayName>
-				<symbol>PAB</symbol>
+				<symbol draft="contributed">PAB</symbol>
 			</currency>
 			<currency type="PEI">
 				<displayName>peruánsky inti</displayName>
@@ -7258,7 +7399,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">peruánske soly</displayName>
 				<displayName count="many">peruánskeho sola</displayName>
 				<displayName count="other">peruánskych solov</displayName>
-				<symbol>PEN</symbol>
+				<symbol draft="contributed">PEN</symbol>
 			</currency>
 			<currency type="PES">
 				<displayName>peruánsky sol (1863 – 1965)</displayName>
@@ -7266,7 +7407,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">peruánske soly (1863–1965)</displayName>
 				<displayName count="many">peruánskeho sola (1863–1965)</displayName>
 				<displayName count="other">peruánskych solov (1863–1965)</displayName>
-				<symbol>PES</symbol>
+				<symbol draft="contributed">PES</symbol>
 			</currency>
 			<currency type="PGK">
 				<displayName>papuánska kina</displayName>
@@ -7274,7 +7415,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">papuánske kiny</displayName>
 				<displayName count="many">papuánskej kiny</displayName>
 				<displayName count="other">papuánskych kín</displayName>
-				<symbol>PGK</symbol>
+				<symbol draft="contributed">PGK</symbol>
 			</currency>
 			<currency type="PHP">
 				<displayName>filipínske peso</displayName>
@@ -7282,7 +7423,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">filipínske pesos</displayName>
 				<displayName count="many">filipínskeho pesa</displayName>
 				<displayName count="other">filipínskych pesos</displayName>
-				<symbol>PHP</symbol>
+				<symbol draft="contributed">PHP</symbol>
 				<symbol alt="narrow" draft="contributed">₱</symbol>
 			</currency>
 			<currency type="PKR">
@@ -7291,7 +7432,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">pakistanské rupie</displayName>
 				<displayName count="many">pakistanskej rupie</displayName>
 				<displayName count="other">pakistanských rupií</displayName>
-				<symbol>PKR</symbol>
+				<symbol draft="contributed">PKR</symbol>
 				<symbol alt="narrow" draft="contributed">Rs</symbol>
 			</currency>
 			<currency type="PLN">
@@ -7300,7 +7441,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">poľské zloté</displayName>
 				<displayName count="many">poľského zlotého</displayName>
 				<displayName count="other">poľských zlotých</displayName>
-				<symbol>PLN</symbol>
+				<symbol draft="contributed">PLN</symbol>
 				<symbol alt="narrow" draft="contributed">zł</symbol>
 			</currency>
 			<currency type="PLZ">
@@ -7325,7 +7466,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">paraguajské guaraní</displayName>
 				<displayName count="many">paraguajského guaraní</displayName>
 				<displayName count="other">paraguajských guaraní</displayName>
-				<symbol>PYG</symbol>
+				<symbol draft="contributed">PYG</symbol>
 				<symbol alt="narrow" draft="contributed">₲</symbol>
 			</currency>
 			<currency type="QAR">
@@ -7334,7 +7475,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">katarské rialy</displayName>
 				<displayName count="many">katarského rialu</displayName>
 				<displayName count="other">katarských rialov</displayName>
-				<symbol>QAR</symbol>
+				<symbol draft="contributed">QAR</symbol>
 			</currency>
 			<currency type="RHD">
 				<displayName draft="contributed">rodézsky dolár</displayName>
@@ -7358,7 +7499,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">rumunské lei</displayName>
 				<displayName count="many">rumunského lei</displayName>
 				<displayName count="other">rumunských lei</displayName>
-				<symbol>RON</symbol>
+				<symbol draft="contributed">RON</symbol>
 				<symbol alt="narrow" draft="contributed">lei</symbol>
 			</currency>
 			<currency type="RSD">
@@ -7367,7 +7508,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">srbské dináre</displayName>
 				<displayName count="many">srbského dinára</displayName>
 				<displayName count="other">srbských dinárov</displayName>
-				<symbol>RSD</symbol>
+				<symbol draft="contributed">RSD</symbol>
 			</currency>
 			<currency type="RUB">
 				<displayName>ruský rubeľ</displayName>
@@ -7375,7 +7516,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">ruské ruble</displayName>
 				<displayName count="many">ruského rubľa</displayName>
 				<displayName count="other">ruských rubľov</displayName>
-				<symbol>RUB</symbol>
+				<symbol draft="contributed">RUB</symbol>
 				<symbol alt="narrow" draft="contributed">₽</symbol>
 				<symbol alt="variant" draft="contributed">₽</symbol>
 			</currency>
@@ -7394,7 +7535,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">rwandské franky</displayName>
 				<displayName count="many">rwandského franku</displayName>
 				<displayName count="other">rwandských frankov</displayName>
-				<symbol>RWF</symbol>
+				<symbol draft="contributed">RWF</symbol>
 				<symbol alt="narrow" draft="contributed">RF</symbol>
 			</currency>
 			<currency type="SAR">
@@ -7403,7 +7544,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">saudskoarabské rialy</displayName>
 				<displayName count="many">saudskoarabského rialu</displayName>
 				<displayName count="other">saudskoarabských rialov</displayName>
-				<symbol>SAR</symbol>
+				<symbol draft="contributed">SAR</symbol>
 			</currency>
 			<currency type="SBD">
 				<displayName>šalamúnsky dolár</displayName>
@@ -7411,7 +7552,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">šalamúnske doláre</displayName>
 				<displayName count="many">šalamúnskeho dolára</displayName>
 				<displayName count="other">šalamúnskych dolárov</displayName>
-				<symbol>SBD</symbol>
+				<symbol draft="contributed">SBD</symbol>
 				<symbol alt="narrow" draft="contributed">$</symbol>
 			</currency>
 			<currency type="SCR">
@@ -7420,7 +7561,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">seychelské rupie</displayName>
 				<displayName count="many">seychelskej rupie</displayName>
 				<displayName count="other">seychelských rupií</displayName>
-				<symbol>SCR</symbol>
+				<symbol draft="contributed">SCR</symbol>
 			</currency>
 			<currency type="SDD">
 				<displayName>sudánsky dinár (1992 – 2007)</displayName>
@@ -7436,7 +7577,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">sudánske libry</displayName>
 				<displayName count="many">sudánskej libry</displayName>
 				<displayName count="other">sudánskych libier</displayName>
-				<symbol>SDG</symbol>
+				<symbol draft="contributed">SDG</symbol>
 			</currency>
 			<currency type="SDP">
 				<displayName>sudánska libra (1957 – 1998)</displayName>
@@ -7452,7 +7593,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">švédske koruny</displayName>
 				<displayName count="many">švédskej koruny</displayName>
 				<displayName count="other">švédskych korún</displayName>
-				<symbol>SEK</symbol>
+				<symbol draft="contributed">SEK</symbol>
 				<symbol alt="narrow" draft="contributed">kr</symbol>
 			</currency>
 			<currency type="SGD">
@@ -7461,7 +7602,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">singapurské doláre</displayName>
 				<displayName count="many">singapurského dolára</displayName>
 				<displayName count="other">singapurských dolárov</displayName>
-				<symbol>SGD</symbol>
+				<symbol draft="contributed">SGD</symbol>
 				<symbol alt="narrow" draft="contributed">$</symbol>
 			</currency>
 			<currency type="SHP">
@@ -7470,7 +7611,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">svätohelenské libry</displayName>
 				<displayName count="many">svätohelenskej libry</displayName>
 				<displayName count="other">svätohelenských libier</displayName>
-				<symbol>SHP</symbol>
+				<symbol draft="contributed">SHP</symbol>
 				<symbol alt="narrow" draft="contributed">£</symbol>
 			</currency>
 			<currency type="SIT">
@@ -7495,7 +7636,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">sierraleonské leone</displayName>
 				<displayName count="many">sierraleonského leone</displayName>
 				<displayName count="other">sierraleonských leone</displayName>
-				<symbol>SLL</symbol>
+				<symbol draft="contributed">SLL</symbol>
 			</currency>
 			<currency type="SOS">
 				<displayName>somálsky šiling</displayName>
@@ -7503,7 +7644,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">somálske šilingy</displayName>
 				<displayName count="many">somálskeho šilingu</displayName>
 				<displayName count="other">somálskych šilingov</displayName>
-				<symbol>SOS</symbol>
+				<symbol draft="contributed">SOS</symbol>
 			</currency>
 			<currency type="SRD">
 				<displayName>surinamský dolár</displayName>
@@ -7511,7 +7652,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">surinamské doláre</displayName>
 				<displayName count="many">surinamského dolára</displayName>
 				<displayName count="other">surinamských dolárov</displayName>
-				<symbol>SRD</symbol>
+				<symbol draft="contributed">SRD</symbol>
 				<symbol alt="narrow" draft="contributed">$</symbol>
 			</currency>
 			<currency type="SRG">
@@ -7528,16 +7669,24 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">juhosudánske libry</displayName>
 				<displayName count="many">juhosudánskej libry</displayName>
 				<displayName count="other">juhosudánskych libier</displayName>
-				<symbol>SSP</symbol>
+				<symbol draft="contributed">SSP</symbol>
 				<symbol alt="narrow" draft="contributed">£</symbol>
 			</currency>
 			<currency type="STD">
+				<displayName>svätotomášska dobra (1977–2017)</displayName>
+				<displayName count="one">svätotomášska dobra (1977–2017)</displayName>
+				<displayName count="few">svätotomášske dobry (1977–2017)</displayName>
+				<displayName count="many">svätotomášskej dobry (1977–2017)</displayName>
+				<displayName count="other">svätotomášskych dobier (1977–2017)</displayName>
+				<symbol draft="contributed">STD</symbol>
+			</currency>
+			<currency type="STN">
 				<displayName>svätotomášska dobra</displayName>
 				<displayName count="one">svätotomášska dobra</displayName>
 				<displayName count="few">svätotomášske dobry</displayName>
 				<displayName count="many">svätotomášskej dobry</displayName>
 				<displayName count="other">svätotomášskych dobier</displayName>
-				<symbol>STD</symbol>
+				<symbol draft="contributed">STN</symbol>
 				<symbol alt="narrow" draft="contributed">Db</symbol>
 			</currency>
 			<currency type="SUR">
@@ -7562,7 +7711,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">sýrske libry</displayName>
 				<displayName count="many">sýrskej libry</displayName>
 				<displayName count="other">sýrskych libier</displayName>
-				<symbol>SYP</symbol>
+				<symbol draft="contributed">SYP</symbol>
 				<symbol alt="narrow" draft="contributed">£</symbol>
 			</currency>
 			<currency type="SZL">
@@ -7571,7 +7720,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">svazijské lilangeni</displayName>
 				<displayName count="many">svazijského lilangeni</displayName>
 				<displayName count="other">svazijských lilangeni</displayName>
-				<symbol>SZL</symbol>
+				<symbol draft="contributed">SZL</symbol>
 			</currency>
 			<currency type="THB">
 				<displayName>thajský baht</displayName>
@@ -7579,7 +7728,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">thajské bahty</displayName>
 				<displayName count="many">thajského bahtu</displayName>
 				<displayName count="other">thajských bahtov</displayName>
-				<symbol>THB</symbol>
+				<symbol draft="contributed">THB</symbol>
 				<symbol alt="narrow" draft="contributed">฿</symbol>
 			</currency>
 			<currency type="TJR">
@@ -7596,7 +7745,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">tadžické somoni</displayName>
 				<displayName count="many">tadžického somoni</displayName>
 				<displayName count="other">tadžických somoni</displayName>
-				<symbol>TJS</symbol>
+				<symbol draft="contributed">TJS</symbol>
 			</currency>
 			<currency type="TMM">
 				<displayName>turkménsky manat (1993 – 2009)</displayName>
@@ -7612,7 +7761,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">turkménske manaty</displayName>
 				<displayName count="many">turkménskeho manatu</displayName>
 				<displayName count="other">turkménskych manatov</displayName>
-				<symbol>TMT</symbol>
+				<symbol draft="contributed">TMT</symbol>
 			</currency>
 			<currency type="TND">
 				<displayName>tuniský dinár</displayName>
@@ -7620,7 +7769,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">tuniské dináre</displayName>
 				<displayName count="many">tuniského dinára</displayName>
 				<displayName count="other">tuniských dinárov</displayName>
-				<symbol>TND</symbol>
+				<symbol draft="contributed">TND</symbol>
 			</currency>
 			<currency type="TOP">
 				<displayName>tongská paʻanga</displayName>
@@ -7628,7 +7777,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">tongské pa’anga</displayName>
 				<displayName count="many">tongského pa’anga</displayName>
 				<displayName count="other">tongských pa’anga</displayName>
-				<symbol>TOP</symbol>
+				<symbol draft="contributed">TOP</symbol>
 				<symbol alt="narrow" draft="contributed">T$</symbol>
 			</currency>
 			<currency type="TPE">
@@ -7653,7 +7802,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">turecké líry</displayName>
 				<displayName count="many">tureckej líry</displayName>
 				<displayName count="other">tureckých lír</displayName>
-				<symbol>TRY</symbol>
+				<symbol draft="contributed">TRY</symbol>
 				<symbol alt="narrow" draft="contributed">₺</symbol>
 				<symbol alt="variant" draft="contributed">TL</symbol>
 			</currency>
@@ -7663,7 +7812,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">trinidadsko-tobažské doláre</displayName>
 				<displayName count="many">trinidadsko-tobažského dolára</displayName>
 				<displayName count="other">trinidadsko-tobažských dolárov</displayName>
-				<symbol>TTD</symbol>
+				<symbol draft="contributed">TTD</symbol>
 				<symbol alt="narrow" draft="contributed">$</symbol>
 			</currency>
 			<currency type="TWD">
@@ -7681,7 +7830,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">tanzánske šilingy</displayName>
 				<displayName count="many">tanzánskeho šilingu</displayName>
 				<displayName count="other">tanzánskych šilingov</displayName>
-				<symbol>TZS</symbol>
+				<symbol draft="contributed">TZS</symbol>
 			</currency>
 			<currency type="UAH">
 				<displayName>ukrajinská hrivna</displayName>
@@ -7689,7 +7838,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">ukrajinské hrivny</displayName>
 				<displayName count="many">ukrajinskej hrivny</displayName>
 				<displayName count="other">ukrajinských hrivien</displayName>
-				<symbol>UAH</symbol>
+				<symbol draft="contributed">UAH</symbol>
 				<symbol alt="narrow" draft="contributed">₴</symbol>
 			</currency>
 			<currency type="UAK">
@@ -7714,7 +7863,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">ugandské šilingy</displayName>
 				<displayName count="many">ugandského šilingu</displayName>
 				<displayName count="other">ugandských šilingov</displayName>
-				<symbol>UGX</symbol>
+				<symbol draft="contributed">UGX</symbol>
 			</currency>
 			<currency type="USD">
 				<displayName>americký dolár</displayName>
@@ -7763,7 +7912,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">uruguajské pesos</displayName>
 				<displayName count="many">uruguajského pesa</displayName>
 				<displayName count="other">uruguajských pesos</displayName>
-				<symbol>UYU</symbol>
+				<symbol draft="contributed">UYU</symbol>
 				<symbol alt="narrow" draft="contributed">$</symbol>
 			</currency>
 			<currency type="UZS">
@@ -7772,7 +7921,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">uzbecké sumy</displayName>
 				<displayName count="many">uzbeckého sumu</displayName>
 				<displayName count="other">uzbeckých sumov</displayName>
-				<symbol>UZS</symbol>
+				<symbol draft="contributed">UZS</symbol>
 			</currency>
 			<currency type="VEB">
 				<displayName>venezuelský bolívar (1871 – 2008)</displayName>
@@ -7783,13 +7932,21 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<symbol draft="contributed">VEB</symbol>
 			</currency>
 			<currency type="VEF">
+				<displayName>venezuelský bolívar (2008–2018)</displayName>
+				<displayName count="one">venezuelský bolívar (2008–2018)</displayName>
+				<displayName count="few">venezuelské bolívary (2008–2018)</displayName>
+				<displayName count="many">venezuelského bolívaru (2008–2018)</displayName>
+				<displayName count="other">venezuelských bolívarov (2008–2018)</displayName>
+				<symbol draft="contributed">VEF</symbol>
+				<symbol alt="narrow" draft="contributed">Bs</symbol>
+			</currency>
+			<currency type="VES">
 				<displayName>venezuelský bolívar</displayName>
 				<displayName count="one">venezuelský bolívar</displayName>
 				<displayName count="few">venezuelské bolívary</displayName>
 				<displayName count="many">venezuelského bolívaru</displayName>
 				<displayName count="other">venezuelských bolívarov</displayName>
-				<symbol>VEF</symbol>
-				<symbol alt="narrow" draft="contributed">Bs</symbol>
+				<symbol draft="contributed">VES</symbol>
 			</currency>
 			<currency type="VND">
 				<displayName>vietnamský dong</displayName>
@@ -7814,7 +7971,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">vanuatské vatu</displayName>
 				<displayName count="many">vanuatského vatu</displayName>
 				<displayName count="other">vanuatských vatu</displayName>
-				<symbol>VUV</symbol>
+				<symbol draft="contributed">VUV</symbol>
 			</currency>
 			<currency type="WST">
 				<displayName>samojská tala</displayName>
@@ -7822,7 +7979,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">samojské taly</displayName>
 				<displayName count="many">samojskej taly</displayName>
 				<displayName count="other">samojských tál</displayName>
-				<symbol>WST</symbol>
+				<symbol draft="contributed">WST</symbol>
 			</currency>
 			<currency type="XAF">
 				<displayName>stredoafrický frank</displayName>
@@ -7830,7 +7987,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">stredoafrické franky</displayName>
 				<displayName count="many">stredoafrického franku</displayName>
 				<displayName count="other">stredoafrických frankov</displayName>
-				<symbol>FCFA</symbol>
+				<symbol draft="contributed">FCFA</symbol>
 			</currency>
 			<currency type="XAG">
 				<displayName draft="contributed">striebro</displayName>
@@ -7886,7 +8043,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">východokaribské doláre</displayName>
 				<displayName count="many">východokaribského dolára</displayName>
 				<displayName count="other">východokaribských dolárov</displayName>
-				<symbol>EC$</symbol>
+				<symbol draft="contributed">EC$</symbol>
 				<symbol alt="narrow" draft="contributed">$</symbol>
 			</currency>
 			<currency type="XDR">
@@ -7927,7 +8084,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">západoafrické franky</displayName>
 				<displayName count="many">západoafrického franku</displayName>
 				<displayName count="other">západoafrických frankov</displayName>
-				<symbol>CFA</symbol>
+				<symbol draft="contributed">CFA</symbol>
 			</currency>
 			<currency type="XPD">
 				<displayName draft="contributed">paládium</displayName>
@@ -7943,7 +8100,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">CFP franky</displayName>
 				<displayName count="many">CFP franku</displayName>
 				<displayName count="other">CFP frankov</displayName>
-				<symbol>CFPF</symbol>
+				<symbol draft="contributed">CFPF</symbol>
 			</currency>
 			<currency type="XPT">
 				<displayName draft="contributed">platina</displayName>
@@ -8007,7 +8164,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">jemenské rialy</displayName>
 				<displayName count="many">jemenského rialu</displayName>
 				<displayName count="other">jemenských rialov</displayName>
-				<symbol>YER</symbol>
+				<symbol draft="contributed">YER</symbol>
 			</currency>
 			<currency type="YUD">
 				<displayName>Juhoslávsky dinár [YUD]</displayName>
@@ -8055,7 +8212,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">juhoafrické randy</displayName>
 				<displayName count="many">juhoafrického randu</displayName>
 				<displayName count="other">juhoafrických randov</displayName>
-				<symbol>ZAR</symbol>
+				<symbol draft="contributed">ZAR</symbol>
 				<symbol alt="narrow" draft="contributed">R</symbol>
 			</currency>
 			<currency type="ZMK">
@@ -8072,7 +8229,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">zambijské kwachy</displayName>
 				<displayName count="many">zambijskej kwachy</displayName>
 				<displayName count="other">zambijských kwách</displayName>
-				<symbol>ZMW</symbol>
+				<symbol draft="contributed">ZMW</symbol>
 				<symbol alt="narrow" draft="contributed">ZK</symbol>
 			</currency>
 			<currency type="ZRN">
@@ -8117,7 +8274,9 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			</currency>
 		</currencies>
 		<miscPatterns numberSystem="latn">
+			<pattern type="approximately">~{0}</pattern>
 			<pattern type="atLeast">{0}+</pattern>
+			<pattern type="atMost">≤{0}</pattern>
 			<pattern type="range">{0} – {1}</pattern>
 		</miscPatterns>
 		<minimalPairs>
@@ -8132,6 +8291,9 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 		<unitLength type="long">
 			<compoundUnit type="per">
 				<compoundUnitPattern>{0}/{1}</compoundUnitPattern>
+			</compoundUnit>
+			<compoundUnit type="times">
+				<compoundUnitPattern>{0}{1}</compoundUnitPattern>
 			</compoundUnit>
 			<unit type="acceleration-g-force">
 				<displayName>jednotky preťaženia</displayName>
@@ -8250,6 +8412,13 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<unitPattern count="other">{0} štvorcových palcov</unitPattern>
 				<perUnitPattern>{0} na štvorcový palec</perUnitPattern>
 			</unit>
+			<unit type="area-dunam">
+				<displayName>dunamy</displayName>
+				<unitPattern count="one">{0} dunam</unitPattern>
+				<unitPattern count="few">{0} dunamy</unitPattern>
+				<unitPattern count="many">{0} dunamu</unitPattern>
+				<unitPattern count="other">{0} dunamov</unitPattern>
+			</unit>
 			<unit type="concentr-karat">
 				<displayName>karáty</displayName>
 				<unitPattern count="one">{0} karát</unitPattern>
@@ -8278,6 +8447,34 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<unitPattern count="many">{0} milióntiny</unitPattern>
 				<unitPattern count="other">{0} milióntin</unitPattern>
 			</unit>
+			<unit type="concentr-percent">
+				<displayName>percentá</displayName>
+				<unitPattern count="one">{0} percento</unitPattern>
+				<unitPattern count="few">{0} percentá</unitPattern>
+				<unitPattern count="many">{0} percenta</unitPattern>
+				<unitPattern count="other">{0} percent</unitPattern>
+			</unit>
+			<unit type="concentr-permille">
+				<displayName>promile</displayName>
+				<unitPattern count="one">{0} promile</unitPattern>
+				<unitPattern count="few">{0} promile</unitPattern>
+				<unitPattern count="many">{0} promile</unitPattern>
+				<unitPattern count="other">{0} promile</unitPattern>
+			</unit>
+			<unit type="concentr-permyriad">
+				<displayName>desatiny promile</displayName>
+				<unitPattern count="one">{0} desatina promile</unitPattern>
+				<unitPattern count="few">{0} desatiny promile</unitPattern>
+				<unitPattern count="many">{0} desatiny promile</unitPattern>
+				<unitPattern count="other">{0} desatín promile</unitPattern>
+			</unit>
+			<unit type="concentr-mole">
+				<displayName>moly</displayName>
+				<unitPattern count="one">{0} mol</unitPattern>
+				<unitPattern count="few">{0} moly</unitPattern>
+				<unitPattern count="many">{0} molu</unitPattern>
+				<unitPattern count="other">{0} molov</unitPattern>
+			</unit>
 			<unit type="consumption-liter-per-kilometer">
 				<displayName>litre na kilometer</displayName>
 				<unitPattern count="one">{0} liter na kilometer</unitPattern>
@@ -8305,6 +8502,13 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<unitPattern count="few">{0} míle na britský galón</unitPattern>
 				<unitPattern count="many">{0} míle na britský galón</unitPattern>
 				<unitPattern count="other">{0} míľ na britský galón</unitPattern>
+			</unit>
+			<unit type="digital-petabyte">
+				<displayName>petabajty</displayName>
+				<unitPattern count="one">{0} petabajt</unitPattern>
+				<unitPattern count="few">{0} petabajty</unitPattern>
+				<unitPattern count="many">{0} petabajtu</unitPattern>
+				<unitPattern count="other">{0} petabajtov</unitPattern>
 			</unit>
 			<unit type="digital-terabyte">
 				<displayName>terabajty</displayName>
@@ -8382,6 +8586,13 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<unitPattern count="few">{0} storočia</unitPattern>
 				<unitPattern count="many">{0} storočia</unitPattern>
 				<unitPattern count="other">{0} storočí</unitPattern>
+			</unit>
+			<unit type="duration-decade">
+				<displayName>desaťročia</displayName>
+				<unitPattern count="one">{0} desaťročie</unitPattern>
+				<unitPattern count="few">{0} desaťročia</unitPattern>
+				<unitPattern count="many">{0} desaťročia</unitPattern>
+				<unitPattern count="other">{0} desaťročí</unitPattern>
 			</unit>
 			<unit type="duration-year">
 				<displayName>roky</displayName>
@@ -8530,6 +8741,41 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<unitPattern count="many">{0} kilowatthodiny</unitPattern>
 				<unitPattern count="other">{0} kilowatthodín</unitPattern>
 			</unit>
+			<unit type="energy-electronvolt">
+				<displayName>elektrónvolty</displayName>
+				<unitPattern count="one">{0} elektrónvolt</unitPattern>
+				<unitPattern count="few">{0} elektrónvolty</unitPattern>
+				<unitPattern count="many">{0} elektrónvoltu</unitPattern>
+				<unitPattern count="other">{0} elektrónvoltov</unitPattern>
+			</unit>
+			<unit type="energy-british-thermal-unit">
+				<displayName>britské tepelné jednotky</displayName>
+				<unitPattern count="one">{0} britská tepelná jednotka</unitPattern>
+				<unitPattern count="few">{0} britské tepelné jednotky</unitPattern>
+				<unitPattern count="many">{0} britskej tepelnej jednotky</unitPattern>
+				<unitPattern count="other">{0} britských tepelných jednotiek</unitPattern>
+			</unit>
+			<unit type="energy-therm-us">
+				<displayName>americké termy</displayName>
+				<unitPattern count="one">{0} americký term</unitPattern>
+				<unitPattern count="few">{0} americké termy</unitPattern>
+				<unitPattern count="many">{0} amerického termu</unitPattern>
+				<unitPattern count="other">{0} amerických termov</unitPattern>
+			</unit>
+			<unit type="force-pound-force">
+				<displayName>libry sily</displayName>
+				<unitPattern count="one">{0} libra sily</unitPattern>
+				<unitPattern count="few">{0} libry sily</unitPattern>
+				<unitPattern count="many">{0} libry sily</unitPattern>
+				<unitPattern count="other">{0} libier sily</unitPattern>
+			</unit>
+			<unit type="force-newton">
+				<displayName>newtony</displayName>
+				<unitPattern count="one">{0} newton</unitPattern>
+				<unitPattern count="few">{0} newtony</unitPattern>
+				<unitPattern count="many">{0} newtona</unitPattern>
+				<unitPattern count="other">{0} newtonov</unitPattern>
+			</unit>
 			<unit type="frequency-gigahertz">
 				<displayName>gigahertze</displayName>
 				<unitPattern count="one">{0} gigahertz</unitPattern>
@@ -8557,6 +8803,48 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<unitPattern count="few">{0} hertze</unitPattern>
 				<unitPattern count="many">{0} hertza</unitPattern>
 				<unitPattern count="other">{0} hertzov</unitPattern>
+			</unit>
+			<unit type="graphics-pixel">
+				<displayName>pixely</displayName>
+				<unitPattern count="one">{0} pixel</unitPattern>
+				<unitPattern count="few">{0} pixely</unitPattern>
+				<unitPattern count="many">{0} pixela</unitPattern>
+				<unitPattern count="other">{0} pixelov</unitPattern>
+			</unit>
+			<unit type="graphics-megapixel">
+				<displayName>megapixely</displayName>
+				<unitPattern count="one">{0} megapixel</unitPattern>
+				<unitPattern count="few">{0} megapixely</unitPattern>
+				<unitPattern count="many">{0} megapixela</unitPattern>
+				<unitPattern count="other">{0} megapixelov</unitPattern>
+			</unit>
+			<unit type="graphics-pixel-per-centimeter">
+				<displayName>pixely na centimeter</displayName>
+				<unitPattern count="one">{0} pixel na centimeter</unitPattern>
+				<unitPattern count="few">{0} pixely na centimeter</unitPattern>
+				<unitPattern count="many">{0} pixela na centimeter</unitPattern>
+				<unitPattern count="other">{0} pixelov na centimeter</unitPattern>
+			</unit>
+			<unit type="graphics-pixel-per-inch">
+				<displayName>pixely na palec</displayName>
+				<unitPattern count="one">{0} pixel na palec</unitPattern>
+				<unitPattern count="few">{0} pixely na palec</unitPattern>
+				<unitPattern count="many">{0} pixela na palec</unitPattern>
+				<unitPattern count="other">{0} pixelov na palec</unitPattern>
+			</unit>
+			<unit type="graphics-dot-per-centimeter">
+				<displayName>body na centimeter</displayName>
+				<unitPattern count="one">{0} bod na centimeter</unitPattern>
+				<unitPattern count="few">{0} body na centimeter</unitPattern>
+				<unitPattern count="many">{0} bodu na centimeter</unitPattern>
+				<unitPattern count="other">{0} bodov na centimeter</unitPattern>
+			</unit>
+			<unit type="graphics-dot-per-inch">
+				<displayName>body na palec</displayName>
+				<unitPattern count="one">{0} bod na palec</unitPattern>
+				<unitPattern count="few">{0} body na palec</unitPattern>
+				<unitPattern count="many">{0} bodu na palec</unitPattern>
+				<unitPattern count="other">{0} bodov na palec</unitPattern>
 			</unit>
 			<unit type="length-kilometer">
 				<displayName>kilometre</displayName>
@@ -8689,12 +8977,26 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<unitPattern count="many">{0} bodu</unitPattern>
 				<unitPattern count="other">{0} bodov</unitPattern>
 			</unit>
+			<unit type="length-solar-radius">
+				<displayName>polomer Slnka</displayName>
+				<unitPattern count="one">{0} polomer Slnka</unitPattern>
+				<unitPattern count="few">{0} polomery Slnka</unitPattern>
+				<unitPattern count="many">{0} polomeru Slnka</unitPattern>
+				<unitPattern count="other">{0} polomerov Slnka</unitPattern>
+			</unit>
 			<unit type="light-lux">
 				<displayName>luxy</displayName>
 				<unitPattern count="one">{0} lux</unitPattern>
 				<unitPattern count="few">{0} luxy</unitPattern>
 				<unitPattern count="many">{0} luxu</unitPattern>
 				<unitPattern count="other">{0} luxov</unitPattern>
+			</unit>
+			<unit type="light-solar-luminosity">
+				<displayName>svietivosti Slnka</displayName>
+				<unitPattern count="one">{0} svietivosť Slnka</unitPattern>
+				<unitPattern count="few">{0} svietivosti Slnka</unitPattern>
+				<unitPattern count="many">{0} svietivosti Slnka</unitPattern>
+				<unitPattern count="other">{0} svietivostí Slnka</unitPattern>
 			</unit>
 			<unit type="mass-metric-ton">
 				<displayName>tony</displayName>
@@ -8777,6 +9079,27 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<unitPattern count="many">{0} karátu</unitPattern>
 				<unitPattern count="other">{0} karátov</unitPattern>
 			</unit>
+			<unit type="mass-dalton">
+				<displayName>daltony</displayName>
+				<unitPattern count="one">{0} dalton</unitPattern>
+				<unitPattern count="few">{0} daltony</unitPattern>
+				<unitPattern count="many">{0} daltona</unitPattern>
+				<unitPattern count="other">{0} daltonov</unitPattern>
+			</unit>
+			<unit type="mass-earth-mass">
+				<displayName>hmotnosti Zeme</displayName>
+				<unitPattern count="one">{0} hmotnosť Zeme</unitPattern>
+				<unitPattern count="few">{0} hmotnosti Zeme</unitPattern>
+				<unitPattern count="many">{0} hmotnosti Zeme</unitPattern>
+				<unitPattern count="other">{0} hmotností Zeme</unitPattern>
+			</unit>
+			<unit type="mass-solar-mass">
+				<displayName>hmotnosti Slnka</displayName>
+				<unitPattern count="one">{0} hmotnosť Slnka</unitPattern>
+				<unitPattern count="few">{0} hmotnosti Slnka</unitPattern>
+				<unitPattern count="many">{0} hmotnosti Slnka</unitPattern>
+				<unitPattern count="other">{0} hmotností Slnka</unitPattern>
+			</unit>
 			<unit type="power-gigawatt">
 				<displayName>gigawatty</displayName>
 				<unitPattern count="one">{0} gigawatt</unitPattern>
@@ -8819,13 +9142,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<unitPattern count="many">{0} konskej sily</unitPattern>
 				<unitPattern count="other">{0} konských síl</unitPattern>
 			</unit>
-			<unit type="pressure-hectopascal">
-				<displayName>hektopascaly</displayName>
-				<unitPattern count="one">{0} hektopascal</unitPattern>
-				<unitPattern count="few">{0} hektopascaly</unitPattern>
-				<unitPattern count="many">{0} hektopascala</unitPattern>
-				<unitPattern count="other">{0} hektopascalov</unitPattern>
-			</unit>
 			<unit type="pressure-millimeter-of-mercury">
 				<displayName>milimetre ortuťového stĺpca</displayName>
 				<unitPattern count="one">{0} milimeter ortuťového stĺpca</unitPattern>
@@ -8847,12 +9163,54 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<unitPattern count="many">{0} palca ortuťového stĺpca</unitPattern>
 				<unitPattern count="other">{0} palcov ortuťového stĺpca</unitPattern>
 			</unit>
+			<unit type="pressure-bar">
+				<displayName>bary</displayName>
+				<unitPattern count="one">{0} bar</unitPattern>
+				<unitPattern count="few">{0} bary</unitPattern>
+				<unitPattern count="many">{0} baru</unitPattern>
+				<unitPattern count="other">{0} barov</unitPattern>
+			</unit>
 			<unit type="pressure-millibar">
 				<displayName>milibary</displayName>
 				<unitPattern count="one">{0} milibar</unitPattern>
 				<unitPattern count="few">{0} milibary</unitPattern>
 				<unitPattern count="many">{0} milibaru</unitPattern>
 				<unitPattern count="other">{0} milibarov</unitPattern>
+			</unit>
+			<unit type="pressure-atmosphere">
+				<displayName>atmosféry</displayName>
+				<unitPattern count="one">{0} atmosféra</unitPattern>
+				<unitPattern count="few">{0} atmosféry</unitPattern>
+				<unitPattern count="many">{0} atmosféry</unitPattern>
+				<unitPattern count="other">{0} atmosfér</unitPattern>
+			</unit>
+			<unit type="pressure-pascal">
+				<displayName>pascaly</displayName>
+				<unitPattern count="one">pascal</unitPattern>
+				<unitPattern count="few">{0} pascaly</unitPattern>
+				<unitPattern count="many">{0} pascala</unitPattern>
+				<unitPattern count="other">{0} pascalov</unitPattern>
+			</unit>
+			<unit type="pressure-hectopascal">
+				<displayName>hektopascaly</displayName>
+				<unitPattern count="one">{0} hektopascal</unitPattern>
+				<unitPattern count="few">{0} hektopascaly</unitPattern>
+				<unitPattern count="many">{0} hektopascala</unitPattern>
+				<unitPattern count="other">{0} hektopascalov</unitPattern>
+			</unit>
+			<unit type="pressure-kilopascal">
+				<displayName>kilopascaly</displayName>
+				<unitPattern count="one">{0} kilopascal</unitPattern>
+				<unitPattern count="few">{0} kilopascaly</unitPattern>
+				<unitPattern count="many">{0} kilopascala</unitPattern>
+				<unitPattern count="other">{0} kilopascalov</unitPattern>
+			</unit>
+			<unit type="pressure-megapascal">
+				<displayName>megapascaly</displayName>
+				<unitPattern count="one">{0} megapascal</unitPattern>
+				<unitPattern count="few">{0} megapascaly</unitPattern>
+				<unitPattern count="many">{0} megapascala</unitPattern>
+				<unitPattern count="other">{0} megapascalov</unitPattern>
 			</unit>
 			<unit type="speed-kilometer-per-hour">
 				<displayName>kilometre za hodinu</displayName>
@@ -8909,6 +9267,20 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<unitPattern count="few">{0} kelviny</unitPattern>
 				<unitPattern count="many">{0} kelvina</unitPattern>
 				<unitPattern count="other">{0} kelvinov</unitPattern>
+			</unit>
+			<unit type="torque-pound-foot">
+				<displayName>librostopy</displayName>
+				<unitPattern count="one">{0} librostopa</unitPattern>
+				<unitPattern count="few">{0} librostopy</unitPattern>
+				<unitPattern count="many">{0} librostopy</unitPattern>
+				<unitPattern count="other">{0} librostôp</unitPattern>
+			</unit>
+			<unit type="torque-newton-meter">
+				<displayName>newtonmetre</displayName>
+				<unitPattern count="one">{0} newtonmeter</unitPattern>
+				<unitPattern count="few">{0} newtonmetre</unitPattern>
+				<unitPattern count="many">{0} newtonmetra</unitPattern>
+				<unitPattern count="other">{0} newtonmetrov</unitPattern>
 			</unit>
 			<unit type="volume-cubic-kilometer">
 				<displayName>kubické kilometre</displayName>
@@ -9069,6 +9441,13 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<unitPattern count="many">{0} tekutej unce</unitPattern>
 				<unitPattern count="other">{0} tekutých uncí</unitPattern>
 			</unit>
+			<unit type="volume-fluid-ounce-imperial">
+				<displayName>britské tekuté unce</displayName>
+				<unitPattern count="one">{0} britská tekutá unca</unitPattern>
+				<unitPattern count="few">{0} britské tekuté unce</unitPattern>
+				<unitPattern count="many">{0} britskej tekutej unce</unitPattern>
+				<unitPattern count="other">{0} britských tekutých uncí</unitPattern>
+			</unit>
 			<unit type="volume-tablespoon">
 				<displayName>polievkové lyžice</displayName>
 				<unitPattern count="one">{0} polievková lyžica</unitPattern>
@@ -9083,7 +9462,15 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<unitPattern count="many">{0} čajovej lyžice</unitPattern>
 				<unitPattern count="other">{0} čajových lyžíc</unitPattern>
 			</unit>
+			<unit type="volume-barrel">
+				<displayName>barely</displayName>
+				<unitPattern count="one">{0} barel</unitPattern>
+				<unitPattern count="few">{0} barely</unitPattern>
+				<unitPattern count="many">{0} barelu</unitPattern>
+				<unitPattern count="other">{0} barelov</unitPattern>
+			</unit>
 			<coordinateUnit>
+				<displayName>svetová strana</displayName>
 				<coordinateUnitPattern type="east">{0} E</coordinateUnitPattern>
 				<coordinateUnitPattern type="north">{0} N</coordinateUnitPattern>
 				<coordinateUnitPattern type="south">{0} S</coordinateUnitPattern>
@@ -9093,6 +9480,9 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 		<unitLength type="short">
 			<compoundUnit type="per">
 				<compoundUnitPattern>{0}/{1}</compoundUnitPattern>
+			</compoundUnit>
+			<compoundUnit type="times">
+				<compoundUnitPattern>{0}{1}</compoundUnitPattern>
 			</compoundUnit>
 			<unit type="acceleration-g-force">
 				<displayName>jednotka preťaženia</displayName>
@@ -9211,6 +9601,13 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<unitPattern count="other">{0} in²</unitPattern>
 				<perUnitPattern>{0}/in²</perUnitPattern>
 			</unit>
+			<unit type="area-dunam">
+				<displayName>dun.</displayName>
+				<unitPattern count="one">{0} dun.</unitPattern>
+				<unitPattern count="few">{0} dun.</unitPattern>
+				<unitPattern count="many">{0} dun.</unitPattern>
+				<unitPattern count="other">{0} dun.</unitPattern>
+			</unit>
 			<unit type="concentr-karat">
 				<displayName>kt</displayName>
 				<unitPattern count="one">{0} kt</unitPattern>
@@ -9239,6 +9636,34 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<unitPattern count="many">{0} ppm</unitPattern>
 				<unitPattern count="other">{0} ppm</unitPattern>
 			</unit>
+			<unit type="concentr-percent">
+				<displayName>%</displayName>
+				<unitPattern count="one">{0} %</unitPattern>
+				<unitPattern count="few">{0} %</unitPattern>
+				<unitPattern count="many">{0} %</unitPattern>
+				<unitPattern count="other">{0} %</unitPattern>
+			</unit>
+			<unit type="concentr-permille">
+				<displayName>‰</displayName>
+				<unitPattern count="one">{0} ‰</unitPattern>
+				<unitPattern count="few">{0} ‰</unitPattern>
+				<unitPattern count="many">{0} ‰</unitPattern>
+				<unitPattern count="other">{0} ‰</unitPattern>
+			</unit>
+			<unit type="concentr-permyriad">
+				<displayName>‱</displayName>
+				<unitPattern count="one">{0} ‱</unitPattern>
+				<unitPattern count="few">{0} ‱</unitPattern>
+				<unitPattern count="many">{0} ‱</unitPattern>
+				<unitPattern count="other">{0} ‱</unitPattern>
+			</unit>
+			<unit type="concentr-mole">
+				<displayName>mol</displayName>
+				<unitPattern count="one">{0} mol</unitPattern>
+				<unitPattern count="few">{0} mol</unitPattern>
+				<unitPattern count="many">{0} mol</unitPattern>
+				<unitPattern count="other">{0} mol</unitPattern>
+			</unit>
 			<unit type="consumption-liter-per-kilometer">
 				<displayName>l/km</displayName>
 				<unitPattern count="one">{0} l/km</unitPattern>
@@ -9266,6 +9691,13 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<unitPattern count="few">{0} mpg brit.</unitPattern>
 				<unitPattern count="many">{0} mpg brit.</unitPattern>
 				<unitPattern count="other">{0} mpg brit.</unitPattern>
+			</unit>
+			<unit type="digital-petabyte">
+				<displayName>PB</displayName>
+				<unitPattern count="one">{0} PB</unitPattern>
+				<unitPattern count="few">{0} PB</unitPattern>
+				<unitPattern count="many">{0} PB</unitPattern>
+				<unitPattern count="other">{0} PB</unitPattern>
 			</unit>
 			<unit type="digital-terabyte">
 				<displayName>TB</displayName>
@@ -9343,6 +9775,13 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<unitPattern count="few">{0} stor.</unitPattern>
 				<unitPattern count="many">{0} stor.</unitPattern>
 				<unitPattern count="other">{0} stor.</unitPattern>
+			</unit>
+			<unit type="duration-decade">
+				<displayName>desaťr.</displayName>
+				<unitPattern count="one">{0} desaťr.</unitPattern>
+				<unitPattern count="few">{0} desaťr.</unitPattern>
+				<unitPattern count="many">{0} desaťr.</unitPattern>
+				<unitPattern count="other">{0} desaťr.</unitPattern>
 			</unit>
 			<unit type="duration-year">
 				<displayName>r.</displayName>
@@ -9491,6 +9930,41 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<unitPattern count="many">{0} kWh</unitPattern>
 				<unitPattern count="other">{0} kWh</unitPattern>
 			</unit>
+			<unit type="energy-electronvolt">
+				<displayName>eV</displayName>
+				<unitPattern count="one">{0} eV</unitPattern>
+				<unitPattern count="few">{0} eV</unitPattern>
+				<unitPattern count="many">{0} eV</unitPattern>
+				<unitPattern count="other">{0} eV</unitPattern>
+			</unit>
+			<unit type="energy-british-thermal-unit">
+				<displayName>BTU</displayName>
+				<unitPattern count="one">{0} BTU</unitPattern>
+				<unitPattern count="few">{0} BTU</unitPattern>
+				<unitPattern count="many">{0} BTU</unitPattern>
+				<unitPattern count="other">{0} BTU</unitPattern>
+			</unit>
+			<unit type="energy-therm-us">
+				<displayName>thm</displayName>
+				<unitPattern count="one">{0} thm</unitPattern>
+				<unitPattern count="few">{0} thm</unitPattern>
+				<unitPattern count="many">{0} thm</unitPattern>
+				<unitPattern count="other">{0} thm</unitPattern>
+			</unit>
+			<unit type="force-pound-force">
+				<displayName>lbf</displayName>
+				<unitPattern count="one">{0} lbf</unitPattern>
+				<unitPattern count="few">{0} lbf</unitPattern>
+				<unitPattern count="many">{0} lbf</unitPattern>
+				<unitPattern count="other">{0} lbf</unitPattern>
+			</unit>
+			<unit type="force-newton">
+				<displayName>N</displayName>
+				<unitPattern count="one">{0} N</unitPattern>
+				<unitPattern count="few">{0} N</unitPattern>
+				<unitPattern count="many">{0} N</unitPattern>
+				<unitPattern count="other">{0} N</unitPattern>
+			</unit>
 			<unit type="frequency-gigahertz">
 				<displayName>GHz</displayName>
 				<unitPattern count="one">{0} GHz</unitPattern>
@@ -9518,6 +9992,55 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<unitPattern count="few">{0} Hz</unitPattern>
 				<unitPattern count="many">{0} Hz</unitPattern>
 				<unitPattern count="other">{0} Hz</unitPattern>
+			</unit>
+			<unit type="graphics-em">
+				<displayName>em</displayName>
+				<unitPattern count="one">{0} em</unitPattern>
+				<unitPattern count="few">{0} em</unitPattern>
+				<unitPattern count="many">{0} em</unitPattern>
+				<unitPattern count="other">{0} em</unitPattern>
+			</unit>
+			<unit type="graphics-pixel">
+				<displayName>px</displayName>
+				<unitPattern count="one">{0} px</unitPattern>
+				<unitPattern count="few">{0} px</unitPattern>
+				<unitPattern count="many">{0} px</unitPattern>
+				<unitPattern count="other">{0} px</unitPattern>
+			</unit>
+			<unit type="graphics-megapixel">
+				<displayName>Mpx</displayName>
+				<unitPattern count="one">{0} Mpx</unitPattern>
+				<unitPattern count="few">{0} Mpx</unitPattern>
+				<unitPattern count="many">{0} Mpx</unitPattern>
+				<unitPattern count="other">{0} Mpx</unitPattern>
+			</unit>
+			<unit type="graphics-pixel-per-centimeter">
+				<displayName>ppcm</displayName>
+				<unitPattern count="one">{0} ppcm</unitPattern>
+				<unitPattern count="few">{0} ppcm</unitPattern>
+				<unitPattern count="many">{0} ppcm</unitPattern>
+				<unitPattern count="other">{0} ppcm</unitPattern>
+			</unit>
+			<unit type="graphics-pixel-per-inch">
+				<displayName>ppi</displayName>
+				<unitPattern count="one">{0} ppi</unitPattern>
+				<unitPattern count="few">{0} ppi</unitPattern>
+				<unitPattern count="many">{0} ppi</unitPattern>
+				<unitPattern count="other">{0} ppi</unitPattern>
+			</unit>
+			<unit type="graphics-dot-per-centimeter">
+				<displayName>dpcm</displayName>
+				<unitPattern count="one">{0} dpcm</unitPattern>
+				<unitPattern count="few">{0} dpcm</unitPattern>
+				<unitPattern count="many">{0} dpcm</unitPattern>
+				<unitPattern count="other">{0} dpcm</unitPattern>
+			</unit>
+			<unit type="graphics-dot-per-inch">
+				<displayName>dpi</displayName>
+				<unitPattern count="one">{0} dpi</unitPattern>
+				<unitPattern count="few">{0} dpi</unitPattern>
+				<unitPattern count="many">{0} dpi</unitPattern>
+				<unitPattern count="other">{0} dpi</unitPattern>
 			</unit>
 			<unit type="length-kilometer">
 				<displayName>km</displayName>
@@ -9650,12 +10173,26 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<unitPattern count="many">{0} pt</unitPattern>
 				<unitPattern count="other">{0} pt</unitPattern>
 			</unit>
+			<unit type="length-solar-radius">
+				<displayName>R☉</displayName>
+				<unitPattern count="one">{0} R☉</unitPattern>
+				<unitPattern count="few">{0} R☉</unitPattern>
+				<unitPattern count="many">{0} R☉</unitPattern>
+				<unitPattern count="other">{0} R☉</unitPattern>
+			</unit>
 			<unit type="light-lux">
 				<displayName>lx</displayName>
 				<unitPattern count="one">{0} lx</unitPattern>
 				<unitPattern count="few">{0} lx</unitPattern>
 				<unitPattern count="many">{0} lx</unitPattern>
 				<unitPattern count="other">{0} lx</unitPattern>
+			</unit>
+			<unit type="light-solar-luminosity">
+				<displayName>L☉</displayName>
+				<unitPattern count="one">{0} L☉</unitPattern>
+				<unitPattern count="few">{0} L☉</unitPattern>
+				<unitPattern count="many">{0} L☉</unitPattern>
+				<unitPattern count="other">{0} L☉</unitPattern>
 			</unit>
 			<unit type="mass-metric-ton">
 				<displayName>t</displayName>
@@ -9738,6 +10275,27 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<unitPattern count="many">{0} ct</unitPattern>
 				<unitPattern count="other">{0} ct</unitPattern>
 			</unit>
+			<unit type="mass-dalton">
+				<displayName>Da</displayName>
+				<unitPattern count="one">{0} Da</unitPattern>
+				<unitPattern count="few">{0} Da</unitPattern>
+				<unitPattern count="many">{0} Da</unitPattern>
+				<unitPattern count="other">{0} Da</unitPattern>
+			</unit>
+			<unit type="mass-earth-mass">
+				<displayName>M⊕</displayName>
+				<unitPattern count="one">{0} M⊕</unitPattern>
+				<unitPattern count="few">{0} M⊕</unitPattern>
+				<unitPattern count="many">{0} M⊕</unitPattern>
+				<unitPattern count="other">{0} M⊕</unitPattern>
+			</unit>
+			<unit type="mass-solar-mass">
+				<displayName>M☉</displayName>
+				<unitPattern count="one">{0} M☉</unitPattern>
+				<unitPattern count="few">{0} M☉</unitPattern>
+				<unitPattern count="many">{0} M☉</unitPattern>
+				<unitPattern count="other">{0} M☉</unitPattern>
+			</unit>
 			<unit type="power-gigawatt">
 				<displayName>GW</displayName>
 				<unitPattern count="one">{0} GW</unitPattern>
@@ -9780,13 +10338,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<unitPattern count="many">{0} hp</unitPattern>
 				<unitPattern count="other">{0} hp</unitPattern>
 			</unit>
-			<unit type="pressure-hectopascal">
-				<displayName>hPa</displayName>
-				<unitPattern count="one">{0} hPa</unitPattern>
-				<unitPattern count="few">{0} hPa</unitPattern>
-				<unitPattern count="many">{0} hPa</unitPattern>
-				<unitPattern count="other">{0} hPa</unitPattern>
-			</unit>
 			<unit type="pressure-millimeter-of-mercury">
 				<displayName>mm Hg</displayName>
 				<unitPattern count="one">{0} mm Hg</unitPattern>
@@ -9814,6 +10365,34 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<unitPattern count="few">{0} mbar</unitPattern>
 				<unitPattern count="many">{0} mbar</unitPattern>
 				<unitPattern count="other">{0} mbar</unitPattern>
+			</unit>
+			<unit type="pressure-atmosphere">
+				<displayName>atm</displayName>
+				<unitPattern count="one">{0} atm</unitPattern>
+				<unitPattern count="few">{0} atm</unitPattern>
+				<unitPattern count="many">{0} atm</unitPattern>
+				<unitPattern count="other">{0} atm</unitPattern>
+			</unit>
+			<unit type="pressure-hectopascal">
+				<displayName>hPa</displayName>
+				<unitPattern count="one">{0} hPa</unitPattern>
+				<unitPattern count="few">{0} hPa</unitPattern>
+				<unitPattern count="many">{0} hPa</unitPattern>
+				<unitPattern count="other">{0} hPa</unitPattern>
+			</unit>
+			<unit type="pressure-kilopascal">
+				<displayName>kPa</displayName>
+				<unitPattern count="one">{0} kPa</unitPattern>
+				<unitPattern count="few">{0} kPa</unitPattern>
+				<unitPattern count="many">{0} kPa</unitPattern>
+				<unitPattern count="other">{0} kPa</unitPattern>
+			</unit>
+			<unit type="pressure-megapascal">
+				<displayName>MPa</displayName>
+				<unitPattern count="one">{0} MPa</unitPattern>
+				<unitPattern count="few">{0} MPa</unitPattern>
+				<unitPattern count="many">{0} MPa</unitPattern>
+				<unitPattern count="other">{0} MPa</unitPattern>
 			</unit>
 			<unit type="speed-kilometer-per-hour">
 				<displayName>km/h</displayName>
@@ -9870,6 +10449,20 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<unitPattern count="few">{0} K</unitPattern>
 				<unitPattern count="many">{0} K</unitPattern>
 				<unitPattern count="other">{0} K</unitPattern>
+			</unit>
+			<unit type="torque-pound-foot">
+				<displayName>lbf⋅ft</displayName>
+				<unitPattern count="one">{0} lbf⋅ft</unitPattern>
+				<unitPattern count="few">{0} lbf⋅ft</unitPattern>
+				<unitPattern count="many">{0} lbf⋅ft</unitPattern>
+				<unitPattern count="other">{0} lbf⋅ft</unitPattern>
+			</unit>
+			<unit type="torque-newton-meter">
+				<displayName>Nm</displayName>
+				<unitPattern count="one">{0} Nm</unitPattern>
+				<unitPattern count="few">{0} Nm</unitPattern>
+				<unitPattern count="many">{0} Nm</unitPattern>
+				<unitPattern count="other">{0} Nm</unitPattern>
 			</unit>
 			<unit type="volume-cubic-kilometer">
 				<displayName>km³</displayName>
@@ -10030,6 +10623,13 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<unitPattern count="many">{0} fl oz</unitPattern>
 				<unitPattern count="other">{0} fl oz</unitPattern>
 			</unit>
+			<unit type="volume-fluid-ounce-imperial">
+				<displayName>brit. fl oz</displayName>
+				<unitPattern count="one">{0} brit. fl oz</unitPattern>
+				<unitPattern count="few">{0} brit. fl oz</unitPattern>
+				<unitPattern count="many">{0} brit. fl oz</unitPattern>
+				<unitPattern count="other">{0} brit. fl oz</unitPattern>
+			</unit>
 			<unit type="volume-tablespoon">
 				<displayName>tbsp</displayName>
 				<unitPattern count="one">{0} tbsp</unitPattern>
@@ -10044,7 +10644,15 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<unitPattern count="many">{0} tsp</unitPattern>
 				<unitPattern count="other">{0} tsp</unitPattern>
 			</unit>
+			<unit type="volume-barrel">
+				<displayName>bbl</displayName>
+				<unitPattern count="one">{0} bbl</unitPattern>
+				<unitPattern count="few">{0} bbl</unitPattern>
+				<unitPattern count="many">{0} bbl</unitPattern>
+				<unitPattern count="other">{0} bbl</unitPattern>
+			</unit>
 			<coordinateUnit>
+				<displayName>svetová strana</displayName>
 				<coordinateUnitPattern type="east">{0} E</coordinateUnitPattern>
 				<coordinateUnitPattern type="north">{0} N</coordinateUnitPattern>
 				<coordinateUnitPattern type="south">{0} S</coordinateUnitPattern>
@@ -10054,6 +10662,9 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 		<unitLength type="narrow">
 			<compoundUnit type="per">
 				<compoundUnitPattern>{0}/{1}</compoundUnitPattern>
+			</compoundUnit>
+			<compoundUnit type="times">
+				<compoundUnitPattern>{0}{1}</compoundUnitPattern>
 			</compoundUnit>
 			<unit type="acceleration-g-force">
 				<displayName draft="contributed">G</displayName>
@@ -10076,10 +10687,10 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<unitPattern count="other" draft="contributed">{0} rad</unitPattern>
 			</unit>
 			<unit type="angle-degree">
-				<unitPattern count="one">{0}°</unitPattern>
-				<unitPattern count="few">{0}°</unitPattern>
-				<unitPattern count="many">{0}°</unitPattern>
-				<unitPattern count="other">{0}°</unitPattern>
+				<unitPattern count="one" draft="contributed">{0}°</unitPattern>
+				<unitPattern count="few" draft="contributed">{0}°</unitPattern>
+				<unitPattern count="many" draft="contributed">{0}°</unitPattern>
+				<unitPattern count="other" draft="contributed">{0}°</unitPattern>
 			</unit>
 			<unit type="angle-arc-minute">
 				<unitPattern count="one">{0}′</unitPattern>
@@ -10094,10 +10705,10 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<unitPattern count="other">{0}″</unitPattern>
 			</unit>
 			<unit type="area-square-kilometer">
-				<unitPattern count="one">{0} km²</unitPattern>
-				<unitPattern count="few">{0} km²</unitPattern>
-				<unitPattern count="many">{0} km²</unitPattern>
-				<unitPattern count="other">{0} km²</unitPattern>
+				<unitPattern count="one" draft="contributed">{0} km²</unitPattern>
+				<unitPattern count="few" draft="contributed">{0} km²</unitPattern>
+				<unitPattern count="many" draft="contributed">{0} km²</unitPattern>
+				<unitPattern count="other" draft="contributed">{0} km²</unitPattern>
 			</unit>
 			<unit type="area-hectare">
 				<unitPattern count="one">{0}ha</unitPattern>
@@ -10106,10 +10717,10 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<unitPattern count="other">{0}ha</unitPattern>
 			</unit>
 			<unit type="area-square-meter">
-				<unitPattern count="one">{0} m²</unitPattern>
-				<unitPattern count="few">{0} m²</unitPattern>
-				<unitPattern count="many">{0} m²</unitPattern>
-				<unitPattern count="other">{0} m²</unitPattern>
+				<unitPattern count="one" draft="contributed">{0} m²</unitPattern>
+				<unitPattern count="few" draft="contributed">{0} m²</unitPattern>
+				<unitPattern count="many" draft="contributed">{0} m²</unitPattern>
+				<unitPattern count="other" draft="contributed">{0} m²</unitPattern>
 			</unit>
 			<unit type="area-square-centimeter">
 				<unitPattern count="one" draft="contributed">{0} cm²</unitPattern>
@@ -10152,6 +10763,13 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<unitPattern count="few" draft="contributed">{0} kt</unitPattern>
 				<unitPattern count="many" draft="contributed">{0} kt</unitPattern>
 				<unitPattern count="other" draft="contributed">{0} kt</unitPattern>
+			</unit>
+			<unit type="concentr-percent">
+				<displayName>%</displayName>
+				<unitPattern count="one">{0} %</unitPattern>
+				<unitPattern count="few">{0} %</unitPattern>
+				<unitPattern count="many">{0} %</unitPattern>
+				<unitPattern count="other">{0} %</unitPattern>
 			</unit>
 			<unit type="consumption-liter-per-kilometer">
 				<unitPattern count="one" draft="contributed">{0} l/km</unitPattern>
@@ -10516,13 +11134,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<unitPattern count="many">{0}hp</unitPattern>
 				<unitPattern count="other">{0}hp</unitPattern>
 			</unit>
-			<unit type="pressure-hectopascal">
-				<displayName draft="contributed">hPa</displayName>
-				<unitPattern count="one">{0} hPa</unitPattern>
-				<unitPattern count="few">{0} hPa</unitPattern>
-				<unitPattern count="many">{0} hPa</unitPattern>
-				<unitPattern count="other">{0} hPa</unitPattern>
-			</unit>
 			<unit type="pressure-millimeter-of-mercury">
 				<displayName draft="contributed">mm Hg</displayName>
 				<unitPattern count="one" draft="contributed">{0} mm Hg</unitPattern>
@@ -10550,6 +11161,13 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<unitPattern count="few">{0} mb</unitPattern>
 				<unitPattern count="many">{0} mb</unitPattern>
 				<unitPattern count="other">{0} mb</unitPattern>
+			</unit>
+			<unit type="pressure-hectopascal">
+				<displayName draft="contributed">hPa</displayName>
+				<unitPattern count="one">{0} hPa</unitPattern>
+				<unitPattern count="few">{0} hPa</unitPattern>
+				<unitPattern count="many">{0} hPa</unitPattern>
+				<unitPattern count="other">{0} hPa</unitPattern>
 			</unit>
 			<unit type="speed-kilometer-per-hour">
 				<displayName>km/h</displayName>
@@ -10735,6 +11353,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<unitPattern count="other" draft="contributed">{0} tsp</unitPattern>
 			</unit>
 			<coordinateUnit>
+				<displayName>svetová strana</displayName>
 				<coordinateUnitPattern type="east">{0} E</coordinateUnitPattern>
 				<coordinateUnitPattern type="north">{0} N</coordinateUnitPattern>
 				<coordinateUnitPattern type="south">{0} S</coordinateUnitPattern>
@@ -10896,4 +11515,74 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 		<characterLabel type="western_asian_scripts">západoázijské písma</characterLabel>
 		<characterLabel type="whitespace">prázdne znaky</characterLabel>
 	</characterLabels>
+	<typographicNames>
+		<axisName type="ital">italika</axisName>
+		<axisName type="opsz">stupeň</axisName>
+		<axisName type="slnt">sklon</axisName>
+		<axisName type="wdth">šírka</axisName>
+		<axisName type="wght">hrúbka</axisName>
+		<styleName type="ital" subtype="1">kurzíva</styleName>
+		<styleName type="opsz" subtype="8">petit</styleName>
+		<styleName type="opsz" subtype="12">cicero</styleName>
+		<styleName type="opsz" subtype="18">parangón</styleName>
+		<styleName type="opsz" subtype="72">šesťcicero</styleName>
+		<styleName type="opsz" subtype="144">dvanásťcicero</styleName>
+		<styleName type="slnt" subtype="-12">doľava sklonené</styleName>
+		<styleName type="slnt" subtype="0">kolmé</styleName>
+		<styleName type="slnt" subtype="12">doprava sklonené</styleName>
+		<styleName type="slnt" subtype="24">zvlášť sklonené</styleName>
+		<styleName type="wdth" subtype="50">ultraúzke</styleName>
+		<styleName type="wdth" subtype="50" alt="compressed">ultrazhustené</styleName>
+		<styleName type="wdth" subtype="50" alt="narrow">ultrazúžené</styleName>
+		<styleName type="wdth" subtype="62.5">zvlášť úzke</styleName>
+		<styleName type="wdth" subtype="62.5" alt="compressed">zvlášť zhustené</styleName>
+		<styleName type="wdth" subtype="62.5" alt="narrow">zvlášť zúžené</styleName>
+		<styleName type="wdth" subtype="75">úzke</styleName>
+		<styleName type="wdth" subtype="75" alt="compressed">zhustené</styleName>
+		<styleName type="wdth" subtype="75" alt="narrow">zúžené</styleName>
+		<styleName type="wdth" subtype="87.5">poloúzke</styleName>
+		<styleName type="wdth" subtype="87.5" alt="compressed">polozhustené</styleName>
+		<styleName type="wdth" subtype="87.5" alt="narrow">polozúžené</styleName>
+		<styleName type="wdth" subtype="100">normálne</styleName>
+		<styleName type="wdth" subtype="112.5">pološiroké</styleName>
+		<styleName type="wdth" subtype="112.5" alt="extended">polorozšírené</styleName>
+		<styleName type="wdth" subtype="112.5" alt="wide">poloroztiahnuté</styleName>
+		<styleName type="wdth" subtype="125">široké</styleName>
+		<styleName type="wdth" subtype="125" alt="extended">rozšírené</styleName>
+		<styleName type="wdth" subtype="125" alt="wide">roztiahnuté</styleName>
+		<styleName type="wdth" subtype="150">zvlášť široké</styleName>
+		<styleName type="wdth" subtype="150" alt="extended">zvlášť rozšírené</styleName>
+		<styleName type="wdth" subtype="150" alt="wide">zvlášť roztiahnuté</styleName>
+		<styleName type="wdth" subtype="200">ultraširoké</styleName>
+		<styleName type="wdth" subtype="200" alt="extended">ultrarozšírené</styleName>
+		<styleName type="wdth" subtype="200" alt="wide">ultraroztiahnuté</styleName>
+		<styleName type="wght" subtype="100">tenké</styleName>
+		<styleName type="wght" subtype="200">zvlášť slabé</styleName>
+		<styleName type="wght" subtype="200" alt="ultra">ultraslabé</styleName>
+		<styleName type="wght" subtype="300">slabé</styleName>
+		<styleName type="wght" subtype="350">poloslabé</styleName>
+		<styleName type="wght" subtype="380">knižné</styleName>
+		<styleName type="wght" subtype="400">obyčajné</styleName>
+		<styleName type="wght" subtype="500">stredné</styleName>
+		<styleName type="wght" subtype="600">polotučné</styleName>
+		<styleName type="wght" subtype="600" alt="demi">polotučné</styleName>
+		<styleName type="wght" subtype="700">tučné</styleName>
+		<styleName type="wght" subtype="800">zvlášť tučné</styleName>
+		<styleName type="wght" subtype="900">silné</styleName>
+		<styleName type="wght" subtype="900" alt="heavy">ťažké</styleName>
+		<styleName type="wght" subtype="950">zvlášť silné</styleName>
+		<styleName type="wght" subtype="950" alt="ultrablack">ultrasilné</styleName>
+		<styleName type="wght" subtype="950" alt="ultraheavy">ultraťažké</styleName>
+		<featureName type="afrc">zvislé zlomky</featureName>
+		<featureName type="cpsp">rozstup veľkých písmen</featureName>
+		<featureName type="dlig">voliteľné ligatúry</featureName>
+		<featureName type="frac">šikmé zlomky</featureName>
+		<featureName type="lnum">veľk´´é číslice</featureName>
+		<featureName type="onum">skákavé číslice</featureName>
+		<featureName type="ordn">radové číslovky</featureName>
+		<featureName type="pnum">proporcionálne číslice</featureName>
+		<featureName type="smcp">kapitálky</featureName>
+		<featureName type="tnum">tabuľkové číslice</featureName>
+		<featureName type="zero">prečiarknutá nula</featureName>
+	</typographicNames>
 </ldml>

@@ -5,7 +5,7 @@
   border: none;
   border-radius: 0;
   box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.1);
-  min-height: 390px;
+  min-height: 415px;
 
   .module-item-heading-grid {
     position: relative;
@@ -30,7 +30,7 @@
       text-align: center;
       font-weight: bolder;
       margin: 1rem 0 .5rem;
-      min-height: 24px;
+      min-height: 40px;
     }
 
     .module-version-author-grid {
@@ -59,7 +59,7 @@
   .module-quick-action-grid {
     display: inline;
     color: $gray-dark;
-    .form-action-button-container {
+    .module-actions {
       position: absolute;
       bottom: 10px;
       width: 100%;

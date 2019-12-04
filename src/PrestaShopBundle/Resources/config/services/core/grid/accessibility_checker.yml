@@ -1,0 +1,14 @@
+services:
+    _defaults:
+        public: true
+
+    prestashop.core.grid.action.row.accessibility_checker.delete_profile:
+        class: 'PrestaShop\PrestaShop\Core\Grid\Action\Row\AccessibilityChecker\DeleteProfileAccessibilityChecker'
+        arguments:
+            - '@=service("prestashop.adapter.legacy.configuration").get("_PS_ADMIN_PROFILE_")'
+
+    prestashop.core.grid.action.row.accessibility_checker.print_invoice:
+        class: 'PrestaShop\PrestaShop\Core\Grid\Action\Row\AccessibilityChecker\PrintInvoiceAccessibilityChecker'
+
+    prestashop.core.grid.action.row.accessibility_checker.print_delivery_slip:
+        class: 'PrestaShop\PrestaShop\Core\Grid\Action\Row\AccessibilityChecker\PrintDeliverySlipAccessibilityChecker'

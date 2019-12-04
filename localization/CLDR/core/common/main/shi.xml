@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE ldml SYSTEM "../../common/dtd/ldml.dtd">
-<!-- Copyright © 1991-2017 Unicode, Inc.
+<!-- Copyright © 1991-2019 Unicode, Inc.
 For terms of use, see http://www.unicode.org/copyright.html
 Unicode and the Unicode Logo are registered trademarks of Unicode, Inc. in the U.S. and other countries.
 CLDR data files are interpreted according to the LDML specification (http://unicode.org/reports/tr35/)
 -->
 <ldml>
 	<identity>
-		<version number="$Revision: 13701 $"/>
+		<version number="$Revision$"/>
 		<language type="shi"/>
 	</identity>
 	<localeDisplayNames>
@@ -184,7 +184,6 @@ CLDR data files are interpreted according to the LDML specification (http://unic
 			<territory type="MD">ⵎⵓⵍⴷⵓⴼⵢⴰ</territory>
 			<territory type="MG">ⵎⴰⴷⴰⵖⴰⵛⵇⴰⵔ</territory>
 			<territory type="MH">ⵜⵉⴳⵣⵉⵔⵉⵏ ⵏ ⵎⴰⵔⵛⴰⵍ</territory>
-			<territory type="MK">ⵎⴰⵙⵉⴷⵓⵏⵢⴰ</territory>
 			<territory type="ML">ⵎⴰⵍⵉ</territory>
 			<territory type="MM">ⵎⵢⴰⵏⵎⴰⵔ</territory>
 			<territory type="MN">ⵎⵏⵖⵓⵍⵢⴰ</territory>
@@ -288,7 +287,7 @@ CLDR data files are interpreted according to the LDML specification (http://unic
 	<characters>
 		<exemplarCharacters>[ⴰ ⴱ ⴳ {ⴳⵯ} ⴷ ⴹ ⴻ ⴼ ⴽ {ⴽⵯ} ⵀ ⵃ ⵄ ⵅ ⵇ ⵉ ⵊ ⵍ ⵎ ⵏ ⵓ ⵔ ⵕ ⵖ ⵙ ⵚ ⵛ ⵜ ⵟ ⵡ ⵢ ⵣ ⵥ]</exemplarCharacters>
 		<exemplarCharacters type="index">[ⴰ ⴱ ⴳ ⴷ ⴹ ⴻ ⴼ ⴽ ⵀ ⵃ ⵄ ⵅ ⵇ ⵉ ⵊ ⵍ ⵎ ⵏ ⵓ ⵔ ⵕ ⵖ ⵙ ⵚ ⵛ ⵜ ⵟ ⵡ ⵢ ⵣ ⵥ]</exemplarCharacters>
-		<exemplarCharacters type="numbers">[  \- , % ‰ + 0 1 2 3 4 5 6 7 8 9]</exemplarCharacters>
+		<exemplarCharacters type="numbers">[  \- ‑ , % ‰ + 0 1 2 3 4 5 6 7 8 9]</exemplarCharacters>
 	</characters>
 	<delimiters>
 		<quotationStart>«</quotationStart>
@@ -695,6 +694,9 @@ CLDR data files are interpreted according to the LDML specification (http://unic
 				<displayName>ⴼⵔⴰⵏⴽ ⵏ ⵎⴰⴷⴰⵖⴰⵛⵇⴰⵔ</displayName>
 			</currency>
 			<currency type="MRO">
+				<displayName>ⵓⵇⵉⵢⵢⴰ ⵏ ⵎⵓⵕⵉⵟⴰⵏⵢⴰ (1973–2017)</displayName>
+			</currency>
+			<currency type="MRU">
 				<displayName>ⵓⵇⵉⵢⵢⴰ ⵏ ⵎⵓⵕⵉⵟⴰⵏⵢⴰ</displayName>
 			</currency>
 			<currency type="MUR">
@@ -737,6 +739,9 @@ CLDR data files are interpreted according to the LDML specification (http://unic
 				<displayName>ⴰⵛⵉⵍⵉⵏ ⵏ ⵚⵚⵓⵎⴰⵍ</displayName>
 			</currency>
 			<currency type="STD">
+				<displayName>ⴰⴷⵓⴱⵔⴰ ⵏ ⵙⴰⵏⵟⵓⵎⵉ (1977–2017)</displayName>
+			</currency>
+			<currency type="STN">
 				<displayName>ⴰⴷⵓⴱⵔⴰ ⵏ ⵙⴰⵏⵟⵓⵎⵉ</displayName>
 			</currency>
 			<currency type="SZL">

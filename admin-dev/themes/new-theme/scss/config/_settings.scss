@@ -6,6 +6,7 @@ $gray-dark-title: #bbcdd1;
 $gray-dark-hover: #282b30;
 $background-grey: #eaebec;
 $gray-dark-text-hover: #ffffff;
+$gray-dark-divider: #eeeeee;
 $color-separator: #dfdfdf;
 
 // Sizes
@@ -19,7 +20,7 @@ $header-mobile-padding-y: .625rem;
 
 // Imported from bootstrap
 
-$grid-gutter-width: 1.875rem !default;
+$grid-gutter-width: 1.875rem;
 
 $border-radius: 0;
 
@@ -64,21 +65,22 @@ $spacing-widths: (
 );
 $grid-breakpoints: (
   xs: 0,
-  sm: 34em,    // 544px
-  md: 48em,    // 768px
-  lg: 64em,    // 1024px
-  xl: 81.25em  // 1300px
+  sm: 544px,
+  md: 768px,
+  lg: 1024px,
+  xl: 1300px,
+  xxl: 1600px    // PS custom
 );
 
-$card-border-color: #e5e5e5 !default;
+$card-border-color: #dbe6e9 !default;
 $module-logo-size: 45px;
 
-$card-spacer-x: 1.25rem !default;
-$card-spacer-y: .75rem !default;
+$card-spacer-x: .625rem !default;
+$card-spacer-y: .625rem !default;
 $card-border-width: 1px !default;
-$card-border-radius: $border-radius !default;
+$card-border-radius: 5px !default;
 $card-border-radius-inner: $card-border-radius !default;
-$card-cap-bg: #f5f5f5 !default;
+$card-cap-bg: $gray-soft !default;
 $card-bg: #fff !default;
 $card-link-hover-color: #fff !default;
 $enable-rounded: true !default;
