@@ -47,6 +47,7 @@ describe('Create Customers, Then disable / Enable and Delete with Bulk actions',
       this.pageObjects.boBasePage.customersParentLink,
       this.pageObjects.boBasePage.customersLink,
     );
+    await this.pageObjects.boBasePage.closeSfToolBar();
     const pageTitle = await this.pageObjects.customersPage.getPageTitle();
     await expect(pageTitle).to.contains(this.pageObjects.customersPage.pageTitle);
   });

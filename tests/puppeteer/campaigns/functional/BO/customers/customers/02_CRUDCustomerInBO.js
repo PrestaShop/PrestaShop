@@ -55,6 +55,7 @@ describe('Create, Read, Update and Delete Customer in BO', async () => {
       this.pageObjects.boBasePage.customersParentLink,
       this.pageObjects.boBasePage.customersLink,
     );
+    await this.pageObjects.boBasePage.closeSfToolBar();
     const pageTitle = await this.pageObjects.customersPage.getPageTitle();
     await expect(pageTitle).to.contains(this.pageObjects.customersPage.pageTitle);
   });
