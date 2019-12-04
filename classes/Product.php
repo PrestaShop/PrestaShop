@@ -227,7 +227,7 @@ class ProductCore extends ObjectModel
      */
     public $base_price;
 
-    public $id_tax_rules_group = 1;
+    public $id_tax_rules_group = 0;
 
     /**
      * We keep this variable for retrocompatibility for themes.
