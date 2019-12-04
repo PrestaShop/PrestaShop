@@ -26,6 +26,7 @@ module.exports = class Invoice extends BOBasePage {
     // Invoice options form
     this.invoiceOptionsForm = '[name="invoice_options"]';
     this.invoiceOptionsEnable = `${this.invoiceOptionsForm} label[for="form_invoice_options_enable_invoices_%ID"]`;
+    this.taxBreakdownEnable = `${this.invoiceOptionsForm} label[for="form_invoice_options_enable_tax_breakdown_%ID"]`;
     this.saveInvoiceOptionsButton = `${this.invoiceOptionsForm} .btn.btn-primary`;
   }
 
@@ -78,5 +79,14 @@ module.exports = class Invoice extends BOBasePage {
   async saveInvoiceOptions() {
     await this.clickAndWaitForNavigation(this.saveInvoiceOptionsButton);
     return this.getTextContent(this.alertSuccessBlockParagraph);
+  }
+
+  /**
+   * Enable tax breakdown
+   * @param enable
+   * @return {Promise<void>}
+   */
+  async enableTaXBreakdown(enable = true) {
+    await this.page.click(this.taxBreakdownEnable.replace('%ID', enable ? 1 : 0));
   }
 };
