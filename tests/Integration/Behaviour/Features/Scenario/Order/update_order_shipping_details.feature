@@ -11,9 +11,9 @@ Feature: Order shipping details from Back Office
     And there is existing order with id 1
 
   Scenario: Update order shipping details
-    When I update order 1 Tracking number to "TEST1234" and Carrier to "My carrier"
-    Then order 1 has Tracking number "TEST1234"
-    And order 1 has Carrier "My carrier"
-    When I update order 1 Tracking number to "TEST123" and Carrier to "0"
-    Then order 1 has Tracking number "TEST123"
-    And order 1 has Carrier "0"
+    When I update order with id 1 Tracking number to "TEST1234" and Carrier to "My carrier"
+    Then order with id 1 has Tracking number "TEST1234"
+    And order with id 1 has Carrier "My carrier"
+    When I update order with id 1 Tracking number to "TEST123" and Carrier to "0"
+    Then order with id 1 has Tracking number "TEST123"
+    And order with id 1 has Carrier "0"
