@@ -422,6 +422,8 @@ class ContextCore
         $translator->clearLanguage($locale);
 
         $adminContext = defined('_PS_ADMIN_DIR_');
+        // Do not load DB translations when $this->language is PrestashopBundle\Install\Language
+        // because it means that we're looking for the installer translations, so we're not yet connected to the DB
         $withDB = !$this->language instanceof PrestashopBundle\Install\Language;
         $theme = $this->shop !== null ? $this->shop->theme : null;
         (new TranslatorLanguageLoader($adminContext))->loadLanguage($translator, $locale, $withDB, $theme);
