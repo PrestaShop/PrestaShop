@@ -78,29 +78,35 @@ let fillTpl = function (results, eltAppendTo, tpl) {
       return;
     }
 
-    /* eslint-disable max-len */
-    var tplReplaced = tpl
-      .replace(/_id_order_/g, parseInt(value.id_order))
-      .replace(/_customer_name_/g, value.customer_name, 10)
-      .replace(/_iso_code_/g, value.iso_code)
-      .replace(/_carrier_/g, (value.carrier !== "" ? ` - ${value.carrier}` : ""))
-      .replace(/_total_paid_/g, value.total_paid)
-      .replace(/_id_customer_/g, parseInt(value.id_customer))
-      .replace(/_company_/g, (value.company !== "" ? ` (${value.company}) ` : ""))
-      .replace(/_date_add_/g, value.date_add)
-      .replace(/_status_/g, value.status)
-      .replace(/order_url/g, `${baseAdminDir}index.php?tab=AdminOrders&token=${token_admin_orders}&vieworder&id_order=${value.id_order}`)
-      .replace(/customer_url/g, `${baseAdminDir}index.php?tab=AdminCustomers&token=${token_admin_customers}&viewcustomer&id_customer=${value.id_customer}`);
+      let tplReplaced = tpl.replace(/_id_order_/g, parseInt(value.id_order))
+        .replace(/_customer_name_/g, value.customer_name)
+        .replace(/_iso_code_/g, value.iso_code)
+        .replace(/_carrier_/g, (value.carrier !== "" ? ` - ${value.carrier}` : ""))
+        .replace(/_total_paid_/g, value.total_paid)
+        .replace(/_id_customer_/g, parseInt(value.id_customer))
+        .replace(/_company_/g, (value.company !== "" ? ` (${value.company}) ` : ""))
+        .replace(/_date_add_/g, value.date_add)
+        .replace(/_status_/g, value.status)
+        .replace(/order_url/g, `${baseAdminDir}index.php?tab=AdminOrders&token=${token_admin_orders}&vieworder&id_order=${value.id_order}`)
 
-    let customerThreadId = parseInt(value.id_customer_thread);
-    if (customerThreadId && tpl.search('message_url') > -1) {
-      tplReplaced = tplReplaced.replace(/message_url/g, router.generate('admin_customer_threads_view', {customerThreadId: customerThreadId}));
-    };
-    /* eslint-ensable max-len */
+      let customerThreadId = parseInt(value.id_customer_thread);
+      if (customerThreadId) {
+        let route = router.generate('admin_customer_threads_view', {customerThreadId});
+        tplReplaced = replaceGlobally(tplReplaced, 'message_url', route);
+      }
+
+      let customerId = parseInt(value.id_customer);
+      if (customerId) {
+        let route = router.generate('admin_customers_view', {customerId});
+        tplReplaced = replaceGlobally(tplReplaced, 'customer_url', route);
+      }
+
       eltAppendTo.children('.notification-elements').append(tplReplaced);
-  });
-};
-
+    });
+  } else {
+    eltAppendTo.addClass('empty');
+  }
+}
 let setNotificationsNumber = function (id, number) {
   if (number > 0) {
     $(`#${id}`).text(` (${number})`);
