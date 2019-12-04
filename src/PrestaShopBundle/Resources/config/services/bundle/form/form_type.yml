@@ -1047,17 +1047,18 @@ services:
             - { name: form.type }
 
     form.type.order.message:
-        class: 'PrestaShopBundle\Form\Admin\Sell\Order\OrderMessageType'
+        class: 'PrestaShopBundle\Form\Admin\Sell\CustomerService\OrderMessageType'
         calls:
             - { method: setTranslator, arguments: ['@translator'] }
         tags:
             - { name: form.type }
 
-      class: 'PrestaShopBundle\Form\Admin\Sell\Order\OrderMessageType'
-      arguments:
-        - '@prestashop.core.form.choice_provider.customer_service_order_messages_name'
-        - '@prestashop.core.form.choice_provider.customer_service_order_messages'
-      calls:
-        - { method: setTranslator, arguments: ['@translator'] }
-      tags:
-        - { name: form.type }
+    form.type.order.customer_service_message:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Order\OrderMessageType'
+        arguments:
+            - '@prestashop.core.form.choice_provider.customer_service_order_messages_name'
+            - '@prestashop.core.form.choice_provider.customer_service_order_messages'
+        calls:
+            - { method: setTranslator, arguments: ['@translator'] }
+        tags:
+            - { name: form.type }
