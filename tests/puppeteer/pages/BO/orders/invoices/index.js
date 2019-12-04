@@ -69,8 +69,7 @@ module.exports = class Invoice extends BOBasePage {
    * @return {Promise<void>}
    */
   async enableInvoices(enable = true) {
-    if (enable) await this.page.click(this.invoiceOptionsEnable.replace('%ID', 1));
-    else await this.page.click(this.invoiceOptionsEnable.replace('%ID', 0));
+    await this.page.click(this.invoiceOptionsEnable.replace('%ID', enable ? 1 : 0));
   }
 
   /** Save invoice options
