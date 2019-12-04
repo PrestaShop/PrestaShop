@@ -19,6 +19,8 @@ module.exports = class Order extends BOBasePage {
     this.orderStatusSearchResult = `${this.orderStatusesSelect} li:nth-child(1)`;
     this.updateStatusButton = '#submit_state';
     this.statusValidation = '#status tr:nth-child(1) > td:nth-child(2)';
+    this.documentTab = '#tabOrder a[href=\'#documents\']';
+    this.documentName = '#documents_table tr td:nth-child(2)';
   }
 
   /*
@@ -50,5 +52,14 @@ module.exports = class Order extends BOBasePage {
     await this.page.click(this.orderStatusSearchResult);
     await this.page.click(this.updateStatusButton);
     return this.checkTextValue(this.statusValidation, status);
+  }
+
+  /**
+   * Get document name
+   * @returns {Promise<void>}
+   */
+  async getDocumentName() {
+    await this.page.click(this.documentTab);
+    return this.getTextContent(this.documentName);
   }
 };
