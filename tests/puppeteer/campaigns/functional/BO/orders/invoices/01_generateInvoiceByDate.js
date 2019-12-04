@@ -79,7 +79,7 @@ describe('Generate PDF file by date', async () => {
     });
   });
 
-  describe('Generate PDF file by date', async () => {
+  describe('Generate invoice by date', async () => {
     it('should go to invoices page', async function () {
       await this.pageObjects.boBasePage.goToSubMenu(
         this.pageObjects.boBasePage.ordersParentLink,
