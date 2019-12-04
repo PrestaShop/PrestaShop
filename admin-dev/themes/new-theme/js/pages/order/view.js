@@ -26,6 +26,8 @@
 import OrderViewPageMap from './OrderViewPageMap';
 import OrderShippingManager from './order-shipping-manager';
 import InvoiceNoteManager from './invoice-note-manager';
+import OrderViewPageMessagesHandler from './message/order-view-page-messages-handler';
+import TextWithLengthCounter from "../../components/form/text-with-length-counter"
 
 const $ = window.$;
 
@@ -35,13 +37,16 @@ $(() => {
   const DISCOUNT_TYPE_FREE_SHIPPING = 'free_shipping';
 
   new OrderShippingManager();
+  new TextWithLengthCounter();
 
   handlePaymentDetailsToggle();
   handlePrivateNoteChange();
   handleUpdateOrderStatusButton();
 
   new InvoiceNoteManager();
-
+  const orderViewPageMessageHandler = new OrderViewPageMessagesHandler();
+  orderViewPageMessageHandler.listenForPredefinedMessageSelection();
+  orderViewPageMessageHandler.listenForFullMessagesOpen();
   $(OrderViewPageMap.privateNoteToggleBtn).on('click', (event) => {
     event.preventDefault();
     togglePrivateNoteBlock();

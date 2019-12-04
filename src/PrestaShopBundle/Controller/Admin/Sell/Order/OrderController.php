@@ -29,6 +29,9 @@ namespace PrestaShopBundle\Controller\Admin\Sell\Order;
 use Exception;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartInformation;
+use PrestaShop\PrestaShop\Core\Domain\CustomerMessage\Command\AddOrderCustomerMessageCommand;
+use PrestaShop\PrestaShop\Core\Domain\CustomerMessage\Exception\CannotSendEmailException;
+use PrestaShop\PrestaShop\Core\Domain\CustomerMessage\Exception\CustomerMessageConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\AddCartRuleToOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\BulkChangeOrderStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\ChangeOrderCurrencyCommand;
@@ -64,11 +67,13 @@ use PrestaShopBundle\Form\Admin\Sell\Order\AddProductToOrderType;
 use PrestaShopBundle\Form\Admin\Sell\Order\ChangeOrderAddressType;
 use PrestaShopBundle\Form\Admin\Sell\Order\ChangeOrderCurrencyType;
 use PrestaShopBundle\Form\Admin\Sell\Order\ChangeOrdersStatusType;
+use PrestaShopBundle\Form\Admin\Sell\Order\OrderMessageType;
 use PrestaShopBundle\Form\Admin\Sell\Order\OrderPaymentType;
 use PrestaShopBundle\Form\Admin\Sell\Order\UpdateOrderShippingType;
 use PrestaShopBundle\Form\Admin\Sell\Order\UpdateOrderStatusType;
 use PrestaShopBundle\Form\Admin\Sell\Order\UpdateProductInOrderType;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use PrestaShopBundle\Security\Annotation\DemoRestricted;
 use PrestaShopBundle\Service\Grid\ResponseBuilder;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -273,6 +278,13 @@ class OrderController extends FrameworkBundleAdminController
             ->setFileName('order_' . date('Y-m-d_His') . '.csv');
     }
 
+    /**
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     *
+     * @param int $orderId
+     *
+     * @return Response
+     */
     public function viewAction(int $orderId, Request $request): Response
     {
         /** @var OrderForViewing $orderForViewing */
@@ -292,6 +304,12 @@ class OrderController extends FrameworkBundleAdminController
         ], [
             'id_order' => $orderId,
         ]);
+
+        $orderMessageForm = $this->createForm(OrderMessageType::class, [], [
+            'action' => $this->generateUrl('admin_orders_send_message', ['orderId' => $orderId]),
+        ]);
+
+        $orderMessageForm->handleRequest($request);
 
         $changeOrderCurrencyForm = $this->createForm(ChangeOrderCurrencyType::class, [], [
             'current_currency_id' => $orderForViewing->getCurrencyId(),
@@ -327,6 +345,7 @@ class OrderController extends FrameworkBundleAdminController
             'updateOrderShippingForm' => $updateOrderShippingForm->createView(),
             'invoiceManagementIsEnabled' => $orderForViewing->isInvoiceManagementIsEnabled(),
             'changeOrderAddressForm' => $changeOrderAddressForm->createView(),
+            'orderMessageForm' => $orderMessageForm->createView(),
         ]);
     }
 
@@ -602,6 +621,84 @@ class OrderController extends FrameworkBundleAdminController
     }
 
     /**
+     * @AdminSecurity(
+     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     redirectRoute="admin_orders_view",
+     *     redirectQueryParamsToKeep={"orderId"},
+     *     message="You do not have permission to edit this."
+     * )
+     * @DemoRestricted(
+     *     redirectRoute="admin_orders_view",
+     *     redirectQueryParamsToKeep={"orderId"}
+     * )
+     *
+     * @param Request $request
+     * @param int $orderId
+     *
+     * @return Response
+     */
+    public function sendMessageAction(Request $request, int $orderId): Response
+    {
+        $orderMessageForm = $this->createForm(OrderMessageType::class);
+
+        $orderMessageForm->handleRequest($request);
+
+        if ($orderMessageForm->isSubmitted() && $orderMessageForm->isValid()) {
+            $data = $orderMessageForm->getData();
+
+            try {
+                $this->getCommandBus()->handle(new AddOrderCustomerMessageCommand(
+                    $orderId,
+                    $data['message'],
+                    !$data['is_displayed_to_customer']
+                ));
+
+                $this->addFlash(
+                    'success',
+                    $this->trans('Comment successfully added.', 'Admin.Notifications.Success')
+                );
+            } catch (CannotSendEmailException $exception) {
+                $this->addFlash(
+                    'success',
+                    $this->trans('Comment successfully added.', 'Admin.Notifications.Success')
+                );
+
+                $this->addFlash(
+                    'error',
+                    $this->trans(
+                        'An error occurred while sending an email to the customer.',
+                        'Admin.Orderscustomers.Notification'
+                    )
+                );
+            } catch (Exception $exception) {
+                $this->addFlash(
+                    'error',
+                    $this->getErrorMessageForException($exception, $this->getCustomerMessageErrorMapping($exception))
+                );
+            }
+        }
+
+        $routesCollection = $this->get('router')->getRouteCollection();
+
+        if (
+            null !== $routesCollection &&
+            !$orderMessageForm->isValid() &&
+            $viewRoute = $routesCollection->get('admin_orders_view')) {
+            return $this->forward(
+                $viewRoute->getDefault('_controller'),
+                [
+                    'orderId' => $orderId,
+                ],
+                $viewRoute->getDefaults()
+            );
+        }
+
+        return $this->redirectToRoute('admin_orders_view', [
+            'orderId' => $orderId,
+        ]);
+    }
+
+    /**
      * Initializes order status update
      *
      * @param int $orderId
@@ -804,5 +901,33 @@ class OrderController extends FrameworkBundleAdminController
                 )
             );
         }
+    }
+
+    private function getCustomerMessageErrorMapping(Exception $exception): array
+    {
+        return [
+            OrderNotFoundException::class => $exception instanceof OrderNotFoundException ?
+                $this->trans(
+                    'Order #%d cannot be loaded',
+                    'Admin.Orderscustomers.Notification',
+                    ['#%d' => $exception->getOrderId()->getValue()]
+                ) : '',
+            CustomerMessageConstraintException::class => [
+                CustomerMessageConstraintException::MISSING_MESSAGE => $this->trans(
+                        'The %s field is not valid',
+                        'Admin.Notifications.Error',
+                        [
+                            sprintf('"%s"', $this->trans('Message', 'Admin.Global')),
+                        ]
+                    ),
+                CustomerMessageConstraintException::INVALID_MESSAGE => $this->trans(
+                        'The %s field is not valid',
+                        'Admin.Notifications.Error',
+                        [
+                            sprintf('"%s"', $this->trans('Message', 'Admin.Global')),
+                        ]
+                    ),
+            ],
+        ];
     }
 }

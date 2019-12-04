@@ -43,7 +43,7 @@ class OrderMessageForViewing
     /**
      * @var DateTimeImmutable
      */
-    private $date;
+    private $messageDate;
 
     /**
      * @var string
@@ -69,35 +69,49 @@ class OrderMessageForViewing
      * @var int
      */
     private $employeeId;
+    /**
+     * @var bool
+     */
+    private $isPrivate;
+    /**
+     * @var bool
+     */
+    private $isCurrentEmployeesMessage;
 
     /**
      * @param int $messageId
      * @param string $message
-     * @param DateTimeImmutable $date
+     * @param DateTimeImmutable $messageDate
      * @param int $employeeId
+     * @param bool $isCurrentEmployeesMessage
      * @param string $employeeFirstName
      * @param string $employeeLastName
      * @param string $customerFirstName
      * @param string $customerLastName
+     * @param bool $isPrivate
      */
     public function __construct(
         int $messageId,
         string $message,
-        DateTimeImmutable $date,
+        OrderMessageDateForViewing $messageDate,
         int $employeeId,
+        bool $isCurrentEmployeesMessage,
         ?string $employeeFirstName,
         ?string $employeeLastName,
         string $customerFirstName,
-        string $customerLastName
+        string $customerLastName,
+        bool $isPrivate
     ) {
         $this->messageId = $messageId;
         $this->message = $message;
-        $this->date = $date;
+        $this->messageDate = $messageDate;
         $this->employeeFirstName = $employeeFirstName;
         $this->employeeLastName = $employeeLastName;
         $this->customerFirstName = $customerFirstName;
         $this->customerLastName = $customerLastName;
         $this->employeeId = $employeeId;
+        $this->isPrivate = $isPrivate;
+        $this->isCurrentEmployeesMessage = $isCurrentEmployeesMessage;
     }
 
     /**
@@ -117,11 +131,11 @@ class OrderMessageForViewing
     }
 
     /**
-     * @return DateTimeImmutable
+     * @return OrderMessageDateForViewing
      */
-    public function getDate(): DateTimeImmutable
+    public function getMessageDate(): OrderMessageDateForViewing
     {
-        return $this->date;
+        return $this->messageDate;
     }
 
     /**
@@ -162,5 +176,21 @@ class OrderMessageForViewing
     public function getEmployeeId(): int
     {
         return $this->employeeId;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isCurrentEmployeesMessage(): bool
+    {
+        return $this->isCurrentEmployeesMessage;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isPrivate(): bool
+    {
+        return $this->isPrivate;
     }
 }

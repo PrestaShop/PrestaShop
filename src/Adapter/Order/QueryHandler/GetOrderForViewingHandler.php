@@ -29,10 +29,10 @@ namespace PrestaShop\PrestaShop\Adapter\Order\QueryHandler;
 use Address;
 use Carrier;
 use Configuration;
+use Context;
 use Country;
 use Currency;
 use Customer;
-use CustomerThread;
 use DateTimeImmutable;
 use Db;
 use Gender;
@@ -46,6 +46,7 @@ use OrderPayment;
 use OrderReturn;
 use OrderSlip;
 use Pack;
+use PrestaShop\PrestaShop\Adapter\Customer\CustomerDataProvider;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryHandler\GetOrderForViewingHandlerInterface;
@@ -58,6 +59,7 @@ use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderDocumentsForViewing
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderHistoryForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderInvoiceAddressForViewing;
+use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderMessageDateForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderMessageForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderMessagesForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderPaymentForViewing;
@@ -110,21 +112,39 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
     private $contextLanguageId;
 
     /**
+     * @var CustomerDataProvider
+     */
+    private $customerDataProvider;
+
+    /**
+     * @var Context
+     */
+    private $context;
+
+    /**
      * @param ImageTagSourceParserInterface $imageTagSourceParser
      * @param TranslatorInterface $translator
      * @param int $contextLanguageId
      * @param Locale $locale
+     * @param Context $context
+     * @param CustomerDataProvider $customerDataProvider
      */
     public function __construct(
         ImageTagSourceParserInterface $imageTagSourceParser,
         TranslatorInterface $translator,
         int $contextLanguageId,
-        Locale $locale
+        Locale $locale,
+        Context $context,
+        CustomerDataProvider $customerDataProvider
     ) {
         $this->imageTagSourceParser = $imageTagSourceParser;
         $this->translator = $translator;
         $this->contextLanguageId = $contextLanguageId;
         $this->locale = $locale;
+        $this->imageTagSourceParser = $imageTagSourceParser;
+        $this->translator = $translator;
+        $this->context = $context;
+        $this->customerDataProvider = $customerDataProvider;
     }
 
     /**
@@ -744,24 +764,35 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
 
     private function getOrderMessages(Order $order): OrderMessagesForViewing
     {
-        $orderMessages = CustomerThread::getCustomerMessagesOrder($order->id_customer, $order->id);
+        $orderMessagesForOrderPage = $this->customerDataProvider->getCustomerMessages(
+            (int) $order->id_customer,
+            (int) $order->id
+        );
 
         $messages = [];
 
-        foreach ($orderMessages as $orderMessage) {
+        foreach ($orderMessagesForOrderPage['messages'] as $orderMessage) {
+            $messageEmployeeId = (int) $orderMessage['id_employee'];
+            $isCurrentEmployeesMessage = (int) $this->context->employee->id === $messageEmployeeId;
+
             $messages[] = new OrderMessageForViewing(
                 (int) $orderMessage['id_customer_message'],
                 $orderMessage['message'],
-                new DateTimeImmutable($orderMessage['date_add']),
-                (int) $orderMessage['id_employee'],
+                new OrderMessageDateForViewing(
+                    new DateTimeImmutable($orderMessage['date_add']),
+                    $this->context->language->date_format_full
+                ),
+                $messageEmployeeId,
+                $isCurrentEmployeesMessage,
                 $orderMessage['efirstname'],
                 $orderMessage['elastname'],
                 $orderMessage['cfirstname'],
-                $orderMessage['clastname']
+                $orderMessage['clastname'],
+                (bool) $orderMessage['private']
             );
         }
 
-        return new OrderMessagesForViewing($messages);
+        return new OrderMessagesForViewing($messages, $orderMessagesForOrderPage['total']);
     }
 
     private function getOrderPrices(Order $order): OrderPricesForViewing

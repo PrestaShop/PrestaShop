@@ -49,5 +49,12 @@ export default {
   updateOrderShippingCurrentOrderCarrierIdInput: '#update_order_shipping_current_order_carrier_id',
   updateCustomerAddressModal: '#updateCustomerAddressModal',
   openOrderAddressUpdateModalBtn: '.js-update-customer-address-modal-btn',
-  updateOrderAddressTypeInput: '#change_order_address_address_type'
+  updateOrderAddressTypeInput: '#change_order_address_address_type',
+  orderMessageNameSelect: '#order_message_order_message',
+  orderMessagesContainer: '.js-order-messages-container',
+  orderMessage: '#order_message_message',
+  orderMessageChangeWarning: '.js-message-change-warning',
+  allMessagesModal: '#view_all_messages_modal',
+  allMessagesList: '#all-messages-list',
+  openAllMessagesBtn: '.js-open-all-messages-btn',
 };

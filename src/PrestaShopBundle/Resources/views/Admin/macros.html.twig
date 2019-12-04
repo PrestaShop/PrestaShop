@@ -261,6 +261,13 @@
   <div class="form-group row {{ class }}">
     {% set extraVars = extraVars|default({}) %}
 
+    {# renders label above the form field if set to true #}
+    {% set labelOnTop = false %}
+
+    {% if extraVars.label_on_top is defined %}
+      {% set labelOnTop = extraVars.label_on_top %}
+    {% endif %}
+
     {% if extraVars.label is defined %}
       {% set isRequired = form.vars.required|default(false) %}
 
@@ -268,7 +275,7 @@
         {% set isRequired = extraVars.required %}
       {% endif %}
 
-      <label for="{{ form.vars.id }}" class="form-control-label">
+      <label for="{{ form.vars.id }}" class="form-control-label {{ labelOnTop ? 'label-on-top col-12' : '' }}">
         {% if isRequired %}
           <span class="text-danger">*</span>
         {% endif %}
@@ -276,7 +283,7 @@
       </label>
     {% endif %}
 
-    <div class="col-sm">
+    <div class="{{ labelOnTop ? 'col-12' : 'col-sm' }}">
       {{ self.form_widget_with_error(form, vars, extraVars) }}
     </div>
   </div>
