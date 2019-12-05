@@ -32,9 +32,21 @@
 
 
 {% block content %}
-  <div class="row">
+  <div class="row d-print-none">
     <div class="col-md-12">
       {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/order_actions.html.twig' %}
+    </div>
+  </div>
+
+  <div class="row d-none d-print-block mb-4">
+    <div class="col-md-12">
+      {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/print_order_statistics.html.twig' %}
+    </div>
+  </div>
+
+  <div class="row d-none d-print-block mb-4">
+    <div class="col-md-12">
+      {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/print_title.html.twig' %}
     </div>
   </div>
 
