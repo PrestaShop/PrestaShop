@@ -444,6 +444,8 @@ class ManufacturerCore extends ObjectModel
         } else {
             $alias = 'p.';
         }
+        
+        $finalOrderBy = $orderBy;
 
         $sql = 'SELECT p.*, product_shop.*, stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity'
             . (Combination::isFeatureActive() ? ', product_attribute_shop.minimal_quantity AS product_attribute_minimal_quantity, IFNULL(product_attribute_shop.`id_product_attribute`,0) id_product_attribute' : '') . '
@@ -484,18 +486,23 @@ class ManufacturerCore extends ObjectModel
 				WHERE p.`id_manufacturer` = ' . (int) $idManufacturer . '
 				' . ($active ? ' AND product_shop.`active` = 1' : '') . '
 				' . ($front ? ' AND product_shop.`visibility` IN ("both", "catalog")' : '') . '
-				GROUP BY p.id_product
+				GROUP BY p.id_product';
+    
+        if ($finalOrderBy != 'price') {
+            $sql .= '
 				ORDER BY ' . $alias . '`' . bqSQL($orderBy) . '` ' . pSQL($orderWay) . '
 				LIMIT ' . (((int) $p - 1) * (int) $n) . ',' . (int) $n;
-
+        }
+    
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
-
+    
         if (!$result) {
             return false;
         }
-
-        if ($orderBy == 'price') {
+    
+        if ($finalOrderBy == 'price') {
             Tools::orderbyPrice($result, $orderWay);
+            $result = array_slice($result, (int)(($p - 1) * $n), (int) $n);
         }
 
         return Product::getProductsProperties($idLang, $result);
