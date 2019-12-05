@@ -11,9 +11,7 @@ module.exports = class Localization extends BOBasePage {
     this.geolocationNavItemLink = '#subtab-AdminGeolocation';
   }
 
-  /*
-  Methods
-   */
+  /* Header Methods */
   /**
    * Go to languages page
    * @return {Promise<void>}
@@ -37,4 +35,6 @@ module.exports = class Localization extends BOBasePage {
   async goToSubTabGeolocation(){
     await this.clickAndWaitForNavigation(this.geolocationNavItemLink);
   }
+
+
 };
