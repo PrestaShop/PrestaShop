@@ -370,7 +370,7 @@ class ImageCore extends ObjectModel
      * Copy images from a product to another.
      *
      * @param int $idProductOld Source product ID
-     * @param bool $idProductNew Destination product ID
+     * @param int $idProductNew Destination product ID
      */
     public static function duplicateProductImages($idProductOld, $idProductNew, $combinationImages)
     {

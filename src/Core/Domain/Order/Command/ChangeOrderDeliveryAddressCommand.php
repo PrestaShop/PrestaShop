@@ -50,8 +50,8 @@ class ChangeOrderDeliveryAddressCommand
      */
     public function __construct($orderId, $newDeliveryAddressId)
     {
-        $this->orderId = $orderId;
-        $this->newDeliveryAddressId = $newDeliveryAddressId;
+        $this->orderId = new OrderId($orderId);
+        $this->newDeliveryAddressId = new AddressId($newDeliveryAddressId);
     }
 
     /**

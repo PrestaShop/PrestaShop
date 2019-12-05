@@ -69,7 +69,7 @@ describe('Create Taxes, Then disable / Enable and Delete with Bulk actions', asy
         await expect(pageTitle).to.contains(this.pageObjects.addTaxPage.pageTitleCreate);
       });
 
-      it('should create first tax and check result', async function () {
+      it('should create tax and check result', async function () {
         const textResult = await this.pageObjects.addTaxPage.createEditTax(test.args.taxToCreate);
         await expect(textResult).to.equal(this.pageObjects.taxesPage.successfulCreationMessage);
         const numberOfTaxesAfterCreation = await this.pageObjects.taxesPage.getNumberOfElementInGrid();

@@ -54,11 +54,14 @@ admin_orders_export:
 
 admin_orders_view:
   path: /{orderId}/view
+  methods: [GET, POST]
   defaults:
     _controller: PrestaShopBundle:Admin/Sell/Order/Order:view
     _legacy_controller: AdminOrders
   options:
     expose: true
+  requirements:
+    orderId: \d+
 
 admin_orders_add_cart_rule:
   path: /{orderId}/cart-rules
@@ -149,12 +152,6 @@ admin_orders_preview:
   requirements:
     orderId: \d+
 
-admin_search_product_for_order_creation:
-  path: /search
-  methods: [GET]
-  defaults:
-    _controller: PrestaShopBundle:Admin/Sell/Order/Order:searchProducts
-
 admin_orders_update_shipping:
   path: /{orderId}/shipping
   methods: [POST]
@@ -184,3 +181,23 @@ admin_orders_generate_invoice:
   methods: [POST]
   defaults:
     _controller: PrestaShopBundle:Admin/Sell/Order/Order:generateInvoice
+  requirements:
+    orderId: \d+
+
+admin_orders_change_customer_address:
+  path: /change-customer-address
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Order/Order:changeCustomerAddress
+    _legacy_controller: AdminOrders
+  requirements:
+    orderId: \d+
+
+admin_orders_send_message:
+  path: /{orderId}/send-message
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Order/Order:sendMessage
+    _legacy_controller: AdminOrders
+  requirements:
+    orderId: \d+

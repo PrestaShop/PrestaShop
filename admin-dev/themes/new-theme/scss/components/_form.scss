@@ -42,7 +42,7 @@
     margin-bottom: 1.2rem;
 
     // label column in forms
-    > .form-control-label:first-of-type {
+    > .form-control-label:first-of-type:not(.label-on-top) {
       @extend .col-sm-4;
       @extend .col-form-label;
 
