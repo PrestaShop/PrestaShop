@@ -8,7 +8,7 @@ module.exports = class AddCurrency extends BOBasePage {
     this.pageTitle = 'Currencies • ';
 
     // Selectors
-    this.currencySelect = 'span[aria-labelledby=\'select2-currency_selected_iso_code-container\']';
+    this.currencySelect = '#currency_selected_iso_code';
     this.selectResultOption = 'li.select2-results__option:nth-child(%ID)';
     this.alternativeCurrencyCheckBox = '#currency_unofficial + i';
     this.currencyNameInput = '#currency_names_%ID';
@@ -35,7 +35,7 @@ module.exports = class AddCurrency extends BOBasePage {
    */
   async addOfficialCurrency(currencyData) {
     // Select currency
-    await this.page.select('#currency_selected_iso_code', currencyData.isoCode);
+    await this.page.select(this.currencySelect, currencyData.isoCode);
     await this.page.waitForSelector(`${this.currencyLoadingModal}.show`, {visible: true});
     // Waiting for currency to be loaded : 10 sec max
     // To check if modal still exist

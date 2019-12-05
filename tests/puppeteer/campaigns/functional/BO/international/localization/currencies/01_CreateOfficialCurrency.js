@@ -86,7 +86,7 @@ describe('Create official currency and check it in FO', async () => {
     });
 
     it(
-      `should filter by iso code of currency '${Currencies.mad.isoCode} and check values created in table`,
+      `should filter by iso code of currency '${Currencies.mad.isoCode}' and check values created in table`,
       async function () {
         await this.pageObjects.currenciesPage.filterTable('input', 'iso_code', Currencies.mad.isoCode);
         const numberOfCurrenciesAfterFilter = await this.pageObjects.currenciesPage.getNumberOfElementInGrid();
@@ -117,7 +117,7 @@ describe('Create official currency and check it in FO', async () => {
   });
 
   describe('Disable and check currency in FO', async () => {
-    it(`should filter by iso code of currency '${Currencies.mad.isoCode}`, async function () {
+    it(`should filter by iso code of currency '${Currencies.mad.isoCode}'`, async function () {
       await this.pageObjects.currenciesPage.filterTable('input', 'iso_code', Currencies.mad.isoCode);
       const numberOfCurrenciesAfterFilter = await this.pageObjects.currenciesPage.getNumberOfElementInGrid();
       await expect(numberOfCurrenciesAfterFilter).to.be.equal(numberOfCurrencies);
@@ -160,7 +160,7 @@ describe('Create official currency and check it in FO', async () => {
   });
 
   describe('Delete currency created ', async () => {
-    it(`should filter by iso code of currency '${Currencies.mad.isoCode}`, async function () {
+    it(`should filter by iso code of currency '${Currencies.mad.isoCode}'`, async function () {
       await this.pageObjects.currenciesPage.filterTable('input', 'iso_code', Currencies.mad.isoCode);
       const numberOfCurrenciesAfterFilter = await this.pageObjects.currenciesPage.getNumberOfElementInGrid();
       await expect(numberOfCurrenciesAfterFilter).to.be.equal(numberOfCurrencies);
