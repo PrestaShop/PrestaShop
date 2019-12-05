@@ -69,9 +69,9 @@ class SearchProducts
     /**
      * @return AlphaIsoCode
      */
-    public function getIsoCode(): AlphaIsoCode
+    public function getAlphaIsoCode(): AlphaIsoCode
     {
-        return $this->isoCode;
+        return $this->alphaIsoCode;
     }
 
     /**
