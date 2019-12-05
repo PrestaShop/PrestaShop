@@ -116,7 +116,7 @@ function getPush()
 				// Add customers notifications to the list
 				html = "";
 				$.each(json.customer.results, function(property, value) {
-					html += "<a class='notif' href='" + value.customer_view_url + "'>";
+					html += "<a class='notif' href='"+baseAdminDir+"index.php/sell/customers/" + parseInt(value.id_customer, 10) +"/view?_token=" + token_admin_customers + "'>";
 					html += "#" + value.id_customer + " - <strong>" + value.customer_name + "</strong>"
           if (value.company !== "") {
             html += " (" + value.company + ")";
@@ -138,7 +138,7 @@ function getPush()
 				// Add messages notifications to the list
 				html = "";
 				$.each(json.customer_message.results, function(property, value) {
-					html += "<a class='notif' href='"+baseAdminDir+"index.php?tab=AdminCustomerThreads&token=" + token_admin_customer_threads + "&viewcustomer_thread&id_customer_thread=" + parseInt(value.id_customer_thread) + "'>";
+					html += "<a class='notif' href='"+baseAdminDir+"index.php/sell/customer-service/customer-threads/" + parseInt(value.id_customer_thread)+"/view?_token=" + token_admin_customer_threads + "'>";
 					html += "<span class='message-notification-status " + value.status + "'><i class='material-icons'>fiber_manual_record</i> " + value.status + "</span> - ";
           html += "<strong>" + value.customer_name + "</strong>";
           if (value.company !== "") {
