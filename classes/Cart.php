@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -704,6 +704,7 @@ class CartCore extends ObjectModel
                 IF (IFNULL(pa.`ean13`, \'\') = \'\', p.`ean13`, pa.`ean13`) AS ean13,
                 IF (IFNULL(pa.`isbn`, \'\') = \'\', p.`isbn`, pa.`isbn`) AS isbn,
                 IF (IFNULL(pa.`upc`, \'\') = \'\', p.`upc`, pa.`upc`) AS upc,
+                IF (IFNULL(pa.`mpn`, \'\') = \'\', p.`mpn`, pa.`mpn`) AS mpn,
                 IFNULL(product_attribute_shop.`minimal_quantity`, product_shop.`minimal_quantity`) as minimal_quantity,
                 IF(product_attribute_shop.wholesale_price > 0,  product_attribute_shop.wholesale_price, product_shop.`wholesale_price`) wholesale_price
             ');
@@ -713,7 +714,7 @@ class CartCore extends ObjectModel
         } else {
             $sql->select(
                 'p.`reference` AS reference, p.`ean13`, p.`isbn`,
-                p.`upc` AS upc, product_shop.`minimal_quantity` AS minimal_quantity, product_shop.`wholesale_price` wholesale_price'
+                p.`upc` AS upc, p.`mpn` AS mpn, product_shop.`minimal_quantity` AS minimal_quantity, product_shop.`wholesale_price` wholesale_price'
             );
         }
 
@@ -744,43 +745,47 @@ class CartCore extends ObjectModel
         Product::cacheProductsFeatures($products_ids);
         Cart::cacheSomeAttributesLists($pa_ids, $this->id_lang);
 
-        $this->_products = array();
         if (empty($result)) {
+            $this->_products = array();
+
             return array();
         }
 
         if ($fullInfos) {
-            $ecotax_rate = (float) Tax::getProductEcotaxRate($this->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
-            $apply_eco_tax = Product::$_taxCalculationMethod == PS_TAX_INC && (int) Configuration::get('PS_TAX');
             $cart_shop_context = Context::getContext()->cloneContext();
 
-            $gifts = $this->getCartRules(CartRule::FILTER_ACTION_GIFT);
             $givenAwayProductsIds = array();
 
-            if ($this->shouldSplitGiftProductsQuantity && count($gifts) > 0) {
-                foreach ($gifts as $gift) {
-                    foreach ($result as $rowIndex => $row) {
-                        if (!array_key_exists('is_gift', $result[$rowIndex])) {
-                            $result[$rowIndex]['is_gift'] = false;
+            // Do not recalculate in case of refresh
+            if ($this->shouldSplitGiftProductsQuantity && !$refresh) {
+                $gifts = $this->getCartRules(CartRule::FILTER_ACTION_GIFT, false);
+                if (count($gifts) > 0) {
+                    foreach ($gifts as $gift) {
+                        foreach ($result as $rowIndex => $row) {
+                            if (!array_key_exists('is_gift', $result[$rowIndex])) {
+                                $result[$rowIndex]['is_gift'] = false;
+                            }
+
+                            if (
+                                $row['id_product'] == $gift['gift_product'] &&
+                                $row['id_product_attribute'] == $gift['gift_product_attribute']
+                            ) {
+                                $row['is_gift'] = true;
+                                $result[$rowIndex] = $row;
+                            }
                         }
 
-                        if (
-                            $row['id_product'] == $gift['gift_product'] &&
-                            $row['id_product_attribute'] == $gift['gift_product_attribute']
-                        ) {
-                            $row['is_gift'] = true;
-                            $result[$rowIndex] = $row;
+                        $index = $gift['gift_product'] . '-' . $gift['gift_product_attribute'];
+                        if (!array_key_exists($index, $givenAwayProductsIds)) {
+                            $givenAwayProductsIds[$index] = 1;
+                        } else {
+                            ++$givenAwayProductsIds[$index];
                         }
-                    }
-
-                    $index = $gift['gift_product'] . '-' . $gift['gift_product_attribute'];
-                    if (!array_key_exists($index, $givenAwayProductsIds)) {
-                        $givenAwayProductsIds[$index] = 1;
-                    } else {
-                        ++$givenAwayProductsIds[$index];
                     }
                 }
             }
+
+            $this->_products = array();
 
             foreach ($result as &$row) {
                 if (!array_key_exists('is_gift', $row)) {
@@ -965,11 +970,11 @@ class CartCore extends ObjectModel
             case Order::ROUND_LINE:
                 $row['total'] = Tools::ps_round(
                     $row['price_with_reduction_without_tax'] * $productQuantity,
-                    _PS_PRICE_COMPUTE_PRECISION_
+                    Context::getContext()->getComputingPrecision()
                 );
                 $row['total_wt'] = Tools::ps_round(
                     $row['price_with_reduction'] * $productQuantity,
-                    _PS_PRICE_COMPUTE_PRECISION_
+                    Context::getContext()->getComputingPrecision()
                 );
 
                 break;
@@ -978,11 +983,11 @@ class CartCore extends ObjectModel
             default:
                 $row['total'] = Tools::ps_round(
                         $row['price_with_reduction_without_tax'],
-                        _PS_PRICE_COMPUTE_PRECISION_
+                        Context::getContext()->getComputingPrecision()
                     ) * $productQuantity;
                 $row['total_wt'] = Tools::ps_round(
                         $row['price_with_reduction'],
-                        _PS_PRICE_COMPUTE_PRECISION_
+                        Context::getContext()->getComputingPrecision()
                     ) * $productQuantity;
 
                 break;
@@ -1564,10 +1569,11 @@ class CartCore extends ObjectModel
      * @param int $type Customization type can be Product::CUSTOMIZE_FILE or Product::CUSTOMIZE_TEXTFIELD
      * @param string $value Customization value
      * @param int $quantity Quantity value
+     * @param bool $returnId if true - returns the customization record id
      *
      * @return bool Success
      */
-    public function _addCustomization($id_product, $id_product_attribute, $index, $type, $value, $quantity)
+    public function _addCustomization($id_product, $id_product_attribute, $index, $type, $value, $quantity, $returnId = false)
     {
         $exising_customization = Db::getInstance()->executeS(
             'SELECT cu.`id_customization`, cd.`index`, cd.`value`, cd.`type` FROM `' . _DB_PREFIX_ . 'customization` cu
@@ -1609,6 +1615,10 @@ class CartCore extends ObjectModel
 
         if (!Db::getInstance()->execute($query)) {
             return false;
+        }
+
+        if (true === $returnId) {
+            return (int) $id_customization;
         }
 
         return true;
@@ -1803,7 +1813,8 @@ class CartCore extends ObjectModel
 
             // Delete customization picture if necessary
             if (isset($cust_data['type']) && $cust_data['type'] == Product::CUSTOMIZE_FILE) {
-                $result &= (@unlink(_PS_UPLOAD_DIR_ . $cust_data['value']) && @unlink(_PS_UPLOAD_DIR_ . $cust_data['value'] . '_small'));
+                $result &= file_exists(_PS_UPLOAD_DIR_ . $cust_data['value']) ? @unlink(_PS_UPLOAD_DIR_ . $cust_data['value']) : true;
+                $result &= file_exists(_PS_UPLOAD_DIR_ . $cust_data['value'] . '_small') ? @unlink(_PS_UPLOAD_DIR_ . $cust_data['value'] . '_small') : true;
             }
 
             $result &= Db::getInstance()->execute(
@@ -1848,7 +1859,7 @@ class CartCore extends ObjectModel
 
         $with_taxes = $use_tax_display ? $cart->_taxCalculationMethod != PS_TAX_EXC : true;
 
-        return Tools::displayPrice($cart->getOrderTotal($with_taxes, $type), Currency::getCurrencyInstance((int) $cart->id_currency), false);
+        return Context::getContext()->getCurrentLocale()->formatPrice($cart->getOrderTotal($with_taxes, $type), Currency::getIsoCodeById((int) $cart->id_currency), false);
     }
 
     /**
@@ -1954,8 +1965,9 @@ class CartCore extends ObjectModel
         if (in_array($type, [Cart::BOTH, Cart::BOTH_WITHOUT_SHIPPING, Cart::ONLY_DISCOUNTS])) {
             $cartRules = $this->getTotalCalculationCartRules($type, $type == Cart::BOTH);
         }
+
         $calculator = $this->newCalculator($products, $cartRules, $id_carrier);
-        $computePrecision = $this->configuration->get('_PS_PRICE_COMPUTE_PRECISION_');
+        $computePrecision = Context::getContext()->getComputingPrecision();
         switch ($type) {
             case Cart::ONLY_SHIPPING:
                 $calculator->calculateRows();
@@ -2000,9 +2012,7 @@ class CartCore extends ObjectModel
 
         // ROUND AND RETURN
 
-        $compute_precision = $this->configuration->get('_PS_PRICE_COMPUTE_PRECISION_');
-
-        return Tools::ps_round($value, $compute_precision);
+        return Tools::ps_round($value, $computePrecision);
     }
 
     /**
@@ -2023,7 +2033,7 @@ class CartCore extends ObjectModel
 
         // set cart rows (products)
         $useEcotax = $this->configuration->get('PS_USE_ECOTAX');
-        $precision = $this->configuration->get('_PS_PRICE_COMPUTE_PRECISION_');
+        $precision = Context::getContext()->getComputingPrecision();
         $configRoundType = $this->configuration->get('PS_ROUND_TYPE');
         $roundTypes = [
             Order::ROUND_TOTAL => CartRow::ROUND_MODE_TOTAL,
@@ -2123,9 +2133,9 @@ class CartCore extends ObjectModel
         if ($withShipping || $type == Cart::ONLY_DISCOUNTS) {
             $cartRules = $this->getCartRules(CartRule::FILTER_ACTION_ALL);
         } else {
-            $cartRules = $this->getCartRules(CartRule::FILTER_ACTION_REDUCTION);
+            $cartRules = $this->getCartRules(CartRule::FILTER_ACTION_REDUCTION, false);
             // Cart Rules array are merged manually in order to avoid doubles
-            foreach ($this->getCartRules(CartRule::FILTER_ACTION_GIFT) as $cartRuleCandidate) {
+            foreach ($this->getCartRules(CartRule::FILTER_ACTION_GIFT, false) as $cartRuleCandidate) {
                 $alreadyAddedCartRule = false;
                 foreach ($cartRules as $cartRule) {
                     if ($cartRuleCandidate['id_cart_rule'] == $cartRule['id_cart_rule']) {
@@ -2214,7 +2224,7 @@ class CartCore extends ObjectModel
         // With PS_ATCP_SHIPWRAP on the gift wrapping cost computation calls getOrderTotal
         // with $type === Cart::ONLY_PRODUCTS, so the flag below prevents an infinite recursion.
         $includeGiftWrapping = (!$this->configuration->get('PS_ATCP_SHIPWRAP') || $type !== Cart::ONLY_PRODUCTS);
-        $computePrecision = $this->configuration->get('_PS_PRICE_COMPUTE_PRECISION_');
+        $computePrecision = Context::getContext()->getComputingPrecision();
 
         if ($this->gift && $includeGiftWrapping) {
             $wrapping_fees = Tools::convertPrice(
@@ -2278,7 +2288,7 @@ class CartCore extends ObjectModel
             // when asked for the pre tax price.
             $wrapping_fees = Tools::ps_round(
                 $wrapping_fees / (1 + $this->getAverageProductsTaxRate()),
-                _PS_PRICE_COMPUTE_PRECISION_
+                Context::getContext()->getComputingPrecision()
             );
         }
 
@@ -3392,7 +3402,7 @@ class CartCore extends ObjectModel
         if (!isset($id_zone)) {
             // Get id zone
             if (!$this->isMultiAddressDelivery()
-                && isset($this->id_address_delivery) // Be carefull, id_address_delivery is not usefull one 1.5
+                && isset($this->id_address_delivery) // Be careful, id_address_delivery is not useful one 1.5
                 && $this->id_address_delivery
                 && Customer::customerHasAddress($this->id_customer, $this->id_address_delivery)
             ) {
@@ -3794,7 +3804,7 @@ class CartCore extends ObjectModel
 
             if ($product['reduction_type'] == 'amount') {
                 $reduction = (!Product::getTaxCalculationMethod() ? (float) $product['price_wt'] : (float) $product['price']) - (float) $product['price_without_quantity_discount'];
-                $product['reduction_formatted'] = Tools::displayPrice($reduction);
+                $product['reduction_formatted'] = Tools::getContextLocale($context)->formatPrice($reduction, $context->currency->iso_code);
             }
         }
 
@@ -3813,8 +3823,8 @@ class CartCore extends ObjectModel
             if ($cart_rule['free_shipping'] && (empty($cart_rule['code']) || preg_match('/^' . CartRule::BO_ORDER_CODE_PREFIX . '[0-9]+/', $cart_rule['code']))) {
                 $cart_rule['value_real'] -= $total_shipping;
                 $cart_rule['value_tax_exc'] -= $total_shipping_tax_exc;
-                $cart_rule['value_real'] = Tools::ps_round($cart_rule['value_real'], (int) $context->currency->decimals * _PS_PRICE_COMPUTE_PRECISION_);
-                $cart_rule['value_tax_exc'] = Tools::ps_round($cart_rule['value_tax_exc'], (int) $context->currency->decimals * _PS_PRICE_COMPUTE_PRECISION_);
+                $cart_rule['value_real'] = Tools::ps_round($cart_rule['value_real'], (int) $context->currency->decimals * Context::getContext()->getComputingPrecision());
+                $cart_rule['value_tax_exc'] = Tools::ps_round($cart_rule['value_tax_exc'], (int) $context->currency->decimals * Context::getContext()->getComputingPrecision());
                 if ($total_discounts > $cart_rule['value_real']) {
                     $total_discounts -= $total_shipping;
                 }
@@ -3831,20 +3841,20 @@ class CartCore extends ObjectModel
                 foreach ($products as $key => &$product) {
                     if (empty($product['gift']) && $product['id_product'] == $cart_rule['gift_product'] && $product['id_product_attribute'] == $cart_rule['gift_product_attribute']) {
                         // Update total products
-                        $total_products_wt = Tools::ps_round($total_products_wt - $product['price_wt'], (int) $context->currency->decimals * _PS_PRICE_COMPUTE_PRECISION_);
-                        $total_products = Tools::ps_round($total_products - $product['price'], (int) $context->currency->decimals * _PS_PRICE_COMPUTE_PRECISION_);
+                        $total_products_wt = Tools::ps_round($total_products_wt - $product['price_wt'], (int) $context->currency->decimals * Context::getContext()->getComputingPrecision());
+                        $total_products = Tools::ps_round($total_products - $product['price'], (int) $context->currency->decimals * Context::getContext()->getComputingPrecision());
 
                         // Update total discounts
-                        $total_discounts = Tools::ps_round($total_discounts - $product['price_wt'], (int) $context->currency->decimals * _PS_PRICE_COMPUTE_PRECISION_);
-                        $total_discounts_tax_exc = Tools::ps_round($total_discounts_tax_exc - $product['price'], (int) $context->currency->decimals * _PS_PRICE_COMPUTE_PRECISION_);
+                        $total_discounts = Tools::ps_round($total_discounts - $product['price_wt'], (int) $context->currency->decimals * Context::getContext()->getComputingPrecision());
+                        $total_discounts_tax_exc = Tools::ps_round($total_discounts_tax_exc - $product['price'], (int) $context->currency->decimals * Context::getContext()->getComputingPrecision());
 
                         // Update cart rule value
-                        $cart_rule['value_real'] = Tools::ps_round($cart_rule['value_real'] - $product['price_wt'], (int) $context->currency->decimals * _PS_PRICE_COMPUTE_PRECISION_);
-                        $cart_rule['value_tax_exc'] = Tools::ps_round($cart_rule['value_tax_exc'] - $product['price'], (int) $context->currency->decimals * _PS_PRICE_COMPUTE_PRECISION_);
+                        $cart_rule['value_real'] = Tools::ps_round($cart_rule['value_real'] - $product['price_wt'], (int) $context->currency->decimals * Context::getContext()->getComputingPrecision());
+                        $cart_rule['value_tax_exc'] = Tools::ps_round($cart_rule['value_tax_exc'] - $product['price'], (int) $context->currency->decimals * Context::getContext()->getComputingPrecision());
 
                         // Update product quantity
-                        $product['total_wt'] = Tools::ps_round($product['total_wt'] - $product['price_wt'], (int) $currency->decimals * _PS_PRICE_COMPUTE_PRECISION_);
-                        $product['total'] = Tools::ps_round($product['total'] - $product['price'], (int) $currency->decimals * _PS_PRICE_COMPUTE_PRECISION_);
+                        $product['total_wt'] = Tools::ps_round($product['total_wt'] - $product['price_wt'], (int) $currency->decimals * Context::getContext()->getComputingPrecision());
+                        $product['total'] = Tools::ps_round($product['total'] - $product['price'], (int) $currency->decimals * Context::getContext()->getComputingPrecision());
                         --$product['cart_quantity'];
 
                         if (!$product['cart_quantity']) {
@@ -3999,6 +4009,7 @@ class CartCore extends ObjectModel
                 WHERE NOT EXISTS (SELECT 1 FROM ' . _DB_PREFIX_ . 'orders o WHERE o.`id_cart` = c.`id_cart`
                                     AND o.`id_customer` = ' . (int) $id_customer . ')
                 AND c.`id_customer` = ' . (int) $id_customer . '
+                AND c.`id_guest` != 0
                     ' . Shop::addSqlRestriction(Shop::SHARE_ORDER, 'c') . '
                 ORDER BY c.`date_upd` DESC';
 
@@ -4107,12 +4118,21 @@ class CartCore extends ObjectModel
      * @param int $index Customization field identifier as id_customization_field in table customization_field
      * @param int $type Customization type can be Product::CUSTOMIZE_FILE or Product::CUSTOMIZE_TEXTFIELD
      * @param string $text_value
+     * @param bool $returnCustomizationId if true - returns the customizationId
      *
      * @return bool Always true
      */
-    public function addTextFieldToProduct($id_product, $index, $type, $text_value)
+    public function addTextFieldToProduct($id_product, $index, $type, $text_value, $returnCustomizationId = false)
     {
-        return $this->_addCustomization($id_product, 0, $index, $type, $text_value, 0);
+        return $this->_addCustomization(
+            $id_product,
+            0,
+            $index,
+            $type,
+            $text_value,
+            0,
+            $returnCustomizationId
+        );
     }
 
     /**
@@ -4122,12 +4142,21 @@ class CartCore extends ObjectModel
      * @param int $index Customization field identifier as id_customization_field in table customization_field
      * @param int $type Customization type can be Product::CUSTOMIZE_FILE or Product::CUSTOMIZE_TEXTFIELD
      * @param string $file Filename
+     * @param bool $returnCustomizationId if true - returns the customizationId
      *
      * @return bool Always true
      */
-    public function addPictureToProduct($id_product, $index, $type, $file)
+    public function addPictureToProduct($id_product, $index, $type, $file, $returnCustomizationId = false)
     {
-        return $this->_addCustomization($id_product, 0, $index, $type, $file, 0);
+        return $this->_addCustomization(
+            $id_product,
+            0,
+            $index,
+            $type,
+            $file,
+            0,
+            $returnCustomizationId
+        );
     }
 
     /**
@@ -4168,8 +4197,9 @@ class CartCore extends ObjectModel
         );
 
         // Delete customization picture if necessary
-        if ($cust_data['type'] == Product::CUSTOMIZE_FILE) {
-            $result &= (@unlink(_PS_UPLOAD_DIR_ . $cust_data['value']) && @unlink(_PS_UPLOAD_DIR_ . $cust_data['value'] . '_small'));
+        if (isset($cust_data['type']) && $cust_data['type'] == Product::CUSTOMIZE_FILE) {
+            $result &= file_exists(_PS_UPLOAD_DIR_ . $cust_data['value']) ? @unlink(_PS_UPLOAD_DIR_ . $cust_data['value']) : true;
+            $result &= file_exists(_PS_UPLOAD_DIR_ . $cust_data['value'] . '_small') ? @unlink(_PS_UPLOAD_DIR_ . $cust_data['value'] . '_small') : true;
         }
 
         $result &= Db::getInstance()->execute(
@@ -4177,6 +4207,18 @@ class CartCore extends ObjectModel
             WHERE `id_customization` = ' . (int) $cust_data['id_customization'] . '
             AND `index` = ' . (int) $index
         );
+
+        $hasRemainingCustomData = Db::getInstance()->getValue(
+            'SELECT 1 FROM `' . _DB_PREFIX_ . 'customized_data`
+            WHERE `id_customization` = ' . (int) $cust_data['id_customization']
+        );
+
+        if (!$hasRemainingCustomData) {
+            $result &= Db::getInstance()->execute(
+                'DELETE FROM `' . _DB_PREFIX_ . 'customization`
+            WHERE `id_customization` = ' . (int) $cust_data['id_customization']
+            );
+        }
 
         return $result;
     }
@@ -4826,6 +4868,26 @@ class CartCore extends ObjectModel
     }
 
     /**
+     * Are all products of the Cart still available in the current state ? They might have been converted to another
+     * type of product since then
+     *
+     * @return bool False if one of the products from the cart has been changed into a new type of product
+     */
+    public function checkAllProductsAreStillAvailableInThisState()
+    {
+        foreach ($this->getProducts(false, false, null, false) as $product) {
+            $currentProduct = new Product();
+            $currentProduct->hydrate($product);
+
+            if ($currentProduct->hasAttributes() && $product['id_product_attribute'] === '0') {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
      * Are all products of the Cart in stock?
      *
      * @param bool $ignore_virtual Ignore virtual products
@@ -4874,6 +4936,23 @@ class CartCore extends ObjectModel
                 if ($productInStock > 0 && $productOutOfStock > 0) {
                     return false;
                 }
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Checks that all products in cart have minimal required quantities
+     *
+     * @return bool
+     */
+    public function checkAllProductsHaveMinimalQuantities()
+    {
+        $productList = $this->getProducts(true);
+        foreach ($productList as $product) {
+            if ($product['minimal_quantity'] > $product['cart_quantity']) {
+                return false;
             }
         }
 

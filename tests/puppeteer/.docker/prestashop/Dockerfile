@@ -2,12 +2,6 @@ FROM prestashop/base:7.2-apache
 
 WORKDIR /tmp
 
-ENV PS_HANDLE_DYNAMIC_DOMAIN 0
-ENV PS_INSTALL_AUTO 1
-ENV PS_COUNTRY fr
-ENV TRAVIS_BUILD_DIR /var/www/html
-ENV DEBIAN_FRONTEND noninteractive
-
 # Install dependencies
 RUN apt-get update
 RUN apt-get install -y apt-utils

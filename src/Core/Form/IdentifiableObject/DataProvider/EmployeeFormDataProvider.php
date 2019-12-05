@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -77,7 +77,6 @@ final class EmployeeFormDataProvider implements FormDataProviderInterface
             'firstname' => $editableEmployee->getFirstName()->getValue(),
             'lastname' => $editableEmployee->getLastName()->getValue(),
             'email' => $editableEmployee->getEmail()->getValue(),
-            'optin' => $editableEmployee->isSubscribedToNewsletter(),
             'default_page' => $editableEmployee->getDefaultPageId(),
             'language' => $editableEmployee->getLanguageId(),
             'active' => $editableEmployee->isActive(),
@@ -92,7 +91,6 @@ final class EmployeeFormDataProvider implements FormDataProviderInterface
     public function getDefaultData()
     {
         $data = [
-            'optin' => true,
             'active' => true,
         ];
 

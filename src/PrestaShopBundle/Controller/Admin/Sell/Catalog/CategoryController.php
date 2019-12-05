@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -48,6 +48,7 @@ use PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoryForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\MenuThumbnailId;
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\Query\GetShowcaseCardIsClosed;
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\ValueObject\ShowcaseCard;
+use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CategoryGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters\CategoryFilters;
 use PrestaShopBundle\Component\CsvResponse;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
@@ -68,7 +69,10 @@ class CategoryController extends FrameworkBundleAdminController
     /**
      * Show categories listing.
      *
-     * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))")
+     * @AdminSecurity(
+     *     "is_granted(['read', 'update', 'create', 'delete'], request.get('_legacy_controller'))",
+     *     message="You do not have permission to list this."
+     * )
      *
      * @param Request $request
      * @param CategoryFilters $filters
@@ -107,12 +111,33 @@ class CategoryController extends FrameworkBundleAdminController
     }
 
     /**
+     * Process Grid search.
+     *
+     * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))")
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    public function searchGridAction(Request $request)
+    {
+        $responseBuilder = $this->get('prestashop.bundle.grid.response_builder');
+
+        return $responseBuilder->buildSearchResponse(
+            $this->get('prestashop.core.grid.definition.factory.category'),
+            $request,
+            CategoryGridDefinitionFactory::GRID_ID,
+            'admin_categories_index'
+        );
+    }
+
+    /**
      * Show "Add new" form and handle form submit.
      *
      * @AdminSecurity(
      *     "is_granted(['create'], request.get('_legacy_controller'))",
-     *     redirectRoute="admin_categories_index",
-     *     message="You do not have permission to create this."
+     *     message="You do not have permission to create this.",
+     *     redirectRoute="admin_categories_index"
      * )
      *
      * @param Request $request
@@ -162,8 +187,8 @@ class CategoryController extends FrameworkBundleAdminController
      *
      * @AdminSecurity(
      *     "is_granted(['create'], request.get('_legacy_controller'))",
-     *     redirectRoute="admin_categories_index",
-     *     message="You do not have permission to create this."
+     *     message="You do not have permission to create this.",
+     *     redirectRoute="admin_categories_index"
      * )
      *
      * @param Request $request
@@ -211,8 +236,8 @@ class CategoryController extends FrameworkBundleAdminController
      *
      * @AdminSecurity(
      *     "is_granted(['update'], request.get('_legacy_controller'))",
-     *     redirectRoute="admin_categories_index",
-     *     message="You do not have permission to edit this."
+     *     message="You do not have permission to edit this.",
+     *     redirectRoute="admin_categories_index"
      * )
      *
      * @param int $categoryId
@@ -282,8 +307,8 @@ class CategoryController extends FrameworkBundleAdminController
      *
      * @AdminSecurity(
      *     "is_granted(['update'], request.get('_legacy_controller'))",
-     *     redirectRoute="admin_categories_index",
-     *     message="You do not have permission to edit this."
+     *     message="You do not have permission to edit this.",
+     *     redirectRoute="admin_categories_index"
      * )
      *
      * @param int $categoryId
@@ -348,9 +373,9 @@ class CategoryController extends FrameworkBundleAdminController
      *
      * @AdminSecurity(
      *     "is_granted(['update'], request.get('_legacy_controller'))",
+     *     message="You do not have permission to edit this.",
      *     redirectRoute="admin_categories_edit",
-     *     redirectQueryParamsToKeep={"categoryId"},
-     *     message="You do not have permission to edit this."
+     *     redirectQueryParamsToKeep={"categoryId"}
      * )
      *
      * @param Request $request
@@ -389,9 +414,9 @@ class CategoryController extends FrameworkBundleAdminController
      *
      * @AdminSecurity(
      *     "is_granted(['update'], request.get('_legacy_controller'))",
+     *     message="You do not have permission to edit this.",
      *     redirectRoute="admin_categories_edit",
-     *     redirectQueryParamsToKeep={"categoryId"},
-     *     message="You do not have permission to edit this."
+     *     redirectQueryParamsToKeep={"categoryId"}
      * )
      *
      * @param Request $request

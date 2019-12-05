@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -61,7 +61,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                 unset($_GET['id_product_attribute']);
             } else {
                 //Only redirect to canonical (parent product without combination) when the requested combination is not valid
-                //In this case we are in a valid combination url and we must display it with redirection for SEO purpose
+                //In this case we are in a valid combination url and we must display it without redirection for SEO purpose
                 return;
             }
 
@@ -496,7 +496,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
 
         $id_currency = (int) $this->context->cookie->id_currency;
         $id_product = (int) $this->product->id;
-        $id_product_attribute = $this->getIdProductAttributeByRequestOrGroup();
+        $id_product_attribute = $this->getIdProductAttributeByGroupOrRequestOrDefault();
         $id_shop = $this->context->shop->id;
 
         $quantity_discounts = SpecificPrice::getQuantityDiscounts($id_product, $id_shop, $id_currency, $id_country, $id_group, $id_product_attribute, false, (int) $this->context->customer->id);
@@ -882,72 +882,21 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
      */
     protected function formatQuantityDiscounts($specific_prices, $price, $tax_rate, $ecotax_amount)
     {
-        $priceFormatter = new PriceFormatter();
+        $priceCalculationMethod = Group::getPriceDisplayMethod(Group::getCurrent()->id);
+        $isTaxIncluded = false;
+
+        if ($priceCalculationMethod !== null && (int) $priceCalculationMethod === PS_TAX_INC) {
+            $isTaxIncluded = true;
+        }
 
         foreach ($specific_prices as $key => &$row) {
-            $row['quantity'] = &$row['from_quantity'];
-            if ($row['price'] >= 0) {
-                // The price may be directly set
-
-                /** @var float $currentPriceDefaultCurrency current price with taxes in default currency */
-                $currentPriceDefaultCurrency = (!$row['reduction_tax'] ? $row['price'] : $row['price'] * (1 + $tax_rate / 100)) + (float) $ecotax_amount;
-                // Since this price is set in default currency,
-                // we need to convert it into current currency
-                $row['id_currency'];
-                $currentPriceCurrentCurrency = Tools::convertPrice($currentPriceDefaultCurrency, $this->context->currency, true, $this->context);
-
-                if ($row['reduction_type'] == 'amount') {
-                    $currentPriceCurrentCurrency -= ($row['reduction_tax'] ? $row['reduction'] : $row['reduction'] / (1 + $tax_rate / 100));
-                    $row['reduction_with_tax'] = $row['reduction_tax'] ? $row['reduction'] : $row['reduction'] / (1 + $tax_rate / 100);
-                } else {
-                    $currentPriceCurrentCurrency *= 1 - $row['reduction'];
-                }
-                $row['real_value'] = $price > 0 ? $price - $currentPriceCurrentCurrency : $currentPriceCurrentCurrency;
-                $discountPrice = $price - $row['real_value'];
-
-                if (Configuration::get('PS_DISPLAY_DISCOUNT_PRICE')) {
-                    if ($row['reduction_tax'] == 0 && !$row['price']) {
-                        $row['discount'] = $priceFormatter->format($price - ($price * $row['reduction_with_tax']));
-                    } else {
-                        $row['discount'] = $priceFormatter->format($price - $row['real_value']);
-                    }
-                } else {
-                    $row['discount'] = $priceFormatter->format($row['real_value']);
-                }
-            } else {
-                if ($row['reduction_type'] == 'amount') {
-                    if (Product::$_taxCalculationMethod == PS_TAX_INC) {
-                        $row['real_value'] = $row['reduction_tax'] == 1 ? $row['reduction'] : $row['reduction'] * (1 + $tax_rate / 100);
-                    } else {
-                        $row['real_value'] = $row['reduction_tax'] == 0 ? $row['reduction'] : $row['reduction'] / (1 + $tax_rate / 100);
-                    }
-                    $row['reduction_with_tax'] = $row['reduction_tax'] ? $row['reduction'] : $row['reduction'] + ($row['reduction'] * $tax_rate) / 100;
-                    $discountPrice = $price - $row['real_value'];
-                    if (Configuration::get('PS_DISPLAY_DISCOUNT_PRICE')) {
-                        if ($row['reduction_tax'] == 0 && !$row['price']) {
-                            $row['discount'] = $priceFormatter->format($price - ($price * $row['reduction_with_tax']));
-                        } else {
-                            $row['discount'] = $priceFormatter->format($price - $row['real_value']);
-                        }
-                    } else {
-                        $row['discount'] = $priceFormatter->format($row['real_value']);
-                    }
-                } else {
-                    $row['real_value'] = $row['reduction'] * 100;
-                    $discountPrice = $price - $price * $row['reduction'];
-                    if (Configuration::get('PS_DISPLAY_DISCOUNT_PRICE')) {
-                        if ($row['reduction_tax'] == 0) {
-                            $row['discount'] = $priceFormatter->format($price - ($price * $row['reduction_with_tax']));
-                        } else {
-                            $row['discount'] = $priceFormatter->format($price - ($price * $row['reduction']));
-                        }
-                    } else {
-                        $row['discount'] = $row['real_value'] . '%';
-                    }
-                }
-            }
-
-            $row['save'] = $priceFormatter->format((($price * $row['quantity']) - ($discountPrice * $row['quantity'])));
+            $specificPriceFormatter = new SpecificPriceFormatter(
+                $row,
+                $isTaxIncluded,
+                $this->context->currency,
+                Configuration::get('PS_DISPLAY_DISCOUNT_PRICE')
+            );
+            $row = $specificPriceFormatter->formatSpecificPrice($price, $tax_rate, $ecotax_amount);
             $row['nextQuantity'] = (isset($specific_prices[$key + 1]) ? (int) $specific_prices[$key + 1]['from_quantity'] : -1);
         }
 
@@ -977,21 +926,25 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
     }
 
     /**
-     * Return id_product_attribute by id_product_attribute request parameter
-     * or by the group request parameter.
+     * Return id_product_attribute by id_product_attribute group parameter,
+     * or request parameter, or the default attribute as a fallback.
      *
      * @return int|null
      *
      * @throws PrestaShopException
      */
-    private function getIdProductAttributeByRequestOrGroup()
+    private function getIdProductAttributeByGroupOrRequestOrDefault()
     {
-        $requestedIdProductAttribute = (int) Tools::getValue('id_product_attribute');
+        $idProductAttribute = $this->getIdProductAttributeByGroup();
+        if (null === $idProductAttribute) {
+            $idProductAttribute = (int) Tools::getValue('id_product_attribute');
+        }
 
-        $groupIdProductAttribute = $this->getIdProductAttributeByGroup();
-        $requestedIdProductAttribute = null !== $groupIdProductAttribute ? $groupIdProductAttribute : $requestedIdProductAttribute;
+        if (0 === $idProductAttribute) {
+            $idProductAttribute = (int) Product::getDefaultAttribute($this->product->id);
+        }
 
-        return $this->tryToGetAvailableIdProductAttribute($requestedIdProductAttribute);
+        return $this->tryToGetAvailableIdProductAttribute($idProductAttribute);
     }
 
     /**
@@ -1062,7 +1015,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         $product['id_product'] = (int) $this->product->id;
         $product['out_of_stock'] = (int) $this->product->out_of_stock;
         $product['new'] = (int) $this->product->new;
-        $product['id_product_attribute'] = $this->getIdProductAttributeByRequestOrGroup();
+        $product['id_product_attribute'] = $this->getIdProductAttributeByGroupOrRequestOrDefault();
         $product['minimal_quantity'] = $this->getProductMinimalQuantity($product);
         $product['quantity_wanted'] = $this->getRequiredQuantity($product);
         $product['extraContent'] = $extraContentFinder->addParams(array('product' => $this->product))->present();
@@ -1093,6 +1046,12 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         }
         $product_full['customer_group_discount'] = $group_reduction;
         $product_full['title'] = $this->getProductPageTitle();
+
+        // round display price (without formatting, we don't want the currency symbol here, just the raw rounded value
+        $product_full['rounded_display_price'] = Tools::ps_round(
+            $product_full['price'],
+            Context::getContext()->currency->precision
+        );
 
         $presenter = $this->getProductPresenter();
 
@@ -1319,7 +1278,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             return $title;
         }
 
-        $idProductAttribute = $this->getIdProductAttributeByRequestOrGroup();
+        $idProductAttribute = $this->getIdProductAttributeByGroupOrRequestOrDefault();
         if ($idProductAttribute) {
             $attributes = $this->product->getAttributeCombinationsById($idProductAttribute, $this->context->language->id);
             if (is_array($attributes) && count($attributes) > 0) {

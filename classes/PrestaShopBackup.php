@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -255,7 +255,7 @@ class PrestaShopBackupCore
         $this->id = realpath($backupfile);
 
         fwrite($fp, '/* Backup for ' . Tools::getHttpHost(false, false) . __PS_BASE_URI__ . "\n *  at " . date($date) . "\n */\n");
-        fwrite($fp, "\n" . 'SET NAMES \'utf8\';');
+        fwrite($fp, "\n" . 'SET NAMES \'utf8mb4\';');
         fwrite($fp, "\n" . 'SET FOREIGN_KEY_CHECKS = 0;');
         fwrite($fp, "\n" . 'SET SESSION sql_mode = \'\';' . "\n\n");
 

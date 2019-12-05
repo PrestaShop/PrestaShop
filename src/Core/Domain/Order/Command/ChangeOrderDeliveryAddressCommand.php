@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -50,8 +50,8 @@ class ChangeOrderDeliveryAddressCommand
      */
     public function __construct($orderId, $newDeliveryAddressId)
     {
-        $this->orderId = $orderId;
-        $this->newDeliveryAddressId = $newDeliveryAddressId;
+        $this->orderId = new OrderId($orderId);
+        $this->newDeliveryAddressId = new AddressId($newDeliveryAddressId);
     }
 
     /**

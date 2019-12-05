@@ -1,5 +1,5 @@
 {#**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -77,6 +77,10 @@
           'label': 'State'|trans({}, 'Admin.Global'),
         }) }}
       </div>
+
+      {{ ps.form_group_row(addressForm.dni, {}, {
+        'label': 'DNI'|trans({}, 'Admin.Global'),
+      }) }}
 
       {{ ps.form_group_row(addressForm.home_phone, {}, {
         'label': 'Home phone'|trans({}, 'Admin.Global'),

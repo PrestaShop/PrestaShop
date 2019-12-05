@@ -43,6 +43,14 @@ services:
         tags:
             - { name: "ps.translation_provider" }
 
+    prestashop.translation.mails_body_provider:
+        class: PrestaShopBundle\Translation\Provider\MailsBodyProvider
+        arguments:
+          - "@prestashop.translation.database_loader"
+          - "%translations_dir%"
+        tags:
+          - { name: "ps.translation_provider" }
+
     prestashop.translation.others_provider:
             class: PrestaShopBundle\Translation\Provider\OthersProvider
             arguments:
@@ -105,6 +113,11 @@ services:
         class: PrestaShopBundle\Translation\Loader\DatabaseTranslationLoader
         arguments:
             - "@doctrine.orm.entity_manager"
+        tags:
+            - {name: translation.loader, alias: db}
+
+    prestashop.translation.sql_loader:
+        class: PrestaShopBundle\Translation\Loader\SqlTranslationLoader
         tags:
             - {name: translation.loader, alias: db}
 

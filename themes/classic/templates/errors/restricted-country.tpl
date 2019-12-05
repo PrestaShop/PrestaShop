@@ -1,5 +1,5 @@
 {**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -30,7 +30,7 @@
 
     {block name='page_header_container'}
       <header class="page-header">
-        <div class="logo"><img src="{$shop.logo}" alt="logo"></div>
+        <div class="logo"><img src="{$urls.img_ps_url}{$shop.logo}" alt="logo"></div>
         {block name='page_header'}
           <h1>{block name='page_title'}{$shop.name}{/block}</h1>
         {/block}

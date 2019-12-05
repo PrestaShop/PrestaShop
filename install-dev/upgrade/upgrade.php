@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -52,7 +52,7 @@ Upgrade::migrateSettingsFile();
 require_once dirname(__FILE__).'/../init.php';
 require_once _PS_CONFIG_DIR_.'bootstrap.php';
 
-$logDir = _PS_ROOT_DIR_.'/var/logs/'.(_PS_MODE_DEV_ ? 'dev' : 'prod').'/';
+$logDir = _PS_ROOT_DIR_.'/var/logs/' . _PS_ENV_ . '/';
 @mkdir($logDir, FileSystem::DEFAULT_MODE_FOLDER, true);
 
 $upgrade = new Upgrade($logDir, dirname(dirname(__FILE__)).'/');

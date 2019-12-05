@@ -1,5 +1,5 @@
 {#**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -40,7 +40,9 @@
       <div class="form-group mb-0">
         {{ form_widget(deleteCategoriesForm.delete_mode) }}
       </div>
-
+      <span class="form-text text-muted">
+        {{ 'Note that if they have another category, your products will logically remain associated with it.'|trans({}, 'Admin.Catalog.Notification') }}
+      </span>
       <div class="d-none">
         {{ form_widget(deleteCategoriesForm.categories_to_delete) }}
       </div>

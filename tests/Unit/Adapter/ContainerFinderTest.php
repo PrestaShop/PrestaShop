@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -53,7 +53,7 @@ class ContainerFinderTest extends TestCase
     }
 
     /**
-     * @expectedException \Exception
+     * @expectedException \PrestaShop\PrestaShop\Core\Exception\ContainerNotFoundException
      * @expectedExceptionMessage Kernel Container is not available
      */
     public function testGetContainerException()

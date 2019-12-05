@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -73,16 +73,19 @@ final class NoQtyProductWithoutCombinationQueryBuilder extends AbstractProductQu
         $attrSubQuery = $this->connection->createQueryBuilder()
             ->select(1)
             ->from($this->dbPrefix . 'product_attribute', 'pa')
-            ->andWhere('pa.id_product = p.id_product')
-        ;
+            ->andWhere('pa.id_product = p.id_product');
 
         $subQuery = $this->connection->createQueryBuilder();
-        $subQuery->select('1')
+        $subQuery->select(1)
             ->from($this->dbPrefix . 'stock_available', 'stock')
             ->andWhere('p.id_product = stock.id_product')
             ->andWhere('NOT EXISTS(' . $attrSubQuery->getSQL() . ')')
-            ->andWhere('IFNULL(stock.quantity, 0) <= 0')
-        ;
+            ->andWhere('IFNULL(stock.quantity, 0) <= 0');
+
+        if ($this->multistoreContextChecker->isSingleShopContext()) {
+            $subQuery->andWhere('stock.id_shop = :context_shop_id')
+                ->setParameter('context_shop_id', $this->contextShopId);
+        }
 
         $qb->andWhere('EXISTS(' . $subQuery->getSQL() . ')');
 

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -60,6 +60,16 @@ class ShowcaseCard
     const CMS_PAGES_CARD = 'cms-pages_card';
 
     /**
+     * Card shown in Sell -> Catalog -> Attributes & features -> Attributes
+     */
+    const ATTRIBUTES_CARD = 'attributes_card';
+
+    /**
+     * Card shown in Sell -> Catalog -> Monitoring
+     */
+    const MONITORING_CARD = 'monitoring_card';
+
+    /**
      * List of supported card names
      */
     const SUPPORTED_NAMES = [
@@ -68,6 +78,8 @@ class ShowcaseCard
         self::CUSTOMERS_CARD => true,
         self::EMPLOYEES_CARD => true,
         self::CMS_PAGES_CARD => true,
+        self::ATTRIBUTES_CARD => true,
+        self::MONITORING_CARD => true,
     ];
 
     /**

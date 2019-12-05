@@ -1,5 +1,5 @@
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -750,21 +750,24 @@ $(document).ready(function()
       return copyMeta2friendlyURL()
   });
 
-  $('#ajax_running').ajaxStart(function() {
-    ajax_running_timeout = setTimeout(function() {showAjaxOverlay()}, 1000);
-  });
-
-  $('#ajax_running').ajaxStop(function() {
-    var element = $(this)
-    setTimeout(function(){element.hide()}, 1000);
-    clearTimeout(ajax_running_timeout);
-  });
-
-  $('#ajax_running').ajaxError(function() {
-    var element = $(this)
-    setTimeout(function(){element.hide()}, 1000);
-    clearTimeout(ajax_running_timeout);
-  });
+  $(document)
+    .ajaxStart(function() {
+      ajax_running_timeout = setTimeout(function() {
+        showAjaxOverlay()
+      }, 1000);
+    })
+    .ajaxStop(function() {
+      setTimeout(function() {
+        $('#ajax_running').hide()
+      }, 1000);
+      clearTimeout(ajax_running_timeout);
+    })
+    .ajaxError(function() {
+      setTimeout(function() {
+        $('#ajax_running').hide()
+      }, 1000);
+      clearTimeout(ajax_running_timeout);
+    });
 
   bindTabModuleListAction();
 
@@ -899,6 +902,7 @@ $(document).ready(function()
   });
 
   $('.swap-container').each(function() {
+    var swap_container = this;
     /** make sure that all the swap id is present in the dom to prevent mistake **/
     if (typeof $('.addSwap', this) !== undefined && typeof $(".removeSwap", this) !== undefined &&
       typeof $('.selectedSwap', this) !== undefined && typeof $('.availableSwap', this) !== undefined)
@@ -907,7 +911,7 @@ $(document).ready(function()
       bindSwapButton('remove', 'selected', 'available', this);
 
       $('button:submit').click(function() {
-        bindSwapSave(this);
+        bindSwapSave(swap_container);
       });
     }
   });
@@ -1395,6 +1399,22 @@ function ajaxStates(id_state_selected)
       }
     });
   }
+}
+
+function dniRequired() {
+  $.ajax({
+    url: 'index.php',
+    dataType: 'json',
+    cache: false,
+    data: 'token=' + address_token + '&ajax=1&dni_required=1&tab=AdminAddresses&id_country=' + $('#id_country').val(),
+    success: function(resp) {
+      if (resp && resp.dni_required) {
+        $("#dni_required").fadeIn();
+      } else {
+        $("#dni_required").fadeOut();
+      }
+    }
+  });
 }
 
 function check_for_all_accesses(tabsize, tabnumber)

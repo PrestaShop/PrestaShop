@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -31,7 +31,6 @@ use Exception;
 use Language;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Currency\CurrencyDataProviderInterface;
-use PrestaShopException;
 
 /**
  * This class will provide data from DB / ORM about Currency.
@@ -51,6 +50,10 @@ class CurrencyDataProvider implements CurrencyDataProviderInterface
     /** @var Currency */
     private $defaultCurrency;
 
+    /**
+     * @param ConfigurationInterface $configuration
+     * @param int $shopId
+     */
     public function __construct(ConfigurationInterface $configuration, $shopId)
     {
         $this->configuration = $configuration;
@@ -58,9 +61,7 @@ class CurrencyDataProvider implements CurrencyDataProviderInterface
     }
 
     /**
-     * Return available currencies.
-     *
-     * @return array Currencies
+     * {@inheritdoc}
      */
     public function getCurrencies($object = false, $active = true, $group_by = false)
     {
@@ -70,26 +71,25 @@ class CurrencyDataProvider implements CurrencyDataProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function findAll()
+    public function findAll($currentShopOnly = true)
     {
-        return Currency::findAll(false);
+        return Currency::findAll(true, false, $currentShopOnly);
     }
 
     /**
-     * Get a Currency entity instance by ISO code.
-     *
-     * @param string $isoCode
-     *                        An ISO 4217 currency code
-     * @param int|false|null $idLang
-     *                               Set this parameter if you want the currency in a specific language.
-     *                               If null or false, default language will be used
-     *
-     * @return currency|null
-     *                       The asked Currency object, or null if not found
+     * {@inheritdoc}
+     */
+    public function findAllInstalled()
+    {
+        return Currency::findAllInstalled();
+    }
+
+    /**
+     * {@inheritdoc}
      */
     public function getCurrencyByIsoCode($isoCode, $idLang = null)
     {
-        $currencyId = Currency::getIdByIsoCode($isoCode);
+        $currencyId = Currency::getIdByIsoCode($isoCode, 0, false, true);
         if (!$currencyId) {
             return null;
         }
@@ -102,35 +102,20 @@ class CurrencyDataProvider implements CurrencyDataProviderInterface
     }
 
     /**
-     * Get a Currency entity instance by ISO code.
-     *
      * @param string $isoCode
-     *                        An ISO 4217 currency code
      * @param string $locale
-     *                       The locale to use for localized data
      *
-     * @return currency|null
-     *                       The asked Currency object, or null if not found
+     * @return Currency|null
      */
     public function getCurrencyByIsoCodeAndLocale($isoCode, $locale)
     {
-        $idLang = Language::getIdByLocale($locale);
+        $idLang = Language::getIdByLocale($locale, true);
 
         return $this->getCurrencyByIsoCode($isoCode, $idLang);
     }
 
     /**
-     * Get a Currency entity instance.
-     * If the passed ISO code is known, this Currency entity will be loaded with known data.
-     *
-     * @param string $isoCode
-     *                        An ISO 4217 currency code
-     * @param int|null $idLang
-     *                         Set this parameter if you want the currency in a specific language.
-     *                         If null, default language will be used
-     *
-     * @return currency
-     *                  The asked Currency object, loaded with relevant data if passed ISO code is known
+     * {@inheritdoc}
      */
     public function getCurrencyByIsoCodeOrCreate($isoCode, $idLang = null)
     {
@@ -139,7 +124,11 @@ class CurrencyDataProvider implements CurrencyDataProviderInterface
         }
 
         $currency = $this->getCurrencyByIsoCode($isoCode, $idLang);
-        if (null === $currency) {
+        // Currently soft deleted currency are considered "absent", and when you try to reinstall
+        // it a new instance is created This is prone to error, the previously created currency
+        // should be re-enabled So perform the check here for deleted status but it should be improved
+        // (even this method should not exist)
+        if (null === $currency || $currency->deleted) {
             $currency = new Currency(null, $idLang);
         }
 
@@ -147,16 +136,7 @@ class CurrencyDataProvider implements CurrencyDataProviderInterface
     }
 
     /**
-     * Persists a Currency entity into DB.
-     * If this entity already exists in DB (has a known currency_id), it will be updated.
-     *
-     * @param Currency $currencyEntity
-     *                                 Currency object model to save
-     *
-     * @throws PrestaShopException
-     *                             If something wrong happened with DB when saving $currencyEntity
-     * @throws Exception
-     *                   If an unexpected result is retrieved when saving $currencyEntity
+     * {@inheritdoc}
      */
     public function saveCurrency(Currency $currencyEntity)
     {
@@ -166,11 +146,7 @@ class CurrencyDataProvider implements CurrencyDataProviderInterface
     }
 
     /**
-     * Gets a legacy Currency instance by ID.
-     *
-     * @param int $currencyId
-     *
-     * @return Currency
+     * {@inheritdoc}
      */
     public function getCurrencyById($currencyId)
     {
@@ -178,7 +154,7 @@ class CurrencyDataProvider implements CurrencyDataProviderInterface
     }
 
     /**
-     * Get Default currency Iso code.
+     * {@inheritdoc}
      */
     public function getDefaultCurrencyIsoCode()
     {

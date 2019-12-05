@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -82,6 +82,7 @@ final class ManufacturerAddressFormDataProvider implements FormDataProviderInter
             'home_phone' => $editableAddress->getHomePhone(),
             'mobile_phone' => $editableAddress->getMobilePhone(),
             'other' => $editableAddress->getOther(),
+            'dni' => $editableAddress->getDni(),
         ];
     }
 

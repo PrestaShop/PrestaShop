@@ -1,5 +1,5 @@
 {**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -39,8 +39,10 @@
       </div>
     {/if}
     <span class="title">{$title|escape}</span>
-    <span cLass="subtitle">{$subtitle|escape}</span>
-    <span class="value">{$value|escape|replace:'&amp;':'&'}</span>
+    <div class="kpi-description">
+      <div class="subtitle">{$subtitle|escape}</div>
+      <div class="value">{$value|escape|replace:'&amp;':'&'}</div>
+    </div>
   </div>
 {if isset($href) && $href}
   </a>

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -26,8 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Supplier;
 
-use HelperList;
-use ImageManager;
+use PrestaShop\PrestaShop\Adapter\ImageManager;
 use PrestaShop\PrestaShop\Core\Image\ImageProviderInterface;
 use PrestaShop\PrestaShop\Core\Image\Parser\ImageTagSourceParserInterface;
 
@@ -42,20 +41,20 @@ final class SupplierLogoThumbnailProvider implements ImageProviderInterface
     private $imageTagSourceParser;
 
     /**
-     * @var int
+     * @var ImageManager
      */
-    private $contextShopId;
+    private $imageManager;
 
     /**
      * @param ImageTagSourceParserInterface $imageTagSourceParser
-     * @param int $contextShopId
+     * @param ImageManager $imageManager
      */
     public function __construct(
         ImageTagSourceParserInterface $imageTagSourceParser,
-        $contextShopId
+        ImageManager $imageManager
     ) {
         $this->imageTagSourceParser = $imageTagSourceParser;
-        $this->contextShopId = $contextShopId;
+        $this->imageManager = $imageManager;
     }
 
     /**
@@ -63,12 +62,11 @@ final class SupplierLogoThumbnailProvider implements ImageProviderInterface
      */
     public function getPath($supplierId)
     {
-        $pathToImage = _PS_IMG_DIR_ . 'su' . DIRECTORY_SEPARATOR . $supplierId . '.jpg';
-
-        $imageTag = ImageManager::thumbnail(
-            $pathToImage,
-            'supplier_mini_' . $supplierId . '_' . $this->contextShopId . '.jpg',
-            HelperList::LIST_THUMBNAIL_SIZE
+        $imageTag = $this->imageManager->getThumbnailForListing(
+            $supplierId,
+            'jpg',
+            'supplier',
+            _PS_SUPP_IMG_DIR_
         );
 
         return $this->imageTagSourceParser->parse($imageTag);

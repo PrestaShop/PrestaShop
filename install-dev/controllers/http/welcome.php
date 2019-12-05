@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -77,6 +77,6 @@ class InstallControllerHttpWelcome extends InstallControllerHttp implements Http
     private function clearCache()
     {
         $fs = new \Symfony\Component\Filesystem\Filesystem();
-        $fs->remove(_PS_ROOT_DIR_ . '/var/cache/' . (_PS_MODE_DEV_ ? 'dev' : 'prod'));
+        $fs->remove(_PS_CACHE_DIR_);
     }
 }

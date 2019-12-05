@@ -1,5 +1,5 @@
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -36,6 +36,7 @@ import ChoiceTree from "../../components/form/choice-tree";
 import GeneratableInput from "../../components/generatable-input";
 import MultipleChoiceTable from "../../components/multiple-choice-table";
 import PermissionsRowSelector from "./permissions-row-selector";
+import LinkRowActionExtension from '../../components/grid/extension/link-row-action-extension';
 
 const $ = window.$;
 
@@ -50,6 +51,7 @@ $(() => {
   webserviceGrid.addExtension(new SubmitBulkActionExtension());
   webserviceGrid.addExtension(new SubmitRowActionExtension());
   webserviceGrid.addExtension(new BulkActionCheckboxExtension());
+  webserviceGrid.addExtension(new LinkRowActionExtension());
 
   // needed for shop association input in form
   new ChoiceTree('#webservice_key_shop_association').enableAutoCheckChildren();

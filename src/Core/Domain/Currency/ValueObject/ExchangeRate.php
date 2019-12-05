@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject;
 
+use PrestaShop\Decimal\Number;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyConstraintException;
 
 /**
@@ -33,21 +34,31 @@ use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyConstraintExcep
  */
 class ExchangeRate
 {
-    const DEFAULT_RATE = 1;
+    const DEFAULT_RATE = 1.0;
 
     /**
-     * @var float|int
+     * Get the default exchange rate as a Number
+     *
+     * @return Number
+     */
+    public static function getDefaultExchangeRate(): Number
+    {
+        return new Number((string) self::DEFAULT_RATE);
+    }
+
+    /**
+     * @var float
      */
     private $exchangeRate;
 
     /**
-     * @param float|int $exchangeRate
+     * @param float $exchangeRate
      *
      * @throws CurrencyConstraintException
      */
     public function __construct($exchangeRate)
     {
-        $this->assertIsNumberAndMoreThenZero($exchangeRate);
+        $this->assertIsNumberAndMoreThanZero($exchangeRate);
         $this->exchangeRate = $exchangeRate;
     }
 
@@ -64,7 +75,7 @@ class ExchangeRate
      *
      * @throws CurrencyConstraintException
      */
-    private function assertIsNumberAndMoreThenZero($exchangeRate)
+    private function assertIsNumberAndMoreThanZero($exchangeRate)
     {
         $isIntegerOrFloat = is_int($exchangeRate) || is_float($exchangeRate);
 

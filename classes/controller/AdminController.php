@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -246,6 +246,9 @@ class AdminControllerCore extends Controller
 
     /** @var HelperList */
     protected $helper;
+
+    /** @var bool */
+    private $allowAnonymous = false;
 
     /** @var int DELETE access level */
     const LEVEL_DELETE = 4;
@@ -565,7 +568,7 @@ class AdminControllerCore extends Controller
      */
     public function initBreadcrumbs($tab_id = null, $tabs = null)
     {
-        if (is_array($tabs)) {
+        if (!is_array($tabs)) {
             $tabs = array();
         }
 
@@ -581,17 +584,17 @@ class AdminControllerCore extends Controller
             'tab' => $dummy,
             'action' => $dummy,
         );
-        if (isset($tabs[0])) {
+        if (!empty($tabs[0])) {
             $this->addMetaTitle($tabs[0]['name']);
             $breadcrumbs2['tab']['name'] = $tabs[0]['name'];
-            $breadcrumbs2['tab']['href'] = $this->context->link->getAdminLink($tabs[0]['class_name']);
+            $breadcrumbs2['tab']['href'] = $this->context->link->getTabLink($tabs[0]);
             if (!isset($tabs[1])) {
                 $breadcrumbs2['tab']['icon'] = 'icon-' . $tabs[0]['class_name'];
             }
         }
-        if (isset($tabs[1])) {
+        if (!empty($tabs[1])) {
             $breadcrumbs2['container']['name'] = $tabs[1]['name'];
-            $breadcrumbs2['container']['href'] = $this->context->link->getAdminLink($tabs[1]['class_name']);
+            $breadcrumbs2['container']['href'] = $this->context->link->getTabLink($tabs[1]);
             $breadcrumbs2['container']['icon'] = 'icon-' . $tabs[1]['class_name'];
         }
 
@@ -770,7 +773,7 @@ class AdminControllerCore extends Controller
      */
     public function checkToken()
     {
-        if (TokenInUrls::isDisabled()) {
+        if (TokenInUrls::isDisabled() || $this->isAnonymousAllowed()) {
             return true;
         }
 
@@ -2053,6 +2056,7 @@ class AdminControllerCore extends Controller
 
         foreach ($tabs as $index => $tab) {
             if (!Tab::checkTabRights($tab['id_tab'])
+                || !$tab['enabled']
                 || ($tab['class_name'] == 'AdminStock' && Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') == 0)
                 || $tab['class_name'] == 'AdminCarrierWizard') {
                 unset($tabs[$index]);
@@ -2068,7 +2072,7 @@ class AdminControllerCore extends Controller
                 $tabs[$index]['current'] = false;
             }
             $tabs[$index]['img'] = null;
-            $tabs[$index]['href'] = $this->context->link->getAdminLink($tab['class_name']);
+            $tabs[$index]['href'] = $this->context->link->getTabLink($tab);
             $tabs[$index]['sub_tabs'] = array_values($this->getTabs($tab['id_tab'], $level + 1));
 
             $subTabHref = $this->getTabLinkFromSubTabs($tabs[$index]['sub_tabs']);
@@ -2701,7 +2705,13 @@ class AdminControllerCore extends Controller
             $this->addCSS(__PS_BASE_URI__ . $this->admin_webpath . '/themes/' . $this->bo_theme . '/css/vendor/titatoggle-min.css', 'all', 0);
             $this->addCSS(__PS_BASE_URI__ . $this->admin_webpath . '/themes/' . $this->bo_theme . '/public/theme.css', 'all', 0);
 
-            $this->addJquery();
+            // add Jquery 3 and its migration script
+            $this->addJs(_PS_JS_DIR_ . 'jquery/jquery-3.4.1.min.js');
+            $this->addJs(_PS_JS_DIR_ . 'jquery/jquery-migrate-3.1.0.min.js');
+            // implement $.browser object and live method, that has been removed since jquery 1.9
+            $this->addJs(_PS_JS_DIR_ . 'jquery/jquery.browser-0.1.0.min.js');
+            $this->addJs(_PS_JS_DIR_ . 'jquery/jquery.live-polyfill-1.0.3.min.js');
+
             $this->addJqueryPlugin(array('scrollTo', 'alerts', 'chosen', 'autosize', 'fancybox'));
             $this->addJqueryPlugin('growl', null, false);
             $this->addJqueryUI(array('ui.slider', 'ui.datepicker'));
@@ -2827,7 +2837,17 @@ class AdminControllerCore extends Controller
                 $this->context->cookie->last_activity = time();
             }
         }
-        if ($this->controller_name != 'AdminLogin' && (!isset($this->context->employee) || !$this->context->employee->isLoggedBack())) {
+
+        if (
+            !$this->isAnonymousAllowed()
+            && (
+                $this->controller_name != 'AdminLogin'
+                && (
+                    !isset($this->context->employee)
+                    || !$this->context->employee->isLoggedBack()
+                )
+            )
+        ) {
             if (isset($this->context->employee)) {
                 $this->context->employee->logout();
             }
@@ -2837,6 +2857,7 @@ class AdminControllerCore extends Controller
             }
             Tools::redirectAdmin($this->context->link->getAdminLink('AdminLogin') . ((!isset($_GET['logout']) && $this->controller_name != 'AdminNotFound' && Tools::getValue('controller')) ? '&redirect=' . $this->controller_name : '') . ($email ? '&email=' . $email : ''));
         }
+
         // Set current index
         $current_index = 'index.php' . (($controller = Tools::getValue('controller')) ? '?controller=' . $controller : '');
         if ($back = Tools::getValue('back')) {
@@ -2906,7 +2927,8 @@ class AdminControllerCore extends Controller
      */
     public function initShopContext()
     {
-        if (!$this->context->employee->isLoggedBack()) {
+        // Do not initialize context when the shop is not installed
+        if (defined('PS_INSTALLATION_IN_PROGRESS')) {
             return;
         }
 
@@ -2921,13 +2943,13 @@ class AdminControllerCore extends Controller
             $this->redirect_after = $url['path'] . ($http_build_query ? '?' . $http_build_query : '');
         } elseif (!Shop::isFeatureActive()) {
             $this->context->cookie->shopContext = 's-' . (int) Configuration::get('PS_SHOP_DEFAULT');
-        } elseif (Shop::getTotalShops(false, null) < 2) {
+        } elseif (Shop::getTotalShops(false, null) < 2 && $this->context->employee->isLoggedBack()) {
             $this->context->cookie->shopContext = 's-' . (int) $this->context->employee->getDefaultShopID();
         }
 
-        $shop_id = '';
+        $shop_id = null;
         Shop::setContext(Shop::CONTEXT_ALL);
-        if ($this->context->cookie->shopContext) {
+        if ($this->context->cookie->shopContext && $this->context->employee->isLoggedBack()) {
             $split = explode('-', $this->context->cookie->shopContext);
             if (count($split) == 2) {
                 if ($split[0] == 'g') {
@@ -4817,7 +4839,7 @@ class AdminControllerCore extends Controller
     private function getTabLinkFromSubTabs(array $subtabs)
     {
         foreach ($subtabs as $tab) {
-            if ($tab['active']) {
+            if ($tab['active'] && $tab['enabled']) {
                 return $tab['href'];
             }
         }
@@ -4867,5 +4889,27 @@ class AdminControllerCore extends Controller
             ['symbol' => $numberSpecification->getSymbolsByNumberingSystem(Locale::NUMBERING_SYSTEM_LATIN)->toArray()],
             $numberSpecification->toArray()
         );
+    }
+
+    /**
+     * Set if anonymous is allowed to run this controller
+     *
+     * @param bool $value
+     *
+     * @return bool
+     */
+    protected function setAllowAnonymous($value)
+    {
+        $this->allowAnonymous = (bool) $value;
+    }
+
+    /**
+     * Return if an anonymous is allowed to run this controller
+     *
+     * @return bool
+     */
+    protected function isAnonymousAllowed()
+    {
+        return $this->allowAnonymous;
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -70,6 +70,11 @@ final class DisabledProductQueryBuilder extends AbstractProductQueryBuilder
     {
         $qb = $this->getProductsCommonQueryBuilder($searchCriteria);
         $qb->andWhere('ps.active = 0');
+
+        if ($this->multistoreContextChecker->isSingleShopContext()) {
+            $qb->andWhere('ps.id_shop = :context_shop_id')
+                ->setParameter('context_shop_id', $this->contextShopId);
+        }
 
         return $qb;
     }

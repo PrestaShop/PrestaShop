@@ -1,5 +1,5 @@
 {#**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -70,7 +70,8 @@
                 <div class="col-lg-12">
                   <p class="checkbox">
                     <label class="form-control-label" for="hook-position">
-                      <input type="checkbox" id="hook-position"/>
+                      <input type="checkbox" id="hook-position" />
+                      <label class="selectbox" for="hook-position"><i class="material-icons done">done</i></label>
                       {{ 'Display non-positionable hooks' | trans }}
                     </label>
                   </p>
@@ -86,9 +87,10 @@
               <a name="{{ hook['name'] }}"></a>
               <header class="hook-panel-header">
                 <span class="hook-name">{{ hook['name'] }}</span>
-                <label class="badge badge-primary badge-pill float-right">
+                <label class="badge badge-pill float-right">
                   {% if hook['modules_count'] and canMove %}
                     <input type="checkbox" class="hook-checker" id="Ghook{{ hook['id_hook'] }}" data-hook-id="{{ hook['id_hook'] }}" />
+                    <label class="selectbox" for="Ghook{{ hook['id_hook'] }}"><i class="material-icons done">done</i></label>
                   {% endif %}
 
                   {{ hook['modules_count'] }}
@@ -109,34 +111,10 @@
                         class="module-position-{{ moduleInstance.id }} module-item{% if canMove and hook['modules_count'] >= 2 %} draggable{% endif %}">
 
                         <div class="module-column-select">
-                          <input type="checkbox" data-hook-id="{{ hook['id_hook'] }}" class="modules-position-checkbox hook{{ hook['id_hook'] }}" name="unhooks[]" value="{{ hook['id_hook'] ~ '_' ~ moduleInstance.id }}"/>
+                          <i class="material-icons drag_indicator">drag_indicator</i>
+                          <input type="checkbox" id="selecterbox{{ hook['id_hook'] ~ '_' ~ moduleInstance.id }}" data-hook-id="{{ hook['id_hook'] }}" class="modules-position-checkbox hook{{ hook['id_hook'] }}" name="unhooks[]" value="{{ hook['id_hook'] ~ '_' ~ moduleInstance.id }}"/>
+                          <label class="selectbox" for="selecterbox{{ hook['id_hook'] ~ '_' ~ moduleInstance.id }}"><i class="material-icons done">done</i></label>
                         </div>
-
-                        {% if not selectedModule and hook['modules_count'] > 1 %}
-                          <div class="btn-toolbar text-center module-column-position{% if canMove and hook['modules_count'] >= 2 %} dragHandle{% endif %}" id="td_{{ hook['id_hook'] ~ '_' ~ moduleInstance.id }}">
-                            <div class="btn-group">
-                              <span class="index-position">{{ loop.index }}</span>
-                            </div>
-
-                            {% if canMove %}
-                              <div class="btn-group-vertical module-buttons-update">
-                                <button class="btn btn-outline-primary btn-sm"
-                                  data-hook-id="{{ hook['id_hook'] }}"
-                                  data-module-id="{{ moduleInstance.id }}"
-                                  data-way="0">
-                                  <i class="material-icons">expand_less</i>
-                                </button>
-
-                                <button class="btn btn-outline-primary btn-sm"
-                                  data-hook-id="{{ hook['id_hook'] }}"
-                                  data-module-id="{{ moduleInstance.id }}"
-                                  data-way="1">
-                                  <i class="material-icons">expand_more</i>
-                                </button>
-                              </div>
-                            {% endif %}
-                          </div>
-                        {% endif %}
 
                         <div class="module-column-icon">
                           <img src="{{ asset('../modules/' ~ moduleInstance.name ~ '/logo.png') }}" alt="{{ moduleInstance.displayName| escape }}" />
@@ -149,8 +127,19 @@
                               <small class="text-muted">&nbsp;-&nbsp;{{ 'v%s' | format(moduleInstance.version) }}</small>
                             {% endif %}
                           </span>
-                          <div class="module-description">{{ moduleInstance.description | escape }}</div>
                         </div>
+
+                        <div class="module-column-description{% if not selectedModule and hook['modules_count'] > 1 %} hasColumnPosition{% endif %} d-none d-md-table-cell">
+                          <span class="module-description">{{ moduleInstance.description | escape }}</span>
+                        </div>
+
+                        {% if not selectedModule and hook['modules_count'] > 1 %}
+                          <div class="btn-toolbar text-center module-column-position{% if canMove and hook['modules_count'] >= 2 %} dragHandle{% endif %}" id="td_{{ hook['id_hook'] ~ '_' ~ moduleInstance.id }}">
+                            <div class="btn-group">
+                              <span class="index-position">{{ loop.index }}</span>
+                            </div>
+                          </div>
+                        {% endif %}
 
                         <div class="module-column-actions">
                           <div class="btn-group">
@@ -163,14 +152,12 @@
                               {% set linkParams = linkParams|merge({'show_modules': selectedModule}) %}
                             {% endif %}
 
-                            <a class="btn btn-outline-primary btn-sm" href="{{ getAdminLink('AdminModulesPositions', true, linkParams) }}">
+                            <a class="btn tooltip-link" href="{{ getAdminLink('AdminModulesPositions', true, linkParams) }}" aria-label="{{ 'Edit' | trans({}, 'Admin.Actions') }}" title="{{ 'Edit' | trans({}, 'Admin.Actions') }}">
                               <i class="material-icons">edit</i>
-                              {{ 'Edit' | trans({}, 'Admin.Actions') }}
                             </a>
 
-                            <button class="btn btn-outline-primary btn-sm dropdown-toggle-split" data-toggle="dropdown" type="button" aria-haspopup="true" aria-expanded="false" data-reference="parent">
-                              <i class="material-icons">expand_more</i>
-                            </button>
+                            <a class="btn tooltip-link dropdown-toggle dropdown-toggle-dots dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-reference="parent">
+                            </a>
 
                             <div class="dropdown-menu">
                               <a class="dropdown-item" href="{{ path('admin_modules_positions_unhook', {moduleId: moduleInstance.id, hookId: hook['id_hook']}) }}">
@@ -179,6 +166,10 @@
                               </a>
                             </div>
                           </div>
+                        </div>
+
+                        <div class="module-column-description d-block d-md-none w-100">
+                          <span class="module-description">{{ moduleInstance.description | escape }}</span>
                         </div>
                       </li>
                     {% endfor %}

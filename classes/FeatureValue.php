@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -65,7 +65,7 @@ class FeatureValueCore extends ObjectModel
     /**
      * Get all values for a given feature.
      *
-     * @param bool $idFeature Feature id
+     * @param int $idFeature Feature id
      *
      * @return array Array with feature's values
      */
@@ -83,7 +83,7 @@ class FeatureValueCore extends ObjectModel
      * Get all values for a given feature and language.
      *
      * @param int $idLang Language id
-     * @param bool $idFeature Feature id
+     * @param int $idFeature Feature id
      *
      * @return array Array with feature's values
      */
@@ -103,7 +103,7 @@ class FeatureValueCore extends ObjectModel
     /**
      * Get all language for a given value.
      *
-     * @param bool $idFeatureValue Feature value id
+     * @param int $idFeatureValue Feature value id
      *
      * @return array Array with value's languages
      */

@@ -218,6 +218,7 @@ GitHub contributors:
 - Fourat Achour
 - fram
 - Francisco Jiménez Cabrera
+- Franck Lefèvre
 - Franck Ribeiro
 - FrancMunoz
 - François Gaillard
@@ -408,6 +409,7 @@ GitHub contributors:
 - Matthieu Mota
 - MatthieuB
 - Matthieu Deroubaix
+- Matthieu Rolland
 - mauglee
 - MaX3315
 - Maxence
@@ -526,8 +528,10 @@ GitHub contributors:
 - Prestashark.eu
 - Prestaspirit
 - Priyank Bolia
+- Priyank Desai
 - ProBackup-nl
 - Profileo
+- Progi1984
 - Pronux
 - proydsl
 - psandmore
@@ -559,6 +563,7 @@ GitHub contributors:
 - Rimas Kudelis
 - Robbie Thompson
 - robert
+- Roja45
 - Rokas
 - Rokas Zygmantas
 - Roland Schütz
@@ -646,6 +651,7 @@ GitHub contributors:
 - Thoma
 - thoma202
 - Thomas
+- Thomas Baccelli
 - Thomas Blanc
 - Thomas Ferney
 - Thomas Leviandier

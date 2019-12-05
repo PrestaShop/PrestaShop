@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -368,20 +368,20 @@ class AdminAddressesControllerCore extends AdminController
         }
 
         // Transform e-mail in id_customer for parent processing
-        if (Validate::isEmail(Tools::getValue('email'))) {
+        if ($id_customer = Tools::getValue('id_customer')) {
+            $customer = new Customer((int) $id_customer);
+            if (Validate::isLoadedObject($customer)) {
+                $_POST['id_customer'] = $customer->id;
+            } else {
+                $this->errors[] = $this->trans('This customer ID is not recognized.', array(), 'Admin.Orderscustomers.Notification');
+            }
+        } elseif (Validate::isEmail(Tools::getValue('email'))) {
             $customer = new Customer();
             $customer->getByEmail(Tools::getValue('email'), null, false);
             if (Validate::isLoadedObject($customer)) {
                 $_POST['id_customer'] = $customer->id;
             } else {
                 $this->errors[] = $this->trans('This email address is not registered.', array(), 'Admin.Orderscustomers.Notification');
-            }
-        } elseif ($id_customer = Tools::getValue('id_customer')) {
-            $customer = new Customer((int) $id_customer);
-            if (Validate::isLoadedObject($customer)) {
-                $_POST['id_customer'] = $customer->id;
-            } else {
-                $this->errors[] = $this->trans('This customer ID is not recognized.', array(), 'Admin.Orderscustomers.Notification');
             }
         } else {
             $this->errors[] = $this->trans('This email address is not valid. Please use an address like bob@example.com.', array(), 'Admin.Orderscustomers.Notification');
@@ -517,6 +517,11 @@ class AdminAddressesControllerCore extends AdminController
                 echo json_encode(array('infos' => pSQL($customer['firstname']) . '_' . pSQL($customer['lastname']) . '_' . pSQL($customer['company'])));
             }
         }
+
+        if (Tools::isSubmit('dni_required')) {
+            echo json_encode(['dni_required' => Address::dniRequired((int) Tools::getValue('id_country'))]);
+        }
+
         die;
     }
 

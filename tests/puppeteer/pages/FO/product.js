@@ -1,6 +1,7 @@
-const CommonPage = require('../commonPage');
+require('module-alias/register');
+const FOBasePage = require('@pages/FO/FObasePage');
 
-module.exports = class Product extends CommonPage {
+module.exports = class Product extends FOBasePage {
   constructor(page) {
     super(page);
 
@@ -18,10 +19,12 @@ module.exports = class Product extends CommonPage {
    * @param productData, product data to check
    */
   async checkProduct(productData) {
-    await this.checkTextValue(this.productName, productData.name_fr);
-    await this.checkAttributeValue(this.productPrice, 'content', productData.price);
-    await this.checkAttributeValue(this.productQuantity, 'value', productData.quantity);
-    await this.checkTextValue(this.productDescription, productData.description_fr, 'contain');
+    return {
+      name: await this.checkTextValue(this.productName, productData.name),
+      price: await this.checkAttributeValue(this.productPrice, 'content', productData.price),
+      quantity_wanted: await this.checkAttributeValue(this.productQuantity, 'value', productData.quantity_wanted),
+      description: await this.checkTextValue(this.productDescription, productData.description, 'contain'),
+    };
   }
 
   /**

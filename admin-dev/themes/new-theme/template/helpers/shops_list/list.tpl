@@ -1,5 +1,5 @@
 {**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -25,7 +25,7 @@
 {strip}
 <ul class="items-list">
     <li{if !isset($current_shop_value) || $current_shop_value == ''} class="active"{/if}>
-      <a class="dropdown-item" href="{$url|escape:'html':'UTF-8'}">{l s='All shops'}</a>
+      <a class="dropdown-item" href="{$url|escape:'html':'UTF-8'}">{l s='All shops' d='Admin.Global'}</a>
     </li>
     {foreach key=group_id item=group_data from=$tree}
         {if !isset($multishop_context) || $is_group_context}

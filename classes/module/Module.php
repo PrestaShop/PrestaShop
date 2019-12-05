@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -2077,7 +2077,7 @@ abstract class ModuleCore implements ModuleInterface
     /**
      * Reorder modules position
      *
-     * @param bool $id_hook Hook ID
+     * @param int $id_hook Hook ID
      * @param array|null $shop_list List of shop
      *
      * @return bool
@@ -2338,18 +2338,24 @@ abstract class ModuleCore implements ModuleInterface
         return Cache::retrieve('Module::isEnabled' . $module_name);
     }
 
+    /**
+     * Check if module is registered on hook
+     *
+     * @param string $hook Hook name
+     *
+     * @return bool
+     */
     public function isRegisteredInHook($hook)
     {
         if (!$this->id) {
             return false;
         }
 
-        $sql = 'SELECT COUNT(*)
-            FROM `' . _DB_PREFIX_ . 'hook_module` hm
-            LEFT JOIN `' . _DB_PREFIX_ . 'hook` h ON (h.`id_hook` = hm.`id_hook`)
-            WHERE h.`name` = \'' . pSQL($hook) . '\' AND hm.`id_module` = ' . (int) $this->id;
-
-        return Db::getInstance()->getValue($sql);
+        return Hook::isModuleRegisteredOnHook(
+            $this,
+            $hook,
+            (int) Context::getContext()->shop->id
+        );
     }
 
     /**

@@ -1,5 +1,5 @@
 {**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -27,7 +27,7 @@
     <div class="alert alert-warning">
       <button type="button" class="close" data-dismiss="alert">&times;</button>
       {if count($warnings) > 1}
-        <h4>{l s='There are %d warnings:' sprintf=[count($warnings)]}</h4>
+        <h4>{l s='There are %d warnings.' sprintf=[count($warnings)] d='Admin.Notifications.Error'}</h4>
       {/if}
       <ul class="list-unstyled">
         {foreach $warnings as $warning}

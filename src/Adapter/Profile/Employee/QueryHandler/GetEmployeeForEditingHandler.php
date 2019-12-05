@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -61,7 +61,6 @@ final class GetEmployeeForEditingHandler implements GetEmployeeForEditingHandler
             new LastName($employee->lastname),
             new Email($employee->email),
             $employee->getImage(),
-            (bool) $employee->optin,
             (int) $employee->default_tab,
             (int) $employee->id_lang,
             (bool) $employee->active,

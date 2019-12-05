@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -31,6 +31,7 @@ use PrestaShop\PrestaShop\Adapter\Address\AbstractManufacturerAddressHandler;
 use PrestaShop\PrestaShop\Core\Domain\Address\Command\EditManufacturerAddressCommand;
 use PrestaShop\PrestaShop\Core\Domain\Address\CommandHandler\EditManufacturerAddressHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressException;
+use PrestaShop\PrestaShop\Core\Domain\Address\Exception\InvalidAddressFieldException;
 use PrestaShopException;
 
 /**
@@ -49,7 +50,7 @@ final class EditManufacturerAddressHandler extends AbstractManufacturerAddressHa
 
         try {
             if (false === $address->validateFields(false) || false === $address->validateFieldsLang(false)) {
-                throw new AddressException('Address contains invalid field values');
+                throw new InvalidAddressFieldException('Address contains invalid field values');
             }
             if (!$address->update()) {
                 throw new AddressException(
@@ -106,6 +107,9 @@ final class EditManufacturerAddressHandler extends AbstractManufacturerAddressHa
         }
         if (null !== $command->getOther()) {
             $address->other = $command->getOther();
+        }
+        if (null !== $command->getDni()) {
+            $address->dni = $command->getDni();
         }
     }
 }

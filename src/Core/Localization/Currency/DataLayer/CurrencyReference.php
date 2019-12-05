@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -55,6 +55,7 @@ class CurrencyReference extends AbstractDataLayer implements CurrencyDataLayerIn
     public function __construct(CldrLocaleRepository $cldrLocaleRepository)
     {
         $this->cldrLocaleRepository = $cldrLocaleRepository;
+        $this->isWritable = false;
     }
 
     /**

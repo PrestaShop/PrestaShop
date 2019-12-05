@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -24,10 +24,6 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
  $this->displayTemplate('header') ?>
-
-<?php if (Tools::getMemoryLimit() < Tools::getOctets('32M')): ?>
-	<div class="warnBlock"><?php echo $this->translator->trans('PrestaShop requires at least 32 MB of memory to run: please check the memory_limit directive in your php.ini file or contact your host provider about this.', array(), 'Install'); ?></div>
-<?php endif; ?>
 
 <?php if ($this->can_upgrade): ?>
 	<div class="warnBlock">

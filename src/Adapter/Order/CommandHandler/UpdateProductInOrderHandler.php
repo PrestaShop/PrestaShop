@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -33,6 +33,7 @@ use OrderCarrier;
 use OrderDetail;
 use OrderInvoice;
 use PrestaShop\PrestaShop\Adapter\Order\AbstractOrderHandler;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\CannotEditDeliveredOrderProductException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\UpdateProductInOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\CommandHandler\UpdateProductInOrderHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
@@ -79,8 +80,8 @@ final class UpdateProductInOrderHandler extends AbstractOrderHandler implements 
         $product_quantity = $command->getQuantity();
 
         // @todo: use https://github.com/PrestaShop/decimal for price computations
-        $product_price_tax_incl = Tools::ps_round(Tools::getValue('product_price_tax_incl'), 2);
-        $product_price_tax_excl = Tools::ps_round(Tools::getValue('product_price_tax_excl'), 2);
+        $product_price_tax_incl = Tools::ps_round($command->getPriceTaxIncluded(), 2);
+        $product_price_tax_excl = Tools::ps_round($command->getPriceTaxExcluded(), 2);
         $total_products_tax_incl = $product_price_tax_incl * $product_quantity;
         $total_products_tax_excl = $product_price_tax_excl * $product_quantity;
 
@@ -215,7 +216,7 @@ final class UpdateProductInOrderHandler extends AbstractOrderHandler implements 
 
         // We can't edit a delivered order
         if ($order->hasBeenDelivered()) {
-            throw new OrderException('You cannot edit a delivered order.');
+            throw new CannotEditDeliveredOrderProductException('You cannot edit a delivered order.');
         }
 
         if (null !== $orderInvoice && $orderInvoice->id_order != $order->id) {
@@ -233,7 +234,7 @@ final class UpdateProductInOrderHandler extends AbstractOrderHandler implements 
         }
 
         if (!is_array($command->getQuantity())
-            && !Validate::isUnsignedInt(Tools::getValue('product_quantity'))
+            && !Validate::isUnsignedInt($command->getQuantity())
         ) {
             throw new OrderException('Invalid quantity');
         }

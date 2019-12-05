@@ -17,7 +17,9 @@ module.exports = class CommonPage {
    * @return textContent
    */
   async getTextContent(selector) {
-    return this.page.$eval(selector, el => el.textContent);
+    await this.page.waitForSelector(selector, {visible: true});
+    const textContent = await this.page.$eval(selector, el => el.textContent);
+    return textContent.replace(/\s+/g, ' ').trim();
   }
 
   /**
@@ -49,13 +51,14 @@ module.exports = class CommonPage {
    * @param selector, where to click
    * @return newPage, what was opened by the browser
    */
-  async openLinkWithTargetBlank(currentPage, selector) {
-    const pageTarget = await currentPage.target();
-    await currentPage.click(selector);
-    const newTarget = await global.browser.waitForTarget(target => target.opener() === pageTarget);
-    this.page = await newTarget.page();
-    await this.page.waitForSelector('body');
-    return this.page;
+  async openLinkWithTargetBlank(currentPage, selector, waitForNavigation = true) {
+    const [newPage] = await Promise.all([
+      new Promise(resolve => this.page.once('popup', resolve)),
+      currentPage.click(selector),
+    ]);
+    if (waitForNavigation) await newPage.waitForNavigation({waitUntil: 'networkidle0'});
+    await newPage.waitForSelector('body', {visible: true});
+    return newPage;
   }
 
   /**
@@ -74,22 +77,22 @@ module.exports = class CommonPage {
    * @param selector, element to check
    * @param textToCheckWith, text to check with
    * @param parameter, parameter to use
-   * @return promise, throw an error if element does not exist or text is not correct
+   * @return promise<*>, boolean if check has passed or failed
    */
   async checkTextValue(selector, textToCheckWith, parameter = 'equal') {
     await this.page.waitForSelector(selector);
+    let text;
     switch (parameter) {
       case 'equal':
-        await this.page.$eval(selector, el => el.innerText)
-          .then(text => expect(text.replace(/\s+/g, ' ').trim()).to.equal(textToCheckWith));
-        break;
+        text = await this.page.$eval(selector, el => el.innerText);
+        return text.replace(/\s+/g, ' ').trim() === textToCheckWith;
       case 'contain':
-        await this.page.$eval(selector, el => el.innerText)
-          .then(text => expect(text).to.contain(textToCheckWith));
-        break;
+        text = await this.page.$eval(selector, el => el.innerText);
+        return text.includes(textToCheckWith);
       default:
       // do nothing
     }
+    return false;
   }
 
   /**
@@ -101,8 +104,154 @@ module.exports = class CommonPage {
    */
   async checkAttributeValue(selector, attribute, textToCheckWith) {
     await this.page.waitForSelector(selector);
-    const value = await this.page.$eval(selector, (el, attribute) => el
-      .getAttribute(attribute), attribute);
-    expect(value).to.be.equal(textToCheckWith);
+    const value = await this.page.$eval(selector, (el, attr) => el
+      .getAttribute(attr), attribute);
+    return value === textToCheckWith;
+  }
+
+  /**
+   * Reload actual browser page
+   * @return {Promise<void>}
+   */
+  async reloadPage() {
+    await this.page.reload({waitUntil: 'networkidle0'});
+  }
+
+  /**
+   * Delete the existing text from input then set a value
+   * @param selector, input
+   * @param value, value to set in the input
+   * @return {Promise<void>}
+   */
+  async setValue(selector, value) {
+    await this.waitForSelectorAndClick(selector);
+    await this.page.click(selector, {clickCount: 3});
+    await this.page.type(selector, value);
+  }
+
+  /**
+   * To accept or dismiss a navigator dialog
+   * @param accept
+   * @return {Promise<void>}
+   */
+  async dialogListener(accept = true) {
+    this.page.once('dialog', (dialog) => {
+      if (accept) dialog.accept();
+      else dialog.dismiss();
+    });
+  }
+
+  /**
+   * Close actual tab and goto another tab if wanted
+   * @param tabId
+   * @return {Promise<void>}
+   */
+  async closePage(browser, tabId = -1) {
+    await this.page.close();
+    if (tabId !== -1) {
+      this.page = (await browser.pages())[tabId];
+      await this.page.bringToFront();
+    }
+    return this.page;
+  }
+
+  /**
+   * Scroll to element
+   * @param selector
+   * @return {Promise<void>}
+   */
+  async scrollTo(selector) {
+    await this.page.$eval(selector, el => el.scrollIntoView());
+  }
+
+
+  /**
+   * Select option in select by visible text
+   * @param selector, id of select
+   * @param textValue, text in option to select
+   */
+  async selectByVisibleText(selector, textValue) {
+    let found = false;
+    let options = await this.page.$$eval(
+      `${selector} option`,
+      all => all.map(
+        option => ({
+          textContent: option.textContent,
+          value: option.value,
+        })),
+    );
+    options = await options.filter(option => textValue === option.textContent);
+    if (options.length !== 0) {
+      const elementValue = await options[0].value;
+      await this.page.select(selector, elementValue);
+      found = true;
+    }
+    if (!found) throw new Error(`${textValue} was not found as option of select`);
+  }
+
+  /**
+   * To get a number from text
+   * @param selector
+   * @param timeout
+   * @return integer
+   */
+  async getNumberFromText(selector, timeout = 0) {
+    await this.page.waitFor(timeout);
+    const text = await this.getTextContent(selector);
+    const number = /\d+/g.exec(text).toString();
+    return parseInt(number, 10);
+  }
+
+  /**
+   * Go to Page and wait for navigation
+   * @param selector
+   * @return {Promise<void>}
+   */
+  async clickAndWaitForNavigation(selector) {
+    await Promise.all([
+      this.page.click(selector),
+      this.page.waitForNavigation({waitUntil: 'networkidle0'}),
+    ]);
+  }
+
+  /**
+   * Replace All occurrences in string
+   * @param str, string to update
+   * @param find, what to replace
+   * @param replace, value to replace with
+   * @return {Promise<*>}
+   */
+  async replaceAll(str, find, replace) {
+    return str.replace(new RegExp(find, 'g'), replace);
+  }
+
+  /**
+   * Navigate to the previous page in history
+   * @param waitUntil
+   * @return {Promise<void>}
+   */
+  async goToPreviousPage(waitUntil = 'networkidle0') {
+    await this.page.goBack({waitUntil});
+  }
+
+  /**
+   * c
+   * @param selector
+   * @return {Promise<boolean>}
+   */
+  async isCheckboxSelected(selector) {
+    return this.page.$eval(selector, el => el.checked);
+  }
+
+  /**
+   * Select, unselect checkbox
+   * @param checkboxSelector, selector of checkbox
+   * @param valueWanted, true if we want to select checkBox, else otherwise
+   * @return {Promise<void>}
+   */
+  async changeCheckboxValue(checkboxSelector, valueWanted = true) {
+    if (valueWanted !== (await this.isCheckboxSelected(checkboxSelector))) {
+      await this.page.click(checkboxSelector);
+    }
   }
 };

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -562,7 +562,7 @@ class AdminCartRulesControllerCore extends AdminController
                 $combinations = array();
                 $productObj = new Product((int) $product['id_product'], false, (int) $this->context->language->id);
                 $attributes = $productObj->getAttributesGroups((int) $this->context->language->id);
-                $product['formatted_price'] = Tools::displayPrice(Tools::convertPrice($product['price_tax_incl'], $this->context->currency), $this->context->currency);
+                $product['formatted_price'] = $this->context->getCurrentLocale()->formatPrice(Tools::convertPrice($product['price_tax_incl'], $this->context->currency), $this->context->currency->iso_code);
 
                 foreach ($attributes as $attribute) {
                     if (!isset($combinations[$attribute['id_product_attribute']]['attributes'])) {
@@ -573,7 +573,7 @@ class AdminCartRulesControllerCore extends AdminController
                     $combinations[$attribute['id_product_attribute']]['default_on'] = $attribute['default_on'];
                     if (!isset($combinations[$attribute['id_product_attribute']]['price'])) {
                         $price_tax_incl = Product::getPriceStatic((int) $product['id_product'], true, $attribute['id_product_attribute']);
-                        $combinations[$attribute['id_product_attribute']]['formatted_price'] = Tools::displayPrice(Tools::convertPrice($price_tax_incl, $this->context->currency), $this->context->currency);
+                        $combinations[$attribute['id_product_attribute']]['formatted_price'] = $this->context->getCurrentLocale()->formatPrice(Tools::convertPrice($price_tax_incl, $this->context->currency), $this->context->currency->iso_code);
                     }
                 }
 
@@ -640,14 +640,32 @@ class AdminCartRulesControllerCore extends AdminController
         $groups = $current_object->getAssociatedRestrictions('group', false, true);
         $shops = $current_object->getAssociatedRestrictions('shop', false, false);
         $cart_rules = $current_object->getAssociatedRestrictions('cart_rule', false, true, 0, $limit);
-        $carriers = $current_object->getAssociatedRestrictions('carrier', true, false);
+        $carriers = $current_object->getAssociatedRestrictions('carrier', true, true);
+
         foreach ($carriers as &$carriers2) {
-            foreach ($carriers2 as &$carrier) {
+            $prev_id_carrier = 0;
+
+            foreach ($carriers2 as $key => &$carrier) {
+                if ($prev_id_carrier == $carrier['id_carrier']) {
+                    unset($carriers2[$key]);
+
+                    continue;
+                }
+
                 foreach ($carrier as $field => &$value) {
-                    if ($field == 'name' && $value == '0') {
-                        $value = Configuration::get('PS_SHOP_NAME');
+                    if ($field == 'name') {
+                        if ($value == '0') {
+                            $value = $carrier['id_carrier'] . ' - ' . Configuration::get('PS_SHOP_NAME');
+                        } else {
+                            $value = $carrier['id_carrier'] . ' - ' . $carrier['name'];
+                            if ($carrier['name']) {
+                                $value .= ' (' . $carrier['delay'] . ')';
+                            }
+                        }
                     }
                 }
+
+                $prev_id_carrier = $carrier['id_carrier'];
             }
         }
 

@@ -1,5 +1,5 @@
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -24,3 +24,11 @@
  */
 import '../sass/font.scss';
 import '../sass/admin-theme.sass';
+import '../node_modules/perfect-scrollbar/css/perfect-scrollbar.css';
+import '@openfonts/ubuntu-condensed_latin';
+
+import PerfectScrollBar from 'perfect-scrollbar';
+
+$(document).ready(function() {
+  new PerfectScrollBar('.nav-bar');
+});

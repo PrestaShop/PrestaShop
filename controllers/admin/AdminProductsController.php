@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -195,6 +195,19 @@ class AdminProductsControllerCore extends AdminController
         return false;
     }
 
+    /**
+     * @param int $id_lang
+     * @param string $orderBy
+     * @param string $orderWay
+     * @param int $start
+     * @param int $limit
+     * @param null $id_lang_shop
+     *
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
+     *
+     * @deprecated
+     */
     public function getList($id_lang, $orderBy = null, $orderWay = null, $start = 0, $limit = null, $id_lang_shop = null)
     {
         $orderByPriceFinal = (empty($orderBy) ? ($this->context->cookie->__get($this->table . 'Orderby') ? $this->context->cookie->__get($this->table . 'Orderby') : 'id_' . $this->table) : $orderBy);
@@ -728,6 +741,7 @@ class AdminProductsControllerCore extends AdminController
                 'ean13' => 'isEan13',
                 'isbn' => 'isIsbn',
                 'upc' => 'isUpc',
+                'mpn' => 'isMpn',
                 'wholesale_price' => 'isPrice',
                 'price' => 'isPrice',
                 'ecotax' => 'isPrice',
@@ -786,7 +800,8 @@ class AdminProductsControllerCore extends AdminController
                                 array(),
                                 Tools::getValue('attribute_isbn'),
                                 Tools::getValue('attribute_low_stock_threshold'),
-                                Tools::getValue('attribute_low_stock_alert')
+                                Tools::getValue('attribute_low_stock_alert'),
+                                Tools::getValue('attribute_mpn')
                             );
                             StockAvailable::setProductDependsOnStock((int) $product->id, $product->depends_on_stock, null, (int) $id_product_attribute);
                             StockAvailable::setProductOutOfStock((int) $product->id, $product->out_of_stock, null, (int) $id_product_attribute);
@@ -819,7 +834,8 @@ class AdminProductsControllerCore extends AdminController
                                 Tools::getValue('available_date_attribute'),
                                 Tools::getValue('attribute_isbn'),
                                 Tools::getValue('attribute_low_stock_threshold'),
-                                Tools::getValue('attribute_low_stock_alert')
+                                Tools::getValue('attribute_low_stock_alert'),
+                                Tools::getValue('attribute_mpn')
                             );
                             StockAvailable::setProductDependsOnStock((int) $product->id, $product->depends_on_stock, null, (int) $id_product_attribute);
                             StockAvailable::setProductOutOfStock((int) $product->id, $product->out_of_stock, null, (int) $id_product_attribute);

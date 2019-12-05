@@ -85,3 +85,16 @@ services:
 
     prestashop.adapter.kpi.shopping_cart_total_kpi:
         class: 'PrestaShop\PrestaShop\Adapter\Kpi\ShoppingCartTotalKpi'
+        arguments:
+          - "@prestashop.core.localization.locale.context_locale"
+    prestashop.adapter.kpi.abandoned_cart:
+        class: 'PrestaShop\PrestaShop\Adapter\Kpi\AbandonedCartKpi'
+
+    prestashop.adapter.kpi.average_order_value:
+        class: 'PrestaShop\PrestaShop\Adapter\Kpi\AverageOrderValueKpi'
+
+    prestashop.adapter.kpi.conversion_rate:
+        class: 'PrestaShop\PrestaShop\Adapter\Kpi\ConversionRateKpi'
+
+    prestashop.adapter.kpi.net_profit_per_visit:
+        class: 'PrestaShop\PrestaShop\Adapter\Kpi\NetProfitPerVisitKpi'

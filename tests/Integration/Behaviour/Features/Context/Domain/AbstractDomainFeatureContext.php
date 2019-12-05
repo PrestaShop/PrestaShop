@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -27,7 +27,11 @@
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 use Behat\Behat\Context\Context;
+use Behat\Testwork\Hook\Scope\BeforeSuiteScope;
+use Language;
+use ObjectModel;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
+use Psr\Container\ContainerInterface;
 use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\CommonFeatureContext;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
@@ -38,6 +42,20 @@ abstract class AbstractDomainFeatureContext implements Context
      * @var \Exception|null
      */
     protected $lastException;
+
+    /**
+     * @var int
+     */
+    protected $lastErrorCode;
+
+    /**
+     * @BeforeSuite
+     */
+    public static function prepare(BeforeSuiteScope $scope)
+    {
+        // Disable legacy object model cache to prevent conflicts between scenarios.
+        ObjectModel::disableCache();
+    }
 
     /**
      * @return CommandBusInterface
@@ -63,17 +81,69 @@ abstract class AbstractDomainFeatureContext implements Context
         return SharedStorage::getStorage();
     }
 
+    protected function getContainer(): ContainerInterface
+    {
+        return CommonFeatureContext::getContainer();
+    }
+
+    protected function assertLastErrorIsNull()
+    {
+        if (null !== $this->lastException) {
+            throw new RuntimeException(sprintf(
+                'An unexpected exception was thrown %s: %s',
+                get_class($this->lastException),
+                $this->lastException->getMessage()
+            ), 0, $this->lastException);
+        }
+    }
+
     /**
      * @param string $expectedError
+     * @param int|null $errorCode
      */
-    protected function assertLastErrorIs($expectedError)
+    protected function assertLastErrorIs($expectedError, $errorCode = null)
     {
         if (!$this->lastException instanceof $expectedError) {
             throw new RuntimeException(sprintf(
                 'Last error should be "%s", but got "%s"',
                 $expectedError,
                 $this->lastException ? get_class($this->lastException) : 'null'
-            ));
+            ), 0, $this->lastException);
         }
+        if (null !== $errorCode && $this->lastException->getCode() !== $errorCode) {
+            throw new RuntimeException(sprintf(
+                'Last error should have code "%s", but has "%s"',
+                $errorCode,
+                $this->lastException ? $this->lastException->getCode() : 'null'
+            ), 0, $this->lastException);
+        }
+    }
+
+    /**
+     * Parse a localized string into a localized array, the expected format can be:
+     *   fr-FR:valueFr;en-EN:valueEn:{localeCode}:{localeValue}
+     *   1:valueFr;2:valueEn:{langId}:{localeValue}
+     * and will be converted into an array indexed by language id
+     *
+     * @param string $parsedArray
+     *
+     * @return array
+     */
+    protected function parseLocalizedArray(string $parsedArray): array
+    {
+        $arrayValues = explode(';', $parsedArray);
+        $localizedArray = [];
+        foreach ($arrayValues as $arrayValue) {
+            $data = explode(':', $arrayValue);
+            $langKey = $data[0];
+            $langValue = $data[1];
+            if (ctype_digit($langKey)) {
+                $localizedArray[$langKey] = $langValue;
+            } else {
+                $localizedArray[Language::getIdByLocale($langKey, true)] = $langValue;
+            }
+        }
+
+        return $localizedArray;
     }
 }

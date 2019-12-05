@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -86,10 +86,8 @@ class ProductPrice extends CommonAbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $this->tax_rules = array_merge(
-            [$this->translator->trans('No tax', [], 'Admin.Catalog.Feature') => 0],
-            $this->tax_rules
-        );
+        $this->tax_rules = [$this->translator->trans('No tax', [], 'Admin.Catalog.Feature') => 0] + $this->tax_rules;
+
         $builder->add(
             'price',
             FormType\MoneyType::class,

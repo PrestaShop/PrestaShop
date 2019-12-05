@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -26,10 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Cart\CommandHandler;
 
-use Address;
 use Cart;
 use PrestaShop\PrestaShop\Adapter\Cart\AbstractCartHandler;
-use PrestaShop\PrestaShop\Core\Domain\Address\ValueObject\AddressId;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartAddressesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\CommandHandler\UpdateCartAddressesHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartException;
@@ -44,40 +42,31 @@ final class UpdateCartAddressesHandler extends AbstractCartHandler implements Up
      */
     public function handle(UpdateCartAddressesCommand $command)
     {
-        $cart = $this->getContextCartObject($command->getCartId());
+        $cart = $this->getCart($command->getCartId());
+        $this->fillCartWithCommandData($cart, $command);
 
-        $this->assertAddressCanBeUsedInCart($cart, $command->getNewDeliveryAddressId());
-        $this->assertAddressCanBeUsedInCart($cart, $command->getNewInvoiceAddressId());
-
-        $cart->id_address_delivery = $command->getNewDeliveryAddressId()->getValue();
-        $cart->id_address_invoice = $command->getNewInvoiceAddressId()->getValue();
-
-        if (false === $cart->save()) {
+        if (false === $cart->update()) {
             throw new CartException(sprintf(
                 'Failed to update addresses for cart with id "%s"',
                 $cart->id
             ));
         }
-
-        // @todo: Should context be changed at controller layer instead?
-        \Context::getContext()->cart = $cart;
     }
 
     /**
+     * Fetches updatable fields from command to cart
+     *
      * @param Cart $cart
-     * @param AddressId $addressId
+     * @param UpdateCartAddressesCommand $command
      */
-    private function assertAddressCanBeUsedInCart(Cart $cart, AddressId $addressId)
+    private function fillCartWithCommandData(Cart $cart, UpdateCartAddressesCommand $command): void
     {
-        $address = new Address($addressId->getValue());
+        if ($command->getNewDeliveryAddressId()) {
+            $cart->id_address_delivery = $command->getNewDeliveryAddressId()->getValue();
+        }
 
-        if ((int) $address->id_customer !== $cart->id_customer) {
-            throw new CartException(
-                sprintf(
-                    'Address with id "%s" does not belong to cart customer, thus it cannot be used.',
-                    $address->id
-                )
-            );
+        if ($command->getNewInvoiceAddressId()) {
+            $cart->id_address_invoice = $command->getNewInvoiceAddressId()->getValue();
         }
     }
 }

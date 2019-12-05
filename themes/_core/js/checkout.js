@@ -1,5 +1,5 @@
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -27,6 +27,7 @@ import prestashop from 'prestashop';
 import setUpAddress from './checkout-address'
 import setUpDelivery from './checkout-delivery'
 import setUpPayment from './checkout-payment'
+import Steps from './checkout-steps'
 
 function setUpCheckout() {
   setUpAddress();
@@ -34,30 +35,38 @@ function setUpCheckout() {
   setUpPayment();
 
   handleCheckoutStepChange();
+  handleSubmitButton();
 }
 
 function handleCheckoutStepChange() {
-  $('.checkout-step').off('click');
+  const steps = new Steps();
+  const clickableSteps = steps.getClickableSteps();
 
-  let currentStepClass = 'js-current-step';
-  let currentStepSelector = '.' + currentStepClass;
-
-  $(currentStepSelector).prevAll().on(
+  clickableSteps.on(
     'click',
     (event) => {
-      const $clickedStep = $(event.target).closest('.checkout-step');
-      if (!$clickedStep.hasClass('-unreachable')) {
-        $(currentStepSelector + ', .-current').removeClass(currentStepClass + ' -current');
-        $clickedStep.toggleClass('-current');
-        $clickedStep.toggleClass(currentStepClass);
-
-        const $nextSteps = $clickedStep.nextAll();
-        $nextSteps.addClass('-unreachable').removeClass('-complete');
-        $('.step-title', $nextSteps).addClass('not-allowed');
+      const clickedStep = Steps.getClickedStep(event);
+      if (!clickedStep.isUnreachable()) {
+        steps.makeCurrent(clickedStep);
+        if (clickedStep.hasContinueButton()) {
+          clickedStep.disableAllAfter();
+        } else {
+          clickedStep.enableAllBefore();
+        }
       }
-      prestashop.emit('changedCheckoutStep', {event: event});
-    }
-  );
+      prestashop.emit('changedCheckoutStep', {event});
+    });
+}
+
+function handleSubmitButton() {
+  // prevents rage clicking on submit button and related issues
+  const submitSelector = '.js-current-step button[type="submit"]';
+  $(document).on('click', submitSelector, function () {
+    $(this).addClass('disabled');
+    $('input[required]').on('invalid', function (e) {
+      $(submitSelector).removeClass('disabled');
+    });
+  });
 }
 
 $(document).ready(() => {

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
 use Exception;
+use PrestaShop\PrestaShop\Core\Domain\Address\Exception\InvalidAddressFieldException;
 use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
 use PrestaShop\PrestaShop\Core\Domain\Address\Command\BulkDeleteAddressCommand;
 use PrestaShop\PrestaShop\Core\Domain\Address\Command\DeleteAddressCommand;
@@ -100,6 +101,7 @@ class ManufacturerController extends FrameworkBundleAdminController
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'manufacturerGrid' => $this->presentGrid($manufacturerGrid),
             'manufacturerAddressGrid' => $this->presentGrid($manufacturerAddressGrid),
+            'settingsTipMessage' => $this->getSettingsTipMessage(),
         ]);
     }
 
@@ -598,11 +600,11 @@ class ManufacturerController extends FrameworkBundleAdminController
         $addressFormBuilder = $this->getAddressFormBuilder();
         $addressFormHandler = $this->getAddressFormHandler();
 
+        /** @var EditableManufacturerAddress $address */
+        $address = $this->getQueryBus()->handle(new GetManufacturerAddressForEditing($addressId));
         if ($request->request->has('manufacturer_address') && isset($request->request->get('manufacturer_address')['id_country'])) {
             $formCountryId = (int) $request->request->get('manufacturer_address')['id_country'];
         } else {
-            /** @var EditableManufacturerAddress $address */
-            $address = $this->getQueryBus()->handle(new GetManufacturerAddressForEditing($addressId));
             $formCountryId = $address->getCountryId();
         }
 
@@ -626,6 +628,7 @@ class ManufacturerController extends FrameworkBundleAdminController
             if ($e instanceof AddressNotFoundException || $e instanceof AddressConstraintException) {
                 return $this->redirectToRoute('admin_manufacturers_index');
             }
+            $editableAddress = $address;
         }
 
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Manufacturer/Address/edit.html.twig', [
@@ -710,6 +713,10 @@ class ManufacturerController extends FrameworkBundleAdminController
                 'The object cannot be loaded (or found)',
                 'Admin.Notifications.Error'
             ),
+            InvalidAddressFieldException::class => $this->trans(
+                'Address contains invalid field values',
+                'Admin.Notifications.Error'
+            ),
         ];
     }
 
@@ -783,5 +790,25 @@ class ManufacturerController extends FrameworkBundleAdminController
     private function getAddressFormHandler()
     {
         return $this->get('prestashop.core.form.identifiable_object.handler.manufacturer_address_form_handler');
+    }
+
+    private function getSettingsTipMessage()
+    {
+        $urlOpening = sprintf('<a href="%s">', $this->get('router')->generate('admin_preferences'));
+        $urlEnding = '</a>';
+
+        if ($this->configuration->get('PS_DISPLAY_MANUFACTURERS')) {
+            return $this->trans(
+                'The display of your brands is enabled on your store. Go to %sShop Parameters > General to edit settings.%s',
+                'Admin.Catalog.Notification',
+                [$urlOpening, $urlEnding]
+            );
+        }
+
+        return $this->trans(
+            'The display of your brands is disabled on your store. Go to %sShop Parameters > General to edit settings.%s',
+            'Admin.Catalog.Notification',
+            [$urlOpening, $urlEnding]
+        );
     }
 }

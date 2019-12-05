@@ -1,5 +1,5 @@
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -62,20 +62,30 @@ const replaceDatePicker = () => {
  * Enable all datepickers.
  */
 const init = function initDatePickers() {
-  $('.datepicker input[type="text"]').datetimepicker(
-    {
-      locale: global.full_language_code,
-      format: 'YYYY-MM-DD',
-    },
-  ).on(
-    'dp.show',
-    replaceDatePicker,
-  ).on(
-    'dp.hide',
-    () => {
-      $(window).off('resize', replaceDatePicker);
-    },
-  );
+  const $datePickers = $('.datepicker input[type="text"]');
+  $.each($datePickers, (i, picker) => {
+    $(picker).datetimepicker(
+      {
+        locale: global.full_language_code,
+        format: $(picker).data('format') ? $(picker).data('format') : 'YYYY-MM-DD',
+        sideBySide: true,
+        icons: {
+          time: 'time',
+          date: 'date',
+          up: 'up',
+          down: 'down',
+        },
+      },
+    ).on(
+      'dp.show',
+      replaceDatePicker,
+    ).on(
+      'dp.hide',
+      () => {
+        $(window).off('resize', replaceDatePicker);
+      },
+    );
+  });
 };
 
 export default init;

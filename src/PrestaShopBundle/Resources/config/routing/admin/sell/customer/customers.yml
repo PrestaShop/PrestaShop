@@ -10,7 +10,7 @@ admin_customers_filter:
   path: /
   methods: [POST]
   defaults:
-    _controller: PrestaShopBundle:Admin\Common:searchGrid
+    _controller: PrestaShopBundle:Admin/Sell/Customer/Customer:searchGrid
     _legacy_controller: AdminCustomers
     gridDefinitionFactoryServiceId: prestashop.core.grid.definition.factory.customer
     redirectRoute: admin_customers_index
@@ -47,6 +47,8 @@ admin_customers_view:
       id_customer: customerId
   requirements:
     customerId: \d+
+  options:
+    expose: true
 
 admin_customers_set_private_note:
   path: /{customerId}/set-private-note
@@ -161,3 +163,29 @@ admin_customers_search:
     _controller: PrestaShopBundle:Admin/Sell/Customer/Customer:search
     _legacy_controller: AdminCustomers
     _legacy_link: AdminCustomers:searchCustomers
+  options:
+    expose: true
+
+admin_customers_carts:
+  path: /{customerId}/carts
+  methods: [GET]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Customer/Customer:getCarts
+    _legacy_controller: AdminCustomers
+    _legacy_link: AdminCustomers
+  requirements:
+    customerId: \d+
+  options:
+    expose: true
+
+admin_customers_orders:
+  path: /{customerId}/orders
+  methods: [GET]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Customer/Customer:getOrders
+    _legacy_controller: AdminCustomers
+    _legacy_link: AdminCustomers
+  requirements:
+    customerId: \d+
+  options:
+    expose: true

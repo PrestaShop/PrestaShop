@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -956,9 +956,9 @@ class AdminStatsControllerCore extends AdminStatsTabController
                     ) . ' 23:59:59"
 				' . Shop::addSqlRestriction()
                 );
-                $value = Tools::displayPrice(
+                $value = $this->context->getCurrentLocale()->formatPrice(
                     $row['orders'] ? $row['total_paid_tax_excl'] / $row['orders'] : 0,
-                    $currency
+                    $currency->iso_code
                 );
                 ConfigurationKPI::updateValue('AVG_ORDER_VALUE', $value);
                 ConfigurationKPI::updateValue(
@@ -978,11 +978,11 @@ class AdminStatsControllerCore extends AdminStatsTabController
                 $net_profits -= AdminStatsController::getPurchases($date_from, $date_to);
 
                 if ($total_visitors) {
-                    $value = Tools::displayPrice($net_profits / $total_visitors, $currency);
+                    $value = $this->context->getCurrentLocale()->formatPrice($net_profits / $total_visitors, $currency->iso_code);
                 } elseif ($net_profits) {
                     $value = '&infin;';
                 } else {
-                    $value = Tools::displayPrice(0, $currency);
+                    $value = $this->context->getCurrentLocale()->formatPrice(0, $currency->iso_code);
                 }
 
                 ConfigurationKPI::updateValue('NETPROFIT_VISIT', $value);

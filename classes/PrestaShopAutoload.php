@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -88,7 +88,7 @@ class PrestaShopAutoload
      */
     public static function getCacheFileIndex()
     {
-        return _PS_ROOT_DIR_ . DIRECTORY_SEPARATOR . 'var' . DIRECTORY_SEPARATOR . 'cache' . DIRECTORY_SEPARATOR . (_PS_MODE_DEV_ ? 'dev' : 'prod') . DIRECTORY_SEPARATOR . 'class_index.php';
+        return _PS_CACHE_DIR_ . 'class_index.php';
     }
 
     /**
@@ -98,7 +98,7 @@ class PrestaShopAutoload
      */
     public static function getNamespacedStubFileIndex()
     {
-        return _PS_ROOT_DIR_ . DIRECTORY_SEPARATOR . 'var' . DIRECTORY_SEPARATOR . 'cache' . DIRECTORY_SEPARATOR . (_PS_MODE_DEV_ ? 'dev' : 'prod') . DIRECTORY_SEPARATOR . 'namespaced_class_stub.php';
+        return _PS_CACHE_DIR_ . 'namespaced_class_stub.php';
     }
 
     /**
@@ -108,7 +108,7 @@ class PrestaShopAutoload
      */
     public static function getStubFileIndex()
     {
-        return _PS_ROOT_DIR_ . DIRECTORY_SEPARATOR . 'var' . DIRECTORY_SEPARATOR . 'cache' . DIRECTORY_SEPARATOR . (_PS_MODE_DEV_ ? 'dev' : 'prod') . DIRECTORY_SEPARATOR . 'class_stub.php';
+        return _PS_CACHE_DIR_ . 'class_stub.php';
     }
 
     /**

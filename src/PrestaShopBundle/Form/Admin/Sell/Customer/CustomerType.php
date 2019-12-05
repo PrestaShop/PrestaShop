@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Form\Admin\Sell\Customer;
 
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CustomerName;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\FirstName;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\LastName;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\Password;
@@ -126,6 +127,9 @@ class CustomerType extends AbstractType
                             'Admin.Notifications.Error'
                         ),
                     ]),
+                    new CustomerName([
+                        'message' => $this->trans('The %s field is invalid.', [sprintf('"%s"', $this->trans('First name', [], 'Admin.Global'))], 'Admin.Notifications.Error'),
+                    ]),
                 ],
             ])
             ->add('last_name', TextType::class, [
@@ -140,6 +144,9 @@ class CustomerType extends AbstractType
                             ['%limit%' => LastName::MAX_LENGTH],
                             'Admin.Notifications.Error'
                         ),
+                    ]),
+                    new CustomerName([
+                        'message' => $this->trans('The %s field is invalid.', [sprintf('"%s"', $this->trans('Last name', [], 'Admin.Global'))], 'Admin.Notifications.Error'),
                     ]),
                 ],
             ])
@@ -202,12 +209,6 @@ class CustomerType extends AbstractType
                 ])
                 ->add('siret_code', TextType::class, [
                     'required' => false,
-                    'constraints' => [
-                        new Type([
-                            'type' => 'numeric',
-                            'message' => $this->trans('This field is invalid', [], 'Admin.Notifications.Error'),
-                        ]),
-                    ],
                 ])
                 ->add('ape_code', TextType::class, [
                     'required' => false,

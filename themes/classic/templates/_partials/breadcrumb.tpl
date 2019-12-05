@@ -1,5 +1,5 @@
 {**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -27,16 +27,16 @@
     {block name='breadcrumb'}
       {foreach from=$breadcrumb.links item=path name=breadcrumb}
         {block name='breadcrumb_item'}
-          <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
-              {if not $smarty.foreach.breadcrumb.last}
-                <a itemprop="item" href="{$path.url}">
-              {/if}
-                <span itemprop="name">{$path.title}</span>
-              {if not $smarty.foreach.breadcrumb.last}
-                </a>
-              {/if}
-            <meta itemprop="position" content="{$smarty.foreach.breadcrumb.iteration}">
-          </li>
+          {if not $smarty.foreach.breadcrumb.last}
+            <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+              <a itemprop="item" href="{$path.url}"><span itemprop="name">{$path.title}</span></a>
+              <meta itemprop="position" content="{$smarty.foreach.breadcrumb.iteration}">
+            </li>
+          {elseif isset($path.title)}
+            <li>
+              <span>{$path.title}</span>
+            </li>
+          {/if}
         {/block}
       {/foreach}
     {/block}

@@ -1,5 +1,5 @@
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -92,11 +92,11 @@ $(() => {
   new Serp(
     {
       container: '#serp-app',
-      defaultTitle: 'input[name^="category[name]',
-      watchedTitle: 'input[name^="category[meta_title]',
-      defaultDescription: 'textarea[name^="category[description]',
-      watchedDescription: 'textarea[name^="category[meta_description]',
-      watchedMetaUrl: 'input[name^="category[link_rewrite]',
+      defaultTitle: 'input[name^="category[name]"]',
+      watchedTitle: 'input[name^="category[meta_title]"]',
+      defaultDescription: 'textarea[name^="category[description]"]',
+      watchedDescription: 'textarea[name^="category[meta_description]"]',
+      watchedMetaUrl: 'input[name^="category[link_rewrite]"]',
       multiLanguageInput: `${translatorInput.localeInputSelector}:not(.d-none)`,
       multiLanguageItem: translatorInput.localeItemSelector,
     },

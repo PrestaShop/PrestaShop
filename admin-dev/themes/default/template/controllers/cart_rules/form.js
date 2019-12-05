@@ -1,5 +1,5 @@
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -105,14 +105,22 @@ var restrictions = new Array('country', 'carrier', 'group', 'cart_rule', 'shop')
 for (i in restrictions)
 {
 	toggleCartRuleFilter($('#' + restrictions[i] + '_restriction'));
-	$('#' + restrictions[i] + '_restriction').click(function() {toggleCartRuleFilter(this);});
+	$('#' + restrictions[i] + '_restriction').change(function() {toggleCartRuleFilter(this);});
 	$('#' + restrictions[i] + '_select_remove').click(function() {removeCartRuleOption(this);});
 	$('#' + restrictions[i] + '_select_add').click(function() {addCartRuleOption(this);});
 }
 
 toggleCartRuleFilter($('#product_restriction'));
 
-$('#product_restriction').click(function() {
+$('#group_restriction').change(function() {
+  $('#customerFilter').prop('disabled', $(this).prop('checked'));
+}).change();
+
+$('#customerFilter').on('change keyup', function() {
+    $('#group_restriction').prop('disabled', $(this).val() !== '');
+}).change();
+
+$('#product_restriction').change(function() {
 	toggleCartRuleFilter(this);
 
 	if ($(this).prop('checked'))
@@ -497,6 +505,8 @@ $(document).ready(function() {
 			callback: function(text) { combinable_filter('#cart_rule_select_2', text, 'selected'); }
 		});
 	}
+
+  displayProductAttributes();
 });
 
 

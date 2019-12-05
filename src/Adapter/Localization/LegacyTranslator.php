@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -56,8 +56,18 @@ class LegacyTranslator
         $sprintf = null,
         $js = false,
         $locale = null,
-        $fallback = true
+        $fallback = true,
+        $escape = true
     ) {
-        return Translate::getModuleTranslation($moduleName, $originalString, $source, $sprintf, $js, $locale, $fallback);
+        return Translate::getModuleTranslation(
+            $moduleName,
+            $originalString,
+            $source,
+            $sprintf,
+            $js,
+            $locale,
+            $fallback,
+            $escape
+        );
     }
 }

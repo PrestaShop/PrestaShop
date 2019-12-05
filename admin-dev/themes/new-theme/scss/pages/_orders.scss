@@ -1,0 +1,134 @@
+#order_grid {
+  // Do not break text for Shop column in Orders grid
+  .column-shop_name {
+    word-break: normal;
+  }
+  .order-preview-content {
+    .details th, .product th, .details td, .product td {
+      border: none;
+      padding-top: 3.2px;
+      padding-bottom: 3.2px;
+    }
+    .details td, .product td {
+      padding-top: 0;
+      padding-bottom: 0;
+    }
+    .product th {
+      background-color: #f8f8f8;
+    }
+
+    $order-details-text-padding-left: 34px;
+
+    .details {
+      td {
+        padding-left: 34px;
+      }
+    }
+  }
+}
+
+$order-block-background-color: #F8F8F8;
+
+.info-block {
+  background-color: $order-block-background-color;
+  padding-top: 18px;
+  padding-left: 18px;
+  padding-right: 18px;
+  padding-bottom: 16px;
+}
+
+
+#order-creation-container {
+  .found-cart-rule:hover {
+    cursor: pointer;
+    color: $primary;
+  }
+
+  #search-cart-rules-result-box {
+    z-index: 10;
+  }
+}
+
+.messages-block {
+  background-color: $order-block-background-color;
+
+  $private-message-color: #7A8A8F;
+
+  .message {
+    padding: 10px;
+    border-radius: 5px;
+
+    &.customer-message {
+      background-color: #fff;
+    }
+    &.employee-message {
+      background-color: #d3f1f7;
+    }
+    &.employee-message--private {
+      background-color: $private-message-color;
+      color: #fff;
+    }
+  }
+
+  .employee-icon {
+    &:before {
+      font-family: "Material Icons";
+      content: 'account_circle';
+    }
+    color: #36b9d7;
+  }
+  .employee-icon--private {
+    &:before {
+      font-family: "Material Icons";
+      content: 'visibility_off';
+    }
+    color: $private-message-color;
+  }
+}
+
+.messages-block {
+  &#all-messages-list {
+    height: 80vh;
+    overflow-y: scroll;
+  }
+
+  li {
+    .row {
+      .col-md-1 {
+
+      }
+
+      .col-md-11 {
+
+      }
+    }
+  }
+}
+
+#view_all_messages_modal {
+  .modal-content {
+    background-color: inherit;
+    padding: 0;
+  }
+  .modal-body {
+    padding: 0;
+  }
+}
+
+
+@media only screen and (max-width: 1475px) {
+  .messages-block {  
+    li {
+      .row {
+        .col-md-1 {
+          order: 1;
+          margin-bottom: 5px;
+        }
+  
+        .col-md-11 {
+          order: 2;
+        }
+      }
+    }
+  } 
+}

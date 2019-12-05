@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -106,11 +106,11 @@ final class AddOrderFromBackOfficeHandler implements AddOrderFromBackOfficeHandl
         $isDeliveryCountryDisabled = !Address::isCountryActiveById((int) $cart->id_address_delivery);
         $isInvoiceCountryDisabled = !Address::isCountryActiveById((int) $cart->id_address_invoice);
 
-        if ($isDeliveryCountryDisabled || $isInvoiceCountryDisabled) {
-            if ($isDeliveryCountryDisabled) {
-                throw new OrderException(sprintf('Delivery country for cart with id "%d" is disabled.', $cart->id));
-            }
+        if ($isDeliveryCountryDisabled) {
+            throw new OrderException(sprintf('Delivery country for cart with id "%d" is disabled.', $cart->id));
+        }
 
+        if ($isInvoiceCountryDisabled) {
             throw new OrderException(sprintf('Invoice country for cart with id "%d" is disabled.', $cart->id));
         }
     }

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -34,6 +34,7 @@ use OrderState;
 use PrestaShop\PrestaShop\Adapter\Order\AbstractOrderHandler;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\UpdateOrderStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler\UpdateOrderStatusHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\ChangeOrderStatusException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use StockAvailable;
 
@@ -93,8 +94,11 @@ final class UpdateOrderStatusHandler extends AbstractOrderHandler implements Upd
             return;
         }
 
-        throw new OrderException(
-            'An error occurred while changing order status, or we were unable to send an email to the customer.'
+        throw new ChangeOrderStatusException(
+            [],
+            [$command->getOrderId()],
+            [],
+            'Failed to update status or sent email when changing order status.'
         );
     }
 

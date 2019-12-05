@@ -1,5 +1,5 @@
 {**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -36,7 +36,7 @@
       <span class="selected-item">
         <i class="material-icons visibility">visibility</i>
         {if !isset($current_shop_name) || $current_shop_name == ''}
-          {l s='All shops'}
+          {l s='All shops' d='Admin.Global'}
         {else}
           {$current_shop_name}
         {/if}
@@ -51,7 +51,7 @@
   <div class="shop-list">
     <a class="link" id="header_shopname" href="{$base_url|escape:'html':'UTF-8'}" target= "_blank">
       <i class="material-icons">visibility</i>
-      {l s='View my shop'}
+      {l s='View my shop' d='Admin.Navigation.Header'}
     </a>
   </div>
 {/if}

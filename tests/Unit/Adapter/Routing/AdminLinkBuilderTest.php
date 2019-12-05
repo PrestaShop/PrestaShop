@@ -16,7 +16,7 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2019 PrestaShop SA and Contributors
@@ -89,8 +89,15 @@ class AdminLinkBuilderTest extends TestCase
 
     public function testCleanTokenInLink()
     {
-        $builder = new AdminLinkBuilder($this->getLinkMock(), ['product' => 'AdminProducts', 'token' => 'toto']);
-        $editLink = $builder->getEditLink('product', ['id_product' => 42]);
+        $builder = new AdminLinkBuilder($this->getLinkMock(), ['product' => 'AdminProducts']);
+        $editLink = $builder->getEditLink('product', ['id_product' => 42, 'token' => 'toto']);
+        $this->assertEquals('?controller=AdminProducts&id_product=42&updateproduct=1', $editLink);
+    }
+
+    public function testCleanCurrentIndex()
+    {
+        $builder = new AdminLinkBuilder($this->getLinkMock(), ['product' => 'AdminProducts']);
+        $editLink = $builder->getEditLink('product', ['id_product' => 42, 'current_index' => '/admin-dev/index.php/sell/customers/?_token=mYY9DFadRSfPTsJR-XXHHMQl_MXOCTZQ8n2bVlbeUMA']);
         $this->assertEquals('?controller=AdminProducts&id_product=42&updateproduct=1', $editLink);
     }
 

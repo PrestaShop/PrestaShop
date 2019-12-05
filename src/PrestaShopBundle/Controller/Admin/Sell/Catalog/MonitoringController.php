@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -26,6 +26,8 @@
 
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
+use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\Query\GetShowcaseCardIsClosed;
+use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\ValueObject\ShowcaseCard;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\Monitoring\DisabledProductGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\Monitoring\EmptyCategoryGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\Monitoring\NoQtyProductWithCombinationGridDefinitionFactory;
@@ -90,6 +92,10 @@ class MonitoringController extends FrameworkBundleAdminController
         $productWithoutDescriptionGrid = $this->getProductWithoutDescriptionGrid($productWithoutDescriptionFilters);
         $productWithoutPriceGrid = $this->getProductWithoutPriceGrid($productWithoutPriceFilters);
 
+        $isShowcaseCardClosed = $this->getQueryBus()->handle(
+            new GetShowcaseCardIsClosed($this->getContext()->employee->id, ShowcaseCard::MONITORING_CARD)
+        );
+
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Monitoring/index.html.twig', [
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
@@ -101,6 +107,8 @@ class MonitoringController extends FrameworkBundleAdminController
             'productWithoutImageGrid' => $this->presentGrid($productWithoutImageGrid),
             'productWithoutDescriptionGrid' => $this->presentGrid($productWithoutDescriptionGrid),
             'productWithoutPriceGrid' => $this->presentGrid($productWithoutPriceGrid),
+            'showcaseCardName' => ShowcaseCard::MONITORING_CARD,
+            'isShowcaseCardClosed' => $isShowcaseCardClosed,
         ]);
     }
 

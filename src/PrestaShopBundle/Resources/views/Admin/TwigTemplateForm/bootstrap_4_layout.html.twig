@@ -1,5 +1,5 @@
 {#**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -38,6 +38,8 @@
 {% block textarea_widget -%}
     {% set attr = attr|merge({class: (attr.class|default('') ~ ' form-control')|trim}) %}
     {{- parent() -}}
+
+    {{ block('form_help') }}
 {%- endblock textarea_widget %}
 
 {% block button_widget -%}
@@ -332,17 +334,17 @@
 {%- endblock translate_textarea_widget %}
 
 {% block date_picker_widget %}
-    {% spaceless %}
-        {%  set attr = attr|merge({'class': ((attr.class|default('') ~ ' datepicker')|trim)}) %}
-        <div class="input-group datepicker">
-            <input type="text" class="form-control" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %}/>
-            <div class="input-group-append">
-                <div class="input-group-text">
-                    <i class="material-icons">date_range</i>
-                </div>
-            </div>
+  {% spaceless %}
+    {%  set attr = attr|merge({'class': ((attr.class|default('') ~ ' datepicker')|trim)}) %}
+    <div class="input-group datepicker">
+      <input type="text" class="form-control" data-format="{{ date_format }}" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %}/>
+      <div class="input-group-append">
+        <div class="input-group-text">
+          <i class="material-icons">date_range</i>
         </div>
-    {% endspaceless %}
+      </div>
+    </div>
+  {% endspaceless %}
 {% endblock date_picker_widget %}
 
 {% block date_range_widget %}
@@ -402,7 +404,7 @@
           <table id="product-attachment-file" class="table">
             <thead class="thead-default">
               <tr>
-                <th class="col-md-3"><input type="checkbox" id="product-attachment-files-check" /> {{ 'Title'|trans({}, 'Admin.Global') }}</th>
+                <th class="col-md-3">{{ 'Title'|trans({}, 'Admin.Global') }}</th>
                 <th class="col-md-6">{{ 'File name'|trans({}, 'Admin.Global') }}</th>
                 <th class="col-md-2">{{ 'Type'|trans({}, 'Admin.Catalog.Feature') }}</th>
               </tr>
@@ -425,7 +427,6 @@
 {# Labels #}
 
 {% block form_label -%}
-    {%- set label_attr = label_attr|merge({class: (label_attr.class|default('') ~ ' control-label')|trim}) -%}
     {{- parent() -}}
 {%- endblock form_label %}
 
@@ -456,7 +457,7 @@
           {% set label = name|humanize %}
       {% endif %}
 
-      {% if material_design is defined %}
+      {% if material_design is defined or attr.material_design is defined %}
         <div class="md-checkbox md-checkbox-inline">
           <label{% for attrname, attrvalue in label_attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}>
           {{- widget|raw -}}
@@ -798,3 +799,29 @@
   {{ form_widget(form['min_field'], { attr: {class: 'min-field'}}) }}
   {{ form_widget(form['max_field'], { attr: {class: 'max-field'}}) }}
 {% endblock %}
+
+{% block form_help %}
+  {% if help %}
+    <small class="form-text">{{ help }}</small>
+  {% endif %}
+{% endblock form_help %}
+
+{% block custom_content_widget %}
+  {% include template with data %}
+{% endblock %}
+
+{% block text_widget %}
+  {% if data_list is not null %}
+    {%- set attr = attr|merge({'list': id ~ '_datalist'}) -%}
+  {% endif %}
+
+  {{ form_widget(form, {'attr': attr}) }}
+
+  {% if data_list is not null %}
+    <datalist id="{{ id ~ '_datalist' }}">
+      {% for item in data_list %}
+        <option value="{{ item }}"></option>
+      {% endfor%}
+    </datalist>
+  {% endif %}
+{% endblock text_widget %}

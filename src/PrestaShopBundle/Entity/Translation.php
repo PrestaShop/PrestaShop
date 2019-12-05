@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -60,7 +60,7 @@ class Translation
     /**
      * @var string
      *
-     * @ORM\Column(name="`key`", type="text", length=65500)
+     * @ORM\Column(name="`key`", type="text", length=8000, options={"collation":"utf8_bin"})
      */
     private $key;
 

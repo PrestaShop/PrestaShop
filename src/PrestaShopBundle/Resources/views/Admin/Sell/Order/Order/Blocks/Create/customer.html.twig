@@ -1,0 +1,181 @@
+{#**
+ * 2007-2019 PrestaShop SA and Contributors
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ *#}
+
+<div class="card" id="customer-search-block">
+  <h3 class="card-header">{{ 'Customer'|trans({}, 'Admin.Global') }}</h3>
+  <div class="card-body">
+    <div class="row js-search-customer-row mb-3">
+      <div class="col-3">
+        <span class="float-right">{{ 'Search for a customer'|trans({}, 'Admin.Orderscustomers.Feature') }}</span>
+      </div>
+      <div class="col-4">
+        <input type="text"
+               class="form-control"
+               id="customer-search-input"
+        >
+        <small class="form-text">
+          {{ 'Search for an existing customer by typing the first letters of his/her name.'|trans({}, 'Admin.Orderscustomers.Help') }}
+        </small>
+      </div>
+      <div class="col">
+        <span class="mr-2">{{ 'or'|trans({}, 'Admin.Global') }}</span>
+
+        <a class="btn btn-primary" href="{{ path('admin_customers_create') }}">
+          {{ 'Add new customer'|trans({}, 'Admin.Orderscustomers.Feature') }}
+        </a>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <div class="row js-customer-search-results"></div>
+      </div>
+    </div>
+    <div class="row d-none" id="customer-checkout-history">
+      <div class="col">
+        <ul class="nav nav-pills" role="tablist">
+          <li class="nav-item">
+            <a class="nav-link active show js-customer-carts-tab"
+               id="customer-carts-tab"
+               data-toggle="pill"
+               href="#customer-carts-tab-content"
+               role="tab"
+               aria-controls="pills-home"
+               aria-expanded="true"
+               aria-selected="true"
+            >
+              {{ 'Carts'|trans({}, 'Admin.Global') }}
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link js-customer-orders-tab"
+               id="customer-orders-tab"
+               data-toggle="pill"
+               href="#customer-orders-tab-content"
+               role="tab"
+               aria-controls="pills-home"
+               aria-expanded="true"
+               aria-selected="true"
+            >
+              {{ 'Orders'|trans({}, 'Admin.Global') }}
+            </a>
+          </li>
+        </ul>
+        <div class="tab-content">
+          <div class="tab-pane fade active show" id="customer-carts-tab-content" role="tabpanel" aria-labelledby="pills-home-tab">
+            <table class="table" id="customer-carts-table">
+              <thead>
+                <tr>
+                  <th>{{ 'ID'|trans({}, 'Admin.Global') }}</th>
+                  <th>{{ 'Date'|trans({}, 'Admin.Global') }}</th>
+                  <th>{{ 'Total'|trans({}, 'Admin.Global') }}</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+          <div class="tab-pane fade" id="customer-orders-tab-content" role="tabpanel" aria-labelledby="pills-home-tab">
+            <table class="table" id="customer-orders-table">
+              <thead>
+              <tr>
+                <th>{{ 'ID'|trans({}, 'Admin.Global') }}</th>
+                <th>{{ 'Date'|trans({}, 'Admin.Global') }}</th>
+                <th>{{ 'Products'|trans({}, 'Admin.Global') }}</th>
+                <th>{{ 'Total paid'|trans({}, 'Admin.Orderscustomers.Feature') }}</th>
+                <th>{{ 'Payment'|trans({}, 'Admin.Global') }}</th>
+                <th>{{ 'Status'|trans({}, 'Admin.Global') }}</th>
+                <th></th>
+              </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="customer-search-result-template" class="d-none">
+  <div class="col-4 js-customer-search-result-col">
+    <div class="card js-customer-search-result">
+      <div class="card-header">
+        <h3 class="card-header-title d-inline-block js-customer-name"></h3>
+        <div class="d-inline-block float-right">
+          #<span class="js-customer-id"></span>
+        </div>
+      </div>
+      <div class="card-body">
+        <p class="mb-0 js-customer-email"></p>
+        <p class="mb-0 js-customer-birthday"></p>
+      </div>
+      <div class="card-footer">
+        <a class="btn btn-outline-secondary js-details-customer-btn" href="">
+          {{ 'Details'|trans({}, 'Admin.Global') }}
+        </a>
+        <button type="button" class="btn btn-primary float-right js-choose-customer-btn">
+          {{ 'Choose'|trans({}, 'Admin.Actions') }}
+        </button>
+        <button type="button" class="btn btn-primary float-right js-change-customer-btn d-none">
+          {{ 'Change'|trans({}, 'Admin.Actions') }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="customer-search-empty-result-template" class="d-none">
+  <div class="col">
+    <div class="alert alert-warning" role="alert">
+      <p class="alert-text">{{ 'No customers found'|trans({}, 'Admin.Orderscustomers.Notification') }}</p>
+    </div>
+  </div>
+</div>
+
+<script id="customer-carts-table-row-template" type="text/template">
+  <tr>
+    <td class="js-cart-id"></td>
+    <td class="js-cart-date"></td>
+    <td class="js-cart-total"></td>
+    <td class="text-right">
+      <a class="btn btn-primary js-cart-details-btn" href="">{{ 'Details'|trans({}, 'Admin.Global') }}</a>
+      <button class="btn btn-primary js-use-cart-btn">{{ 'Use'|trans({}, 'Admin.Orderscustomers.Feature') }}</button>
+    </td>
+  </tr>
+</script>
+
+<script id="customer-orders-table-row-template" type="text/template">
+  <tr>
+    <td class="js-order-id"></td>
+    <td class="js-order-date"></td>
+    <td class="js-order-products"></td>
+    <td class="js-order-total-paid"></td>
+    <td class="js-order-status"></td>
+    <td class="text-right">
+      <a class="btn btn-primary js-order-details-btn" href="">{{ 'Details'|trans({}, 'Admin.Global') }}</a>
+      <button class="btn btn-primary js-use-order-btn">{{ 'Use'|trans({}, 'Admin.Orderscustomers.Feature') }}</button>
+    </td>
+  </tr>
+</script>

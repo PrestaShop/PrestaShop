@@ -1,9 +1,13 @@
 language: php
 
+services:
+  - mysql
+
 addons:
   chrome: stable
   apt:
     packages:
+      - dpkg
       - apache2
       - postfix
       - libapache2-mod-fastcgi
@@ -24,20 +28,25 @@ php:
 env:
   global:
     - SYMFONY_DEPRECATIONS_HELPER=disabled
+    - DISABLE_DEBUG_TOOLBAR=1
   matrix:
     - PRESTASHOP_TEST_TYPE=unit
     - PRESTASHOP_TEST_TYPE=integration
-    - PRESTASHOP_TEST_TYPE=e2e
+    - PRESTASHOP_TEST_TYPE=sanity
+
+stages:
+  - name: deploy
+    if: type = cron
+  - name: test
+    if: type IN (push, pull_request)
 
 matrix:
   include:
-    - php: 7.2
-      env: EXTRA_DEPS=phpHigh  PRESTASHOP_TEST_TYPE=unit
-    - php: 7.2
-      env: PRESTASHOP_TEST_TYPE=e2e EXTRA_TESTS=functional
     - stage: deploy
       php: 7.2
       before_install: skip
+      before_script: skip
+      install: skip
       script:
         - mkdir -p /tmp/ps-release
         - php tools/build/CreateRelease.php --destination-dir=/tmp/ps-release
@@ -55,14 +64,9 @@ matrix:
         local-dir: "/tmp/ps-release"
         on:
           all_branches: true
-  exclude:
-    - php: 7.2 # Replaced with additional tests
-      env: PRESTASHOP_TEST_TYPE=e2e
-  allow_failures:
-    - php: 7.2
-      env: EXTRA_DEPS=phpHigh  PRESTASHOP_TEST_TYPE=unit
 
 before_install:
+  - /sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_10.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :10 -ac -screen 0 1600x1200x16
   # Avoid Composer authentication issues
   - if [[ "$TRAVIS_REPO_SLUG" = PrestaShop/PrestaShop ]]; then cp travis-scripts/.composer-auth.json ~/.composer/auth.json; fi;
   # Apache & php-fpm configuration
@@ -72,13 +76,8 @@ before_install:
   # PrestaShop configuration
   - cp tests-legacy/parameters.yml.travis app/config/parameters.yml
 
-before_script:
-  - if [ "$EXTRA_DEPS" = "phpHigh" ]; then
-        composer update --ignore-platform-reqs --no-suggest --ansi --no-interaction --no-progress --quiet;
-    else
-        composer install --no-suggest --ansi --prefer-dist --no-interaction --no-progress --quiet;
-    fi
-
+install:
+  - composer install --no-suggest --ansi --prefer-dist --no-interaction --no-progress --quiet;
   - bash travis-scripts/install-prestashop;
 
 script:
@@ -95,8 +94,8 @@ script:
         bash tests/check_integration.sh;
     fi
 
-  - if [ $PRESTASHOP_TEST_TYPE = "e2e" ]; then
-        bash tests/check_e2e.sh;
+  - if [ "$PRESTASHOP_TEST_TYPE" = "sanity" ]; then
+        bash tests/check_sanity.sh;
     fi
 
 after_script:
@@ -109,7 +108,6 @@ after_failure:
   - sudo cat /var/log/php-fpm.log
   - sudo ls -l /var/log/apache2
   - sudo cat /var/log/apache2/other_vhosts_access.log
-  - if [ ! -z "$PRESTASTHOP_SCREENHOST" ]; then bash ./travis-scripts/base64-screenshots; fi # As we cannot upload file, we display the base64 encoded content of the screenshots
   - cat $TRAVIS_BUILD_DIR/var/log/dev.log
 
 before_deploy:
@@ -132,7 +130,7 @@ after_deploy:
       gcloud compute instances stop --zone $GC_ZONE "${GC_INSTANCE_NAME}-${INSTANCE_TYPE}";
       gcloud compute instances add-metadata "${GC_INSTANCE_NAME}-${INSTANCE_TYPE}" --zone $GC_ZONE --metadata=NIGHTLY_TOKEN=$NIGHTLY_TOKEN && \
       gcloud compute instances add-metadata "${GC_INSTANCE_NAME}-${INSTANCE_TYPE}" --zone $GC_ZONE --metadata=TRAVIS_BRANCH=$TRAVIS_BRANCH && \
-      gcloud compute instances add-metadata "${GC_INSTANCE_NAME}-${INSTANCE_TYPE}" --zone $GC_ZONE --metadata-from-file startup-tests-script=tests/E2E/scripts/run-nightly-tests.sh && \
-      gcloud compute instances add-metadata "${GC_INSTANCE_NAME}-${INSTANCE_TYPE}" --zone $GC_ZONE --metadata-from-file startup-reports-script=tests/E2E/scripts/run-nightly-reports.sh && \
+      gcloud compute instances add-metadata "${GC_INSTANCE_NAME}-${INSTANCE_TYPE}" --zone $GC_ZONE --metadata-from-file startup-tests-script=tests/puppeteer/scripts/run-nightly-tests.sh && \
+      gcloud compute instances add-metadata "${GC_INSTANCE_NAME}-${INSTANCE_TYPE}" --zone $GC_ZONE --metadata-from-file startup-reports-script=tests/puppeteer/scripts/run-nightly-reports.sh && \
       gcloud compute instances start --zone $GC_ZONE "${GC_INSTANCE_NAME}-${INSTANCE_TYPE}"
     fi

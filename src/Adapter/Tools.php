@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -243,6 +243,18 @@ class Tools
     public function getAdminImageUrl($fileName, $escapeHtmlEntities = false)
     {
         return LegacyTools::getAdminImageUrl($fileName, $escapeHtmlEntities);
+    }
+
+    /**
+     * Delete unicode class from regular expression patterns.
+     *
+     * @param string $pattern
+     *
+     * @return string pattern
+     */
+    public function cleanNonUnicodeSupport($pattern)
+    {
+        return LegacyTools::cleanNonUnicodeSupport($pattern);
     }
 
     /**

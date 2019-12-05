@@ -48,6 +48,7 @@ $product-description-height: 70px;
       position: relative;
       height: calc(100% - #{$product-description-height});
       img {
+        max-height: 100%;
         max-width: 100%;
         position: absolute;
         top: 0;
@@ -158,5 +159,13 @@ $product-description-height: 70px;
         box-shadow: 0 -5px 10px -5px rgba(0, 0, 0, 0.2);
       }
     }
+  }
+}
+
+@include media-breakpoint-down(md) {
+  .featured-products {
+    .products {
+      justify-content: center;
+    } 
   }
 }

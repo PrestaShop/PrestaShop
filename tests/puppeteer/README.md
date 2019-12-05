@@ -3,25 +3,93 @@
 ## How to install your environment
 
 ```bash
+# Clone Prestashop
 git clone https://github.com/PrestaShop/PrestaShop/
+# Install dependencies in puppeteer folder
 cd tests/puppeteer/
-npm i
+npm install
 ```
 
-## LinkChecker
-This script will detect not found and erroneous pages, by crawling your back office and front office
-
-### Available command line parameters
-
+## Available command line parameters
 | Parameter           | Description      |
 |---------------------|----------------- |
-| URL_BO              | URL of your PrestaShop website Back Office (default to **http://localhost:8080/admin-dev/**) |
-| URL_FO              | URL of your PrestaShop website Front Office (default to **http://localhost:8080/**) |
-| LOGIN               | LOGIN of your PrestaShop website (default to **demo@prestashop.com**) |
-| PASSWD              | PASSWD of your PrestaShop website (default to **prestashop_demo**) |
+| URL_FO              | URL of your PrestaShop website Front Office (default to **`http://localhost:8080/`**) |
+| URL_BO              | URL of your PrestaShop website Back Office (default to **`URL_FO + admin-dev/`**) |
+| URL_INSTALL         | URL of the Install folder (default to **`URL_FO + install-dev/`**) |
+| FIRSTNAME           | Firstname of your admin employee (default to **`demo`**) |
+| LASTNAME            | Lastname of your admin employee (default to **`demo`**) |
+| LOGIN               | LOGIN of your PrestaShop website (default to **`demo@prestashop.com`**) |
+| PASSWD              | PASSWD of your PrestaShop website (default to **`prestashop_demo`**) |
+| SHOPNAME            | Shop Name of tour PrestaShop (default to **`Prestashop`**) |
+| DB_USER             | Login user of your MySql (default to **`root`**) |
+| DB_PASSWD           | Password for your MySql (default to **`empty`**) |
+| HEADLESS            | Boolean to run tests in headless or not (default to **`true`**) |
+| DOWNLOAD_PATH       | PATH of your download folder (default to **`/downloads`**)|
+
+Before running tests, you should install your shop manually or run the install script **`campaigns/sanity/01_installShop/*`** with the [`specific-test` command](README.md#specific-test).
+
+## Sanity tests 
+This campaign includes a non-exhaustive set of tests and will ensure that the most important functions work.
+
+### Launch all scripts
+If you want to run all sanity tests, you can run scripts in **`campaigns/sanity/*`**
+
+#### With default values
+
+```bash
+npm run sanity-tests
+```
+
+#### With custom values
+You can add parameters that you need in the beginning of your command 
+```bash
+HEADLESS=false URL_BO="Your_Shop_URL_BO" URL_FO="Your_Shop_URL_FO" npm run sanity-tests
+```
+
+### Stop tests when first step in failed
+If you want to run all sanity tests "safely", you can use the Travis-specific command : this will add the Mocha `--bail` parameter which stops the campaign when the first test fails.
+
+```bash
+npm run sanity-travis
+```
+
+## Functional tests 
+This campaign verifies that each function of the software application operate in conformance with the functional requirements. 
+Each and every functionality of the system is tested by providing appropriate input, verifying the output, and comparing the actual results with the expected results.
+
+### Launch all scripts
+If you want to run all functional tests, you need to specify **`DOWNLOAD_PATH`** env param.
+
+```bash
+DOWNLOAD_PATH="/home/user/Downloads" URL_FO="Your_Shop_URL_FO" npm run functional-tests
+```
+
+## Specific test 
+If you want to run only one test from a campaign or a couple of tests in the same folder, you can use **`specific-test`** command.
+
+To specify which test to run, you can add the **`TEST_PATH`** parameter in the beginning of the command
+
+```bash
+# To run the **Filter Products** test from sanity campaign
+TEST_PATH="sanity/02_productsBO/01_filterProducts" URL_FO="Your_Shop_URL_FO" npm run specific-test
+# To run all **Products BO** tests 
+TEST_PATH="sanity/02_productsBO/*" URL_FO="Your_Shop_URL_FO" npm run specific-test
+```
+
+
+## LinkChecker
+This script will detect not found and erroneous pages, by crawling your back office and front office. It's still a Work In Progress.
+
 
 ### Launch script
-If you want to run the links checker test you can run the script **test/linkchecker.js**
+If you want to run the links checker test you can run the script **`tools/linkchecker.js`**.
+It uses a `urls.js` file describing all the URLs it can crawl.
+
+You **must** disable the Security Token before running this script ! Add this line in your `.htaccess` file:
+
+```bash
+SetEnv _TOKEN_ disabled
+``` 
 
 #### With default values
 
@@ -29,38 +97,18 @@ If you want to run the links checker test you can run the script **test/linkchec
 npm run linkchecker
 ```
 
-#### With custom values
+## Upgrade test
+This test will upgrade Prestashop version with the Autoupgrade module
 
-```bash
-URL_BO="Your_Shop_URL_BO" URL_FO="Your_Shop_URL_FO" LOGIN="Your_Login" PASSWD="Your_Password" npm run linkchecker
-```
-
-#### Run with docker-compose
-
-```bash
-#Create Shop and running test
-docker-compose up --build
-docker-compose exec -e COMMAND="linkchecker" tests bash /tmp/run-tests.sh
-```
-
-## Smoke tests 
-This campaign includes a non-exhaustive set of tests and it will ensure that the most important functions work.
-
-### Launch all scripts
-If you want to run all smoke tests, you can run the script **campaigns/smoke/***
+### Launch script
+Before testing it, you should install Prestashop version to upgrade from
+If you want to run this test, you can use command **specific-test**
 
 #### With default values
 
 ```bash
-npm run smoke-tests
-```
-
-#### Run with docker-compose
-
-```bash
-#Create Shop and running test
-docker-compose up --build
-docker-compose exec -e COMMAND="smoke-tests" tests bash /tmp/run-tests.sh
+# You need to set PS_VERSION to check after upgrade, default to 1.7.6.0 
+PS_VERSION=1.7.6.0 TEST_PATH="upgrade/upgradeShop" npm run specific-test
 ```
 
 Enjoy :wink: :v:

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -26,9 +26,9 @@
 
 namespace LegacyTests\Unit\Core\Localization\DataLayer;
 
+use Currency;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\Currency\CurrencyDataProvider;
-use PrestaShop\PrestaShop\Adapter\Entity\Currency;
 use PrestaShop\PrestaShop\Core\Localization\Currency\CurrencyData;
 use PrestaShop\PrestaShop\Core\Localization\Currency\LocalizedCurrencyId;
 use PrestaShop\PrestaShop\Core\Localization\Currency\DataLayer\CurrencyDatabase as CurrencyDatabaseDataLayer;
@@ -111,9 +111,7 @@ class CurrencyDatabaseTest extends TestCase
     }
 
     /**
-     * Given a valid CurrencyDatabase layer object
-     * When asking it to write Currency data
-     * Then it should call the expected write method on its data provider
+     * This layer is not writable, it should not call any persistence methods
      *
      * @throws LocalizationException
      */
@@ -121,11 +119,11 @@ class CurrencyDatabaseTest extends TestCase
     {
         $someCurrencyData = new CurrencyData();
 
-        $this->fakeDataProvider->expects($this->once())
+        $this->fakeDataProvider->expects($this->never())
             ->method('saveCurrency')
             ->with($this->isInstanceOf(Currency::class));
 
-        $writableLayer = new CurrencyDatabaseDataLayer($this->fakeDataProvider, 'fr-FR');
+        $writableLayer = new CurrencyDatabaseDataLayer($this->fakeDataProvider);
         $writableLayer->write(
             new LocalizedCurrencyId('FOO', 'fr-FR'),
             $someCurrencyData

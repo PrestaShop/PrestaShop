@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -185,15 +185,19 @@ class LegacyContext
     }
 
     /**
-     * Adapter to get admin legacy layout into old controller context.
+     * Adapter to get admin legacy layout into legacy controller context.
      *
      * @param string $controllerName The legacy controller name
      * @param string $title The page title to override default one
      * @param array $headerToolbarBtn The header toolbar to override
      * @param string $displayType The legacy display type variable
      * @param bool $showContentHeader can force header toolbar (buttons and title) to be hidden with false value
+     * @param string $headerTabContent
      * @param bool $enableSidebar Allow to use right sidebar to display docs for instance
      * @param string $helpLink If specified, will be used instead of legacy one
+     * @param string[] $jsRouterMetadata array to provide base_url and security token for JS Router
+     * @param string $metaTitle
+     * @param bool $useRegularH1Structure allows complex <h1> structure if set to false
      *
      * @return string The html layout
      */
@@ -205,7 +209,10 @@ class LegacyContext
         $showContentHeader,
         $headerTabContent,
         $enableSidebar,
-        $helpLink = ''
+        $helpLink = '',
+        $jsRouterMetadata = [],
+        $metaTitle = '',
+        $useRegularH1Structure = true
     ) {
         $originCtrl = new AdminLegacyLayoutControllerCore(
             $controllerName,
@@ -215,7 +222,10 @@ class LegacyContext
             $showContentHeader,
             $headerTabContent,
             $enableSidebar,
-            $helpLink
+            $helpLink,
+            $jsRouterMetadata,
+            $metaTitle,
+            $useRegularH1Structure
         );
         $originCtrl->run();
 

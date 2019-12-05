@@ -16,7 +16,7 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2019 PrestaShop SA and Contributors
@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Routing;
 
+use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 use PrestaShop\PrestaShop\Core\Routing\EntityLinkBuilderInterface;
 
 /**
@@ -36,10 +37,19 @@ use PrestaShop\PrestaShop\Core\Routing\EntityLinkBuilderInterface;
 class LegacyHelperLinkBuilder implements EntityLinkBuilderInterface
 {
     /**
-     * {@inheritdoc}
+     * @param string $entity
+     * @param array $parameters
+     *
+     * @return string
+     *
+     * @throws InvalidArgumentException
      */
     public function getViewLink($entity, array $parameters)
     {
+        if (!isset($parameters['current_index'])) {
+            throw new InvalidArgumentException('Missing parameter current_index to build legacy link');
+        }
+
         $currentIndex = $parameters['current_index'];
         $parameters = $this->buildActionParameters('view', $entity, $parameters);
 
@@ -47,10 +57,19 @@ class LegacyHelperLinkBuilder implements EntityLinkBuilderInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @param string $entity
+     * @param array $parameters
+     *
+     * @return string
+     *
+     * @throws InvalidArgumentException
      */
     public function getEditLink($entity, array $parameters)
     {
+        if (!isset($parameters['current_index'])) {
+            throw new InvalidArgumentException('Missing parameter current_index to build legacy link');
+        }
+
         $currentIndex = $parameters['current_index'];
         $parameters = $this->buildActionParameters('update', $entity, $parameters);
 
@@ -67,11 +86,16 @@ class LegacyHelperLinkBuilder implements EntityLinkBuilderInterface
     private function buildActionParameters($action, $entity, array $parameters)
     {
         unset($parameters['current_index']);
-        $viewAction = $action . $entity;
-        $entityId = 'id_' . $entity;
+        $actionParameter = $action . $entity;
+
+        /**
+         * Legacy actions are displayed with empty value (e.g ?controller=ProductAdminController&updateproduct&id_product=1)
+         * Some modules don't just check that the parameter is set but also that it is empty...
+         * The closest thing we have with http_build_query is controller=ProductAdminController&updateproduct=&id_product=1
+         */
         $parameters = array_merge(
-            $parameters,
-            [$entityId => $parameters[$entityId], $viewAction => 1]
+            [$actionParameter => ''],
+            $parameters
         );
 
         return $parameters;

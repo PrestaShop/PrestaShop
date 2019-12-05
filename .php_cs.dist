@@ -1,5 +1,7 @@
 <?php
 
+ini_set('memory_limit','256M');
+
 $finder = PhpCsFixer\Finder::create()->in([
     __DIR__.'/src',
     __DIR__.'/classes',
@@ -24,7 +26,9 @@ return PhpCsFixer\Config::create()
         ],
         'function_to_constant' => false,
         'no_alias_functions' => false,
-        'non_printable_character' => false,
+        'non_printable_character' => [
+            'use_escape_sequences_in_strings' => true,
+        ],
         'phpdoc_summary' => false,
         'phpdoc_align' => [
             'align' => 'left',
@@ -33,7 +37,6 @@ return PhpCsFixer\Config::create()
         'psr4' => false,
         'self_accessor' => false,
         'yoda_style' => null,
-        'non_printable_character' => true,
         'combine_consecutive_issets' => true,
     ])
     ->setFinder($finder)

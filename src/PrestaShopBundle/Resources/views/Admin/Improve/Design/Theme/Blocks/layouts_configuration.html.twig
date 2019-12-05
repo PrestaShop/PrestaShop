@@ -1,5 +1,5 @@
 {#**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -28,7 +28,7 @@
     <div class="inner-content">
       <div class="float-left">
         <div class="d-inline-block layout-logo">
-          <img src="{{ asset('themes/new-theme/scss/img/pages/themes/icon_layouts.png') }}" alt="{{ 'Configure your page layouts'|trans({}, 'Admin.Design.Feature') }}">
+          <img src="{{ asset('themes/new-theme/public/pages/themes/icon_layouts.png') }}" alt="{{ 'Configure your page layouts'|trans({}, 'Admin.Design.Feature') }}">
         </div>
         <div class="d-inline-block">
           <span class="title">{{ 'Configure your page layouts'|trans({}, 'Admin.Design.Feature') }}</span>
@@ -37,16 +37,16 @@
       </div>
       <div class="float-right">
         <a href="{{ path('admin_theme_customize_layouts') }}"
-           class="btn btn-tertiary choose-layouts-button"
+          class="btn btn-tertiary choose-layouts-button"
         >
           {{ 'Choose layouts'|trans({}, 'Admin.Design.Feature') }}
         </a>
 
         {% if isDevModeOn %}
           <button class="btn btn-tertiary-outline js-reset-theme-layouts-btn"
-                  type="button"
-                  data-submit-url="{{ path('admin_themes_reset_layouts', {'themeName': currentlyUsedTheme.name}) }}"
-                  data-csrf-token="{{ csrf_token('reset-theme-layouts') }}"
+            type="button"
+            data-submit-url="{{ path('admin_themes_reset_layouts', {'themeName': currentlyUsedTheme.name}) }}"
+            data-csrf-token="{{ csrf_token('reset-theme-layouts') }}"
           >
             <i class="material-icons">settings_backup_restore</i>
             {{ 'Reset to defaults'|trans({}, 'Admin.Design.Feature') }}

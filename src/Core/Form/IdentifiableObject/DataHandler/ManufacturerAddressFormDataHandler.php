@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -68,7 +68,8 @@ final class ManufacturerAddressFormDataHandler implements FormDataHandlerInterfa
             $data['id_state'],
             $data['home_phone'],
             $data['mobile_phone'],
-            $data['other']
+            $data['other'],
+            $data['dni']
         ));
 
         return $addressId->getValue();
@@ -130,6 +131,9 @@ final class ManufacturerAddressFormDataHandler implements FormDataHandlerInterfa
         }
         if (null !== $data['other']) {
             $command->setOther($data['other']);
+        }
+        if (null !== $data['dni']) {
+            $command->setDni($data['dni']);
         }
     }
 }

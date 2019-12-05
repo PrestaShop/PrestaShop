@@ -1,5 +1,5 @@
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -41,9 +41,9 @@ export default function() {
     $navWidth += $(item).width();
   });
 
-  $navTabs.width($navWidth);
-
   $widthWithTabs = $navWidth + ($defaultArrowWidth * 2);
+
+  $navTabs.width($widthWithTabs);
 
   $navTabs.find('[data-toggle="tab"]').on('click', (e) => {
     if (!$(e.target).hasClass('active')) {

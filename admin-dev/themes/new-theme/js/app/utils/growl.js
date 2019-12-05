@@ -1,5 +1,5 @@
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -22,11 +22,12 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-export function showGrowl(type, message) {
+export function showGrowl(type, message, duration) {
+  duration = undefined !== duration ? duration : 2000;
   window.$.growl[type]({
     title: '',
     size: "large",
     message: message,
-    duration: 1000
+    duration: duration
   });
 };

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -92,7 +92,7 @@ class InstallControllerHttpSystem extends InstallControllerHttp implements HttpC
                     'title' => $this->translator->trans('Required PHP parameters', array(), 'Install'),
                     'success' => 1,
                     'checks' => array(
-                        'phpversion' => $this->translator->trans('PHP 5.6 or later is not enabled', array(), 'Install'),
+                        'phpversion' => $this->translator->trans('PHP %version% or later is not enabled', array('%version%' => _PS_INSTALL_MINIMUM_PHP_VERSION_), 'Install'),
                         'upload' => $this->translator->trans('Cannot upload files', array(), 'Install'),
                         'system' => $this->translator->trans('Cannot create new files and folders', array(), 'Install'),
                         'curl' => $this->translator->trans('cURL extension is not enabled', array(), 'Install'),
@@ -104,6 +104,7 @@ class InstallControllerHttpSystem extends InstallControllerHttp implements HttpC
                         'zip' => $this->translator->trans('ZIP extension is not enabled', array(), 'Install'),
                         'fileinfo' => $this->translator->trans('Fileinfo extension is not enabled', array(), 'Install'),
                         'intl' => $this->translator->trans('Intl extension is not loaded', array(), 'Install'),
+                        'memory_limit' => $this->translator->trans('PHP\'s config "memory_limit" must be to a minimum of 256M', array(), 'Install'),
                     ),
                 ),
                 array(

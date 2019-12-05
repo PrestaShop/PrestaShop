@@ -1,4 +1,6 @@
-const CommonPage = require('../commonPage');
+require('module-alias/register');
+// Using CommonPage
+const CommonPage = require('@pages/commonPage');
 
 module.exports = class Install extends CommonPage {
   constructor(page) {
@@ -48,40 +50,39 @@ module.exports = class Install extends CommonPage {
 
     // Selectors for Final step
     this.installationProgressBar = '#install_process_form #progress_bar .installing';
-    this.generateSettingsFileStep = "#process_step_generateSettingsFile";
-    this.installDatabaseStep = "#process_step_installDatabase";
-    this.installDefaultDataStep = "#process_step_installDefaultData";
-    this.populateDatabaseStep = "#process_step_populateDatabase";
-    this.configureShopStep = "#process_step_configureShop";
-    this.installModulesStep = "#process_step_installModules";
-    this.installModulesAddons = "#process_step_installModulesAddons";
-    this.installThemeStep = "#process_step_installTheme";
-    this.installFixturesStep = "#process_step_installFixtures";
+    this.generateSettingsFileStep = '#process_step_generateSettingsFile';
+    this.installDatabaseStep = '#process_step_installDatabase';
+    this.installDefaultDataStep = '#process_step_installDefaultData';
+    this.populateDatabaseStep = '#process_step_populateDatabase';
+    this.configureShopStep = '#process_step_configureShop';
+    this.installModulesStep = '#process_step_installModules';
+    this.installModulesAddons = '#process_step_installModulesAddons';
+    this.installThemeStep = '#process_step_installTheme';
+    this.installFixturesStep = '#process_step_installFixtures';
     this.finalStepPageTitle = '#install_process_success h2';
     this.discoverFoButton = '#foBlock';
-
-    // Selectors in FO
-    this.FOLogo = '#_desktop_logo';
-    this.userInfoHeaderIcon = '#_desktop_user_info';
-    this.cartHeaderIcon = '#_desktop_cart';
   }
 
   /**
    * To check each step title
    * @param selector, where to get actual title
    * @param pageTitle, expected title
+   * @return {Promise<*>}
    */
   async checkStepTitle(selector, pageTitle) {
-    await this.page.waitFor(selector, {visible: true, timeout: 90000});
+    await this.page.waitForSelector(selector, {visible: true});
     const title = await this.getTextContent(selector);
-    await global.expect(title).to.contains(pageTitle);
+    if (Array.isArray(pageTitle)) {
+      return pageTitle.some(arrVal => title.includes(arrVal));
+    }
+    return title.includes(pageTitle);
   }
 
   /**
    * Change install language in step 1
    */
   async setInstallLanguage() {
-    await this.page.select(this.languageSelect, global.INSTALL_LANGUAGE);
+    await this.page.select(this.languageSelect, global.INSTALL.LANGUAGE);
   }
 
   /**
@@ -106,66 +107,62 @@ module.exports = class Install extends CommonPage {
    * Fill Information and Account Forms in step 4
    */
   async fillInformationForm() {
-    await this.page.type(this.shopNameInput, global.SHOPNAME);
-    await this.page.select(this.countrySelect, global.INSTALL_COUNTRY);
-    await this.page.type(this.firstNameInput, 'demo');
-    await this.page.type(this.lastNameInput, 'demo');
-    await this.page.type(this.emailInput, global.EMAIL);
-    await this.page.type(this.passwordInput, global.PASSWD);
-    await this.page.type(this.repeatPasswordInput, global.PASSWD);
+    await this.page.type(this.shopNameInput, global.INSTALL.SHOPNAME);
+    await this.page.select(this.countrySelect, global.INSTALL.COUNTRY);
+    await this.page.type(this.firstNameInput, global.BO.FIRSTNAME);
+    await this.page.type(this.lastNameInput, global.BO.LASTNAME);
+    await this.page.type(this.emailInput, global.BO.EMAIL);
+    await this.page.type(this.passwordInput, global.BO.PASSWD);
+    await this.page.type(this.repeatPasswordInput, global.BO.PASSWD);
   }
 
   /**
    * Fill Database Form in step 5
    */
   async fillDatabaseForm() {
-    await this.page.click(this.dbLoginInput, {clickCount: 3});
-    await this.page.type(this.dbLoginInput, global.db_user);
-    await this.page.click(this.dbPasswordInput, {clickCount: 3});
-    await this.page.type(this.dbPasswordInput, global.db_passwd);
+    await this.setValue(this.dbLoginInput, global.INSTALL.DB_USER);
+    await this.setValue(this.dbPasswordInput, global.INSTALL.DB_PASSWD);
   }
 
   /**
    * Check if database exist (if not, it will be created)
    * and check if all set properly to submit form
+   * @return {Promise<boolean>}
    */
-  async checkDatabaseConnected() {
+  async isDatabaseConnected() {
     await this.page.click(this.testDbConnectionButton);
     // Create database 'prestashop' if not exist
     if (await this.elementVisible(this.createDbButton, 3000)) {
       await this.page.click(this.createDbButton);
     }
-    await this.page.waitForSelector(this.dbResultCheckOkBlock);
+    return this.elementVisible(this.dbResultCheckOkBlock, 3000);
   }
 
   /**
    * Check if prestashop is installed properly
    */
-  async checkInstallationSuccessful() {
-    await this.page.waitForSelector(this.installationProgressBar, {visible: true});
-    await this.page.waitFor(this.installationProgressBar, {visible: true});
-    await this.page.waitFor(this.generateSettingsFileStep, {visible: true});
-    await this.page.waitFor(this.installDatabaseStep, {visible: true});
-    await this.page.waitFor(this.installDefaultDataStep, {visible: true, timeout: 360000});
-    await this.page.waitFor(this.populateDatabaseStep, {visible: true, timeout: 360000});
-    await this.page.waitFor(this.configureShopStep, {visible: true, timeout: 360000});
-    await this.page.waitFor(this.installModulesStep, {visible: true});
-    await this.page.waitFor(this.installModulesAddons, {visible: true, timeout: 360000});
-    await this.page.waitFor(this.installThemeStep, {visible: true});
-    await this.page.waitFor(this.installFixturesStep, {visible: true});
-    await this.page.waitForSelector(this.finalStepPageTitle, {visible: true, timeout: 90000});
-    await this.checkStepTitle(this.finalStepPageTitle, this.finalStepEnTitle);
+  async isInstallationSuccessful() {
+    await Promise.all([
+      this.page.waitForSelector(this.installationProgressBar, {visible: true}),
+      this.page.waitForSelector(this.generateSettingsFileStep, {visible: true}),
+      this.page.waitForSelector(this.installDatabaseStep, {visible: true, timeout: 60000}),
+      this.page.waitForSelector(this.installDefaultDataStep, {visible: true, timeout: 120000}),
+      this.page.waitForSelector(this.populateDatabaseStep, {visible: true, timeout: 180000}),
+      this.page.waitForSelector(this.configureShopStep, {visible: true, timeout: 240000}),
+      this.page.waitForSelector(this.installModulesStep, {visible: true, timeout: 360000}),
+      this.page.waitForSelector(this.installModulesAddons, {visible: true, timeout: 360000}),
+      this.page.waitForSelector(this.installThemeStep, {visible: true, timeout: 360000}),
+      this.page.waitForSelector(this.installFixturesStep, {visible: true, timeout: 360000}),
+      this.page.waitForSelector(this.finalStepPageTitle, {visible: true, timeout: 360000}),
+    ]);
+    return this.checkStepTitle(this.finalStepPageTitle, this.finalStepEnTitle);
   }
 
   /**
    * Go to FO after Installation and check that Prestashop logo exist
    */
-  async goAndCheckFOAfterInstall() {
+  async goToFOAfterInstall() {
     await this.page.waitForSelector(this.discoverFoButton, {visible: true});
-    const FOPage = await this.openLinkWithTargetBlank(this.page, this.discoverFoButton);
-    await FOPage.bringToFront();
-    await FOPage.waitForSelector(this.FOLogo, {visible: true});
-    await FOPage.waitForSelector(this.userInfoHeaderIcon, {visible: true});
-    await FOPage.waitForSelector(this.cartHeaderIcon, {visible: true});
+    return this.openLinkWithTargetBlank(this.page, this.discoverFoButton, false);
   }
 };

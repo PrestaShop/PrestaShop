@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -72,7 +72,12 @@ final class CarrierByReferenceChoiceProvider implements FormChoiceProviderInterf
         );
 
         foreach ($carriers as $carrier) {
-            $choices[$carrier['name']] = $carrier['id_reference'];
+            $choiceId = $carrier['id_carrier'] . ' - ' . $carrier['name'];
+            if ($carrier['name']) {
+                $choiceId .= ' (' . $carrier['delay'] . ')';
+            }
+
+            $choices[$choiceId] = $carrier['id_reference'];
         }
 
         return $choices;

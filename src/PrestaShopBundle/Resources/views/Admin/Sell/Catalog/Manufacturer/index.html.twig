@@ -1,5 +1,5 @@
 {#**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -41,6 +41,7 @@
 
 {% block content %}
   {% block manufacturers_listing %}
+    {{ ps.infotip(settingsTipMessage, true) }}
     <div class="row">
       <div class="col">
         {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': manufacturerGrid} %}

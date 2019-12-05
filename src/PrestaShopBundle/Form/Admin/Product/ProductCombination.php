@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -104,6 +104,14 @@ class ProductCombination extends CommonAbstractType
                 ],
                 'empty_data' => '',
             ])
+            ->add('attribute_mpn', TextType::class, [
+                'required' => false,
+                'label' => $this->translator->trans('MPN', [], 'Admin.Catalog.Feature'),
+                'constraints' => [
+                    new Assert\Length(['max' => 40]),
+                ],
+                'empty_data' => '',
+            ])
             ->add('attribute_wholesale_price', MoneyType::class, [
                 'required' => false,
                 'label' => $this->translator->trans('Cost price', [], 'Admin.Catalog.Feature'),
@@ -125,7 +133,7 @@ class ProductCombination extends CommonAbstractType
             ])
             ->add('attribute_ecotax', MoneyType::class, [
                 'required' => false,
-                'label' => $this->translator->trans('Ecotax', [], 'Admin.Catalog.Feature'),
+                'label' => $this->translator->trans('Ecotax (tax incl.)', [], 'Admin.Catalog.Feature'),
                 'currency' => $this->currency->iso_code,
                 'constraints' => [
                     new Assert\NotBlank(),

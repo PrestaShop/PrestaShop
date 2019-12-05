@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -112,7 +112,7 @@ class MailCore extends ObjectModel
      * @param int $idLang Language ID of the email (to translate the template)
      * @param string $template Template: the name of template not be a var but a string !
      * @param string $subject Subject of the email
-     * @param string $templateVars Template variables for the email
+     * @param array $templateVars Template variables for the email
      * @param string $to To email
      * @param string $toName To name
      * @param string $from From email
@@ -465,7 +465,7 @@ class MailCore extends ObjectModel
             );
 
             /* Create mail and attach differents parts */
-            $subject = '[' . $shop->name . '] ' . $subject;
+            $subject = '[' . Tools::safeOutput($configuration['PS_SHOP_NAME']) . '] ' . $subject;
             $message->setSubject($subject);
 
             $message->setCharset('utf-8');
@@ -505,7 +505,7 @@ class MailCore extends ObjectModel
                 Context::getContext()->link = new Link();
             }
 
-            $templateVars['{shop_name}'] = Tools::safeOutput($shop->name);
+            $templateVars['{shop_name}'] = Tools::safeOutput($configuration['PS_SHOP_NAME']);
             $templateVars['{shop_url}'] = Context::getContext()->link->getPageLink(
                 'index',
                 true,
@@ -553,7 +553,7 @@ class MailCore extends ObjectModel
                 true
             );
             $templateVars = array_merge($templateVars, $extraTemplateVars);
-            $swift->registerPlugin(new \Swift_Plugins_DecoratorPlugin(array($toPlugin => $templateVars)));
+            $swift->registerPlugin(new \Swift_Plugins_DecoratorPlugin(array(self::toPunycode($toPlugin) => $templateVars)));
             if ($configuration['PS_MAIL_TYPE'] == Mail::TYPE_BOTH ||
                 $configuration['PS_MAIL_TYPE'] == Mail::TYPE_TEXT
             ) {

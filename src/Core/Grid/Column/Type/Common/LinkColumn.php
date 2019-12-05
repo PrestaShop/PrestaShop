@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -30,7 +30,7 @@ use PrestaShop\PrestaShop\Core\Grid\Column\AbstractColumn;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * Class LinkColumn is used to define column which is link to record action (view, edit, add.
+ * Class LinkColumn is used to define column which is link to record action (view, edit, add).
  */
 final class LinkColumn extends AbstractColumn
 {
@@ -50,6 +50,10 @@ final class LinkColumn extends AbstractColumn
         $resolver
             ->setDefaults([
                 'sortable' => true,
+                'icon' => null,
+                'button_template' => false,
+                'color_template' => 'primary',
+                'clickable' => false,
             ])
             ->setRequired([
                 'field',
@@ -57,11 +61,30 @@ final class LinkColumn extends AbstractColumn
                 'route_param_name',
                 'route_param_field',
             ])
-            ->setAllowedTypes('field', 'string')
+            ->setDefined([
+                'icon',
+            ])
+            ->setAllowedTypes('field', ['string', 'null'])
+            ->setAllowedTypes('icon', ['string', 'null'])
+            ->setAllowedTypes('sortable', 'bool')
             ->setAllowedTypes('route', 'string')
             ->setAllowedTypes('route_param_name', 'string')
             ->setAllowedTypes('route_param_field', 'string')
-            ->setAllowedTypes('sortable', 'bool')
+            ->setAllowedTypes('clickable', 'bool')
+            ->setAllowedValues('color_template', [
+                'primary',
+                'secondary',
+                'success',
+                'danger',
+                'warning',
+                'info',
+            ])
+            ->setAllowedValues('button_template', [
+                false,
+                'outline',
+                'normal',
+            ])
+
         ;
     }
 }

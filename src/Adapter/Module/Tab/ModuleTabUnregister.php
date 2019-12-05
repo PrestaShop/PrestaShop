@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -84,6 +84,14 @@ class ModuleTabUnregister
             $this->unregisterTab($tab);
             $this->removeDuplicatedParent($tab);
         }
+    }
+
+    /**
+     * @param Module $module
+     */
+    public function disableTabs(Module $module)
+    {
+        $this->tabRepository->changeEnabledByModuleName($module->get('name'), false);
     }
 
     /**

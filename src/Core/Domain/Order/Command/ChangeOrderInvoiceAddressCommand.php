@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -50,8 +50,8 @@ class ChangeOrderInvoiceAddressCommand
      */
     public function __construct($orderId, $newInvoiceAddressId)
     {
-        $this->orderId = $orderId;
-        $this->newInvoiceAddressId = $newInvoiceAddressId;
+        $this->orderId = new OrderId($orderId);
+        $this->newInvoiceAddressId = new AddressId($newInvoiceAddressId);
     }
 
     /**

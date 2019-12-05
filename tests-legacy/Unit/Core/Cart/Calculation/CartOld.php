@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -214,7 +214,7 @@ class CartOld extends Cart
             switch ($ps_round_type) {
                 case Order::ROUND_TOTAL:
                     $products_total[$id_tax_rules_group . '_' . $id_address] += $price
-                                                                                * (int) $product['cart_quantity'];
+                        * (int) $product['cart_quantity'];
 
                     break;
 
@@ -229,7 +229,7 @@ class CartOld extends Cart
                     $product_price                       = /*$with_taxes ? $tax_calculator->addTaxes($price) : */
                         $price;
                     $products_total[$id_tax_rules_group] += Tools::ps_round($product_price, $compute_precision)
-                                                            * (int) $product['cart_quantity'];
+                        * (int) $product['cart_quantity'];
 
                     break;
             }
@@ -290,7 +290,7 @@ class CartOld extends Cart
                         foreach ($products as $product) {
                             if ($cartRule->gift_product == $product['id_product']
                                 && $cartRule->gift_product_attribute
-                                   == $product['id_product_attribute']) {
+                                == $product['id_product_attribute']) {
                                 $in_order = true;
                             }
                         }
@@ -323,7 +323,7 @@ class CartOld extends Cart
             }
 
             $order_total_discount = min(Tools::ps_round($order_total_discount, 2), (float) $order_total_products)
-                                    + (float) $order_shipping_discount;
+                + (float) $order_shipping_discount;
             $order_total          -= $order_total_discount;
         }
 

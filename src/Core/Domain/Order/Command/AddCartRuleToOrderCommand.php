@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -26,7 +26,10 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Order\Command;
 
+use PrestaShop\Decimal\Number;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Order\Invoice\ValueObject\OrderInvoiceId;
+use PrestaShop\PrestaShop\Core\Domain\Order\OrderDiscountType;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
 
 /**
@@ -62,25 +65,31 @@ class AddCartRuleToOrderCommand
     /**
      * @param int $orderId
      * @param string $cartRuleName
-     * @param int $cartRuleType
-     * @param float $value
+     * @param string $cartRuleType
+     * @param string|null $value
      * @param null $orderInvoiceId
      */
-    public function __construct($orderId, $cartRuleName, $cartRuleType, $value, $orderInvoiceId = null)
-    {
+    public function __construct(
+        int $orderId,
+        string $cartRuleName,
+        string $cartRuleType,
+        ?string $value,
+        $orderInvoiceId = null
+    ) {
         $this->assertCartRuleNameIsNotEmpty($cartRuleName);
+        $this->assertCartRuleTypeAndValueCombination($cartRuleType, $value);
 
         $this->orderId = new OrderId($orderId);
         $this->cartRuleName = $cartRuleName;
         $this->cartRuleType = $cartRuleType;
-        $this->value = $value;
-        $this->orderInvoiceId = $orderInvoiceId;
+        $this->value = $value ? new Number($value) : null;
+        $this->orderInvoiceId = $orderInvoiceId ? new OrderInvoiceId($orderInvoiceId) : null;
     }
 
     /**
      * @return OrderId
      */
-    public function getOrderId()
+    public function getOrderId(): OrderId
     {
         return $this->orderId;
     }
@@ -88,7 +97,7 @@ class AddCartRuleToOrderCommand
     /**
      * @return string
      */
-    public function getCartRuleName()
+    public function getCartRuleName(): string
     {
         return $this->cartRuleName;
     }
@@ -96,23 +105,23 @@ class AddCartRuleToOrderCommand
     /**
      * @return int
      */
-    public function getCartRuleType()
+    public function getCartRuleType(): string
     {
         return $this->cartRuleType;
     }
 
     /**
-     * @return float
+     * @return Number|null
      */
-    public function getDiscountValue()
+    public function getDiscountValue(): ?Number
     {
         return $this->value;
     }
 
     /**
-     * @return int|null
+     * @return OrderInvoiceId|null
      */
-    public function getOrderInvoiceId()
+    public function getOrderInvoiceId(): ?OrderInvoiceId
     {
         return $this->orderInvoiceId;
     }
@@ -120,10 +129,24 @@ class AddCartRuleToOrderCommand
     /**
      * @param string $cartRuleName
      */
-    private function assertCartRuleNameIsNotEmpty($cartRuleName)
+    private function assertCartRuleNameIsNotEmpty($cartRuleName): void
     {
         if (!is_string($cartRuleName) || empty($cartRuleName)) {
             throw new OrderConstraintException('Cart rule name cannot be empty');
+        }
+    }
+
+    private function assertCartRuleTypeAndValueCombination(string $cartRuleType, ?string $value): void
+    {
+        $isNullValueAllowed = OrderDiscountType::FREE_SHIPPING === $cartRuleType;
+
+        if (!$isNullValueAllowed && null === $value) {
+            throw new OrderConstraintException(
+                sprintf(
+                    'Null values are not allowed for "%s" discount types.',
+                    [OrderDiscountType::DISCOUNT_AMOUNT, OrderDiscountType::DISCOUNT_PERCENT]
+                )
+            );
         }
     }
 }

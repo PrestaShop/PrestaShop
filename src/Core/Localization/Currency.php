@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -101,13 +101,26 @@ class Currency implements CurrencyInterface
     protected $names;
 
     /**
+     * Currency's patterns, by locale code.
+     *
+     * eg.: $patternsUSD = [
+     *     'fr-FR' => '#,##0.00 ¤',
+     *     'en-EN' => '¤#,##0.00',
+     * ]
+     *
+     * @var string[]
+     */
+    protected $patterns;
+
+    /**
      * @param bool $isActive Is this currency active ?
      * @param float $conversionRate Conversion rate of this currency against the default shop's currency
      * @param string $isoCode Currency's alphabetic ISO code (ISO 4217)
      * @param int $numericIsoCode Currency's numeric ISO code (ISO 4217)
      * @param string[] $symbols Currency's symbols, by locale code
      * @param int $precision Number of decimal digits to use with this currency
-     * @param string [] $names the currency's name, by locale code
+     * @param string[] $names the currency's name, by locale code
+     * @param string[] $patterns the currency's pattern, by locale code
      */
     public function __construct(
         $isActive,
@@ -116,7 +129,8 @@ class Currency implements CurrencyInterface
         $numericIsoCode,
         $symbols,
         $precision,
-        $names
+        $names,
+        $patterns = []
     ) {
         $this->isActive = $isActive;
         $this->conversionRate = $conversionRate;
@@ -125,6 +139,7 @@ class Currency implements CurrencyInterface
         $this->symbols = $symbols;
         $this->precision = $precision;
         $this->names = $names;
+        $this->patterns = $patterns;
     }
 
     /**
@@ -166,7 +181,7 @@ class Currency implements CurrencyInterface
      */
     public function getSymbol($localeCode)
     {
-        if (!array_key_exists($localeCode, $this->symbols)) {
+        if (!isset($this->symbols[$localeCode])) {
             throw new LocalizationException('Unknown locale code: ' . $localeCode);
         }
 
@@ -193,5 +208,15 @@ class Currency implements CurrencyInterface
         }
 
         return $this->names[$localeCode];
+    }
+
+    /**
+     * @param string $localeCode
+     *
+     * @return string
+     */
+    public function getPattern($localeCode)
+    {
+        return $this->patterns[$localeCode] ?? '';
     }
 }

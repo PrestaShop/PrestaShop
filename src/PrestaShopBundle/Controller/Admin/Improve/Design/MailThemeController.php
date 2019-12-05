@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -44,7 +44,9 @@ use PrestaShop\PrestaShop\Core\MailTemplate\ThemeInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\Transformation\MailVariablesTransformation;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Form\Admin\Improve\Design\MailTheme\GenerateMailsType;
+use PrestaShopBundle\Form\Admin\Improve\Design\MailTheme\TranslateMailsBodyType;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use PrestaShopBundle\Service\TranslationService;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -72,6 +74,7 @@ class MailThemeController extends FrameworkBundleAdminController
     {
         $legacyController = $request->attributes->get('_legacy_controller');
         $generateThemeMailsForm = $this->createForm(GenerateMailsType::class);
+        $translateMailsBodyForm = $this->createForm(TranslateMailsBodyType::class);
         /** @var ThemeCatalogInterface $themeCatalog */
         $themeCatalog = $this->get('prestashop.core.mail_template.theme_catalog');
         $mailThemes = $themeCatalog->listThemes();
@@ -83,6 +86,7 @@ class MailThemeController extends FrameworkBundleAdminController
             'help_link' => $this->generateSidebarLink($legacyController),
             'mailThemeConfigurationForm' => $this->getMailThemeFormHandler()->getForm()->createView(),
             'generateMailsForm' => $generateThemeMailsForm->createView(),
+            'translateMailsBodyForm' => $translateMailsBodyForm->createView(),
             'mailThemes' => $mailThemes,
         ]);
     }
@@ -351,6 +355,41 @@ class MailThemeController extends FrameworkBundleAdminController
         }
 
         return $this->redirectToRoute('admin_mail_theme_preview', ['theme' => $theme]);
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    public function translateBodyAction(Request $request)
+    {
+        $translateMailsBodyForm = $this->createForm(TranslateMailsBodyType::class);
+        $translateMailsBodyForm->handleRequest($request);
+
+        if (!$translateMailsBodyForm->isSubmitted() || !$translateMailsBodyForm->isValid()) {
+            $this->addFlash(
+                'error',
+                $this->trans(
+                    'Cannot translate emails body contents',
+                    'Admin.Notifications.Error'
+                )
+            );
+
+            return $this->redirectToRoute('admin_mail_theme_index');
+        }
+
+        $translateData = $translateMailsBodyForm->getData();
+        $language = $translateData['language'];
+        /** @var TranslationService $translationService */
+        $translationService = $this->get('prestashop.service.translation');
+        $locale = $translationService->langToLocale($language);
+
+        return $this->redirectToRoute('admin_international_translation_overview', [
+            'lang' => $language,
+            'locale' => $locale,
+            'type' => 'mails_body',
+        ]);
     }
 
     /**

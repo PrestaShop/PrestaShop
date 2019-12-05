@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -51,6 +51,10 @@ final class ImageColumn extends AbstractColumn
             ->setRequired([
                 'src_field',
             ])
-            ->setAllowedTypes('src_field', 'string');
+            ->setDefaults([
+                'clickable' => true,
+            ])
+            ->setAllowedTypes('src_field', 'string')
+            ->setAllowedTypes('clickable', 'bool');
     }
 }

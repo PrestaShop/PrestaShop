@@ -1,5 +1,5 @@
 {#**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -23,4 +23,10 @@
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 
-{{ record[column.id]|date(column.options.format) }}
+{% set valueToDisplay = record[column.id]|date(column.options.format) %}
+
+{% if record[column.id] == constant('PrestaShop\\PrestaShop\\Core\\Util\\DateTime\\DateTime::NULL_VALUE') %}
+  {% set valueToDisplay = column.options.empty_data %}
+{% endif %}
+
+{{ valueToDisplay }}

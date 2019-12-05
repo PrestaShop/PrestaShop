@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -23,8 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
-require_once __DIR__.'/AppKernel.php';
+require_once __DIR__ . '/AppKernel.php';
 
 use Symfony\Bundle\FrameworkBundle\HttpCache\HttpCache;
 

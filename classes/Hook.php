@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -62,7 +62,7 @@ class HookCore extends ObjectModel
         'table' => 'hook',
         'primary' => 'id_hook',
         'fields' => array(
-            'name' => array('type' => self::TYPE_STRING, 'validate' => 'isHookName', 'required' => true, 'size' => 64),
+            'name' => array('type' => self::TYPE_STRING, 'validate' => 'isHookName', 'required' => true, 'size' => 191),
             'title' => array('type' => self::TYPE_STRING, 'validate' => 'isGenericName'),
             'description' => array('type' => self::TYPE_HTML, 'validate' => 'isCleanHtml'),
             'position' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),

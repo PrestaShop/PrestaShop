@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -74,20 +74,6 @@ class FrameworkBundleAdminController extends Controller
             'is_shop_context' => (new Context())->isShopContext(),
             'layoutTitle' => empty($this->layoutTitle) ? '' : $this->trans($this->layoutTitle, 'Admin.Navigation.Menu'),
         ];
-    }
-
-    public function hashUpdateJsAction($hash)
-    {
-        $contents = file_get_contents('http://localhost:8080/' . $hash . '.hot-update.js');
-
-        return new Response($contents);
-    }
-
-    public function hashUpdateJsonAction($hash)
-    {
-        $contents = file_get_contents('http://localhost:8080/' . $hash . '.hot-update.json');
-
-        return new Response($contents);
     }
 
     /**

@@ -1,5 +1,5 @@
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -27,4 +27,6 @@ export default {
   manufacturerAddressCountrySelect: '#manufacturer_address_id_country',
   manufacturerAddressStateSelect: '#manufacturer_address_id_state',
   manufacturerAddressStateBlock: '.js-manufacturer-address-state',
+  manufacturerAddressDniInput: '#manufacturer_address_dni',
+  manufacturerAddressDniInputLabel: 'label[for="manufacturer_address_dni"]',
 };

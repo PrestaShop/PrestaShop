@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -29,7 +29,8 @@ namespace PrestaShop\PrestaShop\Adapter\Address\CommandHandler;
 use PrestaShop\PrestaShop\Adapter\Address\AbstractAddressHandler;
 use PrestaShop\PrestaShop\Core\Domain\Address\Command\BulkDeleteAddressCommand;
 use PrestaShop\PrestaShop\Core\Domain\Address\CommandHandler\BulkDeleteAddressHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Address\Exception\DeleteAddressException;
+use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressException;
+use PrestaShop\PrestaShop\Core\Domain\Address\Exception\BulkDeleteAddressException;
 
 /**
  * Handles command which deletes addresses in bulk action
@@ -38,18 +39,27 @@ final class BulkDeleteAddressHandler extends AbstractAddressHandler implements B
 {
     /**
      * {@inheritdoc}
+     *
+     * @throws BulkDeleteAddressException
      */
     public function handle(BulkDeleteAddressCommand $command)
     {
-        foreach ($command->getAdressIds() as $addressId) {
-            $address = $this->getAddress($addressId);
+        $errors = [];
 
-            if (!$this->deleteAddress($address)) {
-                throw new DeleteAddressException(
-                    sprintf('Cannot delete Address object with id "%s".', $addressId->getValue()),
-                    DeleteAddressException::FAILED_BULK_DELETE
-                );
+        foreach ($command->getAdressIds() as $addressId) {
+            try {
+                $address = $this->getAddress($addressId);
+
+                if (!$this->deleteAddress($address)) {
+                    $errors[] = $address->id;
+                }
+            } catch (AddressException $e) {
+                $errors[] = $addressId->getValue();
             }
+        }
+
+        if (!empty($errors)) {
+            throw new BulkDeleteAddressException($errors, 'Failed to delete all of selected addresses');
         }
     }
 }

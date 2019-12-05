@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -36,5 +36,5 @@ interface UpdateInvoiceNoteHandlerInterface
     /**
      * @param UpdateInvoiceNoteCommand $command
      */
-    public function handle(UpdateInvoiceNoteCommand $command);
+    public function handle(UpdateInvoiceNoteCommand $command): void;
 }

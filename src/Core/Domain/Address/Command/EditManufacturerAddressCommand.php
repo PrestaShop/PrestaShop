@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -98,6 +98,11 @@ class EditManufacturerAddressCommand
      * @var string|null
      */
     private $other;
+
+    /**
+     * @var string|null
+     */
+    private $dni;
 
     /**
      * @param int $addressId
@@ -318,6 +323,22 @@ class EditManufacturerAddressCommand
     public function setOther($other)
     {
         $this->other = $other;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getDni()
+    {
+        return $this->dni;
+    }
+
+    /**
+     * @param string|null $dni
+     */
+    public function setDni($dni)
+    {
+        $this->dni = $dni;
     }
 
     /**

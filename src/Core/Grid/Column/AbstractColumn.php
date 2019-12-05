@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -114,8 +114,10 @@ abstract class AbstractColumn implements ColumnInterface
         $resolver
             ->setDefaults([
                 'sortable' => true,
+                'clickable' => false,
             ])
-            ->setAllowedTypes('sortable', 'bool');
+            ->setAllowedTypes('sortable', 'bool')
+            ->setAllowedTypes('clickable', 'bool');
     }
 
     /**

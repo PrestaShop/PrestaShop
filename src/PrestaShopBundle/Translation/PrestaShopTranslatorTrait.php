@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -163,8 +163,8 @@ trait PrestaShopTranslatorTrait
         $moduleName = strtolower($domainParts[1]);
         $sourceFile = (!empty($domainParts[2])) ? strtolower($domainParts[2]) : $moduleName;
 
-        // translate using the legacy system WITHOUT fallback to the new system (to avoid infinite loop)
-        return (new LegacyTranslator())->translate($moduleName, $message, $sourceFile, $parameters, false, $locale, false);
+        // translate using the legacy system WITHOUT fallback and escape to the new system (to avoid infinite loop)
+        return (new LegacyTranslator())->translate($moduleName, $message, $sourceFile, $parameters, false, $locale, false, false);
     }
 
     /**

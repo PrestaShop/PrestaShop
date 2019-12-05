@@ -1,5 +1,5 @@
 {#**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -37,7 +37,7 @@
     'desc': 'Export current theme'|trans({}, 'Admin.Design.Feature'),
     'icon': 'cloud_download'
   }
-} %}
+  } %}
 
 {% block content %}
   <div id="themes-logo-page">
@@ -53,7 +53,7 @@
         {% endif %}
 
         {% if isInstalledRtlLanguage %}
-            {% include '@PrestaShop/Admin/Improve/Design/Theme/Blocks/rtl_configuration.html.twig' %}
+          {% include '@PrestaShop/Admin/Improve/Design/Theme/Blocks/rtl_configuration.html.twig' %}
         {% endif %}
 
         {{ form_start(shopLogosForm.shop_logos, {'action': path('admin_themes_upload_logos')}) }}
@@ -74,7 +74,7 @@
               <div class="clearfix">&nbsp;</div>
             </div>
           </div>
-        {{ form_rest(shopLogosForm.shop_logos) }}
+          {{ form_rest(shopLogosForm.shop_logos) }}
         {{ form_end(shopLogosForm.shop_logos) }}
 
         <div class="card">
@@ -84,13 +84,14 @@
           <div class="card-body row">
 
             {% embed '@PrestaShop/Admin/Improve/Design/Theme/Blocks/Partials/theme_card.html.twig' with {
-              'themeName': currentlyUsedTheme.name,
+              'themeName': currentlyUsedTheme.get('display_name'),
               'themeVersion': currentlyUsedTheme.get('version'),
               'themeAuthor': currentlyUsedTheme.get('author.name'),
+              'themeAuthorUrl': theme.get('author.url'),
               'isActive': true
-            } %}
+              } %}
               {% block image %}
-                <img src="{{ baseShopUrl }}{{ currentlyUsedTheme.get('preview') }}" alt="{{ currentlyUsedTheme.name }}">
+                <img src="{{ baseShopUrl }}{{ currentlyUsedTheme.get('preview') }}" alt="{{ currentlyUsedTheme.get('display_name')   }}">
               {% endblock %}
               {% block button_container %}
                 <button class="btn action-button">
@@ -103,13 +104,14 @@
             {% if notUsedThemes is not empty %}
               {% for theme in notUsedThemes %}
                 {% embed '@PrestaShop/Admin/Improve/Design/Theme/Blocks/Partials/theme_card.html.twig' with {
-                  'themeName': theme.name,
+                  'themeName': theme.get('display_name'),
                   'themeVersion': theme.get('version'),
                   'themeAuthor': theme.get('author.name'),
+                  'themeAuthorUrl': theme.get('author.url'),
                   'isActive': false
-                }  %}
+                  }  %}
                   {% block image %}
-                    <img src="{{ baseShopUrl }}{{ theme.get('preview') }}" alt="{{ theme.name }}">
+                    <img src="{{ baseShopUrl }}{{ theme.get('preview') }}" alt="{{ theme.get('display_name') }}">
                   {% endblock %}
                   {% block button_container %}
                     <form action="{{ path('admin_themes_enable', {'themeName': theme.name}) }}" method="post" class="d-inline">
@@ -139,7 +141,7 @@
 
             {% embed '@PrestaShop/Admin/Improve/Design/Theme/Blocks/Partials/theme_catalog_card.html.twig' %}
               {% block image %}
-                <img src="{{ asset('themes/new-theme/scss/img/pages/themes/icon_themes.png') }}" alt="{{ 'Visit the theme catalog'|trans({}, 'Admin.Design.Feature') }}">
+                <img src="{{ asset('themes/new-theme/public/pages/themes/icon_themes.png') }}" alt="{{ 'Visit the theme catalog'|trans({}, 'Admin.Design.Feature') }}">
               {% endblock %}
 
               {% block description %}

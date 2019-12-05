@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -29,6 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Query\GetCurrencyForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\ExchangeRate;
+use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\Precision;
 
 /**
  * Class CurrencyFormDataProvider
@@ -64,10 +65,15 @@ final class CurrencyFormDataProvider implements FormDataProviderInterface
         $result = $this->queryBus->handle(new GetCurrencyForEditing((int) $id));
 
         return [
+            'id' => $id,
             'iso_code' => $result->getIsoCode(),
+            'names' => $result->getNames(),
+            'symbols' => $result->getSymbols(),
             'exchange_rate' => $result->getExchangeRate(),
+            'precision' => $result->getPrecision(),
             'shop_association' => $result->getAssociatedShopIds(),
             'active' => $result->isEnabled(),
+            'unofficial' => $result->isUnofficial(),
         ];
     }
 
@@ -77,6 +83,7 @@ final class CurrencyFormDataProvider implements FormDataProviderInterface
     public function getDefaultData()
     {
         return [
+            'precision' => Precision::DEFAULT_PRECISION,
             'exchange_rate' => ExchangeRate::DEFAULT_RATE,
             'shop_association' => $this->contextShopIds,
         ];

@@ -1,5 +1,5 @@
 {**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -51,8 +51,8 @@
 {/block}
 
 {block name='head_icons'}
-  <link rel="icon" type="image/vnd.microsoft.icon" href="{$shop.favicon}?{$shop.favicon_update_time}">
-  <link rel="shortcut icon" type="image/x-icon" href="{$shop.favicon}?{$shop.favicon_update_time}">
+  <link rel="icon" type="image/vnd.microsoft.icon" href="{$urls.img_ps_url}{$shop.favicon}?{$shop.favicon_update_time}">
+  <link rel="shortcut icon" type="image/x-icon" href="{$urls.img_ps_url}{$shop.favicon}?{$shop.favicon_update_time}">
 {/block}
 
 {block name='stylesheets'}

@@ -61,3 +61,19 @@ Feature: Cart rule (amount) calculation with multiple cart rules
     When I use the discount "cartrule6"
     Then my cart total should be 147.4 tax included
     Then my cart total using previous calculation method should be 147.4 tax included
+
+  Scenario: One product in my cart, one cart rule for free shipping and one for free gift
+    Given I have an empty default cart
+    Given there is a category named "Awesome"
+    Given shop configuration for "PS_CART_RULE_FEATURE_ACTIVE" is set to 1
+    Given there is a product in the catalog named "product8" with a price of 12.345 and 1000 items in stock
+    Given product "product8" is in category "Awesome"
+    Given there is a cart rule named "cartrule-free-shipping" that applies an amount discount of 0.0 with priority 1, quantity of 1 and quantity per user 1
+    Given cart rule "cartrule-free-shipping" offers free shipping
+    Given there is a cart rule named "cartrule-free-gift" that applies an amount discount of 10.0 with priority 1, quantity of 1 and quantity per user 1
+    Given cart rule "cartrule-free-gift" is restricted to the category "Awesome" with a quantity of 1
+    Given cart rule "cartrule-free-gift" is restricted to product "product8"
+    When I add 1 item of product "product8" in my cart
+    Then my cart total should be precisely 2.345 tax included
+    Then my cart total should be 2.3 tax included
+    Then my cart total using previous calculation method should be 2.3 tax included

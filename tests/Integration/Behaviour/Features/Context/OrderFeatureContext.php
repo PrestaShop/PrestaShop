@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -183,7 +183,7 @@ class OrderFeatureContext extends AbstractPrestaShopFeatureContext
             throw new \RuntimeException(
                 sprintf(
                     'Expects %s, got %s instead',
-                    $discountTaxIncluded,
+                    $discountTaxExcluded,
                     $orderCartRule->value_tax_excl
                 )
             );

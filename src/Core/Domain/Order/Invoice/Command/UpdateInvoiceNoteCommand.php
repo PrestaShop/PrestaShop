@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -26,43 +26,45 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Order\Invoice\Command;
 
+use PrestaShop\PrestaShop\Core\Domain\Order\Invoice\ValueObject\OrderInvoiceId;
+
 /**
  * Adds note for given invoice.
  */
 class UpdateInvoiceNoteCommand
 {
     /**
-     * @var int
+     * @var OrderInvoiceId
      */
     private $orderInvoiceId;
 
     /**
-     * @var string
+     * @var string|null
      */
     private $note;
 
     /**
      * @param int $orderInvoiceId
-     * @param string $note
+     * @param string|null $note
      */
-    public function __construct($orderInvoiceId, $note)
+    public function __construct(int $orderInvoiceId, ?string $note)
     {
-        $this->orderInvoiceId = $orderInvoiceId;
+        $this->orderInvoiceId = new OrderInvoiceId($orderInvoiceId);
         $this->note = $note;
     }
 
     /**
-     * @return int
+     * @return OrderInvoiceId
      */
-    public function getOrderInvoiceId()
+    public function getOrderInvoiceId(): OrderInvoiceId
     {
         return $this->orderInvoiceId;
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getNote()
+    public function getNote(): ?string
     {
         return $this->note;
     }

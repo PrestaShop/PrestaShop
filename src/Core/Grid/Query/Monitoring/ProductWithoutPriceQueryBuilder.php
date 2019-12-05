@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -74,6 +74,11 @@ final class ProductWithoutPriceQueryBuilder extends AbstractProductQueryBuilder
             ->select(1)
             ->from($this->dbPrefix . 'specific_price', 'sp')
             ->andWhere('p.id_product = sp.id_product');
+
+        if ($this->multistoreContextChecker->isSingleShopContext()) {
+            $specPriceSubQuery->andWhere('sp.id_shop = :context_shop_id')
+                ->setParameter('context_shop_id', $this->contextShopId);
+        }
 
         $qb->andWhere('p.price = 0')
             ->andWhere('p.wholesale_price = 0')

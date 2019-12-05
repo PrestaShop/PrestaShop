@@ -1,5 +1,5 @@
 {**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -29,15 +29,17 @@
     <div class="thumbnail-container">
       {block name='product_thumbnail'}
         {if $product.cover}
-          <a href="{$product.canonical_url}" class="thumbnail product-thumbnail">
+          {assign var='coverImage' value=Product::getCover($product->id)}
+          {assign var='coverImageId' value="{$product->id}-{$coverImage.id_image}"}
+          <a href="{$product.url}" class="thumbnail product-thumbnail">
             <img
-              src="{$product.cover.bySize.home_default.url}"
+              src="{$link->getImageLink($product.link_rewrite, $coverImageId)}"
               alt="{if !empty($product.cover.legend)}{$product.cover.legend}{else}{$product.name|truncate:30:'...'}{/if}"
               data-full-size-image-url="{$product.cover.large.url}"
-            />
+              />
           </a>
         {else}
-          <a href="{$product.canonical_url}" class="thumbnail product-thumbnail">
+          <a href="{$product.url}" class="thumbnail product-thumbnail">
             <img src="{$urls.no_picture_image.bySize.home_default.url}" />
           </a>
         {/if}
@@ -46,9 +48,9 @@
       <div class="product-description">
         {block name='product_name'}
           {if $page.page_name == 'index'}
-            <h3 class="h3 product-title" itemprop="name"><a href="{$product.canonical_url}" itemprop="url" content="{$product.canonical_url}">{$product.name|truncate:30:'...'}</a></h3>
+            <h3 class="h3 product-title" itemprop="name"><a href="{$product.url}" itemprop="url" content="{$product.url}">{$product.name|truncate:30:'...'}</a></h3>
           {else}
-            <h2 class="h3 product-title" itemprop="name"><a href="{$product.canonical_url}" itemprop="url" content="{$product.canonical_url}">{$product.name|truncate:30:'...'}</a></h2>
+            <h2 class="h3 product-title" itemprop="name"><a href="{$product.url}" itemprop="url" content="{$product.url}">{$product.name|truncate:30:'...'}</a></h2>
           {/if}
         {/block}
 
@@ -58,8 +60,7 @@
               {if $product.has_discount}
                 {hook h='displayProductPriceBlock' product=$product type="old_price"}
 
-                <span class="sr-only">{l s='Regular price' d='Shop.Theme.Catalog'}</span>
-                <span class="regular-price">{$product.regular_price}</span>
+                <span class="regular-price" aria-label="{l s='Regular price' d='Shop.Theme.Catalog'}">{$product.regular_price}</span>
                 {if $product.discount_type === 'percentage'}
                   <span class="discount-percentage discount-product">{$product.discount_percentage}</span>
                 {elseif $product.discount_type === 'amount'}
@@ -69,8 +70,7 @@
 
               {hook h='displayProductPriceBlock' product=$product type="before_price"}
 
-              <span class="sr-only">{l s='Price' d='Shop.Theme.Catalog'}</span>
-              <span class="price">{$product.price}</span>
+              <span class="price" aria-label="{l s='Price' d='Shop.Theme.Catalog'}">{$product.price}</span>
               <div itemprop="offers" itemscope itemtype="http://schema.org/Offer" class="invisible">
                 <meta itemprop="priceCurrency" content="{$currency.iso_code}" />
                 <meta itemprop="price" content="{$product.price_amount}" />

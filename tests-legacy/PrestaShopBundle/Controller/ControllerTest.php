@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -128,7 +128,6 @@ class ControllerTest extends TestCase
             array('AdminAttributesGroupsController'),
             array('AdminNotFoundController'),
             array('AdminFeaturesController'),
-            array('AdminOrderMessageController'),
             array('AdminSearchEnginesController'),
             array('AdminGendersController'),
             array('AdminTagsController'),
@@ -150,8 +149,7 @@ class ControllerTest extends TestCase
 
     protected function declareRequiredConstants()
     {
-        $configDirectory = __DIR__ . '/../../../app/config';
-        $configuration = require_once $configDirectory . '/parameters.php';
+        $configuration = require_once _PS_CACHE_DIR_ . 'appParameters.php';
 
         if (defined('_PS_BO_ALL_THEMES_DIR_')) {
             return;
@@ -311,6 +309,7 @@ class ControllerTest extends TestCase
     protected function prophesizeLink()
     {
         $linkProphecy = $this->prophesize(Link::class);
+        $linkProphecy->getTabLink(Argument::type('array'))->willReturn('/link');
         $linkProphecy->getAdminLink(Argument::any(), Argument::cetera())->willReturn('/link');
 
         return $linkProphecy;

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -30,6 +30,7 @@ use OrderInvoice;
 use PrestaShop\PrestaShop\Core\Domain\Order\Invoice\Command\UpdateInvoiceNoteCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Invoice\CommandHandler\UpdateInvoiceNoteHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Order\Invoice\Exception\InvoiceException;
+use PrestaShop\PrestaShop\Core\Domain\Order\Invoice\Exception\InvoiceNotFoundException;
 use Validate;
 
 /**
@@ -40,13 +41,16 @@ final class UpdateInvoiceNoteHandler implements UpdateInvoiceNoteHandlerInterfac
     /**
      * {@inheritdoc}
      */
-    public function handle(UpdateInvoiceNoteCommand $command)
+    public function handle(UpdateInvoiceNoteCommand $command): void
     {
         $note = $command->getNote();
-        $orderInvoice = new OrderInvoice($command->getOrderInvoiceId());
+        $orderInvoice = new OrderInvoice($command->getOrderInvoiceId()->getValue());
 
-        if (Validate::isLoadedObject($orderInvoice) && Validate::isCleanHtml($note)) {
-            throw new InvoiceException('Failed to upload the invoice and edit its note.');
+        if (!Validate::isLoadedObject($orderInvoice) && Validate::isCleanHtml($note)) {
+            throw new InvoiceNotFoundException(sprintf(
+                'Order invoice with id "%d" was not found',
+                $command->getOrderInvoiceId()->getValue()
+            ));
         }
 
         $orderInvoice->note = $note;

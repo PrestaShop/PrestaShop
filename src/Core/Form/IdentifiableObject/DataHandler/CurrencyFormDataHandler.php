@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -27,8 +27,10 @@
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler;
 
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
-use PrestaShop\PrestaShop\Core\Domain\Currency\Command\AddCurrencyCommand;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Command\AddOfficialCurrencyCommand;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Command\AddUnofficialCurrencyCommand;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\EditCurrencyCommand;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Command\EditUnofficialCurrencyCommand;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
 
 /**
@@ -54,13 +56,26 @@ final class CurrencyFormDataHandler implements FormDataHandlerInterface
      */
     public function create(array $data)
     {
-        $command = new AddCurrencyCommand(
-            $data['iso_code'],
-            (float) $data['exchange_rate'],
-            $data['active']
-        );
+        if ($data['unofficial']) {
+            $command = new AddUnofficialCurrencyCommand(
+                $data['iso_code'],
+                (float) $data['exchange_rate'],
+                $data['active']
+            );
+        } else {
+            $command = new AddOfficialCurrencyCommand(
+                $data['iso_code'],
+                (float) $data['exchange_rate'],
+                $data['active']
+            );
+        }
 
-        $command->setShopIds(is_array($data['shop_association']) ? $data['shop_association'] : []);
+        $command
+            ->setPrecision((int) $data['precision'])
+            ->setLocalizedNames($data['names'])
+            ->setLocalizedSymbols($data['symbols'])
+            ->setShopIds(is_array($data['shop_association']) ? $data['shop_association'] : [])
+        ;
 
         /** @var CurrencyId $currencyId */
         $currencyId = $this->commandBus->handle($command);
@@ -73,12 +88,21 @@ final class CurrencyFormDataHandler implements FormDataHandlerInterface
      */
     public function update($id, array $data)
     {
-        $command = new EditCurrencyCommand((int) $id);
+        if ($data['unofficial']) {
+            $command = new EditUnofficialCurrencyCommand((int) $id);
+            $command
+                ->setIsoCode($data['iso_code'])
+            ;
+        } else {
+            $command = new EditCurrencyCommand((int) $id);
+        }
 
         $command
+            ->setLocalizedNames($data['names'])
+            ->setLocalizedSymbols($data['symbols'])
             ->setExchangeRate((float) $data['exchange_rate'])
+            ->setPrecision((int) $data['precision'])
             ->setIsEnabled($data['active'])
-            ->setIsoCode($data['iso_code'])
             ->setShopIds(is_array($data['shop_association']) ? $data['shop_association'] : [])
         ;
 

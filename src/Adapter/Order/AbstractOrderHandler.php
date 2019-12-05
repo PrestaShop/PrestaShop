@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -46,6 +46,7 @@ abstract class AbstractOrderHandler
 
         if ($order->id !== $orderId->getValue()) {
             throw new OrderNotFoundException(
+                $orderId,
                 sprintf('Order with id "%d" was not found.', $orderId->getValue())
             );
         }

@@ -1,5 +1,5 @@
 {#**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -119,19 +119,19 @@
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <label class="form-control-label">{{ 'Number of decimals'|trans }}</label>
-                                <div class="col-sm">
-                                    {{ form_errors(generalForm.price_display_precision) }}
-                                    {{ form_widget(generalForm.price_display_precision) }}
-                                    <small class="form-text">{{ 'Choose how many decimals you want to display'|trans({}, 'Admin.Shopparameters.Help') }}</small>
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <label class="form-control-label">{{ 'Display brands and suppliers'|trans }}</label>
+                                <label class="form-control-label">{{ 'Display suppliers'|trans }}</label>
                                 <div class="col-sm">
                                     {{ form_errors(generalForm.display_suppliers) }}
                                     {{ form_widget(generalForm.display_suppliers) }}
-                                    <small class="form-text">{{ 'Enable brands and suppliers pages on your front office even when their respective modules are disabled.'|trans({}, 'Admin.Shopparameters.Help') }}</small>
+                                    <small class="form-text">{{ 'Enable suppliers page on your front office even when its module is disabled.'|trans({}, 'Admin.Shopparameters.Help') }}</small>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="form-control-label">{{ 'Display brands'|trans }}</label>
+                                <div class="col-sm">
+                                    {{ form_errors(generalForm.display_manufacturers) }}
+                                    {{ form_widget(generalForm.display_manufacturers) }}
+                                    <small class="form-text">{{ 'Enable brands page on your front office even when its module is disabled.'|trans({}, 'Admin.Shopparameters.Help') }}</small>
                                 </div>
                             </div>
                             <div class="form-group row">

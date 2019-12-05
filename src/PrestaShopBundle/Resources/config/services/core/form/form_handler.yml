@@ -105,3 +105,27 @@ services:
     factory: 'prestashop.core.form.identifiable_object.handler.form_handler_factory:create'
     arguments:
       - '@prestashop.core.form.identifiable_object.data_handler.manufacturer_address_form_data_handler'
+
+  prestashop.core.form.identifiable_object.handler.supplier_form_handler:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandler'
+    factory: 'prestashop.core.form.identifiable_object.handler.form_handler_factory:create'
+    arguments:
+      - '@prestashop.core.form.identifiable_object.data_handler.supplier_form_data_handler'
+
+  prestashop.core.form.identifiable_object.handler.feature_form_handler:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandler'
+    factory: 'prestashop.core.form.identifiable_object.handler.form_handler_factory:create'
+    arguments:
+      - '@prestashop.core.form.identifiable_object.data_handler.feature_form_data_handler'
+
+  prestashop.core.form.identifiable_object.handler.order_message_form_handler:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandler'
+    factory: 'prestashop.core.form.identifiable_object.handler.form_handler_factory:create'
+    arguments:
+      - '@prestashop.core.form.identifiable_object.data_handler.order_message_form_data_handler'
+
+  prestashop.core.form.identifiable_object.handler.catalog_price_rule_form_handler:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandler'
+    factory: 'prestashop.core.form.identifiable_object.handler.form_handler_factory:create'
+    arguments:
+      - '@prestashop.core.form.identifiable_object.data_handler.catalog_price_rule_form_data_handler'

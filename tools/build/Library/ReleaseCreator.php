@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -125,7 +125,7 @@ class ReleaseCreator
         'admin/(.*/)?config\.rb$',
         'admin/themes/default/sass$',
         //'admin/themes/new\-theme/js$',
-        //'admin/themes/new\-theme/scss$',
+        'admin/themes/new\-theme/scss$',
         'themes/_core$',
         'themes/classic/_dev',
         'themes/webpack\.config\.js$',
@@ -352,8 +352,8 @@ class ReleaseCreator
     {
         $configDefinesPath = $this->tempProjectPath . '/config/defines.inc.php';
         $configDefinesContent = file_get_contents($configDefinesPath);
-        $configDefinesNewContent = preg_replace('/(.*(define).*)_PS_MODE_DEV_(.*);/Ui', 'define(\'_PS_MODE_DEV_\', false);', $configDefinesContent);
-        $configDefinesNewContent = preg_replace('/(.*)_PS_DISPLAY_COMPATIBILITY_WARNING_(.*);/Ui', 'define(\'_PS_DISPLAY_COMPATIBILITY_WARNING_\', false);', $configDefinesNewContent);
+        $configDefinesNewContent = preg_replace('/(.*(define).*)["\']_PS_MODE_DEV_["\'](.*);/Ui', 'define(\'_PS_MODE_DEV_\', false);', $configDefinesContent);
+        $configDefinesNewContent = preg_replace('/(.*)["\']_PS_DISPLAY_COMPATIBILITY_WARNING_["\'](.*);/Ui', 'define(\'_PS_DISPLAY_COMPATIBILITY_WARNING_\', false);', $configDefinesNewContent);
 
         if (!file_put_contents($configDefinesPath, $configDefinesNewContent)) {
             throw new BuildException("Unable to update contents of '$configDefinesPath'");

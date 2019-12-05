@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -26,9 +26,37 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Order\Exception;
 
+use Exception;
+use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
+
 /**
- * Thrown when order is not found.
+ * Thrown when order is not found
  */
 class OrderNotFoundException extends OrderException
 {
+    /**
+     * @var OrderId
+     */
+    private $orderId;
+
+    /**
+     * @param OrderId $orderId
+     * @param string $message
+     * @param int $code
+     * @param Exception|null $previous
+     */
+    public function __construct(OrderId $orderId, $message = '', $code = 0, $previous = null)
+    {
+        parent::__construct($message, $code, $previous);
+
+        $this->orderId = $orderId;
+    }
+
+    /**
+     * @return OrderId
+     */
+    public function getOrderId()
+    {
+        return $this->orderId;
+    }
 }

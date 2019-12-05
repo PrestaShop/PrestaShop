@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -378,13 +378,13 @@ class ReferrerCore extends ObjectModel
             'pages' => (int) $statsVisits['pages'],
             'registrations' => (int) $registrations,
             'orders' => (int) $statsSales['orders'],
-            'sales' => Tools::displayPrice($statsSales['sales'], $currency),
-            'cart' => Tools::displayPrice(((int) $statsSales['orders'] ? $statsSales['sales'] / (int) $statsSales['orders'] : 0), $currency),
+            'sales' => Context::getContext()->getCurrentLocale()->formatPrice($statsSales['sales'], $currency->iso_code),
+            'cart' => Context::getContext()->getCurrentLocale()->formatPrice(((int) $statsSales['orders'] ? $statsSales['sales'] / (int) $statsSales['orders'] : 0), $currency->iso_code),
             'reg_rate' => number_format((int) $statsVisits['uniqs'] ? (int) $registrations / (int) $statsVisits['uniqs'] : 0, 4, '.', ''),
             'order_rate' => number_format((int) $statsVisits['uniqs'] ? (int) $statsSales['orders'] / (int) $statsVisits['uniqs'] : 0, 4, '.', ''),
-            'click_fee' => Tools::displayPrice((int) $statsVisits['visits'] * $referrer->click_fee, $currency),
-            'base_fee' => Tools::displayPrice($statsSales['orders'] * $referrer->base_fee, $currency),
-            'percent_fee' => Tools::displayPrice($statsSales['sales'] * $referrer->percent_fee / 100, $currency),
+            'click_fee' => Context::getContext()->getCurrentLocale()->formatPrice((int) $statsVisits['visits'] * $referrer->click_fee, $currency->iso_code),
+            'base_fee' => Context::getContext()->getCurrentLocale()->formatPrice($statsSales['orders'] * $referrer->base_fee, $currency->iso_code),
+            'percent_fee' => Context::getContext()->getCurrentLocale()->formatPrice($statsSales['sales'] * $referrer->percent_fee / 100, $currency->iso_code),
         );
 
         return json_encode([$jsonArray]);
