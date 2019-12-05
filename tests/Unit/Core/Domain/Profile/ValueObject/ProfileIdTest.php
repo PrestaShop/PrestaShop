@@ -24,47 +24,37 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Profile\ValueObject;
+namespace Tests\Unit\Core\Domain\Profile\ValueObject;
 
+use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Exception\ProfileException;
+use PrestaShop\PrestaShop\Core\Domain\Profile\ValueObject\ProfileId;
 
-/**
- * Class ProfileId
- */
-class ProfileId
+class ProfileIdTest extends TestCase
 {
-    /**
-     * @var int
-     */
-    private $profileId;
-
-    /**
-     * @param int $profileId
-     */
-    public function __construct($profileId)
+    public function testItCreatesProfileWithValidValues()
     {
-        $this->setProfileId($profileId);
+        $profileId = new ProfileId(1);
+
+        $this->assertEquals(1, $profileId->getValue());
     }
 
     /**
-     * @return int
+     * @dataProvider testItExceptionThrownWithInvalidValuesData
      */
-    public function getValue()
+    public function testItExceptionThrownWithInvalidValues($profileId)
     {
-        return $this->profileId;
+        $this->expectException(ProfileException::class);
+        new ProfileId($profileId);
     }
 
-    /**
-     * @param int $profileId
-     */
-    private function setProfileId($profileId)
+    public function testItExceptionThrownWithInvalidValuesData()
     {
-        if (!is_int($profileId) || 0 >= $profileId) {
-            throw new ProfileException(
-                sprintf('Invalid Profile id %s supplied', var_export($profileId, true))
-            );
-        }
-
-        $this->profileId = $profileId;
+        return [
+            ['-1'],
+            ['1.1'],
+            ['a'],
+            ['+'],
+        ];
     }
 }
