@@ -66,12 +66,12 @@
   <td class="cellProductTotalPrice">{{ product.totalPrice }}</td>
   {% if not orderForViewing.delivered %}
     <td class="text-right cellProductActions">
-      <a href="javascript:void(0);"
-         class="tooltip-link js-order-product-edit-btn"
-         data-toggle="pstooltip"
-         data-placement="top"
-         data-original-title="{{ 'Edit'|trans({}, 'Admin.Actions') }}"
-      >
+      <button
+        type="button"
+        class="btn tooltip-link js-order-product-edit-btn"
+        data-toggle="pstooltip"
+        data-placement="top"
+        data-original-title="{{ 'Edit'|trans({}, 'Admin.Actions') }}">
         <i class="material-icons js-order-product-edit-btn"
            data-order-detail-id="{{ product.orderDetailId }}"
            data-product-quantity="{{ product.quantity }}"
@@ -79,19 +79,18 @@
            data-product-price-tax-excl="{{ product.unitPriceTaxExclRaw }}"
            data-tax-rate="{{ product.taxRate }}"
         >edit</i>
-      </a>
-
-      <a href="javascript:void(0);"
-         class="ml-2 tooltip-link js-order-product-delete-btn"
-         data-toggle="pstooltip"
-         data-placement="top"
-         data-order-id="{{ orderForViewing.id }}"
-         data-order-detail-id="{{ product.orderDetailId }}"
-         data-delete-message="{{ 'Are you sure?'|trans({}, 'Admin.Notifications.Warning') }}"
-         data-original-title="{{ 'Delete'|trans({}, 'Admin.Actions') }}"
-      >
+      </button>
+      <button
+        type="button"
+        class="btn tooltip-link js-order-product-delete-btn"
+        data-toggle="pstooltip"
+        data-placement="top"
+        data-order-id="{{ orderForViewing.id }}"
+        data-order-detail-id="{{ product.orderDetailId }}"
+        data-delete-message="{{ 'Are you sure?'|trans({}, 'Admin.Notifications.Warning') }}"
+        data-original-title="{{ 'Delete'|trans({}, 'Admin.Actions') }}">
         <i class="material-icons">delete</i>
-      </a>
+      </button>
     </td>
   {% endif %}
   <td class="text-right">

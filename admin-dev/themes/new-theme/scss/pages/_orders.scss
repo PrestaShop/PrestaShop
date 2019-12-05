@@ -27,6 +27,19 @@
   }
 }
 
+#orderProductsPanel {
+  .cellProductActions button.btn {
+    background-color: transparent;
+    color: $medium-gray;
+    &:hover {
+      color: $primary;
+    }
+  }
+  input[type="number"] {
+    width: 80px;
+  }
+}
+
 $order-block-background-color: #F8F8F8;
 
 .info-block {

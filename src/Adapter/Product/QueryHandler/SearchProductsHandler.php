@@ -117,12 +117,12 @@ final class SearchProductsHandler implements SearchProductsHandlerInterface
         $foundProduct = new FoundProduct(
             $product->id,
             $product->name[$this->contextLangId],
-            $this->contextLocale->formatPrice($priceTaxExcluded, $query->getIsoCode()->getValue()),
+            $this->contextLocale->formatPrice($priceTaxExcluded, $query->getAlphaIsoCode()->getValue()),
             $priceTaxIncluded,
             $priceTaxExcluded,
             $product->getTaxesRate(),
             Product::getQuantity($product->id),
-            $this->getProductCombinations($product, $query->getIsoCode()->getValue()),
+            $this->getProductCombinations($product, $query->getAlphaIsoCode()->getValue()),
             $this->getProductCustomizationFields($product)
         );
 

@@ -67,6 +67,14 @@ class SearchProducts
     }
 
     /**
+     * @return AlphaIsoCode
+     */
+    public function getAlphaIsoCode(): AlphaIsoCode
+    {
+        return $this->alphaIsoCode;
+    }
+
+    /**
      * @return string
      */
     public function getPhrase()
