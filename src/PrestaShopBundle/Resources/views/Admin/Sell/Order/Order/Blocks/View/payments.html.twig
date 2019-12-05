@@ -104,7 +104,7 @@
           </td>
         </tr>
       {% endfor %}
-      <tr>
+      <tr class="d-print-none">
         {{ form_start(addOrderPaymentForm, {'action': path('admin_orders_add_payment', {'orderId': orderForViewing.id})}) }}
           <td>
             {{ form_widget(addOrderPaymentForm.date) }}
