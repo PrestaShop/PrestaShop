@@ -934,7 +934,7 @@ class CategoryCore extends ObjectModel
      * @param int $idLang Language ID
      * @param int $p Page number
      * @param int $n Number of products per page
-     * @param string|null $orderyBy ORDER BY column
+     * @param string|null $orderBy ORDER BY column
      * @param string|null $orderWay Order way
      * @param bool $getTotal If set to true, returns the total number of results only
      * @param bool $active If set to true, finds only active products
@@ -952,7 +952,7 @@ class CategoryCore extends ObjectModel
         $idLang,
         $p,
         $n,
-        $orderyBy = null,
+        $orderBy = null,
         $orderWay = null,
         $getTotal = false,
         $active = true,
@@ -991,29 +991,31 @@ class CategoryCore extends ObjectModel
         }
 
         /** Tools::strtolower is a fix for all modules which are now using lowercase values for 'orderBy' parameter */
-        $orderyBy = Validate::isOrderBy($orderyBy) ? Tools::strtolower($orderyBy) : 'position';
+        $orderBy = Validate::isOrderBy($orderBy) ? Tools::strtolower($orderBy) : 'position';
         $orderWay = Validate::isOrderWay($orderWay) ? Tools::strtoupper($orderWay) : 'ASC';
 
         $orderByPrefix = false;
-        if ($orderyBy == 'id_product' || $orderyBy == 'date_add' || $orderyBy == 'date_upd') {
+        if ($orderBy == 'id_product' || $orderBy == 'date_add' || $orderBy == 'date_upd') {
             $orderByPrefix = 'p';
-        } elseif ($orderyBy == 'name') {
+        } elseif ($orderBy == 'name') {
             $orderByPrefix = 'pl';
-        } elseif ($orderyBy == 'manufacturer' || $orderyBy == 'manufacturer_name') {
+        } elseif ($orderBy == 'manufacturer' || $orderBy == 'manufacturer_name') {
             $orderByPrefix = 'm';
-            $orderyBy = 'name';
-        } elseif ($orderyBy == 'position') {
+            $orderBy = 'name';
+        } elseif ($orderBy == 'position') {
             $orderByPrefix = 'cp';
         }
 
-        if ($orderyBy == 'price') {
-            $orderyBy = 'orderprice';
+        if ($orderBy == 'price') {
+            $orderBy = 'orderprice';
         }
 
         $nbDaysNewProduct = Configuration::get('PS_NB_DAYS_NEW_PRODUCT');
         if (!Validate::isUnsignedInt($nbDaysNewProduct)) {
             $nbDaysNewProduct = 20;
         }
+    
+        $finalOrderBy = $orderBy;
 
         $sql = 'SELECT p.*, product_shop.*, stock.out_of_stock, IFNULL(stock.quantity, 0) AS quantity' . (Combination::isFeatureActive() ? ', IFNULL(product_attribute_shop.id_product_attribute, 0) AS id_product_attribute,
 					product_attribute_shop.minimal_quantity AS product_attribute_minimal_quantity' : '') . ', pl.`description`, pl.`description_short`, pl.`available_now`,
@@ -1049,19 +1051,20 @@ class CategoryCore extends ObjectModel
 
         if ($random === true) {
             $sql .= ' ORDER BY RAND() LIMIT ' . (int) $randomNumberProducts;
-        } else {
-            $sql .= ' ORDER BY ' . (!empty($orderByPrefix) ? $orderByPrefix . '.' : '') . '`' . bqSQL($orderyBy) . '` ' . pSQL($orderWay) . '
+        } elseif ($finalOrderBy != 'orderprice') {
+            $sql .= ' ORDER BY ' . (!empty($orderByPrefix) ? $orderByPrefix . '.' : '') . '`' . bqSQL($orderBy) . '` ' . pSQL($orderWay) . '
 			LIMIT ' . (((int) $p - 1) * (int) $n) . ',' . (int) $n;
         }
-
+    
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql, true, false);
-
+    
         if (!$result) {
-            return array();
+            return false;
         }
-
-        if ($orderyBy == 'orderprice') {
+    
+        if ($finalOrderBy == 'orderprice') {
             Tools::orderbyPrice($result, $orderWay);
+            $result = array_slice($result, (int) (($p - 1) * $n), (int) $n);
         }
 
         // Modify SQL result
