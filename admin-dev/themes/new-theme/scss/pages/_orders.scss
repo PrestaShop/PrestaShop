@@ -28,6 +28,13 @@
 }
 
 #orderProductsPanel {
+  .cellProductActions button.btn {
+    background-color: transparent;
+    color: $medium-gray;
+    &:hover {
+      color: $primary;
+    }
+  }
   input[type="number"] {
     width: 80px;
   }

@@ -120,6 +120,7 @@ admin_orders_update_product:
   methods: [POST]
   defaults:
     _controller: PrestaShopBundle:Admin/Sell/Order/Order:updateProduct
+    _legacy_controller: AdminOrders
   requirements:
     orderId: \d+
     orderDetailId: \d+
