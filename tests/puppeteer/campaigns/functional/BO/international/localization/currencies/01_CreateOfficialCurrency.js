@@ -99,7 +99,7 @@ describe('Create official currency and check it in FO', async () => {
           expect(createdCurrency.exchangeRate).to.contains(Currencies.mad.exchangeRate),
           expect(createdCurrency.enabled).to.be.equal(Currencies.mad.enabled),
         ]);
-      }
+      },
     );
 
     it('should go to FO and check the new currency', async function () {
@@ -117,7 +117,7 @@ describe('Create official currency and check it in FO', async () => {
   });
 
   describe('Disable and check currency in FO', async () => {
-    it(`should filter by iso code of currency '${Currencies.mad.isoCode}`,async function () {
+    it(`should filter by iso code of currency '${Currencies.mad.isoCode}`, async function () {
       await this.pageObjects.currenciesPage.filterTable('input', 'iso_code', Currencies.mad.isoCode);
       const numberOfCurrenciesAfterFilter = await this.pageObjects.currenciesPage.getNumberOfElementInGrid();
       await expect(numberOfCurrenciesAfterFilter).to.be.equal(numberOfCurrencies);
@@ -127,7 +127,7 @@ describe('Create official currency and check it in FO', async () => {
 
     it('should disable currency', async function () {
       const isActionPerformed = await this.pageObjects.currenciesPage.updateEnabledValue(1, false);
-      if(isActionPerformed) {
+      if (isActionPerformed) {
         const resultMessage = await this.pageObjects.currenciesPage.getTextContent(
           this.pageObjects.currenciesPage.alertSuccessBlockParagraph,
         );

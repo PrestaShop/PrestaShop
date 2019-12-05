@@ -50,7 +50,7 @@ module.exports = class Currencies extends BOBasePage {
    * Go to languages page
    * @return {Promise<void>}
    */
-  async goToSubTabLanguages(){
+  async goToSubTabLanguages() {
     await this.clickAndWaitForNavigation(this.languagesNavItemLink);
   }
 
@@ -58,7 +58,7 @@ module.exports = class Currencies extends BOBasePage {
    * Go to currencies page
    * @return {Promise<void>}
    */
-  async goToSubTabLocalization(){
+  async goToSubTabLocalization() {
     await this.clickAndWaitForNavigation(this.localizationNavItemLink);
   }
 
@@ -66,7 +66,7 @@ module.exports = class Currencies extends BOBasePage {
    * Go to geolocation page
    * @return {Promise<void>}
    */
-  async goToSubTabGeolocation(){
+  async goToSubTabGeolocation() {
     await this.clickAndWaitForNavigation(this.geolocationNavItemLink);
   }
 
@@ -151,12 +151,12 @@ module.exports = class Currencies extends BOBasePage {
    */
   async getCurrencyFromTable(row) {
     return {
-      name : await this.getTextColumnFromTableCurrency(row, 'currency'),
+      name: await this.getTextColumnFromTableCurrency(row, 'currency'),
       symbol: await this.getTextColumnFromTableCurrency(row, 'symbol'),
       isoCode: await this.getTextColumnFromTableCurrency(row, 'iso_code'),
       exchangeRate: await this.getTextColumnFromTableCurrency(row, 'conversion_rate'),
       enabled: await this.getToggleColumnValue(row),
-    }
+    };
   }
 
   /**
