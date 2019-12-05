@@ -1,4 +1,3 @@
-const PDFJS = require('pdfjs-dist');
 const fs = require('fs');
 
 module.exports = {
@@ -24,6 +23,21 @@ module.exports = {
       found = await fs.existsSync(`${global.BO.DOWNLOAD_PATH}/${fileName}`);
     }
     return found;
+  },
+
+  /**
+   * Check text existence
+   * @param downloadPath
+   * @param fileName
+   * @param textData
+   * @return boolean, true if exist, false if not
+   */
+  async checkTextExistence(downloadPath, fileName, textData) {
+    try {
+      fs.appendFileSync(`${downloadPath}/${fileName}`, textData);
+    } catch (err) {
+      /* Handle the error */
+    }
   },
 
   /**
