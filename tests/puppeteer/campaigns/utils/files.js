@@ -25,4 +25,19 @@ module.exports = {
     }
     return found;
   },
+
+  /**
+   * Check text existence
+   * @param downloadPath
+   * @param fileName
+   * @param textData
+   * @return boolean, true if exist, false if not
+   */
+  async checkTextExistence(downloadPath, fileName, textData) {
+    try {
+      fs.appendFileSync(`${downloadPath}/${fileName}`, textData);
+    } catch (err) {
+      /* Handle the error */
+    }
+  },
 };

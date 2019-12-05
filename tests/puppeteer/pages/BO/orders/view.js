@@ -21,6 +21,7 @@ module.exports = class Order extends BOBasePage {
     this.statusValidation = '#status tr:nth-child(1) > td:nth-child(2)';
     this.documentTab = '#tabOrder a[href=\'#documents\']';
     this.documentName = '#documents_table tr td:nth-child(2)';
+    this.numberLink = '#documents_table tr td:nth-child(3) a';
   }
 
   /*
@@ -61,5 +62,22 @@ module.exports = class Order extends BOBasePage {
   async getDocumentName() {
     await this.page.click(this.documentTab);
     return this.getTextContent(this.documentName);
+  }
+
+  /**
+   * Get file name
+   * @returns {Promise<void>}
+   */
+  async getFileName() {
+    await this.page.click(this.documentTab);
+    return this.getTextContent(this.numberLink);
+  }
+
+  /**
+   * Download invoice
+   * @returns {Promise<void>}
+   */
+  async downloadInvoice() {
+    await this.page.click(this.numberLink);
   }
 };
