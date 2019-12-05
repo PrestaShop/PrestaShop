@@ -32,9 +32,8 @@
 
 
 {% block content %}
-  <div class="row">
-
-    {% set displayAdminOrderTopHookContent = renderhook('displayAdminOrderTop', {'id_order': orderForViewing.id}) %}
+  <div class="row d-print-none">
+{% set displayAdminOrderTopHookContent = renderhook('displayAdminOrderTop', {'id_order': orderForViewing.id}) %}
 
     {% if displayAdminOrderTopHookContent != '' %}
       <div class="col-md-12">
@@ -47,8 +46,17 @@
     </div>
   </div>
 
-  <div class="row d-none">
+  <div class="row d-none d-print-block mb-4">
     <div class="col-12" id="orderProductsModificationPosition"></div>
+    <div class="col-md-12">
+      {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/print_order_statistics.html.twig' %}
+    </div>
+  </div>
+
+  <div class="row d-none d-print-block mb-4">
+    <div class="col-md-12">
+      {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/print_title.html.twig' %}
+    </div>
   </div>
 
   <div class="row">

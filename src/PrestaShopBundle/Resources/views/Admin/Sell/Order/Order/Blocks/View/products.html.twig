@@ -81,10 +81,10 @@
           </th>
         {% endif %}
         {% if not orderForViewing.delivered %}
-          <th class="text-right product_actions">
+          <th class="text-right product_actions d-print-none">
             <p>{{ 'Actions'|trans({}, 'Admin.Global') }}</p>
           </th>
-        {% endif %}
+          {% endif %}
         <th class="text-center cancel-product-element">
           <p>{{ 'Partial refund'|trans({}, 'Admin.Orderscustomers.Feature') }}</p>
         </th>
@@ -101,6 +101,7 @@
       {% endfor %}
       {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/add_product_row.html.twig' %}
       {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/edit_product_row.html.twig' %}
+
       </tbody>
     </table>
 
