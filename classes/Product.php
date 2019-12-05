@@ -5939,9 +5939,9 @@ class ProductCore extends ObjectModel
         if ($this->deleteCategories() && !empty($ids)) {
             $sql_values = array();
             foreach ($ids as $id) {
-                $pos = 0;
+                $pos = 1;
                 if (array_key_exists((int) $id, $positions_lookup)) {
-                    $pos = (int) $positions_lookup[(int) $id] + 1;
+                    $pos = (int) $positions_lookup[(int) $id];
                 } elseif (array_key_exists((int) $id, $max_position_lookup)) {
                     $pos = (int) $max_position_lookup[(int) $id] + 1;
                 }
