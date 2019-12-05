@@ -81,8 +81,8 @@ export default class OrderProductEdit {
     $productEditRow.find(OrderViewPageMap.productEditPriceTaxInclInput).val(product.price_tax_incl);
     $productEditRow.find(OrderViewPageMap.productEditQuantityInput).val(product.quantity);
     $productEditRow.find(OrderViewPageMap.productEditTaxRateInput).val(product.tax_rate);
-    $productEditRow.find(OrderViewPageMap.productEditActionBtn).attr('data-order-detail-id', this.orderProductId);
-    $productEditRow.find(OrderViewPageMap.productCancelEditBtn).attr('data-order-detail-id', this.orderProductId);
+    $productEditRow.find(OrderViewPageMap.productEditActionBtn).data('orderDetailId', this.orderProductId);
+    $productEditRow.find(OrderViewPageMap.productCancelEditBtn).data('orderDetailId', this.orderProductId);
     $productEditRow.attr('id', `orderProduct_${this.orderProductId}_edit`);
     this.productRow.addClass('d-none').after($productEditRow.removeClass('d-none'));
 
