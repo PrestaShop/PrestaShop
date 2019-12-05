@@ -24,6 +24,10 @@
       flex: 0 0 100%;
       max-width: 100%;
       width: 100%;
+
+      .card, .tab-pane {
+        page-break-inside: avoid;
+      }
     }
 
     .tab-content {
@@ -44,6 +48,21 @@
       .print-title__id {
         color: #8a8a8a;
       }
+    }
+  }
+}
+
+.adminorders {
+  @media print {
+    .header-toolbar {
+      position: initial;
+    }
+
+    #main-div .content-div {
+      // Forced to use an important there to override inline-style added with JS
+      /* stylelint-disable declaration-no-important */
+      padding-top: 0 !important;
+      /* stylelint-enable */
     }
   }
 }
