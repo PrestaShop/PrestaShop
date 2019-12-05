@@ -190,8 +190,6 @@ final class UpdateProductQuantityInCartHandler extends AbstractCartHandler imple
      * @param UpdateProductQuantityInCartCommand $command
      *
      * @return int
-     *
-     * @throws CartException
      */
     private function findPreviousQuantityInCart(Cart $cart, UpdateProductQuantityInCartCommand $command)
     {
@@ -214,6 +212,6 @@ final class UpdateProductQuantityInCartHandler extends AbstractCartHandler imple
             }
         }
 
-        throw new CartException('Could not find cart line');
+        return 0;
     }
 }
