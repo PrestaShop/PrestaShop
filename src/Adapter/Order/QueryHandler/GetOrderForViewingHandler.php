@@ -425,11 +425,9 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
                 $product['unit_price_tax_excl'] :
                 $product['unit_price_tax_incl']
             ;
-            if (!empty($product['customizedDatas'])) {
-                $totalPrice = Tools::ps_round($unitPrice, 2) * $product['customizationQuantityTotal'];
-            } else {
-                $totalPrice = Tools::ps_round($unitPrice, 2) * ($product['product_quantity'] - $product['customizationQuantityTotal']);
-            }
+
+            $totalPrice = Tools::ps_round($unitPrice, 2) *
+                (!empty($product['customizedDatas']) ? $product['customizationQuantityTotal'] : $product['product_quantity']);
 
             $unitPriceFormatted = $this->locale->formatPrice($unitPrice, $currency->iso_code);
             $totalPriceFormatted = $this->locale->formatPrice($totalPrice, $currency->iso_code);
