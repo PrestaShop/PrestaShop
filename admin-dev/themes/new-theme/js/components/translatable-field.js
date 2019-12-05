@@ -25,7 +25,7 @@
 
 import {EventEmitter} from './event-emitter';
 
-const $ = window.$;
+const {$} = window;
 
 /**
  * This class is used to automatically toggle translated fields (displayed with tabs
@@ -51,7 +51,7 @@ class TranslatableField {
   toggleLanguage(event) {
     const localeLink = $(event.target);
     const form = localeLink.closest('form');
-    EventEmitter.emit('languageSelected', {selectedLocale: localeLink.data('locale'), form: form});
+    EventEmitter.emit('languageSelected', {selectedLocale: localeLink.data('locale'), form});
   }
 
   /**
@@ -64,7 +64,7 @@ class TranslatableField {
       const selectedLink = $('.nav-item a.active', navigation);
       const selectedLocale = selectedLink.data('locale');
       if (event.selectedLocale !== selectedLocale) {
-        $('.nav-item a[data-locale="'+event.selectedLocale+'"]', navigation).tab('show');
+        $(`.nav-item a[data-locale="${event.selectedLocale}"]`, navigation).tab('show');
       }
     });
   }

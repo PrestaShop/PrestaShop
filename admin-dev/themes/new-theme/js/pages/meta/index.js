@@ -41,7 +41,7 @@ import FiltersSubmitButtonEnablerExtension
 from '@components/grid/extension/filters-submit-button-enabler-extension';
 import MetaPageNameOptionHandler from '@pages/meta/meta-page-name-option-handler';
 
-const $ = window.$;
+const {$} = window;
 
 $(() => {
   const meta = new Grid('meta');

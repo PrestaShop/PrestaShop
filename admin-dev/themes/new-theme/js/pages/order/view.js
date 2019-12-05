@@ -27,9 +27,9 @@ import OrderViewPageMap from './OrderViewPageMap';
 import OrderShippingManager from './order-shipping-manager';
 import InvoiceNoteManager from './invoice-note-manager';
 import OrderViewPageMessagesHandler from './message/order-view-page-messages-handler';
-import TextWithLengthCounter from "../../components/form/text-with-length-counter"
+import TextWithLengthCounter from '../../components/form/text-with-length-counter';
 
-const $ = window.$;
+const {$} = window;
 
 $(() => {
   const DISCOUNT_TYPE_AMOUNT = 'amount';

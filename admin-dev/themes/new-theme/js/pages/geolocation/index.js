@@ -25,7 +25,7 @@
 
 import ChoiceTable from '@components/choice-table';
 
-const $ = window.$;
+const {$} = window;
 
 $(() => {
   new ChoiceTable();

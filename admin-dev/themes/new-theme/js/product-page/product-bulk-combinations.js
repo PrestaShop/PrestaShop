@@ -1,22 +1,21 @@
 /**
  * Combination bulk actions management
  */
-export default function() {
-
-  var bulkForm = $('#bulk-combinations-container');
-  var deleteCombinationsBtn = $('#delete-combinations');
-  var applyChangesBtn = $('#apply-on-combinations');
-  var syncedCollection = $('[data-uniqid]');
-  var finalPrice = $('#form_step2_price');
-  var finalPriceIT = $('#form_step2_price_ttc');
-  var finalPriceBasics = $('#form_step1_price_shortcut');
-  var finalPriceBasicsIT = $('#form_step1_price_ttc_shortcut');
-  var impactOnPriceSelector = 'input.attribute_priceTE';
-  var finalPriceSelector = '.attribute-finalprice span';
+export default function () {
+  const bulkForm = $('#bulk-combinations-container');
+  const deleteCombinationsBtn = $('#delete-combinations');
+  const applyChangesBtn = $('#apply-on-combinations');
+  const syncedCollection = $('[data-uniqid]');
+  const finalPrice = $('#form_step2_price');
+  const finalPriceIT = $('#form_step2_price_ttc');
+  const finalPriceBasics = $('#form_step1_price_shortcut');
+  const finalPriceBasicsIT = $('#form_step1_price_ttc_shortcut');
+  const impactOnPriceSelector = 'input.attribute_priceTE';
+  const finalPriceSelector = '.attribute-finalprice span';
 
   return {
-    'init': function init() {
-      var that = this;
+    init: function init() {
+      const that = this;
       // stop propagation on buttons
       deleteCombinationsBtn.on('click', (event) => {
         event.preventDefault();
@@ -26,10 +25,10 @@ export default function() {
       applyChangesBtn.on('click', (event) => {
         event.preventDefault();
         that.applyChangesOnCombinations()
-            .hideForm()
-            .resetForm()
-            .unselectCombinations()
-            .submitUpdate();
+          .hideForm()
+          .resetForm()
+          .unselectCombinations()
+          .submitUpdate();
       });
 
       /* if final price change with user interaction, combinations should be impacted */
@@ -51,13 +50,12 @@ export default function() {
       });
 
       syncedCollection.on('DOMSubtreeModified', (event) => {
+        const uniqid = event.target.getAttribute('data-uniqid');
+        const newValue = event.target.innerText;
 
-        var uniqid = event.target.getAttribute('data-uniqid');
-        var newValue = event.target.innerText;
+        const spans = $(`[data-uniqid="${uniqid}"]`);
 
-        var spans = $('[data-uniqid="'+uniqid+'"]');
-
-        spans.each( function( index, element ){
+        spans.each(function (index, element) {
           if ($(this).text() !== newValue) {
             $(this).text(newValue);
           }
@@ -66,32 +64,32 @@ export default function() {
 
       // bulk select animation
       $('#toggle-all-combinations').on('change', (event) => {
-        $('#accordion_combinations td:first-child input[type="checkbox"]').each(function() {
+        $('#accordion_combinations td:first-child input[type="checkbox"]').each(function () {
           $(this).prop('checked', $(event.currentTarget).prop('checked'));
         });
       });
 
       $(document).on('change', '.js-combination', () => {
-        if ($('.bulk-action').attr('aria-expanded') === "false" || !$('.js-combination').is(':checked')) {
+        if ($('.bulk-action').attr('aria-expanded') === 'false' || !$('.js-combination').is(':checked')) {
           $('.js-collapse').collapse('toggle');
         }
         $('span.js-bulk-combinations').text($('input.js-combination:checked').length);
       });
     },
-    'getSelectedCombinations': function getSelectedCombinations() {
-      var combinations = [];
-      var selectedCombinations = Array.from($('#accordion_combinations td:first-child input[type="checkbox"]:checked'));
+    getSelectedCombinations: function getSelectedCombinations() {
+      const combinations = [];
+      const selectedCombinations = Array.from($('#accordion_combinations td:first-child input[type="checkbox"]:checked'));
       selectedCombinations.forEach((combination) => {
-        var combinationId = combination.getAttribute('data-id');
-        var combinationIndex = combination.getAttribute('data-index');
+        const combinationId = combination.getAttribute('data-id');
+        const combinationIndex = combination.getAttribute('data-index');
         combinations.push(new Combination(combinationId, combinationIndex));
       });
 
       return combinations;
     },
-    'applyChangesOnCombinations': function applyChangesOnCombinations() {
-      var values = this.getFormValues();
-      var combinations = this.getSelectedCombinations();
+    applyChangesOnCombinations: function applyChangesOnCombinations() {
+      const values = this.getFormValues();
+      const combinations = this.getSelectedCombinations();
       combinations.forEach((combination) => {
         combination.updateForm(values);
         combination.syncValues(values);
@@ -99,102 +97,102 @@ export default function() {
 
       return this;
     },
-    'deleteCombinations': function deleteCombinations() {
-      var combinations = this.getSelectedCombinations();
-      var combinationsIds = [];
+    deleteCombinations: function deleteCombinations() {
+      const combinations = this.getSelectedCombinations();
+      const combinationsIds = [];
       combinations.forEach((combination) => {
         combinationsIds.push(combination.domId);
       });
 
       modalConfirmation.create(translate_javascripts['Are you sure to delete this?'], null, {
-        onContinue: function() {
-          var deletionURL = $(deleteCombinationsBtn).attr('data');
+        onContinue() {
+          const deletionURL = $(deleteCombinationsBtn).attr('data');
           $.ajax({
             type: 'DELETE',
             data: {
-              'attribute-ids': combinationsIds
+              'attribute-ids': combinationsIds,
             },
             url: deletionURL,
-            beforeSend: function () {
+            beforeSend() {
               $('#create-combinations, #apply-on-combinations, #submit, .btn-submit').attr('disabled', 'disabled');
             },
-            success: function(response) {
+            success(response) {
               showSuccessMessage(response.message);
               refreshTotalCombinations(-1, combinationsIds.length);
               $('span.js-bulk-combinations').text('0');
               combinationsIds.forEach((combinationId) => {
-                var combination = new Combination(combinationId);
+                const combination = new Combination(combinationId);
                 combination.removeFromDOM();
               });
               displayFieldsManager.refresh();
             },
-            error: function(response) {
+            error(response) {
               showErrorMessage(jQuery.parseJSON(response.responseText).message);
             },
-            complete: function () {
+            complete() {
               $('#create-combinations, #apply-on-combinations, #submit, .btn-submit').removeAttr('disabled');
             },
           });
-        }
+        },
       }).show();
     },
-    'getFormValues': function getFormValues() {
-      var values = [];
-      $(bulkForm).find('input').each(function() {
+    getFormValues: function getFormValues() {
+      const values = [];
+      $(bulkForm).find('input').each(function () {
         if ($(this).val() !== '' && $(this).attr('id') !== 'product_combination_bulk__token') {
           values.push({
-            'id': $(this).attr('id'),
-            'value': $(this).val()
+            id: $(this).attr('id'),
+            value: $(this).val(),
           });
         }
       });
       return values;
     },
-    'resetForm': function resetForm() {
+    resetForm: function resetForm() {
       bulkForm.find('input').val('');
 
       return this;
     },
-    'unselectCombinations': function unselectCombinations() {
+    unselectCombinations: function unselectCombinations() {
       // Use of the bulk action button. It has an event listener to unselect all the combinations
       $('#toggle-all-combinations').prop('checked', false);
 
       return this;
     },
-    'hideForm': function toggleForm() {
+    hideForm: function toggleForm() {
       bulkForm.collapse('hide');
 
       return this;
     },
-    'submitUpdate': function submitUpdate() {
-      var globalProductSubmitButton = $('#form'); // @todo: choose a better identifier
+    submitUpdate: function submitUpdate() {
+      const globalProductSubmitButton = $('#form'); // @todo: choose a better identifier
       globalProductSubmitButton.submit();
     },
-    'syncToPricingTab': function syncToPricingTab() {
-      var newPrice = finalPrice.val();
+    syncToPricingTab: function syncToPricingTab() {
+      const newPrice = finalPrice.val();
       $('tr.combination').toArray().forEach((item) => {
-        var jQueryRow = $('#'+item.id);
-        var jQueryFinalPriceEl = jQueryRow.find(finalPriceSelector);
-        var impactOnPriceEl = jQueryRow.find(impactOnPriceSelector);
-        var impactOnPrice = impactOnPriceEl.val();
+        const jQueryRow = $(`#${item.id}`);
+        const jQueryFinalPriceEl = jQueryRow.find(finalPriceSelector);
+        const impactOnPriceEl = jQueryRow.find(impactOnPriceSelector);
+        const impactOnPrice = impactOnPriceEl.val();
 
         jQueryFinalPriceEl.data('price', newPrice);
         // calculate new price
-        var newFinalPrice = new Number(newPrice) + new Number(impactOnPrice);
+        const newFinalPrice = new Number(newPrice) + new Number(impactOnPrice);
         jQueryFinalPriceEl.text(ps_round(newFinalPrice, 6));
       });
-    }
+    },
   };
 }
 
 class Combination {
   constructor(domId, index) {
-    this.inputBulkPattern = "product_combination_bulk_";
-    this.inputPattern = "combination_" + index + "_";
+    this.inputBulkPattern = 'product_combination_bulk_';
+    this.inputPattern = `combination_${index}_`;
     this.domId = domId;
-    this.appId = 'attribute_' + this.domId;
-    this.element = $('#' + this.appId);
-    this.form = $('#combination_form_' + this.domId);
+    this.appId = `attribute_${this.domId}`;
+    this.element = $(`#${this.appId}`);
+    this.form = $(`#combination_form_${this.domId}`);
   }
 
   isSelected() {
@@ -207,12 +205,12 @@ class Combination {
 
   updateForm(values) {
     values.forEach((valueObject) => {
-      var valueId = valueObject.id.substr(this.inputBulkPattern.length);
-      var $field = $('#'+this.convertInput(valueId));
+      const valueId = valueObject.id.substr(this.inputBulkPattern.length);
+      const $field = $(`#${this.convertInput(valueId)}`);
       if ($field.is(':checkbox')) {
-          $field.prop("checked", !!valueObject.value);
+        $field.prop('checked', !!valueObject.value);
       } else {
-          $field.val(valueObject.value);
+        $field.val(valueObject.value);
       }
     });
     return this.form;
@@ -226,30 +224,29 @@ class Combination {
    * @returns {string}
    */
   convertInput(bulkInput) {
-
-    var convertedInput = '';
+    let convertedInput = '';
     switch (bulkInput) {
-      case "quantity":
-      case "reference":
-      case "minimal_quantity":
-      case "low_stock_threshold":
-      case "low_stock_alert":
-        convertedInput = this.inputPattern + 'attribute_' + bulkInput;
+      case 'quantity':
+      case 'reference':
+      case 'minimal_quantity':
+      case 'low_stock_threshold':
+      case 'low_stock_alert':
+        convertedInput = `${this.inputPattern}attribute_${bulkInput}`;
         break;
-      case "cost_price":
-        convertedInput = this.inputPattern + 'attribute_wholesale_price';
+      case 'cost_price':
+        convertedInput = `${this.inputPattern}attribute_wholesale_price`;
         break;
-      case "date_availability":
-        convertedInput = this.inputPattern + 'available_date_attribute';
+      case 'date_availability':
+        convertedInput = `${this.inputPattern}available_date_attribute`;
         break;
-      case "impact_on_weight":
-        convertedInput = this.inputPattern + 'attribute_weight';
+      case 'impact_on_weight':
+        convertedInput = `${this.inputPattern}attribute_weight`;
         break;
-      case "impact_on_price_te":
-        convertedInput = this.inputPattern + 'attribute_price';
+      case 'impact_on_price_te':
+        convertedInput = `${this.inputPattern}attribute_price`;
         break;
-      case "impact_on_price_ti":
-        convertedInput = this.inputPattern + 'attribute_priceTI';
+      case 'impact_on_price_ti':
+        convertedInput = `${this.inputPattern}attribute_priceTI`;
         break;
       default:
     }
@@ -264,19 +261,18 @@ class Combination {
    * @returns {bool}
    */
   syncValues(values) {
-
     values.forEach((valueObject) => {
-      var valueId = valueObject.id.substr(this.inputBulkPattern.length);
-      var value = valueObject.value;
+      let valueId = valueObject.id.substr(this.inputBulkPattern.length);
+      const {value} = valueObject;
 
-      var syncedProperties = [
+      const syncedProperties = [
         'quantity',
-        'impact_on_price_te'
+        'impact_on_price_te',
       ];
 
       if (syncedProperties.indexOf(valueId) !== -1) {
         valueId = valueId === 'quantity' ? 'quantity' : 'price';
-        var input = $(`#attribute_${this.domId} .attribute-${valueId} input`);
+        const input = $(`#attribute_${this.domId} .attribute-${valueId} input`);
         input.val(value);
         input.change();
       }

@@ -23,7 +23,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-const $ = window.$;
+const {$} = window;
 
 /**
  * Handles UI interactions of choice tree
@@ -139,15 +139,15 @@ export default class ChoiceTree {
       icon: {
         expand: 'collapsed-icon',
         collapse: 'expanded-icon',
-      }
+      },
     };
 
     $parentContainer.find('li').each((index, item) => {
       const $item = $(item);
 
       if ($item.hasClass(config.removeClass[action])) {
-          $item.removeClass(config.removeClass[action])
-            .addClass(config.addClass[action]);
+        $item.removeClass(config.removeClass[action])
+          .addClass(config.addClass[action]);
       }
     });
 

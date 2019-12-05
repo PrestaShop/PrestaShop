@@ -23,7 +23,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-const $ = window.$;
+const {$} = window;
 
 class StockManagementOptionHandler {
   constructor() {
@@ -51,10 +51,10 @@ class StockManagementOptionHandler {
     const allowOrderingOosRadios = $('input[name="form[stock][allow_ordering_oos]"]');
 
     if (isStockManagementEnabled) {
-        allowOrderingOosRadios.removeAttr('disabled');
+      allowOrderingOosRadios.removeAttr('disabled');
     } else {
-        allowOrderingOosRadios.val([1]);
-        allowOrderingOosRadios.attr('disabled', 'disabled');
+      allowOrderingOosRadios.val([1]);
+      allowOrderingOosRadios.attr('disabled', 'disabled');
     }
   }
 
@@ -69,10 +69,10 @@ class StockManagementOptionHandler {
     const displayQuantitiesRadio = $('input[name="form[page][display_quantities]"]');
 
     if (isStockManagementEnabled) {
-        displayQuantitiesRadio.removeAttr('disabled');
+      displayQuantitiesRadio.removeAttr('disabled');
     } else {
-        displayQuantitiesRadio.val([0]);
-        displayQuantitiesRadio.attr('disabled', 'disabled');
+      displayQuantitiesRadio.val([0]);
+      displayQuantitiesRadio.attr('disabled', 'disabled');
     }
   }
 }

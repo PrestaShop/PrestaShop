@@ -25,7 +25,7 @@
 
 import createOrderPageMap from './create-order-map';
 
-const $ = window.$;
+const {$} = window;
 
 /**
  * Manupulates UI of Shipping block in Order creation page

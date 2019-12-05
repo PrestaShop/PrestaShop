@@ -25,7 +25,7 @@
 
 import multiStoreRestrictionFieldMap from './multi-store-restriction-field-map';
 
-const $ = window.$;
+const {$} = window;
 
 /**
  * Enables multi store functionality for the page. It includes switch functionality and checkboxes
@@ -35,13 +35,13 @@ export default class MultiStoreRestrictionField {
     $(document).on(
       'change',
       multiStoreRestrictionFieldMap.multiStoreRestrictionCheckbox,
-      e => this._multiStoreRestrictionCheckboxFieldChangeEvent(e)
+      (e) => this._multiStoreRestrictionCheckboxFieldChangeEvent(e),
     );
 
     $(document).on(
       'change',
       multiStoreRestrictionFieldMap.multiStoreRestrictionSwitch,
-      e => this._multiStoreRestrictionSwitchFieldChangeEvent(e)
+      (e) => this._multiStoreRestrictionSwitchFieldChangeEvent(e),
     );
   }
 
@@ -66,7 +66,7 @@ export default class MultiStoreRestrictionField {
    */
   _multiStoreRestrictionSwitchFieldChangeEvent(e) {
     const $currentItem = $(e.currentTarget);
-    const isSelected = 1 === parseInt($currentItem.val(), 10);
+    const isSelected = parseInt($currentItem.val(), 10) === 1;
     const targetFormName = $currentItem.data('targetFormName');
 
     $(`form[name="${targetFormName}"]`).find(multiStoreRestrictionFieldMap.multiStoreRestrictionCheckbox).each((index, el) => {

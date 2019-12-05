@@ -35,7 +35,7 @@ import LinkRowActionExtension from '@components/grid/extension/link-row-action-e
 import FiltersSubmitButtonEnablerExtension
   from '@components/grid/extension/filters-submit-button-enabler-extension';
 
-const $ = window.$;
+const {$} = window;
 
 class SqlManagerPage {
   constructor() {
@@ -66,7 +66,7 @@ class SqlManagerPage {
       .then((response) => {
         $('.js-table-alert').addClass('d-none');
 
-        const columns = response.columns;
+        const {columns} = response;
 
         $table.removeClass('d-none');
         $table.find('tbody').empty();
@@ -79,8 +79,8 @@ class SqlManagerPage {
               .append($('<button>')
                 .addClass('btn btn-sm btn-outline-secondary js-add-db-table-column-to-query-btn')
                 .attr('data-column', column.name)
-                .html($table.data('action-btn'))
-              )
+                .html($table.data('action-btn')),
+              ),
             );
 
           $table.find('tbody').append($row);
@@ -121,7 +121,7 @@ class SqlManagerPage {
    */
   addToQuery(data) {
     const $queryInput = $('#sql_request_sql');
-    $queryInput.val($queryInput.val() + ' ' + data);
+    $queryInput.val(`${$queryInput.val()} ${data}`);
   }
 }
 

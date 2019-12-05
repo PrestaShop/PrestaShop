@@ -25,7 +25,7 @@
 
 import OrderViewPageMap from '../OrderViewPageMap';
 
-const $ = window.$;
+const {$} = window;
 
 /**
  * All actions for order view page messages are registered in this class.
@@ -96,7 +96,5 @@ export default class OrderViewPageMessagesHandler {
         clearInterval(classCheckInterval);
       }
     }, 10);
-
-
   }
 }

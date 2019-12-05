@@ -27,7 +27,7 @@ import UseThemeHandler from './use-theme-handler';
 import MultiStoreRestrictionField from '../../components/multi-store-restriction-field/multi-store-restriction-field';
 import DeleteThemeHandler from './delete-theme-handler';
 
-const $ = window.$;
+const {$} = window;
 
 $(() => {
   new ResetThemeLayoutsHandler();

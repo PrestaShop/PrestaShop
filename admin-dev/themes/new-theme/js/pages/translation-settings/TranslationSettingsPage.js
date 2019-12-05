@@ -23,10 +23,10 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-import FormFieldToggle from "./FormFieldToggle";
+import FormFieldToggle from './FormFieldToggle';
 
 export default class TranslationSettingsPage {
-    constructor() {
-        new FormFieldToggle();
-    }
+  constructor() {
+    new FormFieldToggle();
+  }
 }

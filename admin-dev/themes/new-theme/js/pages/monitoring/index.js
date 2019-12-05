@@ -41,7 +41,7 @@ import ExportToSqlManagerExtension
 import ShowcaseCard from '@components/showcase-card/showcase-card';
 import ShowcaseCardCloseExtension from '@components/showcase-card/extension/showcase-card-close-extension';
 
-const $ = window.$;
+const {$} = window;
 
 $(() => {
   const emptyCategoriesGrid = new Grid('empty_category');

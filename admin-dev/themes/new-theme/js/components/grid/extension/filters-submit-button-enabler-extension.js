@@ -27,7 +27,6 @@
  * Responsible for grid filters search and reset button availability when filter inputs changes.
  */
 export default class FiltersSubmitButtonEnablerExtension {
-
   /**
    * Extend grid
    *

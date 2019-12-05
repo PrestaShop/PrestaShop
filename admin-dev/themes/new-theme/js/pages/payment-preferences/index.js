@@ -25,7 +25,7 @@
 
 import MultipleChoiceTable from '@components/multiple-choice-table';
 
-const $ = window.$;
+const {$} = window;
 
 $(() => {
   new MultipleChoiceTable();

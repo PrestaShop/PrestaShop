@@ -27,17 +27,17 @@ import CountryStateSelectionToggler from '@components/country-state-selection-to
 import ManufacturerAddressMap from '@pages/manufacturer/manufacturer-address-map';
 import CountryDniRequiredToggler from '@components/country-dni-required-toggler';
 
-const $ = window.$;
+const {$} = window;
 
 $(document).ready(() => {
   new CountryStateSelectionToggler(
     ManufacturerAddressMap.manufacturerAddressCountrySelect,
     ManufacturerAddressMap.manufacturerAddressStateSelect,
-    ManufacturerAddressMap.manufacturerAddressStateBlock
+    ManufacturerAddressMap.manufacturerAddressStateBlock,
   );
   new CountryDniRequiredToggler(
     ManufacturerAddressMap.manufacturerAddressCountrySelect,
     ManufacturerAddressMap.manufacturerAddressDniInput,
-    ManufacturerAddressMap.manufacturerAddressDniInputLabel
+    ManufacturerAddressMap.manufacturerAddressDniInputLabel,
   );
 });

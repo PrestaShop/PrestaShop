@@ -23,10 +23,10 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-import ChoiceTree from "../../components/form/choice-tree";
-import AddonsConnector from "../../components/addons-connector";
-import ChangePasswordControl from "../../components/form/change-password-control";
-import employeeFormMap from "./employee-form-map";
+import ChoiceTree from '../../components/form/choice-tree';
+import AddonsConnector from '../../components/addons-connector';
+import ChangePasswordControl from '../../components/form/change-password-control';
+import employeeFormMap from './employee-form-map';
 
 /**
  * Class responsible for javascript actions in employee add/edit page.
@@ -42,7 +42,7 @@ export default class EmployeeForm {
 
     new AddonsConnector(
       employeeFormMap.addonsConnectForm,
-      employeeFormMap.addonsLoginButton
+      employeeFormMap.addonsLoginButton,
     );
 
     new ChangePasswordControl(
@@ -54,7 +54,7 @@ export default class EmployeeForm {
       employeeFormMap.newPasswordInput,
       employeeFormMap.confirmNewPasswordInput,
       employeeFormMap.generatedPasswordDisplayInput,
-      employeeFormMap.passwordStrengthFeedbackContainer
+      employeeFormMap.passwordStrengthFeedbackContainer,
     );
 
     this._initEvents();
@@ -79,12 +79,12 @@ export default class EmployeeForm {
       $.get(
         getTabsUrl,
         {
-          profileId: $(event.currentTarget).val()
+          profileId: $(event.currentTarget).val(),
         },
         (tabs) => {
           this._reloadTabsDropdown(tabs);
         },
-        'json'
+        'json',
       );
     });
   }
@@ -101,29 +101,29 @@ export default class EmployeeForm {
 
     $tabsDropdown.empty();
 
-    for (let key in accessibleTabs) {
-      if (accessibleTabs[key]['children'].length > 0 && accessibleTabs[key]['name']) {
+    for (const key in accessibleTabs) {
+      if (accessibleTabs[key].children.length > 0 && accessibleTabs[key].name) {
         // If tab has children - create an option group and put children inside.
-        const $optgroup = this._createOptionGroup(accessibleTabs[key]['name']);
+        const $optgroup = this._createOptionGroup(accessibleTabs[key].name);
 
-        for (let childKey in accessibleTabs[key]['children']) {
-          if (accessibleTabs[key]['children'][childKey]['name']) {
+        for (const childKey in accessibleTabs[key].children) {
+          if (accessibleTabs[key].children[childKey].name) {
             $optgroup.append(
               this._createOption(
-                accessibleTabs[key]['children'][childKey]['name'],
-                accessibleTabs[key]['children'][childKey]['id_tab'])
+                accessibleTabs[key].children[childKey].name,
+                accessibleTabs[key].children[childKey].id_tab),
             );
           }
         }
 
         $tabsDropdown.append($optgroup);
-      } else if (accessibleTabs[key]['name']) {
+      } else if (accessibleTabs[key].name) {
         // If tab doesn't have children - create an option.
         $tabsDropdown.append(
           this._createOption(
-            accessibleTabs[key]['name'],
-            accessibleTabs[key]['id_tab']
-          )
+            accessibleTabs[key].name,
+            accessibleTabs[key].id_tab,
+          ),
         );
       }
     }
@@ -139,8 +139,7 @@ export default class EmployeeForm {
     const superAdminProfileId = $employeeProfileDropdown.data('admin-profile');
     $(this.shopChoiceTreeSelector)
       .closest('.form-group')
-      .toggleClass('d-none', $employeeProfileDropdown.val() == superAdminProfileId)
-    ;
+      .toggleClass('d-none', $employeeProfileDropdown.val() == superAdminProfileId);
   }
 
   /**

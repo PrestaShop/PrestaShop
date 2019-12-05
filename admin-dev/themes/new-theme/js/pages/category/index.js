@@ -51,7 +51,7 @@ import TranslatableField from '@components/translatable-field';
 import TinyMCEEditor from '@components/tinymce-editor';
 import Serp from '@app/utils/serp/index';
 
-const $ = window.$;
+const {$} = window;
 
 $(() => {
   const categoriesGrid = new Grid('category');

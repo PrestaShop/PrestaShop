@@ -23,7 +23,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-const $ = window.$;
+const {$} = window;
 
 /**
  * Class MetaPageNameOptionHandler is responsible for checking the index page condition - if index page is selected it
@@ -36,7 +36,7 @@ export default class MetaPageNameOptionHandler {
     const currentPage = $(pageNameSelector).val();
     this.setUrlRewriteDisabledStatusByCurrentPage(currentPage);
 
-    $(document).on('change', pageNameSelector, event => this.changePageNameEvent(event));
+    $(document).on('change', pageNameSelector, (event) => this.changePageNameEvent(event));
   }
 
   /**

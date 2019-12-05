@@ -111,7 +111,7 @@ export default class CurrencyForm {
 
   _onCurrencySelectorChange() {
     const selectedISOCode = this.$currencySelector.val();
-    if ('' !== selectedISOCode) {
+    if (selectedISOCode !== '') {
       this.$isUnofficialCheckbox.prop('checked', false);
       this.$isoCodeInput.prop('readonly', true);
       this._resetCurrencyData(selectedISOCode);
@@ -122,8 +122,8 @@ export default class CurrencyForm {
   }
 
   _isUnofficialCurrency() {
-    if ('hidden' === this.$isUnofficialCheckbox.prop('type')) {
-      return '1' === this.$isUnofficialCheckbox.attr('value');
+    if (this.$isUnofficialCheckbox.prop('type') === 'hidden') {
+      return this.$isUnofficialCheckbox.attr('value') === '1';
     }
 
     return this.$isUnofficialCheckbox.prop('checked');

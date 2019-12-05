@@ -23,7 +23,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-const $ = window.$;
+const {$} = window;
 
 /**
  * Handles submit of grid actions
@@ -58,11 +58,11 @@ export default class SubmitBulkActionExtension {
     const $submitBtn = $(event.currentTarget);
     const confirmMessage = $submitBtn.data('confirm-message');
 
-    if (typeof confirmMessage !== "undefined" && 0 < confirmMessage.length && !confirm(confirmMessage)) {
+    if (typeof confirmMessage !== 'undefined' && confirmMessage.length > 0 && !confirm(confirmMessage)) {
       return;
     }
 
-    const $form = $('#' + grid.getId() + '_filter_form');
+    const $form = $(`#${grid.getId()}_filter_form`);
 
     $form.attr('action', $submitBtn.data('form-url'));
     $form.attr('method', $submitBtn.data('form-method'));

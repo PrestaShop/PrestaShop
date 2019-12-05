@@ -23,13 +23,12 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-const $ = window.$;
+const {$} = window;
 
 /**
  * Class DeleteCategoriesBulkActionExtension handles submitting of row action
  */
 export default class DeleteCategoriesBulkActionExtension {
-
   constructor() {
     return {
       extend: (grid) => this.extend(grid),

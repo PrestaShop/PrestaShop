@@ -25,13 +25,12 @@
 
 import resetSearch from '@app/utils/reset_search';
 
-const $ = window.$;
+const {$} = window;
 
 /**
  * Class FiltersResetExtension extends grid with filters resetting
  */
 export default class FiltersResetExtension {
-
   /**
    * Extend grid
    *

@@ -23,7 +23,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-const $ = window.$;
+const {$} = window;
 
 export default class EntityFieldsValidator {
   /**
@@ -48,7 +48,7 @@ export default class EntityFieldsValidator {
     let valid = true;
 
     $('.js-entity-field select').each(function () {
-      let value = $(this).val();
+      const value = $(this).val();
 
       if (value === 'no') {
         return;
@@ -73,10 +73,10 @@ export default class EntityFieldsValidator {
    * @private
    */
   static _checkRequiredFields() {
-    let requiredImportFields = $('.js-import-data-table').data('required-fields');
+    const requiredImportFields = $('.js-import-data-table').data('required-fields');
 
-    for (let key in requiredImportFields) {
-      if (0 === $(`option[value="${requiredImportFields[key]}"]:selected`).length) {
+    for (const key in requiredImportFields) {
+      if ($(`option[value="${requiredImportFields[key]}"]:selected`).length === 0) {
         $('.js-missing-column-warning').removeClass('d-none');
         $('.js-missing-column').text($(`option[value="${requiredImportFields[key]}"]:first`).text());
 

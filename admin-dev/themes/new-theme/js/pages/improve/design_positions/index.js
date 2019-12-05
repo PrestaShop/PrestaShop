@@ -25,7 +25,7 @@
 
 import PositionsListHandler from './positions-list-handler';
 
-const $ = window.$;
+const {$} = window;
 
 $(() => {
   new PositionsListHandler();

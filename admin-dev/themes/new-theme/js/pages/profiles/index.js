@@ -23,10 +23,10 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-import ProfilesPage from "./ProfilesPage";
+import ProfilesPage from './ProfilesPage';
 
-const $ = window.$;
+const {$} = window;
 
 $(() => {
-  new ProfilesPage;
+  new ProfilesPage();
 });

@@ -25,7 +25,7 @@
 
 import TinyMCEEditor from '@components/tinymce-editor';
 
-const $ = window.$;
+const {$} = window;
 
 $(() => {
   new TinyMCEEditor();

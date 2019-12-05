@@ -23,8 +23,6 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-const $ = window.$;
-
 import PreviewOpener from '@components/form/preview-opener';
 import ChoiceTree from '@components/form/choice-tree';
 import TaggableField from '@components/taggable-field';
@@ -33,6 +31,8 @@ import textToLinkRewriteCopier from '@components/text-to-link-rewrite-copier';
 import TranslatableField from '@components/translatable-field';
 import TinyMCEEditor from '@components/tinymce-editor';
 import Serp from '@app/utils/serp/index';
+
+const {$} = window;
 
 $(() => {
   new ChoiceTree('#cms_page_page_category_id');

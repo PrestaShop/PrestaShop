@@ -23,7 +23,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-const $ = window.$;
+const {$} = window;
 
 /**
  * Class ExportToSqlManagerExtension extends grid with exporting query to SQL Manager
@@ -47,10 +47,10 @@ export default class ExportToSqlManagerExtension {
    * @private
    */
   _onShowSqlQueryClick(grid) {
-    const $sqlManagerForm = $('#' + grid.getId() + '_common_show_query_modal_form');
+    const $sqlManagerForm = $(`#${grid.getId()}_common_show_query_modal_form`);
     this._fillExportForm($sqlManagerForm, grid);
 
-    const $modal = $('#' + grid.getId() + '_grid_common_show_query_modal');
+    const $modal = $(`#${grid.getId()}_grid_common_show_query_modal`);
     $modal.modal('show');
 
     $modal.on('click', '.btn-sql-submit', () => $sqlManagerForm.submit());
@@ -64,7 +64,7 @@ export default class ExportToSqlManagerExtension {
    * @private
    */
   _onExportSqlManagerClick(grid) {
-    const $sqlManagerForm = $('#' + grid.getId() + '_common_show_query_modal_form');
+    const $sqlManagerForm = $(`#${grid.getId()}_common_show_query_modal_form`);
 
     this._fillExportForm($sqlManagerForm, grid);
 
@@ -100,11 +100,11 @@ export default class ExportToSqlManagerExtension {
     $breadcrumbs.each((i, item) => {
       const $breadcrumb = $(item);
 
-      const breadcrumbTitle = 0 < $breadcrumb.find('a').length ?
-        $breadcrumb.find('a').text() :
-        $breadcrumb.text();
+      const breadcrumbTitle = $breadcrumb.find('a').length > 0
+        ? $breadcrumb.find('a').text()
+        : $breadcrumb.text();
 
-      if (0 < name.length) {
+      if (name.length > 0) {
         name = name.concat(' > ');
       }
 

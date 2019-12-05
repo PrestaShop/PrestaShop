@@ -25,11 +25,11 @@
 
 export default function () {
   function updateVisibilityIcons(domainActions) {
-    let visibilityOffIcon = domainActions.find('.visibility-off');
-    let visibilityOnIcon = domainActions.find('.visibility-on');
-    let showMessagesButton = domainActions.find('.btn-show-messages');
-    let hideMessagesButton = domainActions.find('.btn-hide-messages');
-    let expandedMessages = visibilityOffIcon.hasClass('hide');
+    const visibilityOffIcon = domainActions.find('.visibility-off');
+    const visibilityOnIcon = domainActions.find('.visibility-on');
+    const showMessagesButton = domainActions.find('.btn-show-messages');
+    const hideMessagesButton = domainActions.find('.btn-hide-messages');
+    const expandedMessages = visibilityOffIcon.hasClass('hide');
     if (expandedMessages) {
       visibilityOffIcon.removeClass('hide');
       visibilityOnIcon.addClass('hide');
@@ -44,17 +44,17 @@ export default function () {
   }
 
   function updateMissingTranslationsWarning(domainActions) {
-    let subdomain = domainActions.parent().next('.subdomains');
-    let missingTranslations = subdomain.find('[data-missing-translations]');
+    const subdomain = domainActions.parent().next('.subdomains');
+    const missingTranslations = subdomain.find('[data-missing-translations]');
     let totalMissingTranslations = 0;
 
-    $(missingTranslations).each(function (index, element) {
-      totalMissingTranslations = totalMissingTranslations + parseInt($(element).attr('data-missing-translations'), 10);
+    $(missingTranslations).each((index, element) => {
+      totalMissingTranslations += parseInt($(element).attr('data-missing-translations'), 10);
     });
 
     if (totalMissingTranslations > 0) {
-      let missingTranslationsWarning = domainActions.find('.missing-translations');
-      let warningMessage = missingTranslationsWarning .text();
+      const missingTranslationsWarning = domainActions.find('.missing-translations');
+      let warningMessage = missingTranslationsWarning.text();
       warningMessage = warningMessage.replace('%d', totalMissingTranslations);
       missingTranslationsWarning.text(warningMessage);
       missingTranslationsWarning.removeClass('hide');
@@ -66,9 +66,9 @@ export default function () {
   let allDomainsMissingTranslations = 0;
 
   $('.domain-first-part').each((index, domainToggler) => {
-    let domainActions = $(domainToggler).find('.domain-actions');
+    const domainActions = $(domainToggler).find('.domain-actions');
 
-    allDomainsMissingTranslations = allDomainsMissingTranslations + updateMissingTranslationsWarning(domainActions);
+    allDomainsMissingTranslations += updateMissingTranslationsWarning(domainActions);
 
     $(domainToggler).click((event) => {
       let domainTitle;
@@ -90,22 +90,22 @@ export default function () {
     });
   });
 
-  let totalTranslations = $('#jetsContent form').length;
+  const totalTranslations = $('#jetsContent form').length;
   (function (totalTranslations, totalRemainingTranslations) {
-    let totalTranslationsTemplate = $('.summary .total-translations').attr('data-template') ;
-    let remainingTranslationsTemplate = $('.summary .total-remaining-translations').attr('data-template') ;
+    const totalTranslationsTemplate = $('.summary .total-translations').attr('data-template');
+    const remainingTranslationsTemplate = $('.summary .total-remaining-translations').attr('data-template');
 
     if (totalRemainingTranslations > 0) {
-      let remainingTranslationsMessage = remainingTranslationsTemplate.replace('%d', totalRemainingTranslations);
+      const remainingTranslationsMessage = remainingTranslationsTemplate.replace('%d', totalRemainingTranslations);
       $('.total-remaining-translations').text(remainingTranslationsMessage);
       $('.summary .separator').removeClass('hide');
     }
 
     if (totalTranslationsTemplate) {
-      let totalTranslationsMessages = totalTranslationsTemplate.replace('%d', totalTranslations);
+      const totalTranslationsMessages = totalTranslationsTemplate.replace('%d', totalTranslations);
       $('.summary .total-translations').text(totalTranslationsMessages);
     }
-  })(totalTranslations, allDomainsMissingTranslations);
+  }(totalTranslations, allDomainsMissingTranslations));
 
   $('.domain-actions').click((event) => {
     let domainActions = $(event.target);
@@ -113,14 +113,14 @@ export default function () {
       domainActions = $(event.target).parent();
     }
 
-    let domainFirstPart = domainActions.prev();
+    const domainFirstPart = domainActions.prev();
     domainFirstPart.click();
   });
 
   $('.btn-expand').click(() => {
     $('.domain-first-part').each((index, domainToggler) => {
-      let domainTitle = $(domainToggler);
-      let isDomainExpanded = domainTitle.find('i').hasClass('expanded');
+      const domainTitle = $(domainToggler);
+      const isDomainExpanded = domainTitle.find('i').hasClass('expanded');
       if (!isDomainExpanded) {
         $(domainTitle.find('i')).click();
       }
@@ -129,8 +129,8 @@ export default function () {
 
   $('.btn-reduce').click(() => {
     $('.domain-first-part').each((index, domainToggler) => {
-      let domainTitle = $(domainToggler);
-      let isDomainExpanded = domainTitle.find('i').hasClass('expanded');
+      const domainTitle = $(domainToggler);
+      const isDomainExpanded = domainTitle.find('i').hasClass('expanded');
       if (isDomainExpanded) {
         $(domainTitle.find('i')).click();
       }

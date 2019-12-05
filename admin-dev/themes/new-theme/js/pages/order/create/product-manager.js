@@ -30,7 +30,7 @@ import {EventEmitter} from '@components/event-emitter';
 import ProductRenderer from '@pages/order/create/product-renderer';
 import Router from '@components/router';
 
-const $ = window.$;
+const {$} = window;
 
 /**
  * Product component Object for "Create order" page
@@ -49,8 +49,8 @@ export default class ProductManager {
     this._initListeners();
 
     return {
-      search: searchPhrase => this._search(searchPhrase),
-      addProductToCart: cartId => this.cartEditor.addProduct(cartId, this._getProductData()),
+      search: (searchPhrase) => this._search(searchPhrase),
+      addProductToCart: (cartId) => this.cartEditor.addProduct(cartId, this._getProductData()),
       removeProductFromCart: (cartId, product) => this.cartEditor.removeProductFromCart(cartId, product),
     };
   }
@@ -61,8 +61,8 @@ export default class ProductManager {
    * @private
    */
   _initListeners() {
-    $(createOrderMap.productSelect).on('change', e => this._initProductSelect(e));
-    $(createOrderMap.combinationsSelect).on('change', e => this._initCombinationSelect(e));
+    $(createOrderMap.productSelect).on('change', (e) => this._initProductSelect(e));
+    $(createOrderMap.combinationsSelect).on('change', (e) => this._initCombinationSelect(e));
 
     this._onProductSearch();
     this._onAddProductToCart();

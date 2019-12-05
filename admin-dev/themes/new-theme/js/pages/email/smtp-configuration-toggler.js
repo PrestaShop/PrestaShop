@@ -23,7 +23,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-const $ = window.$;
+const {$} = window;
 
 /**
  * Class SmtpConfigurationToggler is responsible for showing/hiding SMTP configuration form

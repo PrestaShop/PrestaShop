@@ -31,7 +31,7 @@ import TaggableField from '@components/taggable-field';
 import ChoiceTree from '@components/form/choice-tree';
 import TinyMCEEditor from '@components/tinymce-editor';
 
-const $ = window.$;
+const {$} = window;
 
 $(document).ready(() => {
   const shopChoiceTree = new ChoiceTree('#supplier_shop_association');
