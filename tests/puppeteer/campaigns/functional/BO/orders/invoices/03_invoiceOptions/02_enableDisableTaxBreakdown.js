@@ -204,13 +204,13 @@ describe('Test enable/disable tax breakdown', async () => {
         const cardTitle = await this.pageObjects.orderConfirmationPage
           .getTextContent(this.pageObjects.orderConfirmationPage.orderConfirmationCardTitleH3);
         await expect(cardTitle).to.contains(this.pageObjects.orderConfirmationPage.orderConfirmationCardTitle);
-        page = await this.pageObjects.foBasePage.closePage(browser, 1);
+        page = await this.pageObjects.orderConfirmationPage.closePage(browser, 1);
         this.pageObjects = await init();
       });
     });
 
     describe('Generate the invoice and check the tax Breakdown', async () => {
-      it('should go to the orders page', async function () {
+      it('should go to orders page', async function () {
         await this.pageObjects.boBasePage.goToSubMenu(
           this.pageObjects.boBasePage.ordersParentLink,
           this.pageObjects.boBasePage.ordersLink,
@@ -240,7 +240,7 @@ describe('Test enable/disable tax breakdown', async () => {
         );
         await files.checkTextExistence(
           global.BO.DOWNLOAD_PATH,
-          `${documentName}.pdf`,
+          `${secondInvoiceFileName}.pdf`,
           '20.000 %',
         );
       });
@@ -292,7 +292,7 @@ describe('Test enable/disable tax breakdown', async () => {
         const cardTitle = await this.pageObjects.orderConfirmationPage
           .getTextContent(this.pageObjects.orderConfirmationPage.orderConfirmationCardTitleH3);
         await expect(cardTitle).to.contains(this.pageObjects.orderConfirmationPage.orderConfirmationCardTitle);
-        page = await this.pageObjects.foBasePage.closePage(browser, 1);
+        page = await this.pageObjects.orderConfirmationPage.closePage(browser, 1);
         this.pageObjects = await init();
       });
     });
