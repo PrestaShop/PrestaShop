@@ -76,11 +76,11 @@ final class IssuePartialRefundHandler extends AbstractOrderCommandHandler implem
         $fullQuantityList = [];
 
         foreach ($refunds as $orderDetailId => $refund) {
-            $quantity = $refund['quantity'];
-
-            if (!$quantity) {
+            if (empty($refund['quantity'])) {
                 continue;
             }
+
+            $quantity = $refund['quantity'];
 
             $fullQuantityList[$orderDetailId] = $quantity;
 
