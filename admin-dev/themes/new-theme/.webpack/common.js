@@ -128,11 +128,11 @@ module.exports = {
           options: {
             presets: [
               ['es2015', {modules: false}],
-              ["env", {
-                "useBuiltIns": "usage"
+              ['env', {
+                'useBuiltIns': 'usage'
               }]
             ],
-            "plugins": ["transform-runtime"]
+            'plugins': ['transform-runtime']
           },
         }],
       },

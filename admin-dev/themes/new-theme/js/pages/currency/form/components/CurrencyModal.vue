@@ -67,7 +67,7 @@
 </script>
 
 <style lang="scss" scoped>
-  @import "../../../../../scss/config/_settings.scss";
+  @import '../../../../../scss/config/_settings.scss';
   .modal-header .close {
     font-size: 1.2rem;
     color: $gray-medium;

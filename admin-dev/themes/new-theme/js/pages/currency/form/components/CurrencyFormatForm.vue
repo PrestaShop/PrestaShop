@@ -56,7 +56,11 @@
       };
     },
     props: {
-      language: Object
+      language: {
+        type: Object,
+        required: true,
+        default: () => {},
+      }
     },
     computed: {
       availableFormats() {
