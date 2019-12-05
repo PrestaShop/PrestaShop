@@ -346,7 +346,7 @@ class SupplierCore extends ObjectModel
             $orderBy = 'name';
             $alias = 'm.';
         }
-    
+
         $finalOrderBy = $orderBy;
 
         $sql = 'SELECT p.*, product_shop.*, stock.out_of_stock,
@@ -394,19 +394,19 @@ class SupplierCore extends ObjectModel
 					' . ($active ? ' AND product_shop.`active` = 1' : '') . '
 					' . ($front ? ' AND product_shop.`visibility` IN ("both", "catalog")' : '') . '
 				GROUP BY ps.id_product';
-    
+
         if ($finalOrderBy != 'price') {
             $sql .= '
 				ORDER BY ' . $alias . '`' . bqSQL($orderBy) . '` ' . pSQL($orderWay) . '
 				LIMIT ' . (((int) $p - 1) * (int) $n) . ',' . (int) $n;
         }
-    
+
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql, true, false);
-    
+
         if (!$result) {
             return false;
         }
-    
+
         if ($finalOrderBy == 'price') {
             Tools::orderbyPrice($result, $orderWay);
             $result = array_slice($result, (int) (($p - 1) * $n), (int) $n);

@@ -343,9 +343,9 @@ class SearchCore
         } elseif (in_array($order_by, array('date_upd', 'date_add'))) {
             $alias = 'p.';
         }
-    
+
         $finalOrderBy = $order_by;
-        
+
         $sql = 'SELECT p.*, product_shop.*, stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity,
 				pl.`description_short`, pl.`available_now`, pl.`available_later`, pl.`link_rewrite`, pl.`name`,
 			 image_shop.`id_image` id_image, il.`legend`, m.`name` manufacturer_name ' . $score . ',
@@ -372,14 +372,14 @@ class SearchCore
 				LEFT JOIN `' . _DB_PREFIX_ . 'image_lang` il ON (image_shop.`id_image` = il.`id_image` AND il.`id_lang` = ' . (int) $id_lang . ')
 				WHERE p.`id_product` ' . $product_pool . '
 				GROUP BY product_shop.id_product';
-    
+
         if ($finalOrderBy != 'price') {
             $sql .= ($order_by ? ' ORDER BY  ' . $alias . $order_by : '') . ($order_way ? ' ' . $order_way : '') . '
 				LIMIT ' . (int) (($page_number - 1) * $page_size) . ',' . (int) $page_size;
         }
-    
+
         $result = $db->executeS($sql, true, false);
-    
+
         if ($finalOrderBy == 'price') {
             Tools::orderbyPrice($result, $order_way);
             $result = array_slice($result, (int) (($page_number - 1) * $page_size), (int) $page_size);

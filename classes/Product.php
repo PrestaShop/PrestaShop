@@ -2619,7 +2619,7 @@ class ProductCore extends ObjectModel
             $order_by_prefix = $order_by[0];
             $order_by = $order_by[1];
         }
-    
+
         $finalOrderBy = $order_by;
 
         $nb_days_new_product = (int) Configuration::get('PS_NB_DAYS_NEW_PRODUCT');
@@ -2671,7 +2671,7 @@ class ProductCore extends ObjectModel
             JOIN `' . _DB_PREFIX_ . 'category_group` cg ON (cp.id_category = cg.id_category AND cg.`id_group` ' . (count($groups) ? 'IN (' . implode(',', $groups) . ')' : '=' . (int) Group::getCurrent()->id) . ')
             WHERE cp.`id_product` = p.`id_product`)');
         }
-    
+
         if ($finalOrderBy != 'price') {
             $sql->orderBy((isset($order_by_prefix) ? pSQL($order_by_prefix) . '.' : '') . '`' . pSQL($order_by) . '` ' . pSQL($order_way));
             $sql->limit($nb_products, (int) (($page_number - 1) * $nb_products));
@@ -2682,18 +2682,18 @@ class ProductCore extends ObjectModel
             $sql->leftJoin('product_attribute_shop', 'product_attribute_shop', 'p.`id_product` = product_attribute_shop.`id_product` AND product_attribute_shop.`default_on` = 1 AND product_attribute_shop.id_shop=' . (int) $context->shop->id);
         }
         $sql->join(Product::sqlStock('p', 0));
-    
+
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
-    
+
         if (!$result) {
             return false;
         }
-    
+
         if ($finalOrderBy == 'price') {
             Tools::orderbyPrice($result, $order_way);
             $result = array_slice($result, (int) (($nb_products - 1) * $page_number), (int) $page_number);
         }
-        
+
         $products_ids = array();
         foreach ($result as $row) {
             $products_ids[] = $row['id_product'];
@@ -2906,7 +2906,7 @@ class ProductCore extends ObjectModel
             $order_by = explode('.', $order_by);
             $order_by = pSQL($order_by[0]) . '.`' . pSQL($order_by[1]) . '`';
         }
-    
+
         $finalOrderBy = $order_by;
 
         $sql = '
@@ -2940,19 +2940,19 @@ class ProductCore extends ObjectModel
         ' . ($front ? ' AND product_shop.`visibility` IN ("both", "catalog")' : '') . '
         ' . ((!$beginning && !$ending) ? ' AND p.`id_product` IN (' . ((is_array($tab_id_product) && count($tab_id_product)) ? implode(', ', $tab_id_product) : 0) . ')' : '') . '
         ' . $sql_groups;
-    
+
         if ($finalOrderBy != 'price') {
             $sql .= '
 				ORDER BY ' . (isset($order_by_prefix) ? pSQL($order_by_prefix) . '.' : '') . pSQL($order_by) . ' ' . pSQL($order_way) . '
 				LIMIT ' . (int) (($page_number - 1) * $nb_products) . ', ' . (int) $nb_products;
         }
-    
+
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
-    
+
         if (!$result) {
             return false;
         }
-    
+
         if ($finalOrderBy == 'price') {
             Tools::orderbyPrice($result, $order_way);
             $result = array_slice($result, (int) (($page_number - 1) * $nb_products), (int) $nb_products);

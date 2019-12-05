@@ -1014,7 +1014,7 @@ class CategoryCore extends ObjectModel
         if (!Validate::isUnsignedInt($nbDaysNewProduct)) {
             $nbDaysNewProduct = 20;
         }
-    
+
         $finalOrderBy = $orderBy;
 
         $sql = 'SELECT p.*, product_shop.*, stock.out_of_stock, IFNULL(stock.quantity, 0) AS quantity' . (Combination::isFeatureActive() ? ', IFNULL(product_attribute_shop.id_product_attribute, 0) AS id_product_attribute,
@@ -1055,13 +1055,13 @@ class CategoryCore extends ObjectModel
             $sql .= ' ORDER BY ' . (!empty($orderByPrefix) ? $orderByPrefix . '.' : '') . '`' . bqSQL($orderBy) . '` ' . pSQL($orderWay) . '
 			LIMIT ' . (((int) $p - 1) * (int) $n) . ',' . (int) $n;
         }
-    
+
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql, true, false);
-    
+
         if (!$result) {
             return false;
         }
-    
+
         if ($finalOrderBy == 'orderprice') {
             Tools::orderbyPrice($result, $orderWay);
             $result = array_slice($result, (int) (($p - 1) * $n), (int) $n);
