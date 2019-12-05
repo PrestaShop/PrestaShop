@@ -23,13 +23,12 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-const $ = window.$;
+const {$} = window;
 
 /**
  * Class DeleteCustomerRowActionExtension handles submitting of row action
  */
 export default class DeleteCustomerRowActionExtension {
-
   constructor() {
     return {
       extend: (grid) => this.extend(grid),

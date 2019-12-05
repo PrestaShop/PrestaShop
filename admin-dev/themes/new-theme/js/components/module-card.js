@@ -23,12 +23,11 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-const $ = window.$;
+const {$} = window;
 
-var BOEvent = {
-  on: function(eventName, callback, context) {
-
-    document.addEventListener(eventName, function(event) {
+const BOEvent = {
+  on(eventName, callback, context) {
+    document.addEventListener(eventName, (event) => {
       if (typeof context !== 'undefined') {
         callback.call(context, event);
       } else {
@@ -37,12 +36,12 @@ var BOEvent = {
     });
   },
 
-  emitEvent: function(eventName, eventType) {
-    var _event = document.createEvent(eventType);
+  emitEvent(eventName, eventType) {
+    const _event = document.createEvent(eventType);
     // true values stand for: can bubble, and is cancellable
     _event.initEvent(eventName, true, true);
     document.dispatchEvent(_event);
-  }
+  },
 };
 
 
@@ -52,7 +51,6 @@ var BOEvent = {
  * This is a port of admin-dev/themes/default/js/bundle/module/module_card.js
  */
 export default class ModuleCard {
-
   constructor() {
     /* Selectors for module action links (uninstall, reset, etc...) to add a confirm popin */
     this.moduleActionMenuLinkSelector = 'button.module_action_menu_';
@@ -81,7 +79,7 @@ export default class ModuleCard {
     const self = this;
 
     $(document).on('click', this.forceDeletionOption, function () {
-      const btn = $(self.moduleActionModalUninstallLinkSelector, $("div.module-item-list[data-tech-name='" + $(this).attr("data-tech-name") + "']"));
+      const btn = $(self.moduleActionModalUninstallLinkSelector, $(`div.module-item-list[data-tech-name='${$(this).attr('data-tech-name')}']`));
       if ($(this).prop('checked') === true) {
         btn.attr('data-deletion', 'true');
       } else {
@@ -90,8 +88,8 @@ export default class ModuleCard {
     });
 
     $(document).on('click', this.moduleActionMenuInstallLinkSelector, function () {
-      if ($("#modal-prestatrust").length) {
-        $("#modal-prestatrust").modal('hide');
+      if ($('#modal-prestatrust').length) {
+        $('#modal-prestatrust').modal('hide');
       }
       return self._dispatchPreEvent('install', this) && self._confirmAction('install', this) && self._requestToController('install', $(this));
     });
@@ -118,42 +116,39 @@ export default class ModuleCard {
     });
 
     $(document).on('click', this.moduleActionModalDisableLinkSelector, function () {
-      return self._requestToController('disable', $(self.moduleActionMenuDisableLinkSelector, $("div.module-item-list[data-tech-name='" + $(this).attr("data-tech-name") + "']")));
+      return self._requestToController('disable', $(self.moduleActionMenuDisableLinkSelector, $(`div.module-item-list[data-tech-name='${$(this).attr('data-tech-name')}']`)));
     });
     $(document).on('click', this.moduleActionModalResetLinkSelector, function () {
-      return self._requestToController('reset', $(self.moduleActionMenuResetLinkSelector, $("div.module-item-list[data-tech-name='" + $(this).attr("data-tech-name") + "']")));
+      return self._requestToController('reset', $(self.moduleActionMenuResetLinkSelector, $(`div.module-item-list[data-tech-name='${$(this).attr('data-tech-name')}']`)));
     });
-    $(document).on('click', this.moduleActionModalUninstallLinkSelector, function (e) {
-      $(e.target).parents('.modal').on('hidden.bs.modal', function(event) {
-        return self._requestToController(
-          'uninstall',
-          $(
-            self.moduleActionMenuUninstallLinkSelector,
-            $("div.module-item-list[data-tech-name='" + $(e.target).attr("data-tech-name") + "']")
-          ),
-          $(e.target).attr("data-deletion")
-        );
-      }.bind(e));
+    $(document).on('click', this.moduleActionModalUninstallLinkSelector, (e) => {
+      $(e.target).parents('.modal').on('hidden.bs.modal', ((event) => self._requestToController(
+        'uninstall',
+        $(
+          self.moduleActionMenuUninstallLinkSelector,
+          $(`div.module-item-list[data-tech-name='${$(e.target).attr('data-tech-name')}']`),
+        ),
+        $(e.target).attr('data-deletion'),
+      )));
     });
-  };
+  }
 
   _getModuleItemSelector() {
     if ($(this.moduleItemListSelector).length) {
       return this.moduleItemListSelector;
-    } else {
-      return this.moduleItemGridSelector;
     }
-  };
+    return this.moduleItemGridSelector;
+  }
 
   _confirmAction(action, element) {
-    var modal = $('#' + $(element).data('confirm_modal'));
+    const modal = $(`#${$(element).data('confirm_modal')}`);
     if (modal.length != 1) {
       return true;
     }
     modal.first().modal('show');
 
     return false; // do not allow a.href to reload the page. The confirm modal dialog will do it async if needed.
-  };
+  }
 
   /**
    * Update the content of a modal asking a confirmation for PrestaTrust and open it
@@ -162,17 +157,17 @@ export default class ModuleCard {
    * @return {void}
    */
   _confirmPrestaTrust(result) {
-    var that = this;
-    var modal = this._replacePrestaTrustPlaceholders(result);
+    const that = this;
+    const modal = this._replacePrestaTrustPlaceholders(result);
 
-    modal.find(".pstrust-install").off('click').on('click', function() {
+    modal.find('.pstrust-install').off('click').on('click', () => {
       // Find related form, update it and submit it
-      var install_button = $(that.moduleActionMenuInstallLinkSelector, '.module-item[data-tech-name="' + result.module.attributes.name + '"]');
-      var form = install_button.parent("form");
+      const install_button = $(that.moduleActionMenuInstallLinkSelector, `.module-item[data-tech-name="${result.module.attributes.name}"]`);
+      const form = install_button.parent('form');
       $('<input>').attr({
         type: 'hidden',
         value: '1',
-        name: 'actionParams[confirmPrestaTrust]'
+        name: 'actionParams[confirmPrestaTrust]',
       }).appendTo(form);
 
       install_button.click();
@@ -180,39 +175,39 @@ export default class ModuleCard {
     });
 
     modal.modal();
-  };
+  }
 
   _replacePrestaTrustPlaceholders(result) {
-    var modal = $("#modal-prestatrust");
-    var module = result.module.attributes;
+    const modal = $('#modal-prestatrust');
+    const module = result.module.attributes;
 
     if (result.confirmation_subject !== 'PrestaTrust' || !modal.length) {
       return;
     }
 
-    var alertClass = module.prestatrust.status ? 'success' : 'warning';
+    const alertClass = module.prestatrust.status ? 'success' : 'warning';
 
     if (module.prestatrust.check_list.property) {
-      modal.find("#pstrust-btn-property-ok").show();
-      modal.find("#pstrust-btn-property-nok").hide();
+      modal.find('#pstrust-btn-property-ok').show();
+      modal.find('#pstrust-btn-property-nok').hide();
     } else {
-      modal.find("#pstrust-btn-property-ok").hide();
-      modal.find("#pstrust-btn-property-nok").show();
-      modal.find("#pstrust-buy").attr("href", module.url).toggle(module.url !== null);
+      modal.find('#pstrust-btn-property-ok').hide();
+      modal.find('#pstrust-btn-property-nok').show();
+      modal.find('#pstrust-buy').attr('href', module.url).toggle(module.url !== null);
     }
 
-    modal.find("#pstrust-img").attr({src: module.img, alt: module.name});
-    modal.find("#pstrust-name").text(module.displayName);
-    modal.find("#pstrust-author").text(module.author);
-    modal.find("#pstrust-label").attr("class", "text-" + alertClass).text(module.prestatrust.status ? 'OK' : 'KO');
-    modal.find("#pstrust-message").attr("class", "alert alert-"+alertClass);
-    modal.find("#pstrust-message > p").text(module.prestatrust.message);
+    modal.find('#pstrust-img').attr({src: module.img, alt: module.name});
+    modal.find('#pstrust-name').text(module.displayName);
+    modal.find('#pstrust-author').text(module.author);
+    modal.find('#pstrust-label').attr('class', `text-${alertClass}`).text(module.prestatrust.status ? 'OK' : 'KO');
+    modal.find('#pstrust-message').attr('class', `alert alert-${alertClass}`);
+    modal.find('#pstrust-message > p').text(module.prestatrust.message);
 
     return modal;
   }
 
   _dispatchPreEvent(action, element) {
-    var event = jQuery.Event('module_card_action_event');
+    const event = jQuery.Event('module_card_action_event');
 
     $(element).trigger(event, [action]);
     if (event.isPropagationStopped() !== false || event.isImmediatePropagationStopped() !== false) {
@@ -220,37 +215,37 @@ export default class ModuleCard {
     }
 
     return (event.result !== false); // explicit false must be set from handlers to stop propagation of the click event.
-  };
+  }
 
   _requestToController(action, element, forceDeletion, disableCacheClear, callback) {
-    var self = this;
-    var jqElementObj = element.closest(this.moduleItemActionsSelector);
-    var form = element.closest("form");
-    var spinnerObj = $("<button class=\"btn-primary-reverse onclick unbind spinner \"></button>");
-    var url = "//" + window.location.host + form.attr("action");
-    var actionParams = form.serializeArray();
+    const self = this;
+    const jqElementObj = element.closest(this.moduleItemActionsSelector);
+    const form = element.closest('form');
+    const spinnerObj = $('<button class="btn-primary-reverse onclick unbind spinner "></button>');
+    const url = `//${window.location.host}${form.attr('action')}`;
+    const actionParams = form.serializeArray();
 
-    if (forceDeletion === "true" || forceDeletion === true) {
-      actionParams.push({name: "actionParams[deletion]", value: true});
+    if (forceDeletion === 'true' || forceDeletion === true) {
+      actionParams.push({name: 'actionParams[deletion]', value: true});
     }
-    if (disableCacheClear === "true" || disableCacheClear === true) {
-      actionParams.push({name: "actionParams[cacheClearEnabled]", value: 0});
+    if (disableCacheClear === 'true' || disableCacheClear === true) {
+      actionParams.push({name: 'actionParams[cacheClearEnabled]', value: 0});
     }
 
     $.ajax({
-      url: url,
+      url,
       dataType: 'json',
       method: 'POST',
       data: actionParams,
-      beforeSend: function () {
+      beforeSend() {
         jqElementObj.hide();
         jqElementObj.after(spinnerObj);
-      }
-    }).done(function (result) {
+      },
+    }).done((result) => {
       if (typeof result === undefined) {
-        $.growl.error({message: "No answer received from server"});
+        $.growl.error({message: 'No answer received from server'});
       } else {
-        var moduleTechName = Object.keys(result)[0];
+        const moduleTechName = Object.keys(result)[0];
 
         if (result[moduleTechName].status === false) {
           if (typeof result[moduleTechName].confirmation_subject !== 'undefined') {
@@ -261,36 +256,36 @@ export default class ModuleCard {
         } else {
           $.growl.notice({message: result[moduleTechName].msg});
 
-          var alteredSelector = self._getModuleItemSelector().replace('.', '');
-          var mainElement = null;
+          const alteredSelector = self._getModuleItemSelector().replace('.', '');
+          let mainElement = null;
 
-          if (action == "uninstall") {
-            mainElement = jqElementObj.closest('.' + alteredSelector);
+          if (action == 'uninstall') {
+            mainElement = jqElementObj.closest(`.${alteredSelector}`);
             mainElement.remove();
 
-            BOEvent.emitEvent("Module Uninstalled", "CustomEvent");
-          } else if (action == "disable") {
-            mainElement = jqElementObj.closest('.' + alteredSelector);
-            mainElement.addClass(alteredSelector + '-isNotActive');
+            BOEvent.emitEvent('Module Uninstalled', 'CustomEvent');
+          } else if (action == 'disable') {
+            mainElement = jqElementObj.closest(`.${alteredSelector}`);
+            mainElement.addClass(`${alteredSelector}-isNotActive`);
             mainElement.attr('data-active', '0');
 
-            BOEvent.emitEvent("Module Disabled", "CustomEvent");
-          } else if (action == "enable") {
-            mainElement = jqElementObj.closest('.' + alteredSelector);
-            mainElement.removeClass(alteredSelector + '-isNotActive');
+            BOEvent.emitEvent('Module Disabled', 'CustomEvent');
+          } else if (action == 'enable') {
+            mainElement = jqElementObj.closest(`.${alteredSelector}`);
+            mainElement.removeClass(`${alteredSelector}-isNotActive`);
             mainElement.attr('data-active', '1');
 
-            BOEvent.emitEvent("Module Enabled", "CustomEvent");
+            BOEvent.emitEvent('Module Enabled', 'CustomEvent');
           }
 
           jqElementObj.replaceWith(result[moduleTechName].action_menu_html);
         }
       }
-    }).fail(function() {
+    }).fail(() => {
       const moduleItem = jqElementObj.closest('module-item-list');
       const techName = moduleItem.data('techName');
-      $.growl.error({message: "Could not perform action "+action+" for module "+techName});
-    }).always(function () {
+      $.growl.error({message: `Could not perform action ${action} for module ${techName}`});
+    }).always(() => {
       jqElementObj.fadeIn();
       spinnerObj.remove();
       if (callback) {
@@ -299,5 +294,5 @@ export default class ModuleCard {
     });
 
     return false;
-  };
+  }
 }

@@ -39,7 +39,7 @@ import ProductRenderer from './product-renderer';
 import SummaryRenderer from './summary-renderer';
 import SummaryManager from './summary-manager';
 
-const $ = window.$;
+const {$} = window;
 
 /**
  * Page Object for "Create order" page
@@ -119,12 +119,12 @@ export default class CreateOrderPage {
    * @private
    */
   _initListeners() {
-    this.$container.on('input', createOrderMap.customerSearchInput, e => this._initCustomerSearch(e));
-    this.$container.on('click', createOrderMap.chooseCustomerBtn, e => this._initCustomerSelect(e));
-    this.$container.on('click', createOrderMap.useCartBtn, e => this._initCartSelect(e));
-    this.$container.on('click', createOrderMap.useOrderBtn, e => this._initDuplicateOrderCart(e));
-    this.$container.on('input', createOrderMap.productSearch, e => this._initProductSearch(e));
-    this.$container.on('input', createOrderMap.cartRuleSearchInput, e => this._initCartRuleSearch(e));
+    this.$container.on('input', createOrderMap.customerSearchInput, (e) => this._initCustomerSearch(e));
+    this.$container.on('click', createOrderMap.chooseCustomerBtn, (e) => this._initCustomerSelect(e));
+    this.$container.on('click', createOrderMap.useCartBtn, (e) => this._initCartSelect(e));
+    this.$container.on('click', createOrderMap.useOrderBtn, (e) => this._initDuplicateOrderCart(e));
+    this.$container.on('input', createOrderMap.productSearch, (e) => this._initProductSearch(e));
+    this.$container.on('input', createOrderMap.cartRuleSearchInput, (e) => this._initCartRuleSearch(e));
     this.$container.on('blur', createOrderMap.cartRuleSearchInput, () => this.cartRuleManager.stopSearching());
     this._listenForCartEdit();
     this._onCartLoaded();
@@ -171,7 +171,7 @@ export default class CreateOrderPage {
     this.$container.on('change', createOrderMap.listedProductUnitPriceInput, (e) => this._initProductChangePrice(e));
     this.$container.on('change', createOrderMap.listedProductQtyInput, e => this._initProductChangeQty(e));
     this.$container.on('change', createOrderMap.addressSelect, () => this._changeCartAddresses());
-    this.$container.on('click', createOrderMap.productRemoveBtn, e => this._initProductRemoveFromCart(e));
+    this.$container.on('click', createOrderMap.productRemoveBtn, (e) => this._initProductRemoveFromCart(e));
 
   }
 

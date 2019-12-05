@@ -23,7 +23,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-const $ = window.$;
+const {$} = window;
 
 /**
  * Component which allows submitting very simple forms without having to use <form> element.
@@ -56,20 +56,20 @@ export default class FormSubmitButton {
 
       const $btn = $(this);
 
-      if ($btn.data('form-confirm-message') && false === confirm($btn.data('form-confirm-message'))) {
+      if ($btn.data('form-confirm-message') && confirm($btn.data('form-confirm-message')) === false) {
         return;
       }
 
       const $form = $('<form>', {
-        'action': $btn.data('form-submit-url'),
-        'method': 'POST',
+        action: $btn.data('form-submit-url'),
+        method: 'POST',
       });
 
       if ($btn.data('form-csrf-token')) {
         $form.append($('<input>', {
-          'type': '_hidden',
-          'name': '_csrf_token',
-          'value': $btn.data('form-csrf-token')
+          type: '_hidden',
+          name: '_csrf_token',
+          value: $btn.data('form-csrf-token'),
         }));
       }
 

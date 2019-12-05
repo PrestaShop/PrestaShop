@@ -23,7 +23,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-const $ = window.$;
+const {$} = window;
 
 /**
  * This class triggers events required for turning on or off exchange rates scheduler an displaying the right text
@@ -31,9 +31,9 @@ const $ = window.$;
  */
 export default class ExchangeRatesUpdateScheduler {
   constructor() {
-   this._initEvents();
+    this._initEvents();
 
-   return {};
+    return {};
   }
 
   _initEvents() {
@@ -65,18 +65,18 @@ export default class ExchangeRatesUpdateScheduler {
 
         showSuccessMessage(response.message);
         this._changeTextByCurrentSwitchValue($liveExchangeRatesSwitch.val());
-      }
-    ).fail((response) => {
-      if (typeof response.responseJSON !== 'undefined') {
-        showErrorMessage(response.responseJSON.message);
-        this._changeTextByCurrentSwitchValue($liveExchangeRatesSwitch.val());
-      }
-    });
+      },
+      ).fail((response) => {
+        if (typeof response.responseJSON !== 'undefined') {
+          showErrorMessage(response.responseJSON.message);
+          this._changeTextByCurrentSwitchValue($liveExchangeRatesSwitch.val());
+        }
+      });
   }
 
   _changeTextByCurrentSwitchValue(switchValue) {
     const valueParsed = parseInt(switchValue);
-    $('.js-exchange-rate-text-when-disabled').toggleClass('d-none', 0 !== valueParsed);
-    $('.js-exchange-rate-text-when-enabled').toggleClass('d-none', 1 !== valueParsed);
+    $('.js-exchange-rate-text-when-disabled').toggleClass('d-none', valueParsed !== 0);
+    $('.js-exchange-rate-text-when-enabled').toggleClass('d-none', valueParsed !== 1);
   }
 }

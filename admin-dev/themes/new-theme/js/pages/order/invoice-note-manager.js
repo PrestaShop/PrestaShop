@@ -24,13 +24,12 @@
  */
 import OrderViewPageMap from './OrderViewPageMap';
 
-const $ = window.$;
+const {$} = window;
 
 /**
  * Manages adding/editing note for invoice documents.
  */
 export default class InvoiceNoteManager {
-
   constructor() {
     this._initShowNoteFormEventHandler();
     this._initCloseNoteFormEventHandler();
@@ -58,11 +57,10 @@ export default class InvoiceNoteManager {
 
   _initEnterPaymentEventHandler() {
     $('.js-enter-payment-btn').on('click', (event) => {
-
       const $btn = $(event.currentTarget);
-      let paymentAmount = $btn.data('payment-amount');
+      const paymentAmount = $btn.data('payment-amount');
 
-      $(OrderViewPageMap.viewOrderPaymentsBlock).get(0).scrollIntoView({behavior: "smooth"});
+      $(OrderViewPageMap.viewOrderPaymentsBlock).get(0).scrollIntoView({behavior: 'smooth'});
       $(OrderViewPageMap.orderPaymentFormAmountInput).val(paymentAmount);
     });
   }

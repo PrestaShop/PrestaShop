@@ -32,7 +32,7 @@ import OrderProductAdd from '@pages/order/view/order-product-add';
 import OrderViewPageMessagesHandler from './message/order-view-page-messages-handler';
 import TextWithLengthCounter from '@components/form/text-with-length-counter';
 
-const $ = window.$;
+const {$} = window;
 
 $(() => {
   const DISCOUNT_TYPE_AMOUNT = 'amount';

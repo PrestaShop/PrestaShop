@@ -23,7 +23,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-const $ = window.$;
+const {$} = window;
 
 /**
  * Class is responsible for handling Grid events
@@ -36,7 +36,7 @@ export default class Grid {
    */
   constructor(id) {
     this.id = id;
-    this.$container = $('#' + this.id + '_grid');
+    this.$container = $(`#${this.id}_grid`);
   }
 
   /**

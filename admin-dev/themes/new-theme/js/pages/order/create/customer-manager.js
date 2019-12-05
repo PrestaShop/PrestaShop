@@ -29,7 +29,7 @@ import {EventEmitter} from '@components/event-emitter';
 import eventMap from '@pages/order/create/event-map';
 import Router from '@components/router';
 
-const $ = window.$;
+const {$} = window;
 
 /**
  * Responsible for customers managing. (search, select, get customer info etc.)
@@ -48,9 +48,9 @@ export default class CustomerManager {
     this._initListeners();
 
     return {
-      search: searchPhrase => this._search(searchPhrase),
-      selectCustomer: event => this._selectCustomer(event),
-      loadCustomerCarts: currentCartId => this._loadCustomerCarts(currentCartId),
+      search: (searchPhrase) => this._search(searchPhrase),
+      selectCustomer: (event) => this._selectCustomer(event),
+      loadCustomerCarts: (currentCartId) => this._loadCustomerCarts(currentCartId),
       loadCustomerOrders: () => this._loadCustomerOrders(),
     };
   }
@@ -107,7 +107,7 @@ export default class CustomerManager {
    * @param currentCartId
    */
   _loadCustomerCarts(currentCartId) {
-    const customerId = this.customerId;
+    const {customerId} = this;
 
     $.get(this.router.generate('admin_customers_carts', {customerId})).then((response) => {
       this.customerRenderer.renderCarts(response.carts, currentCartId);
@@ -120,7 +120,7 @@ export default class CustomerManager {
    * Loads customer orders list
    */
   _loadCustomerOrders() {
-    const customerId = this.customerId;
+    const {customerId} = this;
 
     $.get(this.router.generate('admin_customers_orders', {customerId})).then((response) => {
       this.customerRenderer.renderOrders(response.orders);

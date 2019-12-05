@@ -23,10 +23,10 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-import ChangePasswordHandler from "../change-password-handler";
-import PasswordValidator from "../password-validator";
+import ChangePasswordHandler from '../change-password-handler';
+import PasswordValidator from '../password-validator';
 
-const $ = window.$;
+const {$} = window;
 
 /**
  * Class responsible for actions related to "change password" form type.
@@ -43,7 +43,7 @@ export default class ChangePasswordControl {
     newPasswordInputSelector,
     confirmNewPasswordInputSelector,
     generatedPasswordDisplaySelector,
-    passwordStrengthFeedbackContainerSelector
+    passwordStrengthFeedbackContainerSelector,
   ) {
     // Block that contains password inputs
     this.$inputsBlock = $(inputsBlockSelector);
@@ -85,12 +85,12 @@ export default class ChangePasswordControl {
       .add(this.confirmNewPasswordInputSelector);
 
     this.passwordHandler = new ChangePasswordHandler(
-      passwordStrengthFeedbackContainerSelector
+      passwordStrengthFeedbackContainerSelector,
     );
 
     this.passwordValidator = new PasswordValidator(
       this.newPasswordInputSelector,
-      this.confirmNewPasswordInputSelector
+      this.confirmNewPasswordInputSelector,
     );
 
     this._hideInputsBlock();
@@ -157,13 +157,10 @@ export default class ChangePasswordControl {
 
     $firstPasswordErrorContainer
       .text(this._getPasswordLengthValidationMessage())
-      .toggleClass('text-danger', !this.passwordValidator.isPasswordLengthValid())
-    ;
-
+      .toggleClass('text-danger', !this.passwordValidator.isPasswordLengthValid());
     $secondPasswordErrorContainer
       .text(this._getPasswordConfirmationValidationMessage())
-      .toggleClass('text-danger', !this.passwordValidator.isPasswordMatchingConfirmation())
-    ;
+      .toggleClass('text-danger', !this.passwordValidator.isPasswordMatchingConfirmation());
   }
 
   /**
@@ -190,7 +187,7 @@ export default class ChangePasswordControl {
    */
   _getPasswordLengthValidationMessage() {
     if (this.passwordValidator.isPasswordTooShort()) {
-      return $(this.newPasswordInputSelector).data('password-too-short')
+      return $(this.newPasswordInputSelector).data('password-too-short');
     }
 
     if (this.passwordValidator.isPasswordTooLong()) {

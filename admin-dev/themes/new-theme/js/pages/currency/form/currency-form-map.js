@@ -41,4 +41,4 @@ export default {
   precisionInput: '#currency_precision',
   shopAssociationTree: '#currency_shop_association',
   currencyFormatter: '#currency_formatter',
-}
+};

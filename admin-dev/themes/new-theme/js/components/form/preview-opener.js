@@ -23,7 +23,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-const $ = window.$;
+const {$} = window;
 
 /**
  * Responsible for opening another page with specified url.
@@ -33,7 +33,7 @@ const $ = window.$;
  * The page will be opened once provided 'open_preview' parameter in query url
  */
 export default class PreviewOpener {
-  constructor (previewUrlSelector) {
+  constructor(previewUrlSelector) {
     this.previewUrl = $(previewUrlSelector).data('preview-url');
     this._open();
 

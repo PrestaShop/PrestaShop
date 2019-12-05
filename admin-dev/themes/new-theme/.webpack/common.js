@@ -127,10 +127,11 @@ module.exports = {
           loader: 'babel-loader',
           options: {
             presets: [
-              ['es2015', {modules: false}],
-              ['env', {'useBuiltIns': 'usage'}]
+              ['env', {useBuiltIns: 'usage', modules: false}],
             ],
-            'plugins': ['transform-runtime']
+            plugins: [
+              'transform-object-rest-spread',
+            ],
           },
         }],
       },

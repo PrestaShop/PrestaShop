@@ -182,4 +182,3 @@ export default {
     state.selectedProducts.splice(index, 1);
   },
 };
-

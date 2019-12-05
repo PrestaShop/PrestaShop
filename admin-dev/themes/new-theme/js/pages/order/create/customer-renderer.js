@@ -26,7 +26,7 @@
 import createOrderMap from '@pages/order/create/create-order-map';
 import Router from '@components/router';
 
-const $ = window.$;
+const {$} = window;
 
 /**
  * Responsible for customer information rendering
@@ -82,8 +82,7 @@ export default class CustomerRenderer {
     this.$container.find(createOrderMap.customerSearchRow).addClass('d-none');
     this.$container.find(createOrderMap.notSelectedCustomerSearchResults)
       .closest(createOrderMap.customerSearchResultColumn)
-      .remove()
-    ;
+      .remove();
   }
 
   /**

@@ -23,14 +23,13 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-const $ = global.$;
+const {$} = global;
 
 /**
  * Makes a table sortable by columns.
  * This forces a page reload with more query parameters.
  */
 class TableSorting {
-
   /**
    * @param {jQuery} table
    */
@@ -96,8 +95,8 @@ class TableSorting {
     const params = url.searchParams;
 
     if (prefix) {
-      params.set(prefix+'[orderBy]', colName);
-      params.set(prefix+'[sortOrder]', direction);
+      params.set(`${prefix}[orderBy]`, colName);
+      params.set(`${prefix}[sortOrder]`, direction);
     } else {
       params.set('orderBy', colName);
       params.set('sortOrder', direction);

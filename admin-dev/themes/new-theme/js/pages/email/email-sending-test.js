@@ -23,7 +23,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-const $ = window.$;
+const {$} = window;
 
 /**
  * Class is responsible for managing test email sending
@@ -70,7 +70,7 @@ class EmailSendingTest {
       this._hideLoader();
       this._showSendEmailButton();
 
-      if (0 !== response.errors.length) {
+      if (response.errors.length !== 0) {
         this._showErrors(response.errors);
         return;
       }
@@ -134,7 +134,7 @@ class EmailSendingTest {
    */
   _showErrors(errors) {
     errors.forEach((error) => {
-      this.$errorAlert.append('<p>' + error + '</p>');
+      this.$errorAlert.append(`<p>${error}</p>`);
     });
 
     this.$errorAlert.removeClass('d-none');

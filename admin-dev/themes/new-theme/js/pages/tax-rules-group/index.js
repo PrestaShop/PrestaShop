@@ -36,7 +36,7 @@ import FormSubmitButton from '../../components/form-submit-button';
 import FiltersSubmitButtonEnablerExtension from '../../components/grid/extension/filters-submit-button-enabler-extension';
 import ColumnTogglingExtension from '../../components/grid/extension/column-toggling-extension';
 
-const $ = window.$;
+const {$} = window;
 
 $(() => {
   const taxRulesGroupGrid = new Grid('tax_rules_group');

@@ -28,7 +28,7 @@ import {EventEmitter} from '@components/event-emitter';
 import eventMap from '@pages/order/create/event-map';
 import createOrderMap from "./create-order-map";
 
-const $ = window.$;
+const {$} = window;
 
 /**
  * Provides ajax calls for cart editing actions

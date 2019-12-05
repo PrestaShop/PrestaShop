@@ -23,7 +23,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-const $ = window.$;
+const {$} = window;
 
 /**
  * Extends grid with preview functionality.
@@ -46,8 +46,8 @@ export default class PreviewExtension {
   extend(grid) {
     this.$gridContainer = $(grid.getContainer);
 
-    this.$gridContainer.find('tbody tr').on('mouseover mouseleave', event => this._handleIconHovering(event));
-    this.$gridContainer.find(this.previewToggleSelector).on('click', event => this._togglePreview(event));
+    this.$gridContainer.find('tbody tr').on('mouseover mouseleave', (event) => this._handleIconHovering(event));
+    this.$gridContainer.find(this.previewToggleSelector).on('click', (event) => this._togglePreview(event));
 
     if (typeof this.previewCustomization === 'function') {
       this.previewCustomization(this.$gridContainer);

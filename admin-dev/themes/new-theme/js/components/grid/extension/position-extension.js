@@ -23,9 +23,9 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-import tableDnD from "tablednd/dist/jquery.tablednd.min";
+import tableDnD from 'tablednd/dist/jquery.tablednd.min';
 
-const $ = window.$;
+const {$} = window;
 
 /**
  * Class PositionExtension extends Grid with reorderable positions
@@ -34,7 +34,7 @@ export default class PositionExtension {
   constructor() {
     return {
       extend: (grid) => this.extend(grid),
-    }
+    };
   }
 
   /**
@@ -51,12 +51,12 @@ export default class PositionExtension {
       onDrop: (table, row) => this._handlePositionChange(row),
     });
     grid.getContainer().find('.js-drag-handle').hover(
-      function() {
+      function () {
         $(this).closest('tr').addClass('hover');
       },
-      function() {
+      function () {
         $(this).closest('tr').removeClass('hover');
-      }
+      },
     );
   }
 
@@ -68,7 +68,7 @@ export default class PositionExtension {
    * @private
    */
   _handlePositionChange(row) {
-    const $rowPositionContainer = $(row).find('.js-' + this.grid.getId() + '-position:first');
+    const $rowPositionContainer = $(row).find(`.js-${this.grid.getId()}-position:first`);
     const updateUrl = $rowPositionContainer.data('update-url');
     const method = $rowPositionContainer.data('update-method');
     const paginationOffset = parseInt($rowPositionContainer.data('pagination-offset'), 10);
@@ -85,12 +85,13 @@ export default class PositionExtension {
    */
   _getRowsPositions(paginationOffset) {
     const tableData = JSON.parse($.tableDnD.jsonize());
-    const rowsData = tableData[this.grid.getId()+'_grid_table'];
+    const rowsData = tableData[`${this.grid.getId()}_grid_table`];
     const regex = /^row_(\d+)_(\d+)$/;
 
     const rowsNb = rowsData.length;
     const positions = [];
-    let rowData, i;
+    let rowData; let
+      i;
     for (i = 0; i < rowsNb; ++i) {
       rowData = regex.exec(rowsData[i]);
       positions.push({
@@ -110,7 +111,7 @@ export default class PositionExtension {
    */
   _addIdsToGridTableRows() {
     this.grid.getContainer()
-      .find('.js-grid-table .js-' + this.grid.getId() + '-position')
+      .find(`.js-grid-table .js-${this.grid.getId()}-position`)
       .each((index, positionWrapper) => {
         const $positionWrapper = $(positionWrapper);
         const rowId = $positionWrapper.data('id');
@@ -134,8 +135,8 @@ export default class PositionExtension {
     const isGetOrPostMethod = ['GET', 'POST'].includes(method);
 
     const $form = $('<form>', {
-      'action': url,
-      'method': isGetOrPostMethod ? method : 'POST',
+      action: url,
+      method: isGetOrPostMethod ? method : 'POST',
     }).appendTo('body');
 
     const positionsNb = params.positions.length;
@@ -144,29 +145,29 @@ export default class PositionExtension {
       position = params.positions[i];
       $form.append(
         $('<input>', {
-          'type': 'hidden',
-          'name': 'positions['+i+'][rowId]',
-          'value': position.rowId
+          type: 'hidden',
+          name: `positions[${i}][rowId]`,
+          value: position.rowId,
         }),
         $('<input>', {
-          'type': 'hidden',
-          'name': 'positions['+i+'][oldPosition]',
-          'value': position.oldPosition
+          type: 'hidden',
+          name: `positions[${i}][oldPosition]`,
+          value: position.oldPosition,
         }),
         $('<input>', {
-          'type': 'hidden',
-          'name': 'positions['+i+'][newPosition]',
-          'value': position.newPosition
-        })
+          type: 'hidden',
+          name: `positions[${i}][newPosition]`,
+          value: position.newPosition,
+        }),
       );
     }
 
     // This _method param is used by Symfony to simulate DELETE and PUT methods
     if (!isGetOrPostMethod) {
       $form.append($('<input>', {
-        'type': 'hidden',
-        'name': '_method',
-        'value': method,
+        type: 'hidden',
+        name: '_method',
+        value: method,
       }));
     }
 

@@ -23,17 +23,16 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-const $ = window.$;
+const {$} = window;
 
 /**
  * Class AsyncToggleColumnExtension submits toggle action using AJAX
  */
 export default class AsyncToggleColumnExtension {
-
   constructor() {
     return {
       extend: (grid) => this.extend(grid),
-    }
+    };
   }
 
   /**

@@ -23,7 +23,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-const $ = window.$;
+const {$} = window;
 
 /**
  * Back office translations type
@@ -63,99 +63,99 @@ const others = 'others';
 const emailContentBody = 'body';
 
 export default class FormFieldToggle {
-    constructor() {
-        $('.js-translation-type').on('change', this.toggleFields.bind(this));
-        $('.js-email-content-type').on('change', this.toggleEmailFields.bind(this));
+  constructor() {
+    $('.js-translation-type').on('change', this.toggleFields.bind(this));
+    $('.js-email-content-type').on('change', this.toggleEmailFields.bind(this));
 
-        this.toggleFields();
-    }
+    this.toggleFields();
+  }
 
-    /**
+  /**
      * Toggle dependant translations fields, based on selected translation type
      */
-    toggleFields() {
-        let selectedOption = $('.js-translation-type').val();
-        let $modulesFormGroup = $('.js-module-form-group');
-        let $emailFormGroup = $('.js-email-form-group');
-        let $themesFormGroup = $('.js-theme-form-group');
-        let $themesSelect = $themesFormGroup.find('select');
-        let $noThemeOption = $themesSelect.find('.js-no-theme');
-        let $firstThemeOption = $themesSelect.find('option:not(.js-no-theme):first');
+  toggleFields() {
+    const selectedOption = $('.js-translation-type').val();
+    const $modulesFormGroup = $('.js-module-form-group');
+    const $emailFormGroup = $('.js-email-form-group');
+    const $themesFormGroup = $('.js-theme-form-group');
+    const $themesSelect = $themesFormGroup.find('select');
+    const $noThemeOption = $themesSelect.find('.js-no-theme');
+    const $firstThemeOption = $themesSelect.find('option:not(.js-no-theme):first');
 
-        switch (selectedOption) {
-            case back:
-            case others:
-                this._hide($modulesFormGroup, $emailFormGroup, $themesFormGroup);
+    switch (selectedOption) {
+      case back:
+      case others:
+        this._hide($modulesFormGroup, $emailFormGroup, $themesFormGroup);
 
-                break;
-            case themes:
-                if ($noThemeOption.is(':selected')) {
-                    $themesSelect.val($firstThemeOption.val());
-                }
-
-                this._hide($modulesFormGroup, $emailFormGroup, $noThemeOption);
-                this._show($themesFormGroup);
-
-                break;
-            case modules:
-                this._hide($emailFormGroup, $themesFormGroup);
-                this._show($modulesFormGroup);
-
-                break;
-            case mails:
-                this._hide($modulesFormGroup, $themesFormGroup);
-                this._show($emailFormGroup);
-
-                break;
+        break;
+      case themes:
+        if ($noThemeOption.is(':selected')) {
+          $themesSelect.val($firstThemeOption.val());
         }
 
-        this.toggleEmailFields();
+        this._hide($modulesFormGroup, $emailFormGroup, $noThemeOption);
+        this._show($themesFormGroup);
+
+        break;
+      case modules:
+        this._hide($emailFormGroup, $themesFormGroup);
+        this._show($modulesFormGroup);
+
+        break;
+      case mails:
+        this._hide($modulesFormGroup, $themesFormGroup);
+        this._show($emailFormGroup);
+
+        break;
     }
 
-    /**
+    this.toggleEmailFields();
+  }
+
+  /**
      * Toggles fields, which are related to email translations
      */
-    toggleEmailFields() {
-        if ($('.js-translation-type').val() !== mails) {
-            return;
-        }
-
-        let selectedEmailContentType = $('.js-email-form-group').find('select').val();
-        let $themesFormGroup = $('.js-theme-form-group');
-        let $noThemeOption = $themesFormGroup.find('.js-no-theme');
-
-        if (selectedEmailContentType === emailContentBody) {
-            $noThemeOption.prop('selected', true);
-            this._show($noThemeOption, $themesFormGroup);
-        } else {
-            this._hide($noThemeOption, $themesFormGroup);
-        }
+  toggleEmailFields() {
+    if ($('.js-translation-type').val() !== mails) {
+      return;
     }
 
+    const selectedEmailContentType = $('.js-email-form-group').find('select').val();
+    const $themesFormGroup = $('.js-theme-form-group');
+    const $noThemeOption = $themesFormGroup.find('.js-no-theme');
 
-    /**
+    if (selectedEmailContentType === emailContentBody) {
+      $noThemeOption.prop('selected', true);
+      this._show($noThemeOption, $themesFormGroup);
+    } else {
+      this._hide($noThemeOption, $themesFormGroup);
+    }
+  }
+
+
+  /**
      * Make all given selectors hidden
      *
      * @param $selectors
      * @private
      */
-    _hide(...$selectors) {
-        for (let key in $selectors) {
-            $selectors[key].addClass('d-none');
-            $selectors[key].find('select').prop('disabled', 'disabled');
-        }
+  _hide(...$selectors) {
+    for (const key in $selectors) {
+      $selectors[key].addClass('d-none');
+      $selectors[key].find('select').prop('disabled', 'disabled');
     }
+  }
 
-    /**
+  /**
      * Make all given selectors visible
      *
      * @param $selectors
      * @private
      */
-    _show(...$selectors) {
-        for (let key in $selectors) {
-            $selectors[key].removeClass('d-none');
-            $selectors[key].find('select').prop('disabled', false);
-        }
+  _show(...$selectors) {
+    for (const key in $selectors) {
+      $selectors[key].removeClass('d-none');
+      $selectors[key].find('select').prop('disabled', false);
     }
+  }
 }

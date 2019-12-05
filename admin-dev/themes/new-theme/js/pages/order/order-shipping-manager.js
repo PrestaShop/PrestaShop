@@ -24,7 +24,7 @@
  */
 import OrderViewPageMap from './OrderViewPageMap';
 
-const $ = window.$;
+const {$} = window;
 
 export default class OrderShippingManager {
   constructor() {

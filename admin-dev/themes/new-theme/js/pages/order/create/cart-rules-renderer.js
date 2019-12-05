@@ -25,7 +25,7 @@
 
 import createOrderMap from './create-order-map';
 
-const $ = window.$;
+const {$} = window;
 
 /**
  * Renders cart rules (cartRules) block

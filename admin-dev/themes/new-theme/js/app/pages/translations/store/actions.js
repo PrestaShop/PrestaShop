@@ -29,7 +29,7 @@ import { showGrowl } from '@app/utils/growl';
 
 Vue.use(VueResource);
 
-export const getTranslations = ({ commit }) => {
+export const getTranslations = ({commit}) => {
   const url = window.data.translationUrl;
   Vue.http.get(url).then((response) => {
     commit(types.SET_TRANSLATIONS, response.body);
@@ -39,7 +39,7 @@ export const getTranslations = ({ commit }) => {
   });
 };
 
-export const getCatalog = ({ commit }, payload) => {
+export const getCatalog = ({commit}, payload) => {
   commit(types.PRINCIPAL_LOADING, true);
   Vue.http.get(payload.url, {
     params: {
@@ -55,7 +55,7 @@ export const getCatalog = ({ commit }, payload) => {
   });
 };
 
-export const getDomainsTree = ({ commit }, payload) => {
+export const getDomainsTree = ({commit}, payload) => {
   const url = window.data.domainsTreeUrl;
   const params = {};
 
@@ -77,7 +77,7 @@ export const getDomainsTree = ({ commit }, payload) => {
   });
 };
 
-export const refreshCounts = ({ commit }, payload) => {
+export const refreshCounts = ({commit}, payload) => {
   const url = window.data.domainsTreeUrl;
   const params = {};
 
@@ -95,9 +95,9 @@ export const refreshCounts = ({ commit }, payload) => {
   });
 };
 
-export const saveTranslations = ({ commit }, payload) => {
-  const url = payload.url;
-  const translations = payload.translations;
+export const saveTranslations = ({commit}, payload) => {
+  const {url} = payload;
+  const {translations} = payload;
 
   Vue.http.post(url, {
     translations,
@@ -113,9 +113,9 @@ export const saveTranslations = ({ commit }, payload) => {
   });
 };
 
-export const resetTranslation = ({ commit }, payload) => {
-  const url = payload.url;
-  const translations = payload.translations;
+export const resetTranslation = ({commit}, payload) => {
+  const {url} = payload;
+  const {translations} = payload;
 
   Vue.http.post(url, {
     translations,
@@ -126,18 +126,18 @@ export const resetTranslation = ({ commit }, payload) => {
   });
 };
 
-export const updatePageIndex = ({ commit }, pageIndex) => {
+export const updatePageIndex = ({commit}, pageIndex) => {
   commit(types.SET_PAGE_INDEX, pageIndex);
 };
 
-export const updateCurrentDomain = ({ commit }, currentDomain) => {
+export const updateCurrentDomain = ({commit}, currentDomain) => {
   commit(types.SET_CURRENT_DOMAIN, currentDomain);
 };
 
-export const updatePrincipalLoading = ({ commit }, principalLoading) => {
+export const updatePrincipalLoading = ({commit}, principalLoading) => {
   commit(types.PRINCIPAL_LOADING, principalLoading);
 };
 
-export const updateSearch = ({ commit }, searchTags) => {
+export const updateSearch = ({commit}, searchTags) => {
   commit(types.SEARCH_TAGS, searchTags);
 };

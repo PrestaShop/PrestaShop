@@ -29,7 +29,6 @@
  * If password confirmation input is provided, can validate if entered password is matching confirmation.
  */
 export default class PasswordValidator {
-
   /**
    * @param {String} passwordInputSelector selector of the password input.
    * @param {String|null} confirmPasswordInputSelector (optional) selector for the password confirmation input.

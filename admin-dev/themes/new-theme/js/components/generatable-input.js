@@ -52,7 +52,7 @@
 export default class GeneratableInput {
   constructor() {
     return {
-      'attachOn': (btnSelector) => this._attachOn(btnSelector),
+      attachOn: (btnSelector) => this._attachOn(btnSelector),
     };
   }
 
@@ -69,13 +69,13 @@ export default class GeneratableInput {
       return null;
     }
     generatorBtn.addEventListener('click', (event) => {
-      const attributes = event.currentTarget.attributes;
+      const {attributes} = event.currentTarget;
 
       const targetInputId = attributes.getNamedItem('data-target-input-id').value;
       const generatedValueLength = parseInt(attributes.getNamedItem('data-generated-value-length').value);
 
-      const targetInput = document.querySelector('#' + targetInputId);
-      targetInput.value = this._generateValue(generatedValueLength)
+      const targetInput = document.querySelector(`#${targetInputId}`);
+      targetInput.value = this._generateValue(generatedValueLength);
     });
   }
 

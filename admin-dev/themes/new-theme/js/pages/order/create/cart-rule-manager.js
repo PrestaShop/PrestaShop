@@ -32,7 +32,7 @@ import Router from '@components/router';
 import SummaryRenderer from '@pages/order/create/summary-renderer';
 import ShippingRenderer from '@pages/order/create/shipping-renderer';
 
-const $ = window.$;
+const {$} = window;
 
 /**
  * Responsible for searching cart rules and managing cart rules search block

@@ -23,7 +23,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-const $ = window.$;
+const {$} = window;
 
 const $importDataTable = $('.js-import-data-table');
 
@@ -74,7 +74,7 @@ export default class ImportDataTable {
       $tableColumns = $($tableColumns.toArray().reverse());
     }
 
-    for (let index in $tableColumns) {
+    for (const index in $tableColumns) {
       if (isNaN(index)) {
         // Reached the last column - hide the opposite pagination button
         this._hide($oppositePaginationButton);
@@ -90,7 +90,7 @@ export default class ImportDataTable {
       // If last visible column was found - show the column after it
       if (lastVisibleColumnFound) {
         // If going backward, the column index must be counted from the last element
-        let showColumnIndex = direction === BACKWARD ? this.totalNumberOfColumns - 1 - index :  index;
+        const showColumnIndex = direction === BACKWARD ? this.totalNumberOfColumns - 1 - index : index;
         this._showTableColumnByIndex(showColumnIndex);
         numberOfVisibleColumns++;
 
@@ -167,7 +167,7 @@ export default class ImportDataTable {
     // Increasing the index because nth-child calculates from 1 and index starts from 0
     columnIndex++;
 
-    this._show($importDataTable.find('th:nth-child(' + columnIndex + ')'));
-    this._show($importDataTable.find('tbody > tr').find('td:nth-child(' + columnIndex + ')'));
+    this._show($importDataTable.find(`th:nth-child(${columnIndex})`));
+    this._show($importDataTable.find('tbody > tr').find(`td:nth-child(${columnIndex})`));
   }
 }

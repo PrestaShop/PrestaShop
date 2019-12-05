@@ -25,7 +25,7 @@
 
 import {EventEmitter} from './event-emitter';
 
-const $ = window.$;
+const {$} = window;
 
 /**
  * This class is used to automatically toggle translated inputs (displayed with one
@@ -52,7 +52,7 @@ class TranslatableInput {
   toggleLanguage(event) {
     const localeItem = $(event.target);
     const form = localeItem.closest('form');
-    EventEmitter.emit('languageSelected', {selectedLocale: localeItem.data('locale'), form: form});
+    EventEmitter.emit('languageSelected', {selectedLocale: localeItem.data('locale'), form});
   }
 
   /**
@@ -61,8 +61,8 @@ class TranslatableInput {
    * @param {Event} event
    */
   toggleInputs(event) {
-    const form = event.form;
-    const selectedLocale = event.selectedLocale;
+    const {form} = event;
+    const {selectedLocale} = event;
     const localeButton = form.find(this.localeButtonSelector);
     const changeLanguageUrl = localeButton.data('change-language-url');
 
@@ -87,7 +87,7 @@ class TranslatableInput {
     $.post({
       url: changeLanguageUrl,
       data: {
-        language_iso_code: selectedLocale
+        language_iso_code: selectedLocale,
       },
     });
   }

@@ -25,7 +25,7 @@
 
 import createOrderMap from './create-order-map';
 
-const $ = window.$;
+const {$} = window;
 
 export default class ProductRenderer {
   constructor() {
@@ -176,7 +176,7 @@ export default class ProductRenderer {
     for (const key in foundProducts) {
       const product = foundProducts[key];
 
-      let name = product.name;
+      let {name} = product;
       if (product.combinations.length === 0) {
         name += ` - ${product.formattedPrice}`;
       }

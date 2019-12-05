@@ -23,14 +23,14 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-const $ = window.$;
+const {$} = window;
 
 /**
  * This handler displays use theme modal and handles the submit form logic.
  */
 export default class UseThemeHandler {
   constructor() {
-    $(document).on('click', '.js-display-use-theme-modal', e => this._displayUseThemeModal(e));
+    $(document).on('click', '.js-display-use-theme-modal', (e) => this._displayUseThemeModal(e));
   }
 
   /**

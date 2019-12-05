@@ -86,9 +86,9 @@ export default class ImportBatchSizeCalculator {
       throw 'Import end is not marked.';
     }
 
-    let candidates = [
+    const candidates = [
       this._maxBatchSize,
-      Math.max(this._minBatchSize, Math.floor(currentBatchSize * this._calculateAcceleration()))
+      Math.max(this._minBatchSize, Math.floor(currentBatchSize * this._calculateAcceleration())),
     ];
 
     if (maxBatchSize > 0) {

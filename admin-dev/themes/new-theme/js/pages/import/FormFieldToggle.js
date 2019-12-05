@@ -23,7 +23,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-const $ = window.$;
+const {$} = window;
 
 const entityCategories = 0;
 const entityProducts = 1;
@@ -43,9 +43,9 @@ export default class FormFieldToggle {
   }
 
   toggleForm() {
-    let selectedOption = $('#entity').find('option:selected');
-    let selectedEntity = parseInt(selectedOption.val());
-    let entityName = selectedOption.text().toLowerCase();
+    const selectedOption = $('#entity').find('option:selected');
+    const selectedEntity = parseInt(selectedOption.val());
+    const entityName = selectedOption.text().toLowerCase();
 
     this.toggleEntityAlert(selectedEntity);
     this.toggleFields(selectedEntity, entityName);
@@ -58,7 +58,7 @@ export default class FormFieldToggle {
    * @param {int} selectedEntity
    */
   toggleEntityAlert(selectedEntity) {
-    let $alert = $('.js-entity-alert');
+    const $alert = $('.js-entity-alert');
 
     if ([entityCategories, entityProducts].includes(selectedEntity)) {
       $alert.show();
@@ -97,7 +97,7 @@ export default class FormFieldToggle {
       entityProducts,
       entityBrands,
       entitySuppliers,
-      entityStoreContacts
+      entityStoreContacts,
     ].includes(selectedEntity)
     ) {
       $regenerateFormGroup.show();
@@ -113,7 +113,7 @@ export default class FormFieldToggle {
       entityBrands,
       entitySuppliers,
       entityStoreContacts,
-      entityAlias
+      entityAlias,
     ].includes(selectedEntity)
     ) {
       $forceIdsFormGroup.show();
@@ -135,17 +135,17 @@ export default class FormFieldToggle {
     $.ajax({
       url: $availableFields.data('url'),
       data: {
-        entity: entity
+        entity,
       },
       dataType: 'json',
-    }).then(response => {
+    }).then((response) => {
       this._removeAvailableFields($availableFields);
 
       for (let i = 0; i < response.length; i++) {
         this._appendAvailableField(
           $availableFields,
           response[i].label + (response[i].required ? '*' : ''),
-          response[i].description
+          response[i].description,
         );
       }
 
@@ -172,7 +172,7 @@ export default class FormFieldToggle {
    * @private
    */
   _appendHelpBox($field, helpBoxContent) {
-    let $helpBox = $('.js-available-field-popover-template').clone();
+    const $helpBox = $('.js-available-field-popover-template').clone();
 
     $helpBox.attr('data-content', helpBoxContent);
     $helpBox.removeClass('js-available-field-popover-template d-none');
@@ -188,7 +188,7 @@ export default class FormFieldToggle {
    * @private
    */
   _appendAvailableField($appendTo, fieldText, helpBoxContent) {
-    let $field = $('.js-available-field-template').clone();
+    const $field = $('.js-available-field-template').clone();
 
     $field.text(fieldText);
 
