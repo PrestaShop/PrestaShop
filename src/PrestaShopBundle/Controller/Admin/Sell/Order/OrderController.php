@@ -141,8 +141,6 @@ class OrderController extends FrameworkBundleAdminController
         return $toolbarButtons;
     }
 
-    //@todo: wip
-
     /**
      * Places an order from BO
      *
@@ -180,7 +178,9 @@ class OrderController extends FrameworkBundleAdminController
     }
 
     /**
-     * Renders create order page
+     * Renders create order page.
+     * Whole page dynamics are on javascript side.
+     * To load specific cart pass cartId to url query params (handled by javascript)
      *
      * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))")
      *
@@ -818,28 +818,6 @@ class OrderController extends FrameworkBundleAdminController
     }
 
     /**
-     * Initializes order status update
-     *
-     * @param int $orderId
-     * @param int $orderStatusId
-     */
-    private function handleOrderStatusUpdate(int $orderId, int $orderStatusId): void
-    {
-        try {
-            $cartId = $this->getCommandBus()->handle(new DuplicateOrderCartCommand($orderId))->getValue();
-
-            return $this->json(
-                $this->getQueryBus()->handle(new GetCartInformation($cartId))
-            );
-        } catch (Exception $e) {
-            return $this->json(
-                ['message' => $this->getErrorMessageForException($e, $this->getErrorMessages($e))],
-                Response::HTTP_BAD_REQUEST
-            );
-        }
-    }
-
-    /**
      * @param Request $request
      *
      * @return RedirectResponse
@@ -1004,7 +982,6 @@ class OrderController extends FrameworkBundleAdminController
                     $orderStatusId
                 )
             );
-
             $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
         } catch (ChangeOrderStatusException $e) {
             $this->handleChangeOrderStatusException($e);

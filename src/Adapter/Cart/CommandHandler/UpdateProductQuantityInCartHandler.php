@@ -190,19 +190,29 @@ final class UpdateProductQuantityInCartHandler extends AbstractCartHandler imple
      * @param UpdateProductQuantityInCartCommand $command
      *
      * @return int
-     *
-     * @throws CartException
      */
-    private function findPreviousQuantityInCart(Cart $cart, UpdateProductQuantityInCartCommand $command)
+    private function findPreviousQuantityInCart(Cart $cart, UpdateProductQuantityInCartCommand $command): int
     {
         $products = $cart->getProducts();
 
-        $isItACombination = ($command->getCombinationId() !== null);
+        $isCombination = ($command->getCombinationId() !== null);
+        $isCustomization = ($command->getCustomizationId() !== null);
 
-        if ($isItACombination) {
+        if ($isCombination) {
             foreach ($products as $cartProduct) {
-                if ((int) $cartProduct['id_product'] === $command->getProductId()->getValue()
-                    && (int) $cartProduct['id_product_attribute'] === $command->getCombinationId()->getValue()) {
+                $equalProductId = (int) $cartProduct['id_product'] === $command->getProductId()->getValue();
+                $equalCombinationId = (int) $cartProduct['id_product_attribute'] === $command->getCombinationId()->getValue();
+
+                if ($equalProductId && $equalCombinationId) {
+                    return (int) $cartProduct['quantity'];
+                }
+            }
+        } elseif ($isCustomization) {
+            foreach ($products as $cartProduct) {
+                $equalProductId = (int) $cartProduct['id_product'] === $command->getProductId()->getValue();
+                $equalCustomizationId = (int) $cartProduct['id_customization'] === $command->getCustomizationId()->getValue();
+
+                if ($equalProductId && $equalCustomizationId) {
                     return (int) $cartProduct['quantity'];
                 }
             }
@@ -214,6 +224,6 @@ final class UpdateProductQuantityInCartHandler extends AbstractCartHandler imple
             }
         }
 
-        throw new CartException('Could not find cart line');
+        return 0;
     }
 }
