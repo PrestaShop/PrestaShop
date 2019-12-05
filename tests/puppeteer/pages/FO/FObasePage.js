@@ -15,6 +15,7 @@ module.exports = class Home extends CommonPage {
     this.languageSelectorDiv = '#_desktop_language_selector';
     this.languageSelectorExpandIcon = `${this.languageSelectorDiv} i.expand-more`;
     this.languageSelectorMenuItemLink = `${this.languageSelectorDiv} ul li a[data-iso-code='%LANG']`;
+    this.currencySelect = 'select[aria-labelledby=\'currency-selector-label\']';
 
     // footer
     this.siteMapLink = '#link-static-page-sitemap-2';
@@ -91,6 +92,18 @@ module.exports = class Home extends CommonPage {
     await Promise.all([
       this.page.waitForNavigation({waitUntil: 'networkidle0'}),
       this.page.click(this.languageSelectorMenuItemLink.replace('%LANG', lang)),
+    ]);
+  }
+
+  /**
+   * Change currency in FO
+   * @param currency
+   * @return {Promise<void>}
+   */
+  async changeCurrency(currency = 'EUR €') {
+    await Promise.all([
+      this.selectByVisibleText(this.currencySelect, currency),
+      this.page.waitForNavigation({waitUntil: 'networkidle0'}),
     ]);
   }
 };
