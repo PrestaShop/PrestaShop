@@ -101,8 +101,6 @@ final class SearchProductsHandler implements SearchProductsHandlerInterface
      */
     private function createFoundProductFromLegacy(Product $product): FoundProduct
     {
-        //@todo: sort products alphabetically
-
         $priceTaxExcluded = Product::getPriceStatic($product->id, false);
 
         $foundProduct = new FoundProduct(

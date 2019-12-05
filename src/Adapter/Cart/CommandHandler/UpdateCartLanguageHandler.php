@@ -102,8 +102,9 @@ final class UpdateCartLanguageHandler extends AbstractCartHandler implements Upd
     private function assertLanguageIsActive(Language $lang): void
     {
         if (!$lang->active) {
-            throw new LanguageException(
-                'Language with id "%s" is not active ',
+            throw new LanguageException(sprintf(
+                'Language with id "%s" is not active',
+                $lang->id),
                 LanguageException::NOT_ACTIVE
             );
         }

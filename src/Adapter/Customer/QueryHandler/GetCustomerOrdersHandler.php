@@ -35,7 +35,7 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerOrders;
 use PrestaShop\PrestaShop\Core\Domain\Customer\QueryHandler\GetCustomerOrdersHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\OrderSummary;
 use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
-use PrestaShop\PrestaShop\Core\Localization\Locale;
+use PrestaShop\PrestaShop\Core\Localization\LocaleInterface;
 
 /**
  * Handles GetCustomerOrders query using legacy object models
@@ -43,15 +43,15 @@ use PrestaShop\PrestaShop\Core\Localization\Locale;
 final class GetCustomerOrdersHandler extends AbstractCustomerHandler implements GetCustomerOrdersHandlerInterface
 {
     /**
-     * @var Locale
+     * @var LocaleInterface
      */
     private $locale;
 
     /**
-     * @param Locale $locale
+     * @param LocaleInterface $locale
      */
     public function __construct(
-        Locale $locale
+        LocaleInterface $locale
     ) {
         $this->locale = $locale;
     }
