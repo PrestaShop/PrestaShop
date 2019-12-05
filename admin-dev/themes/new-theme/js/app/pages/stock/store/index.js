@@ -24,9 +24,9 @@
  */
 import Vue from 'vue';
 import Vuex from 'vuex';
+import _ from 'lodash';
 import * as actions from './actions';
 import mutations from './mutations';
-import _ from 'lodash';
 
 Vue.use(Vuex);
 

@@ -30,7 +30,7 @@ import {EventEmitter} from '../../../components/event-emitter';
 import eventMap from './event-map';
 import Router from '../../../components/router';
 
-const $ = window.$;
+const {$} = window;
 
 /**
  * Responsible for searching cart rules and managing cart rules search block

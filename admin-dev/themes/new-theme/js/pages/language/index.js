@@ -32,12 +32,12 @@ import LinkRowActionExtension from '../../components/grid/extension/link-row-act
 import SubmitBulkExtension from '../../components/grid/extension/submit-bulk-action-extension';
 import SubmitRowActionExtension from '../../components/grid/extension/action/row/submit-row-action-extension';
 import BulkActionCheckboxExtension from '../../components/grid/extension/bulk-action-checkbox-extension';
-import ChoiceTree from "../../components/form/choice-tree";
-import ColumnTogglingExtension from "../../components/grid/extension/column-toggling-extension";
+import ChoiceTree from '../../components/form/choice-tree';
+import ColumnTogglingExtension from '../../components/grid/extension/column-toggling-extension';
 import FiltersSubmitButtonEnablerExtension
   from '../../components/grid/extension/filters-submit-button-enabler-extension';
 
-const $ = window.$;
+const {$} = window;
 
 $(document).ready(() => {
   const grid = new Grid('language');

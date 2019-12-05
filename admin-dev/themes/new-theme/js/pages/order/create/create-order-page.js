@@ -37,7 +37,7 @@ import CartRuleManager from './cart-rule-manager';
 import ProductManager from './product-manager';
 import ProductRenderer from './product-renderer';
 
-const $ = window.$;
+const {$} = window;
 
 /**
  * Page Object for "Create order" page
@@ -67,12 +67,12 @@ export default class CreateOrderPage {
    * @private
    */
   _initListeners() {
-    this.$container.on('input', createOrderMap.customerSearchInput, e => this._initCustomerSearch(e));
-    this.$container.on('click', createOrderMap.chooseCustomerBtn, e => this._initCustomerSelect(e));
-    this.$container.on('click', createOrderMap.useCartBtn, e => this._initCartSelect(e));
-    this.$container.on('click', createOrderMap.useOrderBtn, e => this._initDuplicateOrderCart(e));
-    this.$container.on('input', createOrderMap.productSearch, e => this._initProductSearch(e));
-    this.$container.on('input', createOrderMap.cartRuleSearchInput, e => this._initCartRuleSearch(e));
+    this.$container.on('input', createOrderMap.customerSearchInput, (e) => this._initCustomerSearch(e));
+    this.$container.on('click', createOrderMap.chooseCustomerBtn, (e) => this._initCustomerSelect(e));
+    this.$container.on('click', createOrderMap.useCartBtn, (e) => this._initCartSelect(e));
+    this.$container.on('click', createOrderMap.useOrderBtn, (e) => this._initDuplicateOrderCart(e));
+    this.$container.on('input', createOrderMap.productSearch, (e) => this._initProductSearch(e));
+    this.$container.on('input', createOrderMap.cartRuleSearchInput, (e) => this._initCartRuleSearch(e));
     this.$container.on('blur', createOrderMap.cartRuleSearchInput, () => this.cartRuleManager.stopSearching());
     this._initCartEditing();
     this._onCartLoaded();
@@ -85,20 +85,17 @@ export default class CreateOrderPage {
    * @private
    */
   _initCartEditing() {
-    this.$container.on('change', createOrderMap.deliveryOptionSelect, e =>
-      this.cartEditor.changeDeliveryOption(this.cartId, e.currentTarget.value)
+    this.$container.on('change', createOrderMap.deliveryOptionSelect, (e) => this.cartEditor.changeDeliveryOption(this.cartId, e.currentTarget.value),
     );
 
-    this.$container.on('change', createOrderMap.freeShippingSwitch, e =>
-      this.cartEditor.setFreeShipping(this.cartId, e.currentTarget.value)
+    this.$container.on('change', createOrderMap.freeShippingSwitch, (e) => this.cartEditor.setFreeShipping(this.cartId, e.currentTarget.value),
     );
 
-    this.$container.on('click', createOrderMap.addToCartButton, () =>
-      this.productManager.addProductToCart(this.cartId)
+    this.$container.on('click', createOrderMap.addToCartButton, () => this.productManager.addProductToCart(this.cartId),
     );
 
     this.$container.on('change', createOrderMap.addressSelect, () => this._changeCartAddresses());
-    this.$container.on('click', createOrderMap.productRemoveBtn, e => this._initProductRemoveFromCart(e));
+    this.$container.on('click', createOrderMap.productRemoveBtn, (e) => this._initProductRemoveFromCart(e));
 
     this._addCartRuleToCart();
     this._removeCartRuleFromCart();

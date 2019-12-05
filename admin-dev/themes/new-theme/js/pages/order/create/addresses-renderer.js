@@ -25,13 +25,12 @@
 
 import createOrderPageMap from './create-order-map';
 
-const $ = window.$;
+const {$} = window;
 
 /**
  * Renders Delivery & Invoice addresses select
  */
 export default class AddressesRenderer {
-
   /**
    * @param {Array} addresses
    */

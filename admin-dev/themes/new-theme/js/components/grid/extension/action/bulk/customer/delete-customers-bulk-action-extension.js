@@ -23,13 +23,12 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-const $ = window.$;
+const {$} = window;
 
 /**
  * Handles bulk delete for "Customers" grid.
  */
 export default class DeleteCustomersBulkActionExtension {
-
   constructor() {
     return {
       extend: (grid) => this.extend(grid),
@@ -77,9 +76,7 @@ export default class DeleteCustomersBulkActionExtension {
 
     const customerInput = $customersInput
       .data('prototype')
-      .replace(/__name__/g, customerId)
-    ;
-
+      .replace(/__name__/g, customerId);
     const $item = $($.parseHTML(customerInput)[0]);
     $item.val(customerId);
 

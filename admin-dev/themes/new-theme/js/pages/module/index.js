@@ -27,7 +27,7 @@ import ModuleCard from '../../components/module-card';
 import AdminModuleController from './controller';
 import ModuleLoader from './loader';
 
-const $ = window.$;
+const {$} = window;
 
 $(() => {
   const moduleCardController = new ModuleCard();

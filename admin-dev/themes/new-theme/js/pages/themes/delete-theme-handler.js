@@ -23,14 +23,14 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-const $ = window.$;
+const {$} = window;
 
 /**
  * This handler displays delete theme modal and handles the submit action.
  */
 export default class DeleteThemeHandler {
   constructor() {
-    $(document).on('click', '.js-display-delete-theme-modal', e => this._displayDeleteThemeModal(e));
+    $(document).on('click', '.js-display-delete-theme-modal', (e) => this._displayDeleteThemeModal(e));
   }
 
   /**

@@ -23,7 +23,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-const $ = window.$;
+const {$} = window;
 
 /**
  * Displays, fills or hides State selection block depending on selected country.
@@ -72,7 +72,7 @@ export default class CountryStateSelectionToggler {
       dataType: 'json',
       data: {
         id_country: this.$countryInput.val(),
-      }
+      },
     }).then((response) => {
       if (response.states.length === 0) {
         this.$stateSelectionBlock.fadeOut();
@@ -84,10 +84,10 @@ export default class CountryStateSelectionToggler {
 
       if (isFirstToggle === false) {
         this.$countryStateSelector.empty();
-        var _this = this;
-        $.each(response.states, function (index, value) {
+        const _this = this;
+        $.each(response.states, (index, value) => {
           _this.$countryStateSelector.append($('<option></option>').attr('value', value).text(index));
-        })
+        });
       }
     }).catch((response) => {
       if (typeof response.responseJSON !== 'undefined') {

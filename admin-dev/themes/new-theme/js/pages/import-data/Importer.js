@@ -30,8 +30,8 @@ import PostSizeChecker from './PostSizeChecker';
 export default class Importer {
   constructor() {
     this.configuration = {};
-    this.progressModal = new ImportProgressModal;
-    this.batchSizeCalculator = new ImportBatchSizeCalculator;
+    this.progressModal = new ImportProgressModal();
+    this.batchSizeCalculator = new ImportBatchSizeCalculator();
     this.postSizeChecker = new PostSizeChecker();
 
     // Default number of rows in one batch of the import.
@@ -74,10 +74,10 @@ export default class Importer {
    */
   _ajaxImport(offset, batchSize, validateOnly = true, recurringVariables = {}) {
     this._mergeConfiguration({
-      offset: offset,
+      offset,
       limit: batchSize,
       validateOnly: validateOnly ? 1 : 0,
-      crossStepsVars: JSON.stringify(recurringVariables)
+      crossStepsVars: JSON.stringify(recurringVariables),
     });
 
     this._onImportStart();
@@ -92,9 +92,9 @@ export default class Importer {
           return false;
         }
 
-        let hasErrors = response.errors && response.errors.length,
-            hasWarnings = response.warnings && response.warnings.length,
-            hasNotices = response.notices && response.notices.length;
+        const hasErrors = response.errors && response.errors.length;
+        const hasWarnings = response.warnings && response.warnings.length;
+        const hasNotices = response.notices && response.notices.length;
 
         if (response.totalCount !== undefined && response.totalCount) {
           // The total rows count is retrieved only in the first batch response.
@@ -134,13 +134,13 @@ export default class Importer {
           this.batchSizeCalculator.markImportEnd();
 
           // Calculate next import batch size and offset.
-          let nextOffset = offset + batchSize;
-          let nextBatchSize = this.batchSizeCalculator.calculateBatchSize(batchSize, this.totalRowsCount);
+          const nextOffset = offset + batchSize;
+          const nextBatchSize = this.batchSizeCalculator.calculateBatchSize(batchSize, this.totalRowsCount);
 
           // Showing a warning if post size limit is about to be reached.
           if (this.postSizeChecker.isReachingPostSizeLimit(response.postSizeLimit, response.nextPostSize)) {
             this.progressModal.showPostLimitMessage(
-              this.postSizeChecker.getRequiredPostSizeInMegabytes(response.nextPostSize)
+              this.postSizeChecker.getRequiredPostSizeInMegabytes(response.nextPostSize),
             );
           }
 
@@ -149,7 +149,7 @@ export default class Importer {
             nextOffset,
             nextBatchSize,
             validateOnly,
-            response.crossStepsVariables
+            response.crossStepsVariables,
           );
         }
 
@@ -187,7 +187,7 @@ export default class Importer {
 
         this._onImportStop();
         this.progressModal.showErrorMessages([textStatus]);
-      }
+      },
     });
   }
 
@@ -256,7 +256,7 @@ export default class Importer {
    * @private
    */
   _mergeConfiguration(configuration) {
-    for (let key in configuration) {
+    for (const key in configuration) {
       this._importConfiguration[key] = configuration[key];
     }
   }

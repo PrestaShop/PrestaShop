@@ -45,5 +45,5 @@ export default new Vuex.Store({
   getters,
   modules: {
 
-  }
+  },
 });

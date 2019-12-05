@@ -23,7 +23,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-const $ = window.$;
+const {$} = window;
 
 /**
  * Toggle DNI input requirement on country selection
@@ -64,7 +64,7 @@ export default class CountryDniRequiredToggler {
     const $countrySelectedOption = $(this.countryInputSelectedSelector);
     $(this.countryDniInputLabelDangerSelector).remove();
     this.$countryDniInput.attr('required', false);
-    if (1 === parseInt($countrySelectedOption.attr('need_dni'), 10)) {
+    if (parseInt($countrySelectedOption.attr('need_dni'), 10) === 1) {
       this.$countryDniInput.attr('required', true);
       this.$countryDniInputLabel.prepend($('<span class="text-danger">*</span>'));
     }

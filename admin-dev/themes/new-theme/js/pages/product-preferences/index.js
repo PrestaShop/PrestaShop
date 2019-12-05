@@ -28,7 +28,7 @@ import StockManagementOptionHandler from './stock-management-option-handler';
 import CatalogModeOptionHandler from './catalog-mode-option-handler';
 import * as pageMap from './product-preferences-page-map';
 
-const $ = window.$;
+const {$} = window;
 
 $(() => {
   new TranslatableInput();

@@ -23,7 +23,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-import { showGrowl } from '../../../app/utils/growl';
+import {showGrowl} from '../../../app/utils/growl';
 
 export default class CurrencyForm {
   /**
@@ -65,7 +65,7 @@ export default class CurrencyForm {
 
   _onCurrencySelectorChange() {
     const selectedISOCode = this.$currencySelector.val();
-    if ('' !== selectedISOCode) {
+    if (selectedISOCode !== '') {
       this.$isUnofficialCheckbox.prop('checked', false);
       this.$isoCodeInput.prop('readonly', true);
       this._resetCurrencyData(selectedISOCode);
@@ -76,8 +76,8 @@ export default class CurrencyForm {
   }
 
   _isUnofficialCurrency() {
-    if ('hidden' === this.$isUnofficialCheckbox.prop('type')) {
-      return '1' === this.$isUnofficialCheckbox.attr('value');
+    if (this.$isUnofficialCheckbox.prop('type') === 'hidden') {
+      return this.$isUnofficialCheckbox.attr('value') === '1';
     }
 
     return this.$isUnofficialCheckbox.prop('checked');
@@ -102,12 +102,12 @@ export default class CurrencyForm {
     const getCurrencyData = this.getCLDRDataUrl.replace('CURRENCY_ISO_CODE', selectedISOCode);
     $.get(getCurrencyData)
       .then((currencyData) => {
-        for (let langId in currencyData.names) {
-          let langNameSelector = this.map.namesInput(langId);
+        for (const langId in currencyData.names) {
+          const langNameSelector = this.map.namesInput(langId);
           $(langNameSelector).val(currencyData.names[langId]);
         }
-        for (let langId in currencyData.symbols) {
-          let langSymbolSelector = this.map.symbolsInput(langId);
+        for (const langId in currencyData.symbols) {
+          const langSymbolSelector = this.map.symbolsInput(langId);
           $(langSymbolSelector).val(currencyData.symbols[langId]);
         }
         this.$isoCodeInput.val(currencyData.isoCode);
@@ -117,7 +117,7 @@ export default class CurrencyForm {
         this.$precisionInput.val(currencyData.precision);
       })
       .fail((currencyData) => {
-        let errorMessage = 'Can not find CLDR data for currency ' + selectedISOCode;
+        let errorMessage = `Can not find CLDR data for currency ${selectedISOCode}`;
         if (currencyData && currencyData.responseJSON && currencyData.responseJSON.error) {
           errorMessage = currencyData.responseJSON.error;
         }
@@ -126,6 +126,6 @@ export default class CurrencyForm {
       .always(() => {
         this.$loadingDataModal.modal('hide');
         this.$resetDefaultSettingsButton.removeClass('spinner');
-      })
+      });
   }
 }

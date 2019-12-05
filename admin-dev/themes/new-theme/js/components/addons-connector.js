@@ -23,7 +23,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-const $ = window.$;
+const {$} = window;
 
 /**
  * Responsible for connecting to addons marketplace.
@@ -32,7 +32,7 @@ const $ = window.$;
 export default class AddonsConnector {
   constructor(
     addonsConnectFormSelector,
-    loadingSpinnerSelector
+    loadingSpinnerSelector,
   ) {
     this.addonsConnectFormSelector = addonsConnectFormSelector;
     this.$loadingSpinner = $(loadingSpinnerSelector);
@@ -74,13 +74,13 @@ export default class AddonsConnector {
       beforeSend: () => {
         this.$loadingSpinner.show();
         $('button.btn[type="submit"]', this.addonsConnectFormSelector).hide();
-      }
+      },
     }).then((response) => {
       if (response.success === 1) {
         location.reload();
       } else {
         $.growl.error({
-          message: response.message
+          message: response.message,
         });
 
         this.$loadingSpinner.hide();

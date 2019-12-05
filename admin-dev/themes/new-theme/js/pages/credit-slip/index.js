@@ -32,7 +32,7 @@ import TranslatableInput from '../../components/translatable-input';
 import FiltersSubmitButtonEnablerExtension
   from '../../components/grid/extension/filters-submit-button-enabler-extension';
 
-const $ = window.$;
+const {$} = window;
 
 $(() => {
   const creditSlipGrid = new Grid('credit_slip');

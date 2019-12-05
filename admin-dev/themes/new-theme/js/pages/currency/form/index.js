@@ -25,10 +25,10 @@
 
 import ChoiceTree from '../../../components/form/choice-tree';
 import TranslatableInput from '../../../components/translatable-input';
-import currencyFormMap from "./currency-form-map";
+import currencyFormMap from './currency-form-map';
 import CurrencyForm from './currency-form';
 
-const $ = window.$;
+const {$} = window;
 
 $(() => {
   new TranslatableInput();

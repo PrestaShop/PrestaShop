@@ -48,8 +48,8 @@ export default class ImportProgressModal {
     completed = parseInt(completed);
     total = parseInt(total);
 
-    let $progressBar = this.progressBar,
-        percentage = completed / total * 100;
+    const $progressBar = this.progressBar;
+    const percentage = completed / total * 100;
 
     $progressBar.css('width', `${percentage}%`);
     $progressBar.find('> span').text(`${completed}/${total}`);
@@ -132,11 +132,11 @@ export default class ImportProgressModal {
   _showMessages($messageBlock, messages) {
     let showMessagesBlock = false;
 
-    for (let key in messages) {
+    for (const key in messages) {
       // Indicate that the messages block should be displayed
       showMessagesBlock = true;
 
-      let message = $('<div>');
+      const message = $('<div>');
       message.text(messages[key]);
       message.addClass('message');
 
@@ -152,7 +152,7 @@ export default class ImportProgressModal {
    * Show the "Ignore warnings and continue" button.
    */
   showContinueImportButton() {
-    this.continueImportButton.removeClass('d-none')
+    this.continueImportButton.removeClass('d-none');
   }
 
   /**

@@ -33,7 +33,7 @@ import SubmitBulkExtension from '../../components/grid/extension/submit-bulk-act
 import SubmitRowActionExtension from '../../components/grid/extension/action/row/submit-row-action-extension';
 import LinkRowActionExtension from '../../components/grid/extension/link-row-action-extension';
 
-const $ = window.$;
+const {$} = window;
 
 $(() => {
   const attachmentGrid = new Grid('attachment');

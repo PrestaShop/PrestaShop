@@ -23,7 +23,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-const $ = window.$;
+const {$} = window;
 
 /**
  * In Add/Edit page of Webservice key there is permissions table input (permissons as columns / resources as rows).

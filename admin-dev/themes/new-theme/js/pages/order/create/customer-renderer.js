@@ -27,7 +27,7 @@ import createOrderMap from './create-order-map';
 
 import Router from '../../../components/router';
 
-const $ = window.$;
+const {$} = window;
 
 /**
  * Responsible for customer information rendering
@@ -83,8 +83,7 @@ export default class CustomerRenderer {
     this.$container.find(createOrderMap.customerSearchRow).addClass('d-none');
     this.$container.find(createOrderMap.notSelectedCustomerSearchResults)
       .closest(createOrderMap.customerSearchResultColumn)
-      .remove()
-    ;
+      .remove();
   }
 
   /**
@@ -125,7 +124,7 @@ export default class CustomerRenderer {
       $template.find(createOrderMap.cartTotalField).text(cart.totalPrice);
       $template.find(createOrderMap.cartDetailsBtn).prop(
         'href',
-        this.router.generate('admin_carts_view', {cartId: cart.cartId})
+        this.router.generate('admin_carts_view', {cartId: cart.cartId}),
       );
 
       $template.find(createOrderMap.useCartBtn).data('cart-id', cart.cartId);
@@ -162,7 +161,7 @@ export default class CustomerRenderer {
       $template.find(createOrderMap.orderStatusField).text(order.orderStatus);
       $template.find(createOrderMap.orderDetailsBtn).prop(
         'href',
-        this.router.generate('admin_orders_view', {orderId: order.orderId})
+        this.router.generate('admin_orders_view', {orderId: order.orderId}),
       );
 
       $template.find(createOrderMap.useOrderBtn).data('order-id', order.orderId);
@@ -191,7 +190,7 @@ export default class CustomerRenderer {
     $template.find(createOrderMap.chooseCustomerBtn).data('customer-id', customer.id);
     $template.find(createOrderMap.customerDetailsBtn).prop(
       'href',
-      this.router.generate('admin_customers_view', {customerId: customer.id})
+      this.router.generate('admin_customers_view', {customerId: customer.id}),
     );
 
     return this.$customerSearchResultBlock.append($template);

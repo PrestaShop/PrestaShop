@@ -24,7 +24,7 @@
  */
 import CreateOrderPage from './create/create-order-page';
 
-const $ = window.$;
+const {$} = window;
 
 $(document).ready(() => {
   new CreateOrderPage();

@@ -226,8 +226,8 @@ class NumberFormatter {
   strtr(str, pairs) {
     const substrs = Object.keys(pairs).map(escapeRE);
     return str.split(RegExp(`(${substrs.join('|')})`))
-              .map(part => pairs[part] || part)
-              .join('');
+      .map((part) => pairs[part] || part)
+      .join('');
   }
 
 

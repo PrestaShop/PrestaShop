@@ -23,7 +23,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-const $ = window.$;
+const {$} = window;
 
 /**
  * Module Admin Page Controller.
@@ -187,10 +187,10 @@ class AdminModuleController {
       const selector = $(self.bulkActionDropDownSelector);
       if ($(self.getBulkCheckboxesCheckedSelector()).length > 0) {
         selector.closest('.module-top-menu-item')
-                .removeClass('disabled');
+          .removeClass('disabled');
       } else {
         selector.closest('.module-top-menu-item')
-                .addClass('disabled');
+          .addClass('disabled');
       }
     });
 
@@ -232,7 +232,7 @@ class AdminModuleController {
     const self = this;
     const moduleItemSelector = self.getModuleItemSelector();
 
-    $('.modules-list').each(function scanModulesList() {
+    $('.modules-list').each(() => {
       self.updateTotalResults();
     });
   }
@@ -270,14 +270,14 @@ class AdminModuleController {
 
         if (stylesheet.insertRule) {
           stylesheet.insertRule(
-            requiredSelectorCombination +
-            stylesheetRule, stylesheet.cssRules.length
+            requiredSelectorCombination
+            + stylesheetRule, stylesheet.cssRules.length,
           );
         } else if (stylesheet.addRule) {
           stylesheet.addRule(
             requiredSelectorCombination,
             stylesheetRule,
-            -1
+            -1,
           );
         }
 
@@ -449,9 +449,9 @@ class AdminModuleController {
       if (currentModule.display === self.currentDisplay) {
         isVisible = true;
 
-        moduleCategory = self.currentRefCategory === self.CATEGORY_RECENTLY_USED ?
-                         self.CATEGORY_RECENTLY_USED :
-                         currentModule.categories;
+        moduleCategory = self.currentRefCategory === self.CATEGORY_RECENTLY_USED
+          ? self.CATEGORY_RECENTLY_USED
+          : currentModule.categories;
 
         // Check for same category
         if (self.currentRefCategory !== null) {
@@ -582,7 +582,7 @@ class AdminModuleController {
         beforeSend: () => {
           $(self.addonsLoginButtonSelector).show();
           $('button.btn[type="submit"]', self.addonsConnectForm).hide();
-        }
+        },
       }).done((response) => {
         if (response.success === 1) {
           location.reload();
@@ -625,7 +625,7 @@ class AdminModuleController {
             });
           }, 550);
         });
-      }
+      },
     );
 
     // Reinit modal on exit, but check if not already processing something
@@ -650,7 +650,7 @@ class AdminModuleController {
           event.stopPropagation();
           event.preventDefault();
         }
-      }
+      },
     );
 
     body.on('click', this.moduleImportSelectFileManualSelector, (event) => {
@@ -799,35 +799,35 @@ class AdminModuleController {
 
       // Install ajax call
       $.post(result.module.attributes.urls.install, {'actionParams[confirmPrestaTrust]': '1'})
-       .done((data) => {
-         self.displayOnUploadDone(data[moduleName]);
-       })
-       .fail((data) => {
-         self.displayOnUploadError(data[moduleName]);
-       })
-       .always(() => {
-         self.isUploadStarted = false;
-       });
+        .done((data) => {
+          self.displayOnUploadDone(data[moduleName]);
+        })
+        .fail((data) => {
+          self.displayOnUploadError(data[moduleName]);
+        })
+        .always(() => {
+          self.isUploadStarted = false;
+        });
     });
   }
 
   getBulkCheckboxesSelector() {
     return this.currentDisplay === this.DISPLAY_GRID
-         ? this.bulkActionCheckboxGridSelector
-         : this.bulkActionCheckboxListSelector;
+      ? this.bulkActionCheckboxGridSelector
+      : this.bulkActionCheckboxListSelector;
   }
 
 
   getBulkCheckboxesCheckedSelector() {
     return this.currentDisplay === this.DISPLAY_GRID
-         ? this.checkedBulkActionGridSelector
-         : this.checkedBulkActionListSelector;
+      ? this.checkedBulkActionGridSelector
+      : this.checkedBulkActionListSelector;
   }
 
   getModuleItemSelector() {
     return this.currentDisplay === this.DISPLAY_GRID
-         ? this.moduleItemGridSelector
-         : this.moduleItemListSelector;
+      ? this.moduleItemGridSelector
+      : this.moduleItemListSelector;
   }
 
   /**
@@ -838,7 +838,7 @@ class AdminModuleController {
     const self = this;
     $.getJSON(
       window.moduleURLs.notificationsCount,
-      self.updateNotificationsCount
+      self.updateNotificationsCount,
     ).fail(() => {
       console.error('Could not retrieve module notifications count.');
     });
@@ -850,7 +850,7 @@ class AdminModuleController {
       to_update: $('#subtab-AdminModulesUpdates'),
     };
 
-    for (let key in destinationTabs) {
+    for (const key in destinationTabs) {
       if (destinationTabs[key].length === 0) {
         continue;
       }
@@ -871,7 +871,7 @@ class AdminModuleController {
         }
 
         window.open(`${self.baseAddonsUrl}search.php?search_query=${searchQuery}`, '_blank');
-      }
+      },
     );
   }
 
@@ -925,7 +925,7 @@ class AdminModuleController {
       function initializeBodySortingChange() {
         self.currentSorting = $(this).find(':checked').attr('value');
         self.updateModuleVisibility();
-      }
+      },
     );
   }
 
@@ -981,24 +981,24 @@ class AdminModuleController {
       return;
     }
 
-    //First let's filter modules that can't perform this action
-    let actionMenuLinks = filterAllowedActions(modulesActions);
+    // First let's filter modules that can't perform this action
+    const actionMenuLinks = filterAllowedActions(modulesActions);
     if (!actionMenuLinks.length) {
       return;
     }
 
     let modulesRequestedCountdown = actionMenuLinks.length - 1;
-    let spinnerObj = $("<button class=\"btn-primary-reverse onclick unbind spinner \"></button>");
+    let spinnerObj = $('<button class="btn-primary-reverse onclick unbind spinner "></button>');
     if (actionMenuLinks.length > 1) {
-      //Loop through all the modules except the last one which waits for other
-      //requests and then call its request with cache clear enabled
-      $.each(actionMenuLinks, function bulkModulesLoop(index, actionMenuLink) {
+      // Loop through all the modules except the last one which waits for other
+      // requests and then call its request with cache clear enabled
+      $.each(actionMenuLinks, (index, actionMenuLink) => {
         if (index >= actionMenuLinks.length - 1) {
           return;
         }
         requestModuleAction(actionMenuLink, true, countdownModulesRequest);
       });
-      //Display a spinner for the last module
+      // Display a spinner for the last module
       const lastMenuLink = actionMenuLinks[actionMenuLinks.length - 1];
       const actionMenuObj = lastMenuLink.closest(self.moduleCardController.moduleItemActionsSelector);
       actionMenuObj.hide();
@@ -1013,14 +1013,14 @@ class AdminModuleController {
         actionMenuLink,
         forceDeletion,
         disableCacheClear,
-        requestEndCallback
+        requestEndCallback,
       );
     }
 
     function countdownModulesRequest() {
       modulesRequestedCountdown--;
-      //Now that all other modules have performed their action WITHOUT cache clear, we
-      //can request the last module request WITH cache clear
+      // Now that all other modules have performed their action WITHOUT cache clear, we
+      // can request the last module request WITH cache clear
       if (modulesRequestedCountdown <= 0) {
         if (spinnerObj) {
           spinnerObj.remove();
@@ -1035,19 +1035,21 @@ class AdminModuleController {
     }
 
     function filterAllowedActions(modulesActions) {
-      let actionMenuLinks = [];
+      const actionMenuLinks = [];
       let actionMenuLink;
-      $.each(modulesActions, function filterAllowedModules(index, moduleData) {
+      $.each(modulesActions, (index, moduleData) => {
         actionMenuLink = $(
           self.moduleCardController.moduleActionMenuLinkSelector + bulkModuleAction,
-          moduleData.actionMenuObj
+          moduleData.actionMenuObj,
         );
         if (actionMenuLink.length > 0) {
           actionMenuLinks.push(actionMenuLink);
         } else {
-          $.growl.error({message: window.translate_javascripts['Bulk Action - Request not available for module']
+          $.growl.error({
+            message: window.translate_javascripts['Bulk Action - Request not available for module']
               .replace('[1]', bulkModuleAction)
-              .replace('[2]', moduleData.techName)});
+              .replace('[2]', moduleData.techName),
+          });
         }
       });
 
@@ -1074,7 +1076,7 @@ class AdminModuleController {
         }).done(() => {
           $next.fadeOut();
         });
-      }
+      },
     );
 
     // "Upgrade All" button handler
@@ -1117,7 +1119,7 @@ class AdminModuleController {
         $(self.categorySelectorLabelSelector).text($(this).data('category-display-name'));
         $(self.categoryResetBtnSelector).show();
         self.updateModuleVisibility();
-      }
+      },
     );
 
     body.on(
@@ -1133,7 +1135,7 @@ class AdminModuleController {
         $(this).hide();
         self.currentRefCategory = null;
         self.updateModuleVisibility();
-      }
+      },
     );
   }
 
@@ -1176,7 +1178,7 @@ class AdminModuleController {
           self.switchSortingDisplayTo(switchTo);
           self.currentDisplay = switchTo;
         }
-      }
+      },
     );
   }
 
@@ -1224,7 +1226,7 @@ class AdminModuleController {
         const $this = $(this);
         replaceFirstWordBy(
           $this.find('.module-search-result-wording'),
-          $this.next('.modules-list').find('.module-item').length
+          $this.next('.modules-list').find('.module-item').length,
         );
       });
 
@@ -1233,15 +1235,15 @@ class AdminModuleController {
       const modulesCount = $('.modules-list').find('.module-item').length;
       replaceFirstWordBy($('.module-search-result-wording'), modulesCount);
 
-      const selectorToToggle = (self.currentDisplay === self.DISPLAY_LIST) ?
-                               this.addonItemListSelector :
-                               this.addonItemGridSelector;
+      const selectorToToggle = (self.currentDisplay === self.DISPLAY_LIST)
+        ? this.addonItemListSelector
+        : this.addonItemGridSelector;
       $(selectorToToggle).toggle(modulesCount !== (this.modulesList.length / 2));
 
       if (modulesCount === 0) {
         $('.module-addons-search-link').attr(
           'href',
-          `${this.baseAddonsUrl}search.php?search_query=${encodeURIComponent(this.currentTagsList.join(' '))}`
+          `${this.baseAddonsUrl}search.php?search_query=${encodeURIComponent(this.currentTagsList.join(' '))}`,
         );
       }
     }

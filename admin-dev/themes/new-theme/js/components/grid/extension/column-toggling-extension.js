@@ -23,13 +23,12 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-const $ = global.$;
+const {$} = global;
 
 /**
  * Class ReloadListExtension extends grid with "Column toggling" feature
  */
 export default class ColumnTogglingExtension {
-
   /**
    * Extend grid
    *

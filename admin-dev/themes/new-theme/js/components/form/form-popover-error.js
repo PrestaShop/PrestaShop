@@ -23,7 +23,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-const $ = window.$;
+const {$} = window;
 
 /**
  * Component responsible for displaying form popover errors with modified width which is calculated based on the
@@ -33,7 +33,7 @@ $(() => {
   // loads form popover instance
   $('[data-toggle="form-popover-error"]').popover({
     html: true,
-    content: function () {
+    content() {
       return getErrorContent(this);
     },
   });
@@ -86,4 +86,3 @@ $(() => {
   // registers the event which displays the popover
   $(document).on('shown.bs.popover', '[data-toggle="form-popover-error"]', (event) => repositionPopover(event));
 });
-

@@ -35,7 +35,7 @@ import ExportToSqlManagerExtension from '../../components/grid/extension/export-
 import FiltersSubmitButtonEnablerExtension
   from '../../components/grid/extension/filters-submit-button-enabler-extension';
 
-const $ = window.$;
+const {$} = window;
 
 $(() => {
   const priceRuleGrid = new Grid('catalog_price_rule');

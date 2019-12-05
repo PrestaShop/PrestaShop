@@ -23,8 +23,8 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-import TranslatableInput from "../../components/translatable-input";
-import ChoiceTree from "../../components/form/choice-tree";
+import TranslatableInput from '../../components/translatable-input';
+import ChoiceTree from '../../components/form/choice-tree';
 
 $(() => {
   new TranslatableInput();
