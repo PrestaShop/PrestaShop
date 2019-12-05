@@ -1,6 +1,6 @@
 parameters:
-    AdapterSecurityAdminClass:                PrestaShopBundle\Tests\Mock\AdapterSecurityAdminMock
-    prestashop.security.voter.product.class:  PrestaShopBundle\Tests\Mock\PageVoter
+    AdapterSecurityAdminClass:                LegacyTests\PrestaShopBundle\Mock\AdapterSecurityAdminMock
+    prestashop.security.voter.product.class:  LegacyTests\PrestaShopBundle\Mock\PageVoter
 
 imports:
     - { resource: config_dev.yml }
@@ -13,8 +13,19 @@ framework:
         collect: false
 
 web_profiler:
-    toolbar: false
+    toolbar: '%use_debug_toolbar%'
     intercept_redirects: true
 
 swiftmailer:
     disable_delivery: true
+
+services:
+    prestashop.bundle.routing.converter.cache:
+        class: Symfony\Component\Cache\Adapter\ArrayAdapter
+
+# Doctrine Configuration
+doctrine:
+    dbal:
+        connections:
+            default:
+                dbname: "test_%database_name%"

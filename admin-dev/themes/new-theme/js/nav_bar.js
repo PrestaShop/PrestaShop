@@ -1,5 +1,5 @@
 /**
- * 2007-2017 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -15,122 +15,207 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-import $ from 'jquery';
-import MobileDetect from 'mobile-detect';
+
+import PerfectScrollbar from 'perfect-scrollbar';
+import '../node_modules/perfect-scrollbar/css/perfect-scrollbar.css';
+
+const $ = window.$;
 
 export default class NavBar {
   constructor() {
-    let md = new MobileDetect(window.navigator.userAgent);
-    const MAX_MOBILE_WIDTH = 600;
 
     $(() => {
-      $(".nav-bar").find(".link-levelone").hover(function() {
-        $(this).addClass("-hover");
-      }, function() {
-        $(this).removeClass("-hover");
+      const $navBar = $('.nav-bar');
+      new PerfectScrollbar($navBar.get(0));
+
+      $navBar.find('.link-levelone').hover(
+        function onMouseEnter() {
+          $(this).addClass('-hover');
+        },
+        function onMouseLeave() {
+          $(this).removeClass('-hover');
+        }
+      );
+
+      $('.nav-bar li.link-levelone.has_submenu > a').on(
+        'click',
+        function onNavBarClick(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          const $submenu = $(this).parent();
+          $('.nav-bar li.link-levelone.has_submenu a > i.material-icons.sub-tabs-arrow')
+            .text('keyboard_arrow_down');
+          const onlyClose = $(e.currentTarget).parent().hasClass('ul-open');
+
+          if ($('body').is('.page-sidebar-closed:not(.mobile)')) {
+            $('.nav-bar li.link-levelone.has_submenu.ul-open').removeClass('ul-open open -hover');
+            $('.nav-bar li.link-levelone.has_submenu.ul-open ul.submenu').removeAttr('style');
+          } else {
+            $('.nav-bar li.link-levelone.has_submenu.ul-open ul.submenu').slideUp({
+              complete: function slideUpIsComplete() {
+                $(this).parent().removeClass('ul-open open');
+                $(this).removeAttr('style');
+              },
+            });
+          }
+
+          if (onlyClose) {
+            return;
+          }
+
+          $submenu.addClass('ul-open');
+
+          if ($('body').is('.page-sidebar-closed:not(.mobile)')) {
+            $submenu.addClass('-hover');
+            $submenu.find('ul.submenu').removeAttr('style');
+          } else {
+            $submenu.find('ul.submenu').slideDown({
+              complete: function slideDownIsComplete() {
+                $submenu.addClass('open');
+                $(this).removeAttr('style');
+              },
+            });
+          }
+          $submenu.find('i.material-icons.sub-tabs-arrow').text('keyboard_arrow_up');
+        });
+
+      $navBar.on(
+        'click',
+        '.menu-collapse',
+        function onNavBarClick() {
+          $('body').toggleClass('page-sidebar-closed');
+
+          $('.popover.show').remove();
+          $('.help-box[aria-describedby]').removeAttr('aria-describedby');
+
+          if ($('body').hasClass('page-sidebar-closed')) {
+            $('nav.nav-bar ul.main-menu > li')
+              .removeClass('ul-open open')
+              .find('a > i.material-icons.sub-tabs-arrow').text('keyboard_arrow_down');
+            addMobileBodyClickListener();
+          } else {
+            $('nav.nav-bar ul.main-menu > li.-active')
+              .addClass('ul-open open')
+              .find('a > i.material-icons.sub-tabs-arrow').text('keyboard_arrow_up');
+            $('body').off('click.mobile');
+          }
+
+          $.post({
+            url: $(this).data('toggle-url'),
+            cache: false,
+            data: {
+              shouldCollapse: Number($('body').hasClass('page-sidebar-closed')),
+            },
+          });
+        }
+      );
+
+      addMobileBodyClickListener();
+      const MAX_MOBILE_WIDTH = 1023;
+
+      if ($(window).width() <= MAX_MOBILE_WIDTH) {
+        this.mobileNav(MAX_MOBILE_WIDTH);
+      }
+
+      $(window).on('resize', () => {
+        if ($('body').hasClass('mobile') && $(window).width() > MAX_MOBILE_WIDTH) {
+          this.unbuildMobileMenu();
+        } else if (!$('body').hasClass('mobile') && $(window).width() <= MAX_MOBILE_WIDTH) {
+          this.mobileNav(MAX_MOBILE_WIDTH);
+        }
       });
 
-      $('.nav-bar').on('click', '.menu-collapse', function() {
-        $('body').toggleClass('page-sidebar-closed');
-        $.ajax({
-          url: "index.php",
-          cache: false,
-          data: {
-            token: window.employee_token,
-            ajax: 1,
-            action: 'toggleMenu',
-            tab: 'AdminEmployees',
-            collapse: Number($('body').hasClass('page-sidebar-closed'))
-          },
-        });
-      });
-      if(md.isPhoneSized(MAX_MOBILE_WIDTH)) {
-        this.mobileNav(md, MAX_MOBILE_WIDTH);
-        $(window).on('resize', () => {
-          if(!md.isPhoneSized(MAX_MOBILE_WIDTH) && $('body').hasClass('mobile')) {
-            this.unbuildMobileMenu();
+      function addMobileBodyClickListener() {
+        if (!$('body').is('.page-sidebar-closed:not(.mobile)')) {
+          return;
+        }
+        // To close submenu on mobile devices
+        $('body').on(
+          'click.mobile',
+          () => {
+            if ($('ul.main-menu li.ul-open').length > 0) {
+              $('.nav-bar li.link-levelone.has_submenu.ul-open').removeClass('ul-open open -hover');
+              $('.nav-bar li.link-levelone.has_submenu.ul-open ul.submenu').removeAttr('style');
+            }
           }
-          else if(md.isPhoneSized(MAX_MOBILE_WIDTH) && !$('body').hasClass('mobile')) {
-            this.mobileNav(md, MAX_MOBILE_WIDTH);
-          }
-        });
+        );
       }
     });
   }
+
   mobileNav() {
-    let $logout = $('#header_logout').addClass('link').removeClass('m-t-1').prop('outerHTML');
-    let $employee = $('.employee_avatar').prop('outerHTML');
-    let profileLink = $('.profile-link').attr('href');
-    let $shoplist = $('.shop-list');
-    let $shopText =  $('.shop-list .items-list .active a').html();
+    const $logout = $('#header_logout').addClass('link').removeClass('m-t-1').prop('outerHTML');
+    const $employee = $('.employee_avatar').prop('outerHTML');
+    const profileLink = $('.profile-link').attr('href');
+    const $mainMenu = $('.main-menu');
 
-    $shoplist.find('.link').removeClass('link');
-
+    $('.nav-bar li.link-levelone.has_submenu:not(.open) a > i.material-icons.sub-tabs-arrow').text('keyboard_arrow_down');
     $('body').addClass('mobile');
-    $('.nav-bar').addClass('mobile-nav');
-    $('.panel-collapse').addClass('collapse').removeClass('submenu');
-    $('.link-levelone a').each((index, el)=> {
-      let id = $(el).parent().find('.collapse').attr('id');
-      if(id) {
-        $(el).attr('href', `#${id}`).attr('data-toggle','collapse');
+    $('.nav-bar').addClass('mobile-nav').attr('style', 'margin-left: -100%;');
+    $('.panel-collapse').addClass('collapse');
+    $('.link-levelone a').each((index, el) => {
+      const id = $(el).parent().find('.collapse').attr('id');
+      if (id) {
+        $(el).attr('href', `#${id}`).attr('data-toggle', 'collapse');
       }
     });
-    $('.main-menu').append(`<li class="link-levelone">${$logout}</li>`);
-    $('.main-menu').prepend(`<li class="link-levelone">${$employee}</li>`);
+
+    $mainMenu.append(`<li class='link-levelone' data-submenu=''>${$logout}</li>`);
+    $mainMenu.prepend(`<li class='link-levelone'>${$employee}</li>`);
 
     $('.collapse').collapse({
       toggle: false
     });
 
-    if($shoplist.hasClass('ps-dropdown')) {
-      $('.main-menu li:first').append(`<p class="shop-list-title"><a href="#shop-list-collapse" data-toggle="collapse" aria-expanded="true">${$shopText}</a></p>`);
-      $('.main-menu li:first').append( $('.shop-list .items-list').addClass('collapse').attr('id', 'shop-list-collapse'));
-      $('#shop-list-collapse').collapse({
-        toggle: true
-      });
-    }
-    else {
-      $('.main-menu li:first').append( $('.shop-list'));
-    }
-
-    $('.employee_avatar img, .employee_avatar span').wrap(`<a href="${profileLink}"></a>`);
-
+    $mainMenu.find('.employee_avatar .material-icons, .employee_avatar span').wrap(`<a href='${profileLink}'></a>`);
     $('.js-mobile-menu').on('click', expand);
-
     $('.js-notifs_dropdown').css({
-      'height' : window.innerHeight
+      height: window.innerHeight,
     });
 
-    $('.js-non-responsive').show();
-
-    function expand (){
-      if (!$('div.notification-center.dropdown').hasClass('open')) {
-        $('.mobile-nav').toggleClass('expanded');
-        if(!$('.mobile-nav').hasClass('expanded')){
-          $('.mobile-layer').off();
-          $('.mobile-layer').removeClass('expanded');
-        }
-        else {
-          $('.mobile-layer').on('click', expand);
-          $('.mobile-layer').addClass('expanded');
-        }
+    function expand(e) {
+      if ($('div.notification-center.dropdown').hasClass('open')) {
+        return;
       }
-    };
+
+      if ($('.mobile-nav').hasClass('expanded')) {
+        $('.mobile-nav').animate(
+          {'margin-left': '-100%'},
+          {
+            complete: () => {
+              $('.nav-bar, .mobile-layer').removeClass('expanded');
+              $('.nav-bar, .mobile-layer').addClass('d-none');
+            },
+          }
+        );
+        $('.mobile-layer').off();
+        return;
+      }
+
+      $('.nav-bar, .mobile-layer').addClass('expanded');
+      $('.nav-bar, .mobile-layer').removeClass('d-none');
+      $('.mobile-layer').on('click', expand);
+      $('.mobile-nav').animate({'margin-left': 0});
+    }
   }
+
   unbuildMobileMenu() {
     $('body').removeClass('mobile');
-    $('.main-menu li:first').remove();
+    $('body.page-sidebar-closed .nav-bar .link-levelone.open').removeClass('ul-open open');
+    $('.main-menu li:first, .main-menu li:last').remove();
     $('.js-notifs_dropdown').removeAttr('style');
-    $('.nav-bar').removeClass('mobile-nav');
+    $('.nav-bar').removeClass('mobile-nav expanded').addClass('d-none').css('margin-left', 0);
+    $('.js-mobile-menu').off();
     $('.panel-collapse').removeClass('collapse').addClass('submenu');
     $('.shop-list-title').remove();
     $('.js-non-responsive').hide();
+    $('.mobile-layer').addClass('d-none').removeClass('expanded');
   }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -81,7 +81,7 @@ function migrate_orders()
     }
     for ($i = 0; $i < $nb_loop; $i++) {
         $order_res = Db::getInstance()->query('SELECT * FROM `'._DB_PREFIX_.'orders` LIMIT '.(int)$start.', '.(int)$step);
-        $start = intval(($i+1) * $step);
+        $start = (int) (($i+1) * $step);
         $cpt = 0;
         $flush_limit = 200;
         while ($order = Db::getInstance()->nextRow($order_res)) {
@@ -243,6 +243,7 @@ function mo_duplicateTables()
 		`'._DB_PREFIX_.'orders_2` LIKE `'._DB_PREFIX_.'orders`');
     $res &= Db::getInstance()->execute('CREATE TABLE
 		`'._DB_PREFIX_.'order_detail_2` LIKE `'._DB_PREFIX_.'order_detail`');
+
     return $res;
 }
 
@@ -254,6 +255,7 @@ function mo_renameTables()
 
     $res &= Db::getInstance()->execute('RENAME TABLE `'._DB_PREFIX_.'orders_2` TO `'._DB_PREFIX_.'orders`');
     $res &= Db::getInstance()->execute('RENAME TABLE `'._DB_PREFIX_.'order_detail_2` TO `'._DB_PREFIX_.'order_detail`');
+
     return $res;
 }
 
@@ -319,7 +321,7 @@ function mo_setProductPrices($row, $tax_calculation_method)
         }
     }
 
-    if (($row['reduction_percent'] or $row['reduction_amount'] or $row['group_reduction']) and $tax_calculation_method == PS_TAX_EXC) {
+    if (($row['reduction_percent'] || $row['reduction_amount'] || $row['group_reduction']) && $tax_calculation_method == PS_TAX_EXC) {
         $row['product_price'] = mo_ps_round($row['product_price']);
     }
 

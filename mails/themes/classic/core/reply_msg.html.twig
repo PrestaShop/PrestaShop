@@ -1,0 +1,29 @@
+{% extends '@MailThemes/classic/components/layout.html.twig' %}
+
+{% block content %}
+<tr>
+  <td align="center" class="titleblock">
+    <span class="title">{{ 'Hi {firstname} {lastname},'|trans({}, 'Emails.Body', locale) }}</span>
+  </td>
+</tr>
+<tr>
+  <td class="space_footer">&nbsp;</td>
+</tr>
+<tr>
+  <td class="linkbelow">
+    <span>{reply}</span>
+  </td>
+</tr>
+<tr>
+  <td class="space_footer">&nbsp;</td>
+</tr>
+<tr>
+  <td class="linkbelow">
+    <span>
+      {{ 'Please do not reply directly to this email, we will not receive it.'|trans({}, 'Emails.Body', locale)|raw }}
+      <br/>
+      {{ 'In order to reply, please use the following link: <a href="{link}">{link}</a>'|trans({}, 'Emails.Body', locale)|raw }}
+    </span>
+  </td>
+</tr>
+{% endblock %}

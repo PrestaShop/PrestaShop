@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,16 +16,16 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 /**
- * Class GenderCore
+ * Class GenderCore.
  *
  * @since 1.5.0
  */
@@ -66,7 +66,7 @@ class GenderCore extends ObjectModel
     }
 
     /**
-     * Get all Genders
+     * Get all Genders.
      *
      * @param int|null $idLang Language ID
      *
@@ -74,7 +74,7 @@ class GenderCore extends ObjectModel
      */
     public static function getGenders($idLang = null)
     {
-        if (is_null($idLang)) {
+        if (null === $idLang) {
             $idLang = Context::getContext()->language->id;
         }
 
@@ -84,16 +84,16 @@ class GenderCore extends ObjectModel
     }
 
     /**
-     * Get Gender image
+     * Get Gender image.
      *
      * @return string File path
      */
     public function getImage()
     {
-        if (!isset($this->id) || empty($this->id) || !file_exists(_PS_GENDERS_DIR_.$this->id.'.jpg')) {
-            return _THEME_GENDERS_DIR_.'Unknown.jpg';
+        if (!isset($this->id) || empty($this->id) || !file_exists(_PS_GENDERS_DIR_ . $this->id . '.jpg')) {
+            return _THEME_GENDERS_DIR_ . 'Unknown.jpg';
         }
 
-        return _THEME_GENDERS_DIR_.$this->id.'.jpg';
+        return _THEME_GENDERS_DIR_ . $this->id . '.jpg';
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -27,16 +27,17 @@
 namespace PrestaShopBundle\Controller\Api;
 
 use Exception;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class I18nController extends ApiController
 {
     /**
-     * Show translation for page-app build with vue-js
+     * Show translation for page-app build with vue-js.
      *
      * @param Request $request
+     *
      * @return JsonResponse
      */
     public function listTranslationAction(Request $request)
@@ -45,9 +46,8 @@ class I18nController extends ApiController
             $page = $request->attributes->get('page');
 
             try {
-                $translationClass = $this->container->get('prestashop.translation.api.'.$page);
-            }
-            catch (Exception $exception) {
+                $translationClass = $this->container->get('prestashop.translation.api.' . $page);
+            } catch (Exception $exception) {
                 throw new BadRequestHttpException($exception->getMessage());
             }
         } catch (BadRequestHttpException $exception) {

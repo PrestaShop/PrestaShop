@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -72,13 +72,13 @@ class SupplyOrderStateCore extends ObjectModel
         'primary' => 'id_supply_order_state',
         'multilang' => true,
         'fields' => array(
-            'delivery_note' =>        array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-            'editable' =>            array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-            'receipt_state' =>        array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-            'pending_receipt' =>    array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-            'enclosed' =>            array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-            'color' =>                array('type' => self::TYPE_STRING, 'validate' => 'isColor'),
-            'name' =>                array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 128),
+            'delivery_note' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+            'editable' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+            'receipt_state' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+            'pending_receipt' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+            'enclosed' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+            'color' => array('type' => self::TYPE_STRING, 'validate' => 'isColor'),
+            'name' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 128),
         ),
     );
 
@@ -93,10 +93,11 @@ class SupplyOrderStateCore extends ObjectModel
     );
 
     /**
-     * Gets the list of supply order statuses
+     * Gets the list of supply order statuses.
      *
      * @param int $id_state_referrer Optional, used to know what state is available after this one
      * @param int $id_lang Optional Id Language
+     *
      * @return array States
      */
     public static function getSupplyOrderStates($id_state_referrer = null, $id_lang = null)
@@ -108,16 +109,16 @@ class SupplyOrderStateCore extends ObjectModel
         $query = new DbQuery();
         $query->select('sl.name, s.id_supply_order_state');
         $query->from('supply_order_state', 's');
-        $query->leftjoin('supply_order_state_lang', 'sl', 's.id_supply_order_state = sl.id_supply_order_state AND sl.id_lang='.(int)$id_lang);
+        $query->leftjoin('supply_order_state_lang', 'sl', 's.id_supply_order_state = sl.id_supply_order_state AND sl.id_lang=' . (int) $id_lang);
 
-        if (!is_null($id_state_referrer)) {
+        if (null !== $id_state_referrer) {
             $is_receipt_state = false;
             $is_editable = false;
             $is_delivery_note = false;
             $is_pending_receipt = false;
 
             //check current state to see what state is available
-            $state = new SupplyOrderState((int)$id_state_referrer);
+            $state = new SupplyOrderState((int) $id_state_referrer);
             if (Validate::isLoadedObject($state)) {
                 $is_receipt_state = $state->receipt_state;
                 $is_editable = $state->editable;
@@ -125,18 +126,16 @@ class SupplyOrderStateCore extends ObjectModel
                 $is_pending_receipt = $state->pending_receipt;
             }
 
-            $query->where('s.id_supply_order_state <> '.(int)$id_state_referrer);
+            $query->where('s.id_supply_order_state <> ' . (int) $id_state_referrer);
 
             //check first if the order is editable
             if ($is_editable) {
                 $query->where('s.editable = 1 OR s.delivery_note = 1 OR s.enclosed = 1');
-            }
-            //check if the delivery note is available or if the state correspond to a pending receipt state
-            elseif ($is_delivery_note || $is_pending_receipt) {
+            } elseif ($is_delivery_note || $is_pending_receipt) {
+                //check if the delivery note is available or if the state correspond to a pending receipt state
                 $query->where('(s.delivery_note = 0 AND s.editable = 0) OR s.enclosed = 1');
-            }
-            //check if the state correspond to a receipt state
-            elseif ($is_receipt_state) {
+            } elseif ($is_receipt_state) {
+                //check if the state correspond to a receipt state
                 $query->where('s.receipt_state = 1');
             }
         }
@@ -145,10 +144,11 @@ class SupplyOrderStateCore extends ObjectModel
     }
 
     /**
-     * Gets the list of supply order statuses
+     * Gets the list of supply order statuses.
      *
      * @param array $ids Optional Do not include these ids in the result
      * @param int $id_lang Optional
+     *
      * @return array
      */
     public static function getStates($ids = null, $id_lang = null)
@@ -164,9 +164,9 @@ class SupplyOrderStateCore extends ObjectModel
         $query = new DbQuery();
         $query->select('sl.name, s.id_supply_order_state');
         $query->from('supply_order_state', 's');
-        $query->leftjoin('supply_order_state_lang', 'sl', 's.id_supply_order_state = sl.id_supply_order_state AND sl.id_lang='.(int)$id_lang);
+        $query->leftjoin('supply_order_state_lang', 'sl', 's.id_supply_order_state = sl.id_supply_order_state AND sl.id_lang=' . (int) $id_lang);
         if ($ids) {
-            $query->where('s.id_supply_order_state NOT IN('.implode(',', array_map('intval', $ids)).')');
+            $query->where('s.id_supply_order_state NOT IN(' . implode(',', array_map('intval', $ids)) . ')');
         }
 
         $query->orderBy('sl.name ASC');

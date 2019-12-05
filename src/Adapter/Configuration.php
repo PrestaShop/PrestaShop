@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,94 +16,211 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShop\PrestaShop\Adapter;
 
-use PrestaShop\PrestaShop\Core\ConfigurationInterface;
-use Shop;
 use Combination;
-use Feature;
 use Configuration as ConfigurationLegacy;
+use Feature;
+use Language;
+use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShopBundle\Exception\NotImplementedException;
+use Shop;
+use Symfony\Component\HttpFoundation\ParameterBag;
 
-class Configuration implements ConfigurationInterface
+/**
+ * Adapter of Configuration ObjectModel.
+ */
+class Configuration extends ParameterBag implements ConfigurationInterface
 {
+    /**
+     * @var Shop
+     */
     private $shop;
 
-    /**
-     * Returns constant defined by given $key if exists or check directly into PrestaShop
-     * \Configuration
-     * @param $key
-     * @return mixed
-     */
-    public function get($key)
+    public function __construct(array $parameters = array())
     {
-        if (defined($key)) {
-            return constant($key);
-        } else {
-            return ConfigurationLegacy::get($key);
+        // Do nothing
+        if (!empty($parameters)) {
+            throw new \LogicException('No parameter can be handled in constructor. Use method set() instead.');
         }
     }
 
     /**
-     * Set configuration value
-     * @param $key
-     * @param $value
+     * @throws NotImplementedException
+     */
+    public function all()
+    {
+        throw new NotImplementedException();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function keys()
+    {
+        return array_keys($this->all());
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function replace(array $parameters = array())
+    {
+        $this->add($parameters);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function add(array $parameters = array())
+    {
+        foreach ($parameters as $key => $value) {
+            $this->set($key, $value);
+        }
+    }
+
+    /**
+     * Returns constant defined by given $key if exists or check directly into PrestaShop
+     * \Configuration.
+     *
+     * @param string $key
+     * @param mixed $default The default value if the parameter key does not exist
+     *
+     * @return mixed
+     */
+    public function get($key, $default = null)
+    {
+        if (defined($key)) {
+            return constant($key);
+        }
+
+        //If configuration has never been accessed it is still empty and hasKey/isLangKey will always return false
+        if (!ConfigurationLegacy::configurationIsLoaded()) {
+            ConfigurationLegacy::loadConfiguration();
+        }
+
+        // if the key is multi lang related, we return an array with the value per language.
+        if (ConfigurationLegacy::isLangKey($key)) {
+            return $this->getLocalized($key);
+        }
+
+        if (ConfigurationLegacy::hasKey($key)) {
+            return ConfigurationLegacy::get($key);
+        }
+
+        return $default;
+    }
+
+    /**
+     * Set configuration value.
+     *
+     * @param string $key
+     * @param mixed $value
+     * @param array $options Options
+     *
      * @return $this
+     *
      * @throws \Exception
      */
-    public function set($key, $value)
+    public function set($key, $value, array $options = [])
     {
         // By default, set a piece of configuration for all available shops and shop groups
-        $shopGroupId = 0;
-        $shopId = 0;
+        $shopGroupId = null;
+        $shopId = null;
 
         if ($this->shop instanceof Shop) {
             $shopGroupId = $this->shop->id_shop_group;
             $shopId = $this->shop->id;
         }
 
+        $html = isset($options['html']) ? (bool) $options['html'] : false;
+
         $success = ConfigurationLegacy::updateValue(
             $key,
             $value,
-            false,
+            $html,
             $shopGroupId,
             $shopId
         );
 
         if (!$success) {
-            throw new \Exception("Could not update configuration");
+            throw new \Exception('Could not update configuration');
         }
 
         return $this;
     }
 
     /**
-     * Unset configuration value
-     * @param $key
-     * @return $this
-     * @throws \Exception
+     * {@inheritdoc}
      */
-    public function delete($key)
+    public function has($key)
+    {
+        return ConfigurationLegacy::hasKey($key);
+    }
+
+    /**
+     * Removes a configuration key.
+     *
+     * @param type $key
+     *
+     * @return type
+     */
+    public function remove($key)
     {
         $success = \Configuration::deleteByName(
             $key
         );
 
         if (!$success) {
-            throw new \Exception("Could not update configuration");
+            throw new \Exception('Could not update configuration');
         }
 
         return $this;
     }
 
     /**
-     * Return if Feature feature is active or not
+     * Unset configuration value.
+     *
+     * @param $key
+     *
+     * @return $this
+     *
+     * @throws \Exception
+     *
+     * @deprecated since version 1.7.4.0
+     */
+    public function delete($key)
+    {
+        $this->remove($key);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getIterator()
+    {
+        return new \ArrayIterator($this->all());
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function count()
+    {
+        return count($this->all());
+    }
+
+    /**
+     * Return if Feature feature is active or not.
+     *
      * @return bool
      */
     public function featureIsActive()
@@ -112,7 +229,8 @@ class Configuration implements ConfigurationInterface
     }
 
     /**
-     * Return if Combination feature is active or not
+     * Return if Combination feature is active or not.
+     *
      * @return bool
      */
     public function combinationIsActive()
@@ -122,10 +240,29 @@ class Configuration implements ConfigurationInterface
 
     /**
      * Restrict updates of a piece of configuration to a single shop.
+     *
      * @param Shop $shop
      */
     public function restrictUpdatesTo(Shop $shop)
     {
         $this->shop = $shop;
+    }
+
+    /**
+     * Get localized configuration in all languages
+     *
+     * @param string $key
+     *
+     * @return array Array of langId => localizedConfiguration
+     */
+    private function getLocalized($key)
+    {
+        $configuration = [];
+
+        foreach (Language::getIDs(false) as $langId) {
+            $configuration[$langId] = ConfigurationLegacy::get($key, $langId);
+        }
+
+        return $configuration;
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,18 +16,17 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchContext;
 
 /**
- * Class ProductAssemblerCore
+ * Class ProductAssemblerCore.
  */
 class ProductAssemblerCore
 {
@@ -39,14 +38,14 @@ class ProductAssemblerCore
      *
      * @param \Context $context
      */
-    public function __construct(\Context $context)
+    public function __construct(Context $context)
     {
         $this->context = $context;
         $this->searchContext = new ProductSearchContext($context);
     }
 
     /**
-     * Add missing product fields
+     * Add missing product fields.
      *
      * @param array $rawProduct
      *
@@ -64,7 +63,7 @@ class ProductAssemblerCore
             $nbDaysNewProduct = 20;
         }
 
-        $now = date('Y-m-d').' 00:00:00';
+        $now = date('Y-m-d') . ' 00:00:00';
 
         $sql = "SELECT
                     p.*,
@@ -79,22 +78,25 @@ class ProductAssemblerCore
 				)
 			) > 0) as new
                 FROM {$prefix}product p
-                INNER JOIN {$prefix}product_lang pl
+                LEFT JOIN {$prefix}product_lang pl
                     ON pl.id_product = p.id_product
                     AND pl.id_shop = $idShop
                     AND pl.id_lang = $idLang
-                    AND p.id_product = $idProduct
                 LEFT JOIN {$prefix}stock_available sa
 			        ON sa.id_product = p.id_product 
-			        AND sa.id_shop = $idShop";
+			        AND sa.id_shop = $idShop
+			    WHERE p.id_product = $idProduct";
 
         $rows = Db::getInstance()->executeS($sql);
+        if ($rows === false) {
+            return $rawProduct;
+        }
 
-        return array_merge($rawProduct, $rows[0]);
+        return array_merge($rows[0], $rawProduct);
     }
 
     /**
-     * Assemble Product
+     * Assemble Product.
      *
      * @param array $rawProduct
      *

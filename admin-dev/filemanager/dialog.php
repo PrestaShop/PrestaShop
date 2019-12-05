@@ -1,18 +1,16 @@
 <?php
-include('config/config.php');
+include 'config/config.php';
 
 $_SESSION["verify"] = "RESPONSIVEfilemanager";
 
 if (isset($_POST['submit'])) {
-    include('upload.php');
+    include 'upload.php';
 } else {
-    include('include/utils.php');
-
-
+    include 'include/utils.php';
 
     if (isset($_GET['fldr'])
         && !empty($_GET['fldr'])
-        && preg_match('/\.{1,2}[\/|\\\]/', urldecode($_GET['fldr'])) === 0
+        && preg_match('/\.{1,2}[\/|\\\]?/', urldecode($_GET['fldr'])) === 0
     ) {
         $subdir = str_replace("\0", '', urldecode(trim($_GET['fldr'], '/').'/'));
     } else {
@@ -33,7 +31,6 @@ if (isset($_POST['submit'])) {
     if ($subdir == '/') {
         $subdir = '';
     }
-
 
     /***
      *SUB-DIR CODE
@@ -81,7 +78,7 @@ if (isset($_POST['submit'])) {
             $parent = '';
         }
         if (file_exists($current_path.$parent.'config.php')) {
-            require_once($current_path.$parent.'config.php');
+            require_once $current_path.$parent.'config.php';
             $cycle = false;
         }
 
@@ -102,7 +99,7 @@ if (isset($_POST['submit'])) {
         $popup = 0;
     }
 //Sanitize popup
-    $popup = !!$popup;
+    $popup = (bool) $popup;
 
 //view type
     if (!isset($_SESSION['view_type'])) {
@@ -139,7 +136,6 @@ if (isset($_POST['submit'])) {
         $descending = $_SESSION['descending'];
     }
 
-
     $lang = $default_language;
     if (isset($_GET['lang']) && $_GET['lang'] != 'undefined' && $_GET['lang'] != '') {
         $lang = $_GET['lang'];
@@ -154,7 +150,6 @@ if (isset($_POST['submit'])) {
             $lang = $default_language;
         }
     }
-
 
     require_once $language_file;
 
@@ -171,7 +166,7 @@ if (isset($_POST['submit'])) {
             'lang' => Tools::safeOutput($lang),
             'popup' => $popup,
             'field_id' => isset($_GET['field_id']) ? (int)$_GET['field_id'] : '',
-            'fldr' => ''
+            'fldr' => '',
         )
     );
     ?>
@@ -222,7 +217,7 @@ if (isset($_POST['submit'])) {
             if (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) {
                 ?>
 				<script type="text/javascript" src="https://dme0ih8comzn4.cloudfront.net/js/feather.js"></script>
-			<?php 
+			<?php
             } else {
                 ?>
 				<script type="text/javascript" src="http://feather.aviary.com/js/feather.js "></script>
@@ -347,9 +342,9 @@ if (isset($_POST['submit'])) {
     ?>"/>
 	<input type="hidden" id="descending" value="<?php echo $descending ? "true" : "false";
     ?>"/>
-	<?php $protocol = 'http';
+	<?php $protocol = Tools::getShopProtocol();
     ?>
-	<input type="hidden" id="current_url" value="<?php echo str_replace(array('&filter='.$filter), array(''), $protocol."://".$_SERVER['HTTP_HOST'].Tools::safeOutput($_SERVER['REQUEST_URI']));
+	<input type="hidden" id="current_url" value="<?php echo str_replace(array('&filter='.$filter), array(''), $protocol.$_SERVER['HTTP_HOST'].Tools::safeOutput($_SERVER['REQUEST_URI']));
     ?>"/>
 	<input type="hidden" id="lang_show_url" value="<?php echo Tools::safeOutput(lang_Show_url);
     ?>"/>
@@ -383,7 +378,7 @@ if (isset($_POST['submit'])) {
 				</ul>
 				<div class="tab-content">
 					<div class="tab-pane active" id="tab1">
-						<?php 
+						<?php
 }
     ?>
 						<form action="dialog.php" method="post" enctype="multipart/form-data" id="myAwesomeDropzone" class="dropzone">
@@ -424,7 +419,7 @@ if (isset($_POST['submit'])) {
 						<div class="upload-help"><?php echo Tools::safeOutput(lang_Upload_java_help);
     ?></div>
 					</div>
-					<?php 
+					<?php
 }
     ?>
 				</div>
@@ -433,7 +428,7 @@ if (isset($_POST['submit'])) {
 		</div>
 		<!----- uploader div start ------->
 
-	<?php 
+	<?php
 }
     ?>
 	<div class="container-fluid">
@@ -455,7 +450,7 @@ if (isset($_POST['submit'])) {
         $apply = 'apply';
     }
 
-    $files = scandir($current_path.$subfolder.$subdir);
+    $files = scandir($current_path . $subfolder . $subdir, SCANDIR_SORT_NONE);
     $n_files = count($files);
 
     //php sorting
@@ -504,15 +499,19 @@ if (isset($_POST['submit'])) {
     switch ($sort_by) {
         case 'name':
             usort($sorted, 'filenameSort');
+
             break;
         case 'date':
             usort($sorted, 'dateSort');
+
             break;
         case 'size':
             usort($sorted, 'sizeSort');
+
             break;
         case 'extension':
             usort($sorted, 'extensionSort');
+
             break;
         default:
             break;
@@ -554,14 +553,14 @@ if (isset($_POST['submit'])) {
 									<button class="tip btn upload-btn" title="<?php echo Tools::safeOutput(lang_Upload_file);
     ?>">
 										<i class="icon-plus"></i><i class="icon-file"></i></button>
-								<?php 
+								<?php
 }
     ?>
 								<?php if ($create_folders) {
     ?>
 									<button class="tip btn new-folder" title="<?php echo Tools::safeOutput(lang_New_Folder) ?>">
 										<i class="icon-plus"></i><i class="icon-folder-open"></i></button>
-								<?php 
+								<?php
 }
     ?>
 							</div>
@@ -617,20 +616,20 @@ if (isset($_POST['submit'])) {
 									<input id="select-type-5" name="radio-sort" type="radio" data-item="ff-item-type-5" class="hide"/>
 									<label id="ff-item-type-5" title="<?php echo Tools::safeOutput(lang_Music);
     ?>" for="select-type-5" class="tip btn ff-label-type-5"><i class="icon-music"></i></label>
-								<?php 
+								<?php
 }
     ?>
 								<input accesskey="f" type="text" class="filter-input" id="filter-input" name="filter" placeholder="<?php echo fix_strtolower(lang_Text_filter);
     ?>..." value="<?php echo Tools::safeOutput($filter);
     ?>"/><?php if ($n_files > $file_number_limit_js) {
-    ?><label id="filter" class="btn"><i class="icon-play"></i></label><?php 
+    ?><label id="filter" class="btn"><i class="icon-play"></i></label><?php
 }
     ?>
 
 								<input id="select-type-all" name="radio-sort" type="radio" data-item="ff-item-type-all" class="hide"/>
 								<label id="ff-item-type-all" title="<?php echo Tools::safeOutput(lang_All);
     ?>" <?php if (Tools::getValue('type') == 1 || Tools::getValue('type') == 3) {
-    ?>style="visibility: hidden;" <?php 
+    ?>style="visibility: hidden;" <?php
 }
     ?> data-item="ff-item-type-all" for="select-type-all" style="margin-rigth:0px;" class="tip btn btn-inverse ff-label-type-all"><i class="icon-align-justify icon-white"></i></label>
 
@@ -723,7 +722,7 @@ if (isset($_POST['submit'])) {
 		<br/>
 		<div class="alert alert-error">There is an error! The upload folder there isn't. Check your config.php file.
 		</div>
-	<?php 
+	<?php
 } else {
     ?>
 	<h4 id="help"><?php echo Tools::safeOutput(lang_Swipe_help);
@@ -732,7 +731,7 @@ if (isset($_POST['submit'])) {
     ?>
 		<div class="alert alert-block"><?php echo Tools::safeOutput($folder_message);
     ?></div>
-	<?php 
+	<?php
 }
     ?>
 	<?php if ($show_sorting_bar) {
@@ -765,7 +764,7 @@ if (isset($_POST['submit'])) {
 			<div class='file-operations'><?php echo Tools::safeOutput(lang_Operations);
     ?></div>
 		</div>
-	<?php 
+	<?php
 }
     ?>
 
@@ -790,7 +789,7 @@ if (isset($_POST['submit'])) {
         "midi",
         "mid",
         "ogg",
-        "wav"
+        "wav",
     );
     foreach ($files as $file_array) {
         $file = $file_array['file'];
@@ -884,7 +883,7 @@ if (isset($_POST['submit'])) {
 					<div class="file-date"><?php echo date(lang_Date_type, $file_array['date']) ?></div>
 					<?php if ($show_folder_size) {
     ?>
-					<div class="file-size"><?php echo makeSize($file_array['size']) ?></div><?php 
+					<div class="file-size"><?php echo makeSize($file_array['size']) ?></div><?php
 }
     ?>
 					<div class='file-extension'><?php echo lang_Type_dir;
@@ -913,7 +912,7 @@ if (isset($_POST['submit'])) {
     ?>"></i>
 						</a>
 					</figcaption>
-				<?php 
+				<?php
 }
         ?>
 			</figure>
@@ -1050,7 +1049,7 @@ if (isset($_POST['submit'])) {
 				<div class="img-precontainer">
 					<?php if ($is_icon_thumb) {
     ?>
-						<div class="filetype"><?php echo $extension_lower ?></div><?php 
+						<div class="filetype"><?php echo $extension_lower ?></div><?php
 }
         ?>
 					<div class="img-container">
@@ -1075,7 +1074,7 @@ if (isset($_POST['submit'])) {
 							<img alt="<?php echo Tools::safeOutput($filename." thumbnails");
     ?>" class="<?php echo $show_original_mini ? "original" : "" ?> <?php echo $is_icon_thumb_mini ? "icon" : "" ?>" src="<?php echo Tools::safeOutput($mini_src);
     ?>">
-						<?php 
+						<?php
 }
         ?>
 					</div>
@@ -1083,7 +1082,7 @@ if (isset($_POST['submit'])) {
 				<?php if ($is_icon_thumb) {
     ?>
 					<div class="cover"></div>
-				<?php 
+				<?php
 }
         ?>
 			</a>
@@ -1145,7 +1144,7 @@ if (isset($_POST['submit'])) {
 } else {
     ?>
 						<a class="preview disabled"><i class="icon-eye-open icon-white"></i></a>
-					<?php 
+					<?php
 }
         ?>
 					<a href="javascript:void('')" class="tip-left edit-button <?php if ($rename_files) {
@@ -1182,7 +1181,7 @@ if (isset($_POST['submit'])) {
 
     ?></div>
 	</ul>
-	<?php 
+	<?php
 }
     ?>
 	</div>
@@ -1221,5 +1220,5 @@ if (isset($_POST['submit'])) {
 	<img id='aviary_img' src='' class="hide"/>
 	</body>
 	</html>
-<?php 
+<?php
 } ?>

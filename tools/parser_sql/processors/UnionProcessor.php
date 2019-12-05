@@ -30,10 +30,10 @@
  * DAMAGE.
  */
 
-require_once(dirname(__FILE__) . '/AbstractProcessor.php');
-require_once(dirname(__FILE__) . '/SQLProcessor.php');
-require_once(dirname(__FILE__) . '/DefaultProcessor.php');
-require_once(dirname(__FILE__) . '/../utils/ExpressionType.php');
+require_once dirname(__FILE__) . '/AbstractProcessor.php';
+require_once dirname(__FILE__) . '/SQLProcessor.php';
+require_once dirname(__FILE__) . '/DefaultProcessor.php';
+require_once dirname(__FILE__) . '/../utils/ExpressionType.php';
 
 /**
  * 
@@ -43,7 +43,6 @@ require_once(dirname(__FILE__) . '/../utils/ExpressionType.php');
  * 
  */
 class UnionProcessor extends AbstractProcessor {
-
     public function isUnion($queries) {
         $unionTypes = array('UNION', 'UNION ALL');
         foreach ($unionTypes as $unionType) {
@@ -51,6 +50,7 @@ class UnionProcessor extends AbstractProcessor {
                 return true;
             }
         }
+
         return false;
     }
 
@@ -83,11 +83,13 @@ class UnionProcessor extends AbstractProcessor {
                     if (preg_match("/^\\(\\s*select\\s*/i", $token)) {
                         $processor = new DefaultProcessor();
                         $queries[$unionType][$key] = $processor->process($this->removeParenthesisFromStart($token));
+
                         break;
                     }
 
                     $processor = new SQLProcessor();
                     $queries[$unionType][$key] = $processor->process($queries[$unionType][$key]);
+
                     break;
                 }
             }
@@ -122,6 +124,7 @@ class UnionProcessor extends AbstractProcessor {
                 }
                 if (strtoupper($trim) === $skipUntilToken) {
                     $skipUntilToken = false;
+
                     continue; // read the next token
                 }
             }
@@ -163,6 +166,4 @@ class UnionProcessor extends AbstractProcessor {
 
         return $this->processMySQLUnion($queries);
     }
-
 }
-?>

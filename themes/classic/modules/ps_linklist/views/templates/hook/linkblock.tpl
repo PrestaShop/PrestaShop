@@ -1,5 +1,5 @@
 {**
- * 2007-2017 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -15,18 +15,18 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
-<div class="col-md-4 links">
+<div class="col-md-6 links">
   <div class="row">
   {foreach $linkBlocks as $linkBlock}
     <div class="col-md-6 wrapper">
-      <h3 class="h3 hidden-sm-down">{$linkBlock.title}</h3>
+      <p class="h3 hidden-sm-down">{$linkBlock.title}</p>
       {assign var=_expand_id value=10|mt_rand:100000}
       <div class="title clearfix hidden-md-up" data-target="#footer_sub_menu_{$_expand_id}" data-toggle="collapse">
         <span class="h3">{$linkBlock.title}</span>
@@ -44,7 +44,9 @@
                 id="{$link.id}-{$linkBlock.id}"
                 class="{$link.class}"
                 href="{$link.url}"
-                title="{$link.description}">
+                title="{$link.description}"
+                {if !empty($link.target)} target="{$link.target}" {/if}
+            >
               {$link.title}
             </a>
           </li>

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -51,14 +51,14 @@ class SqlLoader
      */
     public function __construct(Db $db = null)
     {
-        if (is_null($db)) {
+        if (null === $db) {
             $db = Db::getInstance();
         }
         $this->db = $db;
     }
 
     /**
-     * Set a list of keywords which will be replaced in queries
+     * Set a list of keywords which will be replaced in queries.
      *
      * @param array $data
      */
@@ -70,12 +70,25 @@ class SqlLoader
     }
 
     /**
-     * Parse a SQL file and execute queries
+     * Parse a SQL file and execute queries.
+     *
+     * @deprecated use parseFile()
      *
      * @param string $filename
      * @param bool $stop_when_fail
      */
     public function parse_file($filename, $stop_when_fail = true)
+    {
+        return $this->parseFile($filename, $stop_when_fail);
+    }
+
+    /**
+     * Parse a SQL file and execute queries.
+     *
+     * @param string $filename
+     * @param bool $stop_when_fail
+     */
+    public function parseFile($filename, $stop_when_fail = true)
     {
         if (!file_exists($filename)) {
             throw new PrestashopInstallerException("File $filename not found");
@@ -85,7 +98,7 @@ class SqlLoader
     }
 
     /**
-     * Parse and execute a list of SQL queries
+     * Parse and execute a list of SQL queries.
      *
      * @param string $content
      * @param bool $stop_when_fail
@@ -119,7 +132,7 @@ class SqlLoader
     }
 
     /**
-     * Get list of errors from last parsing
+     * Get list of errors from last parsing.
      *
      * @return array
      */

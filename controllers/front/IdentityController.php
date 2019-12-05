@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,14 +16,13 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 class IdentityControllerCore extends FrontController
 {
     public $auth = true;
@@ -31,22 +30,25 @@ class IdentityControllerCore extends FrontController
     public $authRedirection = 'identity';
     public $ssl = true;
 
+    public $passwordRequired = true;
+
     /**
-     * Assign template vars related to page content
+     * Assign template vars related to page content.
+     *
      * @see FrontController::initContent()
      */
     public function initContent()
     {
         $should_redirect = false;
 
-        $customer_form = $this->makeCustomerForm();
+        $customer_form = $this->makeCustomerForm()->setPasswordRequired($this->passwordRequired);
         $customer = new Customer();
 
         $customer_form->getFormatter()
             ->setAskForNewPassword(true)
-            ->setPasswordRequired(true)
-            ->setPartnerOptinRequired($customer->isFieldRequired('optin'))
-        ;
+            ->setAskForPassword($this->passwordRequired)
+            ->setPasswordRequired($this->passwordRequired)
+            ->setPartnerOptinRequired($customer->isFieldRequired('optin'));
 
         if (Tools::isSubmit('submitCreate')) {
             $customer_form->fillWith(Tools::getAllValues());
@@ -63,7 +65,7 @@ class IdentityControllerCore extends FrontController
         }
 
         $this->context->smarty->assign([
-            'customer_form' => $customer_form->getProxy()
+            'customer_form' => $customer_form->getProxy(),
         ]);
 
         if ($should_redirect) {

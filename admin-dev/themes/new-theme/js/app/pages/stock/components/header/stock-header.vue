@@ -1,5 +1,5 @@
 <!--**
- * 2007-2017 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -15,17 +15,22 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *-->
+
 <template>
-  <div class="stock-header">
-    <Breadcrumb />
-    <h1>{{trans('head_title')}}</h1>
+  <div class="header-toolbar">
+    <div class="container-fluid">
+      <Breadcrumb />
+      <div class="title-row">
+        <h1 class="title">{{trans('head_title')}}</h1>
+      </div>
+    </div>
     <Tabs />
   </div>
 </template>
@@ -34,20 +39,29 @@
   import Breadcrumb from './breadcrumb';
   import Tabs from './tabs';
 
+  const $ = global.$;
+
+  function getOldHeaderToolbarButtons() {
+    return $('.header-toolbar')
+      .first()
+      .find('.toolbar-icons');
+  }
+
   export default {
     components: {
       Breadcrumb,
       Tabs,
     },
+    mounted() {
+      // move the toolbar buttons to this header
+      const toolbarButtons = getOldHeaderToolbarButtons();
+      toolbarButtons.insertAfter($(this.$el).find('.title-row > .title'));
+
+      // signal header change (so size can be updated)
+      const event = $.Event('vueHeaderMounted', {
+        name: 'stock-header',
+      });
+      $(document).trigger(event);
+    },
   };
 </script>
-
-<style lang="sass" scoped>
-  .stock-header {
-    position: fixed;
-    top: 40px;
-    background: white;
-    width: 100%;
-    z-index: 3;
-  }
-</style>

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -46,14 +46,14 @@ abstract class Db extends DbCore
      * @var array
      */
     public $queries = array();
-    
+
     /**
      * List of uniq queries (replace numbers by XX)
      *
      * @var array
      */
     public $uniqQueries = array();
-    
+
     /**
      * List of tables
      *
@@ -72,7 +72,7 @@ abstract class Db extends DbCore
         if (preg_match('/^\s*explain\s+/i', $sql)) {
             $explain = true;
         }
-            
+
         if (!$explain) {
             $uniqSql = preg_replace('/[\'"][a-f0-9]{32}[\'"]/', '<span style="color:blue">XX</span>', $sql);
             $uniqSql = preg_replace('/[0-9]+/', '<span style="color:blue">XX</span>', $uniqSql);
@@ -112,14 +112,14 @@ abstract class Db extends DbCore
             foreach ($stack as $call) {
                 $stack_light[] = array('file' => isset($call['file']) ? $call['file'] : 'undefined', 'line' => isset($call['line']) ? $call['line'] : 'undefined');
             }
-            
+
             $this->queries[] = array(
                 'query' => $sql,
                 'time' => $end - $start,
-                'stack' => $stack_light
+                'stack' => $stack_light,
             );
         }
-        
+
         return $result;
     }
 }

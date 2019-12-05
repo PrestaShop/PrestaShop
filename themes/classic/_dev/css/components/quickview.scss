@@ -28,21 +28,23 @@
     z-index: 1;
     min-height: 21.88rem;
     .product-images > li.thumb-container > .thumb {
-      width: 4.938rem;
+      width: 100%;
+      max-width: 4.938rem;
       margin-bottom: 0.8125rem;
       background: white;
     }
   }
   .mask {
     width: 35%;
-    height: 22.5rem;
+    max-height: 22.5rem;
     overflow: hidden;
     margin-left: $small-space;
   }
   .arrows {
     position: absolute;
     top: 0;
-    height: 22.5rem;
+    bottom: 0;
+    max-height: 22.5rem;
     right: 5rem;
     z-index: 0;
     .arrow-up {

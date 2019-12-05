@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -35,6 +35,7 @@ class HTMLTemplateOrderReturnCore extends HTMLTemplate
     /**
      * @param OrderReturn $order_return
      * @param $smarty
+     *
      * @throws PrestaShopException
      */
     public function __construct(OrderReturn $order_return, $smarty)
@@ -48,32 +49,32 @@ class HTMLTemplateOrderReturnCore extends HTMLTemplate
         $prefix = Configuration::get('PS_RETURN_PREFIX', Context::getContext()->language->id);
         $this->title = sprintf(HTMLTemplateOrderReturn::l('%1$s%2$06d'), $prefix, $this->order_return->id);
 
-        $this->shop = new Shop((int)$this->order->id_shop);
+        $this->shop = new Shop((int) $this->order->id_shop);
     }
 
     /**
-     * Returns the template's HTML content
+     * Returns the template's HTML content.
      *
      * @return string HTML content
      */
     public function getContent()
     {
-        $delivery_address = new Address((int)$this->order->id_address_delivery);
+        $delivery_address = new Address((int) $this->order->id_address_delivery);
         $formatted_delivery_address = AddressFormat::generateAddress($delivery_address, array(), '<br />', ' ');
         $formatted_invoice_address = '';
 
         if ($this->order->id_address_delivery != $this->order->id_address_invoice) {
-            $invoice_address = new Address((int)$this->order->id_address_invoice);
+            $invoice_address = new Address((int) $this->order->id_address_invoice);
             $formatted_invoice_address = AddressFormat::generateAddress($invoice_address, array(), '<br />', ' ');
         }
 
         $this->smarty->assign(array(
             'order_return' => $this->order_return,
-            'return_nb_days' => (int)Configuration::get('PS_ORDER_RETURN_NB_DAYS'),
-            'products' => OrderReturn::getOrdersReturnProducts((int)$this->order_return->id, $this->order),
+            'return_nb_days' => (int) Configuration::get('PS_ORDER_RETURN_NB_DAYS'),
+            'products' => OrderReturn::getOrdersReturnProducts((int) $this->order_return->id, $this->order),
             'delivery_address' => $formatted_delivery_address,
             'invoice_address' => $formatted_invoice_address,
-            'shop_address' => AddressFormat::generateAddress($this->shop->getAddress(), array(), '<br />', ' ')
+            'shop_address' => AddressFormat::generateAddress($this->shop->getAddress(), array(), '<br />', ' '),
         ));
 
         $tpls = array(
@@ -89,17 +90,17 @@ class HTMLTemplateOrderReturnCore extends HTMLTemplate
     }
 
     /**
-     * Returns the template filename
+     * Returns the template filename.
      *
      * @return string filename
      */
     public function getFilename()
     {
-        return Configuration::get('PS_RETURN_PREFIX', Context::getContext()->language->id, null, $this->order->id_shop).sprintf('%06d', $this->order_return->id).'.pdf';
+        return Configuration::get('PS_RETURN_PREFIX', Context::getContext()->language->id, null, $this->order->id_shop) . sprintf('%06d', $this->order_return->id) . '.pdf';
     }
 
     /**
-     * Returns the template filename when using bulk rendering
+     * Returns the template filename when using bulk rendering.
      *
      * @return string filename
      */
@@ -109,7 +110,7 @@ class HTMLTemplateOrderReturnCore extends HTMLTemplate
     }
 
     /**
-     * Returns the template's HTML header
+     * Returns the template's HTML header.
      *
      * @return string HTML header
      */

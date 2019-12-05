@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,21 +16,21 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Adapter\Module;
 
+use Module as LegacyModule;
+use PrestaShop\PrestaShop\Core\Addon\AddonListFilterOrigin;
 use PrestaShop\PrestaShop\Core\Addon\Module\AddonListFilterDeviceStatus;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleInterface;
 use Symfony\Component\HttpFoundation\ParameterBag;
-use PrestaShop\PrestaShop\Core\Addon\AddonListFilterOrigin;
-use Module as LegacyModule;
 
 /**
  * This class is the interface to the legacy Module class.
@@ -39,7 +39,7 @@ use Module as LegacyModule;
  */
 class Module implements ModuleInterface
 {
-    /** @var legacyInstance Module The instance of the legacy module */
+    /** @var LegacyModule Module The instance of the legacy module */
     public $instance = null;
 
     /**
@@ -82,6 +82,7 @@ class Module implements ModuleInterface
         'need_instance' => 0,
         'limited_countries' => array(),
         'parent_class' => 'Module',
+        'is_paymentModule' => false,
         'productType' => 'module',
         'warning' => '',
         'img' => '',
@@ -114,6 +115,7 @@ class Module implements ModuleInterface
         'is_present' => 0,
         'is_valid' => 0,
         'version' => null,
+        'path' => '',
     );
 
     /**
@@ -148,7 +150,7 @@ class Module implements ModuleInterface
 
         if ($this->database->get('installed')) {
             $version = $this->database->get('version');
-        } elseif (is_null($this->attributes->get('version')) && $this->disk->get('is_valid')) {
+        } elseif (null === $this->attributes->get('version') && $this->disk->get('is_valid')) {
             $version = $this->disk->get('version');
         } else {
             $version = $this->attributes->get('version');
@@ -158,10 +160,7 @@ class Module implements ModuleInterface
             $this->attributes->set('version_available', $this->disk->get('version'));
         }
 
-        $img = $this->attributes->get('img');
-        if (empty($img)) {
-            $this->attributes->set('img', __PS_BASE_URI__.'img/questionmark.png');
-        }
+        $this->fillLogo();
 
         $this->attributes->set('version', $version);
         $this->attributes->set('type', $this->convertType($this->get('origin_filter_value')));
@@ -171,6 +170,11 @@ class Module implements ModuleInterface
         $this->attributes->set('price', (array) $this->attributes->get('price'));
     }
 
+    /**
+     * @return legacyInstance|void
+     *
+     * @throws \Exception
+     */
     public function getInstance()
     {
         if (!$this->hasValidInstance()) {
@@ -185,24 +189,39 @@ class Module implements ModuleInterface
      */
     public function hasValidInstance()
     {
-        if (($this->disk->has('is_present') && $this->disk->get('is_present') == false)
-            || ($this->disk->has('is_valid') && $this->disk->get('is_valid') == false)) {
+        if (($this->disk->has('is_present') && $this->disk->getBoolean('is_present') === false)
+            || ($this->disk->has('is_valid') && $this->disk->getBoolean('is_valid') === false)
+        ) {
             return false;
         }
 
         if ($this->instance === null) {
-            // We try to instanciate the legacy class if not done yet
+            // We try to instantiate the legacy class if not done yet
             try {
                 $this->instanciateLegacyModule($this->attributes->get('name'));
             } catch (\Exception $e) {
-                // ToDo: Send to log when PR merged
+                $this->disk->set('is_valid', false);
+
+                return false;
             }
         }
-        $this->disk->set('is_valid', ($this->instance instanceof LegacyModule));
+
+        $this->disk->set('is_valid', $this->instance instanceof LegacyModule);
 
         return $this->disk->get('is_valid');
     }
 
+    /**
+     * @return bool
+     */
+    public function isActive()
+    {
+        return (bool) $this->database->get('active');
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function onInstall()
     {
         if (!$this->hasValidInstance()) {
@@ -213,34 +232,47 @@ class Module implements ModuleInterface
         // "Notice: Use of undefined constant _PS_INSTALL_LANGS_PATH_ - assumed '_PS_INSTALL_LANGS_PATH_'"
         LegacyModule::updateTranslationsAfterInstall(false);
 
-        return $this->instance->install();
+        // Casted to Boolean, because some modules returns 1 instead true and 0 instead false.
+        // Other value types are not expected. See also: https://github.com/PrestaShop/PrestaShop/pull/11442#issuecomment-440485268
+        // The best way is to check for non Boolean type and `throw \UnexpectedValueException`,
+        // but it's need much refactoring and testing.
+        // TODO: refactoring.
+        $result = (bool) $this->instance->install();
+
+        $this->database->set('installed', $result);
+        $this->database->set('active', $result);
+        $this->database->set('version', $this->attributes->get('version'));
+
+        return $result;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function onUninstall()
     {
         if (!$this->hasValidInstance()) {
             return false;
         }
 
-        return $this->instance->uninstall();
+        $result = $this->instance->uninstall();
+        $this->database->set('installed', !$result);
+
+        return $result;
     }
 
     /**
-     * Execute up files. You can update configuration, update sql schema.
-     * No file modification.
-     *
-     * @return bool true for success
+     * {@inheritdoc}
      */
     public function onUpgrade($version)
     {
+        $this->database->set('version', $this->attributes->get('version_available'));
+
         return true;
     }
 
     /**
-     * Called when switching the current theme of the selected shop.
-     * You can update configuration, enable/disable modules...
-     *
-     * @return bool true for success
+     * {@inheritdoc}
      */
     public function onEnable()
     {
@@ -248,15 +280,14 @@ class Module implements ModuleInterface
             return false;
         }
 
-        return $this->instance->enable();
+        $result = $this->instance->enable();
+        $this->database->set('active', $result);
+
+        return $result;
     }
 
     /**
-     * Not necessarily the opposite of enable. Use this method if
-     * something must be done when switching to another theme (like uninstall
-     * very specific modules for example).
-     *
-     * @return bool true for success
+     * {@inheritdoc}
      */
     public function onDisable()
     {
@@ -264,27 +295,45 @@ class Module implements ModuleInterface
             return false;
         }
 
-        return $this->instance->disable();
+        $result = $this->instance->disable();
+        $this->database->set('active', !$result);
+
+        return $result;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function onMobileEnable()
     {
         if (!$this->hasValidInstance()) {
             return false;
         }
 
-        return $this->instance->enableDevice(AddonListFilterDeviceStatus::DEVICE_MOBILE);
+        $result = $this->instance->enableDevice(AddonListFilterDeviceStatus::DEVICE_MOBILE);
+        $this->database->set('active_on_mobile', $result);
+
+        return $result;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function onMobileDisable()
     {
         if (!$this->hasValidInstance()) {
             return false;
         }
 
-        return $this->instance->disableDevice(AddonListFilterDeviceStatus::DEVICE_MOBILE);
+        $result = $this->instance->disableDevice(AddonListFilterDeviceStatus::DEVICE_MOBILE);
+        $this->database->set('active_on_mobile', !$result);
+
+        return $result;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function onReset()
     {
         if (!$this->hasValidInstance()) {
@@ -294,22 +343,48 @@ class Module implements ModuleInterface
         return $this->instance->reset();
     }
 
+    /**
+     * Retrieve an instance of Legacy Module Object model from data.
+     */
     protected function instanciateLegacyModule()
     {
-        require_once _PS_MODULE_DIR_.DIRECTORY_SEPARATOR.$this->attributes->get('name').DIRECTORY_SEPARATOR.$this->attributes->get('name').'.php';
+        /**
+         * @TODO Temporary: This test prevents an error when switching branches with the cache.
+         * Can be removed at the next release (when we will be sure that it is defined)
+         */
+        $path = $this->disk->get('path', ''); // Variable needed for empty() test
+        if (empty($path)) {
+            $this->disk->set('path', _PS_MODULE_DIR_ . DIRECTORY_SEPARATOR . $this->attributes->get('name'));
+        }
+        // End of temporary content
+        require_once $this->disk->get('path') . DIRECTORY_SEPARATOR . $this->attributes->get('name') . '.php';
         $this->instance = LegacyModule::getInstanceByName($this->attributes->get('name'));
     }
 
+    /**
+     * @param $attribute
+     *
+     * @return mixed
+     */
     public function get($attribute)
     {
         return $this->attributes->get($attribute, null);
     }
 
+    /**
+     * @param $attribute
+     * @param $value
+     */
     public function set($attribute, $value)
     {
         $this->attributes->set($attribute, $value);
     }
 
+    /**
+     * @param $value
+     *
+     * @return mixed|string
+     */
     private function convertType($value)
     {
         $conversionTable = array(
@@ -320,20 +395,33 @@ class Module implements ModuleInterface
         return isset($conversionTable[$value]) ? $conversionTable[$value] : '';
     }
 
+    /**
+     * Set the module logo.
+     */
     public function fillLogo()
     {
-        $this->set('logo', '../../img/questionmark.png');
-
-        if (@filemtime(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.basename(_PS_MODULE_DIR_).DIRECTORY_SEPARATOR.$this->get('name')
-            .DIRECTORY_SEPARATOR.'logo.gif')) {
-            $this->set('logo', 'logo.gif');
+        $img = $this->attributes->get('img');
+        if (empty($img)) {
+            $this->attributes->set('img', __PS_BASE_URI__ . 'img/questionmark.png');
         }
-        if (@filemtime(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.basename(_PS_MODULE_DIR_).DIRECTORY_SEPARATOR.$this->get('name')
-            .DIRECTORY_SEPARATOR.'logo.png')) {
-            $this->set('logo', 'logo.png');
+        $this->attributes->set('logo', __PS_BASE_URI__ . 'img/questionmark.png');
+
+        foreach (array('logo.png', 'logo.gif') as $logo) {
+            $logo_path = _PS_MODULE_DIR_ . $this->get('name') . DIRECTORY_SEPARATOR . $logo;
+            if (file_exists($logo_path)) {
+                $this->attributes->set('img', __PS_BASE_URI__ . basename(_PS_MODULE_DIR_) . '/' . $this->get('name') . '/' . $logo);
+                $this->attributes->set('logo', $logo);
+
+                break;
+            }
         }
     }
 
+    /**
+     * Inform the merchant an upgrade is wating to be applied from the disk or the marketplace.
+     *
+     * @return bool
+     */
     public function canBeUpgraded()
     {
         if ($this->database->get('installed') == 0) {
@@ -341,12 +429,46 @@ class Module implements ModuleInterface
         }
 
         // Potential update from API
-        if ($this->attributes->get('version_available') !== 0
-            && version_compare($this->database->get('version'), $this->attributes->get('version_available'), '<')) {
+        if ($this->canBeUpgradedFromAddons()) {
             return true;
         }
 
         // Potential update from disk
         return version_compare($this->database->get('version'), $this->disk->get('version'), '<');
+    }
+
+    /**
+     * Only check if an upgrade is available on the marketplace.
+     *
+     * @return bool
+     */
+    public function canBeUpgradedFromAddons()
+    {
+        return $this->attributes->get('version_available') !== 0
+            && version_compare($this->database->get('version'), $this->attributes->get('version_available'), '<');
+    }
+
+    /**
+     * Return installed modules.
+     *
+     * @param int $position Take only positionnables modules
+     *
+     * @return array Modules
+     */
+    public function getModulesInstalled($position = 0)
+    {
+        return LegacyModule::getModulesInstalled((int) $position);
+    }
+
+    /**
+     * Return an instance of the specified module.
+     *
+     * @param int $moduleId Module id
+     *
+     * @return Module instance
+     */
+    public function getInstanceById($moduleId)
+    {
+        return LegacyModule::getInstanceById((int) $moduleId);
     }
 }

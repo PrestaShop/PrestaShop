@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,19 +16,19 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
-use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 use PrestaShop\PrestaShop\Adapter\CoreException;
+use PrestaShop\PrestaShop\Adapter\ServiceLocator;
+use PrestaShop\PrestaShop\Core\Crypto\Hashing;
 
 /**
- * Class EmployeeCore
+ * Class EmployeeCore.
  */
 class EmployeeCore extends ObjectModel
 {
@@ -74,7 +74,7 @@ class EmployeeCore extends ObjectModel
     public $bo_theme;
 
     /** @var string employee's chosen css file */
-    public $bo_css = 'admin-theme.css';
+    public $bo_css = 'theme.css';
 
     /** @var int employee desired screen width */
     public $bo_width;
@@ -87,9 +87,6 @@ class EmployeeCore extends ObjectModel
 
     /** @var bool Status */
     public $active = 1;
-
-    /** @var bool Optin status */
-    public $optin = 1;
 
     public $remote_addr;
 
@@ -111,14 +108,13 @@ class EmployeeCore extends ObjectModel
         'table' => 'employee',
         'primary' => 'id_employee',
         'fields' => array(
-            'lastname' => array('type' => self::TYPE_STRING, 'validate' => 'isName', 'required' => true, 'size' => 32),
-            'firstname' => array('type' => self::TYPE_STRING, 'validate' => 'isName', 'required' => true, 'size' => 32),
-            'email' => array('type' => self::TYPE_STRING, 'validate' => 'isEmail', 'required' => true, 'size' => 128),
+            'lastname' => array('type' => self::TYPE_STRING, 'validate' => 'isName', 'required' => true, 'size' => 255),
+            'firstname' => array('type' => self::TYPE_STRING, 'validate' => 'isName', 'required' => true, 'size' => 255),
+            'email' => array('type' => self::TYPE_STRING, 'validate' => 'isEmail', 'required' => true, 'size' => 255),
             'id_lang' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt', 'required' => true),
-            'passwd' => array('type' => self::TYPE_STRING, 'validate' => 'isPasswd', 'required' => true, 'size' => 60),
+            'passwd' => array('type' => self::TYPE_STRING, 'validate' => 'isPasswd', 'required' => true, 'size' => 255),
             'last_passwd_gen' => array('type' => self::TYPE_STRING),
             'active' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-            'optin' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
             'id_profile' => array('type' => self::TYPE_INT, 'validate' => 'isInt', 'required' => true),
             'bo_color' => array('type' => self::TYPE_STRING, 'validate' => 'isColor', 'size' => 32),
             'default_tab' => array('type' => self::TYPE_INT, 'validate' => 'isInt'),
@@ -157,7 +153,7 @@ class EmployeeCore extends ObjectModel
     /**
      * EmployeeCore constructor.
      *
-     * @param int|null $id     Employee ID
+     * @param int|null $id Employee ID
      * @param int|null $idLang Language ID
      * @param int|null $idShop Shop ID
      */
@@ -165,7 +161,7 @@ class EmployeeCore extends ObjectModel
     {
         parent::__construct($id, null, $idShop);
 
-        if (!is_null($idLang)) {
+        if (null !== $idLang) {
             $this->id_lang = (int) (Language::getLanguage($idLang) !== false) ? $idLang : Configuration::get('PS_LANG_DEFAULT');
         }
 
@@ -178,6 +174,7 @@ class EmployeeCore extends ObjectModel
 
     /**
      * @see ObjectModel::getFields()
+     *
      * @return array
      */
     public function getFields()
@@ -202,30 +199,31 @@ class EmployeeCore extends ObjectModel
     }
 
     /**
-     * Adds current Employee as a new Object to the database
+     * Adds current Employee as a new Object to the database.
      *
-     * @param bool $autoDate   Automatically set `date_upd` and `date_add` columns
+     * @param bool $autoDate Automatically set `date_upd` and `date_add` columns
      * @param bool $nullValues Whether we want to use NULL values instead of empty quotes values
      *
      * @return bool Indicates whether the Employee has been successfully added
+     *
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
      */
     public function add($autoDate = true, $nullValues = true)
     {
-        $this->last_passwd_gen = date('Y-m-d H:i:s', strtotime('-'.Configuration::get('PS_PASSWD_TIME_BACK').'minutes'));
-        $this->saveOptin();
+        $this->last_passwd_gen = date('Y-m-d H:i:s', strtotime('-' . Configuration::get('PS_PASSWD_TIME_BACK') . 'minutes'));
         $this->updateTextDirection();
 
         return parent::add($autoDate, $nullValues);
     }
 
     /**
-     * Updates the current object in the database
+     * Updates the current object in the database.
      *
      * @param bool $nullValues Whether we want to use NULL values instead of empty quotes values
      *
      * @return bool Indicates whether the Employee has been successfully updated
+     *
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
      */
@@ -241,32 +239,13 @@ class EmployeeCore extends ObjectModel
 
         $currentEmployee = new Employee((int) $this->id);
 
-        if ($currentEmployee->optin != $this->optin) {
-            $this->saveOptin();
-        }
-
         $this->updateTextDirection();
 
         return parent::update($nullValues);
     }
 
-    protected function saveOptin()
-    {
-        if ($this->optin && !defined('PS_INSTALLATION_IN_PROGRESS')) {
-            $language = new Language($this->id_lang);
-            $params = http_build_query(array(
-                'email' => $this->email,
-                'method' => 'addMemberToNewsletter',
-                'language' => $language->iso_code,
-                'visitorType' => 1,
-                'source' => 'backoffice',
-            ));
-            Tools::file_get_contents('http://www.prestashop.com/ajax/controller.php?'.$params);
-        }
-    }
-
     /**
-     * Update Employee text direction
+     * Update Employee text direction.
      */
     protected function updateTextDirection()
     {
@@ -274,26 +253,26 @@ class EmployeeCore extends ObjectModel
             return;
         }
 
-        $path = _PS_ADMIN_DIR_.DIRECTORY_SEPARATOR.'themes'.DIRECTORY_SEPARATOR.$this->bo_theme.DIRECTORY_SEPARATOR.'css'.DIRECTORY_SEPARATOR;
+        $path = _PS_ADMIN_DIR_ . DIRECTORY_SEPARATOR . 'themes' . DIRECTORY_SEPARATOR . $this->bo_theme . DIRECTORY_SEPARATOR . 'css' . DIRECTORY_SEPARATOR;
         $language = new Language($this->id_lang);
 
         if ($language->is_rtl && !strpos($this->bo_css, '_rtl')) {
             $boCss = preg_replace('/^(.*)\.css$/', '$1_rtl.css', $this->bo_css);
 
-            if (file_exists($path.$boCss)) {
+            if (file_exists($path . $boCss)) {
                 $this->bo_css = $boCss;
             }
         } elseif (!$language->is_rtl && strpos($this->bo_css, '_rtl')) {
             $boCss = preg_replace('/^(.*)_rtl\.css$/', '$1.css', $this->bo_css);
 
-            if (file_exists($path.$boCss)) {
+            if (file_exists($path . $boCss)) {
                 $this->bo_css = $boCss;
             }
         }
     }
 
     /**
-     * Return list of employees
+     * Return list of employees.
      *
      * @param bool $activeOnly Filter employee by active status
      *
@@ -303,23 +282,22 @@ class EmployeeCore extends ObjectModel
     {
         return Db::getInstance()->executeS('
 			SELECT `id_employee`, `firstname`, `lastname`
-			FROM `'._DB_PREFIX_.'employee`
-			'.($activeOnly ? ' WHERE `active` = 1' : '').'
+			FROM `' . _DB_PREFIX_ . 'employee`
+			' . ($activeOnly ? ' WHERE `active` = 1' : '') . '
 			ORDER BY `lastname` ASC
 		');
     }
 
     /**
-     * Return employee instance from its e-mail (optionally check password)
+     * Return employee instance from its e-mail (optionally check password).
      *
-     * @param string $email             e-mail
+     * @param string $email e-mail
      * @param string $plaintextPassword Password is also checked if specified
-     * @param bool   $activeOnly        Filter employee by active status
+     * @param bool $activeOnly Filter employee by active status
      *
      * @return bool|Employee|EmployeeCore Employee instance
      *                                    `false` if not found
      */
-
     public function getByEmail($email, $plaintextPassword = null, $activeOnly = true)
     {
         if (!Validate::isEmail($email) || ($plaintextPassword != null && !Validate::isPlaintextPassword($plaintextPassword))) {
@@ -329,7 +307,7 @@ class EmployeeCore extends ObjectModel
         $sql = new DbQuery();
         $sql->select('e.*');
         $sql->from('employee', 'e');
-        $sql->where('e.`email` = \''.pSQL($email).'\'');
+        $sql->where('e.`email` = \'' . pSQL($email) . '\'');
         if ($activeOnly) {
             $sql->where('e.`active` = 1');
         }
@@ -339,11 +317,11 @@ class EmployeeCore extends ObjectModel
             return false;
         }
 
-        /** @var \PrestaShop\PrestaShop\Core\Crypto\Hashing $crypto */
-        $crypto = ServiceLocator::get('\\PrestaShop\\PrestaShop\\Core\\Crypto\\Hashing');
+        /** @var Hashing $crypto */
+        $crypto = ServiceLocator::get(Hashing::class);
 
         $passwordHash = $result['passwd'];
-        $shouldCheckPassword = !is_null($plaintextPassword);
+        $shouldCheckPassword = null !== $plaintextPassword;
         if ($shouldCheckPassword && !$crypto->checkHash($plaintextPassword, $passwordHash)) {
             return false;
         }
@@ -366,7 +344,7 @@ class EmployeeCore extends ObjectModel
     }
 
     /**
-     * Check if Employee exists
+     * Check if Employee exists.
      *
      * @param string $email Employee email
      *
@@ -378,14 +356,15 @@ class EmployeeCore extends ObjectModel
             die(Tools::displayError());
         }
 
-        return (bool)Db::getInstance()->getValue('
-		SELECT `id_employee`
-		FROM `'._DB_PREFIX_.'employee`
-		WHERE `email` = \''.pSQL($email).'\'');
+        return (bool) Db::getInstance()->getValue('
+		    SELECT `id_employee`
+		    FROM `' . _DB_PREFIX_ . 'employee`
+		    WHERE `email` = \'' . pSQL($email) . '\'
+        ');
     }
 
     /**
-     * Check if employee password is the right one
+     * Check if employee password is the right one.
      *
      * @param string $passwordHash Password
      *
@@ -400,8 +379,8 @@ class EmployeeCore extends ObjectModel
         $sql = new DbQuery();
         $sql->select('e.`id_employee`');
         $sql->from('employee', 'e');
-        $sql->where('e.`id_employee` = '.(int) $idEmployee);
-        $sql->where('e.`passwd` = \''.pSQL($passwordHash).'\'');
+        $sql->where('e.`id_employee` = ' . (int) $idEmployee);
+        $sql->where('e.`passwd` = \'' . pSQL($passwordHash) . '\'');
         $sql->where('e.`active` = 1');
 
         // Get result from DB
@@ -409,38 +388,39 @@ class EmployeeCore extends ObjectModel
     }
 
     /**
-     * Count amount of Employees with the given Profile ID
+     * Count amount of Employees with the given Profile ID.
      *
-     * @param int  $idProfile  Profile ID
+     * @param int $idProfile Profile ID
      * @param bool $activeOnly Only active Employees
      *
-     * @return false|null|string
+     * @return false|string|null
      */
     public static function countProfile($idProfile, $activeOnly = false)
     {
-        return Db::getInstance()->getValue('
-		SELECT COUNT(*)
-		FROM `'._DB_PREFIX_.'employee`
-		WHERE `id_profile` = '.(int) $idProfile.'
-		'.($activeOnly ? ' AND `active` = 1' : ''));
+        return Db::getInstance()->getValue(
+            '
+		    SELECT COUNT(*)
+		    FROM `' . _DB_PREFIX_ . 'employee`
+		    WHERE `id_profile` = ' . (int) $idProfile . '
+		    ' . ($activeOnly ? ' AND `active` = 1' : '')
+        );
     }
 
     /**
-     * Check if this Employee is the only SuperAdmin left
+     * Check if this Employee is the only SuperAdmin left.
      *
      * @return bool Indicates whether this Employee is the last one
      */
     public function isLastAdmin()
     {
-        return ($this->isSuperAdmin()
+        return $this->isSuperAdmin()
             && Employee::countProfile($this->id_profile, true) == 1
-            && $this->active
-        );
+            && $this->active;
     }
 
     /**
      * Set password
-     * (for webservice)
+     * (for webservice).
      *
      * @param string $passwd Password
      *
@@ -467,28 +447,28 @@ class EmployeeCore extends ObjectModel
     }
 
     /**
-     * Check employee informations saved into cookie and return employee validity
+     * Check employee informations saved into cookie and return employee validity.
      *
      * @return bool employee validity
      */
     public function isLoggedBack()
     {
-        if (!Cache::isStored('isLoggedBack'.$this->id)) {
+        if (!Cache::isStored('isLoggedBack' . $this->id)) {
             /* Employee is valid only if it can be load and if cookie password is the same as database one */
             $result = (
                 $this->id && Validate::isUnsignedId($this->id) && Context::getContext()->cookie && Employee::checkPassword($this->id, Context::getContext()->cookie->passwd)
                     && (!isset(Context::getContext()->cookie->remote_addr) || Context::getContext()->cookie->remote_addr == ip2long(Tools::getRemoteAddr()) || !Configuration::get('PS_COOKIE_CHECKIP'))
             );
-            Cache::store('isLoggedBack'.$this->id, $result);
+            Cache::store('isLoggedBack' . $this->id, $result);
 
             return $result;
         }
 
-        return Cache::retrieve('isLoggedBack'.$this->id);
+        return Cache::retrieve('isLoggedBack' . $this->id);
     }
 
     /**
-     * Logout
+     * Logout.
      */
     public function logout()
     {
@@ -500,21 +480,22 @@ class EmployeeCore extends ObjectModel
     }
 
     /**
-     * Get favorite Module list
+     * Get favorite Module list.
      *
-     * @return array|false|mysqli_result|null|PDOStatement|resource
+     * @return array|false|mysqli_result|PDOStatement|resource|null
      */
     public function favoriteModulesList()
     {
-        return Db::getInstance()->executeS('
-			SELECT `module`
-			FROM `'._DB_PREFIX_.'module_preference`
-			WHERE `id_employee` = '.(int)$this->id.' AND `favorite` = 1 AND (`interest` = 1 OR `interest` IS NULL)'
+        return Db::getInstance()->executeS(
+            '
+		    SELECT `module`
+		    FROM `' . _DB_PREFIX_ . 'module_preference`
+		    WHERE `id_employee` = ' . (int) $this->id . ' AND `favorite` = 1 AND (`interest` = 1 OR `interest` IS NULL)'
         );
     }
 
     /**
-     * Check if the employee is associated to a specific shop
+     * Check if the employee is associated to a specific shop.
      *
      * @param int $idShop
      *
@@ -528,7 +509,7 @@ class EmployeeCore extends ObjectModel
     }
 
     /**
-     * Check if the employee is associated to a specific shop group
+     * Check if the employee is associated to a specific shop group.
      *
      * @param int $id_shop_group ShopGroup ID
      *
@@ -552,7 +533,7 @@ class EmployeeCore extends ObjectModel
     }
 
     /**
-     * Get default id_shop with auth for current employee
+     * Get default id_shop with auth for current employee.
      *
      * @return int
      *
@@ -568,24 +549,26 @@ class EmployeeCore extends ObjectModel
     }
 
     /**
-     * Get Employees by Profile
+     * Get Employees by Profile.
      *
-     * @param    int $idProfile  Profile ID
-     * @param bool   $activeOnly Only active Employees
+     * @param int $idProfile Profile ID
+     * @param bool $activeOnly Only active Employees
      *
-     * @return array|false|mysqli_result|null|PDOStatement|resource
+     * @return array|false|mysqli_result|PDOStatement|resource|null
      */
     public static function getEmployeesByProfile($idProfile, $activeOnly = false)
     {
-        return Db::getInstance()->executeS('
-		SELECT *
-		FROM `'._DB_PREFIX_.'employee`
-		WHERE `id_profile` = '.(int) $idProfile.'
-		'.($activeOnly ? ' AND `active` = 1' : ''));
+        return Db::getInstance()->executeS(
+            '
+		    SELECT *
+		    FROM `' . _DB_PREFIX_ . 'employee`
+		    WHERE `id_profile` = ' . (int) $idProfile . '
+		    ' . ($activeOnly ? ' AND `active` = 1' : '')
+        );
     }
 
     /**
-     * Check if current employee is super administrator
+     * Check if current employee is super administrator.
      *
      * @return bool
      */
@@ -595,7 +578,7 @@ class EmployeeCore extends ObjectModel
     }
 
     /**
-     * Get Employee image
+     * Get Employee image.
      *
      * @return string Image URL
      */
@@ -605,11 +588,11 @@ class EmployeeCore extends ObjectModel
             return Tools::getAdminImageUrl('prestashop-avatar.png');
         }
 
-        return Tools::getShopProtocol().'profile.prestashop.com/'.urlencode($this->email).'.jpg';
+        return Tools::getShopProtocol() . 'profile.prestashop.com/' . urlencode($this->email) . '.jpg';
     }
 
     /**
-     * Get last elements for notify
+     * Get last elements for notify.
      *
      * @param $element
      *
@@ -619,19 +602,19 @@ class EmployeeCore extends ObjectModel
     {
         $element = bqSQL($element);
         $max = Db::getInstance()->getValue('
-			SELECT MAX(`id_'.$element.'`) as `id_'.$element.'`
-			FROM `'._DB_PREFIX_.$element.($element == 'order' ? 's': '').'`');
+			SELECT MAX(`id_' . $element . '`) as `id_' . $element . '`
+			FROM `' . _DB_PREFIX_ . $element . ($element == 'order' ? 's' : '') . '`');
 
         // if no rows in table, set max to 0
-        if ((int)$max < 1) {
+        if ((int) $max < 1) {
             $max = 0;
         }
 
-        return (int)$max;
+        return (int) $max;
     }
 
     /**
-     * Set last connection date
+     * Set last connection date.
      *
      * @param int $idEmployee Employee ID
      *
@@ -640,10 +623,12 @@ class EmployeeCore extends ObjectModel
     public static function setLastConnectionDate($idEmployee)
     {
         return Db::getInstance()->execute('
-			UPDATE `'._DB_PREFIX_.'employee`
-			SET `last_connection_date` = CURRENT_DATE()
-			WHERE `id_employee` = '.(int) $idEmployee.' AND `last_connection_date`< CURRENT_DATE()
-		');
+            UPDATE `' . _DB_PREFIX_ . 'employee`
+            SET `last_connection_date` = CURRENT_DATE()
+            WHERE `id_employee` = ' . (int) $idEmployee . '
+            AND (`last_connection_date` < CURRENT_DATE()
+            OR `last_connection_date` IS NULL)
+        ');
     }
 
     /**
@@ -651,10 +636,10 @@ class EmployeeCore extends ObjectModel
      */
     public function stampResetPasswordToken()
     {
-        $salt = $this->id.'+'.uniqid(rand(), true);
-        $this->reset_password_token = sha1(time().$salt);
-        $validity = (int) Configuration::get('PS_PASSWD_RESET_VALIDITY')?:1440;
-        $this->reset_password_validity = date('Y-m-d H:i:s', strtotime('+'.$validity.' minutes'));
+        $salt = $this->id . '+' . uniqid(mt_rand(0, mt_getrandmax()), true);
+        $this->reset_password_token = sha1(time() . $salt);
+        $validity = (int) Configuration::get('PS_PASSWD_RESET_VALIDITY') ?: 1440;
+        $this->reset_password_validity = date('Y-m-d H:i:s', strtotime('+' . $validity . ' minutes'));
     }
 
     /**
@@ -691,7 +676,7 @@ class EmployeeCore extends ObjectModel
     }
 
     /**
-     * Delete reset password token data
+     * Delete reset password token data.
      */
     public function removeResetPasswordToken()
     {
@@ -700,7 +685,7 @@ class EmployeeCore extends ObjectModel
     }
 
     /**
-     * Is the Employee allowed to do the given action
+     * Is the Employee allowed to do the given action.
      *
      * @param $action
      * @param $tab
@@ -711,6 +696,20 @@ class EmployeeCore extends ObjectModel
     {
         $access = Profile::getProfileAccess($this->id_profile, Tab::getIdFromClassName($tab));
 
-        return ($access[$action] == '1');
+        return $access[$action] == '1';
+    }
+
+    /**
+     * Returns the default tab class name.
+     *
+     * @return string|null
+     */
+    public function getDefaultTabClassName()
+    {
+        if ($tabId = (int) $this->default_tab) {
+            return Tab::getClassNameById($tabId) ?: null;
+        }
+
+        return null;
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,15 +16,13 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
-
 class CustomerAddressPersisterCore
 {
     private $customer;
@@ -34,8 +32,8 @@ class CustomerAddressPersisterCore
     public function __construct(Customer $customer, Cart $cart, $token)
     {
         $this->customer = $customer;
-        $this->cart     = $cart;
-        $this->token    = $token;
+        $this->cart = $cart;
+        $this->token = $token;
     }
 
     public function getToken()
@@ -45,7 +43,7 @@ class CustomerAddressPersisterCore
 
     private function authorizeChange(Address $address, $token)
     {
-        if ($address->id_customer && (int)$address->id_customer !== (int)$this->customer->id) {
+        if ($address->id_customer && (int) $address->id_customer !== (int) $this->customer->id) {
             // Can't touch anybody else's address
             return false;
         }
@@ -67,10 +65,7 @@ class CustomerAddressPersisterCore
         $address->id_customer = $this->customer->id;
 
         if ($address->isUsed()) {
-            $old_address = new Address($address->id);
-            $address->id = $address->id_address = null;
-
-            return $address->save() && $old_address->delete();
+            return $this->updateUsedAddress($address);
         }
 
         return $address->save();
@@ -99,5 +94,29 @@ class CustomerAddressPersisterCore
         }
 
         return $ok;
+    }
+
+    /**
+     * When an address has already been used in a placed order, it is not edited directly,
+     * instead it is set to "deleted" (but kept in database) and a new address
+     * is created.
+     *
+     * @param Address $address
+     *
+     * @return bool
+     */
+    private function updateUsedAddress(Address $address)
+    {
+        $old_address = new Address($address->id);
+        $address->id = $address->id_address = null;
+
+        if ($address->save() && $old_address->delete()) {
+            // a new address was created, we must update current cart
+            $this->cart->updateAddressId($old_address->id, $address->id);
+
+            return true;
+        }
+
+        return false;
     }
 }

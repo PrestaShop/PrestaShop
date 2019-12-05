@@ -5,7 +5,10 @@ prestashop.cart = prestashop.cart || {};
 
 prestashop.cart.active_inputs = null;
 
-var spinnerSelector = 'input[name="product-quantity-spin"]';
+let spinnerSelector = 'input[name="product-quantity-spin"]';
+let hasError = false;
+let isUpdateOperation = false;
+let errorMsg = '';
 
 /**
  * Attach Bootstrap TouchSpin event handlers
@@ -13,7 +16,7 @@ var spinnerSelector = 'input[name="product-quantity-spin"]';
 function createSpin()
 {
   $.each($(spinnerSelector), function (index, spinner) {
-     $(spinner).TouchSpin({
+    $(spinner).TouchSpin({
       verticalbuttons: true,
       verticalupclass: 'material-icons touchspin-up',
       verticaldownclass: 'material-icons touchspin-down',
@@ -23,12 +26,14 @@ function createSpin()
       max: 1000000
     });
   });
+
+  CheckUpdateQuantityOperations.switchErrorStat();
 }
 
 
 $(document).ready(() => {
-  let productLineInCartSelector = '.js-cart-line-product-quantity';
-  let promises = [];
+  const productLineInCartSelector = '.js-cart-line-product-quantity';
+  const promises = [];
 
   prestashop.on('updateCart', () => {
     $('.quickview').modal('hide');
@@ -40,7 +45,7 @@ $(document).ready(() => {
 
   createSpin();
 
-  let $body = $('body');
+  const $body = $('body');
 
   function isTouchSpin(namespace) {
     return namespace === 'on.startupspin' || namespace === 'on.startdownspin';
@@ -55,9 +60,9 @@ $(document).ready(() => {
 
     if ($input.is(':focus')) {
       return null;
-    } else {
-      return $input;
     }
+
+    return $input;
   }
 
   function camelize(subject) {
@@ -146,6 +151,7 @@ $(document).ready(() => {
         promises.push(jqXHR);
       }
     }).then(function (resp) {
+      CheckUpdateQuantityOperations.checkUpdateOpertation(resp);
       var $quantityInput = getTouchSpinInput($target);
       $quantityInput.val(resp.quantity);
 
@@ -183,6 +189,7 @@ $(document).ready(() => {
         promises.push(jqXHR);
       }
     }).then(function (resp) {
+      CheckUpdateQuantityOperations.checkUpdateOpertation(resp);
       $target.val(resp.quantity);
 
       var dataset;
@@ -217,44 +224,67 @@ $(document).ready(() => {
 
   function updateProductQuantityInCart(event)
   {
-    let $target = $(event.currentTarget);
-    let updateQuantityInCartUrl = $target.data('update-url');
-    let baseValue = $target.attr('value');
+    const $target = $(event.currentTarget);
+    const updateQuantityInCartUrl = $target.data('update-url');
+    const baseValue = $target.attr('value');
 
     // There should be a valid product quantity in cart
-    let targetValue = $target.val();
+    const targetValue = $target.val();
     if (targetValue != parseInt(targetValue) || targetValue < 0 || isNaN(targetValue)) {
       $target.val(baseValue);
-
       return;
     }
 
     // There should be a new product quantity in cart
-    let qty = targetValue - baseValue;
-    if (qty == 0) {
+    const qty = targetValue - baseValue;
+    if (qty === 0) {
       return;
     }
 
-    var requestData = getRequestData(qty);
-
-    sendUpdateQuantityInCartRequest(updateQuantityInCartUrl, requestData, $target);
+    $target.attr('value', targetValue);
+    sendUpdateQuantityInCartRequest(updateQuantityInCartUrl, getRequestData(qty), $target);
   }
 
   $body.on(
-    'focusout',
+    'focusout keyup',
     productLineInCartSelector,
     (event) => {
+      if (event.type === 'keyup') {
+        if (event.keyCode === 13) {
+          updateProductQuantityInCart(event);
+        }
+        return false;
+      }
+
       updateProductQuantityInCart(event);
     }
   );
 
+  const $timeoutEffect = 400;
+
   $body.on(
-    'keyup',
-    productLineInCartSelector,
+    'hidden.bs.collapse',
+    '#promo-code',
+    () => {
+      $('.display-promo').show($timeoutEffect);
+    }
+  );
+
+  $body.on(
+    'click',
+    '.promo-code-button',
     (event) => {
-      if (event.keyCode == 13) {
-        updateProductQuantityInCart(event);
-      }
+      event.preventDefault();
+
+      $('#promo-code').collapse('toggle');
+    }
+  );
+
+  $body.on(
+    'click',
+    '.display-promo',
+    (event) => {
+      $(event.currentTarget).hide($timeoutEffect);
     }
   );
 
@@ -264,14 +294,60 @@ $(document).ready(() => {
     (event) => {
       event.stopPropagation();
 
-      var $code = $(event.currentTarget);
-      var $discountInput = $('[name=discount_name]');
+      const $code = $(event.currentTarget);
+      const $discountInput = $('[name=discount_name]');
 
       $discountInput.val($code.text());
+      // Show promo code field
+      $('#promo-code').collapse('show');
+      $('.display-promo').hide($timeoutEffect);
 
       return false;
     }
   )
 });
 
+const CheckUpdateQuantityOperations = {
+  'switchErrorStat': () => {
+    /**
+     * if errorMsg is not empty or if notifications are shown, we have error to display
+     * if hasError is true, quantity was not updated : we don't disable checkout button
+     */
+    const $checkoutBtn = $('.checkout a');
+    if ($("#notifications article.alert-danger").length || ('' !== errorMsg && !hasError)) {
+      $checkoutBtn.addClass('disabled');
+    }
 
+    if ('' !== errorMsg) {
+      let strError = ' <article class="alert alert-danger" role="alert" data-alert="danger"><ul><li>' + errorMsg + '</li></ul></article>';
+      $('#notifications .container').html(strError);
+      errorMsg = '';
+      isUpdateOperation = false;
+      if (hasError) {
+        // if hasError is true, quantity was not updated : allow checkout
+        $checkoutBtn.removeClass('disabled');
+      }
+    } else if (!hasError && isUpdateOperation) {
+      hasError = false;
+      isUpdateOperation = false;
+      $('#notifications .container').html('');
+      $checkoutBtn.removeClass('disabled');
+    }
+  },
+  'checkUpdateOpertation': (resp) => {
+    /**
+     * resp.hasError can be not defined but resp.errors not empty: quantity is updated but order cannot be placed
+     * when resp.hasError=true, quantity is not updated
+     */
+    hasError = resp.hasOwnProperty('hasError');
+    let errors = resp.errors || "";
+    // 1.7.2.x returns errors as string, 1.7.3.x returns array
+    if (errors instanceof Array) {
+      errorMsg = errors.join(" ");
+    } else {
+      errorMsg = errors;
+    }
+
+    isUpdateOperation = true;
+  }
+};

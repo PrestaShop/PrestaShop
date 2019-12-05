@@ -1,5 +1,5 @@
 /**
- * 2007-2017 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -15,58 +15,109 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-var path = require('path');
-var webpack = require('webpack');
-var ExtractTextPlugin = require('extract-text-webpack-plugin');
+const path = require('path');
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const keepLicense = require('uglify-save-license');
+const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
+const CleanWebpackPlugin = require('clean-webpack-plugin');
 
-module.exports = {
-  entry: [
-    './js/theme.js'
-  ],
-  output: {
-    path: './public',
-    filename: 'bundle.js'
-  },
-  module: {
-    loaders: [{
-      test: path.join(__dirname, 'js'),
-      loader: 'babel',
-      query: {
-        presets: ['es2015']
-      }
-    }, {
-      test: /\.scss$/,
-      loader: ExtractTextPlugin.extract('style', 'css!sass')
-    }, {
-      test: /\.css$/,
-      loader: ExtractTextPlugin.extract('style', 'css?sourceMap!postcss!sass?sourceMap')
-    }, {
-      test: /.(png|woff(2)?|eot|ttf|svg)(\?[a-z0-9=\.]+)?$/,
-      loader: 'file-loader?name=[hash].[ext]'
-    }]
-  },
-  plugins: [
-    new ExtractTextPlugin('theme.css'),
-    new webpack.optimize.UglifyJsPlugin({
-      sourceMap: false,
-      compress: {
-        sequences: true,
-        conditionals: true,
-        booleans: true,
-        if_return: true,
-        join_vars: true,
-        drop_console: true
-      },
-      output: {
-        comments: false
-      }
-    })
-  ]
+module.exports = (env, argv) => {
+  const devMode = argv.mode === 'development';
+
+  const config = {
+    entry: [
+      './js/theme.js'
+    ],
+    output: {
+      path: path.resolve(__dirname, 'public'),
+      filename: 'bundle.js'
+    },
+    //devtool: 'source-map', // uncomment me to build source maps (really slow)
+    module: {
+      rules: [{
+        test: path.join(__dirname, 'js'),
+        use: [{
+          loader: 'babel-loader',
+          options: {
+            presets: [
+              ['@babel/preset-env', {modules: false}]
+            ]
+          }
+        }]
+      }, {
+        test: /\.(scss|sass|css)$/,
+        use: [
+          MiniCssExtractPlugin.loader,
+          {
+            loader: 'css-loader',
+            options: {
+              //sourceMap: true, // uncomment me to generate source maps
+            }
+          },
+          {
+            loader: 'postcss-loader',
+            options: {
+              //sourceMap: true, // uncomment me to generate source maps
+            }
+          },
+          {
+            loader: 'sass-loader',
+            options: {
+              //sourceMap: true, // uncomment me to generate source maps
+            }
+          }
+        ]
+      }, {
+        test: /.(gif|png|woff(2)?|eot|ttf|svg)(\?[a-z0-9=\.]+)?$/,
+        use: [{
+          loader: 'file-loader',
+          options: {
+            name: '[hash].[ext]'
+          }
+        }]
+      }]
+    },
+    optimization: {
+
+    },
+    plugins: [
+      new CleanWebpackPlugin({
+        root: path.resolve(__dirname),
+        cleanOnceBeforeBuildPatterns: [
+          '**/*', // required
+          '!theme.rtlfix' // exclusion
+        ]
+      }),
+      new MiniCssExtractPlugin({
+        filename: 'theme.css'
+      })
+    ]
+  };
+
+  if (!devMode) {
+    config.optimization.minimizer = [
+      new UglifyJsPlugin({
+        sourceMap: false,
+        uglifyOptions: {
+          compress: {
+            drop_console: true
+          },
+          output: {
+            comments: keepLicense
+          }
+        },
+      }),
+      new OptimizeCSSAssetsPlugin()
+    ];
+  }
+
+  return config;
 };

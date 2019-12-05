@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,18 +16,15 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-
 namespace PrestaShop\PrestaShop\Core\Module;
-
-use PrestaShop\PrestaShop\Core\Module\HookRepository;
 
 class HookConfigurator
 {
@@ -38,27 +35,27 @@ class HookConfigurator
         $this->hookRepository = $hookRepository;
     }
 
-
     /**
      * $hooks is a hook configuration description
      * as found in theme.yml,
      * it has a format like:
      * [
-     * 		"someHookName" => [
-     * 			null,
-     * 			"blockstuff",
-     * 			"othermodule"
-     * 		],
-     * 		"someOtherHookName" => [
-     * 			null,
-     * 			"blockmenu" => [
-     * 				"except_pages" => ["category", "product"]
-     * 			]
-     * 		]
-     * ]
+     *     "someHookName" => [
+     *        null,
+     *        "blockstuff",
+     *        "othermodule"
+     *     ],
+     *     "someOtherHookName" => [
+     *         null,
+     *         "blockmenu" => [
+     *             "except_pages" => ["category", "product"]
+     *         ]
+     *     ]
+     * ].
      */
     public function getThemeHooksConfiguration(array $hooks)
     {
+        $hooks = array_filter($hooks, 'is_array');
         $uniqueModuleList = $this->getUniqueModuleToHookList($hooks);
         $currentHooks = $this->hookRepository->getDisplayHooksWithModules();
 
@@ -74,8 +71,7 @@ class HookConfigurator
             $firstNullValueFound = true;
             $existing = isset($currentHooks[$hookName]) ?
                 $currentHooks[$hookName] :
-                []
-            ;
+                [];
             $currentHooks[$hookName] = [];
             foreach ($modules as $key => $module) {
                 if ($module === null && $firstNullValueFound) {
@@ -99,19 +95,21 @@ class HookConfigurator
         $this->hookRepository->persistHooksConfiguration(
             $this->getThemeHooksConfiguration($hooks)
         );
+
         return $this;
     }
 
     public function addHook($name, $title, $description)
     {
         $this->hookRepository->createHook($name, $title, $description);
+
         return $this;
     }
 
     private function getUniqueModuleToHookList(array $hooks)
     {
         $list = [];
-        foreach ($hooks as $hookName => $modules) {
+        foreach ($hooks as $modules) {
             $list = array_merge($list, $modules);
         }
 

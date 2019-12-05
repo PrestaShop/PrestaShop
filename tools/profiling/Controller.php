@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -50,6 +50,7 @@ abstract class Controller extends ControllerCore
         } elseif (round($n, 2) > 0) {
             return '<span style="color:green">'.sprintf('%0.2f', $n).'</span>';
         }
+
         return '<span style="color:green">-</span>';
     }
 
@@ -62,6 +63,7 @@ abstract class Controller extends ControllerCore
         if ($n > 12) {
             return '<span style="color:#EF8B00">'.sprintf('%0.1f', $n).'</span>';
         }
+
         return '<span style="color:green">'.sprintf('%0.1f', $n).'</span>';
     }
 
@@ -73,6 +75,7 @@ abstract class Controller extends ControllerCore
         if ($n > 100) {
             return '<span style="color:#EF8B00">'.$n.' queries</span>';
         }
+
         return '<span style="color:green">'.$n.' quer'.($n == 1 ? 'y' : 'ies').'</span>';
     }
 
@@ -84,16 +87,18 @@ abstract class Controller extends ControllerCore
         if ($n > 100) {
             return '<span style="color:#EF8B00">'.$n.'  rows browsed</span>';
         }
+
         return '<span style="color:green">'.$n.' row'.($n == 1 ? '' : 's').' browsed</span>';
     }
 
     private function getPhpVersionColor($version)
     {
-        if (version_compare($version, '5.3') < 0) {
+        if (version_compare($version, '5.6') < 0) {
             return '<span style="color:red">'.$version.' (Upgrade strongly recommended)</span>';
-        } elseif (version_compare($version, '5.4') < 0) {
+        } elseif (version_compare($version, '7.1') < 0) {
             return '<span style="color:#EF8B00">'.$version.' (Consider upgrading)</span>';
         }
+
         return '<span style="color:green">'.$version.' (OK)</span>';
     }
 
@@ -104,6 +109,7 @@ abstract class Controller extends ControllerCore
         } elseif (version_compare($version, '5.6') < 0) {
             return '<span style="color:#EF8B00">'.$version.' (Consider upgrading)</span>';
         }
+
         return '<span style="color:green">'.$version.' (OK)</span>';
     }
 
@@ -116,6 +122,7 @@ abstract class Controller extends ControllerCore
         } elseif ($n > 0) {
             return '<span style="color:green">'.round($n * 1000).'</span>'.($kikoo ? ' ms - Unicorn powered webserver!' : '');
         }
+
         return '<span style="color:green">-</span>'.($kikoo ? ' ms - Faster than light' : '');
     }
 
@@ -126,6 +133,7 @@ abstract class Controller extends ControllerCore
         } elseif ($n >= 50) {
             return '<span style="color:#EF8B00">'.$n.'</span>';
         }
+
         return '<span style="color:green">'.$n.'</span>';
     }
 
@@ -136,6 +144,7 @@ abstract class Controller extends ControllerCore
         } elseif ($n >= 50) {
             return '<span style="color:#EF8B00">'.$n.'</span>';
         }
+
         return '<span style="color:green">'.$n.'</span>';
     }
 
@@ -147,6 +156,7 @@ abstract class Controller extends ControllerCore
         if ($n > 2) {
             return 'style="color:#EF8B00"';
         }
+
         return 'style="color:green"';
     }
 
@@ -158,6 +168,7 @@ abstract class Controller extends ControllerCore
         if ($n > 2) {
             return 'style="color:#EF8B00"';
         }
+
         return 'style="color:green"';
     }
 
@@ -169,6 +180,7 @@ abstract class Controller extends ControllerCore
         if ($n > 20) {
             return 'style="color:#EF8B00"';
         }
+
         return 'style="color:green"';
     }
 
@@ -180,6 +192,7 @@ abstract class Controller extends ControllerCore
         if ($n > 10) {
             return 'style="color:#EF8B00"';
         }
+
         return 'style="color:green"';
     }
 
@@ -232,6 +245,7 @@ abstract class Controller extends ControllerCore
                 } elseif (method_exists($this, 'displayAjax')) {
                     $this->displayAjax();
                 }
+
                 return;
             }
         } else {
@@ -244,12 +258,14 @@ abstract class Controller extends ControllerCore
     private function getVarSize($var)
     {
         $start_memory = memory_get_usage();
+
         try {
             $tmp = Tools::unSerialize(serialize($var));
         } catch (Exception $e) {
             $tmp = $this->getVarData($var);
         }
         $size = memory_get_usage() - $start_memory;
+
         return $size;
     }
 
@@ -258,6 +274,7 @@ abstract class Controller extends ControllerCore
         if (is_object($var)) {
             return $var;
         }
+
         return (string)$var;
     }
 
@@ -321,7 +338,7 @@ abstract class Controller extends ControllerCore
             $this->array_queries[] = $query_row;
         }
 
-        uasort(ObjectModel::$debug_list, create_function('$a,$b', 'return (count($a) < count($b)) ? 1 : -1;'));
+        uasort(ObjectModel::$debug_list, function ($a, $b) { return (count($a) < count($b)) ? 1 : -1; });
         arsort(Db::getInstance()->tables);
         arsort(Db::getInstance()->uniqQueries);
     }
@@ -436,7 +453,7 @@ abstract class Controller extends ControllerCore
 		<div class="col-4">
 			<table class="table table-condensed">
 				<tr><td>PrestaShop Version</td><td>'._PS_VERSION_.'</td></tr>
-				<tr><td>PHP Version</td><td>'.$this->getPhpVersionColor(phpversion()).'</td></tr>
+				<tr><td>PHP Version</td><td>'.$this->getPhpVersionColor(PHP_VERSION).'</td></tr>
 				<tr><td>MySQL Version</td><td>'.$this->getMySQLVersionColor(Db::getInstance()->getVersion()).'</td></tr>
 				<tr><td>Memory Limit</td><td>'.ini_get('memory_limit').'</td></tr>
 				<tr><td>Max Execution Time</td><td>'.ini_get('max_execution_time').'s</td></tr>
@@ -737,5 +754,6 @@ function prestashop_querytime_sort($a, $b)
     if ($a['time'] == $b['time']) {
         return 0;
     }
+
     return ($a['time'] > $b['time']) ? -1 : 1;
 }

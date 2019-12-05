@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE ldml SYSTEM "../../common/dtd/ldml.dtd">
+<!-- Copyright © 1991-2019 Unicode, Inc.
+For terms of use, see http://www.unicode.org/copyright.html
+Unicode and the Unicode Logo are registered trademarks of Unicode, Inc. in the U.S. and other countries.
+CLDR data files are interpreted according to the LDML specification (http://unicode.org/reports/tr35/)
+-->
+<ldml>
+	<identity>
+		<version number="$Revision$"/>
+		<language type="sr"/>
+		<script type="Cyrl"/>
+		<territory type="BA"/>
+	</identity>
+	<localeDisplayNames>
+		<languages>
+			<language type="arn" draft="contributed">мапудунгун</language>
+			<language type="be" draft="contributed">бјелоруски</language>
+			<language type="bm" draft="contributed">бамананкан</language>
+			<language type="bn" draft="contributed">бангла</language>
+			<language type="gsw" draft="contributed">швајцарски немачки</language>
+			<language type="ht" draft="contributed">хаићански креолски</language>
+			<language type="lo" draft="contributed">лаошки</language>
+			<language type="moh" draft="contributed">мохок</language>
+			<language type="nqo" draft="contributed">н’ко</language>
+			<language type="shi" draft="contributed">јужни шилха</language>
+			<language type="si" draft="contributed">синхалски</language>
+			<language type="sw_CD" draft="contributed">кисвахили</language>
+			<language type="tzm" draft="contributed">централноатласки тамашек</language>
+			<language type="xh" draft="contributed">исикоса</language>
+			<language type="zgh" draft="contributed">стандардни марокански тамашек</language>
+			<language type="zh_Hans" draft="contributed">поједностављени кинески</language>
+			<language type="zh_Hant" draft="contributed">традиционални кинески</language>
+			<language type="zu" draft="contributed">исизулу</language>
+		</languages>
+		<territories>
+			<territory type="BY" draft="contributed">Бјелорусија</territory>
+			<territory type="CG" draft="contributed">Конго</territory>
+			<territory type="CV" draft="contributed">Кабо Верде</territory>
+			<territory type="CZ" draft="contributed">Чешка Република</territory>
+			<territory type="DE" draft="contributed">Њемачка</territory>
+			<territory type="KN" draft="contributed">Свети Китс и Невис</territory>
+			<territory type="MO" draft="contributed">САР Макао</territory>
+			<territory type="PM" draft="contributed">Свети Пјер и Микелон</territory>
+			<territory type="RE" draft="contributed">Реунион</territory>
+			<territory type="UM" draft="contributed">Мања удаљена острва САД</territory>
+			<territory type="VC" draft="contributed">Свети Винсент и Гренадини</territory>
+			<territory type="VG" draft="contributed">Британска Дјевичанска Острва</territory>
+			<territory type="VI" draft="contributed">Америчка Дјевичанска Острва</territory>
+		</territories>
+	</localeDisplayNames>
+	<dates>
+		<calendars>
+			<calendar type="generic">
+				<dateTimeFormats>
+					<intervalFormats>
+						<intervalFormatItem id="MMMEd">
+							<greatestDifference id="d" draft="contributed">E, d. MMM – E, d. MMM</greatestDifference>
+							<greatestDifference id="M" draft="contributed">E, d. MMM – E, d. MMM</greatestDifference>
+						</intervalFormatItem>
+						<intervalFormatItem id="yMd">
+							<greatestDifference id="M" draft="contributed">d.M.y. – d.M.y. GGGGG</greatestDifference>
+						</intervalFormatItem>
+					</intervalFormats>
+				</dateTimeFormats>
+			</calendar>
+			<calendar type="gregorian">
+				<days>
+					<dayContext type="format">
+						<dayWidth type="abbreviated">
+							<day type="sun" draft="contributed">нед</day>
+							<day type="mon" draft="contributed">пон</day>
+							<day type="tue">ут</day>
+							<day type="wed">ср</day>
+							<day type="thu" draft="contributed">чет</day>
+							<day type="fri" draft="contributed">пет</day>
+							<day type="sat" draft="contributed">суб</day>
+						</dayWidth>
+						<dayWidth type="wide">
+							<day type="sun" draft="contributed">недјеља</day>
+							<day type="mon" draft="contributed">понедељак</day>
+							<day type="tue" draft="contributed">уторак</day>
+							<day type="wed" draft="contributed">сриједа</day>
+							<day type="thu" draft="contributed">четвртак</day>
+							<day type="fri" draft="contributed">петак</day>
+							<day type="sat" draft="contributed">субота</day>
+						</dayWidth>
+					</dayContext>
+					<dayContext type="stand-alone">
+						<dayWidth type="abbreviated">
+							<day type="sun" draft="contributed">нед</day>
+							<day type="mon" draft="contributed">пон</day>
+							<day type="tue">ут</day>
+							<day type="wed">ср</day>
+							<day type="thu" draft="contributed">чет</day>
+							<day type="fri" draft="contributed">пет</day>
+							<day type="sat" draft="contributed">суб</day>
+						</dayWidth>
+						<dayWidth type="wide">
+							<day type="sun" draft="contributed">недјеља</day>
+							<day type="mon" draft="contributed">понедељак</day>
+							<day type="tue" draft="contributed">уторак</day>
+							<day type="wed" draft="contributed">сриједа</day>
+							<day type="thu" draft="contributed">четвртак</day>
+							<day type="fri" draft="contributed">петак</day>
+							<day type="sat" draft="contributed">субота</day>
+						</dayWidth>
+					</dayContext>
+				</days>
+				<dayPeriods>
+					<dayPeriodContext type="format">
+						<dayPeriodWidth type="abbreviated">
+							<dayPeriod type="midnight" draft="contributed">поноћ</dayPeriod>
+							<dayPeriod type="am" draft="contributed">прије подне</dayPeriod>
+							<dayPeriod type="noon" draft="contributed">подне</dayPeriod>
+							<dayPeriod type="pm" draft="contributed">по подне</dayPeriod>
+							<dayPeriod type="morning1" draft="contributed">јутро</dayPeriod>
+							<dayPeriod type="afternoon1" draft="contributed">по под.</dayPeriod>
+							<dayPeriod type="evening1" draft="contributed">вече</dayPeriod>
+							<dayPeriod type="night1">ноћу</dayPeriod>
+						</dayPeriodWidth>
+						<dayPeriodWidth type="narrow">
+							<dayPeriod type="midnight" draft="contributed">поноћ</dayPeriod>
+							<dayPeriod type="noon" draft="contributed">подне</dayPeriod>
+							<dayPeriod type="morning1" draft="contributed">јутро</dayPeriod>
+							<dayPeriod type="afternoon1" draft="contributed">по под.</dayPeriod>
+							<dayPeriod type="evening1" draft="contributed">вече</dayPeriod>
+							<dayPeriod type="night1" draft="contributed">ноћ</dayPeriod>
+						</dayPeriodWidth>
+						<dayPeriodWidth type="wide">
+							<dayPeriod type="am" draft="contributed">прије подне</dayPeriod>
+							<dayPeriod type="pm" draft="contributed">по подне</dayPeriod>
+						</dayPeriodWidth>
+					</dayPeriodContext>
+					<dayPeriodContext type="stand-alone">
+						<dayPeriodWidth type="abbreviated">
+							<dayPeriod type="am" draft="contributed">прије подне</dayPeriod>
+							<dayPeriod type="pm" draft="contributed">по подне</dayPeriod>
+						</dayPeriodWidth>
+						<dayPeriodWidth type="narrow">
+							<dayPeriod type="am" draft="contributed">а</dayPeriod>
+							<dayPeriod type="pm" draft="contributed">p</dayPeriod>
+						</dayPeriodWidth>
+						<dayPeriodWidth type="wide">
+							<dayPeriod type="am" draft="contributed">прије подне</dayPeriod>
+							<dayPeriod type="pm" draft="contributed">по подне</dayPeriod>
+						</dayPeriodWidth>
+					</dayPeriodContext>
+				</dayPeriods>
+				<eras>
+					<eraNames>
+						<era type="0" draft="contributed">прије нове ере</era>
+						<era type="1" alt="variant" draft="contributed">нове ере</era>
+					</eraNames>
+				</eras>
+				<dateTimeFormats>
+					<availableFormats>
+						<dateFormatItem id="MMMMW" count="one" draft="contributed">W. 'сједмица' 'у' MMMM</dateFormatItem>
+						<dateFormatItem id="MMMMW" count="few" draft="contributed">W. 'сједмица' 'у' MMMM</dateFormatItem>
+						<dateFormatItem id="MMMMW" count="other" draft="contributed">W. 'сједмица' 'у' MMMM</dateFormatItem>
+						<dateFormatItem id="yw" count="one" draft="contributed">w. 'сједмица' 'у' Y.</dateFormatItem>
+						<dateFormatItem id="yw" count="few" draft="contributed">w. 'сједмица' 'у' Y.</dateFormatItem>
+						<dateFormatItem id="yw" count="other" draft="contributed">w. 'сједмица' 'у' Y.</dateFormatItem>
+					</availableFormats>
+					<intervalFormats>
+						<intervalFormatItem id="Md">
+							<greatestDifference id="d" draft="contributed">MM-dd – MM-dd</greatestDifference>
+							<greatestDifference id="M" draft="contributed">MM-dd – MM-dd</greatestDifference>
+						</intervalFormatItem>
+						<intervalFormatItem id="MEd">
+							<greatestDifference id="d" draft="contributed">E, MM-dd – E, MM-dd</greatestDifference>
+							<greatestDifference id="M" draft="contributed">E, MM-dd – E, MM-dd</greatestDifference>
+						</intervalFormatItem>
+						<intervalFormatItem id="yM">
+							<greatestDifference id="M" draft="contributed">y-MM – y-MM</greatestDifference>
+							<greatestDifference id="y" draft="contributed">y-MM – y-MM</greatestDifference>
+						</intervalFormatItem>
+						<intervalFormatItem id="yMd">
+							<greatestDifference id="d" draft="contributed">y-MM-dd – y-MM-dd</greatestDifference>
+							<greatestDifference id="M" draft="contributed">y-MM-dd – y-MM-dd</greatestDifference>
+							<greatestDifference id="y" draft="contributed">y-MM-dd – y-MM-dd</greatestDifference>
+						</intervalFormatItem>
+						<intervalFormatItem id="yMEd">
+							<greatestDifference id="d" draft="contributed">E, y-MM-dd – E, y-MM-dd</greatestDifference>
+							<greatestDifference id="M" draft="contributed">E, y-MM-dd – E, y-MM-dd</greatestDifference>
+							<greatestDifference id="y" draft="contributed">E, y-MM-dd – E, y-MM-dd</greatestDifference>
+						</intervalFormatItem>
+					</intervalFormats>
+				</dateTimeFormats>
+			</calendar>
+		</calendars>
+		<fields>
+			<field type="week">
+				<relative type="-1" draft="contributed">претходне недеље</relative>
+				<relative type="1" draft="contributed">наредне недеље</relative>
+			</field>
+		</fields>
+	</dates>
+</ldml>

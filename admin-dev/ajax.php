@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,74 +16,131 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-if (!defined('_PS_ADMIN_DIR_')) {
-    define('_PS_ADMIN_DIR_', getcwd());
-}
-include(_PS_ADMIN_DIR_.'/../config/config.inc.php');
+/**
+ * This file seems to be existing since a long time. Although ajax requests can be handled by our controller,
+ * some methods were forgotten here.
+ *
+ * They've been moved to the proper controller, but we keep this file for compatibility purpose.
+ * The content your see here is a proxy to the controller.
+ */
 
-/* Getting cookie or logout */
-require_once(_PS_ADMIN_DIR_.'/init.php');
+use ToolsCore as Tools;
+
+@trigger_error('Using '.__FILE__.' to make an ajax call is deprecated since 1.7.6.0 and will be removed in the next major version. Use a controller instead.', E_USER_DEPRECATED);
+
+require_once dirname(__FILE__) . '/../classes/Tools.php';
+
+/**
+ * Ajax calls to the controller AdminReferrers
+ * -> Moved to legacy
+ */
+if (Tools::isSubmit('ajaxReferrers')) {
+    $_GET['ajax'] = 1;
+    $_GET['controller'] = 'AdminReferrers';
+    if (Tools::isSubmit('ajaxProductFilter')) {
+        $_GET['action'] = 'productFilter';
+    }
+    if (Tools::isSubmit('ajaxFillProducts')) {
+        $_GET['action'] = 'fillProducts';
+    }
+}
+
+/**
+ * Return the list of a pack of products
+ * Not found
+ *
+ * -> Moved to legacy
+ */
+elseif (Tools::isSubmit('ajaxProductPackItems')) {
+    $_GET['ajax'] = 1;
+    $_GET['controller'] = 'AdminProducts';
+    $_GET['action'] = 'productPackItems';
+}
+
+/**
+ * Get all zones stored on the shop
+ * Json content with an html attribute in it.
+ *
+ * -> Moved in legacy
+ */
+elseif (Tools::isSubmit('getZones')) {
+    $_GET['ajax'] = 1;
+    $_GET['controller'] = 'AdminZones';
+    $_GET['action'] = 'zones';
+}
+
+elseif (Tools::isSubmit('getEmailHTML') && Tools::isSubmit('email')) {
+    $_GET['ajax'] = 1;
+    $_GET['controller'] = 'AdminTranslations';
+    $_GET['action'] = 'emailHTML';
+}
+
+if (1 === Tools::getValue('ajax')) {
+    require_once __DIR__ . '/index.php';
+    return;
+}
+
+/**
+ * From this line, the code could not be moved outside this file. It still requires the core to work.
+ */
+
+require_once __DIR__ . '/bootstrap.php';
 
 $context = Context::getContext();
 
-if (Tools::isSubmit('ajaxReferrers')) {
-    require(_PS_CONTROLLER_DIR_.'admin/AdminReferrersController.php');
-}
-
+// Not used anymore, but kept just in case
 if (Tools::getValue('page') == 'prestastore' && @fsockopen('addons.prestashop.com', 80, $errno, $errst, 3)) {
-    readfile('http://addons.prestashop.com/adminmodules.php?lang='.$context->language->iso_code);
+    readfile('https://addons.prestashop.com/adminmodules.php?lang='.$context->language->iso_code);
 }
 
-if (Tools::isSubmit('getAvailableFields') && Tools::isSubmit('entity')) {
+/**
+ * Import controller: Fields available for a given entity
+ * -> Duplicated in Symfony
+ */
+elseif (Tools::isSubmit('getAvailableFields') && Tools::isSubmit('entity')) {
     $import = new AdminImportController();
 
     $fields = array_map(function ($elem) {
         return ['field' => $elem];
     }, $import->getAvailableFields(true));
-    die(json_encode($fields));
+    echo json_encode($fields);
 }
 
-if (Tools::isSubmit('ajaxProductPackItems')) {
-    $jsonArray = array();
-    $products = Db::getInstance()->executeS('
-	SELECT p.`id_product`, pl.`name`
-	FROM `'._DB_PREFIX_.'product` p
-	NATURAL LEFT JOIN `'._DB_PREFIX_.'product_lang` pl
-	WHERE pl.`id_lang` = '.(int)(Tools::getValue('id_lang')).'
-	'.Shop::addSqlRestrictionOnLang('pl').'
-	AND NOT EXISTS (SELECT 1 FROM `'._DB_PREFIX_.'pack` WHERE `id_product_pack` = p.`id_product`)
-	AND p.`id_product` != '.(int)(Tools::getValue('id_product')));
-
-    foreach ($products as $packItem) {
-        $jsonArray[] = '{"value": "'.(int)($packItem['id_product']).'-'.addslashes($packItem['name']).'", "text":"'.(int)($packItem['id_product']).' - '.addslashes($packItem['name']).'"}';
-    }
-    die('['.implode(',', $jsonArray).']');
+/**
+ * List notifications for an employee
+ * i.e: recent orders, new customers...
+ *
+ * -> Duplicated in Symfony
+ */
+elseif (Tools::isSubmit('getNotifications')) {
+    $notification = new Notification();
+    echo json_encode($notification->getLastElements());
 }
 
-if (Tools::isSubmit('getChildrenCategories') && Tools::isSubmit('id_category_parent')) {
-    $children_categories = Category::getChildrenWithNbSelectedSubCat(Tools::getValue('id_category_parent'), Tools::getValue('selectedCat'), Context::getContext()->language->id, null, Tools::getValue('use_shop_context'));
-    die(json_encode($children_categories));
+/**
+ * Updates the last time a notification has been seen
+ *
+ * -> Duplicated in Symfony
+ */
+elseif (Tools::isSubmit('updateElementEmployee') && Tools::getValue('updateElementEmployeeType')) {
+    $notification = new Notification();
+    echo $notification->updateEmployeeLastElement(Tools::getValue('updateElementEmployeeType'));
 }
 
-if (Tools::isSubmit('getNotifications')) {
-    $notification = new Notification;
-    die(json_encode($notification->getLastElements()));
-}
-
-if (Tools::isSubmit('updateElementEmployee') && Tools::getValue('updateElementEmployeeType')) {
-    $notification = new Notification;
-    die($notification->updateEmployeeLastElement(Tools::getValue('updateElementEmployeeType')));
-}
-
-if (Tools::isSubmit('searchCategory')) {
+/**
+ * Search for a category
+ *
+ * -> TODO in Symfony stack
+ */
+elseif (Tools::isSubmit('searchCategory')) {
     $q = Tools::getValue('q');
     $limit = Tools::getValue('limit');
     $results = Db::getInstance()->executeS('SELECT c.`id_category`, cl.`name`
@@ -102,7 +159,21 @@ if (Tools::isSubmit('searchCategory')) {
     }
 }
 
-if (Tools::isSubmit('getParentCategoriesId') && $id_category = Tools::getValue('id_category')) {
+/**
+ * Used to display children of a given category, but flagged as deprecated since 1.6.0.4
+ * Not moved / Not duplicated
+ */
+elseif (Tools::isSubmit('getChildrenCategories') && Tools::isSubmit('id_category_parent')) {
+    $children_categories = Category::getChildrenWithNbSelectedSubCat(Tools::getValue('id_category_parent'), Tools::getValue('selectedCat'), Context::getContext()->language->id, null, Tools::getValue('use_shop_context'));
+    echo json_encode($children_categories);
+}
+
+/**
+ * Get all parents of a given category
+ *
+ * -> TODO in Symfony stack
+ */
+elseif (Tools::isSubmit('getParentCategoriesId') && $id_category = Tools::getValue('id_category')) {
     $category = new Category((int)$id_category);
     $results = Db::getInstance()->executeS('SELECT `id_category` FROM `'._DB_PREFIX_.'category` c WHERE c.`nleft` < '.(int)$category->nleft.' AND c.`nright` > '.(int)$category->nright.'');
     $output = array();
@@ -110,20 +181,5 @@ if (Tools::isSubmit('getParentCategoriesId') && $id_category = Tools::getValue('
         $output[] = $result;
     }
 
-    die(json_encode($output));
-}
-
-if (Tools::isSubmit('getZones')) {
-    $html = '<select id="zone_to_affect" name="zone_to_affect">';
-    foreach (Zone::getZones() as $z) {
-        $html .= '<option value="'.$z['id_zone'].'">'.$z['name'].'</option>';
-    }
-    $html .= '</select>';
-    $array = array('hasError' => false, 'errors' => '', 'data' => $html);
-    die(json_encode($array));
-}
-
-if (Tools::isSubmit('getEmailHTML') && $email = Tools::getValue('email')) {
-    $email_html = AdminTranslationsController::getEmailHTML($email);
-    die($email_html);
+    echo json_encode($output);
 }

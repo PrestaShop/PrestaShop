@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,13 +16,14 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShopBundle\Service\Hook;
 
 /**
@@ -34,13 +35,13 @@ namespace PrestaShopBundle\Service\Hook;
 class RenderingHookEvent extends HookEvent
 {
     /**
+     * @var array
+     */
+    private $currentContent = [];
+    /**
      * @var string
      */
-    private $currentContent = '';
-    /**
-     * @var undefined
-     */
-    private $currentListener = null;
+    private $currentListener = '';
 
     /**
      * Sets the response from the listener.
@@ -49,21 +50,23 @@ class RenderingHookEvent extends HookEvent
      * This content will be pushed in a stack between each listener call.
      * Every response is kept, but a given listener cannot see the previous listeners' responses.
      *
-     * @param string $content The rendering content returned by the listener
-     * @param undefined $fromListener The listener that sets the content
-     * @return $this for fluent use.
+     * @param array $content The rendering content returned by the listener
+     * @param string $fromListener The listener that sets the content
+     *
+     * @return $this for fluent use
      */
-    public function setContent($content, $fromListener = null)
+    public function setContent(array $content, $fromListener = '')
     {
         $this->currentContent = $content;
         $this->currentListener = $fromListener;
+
         return $this;
     }
 
     /**
      * Gets the last pushed content (for the current listener).
      *
-     * @return string
+     * @return array
      */
     public function getContent()
     {
@@ -72,24 +75,27 @@ class RenderingHookEvent extends HookEvent
 
     /**
      * Retrieves the last pushed content (and cleans the corresponding attribute).
-     * @return string
+     *
+     * @return array
      */
     public function popContent()
     {
         $content = $this->currentContent;
-        $this->currentContent = '';
+        $this->currentContent = [];
+
         return $content;
     }
 
     /**
      * Gets the current listener that put the response (and cleans the corresponding attribute).
      *
-     * @return undefined a listener
+     * @return string a listener
      */
     public function popListener()
     {
         $listener = $this->currentListener;
-        $this->currentListener = null;
+        $this->currentListener = '';
+
         return $listener;
     }
 }

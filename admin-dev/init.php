@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -42,18 +42,18 @@ try {
 
     $iso = $context->language->iso_code;
     if (file_exists(_PS_TRANSLATIONS_DIR_.$iso.'/errors.php')) {
-        include(_PS_TRANSLATIONS_DIR_.$iso.'/errors.php');
+        include _PS_TRANSLATIONS_DIR_.$iso.'/errors.php';
     }
     if (file_exists(_PS_TRANSLATIONS_DIR_.$iso.'/fields.php')) {
-        include(_PS_TRANSLATIONS_DIR_.$iso.'/fields.php');
+        include _PS_TRANSLATIONS_DIR_.$iso.'/fields.php';
     }
     if (file_exists(_PS_TRANSLATIONS_DIR_.$iso.'/admin.php')) {
-        include(_PS_TRANSLATIONS_DIR_.$iso.'/admin.php');
+        include _PS_TRANSLATIONS_DIR_.$iso.'/admin.php';
     }
 
     /* Server Params */
     $protocol_link = (Configuration::get('PS_SSL_ENABLED')) ? 'https://' : 'http://';
-    $protocol_content = (isset($useSSL) and $useSSL and Configuration::get('PS_SSL_ENABLED')) ? 'https://' : 'http://';
+    $protocol_content = (isset($useSSL) && $useSSL && Configuration::get('PS_SSL_ENABLED')) ? 'https://' : 'http://';
     $link = new Link($protocol_link, $protocol_content);
     $context->link = $link;
     if (!defined('_PS_BASE_URL_')) {
@@ -74,9 +74,10 @@ try {
             $context->employee->bo_theme = 'default';
         } else {
             // if default theme doesn't exists, try to find one, otherwise throw exception
-            foreach (scandir($path) as $theme) {
+            foreach (scandir($path, SCANDIR_SORT_NONE) as $theme) {
                 if ($theme[0] != '.' && file_exists($path.$theme.'/template/layout.tpl')) {
                     $context->employee->bo_theme = $theme;
+
                     break;
                 }
             }
@@ -99,7 +100,6 @@ try {
     }
 
     $context->currency = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
-
 
     if ($context->employee->isLoggedBack()) {
         $shop_id = '';

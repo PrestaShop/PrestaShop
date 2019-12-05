@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,18 +16,18 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 if (!defined('_PS_ADMIN_DIR_')) {
-    define('_PS_ADMIN_DIR_', getcwd());
+    define('_PS_ADMIN_DIR_', __DIR__);
 }
-require_once(_PS_ADMIN_DIR_.'/../images.inc.php');
+require_once _PS_ADMIN_DIR_.'/../images.inc.php';
 function bindDatepicker($id, $time)
 {
     if ($time) {
@@ -115,11 +115,13 @@ function rewriteSettingsFile($base_urls = null, $theme = null, $array_db = null)
         $content .= 'define(\''.$k.'\', \''.addslashes($value).'\');'."\n";
     }
     copy(_PS_ADMIN_DIR_.'/../config/settings.inc.php', _PS_ADMIN_DIR_.'/../config/settings.old.php');
-    if ($fd = fopen(_PS_ADMIN_DIR_.'/../config/settings.inc.php', 'w')) {
+    if ($fd = fopen(_PS_ADMIN_DIR_.'/../config/settings.inc.php', 'wb')) {
         fwrite($fd, $content);
         fclose($fd);
+
         return true;
     }
+
     return false;
 }
 
@@ -198,6 +200,7 @@ function getPath($url_base, $id_category, $path = '', $highlight = '', $category
         if ($category->id == 1) {
             return substr($path, 0, strlen($path) - 3);
         }
+
         return getPath($url_base, $category->id_parent, $path, '', 'cms');
     }
 }
@@ -208,12 +211,13 @@ function getDirContent($path)
     if (is_dir($path)) {
         $d = dir($path);
         while (false !== ($entry = $d->read())) {
-            if ($entry{0} != '.') {
+            if ($entry[0] != '.') {
                 $content[] = $entry;
             }
         }
         $d->close();
     }
+
     return $content;
 }
 
@@ -222,6 +226,7 @@ function createDir($path, $rights)
     if (file_exists($path)) {
         return true;
     }
+
     return @mkdir($path, $rights);
 }
 
@@ -247,6 +252,7 @@ function translate($string)
     }
     $key = md5(str_replace('\'', '\\\'', $string));
     $str = (array_key_exists('index'.$key, $_LANGADM)) ? $_LANGADM['index'.$key] : ((array_key_exists('index'.$key, $_LANGADM)) ? $_LANGADM['index'.$key] : $string);
+
     return str_replace('"', '&quot;', stripslashes($str));
 }
 
@@ -268,20 +274,24 @@ function checkingTab($tab)
             Tools::redirectAdmin('?tab='.AdminTab::$tabParenting[$tab].'&token='.Tools::getAdminTokenLite(AdminTab::$tabParenting[$tab]));
         }
         echo sprintf(Tools::displayError('Page %s cannot be found.'), $tab);
+
         return false;
     }
 
     // Class file is included in Dispatcher::dispatch() function
     if (!class_exists($tab, false) || !$row['id_tab']) {
         echo sprintf(Tools::displayError('The class %s cannot be found.'), $tab);
+
         return false;
     }
-    $admin_obj = new $tab;
+    $admin_obj = new $tab();
     if (!$admin_obj->viewAccess() && ($admin_obj->table != 'employee' || Context::getContext()->employee->id != Tools::getValue('id_employee') || !Tools::isSubmit('updateemployee'))) {
         $admin_obj->_errors = array(Tools::displayError('Access denied.'));
         echo $admin_obj->displayErrors();
+
         return false;
     }
+
     return $admin_obj;
 }
 
@@ -297,11 +307,11 @@ function checkTabRights($id_tab)
     }
 
     if (isset($tab_accesses[(int)$id_tab]['view'])) {
-        return ($tab_accesses[(int)$id_tab]['view'] === '1');
+        return $tab_accesses[(int)$id_tab]['view'] === '1';
     }
+
     return false;
 }
-
 
 /**
  * Converts a simpleXML element into an array. Preserves attributes and everything.
@@ -412,7 +422,7 @@ function runAdminTab($tab, $ajax_mode = false)
 {
     $ajax_mode = (bool)$ajax_mode;
 
-    require_once(_PS_ADMIN_DIR_.'/init.php');
+    require_once _PS_ADMIN_DIR_.'/init.php';
     $cookie = Context::getContext()->cookie;
     if (empty($tab) && !count($_POST)) {
         $tab = 'AdminDashboard';
@@ -431,7 +441,7 @@ function runAdminTab($tab, $ajax_mode = false)
             $admin_obj->run();
         } else {
             if (!$ajax_mode) {
-                require_once(_PS_ADMIN_DIR_.'/header.inc.php');
+                require_once _PS_ADMIN_DIR_.'/header.inc.php';
             }
             $iso_user = Context::getContext()->language->id;
             $tabs = array();
@@ -488,11 +498,11 @@ function runAdminTab($tab, $ajax_mode = false)
                                 if (is_array($admin_obj->table)) {
                                     foreach ($admin_obj->table as $table) {
                                         if (strncmp($key, $table.'Filter_', 7) === 0 || strncmp($key, 'submitFilter', 12) === 0) {
-                                            $cookie->$key = !is_array($value) ? $value : serialize($value);
+                                            $cookie->$key = !is_array($value) ? $value : json_encode($value);
                                         }
                                     }
                                 } elseif (strncmp($key, $admin_obj->table.'Filter_', 7) === 0 || strncmp($key, 'submitFilter', 12) === 0) {
-                                    $cookie->$key = !is_array($value) ? $value : serialize($value);
+                                    $cookie->$key = !is_array($value) ? $value : json_encode($value);
                                 }
                             }
                         }
@@ -514,7 +524,7 @@ function runAdminTab($tab, $ajax_mode = false)
                         $admin_obj->postProcess();
                         $admin_obj->displayErrors();
                         $admin_obj->display();
-                        include(_PS_ADMIN_DIR_.'/footer.inc.php');
+                        include _PS_ADMIN_DIR_.'/footer.inc.php';
                     }
                 } else {
                     if ($ajax_mode) {

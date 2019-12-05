@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,87 +16,155 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
  * @TODO Move undeclared variables and methods to this (base) class: $errors, $layout, checkLiveEditAccess, etc.
+ *
  * @since 1.5.0
  */
 abstract class ControllerCore
 {
-    /** @var Context */
+    const SERVICE_LOCALE_REPOSITORY = 'prestashop.core.localization.locale.repository';
+
+    /**
+     * @var Context
+     */
     protected $context;
 
-    /** @var array List of CSS files */
+    /**
+     * List of CSS files.
+     *
+     * @var array
+     */
     public $css_files = array();
 
-    /** @var array List of JavaScript files */
+    /**
+     * List of JavaScript files.
+     *
+     * @var array
+     */
     public $js_files = array();
 
-    /** @var array List of PHP errors */
+    /**
+     * List of PHP errors.
+     *
+     * @var array
+     */
     public static $php_errors = array();
 
-    /** @var bool Set to true to display page header */
+    /**
+     * Set to true to display page header.
+     *
+     * @var bool
+     */
     protected $display_header;
 
-    /** @var bool Set to true to display page header javascript */
+    /**
+     * Set to true to display page header javascript.
+     *
+     * @var bool
+     */
     protected $display_header_javascript;
 
-    /** @var string Template filename for the page content */
+    /**
+     * Template filename for the page content.
+     *
+     * @var string
+     */
     protected $template;
 
-    /** @var string Set to true to display page footer */
+    /**
+     * Set to true to display page footer.
+     *
+     * @var string
+     */
     protected $display_footer;
 
-    /** @var bool Set to true to only render page content (used to get iframe content) */
+    /**
+     * Set to true to only render page content (used to get iframe content).
+     *
+     * @var bool
+     */
     protected $content_only = false;
 
-    /** @var bool If AJAX parameter is detected in request, set this flag to true */
+    /**
+     * If AJAX parameter is detected in request, set this flag to true.
+     *
+     * @var bool
+     */
     public $ajax = false;
 
-    /** @var bool If set to true, page content and messages will be encoded to JSON before responding to AJAX request */
+    /**
+     * If set to true, page content and messages will be encoded to JSON before responding to AJAX request.
+     *
+     * @var bool
+     */
     protected $json = false;
 
-    /** @var string JSON response status string */
+    /**
+     * JSON response status string.
+     *
+     * @var string
+     */
     protected $status = '';
 
     /**
+     * Redirect link. If not empty, the user will be redirected after initializing and processing input.
+     *
      * @see Controller::run()
-     * @var string|null Redirect link. If not empty, the user will be redirected after initializing and processing input.
+     *
+     * @var string|null
      */
     protected $redirect_after = null;
 
-    /** @var string Controller type. Possible values: 'front', 'modulefront', 'admin', 'moduleadmin' */
+    /**
+     * Controller type. Possible values: 'front', 'modulefront', 'admin', 'moduleadmin'.
+     *
+     * @var string
+     */
     public $controller_type;
 
-    /** @var string Controller name */
+    /**
+     * Controller name.
+     *
+     * @var string
+     */
     public $php_self;
 
-    /** @var PrestaShopBundle\Translation\Translator */
+    /**
+     * @var PrestaShopBundle\Translation\Translator
+     */
     protected $translator;
 
-    /** @var ContainerBuilder legacy container */
+    /**
+     * Dependency container.
+     *
+     * @var ContainerBuilder
+     */
     protected $container;
 
-
     /**
-     * Check if the controller is available for the current user/visitor
+     * Check if the controller is available for the current user/visitor.
      */
     abstract public function checkAccess();
 
     /**
-     * Check if the current user/visitor has valid view permissions
+     * Check if the current user/visitor has valid view permissions.
      */
     abstract public function viewAccess();
 
     /**
-     * Initialize the page
+     * Initialize the page.
+     *
+     * @throws Exception
      */
     public function init()
     {
@@ -111,7 +179,15 @@ abstract class ControllerCore
         if (!defined('_PS_BASE_URL_SSL_')) {
             define('_PS_BASE_URL_SSL_', Tools::getShopDomainSsl(true));
         }
-        $this->container = $this->buildContainer();
+
+        if (null === $this->getContainer()) {
+            $this->container = $this->buildContainer();
+        }
+
+        $localeRepo = $this->get(self::SERVICE_LOCALE_REPOSITORY);
+        $this->context->currentLocale = $localeRepo->getLocale(
+            $this->context->language->getLocale()
+        );
     }
 
     /**
@@ -120,21 +196,22 @@ abstract class ControllerCore
     abstract public function postProcess();
 
     /**
-     * Displays page view
+     * Displays page view.
      */
     abstract public function display();
 
     /**
-     * Sets default media list for this controller
+     * Sets default media list for this controller.
      */
     abstract public function setMedia();
 
     /**
-     * returns a new instance of this controller
+     * returns a new instance of this controller.
      *
      * @param string $class_name
      * @param bool $auth
      * @param bool $ssl
+     *
      * @return Controller
      */
     public static function getController($class_name, $auth = false, $ssl = false)
@@ -144,42 +221,52 @@ abstract class ControllerCore
 
     public function __construct()
     {
-        if (is_null($this->display_header)) {
+        if (null === $this->display_header) {
             $this->display_header = true;
         }
-
-        if (is_null($this->display_header_javascript)) {
+        if (null === $this->display_header_javascript) {
             $this->display_header_javascript = true;
         }
-
-        if (is_null($this->display_footer)) {
+        if (null === $this->display_footer) {
             $this->display_footer = true;
         }
-
         $this->context = Context::getContext();
         $this->context->controller = $this;
         $this->translator = Context::getContext()->getTranslator();
+        $this->ajax = $this->isAjax();
 
-        // Usage of ajax parameter is deprecated
-        $this->ajax = Tools::getValue('ajax') || Tools::isSubmit('ajax');
-
-        if (isset($_SERVER['HTTP_ACCEPT'])) {
-            $this->ajax = $this->ajax || preg_match(
-                '#\bapplication/json\b#',
-                $_SERVER['HTTP_ACCEPT']
-            );
-        }
-
-        if (!headers_sent()
-            && isset($_SERVER['HTTP_USER_AGENT'])
-            && (strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE') !== false
-            || strpos($_SERVER['HTTP_USER_AGENT'], 'Trident') !== false)) {
+        if (
+            !headers_sent() &&
+            isset($_SERVER['HTTP_USER_AGENT']) &&
+            (strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE') !== false ||
+            strpos($_SERVER['HTTP_USER_AGENT'], 'Trident') !== false)
+        ) {
             header('X-UA-Compatible: IE=edge,chrome=1');
         }
     }
 
     /**
-     * Starts the controller process (this method should not be overridden!)
+     * Returns if the current request is an AJAX request.
+     *
+     * @return bool
+     */
+    private function isAjax()
+    {
+        // Usage of ajax parameter is deprecated
+        $isAjax = Tools::getValue('ajax') || Tools::isSubmit('ajax');
+
+        if (isset($_SERVER['HTTP_ACCEPT'])) {
+            $isAjax = $isAjax || preg_match(
+                '#\bapplication/json\b#',
+                $_SERVER['HTTP_ACCEPT']
+            );
+        }
+
+        return $isAjax;
+    }
+
+    /**
+     * Starts the controller process (this method should not be overridden!).
      */
     public function run()
     {
@@ -216,8 +303,8 @@ abstract class ControllerCore
             if ($this->ajax) {
                 $action = Tools::toCamelCase(Tools::getValue('action'), true);
 
-                if (!empty($action) && method_exists($this, 'displayAjax'.$action)) {
-                    $this->{'displayAjax'.$action}();
+                if (!empty($action) && method_exists($this, 'displayAjax' . $action)) {
+                    $this->{'displayAjax' . $action}();
                 } elseif (method_exists($this, 'displayAjax')) {
                     $this->displayAjax();
                 }
@@ -230,15 +317,15 @@ abstract class ControllerCore
         }
     }
 
-
     protected function trans($id, array $parameters = array(), $domain = null, $locale = null)
     {
         $parameters['legacy'] = 'htmlspecialchars';
+
         return $this->translator->trans($id, $parameters, $domain, $locale);
     }
 
     /**
-     * Sets page header display
+     * Sets page header display.
      *
      * @param bool $display
      */
@@ -248,7 +335,7 @@ abstract class ControllerCore
     }
 
     /**
-     * Sets page header javascript display
+     * Sets page header javascript display.
      *
      * @param bool $display
      */
@@ -258,7 +345,7 @@ abstract class ControllerCore
     }
 
     /**
-     * Sets page header display
+     * Sets page header display.
      *
      * @param bool $display
      */
@@ -268,7 +355,7 @@ abstract class ControllerCore
     }
 
     /**
-     * Sets template file for page content output
+     * Sets template file for page content output.
      *
      * @param string $template
      */
@@ -278,32 +365,32 @@ abstract class ControllerCore
     }
 
     /**
-     * Assigns Smarty variables for the page header
+     * Assigns Smarty variables for the page header.
      */
     abstract public function initHeader();
 
     /**
-     * Assigns Smarty variables for the page main content
+     * Assigns Smarty variables for the page main content.
      */
     abstract public function initContent();
 
     /**
-     * Assigns Smarty variables when access is forbidden
+     * Assigns Smarty variables when access is forbidden.
      */
     abstract public function initCursedPage();
 
     /**
-     * Assigns Smarty variables for the page footer
+     * Assigns Smarty variables for the page footer.
      */
     abstract public function initFooter();
 
     /**
-     * Redirects to $this->redirect_after after the process if there is no error
+     * Redirects to $this->redirect_after after the process if there is no error.
      */
     abstract protected function redirect();
 
     /**
-     * Set $this->redirect_after that will be used by redirect() after the process
+     * Set $this->redirect_after that will be used by redirect() after the process.
      */
     public function setRedirectAfter($url)
     {
@@ -317,6 +404,7 @@ abstract class ControllerCore
      * @param string $css_media_type
      * @param int|null $offset
      * @param bool $check_path
+     *
      * @return true
      */
     public function addCSS($css_uri, $css_media_type = 'all', $offset = null, $check_path = true)
@@ -353,7 +441,7 @@ abstract class ControllerCore
     }
 
     /**
-     * Removes CSS stylesheet(s) from the queued stylesheet list
+     * Removes CSS stylesheet(s) from the queued stylesheet list.
      *
      * @param string|array $css_uri Path to CSS file or an array like: array(array(uri => media_type), ...)
      * @param string $css_media_type
@@ -380,7 +468,11 @@ abstract class ControllerCore
                 }
             }
 
-            if ($css_path && isset($this->css_files[key($css_path)]) && ($this->css_files[key($css_path)] == reset($css_path))) {
+            if (
+                $css_path
+                && isset($this->css_files[key($css_path)])
+                && ($this->css_files[key($css_path)] == reset($css_path))
+            ) {
                 unset($this->css_files[key($css_path)]);
             }
         }
@@ -391,12 +483,11 @@ abstract class ControllerCore
      *
      * @param string|array $js_uri Path to JS file or an array like: array(uri, ...)
      * @param bool $check_path
-     * @return void
      */
     public function addJS($js_uri, $check_path = true)
     {
         if (!is_array($js_uri)) {
-            $js_uri = [$js_uri];
+            $js_uri = array($js_uri);
         }
 
         foreach ($js_uri as $js_file) {
@@ -411,56 +502,53 @@ abstract class ControllerCore
             }
 
             if ($js_path && !in_array($js_path, $this->js_files)) {
-                $this->js_files[] = $js_path.($version ? '?'.$version : '');
+                $this->js_files[] = $js_path . ($version ? '?' . $version : '');
             }
         }
     }
 
     /**
-     * Removes JS file(s) from the queued JS file list
+     * Removes JS file(s) from the queued JS file list.
      *
      * @param string|array $js_uri Path to JS file or an array like: array(uri, ...)
      * @param bool $check_path
      */
     public function removeJS($js_uri, $check_path = true)
     {
-        if (is_array($js_uri)) {
-            foreach ($js_uri as $js_file) {
-                $js_path = $js_file;
-                if ($check_path) {
-                    $js_path = Media::getJSPath($js_file);
-                }
+        if (!is_array($js_uri)) {
+            $js_uri = array($js_uri);
+        }
 
-                if ($js_path && in_array($js_path, $this->js_files)) {
-                    unset($this->js_files[array_search($js_path, $this->js_files)]);
-                }
-            }
-        } else {
-            $js_path = $js_uri;
+        foreach ($js_uri as $js_file) {
             if ($check_path) {
-                $js_path = Media::getJSPath($js_uri);
+                $js_file = Media::getJSPath($js_file);
             }
 
-            if ($js_path) {
-                unset($this->js_files[array_search($js_path, $this->js_files)]);
+            if ($js_file && in_array($js_file, $this->js_files)) {
+                unset($this->js_files[array_search($js_file, $this->js_files)]);
             }
         }
     }
 
     /**
-     * Adds jQuery library file to queued JS file list
+     * Adds jQuery library file to queued JS file list.
      *
      * @param string|null $version jQuery library version
      * @param string|null $folder jQuery file folder
-     * @param bool $minifier If set tot true, a minified version will be included.
+     * @param bool $minifier if set tot true, a minified version will be included
+     *
+     * @deprecated 1.7.7 jQuery is always included, this method should no longer be used
      */
     public function addJquery($version = null, $folder = null, $minifier = true)
     {
-        $this->addJS(Media::getJqueryPath($version, $folder, $minifier), false);
+        @trigger_error(
+            'Controller->addJquery() is deprecated since version 1.7.7.0, jQuery is always included',
+            E_USER_DEPRECATED
+        );
     }
 
     /**
-     * Adds jQuery UI component(s) to queued JS file list
+     * Adds jQuery UI component(s) to queued JS file list.
      *
      * @param string|array $component
      * @param string $theme
@@ -480,7 +568,7 @@ abstract class ControllerCore
     }
 
     /**
-     * Adds jQuery plugin(s) to queued JS file list
+     * Adds jQuery plugin(s) to queued JS file list.
      *
      * @param string|array $name
      * @param string null $folder
@@ -502,18 +590,20 @@ abstract class ControllerCore
                 $this->addCSS(key($plugin_path['css']), 'all', null, false);
             }
         }
-
     }
 
     /**
-     * Checks if the controller has been called from XmlHttpRequest (AJAX)
+     * Checks if the controller has been called from XmlHttpRequest (AJAX).
      *
      * @since 1.5
+     *
      * @return bool
      */
     public function isXmlHttpRequest()
     {
-        return (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest');
+        return
+            !empty($_SERVER['HTTP_X_REQUESTED_WITH'])
+            && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest';
     }
 
     public function getLayout()
@@ -524,55 +614,58 @@ abstract class ControllerCore
     }
 
     /**
-     * Renders controller templates and generates page content
+     * Renders controller templates and generates page content.
      *
-     * @param array|string $content Template file(s) to be rendered
+     * @param array|string $templates Template file(s) to be rendered
+     *
      * @throws Exception
      * @throws SmartyException
      */
-    protected function smartyOutputContent($content)
+    protected function smartyOutputContent($templates)
     {
         $this->context->cookie->write();
 
-        $html = '';
         $js_tag = 'js_def';
         $this->context->smarty->assign($js_tag, $js_tag);
 
-        if (is_array($content)) {
-            foreach ($content as $tpl) {
-                $html .= $this->context->smarty->fetch($tpl, null, $this->getLayout());
-            }
-        } else {
-            $html = $this->context->smarty->fetch($content, null, $this->getLayout());
+        if (!is_array($templates)) {
+            $templates = array($templates);
+        }
+
+        $html = '';
+        foreach ($templates as $template) {
+            $html .= $this->context->smarty->fetch($template, null, $this->getLayout());
         }
 
         echo trim($html);
     }
 
     /**
-     * Checks if a template is cached
+     * Checks if a template is cached.
      *
      * @param string $template
      * @param string|null $cache_id Cache item ID
      * @param string|null $compile_id
+     *
      * @return bool
      */
     protected function isCached($template, $cache_id = null, $compile_id = null)
     {
         Tools::enableCache();
-        $res = $this->context->smarty->isCached($template, $cache_id, $compile_id);
+        $isCached = $this->context->smarty->isCached($template, $cache_id, $compile_id);
         Tools::restoreCacheSettings();
 
-        return $res;
+        return $isCached;
     }
 
     /**
-     * Custom error handler
+     * Custom error handler.
      *
      * @param string $errno
      * @param string $errstr
      * @param string $errfile
      * @param int $errline
+     *
      * @return bool
      */
     public static function myErrorHandler($errno, $errstr, $errfile, $errline)
@@ -584,27 +677,31 @@ abstract class ControllerCore
         switch ($errno) {
             case E_USER_ERROR:
             case E_ERROR:
-                die('Fatal error: '.$errstr.' in '.$errfile.' on line '.$errline);
+                die('Fatal error: ' . $errstr . ' in ' . $errfile . ' on line ' . $errline);
+
                 break;
             case E_USER_WARNING:
             case E_WARNING:
                 $type = 'Warning';
+
                 break;
             case E_USER_NOTICE:
             case E_NOTICE:
                 $type = 'Notice';
+
                 break;
             default:
                 $type = 'Unknown error';
+
                 break;
         }
 
         Controller::$php_errors[] = array(
-            'type'    => $type,
-            'errline' => (int)$errline,
+            'type' => $type,
+            'errline' => (int) $errline,
             'errfile' => str_replace('\\', '\\\\', $errfile), // Hack for Windows paths
-            'errno'   => (int)$errno,
-            'errstr'  => $errstr
+            'errno' => (int) $errno,
+            'errstr' => $errstr,
         );
         Context::getContext()->smarty->assign('php_errors', Controller::$php_errors);
 
@@ -612,48 +709,95 @@ abstract class ControllerCore
     }
 
     /**
+     * @deprecated deprecated since 1.7.5.0, use ajaxRender instead
      * Dies and echoes output value
      *
      * @param string|null $value
      * @param string|null $controller
      * @param string|null $method
+     *
+     * @throws PrestaShopException
      */
     protected function ajaxDie($value = null, $controller = null, $method = null)
+    {
+        $this->ajaxRender($value, $controller, $method);
+        exit;
+    }
+
+    /**
+     * @param null $value
+     * @param null $controller
+     * @param null $method
+     *
+     * @throws PrestaShopException
+     */
+    protected function ajaxRender($value = null, $controller = null, $method = null)
     {
         if ($controller === null) {
             $controller = get_class($this);
         }
 
         if ($method === null) {
-            $bt = debug_backtrace();
+            $bt = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
             $method = $bt[1]['function'];
         }
 
         /* @deprecated deprecated since 1.6.1.1 */
         Hook::exec('actionAjaxDieBefore', array('controller' => $controller, 'method' => $method, 'value' => $value));
 
-        /**
+        /*
          * @deprecated deprecated since 1.6.1.1
          * use 'actionAjaxDie'.$controller.$method.'Before' instead
          */
-        Hook::exec('actionBeforeAjaxDie'.$controller.$method, array('value' => $value));
-        Hook::exec('actionAjaxDie'.$controller.$method.'Before', array('value' => $value));
+        Hook::exec('actionBeforeAjaxDie' . $controller . $method, array('value' => $value));
+        Hook::exec('actionAjaxDie' . $controller . $method . 'Before', array('value' => $value));
+        header('Cache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0');
 
-        die($value);
+        echo $value;
     }
 
     /**
-     * Construct the container of dependencies
+     * Construct the dependency container.
+     *
+     * @return ContainerBuilder
      */
-    protected function buildContainer(){}
+    abstract protected function buildContainer();
 
+    /**
+     * Gets a service from the service container.
+     *
+     * @param string $serviceId Service identifier
+     *
+     * @return object The associated service
+     *
+     * @throws Exception
+     */
     public function get($serviceId)
     {
         return $this->container->get($serviceId);
     }
 
+    /**
+     * Gets a parameter.
+     *
+     * @param string $parameterId The parameter name
+     *
+     * @return mixed The parameter value
+     *
+     * @throws InvalidArgumentException if the parameter is not defined
+     */
     public function getParameter($parameterId)
     {
         return $this->container->getParameter($parameterId);
+    }
+
+    /**
+     * Gets the dependency container.
+     *
+     * @return ContainerBuilder
+     */
+    public function getContainer()
+    {
+        return $this->container;
     }
 }

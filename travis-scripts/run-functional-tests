@@ -1,0 +1,22 @@
+#!/bin/bash
+
+PROJECT_PATH=$(cd "$( dirname "$0" )/../" && pwd)
+
+bash $PROJECT_PATH/travis-scripts/install-prestashop
+
+echo "* Installing functional tests...";
+
+cd $PROJECT_PATH/tests/E2E
+npm install --silent
+
+echo "* Preparing environment...";
+
+DISPLAY=:10 npm run start-selenium &> /dev/null &
+sleep 5
+npm run sanity-check
+
+echo "* Running functional tests ...";
+npm run test --verbose -- --MODULE=ps_legalcompliance
+status=$?
+
+exit $status

@@ -1,5 +1,5 @@
 {**
- * 2007-2017 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -15,10 +15,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
@@ -47,7 +47,7 @@
           <tr>
             <th scope="row">{$cart_rule.code}</th>
             <td>{$cart_rule.name}</td>
-            <td class="text-xsright">{$cart_rule.quantity_for_user}</td>
+            <td class="text-xs-right">{$cart_rule.quantity_for_user}</td>
             <td>{$cart_rule.value}</td>
             <td>{$cart_rule.voucher_minimal}</td>
             <td>{$cart_rule.voucher_cumulable}</td>
@@ -57,7 +57,7 @@
       </tbody>
     </table>
     <div class="cart-rules hidden-md-up">
-      {foreach from=$cart_rules item=slip}
+      {foreach from=$cart_rules item=cart_rule}
         <div class="cart-rule">
           <ul>
             <li>

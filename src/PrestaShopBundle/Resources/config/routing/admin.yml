@@ -1,0 +1,23 @@
+_admin_common_routing:
+    resource: "admin/_common.yml"
+    prefix: /common
+
+_admin_security_routing:
+    resource: "admin/_security.yml"
+    prefix: /security
+
+_admin_sell_routing:
+    resource: "admin/sell/_sell.yml"
+    prefix: /sell
+
+_admin_configure_routing:
+    resource: "admin/configure/_configure.yml"
+    prefix: /configure
+
+_admin_improve_routing:
+    resource: "admin/improve/_improve.yml"
+    prefix: /improve
+
+_admin_errors:
+    resource: "admin/_errors.yml"
+    prefix: /errors

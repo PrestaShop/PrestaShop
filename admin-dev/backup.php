@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,18 +16,26 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+@trigger_error('Using '.__FILE__.' to make an ajax call is deprecated since 1.7.6.0 and will be removed in the next major version. Use a controller instead.', E_USER_DEPRECATED);
+
+/**
+ * @deprecated
+ * Opens a backup file for download
+ *
+ * -> Duplicated in Symfony (route: admin_backup_download)
+ */
 
 if (!defined('_PS_ADMIN_DIR_')) {
-    define('_PS_ADMIN_DIR_', getcwd());
+    define('_PS_ADMIN_DIR_', __DIR__);
 }
-include(_PS_ADMIN_DIR_.'/../config/config.inc.php');
+include _PS_ADMIN_DIR_.'/../config/config.inc.php';
 
 if (!Context::getContext()->employee->isLoggedBack()) {
     Tools::redirectAdmin(Context::getContext()->link->getAdminLink('AdminLogin'));
@@ -78,7 +86,7 @@ if (substr($backupfile, -4) == '.bz2') {
 } else {
     $contentType = 'text/x-sql';
 }
-$fp = @fopen($backupfile, 'r');
+$fp = @fopen($backupfile, 'rb');
 
 if ($fp === false) {
     die(Context::getContext()->getTranslator()->trans(

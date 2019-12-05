@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -102,7 +102,6 @@ function p15012_add_missing_columns()
     $q_list['order_detail']['original_product_price']['mod'] = 'ALTER TABLE `'._DB_PREFIX_.'order_detail`
 		CHANGE `original_product_price` original_product_price DEC(20,6) NOT NULL DEFAULT "0.000000"';
 
-
     $q_list['order_detail_tax']['unit_amount']['mod'] = 'ALTER TABLE `'._DB_PREFIX_.'order_detail_tax`
 		CHANGE `unit_amount` unit_amount DEC(10,6) NOT NULL DEFAULT "0.000000"';
     $q_list['order_detail_tax']['total_amount']['mod'] = 'ALTER TABLE `'._DB_PREFIX_.'order_detail_tax`
@@ -183,8 +182,9 @@ function p15012_add_missing_columns()
         }
     }
 
-    if (sizeof($errors) > 0) {
+    if (count($errors) > 0) {
         $msg = implode("\r", $errors);
+
         return array('error' => 1, 'msg' => $msg);
     } else {
         return true;

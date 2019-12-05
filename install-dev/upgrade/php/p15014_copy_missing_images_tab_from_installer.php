@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -38,13 +38,13 @@ function p15014_copy_missing_images_tab_from_installer()
     }
 
     $install_dir_path = INSTALL_PATH.$DIR_SEP.'data'.$DIR_SEP.'img';
-    $img_dir = scandir($install_dir_path);
+    $img_dir = scandir($install_dir_path, SCANDIR_SORT_NONE);
     foreach ($img_dir as $dir) {
         if ($dir[0] == '.' || !is_dir($install_dir_path.$DIR_SEP.$dir)) {
             continue;
         }
 
-        $img_subdir = scandir($install_dir_path.$DIR_SEP.$dir);
+        $img_subdir = scandir($install_dir_path . $DIR_SEP . $dir, SCANDIR_SORT_NONE);
         foreach ($img_subdir as $img) {
             if ($img[0] == '.') {
                 continue;

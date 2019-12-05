@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,13 +16,14 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShopBundle\Service\Database;
 
 use PrestaShopBundle\Command\UpdateSchemaCommand;
@@ -31,17 +32,16 @@ use PrestaShopBundle\Service\Command\AbstractCommand;
 class Upgrade extends AbstractCommand
 {
     /**
-     * Run the custom schemaUpgrade command
+     * Run the custom schemaUpgrade command.
      */
     public function addDoctrineSchemaUpdate()
     {
         $command = new UpdateSchemaCommand();
         $this->application->add($command);
 
-        $this->addCacheClear();
-
-        $this->commands[] = array(
-            'command' => 'prestashop:schema:update-without-foreign'
-        );
+        $this->commands[] = [
+            'command' => 'prestashop:schema:update-without-foreign',
+            '--env' => _PS_ENV_,
+        ];
     }
 }

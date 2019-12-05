@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,33 +16,32 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-
 /**
-* A TaxManager define a way to retrieve tax.
-*/
+ * A TaxManager define a way to retrieve tax.
+ */
 interface TaxManagerInterface
 {
     /**
-    * This method determine if the tax manager is available for the specified address.
-    *
-    * @param Address $address
-    *
-    * @return bool
-    */
+     * This method determine if the tax manager is available for the specified address.
+     *
+     * @param Address $address
+     *
+     * @return bool
+     */
     public static function isAvailableForThisAddress(Address $address);
 
     /**
-    * Return the tax calculator associated to this address
-    *
-    * @return TaxCalculator
-    */
+     * Return the tax calculator associated to this address.
+     *
+     * @return TaxCalculator
+     */
     public function getTaxCalculator();
 }

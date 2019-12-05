@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,41 +16,57 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShop\PrestaShop\Adapter;
 
-use PrestaShop\PrestaShop\Adapter\Product\ProductDataProvider;
-use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
-use PrestaShop\PrestaShop\Adapter\Tools;
-use Tools as ToolsLegacy;
-use Product;
 use Combination;
+use PrestaShop\Decimal\Number;
+use PrestaShop\PrestaShop\Adapter\Product\ProductDataProvider;
+use PrestaShop\PrestaShop\Core\Localization\Locale;
+use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
+use Product;
 
 /**
- * This class will provide data from DB / ORM about product combination
+ * This class will provide data from DB / ORM about product combination.
  */
 class CombinationDataProvider
 {
+    /**
+     * @var LegacyContext
+     */
     private $context;
-    private $productAdapter;
-    private $cldrRepository;
 
-    public function __construct()
+    /**
+     * @var ProductDataProvider
+     */
+    private $productAdapter;
+
+    /**
+     * @var Locale
+     */
+    private $locale;
+
+    /**
+     * @param Locale $locale
+     */
+    public function __construct(Locale $locale)
     {
         $this->context = new LegacyContext();
         $this->productAdapter = new ProductDataProvider();
-        $this->cldrRepository = ToolsLegacy::getCldr($this->context->getContext());
-        $this->tools = new Tools();
+        $this->locale = $locale;
     }
 
     /**
-     * Get a combination values
+     * Get a combination values.
+     *
+     * @deprecated since 1.7.3.1 really slow, use getFormCombinations instead.
      *
      * @param int $combinationId The id_product_attribute
      *
@@ -69,6 +85,42 @@ class CombinationDataProvider
         );
     }
 
+    /**
+     * Retrieve combinations data for a specific language id.
+     *
+     * @param array $combinationIds
+     * @param int $languageId
+     *
+     * @return array a list of formatted combinations
+     *
+     * @throws \PrestaShopDatabaseException
+     * @throws \PrestaShopException
+     */
+    public function getFormCombinations(array $combinationIds, $languageId)
+    {
+        $productId = (new Combination($combinationIds[0]))->id_product;
+        $product = new Product($productId);
+        $combinations = array();
+
+        foreach ($combinationIds as $combinationId) {
+            $combinations[$combinationId] = $this->completeCombination(
+                $product->getAttributeCombinationsById(
+                    $combinationId,
+                    $languageId
+                ),
+                $product
+            );
+        }
+
+        return $combinations;
+    }
+
+    /**
+     * @param array $attributesCombinations
+     * @param Product $product
+     *
+     * @return array
+     */
     public function completeCombination($attributesCombinations, $product)
     {
         $combination = $attributesCombinations[0];
@@ -94,17 +146,22 @@ class CombinationDataProvider
             $attribute_unity_price_impact = -1;
         }
 
+        $finalPrice = (new Number((string) $product->price))
+            ->plus(new Number((string) $combination['price']))
+            ->toPrecision(CommonAbstractType::PRESTASHOP_DECIMALS);
+
         return array(
             'id_product_attribute' => $combination['id_product_attribute'],
             'attribute_reference' => $combination['reference'],
             'attribute_ean13' => $combination['ean13'],
             'attribute_isbn' => $combination['isbn'],
             'attribute_upc' => $combination['upc'],
+            'attribute_mpn' => $combination['mpn'],
             'attribute_wholesale_price' => $combination['wholesale_price'],
             'attribute_price_impact' => $attribute_price_impact,
             'attribute_price' => $combination['price'],
-            'attribute_price_display' => $this->cldrRepository->getPrice($combination['price'], $this->context->getContext()->currency->iso_code),
-            'final_price' => $this->tools->bcadd($product->price, $combination['price'], CommonAbstractType::PRESTASHOP_DECIMALS),
+            'attribute_price_display' => $this->locale->formatPrice($combination['price'], $this->context->getContext()->currency->iso_code),
+            'final_price' => (string) $finalPrice,
             'attribute_priceTI' => '',
             'attribute_ecotax' => $combination['ecotax'],
             'attribute_weight_impact' => $attribute_weight_impact,
@@ -112,20 +169,28 @@ class CombinationDataProvider
             'attribute_unit_impact' => $attribute_unity_price_impact,
             'attribute_unity' => $combination['unit_price_impact'],
             'attribute_minimal_quantity' => $combination['minimal_quantity'],
-            'available_date_attribute' =>  $combination['available_date'],
-            'attribute_default' => (bool)$combination['default_on'],
+            'attribute_low_stock_threshold' => $combination['low_stock_threshold'],
+            'attribute_low_stock_alert' => (bool) $combination['low_stock_alert'],
+            'available_date_attribute' => $combination['available_date'],
+            'attribute_default' => (bool) $combination['default_on'],
+            'attribute_location' => $this->productAdapter->getLocation($product->id, $combination['id_product_attribute']),
             'attribute_quantity' => $this->productAdapter->getQuantity($product->id, $combination['id_product_attribute']),
             'name' => $this->getCombinationName($attributesCombinations),
             'id_product' => $product->id,
         );
     }
 
+    /**
+     * @param array $attributesCombinations
+     *
+     * @return string
+     */
     private function getCombinationName($attributesCombinations)
     {
         $name = array();
 
         foreach ($attributesCombinations as $attribute) {
-            $name[] = $attribute['group_name'].' - '.$attribute['attribute_name'];
+            $name[] = $attribute['group_name'] . ' - ' . $attribute['attribute_name'];
         }
 
         return implode(', ', $name);

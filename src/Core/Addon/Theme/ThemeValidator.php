@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -69,7 +69,9 @@ class ThemeValidator
                 }
 
                 $this->errors[$themeName] = $this->translator->trans(
-                    'An error occurred. The information "%s" is missing.', array($prop), 'Admin.Design.Notification'
+                    'An error occurred. The information "%s" is missing.',
+                    array($prop),
+                    'Admin.Design.Notification'
                 );
             }
         }
@@ -99,13 +101,13 @@ class ThemeValidator
     private function hasRequiredFiles(Theme $theme)
     {
         $themeName = $theme->getName();
-        $parentDir = realpath($this->appConfiguration->get('_PS_ALL_THEMES_DIR_').$theme->get('parent')).'/';
+        $parentDir = realpath($this->appConfiguration->get('_PS_ALL_THEMES_DIR_') . $theme->get('parent')) . '/';
         $parentFile = false;
 
         foreach ($this->getRequiredFiles() as $file) {
-            $childFile = $theme->getDirectory().$file;
+            $childFile = $theme->getDirectory() . $file;
             if ($theme->get('parent')) {
-                $parentFile = $parentDir.$file;
+                $parentFile = $parentDir . $file;
             }
 
             if (!file_exists($childFile) && !file_exists($parentFile)) {

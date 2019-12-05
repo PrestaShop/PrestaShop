@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,147 +16,277 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Core\Product\Search;
 
-use PrestaShop\PrestaShop\Core\Product\Search\SortOrder;
-use PrestaShop\PrestaShop\Core\Product\Search\Facet;
-
+/**
+ * Define the Product Query to execute according the the encoded facets.
+ */
 class ProductSearchQuery
 {
-    private $query_type;
-    private $id_category;
-    private $id_manufacturer;
-    private $id_supplier;
-    private $search_string;
-    private $search_tag;
+    /**
+     * @var string
+     */
+    private $queryType;
+
+    /**
+     * @var int
+     */
+    private $idCategory;
+
+    /**
+     * @var int
+     */
+    private $idManufacturer;
+
+    /**
+     * @var int
+     */
+    private $idSupplier;
+
+    /**
+     * @var string
+     */
+    private $searchString;
+
+    /**
+     * @var string
+     */
+    private $searchTag;
+
+    /**
+     * @var array
+     */
     private $encodedFacets;
 
-    // A default that is multiple of 2, 3 and 4 should be OK for
-    // many layouts. 12 is the best number ever.
+    /**
+     * A default that is multiple of 2, 3 and 4 should be OK for
+     * many layouts.
+     *
+     * @var int 12 is the best number ever
+     */
     private $resultsPerPage = 12;
 
+    /**
+     * @var int
+     */
     private $page = 1;
 
+    /**
+     * @var SortOrder
+     */
     private $sortOrder;
 
+    /**
+     * ProductSearchQuery constructor.
+     */
     public function __construct()
     {
         $this->setSortOrder(new SortOrder('product', 'name', 'ASC'));
     }
 
-    public function setQueryType($query_type)
+    /**
+     * @param string $queryType
+     *
+     * @return $this
+     */
+    public function setQueryType($queryType)
     {
-        $this->query_type = $query_type;
+        $this->queryType = $queryType;
+
         return $this;
     }
 
+    /**
+     * @return string
+     */
     public function getQueryType()
     {
-        return $this->query_type;
+        return $this->queryType;
     }
 
-    public function setIdCategory($id_category)
+    /**
+     * @param $idCategory
+     *
+     * @return $this
+     */
+    public function setIdCategory($idCategory)
     {
-        $this->id_category = $id_category;
+        $this->idCategory = $idCategory;
+
         return $this;
     }
 
+    /**
+     * @return int
+     */
     public function getIdCategory()
     {
-        return $this->id_category;
+        return $this->idCategory;
     }
 
-    public function setIdManufacturer($id_manufacturer)
+    /**
+     * @param $idManufacturer
+     *
+     * @return $this
+     */
+    public function setIdManufacturer($idManufacturer)
     {
-        $this->id_manufacturer = $id_manufacturer;
+        $this->idManufacturer = $idManufacturer;
+
         return $this;
     }
 
+    /**
+     * @return int
+     */
     public function getIdManufacturer()
     {
-        return $this->id_manufacturer;
+        return $this->idManufacturer;
     }
 
-    public function setIdSupplier($id_supplier)
+    /**
+     * @param $idSupplier
+     *
+     * @return $this
+     */
+    public function setIdSupplier($idSupplier)
     {
-        $this->id_supplier = $id_supplier;
+        $this->idSupplier = $idSupplier;
+
         return $this;
     }
 
+    /**
+     * @return int
+     */
     public function getIdSupplier()
     {
-        return $this->id_supplier;
+        return $this->idSupplier;
     }
 
+    /**
+     * @param $resultsPerPage
+     *
+     * @return $this
+     */
     public function setResultsPerPage($resultsPerPage)
     {
-        $this->resultsPerPage = (int)$resultsPerPage;
+        $this->resultsPerPage = (int) $resultsPerPage;
+
         return $this;
     }
 
+    /**
+     * @return int
+     */
     public function getResultsPerPage()
     {
         return $this->resultsPerPage;
     }
 
+    /**
+     * @param $page
+     *
+     * @return $this
+     */
     public function setPage($page)
     {
-        $this->page = (int)$page;
+        $this->page = (int) $page;
+
         return $this;
     }
 
+    /**
+     * @return int
+     */
     public function getPage()
     {
         return $this->page;
     }
 
+    /**
+     * @param SortOrder $sortOrder
+     *
+     * @return $this
+     */
     public function setSortOrder(SortOrder $sortOrder)
     {
         $this->sortOrder = $sortOrder;
+
         return $this;
     }
 
+    /**
+     * @return SortOrder
+     */
     public function getSortOrder()
     {
         return $this->sortOrder;
     }
 
-    public function setSearchString($search_string)
+    /**
+     * @param $searchString
+     *
+     * @return $this
+     */
+    public function setSearchString($searchString)
     {
-        $this->search_string = $search_string;
+        $this->searchString = $searchString;
+
         return $this;
     }
 
+    /**
+     * @return string
+     */
     public function getSearchString()
     {
-        return $this->search_string;
+        return $this->searchString;
     }
 
-    public function setSearchTag($search_tag)
+    /**
+     * @param $searchTag
+     *
+     * @return $this
+     */
+    public function setSearchTag($searchTag)
     {
-        $this->search_tag = $search_tag;
+        $this->searchTag = $searchTag;
+
         return $this;
     }
 
+    /**
+     * @return string
+     */
     public function getSearchTag()
     {
-        return $this->search_tag;
+        return $this->searchTag;
     }
 
+    /**
+     * @param array $encodedFacets
+     *
+     * @return $this
+     */
     public function setEncodedFacets($encodedFacets)
     {
         $this->encodedFacets = $encodedFacets;
+
         return $this;
     }
 
+    /**
+     * @return array
+     */
     public function getEncodedFacets()
     {
         return $this->encodedFacets;

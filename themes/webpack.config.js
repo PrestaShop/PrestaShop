@@ -1,5 +1,5 @@
 /**
- * 2007-2017 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -15,45 +15,43 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-var webpack = require('webpack');
+module.exports = (env, argv) => {
 
-var plugins = [];
+  const path = require('path');
+  const mode = argv.mode || 'production';
 
-var production = false;
-
-if (production) {
-    plugins.push(
-        new webpack.optimize.UglifyJsPlugin({
-            compress: {
-                warnings: false
-            }
-        })
-    );
-}
-
-module.exports = {
+  return {
+    mode: mode,
     entry: [
       './_core/js/theme.js'
     ],
     output: {
-        path: '.',
-        filename: 'core.js'
+      path: path.resolve(__dirname),
+      filename: 'core.js'
     },
     module: {
-        loaders: [
-            {test: /\.js$/     , loaders: ['babel-loader']},
-        ]
+      rules: [
+        {
+          test: /\.js$/,
+          use: {
+            loader: 'babel-loader',
+            options: {
+              presets: ['@babel/preset-env']
+            }
+          },
+        },
+      ]
     },
     externals: {
-        prestashop: 'prestashop'
+      prestashop: 'prestashop'
     },
-    devtool: 'source-map',
-    plugins: plugins
+    devtool: 'source-map'
+  };
 };

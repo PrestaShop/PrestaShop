@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,18 +16,20 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Adapter\Country;
 
-use Country;
 use Configuration;
+use Country;
+use Db;
+use DbQuery;
 
 /**
  * This class will provide data from DB / ORM about Country
@@ -35,7 +37,7 @@ use Configuration;
 class CountryDataProvider
 {
     /**
-     * Return available countries
+     * Return available countries.
      *
      * @param int $id_lang Language ID
      * @param bool $active return only active coutries
@@ -46,20 +48,50 @@ class CountryDataProvider
      */
     public function getCountries($id_lang, $active = false, $contain_states = false, $list_states = true)
     {
-        return Country::getCountries($id_lang, $active = false, $contain_states = false, $list_states = true);
+        return Country::getCountries($id_lang, $active, $contain_states, $list_states);
     }
 
     /**
-     * Get Country IsoCode by Id
+     * Returns list of countries IDs which need DNI
+     *
+     * @return array
+     */
+    public function getCountriesIdWhichNeedDni()
+    {
+        $query = new DbQuery();
+        $query
+            ->select('c.`id_country`')
+            ->from('country', 'c')
+            ->where('c.`need_identification_number` = 1')
+        ;
+        $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
+
+        return array_map(function ($country) { return $country['id_country']; }, $result);
+    }
+
+    /**
+     * Get Country IsoCode by Id.
      *
      * @param int $id Country Id
      *
      * @return string the related iso code
      */
-     public function getIsoCodebyId($id = null)
-     {
-         $countryId = (null === $id) ? Configuration::get('PS_COUNTRY_DEFAULT') : $id;
+    public function getIsoCodebyId($id = null)
+    {
+        $countryId = (null === $id) ? Configuration::get('PS_COUNTRY_DEFAULT') : $id;
 
-         return Country::getIsoById($countryId);
-     }
+        return Country::getIsoById($countryId);
+    }
+
+    /**
+     * Get country Id by ISO code.
+     *
+     * @param string $isoCode Country ISO code
+     *
+     * @return int
+     */
+    public function getIdByIsoCode($isoCode)
+    {
+        return Country::getByIso($isoCode);
+    }
 }

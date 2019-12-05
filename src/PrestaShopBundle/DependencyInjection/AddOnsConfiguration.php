@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,18 +16,19 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShopBundle\DependencyInjection;
 
-use Tools;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
+use Tools;
 
 class AddOnsConfiguration implements ConfigurationInterface
 {
@@ -42,6 +43,38 @@ class AddOnsConfiguration implements ConfigurationInterface
             ->children()
                 ->arrayNode('addons')
                     ->children()
+                        ->arrayNode('categories')
+                            ->arrayPrototype()
+                                ->children()
+                                    ->scalarNode('id_category')->isRequired()->end()
+                                    ->scalarNode('name')->isRequired()->end()
+                                    ->scalarNode('order')->isRequired()->end()
+                                    ->scalarNode('link')->isRequired()->end()
+                                    ->scalarNode('id_parent')->isRequired()->end()
+                                    ->scalarNode('parent_link')->isRequired()->end()
+                                    ->scalarNode('tab')->isRequired()->end()
+                                    ->arrayNode('categories')
+                                        ->arrayPrototype()
+                                            ->children()
+                                                ->scalarNode('id_category')->isRequired()->end()
+                                                ->scalarNode('name')->isRequired()->end()
+                                                ->scalarNode('link')->isRequired()->end()
+                                                ->scalarNode('id_parent')->isRequired()->end()
+                                                ->scalarNode('link_rewrite')->isRequired()->end()
+                                                ->scalarNode('tab')->end()
+                                            ->end()
+                                        ->end()
+                                    ->end()
+                                ->end()
+                            ->end()
+                        ->end()
+                        ->arrayNode('prestatrust')
+                            ->children()
+                                ->booleanNode('enabled')
+                                    ->defaultFalse()
+                                ->end()
+                            ->end()
+                        ->end()
                         ->arrayNode('api_client')
                             ->children()
                                 ->integerNode('ttl')

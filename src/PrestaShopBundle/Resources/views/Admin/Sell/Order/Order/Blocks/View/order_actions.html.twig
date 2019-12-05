@@ -1,0 +1,72 @@
+{#**
+ * 2007-2019 PrestaShop SA and Contributors
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ *#}
+
+<div class="mb-3">
+  {{ form_start(updateOrderStatusActionBarForm, {
+    'action': path('admin_orders_update_status', {'orderId': orderForViewing.id}),
+    'attr': {
+      'class': 'form-inline d-inline-block',
+      'id': 'update_order_status_action_form'
+    }
+  }) }}
+    <div class="input-group">
+      {{ form_widget(updateOrderStatusActionBarForm.new_order_status_id, {'attr': {'class': 'mr-1'}, 'id': 'update_order_status_action_input'}) }}
+
+      <button class="btn btn-action"
+              id="update_order_status_action_btn"
+              disabled
+              data-order-status-id="{{ orderForViewing.history.currentOrderStatusId }}"
+      >
+        {{ 'Update status'|trans({}, 'Admin.Orderscustomers.Feature') }}
+      </button>
+    </div>
+
+    <div class="d-none">
+      {{ form_rest(updateOrderStatusActionBarForm) }}
+    </div>
+  {{ form_end(updateOrderStatusActionBarForm) }}
+
+  {% if orderForViewing.documents.canGenerateInvoice %}
+    <form class="form-inline d-inline-block form-horizontal ml-2">
+      <div class="input-group">
+        <a href="{{ path('admin_orders_generate_invoice_pdf', {'orderId': orderForViewing.id}) }}" class="btn btn-action">
+          <i class="material-icons">receipt</i>
+          {{ 'View invoice'|trans({}, 'Admin.Orderscustomers.Feature') }}
+        </a>
+      </div>
+    </form>
+  {% endif %}
+
+  {% if orderForViewing.documents.canGenerateDeliverySlip %}
+    <form class="form-inline d-inline-block form-horizontal ml-2">
+      <div class="input-group">
+        <a href="{{ path('admin_orders_generate_delivery_slip_pdf', {'orderId': orderForViewing.id}) }}" class="btn btn-action">
+          <i class="material-icons">local_shipping</i>
+          {{ 'View delivery slip'|trans({}, 'Admin.Orderscustomers.Feature') }}
+        </a>
+      </div>
+    </form>
+  {% endif %}
+</div>

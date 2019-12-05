@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,40 +16,49 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Adapter\Security;
 
-use Access;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
-use Symfony\Component\HttpFoundation\Request;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
-use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 
 /**
- * Admin Middleware security
+ * Admin Middleware security.
  */
 class Admin
 {
+    /**
+     * @var LegacyContext
+     */
     private $context;
-    private $legacyContext;
-    private $securityTokenStorage;
-    private $userProvider;
 
     /**
-     * Constructor.
-     *
-     * @param LegacyContext $context
-     * @param TokenStorage $securityTokenStorage
+     * @var \Context
      */
+    private $legacyContext;
+
+    /**
+     * @var TokenStorage
+     */
+    private $securityTokenStorage;
+
+    /**
+     * @var UserProviderInterface
+     */
+    private $userProvider;
+
     public function __construct(LegacyContext $context, TokenStorage $securityTokenStorage, UserProviderInterface $userProvider)
     {
         $this->context = $context;
@@ -60,7 +69,7 @@ class Admin
 
     /**
      * Check if employee is logged in
-     * If not loggedin in, redirect to admin home page
+     * If not logged in, redirect to admin home page.
      *
      * @param GetResponseEvent $event
      *
@@ -77,18 +86,25 @@ class Admin
             return true;
         }
 
+        // in case of exception handler sub request, avoid infinite redirection
+        if ($event->getRequestType() === HttpKernelInterface::SUB_REQUEST
+            && $event->getRequest()->attributes->has('exception')
+        ) {
+            return true;
+        }
+
         //employee not logged in
         $event->stopPropagation();
 
         //if http request - add 403 error
         $request = Request::createFromGlobals();
         if ($request->isXmlHttpRequest()) {
-            header("HTTP/1.1 403 Forbidden");
+            header('HTTP/1.1 403 Forbidden');
             exit();
         }
 
         //redirect to admin home page
-        header("Location: ".$this->context->getAdminLink('', false));
+        header('Location: ' . $this->context->getAdminLink('', false));
         exit();
     }
 }

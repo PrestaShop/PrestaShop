@@ -1,0 +1,8 @@
+services:
+    _defaults:
+        public: true
+
+    prestashop.core.cms_page.data_provider.cms_page_view:
+        class: 'PrestaShop\PrestaShop\Core\CMS\CmsPageViewDataProvider'
+        arguments:
+            - '@prestashop.core.query_bus'

@@ -32,7 +32,8 @@
   }
   .sub-menu {
     &.collapse {
-      display: none;
+      opacity: 0;
+      visibility: hidden;
     }
     box-shadow: 2px 1px 11px 2px rgba(0, 0, 0, 0.1);
     border: none;
@@ -40,7 +41,9 @@
     width: calc(100% - 30px);
     min-width: calc(100% - 30px);
     z-index: 18;
-    display: none;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity .5s ease, visibility .5s ease;
     ul[data-depth="1"] > li {
       float: left;
       margin: 0 1.25rem;
@@ -58,9 +61,23 @@
   margin-top: 0;
 }
 
+#_desktop_top_menu {
+  .top-menu {
+    &[data-depth="0"] {
+      li {
+        &:hover {
+          .sub-menu {
+            opacity: 1;
+            visibility: visible;
+          }
+        }
+      }
+    }
+  }
+}
+
 #mobile_top_menu_wrapper {
-  margin-top: 0.625rem;
-  padding-bottom: 0.625rem;
+  padding: 15px;
   background: white;
   #top-menu {
     margin-bottom: 0.625rem;
@@ -107,7 +124,7 @@
       margin-left: 0;
       width: 100%;
       min-width: 100%;
-      background: $gray-lighter;
+      background: white;
       ul[data-depth="0"] > li {
         border-bottom: 1px solid $gray;
       }

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,18 +16,22 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShop\PrestaShop\Adapter;
 
 use Image;
 use ImageManager as LegacyImageManager;
 
+/**
+ * Class responsible of finding images and creating thumbnails.
+ */
 class ImageManager
 {
     /**
@@ -52,14 +56,15 @@ class ImageManager
      * @param string $imageType
      * @param string $tableName
      * @param string $imageDir
+     *
      * @return string The HTML < img > tag
      */
-    public function getThumbnailForListing($imageId, $imageType = 'jpg', $tableName = 'product', $imageDir = 'p')
+    public function getThumbnailForListing($imageId, $imageType = 'jpg', $tableName = 'product', $imageDir = _PS_PROD_IMG_DIR_)
     {
         $thumbPath = $this->getThumbnailTag($imageId, $imageType, $tableName, $imageDir);
 
         // because legacy uses relative path to reach a directory under root directory...
-        $replacement = 'src="'.$this->legacyContext->getRootUrl();
+        $replacement = 'src="' . $this->legacyContext->getRootUrl();
         $thumbPath = preg_replace('/src="(\\.\\.\\/)+/', $replacement, $thumbPath);
 
         return $thumbPath;
@@ -69,7 +74,7 @@ class ImageManager
     {
         $imageType = 'jpg';
         $tableName = 'product';
-        $imageDir = 'p';
+        $imageDir = _PS_PROD_IMG_DIR_;
 
         $imagePath = $this->getImagePath($imageId, $imageType, $tableName, $imageDir);
         $thumbnailCachedImageName = $this->makeCachedImageName($imageId, $imageType, $tableName);
@@ -88,6 +93,7 @@ class ImageManager
      * @param string $imageType
      * @param string $tableName
      * @param string $imageDir
+     *
      * @return string
      */
     private function getThumbnailTag($imageId, $imageType, $tableName, $imageDir)
@@ -107,25 +113,25 @@ class ImageManager
      * @param $imageType
      * @param $tableName
      * @param $imageDir
+     *
      * @return string
      */
     private function getImagePath($imageId, $imageType, $tableName, $imageDir)
     {
-        $parentDirectory = _PS_IMG_DIR_ . $imageDir;
-
         if ($tableName == 'product') {
             $image = new Image($imageId);
 
-            return $parentDirectory . '/' . $image->getExistingImgPath() . '.' . $imageType;
+            return $imageDir . $image->getExistingImgPath() . '.' . $imageType;
         }
 
-        return $parentDirectory . '/' . $imageId . '.' . $imageType;
+        return $imageDir . $imageId . '.' . $imageType;
     }
 
     /**
      * @param $imageId
      * @param $imageType
      * @param $tableName
+     *
      * @return string
      */
     private function makeCachedImageName($imageId, $imageType, $tableName)

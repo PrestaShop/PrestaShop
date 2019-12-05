@@ -1,0 +1,194 @@
+services:
+    _defaults:
+        public: true
+
+    prestashop.admin.shipping_preferences.data_provider:
+        class: 'PrestaShopBundle\Form\Admin\Improve\Shipping\Preferences\PreferencesFormDataProvider'
+        arguments:
+            - '@prestashop.adapter.shipping_preferences.handling_configuration'
+            - '@prestashop.adapter.shipping_preferences.carrier_options_configuration'
+            - '@translator'
+
+    prestashop.admin.order.invoices.by_date.data_provider:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Order\Invoices\InvoicesByDateDataProvider'
+        arguments:
+            - '@prestashop.adapter.data_provider.order_invoice'
+
+    prestashop.admin.order.invoices.by_status.data_provider:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Order\Invoices\InvoicesByStatusDataProvider'
+
+    prestashop.admin.order.invoices.options.data_provider:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Order\Invoices\InvoiceOptionsDataProvider'
+        arguments:
+            - '@prestashop.adapter.order.invoice_options.configuration'
+            - '@=service("prestashop.adapter.data_provider.order_invoice").getNextInvoiceNumber()'
+
+    prestashop.admin.customer_preferences.data_provider:
+        class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\CustomerPreferences\CustomerPreferencesDataProvider'
+        arguments:
+            - '@prestashop.adapter.customer.customer_configuration'
+            - '@translator'
+
+    prestashop.admin.order_preferences.data_provider:
+        class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\OrderPreferences\OrderPreferencesFormDataProvider'
+        arguments:
+            - '@prestashop.adapter.order_general.configuration'
+            - '@prestashop.adapter.order_gift.configuration'
+            - '@translator'
+            - '@prestashop.adapter.data_provider.cms'
+
+    prestashop.admin.product_preferences.data_provider:
+        class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\ProductPreferences\ProductPreferencesFormDataProvider'
+        arguments:
+            - '@prestashop.adapter.product_general.configuration'
+            - '@prestashop.adapter.product_pagination.configuration'
+            - '@prestashop.adapter.product_page.configuration'
+            - '@prestashop.adapter.product_stock.configuration'
+            - '@translator'
+
+    prestashop.adapter.performance.form_provider:
+        class: 'PrestaShopBundle\Form\Admin\AdvancedParameters\Performance\PerformanceFormDataProvider'
+        arguments:
+            - '@prestashop.adapter.smarty_cache.configuration'
+            - '@prestashop.adapter.debug_mode.configuration'
+            - '@prestashop.adapter.optional_features.configuration'
+            - '@prestashop.adapter.ccc.configuration'
+            - '@prestashop.adapter.media_servers.configuration'
+            - '@prestashop.adapter.caching.configuration'
+
+    prestashop.adapter.maintenance.form_provider:
+        class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\General\MaintenanceFormDataProvider'
+        arguments:
+            - '@prestashop.adapter.maintenance.configuration'
+
+    prestashop.adapter.administration.form_provider:
+        class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administration\FormDataProvider'
+        arguments:
+            - '@prestashop.adapter.general.configuration'
+            - '@prestashop.adapter.upload_quota.configuration'
+            - '@prestashop.adapter.notifications.configuration'
+
+    prestashop.adapter.preferences.form_provider:
+        class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\General\PreferencesFormDataProvider'
+        arguments:
+            - '@prestashop.adapter.preferences.configuration'
+
+    prestashop.adapter.logs.form_provider:
+        class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Logs\LogsFormDataProvider'
+        arguments:
+            - '@prestashop.adapter.logs.configuration'
+
+    prestashop.admin.import.form_data_provider:
+        class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Import\ImportFormDataProvider'
+        arguments:
+            - '@prestashop.core.import.file_finder'
+            - '@session'
+
+    prestashop.admin.import_data_configuration.form_data_provider:
+        class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Import\ImportDataConfigurationFormDataProvider'
+        arguments:
+            - '@prestashop.core.import.dir'
+            - '@prestashop.core.import.factory.data_row.collection_factory'
+            - '@prestashop.core.admin.import_match.repository'
+            - '@prestashop.adapter.import.data_match_saver'
+            - '@=service("prestashop.core.form.choice_provider.import_entity_field").getChoices()'
+
+    prestashop.adapter.order.delivery.slip.options.form_provider:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Order\Delivery\SlipOptionsFormDataProvider'
+        arguments:
+            - '@prestashop.adapter.order.delivery.slip.options.configuration'
+
+    prestashop.adapter.order.delivery.slip.pdf.form_provider:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Order\Delivery\SlipPdfFormDataProvider'
+        arguments:
+            - '@prestashop.adapter.order.delivery.slip.pdf.configuration'
+
+    prestashop.admin.localization.form_data_provider:
+        class: 'PrestaShopBundle\Form\Admin\Improve\International\Localization\LocalizationFormDataProvider'
+        arguments:
+            - '@prestashop.adapter.localization.configuration'
+            - '@prestashop.adapter.local_units.configuration'
+            - '@prestashop.adapter.localization_advanced.configuration'
+
+    prestashop.admin.geolocation.form_data_provider:
+        class: 'PrestaShopBundle\Form\Admin\Improve\International\Geolocation\GeolocationFormDataProvider'
+        arguments:
+            - '@prestashop.adapter.geolocation_by_ip_address.configuration'
+            - '@prestashop.adapter.geolocation_ip_address_whitelist.configuration'
+            - '@prestashop.adapter.geolocation_options.configuration'
+            - '@prestashop.core.geolocation.geo_lite_city.checker'
+            - '@prestashop.core.validation.validator'
+
+    prestashop.admin.payment_preferences.form_data_provider:
+        class: 'PrestaShopBundle\Form\Admin\Improve\Payment\Preferences\PaymentPreferencesFormDataProvider'
+        arguments:
+            - '@prestashop.adapter.payment_module_preferences.configuration'
+
+    prestashop.admin.email_configuration.form_data_provider:
+        class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Email\EmailConfigurationFormDataProvider'
+        arguments:
+            - '@prestashop.core.email.email_configurator'
+            - '@prestashop.core.email.smtp_configurator'
+
+    prestashop.admin.request_sql_settings.form_data_provider:
+        class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\RequestSql\SqlRequestSettingsFormDataProvider'
+        arguments:
+          - '@prestashop.core.sql_manager.configuration.sql_request_configuration'
+
+    prestashop.admin.webservice.form_data_provider:
+        class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Webservice\WebserviceFormDataProvider'
+        arguments:
+            - '@prestashop.adapter.webservice.configuration'
+
+    prestashop.admin.backup.form_data_provider:
+        class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Backup\BackupDataProvider'
+        arguments:
+            - '@prestashop.core.backup.options_configuration'
+
+    prestashop.admin.traffic_seo.meta_settings.form_data_provider:
+        class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\TrafficSeo\Meta\MetaSettingsFormDataProvider'
+        arguments:
+            - '@prestashop.adapter.meta.set_up_urls.configuration'
+            - '@prestashop.adapter.meta.shop_url.configuration'
+            - '@prestashop.adapter.meta.url_schema.configuration'
+            - '@prestashop.adapter.meta.seo_options.configuration'
+            - '@translator'
+            - '@prestashop.adapter.routes.route_validator'
+            - '@prestashop.adapter.validate'
+
+    prestashop.admin.employee_options.form_data_provider:
+        class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Employee\EmployeeOptionsFormDataProvider'
+        arguments:
+            - '@prestashop.core.team.employee.configuration.employee_options_configuration'
+
+    prestashop.admin.currency.form_data_provider:
+        class: 'PrestaShopBundle\Form\Admin\Improve\International\Currencies\CurrencyFormDataProvider'
+        arguments:
+            - '@prestashop.core.command_bus'
+            - '@=service("prestashop.adapter.legacy.configuration").get("PS_ACTIVE_CRONJOB_EXCHANGE_RATE")'
+
+    prestashop.admin.tax_options.form_data_provider:
+        class: 'PrestaShopBundle\Form\Admin\Improve\International\Tax\TaxOptionsFormDataProvider'
+        arguments:
+            - '@prestashop.core.tax.tax_options_configuration'
+
+    prestashop.admin.improve.design.theme.shop_logos.form_data_provider:
+        class: 'PrestaShopBundle\Form\Admin\Improve\Design\Theme\ShopLogosFormDataProvider'
+        arguments:
+            - '@prestashop.core.command_bus'
+            - '@prestashop.adapter.theme.theme_multi_store_settings_form_data_provider'
+
+    prestashop.admin.mail_theme.form_data_provider:
+        class: 'PrestaShopBundle\Form\Admin\Improve\Design\MailTheme\MailThemeFormDataProvider'
+        arguments:
+            - '@prestashop.core.mail_theme.configuration'
+
+    prestashop.admin.merchandise_return_options.form_data_provider:
+        class: 'PrestaShopBundle\Form\Admin\Sell\CustomerService\MerchandiseReturn\MerchandiseReturnOptionsFormDataProvider'
+        arguments:
+            - '@prestashop.core.merchandise_return.configuration.merchandise_return_options_configuration'
+
+    prestashop.admin.sell.order.credit_slip.credit_slip_options_form_data_provider:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Order\CreditSlip\CreditSlipOptionsFormDataProvider'
+        arguments:
+            - '@prestashop.core.credit_slip.credit_slip_options.configuration'

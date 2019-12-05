@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,14 +16,13 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 class DiscountControllerCore extends FrontController
 {
     public $auth = true;
@@ -32,7 +31,8 @@ class DiscountControllerCore extends FrontController
     public $ssl = true;
 
     /**
-     * Assign template vars related to page content
+     * Assign template vars related to page content.
+     *
      * @see FrontController::initContent()
      */
     public function initContent()
@@ -58,28 +58,26 @@ class DiscountControllerCore extends FrontController
     public function getTemplateVarCartRules()
     {
         $cart_rules = [];
+        $customerId = $this->context->customer->id;
+        $languageId = $this->context->language->id;
 
         $vouchers = CartRule::getCustomerCartRules(
-            $this->context->language->id,
-            $this->context->customer->id,
-            $active = true,
-            $includeGeneric = false
+            $languageId,
+            $customerId,
+            true,
+            false
         );
 
         foreach ($vouchers as $key => $voucher) {
-            $cart_rules[$key] = $voucher;
-            $cart_rules[$key]['voucher_date'] = Tools::displayDate($voucher['date_to'], null, false);
-            $cart_rules[$key]['voucher_minimal'] = ($voucher['minimum_amount'] > 0) ? Tools::displayPrice($voucher['minimum_amount'], (int)$voucher['minimum_amount_currency']) : $this->trans('None', array(), 'Shop.Theme.Global');
-            $cart_rules[$key]['voucher_cumulable'] = $this->getCombinableVoucherTranslation($voucher);
-            ;
+            $voucherCustomerId = (int) $voucher['id_customer'];
+            $voucherIsRestrictedToASingleCustomer = ($voucherCustomerId !== 0);
 
-            $cartRuleValue = $this->accumulateCartRuleValue($voucher);
-
-            if (0 === count($cartRuleValue)) {
-                $cart_rules[$key]['value'] = '-';
-            } else {
-                $cart_rules[$key]['value'] = implode(' + ', $cartRuleValue);
+            if ($voucherIsRestrictedToASingleCustomer && $customerId !== $voucherCustomerId) {
+                continue;
             }
+
+            $cart_rule = $this->buildCartRuleFromVoucher($voucher);
+            $cart_rules[$key] = $cart_rule;
         }
 
         return $cart_rules;
@@ -96,6 +94,7 @@ class DiscountControllerCore extends FrontController
 
     /**
      * @param $voucher
+     *
      * @return mixed
      */
     protected function getCombinableVoucherTranslation($voucher)
@@ -113,6 +112,7 @@ class DiscountControllerCore extends FrontController
      * @param $hasTaxIncluded
      * @param $amount
      * @param $currencyId
+     *
      * @return string
      */
     protected function formatReductionAmount($hasTaxIncluded, $amount, $currencyId)
@@ -121,16 +121,17 @@ class DiscountControllerCore extends FrontController
             $taxTranslation = $this->trans('Tax included', array(), 'Shop.Theme.Checkout');
         } else {
             $taxTranslation = $this->trans('Tax excluded', array(), 'Shop.Theme.Checkout');
-        };
+        }
 
         return sprintf(
             '%s ' . $taxTranslation,
-            Tools::displayPrice($amount, (int) $currencyId)
+            $this->context->getCurrentLocale()->formatPrice($amount, Currency::getIsoCodeById((int) $currencyId))
         );
     }
 
     /**
      * @param $percentage
+     *
      * @return string
      */
     protected function formatReductionInPercentage($percentage)
@@ -139,7 +140,8 @@ class DiscountControllerCore extends FrontController
     }
 
     /**
-     * @param $voucher
+     * @param array $voucher
+     *
      * @return array
      */
     protected function accumulateCartRuleValue($voucher)
@@ -170,5 +172,36 @@ class DiscountControllerCore extends FrontController
         }
 
         return $cartRuleValue;
+    }
+
+    /**
+     * @param array $voucher
+     *
+     * @return array
+     */
+    protected function buildCartRuleFromVoucher(array $voucher): array
+    {
+        $voucher['voucher_date'] = Tools::displayDate($voucher['date_to'], null, false);
+
+        if ((int) $voucher['minimum_amount'] === 0) {
+            $voucher['voucher_minimal'] = $this->trans('None', array(), 'Shop.Theme.Global');
+        } else {
+            $voucher['voucher_minimal'] = $this->context->getCurrentLocale()->formatPrice(
+                $voucher['minimum_amount'],
+                Currency::getIsoCodeById((int) $voucher['minimum_amount_currency'])
+            );
+        }
+
+        $voucher['voucher_cumulable'] = $this->getCombinableVoucherTranslation($voucher);
+
+        $cartRuleValues = $this->accumulateCartRuleValue($voucher);
+
+        if (0 === count($cartRuleValues)) {
+            $voucher['value'] = '-';
+        } else {
+            $voucher['value'] = implode(' + ', $cartRuleValues);
+        }
+
+        return $voucher;
     }
 }

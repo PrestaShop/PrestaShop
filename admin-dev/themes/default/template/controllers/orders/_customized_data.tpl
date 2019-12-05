@@ -1,5 +1,5 @@
 {**
- * 2007-2017 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -15,13 +15,14 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
+{assign var="currencySymbolBeforeAmount" value=$currency->format[0] === '¤'}
 {if $product['customizedDatas']}
 {* Assign product price *}
 {if ($order->getTaxCalculationMethod() == $smarty.const.PS_TAX_EXC)}
@@ -49,17 +50,17 @@
 				<div class="form-group">
 					<div class="fixed-width-xl">
 						<div class="input-group">
-							{if $currency->format % 2}<div class="input-group-addon">{$currency->sign} {l s='tax excl.' d='Admin.Global'}</div>{/if}
+							{if $currencySymbolBeforeAmount}<div class="input-group-addon">{$currency->sign} {l s='tax excl.' d='Admin.Global'}</div>{/if}
 							<input type="text" name="product_price_tax_excl" class="edit_product_price_tax_excl edit_product_price" value="{Tools::ps_round($product['unit_price_tax_excl'], 2)}" size="5" />
-							{if !($currency->format % 2)}<div class="input-group-addon">{$currency->sign} {l s='tax excl.' d='Admin.Global'}</div>{/if}
+							{if !$currencySymbolBeforeAmount}<div class="input-group-addon">{$currency->sign} {l s='tax excl.' d='Admin.Global'}</div>{/if}
 						</div>
 					</div>
 					<br/>
 					<div class="fixed-width-xl">
 						<div class="input-group">
-							{if $currency->format % 2}<div class="input-group-addon">{$currency->sign} {l s='tax incl.' d='Admin.Global'}</div>{/if}
+							{if $currencySymbolBeforeAmount}<div class="input-group-addon">{$currency->sign} {l s='tax incl.' d='Admin.Global'}</div>{/if}
 							<input type="text" name="product_price_tax_incl" class="edit_product_price_tax_incl edit_product_price" value="{Tools::ps_round($product['unit_price_tax_incl'], 2)}" size="5" />
-							{if !($currency->format % 2)}<div class="input-group-addon">{$currency->sign} {l s='tax incl.' d='Admin.Global'}</div>{/if}
+							{if $currencySymbolBeforeAmount}<div class="input-group-addon">{$currency->sign} {l s='tax incl.' d='Admin.Global'}</div>{/if}
 						</div>
 					</div>
 				</div>
@@ -70,6 +71,7 @@
 		{if $display_warehouse}<td>&nbsp;</td>{/if}
 		{if ($order->hasBeenPaid())}<td class="productQuantity text-center">{$product['customizationQuantityRefunded']}</td>{/if}
 		{if ($order->hasBeenDelivered() || $order->hasProductReturned())}<td class="productQuantity text-center">{$product['customizationQuantityReturned']}</td>{/if}
+		{if $stock_location_is_available}<td class="productQuantity location text-center">{$product['location']}</td>{/if}
 		{if $stock_management}<td class="text-center">{$product['current_stock']}</td>{/if}
 		<td class="total_product">
 		{if ($order->getTaxCalculationMethod() == $smarty.const.PS_TAX_EXC)}
@@ -127,7 +129,7 @@
 									<div class="form-group">
 										<span class="col-lg-4 control-label"><strong>{if $data['name']}{$data['name']}{else}{l s='Picture #' d='Admin.Orderscustomers.Feature'}{$data@iteration}{/if}</strong></span>
 										<div class="col-lg-8">
-											<a href="displayImage.php?img={$data['value']}&amp;name={$order->id|intval}-file{$data@iteration}" class="_blank">
+											<a href="{$link->getAdminLink('AdminCarts', true, [], ['ajax' => 1, 'action' => 'customizationImage', 'img' => $data['value'], 'name' => $order->id|intval|cat:'-file'|cat:$data@iteration])}" class="_blank">
 												<img class="img-thumbnail" src="{$smarty.const._THEME_PROD_PIC_DIR_}{$data['value']}_small" alt=""/>
 											</a>
 										</div>
@@ -167,6 +169,7 @@
 				{/if}
 				{if ($order->hasBeenDelivered())}<td class="text-center">{$customization['quantity_returned']}</td>{/if}
 				<td class="text-center">-</td>
+				{if $stock_location_is_available}<td class="text-center">-</td>{$product['location']}</td>{/if}
 				<td class="total_product">
 					{if ($order->getTaxCalculationMethod() == $smarty.const.PS_TAX_EXC)}
 						{displayPrice price=Tools::ps_round($product['product_price'] * $customization['quantity'], 2) currency=$currency->id|intval}
@@ -214,11 +217,11 @@
 								<small class="text-muted">({$smarty.capture.TaxMethod})</small>
 							</label>
 							<div class="input-group">
-								{if $currency->format % 2}<div class="input-group-addon">{$currency->sign}</div>{/if}
+								{if $currencySymbolBeforeAmount}<div class="input-group-addon">{$currency->sign}</div>{/if}
 								<input onchange="checkPartialRefundProductAmount(this)" type="text" name="partialRefundProduct[{$product['id_order_detail']|intval}]" />
-								{if !($currency->format % 2)}<div class="input-group-addon">{$currency->sign}</div>{/if}
+								{if !$currencySymbolBeforeAmount}<div class="input-group-addon">{$currency->sign}</div>{/if}
 							</div>
-							<p class="help-block"><i class="icon-warning-sign"></i> {l s='(Max %amount_refundable% %tax_method%)' sprintf=[ '%amount_refundable%' => Tools::displayPrice(Tools::ps_round($amount_refundable, 2), $currency->id), '%tax_method%' => $smarty.capture.TaxMethod] d='Admin.Orderscustomers.Help'}</p>
+							<p class="help-block"><i class="icon-warning-sign"></i> {l s='(Max %amount_refundable% %tax_method%)' sprintf=[ '%amount_refundable%' => Context::getContext()->getCurrentLocale()->formatPrice($amount_refundable, Currency::getIsoCodeById((int)$currency->id)), '%tax_method%' => $smarty.capture.TaxMethod] d='Admin.Orderscustomers.Help'}</p>
 						</div>
 					</div>
 					{/if}

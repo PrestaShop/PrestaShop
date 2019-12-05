@@ -1,5 +1,5 @@
 {**
- * 2007-2017 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -15,10 +15,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
@@ -35,10 +35,12 @@
   <meta property="og:site_name" content="{$shop.name}">
   <meta property="og:description" content="{$page.meta.description}">
   <meta property="og:image" content="{$product.cover.large.url}">
-  <meta property="product:pretax_price:amount" content="{$product.price_tax_exc}">
-  <meta property="product:pretax_price:currency" content="{$currency.iso_code}">
-  <meta property="product:price:amount" content="{$product.price_amount}">
-  <meta property="product:price:currency" content="{$currency.iso_code}">
+  {if $product.show_price}
+    <meta property="product:pretax_price:amount" content="{$product.price_tax_exc}">
+    <meta property="product:pretax_price:currency" content="{$currency.iso_code}">
+    <meta property="product:price:amount" content="{$product.price_amount}">
+    <meta property="product:price:currency" content="{$currency.iso_code}">
+  {/if}
   {if isset($product.weight) && ($product.weight != 0)}
   <meta property="product:weight:value" content="{$product.weight}">
   <meta property="product:weight:units" content="{$product.weight_unit}">
@@ -55,13 +57,7 @@
         {block name='page_content_container'}
           <section class="page-content" id="content">
             {block name='page_content'}
-              {block name='product_flags'}
-                <ul class="product-flags">
-                  {foreach from=$product.flags item=flag}
-                    <li class="product-flag {$flag.type}">{$flag.label}</li>
-                  {/foreach}
-                </ul>
-              {/block}
+              {include file='catalog/_partials/product-flags.tpl'}
 
               {block name='product_cover_thumbnails'}
                 {include file='catalog/_partials/product-cover-thumbnails.tpl'}
@@ -87,7 +83,7 @@
 
           <div class="product-information">
             {block name='product_description_short'}
-              <div id="product-description-short-{$product.id}" itemprop="description">{$product.description_short nofilter}</div>
+              <div id="product-description-short-{$product.id}" class="product-description" itemprop="description">{$product.description_short nofilter}</div>
             {/block}
 
             {if $product.is_customizable && count($product.customizations.fields)}
@@ -110,10 +106,10 @@
                   {block name='product_pack'}
                     {if $packItems}
                       <section class="product-pack">
-                        <h3 class="h4">{l s='This pack contains' d='Shop.Theme.Catalog'}</h3>
+                        <p class="h4">{l s='This pack contains' d='Shop.Theme.Catalog'}</p>
                         {foreach from=$packItems item="product_pack"}
                           {block name='product_miniature'}
-                            {include file='catalog/_partials/miniatures/pack-product.tpl' product=$product_pack}
+                            {include file='catalog/_partials/miniatures/pack-product.tpl' product=$product_pack showPackProductsPrice=$product.show_price}
                           {/block}
                         {/foreach}
                     </section>
@@ -132,9 +128,8 @@
                     {include file='catalog/_partials/product-additional-info.tpl'}
                   {/block}
 
-                  {block name='product_refresh'}
-                    <input class="product-refresh ps-hidden-by-js" name="refresh" type="submit" value="{l s='Refresh' d='Shop.Theme.Actions'}">
-                  {/block}
+                  {* Input to refresh product HTML removed, block kept for compatibility with themes *}
+                  {block name='product_refresh'}{/block}
                 </form>
               {/block}
 
@@ -204,11 +199,11 @@
                    {if $product.attachments}
                     <div class="tab-pane fade in" id="attachments" role="tabpanel">
                        <section class="product-attachments">
-                         <h3 class="h5 text-uppercase">{l s='Download' d='Shop.Theme.Actions'}</h3>
+                         <p class="h5 text-uppercase">{l s='Download' d='Shop.Theme.Actions'}</p>
                          {foreach from=$product.attachments item=attachment}
                            <div class="attachment">
                              <h4><a href="{url entity='attachment' params=['id_attachment' => $attachment.id_attachment]}">{$attachment.name}</a></h4>
-                             <p>{$attachment.description}</p
+                             <p>{$attachment.description}</p>
                              <a href="{url entity='attachment' params=['id_attachment' => $attachment.id_attachment]}">
                                {l s='Download' d='Shop.Theme.Actions'} ({$attachment.file_size_formatted})
                              </a>
@@ -234,11 +229,11 @@
     {block name='product_accessories'}
       {if $accessories}
         <section class="product-accessories clearfix">
-          <h3 class="h5 text-uppercase">{l s='You might also like' d='Shop.Theme.Catalog'}</h3>
-          <div class="products">
-            {foreach from=$accessories item="product_accessory"}
+          <p class="h5 text-uppercase">{l s='You might also like' d='Shop.Theme.Catalog'}</p>
+          <div class="products" itemscope itemtype="http://schema.org/ItemList">
+            {foreach from=$accessories item="product_accessory" key="position"}
               {block name='product_miniature'}
-                {include file='catalog/_partials/miniatures/product.tpl' product=$product_accessory}
+                {include file='catalog/_partials/miniatures/product.tpl' product=$product_accessory position=$position}
               {/block}
             {/foreach}
           </div>

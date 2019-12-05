@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,35 +16,47 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Adapter\Category;
 
-use ObjectModel;
-use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use Category;
 use Context;
+use ObjectModel;
+use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use Shop;
 
 /**
- * This class will provide data from DB / ORM about Category
+ * This class will provide data from DB / ORM about Category.
  */
 class CategoryDataProvider
 {
+    /**
+     * @var int
+     */
     private $languageId;
+
+    /** @var array the list of existing active categories until root */
+    private $categoryList;
 
     public function __construct(LegacyContext $context)
     {
         $this->languageId = $context->getLanguage()->id;
+        $categories = Category::getSimpleCategoriesWithParentInfos($this->languageId);
+        // index by categories and construct the categoryList
+        foreach ($categories as $category) {
+            $this->categoryList[$category['id_category']] = $category;
+        }
     }
 
     /**
-     * Get a category
+     * Get a category.
      *
      * @param null $idCategory
      * @param null $idLang
@@ -70,7 +82,7 @@ class CategoryDataProvider
     }
 
     /**
-     * Get all nested categories
+     * Get all nested categories.
      *
      * @param int|null $root_category
      * @param bool|int $id_lang
@@ -93,7 +105,7 @@ class CategoryDataProvider
     }
 
     /**
-     * Return available categories Names - excluding Root category
+     * Return available categories Names - excluding Root category.
      *
      * @param int|null $root_category
      * @param bool|int $id_lang
@@ -103,6 +115,7 @@ class CategoryDataProvider
      * @param string $sql_filter
      * @param string $sql_sort
      * @param string $sql_limit
+     *
      * @return array Categories
      */
     public function getAllCategoriesName($root_category = null, $id_lang = false, $active = true, $groups = null, $use_shop_restriction = true, $sql_filter = '', $sql_sort = '', $sql_limit = '')
@@ -113,53 +126,50 @@ class CategoryDataProvider
 
         $categories = Category::getAllCategoriesName($root_category, $id_lang, $active, $groups, $use_shop_restriction, $sql_filter, $sql_sort, $sql_limit);
         array_shift($categories);
+
         return $categories;
     }
 
     /**
-     * Return a simple array id/name of categories for a specified product
-     * @param Product $product
+     * Return a simple array id/name of categories for a specified product.
+     *
+     * @param \Product $product
      *
      * @return array Categories
      */
     public function getCategoriesByProduct(ObjectModel $product)
     {
-        $allCategories = $this->getAllCategoriesName();
         $productCategories = $product->getCategories();
 
         $results = [];
-        foreach ($allCategories as $category) {
-            foreach($productCategories as $productCategory) {
-                if ($productCategory == $category['id_category']) {
-                    $results[] = [
-                        'id' => $category['id_category'],
-                        'name' => $category['name'],
-                        'breadcrumb' => $this->getBreadCrumb($category['id_category'])
-                    ];
-                }
+        foreach ($productCategories as $productCategory) {
+            if (isset($this->categoryList[$productCategory])) {
+                $category = $this->categoryList[$productCategory];
+                $results[] = [
+                    'id' => $category['id_category'],
+                    'name' => $category['name'],
+                    'breadcrumb' => $this->getBreadCrumb($category['id_category']),
+                ];
                 $productCategories[$category['name']] = $category['id_category'];
             }
-
         }
 
         return $results;
     }
 
     /**
-     * Return a simple array id/name of categories
+     * Return a simple array id/name of categories.
      *
      * @return array Categories
      */
     public function getCategoriesWithBreadCrumb()
     {
-        $allCategories = $this->getAllCategoriesName();
-
         $results = [];
-        foreach ($allCategories as $category) {
+        foreach ($this->categoryList as $category) {
             $results[] = [
                 'id' => $category['id_category'],
                 'name' => $category['name'],
-                'breadcrumb' => $this->getBreadCrumb($category['id_category'])
+                'breadcrumb' => $this->getBreadCrumb($category['id_category']),
             ];
         }
 
@@ -167,31 +177,46 @@ class CategoryDataProvider
     }
 
     /**
-     * Returns a simple breacrumb from a categoryId, the delimiter can be choosen
-     * @param $categoryId
+     * Construct the breadcrumb using the already constructed list of all categories.
+     *
+     * @param int $categoryId
      * @param string $delimiter
+     *
      * @return string
      */
-    public function getBreadCrumb($categoryId, $delimiter = " > ")
+    public function getBreadCrumb($categoryId, $delimiter = ' > ')
     {
-        $currentCategory = new Category($categoryId);
-        $categories = $currentCategory->getParentsCategories();
+        $categories = $this->getParentNamesFromList($categoryId);
         $categories = array_reverse($categories, true);
-        $breadCrumb = '';
 
-        foreach($categories as $category) {
-            $breadCrumb .= ' > '.$category['name'];
-        }
-
-        return substr($breadCrumb, strlen($delimiter));
+        return implode($delimiter, $categories);
     }
 
     /**
-     * Get Categories formatted like ajax_product_file.php using Category::getNestedCategories
+     * @param int $categoryId
+     *
+     * @return array
+     */
+    public function getParentNamesFromList($categoryId)
+    {
+        $categories = [];
+
+        while (isset($this->categoryList[$categoryId])) {
+            $category = $this->categoryList[$categoryId];
+            $categories[] = $category['name'];
+            $categoryId = $category['id_parent'];
+        }
+
+        return $categories;
+    }
+
+    /**
+     * Get Categories formatted like ajax_product_file.php using Category::getNestedCategories.
      *
      * @param $query
      * @param $limit
      * @param bool $nameAsBreadCrumb
+     *
      * @return array
      */
     public function getAjaxCategories($query, $limit, $nameAsBreadCrumb = false)
@@ -199,23 +224,23 @@ class CategoryDataProvider
         if (empty($query)) {
             $query = '';
         } else {
-            $query = "AND cl.name LIKE '%".pSQL($query)."%'";
+            $query = "AND cl.name LIKE '%" . pSQL($query) . "%'";
         }
 
-        if (is_integer($limit)) {
+        if (is_int($limit)) {
             $limit = 'LIMIT ' . $limit;
         } else {
             $limit = '';
         }
 
         $searchCategories = Category::getAllCategoriesName(
-            $root_category = null,
-            $id_lang = Context::getContext()->language->id,
-            $active = true,
-            $groups = null,
-            $use_shop_restriction = true,
-            $sql_filter = $query,
-            $sql_sort = '',
+            null,
+            Context::getContext()->language->id,
+            true,
+            null,
+            true,
+            $query,
+            '',
             $limit
         );
 
@@ -233,6 +258,12 @@ class CategoryDataProvider
         return $results;
     }
 
+    /**
+     * @param int|null $idLang
+     * @param Shop|null $shop
+     *
+     * @return Category
+     */
     public function getRootCategory($idLang = null, Shop $shop = null)
     {
         return Category::getRootCategory($idLang, $shop);

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,21 +16,23 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
-
 use PrestaShop\PrestaShop\Core\Foundation\Templating\RenderableInterface;
 use PrestaShop\PrestaShop\Core\Foundation\Templating\RenderableProxy;
 
 class CheckoutProcessCore implements RenderableInterface
 {
     private $smarty;
+
+    /**
+     * @var CheckoutSession
+     */
     private $checkoutSession;
     private $steps = array();
     private $has_errors;
@@ -124,7 +126,7 @@ class CheckoutProcessCore implements RenderableInterface
 
     public function getDataToPersist()
     {
-        $data = array();
+        $data = [];
         foreach ($this->getSteps() as $step) {
             $defaultStepData = array(
                 'step_is_reachable' => $step->isReachable(),
@@ -148,8 +150,7 @@ class CheckoutProcessCore implements RenderableInterface
                 $step
                     ->setReachable($stepData['step_is_reachable'])
                     ->setComplete($stepData['step_is_complete'])
-                    ->restorePersistedData($stepData)
-                ;
+                    ->restorePersistedData($stepData);
             }
         }
 
@@ -161,8 +162,10 @@ class CheckoutProcessCore implements RenderableInterface
         foreach ($this->getSteps() as $step) {
             if (!$step->isReachable()) {
                 $step->setReachable(true);
+
                 break;
             }
+
             if (!$step->isComplete()) {
                 break;
             }
@@ -211,5 +214,21 @@ class CheckoutProcessCore implements RenderableInterface
         }
 
         return $this;
+    }
+
+    /**
+     * @return CheckoutStepInterface
+     *
+     * @throws \RuntimeException if no current step is found
+     */
+    public function getCurrentStep()
+    {
+        foreach ($this->getSteps() as $step) {
+            if ($step->isCurrent()) {
+                return $step;
+            }
+        }
+
+        throw new \RuntimeException('There should be at least one current step');
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -82,9 +82,9 @@ class HookFinder
                     continue;
                 }
                 if (is_object($content) && !in_array(get_class($content), $this->expectedInstanceClasses)) {
-                    throw new \Exception('The module '.$moduleName.' did not return expected class. Was '.get_class($content).' instead of '.implode(' or ', $this->expectedInstanceClasses).'.');
+                    throw new \Exception('The module ' . $moduleName . ' did not return expected class. Was ' . get_class($content) . ' instead of ' . implode(' or ', $this->expectedInstanceClasses) . '.');
                 } elseif (!is_object($content)) {
-                    throw new \Exception('The module '.$moduleName.' did not return expected type. Was '.gettype($content).' instead of '.implode(' or ', $this->expectedInstanceClasses).'.');
+                    throw new \Exception('The module ' . $moduleName . ' did not return expected type. Was ' . gettype($content) . ' instead of ' . implode(' or ', $this->expectedInstanceClasses) . '.');
                 }
             }
         }
@@ -103,6 +103,9 @@ class HookFinder
         $presentedContents = array();
 
         foreach ($hookContent as $moduleName => $moduleContents) {
+            if (!is_array($moduleContents)) {
+                continue;
+            }
             foreach ($moduleContents as $content) {
                 if (!$content instanceof HookContentClassInterface) {
                     throw new \Exception('The class returned must implement HookContentClassInterface to be presented');
@@ -159,7 +162,7 @@ class HookFinder
     public function addExpectedInstanceClasses($expectedInstanceClasses)
     {
         if (is_array($expectedInstanceClasses)) {
-            array_merge($this->expectedInstanceClasses, $expectedInstanceClasses);
+            $this->expectedInstanceClasses = array_merge($this->expectedInstanceClasses, $expectedInstanceClasses);
         } else {
             $this->expectedInstanceClasses[] = $expectedInstanceClasses;
         }

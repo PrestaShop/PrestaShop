@@ -50,12 +50,11 @@ require_once dirname(__FILE__) . '/../utils/ExpressionType.php';
  *  
  */
 class OperatorBuilder {
-
     public function build($parsed) {
         if ($parsed['expr_type'] !== ExpressionType::OPERATOR) {
             return "";
         }
+
         return $parsed['base_expr'];
     }
 }
-?>

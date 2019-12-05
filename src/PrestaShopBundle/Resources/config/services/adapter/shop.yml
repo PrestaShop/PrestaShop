@@ -1,0 +1,36 @@
+services:
+  _defaults:
+    public: true
+
+  prestashop.adapter.shop.command_handler.upload_logos_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\Shop\CommandHandler\UploadLogosHandler'
+    arguments:
+      - '@prestashop.adapter.legacy.configuration'
+      - '@prestashop.core.shop.logo_uploader'
+      - '@prestashop.core.hook.dispatcher'
+    tags:
+      - { name: tactician.handler, command: 'PrestaShop\PrestaShop\Core\Domain\Shop\Command\UploadLogosCommand' }
+
+  prestashop.adapter.shop.url.base_url_provider:
+    class: 'PrestaShop\PrestaShop\Adapter\Shop\Url\BaseUrlProvider'
+    arguments:
+      - "@=service('prestashop.adapter.legacy.context').getContext().link"
+
+  prestashop.adapter.shop.url.category_provider:
+    class: 'PrestaShop\PrestaShop\Adapter\Shop\Url\CategoryProvider'
+    arguments:
+      - "@=service('prestashop.adapter.legacy.context').getContext().link"
+
+  prestashop.adapter.shop.url.cms_provider:
+    class: 'PrestaShop\PrestaShop\Adapter\Shop\Url\CmsProvider'
+    arguments:
+      - "@=service('prestashop.adapter.legacy.context').getContext().link"
+
+  prestashop.adapter.shop.query_handler.get_logos_paths_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\Shop\QueryHandler\GetLogosPathsHandler'
+    arguments:
+      - '@=service("prestashop.adapter.legacy.configuration").get("_PS_IMG_")'
+      - '@=service("prestashop.adapter.legacy.configuration").get("_PS_IMG_DIR_")'
+    tags:
+      - name: 'tactician.handler'
+        command: PrestaShop\PrestaShop\Core\Domain\Shop\Query\GetLogosPaths

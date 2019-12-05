@@ -1,5 +1,5 @@
 {**
- * 2007-2017 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -15,17 +15,17 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
 
-<div class="block-contact col-md-4 links wrapper">
+<div class="block-contact col-md-3 links wrapper">
   <div class="hidden-sm-down">
-    <h4 class="text-uppercase block-contact-title">{l s='Store information' d='Shop.Theme.Global'}</h4>
+    <p class="h4 text-uppercase block-contact-title">{l s='Store information' d='Shop.Theme.Global'}</p>
       {$contact_infos.address.formatted nofilter}
       {if $contact_infos.phone}
         <br>
@@ -52,14 +52,14 @@
           d='Shop.Theme.Global'
         }
       {/if}
-      {if $contact_infos.email}
+      {if $contact_infos.email && $display_email}
         <br>
         {* [1][/1] is for a HTML tag. *}
         {l
           s='Email us: [1]%email%[/1]'
           sprintf=[
-            '[1]' => '<span>',
-            '[/1]' => '</span>',
+            '[1]' => '<a href="mailto:'|cat:$contact_infos.email|cat:'" class="dropdown">',
+            '[/1]' => '</a>',
             '%email%' => $contact_infos.email
           ]
           d='Shop.Theme.Global'

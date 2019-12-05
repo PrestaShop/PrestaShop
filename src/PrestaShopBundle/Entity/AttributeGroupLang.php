@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,21 +16,20 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 
 namespace PrestaShopBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * AttributeGroupLang
+ * AttributeGroupLang.
  *
  * @ORM\Table()
  * @ORM\Entity(repositoryClass="PrestaShopBundle\Entity\Repository\AttributeGroupLangRepository")
@@ -46,7 +45,6 @@ class AttributeGroupLang
 
     /**
      * @ORM\Id
-     * @ORM\Column(name="id_lang", type="integer")
      * @ORM\ManyToOne(targetEntity="PrestaShopBundle\Entity\Lang")
      * @ORM\JoinColumn(name="id_lang", referencedColumnName="id_lang", nullable=false, onDelete="CASCADE")
      */
@@ -66,20 +64,18 @@ class AttributeGroupLang
      */
     private $publicName;
 
-
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
         return $this->attributeGroup;
     }
 
-
     /**
-     * Set name
+     * Set name.
      *
      * @param string $name
      *
@@ -93,7 +89,7 @@ class AttributeGroupLang
     }
 
     /**
-     * Get name
+     * Get name.
      *
      * @return string
      */
@@ -103,7 +99,7 @@ class AttributeGroupLang
     }
 
     /**
-     * Set publicName
+     * Set publicName.
      *
      * @param string $publicName
      *
@@ -117,7 +113,7 @@ class AttributeGroupLang
     }
 
     /**
-     * Get publicName
+     * Get publicName.
      *
      * @return string
      */
@@ -127,13 +123,13 @@ class AttributeGroupLang
     }
 
     /**
-     * Set attributeGroup
+     * Set attributeGroup.
      *
      * @param \PrestaShopBundle\Entity\AttributeGroup $attributeGroup
      *
      * @return AttributeGroupLang
      */
-    public function setAttributeGroup(\PrestaShopBundle\Entity\AttributeGroup $attributeGroup)
+    public function setAttributeGroup(AttributeGroup $attributeGroup)
     {
         $this->attributeGroup = $attributeGroup;
 
@@ -141,7 +137,7 @@ class AttributeGroupLang
     }
 
     /**
-     * Get attributeGroup
+     * Get attributeGroup.
      *
      * @return \PrestaShopBundle\Entity\AttributeGroup
      */
@@ -151,13 +147,13 @@ class AttributeGroupLang
     }
 
     /**
-     * Set lang
+     * Set lang.
      *
      * @param \PrestaShopBundle\Entity\Lang $lang
      *
      * @return AttributeGroupLang
      */
-    public function setLang(\PrestaShopBundle\Entity\Lang $lang)
+    public function setLang(Lang $lang)
     {
         $this->lang = $lang;
 
@@ -165,7 +161,7 @@ class AttributeGroupLang
     }
 
     /**
-     * Get lang
+     * Get lang.
      *
      * @return \PrestaShopBundle\Entity\Lang
      */

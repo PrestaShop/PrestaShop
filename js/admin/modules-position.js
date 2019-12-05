@@ -1,5 +1,5 @@
 /**
- * 2007-2017 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -15,10 +15,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -165,6 +165,8 @@ $(function(){
 
 		var $this = $(this);
 		var hook_select = $("select[name='id_hook']");
+		var optgroup_unregistered = $('#hooks_unregistered');
+		var optgroup_registered = $('#hooks_registered');
 
 		if ($this.val() != 0)
 		{
@@ -197,7 +199,9 @@ $(function(){
 							var hook_description = '';
 							if(jsonData[current_hook].description != '')
 								hook_description = ' ('+jsonData[current_hook].description+')';
-							hook_select.append('<option value="'+jsonData[current_hook].id_hook+'">'+jsonData[current_hook].name+hook_description+'</option>');
+							var is_registered = jsonData[current_hook].registered;
+							var optgroup = is_registered ? optgroup_registered : optgroup_unregistered;
+							optgroup.append('<option value="'+jsonData[current_hook].id_hook+'">'+jsonData[current_hook].name+hook_description+'</option>');
 						}
 
 						hook_select.prop('disabled', false);

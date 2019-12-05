@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,24 +16,19 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 abstract class TreeToolbarButtonCore
 {
     const DEFAULT_TEMPLATE_DIRECTORY = 'helpers/tree';
 
     protected $_attributes;
-    private $_class;
     private $_context;
-    private $_id;
-    private $_label;
-    private $_name;
     protected $_template;
     protected $_template_directory;
 
@@ -57,6 +52,7 @@ abstract class TreeToolbarButtonCore
         }
 
         $this->_attributes[$name] = $value;
+
         return $this;
     }
 
@@ -72,6 +68,7 @@ abstract class TreeToolbarButtonCore
         }
 
         $this->_attributes = $value;
+
         return $this;
     }
 
@@ -97,6 +94,7 @@ abstract class TreeToolbarButtonCore
     public function setContext($value)
     {
         $this->_context = $value;
+
         return $this;
     }
 
@@ -142,6 +140,7 @@ abstract class TreeToolbarButtonCore
     public function setTemplate($value)
     {
         $this->_template = $value;
+
         return $this;
     }
 
@@ -153,6 +152,7 @@ abstract class TreeToolbarButtonCore
     public function setTemplateDirectory($value)
     {
         $this->_template_directory = $this->_normalizeDirectory($value);
+
         return $this;
     }
 
@@ -172,31 +172,32 @@ abstract class TreeToolbarButtonCore
         }
 
         if ($this->getContext()->controller instanceof ModuleAdminController && file_exists($this->_normalizeDirectory(
-                $this->getContext()->controller->getTemplatePath()).$this->getTemplateDirectory().$template)) {
+                $this->getContext()->controller->getTemplatePath()
+        ) . $this->getTemplateDirectory() . $template)) {
             return $this->_normalizeDirectory($this->getContext()->controller->getTemplatePath())
-                .$this->getTemplateDirectory().$template;
+                . $this->getTemplateDirectory() . $template;
         } elseif ($this->getContext()->controller instanceof AdminController && isset($controllerName)
-            && file_exists($this->_normalizeDirectory($this->getContext()->smarty->getTemplateDir(0)).'controllers'
-                .DIRECTORY_SEPARATOR.$controllerName.DIRECTORY_SEPARATOR.$this->getTemplateDirectory().$template)) {
-            return $this->_normalizeDirectory($this->getContext()->smarty->getTemplateDir(0)).'controllers'
-                .DIRECTORY_SEPARATOR.$controllerName.DIRECTORY_SEPARATOR.$this->getTemplateDirectory().$template;
+            && file_exists($this->_normalizeDirectory($this->getContext()->smarty->getTemplateDir(0)) . 'controllers'
+                . DIRECTORY_SEPARATOR . $controllerName . DIRECTORY_SEPARATOR . $this->getTemplateDirectory() . $template)) {
+            return $this->_normalizeDirectory($this->getContext()->smarty->getTemplateDir(0)) . 'controllers'
+                . DIRECTORY_SEPARATOR . $controllerName . DIRECTORY_SEPARATOR . $this->getTemplateDirectory() . $template;
         } elseif (file_exists($this->_normalizeDirectory($this->getContext()->smarty->getTemplateDir(1))
-                .$this->getTemplateDirectory().$template)) {
+                . $this->getTemplateDirectory() . $template)) {
             return $this->_normalizeDirectory($this->getContext()->smarty->getTemplateDir(1))
-                    .$this->getTemplateDirectory().$template;
+                    . $this->getTemplateDirectory() . $template;
         } elseif (file_exists($this->_normalizeDirectory($this->getContext()->smarty->getTemplateDir(0))
-                .$this->getTemplateDirectory().$template)) {
+                . $this->getTemplateDirectory() . $template)) {
             return $this->_normalizeDirectory($this->getContext()->smarty->getTemplateDir(0))
-                .$this->getTemplateDirectory().$template;
+                . $this->getTemplateDirectory() . $template;
         } else {
-            return $this->getTemplateDirectory().$template;
+            return $this->getTemplateDirectory() . $template;
         }
     }
 
     public function hasAttribute($name)
     {
-        return (isset($this->_attributes)
-            && array_key_exists($name, $this->_attributes));
+        return isset($this->_attributes)
+            && array_key_exists($name, $this->_attributes);
     }
 
     public function render()
@@ -213,10 +214,12 @@ abstract class TreeToolbarButtonCore
 
         if (in_array($last, array('/', '\\'))) {
             $directory[strlen($directory) - 1] = DIRECTORY_SEPARATOR;
+
             return $directory;
         }
 
         $directory .= DIRECTORY_SEPARATOR;
+
         return $directory;
     }
 }

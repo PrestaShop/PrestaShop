@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,14 +16,14 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-use PrestaShop\PrestaShop\Adapter\Order\OrderPresenter;
+use PrestaShop\PrestaShop\Adapter\Presenter\Order\OrderPresenter;
 
 class HistoryControllerCore extends FrontController
 {
@@ -44,7 +44,9 @@ class HistoryControllerCore extends FrontController
             Tools::redirect('index.php');
         }
 
-        $this->order_presenter = new OrderPresenter();
+        if ($this->order_presenter === null) {
+            $this->order_presenter = new OrderPresenter();
+        }
 
         if (Tools::isSubmit('slowvalidation')) {
             $this->warning[] = $this->trans('If you have just placed an order, it may take a few minutes for it to be validated. Please refresh this page if your order is missing.', array(), 'Shop.Notifications.Warning');
@@ -81,9 +83,9 @@ class HistoryControllerCore extends FrontController
         $url_to_invoice = '';
 
         if ((bool) Configuration::get('PS_INVOICE') && OrderState::invoiceAvailable($order->current_state) && count($order->getInvoicesCollection())) {
-            $url_to_invoice = $context->link->getPageLink('pdf-invoice', true, null, 'id_order='.$order->id);
+            $url_to_invoice = $context->link->getPageLink('pdf-invoice', true, null, 'id_order=' . $order->id);
             if ($context->cookie->is_guest) {
-                $url_to_invoice .= '&amp;secure_key='.$order->secure_key;
+                $url_to_invoice .= '&amp;secure_key=' . $order->secure_key;
             }
         }
 
@@ -94,7 +96,7 @@ class HistoryControllerCore extends FrontController
     {
         $url_to_reorder = '';
         if (!(bool) Configuration::get('PS_DISALLOW_HISTORY_REORDERING')) {
-            $url_to_reorder = $context->link->getPageLink('order', true, null, 'submitReorder&id_order='.(int) $id_order);
+            $url_to_reorder = $context->link->getPageLink('order', true, null, 'submitReorder&id_order=' . (int) $id_order);
         }
 
         return $url_to_reorder;

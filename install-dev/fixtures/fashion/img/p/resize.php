@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,21 +16,21 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+include '../../../../../config/config.inc.php';
 
-include('../../../../../config/config.inc.php');
 ini_set('max_execution_time', 7200);
 ini_set('memory_limit', '512M');
 
 $types = ImageType::getImagesTypes('products');
-$files = scandir(dirname(__FILE__));
+$files = scandir(dirname(__FILE__), SCANDIR_SORT_NONE);
 foreach ($files as $file) {
     if (preg_match('/^Fotolia_([0-9]+)_X\.jpg$/i', $file, $match)) {
         foreach ($types as $type) {
@@ -38,10 +38,6 @@ foreach ($files as $file) {
                 ImageManager::resize($file, $match[1].'-'.$type['name'].'.jpg', $type['width'], $type['height'], 'jpg', true);
             }
         }
-        //if (!file_exists($match[1].'.jpg'))
-        {
-            //copy($file, $match[1].'.jpg');
             ImageManager::resize($file, $match[1].'.jpg', 800, 800, 'jpg', true);
-        }
     }
 }

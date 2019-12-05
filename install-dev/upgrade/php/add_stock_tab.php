@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,15 +16,15 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.'add_new_tab.php');
+require_once _PS_INSTALLER_PHP_UPGRADE_DIR_.'add_new_tab.php';
 
 function add_stock_tab()
 {
@@ -40,40 +40,48 @@ function add_stock_tab()
         'AdminStock',
         'en:Stock|fr:Stock|es:Stock|de:Stock|it:Stock',
         0,
-        true);
+        true
+    );
 
     add_new_tab(
         'AdminWarehouses',
         'en:Warehouses|fr:Entrepôts|es:Warehouses|de:Warehouses|it:Warehouses',
-        $id_parent);
+        $id_parent
+    );
 
     add_new_tab(
         'AdminStockManagement',
         'en:Stock Management|fr:Gestion du stock|es:Stock Management|de:Stock Management|it:Stock Management',
-        $id_parent);
+        $id_parent
+    );
 
     add_new_tab(
         'AdminStockMvt',
         'en:Stock Movement|fr:Mouvements de Stock|es:Stock Movement|de:Stock Movement|it:Stock Movement',
-        $id_parent);
+        $id_parent
+    );
 
     add_new_tab(
         'AdminStockInstantState',
         'en:Stock instant state|fr:Etat instantané du stock|es:Stock instant state|de:Stock instant state|it:Stock instant state',
-        $id_parent);
+        $id_parent
+    );
 
     add_new_tab(
         'AdminStockCover',
         'en:Stock cover|fr:Couverture du stock|es:Stock cover|de:Stock cover|it:Stock cover',
-        $id_parent);
+        $id_parent
+    );
 
     add_new_tab(
         'AdminSupplyOrders',
         'en:Supply orders|fr:Commandes fournisseurs|es:Supply orders|de:Supply orders|it:Supply orders',
-        $id_parent);
+        $id_parent
+    );
 
     add_new_tab(
         'AdminStockConfiguration',
         'en:Configuration|fr:Configuration|es:Configuration|de:Configuration|it:Configuration',
-        $id_parent);
+        $id_parent
+    );
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,16 +16,16 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 /**
- * Class ConnectionsSourceCore
+ * Class ConnectionsSourceCore.
  */
 class ConnectionsSourceCore extends ObjectModel
 {
@@ -44,20 +44,21 @@ class ConnectionsSourceCore extends ObjectModel
         'primary' => 'id_connections_source',
         'fields' => array(
             'id_connections' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-            'http_referer' =>    array('type' => self::TYPE_STRING, 'validate' => 'isAbsoluteUrl'),
-            'request_uri' =>    array('type' => self::TYPE_STRING, 'validate' => 'isUrl'),
-            'keywords' =>        array('type' => self::TYPE_STRING, 'validate' => 'isMessage'),
-            'date_add' =>        array('type' => self::TYPE_DATE, 'validate' => 'isDate', 'required' => true),
+            'http_referer' => array('type' => self::TYPE_STRING, 'validate' => 'isAbsoluteUrl'),
+            'request_uri' => array('type' => self::TYPE_STRING, 'validate' => 'isUrl'),
+            'keywords' => array('type' => self::TYPE_STRING, 'validate' => 'isMessage'),
+            'date_add' => array('type' => self::TYPE_DATE, 'validate' => 'isDate', 'required' => true),
         ),
     );
 
     /**
-     * Adds current ConnectionsSource as a new Object to the database
+     * Adds current ConnectionsSource as a new Object to the database.
      *
-     * @param bool $autoDate    Automatically set `date_upd` and `date_add` columns
+     * @param bool $autoDate Automatically set `date_upd` and `date_add` columns
      * @param bool $nullValues Whether we want to use NULL values instead of empty quotes values
      *
      * @return bool Indicates whether the ConnectionsSource has been successfully added
+     *
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
      */
@@ -94,7 +95,7 @@ class ConnectionsSourceCore extends ObjectModel
         if (isset($_SERVER['HTTP_REFERER'])) {
             // If the referrer is internal (i.e. from your own website), then we drop the connection
             $parsed = parse_url($_SERVER['HTTP_REFERER']);
-            $parsedHost = parse_url(Tools::getProtocol().Tools::getHttpHost(false, false).__PS_BASE_URI__);
+            $parsedHost = parse_url(Tools::getProtocol() . Tools::getHttpHost(false, false) . __PS_BASE_URI__);
 
             if (!isset($parsed['host']) || (!isset($parsed['path']) || !isset($parsedHost['path']))) {
                 return false;
@@ -126,21 +127,21 @@ class ConnectionsSourceCore extends ObjectModel
     }
 
     /**
-     * Get Order sources
+     * Get Order sources.
      *
      * @param int $idOrder Order ID
      *
-     * @return array|false|mysqli_result|null|PDOStatement|resource
+     * @return array|false|mysqli_result|PDOStatement|resource|null
      */
     public static function getOrderSources($idOrder)
     {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 		SELECT cos.http_referer, cos.request_uri, cos.keywords, cos.date_add
-		FROM '._DB_PREFIX_.'orders o
-		INNER JOIN '._DB_PREFIX_.'guest g ON g.id_customer = o.id_customer
-		INNER JOIN '._DB_PREFIX_.'connections co  ON co.id_guest = g.id_guest
-		INNER JOIN '._DB_PREFIX_.'connections_source cos ON cos.id_connections = co.id_connections
-		WHERE id_order = '.(int) ($idOrder).'
+		FROM ' . _DB_PREFIX_ . 'orders o
+		INNER JOIN ' . _DB_PREFIX_ . 'guest g ON g.id_customer = o.id_customer
+		INNER JOIN ' . _DB_PREFIX_ . 'connections co  ON co.id_guest = g.id_guest
+		INNER JOIN ' . _DB_PREFIX_ . 'connections_source cos ON cos.id_connections = co.id_connections
+		WHERE id_order = ' . (int) ($idOrder) . '
 		ORDER BY cos.date_add DESC');
     }
 }

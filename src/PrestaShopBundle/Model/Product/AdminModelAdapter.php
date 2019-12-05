@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,62 +16,160 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShopBundle\Model\Product;
 
-use PrestaShop\PrestaShop\Adapter\Configuration;
-use PrestaShop\PrestaShop\Adapter\LegacyContext;
-use PrestaShop\PrestaShop\Adapter\Product\AdminProductWrapper;
-use PrestaShop\PrestaShop\Adapter\Tax\TaxRuleDataProvider;
-use PrestaShop\PrestaShop\Adapter\Tools;
-use PrestaShop\PrestaShop\Adapter\Product\ProductDataProvider;
-use PrestaShop\PrestaShop\Adapter\Supplier\SupplierDataProvider;
-use PrestaShop\PrestaShop\Adapter\Warehouse\WarehouseDataProvider;
-use PrestaShop\PrestaShop\Adapter\Feature\FeatureDataProvider;
-use PrestaShop\PrestaShop\Adapter\Pack\PackDataProvider;
-use PrestaShop\PrestaShop\Adapter\Shop\Context as ShopContext;
-use PrestaShopBundle\Utils\FloatParser;
-use ProductDownload;
 use Attachment;
 use Configuration as ConfigurationLegacy;
-use Tools as ToolsLegacy;
+use PrestaShop\PrestaShop\Adapter\Configuration;
+use PrestaShop\PrestaShop\Adapter\Feature\FeatureDataProvider;
+use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use PrestaShop\PrestaShop\Adapter\Pack\PackDataProvider;
+use PrestaShop\PrestaShop\Adapter\Product\AdminProductWrapper;
+use PrestaShop\PrestaShop\Adapter\Product\ProductDataProvider;
+use PrestaShop\PrestaShop\Adapter\Shop\Context as ShopContext;
+use PrestaShop\PrestaShop\Adapter\Supplier\SupplierDataProvider;
+use PrestaShop\PrestaShop\Adapter\Tax\TaxRuleDataProvider;
+use PrestaShop\PrestaShop\Adapter\Tools;
+use PrestaShop\PrestaShop\Adapter\Warehouse\WarehouseDataProvider;
+use PrestaShop\PrestaShop\Core\Product\ProductInterface;
+use PrestaShopBundle\Utils\FloatParser;
+use Symfony\Component\Routing\Router;
 use Product;
+use ProductDownload;
 
 /**
- * This form class is responsible to map the form data to the product object
+ * This form class is responsible to map the form data to the product object.
  */
 class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
 {
+    /** @var LegacyContext */
     private $context;
+    /** @var \Context */
     private $contextShop;
+    /** @var AdminProductWrapper */
     private $adminProductWrapper;
-    private $cldrRepository;
+    /** @var array */
     private $locales;
+    /** @var string */
     private $defaultLocale;
+    /** @var Tools */
     private $tools;
+    /** @var ProductDataProvider */
     private $productAdapter;
+    /** @var SupplierDataProvider */
     private $supplierAdapter;
+    /** @var FeatureDataProvider */
     private $featureAdapter;
+    /** @var PackDataProvider */
     private $packAdapter;
-    private $product;
-    private $translatableKeys;
-    private $unmapKeys;
+    /** @var Configuration */
     private $configuration;
+    /** @var ShopContext */
     private $shopContext;
+    /** @var TaxRuleDataProvider */
     private $taxRuleDataProvider;
+    /** @var array */
+    private $productPricePriority;
+    /** @var WarehouseDataProvider */
+    private $warehouseAdapter;
+    /** @var Router */
+    private $router;
+    /** @var array */
+    private $multiShopKeys = array(
+        'category_box',
+        'id_category_default',
+        'attribute_wholesale_price',
+        'attribute_price_impact',
+        'attribute_weight_impact',
+        'attribute_unit_impact',
+        'attribute_ecotax',
+        'attribute_minimal_quantity',
+        'attribute_low_stock_threshold',
+        'attribute_low_stock_alert',
+        'available_date_attribute',
+        'attribute_default',
+        'uploadable_files',
+        'text_fields',
+        'active',
+        'redirect_type',
+        'id_type_redirected',
+        'visibility',
+        'available_for_order',
+        'show_price',
+        'online_only',
+        'show_condition',
+        'condition',
+        'wholesale_price',
+        'price',
+        'id_tax_rules_group',
+        'ecotax',
+        'unit_price',
+        'on_sale',
+        'minimal_quantity',
+        'low_stock_threshold',
+        'low_stock_alert',
+        'available_date',
+        'ecotax',
+    );
+
+    /**
+     * Defines translatable key.
+     *
+     * @var array
+     */
+    private $translatableKeys = array(
+        'name',
+        'description',
+        'description_short',
+        'link_rewrite',
+        'meta_title',
+        'meta_description',
+        'available_now',
+        'available_later',
+        'tags',
+        'delivery_in_stock',
+        'delivery_out_stock',
+    );
+
+    /**
+     * Defines unused key for manual binding.
+     *
+     * @var array
+     */
+    private $unmapKeys = array(
+        'name',
+        'description',
+        'description_short',
+        'images',
+        'related_products',
+        'categories',
+        'suppliers',
+        'display_options',
+        'features',
+        'specific_price',
+        'virtual_product',
+        'attachment_product',
+    );
+
+    /**
+     * Array containing all the data to be mapped with the form.
+     *
+     * @var array
+     */
+    private $formData;
 
     /**
      * Constructor
-     * Set all adapters needed and get product
+     * Set all adapters needed and get product.
      *
-     * @param Product $product The product object
      * @param LegacyContext $legacyContext
      * @param AdminProductWrapper $adminProductWrapper
      * @param Tools $toolsAdapter
@@ -82,9 +180,10 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
      * @param PackDataProvider $packDataProvider
      * @param ShopContext $shopContext
      * @param TaxRuleDataProvider $taxRuleDataProvider
+     *
+     * @throws \PrestaShopException
      */
     public function __construct(
-        Product $product,
         LegacyContext $legacyContext,
         AdminProductWrapper $adminProductWrapper,
         Tools $toolsAdapter,
@@ -94,12 +193,12 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
         FeatureDataProvider $featureDataProvider,
         PackDataProvider $packDataProvider,
         ShopContext $shopContext,
-        TaxRuleDataProvider $taxRuleDataProvider
+        TaxRuleDataProvider $taxRuleDataProvider,
+        Router $router
     ) {
         $this->context = $legacyContext;
         $this->contextShop = $this->context->getContext();
         $this->adminProductWrapper = $adminProductWrapper;
-        $this->cldrRepository = ToolsLegacy::getCldr($this->contextShop);
         $this->locales = $this->context->getLanguages();
         $this->defaultLocale = $this->locales[0]['id_lang'];
         $this->tools = $toolsAdapter;
@@ -108,78 +207,15 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
         $this->warehouseAdapter = $warehouseDataProvider;
         $this->featureAdapter = $featureDataProvider;
         $this->packAdapter = $packDataProvider;
-        $this->product = $product;
-        $this->productPricePriority = $this->adminProductWrapper->getPricePriority($product->id);
         $this->configuration = new Configuration();
-        $this->product->loadStockData();
         $this->shopContext = $shopContext;
         $this->taxRuleDataProvider = $taxRuleDataProvider;
-
-        //define translatable key
-        $this->translatableKeys = array(
-            'name',
-            'description',
-            'description_short',
-            'link_rewrite',
-            'meta_title',
-            'meta_description',
-            'available_now',
-            'available_later',
-            'tags',
-        );
-
-        //define unused key for manual binding
-        $this->unmapKeys = array('name',
-            'description',
-            'description_short',
-            'images',
-            'related_products',
-            'categories',
-            'suppliers',
-            'display_options',
-            'features',
-            'specific_price',
-            'virtual_product',
-            'attachment_product',
-        );
-
-        //define multishop keys
-        $this->multishopKeys = array('category_box',
-            'id_category_default',
-            'attribute_wholesale_price',
-            'attribute_price_impact',
-            'attribute_weight_impact',
-            'attribute_unit_impact',
-            'attribute_ecotax',
-            'attribute_minimal_quantity',
-            'available_date_attribute',
-            'attribute_default',
-            'uploadable_files',
-            'text_fields',
-            'active',
-            'redirect_type',
-            'id_type_redirected',
-            'visibility',
-            'available_for_order',
-            'show_price',
-            'online_only',
-            'show_condition',
-            'condition',
-            'wholesale_price',
-            'price',
-            'id_tax_rules_group',
-            'ecotax',
-            'unit_price',
-            'on_sale',
-            'minimal_quantity',
-            'available_date',
-            'ecotax',
-        );
+        $this->router = $router;
     }
 
     /**
      * modelMapper
-     * Map form data to object model
+     * Map form data to object model.
      *
      * @param array $form_data
      * @param bool $isMultiShopContext If the context is define to multishop, force data to be apply on all shops
@@ -189,7 +225,15 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
     public function getModelData($form_data, $isMultiShopContext = false)
     {
         //merge all form steps
-        $form_data = array_merge(['id_product' => $form_data['id_product']], $form_data['step1'], $form_data['step2'], $form_data['step3'], $form_data['step4'], $form_data['step5'], $form_data['step6']);
+        $form_data = array_merge(
+            ['id_product' => $form_data['id_product']],
+            $form_data['step1'],
+            $form_data['step2'],
+            $form_data['step3'],
+            $form_data['step4'],
+            $form_data['step5'],
+            $form_data['step6']
+        );
 
         //add some legacy field to execute some add/update methods
         $form_data['submitted_tabs'] = ['Shipping'];
@@ -198,7 +242,7 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
         //map translatable
         foreach ($this->translatableKeys as $field) {
             foreach ($form_data[$field] as $lang_id => $translate_value) {
-                $form_data[$field.'_'.$lang_id] = $translate_value;
+                $form_data[$field . '_' . $lang_id] = $translate_value;
             }
         }
 
@@ -211,24 +255,28 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
         }
 
         // Product redirection
-        $form_data['redirect_type'] = (string)$form_data['redirect_type'];
-        if ($form_data['redirect_type'] != '404') {
+        $form_data['redirect_type'] = (string) $form_data['redirect_type'];
+        if ($form_data['redirect_type'] != ProductInterface::REDIRECT_TYPE_NOT_FOUND) {
             if (isset($form_data['id_type_redirected']) && !empty($form_data['id_type_redirected']['data'])) {
                 $form_data['id_type_redirected'] = $form_data['id_type_redirected']['data'][0];
+            } elseif (ProductInterface::REDIRECT_TYPE_CATEGORY_MOVED_PERMANENTLY == $form_data['redirect_type'] || ProductInterface::REDIRECT_TYPE_CATEGORY_FOUND == $form_data['redirect_type']) {
+                $form_data['id_type_redirected'] = 0;
             } else {
                 $form_data['id_type_redirected'] = 0;
-                $form_data['redirect_type'] = '404';
+                $form_data['redirect_type'] = ProductInterface::REDIRECT_TYPE_CATEGORY_MOVED_PERMANENTLY;
             }
         } else {
             $form_data['id_type_redirected'] = 0;
-            $form_data['redirect_type'] = '404';
         }
 
         //map inputPackItems
-        if ($form_data['type_product'] == 1 && !empty($form_data['inputPackItems']) && !empty($form_data['inputPackItems']['data'])) {
+        if ($form_data['type_product'] == 1
+            && !empty($form_data['inputPackItems'])
+            && !empty($form_data['inputPackItems']['data'])
+        ) {
             $inputPackItems = '';
             foreach ($form_data['inputPackItems']['data'] as $productIds) {
-                $inputPackItems .= $productIds.'-';
+                $inputPackItems .= $productIds . '-';
             }
             $form_data['inputPackItems'] = $inputPackItems;
         } else {
@@ -256,25 +304,25 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
             $form_data['combinations'][$k]['attribute_weight_impact'] = 0;
             $form_data['combinations'][$k]['attribute_unit_impact'] = 0;
 
-            if ($combination['attribute_price'] > 0) {
+            $floatParser = new FloatParser();
+
+            if ($floatParser->fromString($combination['attribute_price']) > 0) {
                 $form_data['combinations'][$k]['attribute_price_impact'] = 1;
-            } elseif ($combination['attribute_price'] < 0) {
+            } elseif ($floatParser->fromString($combination['attribute_price']) < 0) {
                 $form_data['combinations'][$k]['attribute_price_impact'] = -1;
             }
 
-            if ($combination['attribute_weight'] > 0) {
+            if ($floatParser->fromString($combination['attribute_weight']) > 0) {
                 $form_data['combinations'][$k]['attribute_weight_impact'] = 1;
-            } elseif ($combination['attribute_weight'] < 0) {
+            } elseif ($floatParser->fromString($combination['attribute_weight']) < 0) {
                 $form_data['combinations'][$k]['attribute_weight_impact'] = -1;
             }
 
-            if ($combination['attribute_unity'] > 0) {
+            if ($floatParser->fromString($combination['attribute_unity']) > 0) {
                 $form_data['combinations'][$k]['attribute_unit_impact'] = 1;
-            } elseif ($combination['attribute_unity'] < 0) {
+            } elseif ($floatParser->fromString($combination['attribute_unity']) < 0) {
                 $form_data['combinations'][$k]['attribute_unit_impact'] = -1;
             }
-
-            $floatParser = new FloatParser();
 
             $form_data['combinations'][$k]['attribute_price'] = abs(
                 $floatParser->fromString($combination['attribute_price'])
@@ -291,16 +339,16 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
         $form_data['supplier_loaded'] = 1;
         if (!empty($form_data['suppliers'])) {
             foreach ($form_data['suppliers'] as $id_supplier) {
-                $form_data['check_supplier_'.$id_supplier] = 1;
+                $form_data['check_supplier_' . $id_supplier] = 1;
 
                 //map supplier combinations
-                foreach ($form_data['supplier_combination_'.$id_supplier] as $combination) {
-                    $key = $form_data['id_product'].'_'.$combination['id_product_attribute'].'_'.$id_supplier;
-                    $form_data['supplier_reference_'.$key] = $combination['supplier_reference'];
-                    $form_data['product_price_'.$key] = $combination['product_price'];
-                    $form_data['product_price_currency_'.$key] = $combination['product_price_currency'];
+                foreach ($form_data['supplier_combination_' . $id_supplier] as $combination) {
+                    $key = $form_data['id_product'] . '_' . $combination['id_product_attribute'] . '_' . $id_supplier;
+                    $form_data['supplier_reference_' . $key] = $combination['supplier_reference'];
+                    $form_data['product_price_' . $key] = $combination['product_price'];
+                    $form_data['product_price_currency_' . $key] = $combination['product_price_currency'];
 
-                    unset($form_data['supplier_combination_'.$id_supplier]);
+                    unset($form_data['supplier_combination_' . $id_supplier]);
                 }
             }
         }
@@ -311,8 +359,9 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
         }
 
         //if empty, set link_rewrite for default locale
-        if (empty($form_data['link_rewrite_'.$this->locales[0]['id_lang']])) {
-            $form_data['link_rewrite_'.$this->locales[0]['id_lang']] = $this->tools->link_rewrite($form_data['name_'.$this->locales[0]['id_lang']]);
+        $linkRewriteKey = 'link_rewrite_' . $this->locales[0]['id_lang'];
+        if (empty($form_data[$linkRewriteKey])) {
+            $form_data[$linkRewriteKey] = $this->tools->link_rewrite($form_data['name_' . $this->locales[0]['id_lang']]);
         }
 
         //map inputAccessories
@@ -320,26 +369,9 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
             $inputAccessories = '';
             foreach ($form_data['related_products']['data'] as $accessoryIds) {
                 $accessoryIds = explode(',', $accessoryIds);
-                $inputAccessories .= $accessoryIds[0].'-';
+                $inputAccessories .= $accessoryIds[0] . '-';
             }
             $form_data['inputAccessories'] = $inputAccessories;
-        }
-
-        //map features
-        if (!empty($form_data['features'])) {
-            foreach ($form_data['features'] as $dataFeature) {
-                $idFeature = $dataFeature['feature'];
-
-                //custom value is defined
-                if ($dataFeature['custom_value'][$this->defaultLocale]) {
-                    foreach ($this->locales as $locale) {
-                        $form_data['feature_'.$idFeature.'_value'] = null;
-                        $form_data['custom_'.$idFeature.'_'.$locale['id_lang']] = $dataFeature['custom_value'][$locale['id_lang']];
-                    }
-                } elseif ($dataFeature['value']) {
-                    $form_data['feature_'.$idFeature.'_value'] = $dataFeature['value'];
-                }
-            }
         }
 
         //map warehouseProductLocations
@@ -347,7 +379,9 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
         $warehouses = $this->warehouseAdapter->getWarehouses();
         foreach ($warehouses as $warehouse) {
             foreach ($form_data['warehouse_combination_' . $warehouse['id_warehouse']] as $combination) {
-                $key = $combination['warehouse_id'] . '_' . $combination['product_id'] . '_' . $combination['id_product_attribute'];
+                $key = $combination['warehouse_id']
+                    . '_' . $combination['product_id']
+                    . '_' . $combination['id_product_attribute'];
                 if ($combination['activated']) {
                     $form_data['check_warehouse_' . $key] = '1';
                 }
@@ -380,9 +414,9 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
 
         $new_form_data = array_merge(parent::getHookData(), $new_form_data);
 
-        //if multishop context is defined, simulate multishop checkbox for all POST DATA
+        //if multiShop context is defined, simulate multiShop checkbox for all POST DATA
         if ($isMultiShopContext) {
-            foreach ($this->multishopKeys as $multishopKey) {
+            foreach ($this->multiShopKeys as $multishopKey) {
                 $new_form_data['multishop_check'][$multishopKey] = 1;
             }
 
@@ -399,173 +433,277 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
 
     /**
      * formMapper
-     * Map object model to form data
+     * Map object model to form data.
+     *
+     * @param Product $product
      *
      * @return array Transformed model data to form attempt
      */
-    public function getFormData()
+    public function getFormData(Product $product)
     {
-        $form_data = [
-            'id_product' => $this->product->id,
-            'step1' => [
-                'type_product' => $this->product->getType(),
-                'inputPackItems' => [
-                    'data' => array_map(
-                        function ($p) {
-                            return [
-                                "id" => $p->id,
-                                "id_product_attribute" => isset($p->id_pack_product_attribute) ? $p->id_pack_product_attribute : 0,
-                                "name" => $p->name,
-                                "ref" => $p->reference,
-                                "quantity" => $p->pack_quantity,
-                                "image" => $p->image,
-                            ];
-                        },
-                        $this->packAdapter->getItems($this->product->id, $this->locales[0]['id_lang'])
-                    )
-                ],
-                'name' => $this->product->name,
-                'description' => $this->product->description,
-                'description_short' => $this->product->description_short,
-                'active' => $this->product->active == 0 ? false : true,
-                'price_shortcut' => $this->product->price,
-                'qty_0_shortcut' => $this->product->getQuantity($this->product->id),
-                'categories' => ['tree' => $this->product->getCategories()],
-                'id_category_default' => $this->product->id_category_default,
-                'related_products' => [
-                    'data' => array_map(
-                        function ($p) {
-                            return($p['id_product']);
-                        },
-                        call_user_func_array(
-                            array($this->product, "getAccessoriesLight"),
-                            array($this->locales[0]['id_lang'], $this->product->id)
-                        )
-                    )
-                ],
-                'id_manufacturer' => $this->product->id_manufacturer,
-                'features' => $this->getFormFeatures(),
-                'images' => $this->productAdapter->getImages($this->product->id, $this->locales[0]['id_lang'])
-            ],
-            'step2' => [
-                'price' => $this->product->price,
-                'ecotax' => $this->product->ecotax,
-                'id_tax_rules_group' => !empty($this->product->id_tax_rules_group) ? $this->product->id_tax_rules_group : $this->taxRuleDataProvider->getIdTaxRulesGroupMostUsed(),
-                'on_sale' => (bool) $this->product->on_sale,
-                'wholesale_price' => $this->product->wholesale_price,
-                'unit_price' => $this->product->unit_price_ratio != 0  ? $this->product->price / $this->product->unit_price_ratio : 0,
-                'unity' => $this->product->unity,
-                'specific_price' => [ // extra form to be saved separately. Here this is the default form values.
-                    'sp_from_quantity' => 1,
-                    'sp_reduction' => 0,
-                    'sp_reduction_tax' => 1,
-                    'leave_bprice' => true,
-                    'sp_id_shop' => $this->shopContext->getContextShopID(),
-                ],
-                'specificPricePriority_0' => $this->productPricePriority[0],
-                'specificPricePriority_1' => $this->productPricePriority[1],
-                'specificPricePriority_2' => $this->productPricePriority[2],
-                'specificPricePriority_3' => $this->productPricePriority[3],
-            ],
-            'step3' => [
-                'advanced_stock_management' => (bool) $this->product->advanced_stock_management,
-                'depends_on_stock' => $this->product->depends_on_stock?"1":"0",
-                'qty_0' => $this->product->getQuantity($this->product->id),
-                'id_product_attributes' => $this->getProductAttributes(),
-                'out_of_stock' => $this->product->out_of_stock,
-                'minimal_quantity' => $this->product->minimal_quantity,
-                'available_now' => $this->product->available_now,
-                'available_later' => $this->product->available_later,
-                'available_date' => $this->product->available_date,
-                'pack_stock_type' => $this->product->pack_stock_type,
-                'virtual_product' => $this->getVirtualProductData(),
-            ],
-            'step4' => [
-                'width' => $this->product->width,
-                'height' => $this->product->height,
-                'depth' => $this->product->depth,
-                'weight' => $this->product->weight,
-                'additional_shipping_cost' => $this->product->additional_shipping_cost,
-                'selectedCarriers' => $this->getFormProductCarriers(),
-            ],
-            'step5' => [
-                'link_rewrite' => $this->product->link_rewrite,
-                'meta_title' => $this->product->meta_title,
-                'meta_description' => $this->product->meta_description,
-                'redirect_type' => $this->product->redirect_type,
-                'id_type_redirected' => [
-                    'data' => [$this->product->id_type_redirected]
-                ],
-            ],
-            'step6' => [
-                'visibility' => $this->product->visibility,
-                'tags' => $this->getTags(),
-                'display_options' => [
-                    'available_for_order' => (bool) $this->product->available_for_order,
-                    'show_price' => (bool) $this->product->show_price,
-                    'online_only' => (bool) $this->product->online_only,
-                ],
-                'upc' => $this->product->upc,
-                'ean13' => $this->product->ean13,
-                'isbn' => $this->product->isbn,
-                'reference' => $this->product->reference,
-                'show_condition' => (bool) $this->product->show_condition,
-                'condition' => $this->product->condition,
-                'suppliers' => array_map(
-                    function ($s) {
-                        return($s->id_supplier);
-                    },
-                    $this->supplierAdapter->getProductSuppliers($this->product->id)
-                ),
-                'default_supplier' => $this->product->id_supplier,
-                'custom_fields' => $this->getCustomFields(),
-                'attachments' => $this->getProductAttachments(),
-            ]
-        ];
+        $product->loadStockData();
+        $this->productPricePriority = $this->adminProductWrapper->getPricePriority($product->id);
+
+        $this->formData['id_product'] = $product->id;
+        $this->formData['step1'] = $this->mapStep1FromData($product);
+        $this->formData['step2'] = $this->mapStep2FormData($product);
+        $this->formData['step3'] = $this->mapStep3FormData($product);
+        $this->formData['step4'] = $this->mapStep4FormData($product);
+        $this->formData['step5'] = $this->mapStep5FormData($product);
+        $this->formData['step6'] = $this->mapStep6FormData($product);
 
         //Inject data form for supplier combinations
-        $form_data['step6'] = array_merge($form_data['step6'], $this->getDataSuppliersCombinations());
+        $this->formData['step6'] = array_merge($this->formData['step6'], $this->getDataSuppliersCombinations($product));
 
         //Inject data form for warehouse combinations
-        $form_data['step4'] = array_merge($form_data['step4'], $this->getDataWarehousesCombinations());
+        $this->formData['step4'] = array_merge(
+            $this->formData['step4'],
+            $this->getDataWarehousesCombinations($product)
+        );
 
-        return $form_data;
-    }
-
-    public function getAttributesResume()
-    {
-        return $this->product->getAttributesResume($this->context->getContext()->language->id);
+        return $this->formData;
     }
 
     /**
-     * Get product attachments
+     * Maps the existing products data to the form for Step 1.
+     *
+     * @param Product $product
      *
      * @return array
      */
-    private function getProductAttachments()
+    private function mapStep1FromData(Product $product)
     {
-        return array_map(
-            function ($a) {
-                return($a['id_attachment']);
-            },
-            Attachment::getAttachments($this->locales[0]['id_lang'], $this->product->id, true)
+        return array(
+            'type_product' => $product->getType(),
+            'inputPackItems' => [
+                'data' => array_map(
+                    function ($p) {
+                        return [
+                            'id' => $p->id,
+                            'id_product_attribute' => isset($p->id_pack_product_attribute)
+                                ? $p->id_pack_product_attribute
+                                : 0,
+                            'name' => $p->name,
+                            'ref' => $p->reference,
+                            'quantity' => $p->pack_quantity,
+                            'image' => $p->image,
+                        ];
+                    },
+                    $this->packAdapter->getItems($product->id, $this->locales[0]['id_lang'])
+                ),
+            ],
+            'name' => $product->name,
+            'description' => $product->description,
+            'description_short' => $product->description_short,
+            'active' => $product->active == 0 ? false : true,
+            'price_shortcut' => $product->price,
+            'qty_0_shortcut' => $product->getQuantity($product->id),
+            'categories' => ['tree' => $product->getCategories()],
+            'id_category_default' => $product->id_category_default,
+            'related_products' => [
+                'data' => array_map(
+                    function ($p) {
+                        return $p['id_product'];
+                    },
+                    call_user_func_array(
+                        array($product, 'getAccessoriesLight'),
+                        array($this->locales[0]['id_lang'], $product->id)
+                    )
+                ),
+            ],
+            'id_manufacturer' => $product->id_manufacturer,
+            'features' => $this->getFormFeatures($product),
+            'images' => $this->productAdapter->getImages($product->id, $this->locales[0]['id_lang']),
         );
     }
 
     /**
-     * Get virtual product data
+     * Maps the existing products data to the form for Step 2.
+     *
+     * @param Product $product
      *
      * @return array
      */
-    private function getVirtualProductData()
+    private function mapStep2FormData(Product $product)
+    {
+        return array(
+            'price' => $product->price,
+            'ecotax' => $product->ecotax,
+            'id_tax_rules_group' => isset($product->id_tax_rules_group)
+                ? (int) $product->id_tax_rules_group
+                : $this->taxRuleDataProvider->getIdTaxRulesGroupMostUsed(),
+            'on_sale' => (bool) $product->on_sale,
+            'wholesale_price' => $product->wholesale_price,
+            'unit_price' => $product->unit_price_ratio != 0
+                ? $product->price / $product->unit_price_ratio
+                : 0,
+            'unity' => $product->unity,
+            'specific_price' => [ // extra form to be saved separately. Here this is the default form values.
+                'sp_from_quantity' => 1,
+                'sp_reduction' => 0,
+                'sp_reduction_tax' => 1,
+                'leave_bprice' => true,
+                'sp_id_shop' => $this->shopContext->getContextShopID(),
+            ],
+            'specificPricePriority_0' => $this->productPricePriority[0],
+            'specificPricePriority_1' => $this->productPricePriority[1],
+            'specificPricePriority_2' => $this->productPricePriority[2],
+            'specificPricePriority_3' => $this->productPricePriority[3],
+        );
+    }
+
+    /**
+     * Maps the existing products data to the form for Step 3.
+     *
+     * @param Product $product
+     *
+     * @return array
+     */
+    private function mapStep3FormData(Product $product)
+    {
+        return array(
+            'advanced_stock_management' => (bool) $product->advanced_stock_management,
+            'depends_on_stock' => $product->depends_on_stock ? '1' : '0',
+            'qty_0' => $product::getQuantity($product->id),
+            'id_product_attributes' => $this->getProductAttributes($product),
+            'out_of_stock' => $product->out_of_stock,
+            'minimal_quantity' => $product->minimal_quantity,
+            'location' => $product->location,
+            'low_stock_threshold' => $product->low_stock_threshold,
+            'low_stock_alert' => (bool) $product->low_stock_alert,
+            'available_now' => $product->available_now,
+            'available_later' => $product->available_later,
+            'available_date' => $product->available_date,
+            'pack_stock_type' => $product->pack_stock_type,
+            'virtual_product' => $this->getVirtualProductData($product),
+        );
+    }
+
+    /**
+     * Maps the existing products data to the form for Step 4.
+     *
+     * @param Product $product
+     *
+     * @return array
+     */
+    private function mapStep4FormData(Product $product)
+    {
+        return array(
+            'width' => $product->width,
+            'height' => $product->height,
+            'depth' => $product->depth,
+            'weight' => $product->weight,
+            'additional_shipping_cost' => $product->additional_shipping_cost,
+            'selectedCarriers' => $this->getFormProductCarriers($product),
+            'additional_delivery_times' => $product->additional_delivery_times,
+            'delivery_in_stock' => $product->delivery_in_stock,
+            'delivery_out_stock' => $product->delivery_out_stock,
+        );
+    }
+
+    /**
+     * Maps the existing products data to the form for Step 5.
+     *
+     * @param Product $product
+     *
+     * @return array
+     */
+    private function mapStep5FormData(Product $product)
+    {
+        return array(
+            'link_rewrite' => $product->link_rewrite,
+            'meta_title' => $product->meta_title,
+            'meta_description' => $product->meta_description,
+            'redirect_type' => $product->redirect_type,
+            'id_type_redirected' => [
+                'data' => [$product->id_type_redirected],
+            ],
+        );
+    }
+
+    /**
+     * Maps the existing products data to the form for Step 6.
+     *
+     * @param Product $product
+     *
+     * @return array
+     */
+    private function mapStep6FormData(Product $product)
+    {
+        return array(
+            'visibility' => $product->visibility,
+            'tags' => $this->getTags($product),
+            'display_options' => [
+                'available_for_order' => (bool) $product->available_for_order,
+                'show_price' => (bool) $product->show_price,
+                'online_only' => (bool) $product->online_only,
+            ],
+            'upc' => $product->upc,
+            'mpn' => $product->mpn,
+            'ean13' => $product->ean13,
+            'isbn' => $product->isbn,
+            'reference' => $product->reference,
+            'show_condition' => (bool) $product->show_condition,
+            'condition' => $product->condition,
+            'suppliers' => array_map(
+                function ($s) {
+                    return $s->id_supplier;
+                },
+                $this->supplierAdapter->getProductSuppliers($product->id)
+            ),
+            'default_supplier' => $product->id_supplier,
+            'custom_fields' => $this->getCustomFields($product),
+            'attachments' => $this->getProductAttachments($product),
+        );
+    }
+
+    /**
+     * Get all available product attributes resume.
+     *
+     * @param Product $product
+     *
+     * @return array Product attributes combinations
+     */
+    public function getAttributesResume(Product $product)
+    {
+        return $product->getAttributesResume($this->context->getContext()->language->id);
+    }
+
+    /**
+     * Get product attachments.
+     *
+     * @param Product $product
+     *
+     * @return array
+     */
+    private function getProductAttachments(Product $product)
+    {
+        return array_map(
+            function ($attachment) {
+                return $attachment['id_attachment'];
+            },
+            Attachment::getAttachments($this->locales[0]['id_lang'], $product->id)
+        );
+    }
+
+    /**
+     * Get virtual product data.
+     *
+     * @param Product $product
+     *
+     * @return array
+     */
+    private function getVirtualProductData(Product $product)
     {
         //force virtual product feature
         ConfigurationLegacy::updateGlobalValue('PS_VIRTUAL_PROD_FEATURE_ACTIVE', '1');
 
-        $id_product_download = ProductDownload::getIdFromIdProduct((int)$this->product->id, false);
+        $id_product_download = ProductDownload::getIdFromIdProduct((int) $product->id, false);
         if ($id_product_download) {
             $download = new ProductDownload($id_product_download);
-            $dateValue = $download->date_expiration == '0000-00-00 00:00:00' ? '' : date('Y-m-d', strtotime($download->date_expiration));
+            $dateValue = $download->date_expiration == '0000-00-00 00:00:00'
+                ? ''
+                : date('Y-m-d', strtotime($download->date_expiration));
 
             $res = [
                 'is_virtual_file' => $download->active,
@@ -577,7 +715,10 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
 
             if ($download->filename) {
                 $res['filename'] = $download->filename;
-                $res['file_download_link'] = $this->context->getAdminBaseUrl().$download->getTextLink(true);
+                $res['file_download_link'] = $this->router->generate(
+                    'admin_product_virtual_download_file_action',
+                    ['idProduct' => $download->id_product]
+                );
             }
 
             return $res;
@@ -590,15 +731,17 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
     }
 
     /**
-     * Generate form custom fields configuration
+     * Generate form custom fields configuration.
+     *
+     * @param Product $product
      *
      * @return array
      */
-    private function getCustomFields()
+    private function getCustomFields(Product $product)
     {
         $finalCustomFields = [];
         $customizationFields = [];
-        $productCustomizationFields = $this->product->getCustomizationFields();
+        $productCustomizationFields = $product->getCustomizationFields();
 
         if (!$productCustomizationFields) {
             return [];
@@ -627,34 +770,46 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
     }
 
     /**
-     * Generate form supplier/combinations references
+     * Generate form supplier/combinations references.
+     *
+     * @param Product $product
      *
      * @return array filled data form references combinations
      */
-    private function getDataSuppliersCombinations()
+    private function getDataSuppliersCombinations(Product $product)
     {
-        $combinations = $this->product->getAttributesResume($this->locales[0]['id_lang']);
+        $combinations = $product->getAttributesResume($this->locales[0]['id_lang']);
         if (!$combinations || empty($combinations)) {
             $combinations[] = array(
-                'id_product' => $this->product->id,
+                'id_product' => $product->id,
                 'id_product_attribute' => 0,
-                'attribute_designation' => $this->product->name[$this->locales[0]['id_lang']]
+                'attribute_designation' => $product->name[$this->locales[0]['id_lang']],
             );
         }
 
         //for each supplier, generate combinations list
         $dataSuppliersCombinations = [];
 
-        foreach ($this->supplierAdapter->getProductSuppliers($this->product->id) as $supplier) {
+        foreach ($this->supplierAdapter->getProductSuppliers($product->id) as $supplier) {
             foreach ($combinations as $combination) {
-                $productSupplierData = $this->supplierAdapter->getProductSupplierData($this->product->id, $combination['id_product_attribute'], $supplier->id_supplier);
-                $dataSuppliersCombinations['supplier_combination_'.$supplier->id_supplier][] = [
+                $productSupplierData = $this->supplierAdapter->getProductSupplierData(
+                    $product->id,
+                    $combination['id_product_attribute'],
+                    $supplier->id_supplier
+                );
+                $dataSuppliersCombinations['supplier_combination_' . $supplier->id_supplier][] = [
                     'label' => $combination['attribute_designation'],
-                    'supplier_reference' => isset($productSupplierData['product_supplier_reference']) ? $productSupplierData['product_supplier_reference'] : '',
-                    'product_price' => isset($productSupplierData['price']) ? $productSupplierData['price'] : 0,
-                    'product_price_currency' => isset($productSupplierData['id_currency']) ? $productSupplierData['id_currency'] : 1,
+                    'supplier_reference' => isset($productSupplierData['product_supplier_reference'])
+                        ? $productSupplierData['product_supplier_reference']
+                        : '',
+                    'product_price' => isset($productSupplierData['price'])
+                        ? $productSupplierData['price']
+                        : 0,
+                    'product_price_currency' => isset($productSupplierData['id_currency'])
+                        ? $productSupplierData['id_currency']
+                        : 1,
                     'supplier_id' => $supplier->id_supplier,
-                    'product_id' => $this->product->id,
+                    'product_id' => $product->id,
                     'id_product_attribute' => $combination['id_product_attribute'],
                 ];
             }
@@ -664,18 +819,20 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
     }
 
     /**
-     * Generate form warehouses/combinations references
+     * Generate form warehouses/combinations references.
+     *
+     * @param Product $product
      *
      * @return array filled data form references combinations
      */
-    private function getDataWarehousesCombinations()
+    private function getDataWarehousesCombinations(Product $product)
     {
-        $combinations = $this->product->getAttributesResume($this->locales[0]['id_lang']);
+        $combinations = $product->getAttributesResume($this->locales[0]['id_lang']);
         if (!$combinations || empty($combinations)) {
             $combinations[] = array(
-                'id_product' => $this->product->id,
+                'id_product' => $product->id,
                 'id_product_attribute' => 0,
-                'attribute_designation' => $this->product->name[$this->locales[0]['id_lang']]
+                'attribute_designation' => $product->name[$this->locales[0]['id_lang']],
             );
         }
 
@@ -685,14 +842,20 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
         foreach ($this->warehouseAdapter->getWarehouses() as $warehouse) {
             $warehouseId = $warehouse['id_warehouse'];
             foreach ($combinations as $combination) {
-                $warehouseProductLocationData = $this->warehouseAdapter->getWarehouseProductLocationData($this->product->id, $combination['id_product_attribute'], $warehouseId);
-                $dataWarehousesCombinations['warehouse_combination_'.$warehouseId][] = [
+                $warehouseProductLocationData = $this->warehouseAdapter->getWarehouseProductLocationData(
+                    $product->id,
+                    $combination['id_product_attribute'],
+                    $warehouseId
+                );
+                $dataWarehousesCombinations['warehouse_combination_' . $warehouseId][] = [
                     'label' => $combination['attribute_designation'],
                     'activated' => (bool) $warehouseProductLocationData['activated'],
                     'warehouse_id' => $warehouseId,
-                    'product_id' => $this->product->id,
+                    'product_id' => $product->id,
                     'id_product_attribute' => $combination['id_product_attribute'],
-                    'location' => isset($warehouseProductLocationData['location']) ? $warehouseProductLocationData['location'] : '',
+                    'location' => isset($warehouseProductLocationData['location'])
+                        ? $warehouseProductLocationData['location']
+                        : '',
                 ];
             }
         }
@@ -701,43 +864,51 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
     }
 
     /**
-     * get form product features
+     * get form product features.
+     *
+     * @param Product $product
      *
      * @return array features with translation
      */
-    private function getFormFeatures()
+    private function getFormFeatures(Product $product)
     {
-        $formDataFeatures = [];
-        foreach ($this->product->getFeatures() as $dataFeature) {
+        $formFeaturesData = [];
+        foreach ($product->getFeatures() as $featureData) {
             $itemForm = [
-                'feature' => $dataFeature['id_feature'],
-                'value' => $dataFeature['id_feature_value'],
+                'feature' => $featureData['id_feature'],
+                'value' => null,
                 'custom_value' => null,
             ];
 
-            if ($dataFeature['custom'] == 1) {
+            if ($featureData['custom'] == 0) {
+                // use id_feature_value only if this value isn't custom
+                $itemForm['value'] = $featureData['id_feature_value'];
+            } else {
                 $customLangs = [];
-                foreach ($this->featureAdapter->getFeatureValueLang($dataFeature['id_feature_value']) as $customValues) {
-                    $customLangs[$customValues['id_lang']] = $customValues['value'];
+                $featureLangsData = $this->featureAdapter->getFeatureValueLang($featureData['id_feature_value']);
+                foreach ($featureLangsData as $langData) {
+                    $customLangs[$langData['id_lang']] = $langData['value'];
                 }
                 $itemForm['custom_value'] = $customLangs;
             }
 
-            $formDataFeatures[] = $itemForm;
+            $formFeaturesData[] = $itemForm;
         }
 
-        return $formDataFeatures;
+        return $formFeaturesData;
     }
 
     /**
-     * get product carrier
+     * get product carrier.
+     *
+     * @param Product $product
      *
      * @return array carrier
      */
-    private function getFormProductCarriers()
+    private function getFormProductCarriers(Product $product)
     {
         $formDataCarriers = [];
-        foreach ($this->product->getCarriers() as $carrier) {
+        foreach ($product->getCarriers() as $carrier) {
             $formDataCarriers[] = $carrier['id_reference'];
         }
 
@@ -745,13 +916,15 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
     }
 
     /**
-     * Get all product id_product_attribute
+     * Get all product id_product_attribute.
+     *
+     * @param Product $product
      *
      * @return array id_product_attribute
      */
-    private function getProductAttributes()
+    private function getProductAttributes(Product $product)
     {
-        $combinations = $this->getAttributesResume();
+        $combinations = $product->getAttributesResume($this->context->getContext()->language->id);
         $idsProductAttribute = array();
 
         if (is_array($combinations)) {
@@ -764,16 +937,19 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
     }
 
     /**
-     * Get a localized tags for product
+     * Get a localized tags for product.
+     *
+     * @param Product $product
      *
      * @return array
      */
-    private function getTags()
+    private function getTags(Product $product)
     {
         $tags = [];
         foreach ($this->locales as $locale) {
-            $tags[$locale['id_lang']] = $this->product->getTags($locale['id_lang']);
+            $tags[$locale['id_lang']] = $product->getTags($locale['id_lang']);
         }
+
         return $tags;
     }
 }

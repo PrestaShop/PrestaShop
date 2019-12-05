@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,15 +16,18 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShopBundle\Service\Hook;
 
+use AppKernel;
+use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use Symfony\Component\EventDispatcher\Event;
 
 /**
@@ -39,12 +42,14 @@ class HookEvent extends Event
     /**
      * Sets the Hook parameters.
      *
-     * @param array Hook parameters.
-     * @return $this, for fluent use of object.
+     * @param array hook parameters
+     *
+     * @return $this, for fluent use of object
      */
     public function setHookParameters($parameters)
     {
         $this->hookParameters = $parameters;
+
         return $this;
     }
 
@@ -53,18 +58,19 @@ class HookEvent extends Event
      *
      * More values than the param set is returned:
      * - _ps_version contains PrestaShop version, and is here only if the Hook is triggered by Symfony architecture.
-     * These values can either be overriden by szetHookParameters using the same parameter key.
+     * These values can either be overriden by setHookParameters using the same parameter key.
      *
-     * @return array The array of hook parameters, more default fixed values.
+     * @return array the array of hook parameters, more default fixed values
      */
     public function getHookParameters()
     {
-        global $kernel;
+        $globalParameters = array('_ps_version' => AppKernel::VERSION);
 
-        $globalParameters = array('_ps_version' => _PS_VERSION_);
-
-        if (!is_null($kernel) && !is_null($kernel->getContainer()->get('request_stack')->getCurrentRequest())) {
-            $globalParameters['request'] = $kernel->getContainer()->get('request');
+        $sfContainer = SymfonyContainer::getInstance();
+        if (null !== $sfContainer && null !== $sfContainer->get('request_stack')->getCurrentRequest()) {
+            $request = $sfContainer->get('request_stack')->getCurrentRequest();
+            $globalParameters['request'] = $request;
+            $globalParameters['route'] = $request->get('_route');
         }
 
         return array_merge($globalParameters, $this->hookParameters);

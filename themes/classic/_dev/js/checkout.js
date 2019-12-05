@@ -1,5 +1,5 @@
 /**
- * 2007-2017 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -15,10 +15,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -26,10 +26,6 @@ import $ from 'jquery';
 import prestashop from 'prestashop';
 
 function setUpCheckout() {
-  if ($('.js-cancel-address').length !== 0) {
-    $('.checkout-step:not(.js-current-step) .step-title').addClass('not-allowed');
-  }
-
   $('.js-terms a').on('click', (event) => {
     event.preventDefault();
     var url = $(event.target).attr('href');
@@ -51,9 +47,22 @@ function setUpCheckout() {
   });
 }
 
+function toggleImage() {
+  // Arrow show/hide details Checkout page
+  $('.card-block .cart-summary-products p a').on('click', function (icon) {
+    icon = $(this).find('i.material-icons');
+    if (icon.text() == 'expand_more') { 
+      icon.text('expand_less'); 
+    } else { 
+      icon.text('expand_more'); 
+    }
+  });
+}
+
 $(document).ready(() => {
   if ($('body#checkout').length === 1) {
     setUpCheckout();
+    toggleImage();
   }
 
   prestashop.on('updatedDeliveryForm', (params) => {

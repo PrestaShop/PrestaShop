@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,31 +16,28 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-use Symfony\Component\ClassLoader\ApcClassLoader;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Debug\Debug;
-use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-
-umask(0000); // This will let the permissions be 0777
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 $timer_start = microtime(true);
 if (!defined('_PS_ADMIN_DIR_')) {
-    define('_PS_ADMIN_DIR_', getcwd());
+    define('_PS_ADMIN_DIR_', __DIR__);
 }
 
 if (!defined('PS_ADMIN_DIR')) {
     define('PS_ADMIN_DIR', _PS_ADMIN_DIR_);
 }
 
-require(_PS_ADMIN_DIR_.'/../config/config.inc.php');
+require _PS_ADMIN_DIR_.'/../config/config.inc.php';
 
 //small test to clear cache after upgrade
 if (Configuration::get('PS_UPGRADE_CLEAR_CACHE')) {
@@ -60,8 +57,6 @@ if (!isset($_REQUEST['controller']) && isset($_REQUEST['tab'])) {
     $_REQUEST['controller'] = strtolower($_REQUEST['tab']);
 }
 
-// Prepare Symfony kernel to resolve route.
-$loader = require_once __DIR__.'/../app/bootstrap.php.cache';
 // Enable APC for autoloading to improve performance.
 // You should change the ApcClassLoader first argument to a unique prefix
 // in order to prevent cache key conflicts with other applications
@@ -75,22 +70,26 @@ if (_PS_MODE_DEV_) {
     Debug::enable();
 }
 require_once __DIR__.'/../app/AppKernel.php';
-//require_once __DIR__.'/../app/AppCache.php';
-$kernel = new AppKernel(_PS_MODE_DEV_?'dev':'prod', _PS_MODE_DEV_);
-$kernel->loadClassCache();
+
+$kernel = new AppKernel(_PS_ENV_, _PS_MODE_DEV_);
 //$kernel = new AppCache($kernel);
 // When using the HttpCache, you need to call the method in your front controller instead of relying on the configuration parameter
 //Request::enableHttpMethodParameterOverride();
 $request = Request::createFromGlobals();
+Request::setTrustedProxies([], Request::HEADER_X_FORWARDED_ALL);
+
 try {
+    require_once __DIR__.'/../autoload.php';
     $response = $kernel->handle($request, HttpKernelInterface::MASTER_REQUEST, false);
     $response->send();
     $kernel->terminate($request, $response);
-} catch (NotFoundHttpException $rnfe) {
+} catch (NotFoundHttpException $exception) {
+    define('ADMIN_LEGACY_CONTEXT', true);
     // correct Apache charset (except if it's too late)
     if (!headers_sent()) {
         header('Content-Type: text/html; charset=utf-8');
     }
+
     // Prepare and trigger LEGACY admin dispatcher
     Dispatcher::getInstance()->dispatch();
 }

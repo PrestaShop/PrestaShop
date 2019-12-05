@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,57 +16,84 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 
 namespace PrestaShop\PrestaShop\Core\Product\Search;
 
 class Pagination
 {
     /**
-     * The total number of pages for this query.
-     *
-     * @var int
+     * @var int the total number of pages for this query
      */
     private $pagesCount;
 
     /**
-     * The index of the returned page.
-     *
-     * @var int
+     * @var int the index of the returned page
      */
     private $page;
 
+    /**
+     * @param int $pagesCount
+     *
+     * @return $this
+     */
     public function setPagesCount($pagesCount)
     {
-        $this->pagesCount = (int) $pagesCount;
+        if (!is_int($pagesCount)) {
+            trigger_error(sprintf('Integer value is expected, got `%s`', gettype($pagesCount)), E_USER_NOTICE);
+            $pagesCount = (int) $pagesCount;
+        }
+
+        $this->pagesCount = $pagesCount;
 
         return $this;
     }
 
+    /**
+     * @return int
+     */
     public function getPagesCount()
     {
         return $this->pagesCount;
     }
 
+    /**
+     * @param int $page
+     *
+     * @return $this
+     */
     public function setPage($page)
     {
-        $this->page = (int) $page;
+        if (!is_int($page)) {
+            trigger_error(sprintf('Integer value is expected, got `%s`', gettype($page)), E_USER_NOTICE);
+            $page = (int) $page;
+        }
+
+        $this->page = $page;
 
         return $this;
     }
 
+    /**
+     * @return int
+     */
     public function getPage()
     {
         return $this->page;
     }
 
+    /**
+     * @param $page
+     * @param string $type
+     *
+     * @return array
+     */
     private function buildPageLink($page, $type = 'page')
     {
         $current = $page === $this->getPage();
@@ -79,6 +106,9 @@ class Pagination
         ];
     }
 
+    /**
+     * @return array
+     */
     private function buildSpacer()
     {
         return [
@@ -89,6 +119,9 @@ class Pagination
         ];
     }
 
+    /**
+     * @return array
+     */
     public function buildLinks()
     {
         $links = [];

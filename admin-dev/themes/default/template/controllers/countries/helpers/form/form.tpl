@@ -1,5 +1,5 @@
 {**
- * 2007-2017 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -15,10 +15,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
@@ -32,7 +32,7 @@
 					<textarea id="ordered_fields" name="address_layout" style="height:150px;">{$input.address_layout}</textarea>
 				</div>
 				<div class="col-lg-8">
-					{l s='Required fields for the address (click for more details):' d='Admin.International.Feature'}
+					{l s='Some countries require different elements than others. Click on the button below to get the valid default address format for this country.' d='Admin.International.Feature'}
 					{$input.display_valid_fields}
 				</div>
 			</div>

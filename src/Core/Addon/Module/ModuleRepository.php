@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,29 +16,33 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShop\PrestaShop\Core\Addon\Module;
 
+use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\Common\Cache\CacheProvider;
 use Exception;
-use Psr\Log\LoggerInterface;
+use Module as LegacyModule;
 use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Module\Module;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataUpdater;
+use PrestaShop\PrestaShop\Adapter\Module\PrestaTrust\PrestaTrustChecker;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilter;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterOrigin;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterStatus;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterType;
+use PrestaShop\PrestaShop\Core\Addon\AddonsCollection;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Translation\TranslatorInterface;
-use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 
 class ModuleRepository implements ModuleRepositoryInterface
 {
@@ -68,7 +72,7 @@ class ModuleRepository implements ModuleRepositoryInterface
     private $moduleProvider;
 
     /**
-     * Module Data Provider.
+     * Module Data Updater.
      *
      * @var \PrestaShop\PrestaShop\Adapter\Module\ModuleDataUpdater
      */
@@ -82,9 +86,23 @@ class ModuleRepository implements ModuleRepositoryInterface
     private $translator;
 
     /**
-     * Module Data Provider.
+     * Path to the module directory, coming from Confiuration class.
      *
-     * @var \PrestaShop\PrestaShop\Adapter\Module\ModuleDataUpdater
+     * @var string
+     */
+    private $modulePath;
+
+    /**
+     * @var PrestaTrustChecker
+     */
+    private $prestaTrustChecker = null;
+
+    //### CACHE PROPERTIES ####
+
+    /**
+     * Key of the cache content.
+     *
+     * @var string
      */
     private $cacheFilePath;
 
@@ -96,11 +114,20 @@ class ModuleRepository implements ModuleRepositoryInterface
     private $cache = array();
 
     /**
-     * Optionnal Doctrine cache provider
+     * Optionnal Doctrine cache provider.
      *
      * @var \Doctrine\Common\Cache\CacheProvider
      */
     private $cacheProvider;
+
+    /**
+     * Keep loaded modules in cache.
+     *
+     * @var ArrayCache
+     */
+    private $loadedModules;
+
+    //### END OF CACHE PROPERTIES ####
 
     public function __construct(
         AdminModuleDataProvider $adminModulesProvider,
@@ -108,6 +135,7 @@ class ModuleRepository implements ModuleRepositoryInterface
         ModuleDataUpdater $modulesUpdater,
         LoggerInterface $logger,
         TranslatorInterface $translator,
+        $modulePath,
         CacheProvider $cacheProvider = null
     ) {
         $this->adminModuleProvider = $adminModulesProvider;
@@ -116,16 +144,32 @@ class ModuleRepository implements ModuleRepositoryInterface
         $this->moduleUpdater = $modulesUpdater;
         $this->translator = $translator;
         $this->finder = new Finder();
+        $this->modulePath = $modulePath;
 
         list($isoLang) = explode('-', $translator->getLocale());
 
         // Cache related variables
-        $this->cacheFilePath = $isoLang.'_local_modules';
+        $this->cacheFilePath = $isoLang . '_local_modules';
         $this->cacheProvider = $cacheProvider;
+        $this->loadedModules = new ArrayCache();
 
         if ($this->cacheProvider && $this->cacheProvider->contains($this->cacheFilePath)) {
             $this->cache = $this->cacheProvider->fetch($this->cacheFilePath);
         }
+    }
+
+    /**
+     * Setter for the optional PrestaTrust checker.
+     *
+     * @param PrestaTrustChecker $checker
+     *
+     * @return $this
+     */
+    public function setPrestaTrustChecker(PrestaTrustChecker $checker)
+    {
+        $this->prestaTrustChecker = $checker;
+
+        return $this;
     }
 
     public function __destruct()
@@ -158,8 +202,7 @@ class ModuleRepository implements ModuleRepositoryInterface
 
     /**
      * @param AddonListFilter $filter
-     *
-     * @param bool            $skip_main_class_attributes
+     * @param bool $skip_main_class_attributes
      *
      * @return AddonInterface[] retrieve a list of addons, regarding the $filter used
      */
@@ -183,6 +226,7 @@ class ModuleRepository implements ModuleRepositoryInterface
                 }
                 if (!isset($productType) || $productType & ~$filter->type) {
                     unset($modules[$key]);
+
                     continue;
                 }
             }
@@ -193,6 +237,7 @@ class ModuleRepository implements ModuleRepositoryInterface
                     && ($filter->hasStatus(AddonListFilterStatus::UNINSTALLED)
                         || !$filter->hasStatus(AddonListFilterStatus::INSTALLED))) {
                     unset($modules[$key]);
+
                     continue;
                 }
 
@@ -200,6 +245,7 @@ class ModuleRepository implements ModuleRepositoryInterface
                     && (!$filter->hasStatus(AddonListFilterStatus::UNINSTALLED)
                         || $filter->hasStatus(AddonListFilterStatus::INSTALLED))) {
                     unset($modules[$key]);
+
                     continue;
                 }
 
@@ -208,6 +254,7 @@ class ModuleRepository implements ModuleRepositoryInterface
                     && !$filter->hasStatus(AddonListFilterStatus::DISABLED)
                     && $filter->hasStatus(AddonListFilterStatus::ENABLED)) {
                     unset($modules[$key]);
+
                     continue;
                 }
 
@@ -216,6 +263,7 @@ class ModuleRepository implements ModuleRepositoryInterface
                     && !$filter->hasStatus(AddonListFilterStatus::ENABLED)
                     && $filter->hasStatus(AddonListFilterStatus::DISABLED)) {
                     unset($modules[$key]);
+
                     continue;
                 }
             }
@@ -226,16 +274,19 @@ class ModuleRepository implements ModuleRepositoryInterface
                     !$filter->hasOrigin(AddonListFilterOrigin::DISK)
                 ) {
                     unset($modules[$key]);
+
                     continue;
                 }
                 if ($module->attributes->has('origin_filter_value') &&
                     !$filter->hasOrigin($module->attributes->get('origin_filter_value'))
                 ) {
                     unset($modules[$key]);
+
                     continue;
                 }
             }
         }
+
         return $modules;
     }
 
@@ -341,18 +392,25 @@ class ModuleRepository implements ModuleRepositoryInterface
                         'Parse error on module %module%. %error_details%',
                         array(
                             '%module%' => $name,
-                            '%error_details%' => $e->getMessage(), ),
-                        'Admin.Modules.Notification'));
+                            '%error_details%' => $e->getMessage(),
+                        ),
+                        'Admin.Modules.Notification'
+                    )
+                );
             } catch (Exception $e) {
                 $this->logger->critical(
                     $this->translator->trans(
                         'Unexpected exception on module %module%. %error_details%',
                         array(
                             '%module%' => $name,
-                            '%error_details%' => $e->getMessage(), ),
-                        'Admin.Modules.Notification'));
+                            '%error_details%' => $e->getMessage(),
+                        ),
+                        'Admin.Modules.Notification'
+                    )
+                );
             }
         }
+
         return $modules;
     }
 
@@ -361,19 +419,21 @@ class ModuleRepository implements ModuleRepositoryInterface
      * It contains data from its instance, the disk, the database and from the marketplace if exists.
      *
      * @param string $name The technical name of the module
-     *
-     * @param bool   $skip_main_class_attributes
+     * @param bool $skip_main_class_attributes
      *
      * @return Module
      */
     public function getModule($name, $skip_main_class_attributes = false)
     {
-        $php_file_path = _PS_MODULE_DIR_.$name.'/'.$name.'.php';
+        if ($this->loadedModules->contains($name)) {
+            return $this->loadedModules->fetch($name);
+        }
+
+        $path = $this->modulePath . $name;
+        $php_file_path = $path . '/' . $name . '.php';
 
         /* Data which design the module class */
         $attributes = array('name' => $name);
-        $disk = array();
-        $database = array();
 
         // Get filemtime of module main class (We do this directly with an error suppressor to go faster)
         $current_filemtime = (int) @filemtime($php_file_path);
@@ -390,12 +450,15 @@ class ModuleRepository implements ModuleRepositoryInterface
                 $this->translator->trans(
                     'Loading data from Addons failed. %error_details%',
                     array('%error_details%' => $e->getMessage()),
-                    'Admin.Modules.Notification'));
+                    'Admin.Modules.Notification'
+                )
+            );
         }
 
         // Now, we check that cache is up to date
-        if (isset($this->cache[$name]['disk']['filemtime']) && $this->cache[$name]['disk']['filemtime']
-            === $current_filemtime) {
+        if (isset($this->cache[$name]['disk']['filemtime']) &&
+            $this->cache[$name]['disk']['filemtime'] === $current_filemtime
+        ) {
             // OK, cache can be loaded and used directly
 
             $attributes = array_merge($attributes, $this->cache[$name]['attributes']);
@@ -408,15 +471,14 @@ class ModuleRepository implements ModuleRepositoryInterface
                 'is_present' => (int) $this->moduleProvider->isOnDisk($name),
                 'is_valid' => 0,
                 'version' => null,
+                'path' => $path,
             );
             $main_class_attributes = array();
 
             if (!$skip_main_class_attributes && $this->moduleProvider->isModuleMainClassValid($name)) {
-                require_once $php_file_path;
-
                 // We load the main class of the module, and get its properties
-                $tmp_module = ServiceLocator::get($name);
-                foreach (array('warning', 'name', 'tab', 'displayName', 'description', 'author', 'author_uri',
+                $tmp_module = LegacyModule::getInstanceByName($name);
+                foreach (array('warning', 'name', 'tab', 'displayName', 'description', 'author', 'author_address',
                     'limited_countries', 'need_instance', 'confirmUninstall', ) as $data_to_get) {
                     if (isset($tmp_module->{$data_to_get})) {
                         $main_class_attributes[$data_to_get] = $tmp_module->{$data_to_get};
@@ -424,13 +486,14 @@ class ModuleRepository implements ModuleRepositoryInterface
                 }
 
                 $main_class_attributes['parent_class'] = get_parent_class($name);
+                $main_class_attributes['is_paymentModule'] = is_subclass_of($name, 'PaymentModule');
                 $main_class_attributes['is_configurable'] = (int) method_exists($tmp_module, 'getContent');
 
                 $disk['is_valid'] = 1;
                 $disk['version'] = $tmp_module->version;
 
                 $attributes = array_merge($attributes, $main_class_attributes);
-            } else if (!$skip_main_class_attributes) {
+            } elseif (!$skip_main_class_attributes) {
                 $main_class_attributes['warning'] = 'Invalid module class';
             } else {
                 $disk['is_valid'] = 1;
@@ -440,18 +503,16 @@ class ModuleRepository implements ModuleRepositoryInterface
             $this->cache[$name]['disk'] = $disk;
         }
 
-        foreach (array('logo.png', 'logo.gif') as $logo) {
-            $logo_path = _PS_MODULE_DIR_.$name.DIRECTORY_SEPARATOR.$logo;
-            if (file_exists($logo_path)) {
-                $attributes['img'] = __PS_BASE_URI__.basename(_PS_MODULE_DIR_).'/'.$name.'/'.$logo;
-                break;
-            }
-        }
-
         // Get data from database
         $database = $this->moduleProvider->findByName($name);
 
-        return new Module($attributes, $disk, $database);
+        $module = new Module($attributes, $disk, $database);
+        $this->loadedModules->save($name, $module);
+        if ($this->prestaTrustChecker) {
+            $this->prestaTrustChecker->loadDetailsIntoModule($module);
+        }
+
+        return $module;
     }
 
     public function getModuleAttributes($name)
@@ -462,13 +523,16 @@ class ModuleRepository implements ModuleRepositoryInterface
     }
 
     /**
-     * Send request to get module details on the marketplace, then merge the data received in Module instance
+     * Send request to get module details on the marketplace, then merge the data received in Module instance.
+     *
      * @param $moduleId
+     *
      * @return Module
      */
     public function getModuleById($moduleId)
     {
         $moduleAttributes = $this->adminModuleProvider->getModuleAttributesById($moduleId);
+
         $module = $this->getModule($moduleAttributes['name']);
 
         foreach ($moduleAttributes as $name => $value) {
@@ -491,16 +555,17 @@ class ModuleRepository implements ModuleRepositoryInterface
     {
         $modules = array();
         $modulesDirsList = $this->finder->directories()
-            ->in(_PS_MODULE_DIR_)
+            ->in($this->modulePath)
             ->depth('== 0')
             ->exclude(array('__MACOSX'))
             ->ignoreVCS(true);
 
         foreach ($modulesDirsList as $moduleDir) {
             $moduleName = $moduleDir->getFilename();
-            if (!file_exists(_PS_MODULE_DIR_.$moduleName.'/'.$moduleName.'.php')) {
+            if (!file_exists($this->modulePath . $moduleName . '/' . $moduleName . '.php')) {
                 continue;
             }
+
             try {
                 $module = $this->getModule($moduleName, $skip_main_class_attributes);
                 if ($module instanceof Module) {
@@ -513,7 +578,9 @@ class ModuleRepository implements ModuleRepositoryInterface
                         array(
                             '%module%' => $moduleName,
                             '%error_details%' => $e->getMessage(), ),
-                        'Admin.Modules.Notification'));
+                        'Admin.Modules.Notification'
+                    )
+                );
             } catch (Exception $e) {
                 $this->logger->critical(
                     $this->translator->trans(
@@ -521,7 +588,9 @@ class ModuleRepository implements ModuleRepositoryInterface
                         array(
                             '%module%' => $moduleName,
                             '%error_details%' => $e->getMessage(), ),
-                        'Admin.Modules.Notification'));
+                        'Admin.Modules.Notification'
+                    )
+                );
             }
         }
 
@@ -530,6 +599,7 @@ class ModuleRepository implements ModuleRepositoryInterface
 
     /**
      * Function loading all installed modules on the shop. Can be used as example for AddonListFilter use.
+     *
      * @return array
      */
     public function getInstalledModules()
@@ -539,5 +609,37 @@ class ModuleRepository implements ModuleRepositoryInterface
             ->setStatus(AddonListFilterStatus::INSTALLED);
 
         return $this->getFilteredList($filters);
+    }
+
+    /**
+     * Gets all installed modules as a collection.
+     *
+     * @return AddonsCollection
+     */
+    public function getInstalledModulesCollection()
+    {
+        $installedModules = $this->getInstalledModules();
+
+        return AddonsCollection::createFrom($installedModules);
+    }
+
+    /**
+     * Returns installed module filepaths.
+     *
+     * @return array
+     */
+    public function getInstalledModulesPaths()
+    {
+        $paths = array();
+        $modulesFiles = Finder::create()->directories()->in(__DIR__ . '/../../../../modules')->depth(0);
+        $installedModules = array_keys($this->getInstalledModules());
+
+        foreach ($modulesFiles as $moduleFile) {
+            if (in_array($moduleFile->getFilename(), $installedModules)) {
+                $paths[] = $moduleFile->getPathname();
+            }
+        }
+
+        return $paths;
     }
 }

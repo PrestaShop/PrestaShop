@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,19 +16,30 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShop\PrestaShop\Core\Foundation\Filesystem;
 
 use SplFileInfo;
 
 class FileSystem
 {
+    /**
+     * Default mode for directories
+     */
+    const DEFAULT_MODE_FOLDER = 0755;
+
+    /**
+     * Default mode for files
+     */
+    const DEFAULT_MODE_FILE = 0644;
+
     /**
      * Replaces directory separators with the system's native one
      * and trims the trailing separator.
@@ -66,7 +77,7 @@ class FileSystem
                 $arg_0,
                 call_user_func_array(
                     array($this,
-                          'joinPaths'),
+                        'joinPaths', ),
                     array_slice($func_args, 1)
                 )
             );
@@ -78,6 +89,7 @@ class FileSystem
      * Throws exception if $path is not a file.
      * If $path is a file and not a directory, just gets the file info for it
      * and return it in an array.
+     *
      * @return an array of SplFileInfo object indexed by file path
      */
     public function listEntriesRecursively($path)
@@ -126,7 +138,7 @@ class FileSystem
     /**
      * Filter used by listFilesRecursively.
      */
-    private function matchOnlyFiles(\SplFileInfo $info)
+    private function matchOnlyFiles(SplFileInfo $info)
     {
         return $info->isFile();
     }

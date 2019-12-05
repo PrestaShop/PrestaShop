@@ -1,5 +1,5 @@
 /**
- * 2007-2017 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -15,10 +15,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -33,16 +33,16 @@
     if (isMethodCall) {
       switch (settings) {
         case 'unselect':
-          $('div.radio > label > input:radio', this).prop('checked', false);
+          this.find('.radio > label > input:radio').prop('checked', false);
           // TODO: add a callback method feature?
           break;
         case 'unfold':
-          $('ul', this).show();
-          $('li', this).has('ul').addClass('less');
+          this.find('ul').show();
+          this.find('li').has('ul').removeClass('more').addClass('less');
           break;
         case 'fold':
-          $('ul ul', this).hide();
-          $('li', this).has('ul').addClass('more');
+          this.find('ul ul').hide();
+          this.find('li').has('ul').removeClass('less').addClass('more');
           break;
         default:
           throw 'Unknown method';
@@ -50,9 +50,7 @@
     }
     // initialize tree
     else {
-      $('li > ul', this).each(function (i, item) {
         var clickHandler = function (event) {
-
           var $ui = $(event.target);
           if ($ui.attr('type') === 'radio' || $ui.attr('type') === 'checkbox') {
             return;
@@ -66,22 +64,22 @@
 
           $ui.next('ul').toggle();
           if ($ui.next('ul').is(':visible')) {
-            $ui.parent('li').removeClass().addClass('less');
+            $ui.parent('li').removeClass('more').addClass('less');
           } else {
-            $ui.parent('li').removeClass().addClass('more');
+            $ui.parent('li').removeClass('less').addClass('more');
           }
 
           return false;
-        };
-
+    };
+      this.find('li > ul').each(function (i, item) {
         var $inputWrapper = $(item).prev('div');
         $inputWrapper.on('click', clickHandler);
         $inputWrapper.find('label').on('click', clickHandler);
 
         if ($(item).is(':visible')) {
-          $(item).parent('li').removeClass().addClass('less');
+          $(item).parent('li').removeClass('more').addClass('less');
         } else {
-          $(item).parent('li').removeClass().addClass('more');
+          $(item).parent('li').removeClass('less').addClass('more');
         }
       });
     }

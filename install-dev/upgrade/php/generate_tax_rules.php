@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -42,10 +42,10 @@ function generate_tax_rules()
             'name' => 'Rule '.$tax['rate'].'%',
         );
         $res &= Db::getInstance()->insert('tax_rules_group', $row);
-        $id_tax_rules_group = Db::getInstance()->insert_id();
+        $id_tax_rules_group = Db::getInstance()->Insert_ID();
 
-
-        $countries = Db::getInstance()->executeS('
+        $countries = Db::getInstance()->executeS(
+            '
 		SELECT * FROM `'._DB_PREFIX_.'country` c
 		LEFT JOIN `'._DB_PREFIX_.'zone` z ON (c.`id_zone` = z.`id_zone`)
 		LEFT JOIN `'._DB_PREFIX_.'tax_zone` tz ON (tz.`id_zone` = z.`id_zone`)
@@ -85,13 +85,15 @@ function generate_tax_rules()
             }
         }
 
-        $res &= Db::getInstance()->execute('
+        $res &= Db::getInstance()->execute(
+            '
 		UPDATE `'._DB_PREFIX_.'product`
 		SET `id_tax_rules_group` = '.$id_tax_rules_group.'
 		WHERE `id_tax` = '.(int)$id_tax
         );
 
-        $res &= Db::getInstance()->execute('
+        $res &= Db::getInstance()->execute(
+            '
 		UPDATE `'._DB_PREFIX_.'carrier`
 		SET `id_tax_rules_group` = '.$id_tax_rules_group.'
 		WHERE `id_tax` = '.(int)$id_tax
@@ -105,5 +107,6 @@ function generate_tax_rules()
 			set value="'.$id_tax_rules_group.'" WHERE name="SOCOLISSIMO_OVERCOST_TAX"');
         }
     }
+
     return $res;
 }

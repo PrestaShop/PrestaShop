@@ -1,5 +1,5 @@
 {**
- * 2007-2017 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -15,10 +15,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
@@ -41,8 +41,8 @@
                 {$product.name}
               </a>
             </strong><br/>
-            {if $product.reference}
-              {l s='Reference' d='Shop.Theme.Catalog'}: {$product.reference}<br/>
+            {if $product.product_reference}
+              {l s='Reference' d='Shop.Theme.Catalog'}: {$product.product_reference}<br/>
             {/if}
             {if $product.customizations}
               {foreach from=$product.customizations item="customization"}
@@ -54,7 +54,7 @@
                     <div class="modal-dialog" role="document">
                       <div class="modal-content">
                         <div class="modal-header">
-                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <button type="button" class="close" data-dismiss="modal" aria-label="{l s='Close' d='Shop.Theme.Global'}">
                             <span aria-hidden="true">&times;</span>
                           </button>
                           <h4 class="modal-title">{l s='Product customization' d='Shop.Theme.Catalog'}</h4>
@@ -95,20 +95,20 @@
               {$product.quantity}
             {/if}
           </td>
-          <td class="text-xsright">{$product.price}</td>
-          <td class="text-xsright">{$product.total}</td>
+          <td class="text-xs-right">{$product.price}</td>
+          <td class="text-xs-right">{$product.total}</td>
         </tr>
       {/foreach}
       <tfoot>
         {foreach $order.subtotals as $line}
           {if $line.value}
-            <tr class="text-xsright line-{$line.type}">
+            <tr class="text-xs-right line-{$line.type}">
               <td colspan="3">{$line.label}</td>
               <td>{$line.value}</td>
             </tr>
           {/if}
         {/foreach}
-        <tr class="text-xsright line-{$order.totals.total.type}">
+        <tr class="text-xs-right line-{$order.totals.total.type}">
           <td colspan="3">{$order.totals.total.label}</td>
           <td>{$order.totals.total.value}</td>
         </tr>
@@ -122,8 +122,8 @@
         <div class="row">
           <div class="col-sm-5 desc">
             <div class="name">{$product.name}</div>
-            {if $product.reference}
-              <div class="ref">{l s='Reference' d='Shop.Theme.Catalog'}: {$product.reference}</div>
+            {if $product.product_reference}
+              <div class="ref">{l s='Reference' d='Shop.Theme.Catalog'}: {$product.product_reference}</div>
             {/if}
             {if $product.customizations}
               {foreach $product.customizations as $customization}
@@ -137,7 +137,7 @@
           </div>
           <div class="col-sm-7 qty">
             <div class="row">
-              <div class="col-xs-4 text-smleft text-xsleft">
+              <div class="col-xs-4 text-sm-left text-xs-left">
                 {$product.price}
               </div>
               <div class="col-xs-4">
@@ -149,7 +149,7 @@
                   {$product.quantity}
                 {/if}
               </div>
-              <div class="col-xs-4 text-xsright">
+              <div class="col-xs-4 text-xs-right">
                 {$product.total}
               </div>
             </div>
@@ -163,13 +163,13 @@
       {if $line.value}
         <div class="order-total row">
           <div class="col-xs-8"><strong>{$line.label}</strong></div>
-          <div class="col-xs-4 text-xsright">{$line.value}</div>
+          <div class="col-xs-4 text-xs-right">{$line.value}</div>
         </div>
       {/if}
     {/foreach}
     <div class="order-total row">
       <div class="col-xs-8"><strong>{$order.totals.total.label}</strong></div>
-      <div class="col-xs-4 text-xsright">{$order.totals.total.value}</div>
+      <div class="col-xs-4 text-xs-right">{$order.totals.total.value}</div>
     </div>
   </div>
 {/block}

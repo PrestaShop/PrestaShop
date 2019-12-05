@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,22 +16,23 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShopBundle\Form\Admin\Type;
 
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\FormView;
 use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * This form class is responsible to create a customer
+ * This form class is responsible to create a customer.
  */
 class TypeaheadCustomerCollectionType extends CommonAbstractType
 {
@@ -64,7 +65,7 @@ class TypeaheadCustomerCollectionType extends CommonAbstractType
 
         //if form is submitted, inject datas to display collection
         if (!empty($view->vars['value']) && !empty($view->vars['value']['data'])) {
-            $collection = array();
+            $collection = [];
 
             $i = 0;
             foreach ($view->vars['value']['data'] as $id) {
@@ -72,11 +73,11 @@ class TypeaheadCustomerCollectionType extends CommonAbstractType
                     continue;
                 }
                 $customer = $this->customerAdapter->getCustomer($id);
-                $collection[] = array(
+                $collection[] = [
                     'id' => $id,
-                    'name' => $customer->firstname.' '.$customer->lastname.' - '.$customer->email,
-                );
-                $i++;
+                    'name' => $customer->firstname . ' ' . $customer->lastname . ' - ' . $customer->email,
+                ];
+                ++$i;
 
                 //if collection length is up to limit, break
                 if ($options['limit'] != 0 && $i >= $options['limit']) {
@@ -94,14 +95,14 @@ class TypeaheadCustomerCollectionType extends CommonAbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('data', 'Symfony\Component\Form\Extension\Core\Type\CollectionType', array(
-            'entry_type' =>'Symfony\Component\Form\Extension\Core\Type\HiddenType',
+        $builder->add('data', 'Symfony\Component\Form\Extension\Core\Type\CollectionType', [
+            'entry_type' => 'Symfony\Component\Form\Extension\Core\Type\HiddenType',
             'allow_add' => true,
             'allow_delete' => true,
             'label' => false,
             'required' => false,
             'prototype' => true,
-        ));
+        ]);
     }
 
     /**
@@ -109,14 +110,14 @@ class TypeaheadCustomerCollectionType extends CommonAbstractType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults(array(
+        $resolver->setDefaults([
             'remote_url' => '',
             'mapping_value' => 'id',
             'mapping_name' => 'name',
             'placeholder' => '',
             'template_collection' => '',
             'limit' => 0,
-        ));
+        ]);
     }
 
     /**

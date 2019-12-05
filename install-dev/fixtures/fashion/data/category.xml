@@ -5,14 +5,12 @@
     <field name="active"/>
   </fields>
   <entities>
-    <category id="Women" id_parent="Home" active="1"/>
-    <category id="Tops" id_parent="Women" active="1"/>
-    <category id="T-shirts" id_parent="Tops" active="1"/>
-    <category id="Tops_1" id_parent="Tops" active="0"/>
-    <category id="Blouses" id_parent="Tops" active="1"/>
-    <category id="Dresses" id_parent="Women" active="1"/>
-    <category id="Casual_Dresses" id_parent="Dresses" active="1"/>
-    <category id="Evening_Dresses" id_parent="Dresses" active="1"/>
-    <category id="Summer_Dresses" id_parent="Dresses" active="1"/>
+    <category id="Clothes" id_parent="Home" active="1"/>
+    <category id="Men" id_parent="Clothes" active="1"/>
+    <category id="Women" id_parent="Clothes" active="1"/>
+    <category id="Accessories" id_parent="Home" active="1"/>
+    <category id="Stationery" id_parent="Accessories" active="1"/>
+    <category id="Home_Accessories" id_parent="Accessories" active="1"/>
+    <category id="Art" id_parent="Home" active="1"/>
   </entities>
 </entity_category>

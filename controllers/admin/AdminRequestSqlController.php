@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -34,11 +34,19 @@ class AdminRequestSqlControllerCore extends AdminController
      */
     public static $encoding_file = array(
         array('value' => 1, 'name' => 'utf-8'),
-        array('value' => 2, 'name' => 'iso-8859-1')
+        array('value' => 2, 'name' => 'iso-8859-1'),
     );
 
+    /**
+     * @deprecated since 1.7.6, to be removed in the next minor
+     */
     public function __construct()
     {
+        @trigger_error(
+            'The AdminRequestSqlController is deprecated and will be removed in the next minor',
+            E_USER_DEPRECATED
+        );
+
         $this->bootstrap = true;
         $this->table = 'request_sql';
         $this->className = 'RequestSql';
@@ -50,32 +58,35 @@ class AdminRequestSqlControllerCore extends AdminController
         $this->fields_list = array(
             'id_request_sql' => array('title' => $this->trans('ID', array(), 'Admin.Global'), 'class' => 'fixed-width-xs'),
             'name' => array('title' => $this->trans('SQL query Name', array(), 'Admin.Advparameters.Feature')),
-            'sql' => array('title' => $this->trans('SQL query', array(), 'Admin.Advparameters.Feature')),
+            'sql' => array(
+                'title' => $this->trans('SQL query', array(), 'Admin.Advparameters.Feature'),
+                'filter_key' => 'a!sql',
+            ),
         );
 
         $this->fields_options = array(
             'general' => array(
-                'title' =>    $this->trans('Settings', array(), 'Admin.Global'),
-                'fields' =>    array(
+                'title' => $this->trans('Settings', array(), 'Admin.Global'),
+                'fields' => array(
                     'PS_ENCODING_FILE_MANAGER_SQL' => array(
                         'title' => $this->trans('Select your default file encoding', array(), 'Admin.Advparameters.Feature'),
                         'cast' => 'intval',
                         'type' => 'select',
                         'identifier' => 'value',
                         'list' => self::$encoding_file,
-                        'visibility' => Shop::CONTEXT_ALL
-                    )
+                        'visibility' => Shop::CONTEXT_ALL,
+                    ),
                 ),
-                'submit' => array('title' => $this->trans('Save', array(), 'Admin.Actions'))
-            )
+                'submit' => array('title' => $this->trans('Save', array(), 'Admin.Actions')),
+            ),
         );
 
         $this->bulk_actions = array(
             'delete' => array(
                 'text' => $this->trans('Delete selected', array(), 'Admin.Actions'),
                 'confirm' => $this->trans('Delete selected items?', array(), 'Admin.Notifications.Warning'),
-                'icon' => 'icon-trash'
-            )
+                'icon' => 'icon-trash',
+            ),
         );
     }
 
@@ -94,8 +105,8 @@ class AdminRequestSqlControllerCore extends AdminController
     {
         if ($this->display == 'view' && $id_request = Tools::getValue('id_request_sql')) {
             $this->toolbar_btn['edit'] = array(
-                'href' => self::$currentIndex.'&amp;updaterequest_sql&amp;token='.$this->token.'&amp;id_request_sql='.(int)$id_request,
-                'desc' => $this->trans('Edit this SQL query', array(), 'Admin.Advparameters.Feature')
+                'href' => self::$currentIndex . '&amp;updaterequest_sql&amp;token=' . $this->token . '&amp;id_request_sql=' . (int) $id_request,
+                'desc' => $this->trans('Edit this SQL query', array(), 'Admin.Advparameters.Feature'),
             );
         }
 
@@ -114,12 +125,12 @@ class AdminRequestSqlControllerCore extends AdminController
 
         $this->displayWarning($this->trans('When saving the query, only the "SELECT" SQL statement is allowed.', array(), 'Admin.Advparameters.Notification'));
         $this->displayInformation('
-		<strong>'.$this->trans('How do I create a new SQL query?', array(), 'Admin.Advparameters.Help').'</strong><br />
+		<strong>' . $this->trans('How do I create a new SQL query?', array(), 'Admin.Advparameters.Help') . '</strong><br />
 		<ul>
-			<li>'.$this->trans('Click "Add New".', array(), 'Admin.Advparameters.Help').'</li>
-			<li>'.$this->trans('Fill in the fields and click "Save".', array(), 'Admin.Advparameters.Help').'</li>
-			<li>'.$this->trans('You can then view the query results by clicking on the Edit action in the dropdown menu', array(), 'Admin.Advparameters.Help').' <i class="icon-pencil"></i></li>
-			<li>'.$this->trans('You can also export the query results as a CSV file by clicking on the Export button', array(), 'Admin.Advparameters.Help').' <i class="icon-cloud-upload"></i></li>
+			<li>' . $this->trans('Click "Add New".', array(), 'Admin.Advparameters.Help') . '</li>
+			<li>' . $this->trans('Fill in the fields and click "Save".', array(), 'Admin.Advparameters.Help') . '</li>
+			<li>' . $this->trans('You can then view the query results by clicking on the Edit action in the dropdown menu', array(), 'Admin.Advparameters.Help') . ' <i class="icon-pencil"></i></li>
+			<li>' . $this->trans('You can also export the query results as a CSV file by clicking on the Export button', array(), 'Admin.Advparameters.Help') . ' <i class="icon-cloud-upload"></i></li>
 		</ul>');
 
         $this->addRowAction('export');
@@ -135,7 +146,7 @@ class AdminRequestSqlControllerCore extends AdminController
         $this->fields_form = array(
             'legend' => array(
                 'title' => $this->trans('SQL query', array(), 'Admin.Advparameters.Feature'),
-                'icon' => 'icon-cog'
+                'icon' => 'icon-cog',
             ),
             'input' => array(
                 array(
@@ -143,7 +154,7 @@ class AdminRequestSqlControllerCore extends AdminController
                     'label' => $this->trans('SQL query name', array(), 'Admin.Advparameters.Feature'),
                     'name' => 'name',
                     'size' => 103,
-                    'required' => true
+                    'required' => true,
                 ),
                 array(
                     'type' => 'textarea',
@@ -151,12 +162,12 @@ class AdminRequestSqlControllerCore extends AdminController
                     'name' => 'sql',
                     'cols' => 100,
                     'rows' => 10,
-                    'required' => true
-                )
+                    'required' => true,
+                ),
             ),
             'submit' => array(
-                'title' => $this->trans('Save', array(), 'Admin.Actions')
-            )
+                'title' => $this->trans('Save', array(), 'Admin.Actions'),
+            ),
         );
 
         $request = new RequestSql();
@@ -165,19 +176,21 @@ class AdminRequestSqlControllerCore extends AdminController
         return parent::renderForm();
     }
 
-
     public function postProcess()
     {
         /* PrestaShop demo mode */
         if (_PS_MODE_DEMO_) {
             $this->errors[] = $this->trans('This functionality has been disabled.', array(), 'Admin.Notifications.Error');
+
             return;
         }
+
         return parent::postProcess();
     }
 
     /**
-     * method call when ajax request is made with the details row action
+     * method call when ajax request is made with the details row action.
+     *
      * @see AdminController::postProcess()
      */
     public function ajaxProcess()
@@ -186,14 +199,16 @@ class AdminRequestSqlControllerCore extends AdminController
         if (_PS_MODE_DEMO_) {
             die($this->trans('This functionality has been disabled.', array(), 'Admin.Notifications.Error'));
         }
-        if ($table = Tools::GetValue('table')) {
+        if ($table = Tools::getValue('table')) {
             $request_sql = new RequestSql();
             $attributes = $request_sql->getAttributesByTable($table);
             foreach ($attributes as $key => $attribute) {
-                unset($attributes[$key]['Null']);
-                unset($attributes[$key]['Key']);
-                unset($attributes[$key]['Default']);
-                unset($attributes[$key]['Extra']);
+                unset(
+                    $attributes[$key]['Null'],
+                    $attributes[$key]['Key'],
+                    $attributes[$key]['Default'],
+                    $attributes[$key]['Extra']
+                );
             }
             die(json_encode($attributes));
         }
@@ -225,14 +240,15 @@ class AdminRequestSqlControllerCore extends AdminController
         }
 
         $this->tpl_view_vars = array(
-            'view' => $view
+            'view' => $view,
         );
+
         return parent::renderView();
     }
 
     public function _childValidation()
     {
-        if (Tools::getValue('submitAdd'.$this->table) && $sql = Tools::getValue('sql')) {
+        if (Tools::getValue('submitAdd' . $this->table) && $sql = Tools::getValue('sql')) {
             $request_sql = new RequestSql();
             $parser = $request_sql->parsingSql($sql);
             $validate = $request_sql->validateParser($parser, false, $sql);
@@ -244,12 +260,13 @@ class AdminRequestSqlControllerCore extends AdminController
     }
 
     /**
-     * Display export action link
+     * Display export action link.
      *
      * @param $token
      * @param int $id
      *
      * @return string
+     *
      * @throws Exception
      * @throws SmartyException
      */
@@ -258,8 +275,8 @@ class AdminRequestSqlControllerCore extends AdminController
         $tpl = $this->createTemplate('list_action_export.tpl');
 
         $tpl->assign(array(
-            'href' => self::$currentIndex.'&token='.$this->token.'&'.$this->identifier.'='.$id.'&export'.$this->table.'=1',
-            'action' => $this->trans('Export', array(), 'Admin.Actions')
+            'href' => self::$currentIndex . '&token=' . $this->token . '&' . $this->identifier . '=' . $id . '&export' . $this->table . '=1',
+            'action' => $this->trans('Export', array(), 'Admin.Actions'),
         ));
 
         return $tpl->fetch();
@@ -268,7 +285,7 @@ class AdminRequestSqlControllerCore extends AdminController
     public function initProcess()
     {
         parent::initProcess();
-        if (Tools::getValue('export'.$this->table)) {
+        if (Tools::getValue('export' . $this->table)) {
             $this->display = 'export';
             $this->action = 'export';
         }
@@ -304,9 +321,9 @@ class AdminRequestSqlControllerCore extends AdminController
     {
         if (empty($this->display)) {
             $this->page_header_toolbar_btn['new_request'] = array(
-                'href' => self::$currentIndex.'&addrequest_sql&token='.$this->token,
+                'href' => self::$currentIndex . '&addrequest_sql&token=' . $this->token,
                 'desc' => $this->trans('Add new SQL query', array(), 'Admin.Advparameters.Feature'),
-                'icon' => 'process-icon-new'
+                'icon' => 'process-icon-new',
             );
         }
 
@@ -314,33 +331,33 @@ class AdminRequestSqlControllerCore extends AdminController
     }
 
     /**
-     * Genrating a export file
+     * Genrating a export file.
      */
     public function processExport($textDelimiter = '"')
     {
         $id = Tools::getValue($this->identifier);
-        $export_dir = defined('_PS_HOST_MODE_') ? _PS_ROOT_DIR_.'/export/' : _PS_ADMIN_DIR_.'/export/';
+        $export_dir = defined('_PS_HOST_MODE_') ? _PS_ROOT_DIR_ . '/export/' : _PS_ADMIN_DIR_ . '/export/';
         if (!Validate::isFileName($id)) {
             die(Tools::displayError());
         }
-        $file = 'request_sql_'.$id.'.csv';
-        if ($csv = fopen($export_dir.$file, 'w')) {
+        $file = 'request_sql_' . $id . '.csv';
+        if ($csv = fopen($export_dir . $file, 'wb')) {
             $sql = RequestSql::getRequestSqlById($id);
 
             if ($sql) {
                 $results = Db::getInstance()->executeS($sql[0]['sql']);
                 foreach (array_keys($results[0]) as $key) {
                     $tab_key[] = $key;
-                    fputs($csv, $key.';');
+                    fwrite($csv, $key . ';');
                 }
                 foreach ($results as $result) {
-                    fputs($csv, "\n");
+                    fwrite($csv, "\n");
                     foreach ($tab_key as $name) {
-                        fputs($csv, $textDelimiter.strip_tags($result[$name]).$textDelimiter.';');
+                        fwrite($csv, $textDelimiter . strip_tags($result[$name]) . $textDelimiter . ';');
                     }
                 }
-                if (file_exists($export_dir.$file)) {
-                    $filesize = filesize($export_dir.$file);
+                if (file_exists($export_dir . $file)) {
+                    $filesize = filesize($export_dir . $file);
                     $upload_max_filesize = Tools::convertBytes(ini_get('upload_max_filesize'));
                     if ($filesize < $upload_max_filesize) {
                         if (Configuration::get('PS_ENCODING_FILE_MANAGER_SQL')) {
@@ -349,11 +366,11 @@ class AdminRequestSqlControllerCore extends AdminController
                             $charset = self::$encoding_file[0]['name'];
                         }
 
-                        header('Content-Type: text/csv; charset='.$charset);
+                        header('Content-Type: text/csv; charset=' . $charset);
                         header('Cache-Control: no-store, no-cache');
-                        header('Content-Disposition: attachment; filename="'.$file.'"');
-                        header('Content-Length: '.$filesize);
-                        readfile($export_dir.$file);
+                        header('Content-Disposition: attachment; filename="' . $file . '"');
+                        header('Content-Length: ' . $filesize);
+                        readfile($export_dir . $file);
                         die();
                     } else {
                         $this->errors[] = $this->trans('The file is too large and cannot be downloaded. Please use the LIMIT clause in this query.', array(), 'Admin.Advparameters.Notification');
@@ -364,7 +381,7 @@ class AdminRequestSqlControllerCore extends AdminController
     }
 
     /**
-     * Display all errors
+     * Display all errors.
      *
      * @param $e : array of errors
      */
@@ -393,7 +410,8 @@ class AdminRequestSqlControllerCore extends AdminController
                     } else {
                         $this->errors[] = $this->trans('Undefined "%s" error', array('checkedForm'), 'Admin.Advparameters.Notification');
                     }
-                break;
+
+                    break;
 
                 case 'checkedSelect':
                     if (isset($e[$key]['table'])) {
@@ -418,7 +436,8 @@ class AdminRequestSqlControllerCore extends AdminController
                     } else {
                         $this->errors[] = $this->trans('Undefined "%s" error', array('checkedSelect'), 'Admin.Advparameters.Notification');
                     }
-                break;
+
+                    break;
 
                 case 'checkedWhere':
                     if (isset($e[$key]['operator'])) {
@@ -441,14 +460,15 @@ class AdminRequestSqlControllerCore extends AdminController
                     } else {
                         $this->errors[] = $this->trans('Undefined "%s" error', array('checkedWhere'), 'Admin.Advparameters.Notification');
                     }
-                break;
+
+                    break;
 
                 case 'checkedHaving':
                     if (isset($e[$key]['operator'])) {
                         $this->errors[] = $this->trans(
                             'The "%operator%" operator is incorrect.',
                             array(
-                                '%operator%' => $e[$key]['operator']
+                                '%operator%' => $e[$key]['operator'],
                             ),
                             'Admin.Advparameters.Notification'
                         );
@@ -464,7 +484,8 @@ class AdminRequestSqlControllerCore extends AdminController
                     } else {
                         $this->errors[] = $this->trans('Undefined "%s" error', array('checkedHaving'), 'Admin.Advparameters.Notification');
                     }
-                break;
+
+                    break;
 
                 case 'checkedOrder':
                     if (isset($e[$key]['attribut'])) {
@@ -479,7 +500,8 @@ class AdminRequestSqlControllerCore extends AdminController
                     } else {
                         $this->errors[] = $this->trans('Undefined "%s" error', array('checkedOrder'), 'Admin.Advparameters.Notification');
                     }
-                break;
+
+                    break;
 
                 case 'checkedGroupBy':
                     if (isset($e[$key]['attribut'])) {
@@ -494,11 +516,13 @@ class AdminRequestSqlControllerCore extends AdminController
                     } else {
                         $this->errors[] = $this->trans('Undefined "%s" error', array('checkedGroupBy'), 'Admin.Advparameters.Notification');
                     }
-                break;
+
+                    break;
 
                 case 'checkedLimit':
                     $this->errors[] = $this->trans('The LIMIT clause must contain numeric arguments.', array(), 'Admin.Advparameters.Notification');
-                break;
+
+                    break;
 
                 case 'returnNameTable':
                     if (isset($e[$key]['reference'])) {
@@ -513,15 +537,18 @@ class AdminRequestSqlControllerCore extends AdminController
                     } else {
                         $this->errors[] = $this->trans('When multiple tables are used, each attribute must refer back to a table.', array(), 'Admin.Advparameters.Notification');
                     }
-                break;
+
+                    break;
 
                 case 'testedRequired':
-                    $this->errors[] = sprintf($this->trans('"%s" does not exist.', array(), 'Admin.Notifications.Error'), $e[$key]);
-                break;
+                    $this->errors[] = $this->trans('"%key%" does not exist.', array('%key%' => $e[$key]), 'Admin.Notifications.Error');
+
+                    break;
 
                 case 'testedUnauthorized':
-                    $this->errors[] = sprintf($this->trans('"%s" is an unauthorized keyword.', array(), 'Admin.Advparameters.Notification'), $e[$key]);
-                break;
+                    $this->errors[] = $this->trans('"%key%" is an unauthorized keyword.', array('%key%' => $e[$key]), 'Admin.Advparameters.Notification');
+
+                    break;
             }
         }
     }

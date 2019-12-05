@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,24 +16,26 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Adapter;
 
-use Symfony\Component\Process\Exception\LogicException;
-use Context;
-use Language;
 use AdminController;
-use Link;
-use Tools as ToolsLegacy;
-use Dispatcher;
 use AdminLegacyLayoutControllerCore;
+use Context;
+use Currency;
+use Employee;
+use Language;
+use RuntimeException;
+use Smarty;
+use Symfony\Component\Process\Exception\LogicException;
+use Tab;
 
 /**
  * This adapter will complete the new architecture Context with legacy values.
@@ -42,19 +44,40 @@ use AdminLegacyLayoutControllerCore;
  */
 class LegacyContext
 {
+    /** @var Currency */
+    private $employeeCurrency;
+
+    /** @var string Contains the base uri for mail themes (by default https://domain.com/mails/themes/). Used for mails assets. */
+    private $mailThemesUri;
+
+    /** @var Tools */
+    private $tools;
+
+    /**
+     * @param string|null $mailThemesUri
+     * @param Tools|null $tools
+     */
+    public function __construct(
+        $mailThemesUri = null,
+        Tools $tools = null
+    ) {
+        $this->mailThemesUri = $mailThemesUri;
+        $this->tools = null !== $tools ? $tools : new Tools();
+    }
+
     /**
      * To be used only in Adapters. Should not been called by Core classes. Prefer to use Core\context class,
-     * that will contains all you need in the Core architecture
+     * that will contains all you need in the Core architecture.
      *
      * @throws LogicException If legacy context is not set properly
      *
-     * @return Context The Legacy context, for Adapter use only.
+     * @return Context the Legacy context, for Adapter use only
      */
     public function getContext()
     {
         static $legacyContext = null;
 
-        if (is_null($legacyContext)) {
+        if (null === $legacyContext) {
             $legacyContext = Context::getContext();
 
             if ($legacyContext && !empty($legacyContext->shop) && !isset($legacyContext->controller) && isset($legacyContext->employee)) {
@@ -68,12 +91,23 @@ class LegacyContext
     }
 
     /**
+     * Get smarty instance from legacy context.
+     *
+     * @return Smarty
+     */
+    public function getSmarty()
+    {
+        return $this->getContext()->smarty;
+    }
+
+    /**
      * Gets the Admin base url (actually random directory name).
+     *
      * @return string
      */
     public function getAdminBaseUrl()
     {
-        return __PS_BASE_URI__.basename(_PS_ADMIN_DIR_).'/';
+        return __PS_BASE_URI__ . basename(_PS_ADMIN_DIR_) . '/';
     }
 
     /**
@@ -82,39 +116,60 @@ class LegacyContext
      * @param string $controller the controller name
      * @param bool $withToken
      * @param array[string] $extraParams
+     *
      * @return string
      */
     public function getAdminLink($controller, $withToken = true, $extraParams = array())
     {
-        $id_lang = Context::getContext()->language->id;
-        $params = $extraParams;
-        if ($withToken) {
-            $params['token'] = ToolsLegacy::getAdminTokenLite($controller);
-        }
+        return $this->getContext()->link->getAdminLink($controller, $withToken, $extraParams, $extraParams);
+    }
 
-        $link = new Link();
-        return $link->getBaseLink().basename(_PS_ADMIN_DIR_).'/'.Dispatcher::getInstance()->createUrl($controller, $id_lang, $params, false);
+    /**
+     * Returns the controller link in its legacy form, without trying to convert it in symfony url.
+     *
+     * @param string $controller
+     * @param bool $withToken
+     * @param array $extraParams
+     *
+     * @return string
+     */
+    public function getLegacyAdminLink($controller, $withToken = true, $extraParams = array())
+    {
+        return $this->getContext()->link->getLegacyAdminLink($controller, $withToken, $extraParams);
     }
 
     /**
      * Adapter to get Front controller HTTP link.
      *
      * @param string $controller the controller name
+     *
+     * @return string
      */
     public function getFrontUrl($controller)
     {
         $legacyContext = $this->getContext();
+
         return $legacyContext->link->getPageLink($controller);
     }
 
     /**
-     * Adapter to get Root Url
+     * Adapter to get Root Url.
      *
      * @return string The lagacy root URL
      */
     public function getRootUrl()
     {
         return __PS_BASE_URI__;
+    }
+
+    /**
+     * Url to the mail themes folder
+     *
+     * @return string
+     */
+    public function getMailThemesUrl()
+    {
+        return $this->tools->getShopDomainSsl(true) . __PS_BASE_URI__ . $this->mailThemesUri;
     }
 
     /**
@@ -130,20 +185,35 @@ class LegacyContext
     }
 
     /**
-     * Adapter to get admin legacy layout into old controller context
+     * Adapter to get admin legacy layout into legacy controller context.
      *
      * @param string $controllerName The legacy controller name
      * @param string $title The page title to override default one
      * @param array $headerToolbarBtn The header toolbar to override
      * @param string $displayType The legacy display type variable
-     * @param bool $showContentHeader Can force header toolbar (buttons and title) to be hidden with false value.
+     * @param bool $showContentHeader can force header toolbar (buttons and title) to be hidden with false value
+     * @param string $headerTabContent
      * @param bool $enableSidebar Allow to use right sidebar to display docs for instance
      * @param string $helpLink If specified, will be used instead of legacy one
+     * @param string[] $jsRouterMetadata array to provide base_url and security token for JS Router
+     * @param string $metaTitle
+     * @param bool $useRegularH1Structure allows complex <h1> structure if set to false
      *
      * @return string The html layout
      */
-    public function getLegacyLayout($controllerName = "", $title = "", $headerToolbarBtn = [], $displayType = "", $showContentHeader = true, $headerTabContent = '', $enableSidebar, $helpLink = '')
-    {
+    public function getLegacyLayout(
+        $controllerName,
+        $title,
+        $headerToolbarBtn,
+        $displayType,
+        $showContentHeader,
+        $headerTabContent,
+        $enableSidebar,
+        $helpLink = '',
+        $jsRouterMetadata = [],
+        $metaTitle = '',
+        $useRegularH1Structure = true
+    ) {
         $originCtrl = new AdminLegacyLayoutControllerCore(
             $controllerName,
             $title,
@@ -152,7 +222,10 @@ class LegacyContext
             $showContentHeader,
             $headerTabContent,
             $enableSidebar,
-            $helpLink
+            $helpLink,
+            $jsRouterMetadata,
+            $metaTitle,
+            $useRegularH1Structure
         );
         $originCtrl->run();
 
@@ -162,9 +235,9 @@ class LegacyContext
     /**
      * Returns available languages. The first one is the employee default one.
      *
-     * @param bool     $active   Select only active languages
-     * @param int|bool $id_shop  Shop ID
-     * @param bool     $ids_only If true, returns an array of language IDs
+     * @param bool $active Select only active languages
+     * @param int|bool $id_shop Shop ID
+     * @param bool $ids_only If true, returns an array of language IDs
      *
      * @return array Languages
      */
@@ -179,14 +252,16 @@ class LegacyContext
             if ($b['id_lang'] == $defaultLanguageFirst->id) {
                 return 1; // $b is the default one.
             }
+
             return 0;
         });
+
         return $languages;
     }
 
     /**
-     * Returns language ISO code set for the current employee
-
+     * Returns language ISO code set for the current employee.
+     *
      * @return string Languages
      */
     public function getEmployeeLanguageIso()
@@ -195,16 +270,17 @@ class LegacyContext
     }
 
     /**
-     * Returns Currency set for the current employee
+     * Returns Currency set for the current employee.
+     *
+     * @return Currency
      */
     public function getEmployeeCurrency()
     {
-        static $employeeCurrency;
-
-        if(null === $employeeCurrency) {
-            $employeeCurrency = $this->getContext()->currency->sign;
+        if (null === $this->employeeCurrency && $this->getContext()->currency) {
+            $this->employeeCurrency = $this->getContext()->currency->sign;
         }
-        return $employeeCurrency;
+
+        return $this->employeeCurrency;
     }
 
     /**
@@ -218,6 +294,43 @@ class LegacyContext
             return $context->language;
         }
 
-        return new Language;
+        return new Language();
+    }
+
+    /**
+     * Get employee's default tab name.
+     *
+     * @return string Default tab name for employee
+     *
+     * @throws RuntimeException Throws exception if employee does not exist in context
+     */
+    public function getDefaultEmployeeTab()
+    {
+        $employee = $this->getContext()->employee;
+
+        if (!$employee instanceof Employee) {
+            throw new RuntimeException('Cannot retrieve default employee tab. Employee does not exist in context!');
+        }
+
+        $idTab = $employee->default_tab;
+        $tab = new Tab($idTab);
+
+        return $tab->class_name;
+    }
+
+    /**
+     * @return string
+     */
+    public function getMailThemesUri()
+    {
+        return $this->mailThemesUri;
+    }
+
+    /**
+     * @return array Returns both enabled and disabled languages
+     */
+    public function getAvailableLanguages()
+    {
+        return $this->getLanguages(false);
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -80,7 +80,7 @@ function latin1_database_to_utf8()
         array('name' => 'tab_lang', 'id' => 'id_tab', 'lang' => true, 'fields' => array('name')),
         array('name' => 'tag', 'id' => 'id_tag', 'fields' => array('name')),
         array('name' => 'tax_lang', 'id' => 'id_tax', 'lang' => true, 'fields' => array('name')),
-        array('name' => 'zone', 'id' => 'id_zone', 'fields' => array('name'))
+        array('name' => 'zone', 'id' => 'id_zone', 'fields' => array('name')),
     );
 
     foreach ($tables as $table) {
@@ -92,7 +92,7 @@ function latin1_database_to_utf8()
         foreach ($table['fields'] as $field) {
             $query .= ', `'.$field.'`';
         }
-        if (isset($table['lang']) and $table['lang']) {
+        if (isset($table['lang']) && $table['lang']) {
             $query .= ', `id_lang`';
         }
         $query .= ' FROM `'._DB_PREFIX_.$table['name'].'`';
@@ -107,7 +107,7 @@ function latin1_database_to_utf8()
 				</request>'."\n";
         }
 
-        if (Db::getInstance()->NumRows()) {
+        if (Db::getInstance()->numRows()) {
             /* Utf-8 datas' restitution */
             if (!Db::getInstance()->execute('SET NAMES utf8')) {
                 echo 'Cannot change the sql encoding to utf8!';
@@ -119,7 +119,7 @@ function latin1_database_to_utf8()
                 }
                 $query = rtrim($query, ',');
                 $query .= ' WHERE `'.$table['id'].'` = '.(int)($latin1Data[$table['id']]);
-                if (isset($table['lang']) and $table['lang']) {
+                if (isset($table['lang']) && $table['lang']) {
                     $query .= ' AND `id_lang` = '.(int)($latin1Data['id_lang']);
                 }
                 if (!Db::getInstance()->execute($query)) {

@@ -1,0 +1,64 @@
+services:
+    _defaults:
+        public: true
+
+    prestashop.adapter.admin.data_provider.product:
+        class: PrestaShop\PrestaShop\Adapter\Product\AdminProductDataProvider
+        decorates: prestashop.core.admin.data_provider.product_interface
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@prestashop.adapter.image_manager"
+            - "@prestashop.static_cache.adapter"
+        public: false
+
+    prestashop.adapter.admin.data_updater.product:
+        class: PrestaShop\PrestaShop\Adapter\Product\AdminProductDataUpdater
+        decorates: prestashop.core.admin.data_updater.product_interface
+        public: false
+        arguments:
+            - "@prestashop.core.hook.dispatcher"
+            - "@prestashop.static_cache.adapter"
+
+    prestashop.adapter.admin.wrapper.product:
+        class: PrestaShop\PrestaShop\Adapter\Product\AdminProductWrapper
+        arguments:
+            - "@translator"
+            - "@=service('prestashop.adapter.legacy.context').getContext().employee.getAssociatedShops()"
+            - "@prestashop.core.localization.locale.context_locale"
+
+    prestashop.adapter.admin.controller.attribute_generator:
+        class: PrestaShop\PrestaShop\Adapter\Attribute\AdminAttributeGeneratorControllerWrapper
+
+    prestashop.adapter.product.filter_categories_request_purifier:
+        class: 'PrestaShop\PrestaShop\Adapter\Product\FilterCategoriesRequestPurifier'
+
+    prestashop.adapter.product.list_parameters_updater:
+        class: 'PrestaShop\PrestaShop\Adapter\Product\ListParametersUpdater'
+
+    prestashop.adapter.product.command_handler.add_category_to_product_handler:
+        class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\AssignProductToCategoryHandler
+        public: true
+        tags:
+            - { name: tactician.handler, command: PrestaShop\PrestaShop\Core\Domain\Product\Command\AssignProductToCategoryCommand }
+
+    prestashop.adapter.product.command_handler.update_product_status_handler:
+        class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\UpdateProductStatusCommandHandler
+        tags:
+          - name: tactician.handler
+            command: PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductStatusCommand
+
+    prestashop.adapter.product.query_handler.search_products:
+        class: PrestaShop\PrestaShop\Adapter\Product\QueryHandler\SearchProductsHandler
+        arguments:
+            - '@=service("prestashop.adapter.legacy.context").getContext().language.id'
+            - '@=service("prestashop.adapter.legacy.context").getContext().currency.iso_code'
+            - '@prestashop.core.localization.locale.context_locale'
+        tags:
+            - name: tactician.handler
+              command: PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProducts
+
+    prestashop.adapter.product.command_handler.get_product_is_enabled_handler:
+        class: PrestaShop\PrestaShop\Adapter\Product\QueryHandler\GetProductIsEnabledHandler
+        tags:
+            - name: tactician.handler
+              command: PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductIsEnabled

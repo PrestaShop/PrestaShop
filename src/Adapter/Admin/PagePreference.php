@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,19 +16,21 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShop\PrestaShop\Adapter\Admin;
 
+use AppKernel;
+use Db;
 use PrestaShopBundle\Service\TransitionalBehavior\AdminPagePreferenceInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpFoundation\Session\Storage\PhpBridgeSessionStorage;
-use Db;
 
 /**
  * Adapter to know which page's version to display.
@@ -41,6 +43,9 @@ use Db;
  */
 class PagePreference implements AdminPagePreferenceInterface
 {
+    /**
+     * @var SessionInterface
+     */
     private $session;
 
     public function __construct(SessionInterface $session)
@@ -53,8 +58,8 @@ class PagePreference implements AdminPagePreferenceInterface
         }
     }
 
-    /* (non-PHPdoc)
-     * @see \PrestaShopCoreAdminBundle\TransitionalBehavior\AdminPagePreferenceInterface::getTemporaryShouldUseLegacyPage()
+    /**
+     * {@inheritdoc}
      */
     public function getTemporaryShouldUseLegacyPage($page)
     {
@@ -62,11 +67,11 @@ class PagePreference implements AdminPagePreferenceInterface
             throw new \InvalidParameterException('$page parameter missing');
         }
 
-        return ($this->session->has('should_use_legacy_page_for_'.$page) && $this->session->get('should_use_legacy_page_for_'.$page, 0) == 1);
+        return $this->session->has('should_use_legacy_page_for_' . $page) && $this->session->get('should_use_legacy_page_for_' . $page, 0) == 1;
     }
 
-    /* (non-PHPdoc)
-     * @see \PrestaShopCoreAdminBundle\TransitionalBehavior\AdminPagePreferenceInterface::setTemporaryShouldUseLegacyPage()
+    /**
+     * {@inheritdoc}
      */
     public function setTemporaryShouldUseLegacyPage($page, $useLegacy)
     {
@@ -74,15 +79,15 @@ class PagePreference implements AdminPagePreferenceInterface
             throw new \InvalidParameterException('$page parameter missing');
         }
 
-        if ((bool)$useLegacy) {
-            $this->session->set('should_use_legacy_page_for_'.$page, 1);
+        if ((bool) $useLegacy) {
+            $this->session->set('should_use_legacy_page_for_' . $page, 1);
         } else {
-            $this->session->remove('should_use_legacy_page_for_'.$page);
+            $this->session->remove('should_use_legacy_page_for_' . $page);
         }
     }
 
-    /* (non-PHPdoc)
-     * @see \PrestaShopCoreAdminBundle\TransitionalBehavior\AdminPagePreferenceInterface::getTemporaryShouldAllowUseLegacyPage()
+    /**
+     * {@inheritdoc}
      */
     public function getTemporaryShouldAllowUseLegacyPage($page = null)
     {
@@ -91,12 +96,12 @@ class PagePreference implements AdminPagePreferenceInterface
             return true;
         }
 
-        $version = Db::getInstance()->getValue('SELECT `value` FROM `'._DB_PREFIX_.'configuration` WHERE `name` = "PS_INSTALL_VERSION"');
+        $version = Db::getInstance()->getValue('SELECT `value` FROM `' . _DB_PREFIX_ . 'configuration` WHERE `name` = "PS_INSTALL_VERSION"');
         if (!$version) {
             return false;
         }
         $installVersion = explode('.', $version);
-        $currentVersion = explode('.', _PS_VERSION_);
+        $currentVersion = explode('.', AppKernel::VERSION);
 
         // Prod mode, depends on the page
         switch ($page) {

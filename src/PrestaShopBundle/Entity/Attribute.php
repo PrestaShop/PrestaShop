@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,33 +16,31 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-
 namespace PrestaShopBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Attribute
+ * Attribute.
  *
  * @ORM\Table(
  *     indexes={@ORM\Index(name="attribute_group", columns={"id_attribute_group"})}
  * )
  * @ORM\Entity(repositoryClass="PrestaShopBundle\Entity\Repository\AttributeRepository")
  */
-
 class Attribute
 {
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Id
      * @ORM\Column(name="id_attribute", type="integer")
@@ -64,7 +62,7 @@ class Attribute
     private $color;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="position", type="integer")
      */
@@ -85,7 +83,7 @@ class Attribute
     private $attributeLangs;
 
     /**
-     * Constructor
+     * Constructor.
      */
     public function __construct()
     {
@@ -94,9 +92,9 @@ class Attribute
     }
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -104,7 +102,7 @@ class Attribute
     }
 
     /**
-     * Set color
+     * Set color.
      *
      * @param string $color
      *
@@ -118,7 +116,7 @@ class Attribute
     }
 
     /**
-     * Get color
+     * Get color.
      *
      * @return string
      */
@@ -128,9 +126,9 @@ class Attribute
     }
 
     /**
-     * Set position
+     * Set position.
      *
-     * @param integer $position
+     * @param int $position
      *
      * @return Attribute
      */
@@ -142,9 +140,9 @@ class Attribute
     }
 
     /**
-     * Get position
+     * Get position.
      *
-     * @return integer
+     * @return int
      */
     public function getPosition()
     {
@@ -152,13 +150,13 @@ class Attribute
     }
 
     /**
-     * Set attributeGroup
+     * Set attributeGroup.
      *
      * @param \PrestaShopBundle\Entity\AttributeGroup $attributeGroup
      *
      * @return Attribute
      */
-    public function setAttributeGroup(\PrestaShopBundle\Entity\AttributeGroup $attributeGroup)
+    public function setAttributeGroup(AttributeGroup $attributeGroup)
     {
         $this->attributeGroup = $attributeGroup;
 
@@ -166,7 +164,7 @@ class Attribute
     }
 
     /**
-     * Get attributeGroup
+     * Get attributeGroup.
      *
      * @return \PrestaShopBundle\Entity\AttributeGroup
      */
@@ -176,13 +174,13 @@ class Attribute
     }
 
     /**
-     * Add shop
+     * Add shop.
      *
      * @param \PrestaShopBundle\Entity\Shop $shop
      *
      * @return Attribute
      */
-    public function addShop(\PrestaShopBundle\Entity\Shop $shop)
+    public function addShop(Shop $shop)
     {
         $this->shops[] = $shop;
 
@@ -190,17 +188,17 @@ class Attribute
     }
 
     /**
-     * Remove shop
+     * Remove shop.
      *
      * @param \PrestaShopBundle\Entity\Shop $shop
      */
-    public function removeShop(\PrestaShopBundle\Entity\Shop $shop)
+    public function removeShop(Shop $shop)
     {
         $this->shops->removeElement($shop);
     }
 
     /**
-     * Get shops
+     * Get shops.
      *
      * @return \Doctrine\Common\Collections\Collection
      */

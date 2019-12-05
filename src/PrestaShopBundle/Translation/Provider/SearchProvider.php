@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,42 +16,62 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShopBundle\Translation\Provider;
 
+use PrestaShop\PrestaShop\Core\Exception\FileNotFoundException;
+use Symfony\Component\Translation\Loader\LoaderInterface;
 use Symfony\Component\Translation\MessageCatalogue;
+use Symfony\Component\Translation\MessageCatalogueInterface;
 
-class SearchProvider extends AbstractProvider implements UseDefaultCatalogueInterface
+/**
+ * Able to search translations for a specific translation domains across multiple sources
+ */
+class SearchProvider extends AbstractProvider implements UseDefaultCatalogueInterface, UseModuleInterface
 {
-    private $domain;
+    /**
+     * @var string the "modules" directory path
+     */
+    private $modulesDirectory;
 
     /**
-     * Set domain
-     *
-     * @param $domain
-     * @return $this
+     * @var ExternalModuleLegacySystemProvider
      */
-    public function setDomain($domain)
-    {
-        $this->domain = $domain;
+    private $externalModuleLegacySystemProvider;
 
-        return $this;
+    public function __construct(
+        LoaderInterface $databaseLoader,
+        ExternalModuleLegacySystemProvider $externalModuleLegacySystemProvider,
+        $resourceDirectory,
+        $modulesDirectory
+    ) {
+        $this->modulesDirectory = $modulesDirectory;
+        $this->externalModuleLegacySystemProvider = $externalModuleLegacySystemProvider;
+
+        parent::__construct($databaseLoader, $resourceDirectory);
     }
 
     /**
-     * Get domain
+     * Get domain.
+     *
+     * @deprecated since 1.7.6, to be removed in the next major
      *
      * @return mixed
      */
     public function getDomain()
     {
+        @trigger_error(
+            __METHOD__ . ' function is deprecated and will be removed in the next major',
+            E_USER_DEPRECATED
+        );
+
         return $this->domain;
     }
 
@@ -60,9 +80,7 @@ class SearchProvider extends AbstractProvider implements UseDefaultCatalogueInte
      */
     public function getTranslationDomains()
     {
-        return array(
-            '^'.$this->getDomain(),
-        );
+        return ['^' . preg_quote($this->domain) . '([A-Z]|$)'];
     }
 
     /**
@@ -70,9 +88,7 @@ class SearchProvider extends AbstractProvider implements UseDefaultCatalogueInte
      */
     public function getFilters()
     {
-        return array(
-            '#^'.$this->getDomain().'#',
-        );
+        return ['#^' . preg_quote($this->domain, '#') . '([A-Z]|\.|$)#'];
     }
 
     /**
@@ -86,21 +102,18 @@ class SearchProvider extends AbstractProvider implements UseDefaultCatalogueInte
     /**
      * {@inheritdoc}
      */
+    public function getDefaultResourceDirectory()
+    {
+        return $this->resourceDirectory . DIRECTORY_SEPARATOR . 'default';
+    }
+
     public function getDefaultCatalogue($empty = true)
     {
-        $defaultCatalogue = new MessageCatalogue($this->getLocale());
-
-        foreach ($this->getFilters() as $filter) {
-            $filteredCatalogue = $this->getCatalogueFromPaths(
-                array($this->getDefaultResourceDirectory()),
-                $this->getLocale(),
-                $filter
-            );
-            $defaultCatalogue->addCatalogue($filteredCatalogue);
-        }
-
-        if ($empty) {
-            $defaultCatalogue = $this->emptyCatalogue($defaultCatalogue);
+        try {
+            $defaultCatalogue = parent::getDefaultCatalogue($empty);
+        } catch (FileNotFoundException $e) {
+            $defaultCatalogue = $this->externalModuleLegacySystemProvider->getDefaultCatalogue($empty);
+            $defaultCatalogue = $this->filterCatalogue($defaultCatalogue);
         }
 
         return $defaultCatalogue;
@@ -109,8 +122,75 @@ class SearchProvider extends AbstractProvider implements UseDefaultCatalogueInte
     /**
      * {@inheritdoc}
      */
-    public function getDefaultResourceDirectory()
+    public function getXliffCatalogue()
     {
-        return $this->resourceDirectory.DIRECTORY_SEPARATOR.'default';
+        try {
+            $xliffCatalogue = parent::getXliffCatalogue();
+        } catch (\Exception $e) {
+            $xliffCatalogue = $this->externalModuleLegacySystemProvider->getXliffCatalogue();
+            $xliffCatalogue = $this->filterCatalogue($xliffCatalogue);
+        }
+
+        return $xliffCatalogue;
+    }
+
+    /**
+     * @deprecated since 1.7.6, to be removed in the next major
+     *
+     * @return string
+     */
+    public function getModuleDirectory()
+    {
+        @trigger_error(
+            __METHOD__ . ' function is deprecated and will be removed in the next major',
+            E_USER_DEPRECATED
+        );
+
+        return $this->modulesDirectory;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setLocale($locale)
+    {
+        $this->externalModuleLegacySystemProvider->setLocale($locale);
+
+        return parent::setLocale($locale);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setModuleName($moduleName)
+    {
+        $this->externalModuleLegacySystemProvider->setModuleName($moduleName);
+    }
+
+    /**
+     * Filters the catalogue so that only domains matching the filters are kept
+     *
+     * @param MessageCatalogueInterface $defaultCatalogue
+     *
+     * @return MessageCatalogueInterface
+     */
+    private function filterCatalogue(MessageCatalogueInterface $defaultCatalogue)
+    {
+        // return only elements whose domain matches the filters
+        $filters = $this->getFilters();
+        $allowedDomains = [];
+
+        foreach ($defaultCatalogue->all() as $domain => $messages) {
+            foreach ($filters as $filter) {
+                if (preg_match($filter, $domain)) {
+                    $allowedDomains[$domain] = $messages;
+                    break;
+                }
+            }
+        }
+
+        $defaultCatalogue = new MessageCatalogue($this->getLocale(), $allowedDomains);
+
+        return $defaultCatalogue;
     }
 }

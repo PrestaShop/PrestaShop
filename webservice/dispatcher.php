@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,20 +16,23 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+use PrestaShop\PrestaShop\Adapter\ContainerBuilder;
+
 ob_start();
 
-require_once(dirname(__FILE__).'/../config/config.inc.php');
+require_once dirname(__FILE__).'/../config/config.inc.php';
 
 // Cart is needed for some requests
 Context::getContext()->cart = new Cart();
+Context::getContext()->container = ContainerBuilder::getContainer('webservice', _PS_MODE_DEV_);
 
 //set http auth headers for apache+php-cgi work around
 if (isset($_SERVER['HTTP_AUTHORIZATION']) && preg_match('/Basic\s+(.*)$/i', $_SERVER['HTTP_AUTHORIZATION'], $matches)) {
@@ -56,12 +59,11 @@ if (isset($_SERVER['PHP_AUTH_USER'])) {
     die('401 Unauthorized');
 }
 
-
 $input_xml = null;
 
 // if a XML is in PUT or in POST
 if (($_SERVER['REQUEST_METHOD'] == 'PUT') || ($_SERVER['REQUEST_METHOD'] == 'POST')) {
-    $putresource = fopen("php://input", "r");
+    $putresource = fopen("php://input", "rb");
     while ($putData = fread($putresource, 1024)) {
         $input_xml .= $putData;
     }

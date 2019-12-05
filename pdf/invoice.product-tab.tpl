@@ -1,5 +1,5 @@
 {**
- * 2007-2017 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -15,10 +15,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
@@ -105,9 +105,9 @@
 					<td class="center"> &nbsp;</td>
 
 					<td>
-						{if isset($customization.datas[$smarty.const._CUSTOMIZE_TEXTFIELD_]) && count($customization.datas[$smarty.const._CUSTOMIZE_TEXTFIELD_]) > 0}
+						{if isset($customization.datas[Product::CUSTOMIZE_TEXTFIELD]) && count($customization.datas[Product::CUSTOMIZE_TEXTFIELD]) > 0}
 							<table style="width: 100%;">
-								{foreach $customization.datas[$smarty.const._CUSTOMIZE_TEXTFIELD_] as $customization_infos}
+								{foreach $customization.datas[Product::CUSTOMIZE_TEXTFIELD] as $customization_infos}
 									<tr>
 										<td style="width: 30%;">
 											{$customization_infos.name|string_format:{l s='%s:' d='Shop.Pdf' pdf='true'}}
@@ -118,11 +118,11 @@
 							</table>
 						{/if}
 
-						{if isset($customization.datas[$smarty.const._CUSTOMIZE_FILE_]) && count($customization.datas[$smarty.const._CUSTOMIZE_FILE_]) > 0}
+						{if isset($customization.datas[Product::CUSTOMIZE_FILE]) && count($customization.datas[Product::CUSTOMIZE_FILE]) > 0}
 							<table style="width: 100%;">
 								<tr>
 									<td style="width: 70%;">{l s='image(s):' d='Shop.Pdf' pdf='true'}</td>
-									<td>{count($customization.datas[$smarty.const._CUSTOMIZE_FILE_])}</td>
+									<td>{count($customization.datas[Product::CUSTOMIZE_FILE])}</td>
 								</tr>
 							</table>
 						{/if}

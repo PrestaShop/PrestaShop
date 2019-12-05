@@ -4,24 +4,106 @@
 *.log
 npm-debug.log.*
 .sass-cache/
+
+# Cache
 /cache/*
-download/*
+!/cache/.htaccess
+!/cache/cachefs/index.php
+!/cache/deprecated.txt
+!/cache/index.php
+!/cache/purifier/index.php
+!/cache/push/activity
+!/cache/push/index.php
+!/cache/push/trends
+!/cache/sandbox/index.php
+!/cache/smarty/cache/index.php
+!/cache/smarty/compile/index.php
+!/cache/smarty/index.php
+!/cache/tcpdf/index.php
+
+# Download
+/download/*
+!/download/.htaccess
+!/download/index.php
+
+# Images
 /img/*
-/log/*
+!/img/.htaccess
+!/img/index.php
+!/img/404.gif
+!/img/bg_500.png
+!/img/bg_loader.png
+!/img/favicon.ico
+!/img/loader.gif
+!/img/loadingAnimation.gif
+!/img/logo.jpg
+!/img/logo.png
+!/img/logo_invoice.jpg
+!/img/logo_stores.png
+!/img/macFFBgHack.png
+!/img/prestashop-avatar.png
+!/img/prestashop@2x.png
+!/img/preston-login-wink@2x.png
+!/img/preston-login@2x.png
+!/img/questionmark.png
+!/img/genders/index.php
+!/img/admin/index.php
+!/img/c/index.php
+!/img/cms/index.php
+!/img/co/index.php
+!/img/jquery-ui
+!/img/l/index.php
+!/img/m/index.php
+!/img/os/index.php
+!/img/p/index.php
+!/img/s/index.php
+!/img/scenes
+!/img/st/index.php
+!/img/su/index.php
+!/img/t/index.php
+!/img/tmp/index.php
+
+# Upload
 /upload/*
-vendor/*
-docs/phpdoc-sf/
-composer.lock
-tests/Selenium/errorShots/
-tests/Selenium/errorDumps/
+!/upload/.htaccess
 
-admin-dev/autoupgrade/*
-admin-dev/backups/*
-admin-dev/import/*
+/vendor/*
+/docs/phpdoc-sf/
+/composer.lock
+*.hot-update.js
+*.hot-update.json
 
-admin-dev/import/*
-!admin-dev/import/.htaccess
-!admin-dev/import/index.php
+tests-legacy/resources/modules/followup/
+tests-legacy/resources/modules/ps_emailalerts/
+tests-legacy/resources/modules/ps_emailsubscription/mails/
+tests-legacy/resources/modules/referralprogram/
+
+/admin-dev/autoupgrade/*
+!/admin-dev/autoupgrade/index.php
+!/admin-dev/autoupgrade/backup/index.php
+
+/admin-dev/backups/*
+!/admin-dev/backups/.htaccess
+
+/admin-dev/import/*
+!/admin-dev/import/.htaccess
+!/admin-dev/import/index.php
+
+/admin-dev/export/*
+!/admin-dev/export/.htaccess
+!/admin-dev/export/index.php
+
+# Downloaded RTL files
+/admin-dev/themes/default/css/bundle/default_rtl.css
+/admin-dev/themes/default/css/bundle/shared_rtl.css
+/admin-dev/themes/default/css/font_rtl.css
+/admin-dev/themes/default/css/overrides_rtl.css
+/admin-dev/themes/default/css/vendor/font-awesome/font-awesome_rtl.css
+/admin-dev/themes/default/css/vendor/nv.d3_rtl.css
+/admin-dev/themes/default/css/vendor/titatoggle-min_rtl.css
+/admin-dev/themes/default/public/theme_rtl.css
+/admin-dev/themes/new-theme/css/module/drop_rtl.css
+/admin-dev/themes/new-theme/css/right-sidebar_rtl.css
 
 themes/*/cache/*
 
@@ -32,7 +114,6 @@ config/settings.old.php
 config/xml/*
 config/themes/*
 !config/xml/themes/default.xml
-tests/Selenium/settings.js
 themes/*/config/settings_*.json
 app/config/parameters.old.yml
 app/config/config.php
@@ -41,7 +122,10 @@ app/config/config.php
 
 modules/*
 override/*
-/themes/StarterTheme
+themes/*/
+!themes/classic
+!themes/_core
+!themes/_libraries
 
 # Vendors and dependencies
 
@@ -55,7 +139,8 @@ php-cs-fixer
 
 translations/*
 mails/*
-!mails/en/
+!mails/themes/
+!mails/_partials/
 themes/default-bootstrap/lang/*
 themes/default-bootstrap/modules/*/translations/*.php
 themes/default-bootstrap/mails/*
@@ -70,23 +155,28 @@ themes/default-bootstrap/modules/*/mails/*
 
 # Symfony
 
-/app/bootstrap.php.cache
-/app/cache/*
-!app/cache/.gitkeep
+/bin/
+/.web-server-pid
+/app/Resources/geoip/GeoLite2-City.mmdb
 /app/Resources/translations/*
 !/app/Resources/translations/default
-/app/test/cache/*
-!app/test/cache/.gitkeep
-/app/config/config.php
 /app/config/parameters.yml
 /app/config/parameters.php
-/app/logs/*
-!app/logs/.gitkeep
-/app/phpunit.xml
-/bin/
+/build/
+/phpunit.xml
+/var/*
+!/var/cache
+/var/cache/*
+!var/cache/.gitkeep
+!/var/logs
+/var/logs/*
+!var/logs/.gitkeep
+!/var/sessions
+/var/sessions/*
+!var/sessions/.gitkeep
+!var/SymfonyRequirements.php
+/vendor/
 /web/bundles/
-/web/css/
-/web/js/
 
 
 # Created by https://www.gitignore.io/api/linux,osx,windows,sublimetext,phpstorm
@@ -197,7 +287,7 @@ crashlytics-build.properties
 
 ### NetBeans ###
 nbproject/private/
-build/
+/build/
 nbbuild/
 dist/
 nbdist/
@@ -210,3 +300,7 @@ nb-configuration.xml
 .project
 .settings/
 .externalToolBuilders/
+
+### Release creation ###
+tools/build/releases/*
+!tools/build/releases/.gitkeep

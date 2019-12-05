@@ -1,5 +1,5 @@
 {**
- * 2007-2017 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -15,18 +15,18 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
 <div id="quickview-modal-{$product.id}-{$product.id_product_attribute}" class="modal fade quickview" tabindex="-1" role="dialog" aria-hidden="true">
-  <div class="modal-dialog" role="document">
+  <div class="modal-dialog modal-dialog-centered" role="document">
    <div class="modal-content">
      <div class="modal-header">
-       <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+       <button type="button" class="close" data-dismiss="modal" aria-label="{l s='Close' d='Shop.Theme.Global'}">
          <span aria-hidden="true">&times;</span>
        </button>
      </div>
@@ -63,9 +63,8 @@
                   {include file='catalog/_partials/product-add-to-cart.tpl'}
                 {/block}
 
-                {block name='product_refresh'}
-                  <input class="product-refresh" data-url-update="false" name="refresh" type="submit" value="{l s='Refresh' d='Shop.Theme.Actions'}" hidden>
-                {/block}
+                {* Input to refresh product HTML removed, block kept for compatibility with themes *}
+                {block name='product_refresh'}{/block}
             </form>
           </div>
         {/block}
@@ -73,7 +72,9 @@
       </div>
      </div>
      <div class="modal-footer">
-       {hook h='displayProductAdditionalInfo' product=$product}
+        <div class="product-additional-info">
+          {hook h='displayProductAdditionalInfo' product=$product}
+        </div>
     </div>
    </div>
  </div>

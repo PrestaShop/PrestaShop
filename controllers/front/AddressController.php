@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,27 +16,27 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 class AddressControllerCore extends FrontController
 {
-    public $auth = false;
+    public $auth = true;
     public $guestAllowed = true;
     public $php_self = 'address';
     public $authRedirection = 'addresses';
     public $ssl = true;
 
-    private $address_form;
-    private $should_redirect = false;
+    protected $address_form;
+    protected $should_redirect = false;
 
     /**
-     * Initialize address controller
+     * Initialize address controller.
+     *
      * @see FrontController::init()
      */
     public function init()
@@ -47,7 +47,8 @@ class AddressControllerCore extends FrontController
     }
 
     /**
-     * Start forms process
+     * Start forms process.
+     *
      * @see FrontController::postProcess()
      */
     public function postProcess()
@@ -65,7 +66,7 @@ class AddressControllerCore extends FrontController
                 }
                 $this->should_redirect = true;
             }
-        } elseif (($id_address = (int)Tools::getValue('id_address'))) {
+        } elseif (($id_address = (int) Tools::getValue('id_address'))) {
             $this->address_form->loadAddressById($id_address);
 
             if (Tools::getValue('delete')) {
@@ -86,15 +87,16 @@ class AddressControllerCore extends FrontController
     }
 
     /**
-     * Assign template vars related to page content
+     * Assign template vars related to page content.
+     *
      * @see FrontController::initContent()
      */
     public function initContent()
     {
         if (!$this->ajax && $this->should_redirect) {
-            if (($back = Tools::getValue('back')) && Tools::secureReferrer($back)) {
+            if (($back = Tools::getValue('back')) && Tools::urlBelongsToShop($back)) {
                 $mod = Tools::getValue('mod');
-                $this->redirectWithNotifications('index.php?controller='.$back.($mod ? '&back='.$mod : ''));
+                $this->redirectWithNotifications('index.php?controller=' . $back . ($mod ? '&back=' . $mod : ''));
             } else {
                 $this->redirectWithNotifications('index.php?controller=addresses');
             }
@@ -112,7 +114,7 @@ class AddressControllerCore extends FrontController
 
         $breadcrumb['links'][] = [
             'title' => $this->trans('Addresses', array(), 'Shop.Theme.Global'),
-            'url' => $this->context->link->getPageLink('addresses')
+            'url' => $this->context->link->getPageLink('addresses'),
         ];
 
         return $breadcrumb;
@@ -122,7 +124,7 @@ class AddressControllerCore extends FrontController
     {
         $addressForm = $this->makeAddressForm();
 
-        if (Tools::getIsset('id_address') && ($id_address = (int)Tools::getValue('id_address'))) {
+        if (Tools::getIsset('id_address') && ($id_address = (int) Tools::getValue('id_address'))) {
             $addressForm->loadAddressById($id_address);
         }
 
@@ -132,7 +134,7 @@ class AddressControllerCore extends FrontController
 
         ob_end_clean();
         header('Content-Type: application/json');
-        $this->ajaxDie(Tools::jsonEncode(array(
+        $this->ajaxRender(Tools::jsonEncode(array(
             'address_form' => $this->render(
                 'customer/_partials/address-form',
                 $addressForm->getTemplateVariables()

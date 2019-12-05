@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,17 +16,18 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShopBundle\Form\Admin\Type;
 
-use Symfony\Component\Form\AbstractType;
 use PrestaShop\PrestaShop\Adapter\Configuration;
+use Symfony\Component\Form\AbstractType;
 
 /**
  * This subclass contains common functions for specific Form types needs.
@@ -36,7 +37,7 @@ abstract class CommonAbstractType extends AbstractType
     const PRESTASHOP_DECIMALS = 6;
 
     /**
-     * Get the configuration adapter
+     * Get the configuration adapter.
      *
      * @return object Configuration adapter
      */
@@ -46,16 +47,17 @@ abstract class CommonAbstractType extends AbstractType
     }
 
     /**
-     * Format legacy data list to mapping SF2 form field choice
+     * Format legacy data list to mapping SF2 form field choice.
      *
      * @param array $list
      * @param string $mapping_value
      * @param string $mapping_name
+     *
      * @return array
      */
     protected function formatDataChoicesList($list, $mapping_value = 'id', $mapping_name = 'name')
     {
-        $new_list = array();
+        $new_list = [];
         foreach ($list as $item) {
             if (array_key_exists($item[$mapping_name], $new_list)) {
                 return $this->formatDataDuplicateChoicesList($list, $mapping_value, $mapping_name);
@@ -63,23 +65,26 @@ abstract class CommonAbstractType extends AbstractType
                 $new_list[$item[$mapping_name]] = $item[$mapping_value];
             }
         }
+
         return $new_list;
     }
 
     /**
-     * Format legacy data list to mapping SF2 form field choice (possibility to have 2 name equals)
+     * Format legacy data list to mapping SF2 form field choice (possibility to have 2 name equals).
      *
      * @param array $list
      * @param string $mapping_value
      * @param string $mapping_name
+     *
      * @return array
      */
     protected function formatDataDuplicateChoicesList($list, $mapping_value = 'id', $mapping_name = 'name')
     {
-        $new_list = array();
+        $new_list = [];
         foreach ($list as $item) {
-            $new_list[$item[$mapping_value].' - '.$item[$mapping_name]] = $item[$mapping_value];
+            $new_list[$item[$mapping_value] . ' - ' . $item[$mapping_name]] = $item[$mapping_value];
         }
+
         return $new_list;
     }
 }

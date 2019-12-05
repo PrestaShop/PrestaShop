@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -29,12 +29,15 @@ namespace PrestaShopBundle\Controller\Api;
 use PrestaShopBundle\Api\QueryStockParamsCollection;
 use PrestaShopBundle\Api\Stock\Movement;
 use PrestaShopBundle\Api\Stock\MovementsCollection;
+use PrestaShopBundle\Component\CsvResponse;
 use PrestaShopBundle\Entity\ProductIdentity;
 use PrestaShopBundle\Entity\Repository\StockRepository;
 use PrestaShopBundle\Exception\InvalidPaginationParamsException;
 use PrestaShopBundle\Exception\ProductNotFoundException;
+use PrestaShopBundle\Security\Voter\PageVoter;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class StockController extends ApiController
@@ -56,6 +59,7 @@ class StockController extends ApiController
 
     /**
      * @param Request $request
+     *
      * @return JsonResponse
      */
     public function listProductsAction(Request $request)
@@ -70,7 +74,7 @@ class StockController extends ApiController
             'info' => array(
                 'edit_bulk_url' => $this->container->get('router')->generate('api_stock_bulk_edit_products'),
             ),
-            'data' => $this->stockRepository->getData($queryParamsCollection)
+            'data' => $this->stockRepository->getData($queryParamsCollection),
         );
         $totalPages = $this->stockRepository->countPages($queryParamsCollection);
 
@@ -79,10 +83,15 @@ class StockController extends ApiController
 
     /**
      * @param Request $request
+     *
      * @return JsonResponse
      */
     public function editProductAction(Request $request)
     {
+        if (!$this->isGranted([PageVoter::UPDATE], $request->get('_legacy_controller'))) {
+            return new JsonResponse(null, Response::HTTP_FORBIDDEN);
+        }
+
         try {
             $this->guardAgainstMissingDeltaParameter($request);
             $delta = $request->request->getInt('delta');
@@ -92,7 +101,7 @@ class StockController extends ApiController
 
         $productIdentity = ProductIdentity::fromArray(array(
             'product_id' => $request->attributes->get('productId'),
-            'combination_id' => $request->attributes->get('combinationId', 0)
+            'combination_id' => $request->attributes->get('combinationId', 0),
         ));
 
         try {
@@ -107,10 +116,15 @@ class StockController extends ApiController
 
     /**
      * @param Request $request
+     *
      * @return JsonResponse
      */
     public function bulkEditProductsAction(Request $request)
     {
+        if (!$this->isGranted([PageVoter::UPDATE], $request->get('_legacy_controller'))) {
+            return new JsonResponse(null, Response::HTTP_FORBIDDEN);
+        }
+
         try {
             $this->guardAgainstInvalidBulkEditionRequest($request);
             $stockMovementsParams = json_decode($request->getContent(), true);
@@ -131,6 +145,50 @@ class StockController extends ApiController
 
     /**
      * @param Request $request
+     *
+     * @return CsvResponse|JsonResponse
+     */
+    public function listProductsExportAction(Request $request)
+    {
+        try {
+            $queryParamsCollection = $this->queryParams->fromRequest($request);
+        } catch (InvalidPaginationParamsException $exception) {
+            return $this->handleException(new BadRequestHttpException($exception->getMessage(), $exception));
+        }
+
+        $dataCallback = function ($page, $limit) use ($queryParamsCollection) {
+            return $this->stockRepository->getDataExport($page, $limit, $queryParamsCollection);
+        };
+
+        $translator = $this->container->get('translator');
+
+        // headers columns
+        $headersData = array(
+            'product_id' => 'Product ID',
+            'combination_id' => 'Combination ID',
+            'product_reference' => $translator->trans('Product reference', array(), 'Admin.Advparameters.Feature'),
+            'combination_reference' => $translator->trans('Combination reference', array(), 'Admin.Advparameters.Feature'),
+            'product_name' => $translator->trans('Product name', array(), 'Admin.Catalog.Feature'),
+            'combination_name' => $translator->trans('Combination name', array(), 'Admin.Catalog.Feature'),
+            'supplier_name' => $translator->trans('Supplier', array(), 'Admin.Global'),
+            'active' => $translator->trans('Status', array(), 'Admin.Global'),
+            'product_physical_quantity' => $translator->trans('Physical quantity', array(), 'Admin.Catalog.Feature'),
+            'product_reserved_quantity' => $translator->trans('Reserved quantity', array(), 'Admin.Catalog.Feature'),
+            'product_available_quantity' => $translator->trans('Available quantity', array(), 'Admin.Catalog.Feature'),
+            'product_low_stock_threshold' => $translator->trans('Low stock level', array(), 'Admin.Catalog.Feature'),
+            'product_low_stock_alert' => $translator->trans('Send me an email when the quantity is below or equals this level', array(), 'Admin.Catalog.Feature'),
+        );
+
+        return (new CsvResponse())
+            ->setData($dataCallback)
+            ->setHeadersData($headersData)
+            ->setLimit(10000)
+            ->setFileName('stock_' . date('Y-m-d_His') . '.csv');
+    }
+
+    /**
+     * @param Request $request
+     *
      * @return int
      */
     private function guardAgainstMissingDeltaParameter(Request $request)
@@ -151,6 +209,7 @@ class StockController extends ApiController
     /**
      * @param $content
      * @param $message
+     *
      * @return mixed
      */
     private function guardAgainstInvalidRequestContent($content, $message)
@@ -166,12 +225,14 @@ class StockController extends ApiController
 
     /**
      * @param Request $request
+     *
      * @return mixed
      */
     private function guardAgainstInvalidBulkEditionRequest(Request $request)
     {
         if (strlen($request->getContent()) == 0) {
             $message = 'The request body should contain a JSON-encoded array of product identifiers and deltas';
+
             throw new BadRequestHttpException(sprintf('Invalid JSON content (%s)', $message));
         }
 
@@ -180,6 +241,7 @@ class StockController extends ApiController
 
     /**
      * @param Request $request
+     *
      * @return mixed
      */
     private function guardAgainstMissingParametersInBulkEditionRequest(Request $request)
@@ -187,7 +249,7 @@ class StockController extends ApiController
         $decodedContent = $this->guardAgainstInvalidJsonBody($request->getContent());
 
         $message = 'Each item of JSON-encoded array in the request body should contain ' .
-            'a product id ("product_id"), a quantity delta ("delta"). '.
+            'a product id ("product_id"), a quantity delta ("delta"). ' .
             'The item of index #%d is invalid.';
 
         array_walk($decodedContent, function ($item, $index) use ($message) {

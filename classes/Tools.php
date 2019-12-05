@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,22 +16,29 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
-use PrestaShopBundle\Service\Cache\Refresh;
-use Symfony\Component\HttpFoundation\Request;
-
 use Composer\CaBundle\CaBundle;
+use PrestaShop\PrestaShop\Adapter\ContainerFinder;
+use PrestaShop\PrestaShop\Core\Exception\ContainerNotFoundException;
+use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
+use PrestaShop\PrestaShop\Core\Localization\Locale\Repository as LocaleRepository;
+use PHPSQLParser\PHPSQLParser;
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpFoundation\Request;
+use PrestaShop\PrestaShop\Core\Foundation\Filesystem\FileSystem as PsFileSystem;
+use PrestaShop\PrestaShop\Core\Localization\Locale;
+use PrestaShop\PrestaShop\Core\String\CharacterCleaner;
 
 class ToolsCore
 {
     const CACERT_LOCATION = 'https://curl.haxx.se/ca/cacert.pem';
+    const SERVICE_LOCALE_REPOSITORY = 'prestashop.core.localization.locale.repository';
 
     protected static $file_exists_cache = array();
     protected static $_forceCompile;
@@ -39,9 +46,9 @@ class ToolsCore
     protected static $_user_plateform;
     protected static $_user_browser;
     protected static $request;
+    protected static $cldr_cache = [];
 
     public static $round_mode = null;
-
 
     public function __construct(Request $request = null)
     {
@@ -51,15 +58,32 @@ class ToolsCore
     }
 
     /**
-    * Random password generator
-    *
-    * @param int $length Desired length (optional)
-    * @param string $flag Output type (NUMERIC, ALPHANUMERIC, NO_NUMERIC, RANDOM)
-    * @return bool|string Password
-    */
+     * Properly clean static cache
+     */
+    public static function resetStaticCache()
+    {
+        static::$cldr_cache = [];
+    }
+
+    /**
+     * Reset the request set during the first new Tools($request) call.
+     */
+    public static function resetRequest()
+    {
+        self::$request = null;
+    }
+
+    /**
+     * Random password generator.
+     *
+     * @param int $length Desired length (optional)
+     * @param string $flag Output type (NUMERIC, ALPHANUMERIC, NO_NUMERIC, RANDOM)
+     *
+     * @return bool|string Password
+     */
     public static function passwdGen($length = 8, $flag = 'ALPHANUMERIC')
     {
-        $length = (int)$length;
+        $length = (int) $length;
 
         if ($length <= 0) {
             return false;
@@ -68,17 +92,21 @@ class ToolsCore
         switch ($flag) {
             case 'NUMERIC':
                 $str = '0123456789';
+
                 break;
             case 'NO_NUMERIC':
                 $str = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
                 break;
             case 'RANDOM':
                 $num_bytes = ceil($length * 0.75);
                 $bytes = self::getBytes($num_bytes);
+
                 return substr(rtrim(base64_encode($bytes), '='), 0, $length);
             case 'ALPHANUMERIC':
             default:
                 $str = 'abcdefghijkmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
                 break;
         }
 
@@ -86,7 +114,7 @@ class ToolsCore
         $position = 0;
         $result = '';
 
-        for ($i = 0; $i < $length; $i++) {
+        for ($i = 0; $i < $length; ++$i) {
             $position = ($position + ord($bytes[$i])) % strlen($str);
             $result .= $str[$position];
         }
@@ -95,7 +123,7 @@ class ToolsCore
     }
 
     /**
-     * Random bytes generator
+     * Random bytes generator.
      *
      * Limited to OpenSSL since 1.7.0.0
      *
@@ -120,13 +148,27 @@ class ToolsCore
         return false;
     }
 
+    /**
+     * Replace text within a portion of a string.
+     *
+     * Replaces a string matching a search, (optionally) string from a certain position
+     *
+     * @param string $search The string to search in the input string
+     * @param string $replace The replacement string
+     * @param string $subject The input string
+     * @param int $cur Starting position cursor for the search
+     *
+     * @return string the result string is returned
+     */
     public static function strReplaceFirst($search, $replace, $subject, $cur = 0)
     {
-        return (strpos($subject, $search, $cur))?substr_replace($subject, $replace, (int)strpos($subject, $search, $cur), strlen($search)):$subject;
+        $strPos = strpos($subject, $search, $cur);
+
+        return $strPos !== false ? substr_replace($subject, $replace, (int) $strPos, strlen($search)) : $subject;
     }
 
     /**
-     * Redirect user to another page
+     * Redirect user to another page.
      *
      * @param string $url Desired URL
      * @param string $base_uri Base URI (optional)
@@ -156,7 +198,7 @@ class ToolsCore
             $use_ssl = !empty($url);
             $url = $link->getPageLink($explode[0], $use_ssl);
             if (isset($explode[1])) {
-                $url .= '?'.$explode[1];
+                $url .= '?' . $explode[1];
             }
         }
 
@@ -171,15 +213,15 @@ class ToolsCore
             }
         }
 
-        header('Location: '.$url);
+        header('Location: ' . $url);
         exit;
     }
 
     /**
-    * Redirect URLs already containing PS_BASE_URI
-    *
-    * @param string $url Desired URL
-    */
+     * Redirect URLs already containing PS_BASE_URI.
+     *
+     * @param string $url Desired URL
+     */
     public static function redirectLink($url)
     {
         if (!preg_match('@^https?://@i', $url)) {
@@ -192,54 +234,58 @@ class ToolsCore
             $explode = explode('?', $url);
             $url = Context::getContext()->link->getPageLink($explode[0]);
             if (isset($explode[1])) {
-                $url .= '?'.$explode[1];
+                $url .= '?' . $explode[1];
             }
         }
-        header('Location: '.$url);
+        header('Location: ' . $url);
         exit;
     }
 
     /**
-    * Redirect user to another admin page
-    *
-    * @param string $url Desired URL
-    */
+     * Redirect user to another admin page.
+     *
+     * @param string $url Desired URL
+     */
     public static function redirectAdmin($url)
     {
-        header('Location: '.$url);
+        header('Location: ' . $url);
         exit;
     }
 
     /**
      * getShopProtocol return the available protocol for the current shop in use
-     * SSL if Configuration is set on and available for the server
+     * SSL if Configuration is set on and available for the server.
      *
-     * @return String
+     * @return string
      */
     public static function getShopProtocol()
     {
         $protocol = (Configuration::get('PS_SSL_ENABLED') || (!empty($_SERVER['HTTPS'])
             && Tools::strtolower($_SERVER['HTTPS']) != 'off')) ? 'https://' : 'http://';
+
         return $protocol;
     }
 
     /**
-     * getProtocol return the set protocol according to configuration (http[s])
+     * getProtocol return the set protocol according to configuration (http[s]).
+     *
      * @param bool $use_ssl true if require ssl
-     * @return String (http|https)
+     *
+     * @return string (http|https)
      */
     public static function getProtocol($use_ssl = null)
     {
-        return (!is_null($use_ssl) && $use_ssl ? 'https://' : 'http://');
+        return null !== $use_ssl && $use_ssl ? 'https://' : 'http://';
     }
 
     /**
      * getHttpHost return the <b>current</b> host used, with the protocol (http or https) if $http is true
      * This function should not be used to choose http or https domain name.
-     * Use Tools::getShopDomain() or Tools::getShopDomainSsl instead
+     * Use Tools::getShopDomain() or Tools::getShopDomainSsl instead.
      *
      * @param bool $http
      * @param bool $entities
+     *
      * @return string host
      */
     public static function getHttpHost($http = false, $entities = false, $ignore_port = false)
@@ -257,16 +303,18 @@ class ToolsCore
             $host = htmlspecialchars($host, ENT_COMPAT, 'UTF-8');
         }
         if ($http) {
-            $host = (Configuration::get('PS_SSL_ENABLED') ? 'https://' : 'http://').$host;
+            $host = (Configuration::get('PS_SSL_ENABLED') ? 'https://' : 'http://') . $host;
         }
+
         return $host;
     }
 
     /**
-     * getShopDomain returns domain name according to configuration and ignoring ssl
+     * getShopDomain returns domain name according to configuration and ignoring ssl.
      *
      * @param bool $http if true, return domain name with protocol
      * @param bool $entities if true, convert special chars to HTML entities
+     *
      * @return string domain
      */
     public static function getShopDomain($http = false, $entities = false)
@@ -278,16 +326,18 @@ class ToolsCore
             $domain = htmlspecialchars($domain, ENT_COMPAT, 'UTF-8');
         }
         if ($http) {
-            $domain = 'http://'.$domain;
+            $domain = 'http://' . $domain;
         }
+
         return $domain;
     }
 
     /**
-     * getShopDomainSsl returns domain name according to configuration and depending on ssl activation
+     * getShopDomainSsl returns domain name according to configuration and depending on ssl activation.
      *
      * @param bool $http if true, return domain name with protocol
      * @param bool $entities if true, convert special chars to HTML entities
+     *
      * @return string domain
      */
     public static function getShopDomainSsl($http = false, $entities = false)
@@ -299,29 +349,31 @@ class ToolsCore
             $domain = htmlspecialchars($domain, ENT_COMPAT, 'UTF-8');
         }
         if ($http) {
-            $domain = (Configuration::get('PS_SSL_ENABLED') ? 'https://' : 'http://').$domain;
+            $domain = (Configuration::get('PS_SSL_ENABLED') ? 'https://' : 'http://') . $domain;
         }
+
         return $domain;
     }
 
     /**
-    * Get the server variable SERVER_NAME
-    *
-    * @return string server name
-    */
+     * Get the server variable SERVER_NAME.
+     *
+     * @return string server name
+     */
     public static function getServerName()
     {
         if (isset($_SERVER['HTTP_X_FORWARDED_SERVER']) && $_SERVER['HTTP_X_FORWARDED_SERVER']) {
             return $_SERVER['HTTP_X_FORWARDED_SERVER'];
         }
+
         return $_SERVER['SERVER_NAME'];
     }
 
     /**
-    * Get the server variable REMOTE_ADDR, or the first ip of HTTP_X_FORWARDED_FOR (when using proxy)
-    *
-    * @return string $remote_addr ip of client
-    */
+     * Get the server variable REMOTE_ADDR, or the first ip of HTTP_X_FORWARDED_FOR (when using proxy).
+     *
+     * @return string $remote_addr ip of client
+     */
     public static function getRemoteAddr()
     {
         if (function_exists('apache_request_headers')) {
@@ -339,6 +391,7 @@ class ToolsCore
             || preg_match('/^192\.168\.*/i', trim($_SERVER['REMOTE_ADDR'])) || preg_match('/^10\..*/i', trim($_SERVER['REMOTE_ADDR'])))) {
             if (strpos($_SERVER['HTTP_X_FORWARDED_FOR'], ',')) {
                 $ips = explode(',', $_SERVER['HTTP_X_FORWARDED_FOR']);
+
                 return $ips[0];
             } else {
                 return $_SERVER['HTTP_X_FORWARDED_FOR'];
@@ -349,10 +402,10 @@ class ToolsCore
     }
 
     /**
-    * Check if the current page use SSL connection on not
-    *
-    * @return bool uses SSL
-    */
+     * Check if the current page use SSL connection on not.
+     *
+     * @return bool uses SSL
+     */
     public static function usingSecureMode()
     {
         if (isset($_SERVER['HTTPS'])) {
@@ -377,10 +430,10 @@ class ToolsCore
     }
 
     /**
-    * Get the current url prefix protocol (https/http)
-    *
-    * @return string protocol
-    */
+     * Get the current url prefix protocol (https/http).
+     *
+     * @return string protocol
+     */
     public static function getCurrentUrlProtocolPrefix()
     {
         if (Tools::usingSecureMode()) {
@@ -391,30 +444,67 @@ class ToolsCore
     }
 
     /**
-    * Secure an URL referrer
-    *
-    * @param string $referrer URL referrer
-    * @return string secured referrer
-    */
+     * Returns a safe URL referrer.
+     *
+     * @param string $referrer URL referrer
+     *
+     * @return string secured referrer
+     */
     public static function secureReferrer($referrer)
     {
-        if (preg_match('/^http[s]?:\/\/'.Tools::getServerName().'(:'._PS_SSL_PORT_.')?\/.*$/Ui', $referrer)) {
+        if (static::urlBelongsToShop($referrer)) {
             return $referrer;
         }
+
         return __PS_BASE_URI__;
     }
 
     /**
-    * Get a value from $_POST / $_GET
-    * if unavailable, take a default value
-    *
-    * @param string $key Value key
-    * @param mixed $default_value (optional)
-    * @return mixed Value
-    */
+     * Indicates if the provided URL belongs to this shop (relative urls count as belonging to the shop).
+     *
+     * @param string $url
+     *
+     * @return bool
+     */
+    public static function urlBelongsToShop($url)
+    {
+        $urlHost = Tools::extractHost($url);
+
+        return empty($urlHost) || $urlHost === Tools::getServerName();
+    }
+
+    /**
+     * Safely extracts the host part from an URL.
+     *
+     * @param string $url
+     *
+     * @return string
+     */
+    public static function extractHost($url)
+    {
+        $parsed = parse_url($url);
+        if (!is_array($parsed)) {
+            return $url;
+        }
+        if (empty($parsed['host']) || empty($parsed['scheme'])) {
+            return '';
+        }
+
+        return $parsed['host'];
+    }
+
+    /**
+     * Get a value from $_POST / $_GET
+     * if unavailable, take a default value.
+     *
+     * @param string $key Value key
+     * @param mixed $default_value (optional)
+     *
+     * @return mixed Value
+     */
     public static function getValue($key, $default_value = false)
     {
-        if (!isset($key) || empty($key) || !is_string($key)) {
+        if (empty($key) || !is_string($key)) {
             return false;
         }
 
@@ -425,15 +515,15 @@ class ToolsCore
         }
 
         if (is_string($value)) {
-            return stripslashes(urldecode(preg_replace('/((\%5C0+)|(\%00+))/i', '', urlencode($value))));
+            return urldecode(preg_replace('/((\%5C0+)|(\%00+))/i', '', urlencode($value)));
         }
 
         return $value;
     }
 
-
     /**
-     * Get all values from $_POST/$_GET
+     * Get all values from $_POST/$_GET.
+     *
      * @return mixed
      */
     public static function getAllValues()
@@ -441,19 +531,27 @@ class ToolsCore
         return $_POST + $_GET;
     }
 
+    /**
+     * Checks if a key exists either in $_POST or $_GET.
+     *
+     * @param string $key
+     *
+     * @return bool
+     */
     public static function getIsset($key)
     {
-        if (!isset($key) || empty($key) || !is_string($key)) {
+        if (!is_string($key)) {
             return false;
         }
+
         return isset($_POST[$key]) || isset($_GET[$key]);
     }
 
     /**
-    * Change language in cookie while clicking on a flag
-    *
-    * @return string iso code
-    */
+     * Change language in cookie while clicking on a flag.
+     *
+     * @return string iso code
+     */
     public static function setCookieLanguage($cookie = null)
     {
         if (!$cookie) {
@@ -461,7 +559,7 @@ class ToolsCore
         }
         /* If language does not exist or is disabled, erase it */
         if ($cookie->id_lang) {
-            $lang = new Language((int)$cookie->id_lang);
+            $lang = new Language((int) $cookie->id_lang);
             if (!Validate::isLoadedObject($lang) || !$lang->active || !$lang->isAssociatedToShop()) {
                 $cookie->id_lang = null;
             }
@@ -474,14 +572,14 @@ class ToolsCore
         /* Automatically detect language if not already defined, detect_language is set in Cookie::update */
         if (!Tools::getValue('isolang') && !Tools::getValue('id_lang') && (!$cookie->id_lang || isset($cookie->detect_language))
             && isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
-            $array  = explode(',', Tools::strtolower($_SERVER['HTTP_ACCEPT_LANGUAGE']));
+            $array = explode(',', Tools::strtolower($_SERVER['HTTP_ACCEPT_LANGUAGE']));
             $string = $array[0];
 
             if (Validate::isLanguageCode($string)) {
                 $lang = Language::getLanguageByIETFCode($string);
                 if (Validate::isLoadedObject($lang) && $lang->active && $lang->isAssociatedToShop()) {
                     Context::getContext()->language = $lang;
-                    $cookie->id_lang = (int)$lang->id;
+                    $cookie->id_lang = (int) $lang->id;
                 }
             }
         }
@@ -492,72 +590,81 @@ class ToolsCore
 
         /* If language file not present, you must use default language file */
         if (!$cookie->id_lang || !Validate::isUnsignedId($cookie->id_lang)) {
-            $cookie->id_lang = (int)Configuration::get('PS_LANG_DEFAULT');
+            $cookie->id_lang = (int) Configuration::get('PS_LANG_DEFAULT');
         }
 
-        $iso = Language::getIsoById((int)$cookie->id_lang);
-        @include_once(_PS_THEME_DIR_.'lang/'.$iso.'.php');
+        $iso = Language::getIsoById((int) $cookie->id_lang);
+        @include_once _PS_THEME_DIR_ . 'lang/' . $iso . '.php';
 
         return $iso;
     }
 
     /**
-     * Set cookie id_lang
+     * If necessary change cookie language ID and context language.
+     *
+     * @param Context|null $context
+     *
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
      */
     public static function switchLanguage(Context $context = null)
     {
-        if (!$context) {
+        if (null === $context) {
             $context = Context::getContext();
         }
 
-        // Install call the dispatcher and so the switchLanguage
-        // Stop this method by checking the cookie
+        // On PrestaShop installations Dispatcher::__construct() gets called (and so Tools::switchLanguage())
+        // Stop in this case by checking the cookie
         if (!isset($context->cookie)) {
             return;
         }
 
-        if (($iso = Tools::getValue('isolang')) && Validate::isLanguageIsoCode($iso) && ($id_lang = (int)Language::getIdByIso($iso))) {
+        if (
+            ($iso = Tools::getValue('isolang')) &&
+            Validate::isLanguageIsoCode($iso) &&
+            ($id_lang = (int) Language::getIdByIso($iso))
+        ) {
             $_GET['id_lang'] = $id_lang;
         }
 
-        // update language only if new id is different from old id
-        // or if default language changed
-        $cookie_id_lang = $context->cookie->id_lang;
-        $configuration_id_lang = Configuration::get('PS_LANG_DEFAULT');
-        if ((($id_lang = (int)Tools::getValue('id_lang')) && Validate::isUnsignedId($id_lang) && $cookie_id_lang != (int)$id_lang)
-            || (($id_lang == $configuration_id_lang) && Validate::isUnsignedId($id_lang) && $id_lang != $cookie_id_lang)) {
-            $context->cookie->id_lang = $id_lang;
-            $language = new Language($id_lang);
-            if (Validate::isLoadedObject($language) && $language->active) {
+        // Only switch if new ID is different from old ID
+        $newLanguageId = (int) Tools::getValue('id_lang');
+
+        if (
+            Validate::isUnsignedId($newLanguageId) &&
+            $newLanguageId !== 0 &&
+            $context->cookie->id_lang !== $newLanguageId
+        ) {
+            $context->cookie->id_lang = $newLanguageId;
+            $language = new Language($newLanguageId);
+            if (Validate::isLoadedObject($language) && $language->active && $language->isAssociatedToShop()) {
                 $context->language = $language;
             }
-
-            $params = $_GET;
-            if (Configuration::get('PS_REWRITING_SETTINGS') || !Language::isMultiLanguageActivated()) {
-                unset($params['id_lang']);
-            }
         }
+
+        Tools::setCookieLanguage($context->cookie);
     }
 
     public static function getCountry($address = null)
     {
-        $id_country = (int)Tools::getValue('id_country');
-        if (!$id_country && isset($address) && isset($address->id_country) && $address->id_country) {
-            $id_country = (int)$address->id_country;
+        $id_country = (int) Tools::getValue('id_country');
+        if (!$id_country && isset($address, $address->id_country) && $address->id_country) {
+            $id_country = (int) $address->id_country;
         } elseif (Configuration::get('PS_DETECT_COUNTRY') && isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
             preg_match('#(?<=-)\w\w|\w\w(?!-)#', $_SERVER['HTTP_ACCEPT_LANGUAGE'], $array);
             if (is_array($array) && isset($array[0]) && Validate::isLanguageIsoCode($array[0])) {
-                $id_country = (int)Country::getByIso($array[0], true);
+                $id_country = (int) Country::getByIso($array[0], true);
             }
         }
         if (!isset($id_country) || !$id_country) {
-            $id_country = (int)Configuration::get('PS_COUNTRY_DEFAULT');
+            $id_country = (int) Configuration::get('PS_COUNTRY_DEFAULT');
         }
-        return (int)$id_country;
+
+        return (int) $id_country;
     }
 
     /**
-     * Set cookie currency from POST or default currency
+     * Set cookie currency from POST or default currency.
      *
      * @return Currency object
      */
@@ -565,21 +672,21 @@ class ToolsCore
     {
         if (Tools::isSubmit('SubmitCurrency') && ($id_currency = Tools::getValue('id_currency'))) {
             /** @var Currency $currency */
-            $currency = Currency::getCurrencyInstance((int)$id_currency);
+            $currency = Currency::getCurrencyInstance((int) $id_currency);
             if (is_object($currency) && $currency->id && !$currency->deleted && $currency->isAssociatedToShop()) {
-                $cookie->id_currency = (int)$currency->id;
+                $cookie->id_currency = (int) $currency->id;
             }
         }
 
         $currency = null;
-        if ((int)$cookie->id_currency) {
-            $currency = Currency::getCurrencyInstance((int)$cookie->id_currency);
+        if ((int) $cookie->id_currency) {
+            $currency = Currency::getCurrencyInstance((int) $cookie->id_currency);
         }
-        if (!Validate::isLoadedObject($currency) || (bool)$currency->deleted || !(bool)$currency->active) {
+        if (!Validate::isLoadedObject($currency) || (bool) $currency->deleted || !(bool) $currency->active) {
             $currency = Currency::getCurrencyInstance(Configuration::get('PS_CURRENCY_DEFAULT'));
         }
 
-        $cookie->id_currency = (int)$currency->id;
+        $cookie->id_currency = (int) $currency->id;
         if ($currency->isAssociatedToShop()) {
             return $currency;
         } else {
@@ -587,7 +694,8 @@ class ToolsCore
             $currency = Shop::getEntityIds('currency', Context::getContext()->shop->id, true, true);
             if (isset($currency[0]) && $currency[0]['id_currency']) {
                 $cookie->id_currency = $currency[0]['id_currency'];
-                return Currency::getCurrencyInstance((int)$cookie->id_currency);
+
+                return Currency::getCurrencyInstance((int) $cookie->id_currency);
             }
         }
 
@@ -595,96 +703,150 @@ class ToolsCore
     }
 
     /**
-     * Return the CLDR associated with the context or given language_code
+     * Return the CLDR associated with the context or given language_code.
+     *
+     * @see Tools::getContextLocale
+     * @deprecated since PrestaShop 1.7.6.0
      *
      * @param Context|null $context
-     * @param null         $language_code
-     * @return \PrestaShop\PrestaShop\Core\Cldr\Repository
+     * @param null $language_code
+     *
      * @throws PrestaShopException
      */
     public static function getCldr(Context $context = null, $language_code = null)
     {
-        static $cldr_cache;
-        if ($context) {
-            $language_code = $context->language->locale;
-        }
-
-        if (!empty($cldr_cache[$language_code])) {
-            $cldr = $cldr_cache[$language_code];
-        } else {
-            $cldr = new PrestaShop\PrestaShop\Core\Cldr\Repository($language_code);
-            $cldr_cache[$language_code] = $cldr;
-        }
-
-        return $cldr;
+        throw new PrestaShopException('This CLDR library has been removed. See Tools::getContextLocale instead.');
     }
 
     /**
-    * Return price with currency sign for a given product
-    *
-    * @param float $price Product price
-    * @param object|array $currency Current currency (object, id_currency, NULL => context currency)
-    * @return string Price correctly formated (sign, decimal separator...)
-    * if you modify this function, don't forget to modify the Javascript function formatCurrency (in tools.js)
-    */
+     * Return price with currency sign for a given product.
+     *
+     * @deprecated Since 1.7.6.0. Please use Locale::formatPrice() instead
+     * @see PrestaShop\PrestaShop\Core\Localization\Locale
+     *
+     * @param float $price Product price
+     * @param object|array $currency Current currency (object, id_currency, NULL => context currency)
+     * @param bool $no_utf8 Not used anymore
+     * @param Context|null $context
+     *
+     * @return string Price correctly formatted (sign, decimal separator...)
+     *                if you modify this function, don't forget to modify the Javascript function formatCurrency (in tools.js)
+     *
+     * @throws LocalizationException
+     */
     public static function displayPrice($price, $currency = null, $no_utf8 = false, Context $context = null)
     {
+        @trigger_error(
+            'Tools::displayPrice() is deprecated since version 1.7.6.0. '
+            . 'Use ' . Locale::class . '::formatPrice() instead.',
+            E_USER_DEPRECATED
+        );
+
         if (!is_numeric($price)) {
             return $price;
         }
-        if (!$context) {
-            $context = Context::getContext();
-        }
-        if ($currency === null) {
-            $currency = $context->currency;
-        } elseif (is_int($currency)) {
-            $currency = Currency::getCurrencyInstance((int)$currency);
+
+        $context = $context ?: Context::getContext();
+        $currency = $currency ?: $context->currency;
+
+        if (is_int($currency)) {
+            $currency = Currency::getCurrencyInstance($currency);
         }
 
-        $cldr = self::getCldr($context);
+        $locale = static::getContextLocale($context);
+        $currencyCode = is_array($currency) ? $currency['iso_code'] : $currency->iso_code;
 
-        return $cldr->getPrice($price, is_array($currency) ? $currency['iso_code'] : $currency->iso_code);
+        return $locale->formatPrice($price, $currencyCode);
     }
 
-    /*
-     * Return a number well formatted
-     * @param float $number A number
-     * @param nullable $currency / not used anymaore
+    /**
+     * Return current locale
+     *
+     * @param Context $context
+     *
+     * @return Locale
+     *
+     * @throws Exception
+     */
+    public static function getContextLocale(Context $context)
+    {
+        $locale = $context->getCurrentLocale();
+        if (null !== $locale) {
+            return $locale;
+        }
+
+        $containerFinder = new ContainerFinder($context);
+        $container = $containerFinder->getContainer();
+        if (null === $context->container) {
+            $context->container = $container;
+        }
+
+        /** @var LocaleRepository $localeRepository */
+        $localeRepository = $container->get(self::SERVICE_LOCALE_REPOSITORY);
+        $locale = $localeRepository->getLocale(
+            $context->language->getLocale()
+        );
+
+        return $locale;
+    }
+
+    /**
+     * Returns a well formatted number.
+     *
+     * @deprecated Since 1.7.6.0. Please use Locale::formatNumber() instead
+     * @see Locale
+     *
+     * @param float $number The number to format
+     * @param null $currency not used anymore
+     *
+     * @return string The formatted number
+     *
+     * @throws Exception
+     * @throws LocalizationException
      */
     public static function displayNumber($number, $currency = null)
     {
-        $cldr = self::getCldr(Context::getContext());
+        @trigger_error(
+            'Tools::displayNumber() is deprecated since version 1.7.5.0. '
+            . 'Use ' . Locale::class . ' instead.',
+            E_USER_DEPRECATED
+        );
 
-        return $cldr->getNumber($number);
+        $context = Context::getContext();
+        $locale = static::getContextLocale($context);
+
+        return $locale->formatNumber($number);
     }
 
     public static function displayPriceSmarty($params, &$smarty)
     {
+        $context = Context::getContext();
+        $locale = static::getContextLocale($context);
         if (array_key_exists('currency', $params)) {
-            $currency = Currency::getCurrencyInstance((int)$params['currency']);
+            $currency = Currency::getCurrencyInstance((int) $params['currency']);
             if (Validate::isLoadedObject($currency)) {
-                return Tools::displayPrice($params['price'], $currency, false);
+                return $locale->formatPrice($params['price'], $currency->iso_code);
             }
         }
-        return Tools::displayPrice($params['price']);
+
+        return $locale->formatPrice($params['price'], $context->currency->iso_code);
     }
 
     /**
-    * Return price converted
-    *
-    * @param float $price Product price
-    * @param object|array $currency Current currency object
-    * @param bool $to_currency convert to currency or from currency to default currency
-    * @param Context $context
-    * @return float Price
-    */
+     * Return price converted.
+     *
+     * @deprecated since 1.7.4 use convertPriceToCurrency()
+     *
+     * @param float $price Product price
+     * @param object|array $currency Current currency object
+     * @param bool $to_currency convert to currency or from currency to default currency
+     * @param Context $context
+     *
+     * @return float Price
+     */
     public static function convertPrice($price, $currency = null, $to_currency = true, Context $context = null)
     {
-        static $default_currency = null;
-
-        if ($default_currency === null) {
-            $default_currency = (int)Configuration::get('PS_CURRENCY_DEFAULT');
-        }
+        $default_currency = (int) Configuration::get('PS_CURRENCY_DEFAULT');
 
         if (!$context) {
             $context = Context::getContext();
@@ -710,26 +872,31 @@ class ToolsCore
     }
 
     /**
-     * Implement array_replace for PHP <= 5.2
+     * Implement array_replace for PHP <= 5.2.
      *
      * @return array|mixed|null
+     *
+     * @deprecated since version 1.7.4.0, to be removed.
      */
     public static function array_replace()
     {
+        Tools::displayAsDeprecated('Use PHP\'s array_replace() instead');
         if (!function_exists('array_replace')) {
-            $args     = func_get_args();
+            $args = func_get_args();
             $num_args = func_num_args();
-            $res      = array();
-            for ($i = 0; $i < $num_args; $i++) {
+            $res = array();
+            for ($i = 0; $i < $num_args; ++$i) {
                 if (is_array($args[$i])) {
                     foreach ($args[$i] as $key => $val) {
                         $res[$key] = $val;
                     }
                 } else {
-                    trigger_error(__FUNCTION__.'(): Argument #'.($i + 1).' is not an array', E_USER_WARNING);
+                    trigger_error(__FUNCTION__ . '(): Argument #' . ($i + 1) . ' is not an array', E_USER_WARNING);
+
                     return null;
                 }
             }
+
             return $res;
         } else {
             return call_user_func_array('array_replace', func_get_args());
@@ -737,8 +904,8 @@ class ToolsCore
     }
 
     /**
+     * Convert amount from a currency to an other currency automatically.
      *
-     * Convert amount from a currency to an other currency automatically
      * @param float $amount
      * @param Currency $currency_from if null we used the default currency
      * @param Currency $currency_to if null we used the default currency
@@ -767,30 +934,32 @@ class ToolsCore
             $amount *= $currency_to->conversion_rate;
         }
 
-        return Tools::ps_round($amount, _PS_PRICE_COMPUTE_PRECISION_) ;
+        return Tools::ps_round($amount, Context::getContext()->getComputingPrecision());
     }
 
     /**
-    * Display date regarding to language preferences
-    *
-    * @param array $params Date, format...
-    * @param object $smarty Smarty object for language preferences
-    * @return string Date
-    */
+     * Display date regarding to language preferences.
+     *
+     * @param array $params Date, format...
+     * @param object $smarty Smarty object for language preferences
+     *
+     * @return string Date
+     */
     public static function dateFormat($params, &$smarty)
     {
         return Tools::displayDate($params['date'], null, (isset($params['full']) ? $params['full'] : false));
     }
 
     /**
-    * Display date regarding to language preferences
-    *
-    * @param string $date Date to display format UNIX
-    * @param int $id_lang Language id DEPRECATED
-    * @param bool $full With time or not (optional)
-    * @param string $separator DEPRECATED
-    * @return string Date
-    */
+     * Display date regarding to language preferences.
+     *
+     * @param string $date Date to display format UNIX
+     * @param int $id_lang Language id DEPRECATED
+     * @param bool $full With time or not (optional)
+     * @param string $separator DEPRECATED
+     *
+     * @return string Date
+     */
     public static function displayDate($date, $id_lang = null, $full = false, $separator = null)
     {
         if ($id_lang !== null) {
@@ -814,51 +983,57 @@ class ToolsCore
 
         $context = Context::getContext();
         $date_format = ($full ? $context->language->date_format_full : $context->language->date_format_lite);
+
         return date($date_format, $time);
     }
 
     /**
-    * Get localized date format
-    *
-    * @return string Date format
-    */
+     * Get localized date format.
+     *
+     * @return string Date format
+     */
     public static function getDateFormat()
     {
         $format = Context::getContext()->language->date_format_lite;
         $search = array('d', 'm', 'Y');
         $replace = array('DD', 'MM', 'YYYY');
         $format = str_replace($search, $replace, $format);
+
         return $format;
     }
 
     /**
-    * Get formatted date
-    *
-    * @param string $date_str Date string
-    * @param bool $full With time or not (optional)
-    * @return string Formatted date
-    */
+     * Get formatted date.
+     *
+     * @param string $date_str Date string
+     * @param bool $full With time or not (optional)
+     *
+     * @return string Formatted date
+     */
     public static function formatDateStr($date_str, $full = false)
     {
         $time = strtotime($date_str);
         $context = Context::getContext();
         $date_format = ($full ? $context->language->date_format_full : $context->language->date_format_lite);
         $date = date($date_format, $time);
+
         return $date;
     }
 
     /**
-    * Sanitize a string
-    *
-    * @param string $string String to sanitize
-    * @param bool $full String contains HTML or not (optional)
-    * @return string Sanitized string
-    */
+     * Sanitize a string.
+     *
+     * @param string $string String to sanitize
+     * @param bool $full String contains HTML or not (optional)
+     *
+     * @return string Sanitized string
+     */
     public static function safeOutput($string, $html = false)
     {
         if (!$html) {
             $string = strip_tags($string);
         }
+
         return @Tools::htmlentitiesUTF8($string, ENT_QUOTES);
     }
 
@@ -868,16 +1043,18 @@ class ToolsCore
             return array_map(array('Tools', 'htmlentitiesUTF8'), $string);
         }
 
-        return htmlentities((string)$string, $type, 'utf-8');
+        return htmlentities((string) $string, $type, 'utf-8');
     }
 
     public static function htmlentitiesDecodeUTF8($string)
     {
         if (is_array($string)) {
             $string = array_map(array('Tools', 'htmlentitiesDecodeUTF8'), $string);
-            return (string)array_shift($string);
+
+            return (string) array_shift($string);
         }
-        return html_entity_decode((string)$string, ENT_QUOTES, 'utf-8');
+
+        return html_entity_decode((string) $string, ENT_QUOTES, 'utf-8');
     }
 
     public static function safePostVars()
@@ -890,43 +1067,44 @@ class ToolsCore
     }
 
     /**
-    * Delete directory and subdirectories
-    *
-    * @param string $dirname Directory name
-    */
+     * Delete directory and subdirectories.
+     *
+     * @param string $dirname Directory name
+     */
     public static function deleteDirectory($dirname, $delete_self = true)
     {
-        $dirname = rtrim($dirname, '/').'/';
+        $dirname = rtrim($dirname, '/') . '/';
         if (file_exists($dirname)) {
-            if ($files = scandir($dirname)) {
+            if ($files = scandir($dirname, SCANDIR_SORT_NONE)) {
                 foreach ($files as $file) {
                     if ($file != '.' && $file != '..' && $file != '.svn') {
-                        if (is_dir($dirname.$file)) {
-                            Tools::deleteDirectory($dirname.$file);
-                        } elseif (file_exists($dirname.$file)) {
-                            @chmod($dirname.$file, 0777); // NT ?
-                                unlink($dirname.$file);
+                        if (is_dir($dirname . $file)) {
+                            Tools::deleteDirectory($dirname . $file);
+                        } elseif (file_exists($dirname . $file)) {
+                            unlink($dirname . $file);
                         }
                     }
                 }
+
                 if ($delete_self && file_exists($dirname)) {
                     if (!rmdir($dirname)) {
-                        @chmod($dirname, 0777); // NT ?
                         return false;
                     }
                 }
+
                 return true;
             }
         }
+
         return false;
     }
 
     /**
-    * Delete file
-    *
-    * @param string $file File path
-    * @param array $exclude_files Excluded files
-    */
+     * Delete file.
+     *
+     * @param string $file File path
+     * @param array $exclude_files Excluded files
+     */
     public static function deleteFile($file, $exclude_files = array())
     {
         if (isset($exclude_files) && !is_array($exclude_files)) {
@@ -934,46 +1112,63 @@ class ToolsCore
         }
 
         if (file_exists($file) && is_file($file) && array_search(basename($file), $exclude_files) === false) {
-            @chmod($file, 0777); // NT ?
             unlink($file);
         }
     }
 
     /**
-    * Clear XML cache folder
-    */
+     * Clear XML cache folder.
+     */
     public static function clearXMLCache()
     {
-        foreach (scandir(_PS_ROOT_DIR_.'/config/xml') as $file) {
+        foreach (scandir(_PS_ROOT_DIR_ . '/config/xml', SCANDIR_SORT_NONE) as $file) {
             $path_info = pathinfo($file, PATHINFO_EXTENSION);
             if (($path_info == 'xml') && ($file != 'default.xml')) {
-                self::deleteFile(_PS_ROOT_DIR_.'/config/xml/'.$file);
+                self::deleteFile(_PS_ROOT_DIR_ . '/config/xml/' . $file);
             }
         }
     }
 
     /**
-    * Display an error according to an error code
-    *
-    * @param string $string Error message
-    * @param bool $htmlentities By default at true for parsing error message with htmlentities
-    */
-    public static function displayError($string = 'Fatal error', $htmlentities = true, Context $context = null)
+     * Depending on _PS_MODE_DEV_ throws an exception or returns a error message.
+     *
+     * @param string|null $errorMessage Error message (defaults to "Fatal error")
+     * @param bool $htmlentities DEPRECATED since 1.7.4.0
+     * @param Context|null $context DEPRECATED since 1.7.4.0
+     *
+     * @return string
+     *
+     * @throws PrestaShopException If _PS_MODE_DEV_ is enabled
+     */
+    public static function displayError($errorMessage = null, $htmlentities = null, Context $context = null)
     {
-        if (defined('_PS_MODE_DEV_') && _PS_MODE_DEV_) {
-            throw new PrestaShopException($string);
-        } else if ('Fatal error' !== $string) {
-            return $string;
+        header('HTTP/1.1 500 Internal Server Error', true, 500);
+        if (null !== $htmlentities) {
+            self::displayParameterAsDeprecated('htmlentities');
+        }
+        if (null !== $context) {
+            self::displayParameterAsDeprecated('context');
         }
 
-        return Context::getContext()->getTranslator()->trans('Fatal error', array(), 'Admin.Notifications.Error');
+        if (null === $errorMessage) {
+            $errorMessage = Context::getContext()
+                ->getTranslator()
+                ->trans('Fatal error', [], 'Admin.Notifications.Error');
+        }
+
+        if (_PS_MODE_DEV_) {
+            throw new PrestaShopException($errorMessage);
+        }
+
+        return $errorMessage;
     }
 
     /**
-     * Display an error with detailed object
+     * Display an error with detailed object.
      *
      * @param mixed $object
      * @param bool $kill
+     *
      * @return $object if $kill = false;
      */
     public static function dieObject($object, $kill = true)
@@ -1000,15 +1195,15 @@ class ToolsCore
             <ul>';
         $i = 0;
         foreach ($backtrace as $id => $trace) {
-            if ((int)$limit && (++$i > $limit)) {
+            if ((int) $limit && (++$i > $limit)) {
                 break;
             }
-            $relative_file = (isset($trace['file'])) ? 'in /'.ltrim(str_replace(array(_PS_ROOT_DIR_, '\\'), array('', '/'), $trace['file']), '/') : '';
-            $current_line = (isset($trace['line'])) ? ':'.$trace['line'] : '';
+            $relative_file = (isset($trace['file'])) ? 'in /' . ltrim(str_replace(array(_PS_ROOT_DIR_, '\\'), array('', '/'), $trace['file']), '/') : '';
+            $current_line = (isset($trace['line'])) ? ':' . $trace['line'] : '';
 
             echo '<li>
-                <b>'.((isset($trace['class'])) ? $trace['class'] : '').((isset($trace['type'])) ? $trace['type'] : '').$trace['function'].'</b>
-                '.$relative_file.$current_line.'
+                <b>' . ((isset($trace['class'])) ? $trace['class'] : '') . ((isset($trace['type'])) ? $trace['type'] : '') . $trace['function'] . '</b>
+                ' . $relative_file . $current_line . '
             </li>';
         }
         echo '</ul>
@@ -1016,13 +1211,15 @@ class ToolsCore
     }
 
     /**
-     * Prints object information into error log
+     * Prints object information into error log.
      *
      * @see error_log()
+     *
      * @param mixed $object
-     * @param int|null    $message_type
+     * @param int|null $message_type
      * @param string|null $destination
      * @param string|null $extra_headers
+     *
      * @return bool
      */
     public static function error_log($object, $message_type = null, $destination = null, $extra_headers = null)
@@ -1031,20 +1228,19 @@ class ToolsCore
     }
 
     /**
-    * Check if submit has been posted
-    *
-    * @param string $submit submit name
-    */
+     * Check if submit has been posted.
+     *
+     * @param string $submit submit name
+     */
     public static function isSubmit($submit)
     {
-        return (
-            isset($_POST[$submit]) || isset($_POST[$submit.'_x']) || isset($_POST[$submit.'_y'])
-            || isset($_GET[$submit]) || isset($_GET[$submit.'_x']) || isset($_GET[$submit.'_y'])
-        );
+        return
+            isset($_POST[$submit]) || isset($_POST[$submit . '_x']) || isset($_POST[$submit . '_y'])
+            || isset($_GET[$submit]) || isset($_GET[$submit . '_x']) || isset($_GET[$submit . '_y']);
     }
 
     /**
-     * Hash password
+     * Hash password.
      *
      * @param string $passwd String to hash
      *
@@ -1058,9 +1254,9 @@ class ToolsCore
     }
 
     /**
-    * Hash password
-    *
-    * @param string $passwd String to has
+     * Hash password.
+     *
+     * @param string $passwd String to has
      *
      * @return string Hashed password
      *
@@ -1068,11 +1264,11 @@ class ToolsCore
      */
     public static function hash($passwd)
     {
-        return md5(_COOKIE_KEY_.$passwd);
+        return md5(_COOKIE_KEY_ . $passwd);
     }
 
     /**
-     * Hash data string
+     * Hash data string.
      *
      * @param string $data String to encrypt
      *
@@ -1086,7 +1282,7 @@ class ToolsCore
     }
 
     /**
-     * Hash data string
+     * Hash data string.
      *
      * @param string $data String to encrypt
      *
@@ -1096,31 +1292,31 @@ class ToolsCore
      */
     public static function hashIV($data)
     {
-        return md5(_COOKIE_IV_.$data);
+        return md5(_COOKIE_IV_ . $data);
     }
 
     /**
-    * Get token to prevent CSRF
-    *
-    * @param string $token token to encrypt
-    */
+     * Get token to prevent CSRF.
+     *
+     * @param string $token token to encrypt
+     */
     public static function getToken($page = true, Context $context = null)
     {
         if (!$context) {
             $context = Context::getContext();
         }
         if ($page === true) {
-            return (Tools::hash($context->customer->id.$context->customer->passwd.$_SERVER['SCRIPT_NAME']));
+            return Tools::hash($context->customer->id . $context->customer->passwd . $_SERVER['SCRIPT_NAME']);
         } else {
-            return (Tools::hash($context->customer->id.$context->customer->passwd.$page));
+            return Tools::hash($context->customer->id . $context->customer->passwd . $page);
         }
     }
 
     /**
-    * Tokenize a string
-    *
-    * @param string $string string to encript
-    */
+     * Tokenize a string.
+     *
+     * @param string $string string to encript
+     */
     public static function getAdminToken($string)
     {
         return !empty($string) ? Tools::hash($string) : false;
@@ -1131,24 +1327,26 @@ class ToolsCore
         if (!$context) {
             $context = Context::getContext();
         }
-        return Tools::getAdminToken($tab.(int)Tab::getIdFromClassName($tab).(int)$context->employee->id);
+
+        return Tools::getAdminToken($tab . (int) Tab::getIdFromClassName($tab) . (int) $context->employee->id);
     }
 
     public static function getAdminTokenLiteSmarty($params, &$smarty)
     {
         $context = Context::getContext();
-        return Tools::getAdminToken($params['tab'].(int)Tab::getIdFromClassName($params['tab']).(int)$context->employee->id);
+
+        return Tools::getAdminToken($params['tab'] . (int) Tab::getIdFromClassName($params['tab']) . (int) $context->employee->id);
     }
 
     /**
-    * Get a valid URL to use from BackOffice
-    *
-    * @param string $url An URL to use in BackOffice
-    * @param bool $entites Set to true to use htmlentities function on URL param
-    */
+     * Get a valid URL to use from BackOffice.
+     *
+     * @param string $url An URL to use in BackOffice
+     * @param bool $entites Set to true to use htmlentities function on URL param
+     */
     public static function getAdminUrl($url = null, $entities = false)
     {
-        $link = Tools::getHttpHost(true).__PS_BASE_URI__;
+        $link = Tools::getHttpHost(true) . __PS_BASE_URI__;
 
         if (isset($url)) {
             $link .= ($entities ? Tools::htmlentitiesUTF8($url) : $url);
@@ -1158,21 +1356,22 @@ class ToolsCore
     }
 
     /**
-    * Get a valid image URL to use from BackOffice
-    *
-    * @param string $image Image name
-    * @param bool $entites Set to true to use htmlentities function on image param
-    */
+     * Get a valid image URL to use from BackOffice.
+     *
+     * @param string $image Image name
+     * @param bool $entites Set to true to use htmlentities function on image param
+     */
     public static function getAdminImageUrl($image = null, $entities = false)
     {
-        return Tools::getAdminUrl(basename(_PS_IMG_DIR_).'/'.$image, $entities);
+        return Tools::getAdminUrl(basename(_PS_IMG_DIR_) . '/' . $image, $entities);
     }
 
     /**
-     * Return the friendly url from the provided string
+     * Return the friendly url from the provided string.
      *
      * @param string $str
      * @param bool $utf8_decode (deprecated)
+     *
      * @return string
      */
     public static function link_rewrite($str, $utf8_decode = null)
@@ -1180,14 +1379,16 @@ class ToolsCore
         if ($utf8_decode !== null) {
             Tools::displayParameterAsDeprecated('utf8_decode');
         }
+
         return Tools::str2url($str);
     }
 
     /**
      * Return a friendly url made from the provided string
-     * If the mbstring library is available, the output is the same as the js function of the same name
+     * If the mbstring library is available, the output is the same as the js function of the same name.
      *
      * @param string $str
+     *
      * @return string
      */
     public static function str2url($str)
@@ -1242,6 +1443,7 @@ class ToolsCore
         }
 
         $array_str[$str] = $return_str;
+
         return $return_str;
     }
 
@@ -1249,6 +1451,7 @@ class ToolsCore
      * Replace all accented chars by their equivalent non accented chars.
      *
      * @param string $str
+     *
      * @return string
      */
     public static function replaceAccentedChars($str)
@@ -1259,7 +1462,6 @@ class ToolsCore
             http://www.tachyonsoft.com/uc0004.htm
         */
         $patterns = array(
-
             /* Lowercase */
             /* a  */ '/[\x{00E0}\x{00E1}\x{00E2}\x{00E3}\x{00E4}\x{00E5}\x{0101}\x{0103}\x{0105}\x{0430}\x{00C0}-\x{00C3}\x{1EA0}-\x{1EB7}]/u',
             /* b  */ '/[\x{0431}]/u',
@@ -1335,28 +1537,30 @@ class ToolsCore
             /* YI */ '/[\x{0407}]/u',
             /* YO */ '/[\x{0401}]/u',
             /* YU */ '/[\x{042E}]/u',
-            /* ZH */ '/[\x{0416}]/u');
+            /* ZH */ '/[\x{0416}]/u',
+        );
 
-            // ö to oe
-            // å to aa
-            // ä to ae
+        // ö to oe
+        // å to aa
+        // ä to ae
 
         $replacements = array(
-                'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'r', 's', 'ss', 't', 'u', 'v', 'w', 'y', 'z', 'ae', 'ch', 'kh', 'oe', 'sh', 'shh', 'ya', 'ye', 'yi', 'yo', 'yu', 'zh',
-                'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'R', 'S', 'T', 'U', 'V', 'W', 'Y', 'Z', 'AE', 'CH', 'KH', 'OE', 'SH', 'SHH', 'YA', 'YE', 'YI', 'YO', 'YU', 'ZH'
-            );
+            'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'r', 's', 'ss', 't', 'u', 'v', 'w', 'y', 'z', 'ae', 'ch', 'kh', 'oe', 'sh', 'shh', 'ya', 'ye', 'yi', 'yo', 'yu', 'zh',
+            'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'R', 'S', 'T', 'U', 'V', 'W', 'Y', 'Z', 'AE', 'CH', 'KH', 'OE', 'SH', 'SHH', 'YA', 'YE', 'YI', 'YO', 'YU', 'ZH',
+        );
 
         return preg_replace($patterns, $replacements, $str);
     }
 
     /**
-    * Truncate strings
-    *
-    * @param string $str
-    * @param int $max_length Max length
-    * @param string $suffix Suffix optional
-    * @return string $str truncated
-    */
+     * Truncate strings.
+     *
+     * @param string $str
+     * @param int $max_length Max length
+     * @param string $suffix Suffix optional
+     *
+     * @return string $str truncated
+     */
     /* CAUTION : Use it only on module hookEvents.
     ** For other purposes use the smarty function instead */
     public static function truncate($str, $max_length, $suffix = '...')
@@ -1365,24 +1569,24 @@ class ToolsCore
             return $str;
         }
         $str = utf8_decode($str);
-        return (utf8_encode(substr($str, 0, $max_length - Tools::strlen($suffix)).$suffix));
+
+        return utf8_encode(substr($str, 0, $max_length - Tools::strlen($suffix)) . $suffix);
     }
 
     /*Copied from CakePHP String utility file*/
     public static function truncateString($text, $length = 120, $options = array())
     {
         $default = array(
-            'ellipsis' => '...', 'exact' => true, 'html' => true
+            'ellipsis' => '...', 'exact' => true, 'html' => true,
         );
 
         $options = array_merge($default, $options);
         extract($options);
         /**
-         * @var string $ellipsis
-         * @var bool   $exact
-         * @var bool   $html
+         * @var string
+         * @var bool $exact
+         * @var bool $html
          */
-
         if ($html) {
             if (Tools::strlen(preg_replace('/<.*?>/', '', $text)) <= $length) {
                 return $text;
@@ -1414,7 +1618,7 @@ class ToolsCore
                     if (preg_match_all('/&[0-9a-z]{2,8};|&#[0-9]{1,7};|&#x[0-9a-f]{1,6};/i', $tag[3], $entities, PREG_OFFSET_CAPTURE)) {
                         foreach ($entities[0] as $entity) {
                             if ($entity[1] + 1 - $entities_length <= $left) {
-                                $left--;
+                                --$left;
                                 $entities_length += Tools::strlen($entity[0]);
                             } else {
                                 break;
@@ -1423,6 +1627,7 @@ class ToolsCore
                     }
 
                     $truncate .= Tools::substr($tag[3], 0, $left + $entities_length);
+
                     break;
                 } else {
                     $truncate .= $tag[3];
@@ -1479,7 +1684,7 @@ class ToolsCore
 
         if ($html) {
             foreach ($open_tags as $tag) {
-                $truncate .= '</'.$tag.'>';
+                $truncate .= '</' . $tag . '>';
             }
         }
 
@@ -1488,42 +1693,45 @@ class ToolsCore
 
     public static function normalizeDirectory($directory)
     {
-        return rtrim($directory, '/\\').DIRECTORY_SEPARATOR;
+        return rtrim($directory, '/\\') . DIRECTORY_SEPARATOR;
     }
 
     /**
-    * Generate date form
-    *
-    * @param int $year Year to select
-    * @param int $month Month to select
-    * @param int $day Day to select
-    * @return array $tab html data with 3 cells :['days'], ['months'], ['years']
-    *
-    */
+     * Generate date form.
+     *
+     * @param int $year Year to select
+     * @param int $month Month to select
+     * @param int $day Day to select
+     *
+     * @return array $tab html data with 3 cells :['days'], ['months'], ['years']
+     */
     public static function dateYears()
     {
         $tab = array();
-        for ($i = date('Y'); $i >= 1900; $i--) {
+        for ($i = date('Y'); $i >= 1900; --$i) {
             $tab[] = $i;
         }
+
         return $tab;
     }
 
     public static function dateDays()
     {
         $tab = array();
-        for ($i = 1; $i != 32; $i++) {
+        for ($i = 1; $i != 32; ++$i) {
             $tab[] = $i;
         }
+
         return $tab;
     }
 
     public static function dateMonths()
     {
         $tab = array();
-        for ($i = 1; $i != 13; $i++) {
+        for ($i = 1; $i != 13; ++$i) {
             $tab[$i] = date('F', mktime(0, 0, 0, $i, date('m'), date('Y')));
         }
+
         return $tab;
     }
 
@@ -1536,8 +1744,9 @@ class ToolsCore
     {
         $tab = explode(' ', $date);
         if (!isset($tab[1])) {
-            $date .= ' '.Tools::hourGenerate(0, 0, 0);
+            $date .= ' ' . Tools::hourGenerate(0, 0, 0);
         }
+
         return $date;
     }
 
@@ -1545,8 +1754,9 @@ class ToolsCore
     {
         $tab = explode(' ', $date);
         if (!isset($tab[1])) {
-            $date .= ' '.Tools::hourGenerate(23, 59, 59);
+            $date .= ' ' . Tools::hourGenerate(23, 59, 59);
         }
+
         return $date;
     }
 
@@ -1558,6 +1768,7 @@ class ToolsCore
         if (function_exists('mb_strtolower')) {
             return mb_strtolower($str, 'utf-8');
         }
+
         return strtolower($str);
     }
 
@@ -1570,6 +1781,7 @@ class ToolsCore
         if (function_exists('mb_strlen')) {
             return mb_strlen($str, $encoding);
         }
+
         return strlen($str);
     }
 
@@ -1578,6 +1790,7 @@ class ToolsCore
         if (_PS_MAGIC_QUOTES_GPC_) {
             $string = stripslashes($string);
         }
+
         return $string;
     }
 
@@ -1589,6 +1802,7 @@ class ToolsCore
         if (function_exists('mb_strtoupper')) {
             return mb_strtoupper($str, 'utf-8');
         }
+
         return strtoupper($str);
     }
 
@@ -1598,9 +1812,10 @@ class ToolsCore
             return false;
         }
         if (function_exists('mb_substr')) {
-            return mb_substr($str, (int)$start, ($length === false ? Tools::strlen($str) : (int)$length), $encoding);
+            return mb_substr($str, (int) $start, ($length === false ? Tools::strlen($str) : (int) $length), $encoding);
         }
-        return substr($str, $start, ($length === false ? Tools::strlen($str) : (int)$length));
+
+        return substr($str, $start, ($length === false ? Tools::strlen($str) : (int) $length));
     }
 
     public static function strpos($str, $find, $offset = 0, $encoding = 'UTF-8')
@@ -1608,6 +1823,7 @@ class ToolsCore
         if (function_exists('mb_strpos')) {
             return mb_strpos($str, $find, $offset, $encoding);
         }
+
         return strpos($str, $find, $offset);
     }
 
@@ -1616,12 +1832,13 @@ class ToolsCore
         if (function_exists('mb_strrpos')) {
             return mb_strrpos($str, $find, $offset, $encoding);
         }
+
         return strrpos($str, $find, $offset);
     }
 
     public static function ucfirst($str)
     {
-        return Tools::strtoupper(Tools::substr($str, 0, 1)).Tools::substr($str, 1);
+        return Tools::strtoupper(Tools::substr($str, 0, 1)) . Tools::substr($str, 1);
     }
 
     public static function ucwords($str)
@@ -1629,13 +1846,14 @@ class ToolsCore
         if (function_exists('mb_convert_case')) {
             return mb_convert_case($str, MB_CASE_TITLE);
         }
+
         return ucwords(Tools::strtolower($str));
     }
 
     public static function orderbyPrice(&$array, $order_way)
     {
         foreach ($array as &$row) {
-            $row['price_tmp'] = Product::getPriceStatic($row['id_product'], true, ((isset($row['id_product_attribute']) && !empty($row['id_product_attribute'])) ? (int)$row['id_product_attribute'] : null), 2);
+            $row['price_tmp'] = Product::getPriceStatic($row['id_product'], true, ((isset($row['id_product_attribute']) && !empty($row['id_product_attribute'])) ? (int) $row['id_product_attribute'] : null), 2);
         }
 
         unset($row);
@@ -1653,30 +1871,32 @@ class ToolsCore
     public static function iconv($from, $to, $string)
     {
         if (function_exists('iconv')) {
-            return iconv($from, $to.'//TRANSLIT', str_replace('¥', '&yen;', str_replace('£', '&pound;', str_replace('€', '&euro;', $string))));
+            return iconv($from, $to . '//TRANSLIT', str_replace('¥', '&yen;', str_replace('£', '&pound;', str_replace('€', '&euro;', $string))));
         }
+
         return html_entity_decode(htmlentities($string, ENT_NOQUOTES, $from), ENT_NOQUOTES, $to);
     }
 
     public static function isEmpty($field)
     {
-        return ($field === '' || $field === null);
+        return $field === '' || $field === null;
     }
 
     /**
-     * returns the rounded value of $value to specified precision, according to your configuration;
+     * returns the rounded value of $value to specified precision, according to your configuration;.
      *
      * @note : PHP 5.3.0 introduce a 3rd parameter mode in round function
      *
      * @param float $value
      * @param int $precision
+     *
      * @return float
      */
     public static function ps_round($value, $precision = 0, $round_mode = null)
     {
         if ($round_mode === null) {
             if (Tools::$round_mode == null) {
-                Tools::$round_mode = (int)Configuration::get('PS_PRICE_ROUND_MODE');
+                Tools::$round_mode = (int) Configuration::get('PS_PRICE_ROUND_MODE');
             }
 
             $round_mode = Tools::$round_mode;
@@ -1705,13 +1925,13 @@ class ToolsCore
         }
 
         $precision_places = 14 - floor(log10(abs($value)));
-        $f1 = pow(10.0, (double)abs($places));
+        $f1 = 10.0 ** (float) abs($places);
 
         /* If the decimal precision guaranteed by FP arithmetic is higher than
         * the requested places BUT is small enough to make sure a non-zero value
         * is returned, pre-round the result to the precision */
         if ($precision_places > $places && $precision_places - $places < 15) {
-            $f2 = pow(10.0, (double)abs($precision_places));
+            $f2 = 10.0 ** (float) abs($precision_places);
 
             if ($precision_places >= 0) {
                 $tmp_value = $value * $f2;
@@ -1723,7 +1943,7 @@ class ToolsCore
             * thus never larger than 1e15 here) */
             $tmp_value = Tools::round_helper($tmp_value, $mode);
             /* now correctly move the decimal point */
-            $f2 = pow(10.0, (double)abs($places - $precision_places));
+            $f2 = 10.0 ** (float) abs($places - $precision_places);
             /* because places < precision_places */
             $tmp_value = $tmp_value / $f2;
         } else {
@@ -1762,16 +1982,16 @@ class ToolsCore
 
             if (($mode == PS_ROUND_HALF_DOWN && $value == (-0.5 + $tmp_value)) ||
                 ($mode == PS_ROUND_HALF_EVEN && $value == (0.5 + 2 * floor($tmp_value / 2.0))) ||
-                ($mode == PS_ROUND_HALF_ODD  && $value == (0.5 + 2 * floor($tmp_value / 2.0) - 1.0))) {
-                $tmp_value  = $tmp_value - 1.0;
+                ($mode == PS_ROUND_HALF_ODD && $value == (0.5 + 2 * floor($tmp_value / 2.0) - 1.0))) {
+                $tmp_value = $tmp_value - 1.0;
             }
         } else {
-            $tmp_value  = ceil($value - 0.5);
+            $tmp_value = ceil($value - 0.5);
 
             if (($mode == PS_ROUND_HALF_DOWN && $value == (0.5 + $tmp_value)) ||
                 ($mode == PS_ROUND_HALF_EVEN && $value == (-0.5 + 2 * ceil($tmp_value / 2.0))) ||
-                ($mode == PS_ROUND_HALF_ODD  && $value == (-0.5 + 2 * ceil($tmp_value / 2.0) + 1.0))) {
-                $tmp_value  = $tmp_value + 1.0;
+                ($mode == PS_ROUND_HALF_ODD && $value == (-0.5 + 2 * ceil($tmp_value / 2.0) + 1.0))) {
+                $tmp_value = $tmp_value + 1.0;
             }
         }
 
@@ -1779,53 +1999,58 @@ class ToolsCore
     }
 
     /**
-     * returns the rounded value up of $value to specified precision
+     * returns the rounded value up of $value to specified precision.
      *
      * @param float $value
      * @param int $precision
+     *
      * @return float
      */
     public static function ceilf($value, $precision = 0)
     {
-        $precision_factor = $precision == 0 ? 1 : pow(10, $precision);
+        $precision_factor = $precision == 0 ? 1 : 10 ** $precision;
         $tmp = $value * $precision_factor;
-        $tmp2 = (string)$tmp;
+        $tmp2 = (string) $tmp;
         // If the current value has already the desired precision
         if (strpos($tmp2, '.') === false) {
-            return ($value);
+            return $value;
         }
         if ($tmp2[strlen($tmp2) - 1] == 0) {
             return $value;
         }
+
         return ceil($tmp) / $precision_factor;
     }
 
     /**
-     * returns the rounded value down of $value to specified precision
+     * returns the rounded value down of $value to specified precision.
      *
      * @param float $value
      * @param int $precision
+     *
      * @return float
      */
     public static function floorf($value, $precision = 0)
     {
-        $precision_factor = $precision == 0 ? 1 : pow(10, $precision);
+        $precision_factor = $precision == 0 ? 1 : 10 ** $precision;
         $tmp = $value * $precision_factor;
-        $tmp2 = (string)$tmp;
+        $tmp2 = (string) $tmp;
         // If the current value has already the desired precision
         if (strpos($tmp2, '.') === false) {
-            return ($value);
+            return $value;
         }
         if ($tmp2[strlen($tmp2) - 1] == 0) {
             return $value;
         }
+
         return floor($tmp) / $precision_factor;
     }
 
     /**
-     * file_exists() wrapper with cache to speedup performance
+     * file_exists() wrapper with cache to speedup performance.
      *
      * @param string $filename File name
+     *
      * @return bool Cached result of file_exists($filename)
      */
     public static function file_exists_cache($filename)
@@ -1833,25 +2058,26 @@ class ToolsCore
         if (!isset(self::$file_exists_cache[$filename])) {
             self::$file_exists_cache[$filename] = file_exists($filename);
         }
+
         return self::$file_exists_cache[$filename];
     }
 
     /**
-     * file_exists() wrapper with a call to clearstatcache prior
+     * file_exists() wrapper with a call to clearstatcache prior.
      *
      * @param string $filename File name
+     *
      * @return bool Cached result of file_exists($filename)
      */
     public static function file_exists_no_cache($filename)
     {
         clearstatcache();
+
         return file_exists($filename);
     }
 
     /**
-     * refresh a local cacert file
-     *
-     * @return void
+     * refresh a local cacert file.
      */
     public static function refreshCACertFile()
     {
@@ -1860,8 +2086,8 @@ class ToolsCore
                 array(
                     'http' => array('timeout' => 3),
                     'ssl' => array(
-                        'cafile' => CaBundle::getBundledCaBundlePath()
-                    )
+                        'cafile' => CaBundle::getBundledCaBundlePath(),
+                    ),
                 )
             );
 
@@ -1908,7 +2134,19 @@ class ToolsCore
                     }
                 }
             }
+
             $content = curl_exec($curl);
+
+            if (false === $content && _PS_MODE_DEV_) {
+                $errorMessage = sprintf('file_get_contents_curl failed to download %s : (error code %d) %s',
+                    $url,
+                    curl_errno($curl),
+                    curl_error($curl)
+                );
+
+                throw new \Exception($errorMessage);
+            }
+
             curl_close($curl);
         }
 
@@ -1930,19 +2168,21 @@ class ToolsCore
     }
 
     /**
-     * This method allows to get the content from either a URL or a local file
+     * This method allows to get the content from either a URL or a local file.
+     *
      * @param string $url the url to get the content from
      * @param bool $use_include_path second parameter of http://php.net/manual/en/function.file-get-contents.php
      * @param resource $stream_context third parameter of http://php.net/manual/en/function.file-get-contents.php
      * @param int $curl_timeout
      * @param bool $fallback whether or not to use the fallback if the main solution fails
+     *
      * @return bool|string false or the string content
      */
     public static function file_get_contents(
         $url,
         $use_include_path = false,
         $stream_context = null,
-        $curl_timeout = 60,
+        $curl_timeout = 5,
         $fallback = false
     ) {
         $is_local_file = !preg_match('/^https?:\/\//', $url);
@@ -1965,8 +2205,8 @@ class ToolsCore
                     'http' => array('timeout' => $curl_timeout),
                     'ssl' => array(
                         'verify_peer' => true,
-                        'cafile' => CaBundle::getBundledCaBundlePath()
-                    )
+                        'cafile' => CaBundle::getBundledCaBundlePath(),
+                    ),
                 )
             );
         }
@@ -1990,16 +2230,18 @@ class ToolsCore
     /**
      * Create a local file from url
      * required because ZipArchive is unable to extract from remote files.
+     *
      * @param string $url the remote location
+     *
      * @return bool|string false if failure, else the local filename
      */
     public static function createFileFromUrl($url)
     {
-        $remoteFile = fopen($url, "r");
+        $remoteFile = fopen($url, 'rb');
         if (!$remoteFile) {
             return false;
         }
-        $localFile = fopen(basename($url), "w");
+        $localFile = fopen(basename($url), 'wb');
         if (!$localFile) {
             return false;
         }
@@ -2017,40 +2259,52 @@ class ToolsCore
 
     public static function simplexml_load_file($url, $class_name = null)
     {
-        $cache_id = 'Tools::simplexml_load_file'.$url;
+        $cache_id = 'Tools::simplexml_load_file' . $url;
         if (!Cache::isStored($cache_id)) {
             $result = @simplexml_load_string(Tools::file_get_contents($url), $class_name);
             Cache::store($cache_id, $result);
+
             return $result;
         }
+
         return Cache::retrieve($cache_id);
     }
 
     public static function copy($source, $destination, $stream_context = null)
     {
-        if (is_null($stream_context) && !preg_match('/^https?:\/\//', $source)) {
+        if (null === $stream_context && !preg_match('/^https?:\/\//', $source)) {
             return @copy($source, $destination);
         }
+
         return @file_put_contents($destination, Tools::file_get_contents($source, false, $stream_context));
     }
 
     /**
-    * Translates a string with underscores into camel case (e.g. first_name -> firstName)
-    * @prototype string public static function toCamelCase(string $str[, bool $capitalise_first_char = false])
-    */
-    public static function toCamelCase($str, $catapitalise_first_char = false)
+     * Translates a string with underscores into camel case (e.g. first_name -> firstName).
+     *
+     * @prototype string public static function toCamelCase(string $str[, bool $capitalise_first_char = false])
+     *
+     * @param string $str Source string to convert in camel case
+     * @param bool $capitaliseFirstChar Optionnal parameters to transform the first letter in upper case
+     *
+     * @return string The string in camel case
+     */
+    public static function toCamelCase($str, $capitaliseFirstChar = false)
     {
         $str = Tools::strtolower($str);
-        if ($catapitalise_first_char) {
-            $str = Tools::ucfirst($str);
+        $str = str_replace(' ', '', ucwords(str_replace(['-', '_'], ' ', $str)));
+        if (!$capitaliseFirstChar) {
+            $str = lcfirst($str);
         }
-        return preg_replace_callback('/_+([a-z])/', create_function('$c', 'return strtoupper($c[1]);'), $str);
+
+        return $str;
     }
 
     /**
-     * Transform a CamelCase string to underscore_case string
+     * Transform a CamelCase string to underscore_case string.
      *
      * @param string $string
+     *
      * @return string
      */
     public static function toUnderscoreCase($string)
@@ -2086,28 +2340,34 @@ class ToolsCore
         $r = hexdec(substr($hex, 0, 2));
         $g = hexdec(substr($hex, 2, 2));
         $b = hexdec(substr($hex, 4, 2));
+
         return (($r * 299) + ($g * 587) + ($b * 114)) / 1000;
     }
 
     public static function parserSQL($sql)
     {
         if (strlen($sql) > 0) {
-            require_once(_PS_TOOL_DIR_.'parser_sql/PHPSQLParser.php');
             $parser = new PHPSQLParser($sql);
+
             return $parser->parsed;
         }
+
         return false;
     }
 
     public static function replaceByAbsoluteURL($matches)
     {
         Tools::displayAsDeprecated('Use Media::replaceByAbsoluteURL($matches) instead');
+
         return Media::replaceByAbsoluteURL($matches);
     }
 
     protected static $_cache_nb_media_servers = null;
 
-    public static function getMediaServer($filename)
+    /**
+     * @return bool
+     */
+    public static function hasMediaServer(): bool
     {
         if (self::$_cache_nb_media_servers === null && defined('_MEDIA_SERVER_1_') && defined('_MEDIA_SERVER_2_') && defined('_MEDIA_SERVER_3_')) {
             if (_MEDIA_SERVER_1_ == '') {
@@ -2121,33 +2381,91 @@ class ToolsCore
             }
         }
 
-        if ($filename && self::$_cache_nb_media_servers && ($id_media_server = (abs(crc32($filename)) % self::$_cache_nb_media_servers + 1))) {
-            return constant('_MEDIA_SERVER_'.$id_media_server.'_');
+        return self::$_cache_nb_media_servers > 0;
+    }
+
+    /**
+     * @param string $filename
+     *
+     * @return string
+     */
+    public static function getMediaServer(string $filename): string
+    {
+        if (self::hasMediaServer() && ($id_media_server = (abs(crc32($filename)) % self::$_cache_nb_media_servers + 1))) {
+            return constant('_MEDIA_SERVER_' . $id_media_server . '_');
         }
 
-        return Tools::usingSecureMode() ? Tools::getShopDomainSSL() : Tools::getShopDomain();
+        return Tools::usingSecureMode() ? Tools::getShopDomainSsl() : Tools::getShopDomain();
+    }
+
+    /**
+     * Get domains information with physical and virtual paths
+     *
+     * e.g: [
+     *  prestashop.localhost => [
+     *    physical => "/",
+     *    virtual => "",
+     *    id_shop => "1",
+     *  ]
+     * ]
+     *
+     * @return array
+     */
+    public static function getDomains()
+    {
+        $domains = [];
+        foreach (ShopUrl::getShopUrls() as $shop_url) {
+            /** @var ShopUrl $shop_url */
+            if (!isset($domains[$shop_url->domain])) {
+                $domains[$shop_url->domain] = [];
+            }
+
+            $domains[$shop_url->domain][] = [
+                'physical' => $shop_url->physical_uri,
+                'virtual' => $shop_url->virtual_uri,
+                'id_shop' => $shop_url->id_shop,
+            ];
+
+            if ($shop_url->domain == $shop_url->domain_ssl) {
+                continue;
+            }
+
+            if (!isset($domains[$shop_url->domain_ssl])) {
+                $domains[$shop_url->domain_ssl] = [];
+            }
+
+            $domains[$shop_url->domain_ssl][] = [
+                'physical' => $shop_url->physical_uri,
+                'virtual' => $shop_url->virtual_uri,
+                'id_shop' => $shop_url->id_shop,
+            ];
+        }
+
+        return $domains;
     }
 
     public static function generateHtaccess($path = null, $rewrite_settings = null, $cache_control = null, $specific = '', $disable_multiviews = null, $medias = false, $disable_modsec = null)
     {
-        if (defined('PS_INSTALLATION_IN_PROGRESS') && $rewrite_settings === null) {
+        if (defined('_PS_IN_TEST_')
+            || (defined('PS_INSTALLATION_IN_PROGRESS') && $rewrite_settings === null)
+        ) {
             return true;
         }
 
         // Default values for parameters
-        if (is_null($path)) {
-            $path = _PS_ROOT_DIR_.'/.htaccess';
+        if (null === $path) {
+            $path = _PS_ROOT_DIR_ . '/.htaccess';
         }
 
-        if (is_null($cache_control)) {
-            $cache_control = (int)Configuration::get('PS_HTACCESS_CACHE_CONTROL');
+        if (null === $cache_control) {
+            $cache_control = (int) Configuration::get('PS_HTACCESS_CACHE_CONTROL');
         }
-        if (is_null($disable_multiviews)) {
-            $disable_multiviews = (int)Configuration::get('PS_HTACCESS_DISABLE_MULTIVIEWS');
+        if (null === $disable_multiviews) {
+            $disable_multiviews = (bool) Configuration::get('PS_HTACCESS_DISABLE_MULTIVIEWS');
         }
 
         if ($disable_modsec === null) {
-            $disable_modsec = (int)Configuration::get('PS_HTACCESS_DISABLE_MODSEC');
+            $disable_modsec = (int) Configuration::get('PS_HTACCESS_DISABLE_MODSEC');
         }
 
         // Check current content of .htaccess and save all code outside of prestashop comments
@@ -2168,40 +2486,14 @@ class ToolsCore
         }
 
         // Write .htaccess data
-        if (!$write_fd = @fopen($path, 'w')) {
+        if (!$write_fd = @fopen($path, 'wb')) {
             return false;
         }
         if ($specific_before) {
-            fwrite($write_fd, trim($specific_before)."\n\n");
+            fwrite($write_fd, trim($specific_before) . "\n\n");
         }
 
-        $domains = array();
-        foreach (ShopUrl::getShopUrls() as $shop_url) {
-            /** @var ShopUrl $shop_url */
-            if (!isset($domains[$shop_url->domain])) {
-                $domains[$shop_url->domain] = array();
-            }
-
-            $domains[$shop_url->domain][] = array(
-                'physical' =>    $shop_url->physical_uri,
-                'virtual' =>    $shop_url->virtual_uri,
-                'id_shop' =>    $shop_url->id_shop
-            );
-
-            if ($shop_url->domain == $shop_url->domain_ssl) {
-                continue;
-            }
-
-            if (!isset($domains[$shop_url->domain_ssl])) {
-                $domains[$shop_url->domain_ssl] = array();
-            }
-
-            $domains[$shop_url->domain_ssl][] = array(
-                'physical' =>    $shop_url->physical_uri,
-                'virtual' =>    $shop_url->virtual_uri,
-                'id_shop' =>    $shop_url->id_shop
-            );
-        }
+        $domains = self::getDomains();
 
         // Write data in .htaccess file
         fwrite($write_fd, "# ~~start~~ Do not remove this comment, Prestashop will keep automatically the code outside this comment when .htaccess will be generated again\n");
@@ -2234,7 +2526,7 @@ class ToolsCore
             $medias = array(
                 Configuration::getMultiShopValues('PS_MEDIA_SERVER_1'),
                 Configuration::getMultiShopValues('PS_MEDIA_SERVER_2'),
-                Configuration::getMultiShopValues('PS_MEDIA_SERVER_3')
+                Configuration::getMultiShopValues('PS_MEDIA_SERVER_3'),
             );
         }
 
@@ -2242,7 +2534,7 @@ class ToolsCore
         foreach ($medias as $media) {
             foreach ($media as $media_url) {
                 if ($media_url) {
-                    $media_domains .= 'RewriteCond %{HTTP_HOST} ^'.$media_url.'$ [OR]'."\n";
+                    $media_domains .= 'RewriteCond %{HTTP_HOST} ^' . $media_url . '$ [OR]' . PHP_EOL;
                 }
             }
         }
@@ -2252,43 +2544,38 @@ class ToolsCore
         }
 
         foreach ($domains as $domain => $list_uri) {
-            $physicals = array();
+            // As we use regex in the htaccess, ipv6 surrounded by brackets must be escaped
+            $domain = str_replace(['[', ']'], ['\[', '\]'], $domain);
+
             foreach ($list_uri as $uri) {
-                fwrite($write_fd, PHP_EOL.PHP_EOL.'#Domain: '.$domain.PHP_EOL);
+                fwrite($write_fd, PHP_EOL . PHP_EOL . '#Domain: ' . $domain . PHP_EOL);
                 if (Shop::isFeatureActive()) {
-                    fwrite($write_fd, 'RewriteCond %{HTTP_HOST} ^'.$domain.'$'."\n");
+                    fwrite($write_fd, 'RewriteCond %{HTTP_HOST} ^' . $domain . '$' . PHP_EOL);
                 }
-                fwrite($write_fd, 'RewriteRule . - [E=REWRITEBASE:'.$uri['physical'].']'."\n");
+                fwrite($write_fd, 'RewriteRule . - [E=REWRITEBASE:' . $uri['physical'] . ']' . PHP_EOL);
 
                 // Webservice
-                fwrite($write_fd, 'RewriteRule ^api$ api/ [L]'."\n\n");
-                fwrite($write_fd, 'RewriteRule ^api/(.*)$ %{ENV:REWRITEBASE}webservice/dispatcher.php?url=$1 [QSA,L]'."\n\n");
+                fwrite($write_fd, 'RewriteRule ^api(?:/(.*))?$ %{ENV:REWRITEBASE}webservice/dispatcher.php?url=$1 [QSA,L]' . "\n\n");
 
                 if (!$rewrite_settings) {
-                    $rewrite_settings = (int)Configuration::get('PS_REWRITING_SETTINGS', null, null, (int)$uri['id_shop']);
+                    $rewrite_settings = (int) Configuration::get('PS_REWRITING_SETTINGS', null, null, (int) $uri['id_shop']);
                 }
 
-                $domain_rewrite_cond = 'RewriteCond %{HTTP_HOST} ^'.$domain.'$'."\n";
+                $domain_rewrite_cond = 'RewriteCond %{HTTP_HOST} ^' . $domain . '$' . PHP_EOL;
                 // Rewrite virtual multishop uri
                 if ($uri['virtual']) {
                     if (!$rewrite_settings) {
                         fwrite($write_fd, $media_domains);
-                        if (Shop::isFeatureActive()) {
-                            fwrite($write_fd, $domain_rewrite_cond);
-                        }
-                        fwrite($write_fd, 'RewriteRule ^'.trim($uri['virtual'], '/').'/?$ '.$uri['physical'].$uri['virtual']."index.php [L,R]\n");
+                        fwrite($write_fd, $domain_rewrite_cond);
+                        fwrite($write_fd, 'RewriteRule ^' . trim($uri['virtual'], '/') . '/?$ ' . $uri['physical'] . $uri['virtual'] . "index.php [L,R]\n");
                     } else {
                         fwrite($write_fd, $media_domains);
-                        if (Shop::isFeatureActive()) {
-                            fwrite($write_fd, $domain_rewrite_cond);
-                        }
-                        fwrite($write_fd, 'RewriteRule ^'.trim($uri['virtual'], '/').'$ '.$uri['physical'].$uri['virtual']." [L,R]\n");
+                        fwrite($write_fd, $domain_rewrite_cond);
+                        fwrite($write_fd, 'RewriteRule ^' . trim($uri['virtual'], '/') . '$ ' . $uri['physical'] . $uri['virtual'] . " [L,R]\n");
                     }
                     fwrite($write_fd, $media_domains);
-                    if (Shop::isFeatureActive()) {
-                        fwrite($write_fd, $domain_rewrite_cond);
-                    }
-                    fwrite($write_fd, 'RewriteRule ^'.ltrim($uri['virtual'], '/').'(.*) '.$uri['physical']."$1 [L]\n\n");
+                    fwrite($write_fd, $domain_rewrite_cond);
+                    fwrite($write_fd, 'RewriteRule ^' . ltrim($uri['virtual'], '/') . '(.*) ' . $uri['physical'] . "$1 [L]\n\n");
                 }
 
                 if ($rewrite_settings) {
@@ -2296,48 +2583,38 @@ class ToolsCore
                     fwrite($write_fd, "# Images\n");
                     if (Configuration::get('PS_LEGACY_IMAGES')) {
                         fwrite($write_fd, $media_domains);
-                        if (Shop::isFeatureActive()) {
-                            fwrite($write_fd, $domain_rewrite_cond);
-                        }
-                        fwrite($write_fd, 'RewriteRule ^([a-z0-9]+)\-([a-z0-9]+)(\-[_a-zA-Z0-9-]*)(-[0-9]+)?/.+\.jpg$ %{ENV:REWRITEBASE}img/p/$1-$2$3$4.jpg [L]'."\n");
+                        fwrite($write_fd, $domain_rewrite_cond);
+                        fwrite($write_fd, 'RewriteRule ^([a-z0-9]+)\-([a-z0-9]+)(\-[_a-zA-Z0-9-]*)(-[0-9]+)?/.+\.jpg$ %{ENV:REWRITEBASE}img/p/$1-$2$3$4.jpg [L]' . PHP_EOL);
                         fwrite($write_fd, $media_domains);
-                        if (Shop::isFeatureActive()) {
-                            fwrite($write_fd, $domain_rewrite_cond);
-                        }
-                        fwrite($write_fd, 'RewriteRule ^([0-9]+)\-([0-9]+)(-[0-9]+)?/.+\.jpg$ %{ENV:REWRITEBASE}img/p/$1-$2$3.jpg [L]'."\n");
+                        fwrite($write_fd, $domain_rewrite_cond);
+                        fwrite($write_fd, 'RewriteRule ^([0-9]+)\-([0-9]+)(-[0-9]+)?/.+\.jpg$ %{ENV:REWRITEBASE}img/p/$1-$2$3.jpg [L]' . PHP_EOL);
                     }
 
                     // Rewrite product images < 100 millions
-                    for ($i = 1; $i <= 8; $i++) {
+                    for ($i = 1; $i <= 8; ++$i) {
                         $img_path = $img_name = '';
-                        for ($j = 1; $j <= $i; $j++) {
-                            $img_path .= '$'.$j.'/';
-                            $img_name .= '$'.$j;
+                        for ($j = 1; $j <= $i; ++$j) {
+                            $img_path .= '$' . $j . '/';
+                            $img_name .= '$' . $j;
                         }
-                        $img_name .= '$'.$j;
+                        $img_name .= '$' . $j;
                         fwrite($write_fd, $media_domains);
-                        if (Shop::isFeatureActive()) {
-                            fwrite($write_fd, $domain_rewrite_cond);
-                        }
-                        fwrite($write_fd, 'RewriteRule ^'.str_repeat('([0-9])', $i).'(\-[_a-zA-Z0-9-]*)?(-[0-9]+)?/.+\.jpg$ %{ENV:REWRITEBASE}img/p/'.$img_path.$img_name.'$'.($j + 1).".jpg [L]\n");
+                        fwrite($write_fd, $domain_rewrite_cond);
+                        fwrite($write_fd, 'RewriteRule ^' . str_repeat('([0-9])', $i) . '(\-[_a-zA-Z0-9-]*)?(-[0-9]+)?/.+\.jpg$ %{ENV:REWRITEBASE}img/p/' . $img_path . $img_name . '$' . ($j + 1) . ".jpg [L]\n");
                     }
                     fwrite($write_fd, $media_domains);
-                    if (Shop::isFeatureActive()) {
-                        fwrite($write_fd, $domain_rewrite_cond);
-                    }
-                    fwrite($write_fd, 'RewriteRule ^c/([0-9]+)(\-[\.*_a-zA-Z0-9-]*)(-[0-9]+)?/.+\.jpg$ %{ENV:REWRITEBASE}img/c/$1$2$3.jpg [L]'."\n");
+                    fwrite($write_fd, $domain_rewrite_cond);
+                    fwrite($write_fd, 'RewriteRule ^c/([0-9]+)(\-[\.*_a-zA-Z0-9-]*)(-[0-9]+)?/.+\.jpg$ %{ENV:REWRITEBASE}img/c/$1$2$3.jpg [L]' . PHP_EOL);
                     fwrite($write_fd, $media_domains);
-                    if (Shop::isFeatureActive()) {
-                        fwrite($write_fd, $domain_rewrite_cond);
-                    }
-                    fwrite($write_fd, 'RewriteRule ^c/([a-zA-Z_-]+)(-[0-9]+)?/.+\.jpg$ %{ENV:REWRITEBASE}img/c/$1$2.jpg [L]'."\n");
+                    fwrite($write_fd, $domain_rewrite_cond);
+                    fwrite($write_fd, 'RewriteRule ^c/([a-zA-Z_-]+)(-[0-9]+)?/.+\.jpg$ %{ENV:REWRITEBASE}img/c/$1$2.jpg [L]' . PHP_EOL);
                 }
 
                 fwrite($write_fd, "# AlphaImageLoader for IE and fancybox\n");
                 if (Shop::isFeatureActive()) {
                     fwrite($write_fd, $domain_rewrite_cond);
                 }
-                fwrite($write_fd, 'RewriteRule ^images_ie/?([^/]+)\.(jpe?g|png|gif)$ js/jquery/plugins/fancybox/images/$1.$2 [L]'."\n");
+                fwrite($write_fd, 'RewriteRule ^images_ie/?([^/]+)\.(jpe?g|png|gif)$ js/jquery/plugins/fancybox/images/$1.$2 [L]' . PHP_EOL);
             }
             // Redirections to dispatcher
             if ($rewrite_settings) {
@@ -2412,11 +2689,11 @@ FileETag none
         // Do not remove ($domains is already iterated upper)
         reset($domains);
         $domain = current($domains);
-        fwrite($write_fd, 'ErrorDocument 404 '.$domain[0]['physical']."index.php?controller=404\n\n");
+        fwrite($write_fd, 'ErrorDocument 404 ' . $domain[0]['physical'] . "index.php?controller=404\n\n");
 
-        fwrite($write_fd, "# ~~end~~ Do not remove this comment, Prestashop will keep automatically the code outside this comment when .htaccess will be generated again");
+        fwrite($write_fd, '# ~~end~~ Do not remove this comment, Prestashop will keep automatically the code outside this comment when .htaccess will be generated again');
         if ($specific_after) {
-            fwrite($write_fd, "\n\n".trim($specific_after));
+            fwrite($write_fd, "\n\n" . trim($specific_after));
         }
         fclose($write_fd);
 
@@ -2429,17 +2706,18 @@ FileETag none
 
     public static function generateRobotsFile($executeHook = false)
     {
-        $robots_file = _PS_ROOT_DIR_.'/robots.txt';
+        $robots_file = _PS_ROOT_DIR_ . '/robots.txt';
 
-        if (!$write_fd = @fopen($robots_file, 'w')) {
+        if (!$write_fd = @fopen($robots_file, 'wb')) {
             return false;
         }
 
-        $robots_content = self::getRobotsContent();
+        $robots_content = static::getRobotsContent();
+        $languagesIsoIds = Language::getIsoIds();
 
         if (true === $executeHook) {
             Hook::exec('actionAdminMetaBeforeWriteRobotsFile', array(
-                'rb_data' => &$robots_content
+                'rb_data' => &$robots_content,
             ));
         }
 
@@ -2460,7 +2738,7 @@ FileETag none
         if (count($robots_content['Allow'])) {
             fwrite($write_fd, "# Allow Directives\n");
             foreach ($robots_content['Allow'] as $allow) {
-                fwrite($write_fd, 'Allow: '.$allow."\n");
+                fwrite($write_fd, 'Allow: ' . $allow . PHP_EOL);
             }
         }
 
@@ -2468,51 +2746,79 @@ FileETag none
         if (count($robots_content['GB'])) {
             fwrite($write_fd, "# Private pages\n");
             foreach ($robots_content['GB'] as $gb) {
-                fwrite($write_fd, 'Disallow: /*'.$gb."\n");
+                fwrite($write_fd, 'Disallow: /*' . $gb . PHP_EOL);
             }
         }
 
         // Directories
         if (count($robots_content['Directories'])) {
-            fwrite($write_fd, "# Directories\n");
-            foreach ($robots_content['Directories'] as $dir) {
-                fwrite($write_fd, 'Disallow: */'.$dir."\n");
-            }
-        }
+            foreach (self::getDomains() as $domain => $uriList) {
+                fwrite(
+                    $write_fd,
+                    sprintf(
+                        '# Directories for %s%s',
+                        $domain,
+                        PHP_EOL
+                    )
+                );
+                // Disallow multishop directories
+                foreach ($uriList as $uri) {
+                    foreach ($robots_content['Directories'] as $dir) {
+                        fwrite($write_fd, 'Disallow: ' . $uri['physical'] . $dir . PHP_EOL);
+                    }
+                }
 
-        // Files
-        if (count($robots_content['Files'])) {
-            $language_ids = Language::getIDs();
-            fwrite($write_fd, "# Files\n");
-            foreach ($robots_content['Files'] as $iso_code => $files) {
-                foreach ($files as $file) {
-                    if (!empty($language_ids) && count($language_ids) > 1) {
-                        fwrite($write_fd, 'Disallow: /*'.$iso_code.'/'.$file."\n");
-                    } else {
-                        fwrite($write_fd, 'Disallow: /'.$file."\n");
+                // Disallow multilang directories
+                if (!empty($languagesIsoIds)) {
+                    foreach ($languagesIsoIds as $language) {
+                        foreach ($robots_content['Directories'] as $dir) {
+                            fwrite(
+                                $write_fd,
+                                sprintf(
+                                    'Disallow: /%s/%s%s',
+                                    $language['iso_code'],
+                                    $dir,
+                                    PHP_EOL
+                                )
+                            );
+                        }
                     }
                 }
             }
         }
 
-        if (is_null(Context::getContext())) {
+        // Files
+        if (count($robots_content['Files'])) {
+            fwrite($write_fd, "# Files\n");
+            foreach ($robots_content['Files'] as $iso_code => $files) {
+                foreach ($files as $file) {
+                    if (!empty($languagesIsoIds)) {
+                        fwrite($write_fd, 'Disallow: /*' . $iso_code . '/' . $file . PHP_EOL);
+                    } else {
+                        fwrite($write_fd, 'Disallow: /' . $file . PHP_EOL);
+                    }
+                }
+            }
+        }
+
+        if (null === Context::getContext()) {
             $sitemap_file = _PS_ROOT_DIR_ . DIRECTORY_SEPARATOR . 'index_sitemap.xml';
         } else {
-            $sitemap_file = _PS_ROOT_DIR_.DIRECTORY_SEPARATOR.Context::getContext()->shop->id.'_index_sitemap.xml';
+            $sitemap_file = _PS_ROOT_DIR_ . DIRECTORY_SEPARATOR . Context::getContext()->shop->id . '_index_sitemap.xml';
         }
 
         // Sitemap
         if (file_exists($sitemap_file) && filesize($sitemap_file)) {
             fwrite($write_fd, "# Sitemap\n");
             $sitemap_filename = basename($sitemap_file);
-            fwrite($write_fd, 'Sitemap: '.(Configuration::get('PS_SSL_ENABLED') ? 'https://' : 'http://').$_SERVER['SERVER_NAME']
-                .__PS_BASE_URI__.$sitemap_filename."\n");
+            fwrite($write_fd, 'Sitemap: ' . (Configuration::get('PS_SSL_ENABLED') ? 'https://' : 'http://') . $_SERVER['SERVER_NAME']
+                . __PS_BASE_URI__ . $sitemap_filename . PHP_EOL);
         }
 
         if (true === $executeHook) {
             Hook::exec('actionAdminMetaAfterWriteRobotsFile', array(
                 'rb_data' => $robots_content,
-                'write_fd' => &$write_fd
+                'write_fd' => &$write_fd,
             ));
         }
 
@@ -2531,29 +2837,32 @@ FileETag none
             '*/modules/*.js',
             '*/modules/*.png',
             '*/modules/*.jpg',
+            '/js/jquery/*',
         );
 
         // Directories
-        $tab['Directories'] = array('cache/', 'classes/', 'config/', 'controllers/',
-            'css/', 'download/', 'js/', 'localization/', 'log/', 'mails/', 'modules/', 'override/',
-            'pdf/', 'src/', 'tools/', 'translations/', 'upload/', 'vendor/', 'web/', 'webservice/');
+        $tab['Directories'] = array(
+            'app/', 'cache/', 'classes/', 'config/', 'controllers/',
+            'download/', 'js/', 'localization/', 'log/', 'mails/', 'modules/', 'override/',
+            'pdf/', 'src/', 'tools/', 'translations/', 'upload/', 'var/', 'vendor/', 'webservice/',
+        );
 
         // Files
         $disallow_controllers = array(
             'addresses', 'address', 'authentication', 'cart', 'discount', 'footer',
             'get-file', 'header', 'history', 'identity', 'images.inc', 'init', 'my-account', 'order',
             'order-slip', 'order-detail', 'order-follow', 'order-return', 'order-confirmation', 'pagination', 'password',
-            'pdf-invoice', 'pdf-order-return', 'pdf-order-slip', 'product-sort', 'search', 'statistics','attachment', 'guest-tracking'
+            'pdf-invoice', 'pdf-order-return', 'pdf-order-slip', 'product-sort', 'search', 'statistics', 'attachment', 'guest-tracking',
         );
 
         // Rewrite files
         $tab['Files'] = array();
         if (Configuration::get('PS_REWRITING_SETTINGS')) {
             $sql = 'SELECT DISTINCT ml.url_rewrite, l.iso_code
-					FROM '._DB_PREFIX_.'meta m
-					INNER JOIN '._DB_PREFIX_.'meta_lang ml ON ml.id_meta = m.id_meta
-					INNER JOIN '._DB_PREFIX_.'lang l ON l.id_lang = ml.id_lang
-					WHERE l.active = 1 AND m.page IN (\''.implode('\', \'', $disallow_controllers).'\')';
+					FROM ' . _DB_PREFIX_ . 'meta m
+					INNER JOIN ' . _DB_PREFIX_ . 'meta_lang ml ON ml.id_meta = m.id_meta
+					INNER JOIN ' . _DB_PREFIX_ . 'lang l ON l.id_lang = ml.id_lang
+					WHERE l.active = 1 AND m.page IN (\'' . implode('\', \'', $disallow_controllers) . '\')';
             if ($results = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql)) {
                 foreach ($results as $row) {
                     $tab['Files'][$row['iso_code']][] = $row['url_rewrite'];
@@ -2562,12 +2871,12 @@ FileETag none
         }
 
         $tab['GB'] = array(
-            '?orderby=','?orderway=','?tag=','?id_currency=','?search_query=','?back=','?n=',
-            '&orderby=','&orderway=','&tag=','&id_currency=','&search_query=','&back=','&n='
+            '?order=', '?tag=', '?id_currency=', '?search_query=', '?back=', '?n=',
+            '&order=', '&tag=', '&id_currency=', '&search_query=', '&back=', '&n=',
         );
 
         foreach ($disallow_controllers as $controller) {
-            $tab['GB'][] = 'controller='.$controller;
+            $tab['GB'][] = 'controller=' . $controller;
         }
 
         return $tab;
@@ -2575,12 +2884,6 @@ FileETag none
 
     public static function generateIndex()
     {
-        if (defined('_PS_CREATION_DATE_')) {
-            $creationDate = _PS_CREATION_DATE_;
-            if (!empty($creationDate) && Configuration::get('PS_DISABLE_OVERRIDES')) {
-                PrestaShopAutoload::getInstance()->_include_override_path = false;
-            }
-        }
         PrestaShopAutoload::getInstance()->generateIndex();
     }
 
@@ -2588,7 +2891,7 @@ FileETag none
     {
         return '<?php
 /**
- * 2007-'.date('Y').' PrestaShop
+ * 2007-' . date('Y') . ' PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -2607,7 +2910,7 @@ FileETag none
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-'.date('Y').' PrestaShop SA
+ * @copyright 2007-' . date('Y') . ' PrestaShop SA
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -2625,12 +2928,72 @@ exit;
     }
 
     /**
+     * Return the directory list from the given $path.
+     *
+     * @param string $path
+     *
+     * @return array
+     */
+    public static function getDirectories($path)
+    {
+        if (function_exists('glob')) {
+            return self::getDirectoriesWithGlob($path);
+        }
+
+        return self::getDirectoriesWithReaddir($path);
+    }
+
+    /**
+     * Return the directory list from the given $path using php glob function.
+     *
+     * @param string $path
+     *
+     * @return array
+     */
+    public static function getDirectoriesWithGlob($path)
+    {
+        $directoryList = glob($path . '/*', GLOB_ONLYDIR | GLOB_NOSORT);
+        array_walk(
+            $directoryList,
+            function (&$absolutePath, $key) {
+                $absolutePath = substr($absolutePath, strrpos($absolutePath, '/') + 1);
+            }
+        );
+
+        return $directoryList;
+    }
+
+    /**
+     * Return the directory list from the given $path using php readdir function.
+     *
+     * @param string $path
+     *
+     * @return array
+     */
+    public static function getDirectoriesWithReaddir($path)
+    {
+        $directoryList = [];
+        $dh = @opendir($path);
+        if ($dh) {
+            while (($file = @readdir($dh)) !== false) {
+                if (is_dir($path . DIRECTORY_SEPARATOR . $file) && $file[0] != '.') {
+                    $directoryList[] = $file;
+                }
+            }
+            @closedir($dh);
+        }
+
+        return $directoryList;
+    }
+
+    /**
      * @deprecated Deprecated since 1.7.0
      * Use json_decode instead
      * jsonDecode convert json string to php array / object
      *
      * @param string $data
-     * @param bool $assoc  (since 1.4.2.4) if true, convert to associativ array
+     * @param bool $assoc (since 1.4.2.4) if true, convert to associativ array
+     *
      * @return array
      */
     public static function jsonDecode($data, $assoc = false, $depth = 512, $options = 0)
@@ -2644,19 +3007,16 @@ exit;
      * Convert an array to json string
      *
      * @param array $data
+     *
      * @return string json
      */
     public static function jsonEncode($data, $options = 0, $depth = 512)
     {
-        if (PHP_VERSION_ID < 50500) { /* PHP version < 5.5.0 */
-            return json_encode($data, $options);
-        }
-
         return json_encode($data, $options, $depth);
     }
 
     /**
-     * Display a warning message indicating that the method is deprecated
+     * Display a warning message indicating that the method is deprecated.
      */
     public static function displayAsDeprecated($message = null)
     {
@@ -2665,23 +3025,23 @@ exit;
         $class = isset($callee['class']) ? $callee['class'] : null;
 
         if ($message === null) {
-            $message = 'The function '.$callee['function'].' (Line '.$callee['line'].') is deprecated and will be removed in the next major version.';
+            $message = 'The function ' . $callee['function'] . ' (Line ' . $callee['line'] . ') is deprecated and will be removed in the next major version.';
         }
 
-        $error = 'Function <b>'.$callee['function'].'()</b> is deprecated in <b>'.$callee['file'].'</b> on line <b>'.$callee['line'].'</b><br />';
+        $error = 'Function <b>' . $callee['function'] . '()</b> is deprecated in <b>' . $callee['file'] . '</b> on line <b>' . $callee['line'] . '</b><br />';
 
         Tools::throwDeprecated($error, $message, $class);
     }
 
     /**
-     * Display a warning message indicating that the parameter is deprecated
+     * Display a warning message indicating that the parameter is deprecated.
      */
     public static function displayParameterAsDeprecated($parameter)
     {
         $backtrace = debug_backtrace();
         $callee = next($backtrace);
-        $error = 'Parameter <b>'.$parameter.'</b> in function <b>'.(isset($callee['function']) ? $callee['function'] : '').'()</b> is deprecated in <b>'.$callee['file'].'</b> on line <b>'.(isset($callee['line']) ? $callee['line'] : '(undefined)').'</b><br />';
-        $message = 'The parameter '.$parameter.' in function '.$callee['function'].' (Line '.(isset($callee['line']) ? $callee['line'] : 'undefined').') is deprecated and will be removed in the next major version.';
+        $error = 'Parameter <b>' . $parameter . '</b> in function <b>' . (isset($callee['function']) ? $callee['function'] : '') . '()</b> is deprecated in <b>' . $callee['file'] . '</b> on line <b>' . (isset($callee['line']) ? $callee['line'] : '(undefined)') . '</b><br />';
+        $message = 'The parameter ' . $parameter . ' in function ' . $callee['function'] . ' (Line ' . (isset($callee['line']) ? $callee['line'] : 'undefined') . ') is deprecated and will be removed in the next major version.';
         $class = isset($callee['class']) ? $callee['class'] : null;
 
         Tools::throwDeprecated($error, $message, $class);
@@ -2691,8 +3051,8 @@ exit;
     {
         $backtrace = debug_backtrace();
         $callee = current($backtrace);
-        $error = 'File <b>'.$callee['file'].'</b> is deprecated<br />';
-        $message = 'The file '.$callee['file'].' is deprecated and will be removed in the next major version.';
+        $error = 'File <b>' . $callee['file'] . '</b> is deprecated<br />';
+        $message = 'The file ' . $callee['file'] . ' is deprecated and will be removed in the next major version.';
         $class = isset($callee['class']) ? $callee['class'] : null;
 
         Tools::throwDeprecated($error, $message, $class);
@@ -2701,7 +3061,7 @@ exit;
     protected static function throwDeprecated($error, $message, $class)
     {
         if (_PS_DISPLAY_COMPATIBILITY_WARNING_) {
-            trigger_error($error, E_USER_WARNING);
+            @trigger_error($error, E_USER_DEPRECATED);
             PrestaShopLogger::addLog($message, 3, $class);
         }
     }
@@ -2718,10 +3078,10 @@ exit;
         if ($smarty->force_compile == 0 && $smarty->caching == $level) {
             return;
         }
-        self::$_forceCompile = (int)$smarty->force_compile;
-        self::$_caching = (int)$smarty->caching;
+        self::$_forceCompile = (int) $smarty->force_compile;
+        self::$_caching = (int) $smarty->caching;
         $smarty->force_compile = 0;
-        $smarty->caching = (int)$level;
+        $smarty->caching = (int) $level;
         $smarty->cache_lifetime = 31536000; // 1 Year
     }
 
@@ -2732,25 +3092,27 @@ exit;
         }
 
         if (isset(self::$_forceCompile)) {
-            $context->smarty->force_compile = (int)self::$_forceCompile;
+            $context->smarty->force_compile = (int) self::$_forceCompile;
         }
         if (isset(self::$_caching)) {
-            $context->smarty->caching = (int)self::$_caching;
+            $context->smarty->caching = (int) self::$_caching;
         }
     }
 
     public static function isCallable($function)
     {
         $disabled = explode(',', ini_get('disable_functions'));
-        return (!in_array($function, $disabled) && is_callable($function));
+
+        return !in_array($function, $disabled) && is_callable($function);
     }
 
     public static function pRegexp($s, $delim)
     {
-        $s = str_replace($delim, '\\'.$delim, $s);
+        $s = str_replace($delim, '\\' . $delim, $s);
         foreach (array('?', '[', ']', '(', ')', '{', '}', '-', '.', '+', '*', '^', '$', '`', '"', '%') as $char) {
-            $s = str_replace($char, '\\'.$char, $s);
+            $s = str_replace($char, '\\' . $char, $s);
         }
+
         return $s;
     }
 
@@ -2763,11 +3125,13 @@ exit;
         if ($pos === false) {
             return $haystack;
         }
+
         return substr_replace($haystack, $replace, $pos, strlen($needle));
     }
 
     /**
      * @desc identify the version of php
+     *
      * @return string
      */
     public static function checkPhpVersion()
@@ -2777,12 +3141,12 @@ exit;
         if (defined('PHP_VERSION')) {
             $version = PHP_VERSION;
         } else {
-            $version  = phpversion('');
+            $version = phpversion('');
         }
 
         //Case management system of ubuntu, php version return 5.2.4-2ubuntu5.2
         if (strpos($version, '-') !== false) {
-            $version  = substr($version, 0, strpos($version, '-'));
+            $version = substr($version, 0, strpos($version, '-'));
         }
 
         return $version;
@@ -2790,18 +3154,20 @@ exit;
 
     /**
      * @desc try to open a zip file in order to check if it's valid
+     *
      * @return bool success
      */
     public static function ZipTest($from_file)
     {
         $zip = new ZipArchive();
 
-        return ($zip->open($from_file, ZipArchive::CHECKCONS) === true);
+        return $zip->open($from_file, ZipArchive::CHECKCONS) === true;
     }
 
     /**
      * @deprecated Deprecated since 1.7.0
-     * @return boolean
+     *
+     * @return bool
      */
     public static function getSafeModeStatus()
     {
@@ -2810,12 +3176,13 @@ exit;
 
     /**
      * @desc extract a zip file to the given directory
+     *
      * @return bool success
      */
     public static function ZipExtract($from_file, $to_dir)
     {
         if (!file_exists($to_dir)) {
-            mkdir($to_dir, 0777);
+            mkdir($to_dir, PsFileSystem::DEFAULT_MODE_FOLDER);
         }
 
         $zip = new ZipArchive();
@@ -2834,7 +3201,7 @@ exit;
         $dh = opendir($path);
         while (($file = readdir($dh)) !== false) {
             if ($file != '.' && $file != '..') {
-                $fullpath = $path.'/'.$file;
+                $fullpath = $path . '/' . $file;
                 if (is_link($fullpath)) {
                     return false;
                 } elseif (!is_dir($fullpath) && !@chmod($fullpath, $filemode)) {
@@ -2866,7 +3233,7 @@ exit;
         switch ($type) {
             case 'by':
                 $list = array(0 => 'name', 1 => 'price', 2 => 'date_add', 3 => 'date_upd', 4 => 'position', 5 => 'manufacturer_name', 6 => 'quantity', 7 => 'reference');
-                $value = (is_null($value) || $value === false || $value === '') ? (int)Configuration::get('PS_PRODUCTS_ORDER_BY') : $value;
+                $value = (null === $value || $value === false || $value === '') ? (int) Configuration::get('PS_PRODUCTS_ORDER_BY') : $value;
                 $value = (isset($list[$value])) ? $list[$value] : ((in_array($value, $list)) ? $value : 'position');
                 $order_by_prefix = '';
                 if ($prefix) {
@@ -2882,20 +3249,25 @@ exit;
                     }
                 }
 
-                return $order_by_prefix.$value;
+                return $order_by_prefix . $value;
+
             break;
 
             case 'way':
-                $value = (is_null($value) || $value === false || $value === '') ? (int)Configuration::get('PS_PRODUCTS_ORDER_WAY') : $value;
+                $value = (null === $value || $value === false || $value === '') ? (int) Configuration::get('PS_PRODUCTS_ORDER_WAY') : $value;
                 $list = array(0 => 'asc', 1 => 'desc');
-                return ((isset($list[$value])) ? $list[$value] : ((in_array($value, $list)) ? $value : 'asc'));
+
+                return (isset($list[$value])) ? $list[$value] : ((in_array($value, $list)) ? $value : 'asc');
+
             break;
         }
     }
 
     /**
-     * Convert a shorthand byte value from a PHP configuration directive to an integer value
+     * Convert a shorthand byte value from a PHP configuration directive to an integer value.
+     *
      * @param string $value value to convert
+     *
      * @return int
      */
     public static function convertBytes($value)
@@ -2904,45 +3276,51 @@ exit;
             return $value;
         } else {
             $value_length = strlen($value);
-            $qty = (int)substr($value, 0, $value_length - 1);
+            $qty = (int) substr($value, 0, $value_length - 1);
             $unit = Tools::strtolower(substr($value, $value_length - 1));
             switch ($unit) {
                 case 'k':
                     $qty *= 1024;
+
                     break;
                 case 'm':
                     $qty *= 1048576;
+
                     break;
                 case 'g':
                     $qty *= 1073741824;
+
                     break;
             }
+
             return $qty;
         }
     }
 
     /**
-    * @deprecated as of 1.5 use Controller::getController('PageNotFoundController')->run();
-    */
+     * @deprecated as of 1.5 use Controller::getController('PageNotFoundController')->run();
+     */
     public static function display404Error()
     {
         header('HTTP/1.1 404 Not Found');
         header('Status: 404 Not Found');
-        include(dirname(__FILE__).'/../404.php');
+        include __DIR__ . '/../404.php';
         die;
     }
 
     /**
-     * Concat $begin and $end, add ? or & between strings
+     * Concat $begin and $end, add ? or & between strings.
      *
      * @since 1.5.0
+     *
      * @param string $begin
      * @param string $end
+     *
      * @return string
      */
     public static function url($begin, $end)
     {
-        return $begin.((strpos($begin, '?') !== false) ? '&' : '?').$end;
+        return $begin . ((strpos($begin, '?') !== false) ? '&' : '?') . $end;
     }
 
     /**
@@ -2950,29 +3328,33 @@ exit;
      *
      * @param string $msg
      * @param bool $die
+     *
      * @return bool success of logging
      */
     public static function dieOrLog($msg, $die = true)
     {
         if ($die || (defined('_PS_MODE_DEV_') && _PS_MODE_DEV_)) {
+            header('HTTP/1.1 500 Internal Server Error', true, 500);
             die($msg);
         }
+
         return PrestaShopLogger::addLog($msg);
     }
 
     /**
-     * Convert \n and \r\n and \r to <br />
+     * Convert \n and \r\n and \r to <br />.
      *
      * @param string $string String to transform
+     *
      * @return string New string
      */
     public static function nl2br($str)
     {
-        return str_replace(array("\r\n", "\r", "\n"), '<br />', $str);
+        return str_replace(array("\r\n", "\r", "\n", AddressFormat::FORMAT_NEW_LINE, PHP_EOL), '<br />', $str);
     }
 
     /**
-     * Clear cache for Smarty
+     * Clear cache for Smarty.
      *
      * @param Smarty $smarty
      */
@@ -2998,8 +3380,8 @@ exit;
     }
 
     /**
-     * Clear compile for Smarty
-    */
+     * Clear compile for Smarty.
+     */
     public static function clearCompile($smarty = null)
     {
         if ($smarty === null) {
@@ -3018,8 +3400,8 @@ exit;
     }
 
     /**
-    * Clear Smarty cache and compile folders
-    */
+     * Clear Smarty cache and compile folders.
+     */
     public static function clearSmartyCache()
     {
         $smarty = Context::getContext()->smarty;
@@ -3028,25 +3410,25 @@ exit;
     }
 
     /**
-     * Clear Symfony cache
+     * Clear Symfony cache.
      */
     public static function clearSf2Cache($env = null)
     {
-        if (!$env) {
-            $env = _PS_MODE_DEV_ ? 'dev' : 'prod';
+        if (null === $env) {
+            $env = _PS_ENV_;
         }
 
-        $sf2Refresh = new Refresh($env);
-        $sf2Refresh->addCacheClear();
-        $ret = $sf2Refresh->execute();
+        $dir = _PS_ROOT_DIR_ . '/var/cache/' . $env . '/';
 
-        Hook::exec('actionClearSf2Cache');
-
-        return $ret;
+        register_shutdown_function(function () use ($dir) {
+            $fs = new Filesystem();
+            $fs->remove($dir);
+            Hook::exec('actionClearSf2Cache');
+        });
     }
 
     /**
-     * Clear both Smarty and Symfony cache
+     * Clear both Smarty and Symfony cache.
      */
     public static function clearAllCache()
     {
@@ -3059,14 +3441,15 @@ exit;
         // Change template dir if called from the BackOffice
         $current_template_dir = Context::getContext()->smarty->getTemplateDir();
         Context::getContext()->smarty->setTemplateDir(_PS_THEME_DIR_);
-        Tools::clearCache(null, _PS_THEME_DIR_.'product-list-colors.tpl', Product::getColorsListCacheId((int)$id_product, false));
+        Tools::clearCache(null, _PS_THEME_DIR_ . 'product-list-colors.tpl', Product::getColorsListCacheId((int) $id_product, false));
         Context::getContext()->smarty->setTemplateDir($current_template_dir);
     }
 
     /**
-     * getMemoryLimit allow to get the memory limit in octet
+     * getMemoryLimit allow to get the memory limit in octet.
      *
      * @since 1.4.5.0
+     *
      * @return int the memory limit value in octet
      */
     public static function getMemoryLimit()
@@ -3077,44 +3460,43 @@ exit;
     }
 
     /**
-     * getOctet allow to gets the value of a configuration option in octet
+     * getOctet allow to gets the value of a configuration option in octet.
      *
      * @since 1.5.0
+     *
      * @return int the value of a configuration option in octet
      */
     public static function getOctets($option)
     {
         if (preg_match('/[0-9]+k/i', $option)) {
-            return 1024 * (int)$option;
+            return 1024 * (int) $option;
         }
 
         if (preg_match('/[0-9]+m/i', $option)) {
-            return 1024 * 1024 * (int)$option;
+            return 1024 * 1024 * (int) $option;
         }
 
         if (preg_match('/[0-9]+g/i', $option)) {
-            return 1024 * 1024 * 1024 * (int)$option;
+            return 1024 * 1024 * 1024 * (int) $option;
         }
 
         return $option;
     }
 
     /**
-     *
      * @return bool true if the server use 64bit arch
      */
     public static function isX86_64arch()
     {
-        return (PHP_INT_MAX == '9223372036854775807');
+        return PHP_INT_MAX == '9223372036854775807';
     }
 
     /**
-     *
      * @return bool true if php-cli is used
      */
     public static function isPHPCLI()
     {
-        return (defined('STDIN') || (Tools::strtolower(php_sapi_name()) == 'cli' && (!isset($_SERVER['REMOTE_ADDR']) || empty($_SERVER['REMOTE_ADDR']))));
+        return defined('STDIN') || (Tools::strtolower(PHP_SAPI) == 'cli' && (!isset($_SERVER['REMOTE_ADDR']) || empty($_SERVER['REMOTE_ADDR'])));
     }
 
     public static function argvToGET($argc, $argv)
@@ -3133,9 +3515,10 @@ exit;
     }
 
     /**
-     * Get max file upload size considering server settings and optional max value
+     * Get max file upload size considering server settings and optional max value.
      *
      * @param int $max_size optional max file size
+     *
      * @return int max file size in bytes
      */
     public static function getMaxUploadSize($max_size = 0)
@@ -3155,14 +3538,17 @@ exit;
     }
 
     /**
-     * apacheModExists return true if the apache module $name is loaded
+     * apacheModExists return true if the apache module $name is loaded.
+     *
      * @TODO move this method in class Information (when it will exist)
      *
      * Notes: This method requires either apache_get_modules or phpinfo()
      * to be available. With CGI mod, we cannot get php modules
      *
      * @param string $name module name
+     *
      * @return bool true if exists
+     *
      * @since 1.4.5.0
      */
     public static function apacheModExists($name)
@@ -3181,11 +3567,12 @@ exit;
                 }
             }
         }
+
         return false;
     }
 
     /**
-     * Fix native uasort see: http://php.net/manual/en/function.uasort.php#114535
+     * Fix native uasort see: http://php.net/manual/en/function.uasort.php#114535.
      *
      * @param $array
      * @param $cmp_function
@@ -3203,6 +3590,7 @@ exit;
         self::uasort($array2, $cmp_function);
         if (call_user_func($cmp_function, end($array1), reset($array2)) < 1) {
             $array = $array1 + $array2;
+
             return;
         }
         $array = array();
@@ -3225,13 +3613,13 @@ exit;
             $array[key($array2)] = current($array2);
             next($array2);
         }
-        return;
     }
 
     /**
-     * Copy the folder $src into $dst, $dst is created if it do not exist
-     * @param      $src
-     * @param      $dst
+     * Copy the folder $src into $dst, $dst is created if it do not exist.
+     *
+     * @param $src
+     * @param $dst
      * @param bool $del if true, delete the file after copy
      */
     public static function recurseCopy($src, $dst, $del = false)
@@ -3246,12 +3634,12 @@ exit;
         }
         while (false !== ($file = readdir($dir))) {
             if (($file != '.') && ($file != '..')) {
-                if (is_dir($src.DIRECTORY_SEPARATOR.$file)) {
-                    self::recurseCopy($src.DIRECTORY_SEPARATOR.$file, $dst.DIRECTORY_SEPARATOR.$file, $del);
+                if (is_dir($src . DIRECTORY_SEPARATOR . $file)) {
+                    self::recurseCopy($src . DIRECTORY_SEPARATOR . $file, $dst . DIRECTORY_SEPARATOR . $file, $del);
                 } else {
-                    copy($src.DIRECTORY_SEPARATOR.$file, $dst.DIRECTORY_SEPARATOR.$file);
-                    if ($del && is_writable($src.DIRECTORY_SEPARATOR.$file)) {
-                        unlink($src.DIRECTORY_SEPARATOR.$file);
+                    copy($src . DIRECTORY_SEPARATOR . $file, $dst . DIRECTORY_SEPARATOR . $file);
+                    if ($del && is_writable($src . DIRECTORY_SEPARATOR . $file)) {
+                        unlink($src . DIRECTORY_SEPARATOR . $file);
                     }
                 }
             }
@@ -3263,18 +3651,19 @@ exit;
     }
 
     /**
-     * @params string $path Path to scan
-     * @params string $ext Extention to filter files
-     * @params string $dir Add this to prefix output for example /path/dir/*
+     * @param string $path Path to scan
+     * @param string $ext Extention to filter files
+     * @param string $dir Add this to prefix output for example /path/dir/*
      *
      * @return array List of file found
+     *
      * @since 1.5.0
      */
     public static function scandir($path, $ext = 'php', $dir = '', $recursive = false)
     {
-        $path = rtrim(rtrim($path, '\\'), '/').'/';
-        $real_path = rtrim(rtrim($path.$dir, '\\'), '/').'/';
-        $files = scandir($real_path);
+        $path = rtrim(rtrim($path, '\\'), '/') . '/';
+        $real_path = rtrim(rtrim($path . $dir, '\\'), '/') . '/';
+        $files = scandir($real_path, SCANDIR_SORT_NONE);
         if (!$files) {
             return array();
         }
@@ -3283,44 +3672,46 @@ exit;
 
         $real_ext = false;
         if (!empty($ext)) {
-            $real_ext = '.'.$ext;
+            $real_ext = '.' . $ext;
         }
         $real_ext_length = strlen($real_ext);
 
-        $subdir = ($dir) ? $dir.'/' : '';
+        $subdir = ($dir) ? $dir . '/' : '';
         foreach ($files as $file) {
             if (!$real_ext || (strpos($file, $real_ext) && strpos($file, $real_ext) == (strlen($file) - $real_ext_length))) {
-                $filtered_files[] = $subdir.$file;
+                $filtered_files[] = $subdir . $file;
             }
 
-            if ($recursive && $file[0] != '.' && is_dir($real_path.$file)) {
-                foreach (Tools::scandir($path, $ext, $subdir.$file, $recursive) as $subfile) {
+            if ($recursive && $file[0] != '.' && is_dir($real_path . $file)) {
+                foreach (Tools::scandir($path, $ext, $subdir . $file, $recursive) as $subfile) {
                     $filtered_files[] = $subfile;
                 }
             }
         }
+
         return $filtered_files;
     }
 
-
     /**
-     * Align version sent and use internal function
+     * Align version sent and use internal function.
      *
      * @param $v1
      * @param $v2
      * @param string $operator
+     *
      * @return mixed
      */
     public static function version_compare($v1, $v2, $operator = '<')
     {
         Tools::alignVersionNumber($v1, $v2);
+
         return version_compare($v1, $v2, $operator);
     }
 
     /**
      * Align 2 version with the same number of sub version
      * version_compare will work better for its comparison :)
-     * (Means: '1.8' to '1.9.3' will change '1.8' to '1.8.0')
+     * (Means: '1.8' to '1.9.3' will change '1.8' to '1.8.0').
      *
      * @param $v1
      * @param $v2
@@ -3340,7 +3731,7 @@ exit;
             $str = &$v1;
         }
 
-        for ($len; $len > 0; $len--) {
+        for ($len; $len > 0; --$len) {
             $str .= '.0';
         }
     }
@@ -3353,6 +3744,7 @@ exit;
         if ((isset($_SERVER['HTTP_MOD_REWRITE']) && Tools::strtolower($_SERVER['HTTP_MOD_REWRITE']) == 'on') || Tools::strtolower(getenv('HTTP_MOD_REWRITE')) == 'on') {
             return true;
         }
+
         return false;
     }
 
@@ -3366,33 +3758,45 @@ exit;
     }
 
     /**
-     * Reproduce array_unique working before php version 5.2.9
+     * Reproduce array_unique working before php version 5.2.9.
+     *
      * @param array $array
+     *
      * @return array
      */
     public static function arrayUnique($array)
     {
-        if (version_compare(phpversion(), '5.2.9', '<')) {
-            return array_unique($array);
-        } else {
-            return array_unique($array, SORT_REGULAR);
-        }
+        return array_unique($array, SORT_REGULAR);
     }
 
     /**
-     * Delete unicode class from regular expression patterns
+     * Delete unicode class from regular expression patterns.
+     *
+     * @deprecated Use PrestaShop\PrestaShop\Core\String\CharacterCleaner::cleanNonUnicodeSupport() instead
+     *
      * @param string $pattern
+     *
      * @return string pattern
+     *
+     * @throws Exception
      */
     public static function cleanNonUnicodeSupport($pattern)
     {
-        if (!defined('PREG_BAD_UTF8_OFFSET')) {
-            return $pattern;
+        $context = Context::getContext();
+        $containerFinder = new ContainerFinder($context);
+        try {
+            $container = $containerFinder->getContainer();
+            $characterCleaner = $container->get('prestashop.core.string.character_cleaner');
+        } catch (ContainerNotFoundException $e) {
+            // Used when the container is not generated
+            $characterCleaner = new CharacterCleaner();
         }
-        return preg_replace('/\\\[px]\{[a-z]{1,2}\}|(\/[a-z]*)u([a-z]*)$/i', '$1$2', $pattern);
+
+        return $characterCleaner->cleanNonUnicodeSupport($pattern);
     }
 
     protected static $is_addons_up = true;
+
     public static function addonsRequest($request, $params = array())
     {
         if (!self::$is_addons_up) {
@@ -3413,67 +3817,69 @@ exit;
 
         $post_data = http_build_query($post_query_data);
 
-        $protocols = array('https');
         $end_point = 'api.addons.prestashop.com';
 
         switch ($request) {
             case 'native':
-                $protocols[] = 'http';
                 $post_data .= '&method=listing&action=native';
+
                 break;
             case 'partner':
-                $protocols[] = 'http';
                 $post_data .= '&method=listing&action=partner';
+
                 break;
             case 'service':
-                $protocols[] = 'http';
                 $post_data .= '&method=listing&action=service';
+
                 break;
             case 'native_all':
-                $protocols[] = 'http';
                 $post_data .= '&method=listing&action=native&iso_code=all';
+
                 break;
             case 'must-have':
-                $protocols[] = 'http';
                 $post_data .= '&method=listing&action=must-have';
+
                 break;
             case 'must-have-themes':
-                $protocols[] = 'http';
                 $post_data .= '&method=listing&action=must-have-themes';
+
                 break;
             case 'customer':
-                $post_data .= '&method=listing&action=customer&username='.urlencode(trim(Context::getContext()->cookie->username_addons))
-                    .'&password='.urlencode(trim(Context::getContext()->cookie->password_addons));
+                $post_data .= '&method=listing&action=customer&username=' . urlencode(trim(Context::getContext()->cookie->username_addons))
+                    . '&password=' . urlencode(trim(Context::getContext()->cookie->password_addons));
+
                 break;
             case 'customer_themes':
-                $post_data .= '&method=listing&action=customer-themes&username='.urlencode(trim(Context::getContext()->cookie->username_addons))
-                    .'&password='.urlencode(trim(Context::getContext()->cookie->password_addons));
+                $post_data .= '&method=listing&action=customer-themes&username=' . urlencode(trim(Context::getContext()->cookie->username_addons))
+                    . '&password=' . urlencode(trim(Context::getContext()->cookie->password_addons));
+
                 break;
             case 'check_customer':
-                $post_data .= '&method=check_customer&username='.urlencode($params['username_addons']).'&password='.urlencode($params['password_addons']);
+                $post_data .= '&method=check_customer&username=' . urlencode($params['username_addons']) . '&password=' . urlencode($params['password_addons']);
+
                 break;
             case 'check_module':
-                $post_data .= '&method=check&module_name='.urlencode($params['module_name']).'&module_key='.urlencode($params['module_key']);
+                $post_data .= '&method=check&module_name=' . urlencode($params['module_name']) . '&module_key=' . urlencode($params['module_key']);
+
                 break;
             case 'module':
-                $post_data .= '&method=module&id_module='.urlencode($params['id_module']);
-                if (isset($params['username_addons']) && isset($params['password_addons'])) {
-                    $post_data .= '&username='.urlencode($params['username_addons']).'&password='.urlencode($params['password_addons']);
-                } else {
-                    $protocols[] = 'http';
+                $post_data .= '&method=module&id_module=' . urlencode($params['id_module']);
+                if (isset($params['username_addons'], $params['password_addons'])) {
+                    $post_data .= '&username=' . urlencode($params['username_addons']) . '&password=' . urlencode($params['password_addons']);
                 }
+
                 break;
             case 'hosted_module':
-                $post_data .= '&method=module&id_module='.urlencode((int)$params['id_module']).'&username='.urlencode($params['hosted_email'])
-                    .'&password='.urlencode($params['password_addons'])
-                    .'&shop_url='.urlencode(isset($params['shop_url']) ? $params['shop_url'] : Tools::getShopDomain())
-                    .'&mail='.urlencode(isset($params['email']) ? $params['email'] : Configuration::get('PS_SHOP_EMAIL'));
-                $protocols[] = 'https';
+                $post_data .= '&method=module&id_module=' . urlencode((int) $params['id_module']) . '&username=' . urlencode($params['hosted_email'])
+                    . '&password=' . urlencode($params['password_addons'])
+                    . '&shop_url=' . urlencode(isset($params['shop_url']) ? $params['shop_url'] : Tools::getShopDomain())
+                    . '&mail=' . urlencode(isset($params['email']) ? $params['email'] : Configuration::get('PS_SHOP_EMAIL'));
+
                 break;
             case 'install-modules':
-                $protocols[] = 'http';
                 $post_data .= '&method=listing&action=install-modules';
                 $post_data .= defined('_PS_HOST_MODE_') ? '-od' : '';
+
                 break;
             default:
                 return false;
@@ -3481,29 +3887,28 @@ exit;
 
         $context = stream_context_create(array(
             'http' => array(
-                'method'  => 'POST',
+                'method' => 'POST',
                 'content' => $post_data,
-                'header'  => 'Content-type: application/x-www-form-urlencoded',
+                'header' => 'Content-type: application/x-www-form-urlencoded',
                 'timeout' => 5,
-            )
+            ),
         ));
 
-        foreach ($protocols as $protocol) {
-            if ($content = Tools::file_get_contents($protocol.'://'.$end_point, false, $context)) {
-                return $content;
-            }
+        if ($content = Tools::file_get_contents('https://' . $end_point, false, $context)) {
+            return $content;
         }
 
         self::$is_addons_up = false;
+
         return false;
     }
 
     /**
      * Returns an array containing information about
-     * HTTP file upload variable ($_FILES)
+     * HTTP file upload variable ($_FILES).
      *
-     * @param string $input          File upload field name
-     * @param bool   $return_content If true, returns uploaded file contents
+     * @param string $input File upload field name
+     * @param bool $return_content If true, returns uploaded file contents
      *
      * @return array|null
      */
@@ -3511,15 +3916,15 @@ exit;
     {
         $file_attachment = null;
         if (isset($_FILES[$input]['name']) && !empty($_FILES[$input]['name']) && !empty($_FILES[$input]['tmp_name'])) {
-            $file_attachment['rename'] = uniqid().Tools::strtolower(substr($_FILES[$input]['name'], -5));
+            $file_attachment['rename'] = uniqid() . Tools::strtolower(substr($_FILES[$input]['name'], -5));
             if ($return_content) {
                 $file_attachment['content'] = file_get_contents($_FILES[$input]['tmp_name']);
             }
             $file_attachment['tmp_name'] = $_FILES[$input]['tmp_name'];
-            $file_attachment['name']     = $_FILES[$input]['name'];
-            $file_attachment['mime']     = $_FILES[$input]['type'];
-            $file_attachment['error']    = $_FILES[$input]['error'];
-            $file_attachment['size']     = $_FILES[$input]['size'];
+            $file_attachment['name'] = $_FILES[$input]['name'];
+            $file_attachment['mime'] = $_FILES[$input]['type'];
+            $file_attachment['error'] = $_FILES[$input]['error'];
+            $file_attachment['size'] = $_FILES[$input]['size'];
         }
 
         return $file_attachment;
@@ -3551,9 +3956,11 @@ exit;
     }
 
     /**
-     * Delete a substring from another one starting from the right
+     * Delete a substring from another one starting from the right.
+     *
      * @param string $str
      * @param string $str_search
+     *
      * @return string
      */
     public static function rtrimString($str, $str_search)
@@ -3562,13 +3969,15 @@ exit;
         if (strlen($str) >= $length_str && substr($str, -$length_str) == $str_search) {
             $str = substr($str, 0, -$length_str);
         }
+
         return $str;
     }
 
     /**
      * Format a number into a human readable format
-     * e.g. 24962496 => 23.81M
-     * @param     $size
+     * e.g. 24962496 => 23.81M.
+     *
+     * @param $size
      * @param int $precision
      *
      * @return string
@@ -3581,7 +3990,7 @@ exit;
         $base = log($size) / log(1024);
         $suffixes = array('', 'k', 'M', 'G', 'T');
 
-        return round(pow(1024, $base - floor($base)), $precision).$suffixes[floor($base)];
+        return round(1024 ** ($base - floor($base)), $precision) . $suffixes[floor($base)];
     }
 
     public static function boolVal($value)
@@ -3589,7 +3998,8 @@ exit;
         if (empty($value)) {
             $value = false;
         }
-        return (bool)$value;
+
+        return (bool) $value;
     }
 
     public static function getUserPlatform()
@@ -3639,9 +4049,10 @@ exit;
     }
 
     /**
-     * Allows to display the category description without HTML tags and slashes
+     * Allows to display the category description without HTML tags and slashes.
+     *
      * @return string
-    */
+     */
     public static function getDescriptionClean($description)
     {
         return strip_tags(stripslashes($description));
@@ -3649,8 +4060,6 @@ exit;
 
     public static function purifyHTML($html, $uri_unescape = null, $allow_style = false)
     {
-        require_once(_PS_TOOL_DIR_.'htmlpurifier/HTMLPurifier.standalone.php');
-
         static $use_html_purifier = null;
         static $purifier = null;
 
@@ -3659,7 +4068,7 @@ exit;
         }
 
         if ($use_html_purifier === null) {
-            $use_html_purifier = (bool)Configuration::get('PS_USE_HTMLPURIFIER');
+            $use_html_purifier = (bool) Configuration::get('PS_USE_HTMLPURIFIER');
         }
 
         if ($use_html_purifier) {
@@ -3669,7 +4078,7 @@ exit;
                 $config->set('Attr.EnableID', true);
                 $config->set('Attr.AllowedRel', array('nofollow'));
                 $config->set('HTML.Trusted', true);
-                $config->set('Cache.SerializerPath', _PS_CACHE_DIR_.'purifier');
+                $config->set('Cache.SerializerPath', _PS_CACHE_DIR_ . 'purifier');
                 $config->set('Attr.AllowedFrameTargets', array('_blank', '_self', '_parent', '_top'));
                 if (is_array($uri_unescape)) {
                     $config->set('URI.UnescapeCharacters', implode('', $uri_unescape));
@@ -3719,10 +4128,11 @@ exit;
     }
 
     /**
-     * Check if a constant was already defined
+     * Check if a constant was already defined.
+     *
      * @param string $constant Constant name
      * @param mixed $value Default value to set if not defined
-    */
+     */
     public static function safeDefine($constant, $value)
     {
         if (!defined($constant)) {
@@ -3757,13 +4167,13 @@ exit;
             return;
         }
 
-        $sort_function = create_function('$a, $b', "return \$b['$column'] > \$a['$column'] ? 1 : -1;");
+        $sort_function = function ($a, $b) use ($column) { return $b[$column] > $a[$column] ? 1 : -1; };
 
         uasort($rows, $sort_function);
 
-        $unit = pow(10, $precision);
+        $unit = 10 ** $precision;
 
-        $int_amount = (int)round($unit * $amount);
+        $int_amount = (int) round($unit * $amount);
 
         $remainder = $int_amount % count($rows);
         $amount_to_spread = ($int_amount - $remainder) / count($rows) / $unit;
@@ -3785,10 +4195,11 @@ exit;
     }
 
     /**
-     * Replaces elements from passed arrays into the first array recursively
-     * @param array $base The array in which elements are replaced.
-     * @param array $replacements The array from which elements will be extracted.
-    */
+     * Replaces elements from passed arrays into the first array recursively.
+     *
+     * @param array $base the array in which elements are replaced
+     * @param array $replacements the array from which elements will be extracted
+     */
     public static function arrayReplaceRecursive($base, $replacements)
     {
         if (function_exists('array_replace_recursive')) {
@@ -3815,11 +4226,12 @@ exit;
                 }
             } while (count($head_stack));
         }
+
         return $base;
     }
 
     /**
-     * Return path to a Product or a CMS category
+     * Return path to a Product or a CMS category.
      *
      * @param string $url_base Start URL
      * @param int $id_category Start category
@@ -3833,61 +4245,63 @@ exit;
         if ($category_type == 'catalog') {
             $category = Db::getInstance()->getRow('
 		SELECT id_category, level_depth, nleft, nright
-		FROM '._DB_PREFIX_.'category
-		WHERE id_category = '.(int)$id_category);
+		FROM ' . _DB_PREFIX_ . 'category
+		WHERE id_category = ' . (int) $id_category);
             if (isset($category['id_category'])) {
                 $sql = 'SELECT c.id_category, cl.name, cl.link_rewrite
-					FROM '._DB_PREFIX_.'category c
-					LEFT JOIN '._DB_PREFIX_.'category_lang cl ON (cl.id_category = c.id_category'.Shop::addSqlRestrictionOnLang('cl').')
-					WHERE c.nleft <= '.(int)$category['nleft'].'
-						AND c.nright >= '.(int)$category['nright'].'
-						AND cl.id_lang = '.(int)$context->language->id.
-                       ($home ? ' AND c.id_category='.(int)$id_category : '').'
-						AND c.id_category != '.(int)Category::getTopCategory()->id.'
+					FROM ' . _DB_PREFIX_ . 'category c
+					LEFT JOIN ' . _DB_PREFIX_ . 'category_lang cl ON (cl.id_category = c.id_category' . Shop::addSqlRestrictionOnLang('cl') . ')
+					WHERE c.nleft <= ' . (int) $category['nleft'] . '
+						AND c.nright >= ' . (int) $category['nright'] . '
+						AND cl.id_lang = ' . (int) $context->language->id .
+                       ($home ? ' AND c.id_category=' . (int) $id_category : '') . '
+						AND c.id_category != ' . (int) Category::getTopCategory()->id . '
 					GROUP BY c.id_category
 					ORDER BY c.level_depth ASC
-					LIMIT '.(!$home ? (int)$category['level_depth'] + 1 : 1);
+					LIMIT ' . (!$home ? (int) $category['level_depth'] + 1 : 1);
                 $categories = Db::getInstance()->executeS($sql);
                 $full_path = '';
                 $n = 1;
-                $n_categories = (int)count($categories);
+                $n_categories = (int) count($categories);
                 foreach ($categories as $category) {
                     $link = Context::getContext()->link->getAdminLink('AdminCategories');
-                    $edit = '<a href="'.Tools::safeOutput($link.'&id_category='.(int)$category['id_category'].'&'.(($category['id_category'] == 1 || $home) ? 'viewcategory' : 'updatecategory')).'" title="'.($category['id_category'] == Category::getRootCategory()->id_category ? 'Home' : 'Modify').'"><i class="icon-'.(($category['id_category'] == Category::getRootCategory()->id_category || $home) ? 'home' : 'pencil').'"></i></a> ';
-                    $full_path .= $edit.
-                                  ($n < $n_categories ? '<a href="'.Tools::safeOutput($url_base.'&id_category='.(int)$category['id_category'].'&viewcategory&token='.Tools::getAdminToken('AdminCategories'.(int)Tab::getIdFromClassName('AdminCategories').(int)$context->employee->id)).'" title="'.htmlentities($category['name'], ENT_NOQUOTES, 'UTF-8').'">' : '').
-                                  (!empty($highlight) ? str_ireplace($highlight, '<span class="highlight">'.htmlentities($highlight, ENT_NOQUOTES, 'UTF-8').'</span>', $category['name']) : $category['name']).
-                                  ($n < $n_categories ? '</a>' : '').
+                    $edit = '<a href="' . Tools::safeOutput($link . '&id_category=' . (int) $category['id_category'] . '&' . (($category['id_category'] == 1 || $home) ? 'viewcategory' : 'updatecategory')) . '" title="' . ($category['id_category'] == Category::getRootCategory()->id_category ? 'Home' : 'Modify') . '"><i class="icon-' . (($category['id_category'] == Category::getRootCategory()->id_category || $home) ? 'home' : 'pencil') . '"></i></a> ';
+                    $full_path .= $edit .
+                                  ($n < $n_categories ? '<a href="' . Tools::safeOutput($url_base . '&id_category=' . (int) $category['id_category'] . '&viewcategory&token=' . Tools::getAdminToken('AdminCategories' . (int) Tab::getIdFromClassName('AdminCategories') . (int) $context->employee->id)) . '" title="' . htmlentities($category['name'], ENT_NOQUOTES, 'UTF-8') . '">' : '') .
+                                  (!empty($highlight) ? str_ireplace($highlight, '<span class="highlight">' . htmlentities($highlight, ENT_NOQUOTES, 'UTF-8') . '</span>', $category['name']) : $category['name']) .
+                                  ($n < $n_categories ? '</a>' : '') .
                                   (($n++ != $n_categories || !empty($path)) ? ' > ' : '');
                 }
-                return $full_path.$path;
+
+                return $full_path . $path;
             }
         } elseif ($category_type == 'cms') {
             $category = new CMSCategory($id_category, $context->language->id);
             if (!$category->id) {
                 return $path;
             }
-            $name = ($highlight != null) ? str_ireplace($highlight, '<span class="highlight">'.$highlight.'</span>', CMSCategory::hideCMSCategoryPosition($category->name)) : CMSCategory::hideCMSCategoryPosition($category->name);
-            $edit = '<a href="'.Tools::safeOutput($url_base.'&id_cms_category='.$category->id.'&updatecms_category&token='.Tools::getAdminToken('AdminCmsContent'.(int)Tab::getIdFromClassName('AdminCmsContent').(int)$context->employee->id)).'">
+            $name = ($highlight != null) ? str_ireplace($highlight, '<span class="highlight">' . $highlight . '</span>', CMSCategory::hideCMSCategoryPosition($category->name)) : CMSCategory::hideCMSCategoryPosition($category->name);
+            $edit = '<a href="' . Tools::safeOutput($url_base . '&id_cms_category=' . $category->id . '&updatecms_category&token=' . Tools::getAdminToken('AdminCmsContent' . (int) Tab::getIdFromClassName('AdminCmsContent') . (int) $context->employee->id)) . '">
 				<i class="icon-pencil"></i></a> ';
             if ($category->id == 1) {
-                $edit = '<li><a href="'.Tools::safeOutput($url_base.'&id_cms_category='.$category->id.'&viewcategory&token='.Tools::getAdminToken('AdminCmsContent'.(int)Tab::getIdFromClassName('AdminCmsContent').(int)$context->employee->id)).'">
+                $edit = '<li><a href="' . Tools::safeOutput($url_base . '&id_cms_category=' . $category->id . '&viewcategory&token=' . Tools::getAdminToken('AdminCmsContent' . (int) Tab::getIdFromClassName('AdminCmsContent') . (int) $context->employee->id)) . '">
 					<i class="icon-home"></i></a></li> ';
             }
-            $path = $edit.'<li><a href="'.Tools::safeOutput($url_base.'&id_cms_category='.$category->id.'&viewcategory&token='.Tools::getAdminToken('AdminCmsContent'.(int)Tab::getIdFromClassName('AdminCmsContent').(int)$context->employee->id)).'">
-		'.$name.'</a></li> > '.$path;
+            $path = $edit . '<li><a href="' . Tools::safeOutput($url_base . '&id_cms_category=' . $category->id . '&viewcategory&token=' . Tools::getAdminToken('AdminCmsContent' . (int) Tab::getIdFromClassName('AdminCmsContent') . (int) $context->employee->id)) . '">
+		' . $name . '</a></li> > ' . $path;
             if ($category->id == 1) {
                 return substr($path, 0, strlen($path) - 3);
             }
+
             return Tools::getPath($url_base, $category->id_parent, $path, '', 'cms');
         }
     }
 
     public static function redirectToInstall()
     {
-        if (file_exists(dirname(__FILE__).'/../install')) {
+        if (file_exists(__DIR__ . '/../install')) {
             header('Location: install/');
-        } elseif (file_exists(dirname(__FILE__).'/../install-dev')) {
+        } elseif (file_exists(__DIR__ . '/../install-dev')) {
             header('Location: install-dev/');
         } else {
             die('Error: "install" directory is missing');
@@ -3897,29 +4311,32 @@ exit;
 }
 
 /**
- * Compare 2 prices to sort products
+ * Compare 2 prices to sort products.
  *
  * @param float $a
  * @param float $b
+ *
  * @return int
  */
 /* Externalized because of a bug in PHP 5.1.6 when inside an object */
 function cmpPriceAsc($a, $b)
 {
-    if ((float)$a['price_tmp'] < (float)$b['price_tmp']) {
-        return (-1);
-    } elseif ((float)$a['price_tmp'] > (float)$b['price_tmp']) {
-        return (1);
+    if ((float) $a['price_tmp'] < (float) $b['price_tmp']) {
+        return -1;
+    } elseif ((float) $a['price_tmp'] > (float) $b['price_tmp']) {
+        return 1;
     }
+
     return 0;
 }
 
 function cmpPriceDesc($a, $b)
 {
-    if ((float)$a['price_tmp'] < (float)$b['price_tmp']) {
+    if ((float) $a['price_tmp'] < (float) $b['price_tmp']) {
         return 1;
-    } elseif ((float)$a['price_tmp'] > (float)$b['price_tmp']) {
+    } elseif ((float) $a['price_tmp'] > (float) $b['price_tmp']) {
         return -1;
     }
+
     return 0;
 }

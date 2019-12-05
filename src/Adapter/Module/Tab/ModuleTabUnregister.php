@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -27,13 +27,16 @@
 namespace PrestaShop\PrestaShop\Adapter\Module\Tab;
 
 use PrestaShop\PrestaShop\Adapter\Module\Module;
-use PrestaShopBundle\Entity\Tab;
 use PrestaShopBundle\Entity\Repository\LangRepository;
 use PrestaShopBundle\Entity\Repository\TabRepository;
+use PrestaShopBundle\Entity\Tab;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 use Tab as TabClass;
 
+/**
+ * Class responsible of unregister existing tabs of Back Office's menu.
+ */
 class ModuleTabUnregister
 {
     /**
@@ -69,7 +72,7 @@ class ModuleTabUnregister
      *
      * This is done automatically as part of the module uninstallation.
      *
-     * @return bool Returns true if the module tabs were successfully uninstalled, false if any of them failed to do so.
+     * @return bool returns true if the module tabs were successfully uninstalled, false if any of them failed to do so
      */
     public function unregisterTabs(Module $module)
     {
@@ -79,14 +82,22 @@ class ModuleTabUnregister
 
         foreach ($tabs as $tab) {
             $this->unregisterTab($tab);
+            $this->removeDuplicatedParent($tab);
         }
+    }
+
+    /**
+     * @param Module $module
+     */
+    public function disableTabs(Module $module)
+    {
+        $this->tabRepository->changeEnabledByModuleName($module->get('name'), false);
     }
 
     /**
      * Uninstalls a tab given its defined structure.
      *
-     * @param Tab $tab The instance of entity tab.
-     *
+     * @param Tab $tab the instance of entity tab
      */
     private function unregisterTab(Tab $tab)
     {
@@ -100,8 +111,43 @@ class ModuleTabUnregister
                     array(
                         '%name%' => $tab->getClassName(),
                     ),
-                    'Admin.Modules.Notification'));
+                    'Admin.Modules.Notification'
+                )
+            );
         }
     }
 
+    /**
+     * When we add a level of children in the menu tabs, we created a dummy parent.
+     * We must delete it when it has no more children than the original tab.
+     *
+     * @param Tab $tab
+     */
+    private function removeDuplicatedParent(Tab $tab)
+    {
+        $remainingChildren = $this->tabRepository->findByParentId($tab->getIdParent());
+        // Or more than one children, the parent tab is still used.
+        // If there is no children, the deletion is likely to be done manually by the module.
+        if (count($remainingChildren) !== 1) {
+            return;
+        }
+
+        $parent = $this->tabRepository->find($tab->getIdParent());
+        $child = end($remainingChildren);
+
+        // We know we have a tab to delete if the parent name is the remaining child name+_MTR
+        if ($parent->getClassName() === $child->getClassName() . ModuleTabRegister::SUFFIX) {
+            $legacyTabParent = new TabClass($parent->getId());
+            // Setting a wrong id_parent will prevent the children to move
+            $legacyTabParent->id_parent = -1;
+            $legacyTabParent->delete();
+
+            $legacyTab = new TabClass($child->getId());
+            $legacyTab->id_parent = $parent->getIdParent();
+            $legacyTab->save();
+            // Updating the id_parent will override the position, that's why we save 2 times
+            $legacyTab->position = $parent->getPosition();
+            $legacyTab->save();
+        }
+    }
 }

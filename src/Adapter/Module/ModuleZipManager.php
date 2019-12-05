@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,60 +16,80 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Adapter\Module;
 
+use Exception;
+use PrestaShopBundle\Event\ModuleZipManagementEvent;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Translation\TranslatorInterface;
-
-use Exception;
 use Tools;
 use ZipArchive;
 
+/**
+ * Responsible of unzipping of Module Zip archives.
+ */
 class ModuleZipManager
 {
     /*
      * Data
      */
     private static $sources = array();
-    private $attributes = array('name', 'sandboxPath');
 
     /*
      * Services
      */
     /**
-     * @var Symfony\Component\Filesystem\Filesystem
+     * @var \Symfony\Component\Filesystem\Filesystem
      */
     private $filesystem;
 
+    /**
+     * Translator.
+     *
+     * @var TranslatorInterface
+     */
     private $translator;
-    
-    public function __construct(Filesystem $filesystem, TranslatorInterface $translator)
-    {
+
+    /**
+     * @var EventDispatcherInterface
+     */
+    private $eventDispatcher;
+
+    public function __construct(
+        Filesystem $filesystem,
+        TranslatorInterface $translator,
+        EventDispatcherInterface $eventDispatcher
+        ) {
         $this->filesystem = $filesystem;
         $this->translator = $translator;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
      * Detect module name from zipball.
-     * @param String $source
-     * @return String
+     *
+     * @param string $source
+     *
+     * @return string
+     *
      * @throws Exception If unable to find the module name
      */
     public function getName($source)
     {
         $this->initSource($source);
-        
-        if ($this->get($source, 'name') !== null) {
-            return $this->get($source, 'name');
+
+        if ($this->getSource($source)->getName($source) !== null) {
+            return $this->getSource($source)->getName($source);
         }
 
         if (!file_exists($source)) {
@@ -77,7 +97,9 @@ class ModuleZipManager
                 $this->translator->trans(
                     'Unable to find uploaded module at the following path: %file%',
                     array('%file%' => $source),
-                    'Admin.Modules.Notification'));
+                    'Admin.Modules.Notification'
+                )
+            );
         }
 
         $sandboxPath = $this->getSandboxPath($source);
@@ -88,8 +110,10 @@ class ModuleZipManager
                     'Cannot extract module in %path% to get its name. %error%',
                     array(
                         '%path%' => $sandboxPath,
-                        '%error%' => $zip->getStatusString()),
-                    'Admin.Modules.Notification'));
+                        '%error%' => $zip->getStatusString(), ),
+                    'Admin.Modules.Notification'
+                )
+            );
         }
 
         // Check the structure and get the module name
@@ -109,13 +133,14 @@ class ModuleZipManager
             // Inside of this folder, we MUST have a file called <module name>.php
             $moduleFolder = Finder::create()
                     ->files()
-                    ->in($sandboxPath.$moduleName)
+                    ->in($sandboxPath . $moduleName)
                     ->depth('== 0')
                     ->exclude(['__MACOSX'])
                     ->ignoreVCS(true);
             foreach (iterator_to_array($moduleFolder) as $file) {
-                if ($file->getFileName() === $moduleName.'.php') {
+                if ($file->getFileName() === $moduleName . '.php') {
                     $validModuleStructure = true;
+
                     break;
                 }
             }
@@ -123,80 +148,83 @@ class ModuleZipManager
 
         if (!$validModuleStructure) {
             $this->filesystem->remove($sandboxPath);
+
             throw new Exception($this->translator->trans(
                     'This file does not seem to be a valid module zip',
                     array(),
-                    'Admin.Modules.Notification'));
+                    'Admin.Modules.Notification'
+            ));
         }
 
-        $this->set($source, 'name', $moduleName);
+        $this->getSource($source)->setName($moduleName);
+
         return $moduleName;
     }
 
     /**
-     * When ready, send the module Zip in the modules folder
-     * @param String $source
+     * When ready, send the module Zip in the modules folder.
+     *
+     * @param string $source
      */
     public function storeInModulesFolder($source)
     {
         $name = $this->getName($source);
-        $sandboxPath = $this->get($source, 'sandboxPath');
+        $sandboxPath = $this->getSandboxPath($source);
         // Now we are sure to have a valid module, we copy it to the modules folder
-        $modulePath = _PS_MODULE_DIR_.$name;
+        $modulePath = _PS_MODULE_DIR_ . $name;
         $this->filesystem->mkdir($modulePath);
         $this->filesystem->mirror(
-            $sandboxPath.$name,
+            $sandboxPath . $name,
             $modulePath,
             null,
             array('override' => true)
         );
+        $this->eventDispatcher
+            ->dispatch(
+                ModuleZipManagementEvent::DOWNLOAD,
+                new ModuleZipManagementEvent($this->getSource($source))
+            );
+
         $this->filesystem->remove($sandboxPath);
     }
 
+    /**
+     * @param $source
+     *
+     * @return string|null
+     */
     private function getSandboxPath($source)
     {
-        $sandboxPath = $this->get($source, 'sandboxPath');
+        $sandboxPath = $this->getSource($source)->getSandboxPath();
         if ($sandboxPath === null) {
-            $sandboxPath = _PS_CACHE_DIR_.'sandbox/'.uniqid().'/';
+            $sandboxPath = _PS_CACHE_DIR_ . 'sandbox/' . uniqid() . '/';
             $this->filesystem->mkdir($sandboxPath);
-            $this->set($source, 'sandboxPath', $sandboxPath);
+            $this->getSource($source)->setSandboxPath($sandboxPath);
         }
+
         return $sandboxPath;
     }
 
     /**
-     * Get a attribute value about a source
-     * @param String $source
-     * @param String $attr defined in $attributes
-     * @return mixed
-     * @throws Exception if $attr value not in list
+     * Get a ModuleZip instance from a given source (= zip filepath).
+     *
+     * @param string $source
+     *
+     * @return ModuleZip|null
      */
-    private function get($source, $attr)
+    private function getSource($source)
     {
-        if (!in_array($attr, $this->attributes)) {
-            throw new Exception('Unknow source attribute');
+        if (!array_key_exists($source, self::$sources)) {
+            return null;
         }
-        return self::$sources[$source][$attr];
+
+        return self::$sources[$source];
     }
 
     /**
-     * Store a value about a source
-     * @param String $source
-     * @param String $attr
-     * @param mixed $value
-     * @throws Exception if $attr value not in list
-     */
-    private function set($source, $attr, $value)
-    {
-        if (!in_array($attr, $this->attributes)) {
-            throw new Exception('Unknow source attribute');
-        }
-        self::$sources[$source][$attr] = $value;
-    }
-
-    /**
-     * Init all data regarding a source before proceeding it
-     * @param String $source
+     * Init all data regarding a source before proceeding it.
+     *
+     * @param string $source
      */
     private function initSource($source)
     {
@@ -204,11 +232,8 @@ class ModuleZipManager
             $source = Tools::createFileFromUrl($source);
         }
 
-        if (isset(self::$sources[$source])) {
-            return;
-        }
-        foreach ($this->attributes as $attr) {
-            self::$sources[$source][$attr] = null;
+        if ($this->getSource($source) === null) {
+            self::$sources[$source] = new ModuleZip($source);
         }
     }
 }

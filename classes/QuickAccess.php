@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,16 +16,16 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 /**
- * Class QuickAccessCore
+ * Class QuickAccessCore.
  */
 class QuickAccessCore extends ObjectModel
 {
@@ -55,21 +55,21 @@ class QuickAccessCore extends ObjectModel
     );
 
     /**
-    * Get all available quick_accesses
-    *
-    * @return array QuickAccesses
-    */
+     * Get all available quick_accesses.
+     *
+     * @return array QuickAccesses
+     */
     public static function getQuickAccesses($idLang)
     {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 		SELECT *
-		FROM `'._DB_PREFIX_.'quick_access` qa
-		LEFT JOIN `'._DB_PREFIX_.'quick_access_lang` qal ON (qa.`id_quick_access` = qal.`id_quick_access` AND qal.`id_lang` = '.(int) $idLang.')
+		FROM `' . _DB_PREFIX_ . 'quick_access` qa
+		LEFT JOIN `' . _DB_PREFIX_ . 'quick_access_lang` qal ON (qa.`id_quick_access` = qal.`id_quick_access` AND qal.`id_lang` = ' . (int) $idLang . ')
 		ORDER BY `name` ASC');
     }
 
     /**
-     * Get all available quick_accesses with token
+     * Get all available quick_accesses with token.
      *
      * @return array QuickAccesses
      */
@@ -90,6 +90,7 @@ class QuickAccessCore extends ObjectModel
                 $url = Context::getContext()->shop->getBaseURL();
                 if (!$url) {
                     unset($quickAccess[$index]);
+
                     continue;
                 }
                 $quickAccess[$index]['link'] = $url;
@@ -101,14 +102,14 @@ class QuickAccessCore extends ObjectModel
                     }
                     $quick_access[$index]['target'] = $admin_tab[1];
 
-                    $tokenString = $admin_tab[1].(int)Tab::getIdFromClassName($admin_tab[1]).$idEmployee;
+                    $tokenString = $admin_tab[1] . (int) Tab::getIdFromClassName($admin_tab[1]) . $idEmployee;
                 }
-                $quickAccess[$index]['link'] = Context::getContext()->link->getBaseLink().basename(_PS_ADMIN_DIR_).'/'.$quick['link'];
+                $quickAccess[$index]['link'] = Context::getContext()->link->getBaseLink() . basename(_PS_ADMIN_DIR_) . '/' . $quick['link'];
             }
 
             if (false === strpos($quickAccess[$index]['link'], 'token')) {
                 $separator = strpos($quickAccess[$index]['link'], '?') ? '&' : '?';
-                $quickAccess[$index]['link'] .= $separator.'token='.Tools::getAdminToken($tokenString);
+                $quickAccess[$index]['link'] .= $separator . 'token=' . Tools::getAdminToken($tokenString);
             }
         }
 
@@ -116,7 +117,7 @@ class QuickAccessCore extends ObjectModel
     }
 
     /**
-     * Toggle new window
+     * Toggle new window.
      *
      * @return bool
      *
@@ -125,7 +126,7 @@ class QuickAccessCore extends ObjectModel
     public function toggleNewWindow()
     {
         if (!array_key_exists('new_window', $this)) {
-            throw new PrestaShopException('property "new_window" is missing in object '.get_class($this));
+            throw new PrestaShopException('property "new_window" is missing in object ' . get_class($this));
         }
 
         $this->setFieldsToUpdate(array('new_window' => true));

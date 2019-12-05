@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,16 +16,17 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 /**
- * Webservice entity for stock movements
+ * Webservice entity for stock movements.
+ *
  * @since 1.5.0
  */
 class StockMvtWSCore extends ObjectModelCore
@@ -127,7 +128,7 @@ class StockMvtWSCore extends ObjectModelCore
      */
     public $management_type;
 
-    /*
+    /**
      * @var string : Name of the product (@see Product::getProductName)
      */
     public $product_name;
@@ -143,6 +144,11 @@ class StockMvtWSCore extends ObjectModelCore
     public $upc;
 
     /**
+     * @var string MPN of the product (@see Stock::product_mpn)
+     */
+    public $mpn;
+
+    /**
      * @var string Reference of the product (@see Stock::product_reference)
      */
     public $reference;
@@ -154,20 +160,20 @@ class StockMvtWSCore extends ObjectModelCore
         'table' => 'stock_mvt',
         'primary' => 'id_stock_mvt',
         'fields' => array(
-            'id_employee' =>            array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-            'employee_firstname' =>    array('type' => self::TYPE_STRING, 'validate' => 'isName'),
-            'employee_lastname' =>        array('type' => self::TYPE_STRING, 'validate' => 'isName'),
-            'id_stock' =>                array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-            'physical_quantity' =>        array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt', 'required' => true),
-            'id_stock_mvt_reason' =>    array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-            'id_order' =>                array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
-            'id_supply_order' =>        array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
-            'sign' =>                    array('type' => self::TYPE_INT, 'validate' => 'isInt', 'required' => true),
-            'last_wa' =>                array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice'),
-            'current_wa' =>            array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice'),
-            'price_te' =>                array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice', 'required' => true),
-            'referer' =>                array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
-            'date_add' =>                array('type' => self::TYPE_DATE, 'validate' => 'isDate', 'required' => true),
+            'id_employee' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
+            'employee_firstname' => array('type' => self::TYPE_STRING, 'validate' => 'isName'),
+            'employee_lastname' => array('type' => self::TYPE_STRING, 'validate' => 'isName'),
+            'id_stock' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
+            'physical_quantity' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt', 'required' => true),
+            'id_stock_mvt_reason' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
+            'id_order' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
+            'id_supply_order' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
+            'sign' => array('type' => self::TYPE_INT, 'validate' => 'isInt', 'required' => true),
+            'last_wa' => array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice'),
+            'current_wa' => array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice'),
+            'price_te' => array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice', 'required' => true),
+            'referer' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
+            'date_add' => array('type' => self::TYPE_DATE, 'validate' => 'isDate', 'required' => true),
         ),
     );
 
@@ -190,6 +196,7 @@ class StockMvtWSCore extends ObjectModelCore
             'ean13' => array(),
             'upc' => array(),
             'reference' => array(),
+            'mpn' => array(),
         ),
         'hidden_fields' => array(
             'referer',
@@ -199,8 +206,9 @@ class StockMvtWSCore extends ObjectModelCore
     );
 
     /**
-     * Associations tables for attributes that require different tables than stated in ObjectModel::definition
-     * @var Array
+     * Associations tables for attributes that require different tables than stated in ObjectModel::definition.
+     *
+     * @var array
      */
     protected $tables_assoc = array(
         'id_product' => array('table' => 's'),
@@ -210,6 +218,7 @@ class StockMvtWSCore extends ObjectModelCore
         'management_type' => array('table' => 'w'),
         'ean13' => array('table' => 's'),
         'upc' => array('table' => 's'),
+        'mpn' => array('table' => 's'),
         'reference' => array('table' => 's'),
     );
 
@@ -221,8 +230,8 @@ class StockMvtWSCore extends ObjectModelCore
         // calls parent
         parent::__construct($id, $id_lang, $id_shop);
 
-        if ((int)$this->id != 0) {
-            $res = $this->getWebserviceObjectList(null, (' AND '.$this->def['primary'].' = '.(int)$this->id), null, null, true);
+        if ((int) $this->id != 0) {
+            $res = $this->getWebserviceObjectList(null, (' AND ' . $this->def['primary'] . ' = ' . (int) $this->id), null, null, true);
             if (isset($res[0])) {
                 foreach ($this->tables_assoc as $key => $param) {
                     $this->{$key} = $res[0][$key];
@@ -237,26 +246,26 @@ class StockMvtWSCore extends ObjectModelCore
      */
     public function getWebserviceObjectList($join, $filter, $sort, $limit, $full = false)
     {
-        $query = 'SELECT DISTINCT main.'.$this->def['primary'].' ';
+        $query = 'SELECT DISTINCT main.' . $this->def['primary'] . ' ';
 
         if ($full) {
             $query .= ', s.id_product, s.id_product_attribute, s.id_warehouse, w.id_currency, w.management_type,
-					   s.ean13, s.upc, s.reference ';
+					   s.ean13, s.upc, s.mpn, s.reference ';
         }
 
         $old_filter = $filter;
         if ($filter) {
             foreach ($this->tables_assoc as $key => $value) {
-                $filter = str_replace('main.`'.$key.'`', $value['table'].'.`'.$key.'`', $filter);
+                $filter = str_replace('main.`' . $key . '`', $value['table'] . '.`' . $key . '`', $filter);
             }
         }
 
-        $query .= 'FROM '._DB_PREFIX_.$this->def['table'].' as main ';
+        $query .= 'FROM ' . _DB_PREFIX_ . $this->def['table'] . ' as main ';
 
         if ($filter !== $old_filter || $full) {
-            $query .= 'LEFT JOIN '._DB_PREFIX_.'stock s ON (s.id_stock = main.id_stock) ';
-            $query .= 'LEFT JOIN '._DB_PREFIX_.'warehouse w ON (w.id_warehouse = s.id_warehouse) ';
-            $query .= 'LEFT JOIN '._DB_PREFIX_.'currency c ON (c.id_currency = w.id_currency) ';
+            $query .= 'LEFT JOIN ' . _DB_PREFIX_ . 'stock s ON (s.id_stock = main.id_stock) ';
+            $query .= 'LEFT JOIN ' . _DB_PREFIX_ . 'warehouse w ON (w.id_warehouse = s.id_warehouse) ';
+            $query .= 'LEFT JOIN ' . _DB_PREFIX_ . 'currency c ON (c.id_currency = w.id_currency) ';
         }
 
         if ($join) {
@@ -266,22 +275,22 @@ class StockMvtWSCore extends ObjectModelCore
         $query .= 'WHERE 1 ';
 
         if ($filter) {
-            $query .= $filter.' ';
+            $query .= $filter . ' ';
         }
 
         if ($sort) {
-            $query .= $sort.' ';
+            $query .= $sort . ' ';
         }
 
         if ($limit) {
-            $query .= $limit.' ';
+            $query .= $limit . ' ';
         }
 
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
     }
 
     /**
-     * Webservice : getter for the product name
+     * Webservice : getter for the product name.
      */
     public function getWSProductName()
     {

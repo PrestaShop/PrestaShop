@@ -1,0 +1,128 @@
+services:
+    _defaults:
+        public: true
+
+    prestashop.core.import.file_uploader:
+        class: 'PrestaShop\PrestaShop\Core\Import\File\FileUploader'
+        arguments:
+            - '@translator'
+            - '@prestashop.core.import.dir'
+
+    prestashop.core.import.file_finder:
+        class: 'PrestaShop\PrestaShop\Core\Import\File\FileFinder'
+        arguments:
+            - '@prestashop.core.import.dir'
+
+    prestashop.core.import.dir:
+        class: 'PrestaShop\PrestaShop\Core\Import\ImportDirectory'
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'
+
+    prestashop.core.import.file_removal:
+        class: 'PrestaShop\PrestaShop\Core\Import\File\FileRemoval'
+        arguments:
+            - '@prestashop.core.import.dir'
+
+    prestashop.core.import.sample.file_provider:
+        class: 'PrestaShop\PrestaShop\Core\Import\Sample\SampleFileProvider'
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'
+
+    prestashop.core.import.csv_file_reader:
+        class: 'PrestaShop\PrestaShop\Core\Import\File\CsvFileReader'
+        arguments:
+            - '@prestashop.adapter.import.file_opener'
+            - '@=service("prestashop.core.import.normalizer.csv_value_separator").normalize(service("session").get("separator"))'
+
+    prestashop.core.import.data_row.presenter:
+        class: 'PrestaShop\PrestaShop\Core\Import\File\DataRow\DataRowPresenter'
+
+    prestashop.core.import.data_row.collection_presenter:
+        class: 'PrestaShop\PrestaShop\Core\Import\File\DataRow\DataRowCollectionPresenter'
+        arguments:
+            - '@prestashop.core.import.data_row.presenter'
+
+    prestashop.core.import.factory.data_row.collection_factory:
+        class: 'PrestaShop\PrestaShop\Core\Import\File\DataRow\Factory\DataRowCollectionFactory'
+        arguments:
+            - '@prestashop.core.import.csv_file_reader'
+
+    prestashop.core.import.fields_provider.product:
+        class: 'PrestaShop\PrestaShop\Core\Import\EntityField\Provider\ProductFieldsProvider'
+        arguments:
+            - '@translator'
+
+    prestashop.core.import.fields_provider.category:
+        class: 'PrestaShop\PrestaShop\Core\Import\EntityField\Provider\CategoryFieldsProvider'
+        arguments:
+            - '@translator'
+
+    prestashop.core.import.fields_provider.combination:
+        class: 'PrestaShop\PrestaShop\Core\Import\EntityField\Provider\CombinationFieldsProvider'
+        arguments:
+            - '@translator'
+
+    prestashop.core.import.fields_provider.customer:
+        class: 'PrestaShop\PrestaShop\Core\Import\EntityField\Provider\CustomerFieldsProvider'
+        arguments:
+            - '@translator'
+
+    prestashop.core.import.fields_provider.address:
+        class: 'PrestaShop\PrestaShop\Core\Import\EntityField\Provider\AddressFieldsProvider'
+        arguments:
+            - '@translator'
+
+    prestashop.core.import.fields_provider.supplier:
+        class: 'PrestaShop\PrestaShop\Core\Import\EntityField\Provider\SupplierFieldsProvider'
+        arguments:
+            - '@translator'
+
+    prestashop.core.import.fields_provider.alias:
+        class: 'PrestaShop\PrestaShop\Core\Import\EntityField\Provider\AliasFieldsProvider'
+        arguments:
+            - '@translator'
+
+    prestashop.core.import.fields_provider.store_contact:
+        class: 'PrestaShop\PrestaShop\Core\Import\EntityField\Provider\StoreContactFieldsProvider'
+        arguments:
+            - '@translator'
+
+    prestashop.core.import.normalizer.csv_value_separator:
+        class: 'PrestaShop\PrestaShop\Core\Import\CsvValueSeparatorNormalizer'
+
+    prestashop.core.import.fields_provider_finder:
+        class: 'PrestaShop\PrestaShop\Core\Import\EntityField\Provider\EntityFieldsProviderFinder'
+        arguments:
+            -
+              0: '@prestashop.core.import.fields_provider.category'
+              1: '@prestashop.core.import.fields_provider.product'
+              2: '@prestashop.core.import.fields_provider.combination'
+              3: '@prestashop.core.import.fields_provider.customer'
+              4: '@prestashop.core.import.fields_provider.address'
+              5: '@prestashop.core.import.fields_provider.supplier'
+              6: '@prestashop.core.import.fields_provider.supplier'
+              7: '@prestashop.core.import.fields_provider.alias'
+              8: '@prestashop.core.import.fields_provider.store_contact'
+
+    prestashop.core.import.config_factory:
+        class: 'PrestaShop\PrestaShop\Core\Import\Configuration\ImportConfigFactory'
+
+    prestashop.core.import.runtime_config_factory:
+        class: 'PrestaShop\PrestaShop\Core\Import\Configuration\ImportRuntimeConfigFactory'
+
+    prestashop.core.import.request_validator:
+        class: 'PrestaShop\PrestaShop\Core\Import\Validator\ImportRequestValidator'
+
+    prestashop.core.import.access_checker:
+        class: 'PrestaShop\PrestaShop\Core\Import\Access\ImportAccessChecker'
+        arguments:
+            - '@prestashop.adapter.data_provider.employee'
+
+    prestashop.core.import.importer:
+        class: 'PrestaShop\PrestaShop\Core\Import\Importer'
+        arguments:
+            - '@prestashop.core.import.access_checker'
+            - '@prestashop.adapter.import.entity_deleter'
+            - '@prestashop.core.import.csv_file_reader'
+            - '@prestashop.core.import.dir'
+            - '@prestashop.core.configuration.ini_configuration'

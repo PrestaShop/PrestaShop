@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -49,7 +49,8 @@ class InstallControllerHttpWelcome extends InstallControllerHttp implements Http
 
         $locale = $this->language->getLanguage($this->session->lang)->locale;
         if (!empty($this->session->lang) && !is_file(_PS_ROOT_DIR_ . '/app/Resources/translations/' . $locale . '/Install.' . $locale . '.xlf')) {
-            Language::downloadAndInstallLanguagePack($this->session->lang, _PS_VERSION_, null, false);
+            Language::downloadLanguagePack($this->session->lang, _PS_VERSION_);
+            Language::installSfLanguagePack($locale);
             $this->clearCache();
         }
         if (Tools::getIsset('language') && is_dir(_PS_ROOT_DIR_ . '/app/Resources/translations/' . $locale)) {
@@ -76,6 +77,6 @@ class InstallControllerHttpWelcome extends InstallControllerHttp implements Http
     private function clearCache()
     {
         $fs = new \Symfony\Component\Filesystem\Filesystem();
-        $fs->remove(_PS_ROOT_DIR_ . '/app/cache/' . (_PS_MODE_DEV_ ? 'dev' : 'prod'));
+        $fs->remove(_PS_CACHE_DIR_);
     }
 }

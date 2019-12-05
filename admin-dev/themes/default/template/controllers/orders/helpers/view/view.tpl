@@ -1,5 +1,5 @@
 {**
- * 2007-2017 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -15,10 +15,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
@@ -67,6 +67,10 @@
   <div>{$hook_invoice}</div>
   {/if}
 
+  {assign var="order_documents" value=$order->getDocuments()}
+  {assign var="order_shipping" value=$order->getShipping()}
+  {assign var="order_return" value=$order->getReturn()}
+
   <div class="panel kpi-container">
     <div class="row">
       <div class="col-xs-6 col-sm-3 box-stats color3" >
@@ -87,7 +91,7 @@
         <div class="kpi-content">
           <i class="icon-comments"></i>
           <span class="title">{l s='Messages' d='Admin.Global'}</span>
-          <span class="value"><a href="{$link->getAdminLink('AdminCustomerThreads')|escape:'html':'UTF-8'}&amp;id_order={$order->id|intval}">{sizeof($customer_thread_message)}</a></span>
+          <span class="value"><a href="{$link->getAdminLink('AdminCustomerThreads', true, [], ['id_order' => $order->id|intval])|escape:'html':'UTF-8'}">{sizeof($customer_thread_message)}</a></span>
         </div>
       </div>
       <div class="col-xs-6 col-sm-3 box-stats color1" >
@@ -111,10 +115,10 @@
           <span class="badge">{l s="#" d='Admin.Orderscustomers.Feature'}{$order->id}</span>
           <div class="panel-heading-action">
             <div class="btn-group">
-              <a class="btn btn-default{if !$previousOrder} disabled{/if}" href="{$link->getAdminLink('AdminOrders')|escape:'html':'UTF-8'}&amp;vieworder&amp;id_order={$previousOrder|intval}">
+              <a class="btn btn-default{if !$previousOrder} disabled{/if}" href="{$link->getAdminLink('AdminOrders', true, [], ['vieworder' => 1, 'id_order' => $previousOrder|intval])|escape:'html':'UTF-8'}">
                 <i class="icon-backward"></i>
               </a>
-              <a class="btn btn-default{if !$nextOrder} disabled{/if}" href="{$link->getAdminLink('AdminOrders')|escape:'html':'UTF-8'}&amp;vieworder&amp;id_order={$nextOrder|intval}">
+              <a class="btn btn-default{if !$nextOrder} disabled{/if}" href="{$link->getAdminLink('AdminOrders', true, [], ['vieworder' => 1, 'id_order' => $nextOrder|intval])|escape:'html':'UTF-8'}">
                 <i class="icon-forward"></i>
               </a>
             </div>
@@ -128,7 +132,7 @@
           </a>
           &nbsp;
           {if Configuration::get('PS_INVOICE') && count($invoices_collection) && $order->invoice_number}
-            <a data-selenium-id="view_invoice" class="btn btn-default _blank" href="{$link->getAdminLink('AdminPdf')|escape:'html':'UTF-8'}&amp;submitAction=generateInvoicePDF&amp;id_order={$order->id|intval}">
+            <a data-selenium-id="view_invoice" class="btn btn-default _blank" href="{$link->getAdminLink('AdminPdf', true, [], ['submitAction' => 'generateInvoicePDF', 'id_order' => $order->id|intval])|escape:'html':'UTF-8'}">
               <i class="icon-file"></i>
               {l s='View invoice' d='Admin.Orderscustomers.Feature'}
             </a>
@@ -140,7 +144,7 @@
           {/if}
           &nbsp;
           {if $order->delivery_number}
-            <a class="btn btn-default _blank"  href="{$link->getAdminLink('AdminPdf')|escape:'html':'UTF-8'}&amp;submitAction=generateDeliverySlipPDF&amp;id_order={$order->id|intval}">
+            <a class="btn btn-default _blank"  href="{$link->getAdminLink('AdminPdf', true, [], ['submitAction' => 'generateDeliverySlipPDF', 'id_order' => $order->id|intval])|escape:'html':'UTF-8'}">
               <i class="icon-truck"></i>
               {l s='View delivery slip' d='Admin.Orderscustomers.Feature'}
             </a>
@@ -184,7 +188,7 @@
           <li>
             <a href="#documents">
               <i class="icon-file-text"></i>
-              {l s='Documents' d='Admin.Orderscustomers.Feature'} <span class="badge">{$order->getDocuments()|@count}</span>
+              {l s='Documents' d='Admin.Orderscustomers.Feature'} <span class="badge">{$order_documents|@count}</span>
             </a>
           </li>
         </ul>
@@ -207,7 +211,7 @@
                         <td style="background-color:{$row['color']};color:{$row['text-color']}">{dateFormat date=$row['date_add'] full=true}</td>
                         <td style="background-color:{$row['color']};color:{$row['text-color']}" class="text-right">
                           {if $row['send_email']|intval}
-                            <a class="btn btn-default" href="{$link->getAdminLink('AdminOrders')|escape:'html':'UTF-8'}&amp;vieworder&amp;id_order={$order->id|intval}&amp;sendStateEmail={$row['id_order_state']|intval}&amp;id_order_history={$row['id_order_history']|intval}" title="{l s='Resend this email to the customer' d='Admin.Orderscustomers.Help'}">
+                            <a class="btn btn-default" href="{$link->getAdminLink('AdminOrders', true, [], ['vieworder' => 1, 'id_order' => $order->id|intval, 'sendStateEmail' => $row['id_order_state']|intval, 'id_order_history' => $row['id_order_history']|intval])|escape:'html':'UTF-8'}" title="{l s='Resend this email to the customer' d='Admin.Orderscustomers.Help'}">
                               <i class="icon-mail-reply"></i>
                               {l s='Resend email' d='Admin.Orderscustomers.Feature'}
                             </a>
@@ -222,7 +226,7 @@
                         <td>{dateFormat date=$row['date_add'] full=true}</td>
                         <td class="text-right">
                           {if $row['send_email']|intval}
-                            <a class="btn btn-default" href="{$link->getAdminLink('AdminOrders')|escape:'html':'UTF-8'}&amp;vieworder&amp;id_order={$order->id|intval}&amp;sendStateEmail={$row['id_order_state']|intval}&amp;id_order_history={$row['id_order_history']|intval}" title="{l s='Resend this email to the customer' d='Admin.Orderscustomers.Help'}">
+                            <a class="btn btn-default" href="{$link->getAdminLink('AdminOrders', true, [], ['vieworder' => 1, 'id_order' => $order->id|intval, 'sendStateEmail' => $row['id_order_state']|intval, 'id_order_history' => $row['id_order_history']|intval])|escape:'html':'UTF-8'}" title="{l s='Resend this email to the customer' d='Admin.Orderscustomers.Help'}">
                               <i class="icon-mail-reply"></i>
                               {l s='Resend email' d='Admin.Orderscustomers.Feature'}
                             </a>
@@ -246,7 +250,7 @@
                   <input type="hidden" name="id_order" value="{$order->id}" />
                 </div>
                 <div class="col-lg-3">
-                  <button type="submit" name="submitState" class="btn btn-primary">
+                  <button type="submit" name="submitState" id="submit_state" class="btn btn-primary">
                     {l s='Update status' d='Admin.Orderscustomers.Feature'}
                   </button>
                 </div>
@@ -255,7 +259,7 @@
           </div>
           <!-- Tab documents -->
           <div class="tab-pane" id="documents">
-            <h4 class="visible-print">{l s='Documents' d='Admin.Orderscustomers.Feature'} <span class="badge">({$order->getDocuments()|@count})</span></h4>
+            <h4 class="visible-print">{l s='Documents' d='Admin.Orderscustomers.Feature'} <span class="badge">({$order_documents|@count})</span></h4>
             {* Include document template *}
             {include file='controllers/orders/_documents.tpl'}
           </div>
@@ -273,13 +277,13 @@
           <li class="active">
             <a href="#shipping">
               <i class="icon-truck "></i>
-              {l s='Shipping' d='Admin.Catalog.Feature'} <span class="badge">{$order->getShipping()|@count}</span>
+              {l s='Shipping' d='Admin.Catalog.Feature'} <span class="badge">{$order_shipping|@count}</span>
             </a>
           </li>
           <li>
             <a href="#returns">
               <i class="icon-undo"></i>
-              {l s='Merchandise Returns' d='Admin.Orderscustomers.Feature'} <span class="badge">{$order->getReturn()|@count}</span>
+              {l s='Merchandise Returns' d='Admin.Orderscustomers.Feature'} <span class="badge">{$order_return|@count}</span>
             </a>
           </li>
         </ul>
@@ -288,7 +292,7 @@
         {$HOOK_CONTENT_SHIP}
           <!-- Tab shipping -->
           <div class="tab-pane active" id="shipping">
-            <h4 class="visible-print">{l s='Shipping' d='Admin.Catalog.Feature'} <span class="badge">({$order->getShipping()|@count})</span></h4>
+            <h4 class="visible-print">{l s='Shipping' d='Admin.Catalog.Feature'} <span class="badge">({$order_shipping|@count})</span></h4>
             <!-- Shipping block -->
             {if !$order->isVirtual()}
             <div class="form-horizontal">
@@ -321,10 +325,10 @@
           </div>
           <!-- Tab returns -->
           <div class="tab-pane" id="returns">
-            <h4 class="visible-print">{l s='Merchandise Returns' d='Admin.Orderscustomers.Feature'} <span class="badge">({$order->getReturn()|@count})</span></h4>
+            <h4 class="visible-print">{l s='Merchandise Returns' d='Admin.Orderscustomers.Feature'} <span class="badge">({$order_return|@count})</span></h4>
             {if !$order->isVirtual()}
             <!-- Return block -->
-              {if $order->getReturn()|count > 0}
+              {if $order_return|count > 0}
               <div class="table-responsive">
                 <table class="table">
                   <thead>
@@ -336,7 +340,7 @@
                     </tr>
                   </thead>
                   <tbody>
-                    {foreach from=$order->getReturn() item=line}
+                    {foreach from=$order_return item=line}
                     <tr>
                       <td>{$line.date_add}</td>
                       <td>{$line.type}</td>
@@ -505,7 +509,7 @@
                     </div>
                   </td>
                   <td>
-                    <input name="payment_method" list="payment_method" class="payment_method">
+                    <input name="payment_method" list="payment_method" class="payment_method form-control fixed-width-sm">
                     <datalist id="payment_method">
                     {foreach from=$payment_methods item=payment_method}
                       <option value="{$payment_method}">
@@ -573,7 +577,7 @@
             <i class="icon-user"></i>
             {l s='Customer' d='Admin.Global'}
             <span class="badge">
-              <a href="?tab=AdminCustomers&amp;id_customer={$customer->id}&amp;viewcustomer&amp;token={getAdminToken tab='AdminCustomers'}">
+              <a href="{$link->getAdminLink('AdminCustomers', true, [], ['id_customer' => $customer->id,'viewcustomer' => 1])}">
                 {if Configuration::get('PS_B2B_ENABLE')}{$customer->company} - {/if}
                 {$gender->name|escape:'html':'UTF-8'}
                 {$customer->firstname}
@@ -589,7 +593,8 @@
               {if ($customer->isGuest())}
                 {l s='This order has been placed by a guest.' d='Admin.Orderscustomers.Feature'}
                 {if (!Customer::customerExists($customer->email))}
-                  <form method="post" action="index.php?tab=AdminCustomers&amp;id_customer={$customer->id}&amp;id_order={$order->id|intval}&amp;token={getAdminToken tab='AdminCustomers'}">
+                  <form method="post"
+                        action="{$link->getAdminLink('AdminCustomers', true, [], ['guesttocustomer' => 1, 'id_customer' => $customer->id, 'id_order' => $order->id])}">
                     <input type="hidden" name="id_lang" value="{$order->id_lang}" />
                     <input class="btn btn-default" type="submit" name="submitGuestToCustomer" value="{l s='Transform a guest into a customer'}" />
                     <p class="help-block">{l s='This feature will generate a random password and send an email to the customer.' d='Admin.Orderscustomers.Help'}</p>
@@ -621,14 +626,17 @@
 
             <div class="col-xs-6">
               <div class="form-group hidden-print">
-                <a href="?tab=AdminCustomers&amp;id_customer={$customer->id}&amp;viewcustomer&amp;token={getAdminToken tab='AdminCustomers'}" class="btn btn-default btn-block">{l s='View full details...' d='Admin.Orderscustomers.Feature'}</a>
+                <a href="{$link->getAdminLink('AdminCustomers', true, [], ['id_customer' => $customer->id,'viewcustomer' => 1])}" class="btn btn-default btn-block">{l s='View full details...' d='Admin.Orderscustomers.Feature'}</a>
               </div>
               <div class="panel panel-sm">
                 <div class="panel-heading">
                   <i class="icon-eye-slash"></i>
                   {l s='Private note' d='Admin.Orderscustomers.Feature'}
                 </div>
-                <form id="customer_note" class="form-horizontal" action="ajax.php" method="post" onsubmit="saveCustomerNote({$customer->id});return false;" >
+                <form id="customer_note"
+                      class="form-horizontal"
+                      action="{$link->getAdminLink('AdminCustomers', true, [], ['updateCustomerNote' => 1, 'id_customer' => $customer->id])}"
+                      method="post" onsubmit="saveCustomerNote();return false;" >
                   <div class="form-group">
                     <div class="col-lg-12">
                       <textarea name="note" id="noteContent" class="textarea-autosize" onkeyup="$(this).val().length > 0 ? $('#submitCustomerNote').removeAttr('disabled') : $('#submitCustomerNote').attr('disabled', 'disabled')">{$customer->note}</textarea>
@@ -673,7 +681,7 @@
               {if !$order->isVirtual()}
               <!-- Shipping address -->
                 {if $can_edit}
-                  <form class="form-horizontal hidden-print" method="post" action="{$link->getAdminLink('AdminOrders')|escape:'html':'UTF-8'}&amp;vieworder&amp;id_order={$order->id|intval}">
+                  <form class="form-horizontal hidden-print" method="post" action="{$link->getAdminLink('AdminOrders', true, [], ['vieworder' => 1, 'id_order' => $order->id|intval])|escape:'html':'UTF-8'}">
                     <div class="form-group">
                       <div class="col-lg-9">
                         <select name="id_address">
@@ -723,7 +731,7 @@
               <!-- Invoice address -->
               <h4 class="visible-print">{l s='Invoice address' d='Admin.Orderscustomers.Feature'}</h4>
               {if $can_edit}
-                <form class="form-horizontal hidden-print" method="post" action="{$link->getAdminLink('AdminOrders')|escape:'html':'UTF-8'}&amp;vieworder&amp;id_order={$order->id|intval}">
+                <form class="form-horizontal hidden-print" method="post" action="{$link->getAdminLink('AdminOrders', true, [], ['vieworder' => 1, 'id_order' => $order->id|intval])|escape:'html':'UTF-8'}">
                   <div class="form-group">
                     <div class="col-lg-9">
                       <select name="id_address">
@@ -868,7 +876,7 @@
               <button type="submit" id="submitMessage" class="btn btn-primary pull-right" name="submitMessage">
                 {l s='Send message' d='Admin.Orderscustomers.Feature'}
               </button>
-              <a class="btn btn-default" href="{$link->getAdminLink('AdminCustomerThreads')|escape:'html':'UTF-8'}&amp;id_order={$order->id|intval}">
+              <a class="btn btn-default" href="{$link->getAdminLink('AdminCustomerThreads', true, [], ['id_order' => $order->id|intval])|escape:'html':'UTF-8'}">
                 {l s='Show all messages' d='Admin.Orderscustomers.Feature'}
                 <i class="icon-external-link"></i>
               </a>
@@ -928,6 +936,7 @@
                   {if ($order->hasBeenDelivered() || $order->hasProductReturned())}
                     <th class="text-center"><span class="title_box ">{l s='Returned' d='Admin.Orderscustomers.Feature'}</span></th>
                   {/if}
+                  {if $stock_location_is_available}<th class="text-center"><span class="title_box ">{l s='Stock location' d='Admin.Orderscustomers.Feature'}</span></th>{/if}
                   {if $stock_management}<th class="text-center"><span class="title_box ">{l s='Available quantity' d='Admin.Orderscustomers.Feature'}</span></th>{/if}
                   <th>
                     <span class="title_box ">{l s='Total' d='Admin.Global'}</span>
@@ -1102,7 +1111,7 @@
                         </div>
                         <p class="help-block"><i class="icon-warning-sign"></i> {l
                             s='(Max %s %s)'
-                            sprintf=[Tools::displayPrice(Tools::ps_round($shipping_refundable, 2), $currency->id) , $smarty.capture.TaxMethod]
+                            sprintf=[Context::getContext()->getCurrentLocale()->formatPrice($shipping_refundable, Currency::getIsoCodeById((int) $currency->id)) , $smarty.capture.TaxMethod]
                             d='Admin.Orderscustomers.Feature'
                             }
                         </p>

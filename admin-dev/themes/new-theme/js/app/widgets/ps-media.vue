@@ -1,5 +1,5 @@
 <!--**
- * 2007-2017 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -15,23 +15,21 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *-->
 <template>
-    <div class="media">
-      <div class="media-left">
-        <img v-if="displayThumb" :src="thumbnail" class="thumbnail media-object"  />
-        <div v-else class="no-img"></div>
-      </div>
-      <div class="m-l-1 desc media-body">
-        <slot />
-      </div>
+  <div class="media">
+    <img v-if="displayThumb" :src="thumbnail" class="thumbnail d-flex"  />
+    <div v-else class="no-img"></div>
+    <div class="ml-2 desc media-body">
+      <slot />
     </div>
+  </div>
 </template>
 <script>
   export default {
@@ -44,8 +42,8 @@
   };
 </script>
 
-<style lang="sass" scoped>
-  @import "~PrestaKit/scss/custom/_variables.scss";
+<style lang="scss" scoped>
+  @import "../../../scss/config/_settings.scss";
   .product-title {
     .has-combination & {
       font-weight: 600;

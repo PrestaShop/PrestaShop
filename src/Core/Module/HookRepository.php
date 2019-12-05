@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,21 +16,20 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 
 namespace PrestaShop\PrestaShop\Core\Module;
 
 use Db;
 use Exception;
-use Shop;
 use PrestaShop\PrestaShop\Adapter\Hook\HookInformationProvider;
+use Shop;
 
 class HookRepository
 {
@@ -58,16 +57,16 @@ class HookRepository
             "SELECT id_hook FROM {$this->db_prefix}hook WHERE name = '$escaped_hook_name'"
         );
 
-        return (int)$id_hook;
+        return (int) $id_hook;
     }
 
     public function createHook($hook_name, $title = '', $description = '', $position = 1)
     {
         $this->db->insert('hook', [
-            'name'          => $this->db->escape($hook_name),
-            'title'         => $this->db->escape($title),
-            'description'   => $this->db->escape($description),
-            'position'      => $this->db->escape($position)
+            'name' => $this->db->escape($hook_name),
+            'title' => $this->db->escape($title),
+            'description' => $this->db->escape($description),
+            'position' => $this->db->escape($position),
         ], false, true, Db::REPLACE);
 
         return $this->getIdByName($hook_name);
@@ -81,13 +80,13 @@ class HookRepository
             "SELECT id_module FROM {$this->db_prefix}module WHERE name = '$escaped_module_name'"
         );
 
-        return (int)$id_module;
+        return (int) $id_module;
     }
 
     public function unHookModulesFromHook($hook_name)
     {
         $id_hook = $this->getIdByName($hook_name);
-        $id_shop = (int)$this->shop->id;
+        $id_shop = (int) $this->shop->id;
 
         $this->db->execute("DELETE FROM {$this->db_prefix}hook_module
              WHERE id_hook = $id_hook AND id_shop = $id_shop
@@ -104,25 +103,23 @@ class HookRepository
      * Saves hook settings for a list of hooks.
      * The $hooks array should have this format:
      * [
-     * 		"hookName" => [
-     * 			"module1",
-     * 			"module2",
-     * 			"module3" => [
-     * 				"except_pages" => [
-     * 					"page1",
-     * 					"page2",
-     * 					"page3"
-     * 				]
-     * 			]
-     * 		]
+     *     "hookName" => [
+     *         "module1",
+     *         "module2",
+     *         "module3" => [
+     *             "except_pages" => [
+     *                 "page1",
+     *                 "page2",
+     *                 "page3"
+     *             ]
+     *         ]
+     *     ]
      * ]
      * Only hooks present as keys in the $hooks array are affected and all changes
      * are only done for the shop this Repository belongs to.
      */
     public function persistHooksConfiguration(array $hooks)
     {
-        $hook_module = [];
-
         foreach ($hooks as $hook_name => $module_names) {
             $id_hook = $this->getIdByName($hook_name);
             if (!$id_hook) {
@@ -140,10 +137,10 @@ class HookRepository
             foreach ($module_names as $key => $module) {
                 if (is_array($module)) {
                     $module_name = key($module);
-                    $extra_data  = current($module);
+                    $extra_data = current($module);
                 } else {
                     $module_name = $module;
-                    $extra_data  = [];
+                    $extra_data = [];
                 }
 
                 ++$position;
@@ -154,9 +151,9 @@ class HookRepository
 
                 $row = [
                     'id_module' => $id_module,
-                    'id_shop'   => (int)$this->shop->id,
-                    'id_hook'   => $id_hook,
-                    'position'  => $position
+                    'id_shop' => (int) $this->shop->id,
+                    'id_hook' => $id_hook,
+                    'position' => $position,
                 ];
 
                 $this->db->insert('hook_module', $row);
@@ -176,9 +173,9 @@ class HookRepository
 
     private function setModuleHookExceptions($id_module, $id_hook, array $pages)
     {
-        $id_shop    = (int)$this->shop->id;
-        $id_module  = (int)$id_module;
-        $id_hook    = (int)$id_hook;
+        $id_shop = (int) $this->shop->id;
+        $id_module = (int) $id_module;
+        $id_hook = (int) $id_hook;
 
         $this->db->execute("DELETE FROM {$this->db_prefix}hook_module_exceptions
             WHERE id_shop = $id_shop
@@ -188,10 +185,10 @@ class HookRepository
 
         foreach ($pages as $page) {
             $this->db->insert('hook_module_exceptions', [
-                'id_shop'   => $id_shop,
+                'id_shop' => $id_shop,
                 'id_module' => $id_module,
-                'id_hook'   => $id_hook,
-                'file_name' => $page
+                'id_hook' => $id_hook,
+                'file_name' => $page,
             ]);
         }
 
@@ -200,9 +197,9 @@ class HookRepository
 
     private function getModuleHookExceptions($id_module, $id_hook)
     {
-        $id_shop    = (int)$this->shop->id;
-        $id_module  = (int)$id_module;
-        $id_hook    = (int)$id_hook;
+        $id_shop = (int) $this->shop->id;
+        $id_module = (int) $id_module;
+        $id_hook = (int) $id_hook;
 
         $rows = $this->db->executeS("SELECT file_name
             FROM {$this->db_prefix}hook_module_exceptions
@@ -219,7 +216,7 @@ class HookRepository
 
     public function getHooksWithModules()
     {
-        $id_shop = (int)$this->shop->id;
+        $id_shop = (int) $this->shop->id;
 
         $sql = "SELECT h.name as hook_name, h.id_hook, m.name as module_name, m.id_module
             FROM {$this->db_prefix}hook_module hm
@@ -245,7 +242,7 @@ class HookRepository
                 $hooks[$row['hook_name']][] = $row['module_name'];
             } else {
                 $hooks[$row['hook_name']][$row['module_name']] = [
-                    'except_pages' => $exceptions
+                    'except_pages' => $exceptions,
                 ];
             }
         }
@@ -261,6 +258,7 @@ class HookRepository
                 $hooks[$hook_name] = $modules;
             }
         }
+
         return $hooks;
     }
 }

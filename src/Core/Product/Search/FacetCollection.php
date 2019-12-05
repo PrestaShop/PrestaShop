@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,27 +16,43 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-
 namespace PrestaShop\PrestaShop\Core\Product\Search;
 
+/**
+ * Stores a list of facets.
+ */
 class FacetCollection
 {
+    /**
+     * @var array the list of facets
+     */
     private $facets = [];
 
+    /**
+     * @param Facet $facet the facet to add
+     *
+     * @return $this
+     */
     public function addFacet(Facet $facet)
     {
         $this->facets[] = $facet;
+
         return $this;
     }
 
+    /**
+     * @param array $facets the facets to add
+     *
+     * @return $this
+     */
     public function setFacets(array $facets)
     {
         $this->facets = [];
@@ -47,6 +63,9 @@ class FacetCollection
         return $this;
     }
 
+    /**
+     * @return array returns the list of facets
+     */
     public function getFacets()
     {
         return $this->facets;

@@ -28,12 +28,8 @@ e_arrow "Replacing version number in files"
 node replace_version.js --version $versiong
 
 
-e_arrow "Downloading CLDR"
-node download_cldr.js
-
-
 e_arrow "Installing PHP dependencies with composer"
-cd $rootPath; composer install;
+cd $rootPath; composer install --no-suggest --ansi --prefer-dist --no-interaction --no-progress --quiet;
 
 
 e_arrow "Building assets with NPM"
@@ -56,8 +52,8 @@ rm -f .gitignore
 rm -f .gitmodules
 rm -f .travis.yml
 
-rm -rf app/cache; mkdir app/cache;
-rm -rf app/logs; mkdir app/logs;
+rm -rf var/cache; mkdir var/cache;
+rm -rf var/logs; mkdir var/logs;
 
 read -p "Do you want to delete the .git directory? " -n 1 -r
 if [[ $REPLY =~ ^[Yy]$ ]]

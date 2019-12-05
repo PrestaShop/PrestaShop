@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,28 +16,28 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 
 namespace PrestaShopBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use PrestaShop\PrestaShop\Core\Language\LanguageInterface;
 
 /**
  * @ORM\Table()
  * @ORM\Entity(repositoryClass="PrestaShopBundle\Entity\Repository\LangRepository")
  */
-class Lang
+class Lang implements LanguageInterface
 {
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Id
      * @ORM\Column(name="id_lang", type="integer")
@@ -53,7 +53,7 @@ class Lang
     private $name;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="active", type="boolean")
      */
@@ -95,7 +95,7 @@ class Lang
     private $dateFormatFull;
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="is_rtl", type="boolean")
      */
@@ -112,12 +112,11 @@ class Lang
      *      joinColumns={@ORM\JoinColumn(name="id_lang", referencedColumnName="id_lang", onDelete="CASCADE")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="id_shop", referencedColumnName="id_shop", onDelete="CASCADE")}
      * )
-     *
      */
     private $shops;
 
     /**
-     * Constructor
+     * Constructor.
      */
     public function __construct()
     {
@@ -125,9 +124,9 @@ class Lang
     }
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -135,7 +134,7 @@ class Lang
     }
 
     /**
-     * Set name
+     * Set name.
      *
      * @param string $name
      *
@@ -149,7 +148,7 @@ class Lang
     }
 
     /**
-     * Get name
+     * Get name.
      *
      * @return string
      */
@@ -159,9 +158,9 @@ class Lang
     }
 
     /**
-     * Set active
+     * Set active.
      *
-     * @param integer $active
+     * @param int $active
      *
      * @return Lang
      */
@@ -173,9 +172,9 @@ class Lang
     }
 
     /**
-     * Get active
+     * Get active.
      *
-     * @return integer
+     * @return int
      */
     public function getActive()
     {
@@ -183,7 +182,7 @@ class Lang
     }
 
     /**
-     * Set isoCode
+     * Set isoCode.
      *
      * @param string $isoCode
      *
@@ -197,7 +196,7 @@ class Lang
     }
 
     /**
-     * Get isoCode
+     * Get isoCode.
      *
      * @return string
      */
@@ -207,7 +206,7 @@ class Lang
     }
 
     /**
-     * Set languageCode
+     * Set languageCode.
      *
      * @param string $languageCode
      *
@@ -221,7 +220,7 @@ class Lang
     }
 
     /**
-     * Get languageCode
+     * Get languageCode.
      *
      * @return string
      */
@@ -231,7 +230,7 @@ class Lang
     }
 
     /**
-     * Set dateFormatLite
+     * Set dateFormatLite.
      *
      * @param string $dateFormatLite
      *
@@ -245,7 +244,7 @@ class Lang
     }
 
     /**
-     * Get dateFormatLite
+     * Get dateFormatLite.
      *
      * @return string
      */
@@ -255,7 +254,7 @@ class Lang
     }
 
     /**
-     * Set dateFormatFull
+     * Set dateFormatFull.
      *
      * @param string $dateFormatFull
      *
@@ -269,7 +268,7 @@ class Lang
     }
 
     /**
-     * Get dateFormatFull
+     * Get dateFormatFull.
      *
      * @return string
      */
@@ -279,9 +278,9 @@ class Lang
     }
 
     /**
-     * Set isRtl
+     * Set isRtl.
      *
-     * @param boolean $isRtl
+     * @param bool $isRtl
      *
      * @return Lang
      */
@@ -293,9 +292,9 @@ class Lang
     }
 
     /**
-     * Get isRtl
+     * Get isRtl.
      *
-     * @return boolean
+     * @return bool
      */
     public function getIsRtl()
     {
@@ -303,7 +302,14 @@ class Lang
     }
 
     /**
-     *
+     * {@inheritdoc}
+     */
+    public function isRTL()
+    {
+        return $this->getIsRtl();
+    }
+
+    /**
      * @return string
      */
     public function getLocale()
@@ -312,8 +318,8 @@ class Lang
     }
 
     /**
-     *
      * @param string $locale
+     *
      * @return Lang
      */
     public function setLocale($locale)
@@ -324,13 +330,13 @@ class Lang
     }
 
     /**
-     * Add shop
+     * Add shop.
      *
      * @param \PrestaShopBundle\Entity\Shop $shop
      *
      * @return Lang
      */
-    public function addShop(\PrestaShopBundle\Entity\Shop $shop)
+    public function addShop(Shop $shop)
     {
         $this->shops[] = $shop;
 
@@ -338,17 +344,17 @@ class Lang
     }
 
     /**
-     * Remove shop
+     * Remove shop.
      *
      * @param \PrestaShopBundle\Entity\Shop $shop
      */
-    public function removeShop(\PrestaShopBundle\Entity\Shop $shop)
+    public function removeShop(Shop $shop)
     {
         $this->shops->removeElement($shop);
     }
 
     /**
-     * Get shops
+     * Get shops.
      *
      * @return \Doctrine\Common\Collections\Collection
      */

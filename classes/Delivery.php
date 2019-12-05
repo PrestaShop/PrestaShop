@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,26 +16,26 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 /**
- * Class DeliveryCore
+ * Class DeliveryCore.
  */
 class DeliveryCore extends ObjectModel
 {
     /** @var int */
     public $id_delivery;
 
-    /** @var int **/
+    /** @var int * */
     public $id_shop;
 
-    /** @var int **/
+    /** @var int * */
     public $id_shop_group;
 
     /** @var int */
@@ -77,11 +77,11 @@ class DeliveryCore extends ObjectModel
             'id_range_price' => array('xlink_resource' => 'price_ranges'),
             'id_range_weight' => array('xlink_resource' => 'weight_ranges'),
             'id_zone' => array('xlink_resource' => 'zones'),
-        )
+        ),
     );
 
     /**
-     * Get Object fields and values in array
+     * Get Object fields and values in array.
      *
      * @return array
      */

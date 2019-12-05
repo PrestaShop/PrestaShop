@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -28,10 +28,10 @@ namespace PrestaShop\PrestaShop\Core\Addon\Theme;
 
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShopBundle\Entity\Repository\LangRepository;
+use PrestaShopBundle\Translation\Exporter\ThemeExporter as TranslationsExporter;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use ZipArchive;
-use PrestaShopBundle\Translation\Exporter\ThemeExporter as TranslationsExporter;
 
 class ThemeExporter
 {
@@ -45,8 +45,7 @@ class ThemeExporter
         Filesystem $fileSystem,
         LangRepository $langRepository,
         TranslationsExporter $translationsExporter
-    )
-    {
+    ) {
         $this->configuration = $configuration;
         $this->fileSystem = $fileSystem;
         $this->langRepository = $langRepository;
@@ -55,13 +54,13 @@ class ThemeExporter
 
     public function export(Theme $theme)
     {
-        $cacheDir = $this->configuration->get('_PS_CACHE_DIR_').'export-'.$theme->getName().'-'.time().DIRECTORY_SEPARATOR;
+        $cacheDir = $this->configuration->get('_PS_CACHE_DIR_') . 'export-' . $theme->getName() . '-' . time() . DIRECTORY_SEPARATOR;
 
         $this->copyTheme($theme->getDirectory(), $cacheDir);
         $this->copyModuleDependencies((array) $theme->get('dependencies.modules'), $cacheDir);
         $this->copyTranslations($theme, $cacheDir);
 
-        $finalFile = $this->configuration->get('_PS_ALL_THEMES_DIR_'). DIRECTORY_SEPARATOR .$theme->getName().'.zip';
+        $finalFile = $this->configuration->get('_PS_ALL_THEMES_DIR_') . DIRECTORY_SEPARATOR . $theme->getName() . '.zip';
         $this->createZip($cacheDir, $finalFile);
 
         $this->fileSystem->remove($cacheDir);
@@ -85,12 +84,12 @@ class ThemeExporter
             return;
         }
 
-        $dependencyDir = $cacheDir.'/dependencies/modules/';
+        $dependencyDir = $cacheDir . '/dependencies/modules/';
         $this->fileSystem->mkdir($dependencyDir);
         $moduleDir = $this->configuration->get('_PS_MODULE_DIR_');
 
         foreach ($moduleList as $moduleName) {
-            $this->fileSystem->mirror($moduleDir.$moduleName, $dependencyDir.$moduleName);
+            $this->fileSystem->mirror($moduleDir . $moduleName, $dependencyDir . $moduleName);
         }
     }
 
@@ -107,8 +106,8 @@ class ThemeExporter
 
         $languages = $this->langRepository->findAll();
         if (count($languages) > 0) {
-            /**
-             * @var \PrestaShopBundle\Entity\Lang $lang
+            /*
+             * @var \PrestaShopBundle\Entity\Lang
              */
             foreach ($languages as $lang) {
                 $locale = $lang->getLocale();

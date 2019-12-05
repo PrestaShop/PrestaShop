@@ -8,16 +8,16 @@ framework:
     profiler: { only_exceptions: false }
 
 web_profiler:
-    toolbar: true
+    toolbar: '%use_debug_toolbar%'
     intercept_redirects: false
 
 monolog:
     handlers:
         main:
             type:   stream
-            path:   "%kernel.logs_dir%/%kernel.environment%.log"
+            path:   '%env(PS_LOG_OUTPUT)%'
             level:  debug
-            channels: [!event]
+            channels: ["!event"]
         console:
             type:   console
             bubble: false
@@ -49,3 +49,10 @@ prestashop:
     addons:
         api_client:
             ttl: 300 # 5min
+
+tactician:
+  commandbus:
+    default:
+      middleware:
+        - prestashop.core.command_bus.middleware.command_register_middleware
+        - tactician.middleware.command_handler

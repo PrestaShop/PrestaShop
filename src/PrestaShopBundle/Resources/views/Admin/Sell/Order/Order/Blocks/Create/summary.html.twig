@@ -1,0 +1,107 @@
+{#**
+ * 2007-2019 PrestaShop SA and Contributors
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ *#}
+
+<div class="card d-none" id="summary-block">
+  <h3 class="card-header">
+    {{ 'Summary'|trans({}, 'Admin.Global') }}
+  </h3>
+  <div class="card-body">
+    <div class="row">
+      <div class="col">
+        <div class="card">
+          <div class="card-body">
+            <div class="row">
+              <div class="col text-center">
+                <p class="mb-0">{{ 'Total products'|trans({}, 'Admin.Orderscustomers.Feature') }}</p>
+                <p class="lead text-success">19.12</p>
+              </div>
+              <div class="col text-center">
+                <p class="mb-0">{{ 'Total vouchers (Tax excl.)'|trans({}, 'Admin.Orderscustomers.Feature') }}</p>
+                <p class="lead text-danger">0</p>
+              </div>
+              <div class="col text-center">
+                <p class="mb-0">{{ 'Total shipping (Tax excl.)'|trans({}, 'Admin.Orderscustomers.Feature') }}</p>
+                <p class="lead">0</p>
+              </div>
+              <div class="col text-center">
+                <p class="mb-0 text-center">{{ 'Total taxes'|trans({}, 'Admin.Orderscustomers.Feature') }}</p>
+                <p class="lead">0</p>
+              </div>
+              <div class="col text-center">
+                <p class="mb-0">{{ 'Total (Tax excl.)'|trans({}, 'Admin.Orderscustomers.Feature') }}</p>
+                <p class="lead">0</p>
+              </div>
+              <div class="col text-center">
+                <p class="mb-0">{{ 'Total (Tax excl.)'|trans({}, 'Admin.Orderscustomers.Feature') }}</p>
+                <p class="lead mb-0">0</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row mb-2">
+      <div class="col-3">
+        <span class="float-right">{{ 'Order message'|trans({}, 'Admin.Orderscustomers.Feature') }}</span>
+      </div>
+      <div class="col-7">
+        <textarea class="form-control"></textarea>
+      </div>
+    </div>
+    <div class="row mb-2">
+      <div class="col offset-sm-3">
+        <button type="button" class="btn btn-primary">
+          {{ 'Send an email to the customer with the link to process the payment.'|trans({}, 'Admin.Orderscustomers.Help') }}
+        </button>
+        <a href="#" class="" target="_blank">
+          {{ 'Go on payment page to process the payment.'|trans({}, 'Admin.Orderscustomers.Help') }}
+        </a>
+      </div>
+    </div>
+    <div class="row mb-2">
+      <div class="col-3">
+        <span class="float-right">{{ 'Payment'|trans({}, 'Admin.Global') }}</span>
+      </div>
+      <div class="col-4">
+        <select class="form-control"></select>
+      </div>
+    </div>
+    <div class="row mb-2">
+      <div class="col-3">
+        <span class="float-right">{{ 'Order status'|trans({}, 'Admin.Shopparameters.Feature') }}</span>
+      </div>
+      <div class="col-4">
+        <select class="form-control"></select>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col offset-sm-3">
+        <button class="btn btn-primary" type="button">
+          {{ 'Create the order'|trans({}, 'Admin.Orderscustomers.Feature') }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

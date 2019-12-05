@@ -1,5 +1,5 @@
 {**
- * 2007-2017 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -15,10 +15,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
@@ -69,12 +69,12 @@
 						<td>
 							{if get_class($document) eq 'OrderInvoice'}
 								{if isset($document->is_delivery)}
-									<a class="_blank" title="{l s='See the document'}" href="{$link->getAdminLink('AdminPdf')|escape:'html':'UTF-8'}&amp;submitAction=generateDeliverySlipPDF&amp;id_order_invoice={$document->id}">
+									<a class="_blank" title="{l s='See the document'}" href="{$link->getAdminLink('AdminPdf', true, [], ['submitAction' => 'generateDeliverySlipPDF', 'id_order_invoice' => $document->id])|escape:'html':'UTF-8'}">
 								{else}
-									<a class="_blank" title="{l s='See the document'}" href="{$link->getAdminLink('AdminPdf')|escape:'html':'UTF-8'}&amp;submitAction=generateInvoicePDF&amp;id_order_invoice={$document->id}">
+									<a class="_blank" title="{l s='See the document'}" href="{$link->getAdminLink('AdminPdf', true, [], ['submitAction' => 'generateInvoicePDF', 'id_order_invoice' => $document->id])|escape:'html':'UTF-8'}">
 							   {/if}
 							{elseif get_class($document) eq 'OrderSlip'}
-								<a class="_blank" title="{l s='See the document'}" href="{$link->getAdminLink('AdminPdf')|escape:'html':'UTF-8'}&amp;submitAction=generateOrderSlipPDF&amp;id_order_slip={$document->id}">
+								<a class="_blank" title="{l s='See the document'}" href="{$link->getAdminLink('AdminPdf', true, [], ['submitAction' => 'generateOrderSlipPDF', 'id_order_slip' => $document->id])|escape:'html':'UTF-8'}">
 							{/if}
 							{if get_class($document) eq 'OrderInvoice'}
 								{if isset($document->is_delivery)}

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,14 +16,13 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 class WebserviceExceptionCore extends Exception
 {
     protected $status;
@@ -44,37 +43,47 @@ class WebserviceExceptionCore extends Exception
         parent::__construct($message, $exception_code);
         $this->type = self::SIMPLE;
     }
+
     public function getType()
     {
         return $this->type;
     }
+
     public function setType($type)
     {
         $this->type = $type;
+
         return $this;
     }
+
     public function setStatus($status)
     {
         if (Validate::isInt($status)) {
             $this->status = $status;
         }
+
         return $this;
     }
+
     public function getStatus()
     {
         return $this->status;
     }
+
     public function getWrongValue()
     {
         return $this->wrong_value;
     }
+
     public function setDidYouMean($wrong_value, $available_values)
     {
         $this->type = self::DID_YOU_MEAN;
         $this->wrong_value = $wrong_value;
         $this->available_values = $available_values;
+
         return $this;
     }
+
     public function getAvailableValues()
     {
         return $this->available_values;

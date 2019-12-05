@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -29,17 +29,20 @@
  */
 function select_current_payment_modules()
 {
-    $shops = Db::getInstance()->executeS('
+    $shops = Db::getInstance()->executeS(
+        '
 			SELECT `id_shop`
 			FROM `'._DB_PREFIX_.'shop`'
     );
-    $carriers = Db::getInstance()->executeS('
+    $carriers = Db::getInstance()->executeS(
+        '
 			SELECT DISTINCT `id_reference`
 			FROM `'._DB_PREFIX_.'carrier`
 			WHERE `active` = 1
 			AND `deleted` = 0'
     );
-    $modules = Db::getInstance()->executeS('
+    $modules = Db::getInstance()->executeS(
+        '
 			SELECT m.`id_module`
 			FROM `'._DB_PREFIX_.'module` m
 			LEFT JOIN `'._DB_PREFIX_.'hook_module` hm ON hm.`id_module` = m.`id_module`
@@ -55,7 +58,7 @@ function select_current_payment_modules()
                     array(
                         'id_reference' => (int)$carrier['id_reference'],
                         'id_module' => (int)$module['id_module'],
-                        'id_shop' => (int)$shop['id_shop']
+                        'id_shop' => (int)$shop['id_shop'],
                     ),
                     false,
                     false,

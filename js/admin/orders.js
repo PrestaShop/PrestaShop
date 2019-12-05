@@ -1,5 +1,5 @@
 /**
- * 2007-2017 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -15,10 +15,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -289,7 +289,7 @@ function updateAmounts(order)
 	$('.total_paid').fadeOut('slow', function() {
 		formatCurrencyCldr(parseFloat(order.total_paid_tax_incl), function(value) {
 			$('.total_paid').html(value);
-			$('#.total_paid').fadeIn('slow');
+			$('.total_paid').fadeIn('slow');
 		});
 	});
 	$('.alert').slideDown('slow');
@@ -705,19 +705,22 @@ function init()
 
 	$('button.submitProductChange').unbind('click').click(function(e) {
 		e.preventDefault();
+    var $productLineRow = $(this).closest('tr.product-line-row');
+    var editProductQuantity = $productLineRow.find('td .edit_product_quantity').val();
+    var editProductPrice = $productLineRow.find('td .edit_product_price').val();
 
-		if ($(this).closest('tr.product-line-row').find('td .edit_product_quantity').val() <= 0)
-		{
+    if (editProductQuantity <= 0) {
 			jAlert(txt_add_product_no_product_quantity);
 			return false;
 		}
-		if ($(this).closest('tr.product-line-row').find('td .edit_product_price').val() <= 0)
-		{
-			jAlert(txt_add_product_no_product_price);
-			return false;
+    if (editProductPrice <= 0) {
+      var totalProduct = parseFloat($productLineRow.find('td.total_product').first().text());
+      if (totalProduct > 0) {
+        jAlert(txt_add_product_no_product_price);
+        return false;
+      }
 		}
-		if (confirm(txt_confirm))
-		{
+		if (confirm(txt_confirm)) {
 			var element = $(this);
 			var element_list = $('.customized-' + $(this).parent().parent().find('.edit_product_id_order_detail').val());
 			query = 'ajax=1&token='+token+'&action=editProductOnOrder&id_order='+id_order+'&';
@@ -732,10 +735,8 @@ function init()
 				cache: false,
 				dataType: 'json',
 				data : query,
-				success : function(data)
-				{
-					if (data.result)
-					{
+				success : function(data) {
+					if (data.result) {
 						refreshProductLineView(element, data.view);
 						updateAmounts(data.order);
 						updateInvoice(data.invoices);
@@ -750,9 +751,9 @@ function init()
 						$('.add_product_fields').hide();
 						$('.row-editing-warning').hide();
 						$('td.product_action').attr('colspan', 3);
-					}
-					else
-						jAlert(data.error);
+					} else {
+            jAlert(data.error);
+          }
 				}
 			});
 		}

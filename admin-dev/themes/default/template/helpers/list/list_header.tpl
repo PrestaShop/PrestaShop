@@ -1,5 +1,5 @@
 {**
- * 2007-2017 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -15,10 +15,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
@@ -29,8 +29,13 @@
 			$(".ajax_table_link").click(function () {
 				var link = $(this);
 				$.post($(this).attr('href'), function (data) {
-					if (data.success == 1) {
-						showSuccessMessage(data.text);
+				  // If response comes from symfony controller
+          // then data has "status" and "message" properties
+          // otherwise if response comes from legacy controller
+          // then data has "success" and "text" properties.
+
+					if (data.success == 1 || data.status === true) {
+						showSuccessMessage(data.text || data.message);
 						if (link.hasClass('action-disabled')){
 							link.removeClass('action-disabled').addClass('action-enabled');
 						} else {
@@ -44,7 +49,7 @@
 							}
 						});
 					} else {
-						showErrorMessage(data.text);
+						showErrorMessage(data.text || data.message);
 					}
 				}, 'json');
 				return false;
@@ -107,7 +112,7 @@
 
 <div class="alert alert-warning" id="{$list_id}-empty-filters-alert" style="display:none;">{l s='Please fill at least one field to perform a search in this list.'}</div>
 {if isset($sql) && $sql}
-	<form id="sql_form_{$list_id|escape:'html':'UTF-8'}" action="{$link->getAdminLink('AdminRequestSql')|escape}&amp;addrequest_sql" method="post" class="hide">
+	<form id="sql_form_{$list_id|escape:'html':'UTF-8'}" action="{$link->getAdminLink('AdminRequestSql', true, [], ['addrequest_sql' => 1])|escape}" method="post" class="hide">
 		<input type="hidden" id="sql_query_{$list_id|escape:'html':'UTF-8'}" name="sql" value="{$sql|escape}"/>
 		<input type="hidden" id="sql_name_{$list_id|escape:'html':'UTF-8'}" name="name" value=""/>
 	</form>
@@ -121,10 +126,21 @@
 	<input type="hidden" id="submitFilter{$list_id}" name="submitFilter{$list_id}" value="0"/>
 	<input type="hidden" name="page" value="{$page|intval}"/>
 	<input type="hidden" name="selected_pagination" value="{$selected_pagination|intval}"/>
+
 	{block name="override_form_extra"}{/block}
+
 	<div class="panel col-lg-12">
 		<div class="panel-heading">
-			{if isset($icon)}<i class="{$icon}"></i> {/if}{if is_array($title)}{$title|end}{else}{$title}{/if}
+			{if isset($icon)}
+				<i class="{$icon}"></i>
+			{/if}
+
+			{if is_array($title)}
+				{$title|end|escape:'html':'UTF-8'}
+			{else}
+				{$title|escape:'html':'UTF-8'}
+			{/if}
+
 			{if isset($toolbar_btn) && count($toolbar_btn) >0}
 				<span class="badge">{$list_total}</span>
 				<span class="panel-heading-action">
@@ -224,7 +240,7 @@
 		{/if}
 {elseif $simple_header}
 	<div class="panel col-lg-12">
-		{if isset($title)}<h3>{if isset($icon)}<i class="{$icon}"></i> {/if}{if is_array($title)}{$title|end}{else}{$title}{/if}</h3>{/if}
+		{if isset($title)}<h3>{if isset($icon)}<i class="{$icon}"></i> {/if}{if is_array($title)}{$title|end|escape:'html':'UTF-8'}{else}{$title|escape:'html':'UTF-8'}{/if}</h3>{/if}
 {/if}
 
 
@@ -245,7 +261,7 @@
 
 	{block name="preTable"}{/block}
 	<div class="table-responsive-row clearfix{if isset($use_overflow) && $use_overflow} overflow-y{/if}">
-		<table{if $table_id} id="table-{$table_id}"{/if} class="table{if $table_dnd} tableDnD{/if} {$table}" >
+		<table id="table-{if $table_id}{$table_id}{elseif $table}{$table}{/if}" class="table{if $table_dnd} tableDnD{/if} {$table}" >
 			<thead>
 				<tr class="nodrag nodrop">
 					{if $bulk_actions && $has_bulk_actions}

@@ -1,5 +1,5 @@
 {#**
- * 2007-2017 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -15,13 +15,14 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *#}
+{# Display a range input with min/max controls #}
 <script>
     $(document).ready(function() {
         var sliderInput = $('#{{ input_name }}');
@@ -31,13 +32,13 @@
         // parse and fix init value
         var value = sliderInput.attr('sql');
         if (value != '') {
-	        value = value.replace('BETWEEN ', '');
-	        value = value.replace(' AND ', ',');
-	        value = value.replace('<=', '{{ min|default('0') }},');
-	        value = value.replace('>=', '{{ max|default('1000000000') }},');
-	        value = value.split(',');
-	        value[0] = Number(value[0]);
-	        value[1] = Number(value[1]);
+            value = value.replace('BETWEEN ', '');
+            value = value.replace(' AND ', ',');
+            value = value.replace('<=', '{{ min|default('0') }},');
+            value = value.replace('>=', '{{ max|default('1000000000') }},');
+            value = value.split(',');
+            value[0] = Number(value[0]);
+            value[1] = Number(value[1]);
         } else {
             value = [{{ min|default('0') }}, {{ max|default('1000000000') }}];
         }
@@ -117,6 +118,6 @@
 </script>
 <div id="{{ input_name }}_div">
     <input type="hidden" id="{{ input_name }}" name="{{ input_name }}" value="" sql="{{ value }}" />
-    <input class="form-control form-min-max" type="text" id="{{ input_name }}_min" value="" placeholder="{{ minLabel|default('Min') }}" />
-    <input class="form-control form-min-max" type="text" id="{{ input_name }}_max" value="" placeholder="{{ maxLabel|default('Max') }}" />
+    <input class="form-control form-min-max" type="text" id="{{ input_name }}_min" value="" placeholder="{{ minLabel|default('Min') }}" {% if disabled|default(false) %}disabled{% endif %} />
+    <input class="form-control form-min-max" type="text" id="{{ input_name }}_max" value="" placeholder="{{ maxLabel|default('Max') }}" {% if disabled|default(false) %}disabled{% endif %} />
 </div>

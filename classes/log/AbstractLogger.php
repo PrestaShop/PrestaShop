@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,14 +16,13 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 abstract class AbstractLoggerCore
 {
     public $level;
@@ -41,7 +40,7 @@ abstract class AbstractLoggerCore
 
     public function __construct($level = self::INFO)
     {
-        if (array_key_exists((int)$level, $this->level_value)) {
+        if (array_key_exists((int) $level, $this->level_value)) {
             $this->level = $level;
         } else {
             $this->level = self::INFO;
@@ -49,15 +48,15 @@ abstract class AbstractLoggerCore
     }
 
     /**
-    * Log the message
-    *
-    * @param string message
-    * @param level
-    */
+     * Log the message.
+     *
+     * @param string message
+     * @param level
+     */
     abstract protected function logMessage($message, $level);
 
     /**
-     * Check the level and log the message if needed
+     * Check the level and log the message if needed.
      *
      * @param string message
      * @param level
@@ -70,40 +69,40 @@ abstract class AbstractLoggerCore
     }
 
     /**
-    * Log a debug message
-    *
-    * @param string message
-    */
+     * Log a debug message.
+     *
+     * @param string message
+     */
     public function logDebug($message)
     {
         $this->log($message, self::DEBUG);
     }
 
     /**
-    * Log an info message
-    *
-    * @param string message
-    */
+     * Log an info message.
+     *
+     * @param string message
+     */
     public function logInfo($message)
     {
         $this->log($message, self::INFO);
     }
 
     /**
-    * Log a warning message
-    *
-    * @param string message
-    */
+     * Log a warning message.
+     *
+     * @param string message
+     */
     public function logWarning($message)
     {
         $this->log($message, self::WARNING);
     }
 
     /**
-    * Log an error message
-    *
-    * @param string message
-    */
+     * Log an error message.
+     *
+     * @param string message
+     */
     public function logError($message)
     {
         $this->log($message, self::ERROR);

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,34 +16,47 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShopBundle\Controller\Admin;
 
+use PrestaShop\PrestaShop\Adapter\Configuration;
+use Exception;
 use PrestaShop\PrestaShop\Adapter\Shop\Context;
+use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Grid\GridInterface;
+use PrestaShop\PrestaShop\Core\Module\Exception\ModuleErrorInterface;
+use PrestaShopBundle\Security\Voter\PageVoter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Form;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
-use PrestaShop\PrestaShop\Adapter\Configuration;
-use PrestaShopBundle\Security\Voter\PageVoter;
 
 /**
  * Extends The Symfony framework bundle controller to add common functions for PrestaShop needs.
  */
 class FrameworkBundleAdminController extends Controller
 {
+    /**
+     * @var ConfigurationInterface
+     */
     protected $configuration;
 
+    /**
+     * @var string|null
+     */
     protected $layoutTitle;
 
     /**
-     * Constructor
+     * Constructor.
      */
     public function __construct()
     {
@@ -57,24 +70,10 @@ class FrameworkBundleAdminController extends Controller
      */
     public function overviewAction()
     {
-        return array(
+        return [
             'is_shop_context' => (new Context())->isShopContext(),
-            'layoutTitle' => empty($this->layoutTitle) ? '' : $this->container->get('translator')->trans($this->layoutTitle, array(), 'Admin.Navigation.Menu'),
-        );
-    }
-
-    public function hashUpdateJsAction($hash)
-    {
-        $contents = file_get_contents('http://localhost:8080/' . $hash . '.hot-update.js');
-
-        return new Response($contents);
-    }
-
-    public function hashUpdateJsonAction($hash)
-    {
-        $contents = file_get_contents('http://localhost:8080/' . $hash . '.hot-update.json');
-
-        return new Response($contents);
+            'layoutTitle' => empty($this->layoutTitle) ? '' : $this->trans($this->layoutTitle, 'Admin.Navigation.Menu'),
+        ];
     }
 
     /**
@@ -83,7 +82,10 @@ class FrameworkBundleAdminController extends Controller
      * Parse all errors mapped by id html field
      *
      * @param Form $form The form
+     *
      * @return array[array[string]] Errors
+     *
+     * @throws \Symfony\Component\Translation\Exception\InvalidArgumentException
      */
     public function getFormErrorsForJS(Form $form)
     {
@@ -93,13 +95,13 @@ class FrameworkBundleAdminController extends Controller
             return $errors;
         }
 
-        $translator = $this->container->get('translator');
+        $translator = $this->get('translator');
 
         foreach ($form->getErrors(true) as $error) {
             if (!$error->getCause()) {
-                $form_id = 'bubbling_errors';
+                $formId = 'bubbling_errors';
             } else {
-                $form_id = str_replace(
+                $formId = str_replace(
                     ['.', 'children[', ']', '_data'],
                     ['_', '', '', ''],
                     $error->getCause()->getPropertyPath()
@@ -107,34 +109,35 @@ class FrameworkBundleAdminController extends Controller
             }
 
             if ($error->getMessagePluralization()) {
-                $errors[$form_id][] = $translator->transchoice(
+                $errors[$formId][] = $translator->transChoice(
                     $error->getMessageTemplate(),
                     $error->getMessagePluralization(),
                     $error->getMessageParameters(),
                     'form_error'
                 );
             } else {
-                $errors[$form_id][] = $translator->trans(
+                $errors[$formId][] = $translator->trans(
                     $error->getMessageTemplate(),
                     $error->getMessageParameters(),
                     'form_error'
                 );
             }
         }
+
         return $errors;
     }
 
     /**
      * Creates a HookEvent, sets its parameters, and dispatches it.
      *
-     * Wrapper to: @see HookDispatcher::dispatchForParameters()
+     * Wrapper to: @see HookDispatcher::dispatchWithParameters()
      *
-     * @param $hookName The hook name
-     * @param $parameters The hook parameters
+     * @param string $hookName The hook name
+     * @param array $parameters The hook parameters
      */
     protected function dispatchHook($hookName, array $parameters)
     {
-        $this->container->get('prestashop.hook.dispatcher')->dispatchForParameters($hookName, $parameters);
+        $this->get('prestashop.core.hook.dispatcher')->dispatchWithParameters($hookName, $parameters);
     }
 
     /**
@@ -142,29 +145,37 @@ class FrameworkBundleAdminController extends Controller
      *
      * Wrapper to: @see HookDispatcher::renderForParameters()
      *
-     * @param $hookName The hook name
-     * @param $parameters The hook parameters
+     * @param string $hookName The hook name
+     * @param array $parameters The hook parameters
+     *
      * @return array The responses of hooks
+     *
+     * @throws Exception
      */
     protected function renderHook($hookName, array $parameters)
     {
-        return $this->container->get('prestashop.hook.dispatcher')->renderForParameters($hookName, $parameters)->getContent();
+        return $this->get('prestashop.core.hook.dispatcher')->renderForParameters($hookName, $parameters)->getContent();
     }
 
     /**
-     * Generates a documentation link
+     * Generates a documentation link.
+     *
+     * @param string $section Legacy controller name
+     * @param bool|string $title Help title
+     *
+     * @return string
      */
     protected function generateSidebarLink($section, $title = false)
     {
-        $translator = $this->get('translator');
+        $version = $this->get('prestashop.core.foundation.version')->getVersion();
         $legacyContext = $this->get('prestashop.adapter.legacy.context');
 
         if (empty($title)) {
-            $title = $translator->trans('Help', array(), 'Admin.Global');
+            $title = $this->trans('Help', 'Admin.Global');
         }
 
-        $docLink = urlencode('http://help.prestashop.com/'.$legacyContext->getEmployeeLanguageIso().'/doc/'
-            .$section.'?version='._PS_VERSION_.'&country='.$legacyContext->getEmployeeLanguageIso());
+        $docLink = urlencode('https://help.prestashop.com/' . $legacyContext->getEmployeeLanguageIso() . '/doc/'
+            . $section . '?version=' . $version . '&country=' . $legacyContext->getEmployeeLanguageIso());
 
         return $this->generateUrl('admin_common_sidebar', [
             'url' => $docLink,
@@ -173,8 +184,9 @@ class FrameworkBundleAdminController extends Controller
     }
 
     /**
-     * Get the old but still useful context
+     * Get the old but still useful context.
      *
+     * @return \Context
      */
     protected function getContext()
     {
@@ -183,6 +195,7 @@ class FrameworkBundleAdminController extends Controller
 
     /**
      * @param $lang
+     *
      * @return mixed
      */
     protected function langToLocale($lang)
@@ -191,7 +204,7 @@ class FrameworkBundleAdminController extends Controller
     }
 
     /**
-     * @return mixed
+     * @return bool
      */
     protected function isDemoModeEnabled()
     {
@@ -203,29 +216,261 @@ class FrameworkBundleAdminController extends Controller
      */
     protected function getDemoModeErrorMessage()
     {
-        return $this->get('translator')->trans('This functionality has been disabled.', array(), 'Admin.Notifications.Error');
+        return $this->trans('This functionality has been disabled.', 'Admin.Notifications.Error');
     }
 
     /**
      * Checks if the attributes are granted against the current authentication token and optionally supplied object.
      *
-     * @param mixed $controller name of the controller to valide access
+     * @param string $controller name of the controller to valide access
      *
      * @return int
+     *
+     * @throws \LogicException
      */
     protected function authorizationLevel($controller)
     {
-        if (
-            $this->isGranted(PageVoter::DELETE, $controller.'_')) {
+        if ($this->isGranted(PageVoter::DELETE, $controller . '_')) {
             return PageVoter::LEVEL_DELETE;
-        } elseif ($this->isGranted(PageVoter::CREATE, $controller.'_')) {
-            return PageVoter::LEVEL_CREATE;
-        } elseif ($this->isGranted(PageVoter::UPDATE, $controller.'_')) {
-            return PageVoter::LEVEL_UPDATE;
-        } elseif ($this->isGranted(PageVoter::READ, $controller.'_')) {
-            return PageVoter::LEVEL_READ;
-        } else {
-            return 0;
         }
+
+        if ($this->isGranted(PageVoter::CREATE, $controller . '_')) {
+            return PageVoter::LEVEL_CREATE;
+        }
+
+        if ($this->isGranted(PageVoter::UPDATE, $controller . '_')) {
+            return PageVoter::LEVEL_UPDATE;
+        }
+
+        if ($this->isGranted(PageVoter::READ, $controller . '_')) {
+            return PageVoter::LEVEL_READ;
+        }
+
+        return 0;
+    }
+
+    /**
+     * Get the translated chain from key.
+     *
+     * @param string $key the key to be translated
+     * @param string $domain the domain to be selected
+     * @param array $parameters Optional, pass parameters if needed (uncommon)
+     *
+     * @return string
+     */
+    protected function trans($key, $domain, array $parameters = [])
+    {
+        return $this->get('translator')->trans($key, $parameters, $domain);
+    }
+
+    /**
+     * Return errors as flash error messages.
+     *
+     * @param array $errorMessages
+     *
+     * @throws \LogicException
+     */
+    protected function flashErrors(array $errorMessages)
+    {
+        foreach ($errorMessages as $error) {
+            $message = is_array($error) ? $this->trans($error['key'], $error['domain'], $error['parameters']) : $error;
+            $this->addFlash('error', $message);
+        }
+    }
+
+    /**
+     * Redirect employee to default page.
+     *
+     * @return RedirectResponse
+     */
+    protected function redirectToDefaultPage()
+    {
+        $legacyContext = $this->get('prestashop.adapter.legacy.context');
+        $defaultTab = $legacyContext->getDefaultEmployeeTab();
+
+        return $this->redirect($legacyContext->getAdminLink($defaultTab));
+    }
+
+    /**
+     * Check if the connected user is granted to actions on a specific object.
+     *
+     * @param $action
+     * @param $object
+     * @param string $suffix
+     *
+     * @return bool
+     *
+     * @throws \LogicException
+     */
+    protected function actionIsAllowed($action, $object = '', $suffix = '')
+    {
+        return (
+                $action === 'delete' . $suffix && $this->isGranted(PageVoter::DELETE, $object)
+            ) || (
+                ($action === 'activate' . $suffix || $action === 'deactivate' . $suffix) &&
+                $this->isGranted(PageVoter::UPDATE, $object)
+            ) || (
+                ($action === 'duplicate' . $suffix) &&
+                ($this->isGranted(PageVoter::UPDATE, $object) || $this->isGranted(PageVoter::CREATE, $object))
+            );
+    }
+
+    /**
+     * Display a message about permissions failure according to an action.
+     *
+     * @param $action
+     * @param string $suffix
+     *
+     * @return string
+     *
+     * @throws Exception
+     */
+    protected function getForbiddenActionMessage($action, $suffix = '')
+    {
+        if ($action === 'delete' . $suffix) {
+            return $this->trans('You do not have permission to delete this.', 'Admin.Notifications.Error');
+        }
+
+        if ($action === 'deactivate' . $suffix || $action === 'activate' . $suffix) {
+            return $this->trans('You do not have permission to edit this.', 'Admin.Notifications.Error');
+        }
+
+        if ($action === 'duplicate' . $suffix) {
+            return $this->trans('You do not have permission to add this.', 'Admin.Notifications.Error');
+        }
+
+        throw new Exception(sprintf('Invalid action (%s)', $action . $suffix));
+    }
+
+    /**
+     * Get fallback error message when something unexpected happens.
+     *
+     * @param string $type
+     * @param string $code
+     *
+     * @return string
+     */
+    protected function getFallbackErrorMessage($type, $code)
+    {
+        return $this->trans(
+            'An unexpected error occurred. [%type% code %code%]',
+            'Admin.Notifications.Error',
+            [
+                '%type%' => $type,
+                '%code%' => $code,
+            ]
+        );
+    }
+
+    /**
+     * Get Admin URI from PrestaShop 1.6 Back Office.
+     *
+     * @param string $controller the old Controller name
+     * @param bool $withToken whether we add token or not
+     * @param array $params url parameters
+     *
+     * @return string the page URI (with token)
+     */
+    protected function getAdminLink($controller, array $params, $withToken = true)
+    {
+        return $this->get('prestashop.adapter.legacy.context')->getAdminLink($controller, $withToken, $params);
+    }
+
+    /**
+     * Present provided grid.
+     *
+     * @param GridInterface $grid
+     *
+     * @return array
+     */
+    protected function presentGrid(GridInterface $grid)
+    {
+        return $this->get('prestashop.core.grid.presenter.grid_presenter')->present($grid);
+    }
+
+    /**
+     * Get commands bus to execute commands.
+     *
+     * @return \PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface
+     */
+    protected function getCommandBus()
+    {
+        return $this->get('prestashop.core.command_bus');
+    }
+
+    /**
+     * Get query bus to execute queries.
+     *
+     * @return \PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface
+     */
+    protected function getQueryBus()
+    {
+        return $this->get('prestashop.core.query_bus');
+    }
+
+    /**
+     * @param array $errors
+     * @param int $httpStatusCode
+     *
+     * @return JsonResponse
+     */
+    protected function returnErrorJsonResponse(array $errors, $httpStatusCode)
+    {
+        $response = new JsonResponse();
+        $response->setStatusCode($httpStatusCode);
+        $response->setData($errors);
+
+        return $response;
+    }
+
+    /**
+     * @return int
+     */
+    protected function getContextLangId()
+    {
+        return $this->getContext()->language->id;
+    }
+
+    /**
+     * @return int
+     */
+    protected function getContextShopId()
+    {
+        return $this->getContext()->shop->id;
+    }
+
+    /**
+     * Get error by exception from given messages
+     *
+     * @param Exception $e
+     * @param array $messages
+     *
+     * @return string
+     */
+    protected function getErrorMessageForException(Exception $e, array $messages)
+    {
+        if ($e instanceof ModuleErrorInterface) {
+            return $e->getMessage();
+        }
+
+        $exceptionType = get_class($e);
+        $exceptionCode = $e->getCode();
+
+        if (isset($messages[$exceptionType])) {
+            $message = $messages[$exceptionType];
+
+            if (is_string($message)) {
+                return $message;
+            }
+
+            if (is_array($message) && isset($message[$exceptionCode])) {
+                return $message[$exceptionCode];
+            }
+        }
+
+        return $this->getFallbackErrorMessage(
+            $exceptionType,
+            $exceptionCode
+        );
     }
 }

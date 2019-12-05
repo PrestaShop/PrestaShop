@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -38,9 +38,9 @@
 <?php foreach ($this->tests_render as $type => $categories): ?>
 	<ul id="<?php echo $type ?>">
 	<?php foreach ($categories as $category): ?>
-		<li class="title <?php if ($category['success'] == 1): ?>ok<?php endif;?>"><?php echo $category['title'] ?></li>
+		<li class="title <?php if ($category['success'] == 1): ?>ok<?php endif; ?>"><?php echo $category['title'] ?></li>
 		<?php $i = 0; foreach ($category['checks'] as $id => $lang): ?>
-			<li class="required <?php if ($i == 0): ?>first<?php endif;?> <?php echo isset($this->tests[$type]['checks'][$id]) ? $this->tests[$type]['checks'][$id] : 'fail' ?>">
+			<li class="required <?php if ($i == 0): ?>first<?php endif; ?> <?php echo isset($this->tests[$type]['checks'][$id]) ? $this->tests[$type]['checks'][$id] : 'fail' ?>">
 				<?php echo $lang ?>
 			</li>
 		<?php $i++; endforeach; ?>

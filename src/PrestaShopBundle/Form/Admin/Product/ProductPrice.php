@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,25 +16,31 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShopBundle\Form\Admin\Product;
 
 use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
-use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Form\Extension\Core\Type as FormType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * This form class is responsible to generate the product price form
+ * This form class is responsible to generate the product price form.
  */
 class ProductPrice extends CommonAbstractType
 {
+    // When the form is used to create, the product does not yet exists
+    // however the ID is required for some fields so we use a default one:
+    const DEFAULT_PRODUCT_ID_FOR_FORM_CREATION = 1;
+
     private $translator;
     private $tax_rules;
     private $tax_rules_rates;
@@ -43,7 +49,7 @@ class ProductPrice extends CommonAbstractType
     private $customerDataprovider;
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param object $translator
      * @param object $taxDataProvider
@@ -80,91 +86,147 @@ class ProductPrice extends CommonAbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $this->tax_rules = array_merge(
-            array($this->translator->trans('No tax', [], 'Admin.Catalog.Feature') => 0),
-            $this->tax_rules
-        );
-        $builder->add('price', 'Symfony\Component\Form\Extension\Core\Type\MoneyType', array(
-            'required' => false,
-            'label' => $this->translator->trans('Price (tax excl.)', [], 'Admin.Catalog.Feature'),
-            'attr' => ['data-display-price-precision' => self::PRESTASHOP_DECIMALS],
-            'currency' => $this->currency->iso_code,
-            'constraints' => array(
-                new Assert\NotBlank(),
-                new Assert\Type(array('type' => 'float'))
+        $this->tax_rules = [$this->translator->trans('No tax', [], 'Admin.Catalog.Feature') => 0] + $this->tax_rules;
+
+        $builder->add(
+            'price',
+            FormType\MoneyType::class,
+            [
+                'required' => false,
+                'label' => $this->translator->trans('Price (tax excl.)', [], 'Admin.Catalog.Feature'),
+                'attr' => ['data-display-price-precision' => self::PRESTASHOP_DECIMALS],
+                'currency' => $this->currency->iso_code,
+                'constraints' => [
+                    new Assert\NotBlank(),
+                    new Assert\Type(['type' => 'float']),
+                ],
+            ]
+        )
+            ->add(
+                'price_ttc',
+                FormType\MoneyType::class,
+                [
+                    'required' => false,
+                    'mapped' => false,
+                    'label' => $this->translator->trans('Price (tax incl.)', [], 'Admin.Catalog.Feature'),
+                    'currency' => $this->currency->iso_code,
+                ]
             )
-        ))
-        ->add('price_ttc', 'Symfony\Component\Form\Extension\Core\Type\MoneyType', array(
-            'required' => false,
-            'mapped' => false,
-            'label' => $this->translator->trans('Price (tax incl.)', [], 'Admin.Catalog.Feature'),
-            'currency' => $this->currency->iso_code,
-        ))
-        ->add('ecotax', 'Symfony\Component\Form\Extension\Core\Type\MoneyType', array(
-            'required' => false,
-            'label' => $this->translator->trans('Ecotax (tax incl.)', [], 'Admin.Catalog.Feature'),
-            'currency' => $this->currency->iso_code,
-            'constraints' => array(
-                new Assert\NotBlank(),
-                new Assert\Type(array('type' => 'float'))
-            ),
-            'attr' => ['data-eco-tax-rate' => $this->eco_tax_rate],
-        ))
-        ->add('id_tax_rules_group', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
-            'choices' =>  $this->tax_rules,
-            'required' => true,
-            'choices_as_values' => true,
-            'choice_attr' => function ($val) {
-                return [
-                    'data-rates' => implode(',', $this->tax_rules_rates[$val]['rates']),
-                    'data-computation-method' => $this->tax_rules_rates[$val]['computation_method'],
-                ];
-            },
-            'attr' => array(
-                'data-toggle' => 'select2',
-                'data-minimumResultsForSearch' => '7',
-            ),
-            'label' => $this->translator->trans('Tax rule', [], 'Admin.Catalog.Feature'),
-        ))
-        ->add('on_sale', 'Symfony\Component\Form\Extension\Core\Type\CheckboxType', array(
-            'required' => false,
-            'label' => $this->translator->trans('Display the "On sale!" flag on the product page, and on product listings.', [], 'Admin.Catalog.Feature'),
-        ))
-        ->add('wholesale_price', 'Symfony\Component\Form\Extension\Core\Type\MoneyType', array(
-            'required' => false,
-            'label' => $this->translator->trans('Price (tax excl.)', [], 'Admin.Catalog.Feature'),
-            'currency' => $this->currency->iso_code,
-        ))
-        ->add('unit_price', 'Symfony\Component\Form\Extension\Core\Type\MoneyType', array(
-            'required' => false,
-            'label' => $this->translator->trans('Price per unit (tax excl.)', [], 'Admin.Catalog.Feature'),
-            'currency' => $this->currency->iso_code,
-        ))
-        ->add('unity', 'Symfony\Component\Form\Extension\Core\Type\TextType', array(
-            'required' => false,
-            'attr' => ['placeholder' => $this->translator->trans('Per kilo, per litre', [], 'Admin.Catalog.Help')]
-        ))
-        ->add('specific_price', 'PrestaShopBundle\Form\Admin\Product\ProductSpecificPrice')
-        ->add('specificPricePriorityToAll', 'Symfony\Component\Form\Extension\Core\Type\CheckboxType', array(
-            'required' => false,
-            'label' => $this->translator->trans('Apply to all products', [], 'Admin.Catalog.Feature'),
-        ));
+            ->add(
+                'ecotax',
+                FormType\MoneyType::class,
+                [
+                    'required' => false,
+                    'label' => $this->translator->trans('Ecotax (tax incl.)', [], 'Admin.Catalog.Feature'),
+                    'currency' => $this->currency->iso_code,
+                    'constraints' => [
+                        new Assert\NotBlank(),
+                        new Assert\Type(['type' => 'float']),
+                    ],
+                    'attr' => ['data-eco-tax-rate' => $this->eco_tax_rate],
+                ]
+            )
+            ->add(
+                'id_tax_rules_group',
+                FormType\ChoiceType::class,
+                [
+                    'choices' => $this->tax_rules,
+                    'required' => true,
+                    'choice_attr' => function ($val) {
+                        return [
+                            'data-rates' => implode(',', $this->tax_rules_rates[$val]['rates']),
+                            'data-computation-method' => $this->tax_rules_rates[$val]['computation_method'],
+                        ];
+                    },
+                    'attr' => [
+                        'data-toggle' => 'select2',
+                        'data-minimumResultsForSearch' => '7',
+                    ],
+                    'label' => $this->translator->trans('Tax rule', [], 'Admin.Catalog.Feature'),
+                ]
+            )
+            ->add(
+                'on_sale',
+                FormType\CheckboxType::class,
+                [
+                    'required' => false,
+                    'label' => $this->translator->trans(
+                        'Display the "On sale!" flag on the product page, and on product listings.',
+                        [],
+                        'Admin.Catalog.Feature'
+                    ),
+                ]
+            )
+            ->add(
+                'wholesale_price',
+                FormType\MoneyType::class,
+                [
+                    'required' => false,
+                    'label' => $this->translator->trans('Price (tax excl.)', [], 'Admin.Catalog.Feature'),
+                    'currency' => $this->currency->iso_code,
+                ]
+            )
+            ->add(
+                'unit_price',
+                FormType\MoneyType::class,
+                [
+                    'required' => false,
+                    'label' => $this->translator->trans('Price per unit (tax excl.)', [], 'Admin.Catalog.Feature'),
+                    'currency' => $this->currency->iso_code,
+                ]
+            )
+            ->add(
+                'unity',
+                FormType\TextType::class,
+                [
+                    'required' => false,
+                    'attr' => ['placeholder' => $this->translator->trans('Per kilo, per litre', [], 'Admin.Catalog.Help')],
+                ]
+            )
+            ->add(
+                'specific_price',
+                ProductSpecificPrice::class,
+                [
+                    'id_product' => $options['id_product'],
+                ]
+            )
+            ->add(
+                'specificPricePriorityToAll',
+                FormType\CheckboxType::class,
+                [
+                    'required' => false,
+                    'label' => $this->translator->trans('Apply to all products', [], 'Admin.Catalog.Feature'),
+                ]
+            );
 
         //generates fields for price priority
         $specificPricePriorityChoices = [
-             $this->translator->trans('Shop', [], 'Admin.Global') => 'id_shop',
-             $this->translator->trans('Currency', [], 'Admin.Global') => 'id_currency',
-             $this->translator->trans('Country', [], 'Admin.Global') => 'id_country',
-             $this->translator->trans('Group', [], 'Admin.Global') => 'id_group',
+            $this->translator->trans('Shop', [], 'Admin.Global') => 'id_shop',
+            $this->translator->trans('Currency', [], 'Admin.Global') => 'id_currency',
+            $this->translator->trans('Country', [], 'Admin.Global') => 'id_country',
+            $this->translator->trans('Group', [], 'Admin.Global') => 'id_group',
         ];
 
-        for ($i=0; $i < count($specificPricePriorityChoices); $i++) {
-            $builder->add('specificPricePriority_'.$i, 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
-                'choices' => $specificPricePriorityChoices,
-                'choices_as_values' => true,
-                'required' => true
-            ));
+        for ($i = 0, $iMax = count($specificPricePriorityChoices); $i < $iMax; ++$i) {
+            $builder->add(
+                'specificPricePriority_' . $i,
+                FormType\ChoiceType::class,
+                [
+                    'choices' => $specificPricePriorityChoices,
+                    'required' => true,
+                ]
+            );
         }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver->setDefaults([
+            'id_product' => self::DEFAULT_PRODUCT_ID_FOR_FORM_CREATION,
+        ]);
     }
 
     /**

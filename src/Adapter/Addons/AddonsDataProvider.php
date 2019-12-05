@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,26 +16,22 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShop\PrestaShop\Adapter\Addons;
 
-use PrestaShop\PrestaShop\Adapter\Module\Module;
+use Exception;
+use PhpEncryption;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleZipManager;
 use PrestaShopBundle\Service\DataProvider\Admin\AddonsInterface;
 use PrestaShopBundle\Service\DataProvider\Marketplace\ApiClient;
 use Symfony\Component\HttpFoundation\Request;
-use Configuration;
-use Context;
-use Country;
-use Exception;
-use Tools;
-use PhpEncryption;
 
 /**
  * Data provider for new Architecture, about Addons.
@@ -44,14 +40,29 @@ use PhpEncryption;
  */
 class AddonsDataProvider implements AddonsInterface
 {
+    /**
+     * @var bool
+     */
     protected static $is_addons_up = true;
 
+    /**
+     * @var ApiClient
+     */
     private $marketplaceClient;
 
+    /**
+     * @var ModuleZipManager
+     */
     private $zipManager;
 
+    /**
+     * @var PhpEncryption
+     */
     private $encryption;
 
+    /**
+     * @var string the cache directory location
+     */
     public $cacheDir;
 
     public function __construct(ApiClient $apiClient, ModuleZipManager $zipManager)
@@ -61,6 +72,13 @@ class AddonsDataProvider implements AddonsInterface
         $this->encryption = new PhpEncryption(_NEW_COOKIE_KEY_);
     }
 
+    /**
+     * @param $module_id
+     *
+     * @return bool
+     *
+     * @throws Exception
+     */
     public function downloadModule($module_id)
     {
         $params = array(
@@ -82,13 +100,18 @@ class AddonsDataProvider implements AddonsInterface
         $temp_filename = tempnam($this->cacheDir, 'mod');
         if (file_put_contents($temp_filename, $module_data) !== false) {
             $this->zipManager->storeInModulesFolder($temp_filename);
+
             return true;
         } else {
             throw new Exception('Cannot store module content in temporary folder !');
         }
     }
 
-    /** Does this function should be in a User related class ? **/
+    /**
+     * @return bool
+     *
+     * @todo Does this function should be in a User related class ?
+     */
     public function isAddonsAuthenticated()
     {
         $request = Request::createFromGlobals();
@@ -111,154 +134,66 @@ class AddonsDataProvider implements AddonsInterface
             $params = array_merge($this->getAddonsCredentials(), $params);
         }
 
-        $post_query_data = array(
-            'version' => isset($params['version']) ? $params['version'] : _PS_VERSION_,
-            'iso_lang' => Tools::strtolower(isset($params['iso_lang']) ? $params['iso_lang']
-                        : Context::getContext()->language->iso_code),
-            'iso_code' => Tools::strtolower(isset($params['iso_country']) ? $params['iso_country']
-                        : Country::getIsoById(Configuration::get('PS_COUNTRY_DEFAULT'))),
-            'shop_url' => isset($params['shop_url']) ? $params['shop_url'] : Tools::getShopDomain(),
-            'mail' => isset($params['email']) ? $params['email'] : Configuration::get('PS_SHOP_EMAIL'),
-            'format' => isset($params['format']) ? $params['format'] : 'xml',
-        );
-        if (isset($params['source'])) {
-            $post_query_data['source'] = $params['source'];
-        }
+        $this->marketplaceClient->reset();
 
-        $post_data = http_build_query($post_query_data);
-
-        $protocols = array('https');
-        $end_point = 'api.addons.prestashop.com';
-
-        switch ($action) {
-            case 'native':
-                try {
+        try {
+            switch ($action) {
+                case 'native':
                     return $this->marketplaceClient->getNativesModules();
-                } catch (Exception $e) {
-                    self::$is_addons_up = false;
-                    throw $e;
-                }
-            case 'service':
-                try {
+                case 'service':
                     return $this->marketplaceClient->getServices();
-                } catch (Exception $e) {
-                    self::$is_addons_up = false;
-                    throw $e;
-                }
-            case 'native_all':
-                try {
+                case 'native_all':
                     return $this->marketplaceClient->setIsoCode('all')
                         ->getNativesModules();
-                } catch (Exception $e) {
-                    self::$is_addons_up = false;
-                    throw $e;
-                }
-            case 'must-have':
-                try {
+                case 'must-have':
                     return $this->marketplaceClient->getMustHaveModules();
-                } catch (Exception $e) {
-                    self::$is_addons_up = false;
-                    throw $e;
-                }
-            case 'must-have-themes':
-                $protocols[] = 'http';
-                $post_data .= '&method=listing&action=must-have-themes';
-                break;
-            case 'customer':
-                try {
+                case 'customer':
                     return $this->marketplaceClient->getCustomerModules($params['username_addons'], $params['password_addons']);
-                } catch (Exception $e) {
-                    self::$is_addons_up = false;
-                    throw $e;
-                }
-            case 'customer_themes':
-                $post_data .= '&method=listing&action=customer-themes&username='.urlencode($params['username_addons'])
-                    .'&password='.urlencode($params['password_addons']);
-                break;
-            case 'check_customer':
-                $post_data .= '&method=check_customer&username='.urlencode($params['username_addons']).'&password='.urlencode($params['password_addons']);
-                break;
-            case 'check_module':
-                $post_data .= '&method=check&module_name='.urlencode($params['module_name']).'&module_key='.urlencode($params['module_key']);
-                break;
-            case 'module_download':
-                $post_data .= '&method=module&id_module='.urlencode($params['id_module']);
-                if (isset($params['username_addons']) && isset($params['password_addons'])) {
-                    $post_data .= '&username='.urlencode($params['username_addons']).'&password='.urlencode($params['password_addons']);
-                } else {
-                    $protocols[] = 'http';
-                }
-                break;
-            case 'module':
-                try {
+                case 'customer_themes':
+                    return $this->marketplaceClient
+                        ->setUserMail($params['username_addons'])
+                        ->setPassword($params['password_addons'])
+                        ->getCustomerThemes();
+                case 'check_customer':
+                    return $this->marketplaceClient
+                        ->setUserMail($params['username_addons'])
+                        ->setPassword($params['password_addons'])
+                        ->getCheckCustomer();
+                case 'check_module':
+                    return $this->marketplaceClient
+                        ->setUserMail($params['username_addons'])
+                        ->setPassword($params['password_addons'])
+                        ->setModuleName($params['module_name'])
+                        ->setModuleKey($params['module_key'])
+                        ->getCheckModule();
+                case 'module_download':
+                    if ($this->isAddonsAuthenticated()) {
+                        return $this->marketplaceClient
+                            ->setUserMail($params['username_addons'])
+                            ->setPassword($params['password_addons'])
+                            ->getModuleZip($params['id_module']);
+                    }
+
+                    return $this->marketplaceClient->getModuleZip($params['id_module']);
+                case 'module':
                     return $this->marketplaceClient->getModule($params['id_module']);
-                } catch (Exception $e) {
-                    self::$is_addons_up = false;
-                    throw $e;
-                }
-            case 'hosted_module':
-                $post_data .= '&method=module&id_module='.urlencode((int) $params['id_module']).'&username='.urlencode($params['hosted_email'])
-                    .'&password='.urlencode($params['password_addons'])
-                    .'&shop_url='.urlencode(isset($params['shop_url']) ? $params['shop_url']
-                                : Tools::getShopDomain())
-                    .'&mail='.urlencode(isset($params['email']) ? $params['email']
-                                : Configuration::get('PS_SHOP_EMAIL'));
-                $protocols[] = 'https';
-                break;
-            case 'install-modules':
-                $protocols[] = 'http';
-                $post_data .= '&method=listing&action=install-modules';
-                $post_data .= defined('_PS_HOST_MODE_') ? '-od' : '';
-                break;
-            case 'categories':
-                try {
+                case 'install-modules':
+                    return $this->marketplaceClient->getPreInstalledModules();
+                case 'categories':
                     return $this->marketplaceClient->getCategories();
-                } catch (Exception $e) {
-                    self::$is_addons_up = false;
-                    throw $e;
-                }
-            default:
-                return false;
-        }
-
-        $context = stream_context_create(array(
-            'http' => array(
-                'method' => 'POST',
-                'content' => $post_data,
-                'header' => 'Content-type: application/x-www-form-urlencoded',
-                'timeout' => 5,
-            ),
-        ));
-
-        foreach ($protocols as $protocol) {
-            $content = Tools::file_get_contents($protocol.'://'.$end_point,
-                    false, $context);
-            if (!$content) {
-                continue;
             }
+        } catch (Exception $e) {
+            self::$is_addons_up = false;
 
-            if ($post_query_data['format'] == 'json' && ctype_print($content)) {
-                $json_result = json_decode($content);
-                if ($json_result === false) {
-                    self::$is_addons_up = false;
-                    throw new Exception('Cannot decode JSON from Addons');
-                }
-
-                if (!empty($json_result->errors)) {
-                    self::$is_addons_up = false;
-                    throw new Exception('Error received from Addons: '.json_encode($json_result->errors));
-                }
-
-                return $json_result;
-            } else {
-                return $content; // Return raw result
-            }
+            throw $e;
         }
-
-        self::$is_addons_up = false;
-        throw new Exception('Cannot execute request '.$action.' to Addons');
     }
 
+    /**
+     * @return array
+     *
+     * @throws Exception
+     */
     protected function getAddonsCredentials()
     {
         $request = Request::createFromGlobals();
@@ -266,8 +201,8 @@ class AddonsDataProvider implements AddonsInterface
         $password = $this->encryption->decrypt($request->cookies->get('password_addons'));
 
         return array(
-           'username_addons' => $username,
-           'password_addons' => $password,
+            'username_addons' => $username,
+            'password_addons' => $password,
         );
     }
 

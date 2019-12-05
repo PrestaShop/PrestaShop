@@ -1,5 +1,5 @@
 /**
- * 2007-2017 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -15,10 +15,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -105,14 +105,22 @@ var restrictions = new Array('country', 'carrier', 'group', 'cart_rule', 'shop')
 for (i in restrictions)
 {
 	toggleCartRuleFilter($('#' + restrictions[i] + '_restriction'));
-	$('#' + restrictions[i] + '_restriction').click(function() {toggleCartRuleFilter(this);});
+	$('#' + restrictions[i] + '_restriction').change(function() {toggleCartRuleFilter(this);});
 	$('#' + restrictions[i] + '_select_remove').click(function() {removeCartRuleOption(this);});
 	$('#' + restrictions[i] + '_select_add').click(function() {addCartRuleOption(this);});
 }
 
 toggleCartRuleFilter($('#product_restriction'));
 
-$('#product_restriction').click(function() {
+$('#group_restriction').change(function() {
+  $('#customerFilter').prop('disabled', $(this).prop('checked'));
+}).change();
+
+$('#customerFilter').on('change keyup', function() {
+    $('#group_restriction').prop('disabled', $(this).val() !== '');
+}).change();
+
+$('#product_restriction').change(function() {
 	toggleCartRuleFilter(this);
 
 	if ($(this).prop('checked'))
@@ -497,6 +505,8 @@ $(document).ready(function() {
 			callback: function(text) { combinable_filter('#cart_rule_select_2', text, 'selected'); }
 		});
 	}
+
+  displayProductAttributes();
 });
 
 

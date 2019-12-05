@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,117 +16,216 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-
 namespace PrestaShop\PrestaShop\Core\Product\Search;
 
+/**
+ * We call a facet a set of filters combined with logical operators.
+ */
 class Facet
 {
-    private $label;
-    private $type;
+    /**
+     * @var string the facet label
+     */
+    private $label = '';
+
+    /**
+     * @var string the facet type
+     */
+    private $type = '';
+
+    /**
+     * @var bool if true, the facet is displayed
+     */
     private $displayed = true;
+
+    /**
+     * @var array the facet properties
+     */
     private $properties = [];
+
+    /**
+     * @var array the facet filters
+     */
     private $filters = [];
+
+    /**
+     * @var bool if true, allows the multiple selection
+     */
     private $multipleSelectionAllowed = true;
+
+    /**
+     * @var string the widget type
+     */
     private $widgetType = 'radio';
 
+    /**
+     * @return array an array representation of the facet
+     */
     public function toArray()
     {
         return [
-            'label'         => $this->label,
-            'displayed'     => $this->displayed,
-            'type'          => $this->type,
-            'properties'    => $this->properties,
-            'filters'       => array_map(function (Filter $filter) {
+            'label' => $this->label,
+            'displayed' => $this->displayed,
+            'type' => $this->type,
+            'properties' => $this->properties,
+            'filters' => array_map(function (Filter $filter) {
                 return $filter->toArray();
             }, $this->filters),
             'multipleSelectionAllowed' => $this->multipleSelectionAllowed,
-            'widgetType' => $this->widgetType
+            'widgetType' => $this->widgetType,
         ];
     }
 
+    /**
+     * @param string $label the facet label
+     *
+     * @return $this
+     */
     public function setLabel($label)
     {
         $this->label = $label;
+
         return $this;
     }
 
+    /**
+     * @return string the facet label
+     */
     public function getLabel()
     {
         return $this->label;
     }
 
+    /**
+     * @param string $type the facet type
+     *
+     * @return $this
+     */
     public function setType($type)
     {
         $this->type = $type;
+
         return $this;
     }
 
+    /**
+     * @return string the facet type
+     */
     public function getType()
     {
         return $this->type;
     }
 
+    /**
+     * @param string $name the facet property name
+     * @param mixed $value the facet property value
+     *
+     * @return $this
+     */
     public function setProperty($name, $value)
     {
         $this->properties[$name] = $value;
+
         return $this;
     }
 
+    /**
+     * @param string $name the facet property name
+     *
+     * @return mixed|null
+     */
     public function getProperty($name)
     {
         if (!array_key_exists($name, $this->properties)) {
             return null;
         }
+
         return $this->properties[$name];
     }
 
+    /**
+     * @param Filter $filter the facet filter
+     *
+     * @return $this
+     */
     public function addFilter(Filter $filter)
     {
         $this->filters[] = $filter;
+
         return $this;
     }
 
+    /**
+     * @return array the list of facet filters
+     */
     public function getFilters()
     {
         return $this->filters;
     }
 
-    public function setMultipleSelectionAllowed($yes = true)
+    /**
+     * @param bool $isAllowed allows/disallows the multiple selection
+     *
+     * @return $this
+     */
+    public function setMultipleSelectionAllowed($isAllowed = true)
     {
-        $this->multipleSelectionAllowed = $yes;
+        $this->multipleSelectionAllowed = $isAllowed;
+
         return $this;
     }
 
+    /**
+     * @return bool returns true if multiple selection is allowed
+     */
     public function isMultipleSelectionAllowed()
     {
         return $this->multipleSelectionAllowed;
     }
 
+    /**
+     * @param bool $displayed sets the display of the facet
+     *
+     * @return $this
+     */
     public function setDisplayed($displayed = true)
     {
         $this->displayed = $displayed;
+
         return $this;
     }
 
+    /**
+     * @return bool returns true if the facet is displayed
+     */
     public function isDisplayed()
     {
         return $this->displayed;
     }
 
+    /**
+     * @param string $widgetType sets the widget type of the facet
+     *
+     * @return $this
+     */
     public function setWidgetType($widgetType)
     {
         $this->widgetType = $widgetType;
+
         return $this;
     }
 
+    /**
+     * @return string returns the facet widget type
+     */
     public function getWidgetType()
     {
         return $this->widgetType;

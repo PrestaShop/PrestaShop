@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -39,7 +39,7 @@ class Tools extends ToolsCore
             if (strpos($url, 'index.php?controller=') !== false && strpos($url, 'index.php/') == 0) {
                 $url = substr($url, strlen('index.php?controller='));
                 if (Configuration::get('PS_REWRITING_SETTINGS')) {
-                    $url = Tools::strReplaceFirst('&', '?', $url);
+                    $url = static::strReplaceFirst('&', '?', $url);
                 }
             }
 
@@ -80,6 +80,7 @@ class Tools extends ToolsCore
             $default_controller = 'adminnotfound';
         }
         $controller_class = $controllers[strtolower($default_controller)];
+
         return $controller_class;
     }
 
@@ -101,7 +102,7 @@ class Tools extends ToolsCore
     {
         if (!is_object(Context::getContext()->controller)) {
             try {
-                $controller = Controller::getController(Tools::getDefaultControllerClass());
+                $controller = Controller::getController(static::getDefaultControllerClass());
                 $controller->setRedirectAfter($url);
                 $controller->run();
                 Context::getContext()->controller = $controller;

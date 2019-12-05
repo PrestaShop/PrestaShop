@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,21 +16,23 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
-
 use Symfony\Component\Translation\TranslatorInterface;
 
 abstract class AbstractCheckoutStepCore implements CheckoutStepInterface
 {
     private $smarty;
     private $translator;
+
+    /**
+     * @var CheckoutProcess
+     */
     private $checkoutProcess;
 
     private $title;
@@ -173,5 +175,24 @@ abstract class AbstractCheckoutStepCore implements CheckoutStepInterface
     public function restorePersistedData(array $data)
     {
         return $this;
+    }
+
+    /**
+     * Find next step and mark it as current
+     */
+    public function setNextStepAsCurrent()
+    {
+        $steps = $this->getCheckoutProcess()->getSteps();
+        $next = false;
+        foreach ($steps as $step) {
+            if ($next === true) {
+                $step->step_is_current = true;
+                break;
+            }
+
+            if ($step === $this) {
+                $next = true;
+            }
+        }
     }
 }

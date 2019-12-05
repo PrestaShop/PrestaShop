@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 2007-2017 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -17,14 +17,13 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use Symfony\Component\Filesystem\Filesystem;
 
@@ -56,20 +55,27 @@ class CccReducerCore
             }
         }
 
-        $cccFilename = 'theme-'.$this->getFileNameIdentifierFromList($files).'.css';
-        $destinationPath = $this->cacheDir.$cccFilename;
+        $version = Configuration::get('PS_CCCCSS_VERSION');
+        $cccFilename = 'theme-' . $this->getFileNameIdentifierFromList($files) . $version . '.css';
+        $destinationPath = $this->cacheDir . $cccFilename;
 
         if (!$this->filesystem->exists($destinationPath)) {
             CssMinifier::minify($files, $destinationPath);
         }
+        if (Tools::hasMediaServer()) {
+            $relativePath = _THEMES_DIR_ . _THEME_NAME_ . '/assets/cache/' . $cccFilename;
+            $destinationUri = Tools::getCurrentUrlProtocolPrefix() . Tools::getMediaServer($relativePath) . $relativePath;
+        } else {
+            $destinationUri = $this->getFQDN() . $this->getUriFromPath($destinationPath);
+        }
 
         $cssFileList['external']['theme-ccc'] = [
-            "id" => "theme-ccc",
-            "type" => "external",
-            "path" => $destinationPath,
-            "uri" => $this->getFQDN().$this->getUriFromPath($destinationPath),
-            "media" => "all",
-            "priority" => StylesheetManager::DEFAULT_PRIORITY,
+            'id' => 'theme-ccc',
+            'type' => 'external',
+            'path' => $destinationPath,
+            'uri' => $destinationUri,
+            'media' => 'all',
+            'priority' => StylesheetManager::DEFAULT_PRIORITY,
         ];
 
         return $cssFileList;
@@ -92,19 +98,26 @@ class CccReducerCore
                 continue;
             }
 
-            $cccFilename = $position.'-'.$this->getFileNameIdentifierFromList($files).'.js';
-            $destinationPath = $this->cacheDir.$cccFilename;
+            $version = Configuration::get('PS_CCCJS_VERSION');
+            $cccFilename = $position . '-' . $this->getFileNameIdentifierFromList($files) . $version . '.js';
+            $destinationPath = $this->cacheDir . $cccFilename;
 
             if (!$this->filesystem->exists($destinationPath)) {
                 JsMinifier::minify($files, $destinationPath);
             }
+            if (Tools::hasMediaServer()) {
+                $relativePath = _THEMES_DIR_ . _THEME_NAME_ . '/assets/cache/' . $cccFilename;
+                $destinationUri = Tools::getCurrentUrlProtocolPrefix() . Tools::getMediaServer($relativePath) . $relativePath;
+            } else {
+                $destinationUri = $this->getFQDN() . $this->getUriFromPath($destinationPath);
+            }
 
             $cccItem = [];
-            $cccItem[$position.'-js-ccc'] = [
-                'id' => $position.'-js-ccc',
+            $cccItem[$position . '-js-ccc'] = [
+                'id' => $position . '-js-ccc',
                 'type' => 'external',
                 'path' => $destinationPath,
-                'uri' => $this->getFQDN().$this->getUriFromPath($destinationPath),
+                'uri' => $destinationUri,
                 'priority' => JavascriptManager::DEFAULT_PRIORITY,
                 'attribute' => '',
             ];

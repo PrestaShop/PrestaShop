@@ -1,0 +1,18 @@
+services:
+  _defaults:
+    public: true
+
+  prestashop.adapter.feature.command_handler.add_feature_handler:
+    class: PrestaShop\PrestaShop\Adapter\Feature\CommandHandler\AddFeatureHandler
+    tags:
+      - { name: tactician.handler, command: PrestaShop\PrestaShop\Core\Domain\Feature\Command\AddFeatureCommand }
+
+  prestashop.adapter.feature.command_handler.edit_feature_handler:
+    class: PrestaShop\PrestaShop\Adapter\Feature\CommandHandler\EditFeatureHandler
+    tags:
+      - { name: tactician.handler, command: PrestaShop\PrestaShop\Core\Domain\Feature\Command\EditFeatureCommand }
+
+  prestashop.adapter.feature.query_handler.get_feature_for_editing:
+    class: PrestaShop\PrestaShop\Adapter\Feature\QueryHandler\GetFeatureForEditingHandler
+    tags:
+      - { name: tactician.handler, command: PrestaShop\PrestaShop\Core\Domain\Feature\Query\GetFeatureForEditing }

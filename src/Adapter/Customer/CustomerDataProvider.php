@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,26 +16,26 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShop\PrestaShop\Adapter\Customer;
 
-use Symfony\Component\Process\Exception\LogicException;
 use Customer;
+use Db;
+use Symfony\Component\Process\Exception\LogicException;
 
 /**
- * This class will provide data from DB / ORM about Customer
+ * This class will provide data from DB / ORM about Customer.
  */
 class CustomerDataProvider
 {
     /**
-     * Get a customer
-     *
      * @param int $id
      *
      * @throws LogicException If the customer id is not set
@@ -49,6 +49,69 @@ class CustomerDataProvider
         }
 
         $customer = new Customer($id);
+
         return $customer;
+    }
+
+    /**
+     * @param int $customerId
+     * @param int $langId
+     *
+     * @return array
+     */
+    public function getCustomerAddresses($customerId, $langId)
+    {
+        $customer = $this->getCustomer($customerId);
+
+        return $customer->getAddresses($langId);
+    }
+
+    /**
+     * Get Default Customer Group ID.
+     *
+     * @param int $idCustomer Customer ID
+     *
+     * @return mixed|string|null
+     */
+    public function getDefaultGroupId($idCustomer)
+    {
+        return Customer::getDefaultGroupId($idCustomer);
+    }
+
+    /**
+     * Provides customer messages
+     *
+     * @param int $customerId
+     */
+    public function getCustomerMessages(int $customerId, ?int $orderId = null, ?int $limit = null)
+    {
+        $mainSql = 'SELECT cm.*, c.`firstname` AS cfirstname, c.`lastname` AS clastname,
+            e.`firstname` AS efirstname, e.`lastname` AS elastname
+            FROM ' . _DB_PREFIX_ . 'customer_thread ct
+			LEFT JOIN ' . _DB_PREFIX_ . 'customer_message cm
+				ON ct.id_customer_thread = cm.id_customer_thread
+            LEFT JOIN `' . _DB_PREFIX_ . 'customer` c
+                ON ct.`id_customer` = c.`id_customer`
+            LEFT OUTER JOIN `' . _DB_PREFIX_ . 'employee` e
+                ON e.`id_employee` = cm.`id_employee`
+			WHERE ct.id_customer = ' . $customerId;
+
+        if ($orderId) {
+            $mainSql .= ' AND ct.`id_order` = ' . $orderId;
+        }
+
+        $mainSql .= ' GROUP BY cm.id_customer_message
+            ORDER BY cm.date_add DESC';
+
+        $count = Db::getInstance()->executeS("SELECT COUNT(*) AS total FROM ($mainSql) AS messages");
+
+        if ($limit) {
+            $mainSql .= " LIMIT $limit";
+        }
+
+        return [
+            'total' => empty($count) ? 0 : (int) $count[0]['total'],
+            'messages' => Db::getInstance()->executeS($mainSql),
+        ];
     }
 }

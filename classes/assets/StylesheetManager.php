@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,14 +16,13 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 class StylesheetManagerCore extends AbstractAssetManager
 {
     private $valid_media = array(
@@ -53,11 +52,18 @@ class StylesheetManagerCore extends AbstractAssetManager
         $media = self::DEFAULT_MEDIA,
         $priority = self::DEFAULT_PRIORITY,
         $inline = false,
-        $server = 'local'
+        $server = 'local',
+        $needRtl = true
     ) {
+        $fullPath = $this->getFullPath($relativePath);
+        $rtlFullPath = $this->getFullPath(str_replace('.css', '_rtl.css', $relativePath));
+        $context = Context::getContext();
+        $isRTL = is_object($context->language) && $context->language->is_rtl;
         if ('remote' === $server) {
             $this->add($id, $relativePath, $media, $priority, $inline, $server);
-        } else if ($fullPath = $this->getFullPath($relativePath)) {
+        } elseif ($needRtl && $isRTL && $rtlFullPath) {
+            $this->add($id, $rtlFullPath, $media, $priority, $inline, $server);
+        } elseif ($fullPath) {
             $this->add($id, $fullPath, $media, $priority, $inline, $server);
         }
     }
@@ -90,7 +96,7 @@ class StylesheetManagerCore extends AbstractAssetManager
             $uri = $fullPath;
             $type = 'external';
         } else {
-            $uri = $this->getFQDN().$this->getUriFromPath($fullPath);
+            $uri = $this->getFQDN() . $this->getUriFromPath($fullPath);
             $type = ($inline) ? 'inline' : 'external';
         }
 
@@ -112,7 +118,7 @@ class StylesheetManagerCore extends AbstractAssetManager
 
     private function sortList()
     {
-        foreach ($this->list as $type => &$items) {
+        foreach ($this->list as &$items) {
             Tools::uasort(
                 $items,
                 function ($a, $b) {
@@ -130,7 +136,7 @@ class StylesheetManagerCore extends AbstractAssetManager
     {
         foreach ($this->list['inline'] as &$item) {
             $item['content'] =
-                '/* ---- '.$item['id'].' @ '.$item['path'].' ---- */'."\r\n".
+                '/* ---- ' . $item['id'] . ' @ ' . $item['path'] . ' ---- */' . "\r\n" .
                 file_get_contents($item['path']);
         }
     }

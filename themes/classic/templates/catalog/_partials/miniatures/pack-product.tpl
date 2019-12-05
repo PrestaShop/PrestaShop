@@ -1,5 +1,5 @@
 {**
- * 2007-2017 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -15,10 +15,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
@@ -28,19 +28,28 @@
       <div class="pack-product-container">
         <div class="thumb-mask">
           <div class="mask">
-            <img
-              src="{$product.cover.medium.url}"
-              alt="{$product.cover.legend}"
-              data-full-size-image-url="{$product.cover.large.url}"
-            >
+            <a href="{$product.url}" title="{$product.name}">
+              <img
+                src="{$product.cover.medium.url}"
+                alt="{$product.cover.legend}"
+                data-full-size-image-url="{$product.cover.large.url}"
+              >
+            </a>
           </div>
         </div>
+
         <div class="pack-product-name">
-          {$product.name}
+          <a href="{$product.url}" title="{$product.name}">
+            {$product.name}
+          </a>
         </div>
-        <div class="pack-product-price">
-          <strong>{$product.price}</strong>
-        </div>
+
+        {if $showPackProductsPrice} 
+          <div class="pack-product-price">
+            <strong>{$product.price}</strong>
+          </div>
+        {/if}
+        
         <div class="pack-product-quantity">
           <span>x {$product.pack_quantity}</span>
         </div>

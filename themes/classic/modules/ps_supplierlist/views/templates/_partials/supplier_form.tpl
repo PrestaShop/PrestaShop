@@ -1,5 +1,5 @@
 {**
- * 2007-2017 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -15,19 +15,33 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
 
-<form action="#">
-  <select onchange="this.options[this.selectedIndex].value && (window.location = this.options[this.selectedIndex].value);">
-    <option value="">{l s='All suppliers' d='Shop.Theme.Catalog'}</option>
+<div class="suppliers-sort dropdown">
+  <button
+    class="btn-unstyle select-title"
+    rel="nofollow"
+    data-toggle="dropdown"
+    aria-haspopup="true"
+    aria-expanded="false">
+    {l s='All suppliers' d='Shop.Theme.Catalog'}
+    <i class="material-icons float-xs-right">arrow_drop_down</i>
+  </button>
+  <div class="dropdown-menu">
     {foreach from=$suppliers item=supplier}
-      <option value="{$supplier['link']}">{$supplier['name']}</option>
+      <a
+        rel="nofollow"
+        href="{$supplier['link']}"
+        class="select-list js-search-link"
+      >
+        {$supplier['name']}
+      </a>
     {/foreach}
-  </select>
-</form>
+  </div>
+</div>

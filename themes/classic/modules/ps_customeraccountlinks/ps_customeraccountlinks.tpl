@@ -1,5 +1,5 @@
 {**
- * 2007-2017 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -15,20 +15,20 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
 
-<div id="block_myaccount_infos" class="col-md-2 links wrapper">
-  <h3 class="myaccount-title hidden-sm-down">
+<div id="block_myaccount_infos" class="col-md-3 links wrapper">
+  <p class="h3 myaccount-title hidden-sm-down">
     <a class="text-uppercase" href="{$urls.pages.my_account}" rel="nofollow">
       {l s='Your account' d='Shop.Theme.Customeraccount'}
     </a>
-  </h3>
+  </p>
   <div class="title clearfix hidden-md-up" data-target="#footer_account_list" data-toggle="collapse">
     <span class="h3">{l s='Your account' d='Shop.Theme.Customeraccount'}</span>
     <span class="float-xs-right">

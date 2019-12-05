@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,22 +16,23 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 $currentDir = dirname(__FILE__);
 
 /* Custom defines made by users */
-if (is_file($currentDir.'/defines_custom.inc.php')) {
-    include_once($currentDir.'/defines_custom.inc.php');
+if (is_file($currentDir . '/defines_custom.inc.php')) {
+    include_once $currentDir . '/defines_custom.inc.php';
 }
-require_once($currentDir.'/defines.inc.php');
-require_once(_PS_CONFIG_DIR_.'autoload.php');
+
+require_once $currentDir . '/defines.inc.php';
+
+require_once _PS_CONFIG_DIR_ . 'autoload.php';
 
 $start_time = microtime(true);
 
@@ -42,19 +43,16 @@ define('_PS_SSL_PORT_', 443);
 ini_set('default_charset', 'utf-8');
 
 /* in dev mode - check if composer was executed */
-if (is_dir(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'admin-dev') && (!is_dir(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'vendor') ||
-        !file_exists(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'vendor'.DIRECTORY_SEPARATOR.'autoload.php'))) {
+if (is_dir(_PS_ROOT_DIR_ . DIRECTORY_SEPARATOR . 'admin-dev') && (!is_dir(_PS_ROOT_DIR_ . DIRECTORY_SEPARATOR . 'vendor') ||
+        !file_exists(_PS_ROOT_DIR_ . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php'))) {
     die('Error : please install <a href="https://getcomposer.org/">composer</a>. Then run "php composer.phar install"');
 }
 
 /* No settings file? goto installer... */
-if (!file_exists(_PS_ROOT_DIR_.'/app/config/parameters.yml') && !file_exists(_PS_ROOT_DIR_.'/app/config/parameters.php')) {
+if (!file_exists(_PS_ROOT_DIR_ . '/app/config/parameters.yml') && !file_exists(_PS_ROOT_DIR_ . '/app/config/parameters.php')) {
     Tools::redirectToInstall();
 }
 
-/* include settings file only if we are not in multi-tenancy mode */
-require_once(_PS_ROOT_DIR_.'/config/settings.inc.php');
-require_once(_PS_CONFIG_DIR_.'autoload.php');
 require_once $currentDir . DIRECTORY_SEPARATOR . 'bootstrap.php';
 
 /* Improve PHP configuration on Windows */
@@ -73,21 +71,21 @@ if (defined('_PS_CREATION_DATE_')) {
 
 /* Custom config made by users */
 if (is_file(_PS_CUSTOM_CONFIG_FILE_)) {
-    include_once(_PS_CUSTOM_CONFIG_FILE_);
+    include_once _PS_CUSTOM_CONFIG_FILE_;
 }
 
 if (_PS_DEBUG_PROFILING_) {
-    include_once(_PS_TOOL_DIR_.'profiling/Controller.php');
-    include_once(_PS_TOOL_DIR_.'profiling/ObjectModel.php');
-    include_once(_PS_TOOL_DIR_.'profiling/Db.php');
-    include_once(_PS_TOOL_DIR_.'profiling/Tools.php');
+    include_once _PS_TOOL_DIR_ . 'profiling/Controller.php';
+    include_once _PS_TOOL_DIR_ . 'profiling/ObjectModel.php';
+    include_once _PS_TOOL_DIR_ . 'profiling/Db.php';
+    include_once _PS_TOOL_DIR_ . 'profiling/Tools.php';
 }
 
 if (Tools::convertBytes(ini_get('upload_max_filesize')) < Tools::convertBytes('100M')) {
     ini_set('upload_max_filesize', '100M');
 }
 
-if (Tools::isPHPCLI() && isset($argc) && isset($argv)) {
+if (Tools::isPHPCLI() && isset($argc, $argv)) {
     Tools::argvToGET($argc, $argv);
 }
 
@@ -98,11 +96,11 @@ if (!isset($_SERVER['REQUEST_URI']) || empty($_SERVER['REQUEST_URI'])) {
     }
     if (isset($_SERVER['SCRIPT_NAME'])) {
         if (basename($_SERVER['SCRIPT_NAME']) == 'index.php' && empty($_SERVER['QUERY_STRING'])) {
-            $_SERVER['REQUEST_URI'] = dirname($_SERVER['SCRIPT_NAME']).'/';
+            $_SERVER['REQUEST_URI'] = dirname($_SERVER['SCRIPT_NAME']) . '/';
         } else {
             $_SERVER['REQUEST_URI'] = $_SERVER['SCRIPT_NAME'];
             if (isset($_SERVER['QUERY_STRING']) && !empty($_SERVER['QUERY_STRING'])) {
-                $_SERVER['REQUEST_URI'] .= '?'.$_SERVER['QUERY_STRING'];
+                $_SERVER['REQUEST_URI'] .= '?' . $_SERVER['QUERY_STRING'];
             }
         }
     }
@@ -127,17 +125,20 @@ define('_PARENT_THEME_NAME_', $context->shop->theme->get('parent') ?: '');
 define('__PS_BASE_URI__', $context->shop->getBaseURI());
 
 /* Include all defines related to base uri and theme name */
-require_once($currentDir.'/defines_uri.inc.php');
+require_once $currentDir . '/defines_uri.inc.php';
 
 global $_MODULES;
 $_MODULES = array();
 
-define('_PS_PRICE_DISPLAY_PRECISION_', Configuration::get('PS_PRICE_DISPLAY_PRECISION'));
-define('_PS_PRICE_COMPUTE_PRECISION_', _PS_PRICE_DISPLAY_PRECISION_);
+/**
+ * @deprecated since 1.7.7
+ */
+define('_PS_PRICE_DISPLAY_PRECISION_', 2);
 
-if (Configuration::get('PS_USE_HTMLPURIFIER')) {
-    require_once(_PS_TOOL_DIR_.'htmlpurifier/HTMLPurifier.standalone.php');
-}
+/**
+ * @deprecated since 1.7.7
+ */
+define('_PS_PRICE_COMPUTE_PRECISION_', 6);
 
 /* Load all languages */
 Language::loadLanguages();
@@ -150,15 +151,15 @@ $context->country = $default_country;
 @date_default_timezone_set(Configuration::get('PS_TIMEZONE'));
 
 /* Set locales */
-$locale = strtolower(Configuration::get('PS_LOCALE_LANGUAGE')).'_'.strtoupper(Configuration::get('PS_LOCALE_COUNTRY'));
+$locale = strtolower(Configuration::get('PS_LOCALE_LANGUAGE')) . '_' . strtoupper(Configuration::get('PS_LOCALE_COUNTRY'));
 /* Please do not use LC_ALL here http://www.php.net/manual/fr/function.setlocale.php#25041 */
-setlocale(LC_COLLATE, $locale.'.UTF-8', $locale.'.utf8');
-setlocale(LC_CTYPE, $locale.'.UTF-8', $locale.'.utf8');
-setlocale(LC_TIME, $locale.'.UTF-8', $locale.'.utf8');
+setlocale(LC_COLLATE, $locale . '.UTF-8', $locale . '.utf8');
+setlocale(LC_CTYPE, $locale . '.UTF-8', $locale . '.utf8');
+setlocale(LC_TIME, $locale . '.UTF-8', $locale . '.utf8');
 setlocale(LC_NUMERIC, 'en_US.UTF-8', 'en_US.utf8');
 
 /* Instantiate cookie */
-$cookie_lifetime = defined('_PS_ADMIN_DIR_') ? (int)Configuration::get('PS_COOKIE_LIFETIME_BO') : (int)Configuration::get('PS_COOKIE_LIFETIME_FO');
+$cookie_lifetime = defined('_PS_ADMIN_DIR_') ? (int) Configuration::get('PS_COOKIE_LIFETIME_BO') : (int) Configuration::get('PS_COOKIE_LIFETIME_FO');
 if ($cookie_lifetime > 0) {
     $cookie_lifetime = time() + (max($cookie_lifetime, 1) * 3600);
 }
@@ -168,14 +169,14 @@ if (defined('_PS_ADMIN_DIR_')) {
 } else {
     $force_ssl = Configuration::get('PS_SSL_ENABLED') && Configuration::get('PS_SSL_ENABLED_EVERYWHERE');
     if ($context->shop->getGroup()->share_order) {
-        $cookie = new Cookie('ps-sg'.$context->shop->getGroup()->id, '', $cookie_lifetime, $context->shop->getUrlsSharedCart(), false, $force_ssl);
+        $cookie = new Cookie('ps-sg' . $context->shop->getGroup()->id, '', $cookie_lifetime, $context->shop->getUrlsSharedCart(), false, $force_ssl);
     } else {
         $domains = null;
         if ($context->shop->domain != $context->shop->domain_ssl) {
             $domains = array($context->shop->domain_ssl, $context->shop->domain);
         }
 
-        $cookie = new Cookie('ps-s'.$context->shop->id, '', $cookie_lifetime, $domains, false, $force_ssl);
+        $cookie = new Cookie('ps-s' . $context->shop->id, '', $cookie_lifetime, $domains, false, $force_ssl);
     }
 }
 
@@ -191,7 +192,7 @@ if (defined('_PS_ADMIN_DIR_')) {
         Shop::cacheShops(true);
     }
 
-    $cookie->id_lang = (int)$employee->id_lang;
+    $cookie->id_lang = (int) $employee->id_lang;
 }
 
 /* if the language stored in the cookie is not available language, use default language */
@@ -204,11 +205,11 @@ if (!isset($language) || !Validate::isLoadedObject($language)) {
 $context->language = $language;
 
 /* Get smarty */
-require_once($currentDir.'/smarty.config.inc.php');
+require_once $currentDir . '/smarty.config.inc.php';
 $context->smarty = $smarty;
 
 if (!defined('_PS_ADMIN_DIR_')) {
-    if (isset($cookie->id_customer) && (int)$cookie->id_customer) {
+    if (isset($cookie->id_customer) && (int) $cookie->id_customer) {
         $customer = new Customer($cookie->id_customer);
         if (!Validate::isLoadedObject($customer)) {
             $context->cookie->logout();
@@ -226,7 +227,7 @@ if (!defined('_PS_ADMIN_DIR_')) {
 
         /* Change the default group */
         if (Group::isFeatureActive()) {
-            $customer->id_default_group = (int)Configuration::get('PS_UNIDENTIFIED_GROUP');
+            $customer->id_default_group = (int) Configuration::get('PS_UNIDENTIFIED_GROUP');
         }
     }
     $customer->id_guest = $cookie->id_guest;
@@ -237,7 +238,7 @@ if (!defined('_PS_ADMIN_DIR_')) {
 $https_link = (Tools::usingSecureMode() && Configuration::get('PS_SSL_ENABLED')) ? 'https://' : 'http://';
 $context->link = new Link($https_link, $https_link);
 
-/**
+/*
  * @deprecated
  * USE : Configuration::get() method in order to getting the id of order status
  */

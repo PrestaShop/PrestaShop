@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 2007-2017 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -17,14 +17,13 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 class JavascriptManagerCore extends AbstractAssetManager
 {
     protected $list;
@@ -56,7 +55,7 @@ class JavascriptManagerCore extends AbstractAssetManager
     ) {
         if ('remote' === $server) {
             $this->add($id, $relativePath, $position, $priority, $inline, $attribute, $server);
-        } else if ($fullPath = $this->getFullPath($relativePath)) {
+        } elseif ($fullPath = $this->getFullPath($relativePath)) {
             $this->add($id, $fullPath, $position, $priority, $inline, $attribute, $server);
         }
     }
@@ -84,7 +83,7 @@ class JavascriptManagerCore extends AbstractAssetManager
             $uri = $fullPath;
             $type = 'external';
         } else {
-            $uri = $this->getFQDN().$this->getUriFromPath($fullPath);
+            $uri = $this->getFQDN() . $this->getUriFromPath($fullPath);
             $type = ($inline) ? 'inline' : 'external';
         }
 
@@ -112,7 +111,7 @@ class JavascriptManagerCore extends AbstractAssetManager
         foreach ($this->valid_position as $position) {
             foreach ($this->list[$position]['inline'] as &$item) {
                 $item['content'] =
-                    '/* ---- '.$item['id'].' @ '.$item['path'].' ---- */'."\r\n".
+                    '/* ---- ' . $item['id'] . ' @ ' . $item['path'] . ' ---- */' . "\r\n" .
                     file_get_contents($item['path']);
             }
         }
@@ -136,6 +135,7 @@ class JavascriptManagerCore extends AbstractAssetManager
                     if ($a['priority'] === $b['priority']) {
                         return 0;
                     }
+
                     return ($a['priority'] < $b['priority']) ? -1 : 1;
                 });
                 $this->list[$position][$type] = $items;

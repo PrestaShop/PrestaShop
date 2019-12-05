@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -35,10 +35,11 @@ class InstallSession
 
     public static function getInstance()
     {
-        if (!self::$_instance) {
-            self::$_instance = new self();
+        if (!static::$_instance) {
+            static::$_instance = new static();
         }
-        return self::$_instance;
+
+        return static::$_instance;
     }
 
     public function __construct()
@@ -47,8 +48,8 @@ class InstallSession
         $session_started = session_start();
         if (!($session_started)
         || (!isset($_SESSION['session_mode']) && (isset($_GET['_']) || isset($_POST['submitNext']) || isset($_POST['submitPrevious']) || isset($_POST['language'])))) {
-            InstallSession::$_cookie_mode = true;
-            InstallSession::$_cookie = new Cookie('ps_install', null, time() + 7200, null, true);
+            static::$_cookie_mode = true;
+            static::$_cookie = new Cookie('ps_install', null, time() + 7200, null, true);
         }
         if ($session_started && !isset($_SESSION['session_mode'])) {
             $_SESSION['session_mode'] = 'session';
@@ -58,8 +59,8 @@ class InstallSession
 
     public function clean()
     {
-        if (InstallSession::$_cookie_mode) {
-            InstallSession::$_cookie->logout();
+        if (static::$_cookie_mode) {
+            static::$_cookie->logout();
         } else {
             foreach ($_SESSION as $k => $v) {
                 unset($_SESSION[$k]);
@@ -69,8 +70,8 @@ class InstallSession
 
     public function &__get($varname)
     {
-        if (InstallSession::$_cookie_mode) {
-            $ref = InstallSession::$_cookie->{$varname};
+        if (static::$_cookie_mode) {
+            $ref = static::$_cookie->{$varname};
             if (0 === strncmp($ref, 'serialized_array:', strlen('serialized_array:'))) {
                 $ref = unserialize(substr($ref, strlen('serialized_array:')));
             }
@@ -82,19 +83,20 @@ class InstallSession
                 $ref = &$null;
             }
         }
+
         return $ref;
     }
 
     public function __set($varname, $value)
     {
-        if (InstallSession::$_cookie_mode) {
+        if (static::$_cookie_mode) {
             if ($varname == 'xml_loader_ids') {
                 return;
             }
             if (is_array($value)) {
                 $value = 'serialized_array:'.serialize($value);
             }
-            InstallSession::$_cookie->{$varname} = $value;
+            static::$_cookie->{$varname} = $value;
         } else {
             $_SESSION[$varname] = $value;
         }
@@ -102,8 +104,8 @@ class InstallSession
 
     public function __isset($varname)
     {
-        if (InstallSession::$_cookie_mode) {
-            return isset(InstallSession::$_cookie->{$varname});
+        if (static::$_cookie_mode) {
+            return isset(static::$_cookie->{$varname});
         } else {
             return isset($_SESSION[$varname]);
         }
@@ -111,8 +113,8 @@ class InstallSession
 
     public function __unset($varname)
     {
-        if (InstallSession::$_cookie_mode) {
-            unset(InstallSession::$_cookie->{$varname});
+        if (static::$_cookie_mode) {
+            unset(static::$_cookie->{$varname});
         } else {
             unset($_SESSION[$varname]);
         }

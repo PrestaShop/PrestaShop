@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -57,7 +57,7 @@ class InstallControllerHttpConfigure extends InstallControllerHttp implements Ht
                     'method' => 'addMemberToNewsletter',
                     'language' => $this->language->getLanguageIso(),
                     'visitorType' => 1,
-                    'source' => 'installer'
+                    'source' => 'installer',
                 ));
                 Tools::file_get_contents('http://www.prestashop.com/ajax/controller.php?'.$params);
             }
@@ -195,7 +195,7 @@ class InstallControllerHttpConfigure extends InstallControllerHttp implements Ht
      */
     public function getTimezones()
     {
-        if (!is_null($this->cache_timezones)) {
+        if (null !== $this->cache_timezones) {
             return;
         }
 
@@ -210,6 +210,7 @@ class InstallControllerHttpConfigure extends InstallControllerHttp implements Ht
                 $timezones[] = (string)$timezone['name'];
             }
         }
+
         return $timezones;
     }
 
@@ -232,6 +233,7 @@ class InstallControllerHttpConfigure extends InstallControllerHttp implements Ht
                 $timezones[(string)$relation['iso']] = (string)$relation['zone'];
             }
         }
+
         return isset($timezones[$iso]) ? $timezones[$iso] : '';
     }
 
@@ -316,6 +318,6 @@ class InstallControllerHttpConfigure extends InstallControllerHttp implements Ht
             return;
         }
 
-        return '<span class="result aligned errorTxt">'.$this->errors[$field].'</span>';
+        return '<span class="result aligned errorTxt">' . Tools::htmlentitiesUTF8($this->errors[$field]) . '</span>';
     }
 }

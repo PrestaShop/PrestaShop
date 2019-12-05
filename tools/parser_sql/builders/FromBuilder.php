@@ -53,19 +53,21 @@ require_once dirname(__FILE__) . '/SubQueryBuilder.php';
  *  
  */
 class FromBuilder {
-
     protected function buildTable($parsed, $key) {
         $builder = new TableBuilder();
+
         return $builder->build($parsed, $key);
     }
 
     protected function buildTableExpression($parsed, $key) {
         $builder = new TableExpressionBuilder();
+
         return $builder->build($parsed, $key);
     }
 
     protected function buildSubQuery($parsed, $key) {
         $builder = new SubQueryBuilder();
+
         return $builder->build($parsed, $key);
     }
 
@@ -75,13 +77,13 @@ class FromBuilder {
             $len = strlen($sql);
             $sql .= $this->buildTable($v, $k);
             $sql .= $this->buildTableExpression($v, $k);
-            $sql .= $this->buildSubquery($v, $k);
+            $sql .= $this->buildSubQuery($v, $k);
 
             if ($len == strlen($sql)) {
                 throw new UnableToCreateSQLException('FROM', $k, $v, 'expr_type');
             }
         }
+
         return "FROM " . $sql;
     }
 }
-?>

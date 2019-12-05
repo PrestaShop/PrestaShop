@@ -1,5 +1,5 @@
 /**
- * 2007-2017 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -15,14 +15,13 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-import $ from 'jquery';
 import productHeader from './product-header';
 import productSearchAutocomplete from './product-search-autocomplete';
 import categoryTree from './category-tree';
@@ -30,6 +29,9 @@ import attributes from './attributes';
 import bulkCombination from './product-bulk-combinations';
 import nestedCategory from './nested-categories';
 import combination from './combination';
+import Serp from '../app/utils/serp/index';
+
+const $ = window.$;
 
 $(() => {
   productHeader();
@@ -40,13 +42,26 @@ $(() => {
   bulkCombination().init();
   nestedCategory().init();
 
+  new Serp(
+    {
+      container: '#serp-app',
+      defaultTitle: '.serp-default-title:input',
+      watchedTitle: '.serp-watched-title:input',
+      defaultDescription: '.serp-default-description',
+      watchedDescription: '.serp-watched-description',
+      watchedMetaUrl: '.serp-watched-url:input',
+    },
+    $('#product_form_preview_btn').data('seo-url')
+  );
+
   // This is the only script for the module page so there is no specific file for it.
-  $('.modules-list-select').on("change", (e) => {
+  $('.modules-list-select').on('change', (e) => {
     $('.module-render-container').hide();
     $(`.${e.target.value}`).show();
   });
-  $('.modules-list-button').on("click", (e) => {
-    let target = $(e.target).data('target');
+
+  $('.modules-list-button').on('click', (e) => {
+    const target = $(e.target).data('target');
     $('.module-selection').show();
     $('.modules-list-select').val(target).trigger('change');
     return false;
