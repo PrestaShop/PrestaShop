@@ -36,6 +36,15 @@ module.exports = {
       quantity: 1500,
       status: true,
     },
+    demo_8: {
+      id: 16,
+      name: 'Mountain fox notebook',
+      reference: 'demo_18',
+      category: 'Stationery',
+      price: 15.48,
+      quantity: 1200,
+      status: true,
+    },
     demo_14: {
       id: 19,
       name: 'Customizable mug',
