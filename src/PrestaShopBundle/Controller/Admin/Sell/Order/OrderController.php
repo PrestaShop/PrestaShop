@@ -520,6 +520,8 @@ class OrderController extends FrameworkBundleAdminController
     }
 
     /**
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute="admin_orders_index")
+     *
      * @param int $orderId
      * @param int $orderDetailId
      * @param Request $request
@@ -919,6 +921,8 @@ class OrderController extends FrameworkBundleAdminController
     }
 
     /**
+     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute="admin_orders_index")
+     *
      * @param int $orderId
      * @param int $orderDetailId
      *
@@ -940,6 +944,13 @@ class OrderController extends FrameworkBundleAdminController
         }
     }
 
+    /**
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", redirectRoute="admin_orders_index")
+     *
+     * @param int $orderId
+     *
+     * @return JsonResponse
+     */
     public function getPricesAction(int $orderId): JsonResponse
     {
         /** @var OrderForViewing $orderForViewing */
@@ -955,6 +966,8 @@ class OrderController extends FrameworkBundleAdminController
 
     /**
      * Returns products for given order
+     *
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", redirectRoute="admin_orders_index")
      *
      * @param int $orderId
      * @param Request $request
