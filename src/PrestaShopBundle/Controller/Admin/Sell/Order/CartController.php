@@ -43,7 +43,6 @@ use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartInformation;
-use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetProductQuantityInCart;
 use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleValidityException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\QuantityAction;
@@ -154,7 +153,7 @@ class CartController extends FrameworkBundleAdminController
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
 
-            return $this->redirectToRoute('admin_carts_index');
+            return $this->redirect($this->getAdminLink('AdminCarts', [], true));
         }
 
         $kpiRowFactory = $this->get('prestashop.core.kpi_row.factory.cart');
@@ -168,6 +167,9 @@ class CartController extends FrameworkBundleAdminController
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'cartKpi' => $kpiRowFactory->build(),
+            'createOrderFromCartLink' => $this->generateUrl('admin_orders_create', [
+                'cartId' => $cartId,
+            ]),
         ]);
     }
 
@@ -275,17 +277,15 @@ class CartController extends FrameworkBundleAdminController
      */
     public function editAddressesAction(int $cartId, Request $request): JsonResponse
     {
+        $invoiceAddressId = $request->request->getInt('invoiceAddressId');
+        $deliveryAddressId = $request->request->getInt('deliveryAddressId');
+
         try {
-            $updateAddressCommand = new UpdateCartAddressesCommand($cartId);
-            if ($deliveryAddressId = $request->request->getInt('deliveryAddressId')) {
-                $updateAddressCommand->setNewDeliveryAddressId($deliveryAddressId);
-            }
-
-            if ($invoiceAddressId = $request->request->getInt('invoiceAddressId')) {
-                $updateAddressCommand->setNewInvoiceAddressId($invoiceAddressId);
-            }
-
-            $this->getCommandBus()->handle($updateAddressCommand);
+            $this->getCommandBus()->handle(new UpdateCartAddressesCommand(
+                $cartId,
+                $deliveryAddressId,
+                $invoiceAddressId
+            ));
 
             return $this->json($this->getCartInfo($cartId));
         } catch (Exception $e) {
@@ -550,16 +550,6 @@ class CartController extends FrameworkBundleAdminController
     public function editProductQuantityAction(Request $request, int $cartId, int $productId)
     {
         try {
-            $combinationId = $request->request->getInt('productAttributeId');
-            $customizationId = $request->request->getInt('customizationId');
-
-            $previousQty = $this->getQueryBus()->handle(new GetProductQuantityInCart(
-                $cartId,
-                $productId,
-                $combinationId ? $combinationId : null,
-                $customizationId ? $customizationId : null
-            ));
-
             $newQty = $request->request->getInt('newQty');
 
             $this->getCommandBus()->handle(new UpdateProductQuantityInCartCommand(
@@ -671,7 +661,7 @@ class CartController extends FrameworkBundleAdminController
             foreach ($fileSizesByInputName as $name => $size) {
                 if (!isset($fileCustomizations[$name])) {
                     throw new FileUploadException(
-                        'Some files were possible not uploaded due to post_max_size limit',
+                        'Some files were possibly not uploaded due to post_max_size limit',
                         UPLOAD_ERR_INI_SIZE
                     );
                 }

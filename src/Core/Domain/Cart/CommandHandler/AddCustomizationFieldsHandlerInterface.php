@@ -37,7 +37,7 @@ interface AddCustomizationFieldsHandlerInterface
     /**
      * @param AddCustomizationFieldsCommand $command
      *
-     * @return CustomizationId customizationId
+     * @return CustomizationId|null customizationId
      */
-    public function handle(AddCustomizationFieldsCommand $command): CustomizationId;
+    public function handle(AddCustomizationFieldsCommand $command): ?CustomizationId;
 }

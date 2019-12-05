@@ -31,7 +31,6 @@ import eventMap from '@pages/order/create/event-map';
 import Router from '@components/router';
 import SummaryRenderer from '@pages/order/create/summary-renderer';
 import ShippingRenderer from '@pages/order/create/shipping-renderer';
-import CreateOrderPage from '@pages/order/create/create-order-page';
 
 const $ = window.$;
 
@@ -131,12 +130,11 @@ export default class CartRuleManager {
       this.activeSearchRequest.abort();
     }
 
-    const $searchRequest = $.get(this.router.generate('admin_cart_rules_search'), {
+    this.activeSearchRequest = $.get(this.router.generate('admin_cart_rules_search'), {
       search_phrase: searchPhrase,
     });
-    this.activeSearchRequest = $searchRequest;
 
-    $searchRequest.then((cartRules) => {
+    this.activeSearchRequest.then((cartRules) => {
       EventEmitter.emit(eventMap.cartRuleSearched, cartRules);
     }).catch((e) => {
       if (e.statusText === 'abort') {
