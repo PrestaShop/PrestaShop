@@ -1446,9 +1446,9 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
                 throw new PrestaShopException('Validation function not found. ' . $data['validate']);
             }
 
-            $value = Tools::getValue($field);
+            $value = Tools::getValue($field, null);
 
-            if (empty($value)) {
+            if ($value === null) {
                 $errors[$field] = $this->trans('The field %s is required.', array(self::displayFieldName($field, get_class($this), $htmlentities)), 'Admin.Notifications.Error');
             }
         }
