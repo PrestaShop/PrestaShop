@@ -1,27 +1,31 @@
 module.exports = [
-   {
-    name:'BO',
-    urlPrefix: 'URL_BO', //replaced
+  {
+    name: 'BO',
+    urlPrefix: 'URL_BO', // replaced
     description: 'Parcours du Back Office',
     urls: [
       {name: 'BO_login', url: 'index.php?controller=AdminLogin'},
-      {name: 'BO_dashboard', url: 'index.php?controller=AdminLogin', customAction: async function({page, LOGININFOS}) {
+      {
+        name: 'BO_dashboard',
+        url: 'index.php?controller=AdminLogin',
+        async customAction({page, LOGININFOS}) {
           await page.type('#email', LOGININFOS.admin.login);
           await page.type('#passwd', LOGININFOS.admin.password);
           await Promise.all([
             page.click('#submit_login'),
-            page.waitForNavigation({waitUntil: 'networkidle0'})
+            page.waitForNavigation({waitUntil: 'networkidle0'}),
           ]);
 
           page.evaluate(async () => {
-            const block = document.querySelector("button.onboarding-button-shut-down");
+            const block = document.querySelector('button.onboarding-button-shut-down');
             if (block) {
               await page.click('button.onboarding-button-shut-down');
               await page.waitForSelector('a.onboarding-button-stop', {visible: true});
               await page.click('a.onboarding-button-stop');
             }
           });
-        }},
+        },
+      },
       {name: 'BO_orders', url: 'index.php?controller=AdminOrders'},
       {name: 'BO_add_orders', url: 'index.php?controller=AdminOrders&addorder'},
       {name: 'BO_invoices', url: 'index.php/sell/orders/invoices/'},
@@ -143,7 +147,7 @@ module.exports = [
       {name: 'BO_add_query', url: 'index.php/configure/advanced/sql-requests/new'},
       {name: 'BO_webservice', url: 'index.php/configure/advanced/webservice-keys/'},
       {name: 'BO_add_webservice_key', url: 'index.php/configure/advanced/webservice-keys/new'},
-    ]
+    ],
   },
   {
     name: 'FO',
