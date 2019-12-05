@@ -104,11 +104,14 @@ class PatternTransformer
 
         if (preg_match("/^¤[ \u{a0}].+/", $pattern)) {
             return self::TYPE_LEFT_SYMBOL_WITH_SPACE;
-        } elseif (preg_match('/^¤.+/', $pattern)) {
+        }
+        if (preg_match('/^¤.+/', $pattern)) {
             return self::TYPE_LEFT_SYMBOL_WITHOUT_SPACE;
-        } elseif (preg_match("/.[ \u{a0}]+¤\$/", $pattern)) {
+        }
+        if (preg_match("/.[ \u{a0}]+¤\$/", $pattern)) {
             return self::TYPE_RIGHT_SYMBOL_WITH_SPACE;
-        } elseif (preg_match('/.+¤$/', $pattern)) {
+        }
+        if (preg_match('/.+¤$/', $pattern)) {
             return self::TYPE_RIGHT_SYMBOL_WITHOUT_SPACE;
         }
 
