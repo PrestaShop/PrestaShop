@@ -30,16 +30,23 @@
 function ps_1770_update_tabs()
 {
     include_once 'add_new_tab.php';
-    include_once 'move_tab.php';
     include_once 'copy_tab_rights.php';
 
     add_new_tab_17('AdminParentMailTheme', 'en:Email Themes', 0, false, 'AdminParentThemes');
     Db::getInstance()->execute(
-        'UPDATE `'._DB_PREFIX_.'tab` SET `active`= 1, `enabled`= 1, `position`= 2 WHERE `class_name` = "AdminParentMailTheme"'
+        'UPDATE `' . _DB_PREFIX_ . 'tab` SET `active`= 1, `enabled`= 1, `position`= 2 WHERE `class_name` = "AdminParentMailTheme"'
     );
-    move_tab('AdminMailTheme', 'AdminParentMailTheme');
+
+    // Move AdminMailTheme's parent from AdminMailThemeParent to AdminParentMailTheme
+    $toParentTabId = Db::getInstance()->getValue(
+        'SELECT id_tab FROM `' . _DB_PREFIX_ . 'tab` WHERE `class_name` = "AdminParentMailTheme"'
+    );
+    Db::getInstance()->execute(
+        'UPDATE `' . _DB_PREFIX_ . 'tab` SET `id_parent` = ' . $toParentTabId . ' WHERE class_name = "AdminMailTheme"'
+    );
+
     copy_tab_rights('AdminMailTheme', 'AdminParentMailTheme');
     Db::getInstance()->execute(
-        'DELETE FROM `'._DB_PREFIX_.'tab` WHERE `class_name` = "AdminMailThemeParent"'
+        'DELETE FROM `' . _DB_PREFIX_ . 'tab` WHERE `class_name` = "AdminMailThemeParent"'
     );
 }
