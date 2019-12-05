@@ -108,19 +108,25 @@ export default class OrderProductRenderer {
   }
 
   paginate(orderId, numPage, results) {
+    this.paginateUpdateControls(numPage);
+    // Remove all rows...
+    $(OrderViewPageMap.productsTable).find('tr[id^="orderProduct_"]').remove();
+    // ... and recreate them
+    results.products.forEach(result => this.paginateRowCreate(result, orderId));
+  }
+
+  paginateUpdateControls(numPage) {
     const totalPage = $(OrderViewPageMap.productsTablePagination).find('li.page-item').length - 2;
     $(OrderViewPageMap.productsTablePagination).find('.active').removeClass('active');
     $(OrderViewPageMap.productsTablePagination).find(`li:has(> [data-page="${numPage}"])`).addClass('active');
     $(OrderViewPageMap.productsTablePaginationPrev).removeClass('disabled');
-    if (numPage == 1) {
+    if (numPage === 1) {
       $(OrderViewPageMap.productsTablePaginationPrev).addClass('disabled');
     }
     $(OrderViewPageMap.productsTablePaginationNext).removeClass('disabled');
-    if (numPage == totalPage) {
+    if (numPage === totalPage) {
       $(OrderViewPageMap.productsTablePaginationNext).addClass('disabled');
     }
-    $(OrderViewPageMap.productsTable).find('tr[id^="orderProduct_"]').remove();
-    results.products.forEach(result => this.paginateRowCreate(result, orderId));
   }
 
   paginateRowCreate(result, orderId) {
@@ -137,7 +143,7 @@ export default class OrderProductRenderer {
     if (result.supplierReference) {
       $productRow.find('td.cellProductName p.productSupplierReference').append(result.supplierReference);
     } else {
-      $productRow.find('td.cellProductName p:nth-child(3)').remove();
+      $productRow.find('td.cellProductName p.productSupplierReference').remove();
     }
     if (result.reference) {
       $productRow.find('td.cellProductName p.productReference').append(result.reference);
@@ -155,15 +161,15 @@ export default class OrderProductRenderer {
     $productRow.find('td.cellProductAvailableQuantity').html(result.availableQuantity);
     $productRow.find('td.cellProductTotalPrice').html(result.totalPrice);
     if (!result.delivered) {
-      $productRow.find('td.cellProductActions a.js-order-product-edit-btn i')
-        .attr('data-order-detail-id', result.orderDetailId)
-        .attr('data-product-quantity', result.quantity)
-        .attr('data-product-price-tax-incl', result.unitPriceTaxInclRaw)
-        .attr('data-product-price-tax-excl', result.unitPriceTaxExclRaw)
-        .attr('data-tax-rate', result.taxRate);
-      $productRow.find('td.cellProductActions a.js-order-product-delete-btn')
-        .attr('data-order-id', orderId)
-        .attr('data-order-detail-id', result.orderDetailId);
+      $productRow.find('td.cellProductActions .js-order-product-edit-btn i')
+        .data('orderDetailId', result.orderDetailId)
+        .data('productQuantity', result.quantity)
+        .data('productPriceTaxIncl', result.unitPriceTaxInclRaw)
+        .data('productPriceTaxExcl', result.unitPriceTaxExclRaw)
+        .data('taxRate', result.taxRate);
+      $productRow.find('td.cellProductActions .js-order-product-delete-btn')
+        .data('orderId', orderId)
+        .data('orderDetailId', result.orderDetailId);
     } else {
       $productRow.find('td.cellProductActions').remove();
     }

@@ -83,10 +83,10 @@ export default class OrderProductAdd {
   }
 
   setProduct(product) {
-    this.productIdInput.val(product.product_id).trigger('change');
-    this.priceTaxExcludedInput.val(product.price_tax_excl);
-    this.priceTaxIncludedInput.val(product.price_tax_incl);
-    this.taxRateInput.val(product.tax_rate);
+    this.productIdInput.val(product.productId).trigger('change');
+    this.priceTaxExcludedInput.val(product.priceTaxExcl);
+    this.priceTaxIncludedInput.val(product.priceTaxIncl);
+    this.taxRateInput.val(product.taxRate);
     this.available = product.stock;
     this.quantityInput.val(1);
     this.quantityInput.trigger('change');
@@ -96,7 +96,7 @@ export default class OrderProductAdd {
   setCombinations(combinations) {
     this.combinationsSelect.empty();
     Object.entries(combinations).forEach((val) => {
-      this.combinationsSelect.append(`<option value="${val[1].attribute_combination_id}" data-price-tax-excluded="${val[1].price_tax_excluded}" data-price-tax-included="${val[1].price_tax_included}" data-stock="${val[1].stock}">${val[1].attribute}</option>`);
+      this.combinationsSelect.append(`<option value="${val[1].attributeCombinationId}" data-price-tax-excluded="${val[1].priceTaxExcluded}" data-price-tax-included="${val[1].priceTaxIncluded}" data-stock="${val[1].stock}">${val[1].attribute}</option>`);
     });
     this.combinationsBlock.toggleClass('d-none', Object.keys(combinations).length === 0);
   }
