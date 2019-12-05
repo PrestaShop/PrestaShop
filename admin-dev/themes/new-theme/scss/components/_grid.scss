@@ -157,7 +157,7 @@ table .column-filters td:last-child .grid-reset-button {
           &.choice-type {
             @mixin display-dropdown-arrow() {
               &::after {
-                visibility: visible;
+                display: inline-block;
               }
             }
 
@@ -175,7 +175,7 @@ table .column-filters td:last-child .grid-reset-button {
                 }
 
                 &::after {
-                  visibility: hidden;
+                  display: none;
                 }
 
                 &:hover {

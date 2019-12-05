@@ -17,6 +17,7 @@ module.exports = class CommonPage {
    * @return textContent
    */
   async getTextContent(selector) {
+    await this.page.waitForSelector(selector, {visible: true});
     const textContent = await this.page.$eval(selector, el => el.textContent);
     return textContent.replace(/\s+/g, ' ').trim();
   }
@@ -231,5 +232,26 @@ module.exports = class CommonPage {
    */
   async goToPreviousPage(waitUntil = 'networkidle0') {
     await this.page.goBack({waitUntil});
+  }
+
+  /**
+   * c
+   * @param selector
+   * @return {Promise<boolean>}
+   */
+  async isCheckboxSelected(selector) {
+    return this.page.$eval(selector, el => el.checked);
+  }
+
+  /**
+   * Select, unselect checkbox
+   * @param checkboxSelector, selector of checkbox
+   * @param valueWanted, true if we want to select checkBox, else otherwise
+   * @return {Promise<void>}
+   */
+  async changeCheckboxValue(checkboxSelector, valueWanted = true) {
+    if (valueWanted !== (await this.isCheckboxSelected(checkboxSelector))) {
+      await this.page.click(checkboxSelector);
+    }
   }
 };

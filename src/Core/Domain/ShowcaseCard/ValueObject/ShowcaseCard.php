@@ -65,6 +65,11 @@ class ShowcaseCard
     const ATTRIBUTES_CARD = 'attributes_card';
 
     /**
+     * Card shown in Sell -> Catalog -> Monitoring
+     */
+    const MONITORING_CARD = 'monitoring_card';
+
+    /**
      * List of supported card names
      */
     const SUPPORTED_NAMES = [
@@ -74,6 +79,7 @@ class ShowcaseCard
         self::EMPLOYEES_CARD => true,
         self::CMS_PAGES_CARD => true,
         self::ATTRIBUTES_CARD => true,
+        self::MONITORING_CARD => true,
     ];
 
     /**

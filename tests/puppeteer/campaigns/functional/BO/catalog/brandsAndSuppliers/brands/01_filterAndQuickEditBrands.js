@@ -8,7 +8,7 @@ const {demoBrands} = require('@data/demo/brands');
 const BOBasePage = require('@pages/BO/BObasePage');
 const LoginPage = require('@pages/BO/login');
 const DashboardPage = require('@pages/BO/dashboard');
-const BrandsPage = require('@pages/BO/brands');
+const BrandsPage = require('@pages/BO/catalog/brands');
 
 let browser;
 let page;
@@ -41,7 +41,7 @@ describe('Filter And Quick Edit brands', async () => {
   // GO to Brands Page
   it('should go to brands page', async function () {
     await this.pageObjects.boBasePage.goToSubMenu(
-      this.pageObjects.boBasePage.productsParentLink,
+      this.pageObjects.boBasePage.catalogParentLink,
       this.pageObjects.boBasePage.brandsAndSuppliersLink,
     );
     await this.pageObjects.boBasePage.closeSfToolBar();
@@ -50,132 +50,77 @@ describe('Filter And Quick Edit brands', async () => {
   });
 
   it('should reset all filters and get Number of brands in BO', async function () {
-    numberOfBrands = await this.pageObjects.brandsPage.resetFilters('manufacturer');
+    numberOfBrands = await this.pageObjects.brandsPage.resetAndGetNumberOfLines('manufacturer');
     await expect(numberOfBrands).to.be.above(0);
   });
 
   // 1 : Filter brands
   describe('Filter brands', async () => {
-    it('should filter by Id', async function () {
-      await this.pageObjects.brandsPage.filterBrands('input', 'id_manufacturer', demoBrands.first.id);
-      const numberOfBrandsAfterFilter = await this.pageObjects.brandsPage.getNumberFromText(
-        this.pageObjects.brandsPage.gridHeaderTitle.replace('%TABLE', 'manufacturer'),
-      );
-      await expect(numberOfBrandsAfterFilter).to.be.at.most(numberOfBrands);
-      const textColumn = await this.pageObjects.brandsPage.getTextContent(
-        this.pageObjects.brandsPage.tableColumn
-          .replace('%TABLE', 'manufacturer')
-          .replace('%ROW', 1)
-          .replace('%COLUMN', 'id_manufacturer'),
-      );
-      await expect(textColumn).to.contains(demoBrands.first.id);
-    });
+    const tests = [
+      {args: {filterType: 'input', filterBy: 'id_manufacturer', filterValue: demoBrands.first.id}},
+      {args: {filterType: 'input', filterBy: 'name', filterValue: demoBrands.first.name}},
+      {args: {filterType: 'select', filterBy: 'active', filterValue: demoBrands.first.enabled}, expected: 'check'},
+    ];
+    tests.forEach((test) => {
+      it(`should filter by ${test.args.filterBy} '${test.args.filterValue}'`, async function () {
+        if (test.args.filterBy === 'active') {
+          await this.pageObjects.brandsPage.filterBrandsEnabled(test.args.filterValue);
+        } else {
+          await this.pageObjects.brandsPage.filterBrands(
+            test.args.filterType,
+            test.args.filterBy,
+            test.args.filterValue,
+          );
+        }
+        const numberOfBrandsAfterFilter = await this.pageObjects.brandsPage.getNumberOfElementInGrid('manufacturer');
+        await expect(numberOfBrandsAfterFilter).to.be.at.most(numberOfBrands);
+        for (let i = 1; i <= numberOfBrandsAfterFilter; i++) {
+          const textColumn = await this.pageObjects.brandsPage.getTextColumnFromTableBrands(i, test.args.filterBy);
+          if (test.expected !== undefined) {
+            await expect(textColumn).to.contains(test.expected);
+          } else {
+            await expect(textColumn).to.contains(test.args.filterValue);
+          }
+        }
+      });
 
-    it('should reset all filters', async function () {
-      const numberOfBrandsAfterReset = await this.pageObjects.brandsPage.resetFilters('manufacturer');
-      await expect(numberOfBrandsAfterReset).to.equal(numberOfBrands);
-    });
-
-    it('should filter by brand name', async function () {
-      await this.pageObjects.brandsPage.filterBrands('input', 'name', demoBrands.first.name);
-      const numberOfBrandsAfterFilter = await this.pageObjects.brandsPage.getNumberFromText(
-        this.pageObjects.brandsPage.gridHeaderTitle.replace('%TABLE', 'manufacturer'),
-      );
-      await expect(numberOfBrandsAfterFilter).to.be.at.most(numberOfBrands);
-      const textColumn = await this.pageObjects.brandsPage.getTextContent(
-        this.pageObjects.brandsPage.tableColumn
-          .replace('%TABLE', 'manufacturer')
-          .replace('%ROW', 1)
-          .replace('%COLUMN', 'name'),
-      );
-      await expect(textColumn).to.contains(demoBrands.first.name);
-    });
-
-    it('should reset all filters', async function () {
-      const numberOfBrandsAfterReset = await this.pageObjects.brandsPage.resetFilters('manufacturer');
-      await expect(numberOfBrandsAfterReset).to.equal(numberOfBrands);
-    });
-
-    it('should filter by Enabled \'Yes\'', async function () {
-      await this.pageObjects.brandsPage.filterBrands(
-        'select',
-        'active',
-        demoBrands.first.enabled ? 'Yes' : 'No',
-      );
-      const numberOfBrandsAfterFilter = await this.pageObjects.brandsPage.getNumberFromText(
-        this.pageObjects.brandsPage.gridHeaderTitle.replace('%TABLE', 'manufacturer'),
-      );
-      await expect(numberOfBrandsAfterFilter).to.be.at.most(numberOfBrands);
-      /* eslint-disable no-await-in-loop */
-      for (let i = 1; i <= numberOfBrandsAfterFilter; i++) {
-        const textColumn = await this.pageObjects.brandsPage.getTextContent(
-          this.pageObjects.brandsPage.tableColumn
-            .replace('%TABLE', 'manufacturer')
-            .replace('%ROW', 1)
-            .replace('%COLUMN', 'active'),
-        );
-        await expect(textColumn).to.contains('check');
-      }
-      /* eslint-enable no-await-in-loop */
-    });
-
-    it('should reset all filters', async function () {
-      const numberOfBrandsAfterReset = await this.pageObjects.brandsPage.resetFilters('manufacturer');
-      await expect(numberOfBrandsAfterReset).to.equal(numberOfBrands);
+      it('should reset all filters', async function () {
+        const numberOfBrandsAfterReset = await this.pageObjects.brandsPage.resetAndGetNumberOfLines('manufacturer');
+        await expect(numberOfBrandsAfterReset).to.equal(numberOfBrands);
+      });
     });
   });
   // 2 : Edit brands in list
   describe('Quick Edit brands', async () => {
     it('should filter by brand name', async function () {
       await this.pageObjects.brandsPage.filterBrands('input', 'name', demoBrands.first.name);
-      const numberOfBrandsAfterFilter = await this.pageObjects.brandsPage.getNumberFromText(
-        this.pageObjects.brandsPage.gridHeaderTitle.replace('%TABLE', 'manufacturer'),
-      );
+      const numberOfBrandsAfterFilter = await this.pageObjects.brandsPage.getNumberOfElementInGrid('manufacturer');
       await expect(numberOfBrandsAfterFilter).to.be.at.most(numberOfBrands);
-      const textColumn = await this.pageObjects.brandsPage.getTextContent(
-        this.pageObjects.brandsPage.tableColumn
-          .replace('%TABLE', 'manufacturer')
-          .replace('%ROW', 1)
-          .replace('%COLUMN', 'name'),
-      );
+      const textColumn = await this.pageObjects.brandsPage.getTextColumnFromTableBrands(1, 'name');
       await expect(textColumn).to.contains(demoBrands.first.name);
     });
 
-    it('should disable first brand', async function () {
-      const isActionPerformed = await this.pageObjects.brandsPage.updateEnabledValue(
-        '1',
-        false,
-      );
-      if (isActionPerformed) {
-        const resultMessage = await this.pageObjects.brandsPage.getTextContent(
-          this.pageObjects.brandsPage.alertSuccessBlockParagraph,
-        );
-        await expect(resultMessage).to.contains(this.pageObjects.brandsPage.successfulUpdateStatusMessage);
-      }
-      const isStatusChanged = await this.pageObjects.brandsPage.elementVisible(
-        this.pageObjects.brandsPage.brandsEnableColumnNotValidIcon.replace('%ROW', 1),
-        100,
-      );
-      await expect(isStatusChanged).to.be.true;
-    });
+    const tests = [
+      {args: {action: 'disable', enabledValue: false}},
+      {args: {action: 'enable', enabledValue: true}},
+    ];
 
-    it('should enable first brand', async function () {
-      const isActionPerformed = await this.pageObjects.brandsPage.updateEnabledValue('1', true);
-      if (isActionPerformed) {
-        const resultMessage = await this.pageObjects.brandsPage.getTextContent(
-          this.pageObjects.brandsPage.alertSuccessBlockParagraph,
-        );
-        await expect(resultMessage).to.contains(this.pageObjects.brandsPage.successfulUpdateStatusMessage);
-      }
-      const isStatusChanged = await this.pageObjects.brandsPage.elementVisible(
-        this.pageObjects.brandsPage.brandsEnableColumnValidIcon.replace('%ROW', 1),
-        100,
-      );
-      await expect(isStatusChanged).to.be.true;
+    tests.forEach((test) => {
+      it(`should ${test.args.action} first brand`, async function () {
+        const isActionPerformed = await this.pageObjects.brandsPage.updateEnabledValue(1, test.args.enabledValue);
+        if (isActionPerformed) {
+          const resultMessage = await this.pageObjects.brandsPage.getTextContent(
+            this.pageObjects.brandsPage.alertSuccessBlockParagraph,
+          );
+          await expect(resultMessage).to.contains(this.pageObjects.brandsPage.successfulUpdateStatusMessage);
+        }
+        const isStatusChanged = await this.pageObjects.brandsPage.getToggleColumnValue(1);
+        await expect(isStatusChanged).to.be.equal(test.args.enabledValue);
+      });
     });
 
     it('should reset all filters', async function () {
-      const numberOfBrandsAfterReset = await this.pageObjects.brandsPage.resetFilters('manufacturer');
+      const numberOfBrandsAfterReset = await this.pageObjects.brandsPage.resetAndGetNumberOfLines('manufacturer');
       await expect(numberOfBrandsAfterReset).to.equal(numberOfBrands);
     });
   });

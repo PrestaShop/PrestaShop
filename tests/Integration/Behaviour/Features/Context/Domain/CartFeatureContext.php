@@ -44,7 +44,7 @@ use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 class CartFeatureContext extends AbstractDomainFeatureContext
 {
     /**
-     * @given the current currency is :currencyIsoCode
+     * @Given the current currency is :currencyIsoCode
      */
     public function addCurrencyToContext($currencyIsoCode)
     {
@@ -63,6 +63,8 @@ class CartFeatureContext extends AbstractDomainFeatureContext
      */
     public function createEmptyCartForCustomer($cartReference, $customerReference)
     {
+        // Clear static cache each time you create a cart
+        Cart::resetStaticCache();
         $customer = SharedStorage::getStorage()->get($customerReference);
 
         /** @var CartId $cartId */

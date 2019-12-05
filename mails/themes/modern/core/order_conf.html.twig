@@ -50,7 +50,7 @@
                                     <tr>
                                       <td align="left" style="font-size:0px;padding:10px 25px;padding-top:0px;padding-bottom:25px;word-break:break-word;">
                                         <div style="font-family:Open sans, arial, sans-serif;font-size:16px;line-height:25px;text-align:left;color:#363A41;">
-                                          {{ 'Thank you for shopping on [1]{shop_name}[/1]!'|trans({'[1]': '<span class="label">', '[/1]': '</span>'}, 'Emails.Body', locale)|raw }}
+                                          {{ 'Thank you for your order on [1]{shop_name}[/1]!'|trans({'[1]': '<span class="label">', '[/1]': '</span>'}, 'Emails.Body', locale)|raw }}
                                         </div>
                                       </td>
                                     </tr>
@@ -379,7 +379,7 @@
                                   </tr>
                                   <tr class="order_summary">
                                     <td bgcolor="#FDFDFD" colspan="3" align="right">
-                                      {{ 'Total paid'|trans({}, 'Emails.Body', locale)|raw }}
+                                      {{ 'Total'|trans({}, 'Emails.Body', locale)|raw }}
                                     </td>
                                     <td bgcolor="#FDFDFD" colspan="3"> {total_paid} </td>
                                   </tr>

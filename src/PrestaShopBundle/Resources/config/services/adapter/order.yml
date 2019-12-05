@@ -115,6 +115,8 @@ services:
       - '@translator'
       - '@=service("prestashop.adapter.legacy.context").getContext().language.id'
       - "@prestashop.core.localization.locale.context_locale"
+      - '@=service("prestashop.adapter.legacy.context").getContext()'
+      - '@prestashop.adapter.data_provider.customer'
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderForViewing

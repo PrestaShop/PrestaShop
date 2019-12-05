@@ -25,6 +25,8 @@
 
 export default {
   orderPaymentDetailsBtn: '.js-payment-details-btn',
+  orderPaymentFormAmountInput: '#order_payment_amount',
+  viewOrderPaymentsBlock: '#view_order_payments_block',
   privateNoteToggleBtn: '.js-private-note-toggle-btn',
   privateNoteBlock: '.js-private-note-block',
   privateNoteInput: '#private_note_note',
@@ -42,4 +44,17 @@ export default {
   updateOrderStatusActionBtn: '#update_order_status_action_btn',
   updateOrderStatusActionInput: '#update_order_status_action_input',
   updateOrderStatusActionForm: '#update_order_status_action_form',
+  showOrderShippingUpdateModalBtn: '.js-update-shipping-btn',
+  updateOrderShippingTrackingNumberInput: '#update_order_shipping_tracking_number',
+  updateOrderShippingCurrentOrderCarrierIdInput: '#update_order_shipping_current_order_carrier_id',
+  updateCustomerAddressModal: '#updateCustomerAddressModal',
+  openOrderAddressUpdateModalBtn: '.js-update-customer-address-modal-btn',
+  updateOrderAddressTypeInput: '#change_order_address_address_type',
+  orderMessageNameSelect: '#order_message_order_message',
+  orderMessagesContainer: '.js-order-messages-container',
+  orderMessage: '#order_message_message',
+  orderMessageChangeWarning: '.js-message-change-warning',
+  allMessagesModal: '#view_all_messages_modal',
+  allMessagesList: '#all-messages-list',
+  openAllMessagesBtn: '.js-open-all-messages-btn',
 };

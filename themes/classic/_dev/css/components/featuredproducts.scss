@@ -161,3 +161,11 @@ $product-description-height: 70px;
     }
   }
 }
+
+@include media-breakpoint-down(md) {
+  .featured-products {
+    .products {
+      justify-content: center;
+    } 
+  }
+}

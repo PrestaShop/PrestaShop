@@ -26,15 +26,38 @@
  */
 class AdminLegacyLayoutControllerCore extends AdminController
 {
+    /** @var string */
     public $outPutHtml = '';
+    /** @var string[] */
     public $jsRouterMetadata;
+    /** @var array */
     protected $headerToolbarBtn = array();
+    /** @var string */
     protected $title;
+    /** @var bool */
     protected $showContentHeader = true;
+    /** @var string */
     protected $headerTabContent = '';
+    /** @var bool */
     protected $enableSidebar = false;
+    /** @var string */
     protected $helpLink;
+    /** @var bool */
+    protected $useRegularH1Structure;
 
+    /**
+     * @param string $controllerName
+     * @param string $title
+     * @param array $headerToolbarBtn
+     * @param string $displayType
+     * @param bool $showContentHeader
+     * @param string $headerTabContent
+     * @param bool $enableSidebar
+     * @param string $helpLink
+     * @param string[] $jsRouterMetadata array to provide base_url and security token for JS Router
+     * @param string $metaTitle
+     * @param bool $useRegularH1Structure allows complex <h1> structure if set to false
+     */
     public function __construct(
         $controllerName = '',
         $title = '',
@@ -44,7 +67,9 @@ class AdminLegacyLayoutControllerCore extends AdminController
         $headerTabContent = '',
         $enableSidebar = false,
         $helpLink = '',
-        $jsRouterMetadata = []
+        $jsRouterMetadata = [],
+        $metaTitle = '',
+        $useRegularH1Structure = true
     ) {
         // Compatibility with legacy behavior.
         // Some controllers can only be used in "All shops" context.
@@ -59,7 +84,7 @@ class AdminLegacyLayoutControllerCore extends AdminController
         parent::__construct($controllerName, 'new-theme');
 
         $this->title = $title;
-        $this->meta_title = $title;
+        $this->meta_title = ($metaTitle !== '') ? $metaTitle : $title;
         $this->display = $displayType;
         $this->bootstrap = true;
         $this->controller_name = $_GET['controller'] = $controllerName;
@@ -72,19 +97,32 @@ class AdminLegacyLayoutControllerCore extends AdminController
         $this->php_self = $controllerName;
         $this->className = 'LegacyLayout';
         $this->jsRouterMetadata = $jsRouterMetadata;
+        $this->useRegularH1Structure = $useRegularH1Structure;
     }
 
+    /**
+     * @param bool $isNewTheme
+     */
     public function setMedia($isNewTheme = false)
     {
         parent::setMedia(true);
     }
 
+    /**
+     * @param bool $disable
+     *
+     * @return bool
+     */
     public function viewAccess($disable = false)
     {
         return true;
     }
 
-    //always return true, cause of legacy redirect in layout
+    /**
+     * Always return true, cause of legacy redirect in layout
+     *
+     * @return bool
+     */
     public function checkAccess()
     {
         return true;
@@ -123,6 +161,8 @@ class AdminLegacyLayoutControllerCore extends AdminController
             ]),
             /* base_url and security token for js router. @since 1.7.7 */
             'js_router_metadata' => $this->jsRouterMetadata,
+            /* allow complex <h1> structure. @since 1.7.7 */
+            'use_regular_h1_structure' => $this->useRegularH1Structure,
         );
 
         if ($this->helpLink === false || !empty($this->helpLink)) {

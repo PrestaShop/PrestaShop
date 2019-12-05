@@ -15,15 +15,18 @@ module.exports = class BOBasePage extends CommonPage {
 
     // top navbar
     this.headerLogoImage = '#header_logo';
-    this.userProfileIcon = '#employee_infos';
+    this.userProfileIcon = '#employee_infos,#header_infos #header-employee-container';
     this.userProfileLogoutLink = 'a#header_logout';
     this.shopVersionBloc = '#shop_version';
     this.headerShopNameLink = '#header_shopname';
 
     // left navbar
     // SELL
+    // Orders
     this.ordersParentLink = 'li#subtab-AdminParentOrders';
     this.ordersLink = '#subtab-AdminOrders';
+    // Invoices
+    this.invoicesLink = '#subtab-AdminInvoices';
 
     // Catalog
     this.catalogParentLink = 'li#subtab-AdminCatalog';
@@ -33,15 +36,23 @@ module.exports = class BOBasePage extends CommonPage {
     this.categoriesLink = '#subtab-AdminCategories';
     // Brands And Suppliers
     this.brandsAndSuppliersLink = '#subtab-AdminParentManufacturers';
+    // Stocks
+    this.stocksLink = '#subtab-AdminStockManagement';
 
     // Customers
     this.customersParentLink = 'li#subtab-AdminParentCustomer';
     this.customersLink = '#subtab-AdminCustomers';
 
+    // Improve
     // Modules
     this.modulesParentLink = '#subtab-AdminParentModulesSf';
     this.moduleCatalogueLink = '#subtab-AdminParentModulesCatalog';
     this.moduleManagerLink = '#subtab-AdminModulesSf';
+
+    // Design
+    this.designParentLink = '#subtab-AdminParentThemes';
+    // Pages
+    this.pagesLink = '#subtab-AdminCmsContent';
 
     // International
     this.internationalParentLink = '#subtab-AdminInternational';
@@ -50,6 +61,11 @@ module.exports = class BOBasePage extends CommonPage {
     // Shop Parameters
     this.shopParametersParentLink = '#subtab-ShopParameters';
     this.shopParametersGeneralLink = '#subtab-AdminParentPreferences';
+
+    // Advanced Parameters
+    this.advancedParametersLink = '#subtab-AdminAdvancedParameters';
+    // Team
+    this.teamLink = '#subtab-AdminParentEmployees';
 
     // welcome module
     this.onboardingCloseButton = 'button.onboarding-button-shut-down';
@@ -62,6 +78,12 @@ module.exports = class BOBasePage extends CommonPage {
     // Alert Text
     this.alertSuccessBloc = 'div.alert.alert-success:not([style=\'display: none;\'])';
     this.alertSuccessBlockParagraph = `${this.alertSuccessBloc} div.alert-text p`;
+    this.alertTextBlock = '.alert-text';
+
+    // Alert Box
+    this.alertBoxBloc = 'div.alert-box';
+    this.alertBoxTextSpan = `${this.alertBoxBloc} p.alert-text span`;
+    this.alertBoxButtonClose = `${this.alertBoxBloc} button.close`;
 
     // Modal dialog
     this.modalDialog = '#confirmation_modal.show .modal-dialog';
@@ -99,11 +121,11 @@ module.exports = class BOBasePage extends CommonPage {
    * @returns {Promise<void>}
    */
   async logoutBO() {
-    await this.page.click(this.headerLogoImage);
-    await this.page.waitForSelector(this.userProfileIcon);
+    await this.clickAndWaitForNavigation(this.headerLogoImage);
+    await this.page.waitForSelector(this.userProfileIcon, {visible: true});
     await this.page.click(this.userProfileIcon);
-    await this.page.waitForSelector(this.userProfileLogoutLink);
-    await this.page.click(this.userProfileLogoutLink);
+    await this.page.waitForSelector(this.userProfileLogoutLink, {visible: true});
+    await this.clickAndWaitForNavigation(this.userProfileLogoutLink);
   }
 
   /**

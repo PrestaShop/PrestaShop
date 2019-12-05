@@ -61,7 +61,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                 unset($_GET['id_product_attribute']);
             } else {
                 //Only redirect to canonical (parent product without combination) when the requested combination is not valid
-                //In this case we are in a valid combination url and we must display it with redirection for SEO purpose
+                //In this case we are in a valid combination url and we must display it without redirection for SEO purpose
                 return;
             }
 
@@ -496,7 +496,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
 
         $id_currency = (int) $this->context->cookie->id_currency;
         $id_product = (int) $this->product->id;
-        $id_product_attribute = $this->getIdProductAttributeByRequestOrGroup();
+        $id_product_attribute = $this->getIdProductAttributeByGroupOrRequestOrDefault();
         $id_shop = $this->context->shop->id;
 
         $quantity_discounts = SpecificPrice::getQuantityDiscounts($id_product, $id_shop, $id_currency, $id_country, $id_group, $id_product_attribute, false, (int) $this->context->customer->id);
@@ -926,21 +926,25 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
     }
 
     /**
-     * Return id_product_attribute by id_product_attribute request parameter
-     * or by the group request parameter.
+     * Return id_product_attribute by id_product_attribute group parameter,
+     * or request parameter, or the default attribute as a fallback.
      *
      * @return int|null
      *
      * @throws PrestaShopException
      */
-    private function getIdProductAttributeByRequestOrGroup()
+    private function getIdProductAttributeByGroupOrRequestOrDefault()
     {
-        $requestedIdProductAttribute = (int) Tools::getValue('id_product_attribute');
+        $idProductAttribute = $this->getIdProductAttributeByGroup();
+        if (null === $idProductAttribute) {
+            $idProductAttribute = (int) Tools::getValue('id_product_attribute');
+        }
 
-        $groupIdProductAttribute = $this->getIdProductAttributeByGroup();
-        $requestedIdProductAttribute = null !== $groupIdProductAttribute ? $groupIdProductAttribute : $requestedIdProductAttribute;
+        if (0 === $idProductAttribute) {
+            $idProductAttribute = (int) Product::getDefaultAttribute($this->product->id);
+        }
 
-        return $this->tryToGetAvailableIdProductAttribute($requestedIdProductAttribute);
+        return $this->tryToGetAvailableIdProductAttribute($idProductAttribute);
     }
 
     /**
@@ -1011,7 +1015,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         $product['id_product'] = (int) $this->product->id;
         $product['out_of_stock'] = (int) $this->product->out_of_stock;
         $product['new'] = (int) $this->product->new;
-        $product['id_product_attribute'] = $this->getIdProductAttributeByRequestOrGroup();
+        $product['id_product_attribute'] = $this->getIdProductAttributeByGroupOrRequestOrDefault();
         $product['minimal_quantity'] = $this->getProductMinimalQuantity($product);
         $product['quantity_wanted'] = $this->getRequiredQuantity($product);
         $product['extraContent'] = $extraContentFinder->addParams(array('product' => $this->product))->present();
@@ -1274,7 +1278,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             return $title;
         }
 
-        $idProductAttribute = $this->getIdProductAttributeByRequestOrGroup();
+        $idProductAttribute = $this->getIdProductAttributeByGroupOrRequestOrDefault();
         if ($idProductAttribute) {
             $attributes = $this->product->getAttributeCombinationsById($idProductAttribute, $this->context->language->id);
             if (is_array($attributes) && count($attributes) > 0) {

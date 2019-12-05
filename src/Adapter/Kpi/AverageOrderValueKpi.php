@@ -45,8 +45,8 @@ final class AverageOrderValueKpi implements KpiInterface
 
         $helper = new HelperKpi();
         $helper->id = 'box-average-order';
-        $helper->icon = 'money';
-        $helper->color = 'color3';
+        $helper->icon = 'account_balance_wallet';
+        $helper->color = 'color1';
         $helper->title = $translator->trans('Average Order Value', [], 'Admin.Global');
         $helper->subtitle = $translator->trans('30 days', [], 'Admin.Global');
 

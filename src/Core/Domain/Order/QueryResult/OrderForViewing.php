@@ -137,15 +137,39 @@ class OrderForViewing
      */
     private $createdAt;
 
+    /**
+     * @var bool
+     */
+    private $isVirtual;
+
+    /**
+     * @var int
+     */
+    private $carrierId;
+
+    /**
+     * @var int
+     */
+    private $shopId;
+
+    /**
+     * @var int
+     */
+    private $invoiceManagementIsEnabled;
+
     public function __construct(
         int $orderId,
         int $currencyId,
+        int $carrierId,
+        int $shopId,
         string $reference,
+        bool $isVirtual,
         string $taxMethod,
         bool $isTaxIncluded,
         bool $isValid,
         bool $hasInvoice,
         bool $isDelivered,
+        bool $invoiceManagementIsEnabled,
         DateTimeImmutable $createdAt,
         OrderCustomerForViewing $customer,
         OrderShippingAddressForViewing $shippingAddress,
@@ -181,6 +205,10 @@ class OrderForViewing
         $this->hasInvoice = $hasInvoice;
         $this->discounts = $discounts;
         $this->createdAt = $createdAt;
+        $this->isVirtual = $isVirtual;
+        $this->carrierId = $carrierId;
+        $this->shopId = $shopId;
+        $this->invoiceManagementIsEnabled = $invoiceManagementIsEnabled;
     }
 
     /**
@@ -197,6 +225,22 @@ class OrderForViewing
     public function getCurrencyId(): int
     {
         return $this->currencyId;
+    }
+
+    /**
+     * @return int
+     */
+    public function getCarrierId(): int
+    {
+        return $this->carrierId;
+    }
+
+    /**
+     * @return int
+     */
+    public function getShopId(): int
+    {
+        return $this->shopId;
     }
 
     /**
@@ -349,5 +393,21 @@ class OrderForViewing
     public function getCreatedAt(): DateTimeImmutable
     {
         return $this->createdAt;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isVirtual(): bool
+    {
+        return $this->isVirtual;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isInvoiceManagementIsEnabled(): bool
+    {
+        return $this->invoiceManagementIsEnabled;
     }
 }

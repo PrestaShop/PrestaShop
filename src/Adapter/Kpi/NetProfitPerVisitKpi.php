@@ -45,8 +45,8 @@ final class NetProfitPerVisitKpi implements KpiInterface
 
         $helper = new HelperKpi();
         $helper->id = 'box-net-profit-visit';
-        $helper->icon = 'person';
-        $helper->color = 'color4';
+        $helper->icon = 'account_box';
+        $helper->color = 'color1';
         $helper->title = $translator->trans('Net Profit per Visit', [], 'Admin.Orderscustomers.Feature');
         $helper->subtitle = $translator->trans('30 days', [], 'Admin.Orderscustomers.Feature');
 

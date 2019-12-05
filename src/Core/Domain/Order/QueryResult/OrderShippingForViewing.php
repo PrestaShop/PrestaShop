@@ -49,15 +49,22 @@ class OrderShippingForViewing
     private $carrierModuleInfo;
 
     /**
+     * @var string|null
+     */
+    private $giftMessage;
+
+    /**
      * @param OrderCarrierForViewing[] $carriers
      * @param bool $isRecycledPackaging
      * @param bool $isGiftWrapping
+     * @param string|null $giftMessage
      * @param string|null $carrierModuleInfo
      */
     public function __construct(
         array $carriers,
         bool $isRecycledPackaging,
         bool $isGiftWrapping,
+        ?string $giftMessage,
         ?string $carrierModuleInfo
     ) {
         foreach ($carriers as $carrier) {
@@ -67,6 +74,7 @@ class OrderShippingForViewing
         $this->isRecycledPackaging = $isRecycledPackaging;
         $this->isGiftWrapping = $isGiftWrapping;
         $this->carrierModuleInfo = $carrierModuleInfo;
+        $this->giftMessage = $giftMessage;
     }
 
     /**
@@ -99,6 +107,14 @@ class OrderShippingForViewing
     public function getCarrierModuleInfo(): ?string
     {
         return $this->carrierModuleInfo;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getGiftMessage(): ?string
+    {
+        return $this->giftMessage;
     }
 
     /**

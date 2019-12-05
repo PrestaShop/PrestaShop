@@ -100,6 +100,11 @@ class EditManufacturerAddressCommand
     private $other;
 
     /**
+     * @var string|null
+     */
+    private $dni;
+
+    /**
      * @param int $addressId
      *
      * @throws AddressConstraintException
@@ -318,6 +323,22 @@ class EditManufacturerAddressCommand
     public function setOther($other)
     {
         $this->other = $other;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getDni()
+    {
+        return $this->dni;
+    }
+
+    /**
+     * @param string|null $dni
+     */
+    public function setDni($dni)
+    {
+        $this->dni = $dni;
     }
 
     /**

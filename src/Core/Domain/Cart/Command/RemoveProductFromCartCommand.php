@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Cart\Command;
 
+use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\CartId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
@@ -59,9 +60,15 @@ class RemoveProductFromCartCommand
      * @param int $productId
      * @param int|null $combinationId
      * @param int|null $customizationId
+     *
+     * @throws CartConstraintException
      */
-    public function __construct($cartId, $productId, $combinationId = null, $customizationId = null)
-    {
+    public function __construct(
+        int $cartId,
+        int $productId,
+        int $combinationId = null,
+        int $customizationId = null
+    ) {
         $this->cartId = new CartId($cartId);
         $this->productId = new ProductId($productId);
         $this->combinationId = $combinationId;

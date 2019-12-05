@@ -631,7 +631,7 @@
 				action: "searchProducts",
 				id_cart: id_cart,
 				id_customer: id_customer,
-				id_currency: id_currency,
+				id_currency: $('#id_currency option:selected').val(),
 				product_search: $('#product').val()},
 			success : function(res)
 			{

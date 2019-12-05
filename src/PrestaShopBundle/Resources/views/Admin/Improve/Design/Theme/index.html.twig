@@ -84,13 +84,14 @@
           <div class="card-body row">
 
             {% embed '@PrestaShop/Admin/Improve/Design/Theme/Blocks/Partials/theme_card.html.twig' with {
-              'themeName': currentlyUsedTheme.name,
+              'themeName': currentlyUsedTheme.get('display_name'),
               'themeVersion': currentlyUsedTheme.get('version'),
               'themeAuthor': currentlyUsedTheme.get('author.name'),
+              'themeAuthorUrl': theme.get('author.url'),
               'isActive': true
               } %}
               {% block image %}
-                <img src="{{ baseShopUrl }}{{ currentlyUsedTheme.get('preview') }}" alt="{{ currentlyUsedTheme.name }}">
+                <img src="{{ baseShopUrl }}{{ currentlyUsedTheme.get('preview') }}" alt="{{ currentlyUsedTheme.get('display_name')   }}">
               {% endblock %}
               {% block button_container %}
                 <button class="btn action-button">
@@ -103,13 +104,14 @@
             {% if notUsedThemes is not empty %}
               {% for theme in notUsedThemes %}
                 {% embed '@PrestaShop/Admin/Improve/Design/Theme/Blocks/Partials/theme_card.html.twig' with {
-                  'themeName': theme.name,
+                  'themeName': theme.get('display_name'),
                   'themeVersion': theme.get('version'),
                   'themeAuthor': theme.get('author.name'),
+                  'themeAuthorUrl': theme.get('author.url'),
                   'isActive': false
                   }  %}
                   {% block image %}
-                    <img src="{{ baseShopUrl }}{{ theme.get('preview') }}" alt="{{ theme.name }}">
+                    <img src="{{ baseShopUrl }}{{ theme.get('preview') }}" alt="{{ theme.get('display_name') }}">
                   {% endblock %}
                   {% block button_container %}
                     <form action="{{ path('admin_themes_enable', {'themeName': theme.name}) }}" method="post" class="d-inline">

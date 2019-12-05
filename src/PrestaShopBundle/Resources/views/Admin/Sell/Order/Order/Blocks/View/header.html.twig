@@ -23,38 +23,27 @@
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 
-<div class="pl-2 pt-4 pb-4">
-  <h1 class="d-inline">
-    <strong class="text-muted">#{{ orderForViewing.id }}</strong>
-    <strong>{{ orderForViewing.reference }}</strong>
-  </h1>
+<h1 class="d-inline">
+  <strong class="text-muted">#{{ orderForViewing.id }}</strong>
+  <strong>{{ orderForViewing.reference }}</strong>
+</h1>
 
-  <p class="lead d-inline">
-    {{ 'from'|trans({}, 'Admin.Global') }}
+<p class="lead d-inline">
+  {{ 'from'|trans({}, 'Admin.Global') }}
 
-    {{ orderForViewing.customer.firstName }}
-    {{ orderForViewing.customer.lastName }}
-  </p>
+  {{ orderForViewing.customer.firstName }}
+  {{ orderForViewing.customer.lastName }}
+</p>
 
-  <span class="badge rounded badge-dark ml-2 mr-2 font-size-100">
+<span class="badge rounded badge-dark ml-2 mr-2 font-size-100">
     {{ orderForViewing.prices.totalAmountFormatted }}
   </span>
 
-  <p class="lead d-inline">
-    {{ orderForViewing.createdAt|date('Y-m-d') }}
-    <span class="text-muted">
+<p class="lead d-inline">
+  {{ orderForViewing.createdAt|date('Y-m-d') }}
+  <span class="text-muted">
       {{ 'at'|trans({}, 'Admin.Global') }}
 
-      {{ orderForViewing.createdAt|date('H:i:s') }}
+    {{ orderForViewing.createdAt|date('H:i:s') }}
     </span>
-  </p>
-
-  <a class="btn btn-outline-secondary btn-help btn-sidebar float-right" href="#"
-     title="{{ 'Help'|trans({}, 'Admin.Global') }}"
-     data-toggle="sidebar"
-     data-target="#right-sidebar"
-     data-url="{{ help_link }}"
-  >
-    {{ 'Help'|trans({}, 'Admin.Global') }}
-  </a>
-</div>
+</p>

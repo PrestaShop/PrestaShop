@@ -115,8 +115,8 @@ class CartRuleCalculator
                     && ($product['id_product_attribute'] == $cartRule->gift_product_attribute
                         || !(int) $cartRule->gift_product_attribute)
                 ) {
-                    $cartRuleData->addDiscountApplied($cartRow->getFinalUnitPrice());
-                    $cartRow->applyFlatDiscount($cartRow->getFinalUnitPrice());
+                    $cartRuleData->addDiscountApplied($cartRow->getInitialUnitPrice());
+                    $cartRow->applyFlatDiscount($cartRow->getInitialUnitPrice());
                 }
             }
         }
