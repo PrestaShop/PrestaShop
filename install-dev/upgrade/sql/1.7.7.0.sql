@@ -523,3 +523,5 @@ ALTER TABLE `PREFIX_tab` ADD enabled TINYINT(1) NOT NULL;
 /* PHP:ps_1770_preset_tab_enabled(); */;
 
 /* PHP:ps_1770_update_order_status_colors(); */;
+
+/* PHP:ps_1770_update_tabs(); */;
