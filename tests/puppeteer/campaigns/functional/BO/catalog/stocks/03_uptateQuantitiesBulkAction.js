@@ -13,7 +13,7 @@ const StocksPage = require('@pages/BO/catalog/stocks');
 let browser;
 let page;
 let numberOfProducts = 0;
-let stocks = {};
+const stocks = {};
 
 // Init objects needed
 const init = async function () {
@@ -56,13 +56,13 @@ describe('Bulk Edit Quantity', async () => {
     numberOfProducts = await this.pageObjects.stocksPage.getNumberOfProductsFromList();
     await expect(numberOfProducts).to.be.above(0);
   });
-  
+
   describe('Bulk edit quantity by setting input value', async () => {
     it(`should filter by name '${Products.demo_8.name}'`, async function () {
       await this.pageObjects.stocksPage.simpleFilter(Products.demo_8.name);
       const numberOfProductsAfterFilter = await this.pageObjects.stocksPage.getNumberOfProductsFromList();
       await expect(numberOfProductsAfterFilter).to.be.at.most(numberOfProducts);
-      for(let i = 1; i <= numberOfProductsAfterFilter; i++) {
+      for (let i = 1; i <= numberOfProductsAfterFilter; i++) {
         const textColumn = await this.pageObjects.stocksPage.getTextColumnFromTableStocks(i, 'name');
         await expect(textColumn).to.contains(Products.demo_8.name);
         // Get physical and available quantities of product
@@ -86,7 +86,7 @@ describe('Bulk Edit Quantity', async () => {
         await expect(updateMessage).to.contains(this.pageObjects.stocksPage.successfulUpdateMessage);
         const numberOfProductsInList = await this.pageObjects.stocksPage.getNumberOfProductsFromList();
         // Check physical and available quantities of product after update
-        for(let i = 1; i <= numberOfProductsInList; i++) {
+        for (let i = 1; i <= numberOfProductsInList; i++) {
           const quantityToCheck = await this.pageObjects.stocksPage.getStockQuantityForProduct(i);
           await expect(quantityToCheck.physical).to.be.equal(stocks[`product${i}`].physical + test.args.updateValue);
           stocks[`product${i}`].physical = quantityToCheck.physical;

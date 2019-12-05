@@ -17,7 +17,7 @@ module.exports = class Stocks extends BOBasePage {
     this.searchTagsList = 'form.search-form div.tags-wrapper span.tag';
     this.searchTagsListCloseSpan = `${this.searchTagsList} i`;
 
-    //Bulk actions
+    // Bulk actions
     this.selectAllCheckbox = '#bulk-action + i';
     this.bulkEditQuantityInput = 'div.bulk-qty input';
     this.applyNewQuantityButton = 'button.update-qty';
