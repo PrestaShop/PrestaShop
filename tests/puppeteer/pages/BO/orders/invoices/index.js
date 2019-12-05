@@ -97,7 +97,7 @@ module.exports = class Invoice extends BOBasePage {
    * @param enable
    * @return {Promise<void>}
    */
-  async enableTaXBreakdown(enable = true) {
+  async enableTaxBreakdown(enable = true) {
     await this.page.click(this.taxBreakdownEnable.replace('%ID', enable ? 1 : 0));
   }
 };
