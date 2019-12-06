@@ -68,6 +68,7 @@ default:
                 - Tests\Integration\Behaviour\Features\Context\CountryFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\OrderPaymentFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\OrderShippingFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\OrderCartFeatureContext
 
         currency:
             paths:
