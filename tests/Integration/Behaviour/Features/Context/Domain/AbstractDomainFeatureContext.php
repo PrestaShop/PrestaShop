@@ -28,18 +28,23 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 use Behat\Behat\Context\Context;
 use Behat\Testwork\Hook\Scope\BeforeSuiteScope;
+use Exception;
 use Language;
 use ObjectModel;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use Psr\Container\ContainerInterface;
 use RuntimeException;
+use Symfony\Component\DependencyInjection\Exception\ServiceCircularReferenceException;
+use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 use Tests\Integration\Behaviour\Features\Context\CommonFeatureContext;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
+
+require_once __DIR__ .'/../../../../../../vendor/phpunit/phpunit/src/Framework/Assert/Functions.php';
 
 abstract class AbstractDomainFeatureContext implements Context
 {
     /**
-     * @var \Exception|null
+     * @var Exception|null
      */
     protected $lastException;
 
@@ -59,6 +64,9 @@ abstract class AbstractDomainFeatureContext implements Context
 
     /**
      * @return CommandBusInterface
+     *
+     * @throws ServiceCircularReferenceException
+     * @throws ServiceNotFoundException
      */
     protected function getCommandBus()
     {
@@ -67,6 +75,9 @@ abstract class AbstractDomainFeatureContext implements Context
 
     /**
      * @return CommandBusInterface
+     *
+     * @throws ServiceCircularReferenceException
+     * @throws ServiceNotFoundException
      */
     protected function getQueryBus()
     {
@@ -100,6 +111,8 @@ abstract class AbstractDomainFeatureContext implements Context
     /**
      * @param string $expectedError
      * @param int|null $errorCode
+     *
+     * @throws RuntimeException
      */
     protected function assertLastErrorIs($expectedError, $errorCode = null)
     {
