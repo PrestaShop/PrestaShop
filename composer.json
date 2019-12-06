@@ -157,9 +157,9 @@
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::clearCache"
         ],
         "test-all": [
+            "composer phpunit-admin",
             "composer phpunit-legacy",
             "composer unit-tests",
-            "composer phpunit-admin",
             "composer phpunit-sf",
             "composer integration-tests",
             "composer phpunit-controllers",

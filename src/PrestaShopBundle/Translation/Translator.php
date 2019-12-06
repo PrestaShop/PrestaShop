@@ -35,6 +35,7 @@ use Symfony\Bundle\FrameworkBundle\Translation\Translator as BaseTranslator;
 class Translator extends BaseTranslator
 {
     use PrestaShopTranslatorTrait;
+    use TranslatorLanguageTrait;
 
     /**
      * {@inheritdoc}
