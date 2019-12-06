@@ -35,7 +35,11 @@ const init = async function () {
     foBasePage: new FOBasePage(page),
   };
 };
-
+/*
+Issue https://github.com/PrestaShop/PrestaShop/issues/16725
+Can't create profile with more than 32 characters
+So profile name is now limited to 32 characters
+ */
 // Create, Read, Update and Delete profile in BO
 describe('Create, Read, Update and Delete profile in BO', async () => {
   // before and after functions
