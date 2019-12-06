@@ -52,15 +52,23 @@ abstract class AbstractCurrencyHandler extends AbstractObjectModelHandler
     protected $languages;
 
     /**
+     * @var CurrencyCommandValidator
+     */
+    protected $validator;
+
+    /**
      * @param LocaleRepository $localeRepoCLDR
      * @param LanguageInterface[] $languages
+     * @param CurrencyCommandValidator $validator
      */
     public function __construct(
         LocaleRepository $localeRepoCLDR,
-        array $languages
+        array $languages,
+        CurrencyCommandValidator $validator
     ) {
         $this->localeRepoCLDR = $localeRepoCLDR;
         $this->languages = $languages;
+        $this->validator = $validator;
     }
 
     /**

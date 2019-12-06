@@ -299,6 +299,17 @@ class CurrencyFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
+     * @Given currency with :isoCode is not deleted
+     */
+    public function assertCurrencyIsNotDeleted($isoCode)
+    {
+        $currencyId = (int) Currency::getIdByIsoCode($isoCode, 0, true, false);
+        if (!$currencyId) {
+            throw new RuntimeException(sprintf('Currency with ISO Code "%s" should not be deleted in database', $isoCode));
+        }
+    }
+
+    /**
      * @Given currency with :isoCode has been deactivated
      */
     public function assertCurrencyHasBeenDeactivated($isoCode)

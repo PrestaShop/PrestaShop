@@ -33,7 +33,6 @@ use PrestaShop\PrestaShop\Core\Domain\Currency\Command\AddUnofficialCurrencyComm
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\EditCurrencyCommand;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\EditUnofficialCurrencyCommand;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
-use PrestaShop\PrestaShop\Adapter\Currency\CurrencyDataProvider;
 
 /**
  * Class CurrencyFormDataHandler
@@ -46,27 +45,19 @@ final class CurrencyFormDataHandler implements FormDataHandlerInterface
     private $commandBus;
 
     /**
-     * @var CurrencyDataProvider
-     */
-    private $currencyDataProvider;
-
-    /**
      * @var CacheClearerInterface[]
      */
     private $cacheClearerCollection;
 
     /**
      * @param CommandBusInterface $commandBus
-     * @param CurrencyDataProvider $currencyDataProvider
      * @param CacheClearerInterface[] $cacheClearerCollection
      */
     public function __construct(
         CommandBusInterface $commandBus,
-        CurrencyDataProvider $currencyDataProvider,
         array $cacheClearerCollection
     ) {
         $this->commandBus = $commandBus;
-        $this->currencyDataProvider = $currencyDataProvider;
         $this->cacheClearerCollection = $cacheClearerCollection;
     }
 
@@ -75,15 +66,6 @@ final class CurrencyFormDataHandler implements FormDataHandlerInterface
      */
     public function create(array $data)
     {
-        // check if a corresponding currency already exists in DB (including among soft deleted ones)
-        $correspondingDeletedCurrency = $this->currencyDataProvider->getCurrencyByIsoCode($data['iso_code'], null, true);
-        if ($correspondingDeletedCurrency !== null) {
-            // the currency already exists in "soft delete" mode, in this case the creation is done via an update in DB
-            $this->updateCurrency($correspondingDeletedCurrency->id, $data);
-
-            return $correspondingDeletedCurrency->id;
-        }
-
         if ($data['unofficial']) {
             $command = new AddUnofficialCurrencyCommand(
                 $data['iso_code'],
@@ -117,15 +99,6 @@ final class CurrencyFormDataHandler implements FormDataHandlerInterface
      * {@inheritdoc}
      */
     public function update($id, array $data)
-    {
-        $this->updateCurrency($id, $data);
-    }
-
-    /**
-     * @param int $currencyId
-     * @param array $data
-     */
-    private function updateCurrency($id, array $data)
     {
         if ($data['unofficial']) {
             $command = new EditUnofficialCurrencyCommand((int) $id);

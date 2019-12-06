@@ -33,8 +33,6 @@ use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\DefaultCurrencyInMultiS
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotUpdateCurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyNotFoundException;
-use PrestaShop\PrestaShop\Core\Language\LanguageInterface;
-use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleRepository;
 use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 use Currency;
 use PrestaShopException;
@@ -47,25 +45,6 @@ use PrestaShopDatabaseException;
  */
 final class EditOfficialCurrencyHandler extends AbstractCurrencyHandler implements EditCurrencyHandlerInterface
 {
-    /**
-     * @var CurrencyCommandValidator
-     */
-    private $validator;
-
-    /**
-     * @param LocaleRepository $localeRepository
-     * @param LanguageInterface[] $languages
-     * @param CurrencyCommandValidator $validator
-     */
-    public function __construct(
-        LocaleRepository $localeRepository,
-        array $languages,
-        CurrencyCommandValidator $validator
-    ) {
-        parent::__construct($localeRepository, $languages);
-        $this->validator = $validator;
-    }
-
     /**
      * {@inheritdoc}
      *

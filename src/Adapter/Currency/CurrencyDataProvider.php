@@ -87,9 +87,9 @@ class CurrencyDataProvider implements CurrencyDataProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function getCurrencyByIsoCode($isoCode, $idLang = null, $includeDeleted = false)
+    public function getCurrencyByIsoCode($isoCode, $idLang = null)
     {
-        $currencyId = Currency::getIdByIsoCode($isoCode, 0, false, $includeDeleted);
+        $currencyId = Currency::getIdByIsoCode($isoCode, 0, false, true);
         if (!$currencyId) {
             return null;
         }
@@ -119,16 +119,12 @@ class CurrencyDataProvider implements CurrencyDataProviderInterface
      */
     public function getCurrencyByIsoCodeOrCreate($isoCode, $idLang = null)
     {
-        if (null === $idLang) {
-            $idLang = $this->configuration->get('PS_LANG_DEFAULT');
-        }
-
+        // Soft deleted currencies are not kept duplicated any more, so if one try to recreate it the one in database is reused
         $currency = $this->getCurrencyByIsoCode($isoCode, $idLang);
-        // Currently soft deleted currency are considered "absent", and when you try to reinstall
-        // it a new instance is created This is prone to error, the previously created currency
-        // should be re-enabled So perform the check here for deleted status but it should be improved
-        // (even this method should not exist)
-        if (null === $currency || $currency->deleted) {
+        if (null === $currency) {
+            if (null === $idLang) {
+                $idLang = $this->configuration->get('PS_LANG_DEFAULT');
+            }
             $currency = new Currency(null, $idLang);
         }
 
