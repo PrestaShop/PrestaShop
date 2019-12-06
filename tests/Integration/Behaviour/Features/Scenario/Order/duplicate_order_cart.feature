@@ -8,10 +8,11 @@ Feature: Duplicate order cart from Back Office
     Given email sending is disabled
     And the current currency is "USD"
     And there is existing order with id 1
-    And order with id 1 has 1 cart
+    And order with id 1 has customer with id 1
+    And there is cart with id 1 for order with id 1
 
   Scenario:
     When I duplicate order with id 1 cart
-    Then Order with id 1 has 2 carts
+    Then customer with id 1 has empty cart
 
 
