@@ -96,7 +96,7 @@ describe('Create official currency and check it in FO', async () => {
           expect(createdCurrency.name).to.contains(Currencies.mad.name),
           expect(createdCurrency.symbol).to.contains(Currencies.mad.symbol),
           expect(createdCurrency.isoCode).to.contains(Currencies.mad.isoCode),
-          expect(createdCurrency.exchangeRate).to.contains(Currencies.mad.exchangeRate),
+          expect(createdCurrency.exchangeRate).to.be.above(0),
           expect(createdCurrency.enabled).to.be.equal(Currencies.mad.enabled),
         ]);
       },

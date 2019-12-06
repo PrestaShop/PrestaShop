@@ -145,6 +145,19 @@ module.exports = class Currencies extends BOBasePage {
   }
 
   /**
+   * Get exchange rate value
+   * @param row
+   * @return {Promise<integer>}
+   */
+  async getExchangeRateValue(row) {
+    return this.getNumberFromText(
+      this.tableColumn
+        .replace('%ROW', row)
+        .replace('%COLUMN', 'conversion_rate'),
+    );
+  }
+
+  /**
    * Get currency row from table
    * @param row
    * @return {Promise<object>}
@@ -154,7 +167,7 @@ module.exports = class Currencies extends BOBasePage {
       name: await this.getTextColumnFromTableCurrency(row, 'currency'),
       symbol: await this.getTextColumnFromTableCurrency(row, 'symbol'),
       isoCode: await this.getTextColumnFromTableCurrency(row, 'iso_code'),
-      exchangeRate: await this.getTextColumnFromTableCurrency(row, 'conversion_rate'),
+      exchangeRate: await this.getExchangeRateValue(row),
       enabled: await this.getToggleColumnValue(row),
     };
   }
