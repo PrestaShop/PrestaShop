@@ -36,7 +36,7 @@
         <div class="col-md-6">
           <h2 class="mb-0">
             <i class="material-icons">account_box</i>
-            
+
             {{ orderForViewing.customer.gender }}
             {{ orderForViewing.customer.firstName }}
             {{ orderForViewing.customer.lastName }}
@@ -88,7 +88,7 @@
         <div class="col-md-6">
           <div class="row justify-content-between no-gutters">
             <strong>{{ 'Shipping address'|trans({}, 'Admin.Orderscustomers.Feature') }}</strong>
-            <a class="tooltip-link" href="#" data-toggle="dropdown">
+            <a class="tooltip-link d-print-none" href="#" data-toggle="dropdown">
               <i class="material-icons">more_vert</i>
             </a>
 
@@ -142,7 +142,7 @@
           <div class="row justify-content-between no-gutters">
             <strong>{{ 'Invoice address'|trans({}, 'Admin.Orderscustomers.Feature') }}</strong>
 
-            <a class="tooltip-link" href="#" data-toggle="dropdown">
+            <a class="tooltip-link d-print-none" href="#" data-toggle="dropdown">
               <i class="material-icons">more_vert</i>
             </a>
 
