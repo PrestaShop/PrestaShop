@@ -92,6 +92,11 @@ class NotificationResult
     private $dateAdd;
 
     /**
+     * @var string
+     */
+    private $customerThreadViewUrl;
+
+    /**
      * NotificationResult constructor.
      *
      * @param int $orderId
@@ -106,6 +111,7 @@ class NotificationResult
      * @param string $company
      * @param string $status
      * @param string $dateAdd
+     * @param string $customerThreadViewUrl
      */
     public function __construct(
         int $orderId,
@@ -119,7 +125,8 @@ class NotificationResult
         string $isoCode,
         string $company,
         string $status,
-        string $dateAdd
+        string $dateAdd,
+        string $customerThreadViewUrl = ''
     ) {
         $this->orderId = $orderId;
         $this->customerId = $customerId;
@@ -133,6 +140,7 @@ class NotificationResult
         $this->company = $company;
         $this->status = $status;
         $this->dateAdd = $dateAdd;
+        $this->customerThreadViewUrl = $customerThreadViewUrl;
     }
 
     /**
@@ -229,5 +237,13 @@ class NotificationResult
     public function getDateAdd(): string
     {
         return $this->dateAdd;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCustomerThreadViewUrl(): string
+    {
+        return $this->customerThreadViewUrl;
     }
 }
