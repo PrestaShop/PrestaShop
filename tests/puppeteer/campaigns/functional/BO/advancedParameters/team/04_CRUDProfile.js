@@ -43,17 +43,8 @@ describe('Create, Read, Update and Delete profile in BO', async () => {
     browser = await helper.createBrowser();
     page = await helper.newTab(browser);
     this.pageObjects = await init();
-    profileData = await (new ProfileFaker({
-      defaultPage: 'Products',
-      language: 'English (English)',
-      permissionProfile: 'Salesman',
-    }));
-    editProfileData = await (new ProfileFaker({
-      password: '123456789',
-      defaultPage: 'Orders',
-      language: 'English (English)',
-      permissionProfile: 'Salesman',
-    }));
+    profileData = await (new ProfileFaker());
+    editProfileData = await (new ProfileFaker());
   });
   after(async () => {
     await helper.closeBrowser(browser);
