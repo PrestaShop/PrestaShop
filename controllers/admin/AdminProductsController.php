@@ -2540,7 +2540,6 @@ class AdminProductsControllerCore extends AdminController
                                     AND a.id_product_attribute = ' . (int) $attribute['id_product_attribute'];
                                 ObjectModel::updateMultishopTable('Combination', $data, $where);
                             } else {
-                                $product->wholesale_price = (float) Tools::convertPrice($price, $id_currency); //converted in the default currency
                                 $product->supplier_reference = pSQL($reference);
                                 $product->update();
                             }
