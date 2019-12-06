@@ -4,10 +4,10 @@
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 
-use Behat\Behat\Tester\Exception\PendingException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartInformation;
 use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation;
+use PrestaShop\PrestaShop\Core\Domain\Order\Command\DuplicateOrderCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderCustomerForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderForViewing;
@@ -39,46 +39,62 @@ class OrderCartFeatureContext extends AbstractDomainFeatureContext
         );
     }
 
-
     /**
-     * @Given there is cart with id :cartId for order with id :orderId
+     * @Given there is cart with id :cartId
      *
      * @param int $cartId
-     * @param int $orderId
      *
      * @throws CartConstraintException
      * @throws ServiceCircularReferenceException
      * @throws ServiceNotFoundException
      */
-    public function thereIsCartWithIdForOrderWithId(int $cartId, int $orderId)
+    public function thereIsCartWithId(int $cartId)
+    {
+        $this->getQueryBus()->handle(new GetCartInformation($cartId));
+    }
+
+    /**
+     * @When I duplicate order with id :orderId cart
+     *
+     * @param int $orderId
+     *
+     * @throws ServiceCircularReferenceException
+     * @throws ServiceNotFoundException
+     */
+    public function iDuplicateOrderWithIdCart(int $orderId)
+    {
+        $this->getCommandBus()->handle(new DuplicateOrderCartCommand($orderId));
+    }
+
+    /**
+     * @Then there is duplicated cart with id :cartId for cart with id :duplicatedCartId
+     *
+     * @param int $cartId
+     * @param int $duplicatedCartId
+     * @throws CartConstraintException
+     * @throws ServiceCircularReferenceException
+     * @throws ServiceNotFoundException
+     */
+    public function thereIsDuplicatedCartWithIdForCartWithId(int $cartId, int $duplicatedCartId)
     {
         /** @var CartInformation $cartInformation */
-        $cartInformation = $this->getQueryBus()->handle(new GetCartInformation($orderId));
-        $cartIdReceived = $cartInformation->getCartId();
-        assertSame(
-            $cartId,
-            $cartIdReceived,
-            sprintf('Expected cart id "%s" but received "%s"', $cartId, $cartIdReceived)
-        );
-    }
+        $cartInformation = $this->getQueryBus()->handle(new GetCartInformation($cartId));
+        /** @var CartInformation $duplicatedCartInformation */
+        $duplicatedCartInformation = $this->getQueryBus()->handle(new GetCartInformation($duplicatedCartId));
 
+        assertNotSame($cartInformation->getCartId(), $duplicatedCartInformation->getCartId());
 
-    /**
-     * @When I duplicate order with id :arg1 cart
-     *
-     * @throws PendingException
-     */
-    public function iDuplicateOrderWithIdCart($arg1)
-    {
-        throw new PendingException();
-    }
-
-    /**
-     * @Then customer with id :arg1 has empty cart
-     */
-    public function customerWithIdHasEmptyCart($arg1)
-    {
-        throw new PendingException();
+        assertEquals($cartInformation->getCartRules(), $duplicatedCartInformation->getCartRules());
+        assertEquals($cartInformation->getAddresses(), $duplicatedCartInformation->getAddresses());
+        assertEquals($cartInformation->getCurrencyId(), $duplicatedCartInformation->getCurrencyId());
+        assertEquals($cartInformation->getProducts(), $duplicatedCartInformation->getProducts());
+        assertEquals($cartInformation->getSummary(), $duplicatedCartInformation->getSummary());
+        assertEquals($cartInformation->getLangId(), $duplicatedCartInformation->getLangId());
+        // todo: check why shipping info is not the same in the duplicated cart
+        assertEquals(
+            $cartInformation->getShipping(),
+            $duplicatedCartInformation->getShipping(),
+            'shipping info is not the same');
     }
 
 
