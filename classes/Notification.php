@@ -145,6 +145,14 @@ class NotificationCore
                         'viewcustomer' => true,
                     ]
                 ),
+                'customer_thread_view_url' => !empty($value['id_customer_thread']) ? Context::getContext()->link->getAdminLink(
+                    'AdminCustomerThreads',
+                    true,
+                    [
+                        'customerThreadId' => $value['id_customer_thread'],
+                        'viewcustomer_thread' => true,
+                    ]
+                ) : '',
             );
         }
 

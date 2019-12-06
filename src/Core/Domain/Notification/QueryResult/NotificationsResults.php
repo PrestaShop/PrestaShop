@@ -73,6 +73,7 @@ class NotificationsResults
                     'customer_name' => $notification->getCustomerName(),
                     'date_add' => $notification->getDateAdd(),
                     'customer_view_url' => $notification->getCustomerViewUrl(),
+                    'customer_thread_view_url' => $notification->getCustomerThreadViewUrl(),
                 ];
             }
             $response[($element->getType()->getValue())] = [
