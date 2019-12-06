@@ -32,6 +32,7 @@ services:
             - '@prestashop.core.localization.cldr.locale_repository'
             - "@=service('prestashop.core.admin.lang.repository').findAll()"
             - "@prestashop.adapter.currency.command_handler.command_validator"
+            - '@prestashop.adapter.data_provider.currency'
         tags:
             - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Currency\Command\AddOfficialCurrencyCommand' }
 
@@ -41,6 +42,7 @@ services:
         - '@prestashop.core.localization.cldr.locale_repository'
         - "@=service('prestashop.core.admin.lang.repository').findAll()"
         - "@prestashop.adapter.currency.command_handler.command_validator"
+        - '@prestashop.adapter.data_provider.currency'
       tags:
         - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Currency\Command\AddUnofficialCurrencyCommand' }
 

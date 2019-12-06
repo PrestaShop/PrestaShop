@@ -28,7 +28,6 @@ services:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\CurrencyFormDataHandler'
     arguments:
       - '@prestashop.core.command_bus'
-      - '@prestashop.adapter.data_provider.currency'
       -
         - '@prestashop.adapter.cache.clearer.symfony_cache_clearer'
         - '@prestashop.adapter.cache.clearer.smarty_cache_clearer'

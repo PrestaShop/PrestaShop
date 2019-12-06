@@ -48,25 +48,6 @@ use PrestaShopException;
 final class EditOfficialCurrencyHandler extends AbstractCurrencyHandler implements EditCurrencyHandlerInterface
 {
     /**
-     * @var CurrencyCommandValidator
-     */
-    private $validator;
-
-    /**
-     * @param LocaleRepository $localeRepository
-     * @param LanguageInterface[] $languages
-     * @param CurrencyCommandValidator $validator
-     */
-    public function __construct(
-        LocaleRepository $localeRepository,
-        array $languages,
-        CurrencyCommandValidator $validator
-    ) {
-        parent::__construct($localeRepository, $languages);
-        $this->validator = $validator;
-    }
-
-    /**
      * {@inheritdoc}
      *
      * @throws CurrencyException
