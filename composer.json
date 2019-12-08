@@ -136,7 +136,7 @@
         "johnkary/phpunit-speedtrap": "^3",
         "mikey179/vfsstream": "^1.6",
         "phake/phake": "@stable",
-        "phpunit/phpunit": "~7.5",
+        "phpunit/phpunit": "~7.5.18",
         "symfony/phpunit-bridge": "^3.4"
     },
     "autoload-dev": {
