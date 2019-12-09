@@ -90,7 +90,7 @@ describe('Create official currency and check it in FO', async () => {
       async function () {
         await this.pageObjects.currenciesPage.filterTable('input', 'iso_code', Currencies.mad.isoCode);
         const numberOfCurrenciesAfterFilter = await this.pageObjects.currenciesPage.getNumberOfElementInGrid();
-        await expect(numberOfCurrenciesAfterFilter).to.be.equal(numberOfCurrencies);
+        await expect(numberOfCurrenciesAfterFilter).to.be.at.most(numberOfCurrencies + 1);
         const createdCurrency = await this.pageObjects.currenciesPage.getCurrencyFromTable(1);
         await Promise.all([
           expect(createdCurrency.name).to.contains(Currencies.mad.name),
@@ -120,7 +120,7 @@ describe('Create official currency and check it in FO', async () => {
     it(`should filter by iso code of currency '${Currencies.mad.isoCode}'`, async function () {
       await this.pageObjects.currenciesPage.filterTable('input', 'iso_code', Currencies.mad.isoCode);
       const numberOfCurrenciesAfterFilter = await this.pageObjects.currenciesPage.getNumberOfElementInGrid();
-      await expect(numberOfCurrenciesAfterFilter).to.be.equal(numberOfCurrencies);
+      await expect(numberOfCurrenciesAfterFilter).to.be.at.most(numberOfCurrencies + 1);
       const textColumn = await this.pageObjects.currenciesPage.getTextColumnFromTableCurrency(1, 'iso_code');
       await expect(textColumn).to.contains(Currencies.mad.isoCode);
     });
