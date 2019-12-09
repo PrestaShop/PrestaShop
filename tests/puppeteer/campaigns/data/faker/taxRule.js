@@ -4,7 +4,6 @@ const {countries} = require('@data/demo/countries');
 const {behaviour} = require('@data/demo/taxRule');
 const {tax} = require('@data/demo/tax');
 
-
 module.exports = class Tax {
   constructor(taxRulesToCreate = {}) {
     this.country = taxRulesToCreate.country || faker.random.arrayElement(countries);
