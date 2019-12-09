@@ -47,9 +47,8 @@ use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation\CartProdu
 use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation\CartShipping;
 use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation\CartSummary;
 use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation\CustomizationFieldData;
-use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleInterface;
 use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
-use PrestaShop\PrestaShop\Core\Localization\Locale;
+use PrestaShop\PrestaShop\Core\Localization\LocaleInterface;
 use PrestaShopException;
 use Product;
 
@@ -74,12 +73,12 @@ final class GetCartInformationHandler extends AbstractCartHandler implements Get
     private $contextLink;
 
     /**
-     * @param Locale $locale
+     * @param LocaleInterface $locale
      * @param int $contextLangId
      * @param Link $contextLink
      */
     public function __construct(
-        Locale $locale,
+        LocaleInterface $locale,
         int $contextLangId,
         Link $contextLink
     ) {
