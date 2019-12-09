@@ -1,19 +1,31 @@
 <?php
 
-
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
-
 use Behat\Behat\Tester\Exception\PendingException;
+use PrestaShopException;
+use Shop;
 
 class ShowcaseCardFeatureContext extends AbstractDomainFeatureContext
 {
     /**
-     * @Given :arg1 shop context is loaded
+     * @Given single shop context is loaded
+     *
+     * @throws PrestaShopException
      */
-    public function shopContextIsLoaded($arg1)
+    public function singleleShopContextIsLoaded()
     {
-        throw new PendingException();
+        Shop::setContext(Shop::CONTEXT_SHOP);
+    }
+
+    /**
+     * @Given multiple shop context is loaded
+     *
+     * @throws PrestaShopException
+     */
+    public function multipleShopContextIsLoaded()
+    {
+        Shop::setContext(Shop::CONTEXT_ALL);
     }
 
     /**
@@ -31,5 +43,4 @@ class ShowcaseCardFeatureContext extends AbstractDomainFeatureContext
     {
         throw new PendingException();
     }
-
 }
