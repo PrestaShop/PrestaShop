@@ -79,9 +79,9 @@ module.exports = class Order extends BOBasePage {
    * @returns {Promise<void>}
    */
   async downloadInvoice() {
-    /* eslint no-return-assign: "error" */
-    /* eslint no-param-reassign: "error" */
+    /* eslint-disable */
     await this.page.$eval(this.numberLink, el => el.target = '');
     await this.page.click(this.numberLink);
+    /* eslint-enable */
   }
 };
