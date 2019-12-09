@@ -64,7 +64,6 @@ module.exports = class Order extends BOBasePage {
     return this.getTextContent(this.documentName);
   }
 
-
   /**
    * Get file name
    * @returns fileName

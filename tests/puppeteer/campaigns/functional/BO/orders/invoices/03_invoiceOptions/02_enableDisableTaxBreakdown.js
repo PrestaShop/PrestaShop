@@ -20,6 +20,7 @@ const AddTaxRulesPage = require('@pages/BO/international/taxes/taxRules/add');
 const ProductsPage = require('@pages/BO/catalog/products/index');
 const AddProductPage = require('@pages/BO/catalog/products/add');
 const HomePage = require('@pages/FO/home');
+const SearchProductPage = require('@pages/FO/searchResults');
 const ProductPage = require('@pages/FO/product');
 const FOBasePage = require('@pages/FO/FObasePage');
 const CartPage = require('@pages/FO/cart');
@@ -51,6 +52,7 @@ const init = async function () {
     productsPage: new ProductsPage(page),
     addProductPage: new AddProductPage(page),
     homePage: new HomePage(page),
+    searchProductPage: new SearchProductPage(page),
     productPage: new ProductPage(page),
     foBasePage: new FOBasePage(page),
     cartPage: new CartPage(page),
@@ -89,7 +91,6 @@ describe('Test enable/disable tax breakdown', async () => {
   });
   after(async () => {
     /* Delete the generated invoice */
-    files.deleteFile(`${global.BO.DOWNLOAD_PATH}/${firstInvoiceFileName}.pdf`);
     files.deleteFile(`${global.BO.DOWNLOAD_PATH}/${secondInvoiceFileName}.pdf`);
     await helper.closeBrowser(browser);
   });
@@ -184,7 +185,6 @@ describe('Test enable/disable tax breakdown', async () => {
         page = await this.pageObjects.addProductPage.previewProduct();
         this.pageObjects = await init();
         await this.pageObjects.foBasePage.changeLanguage('en');
-        // Login
         // Add the create product to the cart
         await this.pageObjects.productPage.addProductToTheCart();
         // Proceed to checkout the shopping cart
@@ -226,23 +226,34 @@ describe('Test enable/disable tax breakdown', async () => {
       });
 
       it('should change the order status to \'Payment accepted\' and check it', async function () {
-        const result = await this.pageObjects.viewOrderPage.modifyOrderStatus('Payment accepted');
+        const result = await this.pageObjects.viewOrderPage.modifyOrderStatus(Statuses.paymentAccepted.status);
         await expect(result).to.be.true;
       });
 
-      it('should download the invoice and check the tax breakdown', async function () {
-        secondInvoiceFileName = await this.pageObjects.viewOrderPage.getFileName();
+      it('should download the invoice', async function () {
+        firstInvoiceFileName = await this.pageObjects.viewOrderPage.getFileName();
         await this.pageObjects.viewOrderPage.downloadInvoice();
-        await files.checkTextExistence(
+        const exist = await files.checkFileExistence(
           global.BO.DOWNLOAD_PATH,
-          `${secondInvoiceFileName}.pdf`,
+          `${firstInvoiceFileName}.pdf`,
+        );
+        await expect(exist).to.be.true;
+      });
+
+      it('should check the tax breakdown', async () => {
+        let exist = await files.checkTextInPDF(
+          global.BO.DOWNLOAD_PATH,
+          `${firstInvoiceFileName}.pdf`,
           '10.000 %',
         );
-        await files.checkTextExistence(
+        await expect(exist).to.be.true;
+        exist = await files.checkTextInPDF(
           global.BO.DOWNLOAD_PATH,
-          `${secondInvoiceFileName}.pdf`,
+          `${firstInvoiceFileName}.pdf`,
           '20.000 %',
         );
+        await expect(exist).to.be.true;
+        files.deleteFile(`${global.BO.DOWNLOAD_PATH}/${firstInvoiceFileName}.pdf`);
       });
     });
   });
@@ -266,37 +277,6 @@ describe('Test enable/disable tax breakdown', async () => {
       });
     });
 
-    describe('Create new order with the created product', async () => {
-      it('should go to FO and create an order', async function () {
-        // Click on preview button
-        page = await this.pageObjects.addProductPage.previewProduct();
-        this.pageObjects = await init();
-        await this.pageObjects.foBasePage.changeLanguage('en');
-        // Login
-        // Add the create product to the cart
-        await this.pageObjects.productPage.addProductToTheCart();
-        // Proceed to checkout the shopping cart
-        await this.pageObjects.cartPage.clickOnProceedToCheckout();
-        // Checkout the order
-        // Personal information step
-        await this.pageObjects.checkoutPage.clickOnSignIn();
-        await this.pageObjects.checkoutPage.customerLogin(DefaultAccount);
-        // Address step
-        const isStepAddressComplete = await this.pageObjects.checkoutPage.goToDeliveryStep();
-        await expect(isStepAddressComplete, 'Step Address is not complete').to.be.true;
-        // Delivery step
-        const isStepDeliveryComplete = await this.pageObjects.checkoutPage.goToPaymentStep();
-        await expect(isStepDeliveryComplete, 'Step Address is not complete').to.be.true;
-        // Payment step
-        await this.pageObjects.checkoutPage.choosePaymentAndOrder(PaymentMethods.wirePayment.moduleName);
-        const cardTitle = await this.pageObjects.orderConfirmationPage
-          .getTextContent(this.pageObjects.orderConfirmationPage.orderConfirmationCardTitleH3);
-        await expect(cardTitle).to.contains(this.pageObjects.orderConfirmationPage.orderConfirmationCardTitle);
-        page = await this.pageObjects.orderConfirmationPage.closePage(browser, 1);
-        this.pageObjects = await init();
-      });
-    });
-
     describe('Generate the invoice and check that there is no tax Breakdown', async () => {
       it('should go to the orders page', async function () {
         await this.pageObjects.boBasePage.goToSubMenu(
@@ -313,24 +293,35 @@ describe('Test enable/disable tax breakdown', async () => {
         await expect(pageTitle).to.contains(this.pageObjects.viewOrderPage.pageTitle);
       });
 
-      it('should change the order status to \'Payment accepted\' and check it', async function () {
-        const result = await this.pageObjects.viewOrderPage.modifyOrderStatus('Payment accepted');
-        await expect(result).to.be.true;
-      });
-
-      it('should download the invoice and check that there is no tax breakdown', async function () {
+      it('should download the invoice', async function () {
         secondInvoiceFileName = await this.pageObjects.viewOrderPage.getFileName();
         await this.pageObjects.viewOrderPage.downloadInvoice();
-        await files.checkTextExistence(
+        const exist = await files.checkFileExistence(
+          global.BO.DOWNLOAD_PATH,
+          `${secondInvoiceFileName}.pdf`,
+        );
+        await expect(exist).to.be.true;
+      });
+
+      it('should check that there is no tax breakdown', async () => {
+        let exist = await files.checkTextInPDF(
           global.BO.DOWNLOAD_PATH,
           `${secondInvoiceFileName}.pdf`,
           '10.000 %',
         );
-        await files.checkTextExistence(
+        await expect(exist).to.be.false;
+        exist = await files.checkTextInPDF(
           global.BO.DOWNLOAD_PATH,
           `${secondInvoiceFileName}.pdf`,
           '20.000 %',
         );
+        await expect(exist).to.be.false;
+        exist = await files.checkTextInPDF(
+          global.BO.DOWNLOAD_PATH,
+          `${secondInvoiceFileName}.pdf`,
+          '30.000 %',
+        );
+        await expect(exist).to.be.true;
       });
     });
   });
