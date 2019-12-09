@@ -172,7 +172,9 @@ class OrderController extends FrameworkBundleAdminController
     }
 
     /**
-     * Renders create order page
+     * Renders create order page.
+     * Whole page dynamics are on javascript side.
+     * To load specific cart pass cartId to url query params (handled by javascript)
      *
      * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))")
      *
