@@ -52,13 +52,13 @@ final class CancelOrderProductHandler extends AbstractOrderCommandHandler implem
     {
         $this->translator = Context::getContext()->getTranslator();
         $order = new Order($command->getOrder()->getId());
-        // $this->checkInput($command);
+        $this->checkInput($command);
 
         $cartId = Cart::getCartIdByOrderId($command->getOrder()->getId());
         $customizationQuantities = Customization::countQuantityByCart($cartId);
         $details = [];
-        $customizedProductsOrderDetail = [];
         $orderDetails = $this->getOrderDetails($command);
+
 
         if (!empty($orderDetails['productsOrderDetails'])) {
             foreach ($orderDetails['productsOrderDetails'] as $orderDetail) {
@@ -128,7 +128,6 @@ final class CancelOrderProductHandler extends AbstractOrderCommandHandler implem
                 }
             }
         }
-        var_dump($command->getToBeCanceledProducts()); exit;
     }
 
     private function getOrderDetails(CancelOrderProductCommand $command)

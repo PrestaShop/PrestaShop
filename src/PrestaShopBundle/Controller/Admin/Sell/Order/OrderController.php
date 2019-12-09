@@ -421,10 +421,20 @@ class OrderController extends FrameworkBundleAdminController
                 $toBeCanceledProducts,
                 $orderForViewing
             );
-            // var_dump($command); exit;
-            $this->getCommandBus()->handle($command);
+
+            $status = 'success';
+            $message = $this->trans('The discount was successfully generated.', 'Admin.Catalog.Notification');
+
+            try {
+                $this->getCommandBus()->handle($command);
+            } catch (OrderException $e) {
+                $status = 'error';
+                $message = $e->getMessage();
+            }
+
+            $this->addFlash($status, $message);
         }
-        echo 'nope'; exit;
+
         return $this->redirectToRoute('admin_orders_view', [
             'orderId' => $orderId,
         ]);
