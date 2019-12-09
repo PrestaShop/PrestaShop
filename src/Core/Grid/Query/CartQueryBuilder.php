@@ -33,18 +33,8 @@ use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 /**
  * Builds queries for cart grid
  */
-final class CartQueryBuilder implements DoctrineQueryBuilderInterface
+final class CartQueryBuilder extends AbstractDoctrineQueryBuilder
 {
-    /**
-     * @var Connection
-     */
-    protected $connection;
-
-    /**
-     * @var string
-     */
-    protected $dbPrefix;
-
     /**
      * @var DoctrineSearchCriteriaApplicatorInterface
      */
@@ -67,8 +57,7 @@ final class CartQueryBuilder implements DoctrineQueryBuilderInterface
         DoctrineSearchCriteriaApplicatorInterface $criteriaApplicator,
         $contextShopIds
     ) {
-        $this->connection = $connection;
-        $this->dbPrefix = $dbPrefix;
+        parent::__construct($connection, $dbPrefix);
         $this->criteriaApplicator = $criteriaApplicator;
         $this->contextShopIds = $contextShopIds;
     }
