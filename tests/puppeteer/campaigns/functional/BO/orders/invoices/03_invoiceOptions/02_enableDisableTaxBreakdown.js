@@ -3,12 +3,6 @@ require('module-alias/register');
 const {expect} = require('chai');
 const helper = require('@utils/helpers');
 const loginCommon = require('@commonTests/loginBO');
-const TaxRuleGroup = require('@data/faker/taxRuleGroup');
-const TaxRule = require('@data/faker/taxRule');
-const ProductFaker = require('@data/faker/product');
-const {PaymentMethods} = require('@data/demo/orders');
-const {DefaultAccount} = require('@data/demo/customer');
-const {Statuses} = require('@data/demo/orders');
 // Importing pages
 const BOBasePage = require('@pages/BO/BObasePage');
 const LoginPage = require('@pages/BO/login');
@@ -29,6 +23,13 @@ const OrderConfirmationPage = require('@pages/FO/orderConfirmation');
 const OrdersPage = require('@pages/BO/orders/index');
 const ViewOrderPage = require('@pages/BO/orders/view');
 const files = require('@utils/files');
+// Importing data
+const TaxRuleGroup = require('@data/faker/taxRuleGroup');
+const TaxRule = require('@data/faker/taxRule');
+const ProductFaker = require('@data/faker/product');
+const {PaymentMethods} = require('@data/demo/orders');
+const {DefaultAccount} = require('@data/demo/customer');
+const {Statuses} = require('@data/demo/orders');
 
 let browser;
 let page;
@@ -63,7 +64,7 @@ const init = async function () {
   };
 };
 
-// enable/disable tax breakdown
+// Enable/disable tax breakdown
 describe('Test enable/disable tax breakdown', async () => {
   // before and after functions
   before(async function () {
@@ -110,7 +111,7 @@ describe('Test enable/disable tax breakdown', async () => {
         await expect(pageTitle).to.contains(this.pageObjects.invoicesPage.pageTitle);
       });
 
-      it('should enable Tax Breakdown', async function () {
+      it('should enable tax breakdown', async function () {
         await this.pageObjects.invoicesPage.enableTaxBreakdown(true);
         const textMessage = await this.pageObjects.invoicesPage.saveInvoiceOptions();
         await expect(textMessage).to.contains(this.pageObjects.invoicesPage.successfulUpdateMessage);
@@ -179,30 +180,31 @@ describe('Test enable/disable tax breakdown', async () => {
       });
     });
 
-    describe('Create new order with the created product', async () => {
+    describe('Create new order in FO with the created product', async () => {
       it('should go to FO and create an order', async function () {
         // Click on preview button
         page = await this.pageObjects.addProductPage.previewProduct();
         this.pageObjects = await init();
         await this.pageObjects.foBasePage.changeLanguage('en');
-        // Add the create product to the cart
+        // Add the created product to the cart
         await this.pageObjects.productPage.addProductToTheCart();
         // Proceed to checkout the shopping cart
         await this.pageObjects.cartPage.clickOnProceedToCheckout();
         // Checkout the order
-        // Personal information step
+        // Personal information step - Login
         await this.pageObjects.checkoutPage.clickOnSignIn();
         await this.pageObjects.checkoutPage.customerLogin(DefaultAccount);
-        // Address step
+        // Address step - Go to delivery step
         const isStepAddressComplete = await this.pageObjects.checkoutPage.goToDeliveryStep();
         await expect(isStepAddressComplete, 'Step Address is not complete').to.be.true;
-        // Delivery step
+        // Delivery step - Go to payment step
         const isStepDeliveryComplete = await this.pageObjects.checkoutPage.goToPaymentStep();
         await expect(isStepDeliveryComplete, 'Step Address is not complete').to.be.true;
-        // Payment step
+        // Payment step - Choose payment step
         await this.pageObjects.checkoutPage.choosePaymentAndOrder(PaymentMethods.wirePayment.moduleName);
         const cardTitle = await this.pageObjects.orderConfirmationPage
           .getTextContent(this.pageObjects.orderConfirmationPage.orderConfirmationCardTitleH3);
+        // Check the confirmation message
         await expect(cardTitle).to.contains(this.pageObjects.orderConfirmationPage.orderConfirmationCardTitle);
         page = await this.pageObjects.orderConfirmationPage.closePage(browser, 1);
         this.pageObjects = await init();
@@ -241,18 +243,21 @@ describe('Test enable/disable tax breakdown', async () => {
       });
 
       it('should check the tax breakdown', async () => {
+        // Check the existence of the first tax
         let exist = await files.checkTextInPDF(
           global.BO.DOWNLOAD_PATH,
           `${firstInvoiceFileName}.pdf`,
           '10.000 %',
         );
         await expect(exist).to.be.true;
+        // Check the existence of the second tax
         exist = await files.checkTextInPDF(
           global.BO.DOWNLOAD_PATH,
           `${firstInvoiceFileName}.pdf`,
           '20.000 %',
         );
         await expect(exist).to.be.true;
+        // Delete the invoice file
         files.deleteFile(`${global.BO.DOWNLOAD_PATH}/${firstInvoiceFileName}.pdf`);
       });
     });
@@ -270,14 +275,14 @@ describe('Test enable/disable tax breakdown', async () => {
         await expect(pageTitle).to.contains(this.pageObjects.invoicesPage.pageTitle);
       });
 
-      it('should disable Tax Breakdown', async function () {
+      it('should disable tax breakdown', async function () {
         await this.pageObjects.invoicesPage.enableTaxBreakdown(false);
         const textMessage = await this.pageObjects.invoicesPage.saveInvoiceOptions();
         await expect(textMessage).to.contains(this.pageObjects.invoicesPage.successfulUpdateMessage);
       });
     });
 
-    describe('Generate the invoice and check that there is no tax Breakdown', async () => {
+    describe('Generate the invoice and check that there is no tax breakdown', async () => {
       it('should go to the orders page', async function () {
         await this.pageObjects.boBasePage.goToSubMenu(
           this.pageObjects.boBasePage.ordersParentLink,
@@ -315,6 +320,7 @@ describe('Test enable/disable tax breakdown', async () => {
           `${secondInvoiceFileName}.pdf`,
           '20.000 %',
         );
+        // Check that there is only one tax line 30.000 %
         await expect(exist).to.be.false;
         exist = await files.checkTextInPDF(
           global.BO.DOWNLOAD_PATH,

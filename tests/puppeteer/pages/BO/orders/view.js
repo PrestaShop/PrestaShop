@@ -14,14 +14,16 @@ module.exports = class Order extends BOBasePage {
     this.editProductQuantityInput = `${this.orderProductsRowTable} span.product_quantity_edit > input`;
     this.productQuantitySpan = `${this.orderProductsRowTable} span.product_quantity_show.badge`;
     this.UpdateProductButton = `${this.orderProductsRowTable} .submitProductChange`;
+    // Status tab
     this.orderStatusesSelect = '#id_order_state_chosen';
     this.orderStatusesSearchInput = `${this.orderStatusesSelect} input[type='text']`;
     this.orderStatusSearchResult = `${this.orderStatusesSelect} li:nth-child(1)`;
     this.updateStatusButton = '#submit_state';
     this.statusValidation = '#status tr:nth-child(1) > td:nth-child(2)';
+    // Document tab
     this.documentTab = '#tabOrder a[href=\'#documents\']';
     this.documentName = '#documents_table tr td:nth-child(2)';
-    this.numberLink = '#documents_table tr td:nth-child(3) a';
+    this.documentNumberLink = '#documents_table tr td:nth-child(3) a';
   }
 
   /*
@@ -70,7 +72,7 @@ module.exports = class Order extends BOBasePage {
    */
   async getFileName() {
     await this.page.click(this.documentTab);
-    const fileName = await this.getTextContent(this.numberLink);
+    const fileName = await this.getTextContent(this.documentNumberLink);
     return fileName.replace('#', '').trim();
   }
 
@@ -80,8 +82,8 @@ module.exports = class Order extends BOBasePage {
    */
   async downloadInvoice() {
     /* eslint-disable */
-    await this.page.$eval(this.numberLink, el => el.target = '');
-    await this.page.click(this.numberLink);
+    await this.page.$eval(this.documentNumberLink, el => el.target = '');
+    await this.page.click(this.documentNumberLink);
     /* eslint-enable */
   }
 };
