@@ -180,9 +180,9 @@ class CategoriesProvider
      * @param array $moduleIds
      * @param string $tab
      *
-     * @return object
+     * @return stdClass
      */
-    private function createMenuObject(string $menu, string $name, array $moduleIds = [], ?string $tab = null): object
+    private function createMenuObject(string $menu, string $name, array $moduleIds = [], ?string $tab = null): stdClass
     {
         return (object) array(
             'tab' => $tab,
@@ -239,9 +239,9 @@ class CategoriesProvider
      *
      * @param array $categories
      *
-     * @return object
+     * @return stdClass
      */
-    private function sortCategories(array $categories): object
+    private function sortCategories(array $categories): stdClass
     {
         uasort(
             $categories,
