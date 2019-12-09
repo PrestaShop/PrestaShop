@@ -66,11 +66,12 @@ module.exports = class Order extends BOBasePage {
 
   /**
    * Get file name
-   * @returns {Promise<void>}
+   * @returns fileName
    */
   async getFileName() {
     await this.page.click(this.documentTab);
-    return this.getTextContent(this.numberLink);
+    const fileName = await this.getTextContent(this.numberLink);
+    return fileName.replace('#', '').trim();
   }
 
   /**
@@ -78,6 +79,9 @@ module.exports = class Order extends BOBasePage {
    * @returns {Promise<void>}
    */
   async downloadInvoice() {
+    /* eslint no-return-assign: "error" */
+    /* eslint no-param-reassign: "error" */
+    await this.page.$eval(this.numberLink, el => el.target = '');
     await this.page.click(this.numberLink);
   }
 };

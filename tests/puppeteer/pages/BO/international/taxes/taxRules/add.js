@@ -6,7 +6,7 @@ module.exports = class AddTaxRules extends BOBasePage {
     super(page);
 
     this.pageTitleCreate = 'Tax Rules > Add new • prestashop';
-    this.pageTitleEdit = 'Tax Rules > Edit: FR tax Rule • prestashop';
+    this.pageTitleEdit = 'Tax Rules > Edit';
 
     // Selectors
     // Header buttons
