@@ -393,12 +393,11 @@ class ManufacturerController extends FrameworkBundleAdminController
      * )
      * @DemoRestricted(redirectRoute="admin_manufacturers_index")
      *
-     * @param ManufacturerFilters $filters
-     *
      * @return Response
      */
-    public function exportAction(ManufacturerFilters $filters)
+    public function exportAction()
     {
+        $filters = new ManufacturerFilters(['limit' => null] + ManufacturerFilters::getDefaults());
         $manufacturersGridFactory = $this->get('prestashop.core.grid.grid_factory.manufacturer');
         $manufacturersGrid = $manufacturersGridFactory->getGrid($filters);
 

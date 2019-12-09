@@ -357,12 +357,11 @@ class SupplierController extends FrameworkBundleAdminController
      *
      * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))")
      *
-     * @param SupplierFilters $filters
-     *
      * @return CsvResponse
      */
-    public function exportAction(SupplierFilters $filters)
+    public function exportAction()
     {
+        $filters = new SupplierFilters(['limit' => null] + SupplierFilters::getDefaults());
         $supplierGridFactory = $this->get('prestashop.core.grid.factory.supplier');
         $supplierGrid = $supplierGridFactory->getGrid($filters);
 

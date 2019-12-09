@@ -664,12 +664,11 @@ class CategoryController extends FrameworkBundleAdminController
      * )
      * @DemoRestricted(redirectRoute="admin_categories_index")
      *
-     * @param CategoryFilters $filters
-     *
      * @return Response
      */
-    public function exportAction(CategoryFilters $filters)
+    public function exportAction()
     {
+        $filters = new CategoryFilters(['limit' => null] + CategoryFilters::getDefaults());
         $categoriesGridFactory = $this->get('prestashop.core.grid.factory.category');
         $categoriesGrid = $categoriesGridFactory->getGrid($filters);
 

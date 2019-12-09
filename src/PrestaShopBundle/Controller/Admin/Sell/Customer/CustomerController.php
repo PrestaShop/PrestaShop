@@ -679,12 +679,11 @@ class CustomerController extends AbstractAdminController
      *
      * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))")
      *
-     * @param CustomerFilters $filters
-     *
      * @return CsvResponse
      */
-    public function exportAction(CustomerFilters $filters)
+    public function exportAction()
     {
+        $filters = new CustomerFilters(['limit' => null] + CustomerFilters::getDefaults());
         $gridFactory = $this->get('prestashop.core.grid.factory.customer');
         $grid = $gridFactory->getGrid($filters);
 
