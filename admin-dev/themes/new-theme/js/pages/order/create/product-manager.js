@@ -294,7 +294,7 @@ export default class ProductManager {
 
     // adds key value pairs {input name: file size} of each file in separate object in case formData size exceeds server settings.
     $.each($fileInputs, (key, input) => {
-      if (input.files !== null && typeof input.files !== 'undefined') {
+      if (input.files.length !== 0) {
         fileSizes[$(input).data('customization-field-id')] = input.files[0].size;
       }
     });
