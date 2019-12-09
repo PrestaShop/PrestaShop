@@ -150,10 +150,11 @@ class Calculator
 
         $amount = new AmountImmutable();
         foreach ($this->cartRows as $cartRow) {
-            $rowPrice = $cartRow->getFinalTotalPrice();
+            $rowPrice = $cartRow->getInitialTotalPrice();
             $amount = $amount->add($rowPrice);
         }
-        $shippingFees = $this->fees->getFinalShippingFees();
+        $amount = $amount->sub($this->getDiscountTotal());
+        $shippingFees = $this->fees->getInitialShippingFees();
         if (null !== $shippingFees) {
             $amount = $amount->add($shippingFees);
         }
@@ -185,11 +186,39 @@ class Calculator
      *
      * @throws \Exception
      */
+    public function getRowTotalWithoutDiscount()
+    {
+        $amount = new AmountImmutable();
+        foreach ($this->cartRows as $cartRow) {
+            $amount = $amount->add($cartRow->getInitialTotalPrice());
+        }
+
+        return $amount;
+    }
+
+    /**
+     * @return AmountImmutable
+     *
+     * @throws \Exception
+     */
     public function getDiscountTotal()
     {
         $amount = new AmountImmutable();
         foreach ($this->cartRules as $cartRule) {
             $amount = $amount->add($cartRule->getDiscountApplied());
+        }
+
+        $totalWithoutDiscount = $this->getRowTotalWithoutDiscount();
+        $initialShipping = $this->getFees()->getInitialShippingFees();
+        $finalShipping = $this->getFees()->getFinalShippingFees();
+
+        if (null !== $initialShipping && null !== $finalShipping) {
+            $totalWithoutDiscount = $totalWithoutDiscount->add($initialShipping);
+            $totalWithoutDiscount = $totalWithoutDiscount->sub($finalShipping);
+        }
+        // discount cannot be above total cart price
+        if ($totalWithoutDiscount < $amount) {
+            $amount = $totalWithoutDiscount;
         }
 
         return $amount;
