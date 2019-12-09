@@ -2110,5 +2110,40 @@
       <description>This hook allows to modify data which is about to be used in template for cms page grid
       </description>
     </hook>
+    <hook id="displayAdminOrderTop">
+      <name>displayAdminOrderTop</name>
+      <title>Admin Order Top</title>
+      <description>This hook displays content at the top of the order view page</description>
+    </hook>
+    <hook id="displayBackOfficeOrderActions">
+      <name>displayBackOfficeOrderActions</name>
+      <title>Admin Order Actions</title>
+      <description>This hook displays content in the order view page in the side column under the customer view</description>
+    </hook>
+    <hook id="displayAdminOrderSide">
+      <name>displayAdminOrderSide</name>
+      <title>Admin Order Side Column</title>
+      <description>This hook displays content in the order view page at the end of the side column</description>
+    </hook>
+    <hook id="displayAdminOrderMain">
+      <name>displayAdminOrderMain</name>
+      <title>Admin Order Main Column</title>
+      <description>This hook displays content in the order view page at the end of the main column</description>
+    </hook>
+    <hook id="displayAdminOrderTabLink">
+      <name>displayAdminOrderTabLink</name>
+      <title>Admin Order Tab Link</title>
+      <description>This hook displays new tab links on the order view page</description>
+    </hook>
+    <hook id="displayAdminOrderTabContent">
+      <name>displayAdminOrderTabContent</name>
+      <title>Admin Order Tab Content</title>
+      <description>This hook displays new tab contents on the order view page</description>
+    </hook>
+    <hook id="actionGetBackOfficeOrderButtons">
+      <name>actionGetBackOfficeOrderButtons</name>
+      <title>Admin Order Buttons</title>
+      <description>This hook is used to generate the buttons collection on the order view page thanks (see ActionsBarButtonsCollection)</description>
+    </hook>
   </entities>
 </entity_hook>
