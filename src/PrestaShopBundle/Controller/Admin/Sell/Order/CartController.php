@@ -252,7 +252,6 @@ class CartController extends FrameworkBundleAdminController
     }
 
     /**
-     *
      * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
      *
      * @param int $cartId
