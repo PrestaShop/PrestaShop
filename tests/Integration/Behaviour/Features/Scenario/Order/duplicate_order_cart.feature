@@ -1,8 +1,8 @@
 @reset-database-before-feature
-Feature: Duplicate order cart from Back Office
-  In order to duplicate order cart
+Feature: Duplicate order cart
+  In order to create order with existing order cart duplicate
   As a Back Office (BO) user
-  I need to be able to call DuplicateOrderCartCommand and new cart with the same properties should be created
+  I need to be able to duplicate chosen order cart
 
   Background:
     Given email sending is disabled
