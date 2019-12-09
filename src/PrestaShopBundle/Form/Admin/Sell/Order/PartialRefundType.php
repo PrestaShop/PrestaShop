@@ -47,6 +47,7 @@ class PartialRefundType extends AbstractType
                     'label' => $translator->trans('Quantity', [], 'Global'),
                     'invalid_message' => $translator->trans('This field is invalid, it must contain numeric values', [], 'Admin.Notifications.Error'),
                     'required' => false,
+                    'data' => 0,
                 ])
                 ->add('amount_' . $product->getOrderDetailId(), NumberType::class, [
                     'attr' => ['max' => $product->getTotalPrice(), 'class' => 'refund-amount'],
