@@ -432,13 +432,20 @@ class AdminControllerCore extends Controller
             }
 
             $this->bo_theme = $default_theme_name;
-
             if (!@filemtime(_PS_BO_ALL_THEMES_DIR_ . $this->bo_theme . DIRECTORY_SEPARATOR . 'template')) {
                 $this->bo_theme = 'default';
             }
 
-            $this->bo_css = ((Validate::isLoadedObject($this->context->employee)
-                && $this->context->employee->bo_css) ? $this->context->employee->bo_css : 'theme.css');
+            $this->context->employee->bo_theme = (
+                Validate::isLoadedObject($this->context->employee)
+                && $this->context->employee->bo_theme
+            ) ? $this->context->employee->bo_theme : $this->bo_theme;
+
+            $this->bo_css = (
+                Validate::isLoadedObject($this->context->employee)
+                && $this->context->employee->bo_css
+            ) ? $this->context->employee->bo_css : 'theme.css';
+            $this->context->employee->bo_css = $this->bo_css;
 
             $adminThemeCSSFile = _PS_BO_ALL_THEMES_DIR_ . $this->bo_theme . DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR . $this->bo_css;
 
