@@ -27,7 +27,10 @@
 namespace Tests\Integration\Behaviour\Features\Context;
 
 use AppKernel;
+use Context;
+use Employee;
 use LegacyTests\PrestaShopBundle\Utils\DatabaseCreator;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class CommonFeatureContext extends AbstractPrestaShopFeatureContext
 {
@@ -53,8 +56,8 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
         global $kernel;
         $kernel = self::$kernel;
 
-        $employee = new \Employee();
-        \Context::getContext()->employee = $employee->getByEmail('test@prestashop.com');
+        $employee = new Employee();
+        Context::getContext()->employee = $employee->getByEmail('test@prestashop.com');
     }
 
     /**
@@ -92,7 +95,7 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
     /**
      * Return PrestaShop Symfony services container
      *
-     * @return \Symfony\Component\DependencyInjection\ContainerInterface
+     * @return ContainerInterface
      */
     public static function getContainer()
     {
