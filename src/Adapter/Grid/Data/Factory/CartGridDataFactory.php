@@ -35,6 +35,7 @@ use PrestaShop\PrestaShop\Core\Grid\Data\GridData;
 use PrestaShop\PrestaShop\Core\Grid\Record\RecordCollection;
 use PrestaShop\PrestaShop\Core\Grid\Record\RecordCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
+use PrestaShop\PrestaShop\Core\Localization\LocaleInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
@@ -53,15 +54,23 @@ final class CartGridDataFactory implements GridDataFactoryInterface
     private $translator;
 
     /**
+     * @var LocaleInterface
+     */
+    private $locale;
+
+    /**
      * @param GridDataFactoryInterface $doctrineDataFactory
      * @param TranslatorInterface $translator
+     * @param LocaleInterface $locale
      */
     public function __construct(
         GridDataFactoryInterface $doctrineDataFactory,
-        TranslatorInterface $translator
+        TranslatorInterface $translator,
+        LocaleInterface $locale
     ) {
         $this->doctrineDataFactory = $doctrineDataFactory;
         $this->translator = $translator;
+        $this->locale = $locale;
     }
 
     /**
@@ -112,6 +121,7 @@ final class CartGridDataFactory implements GridDataFactoryInterface
                 $this->translator->trans('No', [], 'Admin.Global');
 
             $context = Context::getContext();
+            $context->currentLocale = $this->locale;
             $context->cart = new Cart($record['id_cart']);
             $context->currency = new Currency((int) $context->cart->id_currency);
             $context->customer = new Customer((int) $context->cart->id_customer);
