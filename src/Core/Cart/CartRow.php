@@ -119,6 +119,11 @@ class CartRow
     /**
      * @var AmountImmutable
      */
+    protected $initialTotalPrice;
+
+    /**
+     * @var AmountImmutable
+     */
     protected $finalUnitPrice;
 
     /**
@@ -204,6 +209,22 @@ class CartRow
     }
 
     /**
+     * Returns the initial total price (ie without applying cart rules).
+     *
+     * @return AmountImmutable
+     *
+     * @throws \Exception
+     */
+    public function getInitialTotalPrice()
+    {
+        if (!$this->isProcessed) {
+            throw new \Exception('Row must be processed before getting its total');
+        }
+
+        return $this->initialTotalPrice;
+    }
+
+    /**
      * return final price: initial minus the cart rule discounts.
      *
      * @return AmountImmutable
@@ -248,10 +269,11 @@ class CartRow
         $quantity = (int) $rowData['cart_quantity'];
         $this->initialUnitPrice = $this->getProductPrice($cart, $rowData);
         // store not rounded values
-        $this->finalTotalPrice = new AmountImmutable(
+        $this->initialTotalPrice = new AmountImmutable(
             $this->initialUnitPrice->getTaxIncluded() * $quantity,
             $this->initialUnitPrice->getTaxExcluded() * $quantity
         );
+        $this->finalTotalPrice = clone $this->initialTotalPrice;
         $this->applyRound();
         // store state
         $this->isProcessed = true;
