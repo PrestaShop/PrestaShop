@@ -48,6 +48,10 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 final class AddCustomizationFieldsHandler extends AbstractCartHandler implements AddCustomizationFieldsHandlerInterface
 {
     /**
+     * If customization fields are not required and none of them are provided
+     *  then no customizations are saved and null returned.
+     *  Else, saved customizationId is returned or exception is thrown.
+     *
      * @param AddCustomizationFieldsCommand $command
      *
      * @return int
@@ -55,10 +59,9 @@ final class AddCustomizationFieldsHandler extends AbstractCartHandler implements
      * @throws CartNotFoundException
      * @throws CustomizationConstraintException
      * @throws CustomizationException
-     * @throws PrestaShopException
      * @throws FileUploadException
      */
-    public function handle(AddCustomizationFieldsCommand $command): CustomizationId
+    public function handle(AddCustomizationFieldsCommand $command): ?CustomizationId
     {
         $productId = $command->getProductId()->getValue();
 
@@ -70,8 +73,19 @@ final class AddCustomizationFieldsHandler extends AbstractCartHandler implements
 
         foreach ($customizationFields as $customizationField) {
             $customizationFieldId = (int) $customizationField['id_customization_field'];
+            $isRequired = (bool) $customizationField['required'];
 
-            if (!isset($customizations[$customizationFieldId])) {
+            if ($isRequired && empty($customizations[$customizationFieldId])) {
+                throw new CustomizationConstraintException(
+                    sprintf(
+                        'Customization field #%s is required',
+                        $customizationFieldId
+                    ),
+                    CustomizationConstraintException::FIELD_IS_REQUIRED
+                );
+            }
+
+            if (empty($customizations[$customizationFieldId])) {
                 continue;
             }
 
@@ -113,10 +127,7 @@ final class AddCustomizationFieldsHandler extends AbstractCartHandler implements
         }
 
         if (!isset($customizationId)) {
-            throw new CustomizationConstraintException(
-                'Invalid customizations provided.
-                It must consist of key - value pairs where key is the id of customization field'
-            );
+            return null;
         }
 
         return new CustomizationId($customizationId);

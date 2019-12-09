@@ -135,8 +135,6 @@ class OrderController extends FrameworkBundleAdminController
         return $toolbarButtons;
     }
 
-    //@todo: wip
-
     /**
      * Places an order from BO
      *
