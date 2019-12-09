@@ -13,6 +13,7 @@ module.exports = class Home extends FOBasePage {
     this.productQuickViewLink = `${this.productArticle} a.quick-view`;
     this.allProductLink = '#content a.all-product-link';
     this.totalProducts = '#js-product-list-top .total-products > p';
+    this.searchInput = '#search_widget form input.ui-autocomplete-input';
     // Quick View modal
     this.quickViewModalDiv = 'div[id*=\'quickview-modal\']';
     this.quantityWantedInput = `${this.quickViewModalDiv} input#quantity_wanted`;
@@ -90,5 +91,15 @@ module.exports = class Home extends FOBasePage {
       this.page.waitForNavigation({waitUntil: 'networkidle0'}),
       this.page.click(this.blockCartModalCheckoutLink),
     ]);
+  }
+
+  /**
+   * Search for the product
+   * @param productName
+   * @return {Promise<void>}
+   */
+  async searchProduct(productName) {
+    await this.setValue(this.searchInput, productName);
+    await this.page.keyboard.press('Enter');
   }
 };
