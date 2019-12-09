@@ -138,3 +138,9 @@ default:
                 - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\OrderMessageContext
                 - Tests\Integration\Behaviour\Features\Context\OrderMessageContext
+        misc:
+            paths:
+              features: Features/Scenario/Misc
+            contexts:
+              - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
+              - Tests\Integration\Behaviour\Features\Context\Domain\DebugModeFeatureContext
