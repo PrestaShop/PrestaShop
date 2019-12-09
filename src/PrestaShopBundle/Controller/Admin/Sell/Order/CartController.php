@@ -153,17 +153,15 @@ class CartController extends FrameworkBundleAdminController
      */
     public function editAddressesAction(int $cartId, Request $request): JsonResponse
     {
+        $invoiceAddressId = $request->request->getInt('invoiceAddressId');
+        $deliveryAddressId = $request->request->getInt('deliveryAddressId');
+
         try {
-            $updateAddressCommand = new UpdateCartAddressesCommand($cartId);
-            if ($deliveryAddressId = $request->request->getInt('deliveryAddressId')) {
-                $updateAddressCommand->setNewDeliveryAddressId($deliveryAddressId);
-            }
-
-            if ($invoiceAddressId = $request->request->getInt('invoiceAddressId')) {
-                $updateAddressCommand->setNewInvoiceAddressId($invoiceAddressId);
-            }
-
-            $this->getCommandBus()->handle($updateAddressCommand);
+            $this->getCommandBus()->handle(new UpdateCartAddressesCommand(
+                $cartId,
+                $deliveryAddressId,
+                $invoiceAddressId
+            ));
 
             return $this->json($this->getCartInfo($cartId));
         } catch (Exception $e) {
