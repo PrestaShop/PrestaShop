@@ -5,10 +5,10 @@ Feature: Switch debug mode
   As a BO user
   I need to be able to enable or disable debug mode
 
-  Scenario: Enable debug mode
-    When I enable debug mode
-    Then debug mode should be enabled in the configuration
-
   Scenario: Disable debug mode
     When I disable debug mode
     Then debug mode should be disabled in the configuration
+
+  Scenario: Enable debug mode
+    When I enable debug mode
+    Then debug mode should be enabled in the configuration
