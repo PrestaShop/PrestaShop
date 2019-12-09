@@ -16,7 +16,6 @@ module.exports = class TaxRules extends BOBasePage {
   Methods
    */
 
-
   /**
    * Go to add tax Rules group Page
    * @return {Promise<void>}
