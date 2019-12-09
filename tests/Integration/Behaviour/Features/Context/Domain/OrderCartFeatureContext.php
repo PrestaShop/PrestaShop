@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
-
 
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartInformation;
@@ -71,6 +69,7 @@ class OrderCartFeatureContext extends AbstractDomainFeatureContext
      *
      * @param int $cartId
      * @param int $duplicatedCartId
+     *
      * @throws CartConstraintException
      * @throws ServiceCircularReferenceException
      * @throws ServiceNotFoundException
@@ -96,6 +95,4 @@ class OrderCartFeatureContext extends AbstractDomainFeatureContext
             $duplicatedCartInformation->getShipping(),
             'shipping info is not the same');
     }
-
-
 }
