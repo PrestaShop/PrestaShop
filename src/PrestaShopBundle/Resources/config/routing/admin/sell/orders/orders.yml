@@ -192,3 +192,11 @@ admin_orders_partial_refund:
     _controller: PrestaShopBundle:Admin/Sell/Order/Order:partialRefund
   requirements:
     orderId: \d+
+
+admin_orders_cancellation:
+  path: /{orderId}/cancellation
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Order/Order:cancellation
+  requirements:
+    orderId: \d+

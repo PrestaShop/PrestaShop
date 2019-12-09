@@ -53,6 +53,12 @@
             <p class="mb-0">{{ 'Total'|trans({}, 'Admin.Global') }}</p>
             <small class="text-muted">{{ orderForViewing.taxMethod }}</small>
           </th>
+          <th>
+            <p>{{ 'Cancel'|trans({}, 'Admin.Orderscustomers.Feature') }}</p>
+          </th>
+          <th>
+            <p> </p>
+          </th>
           {% if not orderForViewing.delivered %}
             <th class="text-right product_actions">
               <p>{{ 'Actions'|trans({}, 'Admin.Global') }}</p>
@@ -64,7 +70,11 @@
         </tr>
       </thead>
       <tbody>
-      {{ form_start(partialRefundForm, {'action': path('admin_orders_partial_refund', {'orderId': orderForViewing.id})}) }}
+      {% if orderForViewing.hasInvoice() %}
+        {{ form_start(partialRefundForm, {'action': path('admin_orders_partial_refund', {'orderId': orderForViewing.id})}) }}
+      {% else %}
+        {{ form_start(cancellationForm, {'action': path('admin_orders_cancellation', {'orderId': orderForViewing.id})}) }}
+      {% endif %}
         {% for product in orderForViewing.products.products %}
           <tr>
             <td>
@@ -101,6 +111,11 @@
               <p>{{ product.quantityRefunded }}{% if product.amountRefund() %} ({{ product.amountRefund() }} {{ 'Refunded'|trans({}, 'Admin.Orderscustomers.Feature') }}){% endif %}</p>
             </td>
             <td>{{ product.totalPrice }}</td>
+            <td>{{ form_widget(cancellationForm['cancellation_' ~ product.orderDetailId]) }}</td>
+            <td>
+              {{ form_widget(cancellationForm['cancellation_number_' ~ product.orderDetailId]) }}
+              0 / 3
+            </td>
             {% if not orderForViewing.delivered %}
               <td class="text-right product_actions">
                 <a href="#"
@@ -172,6 +187,7 @@
           <i class="material-icons">confirmation_number</i>
           {{ 'Add a discount'|trans({}, 'Admin.Orderscustomers.Feature') }}
         </button>
+        {{ form_widget(cancellationForm['save']) }}
       </div>
     </div>
 
@@ -295,4 +311,9 @@
     </div>
   </div>
 </div>
-{{ form_end(partialRefundForm) }}
+
+{% if orderForViewing.hasInvoice() %}
+  {{ form_end(partialRefundForm) }}
+{% else %}
+  {{ form_end(cancellationForm) }}
+{% endif %}
