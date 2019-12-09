@@ -23,3 +23,4 @@ services:
         arguments:
             - '@prestashop.core.grid.data_factory.cart'
             - '@translator'
+            - "@prestashop.core.localization.locale.context_locale"
