@@ -5,11 +5,16 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain;
 use PHPUnit_Framework_AssertionFailedError;
 use PrestaShop\PrestaShop\Adapter\Debug\DebugMode;
 use PrestaShop\PrestaShop\Core\Domain\Configuration\Command\SwitchDebugModeCommand;
+use Symfony\Component\DependencyInjection\Exception\ServiceCircularReferenceException;
+use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 
 class DebugModeFeatureContext extends AbstractDomainFeatureContext
 {
     /**
      * @When I enable debug mode
+     *
+     * @throws ServiceCircularReferenceException
+     * @throws ServiceNotFoundException
      */
     public function iEnableDebugMode()
     {
@@ -18,6 +23,9 @@ class DebugModeFeatureContext extends AbstractDomainFeatureContext
 
     /**
      * @When I disable debug mode
+     *
+     * @throws ServiceCircularReferenceException
+     * @throws ServiceNotFoundException
      */
     public function iDisableDebugMode()
     {
