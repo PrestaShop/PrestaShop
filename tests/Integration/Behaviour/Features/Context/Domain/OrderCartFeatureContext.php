@@ -89,10 +89,10 @@ class OrderCartFeatureContext extends AbstractDomainFeatureContext
         assertEquals($cartInformation->getProducts(), $duplicatedCartInformation->getProducts());
         assertEquals($cartInformation->getSummary(), $duplicatedCartInformation->getSummary());
         assertEquals($cartInformation->getLangId(), $duplicatedCartInformation->getLangId());
-        // todo: check why shipping info is not the same in the duplicated cart
-        assertEquals(
+        // shipping info has to be confirmed and is saved in the db after the order is created
+        assertNotEquals(
             $cartInformation->getShipping(),
             $duplicatedCartInformation->getShipping(),
-            'shipping info is not the same');
+            'shipping info is the same');
     }
 }
