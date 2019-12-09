@@ -136,7 +136,7 @@ default:
                 features: Features/Scenario/OrderMessage
             contexts:
                 - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
-                - Tests\Integration\Behaviour\Features\Context\Domain\OrderMessageContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\OrderMessageFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\OrderMessageContext
         misc:
             paths:
@@ -144,3 +144,4 @@ default:
             contexts:
               - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
               - Tests\Integration\Behaviour\Features\Context\Domain\DebugModeFeatureContext
+              - Tests\Integration\Behaviour\Features\Context\Domain\ShowcaseCardFeatureContext
