@@ -400,6 +400,7 @@ class ManufacturerController extends FrameworkBundleAdminController
      */
     public function exportAction(ManufacturerFilters $filters)
     {
+        $filters = new ManufacturerFilters(['limit' => null] + $filters->all());
         $manufacturersGridFactory = $this->get('prestashop.core.grid.grid_factory.manufacturer');
         $manufacturersGrid = $manufacturersGridFactory->getGrid($filters);
 
