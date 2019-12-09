@@ -64,6 +64,7 @@ export default class CreateOrderPage {
     this.summaryManager = new SummaryManager();
 
     this._initListeners();
+    this._loadCartFromUrlParams();
   }
 
   /**
@@ -92,6 +93,20 @@ export default class CreateOrderPage {
     }
 
     return deliveryValid && invoiceValid;
+  }
+
+  /**
+   * Loads cart if query params contains valid cartId
+   *
+   * @private
+   */
+  _loadCartFromUrlParams() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const cartId = Number(urlParams.get('cartId'));
+
+    if (!isNaN(cartId) && cartId !== 0) {
+      this.cartProvider.getCart(cartId);
+    }
   }
 
   /**
