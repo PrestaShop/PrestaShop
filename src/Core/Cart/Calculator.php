@@ -209,12 +209,13 @@ class Calculator
         }
 
         $totalWithoutDiscount = $this->getRowTotalWithoutDiscount();
-        $initialShipping = $this->getFees()->getInitialShippingFees();
-        $finalShipping = $this->getFees()->getFinalShippingFees();
 
-        if (null !== $initialShipping && null !== $finalShipping) {
-            $totalWithoutDiscount = $totalWithoutDiscount->add($initialShipping);
-            $totalWithoutDiscount = $totalWithoutDiscount->sub($finalShipping);
+        if (null !== $this->getFees()->getInitialShippingFees() && null !== $this->getFees()->getFinalShippingFees()) {
+            $shippingDiscount = (new AmountImmutable())
+                ->add($this->getFees()->getInitialShippingFees())
+                ->sub($this->getFees()->getFinalShippingFees())
+            ;
+            $totalWithoutDiscount = $totalWithoutDiscount->add($shippingDiscount);
         }
         // discount cannot be above total cart price
         if ($totalWithoutDiscount < $amount) {
