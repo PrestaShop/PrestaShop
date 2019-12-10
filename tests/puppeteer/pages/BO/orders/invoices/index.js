@@ -30,6 +30,7 @@ module.exports = class Invoice extends BOBasePage {
     this.invoiceOptionEnableProductImage = `${this.invoiceOptionsForm} 
     label[for="form_invoice_options_enable_product_images_%ID"]`;
     this.saveInvoiceOptionsButton = `${this.invoiceOptionsForm} .btn.btn-primary`;
+    this.invoicePrefixInput = `${this.invoiceOptionsForm} #form_invoice_options_invoice_prefix_1`;
   }
 
   /*
@@ -99,5 +100,13 @@ module.exports = class Invoice extends BOBasePage {
    */
   async enableTaxBreakdown(enable = true) {
     await this.page.click(this.taxBreakdownEnable.replace('%ID', enable ? 1 : 0));
+  }
+
+  /** Edit invoice Prefix
+   * @param prefix
+   * @return {Promise<void>}
+   */
+  async changePrefix(prefix) {
+    await this.setValue(this.invoicePrefixInput, prefix);
   }
 };
