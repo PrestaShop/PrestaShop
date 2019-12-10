@@ -47,7 +47,7 @@ describe('Create unofficial currency and check it in FO', async () => {
   after(async () => {
     await helper.closeBrowser(browser);
   });
-  // Login into BO and go to customers page
+  // Login into BO and go to currencies page
   loginCommon.loginBO();
 
   it('should go to localization page', async function () {
