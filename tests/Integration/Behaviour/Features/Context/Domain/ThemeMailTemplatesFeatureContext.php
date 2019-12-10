@@ -24,9 +24,9 @@ class ThemeMailTemplatesFeatureContext extends AbstractDomainFeatureContext
     {
         $data = $this->extractFirstRowFromProperties($table);
 
-        $overwriteTemplates = $data['overwrite_templates'] === "" ? false : $data['overwrite_templates'];
-        $coreMailsFolder = $data['core_mails_folder'] === "" ? '' : $data['core_mails_folder'];
-        $modulesMailFolder = $data['modules_mail_folder'] === "" ? '' : $data['modules_mail_folder'];
+        $overwriteTemplates = $data['overwrite_templates'] === '' ? false : $data['overwrite_templates'];
+        $coreMailsFolder = $data['core_mails_folder'] === '' ? '' : $data['core_mails_folder'];
+        $modulesMailFolder = $data['modules_mail_folder'] === '' ? '' : $data['modules_mail_folder'];
 
         $this->getCommandBus()->handle(
             new GenerateThemeMailTemplatesCommand(
