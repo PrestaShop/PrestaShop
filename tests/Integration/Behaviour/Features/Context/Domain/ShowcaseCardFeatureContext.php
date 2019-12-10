@@ -2,9 +2,15 @@
 
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
-use Behat\Behat\Tester\Exception\PendingException;
+use PHPUnit_Framework_AssertionFailedError;
+use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\Command\CloseShowcaseCardCommand;
+use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\Exception\InvalidShowcaseCardNameException;
+use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\Exception\ShowcaseCardException;
+use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\Query\GetShowcaseCardIsClosed;
 use PrestaShopException;
 use Shop;
+use Symfony\Component\DependencyInjection\Exception\ServiceCircularReferenceException;
+use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 
 class ShowcaseCardFeatureContext extends AbstractDomainFeatureContext
 {
@@ -13,7 +19,7 @@ class ShowcaseCardFeatureContext extends AbstractDomainFeatureContext
      *
      * @throws PrestaShopException
      */
-    public function singleleShopContextIsLoaded()
+    public function singleShopContextIsLoaded()
     {
         Shop::setContext(Shop::CONTEXT_SHOP);
     }
@@ -29,18 +35,38 @@ class ShowcaseCardFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @When I close :arg1 showcase card
+     * @When I close :cardName showcase card as employee with id :employeeId
+     *
+     * @param string $cardName
+     * @param int $employeeId
+     *
+     * @throws InvalidShowcaseCardNameException
+     * @throws ServiceCircularReferenceException
+     * @throws ServiceNotFoundException
+     * @throws ShowcaseCardException
      */
-    public function iCloseShowcaseCard($arg1)
+    public function iCloseShowcaseCardAsEmployeeWithId(string $cardName, int $employeeId)
     {
-        throw new PendingException();
+        $this->getCommandBus()->handle(new CloseShowcaseCardCommand($employeeId, $cardName));
     }
 
     /**
-     * @Then :arg1 showcase card should be closed
+     * @Then showcase card :cardName for employee with id :employeeId should be closed
+     *
+     * @param string $cardName
+     * @param int $employeeId
+     *
+     * @throws InvalidShowcaseCardNameException
+     * @throws ServiceCircularReferenceException
+     * @throws ServiceNotFoundException
+     * @throws ShowcaseCardException
+     * @throws PHPUnit_Framework_AssertionFailedError
      */
-    public function showcaseCardShouldBeClosed($arg1)
+    public function showcaseCardForEmployeeWithIdShouldBeClosed(string $cardName, int $employeeId)
     {
-        throw new PendingException();
+        $showcaseCardIsClosed = $this->getQueryBus()->handle(
+            new GetShowcaseCardIsClosed((int) $employeeId, $cardName)
+        );
+        assertTrue($showcaseCardIsClosed);
     }
 }

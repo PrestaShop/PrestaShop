@@ -30,7 +30,7 @@ use OrderMessage;
 use PrestaShop\PrestaShop\Core\Domain\OrderMessage\Command\AddOrderMessageCommand;
 use PrestaShop\PrestaShop\Core\Domain\OrderMessage\ValueObject\OrderMessageId;
 
-class OrderMessageFeatureContext extends AbstractDomainFeatureContext
+class OrderMessageContext extends AbstractDomainFeatureContext
 {
     /**
      * @When I specify :propertyName :propertyValue in default language for order message :reference
