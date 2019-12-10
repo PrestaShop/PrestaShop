@@ -43,7 +43,8 @@
     "mochawesome": "^2.3.0",
     "puppeteer": "^1.18.1",
     "faker": "^4.1.0",
-    "module-alias": "^2.2.2"
+    "module-alias": "^2.2.2",
+    "pdfjs-dist": "^2.2.228"
   },
   "devDependencies": {
     "babel-eslint": "^10.0.2",

@@ -21,6 +21,7 @@ module.exports = class Order extends BOBasePage {
     this.statusValidation = '#status tr:nth-child(1) > td:nth-child(2)';
     this.documentTab = '#tabOrder a[href=\'#documents\']';
     this.documentName = '#documents_table tr td:nth-child(2)';
+    this.documentNumberLink = '#documents_table tr td:nth-child(3) a';
   }
 
   /*
@@ -61,5 +62,28 @@ module.exports = class Order extends BOBasePage {
   async getDocumentName() {
     await this.page.click(this.documentTab);
     return this.getTextContent(this.documentName);
+  }
+
+
+  /**
+   * Get file name
+   * @returns fileName
+   */
+  async getFileName() {
+    await this.page.click(this.documentTab);
+    const fileName = await this.getTextContent(this.documentNumberLink);
+    return fileName.replace('#', '').trim();
+  }
+
+  /**
+   * Download invoice
+   * @returns {Promise<void>}
+   */
+  async downloadInvoice() {
+    /* eslint-disable */
+    // Delete the target because a new tab is opened when downloading the file
+    await this.page.$eval(this.documentNumberLink, el => el.target = '');
+    await this.page.click(this.documentNumberLink);
+    /* eslint-enable */
   }
 };
