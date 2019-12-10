@@ -5,10 +5,11 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 
 use Behat\Behat\Tester\Exception\PendingException;
-use Contact;
+use PrestaShop\PrestaShop\Core\Domain\Contact\Command\AddContactCommand;
+use PrestaShop\PrestaShop\Core\Domain\Contact\Exception\ContactConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Contact\Exception\ContactException;
+use PrestaShop\PrestaShop\Core\Domain\Contact\Exception\ContactNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Contact\Query\GetContactForEditing;
-use PrestaShop\PrestaShop\Core\Domain\Contact\QueryResult\EditableContact;
 
 class ContactFeatureContext extends AbstractDomainFeatureContext
 {
@@ -21,11 +22,11 @@ class ContactFeatureContext extends AbstractDomainFeatureContext
      */
     public function thereIsNoContactWithId(int $contactId)
     {
-        /** @var EditableContact $editableContact */
-        $editableContact = $this->getQueryBus()->handle(
-            new GetContactForEditing($contactId)
-        );
-
+        try {
+            $this->getQueryBus()->handle(new GetContactForEditing($contactId));
+        } catch (ContactNotFoundException $exception) {
+            return;
+        }
     }
 
     /**
@@ -37,17 +38,20 @@ class ContactFeatureContext extends AbstractDomainFeatureContext
      */
     public function theLastContactIsWithId(int $contactId)
     {
-        /** @var EditableContact $editableContact */
-        $editableContact = $this->getQueryBus()->handle(
-            new GetContactForEditing($contactId)
-        );
+        $this->getQueryBus()->handle(new GetContactForEditing($contactId));
     }
 
     /**
-     * @When I add new contact with title :arg1 and messages saving is enabled
+     * @When I add new contact with title :title and messages saving is enabled
+     *
+     * @param string $title
+     *
+     * @throws PendingException
+     * @throws ContactConstraintException
      */
-    public function iAddNewContactWithTitleAndMessagesSavingIsEnabled($arg1)
+    public function iAddNewContactWithTitleAndMessagesSavingIsEnabled(string $title)
     {
+        $this->getQueryBus()->handle(new AddContactCommand([$title], true));
         throw new PendingException();
     }
 
