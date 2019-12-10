@@ -5,7 +5,7 @@ module.exports = class AddTaxRules extends BOBasePage {
   constructor(page) {
     super(page);
 
-    this.pageTitleCreate = 'Tax Rules > Add new • prestashop';
+    this.pageTitleCreate = 'Tax Rules > Add new';
     this.pageTitleEdit = 'Tax Rules > Edit';
 
     // Selectors
@@ -20,7 +20,6 @@ module.exports = class AddTaxRules extends BOBasePage {
     // New tax rule form
     this.taxRuleForm = '#tax_rule_form';
     this.countrySelect = `${this.taxRuleForm} #country`;
-    this.zipCodeInput = `${this.taxRuleForm} #zipcode`;
     this.behaviourSelect = `${this.taxRuleForm} #behavior`;
     this.taxSelect = `${this.taxRuleForm} #id_tax`;
     this.descriptionInput = `${this.taxRuleForm} #description`;
@@ -51,7 +50,6 @@ module.exports = class AddTaxRules extends BOBasePage {
    */
   async createEditTaxRules(taxRuleData) {
     await this.selectByVisibleText(this.countrySelect, taxRuleData.country);
-    // await this.page.type(this.zipCodeInput, taxRuleData.zip);
     await this.selectByVisibleText(this.behaviourSelect, taxRuleData.behaviour);
     await this.selectByVisibleText(this.taxSelect, taxRuleData.tax);
     await this.setValue(this.descriptionInput, taxRuleData.description);

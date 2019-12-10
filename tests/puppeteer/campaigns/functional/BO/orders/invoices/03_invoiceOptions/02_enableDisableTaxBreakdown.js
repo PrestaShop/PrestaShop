@@ -14,7 +14,6 @@ const AddTaxRulesPage = require('@pages/BO/international/taxes/taxRules/add');
 const ProductsPage = require('@pages/BO/catalog/products/index');
 const AddProductPage = require('@pages/BO/catalog/products/add');
 const HomePage = require('@pages/FO/home');
-const SearchProductPage = require('@pages/FO/searchResults');
 const ProductPage = require('@pages/FO/product');
 const FOBasePage = require('@pages/FO/FObasePage');
 const CartPage = require('@pages/FO/cart');
@@ -53,7 +52,6 @@ const init = async function () {
     productsPage: new ProductsPage(page),
     addProductPage: new AddProductPage(page),
     homePage: new HomePage(page),
-    searchProductPage: new SearchProductPage(page),
     productPage: new ProductPage(page),
     foBasePage: new FOBasePage(page),
     cartPage: new CartPage(page),
