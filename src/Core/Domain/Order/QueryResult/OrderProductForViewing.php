@@ -26,7 +26,9 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Order\QueryResult;
 
-class OrderProductForViewing
+use JsonSerializable;
+
+class OrderProductForViewing implements JsonSerializable
 {
     const TYPE_PACK = 'pack';
     const TYPE_PRODUCT_WITH_COMBINATIONS = 'product_with_combinations';
@@ -274,5 +276,30 @@ class OrderProductForViewing
     public function getUnitPriceTaxInclRaw(): float
     {
         return $this->unitPriceTaxInclRaw;
+    }
+
+    /**
+     * @return array
+     */
+    public function jsonSerialize()
+    {
+        return [
+            'id' => $this->getId(),
+            'orderDetailId' => $this->getOrderDetailId(),
+            'name' => $this->getName(),
+            'reference' => $this->getReference(),
+            'supplierReference' => $this->getSupplierReference(),
+            'location' => $this->getLocation(),
+            'imagePath' => $this->getImagePath(),
+            'quantity' => $this->getQuantity(),
+            'availableQuantity' => $this->getAvailableQuantity(),
+            'unitPrice' => $this->getUnitPrice(),
+            'unitPriceTaxExclRaw' => $this->getUnitPriceTaxExclRaw(),
+            'unitPriceTaxInclRaw' => $this->getUnitPriceTaxInclRaw(),
+            'totalPrice' => $this->getTotalPrice(),
+            'taxRate' => $this->getTaxRate(),
+            'type' => $this->getType(),
+            'packItems' => $this->getPackItems()
+        ];
     }
 }

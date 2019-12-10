@@ -99,4 +99,9 @@ export default {
   orderShippingTotal: '#orderShippingTotal',
   orderTaxesTotal: '#orderTaxesTotal',
   orderTotal: '#orderTotal',
+  // Product Pack Modal
+  productPackModal: '#productPackModal',
+  productPackModalTable: '#productPackModalTable tbody',
+  productPackModalRows: '#productPackModalTable tbody tr:not(#templatePackTableRow)',
+  productPackModalRowTemplate: '#templatePackTableRow',
 };

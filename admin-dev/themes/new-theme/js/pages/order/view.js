@@ -45,6 +45,7 @@ $(() => {
   const orderAddAutocomplete = new OrderProductAutocomplete($(OrderViewPageMap.productSearchInput));
   const orderAdd = new OrderProductAdd();
 
+  orderViewPage.listenForProductPack();
   orderViewPage.listenForProductDelete();
   orderViewPage.listenForProductEdit();
   orderViewPage.listenForProductAdd();

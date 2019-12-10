@@ -454,7 +454,7 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
                     $pack_item['name'],
                     $pack_item['reference'],
                     $pack_item['supplier_reference'],
-                    $pack_item['out_of_stock'],
+                    $pack_item['pack_quantity'],
                     0,
                     0,
                     $pack_item['current_stock'],
