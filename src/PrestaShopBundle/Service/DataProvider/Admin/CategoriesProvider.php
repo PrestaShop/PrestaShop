@@ -40,9 +40,6 @@ class CategoriesProvider
     const CATEGORY_THEME = 'theme_modules';
     const CATEGORY_THEME_NAME = 'Theme modules';
 
-    const CATEGORY_MY_MODULES = 'my_modules';
-    const CATEGORY_MY_MODULES_NAME = 'My Modules';
-
     /**
      * @var array
      */
@@ -84,10 +81,8 @@ class CategoriesProvider
             }
 
             // Clear custom categories if there is no module inside
-            foreach ([self::CATEGORY_THEME, self::CATEGORY_MY_MODULES] as $category) {
-                if (empty($categories['categories']->subMenu[$category]->modules)) {
-                    unset($categories['categories']->subMenu[$category]);
-                }
+            if (empty($categories['categories']->subMenu[self::CATEGORY_THEME]->modules)) {
+                unset($categories['categories']->subMenu[self::CATEGORY_THEME]);
             }
 
             $this->categories = $categories;
@@ -109,23 +104,6 @@ class CategoriesProvider
         $categories = [
             'categories' => $this->createMenuObject('categories', 'Categories'),
         ];
-
-        if (empty($categoriesListing)) {
-            $categories['categories']->subMenu[self::CATEGORY_THEME] = $this->createMenuObject(
-                self::CATEGORY_THEME,
-                self::CATEGORY_THEME_NAME,
-                [],
-                self::CATEGORY_THEME
-            );
-            $categories['categories']->subMenu[self::CATEGORY_MY_MODULES] = $this->createMenuObject(
-                self::CATEGORY_MY_MODULES,
-                self::CATEGORY_MY_MODULES_NAME,
-                [],
-                self::CATEGORY_MY_MODULES
-            );
-
-            return $categories;
-        }
 
         foreach ($categoriesListing as $category) {
             $categories['categories']->subMenu[$category->name] = $this->createMenuObject(
@@ -194,23 +172,6 @@ class CategoriesProvider
     }
 
     /**
-     * Find module type.
-     *
-     * @param ApiModule $installedProduct Installed product
-     * @param array $modulesTheme Modules theme
-     *
-     * @return string
-     */
-    private function findModuleType(ApiModule $installedProduct, array $modulesTheme)
-    {
-        if (in_array($installedProduct->attributes->get('name'), $modulesTheme)) {
-            return self::CATEGORY_THEME;
-        }
-
-        return self::CATEGORY_MY_MODULES;
-    }
-
-    /**
      * Find module category.
      *
      * @param ApiModule $installedProduct Installed product
@@ -269,9 +230,9 @@ class CategoriesProvider
      *
      * @param ApiModule $module
      *
-     * @return string
+     * @return ?string
      */
-    private function getParentCategoryFromTabAttribute(ApiModule $module): string
+    private function getParentCategoryFromTabAttribute(ApiModule $module): ?string
     {
         foreach ($this->categoriesFromSource as $parentCategory) {
             foreach ($parentCategory->categories as $category) {
@@ -281,6 +242,6 @@ class CategoriesProvider
             }
         }
 
-        return self::CATEGORY_OTHER;
+        return null;
     }
 }
