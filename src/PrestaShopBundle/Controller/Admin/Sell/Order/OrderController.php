@@ -357,6 +357,7 @@ class OrderController extends FrameworkBundleAdminController
             'translator' => $this->get('translator'),
         ]);
         $form->handleRequest($request);
+
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
             $refunds = [];
@@ -407,6 +408,7 @@ class OrderController extends FrameworkBundleAdminController
             'products' => $orderForViewing->getProducts()->getProducts(),
             'translator' => $this->get('translator'),
         ]);
+
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();

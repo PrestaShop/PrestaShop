@@ -73,5 +73,9 @@
     <div class="form-inline d-inline-block form-horizontal ml-2">
       <a href="#" class="btn btn-action partial-refund-display">{{ 'Partial refund'|trans({}, 'Admin.Orderscustomers.Feature') }}</a>
     </div>
-  {% endif %}
+  {% else  %}
+    <div class="form-inline d-inline-block form-horizontal ml-2">
+      <a href="#" class="btn btn-action cancel-product-display">{{ 'Cancel products'|trans({}, 'Admin.Orderscustomers.Feature') }}</a>
+    </div>
+ {% endif %}
 </div>

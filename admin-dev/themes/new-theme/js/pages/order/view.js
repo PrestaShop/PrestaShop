@@ -145,4 +145,8 @@ $(() => {
     event.preventDefault();
     $('td.product_actions, th.product_actions, .partial-refund:not(.hidden), .shipping-price, .refund-checkboxes-container').toggle();
   });
+  $('a.cancel-product-display').on('click', (event) => {
+    event.preventDefault();
+    $('.cancellation-toggle').toggle();
+  });
 });

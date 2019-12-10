@@ -46,18 +46,20 @@ class CancellationType extends AbstractType
                     [
                         'required' => false,
                         'label' => false,
+                        'attr' => ['class' => 'cancellation-toggle']
                     ]
                 )
                 ->add('cancellation_number_' . $product->getOrderDetailId(), NumberType::class,
                     [
                         'required' => false,
                         'label' => false,
+                        'attr' => ['class' => 'cancellation-toggle']
                     ]
             );
         }
 
         $builder->add('save', SubmitType::class, [
-            'attr' => ['class' => 'cancellation save btn btn-primary ml-3'],
+            'attr' => ['class' => 'cancellation save btn btn-primary ml-3 cancellation-toggle'],
             'label' => $translator->trans('Cancel products', [], 'Admin.Orderscustomers.Feature'),
         ]);
     }
