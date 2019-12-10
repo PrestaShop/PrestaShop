@@ -146,3 +146,4 @@ default:
               - Tests\Integration\Behaviour\Features\Context\Domain\EmployeeFeatureContext
               - Tests\Integration\Behaviour\Features\Context\Domain\DebugModeFeatureContext
               - Tests\Integration\Behaviour\Features\Context\Domain\ShowcaseCardFeatureContext
+              - Tests\Integration\Behaviour\Features\Context\Domain\ThemeMailTemplatesFeatureContext
