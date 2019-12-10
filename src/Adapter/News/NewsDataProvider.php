@@ -162,7 +162,7 @@ class NewsDataProvider
             $date = strtotime($item->pubDate);
             $data['rss'][] = [
                 'date' => $this->tools->displayDate(date('Y-m-d H:i:s', $date), null, false),
-                'title' => htmlentities($item->title, ENT_QUOTES, 'utf-8'),
+                'title' => html_entity_decode($item->title, ENT_QUOTES, 'utf-8'),
                 'short_desc' => $this->tools->truncateString(strip_tags((string) $item->description), 150),
                 'link' => (string) $article_link,
             ];
