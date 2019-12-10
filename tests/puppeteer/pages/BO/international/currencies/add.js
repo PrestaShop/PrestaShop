@@ -52,4 +52,20 @@ module.exports = class AddCurrency extends BOBasePage {
     await this.clickAndWaitForNavigation(this.saveButton);
     return this.getTextContent(this.alertSuccessBlockParagraph);
   }
+
+  /**
+   * Create unofficial currency
+   * @param currencyData
+   * @return {Promise<textContent>}
+   */
+  async createUnOfficialCurrency(currencyData) {
+    await this.changeCheckboxValue(this.alternativeCurrencyCheckBox, true);
+    await this.setValue(this.currencyNameInput.replace('%ID', 1), currencyData.name);
+    await this.setValue(this.symbolInput.replace('%ID', 1), currencyData.symbol);
+    await this.setValue(this.isoCodeInput, currencyData.isoCode);
+    await this.setValue(this.exchangeRateInput, currencyData.exchangeRate.toString());
+    await this.page.click(this.statusSwitch.replace('%ID', currencyData.enabled ? 1 : 0));
+    await this.clickAndWaitForNavigation(this.saveButton);
+    return this.getTextContent(this.alertSuccessBlockParagraph);
+  }
 };
