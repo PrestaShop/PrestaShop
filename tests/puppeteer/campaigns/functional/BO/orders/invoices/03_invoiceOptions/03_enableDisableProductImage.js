@@ -24,8 +24,7 @@ const {Statuses} = require('@data/demo/orders');
 
 let browser;
 let page;
-let firstInvoiceFileName;
-let secondInvoiceFileName;
+let fileName;
 
 // Init objects needed
 const init = async function () {
@@ -45,7 +44,16 @@ const init = async function () {
   };
 };
 
-// Enable/Disable product image in invoices
+/*
+Enable product image in invoice
+Create order
+Create invoice
+Check that there is 2 images in the invoice (Logo and product image)
+Disable product image in invoice
+Create order
+Create invoice
+Check that there is 1 image in the invoice (Logo
+ */
 describe('Test enable/disable product image in invoices', async () => {
   // before and after functions
   before(async function () {
@@ -55,201 +63,111 @@ describe('Test enable/disable product image in invoices', async () => {
     this.pageObjects = await init();
   });
   after(async () => {
-    /* Delete the generated invoice */
-    files.deleteFile(`${global.BO.DOWNLOAD_PATH}/${firstInvoiceFileName}.pdf`);
-    files.deleteFile(`${global.BO.DOWNLOAD_PATH}/${secondInvoiceFileName}.pdf`);
     await helper.closeBrowser(browser);
   });
 
   // Login into BO
   loginCommon.loginBO();
 
-  describe('Enable product image in invoices then check the invoice file created', async () => {
-    describe('Enable product image', async () => {
-      it('should go to invoices page', async function () {
-        await this.pageObjects.boBasePage.goToSubMenu(
-          this.pageObjects.boBasePage.ordersParentLink,
-          this.pageObjects.boBasePage.invoicesLink,
-        );
-        await this.pageObjects.boBasePage.closeSfToolBar();
-        const pageTitle = await this.pageObjects.invoicesPage.getPageTitle();
-        await expect(pageTitle).to.contains(this.pageObjects.invoicesPage.pageTitle);
+  const tests = [
+    {args: {action: 'Enable', enable: true, imageNumber: 2}},
+    {args: {action: 'Disable', enable: false, imageNumber: 1}},
+  ];
+
+  tests.forEach((test) => {
+    describe(`${test.args.action} product image in invoice then check the invoice file created`, async () => {
+      describe(`${test.args.action} product image`, async () => {
+        it('should go to invoices page', async function () {
+          await this.pageObjects.boBasePage.goToSubMenu(
+            this.pageObjects.boBasePage.ordersParentLink,
+            this.pageObjects.boBasePage.invoicesLink,
+          );
+          await this.pageObjects.boBasePage.closeSfToolBar();
+          const pageTitle = await this.pageObjects.invoicesPage.getPageTitle();
+          await expect(pageTitle).to.contains(this.pageObjects.invoicesPage.pageTitle);
+        });
+
+        it(`should ${test.args.action} product image`, async function () {
+          await this.pageObjects.invoicesPage.enableProductImage(test.args.enable);
+          const textMessage = await this.pageObjects.invoicesPage.saveInvoiceOptions();
+          await expect(textMessage).to.contains(this.pageObjects.invoicesPage.successfulUpdateMessage);
+        });
       });
 
-      it('should enable product image', async function () {
-        await this.pageObjects.invoicesPage.enableProductImage(true);
-        const textMessage = await this.pageObjects.invoicesPage.saveInvoiceOptions();
-        await expect(textMessage).to.contains(this.pageObjects.invoicesPage.successfulUpdateMessage);
-      });
-    });
-
-    describe('Create new order in FO', async () => {
-      it('should go to FO and create an order', async function () {
-        // Click on view my shop
-        page = await this.pageObjects.boBasePage.viewMyShop();
-        this.pageObjects = await init();
-        await this.pageObjects.foBasePage.changeLanguage('en');
-        // Go to the first product page
-        await this.pageObjects.homePage.goToProductPage(1);
-        // Add the created product to the cart
-        await this.pageObjects.productPage.addProductToTheCart();
-        // Proceed to checkout the shopping cart
-        await this.pageObjects.cartPage.clickOnProceedToCheckout();
-        // Checkout the order
-        // Personal information step - Login
-        await this.pageObjects.checkoutPage.clickOnSignIn();
-        await this.pageObjects.checkoutPage.customerLogin(DefaultAccount);
-        // Address step - Go to delivery step
-        const isStepAddressComplete = await this.pageObjects.checkoutPage.goToDeliveryStep();
-        await expect(isStepAddressComplete, 'Step Address is not complete').to.be.true;
-        // Delivery step - Go to payment step
-        const isStepDeliveryComplete = await this.pageObjects.checkoutPage.goToPaymentStep();
-        await expect(isStepDeliveryComplete, 'Step Address is not complete').to.be.true;
-        // Payment step - Choose payment step
-        await this.pageObjects.checkoutPage.choosePaymentAndOrder(PaymentMethods.wirePayment.moduleName);
-        const cardTitle = await this.pageObjects.orderConfirmationPage
-          .getTextContent(this.pageObjects.orderConfirmationPage.orderConfirmationCardTitleH3);
-        // Check the confirmation message
-        await expect(cardTitle).to.contains(this.pageObjects.orderConfirmationPage.orderConfirmationCardTitle);
-        // Logout from FO
-        await this.pageObjects.foBasePage.logout();
-        page = await this.pageObjects.orderConfirmationPage.closePage(browser, 1);
-        this.pageObjects = await init();
-      });
-    });
-
-    describe('Generate the invoice and check product image', async () => {
-      it('should go to the orders page', async function () {
-        await this.pageObjects.boBasePage.goToSubMenu(
-          this.pageObjects.boBasePage.ordersParentLink,
-          this.pageObjects.boBasePage.ordersLink,
-        );
-        const pageTitle = await this.pageObjects.ordersPage.getPageTitle();
-        await expect(pageTitle).to.contains(this.pageObjects.ordersPage.pageTitle);
+      describe('Create new order in FO', async () => {
+        it('should go to FO and create an order', async function () {
+          // Click on view my shop
+          page = await this.pageObjects.boBasePage.viewMyShop();
+          this.pageObjects = await init();
+          await this.pageObjects.foBasePage.changeLanguage('en');
+          // Go to the first product page
+          await this.pageObjects.homePage.goToProductPage(1);
+          // Add the created product to the cart
+          await this.pageObjects.productPage.addProductToTheCart();
+          // Proceed to checkout the shopping cart
+          await this.pageObjects.cartPage.clickOnProceedToCheckout();
+          // Checkout the order
+          // Personal information step - Login
+          await this.pageObjects.checkoutPage.clickOnSignIn();
+          await this.pageObjects.checkoutPage.customerLogin(DefaultAccount);
+          // Address step - Go to delivery step
+          const isStepAddressComplete = await this.pageObjects.checkoutPage.goToDeliveryStep();
+          await expect(isStepAddressComplete, 'Step Address is not complete').to.be.true;
+          // Delivery step - Go to payment step
+          const isStepDeliveryComplete = await this.pageObjects.checkoutPage.goToPaymentStep();
+          await expect(isStepDeliveryComplete, 'Step Address is not complete').to.be.true;
+          // Payment step - Choose payment step
+          await this.pageObjects.checkoutPage.choosePaymentAndOrder(PaymentMethods.wirePayment.moduleName);
+          const cardTitle = await this.pageObjects.orderConfirmationPage
+            .getTextContent(this.pageObjects.orderConfirmationPage.orderConfirmationCardTitleH3);
+          // Check the confirmation message
+          await expect(cardTitle).to.contains(this.pageObjects.orderConfirmationPage.orderConfirmationCardTitle);
+          // Logout from FO
+          await this.pageObjects.foBasePage.logout();
+          page = await this.pageObjects.orderConfirmationPage.closePage(browser, 1);
+          this.pageObjects = await init();
+        });
       });
 
-      it('should go to the created order page', async function () {
-        await this.pageObjects.ordersPage.goToOrder(1);
-        const pageTitle = await this.pageObjects.viewOrderPage.getPageTitle();
-        await expect(pageTitle).to.contains(this.pageObjects.viewOrderPage.pageTitle);
-      });
+      describe('Generate the invoice and check product image', async () => {
+        it('should go to the orders page', async function () {
+          await this.pageObjects.boBasePage.goToSubMenu(
+            this.pageObjects.boBasePage.ordersParentLink,
+            this.pageObjects.boBasePage.ordersLink,
+          );
+          const pageTitle = await this.pageObjects.ordersPage.getPageTitle();
+          await expect(pageTitle).to.contains(this.pageObjects.ordersPage.pageTitle);
+        });
 
-      it(`should change the order status to '${Statuses.shipped.status}' and check it`, async function () {
-        const result = await this.pageObjects.viewOrderPage.modifyOrderStatus(Statuses.shipped.status);
-        await expect(result).to.be.true;
-      });
+        it('should go to the created order page', async function () {
+          await this.pageObjects.ordersPage.goToOrder(1);
+          const pageTitle = await this.pageObjects.viewOrderPage.getPageTitle();
+          await expect(pageTitle).to.contains(this.pageObjects.viewOrderPage.pageTitle);
+        });
 
-      it('should download the invoice', async function () {
-        firstInvoiceFileName = await this.pageObjects.viewOrderPage.getFileName();
-        await this.pageObjects.viewOrderPage.downloadInvoice();
-        const exist = await files.checkFileExistence(
-          global.BO.DOWNLOAD_PATH,
-          `${firstInvoiceFileName}.pdf`,
-        );
-        await expect(exist).to.be.true;
-      });
+        it(`should change the order status to '${Statuses.shipped.status}' and check it`, async function () {
+          const result = await this.pageObjects.viewOrderPage.modifyOrderStatus(Statuses.shipped.status);
+          await expect(result).to.be.true;
+        });
 
-      it('should check the product images in the PDF File', async () => {
-        // Check if there is 2 images in the invoice(Logo and Product image)
-        const imageNumber = await files.getImageNumberInPDF(
-          global.BO.DOWNLOAD_PATH,
-          `${firstInvoiceFileName}.pdf`,
-        );
-        await expect(imageNumber).to.be.equal(2);
-      });
-    });
-  });
+        it('should download the invoice', async function () {
+          fileName = await this.pageObjects.viewOrderPage.getFileName();
+          await this.pageObjects.viewOrderPage.downloadInvoice();
+          const exist = await files.checkFileExistence(
+            global.BO.DOWNLOAD_PATH,
+            `${fileName}.pdf`,
+          );
+          await expect(exist).to.be.true;
+        });
 
-  describe('Disable product image then check the invoice file created', async () => {
-    describe('Disable product image', async () => {
-      it('should go to invoices page', async function () {
-        await this.pageObjects.boBasePage.goToSubMenu(
-          this.pageObjects.boBasePage.ordersParentLink,
-          this.pageObjects.boBasePage.invoicesLink,
-        );
-        await this.pageObjects.boBasePage.closeSfToolBar();
-        const pageTitle = await this.pageObjects.invoicesPage.getPageTitle();
-        await expect(pageTitle).to.contains(this.pageObjects.invoicesPage.pageTitle);
-      });
-
-      it('should disable product image', async function () {
-        await this.pageObjects.invoicesPage.enableProductImage(false);
-        const textMessage = await this.pageObjects.invoicesPage.saveInvoiceOptions();
-        await expect(textMessage).to.contains(this.pageObjects.invoicesPage.successfulUpdateMessage);
-      });
-    });
-
-    describe('Create new order in FO', async () => {
-      it('should go to FO and create an order', async function () {
-        // Click on view my shop
-        page = await this.pageObjects.boBasePage.viewMyShop();
-        this.pageObjects = await init();
-        await this.pageObjects.foBasePage.changeLanguage('en');
-        // Go to the first product page
-        await this.pageObjects.homePage.goToProductPage(1);
-        // Add the created product to the cart
-        await this.pageObjects.productPage.addProductToTheCart();
-        // Proceed to checkout the shopping cart
-        await this.pageObjects.cartPage.clickOnProceedToCheckout();
-        // Checkout the order
-        // Personal information step - Login
-        await this.pageObjects.checkoutPage.clickOnSignIn();
-        await this.pageObjects.checkoutPage.customerLogin(DefaultAccount);
-        // Address step - Go to delivery step
-        const isStepAddressComplete = await this.pageObjects.checkoutPage.goToDeliveryStep();
-        await expect(isStepAddressComplete, 'Step Address is not complete').to.be.true;
-        // Delivery step - Go to payment step
-        const isStepDeliveryComplete = await this.pageObjects.checkoutPage.goToPaymentStep();
-        await expect(isStepDeliveryComplete, 'Step Address is not complete').to.be.true;
-        // Payment step - Choose payment step
-        await this.pageObjects.checkoutPage.choosePaymentAndOrder(PaymentMethods.wirePayment.moduleName);
-        const cardTitle = await this.pageObjects.orderConfirmationPage
-          .getTextContent(this.pageObjects.orderConfirmationPage.orderConfirmationCardTitleH3);
-        // Check the confirmation message
-        await expect(cardTitle).to.contains(this.pageObjects.orderConfirmationPage.orderConfirmationCardTitle);
-        page = await this.pageObjects.orderConfirmationPage.closePage(browser, 1);
-        this.pageObjects = await init();
-      });
-    });
-
-    describe('Generate the invoice and check product image', async () => {
-      it('should go to the orders page', async function () {
-        await this.pageObjects.boBasePage.goToSubMenu(
-          this.pageObjects.boBasePage.ordersParentLink,
-          this.pageObjects.boBasePage.ordersLink,
-        );
-        const pageTitle = await this.pageObjects.ordersPage.getPageTitle();
-        await expect(pageTitle).to.contains(this.pageObjects.ordersPage.pageTitle);
-      });
-
-      it('should go to the created order page', async function () {
-        await this.pageObjects.ordersPage.goToOrder(1);
-        const pageTitle = await this.pageObjects.viewOrderPage.getPageTitle();
-        await expect(pageTitle).to.contains(this.pageObjects.viewOrderPage.pageTitle);
-      });
-
-      it(`should change the order status to '${Statuses.shipped.status}' and check it`, async function () {
-        const result = await this.pageObjects.viewOrderPage.modifyOrderStatus(Statuses.shipped.status);
-        await expect(result).to.be.true;
-      });
-
-      it('should download the invoice', async function () {
-        secondInvoiceFileName = await this.pageObjects.viewOrderPage.getFileName();
-        await this.pageObjects.viewOrderPage.downloadInvoice();
-        const exist = await files.checkFileExistence(
-          global.BO.DOWNLOAD_PATH,
-          `${secondInvoiceFileName}.pdf`,
-        );
-        await expect(exist).to.be.true;
-      });
-
-      it('should check that there is no product images in the PDF File', async () => {
-        // Check if there is 1 image in the invoice(Logo)
-        const imageNumber = await files.getImageNumberInPDF(
-          global.BO.DOWNLOAD_PATH,
-          `${secondInvoiceFileName}.pdf`,
-        );
-        await expect(imageNumber).to.be.equal(1);
+        it('should check the product images in the PDF File', async () => {
+          const imageNumber = await files.getImageNumberInPDF(
+            global.BO.DOWNLOAD_PATH,
+            `${fileName}.pdf`,
+          );
+          await expect(imageNumber).to.be.equal(test.args.imageNumber);
+          files.deleteFile(`${global.BO.DOWNLOAD_PATH}/${fileName}.pdf`);
+        });
       });
     });
   });
