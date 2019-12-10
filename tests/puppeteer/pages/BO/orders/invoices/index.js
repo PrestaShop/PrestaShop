@@ -26,6 +26,8 @@ module.exports = class Invoice extends BOBasePage {
     // Invoice options form
     this.invoiceOptionsForm = '[name="invoice_options"]';
     this.invoiceOptionsEnable = `${this.invoiceOptionsForm} label[for="form_invoice_options_enable_invoices_%ID"]`;
+    this.invoiceOptionEnableProductImage = `${this.invoiceOptionsForm} 
+    label[for="form_invoice_options_enable_product_images_%ID"]`;
     this.saveInvoiceOptionsButton = `${this.invoiceOptionsForm} .btn.btn-primary`;
   }
 
@@ -78,5 +80,14 @@ module.exports = class Invoice extends BOBasePage {
   async saveInvoiceOptions() {
     await this.clickAndWaitForNavigation(this.saveInvoiceOptionsButton);
     return this.getTextContent(this.alertSuccessBlockParagraph);
+  }
+
+  /**
+   * Enable disable product image
+   * @param enable
+   * @return {Promise<void>}
+   */
+  async enableProductImage(enable = true) {
+    await this.page.click(this.invoiceOptionEnableProductImage.replace('%ID', enable ? 1 : 0));
   }
 };
