@@ -10,8 +10,8 @@
     "watch": "npm run dev",
     "lint": "eslint -c .eslintrc.js --ext .js,.vue .",
     "lint-fix": "eslint -c .eslintrc.js --ext .js,.vue . --fix",
-    "scss-lint": "stylelint \"**/*.scss\" --cache --cache-location .cache/.stylelintcache --formatter verbose",
-    "scss-fix": "stylelint \"**/*.scss\" --fix --cache --cache-location .cache/.stylelintcache"
+    "scss-lint": "stylelint \"scss/**/*.scss\" --cache --cache-location .cache/.stylelintcache --formatter verbose",
+    "scss-fix": "stylelint \"scss/**/*.scss\" --fix --cache --cache-location .cache/.stylelintcache"
   },
   "author": "PrestaShop",
   "license": "OSL-3.0",
