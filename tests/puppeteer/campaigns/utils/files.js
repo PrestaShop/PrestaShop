@@ -39,15 +39,15 @@ module.exports = {
     let imageNumber = 0;
     for (let pageNo = 1; pageNo <= nbrPages; pageNo += 1) {
       const page = await pdf.getPage(nbrPages);
-      /* eslint-disable */
-      await page.getOperatorList().then((ops) => {
+      /* eslint-disable no-loop-func */
+      await page.getOperatorList().then(async (ops) => {
         for (let i = 0; i < ops.fnArray.length; i++) {
           if (ops.fnArray[i] === PDFJS.OPS.paintImageXObject) {
             imageNumber += 1;
           }
         }
       });
-      /* eslint-enable */
+      /* eslint-enable no-loop-func */
     }
     return imageNumber;
   },
