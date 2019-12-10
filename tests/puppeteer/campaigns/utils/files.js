@@ -1,5 +1,4 @@
 const PDFJS = require('pdfjs-dist');
-
 const fs = require('fs');
 
 module.exports = {
@@ -48,7 +47,7 @@ module.exports = {
           }
         }
       });
-      /* eslint-disable */
+      /* eslint-enable */
     }
     return imageNumber;
   },

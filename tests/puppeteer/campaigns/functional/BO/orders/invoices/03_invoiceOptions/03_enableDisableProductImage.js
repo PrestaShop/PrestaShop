@@ -52,7 +52,7 @@ Check that there is 2 images in the invoice (Logo and product image)
 Disable product image in invoice
 Create order
 Create invoice
-Check that there is 1 image in the invoice (Logo
+Check that there is 1 image in the invoice (Logo)
  */
 describe('Test enable/disable product image in invoices', async () => {
   // before and after functions
