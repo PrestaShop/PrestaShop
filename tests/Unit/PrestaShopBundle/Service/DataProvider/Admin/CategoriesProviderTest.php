@@ -461,4 +461,14 @@ class CategoriesProviderTest extends TestCase
 
         return $mock;
     }
+
+    public function testGetParentCategoryWithoutResult()
+    {
+        $this->assertEquals('Test', $this->provider->getParentCategory('Test'));
+    }
+
+    public function testGetParentCategory()
+    {
+        $this->assertEquals('Administration', $this->provider->getParentCategory('Registration & Ordering Process'));
+    }
 }
