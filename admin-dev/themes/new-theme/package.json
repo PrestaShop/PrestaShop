@@ -9,7 +9,9 @@
     "dev": "webpack --progress --colors --debug --display-chunks --watch",
     "watch": "npm run dev",
     "lint": "eslint -c .eslintrc.js --ext .js,.vue .",
-    "lint-fix": "eslint -c .eslintrc.js --ext .js,.vue . --fix"
+    "lint-fix": "eslint -c .eslintrc.js --ext .js,.vue . --fix",
+    "scss-lint": "stylelint \"**/*.scss\" --cache --cache-location .cache/.stylelintcache --formatter verbose",
+    "scss-fix": "stylelint \"**/*.scss\" --fix --cache --cache-location .cache/.stylelintcache"
   },
   "author": "PrestaShop",
   "license": "OSL-3.0",
@@ -79,6 +81,8 @@
     "postcss-loader": "^3.0.0",
     "sass-loader": "^6.0.7",
     "style-loader": "^0.23.0",
+    "stylelint": "^12.0.0",
+    "stylelint-config-prestashop": "^1.0.2",
     "uglify-save-license": "^0.4.1",
     "uglifyjs-webpack-plugin": "^1.3.0",
     "vue-loader": "^11",
