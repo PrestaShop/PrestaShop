@@ -78,7 +78,7 @@ before_install:
 
 install:
   - composer install --no-suggest --ansi --prefer-dist --no-interaction --no-progress --quiet;
-  - if [ "$PRESTASHOP_TEST_TYPE" = "sanity" ]; then
+  - if [ "$PRESTASHOP_TEST_TYPE" != "sanity" ]; then
       bash travis-scripts/install-prestashop;
     fi
 
