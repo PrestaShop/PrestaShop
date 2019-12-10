@@ -27,12 +27,12 @@ module.exports = {
   },
 
   /**
-   * Get page text
+   * Get page text from PDF
    * @param pdf
    * @param pageNo
    * @return text, text in PDF file
    */
-  async getPageText(pdf, pageNo) {
+  async getPageTextFromPdf(pdf, pageNo) {
     const page = await pdf.getPage(pageNo);
     const tokenizedText = await page.getTextContent();
     return tokenizedText.items.map(token => token.str);
@@ -50,7 +50,7 @@ module.exports = {
     const maxPages = pdf.numPages;
     const pageTextPromises = [];
     for (let pageNo = 1; pageNo <= maxPages; pageNo += 1) {
-      pageTextPromises.push(this.getPageText(pdf, pageNo));
+      pageTextPromises.push(this.getPageTextFromPdf(pdf, pageNo));
     }
     const pageTexts = await Promise.all(pageTextPromises);
     return (pageTexts.join(' ').indexOf(text) !== -1);
