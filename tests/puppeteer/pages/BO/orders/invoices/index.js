@@ -33,6 +33,7 @@ module.exports = class Invoice extends BOBasePage {
     this.legalFreeTextInput = '#form_invoice_options_legal_free_text_1';
     this.footerTextInput = '#form_invoice_options_footer_text_1';
     this.saveInvoiceOptionsButton = `${this.invoiceOptionsForm} .btn.btn-primary`;
+    this.invoiceAddCurrentYear = `${this.invoiceOptionsForm} label[for="form_invoice_options_add_current_year_%ID"]`;
   }
 
   /*
@@ -113,5 +114,14 @@ module.exports = class Invoice extends BOBasePage {
     await this.setValue(this.invoiceNumberInput, data.invoiceNumber);
     await this.setValue(this.legalFreeTextInput, data.legalFreeText);
     await this.setValue(this.footerTextInput, data.footerText);
+  }
+
+  /**
+   * Enable disable invoices
+   * @param enable
+   * @return {Promise<void>}
+   */
+  async enableAddCurrentYearToInvoice(enable = true) {
+    await this.page.click(this.invoiceAddCurrentYear.replace('%ID', enable ? 1 : 0));
   }
 };
