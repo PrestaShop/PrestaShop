@@ -5,23 +5,42 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 
 use Behat\Behat\Tester\Exception\PendingException;
+use Contact;
+use PrestaShop\PrestaShop\Core\Domain\Contact\Exception\ContactException;
+use PrestaShop\PrestaShop\Core\Domain\Contact\Query\GetContactForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Contact\QueryResult\EditableContact;
 
 class ContactFeatureContext extends AbstractDomainFeatureContext
 {
     /**
-     * @Given there is no contact with id :arg1
+     * @Given there is no contact with id :contactId
+     *
+     * @param int $contactId
+     *
+     * @throws ContactException
      */
-    public function thereIsNoContactWithId($arg1)
+    public function thereIsNoContactWithId(int $contactId)
     {
-        throw new PendingException();
+        /** @var EditableContact $editableContact */
+        $editableContact = $this->getQueryBus()->handle(
+            new GetContactForEditing($contactId)
+        );
+
     }
 
     /**
-     * @Given the last contact is with id :arg1
+     * @Given the last contact is with id :contactId
+     *
+     * @param int $contactId
+     *
+     * @throws ContactException
      */
-    public function theLastContactIsWithId($arg1)
+    public function theLastContactIsWithId(int $contactId)
     {
-        throw new PendingException();
+        /** @var EditableContact $editableContact */
+        $editableContact = $this->getQueryBus()->handle(
+            new GetContactForEditing($contactId)
+        );
     }
 
     /**
