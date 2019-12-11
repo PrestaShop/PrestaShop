@@ -385,7 +385,7 @@ class LinkCore
             } elseif ((int) $category) {
                 $category = new Category((int) $category, $idLang);
             } else {
-                throw new PrestaShopException('Invalid category vars');
+		return null;
             }
         }
 
@@ -440,7 +440,17 @@ class LinkCore
         if (!$alias) {
             $category = $this->getCategoryObject($category, $idLang);
         }
-        $params['rewrite'] = (!$alias) ? $category->link_rewrite : $alias;
+
+	$params['rewrite'] = "";
+
+        if(!$alias){
+           if(is_object($category)) {
+              $params['rewrite'] = $category->link_rewrite;
+           }
+        } else{
+           $params['rewrite'] = $alias;
+        }
+
         if ($dispatcher->hasKeyword($rule, $idLang, 'meta_keywords', $idShop)) {
             $category = $this->getCategoryObject($category, $idLang);
             $params['meta_keywords'] = Tools::str2url($category->getFieldByLang('meta_keywords'));
