@@ -20,6 +20,7 @@ module.exports = class AddProduct extends BOBasePage {
     this.productOnlineSwitch = '.product-footer div.switch-input';
     this.productDescriotionTab = '#tab_description a';
     this.productDescriptionIframe = '#form_step1_description_1_ifr';
+    this.productTaxRuleSelect = '#step2_id_tax_rules_group_rendered';
     this.productDeleteLink = '.product-footer a.delete';
 
     // Form nav
@@ -72,6 +73,7 @@ module.exports = class AddProduct extends BOBasePage {
       await this.page.click(this.productQuantityInput, {clickCount: 3});
       await this.page.type(this.productQuantityInput, productData.quantity);
     }
+    await this.selectByVisibleText(this.productTaxRuleSelect, productData.taxRule);
     // Switch product online before save
     if (switchProductOnline) {
       await Promise.all([

@@ -1,5 +1,5 @@
-const PDFJS = require('pdfjs-dist');
 const fs = require('fs');
+const PDFJS = require('pdfjs-dist');
 
 module.exports = {
   /**
@@ -24,6 +24,35 @@ module.exports = {
       found = await fs.existsSync(`${global.BO.DOWNLOAD_PATH}/${fileName}`);
     }
     return found;
+  },
+
+  /**
+   * Get page text from PDF
+   * @param pdf
+   * @param pageNo
+   * @return text, text in PDF file
+   */
+  async getPageTextFromPdf(pdf, pageNo) {
+    const page = await pdf.getPage(pageNo);
+    const tokenizedText = await page.getTextContent();
+    return tokenizedText.items.map(token => token.str);
+  },
+
+  /**
+   * Check text in PDF
+   * @param fileName
+   * @param text
+   * @return boolean, true if text exist, false if not
+   */
+  async checkTextInPDF(fileName, text) {
+    const pdf = await PDFJS.getDocument(`${global.BO.DOWNLOAD_PATH}/${fileName}`).promise;
+    const maxPages = pdf.numPages;
+    const pageTextPromises = [];
+    for (let pageNo = 1; pageNo <= maxPages; pageNo += 1) {
+      pageTextPromises.push(this.getPageTextFromPdf(pdf, pageNo));
+    }
+    const pageTexts = await Promise.all(pageTextPromises);
+    return (pageTexts.join(' ').indexOf(text) !== -1);
   },
 
   /**

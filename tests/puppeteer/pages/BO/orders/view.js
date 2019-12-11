@@ -14,11 +14,13 @@ module.exports = class Order extends BOBasePage {
     this.editProductQuantityInput = `${this.orderProductsRowTable} span.product_quantity_edit > input`;
     this.productQuantitySpan = `${this.orderProductsRowTable} span.product_quantity_show.badge`;
     this.UpdateProductButton = `${this.orderProductsRowTable} .submitProductChange`;
+    // Status tab
     this.orderStatusesSelect = '#id_order_state_chosen';
     this.orderStatusesSearchInput = `${this.orderStatusesSelect} input[type='text']`;
     this.orderStatusSearchResult = `${this.orderStatusesSelect} li:nth-child(1)`;
     this.updateStatusButton = '#submit_state';
     this.statusValidation = '#status tr:nth-child(1) > td:nth-child(2)';
+    // Document tab
     this.documentTab = '#tabOrder a[href=\'#documents\']';
     this.documentName = '#documents_table tr td:nth-child(2)';
     this.documentNumberLink = '#documents_table tr td:nth-child(3) a';
@@ -64,7 +66,6 @@ module.exports = class Order extends BOBasePage {
     return this.getTextContent(this.documentName);
   }
 
-
   /**
    * Get file name
    * @returns fileName
@@ -80,10 +81,10 @@ module.exports = class Order extends BOBasePage {
    * @returns {Promise<void>}
    */
   async downloadInvoice() {
-    /* eslint-disable */
+    /* eslint-disable no-return-assign, no-param-reassign */
     // Delete the target because a new tab is opened when downloading the file
     await this.page.$eval(this.documentNumberLink, el => el.target = '');
     await this.page.click(this.documentNumberLink);
-    /* eslint-enable */
+    /* eslint-enable no-return-assign, no-param-reassign */
   }
 };
