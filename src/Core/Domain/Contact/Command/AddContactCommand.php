@@ -61,7 +61,7 @@ class AddContactCommand extends AbstractContactCommand
     private $shopAssociation;
 
     /**
-     * @param string[] $localisedTitles
+     * @param string[] $localisedTitles - sample: [$langId => $title]
      * @param bool $isMessageSavingEnabled
      *
      * @throws ContactConstraintException
