@@ -27,19 +27,19 @@
     <thead class="thead-default">
     <tr class="column-headers">
       <th scope="col">
-        {{$t('Language')}}
+        {{$t('list.language')}}
       </th>
       <th scope="col">
-        {{$t('Example')}}
+        {{$t('list.example')}}
       </th>
       <th scope="col">
         <div class="text-right">
-          {{$t('Edit symbol / format')}}
+          {{$t('list.edit')}}
         </div>
       </th>
       <th scope="col">
         <div class="grid-actions-header-text">
-          {{$t('Reset settings')}}
+          {{$t('list.reset')}}
         </div>
       </th>
     </tr>
@@ -76,7 +76,7 @@
 </template>
 
 <script>
-  import { NumberFormatter } from 'app/cldr';
+  import { NumberFormatter } from '@app/cldr';
 
   export default {
     name: 'language-list',
@@ -90,7 +90,7 @@
       displayFormat(language) {
         const currencyFormatter = NumberFormatter.build(language.priceSpecification);
 
-        return this.$t('Price: %price% (Special discount %discount%)', {
+        return this.$t('list.example.format', {
           '%price%': currencyFormatter.format(14251999.42),
           '%discount%': currencyFormatter.format(-566.268)
         });
