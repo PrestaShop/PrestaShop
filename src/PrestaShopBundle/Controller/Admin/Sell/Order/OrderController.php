@@ -337,7 +337,7 @@ class OrderController extends FrameworkBundleAdminController
         ];
 
         $this->dispatchHook(
-            'actionGetBackOfficeOrderButtons',
+            'actionGetAdminOrderButtons',
             $hookParameters
         );
 

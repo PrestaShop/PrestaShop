@@ -2140,8 +2140,8 @@
       <title>Admin Order Tab Content</title>
       <description>This hook displays new tab contents on the order view page</description>
     </hook>
-    <hook id="actionGetBackOfficeOrderButtons">
-      <name>actionGetBackOfficeOrderButtons</name>
+    <hook id="actionGetAdminOrderButtons">
+      <name>actionGetAdminOrderButtons</name>
       <title>Admin Order Buttons</title>
       <description>This hook is used to generate the buttons collection on the order view page thanks (see ActionsBarButtonsCollection)</description>
     </hook>
