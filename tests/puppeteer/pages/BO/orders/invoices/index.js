@@ -118,7 +118,7 @@ module.exports = class Invoice extends BOBasePage {
   }
 
   /**
-   * Enable disable invoices
+   * Enable add current year to invoice
    * @param enable
    * @return {Promise<void>}
    */

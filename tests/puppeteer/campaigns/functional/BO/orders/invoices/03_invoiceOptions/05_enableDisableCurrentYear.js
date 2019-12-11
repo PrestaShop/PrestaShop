@@ -39,7 +39,10 @@ const init = async function () {
 
 /*
 Enable Add current year to invoice number
+Choose the option After the sequential number
 Change the first Order status to shipped
+Check the current year in the invoice file name
+Choose the option Before the sequential number
 Check the current year in the invoice file name
 Disable Add current year to invoice number
 Check that the current year does not exist in the invoice file name
