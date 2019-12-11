@@ -37,6 +37,9 @@ use PrestaShop\PrestaShop\Core\Domain\Contact\Exception\ContactConstraintExcepti
 use PrestaShop\PrestaShop\Core\Domain\Contact\Exception\ContactException;
 use PrestaShop\PrestaShop\Core\Domain\Contact\ValueObject\ContactId;
 use PrestaShopException;
+use Symfony\Component\Validator\Exception\ConstraintDefinitionException;
+use Symfony\Component\Validator\Exception\InvalidOptionsException;
+use Symfony\Component\Validator\Exception\MissingOptionsException;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
@@ -62,7 +65,16 @@ final class AddContactHandler extends AbstractObjectModelHandler implements AddC
     /**
      * {@inheritdoc}
      *
+     * @param AddContactCommand $command
+     *
+     * @return ContactId
+     *
+     * @throws CannotAddContactException
+     * @throws ConstraintDefinitionException
+     * @throws ContactConstraintException
      * @throws ContactException
+     * @throws InvalidOptionsException
+     * @throws MissingOptionsException
      */
     public function handle(AddContactCommand $command)
     {
@@ -108,6 +120,9 @@ final class AddContactHandler extends AbstractObjectModelHandler implements AddC
      * @param array $localisedTitle
      *
      * @throws ContactConstraintException
+     * @throws ConstraintDefinitionException
+     * @throws InvalidOptionsException
+     * @throws MissingOptionsException
      */
     private function assertLocalisedTitleContainsDefaultLanguage(array $localisedTitle)
     {
