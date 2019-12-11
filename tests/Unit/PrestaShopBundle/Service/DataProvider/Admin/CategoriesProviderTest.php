@@ -41,11 +41,11 @@ class CategoriesProviderTest extends TestCase
     public function setUp()
     {
         $yamlParser = new YamlParser(_PS_CACHE_DIR_);
-        $prestashopAddonsConfig = $yamlParser->parse(_PS_ROOT_DIR_ . '/app/config/addons/categories.yml');
+        $prestashopAddonsConfig = $yamlParser->parse(__DIR__ . '/fixtures/categories.yml');
 
         $this->provider = new CategoriesProvider(
             $prestashopAddonsConfig['prestashop']['addons']['categories'],
-            ['cronjobs', 'gamification']
+            ['my_theme']
         );
     }
 
@@ -143,9 +143,11 @@ class CategoriesProviderTest extends TestCase
         );
     }
 
-    public function testGetCategoriesMenuWithModules()
+    public function testGetCategoriesMenuWithModulesAndThemes()
     {
         $gamification = $this->mockModule('gamification');
+        $cronjobs = $this->mockModule('cronjobs');
+        $myCustomTheme = $this->mockModule('my_theme', null, 'administration');
         $this->assertEquals(
             [
                 'categories' => (object) [
@@ -228,7 +230,14 @@ class CategoriesProviderTest extends TestCase
                             'tab' => 'other',
                             'name' => 'Other',
                             'refMenu' => 'other',
-                            'modules' => [$gamification],
+                            'modules' => [$gamification, $cronjobs],
+                            'subMenu' => [],
+                        ],
+                        'theme_modules' => (object) [
+                            'tab' => 'theme_modules',
+                            'name' => 'Theme modules',
+                            'refMenu' => 'theme_modules',
+                            'modules' => [$myCustomTheme],
                             'subMenu' => [],
                         ],
                     ],
@@ -237,6 +246,8 @@ class CategoriesProviderTest extends TestCase
             $this->provider->getCategoriesMenu(
                 [
                     $gamification,
+                    $cronjobs,
+                    $myCustomTheme,
                 ]
             )
         );
@@ -450,6 +461,7 @@ class CategoriesProviderTest extends TestCase
     {
         $mock = $this->getMockBuilder(Module::class)
               ->getMock();
+        $mock->attributes->set('name', $moduleName);
 
         if ($tab !== null) {
             $mock->attributes->set('tab', $tab);
