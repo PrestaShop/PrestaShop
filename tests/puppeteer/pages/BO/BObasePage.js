@@ -125,7 +125,7 @@ module.exports = class BOBasePage extends CommonPage {
     this.growlCloseButton = `${this.growlDefaultDiv} .growl-close`;
 
     // Alert Text
-    this.alertSuccessBlock = 'div.alert.alert-success:not([style=\'display: none;\'])';
+    this.alertSuccessBlock = "div.alert.alert-success:not([style='display: none;'])";
     this.alertSuccessBlockParagraph = `${this.alertSuccessBlock} div.alert-text p`;
     this.alertTextBlock = '.alert-text';
 
@@ -141,8 +141,8 @@ module.exports = class BOBasePage extends CommonPage {
     this.modalDialogNoButton = `${this.modalDialog} button.cancel`;
 
     // Symfony Toolbar
-    this.sfToolbarMainContentDiv = 'div[id*=\'sfToolbarMainContent\']';
-    this.sfCloseToolbarLink = 'a[id*=\'sfToolbarHideButton\']';
+    this.sfToolbarMainContentDiv = "div[id*='sfToolbarMainContent']";
+    this.sfCloseToolbarLink = "a[id*='sfToolbarHideButton']";
 
     // Sidebar
     this.rightSidebar = '#right-sidebar';
@@ -164,13 +164,10 @@ module.exports = class BOBasePage extends CommonPage {
       await this.clickAndWaitForNavigation(linkSelector);
     } else {
       // open the block
-      await Promise.all([
-        this.page.click(parentSelector),
-        this.waitForVisibleSelector(`${parentSelector}.open`),
-      ]);
+      await Promise.all([this.page.click(parentSelector), this.waitForVisibleSelector(`${parentSelector}.open`)]);
       await this.clickAndWaitForNavigation(linkSelector);
     }
-    await this.waitForVisibleSelector(`${linkSelector}.-active`);
+    await this.waitForVisibleSelector(`${linkSelector}.link-active`);
   }
 
   /**
@@ -299,7 +296,7 @@ module.exports = class BOBasePage extends CommonPage {
     const growlMessageText = await this.getTextContent(this.growlMessageBlock);
     await Promise.all([
       this.page.$eval(this.growlCloseButton, e => e.click()),
-      this.page.waitForSelector(this.growlMessageBlock, {hidden: true}),
+      this.page.waitForSelector(this.growlMessageBlock, {hidden: true})
     ]);
     return growlMessageText;
   }
