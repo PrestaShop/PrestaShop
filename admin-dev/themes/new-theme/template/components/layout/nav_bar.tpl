@@ -43,7 +43,7 @@
         {/if}
 
         {if $level1.icon != ''}
-          <li class="link-levelone {if $level1.current}-active{/if}" data-submenu="{$level1.id_tab}" id="tab-{$level1.class_name}">
+          <li class="link-levelone {if $level1.current}link-levelone-active{/if}" data-submenu="{$level1.id_tab}" id="tab-{$level1.class_name}">
             <a href="{$level1Href}" class="link" >
               <i class="material-icons">{$level1.icon}</i> <span>{$level1Name}</span>
             </a>
@@ -67,12 +67,12 @@
                 {assign var="levelOneClass" value=''}
 
                 {if $level2.current and not $collapse_menu}
-                    {assign var="levelOneClass" value=" -active open ul-open"}
+                    {assign var="levelOneClass" value=" link-levelone-active open ul-open"}
                 {elseif $level2.current and $collapse_menu}
-                    {assign var="levelOneClass" value=" -active"}
+                    {assign var="levelOneClass" value=" link-levelone-active"}
                 {/if}
 
-                <li class="link-levelone{if $level2.sub_tabs|@count} has_submenu{/if}{$levelOneClass}" data-submenu="{$level2.id_tab}" id="subtab-{$level2.class_name}">
+                <li class="link-levelone{if $level2.sub_tabs|@count} has-submenu{/if}{$levelOneClass}" data-submenu="{$level2.id_tab}" id="subtab-{$level2.class_name}">
                   <a href="{$level2Href}" class="link">
                     <i class="material-icons mi-{$level2.icon}">{$level2.icon}</i>
                     <span>
@@ -100,7 +100,7 @@
                               {$level3Name = $level3.class_name|escape:'html':'UTF-8'}
                             {/if}
 
-                            <li class="link-leveltwo {if $level3.current}-active{/if}" data-submenu="{$level3.id_tab}" id="subtab-{$level3.class_name}">
+                            <li class="link-leveltwo {if $level3.current}link-leveltwo-active{/if}" data-submenu="{$level3.id_tab}" id="subtab-{$level3.class_name}">
                               <a href="{$level3Href}" class="link"> {$level3Name}
                               </a>
                             </li>

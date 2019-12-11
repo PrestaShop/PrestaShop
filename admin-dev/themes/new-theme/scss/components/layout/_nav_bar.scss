@@ -1,13 +1,13 @@
 .js-mobile-menu {
   display: none;
-  float: left;
-  cursor: pointer;
-  padding-top: 0;
-  margin-left: 0.6rem;
-  margin-right: 0.6rem;
-  font-size: 1.8rem;
   flex-direction: column;
   justify-content: center;
+  float: left;
+  padding-top: 0;
+  margin-right: .6rem;
+  margin-left: .6rem;
+  font-size: 1.8rem;
+  cursor: pointer;
 
   @include media-breakpoint-down(md) {
     display: inline-flex;
@@ -19,22 +19,22 @@
   top: 0;
   bottom: 0;
   z-index: 502;
-  background: $gray-dark;
   width: $size-navbar-width;
-  margin-top: $size-header-height;
   height: 100%;
+  margin-top: $size-header-height;
   overflow-y: auto;
-  transition: all .5s ease-out;
+  background: $gray-dark;
+  @include transition(all .5s ease-out);
 
   .material-icons {
-    color: white;
     font-size: 1.188rem;
     line-height: inherit;
+    color: #fff;
   }
   &.mobile-nav {
-    margin-left: -100%;
-    margin-top: $size-header-height + ($header-mobile-padding-y * 2);
     width: 70%;
+    margin-top: $size-header-height + ($header-mobile-padding-y * 2);
+    margin-left: -100%;
 
     @include media-breakpoint-only(sm) {
       width: 60%;
@@ -56,28 +56,28 @@
       padding-left: 0;
 
       .link-leveltwo .link {
-        padding-left: 0.75rem;
+        padding-left: .75rem;
       }
     }
-    .employee_avatar {
-      text-decoration: none;
-      text-align: center;
+    .employee-avatar {
       padding-top: 1rem;
+      text-align: center;
+      text-decoration: none;
 
       .material-icons {
-        line-height: 3.75rem;
         font-size: 3.75rem;
+        line-height: 3.75rem;
 
         @include media-breakpoint-down(md) {
-          line-height: 4.6875rem;
           font-size: 4.6875rem;
+          line-height: 4.6875rem;
         }
       }
 
       span {
-        color: white;
         display: block;
-        margin-bottom: 0.625rem;
+        margin-bottom: .625rem;
+        color: #fff;
 
         @include media-breakpoint-down(md) {
           font-size: 1.09375rem;
@@ -90,14 +90,14 @@
         margin-bottom: .625rem;
 
         &.img-thumbnail {
-          border-radius: 36px;
+          @include border-radius(36px);
         }
       }
     }
     .shop-list {
       padding-bottom: 1rem;
+      font-weight: 600;
       text-align: center;
-      font-weight: bold;
 
       a {
         @include media-breakpoint-down(md) {
@@ -106,66 +106,74 @@
       }
     }
     .main-menu {
-      margin-top: 0.625rem;
+      margin-top: .625rem;
 
       & > li:first-child {
         padding-bottom: 1rem;
       }
     }
     .shop-list-title {
-      color: $brand-primary;
-      text-transform: uppercase;
+      margin-bottom: .9375rem;
       font-size: 1rem;
+      color: $brand-primary;
       text-align: center;
-      margin-bottom: 0.9375rem;
+      text-transform: uppercase;
+
       &::after {
-        font-family: 'Material Icons';
-        content: "\E313";
+        margin-left: .625rem;
+        font-family: "Material Icons", Arial, Helvetica, sans-serif;
         font-size: 1.25rem;
         line-height: 1.375rem;
-        margin-left: 0.625rem;
         vertical-align: bottom;
+        content: "\E313";
       }
     }
     .items-list {
       padding-left: 0;
+
       a:focus {
-          background-color: transparent;
+        background-color: transparent;
       }
+
       li {
-        background-color: white;
+        background-color: #fff;
         border-bottom: $gray-light 1px solid;
+
         &.group a{
-          padding: 0.9375rem 2.5rem;
-          font-weight: bold;
+          padding: .9375rem 2.5rem;
+          font-weight: 600;
         }
+
         &.shop {
-          padding: 0.9375rem 0.9375rem 0.9375rem 2.5rem;
+          padding: .9375rem .9375rem .9375rem 2.5rem;
+
           a {
-              display: inline-block;
-              width: auto;
-              &.link-shop {
-                  float: right;
-                  .material-icons {
-                      font-size: 1.25rem;
-                      color: $gray-medium;
-                  }
+            display: inline-block;
+            width: auto;
+
+            &.link-shop {
+              float: right;
+
+              .material-icons {
+                font-size: 1.25rem;
+                color: $gray-medium;
               }
+            }
           }
         }
       }
       li:first-child a {
+        padding: .9375rem 1.25rem;
+        font-size: .9375rem;
         color: $brand-primary;
         text-transform: uppercase;
-        font-size: 0.9375rem;
-        padding: 0.9375rem 1.25rem;
       }
     }
   }
 }
 
 .main-menu {
-  padding: 0 0 5.313rem 0;
+  padding: 0 0 5.313rem;
   margin: 0;
 
   &.sidebar-closed {
@@ -193,9 +201,9 @@
     &[data-submenu] {
       @include media-breakpoint-down(md) {
         a.link {
-          font-size: 1.25rem;
           padding-top: 1.25rem;
           padding-bottom: 1.25rem;
+          font-size: 1.25rem;
           line-height: inherit;
 
           .material-icons {
@@ -209,7 +217,7 @@
         }
       }
 
-      &.has_submenu {
+      &.has-submenu {
         @include media-breakpoint-down(md) {
           .sub-tabs-arrow {
             visibility: visible;
@@ -218,14 +226,14 @@
       }
     }
 
-    &.-active {
+    &.link-active {
       @include media-breakpoint-down(md) {
         border-right: none;
       }
 
       > .link {
-        border-left: .25rem solid #25b9d7;
         padding-left: .638rem;
+        border-left: .25rem solid #25b9d7;
 
         .material-icons {
           &:first-child {
@@ -242,18 +250,18 @@
     }
 
     > .link {
-      font-size: .75rem;
       display: flex;
-      height: initial;
-      line-height: 1rem;
       align-items: end;
+      height: initial;
+      padding: .5rem .3125rem .5rem .938rem;
+      overflow: hidden;
+      font-size: .75rem;
+      line-height: 1rem;
       color: $gray-dark-text;
       text-decoration: none;
-      padding: 0.5rem .3125rem 0.5rem .938rem;
+      text-overflow: initial;
       word-break: break-word;
       white-space: initial;
-      text-overflow: initial;
-      overflow: hidden;
       @include media-breakpoint-down(md) {
         font-size: 1rem;
       }
@@ -264,27 +272,27 @@
 
       .sub-tabs-arrow {
         margin-left: auto;
-        visibility: hidden;
+        line-height: inherit;
         color: #6c868e;
         vertical-align: middle;
-        line-height: inherit;
+        visibility: hidden;
       }
     }
 
     &.ul-open,
-    &.-active,
-    &.-hover {
+    &.link-active,
+    &.link-hover {
       & > .link {
+        color: #fff;
         background: #202226;
-        color: white;
-        transition: background 300ms ease;
+        @include transition(background 300ms ease);
 
         @include media-breakpoint-down(md) {
           background: $gray-dark;
         }
       }
 
-      &.has_submenu {
+      &.has-submenu {
         .link {
           .sub-tabs-arrow {
             visibility: visible;
@@ -294,17 +302,17 @@
     }
 
     > .submenu {
+      display: none;
+      padding-left: 2.75rem;
+      white-space: nowrap;
       list-style: none;
       background: #202226;
-      display: none;
-      white-space: nowrap;
-      padding-left: 2.75rem;
 
       & > li {
         @include media-breakpoint-down(md) {
           a.link {
-            padding-top: 0.75rem;
-            padding-bottom: 0.75rem;
+            padding-top: .75rem;
+            padding-bottom: .75rem;
           }
         }
 
@@ -317,7 +325,7 @@
         }
 
         &:last-of-type {
-          padding-bottom: .750rem;
+          padding-bottom: .75rem;
 
           @include media-breakpoint-down(md) {
             padding-bottom: 0;
@@ -331,7 +339,7 @@
     }
 
     &.ul-open,
-    &.-active {
+    &.link-active {
       .link {
         background: #202226;
       }
@@ -347,18 +355,18 @@
   .link-leveltwo {
     @extend .link-levelone;
 
-    &.-active {
+    &.link-active {
       > .link {
         padding-left: 0;
+        color: #fff;
         border-left: none;
-        color: white;
       }
     }
 
     > .link {
       height: initial;
-      line-height: 0.9rem;
-      padding: 0.3125rem 0.3rem 0.3125rem 0;
+      padding: .3125rem .3rem .3125rem 0;
+      line-height: .9rem;
 
       @include media-breakpoint-down(md) {
         padding-top: 1.4rem;
@@ -375,18 +383,18 @@
 
 .category-title {
   display: block;
-  font-weight: bold;
-  font-size: 0.75rem;
-  border-top: 1px solid #bbcdd2;
+  padding: .875rem 0 .75rem;
   margin: 1.813rem 0 0 .938rem;
-  padding: .875rem 0 .750rem 0;
+  font-size: .75rem;
+  font-weight: 600;
+  border-top: 1px solid #bbcdd2;
 
   @include media-breakpoint-down(md) {
     display: none;
   }
 
   & > .title {
-    color: white;
+    color: #fff;
     background: $gray-dark;
 
     @at-root .sidebar-closed & {
@@ -396,14 +404,14 @@
 }
 
 .menu-collapse {
-  height: .813rem;
-  font-size: 2rem;
   display: block;
-  cursor: pointer;
-  text-align: right;
+  height: .813rem;
   padding: .688rem .938rem 2.188rem 0;
+  font-size: 2rem;
   line-height: .813rem;
   color: $gray-dark-text;
+  text-align: right;
+  cursor: pointer;
 
   @include media-breakpoint-down(md) {
     display: none;
@@ -411,7 +419,7 @@
   }
 
   .material-icons {
-    color: #BEBEBE;
+    color: #bebebe;
 
     &:last-child {
       margin-left: -1.313rem;
@@ -421,13 +429,13 @@
 
 .page-sidebar-closed:not(.mobile) {
   .menu-collapse {
-    transform: rotate(180deg);
     padding-right: .8rem;
+    transform: rotate(180deg);
   }
 
   .nav-bar {
-    overflow: visible;
     width: $size-navbar-width-mini;
+    overflow: visible;
 
     .main-menu {
       .category-title > .title,
@@ -440,8 +448,8 @@
       }
 
       .category-title {
-        margin-top: 0.8rem;
         padding-bottom: 0;
+        margin-top: .8rem;
       }
 
       .link-levelone {
@@ -455,10 +463,10 @@
           margin-bottom: 0;
         }
 
-        &.-hover {
+        &.link-hover {
           > .link {
-            transition: all 0s ease 0s;
             width: 250px;
+            @include transition(all 0s ease 0s);
 
             > span {
               display: inline-block;
@@ -468,10 +476,10 @@
 
           ul.submenu {
             position: absolute !important;
-            display: block !important;
             top: 34px !important;
-            width: 200px !important;
             left: 50px;
+            display: block !important;
+            width: 200px !important;
             padding-left: 5px;
           }
         }
@@ -500,9 +508,9 @@
       #subtab-ShopParameters:hover,
       #subtab-AdminAdvancedParameters:hover {
         ul.submenu {
+          top: 0 !important;
           display: flex !important;
           flex-direction: column-reverse;
-          top: 0 !important;
           transform: rotate(180deg);
           transform-origin: top;
 
@@ -521,15 +529,15 @@
 }
 
 .mobile-layer {
-  display: none;
-  transition: all 0.2s ease-in-out;
   position: fixed;
-  background: rgba(0,0,0,.7);
-  width: 100%;
-  height: 100%;
-  z-index: 501;
   top: 0;
   left: 0;
+  z-index: 501;
+  display: none;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, .7);
+  @include transition(all .2s ease-in-out);
 
   &.expanded {
     display: block;

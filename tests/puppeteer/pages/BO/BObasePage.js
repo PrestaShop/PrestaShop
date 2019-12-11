@@ -149,7 +149,7 @@ module.exports = class BOBasePage extends CommonPage {
       ]);
       await this.clickAndWaitForNavigation(linkSelector);
     }
-    await this.page.waitForSelector(`${linkSelector}.-active`, {visible: true});
+    await this.page.waitForSelector(`${linkSelector}.link-active`, {visible: true});
   }
 
   /**

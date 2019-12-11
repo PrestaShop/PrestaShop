@@ -53,21 +53,21 @@ export default class NavBar {
         },
       );
 
-      $('.nav-bar li.link-levelone.has_submenu > a').on(
+      $('.nav-bar li.link-levelone.has-submenu > a').on(
         'click',
         function onNavBarClick(e) {
           e.preventDefault();
           e.stopPropagation();
           const $submenu = $(this).parent();
-          $('.nav-bar li.link-levelone.has_submenu a > i.material-icons.sub-tabs-arrow')
+          $('.nav-bar li.link-levelone.has-submenu a > i.material-icons.sub-tabs-arrow')
             .text('keyboard_arrow_down');
           const onlyClose = $(e.currentTarget).parent().hasClass('ul-open');
 
           if ($('body').is('.page-sidebar-closed:not(.mobile)')) {
-            $('.nav-bar li.link-levelone.has_submenu.ul-open').removeClass('ul-open open -hover');
-            $('.nav-bar li.link-levelone.has_submenu.ul-open ul.submenu').removeAttr('style');
+            $('.nav-bar li.link-levelone.has-submenu.ul-open').removeClass('ul-open open -hover');
+            $('.nav-bar li.link-levelone.has-submenu.ul-open ul.submenu').removeAttr('style');
           } else {
-            $('.nav-bar li.link-levelone.has_submenu.ul-open ul.submenu').slideUp({
+            $('.nav-bar li.link-levelone.has-submenu.ul-open ul.submenu').slideUp({
               complete: function slideUpIsComplete() {
                 $(this).parent().removeClass('ul-open open');
                 $(this).removeAttr('style');
@@ -112,7 +112,7 @@ export default class NavBar {
               .find('a > i.material-icons.sub-tabs-arrow').text('keyboard_arrow_down');
             addMobileBodyClickListener();
           } else {
-            $('nav.nav-bar ul.main-menu > li.-active')
+            $('nav.nav-bar ul.main-menu > li.link-active')
               .addClass('ul-open open')
               .find('a > i.material-icons.sub-tabs-arrow').text('keyboard_arrow_up');
             $('body').off('click.mobile');
@@ -152,8 +152,8 @@ export default class NavBar {
           'click.mobile',
           () => {
             if ($('ul.main-menu li.ul-open').length > 0) {
-              $('.nav-bar li.link-levelone.has_submenu.ul-open').removeClass('ul-open open -hover');
-              $('.nav-bar li.link-levelone.has_submenu.ul-open ul.submenu').removeAttr('style');
+              $('.nav-bar li.link-levelone.has-submenu.ul-open').removeClass('ul-open open -hover');
+              $('.nav-bar li.link-levelone.has-submenu.ul-open ul.submenu').removeAttr('style');
             }
           },
         );
@@ -163,12 +163,11 @@ export default class NavBar {
 
   mobileNav() {
     const $logout = $('#header_logout').addClass('link').removeClass('m-t-1').prop('outerHTML');
-    const $employee = $('.employee_avatar').prop('outerHTML');
+    const $employee = $('.employee-avatar').prop('outerHTML');
     const profileLink = $('.profile-link').attr('href');
     const $mainMenu = $('.main-menu');
-
-    $('.nav-bar li.link-levelone.has_submenu:not(.open) a > i.material-icons.sub-tabs-arrow')
-      .text('keyboard_arrow_down');
+ 
+    $('.nav-bar li.link-levelone.has-submenu:not(.open) a > i.material-icons.sub-tabs-arrow').text('keyboard_arrow_down');
     $('body').addClass('mobile');
     $('.nav-bar').addClass('mobile-nav').attr('style', 'margin-left: -100%;');
     $('.panel-collapse').addClass('collapse');
@@ -186,7 +185,7 @@ export default class NavBar {
       toggle: false,
     });
 
-    $mainMenu.find('.employee_avatar .material-icons, .employee_avatar span').wrap(`<a href='${profileLink}'></a>`);
+    $mainMenu.find('.employee-avatar .material-icons, .employee-avatar span').wrap(`<a href='${profileLink}'></a>`);
     $('.js-mobile-menu').on('click', expand);
     $('.js-notifs_dropdown').css({
       height: window.innerHeight,
