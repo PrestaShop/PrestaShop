@@ -2,6 +2,7 @@
 
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
+use PHPUnit_Framework_Assert;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartInformation;
 use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation;
@@ -30,7 +31,7 @@ class OrderCartFeatureContext extends AbstractDomainFeatureContext
         /** @var OrderCustomerForViewing $orderCustomerForViewing */
         $orderCustomerForViewing = $orderForViewing->getCustomer();
         $customerIdReceived = $orderCustomerForViewing->getId();
-        assertSame(
+        PHPUnit_Framework_Assert::assertSame(
             $customerId,
             $customerIdReceived,
             sprintf('Expected customer with id "%s" but received "%s', $customerId, $customerIdReceived)
@@ -81,16 +82,16 @@ class OrderCartFeatureContext extends AbstractDomainFeatureContext
         /** @var CartInformation $duplicatedCartInformation */
         $duplicatedCartInformation = $this->getQueryBus()->handle(new GetCartInformation($duplicatedCartId));
 
-        assertNotSame($cartInformation->getCartId(), $duplicatedCartInformation->getCartId());
+        PHPUnit_Framework_Assert::assertNotSame($cartInformation->getCartId(), $duplicatedCartInformation->getCartId());
 
-        assertEquals($cartInformation->getCartRules(), $duplicatedCartInformation->getCartRules());
-        assertEquals($cartInformation->getAddresses(), $duplicatedCartInformation->getAddresses());
-        assertEquals($cartInformation->getCurrencyId(), $duplicatedCartInformation->getCurrencyId());
-        assertEquals($cartInformation->getProducts(), $duplicatedCartInformation->getProducts());
-        assertEquals($cartInformation->getSummary(), $duplicatedCartInformation->getSummary());
-        assertEquals($cartInformation->getLangId(), $duplicatedCartInformation->getLangId());
+        PHPUnit_Framework_Assert::assertEquals($cartInformation->getCartRules(), $duplicatedCartInformation->getCartRules());
+        PHPUnit_Framework_Assert::assertEquals($cartInformation->getAddresses(), $duplicatedCartInformation->getAddresses());
+        PHPUnit_Framework_Assert::assertEquals($cartInformation->getCurrencyId(), $duplicatedCartInformation->getCurrencyId());
+        PHPUnit_Framework_Assert::assertEquals($cartInformation->getProducts(), $duplicatedCartInformation->getProducts());
+        PHPUnit_Framework_Assert::assertEquals($cartInformation->getSummary(), $duplicatedCartInformation->getSummary());
+        PHPUnit_Framework_Assert::assertEquals($cartInformation->getLangId(), $duplicatedCartInformation->getLangId());
         // shipping info has to be confirmed and is saved in the db after the order is created
-        assertNotEquals(
+        PHPUnit_Framework_Assert::assertNotEquals(
             $cartInformation->getShipping(),
             $duplicatedCartInformation->getShipping(),
             'shipping info is the same');
