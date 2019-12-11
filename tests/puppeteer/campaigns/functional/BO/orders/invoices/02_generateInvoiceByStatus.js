@@ -42,7 +42,7 @@ describe('Generate PDF file by status', async () => {
   after(async () => {
     await helper.closeBrowser(browser);
     /* Delete the generated invoice */
-    files.deleteFile(`${global.BO.DOWNLOAD_PATH}/${Invoices.moreThanAnInvoice.fileName}`);
+    await files.deleteFile(`${global.BO.DOWNLOAD_PATH}/${Invoices.moreThanAnInvoice.fileName}`);
   });
 
   // Login into BO
@@ -108,10 +108,7 @@ describe('Generate PDF file by status', async () => {
       await this.pageObjects.invoicesPage.chooseStatus(OrderStatuses.paymentAccepted.id);
       await this.pageObjects.invoicesPage.chooseStatus(OrderStatuses.shipped.id);
       await this.pageObjects.invoicesPage.generatePDFByStatus();
-      const exist = await files.checkFileExistence(
-        global.BO.DOWNLOAD_PATH,
-        Invoices.moreThanAnInvoice.fileName,
-      );
+      const exist = await files.checkFileExistence(Invoices.moreThanAnInvoice.fileName);
       await expect(exist).to.be.true;
     });
   });
