@@ -27,19 +27,23 @@
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 use Behat\Behat\Context\Context;
+use Behat\Gherkin\Node\TableNode;
 use Behat\Testwork\Hook\Scope\BeforeSuiteScope;
+use Exception;
 use Language;
 use ObjectModel;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use Psr\Container\ContainerInterface;
 use RuntimeException;
+use Symfony\Component\DependencyInjection\Exception\ServiceCircularReferenceException;
+use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 use Tests\Integration\Behaviour\Features\Context\CommonFeatureContext;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 
 abstract class AbstractDomainFeatureContext implements Context
 {
     /**
-     * @var \Exception|null
+     * @var Exception|null
      */
     protected $lastException;
 
@@ -59,6 +63,9 @@ abstract class AbstractDomainFeatureContext implements Context
 
     /**
      * @return CommandBusInterface
+     *
+     * @throws ServiceCircularReferenceException
+     * @throws ServiceNotFoundException
      */
     protected function getCommandBus()
     {
@@ -67,6 +74,9 @@ abstract class AbstractDomainFeatureContext implements Context
 
     /**
      * @return CommandBusInterface
+     *
+     * @throws ServiceCircularReferenceException
+     * @throws ServiceNotFoundException
      */
     protected function getQueryBus()
     {
@@ -100,6 +110,8 @@ abstract class AbstractDomainFeatureContext implements Context
     /**
      * @param string $expectedError
      * @param int|null $errorCode
+     *
+     * @throws RuntimeException
      */
     protected function assertLastErrorIs($expectedError, $errorCode = null)
     {
@@ -145,5 +157,39 @@ abstract class AbstractDomainFeatureContext implements Context
         }
 
         return $localizedArray;
+    }
+
+    /**
+     * Used in scenarios which have horizontal properties table
+     *
+     * @param TableNode $table
+     *
+     * @return array
+     *
+     * @throws RuntimeException
+     */
+    protected function extractFirstHorizontalRowFromProperties(TableNode $table): array
+    {
+        $hash = $table->getHash();
+        if (count($hash) != 1) {
+            throw new RuntimeException('Properties are invalid');
+        }
+        /** @var array $data */
+        $data = $hash[0];
+        return $data;
+    }
+
+    /**
+     * @param string|int $value
+     * @return bool
+     */
+    protected function castToBool($value)
+    {
+        if (is_numeric($value)) {
+            return (bool) $value; // 0 => false; all other true
+        } else {
+            $lValue = strtolower($value);
+            return $lValue == 'false' ? false : true;
+        }
     }
 }
