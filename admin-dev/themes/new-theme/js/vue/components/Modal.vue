@@ -87,7 +87,7 @@
 </template>
 
 <script>
-  import '../directives/click-outside';
+  import '@vue/directives/click-outside';
 
   export default {
     name: 'modal',
@@ -101,21 +101,21 @@
         type: String,
         required: false,
         default() {
-          return this.$t('Cancel');
+          return this.$t('modal.cancel');
         },
       },
       confirmLabel: {
         type: String,
         required: false,
         default() {
-          return this.$t('Apply');
+          return this.$t('modal.apply');
         },
       },
       closeLabel: {
         type: String,
         required: false,
         default() {
-          return this.$t('Close');
+          return this.$t('modal.close');
         },
       },
       modalTitle: {

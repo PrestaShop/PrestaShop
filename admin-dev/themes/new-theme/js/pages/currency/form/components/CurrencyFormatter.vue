@@ -49,11 +49,7 @@
 
   export default {
     name: 'currency-formatter',
-    data: () => {
-      return {
-        selectedLanguage: null
-      }
-    },
+    data: () => ({selectedLanguage: null}),
     props: {
       id: {
         type: String,
