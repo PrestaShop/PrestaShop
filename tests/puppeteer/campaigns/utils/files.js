@@ -40,13 +40,12 @@ module.exports = {
 
   /**
    * Check text in PDF
-   * @param downloadPath
    * @param fileName
    * @param text
    * @return boolean, true if text exist, false if not
    */
-  async checkTextInPDF(downloadPath, fileName, text) {
-    const pdf = await PDFJS.getDocument(`${downloadPath}/${fileName}`).promise;
+  async checkTextInPDF(fileName, text) {
+    const pdf = await PDFJS.getDocument(`${global.BO.DOWNLOAD_PATH}/${fileName}`).promise;
     const maxPages = pdf.numPages;
     const pageTextPromises = [];
     for (let pageNo = 1; pageNo <= maxPages; pageNo += 1) {
