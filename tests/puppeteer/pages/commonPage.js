@@ -46,6 +46,20 @@ module.exports = class CommonPage {
   }
 
   /**
+   * Is element not visible
+   * @param selector, element to check
+   * @return boolean, true if visible, false if not
+   */
+  async elementNotVisible(selector, timeout = 10) {
+    try {
+      await this.page.waitForSelector(selector, {hidden: true, timeout});
+      return true;
+    } catch (error) {
+      return false;
+    }
+  }
+
+  /**
    * Open link in new Tab and get opened Page
    * @param currentPage, current page where to click on selector
    * @param selector, where to click
