@@ -254,7 +254,7 @@ describe('Test enable/disable tax breakdown', async () => {
         );
         await expect(exist).to.be.true;
         // Delete the invoice file
-        files.deleteFile(`${global.BO.DOWNLOAD_PATH}/${firstInvoiceFileName}.pdf`);
+        await files.deleteFile(`${global.BO.DOWNLOAD_PATH}/${firstInvoiceFileName}.pdf`);
       });
     });
   });
