@@ -4,12 +4,14 @@
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 
-use Behat\Behat\Tester\Exception\PendingException;
+use PHPUnit_Framework_Assert;
 use PrestaShop\PrestaShop\Core\Domain\Contact\Command\AddContactCommand;
 use PrestaShop\PrestaShop\Core\Domain\Contact\Exception\ContactConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Contact\Exception\ContactException;
 use PrestaShop\PrestaShop\Core\Domain\Contact\Exception\ContactNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Contact\Query\GetContactForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Contact\QueryResult\EditableContact;
+use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\CommonFeatureContext;
 
 class ContactFeatureContext extends AbstractDomainFeatureContext
@@ -42,13 +44,13 @@ class ContactFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Given the last contact is with id :contactId
+     * @Given there is contact with id :contactId
      *
      * @param int $contactId
      *
      * @throws ContactException
      */
-    public function theLastContactIsWithId(int $contactId)
+    public function thereIsContactIsWithId(int $contactId)
     {
         $this->getQueryBus()->handle(new GetContactForEditing($contactId));
     }
@@ -63,32 +65,66 @@ class ContactFeatureContext extends AbstractDomainFeatureContext
     public function iAddNewContactWithTitleAndMessagesSavingIsEnabled(string $title)
     {
         $this->getCommandBus()->handle(new AddContactCommand(
-            [$this->defaultLangId => $title], true)
+                [$this->defaultLangId => $title], true)
         );
     }
 
     /**
-     * @Then I should be able to get contact with id :arg1 for editing
+     * @Then I should be able to get contact with id :contactId for editing
+     *
+     * @param int $contactId
+     *
+     * @throws ContactException
      */
-    public function iShouldBeAbleToGetContactWithIdForEditing($arg1)
+    public function iShouldBeAbleToGetContactWithIdForEditing(int $contactId)
     {
-        throw new PendingException();
+        $this->getQueryBus()->handle(new GetContactForEditing($contactId));
     }
 
     /**
-     * @Then contact with id :arg2 should have title :arg1
+     * @Then contact with id :contactId should have title :title
+     *
+     * @param string $title
+     * @param int $contactId
+     *
+     * @throws ContactException
+     * @throws RuntimeException
      */
-    public function contactWithIdShouldHaveTitle($arg1, $arg2)
+    public function contactWithIdShouldHaveTitle(string $title, int $contactId)
     {
-        throw new PendingException();
+        /** @var EditableContact $editableContact */
+        $editableContact = $this->getQueryBus()->handle(new GetContactForEditing($contactId));
+        /** @var string[] $localisedTitles */
+        $localisedTitles = $editableContact->getLocalisedTitles();
+        foreach ($localisedTitles as $localisedTitle) {
+            if ($title == $localisedTitle) {
+                return;
+            }
+        }
+        throw new RuntimeException(
+            sprintf(
+                'No localized title was found for title "%s", instead received %s',
+                $title,
+                implode(',',$localisedTitles)
+            )
+        );
     }
 
     /**
-     * @Then contact with id :arg1 should have messages saving disabled
+     * @Then contact with id :contactId should have messages saving enabled
+     *
+     * @param int $contactId
+     *
+     * @throws ContactException
      */
-    public function contactWithIdShouldHaveMessagesSavingDisabled($arg1)
+    public function contactWithIdShouldHaveMessagesSavingEnabled(int $contactId)
     {
-        throw new PendingException();
+        /** @var EditableContact $editableContact */
+        $editableContact = $this->getQueryBus()->handle(new GetContactForEditing($contactId));
+        PHPUnit_Framework_Assert::assertSame(
+            1,
+            (int) $editableContact->isMessagesSavingEnabled(),
+            'Message saving is disabled'
+        );
     }
-
 }
