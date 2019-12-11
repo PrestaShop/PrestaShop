@@ -122,27 +122,27 @@ describe('Edit invoice prefix and check the generated invoice file name', async 
         await expect(textMessage).to.contains(this.pageObjects.invoicesPage.successfulUpdateMessage);
       });
     });
-  });
 
-  describe('Change the order status to \'Payment accepted\' and check the invoice file Name', async () => {
-    it('should go to the orders page', async function () {
-      await this.pageObjects.boBasePage.goToSubMenu(
-        this.pageObjects.boBasePage.ordersParentLink,
-        this.pageObjects.boBasePage.ordersLink,
-      );
-      const pageTitle = await this.pageObjects.ordersPage.getPageTitle();
-      await expect(pageTitle).to.contains(this.pageObjects.ordersPage.pageTitle);
-    });
+    describe('Check the invoice file Name', async () => {
+      it('should go to the orders page', async function () {
+        await this.pageObjects.boBasePage.goToSubMenu(
+          this.pageObjects.boBasePage.ordersParentLink,
+          this.pageObjects.boBasePage.ordersLink,
+        );
+        const pageTitle = await this.pageObjects.ordersPage.getPageTitle();
+        await expect(pageTitle).to.contains(this.pageObjects.ordersPage.pageTitle);
+      });
 
-    it('should go to the first order page', async function () {
-      await this.pageObjects.ordersPage.goToOrder(1);
-      const pageTitle = await this.pageObjects.viewOrderPage.getPageTitle();
-      await expect(pageTitle).to.contains(this.pageObjects.viewOrderPage.pageTitle);
-    });
+      it('should go to the first order page', async function () {
+        await this.pageObjects.ordersPage.goToOrder(1);
+        const pageTitle = await this.pageObjects.viewOrderPage.getPageTitle();
+        await expect(pageTitle).to.contains(this.pageObjects.viewOrderPage.pageTitle);
+      });
 
-    it('should check that the invoice file name does not contain the current year', async function () {
-      fileName = await this.pageObjects.viewOrderPage.getFileName();
-      expect(fileName).to.not.contains(currentYear);
+      it('should check that the invoice file name does not contain the current year', async function () {
+        fileName = await this.pageObjects.viewOrderPage.getFileName();
+        expect(fileName).to.not.contains(currentYear);
+      });
     });
   });
 });
