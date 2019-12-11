@@ -39,8 +39,6 @@ use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 use Tests\Integration\Behaviour\Features\Context\CommonFeatureContext;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 
-require_once __DIR__ . '/../../../../../../vendor/phpunit/phpunit/src/Framework/Assert/Functions.php';
-
 abstract class AbstractDomainFeatureContext implements Context
 {
     /**

@@ -3,6 +3,7 @@
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 use Behat\Gherkin\Node\TableNode;
+use PHPUnit_Framework_Assert;
 use PHPUnit_Framework_AssertionFailedError;
 use PrestaShop\PrestaShop\Core\Domain\MailTemplate\Command\GenerateThemeMailTemplatesCommand;
 use RuntimeException;
@@ -49,7 +50,7 @@ class ThemeMailTemplatesFeatureContext extends AbstractDomainFeatureContext
     public function mailsFolderWithSubfolderExists(string $subFolder)
     {
         $mailsSubFolder = _PS_MAIL_DIR_ . $subFolder;
-        assertTrue(is_dir($mailsSubFolder));
+        PHPUnit_Framework_Assert::assertTrue(is_dir($mailsSubFolder));
     }
 
     /**
