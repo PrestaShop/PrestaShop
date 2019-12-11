@@ -14,9 +14,9 @@
   #search {
     .search-input {
       min-height: 35px;
-      background-color: white;
+      background-color: #fff;
       border: $gray-light 1px solid;
-      border-radius: 0;
+      @include border-radius(0);
       outline: none;
       box-shadow: none;
     }
@@ -29,7 +29,7 @@
     }
     .fade-enter-active,
     .fade-leave-active {
-      transition: opacity .5s;
+      @include transition(opacity .5s);
     }
     .fade-enter,
     .fade-leave-to {
@@ -72,9 +72,9 @@
 
   #filters {
     width: 150%;
-    background: white;
+    background: #fff;
     border: solid 1px #b9cdd2;
-    border-radius: 2px;
+    @include border-radius(2px);
     box-shadow: 1px 2px 3px 0 rgba(108, 134, 142, .3);
 
     .row {
@@ -90,7 +90,7 @@
 
     &:hover,
     &.active {
-      input[type=number] {
+      input[type="number"] {
         // we need this offset to make room for the confirmation button
         padding-right: 34px;
       }
@@ -114,7 +114,7 @@
       outline: none;
       opacity: 0;
       .material-icons {
-        color: white;
+        color: #fff;
         vertical-align: middle;
       }
       &:hover {
@@ -147,7 +147,7 @@
       display: inline-block;
       min-width: 50px;
       padding: 2px 5px;
-      color: white;
+      color: #fff;
       background-color: $gray-dark;
       &.is-positive {
         background-color: $brand-primary;
@@ -190,7 +190,7 @@
       .low-stock {
         background: $danger-hover;
         .stock-warning {
-          font-weight: bold;
+          font-weight: 600;
           color: $danger;
           &.ico {
             padding: 0 5px;
@@ -210,8 +210,8 @@
         max-width: 100px;
       }
       .update-qty {
-        color: white;
-        transition: background-color .2s ease;
+        color: #fff;
+        @include transition(background-color .2s ease);
       }
       .qty {
         padding-left: 20px;

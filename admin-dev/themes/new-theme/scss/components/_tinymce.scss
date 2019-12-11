@@ -7,7 +7,7 @@
   padding: 0;
   margin: 0;
   font-size: 12px;
-  font-weight: normal;
+  font-weight: 400;
   line-height: normal;
   color: #333;
   text-align: left;
@@ -29,7 +29,7 @@
     padding: 0;
     margin: 0;
     font-size: 12px;
-    font-weight: normal;
+    font-weight: 400;
     line-height: normal;
     color: #333;
     text-align: left;
@@ -54,7 +54,7 @@
   padding: 0;
   margin: 0;
   font-size: 12px;
-  font-weight: normal;
+  font-weight: 400;
   line-height: normal;
   color: #333;
   text-align: left;
@@ -76,7 +76,7 @@
     padding: 0;
     margin: 0;
     font-size: 12px;
-    font-weight: normal;
+    font-weight: 400;
     line-height: normal;
     color: #333;
     text-align: left;
@@ -96,15 +96,12 @@
 }
 
 .mce-container *[unselectable] {
-  -moz-user-select: none;
-  -webkit-user-select: none;
   user-select: none;
 }
 
 .mce-fade {
   opacity: 0;
-  -webkit-transition: opacity .15s linear;
-  transition: opacity .15s linear;
+  @include transition(opacity .15s linear);
   &.mce-in {
     opacity: 1;
   }
@@ -112,7 +109,9 @@
 
 .mce-tinymce {
   position: relative;
+  display: block;
   visibility: visible !important;
+  @include border-radius(2px);
 }
 
 .mce-fullscreen {
@@ -121,6 +120,7 @@
   padding: 0;
   margin: 0;
   overflow: hidden;
+  background: #fff;
   border: 0;
 }
 
@@ -130,11 +130,6 @@ div.mce-fullscreen {
   left: 0;
   width: 100%;
   height: auto;
-}
-
-.mce-tinymce {
-  display: block;
-  border-radius: 2px;
 }
 
 .mce-wordcount {
@@ -222,8 +217,6 @@ div.mce-edit-area {
 
 div.mce-tinymce-inline {
   width: 100%;
-  -webkit-box-shadow: none;
-  -moz-box-shadow: none;
   box-shadow: none;
 }
 
@@ -251,6 +244,15 @@ div.mce-tinymce-inline {
   zoom: 1;
   filter: alpha(opacity = 40);
   opacity: .4;
+
+  &:hover,
+  &.mce-active {
+    zoom: 1;
+    background-color: #aaa;
+    filter: alpha(opacity = 60);
+    @include border-radius(7px);
+    opacity: .6;
+  }
 }
 
 .mce-scrollbar-h {
@@ -268,23 +270,12 @@ div.mce-tinymce-inline {
   height: 100%;
   background-color: #000;
   border: 1px solid rgba(85, 85, 85, .6);
-  border-radius: 7px;
+  @include border-radius(7px);
 }
 
 .mce-scrollbar-h .mce-scrollbar-thumb {
   width: 100%;
   height: 5px;
-}
-
-.mce-scrollbar {
-  &:hover,
-  &.mce-active {
-    zoom: 1;
-    background-color: #aaa;
-    filter: alpha(opacity = 60);
-    border-radius: 7px;
-    opacity: .6;
-  }
 }
 
 .mce-scroll {
@@ -322,7 +313,7 @@ div.mce-tinymce-inline {
     left: 0;
     background: #fff;
     border: 1px solid rgba(0, 0, 0, .25);
-    border-radius: 6px;
+    @include border-radius(6px);
     &.mce-bottom {
       margin-top: 10px;
       *margin-top: 0;
@@ -357,21 +348,6 @@ div.mce-tinymce-inline {
   }
 }
 
-.mce-fullscreen {
-  height: 100%;
-  padding: 0;
-  margin: 0;
-  overflow: hidden;
-  background: #fff;
-  border: 0;
-}
-
-div.mce-fullscreen {
-  position: fixed;
-  top: 0;
-  left: 0;
-}
-
 #mce-modal-block {
   position: fixed;
   top: 0;
@@ -399,10 +375,21 @@ div.mce-fullscreen {
   left: 0;
   background: #fff;
 
-  border-radius: 6px;
+  iframe {
+    width: 100%;
+    height: 100%;
+  }
+  &.mce-fullscreen {
+    @include border-radius(0);
+    .mce-foot {
+      @include border-radius(0);
+    }
+  }
+
+  @include border-radius(6px);
   opacity: 0;
-  -webkit-transition: opacity 150ms ease-in;
-  transition: opacity 150ms ease-in;
+  @include transition(opacity 150ms ease-in);
+
   &.mce-in {
     opacity: 1;
   }
@@ -419,7 +406,7 @@ div.mce-fullscreen {
     height: 20px;
     overflow: hidden;
     font-size: 18px;
-    font-weight: bold;
+    font-weight: 600;
     line-height: 20px;
     color: #858585;
     cursor: pointer;
@@ -433,7 +420,7 @@ div.mce-fullscreen {
 .mce-window-head .mce-title {
   padding-right: 10px;
   font-size: 14px;
-  font-weight: normal;
+  font-weight: 400;
   line-height: 20px;
   text-rendering: optimizeLegibility;
 }
@@ -446,7 +433,7 @@ div.mce-fullscreen {
   display: block;
   background-color: #fff;
   border-top: 1px solid #c5c5c5;
-  border-radius: 0 0 6px 6px;
+  @include border-radius(0 0 6px 6px);
 }
 
 .mce-window-head .mce-dragh {
@@ -456,19 +443,6 @@ div.mce-fullscreen {
   width: 90%;
   height: 100%;
   cursor: move;
-}
-
-.mce-window {
-  iframe {
-    width: 100%;
-    height: 100%;
-  }
-  &.mce-fullscreen {
-    border-radius: 0;
-    .mce-foot {
-      border-radius: 0;
-    }
-  }
 }
 
 .mce-abs-layout {
@@ -503,7 +477,7 @@ body .mce-abs-layout-item {
   text-align: center;
   white-space: normal;
   background-color: #000;
-  border-radius: 3px;
+  @include border-radius(3px);
 }
 
 .mce-tooltip-arrow {
@@ -614,7 +588,7 @@ body .mce-abs-layout-item {
   display: inline-block;
   *display: inline;
   *zoom: 1;
-  background-color: white;
+  background-color: #fff;
   &:hover,
   &:focus {
     color: #eee;
@@ -646,7 +620,7 @@ body .mce-abs-layout-item {
     color: #333;
     text-align: center;
     cursor: pointer;
-    -webkit-appearance: none;
+
     &::-moz-focus-inner {
       padding: 0;
       border: 0;
@@ -695,7 +669,7 @@ body .mce-abs-layout-item {
     padding: 9px 14px;
     font-size: 12px;
     line-height: normal;
-    border-radius: 5px;
+    @include border-radius(5px);
   }
   i {
     margin-top: 2px;
@@ -747,26 +721,21 @@ body .mce-abs-layout-item {
   .mce-btn {
     border: solid 1px #ccc;
     border-right: none;
-    border-radius: 0;
+    @include border-radius(0);
   }
   .mce-first {
-    border-radius: 3px 0 0 3px;
+    @include border-radius(3px 0 0 3px);
   }
   .mce-last {
     border-right: solid 1px #ccc;
-    border-radius: 0 3px 3px 0;
+    @include border-radius(0 3px 3px 0);
   }
   .mce-first.mce-last {
-    border-radius: 3px;
+    @include border-radius(3px);
   }
   .mce-btn.mce-flow-layout-item {
     margin: 0;
   }
-}
-
-.mce-checkbox {
-
-  cursor: pointer;
 }
 
 i.mce-i-checkbox {
@@ -782,7 +751,7 @@ i.mce-i-checkbox {
   *text-indent: 0;
   background-color: #f0f0f0;
   border: 1px solid #c5c5c5;
-  border-radius: 3px;
+  @include border-radius(3px);
 }
 
 .mce-checked i.mce-i-checkbox {
@@ -793,6 +762,8 @@ i.mce-i-checkbox {
 }
 
 .mce-checkbox {
+  cursor: pointer;
+
   &:focus i.mce-i-checkbox,
   &.mce-focus i.mce-i-checkbox {
     border: 1px solid rgba(82, 168, 236, .8);
@@ -828,7 +799,7 @@ i.mce-i-checkbox {
     margin-top: 7px;
     margin-left: -14px;
     overflow: hidden;
-    background: gray;
+    background: #808080;
   }
   &.mce-btn-small .mce-preview {
     width: 16px;
@@ -862,12 +833,12 @@ i.mce-i-checkbox {
     color: #adadad;
   }
   &.mce-has-open input {
-    border-radius: 4px 0 0 4px;
+    @include border-radius(4px 0 0 4px);
   }
   .mce-btn {
     background-color: #c5c5c5;
     border-left: 0;
-    border-radius: 0 4px 4px 0;
+    @include border-radius(0 4px 4px 0);
   }
 
 
@@ -923,7 +894,7 @@ i.mce-i-checkbox {
 
 .mce-fieldset {
   border: 0 solid #9e9e9e;
-  border-radius: 3px;
+  @include border-radius(3px);
   > .mce-container-body {
     margin-top: -15px;
   }
@@ -991,16 +962,12 @@ i.mce-i-checkbox {
     background: transparent;
     filter: none;
     border-color: transparent;
-    border-radius: 0;
+    @include border-radius(0);
     box-shadow: none;
     button span {
       color: #333;
     }
-  }
-  .mce-caret {
-    border-top-color: #333;
-  }
-  .mce-menubtn {
+
     &:hover,
     &.mce-active,
     &:focus {
@@ -1009,6 +976,10 @@ i.mce-i-checkbox {
       border-color: transparent;
       box-shadow: none;
     }
+  }
+
+  .mce-caret {
+    border-top-color: #333;
   }
 }
 
@@ -1059,12 +1030,40 @@ i.mce-i-checkbox {
   padding: 6px 15px 6px 12px;
   margin-bottom: 1px;
   clear: both;
-  font-weight: normal;
+  font-weight: 400;
   line-height: normal;
   color: #333;
   white-space: nowrap;
   cursor: pointer;
   border-left: 4px solid transparent;
+
+  &:hover,
+  &.mce-selected,
+  &:focus {
+    color: #fff;
+    text-decoration: none;
+    background-color: #3ed2f0;
+  }
+
+  &:hover .mce-menu-shortcut,
+  &.mce-selected .mce-menu-shortcut,
+  &:focus .mce-menu-shortcut {
+    color: #fff;
+  }
+  .mce-caret {
+    margin-top: 4px;
+    *margin-top: 3px;
+    margin-right: 6px;
+    border-top: 4px solid transparent;
+    border-bottom: 4px solid transparent;
+    border-left: 4px solid #333;
+  }
+  &.mce-selected .mce-caret,
+  &:focus .mce-caret,
+  &:hover .mce-caret {
+    border-left-color: #fff;
+  }
+
   .mce-ico,
   .mce-text {
     color: #333;
@@ -1090,27 +1089,6 @@ i.mce-i-checkbox {
   color: #adadad;
 }
 
-.mce-menu-item {
-  &:hover .mce-menu-shortcut,
-  &.mce-selected .mce-menu-shortcut,
-  &:focus .mce-menu-shortcut {
-    color: #fff;
-  }
-  .mce-caret {
-    margin-top: 4px;
-    *margin-top: 3px;
-    margin-right: 6px;
-    border-top: 4px solid transparent;
-    border-bottom: 4px solid transparent;
-    border-left: 4px solid #333;
-  }
-  &.mce-selected .mce-caret,
-  &:focus .mce-caret,
-  &:hover .mce-caret {
-    border-left-color: #fff;
-  }
-}
-
 .mce-menu-align {
   .mce-menu-shortcut {
     position: absolute;
@@ -1129,13 +1107,7 @@ i.mce-i-checkbox {
 
 .mce-menu-item-normal.mce-active {
   background-color: #dff5f9;
-}
 
-.mce-menu-item-preview.mce-active {
-  border-left: 5px solid #aaa;
-}
-
-.mce-menu-item-normal.mce-active {
   .mce-text {
     color: #333;
   }
@@ -1147,14 +1119,8 @@ i.mce-i-checkbox {
   }
 }
 
-.mce-menu-item {
-  &:hover,
-  &.mce-selected,
-  &:focus {
-    color: #fff;
-    text-decoration: none;
-    background-color: #3ed2f0;
-  }
+.mce-menu-item-preview.mce-active {
+  border-left: 5px solid #aaa;
 }
 
 div.mce-menu .mce-menu-item-sep,
@@ -1183,8 +1149,9 @@ div.mce-menu .mce-menu-item-sep,
   overflow-x: hidden;
   background: #fff;
   border: 1px solid #989898;
-  border-radius: 6px;
+  @include border-radius(6px);
   box-shadow: 0 5px 10px rgba(0, 0, 0, .2);
+
   i {
     display: none;
   }
@@ -1237,18 +1204,19 @@ i.mce-i-resize {
 
 .mce-splitbtn {
   .mce-open {
+    padding-left: 4px;
     border-right: 1px solid transparent;
     border-left: 1px solid transparent;
-  }
-  button {
-    padding-right: 4px;
-  }
-  .mce-open {
-    padding-left: 4px;
+
     &.mce-active {
       box-shadow: inset 0 2px 4px rgba(0, 0, 0, .15), 0 1px 2px rgba(0, 0, 0, .05);
     }
   }
+
+  button {
+    padding-right: 4px;
+  }
+
   &.mce-btn-small .mce-open {
     padding: 0 3px;
   }
@@ -1293,25 +1261,25 @@ i.mce-i-resize {
   resize: none;
   background: #fff;
   border: 1px solid #c5c5c5;
-  border-radius: 3px;
-  transition: border linear .2s, box-shadow linear .2s;
+  @include border-radius(3px);
+  @include transition(border linear .2s, box-shadow linear .2s);
+
   &:focus,
   &.mce-focus {
     border-color: rgba(82, 168, 236, .8);
+  }
+
+  &.mce-multiline {
+    padding: 4px;
+  }
+
+  &.mce-disabled {
+    color: #adadad;
   }
 }
 
 .mce-placeholder .mce-textbox {
   color: #aaa;
-}
-
-.mce-textbox {
-  &.mce-multiline {
-    padding: 4px;
-  }
-  &.mce-disabled {
-    color: #adadad;
-  }
 }
 
 .mce-throbber {
@@ -1321,7 +1289,7 @@ i.mce-i-resize {
   width: 100%;
   height: 100%;
   zoom: 1;
-  background: white no-repeat center center;
+  background: #fff no-repeat center center;
   filter: alpha(opacity = 60);
   opacity: .6;
 }

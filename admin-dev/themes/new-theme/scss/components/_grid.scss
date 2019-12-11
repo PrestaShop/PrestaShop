@@ -23,24 +23,22 @@ table.grid-ordering-column tr {
 }
 
 table.grid-ordering-column tr.position-row-while-drag {
-  color: white;
+  color: #fff;
   background: none;
   box-shadow: 3px 3px 8px 0 rgba(0, 0, 0, .2);
   transform: translate(5px, 10px);
   td {
     background-color: $medium-gray;
   }
-  td:first-child { border-top-left-radius: 3px; }
-  td:first-child { border-bottom-left-radius: 3px; }
-  td:last-child { border-top-right-radius: 3px; }
-  td:last-child { border-bottom-right-radius: 3px; }
+  td:first-child { @include border-left-radius(3px); }
+  td:last-child { @include border-right-radius(3px); }
 
   .position-drag-handle,
   .position-drag-handle:hover,
   .btn,
   .btn::after,
   .btn .material-icons {
-    color: white;
+    color: #fff;
   }
 }
 
@@ -121,9 +119,8 @@ table .column-filters td:last-child .grid-reset-button {
           background: #fafbfc;
 
           td {
-            color: white;
+            color: #fff;
             background: #67868e;
-            -webkit-transform: translate(5px, 10px);
             transform: translate(5px, 10px);
 
             // make all icons and links white
@@ -132,7 +129,7 @@ table .column-filters td:last-child .grid-reset-button {
             i.material-icons,
             a,
             a::after {
-              color: white;
+              color: #fff;
             }
           }
         }

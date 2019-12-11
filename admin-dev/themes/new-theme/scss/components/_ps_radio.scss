@@ -20,7 +20,7 @@
         content: "";
         background: #fff;
         border: 2px solid $gray-medium;
-        border-radius: 100%;
+        @include border-radius(100%);
       }
 
       &::after {
@@ -31,8 +31,8 @@
         height: 10px;
         content: "";
         background: $primary;
-        border-radius: 100%;
-        transition: all .2s ease;
+        @include border-radius(100%);
+        @include transition(all .2s ease);
       }
     }
 

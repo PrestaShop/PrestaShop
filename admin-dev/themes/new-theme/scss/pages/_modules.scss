@@ -7,7 +7,7 @@
   > h4 {
     font-family: "Open Sans", Helvetica, Arial, sans-serif !important;
     font-size: 14px;
-    font-weight: bold !important;
+    font-weight: 600 !important;
     color: #1e2024 !important;
   }
 }
@@ -72,7 +72,7 @@
 }
 .module-menu-readmore > .tab-content {
   margin-top: 5px;
-  color: black;
+  color: #000;
   text-align: justify;
 }
 .module-modal-badges {
@@ -101,7 +101,7 @@
     padding: 20px;
     background: rgba(255, 255, 255, .4);
     border: dashed 1px #696969;
-    border-radius: 3px;
+    @include border-radius(3px);
 
     p {
       padding: 0;
@@ -121,7 +121,7 @@
       bottom: $grid-gutter-width / 2;
     }
 
-    background-color: white;
+    background-color: #fff;
   }
   + :nth-child(even) {
     .container-fluid {
@@ -155,12 +155,12 @@
     }
     .module-version-author-list {
       overflow: hidden;
-      font-weight: bold;
+      font-weight: 600;
       color: $gray-medium;
       text-overflow: ellipsis;
       white-space: nowrap;
       b {
-        font-weight: bold;
+        font-weight: 600;
         color: $gray-dark;
       }
     }
@@ -219,12 +219,10 @@
 .module-addons-item-list {
   display: none;
   cursor: pointer;
-  -webkit-user-select: none;
-  -khtml-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
   user-select: none;
+  /* stylelint-disable property-no-vendor-prefix  */
   -webkit-touch-callout: none;
+  /* stylelint-enable property-no-vendor-prefix  */
 
   .module-addons-item-wrapper-list {
     text-align: center;
@@ -250,21 +248,19 @@
     text-align: center;
   }
   .module-placeholders-failure-msg {
-    color: red;
+    color: #f00;
   }
   #module-placeholders-failure-retry {
     margin-top: 10px;
   }
 }
 
-
-
 /**
  * OTHER: Generalist CSS for module pages
  */
 
 #module-modal-bulk-confirm-action-name {
-  font-weight: bold;
+  font-weight: 600;
 }
 
 .module-checkbox-bulk-list {
@@ -278,18 +274,19 @@
 
 .module-search-bar {
   height: 50px !important;
-  background-color: white !important;
+  background-color: #fff !important;
   border: 0 !important;
 }
 .module-search-block {
   width: 100%;
-  background: white;
+  background: #fff;
+
   .search-button {
     position: absolute;
     top: 0;
     right: 0;
     height: 35px;
-    border-radius: 0;
+    @include border-radius(0);
   }
 }
 .module-sorting-menu {
@@ -299,7 +296,7 @@
   margin-left: 35px;
   .select2-selection {
     min-width: 175px;
-    border-radius: 0;
+    @include border-radius(0);
     .select2-selection__arrow {
       b {
         display: none;
@@ -307,7 +304,7 @@
       &::before {
         position: relative;
         right: 20px;
-        font-family: "Material Icons";
+        font-family: "Material Icons", Arial, Helvetica, sans-serif;
         font-size: 1.5rem;
         color: $gray-medium;
         content: "\E313";
@@ -331,14 +328,14 @@
   margin-bottom: 20px;
   font-family: "Open Sans", Helvetica, Arial, sans-serif !important;
   font-size: 18px;
-  font-weight: bold;
+  font-weight: 600;
   color: #1e2024 !important;
 }
 .module-addons-search {
   display: none;
   font-family: "Open Sans", Helvetica, Arial, sans-serif !important;
   font-size: 14px;
-  font-weight: bold;
+  font-weight: 600;
 }
 .module-category-recently-used {
   a {
@@ -356,7 +353,7 @@
     border-bottom: 1px solid #e7e8e8;
 
     &:hover {
-      color: white !important;
+      color: #fff !important;
       text-align: center;
       background-color: #2eacce !important;
       border-bottom: 1px solid #e7e8e8;
@@ -377,7 +374,7 @@
 .module-kpi-number {
   margin: auto;
   font-size: 30px;
-  font-weight: bold;
+  font-weight: 600;
 }
 .module-top-menu {
   min-height: 74px;
@@ -396,7 +393,7 @@
 
 .toolbar-icons {
   .btn-primary {
-    border-radius: 0;
+    @include border-radius(0);
   }
 }
 
@@ -421,12 +418,8 @@
   font-size: 15px;
   text-align: center;
   vertical-align: middle;
-  -webkit-user-select: none;
-  -khtml-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
   user-select: none;
-  background: white;
+  background: #fff;
   box-shadow: 0 1px 0 #c7d6db;
   -webkit-touch-callout: none;
 }
@@ -465,7 +458,7 @@
 }
 .module-import-failure-msg {
   margin-bottom: 0;
-  font-weight: bold;
+  font-weight: 600;
 }
 .module-import-failure-details-action {
   display: block;
@@ -544,7 +537,7 @@ form#importDropzone {
     margin: 0 8px 0 0;
     vertical-align: middle;
     border: 2px solid $gray-light;
-    border-radius: 2px;
+    @include border-radius(2px);
 
     .done {
       margin-top: -7px;
@@ -585,7 +578,7 @@ form#importDropzone {
       font-size: 1.4em;
       color: $brand-primary;
       background-color: #fff;
-      border-radius: 3px;
+      @include border-radius(3px);
     }
     .hook_title {
       @extend .text-muted;
@@ -598,7 +591,7 @@ form#importDropzone {
     .badge {
       color: #363a41;
       background-color: #f4f4f4;
-      border-radius: 4px;
+      @include border-radius(4px);
 
       .selectbox i {
         line-height: 1.5;
@@ -630,7 +623,7 @@ form#importDropzone {
     margin: 0 8px 0 0;
     vertical-align: middle;
     border: 2px solid $gray-light;
-    border-radius: 2px;
+    @include border-radius(2px);
 
     .done {
       margin-top: -7px;
@@ -670,7 +663,7 @@ form#importDropzone {
 
     &.ui-sortable-helper{
       background-color: $medium-gray;
-      border-radius: 3px;
+      @include border-radius(3px);
       box-shadow: 3px 3px 8px 0 rgba(0, 0, 0, .2);
 
       .module-name,
@@ -802,7 +795,7 @@ form#importDropzone {
     color: #aeaeae;
     border-color: #aeaeae;
     &:hover {
-      color: white;
+      color: #fff;
       background-color: #aeaeae;
     }
   }

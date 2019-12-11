@@ -5,9 +5,11 @@
   "rules": {
     "selector-max-id": null,
     "selector-max-class": null,
+    "selector-max-type": null,
     "selector-max-compound-selectors": null,
     "declaration-no-important": null,
     "selector-no-qualifying-type": null,
-    "selector-max-combinators": null
+    "selector-max-combinators": null,
+    "selector-class-pattern": null
   }
 }

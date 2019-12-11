@@ -1,4 +1,4 @@
-$header-text-color: #4e6167;
+$header-text-color: #4e6167 !default;
 
 .main-header {
   position: fixed;
@@ -34,7 +34,7 @@ $header-text-color: #4e6167;
   > .logo {
     width: 13.13rem;
     height: 100%;
-    background: url(img/logo.png) no-repeat center left;
+    background: url("img/logo.png") no-repeat center left;
 
     .mobile & {
       flex-grow: 1;
@@ -106,11 +106,11 @@ $header-text-color: #4e6167;
     form {
       width: 100%; // needed for transition
       height: 1.875rem; // necessary because of elements stretching vertically
-      transition: width .5s ease-in-out;
+      @include transition(width .5s ease-in-out);
 
       .btn {
         opacity: 1;
-        transition: all .5s;
+        @include transition(all .5s);
       }
 
       // behavior when the search form is collapsed
@@ -119,14 +119,14 @@ $header-text-color: #4e6167;
 
         input#bo_query {
           padding-left: 2rem; // leave out space for the loupe
-          border-radius: .983rem;
+          @include border-radius(.983rem);
         }
 
         .input-group {
 
           // loupe icon
           &::before {
-            margin-top: -(1.25rem/2);
+            margin-top: -(1.25rem / 2);
             font-size: 1.25rem;
             opacity: 1;
           }
@@ -146,11 +146,9 @@ $header-text-color: #4e6167;
     // search input
     input#bo_query {
       font-size: .75rem;
-      border: 1px solid #bbcdd2{
-        top-left-radius: .983rem;
-        bottom-left-radius: .983rem;
-      }
-      transition: padding-left .5s;
+      border: 1px solid #bbcdd2;
+      @include border-left-radius(.983rem);
+      @include transition(padding-left .5s);
       padding: {
         top: .375rem;
         bottom: .375rem;
@@ -174,7 +172,7 @@ $header-text-color: #4e6167;
         font-size: 0;
         content: "search";
         opacity: 0;
-        transition: all .5s;
+        @include transition(all .5s);
       }
 
       button:not(:first-of-type) {
@@ -389,7 +387,7 @@ $header-text-color: #4e6167;
     margin: 0;
     font-size: 13px;
     border: 1px solid #bbcdd2;
-    border-radius: 0;
+    @include border-radius(0);
     box-shadow: 0 2px 2px 0 rgba(0, 0, 0, .1);
 
     .items-list {
@@ -404,8 +402,9 @@ $header-text-color: #4e6167;
       li:first-child a {
         padding-left: 0;
         font-size: .875rem !important;
-        font-weight: bold;
+        font-weight: 600;
         color: $brand-info !important;
+
         &:hover {
           cursor: pointer;
         }
@@ -449,7 +448,7 @@ $header-text-color: #4e6167;
             color: $gray-medium;
             cursor: pointer;
             border: solid 1px $gray-light;
-            border-radius: .0625rem;
+            @include border-radius(.0625rem);
           }
         }
       }
@@ -521,7 +520,7 @@ $header-text-color: #4e6167;
         color: #576c72;
         background-color: inherit;
         border: 1px solid #899ea5;
-        border-radius: 1px;
+        @include border-radius(1px);
         &:hover {
           color: $primary;
           border-color: $primary;
@@ -551,7 +550,7 @@ $header-text-color: #4e6167;
       margin: 0 0 0 auto !important;
       color: #576c72;
       border: 1px solid #899ea5;
-      border-radius: 1px;
+      @include border-radius(1px);
 
       &:hover {
         color: $primary;

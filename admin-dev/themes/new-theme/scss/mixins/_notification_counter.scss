@@ -9,5 +9,5 @@
   color: #fff;
   background: #f1b746;
   border: .125rem solid #fff;
-  border-radius: 1rem;
+  @include border-radius(1rem);
 }

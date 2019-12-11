@@ -1,14 +1,15 @@
 .product-page {
-
   padding-bottom: 80px;
 
   .widget-radio-inline {
     div.radio {
       display: inline;
     }
+
     label {
       display: inline-block;
     }
+
     a.btn {
       display: inline;
       height: 29px;
@@ -214,7 +215,7 @@
     display: inline-block;
     margin: 0 .625rem 0 0;
     border: 1px solid $gray-light;
-    border-radius: .1875rem;
+    @include border-radius(.1875rem);
     outline: solid 4px #fff;
   }
 
@@ -261,9 +262,8 @@
     margin-bottom: 0;
     overflow-y: hidden;
     border: none;
-    border-bottom-right-radius: 0;
-    border-bottom-left-radius: 0;
-    transition: width .5s ease-out, margin .5s ease-out;
+    @include border-bottom-radius(0);
+    @include transition(width .5s ease-out, margin .5s ease-out);
     &.col-md-8 {
       min-height: 200px;
       border-right: solid 1px $gray-light;
@@ -276,7 +276,7 @@
         &.active,
         &:hover {
           border: 3px solid $brand-primary;
-          border-radius: 3px;
+          @include border-radius(3px);
         }
         &.openfilemanager {
           color: $gray-light;
@@ -288,13 +288,13 @@
             width: 50px;
             height: 50px;
             border: 5px solid $gray-light;
-            border-radius: 100%;
+            @include border-radius(100%);
             transform: translateY(-50%);
             span {
               display: inline-block;
               height: 50px;
               font-size: 30px;
-              font-weight: bold;
+              font-weight: 600;
               line-height: 40px;
               text-align: center;
             }
@@ -304,7 +304,7 @@
           width: 100%;
           height: 100%;
           line-height: 130px;
-          border-radius: 0;
+          @include border-radius(0);
           &.bg {
             background-repeat: no-repeat;
             background-position: center center;
@@ -372,7 +372,7 @@
       padding: 2em 0;
       margin: 0;
       a {
-        font-weight: bold;
+        font-weight: 600;
       }
       i {
         font-size: 60px;
@@ -426,7 +426,7 @@
       display: none;
       padding: 5px 0;
       font-size: 12px;
-      font-weight: bold;
+      font-weight: 600;
       color: $gray-medium;
       cursor: pointer;
       border-top: solid 1px $gray-light;
@@ -465,7 +465,7 @@
   .pack-product {
     position: relative;
     border: .0625rem solid $gray-light;
-    border-radius: $border-radius;
+    @include border-radius($border-radius);
     > .cover {
       width: 100%;
     }
@@ -489,15 +489,15 @@
     }
     h4 {
       margin: 0;
-      font-weight: normal;
+      font-weight: 400;
       line-height: 1.25rem;
-      color: black;
+      color: #000;
     }
     .ref {
       color: $gray-medium;
     }
     .delete {
-      background: white;
+      background: #fff;
       border: none;
       .material-icons {
         color: $gray-light;
@@ -519,12 +519,14 @@
       font-weight: 600;
     }
     > .ui-autocomplete-input {
+      /* stylelint-disable selector-no-vendor-prefix */
       &::-webkit-input-placeholder,
       &::-moz-placeholder,
       &:-ms-input-placeholder,
       &:-moz-placeholder {
         font-size: .75rem;
       }
+      /* stylelint-enable selector-no-vendor-prefix */
     }
   }
 
@@ -560,7 +562,7 @@
   .categories-tree {
     padding: .625rem;
     border: $gray-light 1px solid;
-    border-radius: .1875rem;
+    @include border-radius(.1875rem);
     .categories-tree-actions {
       display: flex;
       align-items: center;
@@ -658,7 +660,7 @@
   }
 
   #combinations-bulk-form {
-    transition: opacity 1s ease-in-out;
+    @include transition(opacity 1s ease-in-out);
     &.inactive {
       cursor: progress;
       opacity: .3;
@@ -679,7 +681,7 @@
       &.timeline-wrapper,
       .timeline-item {
         background-color: transparent;
-        border-radius: 0;
+        @include border-radius(0);
       }
       .animated-background {
         height: 3.125rem;
@@ -728,7 +730,7 @@
 
     .text-ellipsis.module-version,
     .module-version-author-grid {
-      font-weight: normal;
+      font-weight: 400;
       color: $gray-light;
     }
     .text-ellipsis.module-version {
@@ -791,11 +793,7 @@
   cursor: default;
   background-color: #fff;
   border: 1px solid #ccc;
-  -webkit-border-radius: 5px;
-  -moz-border-radius: 5px;
-  border-radius: 5px;
-  -webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, .2);
-  -moz-box-shadow: 0 5px 10px rgba(0, 0, 0, .2);
+  @include border-radius(5px);
   box-shadow: 0 5px 10px rgba(0, 0, 0, .2);
   > li {
     padding: 3px 20px;
@@ -833,7 +831,7 @@
       }
       &::after {
         float: right;
-        font-family: "Material Icons";
+        font-family: "Material Icons", Arial, Helvetica, sans-serif;
         content: "\E316";
       }
       &.collapsed::after {
@@ -877,7 +875,7 @@
               color: $gray-medium;
               .pretty-checkbox {
                 &.not-color::before {
-                  font-family: "Material Icons";
+                  font-family: "Material Icons", Arial, Helvetica, sans-serif;
                   content: "\E5CA";
                   background: $primary;
                 }
@@ -978,9 +976,9 @@
         z-index: 2;
         height: 3rem;
         padding: .9375rem .3125rem;
-        color: white;
+        color: #fff;
         cursor: pointer;
-        background: white;
+        background: #fff;
         background: $brand-primary;
         &.visible {
           visibility: visible;

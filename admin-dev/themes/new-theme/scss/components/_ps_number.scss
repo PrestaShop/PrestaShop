@@ -2,14 +2,9 @@
   position: relative;
   display: inline-block;
 
-  input[type=number]::-webkit-inner-spin-button,
-  input[type=number]::-webkit-outer-spin-button {
-    -webkit-appearance: none;
-    -moz-appearance: none;
+  input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"]::-webkit-outer-spin-button {
     appearance: none;
-  }
-  input[type=number] {
-    -moz-appearance: textfield;
   }
   .danger {
     color: $gray-dark;
@@ -43,7 +38,7 @@
 
   .ps-number-up::before {
     position: relative;
-    font-family: "Material Icons";
+    font-family: "Material Icons", Arial, Helvetica, sans-serif;
     font-size: 20px;
     color: $gray-dark;
     content: "\E5C7";
@@ -52,7 +47,7 @@
   .ps-number-down::before {
     position: relative;
     bottom: 6px;
-    font-family: "Material Icons";
+    font-family: "Material Icons", Arial, Helvetica, sans-serif;
     font-size: 20px;
     color: $gray-dark;
     content: "\E5C5";

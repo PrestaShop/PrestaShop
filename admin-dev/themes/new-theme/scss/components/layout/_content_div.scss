@@ -4,7 +4,7 @@
   padding-bottom: $grid-gutter-width / 2;
   padding-left: $size-navbar-width + ($grid-gutter-width / 2);
 
-  transition: padding .5s ease; // transition when collapsing the nav menu
+  @include transition(padding .5s ease); // transition when collapsing the nav menu
 
   // with hidden navbar
   @include media-breakpoint-down(md) {
