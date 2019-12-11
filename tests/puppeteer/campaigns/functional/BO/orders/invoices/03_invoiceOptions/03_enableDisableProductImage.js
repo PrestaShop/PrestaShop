@@ -153,20 +153,16 @@ describe('Test enable/disable product image in invoices', async () => {
         it('should download the invoice', async function () {
           fileName = await this.pageObjects.viewOrderPage.getFileName();
           await this.pageObjects.viewOrderPage.downloadInvoice();
-          const exist = await files.checkFileExistence(
-            global.BO.DOWNLOAD_PATH,
-            `${fileName}.pdf`,
-          );
+          const exist = await files.checkFileExistence(`${fileName}.pdf`);
           await expect(exist).to.be.true;
         });
 
         it('should check the product images in the PDF File', async () => {
           const imageNumber = await files.getImageNumberInPDF(
-            global.BO.DOWNLOAD_PATH,
             `${fileName}.pdf`,
           );
           await expect(imageNumber).to.be.equal(test.args.imageNumber);
-          files.deleteFile(`${global.BO.DOWNLOAD_PATH}/${fileName}.pdf`);
+          await files.deleteFile(`${global.BO.DOWNLOAD_PATH}/${fileName}.pdf`);
         });
       });
     });
