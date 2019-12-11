@@ -176,11 +176,13 @@ abstract class AbstractDomainFeatureContext implements Context
         }
         /** @var array $data */
         $data = $hash[0];
+
         return $data;
     }
 
     /**
      * @param string|int $value
+     *
      * @return bool
      */
     protected function castToBool($value)
@@ -189,6 +191,7 @@ abstract class AbstractDomainFeatureContext implements Context
             return (bool) $value; // 0 => false; all other true
         } else {
             $lValue = strtolower($value);
+
             return $lValue == 'false' ? false : true;
         }
     }
