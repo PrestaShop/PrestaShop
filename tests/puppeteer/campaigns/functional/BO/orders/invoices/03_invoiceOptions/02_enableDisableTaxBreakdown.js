@@ -60,7 +60,15 @@ const init = async function () {
   };
 };
 
-// Enable/disable tax breakdown
+/*
+Enable tax breakdown
+Create tax rule
+Create new product with the new tax rule
+Create new order in FO with the created product
+Generate the invoice and check the tax breakdown
+Disable tax breakdown
+Generate the invoice and check that there is no tax breakdown
+ */
 describe('Test enable/disable tax breakdown', async () => {
   // before and after functions
   before(async function () {
@@ -88,7 +96,7 @@ describe('Test enable/disable tax breakdown', async () => {
   });
   after(async () => {
     /* Delete the generated invoice */
-    files.deleteFile(`${global.BO.DOWNLOAD_PATH}/${secondInvoiceFileName}.pdf`);
+    await files.deleteFile(`${global.BO.DOWNLOAD_PATH}/${secondInvoiceFileName}.pdf`);
     await helper.closeBrowser(browser);
   });
 
@@ -207,7 +215,7 @@ describe('Test enable/disable tax breakdown', async () => {
       });
     });
 
-    describe('Generate the invoice and check the tax Breakdown', async () => {
+    describe('Generate the invoice and check the tax breakdown', async () => {
       it('should go to orders page', async function () {
         await this.pageObjects.boBasePage.goToSubMenu(
           this.pageObjects.boBasePage.ordersParentLink,
@@ -223,7 +231,7 @@ describe('Test enable/disable tax breakdown', async () => {
         await expect(pageTitle).to.contains(this.pageObjects.viewOrderPage.pageTitle);
       });
 
-      it('should change the order status to \'Payment accepted\' and check it', async function () {
+      it(`should change the order status to '${Statuses.paymentAccepted.status}' and check it`, async function () {
         const result = await this.pageObjects.viewOrderPage.modifyOrderStatus(Statuses.paymentAccepted.status);
         await expect(result).to.be.true;
       });
@@ -231,27 +239,16 @@ describe('Test enable/disable tax breakdown', async () => {
       it('should download the invoice', async function () {
         firstInvoiceFileName = await this.pageObjects.viewOrderPage.getFileName();
         await this.pageObjects.viewOrderPage.downloadInvoice();
-        const exist = await files.checkFileExistence(
-          global.BO.DOWNLOAD_PATH,
-          `${firstInvoiceFileName}.pdf`,
-        );
+        const exist = await files.checkFileExistence(`${firstInvoiceFileName}.pdf`);
         await expect(exist).to.be.true;
       });
 
       it('should check the tax breakdown', async () => {
         // Check the existence of the first tax
-        let exist = await files.checkTextInPDF(
-          global.BO.DOWNLOAD_PATH,
-          `${firstInvoiceFileName}.pdf`,
-          '10.000 %',
-        );
+        let exist = await files.checkTextInPDF(`${firstInvoiceFileName}.pdf`, '10.000 %');
         await expect(exist).to.be.true;
         // Check the existence of the second tax
-        exist = await files.checkTextInPDF(
-          global.BO.DOWNLOAD_PATH,
-          `${firstInvoiceFileName}.pdf`,
-          '20.000 %',
-        );
+        exist = await files.checkTextInPDF(`${firstInvoiceFileName}.pdf`, '20.000 %');
         await expect(exist).to.be.true;
         // Delete the invoice file
         await files.deleteFile(`${global.BO.DOWNLOAD_PATH}/${firstInvoiceFileName}.pdf`);
@@ -297,32 +294,17 @@ describe('Test enable/disable tax breakdown', async () => {
       it('should download the invoice', async function () {
         secondInvoiceFileName = await this.pageObjects.viewOrderPage.getFileName();
         await this.pageObjects.viewOrderPage.downloadInvoice();
-        const exist = await files.checkFileExistence(
-          global.BO.DOWNLOAD_PATH,
-          `${secondInvoiceFileName}.pdf`,
-        );
+        const exist = await files.checkFileExistence(`${secondInvoiceFileName}.pdf`);
         await expect(exist).to.be.true;
       });
 
       it('should check that there is no tax breakdown', async () => {
-        let exist = await files.checkTextInPDF(
-          global.BO.DOWNLOAD_PATH,
-          `${secondInvoiceFileName}.pdf`,
-          '10.000 %',
-        );
+        let exist = await files.checkTextInPDF(`${secondInvoiceFileName}.pdf`, '10.000 %');
         await expect(exist).to.be.false;
-        exist = await files.checkTextInPDF(
-          global.BO.DOWNLOAD_PATH,
-          `${secondInvoiceFileName}.pdf`,
-          '20.000 %',
-        );
+        exist = await files.checkTextInPDF(`${secondInvoiceFileName}.pdf`,'20.000 %');
         // Check that there is only one tax line 30.000 %
         await expect(exist).to.be.false;
-        exist = await files.checkTextInPDF(
-          global.BO.DOWNLOAD_PATH,
-          `${secondInvoiceFileName}.pdf`,
-          '30.000 %',
-        );
+        exist = await files.checkTextInPDF(`${secondInvoiceFileName}.pdf`,'30.000 %');
         await expect(exist).to.be.true;
       });
     });
