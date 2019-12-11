@@ -5,10 +5,10 @@
   display: inline-block;
   vertical-align: top;
   > h4 {
-    color: #1E2024 !important;
     font-family: "Open Sans", Helvetica, Arial, sans-serif !important;
-    font-weight: bold !important;
     font-size: 14px;
+    font-weight: bold !important;
+    color: #1e2024 !important;
   }
 }
 .module-badges-display {
@@ -19,7 +19,8 @@
     bottom: 82px;
     left: 120px;
 
-    &:before, &:after {
+    &::before,
+    &::after {
       left: -80px;
     }
   }
@@ -34,8 +35,8 @@
 .module-modal-footer {
   .module-badges-action {
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    justify-content: space-between;
   }
 
   .module-price {
@@ -45,29 +46,29 @@
   }
 
   .module-stars-price {
-    padding: 0 0 10px 0;
+    padding: 0 0 10px;
   }
 }
 .module-big-cover {
   height: 240px;
-  overflow: hidden;
   margin-top: -15px;
+  overflow: hidden;
   text-align: center;
 }
 .module-big-cover > img {
   max-width: 100%;
-  max-height: 100%;
   height: auto;
+  max-height: 100%;
   padding: 4px;
 }
 .module-menu-readmore {
   margin-top: 2px;
 }
 .module-readmore-tab-content {
-  text-align: justify;
   padding: 5px 15px;
-  line-height: 20px;
   margin-bottom: 61px !important;
+  line-height: 20px;
+  text-align: justify;
 }
 .module-menu-readmore > .tab-content {
   margin-top: 5px;
@@ -81,8 +82,8 @@
   margin-right: 1em;
 }
 .module-modal-dialog {
-  height: 85%;
   width: 50%;
+  height: 85%;
 }
 .module-modal-content {
   border: none;
@@ -97,14 +98,14 @@
   margin: 2em 0;
 
   .module-list-empty {
-    background: rgba(255,255,255,0.4);
-    border-radius: 3px;
     padding: 20px;
+    background: rgba(255, 255, 255, .4);
     border: dashed 1px #696969;
+    border-radius: 3px;
 
     p {
-      margin: 0;
       padding: 0;
+      margin: 0;
     }
   }
 }
@@ -122,7 +123,7 @@
 
     background-color: white;
   }
-  +:nth-child(even) {
+  + :nth-child(even) {
     .container-fluid {
       background-color: #f5f8f9 !important;
     }
@@ -134,8 +135,8 @@
     }
 
     .module-logo-thumb-list {
-      height:64px;
-      max-width:64px;
+      max-width: 64px;
+      height: 64px;
       margin: 0 auto;
       @media (max-width: 33.9em) {
         height: auto;
@@ -144,20 +145,20 @@
       img {
         width: 100%;
         max-width: 40px;
-        margin-bottom: 0.5em;
+        margin-bottom: .5em;
       }
     }
     .module-name-list {
+      margin: 0;
       font-weight: bolder;
       color: $gray-dark;
-      margin: 0;
     }
     .module-version-author-list {
+      overflow: hidden;
       font-weight: bold;
       color: $gray-medium;
-      white-space: nowrap;
       text-overflow: ellipsis;
-      overflow: hidden;
+      white-space: nowrap;
       b {
         font-weight: bold;
         color: $gray-dark;
@@ -166,7 +167,7 @@
 
     .module-quick-action-list {
       > [class^="module-star-ranking-"] {
-        display:none;
+        display: none;
       }
     }
   }
@@ -199,7 +200,8 @@
       right: 10px;
       left: 10px;
     }
-    .btn-group, .btn {
+    .btn-group,
+    .btn {
       width: 100%;
     }
   }
@@ -216,17 +218,17 @@
  **/
 .module-addons-item-list {
   display: none;
-  -webkit-touch-callout: none;
+  cursor: pointer;
   -webkit-user-select: none;
   -khtml-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
-  cursor: pointer;
+  -webkit-touch-callout: none;
 
   .module-addons-item-wrapper-list {
-    vertical-align: middle;
     text-align: center;
+    vertical-align: middle;
 
     > .module-icon-addons-exit-list {
       > img {
@@ -244,8 +246,8 @@
   display: none;
 
   .module-placeholders-failure-wrapper {
-    text-align: center;
     margin-top: 40px;
+    text-align: center;
   }
   .module-placeholders-failure-msg {
     color: red;
@@ -267,8 +269,8 @@
 
 .module-checkbox-bulk-list {
   position: absolute;
-  right: 7px;
   top: 7px;
+  right: 7px;
   &.md-checkbox label {
     padding: 0;
   }
@@ -276,18 +278,18 @@
 
 .module-search-bar {
   height: 50px !important;
-  border: 0 !important;
   background-color: white !important;
+  border: 0 !important;
 }
 .module-search-block {
-  background: white;
   width: 100%;
+  background: white;
   .search-button {
-    border-radius: 0;
     position: absolute;
     top: 0;
     right: 0;
     height: 35px;
+    border-radius: 0;
   }
 }
 .module-sorting-menu {
@@ -296,67 +298,68 @@
 .module-sorting {
   margin-left: 35px;
   .select2-selection {
-    border-radius: 0;
     min-width: 175px;
+    border-radius: 0;
     .select2-selection__arrow {
       b {
         display: none;
       }
-      &:before {
-        content: "\E313";
-        font-family: 'Material Icons';
-        font-size: 1.5rem;
+      &::before {
         position: relative;
-        color: $gray-medium;
         right: 20px;
+        font-family: "Material Icons";
+        font-size: 1.5rem;
+        color: $gray-medium;
+        content: "\E313";
       }
     }
   }
 }
 .module-sorting i {
   margin-left: 10px;
-  cursor: pointer;
   font-size: 26px;
+  cursor: pointer;
 }
 .module-sort-active {
-  color: #A6B9C0 !important;
+  color: #a6b9c0 !important;
 }
 .module-sort-switch {
-  color: #C7D6DB;
+  color: #c7d6db;
 }
 .module-search-result-title {
-  color: #1E2024 !important;
-  font-family: "Open Sans", Helvetica, Arial, sans-serif !important;
-  font-weight: bold;
-  font-size: 18px;
-  margin-bottom: 20px;
   display: inline-block;
+  margin-bottom: 20px;
+  font-family: "Open Sans", Helvetica, Arial, sans-serif !important;
+  font-size: 18px;
+  font-weight: bold;
+  color: #1e2024 !important;
 }
 .module-addons-search {
-  font-family: "Open Sans", Helvetica, Arial, sans-serif !important;
-  font-weight: bold;
-  font-size: 14px;
   display: none;
+  font-family: "Open Sans", Helvetica, Arial, sans-serif !important;
+  font-size: 14px;
+  font-weight: bold;
 }
 .module-category-recently-used {
   a {
     text-align: center;
-    border-bottom: 1px solid #E7E8E8;
+    border-bottom: 1px solid #e7e8e8;
   }
 }
-.module-category-reset, .module-status-reset {
+.module-category-reset,
+.module-status-reset {
   display: none;
 
   a {
     color: #2eacce !important;
     text-align: center;
-    border-bottom: 1px solid #E7E8E8;
+    border-bottom: 1px solid #e7e8e8;
 
     &:hover {
       color: white !important;
-      background-color: #2eacce !important;
       text-align: center;
-      border-bottom: 1px solid #E7E8E8;
+      background-color: #2eacce !important;
+      border-bottom: 1px solid #e7e8e8;
     }
   }
 }
@@ -364,8 +367,8 @@
   margin: auto;
 }
 .module-kpi {
-  margin-right: 15px;
   display: initial;
+  margin-right: 15px;
   .material-icons {
     font-size: 1.875rem;
     vertical-align: middle;
@@ -380,8 +383,8 @@
   min-height: 74px;
   .module-top-menu-item {
     &.disabled {
-      opacity: 0.5;
       pointer-events: none;
+      opacity: .5;
     }
 
     h3 {
@@ -410,22 +413,22 @@
   cursor: pointer;
 }
 .module-category-item-wrapper {
-  background: white;
-  padding: 20px;
-  margin-bottom: 10px;
-  box-shadow: 0 1px 0 #C7D6DB;
+  display: table-cell;
   height: 247px;
   max-height: 247px;
-  display: table-cell;
-  vertical-align: middle;
-  text-align: center;
+  padding: 20px;
+  margin-bottom: 10px;
   font-size: 15px;
-  -webkit-touch-callout: none;
+  text-align: center;
+  vertical-align: middle;
   -webkit-user-select: none;
   -khtml-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
+  background: white;
+  box-shadow: 0 1px 0 #c7d6db;
+  -webkit-touch-callout: none;
 }
 
 /**
@@ -442,44 +445,44 @@
 .module-import-processing-footer-text {
   font-size: smaller;
   font-style: italic;
-  color: #CECCCC;
+  color: #cecccc;
 }
 .module-import-success {
   display: none;
   text-align: center;
 }
 .module-import-success-icon {
-  color: #1c8ca3;
   font-size: 70px;
+  color: #1c8ca3;
 }
 .module-import-failure {
   display: none;
   text-align: center;
 }
 .module-import-failure-icon {
-  color: #C45C67;
   font-size: 70px;
+  color: #c45c67;
 }
 .module-import-failure-msg {
-  font-weight: bold;
   margin-bottom: 0;
+  font-weight: bold;
 }
 .module-import-failure-details-action {
   display: block;
   cursor: pointer !important;
 }
 .module-import-failure-details {
-  word-wrap: break-word;
-  font-size: small;
+  display: none;
+  margin: 35px 5px 20px;
   overflow: auto;
   overflow-y: hidden;
-  margin: 35px 5px 20px 5px;
+  font-size: small;
   text-align: justify;
-  display: none;
+  word-wrap: break-word;
 }
 .module-import-start-icon {
   font-size: 70px;
-  color: #CECCCC;
+  color: #cecccc;
 }
 .module-import-start-select-manual {
   cursor: pointer !important;
@@ -490,7 +493,7 @@
 .module-import-start-footer-text {
   font-size: smaller;
   font-style: italic;
-  color: #CECCCC;
+  color: #cecccc;
 }
 form#importDropzone {
   border: 2px dashed #6c868e;
@@ -513,8 +516,8 @@ form#importDropzone {
  **/
 
 #pstrust-img {
-  max-height: 64px;
   max-width: 64px;
+  max-height: 64px;
 }
 
 /**
@@ -535,20 +538,20 @@ form#importDropzone {
   }
 
   .selectbox {
+    position: relative;
     width: 20px;
     height: 20px;
+    margin: 0 8px 0 0;
+    vertical-align: middle;
     border: 2px solid $gray-light;
     border-radius: 2px;
-    vertical-align: middle;
-    margin: 0 8px 0 0;
-    position: relative;
 
     .done {
-      opacity: 0;
-      color: #fff;
       margin-top: -7px;
-      font-size: 1.6em;
       margin-left: -4px;
+      font-size: 1.6em;
+      color: #fff;
+      opacity: 0;
     }
   }
 }
@@ -566,22 +569,22 @@ form#importDropzone {
 }
 
 .hook-panel {
+  padding: 10px 10px 5px;
   margin-bottom: 10px !important;
-  padding: 10px 10px 5px 10px;
 
   .highlight {
-    background-color: #F7E69F !important;
+    background-color: #f7e69f !important;
   }
 
   .hook-panel-header {
-    margin: 0 -10px 0 -10px;
-    padding: 0 10px 10px 10px;
+    padding: 0 10px 10px;
+    margin: 0 -10px;
 
     .hook-name {
+      padding: 0 4px;
       font-size: 1.4em;
       color: $brand-primary;
       background-color: #fff;
-      padding: 0 4px;
       border-radius: 3px;
     }
     .hook_title {
@@ -593,9 +596,9 @@ form#importDropzone {
     }
 
     .badge {
+      color: #363a41;
       background-color: #f4f4f4;
       border-radius: 4px;
-      color: #363a41;
 
       .selectbox i {
         line-height: 1.5;
@@ -621,20 +624,20 @@ form#importDropzone {
   }
 
   .selectbox {
+    position: relative;
     width: 20px;
     height: 20px;
+    margin: 0 8px 0 0;
+    vertical-align: middle;
     border: 2px solid $gray-light;
     border-radius: 2px;
-    vertical-align: middle;
-    margin: 0 8px 0 0;
-    position: relative;
 
     .done {
-      opacity: 0;
-      color: #fff;
       margin-top: -7px;
-      font-size: 1.6em;
       margin-left: -4px;
+      font-size: 1.6em;
+      color: #fff;
+      opacity: 0;
     }
   }
 }
@@ -649,8 +652,8 @@ form#importDropzone {
   .module-item {
     width: 100%;
     padding: 5px 0;
-    border-bottom: solid 1px $gray-light;
     background: #fff;
+    border-bottom: solid 1px $gray-light;
 
     &:hover {
       background-color: $gray-soft;
@@ -666,9 +669,9 @@ form#importDropzone {
     }
 
     &.ui-sortable-helper{
-      border-radius: 3px;
-      box-shadow: 3px 3px 8px 0 rgba(0, 0, 0, 0.2);
       background-color: $medium-gray;
+      border-radius: 3px;
+      box-shadow: 3px 3px 8px 0 rgba(0, 0, 0, .2);
 
       .module-name,
       .module-description,
@@ -706,8 +709,8 @@ form#importDropzone {
     display: table-cell;
     width: 90px;
     min-height: 35px;
-    vertical-align: middle;
     padding: 0 10px;
+    vertical-align: middle;
 
     .drag_indicator {
       opacity: 0;
@@ -717,13 +720,13 @@ form#importDropzone {
   .module-column-position {
     display: table-cell;
     width: 80px;
-    vertical-align: middle;
     text-align: right;
+    vertical-align: middle;
 
     .index-position {
+      width: 40px;
       padding: 0 5px;
       font-size: 1em;
-      width: 40px;
     }
   }
 
@@ -741,8 +744,8 @@ form#importDropzone {
   .module-column-description {
     display: table-cell;
     height: 50px;
+    font-size: .95em;
     vertical-align: middle;
-    font-size:.95em;
     .module-name {
       color: $primary;
     }
@@ -767,15 +770,15 @@ form#importDropzone {
   .module-column-actions {
     display: table-cell;
     padding: 0 10px;
-    vertical-align: middle;
     text-align: right;
+    vertical-align: middle;
 
     .btn-group {
       text-align: right;
 
       .btn-outline-primary {
-        border: none;
         color: $medium-gray;
+        border: none;
       }
     }
     .dropdown-toggle.dropdown-toggle-dots:hover::after {
@@ -795,12 +798,12 @@ form#importDropzone {
 .module-actions {
   // @toDo: move to ui kit
   .dropdown-toggle-split-text {
-    color: #AEAEAE;
-    border-color: #AEAEAE;
     margin-left: 10px !important;
+    color: #aeaeae;
+    border-color: #aeaeae;
     &:hover {
-      background-color: #AEAEAE;
       color: white;
+      background-color: #aeaeae;
     }
   }
 }

@@ -1,12 +1,11 @@
 .header-toolbar {
   position: fixed;
-  background: #ffffff;
   top: $size-header-height;
-  left: $size-navbar-width;
   right: 0;
-  z-index: 501; // popup menus' z-index is 502, so it has to be just below that
+  left: $size-navbar-width;
+  z-index: 990; // popup menus' z-index is 1000, so it has to be just below that
+  background: #fff;
   border-bottom: 0.0625rem solid $color-separator;
-
   transition: left 0.5s ease; // transition when collapsing the nav menu
 
   .mobile & {
@@ -18,18 +17,18 @@
   }
 
   @include media-breakpoint-down(sm) {
-    padding-top: 0.3rem;
     top: 3.5rem;
+    padding-top: 0.3rem;
   }
 
   // page title
   .title {
+    float: left;
     padding: 0.3125rem;
     padding-left: 0;
+    margin-bottom: 0;
     font-size: 1.625rem;
     font-weight: normal;
-    margin-bottom: 0;
-    float: left;
 
     @include media-breakpoint-down(sm) {
       float: none;
@@ -44,14 +43,14 @@
   // toolbar buttons
   .toolbar-icons {
     @include media-breakpoint-down(sm) {
-      overflow-x: auto;
       float: none;
+      overflow-x: auto;
     }
 
     > .wrapper {
       display: flex;
-      justify-content: flex-end;
       align-items: flex-start;
+      justify-content: flex-end;
 
       @include media-breakpoint-down(sm) {
         justify-content: flex-start;
@@ -65,7 +64,7 @@
 
   // bottom spacing for title & toolbar row
   .title-row {
-    @include clearfix;
+    @include clearfix();
     margin-bottom: $grid-gutter-width / 2;
   }
 }
@@ -81,10 +80,9 @@
     position: relative;
 
     .notification-container {
-      @include notification_container(1.5rem);
-      position: absolute;
-      bottom: -5px;
+      @include notification_container(1.5rem) position: absolute;
       right: 15px;
+      bottom: -5px;
 
       .notification-counter {
         @include notification_counter();

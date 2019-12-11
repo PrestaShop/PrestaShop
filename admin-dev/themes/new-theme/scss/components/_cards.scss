@@ -9,7 +9,7 @@
   background-color: $card-bg;
   border: $card-border-width solid $card-border-color;
   border-radius: $card-border-radius;
-  box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.06);
+  box-shadow: 0 0 4px 0 rgba(0, 0, 0, .06);
 }
 
 .card-block {
@@ -38,7 +38,7 @@
 // }
 
 .card-link {
-  @include hover {
+  @include hover () {
     text-decoration: none;
   }
 
@@ -70,10 +70,10 @@
 
 .card-header {
   padding: $card-spacer-y $card-spacer-x;
-  background-color: $card-cap-bg;
-  border-bottom: $card-border-width solid $card-border-color;
   font-weight: 600;
   line-height: 1.5rem; // same as material icons
+  background-color: $card-cap-bg;
+  border-bottom: $card-border-width solid $card-border-color;
 
   .card-header-title {
     font-weight: 600;
@@ -85,9 +85,9 @@
   }
 
   .material-icons {
-    vertical-align: text-bottom;
-    color: $medium-gray;
     margin-right: 5px;
+    color: $medium-gray;
+    vertical-align: text-bottom;
   }
 
   h3 {
@@ -158,7 +158,7 @@
 //
 
 .card-inverse {
-  @include card-inverse;
+  @include card-inverse ();
 }
 
 //
@@ -184,7 +184,6 @@
   left: 0;
   padding: 1.25rem;
 }
-
 
 
 // Card image caps

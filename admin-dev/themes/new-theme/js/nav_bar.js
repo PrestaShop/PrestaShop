@@ -46,10 +46,10 @@ export default class NavBar {
 
       $navBar.find('.link-levelone').hover(
         function onMouseEnter() {
-          $(this).addClass('-hover');
+          $(this).addClass('.link-hover');
         },
         function onMouseLeave() {
-          $(this).removeClass('-hover');
+          $(this).removeClass('.link-hover');
         },
       );
 
@@ -64,7 +64,7 @@ export default class NavBar {
           const onlyClose = $(e.currentTarget).parent().hasClass('ul-open');
 
           if ($('body').is('.page-sidebar-closed:not(.mobile)')) {
-            $('.nav-bar li.link-levelone.has-submenu.ul-open').removeClass('ul-open open -hover');
+            $('.nav-bar li.link-levelone.has-submenu.ul-open').removeClass('ul-open open submenu-hover');
             $('.nav-bar li.link-levelone.has-submenu.ul-open ul.submenu').removeAttr('style');
           } else {
             $('.nav-bar li.link-levelone.has-submenu.ul-open ul.submenu').slideUp({
@@ -82,7 +82,7 @@ export default class NavBar {
           $submenu.addClass('ul-open');
 
           if ($('body').is('.page-sidebar-closed:not(.mobile)')) {
-            $submenu.addClass('-hover');
+            $submenu.addClass('submenu-hover');
             $submenu.find('ul.submenu').removeAttr('style');
           } else {
             $submenu.find('ul.submenu').slideDown({
@@ -152,7 +152,7 @@ export default class NavBar {
           'click.mobile',
           () => {
             if ($('ul.main-menu li.ul-open').length > 0) {
-              $('.nav-bar li.link-levelone.has-submenu.ul-open').removeClass('ul-open open -hover');
+              $('.nav-bar li.link-levelone.has-submenu.ul-open').removeClass('ul-open open submenu-hover');
               $('.nav-bar li.link-levelone.has-submenu.ul-open ul.submenu').removeAttr('style');
             }
           },

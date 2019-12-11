@@ -9,9 +9,9 @@
 }
 
 table.grid-ordering-column tr {
-  transition-property: all;
-  transition-duration: 0.2s;
   transition-timing-function: ease-out;
+  transition-duration: .2s;
+  transition-property: all;
   &.hover {
     background-color: $gray-soft;
   }
@@ -23,10 +23,10 @@ table.grid-ordering-column tr {
 }
 
 table.grid-ordering-column tr.position-row-while-drag {
-  box-shadow: 3px 3px 8px 0 rgba(0, 0, 0, 0.2);
   color: white;
-  transform: translate(5px,10px);
   background: none;
+  box-shadow: 3px 3px 8px 0 rgba(0, 0, 0, .2);
+  transform: translate(5px, 10px);
   td {
     background-color: $medium-gray;
   }
@@ -37,7 +37,9 @@ table.grid-ordering-column tr.position-row-while-drag {
 
   .position-drag-handle,
   .position-drag-handle:hover,
-  .btn, .btn:after, .btn .material-icons {
+  .btn,
+  .btn::after,
+  .btn .material-icons {
     color: white;
   }
 }
@@ -60,7 +62,7 @@ table.grid-ordering-column tr.position-row-while-drag {
   button.dropdown-toggle,
   .dropdown-toggle {
     color: $gray-medium;
-    &:after {
+    &::after {
       content: "more_vert";
     }
 
@@ -115,12 +117,12 @@ table .column-filters td:last-child .grid-reset-button {
 
         // styling for row that is being dragged
         &.dragging-row {
-          background: #fafbfc;
           cursor: move;
+          background: #fafbfc;
 
           td {
-            background: #67868e;
             color: white;
+            background: #67868e;
             -webkit-transform: translate(5px, 10px);
             transform: translate(5px, 10px);
 
@@ -129,7 +131,7 @@ table .column-filters td:last-child .grid-reset-button {
             i.grid-toggler-icon-not-valid,
             i.material-icons,
             a,
-            a:after {
+            a::after {
               color: white;
             }
           }
@@ -169,7 +171,7 @@ table .column-filters td:last-child .grid-reset-button {
               }
 
               .dropdown-toggle {
-                padding: 0 5px 0 5px;
+                padding: 0 5px;
                 &.coloured {
                   border: 0;
                 }

@@ -51,7 +51,7 @@
 
         {else}
 
-          <li class="category-title {if $level1.current}-active{/if}" data-submenu="{$level1.id_tab}" id="tab-{$level1.class_name}">
+          <li class="category-title {if $level1.current}link-active{/if}" data-submenu="{$level1.id_tab}" id="tab-{$level1.class_name}">
               <span class="title">{$level1Name}</span>
           </li>
 
@@ -67,9 +67,9 @@
                 {assign var="levelOneClass" value=''}
 
                 {if $level2.current and not $collapse_menu}
-                    {assign var="levelOneClass" value=" link-levelone-active open ul-open"}
+                    {assign var="levelOneClass" value=" link-active open ul-open"}
                 {elseif $level2.current and $collapse_menu}
-                    {assign var="levelOneClass" value=" link-levelone-active"}
+                    {assign var="levelOneClass" value=" link-active"}
                 {/if}
 
                 <li class="link-levelone{if $level2.sub_tabs|@count} has-submenu{/if}{$levelOneClass}" data-submenu="{$level2.id_tab}" id="subtab-{$level2.class_name}">
@@ -100,7 +100,7 @@
                               {$level3Name = $level3.class_name|escape:'html':'UTF-8'}
                             {/if}
 
-                            <li class="link-leveltwo {if $level3.current}link-leveltwo-active{/if}" data-submenu="{$level3.id_tab}" id="subtab-{$level3.class_name}">
+                            <li class="link-leveltwo {if $level3.current}link-active{/if}" data-submenu="{$level3.id_tab}" id="subtab-{$level3.class_name}">
                               <a href="{$level3Href}" class="link"> {$level3Name}
                               </a>
                             </li>
