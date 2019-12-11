@@ -1,10 +1,7 @@
 <?php
 
-
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
-
-use Behat\Behat\Tester\Exception\PendingException;
 use Behat\Gherkin\Node\TableNode;
 use PHPUnit_Framework_Assert;
 use PrestaShop\PrestaShop\Core\Domain\Contact\Command\AddContactCommand;
