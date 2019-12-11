@@ -62,7 +62,9 @@ class ContactFeatureContext extends AbstractDomainFeatureContext
      */
     public function iAddNewContactWithTitleAndMessagesSavingIsEnabled(string $title)
     {
-        $this->getQueryBus()->handle(new AddContactCommand([$this->defaultLangId => $title], true));
+        $this->getCommandBus()->handle(new AddContactCommand(
+            [$this->defaultLangId => $title], true)
+        );
     }
 
     /**
