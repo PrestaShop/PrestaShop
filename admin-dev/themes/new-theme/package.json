@@ -8,7 +8,8 @@
     "build": "NODE_ENV=production webpack --progress --colors --debug --display-chunks",
     "dev": "webpack --progress --colors --debug --display-chunks --watch",
     "watch": "npm run dev",
-    "lint": "eslint -c .eslintrc.js --ext .js,.vue ."
+    "lint": "eslint -c .eslintrc.js --ext .js,.vue .",
+    "lint-fix": "eslint -c .eslintrc.js --ext .js,.vue . --fix"
   },
   "author": "PrestaShop",
   "license": "OSL-3.0",
@@ -42,6 +43,7 @@
   },
   "devDependencies": {
     "babel-core": "^6.26.3",
+    "babel-eslint": "^10.0.3",
     "babel-loader": "^6",
     "babel-polyfill": "^6.26.0",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
