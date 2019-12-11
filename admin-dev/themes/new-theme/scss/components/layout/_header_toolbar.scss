@@ -6,7 +6,9 @@
   z-index: 990; // popup menus' z-index is 1000, so it has to be just below that
   background: #fff;
   border-bottom: 0.0625rem solid $color-separator;
-  transition: left 0.5s ease; // transition when collapsing the nav menu
+  @include transition(
+    left 0.5s ease
+  ); // transition when collapsing the nav menu
 
   .mobile & {
     top: $size-header-height + ($header-mobile-padding-y * 2);
@@ -28,8 +30,7 @@
     padding-left: 0;
     margin-bottom: 0;
     font-size: 1.625rem;
-    font-weight: normal;
-
+    font-weight: 400;
     @include media-breakpoint-down(sm) {
       float: none;
     }

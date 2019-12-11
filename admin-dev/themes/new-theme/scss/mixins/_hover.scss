@@ -19,7 +19,8 @@
   @else {
     &:focus,
     &:hover {
-      @content; }
+      @content;
+    }
   }
 }
 
@@ -27,14 +28,16 @@
   @if $enable-hover-media-query {
     &,
     &:focus {
-      @content; }
+      @content;
+    }
     @include hover () { @content; }
   }
   @else {
     &,
     &:focus,
     &:hover {
-      @content; }
+      @content;
+    }
   }
 }
 
@@ -42,13 +45,15 @@
   @if $enable-hover-media-query {
     &:focus,
     &:active {
-      @content; }
+      @content;
+    }
     @include hover () { @content; }
   }
   @else {
     &:focus,
     &:active,
     &:hover {
-      @content; }
+      @content;
+    }
   }
 }

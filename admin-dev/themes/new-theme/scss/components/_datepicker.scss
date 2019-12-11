@@ -5,7 +5,7 @@
   .down::before,
   .date::before,
   .time::before {
-    font-family: "Material Icons";
+    font-family: "Material Icons", Arial, Helvetica, sans-serif;
   }
   .prev span::before {
     content: "\E314";

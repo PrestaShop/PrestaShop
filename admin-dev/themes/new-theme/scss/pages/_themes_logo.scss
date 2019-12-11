@@ -15,7 +15,7 @@
     text-align: center;
     letter-spacing: -.2px;
     background-color: #6c868e;
-    border-radius: 2px;
+    @include border-radius(2px);
   }
 
   .btn-tertiary-outline {
@@ -38,7 +38,7 @@
     .inner-content {
       padding: .9375rem;
       background-color: #f8f8f8;
-      border-radius: .25rem;
+      @include border-radius(.25rem);
 
       .title {
         font-size: 14px;

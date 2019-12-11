@@ -25,7 +25,7 @@
     min-width: 300px;
     padding: 0;
     margin-top: 4px;
-    border-radius: 0;
+    @include border-radius(0);
     .dropdown-item {
       display: flex;
       align-items: center;

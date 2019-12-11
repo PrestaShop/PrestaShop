@@ -1,8 +1,8 @@
 .btn {
   &.btn-action {
     color: #576c72;
-    background-color: white;
-    border-radius: 4px;
+    background-color: #fff;
+    @include border-radius(4px);
     box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
 
     &:disabled,

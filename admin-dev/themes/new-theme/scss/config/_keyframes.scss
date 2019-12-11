@@ -2,16 +2,10 @@
 @keyframes showcase-img-appearance {
   from {
     opacity: 0;
-    -webkit-transform: translate(-20px);
-    -ms-transform: translate(-20px);
-    -webkit-transform: translate(-20px);
     transform: translate(-20px);
   }
   to {
     opacity: 1;
-    -webkit-transform: translate(0);
-    -ms-transform: translate(0);
-    -webkit-transform: translate(0);
     transform: translate(0);
   }
 }

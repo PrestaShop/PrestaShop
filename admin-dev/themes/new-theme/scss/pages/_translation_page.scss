@@ -1,5 +1,5 @@
-$color-error: #c05c67;
-$color-active: #25b9d7;
+$color-error: #c05c67 !default;
+$color-active: #25b9d7 !default;
 
 .search-translation,
 .domains-tree {
@@ -73,7 +73,7 @@ $color-active: #25b9d7;
     margin-bottom: .9375rem;
     font-size: $font-size-xs;
     font-style: normal;
-    font-weight: bold;
+    font-weight: 600;
     font-stretch: normal;
     color: #70848b;
     text-transform: uppercase;
@@ -102,7 +102,7 @@ $color-active: #25b9d7;
 
   .card {
     padding: .9375rem .9375rem 0;
-    border-radius: 0;
+    @include border-radius(0);
   }
 
   .domain-first-part,

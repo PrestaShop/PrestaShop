@@ -4,7 +4,7 @@
   min-height: 415px;
 
   border: none;
-  border-radius: 0;
+  @include border-radius(0);
   box-shadow: 0 1px 1px 0 rgba(0, 0, 0, .1);
 
   .module-item-heading-grid {
@@ -16,8 +16,7 @@
       height: $module-logo-size;
       margin: 0 auto;
       text-align: center;
-      text-align: center;
-      border-radius: 0;
+      @include border-radius(0);
       > img {
         max-width: $module-logo-size;
         max-height: $module-logo-size;
@@ -85,7 +84,7 @@
     .module-read-more-grid {
       display: inline-block;
       .module-read-more-grid-btn {
-        font-weight: bold;
+        font-weight: 600;
       }
     }
   }
@@ -101,12 +100,7 @@
   height: 258px;
   margin-bottom: .75rem;
   cursor: pointer;
-  -webkit-user-select: none;
-  -khtml-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
   user-select: none;
-  -webkit-touch-callout: none;
   .module-addons-item-wrapper-grid {
     @extend .module-item-wrapper-grid;
     display: flex;
@@ -127,14 +121,6 @@
 * Facebook-like module cards
 **/
 
-@-webkit-keyframes placeHolderShimmer {
-  0% {
-    background-position: -468px 0;
-  }
-  100% {
-    background-position: 468px 0;
-  }
-}
 @keyframes placeHolderShimmer {
   0% {
     background-position: -468px 0;
@@ -145,6 +131,8 @@
 }
 
 .module-placeholders-wrapper {
+  margin-top: 76px;
+
   .timeline-item-wrapper {
     @extend .module-item-wrapper-grid;
     height: 250px;
@@ -154,26 +142,16 @@
       height: 96px;
       background: #f6f7f8;
       background: #eee;
-      background: -webkit-gradient(linear, left top, right top, color-stop(8%, #eee), color-stop(18%, #ddd), color-stop(33%, #eee));
-      background: -webkit-linear-gradient(left, #eee 8%, #ddd 18%, #eee 33%);
       background: linear-gradient(to right, #eee 8%, #ddd 18%, #eee 33%);
-      -webkit-background-size: 800px 104px;
       background-size: 800px 104px;
-      -webkit-animation-name: placeholdershimmer;
       animation-name: placeHolderShimmer;
 
-      -webkit-animation-duration: 1.75s;
       animation-duration: 1.75s;
-      -webkit-animation-timing-function: linear;
       animation-timing-function: linear;
-      -webkit-animation-iteration-count: infinite;
       animation-iteration-count: infinite;
-      -webkit-animation-fill-mode: forwards;
       animation-fill-mode: forwards;
       .background-masker {
         position: absolute;
-        -webkit-box-sizing: border-box;
-        -moz-box-sizing: border-box;
         box-sizing: border-box;
         background: #fff;
       }
@@ -266,9 +244,6 @@
 .background-masker.content-third-end {
   top: 88px;
   left: 300px;
-}
-.module-placeholders-wrapper {
-  margin-top: 76px;
 }
 
 .modal-read-more {

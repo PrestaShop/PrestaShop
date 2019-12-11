@@ -28,7 +28,7 @@
     min-width: 25rem;
     padding: 0;
     margin: 0;
-    border-radius: 0;
+    @include border-radius(0);
   }
 
   .notifications {
@@ -38,7 +38,7 @@
     padding: 0;
     margin: 0;
     font-size: $font-size-base;
-    border-radius: 0;
+    @include border-radius(0);
     box-shadow: 0 2px 2px 0 rgba(0, 0, 0, .1);
     &::before,
     &::after {
@@ -55,7 +55,7 @@
       margin-right: 1px;
       border-color: transparent;
       border-width: 7px;
-      border-bottom-color: white;
+      border-bottom-color: #fff;
     }
     &::before {
       margin-left: -8px;
@@ -106,7 +106,7 @@
           text-align: center;
 
           &::after {
-            font-family: "Material Icons";
+            font-family: "Material Icons", Arial, Helvetica, sans-serif;
             font-size: 5.625rem;
             color: $gray-light;
             content: "\E7F5";
@@ -168,7 +168,7 @@
   .mobile & {
     .nav-link::before {
       display: block;
-      font-family: "Material Icons";
+      font-family: "Material Icons", Arial, Helvetica, sans-serif;
       font-size: 30px;
       color: $gray-dark;
     }
