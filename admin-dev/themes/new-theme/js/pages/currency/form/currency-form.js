@@ -26,7 +26,7 @@ import Vue from 'vue';
 import VueI18n from 'vue-i18n';
 import VueResource from 'vue-resource';
 import CurrencyFormatter from './components/CurrencyFormatter.vue';
-import ReplaceFormatter from '../../../vue/i18n/replace-formatter';
+import ReplaceFormatter from '@vue/plugins/vue-i18n/replace-formatter';
 import {showGrowl} from '@app/utils/growl';
 
 Vue.use(VueResource);
@@ -64,7 +64,7 @@ export default class CurrencyForm {
   _initState() {
     this.state = {
       currencyData: this._getCurrencyDataFromForm(),
-      languages: JSON.parse(JSON.stringify(this.originalLanguages)),
+      languages: [...this.originalLanguages],
     };
   }
 
@@ -151,12 +151,13 @@ export default class CurrencyForm {
 
     // Reset languages
     this.originalLanguages.forEach((language) => {
+      // Use language data (which contain the reference) to reset price specification data (which contain the custom values)
       const patterns = language.currencyPattern.split(';');
       language.priceSpecification.positivePattern = patterns[0];
       language.priceSpecification.negativePattern = patterns.length > 1 ? patterns[1] : '-' + patterns[0];
       language.priceSpecification.currencySymbol = language.currencySymbol;
     });
-    this.state.languages = this.originalLanguages;
+    this.state.languages = [...this.originalLanguages];
 
     this.$loadingDataModal.modal('hide');
     this.$resetDefaultSettingsButton.removeClass('spinner');

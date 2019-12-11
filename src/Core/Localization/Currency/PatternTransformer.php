@@ -102,17 +102,16 @@ class PatternTransformer
         $patterns = explode(';', $currencyPattern);
         $pattern = str_replace(self::RTL_CHARACTER, '', $patterns[0]);
 
-        if (preg_match("/^¤[ \u{a0}].+/", $pattern)) {
-            return self::TYPE_LEFT_SYMBOL_WITH_SPACE;
-        }
-        if (preg_match('/^¤.+/', $pattern)) {
-            return self::TYPE_LEFT_SYMBOL_WITHOUT_SPACE;
-        }
-        if (preg_match("/.[ \u{a0}]+¤\$/", $pattern)) {
-            return self::TYPE_RIGHT_SYMBOL_WITH_SPACE;
-        }
-        if (preg_match('/.+¤$/', $pattern)) {
-            return self::TYPE_RIGHT_SYMBOL_WITHOUT_SPACE;
+        $regexpList = [
+            self::TYPE_LEFT_SYMBOL_WITH_SPACE => '/^¤[ ' . self::NO_BREAK_SPACE . ']+.+/',
+            self::TYPE_LEFT_SYMBOL_WITHOUT_SPACE => '/^¤[^ ' . self::NO_BREAK_SPACE . ']+/',
+            self::TYPE_RIGHT_SYMBOL_WITH_SPACE => '/.+[ ' . self::NO_BREAK_SPACE . ']+¤$/',
+            self::TYPE_RIGHT_SYMBOL_WITHOUT_SPACE => '/[^ ' . self::NO_BREAK_SPACE . ']+¤$/',
+        ];
+        foreach ($regexpList as $type => $regexp) {
+            if (preg_match($regexp, $pattern)) {
+                return $type;
+            }
         }
 
         return '';
