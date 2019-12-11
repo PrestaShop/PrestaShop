@@ -57,4 +57,5 @@ export default {
   allMessagesModal: '#view_all_messages_modal',
   allMessagesList: '#all-messages-list',
   openAllMessagesBtn: '.js-open-all-messages-btn',
+  orderHookTabsContainer: '#order_hook_tabs',
 };

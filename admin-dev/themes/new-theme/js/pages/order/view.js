@@ -55,7 +55,12 @@ $(() => {
   initAddCartRuleFormHandler();
   initAddProductFormHandler();
   initChangeAddressFormHandler();
-  
+  initHookTabs();
+
+  function initHookTabs() {
+    $(OrderViewPageMap.orderHookTabsContainer).find('.nav-tabs li:first-child a').tab('show');
+  }
+
   function handlePaymentDetailsToggle() {
     $(OrderViewPageMap.orderPaymentDetailsBtn).on('click', (event) => {
       const $paymentDetailRow = $(event.currentTarget).closest('tr').next(':first');
