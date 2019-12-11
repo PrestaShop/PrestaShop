@@ -1,3 +1,4 @@
+const PDFJS = require('pdfjs-dist');
 const fs = require('fs');
 
 module.exports = {
@@ -24,5 +25,30 @@ module.exports = {
       found = await fs.existsSync(`${downloadPath}/${fileName}`);
     }
     return found;
+  },
+
+  /**
+   * Get image number from PDF
+   * @param downloadPath
+   * @param fileName
+   * @return imageNumber, number of images in PDF file
+   */
+  async getImageNumberInPDF(downloadPath, fileName) {
+    const pdf = await PDFJS.getDocument(`${downloadPath}/${fileName}`).promise;
+    const nbrPages = pdf.numPages;
+    let imageNumber = 0;
+    for (let pageNo = 1; pageNo <= nbrPages; pageNo += 1) {
+      const page = await pdf.getPage(nbrPages);
+      /* eslint-disable no-loop-func */
+      await page.getOperatorList().then(async (ops) => {
+        for (let i = 0; i < ops.fnArray.length; i++) {
+          if (ops.fnArray[i] === PDFJS.OPS.paintImageXObject) {
+            imageNumber += 1;
+          }
+        }
+      });
+      /* eslint-enable no-loop-func */
+    }
+    return imageNumber;
   },
 };
