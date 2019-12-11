@@ -32,17 +32,17 @@
       'data-reference-url': path('admin_currencies_get_reference_data', {'currencyIsoCode': 'CURRENCY_ISO_CODE'})|replace({'/CURRENCY_ISO_CODE': '{/id}'}),
       'data-languages': languages|json_encode|replace("'", "&#39;")|raw,
       'data-translations': {
-        '1. Enter symbol': '1. Enter symbol'|trans({}, 'Admin.International.Feature'),
-        '2. Choose format': '2. Choose format'|trans({}, 'Admin.International.Feature'),
-        'Customize symbol and format': 'Customize symbol and format'|trans({}, 'Admin.International.Feature'),
-        'Apply': 'Apply'|trans({}, 'Admin.Actions'),
-        'Cancel': 'Cancel'|trans({}, 'Admin.Actions'),
-        'Close': 'Close'|trans({}, 'Admin.Actions'),
-        'Language': 'Language'|trans({}, 'Admin.Global'),
-        'Example': 'Example'|trans({}, 'Admin.Global'),
-        'Edit symbol / format': 'Edit symbol / format'|trans({}, 'Admin.International.Feature'),
-        'Reset settings': 'Reset settings'|trans({}, 'Admin.Actions'),
-        'Price: %price% (Special discount %discount%)': 'Price: %price% (Special discount %discount%)'|trans({}, 'Admin.International.Feature')
+        'step.symbol': '1. Enter symbol'|trans({}, 'Admin.International.Feature'),
+        'step.format': '2. Choose format'|trans({}, 'Admin.International.Feature'),
+        'modal.title': 'Customize symbol and format'|trans({}, 'Admin.International.Feature'),
+        'modal.apply': 'Apply'|trans({}, 'Admin.Actions'),
+        'modal.cancel': 'Cancel'|trans({}, 'Admin.Actions'),
+        'modal.close': 'Close'|trans({}, 'Admin.Actions'),
+        'list.language': 'Language'|trans({}, 'Admin.Global'),
+        'list.example': 'Example'|trans({}, 'Admin.Global'),
+        'list.edit': 'Edit symbol / format'|trans({}, 'Admin.International.Feature'),
+        'list.reset': 'Reset settings'|trans({}, 'Admin.Actions'),
+        'list.example.format': 'Price: %price% (Special discount %discount%)'|trans({}, 'Admin.International.Feature')
       }|json_encode|replace("'", "&#39;")|raw
     }
   }) }}

@@ -38,7 +38,7 @@
 
 <script>
   import CurrencyFormatForm from './CurrencyFormatForm';
-  import Modal from 'psvue/components/Modal';
+  import Modal from '@vue/components/Modal';
 
   export default {
     name: 'currency-modal',
@@ -60,14 +60,15 @@
     },
     computed: {
       modalTitle() {
-        return this.$t('Customize symbol and format') + (null !== this.language ? ' + ' + this.language.name : '');
+        return this.$t('modal.title') + (null !== this.language ? ` + ${this.language.name}`  : '');
       }
     },
   };
 </script>
 
 <style lang="scss" scoped>
-  @import '../../../../../scss/config/_settings.scss';
+  @import '~@scss/config/_settings.scss';
+
   .modal-header .close {
     font-size: 1.2rem;
     color: $gray-medium;
