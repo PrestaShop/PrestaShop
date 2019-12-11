@@ -25,11 +25,11 @@
 <template>
   <div class="row">
     <div class="col-4">
-      <h4>{{$t('1. Enter symbol')}}</h4>
+      <h4>{{$t('step.symbol')}}</h4>
       <input type="text" v-model="customSymbol">
     </div>
     <div class="col-8 border-left">
-      <h4>{{$t('2. Choose format')}}</h4>
+      <h4>{{$t('step.format')}}</h4>
       <div class="row">
         <div class="ps-radio col-6" v-for="(pattern, transformation) in availableFormats" :key="transformation" :id="transformation">
           <input type="radio" :checked="transformation === customTransformation" :value="transformation" />
@@ -43,7 +43,7 @@
 </template>
 
 <script>
-  import { NumberFormatter } from 'app/cldr';
+  import { NumberFormatter } from '@app/cldr';
 
   export default {
     name: 'currency-format-form',
@@ -88,7 +88,7 @@
     methods: {
       displayPattern(pattern) {
         const patterns = pattern.split(';');
-        const priceSpecification = JSON.parse(JSON.stringify(this.language.priceSpecification));
+        const priceSpecification = Object.assign({}, this.language.priceSpecification);
         priceSpecification.positivePattern = patterns[0];
         priceSpecification.negativePattern = patterns.length > 1 ? patterns[1] : '-' + pattern;
         priceSpecification.currencySymbol = this.customSymbol;
