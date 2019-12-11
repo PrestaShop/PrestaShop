@@ -2,6 +2,7 @@
 
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
+use PHPUnit_Framework_Assert;
 use PHPUnit_Framework_AssertionFailedError;
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\Command\CloseShowcaseCardCommand;
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\Exception\InvalidShowcaseCardNameException;
@@ -67,6 +68,6 @@ class ShowcaseCardFeatureContext extends AbstractDomainFeatureContext
         $showcaseCardIsClosed = $this->getQueryBus()->handle(
             new GetShowcaseCardIsClosed((int) $employeeId, $cardName)
         );
-        assertTrue($showcaseCardIsClosed);
+        PHPUnit_Framework_Assert::assertTrue($showcaseCardIsClosed);
     }
 }

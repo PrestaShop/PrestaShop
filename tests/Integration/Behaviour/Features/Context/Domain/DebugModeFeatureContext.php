@@ -2,6 +2,7 @@
 
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
+use PHPUnit_Framework_Assert;
 use PHPUnit_Framework_AssertionFailedError;
 use PrestaShop\PrestaShop\Adapter\Debug\DebugMode;
 use PrestaShop\PrestaShop\Core\Domain\Configuration\Command\SwitchDebugModeCommand;
@@ -42,7 +43,7 @@ class DebugModeFeatureContext extends AbstractDomainFeatureContext
         /** @var DebugMode $configuration */
         $configuration = $this->getContainer()->get('prestashop.adapter.debug_mode');
         $isDebugModeEnabled = $configuration->isDebugModeEnabled();
-        assertTrue($isDebugModeEnabled, 'Debug mode is not enabled');
+        PHPUnit_Framework_Assert::assertTrue($isDebugModeEnabled, 'Debug mode is not enabled');
     }
 
     /**
@@ -55,6 +56,6 @@ class DebugModeFeatureContext extends AbstractDomainFeatureContext
         /** @var DebugMode $configuration */
         $configuration = $this->getContainer()->get('prestashop.adapter.debug_mode');
         $isDebugModeEnabled = $configuration->isDebugModeEnabled();
-        assertFalse($isDebugModeEnabled, 'Debug mode is enabled');
+        PHPUnit_Framework_Assert::assertFalse($isDebugModeEnabled, 'Debug mode is enabled');
     }
 }
