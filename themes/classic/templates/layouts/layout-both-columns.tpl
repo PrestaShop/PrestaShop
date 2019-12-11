@@ -37,7 +37,7 @@
       {hook h='displayAfterBodyOpeningTag'}
     {/block}
 
-    <main>
+    <main {if $page.page_name == "index"}itemscope itemtype="https://schema.org/WebSite"{/if}>
       {block name='product_activation'}
         {include file='catalog/_partials/product-activation.tpl'}
       {/block}
