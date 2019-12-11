@@ -84,7 +84,7 @@ module.exports = class AddProduct extends BOBasePage {
       this.page.waitForSelector(this.growlMessageBloc, {visible: true}),
       this.page.click(this.saveProductButton),
     ]);
-    return this.getTextContent(this.growlMessageBloc);
+    return this.getTextContent(`${this.growlMessageBloc}:last-of-type`);
   }
 
   /**
