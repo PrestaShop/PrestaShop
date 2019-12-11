@@ -108,9 +108,9 @@ describe('Create order messages, check filter results and delete them with bulk 
   // 3: Delete order messages with bulk actions
   describe('Delete order messages with bulk actions', async () => {
     it('should filter by name of order message', async function () {
-      await this.pageObjects.orderMessagesPage.filterTable('name', 'todelete');
+      await this.pageObjects.orderMessagesPage.filterTable('name', firstOrderMessageData.name);
       const textColumn = await this.pageObjects.orderMessagesPage.getTextColumnFromTable(1, 'name');
-      await expect(textColumn).to.contains('todelete');
+      await expect(textColumn).to.contains(firstOrderMessageData.name);
     });
 
     it('should delete order messages', async function () {
