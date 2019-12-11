@@ -34,6 +34,7 @@ module.exports = class Invoice extends BOBasePage {
     this.footerTextInput = '#form_invoice_options_footer_text_1';
     this.saveInvoiceOptionsButton = `${this.invoiceOptionsForm} .btn.btn-primary`;
     this.invoiceAddCurrentYear = `${this.invoiceOptionsForm} label[for="form_invoice_options_add_current_year_%ID"]`;
+    this.optionYearPositionRadioButton = `${this.invoiceOptionsForm} #form_invoice_options_year_position_%ID`;
   }
 
   /*
@@ -123,5 +124,14 @@ module.exports = class Invoice extends BOBasePage {
    */
   async enableAddCurrentYearToInvoice(enable = true) {
     await this.page.click(this.invoiceAddCurrentYear.replace('%ID', enable ? 1 : 0));
+  }
+
+  /**
+   * Choose the position of the year
+   * @param id
+   * @return {Promise<void>}
+   */
+  async chooseInvoiceOptionsYearPosition(id) {
+    await this.page.click(this.optionYearPositionRadioButton.replace('%ID', id === 1 ? 1 : 0));
   }
 };

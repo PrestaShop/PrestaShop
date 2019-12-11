@@ -1,6 +1,8 @@
 require('module-alias/register');
 // Using chai
 const {expect} = require('chai');
+const chai = require('chai');
+chai.use(require('chai-string'));
 const helper = require('@utils/helpers');
 const loginCommon = require('@commonTests/loginBO');
 // Importing pages
@@ -19,7 +21,7 @@ let browser;
 let page;
 let fileName;
 const today = new Date();
-const currentYear = today.getFullYear();
+const currentYear = today.getFullYear().toString();
 
 // Init objects needed
 const init = async function () {
@@ -37,7 +39,7 @@ const init = async function () {
 
 /*
 Enable Add current year to invoice number
-Change the first Order status to Payment accepted
+Change the first Order status to shipped
 Check the current year in the invoice file name
 Disable Add current year to invoice number
 Check that the current year does not exist in the invoice file name
@@ -76,6 +78,15 @@ describe('Edit invoice prefix and check the generated invoice file name', async 
       });
     });
 
+    describe('Choose the position of the year date at the end', async () => {
+      it('should choose \'After the sequential number\'', async function () {
+        // Choose the option 'After the sequential number' (ID = 0)
+        await this.pageObjects.invoicesPage.chooseInvoiceOptionsYearPosition(0);
+        const textMessage = await this.pageObjects.invoicesPage.saveInvoiceOptions();
+        await expect(textMessage).to.contains(this.pageObjects.invoicesPage.successfulUpdateMessage);
+      });
+    });
+
     describe('Check the invoice file Name', async () => {
       it('should go to the orders page', async function () {
         await this.pageObjects.boBasePage.goToSubMenu(
@@ -97,9 +108,55 @@ describe('Edit invoice prefix and check the generated invoice file name', async 
         await expect(result).to.be.true;
       });
 
-      it('should check that the invoice file name contain current year', async function () {
+      it('should check that the invoice file name contain current year at the end', async function () {
         fileName = await this.pageObjects.viewOrderPage.getFileName();
-        expect(fileName).to.contains(currentYear);
+        expect(fileName).to.endWith(currentYear);
+      });
+    });
+
+    describe('Choose the position of the year at the beginning', async () => {
+      it('should go to invoices page', async function () {
+        await this.pageObjects.boBasePage.goToSubMenu(
+          this.pageObjects.boBasePage.ordersParentLink,
+          this.pageObjects.boBasePage.invoicesLink,
+        );
+        await this.pageObjects.boBasePage.closeSfToolBar();
+        const pageTitle = await this.pageObjects.invoicesPage.getPageTitle();
+        await expect(pageTitle).to.contains(this.pageObjects.invoicesPage.pageTitle);
+      });
+
+      it('should choose \'Before the sequential number\'', async function () {
+        // Choose the option 'Before the sequential number' (ID = 1)
+        await this.pageObjects.invoicesPage.chooseInvoiceOptionsYearPosition(1);
+        const textMessage = await this.pageObjects.invoicesPage.saveInvoiceOptions();
+        await expect(textMessage).to.contains(this.pageObjects.invoicesPage.successfulUpdateMessage);
+      });
+    });
+
+    describe('Check the invoice file Name', async () => {
+      it('should go to the orders page', async function () {
+        await this.pageObjects.boBasePage.goToSubMenu(
+          this.pageObjects.boBasePage.ordersParentLink,
+          this.pageObjects.boBasePage.ordersLink,
+        );
+        const pageTitle = await this.pageObjects.ordersPage.getPageTitle();
+        await expect(pageTitle).to.contains(this.pageObjects.ordersPage.pageTitle);
+      });
+
+      it('should go to the first order page', async function () {
+        await this.pageObjects.ordersPage.goToOrder(1);
+        const pageTitle = await this.pageObjects.viewOrderPage.getPageTitle();
+        await expect(pageTitle).to.contains(this.pageObjects.viewOrderPage.pageTitle);
+      });
+
+      it(`should change the order status to '${Statuses.shipped.status}' and check it`, async function () {
+        const result = await this.pageObjects.viewOrderPage.modifyOrderStatus(Statuses.shipped.status);
+        await expect(result).to.be.true;
+      });
+
+      it('should check that the invoice file name contain current year at the beginning', async function () {
+        fileName = await this.pageObjects.viewOrderPage.getFileName();
+        expect(fileName).to.startWith(`IN${currentYear}`);
       });
     });
   });
