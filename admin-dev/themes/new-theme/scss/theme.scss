@@ -13,6 +13,10 @@
 @import "config/settings";
 @import "config/keyframes";
 
+// Tools with vars overwritten
+@import "~bootstrap/scss/mixins/transition";
+@import "~bootstrap/scss/mixins/border-radius";
+
 // Components
 @import "components/layout/content_div";
 @import "components/layout/header_toolbar";
