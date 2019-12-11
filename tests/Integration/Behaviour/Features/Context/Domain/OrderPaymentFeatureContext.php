@@ -10,6 +10,8 @@ use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderPaymentForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderPaymentsForViewing;
 use PrestaShopException;
 use RuntimeException;
+use Symfony\Component\DependencyInjection\Exception\ServiceCircularReferenceException;
+use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 
 class OrderPaymentFeatureContext extends AbstractDomainFeatureContext
 {
@@ -20,6 +22,8 @@ class OrderPaymentFeatureContext extends AbstractDomainFeatureContext
      * @param TableNode $table
      *
      * @throws RuntimeException
+     * @throws ServiceCircularReferenceException
+     * @throws ServiceNotFoundException
      */
     public function iAddPaymentToWithIdOrderWithIdTheFollowingProperties(int $orderId, TableNode $table)
     {
@@ -51,6 +55,8 @@ class OrderPaymentFeatureContext extends AbstractDomainFeatureContext
      * @param int $numberOfPayments
      *
      * @throws RuntimeException
+     * @throws ServiceCircularReferenceException
+     * @throws ServiceNotFoundException
      */
     public function ifIQueryOrderWithIdPaymentsIShouldGetPayments(int $orderId, int $numberOfPayments)
     {
@@ -79,6 +85,8 @@ class OrderPaymentFeatureContext extends AbstractDomainFeatureContext
      * @param TableNode $table
      *
      * @throws RuntimeException
+     * @throws ServiceCircularReferenceException
+     * @throws ServiceNotFoundException
      */
     public function ifIQueryOrderWithIdPaymentsIShouldGetAnOrderWithProperties(int $orderId, TableNode $table)
     {
@@ -167,6 +175,8 @@ class OrderPaymentFeatureContext extends AbstractDomainFeatureContext
      * @param TableNode $table
      *
      * @throws RuntimeException
+     * @throws ServiceCircularReferenceException
+     * @throws ServiceNotFoundException
      */
     public function iAddPaymentToOrderWithIdExceptionIsThrownWithTheFollowingProperties(int $orderId, TableNode $table)
     {
