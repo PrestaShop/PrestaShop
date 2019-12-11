@@ -20,8 +20,10 @@ Feature: Contact
       | Customer service    | test@prestashop.com | true                       | test123     | 1                   |
     And I update contact with id 4 with the following properties:
       | title               | email_address       | is_message_saving_enabled  | description | shop_id_association |
-      | Webmaster           | test@prestashop.com | false                      | test321     | 1                    |
+      | Webmaster           | test@prestashop.com | false                      | test321     | 1                   |
+# todo: recommend finding a way how we can get boolean
+#   this case is tricky because we receive: 'isMessagesSavingEnabled' => '0' from legacy classes
     Then contact with id 4 should have the following properties:
       | title               | email_address       | is_message_saving_enabled  | description | shop_id_association |
-      | Webmaster           | test@prestashop.com | false                      | test321     | 1                    |
+      | Webmaster           | test@prestashop.com | false                      | test321     | 1                   |
 
