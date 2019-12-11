@@ -28,7 +28,7 @@
 	<form method="get" {if $page.page_name == "index"}itemprop="potentialAction" itemscope itemtype="https://schema.org/SearchAction"{/if} action="{$search_controller_url}">
 		<meta itemprop="target" content="{$urls.pages.search}?s={literal}{s}{/literal}"/>
 		<input type="hidden" name="controller" value="search">
-		<input itemprop="query-input" type="text" name="s" value="{$search_string}" placeholder="{l s='Search our catalog' d='Shop.Theme.Catalog'}" aria-label="{l s='Search' d='Shop.Theme.Catalog'}" required>
+		<input type="text" name="s" value="{$search_string}" placeholder="{l s='Search our catalog' d='Shop.Theme.Catalog'}" aria-label="{l s='Search' d='Shop.Theme.Catalog'}"  itemprop="query-input" required>
 		<button type="submit">
 			<i class="material-icons search">&#xE8B6;</i>
       <span class="hidden-xl-down">{l s='Search' d='Shop.Theme.Catalog'}</span>
