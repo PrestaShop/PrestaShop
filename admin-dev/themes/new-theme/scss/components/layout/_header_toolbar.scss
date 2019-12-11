@@ -81,7 +81,8 @@
     position: relative;
 
     .notification-container {
-      @include notification_container(1.5rem) position: absolute;
+      @include notification_container(1.5rem);
+      position: absolute;
       right: 15px;
       bottom: -5px;
 
