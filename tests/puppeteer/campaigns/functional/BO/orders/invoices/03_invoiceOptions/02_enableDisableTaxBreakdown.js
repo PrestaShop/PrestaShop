@@ -301,10 +301,10 @@ describe('Test enable/disable tax breakdown', async () => {
       it('should check that there is no tax breakdown', async () => {
         let exist = await files.checkTextInPDF(`${secondInvoiceFileName}.pdf`, '10.000 %');
         await expect(exist).to.be.false;
-        exist = await files.checkTextInPDF(`${secondInvoiceFileName}.pdf`,'20.000 %');
+        exist = await files.checkTextInPDF(`${secondInvoiceFileName}.pdf`, '20.000 %');
         // Check that there is only one tax line 30.000 %
         await expect(exist).to.be.false;
-        exist = await files.checkTextInPDF(`${secondInvoiceFileName}.pdf`,'30.000 %');
+        exist = await files.checkTextInPDF(`${secondInvoiceFileName}.pdf`, '30.000 %');
         await expect(exist).to.be.true;
       });
     });
