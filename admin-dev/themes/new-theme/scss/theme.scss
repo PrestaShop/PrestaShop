@@ -94,7 +94,7 @@ body {
   }
   > .nav-item > .nav-link {
     &.active {
-      border-bottom: 1px solid #ffffff;
+      border-bottom: 1px solid #fff;
     }
   }
 }
@@ -113,8 +113,8 @@ span.twitter-typeahead {
 
 // text buttons
 .btn.btn-text {
-  cursor: pointer;
   padding: 0;
+  cursor: pointer;
   background: transparent;
 
   &:focus {
@@ -124,10 +124,10 @@ span.twitter-typeahead {
 
 // setting dropdown button
 .dropdown-toggle.tool-button {
-  &:after {
-    content: "settings";
+  &::after {
     font-size: 1.375rem;
     color: $medium-gray;
+    content: "settings";
   }
 }
 
