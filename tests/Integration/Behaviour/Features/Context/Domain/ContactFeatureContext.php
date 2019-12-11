@@ -10,9 +10,21 @@ use PrestaShop\PrestaShop\Core\Domain\Contact\Exception\ContactConstraintExcepti
 use PrestaShop\PrestaShop\Core\Domain\Contact\Exception\ContactException;
 use PrestaShop\PrestaShop\Core\Domain\Contact\Exception\ContactNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Contact\Query\GetContactForEditing;
+use Tests\Integration\Behaviour\Features\Context\CommonFeatureContext;
 
 class ContactFeatureContext extends AbstractDomainFeatureContext
 {
+    /**
+     * @var int
+     */
+    private $defaultLangId;
+
+    public function __construct()
+    {
+        $configuration = CommonFeatureContext::getContainer()->get('prestashop.adapter.legacy.configuration');
+        $this->defaultLangId = $configuration->get('PS_LANG_DEFAULT');
+    }
+
     /**
      * @Given there is no contact with id :contactId
      *
@@ -46,13 +58,11 @@ class ContactFeatureContext extends AbstractDomainFeatureContext
      *
      * @param string $title
      *
-     * @throws PendingException
      * @throws ContactConstraintException
      */
     public function iAddNewContactWithTitleAndMessagesSavingIsEnabled(string $title)
     {
-        $this->getQueryBus()->handle(new AddContactCommand([$title], true));
-        throw new PendingException();
+        $this->getQueryBus()->handle(new AddContactCommand([$this->defaultLangId => $title], true));
     }
 
     /**
