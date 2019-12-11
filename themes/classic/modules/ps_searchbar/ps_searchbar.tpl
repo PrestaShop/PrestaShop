@@ -23,7 +23,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  *}
 <!-- Block search module TOP -->
-<div {if $page.page_name == "index"}itemscope itemtype="https://schema.org/WebSite"{/if} id="search_widget" class="search-widget" data-search-controller-url="{$search_controller_url}">
+<div id="search_widget" class="search-widget" data-search-controller-url="{$search_controller_url}"{if $page.page_name === "index"} itemscope itemtype="https://schema.org/WebSite"{/if}>
 	<meta itemprop="url" content="{$urls.pages.index}"/>
 	<form method="get" {if $page.page_name == "index"}itemprop="potentialAction" itemscope itemtype="https://schema.org/SearchAction"{/if} action="{$search_controller_url}">
 		<meta itemprop="target" content="{$urls.pages.search}?s={literal}{s}{/literal}"/>
