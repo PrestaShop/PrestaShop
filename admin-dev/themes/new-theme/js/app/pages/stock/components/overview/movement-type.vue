@@ -41,7 +41,8 @@
 </template>
 
 <script>
-  import PSButton from 'app/widgets/ps-button';
+  import PSButton from '@app/widgets/ps-button';
+
   export default {
     computed: {
       disabled() {

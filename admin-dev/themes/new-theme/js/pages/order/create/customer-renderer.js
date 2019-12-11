@@ -1,5 +1,3 @@
-import createOrderMap from './create-order-map';
-
 /**
  * 2007-2019 PrestaShop SA and Contributors
  *
@@ -25,7 +23,8 @@ import createOrderMap from './create-order-map';
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-import Router from '../../../components/router';
+import createOrderMap from '@pages/order/create/create-order-map';
+import Router from '@components/router';
 
 const $ = window.$;
 

@@ -24,19 +24,19 @@
  */
 
 import FiltersSubmitButtonEnablerExtension
-  from '../../components/grid/extension/filters-submit-button-enabler-extension';
-import Grid from '../../components/grid/grid';
-import ReloadListActionExtension from '../../components/grid/extension/reload-list-extension';
-import ExportToSqlManagerExtension from '../../components/grid/extension/export-to-sql-manager-extension';
-import FiltersResetExtension from '../../components/grid/extension/filters-reset-extension';
-import SortingExtension from '../../components/grid/extension/sorting-extension';
-import BulkActionCheckboxExtension from '../../components/grid/extension/bulk-action-checkbox-extension';
-import SubmitBulkActionExtension from '../../components/grid/extension/submit-bulk-action-extension';
-import SubmitRowActionExtension from '../../components/grid/extension/action/row/submit-row-action-extension';
-import ColumnTogglingExtension from '../../components/grid/extension/column-toggling-extension';
-import ShowcaseCard from '../../components/showcase-card/showcase-card';
-import ShowcaseCardCloseExtension from '../../components/showcase-card/extension/showcase-card-close-extension';
-import LinkRowActionExtension from '../../components/grid/extension/link-row-action-extension';
+  from '@components/grid/extension/filters-submit-button-enabler-extension';
+import Grid from '@components/grid/grid';
+import ReloadListActionExtension from '@components/grid/extension/reload-list-extension';
+import ExportToSqlManagerExtension from '@components/grid/extension/export-to-sql-manager-extension';
+import FiltersResetExtension from '@components/grid/extension/filters-reset-extension';
+import SortingExtension from '@components/grid/extension/sorting-extension';
+import BulkActionCheckboxExtension from '@components/grid/extension/bulk-action-checkbox-extension';
+import SubmitBulkActionExtension from '@components/grid/extension/submit-bulk-action-extension';
+import SubmitRowActionExtension from '@components/grid/extension/action/row/submit-row-action-extension';
+import ColumnTogglingExtension from '@components/grid/extension/column-toggling-extension';
+import ShowcaseCard from '@components/showcase-card/showcase-card';
+import ShowcaseCardCloseExtension from '@components/showcase-card/extension/showcase-card-close-extension';
+import LinkRowActionExtension from '@components/grid/extension/link-row-action-extension';
 
 const $ = window.$;
 
