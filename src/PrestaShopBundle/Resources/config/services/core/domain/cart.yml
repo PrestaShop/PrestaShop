@@ -1,12 +1,3 @@
 services:
   _defaults:
     public: true
-
-  prestashop.core.domain.query_handler.get_product_quantity_in_cart_handler:
-    class: 'PrestaShop\PrestaShop\Core\Domain\Cart\QueryHandler\GetProductQuantityInCartHandler'
-    arguments:
-      - '@doctrine.dbal.default_connection'
-      - '%database_prefix%'
-    tags:
-      - name: tactician.handler
-        command: 'PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetProductQuantityInCart'
