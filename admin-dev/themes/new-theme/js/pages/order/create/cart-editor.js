@@ -171,11 +171,8 @@ export default class CartEditor {
   changeProductQty(cartId, product) {
     $.post(this.router.generate('admin_carts_edit_product_quantity', {
       cartId,
-      productId: product.productId,
-      productAttributeId: product.attributeId,
-      customizationId: product.customizationId,
+      productId: product.productId
     }), {
-      previousQty: product.previousQty,
       newQty: product.newQty,
       attributeId: product.attributeId,
       customizationId: product.customizationId,

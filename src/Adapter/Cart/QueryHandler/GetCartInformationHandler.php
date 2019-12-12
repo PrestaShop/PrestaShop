@@ -277,17 +277,18 @@ final class GetCartInformationHandler extends AbstractCartHandler implements Get
      * @param Currency $currency
      * @param Cart $cart
      *
-     * @return CartInformation\CartSummary
+     * @return CartSummary
      *
      * @throws LocalizationException
      */
     private function extractSummaryFromLegacySummary(array $legacySummary, Currency $currency, Cart $cart): CartSummary
     {
         $cartId = (int) $cart->id;
-        $discount = $this->locale->formatPrice($legacySummary['total_discounts_tax_exc'], $currency->iso_code);
 
         if (0 !== (int) $legacySummary['total_discounts_tax_exc']) {
-            $discount = '-' . $discount;
+            $discount = $this->locale->formatPrice(-1 * $legacySummary['total_discounts_tax_exc'], $currency->iso_code);
+        } else {
+            $discount = $this->locale->formatPrice($legacySummary['total_discounts_tax_exc'], $currency->iso_code);
         }
 
         $orderMessage = '';

@@ -42,7 +42,6 @@ use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartInformation;
-use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetProductQuantityInCart;
 use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleValidityException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyException;
@@ -429,16 +428,6 @@ class CartController extends FrameworkBundleAdminController
     public function editProductQuantityAction(Request $request, int $cartId, int $productId)
     {
         try {
-            $combinationId = $request->request->getInt('productAttributeId');
-            $customizationId = $request->request->getInt('customizationId');
-
-            $previousQty = $this->getQueryBus()->handle(new GetProductQuantityInCart(
-                $cartId,
-                $productId,
-                $combinationId ? $combinationId : null,
-                $customizationId ? $customizationId : null
-            ));
-
             $newQty = $request->request->getInt('newQty');
 
             $this->getCommandBus()->handle(new UpdateProductQuantityInCartCommand(
@@ -525,7 +514,7 @@ class CartController extends FrameworkBundleAdminController
             foreach ($fileSizesByInputName as $name => $size) {
                 if (!isset($fileCustomizations[$name])) {
                     throw new FileUploadException(
-                        'Some files were possible not uploaded due to post_max_size limit',
+                        'Some files were possibly not uploaded due to post_max_size limit',
                         UPLOAD_ERR_INI_SIZE
                     );
                 }
