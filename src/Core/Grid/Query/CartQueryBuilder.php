@@ -28,6 +28,7 @@ namespace PrestaShop\PrestaShop\Core\Grid\Query;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
+use PrestaShop\PrestaShop\Core\Domain\Cart\CartStatusType;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 
 /**
@@ -71,12 +72,7 @@ final class CartQueryBuilder extends AbstractDoctrineQueryBuilder
 
         $qb = $this->getBaseQuery($searchCriteria->getFilters());
         $qb->addSelect('SQL_CALC_FOUND_ROWS c.id_cart, c.date_add');
-        $qb->addSelect('
-            IF (IFNULL(o.id_order, "not_ordered") = "not_ordered",
-                IF(TIME_TO_SEC(TIMEDIFF(:current_date, c.date_add)) > :day_in_seconds,
-                 "abandoned_cart", "not_ordered"),
-                    o.id_order) AS status
-        ');
+        $qb->addSelect($this->getStatusQuery() . ' AS status');
         $qb->addSelect('CONCAT(LEFT(cu.firstname, 1), ". ", cu.lastname) AS customer_name');
         $qb->addSelect('ca.name AS carrier_name, c.date_add, IF(con.id_guest, 1, 0) id_guest');
         $qb->setParameter('day_in_seconds', $dayInSeconds);
@@ -97,6 +93,18 @@ final class CartQueryBuilder extends AbstractDoctrineQueryBuilder
         $qb->select('FOUND_ROWS()');
 
         return $qb;
+    }
+
+    /**
+     * @return string
+     */
+    private function getStatusQuery(): string
+    {
+        return str_replace(['%not_ordered%', '%abandoned_cart%'], [CartStatusType::NOT_ORDERED, CartStatusType::ABANDONED_CART],
+            '(IF (IFNULL(o.id_order, "%not_ordered%") = "%not_ordered%",
+                  IF (TIME_TO_SEC(TIMEDIFF(:current_date, c.date_add)) > :day_in_seconds, "%abandoned_cart%", "%not_ordered%"),
+                  o.id_order))
+        ');
     }
 
     /**
@@ -129,10 +137,6 @@ final class CartQueryBuilder extends AbstractDoctrineQueryBuilder
             ->setParameter('half_hour_in_seconds', $halfHourInSeconds)
         ;
 
-        $strictComparisonFilters = [
-            'status' => 'o.id_order',
-        ];
-
         $likeComparisonFilters = [
             'id_cart' => 'c.id_cart',
             'customer_name' => 'cu.lastname',
@@ -148,12 +152,9 @@ final class CartQueryBuilder extends AbstractDoctrineQueryBuilder
         ];
 
         foreach ($filters as $filterName => $filterValue) {
-            if (isset($strictComparisonFilters[$filterName])) {
-                $alias = $strictComparisonFilters[$filterName];
-
-                $qb->andWhere("$alias = :$filterName");
-                $qb->setParameter($filterName, $filterValue);
-
+            if ('status' === $filterName) {
+                $qb->andWhere($this->getStatusQuery() . ' LIKE :status');
+                $qb->setParameter('status', '%' . $filterValue . '%');
                 continue;
             }
 

@@ -23,7 +23,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 
-<div class="text-right">
+<div class="text-{{ column.options.text_align }}">
   {% if record[column.options.is_highlighted_field]%}
     <span class="badge badge-{{ column.options.highlight_type }} rounded">
       {{ record[column.options.field] }}

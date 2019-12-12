@@ -405,7 +405,7 @@ class AddressController extends FrameworkBundleAdminController
                     'An error occurred while deleting this selection.',
                     'Admin.Notifications.Error'
                 ),
-                $e instanceof BulkDeleteAddressException ? $e->getAddressIds() : ''
+                $e instanceof BulkDeleteAddressException ? implode(',', $e->getAddressIds()) : ''
             ),
             AddressNotFoundException::class => $this->trans(
                 'The object cannot be loaded (or found)',

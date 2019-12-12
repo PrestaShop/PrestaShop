@@ -1,5 +1,6 @@
-{#**
- * 2007-2019 PrestaShop and Contributors
+<?php
+/**
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -21,8 +22,22 @@
  * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *#}
+ */
 
-<div class="text-center">
-  {% include '@PrestaShop/Admin/Common/Grid/Columns/Header/Content/default.html.twig' %}
-</div>
+namespace PrestaShop\PrestaShop\Core\Domain\Cart;
+
+/**
+ * Cart status type (for cart not already ordered mainly)
+ */
+final class CartStatusType
+{
+    /**
+     * Cart not already ordered
+     */
+    public const NOT_ORDERED = 'not_ordered';
+
+    /**
+     * Cart not already ordered but it for too long so considered abandoned
+     */
+    public const ABANDONED_CART = 'abandoned_cart';
+}
