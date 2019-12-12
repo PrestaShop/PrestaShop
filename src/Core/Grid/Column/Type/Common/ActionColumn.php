@@ -45,9 +45,12 @@ final class ActionColumn extends AbstractColumn
      */
     protected function configureOptions(OptionsResolver $resolver)
     {
+        parent::configureOptions($resolver);
+
         $resolver
             ->setDefaults([
                 'actions' => null,
+                'text_align' => 'right',
             ])
             ->setAllowedTypes('actions', ['null', RowActionCollection::class]);
     }

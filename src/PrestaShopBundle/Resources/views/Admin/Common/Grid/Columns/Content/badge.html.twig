@@ -23,7 +23,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 
-<div class="text-right">
+<div class="text-{{ column.options.text_align }}">
 {% if record[column.options.field] is not empty %}
   <span class="badge rounded badge-{{ column.options.badge_type }}">
     {{ record[column.options.field] }}

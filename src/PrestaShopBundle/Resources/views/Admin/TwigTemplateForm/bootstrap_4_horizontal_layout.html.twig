@@ -149,3 +149,12 @@
     {% endif %}
   </div>
 {% endblock text_with_length_counter_widget %}
+
+{% block datalist_widget %}
+  <input list="{{ id }}_list" {{ block('widget_attributes') }} class="form-control" value="{{ form.vars.value }}">
+  <datalist id="{{ id }}_list">
+    {% for choice_name, choice_value in choices %}
+      <option value="{{ choice_value }}">{{ choice_name }}</option>
+    {% endfor %}
+  </datalist>
+{% endblock %}

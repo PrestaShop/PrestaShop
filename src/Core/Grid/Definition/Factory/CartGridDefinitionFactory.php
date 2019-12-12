@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Domain\Cart\CartStatusType;
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\Type\SubmitBulkAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
@@ -44,6 +45,7 @@ use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
 use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
+use PrestaShopBundle\Form\Admin\Type\DatalistType;
 use PrestaShopBundle\Form\Admin\Type\DateRangeType;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
 use PrestaShopBundle\Form\Admin\Type\YesAndNoChoiceType;
@@ -125,9 +127,10 @@ final class CartGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ])
             )
             ->add((new DataColumn('status'))
-                ->setName($this->trans('Order ID', [], 'Admin.Orderscustomers.Feature'))
+                ->setName($this->trans('Order ID / Status', [], 'Admin.Orderscustomers.Feature'))
                 ->setOptions([
                     'field' => 'status',
+                    'text_align' => 'center',
                 ])
             )
             ->add((new DataColumn('customer_name'))
@@ -193,6 +196,7 @@ final class CartGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ->setName($this->trans('Online', [], 'Admin.Global'))
                 ->setOptions([
                     'field' => 'online',
+                    'text_align' => 'center',
                 ])
             );
         }
@@ -215,10 +219,14 @@ final class CartGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ])
                 ->setAssociatedColumn('id_cart')
             )
-            ->add((new Filter('status', TextType::class))
+            ->add((new Filter('status', DatalistType::class))
                 ->setTypeOptions([
+                    'choices' => [
+                        $this->trans('Not placed', [], 'Admin.Orderscustomers.Feature') => CartStatusType::NOT_ORDERED,
+                        $this->trans('Abandoned cart', [], 'Admin.Orderscustomers.Feature') => CartStatusType::ABANDONED_CART,
+                    ],
                     'attr' => [
-                        'placeholder' => $this->trans('Search ID', [], 'Admin.Actions'),
+                        'placeholder' => $this->trans('Search Order ID / Status', [], 'Admin.Actions'),
                     ],
                     'required' => false,
                 ])

@@ -57,6 +57,7 @@ final class BadgeColumn extends AbstractColumn
                 'badge_type' => 'success',
                 'empty_value' => '',
                 'clickable' => true,
+                'text_align' => 'right',
             ])
             ->setAllowedTypes('field', 'string')
             ->setAllowedTypes('empty_value', 'string')

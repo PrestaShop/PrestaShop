@@ -1,5 +1,6 @@
-{#**
- * 2007-2019 PrestaShop and Contributors
+<?php
+/**
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -21,8 +22,40 @@
  * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *#}
+ */
 
-<div class="text-center">
-  {% include '@PrestaShop/Admin/Common/Grid/Columns/Header/Content/default.html.twig' %}
-</div>
+namespace PrestaShop\PrestaShop\Core\Domain\Cart\Exception;
+
+use Exception;
+
+/**
+ * Thrown on failure to delete all selected addresses without errors
+ */
+class BulkDeleteCartException extends CartException
+{
+    /**
+     * @var int[]
+     */
+    private $cartIds;
+
+    /**
+     * @param int[] $cartIds
+     * @param string $message
+     * @param int $code
+     * @param Exception $previous
+     */
+    public function __construct(array $cartIds, string $message = '', int $code = 0, Exception $previous = null)
+    {
+        parent::__construct($message, $code, $previous);
+
+        $this->cartIds = $cartIds;
+    }
+
+    /**
+     * @return int[]
+     */
+    public function getCartIds(): array
+    {
+        return $this->cartIds;
+    }
+}

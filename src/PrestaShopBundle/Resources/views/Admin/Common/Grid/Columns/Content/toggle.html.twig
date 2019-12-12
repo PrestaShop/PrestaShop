@@ -28,7 +28,7 @@
 
 {% set isValid = record[column.id] is same as('1') %}
 
-<div class="text-center">
+<div class="text-{{ column.options.text_align }}">
   <i
     class="material-icons ps-togglable-row grid-toggler-icon-{% if isValid == true %}valid{% else %}not-valid{% endif %}"
     data-toggle-url="{{ path(column.options.route, {(column.options.route_param_name) : id_primary_key})}}"
