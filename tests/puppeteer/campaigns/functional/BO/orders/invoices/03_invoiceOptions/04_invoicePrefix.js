@@ -10,8 +10,6 @@ const DashboardPage = require('@pages/BO/dashboard');
 const InvoicesPage = require('@pages/BO/orders/invoices/index');
 const OrdersPage = require('@pages/BO/orders/index');
 const ViewOrderPage = require('@pages/BO/orders/view');
-const CheckoutPage = require('@pages/FO/checkout');
-const OrderConfirmationPage = require('@pages/FO/orderConfirmation');
 // Importing data
 const {Statuses} = require('@data/demo/orders');
 
@@ -30,8 +28,6 @@ const init = async function () {
     invoicesPage: new InvoicesPage(page),
     ordersPage: new OrdersPage(page),
     viewOrderPage: new ViewOrderPage(page),
-    checkoutPage: new CheckoutPage(page),
-    orderConfirmationPage: new OrderConfirmationPage(page),
   };
 };
 
