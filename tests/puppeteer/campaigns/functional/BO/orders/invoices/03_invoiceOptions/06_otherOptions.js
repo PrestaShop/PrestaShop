@@ -12,6 +12,7 @@ const OrdersPage = require('@pages/BO/orders/index');
 const ViewOrderPage = require('@pages/BO/orders/view');
 const FOBasePage = require('@pages/FO/FObasePage');
 const HomePage = require('@pages/FO/home');
+const ProductPage = require('@pages/FO/product');
 const CartPage = require('@pages/FO/cart');
 const CheckoutPage = require('@pages/FO/checkout');
 const OrderConfirmationPage = require('@pages/FO/orderConfirmation');
@@ -25,6 +26,7 @@ const InvoiceOptionFaker = require('@data/faker/invoice');
 let browser;
 let page;
 let invoiceData;
+let fileName;
 
 // Init objects needed
 const init = async function () {
@@ -37,6 +39,7 @@ const init = async function () {
     viewOrderPage: new ViewOrderPage(page),
     foBasePage: new FOBasePage(page),
     homePage: new HomePage(page),
+    productPage: new ProductPage(page),
     cartPage: new CartPage(page),
     checkoutPage: new CheckoutPage(page),
     orderConfirmationPage: new OrderConfirmationPage(page),
@@ -46,7 +49,7 @@ const init = async function () {
 /*
 Edit Invoice number, Legal free text, Footer text
 Create order
-Change the Order status to Payment accepted
+Change the Order status to Shipped
 Check the invoice file name
  */
 describe('Edit \'Invoice number, Legal free text, Footer text\' and check the generated invoice file', async () => {
@@ -58,14 +61,16 @@ describe('Edit \'Invoice number, Legal free text, Footer text\' and check the ge
     this.pageObjects = await init();
     invoiceData = await (new InvoiceOptionFaker());
   });
-  /*after(async () => {
+  after(async () => {
+    // Delete the invoice file
+    await files.deleteFile(`${global.BO.DOWNLOAD_PATH}/${fileName}.pdf`);
     await helper.closeBrowser(browser);
-  });*/
+  });
 
   // Login into BO
   loginCommon.loginBO();
 
-  describe('Edit the Invoice number, Legal free text, Footer text', async () => {
+  describe('Edit the Invoice number, Legal free text and Footer text', async () => {
     it('should go to invoices page', async function () {
       await this.pageObjects.boBasePage.goToSubMenu(
         this.pageObjects.boBasePage.ordersParentLink,
@@ -118,7 +123,7 @@ describe('Edit \'Invoice number, Legal free text, Footer text\' and check the ge
     });
   });
 
-  /*describe(`Change the order status to '${Statuses.shipped.status}' and check the invoice file Name`, async () => {
+  describe('Create an invoice and check the edited data', async () => {
     it('should go to the orders page', async function () {
       await this.pageObjects.boBasePage.goToSubMenu(
         this.pageObjects.boBasePage.ordersParentLink,
@@ -134,14 +139,33 @@ describe('Edit \'Invoice number, Legal free text, Footer text\' and check the ge
       await expect(pageTitle).to.contains(this.pageObjects.viewOrderPage.pageTitle);
     });
 
-    it(`should change the order status to '${Statuses.shipped.status}' and check it`, async function () {
+    it(`should change the order status to '${Statuses.shipped.status}'`, async function () {
       const result = await this.pageObjects.viewOrderPage.modifyOrderStatus(Statuses.shipped.status);
       await expect(result).to.be.true;
     });
 
-    it(`should check that the invoice file name contain the prefix '${prefixToEdit}'`, async function () {
+    it('should download the invoice', async function () {
       fileName = await this.pageObjects.viewOrderPage.getFileName();
-      expect(fileName).to.contains(prefixToEdit.replace('#', '').trim());
+      await this.pageObjects.viewOrderPage.downloadInvoice();
+      const exist = await files.checkFileExistence(`${fileName}.pdf`);
+      await expect(exist).to.be.true;
     });
-  });*/
+
+    it('should check that the invoice file name contain the \'Invoice number\'', async function () {
+      fileName = await this.pageObjects.viewOrderPage.getFileName();
+      expect(fileName).to.contains(invoiceData.invoiceNumber);
+    });
+
+    it('should check that the invoice contain the \'legal free text\'', async () => {
+      // Check the existence of the legal free text
+      const exist = await files.checkTextInPDF(`${fileName}.pdf`, invoiceData.legalFreeText);
+      await expect(exist).to.be.true;
+    });
+
+    it('should check that the invoice contain the \'Footer text\'', async () => {
+      // Check the existence of the Footer text
+      const exist = await files.checkTextInPDF(`${fileName}.pdf`, invoiceData.footerText);
+      await expect(exist).to.be.true;
+    });
+  });
 });
