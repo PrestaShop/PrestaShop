@@ -14,8 +14,6 @@ use PrestaShop\PrestaShop\Core\Domain\Contact\QueryResult\EditableContact;
 use PrestaShop\PrestaShop\Core\Domain\Exception\DomainConstraintException;
 use PrestaShopBundle\Utils\BoolParser;
 use RuntimeException;
-use Symfony\Component\DependencyInjection\Exception\ServiceCircularReferenceException;
-use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 use Tests\Integration\Behaviour\Features\Context\CommonFeatureContext;
 use function PrestaShopBundle\Utils\BoolParser;
 
@@ -41,15 +39,12 @@ class ContactFeatureContext extends AbstractDomainFeatureContext
      * @param int $contactId
      *
      * @throws ContactException
-     * @throws ServiceCircularReferenceException
-     * @throws ServiceNotFoundException
      */
     public function thereIsNoContactWithId(int $contactId)
     {
         try {
             $this->getQueryBus()->handle(new GetContactForEditing($contactId));
         } catch (ContactNotFoundException $exception) {
-            return;
         }
     }
 
@@ -59,8 +54,6 @@ class ContactFeatureContext extends AbstractDomainFeatureContext
      * @param int $contactId
      *
      * @throws ContactException
-     * @throws ServiceCircularReferenceException
-     * @throws ServiceNotFoundException
      */
     public function thereIsContactIsWithId(int $contactId)
     {
@@ -73,8 +66,6 @@ class ContactFeatureContext extends AbstractDomainFeatureContext
      * @param int $contactId
      *
      * @throws ContactException
-     * @throws ServiceCircularReferenceException
-     * @throws ServiceNotFoundException
      */
     public function iShouldBeAbleToGetContactWithIdForEditing(int $contactId)
     {
@@ -88,8 +79,6 @@ class ContactFeatureContext extends AbstractDomainFeatureContext
      *
      * @throws ContactConstraintException
      * @throws RuntimeException
-     * @throws ServiceCircularReferenceException
-     * @throws ServiceNotFoundException
      * @throws DomainConstraintException
      * @throws ContactException
      */
@@ -117,8 +106,6 @@ class ContactFeatureContext extends AbstractDomainFeatureContext
      *
      * @throws ContactException
      * @throws RuntimeException
-     * @throws ServiceCircularReferenceException
-     * @throws ServiceNotFoundException
      * @throws DomainConstraintException
      */
     public function contactWithIdShouldHaveTheFollowingProperties(int $contactId, TableNode $table)
@@ -140,8 +127,6 @@ class ContactFeatureContext extends AbstractDomainFeatureContext
      * @throws ContactException
      * @throws DomainConstraintException
      * @throws RuntimeException
-     * @throws ServiceCircularReferenceException
-     * @throws ServiceNotFoundException
      */
     public function iUpdateContactWithIdWithTheFollowingProperties(int $contactId, TableNode $table)
     {
