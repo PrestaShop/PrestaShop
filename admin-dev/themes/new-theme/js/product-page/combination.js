@@ -123,10 +123,12 @@ export default function () {
       }
 
       $.each(combinationsImages[value], (key, image) => {
+        /* eslint-disable max-len */
         html += `<div class="product-combination-image ${(image.id_image_attr ? 'img-highlight' : '')}">
           <input type="checkbox" name="combination_${$index}[id_image_attr][]" value="${image.id}" ${(image.id_image_attr ? 'checked="checked"' : '')}>
           <img src="${image.base_image_url}-small_default.${image.format}" alt="" />
         </div>`;
+        /* eslint-enabled max-len */
       });
       $imagesElem.html(html);
       $combinationElem.fadeIn(1000);
