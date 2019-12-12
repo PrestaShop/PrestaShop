@@ -35,8 +35,6 @@ use ObjectModel;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use Psr\Container\ContainerInterface;
 use RuntimeException;
-use Symfony\Component\DependencyInjection\Exception\ServiceCircularReferenceException;
-use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 use Tests\Integration\Behaviour\Features\Context\CommonFeatureContext;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 
@@ -63,9 +61,6 @@ abstract class AbstractDomainFeatureContext implements Context
 
     /**
      * @return CommandBusInterface
-     *
-     * @throws ServiceCircularReferenceException
-     * @throws ServiceNotFoundException
      */
     protected function getCommandBus()
     {
@@ -74,9 +69,6 @@ abstract class AbstractDomainFeatureContext implements Context
 
     /**
      * @return CommandBusInterface
-     *
-     * @throws ServiceCircularReferenceException
-     * @throws ServiceNotFoundException
      */
     protected function getQueryBus()
     {
@@ -171,12 +163,10 @@ abstract class AbstractDomainFeatureContext implements Context
     protected function extractFirstHorizontalRowFromProperties(TableNode $table): array
     {
         $hash = $table->getHash();
-        if (count($hash) != 1) {
+        if (count($hash) !== 1) {
             throw new RuntimeException('Properties are invalid');
         }
-        /** @var array $data */
-        $data = $hash[0];
 
-        return $data;
+        return $hash[0];
     }
 }

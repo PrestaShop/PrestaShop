@@ -26,6 +26,7 @@ class BoolParserTest extends TestCase
         $this->assertTrue(BoolParser::castToBool('true'));
         $this->assertTrue(BoolParser::castToBool(true));
         $this->assertTrue(BoolParser::castToBool('anything else'));
+        $this->assertTrue(BoolParser::castToBool('on'));
         // this case is open for discussion - not sure if it matters at all
         $this->assertTrue(BoolParser::castToBool('-0'));
     }

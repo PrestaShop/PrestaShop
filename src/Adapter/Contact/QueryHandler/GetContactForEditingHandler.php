@@ -32,11 +32,9 @@ use PrestaShop\PrestaShop\Core\Domain\Contact\Exception\ContactException;
 use PrestaShop\PrestaShop\Core\Domain\Contact\Exception\ContactNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Contact\Query\GetContactForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Contact\QueryHandler\GetContactForEditingHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Exception\DomainConstraintException;
 use PrestaShopBundle\Utils\BoolParser;
 use PrestaShopException;
 use Symfony\Component\Form\DataTransformerInterface;
-use Symfony\Component\Form\Exception\TransformationFailedException;
 
 /**
  * Class GetContactForEditingHandler is responsible for getting the data for contact edit page.
@@ -61,14 +59,7 @@ final class GetContactForEditingHandler implements GetContactForEditingHandlerIn
     /**
      * {@inheritdoc}
      *
-     * @param GetContactForEditing $query
-     *
-     * @return EditableContact
-     *
      * @throws ContactException
-     * @throws ContactNotFoundException
-     * @throws DomainConstraintException
-     * @throws TransformationFailedException
      */
     public function handle(GetContactForEditing $query)
     {
