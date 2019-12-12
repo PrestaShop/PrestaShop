@@ -90,8 +90,7 @@ export default function () {
     });
   });
 
-  const totalTranslations = $('#jetsContent form').length;
-  (function (totalTranslations, totalRemainingTranslations) {
+  (function defineTranslations(totalTranslations, totalRemainingTranslations) {
     const totalTranslationsTemplate = $('.summary .total-translations').attr('data-template');
     const remainingTranslationsTemplate = $('.summary .total-remaining-translations').attr('data-template');
 
@@ -105,7 +104,7 @@ export default function () {
       const totalTranslationsMessages = totalTranslationsTemplate.replace('%d', totalTranslations);
       $('.summary .total-translations').text(totalTranslationsMessages);
     }
-  }(totalTranslations, allDomainsMissingTranslations));
+  }($('#jetsContent form').length, allDomainsMissingTranslations));
 
   $('.domain-actions').click((event) => {
     let domainActions = $(event.target);

@@ -45,12 +45,12 @@ export default function () {
     }
   };
 
-  $('#categories-tree-expand').on('click', (e) => {
+  $('#categories-tree-expand').on('click', () => {
     treeAction('expand');
     $('#categories-tree-expand').hide();
     $('#categories-tree-reduce').show();
   });
-  $('#categories-tree-reduce').on('click', (e) => {
+  $('#categories-tree-reduce').on('click', () => {
     treeAction('collapse');
     $('#categories-tree-reduce').hide();
     $('#categories-tree-expand').show();

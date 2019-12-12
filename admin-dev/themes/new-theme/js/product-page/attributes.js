@@ -54,7 +54,7 @@ export default function () {
   $('input.form-control[counter], textarea.form-control:not(.autoload_rte)[counter]').each(function () {
     const counter = $(this).attr('counter');
 
-    if (typeof counter === undefined || counter === false) {
+    if (typeof counter === 'undefined' || counter === false) {
       return;
     }
 
@@ -64,12 +64,12 @@ export default function () {
     });
 
     function handleCounter(object) {
-      const counter = $(object).attr('counter');
-      const counter_type = $(object).attr('counter_type');
+      const counterObject = $(object).attr('counter');
+      const counterType = $(object).attr('counterType');
       const max = $(object).val().length;
 
       $(object).parent().find('span.currentLength').text(max);
-      if (counter_type !== 'recommended' && max > counter) {
+      if (counterType !== 'recommended' && max > counterObject) {
         $(object).parent().find('span.maxLength').addClass('text-danger');
       } else {
         $(object).parent().find('span.maxLength').removeClass('text-danger');

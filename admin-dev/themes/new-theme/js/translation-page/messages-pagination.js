@@ -31,6 +31,7 @@ export default function () {
   const addPageLinksToNavigationBar = (nav) => {
     const pageTemplate = $(nav).find('.tpl');
     pageTemplate.removeClass('tpl');
+
     const pageLinkTemplate = pageTemplate.clone();
     pageTemplate.remove();
     pageLinkTemplate.removeClass('hide');
@@ -46,9 +47,8 @@ export default function () {
 
     $('.pagination').removeClass('hide');
 
-
     let i;
-    for (i = 1; i < totalPages; i++) {
+    for (i = 1; i < totalPages; i += 1) {
       pageIndex = i + 1;
       pageLink = pageLinkTemplate.clone();
       pageLink.attr('data-page-index', pageIndex);
@@ -57,12 +57,14 @@ export default function () {
 
       $(nav).find('.pagination').append(pageLink);
     }
+
+    return true;
   };
 
   // Fix internal navigation to anchors
   // by adding offset of fixed header height
   // @See also http://stackoverflow.com/a/13067009/282073
-  const scrollToPreviousPaginationBar = (paginationBar, link) => {
+  const scrollToPreviousPaginationBar = (paginationBar) => {
     const paginationBarTop = paginationBar.getBoundingClientRect().top;
     window.scrollTo(window.pageXOffset, window.pageYOffset + paginationBarTop - fixedOffset);
   };

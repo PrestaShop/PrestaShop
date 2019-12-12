@@ -97,7 +97,7 @@ export default function () {
       // if collection length is up to limit, return
 
       const formIdItem = $(`#${autocompleteFormId}-data li`);
-      const autocompleteFormLimit = parseInt(autocompleteObject.attr('data-limit'));
+      const autocompleteFormLimit = parseInt(autocompleteObject.attr('data-limit'), 10);
 
       if (autocompleteFormLimit !== 0 && formIdItem.length >= autocompleteFormLimit) {
         return false;
@@ -109,19 +109,23 @@ export default function () {
       }
 
       const tplcollection = $(`#tplcollection-${autocompleteFormId}`);
-      const tplcollectionHtml = tplcollection.html().replace('%s', suggestion[autocompleteObject.attr('data-mappingname')]);
+      const tplcollectionHtml = tplcollection
+        .html()
+        .replace('%s', suggestion[autocompleteObject.attr('data-mappingname')]);
 
       const html = `<li class="media">
-                      <div class="media-left">
-                      <img class="media-object image" src="${suggestion.image}" />
-                      </div>
-                      <div class="media-body media-middle">
-                      ${tplcollectionHtml}
-                      </div>
-                      <input type="hidden" name="${autocompleteObject.attr('data-fullname')}[data][]" value="${value}" />
-                      </li>`;
+        <div class="media-left">
+          <img class="media-object image" src="${suggestion.image}" />
+        </div>
+        <div class="media-body media-middle">
+          ${tplcollectionHtml}
+        </div>
+        <input type="hidden" name="${autocompleteObject.attr('data-fullname')}[data][]" value="${value}" />
+      </li>`;
 
       $(`#${autocompleteFormId}-data`).append(html);
+
+      return true;
     }).bind('typeahead:close', (e) => {
       $(e.target).val('');
     });

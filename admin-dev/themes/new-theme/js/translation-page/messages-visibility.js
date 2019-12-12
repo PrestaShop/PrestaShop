@@ -48,7 +48,9 @@ export default function (callback) {
 
   function highlightDomainFirstPart(showTranslationsFormButton) {
     $('.domain-first-part').removeClass('active');
-    const domainFirstPart = $($(showTranslationsFormButton.parents('.subdomains')[0]).prevAll().filter('.domain-first-part'))[0];
+    const domainFirstPart = $($(showTranslationsFormButton.parents('.subdomains')[0])
+      .prevAll()
+      .filter('.domain-first-part'))[0];
     $(domainFirstPart).addClass('active');
   }
 
@@ -126,6 +128,7 @@ export default function (callback) {
         updateEditTranslationForms(formsContainer, editTranslationForms);
 
         callback();
+        return true;
       });
     });
 

@@ -55,7 +55,7 @@ export default function () {
 
         const spans = $(`[data-uniqid="${uniqid}"]`);
 
-        spans.each(function (index, element) {
+        spans.each(function () {
           if ($(this).text() !== newValue) {
             $(this).text(newValue);
           }
@@ -78,7 +78,9 @@ export default function () {
     },
     getSelectedCombinations: function getSelectedCombinations() {
       const combinations = [];
-      const selectedCombinations = Array.from($('#accordion_combinations td:first-child input[type="checkbox"]:checked'));
+      const selectedCombinations = Array.from(
+        $('#accordion_combinations td:first-child input[type="checkbox"]:checked'),
+      );
       selectedCombinations.forEach((combination) => {
         const combinationId = combination.getAttribute('data-id');
         const combinationIndex = combination.getAttribute('data-index');
@@ -178,7 +180,7 @@ export default function () {
 
         jQueryFinalPriceEl.data('price', newPrice);
         // calculate new price
-        const newFinalPrice = new Number(newPrice) + new Number(impactOnPrice);
+        const newFinalPrice = Number(newPrice) + Number(impactOnPrice);
         jQueryFinalPriceEl.text(ps_round(newFinalPrice, 6));
       });
     },

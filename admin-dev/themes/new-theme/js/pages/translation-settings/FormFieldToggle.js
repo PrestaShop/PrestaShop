@@ -71,8 +71,8 @@ export default class FormFieldToggle {
   }
 
   /**
-     * Toggle dependant translations fields, based on selected translation type
-     */
+   * Toggle dependant translations fields, based on selected translation type
+   */
   toggleFields() {
     const selectedOption = $('.js-translation-type').val();
     const $modulesFormGroup = $('.js-module-form-group');
@@ -85,27 +85,29 @@ export default class FormFieldToggle {
     switch (selectedOption) {
       case back:
       case others:
-        this._hide($modulesFormGroup, $emailFormGroup, $themesFormGroup);
-
+        this.hide($modulesFormGroup, $emailFormGroup, $themesFormGroup);
         break;
+
       case themes:
         if ($noThemeOption.is(':selected')) {
           $themesSelect.val($firstThemeOption.val());
         }
 
-        this._hide($modulesFormGroup, $emailFormGroup, $noThemeOption);
-        this._show($themesFormGroup);
-
+        this.hide($modulesFormGroup, $emailFormGroup, $noThemeOption);
+        this.show($themesFormGroup);
         break;
+
       case modules:
-        this._hide($emailFormGroup, $themesFormGroup);
-        this._show($modulesFormGroup);
-
+        this.hide($emailFormGroup, $themesFormGroup);
+        this.show($modulesFormGroup);
         break;
-      case mails:
-        this._hide($modulesFormGroup, $themesFormGroup);
-        this._show($emailFormGroup);
 
+      case mails:
+        this.hide($modulesFormGroup, $themesFormGroup);
+        this.show($emailFormGroup);
+        break;
+
+      default:
         break;
     }
 
@@ -113,8 +115,8 @@ export default class FormFieldToggle {
   }
 
   /**
-     * Toggles fields, which are related to email translations
-     */
+   * Toggles fields, which are related to email translations
+   */
   toggleEmailFields() {
     if ($('.js-translation-type').val() !== mails) {
       return;
@@ -126,36 +128,36 @@ export default class FormFieldToggle {
 
     if (selectedEmailContentType === emailContentBody) {
       $noThemeOption.prop('selected', true);
-      this._show($noThemeOption, $themesFormGroup);
+      this.show($noThemeOption, $themesFormGroup);
     } else {
-      this._hide($noThemeOption, $themesFormGroup);
+      this.hide($noThemeOption, $themesFormGroup);
     }
   }
 
 
   /**
-     * Make all given selectors hidden
-     *
-     * @param $selectors
-     * @private
-     */
-  _hide(...$selectors) {
-    for (const key in $selectors) {
-      $selectors[key].addClass('d-none');
-      $selectors[key].find('select').prop('disabled', 'disabled');
-    }
+   * Make all given selectors hidden
+   *
+   * @param $selectors
+   * @private
+   */
+  hide(...$selectors) {
+    Object.values($selectors).forEach((el) => {
+      el.addClass('d-none');
+      el.find('select').prop('disabled', 'disabled');
+    });
   }
 
   /**
-     * Make all given selectors visible
-     *
-     * @param $selectors
-     * @private
-     */
-  _show(...$selectors) {
-    for (const key in $selectors) {
-      $selectors[key].removeClass('d-none');
-      $selectors[key].find('select').prop('disabled', false);
-    }
+   * Make all given selectors visible
+   *
+   * @param $selectors
+   * @private
+   */
+  show(...$selectors) {
+    Object.values($selectors).forEach((el) => {
+      el.removeClass('d-none');
+      el.find('select').prop('disabled', false);
+    });
   }
 }
