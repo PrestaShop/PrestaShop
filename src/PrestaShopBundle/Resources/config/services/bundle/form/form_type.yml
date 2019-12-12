@@ -590,6 +590,12 @@ services:
         tags:
             - { name: form.type }
 
+    from.type.common.datalist:
+      class: 'PrestaShopBundle\Form\Admin\Type\DatalistType'
+      public: true
+      tags:
+        - { name: form.type }
+
     form.type.team.employee.employee_options:
         class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Employee\EmployeeOptionsType'
         parent: 'form.type.translatable.aware'

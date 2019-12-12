@@ -24,46 +24,44 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Grid\Column\Type\Category;
+namespace PrestaShopBundle\Form\Admin\Type;
 
-use PrestaShop\PrestaShop\Core\Grid\Column\AbstractColumn;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * Class CategoryPositionColumn.
+ * Class DatalistType adds an input with suggested choices
  */
-final class CategoryPositionColumn extends AbstractColumn
+class DatalistType extends CommonAbstractType
 {
     /**
      * {@inheritdoc}
      */
-    public function getType()
+    public function configureOptions(OptionsResolver $resolver)
     {
-        return 'category_position';
+        $resolver
+            ->setRequired([
+                'choices',
+            ])
+            ->setAllowedTypes('choices', 'array')
+        ;
     }
 
     /**
      * {@inheritdoc}
      */
-    protected function configureOptions(OptionsResolver $resolver)
+    public function buildView(FormView $view, FormInterface $form, array $options)
     {
-        parent::configureOptions($resolver);
+        $view->vars['choices'] = $options['choices'];
+    }
 
-        $resolver
-            ->setRequired([
-                'field',
-                'id_field',
-                'id_parent_field',
-                'update_route',
-            ])
-            ->setDefaults([
-                'sortable' => true,
-                'text_align' => 'center',
-            ])
-            ->setAllowedTypes('sortable', 'bool')
-            ->setAllowedTypes('field', 'string')
-            ->setAllowedTypes('id_field', 'string')
-            ->setAllowedTypes('id_parent_field', 'string')
-            ->setAllowedTypes('update_route', 'string');
+    /**
+     * {@inheritdoc}
+     */
+    public function getParent()
+    {
+        return TextType::class;
     }
 }

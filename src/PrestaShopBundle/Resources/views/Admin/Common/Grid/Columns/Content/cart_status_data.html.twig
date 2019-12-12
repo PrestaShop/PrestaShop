@@ -23,7 +23,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 
-<div class="text-center">
+<div class="text-{{ column.options.text_align }}">
   {% if record[column.options.field] matches '/^\\d+$/' %}
     {{ record[column.options.field] }}
   {% else %}

@@ -115,7 +115,7 @@ class CommonController extends FrameworkBundleAdminController
         $offsetParam = empty($prefix) ? 'offset' : sprintf('%s[offset]', $prefix);
         $limitParam = empty($prefix) ? 'limit' : sprintf('%s[limit]', $prefix);
 
-        $limit = max($limit, 10);
+        $limit = max($limit, 1);
 
         $currentPage = floor($offset / $limit) + 1;
         $pageCount = ceil($total / $limit);

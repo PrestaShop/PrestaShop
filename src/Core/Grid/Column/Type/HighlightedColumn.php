@@ -30,7 +30,9 @@ use PrestaShop\PrestaShop\Core\Grid\Column\AbstractColumn;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * Displays data with highlighted column
+ * Displays data with highlighted column, the field option indicates which row
+ * field is displayed in this column The is_highlighted_field option indicates
+ * which row field enables/disables the highlighting
  */
 final class HighlightedColumn extends AbstractColumn
 {
@@ -47,6 +49,8 @@ final class HighlightedColumn extends AbstractColumn
      */
     protected function configureOptions(OptionsResolver $resolver)
     {
+        parent::configureOptions($resolver);
+
         $resolver
             ->setRequired([
                 'field',
@@ -54,6 +58,7 @@ final class HighlightedColumn extends AbstractColumn
             ])
             ->setDefaults([
                 'highlight_type' => 'success',
+                'text_align' => 'right',
             ])
             ->setAllowedTypes('field', 'string')
             ->setAllowedTypes('is_highlighted_field', 'string')

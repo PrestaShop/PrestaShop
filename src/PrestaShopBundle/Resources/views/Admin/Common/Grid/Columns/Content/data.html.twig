@@ -23,4 +23,6 @@
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 
-{{ record[column.options.field]|raw }}
+<div class="text-{{ column.options.text_align }}">
+  {{ record[column.options.field]|raw }}
+</div>
