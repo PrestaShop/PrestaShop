@@ -12,10 +12,12 @@ use PrestaShop\PrestaShop\Core\Domain\Contact\Exception\ContactNotFoundException
 use PrestaShop\PrestaShop\Core\Domain\Contact\Query\GetContactForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Contact\QueryResult\EditableContact;
 use PrestaShop\PrestaShop\Core\Domain\Exception\DomainConstraintException;
+use PrestaShopBundle\Utils\BoolParser;
 use RuntimeException;
 use Symfony\Component\DependencyInjection\Exception\ServiceCircularReferenceException;
 use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 use Tests\Integration\Behaviour\Features\Context\CommonFeatureContext;
+use function PrestaShopBundle\Utils\BoolParser;
 
 class ContactFeatureContext extends AbstractDomainFeatureContext
 {
@@ -169,7 +171,7 @@ class ContactFeatureContext extends AbstractDomainFeatureContext
     {
         $title = $data['title'];
         $emailAddress = $data['email_address'];
-        $isMessageSavingEnabled = $this->castToBool($data['is_message_saving_enabled']);
+        $isMessageSavingEnabled = BoolParser::castToBool($data['is_message_saving_enabled']);
         $description = $data['description'];
         $shopIdAssociation = (int) $data['shop_id_association'];
 
