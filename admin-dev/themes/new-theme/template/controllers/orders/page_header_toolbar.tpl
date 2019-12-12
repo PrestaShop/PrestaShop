@@ -38,3 +38,12 @@
     {$title}
   {/if}
 {/block}
+
+<div class="header-toolbar d-print-none">
+  <div class="container-fluid">
+      {literal}
+        {% block page_header_toolbar %}{% endblock %}
+      {/literal}
+  </div>
+  {hook h='displayDashboardTop'}
+</div>
