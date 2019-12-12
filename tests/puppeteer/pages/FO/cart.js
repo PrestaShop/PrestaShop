@@ -35,10 +35,8 @@ module.exports = class Cart extends FOBasePage {
    * Click on Proceed to checkout button
    */
   async clickOnProceedToCheckout() {
-    await Promise.all([
-      this.page.waitForNavigation({waitUntil: 'networkidle0'}),
-      this.page.click(this.proceedToCheckoutButton),
-    ]);
+    await this.page.waitForSelector(this.proceedToCheckoutButton, {visible: true});
+    await this.clickAndWaitForNavigation(this.proceedToCheckoutButton);
   }
 
   /**
