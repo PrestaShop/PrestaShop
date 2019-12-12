@@ -12,11 +12,12 @@ const OrdersPage = require('@pages/BO/orders/index');
 const ViewOrderPage = require('@pages/BO/orders/view');
 // Importing data
 const {Statuses} = require('@data/demo/orders');
+const InvoiceOptionsFaker = require('@data/faker/invoiceOptions');
 
 let browser;
 let page;
 let fileName;
-const prefixToEdit = '#ABC';
+const invoiceData = new InvoiceOptionsFaker();
 const defaultPrefix = '#IN';
 
 // Init objects needed
@@ -53,8 +54,8 @@ describe('Edit invoice prefix and check the generated invoice file name', async 
   // Login into BO
   loginCommon.loginBO();
 
-  describe(`Change the invoice prefix to '${prefixToEdit}' then check the invoice file name`, async () => {
-    describe(`Change the invoice prefix to '${prefixToEdit}'`, async () => {
+  describe(`Change the invoice prefix to '${invoiceData.prefix}'then check the invoice file name`, async () => {
+    describe(`Change the invoice prefix to '${invoiceData.prefix}'`, async () => {
       it('should go to invoices page', async function () {
         await this.pageObjects.boBasePage.goToSubMenu(
           this.pageObjects.boBasePage.ordersParentLink,
@@ -65,8 +66,8 @@ describe('Edit invoice prefix and check the generated invoice file name', async 
         await expect(pageTitle).to.contains(this.pageObjects.invoicesPage.pageTitle);
       });
 
-      it(`should change the invoice prefix to '${prefixToEdit}'`, async function () {
-        await this.pageObjects.invoicesPage.changePrefix(prefixToEdit);
+      it(`should change the invoice prefix to ${invoiceData.prefix}`, async function () {
+        await this.pageObjects.invoicesPage.changePrefix(invoiceData.prefix);
         const textMessage = await this.pageObjects.invoicesPage.saveInvoiceOptions();
         await expect(textMessage).to.contains(this.pageObjects.invoicesPage.successfulUpdateMessage);
       });
@@ -93,14 +94,14 @@ describe('Edit invoice prefix and check the generated invoice file name', async 
         await expect(result).to.be.true;
       });
 
-      it(`should check that the invoice file name contain the prefix '${prefixToEdit}'`, async function () {
+      it(`should check that the invoice file name contain the prefix '${Statuses.shipped.status}'`, async function () {
         fileName = await this.pageObjects.viewOrderPage.getFileName();
-        expect(fileName).to.contains(prefixToEdit.replace('#', '').trim());
+        expect(fileName).to.contains(invoiceData.prefix.replace('#', '').trim());
       });
     });
   });
 
-  describe(`Back to the default invoice prefix value '${defaultPrefix}' then check the invoice file name`, async () => {
+  describe('Back to the default invoice prefix value then check the invoice file name', async () => {
     describe(`Back to the default invoice prefix value '${defaultPrefix}'`, async () => {
       it('should go to invoices page', async function () {
         await this.pageObjects.boBasePage.goToSubMenu(
