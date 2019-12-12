@@ -38,6 +38,7 @@ use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartCurrencyCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartDeliverySettingsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartLanguageCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateProductQuantityInCartCommand;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\BulkDeleteCartException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\InvalidGiftMessageException;
@@ -132,7 +133,7 @@ class CartController extends FrameworkBundleAdminController
 
             $this->addFlash('success', $this->trans('Successful deletion', 'Admin.Notifications.Success'));
         } catch (CartException $e) {
-            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }
 
         return $this->redirectToRoute('admin_carts_index');
@@ -229,6 +230,7 @@ class CartController extends FrameworkBundleAdminController
      */
     public function exportAction(CartFilters $filters)
     {
+        $filters = new CartFilters(['limit' => null] + $filters->all());
         $cartGridFactory = $this->get('prestashop.core.grid.factory.cart');
         $cartGrid = $cartGridFactory->getGrid($filters);
 
@@ -643,7 +645,7 @@ class CartController extends FrameworkBundleAdminController
 
             $this->addFlash('success', $this->trans('Successful deletion', 'Admin.Notifications.Success'));
         } catch (CartException $e) {
-            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }
 
         return $this->redirectToRoute('admin_carts_index');
@@ -745,6 +747,14 @@ class CartController extends FrameworkBundleAdminController
             InvalidGiftMessageException::class => $this->trans(
                 'Gift message not valid',
                 'Admin.Notifications.Error'
+            ),
+            BulkDeleteCartException::class => sprintf(
+                '%s: %s',
+                $this->trans(
+                    'An error occurred while deleting this selection.',
+                    'Admin.Notifications.Error'
+                ),
+                $e instanceof BulkDeleteCartException ? implode(', ', $e->getCartIds()) : ''
             ),
         ];
     }

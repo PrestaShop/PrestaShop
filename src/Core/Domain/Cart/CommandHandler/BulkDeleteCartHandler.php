@@ -28,6 +28,8 @@ namespace PrestaShop\PrestaShop\Core\Domain\Cart\CommandHandler;
 
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\BulkDeleteCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\DeleteCartCommand;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\BulkDeleteCartException;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartException;
 
 /**
  * Handles deleting cart in bulk action
@@ -52,8 +54,18 @@ final class BulkDeleteCartHandler implements BulkDeleteCartHandlerInterface
      */
     public function handle(BulkDeleteCartCommand $command)
     {
+        $errors = [];
+
         foreach ($command->getCartId() as $cartId) {
-            $this->deleteCartHandler->handle(new DeleteCartCommand($cartId->getValue()));
+            try {
+                $this->deleteCartHandler->handle(new DeleteCartCommand($cartId->getValue()));
+            } catch (CartException $e) {
+                $errors[] = $cartId->getValue();
+            }
+        }
+
+        if (!empty($errors)) {
+            throw new BulkDeleteCartException($errors, 'Failed to delete all of selected carts');
         }
     }
 }

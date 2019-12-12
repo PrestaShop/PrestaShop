@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -24,45 +24,44 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Grid\Column\Type;
+namespace PrestaShopBundle\Form\Admin\Type;
 
-use PrestaShop\PrestaShop\Core\Grid\Column\AbstractColumn;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * Displays data with highlighted column, the field option indicates which row
- * field is displayed in this column The is_highlighted_field option indicates
- * which row field enables/disables the highlighting
+ * Class DatalistType adds an input with suggested choices
  */
-final class HighlightedColumn extends AbstractColumn
+class DatalistType extends CommonAbstractType
 {
     /**
      * {@inheritdoc}
      */
-    public function getType()
+    public function configureOptions(OptionsResolver $resolver)
     {
-        return 'highlighted';
+        $resolver
+            ->setRequired([
+                'choices',
+            ])
+            ->setAllowedTypes('choices', 'array')
+        ;
     }
 
     /**
      * {@inheritdoc}
      */
-    protected function configureOptions(OptionsResolver $resolver)
+    public function buildView(FormView $view, FormInterface $form, array $options)
     {
-        parent::configureOptions($resolver);
+        $view->vars['choices'] = $options['choices'];
+    }
 
-        $resolver
-            ->setRequired([
-                'field',
-                'is_highlighted_field',
-            ])
-            ->setDefaults([
-                'highlight_type' => 'success',
-                'text_align' => 'right',
-            ])
-            ->setAllowedTypes('field', 'string')
-            ->setAllowedTypes('is_highlighted_field', 'string')
-            ->setAllowedValues('highlight_type', ['success', 'danger', 'warning', 'info'])
-        ;
+    /**
+     * {@inheritdoc}
+     */
+    public function getParent()
+    {
+        return TextType::class;
     }
 }
