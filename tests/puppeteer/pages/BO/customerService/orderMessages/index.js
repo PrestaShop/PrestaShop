@@ -32,7 +32,7 @@ module.exports = class OrderMessages extends BOBasePage {
     // Bulk Actions
     this.selectAllRowsLabel = `${this.gridPanel} .md-checkbox label`;
     this.bulkActionsToggleButton = `${this.gridPanel} button.js-bulk-actions-btn`;
-    this.bulkActionsDeleteButton = `${this.gridPanel} #order_message_grid_bulk_action_delete_selection`;
+    this.bulkActionsDeleteButton = '#order_message_grid_bulk_action_delete_selection';
   }
 
   /* Header Methods */
