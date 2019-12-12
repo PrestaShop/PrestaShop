@@ -29,6 +29,9 @@ module.exports = class Invoice extends BOBasePage {
     this.taxBreakdownEnable = `${this.invoiceOptionsForm} label[for="form_invoice_options_enable_tax_breakdown_%ID"]`;
     this.invoiceOptionEnableProductImage = `${this.invoiceOptionsForm} 
     label[for="form_invoice_options_enable_product_images_%ID"]`;
+    this.invoiceNumberInput = `${this.invoiceOptionsForm} #form_invoice_options_invoice_number`;
+    this.legalFreeTextInput = `${this.invoiceOptionsForm} #form_invoice_options_legal_free_text_1`;
+    this.footerTextInput = `${this.invoiceOptionsForm} #form_invoice_options_footer_text_1`;
     this.saveInvoiceOptionsButton = `${this.invoiceOptionsForm} .btn.btn-primary`;
   }
 
@@ -99,5 +102,16 @@ module.exports = class Invoice extends BOBasePage {
    */
   async enableTaxBreakdown(enable = true) {
     await this.page.click(this.taxBreakdownEnable.replace('%ID', enable ? 1 : 0));
+  }
+
+  /**
+   * Set invoiceNumber, LegalFreeText, footerText
+   * @param data
+   * @return {Promise<void>}
+   */
+  async setInputOptions(data) {
+    await this.page.type(this.invoiceNumberInput, data.invoiceNumber);
+    await this.setValue(this.legalFreeTextInput, data.legalFreeText);
+    await this.setValue(this.footerTextInput, data.footerText);
   }
 };
