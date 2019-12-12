@@ -16,10 +16,11 @@ class BoolParser
         }
         if (is_numeric($value)) {
             return (bool) $value; // 0 => false; all other true
-        } else {
-            $lValue = strtolower($value);
-
-            return $lValue == 'false' ? false : true;
         }
+
+        return strtolower($value) !== 'false';
+//        $lValue = strtolower($value);
+//
+//        return $lValue == 'false' ? false : true;
     }
 }
