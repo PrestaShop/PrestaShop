@@ -32,12 +32,14 @@ use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryConstraintExcepti
 use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraint;
+use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\ConstraintValidator;
+use Symfony\Component\Validator\ConstraintViolationInterface;
 
 /**
- * Validator for customer address zip code value
+ * Validator for address zip code value
  */
-final class CustomerAddressZipCodeValidator extends ConstraintValidator
+final class AddressZipCodeValidator extends ConstraintValidator
 {
     /**
      * @var TranslatorInterface
@@ -68,31 +70,33 @@ final class CustomerAddressZipCodeValidator extends ConstraintValidator
      */
     public function validate($value, Constraint $constraint)
     {
-        $countryId = (int) $value['id_country'];
-        $postcode = $value['postcode'];
+        $countryId = (int) $constraint->id_country;
 
         /** @var CountryZipCodeRequirements $requirements */
         $requirements = $this->requirementsProvider->getCountryZipCodeRequirements(new CountryId($countryId));
 
-        if ($requirements->isRequired() && null === $postcode) {
-            $this->context->buildViolation($constraint->requiredMessage)
-                ->atPath('[postcode]')
-                ->setTranslationDomain('Admin.Notifications.Error')
-                ->addViolation()
-            ;
+        if ($requirements->isRequired() || $constraint->required) {
+            $constraints = [new NotBlank([
+                'message' => $constraint->requiredMessage,
+            ])];
+
+            /** @var ConstraintViolationInterface[] $violations */
+            $violations = $this->context->getValidator()->validate($value, $constraints);
+            foreach ($violations as $violation) {
+                $this->context->buildViolation($violation->getMessage())
+                    ->setTranslationDomain('Admin.Notifications.Error')
+                    ->addViolation();
+            }
         }
 
-        if (null !== $requirements->getPattern() && !(bool) preg_match($requirements->getPattern(), $postcode)) {
+        if (null !== $requirements->getPattern() && !(bool) preg_match($requirements->getPattern(), $value)) {
             $message = $this->translator->trans('Your Zip/postal code is incorrect.', [], 'Admin.Notifications.Error') .
                 ' ' .
                 $this->translator->trans('It must be entered as follows:', [], 'Admin.Notifications.Error') . ' ' .
                 $requirements->getHumanReadablePattern()
             ;
 
-            $this->context->buildViolation($message)
-                ->atPath('[postcode]')
-                ->addViolation()
-            ;
+            $this->context->buildViolation($message)->addViolation();
         }
     }
 }

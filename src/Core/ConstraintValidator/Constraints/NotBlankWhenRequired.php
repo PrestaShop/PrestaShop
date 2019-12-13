@@ -1,6 +1,7 @@
 <?php
+
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -26,25 +27,20 @@
 
 namespace PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints;
 
-use PrestaShop\PrestaShop\Core\ConstraintValidator\CustomerAddressCountryRequiredFieldsValidator;
-use Symfony\Component\Validator\Constraint;
+use PrestaShop\PrestaShop\Core\ConstraintValidator\NotBlankWhenRequiredValidator;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
-/**
- * Validation constraint for customer address state choice by selected country value
- */
-class CustomerAddressCountryRequiredFields extends Constraint
+class NotBlankWhenRequired extends NotBlank
 {
-    public $countryStateMessage = 'You have selected a state for a country that does not contain states.';
+    public $required;
 
-    public $stateRequiredMessage = 'An address located in a country containing states must have a state selected.';
-
-    public $message = 'This field cannot be empty';
-
-    /**
-     * {@inheritdoc}
-     */
     public function validatedBy()
     {
-        return CustomerAddressCountryRequiredFieldsValidator::class;
+        return NotBlankWhenRequiredValidator::class;
+    }
+
+    public function getRequiredOptions()
+    {
+        return ['required'];
     }
 }

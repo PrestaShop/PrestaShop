@@ -26,14 +26,22 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Country;
 
-use Country;
 use PrestaShop\PrestaShop\Core\Country\CountryRequiredFieldsProviderInterface;
 use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
-use PrestaShopException;
 
 class CountryRequiredFieldsProvider implements CountryRequiredFieldsProviderInterface
 {
+    /**
+     * @var CountryDataProvider
+     */
+    private $countryDataProvider;
+
+    public function __construct(CountryDataProvider $countryDataProvider)
+    {
+        $this->countryDataProvider = $countryDataProvider;
+    }
+
     /**
      * {@inheritdoc}
      *
@@ -41,7 +49,9 @@ class CountryRequiredFieldsProvider implements CountryRequiredFieldsProviderInte
      */
     public function isStatesRequired(CountryId $countryId): bool
     {
-        return $this->getCountry($countryId)->contains_states;
+        $countries = $this->countryDataProvider->getCountriesIdWhichNeedState();
+
+        return in_array($countryId->getValue(), $countries);
     }
 
     /**
@@ -51,33 +61,8 @@ class CountryRequiredFieldsProvider implements CountryRequiredFieldsProviderInte
      */
     public function isDniRequired(CountryId $countryId): bool
     {
-        return $this->getCountry($countryId)->need_identification_number;
-    }
+        $countries = $this->countryDataProvider->getCountriesIdWhichNeedDni();
 
-    /**
-     * Get legacy country
-     *
-     * @param CountryId $countryId
-     *
-     * @return Country
-     *
-     * @throws CountryNotFoundException
-     */
-    private function getCountry(CountryId $countryId): Country
-    {
-        $countryIdValue = $countryId->getValue();
-
-        try {
-            $country = new Country($countryIdValue);
-        } catch (PrestaShopException $e) {
-        }
-
-        if (empty($country->id) || $country->id !== $countryIdValue) {
-            throw new CountryNotFoundException(
-                sprintf('Country with id "%s" was not found.', $countryIdValue)
-            );
-        }
-
-        return $country;
+        return in_array($countryId->getValue(), $countries);
     }
 }

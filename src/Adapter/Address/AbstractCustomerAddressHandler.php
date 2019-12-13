@@ -24,14 +24,37 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Customer;
+namespace PrestaShop\PrestaShop\Adapter\Address;
 
-interface CustomerDataSourceInterface
+use CustomerAddress;
+use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressException;
+use PrestaShopDatabaseException;
+
+abstract class AbstractCustomerAddressHandler extends AbstractAddressHandler
 {
     /**
-     * @param string $email
+     * @return string[]
      *
-     * @return bool
+     * @throws AddressException
      */
-    public function hasCustomerWithEmail(string $email): bool;
+    protected function getRequiredFields(): array
+    {
+        try {
+            $requiredFields = (new CustomerAddress())->getFieldsRequiredDatabase();
+        } catch (PrestaShopDatabaseException $e) {
+            throw new AddressException('Something went wrong while retrieving required fields for address', 0, $e);
+        }
+
+        if (empty($requiredFields)) {
+            return [];
+        }
+
+        $fields = [];
+
+        foreach ($requiredFields as $field) {
+            $fields[] = $field['field_name'];
+        }
+
+        return $fields;
+    }
 }

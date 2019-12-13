@@ -26,7 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Address\QueryHandler;
 
-use PrestaShop\PrestaShop\Adapter\Address\AbstractAddressHandler;
+use PrestaShop\PrestaShop\Adapter\Address\AbstractCustomerAddressHandler;
 use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressException;
 use PrestaShop\PrestaShop\Core\Domain\Address\Query\GetRequiredFieldsForAddress;
 use PrestaShop\PrestaShop\Core\Domain\Address\QueryHandler\GetRequiredFieldsForAddressHandlerInterface;
@@ -36,7 +36,7 @@ use PrestaShop\PrestaShop\Core\Domain\Address\QueryHandler\GetRequiredFieldsForA
  *
  * @internal
  */
-final class GetRequiredFieldsForAddressHandler extends AbstractAddressHandler implements GetRequiredFieldsForAddressHandlerInterface
+final class GetRequiredFieldsForAddressHandler extends AbstractCustomerAddressHandler implements GetRequiredFieldsForAddressHandlerInterface
 {
     /**
      * {@inheritdoc}

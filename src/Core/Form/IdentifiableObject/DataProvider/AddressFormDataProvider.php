@@ -70,7 +70,7 @@ final class AddressFormDataProvider implements FormDataProviderInterface
         $data = [
             'id_customer' => $editableAddress->getCustomerId()->getValue(),
             'customer_email' => $editableAddress->getCustomerEmail(),
-            'dni' => $editableAddress->getIdNumber(),
+            'dni' => $editableAddress->getDni(),
             'alias' => $editableAddress->getAddressAlias(),
             'first_name' => $editableAddress->getFirstName(),
             'last_name' => $editableAddress->getLastName(),

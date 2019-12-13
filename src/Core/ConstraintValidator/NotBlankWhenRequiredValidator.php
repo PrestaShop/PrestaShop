@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -24,23 +24,17 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints;
+namespace PrestaShop\PrestaShop\Core\ConstraintValidator;
 
-use PrestaShop\PrestaShop\Core\ConstraintValidator\CustomerAddressZipCodeValidator;
 use Symfony\Component\Validator\Constraint;
+use Symfony\Component\Validator\Constraints\NotBlankValidator;
 
-/**
- * Customer address zip code validation constraint
- */
-class CustomerAddressZipCode extends Constraint
+class NotBlankWhenRequiredValidator extends NotBlankValidator
 {
-    public $requiredMessage = 'A Zip/postal code is required.';
-
-    /**
-     * {@inheritdoc}
-     */
-    public function validatedBy()
+    public function validate($value, Constraint $constraint)
     {
-        return CustomerAddressZipCodeValidator::class;
+        if (true === $constraint->required) {
+            parent::validate($value, $constraint);
+        }
     }
 }

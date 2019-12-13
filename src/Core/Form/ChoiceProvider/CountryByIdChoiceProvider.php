@@ -56,6 +56,11 @@ final class CountryByIdChoiceProvider implements FormChoiceProviderInterface, Fo
     private $dniCountriesId;
 
     /**
+     * @var int[]
+     */
+    private $postcodeCountriesId;
+
+    /**
      * @param int $langId
      * @param CountryDataProvider $countryDataProvider
      */
@@ -91,11 +96,15 @@ final class CountryByIdChoiceProvider implements FormChoiceProviderInterface, Fo
     {
         $countries = $this->getCountries();
         $dniCountriesId = $this->getDniCountriesId();
+        $postcodeCountriesId = $this->getPostcodeCountriesId();
         $choicesAttributes = [];
 
         foreach ($countries as $country) {
             if (in_array($country['id_country'], $dniCountriesId)) {
-                $choicesAttributes[$country['name']] = ['need_dni' => 1];
+                $choicesAttributes[$country['name']]['need_dni'] = 1;
+            }
+            if (in_array($country['id_country'], $postcodeCountriesId)) {
+                $choicesAttributes[$country['name']]['need_postcode'] = 1;
             }
         }
 
@@ -124,5 +133,14 @@ final class CountryByIdChoiceProvider implements FormChoiceProviderInterface, Fo
         }
 
         return $this->dniCountriesId;
+    }
+
+    private function getPostcodeCountriesId()
+    {
+        if (null === $this->postcodeCountriesId) {
+            $this->postcodeCountriesId = $this->countryDataProvider->getCountriesIdWhichNeedPostcode();
+        }
+
+        return $this->postcodeCountriesId;
     }
 }

@@ -34,24 +34,22 @@ use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressConstraintExcepti
 use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressException;
 use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Address\Exception\BulkDeleteAddressException;
+use PrestaShop\PrestaShop\Core\Domain\Address\Exception\CannotAddAddressException;
 use PrestaShop\PrestaShop\Core\Domain\Address\Exception\CannotSetRequiredFieldsForAddressException;
+use PrestaShop\PrestaShop\Core\Domain\Address\Exception\CannotUpdateAddressException;
 use PrestaShop\PrestaShop\Core\Domain\Address\Exception\DeleteAddressException;
 use PrestaShop\PrestaShop\Core\Domain\Address\Exception\InvalidAddressRequiredFieldsException;
-use PrestaShop\PrestaShop\Core\Domain\Address\Query\GetRequiredFieldsForAddress;
-use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryNotFoundException;
-use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AddressGridDefinitionFactory;
-use PrestaShop\PrestaShop\Core\Search\Filters\AddressFilters;
-use PrestaShop\PrestaShop\Core\Domain\Address\Exception\CannotAddAddressException;
-use PrestaShop\PrestaShop\Core\Domain\Address\Exception\CannotUpdateAddressException;
 use PrestaShop\PrestaShop\Core\Domain\Address\Query\GetCustomerAddressForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Address\Query\GetRequiredFieldsForAddress;
 use PrestaShop\PrestaShop\Core\Domain\Address\QueryResult\EditableCustomerAddress;
 use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerByEmailNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerForAddressCreation;
-use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\AddressCreationCustomerInformation;
 use PrestaShop\PrestaShop\Core\Domain\State\Exception\StateConstraintException;
+use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AddressGridDefinitionFactory;
+use PrestaShop\PrestaShop\Core\Search\Filters\AddressFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Form\Admin\Sell\Address\RequiredFieldsAddressType;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
@@ -271,7 +269,13 @@ class AddressController extends FrameworkBundleAdminController
             'prestashop.core.form.identifiable_object.handler.address_form_handler'
         );
 
-        $addressForm = $addressFormBuilder->getForm();
+        $formData = [];
+        if ($request->request->has('customer_address') && isset($request->request->get('customer_address')['id_country'])) {
+            $formCountryId = (int) $request->request->get('customer_address')['id_country'];
+            $formData['id_country'] = $formCountryId;
+        }
+
+        $addressForm = $addressFormBuilder->getForm($formData);
         $addressForm->handleRequest($request);
 
         try {
@@ -312,13 +316,7 @@ class AddressController extends FrameworkBundleAdminController
         try {
             /** @var EditableCustomerAddress $editableAddress */
             $editableAddress = $this->getQueryBus()->handle(new GetCustomerAddressForEditing((int) $addressId));
-        } catch (AddressException $e) {
-            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
 
-            return $this->redirectToRoute('admin_addresses_index');
-        }
-
-        try {
             $addressFormBuilder = $this->get(
                 'prestashop.core.form.identifiable_object.builder.address_form_builder'
             );
@@ -326,7 +324,13 @@ class AddressController extends FrameworkBundleAdminController
                 'prestashop.core.form.identifiable_object.handler.address_form_handler'
             );
 
-            $addressForm = $addressFormBuilder->getFormFor($addressId);
+            $formData = [];
+            if ($request->request->has('customer_address') && isset($request->request->get('customer_address')['id_country'])) {
+                $formCountryId = (int) $request->request->get('customer_address')['id_country'];
+                $formData['id_country'] = $formCountryId;
+            }
+
+            $addressForm = $addressFormBuilder->getFormFor($addressId, $formData);
             $addressForm->handleRequest($request);
             $result = $addressFormHandler->handleFor($addressId, $addressForm);
 
@@ -353,39 +357,6 @@ class AddressController extends FrameworkBundleAdminController
             'addressForm' => $addressForm->createView(),
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
         ]);
-    }
-
-    /**
-     * Provides customer information for address creation in json format
-     *
-     * @param Request $request
-     *
-     * @return Response
-     */
-    public function getCustomerInformationAction(Request $request): Response
-    {
-        try {
-            $email = $request->query->get('email');
-
-            /** @var AddressCreationCustomerInformation $customerInformation */
-            $customerInformation = $this->getQueryBus()->handle(new GetCustomerForAddressCreation($email));
-
-            $serializer = $this->get('prestashop.bundle.snake_case_serializer_json');
-
-            return new Response($serializer->serialize($customerInformation, 'json'));
-        } catch (Exception $e) {
-            $code = Response::HTTP_INTERNAL_SERVER_ERROR;
-
-            if ($e instanceof CustomerException) {
-                $code = Response::HTTP_NOT_FOUND;
-            }
-
-            return $this->json([
-                'message' => $this->getErrorMessageForException($e, $this->getErrorMessages($e)),
-            ],
-                $code
-            );
-        }
     }
 
     /**

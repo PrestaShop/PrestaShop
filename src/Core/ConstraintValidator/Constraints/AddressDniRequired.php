@@ -24,14 +24,32 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Customer;
+namespace PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints;
 
-interface CustomerDataSourceInterface
+use PrestaShop\PrestaShop\Core\ConstraintValidator\AddressDniRequiredValidator;
+use Symfony\Component\Validator\Constraint;
+
+/**
+ * Validation constraint for address DNI according to the country value and fields requirement
+ */
+class AddressDniRequired extends Constraint
 {
+    public $message = 'This field cannot be empty';
+
+    public $id_country;
+
+    public $required;
+
     /**
-     * @param string $email
-     *
-     * @return bool
+     * {@inheritdoc}
      */
-    public function hasCustomerWithEmail(string $email): bool;
+    public function validatedBy()
+    {
+        return AddressDniRequiredValidator::class;
+    }
+
+    public function getRequiredOptions()
+    {
+        return ['id_country', 'required'];
+    }
 }

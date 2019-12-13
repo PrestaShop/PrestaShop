@@ -81,7 +81,7 @@ class EditCustomerAddressCommand
     /**
      * @var string|null
      */
-    private $idNumber;
+    private $dni;
 
     /**
      * @var string|null
@@ -281,19 +281,19 @@ class EditCustomerAddressCommand
     /**
      * @return string|null
      */
-    public function getIdNumber(): ?string
+    public function getDni(): ?string
     {
-        return $this->idNumber;
+        return $this->dni;
     }
 
     /**
-     * @param string $idNumber
+     * @param string $dni
      *
      * @return EditCustomerAddressCommand
      */
-    public function setIdNumber(string $idNumber): EditCustomerAddressCommand
+    public function setDni(string $dni): EditCustomerAddressCommand
     {
-        $this->idNumber = $idNumber;
+        $this->dni = $dni;
 
         return $this;
     }

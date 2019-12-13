@@ -70,6 +70,46 @@ class CountryDataProvider
     }
 
     /**
+     * Returns list of countries IDs which need Postcode
+     *
+     * @return array
+     *
+     * @throws \PrestaShopDatabaseException
+     */
+    public function getCountriesIdWhichNeedPostcode()
+    {
+        $query = new DbQuery();
+        $query
+            ->select('c.`id_country`')
+            ->from('country', 'c')
+            ->where('c.`need_zip_code` = 1')
+        ;
+        $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
+
+        return array_map(function ($country) { return $country['id_country']; }, $result);
+    }
+
+    /**
+     * Returns list of countries IDS which need a state
+     *
+     * @return array
+     *
+     * @throws \PrestaShopDatabaseException
+     */
+    public function getCountriesIdWhichNeedState()
+    {
+        $query = new DbQuery();
+        $query
+            ->select('c.`id_country`')
+            ->from('country', 'c')
+            ->where('c.`contains_states` = 1')
+        ;
+        $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
+
+        return array_map(function ($country) { return $country['id_country']; }, $result);
+    }
+
+    /**
      * Get Country IsoCode by Id.
      *
      * @param int $id Country Id
