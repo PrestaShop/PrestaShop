@@ -27,7 +27,7 @@ import Router from '../../../components/router';
 import OrderViewPageMap from '../OrderViewPageMap';
 import {EventEmitter} from '../../../components/event-emitter';
 import OrderViewEventMap from './order-view-event-map';
-import OrderPricesTax from "./order-prices-tax";
+import OrderPrices from "./order-prices";
 
 const $ = window.$;
 
@@ -42,29 +42,54 @@ export default class OrderProductEdit {
     this.priceTaxExcludedInput = $(OrderViewPageMap.productEditPriceTaxExclInput);
     this.taxRateInput = $(OrderViewPageMap.productEditTaxRateInput);
     this.quantityInput = $(OrderViewPageMap.productEditQuantityInput);
+    this.locationText = $(OrderViewPageMap.productEditLocationText);
+    this.availableText = $(OrderViewPageMap.productEditAvailableText);
+    this.priceTotalText = $(OrderViewPageMap.productEditTotalPriceText);
     this.product = {};
   }
 
   setupListener() {
+    this.productRowEdit.find(OrderViewPageMap.productEditQuantityInput).on('change keyup', (event) => {
+      const priceTaxCalculator = new OrderPrices();
+      const quantity = parseInt(event.target.value ? event.target.value : 0, 10);
+      const taxIncluded = parseFloat(this.productRowEdit.find(OrderViewPageMap.productEditPriceTaxInclInput).val());
+      this.productRowEdit.find(OrderViewPageMap.productEditTotalPriceText).html(
+        priceTaxCalculator.calculateTotalPrice(quantity, taxIncluded)
+      );
+    });
     this.productRowEdit.find(OrderViewPageMap.productEditPriceTaxInclInput).on('change keyup', (event) => {
-      const priceTaxCalculator = new OrderPricesTax();
-      this.productRowEdit.find(OrderViewPageMap.productEditPriceTaxExclInput).val(
-        priceTaxCalculator.calculateTaxExcluded(
-          event.target.value,
-          this.productRowEdit.find(OrderViewPageMap.productEditTaxRateInput).val()
-        )
+      const priceTaxCalculator = new OrderPrices();
+      const quantity = parseInt(this.productRowEdit.find(OrderViewPageMap.productEditQuantityInput).val(), 10);
+      const taxIncluded = parseFloat(event.target.value);
+      const taxExcluded = priceTaxCalculator.calculateTaxExcluded(
+        taxIncluded,
+        this.productRowEdit.find(OrderViewPageMap.productEditTaxRateInput).val()
+      );
+      this.productRowEdit.find(OrderViewPageMap.productEditPriceTaxExclInput).val(taxExcluded);
+      this.productRowEdit.find(OrderViewPageMap.productEditTotalPriceText).html(
+        priceTaxCalculator.calculateTotalPrice(quantity, taxIncluded)
       );
     });
     this.productRowEdit.find(OrderViewPageMap.productEditPriceTaxExclInput).on('change keyup', (event) => {
-      const priceTaxCalculator = new OrderPricesTax();
-      this.productRowEdit.find(OrderViewPageMap.productEditPriceTaxInclInput).val(
-        priceTaxCalculator.calculateTaxIncluded(
-          event.target.value,
-          this.productRowEdit.find(OrderViewPageMap.productEditTaxRateInput).val()
-        )
+      const priceTaxCalculator = new OrderPrices();
+      const quantity = parseInt(this.productRowEdit.find(OrderViewPageMap.productEditQuantityInput).val(), 10);
+      const taxExcluded = parseFloat(event.target.value);
+      const taxIncluded = priceTaxCalculator.calculateTaxIncluded(
+        taxExcluded,
+        this.productRowEdit.find(OrderViewPageMap.productEditTaxRateInput).val()
+      );
+      this.productRowEdit.find(OrderViewPageMap.productEditPriceTaxInclInput).val(taxIncluded);
+      this.productRowEdit.find(OrderViewPageMap.productEditTotalPriceText).html(
+        priceTaxCalculator.calculateTotalPrice(quantity, taxIncluded)
       );
     });
     this.productRowEdit.find(OrderViewPageMap.productEditActionBtn).on('click', (event) => {
+      const $btn = $(event.currentTarget);
+      const confirmed = confirm($btn.data('updateMessage'));
+      if (!confirmed) {
+        return;
+      }
+      $btn.attr('disabled', 'disabled');
       this.editProduct(
         $(event.currentTarget).data('orderId'),
         $(event.currentTarget).data('orderDetailId'),
@@ -73,6 +98,7 @@ export default class OrderProductEdit {
   }
 
   displayProduct(product) {
+    const priceTaxCalculator = new OrderPrices();
     const $productEditRow = $(OrderViewPageMap.productEditRow).clone(true);
     $productEditRow.find('td:nth-child(1)').html(this.productRow.find('td:nth-child(1)').html());
     $productEditRow.find('td:nth-child(2)').html(this.productRow.find('td:nth-child(2)').html());
@@ -81,6 +107,12 @@ export default class OrderProductEdit {
     $productEditRow.find(OrderViewPageMap.productEditPriceTaxInclInput).val(product.price_tax_incl);
     $productEditRow.find(OrderViewPageMap.productEditQuantityInput).val(product.quantity);
     $productEditRow.find(OrderViewPageMap.productEditTaxRateInput).val(product.tax_rate);
+    $productEditRow.find(OrderViewPageMap.productEditLocationText).html(product.location);
+    $productEditRow.find(OrderViewPageMap.productEditAvailableText).html(product.availableQuantity);
+    $productEditRow.find(OrderViewPageMap.productEditTotalPriceText).html(priceTaxCalculator.calculateTotalPrice(
+      product.quantity,
+      product.price_tax_excl
+    ));
     $productEditRow.find(OrderViewPageMap.productEditActionBtn).data('orderDetailId', this.orderProductId);
     $productEditRow.find(OrderViewPageMap.productCancelEditBtn).data('orderDetailId', this.orderProductId);
     $productEditRow.attr('id', `orderProduct_${this.orderProductId}_edit`);
