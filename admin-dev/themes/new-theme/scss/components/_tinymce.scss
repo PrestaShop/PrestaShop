@@ -110,7 +110,9 @@
 .mce-tinymce {
   position: relative;
   display: block;
+  /* stylelint-disable declaration-no-important */
   visibility: visible !important;
+  /* stylelint-enable declaration-no-important */
   @include border-radius(2px);
 }
 
@@ -1505,9 +1507,11 @@ i.mce-i-backcolor {
 .tab-content.translationsFields {
   padding: 0;
   .mce-tinymce {
+    /* stylelint-disable declaration-no-important */
     border-right: 1px solid #dfdfdf !important;
     border-bottom: 1px solid #dfdfdf !important;
     border-left: 1px solid #dfdfdf !important;
+    /* stylelint-enable declaration-no-important */
   }
   .mce-container-body .mce-flow-layout {
     padding-top: 5px;

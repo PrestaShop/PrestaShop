@@ -148,7 +148,9 @@ table .column-filters td:last-child .grid-reset-button {
 
             @at-root {
               #{$tr}:hover .draggable-column {
+                /* stylelint-disable declaration-no-important */
                 color: #15b7d7 !important;
+                /* stylelint-enable declaration-no-important */
               }
             }
           }

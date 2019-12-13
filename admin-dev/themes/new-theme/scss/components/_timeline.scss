@@ -33,15 +33,19 @@
         margin-left: 0;
       }
 
-      .timeline-icon {
-        right: -60px;
-        left: auto !important;
-      }
+      .timeline-caption {
+        .timeline-panel {
+          .timeline-icon {
+            right: -60px;
+            left: auto;
+          }
 
-      .timeline-date {
-        right: -220px;
-        left: auto !important;
-        text-align: left;
+          .timeline-date {
+            right: -220px;
+            left: auto;
+            text-align: left;
+          }
+        }
       }
     }
 

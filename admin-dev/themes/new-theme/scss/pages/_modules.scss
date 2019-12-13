@@ -1,6 +1,8 @@
 /**
  * Module Modal CSS
  */
+
+/* stylelint-disable declaration-no-important */
 .module-modal-title {
   display: inline-block;
   vertical-align: top;
@@ -800,3 +802,4 @@ form#importDropzone {
     }
   }
 }
+/* stylelint-enable declaration-no-important */
