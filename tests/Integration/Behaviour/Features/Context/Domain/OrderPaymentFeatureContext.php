@@ -3,6 +3,8 @@
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 use Behat\Gherkin\Node\TableNode;
+use DateTimeImmutable;
+use PHPUnit_Framework_Assert;
 use PrestaShop\PrestaShop\Core\Domain\Order\Payment\Command\AddPaymentCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderForViewing;
@@ -10,22 +12,18 @@ use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderPaymentForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderPaymentsForViewing;
 use PrestaShopException;
 use RuntimeException;
-use Symfony\Component\DependencyInjection\Exception\ServiceCircularReferenceException;
-use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 
 class OrderPaymentFeatureContext extends AbstractDomainFeatureContext
 {
     /**
-     * @When I add payment to order with id :orderId with the following properties:
+     * @When I pay order :orderId with the following details:
      *
      * @param int $orderId
      * @param TableNode $table
      *
      * @throws RuntimeException
-     * @throws ServiceCircularReferenceException
-     * @throws ServiceNotFoundException
      */
-    public function iAddPaymentToWithIdOrderWithIdTheFollowingProperties(int $orderId, TableNode $table)
+    public function addPaymentToOrderWithTheFollowingDetails(int $orderId, TableNode $table)
     {
         /** @var array $hash */
         $hash = $table->getHash();
@@ -49,16 +47,14 @@ class OrderPaymentFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Then if I query order with id :orderId payments I should get :numberOfPayments payments
+     * @Then order :orderId has :numberOfPayments payments
      *
      * @param int $orderId
      * @param int $numberOfPayments
      *
      * @throws RuntimeException
-     * @throws ServiceCircularReferenceException
-     * @throws ServiceNotFoundException
      */
-    public function ifIQueryOrderWithIdPaymentsIShouldGetPayments(int $orderId, int $numberOfPayments)
+    public function getOrderPayments(int $orderId, int $numberOfPayments)
     {
         /** @var OrderForViewing $orderForViewing */
         $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
@@ -79,106 +75,50 @@ class OrderPaymentFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Then if I query order with id :orderId payments I should get an Order with properties:
+     * @Then order :orderId payments should have invoice :expectedInvoiceNumber
      *
      * @param int $orderId
-     * @param TableNode $table
-     *
-     * @throws RuntimeException
-     * @throws ServiceCircularReferenceException
-     * @throws ServiceNotFoundException
+     * @param string $expectedInvoiceNumber
      */
-    public function ifIQueryOrderWithIdPaymentsIShouldGetAnOrderWithProperties(int $orderId, TableNode $table)
+    public function queryOrderPaymentsToGetInvoice(int $orderId, string $expectedInvoiceNumber)
     {
         /** @var OrderForViewing $orderForViewing */
         $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
-        /** @var OrderPaymentsForViewing $orderPaymentsForViewing */
-        $orderPaymentsForViewing = $orderForViewing->getPayments();
-        /** @var OrderPaymentForViewing[] $orderPaymentForViewingArray */
-        $orderPaymentForViewingArray = $orderPaymentsForViewing->getPayments();
-
-        if (count($orderPaymentForViewingArray) == 0) {
-            throw new RuntimeException('Order [' . $orderId . '] has no payments for viewing');
-        }
 
         /** @var OrderPaymentForViewing $orderPaymentForViewing */
-        $orderPaymentForViewing = $orderPaymentForViewingArray[0];
-
-        /** @var array $hash */
-        $hash = $table->getHash();
-        if (count($hash) == 0) {
-            throw new RuntimeException('Payment details are invalid');
-        }
-        /** @var array $data */
-        $data = $hash[0];
-
-        $orderPaymentDateFromDb = $orderPaymentForViewing->getDate()->format('Y-m-d H:i:s');
-        $orderPaymentDate = isset($data['date']) ? $data['date'] : false;
-        if ($orderPaymentDate && $orderPaymentDate !== $orderPaymentDateFromDb) {
-            throw new RuntimeException(sprintf(
-                'Order "%s" payment date is not the same as "%s", but "%s" was expected',
-                $orderId,
-                $orderPaymentDateFromDb,
-                $orderPaymentDate
-            ));
-        }
-
-        $paymentMethodFromDb = $orderPaymentForViewing->getPaymentMethod();
-        $orderPaymentMethod = isset($data['payment_method']) ? $data['payment_method'] : false;
-        if ($orderPaymentMethod && $orderPaymentMethod !== $paymentMethodFromDb) {
-            throw new RuntimeException(sprintf(
-                'Order "%s" payment method is not the same as "%s", but "%s" was expected',
-                $orderId,
-                $paymentMethodFromDb,
-                $orderPaymentMethod
-            ));
-        }
-
-        $transactionIdFromDb = $orderPaymentForViewing->getTransactionId();
-        $transactionId = isset($data['transaction_id']) ? $data['transaction_id'] : false;
-        if ($transactionId && $transactionId !== $transactionIdFromDb) {
-            throw new RuntimeException(sprintf(
-                'Order "%s" transaction id is not the same as "%s", but "%s" was expected',
-                $orderId,
-                $transactionIdFromDb,
-                $transactionId
-            ));
-        }
-
-        $amountFromDb = $orderPaymentForViewing->getAmount();
-        $amount = isset($data['amount']) ? $data['amount'] : false;
-        if ($amount && $amount !== $amountFromDb) {
-            throw new RuntimeException(sprintf(
-                'Order "%s" amount is not the same as "%s", but "%s" was expected',
-                $orderId,
-                $amountFromDb,
-                $amount
-            ));
-        }
-
-        $invoiceNumberFromDb = $orderPaymentForViewing->getInvoiceNumber();
-        $invoiceId = isset($data['id_invoice']) ? $data['id_invoice'] : false;
-        if ($invoiceId && $invoiceId !== $invoiceNumberFromDb && $invoiceNumberFromDb != '') {
-            throw new RuntimeException(sprintf(
-                'Order "%s" invoice id is not the same as "%s", but "%s" was expected',
-                $orderId,
-                $invoiceNumberFromDb,
-                $invoiceId
-            ));
-        }
+        $orderPaymentForViewing = $this->getFirstPaymentForViewing($orderId, $orderForViewing);
+        $invoiceNumber = $orderPaymentForViewing->getInvoiceNumber();
+        PHPUnit_Framework_Assert::assertSame($expectedInvoiceNumber, $invoiceNumber);
     }
 
     /**
-     * @When I add payment to order with id :orderId exception is thrown with the following properties:
+     * @Then order :orderId payments should have the following details:
+     *
+     * @param int $orderId
+     * @param TableNode $table
+     */
+    public function queryOrderPaymentsToGetTheFollowingProperties(int $orderId, TableNode $table)
+    {
+        $dataArray = $this->extractFirstRowFromHorizontalTableDetails($table);
+        $expectedOrderPaymentForViewing = $this->mapToOrderPaymentForViewing($orderId, $dataArray);
+
+        /** @var OrderForViewing $orderForViewing */
+        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
+        /** @var OrderPaymentForViewing $orderPaymentForViewing */
+        $orderPaymentForViewing = $this->getFirstPaymentForViewing($orderId, $orderForViewing);
+
+        PHPUnit_Framework_Assert::assertEquals($expectedOrderPaymentForViewing, $orderPaymentForViewing);
+    }
+
+    /**
+     * @When I pay order :orderId with the invalid following details:
      *
      * @param int $orderId
      * @param TableNode $table
      *
      * @throws RuntimeException
-     * @throws ServiceCircularReferenceException
-     * @throws ServiceNotFoundException
      */
-    public function iAddPaymentToOrderWithIdExceptionIsThrownWithTheFollowingProperties(int $orderId, TableNode $table)
+    public function addPaymentToOrderWithTheInvalidFollowingProperties(int $orderId, TableNode $table)
     {
         /** @var array $hash */
         $hash = $table->getHash();
@@ -210,5 +150,62 @@ class OrderPaymentFeatureContext extends AbstractDomainFeatureContext
                     $expectedMsg));
             }
         }
+    }
+
+    private function mapToOrderPaymentForViewing(int $paymentId, array $data)
+    {
+        return new OrderPaymentForViewing(
+            $paymentId,
+            new DateTimeImmutable($data['date']),
+            $data['payment_method'],
+            $data['transaction_id'],
+            $data['amount'],
+            $data['id_invoice'],
+            '',
+            '',
+            '',
+            ''
+        );
+    }
+
+    /**
+     * @param TableNode $table
+     *
+     * @return array
+     *
+     * @throws RuntimeException
+     */
+    private function extractFirstRowFromHorizontalTableDetails(TableNode $table)
+    {
+        /** @var array $hash */
+        $hash = $table->getHash();
+        if (count($hash) == 0) {
+            throw new RuntimeException('Payment details are invalid');
+        }
+
+        return $hash[0];
+    }
+
+    /**
+     * @param int $orderId
+     * @param OrderForViewing $orderForViewing
+     *
+     * @return OrderPaymentForViewing
+     *
+     * @throws RuntimeException
+     */
+    private function getFirstPaymentForViewing(int $orderId, OrderForViewing $orderForViewing): OrderPaymentForViewing
+    {
+        /** @var OrderPaymentsForViewing $orderPaymentsForViewing */
+        $orderPaymentsForViewing = $orderForViewing->getPayments();
+        /** @var OrderPaymentForViewing[] $orderPaymentForViewingArray */
+        $orderPaymentForViewingArray = $orderPaymentsForViewing->getPayments();
+        if (count($orderPaymentForViewingArray) == 0) {
+            throw new RuntimeException('Order [' . $orderId . '] has no payments for viewing');
+        }
+        /** @var OrderPaymentForViewing $orderPaymentForViewing */
+        $orderPaymentForViewing = $orderPaymentForViewingArray[0];
+
+        return $orderPaymentForViewing;
     }
 }
