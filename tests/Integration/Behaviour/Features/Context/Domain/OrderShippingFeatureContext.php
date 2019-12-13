@@ -16,15 +16,13 @@ class OrderShippingFeatureContext extends AbstractDomainFeatureContext
     ];
 
     /**
-     * @When I update order with id :reference Tracking number to :trackingNumber and Carrier to :carrier
+     * @When I update order :orderId Tracking number to :trackingNumber and Carrier to :carrier
      *
      * @param int $orderId
      * @param string $trackingNumber
      * @param string $carrier
-     *
-     * @throws RuntimeException
      */
-    public function iUpdateOrderWithIdTrackingNumberToAndCarrierTo(int $orderId, string $trackingNumber, string $carrier)
+    public function updateOrderTrackingNumberToAndCarrierTo(int $orderId, string $trackingNumber, string $carrier)
     {
         $oldOrderCarrierId = $this->getCarrierIdFromMap($carrier);
         $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
@@ -41,14 +39,14 @@ class OrderShippingFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Then order with id :orderId has Carrier :carrier
+     * @Then order :orderId has Carrier :carrier
      *
      * @param string $orderId
      * @param string $carrier
      *
      * @throws RuntimeException
      */
-    public function orderWithIdHasCarrier(string $orderId, string $carrier)
+    public function orderHasCarrier(string $orderId, string $carrier)
     {
         $carrierId = $this->getCarrierIdFromMap($carrier);
         /** @var OrderCarrierForViewing[] $orderCarriersForViewing */
@@ -104,14 +102,14 @@ class OrderShippingFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Then order with id :orderId has Tracking number :trackingNumber
+     * @Then order :orderId has Tracking number :trackingNumber
      *
      * @param int $orderId
      * @param string $trackingNumber
      *
      * @throws RuntimeException
      */
-    public function orderWithIdHasTrackingNumber(int $orderId, string $trackingNumber)
+    public function orderHasTrackingNumber(int $orderId, string $trackingNumber)
     {
         $orderCarriersForViewing = $this->getOrderCarriersForViewing($orderId);
         $orderTrackingNumberFromDb = $orderCarriersForViewing[0]->getTrackingNumber();
