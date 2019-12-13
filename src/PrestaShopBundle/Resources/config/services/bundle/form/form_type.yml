@@ -618,6 +618,7 @@ services:
         class: 'PrestaShopBundle\Form\Admin\Type\CountryChoiceType'
         arguments:
             - '@prestashop.core.form.choice_provider.country_by_id'
+            - '@prestashop.core.form.choice_provider.country_by_id'
         tags:
             - { name: form.type }
 
@@ -1066,6 +1067,7 @@ services:
       arguments:
         - '@translator'
         - '@prestashop.adapter.form.choice_provider.country_state_by_id'
+        - '@=service("prestashop.adapter.legacy.context").getContext().country.id'
       tags:
         - { name: form.type }
 

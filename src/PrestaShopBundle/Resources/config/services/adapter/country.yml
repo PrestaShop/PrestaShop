@@ -18,3 +18,5 @@ services:
 
   prestashop.adapter.country.country_required_fields_provider:
     class: 'PrestaShop\PrestaShop\Adapter\Country\CountryRequiredFieldsProvider'
+    arguments:
+      - '@prestashop.adapter.data_provider.country'

@@ -26,22 +26,23 @@
 
 namespace PrestaShopBundle\Form\Admin\Sell\Address;
 
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\AddressDniRequired;
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\AddressStateRequired;
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\AddressZipCode;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CleanHtml;
-use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CustomerAddressCountryRequiredFields;
-use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CustomerAddressZipCode;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\ExistingCustomerEmail;
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\NotBlankWhenRequired;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
 use PrestaShop\PrestaShop\Core\Domain\Address\Configuration\AddressConstraint;
 use PrestaShop\PrestaShop\Core\Domain\Address\ValueObject\RequiredFields;
 use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
 use PrestaShopBundle\Form\Admin\Type\CountryChoiceType;
-use PrestaShopBundle\Form\EventSubscriber\CustomerAddressFormSubscriber;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\Length;
@@ -63,15 +64,22 @@ class CustomerAddressType extends AbstractType
     private $stateChoiceProvider;
 
     /**
+     * @var int
+     */
+    private $contextCountryId;
+
+    /**
      * @param TranslatorInterface $translator
      * @param ConfigurableFormChoiceProviderInterface $stateChoiceProvider
      */
     public function __construct(
         TranslatorInterface $translator,
-        ConfigurableFormChoiceProviderInterface $stateChoiceProvider
+        ConfigurableFormChoiceProviderInterface $stateChoiceProvider,
+        $contextCountryId
     ) {
         $this->translator = $translator;
         $this->stateChoiceProvider = $stateChoiceProvider;
+        $this->contextCountryId = $contextCountryId;
     }
 
     /**
@@ -81,6 +89,7 @@ class CustomerAddressType extends AbstractType
     {
         $data = $builder->getData();
         $requiredFields = $data['required_fields'];
+        $countryId = 0 !== $data['id_country'] ? $data['id_country'] : $this->contextCountryId;
 
         if (!isset($data['id_customer'])) {
             $builder->add('customer_email', EmailType::class, [
@@ -111,7 +120,7 @@ class CustomerAddressType extends AbstractType
                     ]),
                     new CleanHtml(),
                     new TypedRegex([
-                        'type' => 'phone_number',
+                        'type' => TypedRegex::TYPE_PHONE_NUMBER,
                     ]),
                     new Length(
                         [
@@ -130,11 +139,15 @@ class CustomerAddressType extends AbstractType
         $builder
             ->add('dni', TextType::class, [
                 'required' => $this->isRequired(RequiredFields::REQUIRED_FIELD_DNI, $requiredFields),
+                'empty_data' => '',
                 'constraints' => [
-                    $this->getNotBlankOrNull(RequiredFields::REQUIRED_FIELD_DNI, $requiredFields),
+                    new AddressDniRequired([
+                        'id_country' => $countryId,
+                        'required' => $this->isRequired(RequiredFields::REQUIRED_FIELD_DNI, $requiredFields),
+                    ]),
                     new CleanHtml(),
                     new TypedRegex([
-                        'type' => 'dni_lite',
+                        'type' => TypedRegex::TYPE_DNI_LITE,
                     ]),
                     new Length(
                         [
@@ -158,7 +171,7 @@ class CustomerAddressType extends AbstractType
                     ]),
                     new CleanHtml(),
                     new TypedRegex([
-                        'type' => 'generic_name',
+                        'type' => TypedRegex::TYPE_GENERIC_NAME,
                     ]),
                     new Length(
                         [
@@ -182,7 +195,7 @@ class CustomerAddressType extends AbstractType
                     ]),
                     new CleanHtml(),
                     new TypedRegex([
-                        'type' => 'name',
+                        'type' => TypedRegex::TYPE_NAME,
                     ]),
                     new Length(
                         [
@@ -206,7 +219,7 @@ class CustomerAddressType extends AbstractType
                     ]),
                     new CleanHtml(),
                     new TypedRegex([
-                        'type' => 'name',
+                        'type' => TypedRegex::TYPE_NAME,
                     ]),
                     new Length(
                         [
@@ -222,11 +235,17 @@ class CustomerAddressType extends AbstractType
             ])
             ->add('company', TextType::class, [
                 'required' => $this->isRequired(RequiredFields::REQUIRED_FIELD_COMPANY, $requiredFields),
+                'empty_data' => '',
                 'constraints' => [
-                    $this->getNotBlankOrNull(RequiredFields::REQUIRED_FIELD_COMPANY, $requiredFields),
+                    new NotBlankWhenRequired([
+                        'required' => $this->isRequired(RequiredFields::REQUIRED_FIELD_COMPANY, $requiredFields),
+                        'message' => $this->translator->trans(
+                            'This field cannot be empty', [], 'Admin.Notifications.Error'
+                        ),
+                    ]),
                     new CleanHtml(),
                     new TypedRegex([
-                        'type' => 'generic_name',
+                        'type' => TypedRegex::TYPE_GENERIC_NAME,
                     ]),
                     new Length(
                         [
@@ -242,11 +261,17 @@ class CustomerAddressType extends AbstractType
             ])
             ->add('vat_number', TextType::class, [
                 'required' => $this->isRequired(RequiredFields::REQUIRED_FIELD_VAT_NUMBER, $requiredFields),
+                'empty_data' => '',
                 'constraints' => [
-                    $this->getNotBlankOrNull(RequiredFields::REQUIRED_FIELD_VAT_NUMBER, $requiredFields),
+                    new NotBlankWhenRequired([
+                        'required' => $this->isRequired(RequiredFields::REQUIRED_FIELD_VAT_NUMBER, $requiredFields),
+                        'message' => $this->translator->trans(
+                            'This field cannot be empty', [], 'Admin.Notifications.Error'
+                        ),
+                    ]),
                     new CleanHtml(),
                     new TypedRegex([
-                        'type' => 'generic_name',
+                        'type' => TypedRegex::TYPE_GENERIC_NAME,
                     ]),
                     new Length(
                         [
@@ -270,7 +295,7 @@ class CustomerAddressType extends AbstractType
                     ]),
                     new CleanHtml(),
                     new TypedRegex([
-                        'type' => 'address',
+                        'type' => TypedRegex::TYPE_ADDRESS,
                     ]),
                     new Length(
                         [
@@ -286,11 +311,17 @@ class CustomerAddressType extends AbstractType
             ])
             ->add('address2', TextType::class, [
                 'required' => $this->isRequired(RequiredFields::REQUIRED_FIELD_ADDRESS_2, $requiredFields),
+                'empty_data' => '',
                 'constraints' => [
-                    $this->getNotBlankOrNull(RequiredFields::REQUIRED_FIELD_ADDRESS_2, $requiredFields),
+                    new NotBlankWhenRequired([
+                        'required' => $this->isRequired(RequiredFields::REQUIRED_FIELD_ADDRESS_2, $requiredFields),
+                        'message' => $this->translator->trans(
+                            'This field cannot be empty', [], 'Admin.Notifications.Error'
+                        ),
+                    ]),
                     new CleanHtml(),
                     new TypedRegex([
-                        'type' => 'address',
+                        'type' => TypedRegex::TYPE_ADDRESS,
                     ]),
                     new Length(
                         [
@@ -314,7 +345,7 @@ class CustomerAddressType extends AbstractType
                     ]),
                     new CleanHtml(),
                     new TypedRegex([
-                        'type' => 'city_name',
+                        'type' => TypedRegex::TYPE_CITY_NAME,
                     ]),
                     new Length(
                         [
@@ -330,11 +361,15 @@ class CustomerAddressType extends AbstractType
             ])
             ->add('postcode', TextType::class, [
                 'required' => $this->isRequired(RequiredFields::REQUIRED_FIELD_POST_CODE, $requiredFields),
+                'empty_data' => '',
                 'constraints' => [
-                    $this->getNotBlankOrNull(RequiredFields::REQUIRED_FIELD_POST_CODE, $requiredFields),
+                    new AddressZipCode([
+                        'id_country' => $countryId,
+                        'required' => $this->isRequired(RequiredFields::REQUIRED_FIELD_POST_CODE, $requiredFields),
+                    ]),
                     new CleanHtml(),
                     new TypedRegex([
-                        'type' => 'post_code',
+                        'type' => TypedRegex::TYPE_POST_CODE,
                     ]),
                     new Length(
                         [
@@ -350,6 +385,8 @@ class CustomerAddressType extends AbstractType
             ])
             ->add('id_country', CountryChoiceType::class, [
                 'required' => true,
+                'withDniAttr' => true,
+                'withPostcodeAttr' => true,
                 'constraints' => [
                     new NotBlank([
                         'message' => $this->translator->trans(
@@ -358,13 +395,28 @@ class CustomerAddressType extends AbstractType
                     ]),
                 ],
             ])
+            ->add('id_state', ChoiceType::class, [
+                'required' => true,
+                'choices' => $this->stateChoiceProvider->getChoices(['id_country' => $countryId]),
+                'constraints' => [
+                    new AddressStateRequired([
+                        'id_country' => $countryId,
+                    ]),
+                ],
+            ])
             ->add('phone', TextType::class, [
                 'required' => $this->isRequired(RequiredFields::REQUIRED_FIELD_PHONE, $requiredFields),
+                'empty_data' => '',
                 'constraints' => [
-                    $this->getNotBlankOrNull(RequiredFields::REQUIRED_FIELD_PHONE, $requiredFields),
+                    new NotBlankWhenRequired([
+                        'required' => $this->isRequired(RequiredFields::REQUIRED_FIELD_PHONE, $requiredFields),
+                        'message' => $this->translator->trans(
+                            'This field cannot be empty', [], 'Admin.Notifications.Error'
+                        ),
+                    ]),
                     new CleanHtml(),
                     new TypedRegex([
-                        'type' => 'phone_number',
+                        'type' => TypedRegex::TYPE_PHONE_NUMBER,
                     ]),
                     new Length(
                         [
@@ -380,11 +432,17 @@ class CustomerAddressType extends AbstractType
             ])
             ->add('other', TextareaType::class, [
                 'required' => $this->isRequired(RequiredFields::REQUIRED_FIELD_OTHER, $requiredFields),
+                'empty_data' => '',
                 'constraints' => [
-                    $this->getNotBlankOrNull(RequiredFields::REQUIRED_FIELD_OTHER, $requiredFields),
+                    new NotBlankWhenRequired([
+                        'required' => $this->isRequired(RequiredFields::REQUIRED_FIELD_OTHER, $requiredFields),
+                        'message' => $this->translator->trans(
+                            'This field cannot be empty', [], 'Admin.Notifications.Error'
+                        ),
+                    ]),
                     new CleanHtml(),
                     new TypedRegex([
-                        'type' => 'message',
+                        'type' => TypedRegex::TYPE_MESSAGE,
                     ]),
                     new Length(
                         [
@@ -398,41 +456,6 @@ class CustomerAddressType extends AbstractType
                     ),
                 ],
             ]);
-
-        $builder->addEventSubscriber(new CustomerAddressFormSubscriber($this->stateChoiceProvider));
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function configureOptions(OptionsResolver $resolver)
-    {
-        $resolver->setDefaults(
-            [
-                'constraints' => [
-                    new CustomerAddressZipCode(),
-                    new CustomerAddressCountryRequiredFields(),
-                ],
-            ]
-        );
-    }
-
-    /**
-     * @param string $field
-     * @param array $requiredFields
-     *
-     * @return NotBlank|null
-     */
-    private function getNotBlankOrNull(string $field, array $requiredFields): ?NotBlank
-    {
-        return $this->isRequired($field, $requiredFields) ?
-            new NotBlank(
-                [
-                    'message' => $this->translator->trans(
-                        'This field cannot be empty', [], 'Admin.Notifications.Error'
-                    ),
-                ]
-            ) : null;
     }
 
     /**

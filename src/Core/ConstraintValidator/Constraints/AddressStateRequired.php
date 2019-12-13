@@ -24,14 +24,30 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Customer;
+namespace PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints;
 
-interface CustomerDataSourceInterface
+use PrestaShop\PrestaShop\Core\ConstraintValidator\AddressStateRequiredValidator;
+use Symfony\Component\Validator\Constraint;
+
+/**
+ * Validation constraint for address state choice by selected country value
+ */
+class AddressStateRequired extends Constraint
 {
+    public $message = 'An address located in a country containing states must have a state selected.';
+
+    public $id_country;
+
     /**
-     * @param string $email
-     *
-     * @return bool
+     * {@inheritdoc}
      */
-    public function hasCustomerWithEmail(string $email): bool;
+    public function validatedBy()
+    {
+        return AddressStateRequiredValidator::class;
+    }
+
+    public function getRequiredOptions()
+    {
+        return ['id_country'];
+    }
 }

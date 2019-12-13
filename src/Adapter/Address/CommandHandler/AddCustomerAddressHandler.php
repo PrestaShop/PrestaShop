@@ -86,42 +86,15 @@ final class AddCustomerAddressHandler implements AddCustomerAddressHandlerInterf
         $address->id_country = $command->getCountryId()->getValue();
         $address->city = $command->getCity();
         $address->alias = $command->getAddressAlias();
-
-        if (null !== $command->getPostCode()) {
-            $address->postcode = $command->getPostCode();
-        }
-
-        if (null !== $command->getAddress2()) {
-            $address->address2 = $command->getAddress2();
-        }
-
-        if (null !== $command->getIdNumber()) {
-            $address->dni = $command->getIdNumber();
-        }
-
-        if (null !== $command->getCompany()) {
-            $address->company = $command->getCompany();
-        }
-
-        if (null !== $command->getVatNumber()) {
-            $address->vat_number = $command->getVatNumber();
-        }
-
-        if (null !== $command->getStateId()) {
-            $address->id_state = $command->getStateId()->getValue();
-        }
-
-        if (null !== $command->getHomePhone()) {
-            $address->phone = $command->getHomePhone();
-        }
-
-        if (null !== $command->getMobilePhone()) {
-            $address->phone_mobile = $command->getMobilePhone();
-        }
-
-        if (null !== $command->getOther()) {
-            $address->other = $command->getOther();
-        }
+        $address->postcode = $command->getPostCode();
+        $address->address2 = $command->getAddress2();
+        $address->dni = $command->getDni();
+        $address->company = $command->getCompany();
+        $address->vat_number = $command->getVatNumber();
+        $address->id_state = $command->getStateId()->getValue();
+        $address->phone = $command->getHomePhone();
+        $address->phone_mobile = $command->getMobilePhone();
+        $address->other = $command->getOther();
 
         return $address;
     }

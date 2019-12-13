@@ -34,8 +34,8 @@ final class CustomerDataSource implements CustomerDataSourceInterface
     /**
      * {@inheritdoc}
      */
-    public function hasCustomerByEmail(string $email): bool
+    public function hasCustomerWithEmail(string $email): bool
     {
-        return Customer::customerExists($email);
+        return Customer::customerExists($email, false, false);
     }
 }

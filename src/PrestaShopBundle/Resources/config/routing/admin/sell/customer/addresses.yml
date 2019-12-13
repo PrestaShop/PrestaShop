@@ -61,11 +61,3 @@ admin_addresses_save_required_fields:
     _controller: PrestaShopBundle:Admin\Sell\Address\Address:saveRequiredFields
     _legacy_controller: AdminAddresses
 #    _legacy_link: AdminAddresses:submitFields
-
-admin_customer_for_address_information:
-  path: /customer-information
-  methods: [GET]
-  defaults:
-    _controller: PrestaShopBundle:Admin\Sell\Address\Address:getCustomerInformation
-    _legacy_controller: AdminAddresses
-#    _legacy_link: AdminAddresses:loadNames

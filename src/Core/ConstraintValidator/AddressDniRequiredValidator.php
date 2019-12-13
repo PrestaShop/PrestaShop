@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -27,15 +27,16 @@
 namespace PrestaShop\PrestaShop\Core\ConstraintValidator;
 
 use PrestaShop\PrestaShop\Core\Country\CountryRequiredFieldsProviderInterface;
-use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
 use Symfony\Component\Validator\Constraint;
+use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\ConstraintValidator;
+use Symfony\Component\Validator\ConstraintViolationInterface;
 
 /**
- * Validates customer address state choice by selected country value
+ * Validates address DNI according to the country value and fields requirement
  */
-final class CustomerAddressCountryRequiredFieldsValidator extends ConstraintValidator
+class AddressDniRequiredValidator extends ConstraintValidator
 {
     /**
      * @var CountryRequiredFieldsProviderInterface
@@ -52,39 +53,23 @@ final class CustomerAddressCountryRequiredFieldsValidator extends ConstraintVali
 
     /**
      * {@inheritdoc}
-     *
-     * @throws CountryConstraintException
      */
     public function validate($value, Constraint $constraint)
     {
-        $countryId = (int) $value['id_country'];
-        $stateId = isset($value['id_state']) ? $value['id_state'] : null;
-        $dni = isset($value['dni']) ? $value['dni'] : null;
+        $countryId = new CountryId((int) $constraint->id_country);
 
-        $countryIdVo = new CountryId($countryId);
+        if ($this->countryRequiredFieldsProvider->isDniRequired($countryId) || $constraint->required) {
+            $constraints = [new NotBlank([
+                'message' => $constraint->message,
+            ])];
 
-        if ($this->countryRequiredFieldsProvider->isStatesRequired($countryIdVo) && null === $stateId) {
-            $this->context->buildViolation($constraint->stateRequiredMessage)
-                ->atPath('[id_state]')
-                ->setTranslationDomain('Admin.Orderscustomers.Notification')
-                ->addViolation()
-            ;
-        }
-
-        if (!$this->countryRequiredFieldsProvider->isStatesRequired($countryIdVo) && null !== $stateId) {
-            $this->context->buildViolation($constraint->countryStateMessage)
-                ->atPath('[id_state]')
-                ->setTranslationDomain('Admin.Orderscustomers.Notification')
-                ->addViolation()
-            ;
-        }
-
-        if ($this->countryRequiredFieldsProvider->isDniRequired($countryIdVo) && null !== $dni) {
-            $this->context->buildViolation($constraint->message)
-                ->atPath('[dni]')
-                ->setTranslationDomain('Admin.Notifications.Error')
-                ->addViolation()
-            ;
+            /** @var ConstraintViolationInterface[] $violations */
+            $violations = $this->context->getValidator()->validate($value, $constraints);
+            foreach ($violations as $violation) {
+                $this->context->buildViolation($violation->getMessage())
+                    ->setTranslationDomain('Admin.Notifications.Error')
+                    ->addViolation();
+            }
         }
     }
 }

@@ -26,32 +26,32 @@
 const $ = window.$;
 
 /**
- * Toggle DNI input requirement on country selection
+ * Toggle Postcode input requirement on country selection
  *
  * Usage:
  *
- * <!-- Country select options must have need_dni attribute when needed -->
+ * <!-- Country select options must have need_postcode attribute when needed -->
  * <select name="id_country" id="id_country" states-url="path/to/states/api">
  *   ...
- *   <option value="6" need_dni="1">Spain</value>
+ *   <option value="6" need_postcode="1">Spain</value>
  *   ...
  * </select>
  *
  * In JS:
  *
- * new CountryDniRequiredToggler('#id_country', '#id_country_dni', 'label[for="id_country_dni"]');
+ * new CountryPostcodeRequiredToggler('#id_country', '#id_country_postcode', 'label[for="id_country_postcode"]');
  */
-export default class CountryDniRequiredToggler {
-  constructor(countryInputSelector, countryDniInput, countryDniInputLabel) {
-    this.$countryDniInput = $(countryDniInput);
-    this.$countryDniInputLabel = $(countryDniInputLabel);
+export default class CountryPostcodeRequiredToggler {
+  constructor(countryInputSelector, countryPostcodeInput, countryPostcodeInputLabel) {
+    this.$countryPostcodeInput = $(countryPostcodeInput);
+    this.$countryPostcodeInputLabel = $(countryPostcodeInputLabel);
     this.$countryInput = $(countryInputSelector);
     this.countryInputSelectedSelector = `${countryInputSelector}>option:selected`;
-    this.countryDniInputLabelDangerSelector = `${countryDniInputLabel}>span.text-danger`;
+    this.countryPostcodeInputLabelDangerSelector = `${countryPostcodeInputLabel}>span.text-danger`;
 
     // If field is required regardless of the country
     // keep it required
-    if (this.$countryDniInput.attr('required')) {
+    if (this.$countryPostcodeInput.attr('required')) {
       return;
     }
 
@@ -62,17 +62,17 @@ export default class CountryDniRequiredToggler {
   }
 
   /**
-   * Toggles DNI input required
+   * Toggles Postcode input required
    *
    * @private
    */
   _toggle() {
     const $countrySelectedOption = $(this.countryInputSelectedSelector);
-    $(this.countryDniInputLabelDangerSelector).remove();
-    this.$countryDniInput.attr('required', false);
-    if (1 === parseInt($countrySelectedOption.attr('need_dni'), 10)) {
-      this.$countryDniInput.attr('required', true);
-      this.$countryDniInputLabel.prepend($('<span class="text-danger">*</span>'));
+    $(this.countryPostcodeInputLabelDangerSelector).remove();
+    this.$countryPostcodeInput.attr('required', false);
+    if (1 === parseInt($countrySelectedOption.attr('need_postcode'), 10)) {
+      this.$countryPostcodeInput.attr('required', true);
+      this.$countryPostcodeInputLabel.prepend($('<span class="text-danger">*</span>'));
     }
   }
 }

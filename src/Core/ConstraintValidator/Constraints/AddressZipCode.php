@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -24,14 +24,32 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Customer;
+namespace PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints;
 
-interface CustomerDataSourceInterface
+use PrestaShop\PrestaShop\Core\ConstraintValidator\AddressZipCodeValidator;
+use Symfony\Component\Validator\Constraint;
+
+/**
+ * Address zip code validation constraint
+ */
+class AddressZipCode extends Constraint
 {
+    public $requiredMessage = 'A Zip/postal code is required.';
+
+    public $id_country;
+
+    public $required;
+
     /**
-     * @param string $email
-     *
-     * @return bool
+     * {@inheritdoc}
      */
-    public function hasCustomerWithEmail(string $email): bool;
+    public function validatedBy()
+    {
+        return AddressZipCodeValidator::class;
+    }
+
+    public function getRequiredOptions()
+    {
+        return ['id_country', 'required'];
+    }
 }

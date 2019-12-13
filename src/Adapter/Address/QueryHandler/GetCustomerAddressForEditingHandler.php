@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Address\QueryHandler;
 
 use Customer;
-use PrestaShop\PrestaShop\Adapter\Address\AbstractAddressHandler;
+use PrestaShop\PrestaShop\Adapter\Address\AbstractCustomerAddressHandler;
 use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressException;
 use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Address\Query\GetCustomerAddressForEditing;
@@ -39,12 +39,13 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
 use PrestaShop\PrestaShop\Core\Domain\State\Exception\StateConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\State\ValueObject\StateId;
 use PrestaShopException;
 
 /**
  * Handles query which gets customer address for editing
  */
-final class GetCustomerAddressForEditingHandler extends AbstractAddressHandler implements GetCustomerAddressForEditingHandlerInterface
+final class GetCustomerAddressForEditingHandler extends AbstractCustomerAddressHandler implements GetCustomerAddressForEditingHandlerInterface
 {
     /**
      * {@inheritdoc}
@@ -85,44 +86,17 @@ final class GetCustomerAddressForEditingHandler extends AbstractAddressHandler i
             $address->address1,
             $address->city,
             new CountryId((int) $address->id_country),
+            $address->postcode,
+            $address->dni,
+            $address->company,
+            $address->vat_number,
+            $address->address2,
+            new StateId($address->id_state),
+            $address->phone,
+            $address->phone_mobile,
+            $address->other,
             $this->getRequiredFields()
         );
-
-        if (null !== $address->postcode) {
-            $editableCustomerAddress->setPostCode($address->postcode);
-        }
-
-        if (null !== $address->dni) {
-            $editableCustomerAddress->setIdNumber($address->dni);
-        }
-
-        if (null !== $address->company) {
-            $editableCustomerAddress->setCompany($address->company);
-        }
-
-        if (null !== $address->vat_number) {
-            $editableCustomerAddress->setVatNumber($address->vat_number);
-        }
-
-        if (null !== $address->address2) {
-            $editableCustomerAddress->setAddress2($address->address2);
-        }
-
-        if (null !== $address->id_state && $address->id_state > 0) {
-            $editableCustomerAddress->setStateId($address->id_state);
-        }
-
-        if (null !== $address->phone) {
-            $editableCustomerAddress->setHomePhone($address->phone);
-        }
-
-        if (null !== $address->phone_mobile) {
-            $editableCustomerAddress->setMobilePhone($address->phone_mobile);
-        }
-
-        if (null !== $address->other) {
-            $editableCustomerAddress->setOther($address->other);
-        }
 
         return $editableCustomerAddress;
     }

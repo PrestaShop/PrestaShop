@@ -1,5 +1,4 @@
-<?php
-/**
+/*
  * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
@@ -24,14 +23,33 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Customer;
+const $ = window.$;
 
-interface CustomerDataSourceInterface
-{
-    /**
-     * @param string $email
-     *
-     * @return bool
-     */
-    public function hasCustomerWithEmail(string $email): bool;
+export default class AutocompleteWithEmail {
+  constructor(emailInputSelector, map = []) {
+    this.map = map;
+    this.$emailInput = $(emailInputSelector);
+    this.$emailInput.on('change', () => this._change());
+  }
+
+  _change() {
+    $.ajax({
+      url: this.$emailInput.data('customer-information-url'),
+      method: 'GET',
+      dataType: 'json',
+      data: {
+        email: this.$emailInput.val(),
+      },
+    }).then((response) => {
+      Object.keys(this.map).forEach((key) => {
+        if (response[key] !== undefined) {
+          $(this.map[key]).val(response[key]);
+        }
+      });
+    }).catch((response) => {
+      if (typeof response.responseJSON !== 'undefined') {
+        showErrorMessage(response.responseJSON.message);
+      }
+    });
+  }
 }
