@@ -7,14 +7,14 @@ Feature: Theme mail templates
 
   Scenario: generate theme mail templates in single shop context
     Given single shop context is loaded
-    When I generate emails with the following properties:
+    When I generate emails with the following details:
       | theme_name | language | overwrite_templates  | core_mails_folder | modules_mail_folder |
       | classic    | en       |                      |                   |                     |
     Then mails folder with sub folder "en" exists
 
   Scenario: generate theme mail templates in multiple shop context
     Given multiple shop context is loaded
-    When I generate emails with the following properties:
+    When I generate emails with the following details:
       | theme_name | language | overwrite_templates  | core_mails_folder | modules_mail_folder |
       | classic    | en       |                      |                   |                     |
     Then mails folder with sub folder "en" exists

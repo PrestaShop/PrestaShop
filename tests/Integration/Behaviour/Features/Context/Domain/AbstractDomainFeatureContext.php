@@ -34,8 +34,7 @@ use ObjectModel;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use Psr\Container\ContainerInterface;
 use RuntimeException;
-use Symfony\Component\DependencyInjection\Exception\ServiceCircularReferenceException;
-use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
+use Shop;
 use Tests\Integration\Behaviour\Features\Context\CommonFeatureContext;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 
@@ -64,9 +63,6 @@ abstract class AbstractDomainFeatureContext implements Context
 
     /**
      * @return CommandBusInterface
-     *
-     * @throws ServiceCircularReferenceException
-     * @throws ServiceNotFoundException
      */
     protected function getCommandBus()
     {
@@ -75,9 +71,6 @@ abstract class AbstractDomainFeatureContext implements Context
 
     /**
      * @return CommandBusInterface
-     *
-     * @throws ServiceCircularReferenceException
-     * @throws ServiceNotFoundException
      */
     protected function getQueryBus()
     {
@@ -158,5 +151,21 @@ abstract class AbstractDomainFeatureContext implements Context
         }
 
         return $localizedArray;
+    }
+
+    /**
+     * @Given single shop context is loaded
+     */
+    protected function singleShopContextIsLoaded()
+    {
+        Shop::setContext(Shop::CONTEXT_SHOP);
+    }
+
+    /**
+     * @Given multiple shop context is loaded
+     */
+    protected function multipleShopContextIsLoaded()
+    {
+        Shop::setContext(Shop::CONTEXT_ALL);
     }
 }
