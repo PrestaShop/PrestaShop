@@ -71,14 +71,15 @@
         class="btn tooltip-link js-order-product-edit-btn"
         data-toggle="pstooltip"
         data-placement="top"
-        data-original-title="{{ 'Edit'|trans({}, 'Admin.Actions') }}">
-        <i class="material-icons js-order-product-edit-btn"
-           data-order-detail-id="{{ product.orderDetailId }}"
-           data-product-quantity="{{ product.quantity }}"
-           data-product-price-tax-incl="{{ product.unitPriceTaxInclRaw }}"
-           data-product-price-tax-excl="{{ product.unitPriceTaxExclRaw }}"
-           data-tax-rate="{{ product.taxRate }}"
-        >edit</i>
+        data-original-title="{{ 'Edit'|trans({}, 'Admin.Actions') }}"
+        data-order-detail-id="{{ product.orderDetailId }}"
+        data-product-quantity="{{ product.quantity }}"
+        data-product-price-tax-incl="{{ product.unitPriceTaxInclRaw }}"
+        data-product-price-tax-excl="{{ product.unitPriceTaxExclRaw }}"
+        data-tax-rate="{{ product.taxRate }}"
+        data-location="{{ product.location }}"
+        data-available-quantity="{{ product.availableQuantity }}">
+        <i class="material-icons">edit</i>
       </button>
       <button
         type="button"

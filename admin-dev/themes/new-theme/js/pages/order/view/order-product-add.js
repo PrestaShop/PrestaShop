@@ -27,7 +27,7 @@ import Router from '../../../components/router';
 import OrderViewPageMap from '../OrderViewPageMap';
 import {EventEmitter} from '../../../components/event-emitter';
 import OrderViewEventMap from './order-view-event-map';
-import OrderPricesTax from "./order-prices-tax";
+import OrderPrices from "./order-prices";
 
 const $ = window.$;
 
@@ -43,6 +43,8 @@ export default class OrderProductAdd {
     this.taxRateInput = $(OrderViewPageMap.productAddTaxRateInput);
     this.quantityInput = $(OrderViewPageMap.productAddQuantityInput);
     this.availableText = $(OrderViewPageMap.productAddAvailableText);
+    this.locationText = $(OrderViewPageMap.productAddLocationText);
+    this.totalPriceText = $(OrderViewPageMap.productAddTotalPriceText);
     this.available = null;
     this.setupListener();
     this.product = {};
@@ -63,20 +65,42 @@ export default class OrderProductAdd {
       const available = this.available - quantity;
       this.availableText.text(available);
       this.availableText.toggleClass('text-danger font-weight-bold', available < 0);
+      if (available < 0) {
+        this.productAddActionBtn.attr('disabled', 'disabled');
+      } else {
+        this.productAddActionBtn.removeAttr('disabled');
+      }
+
+      const priceTaxCalculator = new OrderPrices();
+      const taxIncluded = parseFloat(this.priceTaxIncludedInput.val());
+      this.totalPriceText.html(
+        priceTaxCalculator.calculateTotalPrice(quantity, taxIncluded)
+      );
     });
     this.productIdInput.on('change', () => {
       this.productAddActionBtn.removeAttr('disabled');
     });
     this.priceTaxIncludedInput.on('change keyup', (event) => {
-      const priceTaxCalculator = new OrderPricesTax();
-      this.priceTaxExcludedInput.val(
-        priceTaxCalculator.calculateTaxExcluded(event.target.value, this.taxRateInput.val())
+      const priceTaxCalculator = new OrderPrices();
+      const taxIncluded = parseFloat(event.target.value);
+      const taxExcluded = priceTaxCalculator.calculateTaxExcluded(
+        taxIncluded,
+        this.taxRateInput.val(),
+      );
+      const quantity = parseInt(this.quantityInput.val(), 10);
+      this.priceTaxExcludedInput.val(taxExcluded);
+      this.totalPriceText.html(
+        priceTaxCalculator.calculateTotalPrice(quantity, taxIncluded)
       );
     });
     this.priceTaxExcludedInput.on('change keyup', (event) => {
-      const priceTaxCalculator = new OrderPricesTax();
-      this.priceTaxIncludedInput.val(
-        priceTaxCalculator.calculateTaxIncluded(event.target.value, this.taxRateInput.val())
+      const priceTaxCalculator = new OrderPrices();
+      const taxExcluded = parseFloat(event.target.value);
+      const taxIncluded = priceTaxCalculator.calculateTaxIncluded(taxExcluded, this.taxRateInput.val());
+      const quantity = parseInt(this.quantityInput.val(), 10);
+      this.priceTaxIncludedInput.val(taxIncluded);
+      this.totalPriceText.html(
+        priceTaxCalculator.calculateTotalPrice(quantity, taxIncluded)
       );
     });
     this.productAddActionBtn.on('click', event => this.addProduct($(event.currentTarget).data('orderId')));
@@ -87,6 +111,7 @@ export default class OrderProductAdd {
     this.priceTaxExcludedInput.val(product.priceTaxExcl);
     this.priceTaxIncludedInput.val(product.priceTaxIncl);
     this.taxRateInput.val(product.taxRate);
+    this.locationText.html(product.location);
     this.available = product.stock;
     this.quantityInput.val(1);
     this.quantityInput.trigger('change');

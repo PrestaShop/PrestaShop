@@ -113,6 +113,11 @@ class OrderForViewing
     private $isDelivered;
 
     /**
+     * @var bool
+     */
+    private $isShipped;
+
+    /**
      * @var OrderPricesForViewing
      */
     private $prices;
@@ -169,6 +174,7 @@ class OrderForViewing
         bool $isValid,
         bool $hasInvoice,
         bool $isDelivered,
+        bool $isShipped,
         bool $invoiceManagementIsEnabled,
         DateTimeImmutable $createdAt,
         OrderCustomerForViewing $customer,
@@ -200,6 +206,7 @@ class OrderForViewing
         $this->orderId = $orderId;
         $this->currencyId = $currencyId;
         $this->isDelivered = $isDelivered;
+        $this->isShipped = $isShipped;
         $this->prices = $prices;
         $this->isTaxIncluded = $isTaxIncluded;
         $this->hasInvoice = $hasInvoice;
@@ -353,6 +360,14 @@ class OrderForViewing
     public function isDelivered(): bool
     {
         return $this->isDelivered;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isShipped(): bool
+    {
+        return $this->isShipped;
     }
 
     /**
