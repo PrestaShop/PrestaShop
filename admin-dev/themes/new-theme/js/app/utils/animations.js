@@ -23,9 +23,14 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+/**
+ * Get the correct transition keyword of the browser.
+ * @param {string} type - The property name (transition for example).
+ * @param {string} lifecycle - Which lifecycle of the property name to catch (end, start...).
+ * @return {string} The transition keywoard of the browser.
+*/
 const getAnimationEvent = (type, lifecycle) => {
   const el = document.createElement('element');
-  let browserTransition;
   const typeUpper = type.charAt(0).toUpperCase() + type.substring(1);
   const lifecycleUpper = lifecycle.charAt(0).toUpperCase() + lifecycle.substring(1);
 
@@ -36,13 +41,9 @@ const getAnimationEvent = (type, lifecycle) => {
     WebkitTransition: `webkit${typeUpper}${lifecycleUpper}`,
   };
 
-  Object.keys(properties).forEach((e) => {
-    if (el.style[e] !== undefined) {
-      browserTransition = properties[e];
-    }
-  });
+  const key = Object.keys(properties).find(propKey => el.style[propKey] !== undefined);
 
-  return browserTransition;
+  return key !== undefined ? properties[key] : false;
 };
 
 export default getAnimationEvent;

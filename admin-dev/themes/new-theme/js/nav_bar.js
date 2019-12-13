@@ -26,16 +26,23 @@
 import PerfectScrollbar from 'perfect-scrollbar';
 import '@node_modules/perfect-scrollbar/css/perfect-scrollbar.css';
 import getAnimationEvent from './app/utils/animations';
+import NavbarTransitionHandler from './components/navbar-transition-handler';
 
 const {$} = window;
 
 export default class NavBar {
   constructor() {
     $(() => {
+      const $mainMenu = $('.main-menu');
       const $navBar = $('.nav-bar');
+      const $body = $('body');
       new PerfectScrollbar($navBar.get(0));
-      let endTransitionEvent = getAnimationEvent('transition', 'end');
-      let transitionFired = false;
+      const NavBarTransitions = new NavbarTransitionHandler(
+        $navBar,
+        $mainMenu,
+        getAnimationEvent('transition', 'end'),
+        $body
+      );
 
       $navBar.find('.link-levelone').hover(
         function onMouseEnter() {
@@ -88,29 +95,13 @@ export default class NavBar {
           $submenu.find('i.material-icons.sub-tabs-arrow').text('keyboard_arrow_up');
         });
 
-      function showNavBarContent(event) {
-        if (event.propertyName == 'width') {
-          $navBar[0].removeEventListener(endTransitionEvent, showNavBarContent);
-
-          $('.main-menu').toggleClass('sidebar-closed');
-
-          transitionFired = false;
-        }
-      }
-
       $navBar.on(
         'click',
         '.menu-collapse',
         function onNavBarClick() {
           $('body').toggleClass('page-sidebar-closed');
 
-          if(!transitionFired) {
-            transitionFired = true;
-            $navBar[0].addEventListener(endTransitionEvent, showNavBarContent);
-          }else {
-            $navBar[0].removeEventListener(endTransitionEvent, showNavBarContent);
-            transitionFired = false;
-          }
+          NavBarTransitions.toggle();
 
           $('.popover.show').remove();
           $('.help-box[aria-describedby]').removeAttr('aria-describedby');
