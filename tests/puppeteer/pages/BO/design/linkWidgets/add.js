@@ -1,7 +1,7 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
-module.exports = class AddBlock extends BOBasePage {
+module.exports = class AddLinkWidget extends BOBasePage {
   constructor(page) {
     super(page);
 
@@ -184,6 +184,6 @@ module.exports = class AddBlock extends BOBasePage {
     await this.addCustomPages(linkWidgetData.customPages);
     // Save
     await this.clickAndWaitForNavigation(this.saveButton);
-    return this.getContent(this.alertSuccessBlockParagraph);
+    return this.getTextContent(this.alertSuccessBlockParagraph);
   }
 };
