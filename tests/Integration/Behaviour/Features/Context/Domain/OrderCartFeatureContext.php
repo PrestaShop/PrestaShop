@@ -3,28 +3,22 @@
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 use PHPUnit_Framework_Assert;
-use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartInformation;
 use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\DuplicateOrderCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderCustomerForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderForViewing;
-use Symfony\Component\DependencyInjection\Exception\ServiceCircularReferenceException;
-use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 
 class OrderCartFeatureContext extends AbstractDomainFeatureContext
 {
     /**
-     * @Given order with id :orderId has customer with id :customerId
+     * @Given order :orderId has customer :customerId
      *
      * @param int $orderId
      * @param int $customerId
-     *
-     * @throws ServiceCircularReferenceException
-     * @throws ServiceNotFoundException
      */
-    public function orderWithIdHasCustomerWithId(int $orderId, int $customerId)
+    public function orderHasCustomer(int $orderId, int $customerId)
     {
         /** @var OrderForViewing $orderForViewing */
         $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
@@ -39,43 +33,22 @@ class OrderCartFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Given there is cart with id :cartId
-     *
-     * @param int $cartId
-     *
-     * @throws CartConstraintException
-     * @throws ServiceCircularReferenceException
-     * @throws ServiceNotFoundException
-     */
-    public function thereIsCartWithId(int $cartId)
-    {
-        $this->getQueryBus()->handle(new GetCartInformation($cartId));
-    }
-
-    /**
-     * @When I duplicate order with id :orderId cart
+     * @When I duplicate order :orderId cart
      *
      * @param int $orderId
-     *
-     * @throws ServiceCircularReferenceException
-     * @throws ServiceNotFoundException
      */
-    public function iDuplicateOrderWithIdCart(int $orderId)
+    public function duplicateOrderCart(int $orderId)
     {
         $this->getCommandBus()->handle(new DuplicateOrderCartCommand($orderId));
     }
 
     /**
-     * @Then there is duplicated cart with id :cartId for cart with id :duplicatedCartId
+     * @Then there is duplicated cart :cartId for cart :duplicatedCartId
      *
      * @param int $cartId
      * @param int $duplicatedCartId
-     *
-     * @throws CartConstraintException
-     * @throws ServiceCircularReferenceException
-     * @throws ServiceNotFoundException
      */
-    public function thereIsDuplicatedCartWithIdForCartWithId(int $cartId, int $duplicatedCartId)
+    public function thereIsDuplicatedCartForCart(int $cartId, int $duplicatedCartId)
     {
         /** @var CartInformation $cartInformation */
         $cartInformation = $this->getQueryBus()->handle(new GetCartInformation($cartId));

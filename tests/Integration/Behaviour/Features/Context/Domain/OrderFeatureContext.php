@@ -32,19 +32,14 @@ use Context;
 use FrontController;
 use Order;
 use OrderState;
-use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\InvalidEmployeeIdException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\AddOrderFromBackOfficeCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\BulkChangeOrderStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\UpdateOrderStatusCommand;
-use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Invoice\Command\GenerateInvoiceCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\AddProductToOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
-use PrestaShopDatabaseException;
-use PrestaShopException;
 use Product;
 use RuntimeException;
 use stdClass;
@@ -77,13 +72,6 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
      * @param string $cartReference
      * @param string $paymentModuleName
      * @param string $orderStatus
-     *
-     * @throws OrderException
-     * @throws PrestaShopDatabaseException
-     * @throws PrestaShopException
-     * @throws RuntimeException
-     * @throws CartConstraintException
-     * @throws InvalidEmployeeIdException
      */
     public function placeOrderWithPaymentMethodAndOrderStatus(
         string $orderReference,
@@ -148,13 +136,11 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @When I add products with new invoice and the following properties:
+     * @When I add products to order with new invoice with the following products details:
      *
      * @param TableNode $table
-     *
-     * @throws RuntimeException
      */
-    public function iAddProductsWithNewInvoiceAndTheFollowingProperties(TableNode $table)
+    public function addProductsToOrderWithNewInvoiceWithTheFollowingProductsProperties(TableNode $table)
     {
         $data = $this->extractFirstRowFromProperties($table);
 
@@ -188,15 +174,12 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @When I update orders with ids :references status to :status
+     * @When I update orders :orderIdsString statuses to :status
      *
      * @param string $orderIdsString
      * @param string $status
-     *
-     * @throws OrderException
-     * @throws RuntimeException
      */
-    public function iUpdateOrdersWithIdsStatusTo(string $orderIdsString, string $status)
+    public function updateOrdersToStatuses(string $orderIdsString, string $status)
     {
         /** @var string[] $orderIdsString */
         $orderIdsString = explode(',', $orderIdsString);
@@ -214,14 +197,14 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Then order with id :orderId has status :status
+     * @Then order :orderId has status :status
      *
      * @param int $orderId
      * @param string $status
      *
      * @throws RuntimeException
      */
-    public function orderWithIdHasStatus(int $orderId, string $status)
+    public function orderHasStatus(int $orderId, string $status)
     {
         /** @var OrderForViewing $orderForViewing */
         $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
@@ -236,24 +219,12 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Given there is existing order with id :orderId
-     *
-     * @param int $orderId
-     */
-    public function thereIsExistingOrderWithId(int $orderId)
-    {
-        $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
-    }
-
-    /**
-     * @When I update order with id :orderId to status :status
+     * @When I update order :orderId status to :status
      *
      * @param int $orderId
      * @param string $status
-     *
-     * @throws RuntimeException
      */
-    public function iUpdateOrderWithIdToStatus(int $orderId, string $status)
+    public function updateOrderStatusTo(int $orderId, string $status)
     {
         $statusId = $this->getOrderStatusIdFromMap($status);
         $this->getCommandBus()->handle(
