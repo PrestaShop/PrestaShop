@@ -4,7 +4,7 @@
 		<i class="material-icons">chevron_left</i>
 	</span>
 
-	<ul class="main-menu">
+	<ul class="main-menu{if $collapse_menu} sidebar-closed{/if}">
 		{foreach $tabs as $level_1}
 			{if $level_1.active}
 				{* Dashboard exception *}

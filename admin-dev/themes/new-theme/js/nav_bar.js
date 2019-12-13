@@ -41,7 +41,7 @@ export default class NavBar {
         $navBar,
         $mainMenu,
         getAnimationEvent('transition', 'end'),
-        $body
+        $body,
       );
 
       $navBar.find('.link-levelone').hover(

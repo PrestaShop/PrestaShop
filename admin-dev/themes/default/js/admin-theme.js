@@ -103,6 +103,17 @@ function scroll_if_anchor(href) {
 }
 
 $(document).ready(function() {
+    const $mainMenu = $('.main-menu');
+    const $navBar = $('.nav-bar');
+    const $body = $('body');
+
+    const NavBarTransitions = new NavbarTransitionHandler(
+      $navBar,
+      $mainMenu,
+      getAnimationEvent('transition', 'end'),
+      $body
+    );
+
     $(".nav-bar").find(".link-levelone").hover(function() {
         $(this).addClass("-hover");
     }, function() {
@@ -150,6 +161,8 @@ $(document).ready(function() {
 
     $('.nav-bar').on('click', '.menu-collapse', function() {
         $('body').toggleClass('page-sidebar-closed');
+
+        NavBarTransitions.toggle();
 
         if ($('body').hasClass('page-sidebar-closed')) {
             $('nav.nav-bar ul.main-menu > li')

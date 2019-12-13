@@ -29,7 +29,8 @@
  * @param {string} lifecycle - Which lifecycle of the property name to catch (end, start...).
  * @return {string} The transition keywoard of the browser.
 */
-const getAnimationEvent = (type, lifecycle) => {
+
+function getAnimationEvent(type, lifecycle) {
   const el = document.createElement('element');
   const typeUpper = type.charAt(0).toUpperCase() + type.substring(1);
   const lifecycleUpper = lifecycle.charAt(0).toUpperCase() + lifecycle.substring(1);
@@ -41,9 +42,7 @@ const getAnimationEvent = (type, lifecycle) => {
     WebkitTransition: `webkit${typeUpper}${lifecycleUpper}`,
   };
 
-  const key = Object.keys(properties).find((propKey) => el.style[propKey] !== undefined);
+  const key = Object.keys(properties).find(propKey => el.style[propKey] !== undefined);
 
   return key !== undefined ? properties[key] : false;
-};
-
-export default getAnimationEvent;
+}
