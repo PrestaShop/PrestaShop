@@ -27,12 +27,12 @@
 namespace PrestaShop\PrestaShop\Adapter\Contact\QueryHandler;
 
 use Contact;
-use PrestaShop\PrestaShop\Core\Domain\Contact\QueryResult\EditableContact;
 use PrestaShop\PrestaShop\Core\Domain\Contact\Exception\ContactException;
 use PrestaShop\PrestaShop\Core\Domain\Contact\Exception\ContactNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Contact\Query\GetContactForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Contact\QueryHandler\GetContactForEditingHandlerInterface;
-use PrestaShopBundle\Utils\BoolParser;
+use PrestaShop\PrestaShop\Core\Domain\Contact\QueryResult\EditableContact;
+use PrestaShop\PrestaShop\Core\Util\BoolParser;
 use PrestaShopException;
 use Symfony\Component\Form\DataTransformerInterface;
 
@@ -74,7 +74,6 @@ final class GetContactForEditingHandler implements GetContactForEditingHandlerIn
                     )
                 );
             }
-
             $editableContact = new EditableContact(
                 $query->getContactId()->getValue(),
                 $contact->name,
