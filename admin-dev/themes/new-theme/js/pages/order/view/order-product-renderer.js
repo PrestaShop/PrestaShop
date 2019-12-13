@@ -34,14 +34,6 @@ export default class OrderProductRenderer {
     this.router = new Router();
   }
 
-  removeProductFromList(orderDetailId) {
-    const $productRow = $(OrderViewPageMap.productsTableRow(orderDetailId));
-    $productRow.hide('fast', () => $productRow.remove());
-
-    const numProducts = parseInt($(OrderViewPageMap.productsCount).html(), 10);
-    $(OrderViewPageMap.productsCount).html(numProducts - 1);
-  }
-
   addOrUpdateProductToList(orderProductId, newRow) {
     const $productRow = $(OrderViewPageMap.productsTableRow(orderProductId));
     if ($productRow.length > 0) {
@@ -49,18 +41,21 @@ export default class OrderProductRenderer {
     } else {
       $(OrderViewPageMap.productAddRow).before($(newRow).hide().fadeIn());
     }
-
-    const numProducts = parseInt($(OrderViewPageMap.productsCount).html(), 10);
-    $(OrderViewPageMap.productsCount).html(numProducts + 1);
   }
 
-  editProductFromToList(orderProductId, quantity, priceTaxIncl, priceTaxExcl, taxRate) {
+  updateNumProducts(numProducts) {
+    $(OrderViewPageMap.productsCount).html(numProducts);
+  }
+
+  editProductFromToList(orderProductId, quantity, priceTaxIncl, priceTaxExcl, taxRate, location, availableQuantity) {
     const $orderEdit = new OrderProductEdit(orderProductId);
     $orderEdit.displayProduct({
       price_tax_excl: priceTaxExcl,
       price_tax_incl: priceTaxIncl,
       tax_rate: taxRate,
-      quantity
+      quantity,
+      location,
+      availableQuantity
     });
     $(OrderViewPageMap.productAddActionBtn).addClass('d-none');
     $(OrderViewPageMap.productAddRow).addClass('d-none');
@@ -97,6 +92,7 @@ export default class OrderProductRenderer {
     $(OrderViewPageMap.productAddPriceTaxInclInput).val('');
     $(OrderViewPageMap.productAddQuantityInput).val('');
     $(OrderViewPageMap.productAddAvailableText).html('');
+    $(OrderViewPageMap.productAddLocationText).html('');
     $(OrderViewPageMap.productAddActionBtn).attr('disabled', 'disabled');
   }
 
@@ -127,6 +123,22 @@ export default class OrderProductRenderer {
     if (numPage === totalPage) {
       $(OrderViewPageMap.productsTablePaginationNext).addClass('disabled');
     }
+  }
+
+  paginationAddPage(numPage) {
+    const $tablePagination = $(OrderViewPageMap.productsTablePagination);
+    $tablePagination.data('numPages', numPage);
+    const $linkPagination = $(OrderViewPageMap.productsTablePaginationTemplate).clone();
+    $linkPagination.find('span').attr('data-page', numPage);
+    $linkPagination.find('span').html(numPage);
+    $(OrderViewPageMap.productsTablePaginationTemplate).before($linkPagination.removeClass('d-none'));
+  }
+
+  paginationRemovePage(numPage) {
+    const $tablePagination = $(OrderViewPageMap.productsTablePagination);
+    const numPages = $tablePagination.data('numPages');
+    $tablePagination.data('numPages', numPages - 1);
+    $(OrderViewPageMap.productsTablePagination).find(`li:has(> [data-page="${numPage}"])`).remove();
   }
 
   paginateRowCreate(result, orderId) {
@@ -166,7 +178,9 @@ export default class OrderProductRenderer {
         .data('productQuantity', result.quantity)
         .data('productPriceTaxIncl', result.unitPriceTaxInclRaw)
         .data('productPriceTaxExcl', result.unitPriceTaxExclRaw)
-        .data('taxRate', result.taxRate);
+        .data('taxRate', result.taxRate)
+        .data('location', result.location)
+        .data('availableQuantity', result.availableQuantity);
       $productRow.find('td.cellProductActions .js-order-product-delete-btn')
         .data('orderId', orderId)
         .data('orderDetailId', result.orderDetailId);
