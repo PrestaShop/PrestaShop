@@ -5,17 +5,14 @@ Feature: Showcase card
   As a BO user
   I should be able to close showcase card
 
-  Background:
-    Given employee with id 1 exists
-
   Scenario: close showcase card in single shop context
     Given single shop context is loaded
-    When I close "seo-urls_card" showcase card as employee with id 1
-    Then showcase card "seo-urls_card" for employee with id 1 should be closed
+    When I close "seo-urls_card" showcase card as employee 1
+    Then showcase card "seo-urls_card" for employee 1 should be closed
 
 # todo: remove after resolving the issue
 # Showcase card reappear after closing it in multistore context: https://github.com/PrestaShop/PrestaShop/issues/12390
   Scenario: close showcase card in multiple shops context
     Given multiple shop context is loaded
-    When I close "seo-urls_card" showcase card as employee with id 1
-    Then showcase card "seo-urls_card" for employee with id 1 should be closed
+    When I close "seo-urls_card" showcase card as employee 1
+    Then showcase card "seo-urls_card" for employee 1 should be closed
