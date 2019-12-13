@@ -230,7 +230,7 @@ class AdminModuleController {
 
   onModuleDisabled() {
     const self = this;
-    const moduleItemSelector = self.getModuleItemSelector();
+    self.getModuleItemSelector();
 
     $('.modules-list').each(() => {
       self.updateTotalResults();
@@ -361,6 +361,7 @@ class AdminModuleController {
     let key = self.currentSorting;
     const splittedKey = key.split('-');
     if (splittedKey.length > 1) {
+      /* eslint-disable-next-line prefer-destructuring */
       key = splittedKey[0];
       if (splittedKey[1] === 'desc') {
         order = 'desc';
@@ -373,8 +374,8 @@ class AdminModuleController {
       if (key === 'access') {
         aData = (new Date(aData)).getTime();
         bData = (new Date(bData)).getTime();
-        aData = isNaN(aData) ? 0 : aData;
-        bData = isNaN(bData) ? 0 : bData;
+        aData = Number.isNaN(aData) ? 0 : aData;
+        bData = Number.isNaN(bData) ? 0 : bData;
         if (aData === bData) {
           return b.name.localeCompare(a.name);
         }
@@ -443,6 +444,15 @@ class AdminModuleController {
 
     const modulesListLength = self.modulesList.length;
     const counter = {};
+    const checkTag = (index, value) => {
+      newValue = value.toLowerCase();
+      tagExists |= (
+        currentModule.name.indexOf(newValue) !== -1
+        || currentModule.description.indexOf(newValue) !== -1
+        || currentModule.author.indexOf(newValue) !== -1
+        || currentModule.techName.indexOf(newValue) !== -1
+      );
+    };
 
     for (let i = 0; i < modulesListLength; i += 1) {
       currentModule = self.modulesList[i];
@@ -466,15 +476,7 @@ class AdminModuleController {
         // Check for tag list
         if (self.currentTagsList.length) {
           tagExists = false;
-          $.each(self.currentTagsList, (index, value) => {
-            newValue = value.toLowerCase();
-            tagExists |= (
-              currentModule.name.indexOf(newValue) !== -1
-              || currentModule.description.indexOf(newValue) !== -1
-              || currentModule.author.indexOf(newValue) !== -1
-              || currentModule.techName.indexOf(newValue) !== -1
-            );
-          });
+          $.each(self.currentTagsList, checkTag);
           isVisible &= tagExists;
         }
 
@@ -526,8 +528,11 @@ class AdminModuleController {
 
     $(window).on('beforeunload', () => {
       if (self.isUploadStarted === true) {
-        return 'It seems some critical operation are running, are you sure you want to change page ? It might cause some unexepcted behaviors.';
+        return 'It seems some critical operation are running, are you sure you want to change page? '
+          + 'It might cause some unexepcted behaviors.';
       }
+
+      return true;
     });
   }
 
@@ -585,7 +590,7 @@ class AdminModuleController {
         },
       }).done((response) => {
         if (response.success === 1) {
-          location.reload();
+          window.location.reload();
         } else {
           $.growl.error({message: response.message});
           $(self.addonsLoginButtonSelector).hide();
@@ -612,6 +617,7 @@ class AdminModuleController {
       'click',
       this.moduleImportFailureRetrySelector,
       () => {
+        /* eslint-disable-next-line max-len */
         $(`${self.moduleImportSuccessSelector},${self.moduleImportFailureSelector},${self.moduleImportProcessingSelector}`).fadeOut(() => {
           /**
            * Added timeout for a better render of animation
@@ -786,7 +792,7 @@ class AdminModuleController {
    */
   displayPrestaTrustStep(result) {
     const self = this;
-    const modal = self.moduleCardController._replacePrestaTrustPlaceholders(result);
+    const modal = self.moduleCardController.replacePrestaTrustPlaceholders(result);
     const moduleName = result.module.attributes.name;
 
     $(this.moduleImportConfirmSelector).html(modal.find('.modal-body').html()).fadeIn();
@@ -850,13 +856,11 @@ class AdminModuleController {
       to_update: $('#subtab-AdminModulesUpdates'),
     };
 
-    for (const key in destinationTabs) {
-      if (destinationTabs[key].length === 0) {
-        continue;
+    Object.keys(destinationTabs).forEach((destinationKey) => {
+      if (destinationTabs[destinationKey].length !== 0) {
+        destinationTabs[destinationKey].find('.notification-counter').text(badge[destinationKey]);
       }
-
-      destinationTabs[key].find('.notification-counter').text(badge[key]);
-    }
+    });
   }
 
   initAddonsSearch() {
@@ -947,7 +951,13 @@ class AdminModuleController {
     // Maybe useful to implement this kind of things later if intended to
     // use this functionality elsewhere but "manage my module" section
     if (typeof bulkActionToUrl[requestedBulkAction] === 'undefined') {
-      $.growl.error({message: window.translate_javascripts['Bulk Action - Request not found'].replace('[1]', requestedBulkAction)});
+      $.growl.error(
+        {
+          message: window
+            .translate_javascripts['Bulk Action - Request not found']
+            .replace('[1]', requestedBulkAction),
+        },
+      );
       return false;
     }
 
@@ -1008,7 +1018,7 @@ class AdminModuleController {
     }
 
     function requestModuleAction(actionMenuLink, disableCacheClear, requestEndCallback) {
-      self.moduleCardController._requestToController(
+      self.moduleCardController.requestToController(
         bulkModuleAction,
         actionMenuLink,
         forceDeletion,
@@ -1018,7 +1028,7 @@ class AdminModuleController {
     }
 
     function countdownModulesRequest() {
-      modulesRequestedCountdown--;
+      modulesRequestedCountdown -= 1;
       // Now that all other modules have performed their action WITHOUT cache clear, we
       // can request the last module request WITH cache clear
       if (modulesRequestedCountdown <= 0) {
@@ -1034,16 +1044,16 @@ class AdminModuleController {
       }
     }
 
-    function filterAllowedActions(modulesActions) {
-      const actionMenuLinks = [];
+    function filterAllowedActions(actions) {
+      const menuLinks = [];
       let actionMenuLink;
-      $.each(modulesActions, (index, moduleData) => {
+      $.each(actions, (index, moduleData) => {
         actionMenuLink = $(
           self.moduleCardController.moduleActionMenuLinkSelector + bulkModuleAction,
           moduleData.actionMenuObj,
         );
         if (actionMenuLink.length > 0) {
-          actionMenuLinks.push(actionMenuLink);
+          menuLinks.push(actionMenuLink);
         } else {
           $.growl.error({
             message: window.translate_javascripts['Bulk Action - Request not available for module']
@@ -1053,7 +1063,7 @@ class AdminModuleController {
         }
       });
 
-      return actionMenuLinks;
+      return menuLinks;
     }
   }
 
@@ -1213,6 +1223,7 @@ class AdminModuleController {
   }
 
   updateTotalResults() {
+    const self = this;
     const replaceFirstWordBy = (element, value) => {
       const explodedText = element.text().split(' ');
       explodedText[0] = value;

@@ -30,7 +30,7 @@ const {$} = window;
  */
 export default class ResetThemeLayoutsHandler {
   constructor() {
-    $(document).on('click', '.js-reset-theme-layouts-btn', (e) => this._handleResetting(e));
+    $(document).on('click', '.js-reset-theme-layouts-btn', (e) => this.handleResetting(e));
 
     return {};
   }
@@ -40,7 +40,7 @@ export default class ResetThemeLayoutsHandler {
    *
    * @private
    */
-  _handleResetting(event) {
+  handleResetting(event) {
     const $btn = $(event.currentTarget);
 
     const $form = $('<form>', {

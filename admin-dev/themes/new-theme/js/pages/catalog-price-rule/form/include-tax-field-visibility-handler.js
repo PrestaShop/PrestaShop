@@ -32,8 +32,8 @@ export default class IncludeTaxFieldVisibilityHandler {
   constructor(sourceSelector, targetSelector) {
     this.$sourceSelector = $(sourceSelector);
     this.$targetSelector = $(targetSelector);
-    this._handle();
-    this.$sourceSelector.on('change', () => this._handle());
+    this.handle();
+    this.$sourceSelector.on('change', () => this.handle());
 
     return {};
   }
@@ -43,7 +43,7 @@ export default class IncludeTaxFieldVisibilityHandler {
    *
    * @private
    */
-  _handle() {
+  handle() {
     if (this.$sourceSelector.val() === 'percentage') {
       this.$targetSelector.fadeOut();
     } else {

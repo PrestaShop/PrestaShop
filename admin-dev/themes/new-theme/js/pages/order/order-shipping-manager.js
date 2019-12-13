@@ -28,10 +28,10 @@ const {$} = window;
 
 export default class OrderShippingManager {
   constructor() {
-    this._initOrderShippingUpdateEventHandler();
+    this.initOrderShippingUpdateEventHandler();
   }
 
-  _initOrderShippingUpdateEventHandler() {
+  initOrderShippingUpdateEventHandler() {
     $(OrderViewPageMap.showOrderShippingUpdateModalBtn).on('click', (event) => {
       const $btn = $(event.currentTarget);
 

@@ -46,11 +46,11 @@ export default class ProductManager {
     this.router = new Router();
     this.cartEditor = new CartEditor();
 
-    this._initListeners();
+    this.initListeners();
 
     return {
-      search: (searchPhrase) => this._search(searchPhrase),
-      addProductToCart: (cartId) => this.cartEditor.addProduct(cartId, this._getProductData()),
+      search: (searchPhrase) => this.search(searchPhrase),
+      addProductToCart: (cartId) => this.cartEditor.addProduct(cartId, this.getProductData()),
       removeProductFromCart: (cartId, product) => this.cartEditor.removeProductFromCart(cartId, product),
     };
   }
@@ -60,13 +60,13 @@ export default class ProductManager {
    *
    * @private
    */
-  _initListeners() {
-    $(createOrderMap.productSelect).on('change', (e) => this._initProductSelect(e));
-    $(createOrderMap.combinationsSelect).on('change', (e) => this._initCombinationSelect(e));
+  initListeners() {
+    $(createOrderMap.productSelect).on('change', (e) => this.initProductSelect(e));
+    $(createOrderMap.combinationsSelect).on('change', (e) => this.initCombinationSelect(e));
 
-    this._onProductSearch();
-    this._onAddProductToCart();
-    this._onRemoveProductFromCart();
+    this.onProductSearch();
+    this.onAddProductToCart();
+    this.onRemoveProductFromCart();
   }
 
   /**
@@ -74,11 +74,11 @@ export default class ProductManager {
    *
    * @private
    */
-  _onProductSearch() {
+  onProductSearch() {
     EventEmitter.on(eventMap.productSearched, (response) => {
       this.products = JSON.parse(response);
       this.productRenderer.renderSearchResults(this.products);
-      this._selectFirstResult();
+      this.selectFirstResult();
     });
   }
 
@@ -87,7 +87,7 @@ export default class ProductManager {
    *
    * @private
    */
-  _onAddProductToCart() {
+  onAddProductToCart() {
     EventEmitter.on(eventMap.productAddedToCart, (cartInfo) => {
       EventEmitter.emit(eventMap.cartLoaded, cartInfo);
     });
@@ -98,7 +98,7 @@ export default class ProductManager {
    *
    * @private
    */
-  _onRemoveProductFromCart() {
+  onRemoveProductFromCart() {
     EventEmitter.on(eventMap.productRemovedFromCart, (cartInfo) => {
       EventEmitter.emit(eventMap.cartLoaded, cartInfo);
     });
@@ -111,9 +111,9 @@ export default class ProductManager {
    *
    * @private
    */
-  _initProductSelect(event) {
+  initProductSelect(event) {
     const productId = Number($(event.currentTarget).find(':selected').val());
-    this._selectProduct(productId);
+    this.selectProduct(productId);
   }
 
   /**
@@ -123,9 +123,9 @@ export default class ProductManager {
    *
    * @private
    */
-  _initCombinationSelect(event) {
+  initCombinationSelect(event) {
     const combinationId = Number($(event.currentTarget).find(':selected').val());
-    this._selectCombination(combinationId);
+    this.selectCombination(combinationId);
   }
 
   /**
@@ -133,7 +133,7 @@ export default class ProductManager {
    *
    * @private
    */
-  _search(searchPhrase) {
+  search(searchPhrase) {
     if (searchPhrase.length < 3) {
       return;
     }
@@ -160,11 +160,11 @@ export default class ProductManager {
    *
    * @private
    */
-  _selectFirstResult() {
-    this._unsetProduct();
+  selectFirstResult() {
+    this.unsetProduct();
 
     if (this.products.length !== 0) {
-      this._selectProduct(Object.keys(this.products)[0]);
+      this.selectProduct(Object.keys(this.products)[0]);
     }
   }
 
@@ -175,8 +175,8 @@ export default class ProductManager {
    *
    * @param productId
    */
-  _selectProduct(productId) {
-    this._unsetCombination();
+  selectProduct(productId) {
+    this.unsetCombination();
 
     this.selectedProductId = productId;
     const product = this.products[productId];
@@ -185,7 +185,7 @@ export default class ProductManager {
 
     // if product has combinations select the first else leave it null
     if (product.combinations.length !== 0) {
-      this._selectCombination(Object.keys(product.combinations)[0]);
+      this.selectCombination(Object.keys(product.combinations)[0]);
     }
 
     return product;
@@ -198,7 +198,7 @@ export default class ProductManager {
    *
    * @private
    */
-  _selectCombination(combinationId) {
+  selectCombination(combinationId) {
     const combination = this.products[this.selectedProductId].combinations[combinationId];
 
     this.selectedCombinationId = combinationId;
@@ -212,7 +212,7 @@ export default class ProductManager {
    *
    * @private
    */
-  _unsetCombination() {
+  unsetCombination() {
     this.selectedCombinationId = null;
   }
 
@@ -221,7 +221,7 @@ export default class ProductManager {
    *
    * @private
    */
-  _unsetProduct() {
+  unsetProduct() {
     this.selectedProductId = null;
   }
 
@@ -231,14 +231,14 @@ export default class ProductManager {
    * @returns {FormData}
    * @private
    */
-  _getProductData() {
+  getProductData() {
     const formData = new FormData();
 
     formData.append('productId', this.selectedProductId);
     formData.append('quantity', $(createOrderMap.quantityInput).val());
     formData.append('combinationId', this.selectedCombinationId);
 
-    this._getCustomFieldsData(formData);
+    this.getCustomFieldsData(formData);
 
     return formData;
   }
@@ -252,7 +252,7 @@ export default class ProductManager {
    *
    * @private
    */
-  _getCustomFieldsData(formData) {
+  getCustomFieldsData(formData) {
     const $customFields = $(createOrderMap.productCustomInput);
 
     $customFields.each((key, field) => {

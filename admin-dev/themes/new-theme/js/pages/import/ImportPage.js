@@ -49,8 +49,11 @@ export default class ImportPage {
     $('.js-import-form').on('submit', function () {
       const $this = $(this);
       if ($this.find('input[name="truncate"]:checked').val() === '1') {
-        return confirm(`${$this.data('delete-confirm-message')} ${$.trim($('#entity > option:selected').text().toLowerCase())}?`);
+        /* eslint-disable-next-line max-len */
+        return window.confirm(`${$this.data('delete-confirm-message')} ${$.trim($('#entity > option:selected').text().toLowerCase())}?`);
       }
+
+      return true;
     });
   }
 

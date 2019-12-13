@@ -91,38 +91,38 @@ export default class ModuleCard {
       if ($('#modal-prestatrust').length) {
         $('#modal-prestatrust').modal('hide');
       }
-      return self._dispatchPreEvent('install', this) && self._confirmAction('install', this) && self._requestToController('install', $(this));
+      return self.dispatchPreEvent('install', this) && self._confirmAction('install', this) && self.requestToController('install', $(this));
     });
     $(document).on('click', this.moduleActionMenuEnableLinkSelector, function () {
-      return self._dispatchPreEvent('enable', this) && self._confirmAction('enable', this) && self._requestToController('enable', $(this));
+      return self.dispatchPreEvent('enable', this) && self._confirmAction('enable', this) && self.requestToController('enable', $(this));
     });
     $(document).on('click', this.moduleActionMenuUninstallLinkSelector, function () {
-      return self._dispatchPreEvent('uninstall', this) && self._confirmAction('uninstall', this) && self._requestToController('uninstall', $(this));
+      return self.dispatchPreEvent('uninstall', this) && self._confirmAction('uninstall', this) && self.requestToController('uninstall', $(this));
     });
     $(document).on('click', this.moduleActionMenuDisableLinkSelector, function () {
-      return self._dispatchPreEvent('disable', this) && self._confirmAction('disable', this) && self._requestToController('disable', $(this));
+      return self.dispatchPreEvent('disable', this) && self._confirmAction('disable', this) && self.requestToController('disable', $(this));
     });
     $(document).on('click', this.moduleActionMenuEnableMobileLinkSelector, function () {
-      return self._dispatchPreEvent('enable_mobile', this) && self._confirmAction('enable_mobile', this) && self._requestToController('enable_mobile', $(this));
+      return self.dispatchPreEvent('enable_mobile', this) && self._confirmAction('enable_mobile', this) && self.requestToController('enable_mobile', $(this));
     });
     $(document).on('click', this.moduleActionMenuDisableMobileLinkSelector, function () {
-      return self._dispatchPreEvent('disable_mobile', this) && self._confirmAction('disable_mobile', this) && self._requestToController('disable_mobile', $(this));
+      return self.dispatchPreEvent('disable_mobile', this) && self._confirmAction('disable_mobile', this) && self.requestToController('disable_mobile', $(this));
     });
     $(document).on('click', this.moduleActionMenuResetLinkSelector, function () {
-      return self._dispatchPreEvent('reset', this) && self._confirmAction('reset', this) && self._requestToController('reset', $(this));
+      return self.dispatchPreEvent('reset', this) && self._confirmAction('reset', this) && self.requestToController('reset', $(this));
     });
     $(document).on('click', this.moduleActionMenuUpdateLinkSelector, function () {
-      return self._dispatchPreEvent('update', this) && self._confirmAction('update', this) && self._requestToController('update', $(this));
+      return self.dispatchPreEvent('update', this) && self._confirmAction('update', this) && self.requestToController('update', $(this));
     });
 
     $(document).on('click', this.moduleActionModalDisableLinkSelector, function () {
-      return self._requestToController('disable', $(self.moduleActionMenuDisableLinkSelector, $(`div.module-item-list[data-tech-name='${$(this).attr('data-tech-name')}']`)));
+      return self.requestToController('disable', $(self.moduleActionMenuDisableLinkSelector, $(`div.module-item-list[data-tech-name='${$(this).attr('data-tech-name')}']`)));
     });
     $(document).on('click', this.moduleActionModalResetLinkSelector, function () {
-      return self._requestToController('reset', $(self.moduleActionMenuResetLinkSelector, $(`div.module-item-list[data-tech-name='${$(this).attr('data-tech-name')}']`)));
+      return self.requestToController('reset', $(self.moduleActionMenuResetLinkSelector, $(`div.module-item-list[data-tech-name='${$(this).attr('data-tech-name')}']`)));
     });
     $(document).on('click', this.moduleActionModalUninstallLinkSelector, (e) => {
-      $(e.target).parents('.modal').on('hidden.bs.modal', ((event) => self._requestToController(
+      $(e.target).parents('.modal').on('hidden.bs.modal', (() => self.requestToController(
         'uninstall',
         $(
           self.moduleActionMenuUninstallLinkSelector,
@@ -156,33 +156,33 @@ export default class ModuleCard {
    * @param {array} result containing module data
    * @return {void}
    */
-  _confirmPrestaTrust(result) {
+  confirmPrestaTrust(result) {
     const that = this;
-    const modal = this._replacePrestaTrustPlaceholders(result);
+    const modal = this.replacePrestaTrustPlaceholders(result);
 
     modal.find('.pstrust-install').off('click').on('click', () => {
       // Find related form, update it and submit it
-      const install_button = $(that.moduleActionMenuInstallLinkSelector, `.module-item[data-tech-name="${result.module.attributes.name}"]`);
-      const form = install_button.parent('form');
+      const installButton = $(that.moduleActionMenuInstallLinkSelector, `.module-item[data-tech-name="${result.module.attributes.name}"]`);
+      const form = installButton.parent('form');
       $('<input>').attr({
         type: 'hidden',
         value: '1',
         name: 'actionParams[confirmPrestaTrust]',
       }).appendTo(form);
 
-      install_button.click();
+      installButton.click();
       modal.modal('hide');
     });
 
     modal.modal();
   }
 
-  _replacePrestaTrustPlaceholders(result) {
+  replacePrestaTrustPlaceholders(result) {
     const modal = $('#modal-prestatrust');
     const module = result.module.attributes;
 
     if (result.confirmation_subject !== 'PrestaTrust' || !modal.length) {
-      return;
+      return false;
     }
 
     const alertClass = module.prestatrust.status ? 'success' : 'warning';
@@ -206,7 +206,7 @@ export default class ModuleCard {
     return modal;
   }
 
-  _dispatchPreEvent(action, element) {
+  dispatchPreEvent(action, element) {
     const event = jQuery.Event('module_card_action_event');
 
     $(element).trigger(event, [action]);
@@ -217,7 +217,7 @@ export default class ModuleCard {
     return (event.result !== false); // explicit false must be set from handlers to stop propagation of the click event.
   }
 
-  _requestToController(action, element, forceDeletion, disableCacheClear, callback) {
+  requestToController(action, element, forceDeletion, disableCacheClear, callback) {
     const self = this;
     const jqElementObj = element.closest(this.moduleItemActionsSelector);
     const form = element.closest('form');
@@ -249,7 +249,7 @@ export default class ModuleCard {
 
         if (result[moduleTechName].status === false) {
           if (typeof result[moduleTechName].confirmation_subject !== 'undefined') {
-            self._confirmPrestaTrust(result[moduleTechName]);
+            self.confirmPrestaTrust(result[moduleTechName]);
           }
 
           $.growl.error({message: result[moduleTechName].msg});

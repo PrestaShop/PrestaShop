@@ -44,16 +44,15 @@ export default class CustomerRenderer {
    * @param foundCustomers
    */
   renderSearchResults(foundCustomers) {
-    this._clearShownCustomers();
+    this.clearShownCustomers();
 
     if (foundCustomers.length === 0) {
-      this._showNotFoundCustomers();
+      this.showNotFoundCustomers();
 
       return;
     }
 
-    for (const customerId in foundCustomers) {
-      const customerResult = foundCustomers[customerId];
+    Object.entries(foundCustomers).forEach((customerId, customerResult) => {
       const customer = {
         id: customerId,
         firstName: customerResult.firstname,
@@ -62,8 +61,8 @@ export default class CustomerRenderer {
         birthday: customerResult.birthday !== '0000-00-00' ? customerResult.birthday : ' ',
       };
 
-      this._renderFoundCustomer(customer);
-    }
+      this.renderFoundCustomer(customer);
+    });
   }
 
   /**
@@ -108,14 +107,14 @@ export default class CustomerRenderer {
       return;
     }
 
-    this._showCheckoutHistoryBlock();
+    this.showCheckoutHistoryBlock();
 
-    for (const key in carts) {
-      const cart = carts[key];
+    Object.values(carts).forEach((cart) => {
       // do not render current cart
       if (cart.cartId === currentCartId) {
-        continue;
+        return;
       }
+
       const $template = $cartsTableRowTemplate.clone();
 
       $template.find(createOrderMap.cartIdField).text(cart.cartId);
@@ -129,7 +128,7 @@ export default class CustomerRenderer {
       $template.find(createOrderMap.useCartBtn).data('cart-id', cart.cartId);
 
       $cartsTable.find('tbody').append($template);
-    }
+    });
   }
 
   /**
@@ -147,10 +146,9 @@ export default class CustomerRenderer {
       return;
     }
 
-    this._showCheckoutHistoryBlock();
+    this.showCheckoutHistoryBlock();
 
-    for (const key in Object.keys(orders)) {
-      const order = orders[key];
+    Object.values(orders).forEach((order) => {
       const $template = $rowTemplate.clone();
 
       $template.find(createOrderMap.orderIdField).text(order.orderId);
@@ -166,7 +164,7 @@ export default class CustomerRenderer {
       $template.find(createOrderMap.useOrderBtn).data('order-id', order.orderId);
 
       $ordersTable.find('tbody').append($template);
-    }
+    });
   }
 
   /**
@@ -178,7 +176,7 @@ export default class CustomerRenderer {
    *
    * @private
    */
-  _renderFoundCustomer(customer) {
+  renderFoundCustomer(customer) {
     const $customerSearchResultTemplate = $($(createOrderMap.customerSearchResultTemplate).html());
     const $template = $customerSearchResultTemplate.clone();
 
@@ -200,7 +198,7 @@ export default class CustomerRenderer {
    *
    * @private
    */
-  _showCheckoutHistoryBlock() {
+  showCheckoutHistoryBlock() {
     $(createOrderMap.customerCheckoutHistory).removeClass('d-none');
   }
 
@@ -209,7 +207,7 @@ export default class CustomerRenderer {
    *
    * @private
    */
-  _clearShownCustomers() {
+  clearShownCustomers() {
     this.$customerSearchResultBlock.empty();
   }
 
@@ -218,7 +216,7 @@ export default class CustomerRenderer {
    *
    * @private
    */
-  _showNotFoundCustomers() {
+  showNotFoundCustomers() {
     const $emptyResultTemplate = $($('#customerSearchEmptyResultTemplate').html());
 
     this.$customerSearchResultBlock.append($emptyResultTemplate);

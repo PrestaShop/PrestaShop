@@ -61,9 +61,7 @@ export default class AddressesRenderer {
     $addressesContent.removeClass('d-none');
     $addressesWarningContent.addClass('d-none');
 
-    for (const key in Object.keys(addresses)) {
-      const address = addresses[key];
-
+    Object.values(addresses).forEach((address) => {
       const deliveryAddressOption = {
         value: address.addressId,
         text: address.alias,
@@ -86,7 +84,7 @@ export default class AddressesRenderer {
 
       $deliveryAddressSelect.append($('<option>', deliveryAddressOption));
       $invoiceAddressSelect.append($('<option>', invoiceAddressOption));
-    }
+    });
 
     if (deliveryAddressDetailsContent) {
       $deliveryAddressDetails.html(deliveryAddressDetailsContent);
@@ -96,7 +94,7 @@ export default class AddressesRenderer {
       $invoiceAddressDetails.html(invoiceAddressDetailsContent);
     }
 
-    this._showAddressesBlock();
+    this.showAddressesBlock();
   }
 
   /**
@@ -104,7 +102,7 @@ export default class AddressesRenderer {
    *
    * @private
    */
-  _showAddressesBlock() {
+  showAddressesBlock() {
     $(createOrderPageMap.addressesBlock).removeClass('d-none');
   }
 }

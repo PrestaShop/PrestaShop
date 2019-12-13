@@ -30,9 +30,9 @@ const {$} = window;
  */
 export default class DisplayInCartOptionHandler {
   constructor() {
-    this._handle();
+    this.handle();
 
-    $('.js-enable-tax').on('change', () => this._handle());
+    $('.js-enable-tax').on('change', () => this.handle());
   }
 
   /**
@@ -40,7 +40,7 @@ export default class DisplayInCartOptionHandler {
    *
    * @private
    */
-  _handle() {
+  handle() {
     const enabledVal = $('.js-enable-tax:checked').val();
     const isTaxEnabled = parseInt(enabledVal, 10);
 

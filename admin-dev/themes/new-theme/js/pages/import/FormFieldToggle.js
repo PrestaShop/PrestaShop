@@ -44,7 +44,7 @@ export default class FormFieldToggle {
 
   toggleForm() {
     const selectedOption = $('#entity').find('option:selected');
-    const selectedEntity = parseInt(selectedOption.val());
+    const selectedEntity = parseInt(selectedOption.val(), 10);
     const entityName = selectedOption.text().toLowerCase();
 
     this.toggleEntityAlert(selectedEntity);
@@ -139,10 +139,10 @@ export default class FormFieldToggle {
       },
       dataType: 'json',
     }).then((response) => {
-      this._removeAvailableFields($availableFields);
+      this.removeAvailableFields($availableFields);
 
-      for (let i = 0; i < response.length; i++) {
-        this._appendAvailableField(
+      for (let i = 0; i < response.length; i += 1) {
+        this.appendAvailableField(
           $availableFields,
           response[i].label + (response[i].required ? '*' : ''),
           response[i].description,
@@ -159,7 +159,7 @@ export default class FormFieldToggle {
    * @param {jQuery} $container
    * @private
    */
-  _removeAvailableFields($container) {
+  removeAvailableFields($container) {
     $container.find('[data-toggle="popover"]').popover('hide');
     $container.empty();
   }
@@ -171,7 +171,7 @@ export default class FormFieldToggle {
    * @param {String} helpBoxContent
    * @private
    */
-  _appendHelpBox($field, helpBoxContent) {
+  appendHelpBox($field, helpBoxContent) {
     const $helpBox = $('.js-available-field-popover-template').clone();
 
     $helpBox.attr('data-content', helpBoxContent);
@@ -187,14 +187,14 @@ export default class FormFieldToggle {
    * @param {String} helpBoxContent
    * @private
    */
-  _appendAvailableField($appendTo, fieldText, helpBoxContent) {
+  appendAvailableField($appendTo, fieldText, helpBoxContent) {
     const $field = $('.js-available-field-template').clone();
 
     $field.text(fieldText);
 
     if (helpBoxContent) {
       // Append help box next to the field
-      this._appendHelpBox($field, helpBoxContent);
+      this.appendHelpBox($field, helpBoxContent);
     }
 
     $field.removeClass('js-available-field-template d-none');

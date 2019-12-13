@@ -45,7 +45,7 @@ export default class Importer {
    * @param {Object} configuration import configuration.
    */
   import(importUrl, configuration) {
-    this._mergeConfiguration(configuration);
+    this.mergeConfiguration(configuration);
     this.importUrl = importUrl;
 
     // Total number of rows to be imported.
@@ -60,7 +60,7 @@ export default class Importer {
     this.progressModal.show();
 
     // Starting the import with default batch size, which is adjusted for next iterations.
-    this._ajaxImport(0, this.defaultBatchSize);
+    this.ajaxImport(0, this.defaultBatchSize);
   }
 
   /**
@@ -72,23 +72,23 @@ export default class Importer {
    * @param {Object} recurringVariables variables which are recurring between import batch jobs.
    * @private
    */
-  _ajaxImport(offset, batchSize, validateOnly = true, recurringVariables = {}) {
-    this._mergeConfiguration({
+  ajaxImport(offset, batchSize, validateOnly = true, recurringVariables = {}) {
+    this.mergeConfiguration({
       offset,
       limit: batchSize,
       validateOnly: validateOnly ? 1 : 0,
       crossStepsVars: JSON.stringify(recurringVariables),
     });
 
-    this._onImportStart();
+    this.onImportStart();
 
     $.post({
       url: this.importUrl,
       dataType: 'json',
       data: this.configuration,
       success: (response) => {
-        if (this._importCancelRequested) {
-          this._cancelImport();
+        if (this.importCancelRequested) {
+          this.cancelImport();
           return false;
         }
 
@@ -121,7 +121,7 @@ export default class Importer {
           // If there are errors and it's not validation step - stop the import.
           // If it's validation step - we will show all errors once it finishes.
           if (!validateOnly) {
-            this._onImportStop();
+            this.onImportStop();
             return false;
           }
         } else if (hasWarnings) {
@@ -145,7 +145,7 @@ export default class Importer {
           }
 
           // Run the import again for the next batch.
-          return this._ajaxImport(
+          return this.ajaxImport(
             nextOffset,
             nextBatchSize,
             validateOnly,
@@ -159,14 +159,14 @@ export default class Importer {
         if (validateOnly) {
           // If errors occurred during validation - stop the import.
           if (this.hasErrors) {
-            this._onImportStop();
+            this.onImportStop();
             return false;
           }
 
           if (this.hasWarnings) {
             // Show the button to ignore warnings.
             this.progressModal.showContinueImportButton();
-            this._onImportStop();
+            this.onImportStop();
             return false;
           }
 
@@ -174,19 +174,20 @@ export default class Importer {
           this.progressModal.updateProgress(this.totalRowsCount, this.totalRowsCount);
 
           // Continue with the data import.
-          return this._ajaxImport(0, this.defaultBatchSize, false);
+          return this.ajaxImport(0, this.defaultBatchSize, false);
         }
 
         // Import is completely finished.
-        this._onImportFinish();
+        return this.onImportFinish();
       },
-      error: (XMLHttpRequest, textStatus, errorCode) => {
-        if (textStatus === 'parsererror') {
-          textStatus = 'Technical error: Unexpected response returned by server. Import stopped.';
+      error: (XMLHttpRequest, textStatus) => {
+        let txt = textStatus;
+        if (txt === 'parsererror') {
+          txt = 'Technical error: Unexpected response returned by server. Import stopped.';
         }
 
-        this._onImportStop();
-        this.progressModal.showErrorMessages([textStatus]);
+        this.onImportStop();
+        this.progressModal.showErrorMessages([txt]);
       },
     });
   }
@@ -196,13 +197,13 @@ export default class Importer {
    */
   continueImport() {
     if (!this.configuration) {
-      throw 'Missing import configuration. Make sure the import had started before continuing.';
+      throw new Error('Missing import configuration. Make sure the import had started before continuing.');
     }
 
     this.progressModal.hideContinueImportButton();
     this.progressModal.hideCloseModalButton();
     this.progressModal.clearWarningMessages();
-    this._ajaxImport(0, this.defaultBatchSize, false);
+    this.ajaxImport(0, this.defaultBatchSize, false);
   }
 
   /**
@@ -211,7 +212,7 @@ export default class Importer {
    * @param importConfiguration
    */
   set configuration(importConfiguration) {
-    this._importConfiguration = importConfiguration;
+    this.importConfiguration = importConfiguration;
   }
 
   /**
@@ -220,7 +221,7 @@ export default class Importer {
    * @returns {*}
    */
   get configuration() {
-    return this._importConfiguration;
+    return this.importConfiguration;
   }
 
   /**
@@ -229,7 +230,7 @@ export default class Importer {
    * @param {ImportProgressModal} modal
    */
   set progressModal(modal) {
-    this._modal = modal;
+    this.modal = modal;
   }
 
   /**
@@ -238,7 +239,7 @@ export default class Importer {
    * @returns {ImportProgressModal}
    */
   get progressModal() {
-    return this._modal;
+    return this.modal;
   }
 
   /**
@@ -246,7 +247,7 @@ export default class Importer {
    * Import operation will be cancelled at next iteration when requested.
    */
   requestCancelImport() {
-    this._importCancelRequested = true;
+    this.importCancelRequested = true;
   }
 
   /**
@@ -255,26 +256,24 @@ export default class Importer {
    * @param {Object} configuration
    * @private
    */
-  _mergeConfiguration(configuration) {
-    for (const key in configuration) {
-      this._importConfiguration[key] = configuration[key];
-    }
+  mergeConfiguration(configuration) {
+    this.importConfiguration = {...this.importConfiguration, ...configuration};
   }
 
   /**
    * Cancel the import process.
    * @private
    */
-  _cancelImport() {
+  cancelImport() {
     this.progressModal.hide();
-    this._importCancelRequested = false;
+    this.importCancelRequested = false;
   }
 
   /**
    * Additional actions when import is stopped.
    * @private
    */
-  _onImportStop() {
+  onImportStop() {
     this.progressModal.showCloseModalButton();
     this.progressModal.hideAbortImportButton();
   }
@@ -283,8 +282,8 @@ export default class Importer {
    * Additional actions when import is finished.
    * @private
    */
-  _onImportFinish() {
-    this._onImportStop();
+  onImportFinish() {
+    this.onImportStop();
     this.progressModal.showSuccessMessage();
     this.progressModal.setImportedProgressLabel();
     this.progressModal.updateProgress(this.totalRowsCount, this.totalRowsCount);
@@ -294,7 +293,7 @@ export default class Importer {
    * Additional actions when import is starting.
    * @private
    */
-  _onImportStart() {
+  onImportStart() {
     // Marking the start of import operation.
     this.batchSizeCalculator.markImportStart();
     this.progressModal.showAbortImportButton();

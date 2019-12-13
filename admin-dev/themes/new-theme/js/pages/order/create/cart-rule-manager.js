@@ -42,10 +42,10 @@ export default class CartRuleManager {
     this.cartRulesRenderer = new CartRulesRenderer();
     this.cartEditor = new CartEditor();
 
-    this._initListeners();
+    this.initListeners();
 
     return {
-      search: () => this._search(),
+      search: () => this.search(),
       stopSearching: () => this.cartRulesRenderer.hideResultsDropdown(),
       addCartRuleToCart: (cartRuleId, cartId) => this.cartEditor.addCartRuleToCart(cartRuleId, cartId),
       removeCartRuleFromCart: (cartRuleId, cartId) => this.cartEditor.removeCartRuleFromCart(cartRuleId, cartId),
@@ -57,11 +57,11 @@ export default class CartRuleManager {
    *
    * @private
    */
-  _initListeners() {
-    this._onCartRuleSearch();
-    this._onAddCartRuleToCart();
-    this._onAddCartRuleToCartFailure();
-    this._onRemoveCartRuleFromCart();
+  initListeners() {
+    this.onCartRuleSearch();
+    this.onAddCartRuleToCart();
+    this.onAddCartRuleToCartFailure();
+    this.onRemoveCartRuleFromCart();
   }
 
   /**
@@ -69,7 +69,7 @@ export default class CartRuleManager {
    *
    * @private
    */
-  _onCartRuleSearch() {
+  onCartRuleSearch() {
     EventEmitter.on(eventMap.cartRuleSearched, (cartRules) => {
       this.cartRulesRenderer.renderSearchResults(cartRules);
     });
@@ -80,7 +80,7 @@ export default class CartRuleManager {
    *
    * @private
    */
-  _onAddCartRuleToCart() {
+  onAddCartRuleToCart() {
     EventEmitter.on(eventMap.cartRuleAdded, (cartInfo) => {
       this.cartRulesRenderer.renderCartRulesBlock(cartInfo.cartRules, cartInfo.products.length === 0);
     });
@@ -91,7 +91,7 @@ export default class CartRuleManager {
    *
    * @private
    */
-  _onAddCartRuleToCartFailure() {
+  onAddCartRuleToCartFailure() {
     EventEmitter.on(eventMap.cartRuleFailedToAdd, (message) => {
       this.cartRulesRenderer.displayErrorMessage(message);
     });
@@ -102,7 +102,7 @@ export default class CartRuleManager {
    *
    * @private
    */
-  _onRemoveCartRuleFromCart() {
+  onRemoveCartRuleFromCart() {
     EventEmitter.on(eventMap.cartRuleRemoved, (cartInfo) => {
       this.cartRulesRenderer.renderCartRulesBlock(cartInfo.cartRules, cartInfo.products.length === 0);
     });
@@ -113,7 +113,7 @@ export default class CartRuleManager {
    *
    * @private
    */
-  _search(searchPhrase) {
+  search(searchPhrase) {
     if (searchPhrase.length < 3) {
       return;
     }

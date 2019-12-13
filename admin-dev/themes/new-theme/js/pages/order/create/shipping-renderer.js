@@ -45,11 +45,11 @@ export default class ShippingRenderer {
     const shippingIsAvailable = typeof shipping !== 'undefined' && shipping !== null && shipping.length !== 0;
 
     if (emptyCart) {
-      this._hideContainer();
+      this.hideContainer();
     } else if (shippingIsAvailable) {
-      this._displayForm(shipping);
+      this.displayForm(shipping);
     } else {
-      this._displayNoCarriersWarning();
+      this.displayNoCarriersWarning();
     }
   }
 
@@ -60,12 +60,12 @@ export default class ShippingRenderer {
    *
    * @private
    */
-  _displayForm(shipping) {
-    this._hideNoCarrierBlock();
-    this._renderDeliveryOptions(shipping.deliveryOptions, shipping.selectedCarrierId);
-    this._renderTotalShipping(shipping.shippingPrice);
-    this._showForm();
-    this._showContainer();
+  displayForm(shipping) {
+    this.hideNoCarrierBlock();
+    this.renderDeliveryOptions(shipping.deliveryOptions, shipping.selectedCarrierId);
+    this.renderTotalShipping(shipping.shippingPrice);
+    this.showForm();
+    this.showContainer();
   }
 
   /**
@@ -73,10 +73,10 @@ export default class ShippingRenderer {
    *
    * @private
    */
-  _displayNoCarriersWarning() {
-    this._showContainer();
-    this._hideForm();
-    this._showNoCarrierBlock();
+  displayNoCarriersWarning() {
+    this.showContainer();
+    this.hideForm();
+    this.showNoCarrierBlock();
   }
 
   /**
@@ -87,13 +87,11 @@ export default class ShippingRenderer {
    *
    * @private
    */
-  _renderDeliveryOptions(deliveryOptions, selectedVal) {
+  renderDeliveryOptions(deliveryOptions, selectedVal) {
     const $deliveryOptionSelect = $(createOrderPageMap.deliveryOptionSelect);
     $deliveryOptionSelect.empty();
 
-    for (const key in Object.keys(deliveryOptions)) {
-      const option = deliveryOptions[key];
-
+    Object.values(deliveryOptions).forEach((option) => {
       const deliveryOption = {
         value: option.carrierId,
         text: `${option.carrierName} - ${option.carrierDelay}`,
@@ -104,7 +102,7 @@ export default class ShippingRenderer {
       }
 
       $deliveryOptionSelect.append($('<option>', deliveryOption));
-    }
+    });
   }
 
   /**
@@ -114,7 +112,7 @@ export default class ShippingRenderer {
    *
    * @private
    */
-  _renderTotalShipping(shippingPrice) {
+  renderTotalShipping(shippingPrice) {
     const $totalShippingField = $(createOrderPageMap.totalShippingField);
     $totalShippingField.empty();
 
@@ -126,7 +124,7 @@ export default class ShippingRenderer {
    *
    * @private
    */
-  _showContainer() {
+  showContainer() {
     this.$container.removeClass('d-none');
   }
 
@@ -135,7 +133,7 @@ export default class ShippingRenderer {
    *
    * @private
    */
-  _hideContainer() {
+  hideContainer() {
     this.$container.addClass('d-none');
   }
 
@@ -144,7 +142,7 @@ export default class ShippingRenderer {
    *
    * @private
    */
-  _showForm() {
+  showForm() {
     this.$form.removeClass('d-none');
   }
 
@@ -153,7 +151,7 @@ export default class ShippingRenderer {
    *
    * @private
    */
-  _hideForm() {
+  hideForm() {
     this.$form.addClass('d-none');
   }
 
@@ -162,7 +160,7 @@ export default class ShippingRenderer {
    *
    * @private
    */
-  _showNoCarrierBlock() {
+  showNoCarrierBlock() {
     this.$noCarrierBlock.removeClass('d-none');
   }
 
@@ -171,7 +169,7 @@ export default class ShippingRenderer {
    *
    * @private
    */
-  _hideNoCarrierBlock() {
+  hideNoCarrierBlock() {
     this.$noCarrierBlock.addClass('d-none');
   }
 }
