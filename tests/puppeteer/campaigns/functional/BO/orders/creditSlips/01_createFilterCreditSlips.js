@@ -24,6 +24,10 @@ const {Statuses} = require('@data/demo/orders');
 
 let browser;
 let page;
+const today = new Date();
+// Create date today (yyy-mm-dd)
+const dateToday = `${today.getFullYear()}/${today.getMonth()}/${today.getDay()}`;
+let numberOfCreditSlips = 0;
 
 // Init objects needed
 const init = async function () {
@@ -58,7 +62,7 @@ describe('Create, filter and check credit slips file', async () => {
   // Login into BO
   loginCommon.loginBO();
 
-  describe('Create 2 credit slips', async () => {
+  describe('Create 2 credit slips for the same order', async () => {
     it('should go to FO and create an order', async function () {
       // Click on view my shop
       page = await this.pageObjects.boBasePage.viewMyShop();
@@ -136,4 +140,46 @@ describe('Create, filter and check credit slips file', async () => {
       await expect(documentName).to.be.equal('Credit Slip');
     });
   });
+
+  describe('Filter Credit slips', async () => {
+    it('should go to Credit slips page', async function () {
+      await this.pageObjects.boBasePage.goToSubMenu(
+        this.pageObjects.boBasePage.ordersParentLink,
+        this.pageObjects.boBasePage.creditSlips,
+      );
+      await this.pageObjects.boBasePage.closeSfToolBar();
+      const pageTitle = await this.pageObjects.creditSlipsPage.getPageTitle();
+      await expect(pageTitle).to.contains(this.pageObjects.creditSlipsPage.pageTitle);
+    });
+
+    it('should reset all filters and get number of credit slips', async function () {
+      numberOfCreditSlips = await this.pageObjects.creditSlipsPage.resetAndGetNumberOfLines();
+      await expect(numberOfCreditSlips).to.be.above(0);
+    });
+
+    const tests = [
+      {args: {filterBy: 'id_credit_slip', filterValue: 1, columnName: 'id_order_slip'}},
+      {args: {filterBy: 'id_order', filterValue: 4, columnName: 'id_order'}},
+      {args: {filterBy: 'date_issued_from', filterValue: dateToday, columnName: 'date_issued_from'}},
+      {args: {filterBy: 'date_issued_to', filterValue: dateToday, columnName: 'date_issued_to'}},
+    ];
+    tests.forEach((test) => {
+      it(`should filter by ${test.args.filterBy} '${test.args.filterValue}'`, async function () {
+        await this.pageObjects.creditSlipsPage.filterCreditSlips(
+          test.args.filterBy,
+          test.args.filterValue,
+        );
+        const numberOfCreditSlipsAfterFilter = await this.pageObjects.creditSlipsPage.getNumberOfElementInGrid();
+        await expect(numberOfCreditSlipsAfterFilter).to.be.at.most(numberOfCreditSlips);
+        for (let i = 1; i <= numberOfCreditSlipsAfterFilter; i++) {
+          const textColumn = await this.pageObjects.creditSlipsPage.getTextColumnFromTableCreditSlips(
+            i,
+            test.args.columnName,
+          );
+          await expect(textColumn).to.contains(test.args.filterValue);
+        }
+      });
+    });
+  });
 });
+
