@@ -64,7 +64,10 @@
                   {{ 'Value'|trans({}, 'Admin.Global') }}
                 </label>
 
-                {{ form_widget(addOrderCartRuleForm.value, {'type':'number'}) }}
+                <div class="input-group-append">
+                  <div class="input-group-text" id="add_order_cart_rule_value_unit" data-currency-symbol="{{ orderCurrency.symbol }}">%</div>
+                  {{ form_widget(addOrderCartRuleForm.value, {'type':'number'}) }}
+                </div>
                 <small class="text-muted js-cart-rule-value-help d-none">
                   {{ 'This value must include taxes.'|trans({}, 'Admin.Orderscustomers.Notification') }}
                 </small>

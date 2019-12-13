@@ -36,6 +36,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductCustomizationFi
 use PrestaShop\PrestaShop\Core\Localization\LocaleInterface;
 use PrestaShop\PrestaShop\Adapter\ContextStateManager;
 use Product;
+use Tools;
 
 /**
  * Handles products search using legacy object model
@@ -114,19 +115,18 @@ final class SearchProductsHandler implements SearchProductsHandlerInterface
         $priceTaxExcluded = Product::getPriceStatic($product->id, false);
         $priceTaxIncluded = Product::getPriceStatic($product->id, true);
 
-        $foundProduct = new FoundProduct(
+        return new FoundProduct(
             $product->id,
             $product->name[$this->contextLangId],
             $this->contextLocale->formatPrice($priceTaxExcluded, $query->getAlphaIsoCode()->getValue()),
-            $priceTaxIncluded,
-            $priceTaxExcluded,
+            Tools::ps_round($priceTaxIncluded, 2),
+            Tools::ps_round($priceTaxExcluded, 2),
             $product->getTaxesRate(),
             Product::getQuantity($product->id),
+            $product->location,
             $this->getProductCombinations($product, $query->getAlphaIsoCode()->getValue()),
             $this->getProductCustomizationFields($product)
         );
-
-        return $foundProduct;
     }
 
     /**
