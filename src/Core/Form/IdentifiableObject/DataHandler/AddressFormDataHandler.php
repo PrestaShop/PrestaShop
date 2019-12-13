@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler;
 
+use PrestaShop\PrestaShop\Adapter\Customer\CustomerDataProvider;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Address\Command\AddCustomerAddressCommand;
 use PrestaShop\PrestaShop\Core\Domain\Address\Command\EditCustomerAddressCommand;
@@ -33,8 +34,6 @@ use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressConstraintExcepti
 use PrestaShop\PrestaShop\Core\Domain\Address\ValueObject\AddressId;
 use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerException;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerForAddressCreation;
-use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\AddressCreationCustomerInformation;
 use PrestaShop\PrestaShop\Core\Domain\State\Exception\StateConstraintException;
 
 /**
@@ -48,11 +47,17 @@ final class AddressFormDataHandler implements FormDataHandlerInterface
     private $commandBus;
 
     /**
+     * @var CustomerDataProvider
+     */
+    private $customerDataProvider;
+
+    /**
      * @param CommandBusInterface $commandBus
      */
-    public function __construct(CommandBusInterface $commandBus)
+    public function __construct(CommandBusInterface $commandBus, CustomerDataProvider $customerDataProvider)
     {
         $this->commandBus = $commandBus;
+        $this->customerDataProvider = $customerDataProvider;
     }
 
     /**
@@ -64,54 +69,26 @@ final class AddressFormDataHandler implements FormDataHandlerInterface
      */
     public function create(array $data)
     {
-        /** @var AddressCreationCustomerInformation $addressCustomer */
-        $addressCustomer = $this->commandBus->handle(new GetCustomerForAddressCreation($data['customer_email']));
+        $customerId = $this->customerDataProvider->getIdByEmail($data['customer_email']);
 
         $addAddressCommand = new AddCustomerAddressCommand(
-            $addressCustomer->getCustomerId()->getValue(),
+            $customerId,
             $data['alias'],
             $data['first_name'],
             $data['last_name'],
             $data['address1'],
             $data['city'],
-            (int) $data['id_country']
+            (int) $data['id_country'],
+            $data['postcode'],
+            $data['dni'],
+            $data['company'],
+            $data['vat_number'],
+            $data['address2'],
+            (int) $data['id_state'],
+            $data['phone'],
+            $data['phone_mobile'] ?? null,
+            $data['other']
         );
-
-        if (null !== $data['postcode']) {
-            $addAddressCommand->setPostCode($data['postcode']);
-        }
-
-        if (null !== $data['dni']) {
-            $addAddressCommand->setIdNumber($data['dni']);
-        }
-
-        if (null !== $data['company']) {
-            $addAddressCommand->setCompany($data['company']);
-        }
-
-        if (null !== $data['vat_number']) {
-            $addAddressCommand->setVatNumber($data['vat_number']);
-        }
-
-        if (null !== $data['address2']) {
-            $addAddressCommand->setAddress2($data['address2']);
-        }
-
-        if (null !== $data['id_state']) {
-            $addAddressCommand->setStateId((int) $data['id_state']);
-        }
-
-        if (null !== $data['phone']) {
-            $addAddressCommand->setHomePhone($data['phone']);
-        }
-
-        if (isset($data['phone_mobile']) && null !== $data['phone_mobile']) {
-            $addAddressCommand->setMobilePhone($data['phone_mobile']);
-        }
-
-        if (null !== $data['other']) {
-            $addAddressCommand->setOther($data['other']);
-        }
 
         /** @var AddressId $addressId */
         $addressId = $this->commandBus->handle($addAddressCommand);
@@ -159,7 +136,7 @@ final class AddressFormDataHandler implements FormDataHandlerInterface
         }
 
         if (null !== $data['dni']) {
-            $editAddressCommand->setIdNumber($data['dni']);
+            $editAddressCommand->setDni($data['dni']);
         }
 
         if (null !== $data['company']) {

@@ -28,7 +28,6 @@ namespace PrestaShop\PrestaShop\Core\Domain\Address\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
 use PrestaShop\PrestaShop\Core\Domain\State\Exception\StateConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\State\ValueObject\StateId;
@@ -81,7 +80,7 @@ class AddCustomerAddressCommand
     /**
      * @var string|null
      */
-    private $idNumber;
+    private $dni;
 
     /**
      * @var string|null
@@ -126,9 +125,18 @@ class AddCustomerAddressCommand
      * @param string $address
      * @param string $city
      * @param int $countryId
+     * @param string $postcode
+     * @param string $dni
+     * @param string $company
+     * @param string $vat_number
+     * @param string $address2
+     * @param int $id_state
+     * @param string $phone
+     * @param string $phone_mobile
+     * @param string $other
      *
      * @throws CountryConstraintException
-     * @throws CustomerException
+     * @throws StateConstraintException
      */
     public function __construct(
         int $customerId,
@@ -137,7 +145,16 @@ class AddCustomerAddressCommand
         string $lastName,
         string $address,
         string $city,
-        int $countryId
+        int $countryId,
+        string $postcode,
+        string $dni,
+        string $company,
+        string $vat_number,
+        string $address2,
+        int $id_state,
+        string $phone,
+        ?string $phone_mobile,
+        string $other
     ) {
         $this->customerId = new CustomerId($customerId);
         $this->addressAlias = $addressAlias;
@@ -146,6 +163,15 @@ class AddCustomerAddressCommand
         $this->address = $address;
         $this->city = $city;
         $this->countryId = new CountryId($countryId);
+        $this->postCode = $postcode;
+        $this->dni = $dni;
+        $this->company = $company;
+        $this->vatNumber = $vat_number;
+        $this->address2 = $address2;
+        $this->stateId = new StateId($id_state);
+        $this->homePhone = $phone;
+        $this->mobilePhone = $phone_mobile;
+        $this->other = $other;
     }
 
     /**
@@ -205,18 +231,6 @@ class AddCustomerAddressCommand
     }
 
     /**
-     * @param string $postCode
-     *
-     * @return AddCustomerAddressCommand
-     */
-    public function setPostCode(string $postCode): AddCustomerAddressCommand
-    {
-        $this->postCode = $postCode;
-
-        return $this;
-    }
-
-    /**
      * @return CountryId
      */
     public function getCountryId(): CountryId
@@ -227,21 +241,9 @@ class AddCustomerAddressCommand
     /**
      * @return string|null
      */
-    public function getIdNumber(): ?string
+    public function getDni(): ?string
     {
-        return $this->idNumber;
-    }
-
-    /**
-     * @param string $idNumber
-     *
-     * @return AddCustomerAddressCommand
-     */
-    public function setIdNumber(string $idNumber): AddCustomerAddressCommand
-    {
-        $this->idNumber = $idNumber;
-
-        return $this;
+        return $this->dni;
     }
 
     /**
@@ -253,35 +255,11 @@ class AddCustomerAddressCommand
     }
 
     /**
-     * @param string $company
-     *
-     * @return AddCustomerAddressCommand
-     */
-    public function setCompany(string $company): AddCustomerAddressCommand
-    {
-        $this->company = $company;
-
-        return $this;
-    }
-
-    /**
      * @return string|null
      */
     public function getVatNumber(): ?string
     {
         return $this->vatNumber;
-    }
-
-    /**
-     * @param string $vatNumber
-     *
-     * @return AddCustomerAddressCommand
-     */
-    public function setVatNumber(string $vatNumber): AddCustomerAddressCommand
-    {
-        $this->vatNumber = $vatNumber;
-
-        return $this;
     }
 
     /**
@@ -293,37 +271,11 @@ class AddCustomerAddressCommand
     }
 
     /**
-     * @param string $address2
-     *
-     * @return AddCustomerAddressCommand
-     */
-    public function setAddress2(string $address2): AddCustomerAddressCommand
-    {
-        $this->address2 = $address2;
-
-        return $this;
-    }
-
-    /**
      * @return StateId|null
      */
     public function getStateId(): ?StateId
     {
         return $this->stateId;
-    }
-
-    /**
-     * @param int $stateId
-     *
-     * @return AddCustomerAddressCommand
-     *
-     * @throws StateConstraintException
-     */
-    public function setStateId(int $stateId): AddCustomerAddressCommand
-    {
-        $this->stateId = new StateId($stateId);
-
-        return $this;
     }
 
     /**
@@ -335,18 +287,6 @@ class AddCustomerAddressCommand
     }
 
     /**
-     * @param string $homePhone
-     *
-     * @return AddCustomerAddressCommand
-     */
-    public function setHomePhone(string $homePhone): AddCustomerAddressCommand
-    {
-        $this->homePhone = $homePhone;
-
-        return $this;
-    }
-
-    /**
      * @return string|null
      */
     public function getMobilePhone(): ?string
@@ -355,34 +295,10 @@ class AddCustomerAddressCommand
     }
 
     /**
-     * @param string $mobilePhone
-     *
-     * @return AddCustomerAddressCommand
-     */
-    public function setMobilePhone(string $mobilePhone): AddCustomerAddressCommand
-    {
-        $this->mobilePhone = $mobilePhone;
-
-        return $this;
-    }
-
-    /**
      * @return string|null
      */
     public function getOther(): ?string
     {
         return $this->other;
-    }
-
-    /**
-     * @param string $other
-     *
-     * @return AddCustomerAddressCommand
-     */
-    public function setOther(string $other): AddCustomerAddressCommand
-    {
-        $this->other = $other;
-
-        return $this;
     }
 }

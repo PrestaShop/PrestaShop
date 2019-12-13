@@ -59,7 +59,7 @@ final class ExistingCustomerEmailValidator extends ConstraintValidator
             throw new UnexpectedTypeException($constraint, ExistingCustomerEmail::class);
         }
 
-        if (!$this->customerDataSource->hasCustomerByEmail($value)) {
+        if (!$this->customerDataSource->hasCustomerWithEmail($value)) {
             $this->context->buildViolation($constraint->message)
                 ->setTranslationDomain('Admin.Orderscustomers.Notification')
                 ->addViolation()

@@ -113,8 +113,8 @@ final class EditCustomerAddressHandler extends AbstractAddressHandler implements
             $address->address2 = $command->getAddress2();
         }
 
-        if (null !== $command->getIdNumber()) {
-            $address->dni = $command->getIdNumber();
+        if (null !== $command->getDni()) {
+            $address->dni = $command->getDni();
         }
 
         if (null !== $command->getCompany()) {

@@ -136,3 +136,4 @@ services:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\AddressFormDataHandler'
     arguments:
       - '@prestashop.core.command_bus'
+      - '@prestashop.adapter.data_provider.customer'
