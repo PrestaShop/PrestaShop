@@ -6,14 +6,10 @@ use Behat\Gherkin\Node\TableNode;
 use PHPUnit_Framework_Assert;
 use PrestaShop\PrestaShop\Core\Domain\Contact\Command\AddContactCommand;
 use PrestaShop\PrestaShop\Core\Domain\Contact\Command\EditContactCommand;
-use PrestaShop\PrestaShop\Core\Domain\Contact\Exception\ContactConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Contact\Exception\ContactException;
 use PrestaShop\PrestaShop\Core\Domain\Contact\Exception\ContactNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Contact\Query\GetContactForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Contact\QueryResult\EditableContact;
-use PrestaShop\PrestaShop\Core\Domain\Exception\DomainConstraintException;
 use PrestaShopBundle\Utils\BoolParser;
-use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\CommonFeatureContext;
 use function PrestaShopBundle\Utils\BoolParser;
 
@@ -37,8 +33,6 @@ class ContactFeatureContext extends AbstractDomainFeatureContext
      * @Given there is no contact with id :contactId
      *
      * @param int $contactId
-     *
-     * @throws ContactException
      */
     public function thereIsNoContactWithId(int $contactId)
     {
@@ -52,8 +46,6 @@ class ContactFeatureContext extends AbstractDomainFeatureContext
      * @Given there is contact with id :contactId
      *
      * @param int $contactId
-     *
-     * @throws ContactException
      */
     public function thereIsContactIsWithId(int $contactId)
     {
@@ -64,8 +56,6 @@ class ContactFeatureContext extends AbstractDomainFeatureContext
      * @Then I should be able to get contact with id :contactId for editing
      *
      * @param int $contactId
-     *
-     * @throws ContactException
      */
     public function iShouldBeAbleToGetContactWithIdForEditing(int $contactId)
     {
@@ -76,11 +66,6 @@ class ContactFeatureContext extends AbstractDomainFeatureContext
      * @When I add new contact with the following properties:
      *
      * @param TableNode $table
-     *
-     * @throws ContactConstraintException
-     * @throws RuntimeException
-     * @throws DomainConstraintException
-     * @throws ContactException
      */
     public function iAddNewContactWithTheFollowingProperties(TableNode $table)
     {
@@ -103,10 +88,6 @@ class ContactFeatureContext extends AbstractDomainFeatureContext
      *
      * @param int $contactId
      * @param TableNode $table
-     *
-     * @throws ContactException
-     * @throws RuntimeException
-     * @throws DomainConstraintException
      */
     public function contactWithIdShouldHaveTheFollowingProperties(int $contactId, TableNode $table)
     {
@@ -122,11 +103,6 @@ class ContactFeatureContext extends AbstractDomainFeatureContext
      *
      * @param int $contactId
      * @param TableNode $table
-     *
-     * @throws ContactConstraintException
-     * @throws ContactException
-     * @throws DomainConstraintException
-     * @throws RuntimeException
      */
     public function iUpdateContactWithIdWithTheFollowingProperties(int $contactId, TableNode $table)
     {
@@ -148,9 +124,6 @@ class ContactFeatureContext extends AbstractDomainFeatureContext
      * @param array $data
      *
      * @return EditableContact
-     *
-     * @throws ContactException
-     * @throws DomainConstraintException
      */
     private function mapToEditableContact(int $contactId, array $data): EditableContact
     {
