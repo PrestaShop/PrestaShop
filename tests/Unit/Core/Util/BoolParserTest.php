@@ -4,7 +4,7 @@ namespace Tests\Unit\PrestaShopBundle\Utils;
 
 use PHPUnit\Framework\TestCase;
 use PHPUnit_Framework_AssertionFailedError;
-use PrestaShopBundle\Utils\BoolParser;
+use PrestaShop\PrestaShop\Core\Util\BoolParser;
 
 class BoolParserTest extends TestCase
 {
