@@ -29,8 +29,8 @@
  * @param {jQuery element} $mainMenu - The menu inside the $navBar element.
  * @param {string} endTransitionEvent - The name of the event.
  * @param {jQuery element} $body - The body of the page.
- * @function showNavBarContent - Toggle the class based on event and if body got a class.
- * @function toggle - Add the listener if there is no transition launched yet.
+ * @method showNavBarContent - Toggle the class based on event and if body got a class.
+ * @method toggle - Add the listener if there is no transition launched yet.
  * @return {Object} The object with methods wich permit to toggle on specific event.
 */
 function NavbarTransitionHandler($navBar, $mainMenu, endTransitionEvent, $body) {
