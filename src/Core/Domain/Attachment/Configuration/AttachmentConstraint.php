@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -24,52 +24,22 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Attachment\ValueObject;
-
-use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\AttachmentConstraintException;
+namespace PrestaShop\PrestaShop\Core\Domain\Attachment\Configuration;
 
 /**
- * Class provides attachment id
+ * Stores attachment validation configuration values
  */
-class AttachmentId
+final class AttachmentConstraint
 {
     /**
-     * @var int
+     * Maximum length for name (value is constrained by database)
      */
-    private $id;
+    const MAX_NAME_LENGTH = 32;
 
     /**
-     * @param int $id
-     *
-     * @throws AttachmentConstraintException]
+     * Prevents class to be instantiated
      */
-    public function __construct(int $id)
+    private function __construct()
     {
-        $this->assertIsValidId($id);
-
-        $this->id = $id;
-    }
-
-    /**
-     * @return int
-     */
-    public function getValue(): int
-    {
-        return $this->id;
-    }
-
-    /**
-     * @param int $attachmentId
-     *
-     * @throws AttachmentConstraintException
-     */
-    private function assertIsValidId(int $attachmentId): void
-    {
-        if (0 >= $attachmentId) {
-            throw new AttachmentConstraintException(
-                sprintf('Invalid Attachment id %s supplied', var_export($attachmentId, true)),
-                AttachmentConstraintException::INVALID_ID
-            );
-        }
     }
 }

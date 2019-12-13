@@ -24,52 +24,17 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Attachment\ValueObject;
+namespace PrestaShop\PrestaShop\Core\Configuration;
 
-use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\AttachmentConstraintException;
-
-/**
- * Class provides attachment id
- */
-class AttachmentId
+interface UploadSizeConfigurationInterface
 {
     /**
-     * @var int
+     * @return int
      */
-    private $id;
-
-    /**
-     * @param int $id
-     *
-     * @throws AttachmentConstraintException]
-     */
-    public function __construct(int $id)
-    {
-        $this->assertIsValidId($id);
-
-        $this->id = $id;
-    }
+    public function getMaxUploadSizeInBytes(): int;
 
     /**
      * @return int
      */
-    public function getValue(): int
-    {
-        return $this->id;
-    }
-
-    /**
-     * @param int $attachmentId
-     *
-     * @throws AttachmentConstraintException
-     */
-    private function assertIsValidId(int $attachmentId): void
-    {
-        if (0 >= $attachmentId) {
-            throw new AttachmentConstraintException(
-                sprintf('Invalid Attachment id %s supplied', var_export($attachmentId, true)),
-                AttachmentConstraintException::INVALID_ID
-            );
-        }
-    }
+    public function getPostMaxSizeInBytes(): int;
 }

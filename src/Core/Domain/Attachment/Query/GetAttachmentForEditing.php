@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -24,52 +24,36 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Attachment\ValueObject;
+namespace PrestaShop\PrestaShop\Core\Domain\Attachment\Query;
 
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\AttachmentConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\ValueObject\AttachmentId;
 
 /**
- * Class provides attachment id
+ * Gets attachment information for editing.
  */
-class AttachmentId
+class GetAttachmentForEditing
 {
     /**
-     * @var int
+     * @var AttachmentId
      */
-    private $id;
+    private $attachmentId;
 
     /**
-     * @param int $id
-     *
-     * @throws AttachmentConstraintException]
-     */
-    public function __construct(int $id)
-    {
-        $this->assertIsValidId($id);
-
-        $this->id = $id;
-    }
-
-    /**
-     * @return int
-     */
-    public function getValue(): int
-    {
-        return $this->id;
-    }
-
-    /**
-     * @param int $attachmentId
+     * @param int $attachmentIdValue
      *
      * @throws AttachmentConstraintException
      */
-    private function assertIsValidId(int $attachmentId): void
+    public function __construct(int $attachmentIdValue)
     {
-        if (0 >= $attachmentId) {
-            throw new AttachmentConstraintException(
-                sprintf('Invalid Attachment id %s supplied', var_export($attachmentId, true)),
-                AttachmentConstraintException::INVALID_ID
-            );
-        }
+        $this->attachmentId = new AttachmentId($attachmentIdValue);
+    }
+
+    /**
+     * @return AttachmentId
+     */
+    public function getAttachmentId(): AttachmentId
+    {
+        return $this->attachmentId;
     }
 }

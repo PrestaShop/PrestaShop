@@ -1060,3 +1060,10 @@ services:
             - { method: setTranslator, arguments: ['@translator'] }
         tags:
             - { name: form.type }
+
+    prestashop.bundle.form.admin.sell.attachment.attachment:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Attachment\AttachmentType'
+        calls:
+            - { method: setTranslator, arguments: ['@translator'] }
+        tags:
+            - { name: form.type }

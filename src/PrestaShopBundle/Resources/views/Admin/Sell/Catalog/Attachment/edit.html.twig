@@ -1,6 +1,5 @@
-<?php
-/**
- * 2007-2019 PrestaShop SA and Contributors
+{#**
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -22,26 +21,20 @@
  * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- */
+ *#}
 
-namespace PrestaShop\PrestaShop\Core\Domain\Attachment\Exception;
+{% extends 'PrestaShopBundle:Admin:layout.html.twig' %}
 
-/**
- * Exception is thrown when Attachment constraint is violated
- */
-class AttachmentConstraintException extends AttachmentException
-{
-    const INVALID_ID = 1;
+{% block content %}
+  <div class="row justify-content-center">
+    <div class="col">
+      {% include '@PrestaShop/Admin/Sell/Catalog/Attachment/Blocks/form.html.twig' with {'attachmentId': attachmentId} %}
+    </div>
+  </div>
+{% endblock %}
 
-    const INVALID_FILE_SIZE = 2;
+{% block javascripts %}
+  {{ parent() }}
 
-    const EMPTY_NAME = 3;
-
-    const EMPTY_DESCRIPTION = 4;
-
-    const INVALID_FIELDS = 5;
-
-    const INVALID_DESCRIPTION = 6;
-
-    const MISSING_NAME_IN_DEFAULT_LANGUAGE = 7;
-}
+  <script src="{{ asset('themes/new-theme/public/attachment.bundle.js') }}"></script>
+{% endblock %}

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -24,24 +24,17 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Attachment\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\Attachment\CommandHandler;
 
-/**
- * Exception is thrown when Attachment constraint is violated
- */
-class AttachmentConstraintException extends AttachmentException
+use PrestaShop\PrestaShop\Core\Domain\Attachment\Command\AddAttachmentCommand;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\ValueObject\AttachmentId;
+
+interface AddAttachmentHandlerInterface
 {
-    const INVALID_ID = 1;
-
-    const INVALID_FILE_SIZE = 2;
-
-    const EMPTY_NAME = 3;
-
-    const EMPTY_DESCRIPTION = 4;
-
-    const INVALID_FIELDS = 5;
-
-    const INVALID_DESCRIPTION = 6;
-
-    const MISSING_NAME_IN_DEFAULT_LANGUAGE = 7;
+    /**
+     * @param AddAttachmentCommand $command
+     *
+     * @return AttachmentId
+     */
+    public function handle(AddAttachmentCommand $command): AttachmentId;
 }

@@ -24,52 +24,15 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Attachment\ValueObject;
+namespace PrestaShop\PrestaShop\Core\Domain\Attachment;
 
-use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\AttachmentConstraintException;
-
-/**
- * Class provides attachment id
- */
-class AttachmentId
+interface AttachmentFileUploaderInterface
 {
     /**
-     * @var int
+     * @param string $filePath
+     * @param string $uniqueFileName
+     * @param int $fileSize
+     * @param int|null $id
      */
-    private $id;
-
-    /**
-     * @param int $id
-     *
-     * @throws AttachmentConstraintException]
-     */
-    public function __construct(int $id)
-    {
-        $this->assertIsValidId($id);
-
-        $this->id = $id;
-    }
-
-    /**
-     * @return int
-     */
-    public function getValue(): int
-    {
-        return $this->id;
-    }
-
-    /**
-     * @param int $attachmentId
-     *
-     * @throws AttachmentConstraintException
-     */
-    private function assertIsValidId(int $attachmentId): void
-    {
-        if (0 >= $attachmentId) {
-            throw new AttachmentConstraintException(
-                sprintf('Invalid Attachment id %s supplied', var_export($attachmentId, true)),
-                AttachmentConstraintException::INVALID_ID
-            );
-        }
-    }
+    public function upload(string $filePath, string $uniqueFileName, int $fileSize, int $id = null): void;
 }

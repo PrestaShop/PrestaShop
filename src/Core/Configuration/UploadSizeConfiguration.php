@@ -24,52 +24,36 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Attachment\ValueObject;
+namespace PrestaShop\PrestaShop\Core\Configuration;
 
-use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\AttachmentConstraintException;
-
-/**
- * Class provides attachment id
- */
-class AttachmentId
+class UploadSizeConfiguration implements UploadSizeConfigurationInterface
 {
     /**
-     * @var int
+     * @var IniConfiguration
      */
-    private $id;
+    private $iniConfiguration;
 
     /**
-     * @param int $id
-     *
-     * @throws AttachmentConstraintException]
+     * @param IniConfiguration $iniConfiguration
      */
-    public function __construct(int $id)
+    public function __construct(IniConfiguration $iniConfiguration)
     {
-        $this->assertIsValidId($id);
-
-        $this->id = $id;
+        $this->iniConfiguration = $iniConfiguration;
     }
 
     /**
-     * @return int
+     * {@inheritdoc}
      */
-    public function getValue(): int
+    public function getMaxUploadSizeInBytes(): int
     {
-        return $this->id;
+        return $this->iniConfiguration->getUploadMaxSizeInBytes();
     }
 
     /**
-     * @param int $attachmentId
-     *
-     * @throws AttachmentConstraintException
+     * {@inheritdoc}
      */
-    private function assertIsValidId(int $attachmentId): void
+    public function getPostMaxSizeInBytes(): int
     {
-        if (0 >= $attachmentId) {
-            throw new AttachmentConstraintException(
-                sprintf('Invalid Attachment id %s supplied', var_export($attachmentId, true)),
-                AttachmentConstraintException::INVALID_ID
-            );
-        }
+        return $this->iniConfiguration->getPostMaxSizeInBytes();
     }
 }
