@@ -19,8 +19,5 @@ class BoolParser
         }
 
         return strtolower($value) !== 'false';
-//        $lValue = strtolower($value);
-//
-//        return $lValue == 'false' ? false : true;
     }
 }
