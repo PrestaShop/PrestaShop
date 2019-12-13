@@ -32,7 +32,7 @@ module.exports = class LinkWidgets extends BOBasePage {
   /* Table methods */
   /**
    * Get Number of element in grid
-   * @param hookId, in which table should we delete
+   * @param hookId, table to get number from
    * @return {Promise<integer>}
    */
   async getNumberOfElementInGrid(hookId) {
@@ -41,7 +41,7 @@ module.exports = class LinkWidgets extends BOBasePage {
 
   /**
    * Delete link widget
-   * @param hookId, in which table should we delete
+   * @param hookId, table to delete from
    * @param row, row to delete
    * @return {Promise<textContent>}
    */
