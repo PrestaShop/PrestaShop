@@ -176,6 +176,7 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
             (bool) $order->valid,
             $order->hasInvoice(),
             $order->hasBeenDelivered(),
+            $order->hasBeenShipped(),
             $invoiceManagementIsEnabled,
             new DateTimeImmutable($order->date_add),
             $this->getOrderCustomer($order),
@@ -365,11 +366,6 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
             $product['refund_history'] = OrderSlip::getProductSlipDetail($product['id_order_detail']);
             $product['return_history'] = OrderReturn::getProductReturnDetail($product['id_order_detail']);
 
-            // if the current stock requires a warning
-            if ($product['current_stock'] <= 0 && $display_out_of_stock_warning) {
-                // @todo
-                //$this->displayWarning($this->trans('This product is out of stock: ', array(), 'Admin.Orderscustomers.Notification') . ' ' . $product['product_name']);
-            }
             if ($product['id_warehouse'] != 0) {
                 $warehouse = new Warehouse((int) $product['id_warehouse']);
                 $product['warehouse_name'] = $warehouse->name;
