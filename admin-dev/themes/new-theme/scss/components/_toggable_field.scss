@@ -39,7 +39,9 @@
   }
 
   .token-input {
+    /* stylelint-disable declaration-no-important */
     width: auto !important;
+    /* stylelint-enable declaration-no-important */
   }
 }
 

@@ -1,8 +1,8 @@
 .form-group {
   [class^="popover-error-container"] {
     .popover {
-      max-width: inherit !important;
-      border: inherit !important;
+      max-width: inherit;
+      border: inherit;
       @include border-radius(5px);
       box-shadow: 0 1px 10px #d3d3d3;
 

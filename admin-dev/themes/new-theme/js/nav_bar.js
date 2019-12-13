@@ -57,7 +57,7 @@ export default class NavBar {
 
       $navBar.find('.link-levelone').hover(
         function onMouseEnter() {
-          $(this).addClass('.link-hover');
+          $(this).addClass('link-hover');
         },
         function onMouseLeave() {
           $(this).removeClass('.link-hover');

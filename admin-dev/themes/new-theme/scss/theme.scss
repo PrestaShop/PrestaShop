@@ -108,10 +108,10 @@ body {
 
 // Needed to override the default inline style of typeahead and take all the width
 span.twitter-typeahead {
-  display: block !important;
-  width: 100% !important;
+  width: 100%;
+
   input.tt-input {
-    width: 100% !important;
+    width: 100%;
   }
 }
 
