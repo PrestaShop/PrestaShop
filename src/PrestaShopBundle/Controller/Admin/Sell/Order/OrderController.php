@@ -45,6 +45,7 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Command\UpdateOrderStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\CannotEditDeliveredOrderProductException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\ChangeOrderStatusException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderEmailResendException;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\TransistEmailSendingException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Invoice\Command\GenerateInvoiceCommand;
@@ -342,6 +343,8 @@ class OrderController extends FrameworkBundleAdminController
             $hookParameters
         );
 
+        $this->handleOutOfStockProduct($orderForViewing);
+
         return $this->render('@PrestaShop/Admin/Sell/Order/Order/view.html.twig', [
             'showContentHeader' => true,
             'orderCurrency' => $orderCurrency,
@@ -360,6 +363,26 @@ class OrderController extends FrameworkBundleAdminController
             'orderMessageForm' => $orderMessageForm->createView(),
             'backOfficeOrderButtons' => $backOfficeOrderButtons,
         ]);
+    }
+
+    /**
+     * @param OrderForViewing $orderForViewing
+     */
+    private function handleOutOfStockProduct(OrderForViewing $orderForViewing)
+    {
+        $isStockManagementEnabled = $this->configuration->get('PS_STOCK_MANAGEMENT');
+        if (!$isStockManagementEnabled || $orderForViewing->isDelivered() || $orderForViewing->isShipped()) {
+            return;
+        }
+
+        foreach ($orderForViewing->getProducts()->getProducts() as $product) {
+            if ($product->getAvailableQuantity() <= 0) {
+                $this->addFlash(
+                    'warning',
+                    $this->trans('This product is out of stock: ', 'Admin.Orderscustomers.Notification') . ' ' . $product->getName()
+                );
+            }
+        }
     }
 
     /**
@@ -533,17 +556,21 @@ class OrderController extends FrameworkBundleAdminController
 
                 $invoiceId = $data['apply_on_all_invoices'] ? null : (int) $data['invoice_id'];
 
-                $this->getCommandBus()->handle(
-                    new AddCartRuleToOrderCommand(
-                        $orderId,
-                        $data['name'],
-                        $data['type'],
-                        $data['value'] ?? null,
-                        $invoiceId
-                    )
-                );
+                try {
+                    $this->getCommandBus()->handle(
+                        new AddCartRuleToOrderCommand(
+                            $orderId,
+                            $data['name'],
+                            $data['type'],
+                            $data['value'] ?? null,
+                            $invoiceId
+                        )
+                    );
 
-                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+                    $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+                } catch (OrderException $e) {
+                    $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+                }
             } else {
                 foreach ($addOrderCartRuleForm->getErrors(true) as $error) {
                     $this->addFlash('error', $error->getMessage());
@@ -991,6 +1018,10 @@ class OrderController extends FrameworkBundleAdminController
                 ) : '',
             OrderEmailResendException::class => $this->trans(
                 'An error occurred while sending the e-mail to the customer.',
+                'Admin.Orderscustomers.Notification'
+            ),
+            OrderException::class => $this->trans(
+                $e->getMessage(),
                 'Admin.Orderscustomers.Notification'
             ),
         ];

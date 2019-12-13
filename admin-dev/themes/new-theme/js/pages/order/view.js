@@ -124,11 +124,17 @@ $(() => {
 
     $form.find(OrderViewPageMap.addCartRuleTypeSelect).on('change', (event) => {
       const selectedCartRuleType = $(event.currentTarget).val();
+      const $valueUnit = $form.find(OrderViewPageMap.addCartRuleValueUnit);
 
       if (selectedCartRuleType === DISCOUNT_TYPE_AMOUNT) {
         $valueHelp.removeClass('d-none');
+        $valueUnit.html($valueUnit.data('currencySymbol'));
       } else {
         $valueHelp.addClass('d-none');
+      }
+
+      if (selectedCartRuleType === DISCOUNT_TYPE_PERCENT) {
+        $valueUnit.html('%');
       }
 
       if (selectedCartRuleType === DISCOUNT_TYPE_FREE_SHIPPING) {
