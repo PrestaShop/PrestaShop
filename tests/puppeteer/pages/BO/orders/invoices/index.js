@@ -29,9 +29,9 @@ module.exports = class Invoice extends BOBasePage {
     this.taxBreakdownEnable = `${this.invoiceOptionsForm} label[for="form_invoice_options_enable_tax_breakdown_%ID"]`;
     this.invoiceOptionEnableProductImage = `${this.invoiceOptionsForm} 
     label[for="form_invoice_options_enable_product_images_%ID"]`;
-    this.invoiceNumberInput = `${this.invoiceOptionsForm} #form_invoice_options_invoice_number`;
-    this.legalFreeTextInput = `${this.invoiceOptionsForm} #form_invoice_options_legal_free_text_1`;
-    this.footerTextInput = `${this.invoiceOptionsForm} #form_invoice_options_footer_text_1`;
+    this.invoiceNumberInput = '#form_invoice_options_invoice_number';
+    this.legalFreeTextInput = '#form_invoice_options_legal_free_text_1';
+    this.footerTextInput = '#form_invoice_options_footer_text_1';
     this.saveInvoiceOptionsButton = `${this.invoiceOptionsForm} .btn.btn-primary`;
   }
 
