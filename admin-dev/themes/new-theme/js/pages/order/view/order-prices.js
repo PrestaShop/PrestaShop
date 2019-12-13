@@ -24,7 +24,7 @@
  */
 
 
-export default class OrderPricesTax {
+export default class OrderPrices {
   calculateTaxExcluded(taxIncluded, taxRatePerCent) {
     let priceTaxIncl = parseFloat(taxIncluded);
     if (priceTaxIncl < 0 || isNaN(priceTaxIncl)) {
@@ -41,5 +41,9 @@ export default class OrderPricesTax {
     }
     const taxRate = taxRatePerCent / 100 + 1;
     return ps_round(priceTaxExcl * taxRate, 2);
+  }
+
+  calculateTotalPrice(quantity, unitPrice) {
+    return ps_round(unitPrice * quantity, 2);
   }
 }

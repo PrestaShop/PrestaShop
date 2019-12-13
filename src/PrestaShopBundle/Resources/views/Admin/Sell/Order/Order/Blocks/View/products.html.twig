@@ -106,8 +106,10 @@
             </div>
           </td>
           <td class="pr-5"><input type="number" id="addProductQuantity" min="1" value="1" class="form-control"></td>
+          <td id="addProductLocation"></td>
           <td id="addProductAvailable"></td>
-          <td colspan="3">
+          <td id="addProductTotalPrice"></td>
+          <td class="text-right">
             <button type="button" class="btn btn-sm btn-secondary js-product-add-action-btn mr-2 d-inline" id="cancelAddProductBtn">
               {{ 'Cancel'|trans({}, 'Admin.Actions') }}
             </button>
@@ -136,12 +138,14 @@
             </div>
           </td>
           <td class="pr-5"><input type="number" class="editProductQuantity form-control" min="1" value="1"></td>
+          <td class="editProductLocation"></td>
           <td class="editProductAvailable"></td>
-          <td colspan="3">
+          <td class="editProductTotalPrice"></td>
+          <td class="text-right">
             <button type="button" class="btn btn-sm btn-secondary js-product-edit-action-btn mr-2 d-inline cancelEditProductBtn">
               {{ 'Cancel'|trans({}, 'Admin.Actions') }}
             </button>
-            <button type="button" class="btn btn-sm btn-primary js-product-edit-action-btn mt-2 mb-2 d-inline editProductActionBtn" data-order-id="{{ orderForViewing.id }}">
+            <button type="button" class="btn btn-sm btn-primary js-product-edit-action-btn mt-2 mb-2 d-inline editProductActionBtn" data-order-id="{{ orderForViewing.id }}" data-update-message="{{ 'Are you sure?'|trans({}, 'Admin.Notifications.Warning') }}">
               {{ 'Save'|trans({}, 'Admin.Actions') }}
             </button>
           </td>
@@ -162,7 +166,9 @@
             </a>
           </td>
           <td class="cellProductUnitPrice"></td>
-          <td class="cellProductQuantity"></td>
+          <td class="cellProductQuantity">
+            <span class="badge badge-secondary rounded-circle"></span>
+          </td>
           <td class="cellProductLocation">
             <span class="badge badge-secondary rounded-circle"></span>
             <div class="d-none js-product-quantity">
@@ -178,21 +184,13 @@
               data-toggle="pstooltip"
               data-placement="top"
               data-original-title="{{ 'Edit'|trans({}, 'Admin.Actions') }}">
-              <i class="material-icons js-order-product-edit-btn"
-                 data-order-detail-id=""
-                 data-product-quantity=""
-                 data-product-price-tax-incl=""
-                 data-product-price-tax-excl=""
-                 data-tax-rate=""
-              >edit</i>
+              <i class="material-icons">edit</i>
             </button>
             <button
               type="button"
               class="btn tooltip-link js-order-product-delete-btn"
               data-toggle="pstooltip"
               data-placement="top"
-              data-order-id=""
-              data-order-detail-id=""
               data-delete-message="{{ 'Are you sure?'|trans({}, 'Admin.Notifications.Warning') }}"
               data-original-title="{{ 'Delete'|trans({}, 'Admin.Actions') }}">
               <i class="material-icons">delete</i>
@@ -203,20 +201,20 @@
     </table>
 
     <div class="row mb-3">
-      <div class="col-md-6 text-left">
-        {% if orderForViewing.products.products|length > paginationNum %}
-          {% set paginationNum = (orderForViewing.products.products|length / paginationNum)|round(0, 'floor') + 1%}
+      <div class="col-md-6 text-left{% if orderForViewing.products.products|length <= paginationNum %} d-none{% endif %}">
+          {% set numPages = (orderForViewing.products.products|length / paginationNum)|round(0, 'ceil') %}
           <nav aria-label="Products Navigation">
-            <ul class="pagination" id="orderProductsTablePagination">
+            <ul class="pagination" id="orderProductsTablePagination" data-num-per-page="{{ paginationNum }}" data-num-pages="{{ numPages }}">
               <li class="page-item disabled" id="orderProductsTablePaginationPrev">
                 <a class="page-link" href="javascript:void(0);" aria-label="Previous">
                   <span aria-hidden="true">&laquo;</span>
                   <span class="sr-only">Previous</span>
                 </a>
               </li>
-              {% for numPage in 1..paginationNum %}
+              {% for numPage in 1..numPages %}
                 <li class="page-item{% if numPage==1 %} active{% endif %}"><span class="page-link" data-order-id="{{ orderForViewing.id }}" data-page="{{ numPage }}">{{ numPage }}</span></li>
               {% endfor %}
+              <li class="page-item d-none"><span class="page-link" data-order-id="{{ orderForViewing.id }}" data-page=""></span></li>
               <li class="page-item" id="orderProductsTablePaginationNext">
                 <a class="page-link" href="javascript:void(0);" aria-label="Next">
                   <span aria-hidden="true">&raquo;</span>
@@ -225,7 +223,6 @@
               </li>
             </ul>
           </nav>
-        {% endif %}
       </div>
       <div class="col-md-6 text-right">
         {% if not orderForViewing.delivered %}
