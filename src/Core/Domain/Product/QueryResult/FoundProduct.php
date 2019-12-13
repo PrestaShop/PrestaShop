@@ -67,6 +67,11 @@ class FoundProduct
     private $stock;
 
     /**
+     * @var string
+     */
+    private $location;
+
+    /**
      * @var ProductCombination[]
      */
     private $combinations;
@@ -95,6 +100,7 @@ class FoundProduct
         float $priceTaxExcl,
         float $taxRate,
         int $stock,
+        string $location,
         array $combinations = [],
         array $customizationFields = []
     ) {
@@ -105,6 +111,7 @@ class FoundProduct
         $this->priceTaxExcl = $priceTaxExcl;
         $this->taxRate = $taxRate;
         $this->stock = $stock;
+        $this->location = $location;
         $this->combinations = $combinations;
         $this->customizationFields = $customizationFields;
     }
@@ -115,6 +122,14 @@ class FoundProduct
     public function getProductId(): int
     {
         return $this->productId;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLocation(): string
+    {
+        return $this->location;
     }
 
     /**
