@@ -168,6 +168,20 @@
   padding: 0 0 5.313rem 0;
   margin: 0;
 
+  &.sidebar-closed {
+    .link-levelone {
+      .link > span {
+        display: none;
+      }
+
+      &.open {
+        > .submenu {
+          display: none;
+        }
+      }
+    }
+  }
+
   .category-title > .title {
     text-transform: uppercase;
   }
@@ -212,10 +226,6 @@
       > .link {
         border-left: .25rem solid #25b9d7;
         padding-left: .638rem;
-
-        @at-root .sidebar-closed .link-levelone .link > span {
-          display: none;
-        }
 
         .material-icons {
           &:first-child {
@@ -289,10 +299,6 @@
       display: none;
       white-space: nowrap;
       padding-left: 2.75rem;
-
-      @at-root .nav-bar .main-menu.sidebar-closed .link-levelone > .submenu {
-        display: none;
-      }
 
       & > li {
         @include media-breakpoint-down(md) {
