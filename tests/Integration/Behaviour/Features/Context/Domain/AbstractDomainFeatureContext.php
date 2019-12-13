@@ -178,8 +178,6 @@ abstract class AbstractDomainFeatureContext implements Context
      * @param TableNode $table
      *
      * @return array
-     *
-     * @throws RuntimeException
      */
     protected function extractFirstHorizontalRowFromProperties(TableNode $table): array
     {

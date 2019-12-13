@@ -1,6 +1,6 @@
 <?php
 
-namespace PrestaShopBundle\Utils;
+namespace PrestaShop\PrestaShop\Core\Util;
 
 class BoolParser
 {
