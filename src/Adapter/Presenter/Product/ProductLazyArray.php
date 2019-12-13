@@ -743,7 +743,7 @@ class ProductLazyArray extends AbstractLazyArray
             $ean13,
             $language->id,
             null,
-            !$canonical && $product['id_product_attribute'] > 0 ? $product['id_product_attribute'] : null,
+            !$canonical && $product['id_product_attribute'] > 0 ? $product['id_product_attribute'] : $product['cache_default_attribute'] > 0 ? $product['cache_default_attribute'] : null,
             false,
             false,
             true
