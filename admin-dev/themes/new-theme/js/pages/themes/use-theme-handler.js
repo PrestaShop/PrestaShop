@@ -30,7 +30,7 @@ const {$} = window;
  */
 export default class UseThemeHandler {
   constructor() {
-    $(document).on('click', '.js-display-use-theme-modal', (e) => this._displayUseThemeModal(e));
+    $(document).on('click', '.js-display-use-theme-modal', (e) => this.displayUseThemeModal(e));
   }
 
   /**
@@ -39,12 +39,12 @@ export default class UseThemeHandler {
    * @param e
    * @private
    */
-  _displayUseThemeModal(e) {
+  displayUseThemeModal(e) {
     const $modal = $('#use_theme_modal');
 
     $modal.modal('show');
 
-    this._submitForm($modal, e);
+    this.submitForm($modal, e);
   }
 
   /**
@@ -55,7 +55,7 @@ export default class UseThemeHandler {
    *
    * @private
    */
-  _submitForm($modal, originalButtonEvent) {
+  submitForm($modal, originalButtonEvent) {
     const $formButton = $(originalButtonEvent.currentTarget);
 
     $modal.on('click', '.js-submit-use-theme', () => {

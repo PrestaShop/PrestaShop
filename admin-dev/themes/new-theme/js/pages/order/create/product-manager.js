@@ -46,7 +46,7 @@ export default class ProductManager {
     this.router = new Router();
     this.cartEditor = new CartEditor();
 
-    this._initListeners();
+    this.initListeners();
 
     return {
       search: searchPhrase => this._search(searchPhrase),
@@ -69,9 +69,9 @@ export default class ProductManager {
    *
    * @private
    */
-  _initListeners() {
-    $(createOrderMap.productSelect).on('change', (e) => this._initProductSelect(e));
-    $(createOrderMap.combinationsSelect).on('change', (e) => this._initCombinationSelect(e));
+  initListeners() {
+    $(createOrderMap.productSelect).on('change', (e) => this.initProductSelect(e));
+    $(createOrderMap.combinationsSelect).on('change', (e) => this.initCombinationSelect(e));
 
     this._onProductSearch();
     this._onAddProductToCart();
@@ -85,11 +85,11 @@ export default class ProductManager {
    *
    * @private
    */
-  _onProductSearch() {
+  onProductSearch() {
     EventEmitter.on(eventMap.productSearched, (response) => {
       this.products = response.products;
       this.productRenderer.renderSearchResults(this.products);
-      this._selectFirstResult();
+      this.selectFirstResult();
     });
   }
 
@@ -116,7 +116,7 @@ export default class ProductManager {
    *
    * @private
    */
-  _onRemoveProductFromCart() {
+  onRemoveProductFromCart() {
     EventEmitter.on(eventMap.productRemovedFromCart, (cartInfo) => {
       EventEmitter.emit(eventMap.cartLoaded, cartInfo);
     });
@@ -159,9 +159,9 @@ export default class ProductManager {
    *
    * @private
    */
-  _initProductSelect(event) {
+  initProductSelect(event) {
     const productId = Number($(event.currentTarget).find(':selected').val());
-    this._selectProduct(productId);
+    this.selectProduct(productId);
   }
 
   /**
@@ -171,9 +171,9 @@ export default class ProductManager {
    *
    * @private
    */
-  _initCombinationSelect(event) {
+  initCombinationSelect(event) {
     const combinationId = Number($(event.currentTarget).find(':selected').val());
-    this._selectCombination(combinationId);
+    this.selectCombination(combinationId);
   }
 
   /**
@@ -181,7 +181,7 @@ export default class ProductManager {
    *
    * @private
    */
-  _search(searchPhrase) {
+  search(searchPhrase) {
     if (searchPhrase.length < 3) {
       return;
     }
@@ -216,8 +216,8 @@ export default class ProductManager {
    *
    * @private
    */
-  _selectFirstResult() {
-    this._unsetProduct();
+  selectFirstResult() {
+    this.unsetProduct();
 
     if (this.products.length !== 0) {
       this._selectProduct(this.products[0].productId);
@@ -231,8 +231,8 @@ export default class ProductManager {
    *
    * @param {Number} productId
    */
-  _selectProduct(productId) {
-    this._unsetCombination();
+  selectProduct(productId) {
+    this.unsetCombination();
 
     for (const key in this.products) {
       if (this.products[key].productId === productId) {
@@ -272,7 +272,7 @@ export default class ProductManager {
    *
    * @private
    */
-  _unsetCombination() {
+  unsetCombination() {
     this.selectedCombinationId = null;
   }
 

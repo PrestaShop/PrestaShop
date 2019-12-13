@@ -55,6 +55,7 @@ export default class CurrencyForm {
   }
 
   init() {
+    <<<<<<< HEAD
     this._initListeners();
     this._initFields();
     this._initState();
@@ -76,31 +77,35 @@ export default class CurrencyForm {
 
     $(`<div id="${this.currencyFormatterId}"></div>`).insertBefore(this.$currencyFormFooter);
     this.currencyFormatter = new Vue({
-        el: this.map.currencyFormatter,
-        i18n: new VueI18n({
-          locale: 'en',
-          formatter: new ReplaceFormatter(),
-          messages: { en: this.translations }
-        }),
-        components: {CurrencyFormatter},
-        data: this.state,
-        template: `<currency-formatter id="${this.currencyFormatterId}" :languages="languages" :currencyData="currencyData"></currency-formatter>`
+      el: this.map.currencyFormatter,
+      i18n: new VueI18n({
+        locale: 'en',
+        formatter: new ReplaceFormatter(),
+        messages: { en: this.translations }
+      }),
+      components: {CurrencyFormatter},
+      data: this.state,
+      template: `<currency-formatter id="${this.currencyFormatterId}" :languages="languages" :currencyData="currencyData"></currency-formatter>`
     });
 
     this.currencyFormatter.$watch('currencyData', () => {
-        // We use the state value directly since the object is shared with the Vue component and already updated
-        this._fillCurrencyCustomData(this.state.currencyData);
-      },{deep: true, immediate: true})
+      // We use the state value directly since the object is shared with the Vue component and already updated
+      this._fillCurrencyCustomData(this.state.currencyData);
+    },{deep: true, immediate: true})
+    =======
+      this.initListeners();
+    this.initFields();
+    >>>>>>> Continue to fix eslint errors
   }
 
-  _initListeners() {
-    this.$currencySelector.change(this._onCurrencySelectorChange.bind(this));
-    this.$isUnofficialCheckbox.change(this._onIsUnofficialCheckboxChange.bind(this));
-    this.$resetDefaultSettingsButton.click(this._onResetDefaultSettingsClick.bind(this));
+  initListeners() {
+    this.$currencySelector.change(this.onCurrencySelectorChange.bind(this));
+    this.$isUnofficialCheckbox.change(this.onIsUnofficialCheckboxChange.bind(this));
+    this.$resetDefaultSettingsButton.click(this.onResetDefaultSettingsClick.bind(this));
   }
 
-  _initFields() {
-    if (!this._isUnofficialCurrency()) {
+  initFields() {
+    if (!this.isUnofficialCurrency()) {
       this.$isUnofficialCheckbox.prop('checked', false);
       this.$isoCodeInput.prop('readonly', true);
     } else {
@@ -109,19 +114,19 @@ export default class CurrencyForm {
     }
   }
 
-  _onCurrencySelectorChange() {
+  onCurrencySelectorChange() {
     const selectedISOCode = this.$currencySelector.val();
     if (selectedISOCode !== '') {
       this.$isUnofficialCheckbox.prop('checked', false);
       this.$isoCodeInput.prop('readonly', true);
-      this._resetCurrencyData(selectedISOCode);
+      this.resetCurrencyData(selectedISOCode);
     } else {
       this.$isUnofficialCheckbox.prop('checked', true);
       this.$isoCodeInput.prop('readonly', false);
     }
   }
 
-  _isUnofficialCurrency() {
+  isUnofficialCurrency() {
     if (this.$isUnofficialCheckbox.prop('type') === 'hidden') {
       return this.$isUnofficialCheckbox.attr('value') === '1';
     }
@@ -129,8 +134,8 @@ export default class CurrencyForm {
     return this.$isUnofficialCheckbox.prop('checked');
   }
 
-  _onIsUnofficialCheckboxChange() {
-    if (this._isUnofficialCurrency()) {
+  onIsUnofficialCheckboxChange() {
+    if (this.isUnofficialCurrency()) {
       this.$currencySelector.val('');
       this.$isoCodeInput.prop('readonly', false);
     } else {

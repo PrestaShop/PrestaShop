@@ -40,7 +40,7 @@ class CatalogModeOptionHandler {
 
   handle(fadeLength) {
     const catalogModeVal = $(this.pageMap.selectedCatalogModeField).val();
-    const catalogModeEnabled = parseInt(catalogModeVal);
+    const catalogModeEnabled = parseInt(catalogModeVal, 10);
 
     const catalogOptions = $(this.pageMap.catalogModeOptions);
     if (catalogModeEnabled) {

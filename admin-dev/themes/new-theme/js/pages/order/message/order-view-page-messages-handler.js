@@ -36,8 +36,8 @@ export default class OrderViewPageMessagesHandler {
     this.$messagesContainer = $(OrderViewPageMap.orderMessagesContainer);
 
     return {
-      listenForPredefinedMessageSelection: () => this._handlePredefinedMessageSelection(),
-      listenForFullMessagesOpen: () => this._onFullMessagesOpen(),
+      listenForPredefinedMessageSelection: () => this.handlePredefinedMessageSelection(),
+      listenForFullMessagesOpen: () => this.onFullMessagesOpen(),
     };
   }
 
@@ -46,7 +46,7 @@ export default class OrderViewPageMessagesHandler {
    *
    * @private
    */
-  _handlePredefinedMessageSelection() {
+  handlePredefinedMessageSelection() {
     $(document).on('change', OrderViewPageMap.orderMessageNameSelect, (e) => {
       const $currentItem = $(e.currentTarget);
       const valueId = $currentItem.val();
@@ -64,7 +64,7 @@ export default class OrderViewPageMessagesHandler {
         return;
       }
 
-      if ($orderMessage.val() && !confirm(this.$orderMessageChangeWarning.text())) {
+      if ($orderMessage.val() && !window.confirm(this.$orderMessageChangeWarning.text())) {
         return;
       }
 
@@ -77,8 +77,8 @@ export default class OrderViewPageMessagesHandler {
    *
    * @private
    */
-  _onFullMessagesOpen() {
-    $(document).on('click', OrderViewPageMap.openAllMessagesBtn, () => this._scrollToMsgListBottom());
+  onFullMessagesOpen() {
+    $(document).on('click', OrderViewPageMap.openAllMessagesBtn, () => this.scrollToMsgListBottom());
   }
 
   /**
@@ -86,7 +86,7 @@ export default class OrderViewPageMessagesHandler {
    *
    * @private
    */
-  _scrollToMsgListBottom() {
+  scrollToMsgListBottom() {
     const $msgModal = $(OrderViewPageMap.allMessagesModal);
     const msgList = document.querySelector(OrderViewPageMap.allMessagesList);
 

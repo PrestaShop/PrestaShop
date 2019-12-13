@@ -34,7 +34,7 @@ export default class EntityFieldsValidator {
   static validate() {
     $('.js-validation-error').addClass('d-none');
 
-    return this._checkDuplicateSelectedValues() && this._checkRequiredFields();
+    return this.checkDuplicateSelectedValues() && this.checkRequiredFields();
   }
 
   /**
@@ -43,7 +43,7 @@ export default class EntityFieldsValidator {
    * @returns {boolean}
    * @private
    */
-  static _checkDuplicateSelectedValues() {
+  static checkDuplicateSelectedValues() {
     const uniqueFields = [];
     let valid = true;
 
@@ -72,9 +72,10 @@ export default class EntityFieldsValidator {
    * @returns {boolean}
    * @private
    */
-  static _checkRequiredFields() {
+  static checkRequiredFields() {
     const requiredImportFields = $('.js-import-data-table').data('required-fields');
 
+    /* eslint-disable-next-line */
     for (const key in requiredImportFields) {
       if ($(`option[value="${requiredImportFields[key]}"]:selected`).length === 0) {
         $('.js-missing-column-warning').removeClass('d-none');
@@ -83,6 +84,7 @@ export default class EntityFieldsValidator {
         return false;
       }
     }
+
     return true;
   }
 }

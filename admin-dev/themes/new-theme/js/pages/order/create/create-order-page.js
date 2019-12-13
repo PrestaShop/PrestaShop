@@ -23,14 +23,14 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+import Router from '@components/router';
+import {EventEmitter} from '@components/event-emitter';
 import createOrderMap from './create-order-map';
 import CustomerManager from './customer-manager';
 import ShippingRenderer from './shipping-renderer';
 import CartProvider from './cart-provider';
 import AddressesRenderer from './addresses-renderer';
 import CartRulesRenderer from './cart-rules-renderer';
-import Router from '../../../components/router';
-import {EventEmitter} from '../../../components/event-emitter';
 import CartEditor from './cart-editor';
 import eventMap from './event-map';
 import CartRuleManager from './cart-rule-manager';
@@ -118,13 +118,13 @@ export default class CreateOrderPage {
    *
    * @private
    */
-  _initListeners() {
-    this.$container.on('input', createOrderMap.customerSearchInput, (e) => this._initCustomerSearch(e));
-    this.$container.on('click', createOrderMap.chooseCustomerBtn, (e) => this._initCustomerSelect(e));
-    this.$container.on('click', createOrderMap.useCartBtn, (e) => this._initCartSelect(e));
-    this.$container.on('click', createOrderMap.useOrderBtn, (e) => this._initDuplicateOrderCart(e));
-    this.$container.on('input', createOrderMap.productSearch, (e) => this._initProductSearch(e));
-    this.$container.on('input', createOrderMap.cartRuleSearchInput, (e) => this._initCartRuleSearch(e));
+  initListeners() {
+    this.$container.on('input', createOrderMap.customerSearchInput, (e) => this.initCustomerSearch(e));
+    this.$container.on('click', createOrderMap.chooseCustomerBtn, (e) => this.initCustomerSelect(e));
+    this.$container.on('click', createOrderMap.useCartBtn, (e) => this.initCartSelect(e));
+    this.$container.on('click', createOrderMap.useOrderBtn, (e) => this.initDuplicateOrderCart(e));
+    this.$container.on('input', createOrderMap.productSearch, (e) => this.initProductSearch(e));
+    this.$container.on('input', createOrderMap.cartRuleSearchInput, (e) => this.initCartRuleSearch(e));
     this.$container.on('blur', createOrderMap.cartRuleSearchInput, () => this.cartRuleManager.stopSearching());
     this._listenForCartEdit();
     this._onCartLoaded();
@@ -172,7 +172,6 @@ export default class CreateOrderPage {
     this.$container.on('change', createOrderMap.listedProductQtyInput, e => this._initProductChangeQty(e));
     this.$container.on('change', createOrderMap.addressSelect, () => this._changeCartAddresses());
     this.$container.on('click', createOrderMap.productRemoveBtn, (e) => this._initProductRemoveFromCart(e));
-
   }
 
   /**
@@ -180,7 +179,7 @@ export default class CreateOrderPage {
    *
    * @private
    */
-  _onCartLoaded() {
+  onCartLoaded() {
     EventEmitter.on(eventMap.cartLoaded, (cartInfo) => {
       this.cartId = cartInfo.cartId;
       this._renderCartInfo(cartInfo);
@@ -197,7 +196,7 @@ export default class CreateOrderPage {
    *
    * @private
    */
-  _onCartAddressesChanged() {
+  onCartAddressesChanged() {
     EventEmitter.on(eventMap.cartAddressesChanged, (cartInfo) => {
       this.addressesRenderer.render(cartInfo.addresses);
       this.shippingRenderer.render(cartInfo.shipping, cartInfo.products.length === 0);
@@ -278,7 +277,7 @@ export default class CreateOrderPage {
    *
    * @private
    */
-  _initCustomerSelect(event) {
+  initCustomerSelect(event) {
     const customerId = this.customerManager.selectCustomer(event);
     this.customerId = customerId;
     this.cartProvider.loadEmptyCart(customerId);
@@ -291,7 +290,7 @@ export default class CreateOrderPage {
    *
    * @private
    */
-  _initCartSelect(event) {
+  initCartSelect(event) {
     const cartId = $(event.currentTarget).data('cart-id');
     this.cartProvider.getCart(cartId);
   }
@@ -301,7 +300,7 @@ export default class CreateOrderPage {
    *
    * @private
    */
-  _initDuplicateOrderCart(event) {
+  initDuplicateOrderCart(event) {
     const orderId = $(event.currentTarget).data('order-id');
     this.cartProvider.duplicateOrderCart(orderId);
   }
@@ -311,7 +310,7 @@ export default class CreateOrderPage {
    *
    * @private
    */
-  _initCartRuleSearch(event) {
+  initCartRuleSearch(event) {
     const searchPhrase = event.currentTarget.value;
 
     clearTimeout(this.timeoutId);
@@ -323,7 +322,7 @@ export default class CreateOrderPage {
    *
    * @private
    */
-  _addCartRuleToCart() {
+  addCartRuleToCart() {
     this.$container.on('mousedown', createOrderMap.foundCartRuleListItem, (event) => {
       // prevent blur event to allow selecting cart rule
       event.preventDefault();
@@ -341,7 +340,7 @@ export default class CreateOrderPage {
    *
    * @private
    */
-  _removeCartRuleFromCart() {
+  removeCartRuleFromCart() {
     this.$container.on('click', createOrderMap.cartRuleDeleteBtn, (event) => {
       this.cartRuleManager.removeCartRuleFromCart($(event.currentTarget).data('cart-rule-id'), this.cartId);
     });
@@ -354,7 +353,7 @@ export default class CreateOrderPage {
    *
    * @private
    */
-  _initProductSearch(event) {
+  initProductSearch(event) {
     const $productSearchInput = $(event.currentTarget);
     const searchPhrase = $productSearchInput.val();
     clearTimeout(this.timeoutId);
@@ -369,7 +368,7 @@ export default class CreateOrderPage {
    *
    * @private
    */
-  _initProductRemoveFromCart(event) {
+  initProductRemoveFromCart(event) {
     const product = {
       productId: $(event.currentTarget).data('product-id'),
       attributeId: $(event.currentTarget).data('attribute-id'),
@@ -422,7 +421,7 @@ export default class CreateOrderPage {
    *
    * @private
    */
-  _renderCartInfo(cartInfo) {
+  renderCartInfo(cartInfo) {
     this.addressesRenderer.render(cartInfo.addresses);
     this.cartRulesRenderer.renderCartRulesBlock(cartInfo.cartRules, cartInfo.products.length === 0);
     this.shippingRenderer.render(cartInfo.shipping, cartInfo.products.length === 0);
@@ -462,7 +461,7 @@ export default class CreateOrderPage {
    *
    * @private
    */
-  _changeCartAddresses() {
+  changeCartAddresses() {
     const addresses = {
       deliveryAddressId: $(createOrderMap.deliveryAddressSelect).val(),
       invoiceAddressId: $(createOrderMap.invoiceAddressSelect).val(),

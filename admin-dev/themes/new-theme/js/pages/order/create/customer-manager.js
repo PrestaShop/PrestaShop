@@ -45,13 +45,13 @@ export default class CustomerManager {
     this.$customerSearchResultBlock = $(createOrderMap.customerSearchResultsBlock);
     this.customerRenderer = new CustomerRenderer();
 
-    this._initListeners();
+    this.initListeners();
 
     return {
-      search: (searchPhrase) => this._search(searchPhrase),
-      selectCustomer: (event) => this._selectCustomer(event),
-      loadCustomerCarts: (currentCartId) => this._loadCustomerCarts(currentCartId),
-      loadCustomerOrders: () => this._loadCustomerOrders(),
+      search: (searchPhrase) => this.search(searchPhrase),
+      selectCustomer: (event) => this.selectCustomer(event),
+      loadCustomerCarts: (currentCartId) => this.loadCustomerCarts(currentCartId),
+      loadCustomerOrders: () => this.loadCustomerOrders(),
     };
   }
 
@@ -60,10 +60,10 @@ export default class CustomerManager {
    *
    * @private
    */
-  _initListeners() {
-    this.$container.on('click', createOrderMap.changeCustomerBtn, () => this._changeCustomer());
-    this._onCustomerSearch();
-    this._onCustomerSelect();
+  initListeners() {
+    this.$container.on('click', createOrderMap.changeCustomerBtn, () => this.changeCustomer());
+    this.onCustomerSearch();
+    this.onCustomerSelect();
   }
 
   /**
@@ -71,7 +71,7 @@ export default class CustomerManager {
    *
    * @private
    */
-  _onCustomerSearch() {
+  onCustomerSearch() {
     EventEmitter.on(eventMap.customerSearched, (response) => {
       this.activeSearchRequest = null;
       this.customerRenderer.renderSearchResults(response.customers);
@@ -83,7 +83,7 @@ export default class CustomerManager {
    *
    * @private
    */
-  _onCustomerSelect() {
+  onCustomerSelect() {
     EventEmitter.on(eventMap.customerSelected, (event) => {
       const $chooseBtn = $(event.currentTarget);
       this.customerId = $chooseBtn.data('customer-id');
@@ -97,7 +97,7 @@ export default class CustomerManager {
    *
    * @private
    */
-  _changeCustomer() {
+  changeCustomer() {
     this.customerRenderer.showCustomerSearch();
   }
 
@@ -106,7 +106,7 @@ export default class CustomerManager {
    *
    * @param currentCartId
    */
-  _loadCustomerCarts(currentCartId) {
+  loadCustomerCarts(currentCartId) {
     const {customerId} = this;
 
     $.get(this.router.generate('admin_customers_carts', {customerId})).then((response) => {
@@ -119,7 +119,7 @@ export default class CustomerManager {
   /**
    * Loads customer orders list
    */
-  _loadCustomerOrders() {
+  loadCustomerOrders() {
     const {customerId} = this;
 
     $.get(this.router.generate('admin_customers_orders', {customerId})).then((response) => {
@@ -134,7 +134,7 @@ export default class CustomerManager {
    *
    * @return {Number}
    */
-  _selectCustomer(chooseCustomerEvent) {
+  selectCustomer(chooseCustomerEvent) {
     EventEmitter.emit(eventMap.customerSelected, chooseCustomerEvent);
 
     return this.customerId;

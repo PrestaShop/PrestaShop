@@ -44,16 +44,15 @@ export default class CustomerRenderer {
    * @param foundCustomers
    */
   renderSearchResults(foundCustomers) {
-    this._clearShownCustomers();
+    this.clearShownCustomers();
 
     if (foundCustomers.length === 0) {
-      this._showNotFoundCustomers();
+      this.showNotFoundCustomers();
 
       return;
     }
 
-    for (const customerId in foundCustomers) {
-      const customerResult = foundCustomers[customerId];
+    Object.entries(foundCustomers).forEach((customerId, customerResult) => {
       const customer = {
         id: customerId,
         firstName: customerResult.firstname,
@@ -62,8 +61,8 @@ export default class CustomerRenderer {
         birthday: customerResult.birthday !== '0000-00-00' ? customerResult.birthday : ' ',
       };
 
-      this._renderFoundCustomer(customer);
-    }
+      this.renderFoundCustomer(customer);
+    });
   }
 
   /**
@@ -156,8 +155,8 @@ export default class CustomerRenderer {
       return;
     }
 
-    for (const key in Object.keys(orders)) {
-      const order = orders[key];
+
+    Object.values(orders).forEach((order) => {
       const $template = $rowTemplate.clone();
 
       $template.find(createOrderMap.orderIdField).text(order.orderId);
@@ -174,7 +173,7 @@ export default class CustomerRenderer {
 
       $ordersTable.find('thead').removeClass('d-none');
       $ordersTable.find('tbody').append($template);
-    }
+    });
   }
 
   /**
@@ -205,7 +204,7 @@ export default class CustomerRenderer {
    *
    * @private
    */
-  _renderFoundCustomer(customer) {
+  renderFoundCustomer(customer) {
     this._hideNotFoundCustomers();
     const $customerSearchResultTemplate = $($(createOrderMap.customerSearchResultTemplate).html());
     const $template = $customerSearchResultTemplate.clone();
@@ -228,7 +227,7 @@ export default class CustomerRenderer {
    *
    * @private
    */
-  _showCheckoutHistoryBlock() {
+  showCheckoutHistoryBlock() {
     $(createOrderMap.customerCheckoutHistory).removeClass('d-none');
   }
 
@@ -237,7 +236,7 @@ export default class CustomerRenderer {
    *
    * @private
    */
-  _clearShownCustomers() {
+  clearShownCustomers() {
     this.$customerSearchResultBlock.empty();
   }
 

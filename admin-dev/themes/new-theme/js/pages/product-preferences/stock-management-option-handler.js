@@ -34,7 +34,7 @@ class StockManagementOptionHandler {
 
   handle() {
     const stockManagementVal = $('input[name="form[stock][stock_management]"]:checked').val();
-    const isStockManagementEnabled = parseInt(stockManagementVal);
+    const isStockManagementEnabled = parseInt(stockManagementVal, 10);
 
     this.handleAllowOrderingOutOfStockOption(isStockManagementEnabled);
     this.handleDisplayAvailableQuantitiesOption(isStockManagementEnabled);

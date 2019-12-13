@@ -30,6 +30,7 @@ module.exports = {
     priceCalculation: true,
     supplierCombinations: true,
     warehouseCombinations: true,
+    admin_notification_get_link: true,
   },
   parserOptions: {
     parser: 'babel-eslint',
@@ -44,6 +45,8 @@ module.exports = {
   rules: {
     'no-new': 0,
     'func-names': 0,
+    'no-alert': 0,
+    'no-bitwise': 0,
     'class-methods-use-this': 0,
     'max-len': ['error', { code: 120 }],
   },

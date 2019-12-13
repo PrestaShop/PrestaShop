@@ -45,14 +45,13 @@ export default class ImportProgressModal {
    * @param {number} total number of items in total.
    */
   updateProgress(completed, total) {
-    completed = parseInt(completed);
-    total = parseInt(total);
-
+    const progressCompleted = parseInt(completed, 10);
+    const progressTotal = parseInt(total, 10);
     const $progressBar = this.progressBar;
-    const percentage = completed / total * 100;
+    const percentage = (progressCompleted / progressTotal) * 100;
 
     $progressBar.css('width', `${percentage}%`);
-    $progressBar.find('> span').text(`${completed}/${total}`);
+    $progressBar.find('> span').text(`${progressCompleted}/${progressTotal}`);
   }
 
   /**
@@ -84,7 +83,7 @@ export default class ImportProgressModal {
    * @param {Array} messages
    */
   showInfoMessages(messages) {
-    this._showMessages(this.infoMessageBlock, messages);
+    this.showMessages(this.infoMessageBlock, messages);
   }
 
   /**
@@ -93,7 +92,7 @@ export default class ImportProgressModal {
    * @param {Array} messages
    */
   showWarningMessages(messages) {
-    this._showMessages(this.warningMessageBlock, messages);
+    this.showMessages(this.warningMessageBlock, messages);
   }
 
   /**
@@ -102,7 +101,7 @@ export default class ImportProgressModal {
    * @param {Array} messages
    */
   showErrorMessages(messages) {
-    this._showMessages(this.errorMessageBlock, messages);
+    this.showMessages(this.errorMessageBlock, messages);
   }
 
   /**
@@ -129,19 +128,19 @@ export default class ImportProgressModal {
    * @param {Array} messages
    * @private
    */
-  _showMessages($messageBlock, messages) {
+  showMessages($messageBlock, messages) {
     let showMessagesBlock = false;
 
-    for (const key in messages) {
+    Object.values(messages).forEach((msg) => {
       // Indicate that the messages block should be displayed
       showMessagesBlock = true;
 
       const message = $('<div>');
-      message.text(messages[key]);
+      message.text(msg);
       message.addClass('message');
 
       $messageBlock.append(message);
-    }
+    });
 
     if (showMessagesBlock) {
       $messageBlock.removeClass('d-none');

@@ -208,8 +208,8 @@ class PositionsListHandler {
       success: () => {
         let start = 0;
         $.each($list.children(), (index, element) => {
-          console.log($(element).find('.index-position'));
-          $(element).find('.index-position').html(++start);
+          start += 1;
+          $(element).find('.index-position').html(start);
         });
 
         window.showSuccessMessage(window.update_success_msg);
@@ -227,7 +227,7 @@ class PositionsListHandler {
     const $moduleId = self.$showModules.val();
     const $regex = new RegExp(`(${$hookName})`, 'gi');
 
-    for (let $id = 0; $id < self.$hooksList.length; $id++) {
+    for (let $id = 0; $id < self.$hooksList.length; $id += 1) {
       self.$hooksList[$id].container.toggle($hookName === '' && $moduleId === 'all');
       self.$hooksList[$id].element.html(self.$hooksList[$id].title);
       self.$hooksList[$id].container.find('.module-item').removeClass('highlight');
@@ -241,7 +241,7 @@ class PositionsListHandler {
       let $currentHooks;
       let $start;
 
-      for (let $id = 0; $id < self.$hooksList.length; $id++) {
+      for (let $id = 0; $id < self.$hooksList.length; $id += 1) {
         // Prepare highlight when one module is selected
         if ($moduleId !== 'all') {
           $currentHooks = self.$hooksList[$id].container.find(`.module-position-${$moduleId}`);
@@ -277,7 +277,7 @@ class PositionsListHandler {
     }
 
     if (!self.$hookPosition.prop('checked')) {
-      for (let $id = 0; $id < self.$hooksList.length; $id++) {
+      for (let $id = 0; $id < self.$hooksList.length; $id += 1) {
         if (self.$hooksList[$id].container.is('.hook-position')) {
           self.$hooksList[$id].container.hide();
         }

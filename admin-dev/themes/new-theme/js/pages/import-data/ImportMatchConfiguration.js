@@ -60,25 +60,25 @@ export default class ImportMatchConfiguration {
       data: formData,
     }).then((response) => {
       if (typeof response.errors !== 'undefined' && response.errors.length) {
-        this._showErrorPopUp(response.errors);
+        this.showErrorPopUp(response.errors);
       } else if (response.matches.length > 0) {
         const $dataMatchesDropdown = this.matchesDropdown;
 
-        for (const key in response.matches) {
-          const $existingMatch = $dataMatchesDropdown.find(`option[value=${response.matches[key].id_import_match}]`);
+        Object.values(response.matches).forEach((resp) => {
+          const $existingMatch = $dataMatchesDropdown.find(`option[value=${resp.id_import_match}]`);
 
           // If match already exists with same id - do nothing
           if ($existingMatch.length > 0) {
-            continue;
+            return;
           }
 
           // Append the new option to the matches dropdown
-          this._appendOptionToDropdown(
+          this.appendOptionToDropdown(
             $dataMatchesDropdown,
-            response.matches[key].name,
-            response.matches[key].id_import_match,
+            resp.name,
+            resp.id_import_match,
           );
-        }
+        });
       }
     });
   }
@@ -101,10 +101,9 @@ export default class ImportMatchConfiguration {
         this.rowsSkipInput.val(response.skip);
 
         const entityFields = response.match.split('|');
-
-        for (const i in entityFields) {
+        Object.keys(entityFields).forEach((i) => {
           $(`#type_value_${i}`).val(entityFields[i]);
-        }
+        });
       }
     });
   }
@@ -138,7 +137,7 @@ export default class ImportMatchConfiguration {
    * @param {String} optionValue
    * @private
    */
-  _appendOptionToDropdown($dropdown, optionText, optionValue) {
+  appendOptionToDropdown($dropdown, optionText, optionValue) {
     const $newOption = $('<option>');
 
     $newOption.attr('value', optionValue);
@@ -153,7 +152,7 @@ export default class ImportMatchConfiguration {
    * @param {Array} errors
    * @private
    */
-  _showErrorPopUp(errors) {
+  showErrorPopUp(errors) {
     alert(errors);
   }
 

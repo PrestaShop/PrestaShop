@@ -33,7 +33,11 @@ class SmtpConfigurationToggler {
     $('.js-email-method').on('change', 'input[type="radio"]', (event) => {
       const mailMethod = $(event.currentTarget).val();
 
-      this._getSmtpMailMethodOption() == mailMethod ? this._showSmtpConfiguration() : this._hideSmtpConfiguration();
+      if (this.getSmtpMailMethodOption() === mailMethod) {
+        this.showSmtpConfiguration();
+      } else {
+        this.hideSmtpConfiguration();
+      }
     });
   }
 
@@ -42,7 +46,7 @@ class SmtpConfigurationToggler {
    *
    * @private
    */
-  _showSmtpConfiguration() {
+  showSmtpConfiguration() {
     $('.js-smtp-configuration').removeClass('d-none');
   }
 
@@ -51,7 +55,7 @@ class SmtpConfigurationToggler {
    *
    * @private
    */
-  _hideSmtpConfiguration() {
+  hideSmtpConfiguration() {
     $('.js-smtp-configuration').addClass('d-none');
   }
 
@@ -62,7 +66,7 @@ class SmtpConfigurationToggler {
    *
    * @returns {String}
    */
-  _getSmtpMailMethodOption() {
+  getSmtpMailMethodOption() {
     return $('.js-email-method').data('smtp-mail-method');
   }
 }

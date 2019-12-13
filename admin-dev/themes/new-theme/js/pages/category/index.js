@@ -34,8 +34,10 @@ import SubmitRowActionExtension from '@components/grid/extension/action/row/subm
 import LinkRowActionExtension from '@components/grid/extension/link-row-action-extension';
 import CategoryPositionExtension from '@components/grid/extension/column/catalog/category-position-extension';
 import AsyncToggleColumnExtension from '@components/grid/extension/column/common/async-toggle-column-extension';
-import DeleteCategoryRowActionExtension from '@components/grid/extension/action/row/category/delete-category-row-action-extension';
-import DeleteCategoriesBulkActionExtension from '@components/grid/extension/action/bulk/category/delete-categories-bulk-action-extension';
+import DeleteCategoryRowActionExtension
+  from '@components/grid/extension/action/row/category/delete-category-row-action-extension';
+import DeleteCategoriesBulkActionExtension
+  from '@components/grid/extension/action/bulk/category/delete-categories-bulk-action-extension';
 import TranslatableInput from '@components/translatable-input';
 import ChoiceTable from '@components/choice-table';
 import textToLinkRewriteCopier from '@components/text-to-link-rewrite-copier';
@@ -81,11 +83,13 @@ $(() => {
 
   textToLinkRewriteCopier({
     sourceElementSelector: 'input[name^="category[name]"]',
+    /* eslint-disable-next-line max-len */
     destinationElementSelector: `${translatorInput.localeInputSelector}:not(.d-none) input[name^="category[link_rewrite]"]`,
   });
 
   textToLinkRewriteCopier({
     sourceElementSelector: 'input[name^="root_category[name]"]',
+    /* eslint-disable-next-line max-len */
     destinationElementSelector: `${translatorInput.localeInputSelector}:not(.d-none) input[name^="root_category[link_rewrite]"]`,
   });
 

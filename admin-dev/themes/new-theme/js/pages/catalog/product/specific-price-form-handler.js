@@ -31,7 +31,7 @@ class SpecificPriceFormHandler {
     this.prefixEditForm = 'form_modal_';
     this.editModalIsOpen = false;
 
-    this.$createPriceFormDefaultValues = new Object();
+    this.$createPriceFormDefaultValues = {};
     this.storePriceFormDefaultValues();
 
     this.loadAndDisplayExistingSpecificPricesList();
@@ -85,7 +85,9 @@ class SpecificPriceFormHandler {
     const self = this;
 
     $.each(specificPrices, (index, specificPrice) => {
-      const deleteUrl = $('#js-specific-price-list').attr('data-action-delete').replace(/delete\/\d+/, `delete/${specificPrice.id_specific_price}`);
+      const deleteUrl = $('#js-specific-price-list')
+        .attr('data-action-delete')
+        .replace(/delete\/\d+/, `delete/${specificPrice.id_specific_price}`);
       const row = self.renderSpecificPriceRow(specificPrice, deleteUrl);
 
       specificPricesList += row;
@@ -105,6 +107,7 @@ class SpecificPriceFormHandler {
   renderSpecificPriceRow(specificPrice, deleteUrl) {
     const specificPriceId = specificPrice.id_specific_price;
 
+    /* eslint-disable max-len */
     const row = `${'<tr>'
         + '<td>'}${specificPrice.rule_name}</td>`
         + `<td>${specificPrice.attributes_name}</td>`
@@ -119,6 +122,7 @@ class SpecificPriceFormHandler {
         + `<td>${specificPrice.can_delete ? `<a href="${deleteUrl}" class="js-delete delete btn tooltip-link delete pl-0 pr-0"><i class="material-icons">delete</i></a>` : ''}</td>`
         + `<td>${specificPrice.can_edit ? `<a href="#" data-specific-price-id="${specificPriceId}" class="js-edit edit btn tooltip-link delete pl-0 pr-0"><i class="material-icons">edit</i></a>` : ''}</td>`
         + '</tr>';
+    /* eslint-enable max-len */
 
     return row;
   }
@@ -135,13 +139,25 @@ class SpecificPriceFormHandler {
       $('#specific_price_form').collapse('hide');
     });
 
-    $('#specific_price_form .js-save').on('click', () => this.submitCreatePriceForm());
+    $('#specific_price_form .js-save').on(
+      'click',
+      () => this.submitCreatePriceForm(),
+    );
 
-    $('#js-open-create-specific-price-form').on('click', () => this.loadAndFillOptionsForSelectCombinationInput(usePrefixForCreate));
+    $('#js-open-create-specific-price-form').on(
+      'click',
+      () => this.loadAndFillOptionsForSelectCombinationInput(usePrefixForCreate),
+    );
 
-    $(`${selectorPrefix}leave_bprice`).on('click', () => this.enableSpecificPriceFieldIfEligible(usePrefixForCreate));
+    $(`${selectorPrefix}leave_bprice`).on(
+      'click',
+      () => this.enableSpecificPriceFieldIfEligible(usePrefixForCreate),
+    );
 
-    $(`${selectorPrefix}sp_reduction_type`).on('change', () => this.enableSpecificPriceTaxFieldIfEligible(usePrefixForCreate));
+    $(`${selectorPrefix}sp_reduction_type`).on(
+      'change',
+      () => this.enableSpecificPriceTaxFieldIfEligible(usePrefixForCreate),
+    );
   }
 
   /**
@@ -160,7 +176,10 @@ class SpecificPriceFormHandler {
 
     $(`${selectorPrefix}leave_bprice`).on('click', () => this.enableSpecificPriceFieldIfEligible(usePrefixForCreate));
 
-    $(`${selectorPrefix}sp_reduction_type`).on('change', () => this.enableSpecificPriceTaxFieldIfEligible(usePrefixForCreate));
+    $(`${selectorPrefix}sp_reduction_type`).on(
+      'change',
+      () => this.enableSpecificPriceTaxFieldIfEligible(usePrefixForCreate),
+    );
 
     this.reinitializeDatePickers();
 
@@ -183,7 +202,7 @@ class SpecificPriceFormHandler {
   initializeLeaveBPriceField(usePrefixForCreate) {
     const selectorPrefix = this.getPrefixSelector(usePrefixForCreate);
 
-    if ($(`${selectorPrefix}sp_price`).val() != '') {
+    if ($(`${selectorPrefix}sp_price`).val() !== '') {
       $(`${selectorPrefix}sp_price`).prop('disabled', false);
       $(`${selectorPrefix}leave_bprice`).prop('checked', false);
     }
@@ -212,9 +231,6 @@ class SpecificPriceFormHandler {
     });
   }
 
-  /**
-   * @see https://vijayasankarn.wordpress.com/2017/02/24/quick-fix-scrolling-and-focus-when-multiple-bootstrap-modals-are-open/
-   */
   configureMultipleModalsBehavior() {
     $('.modal').on('hidden.bs.modal', () => {
       if (this.editModalIsOpen) {
@@ -236,20 +252,18 @@ class SpecificPriceFormHandler {
       type: 'POST',
       url,
       data,
-    })
-      .done((response) => {
-        showSuccessMessage(translate_javascripts['Form update success']);
-        this.resetCreatePriceFormDefaultValues();
-        $('#specific_price_form').collapse('hide');
-        this.loadAndDisplayExistingSpecificPricesList();
+    }).done(() => {
+      showSuccessMessage(translate_javascripts['Form update success']);
+      this.resetCreatePriceFormDefaultValues();
+      $('#specific_price_form').collapse('hide');
+      this.loadAndDisplayExistingSpecificPricesList();
 
-        $('#specific_price_form .js-save').removeAttr('disabled');
-      })
-      .fail((errors) => {
-        showErrorMessage(errors.responseJSON);
+      $('#specific_price_form .js-save').removeAttr('disabled');
+    }).fail((errors) => {
+      showErrorMessage(errors.responseJSON);
 
-        $('#specific_price_form .js-save').removeAttr('disabled');
-      });
+      $('#specific_price_form .js-save').removeAttr('disabled');
+    });
   }
 
   /**
@@ -260,6 +274,7 @@ class SpecificPriceFormHandler {
     const specificPriceId = $('#edit-specific-price-modal-form').data('specificPriceId');
     const url = baseUrl.replace(/update\/\d+/, `update/${specificPriceId}`);
 
+    /* eslint-disable-next-line max-len */
     const data = $('#edit-specific-price-modal-form input, #edit-specific-price-modal-form select, #form_id_product').serialize();
 
     $('#edit-specific-price-modal-form .js-save').attr('disabled', 'disabled');
@@ -288,26 +303,28 @@ class SpecificPriceFormHandler {
    * @private
    */
   deleteSpecificPrice(clickedLink) {
-    modalConfirmation.create(translate_javascripts['This will delete the specific price. Do you wish to proceed?'], null, {
-      onContinue: () => {
-        const url = $(clickedLink).attr('href');
-        $(clickedLink).attr('disabled', 'disabled');
+    modalConfirmation.create(
+      translate_javascripts['This will delete the specific price. Do you wish to proceed?'],
+      null,
+      {
+        onContinue: () => {
+          const url = $(clickedLink).attr('href');
+          $(clickedLink).attr('disabled', 'disabled');
 
-        $.ajax({
-          type: 'GET',
-          url,
-        })
-          .done((response) => {
+          $.ajax({
+            type: 'GET',
+            url,
+          }).done((response) => {
             this.loadAndDisplayExistingSpecificPricesList();
             showSuccessMessage(response);
             $(clickedLink).removeAttr('disabled');
-          })
-          .fail((errors) => {
+          }).fail((errors) => {
             showErrorMessage(errors.responseJSON);
             $(clickedLink).removeAttr('disabled');
           });
+        },
       },
-    }).show();
+    ).show();
   }
 
   /**
@@ -339,24 +356,25 @@ class SpecificPriceFormHandler {
     const selectorPrefix = this.getPrefixSelector(usePrefixForCreate);
 
     const inputField = $(`${selectorPrefix}sp_id_product_attribute`);
-    const url = inputField.attr('data-action').replace(/product-combinations\/\d+/, `product-combinations/${this.getProductId()}`);
+    const url = inputField
+      .attr('data-action')
+      .replace(/product-combinations\/\d+/, `product-combinations/${this.getProductId()}`);
 
     $.ajax({
       type: 'GET',
       url,
-    })
-      .done((combinations) => {
-        /** remove all options except first one */
-        inputField.find('option:gt(0)').remove();
+    }).done((combinations) => {
+      /** remove all options except first one */
+      inputField.find('option:gt(0)').remove();
 
-        $.each(combinations, (index, combination) => {
-          inputField.append(`<option value="${combination.id}">${combination.name}</option>`);
-        });
-
-        if (inputField.data('selectedAttribute') != '0') {
-          inputField.val(inputField.data('selectedAttribute')).trigger('change');
-        }
+      $.each(combinations, (index, combination) => {
+        inputField.append(`<option value="${combination.id}">${combination.name}</option>`);
       });
+
+      if (inputField.data('selectedAttribute') !== '0') {
+        inputField.val(inputField.data('selectedAttribute')).trigger('change');
+      }
+    });
   }
 
   /**
@@ -477,9 +495,10 @@ class SpecificPriceFormHandler {
    * @private
    */
   getPrefixSelector(usePrefixForCreate) {
-    if (usePrefixForCreate == true) {
+    if (usePrefixForCreate) {
       return `#${this.prefixCreateForm}`;
     }
+
     return `#${this.prefixEditForm}`;
   }
 }
