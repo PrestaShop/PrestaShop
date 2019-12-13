@@ -27,23 +27,44 @@
 namespace PrestaShop\PrestaShop\Core\CommandBus;
 
 use League\Tactician\CommandBus;
+use Psr\Log\LoggerInterface;
+use Symfony\Component\Serializer\SerializerInterface;
 
 /**
  * Class TacticianCommandBusAdapter is Tactician's CommandsBus implementation for PrestaShop's contract.
  */
 final class TacticianCommandBusAdapter implements CommandBusInterface
 {
+    const LOG_MESSAGE_FORMAT = 'CQRS handle %s: %s';
+
     /**
      * @var CommandBus
      */
     private $bus;
 
     /**
-     * @param CommandBus $bus
+     * @var LoggerInterface
      */
-    public function __construct(CommandBus $bus)
-    {
+    private $logger;
+
+    /**
+     * @var SerializerInterface
+     */
+    private $serializer;
+
+    /**
+     * @param CommandBus $bus
+     * @param LoggerInterface $logger
+     * @param SerializerInterface $serializer
+     */
+    public function __construct(
+        CommandBus $bus,
+        LoggerInterface $logger,
+        SerializerInterface $serializer
+    ) {
         $this->bus = $bus;
+        $this->logger = $logger;
+        $this->serializer = $serializer;
     }
 
     /**
@@ -51,6 +72,12 @@ final class TacticianCommandBusAdapter implements CommandBusInterface
      */
     public function handle($command)
     {
+        $this->logger->info(sprintf(
+            self::LOG_MESSAGE_FORMAT,
+            get_class($command),
+            $this->serializer->serialize($command, 'json')
+        ));
+
         return $this->bus->handle($command);
     }
 }

@@ -6,11 +6,15 @@ services:
         class: 'PrestaShop\PrestaShop\Core\CommandBus\TacticianCommandBusAdapter'
         arguments:
             - '@tactician.commandbus.default'
+            - '@logger'
+            - '@serializer'
 
     prestashop.core.query_bus:
         class: 'PrestaShop\PrestaShop\Core\CommandBus\TacticianCommandBusAdapter'
         arguments:
             - '@tactician.commandbus.default'
+            - '@logger'
+            - '@serializer'
 
     prestashop.core.provider.command_definition_provider:
       class: 'PrestaShop\PrestaShop\Core\CommandBus\Parser\CommandDefinitionParser'
