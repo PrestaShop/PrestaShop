@@ -176,6 +176,8 @@ class SurvivalTest extends WebTestCase
             'admin_emails_index' => ['Advanced parameters E-mail', 'admin_emails_index'],
             'admin_order_messages_index' => ['Order messages', 'admin_order_messages_index'],
             'admin_order_messages_create' => ['Add new', 'admin_order_messages_create'],
+            'admin_attachments_index' => ['Files', 'admin_attachments_index'],
+            'admin_attachment_create' => ['Add new', 'admin_attachment_create'],
         ];
     }
 
