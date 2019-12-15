@@ -67,5 +67,23 @@
           </div>
       {% endblock %}
     {% endembed %}
+
+    {% embed '@PrestaShop/Admin/Helpers/bootstrap_popup.html.twig' with {
+      'id': grid.id ~ '_grid_confirm_deletion_modal',
+      'title': "Delete selection"|trans({}, 'Admin.Global'),
+      'closable': true,
+      'actions': [{
+        'type': 'button',
+        'label': "Delete"|trans({}, 'Admin.Actions'),
+        'value': 'confirm',
+        'class': 'btn btn-danger btn-lg btn-bulk_delete-submit',
+      }],
+    }%}
+      {% block content %}
+        <div class="modal-body text-left font-weight-normal">
+          <p>{{ 'Are you sure you want to delete the selected item(s)?'|trans({}, 'Admin.Global') }}</p>
+        </div>
+      {% endblock %}
+    {% endembed %}
   </div>
 {% endif %}

@@ -33,6 +33,7 @@ import SubmitBulkExtension from '@components/grid/extension/submit-bulk-action-e
 import SubmitRowActionExtension from '@components/grid/extension/action/row/submit-row-action-extension';
 import LinkRowActionExtension from '@components/grid/extension/link-row-action-extension';
 import TranslatableInput from '@components/translatable-input';
+import BulkDeleteWithModalConfirmExtension from '@components/grid/extension/action/bulk/bulk-delete-with-confirm-modal-extension';
 
 const $ = window.$;
 
@@ -47,6 +48,7 @@ $(() => {
   attachmentGrid.addExtension(new SubmitBulkExtension());
   attachmentGrid.addExtension(new SubmitRowActionExtension());
   attachmentGrid.addExtension(new LinkRowActionExtension());
+  attachmentGrid.addExtension(new BulkDeleteWithModalConfirmExtension());
 
   new TranslatableInput();
 });
