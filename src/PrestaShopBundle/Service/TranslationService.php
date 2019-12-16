@@ -153,12 +153,12 @@ class TranslationService
      */
     public function listDomainTranslation($locale, $domain, $theme = null, $search = null, $module = null)
     {
-        if (!empty($theme) && 'classic' !== $theme) {
+        if (!empty($theme) && 'classic' !== $theme && null === $module) {
             $translationProvider = $this->container->get('prestashop.translation.theme_provider');
             $translationProvider->setThemeName($theme);
         } else {
             $translationProvider = $this->container->get('prestashop.translation.search_provider');
-            if ($module !== null && $translationProvider instanceof UseModuleInterface) {
+            if (null !== $module && $translationProvider instanceof UseModuleInterface) {
                 $translationProvider->setModuleName($module);
             }
         }
@@ -178,7 +178,7 @@ class TranslationService
             'data' => array(),
         );
         $treeDomain = preg_split('/(?=[A-Z])/', $domain, -1, PREG_SPLIT_NO_EMPTY);
-        if (!empty($theme) && 'classic' !== $theme) {
+        if (!empty($theme) && 'classic' !== $theme && null === $module) {
             $defaultCatalog = current($translationProvider->getThemeCatalogue()->all());
         } else {
             $defaultCatalog = current($translationProvider->getDefaultCatalogue()->all());
