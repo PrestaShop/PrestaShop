@@ -52,7 +52,6 @@ class ContactFeatureContext extends AbstractDomainFeatureContext
         /** @var ContactId $contactId */
         $contactId = $this->getCommandBus()->handle($addContactCommand);
         SharedStorage::getStorage()->set($reference, $contactId);
-
     }
 
     /**
