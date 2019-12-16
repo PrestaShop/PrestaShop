@@ -34,35 +34,35 @@
         @click="sendQty"
       >
         <i class="material-icons">edit</i>
-        {{trans('button_movement_type')}}
+        {{ trans('button_movement_type') }}
       </PSButton>
     </div>
   </div>
 </template>
 
 <script>
-  import PSButton from '@app/widgets/ps-button';
+import PSButton from '@app/widgets/ps-button';
 
-  export default {
-    computed: {
-      disabled() {
-        return !this.$store.state.hasQty;
-      },
-      classObject() {
-        return {
-          'btn-primary': !this.disabled,
-        };
-      },
+export default {
+  computed: {
+    disabled() {
+      return !this.$store.state.hasQty;
     },
-    methods: {
-      sendQty() {
-        this.$store.dispatch('updateQtyByProductsId');
-      },
+    classObject() {
+      return {
+        'btn-primary': !this.disabled,
+      };
     },
-    components: {
-      PSButton,
+  },
+  methods: {
+    sendQty() {
+      this.$store.dispatch('updateQtyByProductsId');
     },
-  };
+  },
+  components: {
+    PSButton,
+  },
+};
 </script>
 
 <style lang="scss" scoped>

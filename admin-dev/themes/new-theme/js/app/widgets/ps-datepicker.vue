@@ -24,7 +24,11 @@
  *-->
 <template>
   <div class="input-group date">
-    <input ref="datepicker" type="text" class="form-control" />
+    <input
+      ref="datepicker"
+      type="text"
+      class="form-control"
+    >
     <div class="input-group-append">
       <span class="input-group-text">
         <i class="material-icons">event</i>
@@ -34,31 +38,31 @@
 </template>
 
 <script>
-  export default {
-    props: {
-      locale: {
-        type: String,
-        required: true,
-        default: 'en',
-      },
-      type: {
-        type: String,
-        required: true,
-      },
+export default {
+  props: {
+    locale: {
+      type: String,
+      required: true,
+      default: 'en',
     },
-    mounted() {
-      $(this.$refs.datepicker).datetimepicker({
-        format: 'YYYY-MM-DD',
-        showClear: true,
-      }).on('dp.change', (infos) => {
-        infos.dateType = this.type;
-        this.$emit(
-          infos.date ? 'dpChange' : 'reset',
-          infos,
-        );
-      });
+    type: {
+      type: String,
+      required: true,
     },
-  };
+  },
+  mounted() {
+    $(this.$refs.datepicker).datetimepicker({
+      format: 'YYYY-MM-DD',
+      showClear: true,
+    }).on('dp.change', (infos) => {
+      infos.dateType = this.type;
+      this.$emit(
+        infos.date ? 'dpChange' : 'reset',
+        infos,
+      );
+    });
+  },
+};
 </script>
 
 <style lang="scss">

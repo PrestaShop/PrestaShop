@@ -37,7 +37,7 @@
       pattern="\d*"
       step="1"
       buttons="true"
-      hoverButtons="true"
+      hover-buttons="true"
       :value="qty"
       @change="onChange"
       @keyup="onKeyup($event)"
@@ -45,95 +45,100 @@
       @blur="focusOut($event)"
     />
     <transition name="fade">
-      <button v-if="isActive" class="check-button"><i class="material-icons">check</i></button>
+      <button
+        v-if="isActive"
+        class="check-button"
+      >
+        <i class="material-icons">check</i>
+      </button>
     </transition>
   </form>
 </template>
 
 <script>
-  import PSNumber from '@app/widgets/ps-number';
+import PSNumber from '@app/widgets/ps-number';
 
-  const $ = global.$;
+const {$} = global;
 
-  export default {
-    props: ['product'],
-    computed: {
-      qty() {
-        if (!this.product.qty) {
-          this.isEnabled = false;
-          this.value = '';
-        }
-        return this.product.qty;
-      },
-      id() {
-        return `qty-${this.product.product_id}-${this.product.combination_id}`;
-      },
-      classObject() {
-        return {
-          active: this.isActive,
-          disabled: !this.isEnabled,
-        };
-      },
-    },
-    methods: {
-      onChange(val) {
-        this.value = val;
-        this.isEnabled = !!val;
-      },
-      deActivate() {
-        this.isActive = false;
+export default {
+  props: ['product'],
+  computed: {
+    qty() {
+      if (!this.product.qty) {
         this.isEnabled = false;
-        this.value = null;
-        this.product.qty = null;
-      },
-      onKeyup(event) {
-        const val = event.target.value;
-        if (val === 0) {
-          this.deActivate();
-        } else {
-          this.isActive = true;
-          this.isEnabled = true;
-          this.value = val;
-        }
-      },
-      focusIn() {
+        this.value = '';
+      }
+      return this.product.qty;
+    },
+    id() {
+      return `qty-${this.product.product_id}-${this.product.combination_id}`;
+    },
+    classObject() {
+      return {
+        active: this.isActive,
+        disabled: !this.isEnabled,
+      };
+    },
+  },
+  methods: {
+    onChange(val) {
+      this.value = val;
+      this.isEnabled = !!val;
+    },
+    deActivate() {
+      this.isActive = false;
+      this.isEnabled = false;
+      this.value = null;
+      this.product.qty = null;
+    },
+    onKeyup(event) {
+      const val = event.target.value;
+      if (val === 0) {
+        this.deActivate();
+      } else {
         this.isActive = true;
-      },
-      focusOut(event) {
-        const value = parseInt(this.value, 10);
-        if (!$(event.target).hasClass('ps-number') && (isNaN(value) || value === 0)) {
-          this.isActive = false;
-        }
-        this.isEnabled = !!this.value;
-      },
-      sendQty() {
-        const postUrl = this.product.edit_url;
-        if (parseInt(this.product.qty, 10) !== 0 && !isNaN(parseInt(this.value, 10))) {
-          this.$store.dispatch('updateQtyByProductId', {
-            url: postUrl,
-            delta: this.value,
-          });
-          this.deActivate();
-        }
-      },
+        this.isEnabled = true;
+        this.value = val;
+      }
     },
-    watch: {
-      value(val) {
-        this.$emit('updateProductQty', {
-          product: this.product,
-          delta: val,
+    focusIn() {
+      this.isActive = true;
+    },
+    focusOut(event) {
+      const value = parseInt(this.value, 10);
+      if (!$(event.target).hasClass('ps-number') && (isNaN(value) || value === 0)) {
+        this.isActive = false;
+      }
+      this.isEnabled = !!this.value;
+    },
+    sendQty() {
+      const postUrl = this.product.edit_url;
+      if (parseInt(this.product.qty, 10) !== 0 && !isNaN(parseInt(this.value, 10))) {
+        this.$store.dispatch('updateQtyByProductId', {
+          url: postUrl,
+          delta: this.value,
         });
-      },
+        this.deActivate();
+      }
     },
-    components: {
-      PSNumber,
+  },
+  watch: {
+    value(val) {
+      this.$emit('updateProductQty', {
+        product: this.product,
+        delta: val,
+      });
     },
-    data: () => ({
-      value: null,
-      isActive: false,
-      isEnabled: false,
-    }),
-  };
+  },
+  components: {
+    PSNumber,
+  },
+  data: () => ({
+    value: null,
+    isActive: false,
+    isEnabled: false,
+  }),
+};
 </script>
 
 <style lang="scss" type="text/scss" scoped>

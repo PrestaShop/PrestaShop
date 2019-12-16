@@ -34,10 +34,10 @@ const {$} = window;
  */
 class TranslatableField {
   constructor(options) {
-    options = options || {};
+    const opts = options || {};
 
-    this.localeButtonSelector = options.localeButtonSelector || '.translationsLocales.nav .nav-item a[data-toggle="tab"]';
-    this.localeNavigationSelector = options.localeNavigationSelector || '.translationsLocales.nav';
+    this.localeButtonSelector = opts.localeButtonSelector || '.translationsLocales.nav .nav-item a[data-toggle="tab"]';
+    this.localeNavigationSelector = opts.localeNavigationSelector || '.translationsLocales.nav';
 
     $('body').on('shown.bs.tab', this.localeButtonSelector, this.toggleLanguage.bind(this));
     EventEmitter.on('languageSelected', this.toggleFields.bind(this));
