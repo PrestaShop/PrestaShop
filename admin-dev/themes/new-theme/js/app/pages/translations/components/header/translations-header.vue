@@ -36,30 +36,30 @@
 </template>
 
 <script>
-import Breadcrumb from './breadcrumb';
+  import Breadcrumb from './breadcrumb';
 
-const {$} = global;
+  const {$} = global;
 
-function getOldHeaderToolbarButtons() {
-  return $('.header-toolbar')
-    .first()
-    .find('.toolbar-icons');
-}
+  function getOldHeaderToolbarButtons() {
+    return $('.header-toolbar')
+      .first()
+      .find('.toolbar-icons');
+  }
 
-export default {
-  components: {
-    Breadcrumb,
-  },
-  mounted() {
-    // move the toolbar buttons to this header
-    const toolbarButtons = getOldHeaderToolbarButtons();
-    toolbarButtons.insertAfter($(this.$el).find('.title-row > .title'));
+  export default {
+    components: {
+      Breadcrumb,
+    },
+    mounted() {
+      // move the toolbar buttons to this header
+      const toolbarButtons = getOldHeaderToolbarButtons();
+      toolbarButtons.insertAfter($(this.$el).find('.title-row > .title'));
 
-    // signal header change (so size can be updated)
-    const event = $.Event('vueHeaderMounted', {
-      name: 'stock-header',
-    });
-    $(document).trigger(event);
-  },
-};
+      // signal header change (so size can be updated)
+      const event = $.Event('vueHeaderMounted', {
+        name: 'stock-header',
+      });
+      $(document).trigger(event);
+    },
+  };
 </script>

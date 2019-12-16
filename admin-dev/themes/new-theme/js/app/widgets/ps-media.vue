@@ -39,14 +39,14 @@
   </div>
 </template>
 <script>
-export default {
-  props: ['thumbnail'],
-  computed: {
-    displayThumb() {
-      return !!this.thumbnail;
+  export default {
+    props: ['thumbnail'],
+    computed: {
+      displayThumb() {
+        return !!this.thumbnail;
+      },
     },
-  },
-};
+  };
 </script>
 
 <style lang="scss" scoped>

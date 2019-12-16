@@ -23,7 +23,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-import tableDnD from 'tablednd/dist/jquery.tablednd.min';
+import 'tablednd/dist/jquery.tablednd.min';
 
 const {$} = window;
 
@@ -45,7 +45,7 @@ export default class CategoryPositionExtension {
   extend(grid) {
     this.grid = grid;
 
-    this._addIdsToGridTableRows();
+    this.addIdsToGridTableRows();
 
     grid.getContainer().find('.js-grid-table').tableDnD({
       dragHandle: '.js-drag-handle',
@@ -53,7 +53,7 @@ export default class CategoryPositionExtension {
       onDragStart: () => {
         this.originalPositions = decodeURIComponent($.tableDnD.serialize());
       },
-      onDrop: (table, row) => this._handleCategoryPositionChange(row),
+      onDrop: (table, row) => this.handleCategoryPositionChange(row),
     });
   }
 
@@ -64,7 +64,7 @@ export default class CategoryPositionExtension {
    *
    * @private
    */
-  _handleCategoryPositionChange(row) {
+  handleCategoryPositionChange(row) {
     const positions = decodeURIComponent($.tableDnD.serialize());
     const way = (this.originalPositions.indexOf(row.id) < positions.indexOf(row.id)) ? 1 : 0;
 
@@ -88,7 +88,7 @@ export default class CategoryPositionExtension {
 
     params += `&${$.param(queryParams)}`;
 
-    this._updateCategoryPosition(positionUpdateUrl, params);
+    this.updateCategoryPosition(positionUpdateUrl, params);
   }
 
   /**
@@ -96,7 +96,7 @@ export default class CategoryPositionExtension {
    *
    * @private
    */
-  _addIdsToGridTableRows() {
+  addIdsToGridTableRows() {
     this.grid.getContainer()
       .find('.js-grid-table')
       .find(`.js-${this.grid.getId()}-position`)
@@ -118,7 +118,7 @@ export default class CategoryPositionExtension {
    *
    * @private
    */
-  _updateCategoryIdsAndPositions() {
+  updateCategoryIdsAndPositions() {
     this.grid.getContainer()
       .find('.js-grid-table')
       .find(`.js-${this.grid.getId()}-position`)
@@ -145,7 +145,7 @@ export default class CategoryPositionExtension {
    *
    * @private
    */
-  _updateCategoryPosition(url, params) {
+  updateCategoryPosition(url, params) {
     $.post({
       url,
       headers: {
@@ -155,12 +155,12 @@ export default class CategoryPositionExtension {
       dataType: 'json',
     }).then((response) => {
       if (response.success) {
-        showSuccessMessage(response.message);
+        window.showSuccessMessage(response.message);
       } else {
-        showErrorMessage(response.message);
+        window.showErrorMessage(response.message);
       }
 
-      this._updateCategoryIdsAndPositions();
+      this.updateCategoryIdsAndPositions();
     });
   }
 }

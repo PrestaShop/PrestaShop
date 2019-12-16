@@ -40,27 +40,33 @@
 </template>
 
 <script>
-export default {
-  props: {
-    // column name
-    order: String,
-    // indicates the currently sorted column in the table
-    currentSort: String,
-  },
-  methods: {
-    sortToggle() {
-      // toggle direction
-      this.sortDirection = (this.sortDirection === 'asc') ? 'desc' : 'asc';
-      this.$emit('sort', this.order, this.sortDirection);
+  export default {
+    props: {
+      // column name
+      order: {
+        type: String,
+        required: true,
+      },
+      // indicates the currently sorted column in the table
+      currentSort: {
+        type: String,
+        required: true,
+      },
     },
-  },
-  data: () => ({
-    sortDirection: 'asc',
-  }),
-  computed: {
-    isCurrent() {
-      return this.currentSort === this.order;
+    methods: {
+      sortToggle() {
+        // toggle direction
+        this.sortDirection = (this.sortDirection === 'asc') ? 'desc' : 'asc';
+        this.$emit('sort', this.order, this.sortDirection);
+      },
     },
-  },
-};
+    data: () => ({
+      sortDirection: 'asc',
+    }),
+    computed: {
+      isCurrent() {
+        return this.currentSort === this.order;
+      },
+    },
+  };
 </script>

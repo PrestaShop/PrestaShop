@@ -52,7 +52,7 @@
 export default class GeneratableInput {
   constructor() {
     return {
-      attachOn: (btnSelector) => this._attachOn(btnSelector),
+      attachOn: (btnSelector) => this.attachOn(btnSelector),
     };
   }
 
@@ -63,7 +63,7 @@ export default class GeneratableInput {
    *
    * @private
    */
-  _attachOn(generatorBtnSelector) {
+  attachOn(generatorBtnSelector) {
     const generatorBtn = document.querySelector(generatorBtnSelector);
     if (generatorBtn === null) {
       return null;
@@ -72,10 +72,10 @@ export default class GeneratableInput {
       const {attributes} = event.currentTarget;
 
       const targetInputId = attributes.getNamedItem('data-target-input-id').value;
-      const generatedValueLength = parseInt(attributes.getNamedItem('data-generated-value-length').value);
+      const generatedValueLength = parseInt(attributes.getNamedItem('data-generated-value-length').value, 10);
 
       const targetInput = document.querySelector(`#${targetInputId}`);
-      targetInput.value = this._generateValue(generatedValueLength);
+      targetInput.value = this.generateValue(generatedValueLength);
     });
   }
 
@@ -88,11 +88,11 @@ export default class GeneratableInput {
    *
    * @private
    */
-  _generateValue(length) {
+  generateValue(length) {
     const chars = '123456789ABCDEFGHIJKLMNPQRSTUVWXYZ';
     let generatedValue = '';
 
-    for (let i = 1; i <= length; ++i) {
+    for (let i = 1; i <= length; i += 1) {
       generatedValue += chars.charAt(Math.floor(Math.random() * chars.length));
     }
 

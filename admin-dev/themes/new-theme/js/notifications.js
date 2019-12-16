@@ -28,7 +28,7 @@ const refreshNotifications = function () {
   $.ajax({
     type: 'POST',
     headers: {'cache-control': 'no-cache'},
-    url: `${adminNotificationGetLink}&rand=${new Date().getTime()}`,
+    url: `${window.adminNotificationGetLink}&rand=${new Date().getTime()}`,
     async: true,
     cache: false,
     dataType: 'json',
@@ -87,9 +87,9 @@ let fillTpl = function (results, eltAppendTo, tpl) {
         .replace(/_company_/g, (value.company !== '' ? ` (${value.company}) ` : ''))
         .replace(/_date_add_/g, value.date_add)
         .replace(/_status_/g, value.status)
-        .replace(/order_url/g, `${baseAdminDir}index.php?tab=AdminOrders&token=${tokenAdminOrders}&vieworder&id_order=${value.id_order}`)
-        .replace(/customer_url/g, `${baseAdminDir}index.php?tab=AdminCustomers&token=${tokenAdminCustomers}&viewcustomer&id_customer=${value.id_customer}`)
-        .replace(/message_url/g, `${baseAdminDir}index.php?tab=AdminCustomerThreads&token=${tokenAdminCustomerThreads}&viewcustomer_thread&id_customer_thread=${value.id_customer_thread}`),
+        .replace(/order_url/g, `${window.baseAdminDir}index.php?tab=AdminOrders&token=${window.tokenAdminOrders}&vieworder&id_order=${value.id_order}`)
+        .replace(/customer_url/g, `${window.baseAdminDir}index.php?tab=AdminCustomers&token=${window.tokenAdminCustomers}&viewcustomer&id_customer=${value.id_customer}`)
+        .replace(/message_url/g, `${window.baseAdminDir}index.php?tab=AdminCustomerThreads&token=${window.tokenAdminCustomerThreads}&viewcustomer_thread&id_customer_thread=${value.id_customer_thread}`),
     );
     /* eslint-ensable max-len */
   });

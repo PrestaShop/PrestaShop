@@ -140,7 +140,7 @@ export default class Header {
 
   updateEmployeeNotifications() {
     $.post(
-      adminNotificationPushLink,
+      window.adminNotificationPushLink,
       {
         type: $('.notification-center .nav-link.active').attr('data-type'),
       },

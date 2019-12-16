@@ -72,58 +72,58 @@
 </template>
 
 <script>
-import PSTags from '@app/widgets/ps-tags';
-import PSButton from '@app/widgets/ps-button';
-import PSAlert from '@app/widgets/ps-alert';
-import {EventBus} from '@app/utils/event-bus';
-import Filters from './filters';
+  import PSTags from '@app/widgets/ps-tags';
+  import PSButton from '@app/widgets/ps-button';
+  import PSAlert from '@app/widgets/ps-alert';
+  import {EventBus} from '@app/utils/event-bus';
+  import Filters from './filters';
 
-export default {
-  components: {
-    Filters,
-    PSTags,
-    PSButton,
-    PSAlert,
-  },
-  computed: {
-    error() {
-      return (this.alertType === 'ALERT_TYPE_DANGER');
+  export default {
+    components: {
+      Filters,
+      PSTags,
+      PSButton,
+      PSAlert,
     },
-  },
-  methods: {
-    onClick() {
-      const {tag} = this.$refs.psTags;
-      this.$refs.psTags.add(tag);
+    computed: {
+      error() {
+        return (this.alertType === 'ALERT_TYPE_DANGER');
+      },
     },
-    onSearch() {
-      this.$emit('search', this.tags);
-    },
-    applyFilter(filters) {
-      this.$emit('applyFilter', filters);
-    },
-    onCloseAlert() {
-      this.showAlert = false;
-    },
-  },
-  watch: {
-    $route() {
-      this.tags = [];
-    },
-  },
-  mounted() {
-    EventBus.$on('displayBulkAlert', (type) => {
-      this.alertType = type === 'success' ? 'ALERT_TYPE_SUCCESS' : 'ALERT_TYPE_DANGER';
-      this.showAlert = true;
-      setTimeout((_) => {
+    methods: {
+      onClick() {
+        const {tag} = this.$refs.psTags;
+        this.$refs.psTags.add(tag);
+      },
+      onSearch() {
+        this.$emit('search', this.tags);
+      },
+      applyFilter(filters) {
+        this.$emit('applyFilter', filters);
+      },
+      onCloseAlert() {
         this.showAlert = false;
-      }, 5000);
-    });
-  },
-  data: () => ({
-    tags: [],
-    showAlert: false,
-    alertType: 'ALERT_TYPE_DANGER',
-    duration: false,
-  }),
-};
+      },
+    },
+    watch: {
+      $route() {
+        this.tags = [];
+      },
+    },
+    mounted() {
+      EventBus.$on('displayBulkAlert', (type) => {
+        this.alertType = type === 'success' ? 'ALERT_TYPE_SUCCESS' : 'ALERT_TYPE_DANGER';
+        this.showAlert = true;
+        setTimeout((_) => {
+          this.showAlert = false;
+        }, 5000);
+      });
+    },
+    data: () => ({
+      tags: [],
+      showAlert: false,
+      alertType: 'ALERT_TYPE_DANGER',
+      duration: false,
+    }),
+  };
 </script>

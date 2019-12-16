@@ -13,30 +13,6 @@ module.exports = {
     document: true,
     navigator: false,
     window: true,
-    Dropzone: true,
-    ps_round: true,
-
-    showErrorMessage: true,
-    displayFieldsManager: true,
-    refreshTotalCombinations: true,
-    showSuccessMessage: true,
-    translate_javascripts: true,
-    modalConfirmation: true,
-    baseAdminDir: true,
-
-    // From default theme
-    adminNotificationGetLink: true,
-    adminNotificationPushLink: true,
-    defaultCategory: true,
-    form: true,
-    tinyMCE: true,
-    priceCalculation: true,
-    productCategoriesTags: true,
-    supplierCombinations: true,
-    tokenAdminCustomerThreads: true,
-    tokenAdminCustomers: true,
-    tokenAdminOrders: true,
-    warehouseCombinations: true,
   },
   parserOptions: {
     parser: 'babel-eslint',
@@ -48,7 +24,6 @@ module.exports = {
   plugins: [
     'import',
     'vue',
-    'html',
   ],
   rules: {
     'no-new': 0,
@@ -57,8 +32,24 @@ module.exports = {
     'no-bitwise': 0,
     'class-methods-use-this': 0,
     'max-len': ['error', { code: 120 }],
+    'vue/script-indent': [
+      'error',
+      2,
+      {
+        baseIndent: 1,
+        switchCase: 1,
+      }
+    ],
   },
   settings: {
     'import/resolver': 'webpack',
   },
+  overrides: [
+    {
+      files: ['*.vue'],
+      rules: {
+        indent: 'off'
+      },
+    },
+  ],
 };

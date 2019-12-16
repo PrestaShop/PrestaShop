@@ -41,28 +41,28 @@
 </template>
 
 <script>
-import PSButton from '@app/widgets/ps-button';
+  import PSButton from '@app/widgets/ps-button';
 
-export default {
-  computed: {
-    disabled() {
-      return !this.$store.state.hasQty;
+  export default {
+    computed: {
+      disabled() {
+        return !this.$store.state.hasQty;
+      },
+      classObject() {
+        return {
+          'btn-primary': !this.disabled,
+        };
+      },
     },
-    classObject() {
-      return {
-        'btn-primary': !this.disabled,
-      };
+    methods: {
+      sendQty() {
+        this.$store.dispatch('updateQtyByProductsId');
+      },
     },
-  },
-  methods: {
-    sendQty() {
-      this.$store.dispatch('updateQtyByProductsId');
+    components: {
+      PSButton,
     },
-  },
-  components: {
-    PSButton,
-  },
-};
+  };
 </script>
 
 <style lang="scss" scoped>

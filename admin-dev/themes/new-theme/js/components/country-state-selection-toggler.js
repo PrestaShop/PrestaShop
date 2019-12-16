@@ -86,7 +86,7 @@ export default class CountryStateSelectionToggler {
       this.toggle();
     }).catch((response) => {
       if (typeof response.responseJSON !== 'undefined') {
-        showErrorMessage(response.responseJSON.message);
+        window.showErrorMessage(response.responseJSON.message);
       }
     });
   }

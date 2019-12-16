@@ -124,37 +124,37 @@
 </template>
 
 <script>
-import PSAlert from '@app/widgets/ps-alert';
-import PSTable from '@app/widgets/ps-table/ps-table';
-import PSSort from '@app/widgets/ps-table/ps-sort';
-import PSLoader from '@app/widgets/ps-loader';
-import ProductLine from './product-line';
+  import PSAlert from '@app/widgets/ps-alert';
+  import PSTable from '@app/widgets/ps-table/ps-table';
+  import PSSort from '@app/widgets/ps-table/ps-sort';
+  import PSLoader from '@app/widgets/ps-loader';
+  import ProductLine from './product-line';
 
-export default {
-  props: ['isLoading'],
-  components: {
-    ProductLine,
-    PSSort,
-    PSAlert,
-    PSTable,
-    PSLoader,
-  },
-  methods: {
-    sort(order, sortDirection) {
-      this.$store.dispatch('updateOrder', order);
-      this.$emit('sort', sortDirection === 'desc' ? 'desc' : 'asc');
+  export default {
+    props: ['isLoading'],
+    components: {
+      ProductLine,
+      PSSort,
+      PSAlert,
+      PSTable,
+      PSLoader,
     },
-  },
-  computed: {
-    products() {
-      return this.$store.state.products;
+    methods: {
+      sort(order, sortDirection) {
+        this.$store.dispatch('updateOrder', order);
+        this.$emit('sort', sortDirection === 'desc' ? 'desc' : 'asc');
+      },
     },
-    emptyProducts() {
-      return !this.$store.state.products.length;
+    computed: {
+      products() {
+        return this.$store.state.products;
+      },
+      emptyProducts() {
+        return !this.$store.state.products.length;
+      },
+      currentSort() {
+        return this.$store.state.order;
+      },
     },
-    currentSort() {
-      return this.$store.state.order;
-    },
-  },
-};
+  };
 </script>

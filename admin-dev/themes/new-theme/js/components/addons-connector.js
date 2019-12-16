@@ -37,7 +37,7 @@ export default class AddonsConnector {
     this.addonsConnectFormSelector = addonsConnectFormSelector;
     this.$loadingSpinner = $(loadingSpinnerSelector);
 
-    this._initEvents();
+    this.initEvents();
 
     return {};
   }
@@ -47,14 +47,18 @@ export default class AddonsConnector {
    *
    * @private
    */
-  _initEvents() {
-    $('body').on('submit', this.addonsConnectFormSelector, (event) => {
-      const $form = $(event.currentTarget);
-      event.preventDefault();
-      event.stopPropagation();
+  initEvents() {
+    $('body').on(
+      'submit',
+      this.addonsConnectFormSelector,
+      (event) => {
+        const $form = $(event.currentTarget);
+        event.preventDefault();
+        event.stopPropagation();
 
-      this._connect($form.attr('action'), $form.serialize());
-    });
+        this.connect($form.attr('action'), $form.serialize());
+      },
+    );
   }
 
   /**
@@ -65,7 +69,7 @@ export default class AddonsConnector {
    *
    * @private
    */
-  _connect(addonsConnectUrl, formData) {
+  connect(addonsConnectUrl, formData) {
     $.ajax({
       method: 'POST',
       url: addonsConnectUrl,
@@ -77,7 +81,7 @@ export default class AddonsConnector {
       },
     }).then((response) => {
       if (response.success === 1) {
-        location.reload();
+        window.location.reload();
       } else {
         $.growl.error({
           message: response.message,

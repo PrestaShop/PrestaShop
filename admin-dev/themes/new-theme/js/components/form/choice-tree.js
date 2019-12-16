@@ -38,13 +38,13 @@ export default class ChoiceTree {
     this.$container.on('click', '.js-input-wrapper', (event) => {
       const $inputWrapper = $(event.currentTarget);
 
-      this._toggleChildTree($inputWrapper);
+      this.toggleChildTree($inputWrapper);
     });
 
     this.$container.on('click', '.js-toggle-choice-tree-action', (event) => {
       const $action = $(event.currentTarget);
 
-      this._toggleTree($action);
+      this.toggleTree($action);
     });
 
     return {
@@ -89,7 +89,7 @@ export default class ChoiceTree {
    *
    * @private
    */
-  _toggleChildTree($inputWrapper) {
+  toggleChildTree($inputWrapper) {
     const $parentWrapper = $inputWrapper.closest('li');
 
     if ($parentWrapper.hasClass('expanded')) {
@@ -114,7 +114,7 @@ export default class ChoiceTree {
    *
    * @private
    */
-  _toggleTree($action) {
+  toggleTree($action) {
     const $parentContainer = $action.closest('.js-choice-tree-container');
     const action = $action.data('action');
 

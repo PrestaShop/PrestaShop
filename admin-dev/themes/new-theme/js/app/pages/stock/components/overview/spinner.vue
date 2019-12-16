@@ -56,89 +56,89 @@
 </template>
 
 <script>
-import PSNumber from '@app/widgets/ps-number';
+  import PSNumber from '@app/widgets/ps-number';
 
-const {$} = global;
+  const {$} = global;
 
-export default {
-  props: ['product'],
-  computed: {
-    qty() {
-      if (!this.product.qty) {
-        this.isEnabled = false;
-        this.value = '';
-      }
-      return this.product.qty;
+  export default {
+    props: ['product'],
+    computed: {
+      qty() {
+        if (!this.product.qty) {
+          this.isEnabled = false;
+          this.value = '';
+        }
+        return this.product.qty;
+      },
+      id() {
+        return `qty-${this.product.product_id}-${this.product.combination_id}`;
+      },
+      classObject() {
+        return {
+          active: this.isActive,
+          disabled: !this.isEnabled,
+        };
+      },
     },
-    id() {
-      return `qty-${this.product.product_id}-${this.product.combination_id}`;
-    },
-    classObject() {
-      return {
-        active: this.isActive,
-        disabled: !this.isEnabled,
-      };
-    },
-  },
-  methods: {
-    onChange(val) {
-      this.value = val;
-      this.isEnabled = !!val;
-    },
-    deActivate() {
-      this.isActive = false;
-      this.isEnabled = false;
-      this.value = null;
-      this.product.qty = null;
-    },
-    onKeyup(event) {
-      const val = event.target.value;
-      if (val === 0) {
-        this.deActivate();
-      } else {
-        this.isActive = true;
-        this.isEnabled = true;
+    methods: {
+      onChange(val) {
         this.value = val;
-      }
-    },
-    focusIn() {
-      this.isActive = true;
-    },
-    focusOut(event) {
-      const value = parseInt(this.value, 10);
-      if (!$(event.target).hasClass('ps-number') && (isNaN(value) || value === 0)) {
+        this.isEnabled = !!val;
+      },
+      deActivate() {
         this.isActive = false;
-      }
-      this.isEnabled = !!this.value;
+        this.isEnabled = false;
+        this.value = null;
+        this.product.qty = null;
+      },
+      onKeyup(event) {
+        const val = event.target.value;
+        if (val === 0) {
+          this.deActivate();
+        } else {
+          this.isActive = true;
+          this.isEnabled = true;
+          this.value = val;
+        }
+      },
+      focusIn() {
+        this.isActive = true;
+      },
+      focusOut(event) {
+        const value = parseInt(this.value, 10);
+        if (!$(event.target).hasClass('ps-number') && (isNaN(value) || value === 0)) {
+          this.isActive = false;
+        }
+        this.isEnabled = !!this.value;
+      },
+      sendQty() {
+        const postUrl = this.product.edit_url;
+        if (parseInt(this.product.qty, 10) !== 0 && !isNaN(parseInt(this.value, 10))) {
+          this.$store.dispatch('updateQtyByProductId', {
+            url: postUrl,
+            delta: this.value,
+          });
+          this.deActivate();
+        }
+      },
     },
-    sendQty() {
-      const postUrl = this.product.edit_url;
-      if (parseInt(this.product.qty, 10) !== 0 && !isNaN(parseInt(this.value, 10))) {
-        this.$store.dispatch('updateQtyByProductId', {
-          url: postUrl,
-          delta: this.value,
+    watch: {
+      value(val) {
+        this.$emit('updateProductQty', {
+          product: this.product,
+          delta: val,
         });
-        this.deActivate();
-      }
+      },
     },
-  },
-  watch: {
-    value(val) {
-      this.$emit('updateProductQty', {
-        product: this.product,
-        delta: val,
-      });
+    components: {
+      PSNumber,
     },
-  },
-  components: {
-    PSNumber,
-  },
-  data: () => ({
-    value: null,
-    isActive: false,
-    isEnabled: false,
-  }),
-};
+    data: () => ({
+      value: null,
+      isActive: false,
+      isEnabled: false,
+    }),
+  };
 </script>
 
 <style lang="scss" type="text/scss" scoped>

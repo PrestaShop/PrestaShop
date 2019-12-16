@@ -33,9 +33,9 @@
 </template>
 
 <script>
-export default {
-  props: ['thumb'],
-};
+  export default {
+    props: ['thumb'],
+  };
 </script>
 <style lang="scss" scoped>
   @import "../../../scss/config/_settings.scss";

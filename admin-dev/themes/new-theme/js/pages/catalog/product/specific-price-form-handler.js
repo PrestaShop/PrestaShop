@@ -253,14 +253,14 @@ class SpecificPriceFormHandler {
       url,
       data,
     }).done(() => {
-      showSuccessMessage(translate_javascripts['Form update success']);
+      window.showSuccessMessage(window.translate_javascripts['Form update success']);
       this.resetCreatePriceFormDefaultValues();
       $('#specific_price_form').collapse('hide');
       this.loadAndDisplayExistingSpecificPricesList();
 
       $('#specific_price_form .js-save').removeAttr('disabled');
     }).fail((errors) => {
-      showErrorMessage(errors.responseJSON);
+      window.showErrorMessage(errors.responseJSON);
 
       $('#specific_price_form .js-save').removeAttr('disabled');
     });
@@ -285,13 +285,13 @@ class SpecificPriceFormHandler {
       data,
     })
       .done(() => {
-        showSuccessMessage(translate_javascripts['Form update success']);
+        window.showSuccessMessage(window.translate_javascripts['Form update success']);
         this.closeEditPriceModalAndRemoveForm();
         this.loadAndDisplayExistingSpecificPricesList();
         $('#edit-specific-price-modal-form .js-save').removeAttr('disabled');
       })
       .fail((errors) => {
-        showErrorMessage(errors.responseJSON);
+        window.showErrorMessage(errors.responseJSON);
 
         $('#edit-specific-price-modal-form .js-save').removeAttr('disabled');
       });
@@ -303,8 +303,8 @@ class SpecificPriceFormHandler {
    * @private
    */
   deleteSpecificPrice(clickedLink) {
-    modalConfirmation.create(
-      translate_javascripts['This will delete the specific price. Do you wish to proceed?'],
+    window.modalConfirmation.create(
+      window.translate_javascripts['This will delete the specific price. Do you wish to proceed?'],
       null,
       {
         onContinue: () => {
@@ -316,10 +316,10 @@ class SpecificPriceFormHandler {
             url,
           }).done((response) => {
             this.loadAndDisplayExistingSpecificPricesList();
-            showSuccessMessage(response);
+            window.showSuccessMessage(response);
             $(clickedLink).removeAttr('disabled');
           }).fail((errors) => {
-            showErrorMessage(errors.responseJSON);
+            window.showErrorMessage(errors.responseJSON);
             $(clickedLink).removeAttr('disabled');
           });
         },
@@ -448,7 +448,7 @@ class SpecificPriceFormHandler {
         this.configureEditPriceFormInsideModalBehavior();
       })
       .fail((errors) => {
-        showErrorMessage(errors.responseJSON);
+        window.showErrorMessage(errors.responseJSON);
       });
   }
 

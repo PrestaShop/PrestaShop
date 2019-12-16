@@ -112,7 +112,7 @@ export default class CustomerManager {
     $.get(this.router.generate('admin_customers_carts', {customerId})).then((response) => {
       this.customerRenderer.renderCarts(response.carts, currentCartId);
     }).catch((e) => {
-      showErrorMessage(e.responseJSON.message);
+      window.showErrorMessage(e.responseJSON.message);
     });
   }
 
@@ -125,7 +125,7 @@ export default class CustomerManager {
     $.get(this.router.generate('admin_customers_orders', {customerId})).then((response) => {
       this.customerRenderer.renderOrders(response.orders);
     }).catch((e) => {
-      showErrorMessage(e.responseJSON.message);
+      window.showErrorMessage(e.responseJSON.message);
     });
   }
 
@@ -166,7 +166,7 @@ export default class CustomerManager {
         return;
       }
 
-      showErrorMessage(response.responseJSON.message);
+      window.showErrorMessage(response.responseJSON.message);
     });
   }
 }

@@ -57,18 +57,18 @@ export default class ExchangeRatesUpdateScheduler {
     })
       .then((response) => {
         if (!response.status) {
-          showErrorMessage(response.message);
+          window.showErrorMessage(response.message);
           this.changeTextByCurrentSwitchValue($liveExchangeRatesSwitch.val());
 
           return;
         }
 
-        showSuccessMessage(response.message);
+        window.showSuccessMessage(response.message);
         this.changeTextByCurrentSwitchValue($liveExchangeRatesSwitch.val());
       },
       ).fail((response) => {
         if (typeof response.responseJSON !== 'undefined') {
-          showErrorMessage(response.responseJSON.message);
+          window.showErrorMessage(response.responseJSON.message);
           this.changeTextByCurrentSwitchValue($liveExchangeRatesSwitch.val());
         }
       });

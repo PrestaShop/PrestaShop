@@ -54,73 +54,73 @@
 </template>
 
 <script>
-import PSPagination from '@app/widgets/ps-pagination';
-import StockHeader from './header/stock-header';
-import Search from './header/search';
-import LowFilter from './header/filters/low-filter';
+  import PSPagination from '@app/widgets/ps-pagination';
+  import StockHeader from './header/stock-header';
+  import Search from './header/search';
+  import LowFilter from './header/filters/low-filter';
 
-export default {
-  name: 'App',
-  computed: {
-    isReady() {
-      return this.$store.state.isReady;
+  export default {
+    name: 'App',
+    computed: {
+      isReady() {
+        return this.$store.state.isReady;
+      },
+      pagesCount() {
+        return this.$store.state.totalPages;
+      },
+      currentPagination() {
+        return this.$store.state.pageIndex;
+      },
+      isOverview() {
+        return this.$route.name === 'overview';
+      },
     },
-    pagesCount() {
-      return this.$store.state.totalPages;
-    },
-    currentPagination() {
-      return this.$store.state.pageIndex;
-    },
-    isOverview() {
-      return this.$route.name === 'overview';
-    },
-  },
-  methods: {
-    onPageChanged(pageIndex) {
-      this.$store.dispatch('updatePageIndex', pageIndex);
-      this.fetch('asc');
-    },
-    fetch(sortDirection) {
-      const action = this.$route.name === 'overview' ? 'getStock' : 'getMovements';
-      const sorting = (sortDirection === 'desc') ? ' desc' : '';
-      this.$store.dispatch('isLoading');
+    methods: {
+      onPageChanged(pageIndex) {
+        this.$store.dispatch('updatePageIndex', pageIndex);
+        this.fetch('asc');
+      },
+      fetch(sortDirection) {
+        const action = this.$route.name === 'overview' ? 'getStock' : 'getMovements';
+        const sorting = (sortDirection === 'desc') ? ' desc' : '';
+        this.$store.dispatch('isLoading');
 
-      this.filters = {
-        ...this.filters,
-        order: `${this.$store.state.order}${sorting}`,
-        page_size: this.$store.state.productsPerPage,
-        page_index: this.$store.state.pageIndex,
-        keywords: this.$store.state.keywords,
-      };
+        this.filters = {
+          ...this.filters,
+          order: `${this.$store.state.order}${sorting}`,
+          page_size: this.$store.state.productsPerPage,
+          page_index: this.$store.state.pageIndex,
+          keywords: this.$store.state.keywords,
+        };
 
-      this.$store.dispatch(action, this.filters);
+        this.$store.dispatch(action, this.filters);
+      },
+      onSearch(keywords) {
+        this.$store.dispatch('updateKeywords', keywords);
+        this.fetch();
+      },
+      applyFilter(filters) {
+        this.filters = filters;
+        this.fetch();
+      },
+      resetFilters() {
+        this.filters = {};
+      },
+      onLowStockChecked(isChecked) {
+        this.filters = {...this.filters, low_stock: isChecked};
+        this.fetch();
+      },
     },
-    onSearch(keywords) {
-      this.$store.dispatch('updateKeywords', keywords);
-      this.fetch();
+    components: {
+      StockHeader,
+      Search,
+      PSPagination,
+      LowFilter,
     },
-    applyFilter(filters) {
-      this.filters = filters;
-      this.fetch();
-    },
-    resetFilters() {
-      this.filters = {};
-    },
-    onLowStockChecked(isChecked) {
-      this.filters = {...this.filters, low_stock: isChecked};
-      this.fetch();
-    },
-  },
-  components: {
-    StockHeader,
-    Search,
-    PSPagination,
-    LowFilter,
-  },
-  data: () => ({
-    filters: {},
-  }),
-};
+    data: () => ({
+      filters: {},
+    }),
+  };
 </script>
 
 <style lang="scss" type="text/scss">

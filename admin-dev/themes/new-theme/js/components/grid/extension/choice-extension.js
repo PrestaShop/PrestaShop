@@ -48,7 +48,7 @@ export default class ChoiceExtension {
       const $parent = $button.closest('.js-choice-options');
       const url = $parent.data('url');
 
-      this._submitForm(url, $button);
+      this.submitForm(url, $button);
     });
   }
 
@@ -58,10 +58,10 @@ export default class ChoiceExtension {
    * @param {jQuery} $button
    * @private
    */
-  _submitForm(url, $button) {
+  submitForm(url, $button) {
     const selectedStatusId = $button.data('value');
 
-    if (this._isLocked(url)) {
+    if (this.isLocked(url)) {
       return;
     }
 
@@ -78,7 +78,7 @@ export default class ChoiceExtension {
     $form.appendTo('body');
     $form.submit();
 
-    this._lock(url);
+    this.lock(url);
   }
 
   /**
@@ -89,7 +89,7 @@ export default class ChoiceExtension {
    *
    * @private
    */
-  _isLocked(url) {
+  isLocked(url) {
     return this.lock.includes(url);
   }
 
@@ -98,7 +98,7 @@ export default class ChoiceExtension {
    * @param url
    * @private
    */
-  _lock(url) {
+  lock(url) {
     this.lock.push(url);
   }
 }

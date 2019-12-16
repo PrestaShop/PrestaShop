@@ -55,33 +55,33 @@
 </template>
 
 <script>
-import PSTags from '@app/widgets/ps-tags';
-import PSButton from '@app/widgets/ps-button';
+  import PSTags from '@app/widgets/ps-tags';
+  import PSButton from '@app/widgets/ps-button';
 
-export default {
-  components: {
-    PSTags,
-    PSButton,
-  },
-  methods: {
-    onClick() {
-      const {tag} = this.$refs.psTags;
-      this.$refs.psTags.add(tag);
+  export default {
+    components: {
+      PSTags,
+      PSButton,
     },
-    onSearch() {
-      this.$store.dispatch('updateSearch', this.tags);
-      this.$emit('search', this.tags);
+    methods: {
+      onClick() {
+        const {tag} = this.$refs.psTags;
+        this.$refs.psTags.add(tag);
+      },
+      onSearch() {
+        this.$store.dispatch('updateSearch', this.tags);
+        this.$emit('search', this.tags);
+      },
     },
-  },
-  watch: {
-    $route() {
-      this.tags = [];
+    watch: {
+      $route() {
+        this.tags = [];
+      },
     },
-  },
-  data() {
-    return {
-      tags: [],
-    };
-  },
-};
+    data() {
+      return {
+        tags: [],
+      };
+    },
+  };
 </script>

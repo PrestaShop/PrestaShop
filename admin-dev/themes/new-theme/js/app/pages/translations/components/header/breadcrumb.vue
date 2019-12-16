@@ -32,14 +32,14 @@
 </template>
 
 <script>
-export default {
-  computed: {
-    internationalLink() {
-      return window.data.internationalUrl;
+  export default {
+    computed: {
+      internationalLink() {
+        return window.data.internationalUrl;
+      },
+      translationLink() {
+        return window.data.translationsUrl;
+      },
     },
-    translationLink() {
-      return window.data.translationsUrl;
-    },
-  },
-};
+  };
 </script>

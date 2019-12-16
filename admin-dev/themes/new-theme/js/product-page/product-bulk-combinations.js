@@ -106,7 +106,7 @@ export default function () {
         combinationsIds.push(combination.domId);
       });
 
-      modalConfirmation.create(translate_javascripts['Are you sure to delete this?'], null, {
+      window.modalConfirmation.create(window.translate_javascripts['Are you sure to delete this?'], null, {
         onContinue() {
           const deletionURL = $(deleteCombinationsBtn).attr('data');
           $.ajax({
@@ -119,17 +119,17 @@ export default function () {
               $('#create-combinations, #apply-on-combinations, #submit, .btn-submit').attr('disabled', 'disabled');
             },
             success(response) {
-              showSuccessMessage(response.message);
-              refreshTotalCombinations(-1, combinationsIds.length);
+              window.showSuccessMessage(response.message);
+              window.refreshTotalCombinations(-1, combinationsIds.length);
               $('span.js-bulk-combinations').text('0');
               combinationsIds.forEach((combinationId) => {
                 const combination = new Combination(combinationId);
                 combination.removeFromDOM();
               });
-              displayFieldsManager.refresh();
+              window.displayFieldsManager.refresh();
             },
             error(response) {
-              showErrorMessage(jQuery.parseJSON(response.responseText).message);
+              window.showErrorMessage(jQuery.parseJSON(response.responseText).message);
             },
             complete() {
               $('#create-combinations, #apply-on-combinations, #submit, .btn-submit').removeAttr('disabled');
@@ -181,7 +181,7 @@ export default function () {
         jQueryFinalPriceEl.data('price', newPrice);
         // calculate new price
         const newFinalPrice = Number(newPrice) + Number(impactOnPrice);
-        jQueryFinalPriceEl.text(ps_round(newFinalPrice, 6));
+        jQueryFinalPriceEl.text(window.ps_round(newFinalPrice, 6));
       });
     },
   };

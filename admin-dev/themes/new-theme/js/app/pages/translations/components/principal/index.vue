@@ -118,185 +118,185 @@
 </template>
 
 <script>
-import PSButton from '@app/widgets/ps-button';
-import PSPagination from '@app/widgets/ps-pagination';
-import PSAlert from '@app/widgets/ps-alert';
-import {EventBus} from '@app/utils/event-bus';
-import TranslationInput from './translation-input';
+  import PSButton from '@app/widgets/ps-button';
+  import PSPagination from '@app/widgets/ps-pagination';
+  import PSAlert from '@app/widgets/ps-alert';
+  import {EventBus} from '@app/utils/event-bus';
+  import TranslationInput from './translation-input';
 
-export default {
-  props: [
-    'modal',
-  ],
-  computed: {
-    principalReady() {
-      return !this.$store.state.principalLoading;
-    },
-    translationsCatalog() {
-      this.translations = this.$store.getters.catalog.data.data;
-      return this.translations;
-    },
-    saveAction() {
-      return this.$store.getters.catalog.data.info ? this.$store.getters.catalog.data.info.edit_url : '';
-    },
-    resetAction() {
-      return this.$store.getters.catalog.data.info ? this.$store.getters.catalog.data.info.reset_url : '';
-    },
-    pagesCount() {
-      return this.$store.getters.totalPages;
-    },
-    currentPagination() {
-      return this.$store.getters.pageIndex;
-    },
-    currentDomain() {
-      return this.$store.state.currentDomain;
-    },
-    currentDomainTotalTranslations() {
-      return (this.$store.state.currentDomainTotalTranslations <= 1)
-        ? `- ${this.trans('label_total_domain_singular').replace('%nb_translation%', this.$store.state.currentDomainTotalTranslations)}`
-        : `- ${this.trans('label_total_domain').replace('%nb_translations%', this.$store.state.currentDomainTotalTranslations)}`;
-    },
-    currentDomainTotalMissingTranslations() {
-      return this.$store.state.currentDomainTotalMissingTranslations;
-    },
-    currentDomainTotalMissingTranslationsString() {
-      let totalMissingTranslationsString = '';
+  export default {
+    props: [
+      'modal',
+    ],
+    computed: {
+      principalReady() {
+        return !this.$store.state.principalLoading;
+      },
+      translationsCatalog() {
+        this.translations = this.$store.getters.catalog.data.data;
+        return this.translations;
+      },
+      saveAction() {
+        return this.$store.getters.catalog.data.info ? this.$store.getters.catalog.data.info.edit_url : '';
+      },
+      resetAction() {
+        return this.$store.getters.catalog.data.info ? this.$store.getters.catalog.data.info.reset_url : '';
+      },
+      pagesCount() {
+        return this.$store.getters.totalPages;
+      },
+      currentPagination() {
+        return this.$store.getters.pageIndex;
+      },
+      currentDomain() {
+        return this.$store.state.currentDomain;
+      },
+      currentDomainTotalTranslations() {
+        return (this.$store.state.currentDomainTotalTranslations <= 1)
+          ? `- ${this.trans('label_total_domain_singular').replace('%nb_translation%', this.$store.state.currentDomainTotalTranslations)}`
+          : `- ${this.trans('label_total_domain').replace('%nb_translations%', this.$store.state.currentDomainTotalTranslations)}`;
+      },
+      currentDomainTotalMissingTranslations() {
+        return this.$store.state.currentDomainTotalMissingTranslations;
+      },
+      currentDomainTotalMissingTranslationsString() {
+        let totalMissingTranslationsString = '';
 
-      if (this.currentDomainTotalMissingTranslations) {
-        if (this.currentDomainTotalMissingTranslations === 1) {
-          totalMissingTranslationsString = this.trans('label_missing_singular');
-        } else {
-          totalMissingTranslationsString = this.trans('label_missing').replace('%d', this.currentDomainTotalMissingTranslations);
+        if (this.currentDomainTotalMissingTranslations) {
+          if (this.currentDomainTotalMissingTranslations === 1) {
+            totalMissingTranslationsString = this.trans('label_missing_singular');
+          } else {
+            totalMissingTranslationsString = this.trans('label_missing').replace('%d', this.currentDomainTotalMissingTranslations);
+          }
         }
-      }
 
-      return totalMissingTranslationsString;
+        return totalMissingTranslationsString;
+      },
+      noResult() {
+        return (this.$store.getters.currentDomain === '' || typeof this.$store.getters.currentDomain === 'undefined');
+      },
+      noResultInfo() {
+        return this.trans('no_result').replace('%s', this.$store.getters.searchTags.join(' - '));
+      },
+      searchActive() {
+        return this.$store.getters.searchTags.length;
+      },
+      searchInfo() {
+        const transKey = (this.$store.state.totalTranslations <= 1) ? 'search_info_singular' : 'search_info';
+        return this.trans(transKey)
+          .replace('%s', this.$store.getters.searchTags.join(' - '))
+          .replace('%d', this.$store.state.totalTranslations);
+      },
     },
-    noResult() {
-      return (this.$store.getters.currentDomain === '' || typeof this.$store.getters.currentDomain === 'undefined');
-    },
-    noResultInfo() {
-      return this.trans('no_result').replace('%s', this.$store.getters.searchTags.join(' - '));
-    },
-    searchActive() {
-      return this.$store.getters.searchTags.length;
-    },
-    searchInfo() {
-      const transKey = (this.$store.state.totalTranslations <= 1) ? 'search_info_singular' : 'search_info';
-      return this.trans(transKey)
-        .replace('%s', this.$store.getters.searchTags.join(' - '))
-        .replace('%d', this.$store.state.totalTranslations);
-    },
-  },
-  methods: {
-    /**
+    methods: {
+      /**
        * Dispatch the event to change the page index,
        * get the translations and reset the modified translations into the state
        * @param {Number} pageIndex
        */
-    changePage: function changePage(pageIndex) {
-      this.$store.dispatch('updatePageIndex', pageIndex);
-      this.fetch();
-      this.$store.state.modifiedTranslations = [];
-    },
-    isEdited(input) {
-      if (input.translation.edited) {
-        this.$store.state.modifiedTranslations[input.id] = input.translation;
-      } else {
-        this.$store.state.modifiedTranslations.splice(
-          this.$store.state.modifiedTranslations.indexOf(input.id),
-          1,
-        );
-      }
-    },
-    onPageChanged(pageIndex) {
-      if (this.edited()) {
-        this.modal.showModal();
-        this.modal.$once('save', () => {
-          this.saveTranslations();
+      changePage: function changePage(pageIndex) {
+        this.$store.dispatch('updatePageIndex', pageIndex);
+        this.fetch();
+        this.$store.state.modifiedTranslations = [];
+      },
+      isEdited(input) {
+        if (input.translation.edited) {
+          this.$store.state.modifiedTranslations[input.id] = input.translation;
+        } else {
+          this.$store.state.modifiedTranslations.splice(
+            this.$store.state.modifiedTranslations.indexOf(input.id),
+            1,
+          );
+        }
+      },
+      onPageChanged(pageIndex) {
+        if (this.edited()) {
+          this.modal.showModal();
+          this.modal.$once('save', () => {
+            this.saveTranslations();
+            this.changePage(pageIndex);
+          });
+          this.modal.$once('leave', () => {
+            this.changePage(pageIndex);
+          });
+        } else {
           this.changePage(pageIndex);
+        }
+      },
+      fetch() {
+        this.$store.dispatch('getCatalog', {
+          url: this.$store.getters.catalog.info.current_url_without_pagination,
+          page_size: this.$store.state.translationsPerPage,
+          page_index: this.$store.getters.pageIndex,
         });
-        this.modal.$once('leave', () => {
-          this.changePage(pageIndex);
+      },
+      getDomain(domains) {
+        let domain = '';
+        domains.forEach((d) => {
+          domain += `${d} > `;
         });
-      } else {
-        this.changePage(pageIndex);
-      }
-    },
-    fetch() {
-      this.$store.dispatch('getCatalog', {
-        url: this.$store.getters.catalog.info.current_url_without_pagination,
-        page_size: this.$store.state.translationsPerPage,
-        page_index: this.$store.getters.pageIndex,
-      });
-    },
-    getDomain(domains) {
-      let domain = '';
-      domains.forEach((d) => {
-        domain += `${d} > `;
-      });
-      return domain.slice(0, -3);
-    },
-    saveTranslations() {
-      const modifiedTranslations = this.getModifiedTranslations();
+        return domain.slice(0, -3);
+      },
+      saveTranslations() {
+        const modifiedTranslations = this.getModifiedTranslations();
 
-      if (modifiedTranslations.length) {
-        this.$store.dispatch('saveTranslations', {
-          url: this.saveAction,
-          translations: this.getModifiedTranslations(),
-          store: this.$store,
-        });
-      }
-    },
-    getModifiedTranslations() {
-      this.modifiedTranslations = [];
-      const targetTheme = (window.data.type === 'modules') ? '' : window.data.selected;
+        if (modifiedTranslations.length) {
+          this.$store.dispatch('saveTranslations', {
+            url: this.saveAction,
+            translations: this.getModifiedTranslations(),
+            store: this.$store,
+          });
+        }
+      },
+      getModifiedTranslations() {
+        this.modifiedTranslations = [];
+        const targetTheme = (window.data.type === 'modules') ? '' : window.data.selected;
 
-      this.$store.state.modifiedTranslations.forEach((translation) => {
-        this.modifiedTranslations.push({
-          default: translation.default,
-          edited: translation.edited,
-          domain: translation.tree_domain.join(''),
+        this.$store.state.modifiedTranslations.forEach((translation) => {
+          this.modifiedTranslations.push({
+            default: translation.default,
+            edited: translation.edited,
+            domain: translation.tree_domain.join(''),
+            locale: window.data.locale,
+            theme: targetTheme,
+          });
+        });
+
+        return this.modifiedTranslations;
+      },
+      edited() {
+        return this.$store.state.modifiedTranslations.length > 0;
+      },
+    },
+    data: () => ({
+      translations: [],
+      originalTranslations: [],
+      modifiedTranslations: [],
+    }),
+    mounted() {
+      EventBus.$on('resetTranslation', (el) => {
+        const translations = [];
+
+        translations.push({
+          default: el.default,
+          domain: el.tree_domain.join(''),
           locale: window.data.locale,
-          theme: targetTheme,
+          theme: window.data.selected,
+        });
+
+        this.$store.dispatch('resetTranslation', {
+          url: this.resetAction,
+          translations,
         });
       });
-
-      return this.modifiedTranslations;
     },
-    edited() {
-      return this.$store.state.modifiedTranslations.length > 0;
+    components: {
+      TranslationInput,
+      PSButton,
+      PSPagination,
+      PSAlert,
     },
-  },
-  data: () => ({
-    translations: [],
-    originalTranslations: [],
-    modifiedTranslations: [],
-  }),
-  mounted() {
-    EventBus.$on('resetTranslation', (el) => {
-      const translations = [];
-
-      translations.push({
-        default: el.default,
-        domain: el.tree_domain.join(''),
-        locale: window.data.locale,
-        theme: window.data.selected,
-      });
-
-      this.$store.dispatch('resetTranslation', {
-        url: this.resetAction,
-        translations,
-      });
-    });
-  },
-  components: {
-    TranslationInput,
-    PSButton,
-    PSPagination,
-    PSAlert,
-  },
-};
+  };
 </script>
 
 <style lang="scss" scoped>

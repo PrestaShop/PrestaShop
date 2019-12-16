@@ -45,34 +45,34 @@
 </template>
 
 <script>
-const ALERT_TYPE_INFO = 'ALERT_TYPE_INFO';
-const ALERT_TYPE_WARNING = 'ALERT_TYPE_WARNING';
-const ALERT_TYPE_DANGER = 'ALERT_TYPE_DANGER';
-const ALERT_TYPE_SUCCESS = 'ALERT_TYPE_SUCCESS';
+  const ALERT_TYPE_INFO = 'ALERT_TYPE_INFO';
+  const ALERT_TYPE_WARNING = 'ALERT_TYPE_WARNING';
+  const ALERT_TYPE_DANGER = 'ALERT_TYPE_DANGER';
+  const ALERT_TYPE_SUCCESS = 'ALERT_TYPE_SUCCESS';
 
-export default {
-  props: {
-    duration: false,
-    alertType: {type: String, required: true},
-    hasClose: {type: Boolean, required: true},
-  },
-  computed: {
-    classObject() {
-      return {
-        'alert-info': this.alertType === ALERT_TYPE_INFO,
-        'alert-warning': this.alertType === ALERT_TYPE_WARNING,
-        'alert-danger': this.alertType === ALERT_TYPE_DANGER,
-        'alert-success': this.alertType === ALERT_TYPE_SUCCESS,
-      };
+  export default {
+    props: {
+      duration: false,
+      alertType: {type: String, required: true},
+      hasClose: {type: Boolean, required: true},
     },
-    isInfo() {
-      return this.alertType === ALERT_TYPE_INFO;
+    computed: {
+      classObject() {
+        return {
+          'alert-info': this.alertType === ALERT_TYPE_INFO,
+          'alert-warning': this.alertType === ALERT_TYPE_WARNING,
+          'alert-danger': this.alertType === ALERT_TYPE_DANGER,
+          'alert-success': this.alertType === ALERT_TYPE_SUCCESS,
+        };
+      },
+      isInfo() {
+        return this.alertType === ALERT_TYPE_INFO;
+      },
     },
-  },
-  methods: {
-    onClick() {
-      this.$emit('closeAlert');
+    methods: {
+      onClick() {
+        this.$emit('closeAlert');
+      },
     },
-  },
-};
+  };
 </script>

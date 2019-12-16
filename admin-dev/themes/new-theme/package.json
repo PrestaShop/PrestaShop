@@ -20,6 +20,7 @@
     "compass": "^0.1.1",
     "dropzone": "^5.5.1",
     "eonasdan-bootstrap-datetimepicker": "^4.17.47",
+    "events": "^3.0.0",
     "fos-routing": "0.0.6",
     "jets": "0.11.0",
     "jquery-ui-dist": "^1.12.1",
@@ -29,6 +30,8 @@
     "mobile-detect": "^1.4.3",
     "moment": "^2.24.0",
     "perfect-scrollbar": "^1.4.0",
+    "postcss-cssnext": "^2.10.0",
+    "prestakit": "^1.1.0",
     "sprintf-js": "^1.1.2",
     "tablednd": "^1.0.3",
     "tether": "^1.4.6",
@@ -37,9 +40,7 @@
     "vue": "^2.6.7",
     "vue-resource": "^1.5.1",
     "vue-router": "^2.8.1",
-    "postcss-cssnext": "^2.10.0",
     "vue-template-compiler": "^2.6.7",
-    "prestakit": "^1.1.0",
     "vuex": "^2.5.0"
   },
   "devDependencies": {

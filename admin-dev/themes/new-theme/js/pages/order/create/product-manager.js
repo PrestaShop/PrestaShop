@@ -207,7 +207,7 @@ export default class ProductManager {
         return;
       }
 
-      showErrorMessage(response.responseJSON.message);
+      window.showErrorMessage(response.responseJSON.message);
     });
   }
 

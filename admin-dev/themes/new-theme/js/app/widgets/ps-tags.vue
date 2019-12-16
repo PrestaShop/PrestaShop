@@ -31,6 +31,7 @@
     <div class="tags-wrapper">
       <span
         v-for="(tag, index) in tags"
+        :key="index"
         class="tag"
       >{{ tag }}<i
         class="material-icons"
@@ -53,44 +54,58 @@
 
 <script>
 
-export default {
-  props: ['tags', 'placeholder', 'hasIcon'],
-  computed: {
-    inputSize() {
-      return !this.tags.length && this.placeholder ? this.placeholder.length : 0;
+  export default {
+    props: {
+      tags: {
+        type: Array,
+        required: false,
+        default: () => ([]),
+      },
+      placeholder: {
+        type: String,
+        required: true,
+      },
+      hasIcon: {
+        type: Boolean,
+        required: false,
+      },
     },
-    placeholderToDisplay() {
-      return this.tags.length ? '' : this.placeholder;
+    computed: {
+      inputSize() {
+        return !this.tags.length && this.placeholder ? this.placeholder.length : 0;
+      },
+      placeholderToDisplay() {
+        return this.tags.length ? '' : this.placeholder;
+      },
     },
-  },
-  methods: {
-    onKeyUp() {
-      this.$emit('typing', this.$refs.tags.value);
-    },
-    add(tag) {
-      if (tag) {
-        this.tags.push(tag.trim());
-        this.tag = '';
-        this.focus();
-        this.$emit('tagChange', this.tag);
-      }
-    },
-    close(index) {
-      const tagName = this.tags[index];
-      this.tags.splice(index, 1);
-      this.$emit('tagChange', tagName);
-    },
-    remove() {
-      if (this.tags.length && !this.tag.length) {
-        const tagName = this.tags[this.tags.length - 1];
-        this.tags.pop();
+    methods: {
+      onKeyUp() {
+        this.$emit('typing', this.$refs.tags.value);
+      },
+      add(tag) {
+        if (tag) {
+          this.tags.push(tag.trim());
+          this.tag = '';
+          this.focus();
+          this.$emit('tagChange', this.tag);
+        }
+      },
+      close(index) {
+        const tagName = this.tags[index];
+        this.tags.splice(index, 1);
         this.$emit('tagChange', tagName);
-      }
+      },
+      remove() {
+        if (this.tags.length && !this.tag.length) {
+          const tagName = this.tags[this.tags.length - 1];
+          this.tags.pop();
+          this.$emit('tagChange', tagName);
+        }
+      },
+      focus() {
+        this.$refs.tags.focus();
+      },
     },
-    focus() {
-      this.$refs.tags.focus();
-    },
-  },
-  data: () => ({tag: null}),
-};
+    data: () => ({tag: null}),
+  };
 </script>

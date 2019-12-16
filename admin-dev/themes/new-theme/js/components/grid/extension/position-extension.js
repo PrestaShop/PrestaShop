@@ -23,7 +23,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-import tableDnD from 'tablednd/dist/jquery.tablednd.min';
+import 'tablednd/dist/jquery.tablednd.min';
 
 const {$} = window;
 
@@ -44,11 +44,11 @@ export default class PositionExtension {
    */
   extend(grid) {
     this.grid = grid;
-    this._addIdsToGridTableRows();
+    this.addIdsToGridTableRows();
     grid.getContainer().find('.js-grid-table').tableDnD({
       onDragClass: 'position-row-while-drag',
       dragHandle: '.js-drag-handle',
-      onDrop: (table, row) => this._handlePositionChange(row),
+      onDrop: (table, row) => this.handlePositionChange(row),
     });
     grid.getContainer().find('.js-drag-handle').hover(
       function () {
@@ -67,15 +67,15 @@ export default class PositionExtension {
    *
    * @private
    */
-  _handlePositionChange(row) {
+  handlePositionChange(row) {
     const $rowPositionContainer = $(row).find(`.js-${this.grid.getId()}-position:first`);
     const updateUrl = $rowPositionContainer.data('update-url');
     const method = $rowPositionContainer.data('update-method');
     const paginationOffset = parseInt($rowPositionContainer.data('pagination-offset'), 10);
-    const positions = this._getRowsPositions(paginationOffset);
+    const positions = this.getRowsPositions(paginationOffset);
     const params = {positions};
 
-    this._updatePosition(updateUrl, params, method);
+    this.updatePosition(updateUrl, params, method);
   }
 
   /**
@@ -83,7 +83,7 @@ export default class PositionExtension {
    * @returns {Array}
    * @private
    */
-  _getRowsPositions(paginationOffset) {
+  getRowsPositions(paginationOffset) {
     const tableData = JSON.parse($.tableDnD.jsonize());
     const rowsData = tableData[`${this.grid.getId()}_grid_table`];
     const regex = /^row_(\d+)_(\d+)$/;
@@ -92,7 +92,7 @@ export default class PositionExtension {
     const positions = [];
     let rowData; let
       i;
-    for (i = 0; i < rowsNb; ++i) {
+    for (i = 0; i < rowsNb; i += 1) {
       rowData = regex.exec(rowsData[i]);
       positions.push({
         rowId: rowData[1],
@@ -109,7 +109,7 @@ export default class PositionExtension {
    *
    * @private
    */
-  _addIdsToGridTableRows() {
+  addIdsToGridTableRows() {
     this.grid.getContainer()
       .find(`.js-grid-table .js-${this.grid.getId()}-position`)
       .each((index, positionWrapper) => {
@@ -131,7 +131,7 @@ export default class PositionExtension {
    *
    * @private
    */
-  _updatePosition(url, params, method) {
+  updatePosition(url, params, method) {
     const isGetOrPostMethod = ['GET', 'POST'].includes(method);
 
     const $form = $('<form>', {
@@ -141,7 +141,7 @@ export default class PositionExtension {
 
     const positionsNb = params.positions.length;
     let position;
-    for (let i = 0; i < positionsNb; ++i) {
+    for (let i = 0; i < positionsNb; i += 1) {
       position = params.positions[i];
       $form.append(
         $('<input>', {
