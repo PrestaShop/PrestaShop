@@ -22,6 +22,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+/* eslint-disable no-param-reassign */
+
 import * as types from './mutation-types';
 
 export default {

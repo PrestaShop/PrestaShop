@@ -90,7 +90,16 @@
 
 <script>
   export default {
-    props: ['pagesCount', 'currentIndex'],
+    props: {
+      pagesCount: {
+        type: Number,
+        required: true,
+      },
+      currentIndex: {
+        type: Number,
+        required: true,
+      },
+    },
     computed: {
       isMultiPagination() {
         return this.pagesCount > this.multiPagesActivationLimit;

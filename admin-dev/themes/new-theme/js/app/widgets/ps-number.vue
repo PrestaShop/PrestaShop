@@ -86,11 +86,11 @@
       },
       increment() {
         const value = parseInt(this.value === '' ? 0 : this.value, 10);
-        this.$emit('change', isNaN(value) ? 0 : value + 1);
+        this.$emit('change', Number.isNaN(value) ? 0 : value + 1);
       },
       decrement() {
         const value = parseInt(this.value, 10);
-        this.$emit('change', isNaN(value) ? -1 : value - 1);
+        this.$emit('change', Number.isNaN(value) ? -1 : value - 1);
       },
     },
   };

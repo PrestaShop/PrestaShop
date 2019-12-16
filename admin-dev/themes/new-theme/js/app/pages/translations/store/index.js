@@ -77,6 +77,7 @@ const getters = {
   domainsTree() {
     function convert(domains) {
       domains.forEach((domain) => {
+        /* eslint-disable no-param-reassign */
         domain.children = _.values(domain.children);
         domain.extraLabel = domain.total_missing_translations;
         domain.dataValue = domain.domain_catalog_link;
@@ -84,6 +85,7 @@ const getters = {
         domain.disable = !domain.total_translations;
         domain.id = domain.full_name;
         convert(domain.children);
+        /* eslint-enable no-param-reassign */
       });
       return domains;
     }

@@ -59,7 +59,7 @@ class SqlManager {
     }
 
     let name = false;
-    if (container && current && container != current) {
+    if (container && current && container !== current) {
       name = `${container} > ${current}`;
     } else if (container) {
       name = container;
@@ -67,7 +67,7 @@ class SqlManager {
       name = current;
     }
 
-    if (title && title != current && title != container) {
+    if (title && title !== current && title !== container) {
       if (name) {
         name = `${name} > ${title}`;
       } else {
