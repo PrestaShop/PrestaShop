@@ -360,7 +360,7 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
             $product['amount_refundable_tax_incl'] = $product['total_price_tax_incl'] - $resume['amount_tax_incl'];
             $product['displayed_max_refundable'] = $order->getTaxCalculationMethod() ? $product['amount_refundable'] : $product['amount_refundable_tax_incl'];
             $resumeAmount = $order->getTaxCalculationMethod() ? 'amount_tax_excl' : 'amount_tax_incl';
-            $product['amount_refund'] = !is_null($resume[$resumeAmount]) ? $this->locale->formatPrice($resume[$resumeAmount], $currency->iso_code) : null;
+            $product['amount_refund'] = $resume[$resumeAmount] ?? 0;
             $product['refund_history'] = OrderSlip::getProductSlipDetail($product['id_order_detail']);
             $product['return_history'] = OrderReturn::getProductReturnDetail($product['id_order_detail']);
 
@@ -426,16 +426,23 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
                 $product['unit_price_tax_excl'] :
                 $product['unit_price_tax_incl']
             ;
-            $totalPrice = Tools::ps_round($unitPrice, 2) * ($product['product_quantity'] - $product['customizationQuantityTotal']);
 
-            $unitPriceFormatted = $this->locale->formatPrice($unitPrice, $currency->iso_code);
-            $totalPriceFormatted = $this->locale->formatPrice($totalPrice, $currency->iso_code);
+            $totalPrice = $unitPrice *
+                (!empty($product['customizedDatas']) ? $product['customizationQuantityTotal'] : $product['product_quantity']);
+
+            $unitPriceFormatted = $this->locale->formatPrice(
+                Tools::ps_round($unitPrice, $currency->precision),
+                $currency->iso_code
+            );
+            $totalPriceFormatted = $this->locale->formatPrice(
+                Tools::ps_round($unitPrice, $currency->precision),
+                $currency->iso_code
+            );
 
             $imagePath = isset($product['image_tag']) ?
                 $this->imageTagSourceParser->parse($product['image_tag']) :
                 null;
             $product['product_quantity_refunded'] = $product['product_quantity_refunded'] ?: false;
-            $product['amount_refund'] = $product['amount_refund'] ?: 0;
 
             $productsForViewing[] = new OrderProductForViewing(
                 $product['id_order_detail'],
@@ -448,9 +455,9 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
                 $totalPriceFormatted,
                 $product['current_stock'],
                 $imagePath,
-                Tools::ps_round($product['unit_price_tax_excl'], 2),
-                Tools::ps_round($product['unit_price_tax_incl'], 2),
-                $product['amount_refund'],
+                $product['unit_price_tax_excl'],
+                $product['unit_price_tax_incl'],
+                $this->locale->formatPrice($product['amount_refund'], $currency->iso_code),
                 $product['product_quantity_refunded'],
                 $this->locale->formatPrice($product['displayed_max_refundable'], $currency->iso_code)
             );

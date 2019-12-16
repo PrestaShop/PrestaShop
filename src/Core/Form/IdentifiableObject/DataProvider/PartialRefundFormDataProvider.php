@@ -54,7 +54,6 @@ final class PartialRefundFormDataProvider implements FormDataProviderInterface
      */
     public function getData($orderId)
     {
-        /** @var EditableCategory $editableCategory */
         $orderForViewing = $this->queryBus->handle(new GetOrderForViewing((int) $orderId));
 
         return [
