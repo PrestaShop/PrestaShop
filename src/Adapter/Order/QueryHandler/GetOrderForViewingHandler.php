@@ -430,14 +430,8 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
             $totalPrice = $unitPrice *
                 (!empty($product['customizedDatas']) ? $product['customizationQuantityTotal'] : $product['product_quantity']);
 
-            $unitPriceFormatted = $this->locale->formatPrice(
-                Tools::ps_round($unitPrice, $currency->precision),
-                $currency->iso_code
-            );
-            $totalPriceFormatted = $this->locale->formatPrice(
-                Tools::ps_round($unitPrice, $currency->precision),
-                $currency->iso_code
-            );
+            $unitPriceFormatted = $this->locale->formatPrice($unitPrice, $currency->iso_code);
+            $totalPriceFormatted = $this->locale->formatPrice($unitPrice, $currency->iso_code);
 
             $imagePath = isset($product['image_tag']) ?
                 $this->imageTagSourceParser->parse($product['image_tag']) :
@@ -455,8 +449,14 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
                 $totalPriceFormatted,
                 $product['current_stock'],
                 $imagePath,
-                $product['unit_price_tax_excl'],
-                $product['unit_price_tax_incl'],
+                Tools::ps_round(
+                    $product['unit_price_tax_excl'],
+                    $computingPrecision->getPrecision($currency->precision)
+                ),
+                Tools::ps_round(
+                    $product['unit_price_tax_incl'],
+                    $computingPrecision->getPrecision($currency->precision)
+                ),
                 $this->locale->formatPrice($product['amount_refund'], $currency->iso_code),
                 $product['product_quantity_refunded'],
                 $this->locale->formatPrice($product['displayed_max_refundable'], $currency->iso_code)

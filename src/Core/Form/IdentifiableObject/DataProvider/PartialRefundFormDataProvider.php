@@ -27,7 +27,6 @@
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
 
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
-use PrestaShop\PrestaShop\Core\Domain\Category\QueryResult\EditableCategory;
 use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderForViewing;
 
 /**
@@ -54,6 +53,7 @@ final class PartialRefundFormDataProvider implements FormDataProviderInterface
      */
     public function getData($orderId)
     {
+        /** @var OrderForViewing $orderForViewing */
         $orderForViewing = $this->queryBus->handle(new GetOrderForViewing((int) $orderId));
 
         return [
