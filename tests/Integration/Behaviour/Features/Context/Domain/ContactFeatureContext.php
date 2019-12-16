@@ -93,19 +93,13 @@ class ContactFeatureContext extends AbstractDomainFeatureContext
      */
     private function mapToEditableContact(int $contactId, array $data): EditableContact
     {
-        $title = $data['title'];
-        $emailAddress = $data['email_address'];
-        $isMessageSavingEnabled = PrimitiveUtils::castStringBooleanIntoBoolean($data['is_message_saving_enabled']);
-        $description = $data['description'];
-        $shopIdAssociation = (int) $data['shop_id_association'];
-
         return new EditableContact(
             $contactId,
-            [self::DEFAULT_LOCALE_ID => $title],
-            $emailAddress,
-            $isMessageSavingEnabled,
-            [self::DEFAULT_LOCALE_ID => $description],
-            [$shopIdAssociation]
+            [self::DEFAULT_LOCALE_ID => $data['title']],
+            $data['email_address'],
+            $isMessageSavingEnabled = PrimitiveUtils::castStringBooleanIntoBoolean($data['is_message_saving_enabled']),
+            [self::DEFAULT_LOCALE_ID => $data['description']],
+            [(int) $data['shop_id_association']]
         );
     }
 }
