@@ -34,7 +34,6 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerCarts;
 use PrestaShop\PrestaShop\Core\Domain\Customer\QueryHandler\GetCustomerCartsHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\CartSummary;
 use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
-use PrestaShop\PrestaShop\Core\Localization\Locale;
 use PrestaShop\PrestaShop\Core\Localization\LocaleInterface;
 
 /**
@@ -43,7 +42,7 @@ use PrestaShop\PrestaShop\Core\Localization\LocaleInterface;
 final class GetCustomerCartsHandler extends AbstractCustomerHandler implements GetCustomerCartsHandlerInterface
 {
     /**
-     * @var Locale
+     * @var LocaleInterface
      */
     private $locale;
 
