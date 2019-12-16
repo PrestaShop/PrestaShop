@@ -45,7 +45,7 @@ module.exports = [
       {name: 'BO_add_brand', url: 'index.php/sell/catalog/brands/new'},
       {name: 'BO_add_brand_address', url: 'index.php/sell/catalog/brands/addresses/new'},
       {name: 'BO_suppliers', url: 'index.php?controller=AdminSuppliers'},
-      {name: 'BO_add_supplier', url: 'index.php?controller=AdminSuppliers&addsupplier'},
+      {name: 'BO_add_supplier', url: 'index.php/sell/catalog/suppliers/new'},
       {name: 'BO_files', url: 'index.php?controller=AdminAttachments'},
       {name: 'BO_add_file', url: 'index.php?controller=AdminAttachments&addattachment'},
       {name: 'BO_discounts', url: 'index.php?controller=AdminCartRules'},
