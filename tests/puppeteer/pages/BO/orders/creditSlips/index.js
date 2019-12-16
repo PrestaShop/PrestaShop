@@ -21,7 +21,7 @@ module.exports = class CreditSlips extends BOBasePage {
     this.creditSlipsFilterColumnInput = '#credit_slip_%FILTERBY';
     this.creditSlipsTableRow = `${this.creditSlipGridTable} tbody tr:nth-child(%ROW)`;
     this.creditSlipsTableColumn = `${this.creditSlipsTableRow} td.column-%COLUMN`;
-    this.creditSlipDownloadButton = `${this.creditSlipGridTable} td.link-type.column-pdf`;
+    this.creditSlipDownloadButton = `${this.creditSlipGridTable} tr:nth-child(%ID) td.link-type.column-pdf`;
   }
 
   /*
@@ -67,6 +67,19 @@ module.exports = class CreditSlips extends BOBasePage {
   }
 
   /**
+   * Filter credit slips by date
+   * @param dateFrom
+   * @param dateTo
+   * @return {Promise<void>}
+   */
+  async filterCreditSlipsByDate(dateFrom, dateTo) {
+    await this.page.type(this.creditSlipsFilterColumnInput.replace('%FILTERBY', 'date_issued_from'), dateFrom);
+    await this.page.type(this.creditSlipsFilterColumnInput.replace('%FILTERBY', 'date_issued_to'), dateTo);
+    // click on search
+    await this.clickAndWaitForNavigation(this.filterSearchButton);
+  }
+
+  /**
    * get text from a column
    * @param row, row in table
    * @param column, which column
@@ -78,5 +91,14 @@ module.exports = class CreditSlips extends BOBasePage {
         .replace('%ROW', row)
         .replace('%COLUMN', column),
     );
+  }
+
+  /**
+   * Download credit slip
+   * @param lineNumber
+   * @return {Promise<void>}
+   */
+  async downloadCreditSlip(lineNumber = 1) {
+    await this.page.click(this.creditSlipDownloadButton.replace('%ID', lineNumber));
   }
 };
