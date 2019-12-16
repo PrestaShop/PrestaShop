@@ -8,7 +8,7 @@ module.exports = [
       {
         name: 'BO_dashboard',
         url: 'index.php?controller=AdminLogin',
-        async customAction({page, LOGININFOS}) {
+        async customAction(page, LOGININFOS) {
           await page.type('#email', LOGININFOS.admin.login);
           await page.type('#passwd', LOGININFOS.admin.password);
           await Promise.all([
@@ -159,7 +159,7 @@ module.exports = [
       {
         name: 'FO_my_account',
         url: 'index.php?controller=authentication&back=my-account',
-        async customAction({page, LOGININFOS}) {
+        async customAction(page, LOGININFOS) {
           await page.type('#login-form input[name=email]', LOGININFOS.user.login);
           await page.type('#login-form input[name=password]', LOGININFOS.user.password);
           await page.click('#submit-login');

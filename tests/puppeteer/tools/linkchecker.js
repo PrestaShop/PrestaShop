@@ -46,7 +46,6 @@ let javascriptError = false;
 
 let page;
 let browser;
-let pagesToCrawl;
 
 /**
  * Create the report folder
@@ -117,17 +116,13 @@ describe('Crawl every page for defects and issues', async () => {
       return console.log('No error found');
     });
   });
-
   urlsList.forEach((section) => {
+    let count = 1;
     describe(`${section.name} - ${section.description}`, async () => {
-      // crawl every page
-      pagesToCrawl = section.urls;
-      let count = 1;
-      pagesToCrawl.forEach((currentPage) => {
-        const pageToCrawl = currentPage;
-        pageToCrawl.url = `${section.urlPrefix.replace('URL_BO', URL_BO).replace('URL_FO', URL_FO)}${pageToCrawl.url}`;
-        it(`Crawling ${pageToCrawl.name} (${count}/${pagesToCrawl.length})`, async () => {
-          await crawlPage({page, pageToCrawl});
+      section.urls.forEach((pageToCrawl) => {
+        it(`Crawling ${pageToCrawl.name} (${count}/${section.urls.length})`, async () => {
+          pageToCrawl.url = `${section.urlPrefix.replace('URL_BO', URL_BO).replace('URL_FO', URL_FO)}${pageToCrawl.url}`;
+          await crawlPage(page, pageToCrawl);
           await expect(requestError, 'Request error').to.be.false;
           await expect(javascriptError, 'Javascript error').to.be.false;
         });
@@ -137,7 +132,7 @@ describe('Crawl every page for defects and issues', async () => {
   });
 });
 
-async function crawlPage({puppeteerPage, thisPageToCrawl}) {
+async function crawlPage(puppeteerPage, thisPageToCrawl) {
   requestError = false;
   javascriptError = false;
   outputEntry = {
@@ -153,7 +148,7 @@ async function crawlPage({puppeteerPage, thisPageToCrawl}) {
   ]);
 
   if (typeof (thisPageToCrawl.customAction) !== 'undefined') {
-    await thisPageToCrawl.customAction({puppeteerPage, LOGININFOS});
+    await thisPageToCrawl.customAction(puppeteerPage, LOGININFOS);
   }
   output.pages.push(outputEntry);
 }
