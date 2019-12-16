@@ -40,7 +40,12 @@
 </template>
 <script>
   export default {
-    props: ['thumbnail'],
+    props: {
+      thumbnail: {
+        type: String,
+        required: true,
+      },
+    },
     computed: {
       displayThumb() {
         return !!this.thumbnail;

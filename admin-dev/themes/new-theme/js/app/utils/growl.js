@@ -22,12 +22,15 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-export function showGrowl(type, message, duration) {
-  duration = undefined !== duration ? duration : 2000;
+export const showGrowl = (type, message, durationTime) => {
+  const duration = undefined !== durationTime ? durationTime : 2000;
+
   window.$.growl[type]({
     title: '',
     size: 'large',
     message,
     duration,
   });
-}
+};
+
+export default showGrowl;

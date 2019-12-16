@@ -27,7 +27,6 @@ import VueResource from 'vue-resource';
 import * as types from '@app/pages/stock/store/mutation-types';
 import {showGrowl} from '@app/utils/growl';
 import {EventBus} from '@app/utils/event-bus';
-import _ from 'lodash';
 
 Vue.use(VueResource);
 

@@ -32,13 +32,8 @@
   </div>
 </template>
 
-<script>
-  export default {
-    props: ['thumb'],
-  };
-</script>
 <style lang="scss" scoped>
-  @import "../../../scss/config/_settings.scss";
+  @import '../../../scss/config/_settings.scss';
   .ps-loader {
     width: 100%;
     .animated-background {

@@ -106,6 +106,7 @@ export const saveTranslations = ({commit}, payload) => {
       successfullySaved: translations.length,
       store: payload.store,
     });
+    /* eslint-disable-next-line no-param-reassign */
     payload.store.state.modifiedTranslations = [];
     return showGrowl('notice', 'Translations successfully updated');
   }, (error) => {
@@ -113,7 +114,7 @@ export const saveTranslations = ({commit}, payload) => {
   });
 };
 
-export const resetTranslation = ({commit}, payload) => {
+export const resetTranslation = ({}, payload) => {
   const {url} = payload;
   const {translations} = payload;
 
