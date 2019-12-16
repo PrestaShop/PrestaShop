@@ -459,7 +459,7 @@ abstract class CacheCore
                 foreach ($tables as $table) {
                     $this->initializeTableCache($table);
 
-                    if (isset($this->sql_tables_cached[$table][$key], $this->sql_tables_cached[$table][$key]['count'])) {
+                    if (isset($this->sql_tables_cached[$table][$key]['count'])) {
                         $this->sql_tables_cached[$table][$key]['count'] += $count;
                         $changedTables[$table] = true;
                     }
