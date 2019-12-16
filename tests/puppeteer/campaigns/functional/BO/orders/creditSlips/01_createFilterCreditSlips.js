@@ -25,9 +25,12 @@ const {Statuses} = require('@data/demo/orders');
 let browser;
 let page;
 const today = new Date();
-// Create date today (yyy-mm-dd)
-const dateToday = `${today.getFullYear()}/${today.getMonth()}/${today.getDay()}`;
+// Date today (yyy-mm-dd)
+const dateToday = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`;
+const dateTodayToCheck = `${today.getMonth() + 1}/${today.getDate()}/${today.getFullYear()}`;
 let numberOfCreditSlips = 0;
+const firstCreditSlipFileName = '000001.pdf';
+const secondCreditSlipFileName = '000002.pdf';
 
 // Init objects needed
 const init = async function () {
@@ -56,6 +59,9 @@ describe('Create, filter and check credit slips file', async () => {
     this.pageObjects = await init();
   });
   after(async () => {
+    /* Delete the generated creditSlips */
+    await files.deleteFile(`${global.BO.DOWNLOAD_PATH}/${firstCreditSlipFileName}`);
+    await files.deleteFile(`${global.BO.DOWNLOAD_PATH}/${secondCreditSlipFileName}`);
     await helper.closeBrowser(browser);
   });
 
@@ -158,8 +164,6 @@ describe('Create, filter and check credit slips file', async () => {
     const tests = [
       {args: {filterBy: 'id_credit_slip', filterValue: 1, columnName: 'id_order_slip'}},
       {args: {filterBy: 'id_order', filterValue: 4, columnName: 'id_order'}},
-      {args: {filterBy: 'date_issued_from', filterValue: dateToday, columnName: 'date_issued_from'}},
-      {args: {filterBy: 'date_issued_to', filterValue: dateToday, columnName: 'date_issued_to'}},
     ];
     tests.forEach((test) => {
       it(`should filter by ${test.args.filterBy} '${test.args.filterValue}'`, async function () {
@@ -181,6 +185,50 @@ describe('Create, filter and check credit slips file', async () => {
       it('should reset all filters', async function () {
         const numberOfCreditSlipsAfterReset = await this.pageObjects.creditSlipsPage.resetAndGetNumberOfLines();
         await expect(numberOfCreditSlipsAfterReset).to.be.equal(numberOfCreditSlips);
+      });
+    });
+
+    it('should filter by Date issued \'From\' and \'To\'', async function () {
+      await this.pageObjects.creditSlipsPage.filterCreditSlipsByDate(dateToday, dateToday);
+      const numberOfCreditSlipsAfterFilter = await this.pageObjects.creditSlipsPage.getNumberOfElementInGrid();
+      await expect(numberOfCreditSlipsAfterFilter).to.be.at.most(numberOfCreditSlips);
+      for (let i = 1; i <= numberOfCreditSlipsAfterFilter; i++) {
+        const textColumn = await this.pageObjects.creditSlipsPage.getTextColumnFromTableCreditSlips(
+          i,
+          'date_add',
+        );
+        await expect(textColumn).to.contains(dateTodayToCheck);
+      }
+    });
+
+    it('should reset all filters', async function () {
+      const numberOfCreditSlipsAfterReset = await this.pageObjects.creditSlipsPage.resetAndGetNumberOfLines();
+      await expect(numberOfCreditSlipsAfterReset).to.be.equal(numberOfCreditSlips);
+    });
+  });
+
+  const creditSlips = [
+    {args: {number: 'first', id: 1, fileName: firstCreditSlipFileName}},
+    {args: {number: 'second', id: 2, fileName: secondCreditSlipFileName}},
+  ];
+  creditSlips.forEach((creditSlip) => {
+    describe(`Download the ${creditSlip.args.number} Credit slips and check it`, async () => {
+      it(`should filter by the credit slip id '${creditSlip.args.id}'`, async function () {
+        await this.pageObjects.creditSlipsPage.filterCreditSlips(
+          'id_credit_slip',
+          creditSlip.args.id,
+        );
+        const textColumn = await this.pageObjects.creditSlipsPage.getTextColumnFromTableCreditSlips(
+          1,
+          'id_order_slip',
+        );
+        await expect(textColumn).to.contains(creditSlip.args.id);
+      });
+
+      it(`should download the ${creditSlip.args.number} credit slip and check the file existence`, async function () {
+        await this.pageObjects.creditSlipsPage.downloadCreditSlip();
+        const exist = await files.checkFileExistence(creditSlip.args.fileName);
+        await expect(exist).to.be.true;
       });
     });
   });
