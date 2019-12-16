@@ -25,23 +25,29 @@
 
 <template>
   <div class="ps-radio">
-    <input type="radio" :id="id" name="radio-group" :checked="checked" @change="onChange">
-    <label :for="id">{{label}}</label>
+    <input
+      type="radio"
+      :id="id"
+      name="radio-group"
+      :checked="checked"
+      @change="onChange"
+    >
+    <label :for="id">{{ label }}</label>
   </div>
 </template>
 
 <script>
-  export default{
-    props: {
-      id: { type: String, required: true },
-      label: { type: String, required: false },
-      checked: { type: Boolean, required: false },
-      value: { type: String, required: false },
+export default {
+  props: {
+    id: {type: String, required: true},
+    label: {type: String, required: false},
+    checked: {type: Boolean, required: false},
+    value: {type: String, required: false},
+  },
+  methods: {
+    onChange() {
+      this.$emit('change', this.value);
     },
-    methods: {
-      onChange() {
-        this.$emit('change', this.value);
-      },
-    },
-  };
+  },
+};
 </script>

@@ -23,15 +23,30 @@
  * International Registered Trademark & Property of PrestaShop SA
  *-->
 <template>
-  <div v-if="isReady" id="app" class="stock-app container-fluid">
+  <div
+    v-if="isReady"
+    id="app"
+    class="stock-app container-fluid"
+  >
     <StockHeader />
-    <Search @search="onSearch" @applyFilter="applyFilter" />
-    <LowFilter v-if="isOverview" :filters="filters" @lowStockChecked="onLowStockChecked" />
+    <Search
+      @search="onSearch"
+      @applyFilter="applyFilter"
+    />
+    <LowFilter
+      v-if="isOverview"
+      :filters="filters"
+      @lowStockChecked="onLowStockChecked"
+    />
     <div class="card container-fluid pa-2 clearfix">
-      <router-view class="view" @resetFilters="resetFilters" @fetch="fetch"></router-view>
+      <router-view
+        class="view"
+        @resetFilters="resetFilters"
+        @fetch="fetch"
+      />
       <PSPagination
-        :currentIndex="currentPagination"
-        :pagesCount="pagesCount"
+        :current-index="currentPagination"
+        :pages-count="pagesCount"
         @pageChanged="onPageChanged"
       />
     </div>
@@ -39,74 +54,73 @@
 </template>
 
 <script>
-  import StockHeader from './header/stock-header';
-  import Search from './header/search';
-  import LowFilter from './header/filters/low-filter';
-  import PSPagination from '@app/widgets/ps-pagination';
+import PSPagination from '@app/widgets/ps-pagination';
+import StockHeader from './header/stock-header';
+import Search from './header/search';
+import LowFilter from './header/filters/low-filter';
 
-  export default {
-    name: 'app',
-    computed: {
-      isReady() {
-        return this.$store.state.isReady;
-      },
-      pagesCount() {
-        return this.$store.state.totalPages;
-      },
-      currentPagination() {
-        return this.$store.state.pageIndex;
-      },
-      isOverview() {
-        return this.$route.name === 'overview';
-      },
+export default {
+  name: 'App',
+  computed: {
+    isReady() {
+      return this.$store.state.isReady;
     },
-    methods: {
-      onPageChanged(pageIndex) {
-        this.$store.dispatch('updatePageIndex', pageIndex);
-        this.fetch('asc');
-      },
-      fetch(sortDirection) {
-        const action = this.$route.name === 'overview' ? 'getStock' : 'getMovements';
-        const sorting = (sortDirection === 'desc') ? ' desc' : '';
-        this.$store.dispatch('isLoading');
+    pagesCount() {
+      return this.$store.state.totalPages;
+    },
+    currentPagination() {
+      return this.$store.state.pageIndex;
+    },
+    isOverview() {
+      return this.$route.name === 'overview';
+    },
+  },
+  methods: {
+    onPageChanged(pageIndex) {
+      this.$store.dispatch('updatePageIndex', pageIndex);
+      this.fetch('asc');
+    },
+    fetch(sortDirection) {
+      const action = this.$route.name === 'overview' ? 'getStock' : 'getMovements';
+      const sorting = (sortDirection === 'desc') ? ' desc' : '';
+      this.$store.dispatch('isLoading');
 
-        this.filters = Object.assign({}, this.filters, {
-          order: `${this.$store.state.order}${sorting}`,
-          page_size: this.$store.state.productsPerPage,
-          page_index: this.$store.state.pageIndex,
-          keywords: this.$store.state.keywords,
-        });
+      this.filters = {
+        ...this.filters,
+        order: `${this.$store.state.order}${sorting}`,
+        page_size: this.$store.state.productsPerPage,
+        page_index: this.$store.state.pageIndex,
+        keywords: this.$store.state.keywords,
+      };
 
-        this.$store.dispatch(action, this.filters);
-      },
-      onSearch(keywords) {
-        this.$store.dispatch('updateKeywords', keywords);
-        this.fetch();
-      },
-      applyFilter(filters) {
-        this.filters = filters;
-        this.fetch();
-      },
-      resetFilters() {
-        this.filters = {};
-      },
-      onLowStockChecked(isChecked) {
-        this.filters = Object.assign({}, this.filters, {
-          low_stock: isChecked,
-        });
-        this.fetch();
-      },
+      this.$store.dispatch(action, this.filters);
     },
-    components: {
-      StockHeader,
-      Search,
-      PSPagination,
-      LowFilter,
+    onSearch(keywords) {
+      this.$store.dispatch('updateKeywords', keywords);
+      this.fetch();
     },
-    data: () => ({
-      filters: {},
-    }),
-  };
+    applyFilter(filters) {
+      this.filters = filters;
+      this.fetch();
+    },
+    resetFilters() {
+      this.filters = {};
+    },
+    onLowStockChecked(isChecked) {
+      this.filters = {...this.filters, low_stock: isChecked};
+      this.fetch();
+    },
+  },
+  components: {
+    StockHeader,
+    Search,
+    PSPagination,
+    LowFilter,
+  },
+  data: () => ({
+    filters: {},
+  }),
+};
 </script>
 
 <style lang="scss" type="text/scss">

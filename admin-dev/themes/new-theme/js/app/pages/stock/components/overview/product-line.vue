@@ -38,7 +38,7 @@
         >
           <p>
             {{ product.product_name }}
-            <small v-if="hasCombination"><br />
+            <small v-if="hasCombination"><br>
               {{ combinationName }}
             </small>
           </p>
@@ -51,124 +51,157 @@
     <td>
       {{ product.supplier_name }}
     </td>
-    <td v-if="product.active" class="text-sm-center">
+    <td
+      v-if="product.active"
+      class="text-sm-center"
+    >
       <i class="material-icons enable">check</i>
     </td>
-    <td v-else class="text-sm-center">
+    <td
+      v-else
+      class="text-sm-center"
+    >
       <i class="material-icons disable">close</i>
     </td>
-    <td class="text-sm-center" :class="{'stock-warning':lowStock}">
+    <td
+      class="text-sm-center"
+      :class="{'stock-warning':lowStock}"
+    >
       {{ physical }}
-      <span v-if="updatedQty" class="qty-update" :class="{'stock-warning':lowStock}">
+      <span
+        v-if="updatedQty"
+        class="qty-update"
+        :class="{'stock-warning':lowStock}"
+      >
         <i class="material-icons">trending_flat</i>
-        {{physicalQtyUpdated}}
+        {{ physicalQtyUpdated }}
       </span>
     </td>
-    <td class="text-sm-center" :class="{'stock-warning':lowStock}">
+    <td
+      class="text-sm-center"
+      :class="{'stock-warning':lowStock}"
+    >
       {{ product.product_reserved_quantity }}
     </td>
-    <td class="text-sm-center" :class="{'stock-warning':lowStock}">
+    <td
+      class="text-sm-center"
+      :class="{'stock-warning':lowStock}"
+    >
       {{ product.product_available_quantity }}
-      <span v-if="updatedQty" class="qty-update" :class="{'stock-warning':lowStock}">
+      <span
+        v-if="updatedQty"
+        class="qty-update"
+        :class="{'stock-warning':lowStock}"
+      >
         <i class="material-icons">trending_flat</i>
-        {{availableQtyUpdated}}
+        {{ availableQtyUpdated }}
       </span>
-      <span v-if="lowStock" class="stock-warning ico ml-2" data-toggle="pstooltip" data-placement="top" data-html="true" :title="lowStockLevel">!</span>
+      <span
+        v-if="lowStock"
+        class="stock-warning ico ml-2"
+        data-toggle="pstooltip"
+        data-placement="top"
+        data-html="true"
+        :title="lowStockLevel"
+      >!</span>
     </td>
     <td class="qty-spinner text-right">
-      <Spinner :product="product" @updateProductQty="updateProductQty" />
+      <Spinner
+        :product="product"
+        @updateProductQty="updateProductQty"
+      />
     </td>
   </tr>
 </template>
 
 <script>
-  import PSCheckbox from '@app/widgets/ps-checkbox';
-  import PSMedia from '@app/widgets/ps-media';
-  import ProductDesc from '@app/pages/stock/mixins/product-desc';
-  import { EventBus } from '@app/utils/event-bus';
-  import Spinner from '@app/pages/stock/components/overview/spinner';
-  import _ from 'lodash';
+import PSCheckbox from '@app/widgets/ps-checkbox';
+import PSMedia from '@app/widgets/ps-media';
+import ProductDesc from '@app/pages/stock/mixins/product-desc';
+import {EventBus} from '@app/utils/event-bus';
+import Spinner from '@app/pages/stock/components/overview/spinner';
+import _ from 'lodash';
 
-  export default {
-    props: ['product'],
-    mixins: [ProductDesc],
-    computed: {
-      reference() {
-        if (this.product.combination_reference !== 'N/A') {
-          return this.product.combination_reference;
-        }
-        return this.product.product_reference;
-      },
-      updatedQty() {
-        return !!this.product.qty;
-      },
-      physicalQtyUpdated() {
-        return Number(this.physical) + Number(this.product.qty);
-      },
-      availableQtyUpdated() {
-        return Number(this.product.product_available_quantity) + Number(this.product.qty);
-      },
-      physical() {
-        const productAvailableQty = Number(this.product.product_available_quantity);
-        const productReservedQty = Number(this.product.product_reserved_quantity);
-        return productAvailableQty + productReservedQty;
-      },
-      lowStock() {
-        return this.product.product_low_stock_alert;
-      },
-      lowStockLevel() {
-        return `<div class="text-sm-left">
+export default {
+  props: ['product'],
+  mixins: [ProductDesc],
+  computed: {
+    reference() {
+      if (this.product.combination_reference !== 'N/A') {
+        return this.product.combination_reference;
+      }
+      return this.product.product_reference;
+    },
+    updatedQty() {
+      return !!this.product.qty;
+    },
+    physicalQtyUpdated() {
+      return Number(this.physical) + Number(this.product.qty);
+    },
+    availableQtyUpdated() {
+      return Number(this.product.product_available_quantity) + Number(this.product.qty);
+    },
+    physical() {
+      const productAvailableQty = Number(this.product.product_available_quantity);
+      const productReservedQty = Number(this.product.product_reserved_quantity);
+      return productAvailableQty + productReservedQty;
+    },
+    lowStock() {
+      return this.product.product_low_stock_alert;
+    },
+    lowStockLevel() {
+      return `<div class="text-sm-left">
                   <p>${this.trans('product_low_stock')}</p>
                   <p><strong>${this.trans('product_low_stock_level')} ${this.product.product_low_stock_threshold}</strong></p>
                 </div>`;
-      },
-      lowStockAlert() {
-        return `<div class="text-sm-left">
+    },
+    lowStockAlert() {
+      return `<div class="text-sm-left">
                   <p><strong>${this.trans('product_low_stock_alert')} ${this.product.product_low_stock_alert}</strong></p>
                 </div>`;
-      },
-      id() {
-        return `product-${this.product.product_id}${this.product.combination_id}`;
-      },
     },
-    methods: {
-      productChecked(checkbox) {
-        if (checkbox.checked) {
-          this.$store.dispatch('addSelectedProduct', checkbox.item);
-        } else {
-          this.$store.dispatch('removeSelectedProduct', checkbox.item);
-        }
-      },
-      updateProductQty(productToUpdate) {
-        const updatedProduct = {
-          product_id: productToUpdate.product.product_id,
-          combination_id: productToUpdate.product.combination_id,
-          delta: productToUpdate.delta,
-        };
-        this.$store.dispatch('updateProductQty', updatedProduct);
-        if (productToUpdate.delta) {
-          this.$store.dispatch('addProductToUpdate', updatedProduct);
-        } else {
-          this.$store.dispatch('removeProductToUpdate', updatedProduct);
-        }
-      },
+    id() {
+      return `product-${this.product.product_id}${this.product.combination_id}`;
     },
-    mounted() {
-      EventBus.$on('toggleProductsCheck', (checked) => {
-        const ref = this.id;
-        if (this.$refs[ref]) {
-          this.$refs[ref].checked = checked;
-        }
-      });
-      $('[data-toggle="pstooltip"]').pstooltip();
+  },
+  methods: {
+    productChecked(checkbox) {
+      if (checkbox.checked) {
+        this.$store.dispatch('addSelectedProduct', checkbox.item);
+      } else {
+        this.$store.dispatch('removeSelectedProduct', checkbox.item);
+      }
     },
-    data: () => ({
-      bulkEdition: false,
-    }),
-    components: {
-      Spinner,
-      PSMedia,
-      PSCheckbox,
+    updateProductQty(productToUpdate) {
+      const updatedProduct = {
+        product_id: productToUpdate.product.product_id,
+        combination_id: productToUpdate.product.combination_id,
+        delta: productToUpdate.delta,
+      };
+      this.$store.dispatch('updateProductQty', updatedProduct);
+      if (productToUpdate.delta) {
+        this.$store.dispatch('addProductToUpdate', updatedProduct);
+      } else {
+        this.$store.dispatch('removeProductToUpdate', updatedProduct);
+      }
     },
-  };
+  },
+  mounted() {
+    EventBus.$on('toggleProductsCheck', (checked) => {
+      const ref = this.id;
+      if (this.$refs[ref]) {
+        this.$refs[ref].checked = checked;
+      }
+    });
+    $('[data-toggle="pstooltip"]').pstooltip();
+  },
+  data: () => ({
+    bulkEdition: false,
+  }),
+  components: {
+    Spinner,
+    PSMedia,
+    PSCheckbox,
+  },
+};
 </script>

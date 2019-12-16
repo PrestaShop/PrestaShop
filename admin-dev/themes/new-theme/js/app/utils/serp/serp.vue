@@ -26,47 +26,53 @@
 <template>
   <div id="serp">
     <div class="serp-preview">
-      <div class="serp-title">{{ displayedTitle }}</div>
-      <div class="serp-url">{{ url }}<span class="serp-arrow"></span></div>
-      <div class="serp-description">{{ displayedDescription }}</div>
+      <div class="serp-title">
+        {{ displayedTitle }}
+      </div>
+      <div class="serp-url">
+        {{ url }}<span class="serp-arrow" />
+      </div>
+      <div class="serp-description">
+        {{ displayedDescription }}
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-  export default {
-    name: 'serp',
-    props: {
-      url: {
-        type: String,
-        default: 'https://www.example.com/',
-      },
-      description: {
-        type: String,
-        default: '',
-      },
-      title: {
-        type: String,
-        default: '',
-      },
+export default {
+  name: 'Serp',
+  props: {
+    url: {
+      type: String,
+      default: 'https://www.example.com/',
     },
-    computed: {
-      displayedTitle() {
-        if (this.title.length > 70) {
-          return `${this.title.substring(0, 70)}...`;
-        }
-
-        return this.title;
-      },
-      displayedDescription() {
-        if (this.description.length > 150) {
-          return `${this.description.substring(0, 150)}...`;
-        }
-
-        return this.description;
-      },
+    description: {
+      type: String,
+      default: '',
     },
-  };
+    title: {
+      type: String,
+      default: '',
+    },
+  },
+  computed: {
+    displayedTitle() {
+      if (this.title.length > 70) {
+        return `${this.title.substring(0, 70)}...`;
+      }
+
+      return this.title;
+    },
+    displayedDescription() {
+      if (this.description.length > 150) {
+        return `${this.description.substring(0, 150)}...`;
+      }
+
+      return this.description;
+    },
+  },
+};
 </script>
 
 <style lang="scss" type="text/scss" scoped>

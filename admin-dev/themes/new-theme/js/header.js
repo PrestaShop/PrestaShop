@@ -51,7 +51,8 @@ export default class Header {
 
         name = prompt(text, link);
       }
-      if (method === 'add' && name || method === 'remove') {
+
+      if ((method === 'add' && name) || method === 'remove') {
         const postLink = $(e.target).data('post-link');
         const quickLinkId = $(e.target).data('quicklink-id');
         const rand = $(e.target).data('rand');
@@ -72,9 +73,10 @@ export default class Header {
           },
           dataType: 'json',
           success: (data) => {
-            let quicklink_list = '';
+            let quicklinkList = '';
             $.each(data, (index) => {
-              if (typeof data[index].name !== 'undefined') quicklink_list += `<li><a href="${data[index].link}&token=${data[index].token}"><i class="icon-chevron-right"></i> ${data[index].name}</a></li>`;
+              /* eslint-disable-next-line max-len */
+              if (typeof data[index].name !== 'undefined') quicklinkList += `<li><a href="${data[index].link}&token=${data[index].token}"><i class="icon-chevron-right"></i> ${data[index].name}</a></li>`;
             });
 
             if (typeof data.has_errors !== 'undefined' && data.has_errors) {
@@ -86,7 +88,7 @@ export default class Header {
                   });
                 }
               });
-            else if (quicklink_list) {
+            } else if (quicklinkList) {
               $('#header_quick ul.dropdown-menu .divider').prevAll().remove();
               $('#header_quick ul.dropdown-menu').prepend(quicklink_list);
               $(e.target).remove();
@@ -138,7 +140,7 @@ export default class Header {
 
   updateEmployeeNotifications() {
     $.post(
-      admin_notification_push_link,
+      adminNotificationPushLink,
       {
         type: $('.notification-center .nav-link.active').attr('data-type'),
       },

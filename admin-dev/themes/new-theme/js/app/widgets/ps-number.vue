@@ -23,8 +23,9 @@
  * International Registered Trademark & Property of PrestaShop SA
  *-->
 
- <template>
-  <div class="ps-number" :class="{'hover-buttons': hoverButtons}">
+<template>
+  <div class="ps-number"
+:class="{'hover-buttons': hoverButtons}">
     <input
       type="number"
       class="form-control"
@@ -34,40 +35,43 @@
       @keyup="onKeyup($event)"
       @focus="focusIn"
       @blur.native="focusOut($event)"
-    />
-    <div class="ps-number-spinner d-flex" v-if="buttons">
-      <span class="ps-number-up" @click="increment"></span>
-      <span class="ps-number-down" @click="decrement"></span>
+    >
+    <div class="ps-number-spinner d-flex"
+v-if="buttons">
+      <span class="ps-number-up"
+@click="increment"/>
+      <span class="ps-number-down"
+@click="decrement"/>
     </div>
   </div>
 </template>
 
 <script>
-  export default {
-    props: {
-      value: '',
-      danger: false,
-      buttons: false,
-      hoverButtons: false,
+export default {
+  props: {
+    value: ,
+    danger: false,
+    buttons: false,
+    hoverButtons: false,
+  },
+  methods: {
+    onKeyup($event) {
+      this.$emit('keyup', $event);
     },
-    methods: {
-      onKeyup($event) {
-        this.$emit('keyup', $event);
-      },
-      focusIn() {
-        this.$emit('focus');
-      },
-      focusOut($event) {
-        this.$emit('blur', $event);
-      },
-      increment() {
-        const value = parseInt(this.value === '' ? 0 : this.value, 10);
-        this.$emit('change', isNaN(value) ? 0 : value + 1);
-      },
-      decrement() {
-        const value = parseInt(this.value, 10);
-        this.$emit('change', isNaN(value) ? -1 : value - 1);
-      },
+    focusIn() {
+      this.$emit('focus');
     },
-  };
+    focusOut($event) {
+      this.$emit('blur', $event);
+    },
+    increment() {
+      const value = parseInt(this.value === '' ? 0 : this.value, 10);
+      this.$emit('change', isNaN(value) ? 0 : value + 1);
+    },
+    decrement() {
+      const value = parseInt(this.value, 10);
+      this.$emit('change', isNaN(value) ? -1 : value - 1);
+    },
+  },
+};
 </script>

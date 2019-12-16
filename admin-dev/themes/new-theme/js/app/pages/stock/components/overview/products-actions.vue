@@ -32,11 +32,11 @@
         id="bulk-action"
         ref="bulk-action"
         class="mt-3"
-        :isIndeterminate="isIndeterminate"
+        :is-indeterminate="isIndeterminate"
         @checked="bulkChecked"
       />
       <div class="ml-2">
-        <small>{{trans('title_bulk')}}</small>
+        <small>{{ trans('title_bulk') }}</small>
         <PSNumber
           class="bulk-qty"
           :danger="danger"
@@ -59,89 +59,89 @@
         @click="sendQty"
       >
         <i class="material-icons">edit</i>
-        {{trans('button_movement_type')}}
+        {{ trans('button_movement_type') }}
       </PSButton>
     </div>
   </div>
 </template>
 
 <script>
-  import PSNumber from '@app/widgets/ps-number';
-  import PSCheckbox from '@app/widgets/ps-checkbox';
-  import PSButton from '@app/widgets/ps-button';
-  import { EventBus } from '@app/utils/event-bus';
+import PSNumber from '@app/widgets/ps-number';
+import PSCheckbox from '@app/widgets/ps-checkbox';
+import PSButton from '@app/widgets/ps-button';
+import {EventBus} from '@app/utils/event-bus';
 
-  export default {
-    computed: {
-      disabled() {
-        return !this.$store.state.hasQty;
-      },
-      bulkEditQty() {
-        return this.$store.state.bulkEditQty;
-      },
-      isIndeterminate() {
-        const selectedProductsLng = this.selectedProductsLng;
-        const productsLng = this.$store.state.products.length;
-        const isIndeterminate = (selectedProductsLng > 0 && selectedProductsLng < productsLng);
-        if (isIndeterminate) {
-          this.$refs['bulk-action'].checked = true;
-        }
-        return isIndeterminate;
-      },
-      selectedProductsLng() {
-        return this.$store.getters.selectedProductsLng;
-      },
+export default {
+  computed: {
+    disabled() {
+      return !this.$store.state.hasQty;
     },
-    watch: {
-      selectedProductsLng(value) {
-        if (value === 0 && this.$refs['bulk-action']) {
-          this.$refs['bulk-action'].checked = false;
-          this.isFocused = false;
-        }
-        if (value === 1 && this.$refs['bulk-action']) {
-          this.isFocused = true;
-        }
-      },
+    bulkEditQty() {
+      return this.$store.state.bulkEditQty;
     },
-    methods: {
-      focusIn() {
-        this.danger = !this.selectedProductsLng;
-        this.isFocused = !this.danger;
-        if (this.danger) {
-          EventBus.$emit('displayBulkAlert', 'error');
-        }
-      },
-      focusOut(event) {
-        this.isFocused = $(event.target).hasClass('ps-number');
-        this.danger = false;
-      },
-      bulkChecked(checkbox) {
-        if (!checkbox.checked) {
-          this.$store.dispatch('updateBulkEditQty', null);
-        }
-        if (!this.isIndeterminate) {
-          EventBus.$emit('toggleProductsCheck', checkbox.checked);
-        }
-      },
-      sendQty() {
-        this.$store.dispatch('updateQtyByProductsId');
-      },
-      onChange(value) {
-        this.$store.dispatch('updateBulkEditQty', value);
-      },
-      onKeyUp(event) {
+    isIndeterminate() {
+      const {selectedProductsLng} = this;
+      const productsLng = this.$store.state.products.length;
+      const isIndeterminate = (selectedProductsLng > 0 && selectedProductsLng < productsLng);
+      if (isIndeterminate) {
+        this.$refs['bulk-action'].checked = true;
+      }
+      return isIndeterminate;
+    },
+    selectedProductsLng() {
+      return this.$store.getters.selectedProductsLng;
+    },
+  },
+  watch: {
+    selectedProductsLng(value) {
+      if (value === 0 && this.$refs['bulk-action']) {
+        this.$refs['bulk-action'].checked = false;
+        this.isFocused = false;
+      }
+      if (value === 1 && this.$refs['bulk-action']) {
         this.isFocused = true;
-        this.$store.dispatch('updateBulkEditQty', event.target.value);
-      },
+      }
     },
-    data: () => ({
-      isFocused: false,
-      danger: false,
-    }),
-    components: {
-      PSNumber,
-      PSCheckbox,
-      PSButton,
+  },
+  methods: {
+    focusIn() {
+      this.danger = !this.selectedProductsLng;
+      this.isFocused = !this.danger;
+      if (this.danger) {
+        EventBus.$emit('displayBulkAlert', 'error');
+      }
     },
-  };
+    focusOut(event) {
+      this.isFocused = $(event.target).hasClass('ps-number');
+      this.danger = false;
+    },
+    bulkChecked(checkbox) {
+      if (!checkbox.checked) {
+        this.$store.dispatch('updateBulkEditQty', null);
+      }
+      if (!this.isIndeterminate) {
+        EventBus.$emit('toggleProductsCheck', checkbox.checked);
+      }
+    },
+    sendQty() {
+      this.$store.dispatch('updateQtyByProductsId');
+    },
+    onChange(value) {
+      this.$store.dispatch('updateBulkEditQty', value);
+    },
+    onKeyUp(event) {
+      this.isFocused = true;
+      this.$store.dispatch('updateBulkEditQty', event.target.value);
+    },
+  },
+  data: () => ({
+    isFocused: false,
+    danger: false,
+  }),
+  components: {
+    PSNumber,
+    PSCheckbox,
+    PSButton,
+  },
+};
 </script>

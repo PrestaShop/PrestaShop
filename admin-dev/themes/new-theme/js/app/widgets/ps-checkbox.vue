@@ -25,39 +25,44 @@
 <template>
   <div class="md-checkbox">
     <label>
-      <input type="checkbox" :id="id" v-model="checked" :class="{'indeterminate' : isIndeterminate }">
-      <i class="md-checkbox-control"></i>
-      <slot name="label"></slot>
+      <input
+        type="checkbox"
+        :id="id"
+        v-model="checked"
+        :class="{'indeterminate' : isIndeterminate }"
+      >
+      <i class="md-checkbox-control" />
+      <slot name="label" />
     </label>
   </div>
 </template>
 
 <script>
-  export default {
-    props: {
-      id: {
-        type: String,
-      },
-      model: {
-        type: Object,
-        required: false,
-      },
-      isIndeterminate: {
-        type: Boolean,
-        required: false,
-        default: false,
-      },
+export default {
+  props: {
+    id: {
+      type: String,
     },
-    watch: {
-      checked(val) {
-        this.$emit('checked', {
-          checked: val,
-          item: this.model,
-        });
-      },
+    model: {
+      type: Object,
+      required: false,
     },
-    data: () => ({
-      checked: false,
-    }),
-  };
+    isIndeterminate: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
+  },
+  watch: {
+    checked(val) {
+      this.$emit('checked', {
+        checked: val,
+        item: this.model,
+      });
+    },
+  },
+  data: () => ({
+    checked: false,
+  }),
+};
 </script>

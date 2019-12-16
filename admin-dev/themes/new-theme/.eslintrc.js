@@ -22,24 +22,32 @@ module.exports = {
     showSuccessMessage: true,
     translate_javascripts: true,
     modalConfirmation: true,
+    baseAdminDir: true,
 
     // From default theme
-    form: true,
-    productCategoriesTags: true,
+    adminNotificationGetLink: true,
+    adminNotificationPushLink: true,
     defaultCategory: true,
+    form: true,
+    tinyMCE: true,
     priceCalculation: true,
+    productCategoriesTags: true,
     supplierCombinations: true,
+    tokenAdminCustomerThreads: true,
+    tokenAdminCustomers: true,
+    tokenAdminOrders: true,
     warehouseCombinations: true,
-    admin_notification_get_link: true,
   },
   parserOptions: {
     parser: 'babel-eslint',
   },
   extends: [
     'prestashop',
+    'plugin:vue/strongly-recommended'
   ],
   plugins: [
     'import',
+    'vue',
     'html',
   ],
   rules: {

@@ -26,40 +26,40 @@
   <section class="stock-overview">
     <ProductsActions />
     <ProductsTable
-      :isLoading="isLoading"
+      :is-loading="isLoading"
       @sort="sort"
     />
   </section>
 </template>
 
 <script>
-  import ProductsActions from './products-actions';
-  import ProductsTable from './products-table';
+import ProductsActions from './products-actions';
+import ProductsTable from './products-table';
 
-  const DEFAULT_SORT = 'asc';
+const DEFAULT_SORT = 'asc';
 
-  export default {
-    computed: {
-      isLoading() {
-        return this.$store.state.isLoading;
-      },
+export default {
+  computed: {
+    isLoading() {
+      return this.$store.state.isLoading;
     },
-    methods: {
-      sort(sortDirection) {
-        this.$emit('fetch', sortDirection);
-      },
+  },
+  methods: {
+    sort(sortDirection) {
+      this.$emit('fetch', sortDirection);
     },
-    mounted() {
-      this.$store.dispatch('updatePageIndex', 1);
-      this.$store.dispatch('updateKeywords', []);
-      this.$store.dispatch('updateOrder', 'product');
-      this.$store.dispatch('isLoading');
-      this.$emit('resetFilters');
-      this.$emit('fetch', DEFAULT_SORT);
-    },
-    components: {
-      ProductsActions,
-      ProductsTable,
-    },
-  };
+  },
+  mounted() {
+    this.$store.dispatch('updatePageIndex', 1);
+    this.$store.dispatch('updateKeywords', []);
+    this.$store.dispatch('updateOrder', 'product');
+    this.$store.dispatch('isLoading');
+    this.$emit('resetFilters');
+    this.$emit('fetch', DEFAULT_SORT);
+  },
+  components: {
+    ProductsActions,
+    ProductsTable,
+  },
+};
 </script>

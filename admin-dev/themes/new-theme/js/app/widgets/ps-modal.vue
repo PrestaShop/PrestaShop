@@ -23,30 +23,58 @@
  * International Registered Trademark & Property of PrestaShop SA
  *-->
 <template>
-  <div class="modal fade" id="ps-modal" tabindex="-1" role="dialog">
-      <div class="modal-dialog" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">
-                    <i class="material-icons">close</i>
-                </button>
-                <h4 class="modal-title">{{translations.modal_title}}</h4>
-            </div>
-            <div class="modal-body">
-              {{translations.modal_content}}
-            </div>
-            <div class="modal-footer">
-                <PSButton @click="onSave" class="btn-lg" primary data-dismiss="modal">{{translations.button_save}}</PSButton>
-                <PSButton @click="onLeave" class="btn-lg" ghost data-dismiss="modal">{{translations.button_leave}}</PSButton>
-            </div>
-          </div>
+  <div
+    class="modal fade"
+    id="ps-modal"
+    tabindex="-1"
+    role="dialog"
+  >
+    <div
+      class="modal-dialog"
+      role="document"
+    >
+      <div class="modal-content">
+        <div class="modal-header">
+          <button
+            type="button"
+            class="close"
+            data-dismiss="modal"
+          >
+            <i class="material-icons">close</i>
+          </button>
+          <h4 class="modal-title">
+            {{ translations.modal_title }}
+          </h4>
+        </div>
+        <div class="modal-body">
+          {{ translations.modal_content }}
+        </div>
+        <div class="modal-footer">
+          <PSButton
+            @click="onSave"
+            class="btn-lg"
+            primary
+            data-dismiss="modal"
+          >
+            {{ translations.button_save }}
+          </PSButton>
+          <PSButton
+            @click="onLeave"
+            class="btn-lg"
+            ghost
+            data-dismiss="modal"
+          >
+            {{ translations.button_leave }}
+          </PSButton>
+        </div>
       </div>
+    </div>
   </div>
 </template>
 
 <script>
 import PSButton from '@app/widgets/ps-button';
-import { EventBus } from '@app/utils/event-bus';
+import {EventBus} from '@app/utils/event-bus';
 
 export default {
   props: {

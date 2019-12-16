@@ -23,12 +23,22 @@
  * International Registered Trademark & Property of PrestaShop SA
  *-->
 <template>
-  <div class="tags-input search-input search d-flex flex-wrap" :class="{ 'search-with-icon': hasIcon }" @click="focus()">
+  <div
+    class="tags-input search-input search d-flex flex-wrap"
+    :class="{ 'search-with-icon': hasIcon }"
+    @click="focus()"
+  >
     <div class="tags-wrapper">
-      <span v-for="(tag, index) in tags" class="tag">{{ tag }}<i class="material-icons" @click="close(index)">close</i></span>
+      <span
+        v-for="(tag, index) in tags"
+        class="tag"
+      >{{ tag }}<i
+        class="material-icons"
+        @click="close(index)"
+      >close</i></span>
     </div>
     <input
-      ref = "tags"
+      ref="tags"
       :placeholder="placeholderToDisplay"
       type="text"
       v-model="tag"
@@ -37,50 +47,50 @@
       @keydown.enter="add(tag)"
       @keydown.delete.stop="remove()"
       :size="inputSize"
-    />
+    >
   </div>
 </template>
 
 <script>
 
-  export default {
-    props: ['tags', 'placeholder', 'hasIcon'],
-    computed: {
-      inputSize() {
-        return !this.tags.length && this.placeholder ? this.placeholder.length : 0;
-      },
-      placeholderToDisplay() {
-        return this.tags.length ? '' : this.placeholder;
-      },
+export default {
+  props: ['tags', 'placeholder', 'hasIcon'],
+  computed: {
+    inputSize() {
+      return !this.tags.length && this.placeholder ? this.placeholder.length : 0;
     },
-    methods: {
-      onKeyUp() {
-        this.$emit('typing', this.$refs.tags.value);
-      },
-      add(tag) {
-        if (tag) {
-          this.tags.push(tag.trim());
-          this.tag = '';
-          this.focus();
-          this.$emit('tagChange', this.tag);
-        }
-      },
-      close(index) {
-        const tagName = this.tags[index];
-        this.tags.splice(index, 1);
+    placeholderToDisplay() {
+      return this.tags.length ? '' : this.placeholder;
+    },
+  },
+  methods: {
+    onKeyUp() {
+      this.$emit('typing', this.$refs.tags.value);
+    },
+    add(tag) {
+      if (tag) {
+        this.tags.push(tag.trim());
+        this.tag = '';
+        this.focus();
+        this.$emit('tagChange', this.tag);
+      }
+    },
+    close(index) {
+      const tagName = this.tags[index];
+      this.tags.splice(index, 1);
+      this.$emit('tagChange', tagName);
+    },
+    remove() {
+      if (this.tags.length && !this.tag.length) {
+        const tagName = this.tags[this.tags.length - 1];
+        this.tags.pop();
         this.$emit('tagChange', tagName);
-      },
-      remove() {
-        if (this.tags.length && !this.tag.length) {
-          const tagName = this.tags[this.tags.length - 1];
-          this.tags.pop();
-          this.$emit('tagChange', tagName);
-        }
-      },
-      focus() {
-        this.$refs.tags.focus();
-      },
+      }
     },
-    data: () => ({ tag: null }),
-  };
+    focus() {
+      this.$refs.tags.focus();
+    },
+  },
+  data: () => ({tag: null}),
+};
 </script>

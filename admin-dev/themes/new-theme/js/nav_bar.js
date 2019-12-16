@@ -155,7 +155,8 @@ export default class NavBar {
     const profileLink = $('.profile-link').attr('href');
     const $mainMenu = $('.main-menu');
 
-    $('.nav-bar li.link-levelone.has_submenu:not(.open) a > i.material-icons.sub-tabs-arrow').text('keyboard_arrow_down');
+    $('.nav-bar li.link-levelone.has_submenu:not(.open) a > i.material-icons.sub-tabs-arrow')
+      .text('keyboard_arrow_down');
     $('body').addClass('mobile');
     $('.nav-bar').addClass('mobile-nav').attr('style', 'margin-left: -100%;');
     $('.panel-collapse').addClass('collapse');
@@ -179,7 +180,7 @@ export default class NavBar {
       height: window.innerHeight,
     });
 
-    function expand(e) {
+    function expand() {
       if ($('div.notification-center.dropdown').hasClass('open')) {
         return;
       }

@@ -284,7 +284,7 @@ class SpecificPriceFormHandler {
       url,
       data,
     })
-      .done((response) => {
+      .done(() => {
         showSuccessMessage(translate_javascripts['Form update success']);
         this.closeEditPriceModalAndRemoveForm();
         this.loadAndDisplayExistingSpecificPricesList();

@@ -25,25 +25,47 @@
 
 <template>
   <div class="container-fluid">
-     <div class="row py-2">
-       <div class="col row ml-1">
-         <PSCheckbox ref="low-filter" id="low-filter" class="mt-1" @checked="onCheck">
-           <span slot="label" class="ml-2">{{trans('filter_low_stock')}}</span>
-         </PSCheckbox>
-       </div>
-       <div class="col mr-3 d-flex align-items-center justify-content-end">
-         <a :href="stockExporttUrl">
-           <span data-toggle="pstooltip" :title="stockExportTitle" data-html="true" data-placement="top">
-             <i class="material-icons">cloud_upload</i>
-           </span>
-         </a>
-         <a class="ml-2" :href="stockImportUrl" target="_blank">
-           <span data-toggle="pstooltip" :title="stockImportTitle" data-html="true" data-placement="top">
-             <i class="material-icons">cloud_download</i>
-           </span>
-         </a>
-       </div>
-     </div>
+    <div class="row py-2">
+      <div class="col row ml-1">
+        <PSCheckbox
+          ref="low-filter"
+          id="low-filter"
+          class="mt-1"
+          @checked="onCheck"
+        >
+          <span
+            slot="label"
+            class="ml-2"
+          >{{ trans('filter_low_stock') }}</span>
+        </PSCheckbox>
+      </div>
+      <div class="col mr-3 d-flex align-items-center justify-content-end">
+        <a :href="stockExporttUrl">
+          <span
+            data-toggle="pstooltip"
+            :title="stockExportTitle"
+            data-html="true"
+            data-placement="top"
+          >
+            <i class="material-icons">cloud_upload</i>
+          </span>
+        </a>
+        <a
+          class="ml-2"
+          :href="stockImportUrl"
+          target="_blank"
+        >
+          <span
+            data-toggle="pstooltip"
+            :title="stockImportTitle"
+            data-html="true"
+            data-placement="top"
+          >
+            <i class="material-icons">cloud_download</i>
+          </span>
+        </a>
+      </div>
+    </div>
   </div>
 </template>
 
