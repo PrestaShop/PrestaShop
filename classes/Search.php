@@ -312,7 +312,7 @@ class SearchCore
             $scoreArray[] = 'sw.word LIKE \'' . $sql_param_search . '\'';
         }
 
-        if (!count($words)) {
+        if (!count($words) || !count($eligibleProducts2)) {
             return $ajax ? [] : ['total' => 0, 'result' => []];
         }
 
@@ -345,7 +345,8 @@ class SearchCore
             'WHERE c.`active` = 1 ' .
             'AND product_shop.`active` = 1 ' .
             'AND product_shop.`visibility` IN ("both", "search") ' .
-            'AND product_shop.indexed = 1 ' . $sqlGroups,
+            'AND product_shop.indexed = 1 ' .
+            'AND cp.id_product IN (' . implode(',', $eligibleProducts2) . ')' . $sqlGroups,
             true,
             false
         );
@@ -355,22 +356,11 @@ class SearchCore
             $eligibleProducts[] = $row['id_product'];
         }
 
-        $eligibleProducts = array_unique(array_intersect($eligibleProducts, array_unique($eligibleProducts2)));
         if (!count($eligibleProducts)) {
             return $ajax ? [] : ['total' => 0, 'result' => []];
         }
 
-        $product_pool = '';
-        foreach ($eligibleProducts as $id_product) {
-            if ($id_product) {
-                $product_pool .= (int) $id_product . ',';
-            }
-        }
-
-        if (empty($product_pool)) {
-            return $ajax ? [] : ['total' => 0, 'result' => []];
-        }
-        $product_pool = ((strpos($product_pool, ',') === false) ? (' = ' . (int) $product_pool . ' ') : (' IN (' . rtrim($product_pool, ',') . ') '));
+        $product_pool = ' IN (' . implode(',', $eligibleProducts) . ') ';
 
         if ($ajax) {
             $sql = 'SELECT DISTINCT p.id_product, pl.name pname, cl.name cname,
