@@ -4,9 +4,8 @@ module.exports = [
     urlPrefix: 'URL_BO', // replaced
     description: 'Parcours du Back Office',
     urls: [
-      {name: 'BO_login', url: 'index.php?controller=AdminLogin'},
       {
-        name: 'BO_dashboard',
+        name: 'BO_login',
         url: 'index.php?controller=AdminLogin',
         async customAction(page, LOGININFOS) {
           await page.type('#email', LOGININFOS.admin.login);
@@ -16,7 +15,7 @@ module.exports = [
             page.waitForNavigation({waitUntil: 'networkidle0'}),
           ]);
 
-          page.evaluate(async () => {
+          await page.evaluate(async () => {
             const block = document.querySelector('button.onboarding-button-shut-down');
             if (block) {
               await page.click('button.onboarding-button-shut-down');
@@ -26,6 +25,7 @@ module.exports = [
           });
         },
       },
+      {name: 'BO_dashboard', url: 'index.php?controller=AdminDashboard'},
       {name: 'BO_orders', url: 'index.php?controller=AdminOrders'},
       {name: 'BO_add_orders', url: 'index.php?controller=AdminOrders&addorder'},
       {name: 'BO_invoices', url: 'index.php/sell/orders/invoices/'},
