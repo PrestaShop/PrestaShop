@@ -130,14 +130,16 @@ class SupplierController extends FrameworkBundleAdminController
      */
     public function createAction(Request $request)
     {
-        try {
-            $supplierData = $request->request->get('supplier');
-            $supplierForm = $this->getFormBuilder()->getForm(
-                [],
-                isset($supplierData['id_country']) ? ['country_id' => (int) $supplierData['id_country']] : []
-            );
-            $supplierForm->handleRequest($request);
+        $formData = [];
+        if ($request->request->has('supplier') && isset($request->request->get('supplier')['id_country'])) {
+            $formCountryId = (int) $request->request->get('supplier')['id_country'];
+            $formData['id_country'] = $formCountryId;
+        }
 
+        $supplierForm = $this->getFormBuilder()->getForm($formData);
+        $supplierForm->handleRequest($request);
+
+        try {
             $result = $this->getFormHandler()->handle($supplierForm);
 
             if (null !== $result->getIdentifiableObjectId()) {
@@ -320,13 +322,17 @@ class SupplierController extends FrameworkBundleAdminController
      */
     public function editAction(Request $request, $supplierId)
     {
+        $formData = [];
+        if ($request->request->has('supplier') && isset($request->request->get('supplier')['id_country'])) {
+            $formCountryId = (int) $request->request->get('supplier')['id_country'];
+            $formData['id_country'] = $formCountryId;
+        }
+
         try {
             /** @var EditableSupplier $editableSupplier */
             $editableSupplier = $this->getQueryBus()->handle(new GetSupplierForEditing((int) $supplierId));
 
-            $supplierForm = $this->getFormBuilder()->getFormFor((int) $supplierId, [], [
-                'country_id' => $editableSupplier->getCountryId(),
-            ]);
+            $supplierForm = $this->getFormBuilder()->getFormFor((int) $supplierId, $formData);
             $supplierForm->handleRequest($request);
 
             $result = $this->getFormHandler()->handleFor((int) $supplierId, $supplierForm);
