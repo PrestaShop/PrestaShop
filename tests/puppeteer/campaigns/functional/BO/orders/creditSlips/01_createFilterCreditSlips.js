@@ -177,6 +177,11 @@ describe('Create, filter and check credit slips file', async () => {
           await expect(textColumn).to.contains(test.args.filterValue);
         }
       });
+
+      it('should reset all filters', async function () {
+        const numberOfCreditSlipsAfterReset = await this.pageObjects.creditSlipsPage.resetAndGetNumberOfLines();
+        await expect(numberOfCreditSlipsAfterReset).to.be.equal(numberOfCreditSlips);
+      });
     });
   });
 });
