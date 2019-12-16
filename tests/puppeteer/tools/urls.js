@@ -14,15 +14,12 @@ module.exports = [
             page.click('#submit_login'),
             page.waitForNavigation({waitUntil: 'networkidle0'}),
           ]);
-
-          await page.evaluate(async () => {
-            const block = document.querySelector('button.onboarding-button-shut-down');
-            if (block) {
-              await page.click('button.onboarding-button-shut-down');
-              await page.waitForSelector('a.onboarding-button-stop', {visible: true});
-              await page.click('a.onboarding-button-stop');
-            }
-          });
+          const block = await page.$('button.onboarding-button-shut-down');
+          if(block !== null) {
+            await page.click('button.onboarding-button-shut-down');
+            await page.waitForSelector('a.onboarding-button-stop', {visible: true});
+            await page.click('a.onboarding-button-stop');
+          }
         },
       },
       {name: 'BO_dashboard', url: 'index.php?controller=AdminDashboard'},
