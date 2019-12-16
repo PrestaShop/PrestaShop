@@ -32,7 +32,6 @@ use PrestaShop\PrestaShop\Core\Domain\Contact\Exception\ContactNotFoundException
 use PrestaShop\PrestaShop\Core\Domain\Contact\Query\GetContactForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Contact\QueryHandler\GetContactForEditingHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Contact\QueryResult\EditableContact;
-use PrestaShop\PrestaShop\Core\Util\BoolParser;
 use PrestaShopException;
 use Symfony\Component\Form\DataTransformerInterface;
 
@@ -78,7 +77,7 @@ final class GetContactForEditingHandler implements GetContactForEditingHandlerIn
                 $query->getContactId()->getValue(),
                 $contact->name,
                 $contact->email,
-                BoolParser::castToBool($contact->customer_service),
+                (bool) $contact->customer_service,
                 $contact->description,
                 $this->stringArrayToIntegerArrayDataTransformer->reverseTransform($contact->getAssociatedShops())
             );
