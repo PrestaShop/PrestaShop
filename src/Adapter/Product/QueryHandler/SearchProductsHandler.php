@@ -97,7 +97,6 @@ final class SearchProductsHandler implements SearchProductsHandlerInterface
     private function createFoundProductFromLegacy(Product $product, SearchProducts $query): FoundProduct
     {
         //@todo: sort products alphabetically
-
         $priceTaxExcluded = Product::getPriceStatic($product->id, false);
         $priceTaxIncluded = Product::getPriceStatic($product->id, true);
 
@@ -105,8 +104,8 @@ final class SearchProductsHandler implements SearchProductsHandlerInterface
             $product->id,
             $product->name[$this->contextLangId],
             $this->contextLocale->formatPrice($priceTaxExcluded, $query->getAlphaIsoCode()->getValue()),
-            Tools::ps_round($priceTaxIncluded, 2),
-            Tools::ps_round($priceTaxExcluded, 2),
+            $priceTaxIncluded,
+            $priceTaxExcluded,
             $product->getTaxesRate(),
             Product::getQuantity($product->id),
             $product->location,

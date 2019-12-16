@@ -422,7 +422,7 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
                 $product['unit_price_tax_incl']
             ;
 
-            $totalPrice = Tools::ps_round($unitPrice, 2) *
+            $totalPrice = $unitPrice *
                 (!empty($product['customizedDatas']) ? $product['customizationQuantityTotal'] : $product['product_quantity']);
 
             $unitPriceFormatted = $this->locale->formatPrice($unitPrice, $currency->iso_code);
@@ -443,8 +443,8 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
                 $totalPriceFormatted,
                 $product['current_stock'],
                 $imagePath,
-                Tools::ps_round($product['unit_price_tax_excl'], 2),
-                Tools::ps_round($product['unit_price_tax_incl'], 2),
+                $product['unit_price_tax_excl'],
+                $product['unit_price_tax_incl'],
                 $product['tax_rate'],
                 $product['location']
             );
