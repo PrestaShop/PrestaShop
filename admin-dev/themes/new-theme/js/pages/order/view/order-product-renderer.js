@@ -47,7 +47,7 @@ export default class OrderProductRenderer {
     $(OrderViewPageMap.productsCount).html(numProducts);
   }
 
-  editProductFromToList(orderProductId, quantity, priceTaxIncl, priceTaxExcl, taxRate, location, availableQuantity) {
+  editProductFromList(orderProductId, quantity, priceTaxIncl, priceTaxExcl, taxRate, location, availableQuantity) {
     const $orderEdit = new OrderProductEdit(orderProductId);
     $orderEdit.displayProduct({
       price_tax_excl: priceTaxExcl,
@@ -173,7 +173,7 @@ export default class OrderProductRenderer {
     $productRow.find('td.cellProductAvailableQuantity').html(result.availableQuantity);
     $productRow.find('td.cellProductTotalPrice').html(result.totalPrice);
     if (!result.delivered) {
-      $productRow.find('td.cellProductActions .js-order-product-edit-btn i')
+      $productRow.find('td.cellProductActions .js-order-product-edit-btn')
         .data('orderDetailId', result.orderDetailId)
         .data('productQuantity', result.quantity)
         .data('productPriceTaxIncl', result.unitPriceTaxInclRaw)

@@ -74,6 +74,7 @@ use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderShippingForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderStatusForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
 use PrestaShop\PrestaShop\Core\Image\Parser\ImageTagSourceParserInterface;
+use PrestaShop\PrestaShop\Core\Localization\CLDR\ComputingPrecision;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
 use Shop;
 use State;
@@ -415,6 +416,7 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
         $productsForViewing = [];
 
         $isOrderTaxExcluded = ($taxCalculationMethod == PS_TAX_EXC);
+        $computingPrecision = new ComputingPrecision();
 
         foreach ($products as $product) {
             $unitPrice = $isOrderTaxExcluded ?
@@ -422,7 +424,7 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
                 $product['unit_price_tax_incl']
             ;
 
-            $totalPrice = Tools::ps_round($unitPrice, 2) *
+            $totalPrice = $unitPrice *
                 (!empty($product['customizedDatas']) ? $product['customizationQuantityTotal'] : $product['product_quantity']);
 
             $unitPriceFormatted = $this->locale->formatPrice($unitPrice, $currency->iso_code);
@@ -443,8 +445,14 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
                 $totalPriceFormatted,
                 $product['current_stock'],
                 $imagePath,
-                Tools::ps_round($product['unit_price_tax_excl'], 2),
-                Tools::ps_round($product['unit_price_tax_incl'], 2),
+                Tools::ps_round(
+                    $product['unit_price_tax_excl'],
+                    $computingPrecision->getPrecision($currency->precision)
+                ),
+                Tools::ps_round(
+                    $product['unit_price_tax_incl'],
+                    $computingPrecision->getPrecision($currency->precision)
+                ),
                 $product['tax_rate'],
                 $product['location']
             );

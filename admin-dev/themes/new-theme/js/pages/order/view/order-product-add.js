@@ -71,45 +71,54 @@ export default class OrderProductAdd {
         this.productAddActionBtn.removeAttr('disabled');
       }
 
+      const currencyPrecision = $(OrderViewPageMap.productsTable).data('currencyPrecision');
       const priceTaxCalculator = new OrderPrices();
       const taxIncluded = parseFloat(this.priceTaxIncludedInput.val());
       this.totalPriceText.html(
-        priceTaxCalculator.calculateTotalPrice(quantity, taxIncluded)
+        priceTaxCalculator.calculateTotalPrice(quantity, taxIncluded, currencyPrecision)
       );
     });
     this.productIdInput.on('change', () => {
       this.productAddActionBtn.removeAttr('disabled');
     });
     this.priceTaxIncludedInput.on('change keyup', (event) => {
+      const currencyPrecision = $(OrderViewPageMap.productsTable).data('currencyPrecision');
       const priceTaxCalculator = new OrderPrices();
       const taxIncluded = parseFloat(event.target.value);
       const taxExcluded = priceTaxCalculator.calculateTaxExcluded(
         taxIncluded,
         this.taxRateInput.val(),
+        currencyPrecision
       );
       const quantity = parseInt(this.quantityInput.val(), 10);
       this.priceTaxExcludedInput.val(taxExcluded);
       this.totalPriceText.html(
-        priceTaxCalculator.calculateTotalPrice(quantity, taxIncluded)
+        priceTaxCalculator.calculateTotalPrice(quantity, taxIncluded, currencyPrecision)
       );
     });
     this.priceTaxExcludedInput.on('change keyup', (event) => {
+      const currencyPrecision = $(OrderViewPageMap.productsTable).data('currencyPrecision');
       const priceTaxCalculator = new OrderPrices();
       const taxExcluded = parseFloat(event.target.value);
-      const taxIncluded = priceTaxCalculator.calculateTaxIncluded(taxExcluded, this.taxRateInput.val());
+      const taxIncluded = priceTaxCalculator.calculateTaxIncluded(
+        taxExcluded,
+        this.taxRateInput.val(),
+        currencyPrecision
+      );
       const quantity = parseInt(this.quantityInput.val(), 10);
       this.priceTaxIncludedInput.val(taxIncluded);
       this.totalPriceText.html(
-        priceTaxCalculator.calculateTotalPrice(quantity, taxIncluded)
+        priceTaxCalculator.calculateTotalPrice(quantity, taxIncluded, currencyPrecision)
       );
     });
     this.productAddActionBtn.on('click', event => this.addProduct($(event.currentTarget).data('orderId')));
   }
 
   setProduct(product) {
+    const currencyPrecision = $(OrderViewPageMap.productsTable).data('currencyPrecision');
     this.productIdInput.val(product.productId).trigger('change');
-    this.priceTaxExcludedInput.val(product.priceTaxExcl);
-    this.priceTaxIncludedInput.val(product.priceTaxIncl);
+    this.priceTaxExcludedInput.val(ps_round(product.priceTaxExcl, currencyPrecision));
+    this.priceTaxIncludedInput.val(ps_round(product.priceTaxIncl, currencyPrecision));
     this.taxRateInput.val(product.taxRate);
     this.locationText.html(product.location);
     this.available = product.stock;

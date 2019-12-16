@@ -72,7 +72,7 @@ export default class OrderViewPage {
     $(OrderViewPageMap.productEditBtn).on('click', event => {
       const $btn = $(event.currentTarget);
       this.orderProductRenderer.moveProductsPanelToModificationPosition();
-      this.orderProductRenderer.editProductFromToList(
+      this.orderProductRenderer.editProductFromList(
         $btn.data('orderDetailId'),
         $btn.data('productQuantity'),
         $btn.data('productPriceTaxIncl'),
@@ -112,7 +112,6 @@ export default class OrderViewPage {
         // Update pagination
         let numPages = $tablePagination.data('numPages');
         if (numProducts % numRowsPerPage === 0) {
-          console.log('There');
           numPages += 1;
           this.orderProductRenderer.paginationAddPage(numPages);
         }
