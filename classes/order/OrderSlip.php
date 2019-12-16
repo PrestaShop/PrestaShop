@@ -321,8 +321,7 @@ class OrderSlipCore extends ObjectModel
                 continue;
             }
 
-            // @todo this should not be executed in cancel product mode
-            if ($order->hasBeenPaid()) {
+            if (!Tools::isSubmit('cancelProduct') && $order->hasBeenPaid()) {
                 $order_detail->product_quantity_refunded += $quantity;
             }
 

@@ -250,7 +250,7 @@ class OrderProductForViewing
     }
 
     /**
-     * @return float
+     * @return string
      */
     public function getAmountRefundable(): string
     {
