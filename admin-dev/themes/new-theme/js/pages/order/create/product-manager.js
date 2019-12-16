@@ -191,7 +191,7 @@ export default class ProductManager {
     }
 
     const $searchRequest = $.get(this.router.generate('admin_products_search'), {
-      q: searchPhrase,
+      search_phrase: searchPhrase,
     });
     this.activeSearchRequest = $searchRequest;
 
