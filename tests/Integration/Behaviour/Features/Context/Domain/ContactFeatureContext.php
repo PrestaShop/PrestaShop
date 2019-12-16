@@ -8,7 +8,9 @@ use PrestaShop\PrestaShop\Core\Domain\Contact\Command\AddContactCommand;
 use PrestaShop\PrestaShop\Core\Domain\Contact\Command\EditContactCommand;
 use PrestaShop\PrestaShop\Core\Domain\Contact\Query\GetContactForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Contact\QueryResult\EditableContact;
+use PrestaShop\PrestaShop\Core\Domain\Contact\ValueObject\ContactId;
 use Tests\Integration\Behaviour\Features\Context\CommonFeatureContext;
+use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
 class ContactFeatureContext extends AbstractDomainFeatureContext
@@ -28,11 +30,12 @@ class ContactFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @When I add new contact with the following details:
+     * @When I add new contact :reference with the following details:
      *
      * @param TableNode $table
+     * @param string $reference
      */
-    public function addNewContactWithTheFollowingDetails(TableNode $table)
+    public function addNewContactWithTheFollowingDetails(TableNode $table, string $reference)
     {
         $data = $table->getRowsHash();
         /** @var EditableContact $editablContact */
@@ -46,33 +49,47 @@ class ContactFeatureContext extends AbstractDomainFeatureContext
                           ->setLocalisedDescription($editableContact->getLocalisedDescription())
                           ->setShopAssociation($editableContact->getShopAssociation());
 
-        $this->getCommandBus()->handle($addContactCommand);
+        /** @var ContactId $contactId */
+        $contactId = $this->getCommandBus()->handle($addContactCommand);
+        SharedStorage::getStorage()->set($reference, $contactId);
+
     }
 
     /**
-     * @When contact :contactId should have the following details:
+     * @When contact :reference should have the following details:
      *
-     * @param int $contactId
+     * @param string $reference
      * @param TableNode $table
      */
-    public function contactShouldHaveTheFollowingDetails(int $contactId, TableNode $table)
+    public function contactShouldHaveTheFollowingDetails(string $reference, TableNode $table)
     {
         $data = $table->getRowsHash();
+
+        /** @var ContactId $contactIdObject */
+        $contactIdObject = SharedStorage::getStorage()->get($reference);
+        $contactId = $contactIdObject->getValue();
         $expectedEditableContact = $this->mapToEditableContact($contactId, $data);
+
         /** @var EditableContact $editableContact */
         $editableContact = $this->getQueryBus()->handle(new GetContactForEditing($contactId));
+
         PHPUnit_Framework_Assert::assertEquals($expectedEditableContact, $editableContact);
     }
 
     /**
      * @When I update contact :contactId with the following details:
      *
-     * @param int $contactId
+     * @param string $reference
      * @param TableNode $table
      */
-    public function updateContactWithTheFollowingDetails(int $contactId, TableNode $table)
+    public function updateContactWithTheFollowingDetails(string $reference, TableNode $table)
     {
         $data = $table->getRowsHash();
+
+        /** @var ContactId $contactIdObject */
+        $contactIdObject = SharedStorage::getStorage()->get($reference);
+        $contactId = $contactIdObject->getValue();
+
         $editableContact = $this->mapToEditableContact($contactId, $data);
 
         $editContactCommand = new EditContactCommand($contactId);
