@@ -102,7 +102,7 @@ export default class CustomerRenderer {
   renderCarts(carts, currentCartId) {
     const $cartsTable = $(createOrderMap.customerCartsTable);
     const $cartsTableRowTemplate = $($(createOrderMap.customerCartsTableRowTemplate).html());
-
+debugger;
     $cartsTable.find('tbody').empty();
     this._showCheckoutHistoryBlock();
     this._removeEmptyListRowFromTable($cartsTable);

@@ -90,9 +90,13 @@ export default class CreateOrderPage {
       if (address.invoice) {
         invoiceValid = true;
       }
+
+      if (deliveryValid && invoiceValid) {
+        return true;
+      }
     }
 
-    return deliveryValid && invoiceValid;
+    return false;
   }
 
   /**
@@ -245,8 +249,11 @@ export default class CreateOrderPage {
   _onCartCurrencyChanged() {
     // on success
     EventEmitter.on(eventMap.cartCurrencyChanged, (cartInfo) => {
-      this.productRenderer.cleanCartBlockAlerts();
-      this._preselectCartCurrency(cartInfo.currencyId);
+      // this._preselectCartCurrency(cartInfo.currencyId);
+      // this.productRenderer.cleanCartBlockAlerts();
+      this._renderCartInfo(cartInfo);
+      this.customerManager.loadCustomerCarts(this.cartId);
+      this.customerManager.loadCustomerOrders();
     });
 
     // on failure
@@ -422,6 +429,7 @@ export default class CreateOrderPage {
     this.addressesRenderer.render(cartInfo.addresses);
     this.cartRulesRenderer.renderCartRulesBlock(cartInfo.cartRules, cartInfo.products.length === 0);
     this.shippingRenderer.render(cartInfo.shipping, cartInfo.products.length === 0);
+    this.productRenderer.cleanCartBlockAlerts();
     this.productRenderer.renderList(cartInfo.products);
     this.summaryRenderer.render(cartInfo);
     this._preselectCartCurrency(cartInfo.currencyId);
