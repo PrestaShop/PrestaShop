@@ -8,7 +8,7 @@ echo "\n* Disabling DEV mode ...";
 sed -ie "s/define('_PS_MODE_DEV_', true);/define('_PS_MODE_DEV_',\ false);/g" $PROJECT_PATH/config/defines.inc.php
 
 echo "\n* Disabling Token ...";
-echo "SetEnv _TOKEN_ disabled" $PROJECT_PATH/admin-dev/.htaccess
+echo "SetEnv _TOKEN_ disabled"  >> $PROJECT_PATH/admin-dev/.htaccess
 
 cd $PROJECT_PATH/tests/puppeteer && npm install
 
