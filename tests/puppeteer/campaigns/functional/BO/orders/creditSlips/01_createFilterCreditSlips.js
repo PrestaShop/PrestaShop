@@ -118,26 +118,24 @@ describe('Create, filter and check credit slips file', async () => {
       await expect(result).to.be.true;
     });
 
-    it('should add a partial refund', async function () {
-      await this.pageObjects.viewOrderPage.clickOnPartialRefund();
-      const textMessage = await this.pageObjects.viewOrderPage.addPartialRefundProduct(1, 1);
-      await expect(textMessage).to.contains(this.pageObjects.viewOrderPage.partialRefundValidationMessage);
-    });
+    const tests = [
+      {args: {productID: 1, quantity: 1, documentRow: 4}},
+      {args: {productID: 1, quantity: 2, documentRow: 5}},
+    ];
+    tests.forEach((test) => {
+      it('should add a partial refund', async function () {
+        await this.pageObjects.viewOrderPage.clickOnPartialRefund();
+        const textMessage = await this.pageObjects.viewOrderPage.addPartialRefundProduct(
+          test.args.productID,
+          test.args.quantity,
+        );
+        await expect(textMessage).to.contains(this.pageObjects.viewOrderPage.partialRefundValidationMessage);
+      });
 
-    it('should check the existence of the Credit slip document', async function () {
-      const documentName = await this.pageObjects.viewOrderPage.getDocumentName(4);
-      await expect(documentName).to.be.equal('Credit Slip');
-    });
-
-    it('should add a partial refund', async function () {
-      await this.pageObjects.viewOrderPage.clickOnPartialRefund();
-      const textMessage = await this.pageObjects.viewOrderPage.addPartialRefundProduct(1, 2);
-      await expect(textMessage).to.contains(this.pageObjects.viewOrderPage.partialRefundValidationMessage);
-    });
-
-    it('should check the existence of the Credit slip document', async function () {
-      const documentName = await this.pageObjects.viewOrderPage.getDocumentName(5);
-      await expect(documentName).to.be.equal('Credit Slip');
+      it('should check the existence of the Credit slip document', async function () {
+        const documentName = await this.pageObjects.viewOrderPage.getDocumentName(test.args.documentRow);
+        await expect(documentName).to.be.equal('Credit Slip');
+      });
     });
   });
 
@@ -182,4 +180,3 @@ describe('Create, filter and check credit slips file', async () => {
     });
   });
 });
-
