@@ -31,6 +31,7 @@ use BoOrderCore;
 use Cart;
 use Configuration;
 use Context;
+use Country;
 use Employee;
 use Exception;
 use Module;
@@ -61,6 +62,10 @@ final class AddOrderFromBackOfficeHandler implements AddOrderFromBackOfficeHandl
 
         $this->assertAddressesAreNotDeleted($cart);
         $this->assertAddressesAreNotDisabled($cart);
+
+        //Context country is used in PaymentModule::validateOrder to validate order country (it should rely on cart address country instead)
+        //@TODO: investigate further which address should be used when setting context country (invoice or delivery)
+        Context::getContext()->country = new Country((new Address($cart->id_address_invoice))->id_country);
 
         $translator = Context::getContext()->getTranslator();
         $employee = new Employee($command->getEmployeeId()->getValue());
