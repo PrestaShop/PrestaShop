@@ -73,42 +73,42 @@
 </template>
 
 <script>
-import PSButton from '@app/widgets/ps-button';
-import {EventBus} from '@app/utils/event-bus';
+  import PSButton from '@app/widgets/ps-button';
+  import {EventBus} from '@app/utils/event-bus';
 
-export default {
-  props: {
-    translations: {
-      type: Object,
-      required: false,
+  export default {
+    props: {
+      translations: {
+        type: Object,
+        required: false,
+      },
     },
-  },
-  mounted() {
-    EventBus.$on('showModal', () => {
-      this.showModal();
-    });
-    EventBus.$on('hideModal', () => {
-      this.hideModal();
-    });
-  },
-  methods: {
-    showModal() {
-      $(this.$el).modal('show');
+    mounted() {
+      EventBus.$on('showModal', () => {
+        this.showModal();
+      });
+      EventBus.$on('hideModal', () => {
+        this.hideModal();
+      });
     },
-    hideModal() {
-      $(this.$el).modal('hide');
+    methods: {
+      showModal() {
+        $(this.$el).modal('show');
+      },
+      hideModal() {
+        $(this.$el).modal('hide');
+      },
+      onSave() {
+        this.$emit('save');
+      },
+      onLeave() {
+        this.$emit('leave');
+      },
     },
-    onSave() {
-      this.$emit('save');
+    components: {
+      PSButton,
     },
-    onLeave() {
-      this.$emit('leave');
-    },
-  },
-  components: {
-    PSButton,
-  },
-};
+  };
 
 </script>
 

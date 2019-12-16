@@ -48,6 +48,7 @@
         class="page-item"
         :class="{'active' : checkCurrentIndex(index)}"
         v-for="index in pagesCount"
+        :key="index"
       >
         <a
           v-if="showIndex(index)"
@@ -88,70 +89,70 @@
 </template>
 
 <script>
-export default {
-  props: ['pagesCount', 'currentIndex'],
-  computed: {
-    isMultiPagination() {
-      return this.pagesCount > this.multiPagesActivationLimit;
+  export default {
+    props: ['pagesCount', 'currentIndex'],
+    computed: {
+      isMultiPagination() {
+        return this.pagesCount > this.multiPagesActivationLimit;
+      },
+      activeLeftArrow() {
+        return this.currentIndex !== 1;
+      },
+      activeRightArrow() {
+        return this.currentIndex !== this.pagesCount;
+      },
+      pagesToDisplay() {
+        return this.multiPagesToDisplay;
+      },
+      displayPagination() {
+        return this.pagesCount > 1;
+      },
     },
-    activeLeftArrow() {
-      return this.currentIndex !== 1;
+    methods: {
+      checkCurrentIndex(index) {
+        return this.currentIndex === index;
+      },
+      showIndex(index) {
+        const startPaginationIndex = index < this.currentIndex + this.multiPagesToDisplay;
+        const lastPaginationIndex = index > this.currentIndex - this.multiPagesToDisplay;
+        const indexToDisplay = startPaginationIndex && lastPaginationIndex;
+        const lastIndex = index === this.pagesCount;
+        const firstIndex = index === 1;
+        if (!this.isMultiPagination) {
+          return !this.isMultiPagination;
+        }
+        return indexToDisplay || firstIndex || lastIndex;
+      },
+      changePage(pageIndex) {
+        this.$emit('pageChanged', pageIndex);
+      },
+      showFirstDots(index) {
+        const pagesToDisplay = this.pagesCount - this.multiPagesToDisplay;
+        if (!this.isMultiPagination) {
+          return this.isMultiPagination;
+        }
+        return index === this.pagesCount && this.currentIndex <= pagesToDisplay;
+      },
+      showLastDots(index) {
+        if (!this.isMultiPagination) {
+          return this.isMultiPagination;
+        }
+        return index === 1 && this.currentIndex > this.multiPagesToDisplay;
+      },
+      prev() {
+        if (this.currentIndex > 1) {
+          this.changePage(this.currentIndex - 1);
+        }
+      },
+      next() {
+        if (this.currentIndex < this.pagesCount) {
+          this.changePage(this.currentIndex + 1);
+        }
+      },
     },
-    activeRightArrow() {
-      return this.currentIndex !== this.pagesCount;
-    },
-    pagesToDisplay() {
-      return this.multiPagesToDisplay;
-    },
-    displayPagination() {
-      return this.pagesCount > 1;
-    },
-  },
-  methods: {
-    checkCurrentIndex(index) {
-      return this.currentIndex === index;
-    },
-    showIndex(index) {
-      const startPaginationIndex = index < this.currentIndex + this.multiPagesToDisplay;
-      const lastPaginationIndex = index > this.currentIndex - this.multiPagesToDisplay;
-      const indexToDisplay = startPaginationIndex && lastPaginationIndex;
-      const lastIndex = index === this.pagesCount;
-      const firstIndex = index === 1;
-      if (!this.isMultiPagination) {
-        return !this.isMultiPagination;
-      }
-      return indexToDisplay || firstIndex || lastIndex;
-    },
-    changePage(pageIndex) {
-      this.$emit('pageChanged', pageIndex);
-    },
-    showFirstDots(index) {
-      const pagesToDisplay = this.pagesCount - this.multiPagesToDisplay;
-      if (!this.isMultiPagination) {
-        return this.isMultiPagination;
-      }
-      return index === this.pagesCount && this.currentIndex <= pagesToDisplay;
-    },
-    showLastDots(index) {
-      if (!this.isMultiPagination) {
-        return this.isMultiPagination;
-      }
-      return index === 1 && this.currentIndex > this.multiPagesToDisplay;
-    },
-    prev() {
-      if (this.currentIndex > 1) {
-        this.changePage(this.currentIndex - 1);
-      }
-    },
-    next() {
-      if (this.currentIndex < this.pagesCount) {
-        this.changePage(this.currentIndex + 1);
-      }
-    },
-  },
-  data: () => ({
-    multiPagesToDisplay: 2,
-    multiPagesActivationLimit: 5,
-  }),
-};
+    data: () => ({
+      multiPagesToDisplay: 2,
+      multiPagesActivationLimit: 5,
+    }),
+  };
 </script>

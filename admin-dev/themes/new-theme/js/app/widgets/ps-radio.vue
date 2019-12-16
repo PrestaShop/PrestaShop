@@ -37,17 +37,31 @@
 </template>
 
 <script>
-export default {
-  props: {
-    id: {type: String, required: true},
-    label: {type: String, required: false},
-    checked: {type: Boolean, required: false},
-    value: {type: String, required: false},
-  },
-  methods: {
-    onChange() {
-      this.$emit('change', this.value);
+  export default {
+    props: {
+      id: {
+        type: String,
+        required: true,
+      },
+      label: {
+        type: String,
+        required: false,
+        default: '',
+      },
+      checked: {
+        type: Boolean,
+        required: false,
+      },
+      value: {
+        type: String,
+        required: false,
+        default: '',
+      },
     },
-  },
-};
+    methods: {
+      onChange() {
+        this.$emit('change', this.value);
+      },
+    },
+  };
 </script>

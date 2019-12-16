@@ -103,50 +103,50 @@
 </template>
 
 <script>
-import PSTable from '@app/widgets/ps-table/ps-table';
-import PSSort from '@app/widgets/ps-table/ps-sort';
-import PSAlert from '@app/widgets/ps-alert';
-import PSLoader from '@app/widgets/ps-loader';
-import MovementLine from './movement-line';
+  import PSTable from '@app/widgets/ps-table/ps-table';
+  import PSSort from '@app/widgets/ps-table/ps-sort';
+  import PSAlert from '@app/widgets/ps-alert';
+  import PSLoader from '@app/widgets/ps-loader';
+  import MovementLine from './movement-line';
 
-const DEFAULT_SORT = 'desc';
+  const DEFAULT_SORT = 'desc';
 
-export default {
-  computed: {
-    isLoading() {
-      return this.$store.state.isLoading;
+  export default {
+    computed: {
+      isLoading() {
+        return this.$store.state.isLoading;
+      },
+      movements() {
+        return this.$store.state.movements;
+      },
+      emptyMovements() {
+        return !this.$store.state.movements.length;
+      },
+      currentSort() {
+        return this.$store.state.order;
+      },
     },
-    movements() {
-      return this.$store.state.movements;
+    methods: {
+      sort(order, sortDirection) {
+        this.$store.dispatch('updateOrder', order);
+        this.$emit('fetch', sortDirection === 'desc' ? 'desc' : 'asc');
+      },
     },
-    emptyMovements() {
-      return !this.$store.state.movements.length;
+    mounted() {
+      this.$store.dispatch('updatePageIndex', 1);
+      this.$store.dispatch('updateKeywords', []);
+      this.$store.dispatch('getEmployees');
+      this.$store.dispatch('getMovementsTypes');
+      this.$store.dispatch('updateOrder', 'date_add');
+      this.$emit('resetFilters');
+      this.$emit('fetch', DEFAULT_SORT);
     },
-    currentSort() {
-      return this.$store.state.order;
+    components: {
+      PSTable,
+      PSSort,
+      PSAlert,
+      PSLoader,
+      MovementLine,
     },
-  },
-  methods: {
-    sort(order, sortDirection) {
-      this.$store.dispatch('updateOrder', order);
-      this.$emit('fetch', sortDirection === 'desc' ? 'desc' : 'asc');
-    },
-  },
-  mounted() {
-    this.$store.dispatch('updatePageIndex', 1);
-    this.$store.dispatch('updateKeywords', []);
-    this.$store.dispatch('getEmployees');
-    this.$store.dispatch('getMovementsTypes');
-    this.$store.dispatch('updateOrder', 'date_add');
-    this.$emit('resetFilters');
-    this.$emit('fetch', DEFAULT_SORT);
-  },
-  components: {
-    PSTable,
-    PSSort,
-    PSAlert,
-    PSLoader,
-    MovementLine,
-  },
-};
+  };
 </script>

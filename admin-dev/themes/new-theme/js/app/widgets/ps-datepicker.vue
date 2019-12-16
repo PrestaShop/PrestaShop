@@ -38,31 +38,31 @@
 </template>
 
 <script>
-export default {
-  props: {
-    locale: {
-      type: String,
-      required: true,
-      default: 'en',
+  export default {
+    props: {
+      locale: {
+        type: String,
+        required: true,
+        default: 'en',
+      },
+      type: {
+        type: String,
+        required: true,
+      },
     },
-    type: {
-      type: String,
-      required: true,
+    mounted() {
+      $(this.$refs.datepicker).datetimepicker({
+        format: 'YYYY-MM-DD',
+        showClear: true,
+      }).on('dp.change', (infos) => {
+        infos.dateType = this.type;
+        this.$emit(
+          infos.date ? 'dpChange' : 'reset',
+          infos,
+        );
+      });
     },
-  },
-  mounted() {
-    $(this.$refs.datepicker).datetimepicker({
-      format: 'YYYY-MM-DD',
-      showClear: true,
-    }).on('dp.change', (infos) => {
-      infos.dateType = this.type;
-      this.$emit(
-        infos.date ? 'dpChange' : 'reset',
-        infos,
-      );
-    });
-  },
-};
+  };
 </script>
 
 <style lang="scss">

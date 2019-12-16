@@ -46,22 +46,38 @@
 </template>
 
 <script>
-export default {
-  props: ['items', 'itemID', 'itemName'],
-  methods: {
-    onChange() {
-      this.$emit('change', {
-        value: this.selected,
-        itemID: this.itemID,
-      });
+  export default {
+    props: {
+      items: {
+        type: Array,
+        required: true,
+      },
+      itemID: {
+        type: String,
+        required: false,
+        default: '',
+      },
+      itemName: {
+        type: String,
+        required: false,
+        default: '',
+      },
     },
-  },
-  data: () => ({selected: 'default'}),
-};
+    methods: {
+      onChange() {
+        this.$emit('change', {
+          value: this.selected,
+          itemID: this.itemID,
+        });
+      },
+    },
+    data: () => ({selected: 'default'}),
+  };
 </script>
 
 <style lang="scss" scoped>
-  @import "../../../scss/config/_settings.scss";
+  @import '../../../scss/config/_settings.scss';
+
   .ps-select {
     position: relative;
     select {

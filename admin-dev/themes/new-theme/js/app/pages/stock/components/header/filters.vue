@@ -148,98 +148,98 @@
 </template>
 
 <script>
-import PSSelect from '@app/widgets/ps-select';
-import PSButton from '@app/widgets/ps-button';
-import PSDatePicker from '@app/widgets/ps-datepicker';
-import PSRadio from '@app/widgets/ps-radio';
-import _ from 'lodash';
-import FilterComponent from './filters/filter-component';
+  import PSSelect from '@app/widgets/ps-select';
+  import PSButton from '@app/widgets/ps-button';
+  import PSDatePicker from '@app/widgets/ps-datepicker';
+  import PSRadio from '@app/widgets/ps-radio';
+  import _ from 'lodash';
+  import FilterComponent from './filters/filter-component';
 
-export default {
-  computed: {
-    locale() {
-      return window.data.locale;
+  export default {
+    computed: {
+      locale() {
+        return window.data.locale;
+      },
+      isOverview() {
+        return this.$route.name === 'overview';
+      },
+      employees() {
+        return this.$store.state.employees;
+      },
+      movementsTypes() {
+        return this.$store.state.movementsTypes;
+      },
+      categoriesList() {
+        return this.$store.getters.categories;
+      },
     },
-    isOverview() {
-      return this.$route.name === 'overview';
-    },
-    employees() {
-      return this.$store.state.employees;
-    },
-    movementsTypes() {
-      return this.$store.state.movementsTypes;
-    },
-    categoriesList() {
-      return this.$store.getters.categories;
-    },
-  },
-  methods: {
-    onClear(event) {
-      delete this.date_add[event.dateType];
-      this.applyFilter();
-    },
-    onClick() {
-      this.applyFilter();
-    },
-    onFilterActive(list, type) {
-      if (type === 'supplier') {
-        this.suppliers = list;
-      } else {
-        this.categories = list;
-      }
-      this.disabled = !this.suppliers.length && !this.categories.length;
-      this.applyFilter();
-    },
-    applyFilter() {
-      this.$store.dispatch('isLoading');
-      this.$emit('applyFilter', {
-        suppliers: this.suppliers,
-        categories: this.categories,
-        id_stock_mvt_reason: this.id_stock_mvt_reason,
-        id_employee: this.id_employee,
-        date_add: this.date_add,
-        active: this.active,
-      });
-    },
-    onChange(item) {
-      if (item.itemID === 'id_stock_mvt_reason') {
-        this.id_stock_mvt_reason = item.value === 'default' ? [] : item.value;
-      } else {
-        this.id_employee = item.value === 'default' ? [] : item.value;
-      }
-      this.applyFilter();
-    },
-    onDpChange(event) {
-      this.date_add[event.dateType] = event.date.unix();
-      if (event.oldDate) {
+    methods: {
+      onClear(event) {
+        delete this.date_add[event.dateType];
         this.applyFilter();
-      }
+      },
+      onClick() {
+        this.applyFilter();
+      },
+      onFilterActive(list, type) {
+        if (type === 'supplier') {
+          this.suppliers = list;
+        } else {
+          this.categories = list;
+        }
+        this.disabled = !this.suppliers.length && !this.categories.length;
+        this.applyFilter();
+      },
+      applyFilter() {
+        this.$store.dispatch('isLoading');
+        this.$emit('applyFilter', {
+          suppliers: this.suppliers,
+          categories: this.categories,
+          id_stock_mvt_reason: this.id_stock_mvt_reason,
+          id_employee: this.id_employee,
+          date_add: this.date_add,
+          active: this.active,
+        });
+      },
+      onChange(item) {
+        if (item.itemID === 'id_stock_mvt_reason') {
+          this.id_stock_mvt_reason = item.value === 'default' ? [] : item.value;
+        } else {
+          this.id_employee = item.value === 'default' ? [] : item.value;
+        }
+        this.applyFilter();
+      },
+      onDpChange(event) {
+        this.date_add[event.dateType] = event.date.unix();
+        if (event.oldDate) {
+          this.applyFilter();
+        }
+      },
+      onRadioChange(value) {
+        this.active = value;
+        this.applyFilter();
+      },
     },
-    onRadioChange(value) {
-      this.active = value;
-      this.applyFilter();
+    components: {
+      FilterComponent,
+      PSSelect,
+      PSButton,
+      PSDatePicker,
+      PSRadio,
     },
-  },
-  components: {
-    FilterComponent,
-    PSSelect,
-    PSButton,
-    PSDatePicker,
-    PSRadio,
-  },
-  mounted() {
-    this.date_add = {};
-    this.$store.dispatch('getSuppliers');
-    this.$store.dispatch('getCategories');
-  },
-  data: () => ({
-    disabled: true,
-    suppliers: [],
-    categories: [],
-    id_stock_mvt_reason: [],
-    id_employee: [],
-    date_add: {},
-    active: null,
-  }),
-};
+    mounted() {
+      this.date_add = {};
+      this.$store.dispatch('getSuppliers');
+      this.$store.dispatch('getCategories');
+    },
+    data: () => ({
+      disabled: true,
+      suppliers: [],
+      categories: [],
+      id_stock_mvt_reason: [],
+      id_employee: [],
+      date_add: {},
+      active: null,
+    }),
+  };
 </script>

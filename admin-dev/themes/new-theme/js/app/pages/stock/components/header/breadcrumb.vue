@@ -40,17 +40,17 @@
 </template>
 
 <script>
-export default {
-  computed: {
-    isOverview() {
-      return this.$route.name === 'overview';
+  export default {
+    computed: {
+      isOverview() {
+        return this.$route.name === 'overview';
+      },
+      catalogLink() {
+        return window.data.catalogUrl;
+      },
+      stockLink() {
+        return window.data.stockUrl;
+      },
     },
-    catalogLink() {
-      return window.data.catalogUrl;
-    },
-    stockLink() {
-      return window.data.stockUrl;
-    },
-  },
-};
+  };
 </script>

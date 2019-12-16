@@ -41,7 +41,7 @@ export default class SubmitRowActionExtension {
       const $button = $(event.currentTarget);
       const confirmMessage = $button.data('confirm-message');
 
-      if (confirmMessage.length && !confirm(confirmMessage)) {
+      if (confirmMessage.length && !window.confirm(confirmMessage)) {
         return;
       }
 

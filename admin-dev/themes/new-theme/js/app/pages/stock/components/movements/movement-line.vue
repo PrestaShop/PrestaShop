@@ -72,28 +72,28 @@
 </template>
 
 <script>
-import PSMedia from '@app/widgets/ps-media';
-import productDesc from '@app/pages/stock/mixins/product-desc';
+  import PSMedia from '@app/widgets/ps-media';
+  import productDesc from '@app/pages/stock/mixins/product-desc';
 
-export default {
-  props: ['product'],
-  mixins: [productDesc],
-  computed: {
-    qty() {
-      return this.product.physical_quantity;
+  export default {
+    props: ['product'],
+    mixins: [productDesc],
+    computed: {
+      qty() {
+        return this.product.physical_quantity;
+      },
+      employeeName() {
+        return `${this.product.employee_firstname} ${this.product.employee_lastname}`;
+      },
+      isPositive() {
+        return this.product.sign > 0;
+      },
+      orderLink() {
+        return this.product.order_link !== 'N/A' ? this.product.order_link : null;
+      },
     },
-    employeeName() {
-      return `${this.product.employee_firstname} ${this.product.employee_lastname}`;
+    components: {
+      PSMedia,
     },
-    isPositive() {
-      return this.product.sign > 0;
-    },
-    orderLink() {
-      return this.product.order_link !== 'N/A' ? this.product.order_link : null;
-    },
-  },
-  components: {
-    PSMedia,
-  },
-};
+  };
 </script>

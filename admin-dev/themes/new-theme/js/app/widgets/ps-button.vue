@@ -34,30 +34,30 @@
 </template>
 
 <script>
-export default {
-  props: {
-    primary: {type: Boolean},
-    ghost: {type: Boolean},
-  },
-  computed: {
-    classObject() {
-      if (this.ghost) {
-        return {
-          'btn-outline-primary': this.primary,
-          'btn-outline-secondary': !this.primary,
-        };
-      }
+  export default {
+    props: {
+      primary: {type: Boolean},
+      ghost: {type: Boolean},
+    },
+    computed: {
+      classObject() {
+        if (this.ghost) {
+          return {
+            'btn-outline-primary': this.primary,
+            'btn-outline-secondary': !this.primary,
+          };
+        }
 
-      return {
-        'btn-primary': this.primary,
-        'btn-secondary': !this.primary,
-      };
+        return {
+          'btn-primary': this.primary,
+          'btn-secondary': !this.primary,
+        };
+      },
     },
-  },
-  methods: {
-    onClick() {
-      this.$emit('click');
+    methods: {
+      onClick() {
+        this.$emit('click');
+      },
     },
-  },
-};
+  };
 </script>

@@ -48,7 +48,7 @@ export default class LinkRowActionExtension {
     grid.getContainer().on('click', '.js-link-row-action', (event) => {
       const confirmMessage = $(event.currentTarget).data('confirm-message');
 
-      if (confirmMessage.length && !confirm(confirmMessage)) {
+      if (confirmMessage.length && !window.confirm(confirmMessage)) {
         event.preventDefault();
       }
     });
@@ -72,7 +72,7 @@ export default class LinkRowActionExtension {
         clickableCells.addClass('cursor-pointer').click(() => {
           const confirmMessage = $rowAction.data('confirm-message');
 
-          if (!confirmMessage.length || confirm(confirmMessage)) {
+          if (!confirmMessage.length || window.confirm(confirmMessage)) {
             document.location = $rowAction.attr('href');
           }
         });

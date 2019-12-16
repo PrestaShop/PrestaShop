@@ -40,39 +40,39 @@
 </template>
 
 <script>
-export default {
-  name: 'Serp',
-  props: {
-    url: {
-      type: String,
-      default: 'https://www.example.com/',
+  export default {
+    name: 'Serp',
+    props: {
+      url: {
+        type: String,
+        default: 'https://www.example.com/',
+      },
+      description: {
+        type: String,
+        default: '',
+      },
+      title: {
+        type: String,
+        default: '',
+      },
     },
-    description: {
-      type: String,
-      default: '',
-    },
-    title: {
-      type: String,
-      default: '',
-    },
-  },
-  computed: {
-    displayedTitle() {
-      if (this.title.length > 70) {
-        return `${this.title.substring(0, 70)}...`;
-      }
+    computed: {
+      displayedTitle() {
+        if (this.title.length > 70) {
+          return `${this.title.substring(0, 70)}...`;
+        }
 
-      return this.title;
-    },
-    displayedDescription() {
-      if (this.description.length > 150) {
-        return `${this.description.substring(0, 150)}...`;
-      }
+        return this.title;
+      },
+      displayedDescription() {
+        if (this.description.length > 150) {
+          return `${this.description.substring(0, 150)}...`;
+        }
 
-      return this.description;
+        return this.description;
+      },
     },
-  },
-};
+  };
 </script>
 
 <style lang="scss" type="text/scss" scoped>

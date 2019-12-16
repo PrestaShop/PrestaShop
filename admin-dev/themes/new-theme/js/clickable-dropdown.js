@@ -29,6 +29,7 @@
  * In order to make a dropdown behave like this, simply add the class "dropdown-clickable" to its parent element.
  */
 (($) => {
+  /* eslint-disable-next-line no-param-reassign */
   $.fn.clickableDropdown = function clickableDropdown() {
     $(document).on('click', '.dropdown-clickable .dropdown-menu', (e) => {
       e.stopPropagation();

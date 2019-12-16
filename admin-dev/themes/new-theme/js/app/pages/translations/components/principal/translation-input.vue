@@ -44,57 +44,57 @@
 </template>
 
 <script>
-import PSButton from '@app/widgets/ps-button';
-import {EventBus} from '@app/utils/event-bus';
+  import PSButton from '@app/widgets/ps-button';
+  import {EventBus} from '@app/utils/event-bus';
 
-export default {
-  name: 'TranslationInput',
-  props: {
-    id: {
-      type: Number,
-    },
-    extraInfo: {
-      type: String,
-      required: false,
-    },
-    label: {
-      type: String,
-      required: true,
-    },
-    translated: {
-      required: true,
-    },
-  },
-  computed: {
-    getTranslated: {
-      get() {
-        return this.translated.database ? this.translated.database : this.translated.xliff;
+  export default {
+    name: 'TranslationInput',
+    props: {
+      id: {
+        type: Number,
       },
-      set(modifiedValue) {
-        const modifiedTranslated = this.translated;
-        modifiedTranslated.database = modifiedValue;
-        modifiedTranslated.edited = modifiedValue;
-        this.$emit('input', modifiedTranslated);
-        this.$emit('editedAction', {
-          translation: modifiedTranslated,
-          id: this.id,
-        });
+      extraInfo: {
+        type: String,
+        required: false,
+      },
+      label: {
+        type: String,
+        required: true,
+      },
+      translated: {
+        required: true,
       },
     },
-    isMissing() {
-      return this.getTranslated === null;
+    computed: {
+      getTranslated: {
+        get() {
+          return this.translated.database ? this.translated.database : this.translated.xliff;
+        },
+        set(modifiedValue) {
+          const modifiedTranslated = this.translated;
+          modifiedTranslated.database = modifiedValue;
+          modifiedTranslated.edited = modifiedValue;
+          this.$emit('input', modifiedTranslated);
+          this.$emit('editedAction', {
+            translation: modifiedTranslated,
+            id: this.id,
+          });
+        },
+      },
+      isMissing() {
+        return this.getTranslated === null;
+      },
     },
-  },
-  methods: {
-    resetTranslation() {
-      this.getTranslated = '';
-      EventBus.$emit('resetTranslation', this.translated);
+    methods: {
+      resetTranslation() {
+        this.getTranslated = '';
+        EventBus.$emit('resetTranslation', this.translated);
+      },
     },
-  },
-  components: {
-    PSButton,
-  },
-};
+    components: {
+      PSButton,
+    },
+  };
 </script>
 
 <style lang="scss" scoped>

@@ -50,18 +50,18 @@ export default class AsyncToggleColumnExtension {
         url: $button.data('toggle-url'),
       }).then((response) => {
         if (response.status) {
-          showSuccessMessage(response.message);
+          window.showSuccessMessage(response.message);
 
-          this._toggleButtonDisplay($button);
+          this.toggleButtonDisplay($button);
 
           return;
         }
 
-        showErrorMessage(response.message);
+        window.showErrorMessage(response.message);
       }).catch((error) => {
         const response = error.responseJSON;
 
-        showErrorMessage(response.message);
+        window.showErrorMessage(response.message);
       });
     });
   }
@@ -73,7 +73,7 @@ export default class AsyncToggleColumnExtension {
    *
    * @private
    */
-  _toggleButtonDisplay($button) {
+  toggleButtonDisplay($button) {
     const isActive = $button.hasClass('grid-toggler-icon-valid');
 
     const classToAdd = isActive ? 'grid-toggler-icon-not-valid' : 'grid-toggler-icon-valid';

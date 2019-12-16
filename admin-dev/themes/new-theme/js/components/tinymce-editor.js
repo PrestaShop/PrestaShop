@@ -33,16 +33,16 @@ const {$} = window;
  */
 class TinyMCEEditor {
   constructor(options) {
-    options = options || {};
+    const opts = options || {};
     this.tinyMCELoaded = false;
-    if (typeof options.baseAdminUrl === 'undefined') {
+    if (typeof opts.baseAdminUrl === 'undefined') {
       if (typeof window.baseAdminDir !== 'undefined') {
-        options.baseAdminUrl = window.baseAdminDir;
+        opts.baseAdminUrl = window.baseAdminDir;
       } else {
         const pathParts = window.location.pathname.split('/');
         pathParts.every((pathPart) => {
           if (pathPart !== '') {
-            options.baseAdminUrl = `/${pathPart}/`;
+            opts.baseAdminUrl = `/${pathPart}/`;
 
             return false;
           }
@@ -51,10 +51,11 @@ class TinyMCEEditor {
         });
       }
     }
-    if (typeof options.langIsRtl === 'undefined') {
-      options.langIsRtl = typeof window.lang_is_rtl !== 'undefined' ? window.lang_is_rtl === '1' : false;
+
+    if (typeof opts.langIsRtl === 'undefined') {
+      opts.langIsRtl = typeof window.lang_is_rtl !== 'undefined' ? window.lang_is_rtl === '1' : false;
     }
-    this.setupTinyMCE(options);
+    this.setupTinyMCE(opts);
   }
 
   /**
@@ -76,10 +77,11 @@ class TinyMCEEditor {
    * @param config
    */
   initTinyMCE(config) {
-    config = {
+    const cfg = {
       selector: '.rte',
       plugins: 'align colorpicker link image filemanager table media placeholder advlist code table autoresize',
       browser_spellcheck: true,
+      /* eslint-disable-next-line max-len */
       toolbar1: 'code,colorpicker,bold,italic,underline,strikethrough,blockquote,link,align,bullist,numlist,table,image,media,formatselect',
       toolbar2: '',
       external_filemanager_path: `${config.baseAdminUrl}filemanager/`,
@@ -87,7 +89,7 @@ class TinyMCEEditor {
       external_plugins: {
         filemanager: `${config.baseAdminUrl}filemanager/plugin.min.js`,
       },
-      language: iso_user,
+      language: window.iso_user,
       content_style: (config.langIsRtl ? 'body {direction:rtl;}' : ''),
       skin: 'prestashop',
       menubar: false,
@@ -107,15 +109,15 @@ class TinyMCEEditor {
       ...config,
     };
 
-    if (typeof config.editor_selector !== 'undefined') {
-      config.selector = `.${config.editor_selector}`;
+    if (typeof cfg.editor_selector !== 'undefined') {
+      cfg.selector = `.${cfg.editor_selector}`;
     }
 
     // Change icons in popups
     $('body').on('click', '.mce-btn, .mce-open, .mce-menu-item', () => { this.changeToMaterial(); });
 
-    tinyMCE.init(config);
-    this.watchTabChanges(config);
+    window.tinyMCE.init(cfg);
+    this.watchTabChanges(cfg);
   }
 
   /**
@@ -128,11 +130,11 @@ class TinyMCEEditor {
       this.handleCounterTiny(event.target.id);
     });
     editor.on('change', (event) => {
-      tinyMCE.triggerSave();
+      window.tinyMCE.triggerSave();
       this.handleCounterTiny(event.target.id);
     });
     editor.on('blur', () => {
-      tinyMCE.triggerSave();
+      window.tinyMCE.triggerSave();
     });
   }
 
@@ -153,7 +155,7 @@ class TinyMCEEditor {
         const textareaLinkSelector = `.nav-item a[data-locale="${textareaLocale}"]`;
 
         $(textareaLinkSelector, tabContainer).on('shown.bs.tab', () => {
-          const editor = tinyMCE.get(textarea.id);
+          const editor = window.tinyMCE.get(textarea.id);
           if (editor) {
             // Reset content to force refresh of editor
             editor.setContent(editor.getContent());
@@ -223,7 +225,7 @@ class TinyMCEEditor {
     const textarea = $(`#${id}`);
     const counter = textarea.attr('counter');
     const counterType = textarea.attr('counter_type');
-    const max = tinyMCE.activeEditor.getBody().textContent.length;
+    const max = window.tinyMCE.activeEditor.getBody().textContent.length;
 
     textarea.parent().find('span.currentLength').text(max);
     if (counterType !== 'recommended' && max > counter) {

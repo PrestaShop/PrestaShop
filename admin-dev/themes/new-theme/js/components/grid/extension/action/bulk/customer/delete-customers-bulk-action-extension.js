@@ -55,7 +55,7 @@ export default class DeleteCustomersBulkActionExtension {
         $selectedCustomerCheckboxes.each((i, checkbox) => {
           const $input = $(checkbox);
 
-          this._addCustomerToDeleteCollectionInput($input.val());
+          this.addCustomerToDeleteCollectionInput($input.val());
         });
 
         const $form = $modal.find('form');
@@ -71,7 +71,7 @@ export default class DeleteCustomersBulkActionExtension {
    *
    * @private
    */
-  _addCustomerToDeleteCollectionInput(customerId) {
+  addCustomerToDeleteCollectionInput(customerId) {
     const $customersInput = $('#delete_customers_customers_to_delete');
 
     const customerInput = $customersInput

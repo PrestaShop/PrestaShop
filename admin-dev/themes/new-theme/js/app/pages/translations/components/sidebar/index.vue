@@ -39,112 +39,112 @@
 </template>
 
 <script>
-import PSTree from '@app/widgets/ps-tree/ps-tree';
-import PSSpinner from '@app/widgets/ps-spinner';
-import {EventBus} from '@app/utils/event-bus';
+  import PSTree from '@app/widgets/ps-tree/ps-tree';
+  import PSSpinner from '@app/widgets/ps-spinner';
+  import {EventBus} from '@app/utils/event-bus';
 
-export default {
-  props: [
-    'modal',
-    'principal',
-  ],
-  computed: {
-    treeReady() {
-      return !this.$store.state.sidebarLoading;
-    },
-    currentItem() {
-      if (this.$store.getters.currentDomain === '' || typeof this.$store.getters.currentDomain === 'undefined') {
-        if (this.domainsTree.length) {
-          const domain = this.getFirstDomainToDisplay(this.domainsTree);
-          EventBus.$emit('reduce');
-          this.$store.dispatch('updateCurrentDomain', domain);
+  export default {
+    props: [
+      'modal',
+      'principal',
+    ],
+    computed: {
+      treeReady() {
+        return !this.$store.state.sidebarLoading;
+      },
+      currentItem() {
+        if (this.$store.getters.currentDomain === '' || typeof this.$store.getters.currentDomain === 'undefined') {
+          if (this.domainsTree.length) {
+            const domain = this.getFirstDomainToDisplay(this.domainsTree);
+            EventBus.$emit('reduce');
+            this.$store.dispatch('updateCurrentDomain', domain);
 
-          if (domain !== '') {
-            this.$store.dispatch('getCatalog', {url: domain.dataValue});
-            EventBus.$emit('setCurrentElement', domain.full_name);
-            return domain.full_name;
+            if (domain !== '') {
+              this.$store.dispatch('getCatalog', {url: domain.dataValue});
+              EventBus.$emit('setCurrentElement', domain.full_name);
+              return domain.full_name;
+            }
+
+            this.$store.dispatch('updatePrincipalLoading', false);
+            return '';
           }
-
-          this.$store.dispatch('updatePrincipalLoading', false);
-          return '';
         }
-      }
 
-      return this.$store.getters.currentDomain;
+        return this.$store.getters.currentDomain;
+      },
+      domainsTree() {
+        return this.$store.getters.domainsTree;
+      },
+      translations() {
+        return {
+          expand: this.trans('sidebar_expand'),
+          reduce: this.trans('sidebar_collapse'),
+          extra: this.trans('label_missing'),
+          extra_singular: this.trans('label_missing_singular'),
+        };
+      },
     },
-    domainsTree() {
-      return this.$store.getters.domainsTree;
-    },
-    translations() {
-      return {
-        expand: this.trans('sidebar_expand'),
-        reduce: this.trans('sidebar_collapse'),
-        extra: this.trans('label_missing'),
-        extra_singular: this.trans('label_missing_singular'),
-      };
-    },
-  },
-  mounted() {
-    this.$store.dispatch('getDomainsTree', {
-      store: this.$store,
-    });
-    EventBus.$on('lastTreeItemClick', (el) => {
-      if (this.edited()) {
-        this.modal.showModal();
-        this.modal.$once('save', () => {
-          this.principal.saveTranslations();
+    mounted() {
+      this.$store.dispatch('getDomainsTree', {
+        store: this.$store,
+      });
+      EventBus.$on('lastTreeItemClick', (el) => {
+        if (this.edited()) {
+          this.modal.showModal();
+          this.modal.$once('save', () => {
+            this.principal.saveTranslations();
+            this.itemClick(el);
+          });
+          this.modal.$once('leave', () => {
+            this.itemClick(el);
+          });
+        } else {
           this.itemClick(el);
-        });
-        this.modal.$once('leave', () => {
-          this.itemClick(el);
-        });
-      } else {
-        this.itemClick(el);
-      }
-    });
-  },
-  methods: {
-    /**
+        }
+      });
+    },
+    methods: {
+      /**
        * Update the domain, retrieve the translations catalog, set the page to 1
        * and reset the modified translations
        * @param {object} el - Domain to set
        */
-    itemClick: function itemClick(el) {
-      this.$store.dispatch('updateCurrentDomain', el.item);
-      this.$store.dispatch('getCatalog', {url: el.item.dataValue});
-      this.$store.dispatch('updatePageIndex', 1);
-      this.$store.state.modifiedTranslations = [];
-    },
-    getFirstDomainToDisplay: function getFirstDomainToDisplay(tree) {
-      const keys = Object.keys(tree);
-      let toDisplay = '';
+      itemClick: function itemClick(el) {
+        this.$store.dispatch('updateCurrentDomain', el.item);
+        this.$store.dispatch('getCatalog', {url: el.item.dataValue});
+        this.$store.dispatch('updatePageIndex', 1);
+        this.$store.state.modifiedTranslations = [];
+      },
+      getFirstDomainToDisplay: function getFirstDomainToDisplay(tree) {
+        const keys = Object.keys(tree);
+        let toDisplay = '';
 
-      for (let i = 0; i < tree.length; i++) {
-        if (!tree[keys[i]].disable) {
-          if (tree[keys[i]].children && tree[keys[i]].children.length > 0) {
-            return getFirstDomainToDisplay(tree[keys[i]].children);
+        for (let i = 0; i < tree.length; i++) {
+          if (!tree[keys[i]].disable) {
+            if (tree[keys[i]].children && tree[keys[i]].children.length > 0) {
+              return getFirstDomainToDisplay(tree[keys[i]].children);
+            }
+
+            toDisplay = tree[keys[i]];
+            break;
           }
-
-          toDisplay = tree[keys[i]];
-          break;
         }
-      }
 
-      return toDisplay;
-    },
-    /**
+        return toDisplay;
+      },
+      /**
        * Check if some translations have been edited
        * @returns {boolean}
        */
-    edited: function edited() {
-      return this.$store.state.modifiedTranslations.length > 0;
+      edited: function edited() {
+        return this.$store.state.modifiedTranslations.length > 0;
+      },
     },
-  },
-  components: {
-    PSTree,
-    PSSpinner,
-  },
-};
+    components: {
+      PSTree,
+      PSSpinner,
+    },
+  };
 </script>
 
 <style lang="scss" type="text/scss">

@@ -123,7 +123,7 @@ export default class CartRuleManager {
     }).then((cartRules) => {
       EventEmitter.emit(eventMap.cartRuleSearched, cartRules);
     }).catch((e) => {
-      showErrorMessage(e.responseJSON.message);
+      window.showErrorMessage(e.responseJSON.message);
     });
   }
 }

@@ -70,38 +70,38 @@
 </template>
 
 <script>
-import PSCheckbox from '@app/widgets/ps-checkbox';
+  import PSCheckbox from '@app/widgets/ps-checkbox';
 
-export default {
-  props: {
-    filters: {},
-  },
-  computed: {
-    stockImportTitle() {
-      return this.trans('title_import');
+  export default {
+    props: {
+      filters: {},
     },
-    stockExportTitle() {
-      return this.trans('title_export');
+    computed: {
+      stockImportTitle() {
+        return this.trans('title_import');
+      },
+      stockExportTitle() {
+        return this.trans('title_export');
+      },
+      stockImportUrl() {
+        return window.data.stockImportUrl;
+      },
+      stockExporttUrl() {
+        const params = $.param(this.filters);
+        return `${window.data.stockExportUrl}&${params}`;
+      },
     },
-    stockImportUrl() {
-      return window.data.stockImportUrl;
+    methods: {
+      onCheck(checkbox) {
+        const isChecked = checkbox.checked ? 1 : 0;
+        this.$emit('lowStockChecked', isChecked);
+      },
     },
-    stockExporttUrl() {
-      const params = $.param(this.filters);
-      return `${window.data.stockExportUrl}&${params}`;
+    mounted() {
+      $('[data-toggle="pstooltip"]').pstooltip();
     },
-  },
-  methods: {
-    onCheck(checkbox) {
-      const isChecked = checkbox.checked ? 1 : 0;
-      this.$emit('lowStockChecked', isChecked);
+    components: {
+      PSCheckbox,
     },
-  },
-  mounted() {
-    $('[data-toggle="pstooltip"]').pstooltip();
-  },
-  components: {
-    PSCheckbox,
-  },
-};
+  };
 </script>

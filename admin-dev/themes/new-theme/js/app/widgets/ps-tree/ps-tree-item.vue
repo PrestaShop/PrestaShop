@@ -68,6 +68,7 @@
     >
       <li
         v-for="(element, index) in model.children"
+        :key="index"
         class="tree-item"
         :class="{disable: model.disable}"
       >
@@ -88,106 +89,124 @@
 </template>
 
 <script>
-import PSCheckbox from '@app/widgets/ps-checkbox';
-import {EventBus} from '@app/utils/event-bus';
+  import PSCheckbox from '@app/widgets/ps-checkbox';
+  import {EventBus} from '@app/utils/event-bus';
 
-export default {
-  name: 'PSTreeItem',
-  props: {
-    model: {type: Object, required: true},
-    className: {type: String, required: false},
-    hasCheckbox: {type: Boolean, required: false},
-    translations: {type: Object, required: false},
-    currentItem: {type: String, required: false},
-  },
-  computed: {
-    id() {
-      return this.model.id;
+  export default {
+    name: 'PSTreeItem',
+    props: {
+      model: {
+        type: Object,
+        required: true,
+      },
+      className: {
+        type: String,
+        required: false,
+        default: '',
+      },
+      hasCheckbox: {
+        type: Boolean,
+        required: false,
+      },
+      translations: {
+        type: Object,
+        required: false,
+        default: () => ({}),
+      },
+      currentItem: {
+        type: String,
+        required: false,
+        default: '',
+      },
     },
-    isFolder() {
-      return this.model.children && this.model.children.length;
-    },
-    displayExtraLabel() {
-      return this.isFolder && this.model.extraLabel;
-    },
-    getExtraLabel() {
-      let extraLabel = '';
+    computed: {
+      id() {
+        return this.model.id;
+      },
+      isFolder() {
+        return this.model.children && this.model.children.length;
+      },
+      displayExtraLabel() {
+        return this.isFolder && this.model.extraLabel;
+      },
+      getExtraLabel() {
+        let extraLabel = '';
 
-      if (this.model.extraLabel && this.model.extraLabel === 1) {
-        extraLabel = this.translations.extra_singular;
-      } else if (this.model.extraLabel) {
-        extraLabel = this.translations.extra.replace('%d', this.model.extraLabel);
-      }
+        if (this.model.extraLabel && this.model.extraLabel === 1) {
+          extraLabel = this.translations.extra_singular;
+        } else if (this.model.extraLabel) {
+          extraLabel = this.translations.extra.replace('%d', this.model.extraLabel);
+        }
 
-      return extraLabel;
+        return extraLabel;
+      },
+      isHidden() {
+        return !this.isFolder;
+      },
+      chevronStatus() {
+        return this.open ? 'open' : 'closed';
+      },
+      isWarning() {
+        return !this.isFolder && this.model.warning;
+      },
+      active() {
+        return this.model.full_name === this.currentItem;
+      },
     },
-    isHidden() {
-      return !this.isFolder;
+    methods: {
+      setCurrentElement(el) {
+        if (this.$refs[el]) {
+          this.openTreeItemAction();
+          this.current = true;
+          this.parentElement(this.$parent);
+        } else {
+          this.current = false;
+        }
+      },
+      parentElement(parent) {
+        if (parent.clickElement) {
+          parent.clickElement();
+          this.parentElement(parent.$parent);
+        }
+      },
+      clickElement() {
+        return !this.model.disable ? this.openTreeItemAction() : false;
+      },
+      openTreeItemAction() {
+        this.setCurrentElement(this.model.full_name);
+        if (this.isFolder) {
+          this.open = !this.open;
+        } else {
+          EventBus.$emit('lastTreeItemClick', {
+            item: this.model,
+          });
+        }
+      },
+      onCheck(obj) {
+        this.$emit('checked', obj);
+      },
     },
-    chevronStatus() {
-      return this.open ? 'open' : 'closed';
+    mounted() {
+      EventBus.$on('toggleCheckbox', (tag) => {
+        const checkbox = this.$refs[tag];
+        if (checkbox) {
+          checkbox.$data.checked = !checkbox.$data.checked;
+        }
+      }).$on('expand', () => {
+        this.open = true;
+      }).$on('reduce', () => {
+        this.open = false;
+      }).$on('setCurrentElement', (el) => {
+        this.setCurrentElement(el);
+      });
+      this.setCurrentElement(this.currentItem);
     },
-    isWarning() {
-      return !this.isFolder && this.model.warning;
+    components: {
+      PSCheckbox,
     },
-    active() {
-      return this.model.full_name === this.currentItem;
-    },
-  },
-  methods: {
-    setCurrentElement(el) {
-      if (this.$refs[el]) {
-        this.openTreeItemAction();
-        this.current = true;
-        this.parentElement(this.$parent);
-      } else {
-        this.current = false;
-      }
-    },
-    parentElement(parent) {
-      if (parent.clickElement) {
-        parent.clickElement();
-        this.parentElement(parent.$parent);
-      }
-    },
-    clickElement() {
-      return !this.model.disable ? this.openTreeItemAction() : false;
-    },
-    openTreeItemAction() {
-      this.setCurrentElement(this.model.full_name);
-      if (this.isFolder) {
-        this.open = !this.open;
-      } else {
-        EventBus.$emit('lastTreeItemClick', {
-          item: this.model,
-        });
-      }
-    },
-    onCheck(obj) {
-      this.$emit('checked', obj);
-    },
-  },
-  mounted() {
-    EventBus.$on('toggleCheckbox', (tag) => {
-      const checkbox = this.$refs[tag];
-      if (checkbox) {
-        checkbox.$data.checked = !checkbox.$data.checked;
-      }
-    }).$on('expand', () => {
-      this.open = true;
-    }).$on('reduce', () => {
-      this.open = false;
-    }).$on('setCurrentElement', (el) => {
-      this.setCurrentElement(el);
-    });
-    this.setCurrentElement(this.currentItem);
-  },
-  components: {
-    PSCheckbox,
-  },
-  data: () => ({
-    open: false,
-    current: false,
-  }),
-};
+    data: () => ({
+      open: false,
+      current: false,
+    }),
+  };
 </script>

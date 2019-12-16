@@ -51,7 +51,7 @@ export default class DeleteCustomerRowActionExtension {
         const $button = $(event.currentTarget);
         const customerId = $button.data('customer-id');
 
-        this._addCustomerInput(customerId);
+        this.addCustomerInput(customerId);
 
         const $form = $deleteCustomersModal.find('form');
 
@@ -68,7 +68,7 @@ export default class DeleteCustomerRowActionExtension {
    *
    * @private
    */
-  _addCustomerInput(customerId) {
+  addCustomerInput(customerId) {
     const $customersToDeleteInputBlock = $('#delete_customers_customers_to_delete');
 
     const customerInput = $customersToDeleteInputBlock

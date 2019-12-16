@@ -54,7 +54,7 @@ export default class SubmitGridActionExtension {
     const $submitBtn = $(event.currentTarget);
     const confirmMessage = $submitBtn.data('confirm-message');
 
-    if (typeof confirmMessage !== 'undefined' && confirmMessage.length > 0 && !confirm(confirmMessage)) {
+    if (typeof confirmMessage !== 'undefined' && confirmMessage.length > 0 && !window.confirm(confirmMessage)) {
       return;
     }
 

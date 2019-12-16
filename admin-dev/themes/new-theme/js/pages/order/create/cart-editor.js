@@ -107,7 +107,7 @@ export default class CartEditor {
     })).then((cartInfo) => {
       EventEmitter.emit(eventMap.cartRuleRemoved, cartInfo);
     }).catch((response) => {
-      showErrorMessage(response.responseJSON.message);
+      window.showErrorMessage(response.responseJSON.message);
     });
   }
 
@@ -126,7 +126,7 @@ export default class CartEditor {
     }).then((cartInfo) => {
       EventEmitter.emit(eventMap.productAddedToCart, cartInfo);
     }).catch((response) => {
-      showErrorMessage(response.responseJSON.message);
+      window.showErrorMessage(response.responseJSON.message);
     });
   }
 
@@ -144,7 +144,7 @@ export default class CartEditor {
     }).then((cartInfo) => {
       EventEmitter.emit(eventMap.productRemovedFromCart, cartInfo);
     }).catch((response) => {
-      showErrorMessage(response.responseJSON.message);
+      window.showErrorMessage(response.responseJSON.message);
     });
   }
 }

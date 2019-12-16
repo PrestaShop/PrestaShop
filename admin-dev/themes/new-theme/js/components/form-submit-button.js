@@ -56,7 +56,7 @@ export default class FormSubmitButton {
 
       const $btn = $(this);
 
-      if ($btn.data('form-confirm-message') && confirm($btn.data('form-confirm-message')) === false) {
+      if ($btn.data('form-confirm-message') && window.confirm($btn.data('form-confirm-message')) === false) {
         return;
       }
 

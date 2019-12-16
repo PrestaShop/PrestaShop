@@ -44,7 +44,10 @@
       class="tree"
       :class="className"
     >
-      <li v-for="(element, index) in model">
+      <li
+        v-for="(element, index) in model"
+        :key="index"
+      >
         <PSTreeItem
           ref="item"
           :has-checkbox="hasCheckbox"
@@ -61,37 +64,50 @@
 </template>
 
 <script>
-import {EventBus} from '@app/utils/event-bus';
-import PSTreeItem from './ps-tree-item';
+  import {EventBus} from '@app/utils/event-bus';
+  import PSTreeItem from './ps-tree-item';
 
-export default {
-  name: 'PSTree',
-  props: {
-    model: Array,
-    className: String,
-    currentItem: String,
-    hasCheckbox: Boolean,
-    translations: {
-      type: Object,
-      required: false,
+  export default {
+    name: 'PSTree',
+    props: {
+      model: {
+        type: Array,
+        default: () => ([]),
+      },
+      className: {
+        type: String,
+        default: '',
+      },
+      currentItem: {
+        type: String,
+        default: '',
+      },
+      hasCheckbox: {
+        type: Boolean,
+        default: false,
+      },
+      translations: {
+        type: Object,
+        required: false,
+        default: () => ({}),
+      },
     },
-  },
-  methods: {
-    onCheck(obj) {
-      this.$emit('checked', obj);
+    methods: {
+      onCheck(obj) {
+        this.$emit('checked', obj);
+      },
+      expand() {
+        EventBus.$emit('expand');
+      },
+      reduce() {
+        EventBus.$emit('reduce');
+      },
+      setCurrentElement(id) {
+        EventBus.$emit('setCurrentElement', id);
+      },
     },
-    expand() {
-      EventBus.$emit('expand');
+    components: {
+      PSTreeItem,
     },
-    reduce() {
-      EventBus.$emit('reduce');
-    },
-    setCurrentElement(id) {
-      EventBus.$emit('setCurrentElement', id);
-    },
-  },
-  components: {
-    PSTreeItem,
-  },
-};
+  };
 </script>

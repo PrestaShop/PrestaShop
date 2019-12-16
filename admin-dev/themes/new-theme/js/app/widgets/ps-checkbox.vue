@@ -38,31 +38,31 @@
 </template>
 
 <script>
-export default {
-  props: {
-    id: {
-      type: String,
+  export default {
+    props: {
+      id: {
+        type: String,
+      },
+      model: {
+        type: Object,
+        required: false,
+      },
+      isIndeterminate: {
+        type: Boolean,
+        required: false,
+        default: false,
+      },
     },
-    model: {
-      type: Object,
-      required: false,
+    watch: {
+      checked(val) {
+        this.$emit('checked', {
+          checked: val,
+          item: this.model,
+        });
+      },
     },
-    isIndeterminate: {
-      type: Boolean,
-      required: false,
-      default: false,
-    },
-  },
-  watch: {
-    checked(val) {
-      this.$emit('checked', {
-        checked: val,
-        item: this.model,
-      });
-    },
-  },
-  data: () => ({
-    checked: false,
-  }),
-};
+    data: () => ({
+      checked: false,
+    }),
+  };
 </script>

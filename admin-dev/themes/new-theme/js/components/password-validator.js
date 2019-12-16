@@ -74,7 +74,7 @@ export default class PasswordValidator {
    */
   isPasswordMatchingConfirmation() {
     if (!this.confirmPasswordInput) {
-      throw 'Confirm password input is not provided for the password validator.';
+      throw new Error('Confirm password input is not provided for the password validator.');
     }
 
     if (this.confirmPasswordInput.value === '') {

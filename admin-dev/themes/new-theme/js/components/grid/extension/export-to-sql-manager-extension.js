@@ -35,8 +35,12 @@ export default class ExportToSqlManagerExtension {
    * @param {Grid} grid
    */
   extend(grid) {
-    grid.getHeaderContainer().on('click', '.js-common_show_query-grid-action', () => this._onShowSqlQueryClick(grid));
-    grid.getHeaderContainer().on('click', '.js-common_export_sql_manager-grid-action', () => this._onExportSqlManagerClick(grid));
+    grid.getHeaderContainer().on('click', '.js-common_show_query-grid-action', () => this.onShowSqlQueryClick(grid));
+    grid.getHeaderContainer().on(
+      'click',
+      '.js-common_export_sql_manager-grid-action',
+      () => this.onExportSqlManagerClick(grid),
+    );
   }
 
   /**
@@ -46,9 +50,9 @@ export default class ExportToSqlManagerExtension {
    *
    * @private
    */
-  _onShowSqlQueryClick(grid) {
+  onShowSqlQueryClick(grid) {
     const $sqlManagerForm = $(`#${grid.getId()}_common_show_query_modal_form`);
-    this._fillExportForm($sqlManagerForm, grid);
+    this.fillExportForm($sqlManagerForm, grid);
 
     const $modal = $(`#${grid.getId()}_grid_common_show_query_modal`);
     $modal.modal('show');
@@ -63,10 +67,10 @@ export default class ExportToSqlManagerExtension {
    *
    * @private
    */
-  _onExportSqlManagerClick(grid) {
+  onExportSqlManagerClick(grid) {
     const $sqlManagerForm = $(`#${grid.getId()}_common_show_query_modal_form`);
 
-    this._fillExportForm($sqlManagerForm, grid);
+    this.fillExportForm($sqlManagerForm, grid);
 
     $sqlManagerForm.submit();
   }
@@ -79,11 +83,11 @@ export default class ExportToSqlManagerExtension {
    *
    * @private
    */
-  _fillExportForm($sqlManagerForm, grid) {
+  fillExportForm($sqlManagerForm, grid) {
     const query = grid.getContainer().find('.js-grid-table').data('query');
 
     $sqlManagerForm.find('textarea[name="sql"]').val(query);
-    $sqlManagerForm.find('input[name="name"]').val(this._getNameFromBreadcrumb());
+    $sqlManagerForm.find('input[name="name"]').val(this.getNameFromBreadcrumb());
   }
 
   /**
@@ -93,7 +97,7 @@ export default class ExportToSqlManagerExtension {
    *
    * @private
    */
-  _getNameFromBreadcrumb() {
+  getNameFromBreadcrumb() {
     const $breadcrumbs = $('.header-toolbar').find('.breadcrumb-item');
     let name = '';
 

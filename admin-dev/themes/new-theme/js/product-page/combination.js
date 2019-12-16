@@ -25,10 +25,10 @@ export default function () {
 
     $('#create-combinations').click((event) => {
       event.preventDefault();
-      form.send(false, false, generate);
+      window.form.send(false, false, generate);
     });
 
-    const productDropzone = Dropzone.forElement('#product-images-dropzone');
+    const productDropzone = window.Dropzone.forElement('#product-images-dropzone');
     const updateCombinationImages = function () {
       const productAttributeIds = $.map(
         $('.js-combinations-list .combination'),
@@ -51,12 +51,12 @@ export default function () {
 
     $('#product_combination_bulk_impact_on_price_ti, #product_combination_bulk_impact_on_price_te').keyup(function () {
       const self = $(this);
-      const price = priceCalculation.normalizePrice(self.val());
+      const price = window.priceCalculation.normalizePrice(self.val());
 
       if (self.attr('id') === 'product_combination_bulk_impact_on_price_ti') {
-        $('#product_combination_bulk_impact_on_price_te').val(priceCalculation.removeCurrentTax(price)).change();
+        $('#product_combination_bulk_impact_on_price_te').val(window.priceCalculation.removeCurrentTax(price)).change();
       } else {
-        $('#product_combination_bulk_impact_on_price_ti').val(priceCalculation.addCurrentTax(price)).change();
+        $('#product_combination_bulk_impact_on_price_ti').val(window.priceCalculation.addCurrentTax(price)).change();
       }
     });
 
@@ -180,9 +180,9 @@ export default function () {
         $('#create-combinations, #submit, .btn-submit').attr('disabled', 'disabled');
       },
       success(response) {
-        refreshTotalCombinations(1, $(response.form).filter('.combination.loaded').length);
+        window.refreshTotalCombinations(1, $(response.form).filter('.combination.loaded').length);
         $('#accordion_combinations').append(response.form);
-        displayFieldsManager.refresh();
+        window.displayFieldsManager.refresh();
         const url = $('.js-combinations-list').attr('data-action-refresh-images').replace(/form-images\/\d+/, `form-images/${$('.js-combinations-list').data('id-product')}`);
         $.get(url)
           .then((combinationsImages) => {
@@ -201,8 +201,8 @@ export default function () {
       complete() {
         $('#create-combinations, #submit, .btn-submit').removeAttr('disabled');
         activateCombinationsBulk();
-        supplierCombinations.refresh();
-        warehouseCombinations.refresh();
+        window.supplierCombinations.refresh();
+        window.warehouseCombinations.refresh();
       },
     });
   };

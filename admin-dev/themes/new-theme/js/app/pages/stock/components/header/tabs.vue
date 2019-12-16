@@ -55,14 +55,14 @@
 </template>
 
 <script>
-export default {
-  computed: {
-    isOverview() {
-      return this.$route.name === 'overview';
+  export default {
+    computed: {
+      isOverview() {
+        return this.$route.name === 'overview';
+      },
+      isMovements() {
+        return this.$route.name === 'movements';
+      },
     },
-    isMovements() {
-      return this.$route.name === 'movements';
-    },
-  },
-};
+  };
 </script>
