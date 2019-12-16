@@ -59,7 +59,7 @@ describe('Crawl every page for defects and issues', async () => {
     browser = await puppeteer.launch({
       headless: JSON.parse(HEADLESS),
       timeout: 0,
-      slowMo: 5,
+      slowMo: 25,
       args: ['--start-maximized', '--no-sandbox', '--lang=en-GB'],
       defaultViewport: {
         width: 1680,
@@ -113,7 +113,7 @@ describe('Crawl every page for defects and issues', async () => {
       if (err) {
         return console.error(err);
       }
-      return console.log('No error found');
+      return console.log('Report created');
     });
   });
   urlsList.forEach((section) => {
@@ -142,10 +142,7 @@ async function crawlPage(puppeteerPage, thisPageToCrawl) {
     failed: [],
     jsError: [],
   };
-  await Promise.all([
-    puppeteerPage.goto(`${thisPageToCrawl.url}`),
-    puppeteerPage.waitForNavigation({waitUntil: 'networkidle0'}),
-  ]);
+  await puppeteerPage.goto(`${thisPageToCrawl.url}`, {waitUntil: 'networkidle0'});
 
   if (typeof (thisPageToCrawl.customAction) !== 'undefined') {
     await thisPageToCrawl.customAction(puppeteerPage, LOGININFOS);

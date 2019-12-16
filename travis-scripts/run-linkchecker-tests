@@ -12,7 +12,7 @@ echo "SetEnv _TOKEN_ disabled"  >> $PROJECT_PATH/admin-dev/.htaccess
 
 cd $PROJECT_PATH/tests/puppeteer && npm install
 
-echo "* Running puppeteer sanity tests ...";
+echo "* Running puppeteer linkchecker tests ...";
 DISPLAY=:10 HEADLESS=true URL_FO="http://localhost/" npm run linkchecker
 status=$?
 
