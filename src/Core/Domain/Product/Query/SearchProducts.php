@@ -47,7 +47,7 @@ class SearchProducts
      * @param string $phrase
      * @param int $resultsLimit
      */
-    public function __construct(string $phrase, int $resultsLimit = 10)
+    public function __construct(string $phrase, int $resultsLimit)
     {
         $this->assertIsNotEmptyString($phrase);
         $this->phrase = $phrase;

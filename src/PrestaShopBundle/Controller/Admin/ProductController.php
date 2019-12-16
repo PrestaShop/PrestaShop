@@ -1309,10 +1309,10 @@ class ProductController extends FrameworkBundleAdminController
     public function searchProductsAction(Request $request): JsonResponse
     {
         try {
-            $searchPhrase = $request->query->get('q');
+            $searchPhrase = $request->query->get('search_phrase');
 
             /** @var FoundProduct[] $foundProducts */
-            $foundProducts = $this->getQueryBus()->handle(new SearchProducts($searchPhrase));
+            $foundProducts = $this->getQueryBus()->handle(new SearchProducts($searchPhrase, 10));
 
             return $this->json([
                 'products' => $foundProducts,
