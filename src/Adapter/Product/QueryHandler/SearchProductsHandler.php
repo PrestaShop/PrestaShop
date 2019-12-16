@@ -28,15 +28,17 @@ namespace PrestaShop\PrestaShop\Adapter\Product\QueryHandler;
 
 use Context;
 use Currency;
+use PrestaShop\PrestaShop\Adapter\Currency\CurrencyDataProvider;
+use PrestaShop\PrestaShop\Adapter\Tools;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProducts;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryHandler\SearchProductsHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\FoundProduct;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductCombination;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductCustomizationField;
+use PrestaShop\PrestaShop\Core\Localization\CLDR\ComputingPrecision;
 use PrestaShop\PrestaShop\Core\Localization\LocaleInterface;
 use PrestaShop\PrestaShop\Adapter\ContextStateManager;
 use Product;
-use Tools;
 
 /**
  * Handles products search using legacy object model
@@ -59,13 +61,33 @@ final class SearchProductsHandler implements SearchProductsHandlerInterface
     private $contextStateManager;
 
     /**
+     * @var CurrencyDataProvider
+     */
+    private $currencyDataProvider;
+
+    /**
+     * @var Tools
+     */
+    private $tools;
+
+    /**
      * @param int $contextLangId
      * @param LocaleInterface $contextLocale
+     * @param Tools $tools
+     * @param CurrencyDataProvider $currencyDataProvider
+     * @param ContextStateManager $contextStateManager
      */
-    public function __construct(int $contextLangId, LocaleInterface $contextLocale, ContextStateManager $contextStateManager)
-    {
+    public function __construct(
+        int $contextLangId,
+        LocaleInterface $contextLocale,
+        Tools $tools,
+        CurrencyDataProvider $currencyDataProvider,
+        ContextStateManager $contextStateManager
+    ) {
         $this->contextLangId = $contextLangId;
         $this->contextLocale = $contextLocale;
+        $this->currencyDataProvider = $currencyDataProvider;
+        $this->tools = $tools;
         $this->contextStateManager = $contextStateManager;
     }
 
@@ -111,20 +133,23 @@ final class SearchProductsHandler implements SearchProductsHandlerInterface
     private function createFoundProductFromLegacy(Product $product, SearchProducts $query): FoundProduct
     {
         //@todo: sort products alphabetically
-
         $priceTaxExcluded = Product::getPriceStatic($product->id, false);
         $priceTaxIncluded = Product::getPriceStatic($product->id, true);
+
+        $computingPrecision = new ComputingPrecision();
+        $isoCodeCurrency = $query->getAlphaIsoCode()->getValue();
+        $currency = $this->currencyDataProvider->getCurrencyByIsoCode($isoCodeCurrency);
 
         return new FoundProduct(
             $product->id,
             $product->name[$this->contextLangId],
-            $this->contextLocale->formatPrice($priceTaxExcluded, $query->getAlphaIsoCode()->getValue()),
-            Tools::ps_round($priceTaxIncluded, 2),
-            Tools::ps_round($priceTaxExcluded, 2),
+            $this->contextLocale->formatPrice($priceTaxExcluded, $isoCodeCurrency),
+            $this->tools->round($priceTaxIncluded, $computingPrecision->getPrecision($currency->precision)),
+            $this->tools->round($priceTaxExcluded, $computingPrecision->getPrecision($currency->precision)),
             $product->getTaxesRate(),
             Product::getQuantity($product->id),
             $product->location,
-            $this->getProductCombinations($product, $query->getAlphaIsoCode()->getValue()),
+            $this->getProductCombinations($product, $isoCodeCurrency),
             $this->getProductCustomizationFields($product)
         );
     }

@@ -52,6 +52,8 @@ services:
         arguments:
             - '@=service("prestashop.adapter.legacy.context").getContext().language.id'
             - '@prestashop.core.localization.locale.context_locale'
+            - '@prestashop.adapter.tools'
+            - '@prestashop.adapter.data_provider.currency'
             - '@prestashop.adapter.context_state_manager'
         tags:
             - name: tactician.handler
