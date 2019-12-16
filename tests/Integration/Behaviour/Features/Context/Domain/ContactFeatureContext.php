@@ -8,8 +8,8 @@ use PrestaShop\PrestaShop\Core\Domain\Contact\Command\AddContactCommand;
 use PrestaShop\PrestaShop\Core\Domain\Contact\Command\EditContactCommand;
 use PrestaShop\PrestaShop\Core\Domain\Contact\Query\GetContactForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Contact\QueryResult\EditableContact;
-use PrestaShop\PrestaShop\Core\Util\BoolParser;
 use Tests\Integration\Behaviour\Features\Context\CommonFeatureContext;
+use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
 class ContactFeatureContext extends AbstractDomainFeatureContext
 {
@@ -95,7 +95,7 @@ class ContactFeatureContext extends AbstractDomainFeatureContext
     {
         $title = $data['title'];
         $emailAddress = $data['email_address'];
-        $isMessageSavingEnabled = BoolParser::castToBool($data['is_message_saving_enabled']);
+        $isMessageSavingEnabled = PrimitiveUtils::castStringBooleanIntoBoolean($data['is_message_saving_enabled']);
         $description = $data['description'];
         $shopIdAssociation = (int) $data['shop_id_association'];
 
