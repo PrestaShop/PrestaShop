@@ -34,7 +34,7 @@ class ContactFeatureContext extends AbstractDomainFeatureContext
      */
     public function addNewContactWithTheFollowingDetails(TableNode $table)
     {
-        $data = $this->extractFirstHorizontalRowFromProperties($table);
+        $data = $table->getRowsHash();
         /** @var EditableContact $editablContact */
         $editableContact = $this->mapToEditableContact(self::DUMMY_CONTACT_ID, $data);
 
@@ -57,7 +57,7 @@ class ContactFeatureContext extends AbstractDomainFeatureContext
      */
     public function contactShouldHaveTheFollowingDetails(int $contactId, TableNode $table)
     {
-        $data = $this->extractFirstHorizontalRowFromProperties($table);
+        $data = $table->getRowsHash();
         $expectedEditableContact = $this->mapToEditableContact($contactId, $data);
         /** @var EditableContact $editableContact */
         $editableContact = $this->getQueryBus()->handle(new GetContactForEditing($contactId));
@@ -72,7 +72,7 @@ class ContactFeatureContext extends AbstractDomainFeatureContext
      */
     public function updateContactWithTheFollowingDetails(int $contactId, TableNode $table)
     {
-        $data = $this->extractFirstHorizontalRowFromProperties($table);
+        $data = $table->getRowsHash();
         $editableContact = $this->mapToEditableContact($contactId, $data);
 
         $editContactCommand = new EditContactCommand($contactId);

@@ -151,20 +151,4 @@ abstract class AbstractDomainFeatureContext implements Context
         return $localizedArray;
     }
 
-    /**
-     * Used in scenarios which have horizontal properties table
-     *
-     * @param TableNode $table
-     *
-     * @return array
-     */
-    protected function extractFirstHorizontalRowFromProperties(TableNode $table): array
-    {
-        $hash = $table->getHash();
-        if (count($hash) !== 1) {
-            throw new RuntimeException('Properties are invalid');
-        }
-
-        return $hash[0];
-    }
 }
