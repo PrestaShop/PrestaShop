@@ -1,0 +1,19 @@
+#!/bin/bash
+
+PROJECT_PATH=$(cd "$( dirname "$0" )/../" && pwd)
+
+/sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_10.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :10 -ac -screen 0 1600x1200x16
+
+echo "\n* Disabling DEV mode ...";
+sed -ie "s/define('_PS_MODE_DEV_', true);/define('_PS_MODE_DEV_',\ false);/g" $PROJECT_PATH/config/defines.inc.php
+
+echo "\n* Disabling Token ...";
+echo "SetEnv _TOKEN_ disabled" $PROJECT_PATH/admin-dev/.htaccess
+
+cd $PROJECT_PATH/tests/puppeteer && npm install
+
+echo "* Running puppeteer sanity tests ...";
+DISPLAY=:10 HEADLESS=true URL_FO="http://localhost/" npm run linkchecker
+status=$?
+
+exit $status

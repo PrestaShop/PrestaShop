@@ -33,6 +33,7 @@ env:
     - PRESTASHOP_TEST_TYPE=unit
     - PRESTASHOP_TEST_TYPE=integration
     - PRESTASHOP_TEST_TYPE=sanity
+    - PRESTASHOP_TEST_TYPE=linkchecker
 
 stages:
   - name: deploy
@@ -98,6 +99,10 @@ script:
 
   - if [ "$PRESTASHOP_TEST_TYPE" = "sanity" ]; then
         bash tests/check_sanity.sh;
+    fi
+
+  - if [ "$PRESTASHOP_TEST_TYPE" = "linkchecker" ]; then
+        bash tests/check_linkchecker.sh;
     fi
 
 after_script:
