@@ -27,6 +27,7 @@ let page;
 const today = new Date();
 // Date today (yyy-mm-dd)
 const dateToday = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`;
+// Date today to check(mm/dd/yyyy)
 const dateTodayToCheck = `${today.getMonth() + 1}/${today.getDate()}/${today.getFullYear()}`;
 let numberOfCreditSlips = 0;
 const firstCreditSlipFileName = '000001.pdf';
