@@ -194,6 +194,15 @@ class OrderController extends FrameworkBundleAdminController
             return $this->redirectToRoute('admin_orders_index');
         }
 
+        if (!$this->getContext()->country->active) {
+            $this->addFlash('error', $this->trans(
+                'Your current context country is disabled',
+                'Admin.Orderscustomers.Notification'
+            ));
+
+            return $this->redirectToRoute('admin_orders_index');
+        }
+
         $summaryForm = $this->createForm(CartSummaryType::class);
         $languages = $this->get('prestashop.core.form.choice_provider.language_by_id')->getChoices();
         $currencies = $this->get('prestashop.core.form.choice_provider.currency_by_id')->getChoices();
