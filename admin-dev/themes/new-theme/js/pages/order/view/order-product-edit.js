@@ -50,37 +50,42 @@ export default class OrderProductEdit {
 
   setupListener() {
     this.productRowEdit.find(OrderViewPageMap.productEditQuantityInput).on('change keyup', (event) => {
+      const currencyPrecision = $(OrderViewPageMap.productsTable).data('currencyPrecision');
       const priceTaxCalculator = new OrderPrices();
       const quantity = parseInt(event.target.value ? event.target.value : 0, 10);
       const taxIncluded = parseFloat(this.productRowEdit.find(OrderViewPageMap.productEditPriceTaxInclInput).val());
       this.productRowEdit.find(OrderViewPageMap.productEditTotalPriceText).html(
-        priceTaxCalculator.calculateTotalPrice(quantity, taxIncluded)
+        priceTaxCalculator.calculateTotalPrice(quantity, taxIncluded, currencyPrecision)
       );
     });
     this.productRowEdit.find(OrderViewPageMap.productEditPriceTaxInclInput).on('change keyup', (event) => {
+      const currencyPrecision = $(OrderViewPageMap.productsTable).data('currencyPrecision');
       const priceTaxCalculator = new OrderPrices();
       const quantity = parseInt(this.productRowEdit.find(OrderViewPageMap.productEditQuantityInput).val(), 10);
       const taxIncluded = parseFloat(event.target.value);
       const taxExcluded = priceTaxCalculator.calculateTaxExcluded(
         taxIncluded,
-        this.productRowEdit.find(OrderViewPageMap.productEditTaxRateInput).val()
+        this.productRowEdit.find(OrderViewPageMap.productEditTaxRateInput).val(),
+        currencyPrecision
       );
       this.productRowEdit.find(OrderViewPageMap.productEditPriceTaxExclInput).val(taxExcluded);
       this.productRowEdit.find(OrderViewPageMap.productEditTotalPriceText).html(
-        priceTaxCalculator.calculateTotalPrice(quantity, taxIncluded)
+        priceTaxCalculator.calculateTotalPrice(quantity, taxIncluded, currencyPrecision)
       );
     });
     this.productRowEdit.find(OrderViewPageMap.productEditPriceTaxExclInput).on('change keyup', (event) => {
+      const currencyPrecision = $(OrderViewPageMap.productsTable).data('currencyPrecision');
       const priceTaxCalculator = new OrderPrices();
       const quantity = parseInt(this.productRowEdit.find(OrderViewPageMap.productEditQuantityInput).val(), 10);
       const taxExcluded = parseFloat(event.target.value);
       const taxIncluded = priceTaxCalculator.calculateTaxIncluded(
         taxExcluded,
-        this.productRowEdit.find(OrderViewPageMap.productEditTaxRateInput).val()
+        this.productRowEdit.find(OrderViewPageMap.productEditTaxRateInput).val(),
+        currencyPrecision
       );
       this.productRowEdit.find(OrderViewPageMap.productEditPriceTaxInclInput).val(taxIncluded);
       this.productRowEdit.find(OrderViewPageMap.productEditTotalPriceText).html(
-        priceTaxCalculator.calculateTotalPrice(quantity, taxIncluded)
+        priceTaxCalculator.calculateTotalPrice(quantity, taxIncluded, currencyPrecision)
       );
     });
     this.productRowEdit.find(OrderViewPageMap.productEditActionBtn).on('click', (event) => {
@@ -98,20 +103,26 @@ export default class OrderProductEdit {
   }
 
   displayProduct(product) {
+    const currencyPrecision = $(OrderViewPageMap.productsTable).data('currencyPrecision');
     const priceTaxCalculator = new OrderPrices();
     const $productEditRow = $(OrderViewPageMap.productEditRow).clone(true);
     $productEditRow.find('td:nth-child(1)').html(this.productRow.find('td:nth-child(1)').html());
     $productEditRow.find('td:nth-child(2)').html(this.productRow.find('td:nth-child(2)').html());
     $productEditRow.find(OrderViewPageMap.productEditOrderDetailInput).val(this.orderProductId);
-    $productEditRow.find(OrderViewPageMap.productEditPriceTaxExclInput).val(product.price_tax_excl);
-    $productEditRow.find(OrderViewPageMap.productEditPriceTaxInclInput).val(product.price_tax_incl);
+    $productEditRow.find(OrderViewPageMap.productEditPriceTaxExclInput).val(
+      ps_round(product.price_tax_excl, currencyPrecision)
+    );
+    $productEditRow.find(OrderViewPageMap.productEditPriceTaxInclInput).val(
+      ps_round(product.price_tax_incl, currencyPrecision)
+    );
     $productEditRow.find(OrderViewPageMap.productEditQuantityInput).val(product.quantity);
     $productEditRow.find(OrderViewPageMap.productEditTaxRateInput).val(product.tax_rate);
     $productEditRow.find(OrderViewPageMap.productEditLocationText).html(product.location);
     $productEditRow.find(OrderViewPageMap.productEditAvailableText).html(product.availableQuantity);
     $productEditRow.find(OrderViewPageMap.productEditTotalPriceText).html(priceTaxCalculator.calculateTotalPrice(
       product.quantity,
-      product.price_tax_excl
+      product.price_tax_excl,
+      currencyPrecision
     ));
     $productEditRow.find(OrderViewPageMap.productEditActionBtn).data('orderDetailId', this.orderProductId);
     $productEditRow.find(OrderViewPageMap.productCancelEditBtn).data('orderDetailId', this.orderProductId);
