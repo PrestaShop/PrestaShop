@@ -27,6 +27,8 @@ module.exports = class BOBasePage extends CommonPage {
     this.ordersLink = '#subtab-AdminOrders';
     // Invoices
     this.invoicesLink = '#subtab-AdminInvoices';
+    // Delivery slips
+    this.deliverySlips = '#subtab-AdminDeliverySlip';
     // Credit slips
     this.creditSlipsLink = '#subtab-AdminSlip';
 
