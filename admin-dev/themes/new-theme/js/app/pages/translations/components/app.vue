@@ -160,7 +160,8 @@
 </script>
 
 <style lang="scss" type="text/scss">
-  @import "../../../../../scss/config/_settings.scss";
+  @import '~@scss/config/_settings.scss';
+
   // hide the layout header
   #main-div > .header-toolbar {
     height: 0;
