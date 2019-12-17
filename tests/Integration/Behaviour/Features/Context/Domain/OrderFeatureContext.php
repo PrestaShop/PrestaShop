@@ -66,6 +66,41 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @Given I add order :orderReference with the following details:
+     */
+    public function addOrderWithTheFollowingDetails($orderReference, TableNode $table)
+    {
+        $testCaseData = $table->getRowsHash();
+
+        $data['cartId'] = SharedStorage::getStorage()->get($testCaseData['cart']);
+        $data['employeeId'] = SharedStorage::getStorage()->get($testCaseData['payment']);
+        $data['orderMessage'] = '';
+        $data['paymentModuleName'] = $testCaseData['payment module name'];
+
+
+//        * @param int $cartId
+//    * @param int $employeeId
+//    * @param string $orderMessage
+//    * @param string $paymentModuleName
+//    * @param int $orderStateId
+
+//        /** @var OrderId $orderId */
+//        $orderId = $this->getCommandBus()->handle(
+//            new AddOrderFromBackOfficeCommand(
+//                (int) SharedStorage::getStorage()->get($cartReference)->id,
+//                (int) Context::getContext()->employee->id,
+//                '',
+//                $paymentModuleName,
+//                $orderStatusId
+//            )
+//        );
+
+//        SharedStorage::getStorage()->set($orderReference, $orderId->getValue());
+        throw new PendingException();
+    }
+
+
+    /**
      * @When I add order :orderReference from cart :cartReference with :paymentModuleName payment method and :orderStatus order status
      *
      * @param string $orderReference
@@ -99,7 +134,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
             )
         );
 
-        SharedStorage::getStorage()->set($orderReference, new Order($orderId->getValue()));
+        SharedStorage::getStorage()->set($orderReference, $orderId->getValue());
     }
 
     /**
@@ -176,16 +211,16 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     /**
      * @When I update orders :orderIdsString statuses to :status
      *
-     * @param string $orderIdsString
+     * @param string $orderReferencesString
      * @param string $status
      */
-    public function updateOrdersToStatuses(string $orderIdsString, string $status)
+    public function updateOrdersToStatuses(string $orderReferencesString, string $status)
     {
-        /** @var string[] $orderIdsString */
-        $orderIdsString = explode(',', $orderIdsString);
+        /** @var string[] $orderReferencesString */
+        $orderReferencesString = explode(',', $orderReferencesString);
         $ordersIds = [];
-        foreach ($orderIdsString as $orderIdString) {
-            $ordersIds[] = (int) $orderIdString;
+        foreach ($orderReferencesString as $orderReference) {
+            $ordersIds[] = SharedStorage::getStorage()->get($orderReference);
         }
 
         $statusId = $this->getOrderStatusIdFromMap($status);
@@ -197,17 +232,19 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Then order :orderId has status :status
+     * @Then order :orderReference has status :status
      *
-     * @param int $orderId
+     * @param string $orderReference
      * @param string $status
      *
      * @throws RuntimeException
      */
-    public function orderHasStatus(int $orderId, string $status)
+    public function orderHasStatus(string $orderReference, string $status)
     {
+        $orderReference = SharedStorage::getStorage()->get($orderReference);
+
         /** @var OrderForViewing $orderForViewing */
-        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
+        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderReference));
         /** @var OrderState $currentOrderState */
         $currentOrderStateId = $orderForViewing->getHistory()->getCurrentOrderStatusId();
         $statusId = $this->getOrderStatusIdFromMap($status);
@@ -255,6 +292,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @deprecated
      * @param TableNode $table
      *
      * @return array
@@ -272,4 +310,6 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
 
         return $data;
     }
+
+
 }
