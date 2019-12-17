@@ -55,7 +55,6 @@
         format: 'YYYY-MM-DD',
         showClear: true,
       }).on('dp.change', (infos) => {
-        /* eslint-disable-next-line no-param-reassign */
         infos.dateType = this.type;
         this.$emit(
           infos.date ? 'dpChange' : 'reset',

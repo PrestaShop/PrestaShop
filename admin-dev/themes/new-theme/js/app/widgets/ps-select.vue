@@ -36,7 +36,8 @@
         <slot />
       </option>
       <option
-        v-for="item in items"
+        v-for="(item, index) in items"
+        :key="index"
         :value="item[itemID]"
       >
         {{ item[itemName] }}

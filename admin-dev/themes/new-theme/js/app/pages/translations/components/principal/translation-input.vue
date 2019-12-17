@@ -52,16 +52,20 @@
     props: {
       id: {
         type: Number,
+        required: false,
+        default: 0,
       },
       extraInfo: {
         type: String,
         required: false,
+        default: '',
       },
       label: {
         type: String,
         required: true,
       },
       translated: {
+        type: Object,
         required: true,
       },
     },
@@ -98,7 +102,7 @@
 </script>
 
 <style lang="scss" scoped>
-  @import "../../../../../../scss/config/_settings.scss";
+  @import '../../../../../../scss/config/_settings.scss';
 
   .form-group {
     overflow: hidden;

@@ -69,7 +69,11 @@ class TableSorting {
    * @private
    */
   sortByColumn(column, direction) {
-    window.location = this.getUrl(column.data('sortColName'), (direction === 'desc') ? 'desc' : 'asc', column.data('sortPrefix'));
+    window.location = this.getUrl(
+      column.data('sortColName'),
+      (direction === 'desc') ? 'desc' : 'asc',
+      column.data('sortPrefix'),
+    );
   }
 
   /**

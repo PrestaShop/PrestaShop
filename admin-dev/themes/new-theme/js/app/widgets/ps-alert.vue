@@ -52,9 +52,19 @@
 
   export default {
     props: {
-      duration: false,
-      alertType: {type: String, required: true},
-      hasClose: {type: Boolean, required: true},
+      duration: {
+        type: Boolean,
+        required: false,
+        default: false,
+      },
+      alertType: {
+        type: String,
+        required: true,
+      },
+      hasClose: {
+        type: Boolean,
+        required: true,
+      },
     },
     computed: {
       classObject() {

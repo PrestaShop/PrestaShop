@@ -149,10 +149,8 @@
 
 <script>
   import PSSelect from '@app/widgets/ps-select';
-  import PSButton from '@app/widgets/ps-button';
   import PSDatePicker from '@app/widgets/ps-datepicker';
   import PSRadio from '@app/widgets/ps-radio';
-  import _ from 'lodash';
   import FilterComponent from './filters/filter-component';
 
   export default {
@@ -223,7 +221,6 @@
     components: {
       FilterComponent,
       PSSelect,
-      PSButton,
       PSDatePicker,
       PSRadio,
     },

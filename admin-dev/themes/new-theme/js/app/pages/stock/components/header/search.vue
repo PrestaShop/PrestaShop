@@ -114,7 +114,7 @@
       EventBus.$on('displayBulkAlert', (type) => {
         this.alertType = type === 'success' ? 'ALERT_TYPE_SUCCESS' : 'ALERT_TYPE_DANGER';
         this.showAlert = true;
-        setTimeout((_) => {
+        setTimeout(() => {
           this.showAlert = false;
         }, 5000);
       });

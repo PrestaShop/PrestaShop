@@ -131,7 +131,12 @@
   import ProductLine from './product-line';
 
   export default {
-    props: ['isLoading'],
+    props: {
+      isLoading: {
+        type: Boolean,
+        required: true,
+      },
+    },
     components: {
       ProductLine,
       PSSort,

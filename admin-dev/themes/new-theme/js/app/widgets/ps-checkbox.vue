@@ -42,10 +42,13 @@
     props: {
       id: {
         type: String,
+        required: false,
+        default: '',
       },
       model: {
         type: Object,
         required: false,
+        default: () => ({}),
       },
       isIndeterminate: {
         type: Boolean,

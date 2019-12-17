@@ -361,7 +361,6 @@ class AdminModuleController {
     let key = self.currentSorting;
     const splittedKey = key.split('-');
     if (splittedKey.length > 1) {
-      /* eslint-disable-next-line prefer-destructuring */
       key = splittedKey[0];
       if (splittedKey[1] === 'desc') {
         order = 'desc';

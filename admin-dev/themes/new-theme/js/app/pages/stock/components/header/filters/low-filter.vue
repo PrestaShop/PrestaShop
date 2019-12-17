@@ -74,7 +74,11 @@
 
   export default {
     props: {
-      filters: {},
+      filters: {
+        type: Object,
+        required: false,
+        default: () => ({}),
+      },
     },
     computed: {
       stockImportTitle() {

@@ -34,7 +34,10 @@
         <Search @search="onSearch" />
         <div class="translations-summary">
           <span>{{ totalTranslations }}</span>
-          <span v-show="totalMissingTranslations"> - <span class="missing">{{ totalMissingTranslationsString }}</span></span>
+          <span v-show="totalMissingTranslations">
+            -
+            <span class="missing">{{ totalMissingTranslationsString }}</span>
+          </span>
         </div>
       </div>
 
@@ -70,13 +73,19 @@
         return this.$store.getters.isReady;
       },
       totalTranslations() {
-        return (this.$store.state.totalTranslations <= 1) ? this.trans('label_total_domain_singular').replace('%nb_translation%', this.$store.state.totalTranslations) : this.trans('label_total_domain').replace('%nb_translations%', this.$store.state.totalTranslations);
+        return this.$store.state.totalTranslations <= 1
+          ? this.trans('label_total_domain_singular')
+            .replace('%nb_translation%', this.$store.state.totalTranslations)
+          : this.trans('label_total_domain')
+            .replace('%nb_translations%', this.$store.state.totalTranslations);
       },
       totalMissingTranslations() {
         return this.$store.state.totalMissingTranslations;
       },
       totalMissingTranslationsString() {
-        return this.totalMissingTranslations === 1 ? this.trans('label_missing_singular') : this.trans('label_missing').replace('%d', this.totalMissingTranslations);
+        return this.totalMissingTranslations === 1
+          ? this.trans('label_missing_singular')
+          : this.trans('label_missing').replace('%d', this.totalMissingTranslations);
       },
       translations() {
         return {
@@ -97,24 +106,28 @@
         if (!this.destHref && this.isEdited() && !this.leave) {
           return true;
         }
+
         if (!this.leave && this.isEdited()) {
           setTimeout(() => {
             window.stop();
           }, 500);
+
           this.$refs.transModal.showModal();
           this.$refs.transModal.$once('save', () => {
             this.$refs.principal.saveTranslations();
             this.leavePage();
           });
+
           this.$refs.transModal.$once('leave', () => {
             this.leavePage();
           });
-          return null;
         }
+
+        return null;
       };
     },
     methods: {
-      onSearch(keywords) {
+      onSearch() {
         this.$store.dispatch('getDomainsTree', {
           store: this.$store,
         });

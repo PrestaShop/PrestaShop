@@ -142,7 +142,7 @@ export const updateProductQty = ({commit}, payload) => {
   commit(types.UPDATE_PRODUCT_QTY, payload);
 };
 
-export const updateQtyByProductId = ({commit, state}, payload) => {
+export const updateQtyByProductId = ({commit}, payload) => {
   const {url} = payload;
   const {delta} = payload;
 

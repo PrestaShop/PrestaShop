@@ -22,7 +22,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-/* eslint-disable no-param-reassign */
 
 import * as types from './mutation-types';
 
@@ -67,5 +66,11 @@ export default {
   },
   [types.SEARCH_TAGS](state, searchTags) {
     state.searchTags = searchTags;
+  },
+  [types.DECREASE_CURRENT_DOMAIN_TOTAL_MISSING_TRANSLATIONS](state, successfullySaved) {
+    state.currentDomainTotalMissingTranslations -= successfullySaved;
+  },
+  [types.RESET_MODIFIED_TRANSLATIONS](state) {
+    state.modifiedTranslations = [];
   },
 };

@@ -76,7 +76,12 @@
   import productDesc from '@app/pages/stock/mixins/product-desc';
 
   export default {
-    props: ['product'],
+    props: {
+      product: {
+        type: Object,
+        required: true,
+      },
+    },
     mixins: [productDesc],
     computed: {
       qty() {
