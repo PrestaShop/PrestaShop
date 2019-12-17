@@ -143,6 +143,8 @@ default:
               features: Features/Scenario/Misc
             contexts:
               - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
+              - Tests\Integration\Behaviour\Features\Context\ShopFeatureContext
+              - Tests\Integration\Behaviour\Features\Context\Domain\EmployeeFeatureContext
               - Tests\Integration\Behaviour\Features\Context\Domain\DebugModeFeatureContext
               - Tests\Integration\Behaviour\Features\Context\Domain\ShowcaseCardFeatureContext
               - Tests\Integration\Behaviour\Features\Context\Domain\ThemeMailTemplatesFeatureContext
