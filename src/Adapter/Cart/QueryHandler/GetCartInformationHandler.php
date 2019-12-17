@@ -47,6 +47,7 @@ use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation\CartProdu
 use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation\CartShipping;
 use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation\CartSummary;
 use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation\CustomizationFieldData;
+use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation\Customization;
 use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 use PrestaShop\PrestaShop\Core\Localization\LocaleInterface;
 use PrestaShopException;
@@ -285,11 +286,7 @@ final class GetCartInformationHandler extends AbstractCartHandler implements Get
     {
         $cartId = (int) $cart->id;
 
-        if (0 !== (int) $legacySummary['total_discounts_tax_exc']) {
-            $discount = $this->locale->formatPrice(-1 * $legacySummary['total_discounts_tax_exc'], $currency->iso_code);
-        } else {
-            $discount = $this->locale->formatPrice($legacySummary['total_discounts_tax_exc'], $currency->iso_code);
-        }
+        $discount = $this->locale->formatPrice(-1 * $legacySummary['total_discounts_tax_exc'], $currency->iso_code);
 
         $orderMessage = '';
         if ($message = Message::getMessageByCartId($cartId)) {
@@ -323,9 +320,9 @@ final class GetCartInformationHandler extends AbstractCartHandler implements Get
      * @param Cart $cart
      * @param array $product the product array from legacy summary
      *
-     * @return CartInformation\Customization|null
+     * @return Customization|null
      */
-    private function getProductCustomizedData(Cart $cart, array $product): ?CartInformation\Customization
+    private function getProductCustomizedData(Cart $cart, array $product): ?Customization
     {
         $customizationId = (int) $product['id_customization'];
 
