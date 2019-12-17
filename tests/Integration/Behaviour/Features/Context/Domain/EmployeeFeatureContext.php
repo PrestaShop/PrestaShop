@@ -23,8 +23,7 @@ class EmployeeFeatureContext extends AbstractDomainFeatureContext
         string $employeeReference,
         string $shopReference,
         TableNode $table
-    )
-    {
+    ) {
         $testCaseData = $table->getRowsHash();
 
         $data = $this->mapDataForAddEmployeeHandler($testCaseData, $shopReference);
