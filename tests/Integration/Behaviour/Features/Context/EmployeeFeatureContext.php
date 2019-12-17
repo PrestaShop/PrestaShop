@@ -29,6 +29,10 @@ namespace Tests\Integration\Behaviour\Features\Context;
 use Context;
 use Employee;
 
+/**
+ * Class EmployeeFeatureContext
+ * @package Tests\Integration\Behaviour\Features\Context
+ */
 class EmployeeFeatureContext extends AbstractPrestaShopFeatureContext
 {
     /**
