@@ -25,9 +25,9 @@
 import Vue from 'vue';
 import VueI18n from 'vue-i18n';
 import VueResource from 'vue-resource';
-import CurrencyFormatter from './components/CurrencyFormatter.vue';
 import ReplaceFormatter from '@vue/plugins/vue-i18n/replace-formatter';
 import {showGrowl} from '@app/utils/growl';
+import CurrencyFormatter from './components/CurrencyFormatter.vue';
 
 Vue.use(VueResource);
 Vue.use(VueI18n);
@@ -55,7 +55,6 @@ export default class CurrencyForm {
   }
 
   init() {
-    <<<<<<< HEAD
     this._initListeners();
     this._initFields();
     this._initState();
@@ -81,21 +80,17 @@ export default class CurrencyForm {
       i18n: new VueI18n({
         locale: 'en',
         formatter: new ReplaceFormatter(),
-        messages: { en: this.translations }
+        messages: {en: this.translations},
       }),
       components: {CurrencyFormatter},
       data: this.state,
-      template: `<currency-formatter id="${this.currencyFormatterId}" :languages="languages" :currencyData="currencyData"></currency-formatter>`
+      template: `<currency-formatter id="${this.currencyFormatterId}" :languages="languages" :currencyData="currencyData"></currency-formatter>`,
     });
 
     this.currencyFormatter.$watch('currencyData', () => {
       // We use the state value directly since the object is shared with the Vue component and already updated
       this._fillCurrencyCustomData(this.state.currencyData);
-    },{deep: true, immediate: true})
-    =======
-      this.initListeners();
-    this.initFields();
-    >>>>>>> Continue to fix eslint errors
+    }, {deep: true, immediate: true});
   }
 
   initListeners() {
@@ -159,7 +154,7 @@ export default class CurrencyForm {
       // Use language data (which contain the reference) to reset price specification data (which contain the custom values)
       const patterns = language.currencyPattern.split(';');
       language.priceSpecification.positivePattern = patterns[0];
-      language.priceSpecification.negativePattern = patterns.length > 1 ? patterns[1] : '-' + patterns[0];
+      language.priceSpecification.negativePattern = patterns.length > 1 ? patterns[1] : `-${patterns[0]}`;
       language.priceSpecification.currencySymbol = language.currencySymbol;
     });
     this.state.languages = [...this.originalLanguages];
@@ -177,14 +172,14 @@ export default class CurrencyForm {
         if (errorResponse.body && errorResponse.body.error) {
           showGrowl('error', errorResponse.body.error, 3000);
         } else {
-          showGrowl('error', 'Can not find CLDR data for currency ' + currencyIsoCode, 3000);
+          showGrowl('error', `Can not find CLDR data for currency ${currencyIsoCode}`, 3000);
         }
       });
     }
 
     if (currencyData && currencyData.transformations === undefined) {
       currencyData.transformations = {};
-      for (let langId in currencyData.symbols) {
+      for (const langId in currencyData.symbols) {
         currencyData.transformations[langId] = '';
       }
     }
@@ -196,8 +191,8 @@ export default class CurrencyForm {
     if (!currencyData) {
       return;
     }
-    for (let langId in currencyData.names) {
-      let langNameSelector = this.map.namesInput(langId);
+    for (const langId in currencyData.names) {
+      const langNameSelector = this.map.namesInput(langId);
       $(langNameSelector).val(currencyData.names[langId]);
     }
     this._fillCurrencyCustomData(currencyData);
@@ -207,24 +202,24 @@ export default class CurrencyForm {
   }
 
   _fillCurrencyCustomData(currencyData) {
-    for (let langId in currencyData.symbols) {
-      let langSymbolSelector = this.map.symbolsInput(langId);
+    for (const langId in currencyData.symbols) {
+      const langSymbolSelector = this.map.symbolsInput(langId);
       $(langSymbolSelector).val(currencyData.symbols[langId]);
     }
-    for (let langId in currencyData.transformations) {
-      let langTransformationSelector = this.map.transformationsInput(langId);
+    for (const langId in currencyData.transformations) {
+      const langTransformationSelector = this.map.transformationsInput(langId);
       $(langTransformationSelector).val(currencyData.transformations[langId]);
     }
   }
 
   _getCurrencyDataFromForm() {
-    let currencyData = {
+    const currencyData = {
       names: {},
       symbols: {},
       transformations: {},
       isoCode: this.$isoCodeInput.val(),
       exchangeRate: this.$exchangeRateInput.val(),
-      precision: this.$precisionInput.val()
+      precision: this.$precisionInput.val(),
     };
 
     this.originalLanguages.forEach((lang) => {
