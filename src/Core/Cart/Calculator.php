@@ -208,18 +208,18 @@ class Calculator
             $amount = $amount->add($cartRule->getDiscountApplied());
         }
 
-        $totalWithoutDiscount = $this->getRowTotalWithoutDiscount();
+        $allowedMaxDiscount = $this->getRowTotalWithoutDiscount();
 
         if (null !== $this->getFees()->getInitialShippingFees() && null !== $this->getFees()->getFinalShippingFees()) {
             $shippingDiscount = (new AmountImmutable())
                 ->add($this->getFees()->getInitialShippingFees())
                 ->sub($this->getFees()->getFinalShippingFees())
             ;
-            $totalWithoutDiscount = $totalWithoutDiscount->add($shippingDiscount);
+            $allowedMaxDiscount = $allowedMaxDiscount->add($shippingDiscount);
         }
         // discount cannot be above total cart price
-        if ($totalWithoutDiscount < $amount) {
-            $amount = $totalWithoutDiscount;
+        if ($amount > $allowedMaxDiscount) {
+            $amount = $allowedMaxDiscount;
         }
 
         return $amount;
