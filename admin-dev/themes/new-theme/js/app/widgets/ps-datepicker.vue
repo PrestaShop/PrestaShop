@@ -66,7 +66,7 @@
 </script>
 
 <style lang="scss">
-  @import "../../../scss/config/_settings.scss";
+  @import '~@scss/config/_settings.scss';
 
   .date {
     a[data-action='clear']::before {

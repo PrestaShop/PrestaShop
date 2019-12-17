@@ -156,7 +156,7 @@
 </script>
 
 <style lang="scss" type="text/scss">
-  @import '../../../../../../scss/config/_settings.scss';
+  @import '~@scss/config/_settings.scss';
 
   .translationTree {
     .tree-name {

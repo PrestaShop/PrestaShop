@@ -66,7 +66,8 @@
 </script>
 
 <style lang="scss" scoped>
-  @import "../../../../../../scss/config/_settings.scss";
+  @import '~@scss/config/_settings.scss';
+
   .update-qty {
     color: white;
     transition: background-color 0.2s ease;

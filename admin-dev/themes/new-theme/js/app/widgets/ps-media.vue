@@ -55,15 +55,16 @@
 </script>
 
 <style lang="scss" scoped>
-  @import "../../../scss/config/_settings.scss";
+  @import '~@scss/config/_settings.scss';
+
   .product-title {
     .has-combination & {
       font-weight: 600;
     }
   }
   .thumbnail, .no-img {
-      border: $gray-light 1px solid;
-      max-width: 47px;
+    border: $gray-light 1px solid;
+    max-width: 47px;
   }
   .no-img {
     background: white;
