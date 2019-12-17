@@ -51,6 +51,11 @@ const init = async function () {
   };
 };
 
+/*
+Create 2 credit slips for the same order
+Filter Credit slips table( by ID, Order ID, Date issued From and To)
+Download the 2 credit slip files and check them
+ */
 describe('Create, filter and check credit slips file', async () => {
   // before and after functions
   before(async function () {
@@ -60,7 +65,7 @@ describe('Create, filter and check credit slips file', async () => {
     this.pageObjects = await init();
   });
   after(async () => {
-    /* Delete the generated creditSlips */
+    /* Delete the generated credit slips */
     await files.deleteFile(`${global.BO.DOWNLOAD_PATH}/${firstCreditSlipFileName}`);
     await files.deleteFile(`${global.BO.DOWNLOAD_PATH}/${secondCreditSlipFileName}`);
     await helper.closeBrowser(browser);

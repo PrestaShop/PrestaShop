@@ -6,10 +6,6 @@ module.exports = class CreditSlips extends BOBasePage {
     super(page);
 
     this.pageTitle = 'Credit Slips •';
-    this.errorMessageWhenGenerateFileByDate = 'No invoice has been found for this period.';
-    this.errorMessageWhenGenerateFileByStatus = 'No invoice has been found for this status.';
-    this.errorMessageWhenNotSelectStatus = 'You must select at least one order status.';
-    this.successfulUpdateMessage = 'Update successful';
 
     // Credit slips page
     // List of credit slips
