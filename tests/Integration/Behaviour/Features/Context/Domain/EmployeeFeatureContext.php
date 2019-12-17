@@ -19,9 +19,11 @@ class EmployeeFeatureContext extends AbstractDomainFeatureContext
      * @param string $shopReference
      * @param TableNode $table
      */
-    public function addNewEmployeeToShopWithTheFollowingDetails(string $employeeReference,
-                                                                string $shopReference,
-                                                                TableNode $table)
+    public function addNewEmployeeToShopWithTheFollowingDetails(
+        string $employeeReference,
+        string $shopReference,
+        TableNode $table
+    )
     {
         $testCaseData = $table->getRowsHash();
 
@@ -73,8 +75,7 @@ class EmployeeFeatureContext extends AbstractDomainFeatureContext
         $availablePermissionProfiles = $profileChoiceProvider->getChoices();
         $data['profileId'] = $availablePermissionProfiles[$testCaseData['Permission profile']];
 
-        $isActive = $testCaseData['Active'] ? true : false;
-        $data['active'] = $isActive;
+        $data['active'] = (bool) $testCaseData['Active'];
 
         /** @var array $shopAssociation */
         $shopAssociation = [
