@@ -198,29 +198,18 @@ final class UpdateProductQuantityInCartHandler extends AbstractCartHandler imple
         $isCombination = ($command->getCombinationId() !== null);
         $isCustomization = ($command->getCustomizationId() !== null);
 
-        if ($isCombination) {
-            foreach ($products as $cartProduct) {
-                $equalProductId = (int) $cartProduct['id_product'] === $command->getProductId()->getValue();
-                $equalCombinationId = (int) $cartProduct['id_product_attribute'] === $command->getCombinationId()->getValue();
-
-                if ($equalProductId && $equalCombinationId) {
+        foreach ($products as $cartProduct) {
+            $equalProductId = (int) $cartProduct['id_product'] === $command->getProductId()->getValue();
+            if ($isCombination) {
+                if ($equalProductId && (int) $cartProduct['id_product_attribute'] === $command->getCombinationId()->getValue()) {
                     return (int) $cartProduct['quantity'];
                 }
-            }
-        } elseif ($isCustomization) {
-            foreach ($products as $cartProduct) {
-                $equalProductId = (int) $cartProduct['id_product'] === $command->getProductId()->getValue();
-                $equalCustomizationId = (int) $cartProduct['id_customization'] === $command->getCustomizationId()->getValue();
-
-                if ($equalProductId && $equalCustomizationId) {
+            } elseif ($isCustomization) {
+                if ($equalProductId && (int) $cartProduct['id_customization'] === $command->getCustomizationId()->getValue()) {
                     return (int) $cartProduct['quantity'];
                 }
-            }
-        } else {
-            foreach ($products as $cartProduct) {
-                if ((int) $cartProduct['id_product'] === $command->getProductId()->getValue()) {
-                    return (int) $cartProduct['quantity'];
-                }
+            } elseif ($equalProductId) {
+                return (int) $cartProduct['quantity'];
             }
         }
 
