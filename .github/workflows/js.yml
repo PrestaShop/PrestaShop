@@ -1,0 +1,18 @@
+name: JavaScript tests
+on: [push, pull_request]
+jobs:
+  eslint:
+    runs-on: ubuntu-latest
+    name: ESLint
+    steps:
+      - uses: actions/checkout@v1
+        with:
+          fetch-depth: 0
+      - name: Setup Node
+        uses: actions/setup-node@v1
+        with:
+          node-version: '10.x'
+
+      - working-directory: ./admin-dev/themes/new-theme
+      - run: npm install
+      - run: npm run lint
