@@ -531,7 +531,7 @@ class AdminModuleController {
           + 'It might cause some unexepcted behaviors.';
       }
 
-      return true;
+      return undefined;
     });
   }
 

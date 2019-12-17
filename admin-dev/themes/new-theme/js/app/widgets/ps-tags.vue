@@ -63,7 +63,8 @@
       },
       placeholder: {
         type: String,
-        required: true,
+        required: false,
+        default: '',
       },
       hasIcon: {
         type: Boolean,
