@@ -10,7 +10,7 @@ use PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ThemeByNameWithEmailsChoicePr
 class ThemeMailTemplatesFeatureContext extends AbstractDomainFeatureContext
 {
     private const LANGUAGES_MAP = [
-        'en' => 'English (English)'
+        'en' => 'English (English)',
     ];
 
     /**
@@ -49,6 +49,7 @@ class ThemeMailTemplatesFeatureContext extends AbstractDomainFeatureContext
     /**
      * @param array $testCaseData
      * @param array $data
+     *
      * @return array
      */
     private function mapGenerateThemeMailTemplatesData(array $testCaseData, array $data)
@@ -65,6 +66,7 @@ class ThemeMailTemplatesFeatureContext extends AbstractDomainFeatureContext
         $data['overwriteTemplates'] = isset($testCaseData['overwrite_templates']) ?: false;
         $data['coreMailsFolder'] = isset($testCaseData['coreMailsFolder']) ?: '';
         $data['modulesMailFolder'] = isset($testCaseData['modulesMailFolder']) ?: '';
+
         return $data;
     }
 }
