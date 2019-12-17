@@ -766,6 +766,7 @@ class AdminCartsControllerCore extends AdminController
         }
         if (count($orders)) {
             foreach ($orders as &$order) {
+                $currency = new Currency((int) $order['id_currency']);
                 $order['total_paid_real'] = $this->context->getCurrentLocale()->formatPrice($order['total_paid_real'], $currency->iso_code);
             }
         }

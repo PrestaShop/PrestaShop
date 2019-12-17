@@ -61,6 +61,13 @@
 {% block javascripts %}
   {{ parent() }}
 
+  <script type="text/javascript">
+    if (top !== self) {
+      parent.getSummary();
+      parent.$.fancybox.close();
+    }
+  </script>
+
   <script src="{{ asset('themes/default/js/bundle/pagination.js') }}"></script>
   <script src="{{ asset('themes/new-theme/public/address.bundle.js') }}"></script>
 {% endblock %}
