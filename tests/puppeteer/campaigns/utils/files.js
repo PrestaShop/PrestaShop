@@ -78,4 +78,38 @@ module.exports = {
     }
     return imageNumber;
   },
+  /**
+   * Generate report filename
+   * @return {Promise<string>}
+   */
+  async generateReportFilename() {
+    const curDate = new Date();
+    return `report${
+      curDate.toJSON().slice(0, 10)}_${
+      curDate.getHours()}-${
+      curDate.getMinutes()}-${
+      curDate.getSeconds()}`;
+  },
+  /**
+   * Create directory if not exist
+   * @param path
+   * @return {Promise<void>}
+   */
+  async createDirectory(path) {
+    if (!fs.existsSync(path)) await fs.mkdirSync(path);
+  },
+  /**
+   * Create file with content
+   * @param path
+   * @param filename
+   * @param content
+   * @return {Promise<void>}
+   */
+  async createFile(path, filename, content) {
+    await fs.writeFile(`${path}/${filename}`, content, (err) => {
+      if (err) {
+        throw new Error(err);
+      }
+    });
+  },
 };

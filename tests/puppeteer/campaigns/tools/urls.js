@@ -1,3 +1,6 @@
+require('module-alias/register');
+const {DefaultAccount} = require('@data/demo/customer');
+
 module.exports = [
   {
     name: 'BO',
@@ -7,15 +10,15 @@ module.exports = [
       {
         name: 'BO_login',
         url: 'index.php?controller=AdminLogin',
-        async customAction(page, LOGININFOS) {
-          await page.type('#email', LOGININFOS.admin.login);
-          await page.type('#passwd', LOGININFOS.admin.password);
+        async customAction(page) {
+          await page.type('#email', global.BO.EMAIL);
+          await page.type('#passwd', global.BO.PASSWD);
           await Promise.all([
             page.click('#submit_login'),
             page.waitForNavigation({waitUntil: 'networkidle0'}),
           ]);
           const block = await page.$('button.onboarding-button-shut-down');
-          if(block !== null) {
+          if (block !== null) {
             await page.click('button.onboarding-button-shut-down');
             await page.waitForSelector('a.onboarding-button-stop', {visible: true});
             await page.click('a.onboarding-button-stop');
@@ -156,9 +159,9 @@ module.exports = [
       {
         name: 'FO_my_account',
         url: 'index.php?controller=authentication&back=my-account',
-        async customAction(page, LOGININFOS) {
-          await page.type('#login-form input[name=email]', LOGININFOS.user.login);
-          await page.type('#login-form input[name=password]', LOGININFOS.user.password);
+        async customAction(page) {
+          await page.type('#login-form input[name=email]', DefaultAccount.email);
+          await page.type('#login-form input[name=password]', DefaultAccount.password);
           await page.click('#submit-login');
         },
       },
