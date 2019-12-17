@@ -28,7 +28,7 @@ Feature: Showcase card
   Scenario: Employee closes showcase card in multiple shops context
     Given multiple shop context is loaded
     And I Add new employee "TadasTwo" to shop "shop1" with the following details:
-      | First name         | TadasTwo                       |
+      | First name         | TadasTwo                      |
       | Last name          | Davidsonas                    |
       | Email address      | tadas.davidsonas2@invertus.eu |
       | Password           | secretpassword                |
