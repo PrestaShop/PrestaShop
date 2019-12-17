@@ -74,6 +74,7 @@ use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderShippingForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderStatusForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
 use PrestaShop\PrestaShop\Core\Image\Parser\ImageTagSourceParserInterface;
+use PrestaShop\PrestaShop\Core\Localization\CLDR\ComputingPrecision;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
 use Shop;
 use State;
@@ -420,6 +421,7 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
         $productsForViewing = [];
 
         $isOrderTaxExcluded = ($taxCalculationMethod == PS_TAX_EXC);
+        $computingPrecision = new ComputingPrecision();
 
         foreach ($products as $product) {
             $unitPrice = $isOrderTaxExcluded ?
