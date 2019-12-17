@@ -47,11 +47,13 @@
     props: {
       modal: {
         type: Object,
-        required: true,
+        required: false,
+        default: () => ({}),
       },
       principal: {
         type: Object,
-        required: true,
+        required: false,
+        default: () => ({}),
       },
     },
     computed: {

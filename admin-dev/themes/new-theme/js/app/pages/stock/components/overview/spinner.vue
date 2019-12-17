@@ -36,8 +36,8 @@
       placeholder="0"
       pattern="\d*"
       step="1"
-      buttons="true"
-      hover-buttons="true"
+      :buttons="true"
+      :hover-buttons="true"
       :value="getQuantity()"
       @change="onChange"
       @keyup="onKeyup($event)"
@@ -84,7 +84,7 @@
           this.isEnabled = false;
           this.value = '';
         }
-        return this.product.qty;
+        return parseInt(this.product.qty, 10);
       },
       onChange(val) {
         this.value = val;

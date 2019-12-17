@@ -130,7 +130,8 @@
     props: {
       modal: {
         type: Object,
-        required: true,
+        required: false,
+        default: () => ({}),
       },
     },
     data: () => ({

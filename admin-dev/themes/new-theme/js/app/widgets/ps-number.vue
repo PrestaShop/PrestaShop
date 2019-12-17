@@ -58,8 +58,8 @@
   export default {
     props: {
       value: {
-        type: String,
-        default: '',
+        type: Number,
+        default: 0,
       },
       danger: {
         type: Boolean,

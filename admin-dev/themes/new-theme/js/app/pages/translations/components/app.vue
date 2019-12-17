@@ -121,9 +121,10 @@
           this.$refs.transModal.$once('leave', () => {
             this.leavePage();
           });
+          return null;
         }
 
-        return null;
+        return undefined;
       };
     },
     methods: {
