@@ -24,6 +24,8 @@ module.exports = class Order extends BOBasePage {
     this.statusValidation = '#status tr:nth-child(1) > td:nth-child(2)';
     // Document tab
     this.documentTab = '#tabOrder a[href=\'#documents\']';
+    this.documentName = '#documents_table tr td:nth-child(2)';
+    this.documentNumberLink = '#documents_table tr:nth-child(%ID) td:nth-child(3) a';
     this.documentName = '#documents_table tr:nth-child(%ID) td:nth-child(2)';
     this.documentNumberLink = '#documents_table tr td:nth-child(3) a';
     // Refund form
@@ -78,11 +80,12 @@ module.exports = class Order extends BOBasePage {
 
   /**
    * Get file name
+   * @param rowChild
    * @returns fileName
    */
-  async getFileName() {
+  async getFileName(rowChild = 1) {
     await this.page.click(this.documentTab);
-    const fileName = await this.getTextContent(this.documentNumberLink);
+    const fileName = await this.getTextContent(this.documentNumberLink.replace('%ID', rowChild));
     return fileName.replace('#', '').trim();
   }
 

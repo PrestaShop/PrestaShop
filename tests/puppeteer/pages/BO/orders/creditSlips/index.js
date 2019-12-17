@@ -7,6 +7,7 @@ module.exports = class CreditSlips extends BOBasePage {
 
     this.pageTitle = 'Credit Slips •';
     this.errorMessageWhenGenerateFileByDate = 'No order slips were found for this period.';
+    this.successfulUpdateMessage = 'Update successful';
 
     // Credit slips page
     // List of credit slips
@@ -24,6 +25,10 @@ module.exports = class CreditSlips extends BOBasePage {
     this.dateFromInput = '#generate_pdf_by_date_from';
     this.dateToInput = '#generate_pdf_by_date_to';
     this.generatePdfByDateButton = `${this.generateByDateForm} .btn.btn-primary`;
+    // Credit slip options form
+    this.creditSlipOptionsForm = '[name=\'form\']';
+    this.invoicePrefixInput = '#form_options_slip_prefix_1';
+    this.saveCreditSlipOptionsButton = `${this.creditSlipOptionsForm} .btn.btn-primary`;
   }
 
   /*
@@ -114,5 +119,21 @@ module.exports = class CreditSlips extends BOBasePage {
     if (dateFrom) await this.setValue(this.dateFromInput, dateFrom);
     if (dateTo) await this.setValue(this.dateToInput, dateTo);
     await this.page.click(this.generatePdfByDateButton);
+  }
+
+  /** Edit credit slip Prefix
+   * @param prefix
+   * @return {Promise<void>}
+   */
+  async changePrefix(prefix) {
+    await this.setValue(this.invoicePrefixInput, prefix);
+  }
+
+  /** Save credit slip options
+   * @return {Promise<void>}
+   */
+  async saveCreditSlipOptions() {
+    await this.clickAndWaitForNavigation(this.saveCreditSlipOptionsButton);
+    return this.getTextContent(this.alertSuccessBlockParagraph);
   }
 };
