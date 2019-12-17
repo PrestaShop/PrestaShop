@@ -32,7 +32,7 @@
         id="bulk-action"
         ref="bulk-action"
         class="mt-3"
-        :is-indeterminate="isIndeterminate"
+        :is-indeterminate="isIndeterminate()"
         @checked="bulkChecked"
       />
       <div class="ml-2">
@@ -79,15 +79,6 @@
       bulkEditQty() {
         return this.$store.state.bulkEditQty;
       },
-      isIndeterminate() {
-        const {selectedProductsLng} = this;
-        const productsLng = this.$store.state.products.length;
-        const isIndeterminate = (selectedProductsLng > 0 && selectedProductsLng < productsLng);
-        if (isIndeterminate) {
-          this.$refs['bulk-action'].checked = true;
-        }
-        return isIndeterminate;
-      },
       selectedProductsLng() {
         return this.$store.getters.selectedProductsLng;
       },
@@ -104,6 +95,15 @@
       },
     },
     methods: {
+      isIndeterminate() {
+        const {selectedProductsLng} = this;
+        const productsLng = this.$store.state.products.length;
+        const isIndeterminate = (selectedProductsLng > 0 && selectedProductsLng < productsLng);
+        if (isIndeterminate) {
+          this.$refs['bulk-action'].checked = true;
+        }
+        return isIndeterminate;
+      },
       focusIn() {
         this.danger = !this.selectedProductsLng;
         this.isFocused = !this.danger;
@@ -119,7 +119,7 @@
         if (!checkbox.checked) {
           this.$store.dispatch('updateBulkEditQty', null);
         }
-        if (!this.isIndeterminate) {
+        if (!this.isIndeterminate()) {
           EventBus.$emit('toggleProductsCheck', checkbox.checked);
         }
       },

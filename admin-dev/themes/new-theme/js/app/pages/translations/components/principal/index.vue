@@ -52,7 +52,9 @@
             <h3 class="domain-info">
               <span>{{ currentDomain }}</span>
               <span>{{ currentDomainTotalTranslations }}</span>
-              <span v-show="currentDomainTotalMissingTranslations"> - <span class="missing">{{ currentDomainTotalMissingTranslationsString }}</span></span>
+              <span
+                v-show="currentDomainTotalMissingTranslations"
+              > - <span class="missing">{{ currentDomainTotalMissingTranslationsString }}</span></span>
             </h3>
           </div>
           <div class="col-sm-4">
@@ -125,16 +127,22 @@
   import TranslationInput from './translation-input';
 
   export default {
-    props: [
-      'modal',
-    ],
+    props: {
+      modal: {
+        type: Object,
+        required: true,
+      },
+    },
+    data: () => ({
+      originalTranslations: [],
+      modifiedTranslations: [],
+    }),
     computed: {
       principalReady() {
         return !this.$store.state.principalLoading;
       },
       translationsCatalog() {
-        this.translations = this.$store.getters.catalog.data.data;
-        return this.translations;
+        return this.$store.getters.catalog.data.data;
       },
       saveAction() {
         return this.$store.getters.catalog.data.info ? this.$store.getters.catalog.data.info.edit_url : '';
@@ -152,9 +160,11 @@
         return this.$store.state.currentDomain;
       },
       currentDomainTotalTranslations() {
+        /* eslint-disable max-len */
         return (this.$store.state.currentDomainTotalTranslations <= 1)
           ? `- ${this.trans('label_total_domain_singular').replace('%nb_translation%', this.$store.state.currentDomainTotalTranslations)}`
           : `- ${this.trans('label_total_domain').replace('%nb_translations%', this.$store.state.currentDomainTotalTranslations)}`;
+        /* eslint-enable max-len */
       },
       currentDomainTotalMissingTranslations() {
         return this.$store.state.currentDomainTotalMissingTranslations;
@@ -166,7 +176,8 @@
           if (this.currentDomainTotalMissingTranslations === 1) {
             totalMissingTranslationsString = this.trans('label_missing_singular');
           } else {
-            totalMissingTranslationsString = this.trans('label_missing').replace('%d', this.currentDomainTotalMissingTranslations);
+            totalMissingTranslationsString = this.trans('label_missing')
+              .replace('%d', this.currentDomainTotalMissingTranslations);
           }
         }
 
@@ -268,11 +279,6 @@
         return this.$store.state.modifiedTranslations.length > 0;
       },
     },
-    data: () => ({
-      translations: [],
-      originalTranslations: [],
-      modifiedTranslations: [],
-    }),
     mounted() {
       EventBus.$on('resetTranslation', (el) => {
         const translations = [];

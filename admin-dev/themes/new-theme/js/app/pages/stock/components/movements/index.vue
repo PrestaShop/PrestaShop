@@ -94,7 +94,7 @@
         <MovementLine
           v-else
           v-for="(product, index) in movements"
-          key="${index}"
+          :key="index"
           :product="product"
         />
       </tbody>

@@ -44,10 +44,16 @@
   import {EventBus} from '@app/utils/event-bus';
 
   export default {
-    props: [
-      'modal',
-      'principal',
-    ],
+    props: {
+      modal: {
+        type: Object,
+        required: true,
+      },
+      principal: {
+        type: Object,
+        required: true,
+      },
+    },
     computed: {
       treeReady() {
         return !this.$store.state.sidebarLoading;
@@ -119,7 +125,7 @@
         const keys = Object.keys(tree);
         let toDisplay = '';
 
-        for (let i = 0; i < tree.length; i++) {
+        for (let i = 0; i < tree.length; i += 1) {
           if (!tree[keys[i]].disable) {
             if (tree[keys[i]].children && tree[keys[i]].children.length > 0) {
               return getFirstDomainToDisplay(tree[keys[i]].children);
@@ -148,7 +154,8 @@
 </script>
 
 <style lang="scss" type="text/scss">
-  @import "../../../../../../scss/config/_settings.scss";
+  @import '../../../../../../scss/config/_settings.scss';
+
   .translationTree {
     .tree-name {
       margin-bottom: .9375rem;

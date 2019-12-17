@@ -32,6 +32,8 @@ module.exports = {
     'no-bitwise': 0,
     'class-methods-use-this': 0,
     'max-len': ['error', { code: 120 }],
+    'no-param-reassign': ['error', { props: false }],
+    'prefer-destructuring': ['error', {object: true, array: false}],
     'vue/script-indent': [
       'error',
       2,

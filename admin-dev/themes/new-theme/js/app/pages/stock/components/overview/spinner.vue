@@ -38,7 +38,7 @@
       step="1"
       buttons="true"
       hover-buttons="true"
-      :value="qty"
+      :value="getQuantity()"
       @change="onChange"
       @keyup="onKeyup($event)"
       @focus="focusIn"
@@ -61,15 +61,13 @@
   const {$} = global;
 
   export default {
-    props: ['product'],
-    computed: {
-      qty() {
-        if (!this.product.qty) {
-          this.isEnabled = false;
-          this.value = '';
-        }
-        return this.product.qty;
+    props: {
+      product: {
+        type: Object,
+        required: true,
       },
+    },
+    computed: {
       id() {
         return `qty-${this.product.product_id}-${this.product.combination_id}`;
       },
@@ -81,6 +79,13 @@
       },
     },
     methods: {
+      getQuantity() {
+        if (!this.product.qty) {
+          this.isEnabled = false;
+          this.value = '';
+        }
+        return this.product.qty;
+      },
       onChange(val) {
         this.value = val;
         this.isEnabled = !!val;
@@ -106,14 +111,14 @@
       },
       focusOut(event) {
         const value = parseInt(this.value, 10);
-        if (!$(event.target).hasClass('ps-number') && (isNaN(value) || value === 0)) {
+        if (!$(event.target).hasClass('ps-number') && (Number.isNaN(value) || value === 0)) {
           this.isActive = false;
         }
         this.isEnabled = !!this.value;
       },
       sendQty() {
         const postUrl = this.product.edit_url;
-        if (parseInt(this.product.qty, 10) !== 0 && !isNaN(parseInt(this.value, 10))) {
+        if (parseInt(this.product.qty, 10) !== 0 && !Number.isNaN(parseInt(this.value, 10))) {
           this.$store.dispatch('updateQtyByProductId', {
             url: postUrl,
             delta: this.value,
@@ -143,7 +148,7 @@
 
 <style lang="scss" type="text/scss" scoped>
   @import "~jquery-ui-dist/jquery-ui.css";
-  *{
+  * {
     outline: none;
   }
   .fade-enter-active, .fade-leave-active {

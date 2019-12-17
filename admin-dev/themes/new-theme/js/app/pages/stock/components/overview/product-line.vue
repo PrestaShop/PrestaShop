@@ -120,10 +120,14 @@
   import ProductDesc from '@app/pages/stock/mixins/product-desc';
   import {EventBus} from '@app/utils/event-bus';
   import Spinner from '@app/pages/stock/components/overview/spinner';
-  import _ from 'lodash';
 
   export default {
-    props: ['product'],
+    props: {
+      product: {
+        type: Object,
+        required: true,
+      },
+    },
     mixins: [ProductDesc],
     computed: {
       reference() {
@@ -151,14 +155,14 @@
       },
       lowStockLevel() {
         return `<div class="text-sm-left">
-                  <p>${this.trans('product_low_stock')}</p>
-                  <p><strong>${this.trans('product_low_stock_level')} ${this.product.product_low_stock_threshold}</strong></p>
-                </div>`;
+          <p>${this.trans('product_low_stock')}</p>
+          <p><strong>${this.trans('product_low_stock_level')} ${this.product.product_low_stock_threshold}</strong></p>
+        </div>`;
       },
       lowStockAlert() {
         return `<div class="text-sm-left">
-                  <p><strong>${this.trans('product_low_stock_alert')} ${this.product.product_low_stock_alert}</strong></p>
-                </div>`;
+          <p><strong>${this.trans('product_low_stock_alert')} ${this.product.product_low_stock_alert}</strong></p>
+        </div>`;
       },
       id() {
         return `product-${this.product.product_id}${this.product.combination_id}`;

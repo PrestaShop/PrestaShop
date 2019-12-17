@@ -58,7 +58,8 @@
       v-else
     >
       <li
-        v-for="(item, index) in items"
+        v-for="(item, index) in getItems()"
+        :key="index"
         v-show="item.visible"
         class="item"
       >
@@ -78,10 +79,27 @@
   import PSTreeItem from '@app/widgets/ps-tree/ps-tree-item';
   import PSTree from '@app/widgets/ps-tree/ps-tree';
   import {EventBus} from '@app/utils/event-bus';
-  import _ from 'lodash';
 
   export default {
-    props: ['placeholder', 'itemID', 'label', 'list'],
+    props: {
+      placeholder: {
+        type: String,
+        required: false,
+        default: '',
+      },
+      itemID: {
+        type: String,
+        required: true,
+      },
+      label: {
+        type: String,
+        required: true,
+      },
+      list: {
+        type: Array,
+        required: true,
+      },
+    },
     computed: {
       isOverview() {
         return this.$route.name === 'overview';
@@ -89,7 +107,15 @@
       hasPlaceholder() {
         return !this.tags.length;
       },
-      items() {
+      PSTreeTranslations() {
+        return {
+          expand: this.trans('tree_expand'),
+          reduce: this.trans('tree_reduce'),
+        };
+      },
+    },
+    methods: {
+      getItems() {
         const matchList = [];
         this.list.filter((data) => {
           const label = data[this.label].toLowerCase();
@@ -111,14 +137,6 @@
         }
         return this.list;
       },
-      PSTreeTranslations() {
-        return {
-          expand: this.trans('tree_expand'),
-          reduce: this.trans('tree_reduce'),
-        };
-      },
-    },
-    methods: {
       onCheck(obj) {
         const itemLabel = obj.item[this.label];
         const filterType = this.hasChildren ? 'category' : 'supplier';

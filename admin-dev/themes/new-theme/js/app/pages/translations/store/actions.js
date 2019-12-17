@@ -88,7 +88,7 @@ export const refreshCounts = ({commit}, payload) => {
   Vue.http.get(url, {
     params,
   }).then((response) => {
-    payload.store.state.currentDomainTotalMissingTranslations -= payload.successfullySaved;
+    commit(types.DECREASE_CURRENT_DOMAIN_TOTAL_MISSING_TRANSLATIONS, payload.successfullySaved);
     commit(types.SET_DOMAINS_TREE, response.body);
   }, (error) => {
     showGrowl('error', error.bodyText ? JSON.parse(error.bodyText).error : error.statusText);
@@ -106,15 +106,15 @@ export const saveTranslations = ({commit}, payload) => {
       successfullySaved: translations.length,
       store: payload.store,
     });
-    /* eslint-disable-next-line no-param-reassign */
-    payload.store.state.modifiedTranslations = [];
+    commit(types.RESET_MODIFIED_TRANSLATIONS);
     return showGrowl('notice', 'Translations successfully updated');
   }, (error) => {
     showGrowl('error', error.bodyText ? JSON.parse(error.bodyText).error : error.statusText);
   });
 };
 
-export const resetTranslation = ({}, payload) => {
+/* eslint-disable-next-line no-unused-vars */
+export const resetTranslation = ({commit}, payload) => {
   const {url} = payload;
   const {translations} = payload;
 
