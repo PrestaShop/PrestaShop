@@ -69,7 +69,11 @@ final class AddressFormDataHandler implements FormDataHandlerInterface
      */
     public function create(array $data)
     {
-        $customerId = $this->customerDataProvider->getIdByEmail($data['customer_email']);
+        if (!empty($data['id_customer'])) {
+            $customerId = $data['id_customer'];
+        } else {
+            $customerId = $this->customerDataProvider->getIdByEmail($data['customer_email']);
+        }
 
         $addAddressCommand = new AddCustomerAddressCommand(
             $customerId,

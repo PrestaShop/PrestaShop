@@ -37,6 +37,22 @@
       {{ form_errors(addressForm) }}
 
       {% block customer_information %}
+        {% if customerInformation is not null %}
+          {% if addressForm.id_customer is defined %}
+            {{ ps.form_widget_with_error(addressForm.id_customer) }}
+          {% endif %}
+          <div class="form-group row">
+            <label class="form-control-label">
+              {{ 'Customer'|trans({}, 'Admin.Global') }}
+            </label>
+            <div class="col-sm">
+              <a href="{{ path('admin_customers_view', {'customerId': customerId}) }}" class="btn btn-outline-secondary">
+                <i class="material-icons">remove_red_eye</i>
+                {{ customerInformation }}
+              </a>
+            </div>
+          </div>
+        {% endif %}
         {% if addressForm.customer_email is defined %}
           {{ ps.form_group_row(addressForm.customer_email, {'attr': {
             'class': 'js-manufacturer-country-select',
