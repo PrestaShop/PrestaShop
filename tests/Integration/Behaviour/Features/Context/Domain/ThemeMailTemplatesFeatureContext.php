@@ -5,10 +5,14 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain;
 use Behat\Gherkin\Node\TableNode;
 use PHPUnit_Framework_Assert;
 use PrestaShop\PrestaShop\Core\Domain\MailTemplate\Command\GenerateThemeMailTemplatesCommand;
-use Tests\Integration\Behaviour\Features\Context\Util\BehatTableNodeUtils;
+use PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ThemeByNameWithEmailsChoiceProvider;
 
 class ThemeMailTemplatesFeatureContext extends AbstractDomainFeatureContext
 {
+    private const LANGUAGES_MAP = [
+        'en' => 'English (English)'
+    ];
+
     /**
      * @When I generate emails with the following details:
      *
@@ -16,19 +20,17 @@ class ThemeMailTemplatesFeatureContext extends AbstractDomainFeatureContext
      */
     public function generateEmailsWithTheFollowingDetails(TableNode $table)
     {
-        $data = BehatTableNodeUtils::extractFirstRowFromProperties($table);
+        $testCaseData = $table->getRowsHash();
 
-        $overwriteTemplates = $data['overwrite_templates'] !== '' ?: false;
-        $coreMailsFolder = $data['core_mails_folder'] !== '' ?: '';
-        $modulesMailFolder = $data['modules_mail_folder'] !== '' ?: '';
+        $data = $this->mapGenerateThemeMailTemplatesData($testCaseData, $testCaseData);
 
         $this->getCommandBus()->handle(
             new GenerateThemeMailTemplatesCommand(
-                $data['theme_name'],
-                $data['language'],
-                $overwriteTemplates,
-                $coreMailsFolder,
-                $modulesMailFolder
+                $data['themeName'],
+                $data['languageLocale'],
+                $data['overwriteTemplates'],
+                $data['coreMailsFolder'],
+                $data['modulesMailFolder']
             )
         );
     }
@@ -42,5 +44,27 @@ class ThemeMailTemplatesFeatureContext extends AbstractDomainFeatureContext
     {
         $mailsSubFolder = _PS_MAIL_DIR_ . $subFolder;
         PHPUnit_Framework_Assert::assertTrue(is_dir($mailsSubFolder));
+    }
+
+    /**
+     * @param array $testCaseData
+     * @param array $data
+     * @return array
+     */
+    private function mapGenerateThemeMailTemplatesData(array $testCaseData, array $data)
+    {
+        /** @var ThemeByNameWithEmailsChoiceProvider $themeWithEmailsChoiceProvider */
+        $themeWithEmailsChoiceProvider =
+            $this->getContainer()->get('prestashop.core.form.choice_provider.theme_by_name_with_emails');
+        $AvailableLanguages = $themeWithEmailsChoiceProvider->getChoices();
+        $data['themeName'] = $AvailableLanguages[$testCaseData['Email theme']];
+
+        // have not found locale choice provider
+        $data['languageLocale'] = array_flip(self::LANGUAGES_MAP)[$data['Language']];
+
+        $data['overwriteTemplates'] = isset($testCaseData['overwrite_templates']) ?: false;
+        $data['coreMailsFolder'] = isset($testCaseData['coreMailsFolder']) ?: '';
+        $data['modulesMailFolder'] = isset($testCaseData['modulesMailFolder']) ?: '';
+        return $data;
     }
 }

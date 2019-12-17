@@ -25,7 +25,7 @@ class EmployeeFeatureContext extends AbstractDomainFeatureContext
     {
         $testCaseData = $table->getRowsHash();
 
-        $data = $this->mapDataForHandler($testCaseData, $shopReference);
+        $data = $this->mapDataForAddEmployeeHandler($testCaseData, $shopReference);
 
         /** @var EmployeeId $employeeIdObject */
         $employeeIdObject = $this->getCommandBus()->handle(new AddEmployeeCommand(
@@ -49,7 +49,7 @@ class EmployeeFeatureContext extends AbstractDomainFeatureContext
      *
      * @return array
      */
-    private function mapDataForHandler(array $testCaseData, string $shopReference): array
+    private function mapDataForAddEmployeeHandler(array $testCaseData, string $shopReference): array
     {
         $data = [];
 
