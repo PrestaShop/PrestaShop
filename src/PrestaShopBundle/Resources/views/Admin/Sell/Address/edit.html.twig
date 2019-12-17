@@ -28,21 +28,7 @@
 {% block content %}
   <div class="row justify-content-center">
     <div class="col">
-      {% embed "@PrestaShop/Admin/Sell/Address/Blocks/form.html.twig" with {'addressForm': addressForm} %}
-        {% block customer_information %}
-          <div class="form-group row">
-            <label class="form-control-label">
-              {{ 'Customer'|trans({}, 'Admin.Global') }}
-            </label>
-            <div class="col-sm">
-              <a href="{{ path('admin_customers_view', {'customerId': customerId}) }}" class="btn btn-outline-secondary">
-                <i class="material-icons">remove_red_eye</i>
-                {{ customerInformation }}
-              </a>
-            </div>
-          </div>
-        {% endblock %}
-      {% endembed %}
+      {{ include('@PrestaShop/Admin/Sell/Address/Blocks/form.html.twig', {'addressForm': addressForm}) }}
     </div>
   </div>
 {% endblock %}

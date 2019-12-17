@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Controller\Admin\Sell\Address;
 
 use Exception;
+use PrestaShop\PrestaShop\Adapter\Customer\CustomerDataProvider;
 use PrestaShop\PrestaShop\Core\Domain\Address\Command\BulkDeleteAddressCommand;
 use PrestaShop\PrestaShop\Core\Domain\Address\Command\DeleteAddressCommand;
 use PrestaShop\PrestaShop\Core\Domain\Address\Command\SetRequiredFieldsForAddressCommand;
@@ -270,9 +271,32 @@ class AddressController extends FrameworkBundleAdminController
         );
 
         $formData = [];
-        if ($request->request->has('customer_address') && isset($request->request->get('customer_address')['id_country'])) {
-            $formCountryId = (int) $request->request->get('customer_address')['id_country'];
-            $formData['id_country'] = $formCountryId;
+        $customerInfo = null;
+        $customerId = null;
+        if ($request->request->has('customer_address')) {
+            if (isset($request->request->get('customer_address')['id_country'])) {
+                $formCountryId = (int) $request->request->get('customer_address')['id_country'];
+                $formData['id_country'] = $formCountryId;
+            }
+            if (isset($request->request->get('customer_address')['id_customer'])) {
+                $idCustomer = (int) $request->request->get('customer_address')['id_customer'];
+                $formData['id_customer'] = $idCustomer;
+            }
+        }
+
+        if (empty($formData['id_customer']) && $request->query->has('id_customer')) {
+            $formData['id_customer'] = (int) $request->query->get('id_customer');
+        }
+
+        if (!empty($formData['id_customer'])) {
+            /** @var CustomerDataProvider $customerDataProvider */
+            $customerDataProvider = $this->get('prestashop.adapter.data_provider.customer');
+            $customerId = $formData['id_customer'];
+            $customer = $customerDataProvider->getCustomer($customerId);
+            $formData['first_name'] = $customer->firstname;
+            $formData['last_name'] = $customer->lastname;
+            $formData['company'] = $customer->company;
+            $customerInfo = $customer->firstname . ' ' . $customer->lastname . ' (' . $customer->email . ')';
         }
 
         $addressForm = $addressFormBuilder->getForm($formData);
@@ -292,6 +316,8 @@ class AddressController extends FrameworkBundleAdminController
         }
 
         return $this->render('@PrestaShop/Admin/Sell/Address/add.html.twig', [
+            'customerId' => $customerId,
+            'customerInformation' => $customerInfo,
             'enableSidebar' => true,
             'addressForm' => $addressForm->createView(),
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
