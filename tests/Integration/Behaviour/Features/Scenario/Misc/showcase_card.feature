@@ -5,14 +5,37 @@ Feature: Showcase card
   As a BO user
   I should be able to close showcase card
 
-  Scenario: close showcase card in single shop context
+  Background:
+    Given shop "shop1" with name "test_shop" exists
+
+  Scenario: Employee closes showcase card in single shop context
     Given single shop context is loaded
-    When I close "seo-urls_card" showcase card as employee 1
-    Then showcase card "seo-urls_card" for employee 1 should be closed
+    And I Add new employee "Tadas" to shop "shop1" with the following details:
+      | First name         | Tadas                        |
+      | Last name          | Davidsonas                   |
+      | Email address      | tadas.davidsonas@invertus.eu |
+      | Password           | secretpassword               |
+      | Default page       | Dashboard                    |
+      | Language           | English (English)            |
+    # Allow or disallow this employee to log in to the Admin panel.
+      | Active             | YES                          |
+      | Permission profile | SuperAdmin                   |
+    When employee "Tadas" closes showcase card "seo-urls_card"
+    Then employee "Tadas" should not see showcase card "seo-urls_card"
 
 # todo: remove after resolving the issue
 # Showcase card reappear after closing it in multistore context: https://github.com/PrestaShop/PrestaShop/issues/12390
-  Scenario: close showcase card in multiple shops context
+  Scenario: Employee closes showcase card in multiple shops context
     Given multiple shop context is loaded
-    When I close "seo-urls_card" showcase card as employee 1
-    Then showcase card "seo-urls_card" for employee 1 should be closed
+    And I Add new employee "TadasTwo" to shop "shop1" with the following details:
+      | First name         | TadasTwo                       |
+      | Last name          | Davidsonas                    |
+      | Email address      | tadas.davidsonas2@invertus.eu |
+      | Password           | secretpassword                |
+      | Default page       | Dashboard                     |
+      | Language           | English (English)             |
+    # Allow or disallow this employee to log in to the Admin panel.
+      | Active             | YES                           |
+      | Permission profile | SuperAdmin                    |
+    When employee "TadasTwo" closes showcase card "seo-urls_card"
+    Then employee "TadasTwo" should not see showcase card "seo-urls_card"
