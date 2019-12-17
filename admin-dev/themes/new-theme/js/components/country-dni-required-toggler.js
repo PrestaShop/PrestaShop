@@ -69,7 +69,7 @@ export default class CountryDniRequiredToggler {
   toggle() {
     $(this.countryDniInputLabelDangerSelector).remove();
     this.$countryDniInput.prop('required', false);
-    if (1 === parseInt($(this.countryInputSelectedSelector).attr('need_dni'), 10)) {
+    if (parseInt($(this.countryInputSelectedSelector).attr('need_dni'), 10) === 1) {
       this.$countryDniInput.prop('required', true);
       this.$countryDniInputLabel.prepend($('<span class="text-danger">*</span>'));
     }

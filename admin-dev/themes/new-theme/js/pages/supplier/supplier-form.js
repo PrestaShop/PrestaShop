@@ -25,11 +25,11 @@
 
 import CountryStateSelectionToggler from '@components/country-state-selection-toggler';
 import CountryDniRequiredToggler from '@components/country-dni-required-toggler';
-import SupplierMap from './supplier-map';
 import TranslatableInput from '@components/translatable-input';
 import TaggableField from '@components/taggable-field';
 import ChoiceTree from '@components/form/choice-tree';
 import TinyMCEEditor from '@components/tinymce-editor';
+import SupplierMap from './supplier-map';
 
 const {$} = window;
 
@@ -46,7 +46,7 @@ $(document).ready(() => {
   new CountryDniRequiredToggler(
     SupplierMap.supplierCountrySelect,
     SupplierMap.supplierDniInput,
-    SupplierMap.supplierDniInputLabel
+    SupplierMap.supplierDniInputLabel,
   );
 
   new TinyMCEEditor();

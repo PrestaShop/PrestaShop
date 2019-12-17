@@ -98,5 +98,4 @@ export default class CountryStateSelectionToggler {
       this.$stateSelectionBlock.fadeOut();
     }
   }
-
 }
