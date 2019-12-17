@@ -69,9 +69,6 @@ class AddOrderFromBackOfficeCommand
      * @param string $paymentModuleName
      * @param int $orderStateId
      *
-     * @throws OrderException
-     * @throws CartConstraintException
-     * @throws InvalidEmployeeIdException
      */
     public function __construct($cartId, $employeeId, $orderMessage, $paymentModuleName, $orderStateId)
     {
