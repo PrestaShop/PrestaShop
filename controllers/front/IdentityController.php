@@ -82,6 +82,11 @@ class IdentityControllerCore extends FrontController
 
         $breadcrumb['links'][] = $this->addMyAccountToBreadcrumb();
 
+        $breadcrumb['links'][] = [
+            'title' => $this->trans('Your personal information', array(), 'Shop.Theme.Customeraccount'),
+            'url' => $this->context->link->getPageLink('identity'),
+        ];
+
         return $breadcrumb;
     }
 }
