@@ -17,8 +17,8 @@ Feature: Showcase card
       | Password           | secretpassword               |
       | Default page       | Dashboard                    |
       | Language           | English (English)            |
-    # Allow or disallow this employee to log in to the Admin panel.
-      | Active             | YES                          |
+    # Allow or disallow this employee to log in to the Admin panel. true = YES; false = NO
+      | Active             | true                         |
       | Permission profile | SuperAdmin                   |
     When employee "Tadas" closes showcase card "seo-urls_card"
     Then employee "Tadas" should not see showcase card "seo-urls_card"
@@ -34,8 +34,8 @@ Feature: Showcase card
       | Password           | secretpassword                |
       | Default page       | Dashboard                     |
       | Language           | English (English)             |
-    # Allow or disallow this employee to log in to the Admin panel.
-      | Active             | YES                           |
+    # Allow or disallow this employee to log in to the Admin panel. true = YES; false = NO
+      | Active             | true                           |
       | Permission profile | SuperAdmin                    |
     When employee "TadasTwo" closes showcase card "seo-urls_card"
     Then employee "TadasTwo" should not see showcase card "seo-urls_card"

@@ -63,9 +63,9 @@ class ThemeMailTemplatesFeatureContext extends AbstractDomainFeatureContext
         // have not found locale choice provider
         $data['languageLocale'] = array_flip(self::LANGUAGES_MAP)[$data['Language']];
 
-        $data['overwriteTemplates'] = isset($testCaseData['overwrite_templates']) ?: false;
-        $data['coreMailsFolder'] = isset($testCaseData['coreMailsFolder']) ?: '';
-        $data['modulesMailFolder'] = isset($testCaseData['modulesMailFolder']) ?: '';
+        $data['overwriteTemplates'] = isset($testCaseData['overwrite_templates']);
+        $data['coreMailsFolder'] = isset($testCaseData['coreMailsFolder']);
+        $data['modulesMailFolder'] = isset($testCaseData['modulesMailFolder']);
 
         return $data;
     }
