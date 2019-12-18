@@ -148,11 +148,7 @@ class Calculator
             throw new \Exception('Cart must be processed before getting its total');
         }
 
-        $amount = new AmountImmutable();
-        foreach ($this->cartRows as $cartRow) {
-            $rowPrice = $cartRow->getInitialTotalPrice();
-            $amount = $amount->add($rowPrice);
-        }
+        $amount = $this->getRowTotalWithoutDiscount();
         $amount = $amount->sub($this->getDiscountTotal());
         $shippingFees = $this->fees->getInitialShippingFees();
         if (null !== $shippingFees) {
