@@ -132,6 +132,6 @@ module.exports = class Invoice extends BOBasePage {
    * @return {Promise<void>}
    */
   async chooseInvoiceOptionsYearPosition(id) {
-    await this.page.click(this.optionYearPositionRadioButton.replace('%ID', id === 1 ? 1 : 0));
+    await this.page.click(this.optionYearPositionRadioButton.replace('%ID', id));
   }
 };
