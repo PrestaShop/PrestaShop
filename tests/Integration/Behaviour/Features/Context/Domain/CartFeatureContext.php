@@ -60,8 +60,11 @@ class CartFeatureContext extends AbstractDomainFeatureContext
 
     /**
      * @When I create an empty cart :cartReference for customer :customerReference
+     *
+     * @param string $cartReference
+     * @param string $customerReference
      */
-    public function createEmptyCartForCustomer($cartReference, $customerReference)
+    public function createEmptyCartForCustomer(string $cartReference, string $customerReference)
     {
         // Clear static cache each time you create a cart
         Cart::resetStaticCache();
@@ -70,8 +73,7 @@ class CartFeatureContext extends AbstractDomainFeatureContext
         /** @var CartId $cartId */
         $cartId = $this->getCommandBus()->handle(
             new CreateEmptyCustomerCartCommand(
-                (int) $customer->id,
-                (int) Context::getContext()->shop->id
+                (int) $customer->id
             )
         );
 

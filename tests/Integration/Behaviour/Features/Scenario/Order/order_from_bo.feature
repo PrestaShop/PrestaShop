@@ -114,7 +114,7 @@ Feature: Order from Back Office (BO)
       | transaction_id | test123             |
       | amount         | $6.00               |
 
-  Scenario: change order state to Delivered to be able to add valid invoice to new Payment
+  Scenario: Change order state to Delivered to be able to add valid invoice to new Payment
     Given I create an empty cart "dummy_cart7" for customer "testCustomer"
     And I select "US" address as delivery and invoice address for customer "testCustomer" in cart "dummy_cart7"
     And I add 2 products with reference "demo_13" to the cart "dummy_cart7"
@@ -126,3 +126,15 @@ Feature: Order from Back Office (BO)
     When order "bo_order7" has 0 payments
     And I update order "bo_order7" status to "Delivered"
     Then order "bo_order7" payments should have invoice
+
+  Scenario: Duplicate order cart
+    Given I create an empty cart "dummy_cart8" for customer "testCustomer"
+    And I select "US" address as delivery and invoice address for customer "testCustomer" in cart "dummy_cart8"
+    And I add 2 products with reference "demo_13" to the cart "dummy_cart8"
+    And I add order "bo_order8" with the following details:
+      | cart                | dummy_cart8             |
+      | message             | test                    |
+      | payment module name | dummy_payment           |
+      | status              | Awaiting check payment  |
+    When I duplicate order "bo_order8" cart "dummy_cart8" with reference "duplicated_dummy_cart8"
+    Then there is duplicated cart "duplicated_dummy_cart8" for cart dummy_cart8

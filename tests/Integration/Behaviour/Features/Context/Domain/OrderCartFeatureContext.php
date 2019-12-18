@@ -5,10 +5,12 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain;
 use PHPUnit_Framework_Assert;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartInformation;
 use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation;
+use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\CartId;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\DuplicateOrderCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderCustomerForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderForViewing;
+use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 
 class OrderCartFeatureContext extends AbstractDomainFeatureContext
 {
@@ -33,23 +35,31 @@ class OrderCartFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @When I duplicate order :orderId cart
+     * @When I duplicate order :orderReference cart :cartReference with reference :duplicatedCartReference
      *
-     * @param int $orderId
+     * @param string $orderReference
+     * @param string $cartReference
+     * @param string $duplicatedCartReference
      */
-    public function duplicateOrderCart(int $orderId)
+    public function duplicateOrderCart(string $orderReference, string $cartReference, string $duplicatedCartReference)
     {
-        $this->getCommandBus()->handle(new DuplicateOrderCartCommand($orderId));
+        $orderId = SharedStorage::getStorage()->get($orderReference);
+        /** @var CartId $cartIdObject */
+        $cartIdObject = $this->getCommandBus()->handle(new DuplicateOrderCartCommand($orderId));
+        SharedStorage::getStorage()->set($duplicatedCartReference, $cartIdObject->getValue());
     }
 
     /**
-     * @Then there is duplicated cart :cartId for cart :duplicatedCartId
+     * @Then there is duplicated cart :duplicatedCartReference for cart :cartReference
      *
-     * @param int $cartId
-     * @param int $duplicatedCartId
+     * @param string $duplicatedCartReference
+     * @param string $cartReference
      */
-    public function thereIsDuplicatedCartForCart(int $cartId, int $duplicatedCartId)
+    public function thereIsDuplicatedCartForCart(string $duplicatedCartReference, string $cartReference)
     {
+        $duplicatedCartId = SharedStorage::getStorage()->get($duplicatedCartReference);
+        $cartId = SharedStorage::getStorage()->get($cartReference);
+
         /** @var CartInformation $cartInformation */
         $cartInformation = $this->getQueryBus()->handle(new GetCartInformation($cartId));
         /** @var CartInformation $duplicatedCartInformation */
