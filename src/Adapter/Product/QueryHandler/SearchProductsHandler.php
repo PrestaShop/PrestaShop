@@ -101,12 +101,12 @@ final class SearchProductsHandler implements SearchProductsHandlerInterface
      */
     private function createFoundProductFromLegacy(Product $product): FoundProduct
     {
-        $priceTaxExcluded = Product::getPriceStatic($product->id, false);
+        $priceTaxIncluded = Product::getPriceStatic($product->id, true);
 
         $foundProduct = new FoundProduct(
             $product->id,
             $product->name[$this->contextLangId],
-            $this->contextLocale->formatPrice($priceTaxExcluded, $this->contextCurrencyCode),
+            $this->contextLocale->formatPrice($priceTaxIncluded, $this->contextCurrencyCode),
             Product::getQuantity($product->id),
             $this->getProductCombinations($product),
             $this->getProductCustomizationFields($product)
