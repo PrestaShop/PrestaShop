@@ -61,6 +61,7 @@ export default {
   productsCount: '#orderProductsPanelCount',
   productDeleteBtn: '.js-order-product-delete-btn',
   productsTable: '#orderProductsTable',
+  productsNavPagination: '#orderProductsNavPagination',
   productsTablePagination: '#orderProductsTablePagination',
   productsTablePaginationNext: '#orderProductsTablePaginationNext',
   productsTablePaginationPrev: '#orderProductsTablePaginationPrev',

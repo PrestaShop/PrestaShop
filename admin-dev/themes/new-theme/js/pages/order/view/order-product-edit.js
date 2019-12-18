@@ -23,11 +23,11 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-import Router from '../../../components/router';
-import OrderViewPageMap from '../OrderViewPageMap';
-import {EventEmitter} from '../../../components/event-emitter';
-import OrderViewEventMap from './order-view-event-map';
-import OrderPrices from "./order-prices";
+import Router from '@components/router';
+import OrderViewPageMap from '@pages/order/OrderViewPageMap';
+import {EventEmitter} from '@components/event-emitter';
+import OrderViewEventMap from '@pages/order/view/order-view-event-map';
+import OrderPrices from '@pages/order/view/order-prices';
 
 const $ = window.$;
 
@@ -54,9 +54,14 @@ export default class OrderProductEdit {
       const priceTaxCalculator = new OrderPrices();
       const quantity = parseInt(event.target.value ? event.target.value : 0, 10);
       const taxIncluded = parseFloat(this.productRowEdit.find(OrderViewPageMap.productEditPriceTaxInclInput).val());
+      const totalQuantity = parseInt(
+        this.productRowEdit.find(OrderViewPageMap.productEditAvailableText).data('totalQuantity'),
+        10
+      );
       this.productRowEdit.find(OrderViewPageMap.productEditTotalPriceText).html(
         priceTaxCalculator.calculateTotalPrice(quantity, taxIncluded, currencyPrecision)
       );
+      this.productRowEdit.find(OrderViewPageMap.productEditAvailableText).html(totalQuantity - quantity);
     });
     this.productRowEdit.find(OrderViewPageMap.productEditPriceTaxInclInput).on('change keyup', (event) => {
       const currencyPrecision = $(OrderViewPageMap.productsTable).data('currencyPrecision');
@@ -90,11 +95,11 @@ export default class OrderProductEdit {
     });
     this.productRowEdit.find(OrderViewPageMap.productEditActionBtn).on('click', (event) => {
       const $btn = $(event.currentTarget);
-      const confirmed = confirm($btn.data('updateMessage'));
+      const confirmed = window.confirm($btn.data('updateMessage'));
       if (!confirmed) {
         return;
       }
-      $btn.attr('disabled', 'disabled');
+      $btn.prop('disabled', true);
       this.editProduct(
         $(event.currentTarget).data('orderId'),
         $(event.currentTarget).data('orderDetailId'),
@@ -110,14 +115,18 @@ export default class OrderProductEdit {
     $productEditRow.find('td:nth-child(2)').html(this.productRow.find('td:nth-child(2)').html());
     $productEditRow.find(OrderViewPageMap.productEditOrderDetailInput).val(this.orderProductId);
     $productEditRow.find(OrderViewPageMap.productEditPriceTaxExclInput).val(
-      ps_round(product.price_tax_excl, currencyPrecision)
+      window.ps_round(product.price_tax_excl, currencyPrecision)
     );
     $productEditRow.find(OrderViewPageMap.productEditPriceTaxInclInput).val(
-      ps_round(product.price_tax_incl, currencyPrecision)
+      window.ps_round(product.price_tax_incl, currencyPrecision)
     );
     $productEditRow.find(OrderViewPageMap.productEditQuantityInput).val(product.quantity);
     $productEditRow.find(OrderViewPageMap.productEditTaxRateInput).val(product.tax_rate);
     $productEditRow.find(OrderViewPageMap.productEditLocationText).html(product.location);
+    $productEditRow.find(OrderViewPageMap.productEditAvailableText).data(
+      'totalQuantity',
+      product.availableQuantity + product.quantity
+    );
     $productEditRow.find(OrderViewPageMap.productEditAvailableText).html(product.availableQuantity);
     $productEditRow.find(OrderViewPageMap.productEditTotalPriceText).html(priceTaxCalculator.calculateTotalPrice(
       product.quantity,
@@ -136,7 +145,7 @@ export default class OrderProductEdit {
   editProduct(orderId, orderDetailId) {
     const params = {
       price_tax_incl: this.productRowEdit.find(OrderViewPageMap.productEditPriceTaxInclInput).val(),
-      price_tax_excl: this.productRowEdit.find(OrderViewPageMap.productEditPriceTaxInclInput).val(),
+      price_tax_excl: this.productRowEdit.find(OrderViewPageMap.productEditPriceTaxExclInput).val(),
       quantity: this.productRowEdit.find(OrderViewPageMap.productEditQuantityInput).val(),
     };
     $.ajax({
