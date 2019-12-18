@@ -140,6 +140,8 @@ final class SearchProductsHandler implements SearchProductsHandlerInterface
         $isoCodeCurrency = $query->getAlphaIsoCode()->getValue();
         $currency = $this->currencyDataProvider->getCurrencyByIsoCode($isoCodeCurrency);
 
+        $product->loadStockData();
+
         return new FoundProduct(
             $product->id,
             $product->name[$this->contextLangId],
@@ -149,6 +151,7 @@ final class SearchProductsHandler implements SearchProductsHandlerInterface
             $product->getTaxesRate(),
             Product::getQuantity($product->id),
             $product->location,
+            (bool) Product::isAvailableWhenOutOfStock($product->out_of_stock),
             $this->getProductCombinations($product, $isoCodeCurrency),
             $this->getProductCustomizationFields($product)
         );

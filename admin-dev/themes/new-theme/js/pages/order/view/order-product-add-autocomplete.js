@@ -22,8 +22,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-import Router from '../../../components/router';
-import OrderViewPageMap from "../OrderViewPageMap";
+import Router from '@components/router';
+import OrderViewPageMap from '@pages/order/OrderViewPageMap';
 
 const $ = window.$;
 
@@ -49,16 +49,15 @@ export default class OrderProductAutocomplete {
   }
 
   search(search) {
-    $.ajax(this.router.generate('admin_products_search', {search_phrase: search}), {
-      method: 'GET',
-    }).then(results => this.updateResults(results));
+    $.get(this.router.generate('admin_products_search', {search_phrase: search}))
+      .then(response => this.updateResults(response));
   }
 
   updateResults(results) {
-    this.results = results;
+    this.results = results.products;
     this.dropdownMenu.empty();
-    Object.entries(this.results).forEach((val) => {
-      const link = $(`<a class="dropdown-item" data-id="${val[1].productId}" href="#">${val[1].name}</a>`);
+    Object.values(this.results).forEach((val) => {
+      const link = $(`<a class="dropdown-item" data-id="${val.productId}" href="#">${val.name}</a>`);
       link.on('click', event => this.onItemClicked($(event.target).data('id')));
       this.dropdownMenu.append(link);
     });
