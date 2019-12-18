@@ -38,8 +38,11 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Command\UpdateOrderStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Invoice\Command\GenerateInvoiceCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\AddProductToOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderForViewing;
+use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderDiscountForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderForViewing;
+use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderProductForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
+use PrestaShop\PrestaShop\Core\Form\ChoiceProvider\OrderStateByIdChoiceProvider;
 use Product;
 use RuntimeException;
 use stdClass;
@@ -51,6 +54,8 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
         1 => 'Awaiting bank wire payment',
         5 => 'Delivered',
     ];
+
+    private const ORDER_CART_RULE_FREE_SHIPPING = 'Free Shipping';
 
     /**
      * @BeforeScenario
@@ -67,38 +72,29 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
 
     /**
      * @Given I add order :orderReference with the following details:
+     *
+     * @param $orderReference
+     * @param TableNode $table
      */
     public function addOrderWithTheFollowingDetails($orderReference, TableNode $table)
     {
         $testCaseData = $table->getRowsHash();
 
-        $data['cartId'] = SharedStorage::getStorage()->get($testCaseData['cart']);
-        $data['employeeId'] = SharedStorage::getStorage()->get($testCaseData['payment']);
-        $data['orderMessage'] = '';
-        $data['paymentModuleName'] = $testCaseData['payment module name'];
+        $data = $this->mapAddOrderFromBackOfficeData($testCaseData);
 
+        /** @var OrderId $orderId */
+        $orderId = $this->getCommandBus()->handle(
+            new AddOrderFromBackOfficeCommand(
+                $data['cartId'],
+                $data['employeeId'],
+                $data['orderMessage'],
+                $data['paymentModuleName'],
+                $data['orderStateId']
+            )
+        );
 
-//        * @param int $cartId
-//    * @param int $employeeId
-//    * @param string $orderMessage
-//    * @param string $paymentModuleName
-//    * @param int $orderStateId
-
-//        /** @var OrderId $orderId */
-//        $orderId = $this->getCommandBus()->handle(
-//            new AddOrderFromBackOfficeCommand(
-//                (int) SharedStorage::getStorage()->get($cartReference)->id,
-//                (int) Context::getContext()->employee->id,
-//                '',
-//                $paymentModuleName,
-//                $orderStatusId
-//            )
-//        );
-
-//        SharedStorage::getStorage()->set($orderReference, $orderId->getValue());
-        throw new PendingException();
+        SharedStorage::getStorage()->set($orderReference, $orderId->getValue());
     }
-
 
     /**
      * @When I add order :orderReference from cart :cartReference with :paymentModuleName payment method and :orderStatus order status
@@ -256,13 +252,15 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @When I update order :orderId status to :status
+     * @When I update order :orderReference status to :status
      *
-     * @param int $orderId
+     * @param string $orderReference
      * @param string $status
      */
-    public function updateOrderStatusTo(int $orderId, string $status)
+    public function updateOrderStatusTo(string $orderReference, string $status)
     {
+        $orderId = SharedStorage::getStorage()->get($orderReference);
+
         $statusId = $this->getOrderStatusIdFromMap($status);
         $this->getCommandBus()->handle(
             new UpdateOrderStatusCommand(
@@ -293,6 +291,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
 
     /**
      * @deprecated
+     *
      * @param TableNode $table
      *
      * @return array
@@ -311,5 +310,79 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
         return $data;
     }
 
+    /**
+     * @param array $testCaseData
+     *
+     * @return array
+     */
+    private function mapAddOrderFromBackOfficeData(array $testCaseData)
+    {
+        $data = [];
+        // todo: get rid of the legacy class ASAP
+        /** @var \Cart $cart */
+        $cart = SharedStorage::getStorage()->get($testCaseData['cart']);
+        $data['cartId'] = $cart->id;
+        $data['employeeId'] = Context::getContext()->employee->id;
+        $data['orderMessage'] = $testCaseData['message'];
+        $data['paymentModuleName'] = $testCaseData['payment module name'];
 
+        /** @var OrderStateByIdChoiceProvider $orderStateChoiceProvider */
+        $orderStateChoiceProvider = $this->getContainer()->get('prestashop.core.form.choice_provider.order_state_by_id');
+        $availableOrderStates = $orderStateChoiceProvider->getChoices();
+        $data['orderStateId'] = (int) $availableOrderStates[$testCaseData['status']];
+
+        return $data;
+    }
+
+    /**
+     * @Then order :reference should have :quantity products in total
+     *
+     * @param string $reference
+     * @param int $quantity
+     */
+    public function assertOrderProductsQuantity(string $reference, int $quantity)
+    {
+        $orderId = SharedStorage::getStorage()->get($reference);
+
+        /** @var OrderForViewing $orderForViewing */
+        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
+        /** @var OrderProductForViewing[] $orderProducts */
+        $orderProducts = $orderForViewing->getProducts()->getProducts();
+
+        $totalQuantity = 0;
+        foreach ($orderProducts as $orderProduct) {
+            $totalQuantity += $orderProduct->getQuantity();
+        }
+
+        if ($totalQuantity !== $quantity) {
+            throw new RuntimeException(sprintf(
+                'Order should have "%d" products, but has "%d".',
+                $totalQuantity,
+                $quantity
+            ));
+        }
+    }
+
+    /**
+     * @Then order :reference should have free shipping
+     *
+     * @param string $reference
+     */
+    public function createdOrderShouldHaveFreeShipping(string $reference)
+    {
+        $orderId = SharedStorage::getStorage()->get($reference);
+
+        /** @var OrderForViewing $orderForViewing */
+        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
+        /** @var OrderDiscountForViewing[] $orderDiscountsForViewing */
+        $orderDiscountsForViewing = $orderForViewing->getDiscounts()->getDiscounts();
+
+        foreach ($orderDiscountsForViewing as $discount) {
+            if ($discount->getName() == self::ORDER_CART_RULE_FREE_SHIPPING) {
+                return;
+            }
+        }
+
+        throw new RuntimeException('Order should have free shipping.');
+    }
 }
