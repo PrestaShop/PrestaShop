@@ -49,7 +49,7 @@ function copy_tab_rights($fromTabName, $toTabName)
         if (!empty($newID)) {
             $parentRole = strtoupper('ROLE_MOD_TAB_' . pSQL($fromTabName) . '_' . $role);
             Db::getInstance()->execute(
-                'INSERT INTO `' . _DB_PREFIX_ . 'access` (`id_profile`, `id_authorization_role`)
+                'INSERT IGNORE INTO `' . _DB_PREFIX_ . 'access` (`id_profile`, `id_authorization_role`)
                 SELECT a.`id_profile`, ' . (int) $newID . ' as `id_authorization_role`
                 FROM `' . _DB_PREFIX_ . 'access` a join `' . _DB_PREFIX_ . 'authorization_role` ar on a.`id_authorization_role` = ar.`id_authorization_role`
                 WHERE ar.`slug` = "' . pSQL($parentRole) . '"'
