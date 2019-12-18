@@ -29,6 +29,9 @@
         data-form-url="{{ path(action.options.submit_route, action.options.route_params) }}"
         data-form-method="{{ action.options.submit_method }}"
         data-confirm-message="{{ action.options.confirm_message }}"
+        data-confirm-title="{{ action.options.confirm_title }}"
+        data-confirm-button-class="{{ action.options.confirm_button_class|default('btn-primary') }}"
+        data-confirm-button-label="{{ action.options.confirm_button_label|default('Confirm'|trans({}, 'Admin.Actions')) }}"
 >
   {{ action.name }}
 </button>

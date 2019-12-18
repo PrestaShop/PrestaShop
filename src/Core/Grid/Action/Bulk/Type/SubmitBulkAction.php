@@ -53,11 +53,17 @@ final class SubmitBulkAction extends AbstractBulkAction
             ])
             ->setDefaults([
                 'confirm_message' => null,
+                'confirm_title' => null,
+                'confirm_button_class' => 'btn-primary',
+                'confirm_button_label' => null,
                 'submit_method' => 'POST',
                 'route_params' => [],
             ])
             ->setAllowedTypes('submit_route', 'string')
             ->setAllowedTypes('confirm_message', ['string', 'null'])
+            ->setAllowedTypes('confirm_title', ['string', 'null'])
+            ->setAllowedTypes('confirm_button_class', 'string')
+            ->setAllowedTypes('confirm_button_label', ['string', 'null'])
             ->setAllowedValues('submit_method', ['POST', 'GET'])
             ->setAllowedTypes('route_params', 'array');
     }

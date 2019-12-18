@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollection;
+use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\Type\SubmitBulkAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\Type\SubmitBulkDeleteAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollection;
@@ -261,10 +262,14 @@ final class AttachmentGridDefinitionFactory extends AbstractGridDefinitionFactor
     {
         return (new BulkActionCollection())
             ->add(
-                (new SubmitBulkDeleteAction('delete_selection'))
+                (new SubmitBulkAction('delete_selection'))
                     ->setName($this->trans('Delete selected', [], 'Admin.Actions'))
                     ->setOptions([
                         'submit_route' => 'admin_attachments_delete_bulk',
+                        'confirm_message' => $this->trans('Are you sure you want to delete the selected item(s)?', [], 'Admin.Notifications.Warning'),
+                        'confirm_title' => $this->trans('Delete selection', [], 'Admin.Notifications.Warning'),
+                        'confirm_button_label' => $this->trans('Delete', [], 'Admin.Actions'),
+                        'confirm_button_class' => 'btn-danger',
                     ])
             );
     }
