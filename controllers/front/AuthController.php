@@ -120,7 +120,7 @@ class AuthControllerCore extends FrontController
             $breadcrumb['links'][] = [
                 'title' => $this->trans('Log in to your account', array(), 'Shop.Theme.Customeraccount'),
                 'url' => $this->context->link->getPageLink('authentication'),
-            ];            
+            ];
         }
 
         return $breadcrumb;
