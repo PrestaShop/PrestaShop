@@ -152,7 +152,7 @@
         </tr>
         <tr id="templateProductTableRow" class="d-none">
           <td class="cellProductImg">
-              <img alt="">
+              <img alt="" />
           </td>
           <td class="cellProductName">
             <a href="">
@@ -201,9 +201,9 @@
     </table>
 
     <div class="row mb-3">
-      <div class="col-md-6 text-left{% if orderForViewing.products.products|length <= paginationNum %} d-none{% endif %}">
+      <div class="col-md-6 text-left">
           {% set numPages = (orderForViewing.products.products|length / paginationNum)|round(0, 'ceil') %}
-          <nav aria-label="Products Navigation">
+          <nav aria-label="Products Navigation"{% if orderForViewing.products.products|length <= paginationNum %} class="d-none"{% endif %} id="orderProductsNavPagination">
             <ul class="pagination" id="orderProductsTablePagination" data-num-per-page="{{ paginationNum }}" data-num-pages="{{ numPages }}">
               <li class="page-item disabled" id="orderProductsTablePaginationPrev">
                 <a class="page-link" href="javascript:void(0);" aria-label="Previous">

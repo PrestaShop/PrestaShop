@@ -23,9 +23,9 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-import Router from '../../../components/router';
-import {EventEmitter} from '../../../components/event-emitter';
-import OrderViewEventMap from '../view/order-view-event-map';
+import Router from '@components/router';
+import {EventEmitter} from '@components/event-emitter';
+import OrderViewEventMap from '@pages/order/view/order-view-event-map';
 
 const $ = window.$;
 
@@ -38,14 +38,12 @@ export default class OrderProductManager {
     event.preventDefault();
 
     const $btn = $(event.currentTarget);
-
-    const confirmed = confirm($btn.data('deleteMessage'));
-
+    const confirmed = window.confirm($btn.data('deleteMessage'));
     if (!confirmed) {
       return;
     }
 
-    $btn.attr('disabled', 'disabled');
+    $btn.prop('disabled', true);
     this.deleteProduct($btn.data('orderId'), $btn.data('orderDetailId'));
   }
 

@@ -23,8 +23,8 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-import Router from '../../../components/router';
-import OrderViewPageMap from '../OrderViewPageMap';
+import Router from '@components/router';
+import OrderViewPageMap from '@pages/order/OrderViewPageMap';
 
 const $ = window.$;
 

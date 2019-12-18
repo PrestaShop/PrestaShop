@@ -76,7 +76,7 @@ export default class ProductManager {
    */
   _onProductSearch() {
     EventEmitter.on(eventMap.productSearched, (response) => {
-      this.products = JSON.parse(response);
+      this.products = response.products;
       this.productRenderer.renderSearchResults(this.products);
       this._selectFirstResult();
     });

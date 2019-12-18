@@ -23,11 +23,11 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-import Router from '../../../components/router';
-import OrderViewPageMap from '../OrderViewPageMap';
-import {EventEmitter} from '../../../components/event-emitter';
-import OrderViewEventMap from './order-view-event-map';
-import OrderPrices from "./order-prices";
+import Router from '@components/router';
+import OrderViewPageMap from '@pages/order/OrderViewPageMap';
+import {EventEmitter} from '@components/event-emitter';
+import OrderViewEventMap from '@pages/order/view/order-view-event-map';
+import OrderPrices from '@pages/order/view/order-prices';
 
 const $ = window.$;
 
@@ -58,25 +58,21 @@ export default class OrderProductAdd {
       this.quantityInput.trigger('change');
     });
     this.quantityInput.on('change keyup', (event) => {
-      if (this.available === null) {
-        return;
-      }
-      const quantity = parseInt(event.target.value ? event.target.value : 0, 10);
-      const available = this.available - quantity;
-      this.availableText.text(available);
-      this.availableText.toggleClass('text-danger font-weight-bold', available < 0);
-      if (available < 0) {
-        this.productAddActionBtn.attr('disabled', 'disabled');
-      } else {
-        this.productAddActionBtn.removeAttr('disabled');
-      }
+      if (this.available !== null) {
+        const quantity = parseInt(event.target.value ? event.target.value : 0, 10);
+        const available = this.available - quantity;
+        const availableOutOfStock = this.availableText.data('availableOutOfStock');
+        this.availableText.text(available);
+        this.availableText.toggleClass('text-danger font-weight-bold', available < 0);
+        this.productAddActionBtn.prop('disabled', !availableOutOfStock && available < 0);
 
-      const currencyPrecision = $(OrderViewPageMap.productsTable).data('currencyPrecision');
-      const priceTaxCalculator = new OrderPrices();
-      const taxIncluded = parseFloat(this.priceTaxIncludedInput.val());
-      this.totalPriceText.html(
-        priceTaxCalculator.calculateTotalPrice(quantity, taxIncluded, currencyPrecision)
-      );
+        const currencyPrecision = $(OrderViewPageMap.productsTable).data('currencyPrecision');
+        const priceTaxCalculator = new OrderPrices();
+        const taxIncluded = parseFloat(this.priceTaxIncludedInput.val());
+        this.totalPriceText.html(
+          priceTaxCalculator.calculateTotalPrice(quantity, taxIncluded, currencyPrecision)
+        );
+      }
     });
     this.productIdInput.on('change', () => {
       this.productAddActionBtn.removeAttr('disabled');
@@ -117,11 +113,12 @@ export default class OrderProductAdd {
   setProduct(product) {
     const currencyPrecision = $(OrderViewPageMap.productsTable).data('currencyPrecision');
     this.productIdInput.val(product.productId).trigger('change');
-    this.priceTaxExcludedInput.val(ps_round(product.priceTaxExcl, currencyPrecision));
-    this.priceTaxIncludedInput.val(ps_round(product.priceTaxIncl, currencyPrecision));
+    this.priceTaxExcludedInput.val(window.ps_round(product.priceTaxExcl, currencyPrecision));
+    this.priceTaxIncludedInput.val(window.ps_round(product.priceTaxIncl, currencyPrecision));
     this.taxRateInput.val(product.taxRate);
     this.locationText.html(product.location);
     this.available = product.stock;
+    this.availableText.data('availableOutOfStock', product.availableOutOfStock);
     this.quantityInput.val(1);
     this.quantityInput.trigger('change');
     this.setCombinations(product.combinations);
@@ -129,14 +126,14 @@ export default class OrderProductAdd {
 
   setCombinations(combinations) {
     this.combinationsSelect.empty();
-    Object.entries(combinations).forEach((val) => {
-      this.combinationsSelect.append(`<option value="${val[1].attributeCombinationId}" data-price-tax-excluded="${val[1].priceTaxExcluded}" data-price-tax-included="${val[1].priceTaxIncluded}" data-stock="${val[1].stock}">${val[1].attribute}</option>`);
+    Object.values(combinations).forEach((val) => {
+      this.combinationsSelect.append(`<option value="${val.attributeCombinationId}" data-price-tax-excluded="${val.priceTaxExcluded}" data-price-tax-included="${val.priceTaxIncluded}" data-stock="${val.stock}">${val.attribute}</option>`);
     });
     this.combinationsBlock.toggleClass('d-none', Object.keys(combinations).length === 0);
   }
 
   addProduct(orderId) {
-    this.productAddActionBtn.attr('disabled', 'disabled');
+    this.productAddActionBtn.prop('disabled', true);
 
     const params = {
       product_id: this.productIdInput.val(),

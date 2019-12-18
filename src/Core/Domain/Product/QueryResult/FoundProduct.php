@@ -32,6 +32,11 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\QueryResult;
 class FoundProduct
 {
     /**
+     * @var bool
+     */
+    private $availableOutOfStock;
+
+    /**
      * @var int
      */
     private $productId;
@@ -89,6 +94,8 @@ class FoundProduct
      * @param float $priceTaxExcl
      * @param float $taxRate
      * @param int $stock
+     * @param string $location
+     * @param bool $availableOutOfStock
      * @param ProductCombination[] $combinations
      * @param ProductCustomizationField[] $customizationFields
      */
@@ -101,6 +108,7 @@ class FoundProduct
         float $taxRate,
         int $stock,
         string $location,
+        bool $availableOutOfStock,
         array $combinations = [],
         array $customizationFields = []
     ) {
@@ -112,6 +120,7 @@ class FoundProduct
         $this->taxRate = $taxRate;
         $this->stock = $stock;
         $this->location = $location;
+        $this->availableOutOfStock = $availableOutOfStock;
         $this->combinations = $combinations;
         $this->customizationFields = $customizationFields;
     }
@@ -194,5 +203,13 @@ class FoundProduct
     public function getCustomizationFields(): array
     {
         return $this->customizationFields;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isAvailableOutOfStock(): bool
+    {
+        return $this->availableOutOfStock;
     }
 }

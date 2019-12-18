@@ -23,14 +23,14 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-import OrderViewPageMap from './OrderViewPageMap';
-import OrderShippingManager from './order-shipping-manager';
-import InvoiceNoteManager from './invoice-note-manager';
-import OrderViewPage from './view/order-view-page';
-import OrderProductAutocomplete from './view/order-product-add-autocomplete';
-import OrderProductAdd from './view/order-product-add';
+import OrderViewPageMap from '@pages/order/OrderViewPageMap';
+import OrderShippingManager from '@pages/order/order-shipping-manager';
+import InvoiceNoteManager from '@pages/order/invoice-note-manager';
+import OrderViewPage from '@pages/order/view/order-view-page';
+import OrderProductAutocomplete from '@pages/order/view/order-product-add-autocomplete';
+import OrderProductAdd from '@pages/order/view/order-product-add';
 import OrderViewPageMessagesHandler from './message/order-view-page-messages-handler';
-import TextWithLengthCounter from "../../components/form/text-with-length-counter"
+import TextWithLengthCounter from '@components/form/text-with-length-counter';
 
 const $ = window.$;
 

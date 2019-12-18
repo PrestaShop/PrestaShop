@@ -1320,7 +1320,9 @@ class ProductController extends FrameworkBundleAdminController
             /** @var FoundProduct[] $foundProducts */
             $foundProducts = $this->getQueryBus()->handle(new SearchProducts($searchPhrase, 10, $currencyIsoCode));
 
-            return $this->json($foundProducts);
+            return $this->json([
+                'products' => $foundProducts,
+            ]);
         } catch (Exception $e) {
             return $this->json(
                 [$e, 'message' => $this->getErrorMessageForException($e, [])],
