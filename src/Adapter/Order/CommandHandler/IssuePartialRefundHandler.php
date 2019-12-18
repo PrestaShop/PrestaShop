@@ -56,6 +56,16 @@ final class IssuePartialRefundHandler extends AbstractOrderCommandHandler implem
     private $locale;
 
     /**
+     * @var string
+     */
+    private $quantityErrorMessage = 'Please enter a quantity to proceed with your refund.';
+
+    /**
+     * @var string
+     */
+    private $amountErrorMessage = 'Please enter an amount to proceed with your refund.';
+
+    /**
      * @param Locale $locale
      */
     public function __construct(Locale $locale)
@@ -74,12 +84,15 @@ final class IssuePartialRefundHandler extends AbstractOrderCommandHandler implem
         $amount = 0;
         $orderDetailList = [];
         $fullQuantityList = [];
-        $taxCalculator = $this->getTaxCaculator($order->carrier_tax_rate);
+        $taxCalculator = $this->getTaxCalculator($order->carrier_tax_rate);
+        $translator = Context::getContext()->getTranslator();
 
         foreach ($refunds as $orderDetailId => $refund) {
             // this refund has an amount but no quantity, this should not happen
             if (empty($refund['quantity'])) {
-                throw new OrderException('Please enter a quantity to proceed with your refund.');
+                throw new OrderException(
+                    $translator->trans($this->quantityErrorMessage, array(), 'Admin.Orderscustomers.Notification')
+                );
             }
 
             $quantity = $refund['quantity'];
@@ -130,10 +143,14 @@ final class IssuePartialRefundHandler extends AbstractOrderCommandHandler implem
 
         if ($amount === 0 && $shippingCostAmount === 0) {
             if (!empty($refunds)) {
-                throw new OrderException('Please enter a quantity to proceed with your refund.');
+                throw new OrderException(
+                    $translator->trans($this->quantityErrorMessage, array(), 'Admin.Orderscustomers.Notification')
+                );
             }
 
-            throw new OrderException('Please enter an amount to proceed with your refund.');
+            throw new OrderException(
+                $translator->trans($this->amountErrorMessage, array(), 'Admin.Orderscustomers.Notification')
+            );
         }
 
         $chosen = false;
@@ -194,7 +211,6 @@ final class IssuePartialRefundHandler extends AbstractOrderCommandHandler implem
                 '{order_name}' => $order->getUniqReference(),
             ];
 
-            $translator = Context::getContext()->getTranslator();
             $orderLanguage = new Language((int) $order->id_lang);
 
             // @todo: use a dedicated Mail class (see #13945)
@@ -229,10 +245,14 @@ final class IssuePartialRefundHandler extends AbstractOrderCommandHandler implem
             }
         } else {
             if (!empty($refunds)) {
-                throw new OrderException('Please enter a quantity to proceed with your refund.');
+                throw new OrderException(
+                    $translator->trans($this->quantityErrorMessage, array(), 'Admin.Orderscustomers.Notification')
+                );
             }
 
-            throw new OrderException('Please enter an amount to proceed with your refund.');
+            throw new OrderException(
+                $translator->trans($this->amountErrorMessage, array(), 'Admin.Orderscustomers.Notification')
+            );
         }
 
         if ($command->generateCartRule() && $amount > 0) {
@@ -325,7 +345,7 @@ final class IssuePartialRefundHandler extends AbstractOrderCommandHandler implem
      *
      * @return TaxCalculator
      */
-    private function getTaxCaculator(float $taxRate)
+    private function getTaxCalculator(float $taxRate)
     {
         $tax = new Tax();
         $tax->rate = $taxRate;
