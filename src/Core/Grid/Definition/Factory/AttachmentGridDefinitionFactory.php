@@ -27,7 +27,6 @@
 namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollection;
-use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\Type\SubmitBulkDeleteAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\LinkRowAction;
@@ -49,6 +48,8 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
  */
 final class AttachmentGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
+    use BulkDeleteActionTrait;
+
     public const GRID_ID = 'attachment';
 
     /**
@@ -261,11 +262,7 @@ final class AttachmentGridDefinitionFactory extends AbstractGridDefinitionFactor
     {
         return (new BulkActionCollection())
             ->add(
-                (new SubmitBulkDeleteAction('delete_selection'))
-                    ->setName($this->trans('Delete selected', [], 'Admin.Actions'))
-                    ->setOptions([
-                        'submit_route' => 'admin_attachments_delete_bulk',
-                    ])
+                $this->buildBulkDeleteAction('admin_attachments_delete_bulk')
             );
     }
 }

@@ -24,36 +24,65 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Grid\Action\Bulk\Type;
+namespace PrestaShop\PrestaShop\Core\Grid\Action;
 
-use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\AbstractBulkAction;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-final class SubmitBulkDeleteAction extends AbstractBulkAction
+/**
+ * Class ModalOptions used to configure modal used in actions like SubmitBulkAction
+ */
+class ModalOptions
 {
     /**
-     * {@inheritdoc}
+     * @var array
      */
-    public function getType()
+    private $options;
+
+    /**
+     * @param array $options
+     */
+    public function __construct(array $options = [])
     {
-        return 'submit-delete-bulk';
+        $this->setOptions($options);
     }
 
     /**
-     * {@inheritdoc}
+     * @return array
+     */
+    public function getOptions(): array
+    {
+        return $this->options;
+    }
+
+    /**
+     * @param array $options
+     *
+     * @return ModalOptions
+     */
+    public function setOptions(array $options): ModalOptions
+    {
+        $resolver = new OptionsResolver();
+        $this->configureOptions($resolver);
+
+        $this->options = $resolver->resolve($options);
+
+        return $this;
+    }
+
+    /**
+     * @param OptionsResolver $resolver
      */
     protected function configureOptions(OptionsResolver $resolver)
     {
         $resolver
-            ->setRequired([
-                'submit_route',
-            ])
             ->setDefaults([
-                'submit_method' => 'POST',
-                'route_params' => [],
+                'title' => null,
+                'confirm_button_label' => null,
+                'confirm_button_class' => 'btn-primary',
             ])
-            ->setAllowedTypes('submit_route', 'string')
-            ->setAllowedValues('submit_method', ['POST', 'GET'])
-            ->setAllowedTypes('route_params', 'array');
+            ->setAllowedTypes('title', ['string', 'null'])
+            ->setAllowedTypes('confirm_button_label', ['string', 'null'])
+            ->setAllowedTypes('confirm_button_class', 'string')
+        ;
     }
 }
