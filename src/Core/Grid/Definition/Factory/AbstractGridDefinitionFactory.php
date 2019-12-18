@@ -28,6 +28,8 @@ namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollectionInterface;
+use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionInterface;
+use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\Type\SubmitBulkAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollectionInterface;
@@ -149,5 +151,24 @@ abstract class AbstractGridDefinitionFactory implements GridDefinitionFactoryInt
     protected function getFilters()
     {
         return new FilterCollection();
+    }
+
+    /**
+     * @param string $bulkDeleteRouteName
+     *
+     * @return BulkActionInterface
+     */
+    protected function buildBulkDeleteAction(string $bulkDeleteRouteName)
+    {
+        return (new SubmitBulkAction('delete_selection'))
+            ->setName($this->trans('Delete selected', [], 'Admin.Actions'))
+            ->setOptions([
+                'submit_route' => $bulkDeleteRouteName,
+                'confirm_message' => $this->trans('Are you sure you want to delete the selected item(s)?', [], 'Admin.Global'),
+                'confirm_title' => $this->trans('Delete selection', [], 'Admin.Actions'),
+                'confirm_button_label' => $this->trans('Delete', [], 'Admin.Actions'),
+                'confirm_button_class' => 'btn-danger',
+            ])
+        ;
     }
 }

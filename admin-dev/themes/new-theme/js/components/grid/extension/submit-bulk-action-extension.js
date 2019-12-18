@@ -80,7 +80,7 @@ export default class SubmitBulkActionExtension {
     $confirmButton.className = 'btn btn-confirm-submit btn-lg';
     $confirmButton.addClass(confirmButtonClass);
     $confirmButton.html(confirmButtonLabel);
-    $confirmButton.off('click').on('click', () => this.postForm(submitButton, grid));
+    $confirmButton.off('click').on('click', () => this.postForm($submitBtn, grid));
 
     $modal.modal('show');
   }
