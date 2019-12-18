@@ -23,9 +23,9 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-import OrderViewPageMap from '../OrderViewPageMap';
-import OrderProductEdit from "./order-product-edit";
-import Router from "../../../components/router";
+import OrderViewPageMap from '@pages/order/OrderViewPageMap';
+import OrderProductEdit from '@pages/order/view/order-product-edit';
+import Router from '@components/router';
 
 const $ = window.$;
 
@@ -34,8 +34,7 @@ export default class OrderProductRenderer {
     this.router = new Router();
   }
 
-  addOrUpdateProductToList(orderProductId, newRow) {
-    const $productRow = $(OrderViewPageMap.productsTableRow(orderProductId));
+  addOrUpdateProductToList($productRow, newRow) {
     if ($productRow.length > 0) {
       $productRow.html($(newRow).html());
     } else {
@@ -69,8 +68,7 @@ export default class OrderProductRenderer {
     $modificationPosition.closest('.row').removeClass('d-none');
 
     $(OrderViewPageMap.productActionBtn).addClass('d-none');
-    $(OrderViewPageMap.productAddActionBtn).removeClass('d-none');
-    $(OrderViewPageMap.productAddRow).removeClass('d-none');
+    $(`${OrderViewPageMap.productAddActionBtn}, ${OrderViewPageMap.productAddRow}`).removeClass('d-none');
     $('html,body').animate({scrollTop: 0}, 'slow');
   }
 
@@ -80,8 +78,7 @@ export default class OrderProductRenderer {
     $(OrderViewPageMap.productsPanel).detach().appendTo(OrderViewPageMap.productOriginalPosition);
 
     $(OrderViewPageMap.productActionBtn).removeClass('d-none');
-    $(OrderViewPageMap.productAddActionBtn).addClass('d-none');
-    $(OrderViewPageMap.productAddRow).addClass('d-none');
+    $(`${OrderViewPageMap.productAddActionBtn}, ${OrderViewPageMap.productAddRow}`).addClass('d-none');
   }
 
   resetAddRow() {
@@ -93,7 +90,7 @@ export default class OrderProductRenderer {
     $(OrderViewPageMap.productAddQuantityInput).val('');
     $(OrderViewPageMap.productAddAvailableText).html('');
     $(OrderViewPageMap.productAddLocationText).html('');
-    $(OrderViewPageMap.productAddActionBtn).attr('disabled', 'disabled');
+    $(OrderViewPageMap.productAddActionBtn).prop('disabled', true);
   }
 
   resetEditRow(orderProductId) {
@@ -145,12 +142,17 @@ export default class OrderProductRenderer {
     const $productRow = $(OrderViewPageMap.productTemplateRow).clone();
     $productRow.attr('id', `orderProduct_${result.orderDetailId}`);
     if (result.imagePath) {
-      $productRow.find('td.cellProductImg img').attr('src', result.imagePath);
-      $productRow.find('td.cellProductImg img').attr('alt', result.name);
+      $productRow.find('td.cellProductImg img').attr({
+        src: result.imagePath,
+        alt: result.name
+      });
     } else {
       $productRow.find('td.cellProductImg img').remove();
     }
-    $productRow.find('td.cellProductName a').attr('href', this.router.generate('admin_product_form', {orderId: result.id}));
+    $productRow.find('td.cellProductName a').attr(
+      'href',
+      this.router.generate('admin_product_form', {orderId: result.id})
+    );
     $productRow.find('td.cellProductName p.productName').html(result.name);
     if (result.supplierReference) {
       $productRow.find('td.cellProductName p.productSupplierReference').append(result.supplierReference);
