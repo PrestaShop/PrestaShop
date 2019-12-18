@@ -166,13 +166,13 @@ function updateProduct(event, eventType, updateUrl) {
         if ($('.images-container').html() !== $newImagesContainer.find('.images-container').html()) {
           $('.images-container').replaceWith(data.product_cover_thumbnails);
         }
-        $('.product-prices').replaceWith(data.product_prices);
-        $('.product-customization').replaceWith(data.product_customization);
-        $('.product-variants').replaceWith(data.product_variants);
-        $('.product-discounts').replaceWith(data.product_discounts);
-        $('.product-additional-info').replaceWith(data.product_additional_info);
-        $('#product-details').replaceWith(data.product_details);
-        $('.product-flags').replaceWith(data.product_flags);
+        $('.quickview .product-prices, .page-product .product-prices').replaceWith(data.product_prices);
+        $('.quickview .product-customization, .page-product .product-customization').replaceWith(data.product_customization);
+        $('.quickview .product-variants .page-product .product-variants').replaceWith(data.product_variants);
+        $('.quickview .product-discounts, .page-product .product-discounts').replaceWith(data.product_discounts);
+        $('.quickview .product-additional-info, .page-product .product-additional-info').replaceWith(data.product_additional_info);
+        $('.quickview #product-details, .page-product #product-details').replaceWith(data.product_details);
+        $('.quickview .product-flags, .page-product .product-flags').replaceWith(data.product_flags)
         replaceAddToCartSections(data);
         const minimalProductQuantity = parseInt(data.product_minimal_quantity, 10);
 
