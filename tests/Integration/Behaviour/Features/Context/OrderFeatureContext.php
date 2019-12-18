@@ -193,30 +193,6 @@ class OrderFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @Then order :reference should have :quantity products in total
-     */
-    public function assertOrderProductsQuantity($reference, $quantity)
-    {
-        /** @var Order $order */
-        $order = SharedStorage::getStorage()->get($reference);
-        $orderProducts = $order->getProductsDetail();
-
-        $totalQuantity = 0;
-
-        foreach ($orderProducts as $orderProduct) {
-            $totalQuantity += (int) $orderProduct['product_quantity'];
-        }
-
-        if ($totalQuantity !== (int) $quantity) {
-            throw new Exception(sprintf(
-                'Order should have "%d" products, but has "%d".',
-                $totalQuantity,
-                $quantity
-            ));
-        }
-    }
-
-    /**
      * @Given there is order with reference :orderReference
      */
     public function thereIsOrderWithReference($orderReference)
@@ -225,38 +201,6 @@ class OrderFeatureContext extends AbstractPrestaShopFeatureContext
 
         if (0 === $orders->count()) {
             throw new Exception(sprintf('Order with reference "%s" does not exist.', $orderReference));
-        }
-    }
-
-    /**
-     * @Then order :reference should have free shipping
-     */
-    public function createdOrderShouldHaveFreeShipping($reference)
-    {
-        $order = SharedStorage::getStorage()->get($reference);
-
-        foreach ($order->getCartRules() as $cartRule) {
-            if ($cartRule['free_shipping']) {
-                return;
-            }
-        }
-
-        throw new Exception('Order should have free shipping.');
-    }
-
-    /**
-     * @Then order :reference should have :paymentModuleName payment method
-     */
-    public function createdOrderShouldHavePaymentMethod($reference, $paymentModuleName)
-    {
-        $order = SharedStorage::getStorage()->get($reference);
-
-        if ($order->module !== $paymentModuleName) {
-            throw new Exception(sprintf(
-                'Order should have "%s" payment method, but has "%s" instead.',
-                $paymentModuleName,
-                $order->payment
-            ));
         }
     }
 
@@ -374,5 +318,27 @@ class OrderFeatureContext extends AbstractPrestaShopFeatureContext
             $order->delete();
         }
         $this->orders = [];
+    }
+
+    /**
+     * @Then order :reference should have :paymentModuleName payment method
+     *
+     * @param string $reference
+     * @param string $paymentModuleName
+     */
+    public function createdOrderShouldHavePaymentMethod(string $reference, string $paymentModuleName)
+    {
+        $orderId = SharedStorage::getStorage()->get($reference);
+
+        $order = new Order($orderId);
+
+        // todo: think about a way to get paymentModuleName from domain classes
+        if ($order->module !== $paymentModuleName) {
+            throw new RuntimeException(sprintf(
+                'Order should have "%s" payment method, but has "%s" instead.',
+                $paymentModuleName,
+                $order->payment
+            ));
+        }
     }
 }

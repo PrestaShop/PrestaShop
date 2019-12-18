@@ -69,6 +69,7 @@ class OrderShippingFeatureContext extends AbstractDomainFeatureContext
      */
     private function getCarrierIdFromMap(string $carrier)
     {
+        // todo: use CarrierByReferenceChoiceProvider
         $carrierMapFlipped = array_flip(self::CARRIER_MAP);
         if (isset($carrierMapFlipped[$carrier])) {
             /** @var int $carrierId */

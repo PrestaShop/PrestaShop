@@ -26,9 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Order\Command;
 
-use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\CartId;
-use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\InvalidEmployeeIdException;
 use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\EmployeeId;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 
@@ -68,7 +66,6 @@ class AddOrderFromBackOfficeCommand
      * @param string $orderMessage
      * @param string $paymentModuleName
      * @param int $orderStateId
-     *
      */
     public function __construct($cartId, $employeeId, $orderMessage, $paymentModuleName, $orderStateId)
     {
@@ -136,6 +133,8 @@ class AddOrderFromBackOfficeCommand
 
     /**
      * @param int $orderStateId
+     *
+     * @throws OrderException
      */
     private function assertOrderStateIsPositiveInt($orderStateId)
     {

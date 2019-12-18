@@ -31,7 +31,6 @@ use Employee;
 
 /**
  * Class EmployeeFeatureContext
- * @package Tests\Integration\Behaviour\Features\Context
  */
 class EmployeeFeatureContext extends AbstractPrestaShopFeatureContext
 {
