@@ -74,10 +74,12 @@ final class IssuePartialRefundHandler extends AbstractOrderCommandHandler implem
         $amount = 0;
         $orderDetailList = [];
         $fullQuantityList = [];
+        $taxCalculator = $this->getTaxCaculator($order->carrier_tax_rate);
 
         foreach ($refunds as $orderDetailId => $refund) {
+            // this refund has an amount but no quantity, this should not happen
             if (empty($refund['quantity'])) {
-                continue;
+                throw new OrderException('Please enter a quantity to proceed with your refund.');
             }
 
             $quantity = $refund['quantity'];
@@ -90,7 +92,7 @@ final class IssuePartialRefundHandler extends AbstractOrderCommandHandler implem
             ];
 
             $orderDetail = new OrderDetail($orderDetailId);
-            $taxCalculator = $this->getTaxCaculator($order->carrier_tax_rate);
+
 
             if (empty($refund['amount'])) {
                 $refund['amount'] = $command->getTaxMethod() ?
