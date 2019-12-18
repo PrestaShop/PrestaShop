@@ -62,7 +62,9 @@ final class UpdateCartAddressesHandler extends AbstractCartHandler implements Up
     private function fillCartWithCommandData(Cart $cart, UpdateCartAddressesCommand $command): void
     {
         if ($command->getNewDeliveryAddressId()) {
-            $cart->id_address_delivery = $command->getNewDeliveryAddressId()->getValue();
+            // updateAddressId() will actually allow the address change to be impacted on all
+            // other data linked to the cart delivery address
+            $cart->updateAddressId($cart->id_address_delivery, $command->getNewDeliveryAddressId()->getValue());
         }
 
         if ($command->getNewInvoiceAddressId()) {
