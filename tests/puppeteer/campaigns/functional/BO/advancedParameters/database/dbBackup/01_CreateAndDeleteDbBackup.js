@@ -48,7 +48,7 @@ describe('Generate db backup and download it', async () => {
   loginCommon.loginBO();
 
   // Go db backup page
-  it('should go to database > sql manager  page', async function () {
+  it('should go to database > sql manager page', async function () {
     await this.pageObjects.boBasePage.goToSubMenu(
       this.pageObjects.boBasePage.advancedParametersLink,
       this.pageObjects.boBasePage.databaseLink,
