@@ -88,7 +88,7 @@ final class AddOrderFromBackOfficeHandler implements AddOrderFromBackOfficeHandl
                 $cart->secure_key
             );
         } catch (Exception $e) {
-            throw new OrderException('Failed to add order.', 0, $e);
+            throw new OrderException('Failed to add order. ' . $e->getMessage(), 0, $e);
         }
 
         if (!$paymentModule->currentOrder) {
