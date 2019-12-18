@@ -19,8 +19,8 @@ Feature: Order from Back Office (BO)
     And customer "testCustomer" has address in "US" country
 
   Scenario: Add order from Back Office with free shipping
-    When I create an empty cart "dummy_cart" for customer "customer_for_free_shipping"
-    And I select "US" address as delivery and invoice address for customer "customer_for_free_shipping" in cart "dummy_cart"
+    When I create an empty cart "dummy_cart" for customer "testCustomer"
+    And I select "US" address as delivery and invoice address for customer "testCustomer" in cart "dummy_cart"
     And I add 2 products with reference "demo_13" to the cart "dummy_cart"
     And I set Free shipping to the cart "dummy_cart"
     And I add order "bo_order_for_free_shipping" with the following details:
@@ -71,9 +71,58 @@ Feature: Order from Back Office (BO)
       | message             | test                |
       | payment module name | dummy_payment       |
       | status              | Payment accepted    |
-    When I update order "bo_order4" Tracking number to "TEST1234" and Carrier to "My carrier"
+    When I update order "bo_order4" Tracking number to "TEST1234" and Carrier to "2 - My carrier (Delivery next day!)"
     Then order "bo_order4" has Tracking number "TEST1234"
-    And order "bo_order4" has Carrier "My carrier"
-    When I update order "bo_order4" Tracking number to "TEST123" and Carrier to "0"
-    Then order "bo_order4" has Tracking number "TEST123"
-    And order "bo_order4" has Carrier "0"
+    And order "bo_order4" has Carrier "2 - My carrier (Delivery next day!)"
+
+  Scenario: pay order with negative amount and see it is not valid
+    Given I create an empty cart "dummy_cart5" for customer "testCustomer"
+    And I select "US" address as delivery and invoice address for customer "testCustomer" in cart "dummy_cart5"
+    And I add 2 products with reference "demo_13" to the cart "dummy_cart5"
+    And I add order "bo_order5" with the following details:
+      | cart                | dummy_cart5            |
+      | message             | test                   |
+      | payment module name | dummy_payment          |
+      | status              | Awaiting check payment |
+    When order "bo_order5" has 0 payments
+    And I pay order "bo_order5" with the invalid following details:
+      | date           | 2019-11-26 13:56:22 |
+      | payment_method | Payments by check   |
+      | transaction_id | test!@#$%%^^&* OR 1 |
+      | id_currency    | 1                   |
+      | amount         | -5.548              |
+    Then order "bo_order5" has 0 payments
+
+  Scenario: pay for order
+    Given I create an empty cart "dummy_cart6" for customer "testCustomer"
+    And I select "US" address as delivery and invoice address for customer "testCustomer" in cart "dummy_cart6"
+    And I add 2 products with reference "demo_13" to the cart "dummy_cart6"
+    And I add order "bo_order6" with the following details:
+      | cart                | dummy_cart6            |
+      | message             | test                   |
+      | payment module name | dummy_payment          |
+      | status              | Awaiting check payment |
+    When I pay order "bo_order6" with the following details:
+      | date           | 2019-11-26 13:56:23 |
+      | payment_method | Payments by check   |
+      | transaction_id | test123             |
+      | id_currency    | 1                   |
+      | amount         | 6.00                |
+    Then order "bo_order6" payments should have the following details:
+      | date           | 2019-11-26 13:56:23 |
+      | payment_method | Payments by check   |
+      | transaction_id | test123             |
+      | amount         | $6.00               |
+
+  Scenario: change order state to Delivered to be able to add valid invoice to new Payment
+    Given I create an empty cart "dummy_cart7" for customer "testCustomer"
+    And I select "US" address as delivery and invoice address for customer "testCustomer" in cart "dummy_cart7"
+    And I add 2 products with reference "demo_13" to the cart "dummy_cart7"
+    And I add order "bo_order7" with the following details:
+      | cart                | dummy_cart7             |
+      | message             | test                    |
+      | payment module name | dummy_payment           |
+      | status              | Awaiting check payment  |
+    When order "bo_order7" has 0 payments
+    And I update order "bo_order7" status to "Delivered"
+    Then order "bo_order7" payments should have invoice

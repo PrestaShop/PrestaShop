@@ -12,26 +12,21 @@ use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderPaymentForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderPaymentsForViewing;
 use PrestaShopException;
 use RuntimeException;
+use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 
 class OrderPaymentFeatureContext extends AbstractDomainFeatureContext
 {
     /**
-     * @When I pay order :orderId with the following details:
+     * @When I pay order :orderReference with the following details:
      *
-     * @param int $orderId
+     * @param string $orderReference
      * @param TableNode $table
-     *
-     * @throws RuntimeException
      */
-    public function addPaymentToOrderWithTheFollowingDetails(int $orderId, TableNode $table)
+    public function addPaymentToOrderWithTheFollowingDetails(string $orderReference, TableNode $table)
     {
-        /** @var array $hash */
-        $hash = $table->getHash();
-        if (count($hash) != 1) {
-            throw new RuntimeException('Payment details are invalid');
-        }
-        /** @var array $data */
-        $data = $hash[0];
+        $orderId = SharedStorage::getStorage()->get($orderReference);
+
+        $data = $table->getRowsHash();
 
         $this->getCommandBus()->handle(
             new AddPaymentCommand(
@@ -40,22 +35,23 @@ class OrderPaymentFeatureContext extends AbstractDomainFeatureContext
                 $data['payment_method'],
                 $data['amount'],
                 (int) $data['id_currency'],
-                $data['id_invoice'],
+                isset($data['id_invoice']) ? (int) $data['id_invoice'] : null,
                 $data['transaction_id']
             )
         );
     }
 
     /**
-     * @Then order :orderId has :numberOfPayments payments
+     * @Then order :orderReference has :numberOfPayments payments
      *
-     * @param int $orderId
+     * @param string $orderReference
      * @param int $numberOfPayments
      *
-     * @throws RuntimeException
      */
-    public function getOrderPayments(int $orderId, int $numberOfPayments)
+    public function getOrderPayments(string $orderReference, int $numberOfPayments)
     {
+        $orderId = SharedStorage::getStorage()->get($orderReference);
+
         /** @var OrderForViewing $orderForViewing */
         $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
         /** @var OrderPaymentsForViewing $orderPaymentsForViewing */
@@ -75,58 +71,58 @@ class OrderPaymentFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Then order :orderId payments should have invoice :expectedInvoiceNumber
+     * @Then order :orderReference payments should have invoice
      *
-     * @param int $orderId
-     * @param string $expectedInvoiceNumber
+     * @param string $orderReference
      */
-    public function queryOrderPaymentsToGetInvoice(int $orderId, string $expectedInvoiceNumber)
+    public function queryOrderPaymentsToGetInvoice(string $orderReference)
     {
+        $orderId = SharedStorage::getStorage()->get($orderReference);
+
         /** @var OrderForViewing $orderForViewing */
         $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
 
         /** @var OrderPaymentForViewing $orderPaymentForViewing */
         $orderPaymentForViewing = $this->getFirstPaymentForViewing($orderId, $orderForViewing);
         $invoiceNumber = $orderPaymentForViewing->getInvoiceNumber();
-        PHPUnit_Framework_Assert::assertSame($expectedInvoiceNumber, $invoiceNumber);
+        PHPUnit_Framework_Assert::assertNotNull($invoiceNumber);
     }
 
     /**
-     * @Then order :orderId payments should have the following details:
+     * @Then order :orderReference payments should have the following details:
      *
-     * @param int $orderId
+     * @param string $orderReference
      * @param TableNode $table
      */
-    public function queryOrderPaymentsToGetTheFollowingProperties(int $orderId, TableNode $table)
+    public function queryOrderPaymentsToGetTheFollowingProperties(string $orderReference, TableNode $table)
     {
-        $dataArray = $this->extractFirstRowFromHorizontalTableDetails($table);
-        $expectedOrderPaymentForViewing = $this->mapToOrderPaymentForViewing($orderId, $dataArray);
+        $orderId = SharedStorage::getStorage()->get($orderReference);
 
         /** @var OrderForViewing $orderForViewing */
         $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
         /** @var OrderPaymentForViewing $orderPaymentForViewing */
         $orderPaymentForViewing = $this->getFirstPaymentForViewing($orderId, $orderForViewing);
 
+        $dataArray = $table->getRowsHash();
+        $expectedOrderPaymentForViewing = $this->mapToOrderPaymentForViewing(
+            $orderPaymentForViewing->getPaymentId(), $dataArray
+        );
+
         PHPUnit_Framework_Assert::assertEquals($expectedOrderPaymentForViewing, $orderPaymentForViewing);
     }
 
     /**
-     * @When I pay order :orderId with the invalid following details:
+     * @When I pay order :orderReference with the invalid following details:
      *
-     * @param int $orderId
+     * @param string $orderReference
      * @param TableNode $table
      *
-     * @throws RuntimeException
      */
-    public function addPaymentToOrderWithTheInvalidFollowingProperties(int $orderId, TableNode $table)
+    public function addPaymentToOrderWithTheInvalidFollowingProperties(string $orderReference, TableNode $table)
     {
-        /** @var array $hash */
-        $hash = $table->getHash();
-        if (count($hash) != 1) {
-            throw new RuntimeException('Payment details are invalid');
-        }
-        /** @var array $data */
-        $data = $hash[0];
+        $orderId = SharedStorage::getStorage()->get($orderReference);
+
+        $data = $table->getRowsHash();
 
         try {
             $this->getCommandBus()->handle(
@@ -136,7 +132,7 @@ class OrderPaymentFeatureContext extends AbstractDomainFeatureContext
                     $data['payment_method'],
                     $data['amount'],
                     (int) $data['id_currency'],
-                    $data['id_invoice'],
+                    isset($data['id_invoice']) ? (int) $data['id_invoice'] : null,
                     $data['transaction_id']
                 )
             );
@@ -160,7 +156,7 @@ class OrderPaymentFeatureContext extends AbstractDomainFeatureContext
             $data['payment_method'],
             $data['transaction_id'],
             $data['amount'],
-            $data['id_invoice'],
+            isset($data['id_invoice']) ? (int) $data['id_invoice'] : null,
             '',
             '',
             '',
