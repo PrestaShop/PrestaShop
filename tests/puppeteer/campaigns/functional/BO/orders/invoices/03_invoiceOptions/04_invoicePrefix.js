@@ -34,7 +34,7 @@ const init = async function () {
 
 /*
 Edit invoice prefix
-Change the Order status to Payment accepted
+Change the Order status to Shipped
 Check the invoice file name
 Back to the default invoice prefix value
 Check the invoice file name
@@ -94,7 +94,7 @@ describe('Edit invoice prefix and check the generated invoice file name', async 
         await expect(result).to.be.true;
       });
 
-      it(`should check that the invoice file name contain the prefix '${Statuses.shipped.status}'`, async function () {
+      it(`should check that the invoice file name contain the prefix '${invoiceData.prefix}'`, async function () {
         fileName = await this.pageObjects.viewOrderPage.getFileName();
         expect(fileName).to.contains(invoiceData.prefix.replace('#', '').trim());
       });
