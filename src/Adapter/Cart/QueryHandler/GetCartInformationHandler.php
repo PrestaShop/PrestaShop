@@ -296,7 +296,7 @@ final class GetCartInformationHandler extends AbstractCartHandler implements Get
         return new CartSummary(
             $this->locale->formatPrice($legacySummary['total_products'], $currency->iso_code),
             $discount,
-            $this->locale->formatPrice($legacySummary['total_shipping_tax_exc'], $currency->iso_code),
+            $this->locale->formatPrice($legacySummary['total_shipping'], $currency->iso_code),
             $this->locale->formatPrice($legacySummary['total_tax'], $currency->iso_code),
             $this->locale->formatPrice($legacySummary['total_price'], $currency->iso_code),
             $this->locale->formatPrice($legacySummary['total_price_without_tax'], $currency->iso_code),
