@@ -22,9 +22,16 @@
     margin-bottom: 1rem;
   }
 
-  .product-description img {
-    max-width: 100%;
-    height: auto;
+  .product-description {
+    img {
+      max-width: 100%;
+      height: auto;
+    }
+
+    ul {
+      list-style: inherit;
+      list-style-position: inside;
+    }
   }
 }
 .input-color {
