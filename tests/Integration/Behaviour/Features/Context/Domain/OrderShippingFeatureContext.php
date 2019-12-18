@@ -6,27 +6,28 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Command\UpdateOrderShippingDetailsCo
 use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderCarrierForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderForViewing;
+use PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CarrierByReferenceChoiceProvider;
 use RuntimeException;
+use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 
 class OrderShippingFeatureContext extends AbstractDomainFeatureContext
 {
-    private const CARRIER_MAP = [
-        1 => '0',
-        2 => 'My carrier',
-    ];
-
     /**
-     * @When I update order :orderId Tracking number to :trackingNumber and Carrier to :carrier
+     * @When I update order :orderReference Tracking number to :trackingNumber and Carrier to :carrier
      *
-     * @param int $orderId
+     * @param string $orderReference
      * @param string $trackingNumber
      * @param string $carrier
      */
-    public function updateOrderTrackingNumberToAndCarrierTo(int $orderId, string $trackingNumber, string $carrier)
+    public function updateOrderTrackingNumberToAndCarrierTo(
+        string $orderReference, string $trackingNumber, string $carrier
+    )
     {
-        $oldOrderCarrierId = $this->getCarrierIdFromMap($carrier);
+        $orderId = SharedStorage::getStorage()->get($orderReference);
+
+        $oldOrderCarrierId = $this->getCarrierId($carrier);
         $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
-        $newCarrierId = $this->getCarrierIdFromMap($carrier);
+        $newCarrierId = $this->getCarrierId($carrier);
 
         $this->getCommandBus()->handle(
             new UpdateOrderShippingDetailsCommand(
@@ -39,16 +40,18 @@ class OrderShippingFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Then order :orderId has Carrier :carrier
+     * @Then order :orderReference has Carrier :carrier
      *
-     * @param string $orderId
+     * @param string $orderReference
      * @param string $carrier
      *
      * @throws RuntimeException
      */
-    public function orderHasCarrier(string $orderId, string $carrier)
+    public function orderHasCarrier(string $orderReference, string $carrier)
     {
-        $carrierId = $this->getCarrierIdFromMap($carrier);
+        $orderId = SharedStorage::getStorage()->get($orderReference);
+        $carrierId = $this->getCarrierId($carrier);
+
         /** @var OrderCarrierForViewing[] $orderCarriersForViewing */
         $orderCarriersForViewing = $this->getOrderCarriersForViewing($orderId);
         $carrierIdFromDb = $orderCarriersForViewing[0]->getCarrierId();
@@ -67,15 +70,15 @@ class OrderShippingFeatureContext extends AbstractDomainFeatureContext
      *
      * @throws RuntimeException
      */
-    private function getCarrierIdFromMap(string $carrier)
+    private function getCarrierId(string $carrier)
     {
-        // todo: use CarrierByReferenceChoiceProvider
-        $carrierMapFlipped = array_flip(self::CARRIER_MAP);
-        if (isset($carrierMapFlipped[$carrier])) {
-            /** @var int $carrierId */
-            $carrierId = $carrierMapFlipped[$carrier];
+        /** @var CarrierByReferenceChoiceProvider $carrierChoiceProvider */
+        $carrierChoiceProvider = $this->getContainer()
+                                      ->get('prestashop.core.form.choice_provider.carrier_by_reference_id');
+        $availableCarriers = $carrierChoiceProvider->getChoices();
 
-            return $carrierId;
+        if (isset($availableCarriers[$carrier])) {
+            return (int) $availableCarriers[$carrier];
         }
         throw new RuntimeException('Invalid carrier [' . $carrier . ']');
     }
@@ -103,15 +106,17 @@ class OrderShippingFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Then order :orderId has Tracking number :trackingNumber
+     * @Then order :orderReference has Tracking number :trackingNumber
      *
-     * @param int $orderId
+     * @param string $orderReference
      * @param string $trackingNumber
      *
      * @throws RuntimeException
      */
-    public function orderHasTrackingNumber(int $orderId, string $trackingNumber)
+    public function orderHasTrackingNumber(string $orderReference, string $trackingNumber)
     {
+        $orderId = SharedStorage::getStorage()->get($orderReference);
+
         $orderCarriersForViewing = $this->getOrderCarriersForViewing($orderId);
         $orderTrackingNumberFromDb = $orderCarriersForViewing[0]->getTrackingNumber();
 
