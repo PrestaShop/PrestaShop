@@ -18,6 +18,7 @@ module.exports = class DeliverySlips extends BOBasePage {
     // Delivery slip options form
     this.deliverySlipForm = '#delivery_options_fieldset';
     this.deliveryPrefixInput = '#form_options_prefix_1';
+    this.deliveryNumberInput = '#form_options_number';
     this.saveDeliverySlipOptionsButton = `${this.deliverySlipForm} .btn.btn-primary`;
   }
 
@@ -47,6 +48,14 @@ module.exports = class DeliverySlips extends BOBasePage {
    */
   async changePrefix(prefix) {
     await this.setValue(this.deliveryPrefixInput, prefix);
+  }
+
+  /** Edit delivery slip Prefix
+   * @param number
+   * @return {Promise<void>}
+   */
+  async changeNumber(number) {
+    await this.setValue(this.deliveryNumberInput, number);
   }
 
   /** Save delivery slip options
