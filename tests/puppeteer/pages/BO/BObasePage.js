@@ -76,6 +76,8 @@ module.exports = class BOBasePage extends CommonPage {
     this.advancedParametersLink = '#subtab-AdminAdvancedParameters';
     // Team
     this.teamLink = '#subtab-AdminParentEmployees';
+    // Database
+    this.databaseLink = '#subtab-AdminParentRequestSql';
 
     // welcome module
     this.onboardingCloseButton = 'button.onboarding-button-shut-down';
