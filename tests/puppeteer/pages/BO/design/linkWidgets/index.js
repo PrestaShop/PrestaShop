@@ -56,6 +56,5 @@ module.exports = class LinkWidgets extends BOBasePage {
     await this.clickAndWaitForNavigation(this.deleteRowLink.replace('%HOOKID', hookId).replace('%ROW', row));
     await this.page.waitForSelector(this.alertSuccessBlockParagraph, {visible: true});
     return this.getTextContent(this.alertSuccessBlockParagraph);
-
   }
 };
