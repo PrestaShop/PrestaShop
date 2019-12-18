@@ -21,8 +21,7 @@ class OrderShippingFeatureContext extends AbstractDomainFeatureContext
      */
     public function updateOrderTrackingNumberToAndCarrierTo(
         string $orderReference, string $trackingNumber, string $carrier
-    )
-    {
+    ) {
         $orderId = SharedStorage::getStorage()->get($orderReference);
 
         $oldOrderCarrierId = $this->getCarrierId($carrier);

@@ -46,7 +46,6 @@ class OrderPaymentFeatureContext extends AbstractDomainFeatureContext
      *
      * @param string $orderReference
      * @param int $numberOfPayments
-     *
      */
     public function getOrderPayments(string $orderReference, int $numberOfPayments)
     {
@@ -63,7 +62,7 @@ class OrderPaymentFeatureContext extends AbstractDomainFeatureContext
         if (count($orderPaymentForViewingArray) !== $numberOfPayments) {
             throw new RuntimeException(sprintf(
                 'Order "%s" number of payments  is "%s", but "%s" was expected',
-                $orderId,
+                $orderReference,
                 $countOfOrderPaymentsFromDb,
                 $numberOfPayments
             ));
@@ -116,7 +115,6 @@ class OrderPaymentFeatureContext extends AbstractDomainFeatureContext
      *
      * @param string $orderReference
      * @param TableNode $table
-     *
      */
     public function addPaymentToOrderWithTheInvalidFollowingProperties(string $orderReference, TableNode $table)
     {
