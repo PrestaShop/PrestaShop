@@ -18,9 +18,10 @@ Feature: Order from Back Office (BO)
     And the module "dummy_payment" is installed
     #    todo: use domain context to get employee when is merged: https://github.com/PrestaShop/PrestaShop/pull/16757
     And I am logged in as "test@prestashop.com" employee
-    #    todo: use domain context to get customer: GetCustomerForViewing;
-    #    todo: find a way how to get customer object/id by its properties without using legacy objects
-    #    possible solution can be create new customer with AddCustomerHandler
+     #    todo: use domain context to get customer: GetCustomerForViewing;
+     #    todo: find a way how to get customer object/id by its properties without using legacy objects
+     #    possible solution can be create new customer with AddCustomerHandler
+     #    but then how to add Customer Address???
     And there is customer "testCustomer" with email "pub@prestashop.com"
     And customer "testCustomer" has address in "US" country
     And I create an empty cart "dummy_cart" for customer "testCustomer"
