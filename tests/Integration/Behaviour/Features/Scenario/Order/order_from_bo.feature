@@ -127,3 +127,9 @@ Feature: Order from Back Office (BO)
     When I update orders "bo_order1,bo_order2" statuses to "Delivered"
     Then order "bo_order1" has status "Delivered"
     And order "bo_order2" has status "Delivered"
+
+  Scenario: Change order shipping
+    Given there is an address named "1601 Willow Rd Menlo Park" with postcode "94025" in state "California"
+    Given address "1601 Willow Rd Menlo Park" is associated to customer "testCustomer"
+    When I change order "bo_order1" shipping address to "1601 Willow Rd Menlo Park"
+    Then order "bo_order1" shipping address should be "1601 Willow Rd Menlo Park"
