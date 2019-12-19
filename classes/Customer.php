@@ -282,7 +282,7 @@ class CustomerCore extends ObjectModel
      */
     public function addWs($autodate = true, $null_values = false)
     {
-        if (CustomerCore::customerExists($this->email)) {
+        if (Customer::customerExists($this->email)) {
             WebserviceRequest::getInstance()->setError(
                 500,
                 $this->trans('The email is already used, please choose another one',
