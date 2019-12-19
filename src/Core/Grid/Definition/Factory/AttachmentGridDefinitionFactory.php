@@ -48,6 +48,8 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
  */
 final class AttachmentGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
+    use BulkDeleteActionTrait;
+
     public const GRID_ID = 'attachment';
 
     /**
