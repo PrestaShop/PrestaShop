@@ -30,8 +30,8 @@ use AdminController;
 use Behat\Gherkin\Node\TableNode;
 use Context;
 use FrontController;
-use Order;
 use OrderState;
+use PHPUnit_Framework_Assert;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\AddOrderFromBackOfficeCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\BulkChangeOrderStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\UpdateOrderStatusCommand;
@@ -40,6 +40,7 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\AddProductToOrderCom
 use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderDiscountForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderForViewing;
+use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderInvoiceAddressForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderProductForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
 use PrestaShop\PrestaShop\Core\Form\ChoiceProvider\OrderStateByIdChoiceProvider;
@@ -122,7 +123,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
         /** @var OrderId $orderId */
         $orderId = $this->getCommandBus()->handle(
             new AddOrderFromBackOfficeCommand(
-                (int) SharedStorage::getStorage()->get($cartReference)->id,
+                (int) SharedStorage::getStorage()->get($cartReference),
                 (int) Context::getContext()->employee->id,
                 '',
                 $paymentModuleName,
@@ -147,16 +148,14 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
         int $price,
         string $orderReference
     ) {
-        $orders = Order::getByReference($orderReference);
-        /** @var Order $order */
-        $order = $orders->getFirst();
-
-        $productId = Product::getIdByReference($productReference);
+        $orderId = SharedStorage::getStorage()->get($orderReference);
+        // todo: refactor not to use legacy classes
+        $productId = (int) Product::getIdByReference($productReference);
 
         $this->getCommandBus()->handle(
             AddProductToOrderCommand::withNewInvoice(
-                (int) $order->id,
-                (int) $productId,
+                $orderId,
+                $productId,
                 0,
                 (float) $price,
                 (float) $price,
@@ -164,21 +163,28 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
                 true
             )
         );
+
+        SharedStorage::getStorage()->set($productReference, $productId);
     }
 
     /**
-     * @When I add products to order with new invoice with the following products details:
+     * @When I add products :productReference to order :orderReference with new invoice and the following products details:
      *
+     * @param string $productReference
+     * @param string $orderReference
      * @param TableNode $table
      */
-    public function addProductsToOrderWithNewInvoiceWithTheFollowingProductsProperties(TableNode $table)
-    {
-        $data = $this->extractFirstRowFromProperties($table);
+    public function addProductsToOrderWithNewInvoiceAndTheFollowingDetails(
+        string $productReference, string $orderReference, TableNode $table
+    ) {
+        $productId = SharedStorage::getStorage()->get($productReference);
+        $orderId = SharedStorage::getStorage()->get($orderReference);
+        $data = $table->getRowsHash();
 
         $this->getCommandBus()->handle(
             AddProductToOrderCommand::withNewInvoice(
-                (int) $data['id_order'],
-                (int) $data['id_product'],
+                $orderId,
+                $productId,
                 0,
                 (float) $data['price'],
                 (float) $data['price'],
@@ -195,12 +201,9 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
      */
     public function generateOrderInvoice(string $orderReference)
     {
-        $orders = Order::getByReference($orderReference);
-        /** @var Order $order */
-        $order = $orders->getFirst();
-
+        $orderId = SharedStorage::getStorage()->get($orderReference);
         $this->getCommandBus()->handle(
-            new GenerateInvoiceCommand((int) $order->id)
+            new GenerateInvoiceCommand($orderId)
         );
     }
 
@@ -237,10 +240,10 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
      */
     public function orderHasStatus(string $orderReference, string $status)
     {
-        $orderReference = SharedStorage::getStorage()->get($orderReference);
+        $orderId = SharedStorage::getStorage()->get($orderReference);
 
         /** @var OrderForViewing $orderForViewing */
-        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderReference));
+        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
         /** @var OrderState $currentOrderState */
         $currentOrderStateId = $orderForViewing->getHistory()->getCurrentOrderStatusId();
         $statusId = $this->getOrderStatusIdFromMap($status);
@@ -318,10 +321,8 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     private function mapAddOrderFromBackOfficeData(array $testCaseData)
     {
         $data = [];
-        // todo: get rid of the legacy class ASAP
-        /** @var \Cart $cart */
-        $cart = SharedStorage::getStorage()->get($testCaseData['cart']);
-        $data['cartId'] = $cart->id;
+        $cartId = SharedStorage::getStorage()->get($testCaseData['cart']);
+        $data['cartId'] = $cartId;
         $data['employeeId'] = Context::getContext()->employee->id;
         $data['orderMessage'] = $testCaseData['message'];
         $data['paymentModuleName'] = $testCaseData['payment module name'];
@@ -384,5 +385,107 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
         }
 
         throw new RuntimeException('Order should have free shipping.');
+    }
+
+    /**
+     * @Then order :orderReference should have invoice
+     */
+    public function orderShouldHaveInvoice($orderReference)
+    {
+//        $orders = Order::getByReference($orderReference);
+//        /** @var Order $order */
+//        $order = $orders->getFirst();
+//
+//        if (false === $order->hasInvoice()) {
+//            throw new RuntimeException(sprintf('Order "%s" should have invoice', $orderReference));
+//        }
+
+        $orderId = SharedStorage::getStorage()->get($orderReference);
+        /** @var OrderForViewing $orderForViewing */
+        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
+        /** @var OrderInvoiceAddressForViewing $invoiceAddress */
+        $invoiceAddress = $orderForViewing->getInvoiceAddress();
+    }
+
+    /**
+     * @Given order :orderReference does not have any invoices
+     *
+     * @param string $orderReference
+     */
+    public function orderDoesNotHaveAnyInvoices(string $orderReference)
+    {
+        $orderId = SharedStorage::getStorage()->get($orderReference);
+        /** @var OrderForViewing $orderForViewing */
+        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
+        /** @var OrderInvoiceAddressForViewing $invoiceAddress */
+        $invoiceAddress = $orderForViewing->getInvoiceAddress();
+        PHPUnit_Framework_Assert::assertNotNull($invoiceAddress);
+    }
+
+    /**
+     * @Given order with reference :orderReference does not contain product with reference :productReference
+     *
+     * @param string $orderReference
+     * @param string $productReference
+     */
+    public function orderDoesNotContainProductWithReference(string $orderReference, string $productReference)
+    {
+        $orderId = SharedStorage::getStorage()->get($orderReference);
+
+        /** @var OrderForViewing $orderForViewing */
+        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
+
+        /** @var OrderProductForViewing[] $orderProducts */
+        $orderProducts = $orderForViewing->getProducts()->getProducts();
+
+        foreach ($orderProducts as $orderProduct) {
+            if ($orderProduct->getReference() == $productReference) {
+                throw new RuntimeException(
+                    sprintf(
+                        'Order with reference "%s" contains product with reference "%s".',
+                        $orderReference,
+                        $productReference
+                    )
+                );
+            }
+        }
+    }
+
+    /**
+     * @Then order :orderReference should contain :quantity products with reference :productReference
+     *
+     * @param string $orderReference
+     * @param int $quantity
+     * @param string $productReference
+     */
+    public function orderContainsProductWithReference(string $orderReference, int $quantity, string $productReference)
+    {
+        $orderId = SharedStorage::getStorage()->get($orderReference);
+        $productId = SharedStorage::getStorage()->get($productReference);
+
+        /** @var OrderForViewing $orderForViewing */
+        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
+        /** @var OrderProductForViewing[] $products */
+        $products = $orderForViewing->getProducts()->getProducts();
+
+        $totalProductQuantity = 0;
+        foreach ($products as $product) {
+            if ($product->getId() === $productId) {
+                $totalProductQuantity += $product->getQuantity();
+            }
+        }
+
+        if ((int) $totalProductQuantity === (int) $quantity) {
+            return;
+        }
+
+        throw new RuntimeException(
+            sprintf(
+                'Order was expected to have "%d" products "%s" in it. Instead got "%s"',
+                $quantity,
+                $productReference,
+                $totalProductQuantity
+            )
+        );
     }
 }

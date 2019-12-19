@@ -32,7 +32,6 @@ use Exception;
 use LegacyTests\Unit\Core\Cart\CartToOrder\PaymentModuleFake;
 use Order;
 use OrderCartRule;
-use Product;
 use RuntimeException;
 
 class OrderFeatureContext extends AbstractPrestaShopFeatureContext
@@ -189,112 +188,6 @@ class OrderFeatureContext extends AbstractPrestaShopFeatureContext
                     $orderCartRule->value_tax_excl
                 )
             );
-        }
-    }
-
-    /**
-     * @Given there is order with reference :orderReference
-     */
-    public function thereIsOrderWithReference($orderReference)
-    {
-        $orders = Order::getByReference($orderReference);
-
-        if (0 === $orders->count()) {
-            throw new Exception(sprintf('Order with reference "%s" does not exist.', $orderReference));
-        }
-    }
-
-    /**
-     * @Given order with reference :orderReference does not contain product with reference :productReference
-     */
-    public function orderDoesNotContainProductWithReference($orderReference, $productReference)
-    {
-        $orders = Order::getByReference($orderReference);
-        /** @var Order $order */
-        $order = $orders->getFirst();
-
-        $productId = Product::getIdByReference($productReference);
-
-        if ($order->orderContainProduct($productId)) {
-            throw new RuntimeException(
-                sprintf(
-                    'Order with reference "%s" contains product with reference "%s".',
-                    $orderReference,
-                    $productReference
-                )
-            );
-        }
-    }
-
-    /**
-     * @Then order :orderReference should contain :quantity products with reference :productReference
-     */
-    public function orderContainsProductWithReference($orderReference, $quantity, $productReference)
-    {
-        $orders = Order::getByReference($orderReference);
-        /** @var Order $order */
-        $order = $orders->getFirst();
-
-        $productId = (int) Product::getIdByReference($productReference);
-
-        if (!$order->orderContainProduct($productId)) {
-            throw new RuntimeException(
-                sprintf(
-                    'Order with reference "%s" does not contain product with reference "%s".',
-                    $orderReference,
-                    $productReference
-                )
-            );
-        }
-
-        $orderDetails = $order->getOrderDetailList();
-
-        $totalProductQuantity = 0;
-        foreach ($orderDetails as $orderDetail) {
-            if ((int) $orderDetail['product_id'] === $productId) {
-                $totalProductQuantity += $orderDetail['product_quantity'];
-            }
-        }
-
-        if ((int) $totalProductQuantity === (int) $quantity) {
-            return;
-        }
-
-        throw new RuntimeException(
-            sprintf(
-                'Order was expected to have "%d" products "%s" in it. Instead got "%s"',
-                $quantity,
-                $productReference,
-                $totalProductQuantity
-            )
-        );
-    }
-
-    /**
-     * @Given order :orderReference does not have any invoices
-     */
-    public function orderDoesNotHaveAnyInvoices($orderReference)
-    {
-        $orders = Order::getByReference($orderReference);
-        /** @var Order $order */
-        $order = $orders->getFirst();
-
-        if ($order->hasInvoice()) {
-            throw new RuntimeException('Order should not have any invoices');
-        }
-    }
-
-    /**
-     * @Then order :orderReference should have invoice
-     */
-    public function orderShouldHaveInvoice($orderReference)
-    {
-        $orders = Order::getByReference($orderReference);
-        /** @var Order $order */
-        $order = $orders->getFirst();
-
-        if (false === $order->hasInvoice()) {
-            throw new RuntimeException(sprintf('Order "%s" should have invoice', $orderReference));
         }
     }
 

@@ -73,10 +73,5 @@ class OrderCartFeatureContext extends AbstractDomainFeatureContext
         PHPUnit_Framework_Assert::assertEquals($cartInformation->getProducts(), $duplicatedCartInformation->getProducts());
         PHPUnit_Framework_Assert::assertEquals($cartInformation->getSummary(), $duplicatedCartInformation->getSummary());
         PHPUnit_Framework_Assert::assertEquals($cartInformation->getLangId(), $duplicatedCartInformation->getLangId());
-        // shipping info has to be confirmed and is saved in the db after the order is created
-        PHPUnit_Framework_Assert::assertNotEquals(
-            $cartInformation->getShipping(),
-            $duplicatedCartInformation->getShipping(),
-            'shipping info is the same');
     }
 }
