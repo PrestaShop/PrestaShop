@@ -51,10 +51,6 @@ use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 
 class OrderFeatureContext extends AbstractDomainFeatureContext
 {
-    private const ORDER_STATUS_MAP = [
-        1 => 'Awaiting bank wire payment',
-        5 => 'Delivered',
-    ];
 
     private const ORDER_CART_RULE_FREE_SHIPPING = 'Free Shipping';
 
@@ -149,7 +145,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
         string $orderReference
     ) {
         $orderId = SharedStorage::getStorage()->get($orderReference);
-        // todo: refactor not to use legacy classes
+        // todo: refactor not to use legacy classes: use SearchProductHandler
         $productId = (int) Product::getIdByReference($productReference);
 
         $this->getCommandBus()->handle(
@@ -222,7 +218,11 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
             $ordersIds[] = SharedStorage::getStorage()->get($orderReference);
         }
 
-        $statusId = $this->getOrderStatusIdFromMap($status);
+        /** @var OrderStateByIdChoiceProvider $orderStateChoiceProvider */
+        $orderStateChoiceProvider = $this->getContainer()->get('prestashop.core.form.choice_provider.order_state_by_id');
+        $availableOrderStates = $orderStateChoiceProvider->getChoices();
+        $statusId = (int) $availableOrderStates[$status];
+
         $this->getCommandBus()->handle(
             new BulkChangeOrderStatusCommand(
                 $ordersIds, $statusId
@@ -246,10 +246,15 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
         $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
         /** @var OrderState $currentOrderState */
         $currentOrderStateId = $orderForViewing->getHistory()->getCurrentOrderStatusId();
-        $statusId = $this->getOrderStatusIdFromMap($status);
-        if ($currentOrderStateId !== $statusId) {
+
+        /** @var OrderStateByIdChoiceProvider $orderStateChoiceProvider */
+        $orderStateChoiceProvider = $this->getContainer()->get('prestashop.core.form.choice_provider.order_state_by_id');
+        $availableOrderStates = $orderStateChoiceProvider->getChoices();
+        $expectedStatusId = (int) $availableOrderStates[$status];
+
+        if ($currentOrderStateId !== $expectedStatusId) {
             throw new RuntimeException(
-                'After changing order status id should be [' . $statusId . '] but received [' . $currentOrderStateId . ']'
+                'After changing order status id should be [' . $expectedStatusId . '] but received [' . $currentOrderStateId . ']'
             );
         }
     }
@@ -264,32 +269,17 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     {
         $orderId = SharedStorage::getStorage()->get($orderReference);
 
-        $statusId = $this->getOrderStatusIdFromMap($status);
+        /** @var OrderStateByIdChoiceProvider $orderStateChoiceProvider */
+        $orderStateChoiceProvider = $this->getContainer()->get('prestashop.core.form.choice_provider.order_state_by_id');
+        $availableOrderStates = $orderStateChoiceProvider->getChoices();
+        $statusId = (int) $availableOrderStates[$status];
+
         $this->getCommandBus()->handle(
             new UpdateOrderStatusCommand(
                 $orderId,
                 $statusId
             )
         );
-    }
-
-    /**
-     * @param string $status
-     *
-     * @return int
-     *
-     * @throws RuntimeException
-     */
-    private function getOrderStatusIdFromMap(string $status)
-    {
-        $orderStatusMapFlipped = array_flip(self::ORDER_STATUS_MAP);
-        if (isset($orderStatusMapFlipped[$status])) {
-            /** @var int $statusId */
-            $statusId = $orderStatusMapFlipped[$status];
-
-            return $statusId;
-        }
-        throw new RuntimeException('Invalid status [' . $status . ']');
     }
 
     /**
