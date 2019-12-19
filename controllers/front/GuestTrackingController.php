@@ -150,9 +150,16 @@ class GuestTrackingControllerCore extends FrontController
         $breadcrumbLinks = parent::getBreadcrumbLinks();
 
         $breadcrumbLinks['links'][] = [
-            'title' => $this->getTranslator()->trans('Guest order tracking', [], 'Shop.Theme.Checkout'),
-            'url' => '#',
+            'title' => $this->getTranslator()->trans('Guest order tracking', array(), 'Shop.Theme.Checkout'),
+            'url' => $this->context->link->getPageLink('guest-tracking'),
         ];
+
+        if (Validate::isLoadedObject($this->order)) {
+            $breadcrumbLinks['links'][] = array(
+                'title' => $this->order->reference,
+                'url' => '#',
+            );
+        }
 
         return $breadcrumbLinks;
     }
