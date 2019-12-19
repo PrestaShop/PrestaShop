@@ -2,7 +2,8 @@
 
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
-use Behat\Behat\Tester\Exception\PendingException;
+use PHPUnit_Framework_Assert;
+use PrestaShop\PrestaShop\Core\Domain\Order\Command\ChangeOrderDeliveryAddressCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\UpdateOrderShippingDetailsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderCarrierForViewing;
@@ -128,20 +129,32 @@ class OrderShippingFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @When I change order :arg1 shipping address to :arg2
+     * @When I change order :orderReference shipping address to :orderShippingAddress
+     *
+     * @param string $orderReference
+     * @param string $orderShippingAddress
      */
-    public function iChangeOrderShippingAddressTo($arg1, $arg2)
+    public function changeOrderShippingAddressTo(string $orderReference, string $orderShippingAddress)
     {
-//        todo test: changeOrderDeliveryAddressHandler
-        throw new PendingException();
+        $orderId = SharedStorage::getStorage()->get($orderReference);
+        $newDeliveryAddressId = (int) SharedStorage::getStorage()->get($orderShippingAddress);
+        $this->getCommandBus()->handle(new ChangeOrderDeliveryAddressCommand($orderId, $newDeliveryAddressId));
     }
 
     /**
-     * @Then order :arg1 shipping address should be :arg2
+     * @Then order :orderReference shipping address should be :orderShippingAddress
+     *
+     * @param string $orderReference
+     * @param string $orderShippingAddress
      */
-    public function orderShippingAddressShouldBe($arg1, $arg2)
+    public function orderShippingAddressShouldBe(string $orderReference, string $orderShippingAddress)
     {
-        throw new PendingException();
-    }
+        $orderId = SharedStorage::getStorage()->get($orderReference);
+        $expectedShippingAddressId = (int) SharedStorage::getStorage()->get($orderShippingAddress);
 
+        /** @var OrderForViewing $orderForViewing */
+        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
+        $orderShippingAddressId = $orderForViewing->getShippingAddress()->getAddressId();
+        PHPUnit_Framework_Assert::assertSame($expectedShippingAddressId, $orderShippingAddressId);
+    }
 }
