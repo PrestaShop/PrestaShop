@@ -2,6 +2,7 @@
 
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
+use Behat\Behat\Tester\Exception\PendingException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\UpdateOrderShippingDetailsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderCarrierForViewing;
@@ -125,4 +126,22 @@ class OrderShippingFeatureContext extends AbstractDomainFeatureContext
             throw new RuntimeException($msg);
         }
     }
+
+    /**
+     * @When I change order :arg1 shipping address to :arg2
+     */
+    public function iChangeOrderShippingAddressTo($arg1, $arg2)
+    {
+//        todo test: changeOrderDeliveryAddressHandler
+        throw new PendingException();
+    }
+
+    /**
+     * @Then order :arg1 shipping address should be :arg2
+     */
+    public function orderShippingAddressShouldBe($arg1, $arg2)
+    {
+        throw new PendingException();
+    }
+
 }
