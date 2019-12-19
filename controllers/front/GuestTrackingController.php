@@ -69,13 +69,23 @@ class GuestTrackingControllerCore extends FrontController
         }
 
 
-        $this->order = Order::getByReferenceAndEmail($order_reference, $email);
-            if (!Validate::isLoadedObject($this->order)) {
-            $this->errors[] = $this->getTranslator()->trans(
-                'We couldn\'t find your order with the information provided, please try again',
+        $isCustomer = Customer::customerExists($email, false, true);
+        if ($isCustomer) {
+            $this->info[] = $this->trans(
+                'Please log in to your customer account to view the order',
                 array(),
-                'Shop.Notifications.Error'
+                'Shop.Notifications.Info'
             );
+            $this->redirectWithNotifications($this->context->link->getPageLink('history'));
+        } else {
+            $this->order = Order::getByReferenceAndEmail($order_reference, $email);
+            if (!Validate::isLoadedObject($this->order)) {
+                $this->errors[] = $this->getTranslator()->trans(
+                    'We couldn\'t find your order with the information provided, please try again',
+                    array(),
+                    'Shop.Notifications.Error'
+                );
+            }
         }
 
         if (Tools::isSubmit('submitTransformGuestToCustomer') && Tools::getValue('password')) {
