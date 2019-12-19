@@ -26,7 +26,11 @@
   <!--  product line left content: image-->
   <div class="product-line-grid-left col-md-3 col-xs-4">
     <span class="product-image media-middle">
-      <img src="{$product.cover.bySize.cart_default.url}" alt="{$product.name|escape:'quotes'}">
+      {if $product.cover}
+        <img src="{$product.cover.bySize.cart_default.url}" alt="{$product.name|escape:'quotes'}">
+      {else}
+        <img src="{$urls.no_picture_image.bySize.home_default.url}" />
+      {/if}
     </span>
   </div>
 
