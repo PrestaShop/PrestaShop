@@ -285,8 +285,11 @@ class CustomerCore extends ObjectModel
         if (Customer::customerExists($this->email)) {
             WebserviceRequest::getInstance()->setError(
                 500,
-                $this->trans('The email is already used, please choose another one',
-                array(), 'Admin.Notifications.Error'),
+                $this->trans(
+                    'The email is already used, please choose another one',
+                     [],
+                    'Admin.Notifications.Error'
+                ),
                 140
             );
 
@@ -348,13 +351,16 @@ class CustomerCore extends ObjectModel
      */
     public function updateWs($nullValues = false)
     {
-        if (CustomerCore::customerExists($this->email)
-            && CustomerCore::customerExists($this->email, true) !== (int) $this->id
+        if (Customer::customerExists($this->email)
+            && Customer::customerExists($this->email, true) !== (int) $this->id
         ) {
             WebserviceRequest::getInstance()->setError(
                 500,
-                $this->trans('The email is already used, please choose another one',
-                array(), 'Admin.Notifications.Error'),
+                $this->trans(
+                    'The email is already used, please choose another one',
+                    [],
+                    'Admin.Notifications.Error'
+                ),
                 141
             );
 
