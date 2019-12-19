@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -69,11 +69,42 @@ class OrderProductForViewing
     private $availableQuantity;
 
     /**
-     * @var string
+     * @var string|null
      */
     private $imagePath;
 
+    /**
+     * @var float
+     */
+    private $unitPriceTaxExclRaw;
+
+    /**
+     * @var float
+     */
+    private $unitPriceTaxInclRaw;
+
+    /**
+     * @var int
+     */
+    private $orderDetailId;
+
+    /**
+     * @var string
+     */
+    private $amountRefund;
+
+    /**
+     * @var int
+     */
+    private $quantityRefunded;
+
+    /**
+     * @var string
+     */
+    private $amountRefundable;
+
     public function __construct(
+        int $orderDetailId,
         int $id,
         string $name,
         string $reference,
@@ -82,7 +113,12 @@ class OrderProductForViewing
         string $unitPrice,
         string $totalPrice,
         int $availableQuantity,
-        string $imagePath
+        ?string $imagePath,
+        float $unitPriceTaxExclRaw,
+        float $unitPriceTaxInclRaw,
+        string $amountRefund,
+        int $quantityRefunded,
+        string $amountRefundable
     ) {
         $this->id = $id;
         $this->name = $name;
@@ -93,6 +129,20 @@ class OrderProductForViewing
         $this->totalPrice = $totalPrice;
         $this->availableQuantity = $availableQuantity;
         $this->imagePath = $imagePath;
+        $this->unitPriceTaxExclRaw = $unitPriceTaxExclRaw;
+        $this->unitPriceTaxInclRaw = $unitPriceTaxInclRaw;
+        $this->orderDetailId = $orderDetailId;
+        $this->amountRefund = $amountRefund;
+        $this->quantityRefunded = $quantityRefunded;
+        $this->amountRefundable = $amountRefundable;
+    }
+
+    /**
+     * @return int
+     */
+    public function getOrderDetailId(): int
+    {
+        return $this->orderDetailId;
     }
 
     /**
@@ -160,10 +210,70 @@ class OrderProductForViewing
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getImagePath(): string
+    public function getImagePath(): ?string
     {
         return $this->imagePath;
+    }
+
+    /**
+     * @return float
+     */
+    public function getUnitPriceTaxExclRaw(): float
+    {
+        return $this->unitPriceTaxExclRaw;
+    }
+
+    /**
+     * @return float
+     */
+    public function getUnitPriceTaxInclRaw(): float
+    {
+        return $this->unitPriceTaxInclRaw;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAmountRefund(): string
+    {
+        return $this->amountRefund;
+    }
+
+    /**
+     * @return int
+     */
+    public function getQuantityRefunded(): int
+    {
+        return $this->quantityRefunded;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAmountRefundable(): string
+    {
+        return $this->amountRefundable;
+    }
+
+    /**
+     * @return int
+     */
+    public function getQuantityRefundable(): int
+    {
+        return $this->quantity - $this->quantityRefunded;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isRefundable(): bool
+    {
+        if ($this->quantity <= $this->quantityRefunded) {
+            return false;
+        }
+
+        return true;
     }
 }

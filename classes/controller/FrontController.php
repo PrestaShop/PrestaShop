@@ -1052,10 +1052,10 @@ class FrontControllerCore extends Controller
          */
     }
 
-    public function registerStylesheet($id, $relativePath, $params = array())
+    public function registerStylesheet($id, $relativePath, $params = [])
     {
         if (!is_array($params)) {
-            $params = array();
+            $params = [];
         }
 
         $default_params = [
@@ -1064,9 +1064,13 @@ class FrontControllerCore extends Controller
             'inline' => false,
             'server' => 'local',
         ];
-
         $params = array_merge($default_params, $params);
 
+        if (Tools::hasMediaServer() && !Configuration::get('PS_CSS_THEME_CACHE')) {
+            $relativePath = Tools::getCurrentUrlProtocolPrefix() . Tools::getMediaServer($relativePath)
+                . ($this->stylesheetManager->getFullPath($relativePath) ?? $relativePath);
+            $params['server'] = 'remote';
+        }
         $this->stylesheetManager->register($id, $relativePath, $params['media'], $params['priority'], $params['inline'], $params['server']);
     }
 
@@ -1075,10 +1079,10 @@ class FrontControllerCore extends Controller
         $this->stylesheetManager->unregisterById($id);
     }
 
-    public function registerJavascript($id, $relativePath, $params = array())
+    public function registerJavascript($id, $relativePath, $params = [])
     {
         if (!is_array($params)) {
-            $params = array();
+            $params = [];
         }
 
         $default_params = [
@@ -1088,9 +1092,13 @@ class FrontControllerCore extends Controller
             'attributes' => null,
             'server' => 'local',
         ];
-
         $params = array_merge($default_params, $params);
 
+        if (Tools::hasMediaServer() && !Configuration::get('PS_JS_THEME_CACHE')) {
+            $relativePath = Tools::getCurrentUrlProtocolPrefix() . Tools::getMediaServer($relativePath)
+                . ($this->javascriptManager->getFullPath($relativePath) ?? $relativePath);
+            $params['server'] = 'remote';
+        }
         $this->javascriptManager->register($id, $relativePath, $params['position'], $params['priority'], $params['inline'], $params['attributes'], $params['server']);
     }
 
@@ -1181,18 +1189,6 @@ class FrontControllerCore extends Controller
                 $this->unregisterJavascript(sha1($uri));
             }
         }
-    }
-
-    /**
-     * @deprecated 1.7  This function has no effect in PrestaShop 1.7 theme. jQuery2 is register by the core on every theme.
-     *                  Have a look at the /themes/_core folder.
-     */
-    public function addJquery($version = null, $folder = null, $minifier = true)
-    {
-        /*
-        This is deprecated in PrestaShop 1.7 and has no effect in PrestaShop 1.7 theme.
-        jQuery2 is register by the core on every theme. Have a look at the /themes/_core folder.
-        */
     }
 
     /**
@@ -1547,8 +1543,8 @@ class FrontControllerCore extends Controller
             'quantity_discount' => array(
                 'type' => ($quantity_discount_price) ? 'price' : 'discount',
                 'label' => ($quantity_discount_price)
-                    ? $this->getTranslator()->trans('Price', array(), 'Shop.Theme.Catalog')
-                    : $this->getTranslator()->trans('Discount', array(), 'Shop.Theme.Catalog'),
+                    ? $this->getTranslator()->trans('Unit price', array(), 'Shop.Theme.Catalog')
+                    : $this->getTranslator()->trans('Unit discount', array(), 'Shop.Theme.Catalog'),
             ),
             'voucher_enabled' => (int) CartRule::isFeatureActive(),
             'return_enabled' => (int) Configuration::get('PS_ORDER_RETURN'),
@@ -1617,9 +1613,9 @@ class FrontControllerCore extends Controller
             'long' => Configuration::get('PS_STORES_CENTER_LONG'),
             'lat' => Configuration::get('PS_STORES_CENTER_LAT'),
 
-            'logo' => (Configuration::get('PS_LOGO')) ? _PS_IMG_ . Configuration::get('PS_LOGO') : '',
-            'stores_icon' => (Configuration::get('PS_STORES_ICON')) ? _PS_IMG_ . Configuration::get('PS_STORES_ICON') : '',
-            'favicon' => (Configuration::get('PS_FAVICON')) ? _PS_IMG_ . Configuration::get('PS_FAVICON') : '',
+            'logo' => (Configuration::get('PS_LOGO')) ? Configuration::get('PS_LOGO') : '',
+            'stores_icon' => (Configuration::get('PS_STORES_ICON')) ? Configuration::get('PS_STORES_ICON') : '',
+            'favicon' => (Configuration::get('PS_FAVICON')) ? Configuration::get('PS_FAVICON') : '',
             'favicon_update_time' => Configuration::get('PS_IMG_UPDATE_TIME'),
 
             'address' => array(
@@ -1985,7 +1981,7 @@ class FrontControllerCore extends Controller
         $alternativeLangs = array();
         $languages = Language::getLanguages(true, $this->context->shop->id);
 
-        if ($languages < 2) {
+        if (count($languages) < 2) {
             // No need to display alternative lang if there is only one enabled
             return $alternativeLangs;
         }

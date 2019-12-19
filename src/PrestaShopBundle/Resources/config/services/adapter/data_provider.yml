@@ -75,7 +75,8 @@ services:
 
     prestashop.adapter.data_provider.combination:
         class: PrestaShop\PrestaShop\Adapter\CombinationDataProvider
-        arguments: ['@prestashop.core.localization.locale.repository']
+        arguments:
+            - "@prestashop.core.localization.locale.context_locale"
 
     prestashop.adapter.data_provider.cms:
         class: PrestaShop\PrestaShop\Adapter\CMS\CMSDataProvider
@@ -104,8 +105,6 @@ services:
     prestashop.categories_provider:
         class: PrestaShopBundle\Service\DataProvider\Admin\CategoriesProvider
         arguments:
-            - '@prestashop.addons.client_api'
-            - '@logger'
             - "%prestashop.addons.categories%"
             - "@=service('prestashop.adapter.legacy.context').getContext().shop.theme_name?service('prestashop.core.addon.theme.repository').getInstanceByName(service('prestashop.adapter.legacy.context').getContext().shop.theme_name).getModulesToEnable():[]"
 

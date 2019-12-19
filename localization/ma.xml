@@ -5,7 +5,6 @@
 	</currencies>
 	<languages>
 		<language iso_code="ar" />
-		<language iso_code="fr" />
 	</languages>
 	<taxes>
 		<tax id="1" name="TVA MA 20%" rate="20" />

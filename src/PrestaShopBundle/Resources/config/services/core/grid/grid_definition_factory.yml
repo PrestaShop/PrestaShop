@@ -193,6 +193,9 @@ services:
             - '@prestashop.core.form.choice_provider.order_state_by_id'
             - '@=service("prestashop.adapter.legacy.context").getContext().language.date_format_full'
             - '@prestashop.adapter.feature.multistore'
+            - '@prestashop.core.grid.action.row.accessibility_checker.print_invoice'
+            - '@prestashop.core.grid.action.row.accessibility_checker.print_delivery_slip'
+            - '@prestashop.core.form.choice_provider.order_state_by_id'
         public: true
 
     prestashop.core.grid.definition.factory.catalog_price_rule:
@@ -204,3 +207,47 @@ services:
             - '@=service("prestashop.adapter.multistore_feature").isUsed()'
         public: true
 
+    prestashop.core.grid.definition.factory.order_message:
+        class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\OrderMessageGridDefinitionFactory'
+        parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+        public: true
+
+    prestashop.core.grid.definition.factory.attachment:
+        class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AttachmentGridDefinitionFactory'
+        parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+        public: true
+
+    prestashop.core.grid.definition.factory.attribute:
+        class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AttributeGridDefinitionFactory'
+        parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+        arguments:
+            - '@=service("request_stack").getCurrentRequest().attributes.getInt("attributeGroupId")'
+            - '@prestashop.core.attribute_group.attribute_group_view_data_provider'
+        public: true
+
+    prestashop.core.grid.definition.factory.attribute_group:
+        class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AttributeGroupGridDefinitionFactory'
+        parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+        public: true
+
+    prestashop.core.grid.definition.factory.merchandise_return:
+        class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\MerchandiseReturnGridDefinitionFactory'
+        parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+        public: true
+
+    prestashop.core.grid.definition.factory.tax_rules_group:
+      class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\TaxRulesGroupGridDefinitionFactory'
+      parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+      public: true
+
+    prestashop.core.grid.definition.factory.address:
+      class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AddressGridDefinitionFactory'
+      parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+      public: true
+
+    prestashop.core.grid.definition.factory.credit_slip:
+        class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CreditSlipGridDefinitionFactory'
+        parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+        arguments:
+            - '@=service("prestashop.adapter.legacy.context").getLanguage().date_format_lite'
+        public: true

@@ -93,7 +93,7 @@ class ConnectionCore extends ObjectModel
     {
         $idPage = false;
         // The connection is created if it does not exist yet and we get the current page id
-        if (!isset($cookie->id_connections) || !strstr(isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '', Tools::getHttpHost(false, false))) {
+        if (!isset($cookie->id_connections) || !isset($_SERVER['HTTP_REFERER']) || strstr($_SERVER['HTTP_REFERER'], Tools::getHttpHost(false, false) . '/') === false) {
             $idPage = Connection::setNewConnection($cookie);
         }
         // If we do not track the pages, no need to get the page id

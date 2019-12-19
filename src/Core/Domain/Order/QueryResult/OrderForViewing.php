@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -25,6 +25,8 @@
  */
 
 namespace PrestaShop\PrestaShop\Core\Domain\Order\QueryResult;
+
+use DateTimeImmutable;
 
 /**
  * Contains data about order for viewing
@@ -105,12 +107,70 @@ class OrderForViewing
      */
     private $currencyId;
 
+    /**
+     * @var bool
+     */
+    private $isDelivered;
+
+    /**
+     * @var OrderPricesForViewing
+     */
+    private $prices;
+
+    /**
+     * @var bool
+     */
+    private $isTaxIncluded;
+
+    /**
+     * @var bool
+     */
+    private $hasInvoice;
+
+    /**
+     * @var OrderDiscountsForViewing
+     */
+    private $discounts;
+
+    /**
+     * @var DateTimeImmutable
+     */
+    private $createdAt;
+
+    /**
+     * @var bool
+     */
+    private $isVirtual;
+
+    /**
+     * @var int
+     */
+    private $carrierId;
+
+    /**
+     * @var int
+     */
+    private $shopId;
+
+    /**
+     * @var int
+     */
+    private $invoiceManagementIsEnabled;
+
     public function __construct(
         int $orderId,
         int $currencyId,
+        int $carrierId,
+        int $shopId,
         string $reference,
+        bool $isVirtual,
         string $taxMethod,
+        bool $isTaxIncluded,
         bool $isValid,
+        bool $hasInvoice,
+        bool $isDelivered,
+        bool $invoiceManagementIsEnabled,
+        DateTimeImmutable $createdAt,
         OrderCustomerForViewing $customer,
         OrderShippingAddressForViewing $shippingAddress,
         OrderInvoiceAddressForViewing $invoiceAddress,
@@ -120,7 +180,9 @@ class OrderForViewing
         OrderShippingForViewing $shipping,
         OrderReturnsForViewing $returns,
         OrderPaymentsForViewing $payments,
-        OrderMessagesForViewing $messages
+        OrderMessagesForViewing $messages,
+        OrderPricesForViewing $prices,
+        OrderDiscountsForViewing $discounts
     ) {
         $this->reference = $reference;
         $this->customer = $customer;
@@ -137,6 +199,16 @@ class OrderForViewing
         $this->messages = $messages;
         $this->orderId = $orderId;
         $this->currencyId = $currencyId;
+        $this->isDelivered = $isDelivered;
+        $this->prices = $prices;
+        $this->isTaxIncluded = $isTaxIncluded;
+        $this->hasInvoice = $hasInvoice;
+        $this->discounts = $discounts;
+        $this->createdAt = $createdAt;
+        $this->isVirtual = $isVirtual;
+        $this->carrierId = $carrierId;
+        $this->shopId = $shopId;
+        $this->invoiceManagementIsEnabled = $invoiceManagementIsEnabled;
     }
 
     /**
@@ -153,6 +225,22 @@ class OrderForViewing
     public function getCurrencyId(): int
     {
         return $this->currencyId;
+    }
+
+    /**
+     * @return int
+     */
+    public function getCarrierId(): int
+    {
+        return $this->carrierId;
+    }
+
+    /**
+     * @return int
+     */
+    public function getShopId(): int
+    {
+        return $this->shopId;
     }
 
     /**
@@ -257,5 +345,69 @@ class OrderForViewing
     public function getMessages(): OrderMessagesForViewing
     {
         return $this->messages;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isDelivered(): bool
+    {
+        return $this->isDelivered;
+    }
+
+    /**
+     * @return OrderPricesForViewing
+     */
+    public function getPrices(): OrderPricesForViewing
+    {
+        return $this->prices;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isTaxIncluded(): bool
+    {
+        return $this->isTaxIncluded;
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasInvoice(): bool
+    {
+        return $this->hasInvoice;
+    }
+
+    /**
+     * @return OrderDiscountsForViewing
+     */
+    public function getDiscounts(): OrderDiscountsForViewing
+    {
+        return $this->discounts;
+    }
+
+    /**
+     * @return DateTimeImmutable
+     */
+    public function getCreatedAt(): DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isVirtual(): bool
+    {
+        return $this->isVirtual;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isInvoiceManagementIsEnabled(): bool
+    {
+        return $this->invoiceManagementIsEnabled;
     }
 }

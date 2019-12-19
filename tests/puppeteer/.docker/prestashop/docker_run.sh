@@ -24,10 +24,8 @@ if [ -f /var/www/html/config/settings.inc.php -o -f /var/www/html/app/config/par
   rm -rf /var/www/html/var/cache/*
 fi
 
-if [ $PS_DEV_MODE -ne 0 ]; then
-  echo "\n* Enabling DEV mode ...";
-  sed -ie "s/define('_PS_MODE_DEV_', false);/define('_PS_MODE_DEV_',\ true);/g" /var/www/html/config/defines.inc.php
-fi
+echo "\n* Disabling DEV mode ...";
+sed -ie "s/define('_PS_MODE_DEV_', true);/define('_PS_MODE_DEV_',\ false);/g" /var/www/html/config/defines.inc.php
 
 if [ $PS_HOST_MODE -ne 0 -a ! $(grep "define('_PS_HOST_MODE_', true);" /var/www/html/config/defines.inc.php) ]; then
   echo "\n* Enabling HOST mode ...";

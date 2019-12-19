@@ -4,7 +4,11 @@
   {$header}
 </head>
 
-<body class="lang-{$iso_user}{if $lang_is_rtl} lang-rtl{/if} {$smarty.get.controller|escape|strtolower}{if $collapse_menu} page-sidebar-closed{/if}">
+<body
+  class="lang-{$iso_user}{if $lang_is_rtl} lang-rtl{/if} {$smarty.get.controller|escape|strtolower}{if $collapse_menu} page-sidebar-closed{/if}"
+  {if isset($js_router_metadata.base_url)}data-base-url="{$js_router_metadata.base_url}"{/if}
+  {if isset($js_router_metadata.token)}data-token="{$js_router_metadata.token}"{/if}
+>
 
 {if $display_header}
   <header id="header">

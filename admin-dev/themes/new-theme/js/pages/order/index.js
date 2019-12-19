@@ -23,18 +23,22 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-import Grid from '../../components/grid/grid';
-import FiltersResetExtension from '../../components/grid/extension/filters-reset-extension';
-import ReloadListActionExtension from '../../components/grid/extension/reload-list-extension';
-import ExportToSqlManagerExtension from '../../components/grid/extension/export-to-sql-manager-extension';
-import SortingExtension from '../../components/grid/extension/sorting-extension';
-import LinkRowActionExtension from '../../components/grid/extension/link-row-action-extension';
-import SubmitGridExtension from '../../components/grid/extension/submit-grid-action-extension';
-import SubmitBulkExtension from '../../components/grid/extension/submit-bulk-action-extension';
-import BulkActionCheckboxExtension from '../../components/grid/extension/bulk-action-checkbox-extension';
+import Grid from '@components/grid/grid';
+import FiltersResetExtension from '@components/grid/extension/filters-reset-extension';
+import ReloadListActionExtension from '@components/grid/extension/reload-list-extension';
+import ExportToSqlManagerExtension from '@components/grid/extension/export-to-sql-manager-extension';
+import SortingExtension from '@components/grid/extension/sorting-extension';
+import LinkRowActionExtension from '@components/grid/extension/link-row-action-extension';
+import SubmitGridExtension from '@components/grid/extension/submit-grid-action-extension';
+import SubmitBulkExtension from '@components/grid/extension/submit-bulk-action-extension';
+import BulkActionCheckboxExtension from '@components/grid/extension/bulk-action-checkbox-extension';
 import FiltersSubmitButtonEnablerExtension
-  from '../../components/grid/extension/filters-submit-button-enabler-extension';
-import ModalFormSubmitExtension from "../../components/grid/extension/modal-form-submit-extension";
+  from '@components/grid/extension/filters-submit-button-enabler-extension';
+import ChoiceExtension from '@components/grid/extension/choice-extension';
+import ModalFormSubmitExtension from '@components/grid/extension/modal-form-submit-extension';
+import PreviewExtension from '@components/grid/extension/preview-extension';
+import previewProductsToggler from '@pages/order/preview-products-toggler';
+import BulkOpenTabsExtension from '@components/grid/extension/bulk-open-tabs-extension';
 
 const $ = window.$;
 
@@ -50,4 +54,7 @@ $(() => {
   orderGrid.addExtension(new BulkActionCheckboxExtension());
   orderGrid.addExtension(new FiltersSubmitButtonEnablerExtension());
   orderGrid.addExtension(new ModalFormSubmitExtension());
+  orderGrid.addExtension(new ChoiceExtension());
+  orderGrid.addExtension(new PreviewExtension(previewProductsToggler));
+  orderGrid.addExtension(new BulkOpenTabsExtension());
 });

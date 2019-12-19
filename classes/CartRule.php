@@ -393,7 +393,6 @@ class CartRuleCore extends ObjectModel
         }
 
         $sql = '(SELECT SQL_NO_CACHE ' . $sql_part1 . ' WHERE cr.`id_customer` = ' . (int) $id_customer . ' ' . $sql_part2 . ')';
-        $sql .= ' UNION (SELECT ' . $sql_part1 . ' WHERE cr.`group_restriction` = 1 ' . $sql_part2 . ')';
         if ($includeGeneric && (int) $id_customer != 0) {
             $sql .= ' UNION (SELECT ' . $sql_part1 . ' WHERE cr.`id_customer` = 0 ' . $sql_part2 . ')';
         }
@@ -766,7 +765,7 @@ class CartRuleCore extends ObjectModel
                 if ($cart_rule['gift_product']) {
                     foreach ($products as $key => &$product) {
                         if (empty($product['gift']) && $product['id_product'] == $cart_rule['gift_product'] && $product['id_product_attribute'] == $cart_rule['gift_product_attribute']) {
-                            $cartTotal = Tools::ps_round($cartTotal - $product[$this->minimum_amount_tax ? 'price_wt' : 'price'], (int) $context->currency->decimals * _PS_PRICE_COMPUTE_PRECISION_);
+                            $cartTotal = Tools::ps_round($cartTotal - $product[$this->minimum_amount_tax ? 'price_wt' : 'price'], (int) $context->currency->decimals * Context::getContext()->getComputingPrecision());
                         }
                     }
                 }
@@ -1142,7 +1141,7 @@ class CartRuleCore extends ObjectModel
                 // Do not give a reduction on free products!
                 $order_total = $order_package_products_total;
                 foreach ($context->cart->getCartRules(CartRule::FILTER_ACTION_GIFT, false) as $cart_rule) {
-                    $order_total -= Tools::ps_round($cart_rule['obj']->getContextualValue($use_tax, $context, CartRule::FILTER_ACTION_GIFT, $package), _PS_PRICE_COMPUTE_PRECISION_);
+                    $order_total -= Tools::ps_round($cart_rule['obj']->getContextualValue($use_tax, $context, CartRule::FILTER_ACTION_GIFT, $package), Context::getContext()->getComputingPrecision());
                 }
 
                 // Remove products that are on special
@@ -1150,9 +1149,9 @@ class CartRuleCore extends ObjectModel
                     foreach ($package_products as $product) {
                         if ($product['reduction_applies']) {
                             if ($use_tax) {
-                                $order_total -= Tools::ps_round($product['total_wt'], _PS_PRICE_COMPUTE_PRECISION_);
+                                $order_total -= Tools::ps_round($product['total_wt'], Context::getContext()->getComputingPrecision());
                             } else {
-                                $order_total -= Tools::ps_round($product['total'], _PS_PRICE_COMPUTE_PRECISION_);
+                                $order_total -= Tools::ps_round($product['total'], Context::getContext()->getComputingPrecision());
                             }
                         }
                     }
@@ -1247,7 +1246,7 @@ class CartRuleCore extends ObjectModel
 
                     // Then we convert the voucher value in the default currency into the cart currency
                     $reduction_amount *= $context->currency->conversion_rate;
-                    $reduction_amount = Tools::ps_round($reduction_amount, _PS_PRICE_COMPUTE_PRECISION_);
+                    $reduction_amount = Tools::ps_round($reduction_amount, Context::getContext()->getComputingPrecision());
                 }
 
                 // If it has the same tax application that you need, then it's the right value, whatever the product!

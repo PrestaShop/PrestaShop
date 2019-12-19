@@ -1,4 +1,5 @@
-const FOBasePage = require('../FO/FObasePage');
+require('module-alias/register');
+const FOBasePage = require('@pages/FO/FObasePage');
 
 module.exports = class Home extends FOBasePage {
   constructor(page) {
@@ -8,6 +9,7 @@ module.exports = class Home extends FOBasePage {
     this.homePageSection = 'section#content.page-home';
     this.productArticle = '#content .products div:nth-child(%NUMBER) article';
     this.productImg = `${this.productArticle} img`;
+    this.productDescriptionDiv = `${this.productArticle} div.product-description`;
     this.productQuickViewLink = `${this.productArticle} a.quick-view`;
     this.allProductLink = '#content a.all-product-link';
     this.totalProducts = '#js-product-list-top .total-products > p';
@@ -23,8 +25,8 @@ module.exports = class Home extends FOBasePage {
   /**
    * Check home page
    */
-  async checkHomePage() {
-    await this.page.waitForSelector(this.homePageSection);
+  async isHomePage() {
+    return this.elementVisible(this.homePageSection, 3000);
   }
 
   /**
@@ -32,7 +34,10 @@ module.exports = class Home extends FOBasePage {
    * @param id, product id
    */
   async goToProductPage(id) {
-    await this.waitForSelectorAndClick(this.productImg.replace('%NUMBER', id), 5000);
+    await Promise.all([
+      this.page.waitForNavigation({waitUntil: 'networkidle0'}),
+      this.page.click(this.productImg.replace('%NUMBER', id)),
+    ]);
   }
 
   /**
@@ -41,12 +46,22 @@ module.exports = class Home extends FOBasePage {
    * @return {Promise<void>}
    */
   async quickViewProduct(id) {
+    await this.page.hover(this.productImg.replace('%NUMBER', id));
+    let displayed = false;
+    /* eslint-disable no-await-in-loop */
+    // Only way to detect if element is displayed is to get value of computed style 'product description' after hover
+    // and compare it with value 'block'
+    for (let i = 0; i < 10 && !displayed; i++) {
+      displayed = await this.page.evaluate(
+        selector => window.getComputedStyle(document.querySelector(selector), ':after')
+          .getPropertyValue('display') === 'block',
+        this.productDescriptionDiv.replace('%NUMBER', id),
+      );
+      await this.page.waitFor(100);
+    }
+    /* eslint-enable no-await-in-loop */
     await Promise.all([
-      this.page.waitForSelector(`${this.productQuickViewLink.replace('%NUMBER', id)}`),
-      this.page.hover(this.productImg.replace('%NUMBER', id)),
-    ]);
-    await Promise.all([
-      this.page.waitForSelector(this.quickViewModalDiv),
+      this.page.waitForSelector(this.quickViewModalDiv, {visible: true}),
       this.page.$eval(this.productQuickViewLink.replace('%NUMBER', id), el => el.click()),
     ]);
   }
@@ -61,7 +76,7 @@ module.exports = class Home extends FOBasePage {
     await this.quickViewProduct(id);
     await this.setValue(this.quantityWantedInput, quantity_wanted);
     await Promise.all([
-      this.page.waitForSelector(this.blockCartModalDiv),
+      this.page.waitForSelector(this.blockCartModalDiv, {visible: true}),
       this.page.click(this.addToCartButton),
     ]);
   }

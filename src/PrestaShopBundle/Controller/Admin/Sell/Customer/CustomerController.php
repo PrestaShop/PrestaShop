@@ -35,6 +35,8 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\Command\EditCustomerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\SetPrivateNoteAboutCustomerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\TransformGuestToCustomerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\MissingCustomerRequiredFieldsException;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerCarts;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerOrders;
 use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\EditableCustomer;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerDefaultGroupAccessException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerException;
@@ -52,6 +54,7 @@ use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\ValueObject\ShowcaseCard;
 use PrestaShop\PrestaShop\Core\Search\Filters\CustomerFilters;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerForViewing;
+use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CustomerGridDefinitionFactory;
 use PrestaShopBundle\Component\CsvResponse;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController as AbstractAdminController;
 use PrestaShopBundle\Form\Admin\Sell\Customer\DeleteCustomersType;
@@ -108,6 +111,27 @@ class CustomerController extends AbstractAdminController
             'showcaseCardName' => ShowcaseCard::CUSTOMERS_CARD,
             'isShowcaseCardClosed' => $showcaseCardIsClosed,
         ]);
+    }
+
+    /**
+     * Process Grid search.
+     *
+     * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))")
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    public function searchGridAction(Request $request)
+    {
+        $responseBuilder = $this->get('prestashop.bundle.grid.response_builder');
+
+        return $responseBuilder->buildSearchResponse(
+            $this->get('prestashop.core.grid.definition.factory.customer'),
+            $request,
+            CustomerGridDefinitionFactory::GRID_ID,
+            'admin_customers_index'
+        );
     }
 
     /**
@@ -382,7 +406,14 @@ class CustomerController extends AbstractAdminController
         $phrases = explode(' ', $query);
         $isRequestFromLegacyPage = !$request->query->has('sf2');
 
-        $customers = $this->getQueryBus()->handle(new SearchCustomers($phrases));
+        try {
+            $customers = $this->getQueryBus()->handle(new SearchCustomers($phrases));
+        } catch (Exception $e) {
+            return $this->json(
+                ['message' => $this->getErrorMessageForException($e, $this->getErrorMessages($e))],
+                Response::HTTP_INTERNAL_SERVER_ERROR
+            );
+        }
 
         // if call is made from legacy page
         // it will return response so legacy can understand it
@@ -686,8 +717,8 @@ class CustomerController extends AbstractAdminController
                 'id_customer' => $record['id_customer'],
                 'social_title' => '--' === $record['social_title'] ? '' : $record['social_title'],
                 'firstname' => $record['firstname'],
-                'lastname' => $record['firstname'],
-                'email' => $record['firstname'],
+                'lastname' => $record['lastname'],
+                'email' => $record['email'],
                 'company' => '--' === $record['company'] ? '' : $record['company'],
                 'total_spent' => '--' === $record['total_spent'] ? '' : $record['total_spent'],
                 'enabled' => $record['active'],
@@ -702,6 +733,54 @@ class CustomerController extends AbstractAdminController
             ->setData($data)
             ->setHeadersData($headers)
             ->setFileName('customer_' . date('Y-m-d_His') . '.csv');
+    }
+
+    /**
+     * @todo: check access for order create page as its used there (customer OR order access)
+     * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))")
+     *
+     * @param int $customerId
+     *
+     * @return JsonResponse
+     */
+    public function getCartsAction(int $customerId)
+    {
+        try {
+            $carts = $this->getQueryBus()->handle(new GetCustomerCarts($customerId));
+        } catch (Exception $e) {
+            return $this->json(
+                ['message' => $this->getErrorMessageForException($e, $this->getErrorMessages($e))],
+                Response::HTTP_INTERNAL_SERVER_ERROR
+            );
+        }
+
+        return $this->json([
+            'carts' => $carts,
+        ]);
+    }
+
+    /**
+     * @todo: check access for order create page as its used there (customer OR order access)
+     * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))")
+     *
+     * @param int $customerId
+     *
+     * @return JsonResponse
+     */
+    public function getOrdersAction(int $customerId)
+    {
+        try {
+            $orders = $this->getQueryBus()->handle(new GetCustomerOrders($customerId));
+        } catch (Exception $e) {
+            return $this->json(
+                ['message' => $this->getErrorMessageForException($e, $this->getErrorMessages($e))],
+                Response::HTTP_INTERNAL_SERVER_ERROR
+            );
+        }
+
+        return $this->json([
+            'orders' => $orders,
+        ]);
     }
 
     /**

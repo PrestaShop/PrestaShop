@@ -768,7 +768,7 @@ class ToolsCore
      *
      * @throws Exception
      */
-    protected static function getContextLocale(Context $context)
+    public static function getContextLocale(Context $context)
     {
         $locale = $context->getCurrentLocale();
         if (null !== $locale) {
@@ -820,14 +820,16 @@ class ToolsCore
 
     public static function displayPriceSmarty($params, &$smarty)
     {
+        $context = Context::getContext();
+        $locale = static::getContextLocale($context);
         if (array_key_exists('currency', $params)) {
             $currency = Currency::getCurrencyInstance((int) $params['currency']);
             if (Validate::isLoadedObject($currency)) {
-                return Tools::displayPrice($params['price'], $currency, false);
+                return $locale->formatPrice($params['price'], $currency->iso_code);
             }
         }
 
-        return Tools::displayPrice($params['price']);
+        return $locale->formatPrice($params['price'], $context->currency->iso_code);
     }
 
     /**
@@ -932,7 +934,7 @@ class ToolsCore
             $amount *= $currency_to->conversion_rate;
         }
 
-        return Tools::ps_round($amount, _PS_PRICE_COMPUTE_PRECISION_);
+        return Tools::ps_round($amount, Context::getContext()->getComputingPrecision());
     }
 
     /**
@@ -2362,7 +2364,10 @@ class ToolsCore
 
     protected static $_cache_nb_media_servers = null;
 
-    public static function getMediaServer($filename)
+    /**
+     * @return bool
+     */
+    public static function hasMediaServer(): bool
     {
         if (self::$_cache_nb_media_servers === null && defined('_MEDIA_SERVER_1_') && defined('_MEDIA_SERVER_2_') && defined('_MEDIA_SERVER_3_')) {
             if (_MEDIA_SERVER_1_ == '') {
@@ -2376,7 +2381,17 @@ class ToolsCore
             }
         }
 
-        if ($filename && self::$_cache_nb_media_servers && ($id_media_server = (abs(crc32($filename)) % self::$_cache_nb_media_servers + 1))) {
+        return self::$_cache_nb_media_servers > 0;
+    }
+
+    /**
+     * @param string $filename
+     *
+     * @return string
+     */
+    public static function getMediaServer(string $filename): string
+    {
+        if (self::hasMediaServer() && ($id_media_server = (abs(crc32($filename)) % self::$_cache_nb_media_servers + 1))) {
             return constant('_MEDIA_SERVER_' . $id_media_server . '_');
         }
 
@@ -3400,11 +3415,7 @@ exit;
     public static function clearSf2Cache($env = null)
     {
         if (null === $env) {
-            if (defined('_PS_IN_TEST_')) {
-                $env = 'test';
-            } else {
-                $env = (_PS_MODE_DEV_) ? 'dev' : 'prod';
-            }
+            $env = _PS_ENV_;
         }
 
         $dir = _PS_ROOT_DIR_ . '/var/cache/' . $env . '/';

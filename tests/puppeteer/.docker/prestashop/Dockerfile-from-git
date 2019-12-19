@@ -11,12 +11,6 @@ RUN apt install -y \
     nodejs \
     poppler-utils
 
-ENV PS_HANDLE_DYNAMIC_DOMAIN 0
-ENV PS_INSTALL_AUTO 1
-ENV PS_COUNTRY fr
-ENV TRAVIS_BUILD_DIR /var/www/html
-ENV DEBIAN_FRONTEND noninteractive
-
 RUN curl --insecure https://getcomposer.org/composer.phar -o /usr/bin/composer && chmod +x /usr/bin/composer
 
 WORKDIR /tmp

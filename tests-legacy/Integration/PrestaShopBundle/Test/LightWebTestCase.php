@@ -76,6 +76,7 @@ class LightWebTestCase extends TestCase
         $employeeMock = $this->getMockBuilder(Employee::class)
             ->getMock();
         $employeeMock->id_profile = 1;
+        $employeeMock->id_lang = 1;
 
         $contextMock = $this->getMockBuilder(Context::class)
             ->setMethods(array('getTranslator', 'getContext'))

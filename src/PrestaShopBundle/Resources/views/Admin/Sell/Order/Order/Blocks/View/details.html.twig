@@ -1,5 +1,5 @@
 {#**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -27,21 +27,25 @@
   <ul class="nav nav nav-tabs" role="tablist">
     <li class="nav-item">
       <a class="nav-link active show" id="historyTab" data-toggle="tab" href="#historyTabContent" role="tab" aria-controls="historyTabContent" aria-expanded="true" aria-selected="false">
+        <i class="material-icons">history</i>
         {{ 'Status'|trans({}, 'Admin.Global') }} ({{ orderForViewing.history.statuses|length }})
       </a>
     </li>
     <li class="nav-item">
       <a class="nav-link" id="orderDocumentsTab" data-toggle="tab" href="#orderDocumentsTabContent" role="tab" aria-controls="orderDocumentsTabContent" aria-expanded="true" aria-selected="false">
+        <i class="material-icons">note</i>
         {{ 'Documents'|trans({}, 'Admin.Orderscustomers.Feature') }} ({{ orderForViewing.documents.documents|length }})
       </a>
     </li>
     <li class="nav-item">
       <a class="nav-link" id="orderShippingTab" data-toggle="tab" href="#orderShippingTabContent" role="tab" aria-controls="orderShippingTabContent" aria-expanded="true" aria-selected="false">
-        {{ 'Carriers'|trans({}, 'Admin.Orderscustomers.Feature') }} ({{ orderForViewing.shipping.carriers|length }})
+        <i class="material-icons">local_shipping</i>
+        {{ 'Shipping'|trans({}, 'Admin.Catalog.Feature') }} ({{ orderForViewing.shipping.carriers|length }})
       </a>
     </li>
     <li class="nav-item">
       <a class="nav-link" id="orderReturnsTab" data-toggle="tab" href="#orderReturnsTabContent" role="tab" aria-controls="orderReturnsTabContent" aria-expanded="true" aria-selected="false">
+        <i class="material-icons">replay</i>
         {{ 'Merchandise returns'|trans({}, 'Admin.Orderscustomers.Feature') }} ({{ orderForViewing.returns.orderReturns|length }})
       </a>
     </li>
@@ -60,5 +64,17 @@
     <div class="tab-pane fade" id="orderReturnsTabContent" role="tabpanel" aria-labelledby="orderReturnsTab">
       {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/merchandise_returns.html.twig' %}
     </div>
+  </div>
+</div>
+
+<div class="mt-2" id="order_hook_tabs">
+  <ul class="nav nav nav-tabs" role="tablist">
+    {# Rendering of hook displayAdminOrderTabLink, we expect tab links #}
+    {{ renderhook('displayAdminOrderTabLink', {'id_order': orderForViewing.id}) }}
+  </ul>
+
+  <div class="tab-content">
+    {# Rendering of hook displayAdminOrderTabContent, we expect tab contents #}
+    {{ renderhook('displayAdminOrderTabContent', {'id_order': orderForViewing.id}) }}
   </div>
 </div>

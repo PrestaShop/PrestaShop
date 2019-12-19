@@ -404,13 +404,13 @@ class OrderDetailCore extends ObjectModel
         foreach ($this->tax_calculator->getTaxesAmount($discounted_price_tax_excl) as $id_tax => $amount) {
             switch (Configuration::get('PS_ROUND_TYPE')) {
                 case Order::ROUND_ITEM:
-                    $unit_amount = (float) Tools::ps_round($amount, _PS_PRICE_COMPUTE_PRECISION_);
+                    $unit_amount = (float) Tools::ps_round($amount, Context::getContext()->getComputingPrecision());
                     $total_amount = $unit_amount * $this->product_quantity;
 
                     break;
                 case Order::ROUND_LINE:
                     $unit_amount = $amount;
-                    $total_amount = Tools::ps_round($unit_amount * $this->product_quantity, _PS_PRICE_COMPUTE_PRECISION_);
+                    $total_amount = Tools::ps_round($unit_amount * $this->product_quantity, Context::getContext()->getComputingPrecision());
 
                     break;
                 case Order::ROUND_TOTAL:
@@ -571,9 +571,9 @@ class OrderDetailCore extends ObjectModel
 
                     if ($this->specificPrice['reduction_tax']) {
                         $this->reduction_amount_tax_incl = $this->reduction_amount;
-                        $this->reduction_amount_tax_excl = Tools::ps_round($this->tax_calculator->removeTaxes($this->reduction_amount), _PS_PRICE_COMPUTE_PRECISION_);
+                        $this->reduction_amount_tax_excl = Tools::ps_round($this->tax_calculator->removeTaxes($this->reduction_amount), Context::getContext()->getComputingPrecision());
                     } else {
-                        $this->reduction_amount_tax_incl = Tools::ps_round($this->tax_calculator->addTaxes($this->reduction_amount), _PS_PRICE_COMPUTE_PRECISION_);
+                        $this->reduction_amount_tax_incl = Tools::ps_round($this->tax_calculator->addTaxes($this->reduction_amount), Context::getContext()->getComputingPrecision());
                         $this->reduction_amount_tax_excl = $this->reduction_amount;
                     }
 

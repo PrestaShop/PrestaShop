@@ -119,14 +119,6 @@
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <label class="form-control-label">{{ 'Number of decimals'|trans }}</label>
-                                <div class="col-sm">
-                                    {{ form_errors(generalForm.price_display_precision) }}
-                                    {{ form_widget(generalForm.price_display_precision) }}
-                                    <small class="form-text">{{ 'Choose how many decimals you want to display'|trans({}, 'Admin.Shopparameters.Help') }}</small>
-                                </div>
-                            </div>
-                            <div class="form-group row">
                                 <label class="form-control-label">{{ 'Display suppliers'|trans }}</label>
                                 <div class="col-sm">
                                     {{ form_errors(generalForm.display_suppliers) }}

@@ -58,7 +58,8 @@ final class GetManufacturerAddressForEditingHandler extends AbstractManufacturer
             (int) $address->id_state,
             $address->phone,
             $address->phone_mobile,
-            $address->other
+            $address->other,
+            $address->dni
         );
     }
 }

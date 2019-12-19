@@ -30,11 +30,18 @@ class CurrencyCore extends ObjectModel
     public $id;
 
     /**
-     * Name of the currency.
+     * Currency's name for the current language.
      *
      * @var string
      */
     public $name;
+
+    /**
+     * Currency's names, indexed by language id.
+     *
+     * @var string[]
+     */
+    private $localizedNames;
 
     /**
      * Alphabetic ISO 4217 code of this currency.
@@ -73,6 +80,20 @@ class CurrencyCore extends ObjectModel
     public $deleted = 0;
 
     /**
+     * Is this currency unofficial ?
+     *
+     * @var int|bool unofficial
+     */
+    public $unofficial;
+
+    /**
+     * Is this currency modified ?
+     *
+     * @var int|bool modified
+     */
+    public $modified;
+
+    /**
      * Is this currency active ?
      *
      * @var int|bool active
@@ -82,16 +103,25 @@ class CurrencyCore extends ObjectModel
     /**
      * Currency's symbol
      *
+     * @deprecated Use $symbol
+     *
      * @var string
      */
     public $sign;
 
     /**
-     * Currency's symbol.
+     * Currency's symbol for the current language.
      *
      * @var string
      */
     public $symbol;
+
+    /**
+     * Currency's symbols, indexed by language id.
+     *
+     * @var string[]
+     */
+    private $localizedSymbols;
 
     /**
      * CLDR price formatting pattern
@@ -123,6 +153,20 @@ class CurrencyCore extends ObjectModel
     public $precision;
 
     /**
+     * CLDR price pattern
+     *
+     * @var string
+     */
+    public $pattern;
+
+    /**
+     * CLDR price patterns, the array is indexed by language id
+     *
+     * @var string[]
+     */
+    private $localizedPatterns;
+
+    /**
      * @see ObjectModel::$definition
      */
     public static $definition = array(
@@ -136,10 +180,13 @@ class CurrencyCore extends ObjectModel
             'conversion_rate' => array('type' => self::TYPE_FLOAT, 'validate' => 'isUnsignedFloat', 'required' => true, 'shop' => true),
             'deleted' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
             'active' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+            'unofficial' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+            'modified' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 
             /* Lang fields */
             'name' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 255),
             'symbol' => array('type' => self::TYPE_STRING, 'lang' => true, 'size' => 255),
+            'pattern' => array('type' => self::TYPE_STRING, 'lang' => true, 'size' => 255),
         ),
     );
 
@@ -182,16 +229,35 @@ class CurrencyCore extends ObjectModel
             if (empty($idLang)) {
                 $idLang = Context::getContext()->language->id;
             }
+
+            /*
+             * Both fields used to be string, but they were turned into translatable
+             * fields so now they are arrays (indexed by language id). But to avoid BC breaks
+             * the field is turned into a string in the constructor (using either the specified
+             * language or the default one).
+             * Since we want to keep the original array we store it in another field before setting
+             * the field as a string.
+             */
             if (is_array($this->symbol)) {
+                $this->localizedSymbols = $this->symbol;
                 $this->sign = $this->symbol = $this->symbol[$idLang];
             } else {
+                $this->localizedSymbols = [$idLang => $this->symbol];
                 $this->sign = $this->symbol;
             }
 
             if (is_array($this->name)) {
+                $this->localizedNames = $this->name;
                 $this->name = Tools::ucfirst($this->name[$idLang]);
             } else {
+                $this->localizedNames = [$idLang => $this->name];
                 $this->name = Tools::ucfirst($this->name);
+            }
+
+            if (is_array($this->pattern)) {
+                $this->localizedPatterns = $this->pattern;
+            } else {
+                $this->localizedPatterns = [$idLang => $this->pattern];
             }
 
             $this->iso_code_num = $this->numeric_iso_code;
@@ -380,6 +446,92 @@ class CurrencyCore extends ObjectModel
     }
 
     /**
+     * Names indexed by language id
+     *
+     * @return string[]
+     */
+    public function getLocalizedNames()
+    {
+        return $this->localizedNames;
+    }
+
+    /**
+     * This setter updates the name field because it is used when you want to update
+     * the database (legacy core feature). But to be consistent the names field also
+     * needs to be updated.
+     *
+     * @param string[] $localizedNames list of currency names, the array needs to be indexed by language id
+     *
+     * @return $this
+     */
+    public function setLocalizedNames(array $localizedNames)
+    {
+        $this->localizedNames = $this->name = $localizedNames;
+
+        return $this;
+    }
+
+    /**
+     * Symbols indexed by language id
+     *
+     * @return string[]
+     */
+    public function getLocalizedSymbols()
+    {
+        return $this->localizedSymbols;
+    }
+
+    /**
+     * This setter updates the symbol field because it is used when you want to update
+     * the database (legacy core feature). But to be consistent the symbols field also
+     * needs to be updated.
+     *
+     * @param string[] $localizedSymbols list of currency symbols, the array needs to be indexed by language id
+     *
+     * @return CurrencyCore
+     */
+    public function setLocalizedSymbols(array $localizedSymbols)
+    {
+        $this->localizedSymbols = $this->symbol = $localizedSymbols;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPattern($idLang)
+    {
+        return $this->localizedPatterns[$idLang] ?? '';
+    }
+
+    /**
+     * Patterns indexed by language id
+     *
+     * @return string[]
+     */
+    public function getLocalizedPatterns()
+    {
+        return $this->localizedPatterns;
+    }
+
+    /**
+     * This setter updates the pattern field because it is used when you want to update
+     * the database (legacy core feature). But to be consistent the patterns field also
+     * needs to be updated.
+     *
+     * @param string[] $localizedPatterns list of currency patterns, the array needs to be indexed by language id
+     *
+     * @return CurrencyCore
+     */
+    public function setLocalizedPatterns(array $localizedPatterns)
+    {
+        $this->localizedPatterns = $this->pattern = $localizedPatterns;
+
+        return $this;
+    }
+
+    /**
      * Return available currencies.
      *
      * @param bool $object
@@ -413,10 +565,26 @@ class CurrencyCore extends ObjectModel
             SELECT *
             FROM `' . _DB_PREFIX_ . 'currency` c
             ' . ($currentShopOnly ? Shop::addSqlAssociation('currency', 'c') : '') . '
-                WHERE `deleted` = 0' .
+                WHERE c.`deleted` = 0' .
                 ($active ? ' AND c.`active` = 1' : '') .
                 ($groupBy ? ' GROUP BY c.`id_currency`' : '') .
                 ' ORDER BY `iso_code` ASC');
+
+        return $currencies;
+    }
+
+    /**
+     * Retrieve all currencies data from the database.
+     *
+     * @return array Currency data from database
+     *
+     * @throws PrestaShopDatabaseException
+     */
+    public static function findAllInstalled()
+    {
+        $currencies = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
+            'SELECT * FROM `' . _DB_PREFIX_ . 'currency` c ORDER BY `iso_code` ASC'
+        );
 
         return $currencies;
     }
@@ -574,15 +742,62 @@ class CurrencyCore extends ObjectModel
      *
      * @param string $isoCode ISO code
      * @param int $idShop Shop ID
+     * @param bool $forceRefreshCache [default=false] Set to TRUE to forcefully refresh any currently cached results
+     * @param bool $includeDeleted [default=false] Set to TRUE to get result even for soft deleted currency
      *
      * @return int Currency ID
      */
-    public static function getIdByIsoCode($isoCode, $idShop = 0)
+    public static function getIdByIsoCode($isoCode, $idShop = 0, $forceRefreshCache = false, $includeDeleted = false)
     {
-        $cacheId = 'Currency::getIdByIsoCode_' . pSQL($isoCode) . '-' . (int) $idShop;
+        $cacheId = 'Currency::getIdByIsoCode_' . pSQL($isoCode) . '-' . (int) $idShop . ($includeDeleted ? '-deleted' : '');
+        if ($forceRefreshCache || !Cache::isStored($cacheId)) {
+            $query = Currency::getIdByQuery($idShop, $includeDeleted);
+            $query->where('iso_code = \'' . pSQL($isoCode) . '\'');
+
+            $result = (int) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query->build());
+            Cache::store($cacheId, $result);
+
+            return $result;
+        }
+
+        return Cache::retrieve($cacheId);
+    }
+
+    /**
+     * Get Currency ISO Code by ID
+     *
+     * @param int $id
+     * @param bool $forceRefreshCache
+     *
+     * @return string
+     */
+    public static function getIsoCodeById(int $id, bool $forceRefreshCache = false)
+    {
+        $cacheId = 'Currency::getIsoCodeById' . pSQL($id);
+        if ($forceRefreshCache || !Cache::isStored($cacheId)) {
+            $resultIsoCode = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('SELECT `iso_code` FROM ' . _DB_PREFIX_ . 'currency WHERE `id_currency` = ' . (int) $id);
+            Cache::store($cacheId, $resultIsoCode);
+
+            return $resultIsoCode;
+        }
+
+        return Cache::retrieve($cacheId);
+    }
+
+    /**
+     * Get Currency ID by numeric ISO code.
+     *
+     * @param int $numericIsoCode ISO code
+     * @param int $idShop Shop ID
+     *
+     * @return int Currency ID
+     */
+    public static function getIdByNumericIsoCode($numericIsoCode, $idShop = 0)
+    {
+        $cacheId = 'Currency::getIdByNumericIsoCode_' . pSQL($numericIsoCode) . '-' . (int) $idShop;
         if (!Cache::isStored($cacheId)) {
             $query = Currency::getIdByQuery($idShop);
-            $query->where('iso_code = \'' . pSQL($isoCode) . '\'');
+            $query->where('numeric_iso_code = \'' . pSQL($numericIsoCode) . '\'');
 
             $result = (int) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query->build());
             Cache::store($cacheId, $result);
@@ -597,15 +812,18 @@ class CurrencyCore extends ObjectModel
      * Get Currency ID query.
      *
      * @param int $idShop Shop ID
+     * @param bool $includeDeleted [default=false] Set to TRUE to get result even for soft deleted currency
      *
      * @return DbQuery
      */
-    public static function getIdByQuery($idShop = 0)
+    public static function getIdByQuery($idShop = 0, $includeDeleted = false)
     {
         $query = new DbQuery();
         $query->select('c.id_currency');
         $query->from('currency', 'c');
-        $query->where('deleted = 0');
+        if (!$includeDeleted) {
+            $query->where('deleted = 0');
+        }
 
         if (Shop::isFeatureActive() && $idShop > 0) {
             $query->leftJoin('currency_shop', 'cs', 'cs.id_currency = c.id_currency');
@@ -797,10 +1015,13 @@ class CurrencyCore extends ObjectModel
      */
     public function refreshLocalizedCurrencyData(array $languages, LocaleRepository $localeRepoCLDR)
     {
+        $this->modified = false;
+        $originalNames = $this->localizedNames;
+        $originalSymbols = $this->localizedSymbols;
         $symbolsByLang = $namesByLang = [];
         foreach ($languages as $languageData) {
             $language = new Language($languageData['id_lang']);
-            if ($language->locale === '') {
+            if (empty($language->locale)) {
                 // Language doesn't have locale we can't install this language
                 continue;
             }
@@ -811,19 +1032,32 @@ class CurrencyCore extends ObjectModel
             $cldrCurrency = $cldrLocale->getCurrency($this->iso_code);
 
             if (empty($cldrCurrency)) {
-                // The currency may not be declared in the locale, eg with custom iso code
+                // The currency may not be declared in the locale, eg with unofficial iso code
+                // Check if data is present in case it's not available for all languages
+                $namesByLang[$language->id] = !empty($originalNames[$language->id]) ? $originalNames[$language->id] : $this->iso_code;
+                $symbolsByLang[$language->id] = !empty($originalSymbols[$language->id]) ? $originalSymbols[$language->id] : $this->iso_code;
+                $this->modified = true;
                 continue;
             }
 
-            $symbol = (string) $cldrCurrency->getSymbol();
-            if (empty($symbol)) {
-                $symbol = $this->iso_code;
+            // Symbol is localized, we check if it was manually modified
+            $symbol = (string) $cldrCurrency->getSymbol() ?: $this->iso_code;
+            if (!empty($symbol) && !empty($originalSymbols[$language->id]) && $symbol !== $originalSymbols[$language->id]) {
+                $symbol = $originalSymbols[$language->id];
+                $this->modified = true;
             }
-            // symbol is localized
-            $namesByLang[$language->id] = $cldrCurrency->getDisplayName();
             $symbolsByLang[$language->id] = $symbol;
+
+            // Name is localized, we check if it was manually modified
+            $name = $cldrCurrency->getDisplayName();
+            if (!empty($originalNames[$language->id]) && $name !== $originalNames[$language->id]) {
+                $name = $originalNames[$language->id];
+                $this->modified = true;
+            }
+            $namesByLang[$language->id] = $name;
         }
-        $this->name = $namesByLang;
-        $this->symbol = $symbolsByLang;
+
+        $this->setLocalizedNames($namesByLang);
+        $this->setLocalizedSymbols($symbolsByLang);
     }
 }

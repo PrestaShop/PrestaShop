@@ -26,6 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Adapter\CatalogPriceRule;
 
+use DateTime;
+use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Exception\CatalogPriceRuleConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Exception\CatalogPriceRuleException;
 use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Exception\CatalogPriceRuleNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\ValueObject\CatalogPriceRuleId;
@@ -44,7 +46,7 @@ abstract class AbstractCatalogPriceRuleHandler
      *
      * @return SpecificPriceRule
      */
-    protected function getSpecificPriceRule(CatalogPriceRuleId $catalogPriceRuleId)
+    protected function getSpecificPriceRule(CatalogPriceRuleId $catalogPriceRuleId): SpecificPriceRule
     {
         try {
             $specificPriceRule = new SpecificPriceRule($catalogPriceRuleId->getValue());
@@ -79,6 +81,22 @@ abstract class AbstractCatalogPriceRuleHandler
                 'An error occurred when deleting SpecificPriceRule object with id "%s".',
                 $specificPriceRule->id
             ));
+        }
+    }
+
+    /**
+     * @param DateTime $from
+     * @param DateTime $to
+     *
+     * @throws CatalogPriceRuleConstraintException
+     */
+    protected function assertDateRangeIsNotInverse(DateTime $from, DateTime $to)
+    {
+        if ($from->diff($to)->invert) {
+            throw new CatalogPriceRuleConstraintException(
+                'The date time for catalog price rule cannot be inverse',
+                CatalogPriceRuleConstraintException::INVALID_DATE_RANGE
+            );
         }
     }
 }

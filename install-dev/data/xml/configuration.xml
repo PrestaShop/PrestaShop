@@ -796,9 +796,6 @@ Country</value>
   <configuration id="PS_ROUND_TYPE" name="PS_ROUND_TYPE">
     <value>2</value>
   </configuration>
-  <configuration id="PS_PRICE_DISPLAY_PRECISION" name="PS_PRICE_DISPLAY_PRECISION">
-    <value>2</value>
-  </configuration>
   <configuration id="PS_LOG_EMAILS" name="PS_LOG_EMAILS">
     <value>1</value>
   </configuration>

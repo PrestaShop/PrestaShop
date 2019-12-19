@@ -49,7 +49,7 @@ final class UpdateCartCurrencyHandler extends AbstractCartHandler implements Upd
 
         $this->assertCurrencyCantBeUsedInCart($currency);
 
-        $cart = $this->getContextCartObject($command->getCartId());
+        $cart = $this->getCart($command->getCartId());
         $cart->id_currency = (int) $currency->id;
 
         if (false === $cart->save()) {

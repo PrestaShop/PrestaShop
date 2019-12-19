@@ -143,6 +143,7 @@ final class RequestSqlGridDefinitionFactory extends AbstractGridDefinitionFactor
                                 'route' => 'admin_sql_requests_view',
                                 'route_param_name' => 'sqlRequestId',
                                 'route_param_field' => 'id_request_sql',
+                                'clickable_row' => true,
                             ])
                         )
                         ->add(

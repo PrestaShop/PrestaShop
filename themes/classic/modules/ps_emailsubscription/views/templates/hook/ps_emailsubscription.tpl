@@ -49,6 +49,7 @@
                 value="{$value}"
                 placeholder="{l s='Your email address' d='Shop.Forms.Labels'}"
                 aria-labelledby="block-newsletter-label"
+                required
               >
             </div>
             <input type="hidden" name="blockHookName" value="{$hookName}" />
@@ -57,7 +58,7 @@
           </div>
           <div class="col-xs-12">
               {if $conditions}
-                <p>{$conditions}</p>
+                <p>{$conditions nofilter}</p>
               {/if}
               {if $msg}
                 <p class="alert {if $nw_error}alert-danger{else}alert-success{/if}">

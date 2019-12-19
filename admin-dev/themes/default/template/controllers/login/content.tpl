@@ -181,9 +181,6 @@
 			<a class="link-social link-github _blank" href="https://www.prestashop.com/github" title="Github">
 				<i class="icon-github"></i>
 			</a>
-			<a class="link-social link-google _blank" href="https://plus.google.com/+prestashop/" title="Google">
-				<i class="icon-google-plus"></i>
-			</a>
 		</p>
 	</div>
 </div>

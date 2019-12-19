@@ -49,7 +49,7 @@
 			<input type="hidden" name="email" value="{$customer->email}" />
 		{else}
 			<script type="text/javascript">
-			$('input[name=email]').live('blur', function(e)
+			$(document).on('blur', 'input[name=email]', function(e)
 			{
 				var email = $(this).val();
 				if (email.length > 5)

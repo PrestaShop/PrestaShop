@@ -31,7 +31,7 @@
     {block name='page_header_container'}
       <header class="page-header">
         {block name='page_header_logo'}
-        <div class="logo"><img src="{$shop.logo}" alt="logo"></div>
+        <div class="logo"><img src="{$urls.img_ps_url}{$shop.logo}" alt="logo"></div>
         {/block}
 
         {block name='hook_maintenance'}

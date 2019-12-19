@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -32,13 +32,21 @@ class OrderMessagesForViewing
     private $messages = [];
 
     /**
-     * @param OrderMessageForViewing[] $messages
+     * @var int
      */
-    public function __construct(array $messages)
+    private $total;
+
+    /**
+     * @param OrderMessageForViewing[] $messages
+     * @param int $total
+     */
+    public function __construct(array $messages, int $total)
     {
         foreach ($messages as $message) {
             $this->add($message);
         }
+
+        $this->total = $total;
     }
 
     /**
@@ -47,6 +55,14 @@ class OrderMessagesForViewing
     public function getMessages(): array
     {
         return $this->messages;
+    }
+
+    /**
+     * @return int
+     */
+    public function getTotal(): int
+    {
+        return $this->total;
     }
 
     /**

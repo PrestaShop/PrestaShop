@@ -57,6 +57,8 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
  */
 final class CategoryGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
+    const GRID_ID = 'category';
+
     /**
      * @var string
      */
@@ -103,7 +105,7 @@ final class CategoryGridDefinitionFactory extends AbstractGridDefinitionFactory
      */
     protected function getId()
     {
-        return 'category';
+        return self::GRID_ID;
     }
 
     /**
@@ -127,6 +129,7 @@ final class CategoryGridDefinitionFactory extends AbstractGridDefinitionFactory
                     'identifier_field' => 'id_category',
                     'bulk_field' => 'id_category',
                     'with_bulk_field' => true,
+                    'clickable' => false,
                 ])
             )
             ->add(
@@ -229,10 +232,11 @@ final class CategoryGridDefinitionFactory extends AbstractGridDefinitionFactory
                 (new Filter('actions', SearchAndResetType::class))
                 ->setAssociatedColumn('actions')
                 ->setTypeOptions([
-                    'attr' => [
-                        'data-url' => $this->resetActionUrl,
-                        'data-redirect' => $this->redirectActionUrl,
+                    'reset_route' => 'admin_common_reset_search_by_filter_id',
+                    'reset_route_params' => [
+                        'filterId' => self::GRID_ID,
                     ],
+                    'redirect_route' => 'admin_categories_index',
                 ])
             );
 
@@ -338,6 +342,7 @@ final class CategoryGridDefinitionFactory extends AbstractGridDefinitionFactory
                     'route_param_name' => 'categoryId',
                     'route_param_field' => 'id_category',
                     'accessibility_checker' => $this->categoryForViewAccessibilityChecker,
+                    'clickable_row' => true,
                 ])
             )
             ->add(
@@ -348,6 +353,7 @@ final class CategoryGridDefinitionFactory extends AbstractGridDefinitionFactory
                     'route' => 'admin_categories_edit',
                     'route_param_name' => 'categoryId',
                     'route_param_field' => 'id_category',
+                    'clickable_row' => true, // Will only apply if first link action is filtered
                 ])
             )
             ->add(

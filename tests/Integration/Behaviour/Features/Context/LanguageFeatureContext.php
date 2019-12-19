@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -51,5 +51,49 @@ class LanguageFeatureContext extends AbstractPrestaShopFeatureContext
         Configuration::updateValue('PS_LANG_DEFAULT', $languageId);
 
         SharedStorage::getStorage()->set('default_language_id', $languageId);
+    }
+
+    /**
+     * @Given language :reference with locale :locale exists
+     */
+    public function createLanguageWithLocale($reference, $locale)
+    {
+        $languageId = Language::getIdByLocale($locale, true);
+
+        if (false === $languageId) {
+            $language = new Language();
+            $language->locale = $locale;
+            $language->active = true;
+            $language->name = $locale;
+            $language->is_rtl = false;
+            $language->language_code = strtolower($locale);
+            $language->iso_code = substr($locale, 0, strpos($locale, '-'));
+            $language->add();
+            // We need to reset the static cache, or it messes with multilang fields (because the
+            // cache doesn't contain all the expected languages)
+            Language::resetCache();
+        } else {
+            $language = new Language($languageId);
+        }
+
+        SharedStorage::getStorage()->set($reference, $language);
+    }
+
+    /**
+     * @Then language :reference should be :locale
+     */
+    public function assertLanguageLocale($reference, $locale)
+    {
+        /** @var Language $language */
+        $language = SharedStorage::getStorage()->get($reference);
+
+        if ($language->locale !== $locale) {
+            throw new RuntimeException(sprintf(
+                'Currency "%s" has "%s" iso code, but "%s" was expected.',
+                $reference,
+                $language->locale,
+                $locale
+            ));
+        }
     }
 }

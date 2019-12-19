@@ -1,5 +1,5 @@
 {#**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -24,26 +24,58 @@
  *#}
 
 <div class="mb-3">
-  {{ form_start(updateOrderStatusForm, {
+  {{ form_start(updateOrderStatusActionBarForm, {
     'action': path('admin_orders_update_status', {'orderId': orderForViewing.id}),
-    'attr': {'class': 'form-inline d-inline-block'}}
-  ) }}
-    <div class="input-group">
-      {{ form_widget(updateOrderStatusForm.new_order_status_id, {'attr': {'class': 'mr-1'}}) }}
+    'attr': {
+      'class': 'form-inline d-inline-block',
+      'id': 'update_order_status_action_form'
+    }
+  }) }}
 
-      <button class="btn" style="background-color: white; border-radius: 4px; box-shadow: 0 0 10px 0 rgba(0,0,0,0.1);">
-        <i class="material-icons">print</i>
-        {{ 'Update status'|trans({}, 'Admin.Orderscustomers.Feature') }}
-      </button>
+  <div class="input-group">
+    {{ form_widget(updateOrderStatusActionBarForm.new_order_status_id, {'attr': {'class': 'mr-1'}, 'id': 'update_order_status_action_input'}) }}
+
+    <button class="btn btn-action ml-2"
+            id="update_order_status_action_btn"
+            disabled
+            data-order-status-id="{{ orderForViewing.history.currentOrderStatusId }}"
+    >
+      {{ 'Update status'|trans({}, 'Admin.Orderscustomers.Feature') }}
+    </button>
+  </div>
+
+  <div class="d-none">
+    {{ form_rest(updateOrderStatusActionBarForm) }}
+  </div>
+  {{ form_end(updateOrderStatusActionBarForm) }}
+
+  {% if orderForViewing.documents.canGenerateInvoice %}
+    <form class="form-inline d-inline-block form-horizontal ml-2">
+      <div class="input-group">
+        <a href="{{ path('admin_orders_generate_invoice_pdf', {'orderId': orderForViewing.id}) }}"
+           class="btn btn-action">
+          <i class="material-icons">receipt</i>
+          {{ 'View invoice'|trans({}, 'Admin.Orderscustomers.Feature') }}
+        </a>
+      </div>
+    </form>
+  {% endif %}
+
+  {% if orderForViewing.documents.canGenerateDeliverySlip %}
+    <form class="form-inline d-inline-block form-horizontal ml-2">
+      <div class="input-group">
+        <a href="{{ path('admin_orders_generate_delivery_slip_pdf', {'orderId': orderForViewing.id}) }}"
+           class="btn btn-action">
+          <i class="material-icons">local_shipping</i>
+          {{ 'View delivery slip'|trans({}, 'Admin.Orderscustomers.Feature') }}
+        </a>
+      </div>
+    </form>
+  {% endif %}
+  {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/extra_order_button_actions.html.twig' %}
+  {% if orderForViewing.hasInvoice() %}
+    <div class="form-inline d-inline-block form-horizontal ml-2">
+      <button class="btn btn-action partial-refund-display" type="button">{{ 'Partial refund'|trans({}, 'Admin.Orderscustomers.Feature') }}</button>
     </div>
-
-    <div class="d-none">
-      {{ form_rest(updateOrderStatusForm) }}
-    </div>
-  {{ form_end(updateOrderStatusForm) }}
-
-  <button class="btn" style="background-color: white; border-radius: 4px; box-shadow: 0 0 10px 0 rgba(0,0,0,0.1);">
-    <i class="material-icons">print</i>
-    {{ 'Print order'|trans({}, 'Admin.Orderscustomers.Feature') }}
-  </button>
+  {% endif %}
 </div>

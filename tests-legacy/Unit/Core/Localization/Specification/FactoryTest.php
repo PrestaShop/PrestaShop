@@ -143,6 +143,49 @@ class FactoryTest extends TestCase
             $expected,
             $specification->toArray()
         );
+        $this->assertEquals($specification->getMaxFractionDigits(), $expected['maxFractionDigits']);
+    }
+
+    /**
+     * Given a valid CLDR locale
+     * Given a Max Fractions digts to display in a number's decimal
+     * Given a boolean to define if we should group digits in a number's integer part
+     * Given an integer to specify max fraction digits
+     * Then calling buildPriceSpecification() should return an NumberSpecification
+     *
+     * @dataProvider getPriceData
+     */
+    public function testBuildPriceSpecificationWithM($data, $expected)
+    {
+        $maxFractionDigits = 3;
+        $specification = $this->factory->buildPriceSpecification(
+            $data[0],
+            $this->createLocale(
+                ...$data
+            ),
+            new Currency(
+                null,
+                null,
+                'EUR',
+                '978',
+                [
+                    $data[0] => '€',
+                ],
+                '2',
+                [
+                    $data[0] => 'Euro',
+                ]
+            ),
+            3,
+            true,
+            $maxFractionDigits
+        );
+        $expected['maxFractionDigits'] = $maxFractionDigits;
+        $this->assertEquals(
+            $expected,
+            $specification->toArray()
+        );
+        $this->assertEquals($specification->getMaxFractionDigits(), $maxFractionDigits);
     }
 
     public function getPriceData()

@@ -85,11 +85,12 @@ class ConfigurationTestCore
                 'config_dir' => 'config',
                 'files' => false,
                 'mails_dir' => 'mails',
-                'openssl' => 'false',
+                'openssl' => false,
                 'simplexml' => false,
                 'zip' => false,
                 'fileinfo' => false,
                 'intl' => false,
+                'memory_limit' => false,
             ));
         }
 
@@ -112,6 +113,7 @@ class ConfigurationTestCore
             'pdo_mysql' => false,
             'fopen' => false,
             'intl' => false,
+            'memory_limit' => false,
         );
     }
 
@@ -158,7 +160,7 @@ class ConfigurationTestCore
 
     public static function test_new_phpversion()
     {
-        return version_compare(PHP_VERSION, '7.1.3', '>=');
+        return static::test_phpversion();
     }
 
     public static function test_mysql_support()
@@ -169,6 +171,13 @@ class ConfigurationTestCore
     public static function test_intl()
     {
         return extension_loaded('intl');
+    }
+
+    public static function test_memory_limit()
+    {
+        $memoryLimit = Tools::getMemoryLimit();
+
+        return $memoryLimit === '-1' || $memoryLimit >= Tools::getOctets('256M');
     }
 
     public static function test_pdo_mysql()

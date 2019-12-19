@@ -120,6 +120,7 @@ final class TaxGridDefinitionFactory extends AbstractGridDefinitionFactory
                                 'route' => 'admin_taxes_edit',
                                 'route_param_name' => 'taxId',
                                 'route_param_field' => 'id_tax',
+                                'clickable_row' => true,
                             ])
                         )
                         ->add(

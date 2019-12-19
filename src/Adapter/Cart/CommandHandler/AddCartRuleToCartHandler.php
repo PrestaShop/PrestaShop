@@ -26,12 +26,15 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Cart\CommandHandler;
 
+use Cart;
 use CartRule;
 use Context;
 use PrestaShop\PrestaShop\Adapter\Cart\AbstractCartHandler;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\AddCartRuleToCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\CommandHandler\AddCartRuleToCartHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartException;
+use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleValidityException;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * @internal
@@ -39,20 +42,55 @@ use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartException;
 final class AddCartRuleToCartHandler extends AbstractCartHandler implements AddCartRuleToCartHandlerInterface
 {
     /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
+    public function __construct(TranslatorInterface $translator)
+    {
+        $this->translator = $translator;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function handle(AddCartRuleToCartCommand $command)
     {
+        $cart = $this->getCart($command->getCartId());
         $cartRule = new CartRule($command->getCartRuleId()->getValue());
 
-        if (false === $cartRule->checkValidity(Context::getContext(), false, false)) {
-            throw new CartException('Invalid cart rule.');
-        }
+        $errorMessage = $this->validateCartRule($cartRule, $cart);
 
-        $cart = $this->getContextCartObject($command->getCartId());
+        if ($errorMessage) {
+            throw new CartRuleValidityException($errorMessage);
+        }
 
         if (!$cart->addCartRule($cartRule->id)) {
             throw new CartException('Failed to add cart rule to cart.');
         }
+    }
+
+    /**
+     * Validates if the cart rule is applicable to cart
+     *
+     * Returns null if cart rule is valid.
+     * Returns translated error message if cart rule is not valid.
+     *
+     * @param CartRule $cartRule
+     *
+     * @return string|null
+     */
+    private function validateCartRule(CartRule $cartRule, Cart $cart): ?string
+    {
+        Context::getContext()->cart = $cart;
+        $isValid = $cartRule->checkValidity(Context::getContext(), false, true);
+
+        // if its valid, don't return any error message
+        if (true === $isValid) {
+            return null;
+        }
+
+        // if its not valid, then this var contains translated error message
+        return $isValid;
     }
 }

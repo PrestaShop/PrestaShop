@@ -195,6 +195,19 @@ class AdminProductsControllerCore extends AdminController
         return false;
     }
 
+    /**
+     * @param int $id_lang
+     * @param string $orderBy
+     * @param string $orderWay
+     * @param int $start
+     * @param int $limit
+     * @param null $id_lang_shop
+     *
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
+     *
+     * @deprecated
+     */
     public function getList($id_lang, $orderBy = null, $orderWay = null, $start = 0, $limit = null, $id_lang_shop = null)
     {
         $orderByPriceFinal = (empty($orderBy) ? ($this->context->cookie->__get($this->table . 'Orderby') ? $this->context->cookie->__get($this->table . 'Orderby') : 'id_' . $this->table) : $orderBy);

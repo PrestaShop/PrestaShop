@@ -73,6 +73,23 @@ class Context implements MultistoreContextCheckerInterface, ShopContextInterface
     }
 
     /**
+     * Return the result of getContextListShopID() for customers usecase
+     * This handles the "multishop sharing customer" feature setting
+     *
+     * @return array
+     */
+    public function getContextListShopIDUsingCustomerSharingSettings()
+    {
+        $groupSettings = Shop::getGroupFromShop(Shop::getContextShopID(), false);
+
+        if ($groupSettings['share_customer']) {
+            return Shop::getContextListShopID(Shop::SHARE_CUSTOMER);
+        } else {
+            return Shop::getContextListShopID();
+        }
+    }
+
+    /**
      * Get if it's a GroupShop context.
      *
      * @return bool

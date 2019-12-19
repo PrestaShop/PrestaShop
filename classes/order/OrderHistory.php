@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+use PrestaShop\PrestaShop\Adapter\MailTemplate\MailPartialTemplateRenderer;
 use PrestaShop\PrestaShop\Adapter\StockManager as StockManagerAdapter;
 use PrestaShop\PrestaShop\Core\Stock\StockManager;
 
@@ -133,27 +134,36 @@ class OrderHistoryCore extends ObjectModel
                 }
 
                 $customer = new Customer((int) $order->id_customer);
-
-                $links = '<ul>';
+                $links = array();
                 foreach ($assign as $product) {
-                    $links .= '<li>';
-                    $links .= '<a href="' . $product['link'] . '">' . Tools::htmlentitiesUTF8($product['name']) . '</a>';
+                    $complementaryText = array();
                     if (isset($product['deadline'])) {
-                        $links .= '&nbsp;' . $this->trans('expires on %s.', array($product['deadline']), 'Admin.Orderscustomers.Notification');
+                        $complementaryText[] = $this->trans('expires on %s.', array($product['deadline']), 'Admin.Orderscustomers.Notification');
                     }
                     if (isset($product['downloadable'])) {
-                        $links .= '&nbsp;' . $this->trans('downloadable %d time(s)', array((int) $product['downloadable']), 'Admin.Orderscustomers.Notification');
+                        $complementaryText[] = $this->trans('downloadable %d time(s)', array((int) $product['downloadable']), 'Admin.Orderscustomers.Notification');
                     }
-                    $links .= '</li>';
+                    $links[] = array(
+                        'text' => Tools::htmlentitiesUTF8($product['name']),
+                        'url' => $product['link'],
+                        'complementary_text' => implode(' ', $complementaryText),
+                    );
                 }
-                $links .= '</ul>';
+
+                $context = Context::getContext();
+                $partialRenderer = new MailPartialTemplateRenderer($context->smarty);
+
+                $links_txt = $partialRenderer->render('download_product_virtual_products.txt', $context->language, $links, true);
+                $links_html = $partialRenderer->render('download_product_virtual_products.tpl', $context->language, $links);
+
                 $data = array(
                     '{lastname}' => $customer->lastname,
                     '{firstname}' => $customer->firstname,
                     '{id_order}' => (int) $order->id,
                     '{order_name}' => $order->getUniqReference(),
                     '{nbProducts}' => count($virtual_products),
-                    '{virtualProducts}' => $links,
+                    '{virtualProducts}' => $links_html,
+                    '{virtualProductsTxt}' => $links_txt,
                 );
                 // If there is at least one downloadable file
                 if (!empty($assign)) {
@@ -510,12 +520,12 @@ class OrderHistoryCore extends ObjectModel
                 $data = array_merge($data, $template_vars);
             }
 
-            $data['{total_paid}'] = Tools::displayPrice((float) $order->total_paid, new Currency((int) $order->id_currency), false);
+            $context = Context::getContext();
+            $data['{total_paid}'] = Tools::getContextLocale($context)->formatPrice((float) $order->total_paid, Currency::getIsoCodeById((int) $order->id_currency));
 
             if (Validate::isLoadedObject($order)) {
                 // Attach invoice and / or delivery-slip if they exists and status is set to attach them
                 if (($result['pdf_invoice'] || $result['pdf_delivery'])) {
-                    $context = Context::getContext();
                     $invoice = $order->getInvoicesCollection();
                     $file_attachement = array();
 

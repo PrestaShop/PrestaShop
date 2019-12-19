@@ -50,8 +50,8 @@ class ChangeOrderCurrencyCommand
      */
     public function __construct($orderId, $newCurrencyId)
     {
-        $this->orderId = $orderId;
-        $this->newCurrencyId = $newCurrencyId;
+        $this->orderId = new OrderId($orderId);
+        $this->newCurrencyId = new CurrencyId($newCurrencyId);
     }
 
     /**

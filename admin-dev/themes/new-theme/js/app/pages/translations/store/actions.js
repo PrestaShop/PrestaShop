@@ -24,8 +24,8 @@
  */
 import Vue from 'vue';
 import VueResource from 'vue-resource';
-import * as types from './mutation-types';
-import { showGrowl } from 'app/utils/growl';
+import * as types from '@app/pages/translations/store/mutation-types';
+import { showGrowl } from '@app/utils/growl';
 
 Vue.use(VueResource);
 

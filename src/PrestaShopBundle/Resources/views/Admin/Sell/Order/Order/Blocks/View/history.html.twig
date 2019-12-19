@@ -1,5 +1,5 @@
 {#**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -40,14 +40,36 @@
         {% endif %}
       </td>
       <td class="text-right">
-        {{ status.createdAt.format('Y-m-d H:i:s') }}
+        {{ status.createdAt|date_format_full }}
       </td>
       <td class="text-right">
         {% if status.withEmail %}
-          <a href="#">{{ 'Resend email'|trans({}, 'Admin.Orderscustomers.Feature') }}</a>
+          <form method="post" action="{{ path('admin_orders_resend_email', {'orderId': orderForViewing.id, 'orderHistoryId': status.orderHistoryId, 'orderStatusId': status.orderStatusId}) }}">
+            <button class="btn btn-link pt-0 pb-0">
+              {{ 'Resend email'|trans({}, 'Admin.Orderscustomers.Feature') }}
+            </button>
+          </form>
         {% endif %}
       </td>
     </tr>
     {% endfor %}
   </tbody>
 </table>
+
+<div class="row">
+  <div class="col-6 offset-6">
+    {{ form_start(updateOrderStatusForm, {'action': path('admin_orders_update_status', {'orderId': orderForViewing.id})}) }}
+      <div class="input-group ">
+        {{ form_widget(updateOrderStatusForm.new_order_status_id) }}
+
+        <button class="btn btn-primary ml-3">
+          {{ 'Update status'|trans({}, 'Admin.Orderscustomers.Feature') }}
+        </button>
+      </div>
+
+      <div class="d-none">
+        {{ form_rest(updateOrderStatusForm) }}
+      </div>
+    {{ form_end(updateOrderStatusForm) }}
+  </div>
+</div>

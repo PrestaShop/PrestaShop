@@ -86,10 +86,16 @@ class LegacyHelperLinkBuilder implements EntityLinkBuilderInterface
     private function buildActionParameters($action, $entity, array $parameters)
     {
         unset($parameters['current_index']);
-        $viewAction = $action . $entity;
+        $actionParameter = $action . $entity;
+
+        /**
+         * Legacy actions are displayed with empty value (e.g ?controller=ProductAdminController&updateproduct&id_product=1)
+         * Some modules don't just check that the parameter is set but also that it is empty...
+         * The closest thing we have with http_build_query is controller=ProductAdminController&updateproduct=&id_product=1
+         */
         $parameters = array_merge(
-            $parameters,
-            [$viewAction => 1]
+            [$actionParameter => ''],
+            $parameters
         );
 
         return $parameters;

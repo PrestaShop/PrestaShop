@@ -153,7 +153,7 @@ class AdminOutstandingControllerCore extends AdminController
             throw new PrestaShopException('object Customer cannot be loaded');
         }
 
-        return '<b>' . Tools::displayPrice($customer->getOutstanding(), Context::getContext()->currency) . '</b>';
+        return '<b>' . $this->context->getCurrentLocale()->formatPrice($customer->getOutstanding(), Context::getContext()->currency->iso_code) . '</b>';
     }
 
     /**

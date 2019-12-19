@@ -107,3 +107,27 @@ services:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\FeatureFormDataHandler'
     arguments:
       - '@prestashop.core.command_bus'
+
+  prestashop.core.form.identifiable_object.data_handler.order_message_form_data_handler:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\OrderMessageFormDataHandler'
+    arguments:
+      - '@prestashop.core.command_bus'
+
+  prestashop.core.form.identifiable_object.data_handler.catalog_price_rule_form_data_handler:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\CatalogPriceRuleFormDataHandler'
+    arguments:
+      - '@prestashop.core.command_bus'
+      - '@=service("prestashop.adapter.multistore_feature").isUsed()'
+      - '@=service("prestashop.adapter.legacy.context").getContext().shop.id'
+
+  prestashop.core.form.identifiable_object.data_handler.attachment_form_data_handler:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\AttachmentFormDataHandler'
+    arguments:
+      - '@prestashop.core.command_bus'
+      - '@prestashop.adapter.attachment.uploader.attachment_file_uploader'
+
+  prestashop.core.form.identifiable_object.partial_refund_form_data_handler:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\PartialRefundFormDataHandler'
+    arguments:
+      - '@prestashop.core.command_bus'
+      - '@prestashop.core.query_bus'

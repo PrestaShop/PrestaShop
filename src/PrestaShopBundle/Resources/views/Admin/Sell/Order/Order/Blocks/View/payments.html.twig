@@ -1,5 +1,5 @@
 {#**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -23,7 +23,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 
-<div class="card mt-2">
+<div class="card mt-2" id="view_order_payments_block">
   <div class="card-header">
     <h3 class="card-header-title">
       {{ 'Payment'|trans({}, 'Admin.Global') }} ({{ orderForViewing.payments.payments|length }})
@@ -32,7 +32,7 @@
 
   <div class="card-body">
     {% if orderForViewing.payments.amountToPay and orderForViewing.payments.paidAmount %}
-      <div class="alert alert-danger" role="alert">
+      <div class="alert alert-danger mb-0" role="alert">
         <p class="alert-text">
           {{ 'Warning'|trans({}, 'Admin.Global') }}
           <strong>{{ orderForViewing.payments.paidAmount }}</strong>
@@ -62,12 +62,12 @@
           <td>{{ payment.amount }}</td>
           <td>{% if payment.invoiceNumber %}{{ payment.invoiceNumber }}{% endif %}</td>
           <td class="text-right">
-            <button class="btn btn-sm btn-outline-secondary">
+            <button class="btn btn-sm btn-outline-secondary js-payment-details-btn">
               {{ 'Details'|trans({}, 'Admin.Global') }}
             </button>
           </td>
         </tr>
-        <tr>
+        <tr class="d-none">
           <td colspan="6">
             <p class="mb-0">
               <strong>{{ 'Card number'|trans({}, 'Admin.Global') }}</strong>
@@ -78,7 +78,7 @@
               {% endif %}
             </p>
             <p class="mb-0">
-              <strong>{{ 'Card Brand'|trans({}, 'Admin.Orderscustomers.Feature') }}</strong>&nbsp;
+              <strong>{{ 'Card type'|trans({}, 'Admin.Orderscustomers.Feature') }}</strong>&nbsp;
               {% if payment.cardBrand %}
                 {{ payment.cardBrand }}
               {% else %}
@@ -122,7 +122,9 @@
             </div>
           </td>
           <td>
-            {{ form_widget(addOrderPaymentForm.id_invoice) }}
+            <div {% if addOrderPaymentForm.id_invoice.vars.choices is empty %}class="d-none"{% endif %}>
+              {{ form_widget(addOrderPaymentForm.id_invoice) }}
+            </div>
           </td>
           <td>
             <button type="submit" class="btn btn-primary btn-sm">{{ 'Add'|trans({}, 'Admin.Actions') }}</button>
@@ -132,22 +134,28 @@
       </tbody>
     </table>
 
-    {% if not orderForViewing.valid %}
-      <form action="" class="form-horizontal">
+    {% if not orderForViewing.valid and changeOrderCurrencyForm.new_currency_id.vars.choices|length %}
+      {{ form_start(changeOrderCurrencyForm, {'action': path('admin_orders_change_currency', {'orderId': orderForViewing.id})}) }}
         <div class="form-group row">
           <label class="form-control-label">{{ 'Change currency'|trans({}, 'Admin.Orderscustomers.Feature') }}</label>
           <div class="col-sm">
             <div class="input-group">
-              <select name="" id="" class="form-control custom-select">
-                <option value="1">EUR</option>
-              </select>
-              <button class="btn btn-outline-primary btn-sm">
+              {{ form_widget(changeOrderCurrencyForm.new_currency_id) }}
+              <button class="btn btn-outline-secondary btn-sm ml-2">
                 {{ 'Change'|trans({}, 'Admin.Actions') }}
               </button>
             </div>
+
+            <div class="d-none">
+              {{ form_rest(changeOrderCurrencyForm) }}
+            </div>
+
+            <small class="text-muted">
+              {{ 'Do not forget to update your exchange rate before making this change.'|trans({}, 'Admin.Orderscustomers.Help') }}
+            </small>
           </div>
         </div>
-      </form>
+      {{ form_end(changeOrderCurrencyForm) }}
     {% endif %}
   </div>
 </div>

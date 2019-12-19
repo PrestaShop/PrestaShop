@@ -404,7 +404,7 @@
           <table id="product-attachment-file" class="table">
             <thead class="thead-default">
               <tr>
-                <th class="col-md-3"><input type="checkbox" id="product-attachment-files-check" /> {{ 'Title'|trans({}, 'Admin.Global') }}</th>
+                <th class="col-md-3">{{ 'Title'|trans({}, 'Admin.Global') }}</th>
                 <th class="col-md-6">{{ 'File name'|trans({}, 'Admin.Global') }}</th>
                 <th class="col-md-2">{{ 'Type'|trans({}, 'Admin.Catalog.Feature') }}</th>
               </tr>
@@ -457,7 +457,7 @@
           {% set label = name|humanize %}
       {% endif %}
 
-      {% if material_design is defined %}
+      {% if material_design is defined or attr.material_design is defined %}
         <div class="md-checkbox md-checkbox-inline">
           <label{% for attrname, attrvalue in label_attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}>
           {{- widget|raw -}}
@@ -809,3 +809,19 @@
 {% block custom_content_widget %}
   {% include template with data %}
 {% endblock %}
+
+{% block text_widget %}
+  {% if data_list is not null %}
+    {%- set attr = attr|merge({'list': id ~ '_datalist'}) -%}
+  {% endif %}
+
+  {{ form_widget(form, {'attr': attr}) }}
+
+  {% if data_list is not null %}
+    <datalist id="{{ id ~ '_datalist' }}">
+      {% for item in data_list %}
+        <option value="{{ item }}"></option>
+      {% endfor%}
+    </datalist>
+  {% endif %}
+{% endblock text_widget %}

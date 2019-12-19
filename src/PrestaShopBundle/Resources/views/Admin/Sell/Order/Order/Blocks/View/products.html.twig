@@ -1,5 +1,5 @@
 {#**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -43,28 +43,43 @@
             <small class="text-muted">{{ orderForViewing.taxMethod }}</small>
           </th>
           <th>
-            <p>{{ 'Qty'|trans({}, 'Admin.Orderscustomers.Feature') }}</p>
+            <p>{{ 'Quantity'|trans({}, 'Admin.Global') }}</p>
+          </th>
+          <th>
+            <p>{{ 'Refunded'|trans({}, 'Admin.Orderscustomers.Feature') }}</p>
           </th>
           <th>
             <p class="mb-0">{{ 'Total'|trans({}, 'Admin.Global') }}</p>
             <small class="text-muted">{{ orderForViewing.taxMethod }}</small>
           </th>
-          <th class="text-right">
-            <p>{{ 'Actions'|trans({}, 'Admin.Global') }}</p>
+          {% if not orderForViewing.delivered %}
+            <th class="text-right product_actions">
+              <p>{{ 'Actions'|trans({}, 'Admin.Global') }}</p>
+            </th>
+          {% endif %}
+          <th class="text-center partial-refund">
+            <p>{{ 'Partial refund'|trans({}, 'Admin.Orderscustomers.Feature') }}</p>
           </th>
         </tr>
       </thead>
       <tbody>
+      {{ form_start(partialRefundForm, {'action': path('admin_orders_partial_refund', {'orderId': orderForViewing.id})}) }}
         {% for product in orderForViewing.products.products %}
           <tr>
-            <td><img src="{{ product.imagePath }}" alt="{{ product.name }}"></td>
+            <td>
+              {% if product.imagePath %}
+                <img src="{{ product.imagePath }}" alt="{{ product.name }}">
+              {% endif %}
+            </td>
             <td>
               <a href="{{ path('admin_product_form', {'id': product.id}) }}">
                 <p class="mb-0">{{ product.name }}</p>
-                <p class="mb-0">
-                  {{ 'Reference number:'|trans({}, 'Admin.Orderscustomers.Feature') }}
-                  {{ product.reference }}
-                </p>
+                {% if product.reference %}
+                  <p class="mb-0">
+                    {{ 'Reference number:'|trans({}, 'Admin.Orderscustomers.Feature') }}
+                    {{ product.reference }}
+                  </p>
+                {% endif %}
                 {% if product.supplierReference is not empty %}
                   <p class="mb-0">
                     {{ 'Supplier reference:'|trans({}, 'Admin.Orderscustomers.Feature') }}
@@ -74,26 +89,70 @@
               </a>
             </td>
             <td>{{ product.unitPrice }}</td>
-            <td>{{ product.quantity }}</td>
+            <td>
+              {% if product.quantity > 1 %}
+                <span class="badge badge-secondary rounded-circle">{{ product.quantity }}</span>
+              {% else %}
+                {{ product.quantity }}
+              {% endif %}
+            </td>
+            <td>
+              <p>{{ product.quantityRefunded }}{% if product.amountRefund %} ({{ product.amountRefund }} {{ 'Refunded'|trans({}, 'Admin.Orderscustomers.Feature') }}){% endif %}</p>
+            </td>
             <td>{{ product.totalPrice }}</td>
-            <td class="text-right">
-              <a href="#"
-                 class="tooltip-link"
-                 data-toggle="pstooltip"
-                 data-placement="top"
-                 data-original-title="{{ 'Edit'|trans({}, 'Admin.Actions') }}"
-              >
-                <i class="material-icons">edit</i>
-              </a>
+            {% if not orderForViewing.delivered %}
+              <td class="text-right product_actions">
+                <a href="#"
+                   class="tooltip-link"
+                   data-toggle="pstooltip"
+                   data-placement="top"
+                   data-original-title="{{ 'Edit'|trans({}, 'Admin.Actions') }}"
+                >
+                  <i class="material-icons js-order-product-update-btn"
+                     data-update-url="{{ path('admin_orders_update_product', {'orderId': orderForViewing.id, 'orderDetailId': product.orderDetailId}) }}"
+                     data-product-name="{{ product.name }}"
+                     data-product-quantity="{{ product.quantity }}"
+                     data-product-price-tax-incl="{{ product.unitPriceTaxInclRaw }}"
+                     data-product-price-tax-excl="{{ product.unitPriceTaxExclRaw }}"
+                     data-toggle="modal"
+                     data-target="#updateOrderProductModal"
+                  >edit</i>
+                </a>
 
-              <a href="#"
-                 class="ml-2 tooltip-link"
-                 data-toggle="pstooltip"
-                 data-placement="top"
-                 data-original-title="{{ 'Delete'|trans({}, 'Admin.Actions') }}"
-              >
-                <i class="material-icons">delete</i>
-              </a>
+                <a href="#"
+                   class="ml-2 tooltip-link"
+                   data-toggle="pstooltip"
+                   data-placement="top"
+                   data-original-title="{{ 'Delete'|trans({}, 'Admin.Actions') }}"
+                >
+                  <i class="material-icons">delete</i>
+                </a>
+              </td>
+            {% endif %}
+
+            <td class="text-right">
+              <span class="partial-refund{% if product.refundable == false %} hidden{% endif %}">
+                <div class="form-group">
+                  <div class="col-lg-4">
+                    <div class="input-group">
+                      <strong>{{ form_label(partialRefundForm['quantity_' ~ product.orderDetailId]) }}</strong>
+                      {{ form_widget(partialRefundForm['quantity_' ~ product.orderDetailId]) }}
+                      <div class="input-group-append"><div class="input-group-text">/ {{ product.quantityRefundable }}</div></div>
+                    </div>
+                  </div>
+                  <div class="col-lg-8">
+                    <div class="input-group">
+                      <strong>{{ form_label(partialRefundForm['amount_' ~ product.orderDetailId]) }}</strong>
+                      {{ form_widget(partialRefundForm['amount_' ~ product.orderDetailId]) }}
+                      <div class="input-group-append"><div class="input-group-text">{{ orderCurrency.symbol }}</div></div>
+                    </div>
+                    <p class="text-center">{{ '(Max %amount_refundable% %tax_method%)'|trans({
+                        '%amount_refundable%': product.amountRefundable,
+                        '%tax_method%': orderForViewing.taxMethod
+                      }, 'Admin.Orderscustomers.Help')|raw }}</p>
+                  </div>
+                </div>
+              </span>
             </td>
           </tr>
         {% endfor %}
@@ -102,33 +161,106 @@
 
     <div class="row mb-3">
       <div class="col-md-12 text-right">
-        <button type="button" class="btn btn-outline-secondary">
-          <i class="material-icons">add_circle_outline</i>
-          {{ 'Add a product'|trans({}, 'Admin.Orderscustomers.Feature') }}
-        </button>
+        {% if not orderForViewing.delivered %}
+          <button type="button" class="btn btn-outline-secondary mr-3" data-toggle="modal" data-target="#addOrderProductModal">
+            <i class="material-icons">add_circle_outline</i>
+            {{ 'Add a product'|trans({}, 'Admin.Orderscustomers.Feature') }}
+          </button>
+        {% endif %}
         <button type="button" class="btn btn-outline-secondary" data-toggle="modal" data-target="#addOrderDiscountModal">
           <i class="material-icons">confirmation_number</i>
-          {{ 'Add a new discount'|trans({}, 'Admin.Orderscustomers.Feature') }}
+          {{ 'Add a discount'|trans({}, 'Admin.Orderscustomers.Feature') }}
         </button>
       </div>
     </div>
 
+    {% if orderForViewing.discounts.discounts is not empty %}
+      <table class="table">
+        <thead>
+          <tr>
+            <th>{{ 'Name'|trans({}, 'Admin.Global') }}</th>
+            <th>{{ 'Value'|trans({}, 'Admin.Global') }}</th>
+            <th class="text-right">{{ 'Actions'|trans({}, 'Admin.Global') }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for discount in orderForViewing.discounts.discounts %}
+            <tr>
+              <td>{{ discount.name }}</td>
+              <td>
+                {% if discount.amountRaw %}-{% endif %}
+                {{ discount.amountFormatted }}
+              </td>
+              <td class="text-right">
+                <form action="{{ path('admin_orders_remove_cart_rule', {'orderId': orderForViewing.id, 'orderCartRuleId': discount.orderCartRuleId}) }}" method="post">
+                  <button type="submit"
+                          class="ml-2 tooltip-link btn btn-text"
+                          data-toggle="pstooltip"
+                          data-placement="top"
+                          data-original-title="{{ 'Delete'|trans({}, 'Admin.Actions') }}"
+                  >
+                    <i class="material-icons">delete</i>
+                  </button>
+                </form>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% endif %}
+
     <div class="row">
       <div class="col-md-12">
-        <div style="background-color: #F8F8F8; padding-top: 18px; padding-left: 18px; padding-right: 18px; padding-bottom: 16px;">
+        <div class="info-block">
           <div class="row">
             <div class="col-sm text-center">
               <p class="text-muted mb-0"><strong>{{ 'Products'|trans({}, 'Admin.Global') }}</strong></p>
-              <strong>14.99</strong>
+              <strong>{{ orderForViewing.prices.productsPriceFormatted }}</strong>
             </div>
-            <div class="col-sm text-center">
+
+            {% if orderForViewing.prices.discountsAmountRaw %}
+              <div class="col-sm text-center">
+                <p class="text-muted mb-0"><strong>{{ 'Discounts'|trans({}, 'Admin.Global') }}</strong></p>
+                <strong>-{{ orderForViewing.prices.discountsAmountFormatted }}</strong>
+              </div>
+            {% endif %}
+
+            {% if orderForViewing.prices.wrappingPriceRaw %}
+              <div class="col-sm text-center">
+                <p class="text-muted mb-0"><strong>{{ 'Wrapping'|trans({}, 'Admin.Orderscustomers.Feature') }}</strong></p>
+                <strong>{{ orderForViewing.prices.wrappingPriceFormatted }}</strong>
+              </div>
+            {% endif %}
+
+            <div class="col-sm text-center shipping-price">
               <p class="text-muted mb-0"><strong>{{ 'Shipping'|trans({}, 'Admin.Catalog.Feature') }}</strong></p>
-              <strong>99.99</strong>
+              <strong>{{ orderForViewing.prices.shippingPriceFormatted }}</strong>
             </div>
+
+            <span class="partial-refund">
+              <p class="text-muted mb-0 text-center"><strong>{{ 'Shipping'|trans({}, 'Admin.Catalog.Feature') }}</strong></p>
+              <div class="col-sm text-center shipping-price-container">
+                <strong>{{ orderForViewing.prices.shippingPriceFormatted }}</strong>
+                {{ form_widget(partialRefundForm.shipping) }}
+                <div class="input-group-append">
+                  <div class="input-group-text">{{ orderCurrency.symbol }}</div>
+                </div>
+              </div>
+              <p class="text-center">(max {{ orderForViewing.prices.shippingPriceFormatted }} tax included)</p>
+            </span>
+
+            {% if not orderForViewing.taxIncluded %}
+              <div class="col-sm text-center">
+                <p class="text-muted mb-0"><strong>{{ 'Taxes'|trans({}, 'Admin.Global') }}</strong></p>
+                <strong>{{ orderForViewing.prices.taxesAmountFormatted }}</strong>
+              </div>
+            {% endif %}
+
             <div class="col-sm text-center">
               <p class="text-muted mb-0"><strong>{{ 'Total'|trans({}, 'Admin.Global') }}</strong></p>
-              <strong>85</strong>
+              <span class="badge rounded badge-dark font-size-100">{{ orderForViewing.prices.totalAmountFormatted }}</span>
             </div>
+
           </div>
         </div>
       </div>
@@ -146,7 +278,20 @@
             {% endif %}
           </small>
         </p>
+        <div class="refund-checkboxes-container">
+          <div class="form-group">
+            {{ form_widget(partialRefundForm.restock) }}
+          </div>
+          <div class="form-group">
+            {{ form_widget(partialRefundForm.voucher) }}
+          </div>
+        </div>
+      </div>
+      <div class="partial-refund form-submit text-right">
+        <button class="partial-refund partial-refund-cancel btn btn-outline-secondary" type="button">Cancel</button>
+        {{ form_widget(partialRefundForm.save) }}
       </div>
     </div>
   </div>
 </div>
+{{ form_end(partialRefundForm) }}

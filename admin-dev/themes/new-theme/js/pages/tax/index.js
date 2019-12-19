@@ -36,6 +36,7 @@ import DisplayInCartOptionHandler from './display-in-cart-option-handler';
 import TranslatableInput from '../../components/translatable-input';
 import FiltersSubmitButtonEnablerExtension
   from '../../components/grid/extension/filters-submit-button-enabler-extension';
+import LinkRowActionExtension from '../../components/grid/extension/link-row-action-extension';
 
 const $ = window.$;
 
@@ -51,6 +52,7 @@ $(() => {
   taxGrid.addExtension(new SubmitBulkExtension());
   taxGrid.addExtension(new BulkActionCheckboxExtension());
   taxGrid.addExtension(new FiltersSubmitButtonEnablerExtension());
+  taxGrid.addExtension(new LinkRowActionExtension());
 
   new DisplayInCartOptionHandler();
   new TranslatableInput();

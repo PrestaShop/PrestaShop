@@ -23,25 +23,23 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-import Grid from '../../components/grid/grid';
-import FiltersResetExtension from '../../components/grid/extension/filters-reset-extension';
-import SortingExtension from '../../components/grid/extension/sorting-extension';
+import Grid from '@components/grid/grid';
+import FiltersResetExtension from '@components/grid/extension/filters-reset-extension';
+import SortingExtension from '@components/grid/extension/sorting-extension';
 import SubmitRowActionExtension
-  from '../../components/grid/extension/action/row/submit-row-action-extension';
-import LinkRowActionExtension from '../../components/grid/extension/link-row-action-extension';
+  from '@components/grid/extension/action/row/submit-row-action-extension';
+import LinkRowActionExtension from '@components/grid/extension/link-row-action-extension';
 import DeleteCategoryRowActionExtension
-  from '../../components/grid/extension/action/row/category/delete-category-row-action-extension';
+  from '@components/grid/extension/action/row/category/delete-category-row-action-extension';
 import AsyncToggleColumnExtension
-  from '../../components/grid/extension/column/common/async-toggle-column-extension';
+  from '@components/grid/extension/column/common/async-toggle-column-extension';
 import FiltersSubmitButtonEnablerExtension
-  from '../../components/grid/extension/filters-submit-button-enabler-extension';
-import ReloadListActionExtension from '../../components/grid/extension/reload-list-extension';
+  from '@components/grid/extension/filters-submit-button-enabler-extension';
+import ReloadListActionExtension from '@components/grid/extension/reload-list-extension';
 import ExportToSqlManagerExtension
-  from '../../components/grid/extension/export-to-sql-manager-extension';
-import ColumnTogglingExtension from '../../components/grid/extension/column-toggling-extension';
-import SubmitBulkExtension from '../../components/grid/extension/submit-bulk-action-extension';
-import BulkActionCheckboxExtension
-  from '../../components/grid/extension/bulk-action-checkbox-extension';
+  from '@components/grid/extension/export-to-sql-manager-extension';
+import ShowcaseCard from '@components/showcase-card/showcase-card';
+import ShowcaseCardCloseExtension from '@components/showcase-card/extension/showcase-card-close-extension';
 
 const $ = window.$;
 
@@ -69,12 +67,12 @@ $(() => {
 
     grid.addExtension(new ExportToSqlManagerExtension());
     grid.addExtension(new ReloadListActionExtension());
-    grid.addExtension(new SortingExtension());
     grid.addExtension(new FiltersResetExtension());
-    grid.addExtension(new ColumnTogglingExtension());
-    grid.addExtension(new SubmitRowActionExtension());
-    grid.addExtension(new SubmitBulkExtension());
-    grid.addExtension(new BulkActionCheckboxExtension());
+    grid.addExtension(new AsyncToggleColumnExtension());
+    grid.addExtension(new LinkRowActionExtension());
     grid.addExtension(new FiltersSubmitButtonEnablerExtension());
   });
+
+  const showcaseCard = new ShowcaseCard('monitoringShowcaseCard');
+  showcaseCard.addExtension(new ShowcaseCardCloseExtension());
 });

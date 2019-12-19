@@ -47,7 +47,7 @@ class SetFreeShippingToCartCommand
      * @param int $cartId
      * @param bool $allowFreeShipping
      */
-    public function __construct($cartId, $allowFreeShipping)
+    public function __construct(int $cartId, bool $allowFreeShipping)
     {
         $this->cartId = new CartId($cartId);
         $this->allowFreeShipping = $allowFreeShipping;
@@ -56,7 +56,7 @@ class SetFreeShippingToCartCommand
     /**
      * @return CartId
      */
-    public function getCartId()
+    public function getCartId(): CartId
     {
         return $this->cartId;
     }
@@ -64,7 +64,7 @@ class SetFreeShippingToCartCommand
     /**
      * @return bool
      */
-    public function allowFreeShipping()
+    public function allowFreeShipping(): bool
     {
         return $this->allowFreeShipping;
     }

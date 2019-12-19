@@ -23,18 +23,19 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-import Grid from '../../components/grid/grid';
-import SortingExtension from '../../components/grid/extension/sorting-extension';
-import FiltersResetExtension from '../../components/grid/extension/filters-reset-extension';
-import SubmitGridActionExtension from '../../components/grid/extension/submit-grid-action-extension';
-import ColumnTogglingExtension from '../../components/grid/extension/column-toggling-extension';
-import SubmitRowActionExtension from '../../components/grid/extension/action/row/submit-row-action-extension';
-import BulkActionCheckboxExtension from '../../components/grid/extension/bulk-action-checkbox-extension';
-import SubmitBulkActionExtension from '../../components/grid/extension/submit-bulk-action-extension';
-import ReloadListExtension from '../../components/grid/extension/reload-list-extension';
-import ExportToSqlManagerExtension from '../../components/grid/extension/export-to-sql-manager-extension';
+import Grid from '@components/grid/grid';
+import SortingExtension from '@components/grid/extension/sorting-extension';
+import FiltersResetExtension from '@components/grid/extension/filters-reset-extension';
+import SubmitGridActionExtension from '@components/grid/extension/submit-grid-action-extension';
+import ColumnTogglingExtension from '@components/grid/extension/column-toggling-extension';
+import SubmitRowActionExtension from '@components/grid/extension/action/row/submit-row-action-extension';
+import BulkActionCheckboxExtension from '@components/grid/extension/bulk-action-checkbox-extension';
+import SubmitBulkActionExtension from '@components/grid/extension/submit-bulk-action-extension';
+import ReloadListExtension from '@components/grid/extension/reload-list-extension';
+import ExportToSqlManagerExtension from '@components/grid/extension/export-to-sql-manager-extension';
 import FiltersSubmitButtonEnablerExtension
-  from '../../components/grid/extension/filters-submit-button-enabler-extension';
+  from '@components/grid/extension/filters-submit-button-enabler-extension';
+import LinkRowActionExtension from '@components/grid/extension/link-row-action-extension';
 
 const $ = window.$;
 
@@ -50,4 +51,5 @@ $(() => {
   supplierGrid.addExtension(new ReloadListExtension());
   supplierGrid.addExtension(new ExportToSqlManagerExtension());
   supplierGrid.addExtension(new FiltersSubmitButtonEnablerExtension());
+  supplierGrid.addExtension(new LinkRowActionExtension());
 });

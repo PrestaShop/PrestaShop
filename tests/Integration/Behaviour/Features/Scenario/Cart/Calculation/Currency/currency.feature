@@ -90,8 +90,8 @@ Feature: Cart calculation with currencies
     Given currency "currency2" is the current one
     Given there is a product in the catalog named "product1" with a price of 19.812 and 1000 items in stock
     When I add 3 items of product "product1" in my cart
-    Then my cart total should be 83.05 tax included
-    Then my cart total using previous calculation method should be 83.05 tax included
+    Then my cart total should be 83.0 tax included
+    Then my cart total using previous calculation method should be 83.0 tax included
 
   Scenario: 3 products in cart, several quantities
     Given I have an empty default cart

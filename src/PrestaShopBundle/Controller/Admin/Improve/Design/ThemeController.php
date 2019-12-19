@@ -86,7 +86,7 @@ class ThemeController extends AbstractAdminController
         $isoCode = strtoupper($this->get('prestashop.adapter.legacy.context')->getLanguage()->iso_code);
 
         $themeCatalogUrl = sprintf(
-            '%s%s',
+            '%s?%s',
             'https://addons.prestashop.com/en/3-templates-prestashop',
             http_build_query([
                 'utm_source' => 'back-office',

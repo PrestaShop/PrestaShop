@@ -179,7 +179,7 @@ class Number implements NumberInterface
      *
      * @throws LocalizationException
      */
-    public function getSymbolsByNumberingSystem($numberingSystem = null)
+    public function getSymbolsByNumberingSystem($numberingSystem = NumberInterface::NUMBERING_SYSTEM_LATIN)
     {
         if (!isset($this->symbols[$numberingSystem])) {
             throw new LocalizationException('Unknown or invalid numbering system');
@@ -322,16 +322,6 @@ class Number implements NumberInterface
         ) {
             throw new LocalizationException('Invalid secondaryGroupSize');
         }
-    }
-
-    /**
-     * @deprecated https://github.com/PrestaShop/PrestaShop/issues/13168
-     *
-     * @param int $maxFractionDigits
-     */
-    public function setMaxFractionDigits($maxFractionDigits)
-    {
-        $this->maxFractionDigits = $maxFractionDigits;
     }
 
     /**

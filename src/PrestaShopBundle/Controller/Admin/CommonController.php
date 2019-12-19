@@ -26,9 +26,14 @@
 
 namespace PrestaShopBundle\Controller\Admin;
 
+use Context;
 use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
 use PrestaShop\PrestaShop\Core\Addon\AddonsCollection;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
+use PrestaShop\PrestaShop\Core\Domain\Notification\Command\UpdateEmployeeNotificationLastElementCommand;
+use PrestaShop\PrestaShop\Core\Domain\Notification\Exception\TypeException;
+use PrestaShop\PrestaShop\Core\Domain\Notification\Query\GetNotificationLastElements;
+use PrestaShop\PrestaShop\Core\Domain\Notification\QueryResult\NotificationsResults;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\GridDefinitionFactoryInterface;
 use PrestaShop\PrestaShop\Core\Grid\Definition\GridDefinitionInterface;
 use PrestaShop\PrestaShop\Core\Kpi\Row\KpiRowInterface;
@@ -56,20 +61,26 @@ class CommonController extends FrameworkBundleAdminController
      */
     public function notificationsAction()
     {
-        // TODO: Use CQRS
-        return new JsonResponse((new \Notification())->getLastElements());
+        $employeeId = Context::getContext()->employee->id;
+        /** @var NotificationsResults $elements */
+        $elements = $this->getQueryBus()->handle(new GetNotificationLastElements($employeeId));
+
+        return new JsonResponse($elements->getNotificationsResultsForJS());
     }
 
     /**
      * Update the last time a notification type has been seen.
      *
      * @param Request $request
+     *
+     * @throws TypeException
      */
     public function notificationsAckAction(Request $request)
     {
         $type = $request->request->get('type');
-        // TODO: Use CQRS
-        return new JsonResponse((new \Notification())->updateEmployeeLastElement($type));
+        $this->getCommandBus()->handle(new UpdateEmployeeNotificationLastElementCommand($type));
+
+        return new JsonResponse(true);
     }
 
     /**
@@ -118,7 +129,8 @@ class CommonController extends FrameworkBundleAdminController
                 unset($callerParameters[$k]);
             }
         }
-        $routeName = $request->attributes->get('caller_route', $request->attributes->get('caller_parameters', ['_route' => false])['_route']);
+        $callerParameters += array('_route' => false);
+        $routeName = $request->attributes->get('caller_route', $callerParameters['_route']);
         $nextPageUrl = (!$routeName || ($offset + $limit >= $total)) ? false : $this->generateUrl($routeName, array_merge(
             $callerParameters,
             array(

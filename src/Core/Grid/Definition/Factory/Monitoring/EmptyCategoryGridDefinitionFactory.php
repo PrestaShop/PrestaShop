@@ -91,7 +91,6 @@ final class EmptyCategoryGridDefinitionFactory extends AbstractGridDefinitionFac
                     ->setName($this->trans('Description', [], 'Admin.Global'))
                     ->setOptions([
                         'field' => 'description',
-                        'sortable' => false,
                     ])
             )
             ->add(

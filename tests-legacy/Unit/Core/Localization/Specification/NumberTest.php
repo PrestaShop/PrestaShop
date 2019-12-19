@@ -27,6 +27,7 @@
 namespace LegacyTests\Unit\Core\Localization\Specification;
 
 use PHPUnit\Framework\TestCase;
+use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 use PrestaShop\PrestaShop\Core\Localization\Specification\Number as NumberSpecification;
 use PrestaShop\PrestaShop\Core\Localization\Specification\NumberSymbolList;
 
@@ -110,7 +111,7 @@ class NumberTest extends TestCase
      */
     public function testGetSymbolsByNumberingSystemWithInvalidParameter()
     {
-        $this->expectException(\PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException::class);
+        $this->expectException(LocalizationException::class);
 
         $this->latinNumberSpec->getSymbolsByNumberingSystem('foobar');
     }

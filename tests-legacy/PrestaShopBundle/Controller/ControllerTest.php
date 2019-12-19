@@ -121,14 +121,12 @@ class ControllerTest extends TestCase
             array('AdminQuickAccessesController'),
             array('AdminCustomerThreadsController'),
             array('AdminReferrersController'),
-            array('AdminAttachmentsController'),
             array('AdminReturnController'),
             array('AdminStoresController'),
             array('AdminSuppliersController'),
             array('AdminAttributesGroupsController'),
             array('AdminNotFoundController'),
             array('AdminFeaturesController'),
-            array('AdminOrderMessageController'),
             array('AdminSearchEnginesController'),
             array('AdminGendersController'),
             array('AdminTagsController'),
@@ -150,8 +148,7 @@ class ControllerTest extends TestCase
 
     protected function declareRequiredConstants()
     {
-        $configDirectory = __DIR__ . '/../../../app/config';
-        $configuration = require_once $configDirectory . '/parameters.php';
+        $configuration = require_once _PS_CACHE_DIR_ . 'appParameters.php';
 
         if (defined('_PS_BO_ALL_THEMES_DIR_')) {
             return;

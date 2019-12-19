@@ -44,7 +44,6 @@ use Symfony\Component\Translation\TranslatorInterface;
 class ProductCombinationBulk extends CommonAbstractType
 {
     private $isoCode;
-    private $priceDisplayPrecision;
     private $translator;
     private $configuration;
 
@@ -58,7 +57,6 @@ class ProductCombinationBulk extends CommonAbstractType
     {
         $is_stock_management = $this->configuration->get('PS_STOCK_MANAGEMENT');
         $this->isoCode = $options['iso_code'];
-        $this->priceDisplayPrecision = $options['price_display_precision'];
 
         if ($is_stock_management) {
             $builder->add('quantity', NumberType::class, [
@@ -117,7 +115,6 @@ class ProductCombinationBulk extends CommonAbstractType
         $resolver->setDefaults([
             'validation_groups' => false,
             'iso_code' => '',
-            'price_display_precision' => '',
         ]);
     }
 

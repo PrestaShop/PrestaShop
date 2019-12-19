@@ -1,5 +1,5 @@
 {#**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -28,9 +28,7 @@
 {% set layoutTitle = 'Create order'|trans({}, 'Admin.Orderscustomers.Feature') %}
 
 {% block content %}
-  <div id="orderCreationContainer"
-       data-last-empty-cart-url="{{ getAdminLink('AdminCarts', true, {'action': 'searchCarts', 'ajax': 1}) }}"
-       data-cart-addresses-url="{{ getAdminLink('AdminCarts', true, {'action': 'updateAddresses', 'ajax': 1}) }}"
+  <div id="order-creation-container"
        data-cart-summary-url="{{ getAdminLink('AdminCarts', true, {'action': 'getSummary', 'ajax': 1}) }}"
   >
     <div class="row">
@@ -45,7 +43,7 @@
     </div>
     <div class="row">
       <div class="col">
-        {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/Create/vouchers.html.twig' %}
+        {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/Create/cart_rules.html.twig' %}
       </div>
     </div>
     <div class="row">

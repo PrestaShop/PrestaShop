@@ -39,9 +39,18 @@ use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyConstraintExcep
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\AutomateExchangeRatesUpdateException;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\ExchangeRateNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\InvalidUnofficialCurrencyException;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Query\GetCurrencyExchangeRate;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Query\GetReferenceCurrency;
+use PrestaShop\PrestaShop\Core\Domain\Currency\QueryResult\ExchangeRate as ExchangeRateResult;
+use PrestaShop\PrestaShop\Core\Domain\Currency\QueryResult\ReferenceCurrency;
+use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\ExchangeRate;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CurrencyGridDefinitionFactory;
+use PrestaShop\PrestaShop\Core\Localization\CLDR\ComputingPrecision;
+use PrestaShop\PrestaShop\Core\Localization\CLDR\Currency;
 use PrestaShop\PrestaShop\Core\Search\Filters\CurrencyFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
@@ -159,10 +168,9 @@ class CurrencyController extends FrameworkBundleAdminController
     public function editAction($currencyId, Request $request)
     {
         $multiStoreFeature = $this->get('prestashop.adapter.multistore_feature');
-        $currencyForm = null;
+        $currencyForm = $this->getCurrencyFormBuilder()->getFormFor($currencyId);
 
         try {
-            $currencyForm = $this->getCurrencyFormBuilder()->getFormFor($currencyId);
             $currencyForm->handleRequest($request);
 
             $result = $this->getCurrencyFormHandler()->handleFor($currencyId, $currencyForm);
@@ -209,6 +217,52 @@ class CurrencyController extends FrameworkBundleAdminController
         $this->addFlash('success', $this->trans('Successful deletion.', 'Admin.Notifications.Success'));
 
         return $this->redirectToRoute('admin_currencies_index');
+    }
+
+    /**
+     * Get the data for a currency (from CLDR)
+     *
+     * @param string $currencyIsoCode
+     *
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     * @DemoRestricted(redirectRoute="admin_currencies_index")
+     *
+     * @return JsonResponse
+     */
+    public function getReferenceDataAction($currencyIsoCode)
+    {
+        try {
+            /** @var ReferenceCurrency $referenceCurrency */
+            $referenceCurrency = $this->getQueryBus()->handle(new GetReferenceCurrency($currencyIsoCode));
+        } catch (CurrencyException $e) {
+            return new JsonResponse([
+                'error' => $this->trans(
+                    'Cannot find reference data for currency %isoCode%',
+                    'Admin.International.Feature',
+                    [
+                        '%isoCode%' => $currencyIsoCode,
+                    ]
+                ),
+            ], 404);
+        }
+
+        try {
+            /** @var ExchangeRateResult $exchangeRate */
+            $exchangeRate = $this->getQueryBus()->handle(new GetCurrencyExchangeRate($currencyIsoCode));
+            $computingPrecision = new ComputingPrecision();
+            $exchangeRateValue = $exchangeRate->getValue()->round($computingPrecision->getPrecision(2));
+        } catch (ExchangeRateNotFoundException $e) {
+            $exchangeRateValue = ExchangeRate::DEFAULT_RATE;
+        }
+
+        return new JsonResponse([
+                'isoCode' => $referenceCurrency->getIsoCode(),
+                'numericIsoCode' => $referenceCurrency->getNumericIsoCode(),
+                'precision' => $referenceCurrency->getPrecision(),
+                'names' => $referenceCurrency->getNames(),
+                'symbols' => $referenceCurrency->getSymbols(),
+                'exchangeRate' => $exchangeRateValue,
+        ]);
     }
 
     /**
@@ -365,13 +419,22 @@ class CurrencyController extends FrameworkBundleAdminController
      */
     private function getErrorMessages(Exception $e)
     {
+        $isoCode = $e instanceof InvalidUnofficialCurrencyException ? $e->getIsoCode() : '';
+
         return [
             CurrencyConstraintException::class => [
                 CurrencyConstraintException::INVALID_ISO_CODE => $this->trans(
                     'The %s field is not valid',
                     'Admin.Notifications.Error',
                     [
-                        sprintf('"%s"', $this->trans('Currency', 'Admin.Global')),
+                        sprintf('"%s"', $this->trans('ISO code', 'Admin.International.Feature')),
+                    ]
+                ),
+                CurrencyConstraintException::INVALID_NUMERIC_ISO_CODE => $this->trans(
+                    'The %s field is not valid',
+                    'Admin.Notifications.Error',
+                    [
+                        sprintf('"%s"', $this->trans('Numeric ISO code', 'Admin.International.Feature')),
                     ]
                 ),
                 CurrencyConstraintException::INVALID_EXCHANGE_RATE => $this->trans(
@@ -383,6 +446,10 @@ class CurrencyController extends FrameworkBundleAdminController
                     ),
                 CurrencyConstraintException::CURRENCY_ALREADY_EXISTS => $this->trans(
                     'This currency already exists.',
+                    'Admin.International.Notification'
+                ),
+                CurrencyConstraintException::ISO_CODES_MISMATCH => $this->trans(
+                    'Cannot find a real currency matching this couple of ISO code and numeric ISO code',
                     'Admin.International.Notification'
                 ),
             ],
@@ -427,6 +494,10 @@ class CurrencyController extends FrameworkBundleAdminController
             ),
             CannotDisableDefaultCurrencyException::class => $this->trans(
                 'You cannot disable the default currency',
+                'Admin.International.Notification'
+            ),
+            InvalidUnofficialCurrencyException::class => $this->trans(
+                'Oops... it looks like this ISO code already exists. If you are: <ul><li>trying to create an alternative currency, you must type a different ISO code</li><li>trying to modify the currency with ISO code %isoCode%, make sure you did not check the creation box</li></ul>',
                 'Admin.International.Notification'
             ),
         ];

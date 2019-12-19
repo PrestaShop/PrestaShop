@@ -3195,12 +3195,13 @@ class ProductCore extends ObjectModel
 
         $cart_quantity = 0;
         if ((int) $id_cart) {
-            $cache_id = 'Product::getPriceStatic_' . (int) $id_product . '-' . (int) $id_cart;
+            $cache_id = 'Product::getPriceStatic_' . (int) $id_product . '-' . (int) $id_product_attribute . '-' . (int) $id_cart;
             if (!Cache::isStored($cache_id) || ($cart_quantity = Cache::retrieve($cache_id) != (int) $quantity)) {
                 $sql = 'SELECT SUM(`quantity`)
                 FROM `' . _DB_PREFIX_ . 'cart_product`
                 WHERE `id_product` = ' . (int) $id_product . '
                 AND `id_cart` = ' . (int) $id_cart;
+                $sql .= $id_product_attribute !== null ? ' AND `id_product_attribute` = ' . (int) $id_product_attribute : '';
                 $cart_quantity = (int) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($sql);
                 Cache::store($cache_id, $cart_quantity);
             } else {
@@ -3535,7 +3536,7 @@ class ProductCore extends ObjectModel
             $currency = $context->currency;
         }
 
-        return Tools::displayPrice(Tools::convertPrice($price, $currency), $currency);
+        return $context->getCurrentLocale()->formatPrice(Tools::convertPrice($price, $currency), $currency->iso_code);
     }
 
     public static function isDiscounted($id_product, $quantity = 1, Context $context = null)
@@ -3660,7 +3661,7 @@ class ProductCore extends ObjectModel
      */
     public static function convertPrice($params, &$smarty)
     {
-        return Tools::displayPrice($params['price'], Context::getContext()->currency);
+        return Context::getContext()->getCurrentLocale()->formatPrice($params['price'], Context::getContext()->currency->iso_code);
     }
 
     /**
@@ -3673,12 +3674,15 @@ class ProductCore extends ObjectModel
      */
     public static function convertPriceWithCurrency($params, &$smarty)
     {
-        return Tools::displayPrice($params['price'], $params['currency'], false);
+        $currency = $params['currency'];
+        $currency = is_object($currency) ? $currency->iso_code : Currency::getIsoCodeById((int) $currency);
+
+        return Tools::getContextLocale(Context::getContext())->formatPrice($params['price'], $currency);
     }
 
     public static function displayWtPrice($params, &$smarty)
     {
-        return Tools::displayPrice($params['p'], Context::getContext()->currency);
+        return Tools::getContextLocale(Context::getContext())->formatPrice($params['p'], Context::getContext()->currency->iso_code);
     }
 
     /**
@@ -3691,7 +3695,10 @@ class ProductCore extends ObjectModel
      */
     public static function displayWtPriceWithCurrency($params, &$smarty)
     {
-        return Tools::displayPrice($params['price'], $params['currency'], false);
+        $currency = $params['currency'];
+        $currency = is_object($currency) ? $currency->iso_code : Currency::getIsoCodeById((int) $currency);
+
+        return !is_null($params['price']) ? Tools::getContextLocale(Context::getContext())->formatPrice($params['price'], $currency) : null;
     }
 
     /**
@@ -3712,6 +3719,7 @@ class ProductCore extends ObjectModel
         Cart $cart = null,
         $idCustomization = null
     ) {
+        // pack usecase: Pack::getQuantity() returns the pack quantity after cart quantities have been removed from stock
         if (Pack::isPack((int) $idProduct)) {
             return Pack::getQuantity($idProduct, $idProductAttribute, $cacheIsPack, $cart, $idCustomization);
         }
@@ -4229,7 +4237,7 @@ class ProductCore extends ObjectModel
      *
      * @return array Matching products
      */
-    public static function searchByName($id_lang, $query, Context $context = null)
+    public static function searchByName($id_lang, $query, Context $context = null, $limit = null)
     {
         if (!$context) {
             $context = Context::getContext();
@@ -4257,6 +4265,10 @@ class ProductCore extends ObjectModel
         OR EXISTS(SELECT * FROM `' . _DB_PREFIX_ . 'product_supplier` sp WHERE sp.`id_product` = p.`id_product` AND `product_supplier_reference` LIKE \'%' . pSQL($query) . '%\')';
 
         $sql->orderBy('pl.`name` ASC');
+
+        if ($limit) {
+            $sql->limit($limit);
+        }
 
         if (Combination::isFeatureActive()) {
             $where .= ' OR EXISTS(SELECT * FROM `' . _DB_PREFIX_ . 'product_attribute` `pa` WHERE pa.`id_product` = p.`id_product` AND (pa.`reference` LIKE \'%' . pSQL($query) . '%\'
@@ -4893,7 +4905,7 @@ class ProductCore extends ObjectModel
                     true,
                     $quantity
                 ),
-                (int) Configuration::get('PS_PRICE_DISPLAY_PRECISION')
+                Context::getContext()->getComputingPrecision()
             );
             $row['price_without_reduction'] = Product::getPriceStatic(
                 (int) $row['id_product'],
@@ -5623,7 +5635,9 @@ class ProductCore extends ObjectModel
 
     public function getNoPackPrice()
     {
-        return Tools::displayPrice(Pack::noPackPrice((int) $this->id));
+        $context = Context::getContext();
+
+        return Tools::getContextLocale($context)->formatPrice(Pack::noPackPrice((int) $this->id), $context->currency->iso_code);
     }
 
     public function checkAccess($id_customer)

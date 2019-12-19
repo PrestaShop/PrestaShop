@@ -183,7 +183,7 @@ class OrderFeatureContext extends AbstractPrestaShopFeatureContext
             throw new \RuntimeException(
                 sprintf(
                     'Expects %s, got %s instead',
-                    $discountTaxIncluded,
+                    $discountTaxExcluded,
                     $orderCartRule->value_tax_excl
                 )
             );

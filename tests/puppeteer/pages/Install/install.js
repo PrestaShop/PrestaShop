@@ -1,5 +1,6 @@
+require('module-alias/register');
 // Using CommonPage
-const CommonPage = require('../commonPage');
+const CommonPage = require('@pages/commonPage');
 
 module.exports = class Install extends CommonPage {
   constructor(page) {
@@ -42,6 +43,7 @@ module.exports = class Install extends CommonPage {
     // Selectors for step 5
     this.fifthStepPageTitle = '#dbPart h2';
     this.dbLoginInput = '#dbLogin';
+    this.dbNameInput = '#dbName';
     this.dbPasswordInput = '#dbPassword';
     this.testDbConnectionButton = '#btTestDB';
     this.createDbButton = '#btCreateDB';
@@ -108,8 +110,8 @@ module.exports = class Install extends CommonPage {
   async fillInformationForm() {
     await this.page.type(this.shopNameInput, global.INSTALL.SHOPNAME);
     await this.page.select(this.countrySelect, global.INSTALL.COUNTRY);
-    await this.page.type(this.firstNameInput, 'demo');
-    await this.page.type(this.lastNameInput, 'demo');
+    await this.page.type(this.firstNameInput, global.BO.FIRSTNAME);
+    await this.page.type(this.lastNameInput, global.BO.LASTNAME);
     await this.page.type(this.emailInput, global.BO.EMAIL);
     await this.page.type(this.passwordInput, global.BO.PASSWD);
     await this.page.type(this.repeatPasswordInput, global.BO.PASSWD);
@@ -119,42 +121,43 @@ module.exports = class Install extends CommonPage {
    * Fill Database Form in step 5
    */
   async fillDatabaseForm() {
-    await this.page.click(this.dbLoginInput, {clickCount: 3});
-    await this.page.type(this.dbLoginInput, global.INSTALL.DB_USER);
-    await this.page.click(this.dbPasswordInput, {clickCount: 3});
-    await this.page.type(this.dbPasswordInput, global.INSTALL.DB_PASSWD);
+    await this.setValue(this.dbNameInput, global.INSTALL.DB_NAME);
+    await this.setValue(this.dbLoginInput, global.INSTALL.DB_USER);
+    await this.setValue(this.dbPasswordInput, global.INSTALL.DB_PASSWD);
   }
 
   /**
    * Check if database exist (if not, it will be created)
    * and check if all set properly to submit form
+   * @return {Promise<boolean>}
    */
-  async checkDatabaseConnected() {
+  async isDatabaseConnected() {
     await this.page.click(this.testDbConnectionButton);
     // Create database 'prestashop' if not exist
     if (await this.elementVisible(this.createDbButton, 3000)) {
       await this.page.click(this.createDbButton);
     }
-    await this.page.waitForSelector(this.dbResultCheckOkBlock, {visible: true});
+    return this.elementVisible(this.dbResultCheckOkBlock, 3000);
   }
 
   /**
    * Check if prestashop is installed properly
    */
-  async checkInstallationSuccessful() {
-    await this.page.waitForSelector(this.installationProgressBar, {visible: true});
-    await this.page.waitFor(this.installationProgressBar, {visible: true});
-    await this.page.waitFor(this.generateSettingsFileStep, {visible: true});
-    await this.page.waitFor(this.installDatabaseStep, {visible: true});
-    await this.page.waitFor(this.installDefaultDataStep, {visible: true, timeout: 360000});
-    await this.page.waitFor(this.populateDatabaseStep, {visible: true, timeout: 360000});
-    await this.page.waitFor(this.configureShopStep, {visible: true, timeout: 360000});
-    await this.page.waitFor(this.installModulesStep, {visible: true});
-    await this.page.waitFor(this.installModulesAddons, {visible: true, timeout: 360000});
-    await this.page.waitFor(this.installThemeStep, {visible: true});
-    await this.page.waitFor(this.installFixturesStep, {visible: true});
-    await this.page.waitForSelector(this.finalStepPageTitle, {visible: true, timeout: 90000});
-    await this.checkStepTitle(this.finalStepPageTitle, this.finalStepEnTitle);
+  async isInstallationSuccessful() {
+    await Promise.all([
+      this.page.waitForSelector(this.installationProgressBar, {visible: true}),
+      this.page.waitForSelector(this.generateSettingsFileStep, {visible: true}),
+      this.page.waitForSelector(this.installDatabaseStep, {visible: true, timeout: 60000}),
+      this.page.waitForSelector(this.installDefaultDataStep, {visible: true, timeout: 120000}),
+      this.page.waitForSelector(this.populateDatabaseStep, {visible: true, timeout: 180000}),
+      this.page.waitForSelector(this.configureShopStep, {visible: true, timeout: 240000}),
+      this.page.waitForSelector(this.installModulesStep, {visible: true, timeout: 360000}),
+      this.page.waitForSelector(this.installModulesAddons, {visible: true, timeout: 360000}),
+      this.page.waitForSelector(this.installThemeStep, {visible: true, timeout: 360000}),
+      this.page.waitForSelector(this.installFixturesStep, {visible: true, timeout: 360000}),
+      this.page.waitForSelector(this.finalStepPageTitle, {visible: true, timeout: 360000}),
+    ]);
+    return this.checkStepTitle(this.finalStepPageTitle, this.finalStepEnTitle);
   }
 
   /**

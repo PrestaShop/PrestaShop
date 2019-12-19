@@ -1,4 +1,5 @@
-const FOBasePage = require('../FO/FObasePage');
+require('module-alias/register');
+const FOBasePage = require('@pages/FO/FObasePage');
 
 module.exports = class Checkout extends FOBasePage {
   constructor(page) {
@@ -15,6 +16,14 @@ module.exports = class Checkout extends FOBasePage {
     this.paymentOptionInput = `${this.paymentStepSection} input[name='payment-option'][data-module-name='%NAME']`;
     this.conditionToApproveLabel = `${this.paymentStepSection} #conditions-to-approve label`;
     this.paymentConfirmationButton = `${this.paymentStepSection} #payment-confirmation button:not([disabled])`;
+    // Personal information form
+    this.personalInformationStepForm = '#checkout-personal-information-step';
+    this.signInLink = `${this.personalInformationStepForm} a[href="#checkout-login-form"]`;
+    // Checkout login form
+    this.checkoutLoginForm = `${this.personalInformationStepForm} #checkout-login-form`;
+    this.emailInput = `${this.checkoutLoginForm} input[name='email']`;
+    this.passwordInput = `${this.checkoutLoginForm} input[name='password']`;
+    this.personalInformationContinueButton = `${this.checkoutLoginForm} #login-form footer button`;
   }
 
   /*
@@ -77,5 +86,25 @@ module.exports = class Checkout extends FOBasePage {
       this.page.waitForNavigation({waitUntil: 'networkidle0'}),
       this.page.click(this.paymentConfirmationButton),
     ]);
+  }
+
+  /**
+   * Click on sign in
+   * @return {Promise<void>}
+   */
+  async clickOnSignIn() {
+    this.page.click(this.signInLink);
+  }
+
+  /**
+   * Login in FO
+   * @param customer
+   * @return {Promise<void>}
+   */
+  async customerLogin(customer) {
+    await this.page.waitForSelector(this.emailInput, {visible: true});
+    await this.setValue(this.emailInput, customer.email);
+    await this.setValue(this.passwordInput, customer.password);
+    await this.clickAndWaitForNavigation(this.personalInformationContinueButton);
   }
 };

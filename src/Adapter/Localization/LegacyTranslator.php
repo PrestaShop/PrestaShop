@@ -56,8 +56,18 @@ class LegacyTranslator
         $sprintf = null,
         $js = false,
         $locale = null,
-        $fallback = true
+        $fallback = true,
+        $escape = true
     ) {
-        return Translate::getModuleTranslation($moduleName, $originalString, $source, $sprintf, $js, $locale, $fallback);
+        return Translate::getModuleTranslation(
+            $moduleName,
+            $originalString,
+            $source,
+            $sprintf,
+            $js,
+            $locale,
+            $fallback,
+            $escape
+        );
     }
 }

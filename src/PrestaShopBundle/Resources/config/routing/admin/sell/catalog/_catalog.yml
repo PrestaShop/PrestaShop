@@ -15,13 +15,27 @@ _manufacturers:
     prefix: /brands
 
 _monitoring:
-  resource: "monitoring.yml"
-  prefix: /monitoring
+    resource: "monitoring.yml"
+    prefix: /monitoring
 
 _catalog_price_rules:
-  resource: "catalog_price_rule.yml"
-  prefix: /catalog-price-rules
+    resource: "catalog_price_rule.yml"
+    prefix: /catalog-price-rules
 
 _features:
     resource: "features.yml"
     prefix: /features
+
+_attributes:
+    resource: "attribute.yml"
+    prefix: /attribute-groups/{attributeGroupId}/attributes/
+    requirements:
+        attributeGroupId: \d+
+
+_attribute_group:
+    resource: "attribute_group.yml"
+    prefix: /attribute-groups/
+
+_cart_rule:
+    resource: "cart_rule.yml"
+    prefix: /cart-rules

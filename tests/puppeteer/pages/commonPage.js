@@ -17,7 +17,9 @@ module.exports = class CommonPage {
    * @return textContent
    */
   async getTextContent(selector) {
-    return this.page.$eval(selector, el => el.textContent);
+    await this.page.waitForSelector(selector, {visible: true});
+    const textContent = await this.page.$eval(selector, el => el.textContent);
+    return textContent.replace(/\s+/g, ' ').trim();
   }
 
   /**
@@ -37,6 +39,20 @@ module.exports = class CommonPage {
   async elementVisible(selector, timeout = 10) {
     try {
       await this.page.waitForSelector(selector, {visible: true, timeout});
+      return true;
+    } catch (error) {
+      return false;
+    }
+  }
+
+  /**
+   * Is element not visible
+   * @param selector, element to check
+   * @return boolean, true if visible, false if not
+   */
+  async elementNotVisible(selector, timeout = 10) {
+    try {
+      await this.page.waitForSelector(selector, {hidden: true, timeout});
       return true;
     } catch (error) {
       return false;
@@ -170,17 +186,19 @@ module.exports = class CommonPage {
    */
   async selectByVisibleText(selector, textValue) {
     let found = false;
-    const options = await this.page.$$(`${selector} option`);
-    for (let i = 0; i < options.length; i++) {
-      /*eslint-disable*/
-      const elementText = await (await options[i].getProperty('textContent')).jsonValue();
-      if (elementText === textValue) {
-        const elementValue = await (await options[i].getProperty('value')).jsonValue();
-        await this.page.select(selector, elementValue);
-        found = true;
-        break;
-      }
-      /* eslint-enable */
+    let options = await this.page.$$eval(
+      `${selector} option`,
+      all => all.map(
+        option => ({
+          textContent: option.textContent,
+          value: option.value,
+        })),
+    );
+    options = await options.filter(option => textValue === option.textContent);
+    if (options.length !== 0) {
+      const elementValue = await options[0].value;
+      await this.page.select(selector, elementValue);
+      found = true;
     }
     if (!found) throw new Error(`${textValue} was not found as option of select`);
   }
@@ -196,5 +214,58 @@ module.exports = class CommonPage {
     const text = await this.getTextContent(selector);
     const number = /\d+/g.exec(text).toString();
     return parseInt(number, 10);
+  }
+
+  /**
+   * Go to Page and wait for navigation
+   * @param selector
+   * @return {Promise<void>}
+   */
+  async clickAndWaitForNavigation(selector) {
+    await Promise.all([
+      this.page.click(selector),
+      this.page.waitForNavigation({waitUntil: 'networkidle0'}),
+    ]);
+  }
+
+  /**
+   * Replace All occurrences in string
+   * @param str, string to update
+   * @param find, what to replace
+   * @param replace, value to replace with
+   * @return {Promise<*>}
+   */
+  async replaceAll(str, find, replace) {
+    return str.replace(new RegExp(find, 'g'), replace);
+  }
+
+  /**
+   * Navigate to the previous page in history
+   * @param waitUntil
+   * @return {Promise<void>}
+   */
+  async goToPreviousPage(waitUntil = 'networkidle0') {
+    await this.page.goBack({waitUntil});
+  }
+
+  /**
+   * c
+   * @param selector
+   * @return {Promise<boolean>}
+   */
+  async isCheckboxSelected(selector) {
+    return this.page.$eval(selector, el => el.checked);
+  }
+
+  /**
+   * Select, unselect checkbox
+   * @param checkboxSelector, selector of checkbox
+   * @param valueWanted, true if we want to select checkBox, else otherwise
+   * @return {Promise<void>}
+   */
+  async changeCheckboxValue(checkboxSelector, valueWanted = true) {
+    if (valueWanted !== (await this.isCheckboxSelected(checkboxSelector))) {
+      await this.page.click(checkboxSelector);
+    }
   }
 };

@@ -133,3 +133,31 @@ services:
     arguments:
       - 'PrestaShopBundle\Form\Admin\Sell\Catalog\FeatureType'
       - '@prestashop.core.form.identifiable_object.data_provider.feature_form_data_provider'
+
+  prestashop.core.form.identifiable_object.builder.order_message_form_builder:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilder'
+    factory: 'prestashop.core.form.builder.form_builder_factory:create'
+    arguments:
+      - 'PrestaShopBundle\Form\Admin\Sell\CustomerService\OrderMessageType'
+      - '@prestashop.core.form.identifiable_object.data_provider.order_message_form_data_provider'
+
+  prestashop.core.form.identifiable_object.builder.catalog_price_rule_form_builder:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilder'
+    factory: 'prestashop.core.form.builder.form_builder_factory:create'
+    arguments:
+      - 'PrestaShopBundle\Form\Admin\Sell\CatalogPriceRule\CatalogPriceRuleType'
+      - '@prestashop.core.form.identifiable_object.data_provider.catalog_price_rule_form_data_provider'
+
+  prestashop.core.form.identifiable_object.builder.attachment_form_builder:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilder'
+    factory: 'prestashop.core.form.builder.form_builder_factory:create'
+    arguments:
+      - 'PrestaShopBundle\Form\Admin\Sell\Attachment\AttachmentType'
+      - '@prestashop.core.form.identifiable_object.data_provider.attachment_form_data_provider'
+
+  prestashop.core.form.identifiable_object.builder.partial_refund_form_builder:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilder'
+    factory: 'prestashop.core.form.builder.form_builder_factory:create'
+    arguments:
+      - 'PrestaShopBundle\Form\Admin\Sell\Order\PartialRefundType'
+      - '@prestashop.core.form.identifiable_object.data_provider.partial_refund_form_data_provider'

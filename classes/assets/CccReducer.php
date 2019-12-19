@@ -62,12 +62,18 @@ class CccReducerCore
         if (!$this->filesystem->exists($destinationPath)) {
             CssMinifier::minify($files, $destinationPath);
         }
+        if (Tools::hasMediaServer()) {
+            $relativePath = _THEMES_DIR_ . _THEME_NAME_ . '/assets/cache/' . $cccFilename;
+            $destinationUri = Tools::getCurrentUrlProtocolPrefix() . Tools::getMediaServer($relativePath) . $relativePath;
+        } else {
+            $destinationUri = $this->getFQDN() . $this->getUriFromPath($destinationPath);
+        }
 
         $cssFileList['external']['theme-ccc'] = [
             'id' => 'theme-ccc',
             'type' => 'external',
             'path' => $destinationPath,
-            'uri' => $this->getFQDN() . $this->getUriFromPath($destinationPath),
+            'uri' => $destinationUri,
             'media' => 'all',
             'priority' => StylesheetManager::DEFAULT_PRIORITY,
         ];
@@ -99,13 +105,19 @@ class CccReducerCore
             if (!$this->filesystem->exists($destinationPath)) {
                 JsMinifier::minify($files, $destinationPath);
             }
+            if (Tools::hasMediaServer()) {
+                $relativePath = _THEMES_DIR_ . _THEME_NAME_ . '/assets/cache/' . $cccFilename;
+                $destinationUri = Tools::getCurrentUrlProtocolPrefix() . Tools::getMediaServer($relativePath) . $relativePath;
+            } else {
+                $destinationUri = $this->getFQDN() . $this->getUriFromPath($destinationPath);
+            }
 
             $cccItem = [];
             $cccItem[$position . '-js-ccc'] = [
                 'id' => $position . '-js-ccc',
                 'type' => 'external',
                 'path' => $destinationPath,
-                'uri' => $this->getFQDN() . $this->getUriFromPath($destinationPath),
+                'uri' => $destinationUri,
                 'priority' => JavascriptManager::DEFAULT_PRIORITY,
                 'attribute' => '',
             ];
