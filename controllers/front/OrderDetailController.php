@@ -34,6 +34,8 @@ class OrderDetailControllerCore extends FrontController
 
     protected $order_to_display;
 
+    protected $reference;
+
     /**
      * Start forms process.
      *
@@ -184,6 +186,8 @@ class OrderDetailControllerCore extends FrontController
             if (Validate::isLoadedObject($order) && $order->id_customer == $this->context->customer->id) {
                 $this->order_to_display = (new OrderPresenter())->present($order);
 
+                $this->reference = $order->reference;
+
                 $this->context->smarty->assign([
                     'order' => $this->order_to_display,
                     'HOOK_DISPLAYORDERDETAIL' => Hook::exec('displayOrderDetail', ['order' => $order]),
@@ -208,6 +212,11 @@ class OrderDetailControllerCore extends FrontController
             'title' => $this->trans('Order history', [], 'Shop.Theme.Customeraccount'),
             'url' => $this->context->link->getPageLink('history'),
         ];
+
+        $breadcrumb['links'][] = array(
+            'title' => $this->reference,
+            'url' => '#',
+        );
 
         return $breadcrumb;
     }
