@@ -19,7 +19,7 @@ Feature: Order from Back Office (BO)
     And customer "testCustomer" has address in "US" country
     And I create an empty cart "dummy_cart" for customer "testCustomer"
     And I select "US" address as delivery and invoice address for customer "testCustomer" in cart "dummy_cart"
-    And I add 2 products with reference "demo_13" to the cart "dummy_cart"
+    And I add 2 products "Mug The best is yet to come" to the cart "dummy_cart"
     And I add order "bo_order1" with the following details:
       | cart                | dummy_cart                 |
       | message             | test                       |
@@ -68,30 +68,32 @@ Feature: Order from Back Office (BO)
     Then there is duplicated cart "duplicated_dummy_cart" for cart dummy_cart
 
   Scenario: Add product to an existing Order with free shipping and new invoice
-    Given order with reference "bo_order1" does not contain product with reference "demo_5"
-    When I add 2 products with reference "demo_5", price 16 and free shipping to order "bo_order1" with new invoice
-    Then order "bo_order1" should contain 2 products with reference "demo_5"
-    When I add products "demo_5" to order "bo_order1" with new invoice and the following products details:
-      | amount        | 2      |
-      | price         | 16     |
-      | free_shipping | true   |
-    Then order "bo_order1" should contain 4 products with reference "demo_5"
+    Given order with reference "bo_order1" does not contain product "Mug Today is a good day"
+    When I add products to order "bo_order1" with new invoice and the following products details:
+      | name          | Mug Today is a good day |
+      | amount        | 2                       |
+      | price         | 16                      |
+      | free_shipping | true                    |
+    Then order "bo_order1" should contain 2 products "Mug Today is a good day"
     # no exception is thrown when zero/negative amount is passed and nothing changes in the db`
-    When I add products "demo_5" to order "bo_order1" with new invoice and the following products details:
-      | amount        | -1     |
-      | price         | 16     |
-      | free_shipping | true   |
-    Then order "bo_order1" should contain 4 products with reference "demo_5"
-    When I add products "demo_5" to order "bo_order1" with new invoice and the following products details:
-      | amount        | 0      |
-      | price         | 16     |
-      | free_shipping | true   |
-    Then order "bo_order1" should contain 4 products with reference "demo_5"
-    When I add products "demo_5" to order "bo_order1" with new invoice and the following products details:
-      | amount        | 1      |
-      | price         | 16     |
-      | free_shipping | true   |
-    Then order "bo_order1" should contain 5 products with reference "demo_5"
+    When I add products to order "bo_order1" with new invoice and the following products details:
+      | name          | Mug Today is a good day |
+      | amount        | -1                      |
+      | price         | 16                      |
+      | free_shipping | true                    |
+    Then order "bo_order1" should contain 2 products "Mug Today is a good day"
+    When I add products to order "bo_order1" with new invoice and the following products details:
+      | name          | Mug Today is a good day |
+      | amount        | 0                       |
+      | price         | 16                      |
+      | free_shipping | true                    |
+    Then order "bo_order1" should contain 2 products "Mug Today is a good day"
+    When I add products to order "bo_order1" with new invoice and the following products details:
+      | name          | Mug Today is a good day |
+      | amount        | 1                       |
+      | price         | 16                      |
+      | free_shipping | true                    |
+    Then order "bo_order1" should contain 3 products "Mug Today is a good day"
 
   Scenario: Generating invoice for Order
     When I generate invoice for "bo_order1" order

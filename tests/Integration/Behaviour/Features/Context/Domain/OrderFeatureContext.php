@@ -43,6 +43,7 @@ use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderInvoiceAddressForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderProductForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProducts;
 use PrestaShop\PrestaShop\Core\Form\ChoiceProvider\OrderStateByIdChoiceProvider;
 use Product;
 use RuntimeException;
@@ -51,7 +52,6 @@ use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 
 class OrderFeatureContext extends AbstractDomainFeatureContext
 {
-
     private const ORDER_CART_RULE_FREE_SHIPPING = 'Free Shipping';
 
     /**
@@ -131,51 +131,24 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @When I add :quantity products with reference :productReference, price :price and free shipping to order :orderReference with new invoice
+     * @When I add products to order :orderReference with new invoice and the following products details:
      *
-     * @param int $quantity
-     * @param string $productReference
-     * @param int $price
-     * @param string $orderReference
-     */
-    public function addProductsToOrderWithFreeShippingAndNewInvoice(
-        int $quantity,
-        string $productReference,
-        int $price,
-        string $orderReference
-    ) {
-        $orderId = SharedStorage::getStorage()->get($orderReference);
-        // todo: refactor not to use legacy classes: use SearchProductHandler
-        $productId = (int) Product::getIdByReference($productReference);
-
-        $this->getCommandBus()->handle(
-            AddProductToOrderCommand::withNewInvoice(
-                $orderId,
-                $productId,
-                0,
-                (float) $price,
-                (float) $price,
-                (int) $quantity,
-                true
-            )
-        );
-
-        SharedStorage::getStorage()->set($productReference, $productId);
-    }
-
-    /**
-     * @When I add products :productReference to order :orderReference with new invoice and the following products details:
-     *
-     * @param string $productReference
      * @param string $orderReference
      * @param TableNode $table
      */
-    public function addProductsToOrderWithNewInvoiceAndTheFollowingDetails(
-        string $productReference, string $orderReference, TableNode $table
-    ) {
-        $productId = SharedStorage::getStorage()->get($productReference);
+    public function addProductsToOrderWithNewInvoiceAndTheFollowingDetails(string $orderReference, TableNode $table)
+    {
         $orderId = SharedStorage::getStorage()->get($orderReference);
+
         $data = $table->getRowsHash();
+        $productName = $data['name'];
+        /** @var array $productsMap */
+        $productsMap = $this->getQueryBus()->handle(new SearchProducts($productName, 1));
+        $productId = array_key_first($productsMap);
+
+        if (!$productId) {
+            throw new RuntimeException('Product with name "%s" does not exist', $productName);
+        }
 
         $this->getCommandBus()->handle(
             AddProductToOrderCommand::withNewInvoice(
@@ -413,14 +386,18 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Given order with reference :orderReference does not contain product with reference :productReference
+     * @Given order with reference :orderReference does not contain product :productName
      *
      * @param string $orderReference
-     * @param string $productReference
+     * @param string $productName
      */
-    public function orderDoesNotContainProductWithReference(string $orderReference, string $productReference)
+    public function orderDoesNotContainProduct(string $orderReference, string $productName)
     {
         $orderId = SharedStorage::getStorage()->get($orderReference);
+
+        /** @var array $productsMap */
+        $productsMap = $this->getQueryBus()->handle(new SearchProducts($productName, 1));
+        $productId = array_key_first($productsMap);
 
         /** @var OrderForViewing $orderForViewing */
         $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
@@ -429,12 +406,12 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
         $orderProducts = $orderForViewing->getProducts()->getProducts();
 
         foreach ($orderProducts as $orderProduct) {
-            if ($orderProduct->getReference() == $productReference) {
+            if ($orderProduct->getId() == $productId) {
                 throw new RuntimeException(
                     sprintf(
                         'Order with reference "%s" contains product with reference "%s".',
                         $orderReference,
-                        $productReference
+                        $productName
                     )
                 );
             }
@@ -442,16 +419,22 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Then order :orderReference should contain :quantity products with reference :productReference
+     * @Then order :orderReference should contain :quantity products :productName
      *
      * @param string $orderReference
      * @param int $quantity
-     * @param string $productReference
+     * @param string $productName
      */
-    public function orderContainsProductWithReference(string $orderReference, int $quantity, string $productReference)
+    public function orderContainsProductWithReference(string $orderReference, int $quantity, string $productName)
     {
         $orderId = SharedStorage::getStorage()->get($orderReference);
-        $productId = SharedStorage::getStorage()->get($productReference);
+        /** @var array $productsMap */
+        $productsMap = $this->getQueryBus()->handle(new SearchProducts($productName, 1));
+        $productId = array_key_first($productsMap);
+
+        if (!$productId) {
+            throw new RuntimeException('Product with name "%s" does not exist', $productName);
+        }
 
         /** @var OrderForViewing $orderForViewing */
         $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
@@ -473,7 +456,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
             sprintf(
                 'Order was expected to have "%d" products "%s" in it. Instead got "%s"',
                 $quantity,
-                $productReference,
+                $productName,
                 $totalProductQuantity
             )
         );
