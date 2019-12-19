@@ -1622,6 +1622,10 @@ class WebserviceRequestCore
                     }
                     $result = $object->{$objectMethod}();
                     if ($result) {
+                        Hook::exec('actionWebserviceObjectAdd', array(
+                            'object' => $object,
+                            '_POST' => $this->_inputXml
+                        ));
                         if (isset($attributes->associations)) {
                             foreach ($attributes->associations->children() as $association) {
                                 /** @var SimpleXMLElement $association */
