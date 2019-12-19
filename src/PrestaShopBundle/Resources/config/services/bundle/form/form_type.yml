@@ -1067,3 +1067,10 @@ services:
             - { method: setTranslator, arguments: ['@translator'] }
         tags:
             - { name: form.type }
+
+    form.type.order.partial_refund:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Order\PartialRefundType'
+        parent: 'form.type.translatable.aware'
+        public: true
+        tags:
+            - { name: form.type }

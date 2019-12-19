@@ -88,6 +88,21 @@ class OrderProductForViewing
      */
     private $orderDetailId;
 
+    /**
+     * @var string
+     */
+    private $amountRefund;
+
+    /**
+     * @var int
+     */
+    private $quantityRefunded;
+
+    /**
+     * @var string
+     */
+    private $amountRefundable;
+
     public function __construct(
         int $orderDetailId,
         int $id,
@@ -100,7 +115,10 @@ class OrderProductForViewing
         int $availableQuantity,
         ?string $imagePath,
         float $unitPriceTaxExclRaw,
-        float $unitPriceTaxInclRaw
+        float $unitPriceTaxInclRaw,
+        string $amountRefund,
+        int $quantityRefunded,
+        string $amountRefundable
     ) {
         $this->id = $id;
         $this->name = $name;
@@ -114,6 +132,9 @@ class OrderProductForViewing
         $this->unitPriceTaxExclRaw = $unitPriceTaxExclRaw;
         $this->unitPriceTaxInclRaw = $unitPriceTaxInclRaw;
         $this->orderDetailId = $orderDetailId;
+        $this->amountRefund = $amountRefund;
+        $this->quantityRefunded = $quantityRefunded;
+        $this->amountRefundable = $amountRefundable;
     }
 
     /**
@@ -210,5 +231,49 @@ class OrderProductForViewing
     public function getUnitPriceTaxInclRaw(): float
     {
         return $this->unitPriceTaxInclRaw;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAmountRefund(): string
+    {
+        return $this->amountRefund;
+    }
+
+    /**
+     * @return int
+     */
+    public function getQuantityRefunded(): int
+    {
+        return $this->quantityRefunded;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAmountRefundable(): string
+    {
+        return $this->amountRefundable;
+    }
+
+    /**
+     * @return int
+     */
+    public function getQuantityRefundable(): int
+    {
+        return $this->quantity - $this->quantityRefunded;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isRefundable(): bool
+    {
+        if ($this->quantity <= $this->quantityRefunded) {
+            return false;
+        }
+
+        return true;
     }
 }

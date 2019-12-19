@@ -307,13 +307,12 @@ class OrderSlipCore extends ObjectModel
         $order_slip->amount = 0;
         $order_slip->{'total_products_tax_' . $inc_or_ex_1} = 0;
         $order_slip->{'total_products_tax_' . $inc_or_ex_2} = 0;
-
+        $total_products = [];
         foreach ($product_list as &$product) {
             $order_detail = new OrderDetail((int) $product['id_order_detail']);
             $price = (float) $product['unit_price'];
             $quantity = (int) $product['quantity'];
             $order_slip_resume = OrderSlip::getProductSlipResume((int) $order_detail->id);
-
             if ($quantity + $order_slip_resume['product_quantity'] > $order_detail->product_quantity) {
                 $quantity = $order_detail->product_quantity - $order_slip_resume['product_quantity'];
             }

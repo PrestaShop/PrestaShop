@@ -48,7 +48,7 @@
   </div>
 
   <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-4" style="order: 2">
       {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/customer.html.twig' %}
 
       {{ renderhook('displayBackOfficeOrderActions', {'id_order': orderForViewing.id}) }}
@@ -58,7 +58,7 @@
       {{ renderhook('displayAdminOrderSide', {'id_order': orderForViewing.id}) }}
     </div>
 
-    <div class="col-md-8">
+    <div class="col-md-12" style="order: 1">
       {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/products.html.twig' %}
 
       {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/details.html.twig' %}

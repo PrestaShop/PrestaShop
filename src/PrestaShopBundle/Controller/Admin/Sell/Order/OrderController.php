@@ -79,6 +79,8 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\EmptyRefundQuantityException;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\EmptyRefundAmountException;
 
 /**
  * Manages "Sell > Orders" page
@@ -289,6 +291,8 @@ class OrderController extends FrameworkBundleAdminController
     {
         /** @var OrderForViewing $orderForViewing */
         $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
+        $currencyDataProvider = $this->container->get('prestashop.adapter.data_provider.currency');
+        $orderCurrency = $currencyDataProvider->getCurrencyById($orderForViewing->getCurrencyId());
 
         $addOrderCartRuleForm = $this->createForm(AddOrderCartRuleType::class, [], [
             'order_id' => $orderId,
@@ -341,6 +345,9 @@ class OrderController extends FrameworkBundleAdminController
             $hookParameters
         );
 
+        $formBuilder = $this->get('prestashop.core.form.identifiable_object.builder.partial_refund_form_builder');
+        $partialRefundForm = $formBuilder->getFormFor($orderId);
+
         return $this->render('@PrestaShop/Admin/Sell/Order/Order/view.html.twig', [
             'showContentHeader' => true,
             'meta_title' => $this->trans('Orders', 'Admin.Orderscustomers.Feature'),
@@ -355,10 +362,40 @@ class OrderController extends FrameworkBundleAdminController
             'addProductToOrderForm' => $addProductToOrderForm->createView(),
             'updateOrderProductForm' => $updateOrderProductForm->createView(),
             'updateOrderShippingForm' => $updateOrderShippingForm->createView(),
+            'partialRefundForm' => $partialRefundForm->createView(),
             'invoiceManagementIsEnabled' => $orderForViewing->isInvoiceManagementIsEnabled(),
             'changeOrderAddressForm' => $changeOrderAddressForm->createView(),
             'orderMessageForm' => $orderMessageForm->createView(),
             'backOfficeOrderButtons' => $backOfficeOrderButtons,
+            'orderCurrency' => $orderCurrency,
+        ]);
+    }
+
+    /***
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
+     *
+     * @param int $orderId
+     * @param Request $request
+     * @return RedirectResponse
+     */
+    public function partialRefundAction(int $orderId, Request $request)
+    {
+        $formBuilder = $this->get('prestashop.core.form.identifiable_object.builder.partial_refund_form_builder');
+        $formHandler = $this->get('prestashop.core.form.identifiable_object.partial_refund_form_handler');
+        $form = $formBuilder->getFormFor($orderId);
+
+        try {
+            $form->handleRequest($request);
+            $result = $formHandler->handleFor($orderId, $form);
+            if ($result->isSubmitted() && $result->isValid()) {
+                $this->addFlash('success', $this->trans('A partial refund was successfully created.', 'Admin.Orderscustomers.Notification'));
+            }
+        } catch (Exception $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+        }
+
+        return $this->redirectToRoute('admin_orders_view', [
+            'orderId' => $orderId,
         ]);
     }
 
@@ -877,6 +914,14 @@ class OrderController extends FrameworkBundleAdminController
                 ) : '',
             OrderEmailResendException::class => $this->trans(
                 'An error occurred while sending the e-mail to the customer.',
+                'Admin.Orderscustomers.Notification'
+            ),
+            EmptyRefundQuantityException::class => $this->trans(
+                'Please enter a quantity to proceed with your refund.',
+                'Admin.Orderscustomers.Notification'
+            ),
+            EmptyRefundAmountException::class => $this->trans(
+                'Please enter an amount to proceed with your refund.',
                 'Admin.Orderscustomers.Notification'
             ),
         ];
