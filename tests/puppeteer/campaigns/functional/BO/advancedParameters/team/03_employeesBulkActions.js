@@ -42,12 +42,8 @@ const init = async function () {
   };
 };
 
-/**
- * The test is skipped because of the issue described in this ticket
- * https://github.com/PrestaShop/PrestaShop/issues/16246
- * */
 // Create Employees, Then disable / Enable and Delete with Bulk actions
-describe.skip('Create Employees, Then disable / Enable and Delete with Bulk actions (issue #16246)', async () => {
+describe('Create Employees, Then disable / Enable and Delete with Bulk actions (issue #16246)', async () => {
   // before and after functions
   before(async function () {
     browser = await helper.createBrowser();
@@ -100,7 +96,7 @@ describe.skip('Create Employees, Then disable / Enable and Delete with Bulk acti
     it('should filter by First name', async function () {
       await this.pageObjects.employeesPage.filterEmployees('input', 'firstname', firstEmployeeData.firstName);
       const numberOfEmployeesAfterFilter = await this.pageObjects.employeesPage.getNumberOfElementInGrid();
-      await expect(numberOfEmployeesAfterFilter).to.be.at.most(numberOfEmployees);
+      await expect(numberOfEmployeesAfterFilter).to.be.at.most(numberOfEmployees + 2);
       for (let i = 1; i <= numberOfEmployeesAfterFilter; i++) {
         const textColumn = await this.pageObjects.employeesPage.getTextColumnFromTable(i, 'firstname');
         await expect(textColumn).to.contains(firstEmployeeData.firstName);
