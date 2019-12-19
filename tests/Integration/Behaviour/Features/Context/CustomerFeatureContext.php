@@ -88,7 +88,7 @@ class CustomerFeatureContext extends AbstractPrestaShopFeatureContext
             }
         }
 
-        throw new Exception(sprintf(
+        throw new RuntimeException(sprintf(
             'Customer does not have address in "%s" country',
             $isoCode
         ));

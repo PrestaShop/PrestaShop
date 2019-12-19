@@ -31,6 +31,7 @@ use Configuration;
 use Context;
 use Country;
 use Currency;
+use Customer;
 use Exception;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\CreateEmptyCustomerCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\SetFreeShippingToCartCommand;
@@ -69,6 +70,7 @@ class CartFeatureContext extends AbstractDomainFeatureContext
     {
         // Clear static cache each time you create a cart
         Cart::resetStaticCache();
+        /** @var Customer $customer */
         $customer = SharedStorage::getStorage()->get($customerReference);
 
         /** @var CartId $cartIdObject */
