@@ -57,17 +57,26 @@ export default class SubmitBulkActionExtension {
   submit(event, grid) {
     const $submitBtn = $(event.currentTarget);
     const confirmMessage = $submitBtn.data('confirm-message');
+    const confirmTitle = $submitBtn.data('confirmTitle');
 
-    if (typeof confirmMessage !== "undefined" && 0 < confirmMessage.length) {
-      this.showConfirmModal($submitBtn, grid);
+    if (confirmMessage !== undefined && 0 < confirmMessage.length) {
+      if (confirmTitle !== undefined) {
+        this.showConfirmModal($submitBtn, grid, confirmMessage, confirmTitle);
+      } else if (confirm(confirmMessage)) {
+        this.postForm($submitBtn, grid);
+      }
     } else {
       this.postForm($submitBtn, grid);
     }
   }
 
-  showConfirmModal($submitBtn, grid) {
-    const confirmMessage = $submitBtn.data('confirmMessage');
-    const confirmTitle = $submitBtn.data('confirmTitle');
+  /**
+   * @param {jQuery} $submitBtn
+   * @param {Grid} grid
+   * @param {string} confirmMessage
+   * @param {string} confirmTitle
+   */
+  showConfirmModal($submitBtn, grid, confirmMessage, confirmTitle) {
     const confirmButtonLabel = $submitBtn.data('confirmButtonLabel');
     const confirmButtonClass = $submitBtn.data('confirmButtonClass');
 
@@ -85,6 +94,10 @@ export default class SubmitBulkActionExtension {
     $modal.modal('show');
   }
 
+  /**
+   * @param {jQuery} $submitBtn
+   * @param {Grid} grid
+   */
   postForm($submitBtn, grid) {
     const $form = $('#' + grid.getId() + '_filter_form');
 

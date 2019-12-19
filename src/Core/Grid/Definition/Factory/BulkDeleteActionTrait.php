@@ -28,6 +28,7 @@ namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\Type\SubmitBulkAction;
+use PrestaShop\PrestaShop\Core\Grid\Action\ModalOptions;
 
 /**
  * Trait to help build the bulk delete action
@@ -46,11 +47,13 @@ trait BulkDeleteActionTrait
             ->setOptions([
                 'submit_route' => $bulkDeleteRouteName,
                 'confirm_message' => $this->trans('Are you sure you want to delete the selected item(s)?', [], 'Admin.Global'),
-                'confirm_title' => $this->trans('Delete selection', [], 'Admin.Actions'),
-                'confirm_button_label' => $this->trans('Delete', [], 'Admin.Actions'),
-                'confirm_button_class' => 'btn-danger',
+                'modal_options' => new ModalOptions([
+                    'title' => $this->trans('Delete selection', [], 'Admin.Actions'),
+                    'confirm_button_label' => $this->trans('Delete', [], 'Admin.Actions'),
+                    'confirm_button_class' => 'btn-danger',
+                ]),
             ])
-            ;
+        ;
     }
 
     /**
