@@ -433,7 +433,7 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
                 (!empty($product['customizedDatas']) ? $product['customizationQuantityTotal'] : $product['product_quantity']);
 
             $unitPriceFormatted = $this->locale->formatPrice($unitPrice, $currency->iso_code);
-            $totalPriceFormatted = $this->locale->formatPrice($unitPrice, $currency->iso_code);
+            $totalPriceFormatted = $this->locale->formatPrice($totalPrice, $currency->iso_code);
 
             $imagePath = isset($product['image_tag']) ?
                 $this->imageTagSourceParser->parse($product['image_tag']) :

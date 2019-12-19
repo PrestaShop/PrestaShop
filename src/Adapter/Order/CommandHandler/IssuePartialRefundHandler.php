@@ -39,8 +39,11 @@ use OrderSlip;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\IssuePartialRefundCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler\IssuePartialRefundHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\EmptyRefundQuantityException;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\EmptyRefundAmountException;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
 use StockAvailable;
+use Symfony\Component\Translation\TranslatorInterface;
 use Tax;
 use TaxCalculator;
 use Validate;
@@ -56,21 +59,18 @@ final class IssuePartialRefundHandler extends AbstractOrderCommandHandler implem
     private $locale;
 
     /**
-     * @var string
+     * @var TranslatorInterface
      */
-    private $quantityErrorMessage = 'Please enter a quantity to proceed with your refund.';
-
-    /**
-     * @var string
-     */
-    private $amountErrorMessage = 'Please enter an amount to proceed with your refund.';
+    private $translator;
 
     /**
      * @param Locale $locale
+     * @param TranslatorInterface $translator
      */
-    public function __construct(Locale $locale)
+    public function __construct(Locale $locale, TranslatorInterface $translator)
     {
         $this->locale = $locale;
+        $this->translator = $translator;
     }
 
     /**
@@ -85,14 +85,11 @@ final class IssuePartialRefundHandler extends AbstractOrderCommandHandler implem
         $orderDetailList = [];
         $fullQuantityList = [];
         $taxCalculator = $this->getTaxCalculator($order->carrier_tax_rate);
-        $translator = Context::getContext()->getTranslator();
 
         foreach ($refunds as $orderDetailId => $refund) {
             // this refund has an amount but no quantity, this should not happen
             if (empty($refund['quantity'])) {
-                throw new OrderException(
-                    $translator->trans($this->quantityErrorMessage, array(), 'Admin.Orderscustomers.Notification')
-                );
+                throw new EmptyRefundQuantityException();
             }
 
             $quantity = $refund['quantity'];
@@ -105,7 +102,6 @@ final class IssuePartialRefundHandler extends AbstractOrderCommandHandler implem
             ];
 
             $orderDetail = new OrderDetail($orderDetailId);
-
 
             if (empty($refund['amount'])) {
                 $refund['amount'] = $command->getTaxMethod() ?
@@ -143,14 +139,10 @@ final class IssuePartialRefundHandler extends AbstractOrderCommandHandler implem
 
         if ($amount === 0 && $shippingCostAmount === 0) {
             if (!empty($refunds)) {
-                throw new OrderException(
-                    $translator->trans($this->quantityErrorMessage, array(), 'Admin.Orderscustomers.Notification')
-                );
+                throw new EmptyRefundQuantityException();
             }
 
-            throw new OrderException(
-                $translator->trans($this->amountErrorMessage, array(), 'Admin.Orderscustomers.Notification')
-            );
+            throw new EmptyRefundAmountException();
         }
 
         $chosen = false;
@@ -218,7 +210,7 @@ final class IssuePartialRefundHandler extends AbstractOrderCommandHandler implem
             @Mail::Send(
                 (int) $order->id_lang,
                 'credit_slip',
-                $translator->trans(
+                $this->translator->trans(
                     'New credit slip regarding your order',
                     [],
                     'Emails.Subject',
@@ -245,19 +237,15 @@ final class IssuePartialRefundHandler extends AbstractOrderCommandHandler implem
             }
         } else {
             if (!empty($refunds)) {
-                throw new OrderException(
-                    $translator->trans($this->quantityErrorMessage, array(), 'Admin.Orderscustomers.Notification')
-                );
+                throw new EmptyRefundQuantityException();
             }
 
-            throw new OrderException(
-                $translator->trans($this->amountErrorMessage, array(), 'Admin.Orderscustomers.Notification')
-            );
+            throw new EmptyRefundAmountException();
         }
 
         if ($command->generateCartRule() && $amount > 0) {
             $cartRule = new CartRule();
-            $cartRule->description = $translator->trans(
+            $cartRule->description = $this->translator->trans(
                 'Credit slip for order #%d',
                 ['#%d' => $order->id],
                 'Admin.Orderscustomers.Feature'
@@ -320,7 +308,7 @@ final class IssuePartialRefundHandler extends AbstractOrderCommandHandler implem
             @Mail::Send(
                 (int) $order->id_lang,
                 'voucher',
-                $translator->trans(
+                $this->translator->trans(
                     'New voucher for your order #%s',
                     [$order->reference],
                     'Emails.Subject',
