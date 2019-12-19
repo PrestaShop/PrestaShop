@@ -352,22 +352,16 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
 
     /**
      * @Then order :orderReference should have invoice
+     *
+     * @param string $orderReference
      */
-    public function orderShouldHaveInvoice($orderReference)
+    public function orderShouldHaveInvoice(string $orderReference)
     {
-//        $orders = Order::getByReference($orderReference);
-//        /** @var Order $order */
-//        $order = $orders->getFirst();
-//
-//        if (false === $order->hasInvoice()) {
-//            throw new RuntimeException(sprintf('Order "%s" should have invoice', $orderReference));
-//        }
-
         $orderId = SharedStorage::getStorage()->get($orderReference);
         /** @var OrderForViewing $orderForViewing */
         $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
-        /** @var OrderInvoiceAddressForViewing $invoiceAddress */
-        $invoiceAddress = $orderForViewing->getInvoiceAddress();
+        /* @var OrderInvoiceAddressForViewing $invoiceAddress */
+        $orderForViewing->getInvoiceAddress();
     }
 
     /**
