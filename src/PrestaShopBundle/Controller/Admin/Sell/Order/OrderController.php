@@ -79,6 +79,8 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\EmptyRefundQuantityException;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\EmptyRefundAmountException;
 
 /**
  * Manages "Sell > Orders" page
@@ -389,7 +391,7 @@ class OrderController extends FrameworkBundleAdminController
                 $this->addFlash('success', $this->trans('A partial refund was successfully created.', 'Admin.Orderscustomers.Notification'));
             }
         } catch (Exception $e) {
-            $this->addFlash('error', $e->getMessage());
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }
 
         return $this->redirectToRoute('admin_orders_view', [
@@ -912,6 +914,14 @@ class OrderController extends FrameworkBundleAdminController
                 ) : '',
             OrderEmailResendException::class => $this->trans(
                 'An error occurred while sending the e-mail to the customer.',
+                'Admin.Orderscustomers.Notification'
+            ),
+            EmptyRefundQuantityException::class => $this->trans(
+                'Please enter a quantity to proceed with your refund.',
+                'Admin.Orderscustomers.Notification'
+            ),
+            EmptyRefundAmountException::class => $this->trans(
+                'Please enter an amount to proceed with your refund.',
                 'Admin.Orderscustomers.Notification'
             ),
         ];
