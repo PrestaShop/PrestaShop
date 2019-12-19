@@ -24,6 +24,7 @@
  */
 import $ from 'jquery';
 import prestashop from 'prestashop';
+import ProductSelect from './components/product-select';
 
 $(document).ready(function () {
   createProductSpin();
@@ -45,6 +46,9 @@ $(document).ready(function () {
     imageScrollBox();
     $($('.tabs .nav-link.active').attr('href')).addClass('active').removeClass('fade');
     $('.js-product-images-modal').replaceWith(event.product_images_modal);
+
+    let productSelect  = new ProductSelect();
+    productSelect.init();
   });
 
   function coverImage() {
