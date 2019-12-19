@@ -70,37 +70,48 @@ class CartFeatureContext extends AbstractDomainFeatureContext
         Cart::resetStaticCache();
         $customer = SharedStorage::getStorage()->get($customerReference);
 
-        /** @var CartId $cartId */
-        $cartId = $this->getCommandBus()->handle(
+        /** @var CartId $cartIdObject */
+        $cartIdObject = $this->getCommandBus()->handle(
             new CreateEmptyCustomerCartCommand(
                 (int) $customer->id
             )
         );
 
-        SharedStorage::getStorage()->set($cartReference, new Cart($cartId->getValue()));
+        SharedStorage::getStorage()->set($cartReference, $cartIdObject->getValue());
     }
 
     /**
      * @When I add :quantity products with reference :productReference to the cart :reference
+     *
+     * @param int $quantity
+     * @param string $productReference
+     * @param string $reference
      */
-    public function addProductToCarts($quantity, $productReference, $reference)
+    public function addProductToCarts(int $quantity, string $productReference, string $reference)
     {
+        // todo: refactor not to use legacy classes
         $productId = (int) Product::getIdByReference($productReference);
 
         $this->getCommandBus()->handle(
             new UpdateProductQuantityInCartCommand(
-                (int) SharedStorage::getStorage()->get($reference)->id,
+                SharedStorage::getStorage()->get($reference),
                 $productId,
                 (int) $quantity,
                 QuantityAction::INCREASE_PRODUCT_QUANTITY
             )
         );
+
+        SharedStorage::getStorage()->set($productReference, $productId);
     }
 
     /**
      * @When I select :countryIsoCode address as delivery and invoice address for customer :customerReference in cart :cartReference
+     *
+     * @param string $countryIsoCode
+     * @param string $customerReference
+     * @param string $cartReference
      */
-    public function selectAddressAsDeliveryAndInvoiceAddress($countryIsoCode, $customerReference, $cartReference)
+    public function selectAddressAsDeliveryAndInvoiceAddress(string $countryIsoCode, string $customerReference, string $cartReference)
     {
         $customer = SharedStorage::getStorage()->get($customerReference);
 
@@ -122,7 +133,7 @@ class CartFeatureContext extends AbstractDomainFeatureContext
 
         $this->getCommandBus()->handle(
             new UpdateCartAddressesCommand(
-                (int) SharedStorage::getStorage()->get($cartReference)->id,
+                (int) SharedStorage::getStorage()->get($cartReference),
                 $addressId,
                 $addressId
             )
@@ -130,13 +141,15 @@ class CartFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @When I set Free shipping to the cart :reference
+     * @When I set Free shipping to the cart :cartReference
+     *
+     * @param string $cartReference
      */
-    public function setFreeShippingToCart($reference)
+    public function setFreeShippingToCart(string $cartReference)
     {
         $this->getCommandBus()->handle(
             new SetFreeShippingToCartCommand(
-                (int) SharedStorage::getStorage()->get($reference)->id,
+                SharedStorage::getStorage()->get($cartReference),
                 true
             )
         );

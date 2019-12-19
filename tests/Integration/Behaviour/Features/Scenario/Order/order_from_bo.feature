@@ -138,3 +138,49 @@ Feature: Order from Back Office (BO)
       | status              | Awaiting check payment  |
     When I duplicate order "bo_order8" cart "dummy_cart8" with reference "duplicated_dummy_cart8"
     Then there is duplicated cart "duplicated_dummy_cart8" for cart dummy_cart8
+
+  Scenario: Add product to an existing Order with free shipping and new invoice
+    Given I create an empty cart "dummy_cart9" for customer "testCustomer"
+    And I select "US" address as delivery and invoice address for customer "testCustomer" in cart "dummy_cart9"
+    And I add 2 products with reference "demo_13" to the cart "dummy_cart9"
+    And I add order "bo_order9" with the following details:
+      | cart                | dummy_cart9             |
+      | message             | test                    |
+      | payment module name | dummy_payment           |
+      | status              | Awaiting check payment  |
+    And order with reference "bo_order9" does not contain product with reference "demo_5"
+    When I add 2 products with reference "demo_5", price 16 and free shipping to order "bo_order9" with new invoice
+    Then order "bo_order9" should contain 2 products with reference "demo_5"
+    When I add products "demo_5" to order "bo_order9" with new invoice and the following products details:
+      | amount        | 2      |
+      | price         | 16     |
+      | free_shipping | true   |
+    Then order "bo_order9" should contain 4 products with reference "demo_5"
+    # no exception is thrown when zero/negative amount is passed and nothing changes in the db`
+    When I add products "demo_5" to order "bo_order9" with new invoice and the following products details:
+      | amount        | -1     |
+      | price         | 16     |
+      | free_shipping | true   |
+    Then order "bo_order9" should contain 4 products with reference "demo_5"
+    When I add products "demo_5" to order "bo_order9" with new invoice and the following products details:
+      | amount        | 0      |
+      | price         | 16     |
+      | free_shipping | true   |
+    Then order "bo_order9" should contain 4 products with reference "demo_5"
+    When I add products "demo_5" to order "bo_order9" with new invoice and the following products details:
+      | amount        | 1      |
+      | price         | 16     |
+      | free_shipping | true   |
+    Then order "bo_order9" should contain 5 products with reference "demo_5"
+
+  Scenario: Generating invoice for Order
+    Given I create an empty cart "dummy_cart10" for customer "testCustomer"
+    And I select "US" address as delivery and invoice address for customer "testCustomer" in cart "dummy_cart10"
+    And I add 2 products with reference "demo_13" to the cart "dummy_cart10"
+    And I add order "bo_order10" with the following details:
+      | cart                | dummy_cart10            |
+      | message             | test                    |
+      | payment module name | dummy_payment           |
+      | status              | Awaiting check payment  |
+    When I generate invoice for "bo_order10" order
+    Then order "bo_order10" should have invoice
