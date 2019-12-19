@@ -38,7 +38,9 @@ use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartAddressesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateProductQuantityInCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\CartId;
 use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\QuantityAction;
+use PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProducts;
 use Product;
+use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 
 class CartFeatureContext extends AbstractDomainFeatureContext
@@ -81,27 +83,32 @@ class CartFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @When I add :quantity products with reference :productReference to the cart :reference
+     * @When I add :quantity products :productName to the cart :cartReference
      *
      * @param int $quantity
-     * @param string $productReference
-     * @param string $reference
+     * @param string $productName
+     * @param string $cartReference
      */
-    public function addProductToCarts(int $quantity, string $productReference, string $reference)
+    public function addProductsToCarts(int $quantity, string $productName, string $cartReference)
     {
-        // todo: refactor not to use legacy classes
-        $productId = (int) Product::getIdByReference($productReference);
+        /** @var array $productsMap */
+        $productsMap = $this->getQueryBus()->handle(new SearchProducts($productName, 1));
+        $productId = array_key_first($productsMap);
+
+        if (!$productId) {
+            throw new RuntimeException('Product with name "%s" does not exist', $productName);
+        }
 
         $this->getCommandBus()->handle(
             new UpdateProductQuantityInCartCommand(
-                SharedStorage::getStorage()->get($reference),
+                SharedStorage::getStorage()->get($cartReference),
                 $productId,
                 (int) $quantity,
                 QuantityAction::INCREASE_PRODUCT_QUANTITY
             )
         );
 
-        SharedStorage::getStorage()->set($productReference, $productId);
+        SharedStorage::getStorage()->set($productName, $productId);
     }
 
     /**
