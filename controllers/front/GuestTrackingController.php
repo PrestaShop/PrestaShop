@@ -68,23 +68,14 @@ class GuestTrackingControllerCore extends FrontController
             return;
         }
 
-        $isCustomer = Customer::customerExists($email, false, true);
-        if ($isCustomer) {
-            $this->info[] = $this->trans(
-                'Please log in to your customer account to view the order',
-                [],
-                'Shop.Notifications.Info'
-            );
-            $this->redirectWithNotifications($this->context->link->getPageLink('history'));
-        } else {
-            $this->order = Order::getByReferenceAndEmail($order_reference, $email);
+
+        $this->order = Order::getByReferenceAndEmail($order_reference, $email);
             if (!Validate::isLoadedObject($this->order)) {
-                $this->errors[] = $this->getTranslator()->trans(
-                    'We couldn\'t find your order with the information provided, please try again',
-                    [],
-                    'Shop.Notifications.Error'
-                );
-            }
+            $this->errors[] = $this->getTranslator()->trans(
+                'We couldn\'t find your order with the information provided, please try again',
+                array(),
+                'Shop.Notifications.Error'
+            );
         }
 
         if (Tools::isSubmit('submitTransformGuestToCustomer') && Tools::getValue('password')) {
@@ -139,8 +130,9 @@ class GuestTrackingControllerCore extends FrontController
         $this->context->smarty->assign([
             'order' => $presented_order,
             'guest_email' => Tools::getValue('email'),
-            'HOOK_DISPLAYORDERDETAIL' => Hook::exec('displayOrderDetail', ['order' => $this->order]),
-        ]);
+            'is_customer' => Customer::customerExists(Tools::getValue('email'), false, true),
+            'HOOK_DISPLAYORDERDETAIL' => Hook::exec('displayOrderDetail', ['order' => $this->order)],
+        ));
 
         return $this->setTemplate('customer/guest-tracking');
     }
