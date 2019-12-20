@@ -6,6 +6,7 @@ module.exports = class CreditSlips extends BOBasePage {
     super(page);
 
     this.pageTitle = 'Credit Slips •';
+    this.errorMessageWhenGenerateFileByDate = 'No order slips were found for this period.';
 
     // Credit slips page
     // List of credit slips
@@ -18,6 +19,11 @@ module.exports = class CreditSlips extends BOBasePage {
     this.creditSlipsTableRow = `${this.creditSlipGridTable} tbody tr:nth-child(%ROW)`;
     this.creditSlipsTableColumn = `${this.creditSlipsTableRow} td.column-%COLUMN`;
     this.creditSlipDownloadButton = `${this.creditSlipGridTable} tr:nth-child(%ID) td.link-type.column-pdf`;
+    // By date form
+    this.generateByDateForm = '[name=\'generate_pdf_by_date\']';
+    this.dateFromInput = '#generate_pdf_by_date_from';
+    this.dateToInput = '#generate_pdf_by_date_to';
+    this.generatePdfByDateButton = `${this.generateByDateForm} .btn.btn-primary`;
   }
 
   /*
@@ -96,5 +102,17 @@ module.exports = class CreditSlips extends BOBasePage {
    */
   async downloadCreditSlip(lineNumber = 1) {
     await this.page.click(this.creditSlipDownloadButton.replace('%ID', lineNumber));
+  }
+
+  /**
+   * Generate PDF by date
+   * @param dateFrom
+   * @param dateTo
+   * @return {Promise<void>}
+   */
+  async generatePDFByDate(dateFrom = '', dateTo = '') {
+    if (dateFrom) await this.setValue(this.dateFromInput, dateFrom);
+    if (dateTo) await this.setValue(this.dateToInput, dateTo);
+    await this.page.click(this.generatePdfByDateButton);
   }
 };
