@@ -111,10 +111,8 @@ module.exports = class CreditSlips extends BOBasePage {
    * @return {Promise<void>}
    */
   async generatePDFByDate(dateFrom = '', dateTo = '') {
-    if (dateFrom) {
-      await this.setValue(this.dateFromInput, dateFrom);
-      await this.setValue(this.dateToInput, dateTo);
-    }
+    if (dateFrom) await this.setValue(this.dateFromInput, dateFrom);
+    if (dateTo) await this.setValue(this.dateToInput, dateTo);
     await this.page.click(this.generatePdfByDateButton);
   }
 };
