@@ -2838,7 +2838,7 @@ class AdminControllerCore extends Controller
             $this->context->employee->logout();
         }
         if (isset(Context::getContext()->cookie->last_activity)) {
-            if ($this->context->cookie->last_activity + 900 < time()) {
+            if ($this->context->cookie->last_activity + 3600 < time()) {
                 $this->context->employee->logout();
             } else {
                 $this->context->cookie->last_activity = time();
