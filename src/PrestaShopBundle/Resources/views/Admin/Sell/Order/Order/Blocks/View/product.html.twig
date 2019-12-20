@@ -23,7 +23,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 
-<tr id="orderProduct_{{ product.orderDetailId }}">
+<tr id="orderProduct_{{ product.orderDetailId }}"{% if productIndex is defined and paginationNum is defined and productIndex > paginationNum %} class="d-none"{% endif %}>
   <td class="cellProductImg">
     {% if product.imagePath %}
       <img src="{{ product.imagePath }}" alt="{{ product.name }}" />
