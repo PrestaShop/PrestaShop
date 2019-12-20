@@ -140,5 +140,5 @@ Feature: Order from Back Office (BO)
       | Zip/Postal Code | 11111                |
       | City            | Paris                |
       | Country         | France               |
-#    When I change order "bo_order1" shipping address to "1601 Willow Rd Menlo Park"
-#    Then order "bo_order1" shipping address should be "1601 Willow Rd Menlo Park"
+    When I change order "bo_order1" shipping address to "1601 Willow Rd Menlo Park"
+    Then order "bo_order1" shipping address should be "1601 Willow Rd Menlo Park"
