@@ -100,16 +100,22 @@ export default class OrderProductRenderer {
     $productRow.removeClass('d-none');
   }
 
-  paginate(orderId, numPage, results) {
+  paginate(orderId, numPage) {
     this.paginateUpdateControls(numPage);
-    // Remove all rows...
-    $(OrderViewPageMap.productsTable).find('tr[id^="orderProduct_"]').remove();
-    // ... and recreate them
-    results.products.forEach(result => this.paginateRowCreate(result, orderId));
+    // Hide displayed rows...
+    $(OrderViewPageMap.productsTable).find('tr[id^="orderProduct_"]:not(.d-none)').addClass('d-none');
+    // ... and display good ones
+    const $tablePagination = $(OrderViewPageMap.productsTablePagination);
+    const numRowsPerPage = parseInt($tablePagination.data('numPerPage'), 10);
+    const startRow = ((numPage - 1) * numRowsPerPage) + 1;
+    const endRow = numPage * numRowsPerPage;
+    $(OrderViewPageMap.productsTable).find(`tr[id^="orderProduct_"]:nth-child(n+${startRow}):nth-child(-n+${endRow})`)
+        .removeClass('d-none');
   }
 
   paginateUpdateControls(numPage) {
-    const totalPage = $(OrderViewPageMap.productsTablePagination).find('li.page-item').length - 2;
+    // Why 3 ? Next & Prev & Template
+    const totalPage = $(OrderViewPageMap.productsTablePagination).find('li.page-item').length - 3;
     $(OrderViewPageMap.productsTablePagination).find('.active').removeClass('active');
     $(OrderViewPageMap.productsTablePagination).find(`li:has(> [data-page="${numPage}"])`).addClass('active');
     $(OrderViewPageMap.productsTablePaginationPrev).removeClass('disabled');
@@ -136,59 +142,5 @@ export default class OrderProductRenderer {
     const numPages = $tablePagination.data('numPages');
     $tablePagination.data('numPages', numPages - 1);
     $(OrderViewPageMap.productsTablePagination).find(`li:has(> [data-page="${numPage}"])`).remove();
-  }
-
-  paginateRowCreate(result, orderId) {
-    const $productRow = $(OrderViewPageMap.productTemplateRow).clone();
-    $productRow.attr('id', `orderProduct_${result.orderDetailId}`);
-    if (result.imagePath) {
-      $productRow.find('td.cellProductImg img').attr({
-        src: result.imagePath,
-        alt: result.name
-      });
-    } else {
-      $productRow.find('td.cellProductImg img').remove();
-    }
-    $productRow.find('td.cellProductName a').attr(
-      'href',
-      this.router.generate('admin_product_form', {orderId: result.id})
-    );
-    $productRow.find('td.cellProductName p.productName').html(result.name);
-    if (result.supplierReference) {
-      $productRow.find('td.cellProductName p.productSupplierReference').append(result.supplierReference);
-    } else {
-      $productRow.find('td.cellProductName p.productSupplierReference').remove();
-    }
-    if (result.reference) {
-      $productRow.find('td.cellProductName p.productReference').append(result.reference);
-    } else {
-      $productRow.find('td.cellProductName p.productReference').remove();
-    }
-    $productRow.find('td.cellProductUnitPrice').html(result.unitPrice);
-    if (result.quantity > 1) {
-      $productRow.find('td.cellProductQuantity span.badge').html(result.quantity);
-    } else {
-      $productRow.find('td.cellProductQuantity span.badge').replaceWith(result.quantity);
-    }
-    $productRow.find('td.cellProductQuantity input').val(result.quantity);
-    $productRow.find('td.cellProductLocation').html(result.location);
-    $productRow.find('td.cellProductAvailableQuantity').html(result.availableQuantity);
-    $productRow.find('td.cellProductTotalPrice').html(result.totalPrice);
-    if (!result.delivered) {
-      $productRow.find('td.cellProductActions .js-order-product-edit-btn')
-        .data('orderDetailId', result.orderDetailId)
-        .data('productQuantity', result.quantity)
-        .data('productPriceTaxIncl', result.unitPriceTaxInclRaw)
-        .data('productPriceTaxExcl', result.unitPriceTaxExclRaw)
-        .data('taxRate', result.taxRate)
-        .data('location', result.location)
-        .data('availableQuantity', result.availableQuantity);
-      $productRow.find('td.cellProductActions .js-order-product-delete-btn')
-        .data('orderId', orderId)
-        .data('orderDetailId', result.orderDetailId);
-    } else {
-      $productRow.find('td.cellProductActions').remove();
-    }
-    $(OrderViewPageMap.productAddRow).before($productRow.removeClass('d-none'));
   }
 }
