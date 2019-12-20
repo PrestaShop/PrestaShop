@@ -33,8 +33,11 @@ class ShopFeatureContext extends AbstractPrestaShopFeatureContext
 {
     /**
      * @Given shop :reference with name :shopName exists
+     *
+     * @param string $reference
+     * @param string $shopName
      */
-    public function shopWithNameExists($reference, $shopName)
+    public function shopWithNameExists(string $reference, string $shopName)
     {
         $shopId = Shop::getIdByName($shopName);
 
