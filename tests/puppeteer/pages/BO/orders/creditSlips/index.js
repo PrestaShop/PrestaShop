@@ -24,7 +24,6 @@ module.exports = class CreditSlips extends BOBasePage {
     this.dateFromInput = '#generate_pdf_by_date_from';
     this.dateToInput = '#generate_pdf_by_date_to';
     this.generatePdfByDateButton = `${this.generateByDateForm} .btn.btn-primary`;
-
   }
 
   /*
