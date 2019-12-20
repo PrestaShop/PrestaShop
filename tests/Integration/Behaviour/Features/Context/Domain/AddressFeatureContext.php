@@ -11,16 +11,15 @@ use PrestaShop\PrestaShop\Core\Domain\Address\Command\SetRequiredFieldsForAddres
 class AddressFeatureContext extends AbstractDomainFeatureContext
 {
     /**
-     * @Given customer :customerReference creates new address with following details:
+     * @Given I create new address with following details:
      *
-     * @param string $customerReference
      * @param TableNode $table
      */
-    public function customerCreatesNewAddressWithFollowingDetails(string $customerReference, TableNode $table)
+    public function createNewAddressWithFollowingDetails(TableNode $table)
     {
         $data = $table->getRowsHash();
 
-        $this->getCommandBus()->handle(new SetRequiredFieldsForAddressCommand());
+//        $this->getCommandBus()->handle(new SetRequiredFieldsForAddressCommand());
         throw new PendingException();
     }
 
