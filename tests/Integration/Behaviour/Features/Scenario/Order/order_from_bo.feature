@@ -5,7 +5,9 @@ Feature: Order from Back Office (BO)
   As a BO user
   I need to be able to customize orders from the BO
 
-  #  todo: fix the failing scenarios/code, make scenarios independent and not use legacy classes as much as possible
+  #  todo: fix the failing scenarios/code
+  #  todo: make scenarios independent
+  #  todo: change legacy classes with domain where possible
   #  todo: increase code re-use
 
   Background:
@@ -21,7 +23,7 @@ Feature: Order from Back Office (BO)
      #    todo: use domain context to get customer: GetCustomerForViewing;
      #    todo: find a way how to get customer object/id by its properties without using legacy objects
      #    possible solution can be create new customer with AddCustomerHandler
-     #    but then how to add Customer Address???
+     #    but then how to add Customer Address using domain classes???
     And there is customer "testCustomer" with email "pub@prestashop.com"
     And customer "testCustomer" has address in "US" country
     And I create an empty cart "dummy_cart" for customer "testCustomer"
