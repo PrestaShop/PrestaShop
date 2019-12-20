@@ -29,6 +29,7 @@ const today = new Date();
 const dateFrom = `${today.getFullYear() + 1}-${today.getMonth() + 1}-${today.getDate() - 1}`;
 const dateTo = `${today.getFullYear() + 1}-${today.getMonth() + 1}-${today.getDate()}`;
 const creditSlipsFileName = 'order-slips.pdf';
+const creditSlipDocumentName = 'Credit Slip';
 
 // Init objects needed
 const init = async function () {
@@ -48,8 +49,12 @@ const init = async function () {
   };
 };
 
-// Generate Credit slips by date
-describe('Generate Credit slips file by date', async () => {
+/*
+Create order
+Create credit slip
+Generate credit slip file by date
+ */
+describe('Generate Credit slip file by date', async () => {
   // before and after functions
   before(async function () {
     browser = await helper.createBrowser();
@@ -130,7 +135,7 @@ describe('Generate Credit slips file by date', async () => {
 
     it('should check the existence of the Credit slip document', async function () {
       const documentName = await this.pageObjects.viewOrderPage.getDocumentName(4);
-      await expect(documentName).to.be.equal('Credit Slip');
+      await expect(documentName).to.be.equal(creditSlipDocumentName);
     });
   });
 
