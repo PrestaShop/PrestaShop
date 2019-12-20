@@ -133,6 +133,7 @@ Feature: Order from Back Office (BO)
   Scenario: Change order shipping address
     #   -------------- uses legacy clases from here ---------------
 #    todo: avoid using the hows and there is and focus on the steps with bussiness value
+#    todo: use SetRequiredFieldsForAddress
     Given there is a zone named "zone"
     And there is a country named "country" and iso code "US" in zone "zone"
     And there is a state named "state" with iso code "TEST-1" in country"country" and zone "zone"
