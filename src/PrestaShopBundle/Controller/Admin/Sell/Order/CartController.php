@@ -395,7 +395,7 @@ class CartController extends FrameworkBundleAdminController
             $addSpecificPriceCommand->setCartId($cartId);
             $addSpecificPriceCommand->setCustomerId($request->request->getInt('customerId'));
 
-            if ($attributeId = $request->request->getInt('productAttributeId')) {
+            if ($attributeId = $request->query->getInt('productAttributeId')) {
                 $deleteSpecificPriceCommand->setProductAttributeId($attributeId);
                 $addSpecificPriceCommand->setProductAttributeId($attributeId);
             }
