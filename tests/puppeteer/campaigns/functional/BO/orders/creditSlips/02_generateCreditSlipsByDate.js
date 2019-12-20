@@ -143,7 +143,7 @@ describe('Generate Credit slip file by date', async () => {
     it('should go to Credit slips page', async function () {
       await this.pageObjects.boBasePage.goToSubMenu(
         this.pageObjects.boBasePage.ordersParentLink,
-        this.pageObjects.boBasePage.creditSlips,
+        this.pageObjects.boBasePage.creditSlipsLink,
       );
       await this.pageObjects.boBasePage.closeSfToolBar();
       const pageTitle = await this.pageObjects.creditSlipsPage.getPageTitle();
