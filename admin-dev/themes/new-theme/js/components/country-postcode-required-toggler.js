@@ -55,10 +55,10 @@ export default class CountryPostcodeRequiredToggler {
       return;
     }
 
-    this.$countryInput.on('change', () => this._toggle());
+    this.$countryInput.on('change', () => this.toggle());
 
     // toggle on page load
-    this._toggle();
+    this.toggle();
   }
 
   /**
@@ -66,12 +66,11 @@ export default class CountryPostcodeRequiredToggler {
    *
    * @private
    */
-  _toggle() {
-    const $countrySelectedOption = $(this.countryInputSelectedSelector);
+  toggle() {
     $(this.countryPostcodeInputLabelDangerSelector).remove();
-    this.$countryPostcodeInput.attr('required', false);
-    if (1 === parseInt($countrySelectedOption.attr('need_postcode'), 10)) {
-      this.$countryPostcodeInput.attr('required', true);
+    this.$countryPostcodeInput.prop('required', false);
+    if (1 === parseInt($(this.countryInputSelectedSelector).attr('need_postcode'), 10)) {
+      this.$countryPostcodeInput.prop('required', true);
       this.$countryPostcodeInputLabel.prepend($('<span class="text-danger">*</span>'));
     }
   }

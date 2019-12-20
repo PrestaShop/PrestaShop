@@ -29,13 +29,12 @@ export default class AutocompleteWithEmail {
   constructor(emailInputSelector, map = []) {
     this.map = map;
     this.$emailInput = $(emailInputSelector);
-    this.$emailInput.on('change', () => this._change());
+    this.$emailInput.on('change', () => this.change());
   }
 
-  _change() {
-    $.ajax({
+  change() {
+    $.get({
       url: this.$emailInput.data('customer-information-url'),
-      method: 'GET',
       dataType: 'json',
       data: {
         email: this.$emailInput.val(),

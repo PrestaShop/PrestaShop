@@ -52,10 +52,10 @@ export default class CountryStateSelectionToggler {
     this.$countryStateSelector = $(countryStateSelector);
     this.$countryInput = $(countryInputSelector);
 
-    this.$countryInput.on('change', () => this._change());
+    this.$countryInput.on('change', () => this.change());
 
     // toggle on page load
-    this._toggle();
+    this.toggle();
 
     return {};
   }
@@ -65,14 +65,13 @@ export default class CountryStateSelectionToggler {
    *
    * @private
    */
-  _change() {
+  change() {
     const countryId = this.$countryInput.val();
     if (countryId === '') {
       return;
     }
-    $.ajax({
+    $.get({
       url: this.$countryInput.data('states-url'),
-      method: 'GET',
       dataType: 'json',
       data: {
         id_country: countryId,
@@ -84,7 +83,7 @@ export default class CountryStateSelectionToggler {
         this.$countryStateSelector.append($('<option></option>').attr('value', response.states[value]).text(value));
       });
 
-      this._toggle();
+      this.toggle();
     }).catch((response) => {
       if (typeof response.responseJSON !== 'undefined') {
         showErrorMessage(response.responseJSON.message);
@@ -92,7 +91,7 @@ export default class CountryStateSelectionToggler {
     });
   }
 
-  _toggle() {
+  toggle() {
     if (this.$countryStateSelector.find('option').length > 0) {
       this.$stateSelectionBlock.fadeIn();
     } else {
