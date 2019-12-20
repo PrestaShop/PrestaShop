@@ -71,9 +71,12 @@
       </thead>
       <tbody>
       {#{{ form_start(partialRefundForm, {'action': path('admin_orders_partial_refund', {'orderId': orderForViewing.id})}) }}#}
-        {#  @todo Optimize this by using a GetPartialOrderForViewing query which loads only the relevant products #}
-        {% for product in orderForViewing.products.products|slice(0, paginationNum) %}
-          {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/product.html.twig' with {'product': product} %}
+        {% for product in orderForViewing.products.products %}
+          {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/product.html.twig' with {
+            'product': product,
+            'productIndex': loop.index,
+            'paginationNum': paginationNum
+          } %}
         {% endfor %}
         <tr id="addProductTableRow" class="d-none">
           <td colspan="2" class="pr-5">
@@ -148,53 +151,6 @@
             </button>
             <button type="button" class="btn btn-sm btn-primary js-product-edit-action-btn mt-2 mb-2 d-inline editProductActionBtn" data-order-id="{{ orderForViewing.id }}" data-update-message="{{ 'Are you sure?'|trans({}, 'Admin.Notifications.Warning') }}">
               {{ 'Save'|trans({}, 'Admin.Actions') }}
-            </button>
-          </td>
-        </tr>
-        <tr id="templateProductTableRow" class="d-none">
-          <td class="cellProductImg">
-              <img alt="" />
-          </td>
-          <td class="cellProductName">
-            <a href="">
-              <p class="mb-0 productName"></p>
-              <p class="mb-0 productReference">
-                {{ 'Reference number:'|trans({}, 'Admin.Orderscustomers.Feature') }}
-              </p>
-              <p class="mb-0 productSupplierReference">
-               {{ 'Supplier reference:'|trans({}, 'Admin.Orderscustomers.Feature') }}
-              </p>
-            </a>
-          </td>
-          <td class="cellProductUnitPrice"></td>
-          <td class="cellProductQuantity">
-            <span class="badge badge-secondary rounded-circle"></span>
-          </td>
-          <td class="cellProductLocation">
-            <span class="badge badge-secondary rounded-circle"></span>
-            <div class="d-none js-product-quantity">
-              <input type="text" value="" class="form-control">
-            </div>
-          </td>
-          <td class="cellProductAvailableQuantity"></td>
-          <td class="cellProductTotalPrice"></td>
-          <td class="text-right cellProductActions">
-            <button
-              type="button"
-              class="btn tooltip-link js-order-product-edit-btn"
-              data-toggle="pstooltip"
-              data-placement="top"
-              data-original-title="{{ 'Edit'|trans({}, 'Admin.Actions') }}">
-              <i class="material-icons">edit</i>
-            </button>
-            <button
-              type="button"
-              class="btn tooltip-link js-order-product-delete-btn"
-              data-toggle="pstooltip"
-              data-placement="top"
-              data-delete-message="{{ 'Are you sure?'|trans({}, 'Admin.Notifications.Warning') }}"
-              data-original-title="{{ 'Delete'|trans({}, 'Admin.Actions') }}">
-              <i class="material-icons">delete</i>
             </button>
           </td>
         </tr>
