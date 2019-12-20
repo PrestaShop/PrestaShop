@@ -166,13 +166,14 @@ function updateProduct(event, eventType, updateUrl) {
         if ($('.images-container').html() !== $newImagesContainer.find('.images-container').html()) {
           $('.images-container').replaceWith(data.product_cover_thumbnails);
         }
-        $('.quickview .product-prices, .page-product .product-prices').replaceWith(data.product_prices);
-        $('.quickview .product-customization, .page-product .product-customization').replaceWith(data.product_customization);
-        $('.quickview .product-variants .page-product .product-variants').replaceWith(data.product_variants);
-        $('.quickview .product-discounts, .page-product .product-discounts').replaceWith(data.product_discounts);
-        $('.quickview .product-additional-info, .page-product .product-additional-info').replaceWith(data.product_additional_info);
-        $('.quickview #product-details, .page-product #product-details').replaceWith(data.product_details);
-        $('.quickview .product-flags, .page-product .product-flags').replaceWith(data.product_flags)
+        console.log(data);
+        $('.quickview .product-prices, .page-product:not(.modal-open) .row .product-prices').replaceWith(data.product_prices);
+        $('.quickview .product-customization, .page-product:not(.modal-open) .row .product-customization').replaceWith(data.product_customization);
+        $('.quickview .product-variants .page-product:not(.modal-open) .row .product-variants').replaceWith(data.product_variants);
+        $('.quickview .product-discounts, .page-product:not(.modal-open) .row .product-discounts').replaceWith(data.product_discounts);
+        $('.quickview .product-additional-info, .page-product:not(.modal-open) .row .product-additional-info').replaceWith(data.product_additional_info);
+        $('.quickview #product-details, .page-product:not(.modal-open) .row #product-details').replaceWith(data.product_details);
+        $('.quickview .product-flags, .page-product:not(.modal-open) .row .product-flags').replaceWith(data.product_flags)
         replaceAddToCartSections(data);
         const minimalProductQuantity = parseInt(data.product_minimal_quantity, 10);
 
