@@ -735,7 +735,12 @@ class ProductLazyArray extends AbstractLazyArray
         $linkRewrite = isset($product['link_rewrite']) ? $product['link_rewrite'] : null;
         $category = isset($product['category']) ? $product['category'] : null;
         $ean13 = isset($product['ean13']) ? $product['ean13'] : null;
-
+        $attribute = null;
+        if (!$canonical && $product['id_product_attribute'] > 0) {
+            $attribute = $product['id_product_attribute'];
+        } elseif ($product['cache_default_attribute'] > 0){
+            $attribute = $product['cache_default_attribute'];
+        }
         return $this->link->getProductLink(
             $product['id_product'],
             $linkRewrite,
@@ -743,7 +748,7 @@ class ProductLazyArray extends AbstractLazyArray
             $ean13,
             $language->id,
             null,
-            !$canonical && $product['id_product_attribute'] > 0 ? $product['id_product_attribute'] : $product['cache_default_attribute'] > 0 ? $product['cache_default_attribute'] : null,
+            $attribute,
             false,
             false,
             true
