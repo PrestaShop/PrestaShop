@@ -18,7 +18,6 @@ Feature: Order from Back Office (BO)
     #    todo: use domain context for Country
     And country "US" is enabled
     And the module "dummy_payment" is installed
-    #    todo: use domain context to get employee when is merged: https://github.com/PrestaShop/PrestaShop/pull/16757
     And I am logged in as "test@prestashop.com" employee
      #    todo: use domain context to get customer: GetCustomerForViewing;
      #    todo: find a way how to get customer object/id by its properties without using legacy objects
