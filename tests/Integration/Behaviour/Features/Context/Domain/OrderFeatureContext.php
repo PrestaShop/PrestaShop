@@ -45,7 +45,6 @@ use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderProductForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProducts;
 use PrestaShop\PrestaShop\Core\Form\ChoiceProvider\OrderStateByIdChoiceProvider;
-use Product;
 use RuntimeException;
 use stdClass;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
