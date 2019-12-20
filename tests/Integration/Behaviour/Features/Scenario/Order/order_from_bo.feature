@@ -131,14 +131,25 @@ Feature: Order from Back Office (BO)
     And order "bo_order2" has status "Delivered"
 
   Scenario: Change order shipping address
+    Given I create new address with following details:
+      | Customer email  | pub@prestashop.com   |
+      | Address alias   | dummyCustomerAddress |
+      | First Name      | CustomerName         |
+      | Last Name       | CustomerSurname      |
+      | Address         | Street st. 1         |
+      | Zip/Postal Code | 11111                |
+      | City            | Paris                |
+      | Country         | France               |
+
+
     #   -------------- uses legacy clases from here ---------------
 #    todo: avoid using the hows and there is and focus on the steps with bussiness value
 #    todo: use SetRequiredFieldsForAddress
-    Given there is a zone named "zone"
-    And there is a country named "country" and iso code "US" in zone "zone"
-    And there is a state named "state" with iso code "TEST-1" in country"country" and zone "zone"
-    And there is an address named "1601 Willow Rd Menlo Park" with postcode "1" in state "state"
-    And there is a customer named "testCustomer" whose email is "fake@prestashop.com"
+#    Given there is a zone named "zone"
+#    And there is a country named "country" and iso code "US" in zone "zone"
+#    And there is a state named "state" with iso code "TEST-1" in country"country" and zone "zone"
+#    And there is an address named "1601 Willow Rd Menlo Park" with postcode "1" in state "state"
+##    And there is a customer named "testCustomer" whose email is "fake@prestashop.com"
     And address "1601 Willow Rd Menlo Park" is associated to customer "testCustomer"
     #   -------------- uses legacy clases up to here ---------------
     When I change order "bo_order1" shipping address to "1601 Willow Rd Menlo Park"
