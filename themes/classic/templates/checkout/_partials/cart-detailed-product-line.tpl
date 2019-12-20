@@ -29,7 +29,7 @@
       {if $product.cover}
         <img src="{$product.cover.bySize.cart_default.url}" alt="{$product.name|escape:'quotes'}">
       {else}
-        <img src="{$urls.no_picture_image.bySize.home_default.url}" />
+        <img src="{$urls.no_picture_image.bySize.cart_default.url}" />
       {/if}
     </span>
   </div>
