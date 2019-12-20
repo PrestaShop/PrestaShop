@@ -262,9 +262,6 @@ class AdminControllerCore extends Controller
     /** @var int VIEW access level */
     const LEVEL_VIEW = 1;
 
-    /** @var int Auth cookie lifetime */
-    const AUTH_COOKIE_LIFETIME = 3600;
-
     /**
      * Actions to execute on multiple selections.
      *
@@ -435,20 +432,13 @@ class AdminControllerCore extends Controller
             }
 
             $this->bo_theme = $default_theme_name;
+
             if (!@filemtime(_PS_BO_ALL_THEMES_DIR_ . $this->bo_theme . DIRECTORY_SEPARATOR . 'template')) {
                 $this->bo_theme = 'default';
             }
 
-            $this->context->employee->bo_theme = (
-                Validate::isLoadedObject($this->context->employee)
-                && $this->context->employee->bo_theme
-            ) ? $this->context->employee->bo_theme : $this->bo_theme;
-
-            $this->bo_css = (
-                Validate::isLoadedObject($this->context->employee)
-                && $this->context->employee->bo_css
-            ) ? $this->context->employee->bo_css : 'theme.css';
-            $this->context->employee->bo_css = $this->bo_css;
+            $this->bo_css = ((Validate::isLoadedObject($this->context->employee)
+                && $this->context->employee->bo_css) ? $this->context->employee->bo_css : 'theme.css');
 
             $adminThemeCSSFile = _PS_BO_ALL_THEMES_DIR_ . $this->bo_theme . DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR . $this->bo_css;
 
@@ -2841,7 +2831,7 @@ class AdminControllerCore extends Controller
             $this->context->employee->logout();
         }
         if (isset(Context::getContext()->cookie->last_activity)) {
-            if ($this->context->cookie->last_activity + self::AUTH_COOKIE_LIFETIME < time()) {
+            if ($this->context->cookie->last_activity + 3600 < time()) {
                 $this->context->employee->logout();
             } else {
                 $this->context->cookie->last_activity = time();
