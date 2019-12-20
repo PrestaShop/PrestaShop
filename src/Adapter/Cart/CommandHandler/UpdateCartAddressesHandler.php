@@ -29,7 +29,9 @@ namespace PrestaShop\PrestaShop\Adapter\Cart\CommandHandler;
 use Cart;
 use PrestaShop\PrestaShop\Adapter\Cart\AbstractCartHandler;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartAddressesCommand;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartCarrierCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\CommandHandler\UpdateCartAddressesHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Cart\CommandHandler\UpdateCartCarrierHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartException;
 
 /**
@@ -37,6 +39,19 @@ use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartException;
  */
 final class UpdateCartAddressesHandler extends AbstractCartHandler implements UpdateCartAddressesHandlerInterface
 {
+    /**
+     * @var UpdateCartCarrierHandlerInterface
+     */
+    private $updateCartCarrierHandler;
+
+    /**
+     * @param UpdateCartCarrierHandlerInterface $updateCartCarrierHandler
+     */
+    public function __construct(UpdateCartCarrierHandlerInterface $updateCartCarrierHandler)
+    {
+        $this->updateCartCarrierHandler = $updateCartCarrierHandler;
+    }
+
     /**
      * @param UpdateCartAddressesCommand $command
      */
@@ -51,6 +66,8 @@ final class UpdateCartAddressesHandler extends AbstractCartHandler implements Up
                 $cart->id
             ));
         }
+
+        $this->updateCartCarrierHandler->handle(new UpdateCartCarrierCommand($cart->id, $cart->id_carrier));
     }
 
     /**
