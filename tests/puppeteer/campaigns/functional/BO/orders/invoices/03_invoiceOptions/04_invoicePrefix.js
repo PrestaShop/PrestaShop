@@ -12,7 +12,7 @@ const OrdersPage = require('@pages/BO/orders/index');
 const ViewOrderPage = require('@pages/BO/orders/view');
 // Importing data
 const {Statuses} = require('@data/demo/orders');
-const InvoiceOptionsFaker = require('@data/faker/invoiceOptions');
+const InvoiceOptionsFaker = require('@data/faker/invoice');
 
 let browser;
 let page;
