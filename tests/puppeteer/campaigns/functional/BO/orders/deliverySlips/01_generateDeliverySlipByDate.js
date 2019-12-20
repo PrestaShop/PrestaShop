@@ -13,7 +13,6 @@ const OrdersPage = require('@pages/BO/orders/index');
 const ViewOrderPage = require('@pages/BO/orders/view');
 // Importing data
 const {Statuses} = require('@data/demo/orders');
-const {Invoices} = require('@data/demo/invoices');
 
 let browser;
 let page;
@@ -35,7 +34,11 @@ const init = async function () {
   };
 };
 
-// Generate PDF file by date
+/*
+Create order
+Create delivery slip
+Generate delivery slip file by date
+ */
 describe('Generate Delivery slip file by date', async () => {
   // before and after functions
   before(async function () {
@@ -84,7 +87,7 @@ describe('Generate Delivery slip file by date', async () => {
     it('should go to delivery slips page', async function () {
       await this.pageObjects.boBasePage.goToSubMenu(
         this.pageObjects.boBasePage.ordersParentLink,
-        this.pageObjects.boBasePage.deliverySlips,
+        this.pageObjects.boBasePage.deliverySlipslink,
       );
       const pageTitle = await this.pageObjects.deliverySlipsPage.getPageTitle();
       await expect(pageTitle).to.contains(this.pageObjects.deliverySlipsPage.pageTitle);
