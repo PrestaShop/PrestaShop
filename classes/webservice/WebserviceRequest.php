@@ -1622,7 +1622,7 @@ class WebserviceRequestCore
                     }
                     $result = $object->{$objectMethod}();
                     if ($result) {
-                        Hook::exec('actionWebserviceObjectAdd', array(
+                     Hook::exec('actionWebserviceObject' . ucfirst($objectMethod), array(
                             'object' => $object,
                             '_POST' => $this->_inputXml,
                         ));
