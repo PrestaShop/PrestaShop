@@ -43,6 +43,14 @@ module.exports = class Categories extends BOBasePage {
   Methods
    */
   /**
+   * Go to add new category page
+   * @return {Promise<void>}
+   */
+  async goToAddNewCategoryPage() {
+    await this.clickAndWaitForNavigation(this.addNewCategoryLink);
+  }
+
+  /**
    * Reset input filters
    * @return {Promise<integer>}
    */
