@@ -166,7 +166,7 @@ function updateProduct(event, eventType, updateUrl) {
         if ($('.images-container').html() !== $newImagesContainer.find('.images-container').html()) {
           $('.images-container').replaceWith(data.product_cover_thumbnails);
         }
-        console.log(data);
+
         $('.quickview .product-prices, .page-product:not(.modal-open) .row .product-prices').replaceWith(data.product_prices);
         $('.quickview .product-customization, .page-product:not(.modal-open) .row .product-customization').replaceWith(data.product_customization);
         $('.quickview .product-variants .page-product:not(.modal-open) .row .product-variants').replaceWith(data.product_variants);
