@@ -23,13 +23,13 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-import CountryStateSelectionToggler from '../../components/country-state-selection-toggler';
-import CountryDniRequiredToggler from '../../components/country-dni-required-toggler';
+import CountryStateSelectionToggler from '@components/country-state-selection-toggler';
+import CountryDniRequiredToggler from '@components/country-dni-required-toggler';
 import SupplierMap from './supplier-map';
-import TranslatableInput from '../../components/translatable-input';
-import TaggableField from '../../components/taggable-field';
-import ChoiceTree from '../../components/form/choice-tree';
-import TinyMCEEditor from '../../components/tinymce-editor';
+import TranslatableInput from '@components/translatable-input';
+import TaggableField from '@components/taggable-field';
+import ChoiceTree from '@components/form/choice-tree';
+import TinyMCEEditor from '@components/tinymce-editor';
 
 const $ = window.$;
 

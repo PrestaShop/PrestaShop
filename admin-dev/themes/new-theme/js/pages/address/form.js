@@ -23,10 +23,10 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-import AutocompleteWithEmail from '../../components/form/autocomplete-with-email';
-import CountryStateSelectionToggler from '../../components/country-state-selection-toggler';
-import CountryDniRequiredToggler from '../../components/country-dni-required-toggler';
-import CountryPostcodeRequiredToggler from '../../components/country-postcode-required-toggler';
+import AutocompleteWithEmail from '@components/form/autocomplete-with-email';
+import CountryStateSelectionToggler from '@components/country-state-selection-toggler';
+import CountryDniRequiredToggler from '@components/country-dni-required-toggler';
+import CountryPostcodeRequiredToggler from '@components/country-postcode-required-toggler';
 import addressFormMap from './address-form-map';
 
 const $ = window.$;

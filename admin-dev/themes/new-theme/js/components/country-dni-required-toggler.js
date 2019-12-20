@@ -55,10 +55,10 @@ export default class CountryDniRequiredToggler {
       return;
     }
 
-    this.$countryInput.on('change', () => this._toggle());
+    this.$countryInput.on('change', () => this.toggle());
 
     // toggle on page load
-    this._toggle();
+    this.toggle();
   }
 
   /**
@@ -66,12 +66,11 @@ export default class CountryDniRequiredToggler {
    *
    * @private
    */
-  _toggle() {
-    const $countrySelectedOption = $(this.countryInputSelectedSelector);
+  toggle() {
     $(this.countryDniInputLabelDangerSelector).remove();
-    this.$countryDniInput.attr('required', false);
-    if (1 === parseInt($countrySelectedOption.attr('need_dni'), 10)) {
-      this.$countryDniInput.attr('required', true);
+    this.$countryDniInput.prop('required', false);
+    if (1 === parseInt($(this.countryInputSelectedSelector).attr('need_dni'), 10)) {
+      this.$countryDniInput.prop('required', true);
       this.$countryDniInputLabel.prepend($('<span class="text-danger">*</span>'));
     }
   }
