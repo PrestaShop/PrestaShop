@@ -33,10 +33,9 @@ module.exports = class Invoice extends BOBasePage {
     this.legalFreeTextInput = '#form_invoice_options_legal_free_text_1';
     this.footerTextInput = '#form_invoice_options_footer_text_1';
     this.saveInvoiceOptionsButton = `${this.invoiceOptionsForm} .btn.btn-primary`;
-    this.invoicePrefixInput = `${this.invoiceOptionsForm} #form_invoice_options_invoice_prefix_1`;
-    this.invoiceAddCurrentYear = `${this.invoiceOptionsForm} label[for="form_invoice_options_add_current_year_%ID"]`;
-    this.optionYearPositionRadioButton = `${this.invoiceOptionsForm} #form_invoice_options_year_position_%ID`;
     this.invoicePrefixInput = '#form_invoice_options_invoice_prefix_1';
+    this.invoiceAddCurrentYear = `${this.invoiceOptionsForm} label[for="form_invoice_options_add_current_year_%ID"]`;
+    this.optionYearPositionRadioButton = '#form_invoice_options_year_position_%ID';
   }
 
   /*
