@@ -213,10 +213,12 @@ class OrderDetailControllerCore extends FrontController
             'url' => $this->context->link->getPageLink('history'),
         );
 
-        $breadcrumb['links'][] = array(
-            'title' => $this->reference,
-            'url' => '#',
-        );
+        if (!empty($this->reference) {
+            $breadcrumb['links'][] = array(
+                'title' => $this->reference,
+                'url' => '#',
+            );
+        }
 
         return $breadcrumb;
     }
