@@ -22,6 +22,8 @@ services:
 
   prestashop.adapter.cart.command_handler.update_cart_addresses_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Cart\CommandHandler\UpdateCartAddressesHandler'
+    arguments:
+      - '@prestashop.adapter.command_handler.update_cart_carrier_handler'
     tags:
       - name: tactician.handler
         command: 'PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartAddressesCommand'
