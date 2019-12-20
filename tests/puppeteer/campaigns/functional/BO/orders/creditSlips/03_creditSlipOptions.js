@@ -69,7 +69,7 @@ describe('Edit credit slip prefix and check the generated file name', async () =
     });
   });
 
-  describe(`Change the order status to '${Statuses.shipped.status}' and check the credit slip file Name`, async () => {
+  describe(`Change the order status to '${Statuses.shipped.status}' and check the credit slip file name`, async () => {
     it('should go to the orders page', async function () {
       await this.pageObjects.boBasePage.goToSubMenu(
         this.pageObjects.boBasePage.ordersParentLink,
@@ -114,7 +114,7 @@ describe('Edit credit slip prefix and check the generated file name', async () =
     });
   });
 
-  describe('Check that the edited prefix does not exist in the credit slip file Name', async () => {
+  describe('Check that the edited prefix does not exist in the credit slip file name', async () => {
     it('should go to the orders page', async function () {
       await this.pageObjects.boBasePage.goToSubMenu(
         this.pageObjects.boBasePage.ordersParentLink,
@@ -130,7 +130,7 @@ describe('Edit credit slip prefix and check the generated file name', async () =
       await expect(pageTitle).to.contains(this.pageObjects.viewOrderPage.pageTitle);
     });
 
-    it('should check that the credit slip file name', async function () {
+    it('should check the credit slip file name', async function () {
       fileName = await this.pageObjects.viewOrderPage.getFileName(4);
       expect(fileName).to.not.contains(prefixToEdit);
     });

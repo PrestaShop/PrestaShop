@@ -24,10 +24,8 @@ module.exports = class Order extends BOBasePage {
     this.statusValidation = '#status tr:nth-child(1) > td:nth-child(2)';
     // Document tab
     this.documentTab = '#tabOrder a[href=\'#documents\']';
-    this.documentName = '#documents_table tr td:nth-child(2)';
     this.documentNumberLink = '#documents_table tr:nth-child(%ID) td:nth-child(3) a';
     this.documentName = '#documents_table tr:nth-child(%ID) td:nth-child(2)';
-    this.documentNumberLink = '#documents_table tr td:nth-child(3) a';
     // Refund form
     this.refundProductQuantity = `${this.orderProductsTable} tr:nth-child(%ID) 
     input[onchange*='checkPartialRefundProductQuantity']`;
