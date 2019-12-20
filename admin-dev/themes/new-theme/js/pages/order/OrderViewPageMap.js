@@ -65,7 +65,7 @@ export default {
   productsTablePagination: '#orderProductsTablePagination',
   productsTablePaginationNext: '#orderProductsTablePaginationNext',
   productsTablePaginationPrev: '#orderProductsTablePaginationPrev',
-  productsTablePaginationLink: '.page-link',
+  productsTablePaginationLink: '.page-item:not(.d-none):not(#orderProductsTablePaginationNext):not(#orderProductsTablePaginationPrev) .page-link',
   productsTablePaginationActive: '#orderProductsTablePagination .page-item.active span',
   productsTablePaginationTemplate: '#orderProductsTablePagination .page-item.d-none',
   productsTableRow: productId => `#orderProduct_${productId}`,
@@ -100,7 +100,6 @@ export default {
   productEditLocationText: '.editProductLocation',
   productEditAvailableText: '.editProductAvailable',
   productEditTotalPriceText: '.editProductTotalPrice',
-  productTemplateRow: '#templateProductTableRow',
   // Order price elements
   orderProductsTotal: '#orderProductsTotal',
   orderDiscountsTotal: '#orderDiscountsTotal',
