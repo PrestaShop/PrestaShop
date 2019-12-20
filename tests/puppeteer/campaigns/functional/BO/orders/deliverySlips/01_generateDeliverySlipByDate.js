@@ -99,7 +99,7 @@ describe('Generate Delivery slip file by date', async () => {
       await expect(exist).to.be.true;
     });
 
-    it('should check the error message when there is no credit slip in the entered date', async function () {
+    it('should check the error message when there is no delivery slip in the entered date', async function () {
       await this.pageObjects.deliverySlipsPage.generatePDFByDate(dateFrom, dateTo);
       const textMessage = await this.pageObjects.deliverySlipsPage.getTextContent(
         this.pageObjects.deliverySlipsPage.alertTextBlock,
