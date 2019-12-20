@@ -35,8 +35,6 @@ use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use Psr\Container\ContainerInterface;
 use RuntimeException;
 use Shop;
-use Symfony\Component\DependencyInjection\Exception\ServiceCircularReferenceException;
-use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 use Tests\Integration\Behaviour\Features\Context\CommonFeatureContext;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 
@@ -169,22 +167,5 @@ abstract class AbstractDomainFeatureContext implements Context
     protected function multipleShopContextIsLoaded()
     {
         Shop::setContext(Shop::CONTEXT_ALL);
-    }
-
-    /**
-     * Used in scenarios which have horizontal properties table
-     *
-     * @param TableNode $table
-     *
-     * @return array
-     */
-    protected function extractFirstHorizontalRowFromProperties(TableNode $table): array
-    {
-        $hash = $table->getHash();
-        if (count($hash) !== 1) {
-            throw new RuntimeException('Properties are invalid');
-        }
-
-        return $hash[0];
     }
 }
