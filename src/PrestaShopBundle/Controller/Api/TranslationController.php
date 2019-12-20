@@ -67,7 +67,7 @@ class TranslationController extends ApiController
 
             $locale = $request->attributes->get('locale');
             $domain = $request->attributes->get('domain');
-            $theme = $request->attributes->get('theme');
+            $theme = (mb_stripos('Admin', $domain) !== false) ? $request->attributes->get('theme', $this->getSelectedTheme()) : null;
             $module = $request->query->get('module');
             $search = $request->query->get('search');
 
