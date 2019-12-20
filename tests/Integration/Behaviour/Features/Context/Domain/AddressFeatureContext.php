@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
-
 
 use Behat\Behat\Tester\Exception\PendingException;
 use Behat\Gherkin\Node\TableNode;
@@ -22,5 +20,4 @@ class AddressFeatureContext extends AbstractDomainFeatureContext
 //        $this->getCommandBus()->handle(new SetRequiredFieldsForAddressCommand());
         throw new PendingException();
     }
-
 }
