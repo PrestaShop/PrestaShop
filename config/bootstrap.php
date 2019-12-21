@@ -61,7 +61,7 @@ $exportPhpConfigFile = function ($config, $destination) use ($filesystem) {
 
 // Bootstrap an application with parameters.yml, which has been installed before PHP parameters file support
 if (!file_exists($phpParametersFilepath) && file_exists($yamlParametersFilepath)) {
-    $parameters = Yaml::parse($yamlParametersFilepath);
+    $parameters = Yaml::parseFile($yamlParametersFilepath);
     if ($exportPhpConfigFile($parameters, $phpParametersFilepath)) {
         $filesystem->dumpFile($yamlParametersFilepath, 'parameters:' . "\n");
     }
@@ -79,7 +79,7 @@ if ($lastParametersModificationTime) {
             $config = require $phpParametersFilepath;
             $exportPhpConfigFile($config, $cachedParameters);
         } elseif (file_exists($yamlParametersFilepath)) {
-            $config = Yaml::parse($yamlParametersFilepath);
+            $config = Yaml::parseFile($yamlParametersFilepath);
             $exportPhpConfigFile($config, $cachedParameters);
         }
     }
