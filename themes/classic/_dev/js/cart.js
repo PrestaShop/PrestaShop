@@ -157,7 +157,8 @@ $(document).ready(() => {
 
       // Refresh cart preview
       prestashop.emit('updateCart', {
-        reason: dataset
+        reason: dataset,
+        resp: resp
       });
     }).fail((resp) => {
       prestashop.emit('handleError', {
