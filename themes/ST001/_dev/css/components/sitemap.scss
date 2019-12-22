@@ -1,0 +1,38 @@
+.sitemap-title {
+  text-transform: capitalize;
+}
+
+.sitemap {
+  margin-top: rem(15px);
+
+  h2 {
+    color: #414141;
+    text-transform: uppercase;
+    font-size: 1.1rem;
+    font-weight: 600;
+    border-bottom: 1px solid #acaaa6;
+    margin-left: -15px;
+    width: 100%;
+    height: 35px;
+  }
+
+  ul {
+    margin-left: -15px;
+    margin-top: 20px;
+
+    &.nested {
+      margin-left: 20px;
+    }
+
+    li {
+      font-size: 0.9rem;
+      margin-bottom: 1rem;
+    }
+  }
+}
+
+@include media-breakpoint-down(xs) {
+  .sitemap {
+    margin-top: 0;
+  }
+}

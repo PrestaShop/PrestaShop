@@ -1,0 +1,31 @@
+#products,
+#pagenotfound {
+  #main {
+    .page-header {
+      margin: rem(32px) 0 rem(48px);
+    }
+    .page-content {
+      margin-bottom: rem(160px);
+    }
+  }
+  .page-not-found {
+    @include box-shadow;
+    background: white;
+    padding: rem(16px);
+    font-size: $font-size-sm;
+    color: $gray-dark;
+    max-width: 570px;
+    margin: 0 auto;
+    h4 {
+      font-size: $base-font-size;
+      font-weight: 700;
+      margin: rem(8px) 0 rem(16px);
+    }
+    .search-widget {
+      float: none;
+      input {
+        width: 100%;
+      }
+    }
+  }
+}

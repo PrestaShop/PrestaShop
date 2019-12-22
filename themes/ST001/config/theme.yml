@@ -1,0 +1,213 @@
+name: ST001
+display_name: ST001
+version: 1.3.0
+theme_key: b415021d90cd0b5fc588668b2d913632
+author:
+  name: "Sweet theme"
+  email: "support@sweettemplate.com"
+  url: "http://www.sweettheme.com"
+
+meta:
+  compatibility:
+      from: 1.7.0.0
+      to: ~
+
+  available_layouts:
+    layout-full-width:
+      name: Full Width
+      description: No side columns, ideal for distraction-free pages such as product pages.
+    layout-both-columns:
+      name: Three Columns
+      description: One large central column and 2 side columns.
+    layout-left-column:
+      name: Two Columns, small left column
+      description: Two columns with a small left column
+    layout-right-column:
+      name: Two Columns, small right column
+      description: Two columns with a small right column
+
+assets:
+  # If you're using this theme as child and you want to load
+  # the parent theme assets, uncomment this line.
+#  use_parent_assets: true
+
+  # The following lines are showing how to load assets in your page
+  # Uncomment and change value to start loading css or js files
+#  css:
+#    all:
+#      - id: custom-lib-style
+#        path: assets/css/custom-lib.css
+#    product:
+#      - id: product-style
+#        path: assets/css/product.css
+#        media: all
+#        priority: 200
+   css:
+     all:
+      - id: owl-carousel-style
+        path: assets/css/owl.carousel.css
+   js:
+     all:
+       - id: owl-carousel-theme
+         path: assets/js/owl.carousel.js
+         priority: 610
+         position: bottom
+       - id: parallax-lib
+         path: assets/js/ParallaxBackground.js
+         priority: 620
+         position: bottom
+       - id: totalstorage-lib
+         path: assets/js/jquery.total-storage.min.js
+         priority: 630
+       - id: top-lib
+         path: assets/js/jquery.ui.totop.js
+         priority: 640
+         position: bottom       
+#  js:
+#    cart:
+#      - id: cat-extra-lib
+#        path: assets/js/cart-lib.js
+
+
+global_settings:
+  configuration:
+    PS_IMAGE_QUALITY: png
+  modules:
+   to_enable:
+     - ps_linklist
+   to_disable:
+     - ps_imageslider 
+     - ps_featuredproducts
+     - ps_banner
+     - ps_customtext
+  hooks:
+    custom_hooks:
+      - name: displayTopColumn
+        title: displayTopColumn
+        description: Display Content on Top Column After displayTop
+      - name: displayHomeTop
+        title: displayHomeTop
+        description: Display Content After displayTopColumn
+      - name: displayHomeBottom
+        title: displayHomeBottom
+        description: Display Content After displayHome
+    modules_to_hook:
+      displayNav1:
+        - ps_languageselector
+        - ps_currencyselector
+      displayNav2:
+        - ps_searchbar
+        - ps_customersignin
+        - ps_shoppingcart
+      displayTop:
+        - ps_mainmenu
+      displayTopColumn:
+        - othomeslider
+        - otbannerblock
+        - otfeaturedproducts
+      displayHomeTop:
+        - otparallaxblock
+      displayHome:
+        - otspecials
+        - otshippingblock
+      displayHomeBottom:
+        - ottestimonialblock
+        - otbrandlist
+      displayFooterBefore:
+        - ps_emailsubscription
+      displayFooter:
+        - ps_linklist
+        - ps_customeraccountlinks
+        - ps_contactinfo
+      displayFooterBottom:
+        - otfooterbottomblock
+      displayLeftColumn:
+        - ps_categorytree
+        - ps_facetedsearch
+        - otleftbannerblock
+        - otleftnewproducts
+      displaySearch:
+        - ps_searchbar
+      displayProductAdditionalInfo:
+        - ps_sharebuttons
+      displayReassurance:
+        - blockreassurance
+      displayOrderConfirmation2:
+        - otfeaturedproducts
+      displayCrossSellingShoppingCart:
+        - otfeaturedproducts
+
+  image_types:
+    cart_default:
+      width: 125
+      height: 160
+      scope: [products]
+    small_default:
+      width: 98
+      height: 125
+      scope: [products, categories, manufacturers, suppliers]
+    medium_default:
+      width: 450
+      height: 575
+      scope: [products, manufacturers, suppliers]
+    home_default:
+      width: 270
+      height: 345
+      scope: [products]
+    large_default:
+      width: 705
+      height: 900
+      scope: [products, manufacturers, suppliers]
+    category_default:
+      width: 870
+      height: 160
+      scope: [categories]
+    stores_default:
+      width: 170
+      height: 115
+      scope: [stores]
+
+theme_settings:
+  default_layout: layout-full-width
+  layouts:
+    addresses: layout-left-column
+    authentication: layout-left-column
+    address: layout-left-column
+    best-sales: layout-left-column
+    cart: layout-left-column
+    category: layout-left-column
+    cms: layout-left-column
+    contact: layout-left-column
+    discount: layout-left-column
+    history: layout-left-column
+    identity: layout-left-column
+    guest-tracking: layout-left-column
+    my-account: layout-left-column
+    manufacturer: layout-left-column
+    new-products: layout-left-column
+    order-follow: layout-left-column
+    order-slip: layout-left-column
+    order: layout-left-column
+    prices-drop: layout-left-column
+    product: layout-full-width
+    password: layout-left-column
+    search: layout-left-column
+    stores: layout-left-column
+    sitemap: layout-left-column
+    supplier: layout-left-column
+    
+
+dependencies:
+  modules:
+    - othomeslider
+    - otbannerblock
+    - otfeaturedproducts
+    - otparallaxblock
+    - otspecials
+    - otshippingblock
+    - ottestimonialblock
+    - otbrandlist
+    - otfooterbottomblock
+    - otleftbannerblock
+    - otleftnewproducts
+

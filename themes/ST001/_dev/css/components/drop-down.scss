@@ -1,0 +1,33 @@
+.dropdown{
+  color:$gray;
+  &:hover .expand-more{
+    color: $brand-primary;
+  }
+  .expand-more{
+    color: $gray-darker;
+    cursor: pointer;
+    @include user-select(none);
+
+  }
+
+  .active{
+    max-height: 200px;
+    overflow-y: hidden;
+    visibility: visible;
+  }
+
+  select {
+    -moz-appearance: none;
+    border: 0 none;
+    outline: 0 none;
+    color: $gray-darker;
+    background: white;
+  }
+}
+
+.dropdown-item:focus, .dropdown-item:hover {
+  background: none;
+  text-decoration: none;
+  color: $brand-primary;
+}
+
