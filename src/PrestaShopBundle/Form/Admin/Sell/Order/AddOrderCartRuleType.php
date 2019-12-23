@@ -29,6 +29,7 @@ namespace PrestaShopBundle\Form\Admin\Sell\Order;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CleanHtml;
 use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
+use PrestaShopBundle\Translation\TranslatorAwareTrait;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -41,6 +42,8 @@ use Symfony\Component\Validator\Constraints\Type;
 
 class AddOrderCartRuleType extends AbstractType
 {
+    use TranslatorAwareTrait;
+
     /**
      * @var FormChoiceProviderInterface
      */
@@ -57,11 +60,6 @@ class AddOrderCartRuleType extends AbstractType
     private $contextLangId;
 
     /**
-     * @var TranslatorInterface
-     */
-    private $translator;
-
-    /**
      * @param FormChoiceProviderInterface $orderDiscountTypeChoiceProvider
      * @param ConfigurableFormChoiceProviderInterface $orderInvoiceByIdChoiceProvider
      * @param int $contextLangId
@@ -76,7 +74,7 @@ class AddOrderCartRuleType extends AbstractType
         $this->orderDiscountTypeChoiceProvider = $orderDiscountTypeChoiceProvider;
         $this->orderInvoiceByIdChoiceProvider = $orderInvoiceByIdChoiceProvider;
         $this->contextLangId = $contextLangId;
-        $this->translator = $translator;
+        $this->setTranslator($translator);
     }
 
     /**
@@ -94,7 +92,7 @@ class AddOrderCartRuleType extends AbstractType
             ->add('name', TextType::class, [
                 'constraints' => [
                     new CleanHtml([
-                        'message' => $this->translator->trans(
+                        'message' => $this->trans(
                             'Cart rule name must contain clean HTML',
                             [],
                             'Admin.Notifications.Error'
@@ -111,7 +109,7 @@ class AddOrderCartRuleType extends AbstractType
                 ],
                 'constraints' => new Type([
                     'type' => 'numeric',
-                    'message' => $this->translator->trans('Discount value must be a number', [], 'Admin.Notifications.Error'),
+                    'message' => $this->trans('Discount value must be a number', [], 'Admin.Notifications.Error'),
                 ]),
             ])
             ->add('invoice_id', ChoiceType::class, [
@@ -121,6 +119,7 @@ class AddOrderCartRuleType extends AbstractType
             ])
             ->add('apply_on_all_invoices', CheckboxType::class, [
                 'required' => false,
+                'label' => $this->trans('Apply on all invoices', [], 'Admin.Orderscustomers.Feature'),
             ])
         ;
     }
