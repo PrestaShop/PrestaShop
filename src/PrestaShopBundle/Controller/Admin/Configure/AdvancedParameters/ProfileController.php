@@ -31,6 +31,7 @@ use PrestaShop\PrestaShop\Core\Domain\Profile\Command\BulkDeleteProfileCommand;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Command\DeleteProfileCommand;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Exception\CannotDeleteSuperAdminProfileException;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Exception\FailedToDeleteProfileException;
+use PrestaShop\PrestaShop\Core\Domain\Profile\Exception\ProfileConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Exception\ProfileException;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Exception\ProfileNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Query\GetProfileForEditing;
@@ -264,6 +265,13 @@ class ProfileController extends FrameworkBundleAdminController
     protected function getErrorMessages()
     {
         return [
+            ProfileConstraintException::class => [
+                ProfileConstraintException::INVALID_NAME => $this->trans(
+                    'Your entry in field name exceeds max length %d chars (incl. HTML tags)',
+                    'Admin.Notifications.Error',
+                    [ProfileConstraintException::NAME_MAX_LENGTH]
+                ),
+            ],
             ProfileNotFoundException::class => $this->trans(
                 'The object cannot be loaded (or found)',
                 'Admin.Notifications.Error'
