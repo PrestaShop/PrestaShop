@@ -241,9 +241,8 @@ class SupplierType extends TranslatorAwareType
                 ],
                 'attr' => [
                     'class' => 'js-supplier-country-select',
-                    'data-states-url' => $this->router->generate('admin_country_states')
+                    'data-states-url' => $this->router->generate('admin_country_states'),
                 ],
-
             ])
             ->add('id_state', ChoiceType::class, [
                 'required' => false,
