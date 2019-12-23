@@ -54,13 +54,14 @@ final class OrderInvoiceByIdChoiceProvider implements ConfigurableFormChoiceProv
     {
         $order = new Order($options['id_order']);
         $invoices = $order->getInvoicesCollection();
+        $labelFormat = isset($options['display_total']) && false !== $options['display_total'] ? '%s - %s' : '%s';
 
         $choices = [];
 
         /** @var OrderInvoice $invoice */
         foreach ($invoices as $invoice) {
             $invoiceLabel = sprintf(
-                '%s - %s',
+                $labelFormat,
                 $invoice->getInvoiceNumberFormatted($options['id_lang'], $order->id_shop),
                 $this->locale->formatPrice($invoice->total_paid_tax_incl, Currency::getIsoCodeById($invoice->getOrder()->id_currency))
             );
