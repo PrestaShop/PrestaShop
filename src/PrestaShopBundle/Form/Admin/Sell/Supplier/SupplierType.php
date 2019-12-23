@@ -245,11 +245,15 @@ class SupplierType extends TranslatorAwareType
                 ],
             ])
             ->add('id_state', ChoiceType::class, [
+                'label' => $this->trans('State', 'Admin.Global'),
                 'required' => false,
                 'translation_domain' => false,
                 'choices' => $this->statesChoiceProvider->getChoices([
                     'id_country' => $countryIdForStateChoices,
                 ]),
+                'attr' => [
+                    'class' => 'js-supplier-state'
+                ]
             ])
             ->add('logo', FileType::class, [
                 'required' => false,
