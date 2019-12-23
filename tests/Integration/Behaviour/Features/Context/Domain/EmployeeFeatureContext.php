@@ -74,6 +74,7 @@ class EmployeeFeatureContext extends AbstractDomainFeatureContext
         $availablePermissionProfiles = $profileChoiceProvider->getChoices();
         $data['profileId'] = $availablePermissionProfiles[$testCaseData['Permission profile']];
 
+        // todo: use transformer
         $data['active'] = (bool) $testCaseData['Active'];
 
         /** @var array $shopAssociation */

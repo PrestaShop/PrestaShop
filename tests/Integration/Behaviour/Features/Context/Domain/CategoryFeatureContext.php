@@ -26,9 +26,11 @@
 
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
-use Category;
+use Behat\Behat\Tester\Exception\PendingException;
+use Behat\Gherkin\Node\TableNode;
 use Configuration;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\AddCategoryCommand;
+use PrestaShop\PrestaShop\Core\Domain\Category\QueryResult\EditableCategory;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 
@@ -53,9 +55,63 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
         $command->setLocalizedMetaTitles([$defaultLanguageId => $properties['meta_title']]);
         $command->setLocalizedMetaDescriptions([$defaultLanguageId => $properties['meta_description']]);
 
-        /** @var CategoryId $categoryId */
-        $categoryId = $this->getCommandBus()->handle($command);
+        /** @var CategoryId $categoryIdObject */
+        $categoryIdObject = $this->getCommandBus()->handle($command);
 
-        SharedStorage::getStorage()->set($reference, new Category($categoryId->getValue()));
+        SharedStorage::getStorage()->set($reference, $categoryIdObject->getValue());
     }
+
+    /**
+     * @todo finish
+     * @Then category :categoryReference should have following details:
+     *
+     * @param string $categoryReference
+     * @param TableNode $table
+     */
+    public function categoryShouldHaveFollowingDetails(string $categoryReference, TableNode $table)
+    {
+        $categoryId = SharedStorage::getStorage()->get($categoryReference);
+        $testCaseData = $table->getRowsHash();
+
+//            $isActive,
+//            array $description,
+//                $parentId,
+//                array $metaTitle,
+//                    array $metaDescription,
+//                        array $metaKeywords,
+//                            array $linkRewrite,
+//                                array $groupAssociationIds,
+//                                    array $shopAssociationIds,
+//                                        $isRootCategory,
+//                                        $coverImage = null,
+//                                        $thumbnailImage = null,
+//                                        array $menuThumbnailImages = [],
+//                                            array $subCategories = []
+
+//      | Displayed        | true                      |
+//      | Parent category  | Home Accessories          |
+//      | Description      | Best PC parts             |
+//      | Meta title       | PC parts meta title       |
+//      | Meta description | PC parts meta description |
+//      | Friendly URL     | pc-parts                  |
+//      | Group access     | Customer,Guest,Visitor    |
+
+        $editableCategory = new EditableCategory(
+            new CategoryId($categoryId),
+            array($testCaseData['Name']),
+
+        );
+
+        throw new PendingException();
+    }
+
+
+    /**
+     * @When I edit category :arg1 with following details:
+     */
+    public function iEditCategoryWithFollowingDetails($arg1, TableNode $table)
+    {
+        throw new PendingException();
+    }
+
 }
