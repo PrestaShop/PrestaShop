@@ -115,8 +115,16 @@ class SupplierType extends TranslatorAwareType
         $data = $builder->getData();
         $countryId = 0 !== $data['id_country'] ? $data['id_country'] : $this->contextCountryId;
 
+        $invalidCharsText = sprintf(
+            '%s <>;=#{}',
+            $this->trans('Invalid characters:', 'Admin.Notifications.Info')
+        );
+
         $builder
             ->add('name', TextType::class, [
+                'label' => $this->trans('Name', 'Admin.Global'),
+                'required' => true,
+                'help' => $invalidCharsText,
                 'constraints' => [
                     new NotBlank([
                         'message' => $this->trans(
@@ -137,6 +145,12 @@ class SupplierType extends TranslatorAwareType
                 ],
             ])
             ->add('description', TranslateType::class, [
+                'label' => $this->trans('Description', 'Admin.Global'),
+                'help' => sprintf(
+                    '%s %s',
+                    $this->trans('Will appear in the list of suppliers.', 'Admin.Catalog.Help'),
+                    $invalidCharsText
+                ),
                 'required' => false,
                 'type' => FormattedTextareaType::class,
                 'locales' => $this->locales,
