@@ -61,6 +61,7 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderPreview;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderPreview;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderProductForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
+use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\OrderGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters\OrderFilters;
 use PrestaShopBundle\Component\CsvResponse;
@@ -468,6 +469,26 @@ class OrderController extends FrameworkBundleAdminController
         return $this->render('@PrestaShop/Admin/Sell/Order/Order/Blocks/View/product.html.twig', [
             'orderForViewing' => $orderForViewing,
             'product' => $products[array_key_last($products)],
+        ]);
+    }
+
+    /**
+     * @AdminSecurity("is_granted(['create', 'update'], request.get('_legacy_controller'))", redirectRoute="admin_orders_index")
+     *
+     * @param int $orderId
+     */
+    public function getInvoicesAction(int $orderId)
+    {
+        /** @var ConfigurableFormChoiceProviderInterface $choiceProvider */
+        $choiceProvider = $this->get('prestashop.adapter.form.choice_provider.order_invoice_by_id');
+        $choices = $choiceProvider->getChoices([
+            'id_order' => $orderId,
+            'id_lang' => $this->getContextLangId(),
+            'display_total' => false,
+        ]);
+
+        return $this->json([
+            'invoices' => $choices,
         ]);
     }
 

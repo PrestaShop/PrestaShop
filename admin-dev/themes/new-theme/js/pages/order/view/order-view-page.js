@@ -29,6 +29,7 @@ import OrderViewEventMap from '@pages/order/view/order-view-event-map';
 import {EventEmitter} from '@components/event-emitter';
 import OrderProductRenderer from '@pages/order/view/order-product-renderer';
 import OrderPricesRefresher from '@pages/order/view/order-prices-refresher';
+import OrderInvoicesRefresher from './order-invoices-refresher';
 
 const $ = window.$;
 
@@ -37,6 +38,7 @@ export default class OrderViewPage {
     this.orderProductManager = new OrderProductManager();
     this.orderProductRenderer = new OrderProductRenderer();
     this.orderPricesRefresher = new OrderPricesRefresher();
+    this.orderInvoicesRefresher = new OrderInvoicesRefresher();
   }
 
   listenForProductDelete() {
@@ -145,6 +147,7 @@ export default class OrderViewPage {
       this.orderProductRenderer.updateNumProducts(numProducts + 1);
       this.orderProductRenderer.resetAddRow();
       this.orderPricesRefresher.refresh(event.orderId);
+      this.orderInvoicesRefresher.refresh(event.orderId);
       this.orderProductRenderer.moveProductPanelToOriginalPosition();
     });
   }
