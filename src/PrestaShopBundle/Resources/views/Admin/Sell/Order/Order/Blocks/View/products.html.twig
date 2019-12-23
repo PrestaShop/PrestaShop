@@ -79,48 +79,7 @@
           } %}
         {% endfor %}
         <tr id="addProductTableRow" class="d-none">
-          <td colspan="2" class="pr-5">
-            <input type="hidden" id="addProductId">
-            <input type="hidden" id="addProductTaxRate">
-            <label for="addProductSearch">{{ 'Add a product'|trans({}, 'Admin.Orderscustomers.Feature') }}</label>
-            <input type="text" class="form-control" id="addProductSearch" placeholder="{{ 'Search for a product'|trans({}, 'Admin.Orderscustomers.Feature') }}">
-            <div class="dropdown">
-              <div class="dropdown-menu"></div>
-            </div>
-            <div class="input-group mt-2 d-none" id="addProductCombinations">
-              <div class="input-group-prepend">
-                <div class="input-group-text">{{ 'Combinations'|trans({}, 'Admin.Global') }}</div>
-              </div>
-              <select id="addProductCombinationId" class="custom-select"></select>
-            </div>
-          </td>
-          <td class="pr-5">
-            <div class="input-group">
-              <input type="text" id="addProductPriceTaxExcl" class="form-control">
-              <div class="input-group-append">
-                <div class="input-group-text">{{ orderCurrency.symbol }} {{ 'tax excl.'|trans({}, 'Admin.Global') }}</div>
-              </div>
-            </div>
-            <div class="input-group mt-2">
-              <input type="text" id="addProductPriceTaxIncl" class="form-control">
-              <div class="input-group-append">
-                <div class="input-group-text">{{ orderCurrency.symbol }} {{ 'tax incl.'|trans({}, 'Admin.Global') }}</div>
-              </div>
-            </div>
-          </td>
-          <td class="pr-5"><input type="number" id="addProductQuantity" min="1" value="1" class="form-control"></td>
-          <td id="addProductLocation"></td>
-          <td id="addProductRefunded"></td>
-          <td id="addProductAvailable"></td>
-          <td id="addProductTotalPrice"></td>
-          <td class="text-right">
-            <button type="button" class="btn btn-sm btn-secondary js-product-add-action-btn mr-2 d-inline" id="cancelAddProductBtn">
-              {{ 'Cancel'|trans({}, 'Admin.Actions') }}
-            </button>
-            <button type="button" class="btn btn-sm btn-primary js-product-add-action-btn mt-2 mb-2 d-inline" id="addProductActionBtn" data-order-id="{{ orderForViewing.id }}" disabled>
-              {{ 'Add'|trans({}, 'Admin.Actions') }}
-            </button>
-          </td>
+          {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/add_product_row.html.twig' %}
         </tr>
         <tr id="editProductTableRow" class="d-none">
           <td></td>
