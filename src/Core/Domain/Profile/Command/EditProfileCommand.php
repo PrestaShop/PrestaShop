@@ -56,7 +56,7 @@ class EditProfileCommand
             throw new ProfileException('Profile name cannot be empty');
         }
 
-        $this->profileId = new ProfileId($profileId);
+        $this->profileId = new ProfileId((int) $profileId);
         $this->localizedNames = $localizedNames;
     }
 
