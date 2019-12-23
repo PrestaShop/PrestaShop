@@ -1091,3 +1091,11 @@ services:
         public: true
         tags:
             - { name: form.type }
+
+    form.type.configure.advanced_parameters.profile:
+      class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Profile\ProfileType'
+      public: true
+      arguments:
+        - '@translator'
+      tags:
+        - { name: form.type }
