@@ -162,21 +162,28 @@ class SupplierType extends TranslatorAwareType
                 ],
             ])
             ->add('phone', TextType::class, [
+                'label' => $this->trans('Home phone', 'Admin.Global'),
+                'help' => $this->trans('Phone number for this supplier', 'Admin.Catalog.Help'),
                 'required' => false,
                 'constraints' => $this->getPhoneCommonConstraints(),
             ])
             ->add('mobile_phone', TextType::class, [
+                'label' => $this->trans('Mobile phone', 'Admin.Global'),
+                'help' => $this->trans('Mobile phone number for this supplier.', 'Admin.Catalog.Help'),
                 'required' => false,
                 'constraints' => $this->getPhoneCommonConstraints(),
             ])
             ->add('address', TextType::class, [
+                'label' => $this->trans('Address', 'Admin.Global'),
                 'constraints' => $this->getAddressCommonConstraints(),
             ])
             ->add('address2', TextType::class, [
+                'label' => $this->trans('Address (2)', 'Admin.Global'),
                 'required' => false,
                 'constraints' => $this->getAddressCommonConstraints(),
             ])
             ->add('post_code', TextType::class, [
+                'label' => $this->trans('Zip/postal code', 'Admin.Global'),
                 'required' => false,
                 'constraints' => [
                     new TypedRegex([
@@ -193,6 +200,7 @@ class SupplierType extends TranslatorAwareType
                 ],
             ])
             ->add('city', TextType::class, [
+                'label' => $this->trans('City', 'Admin.Global'),
                 'constraints' => [
                     new NotBlank([
                         'message' => $this->trans(
@@ -213,6 +221,7 @@ class SupplierType extends TranslatorAwareType
                 ],
             ])
             ->add('id_country', ChoiceType::class, [
+                'label' => $this->trans('Country', 'Admin.Global'),
                 'required' => true,
                 'choices' => $this->countryChoices,
                 'translation_domain' => false,
