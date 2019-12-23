@@ -32,11 +32,24 @@ use PrestaShop\PrestaShop\Core\Domain\Profile\ValueObject\ProfileId;
 
 class ProfileIdTest extends TestCase
 {
-    public function testItCreatesProfileWithValidValues()
+    /**
+     * @dataProvider testItCreatesProfileWithValidValuesData
+     */
+    public function testItCreatesProfileWithValidValues($idValue)
     {
-        $profileId = new ProfileId(1);
+        $profileId = new ProfileId($idValue);
 
-        $this->assertEquals(1, $profileId->getValue());
+        $this->assertEquals((int) $idValue, $profileId->getValue());
+    }
+
+    public function testItCreatesProfileWithValidValuesData()
+    {
+        return [
+            [1],
+            [42],
+            ['1'],
+            ['51'],
+        ];
     }
 
     /**

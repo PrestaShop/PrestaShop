@@ -43,7 +43,7 @@ class DeleteProfileCommand
      */
     public function __construct($profileId)
     {
-        $this->profileId = new ProfileId($profileId);
+        $this->profileId = new ProfileId((int) $profileId);
     }
 
     /**
