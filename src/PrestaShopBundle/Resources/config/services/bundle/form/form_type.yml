@@ -906,6 +906,7 @@ services:
             - '@translator'
             - '@=service("prestashop.adapter.multistore_feature").isActive()'
             - "@=service('prestashop.adapter.legacy.context').getLanguages()"
+            - '@router'
         tags:
           - { name: form.type }
 
