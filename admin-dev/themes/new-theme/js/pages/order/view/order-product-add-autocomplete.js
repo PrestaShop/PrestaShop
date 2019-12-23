@@ -54,14 +54,19 @@ export default class OrderProductAutocomplete {
   }
 
   updateResults(results) {
-    this.results = results.products;
     this.dropdownMenu.empty();
+    this.results = results.products;
+    if (!this.results || Object.keys(this.results).length <= 0) {
+      this.dropdownMenu.toggle(false);
+      return;
+    }
+
     Object.values(this.results).forEach((val) => {
       const link = $(`<a class="dropdown-item" data-id="${val.productId}" href="#">${val.name}</a>`);
       link.on('click', event => this.onItemClicked($(event.target).data('id')));
       this.dropdownMenu.append(link);
     });
-    this.dropdownMenu.toggle(Object.keys(this.results).length > 0);
+    this.dropdownMenu.toggle(true);
   }
 
   onItemClicked(id) {
