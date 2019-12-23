@@ -84,6 +84,7 @@ class AddProductRowType extends TranslatorAwareType
                 'label' => $this->trans('Add a product', 'Admin.Orderscustomers.Feature'),
                 'attr' => [
                     'class' => 'col-sm-12',
+                    'autocomplete' => 'off',
                     'placeholder' => $this->trans('Search for a product', 'Admin.Orderscustomers.Feature'),
                 ],
             ])
