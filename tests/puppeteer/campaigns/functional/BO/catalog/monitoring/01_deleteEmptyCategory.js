@@ -34,7 +34,7 @@ const init = async function () {
 /*
 Create new category
 Check existence of new category in monitoring page
-Delete category and check deletion in category page
+Delete category and check deletion in categories page
  */
 describe('Create empty category and delete it from monitoring page', async () => {
   // before and after functions
@@ -66,7 +66,7 @@ describe('Create empty category and delete it from monitoring page', async () =>
     await expect(numberOfCategories).to.be.above(0);
   });
 
-  describe('Create Category and subcategory in BO and check it in FO', async () => {
+  describe('Create empty category in BO', async () => {
     it('should go to add new category page', async function () {
       await this.pageObjects.categoriesPage.goToAddNewCategoryPage();
       const pageTitle = await this.pageObjects.addCategoryPage.getPageTitle();
