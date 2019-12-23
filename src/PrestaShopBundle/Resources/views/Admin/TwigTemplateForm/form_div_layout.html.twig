@@ -346,9 +346,13 @@
 
   {% for child in form -%}
     {% if not child.rendered %}
-      {{- ps.form_group_row(child, { attr: child.vars.attr }, {
-        'label': child.vars.label
-      }) -}}
+      {% if 'hidden' in child.vars.block_prefixes %}
+        {{- form_row(child) -}}
+      {% else %}
+        {{- ps.form_group_row(child, { attr: child.vars.attr }, {
+          'label': child.vars.label
+        }) -}}
+      {% endif %}
     {% endif %}
   {%- endfor %}
 {% endblock form_rest %}
