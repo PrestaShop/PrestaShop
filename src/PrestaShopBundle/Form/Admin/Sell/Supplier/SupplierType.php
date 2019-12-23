@@ -40,6 +40,7 @@ use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use PrestaShopBundle\Form\Admin\Type\TranslateType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
+use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -84,6 +85,9 @@ class SupplierType extends TranslatorAwareType
      */
     private $isMultistoreEnabled;
 
+    /** @var Router */
+    private $router;
+
     /**
      * @param array $countryChoices
      * @param ConfigurableFormChoiceProviderInterface $statesChoiceProvider
@@ -91,6 +95,7 @@ class SupplierType extends TranslatorAwareType
      * @param TranslatorInterface $translator
      * @param $isMultistoreEnabled
      * @param array $locales
+     * @param Router $router
      */
     public function __construct(
         array $countryChoices,
@@ -99,15 +104,17 @@ class SupplierType extends TranslatorAwareType
         $contextCountryId,
         TranslatorInterface $translator,
         $isMultistoreEnabled,
-        array $locales = []
+        array $locales = [],
+        Router $router
     ) {
-        parent::__construct($translator, $locales);
+        parent::__construct($translator, $locales, $router);
 
         $this->countryChoices = $countryChoices;
         $this->countryChoicesAttributes = $countryChoicesAttributes;
         $this->statesChoiceProvider = $statesChoiceProvider;
         $this->contextCountryId = $contextCountryId;
         $this->isMultistoreEnabled = $isMultistoreEnabled;
+        $this->router = $router;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -237,6 +244,11 @@ class SupplierType extends TranslatorAwareType
                         ),
                     ]),
                 ],
+                'attr' => [
+                    'class' => 'js-supplier-country-select',
+                    'data-states-url' => $this->router->generate('admin_country_states')
+                ],
+
             ])
             ->add('id_state', ChoiceType::class, [
                 'required' => true,
