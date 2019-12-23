@@ -64,7 +64,7 @@ describe('Create different products and delete them from monitoring page', async
       args: {
         productType: 'without image',
         productToCreate: productWithoutCombinations,
-        gridToVerify: 'product_without_image',
+        gridName: 'product_without_image',
         enabled: true,
       },
     },
@@ -72,7 +72,7 @@ describe('Create different products and delete them from monitoring page', async
       args: {
         productType: 'disabled',
         productToCreate: productWithoutCombinations,
-        gridToVerify: 'disabled_product',
+        gridName: 'disabled_product',
         enabled: false,
       },
     },
@@ -80,7 +80,7 @@ describe('Create different products and delete them from monitoring page', async
       args: {
         productType: 'without combinations and without available quantities',
         productToCreate: productWithoutCombinationsWithoutQuantity,
-        gridToVerify: 'no_qty_product_without_combination',
+        gridName: 'no_qty_product_without_combination',
         enabled: true,
       },
     },
@@ -88,7 +88,7 @@ describe('Create different products and delete them from monitoring page', async
       args: {
         productType: 'with combinations and without available quantities',
         productToCreate: productWithCombinationsWithoutQuantity,
-        gridToVerify: 'no_qty_product_with_combination',
+        gridName: 'no_qty_product_with_combination',
         enabled: true,
       },
     },
@@ -96,7 +96,7 @@ describe('Create different products and delete them from monitoring page', async
       args: {
         productType: 'without price',
         productToCreate: productWithoutPrice,
-        gridToVerify: 'product_without_price',
+        gridName: 'product_without_price',
         enabled: true,
       },
     },
@@ -137,20 +137,20 @@ describe('Create different products and delete them from monitoring page', async
         const pageTitle = await this.pageObjects.monitoringPage.getPageTitle();
         await expect(pageTitle).to.contains(this.pageObjects.monitoringPage.pageTitle);
         numberOfProductsIngrid = await this.pageObjects.monitoringPage.resetAndGetNumberOfLines(
-          test.args.gridToVerify,
+          test.args.gridName,
         );
         await expect(numberOfProductsIngrid).to.be.at.least(1);
       });
 
       it(`should filter products ${test.args.productType} grid and check existence of new product`, async function () {
         await this.pageObjects.monitoringPage.filterTable(
-          test.args.gridToVerify,
+          test.args.gridName,
           'input',
           'name',
           test.args.productToCreate.name,
         );
         const textColumn = await this.pageObjects.monitoringPage.getTextColumnFromTable(
-          test.args.gridToVerify,
+          test.args.gridName,
           1,
           'name',
         );
@@ -158,7 +158,7 @@ describe('Create different products and delete them from monitoring page', async
       });
 
       it(`should reset filter in products ${test.args.productType} grid`, async function () {
-        numberOfProductsIngrid = await this.pageObjects.monitoringPage.resetAndGetNumberOfLines(test.args.gridToVerify);
+        numberOfProductsIngrid = await this.pageObjects.monitoringPage.resetAndGetNumberOfLines(test.args.gridName);
         await expect(numberOfProductsIngrid).to.be.at.least(1);
       });
     });
@@ -166,13 +166,13 @@ describe('Create different products and delete them from monitoring page', async
     describe('Delete product from monitoring page', async () => {
       it(`should filter products ${test.args.productType} grid`, async function () {
         await this.pageObjects.monitoringPage.filterTable(
-          test.args.gridToVerify,
+          test.args.gridName,
           'input',
           'name',
           test.args.productToCreate.name,
         );
         const textColumn = await this.pageObjects.monitoringPage.getTextColumnFromTable(
-          test.args.gridToVerify,
+          test.args.gridName,
           1,
           'name',
         );
@@ -180,7 +180,7 @@ describe('Create different products and delete them from monitoring page', async
       });
 
       it('should delete product', async function () {
-        const textResult = await this.pageObjects.monitoringPage.deleteProductInGrid(test.args.gridToVerify, 1);
+        const textResult = await this.pageObjects.monitoringPage.deleteProductInGrid(test.args.gridName, 1);
         await expect(textResult).to.equal(this.pageObjects.productsPage.productDeletedSuccessfulMessage);
         const pageTitle = await this.pageObjects.productsPage.getPageTitle();
         await expect(pageTitle).to.contains(this.pageObjects.productsPage.pageTitle);
