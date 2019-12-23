@@ -268,3 +268,14 @@ admin_orders_get_paginated_products:
     orderId: \d+
   options:
     expose: true
+
+admin_orders_get_invoices:
+  path: /{orderId}/invoices
+  methods: [GET]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Order/Order:getInvoices
+    _legacy_controller: AdminOrders
+  requirements:
+    orderId: \d+
+  options:
+    expose: true
