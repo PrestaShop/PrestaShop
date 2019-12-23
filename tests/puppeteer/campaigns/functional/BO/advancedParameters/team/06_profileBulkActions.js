@@ -36,8 +36,11 @@ const init = async function () {
   };
 };
 
+/*
+Test disabled because of issue described here https://github.com/PrestaShop/PrestaShop/issues/16899
+ */
 // Create profiles, Then Delete with Bulk actions
-describe('Create profiles then Delete with Bulk actions', async () => {
+describe.skip('Create profiles then Delete with Bulk actions', async () => {
   // before and after functions
   before(async function () {
     browser = await helper.createBrowser();
