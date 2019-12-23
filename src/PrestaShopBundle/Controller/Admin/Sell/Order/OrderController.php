@@ -67,6 +67,7 @@ use PrestaShopBundle\Component\CsvResponse;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Form\Admin\Sell\Customer\PrivateNoteType;
 use PrestaShopBundle\Form\Admin\Sell\Order\AddOrderCartRuleType;
+use PrestaShopBundle\Form\Admin\Sell\Order\AddProductRowType;
 use PrestaShopBundle\Form\Admin\Sell\Order\ChangeOrderAddressType;
 use PrestaShopBundle\Form\Admin\Sell\Order\ChangeOrderCurrencyType;
 use PrestaShopBundle\Form\Admin\Sell\Order\ChangeOrdersStatusType;
@@ -293,8 +294,6 @@ class OrderController extends FrameworkBundleAdminController
     {
         /** @var OrderForViewing $orderForViewing */
         $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
-        $currencyDataProvider = $this->container->get('prestashop.adapter.data_provider.currency');
-        $orderCurrency = $currencyDataProvider->getCurrencyById($orderForViewing->getCurrencyId());
 
         $addOrderCartRuleForm = $this->createForm(AddOrderCartRuleType::class, [], [
             'order_id' => $orderId,
@@ -314,7 +313,6 @@ class OrderController extends FrameworkBundleAdminController
         $orderMessageForm = $this->createForm(OrderMessageType::class, [], [
             'action' => $this->generateUrl('admin_orders_send_message', ['orderId' => $orderId]),
         ]);
-
         $orderMessageForm->handleRequest($request);
 
         $changeOrderCurrencyForm = $this->createForm(ChangeOrderCurrencyType::class, [], [
@@ -335,6 +333,11 @@ class OrderController extends FrameworkBundleAdminController
 
         $currencyDataProvider = $this->container->get('prestashop.adapter.data_provider.currency');
         $orderCurrency = $currencyDataProvider->getCurrencyById($orderForViewing->getCurrencyId());
+
+        $addProductRowForm = $this->createForm(AddProductRowType::class, [], [
+            'order_id' => $orderId,
+            'symbol' => $orderCurrency->symbol,
+        ]);
 
         $backOfficeOrderButtons = new ActionsBarButtonsCollection();
         $hookParameters = [
@@ -370,8 +373,8 @@ class OrderController extends FrameworkBundleAdminController
             'invoiceManagementIsEnabled' => $orderForViewing->isInvoiceManagementIsEnabled(),
             'changeOrderAddressForm' => $changeOrderAddressForm->createView(),
             'orderMessageForm' => $orderMessageForm->createView(),
+            'addProductRowForm' => $addProductRowForm->createView(),
             'backOfficeOrderButtons' => $backOfficeOrderButtons,
-            'orderCurrency' => $orderCurrency,
         ]);
     }
 
@@ -433,15 +436,29 @@ class OrderController extends FrameworkBundleAdminController
      */
     public function addProductAction(int $orderId, Request $request): Response
     {
-        $this->getCommandBus()->handle(AddProductToOrderCommand::withNewInvoice(
-            $orderId,
-            (int) $request->get('product_id'),
-            (int) $request->get('combination_id'),
-            (float) $request->get('price_tax_incl'),
-            (float) $request->get('price_tax_excl'),
-            (int) $request->get('quantity'),
-            false
-        ));
+        $invoiceId = (int) $request->get('invoice_id');
+        if ($invoiceId > 0) {
+            $addProductCommand = AddProductToOrderCommand::toExistingInvoice(
+                $orderId,
+                $invoiceId,
+                (int) $request->get('product_id'),
+                (int) $request->get('combination_id'),
+                (float) $request->get('price_tax_incl'),
+                (float) $request->get('price_tax_excl'),
+                (int) $request->get('quantity')
+            );
+        } else {
+            $addProductCommand = AddProductToOrderCommand::withNewInvoice(
+                $orderId,
+                (int) $request->get('product_id'),
+                (int) $request->get('combination_id'),
+                (float) $request->get('price_tax_incl'),
+                (float) $request->get('price_tax_excl'),
+                (int) $request->get('quantity'),
+                false
+            );
+        }
+        $this->getCommandBus()->handle($addProductCommand);
 
         /** @var OrderForViewing $orderForViewing */
         $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));

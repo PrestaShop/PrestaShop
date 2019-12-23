@@ -45,6 +45,7 @@ export default class OrderProductAdd {
     this.availableText = $(OrderViewPageMap.productAddAvailableText);
     this.locationText = $(OrderViewPageMap.productAddLocationText);
     this.totalPriceText = $(OrderViewPageMap.productAddTotalPriceText);
+    this.invoiceSelect = $(OrderViewPageMap.productAddInvoiceSelect);
     this.available = null;
     this.setupListener();
     this.product = {};
@@ -65,6 +66,7 @@ export default class OrderProductAdd {
         this.availableText.text(available);
         this.availableText.toggleClass('text-danger font-weight-bold', available < 0);
         this.productAddActionBtn.prop('disabled', !availableOutOfStock && available < 0);
+        this.invoiceSelect.prop('disabled', !availableOutOfStock && available < 0);
 
         const currencyPrecision = $(OrderViewPageMap.productsTable).data('currencyPrecision');
         const priceTaxCalculator = new OrderPrices();
@@ -76,6 +78,7 @@ export default class OrderProductAdd {
     });
     this.productIdInput.on('change', () => {
       this.productAddActionBtn.removeAttr('disabled');
+      this.invoiceSelect.removeAttr('disabled');
     });
     this.priceTaxIncludedInput.on('change keyup', (event) => {
       const currencyPrecision = $(OrderViewPageMap.productsTable).data('currencyPrecision');
@@ -134,6 +137,8 @@ export default class OrderProductAdd {
 
   addProduct(orderId) {
     this.productAddActionBtn.prop('disabled', true);
+    this.invoiceSelect.prop('disabled', true);
+    this.combinationsBlock.toggleClass('d-none', true);
 
     const params = {
       product_id: this.productIdInput.val(),
@@ -141,6 +146,7 @@ export default class OrderProductAdd {
       price_tax_incl: this.priceTaxIncludedInput.val(),
       price_tax_excl: this.priceTaxExcludedInput.val(),
       quantity: this.quantityInput.val(),
+      invoice_id: this.invoiceSelect.val(),
     };
     $.ajax({
       url: this.router.generate('admin_orders_add_product', {orderId}),
