@@ -233,7 +233,6 @@ class SupplierType extends TranslatorAwareType
                 ],
             ])
             ->add('id_country', CountryChoiceType::class, [
-            ->add('id_country', ChoiceType::class, [
                 'label' => $this->trans('Country', 'Admin.Global'),
                 'required' => true,
                 'withDniAttr' => true,
@@ -259,6 +258,7 @@ class SupplierType extends TranslatorAwareType
                 ],
             ])
             ->add('dni', TextType::class, [
+                'label' => $this->trans('State', 'Admin.Global'),
                 'required' => false,
                 'empty_data' => '',
                 'constraints' => [
@@ -278,6 +278,13 @@ class SupplierType extends TranslatorAwareType
                         ),
                     ]),
                 ],
+                'translation_domain' => false,
+                'choices' => $this->statesChoiceProvider->getChoices([
+                    'id_country' => $countryIdForStateChoices,
+                ]),
+                'attr' => [
+                    'class' => 'js-supplier-state'
+                ]
             ])
             ->add('logo', FileType::class, [
                 'required' => false,
