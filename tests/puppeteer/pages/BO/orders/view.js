@@ -27,9 +27,9 @@ module.exports = class Order extends BOBasePage {
     this.documentNumberLink = '#documents_table tr:nth-child(%ID) td:nth-child(3) a';
     this.documentName = '#documents_table tr:nth-child(%ID) td:nth-child(2)';
     // Refund form
-    this.refundProductQuantity = `${this.orderProductsTable} tr:nth-child(%ID) 
+    this.refundProductQuantity = `${this.orderProductsTable} tr:nth-child(%ID)
     input[onchange*='checkPartialRefundProductQuantity']`;
-    this.refundProductAmount = `${this.orderProductsTable} tr:nth-child(%ID) 
+    this.refundProductAmount = `${this.orderProductsTable} tr:nth-child(%ID)
     input[onchange*='checkPartialRefundProductAmount']`;
     this.refundShippingCost = 'input[name="partialRefundShippingCost"]';
     this.partialRefundSubmitButton = '[name=\'partialRefund\']';
@@ -94,8 +94,8 @@ module.exports = class Order extends BOBasePage {
   async downloadInvoice() {
     /* eslint-disable no-return-assign, no-param-reassign */
     // Delete the target because a new tab is opened when downloading the file
-    await this.page.$eval(this.documentNumberLink, el => el.target = '');
-    await this.page.click(this.documentNumberLink);
+    await this.page.$eval(this.documentNumberLink.replace('%ID', 1), el => el.target = '');
+    await this.page.click(this.documentNumberLink.replace('%ID', 1));
     /* eslint-enable no-return-assign, no-param-reassign */
   }
 
