@@ -54,7 +54,7 @@ class AttachmentType extends AbstractType
             ->add('name', TranslatableType::class, [
                 'type' => TextType::class,
                 'required' => true,
-                'label' => $this->trans('File name',[],  'Admin.Global'),
+                'label' => $this->trans('File name', [], 'Admin.Global'),
                 'options' => [
                     'constraints' => [
                         new TypedRegex(
@@ -81,7 +81,7 @@ class AttachmentType extends AbstractType
             ->add('file_description', TranslatableType::class, [
                 'type' => TextType::class,
                 'required' => false,
-                'label' => $this->trans('Description',[],  'Admin.Global'),
+                'label' => $this->trans('Description', [], 'Admin.Global'),
                 'options' => [
                     'constraints' => [
                         new CleanHtml(),
@@ -90,7 +90,7 @@ class AttachmentType extends AbstractType
             ])
             ->add('file', FileType::class, [
                 'required' => true,
-                'label' => $this->trans('File',[],  'Admin.Global'),
+                'label' => $this->trans('File', [], 'Admin.Global'),
             ])
         ;
     }
