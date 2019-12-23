@@ -187,8 +187,9 @@ class CategoryFeatureContext extends AbstractPrestaShopFeatureContext
             'friendly url' => 'link_rewrite',
         ];
 
+        $categoryId = SharedStorage::getStorage()->get($reference);
         /** @var Category $category */
-        $category = SharedStorage::getStorage()->get($reference);
+        $category = new Category($categoryId);
         $defaultLanguageId = Configuration::get('PS_LANG_DEFAULT');
 
         if ($category->{$propertyMap[$property]}[$defaultLanguageId] !== $value) {
@@ -205,8 +206,9 @@ class CategoryFeatureContext extends AbstractPrestaShopFeatureContext
     {
         $isDisplayed = 'displayed' === $value;
 
+        $categoryId = SharedStorage::getStorage()->get($reference);
         /** @var Category $category */
-        $category = SharedStorage::getStorage()->get($reference);
+        $category = new Category($categoryId);
 
         if ((bool) $category->active !== $isDisplayed) {
             throw new RuntimeException(sprintf('Category "%s" was expected to be "%s"', $reference, $value));
@@ -218,8 +220,9 @@ class CategoryFeatureContext extends AbstractPrestaShopFeatureContext
      */
     public function assertParentCategory($reference, $categoryName)
     {
+        $categoryId = SharedStorage::getStorage()->get($reference);
         /** @var Category $category */
-        $category = SharedStorage::getStorage()->get($reference);
+        $category = new Category($categoryId);
 
         $parentCategory = new Category($category->id_parent);
 
@@ -238,8 +241,9 @@ class CategoryFeatureContext extends AbstractPrestaShopFeatureContext
         $groupNames = PrimitiveUtils::castStringArrayIntoArray($groupAccess);
         $categoryGroupNames = [];
 
+        $categoryId = SharedStorage::getStorage()->get($reference);
         /** @var Category $category */
-        $category = SharedStorage::getStorage()->get($reference);
+        $category = new Category($categoryId);
         $groupIds = $category->getGroups();
 
         foreach ($groupIds as $groupId) {
