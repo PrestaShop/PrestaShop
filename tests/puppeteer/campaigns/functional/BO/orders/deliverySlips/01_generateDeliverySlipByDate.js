@@ -35,7 +35,7 @@ const init = async function () {
 };
 
 /*
-Create order
+Change the last order status to shipped
 Create delivery slip
 Generate delivery slip file by date
  */
