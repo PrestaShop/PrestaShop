@@ -261,6 +261,9 @@ class AdminControllerCore extends Controller
 
     /** @var int VIEW access level */
     const LEVEL_VIEW = 1;
+    
+    /** @var int Auth cookie lifetime */
+    const AUTH_COOKIE_LIFETIME = 3600;
 
     /**
      * Actions to execute on multiple selections.
@@ -2831,7 +2834,7 @@ class AdminControllerCore extends Controller
             $this->context->employee->logout();
         }
         if (isset(Context::getContext()->cookie->last_activity)) {
-            if ($this->context->cookie->last_activity + max((int) Configuration::get('PS_COOKIE_LIFETIME_BO') * 3600, _PS_DEFAULT_COOKIE_LIFETIME_) < time()) {
+            if ($this->context->cookie->last_activity + self::AUTH_COOKIE_LIFETIME < time()) {
                 $this->context->employee->logout();
             } else {
                 $this->context->cookie->last_activity = time();
