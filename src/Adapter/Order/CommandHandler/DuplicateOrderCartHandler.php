@@ -27,6 +27,8 @@
 namespace PrestaShop\PrestaShop\Adapter\Order\CommandHandler;
 
 use Cart;
+use Context;
+use Customer;
 use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\CartId;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\DuplicateOrderCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler\DuplicateOrderCartHandlerInterface;
@@ -38,11 +40,23 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Exception\DuplicateOrderCartExceptio
 final class DuplicateOrderCartHandler implements DuplicateOrderCartHandlerInterface
 {
     /**
+     * @var Context
+     */
+    private $context;
+
+    public function __construct()
+    {
+        $this->context = Context::getContext();
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function handle(DuplicateOrderCartCommand $command)
     {
+        // IMPORTANT: context customer must be set in order to correctly fill the address
         $cart = Cart::getCartByOrderId($command->getOrderId()->getValue());
+        $this->context->customer = new Customer($cart->id_customer);
         $result = $cart->duplicate();
 
         if (false === $result || !isset($result['cart'])) {
