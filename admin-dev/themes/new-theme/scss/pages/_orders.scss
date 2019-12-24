@@ -53,6 +53,13 @@ $order-block-background-color: #F8F8F8;
       font-size: 100%;
     }
   }
+
+  #customer-tab-content-container-toggler .material-icons::before {
+    content: 'keyboard_arrow_down';
+  }
+  #customer-tab-content-container-toggler[aria-expanded=false] .material-icons::before {
+    content: 'keyboard_arrow_up';
+  }
 }
 
 .messages-block {
@@ -123,20 +130,20 @@ $order-block-background-color: #F8F8F8;
 
 
 @media only screen and (max-width: 1475px) {
-  .messages-block {  
+  .messages-block {
     li {
       .row {
         .col-md-1 {
           order: 1;
           margin-bottom: 5px;
         }
-  
+
         .col-md-11 {
           order: 2;
         }
       }
     }
-  } 
+  }
 }
 
 .partial-refund {
