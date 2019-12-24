@@ -78,8 +78,11 @@ module.exports = class BOBasePage extends CommonPage {
 
     // Shop Parameters
     this.shopParametersParentLink = '#subtab-ShopParameters';
+    // General
     this.shopParametersGeneralLink = '#subtab-AdminParentPreferences';
     this.contactLink = '#subtab-AdminParentStores';
+    // Traffic and SEO
+    this.trafficAndSeoLink = '#subtab-AdminParentMeta';
 
     // Advanced Parameters
     this.advancedParametersLink = '#subtab-AdminAdvancedParameters';
