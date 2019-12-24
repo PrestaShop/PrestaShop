@@ -961,6 +961,13 @@ services:
       tags:
         - { name: form.type }
 
+    form.type.order.edit_product_row:
+      class: 'PrestaShopBundle\Form\Admin\Sell\Order\EditProductRowType'
+      parent: 'form.type.translatable.aware'
+      public: true
+      tags:
+        - { name: form.type }
+
     form.type.order.update_order_status:
       class: 'PrestaShopBundle\Form\Admin\Sell\Order\UpdateOrderStatusType'
       arguments:
