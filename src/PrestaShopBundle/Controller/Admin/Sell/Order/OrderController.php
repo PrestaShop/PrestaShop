@@ -78,6 +78,7 @@ use PrestaShopBundle\Form\Admin\Sell\Order\ChangeOrderAddressType;
 use PrestaShopBundle\Form\Admin\Sell\Order\CartSummaryType;
 use PrestaShopBundle\Form\Admin\Sell\Order\ChangeOrderCurrencyType;
 use PrestaShopBundle\Form\Admin\Sell\Order\ChangeOrdersStatusType;
+use PrestaShopBundle\Form\Admin\Sell\Order\EditProductRowType;
 use PrestaShopBundle\Form\Admin\Sell\Order\OrderMessageType;
 use PrestaShopBundle\Form\Admin\Sell\Order\OrderPaymentType;
 use PrestaShopBundle\Form\Admin\Sell\Order\UpdateOrderShippingType;
@@ -406,6 +407,10 @@ class OrderController extends FrameworkBundleAdminController
             'order_id' => $orderId,
             'symbol' => $orderCurrency->symbol,
         ]);
+        $editProductRowForm = $this->createForm(EditProductRowType::class, [], [
+            'order_id' => $orderId,
+            'symbol' => $orderCurrency->symbol,
+        ]);
 
         $backOfficeOrderButtons = new ActionsBarButtonsCollection();
         $hookParameters = [
@@ -442,6 +447,7 @@ class OrderController extends FrameworkBundleAdminController
             'changeOrderAddressForm' => $changeOrderAddressForm->createView(),
             'orderMessageForm' => $orderMessageForm->createView(),
             'addProductRowForm' => $addProductRowForm->createView(),
+            'editProductRowForm' => $editProductRowForm->createView(),
             'backOfficeOrderButtons' => $backOfficeOrderButtons,
         ]);
     }

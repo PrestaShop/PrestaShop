@@ -46,8 +46,8 @@ export default class OrderProductRenderer {
     $(OrderViewPageMap.productsCount).html(numProducts);
   }
 
-  editProductFromList(orderProductId, quantity, priceTaxIncl, priceTaxExcl, taxRate, location, availableQuantity) {
-    const $orderEdit = new OrderProductEdit(orderProductId);
+  editProductFromList(orderDetailId, quantity, priceTaxIncl, priceTaxExcl, taxRate, location, availableQuantity) {
+    const $orderEdit = new OrderProductEdit(orderDetailId);
     $orderEdit.displayProduct({
       price_tax_excl: priceTaxExcl,
       price_tax_incl: priceTaxIncl,
@@ -62,6 +62,9 @@ export default class OrderProductRenderer {
 
   moveProductsPanelToModificationPosition() {
     const $modificationPosition = $(OrderViewPageMap.productModificationPosition);
+    if ($modificationPosition.find(OrderViewPageMap.productsPanel).length > 0) {
+      return;
+    }
 
     $(OrderViewPageMap.productsPanel).detach().appendTo($modificationPosition);
 
@@ -111,6 +114,8 @@ export default class OrderProductRenderer {
     const endRow = numPage * numRowsPerPage;
     $(OrderViewPageMap.productsTable).find(`tr[id^="orderProduct_"]:nth-child(n+${startRow}):nth-child(-n+${endRow})`)
         .removeClass('d-none');
+    // Remove all edition rows (careful not to remove the template)
+    $(OrderViewPageMap.productEditRow).not(OrderViewPageMap.productEditRowTemplate).remove();
   }
 
   paginateUpdateControls(numPage) {

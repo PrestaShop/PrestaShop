@@ -78,41 +78,8 @@
             'paginationNum': paginationNum
           } %}
         {% endfor %}
-        <tr id="addProductTableRow" class="d-none">
-          {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/add_product_row.html.twig' %}
-        </tr>
-        <tr id="editProductTableRow" class="d-none">
-          <td></td>
-          <td></td>
-          <td class="pr-5">
-            <input type="hidden" class="editOrderDetailId">
-            <input type="hidden" class="editProductTaxRate">
-            <div class="input-group">
-              <input type="text" class="form-control editProductPriceTaxExcl">
-              <div class="input-group-append">
-                <div class="input-group-text">{{ orderCurrency.symbol }} {{ 'tax excl.'|trans({}, 'Admin.Global') }}</div>
-              </div>
-            </div>
-            <div class="input-group mt-2">
-              <input type="text" class="form-control editProductPriceTaxIncl">
-              <div class="input-group-append">
-                <div class="input-group-text">{{ orderCurrency.symbol }} {{ 'tax incl.'|trans({}, 'Admin.Global') }}</div>
-              </div>
-            </div>
-          </td>
-          <td class="pr-5"><input type="number" class="editProductQuantity form-control" min="1" value="1"></td>
-          <td class="editProductLocation"></td>
-          <td class="editProductAvailable"></td>
-          <td class="editProductTotalPrice"></td>
-          <td class="text-right">
-            <button type="button" class="btn btn-sm btn-secondary js-product-edit-action-btn mr-2 d-inline cancelEditProductBtn">
-              {{ 'Cancel'|trans({}, 'Admin.Actions') }}
-            </button>
-            <button type="button" class="btn btn-sm btn-primary js-product-edit-action-btn mt-2 mb-2 d-inline editProductActionBtn" data-order-id="{{ orderForViewing.id }}" data-update-message="{{ 'Are you sure?'|trans({}, 'Admin.Notifications.Warning') }}">
-              {{ 'Save'|trans({}, 'Admin.Actions') }}
-            </button>
-          </td>
-        </tr>
+      {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/add_product_row.html.twig' %}
+      {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/edit_product_row.html.twig' %}
       </tbody>
     </table>
 
