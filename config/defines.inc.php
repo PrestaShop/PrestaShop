@@ -221,6 +221,3 @@ if (!defined('_PS_JQUERY_VERSION_')) {
 }
 
 define('_PS_CACHE_CA_CERT_FILE_', _PS_CACHE_DIR_.'cacert.pem');
-
-/* default cookie lifetime in seconds */
-define('_PS_DEFAULT_COOKIE_LIFETIME_', 3600);
