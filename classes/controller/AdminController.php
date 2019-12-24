@@ -261,7 +261,7 @@ class AdminControllerCore extends Controller
 
     /** @var int VIEW access level */
     const LEVEL_VIEW = 1;
-    
+
     /** @var int Auth cookie lifetime */
     const AUTH_COOKIE_LIFETIME = 3600;
 
