@@ -23,36 +23,38 @@
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 
-<td colspan="2" class="pr-5">
-  {{ form_row(addProductRowForm.product_id) }}
-  {{ form_row(addProductRowForm.tax_rate) }}
-  {{ form_label(addProductRowForm.search) }}
-  {{ form_widget(addProductRowForm.search) }}
-  <div class="dropdown">
-    <div class="dropdown-menu"></div>
-  </div>
-  <div class="input-group mt-2 d-none" id="addProductCombinations">
-    <div class="input-group-prepend">
-      <div class="input-group-text">{{ 'Combinations'|trans({}, 'Admin.Global') }}</div>
+<tr id="addProductTableRow" class="d-none">
+  <td colspan="2" class="pr-5">
+    {{ form_row(addProductRowForm.product_id) }}
+    {{ form_row(addProductRowForm.tax_rate) }}
+    {{ form_label(addProductRowForm.search) }}
+    {{ form_widget(addProductRowForm.search) }}
+    <div class="dropdown">
+      <div class="dropdown-menu"></div>
     </div>
-    <select id="addProductCombinationId" class="custom-select"></select>
-  </div>
-</td>
-<td class="pr-5">
-  {{ form_row(addProductRowForm.price_tax_excluded) }}
-  {{ form_row(addProductRowForm.price_tax_included) }}
-</td>
-<td class="pr-5">
-  {{ form_row(addProductRowForm.quantity) }}
-</td>
-<td id="addProductLocation"></td>
-<td id="addProductRefunded"></td>
-<td id="addProductAvailable"></td>
-<td id="addProductTotalPrice"></td>
-<td colspan="2" class="pr-2">
-  {{ form_row(addProductRowForm.invoice) }}
-</td>
-<td class="text-right btn-group">
-  {{ form_row(addProductRowForm.cancel) }}
-  {{ form_row(addProductRowForm.add) }}
-</td>
+    <div class="input-group mt-2 d-none" id="addProductCombinations">
+      <div class="input-group-prepend">
+        <div class="input-group-text">{{ 'Combinations'|trans({}, 'Admin.Global') }}</div>
+      </div>
+      <select id="addProductCombinationId" class="custom-select"></select>
+    </div>
+  </td>
+  <td class="pr-5">
+    {{ form_row(addProductRowForm.price_tax_excluded) }}
+    {{ form_row(addProductRowForm.price_tax_included) }}
+  </td>
+  <td class="pr-5">
+    {{ form_row(addProductRowForm.quantity) }}
+  </td>
+  <td id="addProductLocation"></td>
+  <td id="addProductRefunded"></td>
+  <td id="addProductAvailable"></td>
+  <td id="addProductTotalPrice"></td>
+  <td colspan="2" class="pr-2">
+    {{ form_row(addProductRowForm.invoice) }}
+  </td>
+  <td class="text-right btn-group">
+    {{ form_row(addProductRowForm.cancel) }}
+    {{ form_row(addProductRowForm.add) }}
+  </td>
+</tr>

@@ -56,7 +56,7 @@ export default class OrderProductAutocomplete {
   updateResults(results) {
     this.dropdownMenu.empty();
     if (!results || !results.products || Object.keys(results.products).length <= 0) {
-      this.dropdownMenu.toggle(false);
+      this.dropdownMenu.hide();
       return;
     }
 
@@ -66,7 +66,7 @@ export default class OrderProductAutocomplete {
       link.on('click', event => this.onItemClicked($(event.target).data('id')));
       this.dropdownMenu.append(link);
     });
-    this.dropdownMenu.toggle(true);
+    this.dropdownMenu.show();
   }
 
   onItemClicked(id) {

@@ -138,7 +138,7 @@ export default class OrderProductAdd {
   addProduct(orderId) {
     this.productAddActionBtn.prop('disabled', true);
     this.invoiceSelect.prop('disabled', true);
-    this.combinationsBlock.toggleClass('d-none', true);
+    this.combinationsBlock.addClass('d-none');
 
     const params = {
       product_id: this.productIdInput.val(),
