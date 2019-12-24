@@ -49,12 +49,20 @@ export default class OrderProductAdd {
     this.available = null;
     this.setupListener();
     this.product = {};
+    this.currencyPrecision = $(OrderViewPageMap.productsTable).data('currencyPrecision');
+    this.priceTaxCalculator = new OrderPrices();
   }
 
   setupListener() {
     this.combinationsSelect.on('change', (event) => {
-      this.priceTaxExcludedInput.val($(event.currentTarget).find(':selected').data('priceTaxExcluded'));
-      this.priceTaxIncludedInput.val($(event.currentTarget).find(':selected').data('priceTaxIncluded'));
+      this.priceTaxExcludedInput.val(window.ps_round(
+        $(event.currentTarget).find(':selected').data('priceTaxExcluded'),
+        this.currencyPrecision
+      ));
+      this.priceTaxIncludedInput.val(window.ps_round(
+        $(event.currentTarget).find(':selected').data('priceTaxIncluded'),
+        this.currencyPrecision
+      ));
       this.available = $(event.currentTarget).find(':selected').data('stock');
       this.quantityInput.trigger('change');
     });
@@ -68,11 +76,9 @@ export default class OrderProductAdd {
         this.productAddActionBtn.prop('disabled', !availableOutOfStock && available < 0);
         this.invoiceSelect.prop('disabled', !availableOutOfStock && available < 0);
 
-        const currencyPrecision = $(OrderViewPageMap.productsTable).data('currencyPrecision');
-        const priceTaxCalculator = new OrderPrices();
         const taxIncluded = parseFloat(this.priceTaxIncludedInput.val());
         this.totalPriceText.html(
-          priceTaxCalculator.calculateTotalPrice(quantity, taxIncluded, currencyPrecision)
+          this.priceTaxCalculator.calculateTotalPrice(quantity, taxIncluded, this.currencyPrecision)
         );
       }
     });
@@ -81,43 +87,38 @@ export default class OrderProductAdd {
       this.invoiceSelect.removeAttr('disabled');
     });
     this.priceTaxIncludedInput.on('change keyup', (event) => {
-      const currencyPrecision = $(OrderViewPageMap.productsTable).data('currencyPrecision');
-      const priceTaxCalculator = new OrderPrices();
       const taxIncluded = parseFloat(event.target.value);
-      const taxExcluded = priceTaxCalculator.calculateTaxExcluded(
+      const taxExcluded = this.priceTaxCalculator.calculateTaxExcluded(
         taxIncluded,
         this.taxRateInput.val(),
-        currencyPrecision
+        this.currencyPrecision
       );
       const quantity = parseInt(this.quantityInput.val(), 10);
       this.priceTaxExcludedInput.val(taxExcluded);
       this.totalPriceText.html(
-        priceTaxCalculator.calculateTotalPrice(quantity, taxIncluded, currencyPrecision)
+        this.priceTaxCalculator.calculateTotalPrice(quantity, taxIncluded, this.currencyPrecision)
       );
     });
     this.priceTaxExcludedInput.on('change keyup', (event) => {
-      const currencyPrecision = $(OrderViewPageMap.productsTable).data('currencyPrecision');
-      const priceTaxCalculator = new OrderPrices();
       const taxExcluded = parseFloat(event.target.value);
-      const taxIncluded = priceTaxCalculator.calculateTaxIncluded(
+      const taxIncluded = this.priceTaxCalculator.calculateTaxIncluded(
         taxExcluded,
         this.taxRateInput.val(),
-        currencyPrecision
+        this.currencyPrecision
       );
       const quantity = parseInt(this.quantityInput.val(), 10);
       this.priceTaxIncludedInput.val(taxIncluded);
       this.totalPriceText.html(
-        priceTaxCalculator.calculateTotalPrice(quantity, taxIncluded, currencyPrecision)
+        this.priceTaxCalculator.calculateTotalPrice(quantity, taxIncluded, this.currencyPrecision)
       );
     });
     this.productAddActionBtn.on('click', event => this.addProduct($(event.currentTarget).data('orderId')));
   }
 
   setProduct(product) {
-    const currencyPrecision = $(OrderViewPageMap.productsTable).data('currencyPrecision');
     this.productIdInput.val(product.productId).trigger('change');
-    this.priceTaxExcludedInput.val(window.ps_round(product.priceTaxExcl, currencyPrecision));
-    this.priceTaxIncludedInput.val(window.ps_round(product.priceTaxIncl, currencyPrecision));
+    this.priceTaxExcludedInput.val(window.ps_round(product.priceTaxExcl, this.currencyPrecision));
+    this.priceTaxIncludedInput.val(window.ps_round(product.priceTaxIncl, this.currencyPrecision));
     this.taxRateInput.val(product.taxRate);
     this.locationText.html(product.location);
     this.available = product.stock;
