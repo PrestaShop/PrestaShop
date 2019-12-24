@@ -33,6 +33,7 @@ use Country;
 use Currency;
 use Customer;
 use Exception;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Command\AddCustomizationFieldsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\CreateEmptyCustomerCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\SetFreeShippingToCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartAddressesCommand;
@@ -40,6 +41,7 @@ use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateProductQuantityInCartCo
 use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\CartId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProducts;
 use RuntimeException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationId;
 use Product;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 
@@ -109,6 +111,40 @@ class CartFeatureContext extends AbstractDomainFeatureContext
         );
 
         SharedStorage::getStorage()->set($productName, $productId);
+    }
+
+    /**
+     * @When I add :quantity customized products with reference :productReference to the cart :reference
+     */
+    public function addCustomizedProductToCarts($quantity, $productReference, $reference)
+    {
+        $productId = (int) Product::getIdByReference($productReference);
+        $product = new Product($productId);
+        $customizationFields = $product->getCustomizationFieldIds();
+        $customizations = [];
+        foreach ($customizationFields as $customizationField) {
+            $customizationFieldId = (int) $customizationField['id_customization_field'];
+            if (Product::CUSTOMIZE_TEXTFIELD == $customizationField['type']) {
+                $customizations[$customizationFieldId] = 'Toto';
+            }
+        }
+
+        /** @var CustomizationId $customizationId */
+        $customizationId = $this->getCommandBus()->handle(new AddCustomizationFieldsCommand(
+            (int) SharedStorage::getStorage()->get($reference)->id,
+            $productId,
+            $customizations
+        ));
+
+        $this->getCommandBus()->handle(
+            new UpdateProductQuantityInCartCommand(
+                (int) SharedStorage::getStorage()->get($reference)->id,
+                $productId,
+                (int) $quantity,
+                null,
+                $customizationId->getValue()
+            )
+        );
     }
 
     /**

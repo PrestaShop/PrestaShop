@@ -81,14 +81,15 @@ final class GetCustomerOrdersHandler extends AbstractCustomerHandler implements 
     {
         $summarizedOrders = [];
 
-        foreach (Order::getCustomerOrders($customerId) as $customerOrder) {
+        $customerOrders = Order::getCustomerOrders($customerId);
+        foreach ($customerOrders as $customerOrder) {
             $currency = new Currency((int) $customerOrder['id_currency']);
 
             $summarizedOrders[] = new OrderSummary(
                 (int) $customerOrder['id_order'],
                 $customerOrder['date_add'],
                 $customerOrder['payment'],
-                $customerOrder['order_state'],
+                $customerOrder['order_state'] ?: '',
                 $customerOrder['nb_products'],
                 $this->locale->formatPrice(
                     $customerOrder['total_paid_real'],
