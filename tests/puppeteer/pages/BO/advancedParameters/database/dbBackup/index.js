@@ -30,6 +30,10 @@ module.exports = class DbBackup extends BOBasePage {
     this.dropdownToggleButton = `${this.actionsColumn} a.dropdown-toggle`;
     this.dropdownToggleMenu = `${this.actionsColumn} div.dropdown-menu`;
     this.deleteRowLink = `${this.dropdownToggleMenu} a[data-method='DELETE']`;
+    // Bulk Actions
+    this.selectAllRowsLabel = `${this.gridPanel} .md-checkbox label`;
+    this.bulkActionsToggleButton = `${this.gridPanel} button.js-bulk-actions-btn`;
+    this.bulkActionsDeleteButton = `${this.gridPanel} #backup_grid_bulk_action_delete_backups`;
   }
 
   /* Header methods */
@@ -105,6 +109,27 @@ module.exports = class DbBackup extends BOBasePage {
       this.page.waitForSelector(`${this.dropdownToggleButton.replace('%ROW', row)}[aria-expanded='true']`),
     ]);
     await this.clickAndWaitForNavigation(this.deleteRowLink.replace('%ROW', row));
+    return this.getTextContent(this.alertSuccessBlockParagraph);
+  }
+
+  /**
+   * Delete with bulk actions
+   * @return {Promise<textContent>}
+   */
+  async deleteWithBulkActions() {
+    this.dialogListener(true);
+    // Click on Select All
+    await Promise.all([
+      this.page.click(this.selectAllRowsLabel),
+      this.page.waitForSelector(`${this.selectAllRowsLabel}:not([disabled])`, {visible: true}),
+    ]);
+    // Click on Button Bulk actions
+    await Promise.all([
+      this.page.click(this.bulkActionsToggleButton),
+      this.page.waitForSelector(`${this.bulkActionsToggleButton}[aria-expanded='true']`, {visible: true}),
+    ]);
+    // Click on delete and wait for modal
+    await this.clickAndWaitForNavigation(this.bulkActionsDeleteButton);
     return this.getTextContent(this.alertSuccessBlockParagraph);
   }
 };
