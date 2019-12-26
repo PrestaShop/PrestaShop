@@ -63,7 +63,6 @@ module.exports = class Contacts extends BOBasePage {
     await this.clickAndWaitForNavigation(this.filterSearchButton);
   }
 
-
   /**
    * get text from a column
    * @param row, row in table
