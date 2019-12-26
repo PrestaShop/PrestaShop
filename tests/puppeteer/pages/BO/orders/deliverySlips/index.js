@@ -27,8 +27,12 @@ module.exports = class DeliverySlips extends BOBasePage {
    * @return {Promise<void>}
    */
   async generatePDFByDate(dateFrom = '', dateTo = '') {
-    if (dateFrom) await this.setValue(this.dateFromInput, dateFrom);
-    if (dateFrom) await this.setValue(this.dateToInput, dateTo);
+    if (dateFrom) {
+      await this.setValue(this.dateFromInput, dateFrom);
+    }
+    if (dateFrom) {
+      await this.setValue(this.dateToInput, dateTo);
+    }
     await this.page.click(this.generatePdfByDateButton);
   }
 };
