@@ -43,7 +43,7 @@ describe('Create Files and Delete with Bulk actions', async () => {
     /* Delete the generated files */
     await Promise.all([
       files.deleteFile(firstFileData.file),
-      files.deleteFile(firstFileData.file),
+      files.deleteFile(secondFileData.file),
     ]);
   });
   // Login into BO and go to files page
