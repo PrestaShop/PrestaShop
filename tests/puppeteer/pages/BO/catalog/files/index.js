@@ -137,51 +137,29 @@ module.exports = class Files extends BOBasePage {
     await this.setValue(this.filterColumn.replace('%FILTERBY', filterBy), value);
     // click on search
     await this.clickAndWaitForNavigation(this.filterSearchButton);
-  /**
-   * Go to new file page
-   * @return {Promise<void>}
-   */
-  async goToAddNewFilePage() {
-    await this.clickAndWaitForNavigation(this.addNewfileButton);
   }
 
   /**
-   * Go to Edit file page
-   * @param row, row in table
-   * @return {Promise<void>}
-   */
-  async goToEditFilePage(row) {
-    // Click on dropDown
-    await Promise.all([
-      this.page.click(this.listTableToggleDropDown.replace('%ROW', row)),
-      this.page.waitForSelector(`${this.listTableToggleDropDown
-        .replace('%ROW', row)}[aria-expanded='true']`, {visible: true},
-      ),
-    ]);
-    // Click on edit
-    this.clickAndWaitForNavigation(this.listTableEditLink.replace('%ROW', row));
-  }
-
-  /**
-   * Delete file
-   * @param row, row in table
+   * Delete all files in table with Bulk Actions
    * @return {Promise<textContent>}
    */
-  async deleteFile(row) {
+  async deleteFilesBulkActions() {
+    // Add listener to dialog to accept deletion
     this.dialogListener();
-    // Click on dropDown
+    // Click on Select All
     await Promise.all([
-      this.page.click(this.listTableToggleDropDown.replace('%ROW', row)),
-      this.page.waitForSelector(
-        `${this.listTableToggleDropDown
-          .replace('%ROW', row)}[aria-expanded='true']`,
-        {visible: true},
-      ),
+      this.page.click(this.selectAllRowsLabel),
+      this.page.waitForSelector(`${this.selectAllRowsLabel}:not([disabled])`, {visible: true}),
+    ]);
+    // Click on Button Bulk actions
+    await Promise.all([
+      this.page.click(this.bulkActionsToggleButton),
+      this.page.waitForSelector(this.bulkActionsToggleButton, {visible: true}),
     ]);
     // Click on delete and wait for modal
     await Promise.all([
-      this.page.click(this.deleteRowLink.replace('%ROW', row)),
-      this.page.waitForSelector(this.alertSuccessBlockParagraph),
+      this.clickAndWaitForNavigation(this.bulkActionsDeleteButton),
+      this.page.waitForSelector(this.alertSuccessBlockParagraph, {visible: true}),
     ]);
     return this.getTextContent(this.alertSuccessBlockParagraph);
   }
