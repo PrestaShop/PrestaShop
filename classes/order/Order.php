@@ -365,6 +365,7 @@ class OrderCore extends ObjectModel
         $product_id_list = array();
         $products = $this->getProducts();
         foreach ($products as &$product) {
+            $product['id_product'] = $product['product_id'];
             $product['id_product_attribute'] = $product['product_attribute_id'];
             $product['cart_quantity'] = $product['product_quantity'];
             $product_id_list[] = $this->id_address_delivery . '_'
