@@ -16,8 +16,8 @@ const FileFaker = require('@data/faker/file');
 let browser;
 let page;
 let numberOfFiles = 0;
-const firstFileData = new FileFaker({filename: 'todelete'});
-const secondFileData = new FileFaker({filename: 'todelete'});
+const firstFileData = new FileFaker({name: 'todelete'});
+const secondFileData = new FileFaker({name: 'todelete'});
 
 // Init objects needed
 const init = async function () {
@@ -92,7 +92,7 @@ describe('Create Files and Delete with Bulk actions', async () => {
   });
 
   // 2 : Delete Files created with bulk actions
-  /*describe('Delete files with Bulk Actions', async () => {
+  describe('Delete files with Bulk Actions', async () => {
     it('should filter list by name', async function () {
       await this.pageObjects.filesPage.filterTable(
         'name',
@@ -120,5 +120,5 @@ describe('Create Files and Delete with Bulk actions', async () => {
       const numberOfFilesAfterReset = await this.pageObjects.filesPage.resetAndGetNumberOfLines();
       await expect(numberOfFilesAfterReset).to.be.equal(numberOfFiles);
     });
-  });*/
+  });
 });
