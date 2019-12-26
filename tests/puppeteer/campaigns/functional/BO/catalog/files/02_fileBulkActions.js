@@ -65,8 +65,12 @@ describe('Create Files and Delete with Bulk actions', async () => {
 
   it('should reset all filters', async function () {
     numberOfFiles = await this.pageObjects.filesPage.resetAndGetNumberOfLines();
-    if (numberOfFiles === 0) await expect(numberOfFiles).to.be.equal(0);
-    if (numberOfFiles !== 0) await expect(numberOfFiles).to.be.above(0);
+    if (numberOfFiles === 0) {
+      await expect(numberOfFiles).to.be.equal(0);
+    }
+    if (numberOfFiles !== 0) {
+      await expect(numberOfFiles).to.be.above(0);
+    }
   });
   // 1 : Create 2 files In BO
   describe('Create 2 files in BO', async () => {
