@@ -31,6 +31,10 @@
       <h2 id="js-product-list-header" class="h2">{$listing.label}</h2>
     {/block}
 
+    {block name='subcategory_list'}
+      {include file='catalog/_partials/subcategories.tpl' subcategories=$subcategories}
+    {/block}
+
     <section id="products">
       {if $listing.products|count}
 
