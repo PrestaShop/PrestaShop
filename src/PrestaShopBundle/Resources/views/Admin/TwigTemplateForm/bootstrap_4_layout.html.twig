@@ -243,7 +243,7 @@
                 </div>
             {% endfor %}
         </div>
-      {{- block('form_help') -}}
+        {{- block('form_help') -}}
     </div>
 {% endblock %}
 
@@ -678,6 +678,7 @@
       </div>
     {% endif %}
   </div>
+  {{- block('form_help') -}}
 {%- endblock translatable_widget %}
 
 {% block birthday_widget %}
@@ -803,7 +804,7 @@
 
 {% block form_help %}
   {% if help %}
-    <small class="form-text">{{ help }}</small>
+    <small class="form-text">{{ help|nl2br }}</small>
   {% endif %}
 {% endblock form_help %}
 
