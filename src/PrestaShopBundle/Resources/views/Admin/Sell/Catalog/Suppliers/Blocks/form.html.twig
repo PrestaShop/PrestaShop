@@ -62,16 +62,6 @@
         </div>
       {% endif %}
 
-      {{ ps.form_group_row(supplierForm.is_enabled, {}, {
-        'label': 'Enabled'|trans({}, 'Admin.Global')
-      }) }}
-
-      {% if supplierForm.shop_association is defined %}
-        {{ ps.form_group_row(supplierForm.shop_association, {}, {
-          'label': 'Shop association'|trans({}, 'Admin.Global')
-        }) }}
-      {% endif %}
-
       {% block supplier_form_rest %}
         {{ form_rest(supplierForm) }}
       {% endblock %}
