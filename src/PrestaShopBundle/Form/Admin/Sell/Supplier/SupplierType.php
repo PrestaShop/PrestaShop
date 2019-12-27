@@ -123,6 +123,18 @@ class SupplierType extends TranslatorAwareType
             $this->trans('Invalid characters:', 'Admin.Notifications.Info')
         );
 
+        $invalidGenericNameHint = sprintf(
+            '%s <>={}',
+            $this->trans('Invalid characters:', 'Admin.Notifications.Info')
+        );
+
+        $keywordHint = sprintf(
+            '%s '.$invalidGenericNameHint,
+            $this->trans(
+                'To add tags, click in the field, write something, and then press the "Enter" key.',
+                'Admin.Shopparameters.Help'
+            ));
+
         $builder
             ->add('name', TextType::class, [
                 'label' => $this->trans('Name', 'Admin.Global'),
@@ -256,9 +268,13 @@ class SupplierType extends TranslatorAwareType
                 ]
             ])
             ->add('logo', FileType::class, [
+                'label' => $this->trans('Logo', 'Admin.Global'),
                 'required' => false,
+                'help' => $this->trans('Upload a supplier logo from your computer.', 'Admin.Catalog.Help')
             ])
             ->add('meta_title', TranslatableType::class, [
+                'label' => $this->trans('Meta title', 'Admin.Catalog.Feature'),
+                'help' => $invalidGenericNameHint,
                 'type' => TextType::class,
                 'required' => false,
                 'options' => [
@@ -278,6 +294,8 @@ class SupplierType extends TranslatorAwareType
                 ],
             ])
             ->add('meta_description', TranslatableType::class, [
+                'label' => $this->trans('Meta description', 'Admin.Global'),
+                'help' => $invalidGenericNameHint,
                 'type' => TextareaType::class,
                 'required' => false,
                 'options' => [
@@ -297,6 +315,8 @@ class SupplierType extends TranslatorAwareType
                 ],
             ])
             ->add('meta_keyword', TranslatableType::class, [
+                'label' => $this->trans('Meta keywords', 'Admin.Global'),
+                'help' => $keywordHint,
                 'type' => TextType::class,
                 'required' => false,
                 'options' => [
