@@ -61,8 +61,24 @@ class TaxType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $invalidCharsText = sprintf(
+            '%s <>;=#{}',
+            $this->translator->trans('Invalid characters:', [], 'Admin.Notifications.Info')
+        );
+
+        $nameHintText =
+            $this->translator->trans(
+                'Tax name to display in carts and on invoices (e.g. "VAT").',
+                [],
+                'Admin.International.Help'
+            )
+            . PHP_EOL
+            . $invalidCharsText;
+
         $builder
             ->add('name', TranslatableType::class, [
+                'label' => $this->translator->trans('Name', [], 'Admin.Global'),
+                'help' => $nameHintText,
                 'options' => [
                     'constraints' => [
                         new Length([
@@ -83,6 +99,12 @@ class TaxType extends AbstractType
                 ],
             ])
             ->add('rate', TextType::class, [
+                'label' => $this->translator->trans('Rate', [], 'Admin.International.Feature'),
+                'help' => $this->translator->trans(
+                    'Format: XX.XX or XX.XXX (e.g. 19.60 or 13.925)',
+                    [],
+                    'Admin.International.Help'
+                ),
                 'constraints' => [
                     new NotBlank([
                         'message' => $this->translator->trans(
@@ -114,6 +136,7 @@ class TaxType extends AbstractType
                 ],
             ])
             ->add('is_enabled', SwitchType::class, [
+                'label' => $this->translator->trans('Enable', [], 'Admin.Actions'),
                 'required' => false,
             ])
         ;
