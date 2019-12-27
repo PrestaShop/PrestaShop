@@ -62,26 +62,6 @@
         </div>
       {% endif %}
 
-      {{ ps.form_group_row(supplierForm.meta_title, {}, {
-        'label': 'Meta title'|trans({}, 'Admin.Catalog.Feature'),
-        'help': invalidGenericNameHint
-      }) }}
-
-      {{ ps.form_group_row(supplierForm.meta_description, {}, {
-        'label': 'Meta description'|trans({}, 'Admin.Global'),
-        'help': invalidGenericNameHint
-      }) }}
-
-      {% set keywordHint %}
-        {{ 'To add tags, click in the field, write something, and then press the "Enter" key.'|trans({}, 'Admin.Shopparameters.Help') }}
-        {{ invalidGenericNameHint }}
-      {% endset %}
-
-      {{ ps.form_group_row(supplierForm.meta_keyword, {}, {
-        'label': 'Meta keywords'|trans({}, 'Admin.Global'),
-        'help': keywordHint
-      }) }}
-
       {{ ps.form_group_row(supplierForm.is_enabled, {}, {
         'label': 'Enabled'|trans({}, 'Admin.Global')
       }) }}
