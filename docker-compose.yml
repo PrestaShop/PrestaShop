@@ -35,14 +35,4 @@ services:
       - vendor:/var/www/html/vendor
       - var:/var/www/html/var
     restart: always
-  phpmyadminbiobank:
-    image: phpmyadmin/phpmyadmin
-    links:
-      - "mysql:db"
-    environment:
-      - MYSQL_USERNAME: root
-      - MYSQL_ROOT_PASSWORD: prestashop
-    ports:
-      - "8901:80"
-    depends_on:
-      - mysql
+    
