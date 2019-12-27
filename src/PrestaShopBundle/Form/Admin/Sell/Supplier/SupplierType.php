@@ -371,12 +371,14 @@ class SupplierType extends TranslatorAwareType
                 ],
             ])
             ->add('is_enabled', SwitchType::class, [
+                'label' => $this->trans('Enabled', 'Admin.Global'),
                 'required' => false,
             ])
         ;
 
         if ($this->isMultistoreEnabled) {
             $builder->add('shop_association', ShopChoiceTreeType::class, [
+                'label' => $this->trans('Shop association', 'Admin.Global'),
                 'required' => false,
                 'constraints' => [
                     new NotBlank([
