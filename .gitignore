@@ -109,6 +109,7 @@ themes/*/cache/*
 
 # Config
 
+config/defines_custom.inc.php
 config/settings.inc.php
 config/settings.old.php
 config/xml/*
@@ -304,3 +305,6 @@ nb-configuration.xml
 ### Release creation ###
 tools/build/releases/*
 !tools/build/releases/.gitkeep
+
+## Docker configuration
+install.lock

@@ -22,8 +22,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-import LocalizationException from '../exception/localization';
-import NumberSpecification from './number';
+import LocalizationException from '@app/cldr/exception/localization';
+import NumberSpecification from '@app/cldr/specifications/number';
 
 /**
  * Currency display option: symbol notation.

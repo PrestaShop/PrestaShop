@@ -35,25 +35,18 @@ const init = async function () {
     foBasePage: new FOBasePage(page),
   };
 };
-
+/*
+Test disabled because of issue described here https://github.com/PrestaShop/PrestaShop/issues/16899
+ */
 // Create, Read, Update and Delete profile in BO
-describe('Create, Read, Update and Delete profile in BO', async () => {
+describe.skip('Create, Read, Update and Delete profile in BO', async () => {
   // before and after functions
   before(async function () {
     browser = await helper.createBrowser();
     page = await helper.newTab(browser);
     this.pageObjects = await init();
-    profileData = await (new ProfileFaker({
-      defaultPage: 'Products',
-      language: 'English (English)',
-      permissionProfile: 'Salesman',
-    }));
-    editProfileData = await (new ProfileFaker({
-      password: '123456789',
-      defaultPage: 'Orders',
-      language: 'English (English)',
-      permissionProfile: 'Salesman',
-    }));
+    profileData = await (new ProfileFaker());
+    editProfileData = await (new ProfileFaker());
   });
   after(async () => {
     await helper.closeBrowser(browser);

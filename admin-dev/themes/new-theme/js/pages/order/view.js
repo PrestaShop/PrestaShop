@@ -55,7 +55,12 @@ $(() => {
   initAddCartRuleFormHandler();
   initAddProductFormHandler();
   initChangeAddressFormHandler();
-  
+  initHookTabs();
+
+  function initHookTabs() {
+    $(OrderViewPageMap.orderHookTabsContainer).find('.nav-tabs li:first-child a').tab('show');
+  }
+
   function handlePaymentDetailsToggle() {
     $(OrderViewPageMap.orderPaymentDetailsBtn).on('click', (event) => {
       const $paymentDetailRow = $(event.currentTarget).closest('tr').next(':first');
@@ -151,8 +156,11 @@ $(() => {
     const $modal = $(OrderViewPageMap.updateCustomerAddressModal);
 
     $(OrderViewPageMap.openOrderAddressUpdateModalBtn).on('click', (event) => {
-      const $btn = $(event.currentTarget);
       $modal.find(OrderViewPageMap.updateOrderAddressTypeInput).val($btn.data('address-type'));
     });
   }
+
+  $(`${OrderViewPageMap.displayPartialRefundBtn}, ${OrderViewPageMap.cancelPartialRefundBtn}`).on('click', (event) => {
+    $(OrderViewPageMap.togglePartialRefundForm).toggle();
+  });
 });

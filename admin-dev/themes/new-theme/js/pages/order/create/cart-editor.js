@@ -23,9 +23,9 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-import Router from '../../../components/router';
-import {EventEmitter} from '../../../components/event-emitter';
-import eventMap from './event-map';
+import Router from '@components/router';
+import {EventEmitter} from '@components/event-emitter';
+import eventMap from '@pages/order/create/event-map';
 
 const $ = window.$;
 

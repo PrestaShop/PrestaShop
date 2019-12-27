@@ -76,7 +76,7 @@ class BulkUpdateEmployeeStatusCommand
     private function setEmployeeIds(array $employeeIds)
     {
         foreach ($employeeIds as $employeeId) {
-            $this->employeeIds[] = new EmployeeId($employeeId);
+            $this->employeeIds[] = new EmployeeId((int) $employeeId);
         }
     }
 }

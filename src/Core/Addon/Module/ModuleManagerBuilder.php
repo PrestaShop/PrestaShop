@@ -202,8 +202,6 @@ class ModuleManagerBuilder
 
         self::$legacyLogger = new LegacyLogger();
         self::$categoriesProvider = new CategoriesProvider(
-            $marketPlaceClient,
-            self::$legacyLogger,
             $prestashopAddonsConfig['prestashop']['addons']['categories'],
             $themeModules
         );

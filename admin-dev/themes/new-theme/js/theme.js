@@ -42,25 +42,25 @@ import 'dropzone/dist/min/dropzone.min.css';
 import 'magnific-popup/dist/magnific-popup.css';
 
 // Theme SCSS
-import '../scss/theme.scss';
+import '@scss/theme.scss';
 
 // Theme Javascript
 window.Dropzone.autoDiscover = false;
-import NavBar from './nav_bar';
+import NavBar from '@js/nav_bar';
 
 // this needs to be ported into the UI kit
-import './clickable-dropdown';
+import '@js/clickable-dropdown';
 
-import './maintenance-page';
-import './translation-page/index';
+import '@js/maintenance-page';
+import '@js/translation-page/index';
 
-import Header from './header';
+import Header from '@js/header';
 
 new NavBar();
 new Header();
 
-import initDatePickers from './app/utils/datepicker';
-import initInvalidFields from './app/utils/fields';
+import initDatePickers from '@js/app/utils/datepicker';
+import initInvalidFields from '@js/app/utils/fields';
 
 $(() => {
   initDatePickers();

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -24,12 +24,36 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
-header('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT');
+namespace PrestaShop\PrestaShop\Core\Domain\Attachment\Query;
 
-header('Cache-Control: no-store, no-cache, must-revalidate');
-header('Cache-Control: post-check=0, pre-check=0', false);
-header('Pragma: no-cache');
+use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\AttachmentConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\ValueObject\AttachmentId;
 
-header('Location: ../../../../../../');
-exit;
+/**
+ * Gets attachment information for editing.
+ */
+class GetAttachmentForEditing
+{
+    /**
+     * @var AttachmentId
+     */
+    private $attachmentId;
+
+    /**
+     * @param int $attachmentIdValue
+     *
+     * @throws AttachmentConstraintException
+     */
+    public function __construct(int $attachmentIdValue)
+    {
+        $this->attachmentId = new AttachmentId($attachmentIdValue);
+    }
+
+    /**
+     * @return AttachmentId
+     */
+    public function getAttachmentId(): AttachmentId
+    {
+        return $this->attachmentId;
+    }
+}

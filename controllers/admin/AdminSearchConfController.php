@@ -124,6 +124,12 @@ class AdminSearchConfControllerCore extends AdminController
             'search' => array(
                 'title' => $this->trans('Search', array(), 'Admin.Shopparameters.Feature'),
                 'icon' => 'icon-search',
+                'info' => '<div class="alert alert-info">' .
+                    $this->trans('We are thrilled to introduce you to the fuzzy search, one of the new features from 1.7.7! Please note that it is still in beta version, so feel free to share improvement ideas on GitHub to have it enhanced.',
+                        [],
+                        'Admin.Shopparameters.Help') .
+                    '</div>' . '<p><a href="https://github.com/PrestaShop/PrestaShop/issues/new?template=bug_report.md" target="_blank" class="btn-link"><i class="icon-external-link-sign"></i> Signaler un problème sur GitHub</a><br>'
+                    . '<a href="https://github.com/PrestaShop/PrestaShop/issues/new?template=feature_request.md" target="_blank"><i class="icon-external-link-sign"></i> Proposer une idée d\'amélioration sur GitHub</a>',
                 'fields' => array(
                     'PS_SEARCH_START' => array(
                         'title' => $this->trans('Search within word', array(), 'Admin.Shopparameters.Feature'),
@@ -180,6 +186,65 @@ class AdminSearchConfControllerCore extends AdminController
                                 'Admin.Shopparameters.Help'
                             ),
                         ),
+                    ),
+                    'PS_SEARCH_FUZZY' => array(
+                        'title' => $this->trans('Fuzzy search', array(), 'Admin.Shopparameters.Feature'),
+                        'validation' => 'isBool',
+                        'cast' => 'intval',
+                        'type' => 'bool',
+                        'desc' => $this->trans(
+                                'By default, the fuzzy search is enabled. It means spelling errors are allowed, e.g. you can search for "bird" with words like "burd", "bard" or "beerd".',
+                                array(),
+                                'Admin.Shopparameters.Help'
+                            ) . '<br/>' .
+                            $this->trans(
+                                'Disabling this option will require exact spelling for the search to match result.',
+                                array(),
+                                'Admin.Shopparameters.Help'
+                            ),
+                        'hint' => array(
+                            $this->trans(
+                                'Enable approximate string matching.',
+                                array(),
+                                'Admin.Shopparameters.Help'
+                            ),
+                        ),
+                    ),
+                    'PS_SEARCH_FUZZY_MAX_LOOP' => array(
+                        'title' => $this->trans(
+                            'Maximum approximate strings allowed by fuzzy search',
+                            array(),
+                            'Admin.Shopparameters.Feature'
+                        ),
+                        'hint' => $this->trans(
+                            'Note that this option is resource-consuming: the more you search, the longer it takes.',
+                            array(),
+                            'Admin.Shopparameters.Help'
+                        ),
+                        'validation' => 'isUnsignedInt',
+                        'type' => 'text',
+                        'cast' => 'intval',
+                    ),
+                    'PS_SEARCH_MAX_WORD_LENGTH' => array(
+                        'title' => $this->trans(
+                            'Maximum word length (in characters)',
+                            array(),
+                            'Admin.Shopparameters.Feature'
+                        ),
+                        'hint' => $this->trans(
+                            'Only words this maximum size or smaller will be used during the search.',
+                            array(),
+                            'Admin.Shopparameters.Help'
+                        ),
+                        'desc' => $this->trans(
+                            'This parameter will only be used if fuzzy search is activated, the lower the value, the more tolerant your research will be.',
+                            [],
+                            'Admin.Shopparameters.Help'
+                        ),
+                        'validation' => 'isUnsignedInt',
+                        'type' => 'text',
+                        'cast' => 'intval',
+                        'required' => true,
                     ),
                     'PS_SEARCH_MINWORDLEN' => array(
                         'title' => $this->trans(

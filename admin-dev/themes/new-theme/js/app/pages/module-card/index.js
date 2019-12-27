@@ -23,7 +23,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-import ModuleCard from '../../../components/module-card';
+import ModuleCard from '@components/module-card';
 
 const $ = global.$;
 

@@ -22,10 +22,10 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-import NumberFormatter from './number-formatter';
-import NumberSymbol from './number-symbol';
-import PriceSpecification from './specifications/price';
-import NumberSpecification from './specifications/number';
+import NumberFormatter from '@app/cldr/number-formatter';
+import NumberSymbol from '@app/cldr/number-symbol';
+import PriceSpecification from '@app/cldr/specifications/price';
+import NumberSpecification from '@app/cldr/specifications/number';
 
 export {
   PriceSpecification,

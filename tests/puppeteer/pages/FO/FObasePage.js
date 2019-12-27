@@ -15,12 +15,19 @@ module.exports = class Home extends CommonPage {
     this.languageSelectorDiv = '#_desktop_language_selector';
     this.languageSelectorExpandIcon = `${this.languageSelectorDiv} i.expand-more`;
     this.languageSelectorMenuItemLink = `${this.languageSelectorDiv} ul li a[data-iso-code='%LANG']`;
+    this.currencySelect = 'select[aria-labelledby=\'currency-selector-label\']';
 
     // footer
     this.siteMapLink = '#link-static-page-sitemap-2';
     this.languageSelectorDiv = '#_desktop_language_selector';
     this.languageSelectorExpandIcon = `${this.languageSelectorDiv} i.expand-more`;
     this.languageSelectorMenuItemLink = `${this.languageSelectorDiv} ul li a[data-iso-code='%LANG']`;
+    // footer links
+    this.footerLinksDiv = '#footer div.links';
+    this.wrapperDiv = `${this.footerLinksDiv}:nth-child(1) > div > div.wrapper:nth-child(%POSITION)`;
+    this.wrapperTitle = `${this.wrapperDiv} p`;
+    this.wrapperSubmenu = `${this.wrapperDiv} ul[id*='footer_sub_menu']`;
+    this.wrapperSubmenuItemLink = `${this.wrapperSubmenu} li a`;
   }
 
   /**
@@ -92,5 +99,38 @@ module.exports = class Home extends CommonPage {
       this.page.waitForNavigation({waitUntil: 'networkidle0'}),
       this.page.click(this.languageSelectorMenuItemLink.replace('%LANG', lang)),
     ]);
+  }
+
+  /**
+   * Change currency in FO
+   * @param currency
+   * @return {Promise<void>}
+   */
+  async changeCurrency(currency = 'EUR €') {
+    await Promise.all([
+      this.selectByVisibleText(this.currencySelect, currency),
+      this.page.waitForNavigation({waitUntil: 'networkidle0'}),
+    ]);
+  }
+
+  /**
+   * Get text content of footer links
+   * @param position, position of links
+   * @return {Promise<!Promise<!Object|undefined>|any>}
+   */
+  async getFooterLinksTextContent(position) {
+    return this.page.$$eval(
+      this.wrapperSubmenuItemLink.replace('%POSITION', position),
+      all => all.map(el => el.textContent.trim()),
+    );
+  }
+
+  /**
+   * Get Title of Block that contains links in footer
+   * @param position
+   * @return {Promise<textContent>}
+   */
+  async getFooterLinksBlockTitle(position) {
+    return this.getTextContent(this.wrapperTitle.replace('%POSITION', position));
   }
 };

@@ -43,11 +43,19 @@ module.exports = class Categories extends BOBasePage {
   Methods
    */
   /**
+   * Go to add new category page
+   * @return {Promise<void>}
+   */
+  async goToAddNewCategoryPage() {
+    await this.clickAndWaitForNavigation(this.addNewCategoryLink);
+  }
+
+  /**
    * Reset input filters
    * @return {Promise<integer>}
    */
   async resetFilter() {
-    if (await this.elementVisible(this.filterResetButton, 2000)) {
+    if (!(await this.elementNotVisible(this.filterResetButton, 2000))) {
       await this.clickAndWaitForNavigation(this.filterResetButton);
     }
   }

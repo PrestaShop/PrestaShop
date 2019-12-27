@@ -17,6 +17,10 @@ module.exports = class Stocks extends BOBasePage {
     this.searchTagsList = 'form.search-form div.tags-wrapper span.tag';
     this.searchTagsListCloseSpan = `${this.searchTagsList} i`;
 
+    // Bulk actions
+    this.selectAllCheckbox = '#bulk-action + i';
+    this.bulkEditQuantityInput = 'div.bulk-qty input';
+    this.applyNewQuantityButton = 'button.update-qty';
 
     this.productList = 'table.table';
     this.productRow = `${this.productList} tbody tr:nth-child(%ROW)`;
@@ -33,6 +37,13 @@ module.exports = class Stocks extends BOBasePage {
 
     // loader
     this.productListLoading = `${this.productRow.replace('%ROW', 1)} td:nth-child(1) div.ps-loader`;
+
+    // Filters containers
+    this.filtersContainerDiv = '#filters-container';
+    this.advancedFiltersButton = `${this.filtersContainerDiv} button[data-target='#filters']`;
+    this.filterStatusEnabledLabel = '#enable + label';
+    this.filterStatusDisabledLabel = '#disable + label';
+    this.filterStatusAllLabel = '#all + label';
   }
 
   /*
@@ -137,5 +148,49 @@ module.exports = class Stocks extends BOBasePage {
     const textContent = await this.getTextContent(this.alertBoxTextSpan);
     await this.page.click(this.alertBoxButtonClose);
     return textContent;
+  }
+
+  /**
+   * Bulk Edit quantity by setting input value
+   * @param value
+   * @return {Promise<textContent>}
+   */
+  async bulkEditQuantityWithInput(value) {
+    // Select All products
+    await this.page.click(this.selectAllCheckbox);
+    // Set value in input
+    await this.setValue(this.bulkEditQuantityInput, value.toString());
+    // Wait for check button before click
+    await this.page.click(this.applyNewQuantityButton);
+    // Wait for alert-Box after update quantity and close alert-Box
+    await this.page.waitForSelector(this.alertBoxTextSpan, {visible: true});
+    const textContent = await this.getTextContent(this.alertBoxTextSpan);
+    await this.page.click(this.alertBoxButtonClose);
+    return textContent;
+  }
+
+  /**
+   * Filter stocks by product's status
+   * @param status
+   * @return {Promise<void>}
+   */
+  async filterByStatus(status) {
+    await Promise.all([
+      this.page.click(this.advancedFiltersButton),
+      this.page.waitForSelector(`${this.advancedFiltersButton}[aria-expanded='true']`, {visible: true}),
+    ]);
+    switch (status) {
+      case 'enabled':
+        await this.page.click(this.filterStatusEnabledLabel);
+        break;
+      case 'disabled':
+        await this.page.click(this.filterStatusDisabledLabel);
+        break;
+      case 'all':
+        await this.page.click(this.filterStatusAllLabel);
+        break;
+      default:
+        throw Error(`${status} was not found as an option`);
+    }
   }
 };

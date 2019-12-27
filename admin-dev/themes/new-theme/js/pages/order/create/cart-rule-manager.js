@@ -23,12 +23,12 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-import CartEditor from './cart-editor';
-import CartRulesRenderer from './cart-rules-renderer';
-import createOrderMap from './create-order-map';
-import {EventEmitter} from '../../../components/event-emitter';
-import eventMap from './event-map';
-import Router from '../../../components/router';
+import CartEditor from '@pages/order/create/cart-editor';
+import CartRulesRenderer from '@pages/order/create/cart-rules-renderer';
+import createOrderMap from '@pages/order/create/create-order-map';
+import {EventEmitter} from '@components/event-emitter';
+import eventMap from '@pages/order/create/event-map';
+import Router from '@components/router';
 
 const $ = window.$;
 

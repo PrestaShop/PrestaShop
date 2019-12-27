@@ -23,10 +23,10 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-import createOrderPageMap from './create-order-map';
-import Router from '../../../components/router';
-import {EventEmitter} from '../../../components/event-emitter';
-import eventMap from './event-map';
+import createOrderPageMap from '@pages/order/create/create-order-map';
+import Router from '@components/router';
+import {EventEmitter} from '@components/event-emitter';
+import eventMap from '@pages/order/create/event-map';
 
 const $ = window.$;
 

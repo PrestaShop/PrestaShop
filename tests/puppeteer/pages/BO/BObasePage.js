@@ -27,6 +27,10 @@ module.exports = class BOBasePage extends CommonPage {
     this.ordersLink = '#subtab-AdminOrders';
     // Invoices
     this.invoicesLink = '#subtab-AdminInvoices';
+    // Credit slips
+    this.creditSlipsLink = '#subtab-AdminSlip';
+    // Delivery slips
+    this.deliverySlipslink = '#subtab-AdminDeliverySlip';
 
     // Catalog
     this.catalogParentLink = 'li#subtab-AdminCatalog';
@@ -34,14 +38,23 @@ module.exports = class BOBasePage extends CommonPage {
     this.productsLink = '#subtab-AdminProducts';
     // Categories
     this.categoriesLink = '#subtab-AdminCategories';
+    // Monitoring
+    this.monitoringLink = '#subtab-AdminTracking';
     // Brands And Suppliers
     this.brandsAndSuppliersLink = '#subtab-AdminParentManufacturers';
+    // files
+    this.filesLink = '#subtab-AdminAttachments';
     // Stocks
     this.stocksLink = '#subtab-AdminStockManagement';
 
     // Customers
     this.customersParentLink = 'li#subtab-AdminParentCustomer';
     this.customersLink = '#subtab-AdminCustomers';
+
+    // Customer Service
+    this.customerServiceParentLink = '#subtab-AdminParentCustomerThreads';
+    // Order Messages
+    this.orderMessagesLink = '#subtab-AdminOrderMessage';
 
     // Improve
     // Modules
@@ -53,19 +66,31 @@ module.exports = class BOBasePage extends CommonPage {
     this.designParentLink = '#subtab-AdminParentThemes';
     // Pages
     this.pagesLink = '#subtab-AdminCmsContent';
+    // Link widget
+    this.linkWidgetLink = '#subtab-AdminLinkWidget';
 
     // International
     this.internationalParentLink = '#subtab-AdminInternational';
+    // Taxes
     this.taxesLink = '#subtab-AdminParentTaxes';
+    // Localization
+    this.localizationLink = '#subtab-AdminParentLocalization';
 
     // Shop Parameters
     this.shopParametersParentLink = '#subtab-ShopParameters';
+    // General
     this.shopParametersGeneralLink = '#subtab-AdminParentPreferences';
+    // Contact
+    this.contactLink = '#subtab-AdminParentStores';
+    // traffic and SEO
+    this.trafficAndSeoLink = '#subtab-AdminParentMeta';
 
     // Advanced Parameters
     this.advancedParametersLink = '#subtab-AdminAdvancedParameters';
     // Team
     this.teamLink = '#subtab-AdminParentEmployees';
+    // Database
+    this.databaseLink = '#subtab-AdminParentRequestSql';
 
     // welcome module
     this.onboardingCloseButton = 'button.onboarding-button-shut-down';
@@ -105,13 +130,15 @@ module.exports = class BOBasePage extends CommonPage {
    * @returns {Promise<void>}
    */
   async goToSubMenu(parentSelector, linkSelector) {
-    if (await this.elementVisible(linkSelector)) {
-      await this.page.click(linkSelector);
+    if (!(await this.elementNotVisible(`${parentSelector}.open`, 1000))) {
+      await this.clickAndWaitForNavigation(linkSelector);
     } else {
       // open the block
-      await this.page.click(parentSelector);
-      await this.page.waitForSelector(`${parentSelector}.open`, {visible: true});
-      await this.page.click(linkSelector);
+      await Promise.all([
+        this.page.click(parentSelector),
+        this.page.waitForSelector(`${parentSelector}.open`, {visible: true}),
+      ]);
+      await this.clickAndWaitForNavigation(linkSelector);
     }
     await this.page.waitForSelector(`${linkSelector}.-active`, {visible: true});
   }

@@ -24,6 +24,11 @@ ALTER TABLE `PREFIX_hook` CHANGE `title` `title` VARCHAR(255) NOT NULL;
 ALTER TABLE `PREFIX_hook_alias` CHANGE `name` `name` VARCHAR(191) NOT NULL;
 ALTER TABLE `PREFIX_hook_alias` CHANGE `alias` `alias` VARCHAR(191) NOT NULL;
 
+/* improve performance of lookup by product reference/product_supplier avoiding full table scan */
+ALTER TABLE PREFIX_product
+    ADD INDEX reference_idx(reference),
+    ADD INDEX supplier_reference_idx(supplier_reference);
+
 /* Add fields for currencies */
 ALTER TABLE `PREFIX_currency` ADD `unofficial` TINYINT(1) UNSIGNED NOT NULL DEFAULT '0' AFTER `active`;
 ALTER TABLE `PREFIX_currency` ADD `modified` TINYINT(1) UNSIGNED NOT NULL DEFAULT '0' AFTER `unofficial`;
@@ -520,6 +525,18 @@ ALTER TABLE `PREFIX_zone_shop` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_
 
 /* Doctrine update happens too late to update the new enabled field, so we preset everything here */
 ALTER TABLE `PREFIX_tab` ADD enabled TINYINT(1) NOT NULL;
-/* PHP:ps_1770_preset_tab_enabled(); */;
 
+/* PHP:ps_1770_preset_tab_enabled(); */;
 /* PHP:ps_1770_update_order_status_colors(); */;
+
+INSERT IGNORE INTO `PREFIX_hook` (`id_hook`, `name`, `title`, `description`, `position`) VALUES
+  (NULL, 'displayAdminOrderTop', 'Admin Order Top', 'This hook displays content at the top of the order view page', '1 '),
+  (NULL, 'displayBackOfficeOrderActions', 'Admin Order Actions', 'This hook displays content in the order view page in the side column under the customer view', '1 '),
+  (NULL, 'displayAdminOrderSide', 'Admin Order Side Column', 'This hook displays content in the order view page at the end of the side column', '1 '),
+  (NULL, 'displayAdminOrderMain', 'Admin Order Main Column', 'This hook displays content in the order view page at the end of the main column', '1 '),
+  (NULL, 'displayAdminOrderTabLink', 'Admin Order Tab Link', 'This hook displays new tab links on the order view page', '1 '),
+  (NULL, 'displayAdminOrderTabContent', 'Admin Order Tab Content', 'This hook displays new tab contents on the order view page', '1 '),
+  (NULL, 'actionGetAdminOrderButtons', 'Admin Order Buttons', 'This hook is used to generate the buttons collection on the order view page thanks (see ActionsBarButtonsCollection)', '1 '),
+;
+
+INSERT INTO `PREFIX_hook_alias` (`name`, `alias`) VALUES ('displayAdminOrderTop', 'displayInvoice');

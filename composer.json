@@ -170,7 +170,6 @@
             "composer phpunit-sf",
             "composer integration-tests",
             "composer phpunit-controllers",
-            "composer phpunit-routing",
             "composer integration-behaviour-tests"
         ],
         "phpunit-legacy": [
@@ -190,10 +189,6 @@
         "phpunit-admin": [
             "@composer create-test-db",
             "@php -d date.timezone=UTC ./vendor/bin/phpunit -c tests-legacy/phpunit-admin.xml"
-        ],
-        "phpunit-routing": [
-            "@composer create-test-db",
-            "@php -d date.timezone=UTC ./vendor/bin/phpunit -c tests-legacy/phpunit-routing.xml"
         ],
         "phpunit-sf": [
             "@composer create-test-db",
