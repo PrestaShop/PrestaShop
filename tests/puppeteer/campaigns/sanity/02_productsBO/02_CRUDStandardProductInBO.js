@@ -6,9 +6,6 @@ const init = require('@utils/init');
 const loginCommon = require('@commonTests/loginBO');
 
 // importing pages
-const LoginPage = require('@pages/BO/login');
-const DashboardPage = require('@pages/BO/dashboard');
-const BOBasePage = require('@pages/BO/BObasePage');
 const ProductsPage = require('@pages/BO/catalog/products');
 const AddProductPage = require('@pages/BO/catalog/products/add');
 const FOProductPage = require('@pages/FO/product');
@@ -21,9 +18,6 @@ let editedProductData;
 
 // creating pages objects in a function
 const pageObjects = {
-  loginPage: LoginPage,
-  dashboardPage: DashboardPage,
-  boBasePage: BOBasePage,
   productsPage: ProductsPage,
   addProductPage: AddProductPage,
   foProductPage: FOProductPage,
@@ -34,7 +28,7 @@ describe('Create, read, update and delete Standard product in BO', async () => {
   before(async function () {
     browser = await helper.createBrowser();
     page = await helper.newTab(browser);
-    this.pageObjects = await init(pageObjects, page);
+    this.pageObjects = await init('BO', pageObjects, page);
     const productToCreate = {
       type: 'Standard product',
       productHasCombinations: false,
@@ -72,10 +66,10 @@ describe('Create, read, update and delete Standard product in BO', async () => {
 
   it('should preview and check product in FO', async function () {
     page = await this.pageObjects.addProductPage.previewProduct();
-    this.pageObjects = await init(pageObjects, page);
+    this.pageObjects = await init('BO', pageObjects, page);
     const result = await this.pageObjects.foProductPage.checkProduct(productData);
     page = await this.pageObjects.foProductPage.closePage(browser, 1);
-    this.pageObjects = await init(pageObjects, page);
+    this.pageObjects = await init('BO', pageObjects, page);
     // Check that all Product attribute are correct
     await Promise.all([
       expect(result.name).to.be.true,
@@ -92,10 +86,10 @@ describe('Create, read, update and delete Standard product in BO', async () => {
 
   it('should preview and check product in FO', async function () {
     page = await this.pageObjects.addProductPage.previewProduct();
-    this.pageObjects = await init(pageObjects, page);
+    this.pageObjects = await init('BO', pageObjects, page);
     const result = await this.pageObjects.foProductPage.checkProduct(editedProductData);
     page = await this.pageObjects.foProductPage.closePage(browser, 1);
-    this.pageObjects = await init(pageObjects, page);
+    this.pageObjects = await init('BO', pageObjects, page);
     // Check that all Product attribute are correct
     await Promise.all([
       expect(result.name).to.be.true,
