@@ -129,7 +129,7 @@ class SupplierType extends TranslatorAwareType
         );
 
         $keywordHint = sprintf(
-            '%s '.PHP_EOL.$invalidGenericNameHint,
+            '%s ' . PHP_EOL . $invalidGenericNameHint,
             $this->trans(
                 'To add tags, click in the field, write something, and then press the "Enter" key.',
                 'Admin.Shopparameters.Help'
@@ -264,13 +264,13 @@ class SupplierType extends TranslatorAwareType
                     'id_country' => $countryIdForStateChoices,
                 ]),
                 'attr' => [
-                    'class' => 'js-supplier-state'
-                ]
+                    'class' => 'js-supplier-state',
+                ],
             ])
             ->add('logo', FileType::class, [
                 'label' => $this->trans('Logo', 'Admin.Global'),
                 'required' => false,
-                'help' => $this->trans('Upload a supplier logo from your computer.', 'Admin.Catalog.Help')
+                'help' => $this->trans('Upload a supplier logo from your computer.', 'Admin.Catalog.Help'),
             ])
             ->add('meta_title', TranslatableType::class, [
                 'label' => $this->trans('Meta title', 'Admin.Catalog.Feature'),
