@@ -40,8 +40,8 @@ services:
     links:
       - "mysql:db"
     environment:
-      - MYSQL_USERNAME=root
-      - MYSQL_ROOT_PASSWORD=prestashop
+      - MYSQL_USERNAME: root
+      - MYSQL_ROOT_PASSWORD: prestashop
     ports:
       - "8901:80"
     depends_on:
