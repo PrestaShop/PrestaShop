@@ -2,12 +2,10 @@ require('module-alias/register');
 // Using chai
 const {expect} = require('chai');
 const helper = require('@utils/helpers');
+const initBasicPages = require('@utils/initPages');
 const loginCommon = require('@commonTests/loginBO');
 
 // importing pages
-const LoginPage = require('@pages/BO/login');
-const DashboardPage = require('@pages/BO/dashboard');
-const BOBasePage = require('@pages/BO/BObasePage');
 const ProductsPage = require('@pages/BO/catalog/products');
 const AddProductPage = require('@pages/BO/catalog/products/add');
 const FOProductPage = require('@pages/FO/product');
@@ -20,14 +18,12 @@ let editedProductData;
 
 // creating pages objects in a function
 const init = async function () {
-  return {
-    loginPage: new LoginPage(page),
-    dashboardPage: new DashboardPage(page),
-    boBasePage: new BOBasePage(page),
+  const pagesObjects = {
     productsPage: new ProductsPage(page),
     addProductPage: new AddProductPage(page),
     foProductPage: new FOProductPage(page),
   };
+  return initBasicPages('BO', pagesObjects, page);
 };
 // Create, read, update and delete Standard product in BO
 describe('Create, read, update and delete Standard product in BO', async () => {
