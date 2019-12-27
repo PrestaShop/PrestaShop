@@ -129,7 +129,7 @@ class SupplierType extends TranslatorAwareType
         );
 
         $keywordHint = sprintf(
-            '%s '.$invalidGenericNameHint,
+            '%s '.PHP_EOL.$invalidGenericNameHint,
             $this->trans(
                 'To add tags, click in the field, write something, and then press the "Enter" key.',
                 'Admin.Shopparameters.Help'
