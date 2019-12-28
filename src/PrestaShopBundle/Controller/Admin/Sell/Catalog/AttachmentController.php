@@ -254,7 +254,7 @@ class AttachmentController extends FrameworkBundleAdminController
             $this->getCommandBus()->handle(new BulkDeleteAttachmentsCommand($attachmentIds));
             $this->addFlash(
                 'success',
-                $this->trans('Successful deletion.', 'Admin.Notifications.Success')
+                $this->trans('The selection has been successfully deleted.', 'Admin.Notifications.Success')
             );
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
