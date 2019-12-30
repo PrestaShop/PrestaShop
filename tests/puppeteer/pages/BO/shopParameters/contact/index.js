@@ -125,11 +125,8 @@ module.exports = class Contacts extends BOBasePage {
         {visible: true},
       ),
     ]);
-    // Click on delete and wait for modal
-    await Promise.all([
-      this.page.click(this.deleteRowLink.replace('%ROW', row)),
-      this.page.waitForSelector(this.alertSuccessBlockParagraph),
-    ]);
+    // Click on delete
+    this.page.click(this.deleteRowLink.replace('%ROW', row));
     return this.getTextContent(this.alertSuccessBlockParagraph);
   }
 };
