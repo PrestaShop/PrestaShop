@@ -38,7 +38,7 @@ const $ = window.$;
  * @param {Function} action
  *
  */
-export default function ConfirmModal({id = 'confirm_modal', title = '', message = '', closeButtonText = 'Fermer', confirmButtonText = 'Accepter', confirmButtonClass = 'btn-primary', closable = true}, action) {
+export default function ConfirmModal({id = 'confirm_modal', title = '', message = '', closeButtonText = 'Close', confirmButtonText = 'Accept', confirmButtonClass = 'btn-primary', closable = true}, action) {
   // Main modal element
   this.modal = document.createElement('div');
   this.modal.classList.add('modal', 'fade');
