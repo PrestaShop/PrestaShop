@@ -1,7 +1,7 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
-module.exports = class Dashboard extends BOBasePage {
+module.exports = class AddSeoUrl extends BOBasePage {
   constructor(page) {
     super(page);
 
