@@ -349,9 +349,17 @@
       {% if 'hidden' in child.vars.block_prefixes %}
         {{- form_row(child) -}}
       {% else %}
-        {{- ps.form_group_row(child, { attr: child.vars.attr }, {
-          'label': child.vars.label
-        }) -}}
+        {% if '_supplier_id_state' in child.vars.block_prefixes %}
+          <div class="js-supplier-state">
+            {{- ps.form_group_row(child, { attr: child.vars.attr }, {
+              'label': child.vars.label
+            }) -}}
+          </div>
+        {% else %}
+          {{- ps.form_group_row(child, { attr: child.vars.attr }, {
+            'label': child.vars.label
+          }) -}}
+        {% endif %}
       {% endif %}
     {% endif %}
   {%- endfor %}
