@@ -8,7 +8,7 @@ const BOBasePage = require('@pages/BO/BObasePage');
 const LoginPage = require('@pages/BO/login');
 const DashboardPage = require('@pages/BO/dashboard');
 const DeliverySlipsPage = require('@pages/BO/orders/deliverySlips/index');
-const OrdersPage = require('@pages/BO/orders/index');
+const OrdersPage = require('@pages/BO/orders');
 const ViewOrderPage = require('@pages/BO/orders/view');
 // Importing data
 const {Statuses} = require('@data/demo/orders');
@@ -37,7 +37,6 @@ Edit delivery slip prefix
 Change the Order status to Shipped
 Check the delivery slip file name
 Back to the default delivery slip prefix value
-Check the delivery slip file name
  */
 describe('Edit delivery slip prefix and check the generated file name', async () => {
   // before and after functions
@@ -113,28 +112,6 @@ describe('Edit delivery slip prefix and check the generated file name', async ()
       await this.pageObjects.deliverySlipsPage.changePrefix(defaultPrefix);
       const textMessage = await this.pageObjects.deliverySlipsPage.saveDeliverySlipOptions();
       await expect(textMessage).to.contains(this.pageObjects.deliverySlipsPage.successfulUpdateMessage);
-    });
-  });
-
-  describe('Check the default prefix in the delivery slip file Name', async () => {
-    it('should go to the orders page', async function () {
-      await this.pageObjects.boBasePage.goToSubMenu(
-        this.pageObjects.boBasePage.ordersParentLink,
-        this.pageObjects.boBasePage.ordersLink,
-      );
-      const pageTitle = await this.pageObjects.ordersPage.getPageTitle();
-      await expect(pageTitle).to.contains(this.pageObjects.ordersPage.pageTitle);
-    });
-
-    it('should go to the first order page', async function () {
-      await this.pageObjects.ordersPage.goToOrder(1);
-      const pageTitle = await this.pageObjects.viewOrderPage.getPageTitle();
-      await expect(pageTitle).to.contains(this.pageObjects.viewOrderPage.pageTitle);
-    });
-
-    it(`should check that the delivery slip file name contain the default prefix ${defaultPrefix}`, async function () {
-      fileName = await this.pageObjects.viewOrderPage.getFileName(3);
-      expect(fileName).to.contains(defaultPrefix.replace('#', '').trim());
     });
   });
 });
