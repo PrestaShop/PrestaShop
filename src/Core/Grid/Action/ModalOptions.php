@@ -79,6 +79,7 @@ class ModalOptions
                 'title' => null,
                 'confirm_button_label' => null,
                 'confirm_button_class' => 'btn-primary',
+                'close_button_label' => null
             ])
             ->setAllowedTypes('title', ['string', 'null'])
             ->setAllowedTypes('confirm_button_label', ['string', 'null'])
