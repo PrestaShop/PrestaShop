@@ -7,6 +7,9 @@ module.exports = class SeoAndUrls extends BOBasePage {
 
     this.pageTitle = 'SEO & URLs •';
 
+    // Header selectors
+    this.addNewSeoPageLink = '#page-header-desc-configuration-add';
+
     // Selectors grid panel
     this.gridPanel = '#meta_grid_panel';
     this.gridTable = '#meta_grid_table';
@@ -20,6 +23,21 @@ module.exports = class SeoAndUrls extends BOBasePage {
     this.tableRow = `${this.tableBody} tr:nth-child(%ROW)`;
     this.tableEmptyRow = `${this.tableBody} tr.empty_row`;
     this.tableColumn = `${this.tableRow} td.column-%COLUMN`;
+    // Actions buttons in Row
+    this.actionsColumn = `${this.tableRow} td.column-actions`;
+    this.editRowLink = `${this.actionsColumn} a[href*='/edit']`;
+    this.dropdownToggleButton = `${this.actionsColumn} a.dropdown-toggle`;
+    this.dropdownToggleMenu = `${this.actionsColumn} div.dropdown-menu`;
+    this.deleteRowLink = `${this.dropdownToggleMenu} a[data-url*='/delete']`;
+  }
+
+  /* header methods */
+  /**
+   * Go to new seo page
+   * @return {Promise<void>}
+   */
+  async goToNewSeoUrlPage() {
+    await this.clickAndWaitForNavigation(this.addNewSeoPageLink);
   }
 
   /* Column methods */
@@ -35,6 +53,32 @@ module.exports = class SeoAndUrls extends BOBasePage {
         .replace('%ROW', row)
         .replace('%COLUMN', column),
     );
+  }
+
+  /**
+   * Go to edit file
+   * @param row, Which row of the list
+   * @return {Promise<void>}
+   */
+  async goToEditSeoUrlPage(row = 1) {
+    await this.clickAndWaitForNavigation(this.editRowLink.replace('%ROW', row));
+  }
+
+  /**
+   * Delete Row in table
+   * @param row, row to delete
+   * @return {Promise<textContent>}
+   */
+  async deleteSeoUrlPage(row = 1) {
+    this.dialogListener(true);
+    await Promise.all([
+      this.page.click(this.dropdownToggleButton.replace('%ROW', row)),
+      this.page.waitForSelector(
+        `${this.dropdownToggleButton}[aria-expanded='true']`.replace('%ROW', row),
+      ),
+    ]);
+    await this.clickAndWaitForNavigation(this.deleteRowLink.replace('%ROW', row));
+    return this.getTextContent(this.alertSuccessBlockParagraph);
   }
 
   /* Reset methods */
