@@ -28,11 +28,6 @@ module.exports = class Currencies extends BOBasePage {
     this.tableBody = `${this.gridTable} tbody`;
     this.tableRow = `${this.tableBody} tr:nth-child(%ROW)`;
     this.tableEmptyRow = `${this.tableBody} tr.empty_row`;
-
-    // Table rows and columns
-    this.tableBody = `${this.gridTable} tbody`;
-    this.tableRow = `${this.tableBody} tr:nth-child(%ROW)`;
-    this.tableEmptyRow = `${this.tableBody} tr.empty_row`;
     this.tableColumn = `${this.tableRow} td.column-%COLUMN`;
     // enable column
     this.enableColumn = this.tableColumn.replace('%COLUMN', 'active');
@@ -55,7 +50,7 @@ module.exports = class Currencies extends BOBasePage {
   }
 
   /**
-   * Go to currencies page
+   * Go to localization page
    * @return {Promise<void>}
    */
   async goToSubTabLocalization() {
