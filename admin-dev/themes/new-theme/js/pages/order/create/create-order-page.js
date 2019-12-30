@@ -250,6 +250,7 @@ export default class CreateOrderPage {
     // on success
     EventEmitter.on(eventMap.cartCurrencyChanged, (cartInfo) => {
       this._renderCartInfo(cartInfo);
+      this.productRenderer.reset();
     });
 
     // on failure

@@ -190,9 +190,14 @@ export default class ProductManager {
       this.activeSearchRequest.abort();
     }
 
-    const $searchRequest = $.get(this.router.generate('admin_products_search'), {
+    const params = {
       search_phrase: searchPhrase,
-    });
+    };
+    if ($(createOrderMap.cartCurrencySelect).data('selectedCurrencyId') != undefined) {
+      params.currency_id = $(createOrderMap.cartCurrencySelect).data('selectedCurrencyId');
+    }
+
+    const $searchRequest = $.get(this.router.generate('admin_products_search'), params);
     this.activeSearchRequest = $searchRequest;
 
     $searchRequest.then((response) => {

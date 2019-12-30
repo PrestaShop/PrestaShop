@@ -33,6 +33,7 @@ use Cart;
 use CartRule;
 use Currency;
 use Customer;
+use Context;
 use Language;
 use Link;
 use Message;
@@ -102,20 +103,40 @@ final class GetCartInformationHandler extends AbstractCartHandler implements Get
         $cart = $this->getCart($query->getCartId());
         $currency = new Currency($cart->id_currency);
         $language = new Language($cart->id_lang);
+        $customer = new Customer($cart->id_customer);
+
+        // the next lines are a nuclear attack against SOLID principles - sorry, can't avoid it
+        $context = Context::getContext();
+        $previousContextState = [
+            'cart' => $context->cart,
+            'currency' => $context->currency,
+            'customer' => $context->customer,
+        ];
+
+        $context->cart = $cart;
+        $context->currency = $currency;
+        $context->customer = $customer;
 
         $legacySummary = $cart->getSummaryDetails(null, true);
         $addresses = $this->getAddresses($cart);
 
-        return new CartInformation(
+        $result = new CartInformation(
             $cart->id,
-            $this->extractProductsFromLegacySummary($cart, $legacySummary),
-            (int) $currency->id,
-            (int) $language->id,
+            $this->extractProductsFromLegacySummary($cart, $legacySummary, $currency),
+            (int)$currency->id,
+            (int)$language->id,
             $this->extractCartRulesFromLegacySummary($legacySummary, $currency),
             $addresses,
             $this->extractSummaryFromLegacySummary($legacySummary, $currency, $cart),
             $addresses ? $this->extractShippingFromLegacySummary($cart, $legacySummary) : null
         );
+
+        // restore context state
+        $context->cart = $previousContextState['cart'];
+        $context->currency = $previousContextState['currency'];
+        $context->customer = $previousContextState['customer'];
+
+        return $result;
     }
 
     /**
@@ -129,8 +150,8 @@ final class GetCartInformationHandler extends AbstractCartHandler implements Get
         $cartAddresses = [];
 
         foreach ($customer->getAddresses($cart->id_lang) as $data) {
-            $addressId = (int) $data['id_address'];
-            $countryIsEnabled = (bool) Address::isCountryActiveById($addressId);
+            $addressId = (int)$data['id_address'];
+            $countryIsEnabled = (bool)Address::isCountryActiveById($addressId);
 
             // filter out disabled countries
             if (!$countryIsEnabled) {
@@ -141,8 +162,8 @@ final class GetCartInformationHandler extends AbstractCartHandler implements Get
                 $addressId,
                 $data['alias'],
                 AddressFormat::generateAddress(new Address($addressId), [], '<br />'),
-                (int) $cart->id_address_delivery === $addressId,
-                (int) $cart->id_address_invoice === $addressId
+                (int)$cart->id_address_delivery === $addressId,
+                (int)$cart->id_address_invoice === $addressId
             );
         }
 
@@ -163,7 +184,7 @@ final class GetCartInformationHandler extends AbstractCartHandler implements Get
 
         foreach ($legacySummary['discounts'] as $discount) {
             $cartRules[] = new CartInformation\CartRule(
-                (int) $discount['id_cart_rule'],
+                (int)$discount['id_cart_rule'],
                 $discount['name'],
                 $discount['description'],
                 $this->locale->formatPrice($discount['value_real'], $currency->iso_code)
@@ -176,22 +197,23 @@ final class GetCartInformationHandler extends AbstractCartHandler implements Get
     /**
      * @param Cart $cart
      * @param array $legacySummary
+     * @param Currency $currency
      *
      * @return CartProduct[]
      */
-    private function extractProductsFromLegacySummary(Cart $cart, array $legacySummary): array
+    private function extractProductsFromLegacySummary(Cart $cart, array $legacySummary, Currency $currency): array
     {
         $products = [];
         foreach ($legacySummary['products'] as $product) {
             $products[] = new CartProduct(
-                (int) $product['id_product'],
-                isset($product['id_product_attribute']) ? (int) $product['id_product_attribute'] : 0,
+                (int)$product['id_product'],
+                isset($product['id_product_attribute']) ? (int)$product['id_product_attribute'] : 0,
                 $product['name'],
                 isset($product['attributes_small']) ? $product['attributes_small'] : '',
                 $product['reference'],
-                $product['price'],
-                (int) $product['quantity'],
-                $product['total'],
+                $this->locale->formatPrice($product['price'], $currency->iso_code),
+                (int)$product['quantity'],
+                $this->locale->formatPrice($product['total'], $currency->iso_code),
                 $this->contextLink->getImageLink($product['link_rewrite'], $product['id_image'], 'small_default'),
                 $this->getProductCustomizedData($cart, $product)
             );
@@ -209,7 +231,7 @@ final class GetCartInformationHandler extends AbstractCartHandler implements Get
     private function extractShippingFromLegacySummary(Cart $cart, array $legacySummary): ?CartShipping
     {
         $deliveryOptionsByAddress = $cart->getDeliveryOptionList();
-        $deliveryAddress = (int) $cart->id_address_delivery;
+        $deliveryAddress = (int)$cart->id_address_delivery;
 
         //Check if there is any delivery options available for cart delivery address
         if (!array_key_exists($deliveryAddress, $deliveryOptionsByAddress)) {
@@ -220,10 +242,10 @@ final class GetCartInformationHandler extends AbstractCartHandler implements Get
         $carrier = $legacySummary['carrier'];
 
         return new CartShipping(
-            (string) $legacySummary['total_shipping'],
+            (string)$legacySummary['total_shipping'],
             $this->getFreeShippingValue($cart),
             $this->fetchCartDeliveryOptions($deliveryOptionsByAddress, $deliveryAddress),
-            (int) $carrier->id ?: null
+            (int)$carrier->id ?: null
         );
     }
 
@@ -233,7 +255,7 @@ final class GetCartInformationHandler extends AbstractCartHandler implements Get
         $freeShipping = false;
 
         foreach ($cartRules as $cartRule) {
-            if ($cartRule['id_cart_rule'] == CartRule::getIdByCode(CartRule::BO_ORDER_CODE_PREFIX . (int) $cart->id)) {
+            if ($cartRule['id_cart_rule'] == CartRule::getIdByCode(CartRule::BO_ORDER_CODE_PREFIX . (int)$cart->id)) {
                 $freeShipping = true;
 
                 break;
@@ -261,8 +283,8 @@ final class GetCartInformationHandler extends AbstractCartHandler implements Get
             foreach ($deliveryOption['carrier_list'] as $carrier) {
                 $carrier = $carrier['instance'];
                 // make sure there is no duplicate carrier
-                $deliveryOptions[(int) $carrier->id] = new CartDeliveryOption(
-                    (int) $carrier->id,
+                $deliveryOptions[(int)$carrier->id] = new CartDeliveryOption(
+                    (int)$carrier->id,
                     $carrier->name,
                     $carrier->delay[$this->contextLangId]
                 );
@@ -284,7 +306,7 @@ final class GetCartInformationHandler extends AbstractCartHandler implements Get
      */
     private function extractSummaryFromLegacySummary(array $legacySummary, Currency $currency, Cart $cart): CartSummary
     {
-        $cartId = (int) $cart->id;
+        $cartId = (int)$cart->id;
 
         $discount = $this->locale->formatPrice(-1 * $legacySummary['total_discounts_tax_exc'], $currency->iso_code);
 
@@ -304,7 +326,7 @@ final class GetCartInformationHandler extends AbstractCartHandler implements Get
             $this->contextLink->getPageLink(
                 'order',
                 false,
-                (int) $cart->id_lang,
+                (int)$cart->id_lang,
                 http_build_query([
                     'step' => 3,
                     'recover_cart' => $cartId,
@@ -324,7 +346,7 @@ final class GetCartInformationHandler extends AbstractCartHandler implements Get
      */
     private function getProductCustomizedData(Cart $cart, array $product): ?Customization
     {
-        $customizationId = (int) $product['id_customization'];
+        $customizationId = (int)$product['id_customization'];
 
         if (!$customizationId) {
             return null;
