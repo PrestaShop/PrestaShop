@@ -99,6 +99,7 @@ export default {
   productEditName: '.cellProductName',
   productEditPriceTaxExclInput: '.editProductPriceTaxExcl',
   productEditPriceTaxInclInput: '.editProductPriceTaxIncl',
+  productEditInvoiceSelect: '.editProductInvoice',
   productEditQuantityInput: '.editProductQuantity',
   productEditLocationText: '.editProductLocation',
   productEditAvailableText: '.editProductAvailable',

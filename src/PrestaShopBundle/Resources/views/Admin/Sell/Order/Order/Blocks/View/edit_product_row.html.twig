@@ -37,6 +37,11 @@
   <td class="editProductRefunded"></td>
   <td class="editProductAvailable"></td>
   <td class="editProductTotalPrice"></td>
+  {% if orderForViewing.hasInvoice() %}
+    <td>
+      {{ form_row(editProductRowForm.invoice) }}
+    </td>
+  {% endif %}
   <td class="text-right btn-group">
     {{ form_row(editProductRowForm.cancel) }}
     {{ form_row(editProductRowForm.save) }}
