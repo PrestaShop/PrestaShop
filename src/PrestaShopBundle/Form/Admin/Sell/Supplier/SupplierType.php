@@ -292,7 +292,7 @@ class SupplierType extends TranslatorAwareType
                 'translation_domain' => false,
                 'choices' => $this->statesChoiceProvider->getChoices([
                     'id_country' => $countryIdForStateChoices,
-                ])
+                ]),
             ])
             ->add('logo', FileType::class, [
                 'label' => $this->trans('Logo', 'Admin.Global'),
