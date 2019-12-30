@@ -326,6 +326,9 @@
   <configuration id="PS_USE_ECOTAX" name="PS_USE_ECOTAX">
     <value>0</value>
   </configuration>
+  <configuration id="PS_ECOTAX_TAX_RULES_GROUP_ID" name="PS_ECOTAX_TAX_RULES_GROUP_ID">
+    <value>0</value>
+  </configuration>
   <configuration id="PS_CANONICAL_REDIRECT" name="PS_CANONICAL_REDIRECT">
     <value>1</value>
   </configuration>
