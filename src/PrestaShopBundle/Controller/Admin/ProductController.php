@@ -1310,9 +1310,10 @@ class ProductController extends FrameworkBundleAdminController
     {
         try {
             $searchPhrase = $request->query->get('search_phrase');
+            $currencyId = $request->query->get('currency_id');
 
             /** @var FoundProduct[] $foundProducts */
-            $foundProducts = $this->getQueryBus()->handle(new SearchProducts($searchPhrase, 10));
+            $foundProducts = $this->getQueryBus()->handle(new SearchProducts($searchPhrase, 10, $currencyId));
 
             return $this->json([
                 'products' => $foundProducts,

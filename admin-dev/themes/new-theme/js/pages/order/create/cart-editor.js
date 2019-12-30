@@ -26,6 +26,7 @@
 import Router from '@components/router';
 import {EventEmitter} from '@components/event-emitter';
 import eventMap from '@pages/order/create/event-map';
+import createOrderMap from "./create-order-map";
 
 const $ = window.$;
 
@@ -187,6 +188,8 @@ export default class CartEditor {
    * @param {Number} currencyId
    */
   changeCartCurrency(cartId, currencyId) {
+    $(createOrderMap.cartCurrencySelect).data('selectedCurrencyId', currencyId);
+
     $.post(this.router.generate('admin_carts_edit_currency', {cartId}), {
       currencyId,
     }).then(cartInfo => EventEmitter.emit(eventMap.cartCurrencyChanged, cartInfo))

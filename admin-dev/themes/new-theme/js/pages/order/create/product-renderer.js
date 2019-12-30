@@ -138,6 +138,12 @@ export default class ProductRenderer {
     this._showResultBlock();
   }
 
+  reset() {
+    this._cleanSearchResults();
+    this._hideTaxWarning();
+    this._hideResultBlock();
+  }
+
   /**
    * Renders available fields related to selected product
    *
