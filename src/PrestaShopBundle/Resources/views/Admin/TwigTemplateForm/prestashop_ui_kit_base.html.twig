@@ -188,7 +188,7 @@
   {{- parent() -}}
 {%- endblock %}
 
-{% block checkbox_widget -%}
+{#{% block checkbox_widget -%}
   {% set parent_label_class = parent_label_class|default('') -%}
   {% if 'checkbox-inline' in parent_label_class %}
     {{- form_label(form, null, { widget: parent() }) -}}
@@ -208,7 +208,12 @@
       {{- form_label(form, null, { widget: parent() }) -}}
     </div>
   {%- endif %}
-{%- endblock radio_widget %}
+{%- endblock radio_widget %}#}
+
+{% block choice_widget %}
+  {{- parent() -}}
+  {{ block('form_help') }}
+{% endblock choice_widget %}
 
 {% block choice_widget_collapsed -%}
   {% set attr = attr|merge({class: (attr.class|default('') ~ ' custom-select')|trim}) %}

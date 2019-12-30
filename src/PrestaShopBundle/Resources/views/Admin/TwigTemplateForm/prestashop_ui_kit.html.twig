@@ -57,7 +57,6 @@
       {{ form_label(form) }}
       <div class="{{ block('form_group_class') }}">
         {{ form_widget(form) }}
-        {{ block('form_help') }}
         {{ form_errors(form) }}
       </div>
     </div>
@@ -92,12 +91,14 @@
       <i class="material-icons">add_circle</i> {{ 'Add my IP'|trans({}, 'Admin.Actions') }}
     </button>
   </div>
+
 {% endblock ip_address_text_widget %}
 
 {% block switch_widget %}
   <div class="input-group">
     {{- parent() -}}
   </div>
+  {{ block('form_help') }}
 {% endblock switch_widget %}
 
 {% block text_with_length_counter_widget %}
