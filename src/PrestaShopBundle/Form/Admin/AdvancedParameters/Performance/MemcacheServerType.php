@@ -26,7 +26,7 @@
 
 namespace PrestaShopBundle\Form\Admin\AdvancedParameters\Performance;
 
-use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
+use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -34,7 +34,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 /**
  * This form class generates the "Memcache server" form in Performance page.
  */
-class MemcacheServerType extends CommonAbstractType
+class MemcacheServerType extends TranslatorAwareType
 {
     /**
      * {@inheritdoc}
@@ -43,15 +43,15 @@ class MemcacheServerType extends CommonAbstractType
     {
         $builder
             ->add('memcache_ip', TextType::class, [
-                'required' => false,
+                'label' => $this->trans('IP Address', 'Admin.Advparameters.Feature'),
                 'empty_data' => '',
             ])
             ->add('memcache_port', TextType::class, [
-                'required' => false,
+                'label' => $this->trans('Port', 'Admin.Advparameters.Feature'),
                 'empty_data' => '',
             ])
             ->add('memcache_weight', TextType::class, [
-                'required' => false,
+                'label' => $this->trans('Weight', 'Admin.Advparameters.Feature'),
                 'empty_data' => '',
             ]);
     }

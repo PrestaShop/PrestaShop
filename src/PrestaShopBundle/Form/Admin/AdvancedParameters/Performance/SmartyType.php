@@ -26,8 +26,8 @@
 
 namespace PrestaShopBundle\Form\Admin\AdvancedParameters\Performance;
 
-use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
+use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -35,7 +35,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 /**
  * This form class generates the "Smarty" form in Performance page.
  */
-class SmartyType extends CommonAbstractType
+class SmartyType extends TranslatorAwareType
 {
     /**
      * {@inheritdoc}
@@ -49,27 +49,43 @@ class SmartyType extends CommonAbstractType
                     'Recompile templates if the files have been updated' => 1,
                     'Force compilation' => 2,
                 ],
-                'required' => true,
+                'required' => false,
+                'label' => $this->trans('Template compilation', 'Admin.Advparameters.Feature'),
             ])
             ->add('cache', SwitchType::class, [
-                'required' => true,
+                'required' => false,
+                'label' => $this->trans('Cache', 'Admin.Advparameters.Feature'),
+                'help' => $this->trans('Should be enabled except for debugging.', 'Admin.Advparameters.Feature'),
             ])
             ->add('multi_front_optimization', SwitchType::class, [
-                'required' => true,
+                'required' => false,
+                'label' => $this->trans('Multi-front optimizations', 'Admin.Advparameters.Feature'),
+                'help' => $this->trans('Should be enabled if you want to avoid to store the smarty cache on NFS.', 'Admin.Advparameters.Help'),
+                'row_attr' => [
+                    'class' => 'smarty-cache-option',
+                ],
             ])
             ->add('caching_type', ChoiceType::class, [
                 'choices' => [
                     'File System' => 'filesystem',
                     'MySQL' => 'mysql',
                 ],
-                'required' => true,
+                'required' => false,
+                'label' => $this->trans('Caching type', 'Admin.Advparameters.Feature'),
+                'row_attr' => [
+                    'class' => 'smarty-cache-option',
+                ],
             ])
             ->add('clear_cache', ChoiceType::class, [
                 'choices' => [
                     'Never clear cache files' => 'never',
                     'Clear cache everytime something has been modified' => 'everytime',
                 ],
-                'required' => true,
+                'required' => false,
+                'label' => $this->trans('Clear cache', 'Admin.Advparameters.Feature'),
+                'row_attr' => [
+                    'class' => 'smarty-cache-option',
+                ],
             ]);
     }
 
