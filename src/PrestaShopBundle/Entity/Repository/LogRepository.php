@@ -252,9 +252,13 @@ class LogRepository implements RepositoryInterface, DoctrineQueryBuilderInterfac
             }
 
             if ('date_add' == $filterName) {
-                $qb->andWhere('l.date_add >= :date_from AND l.date_add <= :date_to');
-                $qb->setParameter('date_from', sprintf('%s 0:0:0', $filterValue['from']));
-                $qb->setParameter('date_to', sprintf('%s 23:59:59', $filterValue['to']));
+                if (!empty($filterValue['from']) &&
+                    !empty($filterValue['to'])
+                ) {
+                    $qb->andWhere('l.date_add >= :date_from AND l.date_add <= :date_to');
+                    $qb->setParameter('date_from', sprintf('%s 0:0:0', $filterValue['from']));
+                    $qb->setParameter('date_to', sprintf('%s 23:59:59', $filterValue['to']));
+                }
 
                 continue;
             }
