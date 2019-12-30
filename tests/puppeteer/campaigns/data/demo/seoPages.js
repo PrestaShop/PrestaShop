@@ -17,4 +17,14 @@ module.exports = {
     title: 'Contact us',
     friendlyUrl: 'contact-us',
   },
+  orderReturn: {
+    page: 'order-return',
+    title: 'Order return',
+    friendlyUrl: 'order-return',
+  },
+  pdfOrderReturn: {
+    page: 'pdf-order-return',
+    title: 'Pdf order return',
+    friendlyUrl: 'pdf-order-return',
+  },
 };
