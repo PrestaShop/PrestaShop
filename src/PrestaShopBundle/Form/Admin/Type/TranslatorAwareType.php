@@ -53,8 +53,8 @@ abstract class TranslatorAwareType extends CommonAbstractType
     /**
      * Get the translated chain from key.
      *
-     * @param $key the key to be translated
-     * @param $domain the domain to be selected
+     * @param string $key the key to be translated
+     * @param string $domain the domain to be selected
      * @param array $parameters Optional, pass parameters if needed (uncommon)
      *
      * @returns string

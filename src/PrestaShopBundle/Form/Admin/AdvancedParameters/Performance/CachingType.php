@@ -50,8 +50,11 @@ class CachingType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('use_cache', SwitchType::class)
+            ->add('use_cache', SwitchType::class, [
+                'label' => $this->trans('Use cache', 'Admin.Advparameters.Feature'),
+            ])
             ->add('caching_system', ChoiceType::class, [
+                'label' => $this->trans('Caching system', 'Admin.Advparameters.Feature'),
                 'choices' => [
                     'Memcached via PHP::Memcache' => 'CacheMemcache',
                     'Memcached via PHP::Memcached' => 'CacheMemcached',
@@ -85,8 +88,10 @@ class CachingType extends TranslatorAwareType
                     return $disabled === true ? ['disabled' => $disabled] : [];
                 },
                 'expanded' => true,
-                'required' => false,
                 'placeholder' => false,
+                'row_attr' => [
+                    'class' => 'memcache',
+                ]
             ]);
     }
 
