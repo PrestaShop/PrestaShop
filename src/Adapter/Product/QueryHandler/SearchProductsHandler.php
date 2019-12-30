@@ -149,10 +149,10 @@ final class SearchProductsHandler implements SearchProductsHandlerInterface
             foreach ($fields as $typeId => $typeFields) {
                 foreach ($typeFields as $field) {
                     $customizationField = new ProductCustomizationField(
-                        (int)$field[$this->contextLangId]['id_customization_field'],
-                        (int)$typeId,
+                        (int) $field[$this->contextLangId]['id_customization_field'],
+                        (int) $typeId,
                         $field[$this->contextLangId]['name'],
-                        (bool)$field[$this->contextLangId]['required']
+                        (bool) $field[$this->contextLangId]['required']
                     );
 
                     $customizationFields[$customizationField->getCustomizationFieldId()] = $customizationField;
@@ -176,7 +176,7 @@ final class SearchProductsHandler implements SearchProductsHandlerInterface
 
         if (false !== $combinations) {
             foreach ($combinations as $combination) {
-                $productAttributeId = (int)$combination['id_product_attribute'];
+                $productAttributeId = (int) $combination['id_product_attribute'];
                 $attribute = $combination['attribute_name'];
 
                 if (isset($productCombinations[$productAttributeId])) {
@@ -184,7 +184,7 @@ final class SearchProductsHandler implements SearchProductsHandlerInterface
                     $attribute = $existingAttribute . ' - ' . $attribute;
                 }
 
-                $priceTaxIncluded = Product::getPriceStatic((int)$product->id, true, $productAttributeId);
+                $priceTaxIncluded = Product::getPriceStatic((int) $product->id, true, $productAttributeId);
 
                 $productCombination = new ProductCombination(
                     $productAttributeId,
