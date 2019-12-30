@@ -85,14 +85,14 @@ export default class SubmitBulkActionExtension {
 
     const modal = new ConfirmModal({
       id: `${grid.getId()}_grid_confirm_modal`,
-      title: confirmTitle.length > 0 ? confirmTitle : '',
-      message: confirmMessage,
-      confirmButtonText: confirmButtonLabel,
-      closeButtonText: closeButtonLabel,
+      confirmTitle,
+      confirmMessage,
+      confirmButtonLabel,
+      closeButtonLabel,
       confirmButtonClass,
     }, () => this.postForm($submitBtn, grid));
 
-    modal.toggle();
+    modal.show();
   }
 
   /**
