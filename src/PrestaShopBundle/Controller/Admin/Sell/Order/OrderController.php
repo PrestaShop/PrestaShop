@@ -539,8 +539,16 @@ class OrderController extends FrameworkBundleAdminController
 
         $products = $orderForViewing->getProducts()->getProducts();
 
+        $formBuilder = $this->get('prestashop.core.form.identifiable_object.builder.partial_refund_form_builder');
+        $partialRefundForm = $formBuilder->getFormFor($orderId);
+
+        $currencyDataProvider = $this->container->get('prestashop.adapter.data_provider.currency');
+        $orderCurrency = $currencyDataProvider->getCurrencyById($orderForViewing->getCurrencyId());
+
         return $this->render('@PrestaShop/Admin/Sell/Order/Order/Blocks/View/product.html.twig', [
             'orderForViewing' => $orderForViewing,
+            'partialRefundForm' => $partialRefundForm->createView(),
+            'orderCurrency' => $orderCurrency,
             'product' => $products[array_key_last($products)],
         ]);
     }
@@ -667,7 +675,8 @@ class OrderController extends FrameworkBundleAdminController
                 $orderDetailId,
                 (float) $request->get('price_tax_incl'),
                 (float) $request->get('price_tax_excl'),
-                (int) $request->get('quantity')
+                (int) $request->get('quantity'),
+                (int) $request->get('invoice')
             )
         );
 

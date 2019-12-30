@@ -47,6 +47,9 @@ export default class OrderProductEdit {
       this.availableText.html(this.totalQuantity - this.quantity);
       this.updateTotal();
     });
+    this.productEditInvoiceSelect.on('change', () => {
+      this.productEditSaveBtn.prop('disabled', false);
+    });
     this.priceTaxIncludedInput.on('change keyup', (event) => {
       this.taxIncluded = parseFloat(event.target.value);
       const taxExcluded = this.priceTaxCalculator.calculateTaxExcluded(
@@ -97,6 +100,7 @@ export default class OrderProductEdit {
     // Find controls
     this.productEditSaveBtn = this.productRowEdit.find(OrderViewPageMap.productEditSaveBtn);
     this.productEditCancelBtn = this.productRowEdit.find(OrderViewPageMap.productEditCancelBtn);
+    this.productEditInvoiceSelect = this.productRowEdit.find(OrderViewPageMap.productEditInvoiceSelect);
     this.productEditImage = this.productRowEdit.find(OrderViewPageMap.productEditImage);
     this.productEditName = this.productRowEdit.find(OrderViewPageMap.productEditName);
     this.priceTaxIncludedInput = this.productRowEdit.find(OrderViewPageMap.productEditPriceTaxInclInput);
@@ -114,6 +118,12 @@ export default class OrderProductEdit {
       window.ps_round(product.price_tax_incl, this.currencyPrecision)
     );
     this.quantityInput.val(product.quantity);
+
+    // set this product's orderInvoiceId as selected
+    if (product.orderInvoiceId) {
+      this.productEditInvoiceSelect.val(product.orderInvoiceId);
+    }
+
 
     // Init editor data
     this.taxRate = product.tax_rate;
@@ -143,7 +153,9 @@ export default class OrderProductEdit {
       price_tax_incl: this.priceTaxIncludedInput.val(),
       price_tax_excl: this.priceTaxExcludedInput.val(),
       quantity: this.quantityInput.val(),
+      invoice: this.productEditInvoiceSelect.val(),
     };
+
     $.ajax({
       url: this.router.generate('admin_orders_update_product', {orderId, orderDetailId}),
       method: 'POST',
