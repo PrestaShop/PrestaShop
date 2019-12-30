@@ -92,8 +92,8 @@ class TaxOptionsType extends AbstractType
             ),
             'required' => false,
             'attr' => [
-                'class' => 'js-enable-tax'
-            ]
+                'class' => 'js-enable-tax',
+            ],
         ])
             ->add('display_tax_in_cart', SwitchType::class, [
                 'label' => $this->translator->trans(
@@ -108,8 +108,8 @@ class TaxOptionsType extends AbstractType
                 ),
                 'required' => false,
                 'attr' => [
-                    'class' => 'js-display-in-cart'
-                ]
+                    'class' => 'js-display-in-cart',
+                ],
             ])
             ->add('tax_address_type', ChoiceType::class, [
                 'label' => $this->translator->trans('Based on', [], 'Admin.International.Feature'),
@@ -136,7 +136,7 @@ class TaxOptionsType extends AbstractType
                     'Define the ecotax (e.g. French ecotax: 19.6%).',
                     [],
                     'Admin.International.Help'),
-                'choices' => $this->taxRuleGroupChoiceProvider->getChoices()
+                'choices' => $this->taxRuleGroupChoiceProvider->getChoices(),
             ]);
         }
     }
