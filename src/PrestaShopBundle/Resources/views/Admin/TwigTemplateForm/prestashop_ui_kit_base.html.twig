@@ -821,7 +821,7 @@
 
 {% block form_help %}
   {% if help %}
-    <small class="form-text">{{ help }}</small>
+    <small class="form-text">{{ help|raw }}</small>
   {% endif %}
   {% if warning is defined %}
     {{ warning }}
