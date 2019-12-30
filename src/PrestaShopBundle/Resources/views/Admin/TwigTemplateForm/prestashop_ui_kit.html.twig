@@ -69,7 +69,7 @@
 {%- endblock form_group_class %}
 
 {% block form_row_class -%}
-  form-group row
+  form-group row{% if row_attr.class is defined %} {{ row_attr.class }}{% endif %}
 {%- endblock form_row_class %}
 
 {# Widgets #}
