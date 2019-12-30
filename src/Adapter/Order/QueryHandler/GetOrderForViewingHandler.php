@@ -436,6 +436,8 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
                 null;
             $product['product_quantity_refunded'] = $product['product_quantity_refunded'] ?: false;
 
+            $orderInvoice = new OrderInvoice($product['id_order_invoice']);
+
             $productsForViewing[] = new OrderProductForViewing(
                 $product['id_order_detail'],
                 $product['product_id'],
@@ -459,7 +461,9 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
                 $this->locale->formatPrice($product['amount_refund'], $currency->iso_code),
                 $product['product_quantity_refunded'],
                 $this->locale->formatPrice($product['displayed_max_refundable'], $currency->iso_code),
-                $product['location']
+                $product['location'],
+                !empty($product['id_order_invoice']) ? $product['id_order_invoice'] : null,
+                $orderInvoice->getInvoiceNumberFormatted($order->id_lang)
             );
         }
 

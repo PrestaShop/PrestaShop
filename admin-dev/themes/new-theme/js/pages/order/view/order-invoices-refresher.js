@@ -43,14 +43,17 @@ export default class OrderInvoicesRefresher {
         const $paymentInvoiceSelect = $(OrderViewPageMap.orderPaymentInvoiceSelect);
         const $appProductInvoiceSelect = $(OrderViewPageMap.productAddInvoiceSelect);
         const $existingInvoicesGroup = $appProductInvoiceSelect.find('optgroup:first');
+        const $productEditInvoiceSelect = $(OrderViewPageMap.productEditInvoiceSelect);
         $existingInvoicesGroup.empty();
         $paymentInvoiceSelect.empty();
+        $productEditInvoiceSelect.empty();
 
         Object.keys(response.invoices).forEach((invoiceName) => {
           const invoiceId = response.invoices[invoiceName];
 
           $existingInvoicesGroup.append(`<option value="${invoiceId}">${invoiceName}</option>`);
           $paymentInvoiceSelect.append(`<option value="${invoiceId}">${invoiceName}</option>`);
+          $productEditInvoiceSelect.append(`<option value="${invoiceId}">${invoiceName}</option>`);
         });
       });
   }

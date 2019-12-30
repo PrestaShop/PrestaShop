@@ -99,6 +99,7 @@ export default {
   productEditName: '.cellProductName',
   productEditPriceTaxExclInput: '.editProductPriceTaxExcl',
   productEditPriceTaxInclInput: '.editProductPriceTaxIncl',
+  productEditInvoiceSelect: '.editProductInvoice',
   productEditQuantityInput: '.editProductQuantity',
   productEditLocationText: '.editProductLocation',
   productEditAvailableText: '.editProductAvailable',
@@ -113,5 +114,6 @@ export default {
   orderHookTabsContainer: '#order_hook_tabs',
   displayPartialRefundBtn: 'button.partial-refund-display',
   cancelPartialRefundBtn: 'button.partial-refund-cancel',
-  togglePartialRefundForm: 'td.product_actions, th.product_actions, .partial-refund:not(.hidden), .shipping-price, .refund-checkboxes-container',
+  actionColumnElements: 'td.cellProductActions, th.product_actions',
+  togglePartialRefundForm: '.partial-refund:not(.hidden), .shipping-price, .refund-checkboxes-container',
 };

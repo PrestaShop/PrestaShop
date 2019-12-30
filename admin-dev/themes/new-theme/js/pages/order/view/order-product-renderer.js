@@ -46,7 +46,7 @@ export default class OrderProductRenderer {
     $(OrderViewPageMap.productsCount).html(numProducts);
   }
 
-  editProductFromList(orderDetailId, quantity, priceTaxIncl, priceTaxExcl, taxRate, location, availableQuantity) {
+  editProductFromList(orderDetailId, quantity, priceTaxIncl, priceTaxExcl, taxRate, location, availableQuantity, orderInvoiceId) {
     const $orderEdit = new OrderProductEdit(orderDetailId);
     $orderEdit.displayProduct({
       price_tax_excl: priceTaxExcl,
@@ -54,25 +54,40 @@ export default class OrderProductRenderer {
       tax_rate: taxRate,
       quantity,
       location,
-      availableQuantity
+      availableQuantity,
+      orderInvoiceId,
     });
     $(OrderViewPageMap.productAddActionBtn).addClass('d-none');
     $(OrderViewPageMap.productAddRow).addClass('d-none');
   }
 
   moveProductsPanelToModificationPosition() {
+    this.moveProductPanelToTop();
+
+    $(OrderViewPageMap.productActionBtn).addClass('d-none');
+    $(`${OrderViewPageMap.productAddActionBtn}, ${OrderViewPageMap.productAddRow}`).removeClass('d-none');
+    $('html,body').animate({scrollTop: 0}, 'slow');
+  }
+
+  moveProductsPanelToRefundPosition() {
+    this.moveProductPanelToTop();
+    $(`${OrderViewPageMap.productAddActionBtn}, ${OrderViewPageMap.productAddRow}, ${OrderViewPageMap.productActionBtn}`).addClass('d-none');
+    $('html,body').animate({scrollTop: 0}, 'slow');
+  }
+
+  moveProductPanelToTop() {
     const $modificationPosition = $(OrderViewPageMap.productModificationPosition);
     if ($modificationPosition.find(OrderViewPageMap.productsPanel).length > 0) {
       return;
     }
 
     $(OrderViewPageMap.productsPanel).detach().appendTo($modificationPosition);
-
     $modificationPosition.closest('.row').removeClass('d-none');
 
-    $(OrderViewPageMap.productActionBtn).addClass('d-none');
-    $(`${OrderViewPageMap.productAddActionBtn}, ${OrderViewPageMap.productAddRow}`).removeClass('d-none');
-    $('html,body').animate({scrollTop: 0}, 'slow');
+    // Show all rows, hide pagination controls
+    const $rows = $(OrderViewPageMap.productsTable).find('tr[id^="orderProduct_"]');
+    $rows.removeClass('d-none');
+    $(OrderViewPageMap.productsNavPagination).addClass('d-none');
   }
 
   moveProductPanelToOriginalPosition() {
@@ -82,6 +97,9 @@ export default class OrderProductRenderer {
 
     $(OrderViewPageMap.productActionBtn).removeClass('d-none');
     $(`${OrderViewPageMap.productAddActionBtn}, ${OrderViewPageMap.productAddRow}`).addClass('d-none');
+
+    // Restore pagination
+    this.paginate(1);
   }
 
   resetAddRow() {
@@ -103,15 +121,20 @@ export default class OrderProductRenderer {
     $productRow.removeClass('d-none');
   }
 
-  paginate(orderId, numPage) {
-    this.paginateUpdateControls(numPage);
-    // Hide displayed rows...
-    $(OrderViewPageMap.productsTable).find('tr[id^="orderProduct_"]:not(.d-none)').addClass('d-none');
-    // ... and display good ones
+  paginate(numPage) {
+    const $rows = $(OrderViewPageMap.productsTable).find('tr[id^="orderProduct_"]');
     const $tablePagination = $(OrderViewPageMap.productsTablePagination);
     const numRowsPerPage = parseInt($tablePagination.data('numPerPage'), 10);
+    const maxPage = Math.ceil($rows.length / numRowsPerPage);
+    numPage = Math.max(1, Math.min(numPage, maxPage));
+    this.paginateUpdateControls(numPage);
+
+    // Hide all rows...
+    $rows.addClass('d-none');
+    // ... and display good ones
+
     const startRow = ((numPage - 1) * numRowsPerPage) + 1;
-    const endRow = numPage * numRowsPerPage;
+    const endRow = numPage * numRowsPerPage + 1;
     $(OrderViewPageMap.productsTable).find(`tr[id^="orderProduct_"]:nth-child(n+${startRow}):nth-child(-n+${endRow})`)
         .removeClass('d-none');
     // Remove all edition rows (careful not to remove the template)
@@ -131,6 +154,7 @@ export default class OrderProductRenderer {
     if (numPage === totalPage) {
       $(OrderViewPageMap.productsTablePaginationNext).addClass('disabled');
     }
+    this.togglePaginationControls();
   }
 
   paginationAddPage(numPage) {
@@ -140,6 +164,7 @@ export default class OrderProductRenderer {
     $linkPagination.find('span').attr('data-page', numPage);
     $linkPagination.find('span').html(numPage);
     $(OrderViewPageMap.productsTablePaginationTemplate).before($linkPagination.removeClass('d-none'));
+    this.togglePaginationControls();
   }
 
   paginationRemovePage(numPage) {
@@ -147,5 +172,12 @@ export default class OrderProductRenderer {
     const numPages = $tablePagination.data('numPages');
     $tablePagination.data('numPages', numPages - 1);
     $(OrderViewPageMap.productsTablePagination).find(`li:has(> [data-page="${numPage}"])`).remove();
+    this.togglePaginationControls();
+  }
+
+  togglePaginationControls() {
+    // Why 3 ? Next & Prev & Template
+    const totalPage = $(OrderViewPageMap.productsTablePagination).find('li.page-item').length - 3;
+    $(OrderViewPageMap.productsNavPagination).toggleClass('d-none', totalPage <= 1);
   }
 }

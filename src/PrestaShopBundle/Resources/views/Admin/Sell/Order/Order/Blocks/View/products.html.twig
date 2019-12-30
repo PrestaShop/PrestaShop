@@ -32,6 +32,7 @@
   </div>
 
   <div class="card-body">
+    {{ form_start(partialRefundForm, {'action': path('admin_orders_partial_refund', {'orderId': orderForViewing.id})}) }}
     <table class="table" id="orderProductsTable" data-currency-precision="{{ orderCurrency.precision }}">
       <thead>
         <tr>
@@ -59,6 +60,11 @@
             <p class="mb-0">{{ 'Total'|trans({}, 'Admin.Global') }}</p>
             <small class="text-muted">{{ orderForViewing.taxMethod }}</small>
           </th>
+          {% if orderForViewing.hasInvoice() %}
+            <th>
+              <p>{{ 'Invoice'|trans({}, 'Admin.Global') }}</p>
+            </th>
+          {% endif %}
           {% if not orderForViewing.delivered %}
             <th class="text-right product_actions">
               <p>{{ 'Actions'|trans({}, 'Admin.Global') }}</p>
@@ -70,7 +76,6 @@
         </tr>
       </thead>
       <tbody>
-      {#{{ form_start(partialRefundForm, {'action': path('admin_orders_partial_refund', {'orderId': orderForViewing.id})}) }}#}
         {% for product in orderForViewing.products.products %}
           {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/product.html.twig' with {
             'product': product,
@@ -189,13 +194,18 @@
                 <p class="text-muted mb-0 text-center"><strong>{{ 'Shipping'|trans({}, 'Admin.Catalog.Feature') }}</strong></p>
                 <div class="col-sm text-center shipping-price-container">
                   <strong>{{ orderForViewing.prices.shippingPriceFormatted }}</strong>
-                  {#{{ form_widget(partialRefundForm.shipping) }}#}
+                  {{ form_widget(partialRefundForm.shipping) }}
                   <div class="input-group-append">
                     <div class="input-group-text">{{ orderCurrency.symbol }}</div>
                   </div>
                 </div>
                 <p class="text-center">(max {{ orderForViewing.prices.shippingPriceFormatted }} tax included)</p>
               </span>
+            {% else %}
+              {# No shippping, the form field is hidden vie this div to avoid it being displayed through automatic  form_rest #}
+              <div class="d-none">
+                {{ form_widget(partialRefundForm.shipping) }}
+              </div>
             {% endif %}
 
             {% if not orderForViewing.taxIncluded %}
@@ -229,18 +239,19 @@
         </p>
         <div class="refund-checkboxes-container">
           <div class="form-group">
-           {# {{ form_widget(partialRefundForm.restock) }}#}
+           {{ form_widget(partialRefundForm.restock) }}
           </div>
           <div class="form-group">
-            {#{{ form_widget(partialRefundForm.voucher) }}#}
+            {{ form_widget(partialRefundForm.voucher) }}
           </div>
         </div>
       </div>
       <div class="partial-refund form-submit text-right">
-        <button class="partial-refund partial-refund-cancel btn btn-outline-secondary" type="button">Cancel</button>
-        {#{{ form_widget(partialRefundForm.save) }}#}
+        {{ form_widget(partialRefundForm.cancel) }}
+        {{ form_widget(partialRefundForm.save) }}
       </div>
     </div>
+    {{ form_end(partialRefundForm) }}
   </div>
 </div>
-{#{{ form_end(partialRefundForm) }}#}
+
