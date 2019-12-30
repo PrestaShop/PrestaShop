@@ -23,6 +23,8 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+import ConfirmModal from '@components/modal';
+
 const $ = window.$;
 
 /**
@@ -63,10 +65,10 @@ export default class SubmitBulkActionExtension {
       if (confirmTitle !== undefined) {
         this.showConfirmModal($submitBtn, grid, confirmMessage, confirmTitle);
       } else if (confirm(confirmMessage)) {
-        this.postForm($submitBtn, grid);
+        // this.postForm($submitBtn, grid);
       }
     } else {
-      this.postForm($submitBtn, grid);
+      // this.postForm($submitBtn, grid);
     }
   }
 
@@ -78,20 +80,19 @@ export default class SubmitBulkActionExtension {
    */
   showConfirmModal($submitBtn, grid, confirmMessage, confirmTitle) {
     const confirmButtonLabel = $submitBtn.data('confirmButtonLabel');
+    const closeButtonLabel = $submitBtn.data('closeButtonLabel');
     const confirmButtonClass = $submitBtn.data('confirmButtonClass');
 
-    const $modal = $('#' + grid.getId() + '_grid_confirm_modal');
-    $('.confirm-message', $modal).html(confirmMessage);
-    $('.modal-title', $modal).html(confirmTitle);
-    $('.modal-header', $modal).toggle(confirmTitle.length > 0);
+    const modal = new ConfirmModal({
+      id: `${grid.getId()}_grid_confirm_modal`,
+      title: confirmTitle.length > 0 ? confirmTitle : '',
+      message: confirmMessage,
+      confirmButtonText: confirmButtonLabel,
+      closeButtonText: closeButtonLabel,
+      confirmButtonClass,
+    }, () => this.postForm($submitBtn, grid));
 
-    const $confirmButton = $('.btn-confirm-submit', $modal);
-    $confirmButton.className = 'btn btn-confirm-submit btn-lg';
-    $confirmButton.addClass(confirmButtonClass);
-    $confirmButton.html(confirmButtonLabel);
-    $confirmButton.off('click').on('click', () => this.postForm($submitBtn, grid));
-
-    $modal.modal('show');
+    modal.toggle();
   }
 
   /**

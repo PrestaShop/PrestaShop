@@ -67,24 +67,5 @@
           </div>
       {% endblock %}
     {% endembed %}
-
-    {% embed '@PrestaShop/Admin/Helpers/bootstrap_popup.html.twig' with {
-      'id': grid.id ~ '_grid_confirm_modal',
-      'title': '',
-      'closable': true,
-      'actions': [{
-        'type': 'button',
-        'label': "Confirm"|trans({}, 'Admin.Actions'),
-        'value': 'confirm',
-        'class': 'btn btn-lg btn-primary btn-confirm-submit',
-      }],
-    }%}
-      {% block content %}
-        <div class="modal-body text-left font-weight-normal">
-          <p class="confirm-message">
-          </p>
-        </div>
-      {% endblock %}
-    {% endembed %}
   </div>
 {% endif %}
