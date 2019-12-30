@@ -89,7 +89,7 @@ class TaxController extends FrameworkBundleAdminController
      *
      * @param Request $request
      *
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     * @return RedirectResponse
      */
     public function saveOptionsAction(Request $request)
     {
