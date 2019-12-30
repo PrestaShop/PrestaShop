@@ -65,10 +65,10 @@ export default class SubmitBulkActionExtension {
       if (confirmTitle !== undefined) {
         this.showConfirmModal($submitBtn, grid, confirmMessage, confirmTitle);
       } else if (confirm(confirmMessage)) {
-        // this.postForm($submitBtn, grid);
+        this.postForm($submitBtn, grid);
       }
     } else {
-      // this.postForm($submitBtn, grid);
+      this.postForm($submitBtn, grid);
     }
   }
 
