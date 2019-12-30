@@ -113,6 +113,16 @@ class OrderProductForViewing
      */
     private $amountRefundable;
 
+    /**
+     * @var int
+     */
+    private $orderInvoiceId;
+
+    /**
+     * @var string
+     */
+    private $orderInvoiceNumber;
+
     public function __construct(
         int $orderDetailId,
         int $id,
@@ -130,7 +140,9 @@ class OrderProductForViewing
         string $amountRefund,
         int $quantityRefunded,
         string $amountRefundable,
-        string $location
+        string $location,
+        ?int $orderInvoiceId,
+        string $orderInvoiceNumber
     ) {
         $this->id = $id;
         $this->name = $name;
@@ -149,6 +161,8 @@ class OrderProductForViewing
         $this->quantityRefunded = $quantityRefunded;
         $this->amountRefundable = $amountRefundable;
         $this->location = $location;
+        $this->orderInvoiceId = $orderInvoiceId;
+        $this->orderInvoiceNumber = $orderInvoiceNumber;
     }
 
     /**
@@ -305,5 +319,21 @@ class OrderProductForViewing
         }
 
         return true;
+    }
+
+    /**
+     * @return int
+     */
+    public function getOrderInvoiceId(): ?int
+    {
+        return $this->orderInvoiceId;
+    }
+
+    /**
+     * @return string
+     */
+    public function getOrderInvoiceNumber(): string
+    {
+        return $this->orderInvoiceNumber;
     }
 }

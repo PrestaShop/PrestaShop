@@ -51,6 +51,7 @@ export default class OrderInvoicesRefresher {
 
           $existingInvoicesGroup.append(`<option value="${invoiceId}">${invoiceName}</option>`);
           $paymentInvoiceSelect.append(`<option value="${invoiceId}">${invoiceName}</option>`);
+          $appProductInvoiceSelect.append(`<option value="${invoiceId}">${invoiceName}</option>`);
         });
       });
   }

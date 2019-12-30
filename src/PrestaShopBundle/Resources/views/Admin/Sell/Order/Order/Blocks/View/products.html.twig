@@ -59,6 +59,11 @@
             <p class="mb-0">{{ 'Total'|trans({}, 'Admin.Global') }}</p>
             <small class="text-muted">{{ orderForViewing.taxMethod }}</small>
           </th>
+          {% if orderForViewing.hasInvoice() %}
+            <th>
+              <p>{{ 'Invoice'|trans({}, 'Admin.Global') }}</p>
+            </th>
+          {% endif %}
           {% if not orderForViewing.delivered %}
             <th class="text-right product_actions">
               <p>{{ 'Actions'|trans({}, 'Admin.Global') }}</p>

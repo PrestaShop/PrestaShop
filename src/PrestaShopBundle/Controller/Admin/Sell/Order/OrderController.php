@@ -600,7 +600,8 @@ class OrderController extends FrameworkBundleAdminController
                 $orderDetailId,
                 (float) $request->get('price_tax_incl'),
                 (float) $request->get('price_tax_excl'),
-                (int) $request->get('quantity')
+                (int) $request->get('quantity'),
+                (int) $request->get('invoice')
             )
         );
 

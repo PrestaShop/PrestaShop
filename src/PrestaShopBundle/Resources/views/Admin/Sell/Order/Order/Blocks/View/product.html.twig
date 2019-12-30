@@ -64,6 +64,9 @@
   </td>
   <td class="cellProductAvailableQuantity">{{ product.availableQuantity }}</td>
   <td class="cellProductTotalPrice">{{ product.totalPrice }}</td>
+  {% if orderForViewing.hasInvoice() %}
+    <td>{{ product.orderInvoiceNumber }}</td>
+  {% endif %}
   {% if not orderForViewing.delivered %}
     <td class="text-right cellProductActions">
       <button
@@ -78,7 +81,8 @@
         data-product-price-tax-excl="{{ product.unitPriceTaxExclRaw }}"
         data-tax-rate="{{ product.taxRate }}"
         data-location="{{ product.location }}"
-        data-available-quantity="{{ product.availableQuantity }}">
+        data-available-quantity="{{ product.availableQuantity }}"
+        data-order-invoice-id="{{ product.orderInvoiceId }}">
         <i class="material-icons">edit</i>
       </button>
       <button
