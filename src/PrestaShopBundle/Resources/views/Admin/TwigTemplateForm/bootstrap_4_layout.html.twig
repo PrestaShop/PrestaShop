@@ -124,6 +124,7 @@
 {% block choice_widget_collapsed -%}
     {% set attr = attr|merge({class: (attr.class|default('') ~ ' custom-select')|trim}) %}
     {{- parent() -}}
+    {{- block('form_help') -}}
 {%- endblock %}
 
 {% block choice_widget_expanded -%}
@@ -146,6 +147,7 @@
             {% endfor -%}
         </div>
     {%- endif %}
+    {{- block('form_help') -}}
 {%- endblock choice_widget_expanded %}
 
 {% block checkbox_widget -%}
@@ -393,6 +395,9 @@
         <span class="slide-button"></span>
     </span>
     {% endspaceless %}
+    <div class="w-100">
+      {{- block('form_help') -}}
+    </div>
 {% endblock switch_widget %}
 
 {% block _form_step6_attachments_widget %}
