@@ -75,7 +75,10 @@
   {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/extra_order_button_actions.html.twig' %}
   {% if orderForViewing.hasInvoice() %}
     <div class="form-inline d-inline-block form-horizontal ml-2">
-      <button class="btn btn-action partial-refund-display" type="button">{{ 'Partial refund'|trans({}, 'Admin.Orderscustomers.Feature') }}</button>
+      <button class="btn btn-action partial-refund-display" type="button">
+        <i class="material-icons">swap_horiz</i>
+        {{ 'Partial refund'|trans({}, 'Admin.Orderscustomers.Feature') }}
+      </button>
     </div>
   {% endif %}
 </div>

@@ -113,6 +113,16 @@ class OrderProductForViewing
      */
     private $amountRefundable;
 
+    /**
+     * @var int
+     */
+    private $orderInvoiceId;
+
+    /**
+     * @var string
+     */
+    private $orderInvoiceNumber;
+
     public function __construct(
         int $orderDetailId,
         int $id,
@@ -130,7 +140,9 @@ class OrderProductForViewing
         string $amountRefund,
         int $quantityRefunded,
         string $amountRefundable,
-        string $location
+        string $location,
+        ?int $orderInvoiceId,
+        string $orderInvoiceNumber
     ) {
         $this->id = $id;
         $this->name = $name;
@@ -149,6 +161,8 @@ class OrderProductForViewing
         $this->quantityRefunded = $quantityRefunded;
         $this->amountRefundable = $amountRefundable;
         $this->location = $location;
+        $this->orderInvoiceId = $orderInvoiceId;
+        $this->orderInvoiceNumber = $orderInvoiceNumber;
     }
 
     /**
@@ -264,6 +278,8 @@ class OrderProductForViewing
     }
 
     /**
+     * How much (money) has already been refunded for this product
+     *
      * @return string
      */
     public function getAmountRefund(): string
@@ -272,6 +288,8 @@ class OrderProductForViewing
     }
 
     /**
+     * How many (quantity) of this product has already been refunded
+     *
      * @return int
      */
     public function getQuantityRefunded(): int
@@ -280,6 +298,8 @@ class OrderProductForViewing
     }
 
     /**
+     * How much (money) can be refunded for this product
+     *
      * @return string
      */
     public function getAmountRefundable(): string
@@ -288,6 +308,8 @@ class OrderProductForViewing
     }
 
     /**
+     * How many (quantity) of this product can be refunded
+     *
      * @return int
      */
     public function getQuantityRefundable(): int
@@ -296,6 +318,8 @@ class OrderProductForViewing
     }
 
     /**
+     * Can this product be refunded
+     *
      * @return bool
      */
     public function isRefundable(): bool
@@ -305,5 +329,25 @@ class OrderProductForViewing
         }
 
         return true;
+    }
+
+    /**
+     * Get the id of this product's invoice
+     *
+     * @return int
+     */
+    public function getOrderInvoiceId(): ?int
+    {
+        return $this->orderInvoiceId;
+    }
+
+    /**
+     * Get the number (reference) of this product's invoice
+     *
+     * @return string
+     */
+    public function getOrderInvoiceNumber(): string
+    {
+        return $this->orderInvoiceNumber;
     }
 }

@@ -26,20 +26,60 @@
 
 namespace PrestaShopBundle\Form\Admin\Sell\Order;
 
+use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
 use PrestaShopBundle\Form\Admin\Type\TextWithUnitType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ButtonType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class EditProductRowType extends TranslatorAwareType
 {
+    /**
+     * @var ConfigurableFormChoiceProviderInterface
+     */
+    private $orderInvoiceByIdChoiceProvider;
+
+    /**
+     * @var int
+     */
+    private $contextLangId;
+
+    /**
+     * EditProductRowType constructor.
+     *
+     * @param TranslatorInterface $translator
+     * @param array $locales
+     * @param ConfigurableFormChoiceProviderInterface $orderInvoiceByIdChoiceProvider
+     * @param int $contextLangId
+     */
+    public function __construct(
+        TranslatorInterface $translator,
+        array $locales,
+        ConfigurableFormChoiceProviderInterface $orderInvoiceByIdChoiceProvider,
+        int $contextLangId
+    ) {
+        parent::__construct($translator, $locales);
+
+        $this->orderInvoiceByIdChoiceProvider = $orderInvoiceByIdChoiceProvider;
+        $this->contextLangId = $contextLangId;
+    }
+
     /**
      * {@inheritdoc}
      */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        $invoices = $options['order_id'] ?
+            $this->orderInvoiceByIdChoiceProvider->getChoices([
+                'id_order' => $options['order_id'],
+                'id_lang' => $this->contextLangId,
+                'display_total' => false,
+            ]) : [];
+
         $builder
             ->add('price_tax_excluded', TextWithUnitType::class, [
                 'label' => false,
@@ -68,6 +108,13 @@ class EditProductRowType extends TranslatorAwareType
                 'attr' => [
                     'min' => 1,
                     'class' => 'editProductQuantity',
+                ],
+            ])
+            ->add('invoice', ChoiceType::class, [
+                'choices' => $invoices,
+                'label' => false,
+                'attr' => [
+                    'class' => 'editProductInvoice custom-select',
                 ],
             ])
             ->add('cancel', ButtonType::class, [

@@ -49,6 +49,7 @@ $(() => {
   orderViewPage.listenForProductEdit();
   orderViewPage.listenForProductAdd();
   orderViewPage.listenForProductPagination();
+  orderViewPage.listenForRefund();
 
   orderAddAutocomplete.listenForSearch();
   orderAddAutocomplete.onItemClickedCallback = product => orderAdd.setProduct(product);
@@ -164,8 +165,4 @@ $(() => {
       $modal.find(OrderViewPageMap.updateOrderAddressTypeInput).val($btn.data('address-type'));
     });
   }
-
-  $(`${OrderViewPageMap.displayPartialRefundBtn}, ${OrderViewPageMap.cancelPartialRefundBtn}`).on('click', (event) => {
-    $(OrderViewPageMap.togglePartialRefundForm).toggle();
-  });
 });
