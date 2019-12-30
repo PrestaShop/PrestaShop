@@ -541,6 +541,6 @@ INSERT IGNORE INTO `PREFIX_hook` (`id_hook`, `name`, `title`, `description`, `po
 
 INSERT INTO `PREFIX_hook_alias` (`name`, `alias`) VALUES ('displayAdminOrderTop', 'displayInvoice');
 
-insert into prestashop.ps_configuration (`id_configuration`, `id_shop_group`, `id_shop`, `name`, `value`, `date_add`, `date_upd`)
-select NULL, NULL, NULL,'PS_ECOTAX_TAX_RULES_GROUP_ID', '0', NOW(), NOW() FROM prestashop.ps_configuration WHERE NOT EXISTS
-    (SELECT * FROM prestashop.ps_configuration WHERE `name`='PS_ECOTAX_TAX_RULES_GROUP_ID') limit 1
+insert into PREFIX_configuration (`id_configuration`, `id_shop_group`, `id_shop`, `name`, `value`, `date_add`, `date_upd`)
+select NULL, NULL, NULL,'PS_ECOTAX_TAX_RULES_GROUP_ID', '0', NOW(), NOW() FROM PREFIX_configuration WHERE NOT EXISTS
+    (SELECT * FROM PREFIX_configuration WHERE `name`='PS_ECOTAX_TAX_RULES_GROUP_ID') limit 1
