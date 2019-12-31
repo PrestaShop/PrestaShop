@@ -101,6 +101,7 @@ describe('Create different products and delete them from monitoring page', async
       },
     },
   ];
+
   tests.forEach((test) => {
     describe(`Create product ${test.args.productType} in BO`, async () => {
       it('should go to catalog > products page', async function () {
@@ -108,6 +109,7 @@ describe('Create different products and delete them from monitoring page', async
           this.pageObjects.boBasePage.catalogParentLink,
           this.pageObjects.boBasePage.productsLink,
         );
+
         await this.pageObjects.boBasePage.closeSfToolBar();
         const pageTitle = await this.pageObjects.productsPage.getPageTitle();
         await expect(pageTitle).to.contains(this.pageObjects.productsPage.pageTitle);
@@ -124,6 +126,7 @@ describe('Create different products and delete them from monitoring page', async
           test.args.productToCreate,
           test.args.enabled,
         );
+
         await expect(createProductMessage).to.equal(this.pageObjects.addProductPage.settingUpdatedMessage);
       });
     });
@@ -134,11 +137,14 @@ describe('Create different products and delete them from monitoring page', async
           this.pageObjects.boBasePage.catalogParentLink,
           this.pageObjects.boBasePage.monitoringLink,
         );
+
         const pageTitle = await this.pageObjects.monitoringPage.getPageTitle();
         await expect(pageTitle).to.contains(this.pageObjects.monitoringPage.pageTitle);
+
         numberOfProductsIngrid = await this.pageObjects.monitoringPage.resetAndGetNumberOfLines(
           test.args.gridName,
         );
+
         await expect(numberOfProductsIngrid).to.be.at.least(1);
       });
 
@@ -149,11 +155,13 @@ describe('Create different products and delete them from monitoring page', async
           'name',
           test.args.productToCreate.name,
         );
+
         const textColumn = await this.pageObjects.monitoringPage.getTextColumnFromTable(
           test.args.gridName,
           1,
           'name',
         );
+
         await expect(textColumn).to.contains(test.args.productToCreate.name);
       });
 
@@ -171,11 +179,13 @@ describe('Create different products and delete them from monitoring page', async
           'name',
           test.args.productToCreate.name,
         );
+
         const textColumn = await this.pageObjects.monitoringPage.getTextColumnFromTable(
           test.args.gridName,
           1,
           'name',
         );
+
         await expect(textColumn).to.contains(test.args.productToCreate.name);
       });
 
