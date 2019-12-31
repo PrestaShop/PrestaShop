@@ -28,7 +28,6 @@ namespace Tests\Integration\Behaviour\Features\Context;
 
 use Context;
 use Category;
-use Configuration;
 use Group;
 use Tools;
 use RuntimeException;
@@ -50,7 +49,7 @@ class CategoryFeatureContext extends AbstractPrestaShopFeatureContext
 
     public function __construct()
     {
-        $this->defaultLanguageId = (int) Configuration::get('PS_LANG_DEFAULT');
+        $this->defaultLanguageId = (int) \Configuration::get('PS_LANG_DEFAULT');
     }
 
     /**

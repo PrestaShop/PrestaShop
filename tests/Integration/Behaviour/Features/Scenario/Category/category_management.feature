@@ -23,16 +23,7 @@ Feature: Category Management
       | Meta title       | PC parts meta title       |
       | Meta description | PC parts meta description |
       | Friendly URL     | pc-parts                  |
-      | Group access     | Customer,Guest,Visitor    |
-#
-#    Then category "category1" "name" should be "PC parts"
-#    And category "category1" should be "displayed"
-#    And category "category1" parent category should be "Home Accessories"
-#    And category "category1" "description" should be "Best PC parts"
-#    And category "category1" "meta title" should be "PC parts meta title"
-#    And category "category1" "meta description" should be "PC parts meta description"
-#    And category "category1" "friendly url" should be "pc-parts"
-#    And category "category1" group access should be for "Customer,Guest,Visitor"
+      | Group access     | Visitor,Guest,Customer    |
 
   Scenario: Edit category
     When I edit category "category1" with following details:
