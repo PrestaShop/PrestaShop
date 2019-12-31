@@ -48,6 +48,7 @@ describe('Create, Update and Delete contact in BO', async () => {
       this.pageObjects.boBasePage.shopParametersParentLink,
       this.pageObjects.boBasePage.contactLink,
     );
+
     await this.pageObjects.boBasePage.closeSfToolBar();
     const pageTitle = await this.pageObjects.contactsPage.getPageTitle();
     await expect(pageTitle).to.contains(this.pageObjects.contactsPage.pageTitle);
@@ -80,6 +81,7 @@ describe('Create, Update and Delete contact in BO', async () => {
         this.pageObjects.boBasePage.shopParametersParentLink,
         this.pageObjects.boBasePage.contactLink,
       );
+
       await this.pageObjects.boBasePage.closeSfToolBar();
       const pageTitle = await this.pageObjects.contactsPage.getPageTitle();
       await expect(pageTitle).to.contains(this.pageObjects.contactsPage.pageTitle);
@@ -116,6 +118,7 @@ describe('Create, Update and Delete contact in BO', async () => {
         this.pageObjects.boBasePage.shopParametersParentLink,
         this.pageObjects.boBasePage.contactLink,
       );
+
       await this.pageObjects.boBasePage.closeSfToolBar();
       const pageTitle = await this.pageObjects.contactsPage.getPageTitle();
       await expect(pageTitle).to.contains(this.pageObjects.contactsPage.pageTitle);
