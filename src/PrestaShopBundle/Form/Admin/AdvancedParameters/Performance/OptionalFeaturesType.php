@@ -64,7 +64,7 @@ class OptionalFeaturesType extends TranslatorAwareType
                 'disabled' => $this->isCombinationsUsed,
                 'label' => $this->trans('Combinations', 'Admin.Global'),
                 'help' => sprintf(
-                    "%s<br>%s",
+                    '%s<br>%s',
                     $this->trans('Choose "No" to disable Product Combinations.', 'Admin.Advparameters.Help'),
                     $this->trans('You cannot set this parameter to No when combinations are already used by some of your products', 'Admin.Advparameters.Help')
                 ),
