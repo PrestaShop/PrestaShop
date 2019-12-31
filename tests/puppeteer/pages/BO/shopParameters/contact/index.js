@@ -117,7 +117,7 @@ module.exports = class Contacts extends BOBasePage {
       ),
     ]);
     // Click on delete
-    this.page.click(this.deleteRowLink.replace('%ROW', row));
+    this.clickAndWaitForNavigation(this.deleteRowLink.replace('%ROW', row));
     return this.getTextContent(this.alertSuccessBlockParagraph);
   }
 };
