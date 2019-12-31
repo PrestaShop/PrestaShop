@@ -46,11 +46,9 @@ module.exports = class AddSeoUrl extends BOBasePage {
    */
   async deleteKeywords(lang = 'en') {
     const closeButtons = await this.page.$$(this.deleteKeywordLink.replace('%LANG', lang));
-    /* eslint-disable no-restricted-syntax */
-    for (const closeButton of closeButtons) {
-      await closeButton.click();
+    for (let i = 0; i < closeButtons.length; i++) {
+      await closeButtons[i].click();
     }
-    /* eslint-enable no-restricted-syntax */
   }
 
   /**
@@ -60,12 +58,10 @@ module.exports = class AddSeoUrl extends BOBasePage {
    * @return {Promise<void>}
    */
   async addKeywords(keywords, idLang = 1) {
-    /* eslint-disable no-restricted-syntax */
-    for (const keyword of keywords) {
-      await this.page.type(this.metaKeywordsInput.replace('%ID', idLang), keyword);
+    for (let i = 0; i < keywords.length; i++) {
+      await this.page.type(this.metaKeywordsInput.replace('%ID', idLang), keywords[i]);
       await this.page.keyboard.press('Enter');
     }
-    /* eslint-enable no-restricted-syntax */
   }
 
   /**
