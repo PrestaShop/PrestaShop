@@ -9,10 +9,14 @@ module.exports = class AddContact extends BOBasePage {
     this.pageTitleEdit = 'Contacts •';
 
     // Selectors
-    this.titleInput = '#contact_title_1';
+    this.pageTitleLangButton = '#contact_title';
+    this.pageTitleLangSpan = 'div.dropdown-menu[aria-labelledby=\'contact_title\'] span[data-locale=\'%LANG\']';
+    this.titleInputEN = '#contact_title_1';
+    this.titleInputFR = '#contact_title_2';
     this.emailAddressInput = '#contact_email';
     this.enableSaveMessageslabel = 'label[for=\'contact_is_messages_saving_enabled_%ID\']';
-    this.descriptionTextarea = '#contact_description_1';
+    this.descriptionTextareaEN = '#contact_description_1';
+    this.descriptionTextareaFR = '#contact_description_2';
     this.saveContactButton = 'div.card-footer button';
   }
 
@@ -21,18 +25,36 @@ module.exports = class AddContact extends BOBasePage {
    */
 
   /**
+   * Change language for selectors
+   * @param lang
+   * @return {Promise<void>}
+   */
+  async changeLanguageForSelectors(lang = 'en') {
+    await Promise.all([
+      this.page.click(this.pageTitleLangButton),
+      this.page.waitForSelector(`${this.pageTitleLangButton}[aria-expanded='true']`, {visible: true}),
+    ]);
+    await Promise.all([
+      this.page.click(this.pageTitleLangSpan.replace('%LANG', lang)),
+      this.page.waitForSelector(`${this.pageTitleLangButton}[aria-expanded='false']`, {visible: true}),
+    ]);
+  }
+
+  /**
    * Fill form for add/edit contact
    * @param contactData
    * @return {Promise<textContent>}
    */
   async createEditContact(contactData) {
-    await this.setValue(this.titleInput, contactData.firstName);
+    await this.setValue(this.titleInputEN, contactData.firstName);
     await this.setValue(this.emailAddressInput, contactData.email);
-    await this.setValue(this.descriptionTextarea, contactData.description);
-    if (contactData.saveMessage) await this.page.click(this.enableSaveMessageslabel.replace('%ID', '1'));
+    await this.setValue(this.descriptionTextareaEN, contactData.description);
+    await this.changeLanguageForSelectors('fr');
+    await this.setValue(this.titleInputFR, contactData.firstName);
+    await this.setValue(this.descriptionTextareaFR, contactData.description);
+    await this.page.click(this.enableSaveMessageslabel.replace('%ID', contactData.saveMessage ? 1 : 0));
     // Save Contact
     await this.clickAndWaitForNavigation(this.saveContactButton);
-    await this.page.waitForSelector(this.alertSuccessBlockParagraph, {visible: true});
     return this.getTextContent(this.alertSuccessBlockParagraph);
   }
 };
