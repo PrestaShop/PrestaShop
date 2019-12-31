@@ -45,3 +45,8 @@ Feature: Category Management
       | Friendly URL     | dummy                     |
       | Group access     | Visitor,Guest,Customer    |
 
+  Scenario: Delete category
+    When I delete category "category1" choosing "associate_and_disable"
+    Then category "category1" does not exist
+
+
