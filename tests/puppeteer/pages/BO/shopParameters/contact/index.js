@@ -21,10 +21,10 @@ module.exports = class Contacts extends BOBasePage {
     this.filterSearchButton = `${this.contactsListForm} button[name='contact[actions][search]']`;
     this.filterResetButton = `${this.contactsListForm} button[name='contact[actions][reset]']`;
     // Actions buttons in Row
-    this.listTableToggleDropDown = `${this.contactsListTableColumn.replace('%COLUMN', 'actions')}
-    a[data-toggle='dropdown']`;
-    this.listTableEditLink = `${this.contactsListTableColumn.replace('%COLUMN', 'actions')} a[href*='edit']`;
-    this.deleteRowLink = `${this.contactsListTableColumn.replace('%COLUMN', 'actions')} a[data-method='POST']`;
+    this.contactsListTableActionsColumn = this.contactsListTableColumn.replace('%COLUMN', 'actions');
+    this.listTableToggleDropDown = `${this.contactsListTableActionsColumn} a[data-toggle='dropdown']`;
+    this.listTableEditLink = `${this.contactsListTableActionsColumn} a[href*='edit']`;
+    this.deleteRowLink = `${this.contactsListTableActionsColumn} a[data-method='POST']`;
   }
 
   /*
@@ -98,14 +98,6 @@ module.exports = class Contacts extends BOBasePage {
    * @return {Promise<void>}
    */
   async goToEditContactPage(row) {
-    // Click on dropDown
-    await Promise.all([
-      this.page.click(this.listTableToggleDropDown.replace('%ROW', row)),
-      this.page.waitForSelector(`${this.listTableToggleDropDown
-        .replace('%ROW', row)}[aria-expanded='true']`, {visible: true},
-      ),
-    ]);
-    // Click on edit
     this.clickAndWaitForNavigation(this.listTableEditLink.replace('%ROW', row));
   }
 
@@ -120,8 +112,7 @@ module.exports = class Contacts extends BOBasePage {
     await Promise.all([
       this.page.click(this.listTableToggleDropDown.replace('%ROW', row)),
       this.page.waitForSelector(
-        `${this.listTableToggleDropDown
-          .replace('%ROW', row)}[aria-expanded='true']`,
+        `${this.listTableToggleDropDown.replace('%ROW', row)}[aria-expanded='true']`,
         {visible: true},
       ),
     ]);
