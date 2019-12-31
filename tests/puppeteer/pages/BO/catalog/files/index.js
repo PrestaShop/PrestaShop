@@ -30,6 +30,10 @@ module.exports = class Files extends BOBasePage {
     this.dropdownToggleMenu = `${this.actionsColumn} div.dropdown-menu`;
     this.viewRowLink = `${this.dropdownToggleMenu} a[href*='/view']`;
     this.deleteRowLink = `${this.dropdownToggleMenu} a[data-url*='/delete']`;
+    // Bulk Actions
+    this.selectAllRowsLabel = `${this.gridPanel} .md-checkbox label`;
+    this.bulkActionsToggleButton = `${this.gridPanel} button.js-bulk-actions-btn`;
+    this.bulkActionsDeleteButton = '#attachment_grid_bulk_action_delete_selection';
   }
 
   /* Header Methods */
@@ -137,5 +141,27 @@ module.exports = class Files extends BOBasePage {
     await this.setValue(this.filterColumn.replace('%FILTERBY', filterBy), value);
     // click on search
     await this.clickAndWaitForNavigation(this.filterSearchButton);
+  }
+
+  /**
+   * Delete all files in table with Bulk Actions
+   * @return {Promise<textContent>}
+   */
+  async deleteFilesBulkActions() {
+    // Add listener to dialog to accept deletion
+    this.dialogListener();
+    // Click on Select All
+    await Promise.all([
+      this.page.click(this.selectAllRowsLabel),
+      this.page.waitForSelector(`${this.selectAllRowsLabel}:not([disabled])`, {visible: true}),
+    ]);
+    // Click on Button Bulk actions
+    await Promise.all([
+      this.page.click(this.bulkActionsToggleButton),
+      this.page.waitForSelector(this.bulkActionsToggleButton, {visible: true}),
+    ]);
+    // Click on delete and wait for modal
+    this.clickAndWaitForNavigation(this.bulkActionsDeleteButton);
+    return this.getTextContent(this.alertSuccessBlockParagraph);
   }
 };
