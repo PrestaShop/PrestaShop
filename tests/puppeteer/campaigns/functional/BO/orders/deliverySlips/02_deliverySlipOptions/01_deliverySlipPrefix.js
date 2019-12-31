@@ -45,6 +45,7 @@ describe('Edit delivery slip prefix and check the generated file name', async ()
     page = await helper.newTab(browser);
     this.pageObjects = await init();
   });
+
   after(async () => {
     await helper.closeBrowser(browser);
   });
@@ -58,6 +59,7 @@ describe('Edit delivery slip prefix and check the generated file name', async ()
         this.pageObjects.boBasePage.ordersParentLink,
         this.pageObjects.boBasePage.deliverySlipslink,
       );
+
       await this.pageObjects.boBasePage.closeSfToolBar();
       const pageTitle = await this.pageObjects.deliverySlipsPage.getPageTitle();
       await expect(pageTitle).to.contains(this.pageObjects.deliverySlipsPage.pageTitle);
@@ -76,6 +78,7 @@ describe('Edit delivery slip prefix and check the generated file name', async ()
         this.pageObjects.boBasePage.ordersParentLink,
         this.pageObjects.boBasePage.ordersLink,
       );
+
       const pageTitle = await this.pageObjects.ordersPage.getPageTitle();
       await expect(pageTitle).to.contains(this.pageObjects.ordersPage.pageTitle);
     });
@@ -103,6 +106,7 @@ describe('Edit delivery slip prefix and check the generated file name', async ()
         this.pageObjects.boBasePage.ordersParentLink,
         this.pageObjects.boBasePage.deliverySlipslink,
       );
+
       await this.pageObjects.boBasePage.closeSfToolBar();
       const pageTitle = await this.pageObjects.deliverySlipsPage.getPageTitle();
       await expect(pageTitle).to.contains(this.pageObjects.deliverySlipsPage.pageTitle);
