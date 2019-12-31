@@ -49,7 +49,7 @@ Enable product image in delivery slip
 Create order
 Create delivery slip
 Check that there is 2 images in the delivery slip (Logo and product image)
-Disable product image in invoice
+Disable product image in delivery slip
 Create order
 Create delivery slip
 Check that there is 1 image in the delivery slip (Logo)
@@ -62,6 +62,7 @@ describe('Test enable/disable product image in delivery slips', async () => {
     await helper.setDownloadBehavior(page);
     this.pageObjects = await init();
   });
+
   after(async () => {
     await helper.closeBrowser(browser);
   });
@@ -80,7 +81,7 @@ describe('Test enable/disable product image in delivery slips', async () => {
         it('should go to delivery slips page', async function () {
           await this.pageObjects.boBasePage.goToSubMenu(
             this.pageObjects.boBasePage.ordersParentLink,
-            this.pageObjects.boBasePage.deliverySlipsLink,
+            this.pageObjects.boBasePage.deliverySlipslink,
           );
           await this.pageObjects.boBasePage.closeSfToolBar();
           const pageTitle = await this.pageObjects.deliverySlipsPage.getPageTitle();
@@ -152,7 +153,7 @@ describe('Test enable/disable product image in delivery slips', async () => {
 
         it('should download the delivery slip', async function () {
           fileName = await this.pageObjects.viewOrderPage.getFileName(3);
-          await this.pageObjects.viewOrderPage.downloadInvoice(3);
+          await this.pageObjects.viewOrderPage.downloadDeliverySlip();
           const exist = await files.checkFileExistence(`${fileName}.pdf`);
           await expect(exist).to.be.true;
         });
