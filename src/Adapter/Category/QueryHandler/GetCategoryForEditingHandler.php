@@ -93,7 +93,7 @@ final class GetCategoryForEditingHandler implements GetCategoryForEditingHandler
             $category->name,
             (bool) $category->active,
             $category->description,
-            $category->id_parent,
+            (int) $category->id_parent,
             $category->meta_title,
             $category->meta_description,
             $category->meta_keywords,

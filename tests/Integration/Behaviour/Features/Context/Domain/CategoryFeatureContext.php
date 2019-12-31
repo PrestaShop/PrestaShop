@@ -26,13 +26,13 @@
 
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
-use Behat\Behat\Tester\Exception\PendingException;
 use Behat\Gherkin\Node\TableNode;
 use Configuration;
 use PHPUnit_Framework_Assert;
 use PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\CategoryTreeChoiceProvider;
 use PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\GroupByIdChoiceProvider;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\AddCategoryCommand;
+use PrestaShop\PrestaShop\Core\Domain\Category\Command\EditCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoryForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Category\QueryResult\EditableCategory;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
@@ -87,8 +87,8 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
      */
     public function categoryShouldHaveFollowingDetails(string $categoryReference, TableNode $table)
     {
-        $categoryId = SharedStorage::getStorage()->get($categoryReference);
         $testCaseData = $table->getRowsHash();
+        $categoryId = SharedStorage::getStorage()->get($categoryReference);
 
         /** @var EditableCategory $expectedEditableCategory */
         $expectedEditableCategory = $this->mapDataToEditableCategory($testCaseData, $categoryId);
@@ -98,11 +98,32 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @When I edit category :arg1 with following details:
+     * @When I edit category :categoryReference with following details:
+     *
+     * @param string $categoryReference
+     * @param TableNode $table
      */
-    public function iEditCategoryWithFollowingDetails($arg1, TableNode $table)
+    public function iEditCategoryWithFollowingDetails(string $categoryReference, TableNode $table)
     {
-        throw new PendingException();
+        $testCaseData = $table->getRowsHash();
+        $categoryId = SharedStorage::getStorage()->get($categoryReference);
+
+        /** @var EditableCategory $expectedEditableCategory */
+        $editableCategoryTestData = $this->mapDataToEditableCategory($testCaseData, $categoryId);
+
+        /** @var EditCategoryCommand $command */
+        $command = new EditCategoryCommand($categoryId);
+        $command->setIsActive($editableCategoryTestData->isActive());
+        $command->setLocalizedLinkRewrites($editableCategoryTestData->getLinkRewrite());
+        $command->setLocalizedNames($editableCategoryTestData->getName());
+        $command->setParentCategoryId($editableCategoryTestData->getParentId());
+        $command->setLocalizedDescriptions($editableCategoryTestData->getDescription());
+        $command->setLocalizedMetaTitles($editableCategoryTestData->getMetaTitle());
+        $command->setLocalizedMetaDescriptions($editableCategoryTestData->getMetaDescription());
+        $command->setLocalizedMetaKeywords($editableCategoryTestData->getMetaKeywords());
+        $command->setAssociatedGroupIds($editableCategoryTestData->getGroupAssociationIds());
+
+        $this->getCommandBus()->handle($command);
     }
 
     /**
