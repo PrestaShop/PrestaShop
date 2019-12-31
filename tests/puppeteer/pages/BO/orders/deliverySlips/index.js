@@ -59,16 +59,6 @@ module.exports = class DeliverySlips extends BOBasePage {
     await this.setValue(this.deliveryNumberInput, number);
   }
 
-  /** Save delivery slip options
-   * @returns {Promise<textContent>}
-  /** Edit delivery slip Prefix
-   * @param number
-   * @return {Promise<void>}
-   */
-  async changeNumber(number) {
-    await this.setValue(this.deliveryNumberInput, number);
-  }
-
   /**
    * Enable disable product image
    * @param enable
@@ -79,7 +69,7 @@ module.exports = class DeliverySlips extends BOBasePage {
   }
 
   /** Save delivery slip options
-   * @return {Promise<void>}
+   * @return {Promise<textContent>}
    */
   async saveDeliverySlipOptions() {
     await this.clickAndWaitForNavigation(this.saveDeliverySlipOptionsButton);
