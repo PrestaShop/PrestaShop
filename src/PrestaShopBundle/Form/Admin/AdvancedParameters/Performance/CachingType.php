@@ -91,7 +91,7 @@ class CachingType extends TranslatorAwareType
                 'placeholder' => false,
                 'row_attr' => [
                     'class' => 'memcache',
-                ]
+                ],
             ]);
     }
 
