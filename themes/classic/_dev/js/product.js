@@ -106,12 +106,24 @@ $(document).ready(function () {
       max: 1000000
     });
 
+
+    let $inputQty = $('#quantity_wanted');
+
+    $inputQty.focusout((e) => {
+      if ($inputQty.val() === '' || $inputQty.val() < $inputQty.attr('min')) {
+        $inputQty.val($inputQty.attr('min'));
+        $inputQty.trigger('change');
+      }
+    });
+
     $('body').on('change keyup', '#quantity_wanted', (e) => {
-      $(e.currentTarget).trigger('touchspin.stopspin');
-      prestashop.emit('updateProduct', {
-          eventType: 'updatedProductQuantity',
-          event: e
-      });
+      if ($inputQty.val() !== '') {
+        $(e.currentTarget).trigger('touchspin.stopspin');
+        prestashop.emit('updateProduct', {
+            eventType: 'updatedProductQuantity',
+            event: e
+        });
+      }
     });
   }
 });
