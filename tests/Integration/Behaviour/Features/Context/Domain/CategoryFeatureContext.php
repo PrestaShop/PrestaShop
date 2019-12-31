@@ -32,11 +32,14 @@ use PHPUnit_Framework_Assert;
 use PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\CategoryTreeChoiceProvider;
 use PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\GroupByIdChoiceProvider;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\AddCategoryCommand;
+use PrestaShop\PrestaShop\Core\Domain\Category\Command\DeleteCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\EditCategoryCommand;
+use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoryForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Category\QueryResult\EditableCategory;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
 use Psr\Container\ContainerInterface;
+use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 use Tests\Integration\Behaviour\Features\Context\Util\CategoryTreeIterator;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
@@ -103,7 +106,7 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
      * @param string $categoryReference
      * @param TableNode $table
      */
-    public function iEditCategoryWithFollowingDetails(string $categoryReference, TableNode $table)
+    public function editCategoryWithFollowingDetails(string $categoryReference, TableNode $table)
     {
         $testCaseData = $table->getRowsHash();
         $categoryId = SharedStorage::getStorage()->get($categoryReference);
@@ -124,6 +127,34 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
         $command->setAssociatedGroupIds($editableCategoryTestData->getGroupAssociationIds());
 
         $this->getCommandBus()->handle($command);
+    }
+
+    /**
+     * @When I delete category :categoryReference choosing :deleteMode
+     *
+     * @param string $categoryReference
+     * @param string $deleteMode
+     */
+    public function deleteCategory(string $categoryReference, string $deleteMode)
+    {
+        $categoryId = SharedStorage::getStorage()->get($categoryReference);
+        $this->getCommandBus()->handle(new DeleteCategoryCommand($categoryId, $deleteMode));
+    }
+
+    /**
+     * @Then category :categoryReference does not exist
+     *
+     * @param string $categoryReference
+     */
+    public function categoryDoesNotExist(string $categoryReference)
+    {
+        $categoryId = SharedStorage::getStorage()->get($categoryReference);
+        try {
+            $this->getQueryBus()->handle(new GetCategoryForEditing($categoryId));
+        } catch (CategoryNotFoundException $e) {
+            return;
+        }
+        throw new RuntimeException(sprintf('Category %s still exists', $categoryReference));
     }
 
     /**
