@@ -7,6 +7,7 @@ module.exports = class DeliverySlips extends BOBasePage {
 
     this.pageTitle = 'Delivery Slips';
     this.errorMessageWhenGenerateFileByDate = 'No delivery slip was found for this period.';
+    this.successfulUpdateMessage = 'Update successful';
 
     // Delivery slips page
     // By date form
@@ -14,6 +15,10 @@ module.exports = class DeliverySlips extends BOBasePage {
     this.dateFromInput = '#slip_pdf_form_pdf_date_from';
     this.dateToInput = '#slip_pdf_form_pdf_date_to';
     this.generatePdfByDateButton = `${this.generateByDateForm} .btn.btn-primary`;
+    // Delivery slip options form
+    this.deliverySlipForm = '#delivery_options_fieldset';
+    this.deliveryPrefixInput = '#form_options_prefix_1';
+    this.saveDeliverySlipOptionsButton = `${this.deliverySlipForm} .btn.btn-primary`;
   }
 
   /*
@@ -34,5 +39,21 @@ module.exports = class DeliverySlips extends BOBasePage {
       await this.setValue(this.dateToInput, dateTo);
     }
     await this.page.click(this.generatePdfByDateButton);
+  }
+
+  /** Edit delivery slip Prefix
+   * @param prefix
+   * @return {Promise<void>}
+   */
+  async changePrefix(prefix) {
+    await this.setValue(this.deliveryPrefixInput, prefix);
+  }
+
+  /** Save delivery slip options
+   * @returns {Promise<textContent>}
+   */
+  async saveDeliverySlipOptions() {
+    await this.clickAndWaitForNavigation(this.saveDeliverySlipOptionsButton);
+    return this.getTextContent(this.alertSuccessBlockParagraph);
   }
 };
