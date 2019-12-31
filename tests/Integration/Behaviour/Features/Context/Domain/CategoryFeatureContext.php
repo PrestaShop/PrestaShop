@@ -46,8 +46,12 @@ use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
 class CategoryFeatureContext extends AbstractDomainFeatureContext
 {
+    const EMPTY_VALUE = '';
+
     /** @var ContainerInterface */
     private $container;
+    /** @var int */
+    private $defaultLanguageId;
 
     /**
      * CategoryFeatureContext constructor.
@@ -55,6 +59,34 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
     public function __construct()
     {
         $this->container = $this->getContainer();
+        $this->defaultLanguageId = Configuration::get('PS_LANG_DEFAULT');
+    }
+
+    /**
+     * @When I add new category :categoryReference with following details:
+     *
+     * @param string $categoryReference
+     * @param TableNode $table
+     */
+    public function addNewCategoryWithFollowingDetails(string $categoryReference, TableNode $table)
+    {
+        $testCaseData = $table->getRowsHash();
+
+        /** @var CategoryTreeChoiceProvider $categoryTreeChoiceProvider */
+        $categoryTreeChoiceProvider = $this->container->get(
+            'prestashop.adapter.form.choice_provider.category_tree_choice_provider');
+        $categoryTreeIterator = new CategoryTreeIterator($categoryTreeChoiceProvider);
+        $parentCategoryId = $categoryTreeIterator->getCategoryId($testCaseData['Parent category']);
+
+        /** @var CategoryId $categoryIdObject */
+        $categoryIdObject = $this->getCommandBus()->handle(new AddCategoryCommand(
+            array($this->defaultLanguageId => $testCaseData['Name']),
+            array($this->defaultLanguageId => $testCaseData['Friendly URL']),
+            PrimitiveUtils::castElementInType($testCaseData['Displayed'], PrimitiveUtils::TYPE_BOOLEAN),
+            $parentCategoryId
+        ));
+
+        SharedStorage::getStorage()->set($categoryReference, $categoryIdObject->getValue());
     }
 
     /**
@@ -93,10 +125,14 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
         $testCaseData = $table->getRowsHash();
         $categoryId = SharedStorage::getStorage()->get($categoryReference);
 
-        /** @var EditableCategory $expectedEditableCategory */
-        $expectedEditableCategory = $this->mapDataToEditableCategory($testCaseData, $categoryId);
-
+        /** @var EditableCategory $editableCategory */
         $editableCategory = $this->getQueryBus()->handle(new GetCategoryForEditing($categoryId));
+        // coverImage array has unique properties generated based on time
+        $coverImage = $editableCategory->getCoverImage();
+
+        /** @var EditableCategory $expectedEditableCategory */
+        $expectedEditableCategory = $this->mapDataToEditableCategory($testCaseData, $categoryId, $coverImage);
+
         PHPUnit_Framework_Assert::assertEquals($expectedEditableCategory, $editableCategory);
     }
 
@@ -159,11 +195,12 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
 
     /**
      * @param array $testCaseData
-     * @param $categoryId
+     * @param int $categoryId
+     * @param array|null $coverImage
      *
      * @return EditableCategory
      */
-    private function mapDataToEditableCategory(array $testCaseData, $categoryId): EditableCategory
+    private function mapDataToEditableCategory(array $testCaseData, int $categoryId, array $coverImage = null): EditableCategory
     {
         /** @var CategoryTreeChoiceProvider $categoryTreeChoiceProvider */
         $categoryTreeChoiceProvider = $this->container->get(
@@ -177,27 +214,60 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
         );
         $groupChoicesArray = $groupByIdChoiceProvider->getChoices();
 
-        $groupAssociations = explode(',', $testCaseData['Group access']);
         $groupAssociationIds = [];
-        foreach ($groupAssociations as $groupAssociation) {
-            $groupAssociationIds[] = (int) $groupChoicesArray[$groupAssociation];
+        if (isset($testCaseData['Group access'])) {
+            $groupAssociations = explode(',', $testCaseData['Group access']);
+            foreach ($groupAssociations as $groupAssociation) {
+                $groupAssociationIds[] = (int) $groupChoicesArray[$groupAssociation];
+            }
+        } else {
+            $groupAssociationIds = array(
+                0 => '1',
+                1 => '2',
+                2 => '3',
+            );
         }
 
         $isActive = PrimitiveUtils::castElementInType($testCaseData['Displayed'], PrimitiveUtils::TYPE_BOOLEAN);
 
+        $name = array($this->defaultLanguageId => self::EMPTY_VALUE);
+        if (isset($testCaseData['Name'])) {
+            $name = array($this->defaultLanguageId => $testCaseData['Name']);
+        }
+        $description = array($this->defaultLanguageId => self::EMPTY_VALUE);
+        if (isset($testCaseData['Description'])) {
+            $description = array($this->defaultLanguageId => $testCaseData['Description']);
+        }
+
+        $metaTitle = array($this->defaultLanguageId => self::EMPTY_VALUE);
+        if (isset($testCaseData['Meta title'])) {
+            $metaTitle = array($this->defaultLanguageId => $testCaseData['Meta title']);
+        }
+
+        $metaDescription = array($this->defaultLanguageId => self::EMPTY_VALUE);
+        if (isset($testCaseData['Meta description'])) {
+            $metaDescription = array($this->defaultLanguageId => $testCaseData['Meta description']);
+        }
+
+        $linkRewrite = array($this->defaultLanguageId => self::EMPTY_VALUE);
+        if (isset($testCaseData['Friendly URL'])) {
+            $linkRewrite = array($this->defaultLanguageId => $testCaseData['Friendly URL']);
+        }
+
         return new EditableCategory(
             new CategoryId($categoryId),
-            array(1 => $testCaseData['Name']),
+            $name,
             $isActive,
-            array(1 => $testCaseData['Description']),
+            $description,
             $parentCategoryId,
-            array(1 => $testCaseData['Meta title']),
-            array(1 => $testCaseData['Meta description']),
-            array(1 => ''),
-            array(1 => $testCaseData['Friendly URL']),
+            $metaTitle,
+            $metaDescription,
+            array($this->defaultLanguageId => self::EMPTY_VALUE),
+            $linkRewrite,
             $groupAssociationIds,
             array(0 => '1'),
-            false
+            false,
+            $coverImage
         );
     }
 }

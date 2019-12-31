@@ -5,31 +5,25 @@ Feature: Category Management
   As a BO user
   I must be able to create, edit and delete categories in my shop
 
-  Scenario: Adding new Category
-    Given I specify "name" "PC parts" for new category "category1"
-    And I specify displayed to be "enabled" for new category "category1"
-    And I specify "parent category" "Home Accessories" for new category "category1"
-    And I specify "description" "Best PC parts" for new category "category1"
-    And I specify "meta title" "PC parts meta title" for new category "category1"
-    And I specify "meta description" "PC parts meta description" for new category "category1"
-    And I specify "friendly url" "pc-parts" for new category "category1"
-    And I specify group access for "Customer,Guest,Visitor" for new category "category1"
-    When I add new category "category1" with specified properties
+  Background: Adding new Category
+    Given I add new category "category1" with following details:
+      | Name                 | PC parts                  |
+      | Displayed            | true                      |
+      | Parent category      | Home Accessories          |
+      | Friendly URL         | pc-parts                  |
+
+  Scenario: Getting category
     Then category "category1" should have following details:
-      | Name             | PC parts                  |
-      | Displayed        | true                      |
-      | Parent category  | Home Accessories          |
-      | Description      | Best PC parts             |
-      | Meta title       | PC parts meta title       |
-      | Meta description | PC parts meta description |
-      | Friendly URL     | pc-parts                  |
-      | Group access     | Visitor,Guest,Customer    |
+      | Name                 | PC parts                  |
+      | Displayed            | true                      |
+      | Parent category      | Home Accessories          |
+      | Friendly URL         | pc-parts                  |
 
   Scenario: Edit category
     When I edit category "category1" with following details:
       | Name             | dummy category name       |
       | Displayed        | false                     |
-      | Parent category  | Art                       |
+      | Parent category  | Home Accessories          |
       | Description      | dummy description         |
       | Meta title       | dummy meta title          |
       | Meta description | dummy meta description    |
@@ -38,7 +32,7 @@ Feature: Category Management
     Then category "category1" should have following details:
       | Name             | dummy category name       |
       | Displayed        | false                     |
-      | Parent category  | Art                       |
+      | Parent category  | Home Accessories          |
       | Description      | dummy description         |
       | Meta title       | dummy meta title          |
       | Meta description | dummy meta description    |
