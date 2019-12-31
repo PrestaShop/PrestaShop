@@ -151,48 +151,53 @@ final class GetCategoryForEditingHandler implements GetCategoryForEditingHandler
         $image = _PS_CAT_IMG_DIR_ . $categoryId->getValue() . '.jpg';
         $imageTypes = ImageType::getImagesTypes('categories');
 
-        $thumb = '';
-        $imageTag = '';
-        $formattedSmall = ImageType::getFormattedName('small');
-        foreach ($imageTypes as $k => $imageType) {
-            if ($formattedSmall == $imageType['name']) {
-                $thumb = _PS_CAT_IMG_DIR_ . $categoryId->getValue() . '-' . $imageType['name'] . '.jpg';
-                if (is_file($thumb)) {
-                    $imageTag = ImageManager::thumbnail(
-                        $thumb,
-                        'category_' . (int) $categoryId->getValue() . '-thumb.jpg',
-                        (int) $imageType['width'],
-                        'jpg',
-                        true,
-                        true
-                    );
+        if (count($imageTypes) > 0) {
+            $thumb = '';
+            $imageTag = '';
+            $formattedSmall = ImageType::getFormattedName('small');
+            $imageType = new ImageType();
+            foreach ($imageTypes as $k => $imageType) {
+                if ($formattedSmall == $imageType['name']) {
+                    $thumb = _PS_CAT_IMG_DIR_ . $categoryId->getValue() . '-' . $imageType['name'] . '.jpg';
+                    if (is_file($thumb)) {
+                        $imageTag = ImageManager::thumbnail(
+                            $thumb,
+                            'category_' . (int) $categoryId->getValue() . '-thumb.jpg',
+                            (int) $imageType['width'],
+                            'jpg',
+                            true,
+                            true
+                        );
+                    }
                 }
             }
+
+            if (!is_file($thumb)) {
+                $thumb = $image;
+                $imageName = 'category_' . $categoryId->getValue() . '-thumb.jpg';
+
+                $imageTag = ImageManager::thumbnail($image, $imageName, 125, 'jpg', true, true);
+                ImageManager::resize(
+                    _PS_TMP_IMG_DIR_ . $imageName,
+                    _PS_TMP_IMG_DIR_ . $imageName,
+                    (int) $imageType['width'],
+                    (int) $imageType['height']
+                );
+            }
+
+            $thumbSize = file_exists($thumb) ? filesize($thumb) / 1000 : false;
+
+            if (empty($imageTag) || false === $thumbSize) {
+                return null;
+            }
+
+            return [
+                'size' => sprintf('%skB', $thumbSize),
+                'path' => $this->imageTagSourceParser->parse($imageTag),
+            ];
         }
 
-        if (!is_file($thumb)) {
-            $thumb = $image;
-            $imageName = 'category_' . $categoryId->getValue() . '-thumb.jpg';
-
-            $imageTag = ImageManager::thumbnail($image, $imageName, 125, 'jpg', true, true);
-            ImageManager::resize(
-                _PS_TMP_IMG_DIR_ . $imageName,
-                _PS_TMP_IMG_DIR_ . $imageName,
-                (int) $imageType['width'],
-                (int) $imageType['height']
-            );
-        }
-
-        $thumbSize = file_exists($thumb) ? filesize($thumb) / 1000 : false;
-
-        if (empty($imageTag) || false === $thumbSize) {
-            return null;
-        }
-
-        return [
-            'size' => sprintf('%skB', $thumbSize),
-            'path' => $this->imageTagSourceParser->parse($imageTag),
-        ];
+        return null;
     }
 
     /**

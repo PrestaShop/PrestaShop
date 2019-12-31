@@ -29,13 +29,31 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain;
 use Behat\Behat\Tester\Exception\PendingException;
 use Behat\Gherkin\Node\TableNode;
 use Configuration;
+use PHPUnit_Framework_Assert;
+use PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\CategoryTreeChoiceProvider;
+use PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\GroupByIdChoiceProvider;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\AddCategoryCommand;
+use PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoryForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Category\QueryResult\EditableCategory;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
+use Psr\Container\ContainerInterface;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
+use Tests\Integration\Behaviour\Features\Context\Util\CategoryTreeIterator;
+use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
 class CategoryFeatureContext extends AbstractDomainFeatureContext
 {
+    /** @var ContainerInterface */
+    private $container;
+
+    /**
+     * CategoryFeatureContext constructor.
+     */
+    public function __construct()
+    {
+        $this->container = $this->getContainer();
+    }
+
     /**
      * @When I add new category :reference with specified properties
      */
@@ -62,7 +80,6 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @todo finish
      * @Then category :categoryReference should have following details:
      *
      * @param string $categoryReference
@@ -73,38 +90,12 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
         $categoryId = SharedStorage::getStorage()->get($categoryReference);
         $testCaseData = $table->getRowsHash();
 
-//            $isActive,
-//            array $description,
-//                $parentId,
-//                array $metaTitle,
-//                    array $metaDescription,
-//                        array $metaKeywords,
-//                            array $linkRewrite,
-//                                array $groupAssociationIds,
-//                                    array $shopAssociationIds,
-//                                        $isRootCategory,
-//                                        $coverImage = null,
-//                                        $thumbnailImage = null,
-//                                        array $menuThumbnailImages = [],
-//                                            array $subCategories = []
+        /** @var EditableCategory $expectedEditableCategory */
+        $expectedEditableCategory = $this->mapDataToEditableCategory($testCaseData, $categoryId);
 
-//      | Displayed        | true                      |
-//      | Parent category  | Home Accessories          |
-//      | Description      | Best PC parts             |
-//      | Meta title       | PC parts meta title       |
-//      | Meta description | PC parts meta description |
-//      | Friendly URL     | pc-parts                  |
-//      | Group access     | Customer,Guest,Visitor    |
-
-        $editableCategory = new EditableCategory(
-            new CategoryId($categoryId),
-            array($testCaseData['Name']),
-
-        );
-
-        throw new PendingException();
+        $editableCategory = $this->getQueryBus()->handle(new GetCategoryForEditing($categoryId));
+        PHPUnit_Framework_Assert::assertEquals($expectedEditableCategory, $editableCategory);
     }
-
 
     /**
      * @When I edit category :arg1 with following details:
@@ -114,4 +105,47 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
         throw new PendingException();
     }
 
+    /**
+     * @param array $testCaseData
+     * @param $categoryId
+     *
+     * @return EditableCategory
+     */
+    private function mapDataToEditableCategory(array $testCaseData, $categoryId): EditableCategory
+    {
+        /** @var CategoryTreeChoiceProvider $categoryTreeChoiceProvider */
+        $categoryTreeChoiceProvider = $this->container->get(
+            'prestashop.adapter.form.choice_provider.category_tree_choice_provider');
+        $categoryTreeIterator = new CategoryTreeIterator($categoryTreeChoiceProvider);
+        $parentCategoryId = $categoryTreeIterator->getCategoryId($testCaseData['Parent category']);
+
+        /** @var GroupByIdChoiceProvider $groupByIdChoiceProvider */
+        $groupByIdChoiceProvider = $this->container->get(
+            'prestashop.adapter.form.choice_provider.group_by_id_choice_provider'
+        );
+        $groupChoicesArray = $groupByIdChoiceProvider->getChoices();
+
+        $groupAssociations = explode(',', $testCaseData['Group access']);
+        $groupAssociationIds = [];
+        foreach ($groupAssociations as $groupAssociation) {
+            $groupAssociationIds[] = (int) $groupChoicesArray[$groupAssociation];
+        }
+
+        $isActive = PrimitiveUtils::castElementInType($testCaseData['Displayed'], PrimitiveUtils::TYPE_BOOLEAN);
+
+        return new EditableCategory(
+            new CategoryId($categoryId),
+            array(1 => $testCaseData['Name']),
+            $isActive,
+            array(1 => $testCaseData['Description']),
+            $parentCategoryId,
+            array(1 => $testCaseData['Meta title']),
+            array(1 => $testCaseData['Meta description']),
+            array(1 => ''),
+            array(1 => $testCaseData['Friendly URL']),
+            $groupAssociationIds,
+            array(0 => '1'),
+            false
+        );
+    }
 }
