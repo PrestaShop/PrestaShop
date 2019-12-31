@@ -55,7 +55,6 @@ export default class OrderViewPage {
       const numProducts = parseInt($(OrderViewPageMap.productsCount).html(), 10);
       if ((numProducts - 1) % numRowsPerPage === 0) {
         this.orderProductRenderer.paginationRemovePage(numPages);
-        $(OrderViewPageMap.productsNavPagination).toggleClass('d-none', (numPages - 1) === 1);
       }
       if (numRows === 1 && currentPage === numPages) {
         currentPage -= 1;
@@ -114,7 +113,6 @@ export default class OrderViewPage {
           numPages += 1;
           this.orderProductRenderer.paginationAddPage(numPages);
         }
-        $(OrderViewPageMap.productsNavPagination).toggleClass('d-none', numPages === 1);
         // Move to last page
         EventEmitter.emit(OrderViewEventMap.productListPaginated, {
           orderId: event.orderId,
@@ -198,9 +196,23 @@ export default class OrderViewPage {
     });
 
     EventEmitter.on(OrderViewEventMap.productListPaginated, (event) => {
-      this.orderProductRenderer.paginate(event.orderId, event.numPage);
+      this.orderProductRenderer.paginate(event.numPage);
       this.listenForProductDelete();
       this.listenForProductEdit();
+    });
+  }
+
+  listenForRefund() {
+    $(OrderViewPageMap.displayPartialRefundBtn).on('click', () => {
+      this.orderProductRenderer.moveProductsPanelToRefundPosition();
+      $(OrderViewPageMap.togglePartialRefundForm).show();
+      $(OrderViewPageMap.actionColumnElements).hide();
+    });
+
+    $(OrderViewPageMap.cancelPartialRefundBtn).on('click', () => {
+      this.orderProductRenderer.moveProductPanelToOriginalPosition();
+      $(OrderViewPageMap.togglePartialRefundForm).hide();
+      $(OrderViewPageMap.actionColumnElements).show();
     });
   }
 
