@@ -42,6 +42,7 @@ describe('Create Files and Delete with Bulk actions', async () => {
       files.createFile('.', secondFileData.filename, `test ${secondFileData.filename}`),
     ]);
   });
+
   after(async () => {
     await helper.closeBrowser(browser);
     /* Delete the generated files */
@@ -50,6 +51,7 @@ describe('Create Files and Delete with Bulk actions', async () => {
       files.deleteFile(secondFileData.filename),
     ]);
   });
+
   // Login into BO and go to files page
   loginCommon.loginBO();
 
@@ -58,6 +60,7 @@ describe('Create Files and Delete with Bulk actions', async () => {
       this.pageObjects.boBasePage.catalogParentLink,
       this.pageObjects.boBasePage.filesLink,
     );
+
     await this.pageObjects.boBasePage.closeSfToolBar();
     const pageTitle = await this.pageObjects.filesPage.getPageTitle();
     await expect(pageTitle).to.contains(this.pageObjects.filesPage.pageTitle);
@@ -68,6 +71,7 @@ describe('Create Files and Delete with Bulk actions', async () => {
     if (numberOfFiles === 0) {
       await expect(numberOfFiles).to.be.equal(0);
     }
+
     if (numberOfFiles !== 0) {
       await expect(numberOfFiles).to.be.above(0);
     }
@@ -104,6 +108,7 @@ describe('Create Files and Delete with Bulk actions', async () => {
       );
       const numberOfFilesAfterFilter = await this.pageObjects.filesPage.getNumberOfElementInGrid();
       await expect(numberOfFilesAfterFilter).to.be.equal(2);
+
       for (let i = 1; i <= numberOfFilesAfterFilter; i++) {
         const textColumn = await this.pageObjects.filesPage.getTextColumnFromTable(
           i,
