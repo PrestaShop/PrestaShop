@@ -164,9 +164,9 @@
             "@php ./tests-legacy/create-test-db.php"
         ],
         "test-all": [
+            "composer phpunit-admin",
             "composer phpunit-legacy",
             "composer unit-tests",
-            "composer phpunit-admin",
             "composer phpunit-sf",
             "composer integration-tests",
             "composer phpunit-controllers",

@@ -2545,21 +2545,15 @@ class AdminProductsControllerCore extends AdminController
                             $product_supplier->update();
                         }
 
-                        if ($product->id_supplier == $supplier->id_supplier) {
-                            if ((int) $attribute['id_product_attribute'] > 0) {
-                                $data = array(
-                                    'supplier_reference' => pSQL($reference),
-                                    'wholesale_price' => (float) Tools::convertPrice($price, $id_currency),
-                                );
-                                $where = '
+                        if ($product->id_supplier == $supplier->id_supplier && (int) $attribute['id_product_attribute'] > 0) {
+                            $data = array(
+                                'supplier_reference' => pSQL($reference),
+                                'wholesale_price' => (float) Tools::convertPrice($price, $id_currency),
+                            );
+                            $where = '
                                     a.id_product = ' . (int) $product->id . '
                                     AND a.id_product_attribute = ' . (int) $attribute['id_product_attribute'];
-                                ObjectModel::updateMultishopTable('Combination', $data, $where);
-                            } else {
-                                $product->wholesale_price = (float) Tools::convertPrice($price, $id_currency); //converted in the default currency
-                                $product->supplier_reference = pSQL($reference);
-                                $product->update();
-                            }
+                            ObjectModel::updateMultishopTable('Combination', $data, $where);
                         }
                     } elseif (Tools::isSubmit('supplier_reference_' . $product->id . '_' . $attribute['id_product_attribute'] . '_' . $supplier->id_supplier)) {
                         //int attribute with default values if possible

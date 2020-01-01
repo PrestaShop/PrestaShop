@@ -27,22 +27,26 @@
 
 namespace PrestaShopBundle\Translation;
 
-use Symfony\Bundle\FrameworkBundle\Translation\Translator as BaseTranslator;
-
 /**
- * Replacement for the original Symfony FrameworkBundle translator
+ * Trait TranslatorLanguageTrait used to check if a language has been loaded and reset a language
  */
-class Translator extends BaseTranslator
+trait TranslatorLanguageTrait
 {
-    use PrestaShopTranslatorTrait;
-    use TranslatorLanguageTrait;
+    /**
+     * @param string $locale Locale code for the catalogue to check if loaded
+     *
+     * @return bool
+     */
+    public function isLanguageLoaded($locale)
+    {
+        return !empty($this->catalogues[$locale]);
+    }
 
     /**
-     * {@inheritdoc}
+     * @param string $locale Locale code for the catalogue to be cleared
      */
-    public function addResource($format, $resource, $locale, $domain = null)
+    public function clearLanguage($locale)
     {
-        parent::addResource($format, $resource, $locale, $domain);
-        parent::addResource('db', $domain . '.' . $locale . '.db', $locale, $domain);
+        unset($this->catalogues[$locale]);
     }
 }
