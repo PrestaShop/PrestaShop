@@ -32,6 +32,7 @@ use PHPUnit_Framework_Assert;
 use PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\CategoryTreeChoiceProvider;
 use PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\GroupByIdChoiceProvider;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\AddCategoryCommand;
+use PrestaShop\PrestaShop\Core\Domain\Category\Command\BulkDeleteCategoriesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\DeleteCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\EditCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryNotFoundException;
@@ -166,7 +167,7 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @When I delete category :categoryReference choosing :deleteMode
+     * @When I delete category :categoryReference choosing mode :deleteMode
      *
      * @param string $categoryReference
      * @param string $deleteMode
@@ -175,6 +176,22 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
     {
         $categoryId = SharedStorage::getStorage()->get($categoryReference);
         $this->getCommandBus()->handle(new DeleteCategoryCommand($categoryId, $deleteMode));
+    }
+
+    /**
+     * @When I bulk delete categories :categoriesReferenceList choosing mode :deleteMode
+     *
+     * @param string $categoriesReferenceList
+     * @param string $deleteMode
+     */
+    public function bulkDeleteCategories(string $categoriesReferenceList, string $deleteMode)
+    {
+        $categoryIds = [];
+        $categoriesReferenceList = explode(',', $categoriesReferenceList);
+        foreach ($categoriesReferenceList as $categoryReference) {
+            $categoryIds[] = SharedStorage::getStorage()->get($categoryReference);
+        }
+        $this->getCommandBus()->handle(new BulkDeleteCategoriesCommand($categoryIds, $deleteMode));
     }
 
     /**
