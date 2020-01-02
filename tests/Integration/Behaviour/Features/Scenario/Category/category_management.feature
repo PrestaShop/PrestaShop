@@ -85,6 +85,24 @@ Feature: Category Management
       | Friendly URL     | dummy-root                  |
       | Group access     | Visitor,Guest,Customer      |
 
+  Scenario: Add root category
+    When I add new root category "root1" with following details:
+      | Name             | dummy root category name    |
+      | Displayed        | false                       |
+      | Description      | dummy root description      |
+      | Meta title       | dummy root meta title       |
+      | Meta description | dummy root meta description |
+      | Friendly URL     | dummy-root                  |
+      | Group access     | Visitor,Guest,Customer      |
+    Then category "root1" should have following details:
+      | Name             | dummy root category name    |
+      | Displayed        | false                       |
+      | Parent category  | Root                        |
+      | Description      | dummy root description      |
+      | Meta title       | dummy root meta title       |
+      | Meta description | dummy root meta description |
+      | Friendly URL     | dummy-root                  |
+      | Group access     | Visitor,Guest,Customer      |
 
 
 
