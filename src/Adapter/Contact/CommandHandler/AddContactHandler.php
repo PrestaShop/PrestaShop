@@ -62,6 +62,7 @@ final class AddContactHandler extends AbstractObjectModelHandler implements AddC
     /**
      * {@inheritdoc}
      *
+     * @throws CannotAddContactException
      * @throws ContactException
      */
     public function handle(AddContactCommand $command)
