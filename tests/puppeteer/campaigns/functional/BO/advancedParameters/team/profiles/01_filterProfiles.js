@@ -33,8 +33,7 @@ const init = async function () {
   };
 };
 
-// Create, Read, Update and Delete profile in BO
-describe('Create, Read, Update and Delete profile in BO', async () => {
+describe('Filter profiles', async () => {
   // before and after functions
   before(async function () {
     browser = await helper.createBrowser();
