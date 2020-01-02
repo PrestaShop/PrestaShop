@@ -25,10 +25,13 @@ const {Statuses} = require('@data/demo/orders');
 let browser;
 let page;
 const today = new Date();
+const day = (`0${today.getDate()}`).slice(-2); // Current day
+const month = (`0${today.getMonth() + 1}`).slice(-2); // Current month
+const year = today.getFullYear(); // Current year
 // Date today (yyy-mm-dd)
-const dateToday = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`;
+const dateToday = `${year}-${month}-${day}`;
 // Date today to check(mm/dd/yyyy)
-const dateTodayToCheck = `${today.getMonth() + 1}/${today.getDate()}/${today.getFullYear()}`;
+const dateTodayToCheck = `${month}/${day}/${year}`;
 let numberOfCreditSlips = 0;
 const firstCreditSlipFileName = '000001.pdf';
 const secondCreditSlipFileName = '000002.pdf';

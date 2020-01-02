@@ -25,9 +25,11 @@ const {Statuses} = require('@data/demo/orders');
 let browser;
 let page;
 const today = new Date();
-// Create a start and end date that there is no credit slips
-const dateFrom = `${today.getFullYear() + 1}-${today.getMonth() + 1}-${today.getDate() - 1}`;
-const dateTo = `${today.getFullYear() + 1}-${today.getMonth() + 1}-${today.getDate()}`;
+// Create a future date that there is no credit slips (yyy-mm-dd)
+const day = (`0${today.getDate()}`).slice(-2); // Current day
+const month = (`0${today.getMonth() + 1}`).slice(-2); // Current month
+const year = today.getFullYear() + 1; // Next year
+const futureDate = `${year}-${month}-${day}`;
 const creditSlipsFileName = 'order-slips.pdf';
 const creditSlipDocumentName = 'Credit Slip';
 
@@ -157,7 +159,7 @@ describe('Generate Credit slip file by date', async () => {
     });
 
     it('should check the error message when there is no credit slip in the entered date', async function () {
-      await this.pageObjects.creditSlipsPage.generatePDFByDate(dateFrom, dateTo);
+      await this.pageObjects.creditSlipsPage.generatePDFByDate(futureDate, futureDate);
       const textMessage = await this.pageObjects.creditSlipsPage.getTextContent(
         this.pageObjects.creditSlipsPage.alertTextBlock,
       );
