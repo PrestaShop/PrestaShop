@@ -40,7 +40,17 @@ Feature: Category Management
       | Group access     | Visitor,Guest,Customer    |
 
   Scenario: Delete category
-    When I delete category "category1" choosing "associate_and_disable"
+    When I delete category "category1" choosing mode "associate_and_disable"
     Then category "category1" does not exist
+
+  Scenario: Bulk delete categories
+    When I add new category "category2" with following details:
+      | Name                 | PC parts 2                |
+      | Displayed            | true                      |
+      | Parent category      | Home Accessories          |
+      | Friendly URL         | pc-parts2                 |
+    And I bulk delete categories "category1,category2" choosing mode "associate_and_disable"
+    Then category "category1" does not exist
+    And category "category2" does not exist
 
 
