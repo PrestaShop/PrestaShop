@@ -29,6 +29,8 @@ import 'velocity-animate';
 import ProductMinitature from './components/product-miniature';
 
 $(document).ready(() => {
+  let history = window.location.href;
+
   prestashop.on('clickQuickView', function (elm) {
     let data = {
       'action': 'quickview',
@@ -136,6 +138,11 @@ $(document).ready(() => {
   $('body').on('click', '.js-search-link', function (event) {
     event.preventDefault();
     prestashop.emit('updateFacets', $(event.target).closest('a').get(0).href);
+  });
+
+  window.addEventListener('popstate', function (e) {
+      var state = e.state;
+      window.location.href = state && state.current_url ? state.current_url : history;
   });
 
   $('body').on('change', '#search_filters select', function (event) {
