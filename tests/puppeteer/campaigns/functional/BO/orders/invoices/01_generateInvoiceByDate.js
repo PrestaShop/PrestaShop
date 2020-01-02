@@ -18,11 +18,11 @@ let browser;
 let page;
 const today = new Date();
 // Create a start and end date that there is no invoices (yyy-mm-dd)
-const day = today.getDate() + 100;
-const month = today.getMonth() + 101;
+const day = today.getDate();
+const month = today.getMonth() + 1;
 const year = today.getFullYear();
-const dateFrom = `${(year + 1).toString()}-${month.toString().substring(1)}-${day.toString().substring(1)}`;
-const dateTo = `${(year + 1).toString()}-${(month + 1).toString()}-${day.toString()}`;
+const dateFrom = `${year + 1}-${(`0${month}`).slice(-2)}-${(`0${day}`).slice(-2)}`;
+const dateTo = `${year + 1}-${(`0${month + 1}`).slice(-2)}-${(`0${day}`).slice(-2)}`;
 
 // Init objects needed
 const init = async function () {
