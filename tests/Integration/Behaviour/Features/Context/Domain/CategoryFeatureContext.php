@@ -35,6 +35,7 @@ use PrestaShop\PrestaShop\Core\Domain\Category\Command\AddCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\BulkDeleteCategoriesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\DeleteCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\EditCategoryCommand;
+use PrestaShop\PrestaShop\Core\Domain\Category\Command\EditRootCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\UpdateCategoryPositionCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoryForEditing;
@@ -136,9 +137,15 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
         $editableCategory = $this->getQueryBus()->handle(new GetCategoryForEditing($categoryId));
         // coverImage array has unique properties generated based on time
         $coverImage = $editableCategory->getCoverImage();
+        $subCategories = $editableCategory->getSubCategories();
 
         /** @var EditableCategory $expectedEditableCategory */
-        $expectedEditableCategory = $this->mapDataToEditableCategory($testCaseData, $categoryId, $coverImage);
+        $expectedEditableCategory = $this->mapDataToEditableCategory(
+            $testCaseData,
+            $categoryId,
+            $subCategories,
+            $coverImage
+        );
 
         PHPUnit_Framework_Assert::assertEquals($expectedEditableCategory, $editableCategory);
     }
@@ -248,19 +255,62 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @param array $testCaseData
-     * @param int $categoryId
-     * @param array|null $coverImage
+     * @When I edit root category :rootCategory with following details:
      *
-     * @return EditableCategory
+     * @param string $rootCategory
+     * @param TableNode $table
      */
-    private function mapDataToEditableCategory(array $testCaseData, int $categoryId, array $coverImage = null): EditableCategory
+    public function editRootCategoryWithFollowingDetails(string $rootCategory, TableNode $table)
     {
         /** @var CategoryTreeChoiceProvider $categoryTreeChoiceProvider */
         $categoryTreeChoiceProvider = $this->container->get(
             'prestashop.adapter.form.choice_provider.category_tree_choice_provider');
         $categoryTreeIterator = new CategoryTreeIterator($categoryTreeChoiceProvider);
-        $parentCategoryId = $categoryTreeIterator->getCategoryId($testCaseData['Parent category']);
+        $categoryId = $categoryTreeIterator->getCategoryId($rootCategory);
+
+        SharedStorage::getStorage()->set($rootCategory, $categoryId);
+
+        $testCaseData = $table->getRowsHash();
+        $editableRootCategoryTestCaseData = $this->mapDataToEditableCategory($testCaseData, $categoryId);
+
+        /** @var EditCategoryCommand $command */
+        $command = new EditCategoryCommand($categoryId);
+        $command->setIsActive($editableRootCategoryTestCaseData->isActive());
+        $command->setLocalizedLinkRewrites($editableRootCategoryTestCaseData->getLinkRewrite());
+        $command->setLocalizedNames($editableRootCategoryTestCaseData->getName());
+        $command->setLocalizedDescriptions($editableRootCategoryTestCaseData->getDescription());
+        $command->setLocalizedMetaTitles($editableRootCategoryTestCaseData->getMetaTitle());
+        $command->setLocalizedMetaDescriptions($editableRootCategoryTestCaseData->getMetaDescription());
+        $command->setLocalizedMetaKeywords($editableRootCategoryTestCaseData->getMetaKeywords());
+        $command->setAssociatedGroupIds($editableRootCategoryTestCaseData->getGroupAssociationIds());
+
+        $this->getCommandBus()->handle($command);
+
+        $this->getCommandBus()->handle(new EditRootCategoryCommand($categoryId));
+    }
+
+    /**
+     * @param array $testCaseData
+     * @param int $categoryId
+     * @param array|null $coverImage
+     * @param array $subcategories
+     *
+     * @return EditableCategory
+     */
+    private function mapDataToEditableCategory(
+        array $testCaseData,
+        int $categoryId,
+        array $subcategories = [],
+        array $coverImage = null
+    ): EditableCategory {
+        $parentCategoryId = null;
+        if (isset($testCaseData['Parent category'])) {
+            /** @var CategoryTreeChoiceProvider $categoryTreeChoiceProvider */
+            $categoryTreeChoiceProvider = $this->container->get(
+                'prestashop.adapter.form.choice_provider.category_tree_choice_provider');
+            $categoryTreeIterator = new CategoryTreeIterator($categoryTreeChoiceProvider);
+            $parentCategoryId = $categoryTreeIterator->getCategoryId($testCaseData['Parent category']);
+        }
 
         /** @var GroupByIdChoiceProvider $groupByIdChoiceProvider */
         $groupByIdChoiceProvider = $this->container->get(
@@ -308,6 +358,10 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
             $linkRewrite = array($this->defaultLanguageId => $testCaseData['Friendly URL']);
         }
 
+        if ($parentCategoryId === null) {
+            $parentCategoryId = CategoryTreeIterator::ROOT_CATEGORY_ID;
+        }
+
         return new EditableCategory(
             new CategoryId($categoryId),
             $name,
@@ -320,8 +374,11 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
             $linkRewrite,
             $groupAssociationIds,
             array(0 => '1'),
-            false,
-            $coverImage
+            $parentCategoryId === null || $parentCategoryId === 1 ? true : false,
+            $coverImage,
+            null,
+            [],
+            $subcategories
         );
     }
 }

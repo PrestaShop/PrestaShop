@@ -6,6 +6,8 @@ use PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\CategoryTreeChoiceProvider
 
 class CategoryTreeIterator
 {
+    public const ROOT_CATEGORY_ID = 1;
+
     public $categoryTreeChoiceProvider;
 
     /**
