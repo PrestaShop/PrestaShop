@@ -49,6 +49,7 @@ use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation\CartShipp
 use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation\CartSummary;
 use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation\CustomizationFieldData;
 use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation\Customization;
+use PrestaShop\PrestaShop\Core\Localization\CLDR\ComputingPrecision;
 use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 use PrestaShop\PrestaShop\Core\Localization\LocaleInterface;
 use PrestaShopException;
@@ -187,7 +188,7 @@ final class GetCartInformationHandler extends AbstractCartHandler implements Get
                 (int) $discount['id_cart_rule'],
                 $discount['name'],
                 $discount['description'],
-                \Tools::ps_round($discount['value_real'], Context::getContext()->getComputingPrecision())
+                \Tools::ps_round($discount['value_real'], $currency->precision)
             );
         }
 
@@ -211,9 +212,9 @@ final class GetCartInformationHandler extends AbstractCartHandler implements Get
                 $product['name'],
                 isset($product['attributes_small']) ? $product['attributes_small'] : '',
                 $product['reference'],
-                \Tools::ps_round($product['price'], Context::getContext()->getComputingPrecision()),
+                \Tools::ps_round($product['price'], $currency->precision),
                 (int) $product['quantity'],
-                \Tools::ps_round($product['total'], Context::getContext()->getComputingPrecision()),
+                \Tools::ps_round($product['total'], $currency->precision),
                 $this->contextLink->getImageLink($product['link_rewrite'], $product['id_image'], 'small_default'),
                 $this->getProductCustomizedData($cart, $product)
             );
