@@ -54,6 +54,22 @@ Feature: Category Management
     And category "category2" does not exist
 
   Scenario: Update category position
+    Given single shop context is loaded
+    When I add new category "category2" with following details:
+      | Name                 | PC parts 2                |
+      | Displayed            | true                      |
+      | Parent category      | Home Accessories          |
+      | Friendly URL         | pc-parts2                 |
+    And I update category "category2" position with following details:
+      | Parent category | Home Accessories    |
+      | Way             | Up                  |
+      | Positions       | tr_8_16_1,tr_8_13_0 |
+      | Found first     | false               |
+
+# not possible to change category position on the multi shop context
+# not sure if it should or should not be available
+  Scenario: Update category position
+    Given multiple shop context is loaded
     When I add new category "category2" with following details:
       | Name                 | PC parts 2                |
       | Displayed            | true                      |
