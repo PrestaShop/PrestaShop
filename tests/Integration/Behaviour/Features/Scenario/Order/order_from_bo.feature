@@ -5,28 +5,29 @@ Feature: Order from Back Office (BO)
   As a BO user
   I need to be able to customize orders from the BO
 
-  #  fix the failing scenarios/code
-  #  make scenarios independent
-  #  change legacy classes with domain where possible
-  #  increase code re-use
+  #  todo: fix the failing scenarios/code
+  #  todo: make scenarios independent
+  #  todo: change legacy classes with domain where possible
+  #  todo: increase code re-use
 
   Background:
     Given email sending is disabled
-    #    improve context to accept EditableCurrency|ReferenceCurrency instead of legacy Currency object
-    #    use domain GetCurrencyForEditing|GetReferenceCurrency to add currency to context
+    #    todo: improve context to accept EditableCurrency|ReferenceCurrency instead of legacy Currency object
+    #    todo: use domain GetCurrencyForEditing|GetReferenceCurrency to add currency to context
     And the current currency is "USD"
-    #    use domain context for Country
+    #    todo: use domain context for Country
     And country "US" is enabled
     And the module "dummy_payment" is installed
+    #    todo: use domain context to get employee when is merged: https://github.com/PrestaShop/PrestaShop/pull/16757
     And I am logged in as "test@prestashop.com" employee
-     #    use domain context to get customer: GetCustomerForViewing;
-     #    find a way how to get customer object/id by its properties without using legacy objects
+     #    todo: use domain context to get customer: GetCustomerForViewing;
+     #    todo: find a way how to get customer object/id by its properties without using legacy objects
      #    possible solution can be create new customer with AddCustomerHandler
      #    but then how to add Customer Address using domain classes???
     And there is customer "testCustomer" with email "pub@prestashop.com"
     And customer "testCustomer" has address in "US" country
     And I create an empty cart "dummy_cart" for customer "testCustomer"
-    # find a way to create country without legacy object
+    #    todo: find a way to create country without legacy object
     And I select "US" address as delivery and invoice address for customer "testCustomer" in cart "dummy_cart"
     And I add 2 products "Mug The best is yet to come" to the cart "dummy_cart"
     And I add order "bo_order1" with the following details:
@@ -131,14 +132,15 @@ Feature: Order from Back Office (BO)
     And order "bo_order2" has status "Delivered"
 
   Scenario: Change order shipping address
-    Given I create new address with following details:
-      | Customer email  | pub@prestashop.com   |
-      | Address alias   | dummyCustomerAddress |
-      | First Name      | CustomerName         |
-      | Last Name       | CustomerSurname      |
-      | Address         | Street st. 1         |
-      | Zip/Postal Code | 11111                |
-      | City            | Paris                |
-      | Country         | France               |
+#   -------------- uses legacy clases from here ---------------
+#    avoid using the hows and there is and focus on the steps with bussiness value
+#   todo: When domain handler for adding address is available - use it here
+    Given there is a zone named "zone"
+    And there is a country named "country" and iso code "US" in zone "zone"
+    And there is a state named "state" with iso code "TEST-1" in country"country" and zone "zone"
+    And there is an address named "1601 Willow Rd Menlo Park" with postcode "1" in state "state"
+    And there is a customer named "customer1" whose email is "fake@prestashop.com"
+    And address "1601 Willow Rd Menlo Park" is associated to customer "customer1"
+    #   -------------- uses legacy clases up to here ---------------
     When I change order "bo_order1" shipping address to "1601 Willow Rd Menlo Park"
     Then order "bo_order1" shipping address should be "1601 Willow Rd Menlo Park"
