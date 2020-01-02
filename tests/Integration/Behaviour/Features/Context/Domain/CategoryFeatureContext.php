@@ -35,6 +35,7 @@ use PrestaShop\PrestaShop\Core\Domain\Category\Command\AddCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\AddRootCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\BulkDeleteCategoriesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\DeleteCategoryCommand;
+use PrestaShop\PrestaShop\Core\Domain\Category\Command\DeleteCategoryCoverImageCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\EditCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\EditRootCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\UpdateCategoryPositionCommand;
@@ -319,6 +320,44 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
         SharedStorage::getStorage()->set($categoryReference, $categoryIdObj->getValue());
     }
 
+    /**
+     * @When I click delete button below category :categoryReference cover image
+     *
+     * @param string $categoryReference
+     */
+    public function deleteButtonBelowCategoryCoverImage(string $categoryReference)
+    {
+        $categoryId = SharedStorage::getStorage()->get($categoryReference);
+        $this->getCommandBus()->handle(new DeleteCategoryCoverImageCommand($categoryId));
+    }
+
+    /**
+     * @Given category :categoryReference has cover image
+     *
+     * @param string $categoryReference
+     */
+    public function categoryHasCoverImage(string $categoryReference)
+    {
+        $categoryId = SharedStorage::getStorage()->get($categoryReference);
+        /** @var EditableCategory $editableCategory */
+        $editableCategory = $this->getQueryBus()->handle(new GetCategoryForEditing($categoryId));
+        $coverImage = $editableCategory->getCoverImage();
+        PHPUnit_Framework_Assert::assertNotNull($coverImage);
+    }
+
+    /**
+     * @Then category :categoryReference does not have cover image
+     *
+     * @param string $categoryReference
+     */
+    public function categoryDoesNotHaveCoverImage(string $categoryReference)
+    {
+        $categoryId = SharedStorage::getStorage()->get($categoryReference);
+        /** @var EditableCategory $editableCategory */
+        $editableCategory = $this->getQueryBus()->handle(new GetCategoryForEditing($categoryId));
+        $coverImage = $editableCategory->getCoverImage();
+        PHPUnit_Framework_Assert::assertNull($coverImage);
+    }
 
     /**
      * @param array $testCaseData
@@ -334,35 +373,8 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
         array $subcategories = [],
         array $coverImage = null
     ): EditableCategory {
-        $parentCategoryId = null;
-        if (isset($testCaseData['Parent category'])) {
-            /** @var CategoryTreeChoiceProvider $categoryTreeChoiceProvider */
-            $categoryTreeChoiceProvider = $this->container->get(
-                'prestashop.adapter.form.choice_provider.category_tree_choice_provider');
-            $categoryTreeIterator = new CategoryTreeIterator($categoryTreeChoiceProvider);
-            $parentCategoryId = $categoryTreeIterator->getCategoryId($testCaseData['Parent category']);
-        }
-
-        /** @var GroupByIdChoiceProvider $groupByIdChoiceProvider */
-        $groupByIdChoiceProvider = $this->container->get(
-            'prestashop.adapter.form.choice_provider.group_by_id_choice_provider'
-        );
-        $groupChoicesArray = $groupByIdChoiceProvider->getChoices();
-
-        $groupAssociationIds = [];
-        if (isset($testCaseData['Group access'])) {
-            $groupAssociations = explode(',', $testCaseData['Group access']);
-            foreach ($groupAssociations as $groupAssociation) {
-                $groupAssociationIds[] = (int) $groupChoicesArray[$groupAssociation];
-            }
-        } else {
-            $groupAssociationIds = [
-                0 => '1',
-                1 => '2',
-                2 => '3',
-            ];
-        }
-
+        $parentCategoryId = $this->getParentCategoryId($testCaseData);
+        $groupAssociationIds = $this->getGroupAssociationIds($testCaseData);
         $isActive = PrimitiveUtils::castElementInType($testCaseData['Displayed'], PrimitiveUtils::TYPE_BOOLEAN);
 
         $name = [$this->defaultLanguageId => self::EMPTY_VALUE];
@@ -411,5 +423,57 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
             [],
             $subcategories
         );
+    }
+
+    /**
+     * @param array $testCaseData
+     *
+     * @return int
+     */
+    private function getParentCategoryId(array $testCaseData)
+    {
+        $parentCategoryId = null;
+        if (isset($testCaseData['Parent category'])) {
+            /** @var CategoryTreeChoiceProvider $categoryTreeChoiceProvider */
+            $categoryTreeChoiceProvider = $this->container->get(
+                'prestashop.adapter.form.choice_provider.category_tree_choice_provider');
+            $categoryTreeIterator = new CategoryTreeIterator($categoryTreeChoiceProvider);
+            $parentCategoryId = $categoryTreeIterator->getCategoryId($testCaseData['Parent category']);
+        }
+        if ($parentCategoryId === null) {
+            $parentCategoryId = CategoryTreeIterator::ROOT_CATEGORY_ID;
+        }
+
+        return $parentCategoryId;
+    }
+
+    /**
+     * @param array $testCaseData
+     *
+     * @return array
+     */
+    private function getGroupAssociationIds(array $testCaseData): array
+    {
+        /** @var GroupByIdChoiceProvider $groupByIdChoiceProvider */
+        $groupByIdChoiceProvider = $this->container->get(
+            'prestashop.adapter.form.choice_provider.group_by_id_choice_provider'
+        );
+        $groupChoicesArray = $groupByIdChoiceProvider->getChoices();
+
+        $groupAssociationIds = [];
+        if (isset($testCaseData['Group access'])) {
+            $groupAssociations = explode(',', $testCaseData['Group access']);
+            foreach ($groupAssociations as $groupAssociation) {
+                $groupAssociationIds[] = (int) $groupChoicesArray[$groupAssociation];
+            }
+        } else {
+            $groupAssociationIds = array(
+                0 => '1',
+                1 => '2',
+                2 => '3',
+            );
+        }
+
+        return $groupAssociationIds;
     }
 }

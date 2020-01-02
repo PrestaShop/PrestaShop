@@ -55,7 +55,6 @@ final class AddRootCategoryHandler extends AbstractObjectModelHandler implements
 
     /**
      * {@inheritdoc}
-     *
      */
     public function handle(AddRootCategoryCommand $command)
     {

@@ -7,17 +7,10 @@ Feature: Category Management
 
   Background: Adding new Category
     Given I add new category "category1" with following details:
-      | Name                 | PC parts                  |
-      | Displayed            | true                      |
-      | Parent category      | Home Accessories          |
-      | Friendly URL         | pc-parts                  |
-
-  Scenario: Getting category
-    Then category "category1" should have following details:
-      | Name                 | PC parts                  |
-      | Displayed            | true                      |
-      | Parent category      | Home Accessories          |
-      | Friendly URL         | pc-parts                  |
+      | Name                 | PC parts         |
+      | Displayed            | true             |
+      | Parent category      | Home Accessories |
+      | Friendly URL         | pc-parts         |
 
   Scenario: Edit category
     When I edit category "category1" with following details:
@@ -104,5 +97,14 @@ Feature: Category Management
       | Friendly URL     | dummy-root                  |
       | Group access     | Visitor,Guest,Customer      |
 
+  Scenario: delete category cover image
+    Given I add new category "category1" with following details:
+      | Name                 | PC parts         |
+      | Displayed            | true             |
+      | Parent category      | Home Accessories |
+      | Friendly URL         | pc-parts         |
+    And category "category1" has cover image
+    When I click delete button below category "category1" cover image
+    Then category "category1" does not have cover image
 
 
