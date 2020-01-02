@@ -32,6 +32,7 @@ use PHPUnit\Framework\Assert as Assert;
 use PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\CategoryTreeChoiceProvider;
 use PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\GroupByIdChoiceProvider;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\AddCategoryCommand;
+use PrestaShop\PrestaShop\Core\Domain\Category\Command\AddRootCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\BulkDeleteCategoriesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\DeleteCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\EditCategoryCommand;
@@ -50,6 +51,7 @@ use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 class CategoryFeatureContext extends AbstractDomainFeatureContext
 {
     const EMPTY_VALUE = '';
+    const DEFAULT_ROOT_CATEGORY_ID = 1;
 
     const CATEGORY_POSITION_WAYS_MAP = [
         0 => 'Up',
@@ -290,6 +292,35 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @When I add new root category :categoryReference with following details:
+     *
+     * @param string $categoryReference
+     * @param TableNode $table
+     */
+    public function addNewRootCategoryWithFollowingDetails(string $categoryReference, TableNode $table)
+    {
+        $testCaseData = $table->getRowsHash();
+        $editableRootCategoryTestCaseData = $this->mapDataToEditableCategory($testCaseData);
+
+        /** @var EditCategoryCommand $command */
+        $command = new AddRootCategoryCommand(
+            $editableRootCategoryTestCaseData->getName(),
+            $editableRootCategoryTestCaseData->getLinkRewrite(),
+            $editableRootCategoryTestCaseData->isActive()
+        );
+        $command->setLocalizedDescriptions($editableRootCategoryTestCaseData->getDescription());
+        $command->setLocalizedMetaTitles($editableRootCategoryTestCaseData->getMetaTitle());
+        $command->setLocalizedMetaDescriptions($editableRootCategoryTestCaseData->getMetaDescription());
+        $command->setLocalizedMetaKeywords($editableRootCategoryTestCaseData->getMetaKeywords());
+        $command->setAssociatedGroupIds($editableRootCategoryTestCaseData->getGroupAssociationIds());
+
+        /** @var CategoryId $categoryIdObj */
+        $categoryIdObj = $this->getCommandBus()->handle($command);
+        SharedStorage::getStorage()->set($categoryReference, $categoryIdObj->getValue());
+    }
+
+
+    /**
      * @param array $testCaseData
      * @param int $categoryId
      * @param array|null $coverImage
@@ -299,7 +330,7 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
      */
     private function mapDataToEditableCategory(
         array $testCaseData,
-        int $categoryId,
+        int $categoryId = self::DEFAULT_ROOT_CATEGORY_ID,
         array $subcategories = [],
         array $coverImage = null
     ): EditableCategory {
