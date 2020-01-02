@@ -17,12 +17,11 @@ const {Statuses} = require('@data/demo/orders');
 let browser;
 let page;
 const today = new Date();
-// Create a start and end date that there is no delivery slip (yyy-mm-dd)
-const day = today.getDate();
-const month = today.getMonth() + 1;
-const year = today.getFullYear();
-const dateFrom = `${year + 1}-${(`0${month}`).slice(-2)}-${(`0${day}`).slice(-2)}`;
-const dateTo = `${year + 1}-${(`0${month + 1}`).slice(-2)}-${(`0${day}`).slice(-2)}`;
+// Create a future date that there is no delivery slips (yyy-mm-dd)
+const day = (`0${today.getDate()}`).slice(-2); // Current day
+const month = (`0${today.getMonth() + 1}`).slice(-2); // Current month
+const year = today.getFullYear() + 1; // Next year
+const futureDate = `${year}-${month}-${day}`;
 const fileName = 'deliveries.pdf';
 
 // Init objects needed
@@ -103,7 +102,7 @@ describe('Generate Delivery slip file by date', async () => {
     });
 
     it('should check the error message when there is no delivery slip in the entered date', async function () {
-      await this.pageObjects.deliverySlipsPage.generatePDFByDate(dateFrom, dateTo);
+      await this.pageObjects.deliverySlipsPage.generatePDFByDate(futureDate, futureDate);
       const textMessage = await this.pageObjects.deliverySlipsPage.getTextContent(
         this.pageObjects.deliverySlipsPage.alertTextBlock,
       );
