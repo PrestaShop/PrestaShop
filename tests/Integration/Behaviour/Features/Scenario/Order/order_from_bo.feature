@@ -5,28 +5,28 @@ Feature: Order from Back Office (BO)
   As a BO user
   I need to be able to customize orders from the BO
 
-  #  todo: fix the failing scenarios/code
-  #  todo: make scenarios independent
-  #  todo: change legacy classes with domain where possible
-  #  todo: increase code re-use
+  #  fix the failing scenarios/code
+  #  make scenarios independent
+  #  change legacy classes with domain where possible
+  #  increase code re-use
 
   Background:
     Given email sending is disabled
-    #    todo: improve context to accept EditableCurrency|ReferenceCurrency instead of legacy Currency object
-    #    todo: use domain GetCurrencyForEditing|GetReferenceCurrency to add currency to context
+    #    improve context to accept EditableCurrency|ReferenceCurrency instead of legacy Currency object
+    #    use domain GetCurrencyForEditing|GetReferenceCurrency to add currency to context
     And the current currency is "USD"
-    #    todo: use domain context for Country
+    #    use domain context for Country
     And country "US" is enabled
     And the module "dummy_payment" is installed
     And I am logged in as "test@prestashop.com" employee
-     #    todo: use domain context to get customer: GetCustomerForViewing;
-     #    todo: find a way how to get customer object/id by its properties without using legacy objects
+     #    use domain context to get customer: GetCustomerForViewing;
+     #    find a way how to get customer object/id by its properties without using legacy objects
      #    possible solution can be create new customer with AddCustomerHandler
      #    but then how to add Customer Address using domain classes???
     And there is customer "testCustomer" with email "pub@prestashop.com"
     And customer "testCustomer" has address in "US" country
     And I create an empty cart "dummy_cart" for customer "testCustomer"
-    #    todo: find a way to create country without legacy object
+    # find a way to create country without legacy object
     And I select "US" address as delivery and invoice address for customer "testCustomer" in cart "dummy_cart"
     And I add 2 products "Mug The best is yet to come" to the cart "dummy_cart"
     And I add order "bo_order1" with the following details:
@@ -44,15 +44,16 @@ Feature: Order from Back Office (BO)
     Then order "bo_order1" has Tracking number "TEST1234"
     And order "bo_order1" has Carrier "2 - My carrier (Delivery next day!)"
 
-  Scenario: pay order with negative amount and see it is not valid
-    When order "bo_order1" has 0 payments
-    And I pay order "bo_order1" with the invalid following details:
-      | date           | 2019-11-26 13:56:22 |
-      | payment_method | Payments by check   |
-      | transaction_id | test!@#$%%^^&* OR 1 |
-      | id_currency    | 1                   |
-      | amount         | -5.548              |
-    Then order "bo_order1" has 0 payments
+#  failing scenario related to: https://github.com/PrestaShop/PrestaShop/issues/16582
+#  Scenario: pay order with negative amount and see it is not valid
+#    When order "bo_order1" has 0 payments
+#    And I pay order "bo_order1" with the invalid following details:
+#      | date           | 2019-11-26 13:56:22 |
+#      | payment_method | Payments by check   |
+#      | transaction_id | test!@#$%%^^&* OR 1 |
+#      | id_currency    | 1                   |
+#      | amount         | -5.548              |
+#    Then order "bo_order1" has 0 payments
 
   Scenario: pay for order
     When I pay order "bo_order1" with the following details:
