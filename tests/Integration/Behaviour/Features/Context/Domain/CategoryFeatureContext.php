@@ -277,7 +277,7 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
         $editableRootCategoryTestCaseData = $this->mapDataToEditableCategory($testCaseData, $categoryId);
 
         /** @var EditCategoryCommand $command */
-        $command = new EditCategoryCommand($categoryId);
+        $command = new EditRootCategoryCommand($categoryId);
         $command->setIsActive($editableRootCategoryTestCaseData->isActive());
         $command->setLocalizedLinkRewrites($editableRootCategoryTestCaseData->getLinkRewrite());
         $command->setLocalizedNames($editableRootCategoryTestCaseData->getName());
@@ -288,8 +288,6 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
         $command->setAssociatedGroupIds($editableRootCategoryTestCaseData->getGroupAssociationIds());
 
         $this->getCommandBus()->handle($command);
-
-        $this->getCommandBus()->handle(new EditRootCategoryCommand($categoryId));
     }
 
     /**
