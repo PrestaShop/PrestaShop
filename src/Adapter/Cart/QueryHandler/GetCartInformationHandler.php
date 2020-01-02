@@ -187,7 +187,7 @@ final class GetCartInformationHandler extends AbstractCartHandler implements Get
                 (int) $discount['id_cart_rule'],
                 $discount['name'],
                 $discount['description'],
-                $this->locale->formatPrice($discount['value_real'], $currency->iso_code)
+                \Tools::ps_round($discount['value_real'], Context::getContext()->getComputingPrecision())
             );
         }
 
@@ -211,9 +211,9 @@ final class GetCartInformationHandler extends AbstractCartHandler implements Get
                 $product['name'],
                 isset($product['attributes_small']) ? $product['attributes_small'] : '',
                 $product['reference'],
-                $this->locale->formatPrice($product['price'], $currency->iso_code),
+                \Tools::ps_round($product['price'], Context::getContext()->getComputingPrecision()),
                 (int) $product['quantity'],
-                $this->locale->formatPrice($product['total'], $currency->iso_code),
+                \Tools::ps_round($product['total'], Context::getContext()->getComputingPrecision()),
                 $this->contextLink->getImageLink($product['link_rewrite'], $product['id_image'], 'small_default'),
                 $this->getProductCustomizedData($cart, $product)
             );
