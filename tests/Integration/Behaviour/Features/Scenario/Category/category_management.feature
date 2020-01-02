@@ -53,8 +53,8 @@ Feature: Category Management
     Then category "category1" does not exist
     And category "category2" does not exist
 
+#    update category not available for multi shop context
   Scenario: Update category position
-    Given single shop context is loaded
     When I add new category "category2" with following details:
       | Name                 | PC parts 2                |
       | Displayed            | true                      |
@@ -66,19 +66,25 @@ Feature: Category Management
       | Positions       | tr_8_16_1,tr_8_13_0 |
       | Found first     | false               |
 
-# not possible to change category position on the multi shop context
-# not sure if it should or should not be available
-  Scenario: Update category position
-    Given multiple shop context is loaded
-    When I add new category "category2" with following details:
-      | Name                 | PC parts 2                |
-      | Displayed            | true                      |
-      | Parent category      | Home Accessories          |
-      | Friendly URL         | pc-parts2                 |
-    And I update category "category2" position with following details:
-      | Parent category | Home Accessories    |
-      | Way             | Up                  |
-      | Positions       | tr_8_16_1,tr_8_13_0 |
-      | Found first     | false               |
+  Scenario: Edit root category
+    When I edit root category "Home" with following details:
+      | Name             | dummy root category name    |
+      | Displayed        | false                       |
+      | Description      | dummy root description      |
+      | Meta title       | dummy root meta title       |
+      | Meta description | dummy root meta description |
+      | Friendly URL     | dummy-root                  |
+      | Group access     | Visitor,Guest,Customer      |
+    Then category "Home" should have following details:
+      | Name             | dummy root category name    |
+      | Displayed        | false                       |
+      | Parent category  | Root                        |
+      | Description      | dummy root description      |
+      | Meta title       | dummy root meta title       |
+      | Meta description | dummy root meta description |
+      | Friendly URL     | dummy-root                  |
+      | Group access     | Visitor,Guest,Customer      |
+
+
 
 
