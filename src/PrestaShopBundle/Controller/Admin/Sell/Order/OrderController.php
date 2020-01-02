@@ -26,7 +26,10 @@
 
 namespace PrestaShopBundle\Controller\Admin\Sell\Order;
 
+use Context;
+use Currency;
 use Exception;
+use Language;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartInformation;
 use PrestaShop\PrestaShop\Core\Domain\CustomerMessage\Command\AddOrderCustomerMessageCommand;
@@ -48,13 +51,13 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderEmailResendException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\TransistEmailSendingException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Invoice\Command\GenerateInvoiceCommand;
-use PrestaShop\PrestaShop\Core\Domain\Order\OrderConstraints;
 use PrestaShop\PrestaShop\Core\Domain\Order\Invoice\Command\UpdateInvoiceNoteCommand;
+use PrestaShop\PrestaShop\Core\Domain\Order\OrderConstraints;
 use PrestaShop\PrestaShop\Core\Domain\Order\Payment\Command\AddPaymentCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\UpdateProductInOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderForViewing;
-use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderPreview;
+use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderPreview;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\OrderGridDefinitionFactory;
@@ -137,8 +140,8 @@ class OrderController extends FrameworkBundleAdminController
     public function createAction()
     {
         return $this->render('@PrestaShop/Admin/Sell/Order/Order/create.html.twig', [
-            'currencies' => \Currency::getCurrenciesByIdShop(\Context::getContext()->shop->id),
-            'languages' => \Language::getLanguages(true, \Context::getContext()->shop->id),
+            'currencies' => Currency::getCurrenciesByIdShop(Context::getContext()->shop->id),
+            'languages' => Language::getLanguages(true, Context::getContext()->shop->id),
         ]);
     }
 

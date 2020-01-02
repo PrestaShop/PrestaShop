@@ -32,6 +32,7 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\Command\AddCustomerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\DeleteCustomerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\EditCustomerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\TransformGuestToCustomerCommand;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\DuplicateCustomerEmailException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\EditableCustomer;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerDeleteMethod;
@@ -65,6 +66,8 @@ class CustomerManagerFeatureContext extends AbstractPrestaShopFeatureContext
     protected $customerRegistry = [];
 
     /**
+     * todo hint: move to domain context?
+     *
      * @When /^I create a customer "(.+)" with following properties:$/
      */
     public function createACustomerUsingCommand($customerReference, TableNode $table)
@@ -110,9 +113,13 @@ class CustomerManagerFeatureContext extends AbstractPrestaShopFeatureContext
 
         $this->latestResult = $id->getValue();
         $this->customerRegistry[$customerReference] = $id->getValue();
+
+        SharedStorage::getStorage()->set($customerReference, $id->getValue());
     }
 
     /**
+     * todo hint: move to domain context?
+     *
      * @When /^I attempt to create a customer "(.+)" with following properties:$/
      */
     public function attemptToCreateACustomerUsingCommand($customerReference, TableNode $table)
@@ -126,6 +133,24 @@ class CustomerManagerFeatureContext extends AbstractPrestaShopFeatureContext
             }
 
             $this->latestResult = $e;
+        }
+    }
+
+    /**
+     * todo hint: move to domain context?
+     *
+     * @When I create not existing customer :customerReference with following properties:
+     *
+     * @param string $customerReference
+     * @param TableNode $table
+     */
+    public function iCreateNotExistingCustomerWithFollowingProperties(string $customerReference, TableNode $table)
+    {
+        try {
+            /** @var CustomerId $customerIdObject */
+            $customerIdObject = $this->createACustomerUsingCommand($customerReference, $table);
+            SharedStorage::getStorage()->set($customerReference, $customerIdObject->getValue());
+        } catch (DuplicateCustomerEmailException $e) {
         }
     }
 

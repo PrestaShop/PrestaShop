@@ -104,8 +104,6 @@ abstract class AbstractDomainFeatureContext implements Context
     /**
      * @param string $expectedError
      * @param int|null $errorCode
-     *
-     * @throws RuntimeException
      */
     protected function assertLastErrorIs($expectedError, $errorCode = null)
     {

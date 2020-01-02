@@ -29,8 +29,9 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain;
 use Cart;
 use Configuration;
 use Context;
-use Currency;
 use Country;
+use Currency;
+use Customer;
 use Exception;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\CreateEmptyCustomerCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\SetFreeShippingToCartCommand;
@@ -38,7 +39,8 @@ use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartAddressesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateProductQuantityInCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\CartId;
 use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\QuantityAction;
-use Product;
+use PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProducts;
+use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 
 class CartFeatureContext extends AbstractDomainFeatureContext
@@ -60,45 +62,64 @@ class CartFeatureContext extends AbstractDomainFeatureContext
 
     /**
      * @When I create an empty cart :cartReference for customer :customerReference
+     *
+     * @param string $cartReference
+     * @param string $customerReference
      */
-    public function createEmptyCartForCustomer($cartReference, $customerReference)
+    public function createEmptyCartForCustomer(string $cartReference, string $customerReference)
     {
         // Clear static cache each time you create a cart
         Cart::resetStaticCache();
+        /** @var Customer $customer */
         $customer = SharedStorage::getStorage()->get($customerReference);
 
-        /** @var CartId $cartId */
-        $cartId = $this->getCommandBus()->handle(
+        /** @var CartId $cartIdObject */
+        $cartIdObject = $this->getCommandBus()->handle(
             new CreateEmptyCustomerCartCommand(
-                (int) $customer->id,
-                (int) Context::getContext()->shop->id
+                (int) $customer->id
             )
         );
 
-        SharedStorage::getStorage()->set($cartReference, new Cart($cartId->getValue()));
+        SharedStorage::getStorage()->set($cartReference, $cartIdObject->getValue());
     }
 
     /**
-     * @When I add :quantity products with reference :productReference to the cart :reference
+     * @When I add :quantity products :productName to the cart :cartReference
+     *
+     * @param int $quantity
+     * @param string $productName
+     * @param string $cartReference
      */
-    public function addProductToCarts($quantity, $productReference, $reference)
+    public function addProductsToCarts(int $quantity, string $productName, string $cartReference)
     {
-        $productId = (int) Product::getIdByReference($productReference);
+        /** @var array $productsMap */
+        $productsMap = $this->getQueryBus()->handle(new SearchProducts($productName, 1));
+        $productId = array_key_first($productsMap);
+
+        if (!$productId) {
+            throw new RuntimeException('Product with name "%s" does not exist', $productName);
+        }
 
         $this->getCommandBus()->handle(
             new UpdateProductQuantityInCartCommand(
-                (int) SharedStorage::getStorage()->get($reference)->id,
+                SharedStorage::getStorage()->get($cartReference),
                 $productId,
                 (int) $quantity,
                 QuantityAction::INCREASE_PRODUCT_QUANTITY
             )
         );
+
+        SharedStorage::getStorage()->set($productName, $productId);
     }
 
     /**
      * @When I select :countryIsoCode address as delivery and invoice address for customer :customerReference in cart :cartReference
+     *
+     * @param string $countryIsoCode
+     * @param string $customerReference
+     * @param string $cartReference
      */
-    public function selectAddressAsDeliveryAndInvoiceAddress($countryIsoCode, $customerReference, $cartReference)
+    public function selectAddressAsDeliveryAndInvoiceAddress(string $countryIsoCode, string $customerReference, string $cartReference)
     {
         $customer = SharedStorage::getStorage()->get($customerReference);
 
@@ -120,7 +141,7 @@ class CartFeatureContext extends AbstractDomainFeatureContext
 
         $this->getCommandBus()->handle(
             new UpdateCartAddressesCommand(
-                (int) SharedStorage::getStorage()->get($cartReference)->id,
+                (int) SharedStorage::getStorage()->get($cartReference),
                 $addressId,
                 $addressId
             )
@@ -128,13 +149,15 @@ class CartFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @When I set Free shipping to the cart :reference
+     * @When I set Free shipping to the cart :cartReference
+     *
+     * @param string $cartReference
      */
-    public function setFreeShippingToCart($reference)
+    public function setFreeShippingToCart(string $cartReference)
     {
         $this->getCommandBus()->handle(
             new SetFreeShippingToCartCommand(
-                (int) SharedStorage::getStorage()->get($reference)->id,
+                SharedStorage::getStorage()->get($cartReference),
                 true
             )
         );
