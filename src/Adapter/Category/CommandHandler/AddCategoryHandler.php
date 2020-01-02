@@ -44,7 +44,9 @@ final class AddCategoryHandler extends AbstractObjectModelHandler implements Add
     /**
      * {@inheritdoc}
      *
-     * @throws CannotAddCategoryException
+     * @param AddCategoryCommand $command
+     *
+     * @return CategoryId
      */
     public function handle(AddCategoryCommand $command)
     {
@@ -57,6 +59,9 @@ final class AddCategoryHandler extends AbstractObjectModelHandler implements Add
      * @param AddCategoryCommand $command
      *
      * @return Category
+     *
+     * @throws CannotAddCategoryException
+     * @throws CategoryConstraintException
      */
     private function createCategoryFromCommand(AddCategoryCommand $command)
     {
