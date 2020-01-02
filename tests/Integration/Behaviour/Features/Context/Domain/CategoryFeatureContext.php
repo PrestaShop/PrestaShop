@@ -35,6 +35,7 @@ use PrestaShop\PrestaShop\Core\Domain\Category\Command\AddCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\BulkDeleteCategoriesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\DeleteCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\EditCategoryCommand;
+use PrestaShop\PrestaShop\Core\Domain\Category\Command\UpdateCategoryPositionCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoryForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Category\QueryResult\EditableCategory;
@@ -48,6 +49,11 @@ use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 class CategoryFeatureContext extends AbstractDomainFeatureContext
 {
     const EMPTY_VALUE = '';
+
+    const CATEGORY_POSITION_WAYS_MAP = [
+        0 => 'Up',
+        1 => 'Down',
+    ];
 
     /** @var ContainerInterface */
     private $container;
@@ -208,6 +214,37 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
             return;
         }
         throw new RuntimeException(sprintf('Category %s still exists', $categoryReference));
+    }
+
+    /**
+     * @When I update category :categoryReference position with following details:
+     *
+     * @param string $categoryReference
+     * @param TableNode $table
+     */
+    public function updateCategoryPositionWithFollowingDetails(string $categoryReference, TableNode $table)
+    {
+        /** @var array $testCaseData */
+        $testCaseData = $table->getRowsHash();
+
+        $categoryId = SharedStorage::getStorage()->get($categoryReference);
+
+        /** @var CategoryTreeChoiceProvider $categoryTreeChoiceProvider */
+        $categoryTreeChoiceProvider = $this->container->get(
+            'prestashop.adapter.form.choice_provider.category_tree_choice_provider');
+        $categoryTreeIterator = new CategoryTreeIterator($categoryTreeChoiceProvider);
+        $parentCategoryId = $categoryTreeIterator->getCategoryId($testCaseData['Parent category']);
+
+        $wayId = array_flip(self::CATEGORY_POSITION_WAYS_MAP)[$testCaseData['Way']];
+        $positionsArray = explode(',', $testCaseData['Positions']);
+
+        $this->getCommandBus()->handle(new UpdateCategoryPositionCommand(
+            $categoryId,
+            $parentCategoryId,
+            $wayId,
+            $positionsArray,
+            $testCaseData['Found first']
+        ));
     }
 
     /**

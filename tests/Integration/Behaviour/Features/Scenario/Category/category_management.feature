@@ -53,4 +53,16 @@ Feature: Category Management
     Then category "category1" does not exist
     And category "category2" does not exist
 
+  Scenario: Update category position
+    When I add new category "category2" with following details:
+      | Name                 | PC parts 2                |
+      | Displayed            | true                      |
+      | Parent category      | Home Accessories          |
+      | Friendly URL         | pc-parts2                 |
+    And I update category "category2" position with following details:
+      | Parent category | Home Accessories    |
+      | Way             | Up                  |
+      | Positions       | tr_8_16_1,tr_8_13_0 |
+      | Found first     | false               |
+
 
