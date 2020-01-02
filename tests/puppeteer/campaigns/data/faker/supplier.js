@@ -4,14 +4,14 @@ const {countries} = require('@data/demo/countries');
 
 module.exports = class Supplier {
   constructor(supplierToCreate = {}) {
-    this.name = supplierToCreate.name || faker.company.companyName();
+    this.name = (supplierToCreate.name || faker.company.companyName()).substring(0, 63);
     this.description = supplierToCreate.description || faker.lorem.sentence();
     this.descriptionFr = supplierToCreate.descriptionFr || this.description;
     this.homePhone = supplierToCreate.homePhone || faker.phone.phoneNumber('01########');
     this.mobilePhone = supplierToCreate.mobilePhone || faker.phone.phoneNumber('06########');
     this.address = supplierToCreate.address || faker.address.streetAddress();
     this.secondaryAddress = supplierToCreate.secondaryAddress || faker.address.secondaryAddress();
-    this.postalCode = supplierToCreate.postalCode || faker.address.zipCode();
+    this.postalCode = supplierToCreate.postalCode || faker.address.zipCode().replace('.', '-');
     this.city = supplierToCreate.city || faker.address.city();
     this.country = supplierToCreate.country || faker.random.arrayElement(countries);
     this.logo = `${this.name.replace(/[^\w\s]/gi, '')}.png`;
