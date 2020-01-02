@@ -17,9 +17,12 @@ const {Statuses} = require('@data/demo/orders');
 let browser;
 let page;
 const today = new Date();
-// Create a start and end date that there is no delivery slip
-const dateFrom = `${today.getFullYear() + 1}-${today.getMonth() + 1}-${today.getDate() - 1}`;
-const dateTo = `${today.getFullYear() + 1}-${today.getMonth() + 1}-${today.getDate()}`;
+// Create a start and end date that there is no delivery slip (yyy-mm-dd)
+const day = today.getDate() + 100;
+const month = today.getMonth() + 101;
+const year = today.getFullYear();
+const dateFrom = `${(year + 1).toString()}-${month.toString().substring(1)}-${day.toString().substring(1)}`;
+const dateTo = `${(year + 1).toString()}-${(month + 1).toString()}-${day.toString()}`;
 const fileName = 'deliveries.pdf';
 
 // Init objects needed
