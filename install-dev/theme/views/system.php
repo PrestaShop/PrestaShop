@@ -32,7 +32,7 @@
 <?php if ($this->tests['required']['success']): ?>
 	<h3 class="okBlock"><?php echo $this->translator->trans('PrestaShop compatibility with your system environment has been verified!', array(), 'Install'); ?></h3>
 <?php else: ?>
-	<h3 class="errorBlock"><?php echo $this->translator->trans('Oops! Please correct the item(s) below, and then click "Refresh information" to test the compatibility of your new system.', array(), 'Install'); ?></h3>
+	<h3 class="errorBlock"><?php echo $this->translator->trans('Oops! Please correct the item(s) below, and then click "Refresh" to test the compatibility of your new system.', array(), 'Install'); ?></h3>
 <?php endif; ?>
 <!-- Display tests results -->
 <?php foreach ($this->tests_render as $type => $categories): ?>
