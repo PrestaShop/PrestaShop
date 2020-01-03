@@ -120,9 +120,7 @@ describe('Create Files and Delete with Bulk actions', async () => {
 
     it('should delete files with Bulk Actions and check Result', async function () {
       const deleteTextResult = await this.pageObjects.filesPage.deleteFilesBulkActions();
-      // Should edit successful delete message after the fix of this issue
-      // https://github.com/PrestaShop/PrestaShop/issues/16921
-      await expect(deleteTextResult).to.be.equal(this.pageObjects.filesPage.successfulDeleteMessage);
+      await expect(deleteTextResult).to.be.equal(this.pageObjects.filesPage.successfulMultiDeleteMessage);
     });
 
     it('should reset all filters', async function () {
