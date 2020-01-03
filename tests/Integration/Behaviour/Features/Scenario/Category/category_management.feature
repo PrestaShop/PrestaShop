@@ -98,12 +98,7 @@ Feature: Category Management
       | Group access     | Visitor,Guest,Customer      |
 
   Scenario: delete category cover image
-    Given I add new category "category1" with following details:
-      | Name                 | PC parts         |
-      | Displayed            | true             |
-      | Parent category      | Home Accessories |
-      | Friendly URL         | pc-parts         |
-    And I edit category "category1" with following details:
+    Given I edit category "category1" with following details:
       | Name                 | dummy category name    |
       | Displayed            | false                  |
       | Parent category      | Home Accessories       |
@@ -114,7 +109,21 @@ Feature: Category Management
       | Group access         | Visitor,Guest,Customer |
       | Category cover image | logo.jpg               |
     And category "category1" has cover image
-    When I click delete button below category "category1" cover image
+    When I delete category "category1" cover image
     Then category "category1" does not have cover image
+
+  Scenario: delete category menu thumbnail image
+    Given I edit category "category1" with following details:
+      | Name                 | dummy category name    |
+      | Displayed            | false                  |
+      | Parent category      | Home Accessories       |
+      | Description          | dummy description      |
+      | Meta title           | dummy meta title       |
+      | Meta description     | dummy meta description |
+      | Friendly URL         | dummy                  |
+      | Group access         | Visitor,Guest,Customer |
+      | Menu thumbnails      | logo.jpg               |
+    And category "category1" has menu thumbnail image
+    When I delete category "category1" menu thumbnail image
 
 
