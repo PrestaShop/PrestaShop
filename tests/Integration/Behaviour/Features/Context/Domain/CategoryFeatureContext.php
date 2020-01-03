@@ -139,16 +139,13 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
 
         /** @var EditableCategory $editableCategory */
         $editableCategory = $this->getQueryBus()->handle(new GetCategoryForEditing($categoryId));
-        // coverImage array has unique properties generated based on time
-        $coverImage = $editableCategory->getCoverImage();
         $subCategories = $editableCategory->getSubCategories();
 
         /** @var EditableCategory $expectedEditableCategory */
         $expectedEditableCategory = $this->mapDataToEditableCategory(
             $testCaseData,
             $categoryId,
-            $subCategories,
-            $coverImage
+            $subCategories
         );
 
         Assert::assertEquals($expectedEditableCategory, $editableCategory);
