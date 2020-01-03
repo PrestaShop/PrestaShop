@@ -8,7 +8,7 @@ Feature: Category Management
   Background: Adding new Category
     Given I add new category "category1" with following details:
       | Name                 | PC parts         |
-      | Displayed            | true             |
+      | Displayed            | false            |
       | Parent category      | Home Accessories |
       | Friendly URL         | pc-parts         |
 
@@ -126,4 +126,19 @@ Feature: Category Management
     And category "category1" has menu thumbnail image
     When I delete category "category1" menu thumbnail image
     Then Then category "category1" does not have menu thumbnail image
+
+#    enabled seems to be the same as displayed
+  Scenario: enable category
+    Given category "category1" is disabled
+    When I enable category "category1"
+    Then category "category1" is enabled
+
+  Scenario: disable category
+    When I add new category "category2" with following details:
+      | Name                 | PC parts 2       |
+      | Displayed            | true             |
+      | Parent category      | Home Accessories |
+      | Friendly URL         | pc-parts2        |
+    When I disable category "category2"
+    Given category "category2" is disabled
 
