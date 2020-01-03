@@ -380,6 +380,18 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @Then Then category :categoryReference does not have menu thumbnail image
+     *
+     * @param string $categoryReference
+     */
+    public function categoryDoesNotHaveMenuThumbnailImage(string $categoryReference)
+    {
+        $editableCategory = $this->getEditableCategory($categoryReference);
+        $menuThumbnailImages = $editableCategory->getMenuThumbnailImages();
+        PHPUnit_Framework_Assert::assertCount(0, $menuThumbnailImages);
+    }
+
+    /**
      * @param array $testCaseData
      * @param int $categoryId
      * @param array|null $coverImage
