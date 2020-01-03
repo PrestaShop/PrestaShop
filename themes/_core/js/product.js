@@ -110,6 +110,7 @@ function updateProduct(event, eventType, updateUrl) {
   const $quantityWantedInput = $productActions.find('#quantity_wanted');
   const formSerialized = $productActions.find('form:first').serialize();
   let preview = psGetRequestParameter('preview');
+  const updateRatingEvent = new Event('updateRating');
 
   if (preview !== null) {
     preview = '&preview=' + preview;
@@ -190,6 +191,8 @@ function updateProduct(event, eventType, updateUrl) {
         $('.quickview .product-flags, .page-product:not(.modal-open) .row .product-flags').replaceWith(data.product_flags)
         replaceAddToCartSections(data);
         const minimalProductQuantity = parseInt(data.product_minimal_quantity, 10);
+
+        document.dispatchEvent(updateRatingEvent);
 
         // Prevent quantity input from blinking with classic theme.
         if (!isNaN(minimalProductQuantity)
