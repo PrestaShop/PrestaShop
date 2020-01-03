@@ -61,12 +61,13 @@ export default class OrderProductRenderer {
     $(OrderViewPageMap.productAddRow).addClass('d-none');
   }
 
-  moveProductsPanelToModificationPosition() {
+  moveProductsPanelToModificationPosition(scrollTarget = 'body') {
     this.moveProductPanelToTop();
 
     $(OrderViewPageMap.productActionBtn).addClass('d-none');
     $(`${OrderViewPageMap.productAddActionBtn}, ${OrderViewPageMap.productAddRow}`).removeClass('d-none');
-    $('html,body').animate({scrollTop: 0}, 'slow');
+    const scrollValue = $(scrollTarget).offset().top - $('.header-toolbar').height() - 100;
+    $('html,body').animate({scrollTop: scrollValue}, 'slow');
   }
 
   moveProductsPanelToRefundPosition() {
@@ -80,7 +81,6 @@ export default class OrderProductRenderer {
     if ($modificationPosition.find(OrderViewPageMap.productsPanel).length > 0) {
       return;
     }
-
     $(OrderViewPageMap.productsPanel).detach().appendTo($modificationPosition);
     $modificationPosition.closest('.row').removeClass('d-none');
 

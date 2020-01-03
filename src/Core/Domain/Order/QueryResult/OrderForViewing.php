@@ -153,6 +153,11 @@ class OrderForViewing
     private $carrierId;
 
     /**
+     * @var string
+     */
+    private $carrierName;
+
+    /**
      * @var int
      */
     private $shopId;
@@ -166,6 +171,7 @@ class OrderForViewing
         int $orderId,
         int $currencyId,
         int $carrierId,
+        string $carrierName,
         int $shopId,
         string $reference,
         bool $isVirtual,
@@ -214,6 +220,7 @@ class OrderForViewing
         $this->createdAt = $createdAt;
         $this->isVirtual = $isVirtual;
         $this->carrierId = $carrierId;
+        $this->carrierName = $carrierName;
         $this->shopId = $shopId;
         $this->invoiceManagementIsEnabled = $invoiceManagementIsEnabled;
     }
@@ -240,6 +247,11 @@ class OrderForViewing
     public function getCarrierId(): int
     {
         return $this->carrierId;
+    }
+
+    public function getCarrierName(): string
+    {
+        return $this->carrierName;
     }
 
     /**
