@@ -107,31 +107,6 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @When I add new category :reference with specified properties
-     */
-    public function addCategoryWithSpecifiedProperties($reference)
-    {
-        $properties = SharedStorage::getStorage()->get(sprintf('%s_properties', $reference));
-        $defaultLanguageId = Configuration::get('PS_LANG_DEFAULT');
-
-        $command = new AddCategoryCommand(
-            [$defaultLanguageId => $properties['name']],
-            [$defaultLanguageId => $properties['link_rewrite']],
-            $properties['is_enabled'],
-            $properties['parent_category_id']
-        );
-        $command->setLocalizedDescriptions([$defaultLanguageId => $properties['description']]);
-        $command->setAssociatedGroupIds($properties['group_ids']);
-        $command->setLocalizedMetaTitles([$defaultLanguageId => $properties['meta_title']]);
-        $command->setLocalizedMetaDescriptions([$defaultLanguageId => $properties['meta_description']]);
-
-        /** @var CategoryId $categoryIdObject */
-        $categoryIdObject = $this->getCommandBus()->handle($command);
-
-        SharedStorage::getStorage()->set($reference, $categoryIdObject->getValue());
-    }
-
-    /**
      * @Then category :categoryReference should have following details:
      *
      * @param string $categoryReference
@@ -520,16 +495,14 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
             $parentCategoryId = CategoryTreeIterator::ROOT_CATEGORY_ID;
         }
         if (isset($testCaseData['Category cover image'])) {
-            $this->pretendImageUploading($testCaseData, $categoryId);
+            $coverImage = $this->pretendImageUploaded($testCaseData, $categoryId);
         }
+        $menuThumbNailsImages = [];
         if (isset($testCaseData['Menu thumbnails'])) {
-            $categoryCoverImage = $testCaseData['Menu thumbnails'];
-            // could not use handler because it uses move_uploaded_file in Uploader.php which allows only POST upload
-            /** @var Kernel $kernel */
-            $kernel = $this->getContainer()->get('kernel');
-            copy(
-                $kernel->getRootDir() . '/../img/' . $categoryCoverImage,
-                _PS_CAT_IMG_DIR_ . $categoryId . '-' . MenuThumbnailId::ALLOWED_ID_VALUES[0] . '_thumb.jpg'
+            $menuThumbNailsImages = $this->pretendMenuThumbnailImagesUploaded(
+                $testCaseData,
+                $categoryId,
+                $menuThumbNailsImages
             );
         }
 
@@ -548,7 +521,7 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
             $parentCategoryId === null || $parentCategoryId === 1 ? true : false,
             $coverImage,
             null,
-            [],
+            $menuThumbNailsImages,
             $subcategories
         );
     }
@@ -573,6 +546,31 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
         }
 
         return $parentCategoryId;
+    }
+
+    /**
+     * @deprecated
+     *
+     * @param array $testCaseData
+     * @param int $categoryId
+     *
+     * @return string
+     */
+    private function pretendImageUploaded(array $testCaseData, int $categoryId): string
+    {
+        $categoryCoverImage = $testCaseData['Category cover image'];
+        // could not use handler because it uses move_uploaded_file which allows only POST upload
+        /** @var Kernel $kernel */
+        $kernel = $this->getContainer()->get('kernel');
+        copy(
+            $kernel->getRootDir() . '/../img/' . $categoryCoverImage,
+            _PS_CAT_IMG_DIR_ . $categoryId . '.jpg'
+        );
+        copy(
+            $kernel->getRootDir() . '/../img/' . $categoryCoverImage,
+            _PS_CAT_IMG_DIR_ . $categoryId . '-' . stripslashes($categoryCoverImage) . '.jpg'
+        );
+        return $categoryCoverImage;
     }
 
     /**
@@ -606,26 +604,6 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @param array $testCaseData
-     * @param int $categoryId
-     */
-    private function pretendImageUploading(array $testCaseData, int $categoryId): void
-    {
-        $categoryCoverImage = $testCaseData['Category cover image'];
-        // could not use handler because it uses move_uploaded_file which allows only POST upload
-        /** @var Kernel $kernel */
-        $kernel = $this->getContainer()->get('kernel');
-        copy(
-            $kernel->getRootDir() . '/../img/' . $categoryCoverImage,
-            _PS_CAT_IMG_DIR_ . $categoryId . '.jpg'
-        );
-        copy(
-            $kernel->getRootDir() . '/../img/' . $categoryCoverImage,
-            _PS_CAT_IMG_DIR_ . $categoryId . '-' . stripslashes($categoryCoverImage) . '.jpg'
-        );
-    }
-
-    /**
      * @param string $categoryReference
      *
      * @return EditableCategory
@@ -650,5 +628,29 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
         $categoryIsEnabled = $this->getQueryBus()->handle(new GetCategoryIsEnabled($categoryId));
 
         return $categoryIsEnabled;
+    }
+
+    /**
+     * @deprecated
+     * @param array $testCaseData
+     * @param int $categoryId
+     * @param array $menuThumbNailsImages
+     *
+     * @return array
+     */
+    private function pretendMenuThumbnailImagesUploaded(
+        array $testCaseData, int $categoryId, array $menuThumbNailsImages
+    ): array
+    {
+        $categoryCoverImage = $testCaseData['Menu thumbnails'];
+        // could not use handler because it uses move_uploaded_file in Uploader.php which allows only POST upload
+        /** @var Kernel $kernel */
+        $kernel = $this->getContainer()->get('kernel');
+        copy(
+            $kernel->getRootDir() . '/../img/' . $categoryCoverImage,
+            _PS_CAT_IMG_DIR_ . $categoryId . '-' . MenuThumbnailId::ALLOWED_ID_VALUES[0] . '_thumb.jpg'
+        );
+        $menuThumbNailsImages[] = $categoryCoverImage;
+        return $menuThumbNailsImages;
     }
 }
