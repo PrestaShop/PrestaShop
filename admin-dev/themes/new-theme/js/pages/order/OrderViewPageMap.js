@@ -91,6 +91,7 @@ export default {
   productAddLocationText: '#addProductLocation',
   productAddTotalPriceText: '#addProductTotalPrice',
   productAddInvoiceSelect: '#add_product_row_invoice',
+  productAddFreeShippingSelect: '#add_product_row_free_shipping',
   productEditSaveBtn: '.productEditSaveBtn',
   productEditCancelBtn: '.productEditCancelBtn',
   productEditRowTemplate: '#editProductTableRowTemplate',

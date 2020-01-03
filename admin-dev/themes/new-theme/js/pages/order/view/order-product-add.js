@@ -46,6 +46,7 @@ export default class OrderProductAdd {
     this.locationText = $(OrderViewPageMap.productAddLocationText);
     this.totalPriceText = $(OrderViewPageMap.productAddTotalPriceText);
     this.invoiceSelect = $(OrderViewPageMap.productAddInvoiceSelect);
+    this.freeShippingSelect = $(OrderViewPageMap.productAddFreeShippingSelect);
     this.available = null;
     this.setupListener();
     this.product = {};
@@ -113,6 +114,13 @@ export default class OrderProductAdd {
       );
     });
     this.productAddActionBtn.on('click', event => this.addProduct($(event.currentTarget).data('orderId')));
+    this.invoiceSelect.on('change', (event) => {
+      if (event.target.value == 0) {
+        $('#addProductNewInvoiceInfo').removeClass('d-none');
+      } else {
+        $('#addProductNewInvoiceInfo').addClass('d-none');
+      }
+    });
   }
 
   setProduct(product) {
@@ -148,6 +156,7 @@ export default class OrderProductAdd {
       price_tax_excl: this.priceTaxExcludedInput.val(),
       quantity: this.quantityInput.val(),
       invoice_id: this.invoiceSelect.val(),
+      free_shipping: this.freeShippingSelect.prop('checked'),
     };
     $.ajax({
       url: this.router.generate('admin_orders_add_product', {orderId}),
