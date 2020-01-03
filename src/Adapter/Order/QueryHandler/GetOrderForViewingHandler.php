@@ -154,6 +154,7 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
     public function handle(GetOrderForViewing $query): OrderForViewing
     {
         $order = $this->getOrder($query->getOrderId());
+        $orderCarrier = new Carrier($order->id_carrier);
         $taxCalculationMethod = $this->getOrderTaxCalculationMethod($order);
 
         $isTaxIncluded = ($taxCalculationMethod == PS_TAX_INC);
@@ -168,6 +169,7 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
             (int) $order->id,
             (int) $order->id_currency,
             (int) $order->id_carrier,
+            (string) $orderCarrier->name,
             (int) $order->id_shop,
             $order->reference,
             (bool) $order->isVirtual(),
