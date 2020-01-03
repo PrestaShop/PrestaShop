@@ -106,18 +106,15 @@ $(document).ready(function () {
       max: 1000000
     });
 
-
-    let $inputQty = $('#quantity_wanted');
-
-    $inputQty.focusout((e) => {
-      if ($inputQty.val() === '' || $inputQty.val() < $inputQty.attr('min')) {
-        $inputQty.val($inputQty.attr('min'));
-        $inputQty.trigger('change');
+    $quantityInput.focusout((e) => {
+      if ($quantityInput.val() === '' || $quantityInput.val() < $quantityInput.attr('min')) {
+        $quantityInput.val($quantityInput.attr('min'));
+        $quantityInput.trigger('change');
       }
     });
 
     $('body').on('change keyup', '#quantity_wanted', (e) => {
-      if ($inputQty.val() !== '') {
+      if ($quantityInput.val() !== '') {
         $(e.currentTarget).trigger('touchspin.stopspin');
         prestashop.emit('updateProduct', {
             eventType: 'updatedProductQuantity',
