@@ -125,5 +125,5 @@ Feature: Category Management
       | Menu thumbnails      | logo.jpg               |
     And category "category1" has menu thumbnail image
     When I delete category "category1" menu thumbnail image
-
+    Then Then category "category1" does not have menu thumbnail image
 
