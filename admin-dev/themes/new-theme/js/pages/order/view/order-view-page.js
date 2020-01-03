@@ -153,7 +153,7 @@ export default class OrderViewPage {
   listenForProductAdd() {
     $(OrderViewPageMap.productAddBtn).on(
       'click',
-      event => this.orderProductRenderer.moveProductsPanelToModificationPosition()
+      event => this.orderProductRenderer.moveProductsPanelToModificationPosition(OrderViewPageMap.productSearchInput)
     );
     $(OrderViewPageMap.productCancelAddBtn).on(
       'click',

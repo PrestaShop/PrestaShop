@@ -30,6 +30,7 @@ use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
 use PrestaShopBundle\Form\Admin\Type\TextWithUnitType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ButtonType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
@@ -125,6 +126,15 @@ class AddProductRowType extends TranslatorAwareType
                     ],
                 ],
             ])
+            ->add('free_shipping', CheckboxType::class,
+                [
+                    'required' => false,
+                    'label' => $this->trans('Free shipping', 'Admin.Orderscustomers.Feature', []),
+                    'attr' => [
+                        'material_design' => true,
+                    ],
+                ]
+            )
             ->add('cancel', ButtonType::class, [
                 'label' => $this->trans('Cancel', 'Admin.Actions'),
                 'attr' => [
