@@ -151,10 +151,11 @@ function updateProduct(event, eventType, updateUrl) {
         }
       },
       error(jqXHR, textStatus, errorThrown) {
+        console.log(errorThrown);
         if (textStatus !== 'abort'
             && $('section#main > .ajax-error').length === 0
         ) {
-          showError($('#product-availability'), 'An error occurred while processing your request');
+          showError($('.quickview #product-availability, .page-product:not(.modal-open) .row #product-availability'), 'An error occurred while processing your request');
         }
       },
       success(data, textStatus, errorThrown) {
@@ -212,7 +213,7 @@ function replaceAddToCartSections(data) {
   });
 
   if ($productAddToCart === null) {
-    showError($('#product-availability'), 'An error occurred while processing your request');
+    showError($('.quickview #product-availability, .page-product:not(.modal-open) .row #product-availability'), 'An error occurred while processing your request');
   }
   const $addProductToCart = $('.product-add-to-cart');
   const productAvailabilitySelector = '.add';
