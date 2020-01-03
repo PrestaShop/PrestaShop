@@ -44,6 +44,7 @@ use PrestaShop\PrestaShop\Core\Domain\Category\Command\SetCategoryIsEnabledComma
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\UpdateCategoryPositionCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoryForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoryIsEnabled;
 use PrestaShop\PrestaShop\Core\Domain\Category\QueryResult\EditableCategory;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\MenuThumbnailId;
@@ -400,8 +401,8 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
      */
     public function categoryIsDisabled(string $categoryReference)
     {
-        $editableCategory = $this->getEditableCategory($categoryReference);
-        PHPUnit_Framework_Assert::assertFalse($editableCategory->isActive());
+        $categoryIsEnabled = $this->getCategoryIsEnabled($categoryReference);
+        PHPUnit_Framework_Assert::assertFalse($categoryIsEnabled);
     }
 
     /**
@@ -439,8 +440,8 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
      */
     public function categoryIsEnabled(string $categoryReference)
     {
-        $editableCategory = $this->getEditableCategory($categoryReference);
-        PHPUnit_Framework_Assert::assertTrue($editableCategory->isActive());
+        $categoryIsEnabled = $this->getCategoryIsEnabled($categoryReference);
+        PHPUnit_Framework_Assert::assertTrue($categoryIsEnabled);
     }
 
     /**
@@ -636,5 +637,18 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
         $editableCategory = $this->getQueryBus()->handle(new GetCategoryForEditing($categoryId));
 
         return $editableCategory;
+    }
+
+    /**
+     * @param string $categoryReference
+     *
+     * @return mixed
+     */
+    private function getCategoryIsEnabled(string $categoryReference)
+    {
+        $categoryId = SharedStorage::getStorage()->get($categoryReference);
+        $categoryIsEnabled = $this->getQueryBus()->handle(new GetCategoryIsEnabled($categoryId));
+
+        return $categoryIsEnabled;
     }
 }
