@@ -45,6 +45,7 @@ use PrestaShop\PrestaShop\Core\Domain\Category\QueryResult\EditableCategory;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
 use Psr\Container\ContainerInterface;
 use RuntimeException;
+use Symfony\Component\HttpKernel\Kernel;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 use Tests\Integration\Behaviour\Features\Context\Util\CategoryTreeIterator;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
@@ -402,6 +403,9 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
         if ($parentCategoryId === null) {
             $parentCategoryId = CategoryTreeIterator::ROOT_CATEGORY_ID;
         }
+        if (isset($testCaseData['Category cover image'])) {
+            $this->pretendImageUploading($testCaseData, $categoryId);
+        }
 
         return new EditableCategory(
             new CategoryId($categoryId),
@@ -473,5 +477,25 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
         }
 
         return $groupAssociationIds;
+    }
+
+    /**
+     * @param array $testCaseData
+     * @param int $categoryId
+     */
+    private function pretendImageUploading(array $testCaseData, int $categoryId): void
+    {
+        $categoryCoverImage = $testCaseData['Category cover image'];
+        // could not use handler because it uses move_uploaded_file which allows only POST upload
+        /** @var Kernel $kernel */
+        $kernel = $this->getContainer()->get('kernel');
+        copy(
+            $kernel->getRootDir() . '/../img/' . $categoryCoverImage,
+            _PS_CAT_IMG_DIR_ . $categoryId . '.jpg'
+        );
+        copy(
+            $kernel->getRootDir() . '/../img/' . $categoryCoverImage,
+            _PS_CAT_IMG_DIR_ . $categoryId . '-' . stripslashes($categoryCoverImage) . '.jpg'
+        );
     }
 }
