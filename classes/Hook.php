@@ -642,9 +642,28 @@ class HookCore extends ObjectModel
                     $sql->where('((h.`name` = "displayPayment" OR h.`name` = "displayPaymentEU" OR h.`name` = "paymentOptions") AND (SELECT `id_currency` FROM `' . _DB_PREFIX_ . 'module_currency` mcr WHERE mcr.`id_module` = m.`id_module` AND `id_currency` IN (' . (int) $context->currency->id . ', -1, -2) LIMIT 1) IN (' . (int) $context->currency->id . ', -1, -2))');
                 }
                 if (Validate::isLoadedObject($context->cart)) {
-                    $carrier = new Carrier($context->cart->id_carrier);
-                    if (Validate::isLoadedObject($carrier)) {
-                        $sql->where('((h.`name` = "displayPayment" OR h.`name` = "displayPaymentEU" OR h.`name` = "paymentOptions") AND (SELECT `id_reference` FROM `' . _DB_PREFIX_ . 'module_carrier` mcar WHERE mcar.`id_module` = m.`id_module` AND `id_reference` = ' . (int) $carrier->id_reference . ' AND `id_shop` = ' . (int) $context->shop->id . ' LIMIT 1) = ' . (int) $carrier->id_reference . ')');
+                    $SQLsubquery = '';
+                    $carriers = [];
+                    $cartCarriers = $context->cart->getDeliveryOption();
+                    foreach ($cartCarriers as $cartCarriersRow) {
+                        $cartCarriersData = explode(',', $cartCarriersRow);
+                        foreach ($cartCarriersData as $carrierId) {
+                            if(empty($carrierId)){
+                                continue;
+                            }
+                            $carrier = new Carrier($carrierId);
+                            if (!Validate::isLoadedObject($carrier)){
+                                continue;
+                            }
+                            $carrierRef = $carrier->id_reference;
+                            if (!in_array($carrierRef, $carriers)) {
+                                $carriers[] = $carrierRef;
+                                $SQLsubquery.=' AND (SELECT `id_reference` FROM `'._DB_PREFIX_.'module_carrier` mcar WHERE mcar.`id_module` = m.`id_module` AND `id_reference` = '.(int)$carrierRef.' AND `id_shop` = '.(int)$context->shop->id.' LIMIT 1) = '.(int)$carrierRef;
+                            }
+                        }
+                    }
+                    if (!empty($carriers)) {
+                        $sql->where('((h.`name` = "displayPayment" OR h.`name` = "displayPaymentEU" OR h.`name` = "paymentOptions") '.$SQLsubquery.')');
                     }
                 }
             }
