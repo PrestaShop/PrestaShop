@@ -39,6 +39,7 @@ use PrestaShop\PrestaShop\Core\Domain\Category\Command\DeleteCategoryCoverImageC
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\DeleteCategoryMenuThumbnailImageCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\EditCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\EditRootCategoryCommand;
+use PrestaShop\PrestaShop\Core\Domain\Category\Command\SetCategoryIsEnabledCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\UpdateCategoryPositionCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoryForEditing;
@@ -389,6 +390,56 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
         $editableCategory = $this->getEditableCategory($categoryReference);
         $menuThumbnailImages = $editableCategory->getMenuThumbnailImages();
         PHPUnit_Framework_Assert::assertCount(0, $menuThumbnailImages);
+    }
+
+    /**
+     * @Given category :categoryReference is disabled
+     *
+     * @param $categoryReference
+     */
+    public function categoryIsDisabled(string $categoryReference)
+    {
+        $editableCategory = $this->getEditableCategory($categoryReference);
+        PHPUnit_Framework_Assert::assertFalse($editableCategory->isActive());
+    }
+
+    /**
+     * @When I enable category :categoryReference
+     *
+     * @param string $categoryReference
+     */
+    public function enableCategory(string $categoryReference)
+    {
+        $editableCategory = $this->getEditableCategory($categoryReference);
+        $this->getCommandBus()->handle(new SetCategoryIsEnabledCommand(
+            $editableCategory->getId()->getValue(),
+            true)
+        );
+    }
+
+    /**
+     * @When I disable category :categoryReference
+     *
+     * @param $categoryReference
+     */
+    public function disableCategory(string $categoryReference)
+    {
+        $editableCategory = $this->getEditableCategory($categoryReference);
+        $this->getCommandBus()->handle(new SetCategoryIsEnabledCommand(
+                $editableCategory->getId()->getValue(),
+                false)
+        );
+    }
+
+    /**
+     * @Then category :categoryReference is enabled
+     *
+     * @param string $categoryReference
+     */
+    public function categoryIsEnabled(string $categoryReference)
+    {
+        $editableCategory = $this->getEditableCategory($categoryReference);
+        PHPUnit_Framework_Assert::assertTrue($editableCategory->isActive());
     }
 
     /**
