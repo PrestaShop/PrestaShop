@@ -34,6 +34,7 @@ use PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\GroupByIdChoiceProvider;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\AddCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\AddRootCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\BulkDeleteCategoriesCommand;
+use PrestaShop\PrestaShop\Core\Domain\Category\Command\BulkUpdateCategoriesStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\DeleteCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\DeleteCategoryCoverImageCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\DeleteCategoryMenuThumbnailImageCommand;
@@ -381,7 +382,7 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Then Then category :categoryReference does not have menu thumbnail image
+     * @Then category :categoryReference does not have menu thumbnail image
      *
      * @param string $categoryReference
      */
@@ -440,6 +441,36 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
     {
         $editableCategory = $this->getEditableCategory($categoryReference);
         PHPUnit_Framework_Assert::assertTrue($editableCategory->isActive());
+    }
+
+    /**
+     * @When I bulk enable categories :categoriesReferences
+     *
+     * @param string $categoriesReferences
+     */
+    public function bulkEnableCategories(string $categoriesReferences)
+    {
+        $categoriesReferencesArray = explode(',', $categoriesReferences);
+        $categoryIds = [];
+        foreach ($categoriesReferencesArray as $categoryReference) {
+            $categoryIds[] = SharedStorage::getStorage()->get($categoryReference);
+        }
+        $this->getCommandBus()->handle(new BulkUpdateCategoriesStatusCommand($categoryIds, true));
+    }
+
+    /**
+     * @When I bulk disable categories :categoriesReferences
+     *
+     * @param string $categoriesReferences
+     */
+    public function bulkDisableCategories(string $categoriesReferences)
+    {
+        $categoriesReferencesArray = explode(',', $categoriesReferences);
+        $categoryIds = [];
+        foreach ($categoriesReferencesArray as $categoryReference) {
+            $categoryIds[] = SharedStorage::getStorage()->get($categoryReference);
+        }
+        $this->getCommandBus()->handle(new BulkUpdateCategoriesStatusCommand($categoryIds, false));
     }
 
     /**

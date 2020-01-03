@@ -125,7 +125,7 @@ Feature: Category Management
       | Menu thumbnails      | logo.jpg               |
     And category "category1" has menu thumbnail image
     When I delete category "category1" menu thumbnail image
-    Then Then category "category1" does not have menu thumbnail image
+    Then category "category1" does not have menu thumbnail image
 
 #    enabled seems to be the same as displayed
   Scenario: enable category
@@ -134,11 +134,31 @@ Feature: Category Management
     Then category "category1" is enabled
 
   Scenario: disable category
-    When I add new category "category2" with following details:
+    Given I add new category "category2" with following details:
       | Name                 | PC parts 2       |
       | Displayed            | true             |
       | Parent category      | Home Accessories |
       | Friendly URL         | pc-parts2        |
     When I disable category "category2"
-    Given category "category2" is disabled
+    Then category "category2" is disabled
+
+  Scenario: bulk enable selected categories
+    Given I add new category "category2" with following details:
+      | Name                 | PC parts 2       |
+      | Displayed            | false            |
+      | Parent category      | Home Accessories |
+      | Friendly URL         | pc-parts2        |
+    When I bulk enable categories "category1,category2"
+    Then category "category1" is enabled
+    And category "category2" is enabled
+
+  Scenario: bulk disable selected categories
+    Given I add new category "category2" with following details:
+      | Name                 | PC parts 2       |
+      | Displayed            | true             |
+      | Parent category      | Home Accessories |
+      | Friendly URL         | pc-parts2        |
+    When I bulk disable categories "category1,category2"
+    Then category "category1" is disabled
+    And category "category2" is disabled
 
