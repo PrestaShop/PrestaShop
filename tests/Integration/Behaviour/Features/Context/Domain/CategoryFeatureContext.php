@@ -36,6 +36,7 @@ use PrestaShop\PrestaShop\Core\Domain\Category\Command\AddRootCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\BulkDeleteCategoriesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\DeleteCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\DeleteCategoryCoverImageCommand;
+use PrestaShop\PrestaShop\Core\Domain\Category\Command\DeleteCategoryMenuThumbnailImageCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\EditCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\EditRootCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\UpdateCategoryPositionCommand;
@@ -43,6 +44,7 @@ use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryNotFoundExcepti
 use PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoryForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Category\QueryResult\EditableCategory;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
+use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\MenuThumbnailId;
 use Psr\Container\ContainerInterface;
 use RuntimeException;
 use Symfony\Component\HttpKernel\Kernel;
@@ -135,16 +137,13 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
     public function categoryShouldHaveFollowingDetails(string $categoryReference, TableNode $table)
     {
         $testCaseData = $table->getRowsHash();
-        $categoryId = SharedStorage::getStorage()->get($categoryReference);
-
-        /** @var EditableCategory $editableCategory */
-        $editableCategory = $this->getQueryBus()->handle(new GetCategoryForEditing($categoryId));
+        $editableCategory = $this->getEditableCategory($categoryReference);
         $subCategories = $editableCategory->getSubCategories();
 
         /** @var EditableCategory $expectedEditableCategory */
         $expectedEditableCategory = $this->mapDataToEditableCategory(
             $testCaseData,
-            $categoryId,
+            $editableCategory->getId()->getValue(),
             $subCategories
         );
 
@@ -317,11 +316,11 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @When I click delete button below category :categoryReference cover image
+     * @When I delete category :categoryReference cover image
      *
      * @param string $categoryReference
      */
-    public function deleteButtonBelowCategoryCoverImage(string $categoryReference)
+    public function deleteCategoryCoverImage(string $categoryReference)
     {
         $categoryId = SharedStorage::getStorage()->get($categoryReference);
         $this->getCommandBus()->handle(new DeleteCategoryCoverImageCommand($categoryId));
@@ -334,9 +333,7 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
      */
     public function categoryHasCoverImage(string $categoryReference)
     {
-        $categoryId = SharedStorage::getStorage()->get($categoryReference);
-        /** @var EditableCategory $editableCategory */
-        $editableCategory = $this->getQueryBus()->handle(new GetCategoryForEditing($categoryId));
+        $editableCategory = $this->getEditableCategory($categoryReference);
         $coverImage = $editableCategory->getCoverImage();
         PHPUnit_Framework_Assert::assertNotNull($coverImage);
     }
@@ -348,11 +345,38 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
      */
     public function categoryDoesNotHaveCoverImage(string $categoryReference)
     {
-        $categoryId = SharedStorage::getStorage()->get($categoryReference);
-        /** @var EditableCategory $editableCategory */
-        $editableCategory = $this->getQueryBus()->handle(new GetCategoryForEditing($categoryId));
+        $editableCategory = $this->getEditableCategory($categoryReference);
         $coverImage = $editableCategory->getCoverImage();
         PHPUnit_Framework_Assert::assertNull($coverImage);
+    }
+
+    /**
+     * @Given category :categoryReference has menu thumbnail image
+     *
+     * @param string $categoryReference
+     */
+    public function categoryHasMenuThumbnailImage(string $categoryReference)
+    {
+        $editableCategory = $this->getEditableCategory($categoryReference);
+        $menuThumbnailImages = $editableCategory->getMenuThumbnailImages();
+        PHPUnit_Framework_Assert::assertCount(1, $menuThumbnailImages);
+    }
+
+    /**
+     * @When I delete category :categoryReference menu thumbnail image
+     *
+     * @param string $categoryReference
+     */
+    public function deleteCategoryMenuThumbnailImage(string $categoryReference)
+    {
+        $categoryId = SharedStorage::getStorage()->get($categoryReference);
+        $editableCategory = $this->getEditableCategory($categoryReference);
+
+        /** @var array $menuThumbnailImages - collection of objects returned would be better style */
+        $menuThumbnailImages = $editableCategory->getMenuThumbnailImages();
+        $menuThumbnailImageId = $menuThumbnailImages[0]['id'];
+
+        $this->getCommandBus()->handle(new DeleteCategoryMenuThumbnailImageCommand($categoryId, $menuThumbnailImageId));
     }
 
     /**
@@ -402,6 +426,16 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
         }
         if (isset($testCaseData['Category cover image'])) {
             $this->pretendImageUploading($testCaseData, $categoryId);
+        }
+        if (isset($testCaseData['Menu thumbnails'])) {
+            $categoryCoverImage = $testCaseData['Menu thumbnails'];
+            // could not use handler because it uses move_uploaded_file in Uploader.php which allows only POST upload
+            /** @var Kernel $kernel */
+            $kernel = $this->getContainer()->get('kernel');
+            copy(
+                $kernel->getRootDir() . '/../img/' . $categoryCoverImage,
+                _PS_CAT_IMG_DIR_ . $categoryId . '-' . MenuThumbnailId::ALLOWED_ID_VALUES[0] . '_thumb.jpg'
+            );
         }
 
         return new EditableCategory(
@@ -494,5 +528,19 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
             $kernel->getRootDir() . '/../img/' . $categoryCoverImage,
             _PS_CAT_IMG_DIR_ . $categoryId . '-' . stripslashes($categoryCoverImage) . '.jpg'
         );
+    }
+
+    /**
+     * @param string $categoryReference
+     *
+     * @return EditableCategory
+     */
+    private function getEditableCategory(string $categoryReference): EditableCategory
+    {
+        $categoryId = SharedStorage::getStorage()->get($categoryReference);
+        /** @var EditableCategory $editableCategory */
+        $editableCategory = $this->getQueryBus()->handle(new GetCategoryForEditing($categoryId));
+
+        return $editableCategory;
     }
 }
