@@ -75,7 +75,7 @@ describe('Filter profiles', async () => {
       {args: {filterType: 'input', filterBy: 'name', filterValue: 'Logistician'}},
     ];
     tests.forEach((test) => {
-      it('should filter list by Id', async function () {
+      it(`should filter list by ${test.args.filterBy}`, async function () {
         await this.pageObjects.profilesPage.filterProfiles(
           test.args.filterType,
           test.args.filterBy,
