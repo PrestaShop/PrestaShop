@@ -409,7 +409,7 @@ class DbMySQLiCore extends Db
         }
 
         if ($engine === null) {
-            $engine = 'InnoDB';
+            $engine = 'MyISAM';
         }
 
         $result = $link->query('
