@@ -6,6 +6,7 @@ module.exports = class Home extends CommonPage {
     super(page);
 
     // Selectors for home page
+    this.content = '#content';
     this.desktopLogo = '#_desktop_logo';
     this.cartProductsCount = '#_desktop_cart span.cart-products-count';
     this.userInfoLink = '#_desktop_user_info';
@@ -132,5 +133,13 @@ module.exports = class Home extends CommonPage {
    */
   async getFooterLinksBlockTitle(position) {
     return this.getTextContent(this.wrapperTitle.replace('%POSITION', position));
+  }
+
+  /**
+   * Get Page content
+   * @return {Promise<textContent>}
+   */
+  getPageContent() {
+    return this.getTextContent(this.content);
   }
 };
