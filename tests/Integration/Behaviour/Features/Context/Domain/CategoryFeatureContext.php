@@ -570,6 +570,7 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
             $kernel->getRootDir() . '/../img/' . $categoryCoverImage,
             _PS_CAT_IMG_DIR_ . $categoryId . '-' . stripslashes($categoryCoverImage) . '.jpg'
         );
+
         return $categoryCoverImage;
     }
 
@@ -632,6 +633,7 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
 
     /**
      * @deprecated
+     *
      * @param array $testCaseData
      * @param int $categoryId
      * @param array $menuThumbNailsImages
@@ -640,8 +642,7 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
      */
     private function pretendMenuThumbnailImagesUploaded(
         array $testCaseData, int $categoryId, array $menuThumbNailsImages
-    ): array
-    {
+    ): array {
         $categoryCoverImage = $testCaseData['Menu thumbnails'];
         // could not use handler because it uses move_uploaded_file in Uploader.php which allows only POST upload
         /** @var Kernel $kernel */
@@ -651,6 +652,7 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
             _PS_CAT_IMG_DIR_ . $categoryId . '-' . MenuThumbnailId::ALLOWED_ID_VALUES[0] . '_thumb.jpg'
         );
         $menuThumbNailsImages[] = $categoryCoverImage;
+
         return $menuThumbNailsImages;
     }
 }
