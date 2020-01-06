@@ -29,7 +29,6 @@ namespace PrestaShopBundle\Form\Admin\AdvancedParameters\Performance;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * This form class generates the "Memcache server" form in Performance page.
@@ -54,16 +53,6 @@ class MemcacheServerType extends TranslatorAwareType
                 'label' => $this->trans('Weight', 'Admin.Advparameters.Feature'),
                 'empty_data' => '',
             ]);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function configureOptions(OptionsResolver $resolver)
-    {
-        $resolver->setDefaults([
-            'translation_domain' => 'Admin.Advparameters.Feature',
-        ]);
     }
 
     /**

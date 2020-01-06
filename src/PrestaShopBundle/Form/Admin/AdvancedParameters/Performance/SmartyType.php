@@ -51,6 +51,7 @@ class SmartyType extends TranslatorAwareType
                 ],
                 'required' => false,
                 'label' => $this->trans('Template compilation', 'Admin.Advparameters.Feature'),
+                'choice_translation_domain' => 'Admin.Advparameters.Feature'
             ])
             ->add('cache', SwitchType::class, [
                 'required' => false,
@@ -75,6 +76,7 @@ class SmartyType extends TranslatorAwareType
                 'row_attr' => [
                     'class' => 'smarty-cache-option',
                 ],
+                'choice_translation_domain' => 'Admin.Advparameters.Feature'
             ])
             ->add('clear_cache', ChoiceType::class, [
                 'choices' => [
@@ -86,17 +88,8 @@ class SmartyType extends TranslatorAwareType
                 'row_attr' => [
                     'class' => 'smarty-cache-option',
                 ],
+                'choice_translation_domain' => 'Admin.Advparameters.Feature'
             ]);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function configureOptions(OptionsResolver $resolver)
-    {
-        $resolver->setDefaults([
-            'translation_domain' => 'Admin.Advparameters.Feature',
-        ]);
     }
 
     /**

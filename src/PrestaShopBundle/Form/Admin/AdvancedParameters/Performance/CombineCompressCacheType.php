@@ -29,7 +29,6 @@ namespace PrestaShopBundle\Form\Admin\AdvancedParameters\Performance;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * This form class generates the "Combine Compress Cache" form in Performance page.
@@ -52,16 +51,6 @@ class CombineCompressCacheType extends TranslatorAwareType
                 'label' => $this->trans('Apache optimization', 'Admin.Advparameters.Feature'),
                 'help' => $this->trans('This will add directives to your .htaccess file, which should improve caching and compression.', 'Admin.Advparameters.Help'),
             ]);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function configureOptions(OptionsResolver $resolver)
-    {
-        $resolver->setDefaults([
-            'translation_domain' => 'Admin.Advparameters.Feature',
-        ]);
     }
 
     /**
