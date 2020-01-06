@@ -113,6 +113,7 @@
       const currencyPattern = this.language.priceSpecification.positivePattern;
 
       // Detect which transformation matches the language pattern
+      /* eslint-disable-next-line no-restricted-syntax,guard-for-in */
       for (const transformation in this.language.transformations) {
         const transformationPatterns = this.language.transformations[transformation].split(';');
         if (transformationPatterns[0] === currencyPattern) {

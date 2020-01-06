@@ -55,20 +55,20 @@ export default class CurrencyForm {
   }
 
   init() {
-    this._initListeners();
-    this._initFields();
-    this._initState();
-    this._initCurrencyFormatter();
+    this.initListeners();
+    this.initFields();
+    this.initState();
+    this.initCurrencyFormatter();
   }
 
-  _initState() {
+  initState() {
     this.state = {
-      currencyData: this._getCurrencyDataFromForm(),
+      currencyData: this.getCurrencyDataFromForm(),
       languages: [...this.originalLanguages],
     };
   }
 
-  _initCurrencyFormatter() {
+  initCurrencyFormatter() {
     // Customizer only present when languages data are present (for installed currencies only)
     if (!this.originalLanguages.length) {
       return;
@@ -84,12 +84,16 @@ export default class CurrencyForm {
       }),
       components: {CurrencyFormatter},
       data: this.state,
-      template: `<currency-formatter id="${this.currencyFormatterId}" :languages="languages" :currencyData="currencyData"></currency-formatter>`,
+      template: `<currency-formatter
+        id="${this.currencyFormatterId}"
+        :languages="languages"
+        :currencyData="currencyData">
+      </currency-formatter>`,
     });
 
     this.currencyFormatter.$watch('currencyData', () => {
       // We use the state value directly since the object is shared with the Vue component and already updated
-      this._fillCurrencyCustomData(this.state.currencyData);
+      this.fillCurrencyCustomData(this.state.currencyData);
     }, {deep: true, immediate: true});
   }
 
@@ -138,20 +142,21 @@ export default class CurrencyForm {
     }
   }
 
-  async _onResetDefaultSettingsClick() {
-    await this._resetCurrencyData(this.$isoCodeInput.val());
+  async onResetDefaultSettingsClick() {
+    await this.resetCurrencyData(this.$isoCodeInput.val());
   }
 
-  async _resetCurrencyData(selectedISOCode) {
+  async resetCurrencyData(selectedISOCode) {
     this.$loadingDataModal.modal('show');
     this.$resetDefaultSettingsButton.addClass('spinner');
 
-    this.state.currencyData = await this._fetchCurrency(selectedISOCode);
-    this._fillCurrencyData(this.state.currencyData);
+    this.state.currencyData = await this.fetchCurrency(selectedISOCode);
+    this.fillCurrencyData(this.state.currencyData);
 
     // Reset languages
     this.originalLanguages.forEach((language) => {
-      // Use language data (which contain the reference) to reset price specification data (which contain the custom values)
+      // Use language data (which contain the reference) to reset
+      // price specification data (which contain the custom values)
       const patterns = language.currencyPattern.split(';');
       language.priceSpecification.positivePattern = patterns[0];
       language.priceSpecification.negativePattern = patterns.length > 1 ? patterns[1] : `-${patterns[0]}`;
@@ -163,7 +168,7 @@ export default class CurrencyForm {
     this.$resetDefaultSettingsButton.removeClass('spinner');
   }
 
-  async _fetchCurrency(currencyIsoCode) {
+  async fetchCurrency(currencyIsoCode) {
     let currencyData = null;
     if (currencyIsoCode) {
       await this.referenceCurrencyResource.get({id: currencyIsoCode}).then((response) => {
@@ -179,40 +184,43 @@ export default class CurrencyForm {
 
     if (currencyData && currencyData.transformations === undefined) {
       currencyData.transformations = {};
-      for (const langId in currencyData.symbols) {
+      Object.keys(currencyData.symbols).forEach((langId) => {
         currencyData.transformations[langId] = '';
-      }
+      });
     }
 
     return currencyData;
   }
 
-  _fillCurrencyData(currencyData) {
+  fillCurrencyData(currencyData) {
     if (!currencyData) {
       return;
     }
-    for (const langId in currencyData.names) {
+
+    Object.keys(currencyData.symbols).forEach((langId) => {
       const langNameSelector = this.map.namesInput(langId);
       $(langNameSelector).val(currencyData.names[langId]);
-    }
-    this._fillCurrencyCustomData(currencyData);
+    });
+
+    this.fillCurrencyCustomData(currencyData);
     this.$isoCodeInput.val(currencyData.isoCode);
     this.$exchangeRateInput.val(currencyData.exchangeRate);
     this.$precisionInput.val(currencyData.precision);
   }
 
-  _fillCurrencyCustomData(currencyData) {
-    for (const langId in currencyData.symbols) {
+  fillCurrencyCustomData(currencyData) {
+    Object.keys(currencyData.symbols).forEach((langId) => {
       const langSymbolSelector = this.map.symbolsInput(langId);
       $(langSymbolSelector).val(currencyData.symbols[langId]);
-    }
-    for (const langId in currencyData.transformations) {
+    });
+
+    Object.keys(currencyData.transformations).forEach((langId) => {
       const langTransformationSelector = this.map.transformationsInput(langId);
       $(langTransformationSelector).val(currencyData.transformations[langId]);
-    }
+    });
   }
 
-  _getCurrencyDataFromForm() {
+  getCurrencyDataFromForm() {
     const currencyData = {
       names: {},
       symbols: {},

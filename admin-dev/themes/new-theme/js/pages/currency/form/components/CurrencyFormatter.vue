@@ -93,7 +93,9 @@
 
         this.selectedLanguage.priceSpecification.currencySymbol = customData.symbol;
         this.selectedLanguage.priceSpecification.positivePattern = patterns[0];
-        this.selectedLanguage.priceSpecification.negativePattern = patterns.length > 1 ? patterns[1] : `-${patterns[0]}`;
+        this.selectedLanguage.priceSpecification.negativePattern = patterns.length > 1
+          ? patterns[1]
+          : `-${patterns[0]}`;
 
         this.currencyData.transformations[this.selectedLanguage.id] = customData.transformation;
         this.currencyData.symbols[this.selectedLanguage.id] = customData.symbol;
