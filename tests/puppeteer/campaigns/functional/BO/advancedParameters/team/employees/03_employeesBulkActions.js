@@ -43,7 +43,7 @@ const init = async function () {
 };
 
 // Create Employees, Then disable / Enable and Delete with Bulk actions
-describe('Create Employees, Then disable / Enable and Delete with Bulk actions (issue #16246)', async () => {
+describe('Create Employees, Then disable / Enable and Delete with Bulk actions', async () => {
   // before and after functions
   before(async function () {
     browser = await helper.createBrowser();
