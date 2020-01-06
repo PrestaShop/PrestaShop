@@ -72,7 +72,7 @@ describe('Enable/Disable shop', async () => {
   it('should verify the existence of the maintenance text', async function () {
     page = await this.pageObjects.boBasePage.viewMyShop();
     this.pageObjects = await init();
-    const pageContent = await this.pageObjects.homePage.getPageContent();
+    const pageContent = await this.pageObjects.homePage.getTextContent(this.pageObjects.homePage.content);
     await expect(pageContent).to.equal(maintenanceText);
     page = await this.pageObjects.homePage.closePage(browser, 1);
     this.pageObjects = await init();
@@ -86,7 +86,7 @@ describe('Enable/Disable shop', async () => {
   it('should verify the existence of the new maintenance text', async function () {
     page = await this.pageObjects.boBasePage.viewMyShop();
     this.pageObjects = await init();
-    const pageContent = await this.pageObjects.homePage.getPageContent();
+    const pageContent = await this.pageObjects.homePage.getTextContent(this.pageObjects.homePage.content);
     await expect(pageContent).to.equal(newMaintenanceText);
     page = await this.pageObjects.homePage.closePage(browser, 1);
     this.pageObjects = await init();
@@ -105,7 +105,7 @@ describe('Enable/Disable shop', async () => {
   it('should verify that the Home page is displayed successfully', async function () {
     page = await this.pageObjects.boBasePage.viewMyShop();
     this.pageObjects = await init();
-    const pageContent = await this.pageObjects.homePage.getPageContent();
+    const pageContent = await this.pageObjects.homePage.getTextContent(this.pageObjects.homePage.content);
     await expect(pageContent).to.not.equal(maintenanceText);
     const result = await this.pageObjects.homePage.isHomePage();
     await expect(result).to.be.true;
@@ -123,7 +123,7 @@ describe('Enable/Disable shop', async () => {
   it('should verify that the shop is enabled', async function () {
     page = await this.pageObjects.boBasePage.viewMyShop();
     this.pageObjects = await init();
-    const pageContent = await this.pageObjects.homePage.getPageContent();
+    const pageContent = await this.pageObjects.homePage.getTextContent(this.pageObjects.homePage.content);
     await expect(pageContent).to.not.equal(maintenanceText);
     const result = await this.pageObjects.homePage.isHomePage();
     await expect(result).to.be.true;

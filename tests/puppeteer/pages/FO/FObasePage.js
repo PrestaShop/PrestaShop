@@ -134,12 +134,4 @@ module.exports = class Home extends CommonPage {
   async getFooterLinksBlockTitle(position) {
     return this.getTextContent(this.wrapperTitle.replace('%POSITION', position));
   }
-
-  /**
-   * Get Page content
-   * @return {Promise<textContent>}
-   */
-  getPageContent() {
-    return this.getTextContent(this.content);
-  }
 };
