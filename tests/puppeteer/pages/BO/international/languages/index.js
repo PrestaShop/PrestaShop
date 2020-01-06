@@ -8,7 +8,7 @@ module.exports = class Languages extends BOBasePage {
     this.pageTitle = 'Languages •';
 
     // Header Selectors
-    this.localizationNavItemLink = '#subtab-AdminCurrencies';
+    this.localizationNavItemLink = '#subtab-AdminLocalization';
     this.geolocationNavItemLink = '#subtab-AdminGeolocation';
     this.currenciesNavItemLink = '#subtab-AdminCurrencies';
     // Selectors grid panel
