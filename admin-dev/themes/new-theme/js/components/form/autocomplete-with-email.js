@@ -47,7 +47,7 @@ export default class AutocompleteWithEmail {
       });
     }).catch((response) => {
       if (typeof response.responseJSON !== 'undefined') {
-        showErrorMessage(response.responseJSON.message);
+        window.showErrorMessage(response.responseJSON.message);
       }
     });
   }
