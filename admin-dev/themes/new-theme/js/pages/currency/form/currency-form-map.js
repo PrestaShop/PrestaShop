@@ -28,14 +28,17 @@
  */
 export default {
   currencyForm: '#currency_form',
+  currencyFormFooter: '#currency_form .card .card-footer',
   currencySelector: '#currency_selected_iso_code',
   isUnofficialCheckbox: '#currency_unofficial',
   namesInput: langId => `#currency_names_${langId}`,
   symbolsInput: langId => `#currency_symbols_${langId}`,
+  transformationsInput: langId => `#currency_transformations_${langId}`,
   isoCodeInput: '#currency_iso_code',
   exchangeRateInput: '#currency_exchange_rate',
   resetDefaultSettingsInput: '#currency_reset_default_settings',
   loadingDataModal: '#currency_loading_data_modal',
   precisionInput: '#currency_precision',
   shopAssociationTree: '#currency_shop_association',
+  currencyFormatter: '#currency_formatter',
 }

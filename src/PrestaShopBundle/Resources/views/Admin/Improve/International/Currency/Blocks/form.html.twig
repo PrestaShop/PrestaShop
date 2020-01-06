@@ -29,7 +29,21 @@
   {{ form_start(currencyForm, {
     'attr': {
       'id': 'currency_form',
-      'data-get-cldr-data': path('admin_currencies_get_reference_data', {'currencyIsoCode': 'CURRENCY_ISO_CODE'}),
+      'data-reference-url': path('admin_currencies_get_reference_data', {'currencyIsoCode': 'CURRENCY_ISO_CODE'})|replace({'/CURRENCY_ISO_CODE': '{/id}'}),
+      'data-languages': languages|json_encode|replace("'", "&#39;")|raw,
+      'data-translations': {
+        'step.symbol': '1. Enter symbol'|trans({}, 'Admin.International.Feature'),
+        'step.format': '2. Choose format'|trans({}, 'Admin.International.Feature'),
+        'modal.title': 'Customize symbol and format'|trans({}, 'Admin.International.Feature'),
+        'modal.apply': 'Apply'|trans({}, 'Admin.Actions'),
+        'modal.cancel': 'Cancel'|trans({}, 'Admin.Actions'),
+        'modal.close': 'Close'|trans({}, 'Admin.Actions'),
+        'list.language': 'Language'|trans({}, 'Admin.Global'),
+        'list.example': 'Example'|trans({}, 'Admin.Global'),
+        'list.edit': 'Edit symbol / format'|trans({}, 'Admin.International.Feature'),
+        'list.reset': 'Reset settings'|trans({}, 'Admin.Actions'),
+        'list.example.format': 'Price: %price% (Special discount %discount%)'|trans({}, 'Admin.International.Feature')
+      }|json_encode|replace("'", "&#39;")|raw
     }
   }) }}
 
@@ -61,6 +75,7 @@
 
         {{ ps.form_group_row(currencyForm.symbols, {}, {
           'label': 'Symbol'|trans({}, 'Admin.International.Feature'),
+          'class': 'd-none'
         }) }}
 
         {{ ps.form_group_row(currencyForm.iso_code, {}, {
@@ -85,13 +100,15 @@
           'label': 'Status'|trans({}, 'Admin.Global'),
         }) }}
 
+        {{ ps.form_group_row(currencyForm.transformations, {}, {'class': 'd-none'}) }}
+
         {% if isShopFeatureEnabled %}
           {{ ps.form_group_row(currencyForm.shop_association, {}, {
             'label': 'Shop association'|trans({}, 'Admin.Global'),
           }) }}
         {% endif %}
 
-        {% if currencyForm.vars.data.id is defined %}
+        {% if currencyForm.vars.data.id is defined and not currencyForm.vars.data.unofficial %}
           <div class="form-group row ">
             <label for="currency_reset_default_settings" class="form-control-label">
             </label>

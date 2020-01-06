@@ -49,10 +49,15 @@ use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\ExchangeRate;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CurrencyGridDefinitionFactory;
+use PrestaShop\PrestaShop\Core\Language\LanguageInterface;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\ComputingPrecision;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\Currency;
+use PrestaShop\PrestaShop\Core\Localization\Currency\PatternTransformer;
+use PrestaShop\PrestaShop\Core\Localization\Locale\Repository as LocaleRepository;
+use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleRepository as CldrLocaleRepository;
 use PrestaShop\PrestaShop\Core\Search\Filters\CurrencyFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopBundle\Entity\Repository\LangRepository;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
 use PrestaShopBundle\Security\Voter\PageVoter;
@@ -187,7 +192,53 @@ class CurrencyController extends FrameworkBundleAdminController
         return $this->render('@PrestaShop/Admin/Improve/International/Currency/edit.html.twig', [
             'isShopFeatureEnabled' => $multiStoreFeature->isUsed(),
             'currencyForm' => null !== $currencyForm ? $currencyForm->createView() : null,
+            'languages' => $this->getLanguagesData($currencyForm->getData()['iso_code']),
         ]);
+    }
+
+    /**
+     * @param string $currencyIsoCode
+     *
+     * @return array
+     */
+    private function getLanguagesData(string $currencyIsoCode)
+    {
+        /** @var LangRepository $langRepository */
+        $langRepository = $this->get('prestashop.core.admin.lang.repository');
+        $languages = $langRepository->findAll();
+        /** @var LocaleRepository $localeRepository */
+        $localeRepository = $this->get('prestashop.core.localization.locale.repository');
+        /** @var CldrLocaleRepository $cldrLocaleRepository */
+        $cldrLocaleRepository = $this->get('prestashop.core.localization.cldr.locale_repository');
+
+        $languagesData = [];
+        /** @var LanguageInterface $language */
+        foreach ($languages as $language) {
+            $locale = $localeRepository->getLocale($language->getLocale());
+            $cldrLocale = $cldrLocaleRepository->getLocale($language->getLocale());
+            $cldrCurrency = $cldrLocale->getCurrency($currencyIsoCode);
+            $priceSpecification = $locale->getPriceSpecification($currencyIsoCode);
+
+            $transformer = new PatternTransformer();
+            $transformations = [];
+            foreach (PatternTransformer::ALLOWED_TRANSFORMATIONS as $transformationType) {
+                $transformations[$transformationType] = $transformer->transform(
+                    $cldrLocale->getCurrencyPattern(),
+                    $transformationType
+                );
+            }
+
+            $languagesData[] = [
+                'id' => $language->getId(),
+                'name' => $language->getName(),
+                'currencyPattern' => $cldrLocale->getCurrencyPattern(),
+                'currencySymbol' => null !== $cldrCurrency ? $cldrCurrency->getSymbol() : $currencyIsoCode,
+                'priceSpecification' => $priceSpecification->toArray(),
+                'transformations' => $transformations,
+            ];
+        }
+
+        return $languagesData;
     }
 
     /**
@@ -261,6 +312,7 @@ class CurrencyController extends FrameworkBundleAdminController
                 'precision' => $referenceCurrency->getPrecision(),
                 'names' => $referenceCurrency->getNames(),
                 'symbols' => $referenceCurrency->getSymbols(),
+                'patterns' => $referenceCurrency->getPatterns(),
                 'exchangeRate' => $exchangeRateValue,
         ]);
     }
@@ -498,7 +550,8 @@ class CurrencyController extends FrameworkBundleAdminController
             ),
             InvalidUnofficialCurrencyException::class => $this->trans(
                 'Oops... it looks like this ISO code already exists. If you are: <ul><li>trying to create an alternative currency, you must type a different ISO code</li><li>trying to modify the currency with ISO code %isoCode%, make sure you did not check the creation box</li></ul>',
-                'Admin.International.Notification'
+                'Admin.International.Notification',
+                ['%isoCode%' => $isoCode]
             ),
         ];
     }
