@@ -158,3 +158,10 @@ default:
               - Tests\Integration\Behaviour\Features\Context\Domain\DebugModeFeatureContext
               - Tests\Integration\Behaviour\Features\Context\Domain\ShowcaseCardFeatureContext
               - Tests\Integration\Behaviour\Features\Context\Domain\ThemeMailTemplatesFeatureContext
+        address:
+            paths:
+              features: Features/Scenario/Address
+            contexts:
+              - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
+              - Tests\Integration\Behaviour\Features\Context\Domain\ManufacturerFeatureContext
+              - Tests\Integration\Behaviour\Features\Context\Domain\AddressFeatureContext
