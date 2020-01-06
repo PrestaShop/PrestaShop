@@ -6,6 +6,7 @@ module.exports = class shopParamsMaintenance extends BOBasePage {
     super(page);
 
     this.pageTitle = 'Maintenance •';
+    this.maintenanceText = 'We are currently updating our shop and will be back really soon. Thanks for your patience.';
 
     // Selectors
     this.generalNavItemLink = '#subtab-AdminPreferences';
@@ -32,7 +33,7 @@ module.exports = class shopParamsMaintenance extends BOBasePage {
   /**
    * Enable / disable shop
    * @param toEnable, true to enable and false to disable
-   * @return {Promise<textContent>}
+   * @return {Promise<string>}
    */
   async changeShopStatus(toEnable = true) {
     if (toEnable) await this.page.click(this.enableShopLabel);
@@ -44,7 +45,7 @@ module.exports = class shopParamsMaintenance extends BOBasePage {
   /**
    * Update Maintenance text
    * @param text
-   * @return {Promise<textContent>}
+   * @return {Promise<string>}
    */
   async changeMaintenanceTextShopStatus(text) {
     await this.setValueOnTinymceInput(this.maintenanceTextInputEN, text);
@@ -54,7 +55,7 @@ module.exports = class shopParamsMaintenance extends BOBasePage {
 
   /**
    * Add my IP address in maintenance IP input
-   * @return {Promise<textContent>}
+   * @return {Promise<string>}
    */
   async addMyIpAddress() {
     await this.page.click(this.addMyIPAddressButton);
@@ -65,7 +66,7 @@ module.exports = class shopParamsMaintenance extends BOBasePage {
   /**
    * Add maintenance IP address input
    * @param ipAddress
-   * @return {Promise<textContent>}
+   * @return {Promise<string>}
    */
   async addMaintenanceIPAddress(ipAddress) {
     await this.setValue(this.maintenanceIpInput, ipAddress);

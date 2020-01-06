@@ -13,7 +13,6 @@ const HomePage = require('@pages/FO/home');
 
 let browser;
 let page;
-const maintenanceText = 'We are currently updating our shop and will be back really soon. Thanks for your patience.';
 const newMaintenanceText = 'Maintenance';
 
 // Init objects needed
@@ -73,7 +72,7 @@ describe('Enable/Disable shop', async () => {
     page = await this.pageObjects.boBasePage.viewMyShop();
     this.pageObjects = await init();
     const pageContent = await this.pageObjects.homePage.getTextContent(this.pageObjects.homePage.content);
-    await expect(pageContent).to.equal(maintenanceText);
+    await expect(pageContent).to.equal(this.pageObjects.maintenancePage.maintenanceText);
     page = await this.pageObjects.homePage.closePage(browser, 1);
     this.pageObjects = await init();
   });
@@ -93,7 +92,9 @@ describe('Enable/Disable shop', async () => {
   });
 
   it('should back to the default maintenance text', async function () {
-    const result = await this.pageObjects.maintenancePage.changeMaintenanceTextShopStatus(maintenanceText);
+    const result = await this.pageObjects.maintenancePage.changeMaintenanceTextShopStatus(
+      this.pageObjects.maintenancePage.maintenanceText,
+    );
     await expect(result).to.contains(this.pageObjects.maintenancePage.successfulUpdateMessage);
   });
 
@@ -106,7 +107,7 @@ describe('Enable/Disable shop', async () => {
     page = await this.pageObjects.boBasePage.viewMyShop();
     this.pageObjects = await init();
     const pageContent = await this.pageObjects.homePage.getTextContent(this.pageObjects.homePage.content);
-    await expect(pageContent).to.not.equal(maintenanceText);
+    await expect(pageContent).to.not.equal(this.pageObjects.maintenancePage.maintenanceText);
     const result = await this.pageObjects.homePage.isHomePage();
     await expect(result).to.be.true;
     page = await this.pageObjects.homePage.closePage(browser, 1);
@@ -124,7 +125,7 @@ describe('Enable/Disable shop', async () => {
     page = await this.pageObjects.boBasePage.viewMyShop();
     this.pageObjects = await init();
     const pageContent = await this.pageObjects.homePage.getTextContent(this.pageObjects.homePage.content);
-    await expect(pageContent).to.not.equal(maintenanceText);
+    await expect(pageContent).to.not.equal(this.pageObjects.maintenancePage.maintenanceText);
     const result = await this.pageObjects.homePage.isHomePage();
     await expect(result).to.be.true;
     page = await this.pageObjects.homePage.closePage(browser, 1);
