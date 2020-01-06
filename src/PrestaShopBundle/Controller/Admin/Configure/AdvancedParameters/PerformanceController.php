@@ -50,7 +50,7 @@ class PerformanceController extends FrameworkBundleAdminController
      *
      * @return Response
      */
-    public function indexAction(FormInterface $form = null)
+    public function indexAction(FormInterface $form = null): Response
     {
         $toolbarButtons = [
             'clear_cache' => [
