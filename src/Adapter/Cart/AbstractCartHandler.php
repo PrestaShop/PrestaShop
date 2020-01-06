@@ -50,9 +50,6 @@ abstract class AbstractCartHandler
     protected function getCart(CartId $cartId)
     {
         try {
-            //@todo: legacy uses context cart object.
-            //@todo: Make sure it is not necessary to set the context cart.
-            //@todo: else refactor to get context cart and set it after every edit
             $cart = new Cart($cartId->getValue());
         } catch (PrestaShopException $e) {
             throw new CartException(sprintf(
