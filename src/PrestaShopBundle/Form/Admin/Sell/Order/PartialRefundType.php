@@ -85,19 +85,8 @@ class PartialRefundType extends TranslatorAwareType
                     ],
                 ]
             )
-            ->add('cancel', SubmitType::class, [
-                'label' => $this->trans('Cancel', 'Admin.Actions'),
-                'attr' => [
-                    'class' => 'partial-refund partial-refund-cancel btn btn-outline-secondary',
-                ],
-            ])
             ->add('save', SubmitType::class, [
-                'label' => $this->trans('Partial refund', 'Admin.Orderscustomers.Feature'),
-                'attr' => [
-                    'class' => 'partial-refund save btn btn-primary ml-3',
-                    'formnovalidate' => true,
-                ],
-            ])
-        ;
+                'attr' => ['class' => 'partial-refund save btn btn-primary ml-3'],
+            ]);
     }
 }

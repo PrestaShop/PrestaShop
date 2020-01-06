@@ -202,20 +202,6 @@ export default class OrderViewPage {
     });
   }
 
-  listenForRefund() {
-    $(OrderViewPageMap.displayPartialRefundBtn).on('click', () => {
-      this.orderProductRenderer.moveProductsPanelToRefundPosition();
-      $(OrderViewPageMap.togglePartialRefundForm).show();
-      $(OrderViewPageMap.actionColumnElements).hide();
-    });
-
-    $(OrderViewPageMap.cancelPartialRefundBtn).on('click', () => {
-      this.orderProductRenderer.moveProductPanelToOriginalPosition();
-      $(OrderViewPageMap.togglePartialRefundForm).hide();
-      $(OrderViewPageMap.actionColumnElements).show();
-    });
-  }
-
   getActivePage() {
     return $(OrderViewPageMap.productsTablePagination).find('.active span').get(0);
   }

@@ -62,21 +62,17 @@ export default class OrderProductRenderer {
   }
 
   moveProductsPanelToModificationPosition(scrollTarget = 'body') {
-    this.moveProductPanelToTop();
-
     $(OrderViewPageMap.productActionBtn).addClass('d-none');
     $(`${OrderViewPageMap.productAddActionBtn}, ${OrderViewPageMap.productAddRow}`).removeClass('d-none');
-    const scrollValue = $(scrollTarget).offset().top - $('.header-toolbar').height() - 100;
-    $('html,body').animate({scrollTop: scrollValue}, 'slow');
+    this.moveProductPanelToTop(scrollTarget);
   }
 
   moveProductsPanelToRefundPosition() {
     this.moveProductPanelToTop();
     $(`${OrderViewPageMap.productAddActionBtn}, ${OrderViewPageMap.productAddRow}, ${OrderViewPageMap.productActionBtn}`).addClass('d-none');
-    $('html,body').animate({scrollTop: 0}, 'slow');
   }
 
-  moveProductPanelToTop() {
+  moveProductPanelToTop(scrollTarget = 'body') {
     const $modificationPosition = $(OrderViewPageMap.productModificationPosition);
     if ($modificationPosition.find(OrderViewPageMap.productsPanel).length > 0) {
       return;
@@ -88,6 +84,9 @@ export default class OrderProductRenderer {
     const $rows = $(OrderViewPageMap.productsTable).find('tr[id^="orderProduct_"]');
     $rows.removeClass('d-none');
     $(OrderViewPageMap.productsNavPagination).addClass('d-none');
+
+    const scrollValue = $(scrollTarget).offset().top - $('.header-toolbar').height() - 100;
+    $('html,body').animate({scrollTop: scrollValue}, 'slow');
   }
 
   moveProductPanelToOriginalPosition() {
