@@ -90,12 +90,13 @@ class SupplierType extends TranslatorAwareType
 
     /**
      * @param array $countryChoices
+     * @param array $countryChoicesAttributes
      * @param ConfigurableFormChoiceProviderInterface $statesChoiceProvider
      * @param $contextCountryId
      * @param TranslatorInterface $translator
      * @param $isMultistoreEnabled
-     * @param array $locales
      * @param Router $router
+     * @param array $locales
      */
     public function __construct(
         array $countryChoices,
@@ -104,10 +105,10 @@ class SupplierType extends TranslatorAwareType
         $contextCountryId,
         TranslatorInterface $translator,
         $isMultistoreEnabled,
-        array $locales = [],
-        Router $router
+        Router $router,
+        array $locales = []
     ) {
-        parent::__construct($translator, $locales, $router);
+        parent::__construct($translator, $locales);
 
         $this->countryChoices = $countryChoices;
         $this->countryChoicesAttributes = $countryChoicesAttributes;
@@ -165,6 +166,7 @@ class SupplierType extends TranslatorAwareType
             ])
             ->add('description', TranslateType::class, [
                 'label' => $this->trans('Description', 'Admin.Global'),
+                'required' => false,
                 'help' => sprintf(
                     '%s %s',
                     $this->trans('Will appear in the list of suppliers.', 'Admin.Catalog.Help'),
@@ -185,7 +187,7 @@ class SupplierType extends TranslatorAwareType
                 ],
             ])
             ->add('phone', TextType::class, [
-                'label' => $this->trans('Home phone', 'Admin.Global'),
+                'label' => $this->trans('Phone', 'Admin.Global'),
                 'help' => $this->trans('Phone number for this supplier', 'Admin.Catalog.Help'),
                 'required' => false,
                 'constraints' => $this->getPhoneCommonConstraints(),
@@ -260,6 +262,7 @@ class SupplierType extends TranslatorAwareType
                 ],
             ])
             ->add('id_state', ChoiceType::class, [
+                'label' => $this->trans('State', 'Admin.Global'),
                 'required' => true,
                 'choices' => $this->statesChoiceProvider->getChoices(['id_country' => $countryId]),
                 'constraints' => [
@@ -269,7 +272,7 @@ class SupplierType extends TranslatorAwareType
                 ],
             ])
             ->add('dni', TextType::class, [
-                'label' => $this->trans('State', 'Admin.Global'),
+                'label' => $this->trans('DNI', 'Admin.Global'),
                 'required' => false,
                 'empty_data' => '',
                 'constraints' => [
@@ -289,10 +292,6 @@ class SupplierType extends TranslatorAwareType
                         ),
                     ]),
                 ],
-                'translation_domain' => false,
-                'choices' => $this->statesChoiceProvider->getChoices([
-                    'id_country' => $countryIdForStateChoices,
-                ]),
             ])
             ->add('logo', FileType::class, [
                 'label' => $this->trans('Logo', 'Admin.Global'),
@@ -300,7 +299,7 @@ class SupplierType extends TranslatorAwareType
                 'help' => $this->trans('Upload a supplier logo from your computer.', 'Admin.Catalog.Help'),
             ])
             ->add('meta_title', TranslatableType::class, [
-                'label' => $this->trans('Meta title', 'Admin.Catalog.Feature'),
+                'label' => $this->trans('Meta title', 'Admin.Global'),
                 'help' => $invalidGenericNameHint,
                 'type' => TextType::class,
                 'required' => false,
