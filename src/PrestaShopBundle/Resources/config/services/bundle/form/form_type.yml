@@ -618,6 +618,7 @@ services:
         class: 'PrestaShopBundle\Form\Admin\Type\CountryChoiceType'
         arguments:
             - '@prestashop.core.form.choice_provider.country_by_id'
+            - '@prestashop.core.form.choice_provider.country_by_id'
         tags:
             - { name: form.type }
 
@@ -901,6 +902,7 @@ services:
         class: 'PrestaShopBundle\Form\Admin\Sell\Supplier\SupplierType'
         arguments:
             - '@=service("prestashop.core.form.choice_provider.country_by_id").getChoices()'
+            - '@=service("prestashop.core.form.choice_provider.country_by_id").getChoicesAttributes()'
             - '@prestashop.adapter.form.choice_provider.country_state_by_id'
             - '@=service("prestashop.adapter.legacy.context").getContext().country.id'
             - '@translator'
@@ -1060,6 +1062,15 @@ services:
             - { method: setTranslator, arguments: ['@translator'] }
         tags:
             - { name: form.type }
+
+    form.type.customer_address:
+      class: 'PrestaShopBundle\Form\Admin\Sell\Address\CustomerAddressType'
+      arguments:
+        - '@translator'
+        - '@prestashop.adapter.form.choice_provider.country_state_by_id'
+        - '@=service("prestashop.adapter.legacy.context").getContext().country.id'
+      tags:
+        - { name: form.type }
 
     prestashop.bundle.form.admin.sell.attachment.attachment:
         class: 'PrestaShopBundle\Form\Admin\Sell\Attachment\AttachmentType'

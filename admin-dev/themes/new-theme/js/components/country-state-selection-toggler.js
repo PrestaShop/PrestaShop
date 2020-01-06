@@ -52,47 +52,51 @@ export default class CountryStateSelectionToggler {
     this.$countryStateSelector = $(countryStateSelector);
     this.$countryInput = $(countryInputSelector);
 
-    this.$countryInput.on('change', () => this._toggle());
+    this.$countryInput.on('change', () => this.change());
 
     // toggle on page load
-    this._toggle(true);
+    this.toggle();
 
     return {};
   }
 
   /**
-   * Toggles State selection
+   * Change State selection
    *
    * @private
    */
-  _toggle(isFirstToggle = false) {
-    $.ajax({
+  change() {
+    const countryId = this.$countryInput.val();
+    if (countryId === '') {
+      return;
+    }
+    $.get({
       url: this.$countryInput.data('states-url'),
-      method: 'GET',
       dataType: 'json',
       data: {
-        id_country: this.$countryInput.val(),
-      }
+        id_country: countryId,
+      },
     }).then((response) => {
-      if (response.states.length === 0) {
-        this.$stateSelectionBlock.fadeOut();
+      this.$countryStateSelector.empty();
 
-        return;
-      }
+      Object.keys(response.states).forEach((value) => {
+        this.$countryStateSelector.append($('<option></option>').attr('value', response.states[value]).text(value));
+      });
 
-      this.$stateSelectionBlock.fadeIn();
-
-      if (isFirstToggle === false) {
-        this.$countryStateSelector.empty();
-        var _this = this;
-        $.each(response.states, function (index, value) {
-          _this.$countryStateSelector.append($('<option></option>').attr('value', value).text(index));
-        })
-      }
+      this.toggle();
     }).catch((response) => {
       if (typeof response.responseJSON !== 'undefined') {
         showErrorMessage(response.responseJSON.message);
       }
     });
   }
+
+  toggle() {
+    if (this.$countryStateSelector.find('option').length > 0) {
+      this.$stateSelectionBlock.fadeIn();
+    } else {
+      this.$stateSelectionBlock.fadeOut();
+    }
+  }
+
 }

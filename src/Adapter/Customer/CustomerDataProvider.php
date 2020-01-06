@@ -53,6 +53,17 @@ class CustomerDataProvider
         return $customer;
     }
 
+    public function getIdByEmail(string $email)
+    {
+        $id = null;
+        $customers = Customer::getCustomersByEmail($email);
+        if (!empty($customers)) {
+            $id = current($customers)['id_customer'];
+        }
+
+        return $id;
+    }
+
     /**
      * @param int $customerId
      * @param int $langId

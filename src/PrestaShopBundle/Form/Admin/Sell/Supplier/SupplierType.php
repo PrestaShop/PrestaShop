@@ -26,11 +26,14 @@
 
 namespace PrestaShopBundle\Form\Admin\Sell\Supplier;
 
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\AddressDniRequired;
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\AddressStateRequired;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CleanHtml;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
 use PrestaShop\PrestaShop\Core\Domain\Address\AddressSettings;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\SupplierSettings;
 use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
+use PrestaShopBundle\Form\Admin\Type\CountryChoiceType;
 use PrestaShopBundle\Form\Admin\Type\FormattedTextareaType;
 use PrestaShopBundle\Form\Admin\Type\ShopChoiceTreeType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
@@ -42,7 +45,6 @@ use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -56,6 +58,11 @@ class SupplierType extends TranslatorAwareType
      * @var array
      */
     private $countryChoices;
+
+    /**
+     * @var array
+     */
+    private $countryChoicesAttributes;
 
     /**
      * @var ConfigurableFormChoiceProviderInterface
@@ -87,6 +94,7 @@ class SupplierType extends TranslatorAwareType
      */
     public function __construct(
         array $countryChoices,
+        array $countryChoicesAttributes,
         ConfigurableFormChoiceProviderInterface $statesChoiceProvider,
         $contextCountryId,
         TranslatorInterface $translator,
@@ -96,6 +104,7 @@ class SupplierType extends TranslatorAwareType
         parent::__construct($translator, $locales);
 
         $this->countryChoices = $countryChoices;
+        $this->countryChoicesAttributes = $countryChoicesAttributes;
         $this->statesChoiceProvider = $statesChoiceProvider;
         $this->contextCountryId = $contextCountryId;
         $this->isMultistoreEnabled = $isMultistoreEnabled;
@@ -103,13 +112,8 @@ class SupplierType extends TranslatorAwareType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        // By default the country id for states choices is taken from context country id
-        $countryIdForStateChoices = $this->contextCountryId;
-
-        // In case custom states country id is provided it is used instead (for example if it's edit action).
-        if (null !== $options['country_id']) {
-            $countryIdForStateChoices = $options['country_id'];
-        }
+        $data = $builder->getData();
+        $countryId = 0 !== $data['id_country'] ? $data['id_country'] : $this->contextCountryId;
 
         $builder
             ->add('name', TextType::class, [
@@ -198,10 +202,9 @@ class SupplierType extends TranslatorAwareType
                     ]),
                 ],
             ])
-            ->add('id_country', ChoiceType::class, [
+            ->add('id_country', CountryChoiceType::class, [
                 'required' => true,
-                'choices' => $this->countryChoices,
-                'translation_domain' => false,
+                'withDniAttr' => true,
                 'constraints' => [
                     new NotBlank([
                         'message' => $this->trans(
@@ -211,11 +214,34 @@ class SupplierType extends TranslatorAwareType
                 ],
             ])
             ->add('id_state', ChoiceType::class, [
+                'required' => true,
+                'choices' => $this->statesChoiceProvider->getChoices(['id_country' => $countryId]),
+                'constraints' => [
+                    new AddressStateRequired([
+                        'id_country' => $countryId,
+                    ]),
+                ],
+            ])
+            ->add('dni', TextType::class, [
                 'required' => false,
-                'translation_domain' => false,
-                'choices' => $this->statesChoiceProvider->getChoices([
-                    'id_country' => $countryIdForStateChoices,
-                ]),
+                'empty_data' => '',
+                'constraints' => [
+                    new AddressDniRequired([
+                        'required' => false,
+                        'id_country' => $countryId,
+                    ]),
+                    new TypedRegex([
+                        'type' => 'dni_lite',
+                    ]),
+                    new Length([
+                        'max' => 16,
+                        'maxMessage' => $this->trans(
+                            'This field cannot be longer than %limit% characters',
+                            'Admin.Notifications.Error',
+                            ['%limit%' => 16]
+                        ),
+                    ]),
+                ],
             ])
             ->add('logo', FileType::class, [
                 'required' => false,
@@ -298,20 +324,6 @@ class SupplierType extends TranslatorAwareType
                 ],
             ]);
         }
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function configureOptions(OptionsResolver $resolver)
-    {
-        $resolver
-            // country_id for states choices provider.
-            ->setDefaults([
-                'country_id' => null,
-            ])
-            ->setAllowedTypes('country_id', ['integer', 'null'])
-        ;
     }
 
     /**

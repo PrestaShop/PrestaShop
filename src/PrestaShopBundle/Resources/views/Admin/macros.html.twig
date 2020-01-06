@@ -257,8 +257,9 @@
   {% import '@PrestaShop/Admin/macros.html.twig' as self %}
 
   {% set class = extraVars.class|default('') %}
+  {% set rowAttributes = extraVars.row_attr|default({}) %}
 
-  <div class="form-group row {{ class }}">
+  <div class="form-group row {{ class }}" {% for key, rowAttr in rowAttributes %} {{ key }}="{{ rowAttr }}"{% endfor %}>
     {% set extraVars = extraVars|default({}) %}
 
     {# renders label above the form field if set to true #}
