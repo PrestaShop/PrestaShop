@@ -107,7 +107,7 @@ final class ContextStateManager
      *
      * @return $this
      */
-    public function setCountry(?Country $country):self
+    public function setCountry(?Country $country): self
     {
         $this->country = $this->context->country;
         $this->context->country = $country;

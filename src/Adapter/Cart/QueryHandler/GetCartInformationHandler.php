@@ -33,7 +33,6 @@ use Cart;
 use CartRule;
 use Currency;
 use Customer;
-use Context;
 use Language;
 use Link;
 use Message;
