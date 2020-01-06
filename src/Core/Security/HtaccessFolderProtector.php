@@ -58,15 +58,17 @@ class HtaccessFolderProtector implements FolderProtectorInterface
      */
     public function protectFolder($folderPath)
     {
-        if (!file_exists($folderPath) || !is_dir($folderPath)) {
+        if (!is_dir($folderPath)) {
             throw new FileNotFoundException(sprintf('Cannot protect nonexistent folder %s', $folderPath));
         }
 
         $htaccessPath = $folderPath . DIRECTORY_SEPARATOR . '.htaccess';
         if (!file_exists($htaccessPath)) {
-            if (!@file_put_contents($htaccessPath, $this->htaccessContent)) {
-                throw new IOException('Could not write htaccess file', 0, null, $htaccessPath);
+            if (!is_writable($folderPath)) {
+                throw new IOException('Could not write into module folder', 0, null, $folderPath);
             }
+
+            file_put_contents($htaccessPath, $this->htaccessContent);
         }
     }
 }
