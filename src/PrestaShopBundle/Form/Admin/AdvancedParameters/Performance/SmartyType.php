@@ -30,7 +30,6 @@ use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * This form class generates the "Smarty" form in Performance page.
@@ -51,7 +50,7 @@ class SmartyType extends TranslatorAwareType
                 ],
                 'required' => false,
                 'label' => $this->trans('Template compilation', 'Admin.Advparameters.Feature'),
-                'choice_translation_domain' => 'Admin.Advparameters.Feature'
+                'choice_translation_domain' => 'Admin.Advparameters.Feature',
             ])
             ->add('cache', SwitchType::class, [
                 'required' => false,
@@ -76,7 +75,7 @@ class SmartyType extends TranslatorAwareType
                 'row_attr' => [
                     'class' => 'smarty-cache-option',
                 ],
-                'choice_translation_domain' => 'Admin.Advparameters.Feature'
+                'choice_translation_domain' => 'Admin.Advparameters.Feature',
             ])
             ->add('clear_cache', ChoiceType::class, [
                 'choices' => [
@@ -88,7 +87,7 @@ class SmartyType extends TranslatorAwareType
                 'row_attr' => [
                     'class' => 'smarty-cache-option',
                 ],
-                'choice_translation_domain' => 'Admin.Advparameters.Feature'
+                'choice_translation_domain' => 'Admin.Advparameters.Feature',
             ]);
     }
 
