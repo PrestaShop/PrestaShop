@@ -29,7 +29,6 @@ namespace PrestaShopBundle\Form\Admin\AdvancedParameters\Performance;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
@@ -77,16 +76,6 @@ class OptionalFeaturesType extends TranslatorAwareType
                 'label' => $this->trans('Customer groups', 'Admin.Advparameters.Feature'),
                 'help' => $this->trans('Choose "No" to disable Customer Groups.', 'Admin.Advparameters.Help'),
             ]);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function configureOptions(OptionsResolver $resolver)
-    {
-        $resolver->setDefaults([
-            'translation_domain' => 'Admin.Global',
-        ]);
     }
 
     /**

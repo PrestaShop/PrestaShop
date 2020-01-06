@@ -29,7 +29,6 @@ namespace PrestaShopBundle\Form\Admin\AdvancedParameters\Performance;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * This form class generates the "Debug mode" form in Performance page.
@@ -57,16 +56,6 @@ class DebugModeType extends TranslatorAwareType
                 'label' => $this->trans('Debug mode', 'Admin.Advparameters.Feature'),
                 'help' => $this->trans('Enable or disable debug mode.', 'Admin.Advparameters.Help'),
             ]);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function configureOptions(OptionsResolver $resolver)
-    {
-        $resolver->setDefaults([
-            'translation_domain' => 'Admin.Advparameters.Feature',
-        ]);
     }
 
     /**
