@@ -32,9 +32,13 @@ use Cart;
 use Configuration;
 use Context;
 use Country;
+use Currency;
+use Customer;
 use Employee;
 use Exception;
+use Language;
 use Module;
+use PrestaShop\PrestaShop\Adapter\ContextStateManager;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\AddOrderFromBackOfficeCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler\AddOrderFromBackOfficeHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
@@ -45,6 +49,16 @@ use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
  */
 final class AddOrderFromBackOfficeHandler implements AddOrderFromBackOfficeHandlerInterface
 {
+    /**
+     * @var ContextStateManager
+     */
+    private $contextStateManager;
+
+    public function __construct(ContextStateManager $contextStateManager)
+    {
+        $this->contextStateManager = $contextStateManager;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -63,9 +77,14 @@ final class AddOrderFromBackOfficeHandler implements AddOrderFromBackOfficeHandl
         $this->assertAddressesAreNotDeleted($cart);
         $this->assertAddressesAreNotDisabled($cart);
 
-        //Context country is used in PaymentModule::validateOrder to validate order country (it should rely on cart address country instead)
-        //@TODO: investigate further which address should be used when setting context country (invoice or delivery)
-        Context::getContext()->country = new Country((new Address($cart->id_address_invoice))->id_country);
+        //Context country, language and currency is used in PaymentModule::validateOrder (it should rely on cart address country instead)
+        $this->contextStateManager
+            ->setCart($cart)
+            ->setCurrency(new Currency($cart->id_currency))
+            ->setCustomer(new Customer($cart->id_customer))
+            ->setLanguage(new Language($cart->id_lang))
+            //@TODO: investigate further which address should be used when setting context country (invoice or delivery)
+            ->setCountry(new Country((new Address($cart->id_address_invoice))->id_country));
 
         $translator = Context::getContext()->getTranslator();
         $employee = new Employee($command->getEmployeeId()->getValue());
@@ -89,12 +108,18 @@ final class AddOrderFromBackOfficeHandler implements AddOrderFromBackOfficeHandl
                 $cart->secure_key
             );
         } catch (Exception $e) {
+            $this->contextStateManager->restoreContext();
+
             throw new OrderException('Failed to add order. ' . $e->getMessage(), 0, $e);
         }
 
         if (!$paymentModule->currentOrder) {
+            $this->contextStateManager->restoreContext();
+
             throw new OrderException('Failed to add order.');
         }
+
+        $this->contextStateManager->restoreContext();
 
         return new OrderId((int) $paymentModule->currentOrder);
     }
