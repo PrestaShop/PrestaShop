@@ -103,16 +103,16 @@
       <div class="form-group">
         <div class="col-lg-4">
           <div class="input-group">
-            <strong>{{ form_label(partialRefundForm['quantity_' ~ product.orderDetailId]) }}</strong>
-            {{ form_widget(partialRefundForm['quantity_' ~ product.orderDetailId]) }}
+            <strong>{# {{ form_label(partialRefundForm['quantity_' ~ product.orderDetailId]) }} #}</strong>
+            {# {{ form_widget(partialRefundForm['quantity_' ~ product.orderDetailId]) }} #}
             <div class="input-group-append"><div class="input-group-text">/ {{ product.quantityRefundable }}</div></div>
           </div>
         </div>
         <div class="col-lg-8">
           <div class="input-group">
-            <strong>{{ form_label(partialRefundForm['amount_' ~ product.orderDetailId]) }}</strong>
-            {{ form_widget(partialRefundForm['amount_' ~ product.orderDetailId]) }}
-            <div class="input-group-append"><div class="input-group-text">{{ orderCurrency.symbol }}</div></div>
+            <strong>{# {{ form_label(partialRefundForm['amount_' ~ product.orderDetailId]) }} #}</strong>
+            {# {{ form_widget(partialRefundForm['amount_' ~ product.orderDetailId]) }} #}
+            {# <div class="input-group-append"><div class="input-group-text">{{ orderCurrency.symbol }}</div></div> #}
           </div>
           <p class="text-center">{{ '(Max %amount_refundable% %tax_method%)'|trans({
               '%amount_refundable%': product.amountRefundable,

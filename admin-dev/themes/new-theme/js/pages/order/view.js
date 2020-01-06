@@ -49,7 +49,6 @@ $(() => {
   orderViewPage.listenForProductEdit();
   orderViewPage.listenForProductAdd();
   orderViewPage.listenForProductPagination();
-  orderViewPage.listenForRefund();
 
   orderAddAutocomplete.listenForSearch();
   orderAddAutocomplete.onItemClickedCallback = product => orderAdd.setProduct(product);
