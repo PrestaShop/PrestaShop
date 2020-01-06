@@ -81,9 +81,10 @@ describe('Filter Languages', async () => {
           test.args.filterBy,
           test.args.filterValue,
         );
-        const numberOfContactsAfterFilter = await this.pageObjects.languagesPage.getNumberOfElementInGrid();
-        await expect(numberOfContactsAfterFilter).to.be.at.most(numberOfLanguages);
-        for (let i = 1; i <= numberOfContactsAfterFilter; i++) {
+        const numberOfLanguagesAfterFilter = await this.pageObjects.languagesPage.getNumberOfElementInGrid();
+        await expect(numberOfLanguagesAfterFilter).to.be.at.most(numberOfLanguages);
+        await expect(numberOfLanguagesAfterFilter).to.be.at.least(1);
+        for (let i = 1; i <= numberOfLanguagesAfterFilter; i++) {
           const textColumn = await this.pageObjects.languagesPage.getTextColumnFromTable(
             i,
             test.args.filterBy,
@@ -97,8 +98,8 @@ describe('Filter Languages', async () => {
       });
 
       it('should reset all filters', async function () {
-        const numberOfContactsAfterReset = await this.pageObjects.languagesPage.resetAndGetNumberOfLines();
-        await expect(numberOfContactsAfterReset).to.equal(numberOfLanguages);
+        const numberOfLanguagesAfterReset = await this.pageObjects.languagesPage.resetAndGetNumberOfLines();
+        await expect(numberOfLanguagesAfterReset).to.equal(numberOfLanguages);
       });
     });
   });
