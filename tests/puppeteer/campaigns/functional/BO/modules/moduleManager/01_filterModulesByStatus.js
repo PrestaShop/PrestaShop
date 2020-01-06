@@ -32,10 +32,10 @@ describe('Filter modules by status', async () => {
   after(async () => {
     await helper.closeBrowser(browser);
   });
-  // Login into BO and go to customers page
+  // Login into BO and go to module manager page
   loginCommon.loginBO();
 
-  it('should go to modules manager page', async function () {
+  it('should go to module manager page', async function () {
     await this.pageObjects.boBasePage.goToSubMenu(
       this.pageObjects.boBasePage.modulesParentLink,
       this.pageObjects.boBasePage.moduleManagerLink,
