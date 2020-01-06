@@ -38,6 +38,7 @@ use Language;
 use Link;
 use Message;
 use PrestaShop\PrestaShop\Adapter\Cart\AbstractCartHandler;
+use PrestaShop\PrestaShop\Adapter\ContextStateManager;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartInformation;
 use PrestaShop\PrestaShop\Core\Domain\Cart\QueryHandler\GetCartInformationHandlerInterface;
@@ -49,7 +50,6 @@ use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation\CartShipp
 use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation\CartSummary;
 use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation\CustomizationFieldData;
 use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation\Customization;
-use PrestaShop\PrestaShop\Core\Localization\CLDR\ComputingPrecision;
 use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 use PrestaShop\PrestaShop\Core\Localization\LocaleInterface;
 use PrestaShopException;
@@ -76,18 +76,26 @@ final class GetCartInformationHandler extends AbstractCartHandler implements Get
     private $contextLink;
 
     /**
+     * @var ContextStateManager
+     */
+    private $contextStateManager;
+
+    /**
      * @param LocaleInterface $locale
      * @param int $contextLangId
      * @param Link $contextLink
+     * @param ContextStateManager $contextStateManager
      */
     public function __construct(
         LocaleInterface $locale,
         int $contextLangId,
-        Link $contextLink
+        Link $contextLink,
+        ContextStateManager $contextStateManager
     ) {
         $this->locale = $locale;
         $this->contextLangId = $contextLangId;
         $this->contextLink = $contextLink;
+        $this->contextStateManager = $contextStateManager;
     }
 
     /**
@@ -104,19 +112,12 @@ final class GetCartInformationHandler extends AbstractCartHandler implements Get
         $cart = $this->getCart($query->getCartId());
         $currency = new Currency($cart->id_currency);
         $language = new Language($cart->id_lang);
-        $customer = new Customer($cart->id_customer);
 
-        // the next lines are a nuclear attack against SOLID principles - sorry, can't avoid it
-        $context = Context::getContext();
-        $previousContextState = [
-            'cart' => $context->cart,
-            'currency' => $context->currency,
-            'customer' => $context->customer,
-        ];
-
-        $context->cart = $cart;
-        $context->currency = $currency;
-        $context->customer = $customer;
+        $this->contextStateManager
+            ->setCart($cart)
+            ->setCurrency($currency)
+            ->setLanguage($language)
+            ->setCustomer(new Customer($cart->id_customer));
 
         $legacySummary = $cart->getSummaryDetails(null, true);
         $addresses = $this->getAddresses($cart);
@@ -132,10 +133,7 @@ final class GetCartInformationHandler extends AbstractCartHandler implements Get
             $addresses ? $this->extractShippingFromLegacySummary($cart, $legacySummary) : null
         );
 
-        // restore context state
-        $context->cart = $previousContextState['cart'];
-        $context->currency = $previousContextState['currency'];
-        $context->customer = $previousContextState['customer'];
+        $this->contextStateManager->restoreContext();
 
         return $result;
     }
