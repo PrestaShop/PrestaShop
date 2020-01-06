@@ -122,7 +122,7 @@ class TaxOptionsType extends AbstractType
                 'help' => $this->translator->trans(
                     'If you disable the ecotax, the ecotax for all your products will be set to 0.',
                     [],
-                    'Admin.International.Feature'),
+                    'Admin.International.Help'),
             ])
         ;
 
