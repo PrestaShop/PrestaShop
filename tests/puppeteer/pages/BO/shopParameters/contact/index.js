@@ -8,6 +8,8 @@ module.exports = class Contacts extends BOBasePage {
     this.pageTitle = 'Contacts';
 
     // Selectors
+    // Header selectors
+    this.addNewContactButton = '#page-header-desc-configuration-add';
     // List of contacts
     this.contactsGridPanel = '#contact_grid_panel';
     this.contactsGridTitle = `${this.contactsGridPanel} h3.card-header-title`;
@@ -18,6 +20,11 @@ module.exports = class Contacts extends BOBasePage {
     this.contactFilterInput = `${this.contactsListForm} #contact_%FILTERBY`;
     this.filterSearchButton = `${this.contactsListForm} button[name='contact[actions][search]']`;
     this.filterResetButton = `${this.contactsListForm} button[name='contact[actions][reset]']`;
+    // Actions buttons in Row
+    this.contactsListTableActionsColumn = this.contactsListTableColumn.replace('%COLUMN', 'actions');
+    this.listTableToggleDropDown = `${this.contactsListTableActionsColumn} a[data-toggle='dropdown']`;
+    this.listTableEditLink = `${this.contactsListTableActionsColumn} a[href*='edit']`;
+    this.deleteRowLink = `${this.contactsListTableActionsColumn} a[data-method='POST']`;
   }
 
   /*
@@ -75,5 +82,42 @@ module.exports = class Contacts extends BOBasePage {
         .replace('%ROW', row)
         .replace('%COLUMN', column),
     );
+  }
+
+  /**
+   * Go to new Contact page
+   * @return {Promise<void>}
+   */
+  async goToAddNewContactPage() {
+    await this.clickAndWaitForNavigation(this.addNewContactButton);
+  }
+
+  /**
+   * Go to Edit Contact page
+   * @param row, row in table
+   * @return {Promise<void>}
+   */
+  async goToEditContactPage(row) {
+    this.clickAndWaitForNavigation(this.listTableEditLink.replace('%ROW', row));
+  }
+
+  /**
+   * Delete Contact
+   * @param row, row in table
+   * @return {Promise<textContent>}
+   */
+  async deleteContact(row) {
+    this.dialogListener();
+    // Click on dropDown
+    await Promise.all([
+      this.page.click(this.listTableToggleDropDown.replace('%ROW', row)),
+      this.page.waitForSelector(
+        `${this.listTableToggleDropDown.replace('%ROW', row)}[aria-expanded='true']`,
+        {visible: true},
+      ),
+    ]);
+    // Click on delete
+    this.clickAndWaitForNavigation(this.deleteRowLink.replace('%ROW', row));
+    return this.getTextContent(this.alertSuccessBlockParagraph);
   }
 };
