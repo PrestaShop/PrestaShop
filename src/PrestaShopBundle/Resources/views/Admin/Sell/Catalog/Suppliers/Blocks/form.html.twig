@@ -38,21 +38,6 @@
         {{ 'Invalid characters:'|trans({}, 'Admin.Notifications.Info') ~ ' <>={}' }}
       {% endset %}
 
-      <div class="js-supplier-state">
-        {{ ps.form_group_row(supplierForm.id_state, {}, {
-          'label': 'State'|trans({}, 'Admin.Global'),
-        }) }}
-      </div>
-
-      {{ ps.form_group_row(supplierForm.dni, {}, {
-        'label': 'DNI'|trans({}, 'Admin.Global'),
-      }) }}
-
-      {{ ps.form_group_row(supplierForm.logo, {}, {
-        'label': 'Logo'|trans({}, 'Admin.Global'),
-        'help': 'Upload a supplier logo from your computer.'|trans({}, 'Admin.Catalog.Help')
-      }) }}
-
       {% if logoImage is defined and logoImage is not null %}
         <div class="form-group row">
           <label class="form-control-label"></label>
