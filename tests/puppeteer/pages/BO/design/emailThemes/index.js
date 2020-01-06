@@ -10,7 +10,7 @@ module.exports = class EmailThemes extends BOBasePage {
     // Selectors
     this.blockDiv = 'div.content-div div.justify-content-center:nth-child(%ID)';
     // Email Theme table selectors
-    this.emailThemeTable = `${this.blockDiv.replace('%ID', 5)} table.grid-table`;
+    this.emailThemeTable = 'table.grid-table';
     this.tableBody = `${this.emailThemeTable} tbody`;
     this.tableRows = `${this.tableBody} tr`;
     this.columnName = 'td.data-type:nth-child(1)';
