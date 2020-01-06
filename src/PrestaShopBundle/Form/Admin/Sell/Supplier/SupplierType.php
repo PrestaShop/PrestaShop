@@ -166,7 +166,6 @@ class SupplierType extends TranslatorAwareType
             ])
             ->add('description', TranslateType::class, [
                 'label' => $this->trans('Description', 'Admin.Global'),
-                'required' => false,
                 'help' => sprintf(
                     '%s %s',
                     $this->trans('Will appear in the list of suppliers.', 'Admin.Catalog.Help'),
