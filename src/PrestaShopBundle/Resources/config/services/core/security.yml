@@ -4,3 +4,8 @@ services:
 
   prestashop.core.crypto.hashing:
     class: 'PrestaShop\PrestaShop\Core\Crypto\Hashing'
+
+  prestashop.core.security.folder_protector.vendor:
+    class: 'PrestaShop\PrestaShop\Core\Security\HtaccessFolderProtector'
+    arguments:
+      - '%kernel.project_dir%/vendor/.htaccess'
