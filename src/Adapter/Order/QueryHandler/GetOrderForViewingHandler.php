@@ -465,7 +465,7 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
                 $this->locale->formatPrice($product['displayed_max_refundable'], $currency->iso_code),
                 $product['location'],
                 !empty($product['id_order_invoice']) ? $product['id_order_invoice'] : null,
-                $orderInvoice->getInvoiceNumberFormatted($order->id_lang)
+                !empty($product['id_order_invoice']) ? $orderInvoice->getInvoiceNumberFormatted($order->id_lang) : ''
             );
         }
 
