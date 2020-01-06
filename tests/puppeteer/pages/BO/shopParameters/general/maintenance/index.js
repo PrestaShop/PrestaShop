@@ -64,7 +64,7 @@ module.exports = class shopParamsMaintenance extends BOBasePage {
 
   /**
    * Add maintenance IP address input
-   * @ipAddress
+   * @param ipAddress
    * @return {Promise<textContent>}
    */
   async addMaintenanceIPAddress(ipAddress) {
