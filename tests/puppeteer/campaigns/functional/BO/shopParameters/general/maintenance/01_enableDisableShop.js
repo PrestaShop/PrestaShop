@@ -29,7 +29,10 @@ const init = async function () {
 };
 
 /*
-Enable/Disable shop
+Disable shop
+Update maintenance text
+Update ip address in maintenance
+Enable shop
  */
 describe('Enable/Disable shop', async () => {
   // before and after functions
