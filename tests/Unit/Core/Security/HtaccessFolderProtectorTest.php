@@ -89,6 +89,30 @@ class HtaccessFolderProtectorTest extends TestCase
         rmdir($testFolder);
     }
 
+    public function testExistingHtaccessFile()
+    {
+        $testFolder = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'security_htaccess';
+        if (!file_exists($testFolder)) {
+            mkdir($testFolder);
+        }
+        $testHtaccessPath = $testFolder . DIRECTORY_SEPARATOR . '.htaccess';
+        if (file_exists($testHtaccessPath)) {
+            unlink($testHtaccessPath);
+        }
+        $existingContent = 'existing file';
+        file_put_contents($testHtaccessPath, $existingContent);
+
+        $protector = new HtaccessFolderProtector($this->htaccessTemplatePath);
+
+        $this->assertTrue(file_exists($testHtaccessPath));
+        $protector->protectFolder($testFolder);
+        $this->assertTrue(file_exists($testHtaccessPath));
+        $this->assertEquals($existingContent, file_get_contents($testHtaccessPath));
+
+        unlink($testHtaccessPath);
+        rmdir($testFolder);
+    }
+
     public function getInvalidFolders()
     {
         return [
