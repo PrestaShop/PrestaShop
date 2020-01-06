@@ -21,6 +21,8 @@ admin_addresses_create:
     _controller: PrestaShopBundle:Admin\Sell\Address\Address:create
     _legacy_controller: AdminAddresses
     _legacy_link: AdminAddresses:addaddress
+  options:
+    expose: true
 
 admin_addresses_edit:
   path: /{addressId}/edit
@@ -33,6 +35,8 @@ admin_addresses_edit:
       id_address: addressId
   requirements:
     addressId: \d+
+  options:
+    expose: true
 
 admin_addresses_delete_bulk:
   path: /delete-bulk
