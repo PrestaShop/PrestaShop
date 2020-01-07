@@ -100,6 +100,16 @@ module.exports = class Home extends CommonPage {
   }
 
   /**
+   * Return true if language exist in FO
+   * @param lang
+   * @return {Promise<boolean|true>}
+   */
+  async languageExist(lang = 'en') {
+    await this.page.click(this.languageSelectorExpandIcon);
+    return this.elementVisible(this.languageSelectorMenuItemLink.replace('%LANG', lang), 1000);
+  }
+
+  /**
    * Change currency in FO
    * @param currency
    * @return {Promise<void>}
