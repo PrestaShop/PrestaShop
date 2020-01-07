@@ -25,6 +25,10 @@ module.exports = class Contacts extends BOBasePage {
     this.listTableToggleDropDown = `${this.contactsListTableActionsColumn} a[data-toggle='dropdown']`;
     this.listTableEditLink = `${this.contactsListTableActionsColumn} a[href*='edit']`;
     this.deleteRowLink = `${this.contactsListTableActionsColumn} a[data-method='POST']`;
+    // Bulk Actions
+    this.selectAllRowsLabel = `${this.contactsGridPanel} .md-checkbox label`;
+    this.bulkActionsToggleButton = `${this.contactsGridPanel} button.js-bulk-actions-btn`;
+    this.bulkActionsDeleteButton = '#contact_grid_bulk_action_delete_all';
   }
 
   /*
@@ -118,6 +122,28 @@ module.exports = class Contacts extends BOBasePage {
     ]);
     // Click on delete
     this.clickAndWaitForNavigation(this.deleteRowLink.replace('%ROW', row));
+    return this.getTextContent(this.alertSuccessBlockParagraph);
+  }
+
+  /**
+   * Delete all contacts in table with Bulk Actions
+   * @return {Promise<string>}
+   */
+  async deleteContactsBulkActions() {
+    // Add listener to dialog to accept deletion
+    this.dialogListener();
+    // Click on Select All
+    await Promise.all([
+      this.page.click(this.selectAllRowsLabel),
+      this.page.waitForSelector(`${this.selectAllRowsLabel}:not([disabled])`, {visible: true}),
+    ]);
+    // Click on Button Bulk actions
+    await Promise.all([
+      this.page.click(this.bulkActionsToggleButton),
+      this.page.waitForSelector(this.bulkActionsToggleButton, {visible: true}),
+    ]);
+    // Click on delete and wait for modal
+    this.clickAndWaitForNavigation(this.bulkActionsDeleteButton);
     return this.getTextContent(this.alertSuccessBlockParagraph);
   }
 };
