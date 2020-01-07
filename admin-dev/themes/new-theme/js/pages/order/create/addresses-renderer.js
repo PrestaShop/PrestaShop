@@ -58,8 +58,6 @@ export default class AddressesRenderer {
       this._renderInvoiceAddress(address);
     }
 
-    // @todo: router.generate(admin_addresses_create) when pr #15300 merged
-    $(createOrderMap.addressAddBtn).prop('href', this.router.generate('admin_addresses_create'));
     this._showAddressesBlock();
   }
 
@@ -82,7 +80,6 @@ export default class AddressesRenderer {
     }
 
     $(createOrderMap.deliveryAddressSelect).append($('<option>', deliveryAddressOption));
-    // @todo: router.generate(admin_addresses_edit) when pr #15300 merged
     $(createOrderMap.deliveryAddressEditBtn).prop('href', this.router.generate('admin_addresses_edit', {
       addressId: address.addressId,
     }));
@@ -107,7 +104,6 @@ export default class AddressesRenderer {
     }
 
     $(createOrderMap.invoiceAddressSelect).append($('<option>', invoiceAddressOption));
-    // @todo: router.generate(admin_addresses_edit) when pr #15300 merged
     $(createOrderMap.invoiceAddressEditBtn).prop('href', this.router.generate('admin_addresses_edit', {
       addressId: address.addressId,
     }));

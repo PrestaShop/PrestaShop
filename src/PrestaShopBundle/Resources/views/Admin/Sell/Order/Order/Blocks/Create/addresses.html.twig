@@ -63,8 +63,7 @@
     </div>
     <div class="row">
       <div class="col">
-        {#@todo: add link after addresses migration. Also in js on edit buttons#}
-        <a class="btn btn-primary" id="js-add-address-btn">
+        <a class="btn btn-primary" id="js-add-address-btn" href="{{ path('admin_addresses_create') }}">
           {{ 'Add a new address'|trans({}, 'Admin.Orderscustomers.Feature') }}
         </a>
       </div>
