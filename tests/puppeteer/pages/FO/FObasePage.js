@@ -20,9 +20,6 @@ module.exports = class Home extends CommonPage {
 
     // footer
     this.siteMapLink = '#link-static-page-sitemap-2';
-    this.languageSelectorDiv = '#_desktop_language_selector';
-    this.languageSelectorExpandIcon = `${this.languageSelectorDiv} i.expand-more`;
-    this.languageSelectorMenuItemLink = `${this.languageSelectorDiv} ul li a[data-iso-code='%LANG']`;
     // footer links
     this.footerLinksDiv = '#footer div.links';
     this.wrapperDiv = `${this.footerLinksDiv}:nth-child(1) > div > div.wrapper:nth-child(%POSITION)`;
