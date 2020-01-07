@@ -91,6 +91,7 @@ class ConfigurationTestCore
                 'fileinfo' => false,
                 'intl' => false,
                 'memory_limit' => false,
+                'mbstring' => false,
             ));
         }
 
@@ -394,7 +395,7 @@ class ConfigurationTestCore
 
     public static function test_mbstring()
     {
-        return function_exists('mb_strtolower');
+        return extension_loaded('mbstring');
     }
 
     public static function test_openssl()
