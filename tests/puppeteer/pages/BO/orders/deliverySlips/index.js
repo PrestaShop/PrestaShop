@@ -69,7 +69,7 @@ module.exports = class DeliverySlips extends BOBasePage {
   }
 
   /** Save delivery slip options
-   * @return {Promise<textContent>}
+   * @return {Promise<string>}
    */
   async saveDeliverySlipOptions() {
     await this.clickAndWaitForNavigation(this.saveDeliverySlipOptionsButton);
