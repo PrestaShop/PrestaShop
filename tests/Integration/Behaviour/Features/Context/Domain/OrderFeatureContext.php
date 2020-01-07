@@ -145,7 +145,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
         $data = $table->getRowsHash();
         $productName = $data['name'];
         /** @var array $productsMap */
-        $productsMap = $this->getQueryBus()->handle(new SearchProducts($productName, 1));
+        $productsMap = $this->getQueryBus()->handle(new SearchProducts($productName, 1, Context::getContext()->currency->iso_code));
         $productId = array_key_first($productsMap);
 
         if (!$productId) {
@@ -392,7 +392,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
         $orderId = SharedStorage::getStorage()->get($orderReference);
 
         /** @var array $productsMap */
-        $productsMap = $this->getQueryBus()->handle(new SearchProducts($productName, 1));
+        $productsMap = $this->getQueryBus()->handle(new SearchProducts($productName, 1, Context::getContext()->currency->iso_code));
         $productId = array_key_first($productsMap);
 
         /** @var OrderForViewing $orderForViewing */
@@ -425,7 +425,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     {
         $orderId = SharedStorage::getStorage()->get($orderReference);
         /** @var array $productsMap */
-        $productsMap = $this->getQueryBus()->handle(new SearchProducts($productName, 1));
+        $productsMap = $this->getQueryBus()->handle(new SearchProducts($productName, 1, Context::getContext()->currency->iso_code));
         $productId = array_key_first($productsMap);
 
         if (!$productId) {
