@@ -145,8 +145,8 @@ class AddressFeatureContext extends AbstractDomainFeatureContext
 
     /**
      * @param array $testCaseData
-     *
      * @param int $addressId
+     *
      * @return EditableManufacturerAddress
      */
     private function mapEditableManufacturerAddress(array $testCaseData, int $addressId): EditableManufacturerAddress
