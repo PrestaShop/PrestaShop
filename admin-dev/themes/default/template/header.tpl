@@ -119,15 +119,15 @@
       <span id="shop_version">{$ps_version}</span>
 
       {* Quick access *}
-      {if count($quick_access) >= 0}
-        <div id="header_quick" class="component">
-          <div class="dropdown">
-            <button
-               id="quick_select"
-               class="btn btn-link dropdown-toggle"
-               data-toggle="dropdown"
-            >{l s='Quick Access' d='Admin.Navigation.Header'} <i class="material-icons">arrow_drop_down</i></button>
-            <ul class="dropdown-menu">
+      <div id="header_quick" class="component">
+        <div class="dropdown">
+          <button
+            id="quick_select"
+            class="btn btn-link dropdown-toggle"
+            data-toggle="dropdown"
+          >{l s='Quick Access' d='Admin.Navigation.Header'} <i class="material-icons">arrow_drop_down</i></button>
+          <ul class="dropdown-menu">
+            {if !empty($quick_access)}
               {foreach $quick_access as $quick}
                 <li {if $link->matchQuickLink({$quick.link})}{assign "matchQuickLink" $quick.id_quick_access}class="active"{/if}>
                   <a href="{$quick.link|escape:'html':'UTF-8'}" {if $quick.new_window}target="_blank"{/if}>
@@ -135,81 +135,82 @@
                   </a>
                 </li>
               {/foreach}
-              <li class="divider"></li>
-              {if isset($matchQuickLink)}
-                <li>
-                  <a href="javascript:void(0);" class="ajax-quick-link" data-method="remove"
-                     data-quicklink-id="{$matchQuickLink}">
-                    <i class="material-icons">remove_circle</i>
-                    {l s='Remove from QuickAccess' d='Admin.Navigation.Header'}
-                  </a>
-                </li>
-              {else}
-                <li>
-                  <a href="javascript:void(0);" class="ajax-quick-link" data-method="add">
-                    <i class="material-icons">add_circle</i>
-                    {l s='Add current page to QuickAccess' d='Admin.Navigation.Header'}
-                  </a>
-                </li>
-              {/if}
+            {/if}
+            <li class="divider"></li>
+            {if isset($matchQuickLink)}
               <li>
-                <a href="{$link->getAdminLink("AdminQuickAccesses")|addslashes}">
-                  <i class="material-icons">settings</i>
-                  {l s='Manage quick accesses' d='Admin.Navigation.Header'}
+                <a href="javascript:void(0);" class="ajax-quick-link" data-method="remove"
+                  data-quicklink-id="{$matchQuickLink}">
+                  <i class="material-icons">remove_circle</i>
+                  {l s='Remove from QuickAccess' d='Admin.Navigation.Header'}
                 </a>
               </li>
-            </ul>
-          </div>
+            {else}
+              <li>
+                <a href="javascript:void(0);" class="ajax-quick-link" data-method="add">
+                  <i class="material-icons">add_circle</i>
+                  {l s='Add current page to QuickAccess' d='Admin.Navigation.Header'}
+                </a>
+              </li>
+            {/if}
+            <li>
+              <a href="{$link->getAdminLink("AdminQuickAccesses")|addslashes}">
+                <i class="material-icons">settings</i>
+                {l s='Manage quick accesses' d='Admin.Navigation.Header'}
+              </a>
+            </li>
+          </ul>
         </div>
-        {$quick_access_current_link_name = " - "|explode:$quick_access_current_link_name}
-        <script>
-          $(function() {
-            $('.ajax-quick-link').on('click', function(e){
-              e.preventDefault();
+      </div>
+      {$quick_access_current_link_name = " - "|explode:$quick_access_current_link_name}
+      <script>
+        $(function() {
+          $('.ajax-quick-link').on('click', function(e){
+            e.preventDefault();
 
-              var method = $(this).data('method');
+            var method = $(this).data('method');
 
-              if(method == 'add')
-                var name = prompt('{l s='Please name this shortcut:' js=1 d='Admin.Navigation.Header'}', '{$quick_access_current_link_name.0|truncate:32}');
+            if(method == 'add')
+              var name = prompt('{l s='Please name this shortcut:' js=1 d='Admin.Navigation.Header'}', '{$quick_access_current_link_name.0|truncate:32}');
 
-              if(method == 'add' && name || method == 'remove')
-              {
-                $.ajax({
-                  type: 'POST',
-                  headers: { "cache-control": "no-cache" },
-                  async: false,
-                  url: "{$link->getAdminLink('AdminQuickAccesses', true, [], ['action' => 'GetUrl', 'rand' => (1|rand:200), 'ajax' => 1])}" + "&method=" + method + ( $(this).data('quicklink-id') ? "&id_quick_access=" + $(this).data('quicklink-id') : ""),
-                  data: {
-                    "url": "{$link->getQuickLink($smarty.server['REQUEST_URI']|escape:'javascript')}",
-                    "name": name,
-                    "icon": "{$quick_access_current_link_icon}"
-                  },
-                  dataType: "json",
-                  success: function(data) {
-                    var quicklink_list ='';
-                    $.each(data, function(index,value){
-                      if (typeof data[index]['name'] !== 'undefined')
-                        quicklink_list += '<li><a href="' + data[index]['link'] + '&token=' + data[index]['token'] + '">' + data[index]['name'] + '</a></li>';
-                    });
+            if(method == 'add' && name || method == 'remove')
+            {
+              $.ajax({
+                type: 'POST',
+                headers: { "cache-control": "no-cache" },
+                async: false,
+                url: "{$link->getAdminLink('AdminQuickAccesses', true, [], ['action' => 'GetUrl', 'rand' => (1|rand:200), 'ajax' => 1])}" + "&method=" + method + ( $(this).data('quicklink-id') ? "&id_quick_access=" + $(this).data('quicklink-id') : ""),
+                data: {
+                  "url": "{$link->getQuickLink($smarty.server['REQUEST_URI']|escape:'javascript')}",
+                  "name": name,
+                  "icon": "{$quick_access_current_link_icon}"
+                },
+                dataType: "json",
+                success: function(data) {
+                  var quicklink_list ='';
+                  $.each(data, function(index,value){
+                    if (typeof data[index]['name'] !== 'undefined')
+                      quicklink_list += '<li><a href="' + data[index]['link'] + '&token=' + data[index]['token'] + '">' + data[index]['name'] + '</a></li>';
+                  });
 
-                    if (typeof data['has_errors'] !== 'undefined' && data['has_errors'])
-                      $.each(data, function(index, value)
+                  if (typeof data['has_errors'] !== 'undefined' && data['has_errors'])
+                    $.each(data, function(index, value)
                       {
                         if (typeof data[index] == 'string')
                           $.growl.error({ title: "", message: data[index]});
-                      });
-                    else if (quicklink_list)
-                    {
-                      $("#header_quick ul.dropdown-menu").html(quicklink_list);
-                      showSuccessMessage(update_success_msg);
-                    }
+                    });
+                  else if (quicklink_list)
+                  {
+                    $('#header_quick ul.dropdown-menu .divider').prevAll().remove();
+                    $('#header_quick ul.dropdown-menu').prepend(quicklink_list);
+                    showSuccessMessage(update_success_msg);
                   }
-                });
-              }
-            });
+                }
+              });
+            }
           });
-        </script>
-      {/if}
+        });
+      </script>
 
       {* Search *}
       {include file="search_form.tpl" show_clear_btn=1}

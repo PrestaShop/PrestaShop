@@ -87,7 +87,8 @@ export default class Header {
                   });
               });
             else if (quicklink_list) {
-              $("#header_quick ul.dropdown-menu").html(quicklink_list);
+              $('#header_quick ul.dropdown-menu .divider').prevAll().remove();
+              $('#header_quick ul.dropdown-menu').prepend(quicklink_list);
               window.showSuccessMessage(window.update_success_msg);
             }
           }
