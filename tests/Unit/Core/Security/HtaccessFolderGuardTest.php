@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -27,9 +27,9 @@
 namespace Tests\Unit\Core\Security;
 
 use PHPUnit\Framework\TestCase;
-use PrestaShop\PrestaShop\Core\Security\HtaccessFolderProtector;
+use PrestaShop\PrestaShop\Core\Security\HtaccessFolderGuard;
 
-class HtaccessFolderProtectorTest extends TestCase
+class HtaccessFolderGuardTest extends TestCase
 {
     /**
      * @var string
@@ -54,7 +54,7 @@ class HtaccessFolderProtectorTest extends TestCase
     public function testInvalidTemplatePath()
     {
         $invalidPath = __DIR__ . '/../../Resources/security/invalid_htaccess';
-        new HtaccessFolderProtector($invalidPath);
+        new HtaccessFolderGuard($invalidPath);
     }
 
     /**
@@ -63,7 +63,7 @@ class HtaccessFolderProtectorTest extends TestCase
      */
     public function testProtectInvalidFolders($invalidFolder)
     {
-        $protector = new HtaccessFolderProtector($this->htaccessTemplatePath);
+        $protector = new HtaccessFolderGuard($this->htaccessTemplatePath);
         $protector->protectFolder($invalidFolder);
     }
 
@@ -78,7 +78,7 @@ class HtaccessFolderProtectorTest extends TestCase
             unlink($testHtaccessPath);
         }
 
-        $protector = new HtaccessFolderProtector($this->htaccessTemplatePath);
+        $protector = new HtaccessFolderGuard($this->htaccessTemplatePath);
 
         $this->assertFalse(file_exists($testHtaccessPath));
         $protector->protectFolder($testFolder);
@@ -102,7 +102,7 @@ class HtaccessFolderProtectorTest extends TestCase
         $existingContent = 'existing file';
         file_put_contents($testHtaccessPath, $existingContent);
 
-        $protector = new HtaccessFolderProtector($this->htaccessTemplatePath);
+        $protector = new HtaccessFolderGuard($this->htaccessTemplatePath);
 
         $this->assertTrue(file_exists($testHtaccessPath));
         $protector->protectFolder($testFolder);

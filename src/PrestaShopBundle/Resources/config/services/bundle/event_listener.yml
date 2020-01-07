@@ -92,10 +92,10 @@ services:
         tags:
           - { name: kernel.event_listener, event: kernel.response, method: onKernelResponse }
 
-    prestashop.bundle.event_listener.module_protector_listener:
-        class: PrestaShopBundle\EventListener\ModuleProtectorListener
+    prestashop.bundle.event_listener.module_guard_listener:
+        class: PrestaShopBundle\EventListener\ModuleGuardListener
         arguments:
-          - '@prestashop.core.security.folder_protector.vendor'
+          - '@prestashop.core.security.folder_guard.vendor'
           - '%modules_dir%'
           - '@logger'
         tags:
