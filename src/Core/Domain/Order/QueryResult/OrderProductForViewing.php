@@ -166,6 +166,8 @@ class OrderProductForViewing
     }
 
     /**
+     * Get product's order detail ID
+     *
      * @return int
      */
     public function getOrderDetailId(): int
@@ -174,6 +176,8 @@ class OrderProductForViewing
     }
 
     /**
+     * Get product ID
+     *
      * @return int
      */
     public function getId(): int
@@ -182,6 +186,8 @@ class OrderProductForViewing
     }
 
     /**
+     * Get product's name
+     *
      * @return string
      */
     public function getName(): string
@@ -190,6 +196,8 @@ class OrderProductForViewing
     }
 
     /**
+     * Product reference
+     *
      * @return string
      */
     public function getReference(): string
@@ -198,6 +206,8 @@ class OrderProductForViewing
     }
 
     /**
+     * Get product's supplier reference
+     *
      * @return string
      */
     public function getSupplierReference(): string
@@ -206,6 +216,8 @@ class OrderProductForViewing
     }
 
     /**
+     * get tax rate to be applied on this product
+     *
      * @return float
      */
     public function getTaxRate(): float
@@ -214,6 +226,8 @@ class OrderProductForViewing
     }
 
     /**
+     * Get product's location
+     *
      * @return string
      */
     public function getLocation(): string
@@ -222,6 +236,8 @@ class OrderProductForViewing
     }
 
     /**
+     * Get product's quantity
+     *
      * @return int
      */
     public function getQuantity(): int
@@ -230,6 +246,8 @@ class OrderProductForViewing
     }
 
     /**
+     * Get product's unit price
+     *
      * @return string
      */
     public function getUnitPrice(): string
@@ -238,6 +256,8 @@ class OrderProductForViewing
     }
 
     /**
+     * Get product's formatted total price
+     *
      * @return string
      */
     public function getTotalPrice(): string
@@ -246,6 +266,8 @@ class OrderProductForViewing
     }
 
     /**
+     * Get available quantity for this product
+     *
      * @return int
      */
     public function getAvailableQuantity(): int
@@ -254,6 +276,8 @@ class OrderProductForViewing
     }
 
     /**
+     * Get image path for this product
+     *
      * @return string|null
      */
     public function getImagePath(): ?string
@@ -262,6 +286,8 @@ class OrderProductForViewing
     }
 
     /**
+     * Get unit price without taxes, as a float value
+     *
      * @return float
      */
     public function getUnitPriceTaxExclRaw(): float
@@ -270,6 +296,8 @@ class OrderProductForViewing
     }
 
     /**
+     * Get unit price including taxes, as a float value
+     *
      * @return float
      */
     public function getUnitPriceTaxInclRaw(): float
@@ -282,7 +310,7 @@ class OrderProductForViewing
      *
      * @return string
      */
-    public function getAmountRefund(): string
+    public function getAmountRefunded(): string
     {
         return $this->amountRefund;
     }
