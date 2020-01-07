@@ -94,6 +94,8 @@ final class AddCartRuleToCartHandler extends AbstractCartHandler implements AddC
 
             throw new CartException('Failed to add cart rule to cart.');
         }
+
+        $this->contextStateManager->restoreContext();
     }
 
     /**

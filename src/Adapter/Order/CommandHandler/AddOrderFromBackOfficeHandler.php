@@ -54,6 +54,9 @@ final class AddOrderFromBackOfficeHandler implements AddOrderFromBackOfficeHandl
      */
     private $contextStateManager;
 
+    /**
+     * @param ContextStateManager $contextStateManager
+     */
     public function __construct(ContextStateManager $contextStateManager)
     {
         $this->contextStateManager = $contextStateManager;
@@ -108,18 +111,14 @@ final class AddOrderFromBackOfficeHandler implements AddOrderFromBackOfficeHandl
                 $cart->secure_key
             );
         } catch (Exception $e) {
-            $this->contextStateManager->restoreContext();
-
             throw new OrderException('Failed to add order. ' . $e->getMessage(), 0, $e);
+        } finally {
+            $this->contextStateManager->restoreContext();
         }
 
         if (!$paymentModule->currentOrder) {
-            $this->contextStateManager->restoreContext();
-
             throw new OrderException('Failed to add order.');
         }
-
-        $this->contextStateManager->restoreContext();
 
         return new OrderId((int) $paymentModule->currentOrder);
     }
