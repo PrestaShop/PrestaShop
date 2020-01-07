@@ -58,7 +58,7 @@
 <script>
   import PSNumber from '@app/widgets/ps-number';
 
-  const {$} = global;
+  const {$} = window;
 
   export default {
     props: {

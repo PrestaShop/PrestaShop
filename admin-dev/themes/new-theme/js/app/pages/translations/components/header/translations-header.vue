@@ -38,7 +38,7 @@
 <script>
   import Breadcrumb from './breadcrumb';
 
-  const {$} = global;
+  const {$} = window;
 
   function getOldHeaderToolbarButtons() {
     return $('.header-toolbar')

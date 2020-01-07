@@ -23,7 +23,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-const {$} = global;
+const {$} = window;
 
 /**
  * This extension enables submit functionality of the choice fields in grid.
