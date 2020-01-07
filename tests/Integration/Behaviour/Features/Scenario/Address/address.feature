@@ -31,3 +31,26 @@ Feature: Address
       | Address          | test street 123                    |
       | City             | Kaunas                             |
       | Country          | Lithuania                          |
+
+  Scenario: add customer address
+    Given I create a customer "Tadas" with following properties:
+      | firstName        | Tadas                              |
+      | lastName         | Davidsonas                         |
+      | email            | tadas.davidsonas@invertus.eu       |
+      | password         | secret                             |
+    When I add new address to customer "Tadas" with following details:
+      | Address alias    | tadas-address                      |
+      | First name       | Tadas                              |
+      | Last name        | Davidsonas                         |
+      | Address          | Work address st. 1234567890        |
+      | City             | Kaunas                             |
+      | Country          | Lithuania                          |
+      | Postal code      | 12345                              |
+    Then customer "Tadas" should have address "tadas-address" with following details:
+      | Address alias    | tadas-address                      |
+      | First name       | Tadas                              |
+      | Last name        | Davidsonas                         |
+      | Address          | Work address st. 1234567890        |
+      | City             | Kaunas                             |
+      | Country          | Lithuania                          |
+      | Postal code      | 12345                              |

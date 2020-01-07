@@ -66,9 +66,7 @@ class CustomerManagerFeatureContext extends AbstractPrestaShopFeatureContext
     protected $customerRegistry = [];
 
     /**
-     * todo hint: move to domain context?
-     *
-     * @When /^I create a customer "(.+)" with following properties:$/
+s     * @When /^I create a customer "(.+)" with following properties:$/
      */
     public function createACustomerUsingCommand($customerReference, TableNode $table)
     {
@@ -113,8 +111,6 @@ class CustomerManagerFeatureContext extends AbstractPrestaShopFeatureContext
 
         $this->latestResult = $id->getValue();
         $this->customerRegistry[$customerReference] = $id->getValue();
-
-        SharedStorage::getStorage()->set($customerReference, $id->getValue());
     }
 
     /**
