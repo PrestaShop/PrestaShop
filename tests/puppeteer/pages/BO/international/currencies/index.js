@@ -10,7 +10,7 @@ module.exports = class Currencies extends BOBasePage {
 
     // Header Selectors
     this.languagesNavItemLink = '#subtab-AdminLanguages';
-    this.localizationNavItemLink = '#subtab-AdminCurrencies';
+    this.localizationNavItemLink = '#subtab-AdminLocalization';
     this.geolocationNavItemLink = '#subtab-AdminGeolocation';
     this.newCurrencyLink = '#page-header-desc-configuration-add';
 
