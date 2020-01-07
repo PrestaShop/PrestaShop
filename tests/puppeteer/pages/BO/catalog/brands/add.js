@@ -39,26 +39,20 @@ module.exports = class AddBrand extends BOBasePage {
     // Fill Name
     await this.setValue(this.nameInput, brandData.name);
     // Fill information in english
-    await Promise.all([
-      this.page.click(this.shortDescriptionLangLink.replace('%LANG', 'en')),
-      this.page.waitForSelector(`${this.shortDescriptionLangLink.replace('%LANG', 'en')}.active`, {visible: true}),
-    ]);
+    await this.changeLanguage('en');
     await this.setValueOnTinymceInput(this.shortDescriptionIFrame.replace('%ID', '1'), brandData.shortDescription);
     await this.setValueOnTinymceInput(this.descriptionIFrame.replace('%ID', '1'), brandData.description);
-    await this.setValueOnTinymceInput(this.metaTitleInput.replace('%ID', '1'), brandData.metaTitle);
-    await this.setValueOnTinymceInput(this.metaDescriptionInput.replace('%ID', '1'), brandData.metaDescription);
+    await this.setValue(this.metaTitleInput.replace('%ID', '1'), brandData.metaTitle);
+    await this.setValue(this.metaDescriptionInput.replace('%ID', '1'), brandData.metaDescription);
     await this.deleteKeywords('en');
     await this.addKeywords(brandData.metaKeywords, '1');
 
     // Fill Information in french
-    await Promise.all([
-      this.page.click(this.shortDescriptionLangLink.replace('%LANG', 'fr')),
-      this.page.waitForSelector(`${this.shortDescriptionLangLink.replace('%LANG', 'fr')}.active`, {visible: true}),
-    ]);
+    await this.changeLanguage('fr');
     await this.setValueOnTinymceInput(this.shortDescriptionIFrame.replace('%ID', '2'), brandData.shortDescriptionFr);
     await this.setValueOnTinymceInput(this.descriptionIFrame.replace('%ID', '2'), brandData.descriptionFr);
-    await this.setValueOnTinymceInput(this.metaTitleInput.replace('%ID', '2'), brandData.metaTitleFr);
-    await this.setValueOnTinymceInput(this.metaDescriptionInput.replace('%ID', '2'), brandData.metaDescriptionFr);
+    await this.setValue(this.metaTitleInput.replace('%ID', '2'), brandData.metaTitleFr);
+    await this.setValue(this.metaDescriptionInput.replace('%ID', '2'), brandData.metaDescriptionFr);
     await this.deleteKeywords('fr');
     await this.addKeywords(brandData.metaKeywordsFr, '2');
 
@@ -104,5 +98,17 @@ module.exports = class AddBrand extends BOBasePage {
       await this.page.keyboard.press('Enter');
     }
     /* eslint-enable no-await-in-loop, no-restricted-syntax */
+  }
+
+  /**
+   * Change language for selector
+   * @param lang
+   * @return {Promise<void>}
+   */
+  async changeLanguage(lang) {
+    await Promise.all([
+      this.page.$eval(this.shortDescriptionLangLink.replace('%LANG', lang), el => el.click()),
+      this.page.waitForSelector(`${this.shortDescriptionLangLink.replace('%LANG', lang)}.active`, {visible: true}),
+    ]);
   }
 };
