@@ -33,24 +33,27 @@ Feature: Address
       | Country          | Lithuania                          |
 
   Scenario: add customer address
-    Given I create a customer "Tadas" with following properties:
-      | firstName        | Tadas                              |
-      | lastName         | Davidsonas                         |
-      | email            | tadas.davidsonas@invertus.eu       |
+    Given I create customer "testFirstName" with following details:
+      | firstName        | testFirstName                      |
+      | lastName         | testLastName                       |
+      | email            | test.davidsonas@invertus.eu       |
       | password         | secret                             |
-    When I add new address to customer "Tadas" with following details:
-      | Address alias    | tadas-address                      |
-      | First name       | Tadas                              |
-      | Last name        | Davidsonas                         |
+    When I add new address to customer "testFirstName" with following details:
+      | Address alias    | test-address                      |
+      | First name       | testFirstName                      |
+      | Last name        | testLastName                       |
       | Address          | Work address st. 1234567890        |
-      | City             | Kaunas                             |
-      | Country          | Lithuania                          |
+      | City             | Birmingham                         |
+      | Country          | United States                      |
+      | State            | Alabama                            |
       | Postal code      | 12345                              |
-    Then customer "Tadas" should have address "tadas-address" with following details:
-      | Address alias    | tadas-address                      |
-      | First name       | Tadas                              |
-      | Last name        | Davidsonas                         |
+    Then customer "testFirstName" should have address "test-address" with following details:
+      | Address alias    | test-address                      |
+      | First name       | testFirstName                      |
+      | Last name        | testLastName                       |
       | Address          | Work address st. 1234567890        |
-      | City             | Kaunas                             |
-      | Country          | Lithuania                          |
+      | City             | Birmingham                         |
+      | Country          | United States                      |
+      | State            | Alabama                            |
       | Postal code      | 12345                              |
+
