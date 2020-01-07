@@ -48,7 +48,7 @@ class SearchProducts
     /**
      * @var AlphaIsoCode
      */
-    private $alphaIsoCode;src/Core/Domain/Product/Query/SearchProducts.php
+    private $alphaIsoCode;
 
     /**
      * @param string $phrase

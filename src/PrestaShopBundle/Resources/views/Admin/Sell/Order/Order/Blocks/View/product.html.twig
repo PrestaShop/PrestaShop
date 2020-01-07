@@ -60,7 +60,7 @@
   </td>
   <td class="cellProductLocation">{{ product.location }}</td>
   <td>
-    <p>{{ product.quantityRefunded }}{% if product.amountRefund %} ({{ product.amountRefund }} {{ 'Refunded'|trans({}, 'Admin.Orderscustomers.Feature') }}){% endif %}</p>
+    <p>{{ product.quantityRefunded }}{% if product.amountRefunded %} ({{ product.amountRefunded }} {{ 'Refunded'|trans({}, 'Admin.Orderscustomers.Feature') }}){% endif %}</p>
   </td>
   <td class="cellProductAvailableQuantity">{{ product.availableQuantity }}</td>
   <td class="cellProductTotalPrice">{{ product.totalPrice }}</td>
