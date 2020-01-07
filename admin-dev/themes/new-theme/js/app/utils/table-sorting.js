@@ -23,7 +23,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-const {$} = global;
+const {$} = window;
 
 /**
  * Makes a table sortable by columns.

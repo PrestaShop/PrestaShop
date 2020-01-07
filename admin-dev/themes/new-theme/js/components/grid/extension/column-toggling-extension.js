@@ -23,7 +23,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-const {$} = global;
+const {$} = window;
 
 /**
  * Class ReloadListExtension extends grid with "Column toggling" feature

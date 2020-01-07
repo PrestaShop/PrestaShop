@@ -57,7 +57,7 @@ import Header from '@js/header';
 import initDatePickers from '@js/app/utils/datepicker';
 import initInvalidFields from '@js/app/utils/fields';
 
-const {$} = global;
+const {$} = window;
 
 // Theme Javascript
 window.Dropzone.autoDiscover = false;

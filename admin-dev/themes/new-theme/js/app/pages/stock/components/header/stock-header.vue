@@ -41,7 +41,7 @@
   import Breadcrumb from './breadcrumb';
   import Tabs from './tabs';
 
-  const {$} = global;
+  const {$} = window;
 
   function getOldHeaderToolbarButtons() {
     return $('.header-toolbar')

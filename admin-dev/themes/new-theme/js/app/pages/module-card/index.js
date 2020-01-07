@@ -25,7 +25,7 @@
 
 import ModuleCard from '@components/module-card';
 
-const {$} = global;
+const {$} = window;
 
 $(() => {
   new ModuleCard().init();

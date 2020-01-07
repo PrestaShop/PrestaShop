@@ -24,7 +24,7 @@
  */
 import 'url-polyfill';
 
-const {$} = global;
+const {$} = window;
 
 const replaceDatePicker = () => {
   const datepickerWidget = $('body').find('.bootstrap-datetimepicker-widget:last');
