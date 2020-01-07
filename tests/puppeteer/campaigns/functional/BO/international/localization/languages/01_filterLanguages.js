@@ -38,7 +38,7 @@ describe('Filter Languages', async () => {
     await helper.closeBrowser(browser);
   });
 
-  // Login into BO and go to contact page
+  // Login into BO and go to localization page
   loginCommon.loginBO();
 
   it('should go to localization page', async function () {
