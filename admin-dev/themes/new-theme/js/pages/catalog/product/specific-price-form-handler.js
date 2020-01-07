@@ -108,20 +108,25 @@ class SpecificPriceFormHandler {
     const specificPriceId = specificPrice.id_specific_price;
 
     /* eslint-disable max-len */
-    const row = `${'<tr>'
-        + '<td>'}${specificPrice.rule_name}</td>`
-        + `<td>${specificPrice.attributes_name}</td>`
-        + `<td>${specificPrice.currency}</td>`
-        + `<td>${specificPrice.country}</td>`
-        + `<td>${specificPrice.group}</td>`
-        + `<td>${specificPrice.customer}</td>`
-        + `<td>${specificPrice.fixed_price}</td>`
-        + `<td>${specificPrice.impact}</td>`
-        + `<td>${specificPrice.period}</td>`
-        + `<td>${specificPrice.from_quantity}</td>`
-        + `<td>${specificPrice.can_delete ? `<a href="${deleteUrl}" class="js-delete delete btn tooltip-link delete pl-0 pr-0"><i class="material-icons">delete</i></a>` : ''}</td>`
-        + `<td>${specificPrice.can_edit ? `<a href="#" data-specific-price-id="${specificPriceId}" class="js-edit edit btn tooltip-link delete pl-0 pr-0"><i class="material-icons">edit</i></a>` : ''}</td>`
-        + '</tr>';
+    const canDelete = specificPrice.can_delete
+      ? `<a href="${deleteUrl}" class="js-delete delete btn tooltip-link delete pl-0 pr-0"><i class="material-icons">delete</i></a>`
+      : '';
+    const canEdit = specificPrice.can_edit
+      ? `<a href="#" data-specific-price-id="${specificPriceId}" class="js-edit edit btn tooltip-link delete pl-0 pr-0"><i class="material-icons">edit</i></a>`
+      : '';
+    const row = `<tr> \
+    <td>${specificPrice.rule_name}</td> \
+    <td>${specificPrice.attributes_name}</td> \
+    <td>${specificPrice.currency}</td> \
+    <td>${specificPrice.country}</td> \
+    <td>${specificPrice.group}</td> \
+    <td>${specificPrice.customer}</td> \
+    <td>${specificPrice.fixed_price}</td> \
+    <td>${specificPrice.impact}</td> \
+    <td>${specificPrice.period}</td> \
+    <td>${specificPrice.from_quantity}</td> \
+    <td>${canDelete}</td> \
+    <td>${canEdit}</td></tr>`;
     /* eslint-enable max-len */
 
     return row;

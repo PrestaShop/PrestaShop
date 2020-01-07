@@ -38,7 +38,7 @@
       <option
         v-for="(item, index) in items"
         :key="index"
-        :value="item[itemID]"
+        :value="item[itemId]"
       >
         {{ item[itemName] }}
       </option>
@@ -53,7 +53,7 @@
         type: Array,
         required: true,
       },
-      itemID: {
+      itemId: {
         type: String,
         required: false,
         default: '',
@@ -68,7 +68,7 @@
       onChange() {
         this.$emit('change', {
           value: this.selected,
-          itemID: this.itemID,
+          itemId: this.itemId,
         });
       },
     },

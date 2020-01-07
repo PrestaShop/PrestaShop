@@ -40,7 +40,7 @@
         </PSCheckbox>
       </div>
       <div class="col mr-3 d-flex align-items-center justify-content-end">
-        <a :href="stockExporttUrl">
+        <a :href="stockExportUrl">
           <span
             data-toggle="pstooltip"
             :title="stockExportTitle"
@@ -90,7 +90,7 @@
       stockImportUrl() {
         return window.data.stockImportUrl;
       },
-      stockExporttUrl() {
+      stockExportUrl() {
         const params = $.param(this.filters);
         return `${window.data.stockExportUrl}&${params}`;
       },
