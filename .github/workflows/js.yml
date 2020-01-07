@@ -14,6 +14,4 @@ jobs:
         with:
           node-version: '10.x'
 
-      - working-directory: ./admin-dev/themes/new-theme
-      - run: npm install
-      - run: npm run lint
+      - run: cd ./admin-dev/themes/new-theme && npm install && npm run lint
