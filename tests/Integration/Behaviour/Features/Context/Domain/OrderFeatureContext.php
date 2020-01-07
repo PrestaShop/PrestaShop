@@ -53,6 +53,8 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
 {
     private const ORDER_CART_RULE_FREE_SHIPPING = 'Free Shipping';
 
+    private $currencyIsoCode;
+
     /**
      * @BeforeScenario
      */
@@ -142,7 +144,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
         $data = $table->getRowsHash();
         $productName = $data['name'];
         /** @var array $productsMap */
-        $productsMap = $this->getQueryBus()->handle(new SearchProducts($productName, 1));
+        $productsMap = $this->getQueryBus()->handle(new SearchProducts($productName, 1, $this->currencyIsoCode));
         $productId = array_key_first($productsMap);
 
         if (!$productId) {
@@ -379,17 +381,18 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Given order with reference :orderReference does not contain product :productName
+     * @Given order with reference :orderReference does not contain product :productName and currency iso code is :currencyIsoCode
      *
      * @param string $orderReference
      * @param string $productName
      */
-    public function orderDoesNotContainProduct(string $orderReference, string $productName)
+    public function orderDoesNotContainProduct(string $orderReference, string $productName, string $currencyIsoCode)
     {
+        $this->currencyIsoCode = $currencyIsoCode;
         $orderId = SharedStorage::getStorage()->get($orderReference);
 
         /** @var array $productsMap */
-        $productsMap = $this->getQueryBus()->handle(new SearchProducts($productName, 1));
+        $productsMap = $this->getQueryBus()->handle(new SearchProducts($productName, 1, $this->currencyIsoCode));
         $productId = array_key_first($productsMap);
 
         /** @var OrderForViewing $orderForViewing */
@@ -422,7 +425,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     {
         $orderId = SharedStorage::getStorage()->get($orderReference);
         /** @var array $productsMap */
-        $productsMap = $this->getQueryBus()->handle(new SearchProducts($productName, 1));
+        $productsMap = $this->getQueryBus()->handle(new SearchProducts($productName, 1, $this->currencyIsoCode));
         $productId = array_key_first($productsMap);
 
         if (!$productId) {

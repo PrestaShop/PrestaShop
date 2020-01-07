@@ -79,7 +79,7 @@ Feature: Order from Back Office (BO)
     Then there is duplicated cart "duplicated_dummy_cart" for cart dummy_cart
 
   Scenario: Add product to an existing Order with free shipping and new invoice
-    Given order with reference "bo_order1" does not contain product "Mug Today is a good day"
+    Given order with reference "bo_order1" does not contain product "Mug Today is a good day" and currency iso code is "USD"
     When I add products to order "bo_order1" with new invoice and the following products details:
       | name          | Mug Today is a good day |
       | amount        | 2                       |
