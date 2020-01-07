@@ -87,7 +87,7 @@
         required: false,
         default: '',
       },
-      itemID: {
+      itemId: {
         type: String,
         required: true,
       },
@@ -177,9 +177,9 @@
         const list = this.hasChildren ? categoryList : this.list;
 
         list.map((data) => {
-          const isInIdList = idList.indexOf(Number(data[this.itemID])) === -1;
+          const isInIdList = idList.indexOf(Number(data[this.itemId])) === -1;
           if (tags.indexOf(data[this.label]) !== -1 && isInIdList) {
-            idList.push(Number(data[this.itemID]));
+            idList.push(Number(data[this.itemId]));
           }
           return idList;
         });

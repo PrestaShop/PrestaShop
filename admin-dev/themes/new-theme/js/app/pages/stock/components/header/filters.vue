@@ -49,7 +49,7 @@
               :placeholder="trans('filter_search_suppliers')"
               :list="this.$store.getters.suppliers"
               class="filter-suppliers"
-              item-i-d="supplier_id"
+              item-id="supplier_id"
               label="name"
               @active="onFilterActive"
             />
@@ -61,7 +61,7 @@
             <h2>{{ trans('filter_movements_type') }}</h2>
             <PSSelect
               :items="movementsTypes"
-              item-i-d="id_stock_mvt_reason"
+              item-id="id_stock_mvt_reason"
               item-name="name"
               @change="onChange"
             >
@@ -72,7 +72,7 @@
             </h2>
             <PSSelect
               :items="employees"
-              item-i-d="id_employee"
+              item-id="id_employee"
               item-name="name"
               @change="onChange"
             >
@@ -110,7 +110,7 @@
               :placeholder="trans('filter_search_category')"
               :list="categoriesList"
               class="filter-categories"
-              item-i-d="id_category"
+              item-id="id_category"
               label="name"
               @active="onFilterActive"
             />
@@ -200,7 +200,7 @@
         });
       },
       onChange(item) {
-        if (item.itemID === 'id_stock_mvt_reason') {
+        if (item.itemId === 'id_stock_mvt_reason') {
           this.id_stock_mvt_reason = item.value === 'default' ? [] : item.value;
         } else {
           this.id_employee = item.value === 'default' ? [] : item.value;
