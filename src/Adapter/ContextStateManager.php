@@ -27,54 +27,9 @@ final class ContextStateManager
     private $context;
 
     /**
-     * @var Cart|null
+     * @var array
      */
-    private $cart;
-
-    /**
-     * @var Country|null
-     */
-    private $country;
-
-    /**
-     * @var Currency|null
-     */
-    private $currency;
-
-    /**
-     * @var Language|null
-     */
-    private $language;
-
-    /**
-     * @var Customer|null
-     */
-    private $customer;
-
-    /**
-     * @var bool
-     */
-    private $cartStateChanged = false;
-
-    /**
-     * @var bool
-     */
-    private $countryStateChanged = false;
-
-    /**
-     * @var bool
-     */
-    private $currencyStateChanged = false;
-
-    /**
-     * @var bool
-     */
-    private $languageStateChanged = false;
-
-    /**
-     * @var bool
-     */
-    private $customerStateChanged = false;
+    private $savedContextFields = [];
 
     /**
      * @param Context $context
@@ -93,9 +48,8 @@ final class ContextStateManager
      */
     public function setCart(?Cart $cart): self
     {
-        $this->cart = $this->context->cart;
+        $this->saveContextField('cart');
         $this->context->cart = $cart;
-        $this->cartStateChanged = true;
 
         return $this;
     }
@@ -109,9 +63,8 @@ final class ContextStateManager
      */
     public function setCountry(?Country $country): self
     {
-        $this->country = $this->context->country;
+        $this->saveContextField('country');
         $this->context->country = $country;
-        $this->countryStateChanged = true;
 
         return $this;
     }
@@ -125,9 +78,8 @@ final class ContextStateManager
      */
     public function setCurrency(?Currency $currency): self
     {
-        $this->currency = $this->context->currency;
+        $this->saveContextField('currency');
         $this->context->currency = $currency;
-        $this->currencyStateChanged = true;
 
         return $this;
     }
@@ -141,9 +93,8 @@ final class ContextStateManager
      */
     public function setLanguage(?Language $language): self
     {
-        $this->language = $this->context->language;
+        $this->saveContextField('language');
         $this->context->language = $language;
-        $this->languageStateChanged = true;
 
         return $this;
     }
@@ -157,36 +108,50 @@ final class ContextStateManager
      */
     public function setCustomer(?Customer $customer): self
     {
-        $this->customer = $this->context->customer;
+        $this->saveContextField('customer');
         $this->context->customer = $customer;
-        $this->customerStateChanged = true;
 
         return $this;
     }
 
     /**
      * Restores context to a state before changes
+     *
+     * @return self
      */
-    public function restoreContext(): void
+    public function restoreContext(): self
     {
-        if ($this->cartStateChanged) {
-            $this->context->cart = $this->cart;
+        foreach ($this->savedContextFields as $fieldName => $contextValue) {
+            $this->restoreContextField($fieldName);
         }
 
-        if ($this->currencyStateChanged) {
-            $this->context->currency = $this->currency;
-        }
+        return $this;
+    }
 
-        if ($this->languageStateChanged) {
-            $this->context->language = $this->language;
+    /**
+     * Save context field into local array
+     *
+     * @param string $fieldName
+     */
+    private function saveContextField(string $fieldName)
+    {
+        // NOTE: array_key_exists important here, isset cannot be used because it would not detect if null is stored
+        if (!array_key_exists($fieldName, $this->savedContextFields)) {
+            $this->savedContextFields[$fieldName] = $this->context->$fieldName;
         }
+    }
 
-        if ($this->customerStateChanged) {
-            $this->context->customer = $this->customer;
-        }
-
-        if ($this->countryStateChanged) {
-            $this->context->country = $this->country;
+    /**
+     * Restores context saved value, and remove save value from local array
+     *
+     * @param string $fieldName
+     */
+    private function restoreContextField(string $fieldName): void
+    {
+        // NOTE: array_key_exists important here, isset cannot be used because it would not detect if null is stored
+        if (array_key_exists($fieldName, $this->savedContextFields)) {
+            $this->context->$fieldName = $this->savedContextFields[$fieldName];
+            unset($this->savedContextFields[$fieldName]);
         }
     }
 }
