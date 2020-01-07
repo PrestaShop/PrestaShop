@@ -38,7 +38,6 @@ use PrestaShop\PrestaShop\Core\Group\Provider\DefaultGroupsProviderInterface;
 use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\CommonFeatureContext;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
-use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
 class CustomerFeatureContext extends AbstractDomainFeatureContext
 {
