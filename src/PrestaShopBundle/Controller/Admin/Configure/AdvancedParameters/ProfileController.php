@@ -34,6 +34,7 @@ use PrestaShop\PrestaShop\Core\Domain\Profile\Exception\FailedToDeleteProfileExc
 use PrestaShop\PrestaShop\Core\Domain\Profile\Exception\ProfileConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Exception\ProfileException;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Exception\ProfileNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Profile\ProfileSettings;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Query\GetProfileForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Profile\QueryResult\EditableProfile;
 use PrestaShop\PrestaShop\Core\Search\Filters\ProfileFilters;
@@ -267,9 +268,9 @@ class ProfileController extends FrameworkBundleAdminController
         return [
             ProfileConstraintException::class => [
                 ProfileConstraintException::INVALID_NAME => $this->trans(
-                    'Your entry in field name exceeds max length %d chars (incl. HTML tags)',
+                    'This field cannot be longer than %limit% characters (incl. HTML tags)',
                     'Admin.Notifications.Error',
-                    [ProfileConstraintException::NAME_MAX_LENGTH]
+                    ['%limit%' => ProfileSettings::NAME_MAX_LENGTH]
                 ),
             ],
             ProfileNotFoundException::class => $this->trans(

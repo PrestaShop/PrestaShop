@@ -28,7 +28,7 @@ namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Profile;
 
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DefaultLanguage;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
-use PrestaShop\PrestaShop\Core\Domain\Profile\Exception\ProfileConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Profile\ProfileSettings;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -68,10 +68,10 @@ class ProfileType extends AbstractType
                             'type' => 'generic_name',
                         ]),
                         new Length([
-                            'max' => ProfileConstraintException::NAME_MAX_LENGTH,
+                            'max' => ProfileSettings::NAME_MAX_LENGTH,
                             'maxMessage' => $this->translator->trans(
                                 'This field cannot be longer than %limit% characters',
-                                ['%limit%' => ProfileConstraintException::NAME_MAX_LENGTH],
+                                ['%limit%' => ProfileSettings::NAME_MAX_LENGTH],
                                 'Admin.Notifications.Error'
                             ),
                         ]),
