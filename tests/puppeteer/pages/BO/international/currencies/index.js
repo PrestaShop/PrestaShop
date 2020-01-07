@@ -10,7 +10,7 @@ module.exports = class Currencies extends BOBasePage {
 
     // Header Selectors
     this.languagesNavItemLink = '#subtab-AdminLanguages';
-    this.localizationNavItemLink = '#subtab-AdminCurrencies';
+    this.localizationNavItemLink = '#subtab-AdminLocalization';
     this.geolocationNavItemLink = '#subtab-AdminGeolocation';
     this.newCurrencyLink = '#page-header-desc-configuration-add';
 
@@ -23,11 +23,6 @@ module.exports = class Currencies extends BOBasePage {
     this.filterColumn = `${this.gridTable} #currency_%FILTERBY`;
     this.filterSearchButton = `${this.gridTable} button[name='currency[actions][search]']`;
     this.filterResetButton = `${this.gridTable} button[name='currency[actions][reset]']`;
-
-    // Table rows and columns
-    this.tableBody = `${this.gridTable} tbody`;
-    this.tableRow = `${this.tableBody} tr:nth-child(%ROW)`;
-    this.tableEmptyRow = `${this.tableBody} tr.empty_row`;
 
     // Table rows and columns
     this.tableBody = `${this.gridTable} tbody`;
@@ -55,7 +50,7 @@ module.exports = class Currencies extends BOBasePage {
   }
 
   /**
-   * Go to currencies page
+   * Go to localization page
    * @return {Promise<void>}
    */
   async goToSubTabLocalization() {
