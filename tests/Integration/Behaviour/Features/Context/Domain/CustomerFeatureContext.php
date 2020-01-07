@@ -112,14 +112,14 @@ class CustomerFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @When /^I create a customer "(.+)" with following properties:$/
+     * @When /^I create customer "(.+)" with following details:$/
      *
      * @param string $customerReference
      * @param TableNode $table
      *
      * @throws Exception
      */
-    public function createACustomerUsingCommand(string $customerReference, TableNode $table)
+    public function createCustomerUsingCommand(string $customerReference, TableNode $table)
     {
         $data = $table->getRowsHash();
 

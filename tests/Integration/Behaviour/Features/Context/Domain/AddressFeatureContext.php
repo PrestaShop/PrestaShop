@@ -96,7 +96,12 @@ class AddressFeatureContext extends AbstractDomainFeatureContext
             $testCaseData['Address'],
             $testCaseData['City'],
             $countryId,
-            $testCaseData['Postal code']
+            $testCaseData['Postal code'],
+            null,
+            null,
+            null,
+            null,
+            $countryStateId
         ));
         SharedStorage::getStorage()->set($testCaseData['Address alias'], $addressIdObject->getValue());
     }
@@ -129,16 +134,19 @@ class AddressFeatureContext extends AbstractDomainFeatureContext
 
         /** @var CountryByIdChoiceProvider $countryChoiceProvider */
         $countryChoiceProvider = $this->getContainer()->get('prestashop.core.form.choice_provider.country_by_id');
-        $countryId = $countryChoiceProvider->getChoices()[$testCaseData['Country']];
-
+        $countryId = (int) $countryChoiceProvider->getChoices()[$testCaseData['Country']];
         PHPUnit_Framework_Assert::assertSame((int) $countryId, $customerAddress->getCountryId()->getValue());
+
+        $countryStateChoiceProvider = $this->getContainer()->get('prestashop.adapter.form.choice_provider.country_state_by_id');
+        $countryStateId = $countryStateChoiceProvider->getChoices(['id_country' => $countryId])[$testCaseData['State']];
+        PHPUnit_Framework_Assert::assertSame((int) $countryStateId, $customerAddress->getStateId()->getValue());
         PHPUnit_Framework_Assert::assertEquals($testCaseData['Postal code'], $customerAddress->getPostCode());
     }
 
     /**
      * @param array $testCaseData
-     * @param int $addressId
      *
+     * @param int $addressId
      * @return EditableManufacturerAddress
      */
     private function mapEditableManufacturerAddress(array $testCaseData, int $addressId): EditableManufacturerAddress
