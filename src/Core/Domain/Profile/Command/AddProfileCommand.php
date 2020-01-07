@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Profile\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\Profile\Exception\ProfileConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Profile\ProfileSettings;
 
 /**
  * Adds new profile
@@ -64,11 +65,11 @@ class AddProfileCommand
      */
     private function assertNameIsStringAndRequiredLength($name)
     {
-        if (!is_string($name) || strlen($name) !== ProfileConstraintException::NAME_MAX_LENGTH) {
+        if (null !== $name && !is_string($name) || strlen($name) > ProfileSettings::NAME_MAX_LENGTH) {
             throw new ProfileConstraintException(
                 sprintf(
                     'Profile name should not exceed %d characters length but %s given',
-                    ProfileConstraintException::NAME_MAX_LENGTH,
+                    ProfileSettings::NAME_MAX_LENGTH,
                     var_export($name, true)
                 ),
                 ProfileConstraintException::INVALID_NAME

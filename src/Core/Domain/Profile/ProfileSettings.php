@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -24,15 +24,12 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Profile\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\Profile;
 
-/**
- * Is thrown when some constraint is violated in Profile subdomain
- */
-class ProfileConstraintException extends ProfileException
+final class ProfileSettings
 {
     /**
-     * @var string Code is used when invalid profile name is encountered
+     * Profile name max length as defined in the ObjectModel
      */
-    const INVALID_NAME = 1;
+    const NAME_MAX_LENGTH = 32;
 }
