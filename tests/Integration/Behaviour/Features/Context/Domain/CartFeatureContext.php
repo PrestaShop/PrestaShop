@@ -95,7 +95,7 @@ class CartFeatureContext extends AbstractDomainFeatureContext
     public function addProductsToCarts(int $quantity, string $productName, string $cartReference)
     {
         /** @var array $productsMap */
-        $productsMap = $this->getQueryBus()->handle(new SearchProducts($productName, 1));
+        $productsMap = $this->getQueryBus()->handle(new SearchProducts($productName, 1, Context::getContext()->currency->iso_code));
         $productId = array_key_first($productsMap);
 
         if (!$productId) {
