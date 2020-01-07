@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,29 +19,30 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShopBundle\EventListener;
 
+use PrestaShop\PrestaShop\Core\Exception\FileNotFoundException;
 use PrestaShop\PrestaShop\Core\Exception\IOException;
-use PrestaShop\PrestaShop\Core\Security\FolderProtectorInterface;
+use PrestaShop\PrestaShop\Core\Security\FolderGuardInterface;
 use PrestaShopBundle\Event\ModuleManagementEvent;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
- * Listens to install/upgrade events from module manager, and protects the module vendor
+ * Listen install/upgrade events from module manager, and protect the module vendor
  * folder using htaccess file.
  */
-class ModuleProtectorListener implements EventSubscriberInterface
+class ModuleGuardListener implements EventSubscriberInterface
 {
     /**
-     * @var FolderProtectorInterface
+     * @var FolderGuardInterface
      */
-    private $vendorFolderProtector;
+    private $vendorFolderGuard;
 
     /**
      * @var string
@@ -54,16 +55,16 @@ class ModuleProtectorListener implements EventSubscriberInterface
     private $logger;
 
     /**
-     * @param FolderProtectorInterface $vendorFolderProtector
+     * @param FolderGuardInterface $vendorFolderGuard
      * @param string $modulesDir
      * @param LoggerInterface $logger
      */
     public function __construct(
-        FolderProtectorInterface $vendorFolderProtector,
+        FolderGuardInterface $vendorFolderGuard,
         $modulesDir,
         LoggerInterface $logger
     ) {
-        $this->vendorFolderProtector = $vendorFolderProtector;
+        $this->vendorFolderGuard = $vendorFolderGuard;
         $this->modulesDir = $modulesDir;
         $this->logger = $logger;
     }
@@ -87,17 +88,14 @@ class ModuleProtectorListener implements EventSubscriberInterface
     {
         $moduleName = $event->getModule()->get('name');
         $moduleVendorPath = $this->modulesDir . DIRECTORY_SEPARATOR . $moduleName . DIRECTORY_SEPARATOR . 'vendor';
-        if (!file_exists($moduleVendorPath)) {
-            $this->logger->info(sprintf('Module %s has no vendor folder', $moduleName));
-
-            return;
-        }
 
         try {
             $this->logger->info(sprintf('Protect vendor folder in module %s', $moduleName));
-            $this->vendorFolderProtector->protectFolder($moduleVendorPath);
+            $this->vendorFolderGuard->protectFolder($moduleVendorPath);
         } catch (IOException $e) {
             $this->logger->error(sprintf('%s: %s', $e->getMessage(), $e->getPath()));
+        } catch (FileNotFoundException $e) {
+            $this->logger->info(sprintf('Module %s has no vendor folder', $moduleName));
         }
     }
 }
