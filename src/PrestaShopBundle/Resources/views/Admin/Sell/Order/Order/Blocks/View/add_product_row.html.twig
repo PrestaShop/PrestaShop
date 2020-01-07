@@ -51,7 +51,9 @@
   <td id="addProductAvailable"></td>
   <td id="addProductTotalPrice"></td>
   <td colspan="2" class="pr-2">
-    {{ form_row(addProductRowForm.invoice) }}
+    {% if orderForViewing.hasInvoice() %}
+      {{ form_row(addProductRowForm.invoice) }}
+    {% endif %}
   </td>
   <td class="text-right btn-group">
     {{ form_row(addProductRowForm.cancel) }}

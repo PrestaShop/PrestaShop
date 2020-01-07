@@ -125,7 +125,7 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
             $cart,
             $order->getCurrentOrderState(),
             $cart->getProducts(),
-            $invoice->id ?: 0
+            !empty($invoice->id) ? $invoice->id : 0
         );
 
         // update totals amount of order
