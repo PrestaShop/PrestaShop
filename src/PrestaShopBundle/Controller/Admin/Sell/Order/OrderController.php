@@ -812,6 +812,13 @@ class OrderController extends FrameworkBundleAdminController
         ]);
     }
 
+    /**
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     *
+     * @param int $orderId
+     *
+     * @return JsonResponse
+     */
     public function previewAction(int $orderId): JsonResponse
     {
         try {
