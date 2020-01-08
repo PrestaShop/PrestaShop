@@ -75,7 +75,7 @@ export default class Header {
             var quicklink_list = '';
             $.each(data, (index) => {
               if (typeof data[index]['name'] !== 'undefined')
-                quicklink_list += '<li><a href="' + data[index]['link'] + '&token=' + data[index]['token'] + '"><i class="icon-chevron-right"></i> ' + data[index]['name'] + '</a></li>';
+                quicklink_list += '<li><a href="' + data[index]['link'] + '"><i class="icon-chevron-right"></i> ' + data[index]['name'] + '</a></li>';
             });
 
             if (typeof data['has_errors'] !== 'undefined' && data['has_errors'])
