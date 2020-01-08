@@ -151,9 +151,9 @@ class CategoryCore extends ObjectModel
     /**
      * CategoryCore constructor.
      *
-     * @param null|int $idCategory
-     * @param null|int $idLang
-     * @param null|int $idShop
+     * @param int|null $idCategory
+     * @param int|null $idLang
+     * @param int|null $idShop
      */
     public function __construct($idCategory = null, $idLang = null, $idShop = null)
     {
