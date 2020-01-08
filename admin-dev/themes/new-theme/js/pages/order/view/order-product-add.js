@@ -116,9 +116,9 @@ export default class OrderProductAdd {
     this.productAddActionBtn.on('click', event => this.addProduct($(event.currentTarget).data('orderId')));
     this.invoiceSelect.on('change', (event) => {
       if (event.target.value == 0) {
-        $('#addProductNewInvoiceInfo').removeClass('d-none');
+        $(OrderViewPageMap.addProductNewInvoiceElement).removeClass('d-none');
       } else {
-        $('#addProductNewInvoiceInfo').addClass('d-none');
+        $(OrderViewPageMap.addProductNewInvoiceElement).addClass('d-none');
       }
     });
   }

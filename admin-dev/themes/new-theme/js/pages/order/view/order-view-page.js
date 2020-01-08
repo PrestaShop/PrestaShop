@@ -153,11 +153,16 @@ export default class OrderViewPage {
   listenForProductAdd() {
     $(OrderViewPageMap.productAddBtn).on(
       'click',
-      event => this.orderProductRenderer.moveProductsPanelToModificationPosition(OrderViewPageMap.productSearchInput)
+      event => {
+        this.orderProductRenderer.toggleAddProductNewInvoiceElement()
+        this.orderProductRenderer.moveProductsPanelToModificationPosition(OrderViewPageMap.productSearchInput)
+      }
     );
     $(OrderViewPageMap.productCancelAddBtn).on(
-      'click',
-      event => this.orderProductRenderer.moveProductPanelToOriginalPosition()
+      'click', event => {
+        $(OrderViewPageMap.addProductNewInvoiceElement).addClass('d-none');
+        this.orderProductRenderer.moveProductPanelToOriginalPosition()
+      }
     );
   }
 

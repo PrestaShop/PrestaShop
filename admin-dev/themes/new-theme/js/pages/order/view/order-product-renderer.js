@@ -90,6 +90,7 @@ export default class OrderProductRenderer {
   }
 
   moveProductPanelToOriginalPosition() {
+    $(OrderViewPageMap.addProductNewInvoiceElement).addClass('d-none');
     $(OrderViewPageMap.productModificationPosition).closest('.row').addClass('d-none');
 
     $(OrderViewPageMap.productsPanel).detach().appendTo(OrderViewPageMap.productOriginalPosition);
@@ -110,6 +111,7 @@ export default class OrderProductRenderer {
     $(OrderViewPageMap.productAddQuantityInput).val('');
     $(OrderViewPageMap.productAddAvailableText).html('');
     $(OrderViewPageMap.productAddLocationText).html('');
+    $(OrderViewPageMap.addProductNewInvoiceElement).addClass('d-none');
     $(OrderViewPageMap.productAddActionBtn).prop('disabled', true);
   }
 
@@ -178,5 +180,13 @@ export default class OrderProductRenderer {
     // Why 3 ? Next & Prev & Template
     const totalPage = $(OrderViewPageMap.productsTablePagination).find('li.page-item').length - 3;
     $(OrderViewPageMap.productsNavPagination).toggleClass('d-none', totalPage <= 1);
+  }
+
+  toggleAddProductNewInvoiceElement() {
+    if ($(OrderViewPageMap.productAddInvoiceSelect).val() == 0) {
+      $(OrderViewPageMap.addProductNewInvoiceElement).removeClass('d-none');
+    } else {
+      $(OrderViewPageMap.addProductNewInvoiceElement).addClass('d-none');
+    }
   }
 }
