@@ -64,7 +64,7 @@ module.exports = class DeliverySlips extends BOBasePage {
    * @param enable
    * @return {Promise<void>}
    */
-  async enableProductImage(enable = true) {
+  async setEnableProductImage(enable = true) {
     await this.page.click(this.deliveryEnableProductImage.replace('%ID', enable ? 1 : 0));
   }
 
