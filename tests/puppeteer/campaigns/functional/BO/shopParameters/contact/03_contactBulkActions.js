@@ -15,8 +15,8 @@ const ContactFaker = require('@data/faker/contact');
 let browser;
 let page;
 let numberOfContacts = 0;
-const firstContactData = new ContactFaker({description: 'todelete'});
-const secondContactData = new ContactFaker({description: 'todelete'});
+const firstContactData = new ContactFaker({title: 'todelete'});
+const secondContactData = new ContactFaker({title: 'todelete'});
 
 // Init objects needed
 const init = async function () {
@@ -80,11 +80,11 @@ describe('Create contacts then delete with Bulk actions', async () => {
     });
   });
 
-  // 3 : Delete Contacts created with bulk actions
+  // 2 : Delete Contacts created with bulk actions
   describe('Delete contacts with Bulk Actions', async () => {
-    it('should filter list by description', async function () {
+    it('should filter list by title', async function () {
       await this.pageObjects.contactsPage.filterContacts(
-        'description',
+        'name',
         'todelete',
       );
       const numberOfContactsAfterFilter = await this.pageObjects.contactsPage.getNumberOfElementInGrid();
@@ -92,7 +92,7 @@ describe('Create contacts then delete with Bulk actions', async () => {
       for (let i = 1; i <= numberOfContactsAfterFilter; i++) {
         const textColumn = await this.pageObjects.contactsPage.getTextColumnFromTableContacts(
           i,
-          'description',
+          'name',
         );
         await expect(textColumn).to.contains('todelete');
       }
