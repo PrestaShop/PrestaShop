@@ -28,6 +28,7 @@ import OrderViewPageMap from '@pages/order/OrderViewPageMap';
 import {EventEmitter} from '@components/event-emitter';
 import OrderViewEventMap from '@pages/order/view/order-view-event-map';
 import OrderPrices from '@pages/order/view/order-prices';
+import OrderProductRenderer from '@pages/order/view/order-product-renderer';
 
 const $ = window.$;
 
@@ -52,6 +53,7 @@ export default class OrderProductAdd {
     this.product = {};
     this.currencyPrecision = $(OrderViewPageMap.productsTable).data('currencyPrecision');
     this.priceTaxCalculator = new OrderPrices();
+    this.orderProductRenderer = new OrderProductRenderer();
   }
 
   setupListener() {
@@ -114,13 +116,7 @@ export default class OrderProductAdd {
       );
     });
     this.productAddActionBtn.on('click', event => this.addProduct($(event.currentTarget).data('orderId')));
-    this.invoiceSelect.on('change', (event) => {
-      if (event.target.value == 0) {
-        $('#addProductNewInvoiceInfo').removeClass('d-none');
-      } else {
-        $('#addProductNewInvoiceInfo').addClass('d-none');
-      }
-    });
+    this.invoiceSelect.on('change', () => this.orderProductRenderer.toggleProductAddNewInvoiceInfo());
   }
 
   setProduct(product) {
