@@ -20,9 +20,6 @@ module.exports = class Home extends CommonPage {
 
     // footer
     this.siteMapLink = '#link-static-page-sitemap-2';
-    this.languageSelectorDiv = '#_desktop_language_selector';
-    this.languageSelectorExpandIcon = `${this.languageSelectorDiv} i.expand-more`;
-    this.languageSelectorMenuItemLink = `${this.languageSelectorDiv} ul li a[data-iso-code='%LANG']`;
     // footer links
     this.footerLinksDiv = '#footer div.links';
     this.wrapperDiv = `${this.footerLinksDiv}:nth-child(1) > div > div.wrapper:nth-child(%POSITION)`;
@@ -100,6 +97,16 @@ module.exports = class Home extends CommonPage {
       this.page.waitForNavigation({waitUntil: 'networkidle0'}),
       this.page.click(this.languageSelectorMenuItemLink.replace('%LANG', lang)),
     ]);
+  }
+
+  /**
+   * Return true if language exist in FO
+   * @param lang
+   * @return {Promise<boolean|true>}
+   */
+  async languageExists(lang = 'en') {
+    await this.page.click(this.languageSelectorExpandIcon);
+    return this.elementVisible(this.languageSelectorMenuItemLink.replace('%LANG', lang), 1000);
   }
 
   /**
