@@ -25,7 +25,19 @@
 import CreateOrderPage from './create/create-order-page';
 
 const $ = window.$;
+let orderPageManager = null;
+
+/**
+ * proxy to allow other scripts within the page to trigger the search
+ * @param string
+ */
+function searchCustomerByString(string)
+{
+  orderPageManager.customerManager.search(string);
+}
 
 $(document).ready(() => {
-  new CreateOrderPage();
+  orderPageManager = new CreateOrderPage();
 });
+
+export {searchCustomerByString}
