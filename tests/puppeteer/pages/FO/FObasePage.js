@@ -104,7 +104,7 @@ module.exports = class Home extends CommonPage {
    * @param lang
    * @return {Promise<boolean|true>}
    */
-  async languageExist(lang = 'en') {
+  async languageExists(lang = 'en') {
     await this.page.click(this.languageSelectorExpandIcon);
     return this.elementVisible(this.languageSelectorMenuItemLink.replace('%LANG', lang), 1000);
   }

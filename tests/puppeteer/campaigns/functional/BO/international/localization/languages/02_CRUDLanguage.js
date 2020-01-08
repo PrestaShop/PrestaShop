@@ -99,7 +99,7 @@ describe('CRUD language', async () => {
     it(`should go to FO and check that '${createLanguageData.name}' exist`, async function () {
       page = await this.pageObjects.boBasePage.viewMyShop();
       this.pageObjects = await init();
-      const isLanguageInFO = await this.pageObjects.foBasePage.languageExist(createLanguageData.isoCode);
+      const isLanguageInFO = await this.pageObjects.foBasePage.languageExists(createLanguageData.isoCode);
       await expect(isLanguageInFO, `${createLanguageData.name} was not found as a language in FO`).to.be.true;
       page = await this.pageObjects.foBasePage.closePage(browser, 1);
       this.pageObjects = await init();
@@ -131,7 +131,7 @@ describe('CRUD language', async () => {
     it(`should go to FO and check that '${editLanguageData.name}' do not exist`, async function () {
       page = await this.pageObjects.boBasePage.viewMyShop();
       this.pageObjects = await init();
-      const isLanguageInFO = await this.pageObjects.foBasePage.languageExist(editLanguageData.isoCode);
+      const isLanguageInFO = await this.pageObjects.foBasePage.languageExists(editLanguageData.isoCode);
       await expect(isLanguageInFO, `${editLanguageData.name} was found as a language in FO`).to.be.false;
       page = await this.pageObjects.foBasePage.closePage(browser, 1);
       this.pageObjects = await init();
