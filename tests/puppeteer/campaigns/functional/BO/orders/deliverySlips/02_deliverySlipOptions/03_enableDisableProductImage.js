@@ -89,7 +89,7 @@ describe('Test enable/disable product image in delivery slips', async () => {
         });
 
         it(`should ${test.args.action} product image`, async function () {
-          await this.pageObjects.deliverySlipsPage.enableProductImage(test.args.enable);
+          await this.pageObjects.deliverySlipsPage.setEnableProductImage(test.args.enable);
           const textMessage = await this.pageObjects.deliverySlipsPage.saveDeliverySlipOptions();
           await expect(textMessage).to.contains(this.pageObjects.deliverySlipsPage.successfulUpdateMessage);
         });
