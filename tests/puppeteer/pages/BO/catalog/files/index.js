@@ -34,6 +34,8 @@ module.exports = class Files extends BOBasePage {
     this.selectAllRowsLabel = `${this.gridPanel} .md-checkbox label`;
     this.bulkActionsToggleButton = `${this.gridPanel} button.js-bulk-actions-btn`;
     this.bulkActionsDeleteButton = '#attachment_grid_bulk_action_delete_selection';
+    this.confirmDeleteModal = '#attachment_grid_confirm_modal';
+    this.confirmDeleteButton = `${this.confirmDeleteModal} button.btn-confirm-submit`;
   }
 
   /* Header Methods */
@@ -148,8 +150,6 @@ module.exports = class Files extends BOBasePage {
    * @return {Promise<textContent>}
    */
   async deleteFilesBulkActions() {
-    // Add listener to dialog to accept deletion
-    this.dialogListener();
     // Click on Select All
     await Promise.all([
       this.page.click(this.selectAllRowsLabel),
@@ -161,7 +161,19 @@ module.exports = class Files extends BOBasePage {
       this.page.waitForSelector(this.bulkActionsToggleButton, {visible: true}),
     ]);
     // Click on delete and wait for modal
-    this.clickAndWaitForNavigation(this.bulkActionsDeleteButton);
+    await Promise.all([
+      this.page.click(this.bulkActionsDeleteButton),
+      this.page.waitForSelector(`${this.confirmDeleteModal}.show`, {visible: true}),
+    ]);
+    await this.confirmDeleteFiles(this.bulkActionsDeleteButton);
     return this.getTextContent(this.alertSuccessBlockParagraph);
+  }
+
+  /**
+   * Confirm delete with in modal
+   * @return {Promise<void>}
+   */
+  async confirmDeleteFiles() {
+    await this.clickAndWaitForNavigation(this.confirmDeleteButton);
   }
 };
