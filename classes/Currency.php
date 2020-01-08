@@ -244,6 +244,10 @@ class CurrencyCore extends ObjectModel
     public function getWebserviceParameters($ws_params_attribute_name = null)
     {
         $parameters = parent::getWebserviceParameters($ws_params_attribute_name);
+        // name & symbol are i18n fields but casted to single string in the constructor
+        // so we need to force the webservice to consider those fields as non-i18n fields.
+        // Also, in 1.7.5 the field symbol didn't exists and name wasn't an i18n field so in order
+        // to keep 1.7.6 backward compatible we need to make those fields non-i18n.
         $parameters['fields']['name']['i18n'] = false;
         $parameters['fields']['symbol']['i18n'] = false;
 
