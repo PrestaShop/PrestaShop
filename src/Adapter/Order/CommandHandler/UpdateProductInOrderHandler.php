@@ -57,8 +57,7 @@ final class UpdateProductInOrderHandler extends AbstractOrderHandler implements 
         $order = $this->getOrderObject($command->getOrderId());
         $orderDetail = new OrderDetail($command->getOrderDetailId());
         $orderInvoice = null;
-
-        if (null !== $command->getOrderInvoiceId()) {
+        if (!empty($command->getOrderInvoiceId())) {
             $orderInvoice = new OrderInvoice($command->getOrderInvoiceId());
         }
 
