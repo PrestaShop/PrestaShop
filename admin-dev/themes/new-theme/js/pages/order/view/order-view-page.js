@@ -123,6 +123,7 @@ export default class OrderViewPage {
       this.orderProductRenderer.resetAddRow();
       this.orderPricesRefresher.refresh(event.orderId);
       this.orderInvoicesRefresher.refresh(event.orderId);
+      $(OrderViewPageMap.addProductNewInvoiceElement).addClass('d-none');
       this.orderProductRenderer.moveProductPanelToOriginalPosition();
     });
   }
