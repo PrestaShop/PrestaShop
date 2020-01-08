@@ -41,8 +41,8 @@ export default class OrderInvoicesRefresher {
         }
 
         const $paymentInvoiceSelect = $(OrderViewPageMap.orderPaymentInvoiceSelect);
-        const $appProductInvoiceSelect = $(OrderViewPageMap.productAddInvoiceSelect);
-        const $existingInvoicesGroup = $appProductInvoiceSelect.find('optgroup:first');
+        const $addProductInvoiceSelect = $(OrderViewPageMap.productAddInvoiceSelect);
+        const $existingInvoicesGroup = $addProductInvoiceSelect.find('optgroup:first');
         const $productEditInvoiceSelect = $(OrderViewPageMap.productEditInvoiceSelect);
         $existingInvoicesGroup.empty();
         $paymentInvoiceSelect.empty();
