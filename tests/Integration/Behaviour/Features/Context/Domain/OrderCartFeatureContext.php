@@ -71,7 +71,31 @@ class OrderCartFeatureContext extends AbstractDomainFeatureContext
         PHPUnit_Framework_Assert::assertEquals($cartInformation->getAddresses(), $duplicatedCartInformation->getAddresses());
         PHPUnit_Framework_Assert::assertEquals($cartInformation->getCurrencyId(), $duplicatedCartInformation->getCurrencyId());
         PHPUnit_Framework_Assert::assertEquals($cartInformation->getProducts(), $duplicatedCartInformation->getProducts());
-        PHPUnit_Framework_Assert::assertEquals($cartInformation->getSummary(), $duplicatedCartInformation->getSummary());
         PHPUnit_Framework_Assert::assertEquals($cartInformation->getLangId(), $duplicatedCartInformation->getLangId());
+        PHPUnit_Framework_Assert::assertEquals(
+            $this->convertSummaryToArray($cartInformation->getSummary()),
+            $this->convertSummaryToArray($duplicatedCartInformation->getSummary())
+        );
+    }
+
+    /**
+     * We convert the summary to an array to filter data that won't be eaquals:
+     * - order message
+     * - process order link
+     *
+     * @param CartInformation\CartSummary $cartSummary
+     *
+     * @return array
+     */
+    private function convertSummaryToArray(CartInformation\CartSummary $cartSummary): array
+    {
+        return [
+            $cartSummary->getTotalDiscount(),
+            $cartSummary->getTotalPriceWithoutTaxes(),
+            $cartSummary->getTotalPriceWithTaxes(),
+            $cartSummary->getTotalProductsPrice(),
+            $cartSummary->getTotalShippingPrice(),
+            $cartSummary->getTotalTaxes(),
+        ];
     }
 }
