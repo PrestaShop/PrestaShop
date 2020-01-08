@@ -32,7 +32,7 @@ use Configuration;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyNotFoundException;
 use RuntimeException;
-use PrestaShop\PrestaShop\Core\Domain\Currency\Command\AddOfficialCurrencyCommand;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Command\AddCurrencyCommand;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\AddUnofficialCurrencyCommand;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\DeleteCurrencyCommand;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\EditCurrencyCommand;
@@ -73,7 +73,7 @@ class CurrencyFeatureContext extends AbstractDomainFeatureContext
                 (bool) $data['is_enabled']
             );
         } else {
-            $command = new AddOfficialCurrencyCommand(
+            $command = new AddCurrencyCommand(
                 $data['iso_code'],
                 (float) $data['exchange_rate'],
                 (bool) $data['is_enabled']
