@@ -24,44 +24,66 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Grid\Action\Bulk\Type;
+namespace PrestaShop\PrestaShop\Core\Grid\Action;
 
-use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\AbstractBulkAction;
-use PrestaShop\PrestaShop\Core\Grid\Action\ModalOptions;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * Class BulkAction holds data about single bulk action available in grid.
+ * Class ModalOptions used to configure modal used in actions like SubmitBulkAction
  */
-final class SubmitBulkAction extends AbstractBulkAction
+class ModalOptions
 {
     /**
-     * {@inheritdoc}
+     * @var array
      */
-    public function getType()
+    private $options;
+
+    /**
+     * @param array $options
+     */
+    public function __construct(array $options = [])
     {
-        return 'submit';
+        $this->setOptions($options);
     }
 
     /**
-     * {@inheritdoc}
+     * @return array
+     */
+    public function getOptions(): array
+    {
+        return $this->options;
+    }
+
+    /**
+     * @param array $options
+     *
+     * @return ModalOptions
+     */
+    public function setOptions(array $options): ModalOptions
+    {
+        $resolver = new OptionsResolver();
+        $this->configureOptions($resolver);
+
+        $this->options = $resolver->resolve($options);
+
+        return $this;
+    }
+
+    /**
+     * @param OptionsResolver $resolver
      */
     protected function configureOptions(OptionsResolver $resolver)
     {
         $resolver
-            ->setRequired([
-                'submit_route',
-            ])
             ->setDefaults([
-                'confirm_message' => null,
-                'modal_options' => null,
-                'submit_method' => 'POST',
-                'route_params' => [],
+                'title' => null,
+                'confirm_button_label' => null,
+                'confirm_button_class' => 'btn-primary',
+                'close_button_label' => null,
             ])
-            ->setAllowedTypes('submit_route', 'string')
-            ->setAllowedTypes('confirm_message', ['string', 'null'])
-            ->setAllowedTypes('modal_options', [ModalOptions::class, 'null'])
-            ->setAllowedValues('submit_method', ['POST', 'GET'])
-            ->setAllowedTypes('route_params', 'array');
+            ->setAllowedTypes('title', ['string', 'null'])
+            ->setAllowedTypes('confirm_button_label', ['string', 'null'])
+            ->setAllowedTypes('confirm_button_class', 'string')
+        ;
     }
 }
