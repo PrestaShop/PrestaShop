@@ -102,7 +102,7 @@ final class SearchProductsHandler implements SearchProductsHandlerInterface
         if ($products) {
             foreach ($products as $product) {
                 $foundProduct = $this->createFoundProductFromLegacy(new Product($product['id_product']), $currencyCode);
-                $foundProducts[] = $foundProduct;
+                $foundProducts[$foundProduct->getProductId()] = $foundProduct;
             }
         }
 

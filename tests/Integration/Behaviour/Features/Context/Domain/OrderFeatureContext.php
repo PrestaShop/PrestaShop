@@ -463,12 +463,11 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
      */
     public function duplicateOrder($orderReference, $duplicatedCartReference)
     {
-        /** @var Order $order */
-        $order = SharedStorage::getStorage()->get($orderReference);
+        $orderId = (int) SharedStorage::getStorage()->get($orderReference);
 
         /** @var CartId $cartId */
         $cartId = $this->getCommandBus()->handle(
-            new DuplicateOrderCartCommand((int) $order->id)
+            new DuplicateOrderCartCommand($orderId)
         );
 
         SharedStorage::getStorage()->set($duplicatedCartReference, new Cart($cartId->getValue()));

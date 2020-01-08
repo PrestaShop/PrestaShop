@@ -99,7 +99,7 @@ class CartFeatureContext extends AbstractDomainFeatureContext
         $productId = array_key_first($productsMap);
 
         if (!$productId) {
-            throw new RuntimeException('Product with name "%s" does not exist', $productName);
+            throw new RuntimeException(sprintf('Product with name "%s" does not exist', $productName));
         }
 
         $this->getCommandBus()->handle(
@@ -109,14 +109,16 @@ class CartFeatureContext extends AbstractDomainFeatureContext
                 (int) $quantity
             )
         );
-
         SharedStorage::getStorage()->set($productName, $productId);
+
+        // Clear cart static cache or it will have no products in next calls
+        Cart::resetStaticCache();
     }
 
     /**
      * @When I add :quantity customized products with reference :productReference to the cart :reference
      */
-    public function addCustomizedProductToCarts($quantity, $productReference, $reference)
+    public function addCustomizedProductToCarts(int $quantity, $productReference, $reference)
     {
         $productId = (int) Product::getIdByReference($productReference);
         $product = new Product($productId);
@@ -129,18 +131,20 @@ class CartFeatureContext extends AbstractDomainFeatureContext
             }
         }
 
+        $cartId = (int) SharedStorage::getStorage()->get($reference);
+
         /** @var CustomizationId $customizationId */
         $customizationId = $this->getCommandBus()->handle(new AddCustomizationFieldsCommand(
-            (int) SharedStorage::getStorage()->get($reference)->id,
+            $cartId,
             $productId,
             $customizations
         ));
 
         $this->getCommandBus()->handle(
             new UpdateProductQuantityInCartCommand(
-                (int) SharedStorage::getStorage()->get($reference)->id,
+                $cartId,
                 $productId,
-                (int) $quantity,
+                $quantity,
                 null,
                 $customizationId->getValue()
             )
