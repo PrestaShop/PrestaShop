@@ -151,7 +151,6 @@ function updateProduct(event, eventType, updateUrl) {
         }
       },
       error(jqXHR, textStatus, errorThrown) {
-        console.log(errorThrown);
         if (textStatus !== 'abort'
             && $('section#main > .ajax-error').length === 0
         ) {
