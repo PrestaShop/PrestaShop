@@ -38,6 +38,7 @@ export default {
   customerSearchResultsBlock: '.js-customer-search-results',
   customerSearchResultTemplate: '#customer-search-result-template',
   customerSearchEmptyResultWarning: '#customer-search-empty-result-warn',
+  customerAddBtn: '#customer-add-btn',
   changeCustomerBtn: '.js-change-customer-btn',
   customerSearchRow: '.js-search-customer-row',
   chooseCustomerBtn: '.js-choose-customer-btn',
