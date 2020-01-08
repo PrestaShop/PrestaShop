@@ -20,6 +20,12 @@ module.exports = class Languages extends LocalizationBasePage {
     this.tableRow = `${this.tableBody} tr:nth-child(%ROW)`;
     this.tableEmptyRow = `${this.tableBody} tr.empty_row`;
     this.tableColumn = `${this.tableRow} td.column-%COLUMN`;
+    // Column actions selectors
+    this.actionsColumn = `${this.tableRow} td.column-actions`;
+    this.editRowLink = `${this.actionsColumn} a[data-original-title='Edit']`;
+    this.dropdownToggleButton = `${this.actionsColumn} a.dropdown-toggle`;
+    this.dropdownToggleMenu = `${this.actionsColumn} div.dropdown-menu`;
+    this.deleteRowLink = `${this.dropdownToggleMenu} a[data-url*='/delete']`;
   }
 
   /* Reset methods */
@@ -86,5 +92,31 @@ module.exports = class Languages extends LocalizationBasePage {
         .replace('%ROW', row)
         .replace('%COLUMN', column),
     );
+  }
+
+  /**
+   * Go to edit language page
+   * @param row, which row of the list
+   * @return {Promise<void>}
+   */
+  async goToEditLanguage(row = 1) {
+    await this.clickAndWaitForNavigation(this.editRowLink.replace('%ROW', row));
+  }
+
+  /**
+   * Delete Row in table
+   * @param row, row to delete
+   * @return {Promise<textContent>}
+   */
+  async deleteLanguage(row = 1) {
+    this.dialogListener(true);
+    await Promise.all([
+      this.page.click(this.dropdownToggleButton.replace('%ROW', row)),
+      this.page.waitForSelector(
+        `${this.dropdownToggleButton}[aria-expanded='true']`.replace('%ROW', row),
+      ),
+    ]);
+    await this.clickAndWaitForNavigation(this.deleteRowLink.replace('%ROW', row));
+    return this.getTextContent(this.alertSuccessBlockParagraph);
   }
 };
