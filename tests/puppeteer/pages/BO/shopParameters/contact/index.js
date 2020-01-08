@@ -121,7 +121,7 @@ module.exports = class Contacts extends BOBasePage {
       ),
     ]);
     // Click on delete
-    this.clickAndWaitForNavigation(this.deleteRowLink.replace('%ROW', row));
+    await this.clickAndWaitForNavigation(this.deleteRowLink.replace('%ROW', row));
     return this.getTextContent(this.alertSuccessBlockParagraph);
   }
 
@@ -143,7 +143,7 @@ module.exports = class Contacts extends BOBasePage {
       this.page.waitForSelector(this.bulkActionsToggleButton, {visible: true}),
     ]);
     // Click on delete and wait for modal
-    this.clickAndWaitForNavigation(this.bulkActionsDeleteButton);
+    await this.clickAndWaitForNavigation(this.bulkActionsDeleteButton);
     return this.getTextContent(this.alertSuccessBlockParagraph);
   }
 };

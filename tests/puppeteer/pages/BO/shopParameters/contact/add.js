@@ -46,11 +46,11 @@ module.exports = class AddContact extends BOBasePage {
    * @return {Promise<textContent>}
    */
   async createEditContact(contactData) {
-    await this.setValue(this.titleInputEN, contactData.firstName);
+    await this.setValue(this.titleInputEN, contactData.title);
     await this.setValue(this.emailAddressInput, contactData.email);
     await this.setValue(this.descriptionTextareaEN, contactData.description);
     await this.changeLanguageForSelectors('fr');
-    await this.setValue(this.titleInputFR, contactData.firstName);
+    await this.setValue(this.titleInputFR, contactData.title);
     await this.setValue(this.descriptionTextareaFR, contactData.description);
     await this.page.click(this.enableSaveMessageslabel.replace('%ID', contactData.saveMessage ? 1 : 0));
     // Save Contact
