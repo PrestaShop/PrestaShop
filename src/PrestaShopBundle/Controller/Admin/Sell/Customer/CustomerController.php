@@ -685,6 +685,7 @@ class CustomerController extends AbstractAdminController
      */
     public function exportAction(CustomerFilters $filters)
     {
+        $filters = new CustomerFilters(['limit' => null] + $filters->all());
         $gridFactory = $this->get('prestashop.core.grid.factory.customer');
         $grid = $gridFactory->getGrid($filters);
 

@@ -670,6 +670,7 @@ class CategoryController extends FrameworkBundleAdminController
      */
     public function exportAction(CategoryFilters $filters)
     {
+        $filters = new CategoryFilters(['limit' => null] + $filters->all());
         $categoriesGridFactory = $this->get('prestashop.core.grid.factory.category');
         $categoriesGrid = $categoriesGridFactory->getGrid($filters);
 
