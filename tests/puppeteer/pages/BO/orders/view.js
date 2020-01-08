@@ -122,4 +122,16 @@ module.exports = class Order extends BOBasePage {
     await this.page.click(this.partialRefundSubmitButton);
     return this.getTextContent(this.alertSuccessBloc);
   }
+
+  /**
+   * Download delivery slip
+   * @returns {Promise<void>}
+   */
+  async downloadDeliverySlip() {
+    /* eslint-disable no-return-assign, no-param-reassign */
+    // Delete the target because a new tab is opened when downloading the file
+    await this.page.$eval(this.documentNumberLink.replace('%ID', 3), el => el.target = '');
+    await this.page.click(this.documentNumberLink.replace('%ID', 3));
+    /* eslint-enable no-return-assign, no-param-reassign */
+  }
 };
