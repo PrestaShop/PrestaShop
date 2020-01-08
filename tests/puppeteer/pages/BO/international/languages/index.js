@@ -1,7 +1,7 @@
 require('module-alias/register');
-const BOBasePage = require('@pages/BO/BObasePage');
+const LocalizationBasePage = require('@pages/BO/international/localization/localizationBasePage');
 
-module.exports = class Languages extends BOBasePage {
+module.exports = class Languages extends LocalizationBasePage {
   constructor(page) {
     super(page);
 
