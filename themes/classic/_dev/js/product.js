@@ -106,7 +106,7 @@ $(document).ready(function () {
       max: 1000000
     });
 
-    $quantityInput.focusout((e) => {
+    $quantityInput.focusout(() => {
       if ($quantityInput.val() === '' || $quantityInput.val() < $quantityInput.attr('min')) {
         $quantityInput.val($quantityInput.attr('min'));
         $quantityInput.trigger('change');
