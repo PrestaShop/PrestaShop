@@ -190,7 +190,7 @@
                   var quicklink_list ='';
                   $.each(data, function(index,value){
                     if (typeof data[index]['name'] !== 'undefined')
-                      quicklink_list += '<li><a href="' + data[index]['link']'">' + data[index]['name'] + '</a></li>';
+                      quicklink_list += '<li><a href="' + data[index]['link'] + '">' + data[index]['name'] + '</a></li>';
                   });
 
                   if (typeof data['has_errors'] !== 'undefined' && data['has_errors'])
