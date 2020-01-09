@@ -26,54 +26,9 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Profile\Command;
 
-use PrestaShop\PrestaShop\Core\Domain\Profile\Exception\ProfileConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Profile\ProfileSettings;
-
 /**
  * Adds new profile
  */
-class AddProfileCommand
+class AddProfileCommand extends AbstractProfileCommand
 {
-    /**
-     * @var string[] As langId => name
-     */
-    private $localizedNames;
-
-    /**
-     * @param string[] $localizedNames
-     *
-     * @throws ProfileConstraintException
-     */
-    public function __construct(array $localizedNames)
-    {
-        foreach ($localizedNames as $localizedName) {
-            $this->assertNameIsStringAndRequiredLength($localizedName);
-        }
-        $this->localizedNames = $localizedNames;
-    }
-
-    /**
-     * @return string[]
-     */
-    public function getLocalizedNames()
-    {
-        return $this->localizedNames;
-    }
-
-    /**
-     * @param string $name
-     */
-    private function assertNameIsStringAndRequiredLength($name)
-    {
-        if (null !== $name && !is_string($name) || strlen($name) > ProfileSettings::NAME_MAX_LENGTH) {
-            throw new ProfileConstraintException(
-                sprintf(
-                    'Profile name should not exceed %d characters length but %s given',
-                    ProfileSettings::NAME_MAX_LENGTH,
-                    var_export($name, true)
-                ),
-                ProfileConstraintException::INVALID_NAME
-            );
-        }
-    }
 }

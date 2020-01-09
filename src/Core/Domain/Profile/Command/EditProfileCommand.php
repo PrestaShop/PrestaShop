@@ -26,25 +26,18 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Profile\Command;
 
-use PrestaShop\PrestaShop\Core\Domain\Profile\Exception\ProfileConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Exception\ProfileException;
-use PrestaShop\PrestaShop\Core\Domain\Profile\ProfileSettings;
 use PrestaShop\PrestaShop\Core\Domain\Profile\ValueObject\ProfileId;
 
 /**
  * Edits existing Profile
  */
-class EditProfileCommand
+class EditProfileCommand extends AbstractProfileCommand
 {
     /**
      * @var ProfileId
      */
     private $profileId;
-
-    /**
-     * @var string[]
-     */
-    private $localizedNames;
 
     /**
      * @param int $profileId
@@ -54,16 +47,8 @@ class EditProfileCommand
      */
     public function __construct($profileId, array $localizedNames)
     {
-        if (empty($localizedNames)) {
-            throw new ProfileException('Profile name cannot be empty');
-        }
-
-        foreach ($localizedNames as $localizedName) {
-            $this->assertNameIsStringAndRequiredLength($localizedName);
-        }
-
+        parent::__construct($localizedNames);
         $this->profileId = new ProfileId($profileId);
-        $this->localizedNames = $localizedNames;
     }
 
     /**
@@ -72,30 +57,5 @@ class EditProfileCommand
     public function getProfileId()
     {
         return $this->profileId;
-    }
-
-    /**
-     * @return string[]
-     */
-    public function getLocalizedNames()
-    {
-        return $this->localizedNames;
-    }
-
-    /**
-     * @param string $name
-     */
-    private function assertNameIsStringAndRequiredLength($name)
-    {
-        if (null !== $name && !is_string($name) || strlen($name) > ProfileSettings::NAME_MAX_LENGTH) {
-            throw new ProfileConstraintException(
-                sprintf(
-                    'Profile name should not exceed %d characters length but %s given',
-                    ProfileSettings::NAME_MAX_LENGTH,
-                    var_export($name, true)
-                ),
-                ProfileConstraintException::INVALID_NAME
-            );
-        }
     }
 }
