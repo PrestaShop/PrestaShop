@@ -147,7 +147,7 @@ abstract class AbstractCurrencyHandler extends AbstractObjectModelHandler
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
      */
-    protected function createEntity(Currency $entity, AddCurrencyCommand $command)
+    protected function addEntity(Currency $entity, AddCurrencyCommand $command)
     {
         $entity->iso_code = $command->getIsoCode()->getValue();
         $entity->active = $command->isEnabled();

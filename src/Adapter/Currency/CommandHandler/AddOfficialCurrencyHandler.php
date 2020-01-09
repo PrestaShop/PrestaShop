@@ -90,7 +90,7 @@ final class AddOfficialCurrencyHandler extends AbstractCurrencyHandler implement
             $entity->numeric_iso_code = $this->findNumericIsoCodeFromAlphaCode($command->getIsoCode()->getValue());
             $entity->precision = $this->getPrecision($command);
 
-            $this->createEntity($entity, $command);
+            $this->addEntity($entity, $command);
         } catch (PrestaShopException $exception) {
             throw new CurrencyException('Failed to create new currency', 0, $exception);
         }
