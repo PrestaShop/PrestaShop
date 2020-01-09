@@ -74,10 +74,11 @@ describe('Crawl every page for defects and issues', async () => {
     describe(`${section.name} - ${section.description}`, async () => {
       section.urls.forEach((pageToCrawl, index) => {
         it(`Crawling ${pageToCrawl.name} (${index + 1}/${section.urls.length})`, async () => {
+          /* eslint-disable no-param-reassign */
           pageToCrawl.url = `${section.urlPrefix}${pageToCrawl.url}`
             .replace('URL_BO', global.BO.URL)
-            .replace('URL_FO', global.FO.URL)
-          ;
+            .replace('URL_FO', global.FO.URL);
+          /* eslint-enable no-param-reassign */
           await crawlPage(page, pageToCrawl);
           await expect(requestError, requestTextError).to.be.false;
           await expect(javascriptError, jsError).to.be.false;
@@ -121,8 +122,8 @@ async function checkResponseStatus(url, status) {
   if (status.startsWith('4') || status.startsWith('5')) {
     requestError = true;
     requestTextError = `Request error : ${url} (${status}`;
-    outputEntry.failed.push({url,status});
+    outputEntry.failed.push({url, status});
   } else if (JSON.parse(LOG_PASSED) === true) {
-    outputEntry.passed.push({url,status});
+    outputEntry.passed.push({url, status});
   }
 }
