@@ -26,7 +26,6 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Product\QueryHandler;
 
-use Context;
 use Currency;
 use PrestaShop\PrestaShop\Adapter\Currency\CurrencyDataProvider;
 use PrestaShop\PrestaShop\Adapter\Tools;
@@ -100,7 +99,7 @@ final class SearchProductsHandler implements SearchProductsHandlerInterface
      */
     public function handle(SearchProducts $query): array
     {
-        $currencyId = Currency::getIdByIsoCode($query->getAlphaIsoCode());
+        $currencyId = Currency::getIdByIsoCode($query->getAlphaIsoCode()->getValue());
         $this->contextStateManager->setCurrency(new Currency($currencyId));
 
         $products = Product::searchByName(

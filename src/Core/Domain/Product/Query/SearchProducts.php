@@ -57,7 +57,7 @@ class SearchProducts
      *
      * @throws ProductException
      * @throws CurrencyConstraintException
--     */
+     */
     public function __construct(string $phrase, int $resultsLimit, string $isoCode)
     {
         $this->assertIsNotEmptyString($phrase);
@@ -88,11 +88,6 @@ class SearchProducts
     public function getResultsLimit(): int
     {
         return $this->resultsLimit;
-    }
-
-    public function getAlphaIsoCode(): AlphaIsoCode
-    {
-        return $this->alphaIsoCode;
     }
 
     /**
