@@ -34,6 +34,13 @@ module.exports = {
     'max-len': ['error', { code: 120 }],
     'no-param-reassign': ['error', { props: false }],
     'prefer-destructuring': ['error', {object: true, array: false}],
+    'no-restricted-globals': [
+      'error',
+      {
+        name: 'global',
+        message: 'Use window variable instead.',
+      },
+    ],
     'vue/script-indent': [
       'error',
       2,
