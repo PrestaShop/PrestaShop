@@ -74,7 +74,10 @@ describe('Crawl every page for defects and issues', async () => {
     describe(`${section.name} - ${section.description}`, async () => {
       section.urls.forEach((pageToCrawl, index) => {
         it(`Crawling ${pageToCrawl.name} (${index + 1}/${section.urls.length})`, async () => {
-          await crawlPage(page, `${section.urlPrefix}${pageToCrawl.url}`);
+          /* eslint-disable no-param-reassign */
+          pageToCrawl.url = `${section.urlPrefix}${pageToCrawl.url}`;
+          /* eslint-enable no-param-reassign */
+          await crawlPage(page, pageToCrawl);
           await expect(requestError, requestTextError).to.be.false;
           await expect(javascriptError, javascriptTextError).to.be.false;
         });
