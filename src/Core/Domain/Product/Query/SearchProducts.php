@@ -46,8 +46,6 @@ class SearchProducts
     /**
      * @param string $phrase
      * @param int $resultsLimit
-     *
-     * @throws ProductException
      */
     public function __construct(string $phrase, int $resultsLimit)
     {

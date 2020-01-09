@@ -671,16 +671,4 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
         $this->products[$productName]->addToCategories([$category->id]);
         $this->products[$productName]->save();
     }
-
-    /**
-     * @Given there is product with reference :productReference
-     */
-    public function thereIsProductOfTypeWithReference($productReference)
-    {
-        $productId = Product::getIdByReference($productReference);
-
-        if (!$productId) {
-            throw new \RuntimeException(sprintf('Product with reference "%s" does not exist.', $productReference));
-        }
-    }
 }

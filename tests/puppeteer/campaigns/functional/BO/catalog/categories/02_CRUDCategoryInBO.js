@@ -90,6 +90,7 @@ describe('Create, Read, Update and Delete Category', async () => {
       });
 
       it('should search for the new category and check result', async function () {
+        await this.pageObjects.categoriesPage.resetFilter();
         await this.pageObjects.categoriesPage.filterCategories(
           'input',
           'name',
@@ -138,6 +139,7 @@ describe('Create, Read, Update and Delete Category', async () => {
       });
 
       it.skip('should search for the subcategory and check result', async function () {
+        await this.pageObjects.categoriesPage.resetFilter();
         await this.pageObjects.categoriesPage.filterCategories(
           'input',
           'name',
@@ -174,6 +176,7 @@ describe('Create, Read, Update and Delete Category', async () => {
     });
 
     it('should filter list by name', async function () {
+      await this.pageObjects.categoriesPage.resetFilter();
       await this.pageObjects.categoriesPage.filterCategories(
         'input',
         'name',
@@ -190,6 +193,7 @@ describe('Create, Read, Update and Delete Category', async () => {
     });
 
     it.skip('should check subcategories list', async function () {
+      await this.pageObjects.categoriesPage.resetFilter();
       await this.pageObjects.categoriesPage.filterCategories(
         'input',
         'name',
@@ -211,6 +215,7 @@ describe('Create, Read, Update and Delete Category', async () => {
     });
 
     it('should filter list by name', async function () {
+      await this.pageObjects.categoriesPage.resetFilter();
       await this.pageObjects.categoriesPage.filterCategories(
         'input',
         'name',
@@ -234,6 +239,7 @@ describe('Create, Read, Update and Delete Category', async () => {
     });
 
     it('should search for the new category and check result', async function () {
+      await this.pageObjects.categoriesPage.resetFilter();
       await this.pageObjects.categoriesPage.filterCategories(
         'input',
         'name',
@@ -269,6 +275,7 @@ describe('Create, Read, Update and Delete Category', async () => {
     });
 
     it('should filter list by name', async function () {
+      await this.pageObjects.categoriesPage.resetFilter();
       await this.pageObjects.categoriesPage.filterCategories(
         'input',
         'name',

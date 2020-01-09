@@ -156,8 +156,11 @@ $(() => {
     const $modal = $(OrderViewPageMap.updateCustomerAddressModal);
 
     $(OrderViewPageMap.openOrderAddressUpdateModalBtn).on('click', (event) => {
-      const $btn = $(event.currentTarget);
       $modal.find(OrderViewPageMap.updateOrderAddressTypeInput).val($btn.data('address-type'));
     });
   }
+
+  $(`${OrderViewPageMap.displayPartialRefundBtn}, ${OrderViewPageMap.cancelPartialRefundBtn}`).on('click', (event) => {
+    $(OrderViewPageMap.togglePartialRefundForm).toggle();
+  });
 });

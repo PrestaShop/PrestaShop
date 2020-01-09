@@ -95,6 +95,7 @@ describe('Create, Read, Update and Delete Customer in BO', async () => {
   // 2 : View Customer and check Creation data are correct
   describe('View Customer Created', async () => {
     it('should filter list by email', async function () {
+      await this.pageObjects.customersPage.resetFilter();
       await this.pageObjects.customersPage.filterCustomers(
         'input',
         'email',
@@ -129,6 +130,7 @@ describe('Create, Read, Update and Delete Customer in BO', async () => {
     });
 
     it('should filter list by email', async function () {
+      await this.pageObjects.customersPage.resetFilter();
       await this.pageObjects.customersPage.filterCustomers(
         'input',
         'email',
@@ -165,6 +167,7 @@ describe('Create, Read, Update and Delete Customer in BO', async () => {
   // 4 : View customer and check data are correct
   describe('View Customer Updated', async () => {
     it('should filter list by email', async function () {
+      await this.pageObjects.customersPage.resetFilter();
       await this.pageObjects.customersPage.filterCustomers(
         'input',
         'email',
@@ -199,6 +202,7 @@ describe('Create, Read, Update and Delete Customer in BO', async () => {
     });
 
     it('should filter list by email', async function () {
+      await this.pageObjects.customersPage.resetFilter();
       await this.pageObjects.customersPage.filterCustomers(
         'input',
         'email',

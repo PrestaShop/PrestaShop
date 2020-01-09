@@ -18,5 +18,14 @@ module.exports = {
       decimals: 2,
       enabled: true,
     },
+    toman: {
+      name: 'Iranian toman',
+      frName: 'Toman iranien',
+      symbol: 'TMN',
+      isoCode: 'TMN',
+      exchangeRate: 4666.539,
+      decimals: 2,
+      enabled: true,
+    },
   },
 };

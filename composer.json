@@ -8,6 +8,10 @@
         "ext-fileinfo": "*",
         "ext-intl": "*",
         "ext-zip": "*",
+        "ext-iconv": "*",
+        "ext-json": "*",
+        "ext-gd": "*",
+        "ext-dom": "*",
         "beberlei/doctrineextensions": "^1.0",
         "composer/ca-bundle": "^1.0",
         "composer/installers": "^1.0.21",
@@ -164,13 +168,12 @@
             "@php ./tests-legacy/create-test-db.php"
         ],
         "test-all": [
+            "composer phpunit-admin",
             "composer phpunit-legacy",
             "composer unit-tests",
-            "composer phpunit-admin",
             "composer phpunit-sf",
             "composer integration-tests",
             "composer phpunit-controllers",
-            "composer phpunit-routing",
             "composer integration-behaviour-tests"
         ],
         "phpunit-legacy": [
@@ -190,10 +193,6 @@
         "phpunit-admin": [
             "@composer create-test-db",
             "@php -d date.timezone=UTC ./vendor/bin/phpunit -c tests-legacy/phpunit-admin.xml"
-        ],
-        "phpunit-routing": [
-            "@composer create-test-db",
-            "@php -d date.timezone=UTC ./vendor/bin/phpunit -c tests-legacy/phpunit-routing.xml"
         ],
         "phpunit-sf": [
             "@composer create-test-db",

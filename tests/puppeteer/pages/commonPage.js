@@ -14,7 +14,7 @@ module.exports = class CommonPage {
   /**
    * Get Text from element
    * @param selector, from where to get text
-   * @return textContent
+   * @return {Promise<string>}
    */
   async getTextContent(selector) {
     await this.page.waitForSelector(selector, {visible: true});

@@ -38,11 +38,12 @@ use PrestaShopException;
 abstract class AbstractAddressHandler
 {
     /**
-     * Gets legacy address
-     *
      * @param AddressId $addressId
      *
      * @return Address
+     *
+     * @throws AddressException
+     * @throws AddressNotFoundException
      */
     protected function getAddress(AddressId $addressId)
     {
@@ -70,7 +71,7 @@ abstract class AbstractAddressHandler
      *
      * @throws AddressException
      */
-    protected function deleteAddress(Address $address)
+    protected function deleteAddress(Address $address): bool
     {
         try {
             return $address->delete();

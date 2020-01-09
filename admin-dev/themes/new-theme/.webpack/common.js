@@ -53,6 +53,7 @@ module.exports = {
     currency: './js/pages/currency',
     currency_form: './js/pages/currency/form',
     customer: './js/pages/customer',
+    customer_address_form: './js/pages/address/form.js',
     customer_thread_view: './js/pages/customer-thread/view.js',
     email: './js/pages/email',
     employee: './js/pages/employee/index',
@@ -114,6 +115,7 @@ module.exports = {
       '@components': path.resolve(__dirname, '../js/components'),
       '@scss': path.resolve(__dirname, '../scss'),
       '@node_modules': path.resolve(__dirname, '../node_modules'),
+      '@vue': path.resolve(__dirname, '../js/vue'),
     },
   },
   module: {
@@ -126,7 +128,9 @@ module.exports = {
           options: {
             presets: [
               ['es2015', {modules: false}],
+              ['env', {'useBuiltIns': 'usage'}]
             ],
+            'plugins': ['transform-runtime']
           },
         }],
       },

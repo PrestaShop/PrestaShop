@@ -28,6 +28,10 @@ services:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\CurrencyFormDataHandler'
     arguments:
       - '@prestashop.core.command_bus'
+      -
+        - '@prestashop.adapter.cache.clearer.symfony_cache_clearer'
+        - '@prestashop.adapter.cache.clearer.smarty_cache_clearer'
+
 
   prestashop.core.form.identifiable_object.data_handler.webservice_key_form_data_handler:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\WebserviceKeyFormDataHandler'
@@ -125,3 +129,15 @@ services:
     arguments:
       - '@prestashop.core.command_bus'
       - '@prestashop.adapter.attachment.uploader.attachment_file_uploader'
+
+  prestashop.core.form.identifiable_object.partial_refund_form_data_handler:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\PartialRefundFormDataHandler'
+    arguments:
+      - '@prestashop.core.command_bus'
+      - '@prestashop.core.query_bus'
+
+  prestashop.core.form.identifiable_object.data_handler.address_form_data_handler:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\AddressFormDataHandler'
+    arguments:
+      - '@prestashop.core.command_bus'
+      - '@prestashop.adapter.data_provider.customer'

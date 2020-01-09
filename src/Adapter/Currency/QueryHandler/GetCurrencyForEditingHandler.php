@@ -31,6 +31,7 @@ use PrestaShop\PrestaShop\Core\Domain\Currency\QueryResult\EditableCurrency;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Query\GetCurrencyForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Currency\QueryHandler\GetCurrencyForEditingHandlerInterface;
+use PrestaShop\PrestaShop\Core\Localization\Currency\PatternTransformer;
 
 /**
  * Class GetCurrencyForEditingHandler is responsible for retrieving required data used in currency form.
@@ -72,11 +73,18 @@ final class GetCurrencyForEditingHandler implements GetCurrencyForEditingHandler
             );
         }
 
+        $transformer = new PatternTransformer();
+        $transformations = [];
+        foreach ($entity->getLocalizedPatterns() as $langId => $pattern) {
+            $transformations[$langId] = !empty($pattern) ? $transformer->getTransformationType($pattern) : '';
+        }
+
         return new EditableCurrency(
             $entity->id,
             $entity->iso_code,
             $entity->getLocalizedNames(),
             $entity->getLocalizedSymbols(),
+            $transformations,
             $entity->conversion_rate,
             $entity->precision,
             $entity->active,

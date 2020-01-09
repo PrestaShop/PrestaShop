@@ -77,6 +77,7 @@ final class FolderThemeCatalog implements ThemeCatalogInterface
         $this->checkThemesFolder();
 
         $finder = new Finder();
+        $finder->sortByName();
         $finder->directories()->in($this->mailThemesFolder)->depth(0);
         $mailThemes = new ThemeCollection();
         /** @var SplFileInfo $mailThemeFolder */

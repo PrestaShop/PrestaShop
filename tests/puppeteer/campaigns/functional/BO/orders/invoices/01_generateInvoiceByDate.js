@@ -17,9 +17,11 @@ const ViewOrderPage = require('@pages/BO/orders/view');
 let browser;
 let page;
 const today = new Date();
-// Create a start and end date that there is no invoices
-const dateFrom = `${today.getFullYear() + 1}-${today.getMonth() + 1}-${today.getDate() - 1}`;
-const dateTo = `${today.getFullYear() + 1}-${today.getMonth() + 1}-${today.getDate()}`;
+// Create a future date that there is no invoices (yyy-mm-dd)
+const day = (`0${today.getDate()}`).slice(-2); // Current day
+const month = (`0${today.getMonth() + 1}`).slice(-2); // Current month
+const year = today.getFullYear() + 1; // Next year
+const futureDate = `${year}-${month}-${day}`;
 
 // Init objects needed
 const init = async function () {
@@ -96,7 +98,7 @@ describe('Generate PDF file by date', async () => {
     });
 
     it('should check the error message when there is no invoice in the entered date', async function () {
-      await this.pageObjects.invoicesPage.generatePDFByDate(dateFrom, dateTo);
+      await this.pageObjects.invoicesPage.generatePDFByDate(futureDate, futureDate);
       const textMessage = await this.pageObjects.invoicesPage.getTextContent(
         this.pageObjects.invoicesPage.alertTextBlock,
       );

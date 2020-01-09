@@ -1,10 +1,10 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "123bf9059cec742e89dccd5250b36256",
+    "content-hash": "3890fd4ebf1137135581edc4ea5f2a06",
     "packages": [
         {
             "name": "analog/analog",
@@ -59,7 +59,7 @@
             "time": "2019-03-05T22:41:22+00:00"
         },
         {
-            "name": "beberlei/doctrineextensions",
+            "name": "beberlei/DoctrineExtensions",
             "version": "v1.1.9",
             "source": {
                 "type": "git",
@@ -390,7 +390,7 @@
             "support": {
                 "source": "https://github.com/PrestaShop/php-cssjanus/tree/patch-1"
             },
-            "time": "2018-01-08T09:57:29+00:00"
+            "time": "2018-01-08 09:57:29"
         },
         {
             "name": "curl/curl",
@@ -1531,15 +1531,15 @@
             "authors": [
                 {
                     "name": "André Rothe",
-                    "role": "Committer",
                     "email": "phosco@gmx.de",
-                    "homepage": "https://www.phosco.info"
+                    "homepage": "https://www.phosco.info",
+                    "role": "Committer"
                 },
                 {
                     "name": "Justin Swanhart",
-                    "role": "Owner",
                     "email": "greenlion@gmail.com",
-                    "homepage": "http://code.google.com/u/greenlion@gmail.com/"
+                    "homepage": "http://code.google.com/u/greenlion@gmail.com/",
+                    "role": "Owner"
                 }
             ],
             "description": "A pure PHP SQL (non validating) parser w/ focus on MySQL dialect of SQL",
@@ -6217,7 +6217,7 @@
                 },
                 {
                     "name": "Gert de Pagter",
-                    "email": "BackEndTea@gmail.com"
+                    "email": "backendtea@gmail.com"
                 }
             ],
             "description": "Symfony polyfill for ctype functions",
@@ -6939,19 +6939,19 @@
             "authors": [
                 {
                     "name": "Fabien Potencier",
-                    "role": "Lead Developer",
                     "email": "fabien@symfony.com",
-                    "homepage": "http://fabien.potencier.org"
+                    "homepage": "http://fabien.potencier.org",
+                    "role": "Lead Developer"
                 },
                 {
                     "name": "Armin Ronacher",
-                    "role": "Project Founder",
-                    "email": "armin.ronacher@active-4.com"
+                    "email": "armin.ronacher@active-4.com",
+                    "role": "Project Founder"
                 },
                 {
                     "name": "Twig Team",
-                    "role": "Contributors",
-                    "homepage": "https://twig.symfony.com/contributors"
+                    "homepage": "https://twig.symfony.com/contributors",
+                    "role": "Contributors"
                 }
             ],
             "description": "Twig, the flexible, fast, and secure template language for PHP",
@@ -7319,6 +7319,7 @@
             ],
             "description": "Promoting the interoperability of container objects (DIC, SL, etc.)",
             "homepage": "https://github.com/container-interop/container-interop",
+            "abandoned": "psr/container",
             "time": "2017-02-14T19:40:03+00:00"
         },
         {
@@ -7458,7 +7459,7 @@
             "time": "2017-03-25T17:14:26+00:00"
         },
         {
-            "name": "mikey179/vfsstream",
+            "name": "mikey179/vfsStream",
             "version": "v1.6.5",
             "source": {
                 "type": "git",
@@ -7495,8 +7496,8 @@
             "authors": [
                 {
                     "name": "Frank Kleine",
-                    "role": "Developer",
-                    "homepage": "http://frankkleine.de/"
+                    "homepage": "http://frankkleine.de/",
+                    "role": "Developer"
                 }
             ],
             "description": "Virtual file system to mock the real file system in unit tests.",
@@ -8955,7 +8956,11 @@
         "ext-curl": "*",
         "ext-fileinfo": "*",
         "ext-intl": "*",
-        "ext-zip": "*"
+        "ext-zip": "*",
+        "ext-iconv": "*",
+        "ext-json": "*",
+        "ext-gd": "*",
+        "ext-dom": "*"
     },
     "platform-dev": [],
     "platform-overrides": {

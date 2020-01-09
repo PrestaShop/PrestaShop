@@ -133,6 +133,8 @@ class AddOrderFromBackOfficeCommand
 
     /**
      * @param int $orderStateId
+     *
+     * @throws OrderException
      */
     private function assertOrderStateIsPositiveInt($orderStateId)
     {

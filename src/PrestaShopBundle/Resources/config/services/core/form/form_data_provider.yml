@@ -126,3 +126,14 @@ services:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\AttachmentFormDataProvider'
     arguments:
       - '@prestashop.core.query_bus'
+
+  prestashop.core.form.identifiable_object.data_provider.partial_refund_form_data_provider:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\PartialRefundFormDataProvider'
+    arguments:
+      - '@prestashop.core.query_bus'
+
+  prestashop.core.form.identifiable_object.data_provider.address_form_data_provider:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\AddressFormDataProvider'
+    arguments:
+      - '@prestashop.core.query_bus'
+      - '@=service("prestashop.adapter.legacy.context").getContext().country.id'

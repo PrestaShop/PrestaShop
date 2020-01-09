@@ -45,7 +45,6 @@ final class EditCategoryHandler extends AbstractObjectModelHandler implements Ed
      * {@inheritdoc}
      *
      * @throws CategoryNotFoundException
-     * @throws CannotEditCategoryException
      */
     public function handle(EditCategoryCommand $command)
     {
@@ -66,6 +65,9 @@ final class EditCategoryHandler extends AbstractObjectModelHandler implements Ed
      *
      * @param Category $category
      * @param EditCategoryCommand $command
+     *
+     * @throws CannotEditCategoryException
+     * @throws CategoryException
      */
     private function updateCategoryFromCommandData(Category $category, EditCategoryCommand $command)
     {

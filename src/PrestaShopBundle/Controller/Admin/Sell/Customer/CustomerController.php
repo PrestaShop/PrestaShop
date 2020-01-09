@@ -36,7 +36,9 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\Command\SetPrivateNoteAboutCustom
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\TransformGuestToCustomerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\MissingCustomerRequiredFieldsException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerCarts;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerForAddressCreation;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerOrders;
+use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\AddressCreationCustomerInformation;
 use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\EditableCustomer;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerDefaultGroupAccessException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerException;
@@ -428,6 +430,39 @@ class CustomerController extends AbstractAdminController
     }
 
     /**
+     * Provides customer information for address creation in json format
+     *
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function getCustomerInformationAction(Request $request): Response
+    {
+        try {
+            $email = $request->query->get('email');
+
+            /** @var AddressCreationCustomerInformation $customerInformation */
+            $customerInformation = $this->getQueryBus()->handle(new GetCustomerForAddressCreation($email));
+
+            return $this->json($customerInformation);
+        } catch (Exception $e) {
+            $code = Response::HTTP_INTERNAL_SERVER_ERROR;
+
+            if ($e instanceof CustomerException) {
+                $code = Response::HTTP_NOT_FOUND;
+            }
+
+            return $this->json([
+                'message' => $this->getErrorMessageForException($e, $this->getErrorMessages($e)),
+            ],
+                $code
+            );
+        }
+    }
+
+    /**
      * Toggle customer status.
      *
      * @AdminSecurity(
@@ -482,6 +517,8 @@ class CustomerController extends AbstractAdminController
             $editableCustomer = $this->getQueryBus()->handle(new GetCustomerForEditing((int) $customerId));
 
             $editCustomerCommand = new EditCustomerCommand((int) $customerId);
+
+            // toggle newsletter subscription
             $editCustomerCommand->setNewsletterSubscribed(!$editableCustomer->isNewsletterSubscribed());
 
             $this->getCommandBus()->handle($editCustomerCommand);

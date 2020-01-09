@@ -39,8 +39,11 @@ use OrderSlip;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\IssuePartialRefundCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler\IssuePartialRefundHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\EmptyRefundQuantityException;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\EmptyRefundAmountException;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
 use StockAvailable;
+use Symfony\Component\Translation\TranslatorInterface;
 use Tax;
 use TaxCalculator;
 use Validate;
@@ -56,11 +59,18 @@ final class IssuePartialRefundHandler extends AbstractOrderCommandHandler implem
     private $locale;
 
     /**
-     * @param Locale $locale
+     * @var TranslatorInterface
      */
-    public function __construct(Locale $locale)
+    private $translator;
+
+    /**
+     * @param Locale $locale
+     * @param TranslatorInterface $translator
+     */
+    public function __construct(Locale $locale, TranslatorInterface $translator)
     {
         $this->locale = $locale;
+        $this->translator = $translator;
     }
 
     /**
@@ -74,13 +84,15 @@ final class IssuePartialRefundHandler extends AbstractOrderCommandHandler implem
         $amount = 0;
         $orderDetailList = [];
         $fullQuantityList = [];
+        $taxCalculator = $this->getTaxCalculator($order->carrier_tax_rate);
 
         foreach ($refunds as $orderDetailId => $refund) {
-            $quantity = $refund['quantity'];
-
-            if (!$quantity) {
-                continue;
+            // this refund has an amount but no quantity, this should not happen
+            if (empty($refund['quantity'])) {
+                throw new EmptyRefundQuantityException();
             }
+
+            $quantity = $refund['quantity'];
 
             $fullQuantityList[$orderDetailId] = $quantity;
 
@@ -92,16 +104,25 @@ final class IssuePartialRefundHandler extends AbstractOrderCommandHandler implem
             $orderDetail = new OrderDetail($orderDetailId);
 
             if (empty($refund['amount'])) {
-                $orderDetailList[$orderDetailId]['unit_price'] = $command->getTaxMethod() ?
+                $refund['amount'] = $command->getTaxMethod() ?
                     $orderDetail->unit_price_tax_excl :
                     $orderDetail->unit_price_tax_incl;
-                $orderDetailList[$orderDetailId]['amount'] =
-                    $orderDetail->unit_price_tax_incl * $orderDetailId[$orderDetailId]['quantity'];
+                $refund['amount'] *= $quantity;
             } else {
-                $orderDetailList[$orderDetailId]['amount'] = (float) str_replace(',', '.', $refund['amount']);
-                $orderDetailList[$orderDetailId]['unit_price'] =
-                    $orderDetailList[$orderDetailId]['amount'] / $orderDetailList[$orderDetailId]['quantity'];
+                $refund['amount'] = $command->getTaxMethod() ?
+                    $taxCalculator->removeTaxes($refund['amount']) :
+                    $taxCalculator->addTaxes($refund['amount']);
             }
+
+            $orderDetailList[$orderDetailId]['amount'] = (float) str_replace(',', '.', $refund['amount']);
+            $orderDetailList[$orderDetailId]['unit_price'] =
+                    $orderDetailList[$orderDetailId]['amount'] / $orderDetailList[$orderDetailId]['quantity'];
+
+            // add missing fields
+            $orderDetailList[$orderDetailId]['unit_price_tax_excl'] = $orderDetail->unit_price_tax_excl;
+            $orderDetailList[$orderDetailId]['unit_price_tax_incl'] = $orderDetail->unit_price_tax_incl;
+            $orderDetailList[$orderDetailId]['total_price_tax_excl'] = $orderDetail->unit_price_tax_excl * $orderDetailList[$orderDetailId]['quantity'];
+            $orderDetailList[$orderDetailId]['total_price_tax_incl'] = $orderDetail->unit_price_tax_incl * $orderDetailList[$orderDetailId]['quantity'];
 
             $amount += $orderDetailList[$orderDetailId]['amount'];
 
@@ -118,10 +139,10 @@ final class IssuePartialRefundHandler extends AbstractOrderCommandHandler implem
 
         if ($amount === 0 && $shippingCostAmount === 0) {
             if (!empty($refunds)) {
-                throw new OrderException('Please enter a quantity to proceed with your refund.');
+                throw new EmptyRefundQuantityException();
             }
 
-            throw new OrderException('Please enter an amount to proceed with your refund.');
+            throw new EmptyRefundAmountException();
         }
 
         $chosen = false;
@@ -138,9 +159,6 @@ final class IssuePartialRefundHandler extends AbstractOrderCommandHandler implem
         if ($shippingCostAmount > 0) {
             if (!$command->getTaxMethod()) {
                 // @todo: use https://github.com/PrestaShop/decimal for price computations
-                $tax = new Tax();
-                $tax->rate = $order->carrier_tax_rate;
-                $taxCalculator = new TaxCalculator([$tax]);
                 $amount += $taxCalculator->addTaxes($shippingCostAmount);
             } else {
                 $amount += $shippingCostAmount;
@@ -156,13 +174,13 @@ final class IssuePartialRefundHandler extends AbstractOrderCommandHandler implem
         }
 
         if ($amount > 0) {
-            $orderSlipCreated = !OrderSlip::create(
+            $orderSlipCreated = OrderSlip::create(
                 $order,
                 $orderDetailList,
                 $shippingCostAmount,
                 $voucher,
                 $chosen,
-                $command->getTaxMethod() ? false : true
+                $command->getTaxMethod()
             );
 
             if (!$orderSlipCreated) {
@@ -185,7 +203,6 @@ final class IssuePartialRefundHandler extends AbstractOrderCommandHandler implem
                 '{order_name}' => $order->getUniqReference(),
             ];
 
-            $translator = Context::getContext()->getTranslator();
             $orderLanguage = new Language((int) $order->id_lang);
 
             // @todo: use a dedicated Mail class (see #13945)
@@ -193,7 +210,7 @@ final class IssuePartialRefundHandler extends AbstractOrderCommandHandler implem
             @Mail::Send(
                 (int) $order->id_lang,
                 'credit_slip',
-                $translator->trans(
+                $this->translator->trans(
                     'New credit slip regarding your order',
                     [],
                     'Emails.Subject',
@@ -220,15 +237,15 @@ final class IssuePartialRefundHandler extends AbstractOrderCommandHandler implem
             }
         } else {
             if (!empty($refunds)) {
-                throw new OrderException('Please enter a quantity to proceed with your refund.');
+                throw new EmptyRefundQuantityException();
             }
 
-            throw new OrderException('Please enter an amount to proceed with your refund.');
+            throw new EmptyRefundAmountException();
         }
 
         if ($command->generateCartRule() && $amount > 0) {
             $cartRule = new CartRule();
-            $cartRule->description = $translator->trans(
+            $cartRule->description = $this->translator->trans(
                 'Credit slip for order #%d',
                 ['#%d' => $order->id],
                 'Admin.Orderscustomers.Feature'
@@ -291,7 +308,7 @@ final class IssuePartialRefundHandler extends AbstractOrderCommandHandler implem
             @Mail::Send(
                 (int) $order->id_lang,
                 'voucher',
-                $translator->trans(
+                $this->translator->trans(
                     'New voucher for your order #%s',
                     [$order->reference],
                     'Emails.Subject',
@@ -309,5 +326,18 @@ final class IssuePartialRefundHandler extends AbstractOrderCommandHandler implem
                 (int) $order->id_shop
             );
         }
+    }
+
+    /**
+     * @param float $taxRate
+     *
+     * @return TaxCalculator
+     */
+    private function getTaxCalculator(float $taxRate)
+    {
+        $tax = new Tax();
+        $tax->rate = $taxRate;
+
+        return new TaxCalculator([$tax]);
     }
 }

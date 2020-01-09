@@ -28,18 +28,20 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 use Behat\Behat\Context\Context;
 use Behat\Testwork\Hook\Scope\BeforeSuiteScope;
+use Exception;
 use Language;
 use ObjectModel;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use Psr\Container\ContainerInterface;
 use RuntimeException;
+use Shop;
 use Tests\Integration\Behaviour\Features\Context\CommonFeatureContext;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 
 abstract class AbstractDomainFeatureContext implements Context
 {
     /**
-     * @var \Exception|null
+     * @var Exception|null
      */
     protected $lastException;
 
@@ -50,6 +52,8 @@ abstract class AbstractDomainFeatureContext implements Context
 
     /**
      * @BeforeSuite
+     *
+     * @param BeforeSuiteScope $scope
      */
     public static function prepare(BeforeSuiteScope $scope)
     {
@@ -145,5 +149,21 @@ abstract class AbstractDomainFeatureContext implements Context
         }
 
         return $localizedArray;
+    }
+
+    /**
+     * @Given single shop context is loaded
+     */
+    protected function singleShopContextIsLoaded()
+    {
+        Shop::setContext(Shop::CONTEXT_SHOP);
+    }
+
+    /**
+     * @Given multiple shop context is loaded
+     */
+    protected function multipleShopContextIsLoaded()
+    {
+        Shop::setContext(Shop::CONTEXT_ALL);
     }
 }
