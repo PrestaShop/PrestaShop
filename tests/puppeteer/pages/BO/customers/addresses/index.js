@@ -13,17 +13,17 @@ module.exports = class Addresses extends BOBasePage {
     // List of addresses
     this.addressGridPanel = '#address_grid_panel';
     this.addressGridTitle = `${this.addressGridPanel} h3.card-header-title`;
-    this.addresssListForm = '#address_grid';
-    this.addressesListTableRow = `${this.addresssListForm} tbody tr:nth-child(%ROW)`;
+    this.addressesListForm = '#address_grid';
+    this.addressesListTableRow = `${this.addressesListForm} tbody tr:nth-child(%ROW)`;
     this.addressesListTableColumn = `${this.addressesListTableRow} td.column-%COLUMN`;
     this.addressesListTableColumnAction = this.addressesListTableColumn.replace('%COLUMN', 'actions');
     this.addressesListTableToggleDropDown = `${this.addressesListTableColumnAction} a[data-toggle='dropdown']`;
     this.addressesListTableDeleteLink = `${this.addressesListTableColumnAction} a[data-url]`;
     this.addressesListTableEditLink = `${this.addressesListTableColumnAction} a[href*='edit']`;
     // Filters
-    this.addressFilterColumnInput = `${this.addresssListForm} #address_%FILTERBY`;
-    this.filterSearchButton = `${this.addresssListForm} button[name='address[actions][search]']`;
-    this.filterResetButton = `${this.addresssListForm} button[name='address[actions][reset]']`;
+    this.addressFilterColumnInput = `${this.addressesListForm} #address_%FILTERBY`;
+    this.filterSearchButton = `${this.addressesListForm} button[name='address[actions][search]']`;
+    this.filterResetButton = `${this.addressesListForm} button[name='address[actions][reset]']`;
   }
 
   /*
