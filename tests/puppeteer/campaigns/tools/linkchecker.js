@@ -74,7 +74,7 @@ describe('Crawl every page for defects and issues', async () => {
     describe(`${section.name} - ${section.description}`, async () => {
       section.urls.forEach((pageToCrawl, index) => {
         it(`Crawling ${pageToCrawl.name} (${index + 1}/${section.urls.length})`, async () => {
-          await crawlPage(page, pageToCrawl);
+          await crawlPage(page, `${section.urlPrefix}${pageToCrawl.url}`);
           await expect(requestError, requestTextError).to.be.false;
           await expect(javascriptError, javascriptTextError).to.be.false;
         });
