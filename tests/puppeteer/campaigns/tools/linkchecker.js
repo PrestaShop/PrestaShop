@@ -27,7 +27,7 @@ let outputEntry = {
 let requestError = false;
 let requestTextError = '';
 let javascriptError = false;
-let jsError = '';
+let javascriptTextError = '';
 
 let page;
 let browser;
@@ -57,10 +57,10 @@ describe('Crawl every page for defects and issues', async () => {
     });
     // intercepts JS errors
     await page.on('pageerror', (pageerr) => {
-      jsError = pageerr.toString();
+      javascriptTextError = pageerr.toString();
       javascriptError = true;
       outputEntry.jsError.push({
-        error: jsError,
+        error: javascriptTextError,
       });
     });
   });
@@ -74,14 +74,9 @@ describe('Crawl every page for defects and issues', async () => {
     describe(`${section.name} - ${section.description}`, async () => {
       section.urls.forEach((pageToCrawl, index) => {
         it(`Crawling ${pageToCrawl.name} (${index + 1}/${section.urls.length})`, async () => {
-          /* eslint-disable no-param-reassign */
-          pageToCrawl.url = `${section.urlPrefix}${pageToCrawl.url}`
-            .replace('URL_BO', global.BO.URL)
-            .replace('URL_FO', global.FO.URL);
-          /* eslint-enable no-param-reassign */
           await crawlPage(page, pageToCrawl);
           await expect(requestError, requestTextError).to.be.false;
-          await expect(javascriptError, jsError).to.be.false;
+          await expect(javascriptError, javascriptTextError).to.be.false;
         });
       });
     });
