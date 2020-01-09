@@ -5,7 +5,7 @@ module.exports = [
   {
     name: 'BO',
     urlPrefix: 'URL_BO', // replaced
-    description: 'Back Office',
+    description: 'Crawling Back Office',
     urls: [
       {
         name: 'BO_login',
@@ -152,7 +152,7 @@ module.exports = [
   {
     name: 'FO',
     urlPrefix: 'URL_FO',
-    description: 'Front Office',
+    description: 'Crawling Front Office',
     urls: [
       {name: 'FO_homepage', url: 'index.php'},
       {name: 'FO_login', url: 'index.php?controller=authentication&back=my-account'},
