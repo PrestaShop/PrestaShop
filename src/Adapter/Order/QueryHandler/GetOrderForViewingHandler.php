@@ -48,6 +48,7 @@ use OrderSlip;
 use Pack;
 use PrestaShop\PrestaShop\Adapter\Customer\CustomerDataProvider;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Order\OrderDocumentType;
 use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryHandler\GetOrderForViewingHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderCarrierForViewing;
@@ -545,17 +546,18 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
             $type = null;
             $number = null;
             $amount = null;
+            $numericAmount = null;
             $amountMismatch = null;
             $availableAction = null;
             $isAddPaymentAllowed = false;
 
-            if (get_class($document) === 'OrderInvoice') {
-                $type = isset($document->is_delivery) ? 'delivery_slip' : 'invoice';
-            } elseif (get_class($document) === 'OrderSlip') {
-                $type = 'credit_slip';
+            if ($document instanceof OrderInvoice) {
+                $type = isset($document->is_delivery) ? OrderDocumentType::DELIVERY_SLIP : OrderDocumentType::INVOICE;
+            } elseif ($document instanceof OrderSlip) {
+                $type = OrderDocumentType::CREDIT_SLIP;
             }
 
-            if ('invoice' === $type) {
+            if (OrderDocumentType::INVOICE === $type) {
                 $number = $document->getInvoiceNumberFormatted(
                     $this->contextLanguageId,
                     $order->id_shop
@@ -564,13 +566,13 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
                 if ($document->getRestPaid()) {
                     $isAddPaymentAllowed = true;
                 }
-            } elseif ('delivery_slip' === $type) {
+            } elseif (OrderDocumentType::DELIVERY_SLIP === $type) {
                 $number = sprintf(
                     '%s%06d',
                     Configuration::get('PS_DELIVERY_PREFIX', $this->contextLanguageId, null, $order->id_shop),
                     $document->delivery_number
                 );
-            } elseif ('credit_slip' === $type) {
+            } elseif (OrderDocumentType::CREDIT_SLIP) {
                 $number = sprintf(
                     '%s%06d',
                     Configuration::get('PS_CREDIT_SLIP_PREFIX', $this->contextLanguageId),
@@ -580,6 +582,7 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
 
             if ($document instanceof OrderInvoice && !isset($document->is_delivery)) {
                 $amount = $this->locale->formatPrice($document->total_paid_tax_incl, $currency->iso_code);
+                $numericAmount = $document->total_paid_tax_incl;
 
                 if ($document->getTotalPaid()) {
                     if ($document->getRestPaid() > 0) {
@@ -601,13 +604,14 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
                     $document->total_products_tax_incl + $document->total_shipping_tax_incl,
                     $currency->iso_code
                 );
+                $numericAmount = $document->total_products_tax_incl + $document->total_shipping_tax_incl;
             }
             $documentsForViewing[] = new OrderDocumentForViewing(
                 $document->id,
                 $type,
                 new DateTimeImmutable($document->date_add),
                 $number,
-                $document->total_paid_tax_incl ?? null,
+                $numericAmount,
                 $amount,
                 $amountMismatch,
                 $document instanceof OrderInvoice ? $document->note : null,

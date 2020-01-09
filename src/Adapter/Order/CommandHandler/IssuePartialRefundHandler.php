@@ -41,6 +41,7 @@ use PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler\IssuePartialRefundHan
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\EmptyRefundQuantityException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\EmptyRefundAmountException;
+use PrestaShop\PrestaShop\Core\Domain\Order\VoucherRefundType;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
 use StockAvailable;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -79,9 +80,10 @@ final class IssuePartialRefundHandler extends AbstractOrderCommandHandler implem
     public function handle(IssuePartialRefundCommand $command)
     {
         $order = $this->getOrderObject($command->getOrderId());
+        $isTaxIncluded = $this->isTaxIncludedInOrder($order);
 
         $refunds = $command->getOrderDetailRefunds();
-        $amount = 0;
+        $refundedAmount = 0;
         $orderDetailList = [];
         $fullQuantityList = [];
         $taxCalculator = $this->getTaxCalculator($order->carrier_tax_rate);
@@ -104,12 +106,12 @@ final class IssuePartialRefundHandler extends AbstractOrderCommandHandler implem
             $orderDetail = new OrderDetail($orderDetailId);
 
             if (empty($refund['amount'])) {
-                $refund['amount'] = $command->getTaxMethod() ?
+                $refund['amount'] = $isTaxIncluded ?
                     $orderDetail->unit_price_tax_excl :
                     $orderDetail->unit_price_tax_incl;
                 $refund['amount'] *= $quantity;
             } else {
-                $refund['amount'] = $command->getTaxMethod() ?
+                $refund['amount'] = $isTaxIncluded ?
                     $taxCalculator->removeTaxes($refund['amount']) :
                     $taxCalculator->addTaxes($refund['amount']);
             }
@@ -124,7 +126,7 @@ final class IssuePartialRefundHandler extends AbstractOrderCommandHandler implem
             $orderDetailList[$orderDetailId]['total_price_tax_excl'] = $orderDetail->unit_price_tax_excl * $orderDetailList[$orderDetailId]['quantity'];
             $orderDetailList[$orderDetailId]['total_price_tax_incl'] = $orderDetail->unit_price_tax_incl * $orderDetailList[$orderDetailId]['quantity'];
 
-            $amount += $orderDetailList[$orderDetailId]['amount'];
+            $refundedAmount += $orderDetailList[$orderDetailId]['amount'];
 
             if (!$order->hasBeenDelivered()
                 || ($order->hasBeenDelivered() && $command->restockRefundedProducts())
@@ -134,10 +136,9 @@ final class IssuePartialRefundHandler extends AbstractOrderCommandHandler implem
             }
         }
 
-        // @todo: use dedicated processing to deal with this issue (commas instead of colons
-        $shippingCostAmount = (float) str_replace(',', '.', $command->getShippingCostRefundAmount()) ?: false;
+        $shippingCostAmount = $command->getShippingCostRefundAmount() ?: false;
 
-        if ($amount === 0 && $shippingCostAmount === 0) {
+        if ($refundedAmount === 0 && $shippingCostAmount === 0) {
             if (!empty($refunds)) {
                 throw new EmptyRefundQuantityException();
             }
@@ -148,20 +149,20 @@ final class IssuePartialRefundHandler extends AbstractOrderCommandHandler implem
         $chosen = false;
         $voucher = 0;
 
-        if ($command->getCartRuleRefundType() === 1) {
+        if ($command->getVoucherRefundType() === VoucherRefundType::PRODUCT_PRICES_EXCLUDING_VOUCHER_REFUND) {
             //@todo: Check if it matches order_discount_price in legacy
-            $amount -= $voucher = (float) $order->total_discounts;
-        } elseif ($command->getCartRuleRefundType() === 2) {
+            $refundedAmount -= $voucher = (float) $order->total_discounts;
+        } elseif ($command->getVoucherRefundType() === VoucherRefundType::SPECIFIC_AMOUNT_REFUND) {
             $chosen = true;
-            $amount = $voucher = $command->getCartRuleRefundAmount();
+            $refundedAmount = $voucher = $command->getVoucherRefundAmount();
         }
 
         if ($shippingCostAmount > 0) {
-            if (!$command->getTaxMethod()) {
+            if (!$isTaxIncluded) {
                 // @todo: use https://github.com/PrestaShop/decimal for price computations
-                $amount += $taxCalculator->addTaxes($shippingCostAmount);
+                $refundedAmount += $taxCalculator->addTaxes($shippingCostAmount);
             } else {
-                $amount += $shippingCostAmount;
+                $refundedAmount += $shippingCostAmount;
             }
         }
 
@@ -173,14 +174,14 @@ final class IssuePartialRefundHandler extends AbstractOrderCommandHandler implem
             }
         }
 
-        if ($amount > 0) {
+        if ($refundedAmount > 0) {
             $orderSlipCreated = OrderSlip::create(
                 $order,
                 $orderDetailList,
                 $shippingCostAmount,
                 $voucher,
                 $chosen,
-                $command->getTaxMethod()
+                $isTaxIncluded
             );
 
             if (!$orderSlipCreated) {
@@ -243,7 +244,7 @@ final class IssuePartialRefundHandler extends AbstractOrderCommandHandler implem
             throw new EmptyRefundAmountException();
         }
 
-        if ($command->generateCartRule() && $amount > 0) {
+        if ($command->generateVoucher() && $refundedAmount > 0) {
             $cartRule = new CartRule();
             $cartRule->description = $this->translator->trans(
                 'Credit slip for order #%d',
@@ -270,7 +271,7 @@ final class IssuePartialRefundHandler extends AbstractOrderCommandHandler implem
             $cartRule->partial_use = 1;
             $cartRule->active = 1;
 
-            $cartRule->reduction_amount = $amount;
+            $cartRule->reduction_amount = $refundedAmount;
             $cartRule->reduction_tax = $order->getTaxCalculationMethod() != PS_TAX_EXC;
             $cartRule->minimum_amount_currency = $order->id_currency;
             $cartRule->reduction_currency = $order->id_currency;
