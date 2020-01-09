@@ -100,6 +100,15 @@ export default class CustomerManager {
       const $chooseBtn = $(event.currentTarget);
       this.customerId = $chooseBtn.data('customer-id');
 
+      const createAddressUrl = this.router.generate(
+          'admin_addresses_create',
+          {
+            'liteDisplaying': 1,
+            'submitFormAjax': 1,
+            'id_customer': this.customerId,
+          });
+      $(createOrderMap.addressAddBtn).attr('href', createAddressUrl);
+
       this.customerRenderer.displaySelectedCustomerBlock($chooseBtn);
     });
   }

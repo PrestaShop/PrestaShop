@@ -35,9 +35,18 @@ function searchCustomerByString(string)
 {
   orderPageManager.customerManager.search(string);
 }
+/**
+ * proxy to allow other scripts within the page to refresh addresses list
+ */
+function refreshAddressesList()
+{
+  orderPageManager.refreshAddressesList();
+}
+
 
 $(document).ready(() => {
   orderPageManager = new CreateOrderPage();
 });
 
 export {searchCustomerByString}
+export {refreshAddressesList}

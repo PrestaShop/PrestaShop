@@ -65,6 +65,10 @@ export default class CreateOrderPage {
 
     this._initListeners();
     this._loadCartFromUrlParams();
+
+    return {
+      refreshAddressesList: () => this._refreshAddressesList(),
+    };
   }
 
   /**
@@ -128,6 +132,18 @@ export default class CreateOrderPage {
     this.$container.on('blur', createOrderMap.cartRuleSearchInput, () => this.cartRuleManager.stopSearching());
     this._listenForCartEdit();
     this._onCartLoaded();
+    this._initAddAddressIframe();
+  }
+
+  /**
+   * @private
+   */
+  _initAddAddressIframe() {
+    $(createOrderMap.addressAddBtn).fancybox({
+      'type': 'iframe',
+      'width': '90%',
+      'height': '90%',
+    });
   }
 
   /**
@@ -145,27 +161,27 @@ export default class CreateOrderPage {
     this._onCartLanguageChanged();
 
     this.$container.on('change', createOrderMap.deliveryOptionSelect, e =>
-      this.cartEditor.changeDeliveryOption(this.cartId, e.currentTarget.value),
+        this.cartEditor.changeDeliveryOption(this.cartId, e.currentTarget.value),
     );
 
     this.$container.on('change', createOrderMap.freeShippingSwitch, e =>
-      this.cartEditor.setFreeShipping(this.cartId, e.currentTarget.value),
+        this.cartEditor.setFreeShipping(this.cartId, e.currentTarget.value),
     );
 
     this.$container.on('click', createOrderMap.addToCartButton, () =>
-      this.productManager.addProductToCart(this.cartId),
+        this.productManager.addProductToCart(this.cartId),
     );
 
     this.$container.on('change', createOrderMap.cartCurrencySelect, (e) =>
-      this.cartEditor.changeCartCurrency(this.cartId, e.currentTarget.value)
+        this.cartEditor.changeCartCurrency(this.cartId, e.currentTarget.value)
     );
 
     this.$container.on('change', createOrderMap.cartLanguageSelect, (e) =>
-      this.cartEditor.changeCartLanguage(this.cartId, e.currentTarget.value)
+        this.cartEditor.changeCartLanguage(this.cartId, e.currentTarget.value)
     );
 
     this.$container.on('click', createOrderMap.sendProcessOrderEmailBtn, () =>
-      this.summaryManager.sendProcessOrderEmail(this.cartId)
+        this.summaryManager.sendProcessOrderEmail(this.cartId)
     );
 
     this.$container.on('change', createOrderMap.listedProductUnitPriceInput, (e) => this._initProductChangePrice(e));
@@ -433,6 +449,7 @@ export default class CreateOrderPage {
     this._preselectCartLanguage(cartInfo.langId);
 
     $(createOrderMap.cartBlock).removeClass('d-none');
+    $(createOrderMap.cartBlock).data('cartId', cartInfo.cartId);
   }
 
   /**
@@ -469,5 +486,17 @@ export default class CreateOrderPage {
     };
 
     this.cartEditor.changeCartAddresses(this.cartId, addresses);
+  }
+
+  /**
+   * Refresh addresses list
+   *
+   * @private
+   */
+  _refreshAddressesList() {
+    const cartId = $(createOrderMap.cartBlock).data('cartId');
+    $.get(this.router.generate('admin_carts_info', {cartId})).then((cartInfo) => {
+      this.addressesRenderer.render(cartInfo.addresses);
+    });
   }
 }
