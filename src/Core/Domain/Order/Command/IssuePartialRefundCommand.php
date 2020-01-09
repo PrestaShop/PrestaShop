@@ -44,7 +44,7 @@ class IssuePartialRefundCommand
     private $orderDetailRefunds;
 
     /**
-     * @var int
+     * @var float
      */
     private $shippingCostRefund;
 
@@ -56,57 +56,49 @@ class IssuePartialRefundCommand
     /**
      * @var bool
      */
-    private $generateCartRule;
-
-    /**
-     * @var bool
-     */
-    private $taxMethod;
+    private $generateVoucher;
 
     /**
      * @var int
      */
-    private $cartRuleRefundType;
+    private $voucherRefundType;
 
     /**
      * @var float|null
      */
-    private $cartRuleRefundAmount;
+    private $voucherRefundAmount;
 
     /**
      * @param int $orderId
      * @param array $orderDetailRefunds
-     * @param int $shippingCostRefund
+     * @param float $shippingCostRefund
      * @param bool $restockRefundedProducts
-     * @param bool $generateCartRule
-     * @param bool $taxMethod
-     * @param int $cartRuleRefundType
-     * @param float|null $cartRuleRefundAmount
+     * @param bool $generateVoucher
+     * @param int $voucherRefundType
+     * @param float|null $voucherRefundAmount
      */
     public function __construct(
-        $orderId,
+        int $orderId,
         array $orderDetailRefunds,
-        $shippingCostRefund,
-        $restockRefundedProducts,
-        $generateCartRule,
-        $taxMethod,
-        $cartRuleRefundType,
-        $cartRuleRefundAmount = null
+        float $shippingCostRefund,
+        bool $restockRefundedProducts,
+        bool $generateVoucher,
+        int $voucherRefundType,
+        float $voucherRefundAmount = null
     ) {
         $this->orderId = new OrderId($orderId);
         $this->orderDetailRefunds = $orderDetailRefunds;
         $this->shippingCostRefund = $shippingCostRefund;
         $this->restockRefundedProducts = $restockRefundedProducts;
-        $this->generateCartRule = $generateCartRule;
-        $this->taxMethod = $taxMethod;
-        $this->cartRuleRefundType = $cartRuleRefundType;
-        $this->cartRuleRefundAmount = $cartRuleRefundAmount;
+        $this->generateVoucher = $generateVoucher;
+        $this->voucherRefundType = $voucherRefundType;
+        $this->voucherRefundAmount = $voucherRefundAmount;
     }
 
     /**
      * @return OrderId
      */
-    public function getOrderId()
+    public function getOrderId(): OrderId
     {
         return $this->orderId;
     }
@@ -114,23 +106,15 @@ class IssuePartialRefundCommand
     /**
      * @return array
      */
-    public function getOrderDetailRefunds()
+    public function getOrderDetailRefunds(): array
     {
         return $this->orderDetailRefunds;
     }
 
     /**
-     * @return bool
+     * @return float
      */
-    public function getTaxMethod()
-    {
-        return $this->taxMethod;
-    }
-
-    /**
-     * @return int
-     */
-    public function getShippingCostRefundAmount()
+    public function getShippingCostRefundAmount(): float
     {
         return $this->shippingCostRefund;
     }
@@ -138,7 +122,7 @@ class IssuePartialRefundCommand
     /**
      * @return bool
      */
-    public function restockRefundedProducts()
+    public function restockRefundedProducts(): bool
     {
         return $this->restockRefundedProducts;
     }
@@ -146,21 +130,24 @@ class IssuePartialRefundCommand
     /**
      * @return bool
      */
-    public function generateCartRule()
+    public function generateVoucher(): bool
     {
-        return $this->generateCartRule;
+        return $this->generateVoucher;
     }
 
     /**
-     * @return mixed
+     * @return int
      */
-    public function getCartRuleRefundType()
+    public function getVoucherRefundType(): int
     {
-        return $this->cartRuleRefundType;
+        return $this->voucherRefundType;
     }
 
-    public function getCartRuleRefundAmount()
+    /**
+     * @return float|null
+     */
+    public function getVoucherRefundAmount(): ?float
     {
-        return $this->cartRuleRefundAmount;
+        return $this->voucherRefundAmount;
     }
 }

@@ -29,6 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\IssuePartialRefundCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderForViewing;
+use PrestaShop\PrestaShop\Core\Domain\Order\VoucherRefundType;
 
 /**
  * Class CurrencyFormDataHandler
@@ -41,18 +42,11 @@ final class PartialRefundFormDataHandler implements FormDataHandlerInterface
     private $commandBus;
 
     /**
-     * @var CommandBusInterface
-     */
-    private $queryBus;
-
-    /**
      * @param CommandBusInterface $commandBus
-     * @param CommandBusInterface $queryBus
      */
-    public function __construct(CommandBusInterface $commandBus, CommandBusInterface $queryBus)
+    public function __construct(CommandBusInterface $commandBus)
     {
         $this->commandBus = $commandBus;
-        $this->queryBus = $queryBus;
     }
 
     /**
@@ -68,7 +62,6 @@ final class PartialRefundFormDataHandler implements FormDataHandlerInterface
      */
     public function update($id, array $data)
     {
-        $orderForViewing = $this->queryBus->handle(new GetOrderForViewing($id));
         $refunds = [];
         foreach ($data['products'] as $product) {
             $orderDetailId = $product->getOrderDetailId();
@@ -86,8 +79,7 @@ final class PartialRefundFormDataHandler implements FormDataHandlerInterface
             $data['shipping'],
             $data['restock'],
             $data['voucher'],
-            $orderForViewing->isTaxIncluded(),
-            1
+            VoucherRefundType::PRODUCT_PRICES_EXCLUDING_VOUCHER_REFUND
         );
 
         $this->commandBus->handle($command);

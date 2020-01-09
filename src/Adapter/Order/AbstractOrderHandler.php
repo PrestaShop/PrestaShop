@@ -26,6 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Order;
 
+use Customer;
+use Group;
 use Order;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
@@ -52,5 +54,19 @@ abstract class AbstractOrderHandler
         }
 
         return $order;
+    }
+
+    /**
+     * @param Order $order
+     *
+     * @return bool
+     */
+    protected function isTaxIncludedInOrder(Order $order): bool
+    {
+        $customer = new Customer($order->id_customer);
+
+        $taxCalculationMethod = Group::getPriceDisplayMethod((int) $customer->id_default_group);
+
+        return ($taxCalculationMethod == PS_TAX_INC);
     }
 }
