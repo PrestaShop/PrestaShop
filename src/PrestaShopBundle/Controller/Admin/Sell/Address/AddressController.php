@@ -307,6 +307,10 @@ class AddressController extends FrameworkBundleAdminController
             if ($handlerResult->isSubmitted() && $handlerResult->isValid()) {
                 $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
 
+                if ($request->query->has('submitFormAjax')) {
+                    return $this->render('@PrestaShop/Admin/Sell/Address/modal_create_success.html.twig');
+                }
+
                 return $this->redirectToRoute('admin_addresses_index');
             }
         } catch (Exception $e) {
