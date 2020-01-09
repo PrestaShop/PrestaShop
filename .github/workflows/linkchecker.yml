@@ -17,9 +17,7 @@ jobs:
           time: '10s'
       - name: Wait for prestashop to be available
         run: cd ./tests/puppeteer/ && docker-compose -f docker-compose.nightly.yml -f docker-compose.tests.yml exec -T tests /tmp/wait-for-it.sh --timeout=720 --strict prestashop-web:80
-
       - name: Disable token
-          run: cd ./tests/puppeteer/ && docker-compose -f docker-compose.nightly.yml -f docker-compose.tests.yml exec -T tests /tmp/disableToken.sh
-
+        run: cd ./tests/puppeteer/ && docker-compose -f docker-compose.nightly.yml -f docker-compose.tests.yml exec -T tests /tmp/disableToken.sh
       - name: Launch link checker tests
         run: cd ./tests/puppeteer/ && docker-compose -f docker-compose.nightly.yml -f docker-compose.tests.yml exec -T -e COMMAND="linkchecker" tests bash /tmp/run-tests.sh
