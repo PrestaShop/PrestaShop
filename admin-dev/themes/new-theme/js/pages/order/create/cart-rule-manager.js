@@ -51,7 +51,7 @@ export default class CartRuleManager {
     this.initListeners();
 
     return {
-      search: searchPhrase => this._search(searchPhrase),
+      search: (searchPhrase) => this.search(searchPhrase),
       stopSearching: () => this.cartRulesRenderer.hideResultsDropdown(),
       addCartRuleToCart: (cartRuleId, cartId) => this.cartEditor.addCartRuleToCart(cartRuleId, cartId),
       removeCartRuleFromCart: (cartRuleId, cartId) => this.cartEditor.removeCartRuleFromCart(cartRuleId, cartId),
@@ -125,7 +125,7 @@ export default class CartRuleManager {
    *
    * @private
    */
-  _search(searchPhrase) {
+  search(searchPhrase) {
     if (this.activeSearchRequest !== null) {
       this.activeSearchRequest.abort();
     }
@@ -141,7 +141,7 @@ export default class CartRuleManager {
         return;
       }
 
-      showErrorMessage(e.responseJSON.message);
+      window.showErrorMessage(e.responseJSON.message);
     });
   }
 }

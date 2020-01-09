@@ -64,7 +64,7 @@ export default class SubmitBulkActionExtension {
     if (confirmMessage !== undefined && confirmMessage.length > 0) {
       if (confirmTitle !== undefined) {
         this.showConfirmModal($submitBtn, grid, confirmMessage, confirmTitle);
-      } else if (confirm(confirmMessage)) {
+      } else if (window.confirm(confirmMessage)) {
         this.postForm($submitBtn, grid);
       }
     } else {

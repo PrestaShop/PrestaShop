@@ -43,9 +43,9 @@ export default class ShippingRenderer {
    */
   render(shipping, emptyCart) {
     if (emptyCart) {
-      this._hideContainer();
+      this.hideContainer();
     } else if (shipping !== null) {
-      this._displayForm(shipping);
+      this.displayForm(shipping);
     } else {
       this.displayNoCarriersWarning();
     }
@@ -58,13 +58,13 @@ export default class ShippingRenderer {
    *
    * @private
    */
-  _displayForm(shipping) {
-    this._hideNoCarrierBlock();
-    this._renderDeliveryOptions(shipping.deliveryOptions, shipping.selectedCarrierId);
-    this._renderTotalShipping(shipping.shippingPrice);
-    this._renderFreeShippingSwitch(shipping.freeShipping);
-    this._showForm();
-    this._showContainer();
+  displayForm(shipping) {
+    this.hideNoCarrierBlock();
+    this.renderDeliveryOptions(shipping.deliveryOptions, shipping.selectedCarrierId);
+    this.renderTotalShipping(shipping.shippingPrice);
+    this.renderFreeShippingSwitch(shipping.freeShipping);
+    this.showForm();
+    this.showContainer();
   }
 
   /**
@@ -74,7 +74,7 @@ export default class ShippingRenderer {
    *
    * @private
    */
-  _renderFreeShippingSwitch(isFreeShipping) {
+  renderFreeShippingSwitch(isFreeShipping) {
     $(createOrderMap.freeShippingSwitch).each((key, input) => {
       if (input.value === '1') {
         input.checked = isFreeShipping;
@@ -103,7 +103,7 @@ export default class ShippingRenderer {
    *
    * @private
    */
-  _renderDeliveryOptions(deliveryOptions, selectedVal) {
+  renderDeliveryOptions(deliveryOptions, selectedVal) {
     const $deliveryOptionSelect = $(createOrderMap.deliveryOptionSelect);
     $deliveryOptionSelect.empty();
 
@@ -128,7 +128,7 @@ export default class ShippingRenderer {
    *
    * @private
    */
-  _renderTotalShipping(shippingPrice) {
+  renderTotalShipping(shippingPrice) {
     const $totalShippingField = $(createOrderMap.totalShippingField);
     $totalShippingField.empty();
 

@@ -53,8 +53,8 @@ export default class ProductRenderer {
       let customizationId = 0;
 
       if (product.customization) {
-        customizationId = product.customization.customizationId;
-        this._renderListedProductCustomization(product.customization, $template);
+        ({customizationId} = product.customization);
+        this.renderListedProductCustomization(product.customization, $template);
       }
 
       $template.find(createOrderMap.listedProductImageField).prop('src', product.imageLink);
@@ -90,13 +90,11 @@ export default class ProductRenderer {
    *
    * @private
    */
-  _renderListedProductCustomization(customization, $productRowTemplate) {
+  renderListedProductCustomization(customization, $productRowTemplate) {
     const $customizedTextTemplate = $($(createOrderMap.listedProductCustomizedTextTemplate).html());
     const $customizedFileTemplate = $($(createOrderMap.listedProductCustomizedFileTemplate).html());
 
-    for (const key in customization.customizationFieldsData) {
-      const customizedData =  customization.customizationFieldsData[key];
-
+    Object.values(customization.customizationFieldsData).forEach((customizedData) => {
       let $customizationTemplate = $customizedTextTemplate.clone();
 
       if (customizedData.type === createOrderMap.productCustomizationFieldTypeFile) {
@@ -104,16 +102,14 @@ export default class ProductRenderer {
         $customizationTemplate.find(createOrderMap.listedProductCustomizationName).text(customizedData.name);
         $customizationTemplate
           .find(`${createOrderMap.listedProductCustomizationValue} img`)
-          .prop('src', customizedData.value)
-        ;
-
+          .prop('src', customizedData.value);
       } else {
         $customizationTemplate.find(createOrderMap.listedProductCustomizationName).text(customizedData.name);
         $customizationTemplate.find(createOrderMap.listedProductCustomizationValue).text(customizedData.value);
       }
 
       $productRowTemplate.find(createOrderMap.listedProductDefinition).append($customizationTemplate);
-    }
+    });
   }
 
   /**
@@ -138,9 +134,9 @@ export default class ProductRenderer {
   }
 
   reset() {
-    this._cleanSearchResults();
-    this._hideTaxWarning();
-    this._hideResultBlock();
+    this.cleanSearchResults();
+    this.hideTaxWarning();
+    this.hideResultBlock();
   }
 
   /**
@@ -150,8 +146,8 @@ export default class ProductRenderer {
    */
   renderProductMetadata(product) {
     this.renderStock(product.stock);
-    this._renderCombinations(product.combinations);
-    this._renderCustomizations(product.customizationFields);
+    this.renderCombinations(product.combinations);
+    this.renderCustomizations(product.customizationFields);
   }
 
   /**
@@ -277,7 +273,7 @@ export default class ProductRenderer {
    */
   renderCartBlockErrorAlert(message) {
     $(createOrderMap.cartErrorAlertText).text(message);
-    this._showCartBlockError()
+    this.showCartBlockError();
   }
 
   /**
@@ -285,7 +281,7 @@ export default class ProductRenderer {
    */
   cleanCartBlockAlerts() {
     $(createOrderMap.cartErrorAlertText).text('');
-    this._hideCartBlockError();
+    this.hideCartBlockError();
   }
 
   /**
@@ -293,8 +289,8 @@ export default class ProductRenderer {
    *
    * @private
    */
-  _showCartBlockError() {
-    $(createOrderMap.cartErrorAlertBlock).removeClass('d-none')
+  showCartBlockError() {
+    $(createOrderMap.cartErrorAlertBlock).removeClass('d-none');
   }
 
   /**
@@ -302,8 +298,8 @@ export default class ProductRenderer {
    *
    * @private
    */
-  _hideCartBlockError() {
-    $(createOrderMap.cartErrorAlertBlock).addClass('d-none')
+  hideCartBlockError() {
+    $(createOrderMap.cartErrorAlertBlock).addClass('d-none');
   }
 
   /**
