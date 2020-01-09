@@ -84,8 +84,8 @@ module.exports = {
    */
   async generateReportFilename() {
     const curDate = new Date();
-    return `report${
-      curDate.toJSON().slice(0, 10)}_${
+    return `report-${
+      curDate.toJSON().slice(0, 10)}-${
       curDate.getHours()}-${
       curDate.getMinutes()}-${
       curDate.getSeconds()}`;
