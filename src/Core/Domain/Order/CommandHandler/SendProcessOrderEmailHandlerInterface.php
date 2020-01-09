@@ -24,11 +24,17 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Order\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler;
+
+use PrestaShop\PrestaShop\Core\Domain\Order\Command\SendProcessOrderEmailCommand;
 
 /**
- * Thrown when failed to resend order email
+ * Interface for handling SendProcessOrderEmail command
  */
-class OrderEmailResendException extends OrderException
+interface SendProcessOrderEmailHandlerInterface
 {
+    /**
+     * @param SendProcessOrderEmailCommand $command
+     */
+    public function handle(SendProcessOrderEmailCommand $command): void;
 }

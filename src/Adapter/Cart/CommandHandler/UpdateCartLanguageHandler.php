@@ -34,6 +34,7 @@ use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartException;
 use PrestaShop\PrestaShop\Core\Domain\Language\Exception\LanguageException;
 use PrestaShop\PrestaShop\Core\Domain\Language\Exception\LanguageNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
+use PrestaShopException;
 
 /**
  * @internal
@@ -43,7 +44,7 @@ final class UpdateCartLanguageHandler extends AbstractCartHandler implements Upd
     /**
      * {@inheritdoc}
      */
-    public function handle(UpdateCartLanguageCommand $command)
+    public function handle(UpdateCartLanguageCommand $command): void
     {
         $language = $this->getLanguageObject($command->getNewLanguageId());
 
@@ -52,22 +53,36 @@ final class UpdateCartLanguageHandler extends AbstractCartHandler implements Upd
         $cart = $this->getCart($command->getCartId());
         $cart->id_lang = (int) $language->id;
 
-        if (false === $cart->save()) {
-            throw new CartException('Failed to update cart');
+        try {
+            if (false === $cart->update()) {
+                throw new CartException('Failed to update cart language');
+            }
+        } catch (PrestaShopException $e) {
+            throw new CartException(sprintf(
+                'An error occurred while trying to update language for cart with id "%s"',
+                $cart->id
+            ));
         }
-
-        // @todo: Should context be changed at controller layer instead?
-        \Context::getContext()->cart = $cart;
     }
 
     /**
      * @param LanguageId $languageId
      *
+     * @return Language
+     *
+     * @throws LanguageException
      * @throws LanguageNotFoundException
      */
-    private function getLanguageObject(LanguageId $languageId)
+    private function getLanguageObject(LanguageId $languageId): Language
     {
-        $lang = new Language($languageId->getValue());
+        try {
+            $lang = new Language($languageId->getValue());
+        } catch (PrestaShopException $e) {
+            throw new LanguageException(
+                $languageId,
+                sprintf('An error occurred when fetching language object with id %s', $languageId->getValue())
+            );
+        }
 
         if ($languageId->getValue() !== $lang->id) {
             throw new LanguageNotFoundException(
@@ -75,15 +90,23 @@ final class UpdateCartLanguageHandler extends AbstractCartHandler implements Upd
                 sprintf('Language with id "%s" was not found', $languageId->getValue())
             );
         }
+
+        return $lang;
     }
 
     /**
      * @param Language $lang
+     *
+     * @throws LanguageException
      */
-    private function assertLanguageIsActive(Language $lang)
+    private function assertLanguageIsActive(Language $lang): void
     {
-        if ($lang->active) {
-            throw new LanguageException('Language with id "%s" is not active ');
+        if (!$lang->active) {
+            throw new LanguageException(sprintf(
+                'Language with id "%s" is not active',
+                $lang->id),
+                LanguageException::NOT_ACTIVE
+            );
         }
     }
 }

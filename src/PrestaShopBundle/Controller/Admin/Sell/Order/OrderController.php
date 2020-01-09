@@ -26,16 +26,13 @@
 
 namespace PrestaShopBundle\Controller\Admin\Sell\Order;
 
-use Context;
-use Currency;
 use Exception;
-use Language;
-use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartInformation;
 use PrestaShop\PrestaShop\Core\Domain\CustomerMessage\Command\AddOrderCustomerMessageCommand;
 use PrestaShop\PrestaShop\Core\Domain\CustomerMessage\Exception\CannotSendEmailException;
 use PrestaShop\PrestaShop\Core\Domain\CustomerMessage\Exception\CustomerMessageConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\AddCartRuleToOrderCommand;
+use PrestaShop\PrestaShop\Core\Domain\Order\Command\AddOrderFromBackOfficeCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\BulkChangeOrderStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\ChangeOrderCurrencyCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\ChangeOrderDeliveryAddressCommand;
@@ -44,10 +41,11 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Command\DeleteCartRuleFromOrderComma
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\DuplicateOrderCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\ResendOrderEmailCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\UpdateOrderShippingDetailsCommand;
+use PrestaShop\PrestaShop\Core\Domain\Order\Command\SendProcessOrderEmailCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\UpdateOrderStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\CannotEditDeliveredOrderProductException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\ChangeOrderStatusException;
-use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderEmailResendException;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderEmailSendException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\TransistEmailSendingException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Invoice\Command\GenerateInvoiceCommand;
@@ -60,7 +58,9 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderPreview;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderPreview;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductOutOfStockException;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\OrderGridDefinitionFactory;
+use PrestaShop\PrestaShop\Core\Multistore\MultistoreContextCheckerInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\OrderFilters;
 use PrestaShopBundle\Component\CsvResponse;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
@@ -68,6 +68,7 @@ use PrestaShopBundle\Form\Admin\Sell\Customer\PrivateNoteType;
 use PrestaShopBundle\Form\Admin\Sell\Order\AddOrderCartRuleType;
 use PrestaShopBundle\Form\Admin\Sell\Order\AddProductToOrderType;
 use PrestaShopBundle\Form\Admin\Sell\Order\ChangeOrderAddressType;
+use PrestaShopBundle\Form\Admin\Sell\Order\CartSummaryType;
 use PrestaShopBundle\Form\Admin\Sell\Order\ChangeOrderCurrencyType;
 use PrestaShopBundle\Form\Admin\Sell\Order\ChangeOrdersStatusType;
 use PrestaShopBundle\Form\Admin\Sell\Order\OrderMessageType;
@@ -136,12 +137,73 @@ class OrderController extends FrameworkBundleAdminController
         return $toolbarButtons;
     }
 
-    //@todo: wip
+    /**
+     * Places an order from BO
+     *
+     * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))")
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    public function placeAction(Request $request)
+    {
+        $summaryForm = $this->createForm(CartSummaryType::class);
+        $summaryForm->handleRequest($request);
+
+        if ($summaryForm->isSubmitted() && $summaryForm->isValid()) {
+            $formData = $summaryForm->getData();
+            try {
+                $orderId = $this->getCommandBus()->handle(new AddOrderFromBackOfficeCommand(
+                    (int) $formData['cart_id'],
+                    $this->getContext()->employee->id,
+                    $formData['order_message'],
+                    $formData['payment_module'],
+                    (int) $formData['order_state']
+                ));
+
+                return $this->redirectToRoute('admin_orders_view', [
+                    'orderId' => $orderId->getValue(),
+                ]);
+            } catch (Exception $e) {
+                $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+            }
+        }
+
+        return $this->redirectToRoute('admin_orders_create');
+    }
+
+    /**
+     * Renders create order page.
+     * Whole page dynamics are on javascript side.
+     * To load specific cart pass cartId to url query params (handled by javascript)
+     *
+     * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))")
+     *
+     * @return Response
+     */
     public function createAction()
     {
+        /** @var MultistoreContextCheckerInterface $shopContextChecker */
+        $shopContextChecker = $this->container->get('prestashop.adapter.shop.context');
+
+        if (!$shopContextChecker->isSingleShopContext()) {
+            $this->addFlash('error', $this->trans(
+                'You have to select a shop before creating new orders.',
+                'Admin.Orderscustomers.Notification'
+            ));
+
+            return $this->redirectToRoute('admin_orders_index');
+        }
+
+        $summaryForm = $this->createForm(CartSummaryType::class);
+        $languages = $this->get('prestashop.core.form.choice_provider.language_by_id')->getChoices();
+        $currencies = $this->get('prestashop.core.form.choice_provider.currency_by_id')->getChoices();
+
         return $this->render('@PrestaShop/Admin/Sell/Order/Order/create.html.twig', [
-            'currencies' => Currency::getCurrenciesByIdShop(Context::getContext()->shop->id),
-            'languages' => Language::getLanguages(true, Context::getContext()->shop->id),
+            'currencies' => $currencies,
+            'languages' => $languages,
+            'summaryForm' => $summaryForm->createView(),
         ]);
     }
 
@@ -658,11 +720,11 @@ class OrderController extends FrameworkBundleAdminController
     /**
      * Duplicates cart from specified order
      *
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller')) || is_granted('create', 'AdminOrders')")
+     *
      * @param int $orderId
      *
      * @return JsonResponse
-     *
-     * @throws CartConstraintException
      */
     public function duplicateOrderCartAction(int $orderId)
     {
@@ -749,30 +811,6 @@ class OrderController extends FrameworkBundleAdminController
         return $this->redirectToRoute('admin_orders_view', [
             'orderId' => $orderId,
         ]);
-    }
-
-    /**
-     * Initializes order status update
-     *
-     * @param int $orderId
-     * @param int $orderStatusId
-     */
-    private function handleOrderStatusUpdate(int $orderId, int $orderStatusId): void
-    {
-        try {
-            $this->getCommandBus()->handle(
-                new UpdateOrderStatusCommand(
-                    $orderId,
-                    $orderStatusId
-                )
-            );
-
-            $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
-        } catch (ChangeOrderStatusException $e) {
-            $this->handleChangeOrderStatusException($e);
-        } catch (Exception $e) {
-            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
-        }
     }
 
     /**
@@ -901,6 +939,54 @@ class OrderController extends FrameworkBundleAdminController
     }
 
     /**
+     * Sends email with process order link to customer
+     *
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller')) || is_granted('create', 'AdminOrders')")
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function sendProcessOrderEmailAction(Request $request): JsonResponse
+    {
+        try {
+            $this->getCommandBus()->handle(new SendProcessOrderEmailCommand($request->request->getInt('cartId')));
+
+            return $this->json([
+                'message' => $this->trans('The email was sent to your customer.', 'Admin.Orderscustomers.Notification'),
+            ]);
+        } catch (Exception $e) {
+            return $this->json(
+                ['message' => $this->getErrorMessageForException($e, $this->getErrorMessages($e))],
+                Response::HTTP_INTERNAL_SERVER_ERROR
+            );
+        }
+    }
+
+    /**
+     * Initializes order status update
+     *
+     * @param int $orderId
+     * @param int $orderStatusId
+     */
+    private function handleOrderStatusUpdate(int $orderId, int $orderStatusId): void
+    {
+        try {
+            $this->getCommandBus()->handle(
+                new UpdateOrderStatusCommand(
+                    $orderId,
+                    $orderStatusId
+                )
+            );
+            $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+        } catch (ChangeOrderStatusException $e) {
+            $this->handleChangeOrderStatusException($e);
+        } catch (Exception $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+        }
+    }
+
+    /**
      * @param Exception $e
      *
      * @return array
@@ -915,7 +1001,7 @@ class OrderController extends FrameworkBundleAdminController
                     'Admin.Orderscustomers.Notification',
                     ['#%d' => $e->getOrderId()->getValue()]
                 ) : '',
-            OrderEmailResendException::class => $this->trans(
+            OrderEmailSendException::class => $this->trans(
                 'An error occurred while sending the e-mail to the customer.',
                 'Admin.Orderscustomers.Notification'
             ),
@@ -926,6 +1012,10 @@ class OrderController extends FrameworkBundleAdminController
             EmptyRefundAmountException::class => $this->trans(
                 'Please enter an amount to proceed with your refund.',
                 'Admin.Orderscustomers.Notification'
+            ),
+            ProductOutOfStockException::class => $this->trans(
+                'There are not enough products in stock',
+                'Admin.Notifications.Error'
             ),
         ];
     }

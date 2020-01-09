@@ -7,11 +7,20 @@ admin_orders_index:
 
 admin_orders_create:
   path: /new
-  methods: [GET, POST]
+  methods: [GET]
   defaults:
     _controller: PrestaShopBundle:Admin\Sell\Order\Order:create
     _legacy_controller: AdminOrders
 #    _legacy_link: AdminOrders:addorder
+
+admin_orders_place:
+  path: /place
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin\Sell\Order\Order:place
+    _legacy_controller: AdminOrders
+  options:
+    expose: true
 
 admin_orders_search:
   path: /
@@ -102,6 +111,7 @@ admin_orders_duplicate_cart:
   methods: [POST]
   defaults:
     _controller: PrestaShopBundle:Admin/Sell/Order/Order:duplicateOrderCart
+    _legacy_controller: AdminOrders
   requirements:
     orderId: \d+
   options:
@@ -112,6 +122,7 @@ admin_orders_change_currency:
   methods: [POST]
   defaults:
     _controller: PrestaShopBundle:Admin/Sell/Order/Order:changeCurrency
+    _legacy_controller: AdminOrders
   requirements:
     orderId: \d+
 
@@ -120,6 +131,7 @@ admin_orders_update_product:
   methods: [POST]
   defaults:
     _controller: PrestaShopBundle:Admin/Sell/Order/Order:updateProduct
+    _legacy_controller: AdminOrders
   requirements:
     orderId: \d+
     orderDetailId: \d+
@@ -170,12 +182,6 @@ admin_orders_update_invoice_note:
     orderId: \d+
     orderInvoiceId: \d+
 
-admin_search_product_for_order_creation:
-  path: /search
-  methods: [GET]
-  defaults:
-    _controller: PrestaShopBundle:Admin/Sell/Order/Order:searchProducts
-
 admin_orders_generate_invoice:
   path: /{orderId}/invoice
   methods: [POST]
@@ -208,3 +214,12 @@ admin_orders_partial_refund:
     _legacy_controller: AdminOrders
   requirements:
     orderId: \d+
+
+admin_orders_send_process_order_email:
+  path: /process-order-email
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Order/Order:sendProcessOrderEmail
+    _legacy_controller: AdminOrders
+  options:
+    expose: true

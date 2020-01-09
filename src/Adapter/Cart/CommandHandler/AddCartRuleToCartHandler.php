@@ -29,7 +29,11 @@ namespace PrestaShop\PrestaShop\Adapter\Cart\CommandHandler;
 use Cart;
 use CartRule;
 use Context;
+use Currency;
+use Customer;
+use Language;
 use PrestaShop\PrestaShop\Adapter\Cart\AbstractCartHandler;
+use PrestaShop\PrestaShop\Adapter\ContextStateManager;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\AddCartRuleToCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\CommandHandler\AddCartRuleToCartHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartException;
@@ -46,9 +50,21 @@ final class AddCartRuleToCartHandler extends AbstractCartHandler implements AddC
      */
     private $translator;
 
-    public function __construct(TranslatorInterface $translator)
-    {
+    /**
+     * @var ContextStateManager
+     */
+    private $contextStateManager;
+
+    /**
+     * @param TranslatorInterface $translator
+     * @param ContextStateManager $contextStateManager
+     */
+    public function __construct(
+        TranslatorInterface $translator,
+        ContextStateManager $contextStateManager
+    ) {
         $this->translator = $translator;
+        $this->contextStateManager = $contextStateManager;
     }
 
     /**
@@ -59,15 +75,27 @@ final class AddCartRuleToCartHandler extends AbstractCartHandler implements AddC
         $cart = $this->getCart($command->getCartId());
         $cartRule = new CartRule($command->getCartRuleId()->getValue());
 
+        $this->contextStateManager
+            ->setCart($cart)
+            ->setCurrency(new Currency($cart->id_currency))
+            ->setLanguage(new Language($cart->id_lang))
+            ->setCustomer(new Customer($cart->id_customer));
+
         $errorMessage = $this->validateCartRule($cartRule, $cart);
 
         if ($errorMessage) {
+            $this->contextStateManager->restoreContext();
+
             throw new CartRuleValidityException($errorMessage);
         }
 
         if (!$cart->addCartRule($cartRule->id)) {
+            $this->contextStateManager->restoreContext();
+
             throw new CartException('Failed to add cart rule to cart.');
         }
+
+        $this->contextStateManager->restoreContext();
     }
 
     /**

@@ -34,6 +34,7 @@ use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
+use PrestaShopException;
 
 /**
  * @internal
@@ -43,22 +44,26 @@ final class UpdateCartCurrencyHandler extends AbstractCartHandler implements Upd
     /**
      * {@inheritdoc}
      */
-    public function handle(UpdateCartCurrencyCommand $command)
+    public function handle(UpdateCartCurrencyCommand $command): void
     {
         $currency = $this->getCurrencyObject($command->getNewCurrencyId());
 
-        $this->assertCurrencyCantBeUsedInCart($currency);
+        $this->assertCurrencyIsNotDeleted($currency);
+        $this->assertCurrencyIsActive($currency);
 
         $cart = $this->getCart($command->getCartId());
         $cart->id_currency = (int) $currency->id;
 
-        if (false === $cart->save()) {
-            throw new CartException('Failed to update cart currency.');
+        try {
+            if (false === $cart->update()) {
+                throw new CartException('Failed to update cart currency.');
+            }
+        } catch (PrestaShopException $e) {
+            throw new CartException(sprintf(
+                'An error occurred while trying to update currency for cart with id "%s"',
+                $cart->id
+            ));
         }
-
-        // @todo: Should context be changed at controller layer instead?
-        \Context::getContext()->currency = $currency;
-        \Context::getContext()->cart = $cart;
     }
 
     /**
@@ -68,7 +73,7 @@ final class UpdateCartCurrencyHandler extends AbstractCartHandler implements Upd
      *
      * @throws CurrencyNotFoundException
      */
-    private function getCurrencyObject(CurrencyId $currencyId)
+    private function getCurrencyObject(CurrencyId $currencyId): Currency
     {
         $currency = new Currency($currencyId->getValue());
 
@@ -83,14 +88,37 @@ final class UpdateCartCurrencyHandler extends AbstractCartHandler implements Upd
 
     /**
      * @param Currency $currency
+     *
+     * @throws CurrencyException
      */
-    private function assertCurrencyCantBeUsedInCart(Currency $currency)
+    private function assertCurrencyIsActive(Currency $currency): void
     {
-        if ($currency->deleted || !$currency->active) {
-            throw new CurrencyException(sprintf(
-                'Currency "%s" cannot be used in cart because it is either deleted or disabled',
-                $currency->iso_code
-            ));
+        if (!$currency->active) {
+            throw new CurrencyException(
+                sprintf(
+                    'Currency "%s" cannot be used in cart because it is disabled',
+                    $currency->iso_code
+                ),
+                CurrencyException::IS_DISABLED
+            );
+        }
+    }
+
+    /**
+     * @param Currency $currency
+     *
+     * @throws CurrencyException
+     */
+    private function assertCurrencyIsNotDeleted(Currency $currency): void
+    {
+        if ($currency->deleted) {
+            throw new CurrencyException(
+                sprintf(
+                    'Currency "%s" cannot be used in cart because it is deleted',
+                    $currency->iso_code
+                ),
+                CurrencyException::IS_DELETED
+            );
         }
     }
 }

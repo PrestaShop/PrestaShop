@@ -1304,19 +1304,20 @@ class ProductController extends FrameworkBundleAdminController
     /**
      * @param Request $request
      *
-     * @return Response
+     * @return JsonResponse
      */
-    public function searchProductsAction(Request $request): Response
+    public function searchProductsAction(Request $request): JsonResponse
     {
         try {
             $searchPhrase = $request->query->get('search_phrase');
+            $currencyId = $request->query->get('currency_id');
 
             /** @var FoundProduct[] $foundProducts */
-            $foundProducts = $this->getQueryBus()->handle(new SearchProducts($searchPhrase, 10));
+            $foundProducts = $this->getQueryBus()->handle(new SearchProducts($searchPhrase, 10, $currencyId));
 
-            $serializer = $this->get('prestashop.bundle.snake_case_serializer_json');
-
-            return new Response($serializer->serialize($foundProducts, 'json'));
+            return $this->json([
+                'products' => $foundProducts,
+            ]);
         } catch (Exception $e) {
             return $this->json(
                 ['message' => $this->getErrorMessageForException($e, [])],

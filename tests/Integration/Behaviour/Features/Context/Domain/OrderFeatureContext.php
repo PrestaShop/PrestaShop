@@ -28,6 +28,7 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 use AdminController;
 use Behat\Gherkin\Node\TableNode;
+use Cart;
 use Context;
 use FrontController;
 use OrderState;
@@ -36,6 +37,8 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Command\AddOrderFromBackOfficeComman
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\BulkChangeOrderStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\UpdateOrderStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Invoice\Command\GenerateInvoiceCommand;
+use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\CartId;
+use PrestaShop\PrestaShop\Core\Domain\Order\Command\DuplicateOrderCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\AddProductToOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderDiscountForViewing;
@@ -453,5 +456,20 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
                 $totalProductQuantity
             )
         );
+    }
+
+    /**
+     * @When I duplicate :orderReference to create cart :duplicatedCartReference
+     */
+    public function duplicateOrder($orderReference, $duplicatedCartReference)
+    {
+        $orderId = (int) SharedStorage::getStorage()->get($orderReference);
+
+        /** @var CartId $cartId */
+        $cartId = $this->getCommandBus()->handle(
+            new DuplicateOrderCartCommand($orderId)
+        );
+
+        SharedStorage::getStorage()->set($duplicatedCartReference, new Cart($cartId->getValue()));
     }
 }

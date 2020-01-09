@@ -44,14 +44,26 @@ class SearchProducts
     private $resultsLimit;
 
     /**
+     * Optional
+     * If provided, found products will be returned using this currency
+     *
+     * @var int
+     */
+    private $currencyId;
+
+    /**
      * @param string $phrase
      * @param int $resultsLimit
+     * @param int $currencyId
+     *
+     * @throws ProductException
      */
-    public function __construct(string $phrase, int $resultsLimit)
+    public function __construct(string $phrase, int $resultsLimit, int $currencyId = null)
     {
         $this->assertIsNotEmptyString($phrase);
         $this->phrase = $phrase;
         $this->resultsLimit = $resultsLimit;
+        $this->currencyId = $currencyId;
     }
 
     /**
@@ -68,6 +80,14 @@ class SearchProducts
     public function getResultsLimit(): int
     {
         return $this->resultsLimit;
+    }
+
+    /**
+     * @return int
+     */
+    public function getCurrencyId(): ?int
+    {
+        return $this->currencyId;
     }
 
     /**

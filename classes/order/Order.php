@@ -924,7 +924,7 @@ class OrderCore extends ObjectModel
             $indexedOrderStates[$orderState['id_order_state']] = $orderState;
         }
         $res = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-        SELECT o.*, 
+        SELECT o.*,
           (SELECT SUM(od.`product_quantity`) FROM `' . _DB_PREFIX_ . 'order_detail` od WHERE od.`id_order` = o.`id_order`) nb_products,
           (SELECT oh.`id_order_state` FROM `' . _DB_PREFIX_ . 'order_history` oh
            LEFT JOIN `' . _DB_PREFIX_ . 'order_state` os ON (os.`id_order_state` = oh.`id_order_state`)
@@ -942,9 +942,11 @@ class OrderCore extends ObjectModel
         }
 
         foreach ($res as $key => $val) {
-            $res[$key]['order_state'] = $indexedOrderStates[$val['id_order_state']]['name'];
-            $res[$key]['invoice'] = $indexedOrderStates[$val['id_order_state']]['invoice'];
-            $res[$key]['order_state_color'] = $indexedOrderStates[$val['id_order_state']]['color'];
+            // In case order creation crashed midway some data might be absent
+            $orderState = !empty($val['id_order_state']) ? $indexedOrderStates[$val['id_order_state']] : null;
+            $res[$key]['order_state'] = $orderState['name'] ?: null;
+            $res[$key]['invoice'] = $orderState['invoice'] ?: null;
+            $res[$key]['order_state_color'] = $orderState['color'] ?: null;
         }
 
         return $res;
@@ -1159,7 +1161,7 @@ class OrderCore extends ObjectModel
      */
     public static function getIdByCartId($id_cart)
     {
-        $sql = 'SELECT `id_order` 
+        $sql = 'SELECT `id_order`
             FROM `' . _DB_PREFIX_ . 'orders`
             WHERE `id_cart` = ' . (int) $id_cart .
             Shop::addSqlRestriction();
