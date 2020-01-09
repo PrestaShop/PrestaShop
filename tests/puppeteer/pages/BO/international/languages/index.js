@@ -1,17 +1,12 @@
 require('module-alias/register');
-const BOBasePage = require('@pages/BO/BObasePage');
+const LocalizationBasePage = require('@pages/BO/international/localization/localizationBasePage');
 
-module.exports = class Languages extends BOBasePage {
+module.exports = class Languages extends LocalizationBasePage {
   constructor(page) {
     super(page);
 
     this.pageTitle = 'Languages •';
 
-    // Header Selectors
-    this.addNewLanguageLink = '#page-header-desc-configuration-add';
-    this.localizationNavItemLink = '#subtab-AdminLocalization';
-    this.geolocationNavItemLink = '#subtab-AdminGeolocation';
-    this.currenciesNavItemLink = '#subtab-AdminCurrencies';
     // Selectors grid panel
     this.gridPanel = '#language_grid_panel';
     this.gridTable = '#language_grid_table';
@@ -31,39 +26,6 @@ module.exports = class Languages extends BOBasePage {
     this.dropdownToggleButton = `${this.actionsColumn} a.dropdown-toggle`;
     this.dropdownToggleMenu = `${this.actionsColumn} div.dropdown-menu`;
     this.deleteRowLink = `${this.dropdownToggleMenu} a[data-url*='/delete']`;
-  }
-
-  /* Header methods */
-  /**
-   * Go to add new language page
-   * @return {Promise<void>}
-   */
-  async goToAddNewLanguage() {
-    await this.clickAndWaitForNavigation(this.addNewLanguageLink);
-  }
-
-  /**
-   * Go to currencies page
-   * @return {Promise<void>}
-   */
-  async goToSubTabCurrencies() {
-    await this.clickAndWaitForNavigation(this.currenciesNavItemLink);
-  }
-
-  /**
-   * Go to localization page
-   * @return {Promise<void>}
-   */
-  async goToSubTabLocalization() {
-    await this.clickAndWaitForNavigation(this.localizationNavItemLink);
-  }
-
-  /**
-   * Go to geolocation page
-   * @return {Promise<void>}
-   */
-  async goToSubTabGeolocation() {
-    await this.clickAndWaitForNavigation(this.geolocationNavItemLink);
   }
 
   /* Reset methods */
