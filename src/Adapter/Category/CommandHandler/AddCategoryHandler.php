@@ -31,7 +31,6 @@ use PrestaShop\PrestaShop\Adapter\Domain\AbstractObjectModelHandler;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\AddCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\CommandHandler\AddCategoryHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CannotAddCategoryException;
-use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
 
 /**
@@ -93,11 +92,11 @@ final class AddCategoryHandler extends AbstractObjectModelHandler implements Add
         }
 
         if (false === $category->validateFields(false)) {
-            throw new CategoryConstraintException('Invalid category data');
+            throw new CannotAddCategoryException('Invalid category data');
         }
 
         if (false === $category->validateFieldsLang(false)) {
-            throw new CategoryConstraintException('Invalid category data');
+            throw new CannotAddCategoryException('Invalid category data');
         }
 
         if (false === $category->add()) {
