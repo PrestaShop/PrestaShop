@@ -80,10 +80,10 @@
                           type="checkbox"
                           {if $filter.active }checked{/if}
                         >
-                        {if isset($filter.properties.color)}
-                          <span class="color" style="background-color:{$filter.properties.color}"></span>
-                        {elseif isset($filter.properties.texture)}
+                        {if isset($filter.properties.texture)}
                           <span class="color texture" style="background-image:url({$filter.properties.texture})"></span>
+                        {elseif isset($filter.properties.color)}
+                          <span class="color" style="background-color:{$filter.properties.color}"></span>
                         {else}
                           <span {if !$js_enabled} class="ps-shown-by-js" {/if}><i class="material-icons rtl-no-flip checkbox-checked">&#xE5CA;</i></span>
                         {/if}
