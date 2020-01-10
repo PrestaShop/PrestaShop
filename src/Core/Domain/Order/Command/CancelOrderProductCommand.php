@@ -24,50 +24,65 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
+namespace PrestaShop\PrestaShop\Core\Domain\Order\Command;
 
-use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
-use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderForViewing;
+use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderForViewing;
 
-/**
- * Provides data for partial refund form in order page
- */
-final class CancelProductFormDataProvider implements FormDataProviderInterface
+class CancelOrderProductCommand
 {
     /**
-     * @var CommandBusInterface
+     * @var array $products
      */
-    private $queryBus;
+    private $products;
 
     /**
-     * @param CommandBusInterface $queryBus
+     * @var array $toBeCanceledProducts
+     *
+     * key: orderDetailId, value: quantity
      */
-    public function __construct(
-        CommandBusInterface $queryBus
-    ) {
-        $this->queryBus = $queryBus;
+    private $toBeCanceledProducts;
+
+    /**
+     * @var OrderForViewing $order
+     */
+    private $order;
+
+    /**
+     * CancelOrderProductCommand constructor.
+     *
+     * @param array $products
+     * @param array $toBeCanceledProducts
+     * @param OrderForViewing $order
+     */
+    public function __construct(array $products, array $toBeCanceledProducts, OrderForViewing $order)
+    {
+        $this->products = $products;
+        $this->toBeCanceledProducts = $toBeCanceledProducts;
+        $this->order = $order;
     }
 
     /**
-     * {@inheritdoc}
+     * @return array
      */
-    public function getData($orderId)
+    public function getToBeCanceledProducts()
     {
-        /** @var OrderForViewing $orderForViewing */
-        $orderForViewing = $this->queryBus->handle(new GetOrderForViewing((int) $orderId));
-
-        return [
-            'products' => $orderForViewing->getProducts()->getProducts(),
-            'taxMethod' => $orderForViewing->getTaxMethod(),
-        ];
+        return $this->toBeCanceledProducts;
     }
 
     /**
-     * {@inheritdoc}
+     * @return array
      */
-    public function getDefaultData()
+    public function getProducts()
     {
-        return [];
+        return $this->products;
+    }
+
+    /**
+     * @return OrderForViewing
+     */
+    public function getOrder()
+    {
+        return $this->order;
     }
 }

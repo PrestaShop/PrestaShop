@@ -27,13 +27,13 @@
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler;
 
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
-use PrestaShop\PrestaShop\Core\Domain\Order\Command\IssuePartialRefundCommand;
-use PrestaShop\PrestaShop\Core\Domain\Order\VoucherRefundType;
+use PrestaShop\PrestaShop\Core\Domain\Order\Command\CancelOrderProductCommand;
+use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderForViewing;
 
 /**
- * Class PartialRefundFormDataHandler
+ * Class CancellationFormDataHandler
  */
-final class PartialRefundFormDataHandler implements FormDataHandlerInterface
+final class CancellationFormDataHandler implements FormDataHandlerInterface
 {
     /**
      * @var CommandBusInterface
@@ -41,11 +41,18 @@ final class PartialRefundFormDataHandler implements FormDataHandlerInterface
     private $commandBus;
 
     /**
-     * @param CommandBusInterface $commandBus
+     * @var CommandBusInterface
      */
-    public function __construct(CommandBusInterface $commandBus)
+    private $queryBus;
+
+    /**
+     * @param CommandBusInterface $commandBus
+     * @param CommandBusInterface $queryBus
+     */
+    public function __construct(CommandBusInterface $commandBus, CommandBusInterface $queryBus)
     {
         $this->commandBus = $commandBus;
+        $this->queryBus = $queryBus;
     }
 
     /**
@@ -61,24 +68,19 @@ final class PartialRefundFormDataHandler implements FormDataHandlerInterface
      */
     public function update($id, array $data)
     {
-        $refunds = [];
+        $orderForViewing = $this->queryBus->handle(new GetOrderForViewing($id));
+
+        $toBeCanceledProducts = [];
         foreach ($data['products'] as $product) {
-            $orderDetailId = $product->getOrderDetailId();
-            if (!empty($data['quantity_' . $orderDetailId])) {
-                $refunds[$orderDetailId]['quantity'] = $data['quantity_' . $orderDetailId];
-            }
-            if (!empty($data['amount_' . $orderDetailId])) {
-                $refunds[$orderDetailId]['amount'] = $data['amount_' . $orderDetailId];
+            if ($data['cancellation_' . $product->getOrderDetailId()]) {
+                $toBeCanceledProducts[$product->getOrderDetailId()] = $data['quantity_' . $product->getOrderDetailId()];
             }
         }
 
-        $command = new IssuePartialRefundCommand(
-            $id,
-            $refunds,
-            $data['shipping'],
-            $data['restock'],
-            $data['voucher'],
-            VoucherRefundType::PRODUCT_PRICES_EXCLUDING_VOUCHER_REFUND
+        $command = new CancelOrderProductCommand(
+            $data['products'],
+            $toBeCanceledProducts,
+            $orderForViewing
         );
 
         $this->commandBus->handle($command);
