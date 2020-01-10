@@ -45,16 +45,19 @@ class MediaServersType extends TranslatorAwareType
                 'label' => $this->trans('Media server #1', 'Admin.Advparameters.Feature'),
                 'help' => $this->trans('Name of the second domain of your shop, (e.g. myshop-media-server-1.com). If you do not have another domain, leave this field blank.', 'Admin.Advparameters.Help'),
                 'empty_data' => '',
+                'required' => false,
             ])
             ->add('media_server_two', TextType::class, [
                 'label' => $this->trans('Media server #2', 'Admin.Advparameters.Feature'),
                 'help' => $this->trans('Name of the third domain of your shop, (e.g. myshop-media-server-2.com). If you do not have another domain, leave this field blank.', 'Admin.Advparameters.Help'),
                 'empty_data' => '',
+                'required' => false,
             ])
             ->add('media_server_three', TextType::class, [
                 'label' => $this->trans('Media server #3', 'Admin.Advparameters.Feature'),
                 'help' => $this->trans('Name of the fourth domain of your shop, (e.g. myshop-media-server-3.com). If you do not have another domain, leave this field blank.', 'Admin.Advparameters.Help'),
                 'empty_data' => '',
+                'required' => false,
             ]);
     }
 

@@ -87,6 +87,7 @@ class CachingType extends TranslatorAwareType
                     return $disabled === true ? ['disabled' => $disabled] : [];
                 },
                 'expanded' => true,
+                'required' => false,
                 'placeholder' => false,
                 'row_attr' => [
                     'class' => 'memcache',
