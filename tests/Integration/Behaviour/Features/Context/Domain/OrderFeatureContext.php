@@ -58,6 +58,11 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     private const ORDER_CART_RULE_FREE_SHIPPING = 'Free Shipping';
 
     /**
+     * @var array
+     */
+    private $productStock = [];
+
+    /**
      * @BeforeScenario
      */
     public function before()
@@ -483,7 +488,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
      */
     public function orderContainsRefundedProductWithReference(string $orderReference, int $quantity, string $productName)
     {
-        $productQuantities = $this->getOrderProductByReference($orderReference, $productName);
+        $productQuantities = $this->getProductQuantitiesByReference($orderReference, $productName);
 
         if ((int) $productQuantities['refunded_quantity'] === (int) $quantity) {
             return;
@@ -500,12 +505,77 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @Then /^I watch the stock of product "(.+)"$/
+     *
+     * This statement must be called to store an initial stock for a product which then
+     * allows you to simply check the expected differences in stock (1 less, 2 more, ...).
+     *
+     * @param string $productName
+     */
+    public function storeProductInStock(string $productName)
+    {
+        $productId = $this->getProductIdByName($productName);
+        $nbProduct = Product::getQuantity($productId);
+        $this->productStock[$productName] = $nbProduct;
+    }
+
+    /**
+     * @Then /^there are ([\-\d]+) (less|more) "(.+)" in stock$/
+     *
+     * @param int $productDifference
+     * @param string $factor
+     * @param string $productName
+     */
+    public function checkProductStockDifference(int $productDifference, string $factor, string $productName)
+    {
+        if (!isset($this->productStock[$productName])) {
+            throw new RuntimeException('Cannot compare a stock that has not been checked initially');
+        }
+        $initialQuantity = $this->productStock[$productName];
+        $factor = 'less' === $factor ? -1 : 1;
+        $expectedDifference = $factor * $productDifference;
+        $expectedQuantity = $initialQuantity + $expectedDifference;
+
+        $productId = $this->getProductIdByName($productName);
+        $nbProduct = Product::getQuantity($productId);
+        if ($expectedQuantity != $nbProduct) {
+            throw new RuntimeException(
+                sprintf(
+                    'Invalid difference for product %s expected %s, got %s instead',
+                    $productName,
+                    $expectedDifference,
+                    $nbProduct - $initialQuantity
+                )
+            );
+        }
+        $this->productStock[$productName] = $expectedQuantity;
+    }
+
+    /**
+     * @param string $productName
+     *
+     * @return int
+     */
+    private function getProductIdByName(string $productName)
+    {
+        /** @var array $productsMap */
+        $productsMap = $this->getQueryBus()->handle(new SearchProducts($productName, 1));
+        $productId = array_key_first($productsMap);
+
+        if (!$productId) {
+            throw new RuntimeException('Product with name "%s" does not exist', $productName);
+        }
+
+        return (int) $productId;
+    }
+
+    /**
      * @param string $orderReference
      * @param string $productName
      *
      * @return array
      */
-    private function getOrderProductByReference(string $orderReference, string $productName)
+    private function getProductQuantitiesByReference(string $orderReference, string $productName)
     {
         $orderId = SharedStorage::getStorage()->get($orderReference);
         /** @var array $productsMap */
@@ -533,41 +603,5 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
         }
 
         return $productQuantities;
-    }
-
-    /**
-     * @Then /^there are ([\-\d]+) "(.+)" in stock$/
-     */
-    public function checkProductInStock($productQuantity, $productName)
-    {
-        $productId = $this->getProductIdByName($productName);
-        $nbProduct = Product::getQuantity($productId);
-        if ($productQuantity != $nbProduct) {
-            throw new \RuntimeException(
-                sprintf(
-                    'Expects %s, got %s instead',
-                    $productQuantity,
-                    $nbProduct
-                )
-            );
-        }
-    }
-
-    /**
-     * @param string $productName
-     *
-     * @return int
-     */
-    protected function getProductIdByName(string $productName)
-    {
-        /** @var array $productsMap */
-        $productsMap = $this->getQueryBus()->handle(new SearchProducts($productName, 1));
-        $productId = array_key_first($productsMap);
-
-        if (!$productId) {
-            throw new RuntimeException('Product with name "%s" does not exist', $productName);
-        }
-
-        return (int) $productId;
     }
 }
