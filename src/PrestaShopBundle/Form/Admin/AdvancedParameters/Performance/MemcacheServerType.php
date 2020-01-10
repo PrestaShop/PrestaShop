@@ -44,14 +44,17 @@ class MemcacheServerType extends TranslatorAwareType
             ->add('memcache_ip', TextType::class, [
                 'label' => $this->trans('IP Address', 'Admin.Advparameters.Feature'),
                 'empty_data' => '',
+                'required' => false,
             ])
             ->add('memcache_port', TextType::class, [
                 'label' => $this->trans('Port', 'Admin.Advparameters.Feature'),
                 'empty_data' => '',
+                'required' => false,
             ])
             ->add('memcache_weight', TextType::class, [
                 'label' => $this->trans('Weight', 'Admin.Advparameters.Feature'),
                 'empty_data' => '',
+                'required' => false,
             ]);
     }
 
