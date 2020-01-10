@@ -15,8 +15,8 @@ const AddressFaker = require('@data/faker/address');
 let browser;
 let page;
 let numberOfAddresses = 0;
-const createAddressData = new AddressFaker({email: 'pub@prestashop.com'});
-const editAddressData = new AddressFaker({email: ' '});
+const createAddressData = new AddressFaker({email: 'pub@prestashop.com', country: 'France'});
+const editAddressData = new AddressFaker({country: 'France'});
 
 // Init objects needed
 const init = async function () {
@@ -66,7 +66,7 @@ describe('Create, Read, Update and Delete address in BO', async () => {
     });
 
     it('should create address and check result', async function () {
-      const textResult = await this.pageObjects.addAddressPage.createEditAddress(createAddressData);
+      const textResult = await this.pageObjects.addAddressPage.createEditAddress(createAddressData, false);
       await expect(textResult).to.equal(this.pageObjects.addressesPage.successfulCreationMessage);
       const numberOfAddressesAfterCreation = await this.pageObjects.addressesPage.getNumberOfElementInGrid();
       await expect(numberOfAddressesAfterCreation).to.be.equal(numberOfAddresses + 1);
