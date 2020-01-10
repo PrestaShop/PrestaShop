@@ -203,6 +203,7 @@
                   {
                     $('#header_quick ul.dropdown-menu .divider').prevAll().remove();
                     $('#header_quick ul.dropdown-menu').prepend(quicklink_list);
+                    $(e.target).remove();
                     showSuccessMessage(update_success_msg);
                   }
                 }
