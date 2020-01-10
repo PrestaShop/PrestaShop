@@ -150,4 +150,29 @@ export default class OrderProductCancel {
     $label.get(0).lastChild.nodeValue = `
     ${defaultLabel} ${formattedAmount}`;
   }
+
+  showCancelProductForm() {
+    const cancelProductRoute = this.router.generate('admin_orders_cancellation', {orderId: this.orderId});
+    this.initForm(
+        $(OrderViewPageMap.cancelProduct.buttons.save).data('cancelLabel'),
+        cancelProductRoute
+    );
+    $(OrderViewPageMap.cancelProduct.form).attr('action', cancelProductRoute);
+    this.hideRefund();
+    $(OrderViewPageMap.cancelProduct.toggle.cancel).show();
+    $(OrderViewPageMap.cancelProduct.table.actions).hide();
+    $(OrderViewPageMap.cancelProduct.containers.refundCheckboxes).hide();
+  }
+
+  fillCancelProductQuantityInput(productCheckbox) {
+    const productRow = productCheckbox.closest('tr');
+    const productId = productRow.data('productId');
+    const productQuantity = productRow.data('productQuantity');
+    const productQuantityInput = $('#cancel_product_quantity_' + productId);
+    if (productCheckbox.is(':checked')) {
+      productQuantityInput.val(productQuantity);
+    } else {
+      productQuantityInput.val(0);
+    }
+  }
 }

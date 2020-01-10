@@ -212,20 +212,6 @@ td .editProductInvoice {
   width: max-content;
 }
 
-@media (min-width: 1410px) {
-  .cancel-product-cell {
-    min-width: 430px;
-
-    .form-group.row {
-      margin-bottom: 0;
-
-      .col-xl-4,
-      .col-xl-8 {
-        padding-right: 0;
-      }
-    }
-  }
-}
 @media (max-width: 1410px) {
   .cancel-product-cell {
     .form-group {
@@ -275,6 +261,9 @@ td .editProductInvoice {
         flex-basis: 100%;
         padding-left: 10px;
       }
+    }
+    .cancel-product-quantity .input-group {
+      flex-wrap: nowrap;
     }
   }
 }

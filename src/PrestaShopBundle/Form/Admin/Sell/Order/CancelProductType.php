@@ -50,6 +50,7 @@ class CancelProductType extends TranslatorAwareType
                         'label' => false,
                         'attr' => [
                             'material_design' => true,
+                            'class' => 'selected-product',
                         ],
                     ]
                 )
@@ -147,10 +148,11 @@ class CancelProductType extends TranslatorAwareType
             ])
             ->add('save', SubmitType::class, [
                 'attr' => [
-                    'class' => 'cancel-product-element save btn btn-primary ml-3',
+                    'class' => 'partial-refund save btn btn-primary ml-3',
                     'formnovalidate' => true,
                     'data-partial-refund-label' => $this->trans('Partial refund', 'Admin.Orderscustomers.Feature'),
                     'data-standard-refund-label' => $this->trans('Standard refund', 'Admin.Orderscustomers.Feature'),
+                    'data-cancel-label' => $this->trans('Cancel products', 'Admin.Orderscustomers.Feature'),
                 ],
             ]);
     }
