@@ -35,6 +35,7 @@ use PrestaShop\PrestaShop\Core\Domain\Category\Command\DeleteCategoryCoverImageC
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\DeleteCategoryMenuThumbnailImageCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\SetCategoryIsEnabledCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\UpdateCategoryPositionCommand;
+use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CannotAddCategoryException;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CannotDeleteRootCategoryForShopException;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CannotEditCategoryException;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CannotUpdateCategoryStatusException;
@@ -786,6 +787,10 @@ class CategoryController extends FrameworkBundleAdminController
             ],
             CannotDeleteRootCategoryForShopException::class => $this->trans(
                 'You cannot remove this category because one of your shops uses it as a root category.',
+                'Admin.Catalog.Notification'
+            ),
+            CannotAddCategoryException::class => $this->trans(
+                'An error occurred while creating the category.',
                 'Admin.Catalog.Notification'
             ),
             CannotEditCategoryException::class => $this->trans(
