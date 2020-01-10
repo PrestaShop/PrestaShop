@@ -142,6 +142,7 @@ export default {
       partialRefund: 'button.partial-refund-display',
       standardRefund: 'button.standard-refund-display',
       returnProduct: 'button.return-product-display',
+      cancel: 'button.cancel-product-display',
     },
     inputs: {
       quantity: '.cancel-product-quantity input',
@@ -169,6 +170,10 @@ export default {
       partialRefund: '.cancel-product-element:not(.hidden):not(.shipping-refund), .cancel-product-amount',
       standardRefund: '.cancel-product-element:not(.hidden):not(.shipping-refund-amount):not(.restock-products), .cancel-product-selector',
       returnProduct: '.cancel-product-element:not(.hidden):not(.shipping-refund-amount), .cancel-product-selector',
+      cancel: '.cancel-product-element:not(.hidden):not(.shipping-refund), .cancel-product-selector',
+    },
+    containers: {
+      refundCheckboxes: '.refund-checkboxes-container',
     },
   },
 };

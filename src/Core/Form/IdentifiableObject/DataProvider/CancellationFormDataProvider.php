@@ -27,15 +27,12 @@
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
 
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
-use PrestaShop\PrestaShop\Core\Currency\CurrencyDataProviderInterface;
 use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderForViewing;
-use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderForViewing;
-use PrestaShop\PrestaShop\Core\Localization\CLDR\ComputingPrecision;
 
 /**
- * Provides data for partial refund form in order page
+ * Provides data for product cancellation form in order page
  */
-final class CancelProductFormDataProvider implements FormDataProviderInterface
+final class CancellationFormDataProvider implements FormDataProviderInterface
 {
     /**
      * @var CommandBusInterface
@@ -43,20 +40,12 @@ final class CancelProductFormDataProvider implements FormDataProviderInterface
     private $queryBus;
 
     /**
-     * @var CurrencyDataProviderInterface
-     */
-    private $currencyDataProvider;
-
-    /**
      * @param CommandBusInterface $queryBus
-     * @param CurrencyDataProviderInterface $currencyDataProvider
      */
     public function __construct(
-        CommandBusInterface $queryBus,
-        CurrencyDataProviderInterface $currencyDataProvider
+        CommandBusInterface $queryBus
     ) {
         $this->queryBus = $queryBus;
-        $this->currencyDataProvider = $currencyDataProvider;
     }
 
     /**
@@ -66,13 +55,9 @@ final class CancelProductFormDataProvider implements FormDataProviderInterface
     {
         /** @var OrderForViewing $orderForViewing */
         $orderForViewing = $this->queryBus->handle(new GetOrderForViewing((int) $orderId));
-        $computingPrecision = new ComputingPrecision();
-        $currency = $this->currencyDataProvider->getCurrencyById($orderForViewing->getCurrencyId());
 
         return [
             'products' => $orderForViewing->getProducts()->getProducts(),
-            'taxMethod' => $orderForViewing->getTaxMethod(),
-            'precision' => $computingPrecision->getPrecision($currency->precision),
         ];
     }
 

@@ -1122,3 +1122,10 @@ services:
         - '@translator'
       tags:
         - { name: form.type }
+
+    form.type.order.cancellation:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Order\CancellationType'
+        parent: 'form.type.translatable.aware'
+        public: true
+        tags:
+            - { name: form.type }

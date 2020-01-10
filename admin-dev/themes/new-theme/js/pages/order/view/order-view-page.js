@@ -268,6 +268,16 @@ export default class OrderViewPage {
     });
   }
 
+  listenForCancelProduct() {
+    $(OrderViewPageMap.cancelProduct.buttons.cancel).on('click', (event) => {
+      this.orderProductCancel.showCancelProductForm();
+      this.orderProductRenderer.moveProductsPanelToRefundPosition();
+    });
+    $(OrderViewPageMap.cancelProduct.inputs.selector).on('change', (event) => {
+      this.orderProductCancel.fillCancelProductQuantityInput($(event.currentTarget));
+    });
+  }
+
   getActivePage() {
     return $(OrderViewPageMap.productsTablePagination).find('.active span').get(0);
   }

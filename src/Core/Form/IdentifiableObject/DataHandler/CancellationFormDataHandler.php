@@ -24,63 +24,65 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
+namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler;
 
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
-use PrestaShop\PrestaShop\Core\Currency\CurrencyDataProviderInterface;
+use PrestaShop\PrestaShop\Core\Domain\Order\Command\CancelOrderProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderForViewing;
-use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderForViewing;
-use PrestaShop\PrestaShop\Core\Localization\CLDR\ComputingPrecision;
 
 /**
- * Provides data for partial refund form in order page
+ * Class CancellationFormDataHandler
  */
-final class CancelProductFormDataProvider implements FormDataProviderInterface
+final class CancellationFormDataHandler implements FormDataHandlerInterface
 {
+    /**
+     * @var CommandBusInterface
+     */
+    private $commandBus;
+
     /**
      * @var CommandBusInterface
      */
     private $queryBus;
 
     /**
-     * @var CurrencyDataProviderInterface
-     */
-    private $currencyDataProvider;
-
-    /**
+     * @param CommandBusInterface $commandBus
      * @param CommandBusInterface $queryBus
-     * @param CurrencyDataProviderInterface $currencyDataProvider
      */
-    public function __construct(
-        CommandBusInterface $queryBus,
-        CurrencyDataProviderInterface $currencyDataProvider
-    ) {
+    public function __construct(CommandBusInterface $commandBus, CommandBusInterface $queryBus)
+    {
+        $this->commandBus = $commandBus;
         $this->queryBus = $queryBus;
-        $this->currencyDataProvider = $currencyDataProvider;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getData($orderId)
+    public function create(array $data)
     {
-        /** @var OrderForViewing $orderForViewing */
-        $orderForViewing = $this->queryBus->handle(new GetOrderForViewing((int) $orderId));
-        $computingPrecision = new ComputingPrecision();
-        $currency = $this->currencyDataProvider->getCurrencyById($orderForViewing->getCurrencyId());
-
-        return [
-            'products' => $orderForViewing->getProducts()->getProducts(),
-            'taxMethod' => $orderForViewing->getTaxMethod(),
-            'precision' => $computingPrecision->getPrecision($currency->precision),
-        ];
+        return;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getDefaultData()
+    public function update($id, array $data)
     {
-        return [];
+        $orderForViewing = $this->queryBus->handle(new GetOrderForViewing($id));
+
+        $toBeCanceledProducts = [];
+        foreach ($data['products'] as $product) {
+            if ($data['selected_' . $product->getOrderDetailId()]) {
+                $toBeCanceledProducts[$product->getOrderDetailId()] = $data['quantity_' . $product->getOrderDetailId()];
+            }
+        }
+
+        $command = new CancelOrderProductCommand(
+            $data['products'],
+            $toBeCanceledProducts,
+            $orderForViewing
+        );
+
+        $this->commandBus->handle($command);
     }
 }

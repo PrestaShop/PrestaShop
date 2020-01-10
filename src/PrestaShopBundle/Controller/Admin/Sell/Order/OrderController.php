@@ -45,6 +45,8 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Command\UpdateOrderShippingDetailsCo
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\UpdateOrderStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\CannotEditDeliveredOrderProductException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\ChangeOrderStatusException;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\EmptyProductSelectionException;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidCancelQuantityException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidRefundException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\NegativePaymentAmountException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderEmailSendException;
@@ -615,6 +617,12 @@ class OrderController extends FrameworkBundleAdminController
 
         $products = $orderForViewing->getProducts()->getProducts();
         $lastProduct = $products[array_key_last($products)];
+
+        $formBuilder = $this->get('prestashop.core.form.identifiable_object.builder.cancel_product_form_builder');
+        $cancelProductForm = $formBuilder->getFormFor($orderId);
+
+        $currencyDataProvider = $this->container->get('prestashop.adapter.data_provider.currency');
+        $orderCurrency = $currencyDataProvider->getCurrencyById($orderForViewing->getCurrencyId());
 
         $formBuilder = $this->get('prestashop.core.form.identifiable_object.builder.cancel_product_form_builder');
         $cancelProductForm = $formBuilder->getFormFor($orderId);
@@ -1314,6 +1322,26 @@ class OrderController extends FrameworkBundleAdminController
         }
     }
 
+    public function cancellationAction(int $orderId, Request $request)
+    {
+        $formBuilder = $this->get('prestashop.core.form.identifiable_object.builder.cancel_product_form_builder');
+        $formHandler = $this->get('prestashop.core.form.identifiable_object.cancellation_form_handler');
+        $form = $formBuilder->getFormFor($orderId);
+        try {
+            $form->handleRequest($request);
+            $result = $formHandler->handleFor($orderId, $form);
+            if ($result->isSubmitted() && $result->isValid()) {
+                $this->addFlash('success', $this->trans('The discount was successfully generated.', 'Admin.Catalog.Notification'));
+            }
+        } catch (Exception $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+        }
+
+        return $this->redirectToRoute('admin_orders_view', [
+            'orderId' => $orderId,
+        ]);
+    }
+
     /**
      * Initializes order status update
      *
@@ -1375,19 +1403,33 @@ class OrderController extends FrameworkBundleAdminController
                     'Admin.Orderscustomers.Notification',
                     ['[1]' => $refundableQuantity]
                 ),
-                InvalidRefundException::INVALID_AMOUNT => $this->trans(
-                    'Please enter a positive amount to proceed with your refund.',
+            ],
+            InvalidCancelQuantityException::class => [
+                InvalidCancelQuantityException::EMPTY_QUANTITY => $this->trans(
+                    'You must enter a quantity.',
                     'Admin.Orderscustomers.Notification'
                 ),
-                InvalidRefundException::NO_REFUNDS => $this->trans(
-                    'Please enter at least one refund.',
-                    'Admin.Orderscustomers.Notification'
-                ),
-                InvalidRefundException::NO_GENERATION => $this->trans(
-                    'Please generate at least one credit slip or voucher.',
+                InvalidCancelQuantityException::QUANTITY_TOO_HIGH => $this->trans(
+                    'An invalid quantity was selected for this product.',
                     'Admin.Orderscustomers.Notification'
                 ),
             ],
+            InvalidRefundException::INVALID_AMOUNT => $this->trans(
+                'Please enter a positive amount to proceed with your refund.',
+                'Admin.Orderscustomers.Notification'
+            ),
+            InvalidRefundException::NO_REFUNDS => $this->trans(
+                'Please enter at least one refund.',
+                'Admin.Orderscustomers.Notification'
+            ),
+            InvalidRefundException::NO_GENERATION => $this->trans(
+                'Please generate at least one credit slip or voucher.',
+                'Admin.Orderscustomers.Notification'
+            ),
+            EmptyProductSelectionException::class => $this->trans(
+              'You must select a product.',
+                'Admin.Orderscustomers.Notification'
+            ),
             ProductOutOfStockException::class => $this->trans(
                 'There are not enough products in stock',
                 'Admin.Notifications.Error'

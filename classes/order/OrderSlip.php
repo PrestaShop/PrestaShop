@@ -138,7 +138,7 @@ class OrderSlipCore extends ObjectModel
         SELECT *
         FROM `' . _DB_PREFIX_ . 'order_slip`
         WHERE `id_customer` = ' . (int) ($customer_id) .
-        ($order_id ? ' AND `id_order` = ' . (int) ($order_id) : '') . '
+            ($order_id ? ' AND `id_order` = ' . (int) ($order_id) : '') . '
         ORDER BY `date_add` DESC');
     }
 
