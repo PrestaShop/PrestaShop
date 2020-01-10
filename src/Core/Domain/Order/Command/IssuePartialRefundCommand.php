@@ -46,7 +46,7 @@ class IssuePartialRefundCommand
     /**
      * @var float
      */
-    private $shippingCostRefund;
+    private $shippingCostRefundAmount;
 
     /**
      * @var bool
@@ -71,7 +71,7 @@ class IssuePartialRefundCommand
     /**
      * @param int $orderId
      * @param array $orderDetailRefunds
-     * @param float $shippingCostRefund
+     * @param float $shippingCostRefundAmount
      * @param bool $restockRefundedProducts
      * @param bool $generateVoucher
      * @param int $voucherRefundType
@@ -80,7 +80,7 @@ class IssuePartialRefundCommand
     public function __construct(
         int $orderId,
         array $orderDetailRefunds,
-        float $shippingCostRefund,
+        float $shippingCostRefundAmount,
         bool $restockRefundedProducts,
         bool $generateVoucher,
         int $voucherRefundType,
@@ -88,7 +88,7 @@ class IssuePartialRefundCommand
     ) {
         $this->orderId = new OrderId($orderId);
         $this->orderDetailRefunds = $orderDetailRefunds;
-        $this->shippingCostRefund = $shippingCostRefund;
+        $this->shippingCostRefundAmount = $shippingCostRefundAmount;
         $this->restockRefundedProducts = $restockRefundedProducts;
         $this->generateVoucher = $generateVoucher;
         $this->voucherRefundType = $voucherRefundType;
@@ -116,7 +116,7 @@ class IssuePartialRefundCommand
      */
     public function getShippingCostRefundAmount(): float
     {
-        return $this->shippingCostRefund;
+        return $this->shippingCostRefundAmount;
     }
 
     /**

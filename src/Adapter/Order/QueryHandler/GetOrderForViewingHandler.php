@@ -365,7 +365,7 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
             $product['amount_refundable_tax_incl'] = $product['total_price_tax_incl'] - $resume['amount_tax_incl'];
             $product['displayed_max_refundable'] = $order->getTaxCalculationMethod() ? $product['amount_refundable'] : $product['amount_refundable_tax_incl'];
             $resumeAmount = $order->getTaxCalculationMethod() ? 'amount_tax_excl' : 'amount_tax_incl';
-            $product['amount_refund'] = $resume[$resumeAmount] ?? 0;
+            $product['amount_refunded'] = $resume[$resumeAmount] ?? 0;
             $product['refund_history'] = OrderSlip::getProductSlipDetail($product['id_order_detail']);
             $product['return_history'] = OrderReturn::getProductReturnDetail($product['id_order_detail']);
 
@@ -461,7 +461,7 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
                     $computingPrecision->getPrecision($currency->precision)
                 ),
                 $product['tax_rate'],
-                $this->locale->formatPrice($product['amount_refund'], $currency->iso_code),
+                $this->locale->formatPrice($product['amount_refunded'], $currency->iso_code),
                 $product['product_quantity_refunded'],
                 $this->locale->formatPrice($product['displayed_max_refundable'], $currency->iso_code),
                 $product['location'],
@@ -566,21 +566,6 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
                 if ($document->getRestPaid()) {
                     $isAddPaymentAllowed = true;
                 }
-            } elseif (OrderDocumentType::DELIVERY_SLIP === $type) {
-                $number = sprintf(
-                    '%s%06d',
-                    Configuration::get('PS_DELIVERY_PREFIX', $this->contextLanguageId, null, $order->id_shop),
-                    $document->delivery_number
-                );
-            } elseif (OrderDocumentType::CREDIT_SLIP) {
-                $number = sprintf(
-                    '%s%06d',
-                    Configuration::get('PS_CREDIT_SLIP_PREFIX', $this->contextLanguageId),
-                    $document->id
-                );
-            }
-
-            if ($document instanceof OrderInvoice && !isset($document->is_delivery)) {
                 $amount = $this->locale->formatPrice($document->total_paid_tax_incl, $currency->iso_code);
                 $numericAmount = $document->total_paid_tax_incl;
 
@@ -599,13 +584,30 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
                         );
                     }
                 }
-            } elseif ($document instanceof OrderSlip) {
+            } elseif (OrderDocumentType::DELIVERY_SLIP === $type) {
+                $number = sprintf(
+                    '%s%06d',
+                    Configuration::get('PS_DELIVERY_PREFIX', $this->contextLanguageId, null, $order->id_shop),
+                    $document->delivery_number
+                );
+                $amount = $this->locale->formatPrice(
+                    $document->total_shipping_tax_incl,
+                    $currency->iso_code
+                );
+                $numericAmount = $document->total_shipping_tax_incl;
+            } elseif (OrderDocumentType::CREDIT_SLIP) {
+                $number = sprintf(
+                    '%s%06d',
+                    Configuration::get('PS_CREDIT_SLIP_PREFIX', $this->contextLanguageId),
+                    $document->id
+                );
                 $amount = $this->locale->formatPrice(
                     $document->total_products_tax_incl + $document->total_shipping_tax_incl,
                     $currency->iso_code
                 );
                 $numericAmount = $document->total_products_tax_incl + $document->total_shipping_tax_incl;
             }
+
             $documentsForViewing[] = new OrderDocumentForViewing(
                 $document->id,
                 $type,

@@ -28,6 +28,7 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 use PHPUnit_Framework_Assert;
 use Order;
+use OrderSlip;
 use Behat\Gherkin\Node\TableNode;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\AddOrderFromBackOfficeCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\IssuePartialRefundCommand;
@@ -43,24 +44,25 @@ use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 class OrderRefundFeatureContext extends AbstractDomainFeatureContext
 {
     /**
-     * @When /^I issue a partial refund on "(.*)" (with|without) restock on following products:$/
+     * @When /^I issue a partial refund on "(.*)" (with|without) restock (with|without) voucher on following products:$/
      *
      * @param string $orderReference
-     * @param bool $restockProducts
+     * @param string $restockProducts
+     * @param string $generateVoucher
      * @param TableNode $table
      */
-    public function issuePartialRefundOrder(string $orderReference, $restockProducts, TableNode $table)
+    public function issuePartialRefundOrder(string $orderReference, $restockProducts, $generateVoucher, TableNode $table)
     {
         $restockProducts = 'with' === $restockProducts;
+        $generateVoucher = 'with' === $generateVoucher;
         $orderId = SharedStorage::getStorage()->get($orderReference);
         $refundData = $table->getColumnsHash();
 
         $command = $this->createIssuePartialRefundCommand(
             $orderId,
             $refundData,
-            false,
             $restockProducts,
-            false
+            $generateVoucher
         );
 
         $this->getCommandBus()->handle($command);
@@ -75,29 +77,20 @@ class OrderRefundFeatureContext extends AbstractDomainFeatureContext
     public function checkOrderRefunds($orderReference, TableNode $table)
     {
         $orderId = SharedStorage::getStorage()->get($orderReference);
-        $refundData = $table->getRowsHash();
-        $refundData['amount'] = 'null' === $refundData['amount'] ? null : $refundData['amount'];
-        $refundData['shipping'] = 'null' === $refundData['shipping'] ? null : $refundData['shipping'];
+        $refundData = $table->getColumnsHash();
 
-        /** @var OrderForViewing $orderForViewing */
-        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing((int) $orderId));
-        /** @var OrderDocumentForViewing $documentForViewing */
-        foreach ($orderForViewing->getDocuments()->getDocuments() as $documentForViewing) {
-            switch ($documentForViewing->getType()) {
-                case OrderDocumentType::CREDIT_SLIP:
-                    PHPUnit_Framework_Assert::assertEquals($documentForViewing->getNumericalAmount(), $refundData['amount']);
-                    break;
-                case OrderDocumentType::DELIVERY_SLIP:
-                    PHPUnit_Framework_Assert::assertEquals($documentForViewing->getNumericalAmount(), $refundData['shipping']);
-                    break;
-            }
+        $order = new Order($orderId);
+        /** @var OrderSlip $orderSlipIndex */
+        foreach ($order->getOrderSlipsCollection() as $orderSlipIndex => $orderSlip) {
+            $refund = $refundData[$orderSlipIndex];
+            PHPUnit_Framework_Assert::assertEquals($orderSlip->amount, $refund['amount']);
+            PHPUnit_Framework_Assert::assertEquals($orderSlip->shipping_cost_amount, $refund['shipping']);
         }
     }
 
     /**
      * @param int $orderId
      * @param array $refunds
-     * @param bool $shippingCostRefund
      * @param bool $restockRefundedProducts
      * @param bool $generateVoucher
      * @param int $voucherRefundType
@@ -108,7 +101,6 @@ class OrderRefundFeatureContext extends AbstractDomainFeatureContext
     private function createIssuePartialRefundCommand(
         int $orderId,
         array $refunds,
-        bool $shippingCostRefund,
         bool $restockRefundedProducts,
         bool $generateVoucher,
         int $voucherRefundType = VoucherRefundType::PRODUCT_PRICES_EXCLUDING_VOUCHER_REFUND,
@@ -117,19 +109,19 @@ class OrderRefundFeatureContext extends AbstractDomainFeatureContext
         /** @var OrderForViewing $orderForViewing */
         $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing((int) $orderId));
 
+        $shippingCostRefund = 0;
         $orderDetailsRefunds = [];
-        /** @var OrderProductForViewing $product */
-        foreach ($orderForViewing->getProducts()->getProducts() as $product) {
-            $productRefund = null;
-            foreach ($refunds as $refund) {
-                if ($refund['product_name'] == $product->getName()) {
-                    $productRefund = $refund;
-                    break;
-                }
+        foreach ($refunds as $refund) {
+            if ('shipping_refund' === $refund['product_name']) {
+                $shippingCostRefund = $refund['amount'];
+                continue;
             }
-            if (null !== $productRefund) {
-                $orderDetailsRefunds[$product->getOrderDetailId()]['quantity'] = $productRefund['quantity'];
-                $orderDetailsRefunds[$product->getOrderDetailId()]['amount'] = $productRefund['amount'];
+            /** @var OrderProductForViewing $product */
+            foreach ($orderForViewing->getProducts()->getProducts() as $product) {
+                if ($product->getName() === $refund['product_name']) {
+                    $orderDetailsRefunds[$product->getOrderDetailId()]['quantity'] = $refund['quantity'];
+                    $orderDetailsRefunds[$product->getOrderDetailId()]['amount'] = $refund['amount'];
+                }
             }
         }
 
