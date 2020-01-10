@@ -7,7 +7,7 @@ module.exports = class Languages extends LocalizationBasePage {
 
     this.pageTitle = 'Languages •';
 
-    // Header Selectors
+    // Header selectors
     this.addNewLanguageLink = '#page-header-desc-configuration-add';
     this.localizationNavItemLink = '#subtab-AdminLocalization';
     this.geolocationNavItemLink = '#subtab-AdminGeolocation';
@@ -41,6 +41,7 @@ module.exports = class Languages extends LocalizationBasePage {
   async goToAddNewLanguage() {
     await this.clickAndWaitForNavigation(this.addNewLanguageLink);
   }
+
 
   /**
    * Go to currencies page
