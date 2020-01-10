@@ -35,12 +35,15 @@ var currentRequestDelayedId = null;
 // Check for popState event
 var isOnPopStateEvent = false;
 
+<<<<<<< HEAD
 // Register form of first update
 var firstFormData = [];
 
 // Detect if the form has changed one time
 var formChanged = false;
 
+=======
+>>>>>>> 69cf50e38a... Test
 /**
  * Get product update URL from different
  * sources if needed (for compatibility)
