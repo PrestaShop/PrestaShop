@@ -150,13 +150,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
 
         $data = $table->getRowsHash();
         $productName = $data['name'];
-        /** @var array $productsMap */
-        $productsMap = $this->getQueryBus()->handle(new SearchProducts($productName, 1, Context::getContext()->currency->iso_code));
-        $productId = array_key_first($productsMap);
-
-        if (!$productId) {
-            throw new RuntimeException('Product with name "%s" does not exist', $productName);
-        }
+        $productId = $this->getProductIdByName($productName);
 
         $this->getCommandBus()->handle(
             AddProductToOrderCommand::withNewInvoice(
@@ -396,10 +390,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     public function orderDoesNotContainProduct(string $orderReference, string $productName)
     {
         $orderId = SharedStorage::getStorage()->get($orderReference);
-
-        /** @var array $productsMap */
-        $productsMap = $this->getQueryBus()->handle(new SearchProducts($productName, 1, Context::getContext()->currency->iso_code));
-        $productId = array_key_first($productsMap);
+        $productId = $this->getProductIdByName($productName);
 
         /** @var OrderForViewing $orderForViewing */
         $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
@@ -444,28 +435,9 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
      */
     public function orderContainsProductWithReference(string $orderReference, int $quantity, string $productName)
     {
-        $orderId = SharedStorage::getStorage()->get($orderReference);
-        /** @var array $productsMap */
-        $productsMap = $this->getQueryBus()->handle(new SearchProducts($productName, 1, Context::getContext()->currency->iso_code));
-        $productId = array_key_first($productsMap);
+        $productQuantities = $this->getProductQuantitiesByReference($orderReference, $productName);
 
-        if (!$productId) {
-            throw new RuntimeException('Product with name "%s" does not exist', $productName);
-        }
-
-        /** @var OrderForViewing $orderForViewing */
-        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
-        /** @var OrderProductForViewing[] $products */
-        $products = $orderForViewing->getProducts()->getProducts();
-
-        $totalProductQuantity = 0;
-        foreach ($products as $product) {
-            if ($product->getId() === $productId) {
-                $totalProductQuantity += $product->getQuantity();
-            }
-        }
-
-        if ((int) $totalProductQuantity === (int) $quantity) {
+        if ((int) $productQuantities['quantity'] === (int) $quantity) {
             return;
         }
 
@@ -474,7 +446,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
                 'Order was expected to have "%d" products "%s" in it. Instead got "%s"',
                 $quantity,
                 $productName,
-                $totalProductQuantity
+                $productQuantities['quantity']
             )
         );
     }
@@ -559,7 +531,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     private function getProductIdByName(string $productName)
     {
         /** @var array $productsMap */
-        $productsMap = $this->getQueryBus()->handle(new SearchProducts($productName, 1));
+        $productsMap = $this->getQueryBus()->handle(new SearchProducts($productName, 1, Context::getContext()->currency->iso_code));
         $productId = array_key_first($productsMap);
 
         if (!$productId) {
@@ -577,14 +549,8 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
      */
     private function getProductQuantitiesByReference(string $orderReference, string $productName)
     {
+        $productId = $this->getProductIdByName($productName);
         $orderId = SharedStorage::getStorage()->get($orderReference);
-        /** @var array $productsMap */
-        $productsMap = $this->getQueryBus()->handle(new SearchProducts($productName, 1));
-        $productId = array_key_first($productsMap);
-
-        if (!$productId) {
-            throw new RuntimeException('Product with name "%s" does not exist', $productName);
-        }
 
         /** @var OrderForViewing $orderForViewing */
         $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
