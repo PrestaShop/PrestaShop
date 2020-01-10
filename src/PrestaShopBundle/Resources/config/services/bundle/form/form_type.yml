@@ -951,6 +951,26 @@ services:
       tags:
           - { name: form.type }
 
+    form.type.order.add_product_row:
+      class: 'PrestaShopBundle\Form\Admin\Sell\Order\AddProductRowType'
+      parent: 'form.type.translatable.aware'
+      public: true
+      arguments:
+        - '@prestashop.adapter.form.choice_provider.order_invoice_by_id'
+        - '@=service("prestashop.adapter.legacy.context").getContext().language.id'
+      tags:
+        - { name: form.type }
+
+    form.type.order.edit_product_row:
+      class: 'PrestaShopBundle\Form\Admin\Sell\Order\EditProductRowType'
+      parent: 'form.type.translatable.aware'
+      public: true
+      arguments:
+          - '@prestashop.adapter.form.choice_provider.order_invoice_by_id'
+          - '@=service("prestashop.adapter.legacy.context").getContext().language.id'
+      tags:
+        - { name: form.type }
+
     form.type.order.update_order_status:
       class: 'PrestaShopBundle\Form\Admin\Sell\Order\UpdateOrderStatusType'
       arguments:

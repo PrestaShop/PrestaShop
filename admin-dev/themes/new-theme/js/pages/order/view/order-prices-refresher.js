@@ -1,4 +1,3 @@
-<?php
 /**
  * 2007-2019 PrestaShop SA and Contributors
  *
@@ -24,31 +23,23 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Localization;
+import Router from '@components/router';
+import OrderViewPageMap from '@pages/order/OrderViewPageMap';
 
-/**
- * Locale entity interface.
- *
- * Describes the behavior of locale classes
- */
-interface LocaleInterface
-{
-    /**
-     * Format a number according to locale rules.
-     *
-     * @param int|float|string $number The number to be formatted
-     *
-     * @return string The formatted number
-     */
-    public function formatNumber($number);
+const $ = window.$;
 
-    /**
-     * Format a number as a price.
-     *
-     * @param int|float|string $number Number to be formatted as a price
-     * @param string $currencyCode Currency of the price
-     *
-     * @return string The formatted price
-     */
-    public function formatPrice($number, $currencyCode);
+export default class OrderPricesRefresher {
+  constructor() {
+    this.router = new Router();
+  }
+
+  refresh(orderId) {
+    $.ajax(this.router.generate('admin_orders_get_prices', {orderId}))
+      .then((response) => {
+        $(OrderViewPageMap.orderTotal).text(response.orderTotalFormatted);
+        $(OrderViewPageMap.orderProductsTotal).text(response.productsTotalFormatted);
+        $(OrderViewPageMap.orderShippingTotal).text(response.shippingTotalFormatted);
+        $(OrderViewPageMap.orderTaxesTotal).text(response.taxesTotalFormatted);
+      });
+  }
 }

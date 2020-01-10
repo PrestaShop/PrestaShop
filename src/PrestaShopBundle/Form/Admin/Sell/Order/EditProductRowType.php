@@ -26,29 +26,18 @@
 
 namespace PrestaShopBundle\Form\Admin\Sell\Order;
 
-use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CleanHtml;
 use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
-use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
-use PrestaShopBundle\Translation\TranslatorAwareTrait;
-use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use PrestaShopBundle\Form\Admin\Type\TextWithUnitType;
+use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
+use Symfony\Component\Form\Extension\Core\Type\ButtonType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Translation\TranslatorInterface;
-use Symfony\Component\Validator\Constraints\Type;
 
-class AddOrderCartRuleType extends AbstractType
+class EditProductRowType extends TranslatorAwareType
 {
-    use TranslatorAwareTrait;
-
-    /**
-     * @var FormChoiceProviderInterface
-     */
-    private $orderDiscountTypeChoiceProvider;
-
     /**
      * @var ConfigurableFormChoiceProviderInterface
      */
@@ -60,21 +49,23 @@ class AddOrderCartRuleType extends AbstractType
     private $contextLangId;
 
     /**
-     * @param FormChoiceProviderInterface $orderDiscountTypeChoiceProvider
+     * EditProductRowType constructor.
+     *
+     * @param TranslatorInterface $translator
+     * @param array $locales
      * @param ConfigurableFormChoiceProviderInterface $orderInvoiceByIdChoiceProvider
      * @param int $contextLangId
-     * @param TranslatorInterface $translator
      */
     public function __construct(
-        FormChoiceProviderInterface $orderDiscountTypeChoiceProvider,
+        TranslatorInterface $translator,
+        array $locales,
         ConfigurableFormChoiceProviderInterface $orderInvoiceByIdChoiceProvider,
-        int $contextLangId,
-        TranslatorInterface $translator
+        int $contextLangId
     ) {
-        $this->orderDiscountTypeChoiceProvider = $orderDiscountTypeChoiceProvider;
+        parent::__construct($translator, $locales);
+
         $this->orderInvoiceByIdChoiceProvider = $orderInvoiceByIdChoiceProvider;
         $this->contextLangId = $contextLangId;
-        $this->setTranslator($translator);
     }
 
     /**
@@ -86,40 +77,60 @@ class AddOrderCartRuleType extends AbstractType
             $this->orderInvoiceByIdChoiceProvider->getChoices([
                 'id_order' => $options['order_id'],
                 'id_lang' => $this->contextLangId,
+                'display_total' => false,
             ]) : [];
 
         $builder
-            ->add('name', TextType::class, [
-                'constraints' => [
-                    new CleanHtml([
-                        'message' => $this->trans(
-                            'Cart rule name must contain clean HTML',
-                            [],
-                            'Admin.Notifications.Error'
-                        ),
-                    ]),
-                ],
-            ])
-            ->add('type', ChoiceType::class, [
-                'choices' => $this->orderDiscountTypeChoiceProvider->getChoices(),
-            ])
-            ->add('value', NumberType::class, [
+            ->add('price_tax_excluded', TextWithUnitType::class, [
+                'label' => false,
+                'unit' => sprintf('%s %s',
+                    $options['symbol'],
+                    $this->trans('tax excl.', 'Admin.Global')
+                ),
                 'attr' => [
-                    'step' => 0.01,
+                    'class' => 'editProductPriceTaxExcl',
                 ],
-                'constraints' => new Type([
-                    'type' => 'numeric',
-                    'message' => $this->trans('Discount value must be a number', [], 'Admin.Notifications.Error'),
-                ]),
             ])
-            ->add('invoice_id', ChoiceType::class, [
+            ->add('price_tax_included', TextWithUnitType::class, [
+                'label' => false,
+                'unit' => sprintf('%s %s',
+                    $options['symbol'],
+                    $this->trans('tax incl.', 'Admin.Global')
+                ),
+                'attr' => [
+                    'class' => 'editProductPriceTaxIncl',
+                ],
+            ])
+            ->add('quantity', NumberType::class, [
+                'label' => false,
+                'data' => 1,
+                'scale' => 0,
+                'attr' => [
+                    'min' => 1,
+                    'class' => 'editProductQuantity',
+                ],
+            ])
+            ->add('invoice', ChoiceType::class, [
                 'choices' => $invoices,
-                'required' => false,
-                'placeholder' => false,
+                'label' => false,
+                'attr' => [
+                    'class' => 'editProductInvoice custom-select',
+                ],
             ])
-            ->add('apply_on_all_invoices', CheckboxType::class, [
-                'required' => false,
-                'label' => $this->trans('Apply on all invoices', [], 'Admin.Orderscustomers.Feature'),
+            ->add('cancel', ButtonType::class, [
+                'label' => $this->trans('Cancel', 'Admin.Actions'),
+                'attr' => [
+                    'class' => 'btn btn-sm btn-secondary js-product-edit-action-btn mr-2 mt-2 mb-2 productEditCancelBtn',
+                ],
+            ])
+            ->add('save', ButtonType::class, [
+                'label' => $this->trans('Save', 'Admin.Actions'),
+                'disabled' => true,
+                'attr' => [
+                    'class' => 'btn btn-sm btn-primary js-product-edit-action-btn mt-2 mb-2 productEditSaveBtn',
+                    'data-order-id' => $options['order_id'],
+                    'data-update-message' => $this->trans('Are you sure?', 'Admin.Notifications.Warning'),
+                ],
             ])
         ;
     }
@@ -130,10 +141,12 @@ class AddOrderCartRuleType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver
+            ->setRequired(['symbol'])
             ->setDefaults([
                 'order_id' => null,
             ])
             ->setAllowedTypes('order_id', ['int', 'null'])
+            ->setAllowedTypes('symbol', ['string'])
         ;
     }
 }

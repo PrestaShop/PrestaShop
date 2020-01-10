@@ -26,14 +26,17 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Product\QueryHandler;
 
-use Context;
 use Currency;
+use PrestaShop\PrestaShop\Adapter\Currency\CurrencyDataProvider;
+use PrestaShop\PrestaShop\Adapter\Tools;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProducts;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryHandler\SearchProductsHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\FoundProduct;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductCombination;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductCustomizationField;
+use PrestaShop\PrestaShop\Core\Localization\CLDR\ComputingPrecision;
 use PrestaShop\PrestaShop\Core\Localization\LocaleInterface;
+use PrestaShop\PrestaShop\Adapter\ContextStateManager;
 use Product;
 
 /**
@@ -47,25 +50,44 @@ final class SearchProductsHandler implements SearchProductsHandlerInterface
     private $contextLangId;
 
     /**
-     * @var string
-     */
-    private $contextCurrencyCode;
-
-    /**
      * @var LocaleInterface
      */
     private $contextLocale;
 
+    /*
+     * @var ContextStateManager
+     */
+    private $contextStateManager;
+
+    /**
+     * @var CurrencyDataProvider
+     */
+    private $currencyDataProvider;
+
+    /**
+     * @var Tools
+     */
+    private $tools;
+
     /**
      * @param int $contextLangId
-     * @param string $contextCurrencyCode
      * @param LocaleInterface $contextLocale
+     * @param Tools $tools
+     * @param CurrencyDataProvider $currencyDataProvider
+     * @param ContextStateManager $contextStateManager
      */
-    public function __construct(int $contextLangId, string $contextCurrencyCode, LocaleInterface $contextLocale)
-    {
+    public function __construct(
+        int $contextLangId,
+        LocaleInterface $contextLocale,
+        Tools $tools,
+        CurrencyDataProvider $currencyDataProvider,
+        ContextStateManager $contextStateManager
+    ) {
         $this->contextLangId = $contextLangId;
-        $this->contextCurrencyCode = $contextCurrencyCode;
         $this->contextLocale = $contextLocale;
+        $this->currencyDataProvider = $currencyDataProvider;
+        $this->tools = $tools;
+        $this->contextStateManager = $contextStateManager;
     }
 
     /**
@@ -77,18 +99,8 @@ final class SearchProductsHandler implements SearchProductsHandlerInterface
      */
     public function handle(SearchProducts $query): array
     {
-        // the next lines are a nuclear attack against SOLID principles - sorry, can't avoid it
-        $currencyCode = $this->contextCurrencyCode;
-        $hasContextStateBeenChanged = false;
-        if ($query->getCurrencyId() !== null) {
-            $currency = new Currency($query->getCurrencyId());
-            $currencyCode = $currency->iso_code;
-
-            $context = Context::getContext();
-            $previousContextCurrencyState = $context->currency;
-            $context->currency = $currency;
-            $hasContextStateBeenChanged = true;
-        }
+        $currencyId = Currency::getIdByIsoCode($query->getAlphaIsoCode()->getValue());
+        $this->contextStateManager->setCurrency(new Currency($currencyId));
 
         $products = Product::searchByName(
             $this->contextLangId,
@@ -101,38 +113,47 @@ final class SearchProductsHandler implements SearchProductsHandlerInterface
 
         if ($products) {
             foreach ($products as $product) {
-                $foundProduct = $this->createFoundProductFromLegacy(new Product($product['id_product']), $currencyCode);
+                $foundProduct = $this->createFoundProductFromLegacy(new Product($product['id_product']), $query);
                 $foundProducts[$foundProduct->getProductId()] = $foundProduct;
             }
         }
 
-        if ($hasContextStateBeenChanged) {
-            $context->currency = $previousContextCurrencyState;
-        }
+        $this->contextStateManager->restoreContext();
 
         return $foundProducts;
     }
 
     /**
      * @param Product $product
-     * @param string $currencyCode
+     * @param SearchProducts $query
      *
      * @return FoundProduct
      */
-    private function createFoundProductFromLegacy(Product $product, $currencyCode): FoundProduct
+    private function createFoundProductFromLegacy(Product $product, SearchProducts $query): FoundProduct
     {
+        //@todo: sort products alphabetically
+        $priceTaxExcluded = Product::getPriceStatic($product->id, false);
         $priceTaxIncluded = Product::getPriceStatic($product->id, true);
 
-        $foundProduct = new FoundProduct(
+        $computingPrecision = new ComputingPrecision();
+        $isoCodeCurrency = $query->getAlphaIsoCode()->getValue();
+        $currency = $this->currencyDataProvider->getCurrencyByIsoCode($isoCodeCurrency);
+
+        $product->loadStockData();
+
+        return new FoundProduct(
             $product->id,
             $product->name[$this->contextLangId],
-            $this->contextLocale->formatPrice($priceTaxIncluded, $currencyCode),
+            $this->contextLocale->formatPrice($priceTaxExcluded, $isoCodeCurrency),
+            $this->tools->round($priceTaxIncluded, $computingPrecision->getPrecision($currency->precision)),
+            $this->tools->round($priceTaxExcluded, $computingPrecision->getPrecision($currency->precision)),
+            $product->getTaxesRate(),
             Product::getQuantity($product->id),
-            $this->getProductCombinations($product, $currencyCode),
+            $product->location,
+            (bool) Product::isAvailableWhenOutOfStock($product->out_of_stock),
+            $this->getProductCombinations($product, $isoCodeCurrency),
             $this->getProductCustomizationFields($product)
         );
-
-        return $foundProduct;
     }
 
     /**
@@ -169,7 +190,7 @@ final class SearchProductsHandler implements SearchProductsHandlerInterface
      *
      * @return ProductCombination[]
      */
-    private function getProductCombinations(Product $product, $currencyCode): array
+    private function getProductCombinations(Product $product, $currencyIsoCode): array
     {
         $productCombinations = [];
         $combinations = $product->getAttributeCombinations();
@@ -184,13 +205,16 @@ final class SearchProductsHandler implements SearchProductsHandlerInterface
                     $attribute = $existingAttribute . ' - ' . $attribute;
                 }
 
+                $priceTaxExcluded = Product::getPriceStatic((int) $product->id, false, $productAttributeId);
                 $priceTaxIncluded = Product::getPriceStatic((int) $product->id, true, $productAttributeId);
 
                 $productCombination = new ProductCombination(
                     $productAttributeId,
                     $attribute,
                     $combination['quantity'],
-                    $this->contextLocale->formatPrice($priceTaxIncluded, $currencyCode)
+                    $this->contextLocale->formatPrice($priceTaxExcluded, $currencyIsoCode),
+                    $priceTaxExcluded,
+                    $priceTaxIncluded
                 );
 
                 $productCombinations[$productCombination->getAttributeCombinationId()] = $productCombination;

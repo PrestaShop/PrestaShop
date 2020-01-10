@@ -1,5 +1,4 @@
-<?php
-/**
+{#**
  * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
@@ -22,22 +21,29 @@
  * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- */
+ *#}
 
-namespace PrestaShopBundle\Form\Admin\Sell\Order;
-
-use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\FormBuilderInterface;
-
-class UpdateProductInOrderType extends AbstractType
-{
-    public function buildForm(FormBuilderInterface $builder, array $options): void
-    {
-        $builder
-            ->add('price_tax_excl', TextType::class)
-            ->add('price_tax_incl', TextType::class)
-            ->add('quantity', TextType::class)
-        ;
-    }
-}
+<tr id="editProductTableRowTemplate" class="d-none editProductRow">
+  <td class="cellProductImg"></td>
+  <td class="cellProductName"></td>
+  <td class="pr-5">
+    {{ form_row(editProductRowForm.price_tax_excluded) }}
+    {{ form_row(editProductRowForm.price_tax_included) }}
+  </td>
+  <td class="pr-5">
+    {{ form_row(editProductRowForm.quantity) }}
+  </td>
+  <td class="editProductLocation"></td>
+  <td class="editProductRefunded"></td>
+  <td class="editProductAvailable"></td>
+  <td class="editProductTotalPrice"></td>
+  {% if orderForViewing.hasInvoice() %}
+    <td>
+      {{ form_row(editProductRowForm.invoice) }}
+    </td>
+  {% endif %}
+  <td class="text-right btn-group">
+    {{ form_row(editProductRowForm.cancel) }}
+    {{ form_row(editProductRowForm.save) }}
+  </td>
+</tr>

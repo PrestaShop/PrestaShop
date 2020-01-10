@@ -23,11 +23,14 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-import OrderViewPageMap from './OrderViewPageMap';
-import OrderShippingManager from './order-shipping-manager';
-import InvoiceNoteManager from './invoice-note-manager';
+import OrderViewPageMap from '@pages/order/OrderViewPageMap';
+import OrderShippingManager from '@pages/order/order-shipping-manager';
+import InvoiceNoteManager from '@pages/order/invoice-note-manager';
+import OrderViewPage from '@pages/order/view/order-view-page';
+import OrderProductAutocomplete from '@pages/order/view/order-product-add-autocomplete';
+import OrderProductAdd from '@pages/order/view/order-product-add';
 import OrderViewPageMessagesHandler from './message/order-view-page-messages-handler';
-import TextWithLengthCounter from "../../components/form/text-with-length-counter"
+import TextWithLengthCounter from '@components/form/text-with-length-counter';
 
 const $ = window.$;
 
@@ -38,6 +41,17 @@ $(() => {
 
   new OrderShippingManager();
   new TextWithLengthCounter();
+  const orderViewPage = new OrderViewPage();
+  const orderAddAutocomplete = new OrderProductAutocomplete($(OrderViewPageMap.productSearchInput));
+  const orderAdd = new OrderProductAdd();
+
+  orderViewPage.listenForProductDelete();
+  orderViewPage.listenForProductEdit();
+  orderViewPage.listenForProductAdd();
+  orderViewPage.listenForProductPagination();
+
+  orderAddAutocomplete.listenForSearch();
+  orderAddAutocomplete.onItemClickedCallback = product => orderAdd.setProduct(product);
 
   handlePaymentDetailsToggle();
   handlePrivateNoteChange();
@@ -53,7 +67,6 @@ $(() => {
   });
 
   initAddCartRuleFormHandler();
-  initAddProductFormHandler();
   initChangeAddressFormHandler();
   initHookTabs();
 
@@ -95,20 +108,6 @@ $(() => {
     });
   }
 
-  function initAddProductFormHandler() {
-    const $modal = $(OrderViewPageMap.updateOrderProductModal);
-
-    $modal.on('click', '.js-order-product-update-btn', (event) => {
-      const $btn = $(event.currentTarget);
-
-      $modal.find('.js-update-product-name').text($btn.data('product-name'));
-      $modal.find(OrderViewPageMap.updateOrderProductPriceTaxExclInput).val($btn.data('product-price-tax-excl'));
-      $modal.find(OrderViewPageMap.updateOrderProductPriceTaxInclInput).val($btn.data('product-price-tax-incl'));
-      $modal.find(OrderViewPageMap.updateOrderProductQuantityInput).val($btn.data('product-quantity'));
-      $modal.find('form').attr('action', $btn.data('update-url'));
-    });
-  }
-
   function initAddCartRuleFormHandler() {
     const $modal = $(OrderViewPageMap.addCartRuleModal);
     const $form = $modal.find('form');
@@ -125,11 +124,17 @@ $(() => {
 
     $form.find(OrderViewPageMap.addCartRuleTypeSelect).on('change', (event) => {
       const selectedCartRuleType = $(event.currentTarget).val();
+      const $valueUnit = $form.find(OrderViewPageMap.addCartRuleValueUnit);
 
       if (selectedCartRuleType === DISCOUNT_TYPE_AMOUNT) {
         $valueHelp.removeClass('d-none');
+        $valueUnit.html($valueUnit.data('currencySymbol'));
       } else {
         $valueHelp.addClass('d-none');
+      }
+
+      if (selectedCartRuleType === DISCOUNT_TYPE_PERCENT) {
+        $valueUnit.html('%');
       }
 
       if (selectedCartRuleType === DISCOUNT_TYPE_FREE_SHIPPING) {
@@ -148,7 +153,7 @@ $(() => {
     $(OrderViewPageMap.updateOrderStatusActionInput).on('change', (event) => {
       const selectedOrderStatusId = $(event.currentTarget).val();
 
-      $btn.prop('disabled', parseInt(selectedOrderStatusId, 10) === $btn.data('order-status-id'));
+      $btn.prop('disabled', parseInt(selectedOrderStatusId, 10) === $btn.data('orderStatusId'));
     });
   }
 
@@ -159,8 +164,4 @@ $(() => {
       $modal.find(OrderViewPageMap.updateOrderAddressTypeInput).val($btn.data('address-type'));
     });
   }
-
-  $(`${OrderViewPageMap.displayPartialRefundBtn}, ${OrderViewPageMap.cancelPartialRefundBtn}`).on('click', (event) => {
-    $(OrderViewPageMap.togglePartialRefundForm).toggle();
-  });
 });

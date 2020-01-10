@@ -27,6 +27,23 @@
   }
 }
 
+#orderProductsPanel {
+  .cellProductActions .btn {
+    background-color: transparent;
+    color: $medium-gray;
+    &:hover {
+      color: $primary;
+    }
+  }
+  input[type="number"] {
+    width: 80px;
+  }
+}
+
+#addProductNewInvoiceInfo h4 {
+  margin-top: 8px;
+}
+
 $order-block-background-color: #F8F8F8;
 
 .info-block {
@@ -36,7 +53,6 @@ $order-block-background-color: #F8F8F8;
   padding-right: 18px;
   padding-bottom: 16px;
 }
-
 
 #order-creation-container {
   .found-cart-rule:hover {
@@ -126,6 +142,10 @@ $order-block-background-color: #F8F8F8;
   .modal-body {
     padding: 0;
   }
+}
+
+td .editProductInvoice {
+  min-width: 130px;
 }
 
 

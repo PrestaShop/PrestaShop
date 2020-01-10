@@ -154,6 +154,7 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
     public function handle(GetOrderForViewing $query): OrderForViewing
     {
         $order = $this->getOrder($query->getOrderId());
+        $orderCarrier = new Carrier($order->id_carrier);
         $taxCalculationMethod = $this->getOrderTaxCalculationMethod($order);
 
         $isTaxIncluded = ($taxCalculationMethod == PS_TAX_INC);
@@ -168,6 +169,7 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
             (int) $order->id,
             (int) $order->id_currency,
             (int) $order->id_carrier,
+            (string) $orderCarrier->name,
             (int) $order->id_shop,
             $order->reference,
             (bool) $order->isVirtual(),
@@ -176,6 +178,7 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
             (bool) $order->valid,
             $order->hasInvoice(),
             $order->hasBeenDelivered(),
+            $order->hasBeenShipped(),
             $invoiceManagementIsEnabled,
             new DateTimeImmutable($order->date_add),
             $this->getOrderCustomer($order),
@@ -365,11 +368,6 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
             $product['refund_history'] = OrderSlip::getProductSlipDetail($product['id_order_detail']);
             $product['return_history'] = OrderReturn::getProductReturnDetail($product['id_order_detail']);
 
-            // if the current stock requires a warning
-            if ($product['current_stock'] <= 0 && $display_out_of_stock_warning) {
-                // @todo
-                //$this->displayWarning($this->trans('This product is out of stock: ', array(), 'Admin.Orderscustomers.Notification') . ' ' . $product['product_name']);
-            }
             if ($product['id_warehouse'] != 0) {
                 $warehouse = new Warehouse((int) $product['id_warehouse']);
                 $product['warehouse_name'] = $warehouse->name;
@@ -440,6 +438,8 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
                 null;
             $product['product_quantity_refunded'] = $product['product_quantity_refunded'] ?: false;
 
+            $orderInvoice = new OrderInvoice($product['id_order_invoice']);
+
             $productsForViewing[] = new OrderProductForViewing(
                 $product['id_order_detail'],
                 $product['product_id'],
@@ -459,9 +459,13 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
                     $product['unit_price_tax_incl'],
                     $computingPrecision->getPrecision($currency->precision)
                 ),
+                $product['tax_rate'],
                 $this->locale->formatPrice($product['amount_refund'], $currency->iso_code),
                 $product['product_quantity_refunded'],
-                $this->locale->formatPrice($product['displayed_max_refundable'], $currency->iso_code)
+                $this->locale->formatPrice($product['displayed_max_refundable'], $currency->iso_code),
+                $product['location'],
+                !empty($product['id_order_invoice']) ? $product['id_order_invoice'] : null,
+                !empty($product['id_order_invoice']) ? $orderInvoice->getInvoiceNumberFormatted($order->id_lang) : ''
             );
         }
 
