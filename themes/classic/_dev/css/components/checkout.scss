@@ -455,13 +455,11 @@ body#checkout {
     tr {
       height: $large-space;
       td {
+        padding: .5rem;
+        font-size: .875rem;
         &:last-child {
           text-align: right;
         }
-      }
-      td {
-        padding: .5rem;
-        font-size: .875rem;
       }
       &.total-value {
         background-color: $gray-light;
