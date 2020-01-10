@@ -41,17 +41,16 @@ const $ = window.$;
 export default function ConfirmModal(params, confirmCallback) {
   // Construct the modal
   const {id, closable} = params;
-  const modal = new Modal(params);
-  Object.assign(this, modal);
+  this.modal = Modal(params);
 
   // jQuery modal object
-  this.$modal = $(this.modal);
+  this.$modal = $(this.modal.container);
 
   this.show = () => {
     this.$modal.modal();
   };
 
-  this.modalConfirmButton.addEventListener('click', confirmCallback);
+  this.modal.confirmButton.addEventListener('click', confirmCallback);
 
   this.$modal.modal({
     backdrop: (closable ? true : 'static'),
@@ -64,91 +63,96 @@ export default function ConfirmModal(params, confirmCallback) {
     document.querySelector(`#${id}`).remove();
   });
 
-  document.body.appendChild(this.modal);
+  document.body.appendChild(this.modal.container);
 }
 
 /**
  * Modal component to improve lisibility by constructing the modal outside the main function
  *
- * @param {String} id
- * @param {String} confirmTitle
- * @param {String} confirmMessage
- * @param {String} closeButtonLabel
- * @param {String} confirmButtonLabel
- * @param {String} confirmButtonClass
- * @param {Boolean} closable
- * @param {Function} confirmCallback
+ * @param {Object} params
  *
  */
-function Modal({id = 'confirm_modal', confirmTitle, confirmMessage = '', closeButtonLabel = 'Close', confirmButtonLabel = 'Accept', confirmButtonClass = 'btn-primary'}) {
+function Modal(
+  {
+    id = 'confirm_modal',
+    confirmTitle,
+    confirmMessage = '',
+    closeButtonLabel = 'Close',
+    confirmButtonLabel = 'Accept',
+    confirmButtonClass = 'btn-primary',
+  }) {
+  const modal = {};
+
   // Main modal element
-  this.modal = document.createElement('div');
-  this.modal.classList.add('modal', 'fade');
-  this.modal.id = id;
+  modal.container = document.createElement('div');
+  modal.container.classList.add('modal', 'fade');
+  modal.container.id = id;
 
   // Modal dialog element
-  this.modalDialog = document.createElement('div');
-  this.modalDialog.classList.add('modal-dialog');
+  modal.dialog = document.createElement('div');
+  modal.dialog.classList.add('modal-dialog');
 
   // Modal content element
-  this.modalContent = document.createElement('div');
-  this.modalContent.classList.add('modal-content');
+  modal.content = document.createElement('div');
+  modal.content.classList.add('modal-content');
 
   // Modal header element
-  this.modalHeader = document.createElement('div');
-  this.modalHeader.classList.add('modal-header');
+  modal.header = document.createElement('div');
+  modal.header.classList.add('modal-header');
 
   // Modal title element
   if (confirmTitle) {
-    this.modalTitle = document.createElement('h4');
-    this.modalTitle.classList.add('modal-title');
-    this.modalTitle.innerHTML = confirmTitle;
+    modal.title = document.createElement('h4');
+    modal.title.classList.add('modal-title');
+    modal.title.innerHTML = confirmTitle;
   }
 
   // Modal close button icon
-  this.modalCloseIcon = document.createElement('button');
-  this.modalCloseIcon.classList.add('close');
-  this.modalCloseIcon.setAttribute('type', 'button');
-  this.modalCloseIcon.dataset.dismiss = 'modal';
-  this.modalCloseIcon.innerHTML = '×';
+  modal.closeIcon = document.createElement('button');
+  modal.closeIcon.classList.add('close');
+  modal.closeIcon.setAttribute('type', 'button');
+  modal.closeIcon.dataset.dismiss = 'modal';
+  modal.closeIcon.innerHTML = '×';
 
   // Modal body element
-  this.modalBody = document.createElement('div');
-  this.modalBody.classList.add('modal-body', 'text-left', 'font-weight-normal');
+  modal.body = document.createElement('div');
+  modal.body.classList.add('modal-body', 'text-left', 'font-weight-normal');
 
   // Modal message element
-  this.modalMessage = document.createElement('p');
-  this.modalMessage.classList.add('confirm-message');
-  this.modalMessage.innerHTML = confirmMessage;
+  modal.message = document.createElement('p');
+  modal.message.classList.add('confirm-message');
+  modal.message.innerHTML = confirmMessage;
 
   // Modal footer element
-  this.modalFooter = document.createElement('div');
-  this.modalFooter.classList.add('modal-footer');
+  modal.footer = document.createElement('div');
+  modal.footer.classList.add('modal-footer');
 
   // Modal close button element
-  this.modalCloseButton = document.createElement('button');
-  this.modalCloseButton.setAttribute('type', 'button');
-  this.modalCloseButton.classList.add('btn', 'btn-outline-secondary', 'btn-lg');
-  this.modalCloseButton.dataset.dismiss = 'modal';
-  this.modalCloseButton.innerHTML = closeButtonLabel;
+  modal.closeButton = document.createElement('button');
+  modal.closeButton.setAttribute('type', 'button');
+  modal.closeButton.classList.add('btn', 'btn-outline-secondary', 'btn-lg');
+  modal.closeButton.dataset.dismiss = 'modal';
+  modal.closeButton.innerHTML = closeButtonLabel;
 
   // Modal close button element
-  this.modalConfirmButton = document.createElement('button');
-  this.modalConfirmButton.setAttribute('type', 'button');
-  this.modalConfirmButton.classList.add('btn', confirmButtonClass, 'btn-lg', 'btn-confirm-submit');
-  this.modalConfirmButton.dataset.dismiss = 'modal';
-  this.modalConfirmButton.innerHTML = confirmButtonLabel;
+  modal.confirmButton = document.createElement('button');
+  modal.confirmButton.setAttribute('type', 'button');
+  modal.confirmButton.classList.add('btn', confirmButtonClass, 'btn-lg', 'btn-confirm-submit');
+  modal.confirmButton.dataset.dismiss = 'modal';
+  modal.confirmButton.innerHTML = confirmButtonLabel;
 
   // Constructing the modal
   if (confirmTitle) {
-    this.modalHeader.append(this.modalTitle, this.modalCloseIcon);
+    modal.header.append(modal.title, modal.closeIcon);
   } else {
-    this.modalHeader.appendChild(this.modalCloseIcon);
+    modal.header.appendChild(modal.closeIcon);
   }
 
-  this.modalBody.appendChild(this.modalMessage);
-  this.modalFooter.append(this.modalCloseButton, this.modalConfirmButton);
-  this.modalContent.append(this.modalHeader, this.modalBody, this.modalFooter);
-  this.modalDialog.appendChild(this.modalContent);
-  this.modal.appendChild(this.modalDialog);
+  modal.body.appendChild(modal.message);
+  modal.footer.append(modal.closeButton, modal.confirmButton);
+  modal.content.append(modal.header, modal.body, modal.footer);
+  modal.dialog.appendChild(modal.content);
+  modal.container.appendChild(modal.dialog);
+
+  return modal;
 }
