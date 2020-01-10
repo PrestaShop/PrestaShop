@@ -370,7 +370,7 @@ final class GetCustomerForViewingHandler implements GetCustomerForViewingHandler
 
             $viewedProducts[] = new ViewedProductInformation(
                 (int) $product->id,
-                Tools::htmlentitiesUTF8($product->name),
+                $product->name,
                 $productUrl
             );
         }
