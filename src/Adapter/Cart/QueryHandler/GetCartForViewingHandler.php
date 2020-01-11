@@ -145,6 +145,7 @@ final class GetCartForViewingHandler implements GetCartForViewingHandlerInterfac
                 Product::addProductCustomizationPrice($product, $customized_datas);
             }
         }
+        unset($product);
 
         $customerStats = $customer->getStats();
         $gender = new Gender($customer->id_gender, $context->language->id);

@@ -3338,7 +3338,7 @@ abstract class ModuleCore implements ModuleInterface
         $hooks_list = Hook::getHooks();
         $possible_hooks_list = array();
         $registeredHookList = Hook::getHookModuleList();
-        foreach ($hooks_list as &$current_hook) {
+        foreach ($hooks_list as $current_hook) {
             $hook_name = $current_hook['name'];
             $retro_hook_name = Hook::getRetroHookName($hook_name);
 

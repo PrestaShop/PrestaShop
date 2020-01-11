@@ -145,7 +145,7 @@ class CMSCategoryCore extends ObjectModel
         $children = array();
         $subcats = $this->getSubCategories($id_lang, true);
         if (($max_depth == 0 || $currentDepth < $max_depth) && $subcats && count($subcats)) {
-            foreach ($subcats as &$subcat) {
+            foreach ($subcats as $subcat) {
                 if (!$subcat['id_cms_category']) {
                     break;
                 } elseif (!is_array($excluded_ids_array) || !in_array($subcat['id_cms_category'], $excluded_ids_array)) {
@@ -195,9 +195,9 @@ class CMSCategoryCore extends ObjectModel
 				FROM `' . _DB_PREFIX_ . 'cms` c
 				' . Shop::addSqlAssociation('cms', 'c') . '
 				JOIN `' . _DB_PREFIX_ . 'cms_lang` cl ON c.`id_cms` = cl.`id_cms`
-				WHERE `id_cms_category` = ' . (int) $current . ($active ? ' AND c.`active` = 1' : '') . ' 
-				AND cl.`id_shop` = ' . (int) Context::getContext()->shop->id . ' 
-				AND cl.`id_lang` = ' . (int) $id_lang . ' 
+				WHERE `id_cms_category` = ' . (int) $current . ($active ? ' AND c.`active` = 1' : '') . '
+				AND cl.`id_shop` = ' . (int) Context::getContext()->shop->id . '
+				AND cl.`id_lang` = ' . (int) $id_lang . '
 				GROUP BY c.id_cms
 				ORDER BY c.`position`';
 

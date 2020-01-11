@@ -228,7 +228,7 @@ final class IssuePartialRefundHandler extends AbstractOrderCommandHandler implem
                 (int) $order->id_shop
             );
 
-            foreach ($orderDetailList as &$product) {
+            foreach ($orderDetailList as $product) {
                 $orderDetail = new OrderDetail((int) $product['id_order_detail']);
 
                 if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT')) {

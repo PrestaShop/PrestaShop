@@ -661,10 +661,10 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
                 return false;
             }
 
-            foreach ($result as &$row) {
-                foreach ($row as $field => &$value) {
+            foreach ($result as $rowKey => $row) {
+                foreach ($row as $field => $value) {
                     if (isset($definition['fields'][$field])) {
-                        $value = ObjectModel::formatValue(
+                        $value[$rowKey][$field] = ObjectModel::formatValue(
                             $value,
                             $definition['fields'][$field]['type'],
                             false,

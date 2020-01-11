@@ -1855,7 +1855,6 @@ class ToolsCore
         foreach ($array as &$row) {
             $row['price_tmp'] = Product::getPriceStatic($row['id_product'], true, ((isset($row['id_product_attribute']) && !empty($row['id_product_attribute'])) ? (int) $row['id_product_attribute'] : null), 2);
         }
-
         unset($row);
 
         if (Tools::strtolower($order_way) == 'desc') {
