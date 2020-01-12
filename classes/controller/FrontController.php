@@ -335,8 +335,15 @@ class FrontControllerCore extends Controller
             }
 
             if ((!$has_currency || $has_country) && !$has_address_type) {
-                $id_country = $has_country && !Validate::isLanguageIsoCode($this->context->cookie->iso_code_country) ?
-                    (int) Country::getByIso(strtoupper($this->context->cookie->iso_code_country)) : (int) Tools::getCountry();
+                if ($has_country && Validate::isLanguageIsoCode($this->context->cookie->iso_code_country)) {
+                    $id_country = (int) Country::getByIso(strtoupper($this->context->cookie->iso_code_country));
+                } elseif (Configuration::get('PS_DETECT_COUNTRY') && isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])
+                        && preg_match('#(?<=-)\w\w|\w\w(?!-)#', $_SERVER['HTTP_ACCEPT_LANGUAGE'], $array)
+                        && Validate::isLanguageIsoCode($array[0])) {
+                    $id_country = (int) Country::getByIso($array[0], true);
+                } else {
+                    $id_country = Tools::getCountry();
+                }
 
                 $country = new Country($id_country, (int) $this->context->cookie->id_lang);
 

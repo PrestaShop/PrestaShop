@@ -647,20 +647,14 @@ class ToolsCore
 
     public static function getCountry($address = null)
     {
-        $id_country = (int) Tools::getValue('id_country');
-        if (!$id_country && isset($address, $address->id_country) && $address->id_country) {
-            $id_country = (int) $address->id_country;
-        } elseif (Configuration::get('PS_DETECT_COUNTRY') && isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
-            preg_match('#(?<=-)\w\w|\w\w(?!-)#', $_SERVER['HTTP_ACCEPT_LANGUAGE'], $array);
-            if (is_array($array) && isset($array[0]) && Validate::isLanguageIsoCode($array[0])) {
-                $id_country = (int) Country::getByIso($array[0], true);
-            }
+        $req_id_country = Tools::getValue('id_country');
+        if (Validate::isInt($req_id_country) && (int) $req_id_country > 0 && !empty(Country::getIsoById((int) $req_id_country))) {
+            return (int) $req_id_country;
+        } elseif ($address !== null && (int) $address->id_country > 0) {
+            return (int) $address->id_country;
+        } else {
+            return (int) Configuration::get('PS_COUNTRY_DEFAULT');
         }
-        if (!isset($id_country) || !$id_country) {
-            $id_country = (int) Configuration::get('PS_COUNTRY_DEFAULT');
-        }
-
-        return (int) $id_country;
     }
 
     /**
