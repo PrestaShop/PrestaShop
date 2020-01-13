@@ -36,10 +36,10 @@ Feature: Address
     Given I create customer "testFirstName" with following details:
       | firstName        | testFirstName                      |
       | lastName         | testLastName                       |
-      | email            | test.davidsonas@invertus.eu       |
+      | email            | test.davidsonas@invertus.eu        |
       | password         | secret                             |
     When I add new address to customer "testFirstName" with following details:
-      | Address alias    | test-address                      |
+      | Address alias    | test-address                       |
       | First name       | testFirstName                      |
       | Last name        | testLastName                       |
       | Address          | Work address st. 1234567890        |
@@ -48,7 +48,7 @@ Feature: Address
       | State            | Alabama                            |
       | Postal code      | 12345                              |
     Then customer "testFirstName" should have address "test-address" with following details:
-      | Address alias    | test-address                      |
+      | Address alias    | test-address                       |
       | First name       | testFirstName                      |
       | Last name        | testLastName                       |
       | Address          | Work address st. 1234567890        |
