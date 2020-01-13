@@ -65,18 +65,17 @@ export default class GeneratableInput {
    */
   attachOn(generatorBtnSelector) {
     const generatorBtn = document.querySelector(generatorBtnSelector);
-    if (generatorBtn === null) {
-      return null;
+    if (generatorBtn !== null) {
+      generatorBtn.addEventListener('click', (event) => {
+        const {attributes} = event.currentTarget;
+
+        const targetInputId = attributes.getNamedItem('data-target-input-id').value;
+        const generatedValueLength = parseInt(attributes.getNamedItem('data-generated-value-length').value, 10);
+
+        const targetInput = document.querySelector(`#${targetInputId}`);
+        targetInput.value = this.generateValue(generatedValueLength);
+      });
     }
-    generatorBtn.addEventListener('click', (event) => {
-      const {attributes} = event.currentTarget;
-
-      const targetInputId = attributes.getNamedItem('data-target-input-id').value;
-      const generatedValueLength = parseInt(attributes.getNamedItem('data-generated-value-length').value, 10);
-
-      const targetInput = document.querySelector(`#${targetInputId}`);
-      targetInput.value = this.generateValue(generatedValueLength);
-    });
   }
 
   /**

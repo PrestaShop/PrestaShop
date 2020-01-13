@@ -27,7 +27,7 @@ import OrderViewPageMap from '@pages/order/OrderViewPageMap';
 import OrderProductEdit from '@pages/order/view/order-product-edit';
 import Router from '@components/router';
 
-const $ = window.$;
+const {$} = window;
 
 export default class OrderProductRenderer {
   constructor() {
@@ -46,7 +46,16 @@ export default class OrderProductRenderer {
     $(OrderViewPageMap.productsCount).html(numProducts);
   }
 
-  editProductFromList(orderDetailId, quantity, priceTaxIncl, priceTaxExcl, taxRate, location, availableQuantity, orderInvoiceId) {
+  editProductFromList(
+    orderDetailId,
+    quantity,
+    priceTaxIncl,
+    priceTaxExcl,
+    taxRate,
+    location,
+    availableQuantity,
+    orderInvoiceId,
+  ) {
     const $orderEdit = new OrderProductEdit(orderDetailId);
     $orderEdit.displayProduct({
       price_tax_excl: priceTaxExcl,
@@ -69,6 +78,7 @@ export default class OrderProductRenderer {
 
   moveProductsPanelToRefundPosition() {
     this.moveProductPanelToTop();
+    /* eslint-disable-next-line max-len */
     $(`${OrderViewPageMap.productAddActionBtn}, ${OrderViewPageMap.productAddRow}, ${OrderViewPageMap.productActionBtn}`).addClass('d-none');
   }
 
@@ -123,12 +133,12 @@ export default class OrderProductRenderer {
     $productRow.removeClass('d-none');
   }
 
-  paginate(numPage) {
+  paginate(originalNumPage) {
     const $rows = $(OrderViewPageMap.productsTable).find('tr[id^="orderProduct_"]');
     const $tablePagination = $(OrderViewPageMap.productsTablePagination);
     const numRowsPerPage = parseInt($tablePagination.data('numPerPage'), 10);
     const maxPage = Math.ceil($rows.length / numRowsPerPage);
-    numPage = Math.max(1, Math.min(numPage, maxPage));
+    const numPage = Math.max(1, Math.min(originalNumPage, maxPage));
     this.paginateUpdateControls(numPage);
 
     // Hide all rows...
@@ -138,7 +148,7 @@ export default class OrderProductRenderer {
     const startRow = ((numPage - 1) * numRowsPerPage) + 1;
     const endRow = numPage * numRowsPerPage + 1;
     $(OrderViewPageMap.productsTable).find(`tr[id^="orderProduct_"]:nth-child(n+${startRow}):nth-child(-n+${endRow})`)
-        .removeClass('d-none');
+      .removeClass('d-none');
     // Remove all edition rows (careful not to remove the template)
     $(OrderViewPageMap.productEditRow).not(OrderViewPageMap.productEditRowTemplate).remove();
   }
@@ -184,10 +194,9 @@ export default class OrderProductRenderer {
   }
 
   toggleProductAddNewInvoiceInfo() {
-    if ($(OrderViewPageMap.productAddInvoiceSelect).val() == 0) {
-      $(OrderViewPageMap.productAddNewInvoiceInfo).removeClass('d-none');
-    } else {
-      $(OrderViewPageMap.productAddNewInvoiceInfo).addClass('d-none');
-    }
+    $(OrderViewPageMap.productAddNewInvoiceInfo).toggleClass(
+      'd-none',
+      $(OrderViewPageMap.productAddInvoiceSelect).val() === 0,
+    );
   }
 }

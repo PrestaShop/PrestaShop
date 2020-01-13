@@ -30,7 +30,7 @@ import OrderViewEventMap from '@pages/order/view/order-view-event-map';
 import OrderPrices from '@pages/order/view/order-prices';
 import OrderProductRenderer from '@pages/order/view/order-product-renderer';
 
-const $ = window.$;
+const {$} = window;
 
 export default class OrderProductAdd {
   constructor() {
@@ -60,11 +60,11 @@ export default class OrderProductAdd {
     this.combinationsSelect.on('change', (event) => {
       this.priceTaxExcludedInput.val(window.ps_round(
         $(event.currentTarget).find(':selected').data('priceTaxExcluded'),
-        this.currencyPrecision
+        this.currencyPrecision,
       ));
       this.priceTaxIncludedInput.val(window.ps_round(
         $(event.currentTarget).find(':selected').data('priceTaxIncluded'),
-        this.currencyPrecision
+        this.currencyPrecision,
       ));
       this.available = $(event.currentTarget).find(':selected').data('stock');
       this.quantityInput.trigger('change');
@@ -81,7 +81,7 @@ export default class OrderProductAdd {
 
         const taxIncluded = parseFloat(this.priceTaxIncludedInput.val());
         this.totalPriceText.html(
-          this.priceTaxCalculator.calculateTotalPrice(quantity, taxIncluded, this.currencyPrecision)
+          this.priceTaxCalculator.calculateTotalPrice(quantity, taxIncluded, this.currencyPrecision),
         );
       }
     });
@@ -94,12 +94,12 @@ export default class OrderProductAdd {
       const taxExcluded = this.priceTaxCalculator.calculateTaxExcluded(
         taxIncluded,
         this.taxRateInput.val(),
-        this.currencyPrecision
+        this.currencyPrecision,
       );
       const quantity = parseInt(this.quantityInput.val(), 10);
       this.priceTaxExcludedInput.val(taxExcluded);
       this.totalPriceText.html(
-        this.priceTaxCalculator.calculateTotalPrice(quantity, taxIncluded, this.currencyPrecision)
+        this.priceTaxCalculator.calculateTotalPrice(quantity, taxIncluded, this.currencyPrecision),
       );
     });
     this.priceTaxExcludedInput.on('change keyup', (event) => {
@@ -107,15 +107,15 @@ export default class OrderProductAdd {
       const taxIncluded = this.priceTaxCalculator.calculateTaxIncluded(
         taxExcluded,
         this.taxRateInput.val(),
-        this.currencyPrecision
+        this.currencyPrecision,
       );
       const quantity = parseInt(this.quantityInput.val(), 10);
       this.priceTaxIncludedInput.val(taxIncluded);
       this.totalPriceText.html(
-        this.priceTaxCalculator.calculateTotalPrice(quantity, taxIncluded, this.currencyPrecision)
+        this.priceTaxCalculator.calculateTotalPrice(quantity, taxIncluded, this.currencyPrecision),
       );
     });
-    this.productAddActionBtn.on('click', event => this.addProduct($(event.currentTarget).data('orderId')));
+    this.productAddActionBtn.on('click', (event) => this.addProduct($(event.currentTarget).data('orderId')));
     this.invoiceSelect.on('change', () => this.orderProductRenderer.toggleProductAddNewInvoiceInfo());
   }
 
@@ -135,7 +135,10 @@ export default class OrderProductAdd {
   setCombinations(combinations) {
     this.combinationsSelect.empty();
     Object.values(combinations).forEach((val) => {
-      this.combinationsSelect.append(`<option value="${val.attributeCombinationId}" data-price-tax-excluded="${val.priceTaxExcluded}" data-price-tax-included="${val.priceTaxIncluded}" data-stock="${val.stock}">${val.attribute}</option>`);
+      this.combinationsSelect.append(
+        /* eslint-disable-next-line max-len */
+        `<option value="${val.attributeCombinationId}" data-price-tax-excluded="${val.priceTaxExcluded}" data-price-tax-included="${val.priceTaxIncluded}" data-stock="${val.stock}">${val.attribute}</option>`,
+      );
     });
     this.combinationsBlock.toggleClass('d-none', Object.keys(combinations).length === 0);
   }

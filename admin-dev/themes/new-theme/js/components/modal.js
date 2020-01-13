@@ -73,13 +73,13 @@ export default function ConfirmModal(params, confirmCallback) {
  *
  */
 function Modal({
-    id = 'confirm_modal',
-    confirmTitle,
-    confirmMessage = '',
-    closeButtonLabel = 'Close',
-    confirmButtonLabel = 'Accept',
-    confirmButtonClass = 'btn-primary',
-  }) {
+  id = 'confirm_modal',
+  confirmTitle,
+  confirmMessage = '',
+  closeButtonLabel = 'Close',
+  confirmButtonLabel = 'Accept',
+  confirmButtonClass = 'btn-primary',
+}) {
   const modal = {};
 
   // Main modal element

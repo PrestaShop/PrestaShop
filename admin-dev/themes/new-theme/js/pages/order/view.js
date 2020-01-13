@@ -29,13 +29,14 @@ import InvoiceNoteManager from '@pages/order/invoice-note-manager';
 import OrderViewPage from '@pages/order/view/order-view-page';
 import OrderProductAutocomplete from '@pages/order/view/order-product-add-autocomplete';
 import OrderProductAdd from '@pages/order/view/order-product-add';
-import OrderViewPageMessagesHandler from './message/order-view-page-messages-handler';
 import TextWithLengthCounter from '@components/form/text-with-length-counter';
+import OrderViewPageMessagesHandler from './message/order-view-page-messages-handler';
 
 const {$} = window;
 
 $(() => {
   const DISCOUNT_TYPE_AMOUNT = 'amount';
+  const DISCOUNT_TYPE_PERCENT = 'percent';
   const DISCOUNT_TYPE_FREE_SHIPPING = 'free_shipping';
 
   new OrderShippingManager();
@@ -50,7 +51,7 @@ $(() => {
   orderViewPage.listenForProductPagination();
 
   orderAddAutocomplete.listenForSearch();
-  orderAddAutocomplete.onItemClickedCallback = product => orderAdd.setProduct(product);
+  orderAddAutocomplete.onItemClickedCallback = (product) => orderAdd.setProduct(product);
 
   handlePaymentDetailsToggle();
   handlePrivateNoteChange();
