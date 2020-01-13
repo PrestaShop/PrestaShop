@@ -10,6 +10,7 @@ use PrestaShop\PrestaShop\Core\Domain\Address\Command\AddCustomerAddressCommand;
 use PrestaShop\PrestaShop\Core\Domain\Address\Command\AddManufacturerAddressCommand;
 use PrestaShop\PrestaShop\Core\Domain\Address\Command\BulkDeleteAddressCommand;
 use PrestaShop\PrestaShop\Core\Domain\Address\Command\DeleteAddressCommand;
+use PrestaShop\PrestaShop\Core\Domain\Address\Command\EditManufacturerAddressCommand;
 use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Address\Query\GetCustomerAddressForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Address\Query\GetManufacturerAddressForEditing;
@@ -55,7 +56,7 @@ class AddressFeatureContext extends AbstractDomainFeatureContext
      * @param string $manufacturerAddressReference
      * @param TableNode $table
      */
-    public function brandAddressShouldHaveFollowingDetails(string $manufacturerAddressReference, TableNode $table)
+    public function manufacturerAddressShouldHaveFollowingDetails(string $manufacturerAddressReference, TableNode $table)
     {
         $manufacturerAddressId = SharedStorage::getStorage()->get($manufacturerAddressReference);
         /** @var EditableManufacturerAddress $editableManufacturerAddress */
@@ -219,5 +220,27 @@ class AddressFeatureContext extends AbstractDomainFeatureContext
             $addressesIds[] = $storage->get($addressReference);
         }
         $this->getCommandBus()->handle(new BulkDeleteAddressCommand($addressesIds));
+    }
+
+    /**
+     * @When I edit brand address :manufacturerAddressReference with following details:
+     *
+     * @param $manufacturerAddressReference
+     * @param TableNode $table
+     */
+    public function editBrandAddressWithFollowingDetails($manufacturerAddressReference, TableNode $table)
+    {
+        $manufacturerAddressId = SharedStorage::getStorage()->get($manufacturerAddressReference);
+        $testCaseData = $table->getRowsHash();
+        /** @var EditableManufacturerAddress $manufacturerAddress */
+        $manufacturerAddress = $this->mapEditableManufacturerAddress($testCaseData, $manufacturerAddressId);
+        $editManufacturerAddressCommand = new EditManufacturerAddressCommand($manufacturerAddressId);
+        $editManufacturerAddressCommand->setLastName($manufacturerAddress->getLastName());
+        $editManufacturerAddressCommand->setFirstName($manufacturerAddress->getFirstName());
+        $editManufacturerAddressCommand->setAddress($manufacturerAddress->getAddress());
+        $editManufacturerAddressCommand->setCity($manufacturerAddress->getCity());
+        $editManufacturerAddressCommand->setManufacturerId($manufacturerAddress->getManufacturerId());
+        $editManufacturerAddressCommand->setCountryId($manufacturerAddress->getCountryId());
+        $this->getCommandBus()->handle($editManufacturerAddressCommand);
     }
 }
