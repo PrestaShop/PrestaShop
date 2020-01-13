@@ -110,10 +110,6 @@ final class IssuePartialRefundHandler extends AbstractOrderCommandHandler implem
                     $orderDetail->unit_price_tax_excl :
                     $orderDetail->unit_price_tax_incl;
                 $refund['amount'] *= $quantity;
-            } else {
-                $refund['amount'] = $isTaxIncluded ?
-                    $taxCalculator->removeTaxes($refund['amount']) :
-                    $taxCalculator->addTaxes($refund['amount']);
             }
 
             $orderDetailList[$orderDetailId]['amount'] = (float) str_replace(',', '.', $refund['amount']);
@@ -160,6 +156,7 @@ final class IssuePartialRefundHandler extends AbstractOrderCommandHandler implem
         if ($shippingCostAmount > 0) {
             if (!$isTaxIncluded) {
                 // @todo: use https://github.com/PrestaShop/decimal for price computations
+                $taxCalculator = $this->getTaxCalculator($order->carrier_tax_rate);
                 $refundedAmount += $taxCalculator->addTaxes($shippingCostAmount);
             } else {
                 $refundedAmount += $shippingCostAmount;
