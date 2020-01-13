@@ -199,6 +199,7 @@ export default class OrderViewPage {
 
     EventEmitter.on(OrderViewEventMap.productListPaginated, (event) => {
       this.orderProductRenderer.paginate(event.numPage);
+      this.orderProductRenderer.toggleColumnLocation();
       this.listenForProductDelete();
       this.listenForProductEdit();
     });
