@@ -57,3 +57,13 @@ Feature: Address
       | State            | Alabama                            |
       | Postal code      | 12345                              |
 
+  Scenario: delete brand address
+    Given I add new brand address "testBrandAddress" with following details:
+      | Brand            | testBrand                          |
+      | Last name        | testLastName                       |
+      | First name       | testFirstName                      |
+      | Address          | test street 123                    |
+      | City             | Kaunas                             |
+      | Country          | Lithuania                          |
+    When I delete address "testBrandAddress"
+    Then brand address "testBrandAddress" does not exist
