@@ -1,7 +1,7 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
     "content-hash": "3890fd4ebf1137135581edc4ea5f2a06",
@@ -59,7 +59,7 @@
             "time": "2019-03-05T22:41:22+00:00"
         },
         {
-            "name": "beberlei/DoctrineExtensions",
+            "name": "beberlei/doctrineextensions",
             "version": "v1.1.9",
             "source": {
                 "type": "git",
@@ -390,7 +390,7 @@
             "support": {
                 "source": "https://github.com/PrestaShop/php-cssjanus/tree/patch-1"
             },
-            "time": "2018-01-08 09:57:29"
+            "time": "2018-01-08T09:57:29+00:00"
         },
         {
             "name": "curl/curl",
@@ -1385,27 +1385,27 @@
         },
         {
             "name": "friendsofsymfony/jsrouting-bundle",
-            "version": "2.4.0",
+            "version": "2.5.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/FriendsOfSymfony/FOSJsRoutingBundle.git",
-                "reference": "e42ed450eac2b61d5fcba9cd834c294a429e9a40"
+                "reference": "165b3f4ae1f798ec320b9942f6db921f7b568bed"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/FriendsOfSymfony/FOSJsRoutingBundle/zipball/e42ed450eac2b61d5fcba9cd834c294a429e9a40",
-                "reference": "e42ed450eac2b61d5fcba9cd834c294a429e9a40",
+                "url": "https://api.github.com/repos/FriendsOfSymfony/FOSJsRoutingBundle/zipball/165b3f4ae1f798ec320b9942f6db921f7b568bed",
+                "reference": "165b3f4ae1f798ec320b9942f6db921f7b568bed",
                 "shasum": ""
             },
             "require": {
-                "php": "^5.3.9|^7.0",
-                "symfony/console": "~2.7||~3.0|^4.0",
-                "symfony/framework-bundle": "~2.7||~3.0|^4.0",
-                "symfony/serializer": "~2.7||~3.0|^4.0",
+                "php": "^7.1",
+                "symfony/console": "~3.3|^4.0|^5.0",
+                "symfony/framework-bundle": "~3.3|^4.0|^5.0",
+                "symfony/serializer": "~3.3|^4.0|^5.0",
                 "willdurand/jsonp-callback-validator": "~1.0"
             },
             "require-dev": {
-                "symfony/expression-language": "~2.7||~3.0|^4.0",
+                "symfony/expression-language": "~3.3|^4.0|^5.0",
                 "symfony/phpunit-bridge": "^3.3|^4.0"
             },
             "type": "symfony-bundle",
@@ -1443,7 +1443,7 @@
                 "javascript",
                 "routing"
             ],
-            "time": "2019-08-10T15:40:05+00:00"
+            "time": "2020-01-13T14:06:12+00:00"
         },
         {
             "name": "geoip2/geoip2",
@@ -6217,7 +6217,7 @@
                 },
                 {
                     "name": "Gert de Pagter",
-                    "email": "backendtea@gmail.com"
+                    "email": "BackEndTea@gmail.com"
                 }
             ],
             "description": "Symfony polyfill for ctype functions",
@@ -7459,7 +7459,7 @@
             "time": "2017-03-25T17:14:26+00:00"
         },
         {
-            "name": "mikey179/vfsStream",
+            "name": "mikey179/vfsstream",
             "version": "v1.6.5",
             "source": {
                 "type": "git",
