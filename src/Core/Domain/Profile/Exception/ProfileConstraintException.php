@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -24,38 +24,15 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Profile\Command;
-
-use PrestaShop\PrestaShop\Core\Domain\Profile\Exception\ProfileException;
-use PrestaShop\PrestaShop\Core\Domain\Profile\ValueObject\ProfileId;
+namespace PrestaShop\PrestaShop\Core\Domain\Profile\Exception;
 
 /**
- * Edits existing Profile
+ * Is thrown when some constraint is violated in Profile subdomain
  */
-class EditProfileCommand extends AbstractProfileCommand
+class ProfileConstraintException extends ProfileException
 {
     /**
-     * @var ProfileId
+     * @var string Code is used when invalid profile name is encountered
      */
-    private $profileId;
-
-    /**
-     * @param int $profileId
-     * @param string[] $localizedNames
-     *
-     * @throws ProfileException
-     */
-    public function __construct($profileId, array $localizedNames)
-    {
-        parent::__construct($localizedNames);
-        $this->profileId = new ProfileId($profileId);
-    }
-
-    /**
-     * @return ProfileId
-     */
-    public function getProfileId()
-    {
-        return $this->profileId;
-    }
+    const INVALID_NAME = 1;
 }

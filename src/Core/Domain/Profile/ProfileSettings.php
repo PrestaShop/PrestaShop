@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -24,38 +24,12 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Profile\Command;
+namespace PrestaShop\PrestaShop\Core\Domain\Profile;
 
-use PrestaShop\PrestaShop\Core\Domain\Profile\Exception\ProfileException;
-use PrestaShop\PrestaShop\Core\Domain\Profile\ValueObject\ProfileId;
-
-/**
- * Edits existing Profile
- */
-class EditProfileCommand extends AbstractProfileCommand
+final class ProfileSettings
 {
     /**
-     * @var ProfileId
+     * Profile name max length as defined in the ObjectModel
      */
-    private $profileId;
-
-    /**
-     * @param int $profileId
-     * @param string[] $localizedNames
-     *
-     * @throws ProfileException
-     */
-    public function __construct($profileId, array $localizedNames)
-    {
-        parent::__construct($localizedNames);
-        $this->profileId = new ProfileId($profileId);
-    }
-
-    /**
-     * @return ProfileId
-     */
-    public function getProfileId()
-    {
-        return $this->profileId;
-    }
+    const NAME_MAX_LENGTH = 32;
 }
