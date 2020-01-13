@@ -121,7 +121,7 @@ class CurrencyCore extends ObjectModel
      *
      * @var string[]
      */
-    private $localizedSymbol;
+    private $localizedSymbols;
 
     /**
      * CLDR price formatting pattern
@@ -257,10 +257,10 @@ class CurrencyCore extends ObjectModel
              * the field as a string.
              */
             if (is_array($this->symbol)) {
-                $this->localizedSymbol = $this->symbol;
+                $this->localizedSymbols = $this->symbol;
                 $this->sign = $this->symbol = $this->symbol[$idLang];
             } else {
-                $this->localizedSymbol = [$idLang => $this->symbol];
+                $this->localizedSymbols = [$idLang => $this->symbol];
                 $this->sign = $this->symbol;
             }
 
@@ -309,7 +309,7 @@ class CurrencyCore extends ObjectModel
 
     public function setSymbolForWebservice()
     {
-        $this->symbol = $this->localizedSymbol;
+        $this->symbol = $this->localizedSymbols;
     }
 
     /**
