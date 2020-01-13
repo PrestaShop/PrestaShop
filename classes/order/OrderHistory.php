@@ -474,6 +474,7 @@ class OrderHistoryCore extends ObjectModel
         if (!$this->add($autodate)) {
             return false;
         }
+        Order::cleanHistoryCache();
 
         if (!$this->sendEmail($order, $template_vars)) {
             return false;
