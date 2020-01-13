@@ -26,6 +26,7 @@
 
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
+use RuntimeException;
 use PHPUnit_Framework_Assert;
 use Order;
 use OrderSlip;
@@ -116,13 +117,17 @@ class OrderRefundFeatureContext extends AbstractDomainFeatureContext
                 $shippingCostRefund = $refund['amount'];
                 continue;
             }
+            $products = $orderForViewing->getProducts()->getProducts();
             /** @var OrderProductForViewing $product */
-            foreach ($orderForViewing->getProducts()->getProducts() as $product) {
+            foreach ($products as $product) {
                 if ($product->getName() === $refund['product_name']) {
                     $orderDetailsRefunds[$product->getOrderDetailId()]['quantity'] = $refund['quantity'];
                     $orderDetailsRefunds[$product->getOrderDetailId()]['amount'] = $refund['amount'];
+                    continue 2;
                 }
             }
+
+            throw new RuntimeException(sprintf('Product %s not found in orders products', $refund['product_name']));
         }
 
         return new IssuePartialRefundCommand(
