@@ -29,7 +29,6 @@ namespace Tests\Unit\Core\Domain\ValueObject;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\Decimal\Number;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
-use PrestaShop\PrestaShop\Core\Domain\Exception\DomainConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\Money;
 
 class MoneyTest extends TestCase
