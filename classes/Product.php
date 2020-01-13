@@ -1646,7 +1646,7 @@ class ProductCore extends ObjectModel
         Tools::displayAsDeprecated();
         $return = array();
         $default_value = 1;
-        foreach ($attributes as &$attribute) {
+        foreach ($attributes as $attribute) {
             $obj = new Combination();
             foreach ($attribute as $key => $value) {
                 $obj->$key = $value;

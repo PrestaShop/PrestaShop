@@ -761,7 +761,7 @@ class CartRuleCore extends ObjectModel
             $products = $context->cart->getProducts();
             $cart_rules = $context->cart->getCartRules(CartRule::FILTER_ACTION_ALL, false);
 
-            foreach ($cart_rules as &$cart_rule) {
+            foreach ($cart_rules as $cart_rule) {
                 if ($cart_rule['gift_product']) {
                     foreach ($products as $key => &$product) {
                         if (empty($product['gift']) && $product['id_product'] == $cart_rule['gift_product'] && $product['id_product_attribute'] == $cart_rule['gift_product_attribute']) {

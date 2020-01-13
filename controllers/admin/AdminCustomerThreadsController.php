@@ -980,7 +980,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
         // Show the errors.
         if (isset($sync_errors['hasError']) && $sync_errors['hasError']) {
             if (isset($sync_errors['errors'])) {
-                foreach ($sync_errors['errors'] as &$error) {
+                foreach ($sync_errors['errors'] as $error) {
                     $this->displayWarning($error);
                 }
             }

@@ -796,7 +796,7 @@ class AdminOrdersControllerCore extends AdminController
                             );
                         }
 
-                        foreach ($order_detail_list as &$product) {
+                        foreach ($order_detail_list as $product) {
                             $order_detail = new OrderDetail((int) $product['id_order_detail']);
                             if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT')) {
                                 StockAvailable::synchronize($order_detail->product_id);
@@ -1545,7 +1545,7 @@ class AdminOrdersControllerCore extends AdminController
                     }
 
                     $res = true;
-                    foreach ($cart_rules as &$cart_rule) {
+                    foreach ($cart_rules as $id_order_invoice => $cart_rule) {
                         $cartRuleObj = new CartRule();
                         $cartRuleObj->date_from = date('Y-m-d H:i:s', strtotime('-1 hour', strtotime($order->date_add)));
                         $cartRuleObj->date_to = date('Y-m-d H:i:s', strtotime('+1 hour'));
@@ -1561,7 +1561,7 @@ class AdminOrdersControllerCore extends AdminController
                         }
                         $cartRuleObj->active = 0;
                         if ($res = $cartRuleObj->add()) {
-                            $cart_rule['id'] = $cartRuleObj->id;
+                            $cart_rules[$id_order_invoice]['id'] = $cartRuleObj->id;
                         } else {
                             break;
                         }
@@ -1832,6 +1832,7 @@ class AdminOrdersControllerCore extends AdminController
                 $stockLocationIsAvailable = true;
             }
         }
+        unset($product);
 
         // Package management for order
         foreach ($products as &$product) {
@@ -1854,15 +1855,17 @@ class AdminOrdersControllerCore extends AdminController
                     }
                 }
             }
+            unset($pack_item);
             $product['pack_items'] = $pack_items;
         }
+        unset($product);
 
         $gender = new Gender((int) $customer->id_gender, $this->context->language->id);
 
         $history = $order->getHistory($this->context->language->id);
 
-        foreach ($history as &$order_state) {
-            $order_state['text-color'] = Tools::getBrightness($order_state['color']) < 128 ? 'white' : 'black';
+        foreach ($history as $k => $order_state) {
+            $history[$k]['text-color'] = Tools::getBrightness($order_state['color']) < 128 ? 'white' : 'black';
         }
 
         $shipping_refundable_tax_excl = $order->total_shipping_tax_excl;
@@ -2016,6 +2019,7 @@ class AdminOrdersControllerCore extends AdminController
                 foreach ($combinations as &$combination) {
                     $combination['attributes'] = rtrim($combination['attributes'], ' - ');
                 }
+                unset($combination);
                 $product['combinations'] = $combinations;
 
                 if ($product['customizable']) {
@@ -2023,6 +2027,7 @@ class AdminOrdersControllerCore extends AdminController
                     $product['customization_fields'] = $product_instance->getCustomizationFields($this->context->language->id);
                 }
             }
+            unset($product);
 
             $to_return = array(
                 'products' => $products,
@@ -2887,6 +2892,7 @@ class AdminOrdersControllerCore extends AdminController
                 }
             }
         }
+        unset($product);
 
         ksort($products);
 
