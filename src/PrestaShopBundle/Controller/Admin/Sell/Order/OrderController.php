@@ -1160,6 +1160,25 @@ class OrderController extends FrameworkBundleAdminController
         }
     }
 
+    public function cancellationAction(int $orderId, Request $request)
+    {
+        $formBuilder = $this->get('prestashop.core.form.identifiable_object.builder.cancellation_form_builder');
+        $formHandler = $this->get('prestashop.core.form.identifiable_object.cancellation_form_handler');
+        $form = $formBuilder->getFormFor($orderId);
+        try {
+            $form->handleRequest($request);
+            $result = $formHandler->handleFor($orderId, $form);
+            if ($result->isSubmitted() && $result->isValid()) {
+                $this->addFlash('success', $this->trans('The discount was successfully generated.', 'Admin.Catalog.Notification'));
+            }
+        } catch (Exception $e) {
+            $this->addFlash('error', $e->getMessage());
+        }
+        return $this->redirectToRoute('admin_orders_view', [
+            'orderId' => $orderId,
+        ]);
+    }
+
     /**
      * Initializes order status update
      *
