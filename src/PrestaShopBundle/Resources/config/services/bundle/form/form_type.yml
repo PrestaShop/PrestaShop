@@ -284,32 +284,45 @@ services:
 
     form.type.performance.smarty:
         class: 'PrestaShopBundle\Form\Admin\AdvancedParameters\Performance\SmartyType'
+        parent: 'form.type.translatable.aware'
+        public: true
         tags:
             - { name: form.type }
 
     form.type.performance.debug_mode:
         class: 'PrestaShopBundle\Form\Admin\AdvancedParameters\Performance\DebugModeType'
+        parent: 'form.type.translatable.aware'
+        public: true
         tags:
             - { name: form.type }
 
     form.type.performance.optional_features:
         class: 'PrestaShopBundle\Form\Admin\AdvancedParameters\Performance\OptionalFeaturesType'
-        arguments: ['@=service("prestashop.adapter.combination_feature").isUsed()']
+        parent: 'form.type.translatable.aware'
+        public: true
+        arguments:
+            - '@=service("prestashop.adapter.combination_feature").isUsed()'
         tags:
             - { name: form.type }
 
     form.type.performance.ccc:
         class: 'PrestaShopBundle\Form\Admin\AdvancedParameters\Performance\CombineCompressCacheType'
+        parent: 'form.type.translatable.aware'
+        public: true
         tags:
             - { name: form.type }
 
     form.type.performance.media_servers:
         class: 'PrestaShopBundle\Form\Admin\AdvancedParameters\Performance\MediaServersType'
+        parent: 'form.type.translatable.aware'
+        public: true
         tags:
             - { name: form.type }
 
     form.type.performance.memcache_servers:
         class: 'PrestaShopBundle\Form\Admin\AdvancedParameters\Performance\MemcacheServerType'
+        parent: 'form.type.translatable.aware'
+        public: true
         tags:
             - { name: form.type }
 

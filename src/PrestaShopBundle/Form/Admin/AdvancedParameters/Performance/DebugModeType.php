@@ -26,15 +26,14 @@
 
 namespace PrestaShopBundle\Form\Admin\AdvancedParameters\Performance;
 
-use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
+use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * This form class generates the "Debug mode" form in Performance page.
  */
-class DebugModeType extends CommonAbstractType
+class DebugModeType extends TranslatorAwareType
 {
     /**
      * {@inheritdoc}
@@ -43,24 +42,20 @@ class DebugModeType extends CommonAbstractType
     {
         $builder
             ->add('disable_non_native_modules', SwitchType::class, [
-                'required' => true,
+                'required' => false,
+                'label' => $this->trans('Disable non PrestaShop modules', 'Admin.Advparameters.Feature'),
+                'help' => $this->trans('Enable or disable non PrestaShop Modules.', 'Admin.Advparameters.Feature'),
             ])
             ->add('disable_overrides', SwitchType::class, [
-                'required' => true,
+                'required' => false,
+                'label' => $this->trans('Disable all overrides', 'Admin.Advparameters.Feature'),
+                'help' => $this->trans('Enable or disable all classes and controllers overrides.', 'Admin.Advparameters.Feature'),
             ])
             ->add('debug_mode', SwitchType::class, [
-                'required' => true,
+                'required' => false,
+                'label' => $this->trans('Debug mode', 'Admin.Advparameters.Feature'),
+                'help' => $this->trans('Enable or disable debug mode.', 'Admin.Advparameters.Help'),
             ]);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function configureOptions(OptionsResolver $resolver)
-    {
-        $resolver->setDefaults([
-            'translation_domain' => 'Admin.Advparameters.Feature',
-        ]);
     }
 
     /**
