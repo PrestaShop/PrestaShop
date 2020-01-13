@@ -8,6 +8,8 @@ use PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\CountryStateByIdChoiceProv
 use PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\ManufacturerNameByIdChoiceProvider;
 use PrestaShop\PrestaShop\Core\Domain\Address\Command\AddCustomerAddressCommand;
 use PrestaShop\PrestaShop\Core\Domain\Address\Command\AddManufacturerAddressCommand;
+use PrestaShop\PrestaShop\Core\Domain\Address\Command\DeleteAddressCommand;
+use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Address\Query\GetCustomerAddressForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Address\Query\GetManufacturerAddressForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Address\QueryResult\EditableCustomerAddress;
@@ -170,5 +172,35 @@ class AddressFeatureContext extends AbstractDomainFeatureContext
             $manufacturerId,
             $countryId
         );
+    }
+
+    /**
+     * @When I delete address :addressReference
+     *
+     * @param string $addressReference
+     */
+    public function deleteAddress(string $addressReference)
+    {
+        $addressId = SharedStorage::getStorage()->get($addressReference);
+        $this->getCommandBus()->handle(new DeleteAddressCommand($addressId));
+    }
+
+    /**
+     * @Then brand address :addressReference does not exist
+     *
+     * @param string $addressReference
+     */
+    public function brandAddressDoesNotExist(string $addressReference)
+    {
+        $addressId = SharedStorage::getStorage()->get($addressReference);
+        try {
+            /* @var EditableManufacturerAddress $editableManufacturerAddress */
+            $this->getQueryBus()->handle(new GetManufacturerAddressForEditing($addressId));
+            throw new \RuntimeException(sprintf(
+                'Manufacturer address "%s" should not be found',
+                $addressReference
+            ));
+        } catch (AddressNotFoundException $exception) {
+        }
     }
 }
