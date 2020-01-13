@@ -64,7 +64,11 @@ export default class GeneratableInput {
    * @private
    */
   _attachOn(generatorBtnSelector) {
-    document.querySelector(generatorBtnSelector).addEventListener('click', (event) => {
+    const generatorBtn = document.querySelector(generatorBtnSelector);
+    if (generatorBtn === null) {
+      return null;
+    }
+    generatorBtn.addEventListener('click', (event) => {
       const attributes = event.currentTarget.attributes;
 
       const targetInputId = attributes.getNamedItem('data-target-input-id').value;
