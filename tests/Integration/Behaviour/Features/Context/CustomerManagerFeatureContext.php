@@ -66,7 +66,7 @@ class CustomerManagerFeatureContext extends AbstractPrestaShopFeatureContext
     protected $customerRegistry = [];
 
     /**
-s     * @When /^I create a customer "(.+)" with following properties:$/
+     * @When /^I create a customer "(.+)" with following properties:$/
      */
     public function createACustomerUsingCommand($customerReference, TableNode $table)
     {
