@@ -13,6 +13,8 @@ module.exports = class shopParamsMaintenance extends BOBasePage {
     this.disableShopLabel = 'label[for=\'form_general_enable_shop_0\']';
     this.enableShopLabel = 'label[for=\'form_general_enable_shop_1\']';
     this.maintenanceTextInputEN = '#form_general_maintenance_text_1_ifr';
+    this.customMaintenanceFrTab = '#form_general_maintenance_text  a[data-locale="fr"]';
+    this.maintenanceTextInputFR = '#form_general_maintenance_text_2_ifr';
     this.addMyIPAddressButton = 'form .add_ip_button';
     this.maintenanceIpInput = '#form_general_maintenance_ip';
     this.saveFormButton = 'form .card-footer button';
@@ -49,6 +51,8 @@ module.exports = class shopParamsMaintenance extends BOBasePage {
    */
   async changeMaintenanceTextShopStatus(text) {
     await this.setValueOnTinymceInput(this.maintenanceTextInputEN, text);
+    await this.page.click(this.customMaintenanceFrTab);
+    await this.setValueOnTinymceInput(this.maintenanceTextInputFR, text);
     await this.page.click(this.saveFormButton);
     return this.getTextContent(this.alertSuccessBloc);
   }
