@@ -67,3 +67,23 @@ Feature: Address
       | Country          | Lithuania                          |
     When I delete address "testBrandAddress"
     Then brand address "testBrandAddress" does not exist
+
+  Scenario: bulk delete brand addresses
+    Given I add new brand address "testBrandAddress1" with following details:
+      | Brand            | testBrand                          |
+      | Last name        | testLastName                       |
+      | First name       | testFirstName                      |
+      | Address          | test street 12                     |
+      | City             | Kaunas                             |
+      | Country          | Lithuania                          |
+    And I add new brand address "testBrandAddress2" with following details:
+      | Brand            | testBrand                          |
+      | Last name        | testLastNameTwo                    |
+      | First name       | testFirstNameTwo                   |
+      | Address          | test street 123                    |
+      | City             | Kaunas                             |
+      | Country          | Lithuania                          |
+    When I bulk delete addresses "testBrandAddress1,testBrandAddress2"
+    Then brand address testBrandAddress1 does not exist
+    Then brand address testBrandAddress2 does not exist
+

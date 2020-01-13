@@ -8,6 +8,7 @@ use PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\CountryStateByIdChoiceProv
 use PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\ManufacturerNameByIdChoiceProvider;
 use PrestaShop\PrestaShop\Core\Domain\Address\Command\AddCustomerAddressCommand;
 use PrestaShop\PrestaShop\Core\Domain\Address\Command\AddManufacturerAddressCommand;
+use PrestaShop\PrestaShop\Core\Domain\Address\Command\BulkDeleteAddressCommand;
 use PrestaShop\PrestaShop\Core\Domain\Address\Command\DeleteAddressCommand;
 use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Address\Query\GetCustomerAddressForEditing;
@@ -202,5 +203,21 @@ class AddressFeatureContext extends AbstractDomainFeatureContext
             ));
         } catch (AddressNotFoundException $exception) {
         }
+    }
+
+    /**
+     * @When I bulk delete addresses :addressesReferences
+     *
+     * @param string $addressesReferences
+     */
+    public function BulkDeleteAddresses(string $addressesReferences)
+    {
+        $addressesReferencesArray = explode(',', $addressesReferences);
+        $addressesIds = [];
+        $storage = SharedStorage::getStorage();
+        foreach ($addressesReferencesArray as $addressReference) {
+            $addressesIds[] = $storage->get($addressReference);
+        }
+        $this->getCommandBus()->handle(new BulkDeleteAddressCommand($addressesIds));
     }
 }
