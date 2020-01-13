@@ -70,7 +70,7 @@ class OrderRefundFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Given :orderReference has following refunds:
+     * @Given :orderReference has following credit slips:
      *
      * @param $orderReference
      * @param TableNode $table

@@ -26,7 +26,7 @@ Feature: Refund Order from Back Office (BO)
       | cart                | dummy_cart                 |
       | message             | test                       |
       | payment module name | dummy_payment              |
-      | status              | Processing in progress |
+      | status              | Processing in progress     |
     And order "bo_order_refund" should contain 2 products "Mug The best is yet to come"
     And order "bo_order_refund" should contain 1 products "Mug Today is a good day"
     And there are 2 less "Mug The best is yet to come" in stock
@@ -35,7 +35,7 @@ Feature: Refund Order from Back Office (BO)
       | product_name                | quantity                 | amount |
       | Mug The best is yet to come | 1                        | 10.5   |
       | Mug Today is a good day     | 1                        | 3.5    |
-    Then "bo_order_refund" has following refunds:
+    Then "bo_order_refund" has following credit slips:
       | amount   | shipping |
       | 14       | 0        |
     And order "bo_order_refund" should contain 2 products "Mug The best is yet to come"
@@ -51,7 +51,7 @@ Feature: Refund Order from Back Office (BO)
       | cart                | dummy_cart                 |
       | message             | test                       |
       | payment module name | dummy_payment              |
-      | status              | Processing in progress |
+      | status              | Processing in progress     |
     And order "bo_order_refund" should contain 2 products "Mug The best is yet to come"
     And order "bo_order_refund" should contain 1 products "Mug Today is a good day"
     And there are 2 less "Mug The best is yet to come" in stock
@@ -59,7 +59,31 @@ Feature: Refund Order from Back Office (BO)
     When I issue a partial refund on "bo_order_refund" with restock without voucher on following products:
       | product_name                | quantity                 | amount |
       | Mug The best is yet to come | 2                        | 7.5    |
-    Then "bo_order_refund" has following refunds:
+    Then "bo_order_refund" has following credit slips:
+      | amount   | shipping |
+      | 7.5      | 0        |
+    And order "bo_order_refund" should contain 2 products "Mug The best is yet to come"
+    And order "bo_order_refund" should contain 1 products "Mug Today is a good day"
+    And order "bo_order_refund" should contain 2 refunded products "Mug The best is yet to come"
+    And order "bo_order_refund" should contain 0 refunded products "Mug Today is a good day"
+    And there are 2 more "Mug The best is yet to come" in stock
+    And there are 0 more "Mug Today is a good day" in stock
+
+  @order-refund
+  Scenario: Partial refund of products restock when not delivered yet (even with restock false)
+    Given I add order "bo_order_refund" with the following details:
+      | cart                | dummy_cart                 |
+      | message             | test                       |
+      | payment module name | dummy_payment              |
+      | status              | Payment accepted           |
+    And order "bo_order_refund" should contain 2 products "Mug The best is yet to come"
+    And order "bo_order_refund" should contain 1 products "Mug Today is a good day"
+    And there are 2 less "Mug The best is yet to come" in stock
+    And there are 1 less "Mug Today is a good day" in stock
+    When I issue a partial refund on "bo_order_refund" without restock without voucher on following products:
+      | product_name                | quantity                 | amount |
+      | Mug The best is yet to come | 2                        | 7.5    |
+    Then "bo_order_refund" has following credit slips:
       | amount   | shipping |
       | 7.5      | 0        |
     And order "bo_order_refund" should contain 2 products "Mug The best is yet to come"
@@ -75,7 +99,7 @@ Feature: Refund Order from Back Office (BO)
       | cart                | dummy_cart                 |
       | message             | test                       |
       | payment module name | dummy_payment              |
-      | status              | Processing in progress |
+      | status              | Processing in progress     |
     And order "bo_order_refund" should contain 2 products "Mug The best is yet to come"
     And order "bo_order_refund" should contain 1 products "Mug Today is a good day"
     And there are 2 less "Mug The best is yet to come" in stock
@@ -84,7 +108,7 @@ Feature: Refund Order from Back Office (BO)
       | product_name                | quantity                 | amount |
       | Mug Today is a good day     | 1                        | 8      |
       | shipping_refund             |                          | 7.5    |
-    Then "bo_order_refund" has following refunds:
+    Then "bo_order_refund" has following credit slips:
       | amount   | shipping |
       | 8        | 7.5      |
     And order "bo_order_refund" should contain 2 products "Mug The best is yet to come"
