@@ -150,6 +150,34 @@ export default class OrderViewPage {
     });
   }
 
+  listenForProductPack() {
+    $(OrderViewPageMap.productPackModal.modal).on('show.bs.modal', function (event) {
+      const button = $(event.relatedTarget);
+      const packItems = button.data('packItems');
+      const modal = $(this);
+      $(OrderViewPageMap.productPackModal.rows).remove();
+      packItems.forEach(item => {
+        const $item = $(OrderViewPageMap.productPackModal.template).clone();
+        $item.attr('id', `productpack_${item.id}`).removeClass('d-none');
+        $item.find(OrderViewPageMap.productPackModal.product.img).attr('src', item.imagePath);
+        $item.find(OrderViewPageMap.productPackModal.product.name).html(item.name);
+        if (item.reference !== '') {
+          $item.find(OrderViewPageMap.productPackModal.product.ref).html(item.reference);
+        } else {
+          $item.find(OrderViewPageMap.productPackModal.product.ref).remove();
+        }
+        if (item.supplierReference !== '') {
+          $item.find(OrderViewPageMap.productPackModal.product.supplierRef).html(item.supplierReference);
+        } else {
+          $item.find(OrderViewPageMap.productPackModal.product.supplierRef).remove();
+        }
+        $item.find(OrderViewPageMap.productPackModal.product.quantity).html(item.quantity);
+        $item.find(OrderViewPageMap.productPackModal.product.availableQuantity).html(item.availableQuantity);
+        $(OrderViewPageMap.productPackModal.template).before($item);
+      });
+    });
+  }
+
   listenForProductAdd() {
     $(OrderViewPageMap.productAddBtn).on(
       'click',

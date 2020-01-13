@@ -438,7 +438,41 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
                 null;
             $product['product_quantity_refunded'] = $product['product_quantity_refunded'] ?: false;
 
+            $productType = !empty($product['pack_items']) ? OrderProductForViewing::TYPE_PACK :
+                OrderProductForViewing::TYPE_PRODUCT_WITHOUT_COMBINATIONS;
+
             $orderInvoice = new OrderInvoice($product['id_order_invoice']);
+
+            $packItems = [];
+            foreach ($product['pack_items'] as $pack_item) {
+                $packItemType = !empty($pack_item['pack_items']) ? OrderProductForViewing::TYPE_PACK :
+                    OrderProductForViewing::TYPE_PRODUCT_WITHOUT_COMBINATIONS;
+                $packItemImagePath = isset($pack_item['image_tag']) ?
+                    $this->imageTagSourceParser->parse($pack_item['image_tag']) :
+                    null;
+                $packItems[] = new OrderProductForViewing(
+                    null,
+                    $pack_item['id_product'],
+                    $pack_item['name'],
+                    $pack_item['reference'],
+                    $pack_item['supplier_reference'],
+                    $pack_item['pack_quantity'],
+                    0,
+                    0,
+                    $pack_item['current_stock'],
+                    $packItemImagePath,
+                    Tools::ps_round(0, $computingPrecision->getPrecision($currency->precision)),
+                    Tools::ps_round(0, $computingPrecision->getPrecision($currency->precision)),
+                    0,
+                    $this->locale->formatPrice(0, $currency->iso_code),
+                    0,
+                    $this->locale->formatPrice(0, $currency->iso_code),
+                    $pack_item['location'],
+                    null,
+                    '',
+                    $packItemType
+                );
+            }
 
             $productsForViewing[] = new OrderProductForViewing(
                 $product['id_order_detail'],
@@ -465,7 +499,9 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
                 $this->locale->formatPrice($product['displayed_max_refundable'], $currency->iso_code),
                 $product['location'],
                 !empty($product['id_order_invoice']) ? $product['id_order_invoice'] : null,
-                !empty($product['id_order_invoice']) ? $orderInvoice->getInvoiceNumberFormatted($order->id_lang) : ''
+                !empty($product['id_order_invoice']) ? $orderInvoice->getInvoiceNumberFormatted($order->id_lang) : '',
+                $productType,
+                $packItems
             );
         }
 
