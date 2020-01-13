@@ -7,6 +7,8 @@ module.exports = class Languages extends LocalizationBasePage {
 
     this.pageTitle = 'Languages •';
 
+    // Header selectors
+    this.addNewLanguageLink = '#page-header-desc-configuration-add';
     // Selectors grid panel
     this.gridPanel = '#language_grid_panel';
     this.gridTable = '#language_grid_table';
@@ -26,6 +28,15 @@ module.exports = class Languages extends LocalizationBasePage {
     this.dropdownToggleButton = `${this.actionsColumn} a.dropdown-toggle`;
     this.dropdownToggleMenu = `${this.actionsColumn} div.dropdown-menu`;
     this.deleteRowLink = `${this.dropdownToggleMenu} a[data-url*='/delete']`;
+  }
+
+  /* Header methods */
+  /**
+   * Go to add new language page
+   * @return {Promise<void>}
+   */
+  async goToAddNewLanguage() {
+    await this.clickAndWaitForNavigation(this.addNewLanguageLink);
   }
 
   /* Reset methods */

@@ -147,14 +147,14 @@ class AddCustomerAddressCommand
         string $city,
         int $countryId,
         string $postcode,
-        string $dni,
-        string $company,
-        string $vat_number,
-        string $address2,
-        int $id_state,
-        string $phone,
-        ?string $phone_mobile,
-        string $other
+        string $dni = null,
+        string $company = null,
+        string $vat_number = null,
+        string $address2 = null,
+        int $id_state = 0,
+        string $phone = null,
+        ?string $phone_mobile = null,
+        string $other = null
     ) {
         $this->customerId = new CustomerId($customerId);
         $this->addressAlias = $addressAlias;

@@ -27,6 +27,23 @@
   }
 }
 
+#orderProductsPanel {
+  .cellProductActions .btn {
+    background-color: transparent;
+    color: $medium-gray;
+    &:hover {
+      color: $primary;
+    }
+  }
+  input[type="number"] {
+    width: 80px;
+  }
+}
+
+#addProductNewInvoiceInfo h4 {
+  margin-top: 8px;
+}
+
 $order-block-background-color: #F8F8F8;
 
 .info-block {
@@ -37,7 +54,6 @@ $order-block-background-color: #F8F8F8;
   padding-bottom: 16px;
 }
 
-
 #order-creation-container {
   .found-cart-rule:hover {
     cursor: pointer;
@@ -46,6 +62,19 @@ $order-block-background-color: #F8F8F8;
 
   #search-cart-rules-result-box {
     z-index: 10;
+  }
+
+  #summary-block {
+    .badge {
+      font-size: 100%;
+    }
+  }
+
+  #customer-tab-content-container-toggler .material-icons::before {
+    content: 'keyboard_arrow_down';
+  }
+  #customer-tab-content-container-toggler[aria-expanded=false] .material-icons::before {
+    content: 'keyboard_arrow_up';
   }
 }
 
@@ -115,22 +144,26 @@ $order-block-background-color: #F8F8F8;
   }
 }
 
+td .editProductInvoice {
+  min-width: 130px;
+}
+
 
 @media only screen and (max-width: 1475px) {
-  .messages-block {  
+  .messages-block {
     li {
       .row {
         .col-md-1 {
           order: 1;
           margin-bottom: 5px;
         }
-  
+
         .col-md-11 {
           order: 2;
         }
       }
     }
-  } 
+  }
 }
 
 .partial-refund {

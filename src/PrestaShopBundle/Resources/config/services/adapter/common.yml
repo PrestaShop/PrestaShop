@@ -21,3 +21,8 @@ services:
 
     prestashop.adapter.validate:
       class: PrestaShop\PrestaShop\Adapter\Validate
+
+    prestashop.adapter.context_state_manager:
+      class: PrestaShop\PrestaShop\Adapter\ContextStateManager
+      arguments:
+        - '@=service("prestashop.adapter.legacy.context").getContext()'

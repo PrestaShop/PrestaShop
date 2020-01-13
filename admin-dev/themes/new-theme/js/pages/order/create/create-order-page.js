@@ -36,6 +36,8 @@ import eventMap from './event-map';
 import CartRuleManager from './cart-rule-manager';
 import ProductManager from './product-manager';
 import ProductRenderer from './product-renderer';
+import SummaryRenderer from './summary-renderer';
+import SummaryManager from './summary-manager';
 
 const $ = window.$;
 
@@ -45,6 +47,7 @@ const $ = window.$;
 export default class CreateOrderPage {
   constructor() {
     this.cartId = null;
+    this.customerId = null;
     this.$container = $(createOrderMap.orderCreationContainer);
 
     this.cartProvider = new CartProvider();
@@ -57,8 +60,57 @@ export default class CreateOrderPage {
     this.cartRuleManager = new CartRuleManager();
     this.productManager = new ProductManager();
     this.productRenderer = new ProductRenderer();
+    this.summaryRenderer = new SummaryRenderer();
+    this.summaryManager = new SummaryManager();
 
     this._initListeners();
+    this._loadCartFromUrlParams();
+  }
+
+  /**
+   * Checks if correct addresses are selected.
+   * There is a case when options list cannot contain cart addresses 'selected' values
+   *  because those are outdated in db (e.g. deleted after cart creation or country is disabled)
+   *
+   * @param {Array} addresses
+   *
+   * @returns {boolean}
+   */
+  static validateSelectedAddresses(addresses) {
+    let deliveryValid = false;
+    let invoiceValid = false;
+
+    for (const key in addresses) {
+      const address = addresses[key];
+
+      if (address.delivery) {
+        deliveryValid = true;
+      }
+
+      if (address.invoice) {
+        invoiceValid = true;
+      }
+
+      if (deliveryValid && invoiceValid) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  /**
+   * Loads cart if query params contains valid cartId
+   *
+   * @private
+   */
+  _loadCartFromUrlParams() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const cartId = Number(urlParams.get('cartId'));
+
+    if (!isNaN(cartId) && cartId !== 0) {
+      this.cartProvider.getCart(cartId);
+    }
   }
 
   /**
@@ -74,9 +126,8 @@ export default class CreateOrderPage {
     this.$container.on('input', createOrderMap.productSearch, e => this._initProductSearch(e));
     this.$container.on('input', createOrderMap.cartRuleSearchInput, e => this._initCartRuleSearch(e));
     this.$container.on('blur', createOrderMap.cartRuleSearchInput, () => this.cartRuleManager.stopSearching());
-    this._initCartEditing();
+    this._listenForCartEdit();
     this._onCartLoaded();
-    this._onCartAddressesChanged();
   }
 
   /**
@@ -84,24 +135,44 @@ export default class CreateOrderPage {
    *
    * @private
    */
-  _initCartEditing() {
+  _listenForCartEdit() {
+    this._onCartAddressesChanged();
+    this._onDeliveryOptionChanged();
+    this._onFreeShippingChanged();
+    this._addCartRuleToCart();
+    this._removeCartRuleFromCart();
+    this._onCartCurrencyChanged();
+    this._onCartLanguageChanged();
+
     this.$container.on('change', createOrderMap.deliveryOptionSelect, e =>
-      this.cartEditor.changeDeliveryOption(this.cartId, e.currentTarget.value)
+      this.cartEditor.changeDeliveryOption(this.cartId, e.currentTarget.value),
     );
 
     this.$container.on('change', createOrderMap.freeShippingSwitch, e =>
-      this.cartEditor.setFreeShipping(this.cartId, e.currentTarget.value)
+      this.cartEditor.setFreeShipping(this.cartId, e.currentTarget.value),
     );
 
     this.$container.on('click', createOrderMap.addToCartButton, () =>
-      this.productManager.addProductToCart(this.cartId)
+      this.productManager.addProductToCart(this.cartId),
     );
 
+    this.$container.on('change', createOrderMap.cartCurrencySelect, (e) =>
+      this.cartEditor.changeCartCurrency(this.cartId, e.currentTarget.value)
+    );
+
+    this.$container.on('change', createOrderMap.cartLanguageSelect, (e) =>
+      this.cartEditor.changeCartLanguage(this.cartId, e.currentTarget.value)
+    );
+
+    this.$container.on('click', createOrderMap.sendProcessOrderEmailBtn, () =>
+      this.summaryManager.sendProcessOrderEmail(this.cartId)
+    );
+
+    this.$container.on('change', createOrderMap.listedProductUnitPriceInput, (e) => this._initProductChangePrice(e));
+    this.$container.on('change', createOrderMap.listedProductQtyInput, e => this._initProductChangeQty(e));
     this.$container.on('change', createOrderMap.addressSelect, () => this._changeCartAddresses());
     this.$container.on('click', createOrderMap.productRemoveBtn, e => this._initProductRemoveFromCart(e));
 
-    this._addCartRuleToCart();
-    this._removeCartRuleFromCart();
   }
 
   /**
@@ -113,6 +184,9 @@ export default class CreateOrderPage {
     EventEmitter.on(eventMap.cartLoaded, (cartInfo) => {
       this.cartId = cartInfo.cartId;
       this._renderCartInfo(cartInfo);
+      if (cartInfo.addresses.length !== 0 && !CreateOrderPage.validateSelectedAddresses(cartInfo.addresses)) {
+        this._changeCartAddresses();
+      }
       this.customerManager.loadCustomerCarts(this.cartId);
       this.customerManager.loadCustomerOrders();
     });
@@ -127,6 +201,7 @@ export default class CreateOrderPage {
     EventEmitter.on(eventMap.cartAddressesChanged, (cartInfo) => {
       this.addressesRenderer.render(cartInfo.addresses);
       this.shippingRenderer.render(cartInfo.shipping, cartInfo.products.length === 0);
+      this.summaryRenderer.render(cartInfo);
     });
   }
 
@@ -138,6 +213,7 @@ export default class CreateOrderPage {
   _onDeliveryOptionChanged() {
     EventEmitter.on(eventMap.cartDeliveryOptionChanged, (cartInfo) => {
       this.shippingRenderer.render(cartInfo.shipping, cartInfo.products.length === 0);
+      this.summaryRenderer.render(cartInfo);
     });
   }
 
@@ -148,8 +224,39 @@ export default class CreateOrderPage {
    */
   _onFreeShippingChanged() {
     EventEmitter.on(eventMap.cartFreeShippingSet, (cartInfo) => {
+      this.cartRulesRenderer.renderCartRulesBlock(cartInfo.cartRules, cartInfo.products.length === 0);
       this.shippingRenderer.render(cartInfo.shipping, cartInfo.products.length === 0);
+      this.summaryRenderer.render(cartInfo);
     });
+  }
+
+  /**
+   * Listens for cart language update event
+   *
+   * @private
+   */
+  _onCartLanguageChanged() {
+    EventEmitter.on(eventMap.cartLanguageChanged, (cartInfo) => {
+      this._preselectCartLanguage(cartInfo.langId);
+    });
+  }
+
+  /**
+   * Listens for cart currency update event
+   *
+   * @private
+   */
+  _onCartCurrencyChanged() {
+    // on success
+    EventEmitter.on(eventMap.cartCurrencyChanged, (cartInfo) => {
+      this._renderCartInfo(cartInfo);
+      this.productRenderer.reset();
+    });
+
+    // on failure
+    EventEmitter.on(eventMap.cartCurrencyChangeFailed, (response) => {
+      this.productRenderer.renderCartBlockErrorAlert(response.responseJSON.message)
+    })
   }
 
   /**
@@ -160,7 +267,8 @@ export default class CreateOrderPage {
    * @private
    */
   _initCustomerSearch(event) {
-    setTimeout(() => this.customerManager.search($(event.currentTarget).val()), 300);
+    clearTimeout(this.timeoutId);
+    this.timeoutId = setTimeout(() => this.customerManager.search($(event.currentTarget).val()), 300);
   }
 
   /**
@@ -172,6 +280,7 @@ export default class CreateOrderPage {
    */
   _initCustomerSelect(event) {
     const customerId = this.customerManager.selectCustomer(event);
+    this.customerId = customerId;
     this.cartProvider.loadEmptyCart(customerId);
   }
 
@@ -204,7 +313,9 @@ export default class CreateOrderPage {
    */
   _initCartRuleSearch(event) {
     const searchPhrase = event.currentTarget.value;
-    this.cartRuleManager.search(searchPhrase);
+
+    clearTimeout(this.timeoutId);
+    this.timeoutId = setTimeout(() => this.cartRuleManager.search(searchPhrase), 300);
   }
 
   /**
@@ -246,8 +357,9 @@ export default class CreateOrderPage {
   _initProductSearch(event) {
     const $productSearchInput = $(event.currentTarget);
     const searchPhrase = $productSearchInput.val();
+    clearTimeout(this.timeoutId);
 
-    setTimeout(() => this.productManager.search(searchPhrase), 300);
+    this.timeoutId = setTimeout(() => this.productManager.search(searchPhrase), 300);
   }
 
   /**
@@ -268,6 +380,42 @@ export default class CreateOrderPage {
   }
 
   /**
+   * Inits product in cart price change
+   *
+   * @param event
+   *
+   * @private
+   */
+  _initProductChangePrice(event) {
+    const product = {
+      productId: $(event.currentTarget).data('product-id'),
+      attributeId: $(event.currentTarget).data('attribute-id'),
+      customizationId: $(event.currentTarget).data('customization-id'),
+      price: $(event.currentTarget).val(),
+    };
+
+    this.productManager.changeProductPrice(this.cartId, this.customerId, product);
+  }
+
+  /**
+   * Inits product in cart quantity update
+   *
+   * @param event
+   *
+   * @private
+   */
+  _initProductChangeQty(event) {
+    const product = {
+      productId: $(event.currentTarget).data('product-id'),
+      attributeId: $(event.currentTarget).data('attribute-id'),
+      customizationId: $(event.currentTarget).data('customization-id'),
+      newQty: $(event.currentTarget).val(),
+    };
+
+    this.productManager.changeProductQty(this.cartId, product);
+  }
+
+  /**
    * Renders cart summary on the page
    *
    * @param {Object} cartInfo
@@ -278,11 +426,35 @@ export default class CreateOrderPage {
     this.addressesRenderer.render(cartInfo.addresses);
     this.cartRulesRenderer.renderCartRulesBlock(cartInfo.cartRules, cartInfo.products.length === 0);
     this.shippingRenderer.render(cartInfo.shipping, cartInfo.products.length === 0);
+    this.productRenderer.cleanCartBlockAlerts();
     this.productRenderer.renderList(cartInfo.products);
-    // @todo: render Summary block when at least 1 product is in cart
-    // and delivery options are available
+    this.summaryRenderer.render(cartInfo);
+    this._preselectCartCurrency(cartInfo.currencyId);
+    this._preselectCartLanguage(cartInfo.langId);
 
     $(createOrderMap.cartBlock).removeClass('d-none');
+  }
+
+  /**
+   * Sets cart currency selection value
+   *
+   * @param currencyId
+   *
+   * @private
+   */
+  _preselectCartCurrency(currencyId) {
+    $(createOrderMap.cartCurrencySelect).val(currencyId);
+  }
+
+  /**
+   * Sets cart language selection value
+   *
+   * @param langId
+   *
+   * @private
+   */
+  _preselectCartLanguage(langId) {
+    $(createOrderMap.cartLanguageSelect).val(langId);
   }
 
   /**

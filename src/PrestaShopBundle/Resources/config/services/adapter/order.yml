@@ -4,12 +4,16 @@ services:
 
   prestashop.adapter.order.command_handler.duplicate_order_cart_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Order\CommandHandler\DuplicateOrderCartHandler'
+    arguments:
+      - '@prestashop.adapter.context_state_manager'
     tags:
       - name: tactician.handler
         command: 'PrestaShop\PrestaShop\Core\Domain\Order\Command\DuplicateOrderCartCommand'
 
   prestashop.adapter.order.command_handler.add_order_from_back_office_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Order\CommandHandler\AddOrderFromBackOfficeHandler'
+    arguments:
+      - '@prestashop.adapter.context_state_manager'
     tags:
       - name: tactician.handler
         command: 'PrestaShop\PrestaShop\Core\Domain\Order\Command\AddOrderFromBackOfficeCommand'
@@ -136,3 +140,12 @@ services:
     tags:
       - name: tactician.handler
         command: 'PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderPreview'
+
+  prestashop.adapter.order.command_handler.send_process_order_email_handler:
+    class: PrestaShop\PrestaShop\Adapter\Order\CommandHandler\SendProcessOrderEmailHandler
+    arguments:
+      - '@translator'
+      - '@=service("prestashop.adapter.legacy.context").getContext().link'
+    tags:
+      - name: tactician.handler
+        command: PrestaShop\PrestaShop\Core\Domain\Order\Command\SendProcessOrderEmailCommand

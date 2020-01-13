@@ -3920,10 +3920,10 @@ class ProductCore extends ObjectModel
         foreach ($res as $row) {
             $row['texture'] = '';
 
-            if (Tools::isEmpty($row['color']) && !@filemtime(_PS_COL_IMG_DIR_ . $row['id_attribute'] . '.jpg')) {
-                continue;
-            } elseif (Tools::isEmpty($row['color']) && @filemtime(_PS_COL_IMG_DIR_ . $row['id_attribute'] . '.jpg')) {
+            if (@filemtime(_PS_COL_IMG_DIR_ . $row['id_attribute'] . '.jpg')) {
                 $row['texture'] = _THEME_COL_DIR_ . $row['id_attribute'] . '.jpg';
+            } elseif (Tools::isEmpty($row['color'])) {
+                continue;
             }
 
             $colors[(int) $row['id_product']][] = array('id_product_attribute' => (int) $row['id_product_attribute'], 'color' => $row['color'], 'texture' => $row['texture'], 'id_product' => $row['id_product'], 'name' => $row['name'], 'id_attribute' => $row['id_attribute']);
