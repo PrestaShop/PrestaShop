@@ -26,6 +26,9 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Order\Command;
 
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\EmptyRefundAmountException;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
+use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderDetailRefund;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
 
 /**
@@ -76,6 +79,9 @@ class IssuePartialRefundCommand
      * @param bool $generateVoucher
      * @param int $voucherRefundType
      * @param float|null $voucherRefundAmount
+     *
+     * @throws EmptyRefundAmountException
+     * @throws OrderException
      */
     public function __construct(
         int $orderId,
@@ -87,7 +93,14 @@ class IssuePartialRefundCommand
         float $voucherRefundAmount = null
     ) {
         $this->orderId = new OrderId($orderId);
-        $this->orderDetailRefunds = $orderDetailRefunds;
+        $this->orderDetailRefunds = [];
+        foreach ($orderDetailRefunds as $orderDetailId => $detailRefund) {
+            $this->orderDetailRefunds[] = OrderDetailRefund::createPartialRefund(
+                $orderDetailId,
+                $detailRefund['quantity'],
+                $detailRefund['amount']
+            );
+        }
         $this->shippingCostRefundAmount = $shippingCostRefundAmount;
         $this->restockRefundedProducts = $restockRefundedProducts;
         $this->generateVoucher = $generateVoucher;

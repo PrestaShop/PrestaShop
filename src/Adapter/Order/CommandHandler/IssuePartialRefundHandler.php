@@ -41,6 +41,7 @@ use PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler\IssuePartialRefundHan
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\EmptyRefundQuantityException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\EmptyRefundAmountException;
+use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderDetailRefund;
 use PrestaShop\PrestaShop\Core\Domain\Order\VoucherRefundType;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
 use StockAvailable;
@@ -82,21 +83,13 @@ final class IssuePartialRefundHandler extends AbstractOrderCommandHandler implem
         $order = $this->getOrderObject($command->getOrderId());
         $isTaxIncluded = $this->isTaxIncludedInOrder($order);
 
-        $refunds = $command->getOrderDetailRefunds();
         $refundedAmount = 0;
         $orderDetailList = [];
-        $fullQuantityList = [];
-        $taxCalculator = $this->getTaxCalculator($order->carrier_tax_rate);
 
-        foreach ($refunds as $orderDetailId => $refund) {
-            // this refund has an amount but no quantity, this should not happen
-            if (empty($refund['quantity'])) {
-                throw new EmptyRefundQuantityException();
-            }
-
-            $quantity = $refund['quantity'];
-
-            $fullQuantityList[$orderDetailId] = $quantity;
+        /** @var OrderDetailRefund $orderDetailRefund */
+        foreach ($command->getOrderDetailRefunds() as $orderDetailRefund) {
+            $orderDetailId = $orderDetailRefund->getOrderDetailId();
+            $quantity = $orderDetailRefund->getProductQuantity();
 
             $orderDetailList[$orderDetailId] = [
                 'quantity' => $quantity,
@@ -105,14 +98,16 @@ final class IssuePartialRefundHandler extends AbstractOrderCommandHandler implem
 
             $orderDetail = new OrderDetail($orderDetailId);
 
-            if (empty($refund['amount'])) {
-                $refund['amount'] = $isTaxIncluded ?
+            if (null === $orderDetailRefund->getRefundAmount()) {
+                $productRefundAmount = $isTaxIncluded ?
                     $orderDetail->unit_price_tax_excl :
                     $orderDetail->unit_price_tax_incl;
-                $refund['amount'] *= $quantity;
+                $productRefundAmount *= $quantity;
+            } else {
+                $productRefundAmount = $orderDetailRefund->getRefundAmount();
             }
 
-            $orderDetailList[$orderDetailId]['amount'] = (float) str_replace(',', '.', $refund['amount']);
+            $orderDetailList[$orderDetailId]['amount'] = $productRefundAmount;
             $orderDetailList[$orderDetailId]['unit_price'] =
                     $orderDetailList[$orderDetailId]['amount'] / $orderDetailList[$orderDetailId]['quantity'];
 
@@ -132,16 +127,6 @@ final class IssuePartialRefundHandler extends AbstractOrderCommandHandler implem
             }
         }
 
-        $shippingCostAmount = $command->getShippingCostRefundAmount() ?: false;
-
-        if ($refundedAmount === 0 && $shippingCostAmount === 0) {
-            if (!empty($refunds)) {
-                throw new EmptyRefundQuantityException();
-            }
-
-            throw new EmptyRefundAmountException();
-        }
-
         $chosen = false;
         $voucher = 0;
 
@@ -153,6 +138,7 @@ final class IssuePartialRefundHandler extends AbstractOrderCommandHandler implem
             $refundedAmount = $voucher = $command->getVoucherRefundAmount();
         }
 
+        $shippingCostAmount = $command->getShippingCostRefundAmount() ?: false;
         if ($shippingCostAmount > 0) {
             if (!$isTaxIncluded) {
                 // @todo: use https://github.com/PrestaShop/decimal for price computations
@@ -185,6 +171,7 @@ final class IssuePartialRefundHandler extends AbstractOrderCommandHandler implem
                 throw new OrderException('You cannot generate a partial credit slip.');
             }
 
+            $fullQuantityList = array_map(function($orderDetail) { return $orderDetail['quantity']; }, $orderDetailList);
             Hook::exec('actionOrderSlipAdd', [
                 'order' => $order,
                 'productList' => $orderDetailList,

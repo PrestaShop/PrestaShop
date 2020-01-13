@@ -26,6 +26,10 @@
 
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
+use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotDisableDefaultCurrencyException;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\EmptyRefundAmountException;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\EmptyRefundQuantityException;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use RuntimeException;
 use PHPUnit_Framework_Assert;
 use Order;
@@ -59,14 +63,19 @@ class OrderRefundFeatureContext extends AbstractDomainFeatureContext
         $orderId = SharedStorage::getStorage()->get($orderReference);
         $refundData = $table->getColumnsHash();
 
-        $command = $this->createIssuePartialRefundCommand(
-            $orderId,
-            $refundData,
-            $restockProducts,
-            $generateVoucher
-        );
+        try {
+            $this->lastException = null;
+            $command = $this->createIssuePartialRefundCommand(
+                $orderId,
+                $refundData,
+                $restockProducts,
+                $generateVoucher
+            );
 
-        $this->getCommandBus()->handle($command);
+            $this->getCommandBus()->handle($command);
+        } catch (OrderException $e) {
+            $this->lastException = $e;
+        }
     }
 
     /**
@@ -87,6 +96,22 @@ class OrderRefundFeatureContext extends AbstractDomainFeatureContext
             PHPUnit_Framework_Assert::assertEquals($orderSlip->amount, $refund['amount']);
             PHPUnit_Framework_Assert::assertEquals($orderSlip->shipping_cost_amount, $refund['shipping']);
         }
+    }
+
+    /**
+     * @Then I should get error that refund quantity is empty
+     */
+    public function assertLastErrorIsEmptyRefundQuantity()
+    {
+        $this->assertLastErrorIs(EmptyRefundQuantityException::class);
+    }
+
+    /**
+     * @Then I should get error that refund amount is empty
+     */
+    public function assertLastErrorIsEmptyRefundAmount()
+    {
+        $this->assertLastErrorIs(EmptyRefundAmountException::class);
     }
 
     /**

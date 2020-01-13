@@ -117,3 +117,35 @@ Feature: Refund Order from Back Office (BO)
     And order "bo_order_refund" should contain 1 refunded products "Mug Today is a good day"
     And there are 0 more "Mug The best is yet to come" in stock
     And there are 1 more "Mug Today is a good day" in stock
+
+  @order-refund-error
+  Scenario: Quantity is required
+    Given I add order "bo_order_refund" with the following details:
+      | cart                | dummy_cart                 |
+      | message             | test                       |
+      | payment module name | dummy_payment              |
+      | status              | Processing in progress     |
+    And order "bo_order_refund" should contain 2 products "Mug The best is yet to come"
+    And order "bo_order_refund" should contain 1 products "Mug Today is a good day"
+    And there are 2 less "Mug The best is yet to come" in stock
+    And there are 1 less "Mug Today is a good day" in stock
+    When I issue a partial refund on "bo_order_refund" with restock without voucher on following products:
+      | product_name                | quantity                 | amount |
+      | Mug Today is a good day     | 0                        | 8      |
+    Then I should get error that refund quantity is empty
+
+  @order-refund-error
+  Scenario: Amount is required
+    Given I add order "bo_order_refund" with the following details:
+      | cart                | dummy_cart                 |
+      | message             | test                       |
+      | payment module name | dummy_payment              |
+      | status              | Processing in progress     |
+    And order "bo_order_refund" should contain 2 products "Mug The best is yet to come"
+    And order "bo_order_refund" should contain 1 products "Mug Today is a good day"
+    And there are 2 less "Mug The best is yet to come" in stock
+    And there are 1 less "Mug Today is a good day" in stock
+    When I issue a partial refund on "bo_order_refund" with restock without voucher on following products:
+      | product_name                | quantity                 | amount |
+      | Mug Today is a good day     | 1                        | 0      |
+    Then I should get error that refund amount is empty
