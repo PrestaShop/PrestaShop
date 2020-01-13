@@ -24,6 +24,12 @@
  *#}
 
 {% set paginationNum = 8 %}
+{% set isColumnLocationDisplayed = false %}
+{% for product in orderForViewing.products.products|slice(0, paginationNum) %}
+  {% if product.location is not empty %}
+    {% set isColumnLocationDisplayed = true %}
+  {% endif %}
+{% endfor %}
 <div class="card" id="orderProductsPanel">
   <div class="card-header">
     <h3 class="card-header-title">
@@ -46,7 +52,7 @@
           <th>
             <p>{{ 'Quantity'|trans({}, 'Admin.Global') }}</p>
           </th>
-          <th>
+          <th class="cellProductLocation{% if not isColumnLocationDisplayed %} d-none{% endif %}">
             <p>{{ 'Stock Location'|trans({}, 'Admin.Global') }}</p>
           </th>
           <th>
@@ -80,7 +86,8 @@
           {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/product.html.twig' with {
             'product': product,
             'productIndex': loop.index,
-            'paginationNum': paginationNum
+            'paginationNum': paginationNum,
+            'isColumnLocationDisplayed': isColumnLocationDisplayed
           } %}
         {% endfor %}
       {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/add_product_row.html.twig' %}

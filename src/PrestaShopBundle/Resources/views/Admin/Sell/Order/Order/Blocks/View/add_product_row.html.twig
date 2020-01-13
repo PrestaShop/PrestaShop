@@ -50,11 +50,11 @@
   <td id="addProductRefunded"></td>
   <td id="addProductAvailable"></td>
   <td id="addProductTotalPrice"></td>
-  <td colspan="2" class="pr-2">
-    {% if orderForViewing.hasInvoice() %}
+  {% if orderForViewing.hasInvoice() %}
+    <td class="pr-2">
       {{ form_row(addProductRowForm.invoice) }}
-    {% endif %}
-  </td>
+    </td>
+  {% endif %}
   <td class="text-right btn-group">
     {{ form_row(addProductRowForm.cancel) }}
     {{ form_row(addProductRowForm.add) }}

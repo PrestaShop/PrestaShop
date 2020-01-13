@@ -22,7 +22,9 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *#}
-
+{% if isColumnLocationDisplayed is not defined %}
+  {% set isColumnLocationDisplayed=(product.availableQuantity is empty) %}
+{% endif %}
 <tr id="orderProduct_{{ product.orderDetailId }}"{% if productIndex is defined and paginationNum is defined and productIndex > paginationNum %} class="d-none"{% endif %}>
   <td class="cellProductImg">
     {% if product.imagePath %}
@@ -58,7 +60,7 @@
       <input type="text" value="{{ product.quantity }}" class="form-control">
     </div>
   </td>
-  <td class="cellProductLocation">{{ product.location }}</td>
+  <td class="cellProductLocation{% if not isColumnLocationDisplayed %} d-none{% endif %}">{{ product.location }}</td>
   <td>
     <p>{{ product.quantityRefunded }}{% if product.amountRefunded %} ({{ product.amountRefunded }} {{ 'Refunded'|trans({}, 'Admin.Orderscustomers.Feature') }}){% endif %}</p>
   </td>
