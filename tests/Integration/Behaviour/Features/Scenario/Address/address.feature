@@ -87,3 +87,26 @@ Feature: Address
     Then brand address testBrandAddress1 does not exist
     Then brand address testBrandAddress2 does not exist
 
+  Scenario: edit brand address
+    Given I add new brand address "testBrandAddress" with following details:
+      | Brand            | testBrand                          |
+      | Last name        | testLastName                       |
+      | First name       | testFirstName                      |
+      | Address          | test street 123                    |
+      | City             | Kaunas                             |
+      | Country          | Lithuania                          |
+    When I edit brand address "testBrandAddress" with following details:
+      | Brand            | testBrand                          |
+      | Last name        | testLastNameEdited                 |
+      | First name       | testFirstNameEdited                |
+      | Address          | test street 123                    |
+      | City             | Paris                              |
+      | Country          | France                             |
+    Then brand address "testBrandAddress" should have following details:
+      | Brand            | testBrand                          |
+      | Last name        | testLastNameEdited                 |
+      | First name       | testFirstNameEdited                |
+      | Address          | test street 123                    |
+      | City             | Paris                              |
+      | Country          | France                             |
+
