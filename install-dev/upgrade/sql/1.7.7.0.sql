@@ -545,13 +545,13 @@ INSERT INTO `PREFIX_hook_alias` (`name`, `alias`) VALUES ('displayAdminOrderTop'
  when Ecotax is saved in Tax Options form in the single shop context
  then it is not rendered in the form because it is being searched
  in the global context cache and not the shop context cache where it was saved */
-insert into PREFIX_configuration (`id_configuration`, `id_shop_group`, `id_shop`, `name`, `value`, `date_add`, `date_upd`)
-select NULL, NULL, NULL, 'PS_ECOTAX_TAX_RULES_GROUP_ID', '0', NOW(), NOW()
+INSERT INTO PREFIX_configuration (`id_configuration`, `id_shop_group`, `id_shop`, `name`, `value`, `date_add`, `date_upd`)
+SELECT NULL, NULL, NULL, 'PS_ECOTAX_TAX_RULES_GROUP_ID', '0', NOW(), NOW()
 FROM PREFIX_configuration
 WHERE NOT EXISTS
     (SELECT *
      FROM PREFIX_configuration
      WHERE `name` = 'PS_ECOTAX_TAX_RULES_GROUP_ID'
-       and `id_shop_group` = NULL
-       and `id_shop` = NULL)
-limit 1
+       AND `id_shop_group` = NULL
+       AND `id_shop` = NULL)
+LIMIT 1
