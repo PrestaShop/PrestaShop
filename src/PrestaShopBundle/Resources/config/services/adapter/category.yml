@@ -83,7 +83,7 @@ services:
     class: PrestaShop\PrestaShop\Adapter\Category\QueryHandler\GetCategoryForEditingHandler
     arguments:
       - '@prestashop.core.image.parser.image_tag_source_parser'
-      - '%ps_tmp_img_dir%'
+      - '%ps_cat_img_dir%'
     tags:
       - { name: tactician.handler, command: PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoryForEditing }
 
@@ -102,7 +102,7 @@ services:
       - '@filesystem'
       - '@prestashop.adapter.legacy.configuration'
       - '@prestashop.adapter.cache.clearer.smarty_cache_clearer'
-      - '%ps_tmp_img_dir%'
+      - '%ps_cat_img_dir%'
     tags:
     - name: tactician.handler
       command: PrestaShop\PrestaShop\Core\Domain\Category\Command\DeleteCategoryMenuThumbnailImageCommand
