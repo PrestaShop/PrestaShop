@@ -98,12 +98,19 @@ services:
       - '@prestashop.core.localization.locale.context_locale'
       - '@translator'
       - '@prestashop.adapter.order.refund.order_refund_calculator'
+      - '@prestashop.adapter.order.refund.order_slip_creator'
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Order\Command\IssuePartialRefundCommand
 
   prestashop.adapter.order.refund.order_refund_calculator:
     class: PrestaShop\PrestaShop\Adapter\Order\Refund\OrderRefundCalculator
+
+  prestashop.adapter.order.refund.order_slip_creator:
+    class: PrestaShop\PrestaShop\Adapter\Order\Refund\OrderSlipCreator
+    arguments:
+      - '@prestashop.adapter.legacy.configuration'
+      - '@translator'
 
   prestashop.adapter.order.command_handler.delete_product_from_order_handler:
     class: PrestaShop\PrestaShop\Adapter\Order\CommandHandler\DeleteProductFromOrderHandler
