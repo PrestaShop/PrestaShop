@@ -59,24 +59,24 @@ final class DeleteCategoryMenuThumbnailImageHandler implements DeleteCategoryMen
     private $smartyCacheClearer;
 
     /** string */
-    private $psTmpImgDir;
+    private $psCatImgDir;
 
     /**
      * @param Filesystem $filesystem
      * @param ConfigurationInterface $configuration
      * @param CacheClearerInterface $smartyCacheClearer
-     * @param string $psTmpImgDir
+     * @param string $psCatImgDir
      */
     public function __construct(
         Filesystem $filesystem,
         ConfigurationInterface $configuration,
         CacheClearerInterface $smartyCacheClearer,
-        string $psTmpImgDir
+        string $psCatImgDir
     ) {
         $this->filesystem = $filesystem;
         $this->configuration = $configuration;
         $this->smartyCacheClearer = $smartyCacheClearer;
-        $this->psTmpImgDir = $psTmpImgDir;
+        $this->psCatImgDir = $psCatImgDir;
     }
 
     /**
@@ -95,7 +95,7 @@ final class DeleteCategoryMenuThumbnailImageHandler implements DeleteCategoryMen
 
         $thumbnailPath = sprintf(
             '%s%s-%s_thumb.jpg',
-            $this->psTmpImgDir,
+            $this->psCatImgDir,
             $category->id,
             $menuThumbnailId->getValue()
         );

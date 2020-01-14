@@ -51,7 +51,7 @@ final class GetCategoryForEditingHandler implements GetCategoryForEditingHandler
     private $imageTagSourceParser;
 
     /** @var string */
-    private $psTmpImgDir;
+    private $psCatImgDir;
 
     /**
      * @param ImageTagSourceParserInterface $imageTagSourceParser
@@ -60,7 +60,7 @@ final class GetCategoryForEditingHandler implements GetCategoryForEditingHandler
     public function __construct(ImageTagSourceParserInterface $imageTagSourceParser, string $psTmpImgDir)
     {
         $this->imageTagSourceParser = $imageTagSourceParser;
-        $this->psTmpImgDir = $psTmpImgDir;
+        $this->psCatImgDir = $psTmpImgDir;
     }
 
     /**
@@ -120,7 +120,7 @@ final class GetCategoryForEditingHandler implements GetCategoryForEditingHandler
     private function getCoverImage(CategoryId $categoryId)
     {
         $imageType = 'jpg';
-        $image = $this->psTmpImgDir . $categoryId->getValue() . '.' . $imageType;
+        $image = $this->psCatImgDir . $categoryId->getValue() . '.' . $imageType;
 
         $imageTag = ImageManager::thumbnail(
             $image,
@@ -150,7 +150,7 @@ final class GetCategoryForEditingHandler implements GetCategoryForEditingHandler
      */
     private function getThumbnailImage(CategoryId $categoryId)
     {
-        $image = $this->psTmpImgDir . $categoryId->getValue() . '.jpg';
+        $image = $this->psCatImgDir . $categoryId->getValue() . '.jpg';
         $imageTypes = ImageType::getImagesTypes('categories');
 
         if (count($imageTypes) > 0) {
@@ -160,7 +160,7 @@ final class GetCategoryForEditingHandler implements GetCategoryForEditingHandler
             $imageType = new ImageType();
             foreach ($imageTypes as $k => $imageType) {
                 if ($formattedSmall == $imageType['name']) {
-                    $thumb = $this->psTmpImgDir . $categoryId->getValue() . '-' . $imageType['name'] . '.jpg';
+                    $thumb = $this->psCatImgDir . $categoryId->getValue() . '-' . $imageType['name'] . '.jpg';
                     if (is_file($thumb)) {
                         $imageTag = ImageManager::thumbnail(
                             $thumb,
@@ -212,7 +212,7 @@ final class GetCategoryForEditingHandler implements GetCategoryForEditingHandler
         $menuThumbnails = [];
 
         foreach (MenuThumbnailId::ALLOWED_ID_VALUES as $id) {
-            $thumbnailPath = $this->psTmpImgDir . $categoryId->getValue() . '-' . $id . '_thumb.jpg';
+            $thumbnailPath = $this->psCatImgDir . $categoryId->getValue() . '-' . $id . '_thumb.jpg';
 
             if (file_exists($thumbnailPath)) {
                 $imageTag = ImageManager::thumbnail(
