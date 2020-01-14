@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -24,52 +24,28 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\ValueObject;
+namespace Tests\Unit\Core\Domain\ValueObject;
 
+use PHPUnit\Framework\TestCase;
 use PrestaShop\Decimal\Number;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
-use PrestaShop\PrestaShop\Core\Domain\Exception\DomainConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\ValueObject\Money;
 
-/**
- * An amount of money with currency
- */
-class Money
+class MoneyTest extends TestCase
 {
-    /**
-     * @var Number
-     */
-    private $amount;
-
-    /**
-     * @var CurrencyId
-     */
-    private $currencyId;
-
-    /**
-     * @param Number $amount
-     * @param CurrencyId $currencyId
-     *
-     * @throws DomainConstraintException
-     */
-    public function __construct(Number $amount, CurrencyId $currencyId)
+    public function testCreateWithPositiveValue()
     {
-        $this->amount = $amount;
-        $this->currencyId = $currencyId;
+        $money = new Money(new Number('100'), new CurrencyId(10));
+
+        $this->assertEquals('100', (string) $money->getAmount());
+        $this->assertEquals('', $money->getAmount()->getSign());
     }
 
-    /**
-     * @return Number
-     */
-    public function getAmount(): Number
+    public function testCreateWithNegativeValue()
     {
-        return $this->amount;
-    }
+        $money = new Money(new Number('-100'), new CurrencyId(10));
 
-    /**
-     * @return CurrencyId
-     */
-    public function getCurrencyId(): CurrencyId
-    {
-        return $this->currencyId;
+        $this->assertEquals('-100', (string) $money->getAmount());
+        $this->assertEquals('-', $money->getAmount()->getSign());
     }
 }
