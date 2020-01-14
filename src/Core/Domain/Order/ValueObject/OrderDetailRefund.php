@@ -48,25 +48,25 @@ class OrderDetailRefund
     /**
      * @var float|null
      */
-    private $refundAmount;
+    private $amountRefunded;
 
     /**
      * @param int $orderDetailId
      * @param int $productQuantity
-     * @param float $refundAmount
+     * @param float $amountRefunded
      *
      * @return self
      *
      * @throws EmptyRefundAmountException
      * @throws OrderException
      */
-    public static function createPartialRefund(int $orderDetailId, int $productQuantity, float $refundAmount): self
+    public static function createPartialRefund(int $orderDetailId, int $productQuantity, float $amountRefunded): self
     {
-        if (0 >= $refundAmount) {
+        if (0 >= $amountRefunded) {
             throw new EmptyRefundAmountException();
         }
 
-        return new self($orderDetailId, $productQuantity, $refundAmount);
+        return new self($orderDetailId, $productQuantity, $amountRefunded);
     }
 
     /**
@@ -85,19 +85,19 @@ class OrderDetailRefund
     /**
      * @param int $orderDetailId
      * @param int $productQuantity
-     * @param float|null $refundAmount
+     * @param float|null $amountRefunded
      *
      * @throws OrderException
      */
-    private function __construct(int $orderDetailId, int $productQuantity, ?float $refundAmount)
+    private function __construct(int $orderDetailId, int $productQuantity, ?float $amountRefunded)
     {
-        $this->assertIntegerIsGreaterThanZero($orderDetailId);
+        $this->assertOrderDetailIdIsGreaterThanZero($orderDetailId);
         if (0 >= $productQuantity) {
             throw new EmptyRefundQuantityException();
         }
         $this->orderDetailId = $orderDetailId;
         $this->productQuantity = $productQuantity;
-        $this->refundAmount = $refundAmount;
+        $this->amountRefunded = $amountRefunded;
     }
 
     /**
@@ -119,9 +119,9 @@ class OrderDetailRefund
     /**
      * @return float|null
      */
-    public function getRefundAmount(): ?float
+    public function getAmountRefunded(): ?float
     {
-        return $this->refundAmount;
+        return $this->amountRefunded;
     }
 
     /**
@@ -129,7 +129,7 @@ class OrderDetailRefund
      *
      * @throws OrderException
      */
-    private function assertIntegerIsGreaterThanZero(int $orderDetailId)
+    private function assertOrderDetailIdIsGreaterThanZero(int $orderDetailId)
     {
         if (0 > $orderDetailId) {
             throw new OrderException(

@@ -98,13 +98,13 @@ final class IssuePartialRefundHandler extends AbstractOrderCommandHandler implem
 
             $orderDetail = new OrderDetail($orderDetailId);
 
-            if (null === $orderDetailRefund->getRefundAmount()) {
+            if (null === $orderDetailRefund->getAmountRefunded()) {
                 $productRefundAmount = $isTaxIncluded ?
                     $orderDetail->unit_price_tax_excl :
                     $orderDetail->unit_price_tax_incl;
                 $productRefundAmount *= $quantity;
             } else {
-                $productRefundAmount = $orderDetailRefund->getRefundAmount();
+                $productRefundAmount = $orderDetailRefund->getAmountRefunded();
             }
 
             $orderDetailList[$orderDetailId]['amount'] = $productRefundAmount;
