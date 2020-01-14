@@ -138,7 +138,7 @@ Feature: Refund Order from Back Office (BO)
     And order "bo_order_refund" should contain 1 products "Mug Today is a good day"
     And there are 2 less "Mug The best is yet to come" in stock
     And there are 1 less "Mug Today is a good day" in stock
-    When I issue a partial refund on "bo_order_refund" without restock with voucher on following products:
+    When I issue a partial refund on "bo_order_refund" without restock without voucher on following products:
       | product_name                | quantity                 | amount |
       | Mug Today is a good day     | 1                        | 8      |
       | shipping_refund             |                          | 7.5    |
@@ -156,6 +156,34 @@ Feature: Refund Order from Back Office (BO)
     And order "bo_order_refund" should contain 1 refunded products "Mug Today is a good day"
     And there are 0 more "Mug The best is yet to come" in stock
     And there are 0 more "Mug Today is a good day" in stock
+
+  @order-refund
+  Scenario: Partial refund of products via a generated voucher
+    And I add order "bo_order_refund" with the following details:
+      | cart                | dummy_cart                 |
+      | message             | test                       |
+      | payment module name | dummy_payment              |
+      | status              | Processing in progress     |
+    And order "bo_order_refund" should contain 2 products "Mug The best is yet to come"
+    And order "bo_order_refund" should contain 1 products "Mug Today is a good day"
+    And there are 2 less "Mug The best is yet to come" in stock
+    And there are 1 less "Mug Today is a good day" in stock
+    When I issue a partial refund on "bo_order_refund" without restock with voucher on following products:
+      | product_name                | quantity                 | amount |
+      | Mug Today is a good day     | 1                        | 8      |
+      | shipping_refund             |                          | 7.5    |
+    Then "bo_order_refund" last credit slip is:
+      | amount                  | 8.0 |
+      | shipping_cost_amount    | 7.5 |
+      | total_products_tax_excl | 8.0 |
+      | total_products_tax_incl | 8.0 |
+    And order "bo_order_refund" should contain 2 products "Mug The best is yet to come"
+    And order "bo_order_refund" should contain 1 products "Mug Today is a good day"
+    And order "bo_order_refund" should contain 0 refunded products "Mug The best is yet to come"
+    And order "bo_order_refund" should contain 1 refunded products "Mug Today is a good day"
+    And there are 0 more "Mug The best is yet to come" in stock
+    And there are 0 more "Mug Today is a good day" in stock
+    And customer "testCustomer" has voucher of 15.5
 
   @order-refund
   Scenario: Quantity is required
