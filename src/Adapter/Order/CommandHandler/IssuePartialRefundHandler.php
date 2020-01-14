@@ -36,18 +36,15 @@ use Mail;
 use OrderCarrier;
 use OrderDetail;
 use OrderSlip;
+use PrestaShop\PrestaShop\Adapter\Order\Refund\OrderRefundCalculator;
+use PrestaShop\PrestaShop\Adapter\Order\Refund\OrderRefundDetail;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\IssuePartialRefundCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler\IssuePartialRefundHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
-use PrestaShop\PrestaShop\Core\Domain\Order\Exception\EmptyRefundQuantityException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\EmptyRefundAmountException;
-use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderDetailRefund;
-use PrestaShop\PrestaShop\Core\Domain\Order\VoucherRefundType;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
 use StockAvailable;
 use Symfony\Component\Translation\TranslatorInterface;
-use Tax;
-use TaxCalculator;
 use Validate;
 
 /**
@@ -66,13 +63,23 @@ final class IssuePartialRefundHandler extends AbstractOrderCommandHandler implem
     private $translator;
 
     /**
+     * @var OrderRefundCalculator
+     */
+    private $orderRefundCalculator;
+
+    /**
      * @param Locale $locale
      * @param TranslatorInterface $translator
+     * @param OrderRefundCalculator $orderRefundCalculator
      */
-    public function __construct(Locale $locale, TranslatorInterface $translator)
-    {
+    public function __construct(
+        Locale $locale,
+        TranslatorInterface $translator,
+        OrderRefundCalculator $orderRefundCalculator
+    ) {
         $this->locale = $locale;
         $this->translator = $translator;
+        $this->orderRefundCalculator = $orderRefundCalculator;
     }
 
     /**
@@ -81,42 +88,23 @@ final class IssuePartialRefundHandler extends AbstractOrderCommandHandler implem
     public function handle(IssuePartialRefundCommand $command)
     {
         $order = $this->getOrderObject($command->getOrderId());
-        $isTaxIncluded = $this->isTaxIncludedInOrder($order);
+        /** @var OrderRefundDetail $orderRefundDetail */
+        $orderRefundDetail = $this->orderRefundCalculator->computeOrderFund(
+            $order,
+            $command->getOrderDetailRefunds(),
+            $command->getShippingCostRefundAmount(),
+            $command->getVoucherRefundType(),
+            $command->getVoucherRefundAmount()
+        );
 
-        $refundedAmount = 0;
-        $orderDetailList = $this->getOrderTailList($command->getOrderDetailRefunds());
-        $productRefunds = $this->flattenProductRefunds($command->getOrderDetailRefunds(), $isTaxIncluded, $orderDetailList);
-
-        foreach ($productRefunds as $orderDetailId => $productRefund) {
-            $refundedAmount += $productRefund['amount'];
-
-            if (!$order->hasBeenDelivered() || $command->restockRefundedProducts()) {
-                $this->reinjectQuantity($orderDetailList[$orderDetailId], $productRefund['quantity']);
+        // Reinject quantity
+        if (!$order->hasBeenDelivered() || $command->restockRefundedProducts()) {
+            foreach ($orderRefundDetail->getProductRefunds() as $orderDetailId => $productRefund) {
+                $this->reinjectQuantity($orderRefundDetail->getOrderDetailById($orderDetailId), $productRefund['quantity']);
             }
         }
 
-        $chosen = false;
-        $voucher = 0;
-
-        if ($command->getVoucherRefundType() === VoucherRefundType::PRODUCT_PRICES_EXCLUDING_VOUCHER_REFUND) {
-            //@todo: Check if it matches order_discount_price in legacy
-            $refundedAmount -= $voucher = (float) $order->total_discounts;
-        } elseif ($command->getVoucherRefundType() === VoucherRefundType::SPECIFIC_AMOUNT_REFUND) {
-            $chosen = true;
-            $refundedAmount = $voucher = $command->getVoucherRefundAmount();
-        }
-
-        $shippingCostAmount = $command->getShippingCostRefundAmount() ?: false;
-        if ($shippingCostAmount > 0) {
-            if (!$isTaxIncluded) {
-                // @todo: use https://github.com/PrestaShop/decimal for price computations
-                $taxCalculator = $this->getTaxCalculator($order->carrier_tax_rate);
-                $refundedAmount += $taxCalculator->addTaxes($shippingCostAmount);
-            } else {
-                $refundedAmount += $shippingCostAmount;
-            }
-        }
-
+        // Update order carrier weight
         $orderCarrier = new OrderCarrier((int) $order->getIdOrderCarrier());
         if (Validate::isLoadedObject($orderCarrier)) {
             $orderCarrier->weight = (float) $order->getTotalWeight();
@@ -125,24 +113,24 @@ final class IssuePartialRefundHandler extends AbstractOrderCommandHandler implem
             }
         }
 
-        if ($refundedAmount > 0) {
+        if ($orderRefundDetail->getRefundedAmount() > 0) {
             $orderSlipCreated = OrderSlip::create(
                 $order,
-                $productRefunds,
-                $shippingCostAmount,
-                $voucher,
-                $chosen,
-                !$isTaxIncluded
+                $orderRefundDetail->getProductRefunds(),
+                $orderRefundDetail->getRefundedShipping(),
+                $orderRefundDetail->getVoucherAmount(),
+                $orderRefundDetail->isVoucherChosen(),
+                !$orderRefundDetail->isTaxIncluded()
             );
 
             if (!$orderSlipCreated) {
                 throw new OrderException('You cannot generate a partial credit slip.');
             }
 
-            $fullQuantityList = array_map(function ($orderDetail) { return $orderDetail['quantity']; }, $productRefunds);
+            $fullQuantityList = array_map(function ($orderDetail) { return $orderDetail['quantity']; }, $orderRefundDetail->getProductRefunds());
             Hook::exec('actionOrderSlipAdd', [
                 'order' => $order,
-                'productList' => $productRefunds,
+                'productList' => $orderRefundDetail->getProductRefunds(),
                 'qtyList' => $fullQuantityList,
             ], null, false, true, false, $order->id_shop);
 
@@ -181,22 +169,17 @@ final class IssuePartialRefundHandler extends AbstractOrderCommandHandler implem
                 (int) $order->id_shop
             );
 
-            foreach ($productRefunds as &$product) {
-                $productRefund = new OrderDetail((int) $product['id_order_detail']);
-
+            /** @var OrderDetail $orderDetail */
+            foreach ($orderRefundDetail->getOrderDetails() as $orderDetail) {
                 if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT')) {
-                    StockAvailable::synchronize($productRefund->product_id);
+                    StockAvailable::synchronize($orderDetail->product_id);
                 }
             }
         } else {
-            if (!empty($refunds)) {
-                throw new EmptyRefundQuantityException();
-            }
-
             throw new EmptyRefundAmountException();
         }
 
-        if ($command->generateVoucher() && $refundedAmount > 0) {
+        if ($command->generateVoucher() && $orderRefundDetail->getRefundedAmount() > 0) {
             $cartRule = new CartRule();
             $cartRule->description = $this->translator->trans(
                 'Credit slip for order #%d',
@@ -223,7 +206,7 @@ final class IssuePartialRefundHandler extends AbstractOrderCommandHandler implem
             $cartRule->partial_use = 1;
             $cartRule->active = 1;
 
-            $cartRule->reduction_amount = $refundedAmount;
+            $cartRule->reduction_amount = $orderRefundDetail->getRefundedAmount();
             $cartRule->reduction_tax = $order->getTaxCalculationMethod() != PS_TAX_EXC;
             $cartRule->minimum_amount_currency = $order->id_currency;
             $cartRule->reduction_currency = $order->id_currency;
@@ -279,83 +262,5 @@ final class IssuePartialRefundHandler extends AbstractOrderCommandHandler implem
                 (int) $order->id_shop
             );
         }
-    }
-
-    /**
-     * @param array $orderDetailRefunds
-     *
-     * @return OrderDetail[]
-     *
-     * @throws \PrestaShopDatabaseException
-     * @throws \PrestaShopException
-     */
-    private function getOrderTailList(array $orderDetailRefunds)
-    {
-        $orderDetailList = [];
-        /** @var OrderDetailRefund $orderDetailRefund */
-        foreach ($orderDetailRefunds as $orderDetailRefund) {
-            $orderDetailList[$orderDetailRefund->getOrderDetailId()] = new OrderDetail($orderDetailRefund->getOrderDetailId());
-        }
-
-        return $orderDetailList;
-    }
-
-    /**
-     * @param array $orderDetailRefunds
-     * @param bool $isTaxIncluded
-     * @param array $orderDetails
-     *
-     * @return array
-     * @throws \PrestaShopDatabaseException
-     * @throws \PrestaShopException
-     */
-    private function flattenProductRefunds(array $orderDetailRefunds, bool $isTaxIncluded, array $orderDetails)
-    {
-        $productRefunds = [];
-        /** @var OrderDetailRefund $orderDetailRefund */
-        foreach ($orderDetailRefunds as $orderDetailRefund) {
-            $orderDetailId = $orderDetailRefund->getOrderDetailId();
-            $orderDetail = $orderDetails[$orderDetailId];
-            $quantity = $orderDetailRefund->getProductQuantity();
-
-            $productRefunds[$orderDetailId] = [
-                'quantity' => $quantity,
-                'id_order_detail' => $orderDetailId,
-            ];
-
-            if (null === $orderDetailRefund->getRefundAmount()) {
-                $productRefundAmount = $isTaxIncluded ?
-                    $orderDetail->unit_price_tax_excl :
-                    $orderDetail->unit_price_tax_incl;
-                $productRefundAmount *= $quantity;
-            } else {
-                $productRefundAmount = $orderDetailRefund->getRefundAmount();
-            }
-
-            $productRefunds[$orderDetailId]['amount'] = $productRefundAmount;
-            $productRefunds[$orderDetailId]['unit_price'] =
-                $productRefunds[$orderDetailId]['amount'] / $productRefunds[$orderDetailId]['quantity'];
-
-            // add missing fields
-            $productRefunds[$orderDetailId]['unit_price_tax_excl'] = $orderDetail->unit_price_tax_excl;
-            $productRefunds[$orderDetailId]['unit_price_tax_incl'] = $orderDetail->unit_price_tax_incl;
-            $productRefunds[$orderDetailId]['total_price_tax_excl'] = $orderDetail->unit_price_tax_excl * $productRefunds[$orderDetailId]['quantity'];
-            $productRefunds[$orderDetailId]['total_price_tax_incl'] = $orderDetail->unit_price_tax_incl * $productRefunds[$orderDetailId]['quantity'];
-        }
-
-        return $productRefunds;
-    }
-
-    /**
-     * @param float $taxRate
-     *
-     * @return TaxCalculator
-     */
-    private function getTaxCalculator(float $taxRate)
-    {
-        $tax = new Tax();
-        $tax->rate = $taxRate;
-
-        return new TaxCalculator([$tax]);
     }
 }
