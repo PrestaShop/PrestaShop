@@ -48,25 +48,25 @@ class OrderDetailRefund
     /**
      * @var float|null
      */
-    private $amountRefunded;
+    private $refundedAmount;
 
     /**
      * @param int $orderDetailId
      * @param int $productQuantity
-     * @param float $amountRefunded
+     * @param float $refundedAmount
      *
      * @return self
      *
      * @throws EmptyRefundAmountException
      * @throws OrderException
      */
-    public static function createPartialRefund(int $orderDetailId, int $productQuantity, float $amountRefunded): self
+    public static function createPartialRefund(int $orderDetailId, int $productQuantity, float $refundedAmount): self
     {
-        if (0 >= $amountRefunded) {
+        if (0 >= $refundedAmount) {
             throw new EmptyRefundAmountException();
         }
 
-        return new self($orderDetailId, $productQuantity, $amountRefunded);
+        return new self($orderDetailId, $productQuantity, $refundedAmount);
     }
 
     /**
@@ -85,11 +85,11 @@ class OrderDetailRefund
     /**
      * @param int $orderDetailId
      * @param int $productQuantity
-     * @param float|null $amountRefunded
+     * @param float|null $refundedAmount
      *
      * @throws OrderException
      */
-    private function __construct(int $orderDetailId, int $productQuantity, ?float $amountRefunded)
+    private function __construct(int $orderDetailId, int $productQuantity, ?float $refundedAmount)
     {
         $this->assertOrderDetailIdIsGreaterThanZero($orderDetailId);
         if (0 >= $productQuantity) {
@@ -97,7 +97,7 @@ class OrderDetailRefund
         }
         $this->orderDetailId = $orderDetailId;
         $this->productQuantity = $productQuantity;
-        $this->amountRefunded = $amountRefunded;
+        $this->refundedAmount = $refundedAmount;
     }
 
     /**
@@ -119,9 +119,9 @@ class OrderDetailRefund
     /**
      * @return float|null
      */
-    public function getAmountRefunded(): ?float
+    public function getRefundedAmount(): ?float
     {
-        return $this->amountRefunded;
+        return $this->refundedAmount;
     }
 
     /**
