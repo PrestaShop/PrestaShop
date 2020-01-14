@@ -26,26 +26,15 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Order\CommandHandler;
 
-use CartRule;
-use Configuration;
 use Context;
-use Customer;
-use Hook;
-use Language;
-use Mail;
 use OrderCarrier;
-use OrderDetail;
-use OrderSlip;
 use PrestaShop\PrestaShop\Adapter\Order\Refund\OrderRefundCalculator;
 use PrestaShop\PrestaShop\Adapter\Order\Refund\OrderRefundDetail;
 use PrestaShop\PrestaShop\Adapter\Order\Refund\OrderSlipCreator;
+use PrestaShop\PrestaShop\Adapter\Order\Refund\VoucherGenerator;
+use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\IssuePartialRefundCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler\IssuePartialRefundHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
-use PrestaShop\PrestaShop\Core\Domain\Order\Exception\EmptyRefundAmountException;
-use PrestaShop\PrestaShop\Core\Localization\Locale;
-use StockAvailable;
-use Symfony\Component\Translation\TranslatorInterface;
 use Validate;
 
 /**
@@ -54,14 +43,9 @@ use Validate;
 final class IssuePartialRefundHandler extends AbstractOrderCommandHandler implements IssuePartialRefundHandlerInterface
 {
     /**
-     * @var Locale
+     * @var ConfigurationInterface
      */
-    private $locale;
-
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
+    private $configuration;
 
     /**
      * @var OrderRefundCalculator
@@ -74,21 +58,26 @@ final class IssuePartialRefundHandler extends AbstractOrderCommandHandler implem
     private $orderSlipCreator;
 
     /**
-     * @param Locale $locale
-     * @param TranslatorInterface $translator
+     * @var VoucherGenerator
+     */
+    private $voucherGenerator;
+
+    /**
+     * @param ConfigurationInterface $configuration
      * @param OrderRefundCalculator $orderRefundCalculator
      * @param OrderSlipCreator $orderSlipCreator
+     * @param VoucherGenerator $voucherGenerator
      */
     public function __construct(
-        Locale $locale,
-        TranslatorInterface $translator,
+        ConfigurationInterface $configuration,
         OrderRefundCalculator $orderRefundCalculator,
-        OrderSlipCreator $orderSlipCreator
+        OrderSlipCreator $orderSlipCreator,
+        VoucherGenerator $voucherGenerator
     ) {
-        $this->locale = $locale;
-        $this->translator = $translator;
+        $this->configuration = $configuration;
         $this->orderRefundCalculator = $orderRefundCalculator;
         $this->orderSlipCreator = $orderSlipCreator;
+        $this->voucherGenerator = $voucherGenerator;
     }
 
     /**
@@ -118,93 +107,20 @@ final class IssuePartialRefundHandler extends AbstractOrderCommandHandler implem
         if (Validate::isLoadedObject($orderCarrier)) {
             $orderCarrier->weight = (float) $order->getTotalWeight();
             if ($orderCarrier->update()) {
-                $order->weight = sprintf('%.3f %s', $orderCarrier->weight, Configuration::get('PS_WEIGHT_UNIT'));
+                $order->weight = sprintf('%.3f %s', $orderCarrier->weight, $this->configuration->get('PS_WEIGHT_UNIT'));
             }
         }
 
+        // Create order slip
         $this->orderSlipCreator->createOrderSlip($order, $orderRefundDetail);
 
+        // Generate voucher if needed
         if ($command->generateVoucher() && $orderRefundDetail->getRefundedAmount() > 0) {
-            $cartRule = new CartRule();
-            $cartRule->description = $this->translator->trans(
-                'Credit slip for order #%d',
-                ['#%d' => $order->id],
-                'Admin.Orderscustomers.Feature'
-            );
-
-            $langIds = Language::getIDs(false);
-            foreach ($langIds as $langId) {
-                // Define a temporary name
-                $cartRule->name[$langId] = sprintf('V0C%1$dO%2$d', $order->id_customer, $order->id);
-            }
-
-            // Define a temporary code
-            $cartRule->code = sprintf('V0C%1$dO%2$d', $order->id_customer, $order->id);
-            $cartRule->quantity = 1;
-            $cartRule->quantity_per_user = 1;
-
-            // Specific to the customer
-            $cartRule->id_customer = $order->id_customer;
-            $now = time();
-            $cartRule->date_from = date('Y-m-d H:i:s', $now);
-            $cartRule->date_to = date('Y-m-d H:i:s', strtotime('+1 year'));
-            $cartRule->partial_use = 1;
-            $cartRule->active = 1;
-
-            $cartRule->reduction_amount = $orderRefundDetail->getRefundedAmount();
-            $cartRule->reduction_tax = $order->getTaxCalculationMethod() != PS_TAX_EXC;
-            $cartRule->minimum_amount_currency = $order->id_currency;
-            $cartRule->reduction_currency = $order->id_currency;
-
-            if (!$cartRule->add()) {
-                throw new OrderException('You cannot generate a voucher.');
-            }
-
-            // Update the voucher code and name
-            foreach ($langIds as $langId) {
-                $cartRule->name[$langId] = sprintf('V%1$dC%2$dO%3$d', $cartRule->id, $order->id_customer, $order->id);
-            }
-
-            $cartRule->code = sprintf('V%1$dC%2$dO%3$d', $cartRule->id, $order->id_customer, $order->id);
-
-            if (!$cartRule->update()) {
-                throw new OrderException('You cannot generate a voucher.');
-            }
-
-            $currency = Context::getContext()->currency;
-            $customer = new Customer((int) ($order->id_customer));
-
-            $params = [
-                '{lastname}' => $customer->lastname,
-                '{firstname}' => $customer->firstname,
-                '{id_order}' => $order->id,
-                '{order_name}' => $order->getUniqReference(),
-                '{voucher_amount}' => $this->locale->formatPrice($cartRule->reduction_amount, $currency->iso_code),
-                '{voucher_num}' => $cartRule->code,
-            ];
-
-            // @todo: use private method to send mail and later a decoupled mail sender
-            $orderLanguage = new Language((int) $order->id_lang);
-
-            @Mail::Send(
-                (int) $order->id_lang,
-                'voucher',
-                $this->translator->trans(
-                    'New voucher for your order #%s',
-                    [$order->reference],
-                    'Emails.Subject',
-                    $orderLanguage->locale
-                ),
-                $params,
-                $customer->email,
-                $customer->firstname . ' ' . $customer->lastname,
-                null,
-                null,
-                null,
-                null,
-                _PS_MAIL_DIR_,
-                true,
-                (int) $order->id_shop
+            $this->voucherGenerator->generateVoucher(
+                $order,
+                $orderRefundDetail->getRefundedAmount(),
+                Context::getContext()->currency->iso_code,
+                $orderRefundDetail->isTaxIncluded()
             );
         }
     }
