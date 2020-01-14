@@ -84,46 +84,14 @@ final class IssuePartialRefundHandler extends AbstractOrderCommandHandler implem
         $isTaxIncluded = $this->isTaxIncludedInOrder($order);
 
         $refundedAmount = 0;
-        $orderDetailList = [];
+        $orderDetailList = $this->getOrderTailList($command->getOrderDetailRefunds());
+        $productRefunds = $this->flattenProductRefunds($command->getOrderDetailRefunds(), $isTaxIncluded, $orderDetailList);
 
-        /** @var OrderDetailRefund $orderDetailRefund */
-        foreach ($command->getOrderDetailRefunds() as $orderDetailRefund) {
-            $orderDetailId = $orderDetailRefund->getOrderDetailId();
-            $quantity = $orderDetailRefund->getProductQuantity();
+        foreach ($productRefunds as $orderDetailId => $productRefund) {
+            $refundedAmount += $productRefund['amount'];
 
-            $orderDetailList[$orderDetailId] = [
-                'quantity' => $quantity,
-                'id_order_detail' => $orderDetailId,
-            ];
-
-            $orderDetail = new OrderDetail($orderDetailId);
-
-            if (null === $orderDetailRefund->getAmountRefunded()) {
-                $productRefundAmount = $isTaxIncluded ?
-                    $orderDetail->unit_price_tax_excl :
-                    $orderDetail->unit_price_tax_incl;
-                $productRefundAmount *= $quantity;
-            } else {
-                $productRefundAmount = $orderDetailRefund->getAmountRefunded();
-            }
-
-            $orderDetailList[$orderDetailId]['amount'] = $productRefundAmount;
-            $orderDetailList[$orderDetailId]['unit_price'] =
-                    $orderDetailList[$orderDetailId]['amount'] / $orderDetailList[$orderDetailId]['quantity'];
-
-            // add missing fields
-            $orderDetailList[$orderDetailId]['unit_price_tax_excl'] = $orderDetail->unit_price_tax_excl;
-            $orderDetailList[$orderDetailId]['unit_price_tax_incl'] = $orderDetail->unit_price_tax_incl;
-            $orderDetailList[$orderDetailId]['total_price_tax_excl'] = $orderDetail->unit_price_tax_excl * $orderDetailList[$orderDetailId]['quantity'];
-            $orderDetailList[$orderDetailId]['total_price_tax_incl'] = $orderDetail->unit_price_tax_incl * $orderDetailList[$orderDetailId]['quantity'];
-
-            $refundedAmount += $orderDetailList[$orderDetailId]['amount'];
-
-            if (!$order->hasBeenDelivered()
-                || ($order->hasBeenDelivered() && $command->restockRefundedProducts())
-                    && $orderDetailList[$orderDetailId]['quantity'] > 0
-            ) {
-                $this->reinjectQuantity($orderDetail, $orderDetailList[$orderDetailId]['quantity']);
+            if (!$order->hasBeenDelivered() || $command->restockRefundedProducts()) {
+                $this->reinjectQuantity($orderDetailList[$orderDetailId], $productRefund['quantity']);
             }
         }
 
@@ -160,7 +128,7 @@ final class IssuePartialRefundHandler extends AbstractOrderCommandHandler implem
         if ($refundedAmount > 0) {
             $orderSlipCreated = OrderSlip::create(
                 $order,
-                $orderDetailList,
+                $productRefunds,
                 $shippingCostAmount,
                 $voucher,
                 $chosen,
@@ -171,10 +139,10 @@ final class IssuePartialRefundHandler extends AbstractOrderCommandHandler implem
                 throw new OrderException('You cannot generate a partial credit slip.');
             }
 
-            $fullQuantityList = array_map(function ($orderDetail) { return $orderDetail['quantity']; }, $orderDetailList);
+            $fullQuantityList = array_map(function ($orderDetail) { return $orderDetail['quantity']; }, $productRefunds);
             Hook::exec('actionOrderSlipAdd', [
                 'order' => $order,
-                'productList' => $orderDetailList,
+                'productList' => $productRefunds,
                 'qtyList' => $fullQuantityList,
             ], null, false, true, false, $order->id_shop);
 
@@ -213,11 +181,11 @@ final class IssuePartialRefundHandler extends AbstractOrderCommandHandler implem
                 (int) $order->id_shop
             );
 
-            foreach ($orderDetailList as &$product) {
-                $orderDetail = new OrderDetail((int) $product['id_order_detail']);
+            foreach ($productRefunds as &$product) {
+                $productRefund = new OrderDetail((int) $product['id_order_detail']);
 
                 if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT')) {
-                    StockAvailable::synchronize($orderDetail->product_id);
+                    StockAvailable::synchronize($productRefund->product_id);
                 }
             }
         } else {
@@ -311,6 +279,71 @@ final class IssuePartialRefundHandler extends AbstractOrderCommandHandler implem
                 (int) $order->id_shop
             );
         }
+    }
+
+    /**
+     * @param array $orderDetailRefunds
+     *
+     * @return OrderDetail[]
+     *
+     * @throws \PrestaShopDatabaseException
+     * @throws \PrestaShopException
+     */
+    private function getOrderTailList(array $orderDetailRefunds)
+    {
+        $orderDetailList = [];
+        /** @var OrderDetailRefund $orderDetailRefund */
+        foreach ($orderDetailRefunds as $orderDetailRefund) {
+            $orderDetailList[$orderDetailRefund->getOrderDetailId()] = new OrderDetail($orderDetailRefund->getOrderDetailId());
+        }
+
+        return $orderDetailList;
+    }
+
+    /**
+     * @param array $orderDetailRefunds
+     * @param bool $isTaxIncluded
+     * @param array $orderDetails
+     *
+     * @return array
+     * @throws \PrestaShopDatabaseException
+     * @throws \PrestaShopException
+     */
+    private function flattenProductRefunds(array $orderDetailRefunds, bool $isTaxIncluded, array $orderDetails)
+    {
+        $productRefunds = [];
+        /** @var OrderDetailRefund $orderDetailRefund */
+        foreach ($orderDetailRefunds as $orderDetailRefund) {
+            $orderDetailId = $orderDetailRefund->getOrderDetailId();
+            $orderDetail = $orderDetails[$orderDetailId];
+            $quantity = $orderDetailRefund->getProductQuantity();
+
+            $productRefunds[$orderDetailId] = [
+                'quantity' => $quantity,
+                'id_order_detail' => $orderDetailId,
+            ];
+
+            if (null === $orderDetailRefund->getRefundAmount()) {
+                $productRefundAmount = $isTaxIncluded ?
+                    $orderDetail->unit_price_tax_excl :
+                    $orderDetail->unit_price_tax_incl;
+                $productRefundAmount *= $quantity;
+            } else {
+                $productRefundAmount = $orderDetailRefund->getRefundAmount();
+            }
+
+            $productRefunds[$orderDetailId]['amount'] = $productRefundAmount;
+            $productRefunds[$orderDetailId]['unit_price'] =
+                $productRefunds[$orderDetailId]['amount'] / $productRefunds[$orderDetailId]['quantity'];
+
+            // add missing fields
+            $productRefunds[$orderDetailId]['unit_price_tax_excl'] = $orderDetail->unit_price_tax_excl;
+            $productRefunds[$orderDetailId]['unit_price_tax_incl'] = $orderDetail->unit_price_tax_incl;
+            $productRefunds[$orderDetailId]['total_price_tax_excl'] = $orderDetail->unit_price_tax_excl * $productRefunds[$orderDetailId]['quantity'];
+            $productRefunds[$orderDetailId]['total_price_tax_incl'] = $orderDetail->unit_price_tax_incl * $productRefunds[$orderDetailId]['quantity'];
+        }
+
+        return $productRefunds;
     }
 
     /**
