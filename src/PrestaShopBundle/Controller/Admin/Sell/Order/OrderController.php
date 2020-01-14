@@ -450,6 +450,7 @@ class OrderController extends FrameworkBundleAdminController
             'addProductRowForm' => $addProductRowForm->createView(),
             'editProductRowForm' => $editProductRowForm->createView(),
             'backOfficeOrderButtons' => $backOfficeOrderButtons,
+            'hasOrderReturnConfig' => (bool) $this->configuration->get('PS_ORDER_RETURN'),
         ]);
     }
 

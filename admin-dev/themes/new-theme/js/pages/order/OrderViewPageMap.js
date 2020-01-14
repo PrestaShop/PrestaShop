@@ -134,4 +134,5 @@ export default {
   actionColumnElements: 'td.cellProductActions, th.product_actions',
   togglePartialRefundForm: '.partial-refund:not(.hidden), .shipping-price, .refund-checkboxes-container',
   productAddNewInvoiceInfo: '#addProductNewInvoiceInfo',
+  cancelProductBtn: 'button.cancel-product-display',
 };
