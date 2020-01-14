@@ -26,7 +26,6 @@
 
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
-use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotDisableDefaultCurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\EmptyRefundAmountException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\EmptyRefundQuantityException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
@@ -35,11 +34,8 @@ use PHPUnit_Framework_Assert;
 use Order;
 use OrderSlip;
 use Behat\Gherkin\Node\TableNode;
-use PrestaShop\PrestaShop\Core\Domain\Order\Command\AddOrderFromBackOfficeCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\IssuePartialRefundCommand;
-use PrestaShop\PrestaShop\Core\Domain\Order\OrderDocumentType;
 use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderForViewing;
-use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderDocumentForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderProductForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;

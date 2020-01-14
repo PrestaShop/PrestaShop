@@ -171,7 +171,7 @@ final class IssuePartialRefundHandler extends AbstractOrderCommandHandler implem
                 throw new OrderException('You cannot generate a partial credit slip.');
             }
 
-            $fullQuantityList = array_map(function($orderDetail) { return $orderDetail['quantity']; }, $orderDetailList);
+            $fullQuantityList = array_map(function ($orderDetail) { return $orderDetail['quantity']; }, $orderDetailList);
             Hook::exec('actionOrderSlipAdd', [
                 'order' => $order,
                 'productList' => $orderDetailList,

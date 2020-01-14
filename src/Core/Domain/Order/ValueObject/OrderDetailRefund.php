@@ -56,6 +56,7 @@ class OrderDetailRefund
      * @param float $refundAmount
      *
      * @return self
+     *
      * @throws EmptyRefundAmountException
      * @throws OrderException
      */
@@ -73,6 +74,7 @@ class OrderDetailRefund
      * @param int $productQuantity
      *
      * @return self
+     *
      * @throws OrderException
      */
     public static function createStandardRefund(int $orderDetailId, int $productQuantity): self
