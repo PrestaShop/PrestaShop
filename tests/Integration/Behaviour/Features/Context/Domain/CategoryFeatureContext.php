@@ -47,10 +47,8 @@ use PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoryForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoryIsEnabled;
 use PrestaShop\PrestaShop\Core\Domain\Category\QueryResult\EditableCategory;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
-use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\MenuThumbnailId;
 use Psr\Container\ContainerInterface;
 use RuntimeException;
-use Symfony\Component\HttpKernel\Kernel;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 use Tests\Integration\Behaviour\Features\Context\Util\CategoryTreeIterator;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
@@ -59,6 +57,13 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
 {
     const EMPTY_VALUE = '';
     const DEFAULT_ROOT_CATEGORY_ID = 1;
+    const TEMP_FILES_URL = '/tmp/';
+    const JPG_IMAGE_TYPE = '.jpg';
+    const THUMB0 = '0_thumb';
+    const JPG_IMAGE_STRING = 'iVBORw0KGgoAAAANSUhEUgAAABwAAAASCAMAAAB/2U7WAAAABl'
+        . 'BMVEUAAAD///+l2Z/dAAAASUlEQVR4XqWQUQoAIAxC2/0vXZDr'
+        . 'EX4IJTRkb7lobNUStXsB0jIXIAMSsQnWlsV+wULF4Avk9fLq2r'
+        . '8a5HSE35Q3eO2XP1A1wQkZSgETvDtKdQAAAABJRU5ErkJggg==';
 
     const CATEGORY_POSITION_WAYS_MAP = [
         0 => 'Up',
@@ -501,8 +506,8 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
         if (isset($testCaseData['Menu thumbnails'])) {
             $menuThumbNailsImages = $this->pretendMenuThumbnailImagesUploaded(
                 $testCaseData,
-                $categoryId,
-                $menuThumbNailsImages
+                $menuThumbNailsImages,
+                $categoryId
             );
         }
 
@@ -549,8 +554,6 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @deprecated
-     *
      * @param array $testCaseData
      * @param int $categoryId
      *
@@ -559,17 +562,22 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
     private function pretendImageUploaded(array $testCaseData, int $categoryId): string
     {
         $categoryCoverImage = $testCaseData['Category cover image'];
-        // could not use handler because it uses move_uploaded_file which allows only POST upload
-        /** @var Kernel $kernel */
-        $kernel = $this->getContainer()->get('kernel');
-        copy(
-            $kernel->getRootDir() . '/../img/' . $categoryCoverImage,
-            _PS_CAT_IMG_DIR_ . $categoryId . '.jpg'
-        );
-        copy(
-            $kernel->getRootDir() . '/../img/' . $categoryCoverImage,
-            _PS_CAT_IMG_DIR_ . $categoryId . '-' . stripslashes($categoryCoverImage) . '.jpg'
-        );
+        $data = base64_decode(self::JPG_IMAGE_STRING);
+        $im = imagecreatefromstring($data);
+        if ($im !== false) {
+            header('Content-Type: image/jpg');
+            imagejpeg(
+                $im,
+                self::TEMP_FILES_URL . $categoryId . '/' . $testCaseData['Category cover image'],
+                0
+            );
+            imagejpeg(
+                $im,
+                self::TEMP_FILES_URL . $categoryId . self::JPG_IMAGE_TYPE,
+                0
+            );
+            imagedestroy($im);
+        }
 
         return $categoryCoverImage;
     }
@@ -632,26 +640,34 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @deprecated
-     *
      * @param array $testCaseData
-     * @param int $categoryId
      * @param array $menuThumbNailsImages
+     * @param int $categoryId
      *
      * @return array
      */
     private function pretendMenuThumbnailImagesUploaded(
-        array $testCaseData, int $categoryId, array $menuThumbNailsImages
+        array $testCaseData,
+        array $menuThumbNailsImages,
+        int $categoryId
     ): array {
-        $categoryCoverImage = $testCaseData['Menu thumbnails'];
-        // could not use handler because it uses move_uploaded_file in Uploader.php which allows only POST upload
-        /** @var Kernel $kernel */
-        $kernel = $this->getContainer()->get('kernel');
-        copy(
-            $kernel->getRootDir() . '/../img/' . $categoryCoverImage,
-            _PS_CAT_IMG_DIR_ . $categoryId . '-' . MenuThumbnailId::ALLOWED_ID_VALUES[0] . '_thumb.jpg'
-        );
-        $menuThumbNailsImages[] = $categoryCoverImage;
+        $data = base64_decode(self::JPG_IMAGE_STRING);
+        $im = imagecreatefromstring($data);
+        if ($im !== false) {
+            header('Content-Type: image/jpg');
+            imagejpeg($im,
+                self::TEMP_FILES_URL . $categoryId . '/' . $testCaseData['Menu thumbnails'],
+                0
+            );
+            imagejpeg(
+                $im,
+                self::TEMP_FILES_URL . $categoryId . '-' . self::THUMB0 . self::JPG_IMAGE_TYPE,
+                0
+            );
+            imagedestroy($im);
+        }
+        $menuThumbnailImage = $testCaseData['Menu thumbnails'];
+        $menuThumbNailsImages[] = $menuThumbnailImage;
 
         return $menuThumbNailsImages;
     }

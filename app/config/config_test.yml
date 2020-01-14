@@ -1,6 +1,7 @@
 parameters:
     AdapterSecurityAdminClass:                LegacyTests\PrestaShopBundle\Mock\AdapterSecurityAdminMock
     prestashop.security.voter.product.class:  LegacyTests\PrestaShopBundle\Mock\PageVoter
+    ps_tmp_img_dir: "/tmp/"
 
 imports:
     - { resource: config_dev.yml }
@@ -22,6 +23,19 @@ swiftmailer:
 services:
     prestashop.bundle.routing.converter.cache:
         class: Symfony\Component\Cache\Adapter\ArrayAdapter
+
+    prestashop.adapter.image.uploader.category_cover_image_uploader:
+      class: 'PrestaShop\PrestaShop\Adapter\Image\Uploader\CategoryCoverImageUploader'
+      arguments:
+        - '%ps_tmp_img_dir%'
+
+    prestashop.adapter.category.command_handler.edit_category_handler:
+      class: PrestaShop\PrestaShop\Adapter\Category\CommandHandler\EditCategoryHandler
+      arguments:
+        - '%ps_tmp_img_dir%'
+      public: true
+      tags:
+        - { name: tactician.handler, command: PrestaShop\PrestaShop\Core\Domain\Category\Command\EditCategoryCommand }
 
 # Doctrine Configuration
 doctrine:
