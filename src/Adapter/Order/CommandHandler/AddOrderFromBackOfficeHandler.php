@@ -169,6 +169,7 @@ final class AddOrderFromBackOfficeHandler implements AddOrderFromBackOfficeHandl
      * @param Cart $cart
      *
      * @return Country
+     *
      * @throws \PrestaShopDatabaseException
      * @throws \PrestaShopException
      */
