@@ -38,6 +38,7 @@ use OrderDetail;
 use OrderSlip;
 use PrestaShop\PrestaShop\Adapter\Order\Refund\OrderRefundCalculator;
 use PrestaShop\PrestaShop\Adapter\Order\Refund\OrderRefundDetail;
+use PrestaShop\PrestaShop\Adapter\Order\Refund\OrderSlipCreator;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\IssuePartialRefundCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler\IssuePartialRefundHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
@@ -68,18 +69,26 @@ final class IssuePartialRefundHandler extends AbstractOrderCommandHandler implem
     private $orderRefundCalculator;
 
     /**
+     * @var OrderSlipCreator
+     */
+    private $orderSlipCreator;
+
+    /**
      * @param Locale $locale
      * @param TranslatorInterface $translator
      * @param OrderRefundCalculator $orderRefundCalculator
+     * @param OrderSlipCreator $orderSlipCreator
      */
     public function __construct(
         Locale $locale,
         TranslatorInterface $translator,
-        OrderRefundCalculator $orderRefundCalculator
+        OrderRefundCalculator $orderRefundCalculator,
+        OrderSlipCreator $orderSlipCreator
     ) {
         $this->locale = $locale;
         $this->translator = $translator;
         $this->orderRefundCalculator = $orderRefundCalculator;
+        $this->orderSlipCreator = $orderSlipCreator;
     }
 
     /**
@@ -113,71 +122,7 @@ final class IssuePartialRefundHandler extends AbstractOrderCommandHandler implem
             }
         }
 
-        if ($orderRefundDetail->getRefundedAmount() > 0) {
-            $orderSlipCreated = OrderSlip::create(
-                $order,
-                $orderRefundDetail->getProductRefunds(),
-                $orderRefundDetail->getRefundedShipping(),
-                $orderRefundDetail->getVoucherAmount(),
-                $orderRefundDetail->isVoucherChosen(),
-                !$orderRefundDetail->isTaxIncluded()
-            );
-
-            if (!$orderSlipCreated) {
-                throw new OrderException('You cannot generate a partial credit slip.');
-            }
-
-            $fullQuantityList = array_map(function ($orderDetail) { return $orderDetail['quantity']; }, $orderRefundDetail->getProductRefunds());
-            Hook::exec('actionOrderSlipAdd', [
-                'order' => $order,
-                'productList' => $orderRefundDetail->getProductRefunds(),
-                'qtyList' => $fullQuantityList,
-            ], null, false, true, false, $order->id_shop);
-
-            $customer = new Customer((int) $order->id_customer);
-
-            // @todo: use private method to send mail
-            $params = [
-                '{lastname}' => $customer->lastname,
-                '{firstname}' => $customer->firstname,
-                '{id_order}' => $order->id,
-                '{order_name}' => $order->getUniqReference(),
-            ];
-
-            $orderLanguage = new Language((int) $order->id_lang);
-
-            // @todo: use a dedicated Mail class (see #13945)
-            // @todo: remove this @and have a proper error handling
-            @Mail::Send(
-                (int) $order->id_lang,
-                'credit_slip',
-                $this->translator->trans(
-                    'New credit slip regarding your order',
-                    [],
-                    'Emails.Subject',
-                    $orderLanguage->locale
-                ),
-                $params,
-                $customer->email,
-                $customer->firstname . ' ' . $customer->lastname,
-                null,
-                null,
-                null,
-                null,
-                _PS_MAIL_DIR_,
-                true,
-                (int) $order->id_shop
-            );
-
-            /** @var OrderDetail $orderDetail */
-            foreach ($orderRefundDetail->getOrderDetails() as $orderDetail) {
-                if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT')) {
-                    StockAvailable::synchronize($orderDetail->product_id);
-                }
-            }
-        } else {
-            throw new EmptyRefundAmountException();
-        }
+        $this->orderSlipCreator->createOrderSlip($order, $orderRefundDetail);
 
         if ($command->generateVoucher() && $orderRefundDetail->getRefundedAmount() > 0) {
             $cartRule = new CartRule();
