@@ -31,6 +31,7 @@ use Configuration;
 use PHPUnit\Framework\Assert as Assert;
 use PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\CategoryTreeChoiceProvider;
 use PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\GroupByIdChoiceProvider;
+use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\AddCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\AddRootCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\BulkDeleteCategoriesCommand;
@@ -57,7 +58,6 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
 {
     const EMPTY_VALUE = '';
     const DEFAULT_ROOT_CATEGORY_ID = 1;
-    const TEMP_FILES_URL = '/tmp/';
     const JPG_IMAGE_TYPE = '.jpg';
     const THUMB0 = '0_thumb';
     const JPG_IMAGE_STRING = 'iVBORw0KGgoAAAANSUhEUgAAABwAAAASCAMAAAB/2U7WAAAABl'
@@ -74,6 +74,8 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
     private $container;
     /** @var int */
     private $defaultLanguageId;
+    /** @var ConfigurationInterface */
+    private $configuration;
 
     /**
      * CategoryFeatureContext constructor.
@@ -82,6 +84,7 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
     {
         $this->container = $this->getContainer();
         $this->defaultLanguageId = Configuration::get('PS_LANG_DEFAULT');
+        $this->configuration = $this->container->get('prestashop.adapter.legacy.configuration');
     }
 
     /**
@@ -568,7 +571,7 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
             header('Content-Type: image/jpg');
             imagejpeg(
                 $im,
-                self::TEMP_FILES_URL . $categoryId . self::JPG_IMAGE_TYPE,
+                $this->configuration->get('_PS_TMP_IMG_DIR_'). $categoryId . self::JPG_IMAGE_TYPE,
                 0
             );
             imagedestroy($im);
@@ -652,7 +655,7 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
             header('Content-Type: image/jpg');
             imagejpeg(
                 $im,
-                self::TEMP_FILES_URL . $categoryId . '-' . self::THUMB0 . self::JPG_IMAGE_TYPE,
+                $this->configuration->get('_PS_TMP_IMG_DIR_'). $categoryId . '-' . self::THUMB0 . self::JPG_IMAGE_TYPE,
                 0
             );
             imagedestroy($im);

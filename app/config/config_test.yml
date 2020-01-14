@@ -1,7 +1,7 @@
 parameters:
     AdapterSecurityAdminClass:                LegacyTests\PrestaShopBundle\Mock\AdapterSecurityAdminMock
     prestashop.security.voter.product.class:  LegacyTests\PrestaShopBundle\Mock\PageVoter
-    ps_tmp_img_dir: "/tmp/"
+    ps_tmp_img_dir: "%kernel.project_dir%/img/tmp/"
 
 imports:
     - { resource: config_dev.yml }

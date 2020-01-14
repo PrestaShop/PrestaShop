@@ -15,8 +15,8 @@ parameters:
     env(PS_LOG_OUTPUT): "%kernel.logs_dir%/%kernel.environment%.log"
     mail_themes_uri: "/mails/themes"
     mail_themes_dir: "%kernel.project_dir%%mail_themes_uri%"
-    ps_tmp_img_dir: "/var/www/PrestaShop/img/tmp/"
-    ps_cat_img_dir: "/var/www/PrestaShop/img/c/"
+    ps_tmp_img_dir: "%kernel.project_dir%/img/tmp/"
+    ps_cat_img_dir: "%kernel.project_dir%/img/c/"
 
 framework:
     assets:
