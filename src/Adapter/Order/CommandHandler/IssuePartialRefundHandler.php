@@ -164,7 +164,7 @@ final class IssuePartialRefundHandler extends AbstractOrderCommandHandler implem
                 $shippingCostAmount,
                 $voucher,
                 $chosen,
-                $isTaxIncluded
+                !$isTaxIncluded
             );
 
             if (!$orderSlipCreated) {

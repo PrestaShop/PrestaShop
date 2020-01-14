@@ -79,7 +79,7 @@ class OrderRefundFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Given :orderReference has following credit slips:
+     * @Given :orderReference last credit slip is:
      *
      * @param $orderReference
      * @param TableNode $table
@@ -87,14 +87,23 @@ class OrderRefundFeatureContext extends AbstractDomainFeatureContext
     public function checkOrderRefunds($orderReference, TableNode $table)
     {
         $orderId = SharedStorage::getStorage()->get($orderReference);
-        $refundData = $table->getColumnsHash();
+        $refundData = $table->getRowsHash();
 
         $order = new Order($orderId);
-        /** @var OrderSlip $orderSlipIndex */
-        foreach ($order->getOrderSlipsCollection() as $orderSlipIndex => $orderSlip) {
-            $refund = $refundData[$orderSlipIndex];
-            PHPUnit_Framework_Assert::assertEquals($orderSlip->amount, $refund['amount']);
-            PHPUnit_Framework_Assert::assertEquals($orderSlip->shipping_cost_amount, $refund['shipping']);
+        $orderSlips = $order->getOrderSlipsCollection();
+        /** @var OrderSlip $orderSlip */
+        $orderSlip = $orderSlips->offsetGet($orderSlips->count() - 1);
+        foreach ($refundData as $orderSlipField => $orderSlipValue) {
+            PHPUnit_Framework_Assert::assertEquals(
+                $orderSlipValue,
+                $orderSlip->{$orderSlipField},
+                sprintf(
+                    'Invalid order slip field %s, expected %s instead of %s',
+                    $orderSlipField,
+                    $orderSlipValue,
+                    $orderSlip->{$orderSlipField}
+                )
+            );
         }
     }
 

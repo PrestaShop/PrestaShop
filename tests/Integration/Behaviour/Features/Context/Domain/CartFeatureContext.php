@@ -27,12 +27,16 @@
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 use Cart;
+use CartRule;
 use Configuration;
 use Context;
 use Country;
 use Currency;
 use Customer;
+use DateTime;
+use DateInterval;
 use Exception;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Command\AddCartRuleToCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\AddCustomizationFieldsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\CreateEmptyCustomerCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\SetFreeShippingToCartCommand;
@@ -198,6 +202,45 @@ class CartFeatureContext extends AbstractDomainFeatureContext
             new SetFreeShippingToCartCommand(
                 SharedStorage::getStorage()->get($cartReference),
                 true
+            )
+        );
+    }
+
+    /**
+     * @When I use a voucher :voucherCode for a discount of :discountAmount on the cart :cartReference
+     *
+     * @param string $voucherCode
+     * @param float $discountAmount
+     * @param string $cartReference
+     *
+     * @throws \PrestaShopDatabaseException
+     * @throws \PrestaShopException
+     */
+    public function useDiscountVoucherOnCart(string $voucherCode, float $discountAmount, string $cartReference)
+    {
+        $cartRule = new CartRule();
+        $cartRule->reduction_amount = $discountAmount;
+        $cartRule->name = [Configuration::get('PS_LANG_DEFAULT') => $voucherCode];
+        $cartRule->priority = 1;
+        $cartRule->quantity = 1;
+        $cartRule->quantity_per_user = 1;
+        $now = new DateTime();
+        // sub 1s to avoid bad comparisons with strictly greater than
+        $now->sub(new DateInterval('P2D'));
+        $cartRule->date_from = $now->format('Y-m-d H:i:s');
+        $now->add(new DateInterval('P1Y'));
+        $cartRule->date_to = $now->format('Y-m-d H:i:s');
+        $cartRule->active = 1;
+        $cartRule->code = $voucherCode;
+
+        if (!$cartRule->add()) {
+            throw new RuntimeException('Cannot add cart rule to database');
+        }
+
+        $this->getCommandBus()->handle(
+            new AddCartRuleToCartCommand(
+                SharedStorage::getStorage()->get($cartReference),
+                $cartRule->id
             )
         );
     }
