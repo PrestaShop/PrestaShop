@@ -167,4 +167,9 @@ export default {
       standardRefund: '.cancel-product-element:not(.hidden):not(.shipping-refund), .cancel-product-selector',
     },
   },
+  displayPartialRefundBtn: 'button.partial-refund-display',
+  cancelPartialRefundBtn: 'button.partial-refund-cancel',
+  actionColumnElements: 'td.cellProductActions, th.product_actions',
+  togglePartialRefundForm: '.partial-refund:not(.hidden), .shipping-price, .refund-checkboxes-container',
+  cancelProductBtn: 'button.cancel-product-display',
 };

@@ -51,6 +51,7 @@ $(() => {
   orderViewPage.listenForProductAdd();
   orderViewPage.listenForProductPagination();
   orderViewPage.listenForRefund();
+  orderViewPage.listenForCancelProduct();
 
   orderAddAutocomplete.listenForSearch();
   orderAddAutocomplete.onItemClickedCallback = product => orderAdd.setProduct(product);

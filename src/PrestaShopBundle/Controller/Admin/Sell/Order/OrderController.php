@@ -453,6 +453,7 @@ class OrderController extends FrameworkBundleAdminController
             'backOfficeOrderButtons' => $backOfficeOrderButtons,
             'merchandiseReturnEnabled' => $merchandiseReturnEnabled,
             'priceSpecification' => $this->getContextLocale()->getPriceSpecification($orderCurrency->iso_code)->toArray(),
+            'hasOrderReturnConfig' => (bool) $this->configuration->get('PS_ORDER_RETURN'),
         ]);
     }
 
