@@ -101,7 +101,7 @@ describe('Create Customers, Then disable / Enable and Delete with Bulk actions',
         );
         await expect(textResult).to.be.equal(this.pageObjects.customersPage.successfulUpdateMessage);
         const numberOfCustomersInGrid = await this.pageObjects.customersPage.getNumberOfElementInGrid();
-        await expect(numberOfCustomersInGrid).to.be.at.most(numberOfCustomers);
+        await expect(numberOfCustomersInGrid).to.be.at.least(2);
         for (let i = 1; i <= numberOfCustomersInGrid; i++) {
           const textColumn = await this.pageObjects.customersPage.getTextColumnFromTableCustomers(1, 'active');
           await expect(textColumn).to.contains(test.expected);
