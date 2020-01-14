@@ -42,6 +42,19 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
  */
 final class CategoryCoverImageUploader extends AbstractImageUploader
 {
+    /** @var string */
+    private $psTmpImgDir;
+
+    /**
+     * CategoryCoverImageUploader constructor.
+     *
+     * @param string $psTmpImgDir
+     */
+    public function __construct(string $psTmpImgDir)
+    {
+        $this->psTmpImgDir = $psTmpImgDir;
+    }
+
     /**
      * {@inheritdoc}
      *
@@ -79,7 +92,7 @@ final class CategoryCoverImageUploader extends AbstractImageUploader
      */
     private function uploadImage($id, UploadedFile $image)
     {
-        $temporaryImageName = tempnam(_PS_TMP_IMG_DIR_, 'PS');
+        $temporaryImageName = tempnam($this->psTmpImgDir, 'PS');
 
         if (!$temporaryImageName) {
             throw new ImageUploadException('Failed to create temporary image file');
