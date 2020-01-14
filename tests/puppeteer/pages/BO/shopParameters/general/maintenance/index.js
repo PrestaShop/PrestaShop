@@ -37,7 +37,7 @@ module.exports = class shopParamsMaintenance extends BOBasePage {
    * @return {Promise<string>}
    */
   async changeShopStatus(toEnable = true) {
-    await this.page.click(this.switchShopLabel.replace('%TOGGLE', toEnable ? 1 : 0));
+    await this.waitForSelectorAndClick(this.switchShopLabel.replace('%TOGGLE', toEnable ? 1 : 0));
     await this.clickAndWaitForNavigation(this.saveFormButton);
     return this.getTextContent(this.alertSuccessBloc);
   }
