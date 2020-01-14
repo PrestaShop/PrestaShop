@@ -568,11 +568,6 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
             header('Content-Type: image/jpg');
             imagejpeg(
                 $im,
-                self::TEMP_FILES_URL . $categoryId . '/' . $testCaseData['Category cover image'],
-                0
-            );
-            imagejpeg(
-                $im,
                 self::TEMP_FILES_URL . $categoryId . self::JPG_IMAGE_TYPE,
                 0
             );
@@ -655,10 +650,6 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
         $im = imagecreatefromstring($data);
         if ($im !== false) {
             header('Content-Type: image/jpg');
-            imagejpeg($im,
-                self::TEMP_FILES_URL . $categoryId . '/' . $testCaseData['Menu thumbnails'],
-                0
-            );
             imagejpeg(
                 $im,
                 self::TEMP_FILES_URL . $categoryId . '-' . self::THUMB0 . self::JPG_IMAGE_TYPE,
