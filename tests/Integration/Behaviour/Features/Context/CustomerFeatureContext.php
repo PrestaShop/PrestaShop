@@ -26,6 +26,7 @@
 
 namespace Tests\Integration\Behaviour\Features\Context;
 
+use CartRule;
 use Configuration;
 use Context;
 use Country;
@@ -133,6 +134,28 @@ class CustomerFeatureContext extends AbstractPrestaShopFeatureContext
                 $reference,
                 $privateNote,
                 $customer->note
+            ));
+        }
+    }
+
+    /**
+     * @Then customer :reference has voucher of :voucherAmount
+     */
+    public function checkCustomerHasVoucher(string $reference, float $voucherAmount)
+    {
+        /** @var Customer $customer */
+        $customer = SharedStorage::getStorage()->get($reference);
+        $cartRules = CartRule::getCustomerCartRules((int) Configuration::get('PS_LANG_DEFAULT'), $customer->id, true);
+        if (empty($cartRules)) {
+            throw new RuntimeException('Cannot find any cart rules for customer');
+        }
+
+        $voucher = $cartRules[0];
+        if ($voucherAmount !== (float) $voucher['reduction_amount']) {
+            throw new RuntimeException(sprintf(
+                'Invalid voucher amount, expected %s but got %s instead',
+                $voucherAmount,
+                $voucher['reduction_amount']
             ));
         }
     }

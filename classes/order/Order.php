@@ -558,6 +558,16 @@ class OrderCore extends ObjectModel
         return self::$_historyCache[$this->id . '_' . $id_order_state . '_' . $filters];
     }
 
+    /**
+     * Clean static history cache, must be called when an OrderHistory is added as it changes
+     * the order history and may change its value for isPaid/isDelivered/... This way calls to
+     * getHistory will be up to date.
+     */
+    public static function cleanHistoryCache()
+    {
+        self::$_historyCache = [];
+    }
+
     public function getProductsDetail()
     {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
