@@ -151,7 +151,7 @@ class CustomerFeatureContext extends AbstractPrestaShopFeatureContext
         }
 
         $voucher = $cartRules[0];
-        if ($voucherAmount != (float) $voucher['reduction_amount']) {
+        if ($voucherAmount !== (float) $voucher['reduction_amount']) {
             throw new RuntimeException(sprintf(
                 'Invalid voucher amount, expected %s but got %s instead',
                 $voucherAmount,
