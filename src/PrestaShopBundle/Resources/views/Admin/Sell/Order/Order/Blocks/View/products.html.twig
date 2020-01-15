@@ -32,6 +32,7 @@
   </div>
 
   <div class="card-body">
+    {{ form_start(cancelProductForm, {'action': path('admin_orders_partial_refund', {'orderId': orderForViewing.id})}) }}
     <table class="table" id="orderProductsTable" data-currency-precision="{{ orderCurrency.precision }}">
       <thead>
         <tr>
@@ -69,13 +70,12 @@
               <p>{{ 'Actions'|trans({}, 'Admin.Global') }}</p>
             </th>
           {% endif %}
-          <th class="text-center partial-refund">
+          <th class="text-center cancel-product-element">
             <p>{{ 'Partial refund'|trans({}, 'Admin.Orderscustomers.Feature') }}</p>
           </th>
         </tr>
       </thead>
       <tbody>
-        {#{{ form_start(partialRefundForm, {'action': path('admin_orders_partial_refund', {'orderId': orderForViewing.id})}) }}#}
         {% for product in orderForViewing.products.products %}
           {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/product.html.twig' with {
             'product': product,
@@ -185,22 +185,28 @@
             {% endif %}
 
             {% if orderForViewing.prices.shippingPriceRaw %}
-              <div class="col-sm text-center shipping-price">
+              <div class="col-sm text-center">
                 <p class="text-muted mb-0"><strong>{{ 'Shipping'|trans({}, 'Admin.Catalog.Feature') }}</strong></p>
-                <strong id="orderShippingTotal">{{ orderForViewing.prices.shippingPriceFormatted }}</strong>
-              </div>
-
-              <span class="partial-refund">
-                <p class="text-muted mb-0 text-center"><strong>{{ 'Shipping'|trans({}, 'Admin.Catalog.Feature') }}</strong></p>
-                <div class="col-sm text-center shipping-price-container">
-                  <strong>{{ orderForViewing.prices.shippingPriceFormatted }}</strong>
-                  {# {{ form_widget(partialRefundForm.shipping) }} #}
-                  <div class="input-group-append">
-                    <div class="input-group-text">{{ orderCurrency.symbol }}</div>
+                <div class="shipping-price">
+                  <strong id="orderShippingTotal">{{ orderForViewing.prices.shippingPriceFormatted }}</strong>
+                  <div class="cancel-product-element shipping-refund-amount">
+                    <div class="input-group">
+                      {{ form_widget(cancelProductForm.shipping_amount) }}
+                      <div class="input-group-append">
+                        <div class="input-group-text">{{ orderCurrency.symbol }}</div>
+                      </div>
+                    </div>
+                    <p class="text-center">(max {{ orderForViewing.prices.shippingPriceFormatted }} tax included)</p>
                   </div>
                 </div>
-                <p class="text-center">(max {{ orderForViewing.prices.shippingPriceFormatted }} tax included)</p>
-              </span>
+              </div>
+
+
+            {% else %}
+              {# No shippping, the form field is hidden in this div to avoid it being displayed through automatic form_rest #}
+              <div class="d-none">
+                {{ form_widget(cancelProductForm.shipping) }}
+              </div>
             {% endif %}
 
             {% if not orderForViewing.taxIncluded %}
@@ -234,18 +240,22 @@
         </p>
         <div class="refund-checkboxes-container">
           <div class="form-group">
-            {# {{ form_widget(partialRefundForm.restock) }} #}
+            {{ form_widget(cancelProductForm.restock) }}
           </div>
           <div class="form-group">
-            {# {{ form_widget(partialRefundForm.voucher) }} #}
+            {{ form_widget(cancelProductForm.voucher) }}
+          </div>
+          <div class="form-group shipping-refund{% if orderForViewing.prices.shippingPriceRaw %} hidden{% endif %}">
+            {{ form_widget(cancelProductForm.shipping) }}
           </div>
         </div>
       </div>
-      <div class="partial-refund form-submit text-right">
-        <button class="partial-refund partial-refund-cancel btn btn-outline-secondary" type="button">Cancel</button>
-        {#{{ form_widget(partialRefundForm.save) }}#}
+      <div class="cancel-product-element form-submit text-right">
+        {{ form_widget(cancelProductForm.cancel) }}
+        {{ form_widget(cancelProductForm.save) }}
       </div>
     </div>
   </div>
+  {{ form_end(cancelProductForm) }}
 </div>
-{#{{ form_end(partialRefundForm) }}#}
+
