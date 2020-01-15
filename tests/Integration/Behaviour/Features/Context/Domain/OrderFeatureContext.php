@@ -33,7 +33,7 @@ use Context;
 use FrontController;
 use OrderState;
 use Product;
-use PHPUnit_Framework_Assert;
+use PHPUnit\Framework\Assert as Assert;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\AddOrderFromBackOfficeCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\BulkChangeOrderStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\UpdateOrderStatusCommand;
@@ -378,7 +378,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
         $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
         /** @var OrderInvoiceAddressForViewing $invoiceAddress */
         $invoiceAddress = $orderForViewing->getInvoiceAddress();
-        PHPUnit_Framework_Assert::assertNotNull($invoiceAddress);
+        Assert::assertNotNull($invoiceAddress);
     }
 
     /**

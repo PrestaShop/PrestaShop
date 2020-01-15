@@ -30,7 +30,7 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Exception\EmptyRefundAmountException
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\EmptyRefundQuantityException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use RuntimeException;
-use PHPUnit_Framework_Assert;
+use PHPUnit\Framework\Assert as Assert;
 use Order;
 use OrderSlip;
 use Behat\Gherkin\Node\TableNode;
@@ -90,8 +90,8 @@ class OrderRefundFeatureContext extends AbstractDomainFeatureContext
         /** @var OrderSlip $orderSlip */
         $orderSlip = $orderSlips->offsetGet($orderSlips->count() - 1);
         foreach ($refundData as $orderSlipField => $orderSlipValue) {
-            PHPUnit_Framework_Assert::assertEquals(
-                $orderSlipValue,
+            Assert::assertEquals(
+                (float) $orderSlipValue,
                 $orderSlip->{$orderSlipField},
                 sprintf(
                     'Invalid order slip field %s, expected %s instead of %s',

@@ -37,7 +37,7 @@ class AdapterDatabaseTest extends IntegrationTestCase
         $this->db = new Database();
     }
 
-    public function testValuesAreEscapedDataProvider()
+    public function getValuesAreEscapedDataProvider()
     {
         return array(
             array('hello', 'hello'),
@@ -50,7 +50,7 @@ class AdapterDatabaseTest extends IntegrationTestCase
     }
 
     /**
-     * @dataProvider testValuesAreEscapedDataProvider
+     * @dataProvider getValuesAreEscapedDataProvider
      */
     public function testValuesAreEscaped($expectedSanitizedValue, $unsafeInput)
     {

@@ -37,11 +37,11 @@ class CurrencyCore extends ObjectModel
     public $name;
 
     /**
-     * Currency's names, indexed by language id.
+     * Localized names of the currency
      *
      * @var string[]
      */
-    private $localizedNames;
+    protected $localizedNames;
 
     /**
      * Alphabetic ISO 4217 code of this currency.
@@ -117,7 +117,7 @@ class CurrencyCore extends ObjectModel
     public $symbol;
 
     /**
-     * Currency's symbols, indexed by language id.
+     * Localized Currency's symbol.
      *
      * @var string[]
      */
@@ -196,6 +196,24 @@ class CurrencyCore extends ObjectModel
 
     protected $webserviceParameters = array(
         'objectsNodeName' => 'currencies',
+        'fields' => array(
+            'name' => array(
+                'setter' => false,
+                'getter' => 'getName',
+                'modifier' => array(
+                    'http_method' => WebserviceRequest::HTTP_POST | WebserviceRequest::HTTP_PUT,
+                    'modifier' => 'setNameForWebservice',
+                ),
+            ),
+            'symbol' => array(
+                'setter' => false,
+                'getter' => 'getSymbol',
+                'modifier' => array(
+                    'http_method' => WebserviceRequest::HTTP_POST | WebserviceRequest::HTTP_PUT,
+                    'modifier' => 'setSymbolForWebservice',
+                ),
+            ),
+        ),
     );
 
     /**
@@ -269,6 +287,29 @@ class CurrencyCore extends ObjectModel
         if (!$this->conversion_rate) {
             $this->conversion_rate = 1;
         }
+    }
+
+    public function getWebserviceParameters($ws_params_attribute_name = null)
+    {
+        $parameters = parent::getWebserviceParameters($ws_params_attribute_name);
+        // name & symbol are i18n fields but casted to single string in the constructor
+        // so we need to force the webservice to consider those fields as non-i18n fields.
+        // Also, in 1.7.5 the field symbol didn't exists and name wasn't an i18n field so in order
+        // to keep 1.7.6 backward compatible we need to make those fields non-i18n.
+        $parameters['fields']['name']['i18n'] = false;
+        $parameters['fields']['symbol']['i18n'] = false;
+
+        return $parameters;
+    }
+
+    public function setNameForWebservice()
+    {
+        $this->name = $this->localizedNames;
+    }
+
+    public function setSymbolForWebservice()
+    {
+        $this->symbol = $this->localizedSymbols;
     }
 
     /**
@@ -443,6 +484,20 @@ class CurrencyCore extends ObjectModel
         }
 
         return Tools::ucfirst($this->name[$id_lang]);
+    }
+
+    public function getSymbol()
+    {
+        if (is_string($this->symbol)) {
+            return $this->symbol;
+        }
+
+        $id_lang = $this->id_lang;
+        if (null === $id_lang) {
+            $id_lang = Configuration::get('PS_LANG_DEFAULT');
+        }
+
+        return Tools::ucfirst($this->symbol[$id_lang]);
     }
 
     /**

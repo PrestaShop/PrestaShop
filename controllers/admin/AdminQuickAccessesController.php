@@ -155,19 +155,9 @@ class AdminQuickAccessesControllerCore extends AdminController
 
     public function getQuickAccessesList()
     {
-        $links = QuickAccess::getQuickAccesses($this->context->language->id);
+        $links = QuickAccess::getQuickAccessesWithToken($this->context->language->id, (int) $this->context->employee->id);
 
-        return json_encode(array_map(array($this, 'getLinkToken'), $links));
-    }
-
-    public function getLinkToken($item)
-    {
-        $url = parse_url($item['link']);
-        parse_str($url['query'], $query);
-        $controller = $query['controller'];
-        $item['token'] = Tools::getAdminTokenLite($controller);
-
-        return $item;
+        return json_encode($links);
     }
 
     public function addQuickLink()

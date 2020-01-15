@@ -23,10 +23,9 @@
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 
-{% import '@PrestaShop/Admin/macros.html.twig' as ps %}
-
 <div class="card-group">
   {% embed '@PrestaShop/Admin/Improve/Design/Theme/Blocks/Partials/logo_card.html.twig' %}
+    {% import '@PrestaShop/Admin/macros.html.twig' as ps %}
     {% block card_title %}
       {{ form_widget(shopLogosForm.shop_logos.header_logo_is_restricted_to_shop) }} {{ 'Header logo'|trans({}, 'Admin.Design.Feature') }}
     {% endblock %}
@@ -49,6 +48,7 @@
   {% endembed %}
 
   {% embed '@PrestaShop/Admin/Improve/Design/Theme/Blocks/Partials/logo_card.html.twig' %}
+    {% import '@PrestaShop/Admin/macros.html.twig' as ps %}
     {% block card_title %}
       <ul class="nav nav-pills" role="tablist">
         <li class="nav-item">
@@ -122,6 +122,7 @@
   {% endembed %}
 
   {% embed '@PrestaShop/Admin/Improve/Design/Theme/Blocks/Partials/logo_card.html.twig' %}
+    {% import '@PrestaShop/Admin/macros.html.twig' as ps %}
     {% block card_title %}
       {{ form_widget(shopLogosForm.shop_logos.favicon_is_restricted_to_shop) }} {{ 'Favicon'|trans({}, 'Admin.Design.Feature') }}
     {% endblock %}

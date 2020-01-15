@@ -28,6 +28,7 @@ namespace Tests\Unit\Adapter\Routing;
 
 use Link;
 use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\MockObject\MockObject;
 use PrestaShop\PrestaShop\Adapter\Routing\AdminLinkBuilder;
 
 class AdminLinkBuilderTest extends TestCase
@@ -102,7 +103,7 @@ class AdminLinkBuilderTest extends TestCase
     }
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject|Link
+     * @return MockObject|Link
      */
     private function getLinkMock()
     {

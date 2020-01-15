@@ -48,7 +48,7 @@ class GenerateMailTemplatesCommandTest extends KernelTestCase
 
     public function testMissingArguments()
     {
-        $this->setExpectedException(RuntimeException::class, 'Not enough arguments (missing: "theme, locale").');
+        $this->expectException(RuntimeException::class, 'Not enough arguments (missing: "theme, locale").');
 
         $application = new Application(static::$kernel);
 

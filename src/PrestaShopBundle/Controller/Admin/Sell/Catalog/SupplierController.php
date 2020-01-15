@@ -436,6 +436,7 @@ class SupplierController extends FrameworkBundleAdminController
      */
     public function exportAction(SupplierFilters $filters)
     {
+        $filters = new SupplierFilters(['limit' => null] + $filters->all());
         $supplierGridFactory = $this->get('prestashop.core.grid.factory.supplier');
         $supplierGrid = $supplierGridFactory->getGrid($filters);
 
