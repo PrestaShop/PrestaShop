@@ -203,18 +203,13 @@ final class GetCartInformationHandler extends AbstractCartHandler implements Get
     {
         $products = [];
         foreach ($legacySummary['products'] as $product) {
-            $products[] = new CartProduct(
-                (int) $product['id_product'],
-                isset($product['id_product_attribute']) ? (int) $product['id_product_attribute'] : 0,
-                $product['name'],
-                isset($product['attributes_small']) ? $product['attributes_small'] : '',
-                $product['reference'],
-                \Tools::ps_round($product['price'], $currency->precision),
-                (int) $product['quantity'],
-                \Tools::ps_round($product['total'], $currency->precision),
-                $this->contextLink->getImageLink($product['link_rewrite'], $product['id_image'], 'small_default'),
-                $this->getProductCustomizedData($cart, $product)
-            );
+            $products[] = $this->buildCartProduct($cart, $currency, $product);
+        }
+
+        if (isset($legacySummary['gift_products'])) {
+            foreach ($legacySummary['gift_products'] as $giftProduct) {
+                $products[] = $this->buildCartProduct($cart, $currency, $giftProduct, true);
+            }
         }
 
         return $products;
@@ -408,5 +403,22 @@ final class GetCartInformationHandler extends AbstractCartHandler implements Get
         }
 
         return $customizationFieldsData;
+    }
+
+    private function buildCartProduct(Cart $cart, Currency $currency, array $product, bool $isGift = false): CartProduct
+    {
+        return new CartProduct(
+            (int) $product['id_product'],
+            isset($product['id_product_attribute']) ? (int) $product['id_product_attribute'] : 0,
+            $product['name'],
+            isset($product['attributes_small']) ? $product['attributes_small'] : '',
+            $product['reference'],
+            \Tools::ps_round($product['price'], $currency->precision),
+            (int) $product['quantity'],
+            \Tools::ps_round($product['total'], $currency->precision),
+            $this->contextLink->getImageLink($product['link_rewrite'], $product['id_image'], 'small_default'),
+            $this->getProductCustomizedData($cart, $product),
+            $isGift
+        );
     }
 }
