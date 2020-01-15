@@ -101,7 +101,7 @@ module.exports = class BOBasePage extends CommonPage {
 
     // Growls
     this.growlMessageBlock = '#growls .growl-message';
-    this.growlDefaultMessageBloc = '#growls-default .growl-message';
+    this.growlDefaultMessageBlock = '#growls-default .growl-message';
 
     // Alert Text
     this.alertSuccessBloc = 'div.alert.alert-success:not([style=\'display: none;\'])';
