@@ -1,7 +1,7 @@
 parameters:
     AdapterSecurityAdminClass:                LegacyTests\PrestaShopBundle\Mock\AdapterSecurityAdminMock
     prestashop.security.voter.product.class:  LegacyTests\PrestaShopBundle\Mock\PageVoter
-    ps_tmp_img_dir: "%kernel.project_dir%/img/tmp/"
+    prestashop_temporary_image_directory: "%kernel.project_dir%/img/tmp/"
 
 imports:
     - { resource: config_dev.yml }
@@ -27,12 +27,12 @@ services:
     prestashop.adapter.image.uploader.category_cover_image_uploader:
       class: 'PrestaShop\PrestaShop\Adapter\Image\Uploader\CategoryCoverImageUploader'
       arguments:
-        - '%ps_tmp_img_dir%'
+        - '%prestashop_temporary_image_directory%'
 
     prestashop.adapter.category.command_handler.edit_category_handler:
       class: PrestaShop\PrestaShop\Adapter\Category\CommandHandler\EditCategoryHandler
       arguments:
-        - '%ps_tmp_img_dir%'
+        - '%prestashop_temporary_image_directory%'
       public: true
       tags:
         - { name: tactician.handler, command: PrestaShop\PrestaShop\Core\Domain\Category\Command\EditCategoryCommand }
@@ -41,7 +41,7 @@ services:
       class: PrestaShop\PrestaShop\Adapter\Category\QueryHandler\GetCategoryForEditingHandler
       arguments:
         - '@prestashop.core.image.parser.image_tag_source_parser'
-        - '%ps_tmp_img_dir%'
+        - '%prestashop_temporary_image_directory%'
       tags:
         - { name: tactician.handler, command: PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoryForEditing }
 
@@ -51,7 +51,7 @@ services:
         - '@filesystem'
         - '@prestashop.adapter.legacy.configuration'
         - '@prestashop.adapter.cache.clearer.smarty_cache_clearer'
-        - '%ps_tmp_img_dir%'
+        - '%prestashop_temporary_image_directory%'
       tags:
         - name: tactician.handler
           command: PrestaShop\PrestaShop\Core\Domain\Category\Command\DeleteCategoryMenuThumbnailImageCommand
