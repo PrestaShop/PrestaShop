@@ -166,26 +166,38 @@ td .editProductInvoice {
   }
 }
 
-.partial-refund {
+.shipping-price {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.shipping-refund-amount {
+  margin-left: 10px;
+}
+
+.cancel-product-element,
+.cancel-product-selector,
+.cancel-product-quantity {
   display: none;
 }
 
-.partial-refund label {
+.cancel-product-element label {
   height: 30px;
   line-height: 30px;
   padding: 0;
 }
 
-.partial-refund .form-group {
+.cancel-product-element .form-group {
   display: inline-flex;
 }
 
-.partial-refund .form-group .input-group {
+.cancel-product-element .form-group .input-group {
   display: flex;
   flex: wrap;
 }
 
-.partial-refund.form-submit {
+.cancel-product-element.form-submit {
   width: 100%;
   margin-right: 20px;
   margin-top: -10px;
@@ -201,21 +213,21 @@ td .editProductInvoice {
   width: max-content;
 }
 
-.partial-refund .shipping-price-container {
-  display: flex;
-  margin-top: 8px;
+.cancel-product-element .form-group {
+  width: fit-content;
 }
 
-.partial-refund .form-group {
+.cancel-product-element .cancel-product-quantity {
   width: max-content;
 }
 
+
 input.refund-quantity {
   max-width: 160px;
-  margin-left: 20px;
+  margin-left: 10px;
 }
 
 input.refund-amount, input#partial_refund_shipping {
   max-width: 80px;
-  margin-left: 20px;
+  margin-left: 10px;
 }

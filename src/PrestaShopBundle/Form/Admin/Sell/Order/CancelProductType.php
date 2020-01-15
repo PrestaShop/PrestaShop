@@ -69,11 +69,20 @@ class CancelProductType extends TranslatorAwareType
                 ]);
         }
         $builder
-            ->add('shipping', NumberType::class,
+            ->add('shipping_amount', NumberType::class,
                 [
                     'label' => $this->trans('Shipping', 'Admin.Catalog.Feature', []),
                     'invalid_message' => $this->trans('The "shipping" field must be a valid number', 'Admin.Orderscustomers.Feature', []),
                     'required' => false,
+                ]
+            )
+            ->add('shipping', CheckboxType::class,
+                [
+                    'label' => $this->trans('Shipping', 'Admin.Catalog.Feature', []),
+                    'required' => false,
+                    'attr' => [
+                        'material_design' => true,
+                    ],
                 ]
             )
             ->add('restock', CheckboxType::class,
@@ -94,8 +103,17 @@ class CancelProductType extends TranslatorAwareType
                     ],
                 ]
             )
+            ->add('cancel', SubmitType::class, [
+                'label' => $this->trans('Cancel', 'Admin.Actions'),
+                'attr' => [
+                    'class' => 'cancel-product-element cancel-product-element-abort btn btn-outline-secondary',
+                ],
+            ])
             ->add('save', SubmitType::class, [
-                'attr' => ['class' => 'partial-refund save btn btn-primary ml-3'],
+                'attr' => [
+                    'class' => 'cancel-product-element save btn btn-primary ml-3',
+                    'formnovalidate' => true,
+                ],
             ]);
     }
 }

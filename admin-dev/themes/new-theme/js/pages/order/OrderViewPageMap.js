@@ -114,8 +114,8 @@ export default {
   orderTotal: '#orderTotal',
   orderHookTabsContainer: '#order_hook_tabs',
   displayPartialRefundBtn: 'button.partial-refund-display',
-  cancelPartialRefundBtn: 'button.partial-refund-cancel',
+  cancelPartialRefundBtn: 'button.cancel-product-element-abort',
   actionColumnElements: 'td.cellProductActions, th.product_actions',
-  togglePartialRefundForm: '.partial-refund:not(.hidden), .shipping-price, .refund-checkboxes-container',
+  togglePartialRefundForm: '.cancel-product-element:not(.hidden):not(.shipping-refund), .cancel-product-quantity, .shipping-price, .refund-checkboxes-container',
   productAddNewInvoiceInfo: '#addProductNewInvoiceInfo',
 };

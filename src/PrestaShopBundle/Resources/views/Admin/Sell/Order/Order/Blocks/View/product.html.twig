@@ -99,20 +99,25 @@
     </td>
   {% endif %}
   <td class="text-right">
-    <span class="partial-refund{% if product.refundable == false %} hidden{% endif %}">
+    <span class="cancel-product-element{% if product.refundable == false %} hidden{% endif %}">
       <div class="form-group">
-        <div class="col-lg-4">
+        <div class="col-lg-5 cancel-product-selector">
           <div class="input-group">
-            <strong>{# {{ form_label(partialRefundForm['quantity_' ~ product.orderDetailId]) }} #}</strong>
-            {# {{ form_widget(partialRefundForm['quantity_' ~ product.orderDetailId]) }} #}
+            {{ form_widget(cancelProductForm['selected_' ~ product.orderDetailId]) }}
+          </div>
+        </div>
+        <div class="col-lg-5 cancel-product-quantity">
+          <div class="input-group">
+            <strong>{{ form_label(cancelProductForm['quantity_' ~ product.orderDetailId]) }}</strong>
+            {{ form_widget(cancelProductForm['quantity_' ~ product.orderDetailId]) }}
             <div class="input-group-append"><div class="input-group-text">/ {{ product.quantityRefundable }}</div></div>
           </div>
         </div>
-        <div class="col-lg-8">
+        <div class="col-lg-7">
           <div class="input-group">
-            <strong>{# {{ form_label(partialRefundForm['amount_' ~ product.orderDetailId]) }} #}</strong>
-            {# {{ form_widget(partialRefundForm['amount_' ~ product.orderDetailId]) }} #}
-            {# <div class="input-group-append"><div class="input-group-text">{{ orderCurrency.symbol }}</div></div> #}
+            <strong>{{ form_label(cancelProductForm['amount_' ~ product.orderDetailId]) }}</strong>
+            {{ form_widget(cancelProductForm['amount_' ~ product.orderDetailId]) }}
+            <div class="input-group-append"><div class="input-group-text">{{ orderCurrency.symbol }}</div></div>
           </div>
           <p class="text-center">{{ '(Max %amount_refundable% %tax_method%)'|trans({
               '%amount_refundable%': product.amountRefundable,
