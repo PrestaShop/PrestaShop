@@ -206,7 +206,7 @@ final class GetCartInformationHandler extends AbstractCartHandler implements Get
             $products[] = $this->buildCartProduct($cart, $currency, $product);
         }
 
-        if (isset($legacySummary['gift_products'])) {
+        if (isset($legacySummary['gift_products']) && is_array($legacySummary['gift_products'])) {
             foreach ($legacySummary['gift_products'] as $giftProduct) {
                 $products[] = $this->buildCartProduct($cart, $currency, $giftProduct, true);
             }
@@ -405,8 +405,20 @@ final class GetCartInformationHandler extends AbstractCartHandler implements Get
         return $customizationFieldsData;
     }
 
-    private function buildCartProduct(Cart $cart, Currency $currency, array $product, bool $isGift = false): CartProduct
-    {
+    /**
+     * @param Cart $cart
+     * @param Currency $currency
+     * @param array $product
+     * @param bool $isGift
+     *
+     * @return CartProduct
+     */
+    private function buildCartProduct(
+        Cart $cart,
+        Currency $currency,
+        array $product,
+        bool $isGift = false
+    ): CartProduct {
         return new CartProduct(
             (int) $product['id_product'],
             isset($product['id_product_attribute']) ? (int) $product['id_product_attribute'] : 0,

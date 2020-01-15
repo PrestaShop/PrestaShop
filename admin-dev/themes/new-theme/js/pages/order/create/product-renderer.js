@@ -52,10 +52,7 @@ export default class ProductRenderer {
     for (const key in products) {
       const product = products[key];
 
-      let $template = $productsTableRowTemplate.clone();
-      if (product.gift === true) {
-        $template = $productsTableGiftRowTemplate.clone();
-      }
+      const $template = product.gift === true ? $productsTableGiftRowTemplate.clone() : $productsTableRowTemplate.clone();
 
       let customizationId = 0;
 
