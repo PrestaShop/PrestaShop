@@ -49,7 +49,7 @@ class OrderRefundCalculator
         float $shippingRefund,
         int $voucherRefundType,
         ?float $chosenVoucherAmount
-    ): OrderRefundDetail {
+    ): OrderRefundSummary {
         $isTaxIncluded = $this->isTaxIncludedInOrder($order);
 
         $orderDetailList = $this->getOrderTailList($orderDetailRefunds);
@@ -80,7 +80,7 @@ class OrderRefundCalculator
             }
         }
 
-        return new OrderRefundDetail(
+        return new OrderRefundSummary(
             $orderDetailList,
             $productRefunds,
             $refundedAmount,
@@ -96,8 +96,8 @@ class OrderRefundCalculator
      *
      * @return OrderDetail[]
      *
-     * @throws \PrestaShopDatabaseException
-     * @throws \PrestaShopException
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
      */
     private function getOrderTailList(array $orderDetailRefunds)
     {

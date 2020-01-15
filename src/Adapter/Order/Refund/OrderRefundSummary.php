@@ -31,7 +31,7 @@ use OrderDetail;
 /**
  * Container of all the necessary information for an order refund
  */
-class OrderRefundDetail
+class OrderRefundSummary
 {
     /**
      * @var OrderDetail[]
