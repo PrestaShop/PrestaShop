@@ -193,6 +193,19 @@ class OrderSlipCore extends ObjectModel
     }
 
     /**
+     * Get resume of all shipping refund for one order.
+     *
+     * @param $id_order
+     */
+    public static function getShippingSlipResume($id_order)
+    {
+        return Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
+            SELECT SUM(total_shipping_tax_incl) total_shipping_tax_incl, SUM(total_shipping_tax_excl) total_shipping_tax_excl, SUM(shipping_cost_amount) shipping_cost_amount
+            FROM `' . _DB_PREFIX_ . 'order_slip`
+            WHERE `id_order` = ' . (int) $id_order);
+    }
+
+    /**
      * Get refund details for one product line.
      *
      * @param $id_order_detail

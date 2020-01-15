@@ -73,8 +73,22 @@
     </form>
   {% endif %}
   {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/extra_order_button_actions.html.twig' %}
+  {% if merchandiseReturnEnabled %}
+    {% if orderForViewing.hasInvoice() %}
+      <div class="form-inline d-inline-block form-horizontal ml-2">
+        <button class="btn btn-action standard-refund-display" type="button">
+          <i class="material-icons">swap_horiz</i>
+          {{ 'Standard refund'|trans({}, 'Admin.Orderscustomers.Feature') }}
+        </button>
+      </div>
+    {% endif %}
+  {% endif %}
   {% if orderForViewing.hasInvoice() %}
     <div class="form-inline d-inline-block form-horizontal ml-2">
+      <button class="btn btn-action partial-refund-display" type="button">
+        <i class="material-icons">swap_horiz</i>
+        {{ 'Partial refund'|trans({}, 'Admin.Orderscustomers.Feature') }}
+      </button>
     </div>
   {% endif %}
 </div>
