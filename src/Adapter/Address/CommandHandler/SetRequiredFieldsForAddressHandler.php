@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Address\CommandHandler;
 
 use Address;
+use CustomerAddress;
 use PrestaShop\PrestaShop\Core\Domain\Address\Command\SetRequiredFieldsForAddressCommand;
 use PrestaShop\PrestaShop\Core\Domain\Address\CommandHandler\SetRequiredFieldsForAddressHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Address\Exception\CannotSetRequiredFieldsForAddressException;
@@ -46,7 +47,7 @@ final class SetRequiredFieldsForAddressHandler implements SetRequiredFieldsForAd
      */
     public function handle(SetRequiredFieldsForAddressCommand $command)
     {
-        $address = new Address();
+        $address = new CustomerAddress();
 
         try {
             if ($address->addFieldsRequiredDatabase($command->getRequiredFields())) {
