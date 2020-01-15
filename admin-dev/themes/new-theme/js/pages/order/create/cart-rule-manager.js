@@ -25,13 +25,12 @@
 
 import CartEditor from '@pages/order/create/cart-editor';
 import CartRulesRenderer from '@pages/order/create/cart-rules-renderer';
-import createOrderMap from '@pages/order/create/create-order-map';
 import {EventEmitter} from '@components/event-emitter';
 import eventMap from '@pages/order/create/event-map';
 import Router from '@components/router';
 import SummaryRenderer from '@pages/order/create/summary-renderer';
 import ShippingRenderer from '@pages/order/create/shipping-renderer';
-import ProductRenderer from "./product-renderer";
+import ProductRenderer from '@pages/order/create/product-renderer';
 
 const $ = window.$;
 
