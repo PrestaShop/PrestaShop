@@ -1099,8 +1099,8 @@ services:
         tags:
             - { name: form.type }
 
-    form.type.order.product_flow:
-        class: 'PrestaShopBundle\Form\Admin\Sell\Order\ProductFlowType'
+    form.type.order.cancel_product:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Order\CancelProductType'
         parent: 'form.type.translatable.aware'
         public: true
         tags:
