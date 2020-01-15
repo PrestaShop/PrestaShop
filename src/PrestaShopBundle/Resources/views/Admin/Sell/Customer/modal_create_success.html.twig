@@ -33,14 +33,14 @@
     {# Script dedicated to close "Create a customer" fancybox used in Add an Order #}
 
     // legacy behavior
-    if (typeof parent.setupCustomer !== "undefined") {
+    if (typeof window.parent.setupCustomer !== "undefined") {
       $('#customer', window.parent.document).val('{{ customerEmail }}');
       window.parent.setupCustomer({{ customerId }});
     }
     // symfony behavior
-    if (typeof parent.order_create !== "undefined") {
+    if (typeof window.parent.order_create !== "undefined") {
       $('#customer-search-input', window.parent.document).val('{{ customerEmail }}');
-      window.parent.order_create.searchCustomerByString('{{ customerEmail }}');
+      window.parent.order_create.searchCustomerByString('{{ customerEmail|e('js') }}');
     }
 
     window.parent.$.fancybox.close();
