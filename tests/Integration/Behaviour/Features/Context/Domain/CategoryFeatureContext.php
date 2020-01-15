@@ -564,7 +564,7 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
             header('Content-Type: image/jpg');
             imagejpeg(
                 $im,
-                $this->configuration->get('_PS_TMP_IMG_DIR_'). $categoryId . self::JPG_IMAGE_TYPE,
+                $this->configuration->get('_PS_TMP_IMG_DIR_') . $categoryId . self::JPG_IMAGE_TYPE,
                 0
             );
             imagedestroy($im);
@@ -648,7 +648,7 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
             header('Content-Type: image/jpg');
             imagejpeg(
                 $im,
-                $this->configuration->get('_PS_TMP_IMG_DIR_'). $categoryId . '-' . self::THUMB0 . self::JPG_IMAGE_TYPE,
+                $this->configuration->get('_PS_TMP_IMG_DIR_') . $categoryId . '-' . self::THUMB0 . self::JPG_IMAGE_TYPE,
                 0
             );
             imagedestroy($im);
