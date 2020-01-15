@@ -459,7 +459,7 @@ class OrderController extends FrameworkBundleAdminController
      */
     public function partialRefundAction(int $orderId, Request $request)
     {
-        $formBuilder = $this->get('prestashop.core.form.identifiable_object.builder.product_flow_form_builder');
+        $formBuilder = $this->get('prestashop.core.form.identifiable_object.builder.cancel_product_form_builder');
         $formHandler = $this->get('prestashop.core.form.identifiable_object.partial_refund_form_handler');
         $form = $formBuilder->getFormFor($orderId);
 
