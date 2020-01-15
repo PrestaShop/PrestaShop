@@ -46,7 +46,7 @@ export default class CustomerManager {
     this.customerRenderer = new CustomerRenderer();
 
     this._initListeners();
-    this._initAddCustomerIframe();
+    this.initAddCustomerIframe();
 
     return {
       search: searchPhrase => this._search(searchPhrase),
@@ -70,7 +70,7 @@ export default class CustomerManager {
   /**
    * @private
    */
-  _initAddCustomerIframe() {
+  initAddCustomerIframe() {
     $(createOrderMap.customerAddBtn).fancybox({
       'type': 'iframe',
       'width': '90%',
@@ -101,12 +101,13 @@ export default class CustomerManager {
       this.customerId = $chooseBtn.data('customer-id');
 
       const createAddressUrl = this.router.generate(
-          'admin_addresses_create',
-          {
-            'liteDisplaying': 1,
-            'submitFormAjax': 1,
-            'id_customer': this.customerId,
-          });
+        'admin_addresses_create',
+        {
+          'liteDisplaying': 1,
+          'submitFormAjax': 1,
+          'id_customer': this.customerId,
+        }
+      );
       $(createOrderMap.addressAddBtn).attr('href', createAddressUrl);
 
       this.customerRenderer.displaySelectedCustomerBlock($chooseBtn);

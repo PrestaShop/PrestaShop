@@ -31,16 +31,23 @@ let orderPageManager = null;
  * proxy to allow other scripts within the page to trigger the search
  * @param string
  */
-function searchCustomerByString(string)
-{
-  orderPageManager.customerManager.search(string);
+function searchCustomerByString(string) {
+  if (orderPageManager !== null) {
+    orderPageManager.search(string);
+  } else {
+    console.log('Error: Could not search customer as orderPageManager is null');
+  }
 }
+
 /**
  * proxy to allow other scripts within the page to refresh addresses list
  */
-function refreshAddressesList()
-{
-  orderPageManager.refreshAddressesList();
+function refreshAddressesList() {
+  if (orderPageManager !== null) {
+    orderPageManager.refreshAddressesList();
+  } else {
+    console.log('Error: Could not refresh addresses list as orderPageManager is null');
+  }
 }
 
 
