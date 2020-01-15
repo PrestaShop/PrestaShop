@@ -29,26 +29,6 @@ namespace PrestaShop\PrestaShop\Core\Domain\Profile\Command;
 /**
  * Adds new profile
  */
-class AddProfileCommand
+class AddProfileCommand extends AbstractProfileCommand
 {
-    /**
-     * @var string[] As langId => name
-     */
-    private $localizedNames;
-
-    /**
-     * @param string[] $localizedNames
-     */
-    public function __construct(array $localizedNames)
-    {
-        $this->localizedNames = $localizedNames;
-    }
-
-    /**
-     * @return string[]
-     */
-    public function getLocalizedNames()
-    {
-        return $this->localizedNames;
-    }
 }
