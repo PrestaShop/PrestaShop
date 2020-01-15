@@ -422,8 +422,8 @@ class OrderController extends FrameworkBundleAdminController
             $hookParameters
         );
 
-        $formBuilder = $this->get('prestashop.core.form.identifiable_object.builder.product_flow_form_builder');
-        $productFlowForm = $formBuilder->getFormFor($orderId);
+        $formBuilder = $this->get('prestashop.core.form.identifiable_object.builder.cancel_product_form_builder');
+        $cancelProductForm = $formBuilder->getFormFor($orderId);
 
         $this->handleOutOfStockProduct($orderForViewing);
 
@@ -440,7 +440,7 @@ class OrderController extends FrameworkBundleAdminController
             'changeOrderCurrencyForm' => $changeOrderCurrencyForm->createView(),
             'privateNoteForm' => $privateNoteForm->createView(),
             'updateOrderShippingForm' => $updateOrderShippingForm->createView(),
-            'productFlowForm' => $productFlowForm->createView(),
+            'cancelProductForm' => $cancelProductForm->createView(),
             'invoiceManagementIsEnabled' => $orderForViewing->isInvoiceManagementIsEnabled(),
             'changeOrderAddressForm' => $changeOrderAddressForm->createView(),
             'orderMessageForm' => $orderMessageForm->createView(),
