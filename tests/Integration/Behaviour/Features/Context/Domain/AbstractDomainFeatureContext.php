@@ -32,9 +32,9 @@ use Exception;
 use Language;
 use ObjectModel;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
-use Psr\Container\ContainerInterface;
 use RuntimeException;
 use Shop;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Tests\Integration\Behaviour\Features\Context\CommonFeatureContext;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 

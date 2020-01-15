@@ -30,8 +30,8 @@ use AppKernel;
 use Context;
 use Employee;
 use LegacyTests\PrestaShopBundle\Utils\DatabaseCreator;
+use Psr\Container\ContainerInterface;
 use Shop;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class CommonFeatureContext extends AbstractPrestaShopFeatureContext
 {
