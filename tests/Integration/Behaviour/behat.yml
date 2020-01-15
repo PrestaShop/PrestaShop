@@ -50,6 +50,9 @@ default:
                 - Tests\Integration\Behaviour\Features\Context\CategoryFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\OrderFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\ShopFeatureContext
+                # domain contexts
+                - Tests\Integration\Behaviour\Features\Context\Domain\CustomerFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\CartFeatureContext
         order:
             paths:
                 features: Features/Scenario/Order
