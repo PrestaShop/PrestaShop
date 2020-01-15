@@ -127,8 +127,8 @@ services:
     arguments:
       - '@prestashop.core.query_bus'
 
-  prestashop.core.form.identifiable_object.data_provider.partial_refund_form_data_provider:
-    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\PartialRefundFormDataProvider'
+  prestashop.core.form.identifiable_object.data_provider.product_flow_form_data_provider:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\ProductFlowFormDataProvider'
     arguments:
       - '@prestashop.core.query_bus'
 

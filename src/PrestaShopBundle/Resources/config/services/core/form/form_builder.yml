@@ -155,12 +155,12 @@ services:
       - 'PrestaShopBundle\Form\Admin\Sell\Attachment\AttachmentType'
       - '@prestashop.core.form.identifiable_object.data_provider.attachment_form_data_provider'
 
-  prestashop.core.form.identifiable_object.builder.partial_refund_form_builder:
+  prestashop.core.form.identifiable_object.builder.product_flow_form_builder:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilder'
     factory: 'prestashop.core.form.builder.form_builder_factory:create'
     arguments:
-      - 'PrestaShopBundle\Form\Admin\Sell\Order\PartialRefundType'
-      - '@prestashop.core.form.identifiable_object.data_provider.partial_refund_form_data_provider'
+      - 'PrestaShopBundle\Form\Admin\Sell\Order\ProductFlowType'
+      - '@prestashop.core.form.identifiable_object.data_provider.product_flow_form_data_provider'
 
   prestashop.core.form.identifiable_object.builder.address_form_builder:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilder'

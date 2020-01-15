@@ -32,7 +32,7 @@ use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 
-class PartialRefundType extends TranslatorAwareType
+class ProductFlowType extends TranslatorAwareType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
@@ -41,6 +41,15 @@ class PartialRefundType extends TranslatorAwareType
 
         foreach ($products as $product) {
             $builder
+                ->add('cancellation_' . $product->getOrderDetailId(), CheckboxType::class,
+                    [
+                        'required' => false,
+                        'label' => false,
+                        'attr' => [
+                            'material_design' => true,
+                        ],
+                    ]
+                )
                 ->add('quantity_' . $product->getOrderDetailId(), NumberType::class, [
                     'attr' => ['max' => $product->getQuantity(), 'class' => 'refund-quantity'],
                     'label' => $this->trans('Quantity', 'Global', []),

@@ -33,7 +33,7 @@ use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderForViewing;
 /**
  * Provides data for category add/edit category forms
  */
-final class PartialRefundFormDataProvider implements FormDataProviderInterface
+final class ProductFlowFormDataProvider implements FormDataProviderInterface
 {
     /**
      * @var CommandBusInterface
