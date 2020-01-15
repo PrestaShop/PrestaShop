@@ -110,8 +110,7 @@ Feature: Category Management
       | Category cover image | logo.jpg               |
     And category "category1" has cover image
     When I delete category "category1" cover image
-#   fails because path to image is used from object model and no easy override injection with services possible
-#    Then category "category1" does not have cover image
+    Then category "category1" does not have cover image
 
   Scenario: delete category menu thumbnail image
     Given I edit category "category1" with following details:

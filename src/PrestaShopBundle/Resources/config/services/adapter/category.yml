@@ -73,8 +73,6 @@ services:
 
   prestashop.adapter.category.command_handler.edit_category_handler:
     class: PrestaShop\PrestaShop\Adapter\Category\CommandHandler\EditCategoryHandler
-    arguments:
-      - '%prestashop_temporary_image_directory%'
     public: true
     tags:
       - { name: tactician.handler, command: PrestaShop\PrestaShop\Core\Domain\Category\Command\EditCategoryCommand }
@@ -83,7 +81,6 @@ services:
     class: PrestaShop\PrestaShop\Adapter\Category\QueryHandler\GetCategoryForEditingHandler
     arguments:
       - '@prestashop.core.image.parser.image_tag_source_parser'
-      - '%prestashop_category_image_directory%'
     tags:
       - { name: tactician.handler, command: PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoryForEditing }
 
@@ -102,7 +99,6 @@ services:
       - '@filesystem'
       - '@prestashop.adapter.legacy.configuration'
       - '@prestashop.adapter.cache.clearer.smarty_cache_clearer'
-      - '%prestashop_category_image_directory%'
     tags:
     - name: tactician.handler
       command: PrestaShop\PrestaShop\Core\Domain\Category\Command\DeleteCategoryMenuThumbnailImageCommand
