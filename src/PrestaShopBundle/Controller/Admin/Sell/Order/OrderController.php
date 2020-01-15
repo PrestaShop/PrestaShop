@@ -422,8 +422,8 @@ class OrderController extends FrameworkBundleAdminController
             $hookParameters
         );
 
-        $formBuilder = $this->get('prestashop.core.form.identifiable_object.builder.partial_refund_form_builder');
-        $partialRefundForm = $formBuilder->getFormFor($orderId);
+        $formBuilder = $this->get('prestashop.core.form.identifiable_object.builder.product_flow_form_builder');
+        $productFlowForm = $formBuilder->getFormFor($orderId);
 
         $this->handleOutOfStockProduct($orderForViewing);
 
@@ -440,7 +440,7 @@ class OrderController extends FrameworkBundleAdminController
             'changeOrderCurrencyForm' => $changeOrderCurrencyForm->createView(),
             'privateNoteForm' => $privateNoteForm->createView(),
             'updateOrderShippingForm' => $updateOrderShippingForm->createView(),
-            'partialRefundForm' => $partialRefundForm->createView(),
+            'productFlowForm' => $productFlowForm->createView(),
             'invoiceManagementIsEnabled' => $orderForViewing->isInvoiceManagementIsEnabled(),
             'changeOrderAddressForm' => $changeOrderAddressForm->createView(),
             'orderMessageForm' => $orderMessageForm->createView(),
@@ -459,7 +459,7 @@ class OrderController extends FrameworkBundleAdminController
      */
     public function partialRefundAction(int $orderId, Request $request)
     {
-        $formBuilder = $this->get('prestashop.core.form.identifiable_object.builder.partial_refund_form_builder');
+        $formBuilder = $this->get('prestashop.core.form.identifiable_object.builder.product_flow_form_builder');
         $formHandler = $this->get('prestashop.core.form.identifiable_object.partial_refund_form_handler');
         $form = $formBuilder->getFormFor($orderId);
 

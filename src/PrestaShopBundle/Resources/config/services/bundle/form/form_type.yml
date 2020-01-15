@@ -1099,8 +1099,8 @@ services:
         tags:
             - { name: form.type }
 
-    form.type.order.partial_refund:
-        class: 'PrestaShopBundle\Form\Admin\Sell\Order\PartialRefundType'
+    form.type.order.product_flow:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Order\ProductFlowType'
         parent: 'form.type.translatable.aware'
         public: true
         tags:
