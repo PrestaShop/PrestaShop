@@ -203,9 +203,9 @@ describe('Create, Read, Update and Delete Employee in BO', async () => {
       loginCommon.logoutBO();
 
       it('should test sign in with the disabled employee', async function () {
-        await this.pageObjects.loginPage.login(secondEditEmployeeData.email, secondEditEmployeeData.password);
-        const pageTitle = await this.pageObjects.loginPage.getPageTitle();
-        await expect(pageTitle).to.contains(this.pageObjects.loginPage.pageTitle);
+        await this.pageObjects.loginPage.login(secondEditEmployeeData.email, secondEditEmployeeData.password, false);
+        const loginError = await this.pageObjects.loginPage.getLoginError();
+        await expect(loginError).to.contains(this.pageObjects.loginPage.loginErrorText);
       });
     });
   });

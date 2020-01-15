@@ -32,6 +32,7 @@ use Cart;
 use Context;
 use FrontController;
 use OrderState;
+use Product;
 use PHPUnit_Framework_Assert;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\AddOrderFromBackOfficeCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\BulkChangeOrderStatusCommand;
@@ -55,6 +56,11 @@ use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 class OrderFeatureContext extends AbstractDomainFeatureContext
 {
     private const ORDER_CART_RULE_FREE_SHIPPING = 'Free Shipping';
+
+    /**
+     * @var array
+     */
+    private $productStock = [];
 
     /**
      * @BeforeScenario
@@ -144,13 +150,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
 
         $data = $table->getRowsHash();
         $productName = $data['name'];
-        /** @var array $productsMap */
-        $productsMap = $this->getQueryBus()->handle(new SearchProducts($productName, 1, Context::getContext()->currency->iso_code));
-        $productId = array_key_first($productsMap);
-
-        if (!$productId) {
-            throw new RuntimeException('Product with name "%s" does not exist', $productName);
-        }
+        $productId = $this->getProductIdByName($productName);
 
         $this->getCommandBus()->handle(
             AddProductToOrderCommand::withNewInvoice(
@@ -390,10 +390,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     public function orderDoesNotContainProduct(string $orderReference, string $productName)
     {
         $orderId = SharedStorage::getStorage()->get($orderReference);
-
-        /** @var array $productsMap */
-        $productsMap = $this->getQueryBus()->handle(new SearchProducts($productName, 1, Context::getContext()->currency->iso_code));
-        $productId = array_key_first($productsMap);
+        $productId = $this->getProductIdByName($productName);
 
         /** @var OrderForViewing $orderForViewing */
         $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
@@ -415,50 +412,6 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Then order :orderReference should contain :quantity products :productName
-     *
-     * @param string $orderReference
-     * @param int $quantity
-     * @param string $productName
-     */
-    public function orderContainsProductWithReference(string $orderReference, int $quantity, string $productName)
-    {
-        $orderId = SharedStorage::getStorage()->get($orderReference);
-        /** @var array $productsMap */
-        $productsMap = $this->getQueryBus()->handle(new SearchProducts($productName, 1, Context::getContext()->currency->iso_code));
-        $productId = array_key_first($productsMap);
-
-        if (!$productId) {
-            throw new RuntimeException('Product with name "%s" does not exist', $productName);
-        }
-
-        /** @var OrderForViewing $orderForViewing */
-        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
-        /** @var OrderProductForViewing[] $products */
-        $products = $orderForViewing->getProducts()->getProducts();
-
-        $totalProductQuantity = 0;
-        foreach ($products as $product) {
-            if ($product->getId() === $productId) {
-                $totalProductQuantity += $product->getQuantity();
-            }
-        }
-
-        if ((int) $totalProductQuantity === (int) $quantity) {
-            return;
-        }
-
-        throw new RuntimeException(
-            sprintf(
-                'Order was expected to have "%d" products "%s" in it. Instead got "%s"',
-                $quantity,
-                $productName,
-                $totalProductQuantity
-            )
-        );
-    }
-
-    /**
      * @When I duplicate :orderReference to create cart :duplicatedCartReference
      */
     public function duplicateOrder($orderReference, $duplicatedCartReference)
@@ -471,5 +424,150 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
         );
 
         SharedStorage::getStorage()->set($duplicatedCartReference, new Cart($cartId->getValue()));
+    }
+
+    /**
+     * @Then order :orderReference should contain :quantity products :productName
+     *
+     * @param string $orderReference
+     * @param int $quantity
+     * @param string $productName
+     */
+    public function orderContainsProductWithReference(string $orderReference, int $quantity, string $productName)
+    {
+        $productQuantities = $this->getProductQuantitiesByReference($orderReference, $productName);
+
+        if ((int) $productQuantities['quantity'] === (int) $quantity) {
+            return;
+        }
+
+        throw new RuntimeException(
+            sprintf(
+                'Order was expected to have "%d" products "%s" in it. Instead got "%s"',
+                $quantity,
+                $productName,
+                $productQuantities['quantity']
+            )
+        );
+    }
+
+    /**
+     * @Then order :orderReference should contain :quantity refunded products :productName
+     *
+     * @param string $orderReference
+     * @param int $quantity
+     * @param string $productName
+     */
+    public function orderContainsRefundedProductWithReference(string $orderReference, int $quantity, string $productName)
+    {
+        $productQuantities = $this->getProductQuantitiesByReference($orderReference, $productName);
+
+        if ((int) $productQuantities['refunded_quantity'] === (int) $quantity) {
+            return;
+        }
+
+        throw new RuntimeException(
+            sprintf(
+                'Order was expected to have "%d" refunded products "%s" in it. Instead got "%s"',
+                $quantity,
+                $productName,
+                $productQuantities['refunded_quantity']
+            )
+        );
+    }
+
+    /**
+     * @Then /^I watch the stock of product "(.+)"$/
+     *
+     * This statement must be called to store an initial stock for a product which then
+     * allows you to simply check the expected differences in stock (1 less, 2 more, ...).
+     *
+     * @param string $productName
+     */
+    public function storeProductInStock(string $productName)
+    {
+        $productId = $this->getProductIdByName($productName);
+        $nbProduct = Product::getQuantity($productId);
+        $this->productStock[$productName] = $nbProduct;
+    }
+
+    /**
+     * @Then /^there are ([\-\d]+) (less|more) "(.+)" in stock$/
+     *
+     * @param int $productDifference
+     * @param string $factor
+     * @param string $productName
+     */
+    public function checkProductStockDifference(int $productDifference, string $factor, string $productName)
+    {
+        if (!isset($this->productStock[$productName])) {
+            throw new RuntimeException('Cannot compare a stock that has not been checked initially');
+        }
+        $initialQuantity = $this->productStock[$productName];
+        $factor = 'less' === $factor ? -1 : 1;
+        $expectedDifference = $factor * $productDifference;
+        $expectedQuantity = $initialQuantity + $expectedDifference;
+
+        $productId = $this->getProductIdByName($productName);
+        $nbProduct = Product::getQuantity($productId);
+        if ($expectedQuantity != $nbProduct) {
+            throw new RuntimeException(
+                sprintf(
+                    'Invalid difference for product %s expected %s, got %s instead',
+                    $productName,
+                    $expectedDifference,
+                    $nbProduct - $initialQuantity
+                )
+            );
+        }
+        $this->productStock[$productName] = $expectedQuantity;
+    }
+
+    /**
+     * @param string $productName
+     *
+     * @return int
+     */
+    private function getProductIdByName(string $productName)
+    {
+        /** @var array $productsMap */
+        $productsMap = $this->getQueryBus()->handle(new SearchProducts($productName, 1, Context::getContext()->currency->iso_code));
+        $productId = array_key_first($productsMap);
+
+        if (!$productId) {
+            throw new RuntimeException('Product with name "%s" does not exist', $productName);
+        }
+
+        return (int) $productId;
+    }
+
+    /**
+     * @param string $orderReference
+     * @param string $productName
+     *
+     * @return array
+     */
+    private function getProductQuantitiesByReference(string $orderReference, string $productName)
+    {
+        $productId = $this->getProductIdByName($productName);
+        $orderId = SharedStorage::getStorage()->get($orderReference);
+
+        /** @var OrderForViewing $orderForViewing */
+        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
+        /** @var OrderProductForViewing[] $products */
+        $products = $orderForViewing->getProducts()->getProducts();
+
+        $productQuantities = [
+            'quantity' => 0,
+            'refunded_quantity' => 0,
+        ];
+        foreach ($products as $product) {
+            if ($product->getId() === $productId) {
+                $productQuantities['quantity'] += $product->getQuantity();
+                $productQuantities['refunded_quantity'] += $product->getQuantityRefunded();
+            }
+        }
+
+        return $productQuantities;
     }
 }
