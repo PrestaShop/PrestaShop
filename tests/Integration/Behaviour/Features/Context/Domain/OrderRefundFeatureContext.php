@@ -91,7 +91,7 @@ class OrderRefundFeatureContext extends AbstractDomainFeatureContext
         $orderSlip = $orderSlips->offsetGet($orderSlips->count() - 1);
         foreach ($refundData as $orderSlipField => $orderSlipValue) {
             Assert::assertEquals(
-                $orderSlipValue,
+                (float) $orderSlipValue,
                 $orderSlip->{$orderSlipField},
                 sprintf(
                     'Invalid order slip field %s, expected %s instead of %s',
