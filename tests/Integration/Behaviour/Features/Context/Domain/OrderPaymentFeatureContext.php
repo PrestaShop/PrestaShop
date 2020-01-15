@@ -4,7 +4,7 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 use Behat\Gherkin\Node\TableNode;
 use DateTimeImmutable;
-use PHPUnit_Framework_Assert;
+use PHPUnit\Framework\Assert as Assert;
 use PrestaShop\PrestaShop\Core\Domain\Order\Payment\Command\AddPaymentCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderForViewing;
@@ -84,7 +84,7 @@ class OrderPaymentFeatureContext extends AbstractDomainFeatureContext
         /** @var OrderPaymentForViewing $orderPaymentForViewing */
         $orderPaymentForViewing = $this->getFirstPaymentForViewing($orderId, $orderForViewing);
         $invoiceNumber = $orderPaymentForViewing->getInvoiceNumber();
-        PHPUnit_Framework_Assert::assertNotNull($invoiceNumber);
+        Assert::assertNotNull($invoiceNumber);
     }
 
     /**
@@ -107,7 +107,7 @@ class OrderPaymentFeatureContext extends AbstractDomainFeatureContext
             $orderPaymentForViewing->getPaymentId(), $dataArray
         );
 
-        PHPUnit_Framework_Assert::assertEquals($expectedOrderPaymentForViewing, $orderPaymentForViewing);
+        Assert::assertEquals($expectedOrderPaymentForViewing, $orderPaymentForViewing);
     }
 
     /**

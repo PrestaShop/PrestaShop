@@ -27,7 +27,7 @@
 
 namespace Tests\Integration\PrestaShopBundle\Translation;
 
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\Translation\MessageCatalogue;
 
 /**
@@ -36,14 +36,14 @@ use Symfony\Component\Translation\MessageCatalogue;
 class CatalogueVerifier
 {
     /**
-     * @var PHPUnit_Framework_TestCase
+     * @var TestCase
      */
     private $test;
 
     /**
-     * @param PHPUnit_Framework_TestCase $test The test class
+     * @param TestCase $test The test class
      */
-    public function __construct(PHPUnit_Framework_TestCase $test)
+    public function __construct(TestCase $test)
     {
         $this->test = $test;
     }
