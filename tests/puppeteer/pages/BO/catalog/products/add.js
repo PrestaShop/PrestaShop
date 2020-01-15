@@ -40,7 +40,7 @@ module.exports = class AddProduct extends BOBasePage {
 
     // Growls : override value from BObasePage
     this.growlDefaultDiv = '#growls-default';
-    this.growlMessageBloc = `${this.growlDefaultDiv} .growl-message`;
+    this.growlMessageBlock = `${this.growlDefaultDiv} .growl-message:last-of-type`;
     this.growlCloseButton = `${this.growlDefaultDiv} .growl-close`;
   }
 
@@ -77,16 +77,16 @@ module.exports = class AddProduct extends BOBasePage {
     // Switch product online before save
     if (switchProductOnline) {
       await Promise.all([
-        this.page.waitForSelector(this.growlMessageBloc, {visible: true}),
+        this.page.waitForSelector(this.growlMessageBlock, {visible: true}),
         this.page.click(this.productOnlineSwitch),
       ]);
     }
     // Save created product
     await Promise.all([
-      this.page.waitForSelector(this.growlMessageBloc, {visible: true}),
+      this.page.waitForSelector(this.growlMessageBlock, {visible: true}),
       this.page.click(this.saveProductButton),
     ]);
-    return this.getTextContent(`${this.growlMessageBloc}:last-of-type`);
+    return this.getTextContent(this.growlMessageBlock);
   }
 
   /**
@@ -129,7 +129,7 @@ module.exports = class AddProduct extends BOBasePage {
         {visible: true},
       ),
       this.page.click(this.generateCombinationsButton),
-      this.waitForSelectorAndClick(this.growlMessageBloc),
+      this.waitForSelectorAndClick(this.growlMessageBlock),
     ]);
     await this.closeCombinationsForm();
   }

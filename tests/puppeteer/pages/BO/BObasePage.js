@@ -100,7 +100,7 @@ module.exports = class BOBasePage extends CommonPage {
     this.onboardingStopButton = 'a.onboarding-button-stop';
 
     // Growls
-    this.growlMessageBloc = '#growls .growl-message';
+    this.growlMessageBlock = '#growls .growl-message';
     this.growlDefaultMessageBloc = '#growls-default .growl-message';
 
     // Alert Text
