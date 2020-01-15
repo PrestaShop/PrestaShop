@@ -38,6 +38,7 @@ class CancelProductType extends TranslatorAwareType
     {
         $products = $options['data']['products'];
         $taxMethod = $options['data']['taxMethod'];
+        $precision = $options['data']['precision'];
 
         foreach ($products as $product) {
             $builder
@@ -56,24 +57,38 @@ class CancelProductType extends TranslatorAwareType
                     'invalid_message' => $this->trans('This field is invalid, it must contain numeric values', 'Admin.Notifications.Error', []),
                     'required' => false,
                     'data' => 0,
+                    'scale' => 0,
                 ])
                 ->add('amount_' . $product->getOrderDetailId(), NumberType::class, [
                     'attr' => ['max' => $product->getTotalPrice(), 'class' => 'refund-amount'],
                     'label' => sprintf(
-                        '%s (%s)',
+                        "%s<br>(%s)",
                         $this->trans('Amount', 'Admin.Global', []),
                         $taxMethod
                     ),
                     'invalid_message' => $this->trans('This field is invalid, it must contain numeric values', 'Admin.Notifications.Error', []),
                     'required' => false,
+                    'data' => 0,
+                    'scale' => $precision,
                 ]);
         }
         $builder
-            ->add('shipping', NumberType::class,
+            ->add('shipping_amount', NumberType::class,
                 [
                     'label' => $this->trans('Shipping', 'Admin.Catalog.Feature', []),
                     'invalid_message' => $this->trans('The "shipping" field must be a valid number', 'Admin.Orderscustomers.Feature', []),
                     'required' => false,
+                    'scale' => $precision,
+                    'data' => 0,
+                ]
+            )
+            ->add('shipping', CheckboxType::class,
+                [
+                    'label' => $this->trans('Shipping', 'Admin.Catalog.Feature', []),
+                    'required' => false,
+                    'attr' => [
+                        'material_design' => true,
+                    ],
                 ]
             )
             ->add('restock', CheckboxType::class,
@@ -85,6 +100,16 @@ class CancelProductType extends TranslatorAwareType
                     ],
                 ]
             )
+            ->add('credit_slip', CheckboxType::class,
+                [
+                    'required' => false,
+                    'label' => $this->trans('Generate a credit slip', 'Admin.Orderscustomers.Feature', []),
+                    'attr' => [
+                        'material_design' => true,
+                    ],
+                    'data' => true,
+                ]
+            )
             ->add('voucher', CheckboxType::class,
                 [
                     'required' => false,
@@ -94,8 +119,19 @@ class CancelProductType extends TranslatorAwareType
                     ],
                 ]
             )
+            ->add('cancel', SubmitType::class, [
+                'label' => $this->trans('Cancel', 'Admin.Actions'),
+                'attr' => [
+                    'class' => 'cancel-product-element cancel-product-element-abort btn btn-outline-secondary',
+                ],
+            ])
             ->add('save', SubmitType::class, [
-                'attr' => ['class' => 'partial-refund save btn btn-primary ml-3'],
+                'attr' => [
+                    'class' => 'cancel-product-element save btn btn-primary ml-3',
+                    'formnovalidate' => true,
+                    'data-partial-refund-label' => $this->trans('Partial refund', 'Admin.Orderscustomers.Feature'),
+                    'data-standard-refund-label' => $this->trans('Standard refund', 'Admin.Orderscustomers.Feature'),
+                ],
             ]);
     }
 }

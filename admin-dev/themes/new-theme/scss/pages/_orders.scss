@@ -40,6 +40,14 @@
   }
 }
 
+#addProductTableRow,
+.editProductRow {
+  // div selector is important here, it is used for empty labels regular labels must not be hidden
+  div.form-control-label {
+    display: none;
+  }
+}
+
 #addProductNewInvoiceInfo h4 {
   margin-top: 8px;
 }
@@ -166,26 +174,23 @@ td .editProductInvoice {
   }
 }
 
-.partial-refund {
+.shipping-price {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.shipping-refund-amount {
+  margin-left: 10px;
+}
+
+.cancel-product-element,
+.cancel-product-selector,
+.cancel-product-amount {
   display: none;
 }
 
-.partial-refund label {
-  height: 30px;
-  line-height: 30px;
-  padding: 0;
-}
-
-.partial-refund .form-group {
-  display: inline-flex;
-}
-
-.partial-refund .form-group .input-group {
-  display: flex;
-  flex: wrap;
-}
-
-.partial-refund.form-submit {
+.cancel-product-element.form-submit {
   width: 100%;
   margin-right: 20px;
   margin-top: -10px;
@@ -201,21 +206,48 @@ td .editProductInvoice {
   width: max-content;
 }
 
-.partial-refund .shipping-price-container {
+.cancel-product-cell {
+  width: max-content;
+  min-width: 250px;
+  margin-right: 0;
+  padding-right: 0;
+}
+.cancel-product-cell label {
+  height: 30px;
+  line-height: 30px;
+  padding: 0;
+  margin-bottom: 0;
+}
+.cancel-product-cell .form-group {
+  width: max-content;
   display: flex;
-  margin-top: 8px;
+  flex-direction: row;
+}
+.cancel-product-cell .form-group.row,
+.cancel-product-cell .form-group.row p {
+  margin-bottom: 0;
 }
 
-.partial-refund .form-group {
+.cancel-product-cell .form-group input,
+.cancel-product-cell .form-group .input-group-append {
+  height: 35px;
+}
+
+.cancel-product-cell .form-group .refund-quantity {
+  width: 30px;
+}
+
+.cancel-product-cell .cancel-product-quantity {
   width: max-content;
 }
 
+
 input.refund-quantity {
   max-width: 160px;
-  margin-left: 20px;
+  margin-left: 10px;
 }
 
 input.refund-amount, input#partial_refund_shipping {
   max-width: 80px;
-  margin-left: 20px;
+  margin-left: 10px;
 }

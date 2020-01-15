@@ -26,7 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Order\Command;
 
-use PrestaShop\PrestaShop\Core\Domain\Order\Exception\EmptyRefundAmountException;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidRefundAmountException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderDetailRefund;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
@@ -59,6 +59,11 @@ class IssuePartialRefundCommand
     /**
      * @var bool
      */
+    private $generateCreditSlip;
+
+    /**
+     * @var bool
+     */
     private $generateVoucher;
 
     /**
@@ -77,10 +82,11 @@ class IssuePartialRefundCommand
      * @param float $shippingCostRefundAmount
      * @param bool $restockRefundedProducts
      * @param bool $generateVoucher
+     * @param bool $generateCreditSlip
      * @param int $voucherRefundType
      * @param float|null $voucherRefundAmount
      *
-     * @throws EmptyRefundAmountException
+     * @throws InvalidRefundAmountException
      * @throws OrderException
      */
     public function __construct(
@@ -88,6 +94,7 @@ class IssuePartialRefundCommand
         array $orderDetailRefunds,
         float $shippingCostRefundAmount,
         bool $restockRefundedProducts,
+        bool $generateCreditSlip,
         bool $generateVoucher,
         int $voucherRefundType,
         float $voucherRefundAmount = null
@@ -103,6 +110,7 @@ class IssuePartialRefundCommand
         }
         $this->shippingCostRefundAmount = $shippingCostRefundAmount;
         $this->restockRefundedProducts = $restockRefundedProducts;
+        $this->generateCreditSlip = $generateCreditSlip;
         $this->generateVoucher = $generateVoucher;
         $this->voucherRefundType = $voucherRefundType;
         $this->voucherRefundAmount = $voucherRefundAmount;
@@ -138,6 +146,14 @@ class IssuePartialRefundCommand
     public function restockRefundedProducts(): bool
     {
         return $this->restockRefundedProducts;
+    }
+
+    /**
+     * @return bool
+     */
+    public function generateCreditSlip(): bool
+    {
+        return $this->generateCreditSlip;
     }
 
     /**
