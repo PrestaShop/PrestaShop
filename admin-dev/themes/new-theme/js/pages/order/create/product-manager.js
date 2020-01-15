@@ -220,7 +220,8 @@ export default class ProductManager {
     this._unsetProduct();
 
     if (this.products.length !== 0) {
-      this._selectProduct(this.products[0].productId);
+      const index = Object.keys(this.products)[0];
+      this._selectProduct(this.products[index].productId);
     }
   }
 

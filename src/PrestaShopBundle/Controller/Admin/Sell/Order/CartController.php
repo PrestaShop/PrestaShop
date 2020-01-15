@@ -539,6 +539,10 @@ class CartController extends FrameworkBundleAdminController
                     'Positive product quantity is required',
                     'Admin.Notifications.Error'
                 ),
+                CartConstraintException::UNCHANGED_QUANTITY => $this->trans(
+                    'Product quantity is already the same as in cart',
+                    'Admin.Notifications.Error'
+                ),
             ],
             LanguageException::class => [
                 LanguageException::NOT_ACTIVE => $this->trans(
