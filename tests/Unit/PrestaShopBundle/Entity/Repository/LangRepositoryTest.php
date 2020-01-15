@@ -29,6 +29,7 @@ namespace Tests\Unit\PrestaShopBundle\Entity\Repository;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\MockObject\MockObject;
 use PrestaShop\PrestaShop\Core\Language\LanguageInterface;
 use PrestaShop\PrestaShop\Core\Language\LanguageRepositoryInterface;
 use PrestaShopBundle\Entity\Repository\LangRepository;
@@ -149,14 +150,14 @@ class LangRepositoryTest extends TestCase
     /**
      * @param LanguageInterface|null $language
      *
-     * @return \PHPUnit_Framework_MockObject_MockObject|LangRepository
+     * @return MockObject|LangRepository
      */
 
     /**
      * @param array $expectedCriteria
      * @param LanguageInterface $language
      *
-     * @return \PHPUnit_Framework_MockObject_MockObject
+     * @return MockObject
      */
     private function buildPartialMock(array $expectedCriteria, LanguageInterface $language)
     {
@@ -189,7 +190,7 @@ class LangRepositoryTest extends TestCase
     }
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject|LanguageInterface
+     * @return MockObject|LanguageInterface
      */
     private function buildLanguageMock()
     {

@@ -27,6 +27,7 @@
 namespace Tests\Unit\Core\MailTemplate;
 
 use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\MockObject\MockObject;
 use PrestaShop\PrestaShop\Core\Exception\FileNotFoundException;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\FolderThemeCatalog;
@@ -272,7 +273,7 @@ class FolderThemeCatalogTest extends TestCase
     /**
      * @param int $layoutsCount
      *
-     * @return \PHPUnit_Framework_MockObject_MockObject|HookDispatcherInterface
+     * @return MockObject|HookDispatcherInterface
      */
     private function createHookDispatcherMock($layoutsCount)
     {

@@ -27,6 +27,7 @@
 namespace LegacyTests\Unit\Core\Grid\Position;
 
 use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\MockObject\MockObject;
 use PrestaShop\PrestaShop\Core\Grid\Position\Exception\PositionException;
 use PrestaShop\PrestaShop\Core\Grid\Position\Exception\PositionUpdateException;
 use PrestaShop\PrestaShop\Core\Grid\Position\GridPositionUpdater;
@@ -90,7 +91,7 @@ class GridPositionUpdaterTest extends TestCase
     }
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject|PositionUpdateHandlerInterface
+     * @return MockObject|PositionUpdateHandlerInterface
      */
     private function createUpdateHandlerMockWithAssertions()
     {

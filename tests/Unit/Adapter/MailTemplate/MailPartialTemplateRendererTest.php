@@ -27,6 +27,7 @@
 namespace Tests\Unit\Adapter\MailTemplate;
 
 use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\MockObject\MockObject;
 use PrestaShop\PrestaShop\Adapter\MailTemplate\MailPartialTemplateRenderer;
 use PrestaShop\PrestaShop\Core\Language\LanguageInterface;
 use Smarty;
@@ -69,7 +70,7 @@ class MailPartialTemplateRendererTest extends TestCase
     }
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject|Smarty
+     * @return MockObject|Smarty
      */
     private function buildSmartyMock($template = '')
     {
@@ -95,7 +96,7 @@ class MailPartialTemplateRendererTest extends TestCase
     }
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject|LanguageInterface
+     * @return MockObject|LanguageInterface
      */
     private function buildLanguageMock()
     {
