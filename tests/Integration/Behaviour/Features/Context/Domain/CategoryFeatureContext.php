@@ -74,7 +74,7 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
     /** @var int */
     private $defaultLanguageId;
     /** @var string */
-    private $psTmpImgDir;
+    private $psCatImgDir;
 
     /**
      * CategoryFeatureContext constructor.
@@ -83,7 +83,7 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
     {
         $this->container = $this->getContainer();
         $this->defaultLanguageId = Configuration::get('PS_LANG_DEFAULT');
-        $this->psTmpImgDir = $this->container->getParameter('prestashop_temporary_image_directory');
+        $this->psCatImgDir = _PS_CAT_IMG_DIR_;
     }
 
     /**
@@ -563,20 +563,20 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
      */
     private function pretendImageUploaded(array $testCaseData, int $categoryId): string
     {
-        $categoryCoverImage = $testCaseData['Category cover image'];
+        $categoryCoverImageName = $testCaseData['Category cover image'];
         $data = base64_decode(self::JPG_IMAGE_STRING);
         $im = imagecreatefromstring($data);
         if ($im !== false) {
             header('Content-Type: image/jpg');
             imagejpeg(
                 $im,
-                $this->psTmpImgDir . $categoryId . self::JPG_IMAGE_TYPE,
+                $this->psCatImgDir . $categoryId . self::JPG_IMAGE_TYPE,
                 0
             );
             imagedestroy($im);
         }
 
-        return $categoryCoverImage;
+        return $categoryCoverImageName;
     }
 
     /**
@@ -654,7 +654,7 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
             header('Content-Type: image/jpg');
             imagejpeg(
                 $im,
-                $this->psTmpImgDir . $categoryId . '-' . self::THUMB0 . self::JPG_IMAGE_TYPE,
+                $this->psCatImgDir . $categoryId . '-' . self::THUMB0 . self::JPG_IMAGE_TYPE,
                 0
             );
             imagedestroy($im);
