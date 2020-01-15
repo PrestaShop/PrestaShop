@@ -31,6 +31,7 @@ import eventMap from '@pages/order/create/event-map';
 import Router from '@components/router';
 import SummaryRenderer from '@pages/order/create/summary-renderer';
 import ShippingRenderer from '@pages/order/create/shipping-renderer';
+import ProductRenderer from "./product-renderer";
 
 const $ = window.$;
 
@@ -42,11 +43,11 @@ export default class CartRuleManager {
     this.activeSearchRequest = null;
 
     this.router = new Router();
-    this.$searchInput = $(createOrderMap.cartRuleSearchInput);
     this.cartRulesRenderer = new CartRulesRenderer();
     this.cartEditor = new CartEditor();
     this.summaryRenderer = new SummaryRenderer();
     this.shippingRenderer = new ShippingRenderer();
+    this.productRenderer = new ProductRenderer();
 
     this._initListeners();
 
@@ -90,6 +91,7 @@ export default class CartRuleManager {
     EventEmitter.on(eventMap.cartRuleAdded, (cartInfo) => {
       const cartIsEmpty = cartInfo.products.length === 0;
       this.cartRulesRenderer.renderCartRulesBlock(cartInfo.cartRules, cartIsEmpty);
+      this.productRenderer.renderList(cartInfo.products);
       this.shippingRenderer.render(cartInfo.shipping, cartIsEmpty);
       this.summaryRenderer.render(cartInfo);
     });
