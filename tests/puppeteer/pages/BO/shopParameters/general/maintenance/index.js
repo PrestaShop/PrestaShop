@@ -10,8 +10,7 @@ module.exports = class shopParamsMaintenance extends BOBasePage {
 
     // Selectors
     this.generalNavItemLink = '#subtab-AdminPreferences';
-    this.disableShopLabel = 'label[for=\'form_general_enable_shop_0\']';
-    this.enableShopLabel = 'label[for=\'form_general_enable_shop_1\']';
+    this.switchShopLabel = 'label[for=\'form_general_enable_shop_%TOGGLE\']';
     this.maintenanceTextInputEN = '#form_general_maintenance_text_1_ifr';
     this.customMaintenanceFrTab = '#form_general_maintenance_text  a[data-locale="fr"]';
     this.maintenanceTextInputFR = '#form_general_maintenance_text_2_ifr';
@@ -38,9 +37,8 @@ module.exports = class shopParamsMaintenance extends BOBasePage {
    * @return {Promise<string>}
    */
   async changeShopStatus(toEnable = true) {
-    if (toEnable) await this.page.click(this.enableShopLabel);
-    else await this.page.click(this.disableShopLabel);
-    await this.page.click(this.saveFormButton);
+    await this.waitForSelectorAndClick(this.switchShopLabel.replace('%TOGGLE', toEnable ? 1 : 0));
+    await this.clickAndWaitForNavigation(this.saveFormButton);
     return this.getTextContent(this.alertSuccessBloc);
   }
 

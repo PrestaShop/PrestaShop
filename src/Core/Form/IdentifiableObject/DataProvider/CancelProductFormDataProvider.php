@@ -28,11 +28,12 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
 
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderForViewing;
+use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderForViewing;
 
 /**
  * Provides data for category add/edit category forms
  */
-final class PartialRefundFormDataProvider implements FormDataProviderInterface
+final class CancelProductFormDataProvider implements FormDataProviderInterface
 {
     /**
      * @var CommandBusInterface

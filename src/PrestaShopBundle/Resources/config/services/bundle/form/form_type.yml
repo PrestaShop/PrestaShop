@@ -1112,8 +1112,8 @@ services:
         tags:
             - { name: form.type }
 
-    form.type.order.partial_refund:
-        class: 'PrestaShopBundle\Form\Admin\Sell\Order\PartialRefundType'
+    form.type.order.cancel_product:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Order\CancelProductType'
         parent: 'form.type.translatable.aware'
         public: true
         tags:
