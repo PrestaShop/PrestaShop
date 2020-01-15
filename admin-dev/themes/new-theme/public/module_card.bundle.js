@@ -1,5 +1,10 @@
+<<<<<<< HEAD
 window.module_card=function(t){function e(o){if(n[o])return n[o].exports;var i=n[o]={i:o,l:!1,exports:{}};return t[o].call(i.exports,i,i.exports,e),i.l=!0,i.exports}var n={};return e.m=t,e.c=n,e.i=function(t){return t},e.d=function(t,n,o){e.o(t,n)||Object.defineProperty(t,n,{configurable:!1,enumerable:!0,get:o})},e.n=function(t){var n=t&&t.__esModule?function(){return t.default}:function(){return t};return e.d(n,"a",n),n},e.o=function(t,e){return Object.prototype.hasOwnProperty.call(t,e)},e.p="",e(e.s=323)}({0:function(t,e){var n;n=function(){return this}();try{n=n||Function("return this")()||(0,eval)("this")}catch(t){"object"==typeof window&&(n=window)}t.exports=n},13:function(t,e){!function(){t.exports=window.jQuery}()},323:function(t,e,n){"use strict";(function(t){var e=n(66),o=function(t){return t&&t.__esModule?t:{default:t}}(e);/**
                    * 2007-2019 PrestaShop SA and Contributors
+=======
+window.module_card=function(t){function e(o){if(n[o])return n[o].exports;var i=n[o]={i:o,l:!1,exports:{}};return t[o].call(i.exports,i,i.exports,e),i.l=!0,i.exports}var n={};return e.m=t,e.c=n,e.i=function(t){return t},e.d=function(t,n,o){e.o(t,n)||Object.defineProperty(t,n,{configurable:!1,enumerable:!0,get:o})},e.n=function(t){var n=t&&t.__esModule?function(){return t.default}:function(){return t};return e.d(n,"a",n),n},e.o=function(t,e){return Object.prototype.hasOwnProperty.call(t,e)},e.p="",e(e.s=296)}({1:function(t,e){var n;n=function(){return this}();try{n=n||Function("return this")()||(0,eval)("this")}catch(t){"object"==typeof window&&(n=window)}t.exports=n},296:function(t,e,n){"use strict";(function(t){var e=n(55),o=function(t){return t&&t.__esModule?t:{default:t}}(e);/**
+                   * 2007-2019 PrestaShop and Contributors
+>>>>>>> fc9f89ebbc8e8b38f5f17b194d3a23391fa9c271
                    *
                    * NOTICE OF LICENSE
                    *

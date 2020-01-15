@@ -24,11 +24,29 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Profile\Command;
-
 /**
- * Adds new profile
+ * File copied from ps_1750_update_module_tabs.php and modified to add new roles
  */
-class AddProfileCommand extends AbstractProfileCommand
+function ps_1763_update_tabs()
 {
+    include_once 'add_new_tab.php';
+    include_once 'copy_tab_rights.php';
+
+    add_new_tab_17('AdminParentMailTheme', 'en:Email Themes', 0, false, 'AdminParentThemes');
+    Db::getInstance()->execute(
+        'UPDATE `' . _DB_PREFIX_ . 'tab` SET `active`= 1, `position`= 2 WHERE `class_name` = "AdminParentMailTheme"'
+    );
+
+    // Move AdminMailTheme's parent from AdminMailThemeParent to AdminParentMailTheme
+    $toParentTabId = Db::getInstance()->getValue(
+        'SELECT id_tab FROM `' . _DB_PREFIX_ . 'tab` WHERE `class_name` = "AdminParentMailTheme"'
+    );
+    Db::getInstance()->execute(
+        'UPDATE `' . _DB_PREFIX_ . 'tab` SET `id_parent` = ' . $toParentTabId . ' WHERE class_name = "AdminMailTheme"'
+    );
+
+    copy_tab_rights('AdminMailTheme', 'AdminParentMailTheme');
+    Db::getInstance()->execute(
+        'DELETE FROM `' . _DB_PREFIX_ . 'tab` WHERE `class_name` = "AdminMailThemeParent"'
+    );
 }

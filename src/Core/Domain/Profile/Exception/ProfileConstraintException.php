@@ -24,11 +24,15 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Profile\Command;
+namespace PrestaShop\PrestaShop\Core\Domain\Profile\Exception;
 
 /**
- * Adds new profile
+ * Is thrown when some constraint is violated in Profile subdomain
  */
-class AddProfileCommand extends AbstractProfileCommand
+class ProfileConstraintException extends ProfileException
 {
+    /**
+     * @var string Code is used when invalid profile name is encountered
+     */
+    const INVALID_NAME = 1;
 }

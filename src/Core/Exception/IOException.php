@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,16 +19,41 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Profile\Command;
+namespace PrestaShop\PrestaShop\Core\Exception;
+
+use Throwable;
 
 /**
- * Adds new profile
+ * Exception class thrown when a filesystem operation failure happens.
  */
-class AddProfileCommand extends AbstractProfileCommand
+class IOException extends CoreException
 {
+    private $path;
+
+    /**
+     * @param string $message
+     * @param int $code
+     * @param Throwable $previous
+     * @param string|null $path
+     */
+    public function __construct($message = '', $code = 0, Throwable $previous = null, $path = null)
+    {
+        parent::__construct($message, $code, $previous);
+        $this->path = $path;
+    }
+
+    /**
+     * Returns the associated path for the exception.
+     *
+     * @return string|null
+     */
+    public function getPath()
+    {
+        return $this->path;
+    }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -24,11 +24,12 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Profile\Command;
+namespace PrestaShop\PrestaShop\Core\Domain\Profile;
 
-/**
- * Adds new profile
- */
-class AddProfileCommand extends AbstractProfileCommand
+final class ProfileSettings
 {
+    /**
+     * Profile name max length as defined in the ObjectModel
+     */
+    const NAME_MAX_LENGTH = 32;
 }
