@@ -67,7 +67,8 @@ export default class CreateOrderPage {
     this._loadCartFromUrlParams();
 
     return {
-      refreshAddressesList: () => this._refreshAddressesList(),
+      refreshAddressesList: () => this.refreshAddressesList(),
+      search: (string) => this.customerManager.search(string),
     };
   }
 
@@ -148,13 +149,13 @@ export default class CreateOrderPage {
     this._onCartLoaded();
     this.onCustomersNotFound();
     this._onCustomerSelected();
-    this._initAddAddressIframe();
+    this.initAddAddressIframe();
   }
 
   /**
    * @private
    */
-  _initAddAddressIframe() {
+  initAddAddressIframe() {
     $(createOrderMap.addressAddBtn).fancybox({
       'type': 'iframe',
       'width': '90%',
@@ -177,27 +178,27 @@ export default class CreateOrderPage {
     this._onCartLanguageChanged();
 
     this.$container.on('change', createOrderMap.deliveryOptionSelect, e =>
-        this.cartEditor.changeDeliveryOption(this.cartId, e.currentTarget.value),
+      this.cartEditor.changeDeliveryOption(this.cartId, e.currentTarget.value),
     );
 
     this.$container.on('change', createOrderMap.freeShippingSwitch, e =>
-        this.cartEditor.setFreeShipping(this.cartId, e.currentTarget.value),
+      this.cartEditor.setFreeShipping(this.cartId, e.currentTarget.value),
     );
 
     this.$container.on('click', createOrderMap.addToCartButton, () =>
-        this.productManager.addProductToCart(this.cartId),
+      this.productManager.addProductToCart(this.cartId),
     );
 
     this.$container.on('change', createOrderMap.cartCurrencySelect, (e) =>
-        this.cartEditor.changeCartCurrency(this.cartId, e.currentTarget.value)
+      this.cartEditor.changeCartCurrency(this.cartId, e.currentTarget.value)
     );
 
     this.$container.on('change', createOrderMap.cartLanguageSelect, (e) =>
-        this.cartEditor.changeCartLanguage(this.cartId, e.currentTarget.value)
+      this.cartEditor.changeCartLanguage(this.cartId, e.currentTarget.value)
     );
 
     this.$container.on('click', createOrderMap.sendProcessOrderEmailBtn, () =>
-        this.summaryManager.sendProcessOrderEmail(this.cartId)
+      this.summaryManager.sendProcessOrderEmail(this.cartId)
     );
 
     this.$container.on('change', createOrderMap.listedProductUnitPriceInput, (e) => this._initProductChangePrice(e));
@@ -531,10 +532,12 @@ export default class CreateOrderPage {
    *
    * @private
    */
-  _refreshAddressesList() {
+  refreshAddressesList() {
     const cartId = $(createOrderMap.cartBlock).data('cartId');
     $.get(this.router.generate('admin_carts_info', {cartId})).then((cartInfo) => {
       this.addressesRenderer.render(cartInfo.addresses);
+    }).catch((e) => {
+      showErrorMessage(e.responseJSON.message);
     });
   }
 }
