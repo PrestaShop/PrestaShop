@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Adapter\Order\CommandHandler;
 use Context;
 use OrderCarrier;
 use PrestaShop\PrestaShop\Adapter\Order\Refund\OrderRefundCalculator;
-use PrestaShop\PrestaShop\Adapter\Order\Refund\OrderRefundDetail;
+use PrestaShop\PrestaShop\Adapter\Order\Refund\OrderRefundSummary;
 use PrestaShop\PrestaShop\Adapter\Order\Refund\OrderSlipCreator;
 use PrestaShop\PrestaShop\Adapter\Order\Refund\VoucherGenerator;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
@@ -86,7 +86,7 @@ final class IssuePartialRefundHandler extends AbstractOrderCommandHandler implem
     public function handle(IssuePartialRefundCommand $command)
     {
         $order = $this->getOrderObject($command->getOrderId());
-        /** @var OrderRefundDetail $orderRefundDetail */
+        /** @var OrderRefundSummary $orderRefundDetail */
         $orderRefundDetail = $this->orderRefundCalculator->computeOrderFund(
             $order,
             $command->getOrderDetailRefunds(),

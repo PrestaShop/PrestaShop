@@ -33,6 +33,8 @@ use Mail;
 use Order;
 use OrderSlip;
 use OrderDetail;
+use PrestaShopDatabaseException;
+use PrestaShopException;
 use StockAvailable;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\EmptyRefundAmountException;
@@ -66,9 +68,18 @@ class OrderSlipCreator
         $this->translator = $translator;
     }
 
+    /**
+     * @param Order $order
+     * @param OrderRefundSummary $orderRefundDetail
+     *
+     * @throws EmptyRefundAmountException
+     * @throws OrderException
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
+     */
     public function createOrderSlip(
         Order $order,
-        OrderRefundDetail $orderRefundDetail
+        OrderRefundSummary $orderRefundDetail
     ) {
         if ($orderRefundDetail->getRefundedAmount() > 0) {
             $orderSlipCreated = OrderSlip::create(
