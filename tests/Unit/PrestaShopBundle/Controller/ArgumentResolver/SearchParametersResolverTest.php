@@ -27,6 +27,7 @@
 namespace Tests\Unit\PrestaShopBundle\Controller\ArgumentResolver;
 
 use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\MockObject\MockObject;
 use PrestaShop\PrestaShop\Core\Search\Filters;
 use PrestaShop\PrestaShop\Core\Search\SearchParametersInterface;
 use PrestaShopBundle\Controller\ArgumentResolver\SearchParametersResolver;
@@ -224,7 +225,7 @@ class SearchParametersResolverTest extends TestCase
     /**
      * @param array|null $expectedFilters
      *
-     * @return \PHPUnit_Framework_MockObject_MockObject|EventDispatcherInterface
+     * @return MockObject|EventDispatcherInterface
      */
     private function buildEventDispatcherMock(array $expectedFilters = null)
     {
@@ -257,7 +258,7 @@ class SearchParametersResolverTest extends TestCase
     /**
      * @param string $type
      *
-     * @return \PHPUnit_Framework_MockObject_MockObject|ArgumentMetadata
+     * @return MockObject|ArgumentMetadata
      */
     private function buildArgumentMetaDataMock($type)
     {
@@ -279,7 +280,7 @@ class SearchParametersResolverTest extends TestCase
      * @param array $parameters
      * @param bool $postQuery
      *
-     * @return \PHPUnit_Framework_MockObject_MockObject|Request
+     * @return MockObject|Request
      */
     private function buildRequestMock(array $parameters = [], $postQuery = false)
     {
@@ -333,7 +334,7 @@ class SearchParametersResolverTest extends TestCase
     /**
      * @param bool $withEmployee
      *
-     * @return \PHPUnit_Framework_MockObject_MockObject|TokenStorageInterface
+     * @return MockObject|TokenStorageInterface
      */
     private function buildTokenStorageMock($withEmployee = false)
     {
@@ -377,7 +378,7 @@ class SearchParametersResolverTest extends TestCase
      * @param array|null $repoParameters
      * @param array|null $requestParameters
      *
-     * @return \PHPUnit_Framework_MockObject_MockObject|SearchParametersInterface
+     * @return MockObject|SearchParametersInterface
      */
     private function buildSearchParametersMock(array $repoParameters = null, array $requestParameters = [])
     {
@@ -406,7 +407,7 @@ class SearchParametersResolverTest extends TestCase
     }
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject|AdminFilterRepository
+     * @return MockObject|AdminFilterRepository
      */
     private function buildAdminFilterRepositoryMock(array $expectedParameters = null)
     {

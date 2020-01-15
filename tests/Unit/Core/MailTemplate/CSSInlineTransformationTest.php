@@ -27,6 +27,7 @@
 namespace Tests\Unit\Core\MailTemplate;
 
 use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\MockObject\MockObject;
 use PrestaShop\PrestaShop\Core\Language\LanguageInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\Transformation\CSSInlineTransformation;
 use Symfony\Component\DomCrawler\Crawler;
@@ -202,7 +203,7 @@ HTML;
     }
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject|LanguageInterface
+     * @return MockObject|LanguageInterface
      */
     private function buildLanguageMock()
     {

@@ -27,6 +27,7 @@
 namespace Tests\Unit\Core\Hook\Generator;
 
 use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\MockObject\MockObject;
 use PrestaShop\PrestaShop\Core\Hook\Generator\HookDescriptionGenerator;
 use PrestaShop\PrestaShop\Core\Hook\HookDescription;
 use PrestaShop\PrestaShop\Core\Util\String\StringModifierInterface;
@@ -35,12 +36,12 @@ use PrestaShop\PrestaShop\Core\Util\String\StringValidatorInterface;
 class HookDescriptionGeneratorTest extends TestCase
 {
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject|StringValidatorInterface
+     * @var MockObject|StringValidatorInterface
      */
     private $stringValidatorMock;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject|StringModifierInterface
+     * @var MockObject|StringModifierInterface
      */
     private $stringModifierMock;
 

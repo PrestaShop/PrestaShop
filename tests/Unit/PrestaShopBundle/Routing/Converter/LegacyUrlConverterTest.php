@@ -27,6 +27,7 @@
 namespace Tests\PrestaShopBundle\Routing\Converter;
 
 use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\MockObject\MockObject;
 use PrestaShopBundle\Routing\Converter\Exception\ArgumentException;
 use PrestaShopBundle\Routing\Converter\Exception\RouteNotFoundException;
 use PrestaShopBundle\Routing\Converter\LegacyUrlConverter;
@@ -491,7 +492,7 @@ class LegacyUrlConverterTest extends TestCase
      * @param array|null $legacyParameters
      * @param array|null $expectedParameters
      *
-     * @return \PHPUnit_Framework_MockObject_MockObject|RouterInterface
+     * @return MockObject|RouterInterface
      */
     private function buildRouterMock($routeName, $routePath, $legacyLink, array $legacyParameters = null, array $expectedParameters = null)
     {
@@ -541,7 +542,7 @@ class LegacyUrlConverterTest extends TestCase
     /**
      * @param array $routes
      *
-     * @return \PHPUnit_Framework_MockObject_MockObject|RouterInterface
+     * @return MockObject|RouterInterface
      */
     private function buildMultipleRouterMock(array $routes)
     {

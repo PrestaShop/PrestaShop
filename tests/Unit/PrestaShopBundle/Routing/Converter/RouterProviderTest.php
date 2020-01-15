@@ -27,6 +27,7 @@
 namespace Tests\PrestaShopBundle\Routing\Converter;
 
 use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\MockObject\MockObject;
 use PrestaShopBundle\Routing\Converter\Exception\RouteNotFoundException;
 use PrestaShopBundle\Routing\Converter\LegacyRoute;
 use PrestaShopBundle\Routing\Converter\RouterProvider;
@@ -354,7 +355,7 @@ class RouterProviderTest extends TestCase
     /**
      * @param array $routes
      *
-     * @return \PHPUnit_Framework_MockObject_MockObject|RouterInterface
+     * @return MockObject|RouterInterface
      */
     private function buildMultipleRouterMock(array $routes)
     {

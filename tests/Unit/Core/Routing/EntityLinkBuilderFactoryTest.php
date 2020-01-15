@@ -27,6 +27,7 @@
 namespace Tests\Unit\Core\Routing;
 
 use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\MockObject\MockObject;
 use PrestaShop\PrestaShop\Core\Routing\EntityLinkBuilderFactory;
 use PrestaShop\PrestaShop\Core\Routing\EntityLinkBuilderInterface;
 
@@ -52,7 +53,7 @@ class EntityLinkBuilderFactoryTest extends TestCase
     /**
      * @param array $managedEntities
      *
-     * @return \PHPUnit_Framework_MockObject_MockObject|EntityLinkBuilderInterface
+     * @return MockObject|EntityLinkBuilderInterface
      */
     private function getEntityLinkBuilderMock(array $managedEntities)
     {
