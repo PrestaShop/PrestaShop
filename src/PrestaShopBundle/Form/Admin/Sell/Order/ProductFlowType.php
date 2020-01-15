@@ -41,7 +41,7 @@ class ProductFlowType extends TranslatorAwareType
 
         foreach ($products as $product) {
             $builder
-                ->add('cancellation_' . $product->getOrderDetailId(), CheckboxType::class,
+                ->add('selected_' . $product->getOrderDetailId(), CheckboxType::class,
                     [
                         'required' => false,
                         'label' => false,
