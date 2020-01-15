@@ -244,4 +244,20 @@ class CartFeatureContext extends AbstractDomainFeatureContext
             )
         );
     }
+
+    /**
+     * @When I delete product :arg1 from cart
+     */
+    public function iDeleteProductFromCart($arg1)
+    {
+        throw new PendingException();
+    }
+
+    /**
+     * @Then cart :arg1 has :arg2 products
+     */
+    public function cartHasProducts($arg1, $arg2)
+    {
+        throw new PendingException();
+    }
 }
