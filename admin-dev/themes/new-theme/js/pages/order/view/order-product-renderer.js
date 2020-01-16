@@ -55,7 +55,7 @@ export default class OrderProductRenderer {
     location,
     availableQuantity,
     availableOutOfStock,
-    orderInvoiceId
+    orderInvoiceId,
   ) {
     const $orderEdit = new OrderProductEdit(orderDetailId);
     $orderEdit.displayProduct({

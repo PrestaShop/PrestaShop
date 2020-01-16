@@ -46,7 +46,7 @@ export default class OrderProductEdit {
   setupListener() {
     this.quantityInput.on('change keyup', (event) => {
       this.quantity = parseInt(event.target.value ? event.target.value : 0, 10);
-      const available = $(event.currentTarget).data('stock') - this.quantity;
+      const available = parseInt($(event.currentTarget).data('stock'), 10) - this.quantity;
       const availableOutOfStock = this.availableText.data('availableOutOfStock');
       this.availableText.text(available);
       this.availableText.toggleClass('text-danger font-weight-bold', available < 0);
