@@ -145,6 +145,11 @@ class OrderProductForViewing implements JsonSerializable
     private $orderInvoiceNumber;
 
     /**
+     * @var bool
+     */
+    private $availableOutOfStock;
+
+    /**
      * @var OrderProductCustomizationsForViewing
      */
     private $customizations;
@@ -170,6 +175,10 @@ class OrderProductForViewing implements JsonSerializable
      * @param string $location
      * @param int|null $orderInvoiceId
      * @param string $orderInvoiceNumber
+     * @param string $type
+     * @param bool $availableOutOfStock
+     * @param array $packItems
+     * @param OrderProductCustomizationsForViewing|null $customizations
      */
     public function __construct(
         ?int $orderDetailId,
@@ -193,6 +202,7 @@ class OrderProductForViewing implements JsonSerializable
         ?int $orderInvoiceId,
         string $orderInvoiceNumber,
         string $type,
+        bool $availableOutOfStock,
         array $packItems = [],
         ?OrderProductCustomizationsForViewing $customizations = null
     ) {
@@ -217,6 +227,7 @@ class OrderProductForViewing implements JsonSerializable
         $this->orderInvoiceId = $orderInvoiceId;
         $this->orderInvoiceNumber = $orderInvoiceNumber;
         $this->type = $type;
+        $this->availableOutOfStock = $availableOutOfStock;
         $this->packItems = $packItems;
         $this->customizations = $customizations;
     }
@@ -472,9 +483,17 @@ class OrderProductForViewing implements JsonSerializable
     }
 
     /**
+    * @return bool
+    */
+    public function isAvailableOutOfStock(): bool
+    {
+        return $this->availableOutOfStock;
+    }
+
+    /**
      * @return array
      */
-    public function jsonSerialize()
+    public function jsonSerialize(): array
     {
         return [
             'id' => $this->getId(),
