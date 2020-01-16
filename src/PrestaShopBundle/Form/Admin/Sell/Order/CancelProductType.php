@@ -60,7 +60,7 @@ class CancelProductType extends TranslatorAwareType
                 ->add('amount_' . $product->getOrderDetailId(), NumberType::class, [
                     'attr' => ['max' => $product->getTotalPrice(), 'class' => 'refund-amount'],
                     'label' => sprintf(
-                        '%s (%s)',
+                        "%s<br>(%s)",
                         $this->trans('Amount', 'Admin.Global', []),
                         $taxMethod
                     ),

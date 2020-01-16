@@ -207,13 +207,22 @@ export default class OrderViewPage {
   listenForRefund() {
     $(OrderViewPageMap.displayPartialRefundBtn).on('click', () => {
       this.orderProductRenderer.moveProductsPanelToRefundPosition();
+      $(OrderViewPageMap.toggleStandardRefundForm).hide();
       $(OrderViewPageMap.togglePartialRefundForm).show();
+      $(OrderViewPageMap.actionColumnElements).hide();
+    });
+
+    $(OrderViewPageMap.displayStandardRefundBtn).on('click', () => {
+      this.orderProductRenderer.moveProductsPanelToRefundPosition();
+      $(OrderViewPageMap.togglePartialRefundForm).hide();
+      $(OrderViewPageMap.toggleStandardRefundForm).show();
       $(OrderViewPageMap.actionColumnElements).hide();
     });
 
     $(OrderViewPageMap.cancelPartialRefundBtn).on('click', () => {
       this.orderProductRenderer.moveProductPanelToOriginalPosition();
       $(OrderViewPageMap.togglePartialRefundForm).hide();
+      $(OrderViewPageMap.toggleStandardRefundForm).hide();
       $(OrderViewPageMap.actionColumnElements).show();
     });
   }
