@@ -46,7 +46,12 @@ export default class OrderViewPage {
   listenToEvents() {
     EventEmitter.on(OrderViewEventMap.productDeletedFromOrder, (event) => {
       // Remove the row
-      $(OrderViewPageMap.productsTableRow(event.oldOrderDetailId)).remove();
+      const $row = $(OrderViewPageMap.productsTableRow(event.oldOrderDetailId));
+      const $next = $row.next();
+      $row.remove();
+      if ($next.hasClass('order-product-customization')) {
+        $next.remove();
+      }
 
       const $tablePagination = $(OrderViewPageMap.productsTablePagination);
       let numPages = $tablePagination.data('numPages');

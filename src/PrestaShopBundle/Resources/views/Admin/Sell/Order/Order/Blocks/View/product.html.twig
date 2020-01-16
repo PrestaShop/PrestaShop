@@ -45,7 +45,7 @@
         </p>
       {% endif %}
     </a>
-    {% if product.type == constant('PrestaShop\\PrestaShop\\Core\\Domain\\Order\\QueryResult\\OrderProductForViewing::TYPE_PACK') %}
+    {% if product.type == constant('PrestaShop\\PrestaShop\\Core\\Domain\\Order\\QueryResult\\OrderProductForViewing::TYPE_PACK') and product.customizations is null %}
       <span class="btn-product-pack-modal" data-toggle="modal" data-target="#product-pack-modal" data-pack-items="{{ product.packItems|json_encode }}">
         <strong>{{ 'View pack content'|trans({}, 'Admin.Orderscustomers.Feature') }}</strong>
       </span>
@@ -128,3 +128,35 @@
     </span>
   </td>
 </tr>
+{% if product.customizations is not null %}
+  <tr class="order-product-customization{% if productIndex is defined and paginationNum is defined and productIndex > paginationNum %} d-none{% endif %}">
+    <td class="border-top-0"></td>
+    {% set colspan = 8 %}
+    {% if orderForViewing.hasInvoice() %}
+      {% set colspan = colspan + 1 %}
+    {% endif %}
+    {% if not orderForViewing.delivered %}
+      {% set colspan = colspan + 1 %}
+    {% endif %}
+    <td colspan="{{ colspan }}" class="border-top-0 text-muted">
+      {% if product.customizations.fileCustomizations %}
+        <div class="d-flex flex-row flex-wrap">
+          {% for customization in product.customizations.fileCustomizations %}
+            <div class="mr-4">
+              <p><strong>{{ customization.name }}</strong></p>
+              <p><img src="{{ customization.image }}" alt=""></p>
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+      {% for customization in product.customizations.textCustomizations %}
+        <p><strong>{{ customization.name }}</strong> {{ customization.value }}</p>
+      {% endfor %}
+      {% if product.type == constant('PrestaShop\\PrestaShop\\Core\\Domain\\Order\\QueryResult\\OrderProductForViewing::TYPE_PACK') %}
+        <div class="btn-product-pack-modal mb-3" data-toggle="modal" data-target="#product-pack-modal" data-pack-items="{{ product.packItems|json_encode }}">
+          <strong>{{ 'View pack content'|trans({}, 'Admin.Orderscustomers.Feature') }}</strong>
+        </div>
+      {% endif %}
+    </td>
+  </tr>
+{% endif %}

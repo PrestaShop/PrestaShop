@@ -139,6 +139,11 @@ class OrderProductForViewing implements JsonSerializable
      */
     private $orderInvoiceNumber;
 
+    /**
+     * @var OrderProductCustomizationsForViewing
+     */
+    private $customizations;
+
     public function __construct(
         ?int $orderDetailId,
         int $id,
@@ -160,7 +165,8 @@ class OrderProductForViewing implements JsonSerializable
         ?int $orderInvoiceId,
         string $orderInvoiceNumber,
         string $type,
-        array $packItems = []
+        array $packItems = [],
+        ?OrderProductCustomizationsForViewing $customizations = null
     ) {
         $this->id = $id;
         $this->name = $name;
@@ -183,6 +189,7 @@ class OrderProductForViewing implements JsonSerializable
         $this->orderInvoiceNumber = $orderInvoiceNumber;
         $this->type = $type;
         $this->packItems = $packItems;
+        $this->customizations = $customizations;
     }
 
     /**
@@ -413,6 +420,16 @@ class OrderProductForViewing implements JsonSerializable
     public function getOrderInvoiceNumber(): string
     {
         return $this->orderInvoiceNumber;
+    }
+
+    /**
+     * Get the customizations of this product
+     *
+     * @return OrderProductCustomizationsForViewing
+     */
+    public function getCustomizations(): ?OrderProductCustomizationsForViewing
+    {
+        return $this->customizations;
     }
 
     /**

@@ -66,6 +66,8 @@ use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderMessagesForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderPaymentForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderPaymentsForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderPricesForViewing;
+use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderProductCustomizationForViewing;
+use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderProductCustomizationsForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderProductForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderProductsForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderReturnForViewing;
@@ -346,14 +348,21 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
             // Get total customized quantity for current product
             $customized_product_quantity = 0;
 
+            $customizations = [];
             if (is_array($product['customizedDatas'])) {
                 foreach ($product['customizedDatas'] as $customizationPerAddress) {
                     foreach ($customizationPerAddress as $customizationId => $customization) {
                         $customized_product_quantity += (int) $customization['quantity'];
+                        foreach ($customization['datas'] as $datas) {
+                            foreach ($datas as $data) {
+                                $customizations[] = new OrderProductCustomizationForViewing((int) $data['type'], $data['name'], $data['value']);
+                            }
+                        }
                     }
                 }
             }
 
+            $product['customizations'] = !empty($customizations) ? new OrderProductCustomizationsForViewing($customizations) : null;
             $product['customized_product_quantity'] = $customized_product_quantity;
             $product['current_stock'] = StockAvailable::getQuantityAvailableByProduct($product['product_id'], $product['product_attribute_id'], $product['id_shop']);
             $resume = OrderSlip::getProductSlipResume($product['id_order_detail']);
@@ -499,7 +508,8 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
                 !empty($product['id_order_invoice']) ? $product['id_order_invoice'] : null,
                 !empty($product['id_order_invoice']) ? $orderInvoice->getInvoiceNumberFormatted($order->id_lang) : '',
                 $productType,
-                $packItems
+                $packItems,
+                $product['customizations']
             );
         }
 
