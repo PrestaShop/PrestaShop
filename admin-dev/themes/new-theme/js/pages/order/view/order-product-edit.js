@@ -39,13 +39,19 @@ export default class OrderProductEdit {
     this.product = {};
     this.currencyPrecision = $(OrderViewPageMap.productsTable).data('currencyPrecision');
     this.priceTaxCalculator = new OrderPrices();
+    this.productEditSaveBtn = $(OrderViewPageMap.productEditSaveBtn);
+    this.quantityInput = $(OrderViewPageMap.productEditQuantityInput);
   }
 
   setupListener() {
     this.quantityInput.on('change keyup', (event) => {
       this.quantity = parseInt(event.target.value ? event.target.value : 0, 10);
-      this.availableText.html(this.totalQuantity - this.quantity);
+      const available = $(event.currentTarget).data('stock') - this.quantity;
+      const availableOutOfStock = this.availableText.data('availableOutOfStock');
+      this.availableText.text(available);
+      this.availableText.toggleClass('text-danger font-weight-bold', available < 0);
       this.updateTotal();
+      this.productEditSaveBtn.prop('disabled', !availableOutOfStock && available < 0);
     });
     this.productEditInvoiceSelect.on('change', () => {
       this.productEditSaveBtn.prop('disabled', false);
@@ -117,7 +123,8 @@ export default class OrderProductEdit {
     this.priceTaxIncludedInput.val(
       window.ps_round(product.price_tax_incl, this.currencyPrecision)
     );
-    this.quantityInput.val(product.quantity);
+    this.quantityInput.val(product.quantity).data('stock', product.availableQuantity);
+    this.availableText.data('availableOutOfStock', product.availableOutOfStock);
 
     // set this product's orderInvoiceId as selected
     if (product.orderInvoiceId) {
@@ -127,7 +134,6 @@ export default class OrderProductEdit {
 
     // Init editor data
     this.taxRate = product.tax_rate;
-    this.totalQuantity = product.availableQuantity + product.quantity;
     this.initialTotal = this.priceTaxCalculator.calculateTotalPrice(
       product.quantity,
       product.price_tax_incl,

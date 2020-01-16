@@ -123,6 +123,11 @@ class OrderProductForViewing
      */
     private $orderInvoiceNumber;
 
+    /**
+     * @var bool
+     */
+    private $availableOutOfStock;
+
     public function __construct(
         int $orderDetailId,
         int $id,
@@ -142,7 +147,8 @@ class OrderProductForViewing
         string $amountRefundable,
         string $location,
         ?int $orderInvoiceId,
-        string $orderInvoiceNumber
+        string $orderInvoiceNumber,
+        bool $availableOutOfStock
     ) {
         $this->id = $id;
         $this->name = $name;
@@ -163,6 +169,7 @@ class OrderProductForViewing
         $this->location = $location;
         $this->orderInvoiceId = $orderInvoiceId;
         $this->orderInvoiceNumber = $orderInvoiceNumber;
+        $this->availableOutOfStock = $availableOutOfStock;
     }
 
     /**
@@ -377,5 +384,13 @@ class OrderProductForViewing
     public function getOrderInvoiceNumber(): string
     {
         return $this->orderInvoiceNumber;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isAvailableOutOfStock(): bool
+    {
+        return $this->availableOutOfStock;
     }
 }
