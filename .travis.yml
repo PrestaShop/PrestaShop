@@ -77,7 +77,8 @@ before_install:
   - cp tests-legacy/parameters.yml.travis app/config/parameters.yml
 
 install:
-  - composer install --no-suggest --ansi --prefer-dist --no-interaction --no-progress --quiet;
+  - composer update --ignore-platform-reqs --no-suggest --ansi --no-interaction --no-progress --quiet;
+
   - if [ "$PRESTASHOP_TEST_TYPE" != "sanity" ]; then
       bash travis-scripts/install-prestashop;
     fi
