@@ -24,6 +24,7 @@
  *#}
 
 {% import '@PrestaShop/Admin/macros.html.twig' as ps %}
+{% form_theme supplierForm 'PrestaShopBundle:Admin/TwigTemplateForm:prestashop_ui_kit.html.twig' %}
 
 {{ form_start(supplierForm) }}
 <div class="card">
@@ -48,7 +49,7 @@
       {% endif %}
 
       {% block supplier_form_rest %}
-        {{ form_rest(supplierForm) }}
+        {{ form_widget(supplierForm) }}
       {% endblock %}
 
     </div>
