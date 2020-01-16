@@ -24,6 +24,7 @@
  *#}
 
 {% import '@PrestaShop/Admin/macros.html.twig' as ps %}
+{% form_theme attachmentForm 'PrestaShopBundle:Admin/TwigTemplateForm:prestashop_ui_kit.html.twig' %}
 
 {% block attachment_form %}
   {{ form_start(attachmentForm) }}
@@ -36,8 +37,8 @@
         <div class="card-text">
           {{ form_errors(attachmentForm) }}
 
-          {% block attachment_form_rest %}
-            {{ form_rest(attachmentForm) }}
+          {% block attachment_form_widget %}
+            {{ form_widget(attachmentForm) }}
           {% endblock %}
 
           {% if attachmentId is defined %}
