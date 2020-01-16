@@ -24,6 +24,7 @@
  *#}
 
 {% import '@PrestaShop/Admin/macros.html.twig' as ps %}
+{% form_theme taxForm 'PrestaShopBundle:Admin/TwigTemplateForm:prestashop_ui_kit.html.twig' %}
 
 {{ form_start(taxForm) }}
 <div class="card">
@@ -36,7 +37,7 @@
       {{ form_errors(taxForm) }}
 
       {% block tax_form_rest %}
-        {{ form_rest(taxForm) }}
+        {{ form_widget(taxForm) }}
       {% endblock %}
     </div>
   </div>
