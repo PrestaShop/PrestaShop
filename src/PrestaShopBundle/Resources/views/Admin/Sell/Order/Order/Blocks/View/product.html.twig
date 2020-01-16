@@ -99,8 +99,8 @@
     </td>
   {% endif %}
   <td class="text-right">
-    <span class="cancel-product-element{% if product.refundable == false %} hidden{% endif %}">
-      <div class="form-group">
+    <div class="cancel-product-cell cancel-product-element{% if product.refundable == false %} hidden{% endif %}">
+      <div class="row form-group">
         <div class="col-lg-5 cancel-product-selector">
           <div class="input-group">
             {{ form_widget(cancelProductForm['selected_' ~ product.orderDetailId]) }}
@@ -113,7 +113,7 @@
             <div class="input-group-append"><div class="input-group-text">/ {{ product.quantityRefundable }}</div></div>
           </div>
         </div>
-        <div class="col-lg-7">
+        <div class="col-lg-7 cancel-product-amount">
           <div class="input-group">
             <strong>{{ form_label(cancelProductForm['amount_' ~ product.orderDetailId]) }}</strong>
             {{ form_widget(cancelProductForm['amount_' ~ product.orderDetailId]) }}
@@ -125,6 +125,6 @@
             }, 'Admin.Orderscustomers.Help')|raw }}</p>
         </div>
       </div>
-    </span>
+    </div>
   </td>
 </tr>

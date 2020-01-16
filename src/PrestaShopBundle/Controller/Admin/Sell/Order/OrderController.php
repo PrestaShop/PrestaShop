@@ -427,6 +427,8 @@ class OrderController extends FrameworkBundleAdminController
 
         $this->handleOutOfStockProduct($orderForViewing);
 
+        $merchandiseReturnEnabled = (bool) $this->configuration->get('PS_ORDER_RETURN');
+
         return $this->render('@PrestaShop/Admin/Sell/Order/Order/view.html.twig', [
             'showContentHeader' => true,
             'orderCurrency' => $orderCurrency,
@@ -447,6 +449,7 @@ class OrderController extends FrameworkBundleAdminController
             'addProductRowForm' => $addProductRowForm->createView(),
             'editProductRowForm' => $editProductRowForm->createView(),
             'backOfficeOrderButtons' => $backOfficeOrderButtons,
+            'merchandiseReturnEnabled' => $merchandiseReturnEnabled,
         ]);
     }
 

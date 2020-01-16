@@ -178,7 +178,7 @@ td .editProductInvoice {
 
 .cancel-product-element,
 .cancel-product-selector,
-.cancel-product-quantity {
+.cancel-product-amount {
   display: none;
 }
 
@@ -186,6 +186,7 @@ td .editProductInvoice {
   height: 30px;
   line-height: 30px;
   padding: 0;
+  margin-bottom: 0;
 }
 
 .cancel-product-element .form-group {
@@ -213,11 +214,30 @@ td .editProductInvoice {
   width: max-content;
 }
 
-.cancel-product-element .form-group {
-  width: fit-content;
+.cancel-product-cell {
+  width: max-content;
+  min-width: 250px;
+  margin-right: 0;
+  padding-right: 0;
+}
+.cancel-product-cell .form-group {
+  width: max-content;
+}
+.cancel-product-cell .form-group.row,
+.cancel-product-cell .form-group.row p {
+  margin-bottom: 0;
 }
 
-.cancel-product-element .cancel-product-quantity {
+.cancel-product-cell .form-group input,
+.cancel-product-cell .form-group .input-group-append {
+  height: 35px;
+}
+
+.cancel-product-cell .form-group .refund-quantity {
+  width: 30px;
+}
+
+.cancel-product-cell .cancel-product-quantity {
   width: max-content;
 }
 
