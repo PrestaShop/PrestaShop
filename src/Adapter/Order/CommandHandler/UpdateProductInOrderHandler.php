@@ -37,6 +37,7 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Exception\CannotEditDeliveredOrderPr
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\UpdateProductInOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\CommandHandler\UpdateProductInOrderHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductOutOfStockException;
 use StockAvailable;
 use Tools;
 use Validate;
@@ -246,5 +247,14 @@ final class UpdateProductInOrderHandler extends AbstractOrderHandler implements 
 //                }
 //            }
 //        }
+
+        //check if product is available in stock
+        if (!\Product::isAvailableWhenOutOfStock(StockAvailable::outOfStock($orderDetail->product_id))) {
+            $availableQuantity = StockAvailable::getQuantityAvailableByProduct($orderDetail->product_id, $orderDetail->product_attribute_id);
+
+            if ($availableQuantity < $command->getQuantity()) {
+                throw new ProductOutOfStockException('Not enough products in stock');
+            }
+        }
     }
 }
