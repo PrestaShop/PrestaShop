@@ -153,6 +153,7 @@ export default class OrderViewPage {
         $btn.data('taxRate'),
         $btn.data('location'),
         $btn.data('availableQuantity'),
+        $btn.data('availableOutOfStock'),
         $btn.data('orderInvoiceId'),
       );
     });
