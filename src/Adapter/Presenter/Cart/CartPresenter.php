@@ -454,7 +454,7 @@ class CartPresenter implements PresenterInterface
             return !array_key_exists($discount['id_cart_rule'], $cartRulesIds);
         });
 
-        return [
+        $result = [
             'products' => $products,
             'totals' => $totals,
             'subtotals' => $subtotals,
@@ -478,6 +478,12 @@ class CartPresenter implements PresenterInterface
                 ) :
                 '',
         ];
+
+        Hook::exec('overridePresentedCart',
+            ['presentedCart' => &$result]
+        );
+
+        return $result;
     }
 
     /**
