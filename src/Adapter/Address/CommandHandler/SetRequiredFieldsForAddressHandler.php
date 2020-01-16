@@ -26,7 +26,6 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Address\CommandHandler;
 
-use Address;
 use CustomerAddress;
 use PrestaShop\PrestaShop\Core\Domain\Address\Command\SetRequiredFieldsForAddressCommand;
 use PrestaShop\PrestaShop\Core\Domain\Address\CommandHandler\SetRequiredFieldsForAddressHandlerInterface;
