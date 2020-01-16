@@ -128,6 +128,7 @@ export default class OrderProductRenderer {
 
   paginate(numPage) {
     const $rows = $(OrderViewPageMap.productsTable).find('tr[id^="orderProduct_"]');
+    const $customizationRows = $(OrderViewPageMap.productsTable).find('.order-product-customization');
     const $tablePagination = $(OrderViewPageMap.productsTablePagination);
     const numRowsPerPage = parseInt($tablePagination.data('numPerPage'), 10);
     const maxPage = Math.ceil($rows.length / numRowsPerPage);
@@ -136,12 +137,19 @@ export default class OrderProductRenderer {
 
     // Hide all rows...
     $rows.addClass('d-none');
+    $customizationRows.addClass('d-none');
     // ... and display good ones
 
     const startRow = ((numPage - 1) * numRowsPerPage) + 1;
-    const endRow = numPage * numRowsPerPage + 1;
+    const endRow = numPage * numRowsPerPage;
     $(OrderViewPageMap.productsTable).find(`tr[id^="orderProduct_"]:nth-child(n+${startRow}):nth-child(-n+${endRow})`)
         .removeClass('d-none');
+    $customizationRows.each(function () {
+      if (!$(this).prev().hasClass('d-none')) {
+        $(this).removeClass('d-none');
+      }
+    });
+
     // Remove all edition rows (careful not to remove the template)
     $(OrderViewPageMap.productEditRow).not(OrderViewPageMap.productEditRowTemplate).remove();
 
