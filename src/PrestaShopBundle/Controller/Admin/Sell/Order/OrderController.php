@@ -768,16 +768,20 @@ class OrderController extends FrameworkBundleAdminController
      */
     public function updateProductAction(int $orderId, int $orderDetailId, Request $request): Response
     {
-        $this->getCommandBus()->handle(
-            new UpdateProductInOrderCommand(
-                $orderId,
-                $orderDetailId,
-                (float) $request->get('price_tax_incl'),
-                (float) $request->get('price_tax_excl'),
-                (int) $request->get('quantity'),
-                (int) $request->get('invoice')
-            )
-        );
+        try {
+            $this->getCommandBus()->handle(
+                new UpdateProductInOrderCommand(
+                    $orderId,
+                    $orderDetailId,
+                    (float) $request->get('price_tax_incl'),
+                    (float) $request->get('price_tax_excl'),
+                    (int) $request->get('quantity'),
+                    (int) $request->get('invoice')
+                )
+            );
+        } catch (ProductOutOfStockException $e) {
+            $invalidQty = true;
+        }
 
         /** @var OrderForViewing $orderForViewing */
         $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
@@ -799,6 +803,7 @@ class OrderController extends FrameworkBundleAdminController
             'orderCurrency' => $orderCurrency,
             'orderForViewing' => $orderForViewing,
             'product' => $product,
+            'invalidQty' => $invalidQty ?? false,
         ]);
     }
 
