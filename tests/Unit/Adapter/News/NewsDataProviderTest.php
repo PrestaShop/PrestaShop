@@ -28,6 +28,7 @@ namespace Tests\Unit\Adapter\News;
 
 use ContextCore;
 use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\MockObject\MockObject;
 use PrestaShop\CircuitBreaker\Contract\CircuitBreakerInterface;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\Country\CountryDataProvider;
@@ -129,7 +130,7 @@ class NewsDataProviderTest extends TestCase
      * @param string|null $locale
      * @param string|null $returnData
      *
-     * @return \PHPUnit_Framework_MockObject_MockObject|CircuitBreakerInterface
+     * @return MockObject|CircuitBreakerInterface
      */
     private function createCircuitBreakerMock($locale = null, $returnData = null)
     {
@@ -153,7 +154,7 @@ class NewsDataProviderTest extends TestCase
     }
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject|Configuration
+     * @return MockObject|Configuration
      */
     private function createConfigurationMock()
     {
@@ -164,7 +165,7 @@ class NewsDataProviderTest extends TestCase
     }
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject|CountryDataProvider
+     * @return MockObject|CountryDataProvider
      */
     private function createCountryDataProviderMock()
     {
@@ -175,7 +176,7 @@ class NewsDataProviderTest extends TestCase
     }
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject|Tools
+     * @return MockObject|Tools
      */
     private function createToolsMock()
     {
@@ -193,7 +194,7 @@ class NewsDataProviderTest extends TestCase
     /**
      * @param bool|null $isCleanHtml
      *
-     * @return \PHPUnit_Framework_MockObject_MockObject|Validate
+     * @return MockObject|Validate
      */
     private function createValidateMock($isCleanHtml = null)
     {

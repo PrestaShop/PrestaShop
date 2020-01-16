@@ -3,7 +3,7 @@
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 use Behat\Gherkin\Node\TableNode;
-use PHPUnit_Framework_Assert;
+use PHPUnit\Framework\Assert as Assert;
 use PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\CountryStateByIdChoiceProvider;
 use PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\ManufacturerNameByIdChoiceProvider;
 use PrestaShop\PrestaShop\Core\Domain\Address\Command\AddCustomerAddressCommand;
@@ -68,7 +68,7 @@ class AddressFeatureContext extends AbstractDomainFeatureContext
             $testCaseData,
             $manufacturerAddressId
         );
-        PHPUnit_Framework_Assert::assertEquals($expectedEditableManufacturerAddress, $editableManufacturerAddress);
+        Assert::assertEquals($expectedEditableManufacturerAddress, $editableManufacturerAddress);
     }
 
     /**
@@ -129,22 +129,22 @@ class AddressFeatureContext extends AbstractDomainFeatureContext
         /** @var EditableCustomerAddress $customerAddress */
         $customerAddress = $this->getQueryBus()->handle(new GetCustomerAddressForEditing($customerAddressId));
 
-        PHPUnit_Framework_Assert::assertSame($customerId, $customerAddress->getCustomerId()->getValue());
-        PHPUnit_Framework_Assert::assertEquals($testCaseData['Address alias'], $customerAddress->getAddressAlias());
-        PHPUnit_Framework_Assert::assertEquals($testCaseData['First name'], $customerAddress->getFirstName());
-        PHPUnit_Framework_Assert::assertEquals($testCaseData['Last name'], $customerAddress->getLastName());
-        PHPUnit_Framework_Assert::assertEquals($testCaseData['Address'], $customerAddress->getAddress());
-        PHPUnit_Framework_Assert::assertEquals($testCaseData['City'], $customerAddress->getCity());
+        Assert::assertSame($customerId, $customerAddress->getCustomerId()->getValue());
+        Assert::assertEquals($testCaseData['Address alias'], $customerAddress->getAddressAlias());
+        Assert::assertEquals($testCaseData['First name'], $customerAddress->getFirstName());
+        Assert::assertEquals($testCaseData['Last name'], $customerAddress->getLastName());
+        Assert::assertEquals($testCaseData['Address'], $customerAddress->getAddress());
+        Assert::assertEquals($testCaseData['City'], $customerAddress->getCity());
 
         /** @var CountryByIdChoiceProvider $countryChoiceProvider */
         $countryChoiceProvider = $this->getContainer()->get('prestashop.core.form.choice_provider.country_by_id');
         $countryId = (int) $countryChoiceProvider->getChoices()[$testCaseData['Country']];
-        PHPUnit_Framework_Assert::assertSame((int) $countryId, $customerAddress->getCountryId()->getValue());
+        Assert::assertSame((int) $countryId, $customerAddress->getCountryId()->getValue());
 
         $countryStateChoiceProvider = $this->getContainer()->get('prestashop.adapter.form.choice_provider.country_state_by_id');
         $countryStateId = $countryStateChoiceProvider->getChoices(['id_country' => $countryId])[$testCaseData['State']];
-        PHPUnit_Framework_Assert::assertSame((int) $countryStateId, $customerAddress->getStateId()->getValue());
-        PHPUnit_Framework_Assert::assertEquals($testCaseData['Postal code'], $customerAddress->getPostCode());
+        Assert::assertSame((int) $countryStateId, $customerAddress->getStateId()->getValue());
+        Assert::assertEquals($testCaseData['Postal code'], $customerAddress->getPostCode());
     }
 
     /**

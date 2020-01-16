@@ -346,7 +346,6 @@ class InstallControllerConsoleProcess extends InstallControllerConsole implement
 
         global $kernel;
         $kernel = new AppKernel(_PS_ENV_, _PS_MODE_DEV_);
-        $kernel->loadClassCache();
         $kernel->boot();
     }
 }

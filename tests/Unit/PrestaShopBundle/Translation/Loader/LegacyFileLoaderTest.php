@@ -26,12 +26,14 @@
 
 namespace Tests\Unit\PrestaShopBundle\Translation\Loader;
 
+use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\MockObject\MockObject;
 use PrestaShopBundle\Translation\Loader\LegacyFileLoader;
 use PrestaShopBundle\Translation\Loader\LegacyFileReader;
 use Symfony\Component\Translation\MessageCatalogue;
 use PrestaShopBundle\Translation\Exception\InvalidLegacyTranslationKeyException;
 
-class LegacyFileLoaderTest extends \PHPUnit_Framework_TestCase
+class LegacyFileLoaderTest extends TestCase
 {
     public function testItInterpretsLegacyTranslationFileData()
     {
@@ -70,7 +72,7 @@ class LegacyFileLoaderTest extends \PHPUnit_Framework_TestCase
 
     public function testItThrowsAnExceptionIfKeyIsInvalid()
     {
-        $this->setExpectedException(InvalidLegacyTranslationKeyException::class);
+        $this->expectException(InvalidLegacyTranslationKeyException::class);
 
         $path = '/some/path/to/module/translations/';
         $locale = 'fr-FR';
@@ -85,7 +87,7 @@ class LegacyFileLoaderTest extends \PHPUnit_Framework_TestCase
     /**
      * @param $translations
      *
-     * @return \PHPUnit_Framework_MockObject_MockObject|LegacyFileReader
+     * @return MockObject|LegacyFileReader
      */
     private function getMockReader($path, $locale, $translations)
     {

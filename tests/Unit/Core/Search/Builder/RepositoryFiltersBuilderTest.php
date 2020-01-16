@@ -27,6 +27,7 @@
 namespace Tests\Unit\Core\Search\Builder;
 
 use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\MockObject\MockObject;
 use PrestaShop\PrestaShop\Core\Employee\ContextEmployeeProviderInterface;
 use PrestaShop\PrestaShop\Core\Search\Builder\RepositoryFiltersBuilder;
 use PrestaShop\PrestaShop\Core\Search\Filters;
@@ -173,7 +174,7 @@ class RepositoryFiltersBuilderTest extends TestCase
      * @param array $filters
      * @param string $filterId
      *
-     * @return \PHPUnit_Framework_MockObject_MockObject|AdminFilterRepository
+     * @return MockObject|AdminFilterRepository
      */
     private function buildRepositoryByFilterIdMock(array $filters, $filterId)
     {
@@ -208,7 +209,7 @@ class RepositoryFiltersBuilderTest extends TestCase
      * @param string $controller
      * @param string $action
      *
-     * @return \PHPUnit_Framework_MockObject_MockObject|AdminFilterRepository
+     * @return MockObject|AdminFilterRepository
      */
     private function buildRepositoryByRouteMock(array $filters, $controller, $action)
     {
@@ -242,7 +243,7 @@ class RepositoryFiltersBuilderTest extends TestCase
     /**
      * @param array $filters
      *
-     * @return \PHPUnit_Framework_MockObject_MockObject|AdminFilter
+     * @return MockObject|AdminFilter
      */
     private function buildAdminFilterMock(array $filters)
     {
@@ -261,7 +262,7 @@ class RepositoryFiltersBuilderTest extends TestCase
     }
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject|ContextEmployeeProviderInterface
+     * @return MockObject|ContextEmployeeProviderInterface
      */
     private function buildEmployeeProviderMock()
     {

@@ -27,6 +27,7 @@
 namespace Tests\Unit\Core\Language;
 
 use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\MockObject\MockObject;
 use PrestaShop\PrestaShop\Core\Language\LanguageDefaultFontsCatalog;
 use PrestaShop\PrestaShop\Core\Language\LanguageInterface;
 
@@ -66,7 +67,7 @@ class LanguageDefaultFontsCatalogTest extends TestCase
     /**
      * @param string $isoCode
      *
-     * @return \PHPUnit_Framework_MockObject_MockObject|LanguageInterface
+     * @return MockObject|LanguageInterface
      */
     private function buildLanguageMock($isoCode)
     {

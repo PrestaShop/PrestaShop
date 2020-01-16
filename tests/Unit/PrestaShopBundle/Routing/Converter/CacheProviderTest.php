@@ -27,6 +27,7 @@
 namespace Tests\PrestaShopBundle\Routing\Converter;
 
 use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\MockObject\MockObject;
 use PrestaShopBundle\Routing\Converter\CacheKeyGeneratorInterface;
 use PrestaShopBundle\Routing\Converter\CacheProvider;
 use PrestaShopBundle\Routing\Converter\LegacyRoute;
@@ -326,7 +327,7 @@ class CacheProviderTest extends TestCase
     }
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject|AdapterInterface
+     * @return MockObject|AdapterInterface
      */
     private function buildExistingCache()
     {
@@ -369,7 +370,7 @@ class CacheProviderTest extends TestCase
     }
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject|AdapterInterface
+     * @return MockObject|AdapterInterface
      */
     private function buildSavingCache()
     {
@@ -414,7 +415,7 @@ class CacheProviderTest extends TestCase
     /**
      * @param array $legacyRoutes
      *
-     * @return \PHPUnit_Framework_MockObject_MockObject|LegacyRouteProviderInterface
+     * @return MockObject|LegacyRouteProviderInterface
      */
     private function buildMockRouterProvider(array $legacyRoutes)
     {
@@ -432,7 +433,7 @@ class CacheProviderTest extends TestCase
     }
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject|LegacyRouteProviderInterface
+     * @return MockObject|LegacyRouteProviderInterface
      */
     private function buildCachedRouterProvider()
     {
@@ -449,7 +450,7 @@ class CacheProviderTest extends TestCase
     }
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject|CacheKeyGeneratorInterface
+     * @return MockObject|CacheKeyGeneratorInterface
      */
     private function buildCacheKeyGenerator()
     {

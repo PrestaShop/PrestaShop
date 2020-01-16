@@ -28,7 +28,7 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 use Behat\Gherkin\Node\TableNode;
 use Configuration;
-use PHPUnit_Framework_Assert;
+use PHPUnit\Framework\Assert as Assert;
 use PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\CategoryTreeChoiceProvider;
 use PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\GroupByIdChoiceProvider;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\AddCategoryCommand;
@@ -147,7 +147,7 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
             $coverImage
         );
 
-        PHPUnit_Framework_Assert::assertEquals($expectedEditableCategory, $editableCategory);
+        Assert::assertEquals($expectedEditableCategory, $editableCategory);
     }
 
     /**

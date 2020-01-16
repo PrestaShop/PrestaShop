@@ -27,6 +27,7 @@
 namespace Tests\Unit\Core\MailTemplate;
 
 use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\MockObject\MockObject;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShop\PrestaShop\Core\Language\LanguageDefaultFontsCatalog;
 use PrestaShop\PrestaShop\Core\Language\LanguageInterface;
@@ -139,7 +140,7 @@ class LayoutVariablesBuilderTest extends TestCase
      * @param array $expectedVariables
      * @param LayoutInterface $mailLayout
      *
-     * @return \PHPUnit_Framework_MockObject_MockObject|HookDispatcherInterface
+     * @return MockObject|HookDispatcherInterface
      */
     private function createHookDispatcherMock(array $expectedVariables, LayoutInterface $mailLayout)
     {
@@ -170,7 +171,7 @@ class LayoutVariablesBuilderTest extends TestCase
      * @param string $isoCode
      * @param bool $isRTL
      *
-     * @return \PHPUnit_Framework_MockObject_MockObject|LanguageInterface
+     * @return MockObject|LanguageInterface
      */
     private function buildLanguageMock($isoCode = 'en', $isRTL = false)
     {
@@ -201,7 +202,7 @@ class LayoutVariablesBuilderTest extends TestCase
     /**
      * @param array $expectedMethods
      *
-     * @return \PHPUnit_Framework_MockObject_MockObject|LayoutInterface
+     * @return MockObject|LayoutInterface
      */
     private function buildLayoutMock(array $expectedMethods)
     {
@@ -222,7 +223,7 @@ class LayoutVariablesBuilderTest extends TestCase
     }
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject|LanguageDefaultFontsCatalog
+     * @return MockObject|LanguageDefaultFontsCatalog
      */
     private function buildFontCatalog()
     {
