@@ -1,0 +1,9 @@
+services:
+  _defaults:
+    public: true
+
+  prestashop.adapter.order_state.order_state_icon_provider:
+    class: 'PrestaShop\PrestaShop\Adapter\OrderState\OrderStateIconProvider'
+    arguments:
+      - '@prestashop.core.image.parser.image_tag_source_parser'
+      - "@=service('prestashop.adapter.legacy.context').getContext().shop.id"

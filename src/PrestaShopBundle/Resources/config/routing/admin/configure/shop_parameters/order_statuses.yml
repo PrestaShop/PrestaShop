@@ -1,0 +1,17 @@
+admin_order_statuses:
+    path: /
+    methods: [GET]
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Configure\ShopParameters\OrderStatuses:index'
+        _legacy_controller: AdminStatuses
+#        _legacy_link: AdminStatuses
+
+admin_order_statuses_filter:
+  path: /
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin\Configure\ShopParameters\OrderStatuses:searchGrid
+    _legacy_controller: AdminCustomers
+    gridDefinitionFactoryServiceId: prestashop.core.grid.definition.factory.order_statuses
+    redirectRoute: admin_order_statuses
+#    _legacy_link: AdminStatuses:submitFilterstate

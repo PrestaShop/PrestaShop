@@ -294,3 +294,19 @@ services:
             - '@prestashop.core.grid.data.factory.credit_slip_decorator'
             - '@prestashop.core.grid.filter.credit_slip_form_factory'
             - '@prestashop.core.hook.dispatcher'
+
+    prestashop.core.grid.factory.order_statuses:
+      class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
+      arguments:
+        - '@prestashop.core.grid.definition.factory.order_statuses'
+        - '@prestashop.core.grid.data_provider.order_statuses_decorator'
+        - '@prestashop.core.grid.filter.form_factory'
+        - '@prestashop.core.hook.dispatcher'
+
+    prestashop.core.grid.factory.order_return_statuses:
+      class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
+      arguments:
+        - '@prestashop.core.grid.definition.factory.order_return_statuses'
+        - '@prestashop.core.grid.data_provider.order_return_statuses_decorator'
+        - '@prestashop.core.grid.filter.form_factory'
+        - '@prestashop.core.hook.dispatcher'
