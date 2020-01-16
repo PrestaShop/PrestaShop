@@ -38,6 +38,7 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\UpdateProductInOrder
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\CommandHandler\UpdateProductInOrderHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductOutOfStockException;
+use Product;
 use StockAvailable;
 use Tools;
 use Validate;
@@ -175,7 +176,11 @@ final class UpdateProductInOrderHandler extends AbstractOrderHandler implements 
             $order->id_shop
         );
 
-        $order = $order->refreshShippingCost();
+        $product = new Product($orderDetail->product_id);
+
+        if (!$product->is_virtual) {
+            $order = $order->refreshShippingCost();
+        }
 
         if (!$res) {
             throw new OrderException('An error occurred while editing the product line.');
