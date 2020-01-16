@@ -554,4 +554,4 @@ WHERE NOT EXISTS
      WHERE `name` = 'PS_ECOTAX_TAX_RULES_GROUP_ID'
        AND `id_shop_group` = NULL
        AND `id_shop` = NULL)
-LIMIT 1
+LIMIT 1;
