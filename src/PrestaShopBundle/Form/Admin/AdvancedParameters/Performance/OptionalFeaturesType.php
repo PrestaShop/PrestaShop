@@ -67,14 +67,17 @@ class OptionalFeaturesType extends TranslatorAwareType
                     $this->trans('Choose "No" to disable Product Combinations.', 'Admin.Advparameters.Help'),
                     $this->trans('You cannot set this parameter to No when combinations are already used by some of your products', 'Admin.Advparameters.Help')
                 ),
+                'required' => false,
             ])
             ->add('features', SwitchType::class, [
                 'label' => $this->trans('Features', 'Admin.Global'),
                 'help' => $this->trans('Choose "No" to disable Product Features.', 'Admin.Advparameters.Help'),
+                'required' => false,
             ])
             ->add('customer_groups', SwitchType::class, [
                 'label' => $this->trans('Customer groups', 'Admin.Advparameters.Feature'),
                 'help' => $this->trans('Choose "No" to disable Customer Groups.', 'Admin.Advparameters.Help'),
+                'required' => false,
             ]);
     }
 

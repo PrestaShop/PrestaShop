@@ -51,6 +51,7 @@ class CachingType extends TranslatorAwareType
         $builder
             ->add('use_cache', SwitchType::class, [
                 'label' => $this->trans('Use cache', 'Admin.Advparameters.Feature'),
+                'required' => false,
             ])
             ->add('caching_system', ChoiceType::class, [
                 'label' => $this->trans('Caching system', 'Admin.Advparameters.Feature'),

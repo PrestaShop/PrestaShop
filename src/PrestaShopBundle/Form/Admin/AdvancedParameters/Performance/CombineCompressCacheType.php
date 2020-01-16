@@ -43,13 +43,16 @@ class CombineCompressCacheType extends TranslatorAwareType
         $builder
             ->add('smart_cache_css', SwitchType::class, [
                 'label' => $this->trans('Smart cache for CSS', 'Admin.Advparameters.Feature'),
+                'required' => false,
             ])
             ->add('smart_cache_js', SwitchType::class, [
                 'label' => $this->trans('Smart cache for JavaScript', 'Admin.Advparameters.Feature'),
+                'required' => false,
             ])
             ->add('apache_optimization', SwitchType::class, [
                 'label' => $this->trans('Apache optimization', 'Admin.Advparameters.Feature'),
                 'help' => $this->trans('This will add directives to your .htaccess file, which should improve caching and compression.', 'Admin.Advparameters.Help'),
+                'required' => false,
             ]);
     }
 
