@@ -251,3 +251,17 @@ services:
         arguments:
             - '@=service("prestashop.adapter.legacy.context").getLanguage().date_format_lite'
         public: true
+
+    prestashop.core.grid.definition.factory.order_states:
+      class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\OrderStatesGridDefinitionFactory'
+      parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+      arguments:
+        - '@prestashop.core.form.choice_provider.order_state_by_id'
+      public: true
+
+    prestashop.core.grid.definition.factory.order_return_states:
+      class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\OrderReturnStatesGridDefinitionFactory'
+      parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+      arguments:
+        - '@prestashop.core.form.choice_provider.order_return_state_by_id'
+      public: true

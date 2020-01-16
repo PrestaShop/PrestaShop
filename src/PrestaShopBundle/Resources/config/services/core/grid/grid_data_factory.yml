@@ -358,3 +358,29 @@ services:
       arguments:
         - '@prestashop.core.grid.data.factory.credit_slip'
         - '@translator'
+
+    prestashop.core.grid.data_provider.order_states:
+      class: '%prestashop.core.grid.data.factory.doctrine_grid_data_factory%'
+      arguments:
+        - '@prestashop.core.grid.query_builder.order_states'
+        - '@prestashop.core.hook.dispatcher'
+        - '@prestashop.core.grid.query.doctrine_query_parser'
+        - 'order_states'
+
+    prestashop.core.grid.data_provider.order_states_decorator:
+      class: 'PrestaShop\PrestaShop\Core\Grid\Data\Factory\OrderStatesGridDataFactoryDecorator'
+      arguments:
+        - '@prestashop.core.grid.data_provider.order_states'
+
+    prestashop.core.grid.data_provider.order_return_states:
+      class: '%prestashop.core.grid.data.factory.doctrine_grid_data_factory%'
+      arguments:
+        - '@prestashop.core.grid.query_builder.order_return_states'
+        - '@prestashop.core.hook.dispatcher'
+        - '@prestashop.core.grid.query.doctrine_query_parser'
+        - 'order_return_states'
+
+    prestashop.core.grid.data_provider.order_return_states_decorator:
+      class: 'PrestaShop\PrestaShop\Core\Grid\Data\Factory\OrderReturnStatesGridDataFactoryDecorator'
+      arguments:
+        - '@prestashop.core.grid.data_provider.order_return_states'

@@ -67,6 +67,12 @@ services:
       - '@=service("prestashop.adapter.legacy.context").getLanguage().id'
       - '@prestashop.adapter.data_provider.order_state'
 
+  prestashop.core.form.choice_provider.order_return_state_by_id:
+    class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\OrderReturnStateByIdChoiceProvider'
+    arguments:
+      - '@=service("prestashop.adapter.legacy.context").getLanguage().id'
+      - '@prestashop.adapter.data_provider.order_return_state'
+
   prestashop.core.form.choice_provider.invoice_model_by_name:
     class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\InvoiceModelByNameChoiceProvider'
     arguments:

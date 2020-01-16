@@ -83,6 +83,7 @@ module.exports = {
     order_message_form: './js/pages/order_message/form',
     order_message: './js/pages/order_message',
     order_preferences: './js/pages/order-preferences',
+    order_states: './js/pages/order-states',
     order_view: './js/pages/order/view.js',
     payment_preferences: './js/pages/payment-preferences',
     product_page: './js/product-page/index',
