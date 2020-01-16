@@ -46,7 +46,17 @@ export default class OrderProductRenderer {
     $(OrderViewPageMap.productsCount).html(numProducts);
   }
 
-  editProductFromList(orderDetailId, quantity, priceTaxIncl, priceTaxExcl, taxRate, location, availableQuantity, orderInvoiceId) {
+  editProductFromList(
+    orderDetailId,
+    quantity,
+    priceTaxIncl,
+    priceTaxExcl,
+    taxRate,
+    location,
+    availableQuantity,
+    availableOutOfStock,
+    orderInvoiceId
+  ) {
     const $orderEdit = new OrderProductEdit(orderDetailId);
     $orderEdit.displayProduct({
       price_tax_excl: priceTaxExcl,
@@ -55,6 +65,7 @@ export default class OrderProductRenderer {
       quantity,
       location,
       availableQuantity,
+      availableOutOfStock,
       orderInvoiceId,
     });
     $(OrderViewPageMap.productAddActionBtn).addClass('d-none');

@@ -77,6 +77,7 @@ use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
 use PrestaShop\PrestaShop\Core\Image\Parser\ImageTagSourceParserInterface;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\ComputingPrecision;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
+use Product;
 use Shop;
 use State;
 use StockAvailable;
@@ -466,7 +467,8 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
                 $this->locale->formatPrice($product['displayed_max_refundable'], $currency->iso_code),
                 $product['location'],
                 !empty($product['id_order_invoice']) ? $product['id_order_invoice'] : null,
-                !empty($product['id_order_invoice']) ? $orderInvoice->getInvoiceNumberFormatted($order->id_lang) : ''
+                !empty($product['id_order_invoice']) ? $orderInvoice->getInvoiceNumberFormatted($order->id_lang) : '',
+                (bool) Product::isAvailableWhenOutOfStock($product['out_of_stock'])
             );
         }
 
