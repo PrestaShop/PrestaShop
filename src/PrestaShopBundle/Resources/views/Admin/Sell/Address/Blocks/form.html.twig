@@ -24,6 +24,7 @@
  *#}
 
 {% import '@PrestaShop/Admin/macros.html.twig' as ps %}
+{% form_theme addressForm 'PrestaShopBundle:Admin/TwigTemplateForm:prestashop_ui_kit.html.twig' %}
 
 {{ form_start(addressForm) }}
 <div class="card">
@@ -53,91 +54,8 @@
             </div>
           </div>
         {% endif %}
-        {% if addressForm.customer_email is defined %}
-          {{ ps.form_group_row(addressForm.customer_email, {'attr': {
-            'class': 'js-manufacturer-country-select',
-            'data-customer-information-url': path('admin_customer_for_address_information') }}, {
-            'label': 'Customer email'|trans({}, 'Admin.Orderscustomers.Feature'),
-          }) }}
-        {% endif %}
       {% endblock %}
-
-      {{ ps.form_group_row(addressForm.dni, {}, {
-        'label': 'Identification number'|trans({}, 'Admin.Orderscustomers.Feature'),
-        'help' : 'The national ID card number of this person, or a unique tax identification number.'|trans({}, 'Admin.Orderscustomers.Help')
-      }) }}
-
-      {{ ps.form_group_row(addressForm.alias, {}, {
-        'label': 'Address alias'|trans({}, 'Admin.Orderscustomers.Feature'),
-        'help' : 'Invalid characters:'|trans({}, 'Admin.Notifications.Info') ~ ' <>;=#{}'
-      }) }}
-
-      {{ ps.form_group_row(addressForm.first_name, {}, {
-        'label': 'First name'|trans({}, 'Admin.Global'),
-        'help' : 'Invalid characters:'|trans({}, 'Admin.Notifications.Info') ~ ' 0-9!<>,;?=+()@#"�{}_$%:'
-      }) }}
-
-      {{ ps.form_group_row(addressForm.last_name, {}, {
-        'label': 'Last name'|trans({}, 'Admin.Global'),
-        'help' : 'Invalid characters:'|trans({}, 'Admin.Notifications.Info') ~ ' 0-9!<>,;?=+()@#"�{}_$%:'
-      }) }}
-
-      {{ ps.form_group_row(addressForm.company, {}, {
-        'label': 'Company'|trans({}, 'Admin.Global'),
-        'help' : 'Invalid characters:'|trans({}, 'Admin.Notifications.Info') ~ ' <>;=#{}'
-      }) }}
-
-      {{ ps.form_group_row(addressForm.vat_number, {}, {
-        'label': 'VAT number'|trans({}, 'Admin.Orderscustomers.Feature'),
-      }) }}
-
-      {{ ps.form_group_row(addressForm.address1, {}, {
-        'label': 'Address'|trans({}, 'Admin.Global'),
-      }) }}
-
-      {{ ps.form_group_row(addressForm.address2, {}, {
-        'label': 'Address (2)'|trans({}, 'Admin.Global'),
-      }) }}
-
-      {{ ps.form_group_row(addressForm.postcode, {}, {
-        'label': 'Zip/postal code'|trans({}, 'Admin.Global')
-      }) }}
-
-      {{ ps.form_group_row(addressForm.city, {}, {
-        'label': 'City'|trans({}, 'Admin.Global')
-      }) }}
-
-      {{ ps.form_group_row(addressForm.id_country, {'attr': {
-        'data-states-url': path('admin_country_states') }}, {
-        'label': 'Country'|trans({}, 'Admin.Global'),
-      }) }}
-
-      {% if addressForm.id_state.vars.disabled is defined and addressForm.id_state.vars.disabled %}
-        {% set rowAttr = {'style': 'display:none'} %}
-      {% endif %}
-
-      {{ ps.form_group_row(addressForm.id_state, {}, {
-        'label': 'State'|trans({}, 'Admin.Global'),
-        'class': 'js-address-state-select',
-        'row_attr': rowAttr|default({})
-      }) }}
-
-      {{ ps.form_group_row(addressForm.phone, {}, {
-        'label': 'Phone'|trans({}, 'Admin.Global')
-      }) }}
-
-      {% if addressForm.phone_mobile is defined %}
-        {{ ps.form_group_row(addressForm.phone_mobile, {}, {
-          'label': 'Mobile phone'|trans({}, 'Admin.Global')
-        }) }}
-      {% endif %}
-
-      {{ ps.form_group_row(addressForm.other, {}, {
-        'label': 'Other'|trans({}, 'Admin.Global'),
-        'help' : 'Invalid characters:'|trans({}, 'Admin.Notifications.Info') ~ ' <>;=#{}'
-      }) }}
-
-      {{ form_rest(addressForm) }}
+      {{ form_widget(addressForm) }}
     </div>
   </div>
 
