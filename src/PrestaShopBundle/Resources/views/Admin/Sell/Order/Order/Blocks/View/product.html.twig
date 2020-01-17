@@ -109,7 +109,15 @@
         <div class="col-lg-5 cancel-product-quantity">
           <div class="input-group">
             <strong>{{ form_label(cancelProductForm['quantity_' ~ product.orderDetailId]) }}</strong>
-            {{ form_widget(cancelProductForm['quantity_' ~ product.orderDetailId]) }}
+            {% set quantityInputOptions = {
+              'attr': {
+                'data-product-price-tax-incl': product.unitPriceTaxInclRaw,
+                'data-product-price-tax-excl': product.unitPriceTaxExclRaw,
+                'data-is-tax-included': orderForViewing.isTaxIncluded,
+                'data-amount-refundable': product.amountRefundableRaw,
+              }
+            } %}
+            {{ form_widget(cancelProductForm['quantity_' ~ product.orderDetailId], quantityInputOptions) }}
             <div class="input-group-append"><div class="input-group-text">/ {{ product.quantityRefundable }}</div></div>
           </div>
         </div>

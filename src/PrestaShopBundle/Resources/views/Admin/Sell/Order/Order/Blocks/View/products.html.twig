@@ -32,7 +32,12 @@
   </div>
 
   <div class="card-body">
-    {{ form_start(cancelProductForm, {'action': path('admin_orders_partial_refund', {'orderId': orderForViewing.id})}) }}
+    {% set formOptions = {
+      'attr': {
+        'data-order-id': orderForViewing.id
+      }
+    } %}
+    {{ form_start(cancelProductForm, formOptions) }}
     <table class="table" id="orderProductsTable" data-currency-precision="{{ orderCurrency.precision }}">
       <thead>
         <tr>
@@ -238,14 +243,14 @@
             {% endif %}
           </small>
         </p>
-        <div class="refund-checkboxes-container">
+        <div class="cancel-product-element refund-checkboxes-container">
           <div class="form-group">
             {{ form_widget(cancelProductForm.restock) }}
           </div>
           <div class="form-group">
             {{ form_widget(cancelProductForm.voucher) }}
           </div>
-          <div class="form-group shipping-refund{% if orderForViewing.prices.shippingPriceRaw %} hidden{% endif %}">
+          <div class="cancel-product-element form-group shipping-refund{% if orderForViewing.prices.shippingPriceRaw %} hidden{% endif %}">
             {{ form_widget(cancelProductForm.shipping) }}
           </div>
         </div>
