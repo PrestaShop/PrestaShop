@@ -30,6 +30,7 @@ use Customer;
 use Group;
 use Order;
 use OrderDetail;
+use OrderSlip;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderDetailRefund;
 use PrestaShop\PrestaShop\Core\Domain\Order\VoucherRefundType;
 use PrestaShopDatabaseException;
@@ -71,6 +72,12 @@ class OrderRefundCalculator
 
         $shippingCostAmount = $shippingRefund ?: false;
         if ($shippingCostAmount > 0) {
+            $shippingMaxRefund = $isTaxIncluded ? $order->total_shipping_tax_incl : $order->total_shipping_tax_excl;
+            $shippingSlipResume = OrderSlip::getShippingSlipResume($order->id);
+            $shippingMaxRefund -= isset($shippingSlipResume['total_shipping_tax_incl']) ? $shippingSlipResume['total_shipping_tax_incl'] : 0;
+            if ($shippingCostAmount > $shippingMaxRefund) {
+                $shippingCostAmount = $shippingMaxRefund;
+            }
             if (!$isTaxIncluded) {
                 // @todo: use https://github.com/PrestaShop/decimal for price computations
                 $taxCalculator = $this->getTaxCalculator($order->carrier_tax_rate);
@@ -126,6 +133,7 @@ class OrderRefundCalculator
         /** @var OrderDetailRefund $orderDetailRefund */
         foreach ($orderDetailRefunds as $orderDetailRefund) {
             $orderDetailId = $orderDetailRefund->getOrderDetailId();
+            /** @var OrderDetail $orderDetail */
             $orderDetail = $orderDetails[$orderDetailId];
             $quantity = $orderDetailRefund->getProductQuantity();
 
@@ -134,20 +142,25 @@ class OrderRefundCalculator
                 'id_order_detail' => $orderDetailId,
             ];
 
+            // Compute max refund by product (based on quantity and already refunded amount)
+            $productMaxRefund = $isTaxIncluded ? $orderDetail->unit_price_tax_excl : $orderDetail->unit_price_tax_incl;
+            $productMaxRefund *= $quantity;
+            $productSlipResume = OrderSlip::getProductSlipResume($orderDetailId);
+            $productMaxRefund -= $isTaxIncluded ? $productSlipResume['amount_tax_incl'] : $productSlipResume['amount_tax_excl'];
+
+            // If refunded amount is null it means the whole product is refunded (used for standard refund, and return product)
             if (null === $orderDetailRefund->getRefundedAmount()) {
-                $productRefundAmount = $isTaxIncluded ?
-                    $orderDetail->unit_price_tax_excl :
-                    $orderDetail->unit_price_tax_incl;
-                $productRefundAmount *= $quantity;
+                $productRefundAmount = $productMaxRefund;
             } else {
-                $productRefundAmount = $orderDetailRefund->getRefundedAmount();
+                $productRefundAmount = $orderDetailRefund->getRefundedAmount() <= $productMaxRefund ?
+                    $orderDetailRefund->getRefundedAmount() : $productMaxRefund;
             }
 
             $productRefunds[$orderDetailId]['amount'] = $productRefundAmount;
             $productRefunds[$orderDetailId]['unit_price'] =
                 $productRefunds[$orderDetailId]['amount'] / $productRefunds[$orderDetailId]['quantity'];
 
-            // add missing fields
+            // Add missing fields
             $productRefunds[$orderDetailId]['unit_price_tax_excl'] = $orderDetail->unit_price_tax_excl;
             $productRefunds[$orderDetailId]['unit_price_tax_incl'] = $orderDetail->unit_price_tax_incl;
             $productRefunds[$orderDetailId]['total_price_tax_excl'] = $orderDetail->unit_price_tax_excl * $productRefunds[$orderDetailId]['quantity'];

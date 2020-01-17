@@ -113,10 +113,10 @@ Feature: Refund Order from Back Office (BO)
     When I issue a partial refund on "bo_order_refund" with restock without voucher on following products:
       | product_name                | quantity                 | amount |
       | Mug Today is a good day     | 1                        | 8      |
-      | shipping_refund             |                          | 7.5    |
+      | shipping_refund             |                          | 5.5    |
     Then "bo_order_refund" last credit slip is:
       | amount                  | 8.0  |
-      | shipping_cost_amount    | 7.5  |
+      | shipping_cost_amount    | 5.5  |
       | total_products_tax_excl | 8.0  |
       | total_products_tax_incl | 8.0  |
     And order "bo_order_refund" should contain 2 products "Mug The best is yet to come"
@@ -141,13 +141,13 @@ Feature: Refund Order from Back Office (BO)
     When I issue a partial refund on "bo_order_refund" without restock without voucher on following products:
       | product_name                | quantity                 | amount |
       | Mug Today is a good day     | 1                        | 8      |
-      | shipping_refund             |                          | 7.5    |
+      | shipping_refund             |                          | 5.5    |
     # Weird behavior, we are in tax EXCLUDED display, so total_products_tax_excl contains the initial refund
     # amount, and total_products_tax_incl the real one (minus voucher) If we had been in tax INCLUDED display
     # it would have been the opposite
     Then "bo_order_refund" last credit slip is:
       | amount                  | 8.0 |
-      | shipping_cost_amount    | 7.5 |
+      | shipping_cost_amount    | 5.5 |
       | total_products_tax_excl | 8.0 |
       | total_products_tax_incl | 3.0 |
     And order "bo_order_refund" should contain 2 products "Mug The best is yet to come"
@@ -171,10 +171,10 @@ Feature: Refund Order from Back Office (BO)
     When I issue a partial refund on "bo_order_refund" without restock with voucher on following products:
       | product_name                | quantity                 | amount |
       | Mug Today is a good day     | 1                        | 8      |
-      | shipping_refund             |                          | 7.5    |
+      | shipping_refund             |                          | 5.5    |
     Then "bo_order_refund" last credit slip is:
       | amount                  | 8.0 |
-      | shipping_cost_amount    | 7.5 |
+      | shipping_cost_amount    | 5.5 |
       | total_products_tax_excl | 8.0 |
       | total_products_tax_incl | 8.0 |
     And order "bo_order_refund" should contain 2 products "Mug The best is yet to come"
@@ -183,7 +183,35 @@ Feature: Refund Order from Back Office (BO)
     And order "bo_order_refund" should contain 1 refunded products "Mug Today is a good day"
     And there are 0 more "Mug The best is yet to come" in stock
     And there are 0 more "Mug Today is a good day" in stock
-    And customer "testCustomer" has voucher of 15.5
+    And customer "testCustomer" has voucher of 13.5
+
+  @order-refund
+  Scenario: Partial refund of products avoids refunding too much
+    Given I add order "bo_order_refund" with the following details:
+      | cart                | dummy_cart                 |
+      | message             | test                       |
+      | payment module name | dummy_payment              |
+      | status              | Processing in progress     |
+    And order "bo_order_refund" should contain 2 products "Mug The best is yet to come"
+    And order "bo_order_refund" should contain 1 products "Mug Today is a good day"
+    And there are 2 less "Mug The best is yet to come" in stock
+    And there are 1 less "Mug Today is a good day" in stock
+    When I issue a partial refund on "bo_order_refund" without restock without voucher on following products:
+      | product_name                | quantity                 | amount |
+      | Mug The best is yet to come | 1                        | 1024   |
+      | Mug Today is a good day     | 1                        | 1024   |
+      | shipping_refund             |                          | 51     |
+    Then "bo_order_refund" last credit slip is:
+      | amount                  | 23.8 |
+      | shipping_cost_amount    | 7.0  |
+      | total_products_tax_excl | 23.8 |
+      | total_products_tax_incl | 23.8 |
+    And order "bo_order_refund" should contain 2 products "Mug The best is yet to come"
+    And order "bo_order_refund" should contain 1 products "Mug Today is a good day"
+    And order "bo_order_refund" should contain 1 refunded products "Mug The best is yet to come"
+    And order "bo_order_refund" should contain 1 refunded products "Mug Today is a good day"
+    And there are 0 more "Mug The best is yet to come" in stock
+    And there are 0 more "Mug Today is a good day" in stock
 
   @order-refund
   Scenario: Quantity is required
