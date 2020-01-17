@@ -30,6 +30,7 @@ import {EventEmitter} from '@components/event-emitter';
 import OrderProductRenderer from '@pages/order/view/order-product-renderer';
 import OrderPricesRefresher from '@pages/order/view/order-prices-refresher';
 import OrderInvoicesRefresher from './order-invoices-refresher';
+import OrderProductCancel from './order-product-cancel';
 
 const $ = window.$;
 
@@ -39,6 +40,7 @@ export default class OrderViewPage {
     this.orderProductRenderer = new OrderProductRenderer();
     this.orderPricesRefresher = new OrderPricesRefresher();
     this.orderInvoicesRefresher = new OrderInvoicesRefresher();
+    this.orderProductCancel = new OrderProductCancel();
     this.listenToEvents();
   }
 
@@ -207,19 +209,14 @@ export default class OrderViewPage {
   listenForRefund() {
     $(OrderViewPageMap.displayPartialRefundBtn).on('click', () => {
       this.orderProductRenderer.moveProductsPanelToRefundPosition();
-      $(OrderViewPageMap.toggleStandardRefundForm).hide();
-      $(OrderViewPageMap.togglePartialRefundForm).show();
-      $(OrderViewPageMap.actionColumnElements).hide();
+      this.orderProductCancel.showPartialRefund();
     });
 
     $(OrderViewPageMap.displayStandardRefundBtn).on('click', () => {
       this.orderProductRenderer.moveProductsPanelToRefundPosition();
-      $(OrderViewPageMap.togglePartialRefundForm).hide();
-      $(OrderViewPageMap.toggleStandardRefundForm).show();
-      $(OrderViewPageMap.actionColumnElements).hide();
     });
 
-    $(OrderViewPageMap.cancelPartialRefundBtn).on('click', () => {
+    $(OrderViewPageMap.cancelProductAbortBtn).on('click', () => {
       this.orderProductRenderer.moveProductPanelToOriginalPosition();
       $(OrderViewPageMap.togglePartialRefundForm).hide();
       $(OrderViewPageMap.toggleStandardRefundForm).hide();

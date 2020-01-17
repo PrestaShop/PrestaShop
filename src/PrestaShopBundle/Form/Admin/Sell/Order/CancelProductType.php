@@ -38,6 +38,7 @@ class CancelProductType extends TranslatorAwareType
     {
         $products = $options['data']['products'];
         $taxMethod = $options['data']['taxMethod'];
+        $precision = $options['data']['precision'];
 
         foreach ($products as $product) {
             $builder
@@ -56,6 +57,7 @@ class CancelProductType extends TranslatorAwareType
                     'invalid_message' => $this->trans('This field is invalid, it must contain numeric values', 'Admin.Notifications.Error', []),
                     'required' => false,
                     'data' => 0,
+                    'scale' => 0,
                 ])
                 ->add('amount_' . $product->getOrderDetailId(), NumberType::class, [
                     'attr' => ['max' => $product->getTotalPrice(), 'class' => 'refund-amount'],
@@ -66,6 +68,8 @@ class CancelProductType extends TranslatorAwareType
                     ),
                     'invalid_message' => $this->trans('This field is invalid, it must contain numeric values', 'Admin.Notifications.Error', []),
                     'required' => false,
+                    'data' => 0,
+                    'scale' => $precision,
                 ]);
         }
         $builder
@@ -74,6 +78,8 @@ class CancelProductType extends TranslatorAwareType
                     'label' => $this->trans('Shipping', 'Admin.Catalog.Feature', []),
                     'invalid_message' => $this->trans('The "shipping" field must be a valid number', 'Admin.Orderscustomers.Feature', []),
                     'required' => false,
+                    'scale' => $precision,
+                    'data' => 0,
                 ]
             )
             ->add('shipping', CheckboxType::class,
@@ -113,6 +119,8 @@ class CancelProductType extends TranslatorAwareType
                 'attr' => [
                     'class' => 'cancel-product-element save btn btn-primary ml-3',
                     'formnovalidate' => true,
+                    'data-partial-refund-label' => $this->trans('Partial refund', 'Admin.Orderscustomers.Feature'),
+                    'data-standard-refund-label' => $this->trans('Standard refund', 'Admin.Orderscustomers.Feature'),
                 ],
             ]);
     }

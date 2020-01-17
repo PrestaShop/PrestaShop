@@ -216,6 +216,8 @@ admin_orders_partial_refund:
     _legacy_controller: AdminOrders
   requirements:
     orderId: \d+
+  options:
+    expose: true
 
 admin_orders_send_process_order_email:
   path: /process-order-email

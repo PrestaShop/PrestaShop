@@ -24,7 +24,7 @@
  *#}
 
 <tr id="addProductTableRow" class="d-none">
-  <td colspan="2" class="pr-5">
+  <td colspan="2" class="pr-2">
     {{ form_row(addProductRowForm.product_id) }}
     {{ form_row(addProductRowForm.tax_rate) }}
     {{ form_label(addProductRowForm.search) }}
@@ -39,18 +39,18 @@
       <select id="addProductCombinationId" class="custom-select"></select>
     </div>
   </td>
-  <td class="pr-5">
+  <td class="pr-2">
     {{ form_row(addProductRowForm.price_tax_excluded) }}
     {{ form_row(addProductRowForm.price_tax_included) }}
   </td>
-  <td class="pr-5">
+  <td class="pr-2">
     {{ form_row(addProductRowForm.quantity) }}
   </td>
   <td id="addProductLocation"></td>
   <td id="addProductRefunded"></td>
   <td id="addProductAvailable"></td>
   <td id="addProductTotalPrice"></td>
-  <td colspan="2" class="pr-2">
+  <td class="pr-2">
     {% if orderForViewing.hasInvoice() %}
       {{ form_row(addProductRowForm.invoice) }}
     {% endif %}
