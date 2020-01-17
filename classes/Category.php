@@ -1059,7 +1059,7 @@ class CategoryCore extends ObjectModel
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql, true, false);
 
         if (!$result) {
-            return false;
+            return array();
         }
 
         if ($finalOrderBy == 'orderprice') {
