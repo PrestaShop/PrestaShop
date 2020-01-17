@@ -34,12 +34,12 @@
 
     // legacy behavior
     if (typeof window.parent.setupCustomer !== "undefined") {
-      $('#customer', window.parent.document).val('{{ customerEmail }}');
-      window.parent.setupCustomer({{ customerId }});
+      $('#customer', window.parent.document).val('{{ customerEmail|e('js') }}');
+      window.parent.setupCustomer({{ customerId|e('js') }});
     }
     // symfony behavior
     if (typeof window.parent.order_create !== "undefined") {
-      $('#customer-search-input', window.parent.document).val('{{ customerEmail }}');
+      $('#customer-search-input', window.parent.document).val('{{ customerEmail|e('js') }}');
       window.parent.order_create.searchCustomerByString('{{ customerEmail|e('js') }}');
     }
 
