@@ -147,10 +147,10 @@ class ManufacturerController extends FrameworkBundleAdminController
      */
     public function createAction(Request $request)
     {
-        try {
-            $manufacturerForm = $this->getFormBuilder()->getForm();
-            $manufacturerForm->handleRequest($request);
+        $manufacturerForm = $this->getFormBuilder()->getForm();
+        $manufacturerForm->handleRequest($request);
 
+        try {
             $result = $this->getFormHandler()->handle($manufacturerForm);
 
             if (null !== $result->getIdentifiableObjectId()) {
@@ -218,6 +218,9 @@ class ManufacturerController extends FrameworkBundleAdminController
     public function editAction(Request $request, $manufacturerId)
     {
         try {
+            /** @var EditableManufacturer $editableManufacturer */
+            $editableManufacturer = $this->getQueryBus()->handle(new GetManufacturerForEditing((int) $manufacturerId));
+
             $manufacturerForm = $this->getFormBuilder()->getFormFor((int) $manufacturerId);
             $manufacturerForm->handleRequest($request);
 
@@ -230,14 +233,11 @@ class ManufacturerController extends FrameworkBundleAdminController
             }
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
-
-            if ($e instanceof ManufacturerNotFoundException) {
-                return $this->redirectToRoute('admin_manufacturers_index');
-            }
         }
 
-        /** @var EditableManufacturer $editableManufacturer */
-        $editableManufacturer = $this->getQueryBus()->handle(new GetManufacturerForEditing((int) $manufacturerId));
+        if (!isset($editableManufacturer) || !isset($manufacturerForm)) {
+            return $this->redirectToRoute('admin_manufacturers_index');
+        }
 
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Manufacturer/edit.html.twig', [
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
@@ -597,9 +597,6 @@ class ManufacturerController extends FrameworkBundleAdminController
         $addressFormBuilder = $this->getAddressFormBuilder();
         $addressFormHandler = $this->getAddressFormHandler();
 
-        /** @var EditableManufacturerAddress $address */
-        $address = $this->getQueryBus()->handle(new GetManufacturerAddressForEditing($addressId));
-
         $formData = [];
         if ($request->request->has('manufacturer_address') && isset($request->request->get('manufacturer_address')['id_country'])) {
             $formCountryId = (int) $request->request->get('manufacturer_address')['id_country'];
@@ -607,6 +604,8 @@ class ManufacturerController extends FrameworkBundleAdminController
         }
 
         try {
+            /** @var EditableManufacturerAddress $address */
+            $editableAddress = $this->getQueryBus()->handle(new GetManufacturerAddressForEditing($addressId));
             $addressForm = $addressFormBuilder->getFormFor($addressId, $formData);
             $addressForm->handleRequest($request);
 
@@ -620,13 +619,12 @@ class ManufacturerController extends FrameworkBundleAdminController
 
             /** @var EditableManufacturerAddress $editableAddress */
             $editableAddress = $this->getQueryBus()->handle(new GetManufacturerAddressForEditing($addressId));
-        } catch (DomainException $e) {
+        } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+        }
 
-            if ($e instanceof AddressNotFoundException || $e instanceof AddressConstraintException) {
-                return $this->redirectToRoute('admin_manufacturers_index');
-            }
-            $editableAddress = $address;
+        if (!isset($editableAddress) || !isset($addressForm)) {
+            return $this->redirectToRoute('admin_manufacturers_index');
         }
 
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Manufacturer/Address/edit.html.twig', [
