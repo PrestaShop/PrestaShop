@@ -11,7 +11,7 @@ module.exports = class AddAddress extends BOBasePage {
     // Selectors
     this.customerEmailInput = '#customer_address_customer_email';
     this.customerAddressdniInput = '#customer_address_dni';
-    this.customerAddressAliaInput = '#customer_address_alias';
+    this.customerAddressAliasInput = '#customer_address_alias';
     this.customerAddressFirstNameInput = '#customer_address_first_name';
     this.customerLastNameInput = '#customer_address_last_name';
     this.customerAddressCompanyInput = '#customer_address_company';
@@ -39,7 +39,7 @@ module.exports = class AddAddress extends BOBasePage {
   async createEditAddress(addressData, setEmailValue = true) {
     if (setEmailValue) await this.setValue(this.customerEmailInput, addressData.email);
     await this.setValue(this.customerAddressdniInput, addressData.dni);
-    await this.setValue(this.customerAddressAliaInput, addressData.alias);
+    await this.setValue(this.customerAddressAliasInput, addressData.alias);
     await this.setValue(this.customerAddressFirstNameInput, addressData.firstName);
     await this.setValue(this.customerLastNameInput, addressData.lastName);
     await this.setValue(this.customerAddressCompanyInput, addressData.company);
