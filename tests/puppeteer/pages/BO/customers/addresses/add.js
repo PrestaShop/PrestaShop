@@ -27,8 +27,8 @@ module.exports = class AddAddress extends BOBasePage {
   }
 
   /*
-    Methods
-     */
+  Methods
+   */
 
   /**
      * Fill form for add/edit address
