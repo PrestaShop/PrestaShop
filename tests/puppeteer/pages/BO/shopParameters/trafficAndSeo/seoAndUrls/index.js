@@ -6,6 +6,7 @@ module.exports = class SeoAndUrls extends BOBasePage {
     super(page);
 
     this.pageTitle = 'SEO & URLs •';
+    this.successfulUpdateMessage = 'The settings have been successfully updated.';
 
     // Header selectors
     this.addNewSeoPageLink = '#page-header-desc-configuration-add';
@@ -29,6 +30,9 @@ module.exports = class SeoAndUrls extends BOBasePage {
     this.dropdownToggleButton = `${this.actionsColumn} a.dropdown-toggle`;
     this.dropdownToggleMenu = `${this.actionsColumn} div.dropdown-menu`;
     this.deleteRowLink = `${this.dropdownToggleMenu} a[data-url*='/delete']`;
+    // Set up URL form
+    this.switchFriendlyUrlLabel = 'label[for=\'meta_settings_form_set_up_urls_friendly_url_%TOGGLE\']';
+    this.saveSeoAndUrlFormButton = '#main-div form:nth-child(1) div:nth-child(1) div.card-footer button';
   }
 
   /* header methods */
@@ -120,5 +124,16 @@ module.exports = class SeoAndUrls extends BOBasePage {
     await this.setValue(this.filterColumn.replace('%FILTERBY', filterBy), value.toString());
     // click on search
     await this.clickAndWaitForNavigation(this.filterSearchButton);
+  }
+
+  /**
+   * Enable/disable friendly url
+   * @param toEnable, true to enable and false to disable
+   * @return {Promise<string>}
+   */
+  async enableDisableFriendlyURL(toEnable = true) {
+    await this.waitForSelectorAndClick(this.switchFriendlyUrlLabel.replace('%TOGGLE', toEnable ? 1 : 0));
+    await this.clickAndWaitForNavigation(this.saveSeoAndUrlFormButton);
+    return this.getTextContent(this.alertSuccessBloc);
   }
 };
