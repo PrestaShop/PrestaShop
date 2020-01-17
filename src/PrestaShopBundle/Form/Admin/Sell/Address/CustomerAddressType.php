@@ -107,7 +107,7 @@ class CustomerAddressType extends AbstractType
 
         if (!isset($data['id_customer'])) {
             $builder->add('customer_email', EmailType::class, [
-                'label' => $this->translator->trans('Customer email', [],'Admin.Orderscustomers.Feature'),
+                'label' => $this->translator->trans('Customer email', [], 'Admin.Orderscustomers.Feature'),
                 'required' => true,
                 'constraints' => [
                     new NotBlank([
@@ -162,7 +162,7 @@ class CustomerAddressType extends AbstractType
                 ],
             ])
             ->add('alias', TextType::class, [
-                'label' => $this->translator->trans('Address alias', [],'Admin.Orderscustomers.Feature'),
+                'label' => $this->translator->trans('Address alias', [], 'Admin.Orderscustomers.Feature'),
                 'help' => $commonInvalidCharsMessage,
                 'required' => true,
                 'constraints' => [
@@ -188,13 +188,13 @@ class CustomerAddressType extends AbstractType
                 ],
             ])
             ->add('first_name', TextType::class, [
-                'label' => $this->translator->trans('First name', [],'Admin.Global'),
-                'help' => $this->translator->trans('Invalid characters:').self::NAME_INVALID_CHARS,
+                'label' => $this->translator->trans('First name', [], 'Admin.Global'),
+                'help' => $this->translator->trans('Invalid characters:') . self::NAME_INVALID_CHARS,
                 'required' => true,
                 'constraints' => [
                     new NotBlank([
                         'message' => $this->translator->trans(
-                            'This field cannot be empty', [],'Admin.Notifications.Error'
+                            'This field cannot be empty', [], 'Admin.Notifications.Error'
                         ),
                     ]),
                     new CleanHtml(),
@@ -215,7 +215,7 @@ class CustomerAddressType extends AbstractType
             ])
             ->add('last_name', TextType::class, [
                 'label' => $this->translator->trans('Last name', [], 'Admin.Global'),
-                'help' => $this->translator->trans('Invalid characters:').self::NAME_INVALID_CHARS,
+                'help' => $this->translator->trans('Invalid characters:') . self::NAME_INVALID_CHARS,
                 'required' => true,
                 'constraints' => [
                     new NotBlank([
