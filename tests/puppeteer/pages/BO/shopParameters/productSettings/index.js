@@ -18,7 +18,7 @@ module.exports = class productSettings extends BOBasePage {
 
   /*
     Methods
-     */
+  */
 
   /**
      * Enable/disable catalog mode
