@@ -147,7 +147,7 @@ export default class OrderProductRenderer {
     // ... and display good ones
 
     const startRow = ((numPage - 1) * numRowsPerPage) + 1;
-    const endRow = numPage * numRowsPerPage + 1;
+    const endRow = numPage * numRowsPerPage;
     $(OrderViewPageMap.productsTable).find(`tr[id^="orderProduct_"]:nth-child(n+${startRow}):nth-child(-n+${endRow})`)
         .removeClass('d-none');
     // Remove all edition rows (careful not to remove the template)
