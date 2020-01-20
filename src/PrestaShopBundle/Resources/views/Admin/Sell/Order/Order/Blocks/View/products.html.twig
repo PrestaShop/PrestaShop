@@ -250,6 +250,9 @@
             {{ form_widget(cancelProductForm.restock) }}
           </div>
           <div class="form-group">
+            {{ form_widget(cancelProductForm.credit_slip) }}
+          </div>
+          <div class="form-group">
             {{ form_widget(cancelProductForm.voucher) }}
           </div>
           <div class="cancel-product-element form-group shipping-refund{% if orderForViewing.prices.shippingPriceRaw %} hidden{% endif %}">

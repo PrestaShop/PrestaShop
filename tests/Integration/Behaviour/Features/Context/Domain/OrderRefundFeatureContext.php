@@ -45,16 +45,23 @@ use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 class OrderRefundFeatureContext extends AbstractDomainFeatureContext
 {
     /**
-     * @When /^I issue a partial refund on "(.*)" (with|without) restock (with|without) voucher on following products:$/
+     * @When /^I issue a partial refund on "(.*)" (with|without) restock (with|without) credit slip (with|without) voucher on following products:$/
      *
      * @param string $orderReference
      * @param string $restockProducts
+     * @param string $generateCreditSlip
      * @param string $generateVoucher
      * @param TableNode $table
      */
-    public function issuePartialRefundOrder(string $orderReference, $restockProducts, $generateVoucher, TableNode $table)
-    {
+    public function issuePartialRefundOrder(
+        string $orderReference,
+        string $restockProducts,
+        string $generateCreditSlip,
+        string $generateVoucher,
+        TableNode $table
+    ) {
         $restockProducts = 'with' === $restockProducts;
+        $generateCreditSlip = 'with' === $generateCreditSlip;
         $generateVoucher = 'with' === $generateVoucher;
         $orderId = SharedStorage::getStorage()->get($orderReference);
         $refundData = $table->getColumnsHash();
@@ -65,12 +72,35 @@ class OrderRefundFeatureContext extends AbstractDomainFeatureContext
                 $orderId,
                 $refundData,
                 $restockProducts,
+                $generateCreditSlip,
                 $generateVoucher
             );
 
             $this->getCommandBus()->handle($command);
         } catch (OrderException $e) {
             $this->lastException = $e;
+        }
+    }
+
+    /**
+     * @Given :orderReference has :creditSlipNumber credit slips
+     *
+     * @param $orderReference
+     * @param int $creditSlipNumber
+     */
+    public function checkOrderRefundsNumber($orderReference, int $creditSlipNumber)
+    {
+        $orderId = SharedStorage::getStorage()->get($orderReference);
+
+        $order = new Order($orderId);
+        $orderSlips = $order->getOrderSlipsCollection();
+        if ($creditSlipNumber !== $orderSlips->count()) {
+            throw new RuntimeException(sprintf(
+                'Invalid number of credit slips on order %s, expected %s but got %s',
+                $orderReference,
+                $creditSlipNumber,
+                $orderSlips->count()
+            ));
         }
     }
 
@@ -133,6 +163,7 @@ class OrderRefundFeatureContext extends AbstractDomainFeatureContext
         int $orderId,
         array $refunds,
         bool $restockRefundedProducts,
+        bool $generateCreditSlip,
         bool $generateVoucher,
         int $voucherRefundType = VoucherRefundType::PRODUCT_PRICES_EXCLUDING_VOUCHER_REFUND,
         ?float $voucherRefundAmount = null
@@ -165,6 +196,7 @@ class OrderRefundFeatureContext extends AbstractDomainFeatureContext
             $orderDetailsRefunds,
             $shippingCostRefund,
             $restockRefundedProducts,
+            $generateCreditSlip,
             $generateVoucher,
             $voucherRefundType,
             $voucherRefundAmount

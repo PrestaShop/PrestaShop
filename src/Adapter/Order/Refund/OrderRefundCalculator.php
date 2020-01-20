@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Order\Refund;
 
+use Currency;
 use Customer;
 use Group;
 use Order;
@@ -33,6 +34,7 @@ use OrderDetail;
 use OrderSlip;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderDetailRefund;
 use PrestaShop\PrestaShop\Core\Domain\Order\VoucherRefundType;
+use PrestaShop\PrestaShop\Core\Localization\CLDR\ComputingPrecision;
 use PrestaShopDatabaseException;
 use PrestaShopException;
 use Tax;
@@ -52,6 +54,7 @@ class OrderRefundCalculator
         ?float $chosenVoucherAmount
     ): OrderRefundSummary {
         $isTaxIncluded = $this->isTaxIncludedInOrder($order);
+        $precision = $this->getPrecision($order);
 
         $orderDetailList = $this->getOrderTailList($orderDetailRefunds);
         $productRefunds = $this->flattenProductRefunds($orderDetailRefunds, $isTaxIncluded, $orderDetailList);
@@ -94,7 +97,8 @@ class OrderRefundCalculator
             $shippingCostAmount,
             $voucherAmount,
             $voucherChosen,
-            $isTaxIncluded
+            $isTaxIncluded,
+            $precision
         );
     }
 
@@ -198,5 +202,18 @@ class OrderRefundCalculator
         $tax->rate = $taxRate;
 
         return new TaxCalculator([$tax]);
+    }
+
+    /**
+     * @param Order $order
+     *
+     * @return int
+     */
+    private function getPrecision(Order $order) :int
+    {
+        $currency = new Currency($order->id_currency);
+        $computingPrecision = new ComputingPrecision();
+
+        return $computingPrecision->getPrecision($currency->precision);
     }
 }

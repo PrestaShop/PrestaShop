@@ -67,6 +67,7 @@ export default class OrderProductCancel {
     $(OrderViewPageMap.cancelProductSaveBtn).html(actionName);
     $(OrderViewPageMap.cancelProductColumnHeader).html(actionName);
     $(OrderViewPageMap.cancelProductRestockCheckbox).attr('checked', this.orderDelivered);
+    $(OrderViewPageMap.cancelProductCreditSlipCheckbox).attr('checked', true);
   }
 
   listenForInputs() {

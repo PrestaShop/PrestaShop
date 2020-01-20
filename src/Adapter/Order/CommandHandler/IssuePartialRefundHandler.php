@@ -35,6 +35,8 @@ use PrestaShop\PrestaShop\Adapter\Order\Refund\VoucherGenerator;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\IssuePartialRefundCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler\IssuePartialRefundHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\CancelProductFromOrderException;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\EmptyRefundAmountException;
 use Validate;
 
 /**
@@ -95,10 +97,22 @@ final class IssuePartialRefundHandler extends AbstractOrderCommandHandler implem
             $command->getVoucherRefundAmount()
         );
 
-        // Reinject quantity
-        if (!$order->hasBeenDelivered() || $command->restockRefundedProducts()) {
-            foreach ($orderRefundDetail->getProductRefunds() as $orderDetailId => $productRefund) {
-                $this->reinjectQuantity($orderRefundDetail->getOrderDetailById($orderDetailId), $productRefund['quantity']);
+        // Update order details and reinject quantities
+        foreach ($orderRefundDetail->getProductRefunds() as $orderDetailId => $productRefund) {
+            $orderDetail = $orderRefundDetail->getOrderDetailById($orderDetailId);
+            $updateOrderDetail = false;
+            if (!$order->hasBeenDelivered() || $command->restockRefundedProducts()) {
+                $updateOrderDetail = true;
+                $this->reinjectQuantity($orderDetail, $productRefund['quantity']);
+            }
+            if ($order->hasBeenPaid()) {
+                $updateOrderDetail = true;
+                // This was previously done in OrderSlip::create, but it was not consistent and too complicated
+                // Besides this now allows to track refunded products even when credit slip is not generated
+                $orderDetail->product_quantity_refunded += $productRefund['quantity'];
+            }
+            if ($updateOrderDetail && !$orderDetail->update()) {
+                throw new CancelProductFromOrderException('Cannot update order detail');
             }
         }
 
@@ -112,7 +126,9 @@ final class IssuePartialRefundHandler extends AbstractOrderCommandHandler implem
         }
 
         // Create order slip
-        $this->orderSlipCreator->createOrderSlip($order, $orderRefundDetail);
+        if ($command->generateCreditSlip()) {
+            $this->orderSlipCreator->create($order, $orderRefundDetail);
+        }
 
         // Generate voucher if needed
         if ($command->generateVoucher() && $orderRefundDetail->getRefundedAmount() > 0) {

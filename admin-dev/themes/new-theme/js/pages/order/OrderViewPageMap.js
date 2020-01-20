@@ -128,4 +128,5 @@ export default {
   cancelProductTableCell: '.cancel-product-cell',
   cancelProductColumnHeader: 'th.cancel-product-element p',
   cancelProductRestockCheckbox: '#cancel_product_restock',
+  cancelProductCreditSlipCheckbox: '#cancel_product_credit_slip',
 };

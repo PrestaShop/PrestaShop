@@ -100,6 +100,16 @@ class CancelProductType extends TranslatorAwareType
                     ],
                 ]
             )
+            ->add('credit_slip', CheckboxType::class,
+                [
+                    'required' => false,
+                    'label' => $this->trans('Generate a credit slip', 'Admin.Orderscustomers.Feature', []),
+                    'attr' => [
+                        'material_design' => true,
+                    ],
+                    'data' => true,
+                ]
+            )
             ->add('voucher', CheckboxType::class,
                 [
                     'required' => false,
