@@ -207,21 +207,19 @@ export default class OrderViewPage {
   }
 
   listenForRefund() {
-    $(OrderViewPageMap.displayPartialRefundBtn).on('click', () => {
+    $(OrderViewPageMap.cancelProduct.buttons.partialRefund).on('click', () => {
       this.orderProductRenderer.moveProductsPanelToRefundPosition();
       this.orderProductCancel.showPartialRefund();
     });
 
-    $(OrderViewPageMap.displayStandardRefundBtn).on('click', () => {
+    $(OrderViewPageMap.cancelProduct.buttons.standardRefund).on('click', () => {
       this.orderProductRenderer.moveProductsPanelToRefundPosition();
       this.orderProductCancel.showStandardRefund();
     });
 
-    $(OrderViewPageMap.cancelProductAbortBtn).on('click', () => {
+    $(OrderViewPageMap.cancelProduct.buttons.abort).on('click', () => {
       this.orderProductRenderer.moveProductPanelToOriginalPosition();
-      $(OrderViewPageMap.togglePartialRefundForm).hide();
-      $(OrderViewPageMap.toggleStandardRefundForm).hide();
-      $(OrderViewPageMap.actionColumnElements).show();
+      this.orderProductCancel.hideRefund();
     });
   }
 

@@ -44,13 +44,17 @@ Feature: Refund Order from Back Office (BO)
       | total_products_tax_excl | 14.0 |
       | total_products_tax_incl | 14.0 |
     And product "Mug The best is yet to come" in order "bo_order_refund" has following details:
-      | product_quantity            | 2 |
-      | product_quantity_refunded   | 1 |
-      | product_quantity_reinjected | 0 |
+      | product_quantity            | 2    |
+      | product_quantity_refunded   | 1    |
+      | product_quantity_reinjected | 0    |
+      | total_refunded_tax_excl     | 10.5 |
+      | total_refunded_tax_incl     | 10.5 |
     And product "Mug Today is a good day" in order "bo_order_refund" has following details:
-      | product_quantity            | 1 |
-      | product_quantity_refunded   | 1 |
-      | product_quantity_reinjected | 0 |
+      | product_quantity            | 1   |
+      | product_quantity_refunded   | 1   |
+      | product_quantity_reinjected | 0   |
+      | total_refunded_tax_excl     | 3.5 |
+      | total_refunded_tax_incl     | 3.5 |
     And there are 0 more "Mug The best is yet to come" in stock
     And there are 0 more "Mug Today is a good day" in stock
 
@@ -77,13 +81,17 @@ Feature: Refund Order from Back Office (BO)
       | total_products_tax_excl | 7.5  |
       | total_products_tax_incl | 7.5  |
     And product "Mug The best is yet to come" in order "bo_order_refund" has following details:
-      | product_quantity            | 2 |
-      | product_quantity_refunded   | 2 |
-      | product_quantity_reinjected | 2 |
+      | product_quantity            | 2   |
+      | product_quantity_refunded   | 2   |
+      | product_quantity_reinjected | 2   |
+      | total_refunded_tax_excl     | 7.5 |
+      | total_refunded_tax_incl     | 7.5 |
     And product "Mug Today is a good day" in order "bo_order_refund" has following details:
       | product_quantity            | 1 |
       | product_quantity_refunded   | 0 |
       | product_quantity_reinjected | 0 |
+      | total_refunded_tax_excl     | 0 |
+      | total_refunded_tax_incl     | 0 |
     And there are 2 more "Mug The best is yet to come" in stock
     And there are 0 more "Mug Today is a good day" in stock
 
@@ -110,13 +118,17 @@ Feature: Refund Order from Back Office (BO)
       | total_products_tax_excl | 7.5  |
       | total_products_tax_incl | 7.5  |
     And product "Mug The best is yet to come" in order "bo_order_refund" has following details:
-      | product_quantity            | 2 |
-      | product_quantity_refunded   | 2 |
-      | product_quantity_reinjected | 2 |
+      | product_quantity            | 2   |
+      | product_quantity_refunded   | 2   |
+      | product_quantity_reinjected | 2   |
+      | total_refunded_tax_excl     | 7.5 |
+      | total_refunded_tax_incl     | 7.5 |
     And product "Mug Today is a good day" in order "bo_order_refund" has following details:
       | product_quantity            | 1 |
       | product_quantity_refunded   | 0 |
       | product_quantity_reinjected | 0 |
+      | total_refunded_tax_excl     | 0 |
+      | total_refunded_tax_incl     | 0 |
     And there are 2 more "Mug The best is yet to come" in stock
     And there are 0 more "Mug Today is a good day" in stock
 
@@ -147,10 +159,14 @@ Feature: Refund Order from Back Office (BO)
       | product_quantity            | 2 |
       | product_quantity_refunded   | 0 |
       | product_quantity_reinjected | 0 |
+      | total_refunded_tax_excl     | 0 |
+      | total_refunded_tax_incl     | 0 |
     And product "Mug Today is a good day" in order "bo_order_refund" has following details:
-      | product_quantity            | 1 |
-      | product_quantity_refunded   | 1 |
-      | product_quantity_reinjected | 1 |
+      | product_quantity            | 1   |
+      | product_quantity_refunded   | 1   |
+      | product_quantity_reinjected | 1   |
+      | total_refunded_tax_excl     | 8.0 |
+      | total_refunded_tax_incl     | 8.0 |
     And there are 0 more "Mug The best is yet to come" in stock
     And there are 1 more "Mug Today is a good day" in stock
 
@@ -185,10 +201,14 @@ Feature: Refund Order from Back Office (BO)
       | product_quantity            | 2 |
       | product_quantity_refunded   | 0 |
       | product_quantity_reinjected | 0 |
+      | total_refunded_tax_excl     | 0 |
+      | total_refunded_tax_incl     | 0 |
     And product "Mug Today is a good day" in order "bo_order_refund" has following details:
-      | product_quantity            | 1 |
-      | product_quantity_refunded   | 1 |
-      | product_quantity_reinjected | 0 |
+      | product_quantity            | 1   |
+      | product_quantity_refunded   | 1   |
+      | product_quantity_reinjected | 0   |
+      | total_refunded_tax_excl     | 8.0 |
+      | total_refunded_tax_incl     | 8.0 |
     And there are 0 more "Mug The best is yet to come" in stock
     And there are 0 more "Mug Today is a good day" in stock
 
@@ -219,10 +239,14 @@ Feature: Refund Order from Back Office (BO)
       | product_quantity            | 2 |
       | product_quantity_refunded   | 0 |
       | product_quantity_reinjected | 0 |
+      | total_refunded_tax_excl     | 0 |
+      | total_refunded_tax_incl     | 0 |
     And product "Mug Today is a good day" in order "bo_order_refund" has following details:
-      | product_quantity            | 1 |
-      | product_quantity_refunded   | 1 |
-      | product_quantity_reinjected | 0 |
+      | product_quantity            | 1   |
+      | product_quantity_refunded   | 1   |
+      | product_quantity_reinjected | 0   |
+      | total_refunded_tax_excl     | 8.0 |
+      | total_refunded_tax_incl     | 8.0 |
     And there are 0 more "Mug The best is yet to come" in stock
     And there are 0 more "Mug Today is a good day" in stock
     And customer "testCustomer" has voucher of 13.5
@@ -252,13 +276,17 @@ Feature: Refund Order from Back Office (BO)
       | total_products_tax_excl | 23.8 |
       | total_products_tax_incl | 23.8 |
     And product "Mug The best is yet to come" in order "bo_order_refund" has following details:
-      | product_quantity            | 2 |
-      | product_quantity_refunded   | 1 |
-      | product_quantity_reinjected | 0 |
+      | product_quantity            | 2    |
+      | product_quantity_refunded   | 1    |
+      | product_quantity_reinjected | 0    |
+      | total_refunded_tax_excl     | 11.9 |
+      | total_refunded_tax_incl     | 11.9 |
     And product "Mug Today is a good day" in order "bo_order_refund" has following details:
-      | product_quantity            | 1 |
-      | product_quantity_refunded   | 1 |
-      | product_quantity_reinjected | 0 |
+      | product_quantity            | 1    |
+      | product_quantity_refunded   | 1    |
+      | product_quantity_reinjected | 0    |
+      | total_refunded_tax_excl     | 11.9 |
+      | total_refunded_tax_incl     | 11.9 |
     And there are 0 more "Mug The best is yet to come" in stock
     And there are 0 more "Mug Today is a good day" in stock
 
@@ -281,13 +309,17 @@ Feature: Refund Order from Back Office (BO)
       | Mug Today is a good day     | 1                        | 3.5    |
     Then "bo_order_refund" has 0 credit slips
     And product "Mug The best is yet to come" in order "bo_order_refund" has following details:
-      | product_quantity            | 2 |
-      | product_quantity_refunded   | 1 |
-      | product_quantity_reinjected | 1 |
+      | product_quantity            | 2    |
+      | product_quantity_refunded   | 1    |
+      | product_quantity_reinjected | 1    |
+      | total_refunded_tax_excl     | 10.5 |
+      | total_refunded_tax_incl     | 10.5 |
     And product "Mug Today is a good day" in order "bo_order_refund" has following details:
-      | product_quantity            | 1 |
-      | product_quantity_refunded   | 1 |
-      | product_quantity_reinjected | 1 |
+      | product_quantity            | 1   |
+      | product_quantity_refunded   | 1   |
+      | product_quantity_reinjected | 1   |
+      | total_refunded_tax_excl     | 3.5 |
+      | total_refunded_tax_incl     | 3.5 |
     And there are 1 more "Mug The best is yet to come" in stock
     And there are 1 more "Mug Today is a good day" in stock
 

@@ -33,8 +33,6 @@ use PHPUnit\Framework\Assert as Assert;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\IssuePartialRefundCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidRefundAmountException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidRefundQuantityException;
-use PrestaShop\PrestaShop\Core\Domain\Order\Exception\EmptyRefundAmountException;
-use PrestaShop\PrestaShop\Core\Domain\Order\Exception\EmptyRefundQuantityException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderForViewing;
@@ -97,12 +95,7 @@ class OrderRefundFeatureContext extends AbstractDomainFeatureContext
         $order = new Order($orderId);
         $orderSlips = $order->getOrderSlipsCollection();
         if ($creditSlipNumber !== $orderSlips->count()) {
-            throw new RuntimeException(sprintf(
-                'Invalid number of credit slips on order %s, expected %s but got %s',
-                $orderReference,
-                $creditSlipNumber,
-                $orderSlips->count()
-            ));
+            throw new RuntimeException(sprintf('Invalid number of credit slips on order %s, expected %s but got %s', $orderReference, $creditSlipNumber, $orderSlips->count()));
         }
     }
 
@@ -150,11 +143,7 @@ class OrderRefundFeatureContext extends AbstractDomainFeatureContext
     {
         $this->assertLastErrorIs(InvalidRefundQuantityException::class, InvalidRefundQuantityException::QUANTITY_TOO_HIGH);
         if ($maxRefund !== $this->lastException->getRefundableQuantity()) {
-            throw new RuntimeException(sprintf(
-                'Invalid refundable quantity in exception, expected %s but got %s',
-                $maxRefund,
-                $this->lastException->getRefundableQuantity()
-            ));
+            throw new RuntimeException(sprintf('Invalid refundable quantity in exception, expected %s but got %s', $maxRefund, $this->lastException->getRefundableQuantity()));
         }
     }
 

@@ -114,19 +114,31 @@ export default {
   orderTaxesTotal: '#orderTaxesTotal',
   orderTotal: '#orderTotal',
   orderHookTabsContainer: '#order_hook_tabs',
-  actionColumnElements: 'td.cellProductActions, th.product_actions',
   // Product cancel/refund elements
-  togglePartialRefundForm: '.cancel-product-element:not(.hidden):not(.shipping-refund), .cancel-product-amount',
-  toggleStandardRefundForm: '.cancel-product-element:not(.hidden):not(.shipping-refund), .cancel-product-selector',
-  displayPartialRefundBtn: 'button.partial-refund-display',
-  displayStandardRefundBtn: 'button.standard-refund-display',
-  cancelProductForm: 'form[name="cancel_product"]',
-  cancelProductAbortBtn: 'button.cancel-product-element-abort',
-  cancelProductSaveBtn: '#cancel_product_save',
-  cancelProductQuantityInput: '.cancel-product-quantity input',
-  cancelProductAmountInput: '.cancel-product-amount input',
-  cancelProductTableCell: '.cancel-product-cell',
-  cancelProductColumnHeader: 'th.cancel-product-element p',
-  cancelProductRestockCheckbox: '#cancel_product_restock',
-  cancelProductCreditSlipCheckbox: '#cancel_product_credit_slip',
+  cancelProduct: {
+    form: 'form[name="cancel_product"]',
+    buttons: {
+      abort: 'button.cancel-product-element-abort',
+      save: '#cancel_product_save',
+      partialRefund: 'button.partial-refund-display',
+      standardRefund: 'button.standard-refund-display',
+    },
+    inputs: {
+      quantity: '.cancel-product-quantity input',
+      amount: '.cancel-product-amount input',
+    },
+    table: {
+      cell: '.cancel-product-cell',
+      header: 'th.cancel-product-element p',
+      actions: 'td.cellProductActions, th.product_actions',
+    },
+    checkboxes: {
+      restock: '#cancel_product_restock',
+      creditSlip: '#cancel_product_credit_slip',
+    },
+    toggle: {
+      partialRefund: '.cancel-product-element:not(.hidden):not(.shipping-refund), .cancel-product-amount',
+      standardRefund: '.cancel-product-element:not(.hidden):not(.shipping-refund), .cancel-product-selector',
+    },
+  },
 };
