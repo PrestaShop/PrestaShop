@@ -203,6 +203,7 @@ class OrderSlipCreator
         if ($shipping_cost > 0) {
             $order_slip->shipping_cost = true;
             $carrier = new Carrier((int) $order->id_carrier);
+            // @todo: define if we use invoice or delivery address, or we use configuration PS_TAX_ADDRESS_TYPE
             $address = Address::initialize($order->id_address_delivery, false);
             $tax_calculator = $carrier->getTaxCalculator($address);
             $order_slip->{'total_shipping_tax_' . $inc_or_ex_1} = $shipping_cost;
@@ -224,15 +225,8 @@ class OrderSlipCreator
             $order_detail = new OrderDetail((int) $product['id_order_detail']);
             $price = (float) $product['unit_price'];
             $quantity = (int) $product['quantity'];
-            $order_slip_resume = OrderSlip::getProductSlipResume((int) $order_detail->id);
-            if ($quantity + $order_slip_resume['product_quantity'] > $order_detail->product_quantity) {
-                $quantity = $order_detail->product_quantity - $order_slip_resume['product_quantity'];
-            }
 
-            if ($quantity == 0) {
-                continue;
-            }
-
+            // @todo: define if we use invoice or delivery address, or we use configuration PS_TAX_ADDRESS_TYPE
             $address = Address::initialize($order->id_address_invoice, false);
             $id_address = (int) $address->id;
             $id_tax_rules_group = Product::getIdTaxRulesGroupByIdProduct((int) $order_detail->product_id);

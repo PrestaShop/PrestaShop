@@ -112,6 +112,9 @@ final class IssuePartialRefundHandler extends AbstractOrderCommandHandler implem
                 // on the order status (delivered or not) But this method could not be used as it can fail when
                 // merchandising return is disabled
                 $orderDetail->product_quantity_refunded += $productRefund['quantity'];
+                $orderDetail->total_refunded_tax_excl = $productRefund['total_refunded_tax_excl'];
+                $orderDetail->total_refunded_tax_incl = $productRefund['total_refunded_tax_incl'];
+
                 if (!$orderDetail->update()) {
                     throw new CancelProductFromOrderException('Cannot update order detail');
                 }

@@ -183,6 +183,7 @@ class OrderSlipCore extends ObjectModel
      * Get resume of all refund for one product line.
      *
      * @param $id_order_detail
+     * @deprecated This method should not be used any more because sometimes OrderSlip is not created, you should use the OrderDetail::total_refunded_tax_excl/incl fields instead
      */
     public static function getProductSlipResume($id_order_detail)
     {
