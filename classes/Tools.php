@@ -647,14 +647,19 @@ class ToolsCore
 
     public static function getCountry($address = null)
     {
-        $req_id_country = Tools::getValue('id_country');
-        if (Validate::isInt($req_id_country) && (int) $req_id_country > 0 && !empty(Country::getIsoById((int) $req_id_country))) {
-            return (int) $req_id_country;
-        } elseif ($address !== null && (int) $address->id_country > 0) {
-            return (int) $address->id_country;
-        } else {
-            return (int) Configuration::get('PS_COUNTRY_DEFAULT');
+        $reqIdCountry = Tools::getValue('id_country');
+        if (Validate::isInt($reqIdCountry)
+            && (int) $reqIdCountry > 0
+            && !empty(Country::getIsoById((int) $reqIdCountry))
+        ) {
+            return (int) $reqIdCountry;
         }
+
+        if (!empty($address->id_country) && (int) $address->id_country > 0) {
+            return (int) $address->id_country;
+        }
+
+        return (int) Configuration::get('PS_COUNTRY_DEFAULT');
     }
 
     /**
