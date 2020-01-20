@@ -783,29 +783,31 @@ class OrderController extends FrameworkBundleAdminController
         ]);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $data = $form->getData();
+        if ($form->isSubmitted()) {
+            if ($form->isValid()) {
+                $data = $form->getData();
 
-            try {
-                $this->getCommandBus()->handle(
-                    new AddPaymentCommand(
-                        $orderId,
-                        $data['date'],
-                        $data['payment_method'],
-                        $data['amount'],
-                        $data['id_currency'],
-                        $data['id_invoice'],
-                        $data['transaction_id']
-                    )
-                );
+                try {
+                    $this->getCommandBus()->handle(
+                        new AddPaymentCommand(
+                            $orderId,
+                            $data['date'],
+                            $data['payment_method'],
+                            $data['amount'],
+                            $data['id_currency'],
+                            $data['id_invoice'],
+                            $data['transaction_id']
+                        )
+                    );
 
-                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
-            } catch (Exception $e) {
-                $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
-            }
-        } elseif (!$form->isValid()) {
-            foreach ($form->getErrors(true) as $error) {
-                $this->addFlash('error', $error->getMessage());
+                    $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+                } catch (Exception $e) {
+                    $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+                }
+            } else {
+                foreach ($form->getErrors(true) as $error) {
+                    $this->addFlash('error', $error->getMessage());
+                }
             }
         }
 
