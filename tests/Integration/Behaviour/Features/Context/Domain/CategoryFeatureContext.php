@@ -29,7 +29,6 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain;
 use Behat\Gherkin\Node\TableNode;
 use Configuration;
 use PHPUnit\Framework\Assert as Assert;
-use PHPUnit_Framework_Assert;
 use PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\CategoryTreeChoiceProvider;
 use PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\GroupByIdChoiceProvider;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\AddCategoryCommand;
@@ -321,7 +320,7 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
     {
         $editableCategory = $this->getEditableCategory($categoryReference);
         $coverImage = $editableCategory->getCoverImage();
-        PHPUnit_Framework_Assert::assertNotNull($coverImage);
+        ASSERT::assertNotNull($coverImage);
     }
 
     /**
@@ -333,7 +332,7 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
     {
         $editableCategory = $this->getEditableCategory($categoryReference);
         $coverImage = $editableCategory->getCoverImage();
-        PHPUnit_Framework_Assert::assertNull($coverImage);
+        ASSERT::assertNull($coverImage);
     }
 
     /**
@@ -345,7 +344,7 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
     {
         $editableCategory = $this->getEditableCategory($categoryReference);
         $menuThumbnailImages = $editableCategory->getMenuThumbnailImages();
-        PHPUnit_Framework_Assert::assertCount(1, $menuThumbnailImages);
+        ASSERT::assertCount(1, $menuThumbnailImages);
     }
 
     /**
@@ -374,7 +373,7 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
     {
         $editableCategory = $this->getEditableCategory($categoryReference);
         $menuThumbnailImages = $editableCategory->getMenuThumbnailImages();
-        PHPUnit_Framework_Assert::assertCount(0, $menuThumbnailImages);
+        ASSERT::assertCount(0, $menuThumbnailImages);
     }
 
     /**
@@ -385,7 +384,7 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
     public function categoryIsDisabled(string $categoryReference)
     {
         $categoryIsEnabled = $this->getCategoryIsEnabled($categoryReference);
-        PHPUnit_Framework_Assert::assertFalse($categoryIsEnabled);
+        ASSERT::assertFalse($categoryIsEnabled);
     }
 
     /**
@@ -424,7 +423,7 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
     public function categoryIsEnabled(string $categoryReference)
     {
         $categoryIsEnabled = $this->getCategoryIsEnabled($categoryReference);
-        PHPUnit_Framework_Assert::assertTrue($categoryIsEnabled);
+        ASSERT::assertTrue($categoryIsEnabled);
     }
 
     /**
