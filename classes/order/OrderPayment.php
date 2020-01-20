@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -46,7 +46,7 @@ class OrderPaymentCore extends ObjectModel
         'fields' => array(
             'order_reference' => array('type' => self::TYPE_STRING, 'validate' => 'isAnything', 'size' => 9),
             'id_currency' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-            'amount' => array('type' => self::TYPE_FLOAT, 'validate' => 'isNegativePrice', 'required' => true),
+            'amount' => array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice', 'required' => true),
             'payment_method' => array('type' => self::TYPE_STRING, 'validate' => 'isGenericName'),
             'conversion_rate' => array('type' => self::TYPE_FLOAT, 'validate' => 'isFloat'),
             'transaction_id' => array('type' => self::TYPE_STRING, 'validate' => 'isAnything', 'size' => 254),
