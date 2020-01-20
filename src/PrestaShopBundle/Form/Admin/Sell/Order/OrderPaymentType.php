@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -34,9 +34,16 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Component\Validator\Constraints\GreaterThan;
 
 class OrderPaymentType extends AbstractType
 {
+    /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
     /**
      * @var ConfigurableFormChoiceProviderInterface
      */
@@ -70,12 +77,14 @@ class OrderPaymentType extends AbstractType
      * @param int $contextShopId
      */
     public function __construct(
+        TranslatorInterface $translator,
         ConfigurableFormChoiceProviderInterface $currencySymbolByIdChoiceProvider,
         ConfigurableFormChoiceProviderInterface $orderInvoiceChoiceProvider,
         FormChoiceProviderInterface $installedPaymentModulesChoiceProvider,
         int $contextLanguageId,
         int $contextShopId
     ) {
+        $this->translator = $translator;
         $this->currencySymbolByIdChoiceProvider = $currencySymbolByIdChoiceProvider;
         $this->orderInvoiceChoiceProvider = $orderInvoiceChoiceProvider;
         $this->contextLanguageId = $contextLanguageId;
@@ -98,7 +107,16 @@ class OrderPaymentType extends AbstractType
             ->add('transaction_id', TextType::class, [
                 'required' => false,
             ])
-            ->add('amount', TextType::class)
+            ->add('amount', TextType::class, [
+                'constraints' => [
+                    new GreaterThan([
+                        'value' => 0,
+                        'message' => $this->translator->trans(
+                            'The amount should be greater than 0.', [], 'Admin.Notifications.Error'
+                        ),
+                    ]),
+                ],
+            ])
             ->add('id_currency', ChoiceType::class, [
                 'choices' => $this->currencySymbolByIdChoiceProvider->getChoices([
                     'id_shop' => $this->contextShopId,
