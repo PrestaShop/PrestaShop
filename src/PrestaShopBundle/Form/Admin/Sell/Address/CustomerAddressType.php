@@ -33,6 +33,7 @@ use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CleanHtml;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\ExistingCustomerEmail;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\NotBlankWhenRequired;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
+use PrestaShop\PrestaShop\Core\ConstraintValidator\TypedRegexValidator;
 use PrestaShop\PrestaShop\Core\Domain\Address\Configuration\AddressConstraint;
 use PrestaShop\PrestaShop\Core\Domain\Address\ValueObject\RequiredFields;
 use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
@@ -56,8 +57,6 @@ use Symfony\Component\Validator\Constraints\NotBlank;
  */
 class CustomerAddressType extends AbstractType
 {
-    private const COMMON_INVALID_CHARS = ' <>;=#{}';
-    private const NAME_INVALID_CHARS = ' 0-9!<>,;?=+()@#"�{}_$%:';
     /**
      * @var TranslatorInterface
      */
@@ -102,8 +101,12 @@ class CustomerAddressType extends AbstractType
         $data = $builder->getData();
         $requiredFields = $data['required_fields'];
         $countryId = 0 !== $data['id_country'] ? $data['id_country'] : $this->contextCountryId;
-
-        $commonInvalidCharsMessage = $this->translator->trans('Invalid characters:', [], 'Admin.Notifications.Info') . self::COMMON_INVALID_CHARS;
+        $invalidCharsTrans = $this->translator->trans('Invalid characters: ', [], 'Admin.Notifications.Info');
+        $genericInvalidCharsMessage = sprintf(
+            '%s%s',
+            $invalidCharsTrans,
+            TypedRegexValidator::GENERIC_NAME_CHARS
+        );
 
         if (!isset($data['id_customer'])) {
             $builder->add('customer_email', EmailType::class, [
@@ -163,7 +166,7 @@ class CustomerAddressType extends AbstractType
             ])
             ->add('alias', TextType::class, [
                 'label' => $this->translator->trans('Address alias', [], 'Admin.Orderscustomers.Feature'),
-                'help' => $commonInvalidCharsMessage,
+                'help' => $genericInvalidCharsMessage,
                 'required' => true,
                 'constraints' => [
                     new NotBlank([
@@ -189,7 +192,7 @@ class CustomerAddressType extends AbstractType
             ])
             ->add('first_name', TextType::class, [
                 'label' => $this->translator->trans('First name', [], 'Admin.Global'),
-                'help' => $this->translator->trans('Invalid characters:') . self::NAME_INVALID_CHARS,
+                'help' => $this->translator->trans('Invalid characters:') . TypedRegexValidator::NAME_CHARS,
                 'required' => true,
                 'constraints' => [
                     new NotBlank([
@@ -215,7 +218,7 @@ class CustomerAddressType extends AbstractType
             ])
             ->add('last_name', TextType::class, [
                 'label' => $this->translator->trans('Last name', [], 'Admin.Global'),
-                'help' => $this->translator->trans('Invalid characters:') . self::NAME_INVALID_CHARS,
+                'help' => $this->translator->trans('Invalid characters:') . TypedRegexValidator::NAME_CHARS,
                 'required' => true,
                 'constraints' => [
                     new NotBlank([
@@ -241,7 +244,7 @@ class CustomerAddressType extends AbstractType
             ])
             ->add('company', TextType::class, [
                 'label' => $this->translator->trans('Company', [], 'Admin.Global'),
-                'help' => $commonInvalidCharsMessage,
+                'help' => $genericInvalidCharsMessage,
                 'required' => $this->isRequired(RequiredFields::REQUIRED_FIELD_COMPANY, $requiredFields),
                 'empty_data' => '',
                 'constraints' => [
@@ -482,7 +485,7 @@ class CustomerAddressType extends AbstractType
         $builder
             ->add('other', TextareaType::class, [
                 'label' => $this->translator->trans('Other', [], 'Admin.Global'),
-                'help' => $commonInvalidCharsMessage,
+                'help' => $invalidCharsTrans . TypedRegexValidator::MESSAGE_CHARS,
                 'required' => $this->isRequired(RequiredFields::REQUIRED_FIELD_OTHER, $requiredFields),
                 'empty_data' => '',
                 'constraints' => [
