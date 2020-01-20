@@ -100,19 +100,21 @@ final class IssuePartialRefundHandler extends AbstractOrderCommandHandler implem
         // Update order details and reinject quantities
         foreach ($orderRefundDetail->getProductRefunds() as $orderDetailId => $productRefund) {
             $orderDetail = $orderRefundDetail->getOrderDetailById($orderDetailId);
-            $updateOrderDetail = false;
             if (!$order->hasBeenDelivered() || $command->restockRefundedProducts()) {
-                $updateOrderDetail = true;
                 $this->reinjectQuantity($orderDetail, $productRefund['quantity']);
             }
+
+            // This was previously done in OrderSlip::create, but it was not consistent and too complicated
+            // Besides this now allows to track refunded products even when credit slip is not generated
             if ($order->hasBeenPaid()) {
-                $updateOrderDetail = true;
-                // This was previously done in OrderSlip::create, but it was not consistent and too complicated
-                // Besides this now allows to track refunded products even when credit slip is not generated
+                // It appears partial refund only manages product_quantity_refunded when Order::deleteProduct
+                // makes a distinction between product_quantity_refunded and product_quantity_returned depending
+                // on the order status (delivered or not) But this method could not be used as it can fail when
+                // merchandising return is disabled
                 $orderDetail->product_quantity_refunded += $productRefund['quantity'];
-            }
-            if ($updateOrderDetail && !$orderDetail->update()) {
-                throw new CancelProductFromOrderException('Cannot update order detail');
+                if (!$orderDetail->update()) {
+                    throw new CancelProductFromOrderException('Cannot update order detail');
+                }
             }
         }
 

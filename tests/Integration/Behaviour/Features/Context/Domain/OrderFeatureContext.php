@@ -31,6 +31,7 @@ use Behat\Gherkin\Node\TableNode;
 use Cart;
 use Context;
 use FrontController;
+use Order;
 use OrderState;
 use PHPUnit\Framework\Assert as Assert;
 use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\CartId;
@@ -448,6 +449,51 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
         }
 
         throw new RuntimeException(sprintf('Order was expected to have "%d" refunded products "%s" in it. Instead got "%s"', $quantity, $productName, $productQuantities['refunded_quantity']));
+    }
+
+    /**
+     * @Then product :productName in order :orderReference has following details:
+     *
+     * @param string $orderReference
+     * @param string $productName
+     */
+    public function checkProductDetailsWithReference(string $orderReference, string $productName, TableNode $table)
+    {
+        $productId = (int) $this->getProductIdByName($productName);
+        $order = new Order(SharedStorage::getStorage()->get($orderReference));
+        $orderDetails = $order->getProducts();
+        $productOrderDetail = null;
+        foreach ($orderDetails as $orderDetail) {
+            if ((int) $orderDetail['product_id'] == $productId) {
+                $productOrderDetail = $orderDetail;
+                break;
+            }
+        }
+
+        if (null === $productOrderDetail) {
+            throw new RuntimeException(
+                sprintf(
+                    'Cannot find product details for product %s in order %s',
+                    $productName,
+                    $orderReference
+                )
+            );
+        }
+
+        $expectedDetails = $table->getRowsHash();
+        foreach ($expectedDetails as $detailName => $detailValue) {
+            Assert::assertEquals(
+                $detailValue,
+                $productOrderDetail[$detailName],
+                sprintf(
+                    'Invalid product detail field %s for product %s, expected %s instead of %s',
+                    $detailName,
+                    $productName,
+                    $detailValue,
+                    $productOrderDetail[$detailName]
+                )
+            );
+        }
     }
 
     /**
