@@ -156,8 +156,9 @@ class CustomerFeatureContext extends AbstractDomainFeatureContext
             (isset($data['birthday']) ? $data['birthday'] : null)
         );
 
-        /** @var CustomerId $id */
-        $id = $commandBus->handle($command);
-        SharedStorage::getStorage()->set($customerReference, $id->getValue());
+        /** @var CustomerId $customerIdObject */
+        $customerIdObject = $commandBus->handle($command);
+        // still legacy customer dependency; customer is still linked with other legacy dependant scenarios
+        SharedStorage::getStorage()->set($customerReference, new Customer($customerIdObject->getValue()));
     }
 }
