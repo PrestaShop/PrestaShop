@@ -41,6 +41,10 @@ use Symfony\Component\Validator\Exception\UnexpectedTypeException;
  */
 class TypedRegexValidator extends ConstraintValidator
 {
+    const GENERIC_NAME_CHARS = '<>={}';
+    const MESSAGE_CHARS = '<>{}';
+    const NAME_CHARS = '0-9!<>,;?=+()@#"°{}_$%:¤|';
+
     /**
      * @var CharacterCleaner
      */
@@ -89,18 +93,20 @@ class TypedRegexValidator extends ConstraintValidator
      * @param string $type
      *
      * @return string
+     *
+     * @throws InvalidArgumentException
      */
     private function getPattern($type)
     {
         $typePatterns = [
-            TypedRegex::TYPE_NAME => $this->characterCleaner->cleanNonUnicodeSupport('/^[^0-9!<>,;?=+()@#"°{}_$%:¤|]*$/u'),
+            TypedRegex::TYPE_NAME => $this->characterCleaner->cleanNonUnicodeSupport('/^[^' . self::NAME_CHARS . ']*$/u'),
             TypedRegex::TYPE_CATALOG_NAME => $this->characterCleaner->cleanNonUnicodeSupport('/^[^<>;=#{}]*$/u'),
-            TypedRegex::TYPE_GENERIC_NAME => $this->characterCleaner->cleanNonUnicodeSupport('/^[^<>={}]*$/u'),
+            TypedRegex::TYPE_GENERIC_NAME => $this->characterCleaner->cleanNonUnicodeSupport('/^[^' . self::GENERIC_NAME_CHARS . ']*$/u'),
             TypedRegex::TYPE_CITY_NAME => $this->characterCleaner->cleanNonUnicodeSupport('/^[^!<>;?=+@#"°{}_$%]*$/u'),
             TypedRegex::TYPE_ADDRESS => $this->characterCleaner->cleanNonUnicodeSupport('/^[^!<>?=+@{}_$%]*$/u'),
             TypedRegex::TYPE_POST_CODE => '/^[a-zA-Z 0-9-]+$/',
             TypedRegex::TYPE_PHONE_NUMBER => '/^[+0-9. ()\/-]*$/',
-            TypedRegex::TYPE_MESSAGE => '/[<>{}]/i',
+            TypedRegex::TYPE_MESSAGE => '/[' . self::MESSAGE_CHARS . ']/i',
             TypedRegex::TYPE_LANGUAGE_ISO_CODE => IsoCode::PATTERN,
             TypedRegex::TYPE_LANGUAGE_CODE => '/^[a-zA-Z]{2}(-[a-zA-Z]{2})?$/',
             TypedRegex::TYPE_CURRENCY_ISO_CODE => AlphaIsoCode::PATTERN,
