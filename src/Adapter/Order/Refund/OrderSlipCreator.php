@@ -38,6 +38,8 @@ use Order;
 use OrderDetail;
 use OrderSlip;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidRefundAmountException;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\EmptyRefundAmountException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShopDatabaseException;
@@ -80,7 +82,7 @@ class OrderSlipCreator
      * @param Order $order
      * @param OrderRefundSummary $orderRefundSummary
      *
-     * @throws EmptyRefundAmountException
+     * @throws InvalidRefundAmountException
      * @throws OrderException
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
@@ -153,7 +155,7 @@ class OrderSlipCreator
                 }
             }
         } else {
-            throw new EmptyRefundAmountException();
+            throw new InvalidRefundAmountException();
         }
     }
 

@@ -31,6 +31,8 @@ use Order;
 use OrderSlip;
 use PHPUnit\Framework\Assert as Assert;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\IssuePartialRefundCommand;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidRefundAmountException;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidRefundQuantityException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\EmptyRefundAmountException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\EmptyRefundQuantityException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
@@ -138,15 +140,30 @@ class OrderRefundFeatureContext extends AbstractDomainFeatureContext
      */
     public function assertLastErrorIsEmptyRefundQuantity()
     {
-        $this->assertLastErrorIs(EmptyRefundQuantityException::class);
+        $this->assertLastErrorIs(InvalidRefundQuantityException::class, InvalidRefundQuantityException::EMPTY_QUANTITY);
     }
 
     /**
-     * @Then I should get error that refund amount is empty
+     * @Then I should get error that refund quantity is too high and max is :maxRefund
      */
-    public function assertLastErrorIsEmptyRefundAmount()
+    public function assertLastErrorIsRefundQuantityTooHigh(int $maxRefund)
     {
-        $this->assertLastErrorIs(EmptyRefundAmountException::class);
+        $this->assertLastErrorIs(InvalidRefundQuantityException::class, InvalidRefundQuantityException::QUANTITY_TOO_HIGH);
+        if ($maxRefund !== $this->lastException->getRefundableQuantity()) {
+            throw new RuntimeException(sprintf(
+                'Invalid refundable quantity in exception, expected %s but got %s',
+                $maxRefund,
+                $this->lastException->getRefundableQuantity()
+            ));
+        }
+    }
+
+    /**
+     * @Then I should get error that refund amount is invalid
+     */
+    public function assertLastErrorIsInvalidRefundAmount()
+    {
+        $this->assertLastErrorIs(InvalidRefundAmountException::class);
     }
 
     /**

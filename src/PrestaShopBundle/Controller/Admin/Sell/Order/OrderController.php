@@ -47,6 +47,8 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Exception\CannotEditDeliveredOrderPr
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\ChangeOrderStatusException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\EmptyRefundAmountException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\EmptyRefundQuantityException;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidRefundQuantityException;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidRefundAmountException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderEmailSendException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderNotFoundException;
@@ -1214,12 +1216,19 @@ class OrderController extends FrameworkBundleAdminController
                 $e->getMessage(),
                 'Admin.Orderscustomers.Notification'
             ),
-            EmptyRefundQuantityException::class => $this->trans(
-                'Please enter a quantity to proceed with your refund.',
-                'Admin.Orderscustomers.Notification'
-            ),
-            EmptyRefundAmountException::class => $this->trans(
-                'Please enter an amount to proceed with your refund.',
+            InvalidRefundQuantityException::class => [
+                InvalidRefundQuantityException::EMPTY_QUANTITY => $this->trans(
+                    'Please enter a positive quantity to proceed with your refund.',
+                    'Admin.Orderscustomers.Notification'
+                ),
+                InvalidRefundQuantityException::QUANTITY_TOO_HIGH => $this->trans(
+                    'Please enter a maximum quantity of [1] to proceed with your refund.',
+                    'Admin.Orderscustomers.Notification',
+                    ['[1]' => $e->getRefundableQuantity()]
+                ),
+            ],
+            InvalidRefundAmountException::class => $this->trans(
+                'Please enter a positive amount to proceed with your refund.',
                 'Admin.Orderscustomers.Notification'
             ),
             ProductOutOfStockException::class => $this->trans(

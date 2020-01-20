@@ -27,8 +27,8 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Order\Exception;
 
 /**
- * EmptyAmountQuantityException
+ * Thrown when the refund amount is not strictly positive
  */
-class EmptyRefundAmountException extends OrderException
+class InvalidRefundAmountException extends OrderException
 {
 }

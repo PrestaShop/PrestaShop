@@ -26,7 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Order\Command;
 
-use PrestaShop\PrestaShop\Core\Domain\Order\Exception\EmptyRefundAmountException;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidRefundAmountException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderDetailRefund;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
@@ -86,7 +86,7 @@ class IssuePartialRefundCommand
      * @param int $voucherRefundType
      * @param float|null $voucherRefundAmount
      *
-     * @throws EmptyRefundAmountException
+     * @throws InvalidRefundAmountException
      * @throws OrderException
      */
     public function __construct(

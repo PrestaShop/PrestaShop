@@ -26,9 +26,45 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Order\Exception;
 
+use Throwable;
+
 /**
  * Throw new when a partial refund's is asked without a specified quantity
  */
-class EmptyRefundQuantityException extends OrderException
+class InvalidRefundQuantityException extends OrderException
 {
+    /**
+     * @var int
+     */
+    private $refundableQuantity;
+
+    /**
+     * Used when the quantity refunded is not strictly positive
+     */
+    const EMPTY_QUANTITY = 1;
+
+    /**
+     * Use when the quantity refunded is higher than the remaining quantity
+     */
+    const QUANTITY_TOO_HIGH = 2;
+
+    /**
+     * @param int $code
+     * @param int $refundableQuantity
+     * @param string $message
+     * @param Throwable|null $previous
+     */
+    public function __construct($code = 0, int $refundableQuantity = 0, $message = "", Throwable $previous = null)
+    {
+        parent::__construct($message, $code, $previous);
+        $this->refundableQuantity = $refundableQuantity;
+    }
+
+    /**
+     * @return int
+     */
+    public function getRefundableQuantity() :int
+    {
+        return $this->refundableQuantity;
+    }
 }

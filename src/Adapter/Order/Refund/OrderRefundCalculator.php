@@ -32,6 +32,7 @@ use Group;
 use Order;
 use OrderDetail;
 use OrderSlip;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidRefundQuantityException;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderDetailRefund;
 use PrestaShop\PrestaShop\Core\Domain\Order\VoucherRefundType;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\ComputingPrecision;
@@ -56,8 +57,8 @@ class OrderRefundCalculator
         $isTaxIncluded = $this->isTaxIncludedInOrder($order);
         $precision = $this->getPrecision($order);
 
-        $orderDetailList = $this->getOrderTailList($orderDetailRefunds);
-        $productRefunds = $this->flattenProductRefunds($orderDetailRefunds, $isTaxIncluded, $orderDetailList);
+        $orderDetailList = $this->getOrderDetailList($orderDetailRefunds);
+        $productRefunds = $this->flattenCheckedProductRefunds($orderDetailRefunds, $isTaxIncluded, $orderDetailList);
         $refundedAmount = 0;
         foreach ($productRefunds as $orderDetailId => $productRefund) {
             $refundedAmount += $productRefund['amount'];
@@ -110,7 +111,7 @@ class OrderRefundCalculator
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
      */
-    private function getOrderTailList(array $orderDetailRefunds)
+    private function getOrderDetailList(array $orderDetailRefunds)
     {
         $orderDetailList = [];
         /** @var OrderDetailRefund $orderDetailRefund */
@@ -131,7 +132,7 @@ class OrderRefundCalculator
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
      */
-    private function flattenProductRefunds(array $orderDetailRefunds, bool $isTaxIncluded, array $orderDetails)
+    private function flattenCheckedProductRefunds(array $orderDetailRefunds, bool $isTaxIncluded, array $orderDetails)
     {
         $productRefunds = [];
         /** @var OrderDetailRefund $orderDetailRefund */
@@ -140,6 +141,13 @@ class OrderRefundCalculator
             /** @var OrderDetail $orderDetail */
             $orderDetail = $orderDetails[$orderDetailId];
             $quantity = $orderDetailRefund->getProductQuantity();
+            $quantityLeft = (int) $orderDetail->product_quantity - (int) $orderDetail->product_quantity_refunded - (int) $orderDetail->product_quantity_return;
+            if ($quantity > $quantityLeft) {
+                throw new InvalidRefundQuantityException(
+                    InvalidRefundQuantityException::QUANTITY_TOO_HIGH,
+                    $quantityLeft
+                );
+            }
 
             $productRefunds[$orderDetailId] = [
                 'quantity' => $quantity,

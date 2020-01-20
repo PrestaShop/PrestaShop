@@ -311,6 +311,25 @@ Feature: Refund Order from Back Office (BO)
     And "bo_order_refund" has 0 credit slips
 
   @order-refund
+  Scenario: Quantity too high is forbidden
+    Given I add order "bo_order_refund" with the following details:
+      | cart                | dummy_cart                 |
+      | message             | test                       |
+      | payment module name | dummy_payment              |
+      | status              | Processing in progress     |
+    And product "Mug The best is yet to come" in order "bo_order_refund" has following details:
+      | product_quantity            | 2 |
+    And product "Mug Today is a good day" in order "bo_order_refund" has following details:
+      | product_quantity            | 1 |
+    And there are 2 less "Mug The best is yet to come" in stock
+    And there are 1 less "Mug Today is a good day" in stock
+    When I issue a partial refund on "bo_order_refund" with restock with credit slip without voucher on following products:
+      | product_name                | quantity                 | amount |
+      | Mug The best is yet to come | 3                        | 8      |
+    Then I should get error that refund quantity is too high and max is 2
+    And "bo_order_refund" has 0 credit slips
+
+  @order-refund
   Scenario: Amount is required
     Given I add order "bo_order_refund" with the following details:
       | cart                | dummy_cart                 |
@@ -326,5 +345,24 @@ Feature: Refund Order from Back Office (BO)
     When I issue a partial refund on "bo_order_refund" with restock with credit slip without voucher on following products:
       | product_name                | quantity                 | amount |
       | Mug Today is a good day     | 1                        | 0      |
-    Then I should get error that refund amount is empty
+    Then I should get error that refund amount is invalid
+    And "bo_order_refund" has 0 credit slips
+
+  @order-refund
+  Scenario: Amount must be positive
+    Given I add order "bo_order_refund" with the following details:
+      | cart                | dummy_cart                 |
+      | message             | test                       |
+      | payment module name | dummy_payment              |
+      | status              | Processing in progress     |
+    And product "Mug The best is yet to come" in order "bo_order_refund" has following details:
+      | product_quantity            | 2 |
+    And product "Mug Today is a good day" in order "bo_order_refund" has following details:
+      | product_quantity            | 1 |
+    And there are 2 less "Mug The best is yet to come" in stock
+    And there are 1 less "Mug Today is a good day" in stock
+    When I issue a partial refund on "bo_order_refund" with restock with credit slip without voucher on following products:
+      | product_name                | quantity                 | amount |
+      | Mug Today is a good day     | 1                        | -2.5   |
+    Then I should get error that refund amount is invalid
     And "bo_order_refund" has 0 credit slips
