@@ -129,9 +129,7 @@ class SharedStorage
     public function getLatestResource()
     {
         if (!array_key_exists($this->latestKey, $this->storage)) {
-            throw new RuntimeException(
-                sprintf('Latest resource with key "%s" does not exist.', $this->latestKey)
-            );
+            throw new RuntimeException(sprintf('Latest resource with key "%s" does not exist.', $this->latestKey));
         }
 
         return $this->storage[$this->latestKey];

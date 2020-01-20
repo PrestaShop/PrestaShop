@@ -26,8 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\QueryHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\QueryResult\EditableCmsPageCategory;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Query\GetCmsPageCategoryForEditing;
+use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\QueryResult\EditableCmsPageCategory;
 
 /**
  * Interface GetCmsPageCategoryForEditingHandlerInterface defines contract for GetCmsPageCategoryForEditingHandler.

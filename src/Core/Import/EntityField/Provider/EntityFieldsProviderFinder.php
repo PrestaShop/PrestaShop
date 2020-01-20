@@ -52,9 +52,7 @@ final class EntityFieldsProviderFinder implements EntityFieldsProviderFinderInte
     public function find($importEntity)
     {
         if (!isset($this->entityFieldsProviders[$importEntity])) {
-            throw new NotSupportedImportEntityException(
-                "Entity fields provider does not exist for entity $importEntity."
-            );
+            throw new NotSupportedImportEntityException("Entity fields provider does not exist for entity $importEntity.");
         }
 
         return $this->entityFieldsProviders[$importEntity];

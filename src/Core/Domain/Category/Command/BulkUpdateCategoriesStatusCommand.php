@@ -105,10 +105,7 @@ class BulkUpdateCategoriesStatusCommand
     private function setNewStatus($newStatus)
     {
         if (!is_bool($newStatus)) {
-            throw new CategoryConstraintException(
-                sprintf('Category status %s is invalid. Status must be of type "bool".', var_export($newStatus, true)),
-                CategoryConstraintException::INVALID_STATUS
-            );
+            throw new CategoryConstraintException(sprintf('Category status %s is invalid. Status must be of type "bool".', var_export($newStatus, true)), CategoryConstraintException::INVALID_STATUS);
         }
 
         $this->newStatus = $newStatus;

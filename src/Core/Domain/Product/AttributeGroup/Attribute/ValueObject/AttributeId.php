@@ -67,10 +67,7 @@ final class AttributeId
     private function assertIsIntegerGreaterThanZero($value)
     {
         if (!is_int($value) || 0 >= $value) {
-            throw new AttributeConstraintException(
-                sprintf('Invalid attribute id "%s".', var_export($value, true)),
-                AttributeConstraintException::INVALID_ID
-            );
+            throw new AttributeConstraintException(sprintf('Invalid attribute id "%s".', var_export($value, true)), AttributeConstraintException::INVALID_ID);
         }
     }
 }

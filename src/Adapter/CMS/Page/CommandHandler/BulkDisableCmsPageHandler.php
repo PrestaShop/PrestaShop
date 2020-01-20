@@ -52,11 +52,7 @@ final class BulkDisableCmsPageHandler extends AbstractCmsPageHandler implements 
         try {
             $this->disableCmsPages($command);
         } catch (PrestaShopException $exception) {
-            throw new CmsPageException(
-                'An error occurred when bulk disabling the cms pages',
-                0,
-                $exception
-            );
+            throw new CmsPageException('An error occurred when bulk disabling the cms pages', 0, $exception);
         }
     }
 
@@ -77,9 +73,7 @@ final class BulkDisableCmsPageHandler extends AbstractCmsPageHandler implements 
             $cms->active = false;
 
             if (false === $cms->update()) {
-                throw new CannotDisableCmsPageException(
-                    sprintf('Failed to disable cms page with id %s', $cmsPage->getValue())
-                );
+                throw new CannotDisableCmsPageException(sprintf('Failed to disable cms page with id %s', $cmsPage->getValue()));
             }
         }
     }

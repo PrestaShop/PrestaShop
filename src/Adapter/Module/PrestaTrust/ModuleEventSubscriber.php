@@ -57,9 +57,9 @@ class ModuleEventSubscriber implements EventSubscriberInterface
      */
     public static function getSubscribedEvents()
     {
-        return array(
+        return [
             ModuleZipManagementEvent::DOWNLOAD => 'onNewModule',
-        );
+        ];
     }
 
     /**

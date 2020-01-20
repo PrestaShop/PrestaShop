@@ -119,13 +119,7 @@ class ThemeImportSource
         $supportedSources = [self::FROM_ARCHIVE, self::FROM_WEB, self::FROM_FTP];
 
         if (!in_array($sourceType, $supportedSources)) {
-            throw new NotSupportedThemeImportSourceException(
-                sprintf(
-                    'Not supported %s theme import source type supplied. Supported sources are: "%s"',
-                    var_export($sourceType, true),
-                    implode(',', $supportedSources)
-                )
-            );
+            throw new NotSupportedThemeImportSourceException(sprintf('Not supported %s theme import source type supplied. Supported sources are: "%s"', var_export($sourceType, true), implode(',', $supportedSources)));
         }
     }
 }

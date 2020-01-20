@@ -162,9 +162,7 @@ final class GetCustomerThreadForViewingHandler implements GetCustomerThreadForVi
         $customerThread = new CustomerThread($customerThreadId->getValue());
 
         if ($customerThread->id !== $customerThreadId->getValue()) {
-            throw new CustomerThreadNotFoundException(
-                sprintf('Customer thread with id "%s" was not found', $customerThreadId->getValue())
-            );
+            throw new CustomerThreadNotFoundException(sprintf('Customer thread with id "%s" was not found', $customerThreadId->getValue()));
         }
 
         return $customerThread;

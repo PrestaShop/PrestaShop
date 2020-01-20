@@ -50,7 +50,7 @@ class CsvResponse extends StreamedResponse
     /**
      * @var array
      */
-    private $headersData = array();
+    private $headersData = [];
 
     /**
      * @var int, self::MODE_PAGINATION by default
@@ -74,12 +74,12 @@ class CsvResponse extends StreamedResponse
      * @param int $status The response status code
      * @param array $headers An array of response headers
      */
-    public function __construct($callback = null, $status = 200, $headers = array())
+    public function __construct($callback = null, $status = 200, $headers = [])
     {
         parent::__construct($callback, $status, $headers);
 
         if (null === $callback) {
-            $this->setCallback(array($this, 'processData'));
+            $this->setCallback([$this, 'processData']);
         }
 
         $this->setFileName('export_' . date('Y-m-d_His') . '.csv');
@@ -214,7 +214,7 @@ class CsvResponse extends StreamedResponse
         fputcsv($handle, $this->headersData, ';');
 
         do {
-            $data = call_user_func_array($this->data, array($this->start, $this->limit));
+            $data = call_user_func_array($this->data, [$this->start, $this->limit]);
 
             $count = count($data);
             if ($count === 0) {
@@ -222,7 +222,7 @@ class CsvResponse extends StreamedResponse
             }
 
             foreach ($data as $line) {
-                $lineData = array();
+                $lineData = [];
 
                 foreach (array_keys($this->headersData) as $column) {
                     if (array_key_exists($column, $line)) {

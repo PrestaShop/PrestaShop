@@ -28,8 +28,8 @@ namespace PrestaShop\PrestaShop\Core\ConstraintValidator\Factory;
 
 use PrestaShop\PrestaShop\Core\ConstraintValidator\CustomerNameValidator;
 use PrestaShop\PrestaShop\Core\String\CharacterCleaner;
-use Symfony\Component\Validator\ConstraintValidatorFactoryInterface;
 use Symfony\Component\Validator\Constraint;
+use Symfony\Component\Validator\ConstraintValidatorFactoryInterface;
 use Symfony\Component\Validator\ConstraintValidatorInterface;
 
 class CustomerNameValidatorFactory implements ConstraintValidatorFactoryInterface

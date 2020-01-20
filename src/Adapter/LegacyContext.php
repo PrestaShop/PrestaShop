@@ -119,7 +119,7 @@ class LegacyContext
      *
      * @return string
      */
-    public function getAdminLink($controller, $withToken = true, $extraParams = array())
+    public function getAdminLink($controller, $withToken = true, $extraParams = [])
     {
         return $this->getContext()->link->getAdminLink($controller, $withToken, $extraParams, $extraParams);
     }
@@ -133,7 +133,7 @@ class LegacyContext
      *
      * @return string
      */
-    public function getLegacyAdminLink($controller, $withToken = true, $extraParams = array())
+    public function getLegacyAdminLink($controller, $withToken = true, $extraParams = [])
     {
         return $this->getContext()->link->getLegacyAdminLink($controller, $withToken, $extraParams);
     }

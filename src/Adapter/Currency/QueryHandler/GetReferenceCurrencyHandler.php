@@ -92,10 +92,7 @@ class GetReferenceCurrencyHandler implements GetReferenceCurrencyHandlerInterfac
         }
 
         if (null === $currency) {
-            throw new CurrencyNotFoundException(sprintf(
-                'Can not find reference currency with ISO code %s',
-                $query->getIsoCode()->getValue()
-            ));
+            throw new CurrencyNotFoundException(sprintf('Can not find reference currency with ISO code %s', $query->getIsoCode()->getValue()));
         }
 
         return new ReferenceCurrency(

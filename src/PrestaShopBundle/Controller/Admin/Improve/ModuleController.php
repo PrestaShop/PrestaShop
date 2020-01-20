@@ -338,7 +338,7 @@ class ModuleController extends ModuleAbstractController
             $responseArray['msg'] = $this->trans(
                 'Cannot get catalog data, please try again later. Reason: %error_details%',
                 'Admin.Modules.Notification',
-                array('%error_details%' => print_r($e->getMessage(), true))
+                ['%error_details%' => print_r($e->getMessage(), true)]
             );
             $responseArray['status'] = false;
         }
@@ -430,7 +430,7 @@ class ModuleController extends ModuleAbstractController
                 );
             }
         } catch (UnconfirmedModuleActionException $e) {
-            $collection = AddonsCollection::createFrom(array($e->getModule()));
+            $collection = AddonsCollection::createFrom([$e->getModule()]);
             $modules = $modulesProvider->generateAddonsUrls($collection);
             $response[$module] = array_replace(
                 $response[$module],
@@ -546,11 +546,11 @@ class ModuleController extends ModuleAbstractController
             $moduleName = $moduleZipManager->getName($fileUploaded->getPathname());
 
             // Install the module
-            $installationResponse = array(
+            $installationResponse = [
                 'status' => $moduleManager->install($fileUploaded->getPathname()),
                 'msg' => '',
                 'module_name' => $moduleName,
-            );
+            ];
 
             if ($installationResponse['status'] === null) {
                 $installationResponse['status'] = false;
@@ -581,7 +581,7 @@ class ModuleController extends ModuleAbstractController
                 );
             }
         } catch (UnconfirmedModuleActionException $e) {
-            $collection = AddonsCollection::createFrom(array($e->getModule()));
+            $collection = AddonsCollection::createFrom([$e->getModule()]);
             $modules = $this->get('prestashop.core.admin.data_provider.module_interface')
                      ->generateAddonsUrls($collection);
             $installationResponse = [
@@ -621,10 +621,10 @@ class ModuleController extends ModuleAbstractController
 
         $modulesOnDisk = AddonsCollection::createFrom($moduleRepository->getList());
 
-        $modulesList = array(
+        $modulesList = [
             'installed' => [],
             'not_installed' => [],
-        );
+        ];
 
         $modulesOnDisk = $addonsProvider->generateAddonsUrls($modulesOnDisk);
         foreach ($modulesOnDisk as $module) {
@@ -668,13 +668,7 @@ class ModuleController extends ModuleAbstractController
     {
         if (isset($activeMenu)) {
             if (!isset($topMenuData[$activeMenu])) {
-                throw new Exception(
-                    sprintf(
-                        'Menu \'%s\' not found in Top Menu data',
-                        $activeMenu
-                    ),
-                    1
-                );
+                throw new Exception(sprintf('Menu \'%s\' not found in Top Menu data', $activeMenu), 1);
             }
 
             $topMenuData[$activeMenu]->class = 'active';
@@ -690,12 +684,12 @@ class ModuleController extends ModuleAbstractController
      */
     private function getDisabledFunctionalityResponse(Request $request)
     {
-        $content = array(
-            $request->get('module_name') => array(
+        $content = [
+            $request->get('module_name') => [
                 'status' => false,
                 'msg' => $this->getDemoModeErrorMessage(),
-            ),
-        );
+            ],
+        ];
 
         return new JsonResponse($content);
     }
@@ -716,21 +710,21 @@ class ModuleController extends ModuleAbstractController
         $formattedContent['selector'] = '.module-catalog-page';
         $formattedContent['content'] = $this->render(
             '@PrestaShop/Admin/Module/Includes/sorting.html.twig',
-            array(
+            [
                 'totalModules' => count($modules),
-            )
+            ]
         )->getContent();
 
         $errorMessage = $this->trans('You do not have permission to add this.', 'Admin.Notifications.Error');
 
         $formattedContent['content'] .= $this->render(
             '@PrestaShop/Admin/Module/catalog-refresh.html.twig',
-            array(
+            [
                 'categories' => $categories['categories'],
                 'requireAddonsSearch' => true,
                 'level' => $this->authorizationLevel(self::CONTROLLER_NAME),
                 'errorMessage' => $errorMessage,
-            )
+            ]
         )->getContent();
 
         return $formattedContent;
@@ -749,9 +743,9 @@ class ModuleController extends ModuleAbstractController
         $formattedContent['selector'] = '.module-menu-item';
         $formattedContent['content'] = $this->render(
             '@PrestaShop/Admin/Module/Includes/dropdown_categories_catalog.html.twig',
-            array(
+            [
                 'topMenuData' => $this->getTopMenuData($categories),
-            )
+            ]
         )->getContent();
 
         return $formattedContent;

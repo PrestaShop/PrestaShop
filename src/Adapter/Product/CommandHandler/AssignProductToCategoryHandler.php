@@ -27,9 +27,9 @@
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Domain\AbstractObjectModelHandler;
-use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\AssignProductToCategoryHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Product\Command\AssignProductToCategoryCommand;
 use PrestaShop\PrestaShop\Adapter\Product\ProductDataProvider;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\AssignProductToCategoryCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\AssignProductToCategoryHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotAssignProductToCategoryException;
 
 /**
@@ -58,12 +58,7 @@ final class AssignProductToCategoryHandler extends AbstractObjectModelHandler im
         $product = $productDataProvider->getProductInstance($command->getProductId()->getValue());
         $product->addToCategories($command->getCategoryId()->getValue());
         if (false === $product->save()) {
-            throw new CannotAssignProductToCategoryException(
-                sprintf(
-                    'Failed to add category to product %d',
-                    $command->getProductId()->getValue()
-                )
-            );
+            throw new CannotAssignProductToCategoryException(sprintf('Failed to add category to product %d', $command->getProductId()->getValue()));
         }
     }
 }

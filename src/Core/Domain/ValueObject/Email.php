@@ -87,10 +87,7 @@ class Email
     private function assertEmailIsValid($email)
     {
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            throw new DomainConstraintException(
-                sprintf('Email %s is invalid.', var_export($email, true)),
-                DomainConstraintException::INVALID_EMAIL
-            );
+            throw new DomainConstraintException(sprintf('Email %s is invalid.', var_export($email, true)), DomainConstraintException::INVALID_EMAIL);
         }
     }
 
@@ -107,10 +104,7 @@ class Email
 
         $length = function_exists('mb_strlen') ? mb_strlen($email, 'UTF-8') : strlen($email);
         if (self::MAX_LENGTH < $length) {
-            throw new DomainConstraintException(
-                sprintf('Email is too long. Max allowed length is %s', self::MAX_LENGTH),
-                DomainConstraintException::INVALID_EMAIL
-            );
+            throw new DomainConstraintException(sprintf('Email is too long. Max allowed length is %s', self::MAX_LENGTH), DomainConstraintException::INVALID_EMAIL);
         }
     }
 
@@ -124,10 +118,7 @@ class Email
     private function assertEmailIsString($email)
     {
         if (!is_string($email)) {
-            throw new DomainConstraintException(
-                'Email must be of type string',
-                DomainConstraintException::INVALID_EMAIL
-            );
+            throw new DomainConstraintException('Email must be of type string', DomainConstraintException::INVALID_EMAIL);
         }
     }
 }

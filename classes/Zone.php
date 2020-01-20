@@ -38,16 +38,16 @@ class ZoneCore extends ObjectModel
     /**
      * @see ObjectModel::$definition
      */
-    public static $definition = array(
+    public static $definition = [
         'table' => 'zone',
         'primary' => 'id_zone',
-        'fields' => array(
-            'name' => array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => true, 'size' => 64),
-            'active' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-        ),
-    );
+        'fields' => [
+            'name' => ['type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => true, 'size' => 64],
+            'active' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
+        ],
+    ];
 
-    protected $webserviceParameters = array();
+    protected $webserviceParameters = [];
 
     /**
      * Get all available geographical zones.
@@ -104,8 +104,8 @@ class ZoneCore extends ObjectModel
             $result &= Db::getInstance()->delete('delivery', 'id_zone = ' . (int) $this->id);
 
             // Update Country & state zone with 0
-            $result &= Db::getInstance()->update('country', array('id_zone' => 0), 'id_zone = ' . (int) $this->id);
-            $result &= Db::getInstance()->update('state', array('id_zone' => 0), 'id_zone = ' . (int) $this->id);
+            $result &= Db::getInstance()->update('country', ['id_zone' => 0], 'id_zone = ' . (int) $this->id);
+            $result &= Db::getInstance()->update('state', ['id_zone' => 0], 'id_zone = ' . (int) $this->id);
 
             return $result;
         }

@@ -209,10 +209,7 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
         $order = new Order($orderId->getValue());
 
         if ($order->id !== $orderId->getValue()) {
-            throw new OrderNotFoundException(
-                $orderId,
-                sprintf('Order with id "%s" was not found.', $orderId->getValue())
-            );
+            throw new OrderNotFoundException($orderId, sprintf('Order with id "%s" was not found.', $orderId->getValue()));
         }
 
         return $order;
@@ -387,7 +384,7 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
                 $stockLocationIsAvailable = true;
             }
 
-            $pack_items = $product['cache_is_pack'] ? Pack::getItemTable($product['id_product'], $this->contextLanguageId, true) : array();
+            $pack_items = $product['cache_is_pack'] ? Pack::getItemTable($product['id_product'], $this->contextLanguageId, true) : [];
             foreach ($pack_items as &$pack_item) {
                 $pack_item['current_stock'] = StockAvailable::getQuantityAvailableByProduct($pack_item['id_product'], $pack_item['id_product_attribute'], $pack_item['id_shop']);
                 // if the current stock requires a warning

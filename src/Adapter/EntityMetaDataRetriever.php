@@ -50,14 +50,9 @@ class EntityMetaDataRetriever
             // Legacy entity
             $classVars = get_class_vars($className);
             $metaData->setTableName($classVars['definition']['table']);
-            $metaData->setPrimaryKeyFieldNames(array($classVars['definition']['primary']));
+            $metaData->setPrimaryKeyFieldNames([$classVars['definition']['primary']]);
         } else {
-            throw new CoreException(
-                sprintf(
-                    'Cannot get metadata for entity `%s`.',
-                    $className
-                )
-            );
+            throw new CoreException(sprintf('Cannot get metadata for entity `%s`.', $className));
         }
 
         return $metaData;

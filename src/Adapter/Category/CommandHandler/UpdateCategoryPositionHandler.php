@@ -64,10 +64,7 @@ final class UpdateCategoryPositionHandler implements UpdateCategoryPositionHandl
         $category = new Category($categoryId);
 
         if (!$category->id) {
-            throw new CategoryNotFoundException(
-                $command->getCategoryId(),
-                sprintf('Category with id "%s" was not found', $categoryId)
-            );
+            throw new CategoryNotFoundException($command->getCategoryId(), sprintf('Category with id "%s" was not found', $categoryId));
         }
 
         if ($category->updatePosition($command->getWay(), $position)) {

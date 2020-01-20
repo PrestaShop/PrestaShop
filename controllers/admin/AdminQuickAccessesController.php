@@ -45,81 +45,81 @@ class AdminQuickAccessesControllerCore extends AdminController
             $this->deleted = false;
         }
 
-        $this->bulk_actions = array(
-            'delete' => array(
-                'text' => $this->trans('Delete selected', array(), 'Admin.Actions'),
-                'confirm' => $this->trans('Delete selected items?', array(), 'Admin.Notifications.Warning'),
+        $this->bulk_actions = [
+            'delete' => [
+                'text' => $this->trans('Delete selected', [], 'Admin.Actions'),
+                'confirm' => $this->trans('Delete selected items?', [], 'Admin.Notifications.Warning'),
                 'icon' => 'icon-trash',
-            ),
-        );
+            ],
+        ];
 
-        $this->fields_list = array(
-            'id_quick_access' => array(
-                'title' => $this->trans('ID', array(), 'Admin.Global'),
+        $this->fields_list = [
+            'id_quick_access' => [
+                'title' => $this->trans('ID', [], 'Admin.Global'),
                 'align' => 'center',
                 'class' => 'fixed-width-xs',
-            ),
-            'name' => array(
-                'title' => $this->trans('Name', array(), 'Admin.Global'),
-            ),
-            'link' => array(
-                'title' => $this->trans('Link', array(), 'Admin.Navigation.Header'),
-            ),
-            'new_window' => array(
-                'title' => $this->trans('New window', array(), 'Admin.Navigation.Header'),
+            ],
+            'name' => [
+                'title' => $this->trans('Name', [], 'Admin.Global'),
+            ],
+            'link' => [
+                'title' => $this->trans('Link', [], 'Admin.Navigation.Header'),
+            ],
+            'new_window' => [
+                'title' => $this->trans('New window', [], 'Admin.Navigation.Header'),
                 'align' => 'center',
                 'type' => 'bool',
                 'active' => 'new_window',
                 'class' => 'fixed-width-sm',
-            ),
-        );
+            ],
+        ];
 
-        $this->fields_form = array(
-            'legend' => array(
-                'title' => $this->trans('Quick Access menu', array(), 'Admin.Navigation.Header'),
+        $this->fields_form = [
+            'legend' => [
+                'title' => $this->trans('Quick Access menu', [], 'Admin.Navigation.Header'),
                 'icon' => 'icon-align-justify',
-            ),
-            'input' => array(
-                array(
+            ],
+            'input' => [
+                [
                     'type' => 'text',
-                    'label' => $this->trans('Name', array(), 'Admin.Global'),
+                    'label' => $this->trans('Name', [], 'Admin.Global'),
                     'name' => 'name',
                     'lang' => true,
                     'maxlength' => 32,
                     'required' => true,
-                    'hint' => $this->trans('Forbidden characters:', array(), 'Admin.Notifications.Info') . ' &lt;&gt;;=#{}',
-                ),
-                array(
+                    'hint' => $this->trans('Forbidden characters:', [], 'Admin.Notifications.Info') . ' &lt;&gt;;=#{}',
+                ],
+                [
                     'type' => 'text',
-                    'label' => $this->trans('URL', array(), 'Admin.Global'),
+                    'label' => $this->trans('URL', [], 'Admin.Global'),
                     'name' => 'link',
                     'maxlength' => 128,
                     'required' => true,
-                    'hint' => $this->trans('If it\'s a URL that comes from your back office, you MUST remove the security token.', array(), 'Admin.Navigation.Header'),
-                ),
-                array(
+                    'hint' => $this->trans('If it\'s a URL that comes from your back office, you MUST remove the security token.', [], 'Admin.Navigation.Header'),
+                ],
+                [
                     'type' => 'switch',
-                    'label' => $this->trans('Open in new window', array(), 'Admin.Navigation.Header'),
+                    'label' => $this->trans('Open in new window', [], 'Admin.Navigation.Header'),
                     'name' => 'new_window',
                     'required' => false,
-                    'values' => array(
-                        array(
+                    'values' => [
+                        [
                             'id' => 'new_window_on',
                             'value' => 1,
-                            'label' => '<img src="../img/admin/enabled.gif" alt="' . $this->trans('Enabled', array(), 'Admin.Global') . '" title="' . $this->trans('Enabled', array(), 'Admin.Global') . '" />',
-                        ),
-                        array(
+                            'label' => '<img src="../img/admin/enabled.gif" alt="' . $this->trans('Enabled', [], 'Admin.Global') . '" title="' . $this->trans('Enabled', [], 'Admin.Global') . '" />',
+                        ],
+                        [
                             'id' => 'new_window_off',
                             'value' => 0,
-                            'label' => '<img src="../img/admin/disabled.gif" alt="' . $this->trans('Disabled', array(), 'Admin.Global') . '" title="' . $this->trans('Disabled', array(), 'Admin.Global') . '" />',
-                        ),
-                    ),
-                ),
-            ),
-            'submit' => array(
-                'title' => $this->trans('Save', array(), 'Admin.Actions'),
-            ),
-        );
+                            'label' => '<img src="../img/admin/disabled.gif" alt="' . $this->trans('Disabled', [], 'Admin.Global') . '" title="' . $this->trans('Disabled', [], 'Admin.Global') . '" />',
+                        ],
+                    ],
+                ],
+            ],
+            'submit' => [
+                'title' => $this->trans('Save', [], 'Admin.Actions'),
+            ],
+        ];
     }
 
     public function getTabSlug()
@@ -130,11 +130,11 @@ class AdminQuickAccessesControllerCore extends AdminController
     public function initPageHeaderToolbar()
     {
         if (empty($this->display)) {
-            $this->page_header_toolbar_btn['new_quick_access'] = array(
+            $this->page_header_toolbar_btn['new_quick_access'] = [
                 'href' => self::$currentIndex . '&addquick_access&token=' . $this->token,
-                'desc' => $this->trans('Add new quick access', array(), 'Admin.Navigation.Header'),
+                'desc' => $this->trans('Add new quick access', [], 'Admin.Navigation.Header'),
                 'icon' => 'process-icon-new',
-            );
+            ];
         }
 
         parent::initPageHeaderToolbar();
@@ -146,7 +146,7 @@ class AdminQuickAccessesControllerCore extends AdminController
             if ($this->access('edit')) {
                 $this->action = 'newWindow';
             } else {
-                $this->errors[] = $this->trans('You do not have permission to edit this.', array(), 'Admin.Notifications.Error');
+                $this->errors[] = $this->trans('You do not have permission to edit this.', [], 'Admin.Notifications.Error');
             }
         }
 
@@ -177,11 +177,11 @@ class AdminQuickAccessesControllerCore extends AdminController
             $this->beforeAdd($this->object);
 
             if (method_exists($this->object, 'add') && !$this->object->add()) {
-                $this->errors[] = $this->trans('An error occurred while creating an object.', array(), 'Admin.Notifications.Error') .
+                $this->errors[] = $this->trans('An error occurred while creating an object.', [], 'Admin.Notifications.Error') .
                     ' <b>' . $this->table . ' (' . Db::getInstance()->getMsgError() . ')</b>';
             } elseif (($_POST[$this->identifier] = $this->object->id) && $this->postImage($this->object->id) && !count($this->errors) && $this->_redirect) {
                 // voluntary do affectation here
-                PrestaShopLogger::addLog($this->trans('%class_name% addition', array('%class_name%' => $this->className), 'Admin.Advparameters.Feature'), 1, null, $this->className, (int) $this->object->id, true, (int) $this->context->employee->id);
+                PrestaShopLogger::addLog($this->trans('%class_name% addition', ['%class_name%' => $this->className], 'Admin.Advparameters.Feature'), 1, null, $this->className, (int) $this->object->id, true, (int) $this->context->employee->id);
                 $this->afterAdd($this->object);
             }
         }
@@ -228,12 +228,12 @@ class AdminQuickAccessesControllerCore extends AdminController
             if ($object->toggleNewWindow()) {
                 $this->redirect_after = self::$currentIndex . '&conf=5&token=' . $this->token;
             } else {
-                $this->errors[] = $this->trans('An error occurred while updating new window property.', array(), 'Admin.Navigation.Notification');
+                $this->errors[] = $this->trans('An error occurred while updating new window property.', [], 'Admin.Navigation.Notification');
             }
         } else {
-            $this->errors[] = $this->trans('An error occurred while updating the new window property for this object.', array(), 'Admin.Navigation.Notification') .
+            $this->errors[] = $this->trans('An error occurred while updating the new window property for this object.', [], 'Admin.Navigation.Notification') .
                 ' <b>' . $this->table . '</b> ' .
-                $this->trans('(cannot load object)', array(), 'Admin.Notifications.Error');
+                $this->trans('(cannot load object)', [], 'Admin.Notifications.Error');
         }
 
         return $object;

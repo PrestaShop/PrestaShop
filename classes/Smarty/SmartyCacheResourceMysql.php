@@ -113,7 +113,7 @@ class Smarty_CacheResource_Mysql extends Smarty_CacheResource_Custom
             return -1;
         }
 
-        $where = array();
+        $where = [];
         if ($name !== null) {
             $where[] = 'name = "' . pSQL(sha1($name)) . '"';
         }

@@ -59,15 +59,15 @@ class AverageTaxOfProductsTaxCalculator
 
     public function getTaxesAmount($price_before_tax, $price_after_tax = null, $round_precision = 2, $round_mode = null)
     {
-        $amounts = array();
+        $amounts = [];
         $total_base = 0;
 
         foreach ($this->getProductTaxes() as $row) {
             if (!array_key_exists($row['id_tax'], $amounts)) {
-                $amounts[$row['id_tax']] = array(
+                $amounts[$row['id_tax']] = [
                     'rate' => $row['rate'],
                     'base' => 0,
-                );
+                ];
             }
 
             $amounts[$row['id_tax']]['base'] += $row['total_price_tax_excl'];

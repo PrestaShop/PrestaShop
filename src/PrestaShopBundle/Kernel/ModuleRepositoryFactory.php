@@ -114,7 +114,7 @@ class ModuleRepositoryFactory
      */
     private function getConnection(array $parameters)
     {
-        return DriverManager::getConnection(array(
+        return DriverManager::getConnection([
             'dbname' => $parameters['database_name'],
             'user' => $parameters['database_user'],
             'password' => $parameters['database_password'],
@@ -122,7 +122,7 @@ class ModuleRepositoryFactory
             'port' => $parameters['database_port'],
             'charset' => 'utf8',
             'driver' => 'pdo_mysql',
-        ));
+        ]);
     }
 
     /**

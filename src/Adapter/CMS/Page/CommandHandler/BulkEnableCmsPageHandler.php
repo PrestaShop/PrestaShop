@@ -48,11 +48,7 @@ final class BulkEnableCmsPageHandler extends AbstractCmsPageHandler implements B
         try {
             $this->enableCmsPages($command);
         } catch (PrestaShopException $exception) {
-            throw new CmsPageException(
-                'An error occurred when bulk enabling the cms pages',
-                0,
-                $exception
-            );
+            throw new CmsPageException('An error occurred when bulk enabling the cms pages', 0, $exception);
         }
     }
 
@@ -73,9 +69,7 @@ final class BulkEnableCmsPageHandler extends AbstractCmsPageHandler implements B
             $cms->active = true;
 
             if (false === $cms->update()) {
-                throw new CannotEnableCmsPageException(
-                    sprintf('Failed to enable cms page with id %s', $cmsPage->getValue())
-                );
+                throw new CannotEnableCmsPageException(sprintf('Failed to enable cms page with id %s', $cmsPage->getValue()));
             }
         }
     }

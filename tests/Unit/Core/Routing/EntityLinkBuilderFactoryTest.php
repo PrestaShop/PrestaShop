@@ -26,8 +26,8 @@
 
 namespace Tests\Unit\Core\Routing;
 
-use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Routing\EntityLinkBuilderFactory;
 use PrestaShop\PrestaShop\Core\Routing\EntityLinkBuilderInterface;
 

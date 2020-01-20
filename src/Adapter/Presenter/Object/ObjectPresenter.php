@@ -46,7 +46,7 @@ class ObjectPresenter implements PresenterInterface
             throw new Exception('ObjectPresenter can only present ObjectModel classes');
         }
 
-        $presentedObject = array();
+        $presentedObject = [];
 
         $fields = $object::$definition['fields'];
         foreach ($fields as $fieldName => $null) {
@@ -78,11 +78,11 @@ class ObjectPresenter implements PresenterInterface
         if (!empty($htmlFields) && is_array($htmlFields)) {
             $filteredHtml = Hook::exec(
                 'filterHtmlContent',
-                array(
+                [
                     'type' => $type,
                     'htmlFields' => $htmlFields,
                     'object' => $presentedObject,
-                ),
+                ],
                 null,
                 false,
                 true,

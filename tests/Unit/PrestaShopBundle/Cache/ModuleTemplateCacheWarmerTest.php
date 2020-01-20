@@ -38,7 +38,7 @@ class ModuleTemplateCacheWarmerTest extends TestCase
         $twigMock = $this
         ->getMockBuilder(Environment::class)
         ->disableOriginalConstructor()
-        ->setMethods(array('loadTemplate'))
+        ->setMethods(['loadTemplate'])
         ->getMock();
 
         $container = $this->getMockBuilder(ContainerInterface::class)->disableOriginalConstructor()->getMock();

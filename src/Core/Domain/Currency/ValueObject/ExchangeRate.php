@@ -80,13 +80,7 @@ class ExchangeRate
         $isIntegerOrFloat = is_int($exchangeRate) || is_float($exchangeRate);
 
         if (!$isIntegerOrFloat || 0 >= $exchangeRate) {
-            throw new CurrencyConstraintException(
-                sprintf(
-                    'Given exchange rate %s is not valid. It must be more than 0',
-                    var_export($exchangeRate, true)
-                ),
-                CurrencyConstraintException::INVALID_EXCHANGE_RATE
-            );
+            throw new CurrencyConstraintException(sprintf('Given exchange rate %s is not valid. It must be more than 0', var_export($exchangeRate, true)), CurrencyConstraintException::INVALID_EXCHANGE_RATE);
         }
     }
 }

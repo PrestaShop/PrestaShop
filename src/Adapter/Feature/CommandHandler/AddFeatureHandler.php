@@ -28,11 +28,11 @@ namespace PrestaShop\PrestaShop\Adapter\Feature\CommandHandler;
 
 use Feature;
 use PrestaShop\PrestaShop\Adapter\Domain\AbstractObjectModelHandler;
+use PrestaShop\PrestaShop\Core\Domain\Feature\Command\AddFeatureCommand;
+use PrestaShop\PrestaShop\Core\Domain\Feature\CommandHandler\AddFeatureHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\CannotAddFeatureException;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\FeatureConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Feature\ValueObject\FeatureId;
-use PrestaShop\PrestaShop\Core\Domain\Feature\Command\AddFeatureCommand;
-use PrestaShop\PrestaShop\Core\Domain\Feature\CommandHandler\AddFeatureHandlerInterface;
 
 /**
  * Handles adding of features using legacy logic.

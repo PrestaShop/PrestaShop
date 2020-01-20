@@ -27,11 +27,11 @@
 namespace Tests\Unit\Core\Form\IdentifiableObject\Handler;
 
 use PHPUnit\Framework\TestCase;
-use PrestaShop\PrestaShop\Core\Form\FormHandler;
 use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
+use PrestaShop\PrestaShop\Core\Form\FormHandler;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
-use Symfony\Component\Form\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
+use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 
 class FormHandlerTest extends TestCase

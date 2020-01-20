@@ -51,13 +51,13 @@ abstract class ModuleGridEngineCore extends Module
             WHERE h.`name` = \'displayAdminStatsGridEngine\'
         ');
 
-        $array_engines = array();
+        $array_engines = [];
         foreach ($result as $module) {
             $instance = Module::getInstanceByName($module['name']);
             if (!$instance) {
                 continue;
             }
-            $array_engines[$module['name']] = array($instance->displayName, $instance->description);
+            $array_engines[$module['name']] = [$instance->displayName, $instance->description];
         }
 
         return $array_engines;
