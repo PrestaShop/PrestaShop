@@ -471,25 +471,19 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
         }
 
         if (null === $productOrderDetail) {
-            throw new RuntimeException(
-                sprintf(
-                    'Cannot find product details for product %s in order %s',
-                    $productName,
-                    $orderReference
-                )
-            );
+            throw new RuntimeException(sprintf('Cannot find product details for product %s in order %s', $productName, $orderReference));
         }
 
         $expectedDetails = $table->getRowsHash();
-        foreach ($expectedDetails as $detailName => $detailValue) {
+        foreach ($expectedDetails as $detailName => $expectedDetailValue) {
             Assert::assertEquals(
-                $detailValue,
+                (float) $expectedDetailValue,
                 $productOrderDetail[$detailName],
                 sprintf(
                     'Invalid product detail field %s for product %s, expected %s instead of %s',
                     $detailName,
                     $productName,
-                    $detailValue,
+                    $expectedDetailValue,
                     $productOrderDetail[$detailName]
                 )
             );

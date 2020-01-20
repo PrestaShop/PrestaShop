@@ -166,6 +166,12 @@ class OrderDetailCore extends ObjectModel
     /** @var float */
     public $original_wholesale_price;
 
+    /** @var float */
+    public $total_refunded_tax_excl;
+
+    /** @var float */
+    public $total_refunded_tax_incl;
+
     /**
      * @see ObjectModel::$definition
      */
@@ -219,6 +225,8 @@ class OrderDetailCore extends ObjectModel
             'purchase_supplier_price' => ['type' => self::TYPE_FLOAT, 'validate' => 'isPrice'],
             'original_product_price' => ['type' => self::TYPE_FLOAT, 'validate' => 'isPrice'],
             'original_wholesale_price' => ['type' => self::TYPE_FLOAT, 'validate' => 'isPrice'],
+            'total_refunded_tax_excl' => ['type' => self::TYPE_FLOAT, 'validate' => 'isPrice'],
+            'total_refunded_tax_incl' => ['type' => self::TYPE_FLOAT, 'validate' => 'isPrice'],
         ],
     ];
 

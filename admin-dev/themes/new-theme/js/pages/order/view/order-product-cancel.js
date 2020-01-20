@@ -34,47 +34,55 @@ const {$} = window;
 export default class OrderProductCancel {
   constructor() {
     this.router = new Router();
-    this.cancelProductForm = $(OrderViewPageMap.cancelProductForm);
+    this.cancelProductForm = $(OrderViewPageMap.cancelProduct.form);
     this.orderId = this.cancelProductForm.data('orderId');
     this.orderDelivered = parseInt(this.cancelProductForm.data('isDelivered'), 10) === 1;
     this.isTaxIncluded = parseInt(this.cancelProductForm.data('isTaxIncluded'), 10) === 1;
   }
 
   showPartialRefund() {
-    $(OrderViewPageMap.toggleStandardRefundForm).hide();
-    $(OrderViewPageMap.togglePartialRefundForm).show();
-    $(OrderViewPageMap.actionColumnElements).hide();
+    // Always start by hiding elements then show the others, since some elements are common
+    $(OrderViewPageMap.cancelProduct.toggle.standardRefund).hide();
+    $(OrderViewPageMap.cancelProduct.toggle.partialRefund).show();
+    $(OrderViewPageMap.cancelProduct.table.actions).hide();
     this.listenForInputs();
     this.initForm(
-      $(OrderViewPageMap.cancelProductSaveBtn).data('partialRefundLabel'),
+      $(OrderViewPageMap.cancelProduct.buttons.save).data('partialRefundLabel'),
       this.router.generate('admin_orders_partial_refund', {orderId: this.orderId})
     );
   }
 
   showStandardRefund() {
-    $(OrderViewPageMap.togglePartialRefundForm).hide();
-    $(OrderViewPageMap.toggleStandardRefundForm).show();
-    $(OrderViewPageMap.actionColumnElements).hide();
+    // Always start by hiding elements then show the others, since some elements are common
+    $(OrderViewPageMap.cancelProduct.toggle.partialRefund).hide();
+    $(OrderViewPageMap.cancelProduct.toggle.standardRefund).show();
+    $(OrderViewPageMap.cancelProduct.table.actions).hide();
     this.listenForInputs();
     this.initForm(
-      $(OrderViewPageMap.cancelProductSaveBtn).data('standardRefundLabel'),
+      $(OrderViewPageMap.cancelProduct.buttons.save).data('standardRefundLabel'),
       ''
     );
   }
 
+  hideRefund() {
+    $(OrderViewPageMap.cancelProduct.toggle.partialRefund).hide();
+    $(OrderViewPageMap.cancelProduct.toggle.standardRefund).hide();
+    $(OrderViewPageMap.cancelProduct.table.actions).show();
+  }
+
   initForm(actionName, formAction) {
-    $(OrderViewPageMap.cancelProductForm).attr('action', formAction);
-    $(OrderViewPageMap.cancelProductSaveBtn).html(actionName);
-    $(OrderViewPageMap.cancelProductColumnHeader).html(actionName);
-    $(OrderViewPageMap.cancelProductRestockCheckbox).attr('checked', this.orderDelivered);
-    $(OrderViewPageMap.cancelProductCreditSlipCheckbox).attr('checked', true);
+    this.cancelProductForm.attr('action', formAction);
+    $(OrderViewPageMap.cancelProduct.buttons.save).html(actionName);
+    $(OrderViewPageMap.cancelProduct.table.header).html(actionName);
+    $(OrderViewPageMap.cancelProduct.checkboxes.restock).attr('checked', this.orderDelivered);
+    $(OrderViewPageMap.cancelProduct.checkboxes.creditSlip).attr('checked', true);
   }
 
   listenForInputs() {
-    $(OrderViewPageMap.cancelProductQuantityInput).off('change').on('change', (event) => {
+    $(OrderViewPageMap.cancelProduct.inputs.quantity).off('change').on('change', (event) => {
       const $productQuantityInput = $(event.target);
-      const $parentCell = $productQuantityInput.parents(OrderViewPageMap.cancelProductTableCell);
-      const $productAmount = $parentCell.find(OrderViewPageMap.cancelProductAmountInput);
+      const $parentCell = $productQuantityInput.parents(OrderViewPageMap.cancelProduct.table.cell);
+      const $productAmount = $parentCell.find(OrderViewPageMap.cancelProduct.inputs.amount);
       const productQuantity = parseInt($productQuantityInput.val(), 10);
       if (productQuantity <= 0) {
         $productAmount.val(0);
