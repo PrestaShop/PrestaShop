@@ -47,6 +47,7 @@ class CancelProductType extends TranslatorAwareType
                         'label' => false,
                         'attr' => [
                             'material_design' => true,
+                            'class' => 'selected-product',
                         ],
                     ]
                 )
@@ -60,7 +61,7 @@ class CancelProductType extends TranslatorAwareType
                 ->add('amount_' . $product->getOrderDetailId(), NumberType::class, [
                     'attr' => ['max' => $product->getTotalPrice(), 'class' => 'refund-amount'],
                     'label' => sprintf(
-                        '%s (%s)',
+                        '%s<br>(%s)',
                         $this->trans('Amount', 'Admin.Global', []),
                         $taxMethod
                     ),
@@ -74,6 +75,15 @@ class CancelProductType extends TranslatorAwareType
                     'label' => $this->trans('Shipping', 'Admin.Catalog.Feature', []),
                     'invalid_message' => $this->trans('The "shipping" field must be a valid number', 'Admin.Orderscustomers.Feature', []),
                     'required' => false,
+                ]
+            )
+            ->add('shipping', CheckboxType::class,
+                [
+                    'label' => $this->trans('Shipping', 'Admin.Catalog.Feature', []),
+                    'required' => false,
+                    'attr' => [
+                        'material_design' => true,
+                    ],
                 ]
             )
             ->add('restock', CheckboxType::class,
@@ -94,8 +104,17 @@ class CancelProductType extends TranslatorAwareType
                     ],
                 ]
             )
+            ->add('cancel', SubmitType::class, [
+                'label' => $this->trans('Cancel', 'Admin.Actions'),
+                'attr' => [
+                    'class' => 'cancel-product-element cancel-product-element-abort btn btn-outline-secondary',
+                ],
+            ])
             ->add('save', SubmitType::class, [
-                'attr' => ['class' => 'partial-refund save btn btn-primary ml-3'],
+                'attr' => [
+                    'class' => 'partial-refund save btn btn-primary ml-3',
+                    'formnovalidate' => true,
+                ],
             ]);
     }
 }

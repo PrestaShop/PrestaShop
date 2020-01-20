@@ -50,6 +50,7 @@ $(() => {
   orderViewPage.listenForProductEdit();
   orderViewPage.listenForProductAdd();
   orderViewPage.listenForProductPagination();
+  orderViewPage.listenForRefund();
   orderViewPage.listenForCancelProduct();
 
   orderAddAutocomplete.listenForSearch();

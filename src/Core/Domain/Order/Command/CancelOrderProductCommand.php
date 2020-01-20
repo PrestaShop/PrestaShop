@@ -26,25 +26,24 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Order\Command;
 
-use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderForViewing;
 
 class CancelOrderProductCommand
 {
     /**
-     * @var array $products
+     * @var array
      */
     private $products;
 
     /**
-     * @var array $toBeCanceledProducts
+     * @var array
      *
      * key: orderDetailId, value: quantity
      */
     private $toBeCanceledProducts;
 
     /**
-     * @var OrderForViewing $order
+     * @var OrderForViewing
      */
     private $order;
 

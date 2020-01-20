@@ -34,7 +34,6 @@ use PrestaShop\PrestaShop\Core\Domain\CustomerMessage\Exception\CustomerMessageC
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\AddCartRuleToOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\AddOrderFromBackOfficeCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\BulkChangeOrderStatusCommand;
-use PrestaShop\PrestaShop\Core\Domain\Order\Command\CancelOrderProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\ChangeOrderCurrencyCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\ChangeOrderDeliveryAddressCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\ChangeOrderInvoiceAddressCommand;
@@ -78,7 +77,6 @@ use PrestaShopBundle\Form\Admin\Sell\Order\AddProductRowType;
 use PrestaShopBundle\Form\Admin\Sell\Order\CartSummaryType;
 use PrestaShopBundle\Form\Admin\Sell\Order\ChangeOrderAddressType;
 use PrestaShopBundle\Form\Admin\Sell\Order\ChangeOrderCurrencyType;
-use PrestaShopBundle\Form\Admin\Sell\Order\CancellationType;
 use PrestaShopBundle\Form\Admin\Sell\Order\ChangeOrdersStatusType;
 use PrestaShopBundle\Form\Admin\Sell\Order\EditProductRowType;
 use PrestaShopBundle\Form\Admin\Sell\Order\OrderMessageType;
@@ -427,8 +425,9 @@ class OrderController extends FrameworkBundleAdminController
         $formBuilder = $this->get('prestashop.core.form.identifiable_object.builder.cancel_product_form_builder');
         $cancelProductForm = $formBuilder->getFormFor($orderId);
 
-
         $this->handleOutOfStockProduct($orderForViewing);
+
+        $merchandiseReturnEnabled = (bool) $this->configuration->get('PS_ORDER_RETURN');
 
         return $this->render('@PrestaShop/Admin/Sell/Order/Order/view.html.twig', [
             'showContentHeader' => true,
@@ -450,7 +449,7 @@ class OrderController extends FrameworkBundleAdminController
             'addProductRowForm' => $addProductRowForm->createView(),
             'editProductRowForm' => $editProductRowForm->createView(),
             'backOfficeOrderButtons' => $backOfficeOrderButtons,
-            'hasOrderReturnConfig' => (bool) $this->configuration->get('PS_ORDER_RETURN'),
+            'merchandiseReturnEnabled' => $merchandiseReturnEnabled,
         ]);
     }
 
@@ -1163,7 +1162,7 @@ class OrderController extends FrameworkBundleAdminController
 
     public function cancellationAction(int $orderId, Request $request)
     {
-        $formBuilder = $this->get('prestashop.core.form.identifiable_object.builder.cancellation_form_builder');
+        $formBuilder = $this->get('prestashop.core.form.identifiable_object.builder.cancel_product_form_builder');
         $formHandler = $this->get('prestashop.core.form.identifiable_object.cancellation_form_handler');
         $form = $formBuilder->getFormFor($orderId);
         try {
@@ -1175,6 +1174,7 @@ class OrderController extends FrameworkBundleAdminController
         } catch (Exception $e) {
             $this->addFlash('error', $e->getMessage());
         }
+
         return $this->redirectToRoute('admin_orders_view', [
             'orderId' => $orderId,
         ]);

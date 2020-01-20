@@ -31,6 +31,7 @@ import OrderProductRenderer from '@pages/order/view/order-product-renderer';
 import OrderPricesRefresher from '@pages/order/view/order-prices-refresher';
 import OrderInvoicesRefresher from './order-invoices-refresher';
 import Router from '@components/router';
+import OrderProductCancel from './order-product-cancel';
 
 const $ = window.$;
 
@@ -40,6 +41,8 @@ export default class OrderViewPage {
     this.orderProductRenderer = new OrderProductRenderer();
     this.orderPricesRefresher = new OrderPricesRefresher();
     this.orderInvoicesRefresher = new OrderInvoicesRefresher();
+    this.orderProductCancel = new OrderProductCancel();
+    this.router = new Router();
     this.listenToEvents();
   }
 
@@ -239,10 +242,36 @@ export default class OrderViewPage {
     });
   }
 
+  listenForRefund() {
+    $(OrderViewPageMap.displayPartialRefundBtn).on('click', () => {
+      this.orderProductRenderer.moveProductsPanelToRefundPosition();
+      this.orderProductCancel.showPartialRefund();
+    });
+
+    $(OrderViewPageMap.displayStandardRefundBtn).on('click', () => {
+      this.orderProductRenderer.moveProductsPanelToRefundPosition();
+    });
+
+    $(OrderViewPageMap.cancelPartialRefundBtn).on('click', () => {
+      this.orderProductRenderer.moveProductPanelToOriginalPosition();
+      $(OrderViewPageMap.togglePartialRefundForm).hide();
+      $(OrderViewPageMap.toggleStandardRefundForm).hide();
+      $(OrderViewPageMap.toggleCancelProductForm).hide();
+      $(OrderViewPageMap.actionColumnElements).show();
+    });
+  }
+
   listenForCancelProduct() {
     $(OrderViewPageMap.cancelProductBtn).on('click', (event) => {
       event.preventDefault();
-      this.orderProductRenderer.moveProductsPanelToModificationPosition()
+      const orderId = event.currentTarget.dataset.orderId;
+      const cancelProductRoute = this.router.generate('admin_orders_cancellation', {orderId: orderId});
+      const cancelProductForm = document.getElementsByName('cancel_product');
+      $(cancelProductForm).attr('action', cancelProductRoute);
+
+      $(OrderViewPageMap.toggleCancelProductForm).show();
+      $(OrderViewPageMap.actionColumnElements).hide();
+      this.orderProductRenderer.moveProductsPanelToRefundPosition();
     })
   }
 
