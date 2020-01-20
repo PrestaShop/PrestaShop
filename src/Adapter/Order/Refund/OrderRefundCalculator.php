@@ -40,7 +40,6 @@ use PrestaShop\PrestaShop\Core\Domain\Order\VoucherRefundType;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\ComputingPrecision;
 use PrestaShopDatabaseException;
 use PrestaShopException;
-use Tax;
 use TaxCalculator;
 
 /**
@@ -49,7 +48,7 @@ use TaxCalculator;
  */
 class OrderRefundCalculator
 {
-    public function computeOrderFund(
+    public function computeOrderRefund(
         Order $order,
         array $orderDetailRefunds,
         float $shippingRefund,

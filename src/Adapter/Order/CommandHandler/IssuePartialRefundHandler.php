@@ -87,8 +87,8 @@ final class IssuePartialRefundHandler extends AbstractOrderCommandHandler implem
     public function handle(IssuePartialRefundCommand $command)
     {
         $order = $this->getOrderObject($command->getOrderId());
-        /** @var OrderRefundSummary $orderRefundDetail */
-        $orderRefundDetail = $this->orderRefundCalculator->computeOrderFund(
+        /** @var OrderRefundSummary $orderRefundSummary */
+        $orderRefundSummary = $this->orderRefundCalculator->computeOrderRefund(
             $order,
             $command->getOrderDetailRefunds(),
             $command->getShippingCostRefundAmount(),
@@ -96,9 +96,10 @@ final class IssuePartialRefundHandler extends AbstractOrderCommandHandler implem
             $command->getVoucherRefundAmount()
         );
 
+        // @todo This part should probably be in a share abstract class as it will probably be common with other handlers
         // Update order details and reinject quantities
-        foreach ($orderRefundDetail->getProductRefunds() as $orderDetailId => $productRefund) {
-            $orderDetail = $orderRefundDetail->getOrderDetailById($orderDetailId);
+        foreach ($orderRefundSummary->getProductRefunds() as $orderDetailId => $productRefund) {
+            $orderDetail = $orderRefundSummary->getOrderDetailById($orderDetailId);
             if (!$order->hasBeenDelivered() || $command->restockRefundedProducts()) {
                 $this->reinjectQuantity($orderDetail, $productRefund['quantity']);
             }
@@ -131,16 +132,16 @@ final class IssuePartialRefundHandler extends AbstractOrderCommandHandler implem
 
         // Create order slip
         if ($command->generateCreditSlip()) {
-            $this->orderSlipCreator->create($order, $orderRefundDetail);
+            $this->orderSlipCreator->create($order, $orderRefundSummary);
         }
 
         // Generate voucher if needed
-        if ($command->generateVoucher() && $orderRefundDetail->getRefundedAmount() > 0) {
+        if ($command->generateVoucher() && $orderRefundSummary->getRefundedAmount() > 0) {
             $this->voucherGenerator->generateVoucher(
                 $order,
-                $orderRefundDetail->getRefundedAmount(),
+                $orderRefundSummary->getRefundedAmount(),
                 Context::getContext()->currency->iso_code,
-                $orderRefundDetail->isTaxIncluded()
+                $orderRefundSummary->isTaxIncluded()
             );
         }
     }
