@@ -32,7 +32,6 @@ use Configuration;
 use Context;
 use Country;
 use Currency;
-use Customer;
 use DateInterval;
 use DateTime;
 use Exception;
@@ -43,14 +42,15 @@ use PrestaShop\PrestaShop\Core\Domain\Cart\Command\RemoveProductFromCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\SetFreeShippingToCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartAddressesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateProductQuantityInCartCommand;
-use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartForViewing;
-use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartView;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartInformation;
+use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation;
 use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\CartId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProducts;
 use Product;
 use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
+use PHPUnit\Framework\Assert as Assert;
 
 class CartFeatureContext extends AbstractDomainFeatureContext
 {
@@ -77,18 +77,9 @@ class CartFeatureContext extends AbstractDomainFeatureContext
      */
     public function createEmptyCartForCustomer(string $cartReference, string $customerReference)
     {
-        // Clear static cache each time you create a cart
-        Cart::resetStaticCache();
-        /** @var Customer $customer */
-        $customer = SharedStorage::getStorage()->get($customerReference);
-
+        $customerId = SharedStorage::getStorage()->get($customerReference);
         /** @var CartId $cartIdObject */
-        $cartIdObject = $this->getCommandBus()->handle(
-            new CreateEmptyCustomerCartCommand(
-                (int) $customer->id
-            )
-        );
-
+        $cartIdObject = $this->getCommandBus()->handle(new CreateEmptyCustomerCartCommand($customerId));
         SharedStorage::getStorage()->set($cartReference, $cartIdObject->getValue());
     }
 
@@ -215,9 +206,6 @@ class CartFeatureContext extends AbstractDomainFeatureContext
      * @param string $voucherCode
      * @param float $discountAmount
      * @param string $cartReference
-     *
-     * @throws \PrestaShopDatabaseException
-     * @throws \PrestaShopException
      */
     public function useDiscountVoucherOnCart(string $voucherCode, float $discountAmount, string $cartReference)
     {
@@ -270,9 +258,10 @@ class CartFeatureContext extends AbstractDomainFeatureContext
      */
     public function cartHasProducts(string $cartReference, int $numberOfProducts)
     {
-        /** @var CartView $cartView */
-        $cartView = $this->getQueryBus()->handle(
-            new GetCartForViewing(SharedStorage::getStorage()->get(SharedStorage::getStorage()->get($cartReference)))
+        /** @var CartInformation $cartInformation */
+        $cartInformation = $this->getQueryBus()->handle(
+            new GetCartInformation((SharedStorage::getStorage()->get($cartReference)))
         );
+        Assert::assertSame($numberOfProducts, count($cartInformation->getProducts()));
     }
 }
