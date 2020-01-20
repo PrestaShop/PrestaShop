@@ -34,7 +34,9 @@
   <div class="card-body">
     {% set formOptions = {
       'attr': {
-        'data-order-id': orderForViewing.id
+        'data-order-id': orderForViewing.id,
+        'data-is-delivered': orderForViewing.isDelivered,
+        'data-is-tax-included': orderForViewing.isTaxIncluded,
       }
     } %}
     {{ form_start(cancelProductForm, formOptions) }}

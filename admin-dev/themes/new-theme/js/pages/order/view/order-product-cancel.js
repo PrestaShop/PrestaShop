@@ -36,6 +36,8 @@ export default class OrderProductCancel {
     this.router = new Router();
     this.cancelProductForm = $(OrderViewPageMap.cancelProductForm);
     this.orderId = this.cancelProductForm.data('orderId');
+    this.orderDelivered = parseInt(this.cancelProductForm.data('isDelivered'), 10) === 1;
+    this.isTaxIncluded = parseInt(this.cancelProductForm.data('isTaxIncluded'), 10) === 1;
   }
 
   showPartialRefund() {
@@ -43,28 +45,28 @@ export default class OrderProductCancel {
     $(OrderViewPageMap.togglePartialRefundForm).show();
     $(OrderViewPageMap.actionColumnElements).hide();
     this.listenForInputs();
-    console.log(this.orderId);
-    this.updateForm(
+    this.initForm(
       $(OrderViewPageMap.cancelProductSaveBtn).data('partialRefundLabel'),
       this.router.generate('admin_orders_partial_refund', {orderId: this.orderId})
     );
   }
 
   showStandardRefund() {
-    $(OrderViewPageMap.toggleStandardRefundForm).show();
     $(OrderViewPageMap.togglePartialRefundForm).hide();
+    $(OrderViewPageMap.toggleStandardRefundForm).show();
     $(OrderViewPageMap.actionColumnElements).hide();
     this.listenForInputs();
-    this.updateForm(
+    this.initForm(
       $(OrderViewPageMap.cancelProductSaveBtn).data('standardRefundLabel'),
       ''
     );
   }
 
-  updateForm(actionName, formAction) {
+  initForm(actionName, formAction) {
     $(OrderViewPageMap.cancelProductForm).attr('action', formAction);
     $(OrderViewPageMap.cancelProductSaveBtn).html(actionName);
     $(OrderViewPageMap.cancelProductColumnHeader).html(actionName);
+    $(OrderViewPageMap.cancelProductRestockCheckbox).attr('checked', this.orderDelivered);
   }
 
   listenForInputs() {
@@ -77,8 +79,7 @@ export default class OrderProductCancel {
         $productAmount.val(0);
         return;
       }
-      const isTaxIncluded = parseInt($productQuantityInput.data('isTaxIncluded'), 10);
-      const priceFieldName = isTaxIncluded ? 'productPriceTaxIncl' : 'productPriceTaxExcl';
+      const priceFieldName = this.isTaxIncluded ? 'productPriceTaxIncl' : 'productPriceTaxExcl';
       const productUnitPrice = parseFloat($productQuantityInput.data(priceFieldName));
       const amountRefundable = parseFloat($productQuantityInput.data('amountRefundable'));
       const guessedAmount = productUnitPrice * productQuantity < amountRefundable ?

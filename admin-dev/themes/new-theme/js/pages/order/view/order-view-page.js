@@ -214,6 +214,7 @@ export default class OrderViewPage {
 
     $(OrderViewPageMap.displayStandardRefundBtn).on('click', () => {
       this.orderProductRenderer.moveProductsPanelToRefundPosition();
+      this.orderProductCancel.showStandardRefund();
     });
 
     $(OrderViewPageMap.cancelProductAbortBtn).on('click', () => {

@@ -127,4 +127,5 @@ export default {
   cancelProductAmountInput: '.cancel-product-amount input',
   cancelProductTableCell: '.cancel-product-cell',
   cancelProductColumnHeader: 'th.cancel-product-element p',
+  cancelProductRestockCheckbox: '#cancel_product_restock',
 };
