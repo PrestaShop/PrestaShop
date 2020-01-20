@@ -423,7 +423,6 @@ class CustomerAddressType extends AbstractType
                 ],
                 'attr' => [
                     'class' => 'js-address-state-select',
-//                    'row_attr' => ,
                 ],
             ])
             ->add('phone', TextType::class, [
