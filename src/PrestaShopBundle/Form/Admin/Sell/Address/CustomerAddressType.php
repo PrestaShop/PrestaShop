@@ -101,11 +101,10 @@ class CustomerAddressType extends AbstractType
         $data = $builder->getData();
         $requiredFields = $data['required_fields'];
         $countryId = 0 !== $data['id_country'] ? $data['id_country'] : $this->contextCountryId;
-        $invalidCharsTrans = $this->translator->trans('Invalid characters: ', [], 'Admin.Notifications.Info');
-        $genericInvalidCharsMessage = sprintf(
-            '%s%s',
-            $invalidCharsTrans,
-            TypedRegexValidator::GENERIC_NAME_CHARS
+        $genericInvalidCharsMessage = $this->translator->trans(
+            'Invalid characters: %s',
+            [TypedRegexValidator::GENERIC_NAME_CHARS],
+            'Admin.Notifications.Info'
         );
 
         if (!isset($data['id_customer'])) {
@@ -485,7 +484,11 @@ class CustomerAddressType extends AbstractType
         $builder
             ->add('other', TextareaType::class, [
                 'label' => $this->translator->trans('Other', [], 'Admin.Global'),
-                'help' => $invalidCharsTrans . TypedRegexValidator::MESSAGE_CHARS,
+                'help' => $this->translator->trans(
+                    'Invalid characters: %s',
+                    [TypedRegexValidator::MESSAGE_CHARS],
+                    'Admin.Notifications.Info'
+                ),
                 'required' => $this->isRequired(RequiredFields::REQUIRED_FIELD_OTHER, $requiredFields),
                 'empty_data' => '',
                 'constraints' => [
