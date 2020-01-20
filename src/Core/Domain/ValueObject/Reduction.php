@@ -105,15 +105,7 @@ class Reduction
     private function assertIsAllowedType(string $type)
     {
         if (!in_array($type, self::ALLOWED_TYPES, true)) {
-            throw new DomainConstraintException(
-                sprintf(
-                    'The reduction type "%s" is invalid. Valid types are: "%s", "%s".',
-                    $type,
-                    self::TYPE_AMOUNT,
-                    self::TYPE_PERCENTAGE
-                ),
-                DomainConstraintException::INVALID_REDUCTION_TYPE
-            );
+            throw new DomainConstraintException(sprintf('The reduction type "%s" is invalid. Valid types are: "%s", "%s".', $type, self::TYPE_AMOUNT, self::TYPE_PERCENTAGE), DomainConstraintException::INVALID_REDUCTION_TYPE);
         }
     }
 
@@ -127,24 +119,12 @@ class Reduction
     {
         if (self::TYPE_PERCENTAGE === $type) {
             if (!$this->assertIsNotNegative($value) || self::MAX_ALLOWED_PERCENTAGE < $value) {
-                throw new DomainConstraintException(
-                    sprintf(
-                        'Invalid reduction percentage "%s". It must be from 0 to %s%%',
-                        $value,
-                        self::MAX_ALLOWED_PERCENTAGE),
-                    DomainConstraintException::INVALID_REDUCTION_PERCENTAGE
-                );
+                throw new DomainConstraintException(sprintf('Invalid reduction percentage "%s". It must be from 0 to %s%%', $value, self::MAX_ALLOWED_PERCENTAGE), DomainConstraintException::INVALID_REDUCTION_PERCENTAGE);
             }
         }
 
         if (!$this->assertIsNotNegative($value)) {
-            throw new DomainConstraintException(
-                sprintf(
-                    'Invalid reduction amount "%s". It cannot be less than 0',
-                    $value
-                ),
-                DomainConstraintException::INVALID_REDUCTION_AMOUNT
-            );
+            throw new DomainConstraintException(sprintf('Invalid reduction amount "%s". It cannot be less than 0', $value), DomainConstraintException::INVALID_REDUCTION_AMOUNT);
         }
     }
 

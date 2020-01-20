@@ -42,7 +42,7 @@ class PaymentOptionsFinderCore extends HookFinder
         $this->hookName = 'displayPaymentEU';
         $rawDisplayPaymentEUOptions = parent::find();
         $paymentOptions = array_map(
-            array('PrestaShop\PrestaShop\Core\Payment\PaymentOption', 'convertLegacyOption'),
+            ['PrestaShop\PrestaShop\Core\Payment\PaymentOption', 'convertLegacyOption'],
             $rawDisplayPaymentEUOptions
         );
 
@@ -52,7 +52,7 @@ class PaymentOptionsFinderCore extends HookFinder
 
         // Payment options coming from regular Advanced API
         $this->hookName = 'paymentOptions';
-        $this->expectedInstanceClasses = array('PrestaShop\PrestaShop\Core\Payment\PaymentOption');
+        $this->expectedInstanceClasses = ['PrestaShop\PrestaShop\Core\Payment\PaymentOption'];
         $paymentOptions = array_merge($paymentOptions, parent::find());
 
         // Safety check
@@ -69,10 +69,10 @@ class PaymentOptionsFinderCore extends HookFinder
     {
         $freeOption = new PaymentOption();
         $freeOption->setModuleName('free_order')
-            ->setCallToActionText(Context::getContext()->getTranslator()->trans('Free order', array(), 'Admin.Orderscustomers.Feature'))
+            ->setCallToActionText(Context::getContext()->getTranslator()->trans('Free order', [], 'Admin.Orderscustomers.Feature'))
             ->setAction(Context::getContext()->link->getPageLink('order-confirmation', null, null, 'free_order=1'));
 
-        return array('free_order' => array($freeOption));
+        return ['free_order' => [$freeOption]];
     }
 
     public function present($free = false) //getPaymentOptionsForTemplate()

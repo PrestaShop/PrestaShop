@@ -27,9 +27,9 @@
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
 
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
-use PrestaShop\PrestaShop\Core\Domain\Contact\QueryResult\EditableContact;
 use PrestaShop\PrestaShop\Core\Domain\Contact\Exception\ContactException;
 use PrestaShop\PrestaShop\Core\Domain\Contact\Query\GetContactForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Contact\QueryResult\EditableContact;
 use Symfony\Component\Form\DataTransformerInterface;
 
 /**

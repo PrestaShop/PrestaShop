@@ -49,7 +49,7 @@ class DataTransfer
         $reflectionObject = new \ReflectionObject($subObject);
         $reflectionMethods = $reflectionObject->getMethods(\ReflectionMethod::IS_PUBLIC);
 
-        $attributes = array();
+        $attributes = [];
         foreach ($reflectionMethods as $method) {
             if ($method->isStatic()) {
                 continue;

@@ -38,7 +38,7 @@ class ModuleTemplateLoader extends FilesystemLoader
      * @param array $namespaces a collection of path namespaces with namespace names
      * @param array $modulePaths A path or an array of paths where to look for module templates
      */
-    public function __construct(array $namespaces, array $modulePaths = array())
+    public function __construct(array $namespaces, array $modulePaths = [])
     {
         if (!empty($modulePaths)) {
             $this->registerNamespacesFromConfig($modulePaths, $namespaces);
@@ -54,7 +54,7 @@ class ModuleTemplateLoader extends FilesystemLoader
     private function registerNamespacesFromConfig(array $modulePaths, array $namespaces)
     {
         foreach ($namespaces as $namespace => $namespacePath) {
-            $templatePaths = array();
+            $templatePaths = [];
 
             foreach ($modulePaths as $path) {
                 if (is_dir($dir = $path . '/views/PrestaShop/' . $namespacePath)) {

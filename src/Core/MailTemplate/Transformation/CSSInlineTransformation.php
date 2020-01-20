@@ -26,12 +26,12 @@
 
 namespace PrestaShop\PrestaShop\Core\MailTemplate\Transformation;
 
+use DOMAttr;
+use DOMElement;
 use Pelago\Emogrifier;
 use Pelago\Emogrifier\HtmlProcessor\CssToAttributeConverter;
 use PrestaShop\PrestaShop\Core\MailTemplate\MailTemplateInterface;
 use Symfony\Component\DomCrawler\Crawler;
-use DOMElement;
-use DOMAttr;
 use TijsVerkoyen\CssToInlineStyles\CssToInlineStyles;
 
 /**

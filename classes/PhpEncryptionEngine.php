@@ -148,9 +148,7 @@ class PhpEncryptionEngineCore
             return $buf;
         }
 
-        throw new Exception(
-            'Could not gather sufficient random data'
-        );
+        throw new Exception('Could not gather sufficient random data');
     }
 
     /**

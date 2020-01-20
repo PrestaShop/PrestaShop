@@ -43,7 +43,7 @@ class PrestaTrustChecker
     /**
      * @var array
      */
-    protected $checked_extensions = array('php', 'js', 'css', 'tpl');
+    protected $checked_extensions = ['php', 'js', 'css', 'tpl'];
 
     const SMART_CONTRACT_PATTERN = 'prestatrust-license-verification: ';
     const CHECKS_ALL_OK = 'Module is authenticated.';
@@ -101,7 +101,7 @@ class PrestaTrustChecker
 
         $details->check_list = $this->requestCheck($details->hash, $this->findSmartContrat($module->disk->get('path')));
         $details->status = array_sum($details->check_list) == count($details->check_list); // True if all content is True
-        $details->message = $this->translator->trans($this->getMessage($details->check_list), array(), 'Admin.Modules.Notification');
+        $details->message = $this->translator->trans($this->getMessage($details->check_list), [], 'Admin.Modules.Notification');
 
         $module->set('prestatrust', $details);
     }
@@ -262,12 +262,12 @@ class PrestaTrustChecker
         try {
             $result = $this->apiClient->getPrestaTrustCheck($hash, $contract);
 
-            return array(
+            return [
                 'integrity' => (bool) ($result->hash_trusted),
                 'property' => (bool) ($result->property_trusted),
-            );
+            ];
         } catch (Exception $e) {
-            return array('integrity' => false, 'property' => false);
+            return ['integrity' => false, 'property' => false];
         }
     }
 }

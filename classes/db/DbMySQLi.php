@@ -178,7 +178,7 @@ class DbMySQLiCore extends Db
         if (method_exists($result, 'fetch_all')) {
             return $result->fetch_all(MYSQLI_ASSOC);
         } else {
-            $ret = array();
+            $ret = [];
 
             while ($row = $this->nextRow($result)) {
                 $ret[] = $row;
@@ -378,7 +378,7 @@ class DbMySQLiCore extends Db
         $result = $this->link->query($sql);
         while ($row = $result->fetch_assoc()) {
             if ($row['Engine'] == 'InnoDB') {
-                if (in_array($row['Support'], array('DEFAULT', 'YES'))) {
+                if (in_array($row['Support'], ['DEFAULT', 'YES'])) {
                     $value = 'InnoDB';
                 }
 

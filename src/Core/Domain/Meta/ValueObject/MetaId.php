@@ -68,12 +68,7 @@ class MetaId
     public function assertIsIntAndLargerThanZero($metaId)
     {
         if (!is_int($metaId) || $metaId <= 0) {
-            throw new MetaException(
-                sprintf(
-                    'Invalid meta id: %s. It must be of type integer and above 0',
-                    var_export($metaId, true)
-                )
-            );
+            throw new MetaException(sprintf('Invalid meta id: %s. It must be of type integer and above 0', var_export($metaId, true)));
         }
     }
 }

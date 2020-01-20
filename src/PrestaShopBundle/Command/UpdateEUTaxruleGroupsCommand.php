@@ -86,7 +86,7 @@ class UpdateEUTaxruleGroupsCommand extends ContainerAwareCommand
             return $output->writeln("<error>Could not find the folder containing the localization files (should be 'localization' at the root of the PrestaShop folder)</error>");
         }
 
-        $euLocalizationFiles = array();
+        $euLocalizationFiles = [];
 
         foreach (scandir($localizationPacksRoot, SCANDIR_SORT_ASCENDING) as $entry) {
             if (!preg_match('/\.xml$/', $entry)) {
@@ -105,11 +105,11 @@ class UpdateEUTaxruleGroupsCommand extends ContainerAwareCommand
             foreach ($localizationPack->taxes->tax as $tax) {
                 if ((string) $tax['eu-tax-group'] === 'virtual') {
                     if (!isset($euLocalizationFiles[$localizationPackFile])) {
-                        $euLocalizationFiles[$localizationPackFile] = array(
+                        $euLocalizationFiles[$localizationPackFile] = [
                             'virtualTax' => $tax,
                             'pack' => $localizationPack,
                             'iso_code_country' => basename($entry, '.xml'),
-                        );
+                        ];
                     } else {
                         return $output->writeln("<error>Too many taxes with eu-tax-group=\"virtual\" found in `$localizationPackFile`.");
                     }
@@ -118,7 +118,7 @@ class UpdateEUTaxruleGroupsCommand extends ContainerAwareCommand
         }
 
         foreach ($euLocalizationFiles as $path => $file) {
-            $nodesToKill = array();
+            $nodesToKill = [];
 
             // Get max tax id, and list of nodes to kill
             $taxId = 0;
@@ -155,11 +155,11 @@ class UpdateEUTaxruleGroupsCommand extends ContainerAwareCommand
                     continue;
                 }
 
-                $tax = $this->addTax($file['pack']->taxes, $foreignFile['virtualTax'], array(
+                $tax = $this->addTax($file['pack']->taxes, $foreignFile['virtualTax'], [
                     'id' => (string) $taxId,
                     'auto-generated' => '1',
                     'from-eu-tax-group' => 'virtual',
-                ), array('eu-tax-group'));
+                ], ['eu-tax-group']);
 
                 $this->addTaxRule($taxRulesGroup, $tax, $foreignFile['iso_code_country']);
 
@@ -182,7 +182,7 @@ class UpdateEUTaxruleGroupsCommand extends ContainerAwareCommand
         $output->writeln("<info>Updated the virtual tax groups for $nUpdated localization files</info>");
     }
 
-    protected function addTax(SimpleXMLElement $taxes, SimpleXMLElement $tax, array $attributesToUpdate = array(), array $attributesToRemove = array())
+    protected function addTax(SimpleXMLElement $taxes, SimpleXMLElement $tax, array $attributesToUpdate = [], array $attributesToRemove = [])
     {
         $newTax = new SimpleXMLElement('<tax/>');
 
@@ -206,7 +206,7 @@ class UpdateEUTaxruleGroupsCommand extends ContainerAwareCommand
 
         $newTax = simplexml_import_dom($new);
 
-        $newAttributes = array();
+        $newAttributes = [];
 
         foreach ($tax->attributes() as $attribute) {
             $name = $attribute->getName();

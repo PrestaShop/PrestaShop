@@ -53,7 +53,7 @@ class EmailLister
         }
 
         $mail_directory = $this->filesystem->listEntriesRecursively($dir);
-        $mail_list = array();
+        $mail_list = [];
 
         // Remove unwanted .html / .txt / .tpl / .php / . / ..
         foreach ($mail_directory as $mail) {
@@ -92,6 +92,6 @@ class EmailLister
             $mail_name = $tmp[0];
         }
 
-        return ucfirst(str_replace(array('_', '-'), ' ', $mail_name));
+        return ucfirst(str_replace(['_', '-'], ' ', $mail_name));
     }
 }

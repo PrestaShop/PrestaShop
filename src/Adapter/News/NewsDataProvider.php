@@ -149,7 +149,7 @@ class NewsDataProvider
                 continue;
             }
             $analytics_params['utm_content'] = 'download';
-            if (in_array($this->contextMode, array(Context::MODE_HOST, Context::MODE_HOST_CONTRIB))) {
+            if (in_array($this->contextMode, [Context::MODE_HOST, Context::MODE_HOST_CONTRIB])) {
                 $analytics_params['utm_content'] = 'cloud';
             }
 

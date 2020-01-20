@@ -62,12 +62,7 @@ class ProductId
     private function assertIntegerIsGreaterThanZero($productId)
     {
         if (!is_int($productId) || 0 > $productId) {
-            throw new ProductConstraintException(
-                sprintf(
-                    'Product id %s is invalid. Product id must be number that is greater than zero.',
-                    var_export($productId, true)
-                )
-            );
+            throw new ProductConstraintException(sprintf('Product id %s is invalid. Product id must be number that is greater than zero.', var_export($productId, true)));
         }
     }
 }

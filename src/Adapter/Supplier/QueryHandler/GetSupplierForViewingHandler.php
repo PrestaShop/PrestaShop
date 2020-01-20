@@ -27,18 +27,18 @@
 namespace PrestaShop\PrestaShop\Adapter\Supplier\QueryHandler;
 
 use Currency;
+use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\SupplierException;
+use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\SupplierNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Supplier\Query\GetSupplierForViewing;
+use PrestaShop\PrestaShop\Core\Domain\Supplier\QueryHandler\GetSupplierForViewingHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Supplier\QueryResult\ViewableSupplier;
+use PrestaShop\PrestaShop\Core\Domain\Supplier\ValueObject\SupplierId;
 use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
 use PrestaShopException;
-use Supplier;
-use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
-use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\SupplierNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\Supplier\Query\GetSupplierForViewing;
-use PrestaShop\PrestaShop\Core\Domain\Supplier\QueryResult\ViewableSupplier;
-use PrestaShop\PrestaShop\Core\Domain\Supplier\ValueObject\SupplierId;
-use PrestaShop\PrestaShop\Core\Domain\Supplier\QueryHandler\GetSupplierForViewingHandlerInterface;
 use Product;
+use Supplier;
 
 /**
  * Handles query which gets supplier for viewing
@@ -87,9 +87,7 @@ final class GetSupplierForViewingHandler implements GetSupplierForViewingHandler
         $supplier = new Supplier($supplierId->getValue());
 
         if ($supplier->id !== $supplierId->getValue()) {
-            throw new SupplierNotFoundException(
-                sprintf('Supplier with id "%s" was not found.', $supplierId->getValue())
-            );
+            throw new SupplierNotFoundException(sprintf('Supplier with id "%s" was not found.', $supplierId->getValue()));
         }
 
         return $supplier;
@@ -171,9 +169,7 @@ final class GetSupplierForViewingHandler implements GetSupplierForViewingHandler
                 ];
             }
         } catch (PrestaShopException $e) {
-            throw new SupplierException(
-                sprintf('Failed to get products for supplier with id "%s".', $supplier->id)
-            );
+            throw new SupplierException(sprintf('Failed to get products for supplier with id "%s".', $supplier->id));
         }
 
         return $products;

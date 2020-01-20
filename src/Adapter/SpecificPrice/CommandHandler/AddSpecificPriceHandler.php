@@ -59,9 +59,7 @@ final class AddSpecificPriceHandler extends AbstractSpecificPriceHandler impleme
             }
 
             if (!$specificPrice->add()) {
-                throw new SpecificPriceException(
-                    'Failed to add new specific price'
-                );
+                throw new SpecificPriceException('Failed to add new specific price');
             }
         } catch (PrestaShopException $e) {
             throw new SpecificPriceException('An error occurred when trying to add new specific price');

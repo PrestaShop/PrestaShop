@@ -68,10 +68,7 @@ class BulkDeleteSqlRequestCommand
     private function setSqlRequestIds(array $sqlRequestIds)
     {
         if (empty($sqlRequestIds)) {
-            throw new SqlRequestConstraintException(
-                'Missing SqlRequest data for bulk deleting',
-                SqlRequestConstraintException::MISSING_BULK_DATA
-            );
+            throw new SqlRequestConstraintException('Missing SqlRequest data for bulk deleting', SqlRequestConstraintException::MISSING_BULK_DATA);
         }
 
         foreach ($sqlRequestIds as $sqlRequestId) {

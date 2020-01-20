@@ -89,10 +89,7 @@ class CustomerFeatureContext extends AbstractPrestaShopFeatureContext
             }
         }
 
-        throw new RuntimeException(sprintf(
-            'Customer does not have address in "%s" country',
-            $isoCode
-        ));
+        throw new RuntimeException(sprintf('Customer does not have address in "%s" country', $isoCode));
     }
 
     /**
@@ -113,10 +110,7 @@ class CustomerFeatureContext extends AbstractPrestaShopFeatureContext
         $customer = SharedStorage::getStorage()->get($reference);
 
         if ($customer->note) {
-            throw new RuntimeException(sprintf(
-                'It was expected that customer "%s" should not have private note.',
-                $reference
-            ));
+            throw new RuntimeException(sprintf('It was expected that customer "%s" should not have private note.', $reference));
         }
     }
 
@@ -129,12 +123,7 @@ class CustomerFeatureContext extends AbstractPrestaShopFeatureContext
         $customer = SharedStorage::getStorage()->get($reference);
 
         if ($customer->note !== $privateNote) {
-            throw new RuntimeException(sprintf(
-                'It was expected that customer "%s" private note should be "%s", but actually is "%s".',
-                $reference,
-                $privateNote,
-                $customer->note
-            ));
+            throw new RuntimeException(sprintf('It was expected that customer "%s" private note should be "%s", but actually is "%s".', $reference, $privateNote, $customer->note));
         }
     }
 
@@ -152,11 +141,7 @@ class CustomerFeatureContext extends AbstractPrestaShopFeatureContext
 
         $voucher = $cartRules[0];
         if ($voucherAmount !== (float) $voucher['reduction_amount']) {
-            throw new RuntimeException(sprintf(
-                'Invalid voucher amount, expected %s but got %s instead',
-                $voucherAmount,
-                $voucher['reduction_amount']
-            ));
+            throw new RuntimeException(sprintf('Invalid voucher amount, expected %s but got %s instead', $voucherAmount, $voucher['reduction_amount']));
         }
     }
 

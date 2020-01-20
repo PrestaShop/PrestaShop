@@ -84,10 +84,7 @@ final class DeleteCategoryMenuThumbnailImageHandler implements DeleteCategoryMen
         $category = new Category($categoryId->getValue());
 
         if ($category->id !== $categoryId->getValue()) {
-            throw new CategoryNotFoundException(
-                $categoryId,
-                sprintf('Category with id "%s" was not found', $categoryId)
-            );
+            throw new CategoryNotFoundException($categoryId, sprintf('Category with id "%s" was not found', $categoryId));
         }
 
         $thumbnailPath = sprintf(
@@ -104,15 +101,7 @@ final class DeleteCategoryMenuThumbnailImageHandler implements DeleteCategoryMen
                 $this->smartyCacheClearer->clear();
             }
         } catch (IOException $e) {
-            throw new CannotDeleteImageException(
-                sprintf(
-                    'Cannot delete menu thumbnail with id "%s" for category with id "%s".',
-                    $menuThumbnailId->getValue(),
-                    $categoryId->getValue()
-                ),
-                CannotDeleteImageException::MENU_THUMBNAIL_IMAGE,
-                $e
-            );
+            throw new CannotDeleteImageException(sprintf('Cannot delete menu thumbnail with id "%s" for category with id "%s".', $menuThumbnailId->getValue(), $categoryId->getValue()), CannotDeleteImageException::MENU_THUMBNAIL_IMAGE, $e);
         }
     }
 }

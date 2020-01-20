@@ -49,13 +49,7 @@ class BulkEnableSupplierCommand extends AbstractBulkSupplierCommand
     public function __construct(array $supplierIds)
     {
         if ($this->assertIsEmptyOrContainsNonIntegerValues($supplierIds)) {
-            throw new SupplierConstraintException(
-                sprintf(
-                    'Missing supplier data or array %s contains non integer values for bulk enable',
-                    var_export($supplierIds, true)
-                ),
-                SupplierConstraintException::INVALID_BULK_DATA
-            );
+            throw new SupplierConstraintException(sprintf('Missing supplier data or array %s contains non integer values for bulk enable', var_export($supplierIds, true)), SupplierConstraintException::INVALID_BULK_DATA);
         }
 
         $this->setSupplierIds($supplierIds);

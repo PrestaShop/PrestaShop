@@ -218,7 +218,7 @@ class OrderDetailLazyArray extends AbstractLazyArray
         $order = $this->order;
 
         $shippingList = $order->getShipping();
-        $orderShipping = array();
+        $orderShipping = [];
 
         foreach ($shippingList as $shippingId => $shipping) {
             if (isset($shipping['carrier_name']) && $shipping['carrier_name']) {
@@ -233,7 +233,7 @@ class OrderDetailLazyArray extends AbstractLazyArray
                         : $shipping['shipping_cost_tax_incl'];
                 $orderShipping[$shippingId]['shipping_cost'] =
                     ($shippingCost > 0) ? $this->locale->formatPrice($shippingCost, (Currency::getIsoCodeById((int) $order->id_currency)))
-                        : $this->translator->trans('Free', array(), 'Shop.Theme.Checkout');
+                        : $this->translator->trans('Free', [], 'Shop.Theme.Checkout');
 
                 $tracking_line = '-';
                 if ($shipping['tracking_number']) {

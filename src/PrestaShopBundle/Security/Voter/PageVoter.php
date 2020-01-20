@@ -61,7 +61,7 @@ class PageVoter extends Voter
      */
     protected function supports($attribute, $subject)
     {
-        return in_array($attribute, array(self::CREATE, self::UPDATE, self::DELETE, self::READ));
+        return in_array($attribute, [self::CREATE, self::UPDATE, self::DELETE, self::READ]);
     }
 
     /**

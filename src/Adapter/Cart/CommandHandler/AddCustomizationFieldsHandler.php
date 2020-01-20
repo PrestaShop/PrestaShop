@@ -76,13 +76,7 @@ final class AddCustomizationFieldsHandler extends AbstractCartHandler implements
             $isRequired = (bool) $customizationField['required'];
 
             if ($isRequired && empty($customizations[$customizationFieldId])) {
-                throw new CustomizationConstraintException(
-                    sprintf(
-                        'Customization field #%s is required',
-                        $customizationFieldId
-                    ),
-                    CustomizationConstraintException::FIELD_IS_REQUIRED
-                );
+                throw new CustomizationConstraintException(sprintf('Customization field #%s is required', $customizationFieldId), CustomizationConstraintException::FIELD_IS_REQUIRED);
             }
 
             if (empty($customizations[$customizationFieldId])) {
@@ -113,16 +107,10 @@ final class AddCustomizationFieldsHandler extends AbstractCartHandler implements
                 }
 
                 if (false === $customizationId) {
-                    throw new CustomizationException(sprintf(
-                        'Failed to add customized data for customization field with id "%s"',
-                        $customizationFieldId
-                    ));
+                    throw new CustomizationException(sprintf('Failed to add customized data for customization field with id "%s"', $customizationFieldId));
                 }
             } catch (PrestaShopException $e) {
-                throw new CustomizationException(sprintf(
-                    'An error occurred while trying to add customized data for customization field with id "%s"',
-                    $customizationFieldId
-                ));
+                throw new CustomizationException(sprintf('An error occurred while trying to add customized data for customization field with id "%s"', $customizationFieldId));
             }
         }
 
@@ -181,21 +169,11 @@ final class AddCustomizationFieldsHandler extends AbstractCartHandler implements
         $maxFileSize = (int) Configuration::get('PS_PRODUCT_PICTURE_MAX_SIZE');
 
         if ((int) $maxFileSize > 0 && $file->getSize() > (int) $maxFileSize) {
-            throw new FileUploadException(
-                sprintf(
-                    'Image is too large (%s kB). Maximum allowed: %s kB',
-                    $file->getSize() / 1024,
-                    $maxFileSize / 1024
-                ),
-                UPLOAD_ERR_FORM_SIZE
-            );
+            throw new FileUploadException(sprintf('Image is too large (%s kB). Maximum allowed: %s kB', $file->getSize() / 1024, $maxFileSize / 1024), UPLOAD_ERR_FORM_SIZE);
         }
 
         if (!ImageManager::isRealImage($file->getPathname(), $file->getType()) || !ImageManager::isCorrectImageFileExt($file->getClientOriginalName(), null) || preg_match('/\%00/', $file->getClientOriginalName())) {
-            throw new FileUploadException(
-                'Image format not recognized, allowed formats are: .gif, .jpg, .png',
-                UPLOAD_ERR_EXTENSION
-            );
+            throw new FileUploadException('Image format not recognized, allowed formats are: .gif, .jpg, .png', UPLOAD_ERR_EXTENSION);
         }
 
         if ($file->getError()) {
@@ -214,17 +192,11 @@ final class AddCustomizationFieldsHandler extends AbstractCartHandler implements
         $customization = new CustomizationField($customFieldId);
 
         if ($customization->required && '' === $value) {
-            throw new CustomizationConstraintException(
-                sprintf('Customization field #%s is required', $customFieldId),
-                CustomizationConstraintException::FIELD_IS_REQUIRED
-            );
+            throw new CustomizationConstraintException(sprintf('Customization field #%s is required', $customFieldId), CustomizationConstraintException::FIELD_IS_REQUIRED);
         }
 
         if (strlen($value) > CustomizationSettings::MAX_TEXT_LENGTH) {
-            throw new CustomizationConstraintException(
-                sprintf('Customization field #%s value is too long', $customFieldId),
-                CustomizationConstraintException::FIELD_IS_TOO_LONG
-            );
+            throw new CustomizationConstraintException(sprintf('Customization field #%s value is too long', $customFieldId), CustomizationConstraintException::FIELD_IS_TOO_LONG);
         }
     }
 }

@@ -54,7 +54,7 @@ class DatabaseTranslationLoader implements LoaderInterface
      */
     public function load($resource, $locale, $domain = 'messages', $theme = null)
     {
-        static $langs = array();
+        static $langs = [];
         $catalogue = new MessageCatalogue($locale);
 
         // do not try and load translations for a locale that cannot be saved to DB anyway

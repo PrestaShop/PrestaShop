@@ -550,13 +550,7 @@ class AddCartRuleCommand
     private function setPriority(int $priority): AddCartRuleCommand
     {
         if (0 >= $priority) {
-            throw new CartRuleConstraintException(
-                sprintf(
-                    'Invalid cart rule priority "%s". Must be a positive integer.',
-                    var_export($priority, true)
-                ),
-                CartRuleConstraintException::INVALID_PRIORITY
-            );
+            throw new CartRuleConstraintException(sprintf('Invalid cart rule priority "%s". Must be a positive integer.', var_export($priority, true)), CartRuleConstraintException::INVALID_PRIORITY);
         }
 
         $this->priority = $priority;
@@ -574,13 +568,7 @@ class AddCartRuleCommand
     private function setTotalQuantity(int $quantity): AddCartRuleCommand
     {
         if (0 > $quantity) {
-            throw new CartRuleConstraintException(
-                sprintf(
-                   'Quantity cannot be lower than zero, %d given',
-                    $quantity
-                ),
-                CartRuleConstraintException::INVALID_QUANTITY
-            );
+            throw new CartRuleConstraintException(sprintf('Quantity cannot be lower than zero, %d given', $quantity), CartRuleConstraintException::INVALID_QUANTITY);
         }
 
         $this->totalQuantity = $quantity;
@@ -598,13 +586,7 @@ class AddCartRuleCommand
     private function setQuantityPerUser(int $quantity): AddCartRuleCommand
     {
         if (0 > $quantity) {
-            throw new CartRuleConstraintException(
-                sprintf(
-                    'Quantity per user cannot be lower than zero, %d given',
-                    $quantity
-                ),
-                CartRuleConstraintException::INVALID_QUANTITY_PER_USER
-            );
+            throw new CartRuleConstraintException(sprintf('Quantity per user cannot be lower than zero, %d given', $quantity), CartRuleConstraintException::INVALID_QUANTITY_PER_USER);
         }
 
         $this->quantityPerUser = $quantity;
@@ -620,10 +602,7 @@ class AddCartRuleCommand
     private function assertAtLeastOneNameIsPresent(array $names): void
     {
         if (empty($names)) {
-            throw new CartRuleConstraintException(
-                'Cart rule name is mandatory in at least one language',
-                CartRuleConstraintException::EMPTY_NAME
-            );
+            throw new CartRuleConstraintException('Cart rule name is mandatory in at least one language', CartRuleConstraintException::EMPTY_NAME);
         }
     }
 
@@ -636,10 +615,7 @@ class AddCartRuleCommand
     private function assertDateRangeIsValid(DateTime $dateFrom, DateTime $dateTo): void
     {
         if ($dateFrom > $dateTo) {
-            throw new CartRuleConstraintException(
-                'Date from cannot be greater than date to.',
-                CartRuleConstraintException::DATE_FROM_GREATER_THAN_DATE_TO
-            );
+            throw new CartRuleConstraintException('Date from cannot be greater than date to.', CartRuleConstraintException::DATE_FROM_GREATER_THAN_DATE_TO);
         }
     }
 }

@@ -354,9 +354,7 @@ class NumberSymbolList
         if (!isset($this->superscriptingExponent)
             || !is_string($this->superscriptingExponent)
         ) {
-            throw new LocalizationException(
-                'Invalid superscriptingExponent : ' . print_r($this->superscriptingExponent, true)
-            );
+            throw new LocalizationException('Invalid superscriptingExponent : ' . print_r($this->superscriptingExponent, true));
         }
 
         if (!isset($this->perMille)
