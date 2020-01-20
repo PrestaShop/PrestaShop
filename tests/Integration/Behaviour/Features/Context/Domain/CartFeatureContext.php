@@ -32,6 +32,7 @@ use Configuration;
 use Context;
 use Country;
 use Currency;
+use Customer;
 use DateInterval;
 use DateTime;
 use Exception;
@@ -77,9 +78,10 @@ class CartFeatureContext extends AbstractDomainFeatureContext
      */
     public function createEmptyCartForCustomer(string $cartReference, string $customerReference)
     {
-        $customerId = SharedStorage::getStorage()->get($customerReference);
+        /** @var Customer $customer */
+        $customer = SharedStorage::getStorage()->get($customerReference);
         /** @var CartId $cartIdObject */
-        $cartIdObject = $this->getCommandBus()->handle(new CreateEmptyCustomerCartCommand($customerId));
+        $cartIdObject = $this->getCommandBus()->handle(new CreateEmptyCustomerCartCommand((int) $customer->id));
         SharedStorage::getStorage()->set($cartReference, $cartIdObject->getValue());
     }
 
