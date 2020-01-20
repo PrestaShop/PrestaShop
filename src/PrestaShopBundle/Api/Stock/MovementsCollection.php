@@ -30,7 +30,7 @@ use PrestaShopBundle\Entity\ProductIdentity;
 
 class MovementsCollection
 {
-    private $movements = array();
+    private $movements = [];
 
     /**
      * @param array $stockMovementsParams
@@ -39,7 +39,7 @@ class MovementsCollection
      */
     public function fromArray(array $stockMovementsParams)
     {
-        $movements = array();
+        $movements = [];
 
         array_walk($stockMovementsParams, function ($item) use (&$movements) {
             $combinationId = 0;
@@ -49,10 +49,10 @@ class MovementsCollection
                     $combinationId = $item['combination_id'];
                 }
 
-                $productIdentity = ProductIdentity::fromArray(array(
+                $productIdentity = ProductIdentity::fromArray([
                     'product_id' => $item['product_id'],
                     'combination_id' => $combinationId,
-                ));
+                ]);
 
                 $movements[] = new Movement($productIdentity, $item['delta']);
             }

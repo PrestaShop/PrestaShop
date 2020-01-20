@@ -41,9 +41,7 @@ class WebserviceKeyFeatureContext extends AbstractPrestaShopFeatureContext
         $webserviceKey = SharedStorage::getStorage()->get($reference);
 
         if ($webserviceKey->key !== $key) {
-            throw new RuntimeException(
-                sprintf('Webservice key "%s" does not match "%s" key.', $webserviceKey->key, $key)
-            );
+            throw new RuntimeException(sprintf('Webservice key "%s" does not match "%s" key.', $webserviceKey->key, $key));
         }
     }
 
@@ -56,9 +54,7 @@ class WebserviceKeyFeatureContext extends AbstractPrestaShopFeatureContext
         $webserviceKey = SharedStorage::getStorage()->get($reference);
 
         if ($webserviceKey->description !== $description) {
-            throw new RuntimeException(
-                sprintf('Webservice key "%s" description is not "%s".', $webserviceKey->id, $description)
-            );
+            throw new RuntimeException(sprintf('Webservice key "%s" description is not "%s".', $webserviceKey->id, $description));
         }
     }
 
@@ -73,9 +69,7 @@ class WebserviceKeyFeatureContext extends AbstractPrestaShopFeatureContext
         $isEnabled = 'enabled' === $status;
 
         if ((bool) $webserviceKey->active !== $isEnabled) {
-            throw new RuntimeException(
-                sprintf('Webservice key "%s" is not "%s"', $webserviceKey->id, $status)
-            );
+            throw new RuntimeException(sprintf('Webservice key "%s" is not "%s"', $webserviceKey->id, $status));
         }
     }
 
@@ -102,20 +96,11 @@ class WebserviceKeyFeatureContext extends AbstractPrestaShopFeatureContext
 
         foreach ($resources as $resource) {
             if (!isset($permissions[$resource])) {
-                throw new RuntimeException(
-                    sprintf('Resource "%s" is not configured for "%s" key', $resources, $webserviceKey->key)
-                );
+                throw new RuntimeException(sprintf('Resource "%s" is not configured for "%s" key', $resources, $webserviceKey->key));
             }
 
             if (!in_array($method, $permissions[$resource], true)) {
-                throw new RuntimeException(
-                    sprintf(
-                        '"%s" permission is not configured for resource "%s" for "%s" key',
-                        $permission,
-                        $resources,
-                        $webserviceKey->key
-                    )
-                );
+                throw new RuntimeException(sprintf('"%s" permission is not configured for resource "%s" for "%s" key', $permission, $resources, $webserviceKey->key));
             }
         }
     }

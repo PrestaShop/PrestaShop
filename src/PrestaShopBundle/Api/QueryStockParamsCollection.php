@@ -49,7 +49,7 @@ class QueryStockParamsCollection extends QueryParamsCollection
      */
     protected function getValidFilterParams()
     {
-        return array(
+        return [
             'productId',
             'supplier_id',
             'category_id',
@@ -57,7 +57,7 @@ class QueryStockParamsCollection extends QueryParamsCollection
             'attributes',
             'features',
             'active',
-        );
+        ];
     }
 
     /**
@@ -65,7 +65,7 @@ class QueryStockParamsCollection extends QueryParamsCollection
      */
     protected function getValidOrderParams()
     {
-        return array(
+        return [
             'product',
             'reference',
             'supplier',
@@ -73,7 +73,7 @@ class QueryStockParamsCollection extends QueryParamsCollection
             'physical_quantity',
             'active',
             'low_stock',
-        );
+        ];
     }
 
     /**
@@ -83,7 +83,7 @@ class QueryStockParamsCollection extends QueryParamsCollection
      */
     protected function setDefaultOrderParam($queryParams)
     {
-        $queryParams['order'] = array('product DESC');
+        $queryParams['order'] = ['product DESC'];
 
         return $queryParams;
     }

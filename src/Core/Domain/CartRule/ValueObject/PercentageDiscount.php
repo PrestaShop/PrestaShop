@@ -50,10 +50,7 @@ class PercentageDiscount
     public function __construct(float $percentage, bool $appliesToDiscountedProducts)
     {
         if ($percentage <= 0 || $percentage > 100) {
-            throw new CartRuleConstraintException(
-                'Percentage must be greater than 0 and not greater than 100',
-                CartRuleConstraintException::INVALID_PERCENTAGE
-            );
+            throw new CartRuleConstraintException('Percentage must be greater than 0 and not greater than 100', CartRuleConstraintException::INVALID_PERCENTAGE);
         }
 
         $this->percentage = $percentage;

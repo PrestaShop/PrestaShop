@@ -26,11 +26,11 @@
 
 namespace Tests\TestCase;
 
+use LegacyTests\PrestaShopBundle\Utils\DatabaseCreator as Database;
+use LegacyTests\Unit\ContextMocker;
 use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use LegacyTests\Unit\ContextMocker;
-use LegacyTests\PrestaShopBundle\Utils\DatabaseCreator as Database;
 
 class SymfonyIntegrationTestCase extends WebTestCase
 {

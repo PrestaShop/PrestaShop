@@ -48,20 +48,20 @@ class AdminSearchConfControllerCore extends AdminController
             $this->deleted = false;
         }
 
-        $this->bulk_actions = array(
-            'delete' => array(
-                'text' => $this->trans('Delete selected', array(), 'Admin.Actions'),
-                'confirm' => $this->trans('Delete selected items?', array(), 'Admin.Notifications.Info'),
+        $this->bulk_actions = [
+            'delete' => [
+                'text' => $this->trans('Delete selected', [], 'Admin.Actions'),
+                'confirm' => $this->trans('Delete selected items?', [], 'Admin.Notifications.Info'),
                 'icon' => 'icon-trash',
-            ),
-        );
+            ],
+        ];
 
-        $this->fields_list = array(
-            'alias' => array('title' => $this->trans('Aliases', array(), 'Admin.Shopparameters.Feature')),
+        $this->fields_list = [
+            'alias' => ['title' => $this->trans('Aliases', [], 'Admin.Shopparameters.Feature')],
             // Search is a noum here.
-            'search' => array('title' => $this->trans('Search', array(), 'Admin.Shopparameters.Feature')),
-            'active' => array('title' => $this->trans('Status', array(), 'Admin.Global'), 'class' => 'fixed-width-sm', 'align' => 'center', 'active' => 'status', 'type' => 'bool', 'orderby' => false),
-        );
+            'search' => ['title' => $this->trans('Search', [], 'Admin.Shopparameters.Feature')],
+            'active' => ['title' => $this->trans('Status', [], 'Admin.Global'), 'class' => 'fixed-width-sm', 'align' => 'center', 'active' => 'status', 'type' => 'bool', 'orderby' => false],
+        ];
 
         $params = [
             'action' => 'searchCron',
@@ -83,46 +83,46 @@ class AdminSearchConfControllerCore extends AdminController
 
         list($total, $indexed) = Db::getInstance()->getRow('SELECT COUNT(*) as "0", SUM(product_shop.indexed) as "1" FROM ' . _DB_PREFIX_ . 'product p ' . Shop::addSqlAssociation('product', 'p') . ' WHERE product_shop.`visibility` IN ("both", "search") AND product_shop.`active` = 1');
 
-        $this->fields_options = array(
-            'indexation' => array(
-                'title' => $this->trans('Indexing', array(), 'Admin.Shopparameters.Feature'),
+        $this->fields_options = [
+            'indexation' => [
+                'title' => $this->trans('Indexing', [], 'Admin.Shopparameters.Feature'),
                 'icon' => 'icon-cogs',
                 'info' => '<p>
-						' . $this->trans('The "indexed" products have been analyzed by PrestaShop and will appear in the results of a front office search.', array(), 'Admin.Shopparameters.Feature') . '<br />
-						' . $this->trans('Indexed products', array(), 'Admin.Shopparameters.Feature') . ' <strong>' . (int) $indexed . ' / ' . (int) $total . '</strong>.
+						' . $this->trans('The "indexed" products have been analyzed by PrestaShop and will appear in the results of a front office search.', [], 'Admin.Shopparameters.Feature') . '<br />
+						' . $this->trans('Indexed products', [], 'Admin.Shopparameters.Feature') . ' <strong>' . (int) $indexed . ' / ' . (int) $total . '</strong>.
 					</p>
 					<p>
-						' . $this->trans('Building the product index may take a few minutes.', array(), 'Admin.Shopparameters.Feature') . '
-						' . $this->trans('If your server stops before the process ends, you can resume the indexing by clicking "Add missing products to the index".', array(), 'Admin.Shopparameters.Feature') . '
+						' . $this->trans('Building the product index may take a few minutes.', [], 'Admin.Shopparameters.Feature') . '
+						' . $this->trans('If your server stops before the process ends, you can resume the indexing by clicking "Add missing products to the index".', [], 'Admin.Shopparameters.Feature') . '
 					</p>
 					<a href="' . Context::getContext()->link->getAdminLink('AdminSearch', false) . '&action=searchCron&ajax=1&token=' . $this->getTokenForCron() . '&amp;redirect=1' . (Shop::getContext() == Shop::CONTEXT_SHOP ? '&id_shop=' . (int) Context::getContext()->shop->id : '') . '" class="btn-link">
 						<i class="icon-external-link-sign"></i>
-						' . $this->trans('Add missing products to the index', array(), 'Admin.Shopparameters.Feature') . '
+						' . $this->trans('Add missing products to the index', [], 'Admin.Shopparameters.Feature') . '
 					</a><br />
 					<a href="' . Context::getContext()->link->getAdminLink('AdminSearch', false) . '&action=searchCron&ajax=1&full=1&amp;token=' . $this->getTokenForCron() . '&amp;redirect=1' . (Shop::getContext() == Shop::CONTEXT_SHOP ? '&id_shop=' . (int) Context::getContext()->shop->id : '') . '" class="btn-link">
 						<i class="icon-external-link-sign"></i>
-						' . $this->trans('Re-build the entire index', array(), 'Admin.Shopparameters.Feature') . '
+						' . $this->trans('Re-build the entire index', [], 'Admin.Shopparameters.Feature') . '
 					</a><br /><br />
 					<p>
-						' . $this->trans('You can set a cron job that will rebuild your index using the following URL:', array(), 'Admin.Shopparameters.Feature') . '<br />
+						' . $this->trans('You can set a cron job that will rebuild your index using the following URL:', [], 'Admin.Shopparameters.Feature') . '<br />
 						<a href="' . Tools::safeOutput($cron_url) . '">
 							<i class="icon-external-link-sign"></i>
 							' . Tools::safeOutput($cron_url) . '
 						</a>
 					</p><br />',
-                'fields' => array(
-                    'PS_SEARCH_INDEXATION' => array(
-                        'title' => $this->trans('Indexing', array(), 'Admin.Shopparameters.Feature'),
+                'fields' => [
+                    'PS_SEARCH_INDEXATION' => [
+                        'title' => $this->trans('Indexing', [], 'Admin.Shopparameters.Feature'),
                         'validation' => 'isBool',
                         'type' => 'bool',
                         'cast' => 'intval',
-                        'desc' => $this->trans('Enable the automatic indexing of products. If you enable this feature, the products will be indexed in the search automatically when they are saved. If the feature is disabled, you will have to index products manually by using the links provided in the field set.', array(), 'Admin.Shopparameters.Help'),
-                    ),
-                ),
-                'submit' => array('title' => $this->trans('Save', array(), 'Admin.Actions')),
-            ),
-            'search' => array(
-                'title' => $this->trans('Search', array(), 'Admin.Shopparameters.Feature'),
+                        'desc' => $this->trans('Enable the automatic indexing of products. If you enable this feature, the products will be indexed in the search automatically when they are saved. If the feature is disabled, you will have to index products manually by using the links provided in the field set.', [], 'Admin.Shopparameters.Help'),
+                    ],
+                ],
+                'submit' => ['title' => $this->trans('Save', [], 'Admin.Actions')],
+            ],
+            'search' => [
+                'title' => $this->trans('Search', [], 'Admin.Shopparameters.Feature'),
                 'icon' => 'icon-search',
                 'info' => '<div class="alert alert-info">' .
                     $this->trans('We are thrilled to introduce you to the fuzzy search, one of the new features from 1.7.7! Please note that it is still in beta version, so feel free to share improvement ideas on GitHub to have it enhanced.',
@@ -130,110 +130,110 @@ class AdminSearchConfControllerCore extends AdminController
                         'Admin.Shopparameters.Help') .
                     '</div>' . '<p><a href="https://github.com/PrestaShop/PrestaShop/issues/new?template=bug_report.md" target="_blank" class="btn-link"><i class="icon-external-link-sign"></i> Signaler un problème sur GitHub</a><br>'
                     . '<a href="https://github.com/PrestaShop/PrestaShop/issues/new?template=feature_request.md" target="_blank"><i class="icon-external-link-sign"></i> Proposer une idée d\'amélioration sur GitHub</a>',
-                'fields' => array(
-                    'PS_SEARCH_START' => array(
-                        'title' => $this->trans('Search within word', array(), 'Admin.Shopparameters.Feature'),
+                'fields' => [
+                    'PS_SEARCH_START' => [
+                        'title' => $this->trans('Search within word', [], 'Admin.Shopparameters.Feature'),
                         'validation' => 'isBool',
                         'cast' => 'intval',
                         'type' => 'bool',
                         'desc' => $this->trans(
                                 'By default, to search for “blouse”, you have to enter “blous”, “blo”, etc (beginning of the word) – but not “lous” (within the word).',
-                                array(),
+                                [],
                                 'Admin.Shopparameters.Help'
                             ) . '<br/>' .
                             $this->trans(
                                 'With this option enabled, it also gives the good result if you search for “lous”, “ouse”, or anything contained in the word.',
-                                array(),
+                                [],
                                 'Admin.Shopparameters.Help'
                             ),
-                        'hint' => array(
+                        'hint' => [
                             $this->trans(
                                 'Enable search within a whole word, rather than from its beginning only.',
-                                array(),
+                                [],
                                 'Admin.Shopparameters.Help'
                             ),
                             $this->trans(
                                 'It checks if the searched term is contained in the indexed word. This may be resource-consuming.',
-                                array(),
+                                [],
                                 'Admin.Shopparameters.Help'
                             ),
-                        ),
-                    ),
-                    'PS_SEARCH_END' => array(
-                        'title' => $this->trans('Search exact end match', array(), 'Admin.Shopparameters.Feature'),
+                        ],
+                    ],
+                    'PS_SEARCH_END' => [
+                        'title' => $this->trans('Search exact end match', [], 'Admin.Shopparameters.Feature'),
                         'validation' => 'isBool',
                         'cast' => 'intval',
                         'type' => 'bool',
                         'desc' => $this->trans(
                                 'By default, if you search "book", you will have "book", "bookcase" and "bookend".',
-                                array(),
+                                [],
                                 'Admin.Shopparameters.Help'
                             ) . '<br/>' .
                             $this->trans(
                                 'With this option enabled, it only gives one result “book”, as exact end of the indexed word is matching.',
-                                array(),
+                                [],
                                 'Admin.Shopparameters.Help'
                             ),
-                        'hint' => array(
+                        'hint' => [
                             $this->trans(
                                 'Enable more precise search with the end of the word.',
-                                array(),
+                                [],
                                 'Admin.Shopparameters.Help'
                             ),
                             $this->trans(
                                 'It checks if the searched term is the exact end of the indexed word.',
-                                array(),
+                                [],
                                 'Admin.Shopparameters.Help'
                             ),
-                        ),
-                    ),
-                    'PS_SEARCH_FUZZY' => array(
-                        'title' => $this->trans('Fuzzy search', array(), 'Admin.Shopparameters.Feature'),
+                        ],
+                    ],
+                    'PS_SEARCH_FUZZY' => [
+                        'title' => $this->trans('Fuzzy search', [], 'Admin.Shopparameters.Feature'),
                         'validation' => 'isBool',
                         'cast' => 'intval',
                         'type' => 'bool',
                         'desc' => $this->trans(
                                 'By default, the fuzzy search is enabled. It means spelling errors are allowed, e.g. you can search for "bird" with words like "burd", "bard" or "beerd".',
-                                array(),
+                                [],
                                 'Admin.Shopparameters.Help'
                             ) . '<br/>' .
                             $this->trans(
                                 'Disabling this option will require exact spelling for the search to match result.',
-                                array(),
+                                [],
                                 'Admin.Shopparameters.Help'
                             ),
-                        'hint' => array(
+                        'hint' => [
                             $this->trans(
                                 'Enable approximate string matching.',
-                                array(),
+                                [],
                                 'Admin.Shopparameters.Help'
                             ),
-                        ),
-                    ),
-                    'PS_SEARCH_FUZZY_MAX_LOOP' => array(
+                        ],
+                    ],
+                    'PS_SEARCH_FUZZY_MAX_LOOP' => [
                         'title' => $this->trans(
                             'Maximum approximate strings allowed by fuzzy search',
-                            array(),
+                            [],
                             'Admin.Shopparameters.Feature'
                         ),
                         'hint' => $this->trans(
                             'Note that this option is resource-consuming: the more you search, the longer it takes.',
-                            array(),
+                            [],
                             'Admin.Shopparameters.Help'
                         ),
                         'validation' => 'isUnsignedInt',
                         'type' => 'text',
                         'cast' => 'intval',
-                    ),
-                    'PS_SEARCH_MAX_WORD_LENGTH' => array(
+                    ],
+                    'PS_SEARCH_MAX_WORD_LENGTH' => [
                         'title' => $this->trans(
                             'Maximum word length (in characters)',
-                            array(),
+                            [],
                             'Admin.Shopparameters.Feature'
                         ),
                         'hint' => $this->trans(
                             'Only words this maximum size or smaller will be used during the search.',
-                            array(),
+                            [],
                             'Admin.Shopparameters.Help'
                         ),
                         'desc' => $this->trans(
@@ -245,139 +245,139 @@ class AdminSearchConfControllerCore extends AdminController
                         'type' => 'text',
                         'cast' => 'intval',
                         'required' => true,
-                    ),
-                    'PS_SEARCH_MINWORDLEN' => array(
+                    ],
+                    'PS_SEARCH_MINWORDLEN' => [
                         'title' => $this->trans(
                             'Minimum word length (in characters)',
-                            array(),
+                            [],
                             'Admin.Shopparameters.Feature'
                         ),
                         'hint' => $this->trans(
                             'Only words this size or larger will be indexed.',
-                            array(),
+                            [],
                             'Admin.Shopparameters.Help'
                         ),
                         'validation' => 'isUnsignedInt',
                         'type' => 'text',
                         'cast' => 'intval',
-                    ),
-                    'PS_SEARCH_BLACKLIST' => array(
-                        'title' => $this->trans('Blacklisted words', array(), 'Admin.Shopparameters.Feature'),
+                    ],
+                    'PS_SEARCH_BLACKLIST' => [
+                        'title' => $this->trans('Blacklisted words', [], 'Admin.Shopparameters.Feature'),
                         'validation' => 'isGenericName',
                         'hint' => $this->trans(
                             'Please enter the index words separated by a "|".',
-                            array(),
+                            [],
                             'Admin.Shopparameters.Help'
                         ),
                         'type' => 'textareaLang',
-                    ),
-                ),
-                'submit' => array('title' => $this->trans('Save', array(), 'Admin.Actions')),
-            ),
-            'relevance' => array(
-                'title' => $this->trans('Weight', array(), 'Admin.Shopparameters.Feature'),
+                    ],
+                ],
+                'submit' => ['title' => $this->trans('Save', [], 'Admin.Actions')],
+            ],
+            'relevance' => [
+                'title' => $this->trans('Weight', [], 'Admin.Shopparameters.Feature'),
                 'icon' => 'icon-cogs',
                 'info' => $this->trans(
                         'The "weight" represents its importance and relevance for the ranking of the products when completing a new search.',
-                        array(),
+                        [],
                         'Admin.Shopparameters.Feature'
                     ) . '<br />
 						' . $this->trans(
                         'A word with a weight of eight will have four times more value than a word with a weight of two.',
-                        array(),
+                        [],
                         'Admin.Shopparameters.Feature'
                     ) . '<br /><br />
 						' . $this->trans(
                         'We advise you to set a greater weight for words which appear in the name or reference of a product. This will allow the search results to be as precise and relevant as possible.',
-                        array(),
+                        [],
                         'Admin.Shopparameters.Feature'
                     ) . '<br /><br />
 						' . $this->trans(
                         'Setting a weight to 0 will exclude that field from search index. Re-build of the entire index is required when changing to or from 0',
-                        array(),
+                        [],
                         'Admin.Shopparameters.Feature'
                     ),
-                'fields' => array(
-                    'PS_SEARCH_WEIGHT_PNAME' => array(
-                        'title' => $this->trans('Product name weight', array(), 'Admin.Shopparameters.Feature'),
+                'fields' => [
+                    'PS_SEARCH_WEIGHT_PNAME' => [
+                        'title' => $this->trans('Product name weight', [], 'Admin.Shopparameters.Feature'),
                         'validation' => 'isUnsignedInt',
                         'type' => 'text',
                         'cast' => 'intval',
-                    ),
-                    'PS_SEARCH_WEIGHT_REF' => array(
-                        'title' => $this->trans('Reference weight', array(), 'Admin.Shopparameters.Feature'),
+                    ],
+                    'PS_SEARCH_WEIGHT_REF' => [
+                        'title' => $this->trans('Reference weight', [], 'Admin.Shopparameters.Feature'),
                         'validation' => 'isUnsignedInt',
                         'type' => 'text',
                         'cast' => 'intval',
-                    ),
-                    'PS_SEARCH_WEIGHT_SHORTDESC' => array(
+                    ],
+                    'PS_SEARCH_WEIGHT_SHORTDESC' => [
                         'title' => $this->trans(
                             'Short description weight',
-                            array(),
+                            [],
                             'Admin.Shopparameters.Feature'
                         ),
                         'validation' => 'isUnsignedInt',
                         'type' => 'text',
                         'cast' => 'intval',
-                    ),
-                    'PS_SEARCH_WEIGHT_DESC' => array(
-                        'title' => $this->trans('Description weight', array(), 'Admin.Shopparameters.Feature'),
+                    ],
+                    'PS_SEARCH_WEIGHT_DESC' => [
+                        'title' => $this->trans('Description weight', [], 'Admin.Shopparameters.Feature'),
                         'validation' => 'isUnsignedInt',
                         'type' => 'text',
                         'cast' => 'intval',
-                    ),
-                    'PS_SEARCH_WEIGHT_CNAME' => array(
-                        'title' => $this->trans('Category weight', array(), 'Admin.Shopparameters.Feature'),
+                    ],
+                    'PS_SEARCH_WEIGHT_CNAME' => [
+                        'title' => $this->trans('Category weight', [], 'Admin.Shopparameters.Feature'),
                         'validation' => 'isUnsignedInt',
                         'type' => 'text',
                         'cast' => 'intval',
-                    ),
-                    'PS_SEARCH_WEIGHT_MNAME' => array(
-                        'title' => $this->trans('Brand weight', array(), 'Admin.Shopparameters.Feature'),
+                    ],
+                    'PS_SEARCH_WEIGHT_MNAME' => [
+                        'title' => $this->trans('Brand weight', [], 'Admin.Shopparameters.Feature'),
                         'validation' => 'isUnsignedInt',
                         'type' => 'text',
                         'cast' => 'intval',
-                    ),
-                    'PS_SEARCH_WEIGHT_TAG' => array(
-                        'title' => $this->trans('Tags weight', array(), 'Admin.Shopparameters.Feature'),
+                    ],
+                    'PS_SEARCH_WEIGHT_TAG' => [
+                        'title' => $this->trans('Tags weight', [], 'Admin.Shopparameters.Feature'),
                         'validation' => 'isUnsignedInt',
                         'type' => 'text',
                         'cast' => 'intval',
-                    ),
-                    'PS_SEARCH_WEIGHT_ATTRIBUTE' => array(
-                        'title' => $this->trans('Attributes weight', array(), 'Admin.Shopparameters.Feature'),
+                    ],
+                    'PS_SEARCH_WEIGHT_ATTRIBUTE' => [
+                        'title' => $this->trans('Attributes weight', [], 'Admin.Shopparameters.Feature'),
                         'validation' => 'isUnsignedInt',
                         'type' => 'text',
                         'cast' => 'intval',
-                    ),
-                    'PS_SEARCH_WEIGHT_FEATURE' => array(
-                        'title' => $this->trans('Features weight', array(), 'Admin.Shopparameters.Feature'),
+                    ],
+                    'PS_SEARCH_WEIGHT_FEATURE' => [
+                        'title' => $this->trans('Features weight', [], 'Admin.Shopparameters.Feature'),
                         'validation' => 'isUnsignedInt',
                         'type' => 'text',
                         'cast' => 'intval',
-                    ),
-                ),
-                'submit' => array('title' => $this->trans('Save', array(), 'Admin.Actions')),
-            ),
-        );
+                    ],
+                ],
+                'submit' => ['title' => $this->trans('Save', [], 'Admin.Actions')],
+            ],
+        ];
     }
 
     public function initPageHeaderToolbar()
     {
         if (empty($this->display)) {
-            $this->page_header_toolbar_btn['new_alias'] = array(
+            $this->page_header_toolbar_btn['new_alias'] = [
                 'href' => self::$currentIndex . '&addalias&token=' . $this->token,
-                'desc' => $this->trans('Add new alias', array(), 'Admin.Shopparameters.Feature'),
+                'desc' => $this->trans('Add new alias', [], 'Admin.Shopparameters.Feature'),
                 'icon' => 'process-icon-new',
-            );
+            ];
         }
         $this->identifier_name = 'alias';
         parent::initPageHeaderToolbar();
         if ($this->can_import) {
-            $this->toolbar_btn['import'] = array(
+            $this->toolbar_btn['import'] = [
                 'href' => $this->context->link->getAdminLink('AdminImport', true) . '&import_type=alias',
-                'desc' => $this->trans('Import', array(), 'Admin.Actions'),
-            );
+                'desc' => $this->trans('Import', [], 'Admin.Actions'),
+            ];
         }
     }
 
@@ -399,10 +399,10 @@ class AdminSearchConfControllerCore extends AdminController
             $helper = new HelperOptions($this);
             $this->setHelperDisplay($helper);
             $helper->toolbar_scroll = true;
-            $helper->toolbar_btn = array('save' => array(
+            $helper->toolbar_btn = ['save' => [
                 'href' => '#',
-                'desc' => $this->trans('Save', array(), 'Admin.Actions'),
-            ));
+                'desc' => $this->trans('Save', [], 'Admin.Actions'),
+            ]];
             $helper->id = $this->id;
             $helper->tpl_vars = $this->tpl_option_vars;
             $options = $helper->generateOptions($this->fields_options);
@@ -413,36 +413,36 @@ class AdminSearchConfControllerCore extends AdminController
 
     public function renderForm()
     {
-        $this->fields_form = array(
-            'legend' => array(
-                'title' => $this->trans('Aliases', array(), 'Admin.Shopparameters.Feature'),
+        $this->fields_form = [
+            'legend' => [
+                'title' => $this->trans('Aliases', [], 'Admin.Shopparameters.Feature'),
                 'icon' => 'icon-search',
-            ),
-            'input' => array(
-                array(
+            ],
+            'input' => [
+                [
                     'type' => 'text',
-                    'label' => $this->trans('Alias', array(), 'Admin.Shopparameters.Feature'),
+                    'label' => $this->trans('Alias', [], 'Admin.Shopparameters.Feature'),
                     'name' => 'alias',
                     'required' => true,
-                    'hint' => array(
-                        $this->trans('Enter each alias separated by a comma (e.g. \'prestshop,preztashop,prestasohp\').', array(), 'Admin.Shopparameters.Help'),
-                        $this->trans('Forbidden characters: &lt;&gt;;=#{}', array(), 'Admin.Shopparameters.Help'),
-                    ),
-                ),
-                array(
+                    'hint' => [
+                        $this->trans('Enter each alias separated by a comma (e.g. \'prestshop,preztashop,prestasohp\').', [], 'Admin.Shopparameters.Help'),
+                        $this->trans('Forbidden characters: &lt;&gt;;=#{}', [], 'Admin.Shopparameters.Help'),
+                    ],
+                ],
+                [
                     'type' => 'text',
-                    'label' => $this->trans('Result', array(), 'Admin.Shopparameters.Feature'),
+                    'label' => $this->trans('Result', [], 'Admin.Shopparameters.Feature'),
                     'name' => 'search',
                     'required' => true,
-                    'hint' => $this->trans('Search this word instead.', array(), 'Admin.Shopparameters.Help'),
-                ),
-            ),
-            'submit' => array(
-                'title' => $this->trans('Save', array(), 'Admin.Actions'),
-            ),
-        );
+                    'hint' => $this->trans('Search this word instead.', [], 'Admin.Shopparameters.Help'),
+                ],
+            ],
+            'submit' => [
+                'title' => $this->trans('Save', [], 'Admin.Actions'),
+            ],
+        ];
 
-        $this->fields_value = array('alias' => $this->object->getAliases());
+        $this->fields_value = ['alias' => $this->object->getAliases()];
 
         return parent::renderForm();
     }
@@ -453,14 +453,14 @@ class AdminSearchConfControllerCore extends AdminController
         $string = (string) Tools::getValue('alias');
         $aliases = explode(',', $string);
         if (empty($search) || empty($string)) {
-            $this->errors[] = $this->trans('Aliases and results are both required.', array(), 'Admin.Shopparameters.Notification');
+            $this->errors[] = $this->trans('Aliases and results are both required.', [], 'Admin.Shopparameters.Notification');
         }
         if (!Validate::isValidSearch($search)) {
-            $this->errors[] = $search . ' ' . $this->trans('Is not a valid result', array(), 'Admin.Shopparameters.Notification');
+            $this->errors[] = $search . ' ' . $this->trans('Is not a valid result', [], 'Admin.Shopparameters.Notification');
         }
         foreach ($aliases as $alias) {
             if (!Validate::isValidSearch($alias)) {
-                $this->errors[] = $alias . ' ' . $this->trans('Is not a valid alias', array(), 'Admin.Shopparameters.Notification');
+                $this->errors[] = $alias . ' ' . $this->trans('Is not a valid alias', [], 'Admin.Shopparameters.Notification');
             }
         }
 
@@ -472,7 +472,7 @@ class AdminSearchConfControllerCore extends AdminController
         }
 
         if (empty($this->errors)) {
-            $this->confirmations[] = $this->trans('Creation successful', array(), 'Admin.Shopparameters.Notification');
+            $this->confirmations[] = $this->trans('Creation successful', [], 'Admin.Shopparameters.Notification');
         }
     }
 

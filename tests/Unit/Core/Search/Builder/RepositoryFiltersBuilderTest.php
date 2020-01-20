@@ -26,8 +26,8 @@
 
 namespace Tests\Unit\Core\Search\Builder;
 
-use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Employee\ContextEmployeeProviderInterface;
 use PrestaShop\PrestaShop\Core\Search\Builder\RepositoryFiltersBuilder;
 use PrestaShop\PrestaShop\Core\Search\Filters;

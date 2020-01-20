@@ -47,10 +47,7 @@ final class UpdateInvoiceNoteHandler implements UpdateInvoiceNoteHandlerInterfac
         $orderInvoice = new OrderInvoice($command->getOrderInvoiceId()->getValue());
 
         if (!Validate::isLoadedObject($orderInvoice) && Validate::isCleanHtml($note)) {
-            throw new InvoiceNotFoundException(sprintf(
-                'Order invoice with id "%d" was not found',
-                $command->getOrderInvoiceId()->getValue()
-            ));
+            throw new InvoiceNotFoundException(sprintf('Order invoice with id "%d" was not found', $command->getOrderInvoiceId()->getValue()));
         }
 
         $orderInvoice->note = $note;

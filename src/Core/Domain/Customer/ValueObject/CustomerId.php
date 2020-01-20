@@ -62,12 +62,7 @@ class CustomerId
     private function assertIntegerIsGreaterThanZero($customerId)
     {
         if (!is_int($customerId) || 0 > $customerId) {
-            throw new CustomerException(
-                sprintf(
-                    'Customer id %s is invalid. Customer id must be number that is greater than zero.',
-                    var_export($customerId, true)
-                )
-            );
+            throw new CustomerException(sprintf('Customer id %s is invalid. Customer id must be number that is greater than zero.', var_export($customerId, true)));
         }
     }
 }

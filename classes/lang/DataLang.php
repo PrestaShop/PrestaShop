@@ -66,7 +66,7 @@ class DataLangCore
 
     public function getFieldValue($field, $value)
     {
-        return $this->translator->trans($value, array(), $this->domain, $this->locale);
+        return $this->translator->trans($value, [], $this->domain, $this->locale);
     }
 
     public function getKeys()

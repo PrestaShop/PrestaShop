@@ -69,12 +69,7 @@ class SetRequiredFieldsForCustomerCommand
         }
 
         if (!empty(array_diff($requiredFields, RequiredField::ALLOWED_REQUIRED_FIELDS))) {
-            throw new InvalidCustomerRequiredFieldsException(
-                sprintf(
-                    'Invalid customer required fields provided. Allowed fields are: %s',
-                    implode(',', RequiredField::ALLOWED_REQUIRED_FIELDS)
-                )
-            );
+            throw new InvalidCustomerRequiredFieldsException(sprintf('Invalid customer required fields provided. Allowed fields are: %s', implode(',', RequiredField::ALLOWED_REQUIRED_FIELDS)));
         }
     }
 }

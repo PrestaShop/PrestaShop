@@ -34,10 +34,10 @@ class HelperFormCore extends Helper
     public $first_call = true;
 
     /** @var array of forms fields */
-    protected $fields_form = array();
+    protected $fields_form = [];
 
     /** @var array values of form fields */
-    public $fields_value = array();
+    public $fields_value = [];
     public $name_controller = '';
 
     /** @var string if not null, a title will be added on that list */
@@ -155,34 +155,34 @@ class HelperFormCore extends Helper
                             if (isset($params['files']) && $params['files']) {
                                 $uploader->setFiles($params['files']);
                             } elseif (isset($params['image']) && $params['image']) { // Use for retrocompatibility
-                                $uploader->setFiles(array(
-                                    0 => array(
+                                $uploader->setFiles([
+                                    0 => [
                                         'type' => HelperUploader::TYPE_IMAGE,
                                         'image' => isset($params['image']) ? $params['image'] : null,
                                         'size' => isset($params['size']) ? $params['size'] : null,
                                         'delete_url' => isset($params['delete_url']) ? $params['delete_url'] : null,
-                                    ),
-                                ));
+                                    ],
+                                ]);
                             }
 
                             if (isset($params['file']) && $params['file']) { // Use for retrocompatibility
-                                $uploader->setFiles(array(
-                                    0 => array(
+                                $uploader->setFiles([
+                                    0 => [
                                         'type' => HelperUploader::TYPE_FILE,
                                         'size' => isset($params['size']) ? $params['size'] : null,
                                         'delete_url' => isset($params['delete_url']) ? $params['delete_url'] : null,
                                         'download_url' => isset($params['file']) ? $params['file'] : null,
-                                    ),
-                                ));
+                                    ],
+                                ]);
                             }
 
                             if (isset($params['thumb']) && $params['thumb']) { // Use for retrocompatibility
-                                $uploader->setFiles(array(
-                                    0 => array(
+                                $uploader->setFiles([
+                                    0 => [
                                         'type' => HelperUploader::TYPE_IMAGE,
                                         'image' => isset($params['thumb']) ? '<img src="' . $params['thumb'] . '" alt="' . (isset($params['title']) ? $params['title'] : '') . '" title="' . (isset($params['title']) ? $params['title'] : '') . '" />' : null,
-                                    ),
-                                ));
+                                    ],
+                                ]);
                             }
 
                             $uploader->setTitle(isset($params['title']) ? $params['title'] : null);
@@ -246,7 +246,7 @@ class HelperFormCore extends Helper
         $moduleManagerBuilder = ModuleManagerBuilder::getInstance();
         $moduleManager = $moduleManagerBuilder->build();
 
-        $this->tpl->assign(array(
+        $this->tpl->assign([
             'title' => $this->title,
             'toolbar_btn' => $this->toolbar_btn,
             'show_toolbar' => $this->show_toolbar,
@@ -274,7 +274,7 @@ class HelperFormCore extends Helper
             'dni_required' => (isset($this->fields_value['id_country'], $this->fields_value['dni'])) ? Address::dniRequired($this->fields_value['id_country']) : null,
             'show_cancel_button' => $this->show_cancel_button,
             'back_url' => $this->back_url,
-        ));
+        ]);
 
         return parent::generate();
     }
@@ -308,7 +308,7 @@ class HelperFormCore extends Helper
             return;
         }
 
-        $assos = array();
+        $assos = [];
         if ((int) $this->id) {
             $sql = 'SELECT `id_shop`, `' . bqSQL($this->identifier) . '`
 					FROM `' . _DB_PREFIX_ . bqSQL($this->table) . '_shop`

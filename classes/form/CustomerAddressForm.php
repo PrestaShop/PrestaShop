@@ -112,7 +112,7 @@ class CustomerAddressFormCore extends AbstractForm
                 if (!$country->checkZipCode($postcode->getValue())) {
                     $postcode->addError($this->translator->trans(
                         'Invalid postcode - should look like "%zipcode%"',
-                        array('%zipcode%' => $country->zip_code_format),
+                        ['%zipcode%' => $country->zip_code_format],
                         'Shop.Forms.Errors'
                     ));
                     $is_valid = false;
@@ -120,7 +120,7 @@ class CustomerAddressFormCore extends AbstractForm
             }
         }
 
-        if (($hookReturn = Hook::exec('actionValidateCustomerAddressForm', array('form' => $this))) !== '') {
+        if (($hookReturn = Hook::exec('actionValidateCustomerAddressForm', ['form' => $this])) !== '') {
             $is_valid &= (bool) $hookReturn;
         }
 
@@ -150,7 +150,7 @@ class CustomerAddressFormCore extends AbstractForm
             $address->alias = $this->translator->trans('My Address', [], 'Shop.Theme.Checkout');
         }
 
-        Hook::exec('actionSubmitCustomerAddressForm', array('address' => &$address));
+        Hook::exec('actionSubmitCustomerAddressForm', ['address' => &$address]);
 
         $this->setAddress($address);
 
@@ -210,11 +210,11 @@ class CustomerAddressFormCore extends AbstractForm
             $formFields['lastname']['value'] = $context->customer->lastname;
         }
 
-        return array(
+        return [
             'id_address' => (isset($this->address->id)) ? $this->address->id : 0,
             'action' => $this->action,
             'errors' => $this->getErrors(),
             'formFields' => $formFields,
-        );
+        ];
     }
 }

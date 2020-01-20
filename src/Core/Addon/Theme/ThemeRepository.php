@@ -127,7 +127,7 @@ class ThemeRepository implements AddonRepositoryInterface
         $suffix = 'config/theme.yml';
         $themeDirectories = glob($this->appConfiguration->get('_PS_ALL_THEMES_DIR_') . '*/' . $suffix, GLOB_NOSORT);
 
-        $themes = array();
+        $themes = [];
         foreach ($themeDirectories as $directory) {
             $name = basename(substr($directory, 0, -strlen($suffix)));
             $theme = $this->getInstanceByName($name);
@@ -142,10 +142,7 @@ class ThemeRepository implements AddonRepositoryInterface
     private function getConfigFromFile($file)
     {
         if (!$this->filesystem->exists($file)) {
-            throw new PrestaShopException(sprintf(
-                '[ThemeRepository] Theme configuration file not found for theme at `%s`.',
-                $file
-            ));
+            throw new PrestaShopException(sprintf('[ThemeRepository] Theme configuration file not found for theme at `%s`.', $file));
         }
 
         $content = file_get_contents($file);

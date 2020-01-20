@@ -62,14 +62,7 @@ class FeatureFeatureContext extends AbstractDomainFeatureContext
         $productFeature = SharedStorage::getStorage()->get($reference);
 
         if ($productFeature->name[$defaultLanguageId] !== $name) {
-            throw new RuntimeException(
-                sprintf(
-                    'Feature "%s" name was expected to be "%s" but is "%s"',
-                    $reference,
-                    $name,
-                    $productFeature->name[$defaultLanguageId]
-                )
-            );
+            throw new RuntimeException(sprintf('Feature "%s" name was expected to be "%s" but is "%s"', $reference, $name, $productFeature->name[$defaultLanguageId]));
         }
     }
 
@@ -115,12 +108,7 @@ class FeatureFeatureContext extends AbstractDomainFeatureContext
         $featureNames = $editableFeature->getName();
 
         if ($featureNames[$defaultLanguageId] !== $featureName) {
-            throw new RuntimeException(sprintf(
-                'Product feature with id "%s" has name "%s", but "%s" was expected',
-                $featureId,
-                $featureNames[$defaultLanguageId],
-                $featureName
-            ));
+            throw new RuntimeException(sprintf('Product feature with id "%s" has name "%s", but "%s" was expected', $featureId, $featureNames[$defaultLanguageId], $featureName));
         }
     }
 

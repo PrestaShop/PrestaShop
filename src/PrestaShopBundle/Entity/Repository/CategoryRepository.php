@@ -146,8 +146,8 @@ class CategoryRepository
     {
         $idRootCategory = (new CategoryDataProvider($this->contextAdapter))->getRootCategory()->id;
 
-        $categories = array();
-        $buff = array();
+        $categories = [];
+        $buff = [];
 
         foreach ($rows as $row) {
             $current = &$buff[$row['id_category']];
@@ -160,6 +160,6 @@ class CategoryRepository
             }
         }
 
-        return array('tree' => array('children' => $categories));
+        return ['tree' => ['children' => $categories]];
     }
 }

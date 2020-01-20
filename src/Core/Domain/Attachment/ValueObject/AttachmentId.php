@@ -66,10 +66,7 @@ class AttachmentId
     private function assertIsValidId(int $attachmentId): void
     {
         if (0 >= $attachmentId) {
-            throw new AttachmentConstraintException(
-                sprintf('Invalid Attachment id %s supplied', var_export($attachmentId, true)),
-                AttachmentConstraintException::INVALID_ID
-            );
+            throw new AttachmentConstraintException(sprintf('Invalid Attachment id %s supplied', var_export($attachmentId, true)), AttachmentConstraintException::INVALID_ID);
         }
     }
 }

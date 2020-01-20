@@ -53,9 +53,7 @@ abstract class AbstractTaxHandler
         }
 
         if ($tax->id !== $taxId->getValue()) {
-            throw new TaxNotFoundException(
-                sprintf('Tax with id "%s" was not found.', $taxId->getValue())
-            );
+            throw new TaxNotFoundException(sprintf('Tax with id "%s" was not found.', $taxId->getValue()));
         }
 
         return $tax;

@@ -31,11 +31,11 @@ use Customer;
 use Language;
 use Mail;
 use Order;
-use PrestaShopDatabaseException;
-use PrestaShopException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
+use PrestaShopDatabaseException;
+use PrestaShopException;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**

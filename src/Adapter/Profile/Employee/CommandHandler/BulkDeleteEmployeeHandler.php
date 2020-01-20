@@ -50,10 +50,7 @@ final class BulkDeleteEmployeeHandler extends AbstractEmployeeHandler implements
             $this->assertEmployeeDoesNotManageWarehouse($employee);
 
             if (!$employee->delete()) {
-                throw new CannotDeleteEmployeeException(
-                    $employeeId,
-                    sprintf('Cannot delete employee with id "%s".', $employeeId->getValue())
-                );
+                throw new CannotDeleteEmployeeException($employeeId, sprintf('Cannot delete employee with id "%s".', $employeeId->getValue()));
             }
         }
     }

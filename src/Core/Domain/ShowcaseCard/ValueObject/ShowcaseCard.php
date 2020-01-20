@@ -97,9 +97,7 @@ class ShowcaseCard
     public function __construct($name)
     {
         if (!$this->isSupported($name)) {
-            throw new InvalidShowcaseCardNameException(
-                sprintf('Unsupported showcase card name: %s', print_r($name, true))
-            );
+            throw new InvalidShowcaseCardNameException(sprintf('Unsupported showcase card name: %s', print_r($name, true)));
         }
 
         $this->name = $name;

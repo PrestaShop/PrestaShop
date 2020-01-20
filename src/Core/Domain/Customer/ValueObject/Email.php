@@ -85,10 +85,7 @@ class Email
     private function assertEmailIsValid($email)
     {
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            throw new CustomerConstraintException(
-                sprintf('Customer email %s is invalid.', var_export($email, true)),
-                CustomerConstraintException::INVALID_EMAIL
-            );
+            throw new CustomerConstraintException(sprintf('Customer email %s is invalid.', var_export($email, true)), CustomerConstraintException::INVALID_EMAIL);
         }
     }
 
@@ -105,10 +102,7 @@ class Email
 
         $length = function_exists('mb_strlen') ? mb_strlen($email, 'UTF-8') : strlen($email);
         if (self::MAX_LENGTH < $length) {
-            throw new CustomerConstraintException(
-                sprintf('Customer email is too long. Max allowed length is %s', self::MAX_LENGTH),
-                CustomerConstraintException::INVALID_EMAIL
-            );
+            throw new CustomerConstraintException(sprintf('Customer email is too long. Max allowed length is %s', self::MAX_LENGTH), CustomerConstraintException::INVALID_EMAIL);
         }
     }
 
@@ -122,10 +116,7 @@ class Email
     private function assertEmailIsString($email)
     {
         if (!is_string($email)) {
-            throw new CustomerConstraintException(
-                'Customer email must be of type string',
-                CustomerConstraintException::INVALID_EMAIL
-            );
+            throw new CustomerConstraintException('Customer email must be of type string', CustomerConstraintException::INVALID_EMAIL);
         }
     }
 }

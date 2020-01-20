@@ -70,7 +70,7 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
     public function getHeader()
     {
         $this->assignCommonHeaderData();
-        $this->smarty->assign(array('header' => Context::getContext()->getTranslator()->trans('Credit slip', array(), 'Shop.Pdf')));
+        $this->smarty->assign(['header' => Context::getContext()->getTranslator()->trans('Credit slip', [], 'Shop.Pdf')]);
 
         return $this->smarty->fetch($this->getTemplate('header'));
     }
@@ -83,12 +83,12 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
     public function getContent()
     {
         $delivery_address = $invoice_address = new Address((int) $this->order->id_address_invoice);
-        $formatted_invoice_address = AddressFormat::generateAddress($invoice_address, array(), '<br />', ' ');
+        $formatted_invoice_address = AddressFormat::generateAddress($invoice_address, [], '<br />', ' ');
         $formatted_delivery_address = '';
 
         if ($this->order->id_address_delivery != $this->order->id_address_invoice) {
             $delivery_address = new Address((int) $this->order->id_address_delivery);
-            $formatted_delivery_address = AddressFormat::generateAddress($delivery_address, array(), '<br />', ' ');
+            $formatted_delivery_address = AddressFormat::generateAddress($delivery_address, [], '<br />', ' ');
         }
 
         $customer = new Customer((int) $this->order->id_customer);
@@ -126,7 +126,7 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
 
         $tax = new Tax();
         $tax->rate = $this->order->carrier_tax_rate;
-        $tax_calculator = new TaxCalculator(array($tax));
+        $tax_calculator = new TaxCalculator([$tax]);
         $tax_excluded_display = Group::getPriceDisplayMethod((int) $customer->id_default_group);
 
         $this->order->total_shipping_tax_incl = $this->order_slip->total_shipping_tax_incl;
@@ -147,7 +147,7 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
             }
         }
 
-        $this->smarty->assign(array(
+        $this->smarty->assign([
             'order' => $this->order,
             'order_slip' => $this->order_slip,
             'order_details' => $this->order->products,
@@ -155,12 +155,12 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
             'amount_choosen' => $this->order_slip->order_slip_type == 2 ? true : false,
             'delivery_address' => $formatted_delivery_address,
             'invoice_address' => $formatted_invoice_address,
-            'addresses' => array('invoice' => $invoice_address, 'delivery' => $delivery_address),
+            'addresses' => ['invoice' => $invoice_address, 'delivery' => $delivery_address],
             'tax_excluded_display' => $tax_excluded_display,
             'total_cart_rule' => $total_cart_rule,
-        ));
+        ]);
 
-        $tpls = array(
+        $tpls = [
             'style_tab' => $this->smarty->fetch($this->getTemplate('invoice.style-tab')),
             'addresses_tab' => $this->smarty->fetch($this->getTemplate('invoice.addresses-tab')),
             'summary_tab' => $this->smarty->fetch($this->getTemplate('order-slip.summary-tab')),
@@ -168,7 +168,7 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
             'total_tab' => $this->smarty->fetch($this->getTemplate('order-slip.total-tab')),
             'payment_tab' => $this->smarty->fetch($this->getTemplate('order-slip.payment-tab')),
             'tax_tab' => $this->getTaxTabContent(),
-        );
+        ];
         $this->smarty->assign($tpls);
 
         return $this->smarty->fetch($this->getTemplate('order-slip'));
@@ -206,7 +206,7 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
                             && !empty($address->vat_number)
                             && $address->id_country != Configuration::get('VATNUMBER_COUNTRY');
 
-        $this->smarty->assign(array(
+        $this->smarty->assign([
             'tax_exempt' => $tax_exempt,
             'product_tax_breakdown' => $this->getProductTaxesBreakdown(),
             'shipping_tax_breakdown' => $this->getShippingTaxesBreakdown(),
@@ -215,7 +215,7 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
             'is_order_slip' => true,
             'tax_breakdowns' => $this->getTaxBreakdown(),
             'display_tax_bases_in_breakdowns' => false,
-        ));
+        ]);
 
         return $this->smarty->fetch($this->getTemplate('invoice.tax-tab'));
     }
@@ -227,11 +227,11 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
      */
     protected function getTaxBreakdown()
     {
-        $breakdowns = array(
+        $breakdowns = [
             'product_tax' => $this->getProductTaxesBreakdown(),
             'shipping_tax' => $this->getShippingTaxesBreakdown(),
             'ecotax_tax' => $this->order_slip->getEcoTaxTaxesBreakdown(),
-        );
+        ];
 
         foreach ($breakdowns as $type => $bd) {
             if (empty($bd)) {
@@ -264,19 +264,19 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
         // $breakdown will be an array with tax rates as keys and at least the columns:
         // 	- 'total_price_tax_excl'
         // 	- 'total_amount'
-        $breakdown = array();
+        $breakdown = [];
 
         $details = $this->order->getProductTaxesDetails($this->order->products);
 
         foreach ($details as $row) {
             $rate = sprintf('%.3f', $row['tax_rate']);
             if (!isset($breakdown[$rate])) {
-                $breakdown[$rate] = array(
+                $breakdown[$rate] = [
                     'total_price_tax_excl' => 0,
                     'total_amount' => 0,
                     'id_tax' => $row['id_tax'],
                     'rate' => $rate,
-                );
+                ];
             }
 
             $breakdown[$rate]['total_price_tax_excl'] += $row['total_tax_base'];
@@ -300,10 +300,10 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
      */
     public function getShippingTaxesBreakdown()
     {
-        $taxes_breakdown = array();
+        $taxes_breakdown = [];
         $tax = new Tax();
         $tax->rate = $this->order->carrier_tax_rate;
-        $tax_calculator = new TaxCalculator(array($tax));
+        $tax_calculator = new TaxCalculator([$tax]);
         $customer = new Customer((int) $this->order->id_customer);
         $tax_excluded_display = Group::getPriceDisplayMethod((int) $customer->id_default_group);
 
@@ -316,11 +316,11 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
         }
 
         if ($shipping_tax_amount > 0) {
-            $taxes_breakdown[] = array(
+            $taxes_breakdown[] = [
                 'rate' => $this->order->carrier_tax_rate,
                 'total_amount' => $shipping_tax_amount,
                 'total_tax_excl' => $total_tax_excl,
-            );
+            ];
         }
 
         return $taxes_breakdown;

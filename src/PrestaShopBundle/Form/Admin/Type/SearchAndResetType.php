@@ -86,10 +86,7 @@ class SearchAndResetType extends AbstractType
         }
 
         if (in_array(null, [$resetUrl, $redirectUrl])) {
-            throw new LogicException(sprintf(
-                'You must configure "reset_route" and "redirect_route" options for "%s" type.',
-                self::class
-            ));
+            throw new LogicException(sprintf('You must configure "reset_route" and "redirect_route" options for "%s" type.', self::class));
         }
 
         $view->vars['show_reset_button'] = $showResetButton;

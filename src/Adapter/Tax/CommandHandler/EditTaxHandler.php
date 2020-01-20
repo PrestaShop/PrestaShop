@@ -63,14 +63,10 @@ final class EditTaxHandler extends AbstractTaxHandler implements EditTaxHandlerI
             }
 
             if (!$tax->update()) {
-                throw new TaxException(
-                    sprintf('Cannot update tax with id "%s"', $tax->id)
-                );
+                throw new TaxException(sprintf('Cannot update tax with id "%s"', $tax->id));
             }
         } catch (PrestaShopException $e) {
-            throw new TaxException(
-                sprintf('Cannot update tax with id "%s"', $tax->id)
-            );
+            throw new TaxException(sprintf('Cannot update tax with id "%s"', $tax->id));
         }
     }
 }

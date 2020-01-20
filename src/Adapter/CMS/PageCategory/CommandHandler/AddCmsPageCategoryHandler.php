@@ -48,17 +48,11 @@ final class AddCmsPageCategoryHandler extends AbstractCmsPageCategoryHandler imp
     public function handle(AddCmsPageCategoryCommand $command)
     {
         if (!$this->assertHasDefaultLanguage($command->getLocalisedName())) {
-            throw new CmsPageCategoryConstraintException(
-                'Missing name in default language',
-                CmsPageCategoryConstraintException::MISSING_DEFAULT_LANGUAGE_FOR_NAME
-            );
+            throw new CmsPageCategoryConstraintException('Missing name in default language', CmsPageCategoryConstraintException::MISSING_DEFAULT_LANGUAGE_FOR_NAME);
         }
 
         if (!$this->assertHasDefaultLanguage($command->getLocalisedFriendlyUrl())) {
-            throw new CmsPageCategoryConstraintException(
-                'Missing friendly url in default language',
-                CmsPageCategoryConstraintException::MISSING_DEFAULT_LANGUAGE_FOR_FRIENDLY_URL
-            );
+            throw new CmsPageCategoryConstraintException('Missing friendly url in default language', CmsPageCategoryConstraintException::MISSING_DEFAULT_LANGUAGE_FOR_FRIENDLY_URL);
         }
 
         $this->assertIsValidLinkRewrite($command->getLocalisedFriendlyUrl());
@@ -77,18 +71,12 @@ final class AddCmsPageCategoryHandler extends AbstractCmsPageCategoryHandler imp
             $cmsPageCategory->link_rewrite = $command->getLocalisedFriendlyUrl();
 
             if (false === $cmsPageCategory->add()) {
-                throw new CannotAddCmsPageCategoryException(
-                    'Failed to add cms page category'
-                );
+                throw new CannotAddCmsPageCategoryException('Failed to add cms page category');
             }
 
             $this->associateWithShops($cmsPageCategory, $command->getShopAssociation());
         } catch (PrestaShopException $exception) {
-            throw new CmsPageCategoryException(
-                'An unexpected error occurred when adding cms page category',
-                0,
-                $exception
-            );
+            throw new CmsPageCategoryException('An unexpected error occurred when adding cms page category', 0, $exception);
         }
 
         return new CmsPageCategoryId((int) $cmsPageCategory->id);

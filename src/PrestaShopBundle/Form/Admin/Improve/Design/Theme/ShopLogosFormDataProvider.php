@@ -29,9 +29,9 @@ namespace PrestaShopBundle\Form\Admin\Improve\Design\Theme;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Command\UploadLogosCommand;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopException;
+use PrestaShop\PrestaShop\Core\Form\DTO\ShopRestriction;
 use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 use PrestaShop\PrestaShop\Core\Form\MultiStoreSettingsFormDataProviderInterface;
-use PrestaShop\PrestaShop\Core\Form\DTO\ShopRestriction;
 
 /**
  * {@inheritdoc}

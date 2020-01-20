@@ -52,17 +52,11 @@ final class AddCmsPageHandler extends AbstractCmsPageHandler implements AddCmsPa
             }
 
             if (false === $cms->add()) {
-                throw new CannotAddCmsPageException(
-                    'Failed to add cms page'
-                );
+                throw new CannotAddCmsPageException('Failed to add cms page');
             }
             $this->associateWithShops($cms, $command->getShopAssociation());
         } catch (PrestaShopException $e) {
-            throw new CmsPageException(
-                'An unexpected error occurred when adding cms page',
-                0,
-                $e
-            );
+            throw new CmsPageException('An unexpected error occurred when adding cms page', 0, $e);
         }
 
         return new CmsPageId((int) $cms->id);

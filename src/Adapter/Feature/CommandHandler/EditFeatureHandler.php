@@ -63,16 +63,11 @@ final class EditFeatureHandler extends AbstractObjectModelHandler implements Edi
         }
 
         if (false === $feature->validateFieldsLang(false)) {
-            throw new FeatureConstraintException(
-                'Invalid data when updating feature',
-                FeatureConstraintException::INVALID_NAME
-            );
+            throw new FeatureConstraintException('Invalid data when updating feature', FeatureConstraintException::INVALID_NAME);
         }
 
         if (false === $feature->update()) {
-            throw new CannotEditFeatureException(
-                sprintf('Failed to edit Feature with id "%s".', $feature->id)
-            );
+            throw new CannotEditFeatureException(sprintf('Failed to edit Feature with id "%s".', $feature->id));
         }
     }
 }

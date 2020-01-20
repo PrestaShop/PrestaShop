@@ -35,7 +35,7 @@ use PrestaShopBundle\Service\Hook\HookFinder;
 class ProductExtraContentFinder extends HookFinder
 {
     protected $hookName = 'displayProductExtraContent';
-    protected $expectedInstanceClasses = array('PrestaShop\PrestaShop\Core\Product\ProductExtraContent');
+    protected $expectedInstanceClasses = ['PrestaShop\PrestaShop\Core\Product\ProductExtraContent'];
 
     /**
      * Execute hook to get all addionnal product content, and check if valid

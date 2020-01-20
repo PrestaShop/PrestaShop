@@ -30,7 +30,7 @@
  */
 class AdminAttributeGeneratorControllerCore extends AdminController
 {
-    protected $combinations = array();
+    protected $combinations = [];
 
     /** @var Product */
     protected $product;
@@ -58,7 +58,7 @@ class AdminAttributeGeneratorControllerCore extends AdminController
             $weight += (float) preg_replace('/[^0-9.]/', '', str_replace(',', '.', Tools::getValue('weight_impact_' . (int) $attribute)));
         }
         if ($this->product->id) {
-            return array(
+            return [
                 'id_product' => (int) $this->product->id,
                 'price' => (float) $price,
                 'weight' => (float) $weight,
@@ -67,23 +67,23 @@ class AdminAttributeGeneratorControllerCore extends AdminController
                 'reference' => pSQL($_POST['reference']),
                 'default_on' => 0,
                 'available_date' => '0000-00-00',
-            );
+            ];
         }
 
-        return array();
+        return [];
     }
 
     public static function createCombinations($list)
     {
         if (count($list) <= 1) {
-            return count($list) ? array_map(function ($v) { return array($v); }, $list[0]) : $list;
+            return count($list) ? array_map(function ($v) { return [$v]; }, $list[0]) : $list;
         }
-        $res = array();
+        $res = [];
         $first = array_pop($list);
         foreach ($first as $attribute) {
             $tab = AdminAttributeGeneratorController::createCombinations($list);
             foreach ($tab as $to_add) {
-                $res[] = is_array($to_add) ? array_merge($to_add, array($attribute)) : array($to_add, $attribute);
+                $res[] = is_array($to_add) ? array_merge($to_add, [$attribute]) : [$to_add, $attribute];
             }
         }
 
@@ -100,7 +100,7 @@ class AdminAttributeGeneratorControllerCore extends AdminController
             if ($this->access('edit')) {
                 $this->action = 'generate';
             } else {
-                $this->errors[] = $this->trans('You do not have permission to add this.', array(), 'Admin.Notifications.Error');
+                $this->errors[] = $this->trans('You do not have permission to add this.', [], 'Admin.Notifications.Error');
             }
         }
         parent::initProcess();
@@ -116,13 +116,13 @@ class AdminAttributeGeneratorControllerCore extends AdminController
     public function processGenerate()
     {
         if (!is_array(Tools::getValue('options'))) {
-            $this->errors[] = $this->trans('Please select at least one attribute.', array(), 'Admin.Catalog.Notification');
+            $this->errors[] = $this->trans('Please select at least one attribute.', [], 'Admin.Catalog.Notification');
         } else {
             $tab = array_values(Tools::getValue('options'));
             if (count($tab) && Validate::isLoadedObject($this->product)) {
                 AdminAttributeGeneratorController::setAttributesImpacts($this->product->id, $tab);
                 $this->combinations = array_values(AdminAttributeGeneratorController::createCombinations($tab));
-                $values = array_values(array_map(array($this, 'addAttribute'), $this->combinations));
+                $values = array_values(array_map([$this, 'addAttribute'], $this->combinations));
 
                 // @since 1.5.0
                 if ($this->product->depends_on_stock == 0) {
@@ -164,18 +164,18 @@ class AdminAttributeGeneratorControllerCore extends AdminController
                 }
 
                 SpecificPriceRule::enableAnyApplication();
-                SpecificPriceRule::applyAllRules(array((int) $this->product->id));
+                SpecificPriceRule::applyAllRules([(int) $this->product->id]);
 
                 Tools::redirectAdmin($this->context->link->getAdminLink('AdminProducts') . '&id_product=' . (int) Tools::getValue('id_product') . '&updateproduct&key_tab=Combinations&conf=4');
             } else {
-                $this->errors[] = $this->trans('Unable to initialize these parameters. A combination is missing or an object cannot be loaded.', array(), 'Admin.Catalog.Notification');
+                $this->errors[] = $this->trans('Unable to initialize these parameters. A combination is missing or an object cannot be loaded.', [], 'Admin.Catalog.Notification');
             }
         }
     }
 
     protected static function setAttributesImpacts($id_product, $tab)
     {
-        $attributes = array();
+        $attributes = [];
         foreach ($tab as $group) {
             foreach ($group as $attribute) {
                 $price = preg_replace('/[^0-9.]/', '', str_replace(',', '.', Tools::getValue('price_impact_' . (int) $attribute)));
@@ -193,7 +193,7 @@ class AdminAttributeGeneratorControllerCore extends AdminController
     public function initGroupTable()
     {
         $combinations_groups = $this->product->getAttributesGroups($this->context->language->id);
-        $attributes = array();
+        $attributes = [];
         $impacts = Product::getAttributesImpacts($this->product->id);
         foreach ($combinations_groups as &$combination) {
             $target = &$attributes[$combination['id_attribute_group']][$combination['id_attribute']];
@@ -203,22 +203,22 @@ class AdminAttributeGeneratorControllerCore extends AdminController
                 $target['weight'] = $impacts[$combination['id_attribute']]['weight'];
             }
         }
-        $this->context->smarty->assign(array(
+        $this->context->smarty->assign([
             'currency_sign' => $this->context->currency->sign,
             'weight_unit' => Configuration::get('PS_WEIGHT_UNIT'),
             'attributes' => $attributes,
-        ));
+        ]);
     }
 
     public function initPageHeaderToolbar()
     {
         parent::initPageHeaderToolbar();
 
-        $this->page_header_toolbar_title = $this->trans('Attributes generator', array(), 'Admin.Catalog.Feature');
-        $this->page_header_toolbar_btn['back'] = array(
+        $this->page_header_toolbar_title = $this->trans('Attributes generator', [], 'Admin.Catalog.Feature');
+        $this->page_header_toolbar_btn['back'] = [
             'href' => $this->context->link->getAdminLink('AdminProducts') . '&id_product=' . (int) Tools::getValue('id_product') . '&updateproduct&key_tab=Combinations',
-            'desc' => $this->trans('Back to the product', array(), 'Admin.Catalog.Feature'),
-        );
+            'desc' => $this->trans('Back to the product', [], 'Admin.Catalog.Feature'),
+        ];
     }
 
     public function initBreadcrumbs($tab_id = null, $tabs = null)
@@ -234,8 +234,8 @@ class AdminAttributeGeneratorControllerCore extends AdminController
             $adminPerformanceUrl = $this->context->link->getAdminLink('AdminPerformance');
 
             $url = '<a href="' . $adminPerformanceUrl . '#featuresDetachables">' .
-                    $this->trans('Performance', array(), 'Admin.Global') . '</a>';
-            $this->displayWarning($this->trans('This feature has been disabled. You can activate it here: %link%.', array('%link%' => $url), 'Admin.Catalog.Notification'));
+                    $this->trans('Performance', [], 'Admin.Global') . '</a>';
+            $this->displayWarning($this->trans('This feature has been disabled. You can activate it here: %link%.', ['%link%' => $url], 'Admin.Catalog.Notification'));
 
             return;
         }
@@ -245,7 +245,7 @@ class AdminAttributeGeneratorControllerCore extends AdminController
         $this->initGroupTable();
 
         $attributes = Attribute::getAttributes(Context::getContext()->language->id, true);
-        $attribute_js = array();
+        $attribute_js = [];
 
         foreach ($attributes as $k => $attribute) {
             $attribute_js[$attribute['id_attribute_group']][$attribute['id_attribute']] = $attribute['name'];
@@ -254,7 +254,7 @@ class AdminAttributeGeneratorControllerCore extends AdminController
         $attribute_groups = AttributeGroup::getAttributesGroups($this->context->language->id);
         $this->product = new Product((int) Tools::getValue('id_product'));
 
-        $this->context->smarty->assign(array(
+        $this->context->smarty->assign([
             'tax_rates' => $this->product->getTaxesRate(),
             'generate' => isset($_POST['generate']) && !count($this->errors),
             'combinations_size' => count($this->combinations),
@@ -268,6 +268,6 @@ class AdminAttributeGeneratorControllerCore extends AdminController
             'show_page_header_toolbar' => $this->show_page_header_toolbar,
             'page_header_toolbar_title' => $this->page_header_toolbar_title,
             'page_header_toolbar_btn' => $this->page_header_toolbar_btn,
-        ));
+        ]);
     }
 }

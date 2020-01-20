@@ -27,8 +27,8 @@
 namespace Tests\Unit\Core\ConstraintValidator;
 
 use PHPUnit\Framework\MockObject\MockObject;
-use PrestaShop\PrestaShop\Core\ConstraintValidator\CustomerNameValidator;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CustomerName;
+use PrestaShop\PrestaShop\Core\ConstraintValidator\CustomerNameValidator;
 use PrestaShop\PrestaShop\Core\String\CharacterCleaner;
 use Symfony\Component\Validator\Test\ConstraintValidatorTestCase;
 

@@ -37,7 +37,7 @@ class HookFinderTest extends TestCase
         $finder->addExpectedInstanceClasses(__CLASS__);
 
         $this->assertSame(
-            array(__CLASS__),
+            [__CLASS__],
             $finder->getExpectedInstanceClasses()
         );
     }
@@ -49,7 +49,7 @@ class HookFinderTest extends TestCase
         $finder->addExpectedInstanceClasses([HookFinder::class, TestCase::class]);
 
         $this->assertSame(
-            array(__CLASS__, HookFinder::class, TestCase::class),
+            [__CLASS__, HookFinder::class, TestCase::class],
             $finder->getExpectedInstanceClasses()
         );
     }
