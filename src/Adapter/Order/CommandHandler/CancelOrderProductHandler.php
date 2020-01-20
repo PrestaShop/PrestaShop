@@ -26,18 +26,19 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Order\CommandHandler;
 
+use Cart;
 use Configuration;
-use StockAvailable;
+use Context;
 use Customization;
 use Hook;
 use Order;
 use OrderCarrier;
 use OrderDetail;
-use PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler\CancelOrderProductHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\CancelOrderProductCommand;
+use PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler\CancelOrderProductHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\EmptyCancelQuantityException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
-use Context;
-use Cart;
+use StockAvailable;
 use Validate;
 
 /**
@@ -49,8 +50,6 @@ final class CancelOrderProductHandler extends AbstractOrderCommandHandler implem
 
     /**
      * Legacy code for product cancellation handling in order page
-     *
-     * @param CancelOrderProductCommand $command
      */
     public function handle(CancelOrderProductCommand $command)
     {
@@ -72,7 +71,7 @@ final class CancelOrderProductHandler extends AbstractOrderCommandHandler implem
                     $customizationQuantity = (int) $customizationQuantities[$orderDetail->product_id][$orderDetail->product_attribute_id];
                 }
                 if (($orderDetail->product_quantity - $customizationQuantity - $orderDetail->product_quantity_refunded - $orderDetail->product_quantity_return) < $cancelQuantity) {
-                    throw new OrderException($this->translator->trans('An invalid quantity was selected for this product.', array(), 'Admin.Orderscustomers.Notification'));
+                    throw new OrderException($this->translator->trans('An invalid quantity was selected for this product.', [], 'Admin.Orderscustomers.Notification'));
                 }
             }
         }
@@ -87,10 +86,10 @@ final class CancelOrderProductHandler extends AbstractOrderCommandHandler implem
                 $qtyCancelProduct = abs($orderDetails['customizedCancelQuantity'][$id_customization]);
                 $customization_quantity = $customization_quantities[$id_customization];
                 if (!$qtyCancelProduct) {
-                    throw new OrderException($this->trans('No quantity has been selected for this product.', array(), 'Admin.Orderscustomers.Notification'));
+                    throw new OrderException($this->trans('No quantity has been selected for this product.', [], 'Admin.Orderscustomers.Notification'));
                 }
                 if ($qtyCancelProduct > ($customization_quantity['quantity'] - ($customization_quantity['quantity_refunded'] + $customization_quantity['quantity_returned']))) {
-                    throw new OrderException($this->trans('An invalid quantity was selected for this product.', array(), 'Admin.Orderscustomers.Notification'));
+                    throw new OrderException($this->trans('An invalid quantity was selected for this product.', [], 'Admin.Orderscustomers.Notification'));
                 }
             }
         }
@@ -102,7 +101,7 @@ final class CancelOrderProductHandler extends AbstractOrderCommandHandler implem
 
                 // Delete product
                 if (!$order->deleteProduct($order, $orderDetail, $qty_cancel_product)) {
-                    throw new OrderException($this->trans('An error occurred while attempting to delete the product.', array(), 'Admin.Orderscustomers.Notification'));
+                    throw new OrderException($this->trans('An error occurred while attempting to delete the product.', [], 'Admin.Orderscustomers.Notification'));
                 }
 
                 // Update weight SUM
@@ -117,14 +116,14 @@ final class CancelOrderProductHandler extends AbstractOrderCommandHandler implem
                 if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') && StockAvailable::dependsOnStock($orderDetail->product_id)) {
                     StockAvailable::synchronize($orderDetail->product_id);
                 }
-                Hook::exec('actionProductCancel', array('order' => $order, 'id_order_detail' => (int) $orderDetail->id_order_detail), null, false, true, false, $order->id_shop);
+                Hook::exec('actionProductCancel', ['order' => $order, 'id_order_detail' => (int) $orderDetail->id_order_detail], null, false, true, false, $order->id_shop);
             }
         }
         if (!empty($orderDetails['customizedProductsOrderDetail'])) {
             foreach ($orderDetails['customizedProductsOrderDetail'] as $orderDetail) {
                 $qtyCancelProduct = abs($orderDetails['customizedCancelQuantity'][$orderDetail->id_customization]);
                 if (!$order->deleteCustomization($orderDetail->id_customization, $qtyCancelProduct, $orderDetail)) {
-                    $this->errors[] = $this->trans('An error occurred while attempting to delete product customization.', array(), 'Admin.Orderscustomers.Notification') . ' ' . $id_customization;
+                    $this->errors[] = $this->trans('An error occurred while attempting to delete product customization.', [], 'Admin.Orderscustomers.Notification') . ' ' . $id_customization;
                 }
             }
         }
@@ -158,12 +157,12 @@ final class CancelOrderProductHandler extends AbstractOrderCommandHandler implem
     private function checkInput(CancelOrderProductCommand $command)
     {
         if (empty($command->getToBeCanceledProducts())) {
-            throw new OrderException($this->translator->trans('You must select a product.', array(), 'Admin.Orderscustomers.Notification'));
+            throw new OrderException($this->translator->trans('You must select a product.', [], 'Admin.Orderscustomers.Notification'));
         }
 
         foreach ($command->getToBeCanceledProducts() as $orderDetailId => $quantity) {
             if ((int) $quantity <= 0) {
-                throw new OrderException($this->translator->trans('You must enter a quantity.', array(), 'Admin.Orderscustomers.Notification'));
+                throw new EmptyCancelQuantityException($this->translator->trans('You must enter a quantity.', [], 'Admin.Orderscustomers.Notification'));
             }
         }
     }
