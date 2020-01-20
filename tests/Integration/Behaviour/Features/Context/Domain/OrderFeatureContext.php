@@ -471,13 +471,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
         }
 
         if (null === $productOrderDetail) {
-            throw new RuntimeException(
-                sprintf(
-                    'Cannot find product details for product %s in order %s',
-                    $productName,
-                    $orderReference
-                )
-            );
+            throw new RuntimeException(sprintf('Cannot find product details for product %s in order %s', $productName, $orderReference));
         }
 
         $expectedDetails = $table->getRowsHash();

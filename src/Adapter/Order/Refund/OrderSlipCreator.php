@@ -40,15 +40,13 @@ use OrderSlip;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidRefundAmountException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
-use PrestaShop\PrestaShop\Core\Domain\Order\Exception\EmptyRefundAmountException;
-use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShopDatabaseException;
 use PrestaShopException;
 use Product;
 use StockAvailable;
 use Symfony\Component\Translation\TranslatorInterface;
-use TaxManagerFactory;
 use TaxCalculator;
+use TaxManagerFactory;
 use Tools;
 
 /**
@@ -175,6 +173,7 @@ class OrderSlipCreator
      * @param int $precision
      *
      * @return bool
+     *
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
      */
@@ -234,7 +233,7 @@ class OrderSlipCreator
 
             $order_slip->{'total_products_tax_' . $inc_or_ex_1} += $price * $quantity;
 
-            if (in_array($this->configuration->get('PS_ROUND_TYPE'), array(Order::ROUND_ITEM, Order::ROUND_LINE))) {
+            if (in_array($this->configuration->get('PS_ROUND_TYPE'), [Order::ROUND_ITEM, Order::ROUND_LINE])) {
                 if (!isset($total_products[$id_tax_rules_group])) {
                     $total_products[$id_tax_rules_group] = 0;
                 }
@@ -311,11 +310,12 @@ class OrderSlipCreator
      * @param array $product
      *
      * @return bool
+     *
      * @throws PrestaShopDatabaseException
      */
     private function addProductOrderSlip(int $orderSlipId, array $product)
     {
-        return Db::getInstance()->insert('order_slip_detail', array(
+        return Db::getInstance()->insert('order_slip_detail', [
             'id_order_slip' => $orderSlipId,
             'id_order_detail' => (int) $product['id_order_detail'],
             'product_quantity' => $product['quantity'],
@@ -325,6 +325,6 @@ class OrderSlipCreator
             'total_price_tax_incl' => $product['total_price_tax_incl'],
             'amount_tax_excl' => $product['total_price_tax_excl'],
             'amount_tax_incl' => $product['total_price_tax_incl'],
-        ));
+        ]);
     }
 }

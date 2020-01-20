@@ -93,7 +93,7 @@ class OrderDetailRefund
     {
         $this->assertOrderDetailIdIsGreaterThanZero($orderDetailId);
         if (0 >= $productQuantity) {
-            throw new InvalidRefundQuantityException( InvalidRefundQuantityException::EMPTY_QUANTITY);
+            throw new InvalidRefundQuantityException(InvalidRefundQuantityException::EMPTY_QUANTITY);
         }
         $this->orderDetailId = $orderDetailId;
         $this->productQuantity = $productQuantity;

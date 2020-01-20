@@ -36,7 +36,6 @@ use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\IssuePartialRefundCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler\IssuePartialRefundHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\CancelProductFromOrderException;
-use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidRefundAmountException;
 use Validate;
 
 /**

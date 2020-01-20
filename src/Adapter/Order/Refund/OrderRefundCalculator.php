@@ -42,7 +42,6 @@ use PrestaShopDatabaseException;
 use PrestaShopException;
 use Tax;
 use TaxCalculator;
-use TaxManagerFactory;
 
 /**
  * Performs all computation for a refund on an Order, returns a OrderRefundDetail
@@ -147,10 +146,7 @@ class OrderRefundCalculator
             $quantity = $orderDetailRefund->getProductQuantity();
             $quantityLeft = (int) $orderDetail->product_quantity - (int) $orderDetail->product_quantity_refunded - (int) $orderDetail->product_quantity_return;
             if ($quantity > $quantityLeft) {
-                throw new InvalidRefundQuantityException(
-                    InvalidRefundQuantityException::QUANTITY_TOO_HIGH,
-                    $quantityLeft
-                );
+                throw new InvalidRefundQuantityException(InvalidRefundQuantityException::QUANTITY_TOO_HIGH, $quantityLeft);
             }
 
             $productRefunds[$orderDetailId] = [
@@ -212,9 +208,10 @@ class OrderRefundCalculator
      * @param Order $order
      *
      * @return TaxCalculator
+     *
      * @throws PrestaShopException
      */
-    private function getOrderTaxCalculator(Order $order) :TaxCalculator
+    private function getOrderTaxCalculator(Order $order): TaxCalculator
     {
         $carrier = new Carrier((int) $order->id_carrier);
         // @todo: define if we use invoice or delivery address, or we use configuration PS_TAX_ADDRESS_TYPE
@@ -228,7 +225,7 @@ class OrderRefundCalculator
      *
      * @return int
      */
-    private function getPrecision(Order $order) :int
+    private function getPrecision(Order $order): int
     {
         $currency = new Currency($order->id_currency);
         $computingPrecision = new ComputingPrecision();
