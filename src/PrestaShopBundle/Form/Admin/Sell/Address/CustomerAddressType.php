@@ -191,7 +191,11 @@ class CustomerAddressType extends AbstractType
             ])
             ->add('first_name', TextType::class, [
                 'label' => $this->translator->trans('First name', [], 'Admin.Global'),
-                'help' => $this->translator->trans('Invalid characters:') . TypedRegexValidator::NAME_CHARS,
+                'help' => $this->translator->trans(
+                    'Invalid characters: %s',
+                    [TypedRegexValidator::NAME_CHARS],
+                    'Admin.Notifications.Info'
+                ),
                 'required' => true,
                 'constraints' => [
                     new NotBlank([
