@@ -78,7 +78,7 @@ class OrderRefundCalculator
         if ($shippingCostAmount > 0) {
             $shippingMaxRefund = $isTaxIncluded ? $order->total_shipping_tax_incl : $order->total_shipping_tax_excl;
             $shippingSlipResume = OrderSlip::getShippingSlipResume($order->id);
-            $shippingMaxRefund -= isset($shippingSlipResume['total_shipping_tax_incl']) ? $shippingSlipResume['total_shipping_tax_incl'] : 0;
+            $shippingMaxRefund -= $shippingSlipResume['total_shipping_tax_incl'] ?? 0;
             if ($shippingCostAmount > $shippingMaxRefund) {
                 $shippingCostAmount = $shippingMaxRefund;
             }
