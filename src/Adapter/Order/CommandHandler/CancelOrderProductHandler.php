@@ -34,7 +34,6 @@ use Order;
 use OrderCarrier;
 use OrderDetail;
 use PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler\CancelOrderProductHandlerInterface;
-// use PrestaShop\PrestaShop\Adapter\Order\CommandHandler\AbstractOrderCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\CancelOrderProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use Context;
@@ -48,6 +47,11 @@ final class CancelOrderProductHandler extends AbstractOrderCommandHandler implem
 {
     private $translator;
 
+    /**
+     * Legacy code for product cancellation handling in order page
+     *
+     * @param CancelOrderProductCommand $command
+     */
     public function handle(CancelOrderProductCommand $command)
     {
         $this->translator = Context::getContext()->getTranslator();
@@ -58,7 +62,6 @@ final class CancelOrderProductHandler extends AbstractOrderCommandHandler implem
         $customizationQuantities = Customization::countQuantityByCart($cartId);
         $details = [];
         $orderDetails = $this->getOrderDetails($command);
-
 
         if (!empty($orderDetails['productsOrderDetails'])) {
             foreach ($orderDetails['productsOrderDetails'] as $orderDetail) {
@@ -95,9 +98,7 @@ final class CancelOrderProductHandler extends AbstractOrderCommandHandler implem
         if (!empty($orderDetails['productsOrderDetails'])) {
             foreach ($orderDetails['productsOrderDetails'] as $orderDetail) {
                 $qty_cancel_product = $orderDetails['productCancelQuantity'][$orderDetail->id_order_detail];
-                if (!$order->hasBeenDelivered() || ($order->hasBeenDelivered() /*&& Tools::isSubmit('reinjectQuantities'))*/ && $qty_cancel_product > 0)) {
-                    $this->reinjectQuantity($orderDetail, $qty_cancel_product);
-                }
+                $this->reinjectQuantity($orderDetail, $qty_cancel_product);
 
                 // Delete product
                 if (!$order->deleteProduct($order, $orderDetail, $qty_cancel_product)) {
@@ -120,8 +121,7 @@ final class CancelOrderProductHandler extends AbstractOrderCommandHandler implem
             }
         }
         if (!empty($orderDetails['customizedProductsOrderDetail'])) {
-            foreach ($orderDetails['customizedProductsOrderDetail'] as $orderDetail)
-            {
+            foreach ($orderDetails['customizedProductsOrderDetail'] as $orderDetail) {
                 $qtyCancelProduct = abs($orderDetails['customizedCancelQuantity'][$orderDetail->id_customization]);
                 if (!$order->deleteCustomization($orderDetail->id_customization, $qtyCancelProduct, $orderDetail)) {
                     $this->errors[] = $this->trans('An error occurred while attempting to delete product customization.', array(), 'Admin.Orderscustomers.Notification') . ' ' . $id_customization;

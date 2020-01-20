@@ -25,9 +25,9 @@
 
 import Router from '@components/router';
 import OrderViewPageMap from '@pages/order/OrderViewPageMap';
-import { NumberFormatter } from '@app/cldr';
+import {NumberFormatter} from '@app/cldr';
 
-const {$} = window;
+const $ = window.$;
 
 /**
  * manages all product cancel actions, that includes all refund operations
@@ -52,7 +52,6 @@ export default class OrderProductCancel {
     this.initForm(
       $(OrderViewPageMap.cancelProduct.buttons.save).data('partialRefundLabel'),
       this.router.generate('admin_orders_partial_refund', {orderId: this.orderId})
-    );
   }
 
   showStandardRefund() {

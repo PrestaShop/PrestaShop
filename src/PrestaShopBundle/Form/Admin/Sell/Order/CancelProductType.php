@@ -50,6 +50,7 @@ class CancelProductType extends TranslatorAwareType
                         'label' => false,
                         'attr' => [
                             'material_design' => true,
+                            'class' => 'selected-product',
                         ],
                     ]
                 )
@@ -64,7 +65,7 @@ class CancelProductType extends TranslatorAwareType
                 ->add('amount_' . $product->getOrderDetailId(), NumberType::class, [
                     'attr' => ['max' => $product->getTotalPrice(), 'class' => 'refund-amount'],
                     'label' => sprintf(
-                        '%s (%s)',
+                        '%s<br>(%s)',
                         $this->trans('Amount', 'Admin.Global', []),
                         $taxMethod
                     ),
@@ -82,6 +83,15 @@ class CancelProductType extends TranslatorAwareType
                     'required' => false,
                     'scale' => $precision,
                     'data' => 0,
+                ]
+            )
+            ->add('shipping', CheckboxType::class,
+                [
+                    'label' => $this->trans('Shipping', 'Admin.Catalog.Feature', []),
+                    'required' => false,
+                    'attr' => [
+                        'material_design' => true,
+                    ],
                 ]
             )
             ->add('shipping', CheckboxType::class,
@@ -147,7 +157,7 @@ class CancelProductType extends TranslatorAwareType
             ])
             ->add('save', SubmitType::class, [
                 'attr' => [
-                    'class' => 'cancel-product-element save btn btn-primary ml-3',
+                    'class' => 'partial-refund cancel-product-element save btn btn-primary ml-3',
                     'formnovalidate' => true,
                     'data-partial-refund-label' => $this->trans('Partial refund', 'Admin.Orderscustomers.Feature'),
                     'data-standard-refund-label' => $this->trans('Standard refund', 'Admin.Orderscustomers.Feature'),

@@ -289,3 +289,5 @@ admin_orders_cancellation:
     _controller: PrestaShopBundle:Admin/Sell/Order/Order:cancellation
   requirements:
     orderId: \d+
+  options:
+    expose: true

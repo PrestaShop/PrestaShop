@@ -196,6 +196,22 @@ td .editProductInvoice {
   display: none;
 }
 
+.cancel-product-element label {
+  height: 30px;
+  line-height: 30px;
+  padding: 0;
+  margin-bottom: 0;
+}
+
+.cancel-product-element .form-group {
+  display: inline-flex;
+}
+
+.cancel-product-element .form-group .input-group {
+  display: flex;
+  flex: wrap;
+}
+
 .cancel-product-element.form-submit {
   width: 100%;
   margin-right: 20px;
@@ -282,6 +298,14 @@ td .editProductInvoice {
 .voucher-refund-type-negative-error {
   color: $color-error;
   display: none;
+}
+
+.cancel-product-cell .form-group .refund-quantity {
+  width: 30px;
+}
+
+.cancel-product-cell .cancel-product-quantity {
+  width: max-content;
 }
 
 input.refund-quantity {

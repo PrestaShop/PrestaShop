@@ -45,7 +45,8 @@
         'data-is-tax-included': orderForViewing.isTaxIncluded,
         'data-discounts-amount': orderForViewing.prices.discountsAmountRaw,
         'data-price-specification': priceSpecification|json_encode|replace("'", "&#39;")|raw
-      }
+      },
+      'action': path('admin_orders_partial_refund', {'orderId': orderForViewing.id})
     } %}
     {{ form_start(cancelProductForm, formOptions) }}
     <table class="table" id="orderProductsTable" data-currency-precision="{{ orderCurrency.precision }}">
@@ -84,6 +85,13 @@
             <th class="text-right product_actions">
               <p>{{ 'Actions'|trans({}, 'Admin.Global') }}</p>
             </th>
+          {% else %}
+            <th class="cancellation-toggle">
+              <p>{{ 'Cancel'|trans({}, 'Admin.Orderscustomers.Feature') }}</p>
+            </th>
+            <th>
+              <p> </p>
+            </th>
           {% endif %}
           <th class="text-center cancel-product-element">
             <p>{{ 'Partial refund'|trans({}, 'Admin.Orderscustomers.Feature') }}</p>
@@ -91,6 +99,8 @@
         </tr>
       </thead>
       <tbody>
+        {{ form_start(cancelProductForm) }}
+
         {% for product in orderForViewing.products.products %}
           {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/product.html.twig' with {
             'product': product,
@@ -281,4 +291,5 @@
     </div>
     {{ form_end(cancelProductForm) }}
   </div>
+  {{ form_end(cancelProductForm) }}
 </div>
