@@ -26,7 +26,7 @@
 import Router from '@components/router';
 import OrderViewPageMap from '@pages/order/OrderViewPageMap';
 
-const $ = window.$;
+const {$} = window;
 
 /**
  * manages all product cancel actions, that includes all refund operations
@@ -76,7 +76,7 @@ export default class OrderProductCancel {
       const $parentCell = $productQuantityInput.parents(OrderViewPageMap.cancelProductTableCell);
       const $productAmount = $parentCell.find(OrderViewPageMap.cancelProductAmountInput);
       const productQuantity = parseInt($productQuantityInput.val(), 10);
-      if (productQuantity === 0) {
+      if (productQuantity <= 0) {
         $productAmount.val(0);
         return;
       }

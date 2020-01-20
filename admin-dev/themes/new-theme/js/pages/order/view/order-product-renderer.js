@@ -184,7 +184,7 @@ export default class OrderProductRenderer {
   }
 
   toggleProductAddNewInvoiceInfo() {
-    if (0 === $(OrderViewPageMap.productAddInvoiceSelect).val()) {
+    if ($(OrderViewPageMap.productAddInvoiceSelect).val() === 0) {
       $(OrderViewPageMap.productAddNewInvoiceInfo).removeClass('d-none');
     } else {
       $(OrderViewPageMap.productAddNewInvoiceInfo).addClass('d-none');
