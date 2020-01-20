@@ -15,6 +15,6 @@ Feature: Cart management
 
   Scenario: remove product from cart
     # later could be changed with "Add product" when it's handler will be migrated
-    Given I add 1 products "Mug The best is yet to come" to the cart "dummy_cart"
-    When I delete product "Mug The best is yet to come" from cart
-    Then cart "dummy_cart" has 0 products
+    Given I add 2 products "Mug The best is yet to come" to the cart "dummy_cart"
+    When I delete product "Mug The best is yet to come" from cart "dummy_cart"
+    Then cart "dummy_cart" has 1 products

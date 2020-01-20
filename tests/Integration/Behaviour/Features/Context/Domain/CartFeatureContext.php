@@ -33,20 +33,23 @@ use Context;
 use Country;
 use Currency;
 use Customer;
-use DateTime;
 use DateInterval;
+use DateTime;
 use Exception;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\AddCartRuleToCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\AddCustomizationFieldsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\CreateEmptyCustomerCartCommand;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Command\RemoveProductFromCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\SetFreeShippingToCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartAddressesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateProductQuantityInCartCommand;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartForViewing;
+use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartView;
 use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\CartId;
-use PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProducts;
-use RuntimeException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProducts;
 use Product;
+use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 
 class CartFeatureContext extends AbstractDomainFeatureContext
@@ -246,18 +249,30 @@ class CartFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @When I delete product :arg1 from cart
+     * @When I delete product :productReference from cart :cartReference
+     *
+     * @param string $productReference
+     * @param string $cartReference
      */
-    public function iDeleteProductFromCart($arg1)
+    public function deleteProductFromCart(string $productReference, string $cartReference)
     {
-        throw new PendingException();
+        $this->getCommandBus()->handle(new RemoveProductFromCartCommand(
+            SharedStorage::getStorage()->get($cartReference),
+            SharedStorage::getStorage()->get($productReference)
+        ));
     }
 
     /**
-     * @Then cart :arg1 has :arg2 products
+     * @Then cart :cartReference has :numberOfProducts products
+     *
+     * @param string $cartReference
+     * @param int $numberOfProducts
      */
-    public function cartHasProducts($arg1, $arg2)
+    public function cartHasProducts(string $cartReference, int $numberOfProducts)
     {
-        throw new PendingException();
+        /** @var CartView $cartView */
+        $cartView = $this->getQueryBus()->handle(
+            new GetCartForViewing(SharedStorage::getStorage()->get(SharedStorage::getStorage()->get($cartReference)))
+        );
     }
 }
