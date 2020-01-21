@@ -32,10 +32,10 @@ use Configuration;
 use Context;
 use Country;
 use Currency;
-use Customer;
 use DateInterval;
 use DateTime;
 use Exception;
+use PHPUnit\Framework\Assert as Assert;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\AddCartRuleToCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\AddCustomizationFieldsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\CreateEmptyCustomerCartCommand;
@@ -51,7 +51,6 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProducts;
 use Product;
 use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
-use PHPUnit\Framework\Assert as Assert;
 
 class CartFeatureContext extends AbstractDomainFeatureContext
 {
@@ -78,10 +77,9 @@ class CartFeatureContext extends AbstractDomainFeatureContext
      */
     public function createEmptyCartForCustomer(string $cartReference, string $customerReference)
     {
-        /** @var Customer $customer */
-        $customer = SharedStorage::getStorage()->get($customerReference);
+        $customerId = SharedStorage::getStorage()->get($customerReference);
         /** @var CartId $cartIdObject */
-        $cartIdObject = $this->getCommandBus()->handle(new CreateEmptyCustomerCartCommand((int) $customer->id));
+        $cartIdObject = $this->getCommandBus()->handle(new CreateEmptyCustomerCartCommand($customerId));
         SharedStorage::getStorage()->set($cartReference, $cartIdObject->getValue());
     }
 
@@ -152,13 +150,32 @@ class CartFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @When I select address :customerAddressReference as delivery and invoice in cart :cartReference
+     *
+     * @param string $customerAddressReference
+     * @param string $cartReference
+     */
+    public function selectAddressAsDeliveryAndInvoiceInCart(string $customerAddressReference, string $cartReference)
+    {
+        $customerAddressId = SharedStorage::getStorage()->get($customerAddressReference);
+        $this->getCommandBus()->handle(
+            new UpdateCartAddressesCommand(
+                (int) SharedStorage::getStorage()->get($cartReference),
+                $customerAddressId,
+                $customerAddressId
+            )
+        );
+    }
+
+    /**
+     * @see selectAddressAsDeliveryAndInvoiceInCart for using selecting customer address in cart
      * @When I select :countryIsoCode address as delivery and invoice address for customer :customerReference in cart :cartReference
      *
      * @param string $countryIsoCode
      * @param string $customerReference
      * @param string $cartReference
      */
-    public function selectAddressAsDeliveryAndInvoiceAddress(string $countryIsoCode, string $customerReference, string $cartReference)
+    public function selectAddressAsDeliveryAndInvoice(string $countryIsoCode, string $customerReference, string $cartReference)
     {
         $customer = SharedStorage::getStorage()->get($customerReference);
 
