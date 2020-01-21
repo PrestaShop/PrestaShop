@@ -40,6 +40,7 @@ use OrderSlip;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidRefundAmountException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
+use PrestaShop\PrestaShop\Core\Domain\Order\VoucherRefundType;
 use PrestaShopDatabaseException;
 use PrestaShopException;
 use Product;
@@ -177,13 +178,20 @@ class OrderSlipCreator
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
      */
-    private function createOrderSlip(Order $order, array $product_list, float $shipping_cost = 0, float $amount = 0, bool $amount_choosen = false, bool $add_tax = true, int $precision = 6)
-    {
+    private function createOrderSlip(
+        Order $order,
+        array $product_list,
+        float $shipping_cost = 0,
+        float $amount = 0,
+        bool $amount_choosen = false,
+        bool $add_tax = true,
+        int $precision = 6
+    ) {
         $currency = new Currency((int) $order->id_currency);
-        $order_slip = new OrderSlip();
-        $order_slip->id_customer = (int) $order->id_customer;
-        $order_slip->id_order = (int) $order->id;
-        $order_slip->conversion_rate = $currency->conversion_rate;
+        $orderSlip = new OrderSlip();
+        $orderSlip->id_customer = (int) $order->id_customer;
+        $orderSlip->id_order = (int) $order->id;
+        $orderSlip->conversion_rate = $currency->conversion_rate;
 
         if ($add_tax) {
             $add_or_remove = 'add';
@@ -195,30 +203,30 @@ class OrderSlipCreator
             $inc_or_ex_2 = 'excl';
         }
 
-        $order_slip->{'total_shipping_tax_' . $inc_or_ex_1} = 0;
-        $order_slip->{'total_shipping_tax_' . $inc_or_ex_2} = 0;
-        $order_slip->partial = 0;
+        $orderSlip->total_shipping_tax_excl = 0;
+        $orderSlip->total_shipping_tax_incl = 0;
+        $orderSlip->partial = 0;
 
         if ($shipping_cost > 0) {
-            $order_slip->shipping_cost = true;
+            $orderSlip->shipping_cost = true;
             $carrier = new Carrier((int) $order->id_carrier);
             // @todo: define if we use invoice or delivery address, or we use configuration PS_TAX_ADDRESS_TYPE
             $address = Address::initialize($order->id_address_delivery, false);
             $tax_calculator = $carrier->getTaxCalculator($address);
-            $order_slip->{'total_shipping_tax_' . $inc_or_ex_1} = $shipping_cost;
+            $orderSlip->{'total_shipping_tax_' . $inc_or_ex_1} = $shipping_cost;
 
             if ($tax_calculator instanceof TaxCalculator) {
-                $order_slip->{'total_shipping_tax_' . $inc_or_ex_2} = Tools::ps_round($tax_calculator->{$add_or_remove . 'Taxes'}($order_slip->{'total_shipping_tax_' . $inc_or_ex_1}), $precision);
+                $orderSlip->{'total_shipping_tax_' . $inc_or_ex_2} = Tools::ps_round($tax_calculator->{$add_or_remove . 'Taxes'}($orderSlip->{'total_shipping_tax_' . $inc_or_ex_1}), $precision);
             } else {
-                $order_slip->{'total_shipping_tax_' . $inc_or_ex_2} = $order_slip->{'total_shipping_tax_' . $inc_or_ex_1};
+                $orderSlip->{'total_shipping_tax_' . $inc_or_ex_2} = $orderSlip->{'total_shipping_tax_' . $inc_or_ex_1};
             }
         } else {
-            $order_slip->shipping_cost = false;
+            $orderSlip->shipping_cost = false;
         }
 
-        $order_slip->amount = 0;
-        $order_slip->{'total_products_tax_' . $inc_or_ex_1} = 0;
-        $order_slip->{'total_products_tax_' . $inc_or_ex_2} = 0;
+        $orderSlip->amount = 0;
+        $orderSlip->total_products_tax_excl = 0;
+        $orderSlip->total_products_tax_incl = 0;
         $total_products = [];
         foreach ($product_list as &$product) {
             $order_detail = new OrderDetail((int) $product['id_order_detail']);
@@ -231,7 +239,7 @@ class OrderSlipCreator
             $id_tax_rules_group = Product::getIdTaxRulesGroupByIdProduct((int) $order_detail->product_id);
             $tax_calculator = TaxManagerFactory::getManager($address, $id_tax_rules_group)->getTaxCalculator();
 
-            $order_slip->{'total_products_tax_' . $inc_or_ex_1} += $price * $quantity;
+            $orderSlip->{'total_products_tax_' . $inc_or_ex_1} += $price * $quantity;
 
             if (in_array($this->configuration->get('PS_ROUND_TYPE'), [Order::ROUND_ITEM, Order::ROUND_LINE])) {
                 if (!isset($total_products[$id_tax_rules_group])) {
@@ -276,31 +284,31 @@ class OrderSlipCreator
                 $tmp = explode('_', $key);
                 $address = Address::initialize((int) $tmp[1], true);
                 $tax_calculator = TaxManagerFactory::getManager($address, $tmp[0])->getTaxCalculator();
-                $order_slip->{'total_products_tax_' . $inc_or_ex_2} += Tools::ps_round($tax_calculator->{$add_or_remove . 'Taxes'}($price), $precision);
+                $orderSlip->{'total_products_tax_' . $inc_or_ex_2} += Tools::ps_round($tax_calculator->{$add_or_remove . 'Taxes'}($price), $precision);
             } else {
-                $order_slip->{'total_products_tax_' . $inc_or_ex_2} += $price;
+                $orderSlip->{'total_products_tax_' . $inc_or_ex_2} += $price;
             }
         }
 
-        $order_slip->{'total_products_tax_' . $inc_or_ex_2} -= $amount && !$amount_choosen ? $amount : 0;
-        $order_slip->amount = $amount_choosen ? $amount : $order_slip->{'total_products_tax_' . $inc_or_ex_1};
-        $order_slip->shipping_cost_amount = $order_slip->total_shipping_tax_incl;
+        $orderSlip->{'total_products_tax_' . $inc_or_ex_2} -= $amount && !$amount_choosen ? $amount : 0;
+        $orderSlip->amount = $amount_choosen ? $amount : $orderSlip->{'total_products_tax_' . $inc_or_ex_1};
+        $orderSlip->shipping_cost_amount = $orderSlip->total_shipping_tax_incl;
 
         if ((float) $amount && !$amount_choosen) {
-            $order_slip->order_slip_type = 1;
+            $orderSlip->order_slip_type = VoucherRefundType::PRODUCT_PRICES_EXCLUDING_VOUCHER_REFUND;
         }
-        if (((float) $amount && $amount_choosen) || $order_slip->shipping_cost_amount > 0) {
-            $order_slip->order_slip_type = 2;
+        if (((float) $amount && $amount_choosen) || $orderSlip->shipping_cost_amount > 0) {
+            $orderSlip->order_slip_type = VoucherRefundType::SPECIFIC_AMOUNT_REFUND;
         }
 
-        if (!$order_slip->add()) {
+        if (!$orderSlip->add()) {
             return false;
         }
 
         $res = true;
 
         foreach ($product_list as $product) {
-            $res &= $this->addProductOrderSlip((int) $order_slip->id, $product);
+            $res &= $this->addProductOrderSlip((int) $orderSlip->id, $product);
         }
 
         return $res;
@@ -313,9 +321,9 @@ class OrderSlipCreator
      *
      * @throws PrestaShopDatabaseException
      */
-    private function addProductOrderSlip(int $orderSlipId, array $product)
+    private function addProductOrderSlip(int $orderSlipId, array $product): bool
     {
-        return Db::getInstance()->insert('order_slip_detail', [
+        return (bool) Db::getInstance()->insert('order_slip_detail', [
             'id_order_slip' => $orderSlipId,
             'id_order_detail' => (int) $product['id_order_detail'],
             'product_quantity' => $product['quantity'],
