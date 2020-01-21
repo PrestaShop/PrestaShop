@@ -16,7 +16,7 @@ use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 
 class OrderShippingFeatureContext extends AbstractDomainFeatureContext
 {
-    const DEFAULT_ORDER_CARRIER_ID = 1;
+    const DEFAULT_ORDER_CARRIER_ID = 2;
 
     /**
      * @When I update order :orderReference Tracking number to :trackingNumber and Carrier to :carrier
@@ -38,11 +38,9 @@ class OrderShippingFeatureContext extends AbstractDomainFeatureContext
         } else {
             // legacy classes adding order carrier
             $orderCarrier = new OrderCarrier(self::DEFAULT_ORDER_CARRIER_ID);
+            $orderCarrier->id_order = $orderId;
             $orderCarrier->add();
-            $order = new Order($orderId);
-            $order->id_carrier = $orderCarrier->id;
-            $order->update();
-            $currentOrderCarrierId = $order->id_carrier;
+            $currentOrderCarrierId = self::DEFAULT_ORDER_CARRIER_ID;
         }
         $newCarrierId = $this->getCarrierId($carrier);
         $this->getCommandBus()->handle(
