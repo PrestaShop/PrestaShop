@@ -27,7 +27,7 @@ module.exports = class Addresses extends BOBasePage {
     // Bulk Actions
     this.selectAllRowsLabel = `${this.addressesListForm} .md-checkbox label`;
     this.bulkActionsToggleButton = `${this.addressesListForm} button.dropdown-toggle`;
-    this.bulkActionsDeleteButton = `${this.addressesListForm} #address_grid_bulk_action_delete_selection`;
+    this.bulkActionsDeleteButton = '#address_grid_bulk_action_delete_selection';
   }
 
   /*
