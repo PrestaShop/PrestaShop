@@ -15,8 +15,7 @@ const AddressFaker = require('@data/faker/address');
 let browser;
 let page;
 let numberOfAddresses = 0;
-const firstAddressData = new AddressFaker({address: 'todelete', email: 'pub@prestashop.com', country: 'France'});
-const secondAddressData = new AddressFaker({address: 'todelete', email: 'pub@prestashop.com', country: 'France'});
+const addressData = new AddressFaker({address: 'todelete', email: 'pub@prestashop.com', country: 'France'});
 
 // Init objects needed
 const init = async function () {
@@ -60,8 +59,8 @@ describe('Create Addresses then delete with Bulk actions', async () => {
   // 1 : Create 2 addresses in BO
   describe('Create 2 addresses in BO', async () => {
     const tests = [
-      {args: {addressToCreate: firstAddressData}},
-      {args: {addressToCreate: secondAddressData}},
+      {args: {addressToCreate: addressData}},
+      {args: {addressToCreate: addressData}},
     ];
 
     tests.forEach((test, index) => {
@@ -86,10 +85,10 @@ describe('Create Addresses then delete with Bulk actions', async () => {
       await this.pageObjects.addressesPage.filterAddresses(
         'input',
         'address1',
-        firstAddressData.address,
+        addressData.address,
       );
       const address = await this.pageObjects.addressesPage.getTextColumnFromTableAddresses(1, 'address1');
-      await expect(address).to.contains(firstAddressData.address);
+      await expect(address).to.contains(addressData.address);
     });
 
     it('should delete addresses with Bulk Actions and check addressesPage', async function () {
