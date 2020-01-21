@@ -49,6 +49,8 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
  */
 final class ManufacturerAddressGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
+    use BulkDeleteActionTrait;
+
     const GRID_ID = 'manufacturer_address';
 
     /**
@@ -239,12 +241,8 @@ final class ManufacturerAddressGridDefinitionFactory extends AbstractGridDefinit
     protected function getBulkActions()
     {
         return (new BulkActionCollection())
-            ->add((new SubmitBulkAction('delete_manufacturer_address'))
-                ->setName($this->trans('Delete selected', [], 'Admin.Actions'))
-                ->setOptions([
-                    'submit_route' => 'admin_manufacturer_addresses_bulk_delete',
-                    'confirm_message' => $this->trans('Delete selected items?', [], 'Admin.Notifications.Warning'),
-                ])
+            ->add(
+                $this->buildBulkDeleteAction('admin_manufacturer_addresses_bulk_delete')
             )
         ;
     }
