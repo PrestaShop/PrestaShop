@@ -25,6 +25,7 @@
 
 import Router from '@components/router';
 import OrderViewPageMap from '@pages/order/OrderViewPageMap';
+import { NumberFormatter } from '@app/cldr';
 
 const {$} = window;
 
@@ -38,6 +39,8 @@ export default class OrderProductCancel {
     this.orderId = this.cancelProductForm.data('orderId');
     this.orderDelivered = parseInt(this.cancelProductForm.data('isDelivered'), 10) === 1;
     this.isTaxIncluded = parseInt(this.cancelProductForm.data('isTaxIncluded'), 10) === 1;
+    this.discountsAmount = parseFloat(this.cancelProductForm.data('discountsAmount'));
+    this.currencyFormatter = NumberFormatter.build(this.cancelProductForm.data('priceSpecification'));
   }
 
   showPartialRefund() {
@@ -45,7 +48,6 @@ export default class OrderProductCancel {
     $(OrderViewPageMap.cancelProduct.toggle.standardRefund).hide();
     $(OrderViewPageMap.cancelProduct.toggle.partialRefund).show();
     $(OrderViewPageMap.cancelProduct.table.actions).hide();
-    this.listenForInputs();
     this.initForm(
       $(OrderViewPageMap.cancelProduct.buttons.save).data('partialRefundLabel'),
       this.router.generate('admin_orders_partial_refund', {orderId: this.orderId})
@@ -57,7 +59,6 @@ export default class OrderProductCancel {
     $(OrderViewPageMap.cancelProduct.toggle.partialRefund).hide();
     $(OrderViewPageMap.cancelProduct.toggle.standardRefund).show();
     $(OrderViewPageMap.cancelProduct.table.actions).hide();
-    this.listenForInputs();
     this.initForm(
       $(OrderViewPageMap.cancelProduct.buttons.save).data('standardRefundLabel'),
       ''
@@ -71,6 +72,9 @@ export default class OrderProductCancel {
   }
 
   initForm(actionName, formAction) {
+    this.listenForInputs();
+    this.updateVoucherRefund();
+
     this.cancelProductForm.attr('action', formAction);
     $(OrderViewPageMap.cancelProduct.buttons.save).html(actionName);
     $(OrderViewPageMap.cancelProduct.table.header).html(actionName);
@@ -86,6 +90,8 @@ export default class OrderProductCancel {
       const productQuantity = parseInt($productQuantityInput.val(), 10);
       if (productQuantity <= 0) {
         $productAmount.val(0);
+        this.updateVoucherRefund();
+
         return;
       }
       const priceFieldName = this.isTaxIncluded ? 'productPriceTaxIncl' : 'productPriceTaxExcl';
@@ -94,9 +100,44 @@ export default class OrderProductCancel {
       const guessedAmount = productUnitPrice * productQuantity < amountRefundable ?
         productUnitPrice * productQuantity : amountRefundable;
       const amountValue = parseFloat($productAmount.val());
-      if (amountValue === 0 || amountValue > guessedAmount) {
+      if ($productAmount.val() === '' || amountValue === 0 || amountValue > guessedAmount) {
         $productAmount.val(guessedAmount);
+        this.updateVoucherRefund();
       }
     });
+
+    $(OrderViewPageMap.cancelProduct.inputs.amount).off('change').on('change', () => {
+      this.updateVoucherRefund();
+    });
+  }
+
+  updateVoucherRefund() {
+    let totalAmount = 0;
+    $(OrderViewPageMap.cancelProduct.inputs.amount).each((index, amount) => {
+      const floatValue = parseFloat(amount.value);
+      totalAmount += !isNaN(floatValue) ? floatValue : 0;
+    });
+
+    this.updateVoucherRefundTypeLabel($(OrderViewPageMap.cancelProduct.radios.voucherRefundType.productPrices), totalAmount);
+    const refundVoucherExcluded = totalAmount - this.discountsAmount;
+    this.updateVoucherRefundTypeLabel($(OrderViewPageMap.cancelProduct.radios.voucherRefundType.productPricesVoucherExcluded), refundVoucherExcluded);
+    if (refundVoucherExcluded < 0) {
+      $(OrderViewPageMap.cancelProduct.radios.voucherRefundType.productPricesVoucherExcluded).prop('checked', false).prop('disabled', true);
+      $(OrderViewPageMap.cancelProduct.radios.voucherRefundType.productPrices).prop('checked', true);
+      $(OrderViewPageMap.cancelProduct.radios.voucherRefundType.negativeErrorMessage).show();
+    } else {
+      $(OrderViewPageMap.cancelProduct.radios.voucherRefundType.productPricesVoucherExcluded).prop('disabled', false);
+      $(OrderViewPageMap.cancelProduct.radios.voucherRefundType.negativeErrorMessage).hide();
+    }
+  }
+
+  updateVoucherRefundTypeLabel($input, refundAmount) {
+    const defaultLabel = $input.data('defaultLabel');
+    const $label = $input.parents('label');
+    const formattedAmount = this.currencyFormatter.format(refundAmount);
+
+    // Change the ending text part only to avoid removing the input
+    $label.get(0).lastChild.nodeValue = `
+    ${defaultLabel} ${formattedAmount}`;
   }
 }

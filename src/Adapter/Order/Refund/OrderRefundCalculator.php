@@ -41,6 +41,7 @@ use PrestaShop\PrestaShop\Core\Localization\CLDR\ComputingPrecision;
 use PrestaShopDatabaseException;
 use PrestaShopException;
 use TaxCalculator;
+use Tools;
 
 /**
  * Performs all computation for a refund on an Order, returns a OrderRefundDetail
@@ -60,7 +61,7 @@ class OrderRefundCalculator
 
         $orderDetailList = $this->getOrderDetailList($orderDetailRefunds);
         $taxCalculator = $this->getOrderTaxCalculator($order);
-        $productRefunds = $this->flattenCheckedProductRefunds($orderDetailRefunds, $isTaxIncluded, $orderDetailList, $taxCalculator);
+        $productRefunds = $this->flattenCheckedProductRefunds($orderDetailRefunds, $isTaxIncluded, $orderDetailList, $taxCalculator, $precision);
         $refundedAmount = 0;
         foreach ($productRefunds as $orderDetailId => $productRefund) {
             $refundedAmount += $productRefund['amount'];
@@ -128,13 +129,14 @@ class OrderRefundCalculator
      * @param bool $isTaxIncluded
      * @param array $orderDetails
      * @param TaxCalculator $taxCalculator
+     * @param int $precision
      *
      * @return array
      *
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
      */
-    private function flattenCheckedProductRefunds(array $orderDetailRefunds, bool $isTaxIncluded, array $orderDetails, TaxCalculator $taxCalculator)
+    private function flattenCheckedProductRefunds(array $orderDetailRefunds, bool $isTaxIncluded, array $orderDetails, TaxCalculator $taxCalculator, int $precision)
     {
         $productRefunds = [];
         /** @var OrderDetailRefund $orderDetailRefund */
@@ -154,9 +156,9 @@ class OrderRefundCalculator
             ];
 
             // Compute max refund by product (based on quantity and already refunded amount)
-            $productMaxRefund = $isTaxIncluded ? $orderDetail->unit_price_tax_excl : $orderDetail->unit_price_tax_incl;
+            $productMaxRefund = $isTaxIncluded ? (float) $orderDetail->unit_price_tax_excl : (float) $orderDetail->unit_price_tax_incl;
             $productMaxRefund *= $quantity;
-            $productMaxRefund -= $isTaxIncluded ? $orderDetail->total_refunded_tax_incl : $orderDetail->total_refunded_tax_excl;
+            $productMaxRefund -= $isTaxIncluded ? (float) $orderDetail->total_refunded_tax_incl : (float) $orderDetail->total_refunded_tax_excl;
 
             // If refunded amount is null it means the whole product is refunded (used for standard refund, and return product)
             if (null === $orderDetailRefund->getRefundedAmount()) {
@@ -170,13 +172,13 @@ class OrderRefundCalculator
             $productRefunds[$orderDetailId]['unit_price'] =
                 $productRefunds[$orderDetailId]['amount'] / $productRefunds[$orderDetailId]['quantity'];
 
-            // Add data for OrderDetail updates
+            // Add data for OrderDetail updates, it's important to round because too many decimals will fail in Validate::isPrice
             if ($isTaxIncluded) {
-                $productRefunds[$orderDetailId]['total_refunded_tax_incl'] = $productRefunds[$orderDetailId]['amount'];
-                $productRefunds[$orderDetailId]['total_refunded_tax_excl'] = $taxCalculator->removeTaxes($productRefunds[$orderDetailId]['amount']);
+                $productRefunds[$orderDetailId]['total_refunded_tax_incl'] = Tools::ps_round($productRefundAmount, $precision);
+                $productRefunds[$orderDetailId]['total_refunded_tax_excl'] = Tools::ps_round($taxCalculator->removeTaxes($productRefundAmount), $precision);
             } else {
-                $productRefunds[$orderDetailId]['total_refunded_tax_excl'] = $productRefunds[$orderDetailId]['amount'];
-                $productRefunds[$orderDetailId]['total_refunded_tax_incl'] = $taxCalculator->addTaxes($productRefunds[$orderDetailId]['amount']);
+                $productRefunds[$orderDetailId]['total_refunded_tax_excl'] = Tools::ps_round($productRefundAmount, $precision);
+                $productRefunds[$orderDetailId]['total_refunded_tax_incl'] = Tools::ps_round($taxCalculator->addTaxes($productRefundAmount), $precision);
             }
 
             // Add missing fields

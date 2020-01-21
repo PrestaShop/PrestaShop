@@ -136,6 +136,13 @@ export default {
       restock: '#cancel_product_restock',
       creditSlip: '#cancel_product_credit_slip',
     },
+    radios: {
+      voucherRefundType: {
+        productPrices: 'input[voucher-refund-type="0"]',
+        productPricesVoucherExcluded: 'input[voucher-refund-type="1"]',
+        negativeErrorMessage: '.voucher-refund-type-negative-error',
+      },
+    },
     toggle: {
       partialRefund: '.cancel-product-element:not(.hidden):not(.shipping-refund), .cancel-product-amount',
       standardRefund: '.cancel-product-element:not(.hidden):not(.shipping-refund), .cancel-product-selector',
