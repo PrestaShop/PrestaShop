@@ -41,6 +41,7 @@ export default class OrderProductCancel {
     this.isTaxIncluded = parseInt(this.cancelProductForm.data('isTaxIncluded'), 10) === 1;
     this.discountsAmount = parseFloat(this.cancelProductForm.data('discountsAmount'));
     this.currencyFormatter = NumberFormatter.build(this.cancelProductForm.data('priceSpecification'));
+    this.listenForInputs();
   }
 
   showPartialRefund() {
@@ -72,18 +73,17 @@ export default class OrderProductCancel {
   }
 
   initForm(actionName, formAction) {
-    this.listenForInputs();
     this.updateVoucherRefund();
 
-    this.cancelProductForm.attr('action', formAction);
+    this.cancelProductForm.prop('action', formAction);
     $(OrderViewPageMap.cancelProduct.buttons.save).html(actionName);
     $(OrderViewPageMap.cancelProduct.table.header).html(actionName);
-    $(OrderViewPageMap.cancelProduct.checkboxes.restock).attr('checked', this.orderDelivered);
-    $(OrderViewPageMap.cancelProduct.checkboxes.creditSlip).attr('checked', true);
+    $(OrderViewPageMap.cancelProduct.checkboxes.restock).prop('checked', this.orderDelivered);
+    $(OrderViewPageMap.cancelProduct.checkboxes.creditSlip).prop('checked', true);
   }
 
   listenForInputs() {
-    $(OrderViewPageMap.cancelProduct.inputs.quantity).off('change').on('change', (event) => {
+    $(document).on('change', OrderViewPageMap.cancelProduct.inputs.quantity, (event) => {
       const $productQuantityInput = $(event.target);
       const $parentCell = $productQuantityInput.parents(OrderViewPageMap.cancelProduct.table.cell);
       const $productAmount = $parentCell.find(OrderViewPageMap.cancelProduct.inputs.amount);
@@ -97,8 +97,8 @@ export default class OrderProductCancel {
       const priceFieldName = this.isTaxIncluded ? 'productPriceTaxIncl' : 'productPriceTaxExcl';
       const productUnitPrice = parseFloat($productQuantityInput.data(priceFieldName));
       const amountRefundable = parseFloat($productQuantityInput.data('amountRefundable'));
-      const guessedAmount = productUnitPrice * productQuantity < amountRefundable ?
-        productUnitPrice * productQuantity : amountRefundable;
+      const guessedAmount = (productUnitPrice * productQuantity) < amountRefundable ?
+        (productUnitPrice * productQuantity) : amountRefundable;
       const amountValue = parseFloat($productAmount.val());
       if ($productAmount.val() === '' || amountValue === 0 || amountValue > guessedAmount) {
         $productAmount.val(guessedAmount);
@@ -106,7 +106,7 @@ export default class OrderProductCancel {
       }
     });
 
-    $(OrderViewPageMap.cancelProduct.inputs.amount).off('change').on('change', () => {
+    $(document).on('change', OrderViewPageMap.cancelProduct.inputs.amount, () => {
       this.updateVoucherRefund();
     });
   }
@@ -115,14 +115,24 @@ export default class OrderProductCancel {
     let totalAmount = 0;
     $(OrderViewPageMap.cancelProduct.inputs.amount).each((index, amount) => {
       const floatValue = parseFloat(amount.value);
-      totalAmount += !isNaN(floatValue) ? floatValue : 0;
+      totalAmount += !Number.isNaN(floatValue) ? floatValue : 0;
     });
 
-    this.updateVoucherRefundTypeLabel($(OrderViewPageMap.cancelProduct.radios.voucherRefundType.productPrices), totalAmount);
+    this.updateVoucherRefundTypeLabel(
+      $(OrderViewPageMap.cancelProduct.radios.voucherRefundType.productPrices),
+      totalAmount
+    );
     const refundVoucherExcluded = totalAmount - this.discountsAmount;
-    this.updateVoucherRefundTypeLabel($(OrderViewPageMap.cancelProduct.radios.voucherRefundType.productPricesVoucherExcluded), refundVoucherExcluded);
+    this.updateVoucherRefundTypeLabel(
+      $(OrderViewPageMap.cancelProduct.radios.voucherRefundType.productPricesVoucherExcluded),
+      refundVoucherExcluded
+    );
+
+    // Disable voucher excluded option when the voucher amount is too high
     if (refundVoucherExcluded < 0) {
-      $(OrderViewPageMap.cancelProduct.radios.voucherRefundType.productPricesVoucherExcluded).prop('checked', false).prop('disabled', true);
+      $(OrderViewPageMap.cancelProduct.radios.voucherRefundType.productPricesVoucherExcluded)
+        .prop('checked', false)
+        .prop('disabled', true);
       $(OrderViewPageMap.cancelProduct.radios.voucherRefundType.productPrices).prop('checked', true);
       $(OrderViewPageMap.cancelProduct.radios.voucherRefundType.negativeErrorMessage).show();
     } else {
@@ -136,7 +146,7 @@ export default class OrderProductCancel {
     const $label = $input.parents('label');
     const formattedAmount = this.currencyFormatter.format(refundAmount);
 
-    // Change the ending text part only to avoid removing the input
+    // Change the ending text part only to avoid removing the input (the EOL is on purpose for better display)
     $label.get(0).lastChild.nodeValue = `
     ${defaultLabel} ${formattedAmount}`;
   }

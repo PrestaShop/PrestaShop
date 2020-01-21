@@ -437,7 +437,7 @@ Feature: Refund Order from Back Office (BO)
     Then I should get error that refund amount is invalid
     And "bo_order_refund" has 0 credit slips
 
-  @order-refund-voucher
+  @order-refund
   Scenario: Partial refund of products paid partially with a big voucher, too high refund
     Given I use a voucher "PROMO20" for a discount of 20.0 on the cart "dummy_cart"
     And I add order "bo_order_refund" with the following details:

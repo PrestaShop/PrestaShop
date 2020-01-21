@@ -542,8 +542,8 @@ INSERT IGNORE INTO `PREFIX_hook` (`id_hook`, `name`, `title`, `description`, `po
 INSERT INTO `PREFIX_hook_alias` (`name`, `alias`) VALUES ('displayAdminOrderTop', 'displayInvoice');
 
 /* Add refund amount on order detail, and fill new columns via data in order_slip_detail table */
-ALTER TABLE `PREFIX_order_detail` ADD `total_refunded_tax_excl` DECIMAL(20, 6) NOT NULL AFTER `original_wholesale_price`;
-ALTER TABLE `PREFIX_order_detail` ADD `total_refunded_tax_incl` DECIMAL(20, 6) NOT NULL AFTER `total_refunded_tax_excl`;
+ALTER TABLE `PREFIX_order_detail` ADD `total_refunded_tax_excl` DECIMAL(20, 6) NOT NULL AFTER `original_wholesale_price` DEFAULT '0.000000';
+ALTER TABLE `PREFIX_order_detail` ADD `total_refunded_tax_incl` DECIMAL(20, 6) NOT NULL AFTER `total_refunded_tax_excl` DEFAULT '0.000000';
 
 UPDATE
     `PREFIX_order_detail` `od`
