@@ -16,7 +16,7 @@ use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 
 class OrderShippingFeatureContext extends AbstractDomainFeatureContext
 {
-    const DEFAULT_ORDER_CARRIER_ID = 2;
+    const DEFAULT_ORDER_CARRIER_ID = 1;
 
     /**
      * @When I update order :orderReference Tracking number to :trackingNumber and Carrier to :carrier
