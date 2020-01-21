@@ -23,8 +23,8 @@
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 
+{% form_theme pdfByDateForm 'PrestaShopBundle:Admin/TwigTemplateForm:prestashop_ui_kit.html.twig' %}
 {% trans_default_domain "Admin.Orderscustomers.Feature" %}
-{% import '@PrestaShop/Admin/macros.html.twig' as ps %}
 
 {{ form_start(pdfByDateForm, {
   'method': 'GET',
@@ -37,20 +37,10 @@
 
   <div class="card-block row">
     <div class="card-text">
-      {% set dateHint = 'Format: 2011-12-31 (inclusive).'|trans({}, 'Admin.Orderscustomers.Help') %}
-      {{ ps.form_group_row(pdfByDateForm.from, {}, {
-        'label': 'From'|trans({}, 'Admin.Global'),
-        'help': dateHint
-      }) }}
-
-      {{ ps.form_group_row(pdfByDateForm.to, {}, {
-        'label': 'To'|trans({}, 'Admin.Global'),
-        'help': dateHint
-      }) }}
+      {% block credit_slip_pdf_by_date_form %}
+        {{ form_widget(pdfByDateForm) }}
+      {% endblock %}
     </div>
-    {% block credit_slip_pdf_by_date_form_rest %}
-      {{ form_rest(pdfByDateForm) }}
-    {% endblock %}
   </div>
 
   <div class="card-footer">
