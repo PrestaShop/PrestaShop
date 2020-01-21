@@ -31,22 +31,11 @@ class OrderShippingFeatureContext extends AbstractDomainFeatureContext
         $orderId = SharedStorage::getStorage()->get($orderReference);
         /** @var OrderForViewing $orderForViewing */
         $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
-        /** @var OrderCarrierForViewing[] $carriers */
-        $carriers = $orderForViewing->getShipping()->getCarriers();
-        if (count($carriers) > 0 && (int) $carriers[0]->getCarrierId() !== 0) {
-            $currentOrderCarrierId = $carriers[0]->getCarrierId();
-        } else {
-            // legacy classes adding order carrier
-            $orderCarrier = new OrderCarrier(self::DEFAULT_ORDER_CARRIER_ID);
-            $orderCarrier->id_order = $orderId;
-            $orderCarrier->add();
-            $currentOrderCarrierId = self::DEFAULT_ORDER_CARRIER_ID;
-        }
         $newCarrierId = $this->getCarrierId($carrier);
         $this->getCommandBus()->handle(
             new UpdateOrderShippingDetailsCommand(
                 $orderId,
-                $currentOrderCarrierId,
+                $orderForViewing->getShipping()->getCarriers()[0]->getCarrierId(),
                 $newCarrierId,
                 $trackingNumber
             )

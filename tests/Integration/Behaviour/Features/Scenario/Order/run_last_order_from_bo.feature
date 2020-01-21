@@ -41,6 +41,7 @@ Feature: Order from Back Office (BO)
       | message             | test                       |
       | payment module name | dummy_payment              |
       | status              | Awaiting bank wire payment |
+    And I associate default carrier to order "bo_order1"
 
   Scenario: Update order status
     When I update order "bo_order1" status to "Awaiting Cash On Delivery validation"
