@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<localizationPack name="Senegal" version="1.0">
+	<currencies>
+		<currency name="Franc CFA" iso_code="XOF" iso_code_num="952" sign="FCFA" blank="1" format="2" decimals="0" />
+	</currencies>
+	<languages>
+		<language iso_code="fr" />
+	</languages>
+	<taxes>
+		<tax id="1" name="TVA SN 18%" rate="18" />
+		<tax id="2" name="TVA SN 15%" rate="15" />
+		<tax id="3" name="TVA SN 10%" rate="10" />
+
+		<taxRulesGroup name="SN Standard Rate (18%)">
+			<taxRule iso_code_country="sn" id_tax="1" />
+		</taxRulesGroup>
+
+		<taxRulesGroup name="SN Tourism Rate (15%)">
+			<taxRule iso_code_country="sn" id_tax="2" />
+		</taxRulesGroup>
+
+		<taxRulesGroup name="SN Reduced Rate (10%)">
+			<taxRule iso_code_country="sn" id_tax="3" />
+		</taxRulesGroup>
+	</taxes>
+	<units>
+		<unit type="weight" value="kg" />
+		<unit type="volume" value="L" />
+		<unit type="short_distance" value="cm" />
+		<unit type="base_distance" value="m" />
+		<unit type="long_distance" value="km" />
+	</units>
+</localizationPack>
