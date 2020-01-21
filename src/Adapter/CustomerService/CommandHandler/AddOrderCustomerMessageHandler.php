@@ -105,19 +105,13 @@ final class AddOrderCustomerMessageHandler implements AddOrderCustomerMessageHan
         $order = new Order($command->getOrderId()->getValue());
 
         if (0 >= $order->id) {
-            throw new OrderNotFoundException(
-                $command->getOrderId(),
-                "Order with id {$command->getOrderId()->getValue()} was not found"
-            );
+            throw new OrderNotFoundException($command->getOrderId(), "Order with id {$command->getOrderId()->getValue()} was not found");
         }
 
         $customer = new Customer($order->id_customer);
 
         if (0 >= $customer->id) {
-            throw new CustomerMessageException(
-                "Associated order customer with id {$command->getOrderId()->getValue()} was not found",
-                CustomerMessageException::ORDER_CUSTOMER_NOT_FOUND
-            );
+            throw new CustomerMessageException("Associated order customer with id {$command->getOrderId()->getValue()} was not found", CustomerMessageException::ORDER_CUSTOMER_NOT_FOUND);
         }
 
         $customerServiceThreadId = CustomerThread::getIdCustomerThreadByEmailAndIdOrder(
@@ -129,22 +123,14 @@ final class AddOrderCustomerMessageHandler implements AddOrderCustomerMessageHan
             try {
                 $customerServiceThreadId = $this->createCustomerMessageThread($order);
             } catch (\PrestaShopException $e) {
-                throw new CustomerMessageException(
-                    'An unexpected error occurred when creating customer message thread',
-                    0,
-                    $e
-                );
+                throw new CustomerMessageException('An unexpected error occurred when creating customer message thread', 0, $e);
             }
         }
 
         try {
             $this->createMessage($customerServiceThreadId, $command);
         } catch (\PrestaShopException $e) {
-            throw new CustomerMessageException(
-                'An unexpected error occurred when creating customer message',
-                0,
-                $e
-            );
+            throw new CustomerMessageException('An unexpected error occurred when creating customer message', 0, $e);
         }
 
         $failedMailSentMessage = 'An unexpected error occurred when sending the email';
@@ -156,11 +142,7 @@ final class AddOrderCustomerMessageHandler implements AddOrderCustomerMessageHan
                 throw new CannotSendEmailException($failedMailSentMessage);
             }
         } catch (\PrestaShopException $e) {
-            throw new CannotSendEmailException(
-                $failedMailSentMessage,
-                0,
-                $e
-            );
+            throw new CannotSendEmailException($failedMailSentMessage, 0, $e);
         }
     }
 
@@ -174,13 +156,7 @@ final class AddOrderCustomerMessageHandler implements AddOrderCustomerMessageHan
         $errors = $this->validator->validate($message, new CleanHtml());
 
         if (0 !== \count($errors)) {
-            throw new CustomerMessageConstraintException(
-                sprintf(
-                    'Given message "%s" contains javascript events or script tags',
-                    $message
-                ),
-                CustomerMessageConstraintException::INVALID_MESSAGE
-            );
+            throw new CustomerMessageConstraintException(sprintf('Given message "%s" contains javascript events or script tags', $message), CustomerMessageConstraintException::INVALID_MESSAGE);
         }
     }
 
@@ -256,13 +232,13 @@ final class AddOrderCustomerMessageHandler implements AddOrderCustomerMessageHan
         }
 
         $orderLanguage = new Language((int) $order->id_lang);
-        $varsTpl = array(
+        $varsTpl = [
             '{lastname}' => $customer->lastname,
             '{firstname}' => $customer->firstname,
             '{id_order}' => $order->id,
             '{order_name}' => $order->getUniqReference(),
             '{message}' => $message,
-        );
+        ];
 
         return Mail::Send(
             (int) $order->id_lang,

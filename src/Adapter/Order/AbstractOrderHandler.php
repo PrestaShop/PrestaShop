@@ -47,10 +47,7 @@ abstract class AbstractOrderHandler
         $order = new Order($orderId->getValue());
 
         if ($order->id !== $orderId->getValue()) {
-            throw new OrderNotFoundException(
-                $orderId,
-                sprintf('Order with id "%d" was not found.', $orderId->getValue())
-            );
+            throw new OrderNotFoundException($orderId, sprintf('Order with id "%d" was not found.', $orderId->getValue()));
         }
 
         return $order;

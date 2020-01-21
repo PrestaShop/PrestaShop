@@ -27,9 +27,9 @@
 namespace PrestaShop\PrestaShop\Adapter\Meta\QueryHandler;
 
 use Meta;
-use PrestaShop\PrestaShop\Core\Domain\Meta\QueryResult\LayoutCustomizationPage;
 use PrestaShop\PrestaShop\Core\Domain\Meta\Query\GetPagesForLayoutCustomization;
 use PrestaShop\PrestaShop\Core\Domain\Meta\QueryHandler\GetPagesForLayoutCustomizationHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Meta\QueryResult\LayoutCustomizationPage;
 
 /**
  * Class GetMetaPagesListHandler.

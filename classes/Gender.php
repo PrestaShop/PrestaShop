@@ -39,17 +39,17 @@ class GenderCore extends ObjectModel
     /**
      * @see ObjectModel::$definition
      */
-    public static $definition = array(
+    public static $definition = [
         'table' => 'gender',
         'primary' => 'id_gender',
         'multilang' => true,
-        'fields' => array(
-            'type' => array('type' => self::TYPE_INT, 'required' => true),
+        'fields' => [
+            'type' => ['type' => self::TYPE_INT, 'required' => true],
 
             /* Lang fields */
-            'name' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isString', 'required' => true, 'size' => 20),
-        ),
-    );
+            'name' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isString', 'required' => true, 'size' => 20],
+        ],
+    ];
 
     /**
      * GenderCore constructor.

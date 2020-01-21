@@ -104,9 +104,7 @@ class GridExtension extends AbstractExtension
             );
 
             if (null === $template) {
-                throw new RuntimeException(
-                    sprintf('Content template for column type "%s" was not found', $column['type'])
-                );
+                throw new RuntimeException(sprintf('Content template for column type "%s" was not found', $column['type']));
             }
 
             $this->cache->save(

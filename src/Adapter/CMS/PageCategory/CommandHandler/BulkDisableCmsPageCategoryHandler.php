@@ -51,31 +51,17 @@ final class BulkDisableCmsPageCategoryHandler implements BulkDisableCmsPageCateg
                 $entity = new CMSCategory($cmsPageCategoryId->getValue());
 
                 if (0 >= $entity->id) {
-                    throw new CmsPageCategoryNotFoundException(
-                        sprintf(
-                            'Cms category object with id "%s" has not been found for disabling status.',
-                            $cmsPageCategoryId->getValue()
-                        )
-                    );
+                    throw new CmsPageCategoryNotFoundException(sprintf('Cms category object with id "%s" has not been found for disabling status.', $cmsPageCategoryId->getValue()));
                 }
 
                 $entity->active = false;
 
                 if (false === $entity->update()) {
-                    throw new CannotDisableCmsPageCategoryException(
-                        sprintf(
-                            'Unable to disable cms category object with id "%s"',
-                            $cmsPageCategoryId->getValue()
-                        )
-                    );
+                    throw new CannotDisableCmsPageCategoryException(sprintf('Unable to disable cms category object with id "%s"', $cmsPageCategoryId->getValue()));
                 }
             }
         } catch (PrestaShopException $e) {
-            throw new CmsPageCategoryException(
-                'Unexpected error occurred when handling bulk disable cms category',
-                0,
-                $e
-            );
+            throw new CmsPageCategoryException('Unexpected error occurred when handling bulk disable cms category', 0, $e);
         }
     }
 }

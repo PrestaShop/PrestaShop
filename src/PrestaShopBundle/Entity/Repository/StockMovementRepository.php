@@ -83,20 +83,20 @@ class StockMovementRepository extends StockManagementRepository
         $combinationNameQuery = $this->getCombinationNameSubquery();
 
         return str_replace(
-            array(
+            [
                 '{and_where}',
                 '{having}',
                 '{order_by}',
                 '{table_prefix}',
                 '{combination_name}',
-            ),
-            array(
+            ],
+            [
                 $andWhereClause,
                 $having,
                 $orderByClause,
                 $this->tablePrefix,
                 $combinationNameQuery,
-            ),
+            ],
             'SELECT SQL_CALC_FOUND_ROWS
               sm.id_stock_mvt,
               sm.id_stock,
@@ -201,8 +201,8 @@ class StockMovementRepository extends StockManagementRepository
                 $row['order_link'] = $this->contextAdapter->getContext()->link->getAdminLink(
                     'AdminOrders',
                     true,
-                    array(),
-                    array('vieworder' => true, 'id_order' => (int) $row['id_order'])
+                    [],
+                    ['vieworder' => true, 'id_order' => (int) $row['id_order']]
                 );
             } else {
                 $row['order_link'] = 'N/A';

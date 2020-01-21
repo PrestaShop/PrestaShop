@@ -59,10 +59,7 @@ final class BulkSetTaxRulesGroupStatusHandler extends AbstractTaxRulesGroupHandl
         }
 
         if (!empty($errors)) {
-            throw new CannotBulkUpdateTaxRulesGroupException(
-                $errors,
-                'Failed to set all tax rules groups statuses without errors'
-            );
+            throw new CannotBulkUpdateTaxRulesGroupException($errors, 'Failed to set all tax rules groups statuses without errors');
         }
     }
 }

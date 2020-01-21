@@ -44,7 +44,7 @@ class Router extends BaseRouter
     /**
      * {@inheritdoc}
      */
-    public function generate($name, $parameters = array(), $referenceType = self::ABSOLUTE_PATH)
+    public function generate($name, $parameters = [], $referenceType = self::ABSOLUTE_PATH)
     {
         $url = parent::generate($name, $parameters, $referenceType);
         $token = $this->tokenManager->getToken($this->userProvider->getUsername())->getValue();
@@ -69,7 +69,7 @@ class Router extends BaseRouter
         }
         $components = parse_url($url);
         $baseUrl = (isset($components['path']) ? $components['path'] : '');
-        $queryParams = array();
+        $queryParams = [];
         if (isset($components['query'])) {
             $query = $components['query'];
 

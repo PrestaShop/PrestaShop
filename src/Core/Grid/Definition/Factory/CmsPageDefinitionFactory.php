@@ -116,7 +116,7 @@ class CmsPageDefinitionFactory extends AbstractGridDefinitionFactory
 
         return $this->trans(
             'Pages in category "%name%"',
-            array('%name%' => $cmsCategoryName),
+            ['%name%' => $cmsCategoryName],
             'Admin.Design.Feature'
         );
     }

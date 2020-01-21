@@ -68,9 +68,7 @@ final class Entity
             return self::AVAILABLE_TYPES[$importType];
         }
 
-        throw new NotSupportedImportTypeException(
-            sprintf('Import type with name "%s" is not supported.', $importType)
-        );
+        throw new NotSupportedImportTypeException(sprintf('Import type with name "%s" is not supported.', $importType));
     }
 
     /**

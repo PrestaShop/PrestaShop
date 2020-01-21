@@ -27,14 +27,14 @@
 namespace PrestaShop\PrestaShop\Adapter\Customer\QueryHandler;
 
 use Customer;
-use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\EditableCustomer;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Customer\QueryHandler\GetCustomerForEditingHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\EditableCustomer;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\Birthday;
-use PrestaShop\PrestaShop\Core\Domain\ValueObject\Email;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\FirstName;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\LastName;
+use PrestaShop\PrestaShop\Core\Domain\ValueObject\Email;
 
 /**
  * Handles command that gets customer for editing
@@ -52,10 +52,7 @@ final class GetCustomerForEditingHandler implements GetCustomerForEditingHandler
         $customer = new Customer($customerId->getValue());
 
         if ($customer->id !== $customerId->getValue()) {
-            throw new CustomerNotFoundException(
-                $customerId,
-                sprintf('Customer with id "%s" was not found', $customerId->getValue())
-            );
+            throw new CustomerNotFoundException($customerId, sprintf('Customer with id "%s" was not found', $customerId->getValue()));
         }
 
         $birthday = null === $customer->birthday ?

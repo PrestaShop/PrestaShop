@@ -43,23 +43,23 @@ class RangePriceCore extends ObjectModel
     /**
      * @see ObjectModel::$definition
      */
-    public static $definition = array(
+    public static $definition = [
         'table' => 'range_price',
         'primary' => 'id_range_price',
-        'fields' => array(
-            'id_carrier' => array('type' => self::TYPE_INT, 'validate' => 'isInt', 'required' => true),
-            'delimiter1' => array('type' => self::TYPE_FLOAT, 'validate' => 'isUnsignedFloat', 'required' => true),
-            'delimiter2' => array('type' => self::TYPE_FLOAT, 'validate' => 'isUnsignedFloat', 'required' => true),
-        ),
-    );
+        'fields' => [
+            'id_carrier' => ['type' => self::TYPE_INT, 'validate' => 'isInt', 'required' => true],
+            'delimiter1' => ['type' => self::TYPE_FLOAT, 'validate' => 'isUnsignedFloat', 'required' => true],
+            'delimiter2' => ['type' => self::TYPE_FLOAT, 'validate' => 'isUnsignedFloat', 'required' => true],
+        ],
+    ];
 
-    protected $webserviceParameters = array(
+    protected $webserviceParameters = [
         'objectsNodeName' => 'price_ranges',
         'objectNodeName' => 'price_range',
-        'fields' => array(
-            'id_carrier' => array('xlink_resource' => 'carriers'),
-        ),
-    );
+        'fields' => [
+            'id_carrier' => ['xlink_resource' => 'carriers'],
+        ],
+    ];
 
     /**
      * Override add to create delivery value for all zones.
@@ -80,15 +80,15 @@ class RangePriceCore extends ObjectModel
             return true;
         }
         $carrier = new Carrier((int) $this->id_carrier);
-        $price_list = array();
+        $price_list = [];
         foreach ($carrier->getZones() as $zone) {
-            $price_list[] = array(
+            $price_list[] = [
                 'id_range_price' => (int) $this->id,
                 'id_range_weight' => null,
                 'id_carrier' => (int) $this->id_carrier,
                 'id_zone' => (int) $zone['id_zone'],
                 'price' => 0,
-            );
+            ];
         }
         $carrier->addDeliveryPrice($price_list);
 

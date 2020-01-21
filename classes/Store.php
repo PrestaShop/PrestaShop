@@ -86,40 +86,40 @@ class StoreCore extends ObjectModel
     /**
      * @see ObjectModel::$definition
      */
-    public static $definition = array(
+    public static $definition = [
         'table' => 'store',
         'primary' => 'id_store',
         'multilang' => true,
-        'fields' => array(
-            'id_country' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-            'id_state' => array('type' => self::TYPE_INT, 'validate' => 'isNullOrUnsignedId'),
-            'postcode' => array('type' => self::TYPE_STRING, 'size' => 12),
-            'city' => array('type' => self::TYPE_STRING, 'validate' => 'isCityName', 'required' => true, 'size' => 64),
-            'latitude' => array('type' => self::TYPE_FLOAT, 'validate' => 'isCoordinate', 'size' => 13),
-            'longitude' => array('type' => self::TYPE_FLOAT, 'validate' => 'isCoordinate', 'size' => 13),
-            'phone' => array('type' => self::TYPE_STRING, 'validate' => 'isPhoneNumber', 'size' => 16),
-            'fax' => array('type' => self::TYPE_STRING, 'validate' => 'isPhoneNumber', 'size' => 16),
-            'email' => array('type' => self::TYPE_STRING, 'validate' => 'isEmail', 'size' => 255),
-            'active' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool', 'required' => true),
-            'date_add' => array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
-            'date_upd' => array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
+        'fields' => [
+            'id_country' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
+            'id_state' => ['type' => self::TYPE_INT, 'validate' => 'isNullOrUnsignedId'],
+            'postcode' => ['type' => self::TYPE_STRING, 'size' => 12],
+            'city' => ['type' => self::TYPE_STRING, 'validate' => 'isCityName', 'required' => true, 'size' => 64],
+            'latitude' => ['type' => self::TYPE_FLOAT, 'validate' => 'isCoordinate', 'size' => 13],
+            'longitude' => ['type' => self::TYPE_FLOAT, 'validate' => 'isCoordinate', 'size' => 13],
+            'phone' => ['type' => self::TYPE_STRING, 'validate' => 'isPhoneNumber', 'size' => 16],
+            'fax' => ['type' => self::TYPE_STRING, 'validate' => 'isPhoneNumber', 'size' => 16],
+            'email' => ['type' => self::TYPE_STRING, 'validate' => 'isEmail', 'size' => 255],
+            'active' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool', 'required' => true],
+            'date_add' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
+            'date_upd' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
 
             /* Lang fields */
-            'name' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 255),
-            'address1' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isAddress', 'required' => true, 'size' => 255),
-            'address2' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isAddress', 'size' => 255),
-            'hours' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isJson', 'size' => 65000),
-            'note' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isCleanHtml', 'size' => 65000),
-        ),
-    );
+            'name' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 255],
+            'address1' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isAddress', 'required' => true, 'size' => 255],
+            'address2' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isAddress', 'size' => 255],
+            'hours' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isJson', 'size' => 65000],
+            'note' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isCleanHtml', 'size' => 65000],
+        ],
+    ];
 
-    protected $webserviceParameters = array(
-        'fields' => array(
-            'id_country' => array('xlink_resource' => 'countries'),
-            'id_state' => array('xlink_resource' => 'states'),
-            'hours' => array('getter' => 'getWsHours', 'setter' => 'setWsHours'),
-        ),
-    );
+    protected $webserviceParameters = [
+        'fields' => [
+            'id_country' => ['xlink_resource' => 'countries'],
+            'id_state' => ['xlink_resource' => 'states'],
+            'hours' => ['getter' => 'getWsHours', 'setter' => 'setWsHours'],
+        ],
+    ];
 
     /**
      * StoreCore constructor.

@@ -48,10 +48,7 @@ final class BulkDeleteAttributeHandler extends AbstractAttributeHandler implemen
             $attribute = $this->getAttributeById($attributeId);
 
             if (false === $this->deleteAttribute($attribute)) {
-                throw new DeleteAttributeException(
-                    sprintf('Failed to delete attribute with id "%s"', $attribute->id),
-                    DeleteAttributeException::FAILED_BULK_DELETE
-                );
+                throw new DeleteAttributeException(sprintf('Failed to delete attribute with id "%s"', $attribute->id), DeleteAttributeException::FAILED_BULK_DELETE);
             }
         }
     }

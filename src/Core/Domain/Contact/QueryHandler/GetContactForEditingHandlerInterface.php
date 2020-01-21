@@ -26,8 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Contact\QueryHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Contact\QueryResult\EditableContact;
 use PrestaShop\PrestaShop\Core\Domain\Contact\Query\GetContactForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Contact\QueryResult\EditableContact;
 
 /**
  * Interface GetContactForEditingHandlerInterface defines contract for GetContactForEditingHandler

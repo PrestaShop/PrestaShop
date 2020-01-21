@@ -59,10 +59,7 @@ final class BulkDeleteTaxRulesGroupHandler extends AbstractTaxRulesGroupHandler 
         }
 
         if (!empty($errors)) {
-            throw new CannotBulkDeleteTaxRulesGroupException(
-                $errors,
-                'Failed to delete all tax rules groups without errors'
-            );
+            throw new CannotBulkDeleteTaxRulesGroupException($errors, 'Failed to delete all tax rules groups without errors');
         }
     }
 }

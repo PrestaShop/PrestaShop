@@ -48,9 +48,7 @@ final class DeleteAttachmentHandler extends AbstractAttachmentHandler implements
         $attachment = $this->getAttachment($command->getAttachmentId());
 
         if (!$this->deleteAttachment($attachment)) {
-            throw new DeleteAttachmentException(sprintf(
-                'Cannot delete Attachment object with id "%s".', $attachment->id)
-            );
+            throw new DeleteAttachmentException(sprintf('Cannot delete Attachment object with id "%s".', $attachment->id));
         }
     }
 }

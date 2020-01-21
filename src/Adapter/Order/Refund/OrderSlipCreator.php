@@ -31,14 +31,14 @@ use Hook;
 use Language;
 use Mail;
 use Order;
-use OrderSlip;
 use OrderDetail;
-use PrestaShopDatabaseException;
-use PrestaShopException;
-use StockAvailable;
+use OrderSlip;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\EmptyRefundAmountException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
+use PrestaShopDatabaseException;
+use PrestaShopException;
+use StockAvailable;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**

@@ -79,9 +79,9 @@ class System extends AbstractInstall
             $success &= ($result == 'ok') ? true : false;
         }
 
-        return array(
+        return [
             'checks' => $tests,
             'success' => $success,
-        );
+        ];
     }
 }

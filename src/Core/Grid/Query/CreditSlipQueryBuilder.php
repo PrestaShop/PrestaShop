@@ -26,9 +26,9 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Query;
 
+use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
-use Doctrine\DBAL\Connection;
 
 /**
  * Class responsible for providing sql for credit slip list

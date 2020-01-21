@@ -132,12 +132,7 @@ class OrderDetailRefund
     private function assertOrderDetailIdIsGreaterThanZero(int $orderDetailId)
     {
         if (0 > $orderDetailId) {
-            throw new OrderException(
-                sprintf(
-                    'Order detail id %s is invalid. Order detail id must be number that is greater than zero.',
-                    var_export($orderDetailId, true)
-                )
-            );
+            throw new OrderException(sprintf('Order detail id %s is invalid. Order detail id must be number that is greater than zero.', var_export($orderDetailId, true)));
         }
     }
 }

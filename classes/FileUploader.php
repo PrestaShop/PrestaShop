@@ -25,13 +25,13 @@
  */
 class FileUploaderCore
 {
-    protected $allowedExtensions = array();
+    protected $allowedExtensions = [];
 
     /** @var QqUploadedFileXhr|QqUploadedFileForm|false */
     protected $file;
     protected $sizeLimit;
 
-    public function __construct(array $allowedExtensions = array(), $sizeLimit = 10485760)
+    public function __construct(array $allowedExtensions = [], $sizeLimit = 10485760)
     {
         $allowedExtensions = array_map('strtolower', $allowedExtensions);
 
@@ -71,26 +71,26 @@ class FileUploaderCore
     public function handleUpload()
     {
         if (!$this->file) {
-            return array('error' => Context::getContext()->getTranslator()->trans('No files were uploaded.', array(), 'Admin.Notifications.Error'));
+            return ['error' => Context::getContext()->getTranslator()->trans('No files were uploaded.', [], 'Admin.Notifications.Error')];
         }
 
         $size = $this->file->getSize();
 
         if ($size == 0) {
-            return array('error' => Context::getContext()->getTranslator()->trans('Source file does not exist or is empty.', array(), 'Admin.Notifications.Error'));
+            return ['error' => Context::getContext()->getTranslator()->trans('Source file does not exist or is empty.', [], 'Admin.Notifications.Error')];
         }
         if ($size > $this->sizeLimit) {
-            return array('error' => Context::getContext()->getTranslator()->trans('The uploaded file is too large.', array(), 'Admin.Notifications.Error'));
+            return ['error' => Context::getContext()->getTranslator()->trans('The uploaded file is too large.', [], 'Admin.Notifications.Error')];
         }
 
         $pathinfo = pathinfo($this->file->getName());
         $these = implode(', ', $this->allowedExtensions);
         if (!isset($pathinfo['extension'])) {
-            return array('error' => Context::getContext()->getTranslator()->trans('File has an invalid extension, it should be one of these: %s.', array($these), 'Admin.Notifications.Error'));
+            return ['error' => Context::getContext()->getTranslator()->trans('File has an invalid extension, it should be one of these: %s.', [$these], 'Admin.Notifications.Error')];
         }
         $ext = $pathinfo['extension'];
         if ($this->allowedExtensions && !in_array(strtolower($ext), $this->allowedExtensions)) {
-            return array('error' => Context::getContext()->getTranslator()->trans('File has an invalid extension, it should be one of these: %s.', array($these), 'Admin.Notifications.Error'));
+            return ['error' => Context::getContext()->getTranslator()->trans('File has an invalid extension, it should be one of these: %s.', [$these], 'Admin.Notifications.Error')];
         }
 
         return $this->file->save();

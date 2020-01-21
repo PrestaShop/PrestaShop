@@ -128,14 +128,14 @@ class LanguageImageManager
      */
     public function deleteImages(int $langId, string $isoCode): void
     {
-        $images = array(
+        $images = [
             $this->getPlaceholderImageFilename($isoCode),
             $this->getPlaceholderImageFilename($isoCode, ImageType::getFormattedName('thickbox')),
             $this->getPlaceholderImageFilename($isoCode, ImageType::getFormattedName('home')),
             $this->getPlaceholderImageFilename($isoCode, ImageType::getFormattedName('large')),
             $this->getPlaceholderImageFilename($isoCode, ImageType::getFormattedName('medium')),
             $this->getPlaceholderImageFilename($isoCode, ImageType::getFormattedName('small')),
-        );
+        ];
         foreach (static::IMAGE_DIRECTORIES as $directory) {
             foreach ($images as $image) {
                 $this->unlinkIfExists($directory . $image);

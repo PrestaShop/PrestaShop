@@ -561,7 +561,7 @@ class MailCore extends ObjectModel
                 true
             );
             $templateVars = array_merge($templateVars, $extraTemplateVars);
-            $swift->registerPlugin(new Swift_Plugins_DecoratorPlugin(array(self::toPunycode($toPlugin) => $templateVars)));
+            $swift->registerPlugin(new Swift_Plugins_DecoratorPlugin([self::toPunycode($toPlugin) => $templateVars]));
             if ($configuration['PS_MAIL_TYPE'] == Mail::TYPE_BOTH ||
                 $configuration['PS_MAIL_TYPE'] == Mail::TYPE_TEXT
             ) {
@@ -576,7 +576,7 @@ class MailCore extends ObjectModel
             if ($fileAttachment && !empty($fileAttachment)) {
                 // Multiple attachments?
                 if (!is_array(current($fileAttachment))) {
-                    $fileAttachment = array($fileAttachment);
+                    $fileAttachment = [$fileAttachment];
                 }
 
                 foreach ($fileAttachment as $attachment) {
@@ -591,7 +591,7 @@ class MailCore extends ObjectModel
                 }
             }
             /* Send mail */
-            $message->setFrom(array($from => $fromName));
+            $message->setFrom([$from => $fromName]);
 
             // Hook to alter Swift Message before sending mail
             Hook::exec('actionMailAlterMessageBeforeSend', [

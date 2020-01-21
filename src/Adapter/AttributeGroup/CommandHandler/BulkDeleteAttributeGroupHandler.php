@@ -45,10 +45,7 @@ final class BulkDeleteAttributeGroupHandler extends AbstractAttributeGroupHandle
             $attributeGroup = $this->getAttributeGroupById($attributeGroupId);
 
             if (false === $this->deleteAttributeGroup($attributeGroup)) {
-                throw new DeleteAttributeGroupException(
-                    sprintf('Failed to delete attribute group with id "%s"', $attributeGroupId->getValue()),
-                    DeleteAttributeGroupException::FAILED_BULK_DELETE
-                );
+                throw new DeleteAttributeGroupException(sprintf('Failed to delete attribute group with id "%s"', $attributeGroupId->getValue()), DeleteAttributeGroupException::FAILED_BULK_DELETE);
             }
         }
     }

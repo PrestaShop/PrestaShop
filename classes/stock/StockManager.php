@@ -83,7 +83,7 @@ class StockManagerCore implements StockManagerInterface
 
         $context = Context::getContext();
 
-        $mvt_params = array(
+        $mvt_params = [
             'id_stock' => null,
             'physical_quantity' => $quantity,
             'id_stock_mvt_reason' => $id_stock_mvt_reason,
@@ -95,7 +95,7 @@ class StockManagerCore implements StockManagerInterface
             'employee_firstname' => $context->employee->firstname ? $context->employee->firstname : $employee->firstname,
             'employee_lastname' => $context->employee->lastname ? $context->employee->lastname : $employee->lastname,
             'sign' => 1,
-        );
+        ];
 
         $stock_exists = false;
 
@@ -121,12 +121,12 @@ class StockManagerCore implements StockManagerInterface
                     $mvt_params['last_wa'] = $last_wa;
                     $mvt_params['current_wa'] = $current_wa;
 
-                    $stock_params = array(
+                    $stock_params = [
                         'physical_quantity' => ($stock->physical_quantity + $quantity),
                         'price_te' => $current_wa,
                         'usable_quantity' => ($is_usable ? ($stock->usable_quantity + $quantity) : $stock->usable_quantity),
                         'id_warehouse' => $warehouse->id,
-                    );
+                    ];
 
                     // saves stock in warehouse
                     $stock->hydrate($stock_params);
@@ -153,10 +153,10 @@ class StockManagerCore implements StockManagerInterface
                     // there is one and only one stock for a given product in a warehouse and at the current unit price
                     $stock = $stock_collection->current();
 
-                    $stock_params = array(
+                    $stock_params = [
                         'physical_quantity' => ($stock->physical_quantity + $quantity),
                         'usable_quantity' => ($is_usable ? ($stock->usable_quantity + $quantity) : $stock->usable_quantity),
-                    );
+                    ];
 
                     // updates stock in warehouse
                     $stock->hydrate($stock_params);
@@ -177,14 +177,14 @@ class StockManagerCore implements StockManagerInterface
         if (!$stock_exists) {
             $stock = new Stock();
 
-            $stock_params = array(
+            $stock_params = [
                 'id_product_attribute' => $id_product_attribute,
                 'id_product' => $id_product,
                 'physical_quantity' => $quantity,
                 'price_te' => $price_te,
                 'usable_quantity' => ($is_usable ? $quantity : 0),
                 'id_warehouse' => $warehouse->id,
-            );
+            ];
 
             // saves stock in warehouse
             $stock->hydrate($stock_params);
@@ -228,7 +228,7 @@ class StockManagerCore implements StockManagerInterface
         $ignore_pack = 0,
         $employee = null
     ) {
-        $return = array();
+        $return = [];
 
         if (!Validate::isLoadedObject($warehouse) || !$quantity || !$id_product) {
             return $return;
@@ -285,8 +285,8 @@ class StockManagerCore implements StockManagerInterface
             }
         } else {
             // gets total quantities in stock for the current product
-            $physical_quantity_in_stock = (int) $this->getProductPhysicalQuantities($id_product, $id_product_attribute, array($warehouse->id), false);
-            $usable_quantity_in_stock = (int) $this->getProductPhysicalQuantities($id_product, $id_product_attribute, array($warehouse->id), true);
+            $physical_quantity_in_stock = (int) $this->getProductPhysicalQuantities($id_product, $id_product_attribute, [$warehouse->id], false);
+            $usable_quantity_in_stock = (int) $this->getProductPhysicalQuantities($id_product, $id_product_attribute, [$warehouse->id], true);
 
             // check quantity if we want to decrement unusable quantity
             if (!$is_usable) {
@@ -308,10 +308,10 @@ class StockManagerCore implements StockManagerInterface
                 return $return;
             }
 
-            $stock_history_qty_available = array();
-            $mvt_params = array();
-            $stock_params = array();
-            $quantity_to_decrement_by_stock = array();
+            $stock_history_qty_available = [];
+            $mvt_params = [];
+            $stock_params = [];
+            $quantity_to_decrement_by_stock = [];
             $global_quantity_to_decrement = $quantity;
 
             // switch on MANAGEMENT_TYPE
@@ -322,7 +322,7 @@ class StockManagerCore implements StockManagerInterface
                     // There is one and only one stock for a given product in a warehouse in this mode
                     $stock = $stock_collection->current();
 
-                    $mvt_params = array(
+                    $mvt_params = [
                         'id_stock' => $stock->id,
                         'physical_quantity' => $quantity,
                         'id_stock_mvt_reason' => $id_stock_mvt_reason,
@@ -334,11 +334,11 @@ class StockManagerCore implements StockManagerInterface
                         'employee_firstname' => $context->employee->firstname ? $context->employee->firstname : $employee->firstname,
                         'employee_lastname' => $context->employee->lastname ? $context->employee->lastname : $employee->lastname,
                         'sign' => -1,
-                    );
-                    $stock_params = array(
+                    ];
+                    $stock_params = [
                         'physical_quantity' => ($stock->physical_quantity - $quantity),
                         'usable_quantity' => ($is_usable ? ($stock->usable_quantity - $quantity) : $stock->usable_quantity),
-                    );
+                    ];
 
                     // saves stock in warehouse
                     $stock->hydrate($stock_params);
@@ -391,11 +391,11 @@ class StockManagerCore implements StockManagerInterface
                             $timestamp = $date->format('U');
 
                             // history of the mvt
-                            $stock_history_qty_available[$timestamp] = array(
+                            $stock_history_qty_available[$timestamp] = [
                                 'id_stock' => $stock->id,
                                 'id_stock_mvt' => (int) $row['id_stock_mvt'],
                                 'qty' => (int) $row['qty'],
-                            );
+                            ];
 
                             // break - in LIFO mode, checks only the necessary history to handle the global quantity for the current stock
                             if ($warehouse->management_type == 'LIFO') {
@@ -436,7 +436,7 @@ class StockManagerCore implements StockManagerInterface
                             $total_quantity_for_current_stock = 0;
 
                             foreach ($quantity_to_decrement_by_stock[$stock->id] as $id_mvt_referrer => $qte) {
-                                $mvt_params = array(
+                                $mvt_params = [
                                     'id_stock' => $stock->id,
                                     'physical_quantity' => $qte,
                                     'id_stock_mvt_reason' => $id_stock_mvt_reason,
@@ -445,7 +445,7 @@ class StockManagerCore implements StockManagerInterface
                                     'sign' => -1,
                                     'referer' => $id_mvt_referrer,
                                     'id_employee' => (int) $context->employee->id ? (int) $context->employee->id : $employee->id,
-                                );
+                                ];
 
                                 // saves stock mvt
                                 $stock_mvt = new StockMvt();
@@ -455,10 +455,10 @@ class StockManagerCore implements StockManagerInterface
                                 $total_quantity_for_current_stock += $qte;
                             }
 
-                            $stock_params = array(
+                            $stock_params = [
                                 'physical_quantity' => ($stock->physical_quantity - $total_quantity_for_current_stock),
                                 'usable_quantity' => ($is_usable ? ($stock->usable_quantity - $total_quantity_for_current_stock) : $stock->usable_quantity),
-                            );
+                            ];
 
                             $return[$stock->id]['quantity'] = $total_quantity_for_current_stock;
                             $return[$stock->id]['price_te'] = $stock->price_te;
@@ -488,7 +488,7 @@ class StockManagerCore implements StockManagerInterface
                     // How many packs can be constituated with the remaining product stocks
                     $quantity_by_pack = $pack->pack_item_quantity;
                     $stock_available_quantity = $quantity_in_stock - $quantity;
-                    $max_pack_quantity = max(array(0, floor($stock_available_quantity / $quantity_by_pack)));
+                    $max_pack_quantity = max([0, floor($stock_available_quantity / $quantity_by_pack)]);
                     $quantity_delta = Pack::getQuantity($pack->id) - $max_pack_quantity;
 
                     if ($pack->advanced_stock_management == 1 && $quantity_delta > 0) {
@@ -513,11 +513,11 @@ class StockManagerCore implements StockManagerInterface
         if ($is_usable) {
             Hook::exec(
                 'actionProductCoverage',
-                    array(
+                    [
                         'id_product' => $id_product,
                         'id_product_attribute' => $id_product_attribute,
                         'warehouse' => $warehouse,
-                    )
+                    ]
             );
         }
 
@@ -532,7 +532,7 @@ class StockManagerCore implements StockManagerInterface
         if (null !== $ids_warehouse) {
             // in case $ids_warehouse is not an array
             if (!is_array($ids_warehouse)) {
-                $ids_warehouse = array($ids_warehouse);
+                $ids_warehouse = [$ids_warehouse];
             }
 
             // casts for security reason
@@ -541,7 +541,7 @@ class StockManagerCore implements StockManagerInterface
                 return 0;
             }
         } else {
-            $ids_warehouse = array();
+            $ids_warehouse = [];
         }
 
         $query = new DbQuery();
@@ -567,7 +567,7 @@ class StockManagerCore implements StockManagerInterface
         if (null !== $ids_warehouse) {
             // in case $ids_warehouse is not an array
             if (!is_array($ids_warehouse)) {
-                $ids_warehouse = array($ids_warehouse);
+                $ids_warehouse = [$ids_warehouse];
             }
 
             // casts for security reason
@@ -681,7 +681,7 @@ class StockManagerCore implements StockManagerInterface
         $usable_to = true
     ) {
         // Checks if this transfer is possible
-        if ($this->getProductPhysicalQuantities($id_product, $id_product_attribute, array($id_warehouse_from), $usable_from) < $quantity) {
+        if ($this->getProductPhysicalQuantities($id_product, $id_product_attribute, [$id_warehouse_from], $usable_from) < $quantity) {
             return false;
         }
 
@@ -784,7 +784,7 @@ class StockManagerCore implements StockManagerInterface
         $physical_quantity = $this->getProductPhysicalQuantities(
             $id_product,
                                                                  $id_product_attribute,
-                                                                 ($id_warehouse ? array($id_warehouse) : null),
+                                                                 ($id_warehouse ? [$id_warehouse] : null),
                                                                  true
         );
         $time_left = ($quantity_per_day == 0) ? (-1) : Tools::ps_round($physical_quantity / $quantity_per_day);

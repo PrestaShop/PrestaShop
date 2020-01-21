@@ -41,7 +41,7 @@ class HookFinder
      *
      * @var string
      */
-    protected $expectedInstanceClasses = array();
+    protected $expectedInstanceClasses = [];
 
     /**
      * Because we cannot send the same parameters between two different finders,
@@ -49,7 +49,7 @@ class HookFinder
      *
      * @var array
      */
-    protected $params = array();
+    protected $params = [];
 
     /**
      * The hook to call.
@@ -69,7 +69,7 @@ class HookFinder
     {
         $hookContent = (new HookManager())->exec($this->hookName, $this->params, null, true);
         if (!is_array($hookContent)) {
-            $hookContent = array();
+            $hookContent = [];
         }
 
         foreach ($hookContent as $moduleName => $moduleContents) {
@@ -100,7 +100,7 @@ class HookFinder
     public function present()
     {
         $hookContent = $this->find();
-        $presentedContents = array();
+        $presentedContents = [];
 
         foreach ($hookContent as $moduleName => $moduleContents) {
             if (!is_array($moduleContents)) {

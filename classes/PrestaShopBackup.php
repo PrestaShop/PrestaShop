@@ -119,7 +119,7 @@ class PrestaShopBackupCore
         $backupdir = realpath((defined('_PS_HOST_MODE_') ? _PS_ROOT_DIR_ : _PS_ADMIN_DIR_) . self::$backupDir);
 
         if ($backupdir === false) {
-            die(Tools::displayError(Context::getContext()->getTranslator()->trans('"Backup" directory does not exist.', array(), 'Admin.Advparameters.Notification')));
+            die(Tools::displayError(Context::getContext()->getTranslator()->trans('"Backup" directory does not exist.', [], 'Admin.Advparameters.Notification')));
         }
 
         // Check the realpath so we can validate the backup file is under the backup directory
@@ -148,7 +148,7 @@ class PrestaShopBackupCore
         $backupdir = realpath((defined('_PS_HOST_MODE_') ? _PS_ROOT_DIR_ : _PS_ADMIN_DIR_) . self::$backupDir);
 
         if ($backupdir === false) {
-            die(Tools::displayError(Context::getContext()->getTranslator()->trans('"Backup" directory does not exist.', array(), 'Admin.Advparameters.Notification')));
+            die(Tools::displayError(Context::getContext()->getTranslator()->trans('"Backup" directory does not exist.', [], 'Admin.Advparameters.Notification')));
         }
 
         return @filemtime($backupdir . DIRECTORY_SEPARATOR . $filename);
@@ -187,8 +187,8 @@ class PrestaShopBackupCore
     public function delete()
     {
         if (!$this->id || !unlink($this->id)) {
-            $this->error = Context::getContext()->getTranslator()->trans('Error deleting', array(), 'Admin.Advparameters.Notification') . ' ' . ($this->id ? '"' . $this->id . '"' :
-                Context::getContext()->getTranslator()->trans('Invalid ID', array(), 'Admin.Advparameters.Notification'));
+            $this->error = Context::getContext()->getTranslator()->trans('Error deleting', [], 'Admin.Advparameters.Notification') . ' ' . ($this->id ? '"' . $this->id . '"' :
+                Context::getContext()->getTranslator()->trans('Invalid ID', [], 'Admin.Advparameters.Notification'));
 
             return false;
         }
@@ -223,11 +223,11 @@ class PrestaShopBackupCore
     public function add()
     {
         if (!$this->psBackupAll) {
-            $ignoreInsertTable = array(_DB_PREFIX_ . 'connections', _DB_PREFIX_ . 'connections_page', _DB_PREFIX_
+            $ignoreInsertTable = [_DB_PREFIX_ . 'connections', _DB_PREFIX_ . 'connections_page', _DB_PREFIX_
                 . 'connections_source', _DB_PREFIX_ . 'guest', _DB_PREFIX_ . 'statssearch',
-            );
+            ];
         } else {
-            $ignoreInsertTable = array();
+            $ignoreInsertTable = [];
         }
 
         // Generate some random number, to make it extra hard to guess backup file names
@@ -247,7 +247,7 @@ class PrestaShopBackupCore
         }
 
         if ($fp === false) {
-            echo Context::getContext()->getTranslator()->trans('Unable to create backup file', array(), 'Admin.Advparameters.Notification') . ' "' . addslashes($backupfile) . '"';
+            echo Context::getContext()->getTranslator()->trans('Unable to create backup file', [], 'Admin.Advparameters.Notification') . ' "' . addslashes($backupfile) . '"';
 
             return false;
         }
@@ -276,7 +276,7 @@ class PrestaShopBackupCore
             if (count($schema) != 1 || !isset($schema[0]['Table']) || !isset($schema[0]['Create Table'])) {
                 fclose($fp);
                 $this->delete();
-                echo Context::getContext()->getTranslator()->trans('An error occurred while backing up. Unable to obtain the schema of %s', array($table), 'Admin.Advparameters.Notification');
+                echo Context::getContext()->getTranslator()->trans('An error occurred while backing up. Unable to obtain the schema of %s', [$table], 'Admin.Advparameters.Notification');
 
                 return false;
             }
@@ -340,7 +340,7 @@ class PrestaShopBackupCore
         fclose($fp);
         if ($found == 0) {
             $this->delete();
-            echo Context::getContext()->getTranslator()->trans('No valid tables were found to backup.', array(), 'Admin.Advparameters.Notification');
+            echo Context::getContext()->getTranslator()->trans('No valid tables were found to backup.', [], 'Admin.Advparameters.Notification');
 
             return false;
         }

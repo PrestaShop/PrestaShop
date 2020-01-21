@@ -28,7 +28,7 @@ class ThemeLangCore extends DataLangCore
     // Don't replace domain in init() with $this->domain for translation parsing
     protected $domain = 'Admin.Design.Feature';
 
-    protected $keys = array();
+    protected $keys = [];
 
-    protected $fieldsToUpdate = array('name', 'description');
+    protected $fieldsToUpdate = ['name', 'description'];
 }

@@ -26,12 +26,12 @@
 
 namespace Tests\Unit\PrestaShopBundle\Translation\Loader;
 
-use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\TestCase;
+use PrestaShopBundle\Translation\Exception\InvalidLegacyTranslationKeyException;
 use PrestaShopBundle\Translation\Loader\LegacyFileLoader;
 use PrestaShopBundle\Translation\Loader\LegacyFileReader;
 use Symfony\Component\Translation\MessageCatalogue;
-use PrestaShopBundle\Translation\Exception\InvalidLegacyTranslationKeyException;
 
 class LegacyFileLoaderTest extends TestCase
 {

@@ -26,8 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Customer\QueryHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\EditableCustomer;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\EditableCustomer;
 
 /**
  * Interface for service that gets customer data for editing

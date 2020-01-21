@@ -26,8 +26,8 @@
 
 namespace Tests\Unit\PrestaShopBundle\Twig\Extension;
 
-use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Util\Url\BackUrlProvider;
 use PrestaShopBundle\Twig\Extension\PathWithBackUrlExtension;
 use Symfony\Bridge\Twig\Extension\RoutingExtension;

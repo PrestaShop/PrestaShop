@@ -178,10 +178,7 @@ final class FolderThemeScanner
     private function checkThemeFolder($mailThemeFolder)
     {
         if (!is_dir($mailThemeFolder)) {
-            throw new FileNotFoundException(sprintf(
-                'Invalid mail theme folder "%s": no such directory',
-                $mailThemeFolder
-            ));
+            throw new FileNotFoundException(sprintf('Invalid mail theme folder "%s": no such directory', $mailThemeFolder));
         }
     }
 }
