@@ -33,6 +33,7 @@ use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraints\Length;
 
 /**
@@ -41,6 +42,16 @@ use Symfony\Component\Validator\Constraints\Length;
 class OrderMessageType extends AbstractType
 {
     /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
+    public function __construct(TranslatorInterface $translator)
+    {
+        $this->translator = $translator;
+    }
+
+    /**
      * @param FormBuilderInterface $builder
      * @param array $options
      */
@@ -48,6 +59,7 @@ class OrderMessageType extends AbstractType
     {
         $builder
             ->add('name', TranslatableType::class, [
+                'label' => $this->translator->trans('Name', [], 'Admin.Global'),
                 'options' => [
                     'constraints' => [
                         new TypedRegex([
@@ -63,6 +75,7 @@ class OrderMessageType extends AbstractType
                 ],
             ])
             ->add('message', TranslatableType::class, [
+                'label' => $this->translator->trans('Message', [], 'Admin.Global'),
                 'type' => TextareaType::class,
                 'options' => [
                     'constraints' => [
