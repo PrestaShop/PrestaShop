@@ -47,6 +47,7 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Exception\CannotEditDeliveredOrderPr
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\ChangeOrderStatusException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\EmptyRefundAmountException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\EmptyRefundQuantityException;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\NegativePaymentAmountException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderEmailSendException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderNotFoundException;
@@ -1219,6 +1220,10 @@ class OrderController extends FrameworkBundleAdminController
             ),
             ProductOutOfStockException::class => $this->trans(
                 'There are not enough products in stock',
+                'Admin.Notifications.Error'
+            ),
+            NegativePaymentAmountException::class => $this->trans(
+                'The amount should be greater than 0.',
                 'Admin.Notifications.Error'
             ),
         ];
