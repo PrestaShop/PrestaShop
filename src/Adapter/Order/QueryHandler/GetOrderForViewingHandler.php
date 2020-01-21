@@ -360,8 +360,8 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
             $product['amount_refundable'] = $product['total_price_tax_excl'] - $product['total_refunded_tax_excl'];
             $product['amount_refundable_tax_incl'] = $product['total_price_tax_incl'] - $product['total_refunded_tax_incl'];
             $product['displayed_max_refundable'] = $order->getTaxCalculationMethod() ? $product['amount_refundable'] : $product['amount_refundable_tax_incl'];
-            $resumeAmount = $order->getTaxCalculationMethod() ? 'total_refunded_tax_excl' : 'total_refunded_tax_incl';
-            $product['amount_refunded'] = $product[$resumeAmount] ?? 0;
+            $resumeAmountKey = $order->getTaxCalculationMethod() ? 'total_refunded_tax_excl' : 'total_refunded_tax_incl';
+            $product['amount_refunded'] = $product[$resumeAmountKey] ?? 0;
             $product['refund_history'] = OrderSlip::getProductSlipDetail($product['id_order_detail']);
             $product['return_history'] = OrderReturn::getProductReturnDetail($product['id_order_detail']);
 

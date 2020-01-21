@@ -470,10 +470,12 @@ class OrderController extends FrameworkBundleAdminController
         try {
             $form->handleRequest($request);
             $result = $formHandler->handleFor($orderId, $form);
-            if ($result->isSubmitted() && $result->isValid()) {
-                $this->addFlash('success', $this->trans('A partial refund was successfully created.', 'Admin.Orderscustomers.Notification'));
-            } else {
-                $this->addFlashFormErrors($form);
+            if ($result->isSubmitted()) {
+                if ($result->isValid()) {
+                    $this->addFlash('success', $this->trans('A partial refund was successfully created.', 'Admin.Orderscustomers.Notification'));
+                } else {
+                    $this->addFlashFormErrors($form);
+                }
             }
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));

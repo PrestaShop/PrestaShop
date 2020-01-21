@@ -484,7 +484,7 @@ class FrameworkBundleAdminController extends Controller
     protected function addFlashFormErrors(FormInterface $form)
     {
         /** @var FormError $formError */
-        foreach ($form->getErrors() as $formError) {
+        foreach ($form->getErrors(true) as $formError) {
             $this->addFlash('error', $formError->getMessage());
         }
     }

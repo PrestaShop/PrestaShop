@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Order\CommandHandler;
 
 use Context;
+use Order;
 use OrderCarrier;
 use PrestaShop\PrestaShop\Adapter\Order\Refund\OrderRefundCalculator;
 use PrestaShop\PrestaShop\Adapter\Order\Refund\OrderRefundSummary;
@@ -86,6 +87,7 @@ final class IssuePartialRefundHandler extends AbstractOrderCommandHandler implem
      */
     public function handle(IssuePartialRefundCommand $command)
     {
+        /** @var Order $order */
         $order = $this->getOrderObject($command->getOrderId());
         /** @var OrderRefundSummary $orderRefundSummary */
         $orderRefundSummary = $this->orderRefundCalculator->computeOrderRefund(
@@ -119,26 +121,8 @@ final class IssuePartialRefundHandler extends AbstractOrderCommandHandler implem
             $this->orderSlipCreator->create($order, $orderRefundSummary);
         }
 
-        // Update order details (after credit slip to avoid updating refunded quantities while the credit slip fails)
-        foreach ($orderRefundSummary->getProductRefunds() as $orderDetailId => $productRefund) {
-            $orderDetail = $orderRefundSummary->getOrderDetailById($orderDetailId);
-            if ($order->hasBeenPaid()) {
-                // It appears partial refund only manages product_quantity_refunded when Order::deleteProduct
-                // makes a distinction between product_quantity_refunded and product_quantity_returned depending
-                // on the order status (delivered or not) But this method could not be used as it can fail when
-                // merchandising return is disabled
-                $orderDetail->product_quantity_refunded += $productRefund['quantity'];
-
-                // This was previously done in OrderSlip::create, but it was not consistent and too complicated
-                // Besides this now allows to track refunded products even when credit slip is not generated
-                $orderDetail->total_refunded_tax_excl = $productRefund['total_refunded_tax_excl'];
-                $orderDetail->total_refunded_tax_incl = $productRefund['total_refunded_tax_incl'];
-
-                if (!$orderDetail->update()) {
-                    throw new CancelProductFromOrderException('Cannot update order detail');
-                }
-            }
-        }
+        // Update refund details
+        $this->updateOrderDetailsRefundData($order, $orderRefundSummary);
 
         // Generate voucher if needed
         if ($command->generateVoucher() && $orderRefundSummary->getRefundedAmount() > 0) {
@@ -148,6 +132,42 @@ final class IssuePartialRefundHandler extends AbstractOrderCommandHandler implem
                 Context::getContext()->currency->iso_code,
                 $orderRefundSummary->isTaxIncluded()
             );
+        }
+    }
+
+    /**
+     * @param Order $order
+     * @param OrderRefundSummary $orderRefundSummary
+     *
+     * @throws CancelProductFromOrderException
+     * @throws \PrestaShopDatabaseException
+     * @throws \PrestaShopException
+     */
+    private function updateOrderDetailsRefundData(Order $order, OrderRefundSummary $orderRefundSummary)
+    {
+        // I wonder it this is really useful since partial refund is supposed to be enabled only once order
+        // is paid Maybe this should be a more general check at the beginning of the handler and throw an error
+        if (!$order->hasBeenPaid()) {
+            return;
+        }
+
+        // Update order details (after credit slip to avoid updating refunded quantities while the credit slip fails)
+        foreach ($orderRefundSummary->getProductRefunds() as $orderDetailId => $productRefund) {
+            $orderDetail = $orderRefundSummary->getOrderDetailById($orderDetailId);
+            // It appears partial refund only manages product_quantity_refunded when Order::deleteProduct
+            // makes a distinction between product_quantity_refunded and product_quantity_returned depending
+            // on the order status (delivered or not) But this method could not be used as it can fail when
+            // merchandising return is disabled
+            $orderDetail->product_quantity_refunded += $productRefund['quantity'];
+
+            // This was previously done in OrderSlip::create, but it was not consistent and too complicated
+            // Besides this now allows to track refunded products even when credit slip is not generated
+            $orderDetail->total_refunded_tax_excl = $productRefund['total_refunded_tax_excl'];
+            $orderDetail->total_refunded_tax_incl = $productRefund['total_refunded_tax_incl'];
+
+            if (!$orderDetail->update()) {
+                throw new CancelProductFromOrderException('Cannot update order detail');
+            }
         }
     }
 }

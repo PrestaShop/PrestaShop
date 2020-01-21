@@ -49,6 +49,19 @@ use Tools;
  */
 class OrderRefundCalculator
 {
+    /**
+     * @param Order $order
+     * @param array $orderDetailRefunds
+     * @param float $shippingRefund
+     * @param int $voucherRefundType
+     * @param float|null $chosenVoucherAmount
+     *
+     * @return OrderRefundSummary
+     *
+     * @throws InvalidRefundQuantityException
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
+     */
     public function computeOrderRefund(
         Order $order,
         array $orderDetailRefunds,
@@ -61,7 +74,13 @@ class OrderRefundCalculator
 
         $orderDetailList = $this->getOrderDetailList($orderDetailRefunds);
         $taxCalculator = $this->getOrderTaxCalculator($order);
-        $productRefunds = $this->flattenCheckedProductRefunds($orderDetailRefunds, $isTaxIncluded, $orderDetailList, $taxCalculator, $precision);
+        $productRefunds = $this->flattenCheckedProductRefunds(
+            $orderDetailRefunds,
+            $isTaxIncluded,
+            $orderDetailList,
+            $taxCalculator,
+            $precision
+        );
         $refundedAmount = 0;
         foreach ($productRefunds as $orderDetailId => $productRefund) {
             $refundedAmount += $productRefund['amount'];
@@ -133,11 +152,15 @@ class OrderRefundCalculator
      *
      * @return array
      *
-     * @throws PrestaShopDatabaseException
-     * @throws PrestaShopException
+     * @throws InvalidRefundQuantityException
      */
-    private function flattenCheckedProductRefunds(array $orderDetailRefunds, bool $isTaxIncluded, array $orderDetails, TaxCalculator $taxCalculator, int $precision)
-    {
+    private function flattenCheckedProductRefunds(
+        array $orderDetailRefunds,
+        bool $isTaxIncluded,
+        array $orderDetails,
+        TaxCalculator $taxCalculator,
+        int $precision
+    ) {
         $productRefunds = [];
         /** @var OrderDetailRefund $orderDetailRefund */
         foreach ($orderDetailRefunds as $orderDetailRefund) {

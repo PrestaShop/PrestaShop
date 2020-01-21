@@ -464,7 +464,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
         $orderDetails = $order->getProducts();
         $productOrderDetail = null;
         foreach ($orderDetails as $orderDetail) {
-            if ((int) $orderDetail['product_id'] == $productId) {
+            if ((int) $orderDetail['product_id'] === $productId) {
                 $productOrderDetail = $orderDetail;
                 break;
             }
