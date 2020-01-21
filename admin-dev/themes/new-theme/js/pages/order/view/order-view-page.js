@@ -263,16 +263,12 @@ export default class OrderViewPage {
 
   listenForCancelProduct() {
     $(OrderViewPageMap.cancelProductBtn).on('click', (event) => {
-      event.preventDefault();
-      const orderId = event.currentTarget.dataset.orderId;
-      const cancelProductRoute = this.router.generate('admin_orders_cancellation', {orderId: orderId});
-      const cancelProductForm = document.getElementsByName('cancel_product');
-      $(cancelProductForm).attr('action', cancelProductRoute);
-
-      $(OrderViewPageMap.toggleCancelProductForm).show();
-      $(OrderViewPageMap.actionColumnElements).hide();
+      this.orderProductCancel.showCancelProductForm(event.currentTarget.dataset.orderId);
       this.orderProductRenderer.moveProductsPanelToRefundPosition();
-    })
+    });
+    $(OrderViewPageMap.cancelProductSelectorCheckbox).on('change', (event) => {
+      this.orderProductCancel.fillCancelProductQuantityInput($(event.currentTarget));
+    });
   }
 
   getActivePage() {
