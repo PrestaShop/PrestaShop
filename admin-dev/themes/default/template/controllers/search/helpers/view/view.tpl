@@ -182,7 +182,7 @@ $(function() {
     <div class="col-lg-4">
         <div class="panel">
             <h3>{l s='Search doc.prestashop.com' d='Admin.Navigation.Search'}</h3>
-            <a href="http://doc.prestashop.com/dosearchsite.action?spaceSearch=true&amp;queryString={$query}&amp;utm_source=back-office&amp;utm_medium=search&amp;utm_campaign=back-office-{$lang_iso|upper}&amp;utm_content={if $host_mode}cloud{else}download{/if}" class="btn btn-default _blank">{l s='Go to the documentation' d='Admin.Navigation.Search'}</a>
+            <a href="https://doc.prestashop.com/dosearchsite.action?spaceSearch=true&amp;queryString={$query}&amp;utm_source=back-office&amp;utm_medium=search&amp;utm_campaign=back-office-{$lang_iso|upper}&amp;utm_content={if $host_mode}cloud{else}download{/if}" class="btn btn-default _blank">{l s='Go to the documentation' d='Admin.Navigation.Search'}</a>
         </div>
     </div>
     <div class="col-lg-4">
