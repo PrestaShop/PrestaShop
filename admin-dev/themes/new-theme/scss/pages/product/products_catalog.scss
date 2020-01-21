@@ -58,6 +58,10 @@
     .action-disabled {
       color: $brand-danger;
     }
+
+    .img-thumbnail {
+      @include border-radius(0);
+    }
   }
 
   .bulk-catalog {
