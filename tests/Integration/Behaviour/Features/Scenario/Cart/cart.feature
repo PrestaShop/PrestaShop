@@ -11,7 +11,7 @@ Feature: Cart management
       | lastName         | testLastName                       |
       | email            | customer@domain.eu                 |
       | password         | secret                             |
-    And I create an empty cart "dummy_cart" for customer "testCustomer"
+    And I create empty cart "dummy_cart" for customer "testCustomer"
 
   Scenario: remove product from cart
     # later could be changed with "Add product" when it's handler will be migrated
