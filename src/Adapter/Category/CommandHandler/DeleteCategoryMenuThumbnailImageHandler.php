@@ -89,7 +89,7 @@ final class DeleteCategoryMenuThumbnailImageHandler implements DeleteCategoryMen
 
         $thumbnailPath = sprintf(
             '%s%s-%s_thumb.jpg',
-            _PS_CAT_IMG_DIR_,
+            $this->configuration->get('_PS_CAT_IMG_DIR_'),
             $category->id,
             $menuThumbnailId->getValue()
         );
