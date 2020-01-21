@@ -33,7 +33,7 @@ class OrderShippingFeatureContext extends AbstractDomainFeatureContext
         $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
         /** @var OrderCarrierForViewing[] $carriers */
         $carriers = $orderForViewing->getShipping()->getCarriers();
-        if (count($carriers) > 0) {
+        if (count($carriers) > 0 && (int) $carriers[0]->getCarrierId() !== 0) {
             $currentOrderCarrierId = $carriers[0]->getCarrierId();
         } else {
             // legacy classes adding order carrier
