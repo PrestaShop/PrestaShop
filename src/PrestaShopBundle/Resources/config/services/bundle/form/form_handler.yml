@@ -366,5 +366,5 @@ services:
             - '@prestashop.core.hook.dispatcher'
             - '@prestashop.admin.sell.order.credit_slip.credit_slip_options_form_data_provider'
             -
-              'optionstest': 'PrestaShopBundle\Form\Admin\Sell\Order\CreditSlip\CreditSlipOptionsType'
+              'options': 'PrestaShopBundle\Form\Admin\Sell\Order\CreditSlip\CreditSlipOptionsType'
             - 'CreditSlip'
