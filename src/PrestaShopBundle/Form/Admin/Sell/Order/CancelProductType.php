@@ -26,8 +26,10 @@
 
 namespace PrestaShopBundle\Form\Admin\Sell\Order;
 
+use PrestaShop\PrestaShop\Core\Domain\Order\VoucherRefundType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -117,6 +119,24 @@ class CancelProductType extends TranslatorAwareType
                     'attr' => [
                         'material_design' => true,
                     ],
+                ]
+            )
+            ->add('voucher_refund_type', ChoiceType::class,
+                [
+                    'required' => true,
+                    'multiple' => false,
+                    'expanded' => true,
+                    'choices' => [
+                        $this->trans('Product(s) price: ', 'Admin.Orderscustomers.Feature') => VoucherRefundType::PRODUCT_PRICES_REFUND,
+                        $this->trans('Product(s) price, excluding amount of initial voucher: ', 'Admin.Orderscustomers.Feature') => VoucherRefundType::PRODUCT_PRICES_EXCLUDING_VOUCHER_REFUND,
+                    ],
+                    'choice_attr' => function ($choice, $key) {
+                        return [
+                            'voucher-refund-type' => $choice,
+                            'data-default-label' => $key,
+                        ];
+                    },
+                    'data' => VoucherRefundType::PRODUCT_PRICES_EXCLUDING_VOUCHER_REFUND,
                 ]
             )
             ->add('cancel', SubmitType::class, [
