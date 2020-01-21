@@ -1085,6 +1085,8 @@ services:
 
     form.type.order.message:
         class: 'PrestaShopBundle\Form\Admin\Sell\CustomerService\OrderMessageType'
+        arguments:
+          - '@translator'
         tags:
             - { name: form.type }
 
