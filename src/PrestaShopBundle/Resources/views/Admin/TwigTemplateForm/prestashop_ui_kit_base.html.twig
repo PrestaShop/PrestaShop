@@ -71,24 +71,27 @@
         {% set label = name|humanize %}
       {%- endif -%}
     {%- endif -%}
-    <label{% for attrname, attrvalue in label_attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}>
-    {% if required -%}
-      <span class="text-danger">*</span>
-    {%- endif %}
-    {{ translation_domain is same as(false) ? label|raw : label|raw }}
-    {% if label_attr['tooltip'] is defined %}
-      {% set placement = label_attr['tooltip_placement'] is defined ? label_attr['tooltip_placement'] : 'top' %}
-      <i class="icon-question" data-toggle="pstooltip" data-placement="{{ placement }}"
-         title="{{ label_attr['tooltip'] }}"></i>
-    {% endif %}
+    {# options 'comes' from service: prestashop.admin.credit_slip_options.form_handler in .yml file and is added as additional field; #}
+    {# would be nice to find better solution   #}
+    {% if name != 'options' %}
+      <label{% for attrname, attrvalue in label_attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}>
+      {% if required -%}
+        <span class="text-danger">*</span>
+      {%- endif %}
+      {{ translation_domain is same as(false) ? label|raw : label|raw }}
+      {% if label_attr['tooltip'] is defined %}
+        {% set placement = label_attr['tooltip_placement'] is defined ? label_attr['tooltip_placement'] : 'top' %}
+        <i class="icon-question" data-toggle="pstooltip" data-placement="{{ placement }}"
+           title="{{ label_attr['tooltip'] }}"></i>
+      {% endif %}
 
-    {% if label_attr['popover'] is defined %}
-      {% set placement = label_attr['popover_placement'] is defined ? label_attr['popover_placement'] : 'top' %}
-      <span class="help-box" data-toggle="popover" data-placement="{{ placement }}"
-            data-content="{{ label_attr['popover'] }}"></span>
+      {% if label_attr['popover'] is defined %}
+        {% set placement = label_attr['popover_placement'] is defined ? label_attr['popover_placement'] : 'top' %}
+        <span class="help-box" data-toggle="popover" data-placement="{{ placement }}"
+              data-content="{{ label_attr['popover'] }}"></span>
+      {% endif %}
+      </label>
     {% endif %}
-    </label>
-
   {%- endif -%}
 {%- endblock form_label -%}
 
