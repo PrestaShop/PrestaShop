@@ -93,6 +93,9 @@ tests-legacy/resources/modules/referralprogram/
 !/admin-dev/export/.htaccess
 !/admin-dev/export/index.php
 
+# Json routing
+/admin-dev/themes/new-theme/js/fos_js_routes.json
+
 # Downloaded RTL files
 /admin-dev/themes/default/css/bundle/default_rtl.css
 /admin-dev/themes/default/css/bundle/shared_rtl.css

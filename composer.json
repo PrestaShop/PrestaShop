@@ -158,7 +158,8 @@
     "scripts": {
         "post-install-cmd": [
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
-            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::prepareDeploymentTarget"
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::prepareDeploymentTarget",
+            "composer generate-json-routes"
         ],
         "post-update-cmd": [
             "PrestaShopBundle\\Install\\Upgrade::migrateSettingsFile",
@@ -209,7 +210,8 @@
         ],
         "create-release": "@php tools/build/CreateRelease.php",
         "git-hook-install": "@php .github/contrib/install.php",
-        "git-hook-uninstall": "@php .github/contrib/uninstall.php"
+        "git-hook-uninstall": "@php .github/contrib/uninstall.php",
+        "generate-json-routes": "@php ./bin/console fos:js-routing:dump --format=json --target=admin-dev/themes/new-theme/js/fos_js_routes.json"
     },
     "scripts-descriptions": {
         "test-all": "Launch all PHPUnit test suites",
