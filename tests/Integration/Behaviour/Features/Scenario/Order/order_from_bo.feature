@@ -1,5 +1,5 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s order
-@reset-database-before-feature
+@database-scenario
 Feature: Order from Back Office (BO)
   In order to manage orders for FO customers
   As a BO user
@@ -18,15 +18,23 @@ Feature: Order from Back Office (BO)
     #    todo: use domain context for Country
     And country "US" is enabled
     And the module "dummy_payment" is installed
-    #    todo: use domain context to get employee when is merged: https://github.com/PrestaShop/PrestaShop/pull/16757
     And I am logged in as "test@prestashop.com" employee
-     #    todo: use domain context to get customer: GetCustomerForViewing;
-     #    todo: find a way how to get customer object/id by its properties without using legacy objects
-    And there is customer "testCustomer" with email "pub@prestashop.com"
-    And customer "testCustomer" has address in "US" country
+    And I create customer "testCustomer" with following details:
+      | firstName        | testFirstName                      |
+      | lastName         | testLastName                       |
+      | email            | customer@domain.eu                 |
+      | password         | secret                             |
+    And I add new address to customer "testCustomer" with following details:
+      | Address alias    | test-address                       |
+      | First name       | testFirstName                      |
+      | Last name        | testLastName                       |
+      | Address          | Work address st. 1234567890        |
+      | City             | Birmingham                         |
+      | Country          | United States                      |
+      | State            | Alabama                            |
+      | Postal code      | 12345                              |
     And I create an empty cart "dummy_cart" for customer "testCustomer"
-    #    todo: find a way to create country without legacy object
-    And I select "US" address as delivery and invoice address for customer "testCustomer" in cart "dummy_cart"
+    And I select address "test-address" as delivery and invoice in cart "dummy_cart"
     And I add 2 products "Mug The best is yet to come" to the cart "dummy_cart"
     And I add order "bo_order1" with the following details:
       | cart                | dummy_cart                 |
