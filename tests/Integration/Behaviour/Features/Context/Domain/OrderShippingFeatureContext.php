@@ -2,6 +2,8 @@
 
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
+use Order;
+use OrderCarrier;
 use PHPUnit\Framework\Assert as Assert;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\ChangeOrderDeliveryAddressCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\UpdateOrderShippingDetailsCommand;
@@ -31,9 +33,16 @@ class OrderShippingFeatureContext extends AbstractDomainFeatureContext
         $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
         /** @var OrderCarrierForViewing[] $carriers */
         $carriers = $orderForViewing->getShipping()->getCarriers();
-        $currentOrderCarrierId = self::DEFAULT_ORDER_CARRIER_ID;
         if (count($carriers) > 0) {
             $currentOrderCarrierId = $carriers[0]->getCarrierId();
+        } else {
+            // legacy classes adding order carrier
+            $orderCarrier = new OrderCarrier(self::DEFAULT_ORDER_CARRIER_ID);
+            $orderCarrier->add();
+            $order = new Order($orderId);
+            $order->id_carrier = $orderCarrier->id;
+            $order->update();
+            $currentOrderCarrierId = $order->id_carrier;
         }
         $newCarrierId = $this->getCarrierId($carrier);
         $this->getCommandBus()->handle(
