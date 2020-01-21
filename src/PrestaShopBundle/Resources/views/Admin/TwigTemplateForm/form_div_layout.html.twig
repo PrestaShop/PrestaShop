@@ -346,10 +346,10 @@
 
   {% for child in form -%}
     {% if not child.rendered %}
-            {{- ps.form_group_row(child, { attr: child.vars.attr }, {
-              'label': child.vars.label
-            }) -}}
-      {% endif %}
+      {{- ps.form_group_row(child, { attr: child.vars.attr }, {
+        'label': child.vars.label
+      }) -}}
+    {% endif %}
   {%- endfor %}
 {% endblock form_rest %}
 
