@@ -171,6 +171,7 @@ class OrderLazyArray extends AbstractLazyArray
 
         $includeTaxes = $this->includeTaxes();
         foreach ($orderProducts as &$orderProduct) {
+            // Use data from OrderDetail in case that the Product has been deleted
             $orderProduct['name'] = $orderProduct['product_name'];
             $orderProduct['quantity'] = $orderProduct['product_quantity'];
             $orderProduct['id_product'] = $orderProduct['product_id'];
