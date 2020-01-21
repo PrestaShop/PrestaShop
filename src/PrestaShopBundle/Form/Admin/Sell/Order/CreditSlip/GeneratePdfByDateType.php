@@ -60,9 +60,12 @@ final class GeneratePdfByDateType extends CommonAbstractType
 
         $blankMessage = $this->translator->trans('This field is required', [], 'Admin.Notifications.Error');
         $invalidDateMessage = $this->translator->trans('Invalid date format.', [], 'Admin.Notifications.Error');
+        $dateHintTrans = $this->translator->trans('Format: 2011-12-31 (inclusive).', [], 'Admin.Global');
 
         $builder
             ->add('from', DatePickerType::class, [
+                'label' => $this->translator->trans('From', [], 'Admin.Global'),
+                'help' => $dateHintTrans,
                 'data' => $nowDate,
                 'constraints' => [
                     new NotBlank([
@@ -75,6 +78,8 @@ final class GeneratePdfByDateType extends CommonAbstractType
                 ],
             ])
             ->add('to', DatePickerType::class, [
+                'label' => $this->translator->trans('To', [], 'Admin.Global'),
+                'help' => $dateHintTrans,
                 'data' => $nowDate,
                 'constraints' => [
                     new NotBlank([

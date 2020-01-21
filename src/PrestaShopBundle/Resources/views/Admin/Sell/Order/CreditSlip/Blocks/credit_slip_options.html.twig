@@ -23,8 +23,8 @@
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 
+{% form_theme creditSlipOptionsForm 'PrestaShopBundle:Admin/TwigTemplateForm:prestashop_ui_kit.html.twig' %}
 {% trans_default_domain "Admin.Orderscustomers.Feature" %}
-{% import '@PrestaShop/Admin/macros.html.twig' as ps %}
 
 {{ form_start(creditSlipOptionsForm, {
   'method': 'POST',
@@ -38,14 +38,10 @@
 
   <div class="card-block row">
     <div class="card-text">
-      {{ ps.form_group_row(creditSlipOptionsForm.options.slip_prefix, {}, {
-        'label': 'Credit slip prefix'|trans({}, 'Admin.Orderscustomers.Feature'),
-        'help': 'Prefix used for credit slips.'|trans({}, 'Admin.Orderscustomers.Help')
-      }) }}
+      {% block credit_slip_options_form %}
+        {{ form_widget(creditSlipOptionsForm) }}
+      {% endblock %}
     </div>
-    {% block credit_slip_options_form_rest %}
-      {{ form_rest(creditSlipOptionsForm) }}
-    {% endblock %}
   </div>
 
   <div class="card-footer">
