@@ -33,7 +33,7 @@ Feature: Order from Back Office (BO)
       | Country          | United States                      |
       | State            | Alabama                            |
       | Postal code      | 12345                              |
-    And I create an empty cart "dummy_cart" for customer "testCustomer"
+    And I create empty cart "dummy_cart" for customer "testCustomer"
     And I select address "test-address" as delivery and invoice in cart "dummy_cart"
     And I add 2 products "Mug The best is yet to come" to the cart "dummy_cart"
     And I add order "bo_order1" with the following details:
