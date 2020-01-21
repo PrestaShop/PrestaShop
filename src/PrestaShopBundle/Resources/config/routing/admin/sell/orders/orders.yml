@@ -140,7 +140,7 @@ admin_orders_update_product:
 
 admin_orders_remove_cart_rule:
   path: /{orderId}/cart-rules/{orderCartRuleId}/delete
-  methods: [POST]
+  methods: [GET]
   defaults:
     _controller: PrestaShopBundle:Admin/Sell/Order/Order:removeCartRule
   requirements:
