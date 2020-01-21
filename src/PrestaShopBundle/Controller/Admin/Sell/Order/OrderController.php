@@ -450,6 +450,7 @@ class OrderController extends FrameworkBundleAdminController
             'editProductRowForm' => $editProductRowForm->createView(),
             'backOfficeOrderButtons' => $backOfficeOrderButtons,
             'merchandiseReturnEnabled' => $merchandiseReturnEnabled,
+            'priceSpecification' => $this->getContextLocale()->getPriceSpecification($orderCurrency->iso_code)->toArray(),
         ]);
     }
 
@@ -471,6 +472,8 @@ class OrderController extends FrameworkBundleAdminController
             $result = $formHandler->handleFor($orderId, $form);
             if ($result->isSubmitted() && $result->isValid()) {
                 $this->addFlash('success', $this->trans('A partial refund was successfully created.', 'Admin.Orderscustomers.Notification'));
+            } else {
+                $this->addFlashFormErrors($form);
             }
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
@@ -1198,6 +1201,11 @@ class OrderController extends FrameworkBundleAdminController
      */
     private function getErrorMessages(Exception $e)
     {
+        $refundableQuantity = 0;
+        if ($e instanceof InvalidRefundQuantityException) {
+            $refundableQuantity = $e->getRefundableQuantity();
+        }
+
         return [
             CannotEditDeliveredOrderProductException::class => $this->trans('You cannot edit the cart once the order delivered', 'Admin.Orderscustomers.Notification'),
             OrderNotFoundException::class => $e instanceof OrderNotFoundException ?
@@ -1222,7 +1230,7 @@ class OrderController extends FrameworkBundleAdminController
                 InvalidRefundQuantityException::QUANTITY_TOO_HIGH => $this->trans(
                     'Please enter a maximum quantity of [1] to proceed with your refund.',
                     'Admin.Orderscustomers.Notification',
-                    ['[1]' => $e->getRefundableQuantity()]
+                    ['[1]' => $refundableQuantity]
                 ),
             ],
             InvalidRefundAmountException::class => $this->trans(

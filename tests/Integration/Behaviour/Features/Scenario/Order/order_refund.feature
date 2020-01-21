@@ -324,6 +324,44 @@ Feature: Refund Order from Back Office (BO)
     And there are 1 more "Mug Today is a good day" in stock
 
   @order-refund
+  Scenario: Partial refund of products with a lot of precision
+    Given I add order "bo_order_refund" with the following details:
+      | cart                | dummy_cart                 |
+      | message             | test                       |
+      | payment module name | dummy_payment              |
+      | status              | Processing in progress     |
+    And product "Mug The best is yet to come" in order "bo_order_refund" has following details:
+      | product_quantity            | 2 |
+    And product "Mug Today is a good day" in order "bo_order_refund" has following details:
+      | product_quantity            | 1 |
+    And there are 2 less "Mug The best is yet to come" in stock
+    And there are 1 less "Mug Today is a good day" in stock
+    When I issue a partial refund on "bo_order_refund" without restock with credit slip without voucher on following products:
+      | product_name                | quantity                 | amount              |
+      | Mug The best is yet to come | 1                        | 10.5456889623154870 |
+      | Mug Today is a good day     | 1                        | 3.5456889623154870  |
+    Then "bo_order_refund" has 1 credit slips
+    Then "bo_order_refund" last credit slip is:
+      | amount                  | 14.09     |
+      | shipping_cost_amount    | 0.0       |
+      | total_products_tax_excl | 14.091378 |
+      | total_products_tax_incl | 14.091378 |
+    And product "Mug The best is yet to come" in order "bo_order_refund" has following details:
+      | product_quantity            | 2         |
+      | product_quantity_refunded   | 1         |
+      | product_quantity_reinjected | 0         |
+      | total_refunded_tax_excl     | 10.545689 |
+      | total_refunded_tax_incl     | 10.545689 |
+    And product "Mug Today is a good day" in order "bo_order_refund" has following details:
+      | product_quantity            | 1        |
+      | product_quantity_refunded   | 1        |
+      | product_quantity_reinjected | 0        |
+      | total_refunded_tax_excl     | 3.545689 |
+      | total_refunded_tax_incl     | 3.545689 |
+    And there are 0 more "Mug The best is yet to come" in stock
+    And there are 0 more "Mug Today is a good day" in stock
+
+  @order-refund
   Scenario: Quantity is required
     Given I add order "bo_order_refund" with the following details:
       | cart                | dummy_cart                 |
@@ -398,3 +436,24 @@ Feature: Refund Order from Back Office (BO)
       | Mug Today is a good day     | 1                        | -2.5   |
     Then I should get error that refund amount is invalid
     And "bo_order_refund" has 0 credit slips
+
+  @order-refund-voucher
+  Scenario: Partial refund of products paid partially with a big voucher, too high refund
+    Given I use a voucher "PROMO20" for a discount of 20.0 on the cart "dummy_cart"
+    And I add order "bo_order_refund" with the following details:
+      | cart                | dummy_cart                 |
+      | message             | test                       |
+      | payment module name | dummy_payment              |
+      | status              | Processing in progress     |
+    And product "Mug The best is yet to come" in order "bo_order_refund" has following details:
+      | product_quantity            | 2 |
+    And product "Mug Today is a good day" in order "bo_order_refund" has following details:
+      | product_quantity            | 1 |
+    And there are 2 less "Mug The best is yet to come" in stock
+    And there are 1 less "Mug Today is a good day" in stock
+    When I issue a partial refund on "bo_order_refund" without restock with credit slip without voucher on following products:
+      | product_name                | quantity                 | amount |
+      | Mug Today is a good day     | 1                        | 8      |
+      | shipping_refund             |                          | 5.5    |
+    Then I should get error that refund amount is invalid
+    Then "bo_order_refund" has 0 credit slips

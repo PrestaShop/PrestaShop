@@ -197,7 +197,7 @@ td .editProductInvoice {
 }
 
 .refund-checkboxes-container {
-  max-width: 90px;
+  width: fit-content;
   margin: 16px auto;
   display: none;
 }
@@ -241,6 +241,10 @@ td .editProductInvoice {
   width: max-content;
 }
 
+.voucher-refund-type-negative-error {
+  color: $color-error;
+  display: none;
+}
 
 input.refund-quantity {
   max-width: 160px;

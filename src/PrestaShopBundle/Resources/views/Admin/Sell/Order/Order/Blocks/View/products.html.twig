@@ -37,6 +37,8 @@
         'data-order-id': orderForViewing.id,
         'data-is-delivered': orderForViewing.isDelivered,
         'data-is-tax-included': orderForViewing.isTaxIncluded,
+        'data-discounts-amount': orderForViewing.prices.discountsAmountRaw,
+        'data-price-specification': priceSpecification|json_encode|replace("'", "&#39;")|raw
       }
     } %}
     {{ form_start(cancelProductForm, formOptions) }}
@@ -196,23 +198,21 @@
                 <p class="text-muted mb-0"><strong>{{ 'Shipping'|trans({}, 'Admin.Catalog.Feature') }}</strong></p>
                 <div class="shipping-price">
                   <strong id="orderShippingTotal">{{ orderForViewing.prices.shippingPriceFormatted }}</strong>
-                  <div class="cancel-product-element shipping-refund-amount">
+                  <div class="cancel-product-element shipping-refund-amount{% if orderForViewing.prices.shippingRefundableAmountRaw <= 0 %} hidden{% endif %}">
                     <div class="input-group">
                       {{ form_widget(cancelProductForm.shipping_amount) }}
                       <div class="input-group-append">
                         <div class="input-group-text">{{ orderCurrency.symbol }}</div>
                       </div>
                     </div>
-                    <p class="text-center">(max {{ orderForViewing.prices.shippingPriceFormatted }} tax included)</p>
+                    <p class="text-center">(max {{ orderForViewing.prices.shippingRefundableAmountFormatted }} tax included)</p>
                   </div>
                 </div>
               </div>
-
-
             {% else %}
               {# No shippping, the form field is hidden in this div to avoid it being displayed through automatic form_rest #}
               <div class="d-none">
-                {{ form_widget(cancelProductForm.shipping) }}
+                {{ form_widget(cancelProductForm.shipping_amount) }}
               </div>
             {% endif %}
 
@@ -258,6 +258,13 @@
           <div class="cancel-product-element form-group shipping-refund{% if orderForViewing.prices.shippingPriceRaw %} hidden{% endif %}">
             {{ form_widget(cancelProductForm.shipping) }}
           </div>
+          <div class="cancel-product-element form-group voucher-refund-type{% if orderForViewing.prices.discountsAmountRaw <= 0 %} hidden{% endif %}">
+            {{ 'This order has been partially paid by voucher. Choose the amount you want to refund:'|trans({}, 'Admin.Orderscustomers.Feature') }}
+            {{ form_widget(cancelProductForm.voucher_refund_type) }}
+            <div class="voucher-refund-type-negative-error">
+              {{ 'Error. You cannot refund a negative amount.'|trans({}, 'Admin.Orderscustomers.Notification') }}
+            </div>
+          </div>
         </div>
       </div>
       <div class="cancel-product-element form-submit text-right">
@@ -265,7 +272,7 @@
         {{ form_widget(cancelProductForm.save) }}
       </div>
     </div>
+    {{ form_end(cancelProductForm) }}
   </div>
-  {{ form_end(cancelProductForm) }}
 </div>
 
