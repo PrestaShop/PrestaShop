@@ -33,11 +33,12 @@ module.exports = class AddAddress extends BOBasePage {
   /**
      * Fill form for add/edit address
      * @param addressData
-     * @param setEmailValue
      * @return {Promise<textContent>}
      */
-  async createEditAddress(addressData, setEmailValue = true) {
-    if (setEmailValue) await this.setValue(this.customerEmailInput, addressData.email);
+  async createEditAddress(addressData) {
+    if (await this.elementVisible(this.customerEmailInput, 2000)) {
+      await this.setValue(this.customerEmailInput, addressData.email);
+    }
     await this.setValue(this.customerAddressdniInput, addressData.dni);
     await this.setValue(this.customerAddressAliasInput, addressData.alias);
     await this.setValue(this.customerAddressFirstNameInput, addressData.firstName);

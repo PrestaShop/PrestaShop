@@ -108,7 +108,7 @@ describe('Create, Read, Update and Delete address in BO', async () => {
     });
 
     it('should update address', async function () {
-      const textResult = await this.pageObjects.addAddressPage.createEditAddress(editAddressData, false);
+      const textResult = await this.pageObjects.addAddressPage.createEditAddress(editAddressData);
       await expect(textResult).to.equal(this.pageObjects.addressesPage.successfulUpdateMessage);
       const numberOfAddressesAfterUpdate = await this.pageObjects.addressesPage.resetAndGetNumberOfLines();
       await expect(numberOfAddressesAfterUpdate).to.be.equal(numberOfAddresses + 1);
@@ -144,7 +144,7 @@ describe('Create, Read, Update and Delete address in BO', async () => {
     });
 
     it('should delete address', async function () {
-      const textResult = await this.pageObjects.addressesPage.deleteAddress('1');
+      const textResult = await this.pageObjects.addressesPage.deleteAddress(1);
       await expect(textResult).to.equal(this.pageObjects.addressesPage.successfulDeleteMessage);
       const numberOfAddressesAfterDelete = await this.pageObjects.addressesPage.resetAndGetNumberOfLines();
       await expect(numberOfAddressesAfterDelete).to.be.equal(numberOfAddresses);
