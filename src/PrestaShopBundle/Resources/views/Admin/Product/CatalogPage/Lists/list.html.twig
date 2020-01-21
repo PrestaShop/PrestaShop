@@ -75,28 +75,36 @@
             <td></td>
         {% endif %}
         <td class="text-center">
-            {% if product.active|default(0) == 0 %}
-                <a href="#" onclick="unitProductAction(this, 'activate'); return false;">
-                    <i class="material-icons action-disabled">clear</i>
-                </a>
-            {% else %}
-                <a href="#" onclick="unitProductAction(this, 'deactivate'); return false;">
-                    <i class="material-icons action-enabled ">check</i>
-                </a>
-            {% endif %}
-        </td>
-        {% if product.position is defined %}
-            <td {% if activate_drag_and_drop %}class="placeholder"{% endif %} style="cursor: pointer; cursor: hand;">
-                {% if activate_drag_and_drop %}
-                    <big><big>⇅</big></big>
-                {% endif %}
-                <span class="position">{{ product.position }}</span>
-                <input type="hidden" name="mass_edit_action_sorted_products[]" value="{{ product.id_product }}" />
-                <input type="hidden" name="mass_edit_action_sorted_positions[]" value="{{ product.position }}" />
-            </td>
-        {% endif %}
-        <td class="text-right">
-            <div class="btn-group-action">
+          {% if product.active|default(0) == 0 %}
+            <div class="ps-switch ps-switch-sm ps-switch-nolabel ps-switch-center" onclick="unitProductAction(this, 'activate');">
+              <input type="radio" name="input-{{ product.id_product }}" id="input-false-{{ product.id_product }}" value="0" checked>
+              <label for="input-false-{{ product.id_product }}">Off</label>
+              <input type="radio" name="input-{{ product.id_product }}" id="input-true-{{ product.id_product }}" value="1">
+              <label for="input-true-{{ product.id_product }}">On</label>
+              <span class="slide-button"></span>
+            </div>
+          {% else %}
+            <div class="ps-switch ps-switch-sm ps-switch-nolabel ps-switch-center" onclick="unitProductAction(this, 'activate');">
+              <input type="radio" name="input-{{ product.id_product }}" id="input-false-{{ product.id_product }}" value="0">
+              <label for="input-false-{{ product.id_product }}">Off</label>
+              <input type="radio" name="input-{{ product.id_product }}" id="input-true-{{ product.id_product }}" value="1" checked>
+              <label for="input-true-{{ product.id_product }}">On</label>
+              <span class="slide-button"></span>
+            </div>
+          {% endif %}
+      </td>
+      {% if product.position is defined %}
+          <td {% if activate_drag_and_drop %}class="placeholder"{% endif %} style="cursor: pointer; cursor: hand;">
+              {% if activate_drag_and_drop %}
+                  <big><big>⇅</big></big>
+              {% endif %}
+              <span class="position">{{ product.position }}</span>
+              <input type="hidden" name="mass_edit_action_sorted_products[]" value="{{ product.id_product }}" />
+              <input type="hidden" name="mass_edit_action_sorted_positions[]" value="{{ product.position }}" />
+          </td>
+      {% endif %}
+      <td class="text-right">
+          <div class="btn-group-action">
 
                 {% set buttons_action = [
                     {
