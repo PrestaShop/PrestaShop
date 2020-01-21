@@ -182,4 +182,6 @@ export default {
   cancelProductAmountInput: '.cancel-product-amount input',
   cancelProductTableCell: '.cancel-product-cell',
   cancelProductColumnHeader: 'th.cancel-product-element p',
+  cancelProductSelectorCheckbox: 'input[type=\'checkbox\'].selected-product',
+
 };
