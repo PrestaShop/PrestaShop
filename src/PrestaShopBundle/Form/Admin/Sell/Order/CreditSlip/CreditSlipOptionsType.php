@@ -53,6 +53,8 @@ final class CreditSlipOptionsType extends CommonAbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('slip_prefix', TranslatableType::class, [
+            'label' => $this->translator->trans('Credit slip prefix', [], 'Admin.Orderscustomers.Feature'),
+            'help' => $this->translator->trans('Prefix used for credit slips.', [], 'Admin.Orderscustomers.Help'),
             'required' => false,
             'error_bubbling' => true,
             'options' => [
