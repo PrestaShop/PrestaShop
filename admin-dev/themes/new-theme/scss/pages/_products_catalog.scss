@@ -27,8 +27,8 @@
 
   .icon-caret {
     display: inline-block;
-    font-size: .625rem;
-    vertical-align: .0625rem;
+    font-size: 0.625rem;
+    vertical-align: 0.0625rem;
     cursor: pointer;
 
     &.-current {
@@ -50,6 +50,10 @@
     }
     .action-disabled {
       color: $brand-danger;
+    }
+
+    .img-thumbnail {
+      @include border-radius(0);
     }
   }
 
