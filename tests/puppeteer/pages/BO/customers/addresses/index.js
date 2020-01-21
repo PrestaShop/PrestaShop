@@ -24,6 +24,10 @@ module.exports = class Addresses extends BOBasePage {
     this.addressFilterColumnInput = `${this.addressesListForm} #address_%FILTERBY`;
     this.filterSearchButton = `${this.addressesListForm} button[name='address[actions][search]']`;
     this.filterResetButton = `${this.addressesListForm} button[name='address[actions][reset]']`;
+    // Bulk Actions
+    this.selectAllRowsLabel = `${this.addressesListForm} .md-checkbox label`;
+    this.bulkActionsToggleButton = `${this.addressesListForm} button.dropdown-toggle`;
+    this.bulkActionsDeleteButton = '#address_grid_bulk_action_delete_selection';
   }
 
   /*
@@ -126,6 +130,27 @@ module.exports = class Addresses extends BOBasePage {
     ]);
     // Click on delete
     await this.page.click(this.addressesListTableDeleteLink.replace('%ROW', row));
+    return this.getTextContent(this.alertSuccessBlockParagraph);
+  }
+
+  /**
+   * Delete all addresses with Bulk Actions
+   * @return {Promise<string>}
+   */
+  async deleteAddressesBulkActions() {
+    this.dialogListener();
+    // Click on Select All
+    await Promise.all([
+      this.page.click(this.selectAllRowsLabel),
+      this.page.waitForSelector(`${this.selectAllRowsLabel}:not([disabled])`, {visible: true}),
+    ]);
+    // Click on Button Bulk actions
+    await Promise.all([
+      this.page.click(this.bulkActionsToggleButton),
+      this.page.waitForSelector(`${this.bulkActionsToggleButton}[aria-expanded='true']`, {visible: true}),
+    ]);
+    // Click on delete
+    await this.page.click(this.bulkActionsDeleteButton);
     return this.getTextContent(this.alertSuccessBlockParagraph);
   }
 };
