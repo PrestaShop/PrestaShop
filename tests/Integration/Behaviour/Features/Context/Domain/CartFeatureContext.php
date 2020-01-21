@@ -87,7 +87,6 @@ class CartFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     *
      * @When I create empty cart :cartReference for customer :customerReference
      *
      * @param string $cartReference
