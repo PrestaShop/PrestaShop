@@ -38,7 +38,7 @@ class MoneyTest extends TestCase
     {
         $money = new Money(new Number('100'), new CurrencyId(10));
 
-        $this->assertEquals('100', (string)$money->getAmount());
+        $this->assertEquals('100', (string) $money->getAmount());
         $this->assertEquals('', $money->getAmount()->getSign());
     }
 
