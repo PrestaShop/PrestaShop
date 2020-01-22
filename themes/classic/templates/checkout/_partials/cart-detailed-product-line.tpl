@@ -61,6 +61,7 @@
           <div class="unit-price-cart">{$product.unit_price_full}</div>
         {/if}
       </div>
+      {hook h='displayProductPriceBlock' product=$product type="unit_price"}
     </div>
 
     <br/>
