@@ -603,9 +603,8 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
             $orderCarrier->add();
             /** @var Order $order */
             $order = new Order($orderId);
-            $order->id_carrier = (int)$orderCarrier->id_carrier;
+            $order->id_carrier = (int) $orderCarrier->id_carrier;
             $order->save();
         }
     }
-
 }
