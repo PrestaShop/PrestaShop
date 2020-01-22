@@ -112,7 +112,7 @@ Feature: Order from Back Office (BO)
     Then order "bo_order1" should have invoice
 
   Scenario: Add order from Back Office with free shipping
-    And I create empty cart "dummy_cart_free_shipping" for customer "testCustomer"
+    And I create an empty cart "dummy_cart_free_shipping" for customer "testCustomer"
     And I select "US" address as delivery and invoice address for customer "testCustomer" in cart "dummy_cart_free_shipping"
     And I add 2 products "Mug The best is yet to come" to the cart "dummy_cart_free_shipping"
     And I set Free shipping to the cart "dummy_cart_free_shipping"
