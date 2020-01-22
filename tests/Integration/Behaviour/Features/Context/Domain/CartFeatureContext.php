@@ -94,10 +94,9 @@ class CartFeatureContext extends AbstractDomainFeatureContext
      */
     public function createEmptyCartForCustomerNonLegacy(string $cartReference, string $customerReference)
     {
-        /** @var Customer $customer */
-        $customer = SharedStorage::getStorage()->get($customerReference);
+        $customerId = SharedStorage::getStorage()->get($customerReference);
         /** @var CartId $cartIdObject */
-        $cartIdObject = $this->getCommandBus()->handle(new CreateEmptyCustomerCartCommand($customer->id));
+        $cartIdObject = $this->getCommandBus()->handle(new CreateEmptyCustomerCartCommand($customerId));
         SharedStorage::getStorage()->set($cartReference, $cartIdObject->getValue());
     }
 
