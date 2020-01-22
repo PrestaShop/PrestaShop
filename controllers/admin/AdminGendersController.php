@@ -44,63 +44,63 @@ class AdminGendersControllerCore extends AdminController
             $this->deleted = false;
         }
 
-        $this->bulk_actions = array(
-            'delete' => array(
-                'text' => $this->trans('Delete selected', array(), 'Admin.Actions'),
-                'confirm' => $this->trans('Delete selected items?', array(), 'Admin.Notifications.Warning'),
+        $this->bulk_actions = [
+            'delete' => [
+                'text' => $this->trans('Delete selected', [], 'Admin.Actions'),
+                'confirm' => $this->trans('Delete selected items?', [], 'Admin.Notifications.Warning'),
                 'icon' => 'icon-trash',
-            ),
-        );
+            ],
+        ];
 
         $this->default_image_height = 16;
         $this->default_image_width = 16;
 
-        $this->fieldImageSettings = array(
+        $this->fieldImageSettings = [
             'name' => 'image',
             'dir' => 'genders',
-        );
+        ];
 
-        $this->fields_list = array(
-            'id_gender' => array(
-                'title' => $this->trans('ID', array(), 'Admin.Global'),
+        $this->fields_list = [
+            'id_gender' => [
+                'title' => $this->trans('ID', [], 'Admin.Global'),
                 'align' => 'center',
                 'class' => 'fixed-width-xs',
-            ),
-            'name' => array(
-                'title' => $this->trans('Social title', array(), 'Admin.Shopparameters.Feature'),
+            ],
+            'name' => [
+                'title' => $this->trans('Social title', [], 'Admin.Shopparameters.Feature'),
                 'filter_key' => 'b!name',
-            ),
-            'type' => array(
-                'title' => $this->trans('Gender', array(), 'Admin.Global'),
+            ],
+            'type' => [
+                'title' => $this->trans('Gender', [], 'Admin.Global'),
                 'orderby' => false,
                 'type' => 'select',
-                'list' => array(
-                    0 => $this->trans('Male', array(), 'Admin.Shopparameters.Feature'),
-                    1 => $this->trans('Female', array(), 'Admin.Shopparameters.Feature'),
-                    2 => $this->trans('Neutral', array(), 'Admin.Shopparameters.Feature'),
-                ),
+                'list' => [
+                    0 => $this->trans('Male', [], 'Admin.Shopparameters.Feature'),
+                    1 => $this->trans('Female', [], 'Admin.Shopparameters.Feature'),
+                    2 => $this->trans('Neutral', [], 'Admin.Shopparameters.Feature'),
+                ],
                 'filter_key' => 'a!type',
                 'callback' => 'displayGenderType',
                 'callback_object' => $this,
-            ),
-            'image' => array(
-                'title' => $this->trans('Image', array(), 'Admin.Global'),
+            ],
+            'image' => [
+                'title' => $this->trans('Image', [], 'Admin.Global'),
                 'align' => 'center',
                 'image' => 'genders',
                 'orderby' => false,
                 'search' => false,
-            ),
-        );
+            ],
+        ];
     }
 
     public function initPageHeaderToolbar()
     {
         if (empty($this->display)) {
-            $this->page_header_toolbar_btn['new_gender'] = array(
+            $this->page_header_toolbar_btn['new_gender'] = [
                 'href' => self::$currentIndex . '&addgender&token=' . $this->token,
-                'desc' => $this->trans('Add new social title', array(), 'Admin.Shopparameters.Feature'),
+                'desc' => $this->trans('Add new social title', [], 'Admin.Shopparameters.Feature'),
                 'icon' => 'process-icon-new',
-            );
+            ];
         }
 
         parent::initPageHeaderToolbar();
@@ -108,82 +108,82 @@ class AdminGendersControllerCore extends AdminController
 
     public function renderForm()
     {
-        $this->fields_form = array(
-            'legend' => array(
-                'title' => $this->trans('Social titles', array(), 'Admin.Shopparameters.Feature'),
+        $this->fields_form = [
+            'legend' => [
+                'title' => $this->trans('Social titles', [], 'Admin.Shopparameters.Feature'),
                 'icon' => 'icon-male',
-            ),
-            'input' => array(
-                array(
+            ],
+            'input' => [
+                [
                     'type' => 'text',
-                    'label' => $this->trans('Social title', array(), 'Admin.Global'),
+                    'label' => $this->trans('Social title', [], 'Admin.Global'),
                     'name' => 'name',
                     'lang' => true,
                     'col' => 4,
-                    'hint' => $this->trans('Invalid characters:', array(), 'Admin.Shopparameters.Help') . ' 0-9!&lt;&gt;,;?=+()@#"�{}_$%:',
+                    'hint' => $this->trans('Invalid characters:', [], 'Admin.Shopparameters.Help') . ' 0-9!&lt;&gt;,;?=+()@#"�{}_$%:',
                     'required' => true,
-                ),
-                array(
+                ],
+                [
                     'type' => 'radio',
-                    'label' => $this->trans('Gender', array(), 'Admin.Global'),
+                    'label' => $this->trans('Gender', [], 'Admin.Global'),
                     'name' => 'type',
                     'required' => false,
                     'class' => 't',
-                    'values' => array(
-                        array(
+                    'values' => [
+                        [
                             'id' => 'type_male',
                             'value' => 0,
-                            'label' => $this->trans('Male', array(), 'Admin.Shopparameters.Feature'),
-                        ),
-                        array(
+                            'label' => $this->trans('Male', [], 'Admin.Shopparameters.Feature'),
+                        ],
+                        [
                             'id' => 'type_female',
                             'value' => 1,
-                            'label' => $this->trans('Female', array(), 'Admin.Shopparameters.Feature'),
-                        ),
-                        array(
+                            'label' => $this->trans('Female', [], 'Admin.Shopparameters.Feature'),
+                        ],
+                        [
                             'id' => 'type_neutral',
                             'value' => 2,
-                            'label' => $this->trans('Neutral', array(), 'Admin.Shopparameters.Feature'),
-                        ),
-                    ),
-                ),
-                array(
+                            'label' => $this->trans('Neutral', [], 'Admin.Shopparameters.Feature'),
+                        ],
+                    ],
+                ],
+                [
                     'type' => 'file',
-                    'label' => $this->trans('Image', array(), 'Admin.Global'),
+                    'label' => $this->trans('Image', [], 'Admin.Global'),
                     'name' => 'image',
                     'col' => 6,
                     'value' => true,
-                ),
-                array(
+                ],
+                [
                     'type' => 'text',
-                    'label' => $this->trans('Image width', array(), 'Admin.Shopparameters.Feature'),
+                    'label' => $this->trans('Image width', [], 'Admin.Shopparameters.Feature'),
                     'name' => 'img_width',
                     'col' => 2,
-                    'hint' => $this->trans('Image width in pixels. Enter "0" to use the original size.', array(), 'Admin.Shopparameters.Help'),
-                ),
-                array(
+                    'hint' => $this->trans('Image width in pixels. Enter "0" to use the original size.', [], 'Admin.Shopparameters.Help'),
+                ],
+                [
                     'type' => 'text',
-                    'label' => $this->trans('Image height', array(), 'Admin.Shopparameters.Feature'),
+                    'label' => $this->trans('Image height', [], 'Admin.Shopparameters.Feature'),
                     'name' => 'img_height',
                     'col' => 2,
-                    'hint' => $this->trans('Image height in pixels. Enter "0" to use the original size.', array(), 'Admin.Shopparameters.Help'),
-                ),
-            ),
-            'submit' => array(
-                'title' => $this->trans('Save', array(), 'Admin.Actions'),
-            ),
-        );
+                    'hint' => $this->trans('Image height in pixels. Enter "0" to use the original size.', [], 'Admin.Shopparameters.Help'),
+                ],
+            ],
+            'submit' => [
+                'title' => $this->trans('Save', [], 'Admin.Actions'),
+            ],
+        ];
 
         /** @var Gender $obj */
         if (!($obj = $this->loadObject(true))) {
             return;
         }
 
-        $this->fields_value = array(
+        $this->fields_value = [
             'img_width' => $this->default_image_width,
             'img_height' => $this->default_image_height,
             'image' => $obj->getImage(),
-        );
+        ];
 
         return parent::renderForm();
     }
@@ -197,7 +197,7 @@ class AdminGendersControllerCore extends AdminController
     {
         if (isset($this->fieldImageSettings['name'], $this->fieldImageSettings['dir'])) {
             if (!Validate::isInt(Tools::getValue('img_width')) || !Validate::isInt(Tools::getValue('img_height'))) {
-                $this->errors[] = $this->trans('Width and height must be numeric values.', array(), 'Admin.Shopparameters.Notification');
+                $this->errors[] = $this->trans('Width and height must be numeric values.', [], 'Admin.Shopparameters.Notification');
             } else {
                 if ((int) Tools::getValue('img_width') > 0 && (int) Tools::getValue('img_height') > 0) {
                     $width = (int) Tools::getValue('img_width');

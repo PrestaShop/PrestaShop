@@ -62,10 +62,7 @@ class CustomizationId
     private function assertValueIsPositive(int $value)
     {
         if (0 >= $value) {
-            throw new CustomizationConstraintException(
-                sprintf('Customization id must be positive integer. "%s" given', $value),
-                CustomizationConstraintException::INVALID_ID
-            );
+            throw new CustomizationConstraintException(sprintf('Customization id must be positive integer. "%s" given', $value), CustomizationConstraintException::INVALID_ID);
         }
     }
 }

@@ -28,7 +28,7 @@ use Defuse\Crypto\Key;
 class CookieCore
 {
     /** @var array Contain cookie content in a key => value format */
-    protected $_content = array();
+    protected $_content = [];
 
     /** @var array Crypted cookie name for setcookie() */
     protected $_name;
@@ -63,7 +63,7 @@ class CookieCore
      */
     public function __construct($name, $path = '', $expire = null, $shared_urls = null, $standalone = false, $secure = false)
     {
-        $this->_content = array();
+        $this->_content = [];
         $this->_standalone = $standalone;
         $this->_expire = null === $expire ? time() + 1728000 : (int) $expire;
         $this->_path = trim(($this->_standalone ? '' : Context::getContext()->shop->physical_uri) . $path, '/\\') . '/';
@@ -246,7 +246,7 @@ class CookieCore
      */
     public function logout()
     {
-        $this->_content = array();
+        $this->_content = [];
         $this->encryptAndSetCookie();
         unset($_COOKIE[$this->_name]);
         $this->_modified = true;
@@ -415,7 +415,7 @@ class CookieCore
      */
     public function getFamily($origin)
     {
-        $result = array();
+        $result = [];
         if (count($this->_content) == 0) {
             return $result;
         }

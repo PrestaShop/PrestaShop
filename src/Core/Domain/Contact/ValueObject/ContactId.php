@@ -58,9 +58,7 @@ class ContactId
     private function assertIsIntegerOrMoreThanZero($contactId)
     {
         if (!is_int($contactId) || 0 >= $contactId) {
-            throw new ContactException(
-                sprintf('Invalid Contact id: %s', var_export($contactId, true))
-            );
+            throw new ContactException(sprintf('Invalid Contact id: %s', var_export($contactId, true)));
         }
     }
 

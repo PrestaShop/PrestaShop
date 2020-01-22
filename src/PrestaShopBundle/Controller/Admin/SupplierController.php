@@ -94,23 +94,23 @@ class SupplierController extends FrameworkBundleAdminController
                 continue;
             }
 
-            $simpleSubForm->add('supplier_combination_' . $idSupplier, 'Symfony\Component\Form\Extension\Core\Type\CollectionType', array(
+            $simpleSubForm->add('supplier_combination_' . $idSupplier, 'Symfony\Component\Form\Extension\Core\Type\CollectionType', [
                 'entry_type' => 'PrestaShopBundle\Form\Admin\Product\ProductSupplierCombination',
-                'entry_options' => array(
+                'entry_options' => [
                     'id_supplier' => $idSupplier,
-                ),
+                ],
                 'prototype' => true,
                 'allow_add' => true,
                 'required' => false,
                 'label' => $this->get('prestashop.adapter.data_provider.supplier')->getNameById($idSupplier),
-            ));
+            ]);
         }
 
         $form->add($simpleSubForm);
 
-        return $this->render('@Product/ProductPage/Forms/form_supplier_combination.html.twig', array(
+        return $this->render('@Product/ProductPage/Forms/form_supplier_combination.html.twig', [
             'suppliers' => $suppliers,
             'form' => $form->getForm()['step6']->createView(),
-        ));
+        ]);
     }
 }

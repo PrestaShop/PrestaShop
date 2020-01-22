@@ -43,40 +43,40 @@ class AdminFeaturesControllerCore extends AdminController
 
         parent::__construct();
 
-        $this->fields_list = array(
-            'id_feature' => array(
-                'title' => $this->trans('ID', array(), 'Admin.Global'),
+        $this->fields_list = [
+            'id_feature' => [
+                'title' => $this->trans('ID', [], 'Admin.Global'),
                 'align' => 'center',
                 'class' => 'fixed-width-xs',
-            ),
-            'name' => array(
-                'title' => $this->trans('Name', array(), 'Admin.Global'),
+            ],
+            'name' => [
+                'title' => $this->trans('Name', [], 'Admin.Global'),
                 'width' => 'auto',
                 'filter_key' => 'b!name',
-            ),
-            'value' => array(
-                'title' => $this->trans('Values', array(), 'Admin.Global'),
+            ],
+            'value' => [
+                'title' => $this->trans('Values', [], 'Admin.Global'),
                 'orderby' => false,
                 'search' => false,
                 'align' => 'center',
                 'class' => 'fixed-width-xs',
-            ),
-            'position' => array(
-                'title' => $this->trans('Position', array(), 'Admin.Global'),
+            ],
+            'position' => [
+                'title' => $this->trans('Position', [], 'Admin.Global'),
                 'filter_key' => 'a!position',
                 'align' => 'center',
                 'class' => 'fixed-width-xs',
                 'position' => 'position',
-            ),
-        );
+            ],
+        ];
 
-        $this->bulk_actions = array(
-            'delete' => array(
-                'text' => $this->trans('Delete selected', array(), 'Admin.Actions'),
+        $this->bulk_actions = [
+            'delete' => [
+                'text' => $this->trans('Delete selected', [], 'Admin.Actions'),
                 'icon' => 'icon-trash',
-                'confirm' => $this->trans('Delete selected items?', array(), 'Admin.Notifications.Warning'),
-            ),
-        );
+                'confirm' => $this->trans('Delete selected items?', [], 'Admin.Notifications.Warning'),
+            ],
+        ];
     }
 
     /**
@@ -125,23 +125,23 @@ class AdminFeaturesControllerCore extends AdminController
             $this->addRowAction('delete');
 
             if (!Validate::isLoadedObject($obj = new Feature((int) $id))) {
-                $this->errors[] = $this->trans('An error occurred while updating the status for an object.', array(), 'Admin.Notifications.Error') . ' <b>' . $this->table . '</b> ' . $this->trans('(cannot load object)', array(), 'Admin.Notifications.Error');
+                $this->errors[] = $this->trans('An error occurred while updating the status for an object.', [], 'Admin.Notifications.Error') . ' <b>' . $this->table . '</b> ' . $this->trans('(cannot load object)', [], 'Admin.Notifications.Error');
 
                 return;
             }
 
             $this->feature_name = $obj->name;
             $this->toolbar_title = $this->feature_name[$this->context->employee->id_lang];
-            $this->fields_list = array(
-                'id_feature_value' => array(
-                    'title' => $this->trans('ID', array(), 'Admin.Global'),
+            $this->fields_list = [
+                'id_feature_value' => [
+                    'title' => $this->trans('ID', [], 'Admin.Global'),
                     'align' => 'center',
                     'class' => 'fixed-width-xs',
-                ),
-                'value' => array(
-                    'title' => $this->trans('Value', array(), 'Admin.Global'),
-                ),
-            );
+                ],
+                'value' => [
+                    'title' => $this->trans('Value', [], 'Admin.Global'),
+                ],
+            ];
 
             $this->_where = sprintf('AND `id_feature` = %d', (int) $id);
             self::$currentIndex = self::$currentIndex . '&id_feature=' . (int) $id . '&viewfeature';
@@ -158,36 +158,36 @@ class AdminFeaturesControllerCore extends AdminController
      */
     public function renderForm()
     {
-        $this->toolbar_title = $this->trans('Add a new feature', array(), 'Admin.Catalog.Feature');
-        $this->fields_form = array(
-            'legend' => array(
-                'title' => $this->trans('Feature', array(), 'Admin.Catalog.Feature'),
+        $this->toolbar_title = $this->trans('Add a new feature', [], 'Admin.Catalog.Feature');
+        $this->fields_form = [
+            'legend' => [
+                'title' => $this->trans('Feature', [], 'Admin.Catalog.Feature'),
                 'icon' => 'icon-info-sign',
-            ),
-            'input' => array(
-                array(
+            ],
+            'input' => [
+                [
                     'type' => 'text',
-                    'label' => $this->trans('Name', array(), 'Admin.Global'),
+                    'label' => $this->trans('Name', [], 'Admin.Global'),
                     'name' => 'name',
                     'lang' => true,
                     'size' => 33,
-                    'hint' => $this->trans('Invalid characters:', array(), 'Admin.Notifications.Info') . ' <>;=#{}',
+                    'hint' => $this->trans('Invalid characters:', [], 'Admin.Notifications.Info') . ' <>;=#{}',
                     'required' => true,
-                ),
-            ),
-        );
+                ],
+            ],
+        ];
 
         if (Shop::isFeatureActive()) {
-            $this->fields_form['input'][] = array(
+            $this->fields_form['input'][] = [
                 'type' => 'shop',
-                'label' => $this->trans('Shop association', array(), 'Admin.Global'),
+                'label' => $this->trans('Shop association', [], 'Admin.Global'),
                 'name' => 'checkBoxShopAsso',
-            );
+            ];
         }
 
-        $this->fields_form['submit'] = array(
-            'title' => $this->trans('Save', array(), 'Admin.Actions'),
-        );
+        $this->fields_form['submit'] = [
+            'title' => $this->trans('Save', [], 'Admin.Actions'),
+        ];
 
         return parent::renderForm();
     }
@@ -196,26 +196,26 @@ class AdminFeaturesControllerCore extends AdminController
     {
         if (Feature::isFeatureActive()) {
             if (empty($this->display)) {
-                $this->page_header_toolbar_btn['new_feature'] = array(
+                $this->page_header_toolbar_btn['new_feature'] = [
                     'href' => self::$currentIndex . '&addfeature&token=' . $this->token,
-                    'desc' => $this->trans('Add new feature', array(), 'Admin.Catalog.Feature'),
+                    'desc' => $this->trans('Add new feature', [], 'Admin.Catalog.Feature'),
                     'icon' => 'process-icon-new',
-                );
+                ];
 
-                $this->page_header_toolbar_btn['new_feature_value'] = array(
+                $this->page_header_toolbar_btn['new_feature_value'] = [
                     'href' => self::$currentIndex . '&addfeature_value&id_feature=' . (int) Tools::getValue('id_feature') . '&token=' . $this->token,
-                    'desc' => $this->trans('Add new feature value', array(), 'Admin.Catalog.Help'),
+                    'desc' => $this->trans('Add new feature value', [], 'Admin.Catalog.Help'),
                     'icon' => 'process-icon-new',
-                );
+                ];
             }
         }
 
         if ($this->display == 'view') {
-            $this->page_header_toolbar_btn['new_feature_value'] = array(
+            $this->page_header_toolbar_btn['new_feature_value'] = [
                 'href' => self::$currentIndex . '&addfeature_value&id_feature=' . (int) Tools::getValue('id_feature') . '&token=' . $this->token,
-                'desc' => $this->trans('Add new feature value', array(), 'Admin.Catalog.Help'),
+                'desc' => $this->trans('Add new feature value', [], 'Admin.Catalog.Help'),
                 'icon' => 'process-icon-new',
-            );
+            ];
         }
 
         parent::initPageHeaderToolbar();
@@ -232,18 +232,18 @@ class AdminFeaturesControllerCore extends AdminController
             case 'editFeatureValue':
             case 'add':
             case 'edit':
-                $this->toolbar_btn['save'] = array(
+                $this->toolbar_btn['save'] = [
                     'href' => '#',
-                    'desc' => $this->trans('Save', array(), 'Admin.Actions'),
-                );
+                    'desc' => $this->trans('Save', [], 'Admin.Actions'),
+                ];
 
                 if ($this->display == 'editFeatureValue') {
-                    $this->toolbar_btn['save-and-stay'] = array(
+                    $this->toolbar_btn['save-and-stay'] = [
                         'short' => 'SaveAndStay',
                         'href' => '#',
-                        'desc' => $this->trans('Save and add another value', array(), 'Admin.Catalog.Help'),
+                        'desc' => $this->trans('Save and add another value', [], 'Admin.Catalog.Help'),
                         'force_desc' => true,
-                    );
+                    ];
                 }
 
                 // Default cancel button - like old back link
@@ -252,21 +252,21 @@ class AdminFeaturesControllerCore extends AdminController
                     $back = self::$currentIndex . '&token=' . $this->token;
                 }
 
-                $this->toolbar_btn['back'] = array(
+                $this->toolbar_btn['back'] = [
                     'href' => $back,
-                    'desc' => $this->trans('Back to the list', array(), 'Admin.Catalog.Help'),
-                );
+                    'desc' => $this->trans('Back to the list', [], 'Admin.Catalog.Help'),
+                ];
 
                 break;
             case 'view':
-                $this->toolbar_btn['newAttributes'] = array(
+                $this->toolbar_btn['newAttributes'] = [
                     'href' => self::$currentIndex . '&addfeature_value&id_feature=' . (int) Tools::getValue('id_feature') . '&token=' . $this->token,
-                    'desc' => $this->trans('Add new feature values', array(), 'Admin.Catalog.Help'),
-                );
-                $this->toolbar_btn['back'] = array(
+                    'desc' => $this->trans('Add new feature values', [], 'Admin.Catalog.Help'),
+                ];
+                $this->toolbar_btn['back'] = [
                     'href' => self::$currentIndex . '&token=' . $this->token,
-                    'desc' => $this->trans('Back to the list', array(), 'Admin.Catalog.Help'),
-                );
+                    'desc' => $this->trans('Back to the list', [], 'Admin.Catalog.Help'),
+                ];
 
                 break;
             default:
@@ -280,13 +280,13 @@ class AdminFeaturesControllerCore extends AdminController
 
         switch ($this->display) {
             case 'edit':
-                $bread_extended[] = $this->trans('Edit New Feature', array(), 'Admin.Catalog.Feature');
+                $bread_extended[] = $this->trans('Edit New Feature', [], 'Admin.Catalog.Feature');
                 $this->addMetaTitle($bread_extended[count($bread_extended) - 1]);
 
                 break;
 
             case 'add':
-                $bread_extended[] = $this->trans('Add New Feature', array(), 'Admin.Catalog.Feature');
+                $bread_extended[] = $this->trans('Add New Feature', [], 'Admin.Catalog.Feature');
                 $this->addMetaTitle($bread_extended[count($bread_extended) - 1]);
 
                 break;
@@ -305,13 +305,13 @@ class AdminFeaturesControllerCore extends AdminController
                         }
 
                         if (Validate::isLoadedObject($obj = new FeatureValue((int) Tools::getValue('id_feature_value')))) {
-                            $bread_extended[] = $this->trans('Edit: %value%', array('%value%' => $obj->value[$this->context->employee->id_lang]), 'Admin.Catalog.Feature');
+                            $bread_extended[] = $this->trans('Edit: %value%', ['%value%' => $obj->value[$this->context->employee->id_lang]], 'Admin.Catalog.Feature');
                         }
                     } else {
-                        $bread_extended[] = $this->trans('Edit Value', array(), 'Admin.Catalog.Feature');
+                        $bread_extended[] = $this->trans('Edit Value', [], 'Admin.Catalog.Feature');
                     }
                 } else {
-                    $bread_extended[] = $this->trans('Add New Value', array(), 'Admin.Catalog.Feature');
+                    $bread_extended[] = $this->trans('Add New Value', [], 'Admin.Catalog.Feature');
                 }
 
                 if (count($bread_extended) > 0) {
@@ -333,55 +333,55 @@ class AdminFeaturesControllerCore extends AdminController
     {
         $this->setTypeValue();
 
-        $this->fields_form[0]['form'] = array(
-            'legend' => array(
-                'title' => $this->trans('Feature value', array(), 'Admin.Catalog.Feature'),
+        $this->fields_form[0]['form'] = [
+            'legend' => [
+                'title' => $this->trans('Feature value', [], 'Admin.Catalog.Feature'),
                 'icon' => 'icon-info-sign',
-            ),
-            'input' => array(
-                array(
+            ],
+            'input' => [
+                [
                     'type' => 'select',
-                    'label' => $this->trans('Feature', array(), 'Admin.Catalog.Feature'),
+                    'label' => $this->trans('Feature', [], 'Admin.Catalog.Feature'),
                     'name' => 'id_feature',
-                    'options' => array(
+                    'options' => [
                         'query' => Feature::getFeatures($this->context->language->id),
                         'id' => 'id_feature',
                         'name' => 'name',
-                    ),
+                    ],
                     'required' => true,
-                ),
-                array(
+                ],
+                [
                     'type' => 'text',
-                    'label' => $this->trans('Value', array(), 'Admin.Global'),
+                    'label' => $this->trans('Value', [], 'Admin.Global'),
                     'name' => 'value',
                     'lang' => true,
                     'size' => 33,
-                    'hint' => $this->trans('Invalid characters:', array(), 'Admin.Notifications.Info') . ' <>;=#{}',
+                    'hint' => $this->trans('Invalid characters:', [], 'Admin.Notifications.Info') . ' <>;=#{}',
                     'required' => true,
-                ),
-            ),
-            'submit' => array(
-                'title' => $this->trans('Save', array(), 'Admin.Actions'),
-            ),
-            'buttons' => array(
-                'save-and-stay' => array(
-                    'title' => $this->trans('Save then add another value', array(), 'Admin.Catalog.Feature'),
+                ],
+            ],
+            'submit' => [
+                'title' => $this->trans('Save', [], 'Admin.Actions'),
+            ],
+            'buttons' => [
+                'save-and-stay' => [
+                    'title' => $this->trans('Save then add another value', [], 'Admin.Catalog.Feature'),
                     'name' => 'submitAdd' . $this->table . 'AndStay',
                     'type' => 'submit',
                     'class' => 'btn btn-default pull-right',
                     'icon' => 'process-icon-save',
-                ),
-            ),
-        );
+                ],
+            ],
+        ];
 
         $this->fields_value['id_feature'] = (int) Tools::getValue('id_feature');
 
         // Create Object FeatureValue
         $feature_value = new FeatureValue(Tools::getValue('id_feature_value'));
 
-        $this->tpl_vars = array(
+        $this->tpl_vars = [
             'feature_value' => $feature_value,
-        );
+        ];
 
         $this->getlanguages();
         $helper = new HelperForm();
@@ -409,7 +409,7 @@ class AdminFeaturesControllerCore extends AdminController
         $helper->allow_employee_form_lang = $this->allow_employee_form_lang;
         $helper->fields_value = $this->getFieldsValue($feature_value);
         $helper->toolbar_btn = $this->toolbar_btn;
-        $helper->title = $this->trans('Add a new feature value', array(), 'Admin.Catalog.Feature');
+        $helper->title = $this->trans('Add a new feature value', [], 'Admin.Catalog.Feature');
         $this->content .= $helper->generateForm($this->fields_form);
     }
 
@@ -448,13 +448,13 @@ class AdminFeaturesControllerCore extends AdminController
             }
         } else {
             $adminPerformanceUrl = $this->context->link->getAdminLink('AdminPerformance');
-            $url = '<a href="' . $adminPerformanceUrl . '#featuresDetachables">' . $this->trans('Performance', array(), 'Admin.Global') . '</a>';
-            $this->displayWarning($this->trans('This feature has been disabled. You can activate it here: %url%.', array('%url%' => $url), 'Admin.Catalog.Notification'));
+            $url = '<a href="' . $adminPerformanceUrl . '#featuresDetachables">' . $this->trans('Performance', [], 'Admin.Global') . '</a>';
+            $this->displayWarning($this->trans('This feature has been disabled. You can activate it here: %url%.', ['%url%' => $url], 'Admin.Catalog.Notification'));
         }
 
-        $this->context->smarty->assign(array(
+        $this->context->smarty->assign([
             'content' => $this->content,
-        ));
+        ]);
     }
 
     public function initProcess()
@@ -498,13 +498,13 @@ class AdminFeaturesControllerCore extends AdminController
         if ($this->table == 'feature_value' && ($this->action == 'save' || $this->action == 'delete' || $this->action == 'bulkDelete')) {
             Hook::exec(
                 'displayFeatureValuePostProcess',
-                array('errors' => &$this->errors)
+                ['errors' => &$this->errors]
             );
         } // send errors as reference to allow displayFeatureValuePostProcess to stop saving process
         else {
             Hook::exec(
                 'displayFeaturePostProcess',
-                array('errors' => &$this->errors)
+                ['errors' => &$this->errors]
             );
         } // send errors as reference to allow displayFeaturePostProcess to stop saving process
 
@@ -627,7 +627,7 @@ class AdminFeaturesControllerCore extends AdminController
             $id_feature = (int) Tools::getValue('id');
             $positions = Tools::getValue('feature');
 
-            $new_positions = array();
+            $new_positions = [];
             foreach ($positions as $v) {
                 if (!empty($v)) {
                     $new_positions[] = $v;

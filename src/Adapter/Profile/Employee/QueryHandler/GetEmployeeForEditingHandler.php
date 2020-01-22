@@ -49,10 +49,7 @@ final class GetEmployeeForEditingHandler implements GetEmployeeForEditingHandler
         $employee = new Employee($employeeId->getValue());
 
         if ($employee->id !== $employeeId->getValue()) {
-            throw new EmployeeNotFoundException(
-                $employeeId,
-                sprintf('Employee with id "%s" was not found', $employeeId->getValue())
-            );
+            throw new EmployeeNotFoundException($employeeId, sprintf('Employee with id "%s" was not found', $employeeId->getValue()));
         }
 
         return new EditableEmployee(

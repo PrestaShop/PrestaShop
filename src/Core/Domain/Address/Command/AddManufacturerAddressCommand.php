@@ -261,9 +261,6 @@ class AddManufacturerAddressCommand
             return;
         }
 
-        throw new AddressConstraintException(
-            sprintf('Invalid manufacturer id "%s" provided for address.', var_export($value, true)),
-            AddressConstraintException::INVALID_MANUFACTURER_ID
-        );
+        throw new AddressConstraintException(sprintf('Invalid manufacturer id "%s" provided for address.', var_export($value, true)), AddressConstraintException::INVALID_MANUFACTURER_ID);
     }
 }

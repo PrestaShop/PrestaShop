@@ -34,10 +34,10 @@ class TemplateFinderCore
 {
     private $directories;
     private $extension;
-    private $productListEntities = array('category', 'manufacturer', 'supplier');
-    private $productListSearchEntities = array('search', 'price-drop', 'best-sale');
-    private $productEntities = array('product');
-    private $brandListEntities = array('manufacturers', 'suppliers');
+    private $productListEntities = ['category', 'manufacturer', 'supplier'];
+    private $productListSearchEntities = ['search', 'price-drop', 'best-sale'];
+    private $productEntities = ['product'];
+    private $brandListEntities = ['manufacturers', 'suppliers'];
 
     public function __construct(array $directories, $extension)
     {
@@ -74,37 +74,37 @@ class TemplateFinderCore
         $id = (int) $id;
 
         if (in_array($entity, $this->getProductListEntities())) {
-            $templates = array(
+            $templates = [
                 'catalog/listing/' . $entity . '-' . $id,
                 'catalog/listing/' . $entity,
                 $template,
                 'catalog/listing/product-list',
-            );
+            ];
         } elseif (in_array($entity, $this->getProductListSearchEntities())) {
-            $templates = array(
+            $templates = [
                 'catalog/listing/' . $entity,
                 $template,
                 'catalog/listing/product-list',
-            );
+            ];
         } elseif (in_array($entity, $this->getProductEntities())) {
-            $templates = array(
+            $templates = [
                 'catalog/' . $entity . '-' . $id,
                 $template,
                 'catalog/product',
-            );
+            ];
         } elseif (in_array($entity, $this->getBrandListEntities())) {
-            $templates = array(
+            $templates = [
                 $template,
                 'catalog/brands',
-            );
+            ];
         } elseif ('cms' === $entity) {
-            $templates = array(
+            $templates = [
                 'cms/page-' . $id,
                 $template,
                 'cms/page',
-            );
+            ];
         } else {
-            $templates = array($template);
+            $templates = [$template];
         }
 
         return array_unique($templates);

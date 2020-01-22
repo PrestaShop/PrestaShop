@@ -75,15 +75,11 @@ final class EditAttachmentHandler extends AbstractAttachmentHandler implements E
         try {
             $attachment = new Attachment($attachmentIdValue);
         } catch (PrestaShopException $e) {
-            throw new AttachmentNotFoundException(
-                sprintf('Attachment with id "%s" was not found.', $attachmentIdValue)
-            );
+            throw new AttachmentNotFoundException(sprintf('Attachment with id "%s" was not found.', $attachmentIdValue));
         }
 
         if ($attachment->id !== $attachmentIdValue) {
-            throw new AttachmentNotFoundException(
-                sprintf('Attachment with id "%s" was not found.', $attachmentIdValue)
-            );
+            throw new AttachmentNotFoundException(sprintf('Attachment with id "%s" was not found.', $attachmentIdValue));
         }
 
         $this->updateAttachmentFromCommandData($attachment, $command);
@@ -102,10 +98,7 @@ final class EditAttachmentHandler extends AbstractAttachmentHandler implements E
     {
         try {
             if (!$attachment->validateFields(false) && !$attachment->validateFieldsLang(false)) {
-                throw new AttachmentConstraintException(
-                    'Attachment contains invalid field values',
-                    AttachmentConstraintException::INVALID_FIELDS
-                );
+                throw new AttachmentConstraintException('Attachment contains invalid field values', AttachmentConstraintException::INVALID_FIELDS);
             }
 
             $this->assertDescriptionContainsCleanHtml($command->getLocalizedDescriptions());

@@ -88,8 +88,8 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
 
         /** @var CategoryId $categoryIdObject */
         $categoryIdObject = $this->getCommandBus()->handle(new AddCategoryCommand(
-            array($this->defaultLanguageId => $testCaseData['Name']),
-            array($this->defaultLanguageId => $testCaseData['Friendly URL']),
+            [$this->defaultLanguageId => $testCaseData['Name']],
+            [$this->defaultLanguageId => $testCaseData['Friendly URL']],
             PrimitiveUtils::castElementInType($testCaseData['Displayed'], PrimitiveUtils::TYPE_BOOLEAN),
             $parentCategoryId
         ));
@@ -325,37 +325,37 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
                 $groupAssociationIds[] = (int) $groupChoicesArray[$groupAssociation];
             }
         } else {
-            $groupAssociationIds = array(
+            $groupAssociationIds = [
                 0 => '1',
                 1 => '2',
                 2 => '3',
-            );
+            ];
         }
 
         $isActive = PrimitiveUtils::castElementInType($testCaseData['Displayed'], PrimitiveUtils::TYPE_BOOLEAN);
 
-        $name = array($this->defaultLanguageId => self::EMPTY_VALUE);
+        $name = [$this->defaultLanguageId => self::EMPTY_VALUE];
         if (isset($testCaseData['Name'])) {
-            $name = array($this->defaultLanguageId => $testCaseData['Name']);
+            $name = [$this->defaultLanguageId => $testCaseData['Name']];
         }
-        $description = array($this->defaultLanguageId => self::EMPTY_VALUE);
+        $description = [$this->defaultLanguageId => self::EMPTY_VALUE];
         if (isset($testCaseData['Description'])) {
-            $description = array($this->defaultLanguageId => $testCaseData['Description']);
+            $description = [$this->defaultLanguageId => $testCaseData['Description']];
         }
 
-        $metaTitle = array($this->defaultLanguageId => self::EMPTY_VALUE);
+        $metaTitle = [$this->defaultLanguageId => self::EMPTY_VALUE];
         if (isset($testCaseData['Meta title'])) {
-            $metaTitle = array($this->defaultLanguageId => $testCaseData['Meta title']);
+            $metaTitle = [$this->defaultLanguageId => $testCaseData['Meta title']];
         }
 
-        $metaDescription = array($this->defaultLanguageId => self::EMPTY_VALUE);
+        $metaDescription = [$this->defaultLanguageId => self::EMPTY_VALUE];
         if (isset($testCaseData['Meta description'])) {
-            $metaDescription = array($this->defaultLanguageId => $testCaseData['Meta description']);
+            $metaDescription = [$this->defaultLanguageId => $testCaseData['Meta description']];
         }
 
-        $linkRewrite = array($this->defaultLanguageId => self::EMPTY_VALUE);
+        $linkRewrite = [$this->defaultLanguageId => self::EMPTY_VALUE];
         if (isset($testCaseData['Friendly URL'])) {
-            $linkRewrite = array($this->defaultLanguageId => $testCaseData['Friendly URL']);
+            $linkRewrite = [$this->defaultLanguageId => $testCaseData['Friendly URL']];
         }
 
         if ($parentCategoryId === null) {
@@ -370,10 +370,10 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
             $parentCategoryId,
             $metaTitle,
             $metaDescription,
-            array($this->defaultLanguageId => self::EMPTY_VALUE),
+            [$this->defaultLanguageId => self::EMPTY_VALUE],
             $linkRewrite,
             $groupAssociationIds,
-            array(0 => '1'),
+            [0 => '1'],
             $parentCategoryId === null || $parentCategoryId === 1 ? true : false,
             $coverImage,
             null,

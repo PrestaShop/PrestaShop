@@ -26,8 +26,8 @@
 
 namespace Tests\Unit\Core\Search;
 
-use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters;
 use PrestaShop\PrestaShop\Core\Search\SearchParameters;

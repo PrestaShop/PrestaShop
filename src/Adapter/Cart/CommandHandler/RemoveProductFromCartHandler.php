@@ -53,9 +53,7 @@ final class RemoveProductFromCartHandler extends AbstractCartHandler implements 
         );
 
         if (!$removed) {
-            throw new CartException(
-                sprintf('Failed to remove product with id "%d" from cart', $command->getProductId()->getValue())
-            );
+            throw new CartException(sprintf('Failed to remove product with id "%d" from cart', $command->getProductId()->getValue()));
         }
     }
 }

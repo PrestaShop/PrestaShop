@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Attachment;
 
+use Attachment;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CleanHtml;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DefaultLanguage;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\AttachmentConstraintException;
@@ -33,7 +34,6 @@ use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\AttachmentNotFoundExc
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\DeleteAttachmentException;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\ValueObject\AttachmentId;
 use PrestaShopException;
-use Attachment;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
@@ -64,10 +64,7 @@ abstract class AbstractAttachmentHandler
         $errors = $this->validator->validate($localizedTexts, new DefaultLanguage());
 
         if (0 !== count($errors)) {
-            throw new AttachmentConstraintException(
-                'Missing name in default language',
-                AttachmentConstraintException::MISSING_NAME_IN_DEFAULT_LANGUAGE
-            );
+            throw new AttachmentConstraintException('Missing name in default language', AttachmentConstraintException::MISSING_NAME_IN_DEFAULT_LANGUAGE);
         }
     }
 
@@ -82,13 +79,7 @@ abstract class AbstractAttachmentHandler
             $errors = $this->validator->validate($description, new CleanHtml());
 
             if (0 !== count($errors)) {
-                throw new AttachmentConstraintException(
-                    sprintf(
-                        'Given description "%s" contains javascript events or script tags',
-                        $description
-                    ),
-                    AttachmentConstraintException::INVALID_DESCRIPTION
-                );
+                throw new AttachmentConstraintException(sprintf('Given description "%s" contains javascript events or script tags', $description), AttachmentConstraintException::INVALID_DESCRIPTION);
             }
         }
     }
@@ -112,10 +103,7 @@ abstract class AbstractAttachmentHandler
     protected function assertValidFields(Attachment $attachment)
     {
         if (!$attachment->validateFields(false) && !$attachment->validateFieldsLang(false)) {
-            throw new AttachmentConstraintException(
-                'Attachment contains invalid field values',
-                AttachmentConstraintException::INVALID_FIELDS
-            );
+            throw new AttachmentConstraintException('Attachment contains invalid field values', AttachmentConstraintException::INVALID_FIELDS);
         }
     }
 
@@ -132,15 +120,11 @@ abstract class AbstractAttachmentHandler
         try {
             $attachment = new Attachment($attachmentIdValue);
         } catch (PrestaShopException $e) {
-            throw new AttachmentNotFoundException(
-                sprintf('Attachment with id "%s" was not found.', $attachmentId->getValue())
-            );
+            throw new AttachmentNotFoundException(sprintf('Attachment with id "%s" was not found.', $attachmentId->getValue()));
         }
 
         if ($attachment->id !== $attachmentId->getValue()) {
-            throw new AttachmentNotFoundException(
-                sprintf('Attachment with id "%s" was not found.', $attachmentId->getValue())
-            );
+            throw new AttachmentNotFoundException(sprintf('Attachment with id "%s" was not found.', $attachmentId->getValue()));
         }
 
         return $attachment;
@@ -160,9 +144,7 @@ abstract class AbstractAttachmentHandler
         try {
             return $attachment->delete();
         } catch (PrestaShopException $e) {
-            throw new DeleteAttachmentException(
-                sprintf('An error occurred when deleting Attachment object with id "%s".', $attachment->id)
-            );
+            throw new DeleteAttachmentException(sprintf('An error occurred when deleting Attachment object with id "%s".', $attachment->id));
         }
     }
 }

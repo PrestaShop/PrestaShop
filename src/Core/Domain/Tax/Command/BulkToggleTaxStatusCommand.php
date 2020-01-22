@@ -96,10 +96,7 @@ class BulkToggleTaxStatusCommand
     private function assertIsBool($value)
     {
         if (!is_bool($value)) {
-            throw new TaxConstraintException(
-                sprintf('Status must be of type bool, but given %s', var_export($value, true)),
-                TaxConstraintException::INVALID_STATUS
-            );
+            throw new TaxConstraintException(sprintf('Status must be of type bool, but given %s', var_export($value, true)), TaxConstraintException::INVALID_STATUS);
         }
     }
 }

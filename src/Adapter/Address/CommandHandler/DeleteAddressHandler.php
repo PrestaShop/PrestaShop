@@ -45,10 +45,7 @@ final class DeleteAddressHandler extends AbstractAddressHandler implements Delet
         $address = $this->getAddress($addressId);
 
         if (!$this->deleteAddress($address)) {
-            throw new DeleteAddressException(
-                sprintf('Cannot delete Address object with id "%s".', $addressId->getValue()),
-                DeleteAddressException::FAILED_DELETE
-            );
+            throw new DeleteAddressException(sprintf('Cannot delete Address object with id "%s".', $addressId->getValue()), DeleteAddressException::FAILED_DELETE);
         }
     }
 }

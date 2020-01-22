@@ -26,19 +26,19 @@
 
 namespace PrestaShop\PrestaShop\Adapter\MailTemplate;
 
-use PrestaShop\PrestaShop\Adapter\LegacyContext;
-use PrestaShop\PrestaShop\Core\ConfigurationInterface;
-use PrestaShop\PrestaShop\Core\Employee\ContextEmployeeProviderInterface;
-use PrestaShop\PrestaShop\Core\Localization\Locale;
-use PrestaShop\PrestaShop\Core\MailTemplate\Layout\LayoutInterface;
-use Symfony\Component\Translation\TranslatorInterface;
 use Address;
 use AddressFormat;
 use Carrier;
 use Cart;
 use Context;
 use Order;
+use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Employee\ContextEmployeeProviderInterface;
+use PrestaShop\PrestaShop\Core\Localization\Locale;
+use PrestaShop\PrestaShop\Core\MailTemplate\Layout\LayoutInterface;
 use Product;
+use Symfony\Component\Translation\TranslatorInterface;
 use Tools;
 
 /**
@@ -177,10 +177,10 @@ final class MailPreviewVariablesBuilder
             $productListTxt = $this->mailPartialTemplateRenderer->render('order_conf_product_list.txt', $this->context->language, $productTemplateList);
             $productListHtml = $this->mailPartialTemplateRenderer->render('order_conf_product_list.tpl', $this->context->language, $productTemplateList);
 
-            $cartRulesList[] = array(
+            $cartRulesList[] = [
                 'voucher_name' => 'Promo code',
                 'voucher_reduction' => '-' . $this->locale->formatPrice(5, $this->context->currency->iso_code),
-            );
+            ];
             $cartRulesListTxt = $this->mailPartialTemplateRenderer->render('order_conf_cart_rules.txt', $this->context->language, $cartRulesList);
             $cartRulesListHtml = $this->mailPartialTemplateRenderer->render('order_conf_cart_rules.tpl', $this->context->language, $cartRulesList);
 
@@ -219,14 +219,14 @@ final class MailPreviewVariablesBuilder
             '{carrier}' => $carrier->name,
             '{delivery_block_txt}' => $this->getFormatedAddress($delivery, "\n"),
             '{invoice_block_txt}' => $this->getFormatedAddress($invoice, "\n"),
-            '{delivery_block_html}' => $this->getFormatedAddress($delivery, '<br />', array(
+            '{delivery_block_html}' => $this->getFormatedAddress($delivery, '<br />', [
                 'firstname' => '<span style="font-weight:bold;">%s</span>',
                 'lastname' => '<span style="font-weight:bold;">%s</span>',
-            )),
-            '{invoice_block_html}' => $this->getFormatedAddress($invoice, '<br />', array(
+            ]),
+            '{invoice_block_html}' => $this->getFormatedAddress($invoice, '<br />', [
                 'firstname' => '<span style="font-weight:bold;">%s</span>',
                 'lastname' => '<span style="font-weight:bold;">%s</span>',
-            )),
+            ]),
             '{date}' => Tools::displayDate($order->date_add, null, 1),
             '{order_name}' => $order->getUniqReference(),
             '{id_order}' => $order->id,
@@ -270,7 +270,7 @@ final class MailPreviewVariablesBuilder
                     }
 
                     if (isset($customization['datas'][Product::CUSTOMIZE_FILE])) {
-                        $customizationText .= count($customization['datas'][Product::CUSTOMIZE_FILE]) . ' ' . $this->trans('image(s)', array(), 'Modules.Mailalerts.Admin') . '<br />';
+                        $customizationText .= count($customization['datas'][Product::CUSTOMIZE_FILE]) . ' ' . $this->trans('image(s)', [], 'Modules.Mailalerts.Admin') . '<br />';
                     }
 
                     $customizationText .= '---<br />';
@@ -302,7 +302,7 @@ final class MailPreviewVariablesBuilder
         foreach ($order->getCartRules() as $discount) {
             $itemsTable .=
                 '<tr style="background-color:#EBECEE;">
-						<td colspan="4" style="padding:0.6em 0.4em; text-align:right;">' . $this->trans('Voucher code:', array(), 'Modules.Mailalerts.Admin') . ' ' . $discount['name'] . '</td>
+						<td colspan="4" style="padding:0.6em 0.4em; text-align:right;">' . $this->trans('Voucher code:', [], 'Modules.Mailalerts.Admin') . ' ' . $discount['name'] . '</td>
 					<td style="padding:0.6em 0.4em; text-align:right;">-' . $this->locale->formatPrice($discount['value'], $this->context->currency->iso_code) . '</td>
 			</tr>';
         }
@@ -350,21 +350,21 @@ final class MailPreviewVariablesBuilder
         $package = current(current($packageList));
         $productList = $package['product_list'];
 
-        $productTemplateList = array();
+        $productTemplateList = [];
         foreach ($productList as $product) {
             $price = Product::getPriceStatic((int) $product['id_product'], false, ($product['id_product_attribute'] ? (int) $product['id_product_attribute'] : null), 6, null, false, true, $product['cart_quantity'], false, (int) $order->id_customer, (int) $order->id_cart, (int) $order->{$this->configuration->get('PS_TAX_ADDRESS_TYPE')}, $specific_price, true, true, null, true, $product['id_customization']);
             $priceWithTax = Product::getPriceStatic((int) $product['id_product'], true, ($product['id_product_attribute'] ? (int) $product['id_product_attribute'] : null), 2, null, false, true, $product['cart_quantity'], false, (int) $order->id_customer, (int) $order->id_cart, (int) $order->{$this->configuration->get('PS_TAX_ADDRESS_TYPE')}, $specific_price, true, true, null, true, $product['id_customization']);
 
             $productPrice = Product::getTaxCalculationMethod() == PS_TAX_EXC ? Tools::ps_round($price, 2) : $priceWithTax;
 
-            $productTemplate = array(
+            $productTemplate = [
                 'id_product' => $product['id_product'],
                 'reference' => $product['reference'],
                 'name' => $product['name'] . (isset($product['attributes']) ? ' - ' . $product['attributes'] : ''),
                 'price' => $this->locale->formatPrice($productPrice * $product['quantity'], $this->context->currency->iso_code),
                 'quantity' => $product['quantity'],
-                'customization' => array(),
-            );
+                'customization' => [],
+            ];
 
             if (isset($product['price']) && $product['price']) {
                 $productTemplate['unit_price'] = $this->locale->formatPrice($productPrice, $this->context->currency->iso_code);
@@ -376,7 +376,7 @@ final class MailPreviewVariablesBuilder
 
             $customizedDatas = Product::getAllCustomizedDatas((int) $order->id_cart, null, true, null, (int) $product['id_customization']);
             if (isset($customizedDatas[$product['id_product']][$product['id_product_attribute']])) {
-                $productTemplate['customization'] = array();
+                $productTemplate['customization'] = [];
                 foreach ($customizedDatas[$product['id_product']][$product['id_product_attribute']][$order->id_address_delivery] as $customization) {
                     $customizationText = '';
                     if (isset($customization['datas'][Product::CUSTOMIZE_TEXTFIELD])) {
@@ -386,16 +386,16 @@ final class MailPreviewVariablesBuilder
                     }
 
                     if (isset($customization['datas'][Product::CUSTOMIZE_FILE])) {
-                        $customizationText .= $this->trans('%d image(s)', array(count($customization['datas'][Product::CUSTOMIZE_FILE])), 'Admin.Payment.Notification') . '<br />';
+                        $customizationText .= $this->trans('%d image(s)', [count($customization['datas'][Product::CUSTOMIZE_FILE])], 'Admin.Payment.Notification') . '<br />';
                     }
 
                     $customizationQuantity = (int) $customization['quantity'];
 
-                    $productTemplate['customization'][] = array(
+                    $productTemplate['customization'][] = [
                         'customization_text' => $customizationText,
                         'customization_quantity' => $customizationQuantity,
                         'quantity' => $this->locale->formatPrice($customizationQuantity * $productPrice, $this->context->currency->iso_code),
-                    );
+                    ];
                 }
             }
             $productTemplateList[] = $productTemplate;
@@ -420,8 +420,8 @@ final class MailPreviewVariablesBuilder
                 'complementary_text' => '',
             ];
         }
-        $results[1]['complementary_text'] = ' ' . $this->trans('expires on %s.', array(date('Y-m-d')), 'Admin.Orderscustomers.Notification');
-        $results[1]['complementary_text'] .= ' ' . $this->trans('downloadable %d time(s)', array(10), 'Admin.Orderscustomers.Notification');
+        $results[1]['complementary_text'] = ' ' . $this->trans('expires on %s.', [date('Y-m-d')], 'Admin.Orderscustomers.Notification');
+        $results[1]['complementary_text'] .= ' ' . $this->trans('downloadable %d time(s)', [10], 'Admin.Orderscustomers.Notification');
 
         return $results;
     }
@@ -433,8 +433,8 @@ final class MailPreviewVariablesBuilder
      *
      * @return string
      */
-    private function getFormatedAddress(Address $address, $lineSeparator, $fieldsStyle = array())
+    private function getFormatedAddress(Address $address, $lineSeparator, $fieldsStyle = [])
     {
-        return AddressFormat::generateAddress($address, array('avoid' => array()), $lineSeparator, ' ', $fieldsStyle);
+        return AddressFormat::generateAddress($address, ['avoid' => []], $lineSeparator, ' ', $fieldsStyle);
     }
 }

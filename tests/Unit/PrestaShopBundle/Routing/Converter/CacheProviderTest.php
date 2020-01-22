@@ -26,8 +26,8 @@
 
 namespace Tests\PrestaShopBundle\Routing\Converter;
 
-use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\TestCase;
 use PrestaShopBundle\Routing\Converter\CacheKeyGeneratorInterface;
 use PrestaShopBundle\Routing\Converter\CacheProvider;
 use PrestaShopBundle\Routing\Converter\LegacyRoute;

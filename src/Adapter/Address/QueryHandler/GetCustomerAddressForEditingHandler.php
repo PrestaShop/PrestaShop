@@ -70,10 +70,7 @@ final class GetCustomerAddressForEditingHandler extends AbstractCustomerAddressH
         }
 
         if ($customer->id !== $customerId->getValue()) {
-            throw new CustomerNotFoundException(
-                $customerId,
-                sprintf('Customer with id "%s" was not found.', $customerId->getValue())
-            );
+            throw new CustomerNotFoundException($customerId, sprintf('Customer with id "%s" was not found.', $customerId->getValue()));
         }
 
         $editableCustomerAddress = new EditableCustomerAddress(

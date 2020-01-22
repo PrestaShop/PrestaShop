@@ -50,7 +50,7 @@ class ConditionsToApproveFinderCore
         $termsAndConditions = new TermsAndConditions();
         $termsAndConditions
             ->setText(
-                $this->translator->trans('I agree to the [terms of service] and will adhere to them unconditionally.', array(), 'Shop.Theme.Checkout'),
+                $this->translator->trans('I agree to the [terms of service] and will adhere to them unconditionally.', [], 'Shop.Theme.Checkout'),
                 $link
             )
             ->setIdentifier('terms-and-conditions');
@@ -60,10 +60,10 @@ class ConditionsToApproveFinderCore
 
     private function getConditionsToApprove()
     {
-        $allConditions = array();
-        $hookedConditions = Hook::exec('termsAndConditions', array(), null, true);
+        $allConditions = [];
+        $hookedConditions = Hook::exec('termsAndConditions', [], null, true);
         if (!is_array($hookedConditions)) {
-            $hookedConditions = array();
+            $hookedConditions = [];
         }
         foreach ($hookedConditions as $hookedCondition) {
             if ($hookedCondition instanceof TermsAndConditions) {
@@ -87,7 +87,7 @@ class ConditionsToApproveFinderCore
          * This allows a module to override the default checkbox
          * in a consistent manner.
          */
-        $reducedConditions = array();
+        $reducedConditions = [];
         foreach ($allConditions as $condition) {
             if ($condition instanceof TermsAndConditions) {
                 $reducedConditions[$condition->getIdentifier()] = $condition;

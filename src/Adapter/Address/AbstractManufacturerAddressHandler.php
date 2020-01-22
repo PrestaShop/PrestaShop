@@ -49,9 +49,7 @@ abstract class AbstractManufacturerAddressHandler
         $address = new Address($addressId->getValue());
 
         if ($address->id !== $addressId->getValue()) {
-            throw new AddressNotFoundException(
-                sprintf('Address with id "%s" was not found.', $addressId->getValue())
-            );
+            throw new AddressNotFoundException(sprintf('Address with id "%s" was not found.', $addressId->getValue()));
         }
 
         return $address;

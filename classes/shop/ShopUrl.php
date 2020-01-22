@@ -33,31 +33,31 @@ class ShopUrlCore extends ObjectModel
     public $main;
     public $active;
 
-    protected static $main_domain = array();
-    protected static $main_domain_ssl = array();
+    protected static $main_domain = [];
+    protected static $main_domain_ssl = [];
 
     /**
      * @see ObjectModel::$definition
      */
-    public static $definition = array(
+    public static $definition = [
         'table' => 'shop_url',
         'primary' => 'id_shop_url',
-        'fields' => array(
-            'active' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-            'main' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-            'domain' => array('type' => self::TYPE_STRING, 'required' => true, 'size' => 255, 'validate' => 'isCleanHtml'),
-            'domain_ssl' => array('type' => self::TYPE_STRING, 'size' => 255, 'validate' => 'isCleanHtml'),
-            'id_shop' => array('type' => self::TYPE_INT, 'required' => true),
-            'physical_uri' => array('type' => self::TYPE_STRING, 'size' => 64),
-            'virtual_uri' => array('type' => self::TYPE_STRING, 'size' => 64),
-        ),
-    );
+        'fields' => [
+            'active' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
+            'main' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
+            'domain' => ['type' => self::TYPE_STRING, 'required' => true, 'size' => 255, 'validate' => 'isCleanHtml'],
+            'domain_ssl' => ['type' => self::TYPE_STRING, 'size' => 255, 'validate' => 'isCleanHtml'],
+            'id_shop' => ['type' => self::TYPE_INT, 'required' => true],
+            'physical_uri' => ['type' => self::TYPE_STRING, 'size' => 64],
+            'virtual_uri' => ['type' => self::TYPE_STRING, 'size' => 64],
+        ],
+    ];
 
-    protected $webserviceParameters = array(
-        'fields' => array(
-            'id_shop' => array('xlink_resource' => 'shops'),
-        ),
-    );
+    protected $webserviceParameters = [
+        'fields' => [
+            'id_shop' => ['xlink_resource' => 'shops'],
+        ],
+    ];
 
     /**
      * @see ObjectModel::getFields()
@@ -119,8 +119,8 @@ class ShopUrlCore extends ObjectModel
 
     public function setMain()
     {
-        $res = Db::getInstance()->update('shop_url', array('main' => 0), 'id_shop = ' . (int) $this->id_shop);
-        $res &= Db::getInstance()->update('shop_url', array('main' => 1), 'id_shop_url = ' . (int) $this->id);
+        $res = Db::getInstance()->update('shop_url', ['main' => 0], 'id_shop = ' . (int) $this->id_shop);
+        $res &= Db::getInstance()->update('shop_url', ['main' => 1], 'id_shop_url = ' . (int) $this->id);
         $this->main = true;
 
         // Reset main URL for all shops to prevent problems
@@ -132,7 +132,7 @@ class ShopUrlCore extends ObjectModel
                 ) = 0
                 GROUP BY s1.id_shop';
         foreach (Db::getInstance()->executeS($sql) as $row) {
-            Db::getInstance()->update('shop_url', array('main' => 1), 'id_shop_url = ' . $row['id_shop_url']);
+            Db::getInstance()->update('shop_url', ['main' => 1], 'id_shop_url = ' . $row['id_shop_url']);
         }
 
         return $res;
@@ -187,8 +187,8 @@ class ShopUrlCore extends ObjectModel
 
     public static function resetMainDomainCache()
     {
-        self::$main_domain = array();
-        self::$main_domain_ssl = array();
+        self::$main_domain = [];
+        self::$main_domain_ssl = [];
     }
 
     public static function getMainShopDomain($id_shop = null)

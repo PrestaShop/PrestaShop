@@ -27,9 +27,9 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
-use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
 
 /**
  * Class AssignProductToCategoryCommand adds a product to a category.

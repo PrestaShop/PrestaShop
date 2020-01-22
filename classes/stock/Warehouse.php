@@ -62,53 +62,53 @@ class WarehouseCore extends ObjectModel
     /**
      * @see ObjectModel::$definition
      */
-    public static $definition = array(
+    public static $definition = [
         'table' => 'warehouse',
         'primary' => 'id_warehouse',
-        'fields' => array(
-            'id_address' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-            'reference' => array('type' => self::TYPE_STRING, 'validate' => 'isString', 'required' => true, 'size' => 64),
-            'name' => array('type' => self::TYPE_STRING, 'validate' => 'isString', 'required' => true, 'size' => 45),
-            'id_employee' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-            'management_type' => array('type' => self::TYPE_STRING, 'validate' => 'isStockManagement', 'required' => true),
-            'id_currency' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-            'deleted' => array('type' => self::TYPE_BOOL),
-        ),
-    );
+        'fields' => [
+            'id_address' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
+            'reference' => ['type' => self::TYPE_STRING, 'validate' => 'isString', 'required' => true, 'size' => 64],
+            'name' => ['type' => self::TYPE_STRING, 'validate' => 'isString', 'required' => true, 'size' => 45],
+            'id_employee' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
+            'management_type' => ['type' => self::TYPE_STRING, 'validate' => 'isStockManagement', 'required' => true],
+            'id_currency' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
+            'deleted' => ['type' => self::TYPE_BOOL],
+        ],
+    ];
 
     /**
      * @see ObjectModel::$webserviceParameters
      */
-    protected $webserviceParameters = array(
-        'fields' => array(
-            'id_address' => array('xlink_resource' => 'addresses'),
-            'id_employee' => array('xlink_resource' => 'employees'),
-            'id_currency' => array('xlink_resource' => 'currencies'),
-            'valuation' => array('getter' => 'getWsStockValue', 'setter' => false),
-            'deleted' => array(),
-        ),
-        'associations' => array(
-            'stocks' => array(
+    protected $webserviceParameters = [
+        'fields' => [
+            'id_address' => ['xlink_resource' => 'addresses'],
+            'id_employee' => ['xlink_resource' => 'employees'],
+            'id_currency' => ['xlink_resource' => 'currencies'],
+            'valuation' => ['getter' => 'getWsStockValue', 'setter' => false],
+            'deleted' => [],
+        ],
+        'associations' => [
+            'stocks' => [
                 'resource' => 'stock',
-                'fields' => array(
-                    'id' => array(),
-                ),
-            ),
-            'carriers' => array(
+                'fields' => [
+                    'id' => [],
+                ],
+            ],
+            'carriers' => [
                 'resource' => 'carrier',
-                'fields' => array(
-                    'id' => array(),
-                ),
-            ),
-            'shops' => array(
+                'fields' => [
+                    'id' => [],
+                ],
+            ],
+            'shops' => [
                 'resource' => 'shop',
-                'fields' => array(
-                    'id' => array(),
-                    'name' => array(),
-                ),
-            ),
-        ),
-    );
+                'fields' => [
+                    'id' => [],
+                    'name' => [],
+                ],
+            ],
+        ],
+    ];
 
     /**
      * Gets the shops associated to the current warehouse.
@@ -135,7 +135,7 @@ class WarehouseCore extends ObjectModel
      */
     public function getCarriers($return_reference = false)
     {
-        $ids_carrier = array();
+        $ids_carrier = [];
 
         $query = new DbQuery();
         if ($return_reference) {
@@ -170,12 +170,12 @@ class WarehouseCore extends ObjectModel
     public function setCarriers($ids_carriers)
     {
         if (!is_array($ids_carriers)) {
-            $ids_carriers = array();
+            $ids_carriers = [];
         }
 
-        $row_to_insert = array();
+        $row_to_insert = [];
         foreach ($ids_carriers as $id_carrier) {
-            $row_to_insert[] = array($this->def['primary'] => $this->id, 'id_carrier' => (int) $id_carrier);
+            $row_to_insert[] = [$this->def['primary'] => $this->id, 'id_carrier' => (int) $id_carrier];
         }
 
         Db::getInstance()->execute('
@@ -254,12 +254,12 @@ class WarehouseCore extends ObjectModel
 			AND `id_product_attribute` = ' . (int) $id_product_attribute . '
 			AND `id_warehouse` = ' . (int) $id_warehouse);
 
-        $row_to_insert = array(
+        $row_to_insert = [
             'id_product' => (int) $id_product,
             'id_product_attribute' => (int) $id_product_attribute,
             'id_warehouse' => (int) $id_warehouse,
             'location' => pSQL($location),
-        );
+        ];
 
         return Db::getInstance()->insert('warehouse_product_location', $row_to_insert);
     }
@@ -324,7 +324,7 @@ class WarehouseCore extends ObjectModel
         if ($share_stock) {
             $ids_shop = Shop::getShops(true, (int) $shop_group->id, true);
         } else {
-            $ids_shop = array((int) $id_shop);
+            $ids_shop = [(int) $id_shop];
         }
 
         $query = new DbQuery();
@@ -376,7 +376,7 @@ class WarehouseCore extends ObjectModel
      */
     public static function getWarehousesGroupedByShops()
     {
-        $ids_warehouse = array();
+        $ids_warehouse = [];
         $query = new DbQuery();
         $query->select('id_warehouse, id_shop');
         $query->from('warehouse_shop');
@@ -470,7 +470,7 @@ class WarehouseCore extends ObjectModel
     public static function getWarehousesByProductId($id_product, $id_product_attribute = 0)
     {
         if (!$id_product && !$id_product_attribute) {
-            return array();
+            return [];
         }
 
         $query = new DbQuery();
@@ -528,7 +528,7 @@ class WarehouseCore extends ObjectModel
         $products = Pack::getItems((int) $id_product, Configuration::get('PS_LANG_DEFAULT'));
 
         // array with all warehouses id to check
-        $list = array();
+        $list = [];
 
         // fills $list
         foreach ($pack_warehouses as $pack_warehouse) {
@@ -541,7 +541,7 @@ class WarehouseCore extends ObjectModel
             if ($product->advanced_stock_management) {
                 // gets the warehouses of one product
                 $product_warehouses = Warehouse::getProductWarehouseList((int) $product->id, (int) $product->cache_default_attribute, (int) $id_shop);
-                $list[(int) $product->id] = array();
+                $list[(int) $product->id] = [];
                 // fills array with warehouses for this product
                 foreach ($product_warehouses as $product_warehouse) {
                     $list[(int) $product->id][] = $product_warehouse['id_warehouse'];
@@ -622,7 +622,7 @@ class WarehouseCore extends ObjectModel
      */
     public function getWsCarriers()
     {
-        $ids_carrier = array();
+        $ids_carrier = [];
 
         $query = new DbQuery();
         $query->select('wc.id_carrier as id');

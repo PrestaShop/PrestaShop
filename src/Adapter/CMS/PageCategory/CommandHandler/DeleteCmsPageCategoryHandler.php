@@ -50,32 +50,14 @@ final class DeleteCmsPageCategoryHandler implements DeleteCmsPageCategoryHandler
             $entity = new CMSCategory($command->getCmsPageCategoryId()->getValue());
 
             if (0 >= $entity->id) {
-                throw new CmsPageCategoryNotFoundException(
-                    sprintf(
-                        'Cms category object with id "%s" has not been found for deletion.',
-                        $command->getCmsPageCategoryId()->getValue()
-                    )
-                );
+                throw new CmsPageCategoryNotFoundException(sprintf('Cms category object with id "%s" has not been found for deletion.', $command->getCmsPageCategoryId()->getValue()));
             }
 
             if (false === $entity->delete()) {
-                throw new CannotDeleteCmsPageCategoryException(
-                    sprintf(
-                        'Unable to delete cms category object with id "%s"',
-                        $command->getCmsPageCategoryId()->getValue()
-                    ),
-                    CannotDeleteCmsPageCategoryException::FAILED_DELETE
-                );
+                throw new CannotDeleteCmsPageCategoryException(sprintf('Unable to delete cms category object with id "%s"', $command->getCmsPageCategoryId()->getValue()), CannotDeleteCmsPageCategoryException::FAILED_DELETE);
             }
         } catch (PrestaShopException $exception) {
-            throw new CmsPageCategoryException(
-                sprintf(
-                    'An error occurred when deleting cms category object with id "%s"',
-                    $command->getCmsPageCategoryId()->getValue()
-                ),
-                0,
-                $exception
-            );
+            throw new CmsPageCategoryException(sprintf('An error occurred when deleting cms category object with id "%s"', $command->getCmsPageCategoryId()->getValue()), 0, $exception);
         }
     }
 }

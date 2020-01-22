@@ -53,7 +53,7 @@ class HTMLTemplateSupplyOrderFormCore extends HTMLTemplate
         // header informations
         $this->date = Tools::displayDate($supply_order->date_add);
 
-        $this->title = Context::getContext()->getTranslator()->trans('Supply order form', array(), 'Shop.Pdf');
+        $this->title = Context::getContext()->getTranslator()->trans('Supply order form', [], 'Shop.Pdf');
 
         $this->shop = new Shop((int) $this->order->id_shop);
     }
@@ -71,7 +71,7 @@ class HTMLTemplateSupplyOrderFormCore extends HTMLTemplate
         $tax_order_summary = $this->getTaxOrderSummary();
         $currency = new Currency((int) $this->supply_order->id_currency);
 
-        $this->smarty->assign(array(
+        $this->smarty->assign([
             'warehouse' => $this->warehouse,
             'address_warehouse' => $this->address_warehouse,
             'address_supplier' => $this->address_supplier,
@@ -79,15 +79,15 @@ class HTMLTemplateSupplyOrderFormCore extends HTMLTemplate
             'supply_order_details' => $supply_order_details,
             'tax_order_summary' => $tax_order_summary,
             'currency' => $currency,
-        ));
+        ]);
 
-        $tpls = array(
+        $tpls = [
             'style_tab' => $this->smarty->fetch($this->getTemplate('invoice.style-tab')),
             'addresses_tab' => $this->smarty->fetch($this->getTemplate('supply-order.addresses-tab')),
             'product_tab' => $this->smarty->fetch($this->getTemplate('supply-order.product-tab')),
             'tax_tab' => $this->smarty->fetch($this->getTemplate('supply-order.tax-tab')),
             'total_tab' => $this->smarty->fetch($this->getTemplate('supply-order.total-tab')),
-        );
+        ];
         $this->smarty->assign($tpls);
 
         return $this->smarty->fetch($this->getTemplate('supply-order'));
@@ -172,7 +172,7 @@ class HTMLTemplateSupplyOrderFormCore extends HTMLTemplate
             list($width, $height) = getimagesize($path_logo);
         }
 
-        $this->smarty->assign(array(
+        $this->smarty->assign([
             'logo_path' => $path_logo,
             'img_ps_dir' => Tools::getShopProtocol() . Tools::getMediaServer(_PS_IMG_) . _PS_IMG_,
             'img_update_time' => Configuration::get('PS_IMG_UPDATE_TIME'),
@@ -182,7 +182,7 @@ class HTMLTemplateSupplyOrderFormCore extends HTMLTemplate
             'shop_name' => $shop_name,
             'width_logo' => $width,
             'height_logo' => $height,
-        ));
+        ]);
 
         return $this->smarty->fetch($this->getTemplate('supply-order-header'));
     }
@@ -193,17 +193,17 @@ class HTMLTemplateSupplyOrderFormCore extends HTMLTemplate
     public function getFooter()
     {
         $this->address = $this->address_warehouse;
-        $free_text = array();
-        $free_text[] = Context::getContext()->getTranslator()->trans('TE: Tax excluded', array(), 'Shop.Pdf');
-        $free_text[] = Context::getContext()->getTranslator()->trans('TI: Tax included', array(), 'Shop.Pdf');
+        $free_text = [];
+        $free_text[] = Context::getContext()->getTranslator()->trans('TE: Tax excluded', [], 'Shop.Pdf');
+        $free_text[] = Context::getContext()->getTranslator()->trans('TI: Tax included', [], 'Shop.Pdf');
 
-        $this->smarty->assign(array(
+        $this->smarty->assign([
             'shop_address' => $this->getShopAddress(),
             'shop_fax' => Configuration::get('PS_SHOP_FAX'),
             'shop_phone' => Configuration::get('PS_SHOP_PHONE'),
             'shop_details' => Configuration::get('PS_SHOP_DETAILS'),
             'free_text' => $free_text,
-        ));
+        ]);
 
         return $this->smarty->fetch($this->getTemplate('supply-order-footer'));
     }

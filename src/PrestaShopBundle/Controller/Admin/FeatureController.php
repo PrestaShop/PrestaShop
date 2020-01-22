@@ -44,7 +44,7 @@ class FeatureController extends FrameworkBundleAdminController
     {
         $response = new JsonResponse();
         $locales = $this->get('prestashop.adapter.legacy.context')->getLanguages();
-        $data = array();
+        $data = [];
 
         if ($idFeature == 0) {
             return $response;
@@ -53,20 +53,20 @@ class FeatureController extends FrameworkBundleAdminController
         $featuresValues = $this->get('prestashop.adapter.data_provider.feature')->getFeatureValuesWithLang($locales[0]['id_lang'], $idFeature);
 
         if (count($featuresValues) !== 0) {
-            $data['0'] = array(
+            $data['0'] = [
                 'id' => 0,
                 'value' => $this->trans('Choose a value', 'Admin.Catalog.Feature'),
-            );
+            ];
         }
 
         foreach ($featuresValues as $featureValue) {
             if (isset($featureValue['custom']) && $featureValue['custom'] == 1) {
                 continue;
             }
-            $data[] = array(
+            $data[] = [
                 'id' => $featureValue['id_feature_value'],
                 'value' => $featureValue['value'],
-            );
+            ];
         }
 
         $response->setData($data);

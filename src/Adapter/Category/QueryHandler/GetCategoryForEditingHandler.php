@@ -26,19 +26,19 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Category\QueryHandler;
 
-use Shop;
 use Category;
 use Db;
 use ImageManager;
 use ImageType;
 use PDO;
-use PrestaShop\PrestaShop\Core\Domain\Category\QueryResult\EditableCategory;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoryForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Category\QueryHandler\GetCategoryForEditingHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Category\QueryResult\EditableCategory;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\MenuThumbnailId;
 use PrestaShop\PrestaShop\Core\Image\Parser\ImageTagSourceParserInterface;
+use Shop;
 
 /**
  * Class GetCategoryForEditingHandler.
@@ -68,10 +68,7 @@ final class GetCategoryForEditingHandler implements GetCategoryForEditingHandler
         $category = new Category($query->getCategoryId()->getValue());
 
         if (!$category->id || (!$category->isAssociatedToShop() && Shop::getContext() == Shop::CONTEXT_SHOP)) {
-            throw new CategoryNotFoundException(
-                $query->getCategoryId(),
-                sprintf('Category with id "%s" was not found', $query->getCategoryId()->getValue())
-            );
+            throw new CategoryNotFoundException($query->getCategoryId(), sprintf('Category with id "%s" was not found', $query->getCategoryId()->getValue()));
         }
 
         /**

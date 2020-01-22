@@ -67,9 +67,7 @@ class CmsPageId
     private function assertIsIntegerGreaterThanZero($cmsPageId)
     {
         if (!is_int($cmsPageId) || 0 >= $cmsPageId) {
-            throw new CmsPageException(
-                sprintf('Invalid cms page id %s supplied', var_export($cmsPageId, true))
-            );
+            throw new CmsPageException(sprintf('Invalid cms page id %s supplied', var_export($cmsPageId, true)));
         }
     }
 }

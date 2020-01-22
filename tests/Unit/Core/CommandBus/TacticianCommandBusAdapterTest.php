@@ -26,8 +26,8 @@
 
 namespace Tests\Unit\Core\CommandBus;
 
-use PHPUnit\Framework\TestCase;
 use League\Tactician\CommandBus;
+use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\CommandBus\TacticianCommandBusAdapter;
 

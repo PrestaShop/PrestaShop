@@ -31,10 +31,10 @@ use Configuration;
 use OrderCartRule;
 use OrderInvoice;
 use PrestaShop\PrestaShop\Adapter\Order\AbstractOrderHandler;
-use PrestaShop\PrestaShop\Core\Domain\Order\OrderDiscountType;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\AddCartRuleToOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler\AddCartRuleToOrderHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
+use PrestaShop\PrestaShop\Core\Domain\Order\OrderDiscountType;
 use Tools;
 use Validate;
 

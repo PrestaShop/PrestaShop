@@ -26,8 +26,8 @@
 
 namespace Tests\Unit\Core\Hook\Generator;
 
-use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Hook\Generator\HookDescriptionGenerator;
 use PrestaShop\PrestaShop\Core\Hook\HookDescription;
 use PrestaShop\PrestaShop\Core\Util\String\StringModifierInterface;

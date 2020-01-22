@@ -53,14 +53,10 @@ final class EditManufacturerAddressHandler extends AbstractManufacturerAddressHa
                 throw new InvalidAddressFieldException('Address contains invalid field values');
             }
             if (!$address->update()) {
-                throw new AddressException(
-                    sprintf('Cannot update address with id "%s"', $address->id)
-                );
+                throw new AddressException(sprintf('Cannot update address with id "%s"', $address->id));
             }
         } catch (PrestaShopException $e) {
-            throw new AddressException(
-                sprintf('Cannot update address with id "%s"', $address->id)
-            );
+            throw new AddressException(sprintf('Cannot update address with id "%s"', $address->id));
         }
     }
 

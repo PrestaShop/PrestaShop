@@ -33,12 +33,12 @@ class ShopFilter extends HashMapWhitelistFilter
 {
     public function __construct()
     {
-        $whitelist = array(
+        $whitelist = [
             'favicon',
             'logo',
             'name',
             'stores_icon',
-        );
+        ];
 
         $this->whitelist($whitelist);
     }

@@ -38,12 +38,12 @@ class DataFormatterExtension extends \Twig_Extension
      */
     public function getFilters()
     {
-        return array(
-            new \Twig_SimpleFilter('arrayCast', array($this, 'arrayCast')),
-            new \Twig_SimpleFilter('intCast', array($this, 'intCast')),
-            new \Twig_SimpleFilter('unsetElement', array($this, 'unsetElement')),
-            new \Twig_SimpleFilter('array_pluck', array($this, 'arrayPluck')),
-        );
+        return [
+            new \Twig_SimpleFilter('arrayCast', [$this, 'arrayCast']),
+            new \Twig_SimpleFilter('intCast', [$this, 'intCast']),
+            new \Twig_SimpleFilter('unsetElement', [$this, 'unsetElement']),
+            new \Twig_SimpleFilter('array_pluck', [$this, 'arrayPluck']),
+        ];
     }
 
     /**
@@ -53,12 +53,12 @@ class DataFormatterExtension extends \Twig_Extension
      */
     public function getFunctions()
     {
-        return array(
-            new \Twig_SimpleFunction('arrayCast', array($this, 'arrayCast')),
-            new \Twig_SimpleFunction('intCast', array($this, 'intCast')),
-            new \Twig_SimpleFunction('unsetElement', array($this, 'unsetElement')),
-            new \Twig_SimpleFunction('array_pluck', array($this, 'arrayPluck')),
-        );
+        return [
+            new \Twig_SimpleFunction('arrayCast', [$this, 'arrayCast']),
+            new \Twig_SimpleFunction('intCast', [$this, 'intCast']),
+            new \Twig_SimpleFunction('unsetElement', [$this, 'unsetElement']),
+            new \Twig_SimpleFunction('array_pluck', [$this, 'arrayPluck']),
+        ];
     }
 
     /**

@@ -50,18 +50,11 @@ final class BulkDeleteSqlRequestHandler implements BulkDeleteSqlRequestHandlerIn
                 $entity = new RequestSql($sqlRequestId->getValue());
 
                 if (false === $entity->delete()) {
-                    throw new CannotDeleteSqlRequestException(
-                        sprintf('Failed to delete SqlRequest with id %s', $sqlRequestId),
-                        CannotDeleteSqlRequestException::CANNOT_BULK_DELETE
-                    );
+                    throw new CannotDeleteSqlRequestException(sprintf('Failed to delete SqlRequest with id %s', $sqlRequestId), CannotDeleteSqlRequestException::CANNOT_BULK_DELETE);
                 }
             }
         } catch (PrestaShopException $e) {
-            throw new SqlRequestException(
-                'Unexpected error occurred when handling bulk delete SqlRequest',
-                0,
-                $e
-            );
+            throw new SqlRequestException('Unexpected error occurred when handling bulk delete SqlRequest', 0, $e);
         }
     }
 }

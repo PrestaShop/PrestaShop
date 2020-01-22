@@ -60,12 +60,7 @@ class OrderPaymentFeatureContext extends AbstractDomainFeatureContext
 
         $countOfOrderPaymentsFromDb = count($orderPaymentForViewingArray);
         if (count($orderPaymentForViewingArray) !== $numberOfPayments) {
-            throw new RuntimeException(sprintf(
-                'Order "%s" number of payments  is "%s", but "%s" was expected',
-                $orderReference,
-                $countOfOrderPaymentsFromDb,
-                $numberOfPayments
-            ));
+            throw new RuntimeException(sprintf('Order "%s" number of payments  is "%s", but "%s" was expected', $orderReference, $countOfOrderPaymentsFromDb, $numberOfPayments));
         }
     }
 
@@ -138,10 +133,7 @@ class OrderPaymentFeatureContext extends AbstractDomainFeatureContext
             $msg = $exception->getMessage();
             $expectedMsg = 'Property Order->total_paid_real is not valid';
             if ($msg !== 'Property Order->total_paid_real is not valid') {
-                throw new RuntimeException(sprintf(
-                    'Not expected exception is thrown "%s" but "%s" was expected',
-                    $msg,
-                    $expectedMsg));
+                throw new RuntimeException(sprintf('Not expected exception is thrown "%s" but "%s" was expected', $msg, $expectedMsg));
             }
         }
     }

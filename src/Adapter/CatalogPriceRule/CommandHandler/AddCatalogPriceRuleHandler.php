@@ -52,18 +52,12 @@ final class AddCatalogPriceRuleHandler extends AbstractCatalogPriceRuleHandler i
             }
 
             if (false === $specificPriceRule->add()) {
-                throw new CatalogPriceRuleException(
-                    sprintf('Failed to create specific price rule')
-                );
+                throw new CatalogPriceRuleException(sprintf('Failed to create specific price rule'));
             }
             $specificPriceRule->deleteConditions();
             $specificPriceRule->apply();
         } catch (PrestaShopException $e) {
-            throw new CatalogPriceRuleException(
-                'An unexpected error occurred while creating specific price rule',
-                0,
-                $e
-            );
+            throw new CatalogPriceRuleException('An unexpected error occurred while creating specific price rule', 0, $e);
         }
 
         return new CatalogPriceRuleId((int) $specificPriceRule->id);

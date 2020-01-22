@@ -29,8 +29,8 @@ namespace PrestaShopBundle\Translation\Loader;
 
 use PrestaShop\TranslationToolsBundle\Translation\Helper\DomainHelper;
 use PrestaShopBundle\Translation\DomainNormalizer;
-use Symfony\Component\Translation\MessageCatalogue;
 use Symfony\Component\Translation\Loader\LoaderInterface;
+use Symfony\Component\Translation\MessageCatalogue;
 
 /**
  * Able to convert old translation files (in translations/es.php) into
