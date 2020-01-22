@@ -141,10 +141,12 @@ export default {
       save: '#cancel_product_save',
       partialRefund: 'button.partial-refund-display',
       standardRefund: 'button.standard-refund-display',
+      cancel: 'button.cancel-product-display',
     },
     inputs: {
       quantity: '.cancel-product-quantity input',
       amount: '.cancel-product-amount input',
+      selector: 'input[type=\'checkbox\'].selected-product',
     },
     table: {
       cell: '.cancel-product-cell',
@@ -165,6 +167,10 @@ export default {
     toggle: {
       partialRefund: '.cancel-product-element:not(.hidden):not(.shipping-refund), .cancel-product-amount',
       standardRefund: '.cancel-product-element:not(.hidden):not(.shipping-refund), .cancel-product-selector',
+        cancel: '.cancel-product-element:not(.hidden):not(.shipping-refund), .cancel-product-selector',
+    },
+    containers: {
+      refundCheckboxes: '.refund-checkboxes-container',
     },
   },
   displayPartialRefundBtn: 'button.partial-refund-display',
@@ -183,5 +189,4 @@ export default {
   cancelProductTableCell: '.cancel-product-cell',
   cancelProductColumnHeader: 'th.cancel-product-element p',
   cancelProductSelectorCheckbox: 'input[type=\'checkbox\'].selected-product',
-
 };

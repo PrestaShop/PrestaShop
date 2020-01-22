@@ -161,6 +161,7 @@ class CancelProductType extends TranslatorAwareType
                     'formnovalidate' => true,
                     'data-partial-refund-label' => $this->trans('Partial refund', 'Admin.Orderscustomers.Feature'),
                     'data-standard-refund-label' => $this->trans('Standard refund', 'Admin.Orderscustomers.Feature'),
+                    'data-cancel-label' => $this->trans('Cancel products', 'Admin.Orderscustomers.Feature'),
                 ],
             ]);
     }

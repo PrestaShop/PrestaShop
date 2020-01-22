@@ -27,7 +27,7 @@ import Router from '@components/router';
 import OrderViewPageMap from '@pages/order/OrderViewPageMap';
 import {NumberFormatter} from '@app/cldr';
 
-const $ = window.$;
+const {$} = window;
 
 /**
  * manages all product cancel actions, that includes all refund operations
@@ -52,6 +52,7 @@ export default class OrderProductCancel {
     this.initForm(
       $(OrderViewPageMap.cancelProduct.buttons.save).data('partialRefundLabel'),
       this.router.generate('admin_orders_partial_refund', {orderId: this.orderId})
+    );
   }
 
   showStandardRefund() {
@@ -150,12 +151,26 @@ export default class OrderProductCancel {
     ${defaultLabel} ${formattedAmount}`;
   }
 
-  showCancelProductForm(orderId) {
-    const cancelProductRoute = this.router.generate('admin_orders_cancellation', {orderId: orderId});
-    const cancelProductForm = document.getElementsByName('cancel_product');
-    $(cancelProductForm).attr('action', cancelProductRoute);
-    $(OrderViewPageMap.toggleCancelProductForm).show();
-    $(OrderViewPageMap.actionColumnElements).hide();
+  updateVoucherRefundTypeLabel($input, refundAmount) {
+    const defaultLabel = $input.data('defaultLabel');
+    const $label = $input.parents('label');
+    const formattedAmount = this.currencyFormatter.format(refundAmount);
+
+    // Change the ending text part only to avoid removing the input (the EOL is on purpose for better display)
+    $label.get(0).lastChild.nodeValue = `
+    ${defaultLabel} ${formattedAmount}`;
+  }
+
+  showCancelProductForm() {
+    const cancelProductRoute = this.router.generate('admin_orders_cancellation', {orderId: this.orderId});
+    this.initForm(
+        $(OrderViewPageMap.cancelProduct.buttons.save).data('cancelLabel'),
+        cancelProductRoute
+    );
+    $(OrderViewPageMap.cancelProduct.form).attr('action', cancelProductRoute);
+    $(OrderViewPageMap.cancelProduct.toggle.cancel).show();
+    $(OrderViewPageMap.cancelProduct.table.actions).hide();
+    $(OrderViewPageMap.cancelProduct.containers.refundCheckboxes).hide();
   }
 
   fillCancelProductQuantityInput(productCheckbox) {
