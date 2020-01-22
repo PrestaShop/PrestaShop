@@ -22,10 +22,10 @@ module.exports = class CommonPage {
 
   /**
    * Get current url
-   * @returns {Promise<void>}
+   * @returns {Promise<string>}
    */
   async getCurrentURL() {
-    return this.page.url();
+    return decodeURIComponent(this.page.url());
   }
 
   /**
