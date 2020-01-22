@@ -60,7 +60,7 @@
       <input type="text" value="{{ product.quantity }}" class="form-control">
     </div>
   </td>
-  <td class="cell-product-location{% if not isColumnLocationDisplayed %} d-none{% endif %}">{{ product.location }}</td>
+  <td class="cellProductLocation{% if not isColumnLocationDisplayed %} d-none{% endif %}">{{ product.location }}</td>
   <td>
     <p>{{ product.quantityRefunded }}{% if product.amountRefunded %} ({{ product.amountRefunded }} {{ 'Refunded'|trans({}, 'Admin.Orderscustomers.Feature') }}){% endif %}</p>
   </td>
