@@ -344,10 +344,10 @@ class SupplierController extends FrameworkBundleAdminController
             }
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+        }
 
-            if ($e instanceof SupplierNotFoundException || $e instanceof AddressNotFoundException) {
-                return $this->redirectToRoute('admin_suppliers_index');
-            }
+        if (!isset($supplierForm) || !isset($editableSupplier)) {
+            return $this->redirectToRoute('admin_suppliers_index');
         }
 
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Suppliers/edit.html.twig', [
