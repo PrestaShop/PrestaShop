@@ -5,11 +5,11 @@ Feature: Order from Back Office (BO)
   As a BO user
   I need to be able to customize orders from the BO
 
-  #  todo: fix the failing scenarios/code
-  #  todo: make scenarios independent
-  #  todo: change legacy classes with the usage of domain handlers where possible
-  #  todo: increase code re-use
-  #  todo: scenario steps like 'there is..' have very little bussiness value - prefer user action based scenarios
+  #  fix the failing scenarios/code
+  #  make scenarios independent
+  #  change legacy classes with the usage of domain handlers where possible
+  #  increase code re-use
+  #  scenario steps like 'there is..' have very little bussiness value - prefer user action based scenarios
   # -------------------------------------------------------------------------------------
   #  this is important recommendation - start every scenario with a predictable database
   #  Why? it is explained here: https://symfonycasts.com/screencast/behat/clear-data-symfony-extension#play
