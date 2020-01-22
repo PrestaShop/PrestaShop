@@ -13,15 +13,15 @@ module.exports = class CommonPage {
 
   /**
    * Go to URL
-   * @param URL
+   * @param url
    * @returns {Promise<void>}
    */
-  async goTo(URL) {
-    await this.page.goto(URL);
+  async goTo(url) {
+    await this.page.goto(url);
   }
 
   /**
-   * Get current URL
+   * Get current url
    * @returns {Promise<void>}
    */
   async getCurrentURL() {
