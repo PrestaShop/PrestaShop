@@ -166,7 +166,8 @@ class ThemeManager implements AddonManagerInterface
      */
     public function uninstall($name)
     {
-        if (!$this->employee->can('delete', 'AdminThemes')) {
+        if (!$this->employee->can('delete', 'AdminThemes')
+            || $this->isThemeUsed($name)) {
             return false;
         }
 
@@ -176,6 +177,24 @@ class ThemeManager implements AddonManagerInterface
         $this->filesystem->remove($theme->getDirectory());
 
         return true;
+    }
+
+    /**
+     * Check if the theme is used in at least one shop
+     *
+     * @param $name string theme name
+     *
+     * @return bool
+     */
+    public function isThemeUsed($name)
+    {
+        foreach (Shop::getShops() as $shop) {
+            if ($shop['theme_name'] === $name) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
