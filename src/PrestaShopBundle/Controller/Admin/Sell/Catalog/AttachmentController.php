@@ -161,9 +161,10 @@ class AttachmentController extends FrameworkBundleAdminController
             }
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
-            if ($e instanceof AttachmentNotFoundException || $e instanceof ErrorException) {
-                return $this->redirectToRoute('admin_attachments_index');
-            }
+        }
+
+        if (!isset($attachmentInformation) || !isset($attachmentForm)) {
+            return $this->redirectToRoute('admin_attachments_index');
         }
 
         $names = $attachmentInformation->getName();
