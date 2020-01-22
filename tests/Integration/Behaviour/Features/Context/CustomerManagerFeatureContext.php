@@ -32,6 +32,7 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\Command\AddCustomerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\DeleteCustomerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\EditCustomerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\TransformGuestToCustomerCommand;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\DuplicateCustomerEmailException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\EditableCustomer;
@@ -182,6 +183,14 @@ class CustomerManagerFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
+     * @When I delete customer ":customerReference" with "allow registration after deletion" checked
+     */
+    public function deleteCustomerWithAllowCustomerRegistration($customerReference)
+    {
+        $this->deleteCustomer($customerReference, CustomerDeleteMethod::ALLOW_CUSTOMER_REGISTRATION);
+    }
+
+    /**
      * @When /^I delete customer "(.+)" with method "(.+)"$/
      */
     public function deleteCustomer($customerReference, $methodName)
@@ -199,7 +208,7 @@ class CustomerManagerFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @Then /^if I query customer customer "(.+)" I should get a Customer with properties:$/
+     * @Then /^if I query customer "(.+)" I should get a Customer with properties:$/
      */
     public function assertQueryCustomerProperties($customerReference, TableNode $table)
     {
@@ -221,7 +230,27 @@ class CustomerManagerFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @Then /^if I query customer customer "(.+)" I should get an error '(.+)'$/
+     * @Then the customer ":customerReference" should not be found
+     */
+    public function assertCustomerWasNotFound($customerReference)
+    {
+        $this->assertCustomerReferenceExistsInRegistry($customerReference);
+
+        $queryBus = $this->getQueryBus();
+        /* @var EditableCustomer $result */
+        try {
+            $result = $queryBus->handle(new GetCustomerForEditing($this->customerRegistry[$customerReference]));
+
+            throw new NoExceptionAlthoughExpectedException();
+        } catch (CustomerNotFoundException $e) {
+            return;
+        }
+
+        throw new \Exception('Customer exists');
+    }
+
+    /**
+     * @Then /^if I query customer "(.+)" I should get an error '(.+)'$/
      */
     public function assertQueryReturnsErrormessage($customerReference, $errorMessage)
     {
