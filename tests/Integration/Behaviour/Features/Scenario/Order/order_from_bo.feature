@@ -7,8 +7,15 @@ Feature: Order from Back Office (BO)
 
   #  todo: fix the failing scenarios/code
   #  todo: make scenarios independent
-  #  todo: change legacy classes with domain where possible
+  #  todo: change legacy classes with the usage of domain handlers where possible
   #  todo: increase code re-use
+  #  todo: scenario steps like 'there is..' have very little bussiness value - prefer user action based scenarios
+  # -------------------------------------------------------------------------------------
+  #  this is important recommendation - start every scenario with a predictable database
+  #  Why? it is explained here: https://symfonycasts.com/screencast/behat/clear-data-symfony-extension#play
+  #  this tip might keep you out of trouble of having dependent scenarios - they are very time consuming to figure out
+  #  @database-scenario resets the database before every scenario
+  # -------------------------------------------------------------------------------------
 
   Background:
     Given email sending is disabled
@@ -19,12 +26,12 @@ Feature: Order from Back Office (BO)
     And country "US" is enabled
     And the module "dummy_payment" is installed
     And I am logged in as "test@prestashop.com" employee
-    And I create customer "testCustomer" with following details:
+    And I create customer "testCustomerFromBo" with following details:
       | firstName        | testFirstName                      |
       | lastName         | testLastName                       |
       | email            | customer@domain.eu                 |
       | password         | secret                             |
-    And I add new address to customer "testCustomer" with following details:
+    And I add new address to customer "testCustomerFromBo" with following details:
       | Address alias    | test-address                       |
       | First name       | testFirstName                      |
       | Last name        | testLastName                       |
@@ -33,7 +40,7 @@ Feature: Order from Back Office (BO)
       | Country          | United States                      |
       | State            | Alabama                            |
       | Postal code      | 12345                              |
-    And I create empty cart "dummy_cart" for customer "testCustomer"
+    And I create empty cart "dummy_cart" for customer "testCustomerFromBo"
     And I select address "test-address" as delivery and invoice in cart "dummy_cart"
     And I add 2 products "Mug The best is yet to come" to the cart "dummy_cart"
     And I add order "bo_order1" with the following details:

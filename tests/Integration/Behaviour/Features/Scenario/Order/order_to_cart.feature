@@ -10,7 +10,15 @@ Feature: Check order to cart data copy
     And the current currency is "USD"
     And country "US" is enabled
     And there is customer "customer_for_customization" with email "pub@prestashop.com"
-    And customer "customer_for_customization" has address in "US" country
+    And I add new address to customer "testCustomer" with following details:
+      | Address alias    | test-address                       |
+      | First name       | testFirstName                      |
+      | Last name        | testLastName                       |
+      | Address          | Work address st. 1234567890        |
+      | City             | Birmingham                         |
+      | Country          | United States                      |
+      | State            | Alabama                            |
+      | Postal code      | 12345                              |
     And the module "dummy_payment" is installed
     When I create an empty cart "dummy_custom_cart" for customer "customer_for_customization"
     And I add 1 customized products with reference "demo_14" to the cart "dummy_custom_cart"
