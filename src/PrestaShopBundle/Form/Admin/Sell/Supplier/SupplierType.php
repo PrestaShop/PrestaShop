@@ -26,7 +26,6 @@
 
 namespace PrestaShopBundle\Form\Admin\Sell\Supplier;
 
-use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\AddressDniRequired;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\AddressStateRequired;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CleanHtml;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
