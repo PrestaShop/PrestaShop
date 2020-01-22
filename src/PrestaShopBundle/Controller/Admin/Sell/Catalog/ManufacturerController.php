@@ -29,7 +29,6 @@ namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 use Exception;
 use PrestaShop\PrestaShop\Core\Domain\Address\Command\BulkDeleteAddressCommand;
 use PrestaShop\PrestaShop\Core\Domain\Address\Command\DeleteAddressCommand;
-use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressException;
 use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Address\Exception\DeleteAddressException;
@@ -79,10 +78,6 @@ class ManufacturerController extends FrameworkBundleAdminController
      *
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *
-     * @param Request $request
-     * @param ManufacturerFilters $manufacturerFilters
-     * @param ManufacturerAddressFilters $manufacturerAddressFilters
-     *
      * @return Response
      */
     public function indexAction(
@@ -109,8 +104,6 @@ class ManufacturerController extends FrameworkBundleAdminController
      * Provides filters functionality
      *
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
-     *
-     * @param Request $request
      *
      * @return RedirectResponse
      */
@@ -140,8 +133,6 @@ class ManufacturerController extends FrameworkBundleAdminController
      * @AdminSecurity(
      *     "is_granted(['create'], request.get('_legacy_controller'))"
      * )
-     *
-     * @param Request $request
      *
      * @return Response
      */
@@ -174,7 +165,6 @@ class ManufacturerController extends FrameworkBundleAdminController
      *
      * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))")
      *
-     * @param Request $request
      * @param int $manufacturerId
      *
      * @return Response
@@ -211,7 +201,6 @@ class ManufacturerController extends FrameworkBundleAdminController
      * )
      *
      * @param int $manufacturerId
-     * @param Request $request
      *
      * @return Response
      */
@@ -279,8 +268,6 @@ class ManufacturerController extends FrameworkBundleAdminController
      * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute="admin_manufacturers_index")
      * @DemoRestricted(redirectRoute="admin_manufacturers_index")
      *
-     * @param Request $request
-     *
      * @return RedirectResponse
      */
     public function bulkDeleteAction(Request $request)
@@ -305,8 +292,6 @@ class ManufacturerController extends FrameworkBundleAdminController
      *
      * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute="admin_manufacturers_index")
      * @DemoRestricted(redirectRoute="admin_manufacturers_index")
-     *
-     * @param Request $request
      *
      * @return RedirectResponse
      */
@@ -333,8 +318,6 @@ class ManufacturerController extends FrameworkBundleAdminController
      *
      * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute="admin_manufacturers_index")
      * @DemoRestricted(redirectRoute="admin_manufacturers_index")
-     *
-     * @param Request $request
      *
      * @return RedirectResponse
      */
@@ -393,8 +376,6 @@ class ManufacturerController extends FrameworkBundleAdminController
      *     redirectRoute="admin_manufacturers_index"
      * )
      * @DemoRestricted(redirectRoute="admin_manufacturers_index")
-     *
-     * @param ManufacturerFilters $filters
      *
      * @return Response
      */
@@ -467,8 +448,6 @@ class ManufacturerController extends FrameworkBundleAdminController
      * )
      * @DemoRestricted(redirectRoute="admin_manufacturers_index")
      *
-     * @param ManufacturerAddressFilters $filters
-     *
      * @return Response
      */
     public function exportAddressAction(ManufacturerAddressFilters $filters)
@@ -513,8 +492,6 @@ class ManufacturerController extends FrameworkBundleAdminController
      * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute="admin_manufacturers_index")
      * @DemoRestricted(redirectRoute="admin_manufacturers_index")
      *
-     * @param Request $request
-     *
      * @return RedirectResponse
      */
     public function bulkDeleteAddressAction(Request $request)
@@ -538,8 +515,6 @@ class ManufacturerController extends FrameworkBundleAdminController
      * Show & process address creation.
      *
      * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))")
-     *
-     * @param Request $request
      *
      * @return Response
      */
@@ -586,7 +561,6 @@ class ManufacturerController extends FrameworkBundleAdminController
      * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
      *
      * @param int $addressId
-     * @param Request $request
      *
      * @return Response
      */
@@ -717,8 +691,6 @@ class ManufacturerController extends FrameworkBundleAdminController
     }
 
     /**
-     * @param Request $request
-     *
      * @return array
      */
     private function getBulkManufacturersFromRequest(Request $request)
@@ -737,8 +709,6 @@ class ManufacturerController extends FrameworkBundleAdminController
     }
 
     /**
-     * @param Request $request
-     *
      * @return array
      */
     private function getBulkAddressesFromRequest(Request $request)
