@@ -311,7 +311,7 @@ class OrderSlipCreator
             $res &= $this->addProductOrderSlip((int) $orderSlip->id, $product);
         }
 
-        return $res;
+        return (bool) $res;
     }
 
     /**
