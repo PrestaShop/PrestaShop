@@ -103,9 +103,6 @@ export default class OrderProductRenderer {
 
     // Restore pagination
     this.paginate(1);
-
-    // Toggle Column Location
-    this.toggleColumnLocation();
   }
 
   resetAddRow() {
@@ -147,6 +144,9 @@ export default class OrderProductRenderer {
         .removeClass('d-none');
     // Remove all edition rows (careful not to remove the template)
     $(OrderViewPageMap.productEditRow).not(OrderViewPageMap.productEditRowTemplate).remove();
+
+    // Toggle Column Location
+    this.toggleColumnLocation();
   }
 
   paginateUpdateControls(numPage) {
@@ -200,15 +200,15 @@ export default class OrderProductRenderer {
   toggleColumnLocation(forceDisplay = null) {
     let isColumnLocationDisplayed = false;
     if (forceDisplay === null) {
-      $(OrderViewPageMap.productsCellLocation).filter('td').each(function() {
+      $(OrderViewPageMap.productsCellLocationDisplayed).filter('td').each(function() {
         if ($(this).html() !== '') {
           isColumnLocationDisplayed = true;
           return false;
         }
       });
+      $(OrderViewPageMap.productsCellLocationDisplayed).toggleClass('d-none', !isColumnLocationDisplayed);
     } else {
-      isColumnLocationDisplayed = forceDisplay;
+      $(OrderViewPageMap.productsCellLocation).toggleClass('d-none', !forceDisplay);
     }
-    $(OrderViewPageMap.productsCellLocation).toggleClass('d-none', !isColumnLocationDisplayed);
   }
 }
