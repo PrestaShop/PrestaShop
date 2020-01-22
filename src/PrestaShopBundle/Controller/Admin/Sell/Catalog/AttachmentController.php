@@ -26,23 +26,22 @@
 
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
-use ErrorException;
 use Exception;
-use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\AttachmentConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Command\BulkDeleteAttachmentsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Command\DeleteAttachmentCommand;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\AttachmentConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\AttachmentNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\AttachmentUploadFailedException;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\BulkDeleteAttachmentsException;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\CannotAddAttachmentException;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\CannotUpdateAttachmentException;
-use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\BulkDeleteAttachmentsException;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\DeleteAttachmentException;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\EmptyFileException;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Query\GetAttachment;
-use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryResult\Attachment;
-use PrestaShop\PrestaShop\Core\Search\Filters\AttachmentFilters;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Query\GetAttachmentForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryResult\Attachment;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryResult\EditableAttachment;
+use PrestaShop\PrestaShop\Core\Search\Filters\AttachmentFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
@@ -57,11 +56,6 @@ class AttachmentController extends FrameworkBundleAdminController
 {
     /**
      * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))")
-     *
-     * @param Request $request
-     * @param AttachmentFilters $filters
-     *
-     * @return Response
      */
     public function indexAction(Request $request, AttachmentFilters $filters): Response
     {
@@ -84,8 +78,6 @@ class AttachmentController extends FrameworkBundleAdminController
      *     redirectRoute="admin_attachments_index",
      *     message="You do not have permission to create this."
      * )
-     *
-     * @param Request $request
      *
      * @return Response
      */
@@ -132,7 +124,6 @@ class AttachmentController extends FrameworkBundleAdminController
      * )
      *
      * @param int $attachmentId
-     * @param Request $request
      *
      * @return Response
      */
@@ -190,10 +181,6 @@ class AttachmentController extends FrameworkBundleAdminController
      *     redirectRoute="admin_attachments_index",
      *     message="You do not have permission to edit this."
      * )
-     *
-     * @param int $attachmentId
-     *
-     * @return Response
      */
     public function viewAction(int $attachmentId): Response
     {
@@ -214,10 +201,6 @@ class AttachmentController extends FrameworkBundleAdminController
      *
      * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute="admin_attachments_index")
      * @DemoRestricted(redirectRoute="admin_attachments_index")
-     *
-     * @param int $attachmentId
-     *
-     * @return RedirectResponse
      */
     public function deleteAction(int $attachmentId): RedirectResponse
     {
@@ -242,10 +225,6 @@ class AttachmentController extends FrameworkBundleAdminController
      *     redirectRoute="admin_attachments_index",
      *     message="You do not have permission to delete this."
      * )
-     *
-     * @param Request $request
-     *
-     * @return RedirectResponse
      */
     public function deleteBulkAction(Request $request): RedirectResponse
     {
@@ -266,8 +245,6 @@ class AttachmentController extends FrameworkBundleAdminController
 
     /**
      * @param Exception $e
-     *
-     * @return array
      */
     private function getErrorMessages(Exception $e = null): array
     {
@@ -337,11 +314,6 @@ class AttachmentController extends FrameworkBundleAdminController
         ];
     }
 
-    /**
-     * @param Request $request
-     *
-     * @return array
-     */
     private function getBulkAttachmentsFromRequest(Request $request): array
     {
         $attachmentIds = $request->request->get('attachment_files_bulk');
@@ -357,9 +329,6 @@ class AttachmentController extends FrameworkBundleAdminController
         return $attachmentIds;
     }
 
-    /**
-     * @return array
-     */
     private function getAttachmentToolbarButtons(): array
     {
         $toolbarButtons = [];
