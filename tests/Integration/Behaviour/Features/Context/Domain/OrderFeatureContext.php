@@ -588,7 +588,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
         /** @var OrderCarrierForViewing[] $carriers */
         $carriers = $orderForViewing->getShipping()->getCarriers();
         // adding carrier to order if it does not have a valid carrier
-        if (count($carriers) == 0 || (int) $carriers[0]->getCarrierId() == 0) {
+        if (empty($carriers[0]->getCarrierId())) {
             // legacy classes adding order carrier
             // would be nice to find/create a handler adding carrier to newly created order
             $orderCarrier = new OrderCarrier(self::DEFAULT_ORDER_CARRIER_ID);

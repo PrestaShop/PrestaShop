@@ -81,6 +81,9 @@ class AddressFeatureContext extends AbstractDomainFeatureContext
     {
         $testCaseData = $table->getRowsHash();
         $customerId = SharedStorage::getStorage()->get($customerReference);
+        if (is_object($customerId)) {
+            $customerId = $customerId->id;
+        }
         /** @var CountryByIdChoiceProvider $countryChoiceProvider */
         $countryChoiceProvider = $this->getContainer()->get('prestashop.core.form.choice_provider.country_by_id');
         $countryId = (int) $countryChoiceProvider->getChoices()[$testCaseData['Country']];

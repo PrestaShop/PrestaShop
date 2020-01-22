@@ -12,7 +12,15 @@ Feature: Refund Order from Back Office (BO)
     And the module "dummy_payment" is installed
     And I am logged in as "test@prestashop.com" employee
     And there is customer "testCustomer" with email "pub@prestashop.com"
-    And customer "testCustomer" has address in "US" country
+    And I add new address to customer "testCustomer" with following details:
+      | Address alias    | test-address                       |
+      | First name       | testFirstName                      |
+      | Last name        | testLastName                       |
+      | Address          | Work address st. 1234567890        |
+      | City             | Birmingham                         |
+      | Country          | United States                      |
+      | State            | Alabama                            |
+      | Postal code      | 12345                              |
     And I create an empty cart "dummy_cart" for customer "testCustomer"
     And I select "US" address as delivery and invoice address for customer "testCustomer" in cart "dummy_cart"
     And I add 2 products "Mug The best is yet to come" to the cart "dummy_cart"
