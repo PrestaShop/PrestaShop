@@ -30,7 +30,6 @@ import {EventEmitter} from '@components/event-emitter';
 import OrderProductRenderer from '@pages/order/view/order-product-renderer';
 import OrderPricesRefresher from '@pages/order/view/order-prices-refresher';
 import OrderInvoicesRefresher from './order-invoices-refresher';
-import Router from '@components/router';
 import OrderProductCancel from './order-product-cancel';
 
 const $ = window.$;
@@ -42,7 +41,6 @@ export default class OrderViewPage {
     this.orderPricesRefresher = new OrderPricesRefresher();
     this.orderInvoicesRefresher = new OrderInvoicesRefresher();
     this.orderProductCancel = new OrderProductCancel();
-    this.router = new Router();
     this.listenToEvents();
   }
 
@@ -83,8 +81,8 @@ export default class OrderViewPage {
 
     EventEmitter.on(OrderViewEventMap.productUpdated, (event) => {
       this.orderProductRenderer.addOrUpdateProductToList(
-        $(OrderViewPageMap.productsTableRow(event.orderDetailId)),
-        event.newRow
+          $(OrderViewPageMap.productsTableRow(event.orderDetailId)),
+          event.newRow
       );
       this.orderProductRenderer.resetEditRow(event.orderDetailId);
       this.orderPricesRefresher.refresh(event.orderId);
@@ -104,8 +102,8 @@ export default class OrderViewPage {
       const numProducts = parseInt($(OrderViewPageMap.productsCount).html(), 10);
 
       this.orderProductRenderer.addOrUpdateProductToList(
-        $(`#${$(event.newRow).find('tr').attr('id')}`),
-        event.newRow
+          $(`#${$(event.newRow).find('tr').attr('id')}`),
+          event.newRow
       );
       this.listenForProductDelete();
       this.listenForProductEdit();
@@ -133,8 +131,8 @@ export default class OrderViewPage {
 
   listenForProductDelete() {
     $(OrderViewPageMap.productDeleteBtn)
-      .off('click')
-      .on('click', event => this.orderProductManager.handleDeleteProductEvent(event));
+        .off('click')
+        .on('click', event => this.orderProductManager.handleDeleteProductEvent(event));
   }
 
   listenForProductEdit() {
@@ -142,14 +140,14 @@ export default class OrderViewPage {
       const $btn = $(event.currentTarget);
       this.orderProductRenderer.moveProductsPanelToModificationPosition();
       this.orderProductRenderer.editProductFromList(
-        $btn.data('orderDetailId'),
-        $btn.data('productQuantity'),
-        $btn.data('productPriceTaxIncl'),
-        $btn.data('productPriceTaxExcl'),
-        $btn.data('taxRate'),
-        $btn.data('location'),
-        $btn.data('availableQuantity'),
-        $btn.data('orderInvoiceId'),
+          $btn.data('orderDetailId'),
+          $btn.data('productQuantity'),
+          $btn.data('productPriceTaxIncl'),
+          $btn.data('productPriceTaxExcl'),
+          $btn.data('taxRate'),
+          $btn.data('location'),
+          $btn.data('availableQuantity'),
+          $btn.data('orderInvoiceId'),
       );
     });
   }
@@ -190,14 +188,14 @@ export default class OrderViewPage {
 
   listenForProductAdd() {
     $(OrderViewPageMap.productAddBtn).on(
-      'click',
-      event => {
-        this.orderProductRenderer.toggleProductAddNewInvoiceInfo()
-        this.orderProductRenderer.moveProductsPanelToModificationPosition(OrderViewPageMap.productSearchInput)
-      }
+        'click',
+        event => {
+          this.orderProductRenderer.toggleProductAddNewInvoiceInfo()
+          this.orderProductRenderer.moveProductsPanelToModificationPosition(OrderViewPageMap.productSearchInput)
+        }
     );
     $(OrderViewPageMap.productCancelAddBtn).on(
-      'click', event => this.orderProductRenderer.moveProductPanelToOriginalPosition()
+        'click', event => this.orderProductRenderer.moveProductPanelToOriginalPosition()
     );
   }
 
@@ -243,30 +241,28 @@ export default class OrderViewPage {
   }
 
   listenForRefund() {
-    $(OrderViewPageMap.displayPartialRefundBtn).on('click', () => {
+    $(OrderViewPageMap.cancelProduct.buttons.partialRefund).on('click', () => {
       this.orderProductRenderer.moveProductsPanelToRefundPosition();
       this.orderProductCancel.showPartialRefund();
     });
 
-    $(OrderViewPageMap.displayStandardRefundBtn).on('click', () => {
+    $(OrderViewPageMap.cancelProduct.buttons.standardRefund).on('click', () => {
       this.orderProductRenderer.moveProductsPanelToRefundPosition();
+      this.orderProductCancel.showStandardRefund();
     });
 
-    $(OrderViewPageMap.cancelPartialRefundBtn).on('click', () => {
+    $(OrderViewPageMap.cancelProduct.buttons.abort).on('click', () => {
       this.orderProductRenderer.moveProductPanelToOriginalPosition();
-      $(OrderViewPageMap.togglePartialRefundForm).hide();
-      $(OrderViewPageMap.toggleStandardRefundForm).hide();
-      $(OrderViewPageMap.toggleCancelProductForm).hide();
-      $(OrderViewPageMap.actionColumnElements).show();
+      this.orderProductCancel.hideRefund();
     });
   }
 
   listenForCancelProduct() {
-    $(OrderViewPageMap.cancelProductBtn).on('click', (event) => {
-      this.orderProductCancel.showCancelProductForm(event.currentTarget.dataset.orderId);
+    $(OrderViewPageMap.cancelProduct.buttons.cancel).on('click', (event) => {
+      this.orderProductCancel.showCancelProductForm();
       this.orderProductRenderer.moveProductsPanelToRefundPosition();
     });
-    $(OrderViewPageMap.cancelProductSelectorCheckbox).on('change', (event) => {
+    $(OrderViewPageMap.cancelProduct.inputs.selector).on('change', (event) => {
       this.orderProductCancel.fillCancelProductQuantityInput($(event.currentTarget));
     });
   }
@@ -275,3 +271,17 @@ export default class OrderViewPage {
     return $(OrderViewPageMap.productsTablePagination).find('.active span').get(0);
   }
 }
+
+
+
+/*
+listenForCancelProduct() {
+    $(OrderViewPageMap.cancelProduct.buttons.cancel).on('click', (event) => {
+      this.orderProductCancel.showCancelProductForm(event.currentTarget.dataset.orderId);
+      this.orderProductRenderer.moveProductsPanelToRefundPosition();
+    });
+    $(OrderViewPageMap.cancelProduct.inputs.selector).on('change', (event) => {
+      this.orderProductCancel.fillCancelProductQuantityInput($(event.currentTarget));
+    });
+  }
+ */

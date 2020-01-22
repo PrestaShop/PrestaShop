@@ -356,13 +356,12 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
 
             $product['customized_product_quantity'] = $customized_product_quantity;
             $product['current_stock'] = StockAvailable::getQuantityAvailableByProduct($product['product_id'], $product['product_attribute_id'], $product['id_shop']);
-            $resume = OrderSlip::getProductSlipResume($product['id_order_detail']);
-            $product['quantity_refundable'] = $product['product_quantity'] - $resume['product_quantity'];
-            $product['amount_refundable'] = $product['total_price_tax_excl'] - $resume['amount_tax_excl'];
-            $product['amount_refundable_tax_incl'] = $product['total_price_tax_incl'] - $resume['amount_tax_incl'];
+            $product['quantity_refundable'] = $product['product_quantity'] - $product['product_quantity_return'] - $product['product_quantity_refunded'];
+            $product['amount_refundable'] = $product['total_price_tax_excl'] - $product['total_refunded_tax_excl'];
+            $product['amount_refundable_tax_incl'] = $product['total_price_tax_incl'] - $product['total_refunded_tax_incl'];
             $product['displayed_max_refundable'] = $order->getTaxCalculationMethod() ? $product['amount_refundable'] : $product['amount_refundable_tax_incl'];
-            $resumeAmount = $order->getTaxCalculationMethod() ? 'amount_tax_excl' : 'amount_tax_incl';
-            $product['amount_refunded'] = $resume[$resumeAmount] ?? 0;
+            $resumeAmountKey = $order->getTaxCalculationMethod() ? 'total_refunded_tax_excl' : 'total_refunded_tax_incl';
+            $product['amount_refunded'] = $product[$resumeAmountKey] ?? 0;
             $product['refund_history'] = OrderSlip::getProductSlipDetail($product['id_order_detail']);
             $product['return_history'] = OrderReturn::getProductReturnDetail($product['id_order_detail']);
 
@@ -495,6 +494,7 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
                 $this->locale->formatPrice($product['amount_refunded'], $currency->iso_code),
                 $product['product_quantity_refunded'],
                 $this->locale->formatPrice($product['displayed_max_refundable'], $currency->iso_code),
+                $product['displayed_max_refundable'],
                 $product['location'],
                 !empty($product['id_order_invoice']) ? $product['id_order_invoice'] : null,
                 !empty($product['id_order_invoice']) ? $orderInvoice->getInvoiceNumberFormatted($order->id_lang) : '',

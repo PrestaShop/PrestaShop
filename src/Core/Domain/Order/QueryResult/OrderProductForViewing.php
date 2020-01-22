@@ -130,6 +130,11 @@ class OrderProductForViewing implements JsonSerializable
     private $amountRefundable;
 
     /**
+     * @var float
+     */
+    private $amountRefundableRaw;
+
+    /**
      * @var int
      */
     private $orderInvoiceId;
@@ -156,6 +161,7 @@ class OrderProductForViewing implements JsonSerializable
         string $amountRefunded,
         int $quantityRefunded,
         string $amountRefundable,
+        float $amountRefundableRaw,
         string $location,
         ?int $orderInvoiceId,
         string $orderInvoiceNumber,
@@ -178,6 +184,7 @@ class OrderProductForViewing implements JsonSerializable
         $this->amountRefunded = $amountRefunded;
         $this->quantityRefunded = $quantityRefunded;
         $this->amountRefundable = $amountRefundable;
+        $this->amountRefundableRaw = $amountRefundableRaw;
         $this->location = $location;
         $this->orderInvoiceId = $orderInvoiceId;
         $this->orderInvoiceNumber = $orderInvoiceNumber;
@@ -362,13 +369,23 @@ class OrderProductForViewing implements JsonSerializable
     }
 
     /**
-     * How much (money) can be refunded for this product
+     * How much (money) can be refunded for this product (formatted for display)
      *
      * @return string
      */
     public function getAmountRefundable(): string
     {
         return $this->amountRefundable;
+    }
+
+    /**
+     * How much (money) can be refunded for this product (raw float value)
+     *
+     * @return float
+     */
+    public function getAmountRefundableRaw(): float
+    {
+        return $this->amountRefundableRaw;
     }
 
     /**

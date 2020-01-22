@@ -31,7 +31,7 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Command\IssuePartialRefundCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\VoucherRefundType;
 
 /**
- * Class PartialRefundFormDataHandler
+ * Class CurrencyFormDataHandler
  */
 final class PartialRefundFormDataHandler implements FormDataHandlerInterface
 {
@@ -66,19 +66,18 @@ final class PartialRefundFormDataHandler implements FormDataHandlerInterface
             $orderDetailId = $product->getOrderDetailId();
             if (!empty($data['quantity_' . $orderDetailId])) {
                 $refunds[$orderDetailId]['quantity'] = $data['quantity_' . $orderDetailId];
-            }
-            if (!empty($data['amount_' . $orderDetailId])) {
-                $refunds[$orderDetailId]['amount'] = $data['amount_' . $orderDetailId];
+                $refunds[$orderDetailId]['amount'] = $data['amount_' . $orderDetailId] ?? 0;
             }
         }
 
         $command = new IssuePartialRefundCommand(
             $id,
             $refunds,
-            $data['shipping'],
+            $data['shipping_amount'],
             $data['restock'],
+            $data['credit_slip'],
             $data['voucher'],
-            VoucherRefundType::PRODUCT_PRICES_EXCLUDING_VOUCHER_REFUND
+            $data['voucher_refund_type'] ?? VoucherRefundType::PRODUCT_PRICES_EXCLUDING_VOUCHER_REFUND
         );
 
         $this->commandBus->handle($command);

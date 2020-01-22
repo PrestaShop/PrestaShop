@@ -138,7 +138,7 @@ class OrderSlipCore extends ObjectModel
         SELECT *
         FROM `' . _DB_PREFIX_ . 'order_slip`
         WHERE `id_customer` = ' . (int) ($customer_id) .
-        ($order_id ? ' AND `id_order` = ' . (int) ($order_id) : '') . '
+            ($order_id ? ' AND `id_order` = ' . (int) ($order_id) : '') . '
         ORDER BY `date_add` DESC');
     }
 
@@ -183,6 +183,8 @@ class OrderSlipCore extends ObjectModel
      * Get resume of all refund for one product line.
      *
      * @param $id_order_detail
+     *
+     * @deprecated This method should not be used any more because sometimes OrderSlip is not created, you should use the OrderDetail::total_refunded_tax_excl/incl fields instead
      */
     public static function getProductSlipResume($id_order_detail)
     {
@@ -190,6 +192,22 @@ class OrderSlipCore extends ObjectModel
             SELECT SUM(product_quantity) product_quantity, SUM(amount_tax_excl) amount_tax_excl, SUM(amount_tax_incl) amount_tax_incl
             FROM `' . _DB_PREFIX_ . 'order_slip_detail`
             WHERE `id_order_detail` = ' . (int) $id_order_detail);
+    }
+
+    /**
+     * Get resume of all shipping refund for one order.
+     *
+     * @param int $idOrder
+     */
+    public static function getShippingSlipResume(int $idOrder)
+    {
+        return Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
+            SELECT
+                SUM(total_shipping_tax_incl) total_shipping_tax_incl,
+                SUM(total_shipping_tax_excl) total_shipping_tax_excl,
+                SUM(shipping_cost_amount) shipping_cost_amount
+            FROM `' . _DB_PREFIX_ . 'order_slip`
+            WHERE `id_order` = ' . $idOrder);
     }
 
     /**

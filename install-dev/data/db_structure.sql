@@ -1375,6 +1375,8 @@ CREATE TABLE `PREFIX_order_detail` (
   `purchase_supplier_price` DECIMAL(20, 6) NOT NULL DEFAULT '0.000000',
   `original_product_price` DECIMAL(20, 6) NOT NULL DEFAULT '0.000000',
   `original_wholesale_price` DECIMAL(20, 6) NOT NULL DEFAULT '0.000000',
+  `total_refunded_tax_excl` DECIMAL(20, 6) NOT NULL DEFAULT '0.000000',
+  `total_refunded_tax_incl` DECIMAL(20, 6) NOT NULL DEFAULT '0.000000',
   PRIMARY KEY (`id_order_detail`),
   KEY `order_detail_order` (`id_order`),
   KEY `product_id` (

@@ -25,8 +25,9 @@
 
 import Router from '@components/router';
 import OrderViewPageMap from '@pages/order/OrderViewPageMap';
+import { NumberFormatter } from '@app/cldr';
 
-const $ = window.$;
+const {$} = window;
 
 /**
  * manages all product cancel actions, that includes all refund operations
@@ -34,67 +35,132 @@ const $ = window.$;
 export default class OrderProductCancel {
   constructor() {
     this.router = new Router();
-    this.cancelProductForm = $(OrderViewPageMap.cancelProductForm);
+    this.cancelProductForm = $(OrderViewPageMap.cancelProduct.form);
     this.orderId = this.cancelProductForm.data('orderId');
+    this.orderDelivered = parseInt(this.cancelProductForm.data('isDelivered'), 10) === 1;
+    this.isTaxIncluded = parseInt(this.cancelProductForm.data('isTaxIncluded'), 10) === 1;
+    this.discountsAmount = parseFloat(this.cancelProductForm.data('discountsAmount'));
+    this.currencyFormatter = NumberFormatter.build(this.cancelProductForm.data('priceSpecification'));
+    this.listenForInputs();
   }
 
   showPartialRefund() {
-    $(OrderViewPageMap.toggleStandardRefundForm).hide();
-    $(OrderViewPageMap.togglePartialRefundForm).show();
-    $(OrderViewPageMap.actionColumnElements).hide();
-    this.listenForInputs();
-    this.updateForm(
-        $(OrderViewPageMap.cancelProductSaveBtn).data('partialRefundLabel'),
+    // Always start by hiding elements then show the others, since some elements are common
+    $(OrderViewPageMap.cancelProduct.toggle.standardRefund).hide();
+    $(OrderViewPageMap.cancelProduct.toggle.partialRefund).show();
+    $(OrderViewPageMap.cancelProduct.table.actions).hide();
+    this.initForm(
+        $(OrderViewPageMap.cancelProduct.buttons.save).data('partialRefundLabel'),
         this.router.generate('admin_orders_partial_refund', {orderId: this.orderId})
     );
   }
 
   showStandardRefund() {
-    $(OrderViewPageMap.toggleStandardRefundForm).show();
-    $(OrderViewPageMap.togglePartialRefundForm).hide();
-    $(OrderViewPageMap.actionColumnElements).hide();
-    this.listenForInputs();
-    this.updateForm(
-        $(OrderViewPageMap.cancelProductSaveBtn).data('standardRefundLabel'),
+    // Always start by hiding elements then show the others, since some elements are common
+    $(OrderViewPageMap.cancelProduct.toggle.partialRefund).hide();
+    $(OrderViewPageMap.cancelProduct.toggle.standardRefund).show();
+    $(OrderViewPageMap.cancelProduct.table.actions).hide();
+    this.initForm(
+        $(OrderViewPageMap.cancelProduct.buttons.save).data('standardRefundLabel'),
         ''
     );
   }
 
-  updateForm(actionName, formAction) {
-    $(OrderViewPageMap.cancelProductForm).attr('action', formAction);
-    $(OrderViewPageMap.cancelProductSaveBtn).html(actionName);
-    $(OrderViewPageMap.cancelProductColumnHeader).html(actionName);
+  hideRefund() {
+    $(OrderViewPageMap.cancelProduct.toggle.partialRefund).hide();
+    $(OrderViewPageMap.cancelProduct.toggle.standardRefund).hide();
+    $(OrderViewPageMap.cancelProduct.table.actions).show();
+  }
+
+  initForm(actionName, formAction) {
+    this.updateVoucherRefund();
+
+    this.cancelProductForm.prop('action', formAction);
+    $(OrderViewPageMap.cancelProduct.buttons.save).html(actionName);
+    $(OrderViewPageMap.cancelProduct.table.header).html(actionName);
+    $(OrderViewPageMap.cancelProduct.checkboxes.restock).prop('checked', this.orderDelivered);
+    $(OrderViewPageMap.cancelProduct.checkboxes.creditSlip).prop('checked', true);
   }
 
   listenForInputs() {
-    $(OrderViewPageMap.cancelProductQuantityInput).off('change').on('change', (event) => {
+    $(document).on('change', OrderViewPageMap.cancelProduct.inputs.quantity, (event) => {
       const $productQuantityInput = $(event.target);
-      const $parentCell = $productQuantityInput.parents(OrderViewPageMap.cancelProductTableCell);
-      const $productAmount = $parentCell.find(OrderViewPageMap.cancelProductAmountInput);
+      const $parentCell = $productQuantityInput.parents(OrderViewPageMap.cancelProduct.table.cell);
+      const $productAmount = $parentCell.find(OrderViewPageMap.cancelProduct.inputs.amount);
       const productQuantity = parseInt($productQuantityInput.val(), 10);
-      if (productQuantity === 0) {
+      if (productQuantity <= 0) {
         $productAmount.val(0);
+        this.updateVoucherRefund();
+
         return;
       }
-      const isTaxIncluded = parseInt($productQuantityInput.data('isTaxIncluded'), 10);
-      const priceFieldName = isTaxIncluded ? 'productPriceTaxIncl' : 'productPriceTaxExcl';
+      const priceFieldName = this.isTaxIncluded ? 'productPriceTaxIncl' : 'productPriceTaxExcl';
       const productUnitPrice = parseFloat($productQuantityInput.data(priceFieldName));
       const amountRefundable = parseFloat($productQuantityInput.data('amountRefundable'));
-      const guessedAmount = productUnitPrice * productQuantity < amountRefundable ?
-          productUnitPrice * productQuantity : amountRefundable;
+      const guessedAmount = (productUnitPrice * productQuantity) < amountRefundable ?
+          (productUnitPrice * productQuantity) : amountRefundable;
       const amountValue = parseFloat($productAmount.val());
-      if (amountValue === 0 || amountValue > guessedAmount) {
+      if ($productAmount.val() === '' || amountValue === 0 || amountValue > guessedAmount) {
         $productAmount.val(guessedAmount);
+        this.updateVoucherRefund();
       }
+    });
+
+    $(document).on('change', OrderViewPageMap.cancelProduct.inputs.amount, () => {
+      this.updateVoucherRefund();
     });
   }
 
-  showCancelProductForm(orderId) {
-    const cancelProductRoute = this.router.generate('admin_orders_cancellation', {orderId: orderId});
-    const cancelProductForm = document.getElementsByName('cancel_product');
-    $(cancelProductForm).attr('action', cancelProductRoute);
-    $(OrderViewPageMap.toggleCancelProductForm).show();
-    $(OrderViewPageMap.actionColumnElements).hide();
+  updateVoucherRefund() {
+    let totalAmount = 0;
+    $(OrderViewPageMap.cancelProduct.inputs.amount).each((index, amount) => {
+      const floatValue = parseFloat(amount.value);
+      totalAmount += !Number.isNaN(floatValue) ? floatValue : 0;
+    });
+
+    this.updateVoucherRefundTypeLabel(
+        $(OrderViewPageMap.cancelProduct.radios.voucherRefundType.productPrices),
+        totalAmount
+    );
+    const refundVoucherExcluded = totalAmount - this.discountsAmount;
+    this.updateVoucherRefundTypeLabel(
+        $(OrderViewPageMap.cancelProduct.radios.voucherRefundType.productPricesVoucherExcluded),
+        refundVoucherExcluded
+    );
+
+    // Disable voucher excluded option when the voucher amount is too high
+    if (refundVoucherExcluded < 0) {
+      $(OrderViewPageMap.cancelProduct.radios.voucherRefundType.productPricesVoucherExcluded)
+          .prop('checked', false)
+          .prop('disabled', true);
+      $(OrderViewPageMap.cancelProduct.radios.voucherRefundType.productPrices).prop('checked', true);
+      $(OrderViewPageMap.cancelProduct.radios.voucherRefundType.negativeErrorMessage).show();
+    } else {
+      $(OrderViewPageMap.cancelProduct.radios.voucherRefundType.productPricesVoucherExcluded).prop('disabled', false);
+      $(OrderViewPageMap.cancelProduct.radios.voucherRefundType.negativeErrorMessage).hide();
+    }
+  }
+
+  updateVoucherRefundTypeLabel($input, refundAmount) {
+    const defaultLabel = $input.data('defaultLabel');
+    const $label = $input.parents('label');
+    const formattedAmount = this.currencyFormatter.format(refundAmount);
+
+    // Change the ending text part only to avoid removing the input (the EOL is on purpose for better display)
+    $label.get(0).lastChild.nodeValue = `
+    ${defaultLabel} ${formattedAmount}`;
+  }
+
+  showCancelProductForm() {
+    const cancelProductRoute = this.router.generate('admin_orders_cancellation', {orderId: this.orderId});
+    this.initForm(
+        $(OrderViewPageMap.cancelProduct.buttons.save).data('cancelLabel'),
+        cancelProductRoute
+    );
+    $(OrderViewPageMap.cancelProduct.form).attr('action', cancelProductRoute);
+    $(OrderViewPageMap.cancelProduct.toggle.cancel).show();
+    $(OrderViewPageMap.cancelProduct.table.actions).hide();
+    $(OrderViewPageMap.cancelProduct.containers.refundCheckboxes).hide();
   }
 
   fillCancelProductQuantityInput(productCheckbox) {

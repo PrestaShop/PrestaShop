@@ -129,22 +129,46 @@ export default {
   orderTaxesTotal: '#orderTaxesTotal',
   orderTotal: '#orderTotal',
   orderHookTabsContainer: '#order_hook_tabs',
-  displayPartialRefundBtn: 'button.partial-refund-display',
-  displayStandardRefundBtn: 'button.standard-refund-display',
-  cancelPartialRefundBtn: 'button.cancel-product-element-abort',
-  actionColumnElements: 'td.cellProductActions, th.product_actions',
-  togglePartialRefundForm: '.cancel-product-element:not(.hidden):not(.shipping-refund), .cancel-product-amount, .shipping-price, .refund-checkboxes-container',
-  toggleStandardRefundForm: '.cancel-product-element:not(.hidden):not(.shipping-refund), .cancel-product-selector, .shipping-price, .refund-checkboxes-container',
-  toggleCancelProductForm: '.cancel-product-element:not(.hidden):not(.shipping-refund), .cancel-product-selector',
   productAddNewInvoiceInfo: '#addProductNewInvoiceInfo',
-  cancelProductBtn: 'button.cancel-product-display',
-  cancelProductForm: 'form[name="cancel_product"]',
-  cancelProductAbortBtn: 'button.cancel-product-element-abort',
-  cancelProductSaveBtn: '#cancel_product_save',
-  cancelProductQuantityInput: '.cancel-product-quantity input',
-  cancelProductAmountInput: '.cancel-product-amount input',
-  cancelProductTableCell: '.cancel-product-cell',
-  cancelProductColumnHeader: 'th.cancel-product-element p',
-  cancelProductSelectorCheckbox: 'input[type=\'checkbox\'].selected-product',
+  // Product cancel/refund elements
+  cancelProduct: {
+    form: 'form[name="cancel_product"]',
+    buttons: {
+      abort: 'button.cancel-product-element-abort',
+      save: '#cancel_product_save',
+      partialRefund: 'button.partial-refund-display',
+      standardRefund: 'button.standard-refund-display',
+      cancel: 'button.cancel-product-display',
+    },
+    inputs: {
+      quantity: '.cancel-product-quantity input',
+      amount: '.cancel-product-amount input',
+      selector: 'input[type=\'checkbox\'].selected-product',
+    },
+    table: {
+      cell: '.cancel-product-cell',
+      header: 'th.cancel-product-element p',
+      actions: 'td.cellProductActions, th.product_actions',
+    },
+    checkboxes: {
+      restock: '#cancel_product_restock',
+      creditSlip: '#cancel_product_credit_slip',
+    },
+    radios: {
+      voucherRefundType: {
+        productPrices: 'input[voucher-refund-type="0"]',
+        productPricesVoucherExcluded: 'input[voucher-refund-type="1"]',
+        negativeErrorMessage: '.voucher-refund-type-negative-error',
+      },
+    },
+    toggle: {
+      partialRefund: '.cancel-product-element:not(.hidden):not(.shipping-refund), .cancel-product-amount',
+      standardRefund: '.cancel-product-element:not(.hidden):not(.shipping-refund), .cancel-product-selector',
+      cancel: '.cancel-product-element:not(.hidden):not(.shipping-refund), .cancel-product-selector',
+    },
+    containers: {
+      refundCheckboxes: '.refund-checkboxes-container',
+    },
+  },
 
 };

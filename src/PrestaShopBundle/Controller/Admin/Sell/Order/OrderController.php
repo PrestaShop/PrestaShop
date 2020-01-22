@@ -450,6 +450,7 @@ class OrderController extends FrameworkBundleAdminController
             'editProductRowForm' => $editProductRowForm->createView(),
             'backOfficeOrderButtons' => $backOfficeOrderButtons,
             'merchandiseReturnEnabled' => $merchandiseReturnEnabled,
+            'priceSpecification' => $this->getContextLocale()->getPriceSpecification($orderCurrency->iso_code)->toArray(),
         ]);
     }
 
@@ -469,8 +470,12 @@ class OrderController extends FrameworkBundleAdminController
         try {
             $form->handleRequest($request);
             $result = $formHandler->handleFor($orderId, $form);
-            if ($result->isSubmitted() && $result->isValid()) {
-                $this->addFlash('success', $this->trans('A partial refund was successfully created.', 'Admin.Orderscustomers.Notification'));
+            if ($result->isSubmitted()) {
+                if ($result->isValid()) {
+                    $this->addFlash('success', $this->trans('A partial refund was successfully created.', 'Admin.Orderscustomers.Notification'));
+                } else {
+                    $this->addFlashFormErrors($form);
+                }
             }
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
@@ -540,9 +545,17 @@ class OrderController extends FrameworkBundleAdminController
 
         $products = $orderForViewing->getProducts()->getProducts();
 
+        $formBuilder = $this->get('prestashop.core.form.identifiable_object.builder.cancel_product_form_builder');
+        $cancelProductForm = $formBuilder->getFormFor($orderId);
+
+        $currencyDataProvider = $this->container->get('prestashop.adapter.data_provider.currency');
+        $orderCurrency = $currencyDataProvider->getCurrencyById($orderForViewing->getCurrencyId());
+
         return $this->render('@PrestaShop/Admin/Sell/Order/Order/Blocks/View/product.html.twig', [
             'orderForViewing' => $orderForViewing,
             'product' => $products[array_key_last($products)],
+            'cancelProductForm' => $cancelProductForm->createView(),
+            'orderCurrency' => $orderCurrency,
         ]);
     }
 
