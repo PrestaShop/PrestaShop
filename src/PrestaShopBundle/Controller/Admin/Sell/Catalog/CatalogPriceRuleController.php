@@ -160,12 +160,11 @@ class CatalogPriceRuleController extends FrameworkBundleAdminController
      */
     public function createAction(Request $request): Response
     {
+        $catalogPriceRuleForm = $this->getFormBuilder()->getForm();
+        $catalogPriceRuleForm->handleRequest($request);
+        $result = $this->getFormHandler()->handle($catalogPriceRuleForm);
+
         try {
-            $catalogPriceRuleForm = $this->getFormBuilder()->getForm();
-            $catalogPriceRuleForm->handleRequest($request);
-
-            $result = $this->getFormHandler()->handle($catalogPriceRuleForm);
-
             if (null !== $result->getIdentifiableObjectId()) {
                 $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
 
