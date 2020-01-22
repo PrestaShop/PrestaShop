@@ -127,6 +127,7 @@ final class AddSupplierHandler extends AbstractSupplierHandler implements AddSup
         $address->id_state = $command->getStateId();
         $address->phone = $command->getPhone();
         $address->phone_mobile = $command->getMobilePhone();
+        $address->postcode = $command->getPostCode();
 
         return $address;
     }

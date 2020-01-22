@@ -223,27 +223,6 @@ class SupplierType extends TranslatorAwareType
                     ]),
                 ],
             ])
-            ->add('dni', TextType::class, [
-                'required' => false,
-                'empty_data' => '',
-                'constraints' => [
-                    new AddressDniRequired([
-                        'required' => false,
-                        'id_country' => $countryId,
-                    ]),
-                    new TypedRegex([
-                        'type' => 'dni_lite',
-                    ]),
-                    new Length([
-                        'max' => 16,
-                        'maxMessage' => $this->trans(
-                            'This field cannot be longer than %limit% characters',
-                            'Admin.Notifications.Error',
-                            ['%limit%' => 16]
-                        ),
-                    ]),
-                ],
-            ])
             ->add('logo', FileType::class, [
                 'required' => false,
             ])
