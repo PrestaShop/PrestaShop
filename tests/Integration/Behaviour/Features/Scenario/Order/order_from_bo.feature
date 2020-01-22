@@ -125,15 +125,16 @@ Feature: Order from Back Office (BO)
     Then order "bo_order1" should have invoice
 
   Scenario: Add order from Back Office with free shipping
-    And I set Free shipping to the cart "dummy_cart"
+    And I create empty cart "dummy_cart_free_shipping" for customer "testCustomerFromBo"
+    And I select address "test-address" as delivery and invoice in cart "dummy_cart_free_shipping"
+    And I add 2 products "Mug The best is yet to come" to the cart "dummy_cart_free_shipping"
+    And I set Free shipping to the cart "dummy_cart_free_shipping"
     And I add order "bo_order2" with the following details:
-      | cart                | dummy_cart          |
-      | message             | test                |
-      | payment module name | dummy_payment       |
-      | status              | Payment accepted    |
-    Then order "bo_order2" should have 2 products in total
+      | cart                | dummy_cart_free_shipping |
+      | message             | test                     |
+      | payment module name | dummy_payment            |
+      | status              | Payment accepted         |
     And order "bo_order2" should have free shipping
-    And order "bo_order2" should have "dummy_payment" payment method
 
   Scenario: Update multiple orders statuses using Bulk actions
     And I add order "bo_order2" with the following details:
