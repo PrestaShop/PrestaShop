@@ -47,10 +47,7 @@ abstract class AbstractCustomerHandler
     protected function assertCustomerWasFound(CustomerId $customerId, Customer $customer)
     {
         if ($customer->id !== $customerId->getValue()) {
-            throw new CustomerNotFoundException(
-                $customerId,
-                sprintf('Customer with id "%s" was not found.', $customerId->getValue())
-            );
+            throw new CustomerNotFoundException($customerId, sprintf('Customer with id "%s" was not found.', $customerId->getValue()));
         }
     }
 
@@ -66,13 +63,7 @@ abstract class AbstractCustomerHandler
         if (!empty($errors)) {
             $missingFields = array_keys($errors);
 
-            throw new MissingCustomerRequiredFieldsException(
-                $missingFields,
-                sprintf(
-                    'One or more required fields for customer are missing. Missing fields are: %s',
-                    implode(',', $missingFields)
-                )
-            );
+            throw new MissingCustomerRequiredFieldsException($missingFields, sprintf('One or more required fields for customer are missing. Missing fields are: %s', implode(',', $missingFields)));
         }
     }
 }

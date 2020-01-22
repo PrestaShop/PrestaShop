@@ -46,10 +46,7 @@ class DynamicRolePass implements CompilerPassInterface
          * @see Symfony\Bundle\SecurityBundle\DependencyInjection\SecurityExtension:createRoleHierarchy
          */
         if ($container->hasDefinition('security.access.role_hierarchy_voter')) {
-            throw new ServiceDefinitionException(
-                'The security.access.role_hierarchy_voter service is already defined',
-                'security.access.role_hierarchy_voter'
-            );
+            throw new ServiceDefinitionException('The security.access.role_hierarchy_voter service is already defined', 'security.access.role_hierarchy_voter');
         }
 
         $roleHierarchyVoterDefinition = $container->register(
@@ -60,6 +57,6 @@ class DynamicRolePass implements CompilerPassInterface
         $roleHierarchyVoterDefinition
             ->setPublic(false)
             ->addArgument(new Reference('prestashop.security.role.dynamic_role_hierarchy'))
-            ->addTag('security.voter', array('priority' => 245));
+            ->addTag('security.voter', ['priority' => 245]);
     }
 }

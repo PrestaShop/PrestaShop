@@ -50,10 +50,7 @@ final class EditRootCategoryHandler extends AbstractObjectModelHandler implement
         $category = new Category($command->getCategoryId()->getValue());
 
         if (!$category->id) {
-            throw new CategoryNotFoundException(
-                $command->getCategoryId(),
-                sprintf('Category with id "%s" cannot be found.', $command->getCategoryId()->getValue())
-            );
+            throw new CategoryNotFoundException($command->getCategoryId(), sprintf('Category with id "%s" cannot be found.', $command->getCategoryId()->getValue()));
         }
 
         $this->updateRootCategoryFromCommandData($category, $command);

@@ -27,8 +27,8 @@
 namespace PrestaShop\PrestaShop\Core\Grid\Query;
 
 use Doctrine\DBAL\Connection;
-use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 use Doctrine\DBAL\Query\QueryBuilder;
+use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 
 /**
  * Class SupplierQueryBuilder builds search & count queries for suppliers grid.

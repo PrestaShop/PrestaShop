@@ -28,8 +28,8 @@ namespace Tests\Unit\Adapter;
 
 use Context;
 use Controller;
-use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\ContainerFinder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 

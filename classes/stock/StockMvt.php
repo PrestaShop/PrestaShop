@@ -138,38 +138,38 @@ class StockMvtCore extends ObjectModel
     /**
      * @see ObjectModel::$definition
      */
-    public static $definition = array(
+    public static $definition = [
         'table' => 'stock_mvt',
         'primary' => 'id_stock_mvt',
-        'fields' => array(
-            'id_employee' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-            'employee_firstname' => array('type' => self::TYPE_STRING, 'validate' => 'isName'),
-            'employee_lastname' => array('type' => self::TYPE_STRING, 'validate' => 'isName'),
-            'id_stock' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-            'physical_quantity' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt', 'required' => true),
-            'id_stock_mvt_reason' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-            'id_order' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
-            'id_supply_order' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
-            'sign' => array('type' => self::TYPE_INT, 'validate' => 'isInt', 'required' => true),
-            'last_wa' => array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice'),
-            'current_wa' => array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice'),
-            'price_te' => array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice', 'required' => true),
-            'referer' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
-            'date_add' => array('type' => self::TYPE_DATE, 'validate' => 'isDate', 'required' => true),
-        ),
-    );
+        'fields' => [
+            'id_employee' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
+            'employee_firstname' => ['type' => self::TYPE_STRING, 'validate' => 'isName'],
+            'employee_lastname' => ['type' => self::TYPE_STRING, 'validate' => 'isName'],
+            'id_stock' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
+            'physical_quantity' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedInt', 'required' => true],
+            'id_stock_mvt_reason' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
+            'id_order' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId'],
+            'id_supply_order' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId'],
+            'sign' => ['type' => self::TYPE_INT, 'validate' => 'isInt', 'required' => true],
+            'last_wa' => ['type' => self::TYPE_FLOAT, 'validate' => 'isPrice'],
+            'current_wa' => ['type' => self::TYPE_FLOAT, 'validate' => 'isPrice'],
+            'price_te' => ['type' => self::TYPE_FLOAT, 'validate' => 'isPrice', 'required' => true],
+            'referer' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId'],
+            'date_add' => ['type' => self::TYPE_DATE, 'validate' => 'isDate', 'required' => true],
+        ],
+    ];
 
-    protected $webserviceParameters = array(
+    protected $webserviceParameters = [
         'objectsNodeName' => 'stock_movements',
         'objectNodeName' => 'stock_movement',
-        'fields' => array(
-            'id_employee' => array('xlink_resource' => 'employees'),
-            'id_stock' => array('xlink_resource' => 'stock'),
-            'id_stock_mvt_reason' => array('xlink_resource' => 'stock_movement_reasons'),
-            'id_order' => array('xlink_resource' => 'orders'),
-            'id_supply_order' => array('xlink_resource' => 'supply_order'),
-        ),
-    );
+        'fields' => [
+            'id_employee' => ['xlink_resource' => 'employees'],
+            'id_stock' => ['xlink_resource' => 'stock'],
+            'id_stock_mvt_reason' => ['xlink_resource' => 'stock_movement_reasons'],
+            'id_order' => ['xlink_resource' => 'orders'],
+            'id_supply_order' => ['xlink_resource' => 'supply_order'],
+        ],
+    ];
 
     /**
      * @deprecated since 1.5.0
@@ -199,7 +199,7 @@ class StockMvtCore extends ObjectModel
      */
     public static function getNegativeStockMvts($id_order, $id_product, $id_product_attribute, $quantity, $id_warehouse = null)
     {
-        $movements = array();
+        $movements = [];
         $quantity_total = 0;
 
         // preps query

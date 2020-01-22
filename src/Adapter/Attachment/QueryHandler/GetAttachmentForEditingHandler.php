@@ -53,15 +53,11 @@ final class GetAttachmentForEditingHandler implements GetAttachmentForEditingHan
         try {
             $attachment = new Attachment($attachmentIdValue);
         } catch (PrestaShopException $e) {
-            throw new AttachmentNotFoundException(
-                sprintf('Attachment with id "%s" was not found.', $attachmentIdValue)
-            );
+            throw new AttachmentNotFoundException(sprintf('Attachment with id "%s" was not found.', $attachmentIdValue));
         }
 
         if ($attachment->id !== $attachmentIdValue) {
-            throw new AttachmentNotFoundException(
-                sprintf('Attachment with id "%s" was not found.', $attachmentIdValue)
-            );
+            throw new AttachmentNotFoundException(sprintf('Attachment with id "%s" was not found.', $attachmentIdValue));
         }
 
         $filePath = _PS_DOWNLOAD_DIR_ . $attachment->file;

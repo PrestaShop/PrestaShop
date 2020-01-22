@@ -32,17 +32,17 @@ class GroupReductionCore extends ObjectModel
     /**
      * @see ObjectModel::$definition
      */
-    public static $definition = array(
+    public static $definition = [
         'table' => 'group_reduction',
         'primary' => 'id_group_reduction',
-        'fields' => array(
-            'id_group' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-            'id_category' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-            'reduction' => array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice', 'required' => true),
-        ),
-    );
+        'fields' => [
+            'id_group' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
+            'id_category' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
+            'reduction' => ['type' => self::TYPE_FLOAT, 'validate' => 'isPrice', 'required' => true],
+        ],
+    ];
 
-    protected static $reduction_cache = array();
+    protected static $reduction_cache = [];
 
     public function add($autodate = true, $null_values = false)
     {
@@ -63,7 +63,7 @@ class GroupReductionCore extends ObjectModel
 			WHERE cp.`id_category` = ' . (int) $this->id_category
         );
 
-        $ids = array();
+        $ids = [];
         foreach ($products as $row) {
             $ids[] = $row['id_product'];
         }
@@ -89,7 +89,7 @@ class GroupReductionCore extends ObjectModel
 			WHERE cp.`id_category` = ' . (int) $this->id_category
         );
 
-        $values = array();
+        $values = [];
         foreach ($products as $row) {
             $values[] = '(' . (int) $row['id_product'] . ', ' . (int) $this->id_group . ', ' . (float) $this->reduction . ')';
         }
@@ -115,16 +115,16 @@ class GroupReductionCore extends ObjectModel
         false
         );
 
-        $ids = array();
+        $ids = [];
         foreach ($products as $product) {
             $ids[] = $product['id_product'];
         }
 
         $result = true;
         if ($ids) {
-            $result &= Db::getInstance()->update('product_group_reduction_cache', array(
+            $result &= Db::getInstance()->update('product_group_reduction_cache', [
                 'reduction' => (float) $this->reduction,
-            ), 'id_product IN(' . implode(', ', $ids) . ') AND id_group = ' . (int) $this->id_group);
+            ], 'id_product IN(' . implode(', ', $ids) . ') AND id_group = ' . (int) $this->id_group);
         }
 
         return $result;

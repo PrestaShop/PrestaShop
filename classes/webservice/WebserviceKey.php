@@ -37,15 +37,15 @@ class WebserviceKeyCore extends ObjectModel
     /**
      * @see ObjectModel::$definition
      */
-    public static $definition = array(
+    public static $definition = [
         'table' => 'webservice_account',
         'primary' => 'id_webservice_account',
-        'fields' => array(
-            'active' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-            'key' => array('type' => self::TYPE_STRING, 'required' => true, 'size' => 32),
-            'description' => array('type' => self::TYPE_STRING),
-        ),
-    );
+        'fields' => [
+            'active' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
+            'key' => ['type' => self::TYPE_STRING, 'required' => true, 'size' => 32],
+            'description' => ['type' => self::TYPE_STRING],
+        ],
+    ];
 
     public function add($autodate = true, $nullValues = false)
     {
@@ -82,7 +82,7 @@ class WebserviceKeyCore extends ObjectModel
 			LEFT JOIN `' . _DB_PREFIX_ . 'webservice_account` a ON (a.id_webservice_account = p.id_webservice_account)
 			WHERE a.key = \'' . pSQL($auth_key) . '\'
 		');
-        $permissions = array();
+        $permissions = [];
         if ($result) {
             foreach ($result as $row) {
                 $permissions[$row['resource']][] = $row['method'];
@@ -116,14 +116,14 @@ class WebserviceKeyCore extends ObjectModel
             $ok = false;
         }
         if (isset($permissions_to_set)) {
-            $permissions = array();
+            $permissions = [];
             $resources = WebserviceRequest::getResources();
-            $methods = array('GET', 'PUT', 'POST', 'DELETE', 'HEAD');
+            $methods = ['GET', 'PUT', 'POST', 'DELETE', 'HEAD'];
             foreach ($permissions_to_set as $resource_name => $resource_methods) {
                 if (in_array($resource_name, array_keys($resources))) {
                     foreach (array_keys($resource_methods) as $method_name) {
                         if (in_array($method_name, $methods)) {
-                            $permissions[] = array($method_name, $resource_name);
+                            $permissions[] = [$method_name, $resource_name];
                         }
                     }
                 }

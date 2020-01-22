@@ -67,10 +67,7 @@ class SpecificPriceId
     private function assertIsGreaterThanZero(int $value): void
     {
         if (!is_int($value) || 0 >= $value) {
-            throw new SpecificPriceConstraintException(
-                sprintf('Invalid specific price id "%s".', $value),
-                SpecificPriceConstraintException::INVALID_ID
-            );
+            throw new SpecificPriceConstraintException(sprintf('Invalid specific price id "%s".', $value), SpecificPriceConstraintException::INVALID_ID);
         }
     }
 }

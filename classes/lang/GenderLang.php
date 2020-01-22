@@ -28,7 +28,7 @@ class GenderLangCore extends DataLangCore
     // Don't replace domain in init() with $this->domain for translation parsing
     protected $domain = 'Admin.Shopparameters.Feature';
 
-    protected $keys = array('id_gender');
+    protected $keys = ['id_gender'];
 
-    protected $fieldsToUpdate = array('name');
+    protected $fieldsToUpdate = ['name'];
 }

@@ -25,7 +25,7 @@
  */
 class CurveCore
 {
-    protected $values = array();
+    protected $values = [];
     protected $label;
     protected $type;
 

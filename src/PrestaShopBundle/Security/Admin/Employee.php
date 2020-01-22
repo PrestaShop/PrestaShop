@@ -57,7 +57,7 @@ class Employee implements UserInterface, EquatableInterface
     /**
      * @var array
      */
-    private $roles = array();
+    private $roles = [];
 
     private $data;
 

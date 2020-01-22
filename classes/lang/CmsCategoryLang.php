@@ -28,16 +28,16 @@ class CmsCategoryLangCore extends DataLangCore
     // Don't replace domain in init() with $this->domain for translation parsing
     protected $domain = 'Admin.Catalog.Feature';
 
-    protected $keys = array('id_cms_category', 'id_shop');
+    protected $keys = ['id_cms_category', 'id_shop'];
 
-    protected $fieldsToUpdate = array('name', 'link_rewrite');
+    protected $fieldsToUpdate = ['name', 'link_rewrite'];
 
     public function getFieldValue($field, $value)
     {
         if ($field == 'link_rewrite') {
-            $replacements = array(
+            $replacements = [
                 'home' => 'Home',
-            );
+            ];
             $value = str_replace(array_keys($replacements), array_values($replacements), $value);
         }
 

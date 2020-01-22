@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -209,10 +209,7 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
         $order = new Order($orderId->getValue());
 
         if ($order->id !== $orderId->getValue()) {
-            throw new OrderNotFoundException(
-                $orderId,
-                sprintf('Order with id "%s" was not found.', $orderId->getValue())
-            );
+            throw new OrderNotFoundException($orderId, sprintf('Order with id "%s" was not found.', $orderId->getValue()));
         }
 
         return $order;
@@ -387,7 +384,7 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
                 $stockLocationIsAvailable = true;
             }
 
-            $pack_items = $product['cache_is_pack'] ? Pack::getItemTable($product['id_product'], $this->contextLanguageId, true) : array();
+            $pack_items = $product['cache_is_pack'] ? Pack::getItemTable($product['id_product'], $this->contextLanguageId, true) : [];
             foreach ($pack_items as &$pack_item) {
                 $pack_item['current_stock'] = StockAvailable::getQuantityAvailableByProduct($pack_item['id_product'], $pack_item['id_product_attribute'], $pack_item['id_shop']);
                 // if the current stock requires a warning
@@ -445,8 +442,8 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
                 $product['id_order_detail'],
                 $product['product_id'],
                 $product['product_name'],
-                $product['reference'],
-                $product['supplier_reference'],
+                $product['product_reference'],
+                $product['product_supplier_reference'],
                 $product['product_quantity'],
                 $unitPriceFormatted,
                 $totalPriceFormatted,

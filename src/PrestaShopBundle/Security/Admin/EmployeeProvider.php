@@ -89,9 +89,7 @@ class EmployeeProvider implements UserProviderInterface
             return $cachedEmployee->get();
         }
 
-        throw new UsernameNotFoundException(
-            sprintf('Username "%s" does not exist.', $username)
-        );
+        throw new UsernameNotFoundException(sprintf('Username "%s" does not exist.', $username));
     }
 
     /**
@@ -104,9 +102,7 @@ class EmployeeProvider implements UserProviderInterface
     public function refreshUser(UserInterface $employee)
     {
         if (!$employee instanceof Employee) {
-            throw new UnsupportedUserException(
-                sprintf('Instances of "%s" are not supported.', get_class($employee))
-            );
+            throw new UnsupportedUserException(sprintf('Instances of "%s" are not supported.', get_class($employee)));
         }
 
         return $this->loadUserByUsername($employee->getUsername());

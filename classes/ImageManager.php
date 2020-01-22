@@ -294,7 +294,7 @@ class ImageManagerCore
             ImageManager::imagecopyresampled($destImage, $srcImage, (int) (($destinationWidth - $nextWidth) / 2), (int) (($destinationHeight - $nextHeight) / 2), 0, 0, $nextWidth, $nextHeight, $sourceWidth, $sourceHeight, $quality);
         }
         $writeFile = ImageManager::write($fileType, $destImage, $destinationFile);
-        Hook::exec('actionOnImageResizeAfter', array('dst_file' => $destinationFile, 'file_type' => $fileType));
+        Hook::exec('actionOnImageResizeAfter', ['dst_file' => $destinationFile, 'file_type' => $fileType]);
         @imagedestroy($srcImage);
 
         file_put_contents(
@@ -443,7 +443,7 @@ class ImageManagerCore
     {
         // Filter on file extension
         if ($authorizedExtensions === null) {
-            $authorizedExtensions = array('gif', 'jpg', 'jpeg', 'jpe', 'png');
+            $authorizedExtensions = ['gif', 'jpg', 'jpeg', 'jpe', 'png'];
         }
         $nameExplode = explode('.', $filename);
         if (count($nameExplode) >= 2) {
@@ -471,13 +471,13 @@ class ImageManagerCore
     public static function validateUpload($file, $maxFileSize = 0, $types = null, $mimeTypeList = null)
     {
         if ((int) $maxFileSize > 0 && $file['size'] > (int) $maxFileSize) {
-            return Context::getContext()->getTranslator()->trans('Image is too large (%1$d kB). Maximum allowed: %2$d kB', array($file['size'] / 1024, $maxFileSize / 1024), 'Admin.Notifications.Error');
+            return Context::getContext()->getTranslator()->trans('Image is too large (%1$d kB). Maximum allowed: %2$d kB', [$file['size'] / 1024, $maxFileSize / 1024], 'Admin.Notifications.Error');
         }
         if (!ImageManager::isRealImage($file['tmp_name'], $file['type'], $mimeTypeList) || !ImageManager::isCorrectImageFileExt($file['name'], $types) || preg_match('/\%00/', $file['name'])) {
-            return Context::getContext()->getTranslator()->trans('Image format not recognized, allowed formats are: .gif, .jpg, .png', array(), 'Admin.Notifications.Error');
+            return Context::getContext()->getTranslator()->trans('Image format not recognized, allowed formats are: .gif, .jpg, .png', [], 'Admin.Notifications.Error');
         }
         if ($file['error']) {
-            return Context::getContext()->getTranslator()->trans('Error while uploading image; please change your server\'s settings. (Error code: %s)', array($file['error']), 'Admin.Notifications.Error');
+            return Context::getContext()->getTranslator()->trans('Error while uploading image; please change your server\'s settings. (Error code: %s)', [$file['error']], 'Admin.Notifications.Error');
         }
 
         return false;
@@ -494,13 +494,13 @@ class ImageManagerCore
     public static function validateIconUpload($file, $maxFileSize = 0)
     {
         if ((int) $maxFileSize > 0 && $file['size'] > $maxFileSize) {
-            return Context::getContext()->getTranslator()->trans('Image is too large (%1$d kB). Maximum allowed: %2$d kB', array($file['size'] / 1000, $maxFileSize / 1000), 'Admin.Notifications.Error');
+            return Context::getContext()->getTranslator()->trans('Image is too large (%1$d kB). Maximum allowed: %2$d kB', [$file['size'] / 1000, $maxFileSize / 1000], 'Admin.Notifications.Error');
         }
         if (substr($file['name'], -4) != '.ico') {
-            return Context::getContext()->getTranslator()->trans('Image format not recognized, allowed formats are: .ico', array(), 'Admin.Notifications.Error');
+            return Context::getContext()->getTranslator()->trans('Image format not recognized, allowed formats are: .ico', [], 'Admin.Notifications.Error');
         }
         if ($file['error']) {
-            return Context::getContext()->getTranslator()->trans('Error while uploading image; please change your server\'s settings.', array(), 'Admin.Notifications.Error');
+            return Context::getContext()->getTranslator()->trans('Error while uploading image; please change your server\'s settings.', [], 'Admin.Notifications.Error');
         }
 
         return false;
@@ -527,14 +527,14 @@ class ImageManagerCore
 
         // Source information
         $srcInfo = getimagesize($srcFile);
-        $src = array(
+        $src = [
             'width' => $srcInfo[0],
             'height' => $srcInfo[1],
             'ressource' => ImageManager::create($srcInfo[2], $srcFile),
-        );
+        ];
 
         // Destination information
-        $dest = array();
+        $dest = [];
         $dest['x'] = $dstX;
         $dest['y'] = $dstY;
         $dest['width'] = null !== $dstWidth ? $dstWidth : $src['width'];
@@ -545,7 +545,7 @@ class ImageManagerCore
         imagecopyresampled($dest['ressource'], $src['ressource'], 0, 0, $dest['x'], $dest['y'], $dest['width'], $dest['height'], $dest['width'], $dest['height']);
         imagecolortransparent($dest['ressource'], $white);
         $return = ImageManager::write($fileType, $dest['ressource'], $dstFile);
-        Hook::exec('actionOnImageCutAfter', array('dst_file' => $dstFile, 'file_type' => $fileType));
+        Hook::exec('actionOnImageCutAfter', ['dst_file' => $dstFile, 'file_type' => $fileType]);
         @imagedestroy($src['ressource']);
 
         return $return;
@@ -655,11 +655,11 @@ class ImageManagerCore
      */
     public static function getMimeTypeByExtension($fileName)
     {
-        $types = array(
-            'image/gif' => array('gif'),
-            'image/jpeg' => array('jpg', 'jpeg'),
-            'image/png' => array('png'),
-        );
+        $types = [
+            'image/gif' => ['gif'],
+            'image/jpeg' => ['jpg', 'jpeg'],
+            'image/png' => ['png'],
+        ];
         $extension = substr($fileName, strrpos($fileName, '.') + 1);
 
         $mimeType = null;

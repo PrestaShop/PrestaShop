@@ -30,9 +30,9 @@ use PrestaShopBundle\Routing\Converter\Exception\AlreadyConvertedException;
 use PrestaShopBundle\Routing\Converter\Exception\ArgumentException;
 use PrestaShopBundle\Routing\Converter\Exception\RouteNotFoundException;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Exception\Exceptioninterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\Routing\Exception\Exceptioninterface;
 
 /**
  * Class LegacyUrlConverter is able to convert query parameters or an url into a
@@ -106,7 +106,7 @@ final class LegacyUrlConverter
         $this->checkAlreadyMatchingRoute($url);
 
         $parsedUrl = parse_url($url);
-        $parameters = array();
+        $parameters = [];
         if (isset($parsedUrl['query'])) {
             parse_str($parsedUrl['query'], $parameters);
         }

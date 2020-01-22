@@ -51,17 +51,12 @@ final class EditCmsPageCategoryHandler extends AbstractCmsPageCategoryHandler im
             $cmsPageCategory = new CMSCategory($command->getCmsPageCategoryId()->getValue());
 
             if (0 >= $cmsPageCategory->id) {
-                throw new CmsPageCategoryNotFoundException(
-                    sprintf('Unable to find cms page category with id "%s"', $cmsPageCategory->id)
-                );
+                throw new CmsPageCategoryNotFoundException(sprintf('Unable to find cms page category with id "%s"', $cmsPageCategory->id));
             }
 
             if (null !== $command->getLocalisedName()) {
                 if (!$this->assertHasDefaultLanguage($command->getLocalisedName())) {
-                    throw new CmsPageCategoryConstraintException(
-                        'Missing name in default language',
-                        CmsPageCategoryConstraintException::MISSING_DEFAULT_LANGUAGE_FOR_NAME
-                    );
+                    throw new CmsPageCategoryConstraintException('Missing name in default language', CmsPageCategoryConstraintException::MISSING_DEFAULT_LANGUAGE_FOR_NAME);
                 }
                 $cmsPageCategory->name = $command->getLocalisedName();
             }
@@ -97,10 +92,7 @@ final class EditCmsPageCategoryHandler extends AbstractCmsPageCategoryHandler im
 
             if (null !== $command->getLocalisedFriendlyUrl()) {
                 if (!$this->assertHasDefaultLanguage($command->getLocalisedFriendlyUrl())) {
-                    throw new CmsPageCategoryConstraintException(
-                        'Missing friendly url in default language',
-                        CmsPageCategoryConstraintException::MISSING_DEFAULT_LANGUAGE_FOR_FRIENDLY_URL
-                    );
+                    throw new CmsPageCategoryConstraintException('Missing friendly url in default language', CmsPageCategoryConstraintException::MISSING_DEFAULT_LANGUAGE_FOR_FRIENDLY_URL);
                 }
                 $this->assertIsValidLinkRewrite($command->getLocalisedFriendlyUrl());
 
@@ -108,20 +100,14 @@ final class EditCmsPageCategoryHandler extends AbstractCmsPageCategoryHandler im
             }
 
             if (false === $cmsPageCategory->update()) {
-                throw new CannotUpdateCmsPageCategoryException(
-                    'Failed to update cms page category'
-                );
+                throw new CannotUpdateCmsPageCategoryException('Failed to update cms page category');
             }
 
             if (null !== $command->getShopAssociation()) {
                 $this->associateWithShops($cmsPageCategory, $command->getShopAssociation());
             }
         } catch (PrestaShopException $exception) {
-            throw new CmsPageCategoryException(
-                'An unexpected error occurred when updating cms page category',
-                0,
-                $exception
-            );
+            throw new CmsPageCategoryException('An unexpected error occurred when updating cms page category', 0, $exception);
         }
     }
 
@@ -136,14 +122,7 @@ final class EditCmsPageCategoryHandler extends AbstractCmsPageCategoryHandler im
     private function assertCmsCategoryCanBeMovedToParent($cmsCategoryId, $cmsCategoryParentId)
     {
         if (!CMSCategory::checkBeforeMove($cmsCategoryId, $cmsCategoryParentId)) {
-            throw new CmsPageCategoryConstraintException(
-                sprintf(
-                    'Unable to move cms category "%s" to parent category "%s"',
-                    $cmsCategoryId,
-                    $cmsCategoryParentId
-                ),
-                CmsPageCategoryConstraintException::CANNOT_MOVE_CATEGORY_TO_PARENT
-            );
+            throw new CmsPageCategoryConstraintException(sprintf('Unable to move cms category "%s" to parent category "%s"', $cmsCategoryId, $cmsCategoryParentId), CmsPageCategoryConstraintException::CANNOT_MOVE_CATEGORY_TO_PARENT);
         }
     }
 }

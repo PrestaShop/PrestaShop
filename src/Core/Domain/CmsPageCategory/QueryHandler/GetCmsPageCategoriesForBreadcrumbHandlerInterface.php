@@ -26,8 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\QueryHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\QueryResult\Breadcrumb;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Query\GetCmsPageCategoriesForBreadcrumb;
+use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\QueryResult\Breadcrumb;
 
 /**
  * Interface GetCmsPageCategoriesForBreadcrumbHandlerInterface defines contract for GetCmsPageCategoriesForBreadcrumbHandlerInterface.

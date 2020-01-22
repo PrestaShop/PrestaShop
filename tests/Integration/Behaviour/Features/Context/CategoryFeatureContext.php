@@ -26,8 +26,8 @@
 
 namespace Tests\Integration\Behaviour\Features\Context;
 
-use Context;
 use Category;
+use Context;
 use Tools;
 
 class CategoryFeatureContext extends AbstractPrestaShopFeatureContext

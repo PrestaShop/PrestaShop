@@ -513,10 +513,7 @@ class CartController extends FrameworkBundleAdminController
             $fileSizesByInputName = json_decode($fileSizeHeaders, true);
             foreach ($fileSizesByInputName as $name => $size) {
                 if (!isset($fileCustomizations[$name])) {
-                    throw new FileUploadException(
-                        'Some files were possibly not uploaded due to post_max_size limit',
-                        UPLOAD_ERR_INI_SIZE
-                    );
+                    throw new FileUploadException('Some files were possibly not uploaded due to post_max_size limit', UPLOAD_ERR_INI_SIZE);
                 }
             }
         }

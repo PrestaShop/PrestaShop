@@ -62,11 +62,11 @@ class OrderControllerCore extends FrontController
             $oldCart = new Cart(Order::getCartIdStatic($id_order, $this->context->customer->id));
             $duplication = $oldCart->duplicate();
             if (!$duplication || !Validate::isLoadedObject($duplication['cart'])) {
-                $this->errors[] = $this->trans('Sorry. We cannot renew your order.', array(), 'Shop.Notifications.Error');
+                $this->errors[] = $this->trans('Sorry. We cannot renew your order.', [], 'Shop.Notifications.Error');
             } elseif (!$duplication['success']) {
                 $this->errors[] = $this->trans(
                     'Some items are no longer available, and we are unable to renew your order.',
-                    array(),
+                    [],
                     'Shop.Notifications.Error'
                 );
             } else {
@@ -216,7 +216,7 @@ class OrderControllerCore extends FrontController
         );
         $data = json_decode($rawData, true);
         if (!is_array($data)) {
-            $data = array();
+            $data = [];
         }
 
         $addressValidator = new AddressValidator();
@@ -224,14 +224,14 @@ class OrderControllerCore extends FrontController
 
         // Build the currently selected address' warning message (if relevant)
         if (!$customer->isGuest() && !empty($invalidAddressIds)) {
-            $this->checkoutWarning['address'] = array(
+            $this->checkoutWarning['address'] = [
                 'id_address' => (int) reset($invalidAddressIds),
                 'exception' => $this->trans(
                     'Your address is incomplete, please update it.',
-                    array(),
+                    [],
                     'Shop.Notifications.Error'
                 ),
-            );
+            ];
 
             $checksum = null;
         } else {
@@ -256,12 +256,12 @@ class OrderControllerCore extends FrontController
 
         ob_end_clean();
         header('Content-Type: application/json');
-        $this->ajaxRender(Tools::jsonEncode(array(
-            'preview' => $this->render('checkout/_partials/cart-summary', array(
+        $this->ajaxRender(Tools::jsonEncode([
+            'preview' => $this->render('checkout/_partials/cart-summary', [
                 'cart' => $cart,
                 'static_token' => Tools::getToken(false),
-            )),
-        )));
+            ]),
+        ]));
     }
 
     public function initContent()
@@ -286,7 +286,7 @@ class OrderControllerCore extends FrontController
         $product = $this->context->cart->checkQuantities(true);
         if (is_array($product)) {
             // if there is an issue with product quantities, redirect to cart page
-            $cartLink = $this->context->link->getPageLink('cart', null, null, array('action' => 'show'));
+            $cartLink = $this->context->link->getPageLink('cart', null, null, ['action' => 'show']);
             Tools::redirect($cartLink);
         }
 
@@ -327,10 +327,10 @@ class OrderControllerCore extends FrontController
         }
 
         if (Tools::getIsset('id_country')) {
-            $addressForm->fillWith(array('id_country' => Tools::getValue('id_country')));
+            $addressForm->fillWith(['id_country' => Tools::getValue('id_country')]);
         }
 
-        $stepTemplateParameters = array();
+        $stepTemplateParameters = [];
         foreach ($this->checkoutProcess->getSteps() as $step) {
             if ($step instanceof CheckoutAddressesStep) {
                 $stepTemplateParameters = $step->getTemplateParameters();
@@ -340,17 +340,17 @@ class OrderControllerCore extends FrontController
         $templateParams = array_merge(
             $addressForm->getTemplateVariables(),
             $stepTemplateParameters,
-            array('type' => 'delivery')
+            ['type' => 'delivery']
         );
 
         ob_end_clean();
         header('Content-Type: application/json');
 
-        $this->ajaxRender(Tools::jsonEncode(array(
+        $this->ajaxRender(Tools::jsonEncode([
             'address_form' => $this->render(
                 'checkout/_partials/address-form',
                 $templateParams
             ),
-        )));
+        ]));
     }
 }

@@ -97,10 +97,7 @@ final class SendCartToCustomerHandler implements SendCartToCustomerHanlderInterf
         $cart = new Cart($cartId->getValue());
 
         if (!Validate::isLoadedObject($cart)) {
-            throw new CartNotFoundException(sprintf(
-                'Cart with id "%d" was not found',
-                $cartId->getValue()
-            ));
+            throw new CartNotFoundException(sprintf('Cart with id "%d" was not found', $cartId->getValue()));
         }
 
         return $cart;
@@ -118,10 +115,7 @@ final class SendCartToCustomerHandler implements SendCartToCustomerHanlderInterf
         $customer = new Customer($customerId);
 
         if (!Validate::isLoadedObject($customer)) {
-            throw new CartException(sprintf(
-                'Customer with id "%d" was not found',
-                $customerId
-            ));
+            throw new CartException(sprintf('Customer with id "%d" was not found', $customerId));
         }
 
         return $customer;

@@ -47,10 +47,7 @@ final class DeleteAttributeHandler extends AbstractAttributeHandler implements D
         $attribute = $this->getAttributeById($command->getAttributeId());
 
         if (false === $this->deleteAttribute($attribute)) {
-            throw new DeleteAttributeException(
-                sprintf('Failed to delete attribute with id "%s".', $attribute->id),
-                DeleteAttributeException::FAILED_DELETE
-            );
+            throw new DeleteAttributeException(sprintf('Failed to delete attribute with id "%s".', $attribute->id), DeleteAttributeException::FAILED_DELETE);
         }
     }
 }

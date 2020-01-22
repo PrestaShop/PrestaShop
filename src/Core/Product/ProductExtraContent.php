@@ -52,10 +52,10 @@ class ProductExtraContent implements HookContentClassInterface
      *
      * @var array
      */
-    private $attr = array(
+    private $attr = [
         'id' => '',
         'class' => '',
-    );
+    ];
 
     public function getTitle()
     {
@@ -97,20 +97,20 @@ class ProductExtraContent implements HookContentClassInterface
     {
         // We declare default values for if and class which
         // could be mandatory in the template
-        $this->attr = array_merge(array(
+        $this->attr = array_merge([
             'id' => '',
             'class' => '',
-        ), $attr);
+        ], $attr);
 
         return $this;
     }
 
     public function toArray()
     {
-        return array(
+        return [
             'title' => $this->title,
             'content' => $this->content,
             'attr' => $this->attr,
-        );
+        ];
     }
 }

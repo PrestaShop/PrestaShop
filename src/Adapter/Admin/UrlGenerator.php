@@ -69,7 +69,7 @@ class UrlGenerator implements UrlGeneratorInterface
     /**
      * {@inheritdoc}
      */
-    public function generate($name, $parameters = array(), $referenceType = self::ABSOLUTE_PATH)
+    public function generate($name, $parameters = [], $referenceType = self::ABSOLUTE_PATH)
     {
         // By default, consider given parameters in legacy format (no mapping if route not found).
         $legacyController = $name;
@@ -91,7 +91,7 @@ class UrlGenerator implements UrlGeneratorInterface
      *
      * @return array[] An array with: the legacy controller name, then the parameters array
      */
-    final public function getLegacyOptions($routeName, $parameters = array())
+    final public function getLegacyOptions($routeName, $parameters = [])
     {
         $legacyController = $routeName;
         $legacyParameters = $parameters;
@@ -109,7 +109,7 @@ class UrlGenerator implements UrlGeneratorInterface
             }
         }
 
-        return array($legacyController, $legacyParameters);
+        return [$legacyController, $legacyParameters];
     }
 
     /**

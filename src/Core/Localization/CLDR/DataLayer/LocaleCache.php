@@ -92,9 +92,7 @@ class LocaleCache extends AbstractDataLayer implements CldrLocaleDataLayerInterf
     public function write($id, $data)
     {
         if (!($data instanceof LocaleData)) {
-            throw new LocalizationException(
-                '$data must be an instance of ' . LocaleData::class
-            );
+            throw new LocalizationException('$data must be an instance of ' . LocaleData::class);
         }
 
         return parent::write($id, $data);

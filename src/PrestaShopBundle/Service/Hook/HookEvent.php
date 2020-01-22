@@ -37,7 +37,7 @@ use Symfony\Component\EventDispatcher\Event;
  */
 class HookEvent extends Event
 {
-    private $hookParameters = array();
+    private $hookParameters = [];
 
     /**
      * Sets the Hook parameters.
@@ -64,7 +64,7 @@ class HookEvent extends Event
      */
     public function getHookParameters()
     {
-        $globalParameters = array('_ps_version' => AppKernel::VERSION);
+        $globalParameters = ['_ps_version' => AppKernel::VERSION];
 
         $sfContainer = SymfonyContainer::getInstance();
         if (null !== $sfContainer && null !== $sfContainer->get('request_stack')->getCurrentRequest()) {

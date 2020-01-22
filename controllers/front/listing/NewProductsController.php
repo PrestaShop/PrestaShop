@@ -62,7 +62,7 @@ class NewProductsControllerCore extends ProductListingFrontController
     {
         return $this->trans(
             'New products',
-            array(),
+            [],
             'Shop.Theme.Catalog'
         );
     }
@@ -72,7 +72,7 @@ class NewProductsControllerCore extends ProductListingFrontController
         $breadcrumb = parent::getBreadcrumbLinks();
 
         $breadcrumb['links'][] = [
-            'title' => $this->trans('New products', array(), 'Shop.Theme.Catalog'),
+            'title' => $this->trans('New products', [], 'Shop.Theme.Catalog'),
             'url' => $this->context->link->getPageLink('new-products', true),
         ];
 

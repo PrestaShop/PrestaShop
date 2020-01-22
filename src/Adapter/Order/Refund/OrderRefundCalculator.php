@@ -30,12 +30,12 @@ use Customer;
 use Group;
 use Order;
 use OrderDetail;
+use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderDetailRefund;
+use PrestaShop\PrestaShop\Core\Domain\Order\VoucherRefundType;
 use PrestaShopDatabaseException;
 use PrestaShopException;
 use Tax;
 use TaxCalculator;
-use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderDetailRefund;
-use PrestaShop\PrestaShop\Core\Domain\Order\VoucherRefundType;
 
 /**
  * Performs all computation for a refund on an Order, returns a OrderRefundDetail

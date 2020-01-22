@@ -55,18 +55,14 @@ final class EditManufacturerHandler extends AbstractManufacturerHandler implemen
             }
 
             if (!$manufacturer->update()) {
-                throw new ManufacturerException(
-                    sprintf('Cannot update manufacturer with id "%s"', $manufacturer->id)
-                );
+                throw new ManufacturerException(sprintf('Cannot update manufacturer with id "%s"', $manufacturer->id));
             }
 
             if (null !== $command->getAssociatedShops()) {
                 $this->associateWithShops($manufacturer, $command->getAssociatedShops());
             }
         } catch (PrestaShopException $e) {
-            throw new ManufacturerException(
-                sprintf('Cannot update manufacturer with id "%s"', $manufacturer->id)
-            );
+            throw new ManufacturerException(sprintf('Cannot update manufacturer with id "%s"', $manufacturer->id));
         }
     }
 

@@ -26,8 +26,8 @@
 
 namespace Tests\Unit\Adapter\Hook;
 
-use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\Hook\HookDispatcher;
 use PrestaShopBundle\Service\Hook\HookEvent;
 

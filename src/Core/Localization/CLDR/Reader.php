@@ -131,9 +131,7 @@ class Reader implements ReaderInterface
     protected function validateLocaleCodeForFilenames($localeCode)
     {
         if (!preg_match('#^[a-zA-Z0-9]+(_[a-zA-Z0-9]+)*$#', $localeCode)) {
-            throw new LocalizationException(
-                sprintf('Invalid locale code: "%s"', $localeCode)
-            );
+            throw new LocalizationException(sprintf('Invalid locale code: "%s"', $localeCode));
         }
     }
 
@@ -221,9 +219,7 @@ class Reader implements ReaderInterface
         if (false !== $pos) {
             $parent = substr($localeCode, 0, $pos);
             if (false === $parent) {
-                throw new LocalizationException(
-                    sprintf('Invalid locale code: "%s"', $localeCode)
-                );
+                throw new LocalizationException(sprintf('Invalid locale code: "%s"', $localeCode));
             }
 
             return $parent;

@@ -60,9 +60,7 @@ class ProfileId
     private function setProfileId($profileId)
     {
         if (!is_int($profileId) || 0 >= $profileId) {
-            throw new ProfileException(
-                sprintf('Invalid Profile id %s supplied', var_export($profileId, true))
-            );
+            throw new ProfileException(sprintf('Invalid Profile id %s supplied', var_export($profileId, true)));
         }
 
         $this->profileId = $profileId;

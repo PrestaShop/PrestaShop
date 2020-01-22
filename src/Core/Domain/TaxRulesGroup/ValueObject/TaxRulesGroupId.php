@@ -65,10 +65,7 @@ class TaxRulesGroupId
     private function assertPositiveInt(int $value): void
     {
         if (0 > $value) {
-            throw new TaxRulesGroupConstraintException(
-                sprintf('Invalid tax rules group id "%s".', var_export($value, true)),
-                TaxRulesGroupConstraintException::INVALID_ID
-            );
+            throw new TaxRulesGroupConstraintException(sprintf('Invalid tax rules group id "%s".', var_export($value, true)), TaxRulesGroupConstraintException::INVALID_ID);
         }
     }
 }

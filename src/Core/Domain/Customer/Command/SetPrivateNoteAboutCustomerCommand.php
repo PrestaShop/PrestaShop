@@ -80,10 +80,7 @@ class SetPrivateNoteAboutCustomerCommand
     private function assertPrivateNoteIsString($privateNote)
     {
         if (!is_string($privateNote)) {
-            throw new CustomerConstraintException(
-                'Invalid private note provided. Private note must be a string.',
-                CustomerConstraintException::INVALID_PRIVATE_NOTE
-            );
+            throw new CustomerConstraintException('Invalid private note provided. Private note must be a string.', CustomerConstraintException::INVALID_PRIVATE_NOTE);
         }
     }
 }

@@ -27,12 +27,12 @@
 namespace PrestaShop\PrestaShop\Adapter\Supplier\CommandHandler;
 
 use Address;
-use Supplier;
 use PrestaShop\PrestaShop\Adapter\Supplier\AbstractSupplierHandler;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Command\EditSupplierCommand;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\CommandHandler\EditSupplierHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\SupplierException;
 use PrestaShopException;
+use Supplier;
 
 /**
  * Handles command which edits supplier using legacy object model
@@ -57,22 +57,16 @@ final class EditSupplierHandler extends AbstractSupplierHandler implements EditS
             $this->validateFields($supplier, $address);
 
             if (false === $supplier->update()) {
-                throw new SupplierException(
-                    sprintf('Cannot update supplier with id "%s"', $supplier->id)
-                );
+                throw new SupplierException(sprintf('Cannot update supplier with id "%s"', $supplier->id));
             }
             if (false === $address->update()) {
-                throw new SupplierException(
-                    sprintf('Cannot update supplier address with id "%s"', $address->id)
-                );
+                throw new SupplierException(sprintf('Cannot update supplier address with id "%s"', $address->id));
             }
             if (null !== $command->getAssociatedShops()) {
                 $this->associateWithShops($supplier, $command->getAssociatedShops());
             }
         } catch (PrestaShopException $e) {
-            throw new SupplierException(
-                sprintf('Cannot update supplier with id "%s"', $supplier->id)
-            );
+            throw new SupplierException(sprintf('Cannot update supplier with id "%s"', $supplier->id));
         }
     }
 

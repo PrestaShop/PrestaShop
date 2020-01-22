@@ -63,7 +63,7 @@ class VirtualProductController extends FrameworkBundleAdminController
         $form = $this->createForm(
             ProductVirtual::class,
             null,
-            array('csrf_protection' => false)
+            ['csrf_protection' => false]
         );
 
         $form->handleRequest($request);
@@ -102,9 +102,9 @@ class VirtualProductController extends FrameworkBundleAdminController
         $configuration = $this->get('prestashop.adapter.legacy.configuration');
         $download = $this->getDoctrine()
             ->getRepository('PrestaShopBundle:ProductDownload')
-            ->findOneBy(array(
+            ->findOneBy([
                 'idProduct' => $idProduct,
-            ));
+            ]);
 
         $response = new BinaryFileResponse(
             $configuration->get('_PS_DOWNLOAD_DIR_') . $download->getFilename()

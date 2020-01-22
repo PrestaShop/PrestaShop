@@ -26,8 +26,8 @@
 
 namespace Tests\Integration\PrestaShopBundle\Translation\Loader;
 
-use Symfony\Component\Translation\MessageCatalogueInterface;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Symfony\Component\Translation\MessageCatalogueInterface;
 use Tests\Integration\PrestaShopBundle\Translation\CatalogueVerifier;
 
 /**
