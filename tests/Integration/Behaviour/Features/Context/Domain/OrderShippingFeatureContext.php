@@ -2,8 +2,6 @@
 
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
-use Order;
-use OrderCarrier;
 use PHPUnit\Framework\Assert as Assert;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\ChangeOrderDeliveryAddressCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\UpdateOrderShippingDetailsCommand;
