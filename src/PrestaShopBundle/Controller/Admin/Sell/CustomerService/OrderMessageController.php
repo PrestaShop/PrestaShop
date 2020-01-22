@@ -176,12 +176,12 @@ class OrderMessageController extends FrameworkBundleAdminController
 
                 return $this->redirectToRoute('admin_order_messages_index');
             }
-        } catch (OrderMessageNotFoundException $e) {
-            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
-
-            return $this->redirectToRoute('admin_order_messages_index');
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+        }
+
+        if (!isset($form) || !isset($orderMessageName)) {
+            return $this->redirectToRoute('admin_order_messages_index');
         }
 
         return $this->render('@PrestaShop/Admin/Sell/CustomerService/OrderMessage/edit.html.twig', [
