@@ -1,5 +1,5 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s order
-@database-scenario
+@reset-database-before-feature
 Feature: Order from Back Office (BO)
   In order to manage orders for FO customers
   As a BO user
@@ -13,8 +13,7 @@ Feature: Order from Back Office (BO)
   # -------------------------------------------------------------------------------------
   #  this is important recommendation - start every scenario with a predictable database
   #  Why? it is explained here: https://symfonycasts.com/screencast/behat/clear-data-symfony-extension#play
-  #  this tip might keep you out of trouble of having dependent scenarios - they are very time consuming to figure out
-  #  @database-scenario resets the database before every scenario
+  #  this tip might keep out of trouble of having dependent scenarios - they are very time consuming to figure out
   # -------------------------------------------------------------------------------------
 
   Background:
@@ -26,22 +25,10 @@ Feature: Order from Back Office (BO)
     And country "US" is enabled
     And the module "dummy_payment" is installed
     And I am logged in as "test@prestashop.com" employee
-    And I create customer "testCustomerFromBo" with following details:
-      | firstName        | testFirstName                      |
-      | lastName         | testLastName                       |
-      | email            | customer@domain.eu                 |
-      | password         | secret                             |
-    And I add new address to customer "testCustomerFromBo" with following details:
-      | Address alias    | test-address                       |
-      | First name       | testFirstName                      |
-      | Last name        | testLastName                       |
-      | Address          | Work address st. 1234567890        |
-      | City             | Birmingham                         |
-      | Country          | United States                      |
-      | State            | Alabama                            |
-      | Postal code      | 12345                              |
-    And I create empty cart "dummy_cart" for customer "testCustomerFromBo"
-    And I select address "test-address" as delivery and invoice in cart "dummy_cart"
+    # using legacy classes to get the customer; could be refactored using SearchCustomerHandler
+    And there is customer "testCustomer" with email "pub@prestashop.com"
+    And I create an empty cart "dummy_cart" for customer "testCustomer"
+    And I select "US" address as delivery and invoice address for customer "testCustomer" in cart "dummy_cart"
     And I add 2 products "Mug The best is yet to come" to the cart "dummy_cart"
     And I add order "bo_order1" with the following details:
       | cart                | dummy_cart                 |
@@ -125,8 +112,8 @@ Feature: Order from Back Office (BO)
     Then order "bo_order1" should have invoice
 
   Scenario: Add order from Back Office with free shipping
-    And I create empty cart "dummy_cart_free_shipping" for customer "testCustomerFromBo"
-    And I select address "test-address" as delivery and invoice in cart "dummy_cart_free_shipping"
+    And I create empty cart "dummy_cart_free_shipping" for customer "testCustomer"
+    And I select "US" address as delivery and invoice address for customer "testCustomer" in cart "dummy_cart_free_shipping"
     And I add 2 products "Mug The best is yet to come" to the cart "dummy_cart_free_shipping"
     And I set Free shipping to the cart "dummy_cart_free_shipping"
     And I add order "bo_order2" with the following details:
