@@ -71,7 +71,7 @@ export default {
   productsTablePaginationTemplate: '#orderProductsTablePagination .page-item.d-none',
   productsTableRow: productId => `#orderProduct_${productId}`,
   productsTableRowEdited: productId => `#editOrderProduct_${productId}`,
-  productsCellLocation: '.cell-product-location',
+  productsCellLocation: 'tr:not(.d-none) .cellProductLocation',
   productEditBtn: '.js-order-product-edit-btn',
   productAddBtn: '#addProductBtn',
   productActionBtn: '.js-product-action-btn',

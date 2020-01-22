@@ -536,10 +536,12 @@ class OrderController extends FrameworkBundleAdminController
         $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
 
         $products = $orderForViewing->getProducts()->getProducts();
+        $lastProduct = $products[array_key_last($products)];
 
         return $this->render('@PrestaShop/Admin/Sell/Order/Order/Blocks/View/product.html.twig', [
             'orderForViewing' => $orderForViewing,
-            'product' => $products[array_key_last($products)],
+            'product' => $lastProduct,
+            'isColumnLocationDisplayed' => ($lastProduct->getLocation() !== '')
         ]);
     }
 
