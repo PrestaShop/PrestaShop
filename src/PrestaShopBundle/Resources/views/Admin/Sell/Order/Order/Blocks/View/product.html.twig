@@ -23,7 +23,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 {% if isColumnLocationDisplayed is not defined %}
-  {% set isColumnLocationDisplayed=(product.availableQuantity is empty) %}
+  {% set isColumnLocationDisplayed=(product.location is empty) %}
 {% endif %}
 <tr id="orderProduct_{{ product.orderDetailId }}"{% if productIndex is defined and paginationNum is defined and productIndex > paginationNum %} class="d-none"{% endif %}>
   <td class="cellProductImg">
@@ -60,7 +60,7 @@
       <input type="text" value="{{ product.quantity }}" class="form-control">
     </div>
   </td>
-  <td class="cell-product-location{% if not isColumnLocationDisplayed %} d-none{% endif %}">{{ product.location }}</td>
+  <td class="cellProductLocation{% if not isColumnLocationDisplayed %} d-none{% endif %}">{{ product.location }}</td>
   <td>
     <p>{{ product.quantityRefunded }}{% if product.amountRefunded %} ({{ product.amountRefunded }} {{ 'Refunded'|trans({}, 'Admin.Orderscustomers.Feature') }}){% endif %}</p>
   </td>
