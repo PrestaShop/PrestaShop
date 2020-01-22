@@ -30,6 +30,7 @@ env:
   global:
     - SYMFONY_DEPRECATIONS_HELPER=disabled
     - DISABLE_DEBUG_TOOLBAR=1
+    - NODE_VERSION=10.18.1
   jobs:
     - PRESTASHOP_TEST_TYPE=unit
     - PRESTASHOP_TEST_TYPE=integration
@@ -66,6 +67,8 @@ jobs:
           all_branches: true
 
 before_install:
+  - nvm install $NODE_VERSION && nvm use $NODE_VERSION
+  - npm i -g npm
   - /sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_10.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :10 -ac -screen 0 1600x1200x16
   # Avoid Composer authentication issues
   - if [[ "$TRAVIS_REPO_SLUG" = PrestaShop/PrestaShop ]]; then cp travis-scripts/.composer-auth.json ~/.composer/auth.json; fi;
@@ -77,7 +80,8 @@ before_install:
   - cp tests-legacy/parameters.yml.travis app/config/parameters.yml
 
 install:
-  - composer install --no-suggest --ansi --prefer-dist --no-interaction --no-progress --quiet;
+  - composer install --prefer-dist --no-progress
+  - ./bin/console fos:js-routing:dump --format=json --target=admin-dev/themes/new-theme/js/fos_js_routes.json
   - make assets
   - if [ "$PRESTASHOP_TEST_TYPE" != "sanity" ]; then
       bash travis-scripts/install-prestashop;
