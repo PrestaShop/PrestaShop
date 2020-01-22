@@ -3,6 +3,9 @@ parameters:
 	missingClosureNativeReturnCheckObjectTypehint: false
 	autoload_files:
 	- config/config.inc.php
+	excludes_analyse:
+	- src/Adapter
+	- src/PrestaShopBundle/Install
 	checkMaybeUndefinedVariables: true
 	checkExtraArguments: true
 	reportMagicMethods: true
@@ -10,7 +13,6 @@ parameters:
 conditionalTags:
 	PHPStan\Rules\Missing\MissingClosureNativeReturnTypehintRule:
 		phpstan.rules.rule: %checkMissingClosureNativeReturnTypehintRule%
-
 parametersSchema:
 	missingClosureNativeReturnCheckObjectTypehint: bool()
 
