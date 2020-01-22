@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -165,14 +165,17 @@ class OrderLazyArray extends AbstractLazyArray
         $order = $this->order;
         $cart = new Cart($order->id_cart);
 
-        $orderProducts = $order->getCartProducts();
+        $orderProducts = $order->getProducts();
         $cartProducts = $this->cartPresenter->present($cart);
         $orderPaid = $order->getCurrentOrderState() && $order->getCurrentOrderState()->paid;
 
         $includeTaxes = $this->includeTaxes();
         foreach ($orderProducts as &$orderProduct) {
+            // Use data from OrderDetail in case that the Product has been deleted
             $orderProduct['name'] = $orderProduct['product_name'];
             $orderProduct['quantity'] = $orderProduct['product_quantity'];
+            $orderProduct['id_product'] = $orderProduct['product_id'];
+            $orderProduct['id_product_attribute'] = $orderProduct['product_attribute_id'];
 
             $productPrice = $includeTaxes ? 'product_price_wt' : 'product_price';
             $totalPrice = $includeTaxes ? 'total_wt' : 'total_price';
