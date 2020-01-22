@@ -543,6 +543,7 @@ class OrderController extends FrameworkBundleAdminController
         $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
 
         $products = $orderForViewing->getProducts()->getProducts();
+        $lastProduct = $products[array_key_last($products)];
 
         $formBuilder = $this->get('prestashop.core.form.identifiable_object.builder.cancel_product_form_builder');
         $cancelProductForm = $formBuilder->getFormFor($orderId);
@@ -552,7 +553,8 @@ class OrderController extends FrameworkBundleAdminController
 
         return $this->render('@PrestaShop/Admin/Sell/Order/Order/Blocks/View/product.html.twig', [
             'orderForViewing' => $orderForViewing,
-            'product' => $products[array_key_last($products)],
+            'product' => $lastProduct,
+            'isColumnLocationDisplayed' => ($lastProduct->getLocation() !== ''),
             'cancelProductForm' => $cancelProductForm->createView(),
             'orderCurrency' => $orderCurrency,
         ]);
