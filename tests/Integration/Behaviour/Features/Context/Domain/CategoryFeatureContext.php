@@ -599,11 +599,11 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
                 $groupAssociationIds[] = (int) $groupChoicesArray[$groupAssociation];
             }
         } else {
-            $groupAssociationIds = array(
+            $groupAssociationIds = [
                 0 => '1',
                 1 => '2',
                 2 => '3',
-            );
+            ];
         }
 
         return $groupAssociationIds;
