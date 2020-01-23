@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Supplier\CommandHandler;
 
@@ -130,6 +131,9 @@ final class EditSupplierHandler extends AbstractSupplierHandler implements EditS
         }
         if (null !== $command->getStateId()) {
             $address->id_state = $command->getStateId();
+        }
+        if (null !== $command->getDni()) {
+            $address->dni = $command->getDni();
         }
     }
 }

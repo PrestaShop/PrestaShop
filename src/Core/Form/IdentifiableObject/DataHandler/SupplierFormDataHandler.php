@@ -84,7 +84,8 @@ final class SupplierFormDataHandler implements FormDataHandlerInterface
             $data['post_code'],
             isset($data['id_state']) ? (int) $data['id_state'] : null,
             $data['phone'],
-            $data['mobile_phone']
+            $data['mobile_phone'],
+            $data['dni']
         ));
 
         /** @var UploadedFile $uploadedFlagImage */
@@ -124,19 +125,21 @@ final class SupplierFormDataHandler implements FormDataHandlerInterface
      */
     private function fillCommandWithData(EditSupplierCommand $command, array $data)
     {
-        $command->setName($data['name']);
-        $command->setLocalizedDescriptions($data['description']);
-        $command->setPhone($data['phone']);
-        $command->setMobilePhone($data['mobile_phone']);
-        $command->setAddress($data['address']);
-        $command->setAddress2($data['address2']);
-        $command->setPostCode($data['post_code']);
-        $command->setCity($data['city']);
-        $command->setCountryId((int) $data['id_country']);
-        $command->setLocalizedMetaTitles($data['meta_title']);
-        $command->setLocalizedMetaDescriptions($data['meta_description']);
-        $command->setLocalizedMetaKeywords($data['meta_keyword']);
-        $command->setEnabled((bool) $data['is_enabled']);
+        $command->setName($data['name'])
+            ->setLocalizedDescriptions($data['description'])
+            ->setPhone($data['phone'])
+            ->setMobilePhone($data['mobile_phone'])
+            ->setAddress($data['address'])
+            ->setAddress2($data['address2'])
+            ->setPostCode($data['post_code'])
+            ->setCity($data['city'])
+            ->setCountryId((int) $data['id_country'])
+            ->setLocalizedMetaTitles($data['meta_title'])
+            ->setLocalizedMetaDescriptions($data['meta_description'])
+            ->setLocalizedMetaKeywords($data['meta_keyword'])
+            ->setEnabled((bool) $data['is_enabled'])
+            ->setDni($data['dni'])
+        ;
 
         if (isset($data['id_state'])) {
             $command->setStateId((int) $data['id_state']);

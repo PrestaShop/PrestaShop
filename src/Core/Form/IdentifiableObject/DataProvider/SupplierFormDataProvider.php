@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
 
@@ -99,6 +100,7 @@ final class SupplierFormDataProvider implements FormDataProviderInterface
             'meta_description' => $editableSupplier->getLocalizedMetaDescriptions(),
             'meta_keyword' => $editableSupplier->getLocalizedMetaKeywords(),
             'is_enabled' => $editableSupplier->isEnabled(),
+            'dni' => $editableSupplier->getDni()
         ];
 
         if ($this->multistoreEnabled) {

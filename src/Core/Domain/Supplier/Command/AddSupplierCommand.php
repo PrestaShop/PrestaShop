@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Supplier\Command;
 
@@ -106,10 +107,15 @@ class AddSupplierCommand
     private $mobilePhone;
 
     /**
+     * @var string|null
+     */
+    private $dni;
+
+    /**
      * @param string $name
      * @param string $address
-     * @param int $countryId
      * @param string $city
+     * @param int $countryId
      * @param bool $enabled
      * @param string[] $localizedDescriptions
      * @param string[] $localizedMetaTitles
@@ -121,23 +127,25 @@ class AddSupplierCommand
      * @param int|null $stateId
      * @param string|null $phone
      * @param string|null $mobilePhone
+     * @param string $dni
      */
     public function __construct(
-        $name,
-        $address,
-        $city,
-        $countryId,
-        $enabled,
+        string $name,
+        string $address,
+        string $city,
+        int $countryId,
+        bool $enabled,
         array $localizedDescriptions,
         array $localizedMetaTitles,
         array $localizedMetaDescriptions,
         array $localizedMetaKeywords,
         array $shopAssociation,
-        $address2 = null,
-        $postCode = null,
-        $stateId = null,
-        $phone = null,
-        $mobilePhone = null
+        ?string $address2 = null,
+        ?string $postCode = null,
+        ?int $stateId = null,
+        ?string $phone = null,
+        ?string $mobilePhone = null,
+        ?string $dni = null
     ) {
         $this->name = $name;
         $this->address = $address;
@@ -154,12 +162,13 @@ class AddSupplierCommand
         $this->stateId = $stateId;
         $this->phone = $phone;
         $this->mobilePhone = $mobilePhone;
+        $this->dni = $dni;
     }
 
     /**
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
@@ -167,7 +176,7 @@ class AddSupplierCommand
     /**
      * @return string
      */
-    public function getAddress()
+    public function getAddress(): string
     {
         return $this->address;
     }
@@ -175,7 +184,7 @@ class AddSupplierCommand
     /**
      * @return string
      */
-    public function getCity()
+    public function getCity(): string
     {
         return $this->city;
     }
@@ -183,7 +192,7 @@ class AddSupplierCommand
     /**
      * @return string|null
      */
-    public function getAddress2()
+    public function getAddress2(): ?string
     {
         return $this->address2;
     }
@@ -191,7 +200,7 @@ class AddSupplierCommand
     /**
      * @return int
      */
-    public function getCountryId()
+    public function getCountryId(): ?int
     {
         return $this->countryId;
     }
@@ -199,7 +208,7 @@ class AddSupplierCommand
     /**
      * @return string|null
      */
-    public function getPostCode()
+    public function getPostCode(): ?string
     {
         return $this->postCode;
     }
@@ -207,7 +216,7 @@ class AddSupplierCommand
     /**
      * @return int|null
      */
-    public function getStateId()
+    public function getStateId(): ?int
     {
         return $this->stateId;
     }
@@ -215,7 +224,7 @@ class AddSupplierCommand
     /**
      * @return string|null
      */
-    public function getPhone()
+    public function getPhone(): ?string
     {
         return $this->phone;
     }
@@ -223,7 +232,7 @@ class AddSupplierCommand
     /**
      * @return string|null
      */
-    public function getMobilePhone()
+    public function getMobilePhone(): ?string
     {
         return $this->mobilePhone;
     }
@@ -231,7 +240,7 @@ class AddSupplierCommand
     /**
      * @return string[]
      */
-    public function getLocalizedDescriptions()
+    public function getLocalizedDescriptions(): array
     {
         return $this->localizedDescriptions;
     }
@@ -239,7 +248,7 @@ class AddSupplierCommand
     /**
      * @return string[]
      */
-    public function getLocalizedMetaTitles()
+    public function getLocalizedMetaTitles(): array
     {
         return $this->localizedMetaTitles;
     }
@@ -247,7 +256,7 @@ class AddSupplierCommand
     /**
      * @return string[]
      */
-    public function getLocalizedMetaDescriptions()
+    public function getLocalizedMetaDescriptions(): array
     {
         return $this->localizedMetaDescriptions;
     }
@@ -255,7 +264,7 @@ class AddSupplierCommand
     /**
      * @return string[]
      */
-    public function getLocalizedMetaKeywords()
+    public function getLocalizedMetaKeywords(): array
     {
         return $this->localizedMetaKeywords;
     }
@@ -263,7 +272,7 @@ class AddSupplierCommand
     /**
      * @return bool
      */
-    public function isEnabled()
+    public function isEnabled(): bool
     {
         return $this->enabled;
     }
@@ -271,8 +280,16 @@ class AddSupplierCommand
     /**
      * @return array
      */
-    public function getShopAssociation()
+    public function getShopAssociation(): array
     {
         return $this->shopAssociation;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getDni(): ?string
+    {
+        return $this->dni;
     }
 }

@@ -81,6 +81,7 @@ final class GetSupplierForEditingHandler extends AbstractSupplierHandler impleme
             $supplier->meta_keywords,
             (bool) $supplier->active,
             $supplier->getAssociatedShops(),
+            $address->dni,
             $this->getLogoImage($supplierId->getValue())
         );
     }
@@ -90,7 +91,7 @@ final class GetSupplierForEditingHandler extends AbstractSupplierHandler impleme
      *
      * @return array|null
      */
-    private function getLogoImage($imageId)
+    private function getLogoImage($imageId): ?array
     {
         $imagePath = _PS_SUPP_IMG_DIR_ . $imageId . '.jpg';
         $imageTag = $this->getTmpImageTag($imagePath, $imageId, 'supplier');

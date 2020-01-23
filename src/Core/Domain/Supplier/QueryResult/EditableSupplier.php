@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Supplier\QueryResult;
 
@@ -119,6 +120,11 @@ class EditableSupplier
     private $associatedShops;
 
     /**
+     * @var string
+     */
+    private $dni;
+
+    /**
      * @param SupplierId $supplierId
      * @param string $name
      * @param string[] $localizedDescriptions
@@ -135,26 +141,28 @@ class EditableSupplier
      * @param string[] $localizedMetaKeywords
      * @param bool $enabled
      * @param array $associatedShops
+     * @param string $dni
      * @param array|null $logoImage
      */
     public function __construct(
         SupplierId $supplierId,
-        $name,
+        string $name,
         array $localizedDescriptions,
-        $address,
-        $city,
-        $address2,
-        $countryId,
-        $postCode,
-        $stateId,
-        $phone,
-        $mobilePhone,
+        string $address,
+        string $city,
+        string $address2,
+        int $countryId,
+        string $postCode,
+        int $stateId,
+        string $phone,
+        string $mobilePhone,
         array $localizedMetaTitles,
         array $localizedMetaDescriptions,
         array $localizedMetaKeywords,
-        $enabled,
+        bool $enabled,
         array $associatedShops,
-        array $logoImage = null
+        string $dni,
+        ?array $logoImage = null
     ) {
         $this->supplierId = $supplierId;
         $this->name = $name;
@@ -172,13 +180,14 @@ class EditableSupplier
         $this->localizedMetaDescriptions = $localizedMetaDescriptions;
         $this->localizedMetaKeywords = $localizedMetaKeywords;
         $this->enabled = $enabled;
+        $this->dni = $dni;
         $this->associatedShops = $associatedShops;
     }
 
     /**
      * @return SupplierId
      */
-    public function getSupplierId()
+    public function getSupplierId(): SupplierId
     {
         return $this->supplierId;
     }
@@ -186,7 +195,7 @@ class EditableSupplier
     /**
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
@@ -194,7 +203,7 @@ class EditableSupplier
     /**
      * @return string[]
      */
-    public function getLocalizedDescriptions()
+    public function getLocalizedDescriptions(): array
     {
         return $this->localizedDescriptions;
     }
@@ -202,7 +211,7 @@ class EditableSupplier
     /**
      * @return string
      */
-    public function getAddress()
+    public function getAddress(): string
     {
         return $this->address;
     }
@@ -210,7 +219,7 @@ class EditableSupplier
     /**
      * @return string
      */
-    public function getCity()
+    public function getCity(): string
     {
         return $this->city;
     }
@@ -218,7 +227,7 @@ class EditableSupplier
     /**
      * @return string
      */
-    public function getAddress2()
+    public function getAddress2(): string
     {
         return $this->address2;
     }
@@ -226,7 +235,7 @@ class EditableSupplier
     /**
      * @return int
      */
-    public function getCountryId()
+    public function getCountryId(): int
     {
         return $this->countryId;
     }
@@ -234,7 +243,7 @@ class EditableSupplier
     /**
      * @return string
      */
-    public function getPostCode()
+    public function getPostCode(): string
     {
         return $this->postCode;
     }
@@ -242,7 +251,7 @@ class EditableSupplier
     /**
      * @return int
      */
-    public function getStateId()
+    public function getStateId(): int
     {
         return $this->stateId;
     }
@@ -250,7 +259,7 @@ class EditableSupplier
     /**
      * @return string
      */
-    public function getPhone()
+    public function getPhone(): string
     {
         return $this->phone;
     }
@@ -258,15 +267,15 @@ class EditableSupplier
     /**
      * @return string
      */
-    public function getMobilePhone()
+    public function getMobilePhone(): string
     {
         return $this->mobilePhone;
     }
 
     /**
-     * @return array
+     * @return array|null ?array
      */
-    public function getLogoImage()
+    public function getLogoImage(): ?array
     {
         return $this->logoImage;
     }
@@ -274,7 +283,7 @@ class EditableSupplier
     /**
      * @return string[]
      */
-    public function getLocalizedMetaTitles()
+    public function getLocalizedMetaTitles(): array
     {
         return $this->localizedMetaTitles;
     }
@@ -282,7 +291,7 @@ class EditableSupplier
     /**
      * @return string[]
      */
-    public function getLocalizedMetaDescriptions()
+    public function getLocalizedMetaDescriptions(): array
     {
         return $this->localizedMetaDescriptions;
     }
@@ -290,7 +299,7 @@ class EditableSupplier
     /**
      * @return string[]
      */
-    public function getLocalizedMetaKeywords()
+    public function getLocalizedMetaKeywords(): array
     {
         return $this->localizedMetaKeywords;
     }
@@ -298,7 +307,7 @@ class EditableSupplier
     /**
      * @return bool
      */
-    public function isEnabled()
+    public function isEnabled(): bool
     {
         return $this->enabled;
     }
@@ -306,8 +315,16 @@ class EditableSupplier
     /**
      * @return array
      */
-    public function getAssociatedShops()
+    public function getAssociatedShops(): array
     {
         return $this->associatedShops;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDni(): string
+    {
+        return $this->dni;
     }
 }
