@@ -198,6 +198,7 @@ class EditSupplierCommand
     public function setAddress(?string $address): self
     {
         $this->address = $address;
+
         return $this;
     }
 
@@ -317,6 +318,7 @@ class EditSupplierCommand
     public function setPhone(?string $phone): self
     {
         $this->phone = $phone;
+
         return $this;
     }
 
@@ -356,6 +358,7 @@ class EditSupplierCommand
     public function setLocalizedMetaTitles(?array $localizedMetaTitles): self
     {
         $this->localizedMetaTitles = $localizedMetaTitles;
+
         return $this;
     }
 
@@ -375,6 +378,7 @@ class EditSupplierCommand
     public function setLocalizedMetaDescriptions(?array $localizedMetaDescriptions): self
     {
         $this->localizedMetaDescriptions = $localizedMetaDescriptions;
+
         return $this;
     }
 

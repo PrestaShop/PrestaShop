@@ -100,7 +100,7 @@ final class SupplierFormDataProvider implements FormDataProviderInterface
             'meta_description' => $editableSupplier->getLocalizedMetaDescriptions(),
             'meta_keyword' => $editableSupplier->getLocalizedMetaKeywords(),
             'is_enabled' => $editableSupplier->isEnabled(),
-            'dni' => $editableSupplier->getDni()
+            'dni' => $editableSupplier->getDni(),
         ];
 
         if ($this->multistoreEnabled) {
