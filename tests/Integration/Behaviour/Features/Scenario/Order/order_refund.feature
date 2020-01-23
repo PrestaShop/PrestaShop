@@ -249,7 +249,7 @@ Feature: Refund Order from Back Office (BO)
       | total_refunded_tax_incl     | 8.0 |
     And there are 0 more "Mug The best is yet to come" in stock
     And there are 0 more "Mug Today is a good day" in stock
-    And customer "testCustomer" has voucher of 13.5
+    And customer "testCustomer" last voucher is 13.5
 
   @order-refund
   Scenario: Partial refund of products avoids refunding too much
@@ -291,7 +291,7 @@ Feature: Refund Order from Back Office (BO)
     And there are 0 more "Mug Today is a good day" in stock
 
   @order-refund
-  Scenario: Partial refund of products without credit slip
+  Scenario: Partial refund of products without credit slip (voucher generation is required then)
     Given I add order "bo_order_refund" with the following details:
       | cart                | dummy_cart                 |
       | message             | test                       |
@@ -303,7 +303,7 @@ Feature: Refund Order from Back Office (BO)
       | product_quantity            | 1 |
     And there are 2 less "Mug The best is yet to come" in stock
     And there are 1 less "Mug Today is a good day" in stock
-    When I issue a partial refund on "bo_order_refund" with restock without credit slip without voucher on following products:
+    When I issue a partial refund on "bo_order_refund" with restock without credit slip with voucher on following products:
       | product_name                | quantity                 | amount |
       | Mug The best is yet to come | 1                        | 10.5   |
       | Mug Today is a good day     | 1                        | 3.5    |
@@ -322,6 +322,7 @@ Feature: Refund Order from Back Office (BO)
       | total_refunded_tax_incl     | 3.5 |
     And there are 1 more "Mug The best is yet to come" in stock
     And there are 1 more "Mug Today is a good day" in stock
+    And customer "testCustomer" last voucher is 14.0
 
   @order-refund
   Scenario: Partial refund of products with a lot of precision
@@ -377,7 +378,25 @@ Feature: Refund Order from Back Office (BO)
     When I issue a partial refund on "bo_order_refund" with restock with credit slip without voucher on following products:
       | product_name                | quantity                 | amount |
       | Mug Today is a good day     | 0                        | 8      |
-    Then I should get error that refund quantity is empty
+    Then I should get error that refund quantity is invalid
+    And "bo_order_refund" has 0 credit slips
+
+  @order-refund
+  Scenario: Minimum one product refund
+    Given I add order "bo_order_refund" with the following details:
+      | cart                | dummy_cart                 |
+      | message             | test                       |
+      | payment module name | dummy_payment              |
+      | status              | Processing in progress     |
+    And product "Mug The best is yet to come" in order "bo_order_refund" has following details:
+      | product_quantity            | 2 |
+    And product "Mug Today is a good day" in order "bo_order_refund" has following details:
+      | product_quantity            | 1 |
+    And there are 2 less "Mug The best is yet to come" in stock
+    And there are 1 less "Mug Today is a good day" in stock
+    When I issue a partial refund on "bo_order_refund" with restock with credit slip without voucher on following products:
+      | product_name                | quantity                 | amount |
+    Then I should get error that no refunds is invalid
     And "bo_order_refund" has 0 credit slips
 
   @order-refund
@@ -456,4 +475,24 @@ Feature: Refund Order from Back Office (BO)
       | Mug Today is a good day     | 1                        | 8      |
       | shipping_refund             |                          | 5.5    |
     Then I should get error that refund amount is invalid
+    Then "bo_order_refund" has 0 credit slips
+
+  @order-refund
+  Scenario: Partial refund with no generation is invalid
+    And I add order "bo_order_refund" with the following details:
+      | cart                | dummy_cart                 |
+      | message             | test                       |
+      | payment module name | dummy_payment              |
+      | status              | Processing in progress     |
+    And product "Mug The best is yet to come" in order "bo_order_refund" has following details:
+      | product_quantity            | 2 |
+    And product "Mug Today is a good day" in order "bo_order_refund" has following details:
+      | product_quantity            | 1 |
+    And there are 2 less "Mug The best is yet to come" in stock
+    And there are 1 less "Mug Today is a good day" in stock
+    When I issue a partial refund on "bo_order_refund" without restock without credit slip without voucher on following products:
+      | product_name                | quantity                 | amount |
+      | Mug Today is a good day     | 1                        | 8      |
+      | shipping_refund             |                          | 5.5    |
+    Then I should get error that no generation is invalid
     Then "bo_order_refund" has 0 credit slips

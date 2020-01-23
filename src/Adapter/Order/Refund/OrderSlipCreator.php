@@ -38,7 +38,7 @@ use Order;
 use OrderDetail;
 use OrderSlip;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
-use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidRefundAmountException;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidRefundException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\VoucherRefundType;
 use PrestaShopDatabaseException;
@@ -81,7 +81,7 @@ class OrderSlipCreator
      * @param Order $order
      * @param OrderRefundSummary $orderRefundSummary
      *
-     * @throws InvalidRefundAmountException
+     * @throws InvalidRefundException
      * @throws OrderException
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
@@ -154,7 +154,7 @@ class OrderSlipCreator
                 }
             }
         } else {
-            throw new InvalidRefundAmountException();
+            throw new InvalidRefundException(InvalidRefundException::INVALID_AMOUNT);
         }
     }
 

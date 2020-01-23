@@ -34,7 +34,7 @@ use Group;
 use Order;
 use OrderDetail;
 use OrderSlip;
-use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidRefundQuantityException;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidRefundException;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderDetailRefund;
 use PrestaShop\PrestaShop\Core\Domain\Order\VoucherRefundType;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\ComputingPrecision;
@@ -58,7 +58,7 @@ class OrderRefundCalculator
      *
      * @return OrderRefundSummary
      *
-     * @throws InvalidRefundQuantityException
+     * @throws InvalidRefundException
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
      */
@@ -152,7 +152,7 @@ class OrderRefundCalculator
      *
      * @return array
      *
-     * @throws InvalidRefundQuantityException
+     * @throws InvalidRefundException
      */
     private function flattenCheckedProductRefunds(
         array $orderDetailRefunds,
@@ -170,7 +170,7 @@ class OrderRefundCalculator
             $quantity = $orderDetailRefund->getProductQuantity();
             $quantityLeft = (int) $orderDetail->product_quantity - (int) $orderDetail->product_quantity_refunded - (int) $orderDetail->product_quantity_return;
             if ($quantity > $quantityLeft) {
-                throw new InvalidRefundQuantityException(InvalidRefundQuantityException::QUANTITY_TOO_HIGH, $quantityLeft);
+                throw new InvalidRefundException(InvalidRefundException::QUANTITY_TOO_HIGH, $quantityLeft);
             }
 
             $productRefunds[$orderDetailId] = [
@@ -179,7 +179,7 @@ class OrderRefundCalculator
             ];
 
             // Compute max refund by product (based on quantity and already refunded amount)
-            $productMaxRefund = $isTaxIncluded ? (float) $orderDetail->unit_price_tax_excl : (float) $orderDetail->unit_price_tax_incl;
+            $productMaxRefund = $isTaxIncluded ? (float) $orderDetail->unit_price_tax_incl : (float) $orderDetail->unit_price_tax_excl;
             $productMaxRefund *= $quantity;
             $productMaxRefund -= $isTaxIncluded ? (float) $orderDetail->total_refunded_tax_incl : (float) $orderDetail->total_refunded_tax_excl;
 
