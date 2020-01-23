@@ -26,11 +26,18 @@
 
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
+use Behat\Gherkin\Node\TableNode;
 use Customer;
+use Exception;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Command\AddCustomerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\SetPrivateNoteAboutCustomerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\SetRequiredFieldsForCustomerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetRequiredFieldsForCustomer;
+use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
+use PrestaShop\PrestaShop\Core\Group\Provider\DefaultGroupsProviderInterface;
 use RuntimeException;
+use Tests\Integration\Behaviour\Features\Context\CommonFeatureContext;
+use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 
 class CustomerFeatureContext extends AbstractDomainFeatureContext
 {
@@ -102,5 +109,55 @@ class CustomerFeatureContext extends AbstractDomainFeatureContext
         ];
 
         return $requiredCustomerFields[$requiredField];
+    }
+
+    /**
+     * @When /^I create customer "(.+)" with following details:$/
+     *
+     * @param string $customerReference
+     * @param TableNode $table
+     *
+     * @throws Exception
+     */
+    public function createCustomerUsingCommand(string $customerReference, TableNode $table)
+    {
+        $data = $table->getRowsHash();
+
+        $commandBus = $this->getCommandBus();
+
+        /** @var DefaultGroupsProviderInterface $groupProvider */
+        $groupProvider = CommonFeatureContext::getContainer()->get('prestashop.adapter.group.provider.default_groups_provider');
+        $defaultGroups = $groupProvider->getGroups();
+
+        $mandatoryFields = [
+            'firstName',
+            'lastName',
+            'email',
+            'password',
+        ];
+
+        foreach ($mandatoryFields as $mandatoryField) {
+            if (!array_key_exists($mandatoryField, $data)) {
+                throw new Exception(sprintf('Mandatory property %s for customer has not been provided', $mandatoryField));
+            }
+        }
+
+        $command = new AddCustomerCommand(
+            $data['firstName'],
+            $data['lastName'],
+            $data['email'],
+            $data['password'],
+            isset($data['defaultGroupId']) ? $data['defaultGroupId'] : $defaultGroups->getCustomersGroup()->getId(),
+            isset($data['groupIds']) ? $data['groupIds'] : [$defaultGroups->getCustomersGroup()->getId()],
+            (isset($data['shopId']) ? $data['shopId'] : 0),
+            (isset($data['genderId']) ? $data['genderId'] : null),
+            (isset($data['isEnabled']) ? $data['isEnabled'] : true),
+            (isset($data['isPartnerOffersSubscribed']) ? $data['isPartnerOffersSubscribed'] : false),
+            (isset($data['birthday']) ? $data['birthday'] : null)
+        );
+
+        /** @var CustomerId $id */
+        $id = $commandBus->handle($command);
+        SharedStorage::getStorage()->set($customerReference, $id->getValue());
     }
 }

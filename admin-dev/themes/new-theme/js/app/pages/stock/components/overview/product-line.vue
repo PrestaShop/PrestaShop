@@ -82,11 +82,11 @@
 </template>
 
 <script>
-  import Spinner from './spinner';
-  import PSCheckbox from 'app/widgets/ps-checkbox';
-  import PSMedia from 'app/widgets/ps-media';
-  import ProductDesc from 'app/pages/stock/mixins/product-desc';
-  import { EventBus } from 'app/utils/event-bus';
+  import PSCheckbox from '@app/widgets/ps-checkbox';
+  import PSMedia from '@app/widgets/ps-media';
+  import ProductDesc from '@app/pages/stock/mixins/product-desc';
+  import { EventBus } from '@app/utils/event-bus';
+  import Spinner from '@app/pages/stock/components/overview/spinner';
   import _ from 'lodash';
 
   export default {

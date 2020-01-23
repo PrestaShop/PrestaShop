@@ -177,13 +177,7 @@ class AppendHooksListForSqlUpgradeFileCommand extends ContainerAwareCommand
         $filesCount = $filesFinder->count();
 
         if (1 !== $filesCount) {
-            throw new FileNotFoundException(
-                sprintf(
-                    'Expected to find 1 file but %s files found with name %s',
-                    $filesFinder->count(),
-                    $sqlUpgradeFile
-                )
-            );
+            throw new FileNotFoundException(sprintf('Expected to find 1 file but %s files found with name %s', $filesFinder->count(), $sqlUpgradeFile));
         }
 
         foreach ($filesFinder as $sqlInfo) {

@@ -27,6 +27,8 @@
 namespace PrestaShopBundle\Controller\Admin;
 
 use Category;
+use Configuration;
+use Currency;
 use Exception;
 use PrestaShop\PrestaShop\Adapter\Product\ListParametersUpdater;
 use PrestaShop\PrestaShop\Adapter\Tax\TaxRuleDataProvider;
@@ -122,7 +124,7 @@ class ProductController extends FrameworkBundleAdminController
         $orderBy = 'id_product',
         $sortOrder = 'desc'
     ) {
-        if (!$this->isGranted(array(PageVoter::READ, PageVoter::UPDATE, PageVoter::CREATE), self::PRODUCT_OBJECT)) {
+        if (!$this->isGranted([PageVoter::READ, PageVoter::UPDATE, PageVoter::CREATE], self::PRODUCT_OBJECT)) {
             return $this->redirect('admin_dashboard');
         }
 
@@ -328,14 +330,14 @@ class ProductController extends FrameworkBundleAdminController
         $activateDragAndDrop = 'position_ordering' === $orderBy && $hasCategoryFilter;
 
         // Template vars injection
-        $vars = array(
+        $vars = [
             'activate_drag_and_drop' => $activateDragAndDrop,
             'products' => $products,
             'product_count' => $totalCount,
             'last_sql_query' => $lastSql,
             'has_category_filter' => $productProvider->isCategoryFiltered(),
             'is_shop_context' => $this->get('prestashop.adapter.shop.context')->isShopContext(),
-        );
+        ];
         if ($view !== 'full') {
             return $this->render(
                 '@Product/CatalogPage/Lists/list_' . $view . '.html.twig',
@@ -360,13 +362,13 @@ class ProductController extends FrameworkBundleAdminController
      */
     private function getToolbarButtons()
     {
-        $toolbarButtons = array();
-        $toolbarButtons['add'] = array(
+        $toolbarButtons = [];
+        $toolbarButtons['add'] = [
             'href' => $this->generateUrl('admin_product_new'),
             'desc' => $this->trans('New product', 'Admin.Actions'),
             'icon' => 'add_circle_outline',
             'help' => $this->trans('Create a new product: CTRL+P', 'Admin.Catalog.Help'),
-        );
+        ];
 
         return $toolbarButtons;
     }
@@ -434,7 +436,7 @@ class ProductController extends FrameworkBundleAdminController
     {
         gc_disable();
 
-        if (!$this->isGranted(array(PageVoter::READ, PageVoter::UPDATE, PageVoter::CREATE), self::PRODUCT_OBJECT)) {
+        if (!$this->isGranted([PageVoter::READ, PageVoter::UPDATE, PageVoter::CREATE], self::PRODUCT_OBJECT)) {
             return $this->redirect('admin_dashboard');
         }
 
@@ -691,7 +693,7 @@ class ProductController extends FrameworkBundleAdminController
                     $this->trans(
                         'The value of the PHP.ini setting "max_input_vars" must be increased to %value% in order to be able to submit the product form.',
                         'Admin.Notifications.Error',
-                        array('%value%' => $combinationsInputs)
+                        ['%value%' => $combinationsInputs]
                     )
                 );
             }
@@ -867,10 +869,7 @@ class ProductController extends FrameworkBundleAdminController
                      */
                     $logger->error('Bulk action from ProductController received a bad parameter.');
 
-                    throw new Exception(
-                        'Bad action received from call to ProductController::bulkAction: "' . $action . '"',
-                        2001
-                    );
+                    throw new Exception('Bad action received from call to ProductController::bulkAction: "' . $action . '"', 2001);
             }
         } catch (UpdateProductException $due) {
             //TODO : need to translate this with an domain name
@@ -979,10 +978,7 @@ class ProductController extends FrameworkBundleAdminController
                      */
                     $logger->error('Mass edit action from ProductController received a bad parameter.');
 
-                    throw new Exception(
-                        'Bad action received from call to ProductController::massEditAction: "' . $action . '"',
-                        2001
-                    );
+                    throw new Exception('Bad action received from call to ProductController::massEditAction: "' . $action . '"', 2001);
             }
         } catch (UpdateProductException $due) {
             //TODO : need to translate with domain name
@@ -1141,10 +1137,7 @@ class ProductController extends FrameworkBundleAdminController
                      */
                     $logger->error('Unit action from ProductController received a bad parameter.');
 
-                    throw new Exception(
-                        'Bad action received from call to ProductController::unitAction: "' . $action . '"',
-                        2002
-                    );
+                    throw new Exception('Bad action received from call to ProductController::unitAction: "' . $action . '"', 2002);
             }
         } catch (UpdateProductException $due) {
             //TODO : need to translate with a domain name
@@ -1304,22 +1297,26 @@ class ProductController extends FrameworkBundleAdminController
     /**
      * @param Request $request
      *
-     * @return Response
+     * @return JsonResponse
      */
-    public function searchProductsAction(Request $request): Response
+    public function searchProductsAction(Request $request): JsonResponse
     {
         try {
             $searchPhrase = $request->query->get('search_phrase');
+            $currencyId = $request->query->get('currency_id');
+            $currencyIsoCode = $currencyId !== null
+                ? Currency::getIsoCodeById((int) $currencyId)
+                : Currency::getIsoCodeById((int) Configuration::get('PS_CURRENCY_DEFAULT'));
 
             /** @var FoundProduct[] $foundProducts */
-            $foundProducts = $this->getQueryBus()->handle(new SearchProducts($searchPhrase, 10));
+            $foundProducts = $this->getQueryBus()->handle(new SearchProducts($searchPhrase, 10, $currencyIsoCode));
 
-            $serializer = $this->get('prestashop.bundle.snake_case_serializer_json');
-
-            return new Response($serializer->serialize($foundProducts, 'json'));
+            return $this->json([
+                'products' => $foundProducts,
+            ]);
         } catch (Exception $e) {
             return $this->json(
-                ['message' => $this->getErrorMessageForException($e, [])],
+                [$e, 'message' => $this->getErrorMessageForException($e, [])],
                 Response::HTTP_INTERNAL_SERVER_ERROR
             );
         }

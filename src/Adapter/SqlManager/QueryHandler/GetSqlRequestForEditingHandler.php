@@ -66,19 +66,11 @@ final class GetSqlRequestForEditingHandler implements GetSqlRequestForEditingHan
         $entity = new RequestSql($requestSqlId->getValue());
 
         if (0 >= $entity->id) {
-            throw new SqlRequestNotFoundException(
-                sprintf('SqlRequest with id "%s" cannot be found', $requestSqlId->getValue())
-            );
+            throw new SqlRequestNotFoundException(sprintf('SqlRequest with id "%s" cannot be found', $requestSqlId->getValue()));
         }
 
         if ((int) $entity->id !== $requestSqlId->getValue()) {
-            throw new SqlRequestNotFoundException(
-                sprintf(
-                    'The retrieved id "%s" does not match requested SqlRequest id "%s"',
-                    $entity->id,
-                    $requestSqlId->getValue()
-                )
-            );
+            throw new SqlRequestNotFoundException(sprintf('The retrieved id "%s" does not match requested SqlRequest id "%s"', $entity->id, $requestSqlId->getValue()));
         }
 
         return $entity;

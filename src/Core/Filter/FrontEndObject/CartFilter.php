@@ -36,7 +36,7 @@ class CartFilter extends HashMapWhitelistFilter
 {
     public function __construct($productsFilter)
     {
-        $whitelist = array(
+        $whitelist = [
             'discounts',
             'minimalPurchase',
             'minimalPurchaseRequired',
@@ -46,7 +46,7 @@ class CartFilter extends HashMapWhitelistFilter
             'summary_string',
             'totals',
             'vouchers',
-        );
+        ];
 
         $this->whitelist($whitelist);
     }

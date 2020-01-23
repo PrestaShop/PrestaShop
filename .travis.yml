@@ -18,18 +18,19 @@ cache:
   directories:
     - $HOME/.composer/cache
 
-sudo: required
+os: linux
 dist: trusty
 
 php:
   - 7.1
   - 7.2
+  - 7.3
 
 env:
   global:
     - SYMFONY_DEPRECATIONS_HELPER=disabled
     - DISABLE_DEBUG_TOOLBAR=1
-  matrix:
+  jobs:
     - PRESTASHOP_TEST_TYPE=unit
     - PRESTASHOP_TEST_TYPE=integration
     - PRESTASHOP_TEST_TYPE=sanity
@@ -40,10 +41,10 @@ stages:
   - name: test
     if: type IN (push, pull_request)
 
-matrix:
+jobs:
   include:
     - stage: deploy
-      php: 7.2
+      php: 7.3
       before_install: skip
       before_script: skip
       install: skip
@@ -59,9 +60,8 @@ matrix:
         access_key_id: $GCS_ACCESS_KEY
         secret_access_key: $GCS_ACCESS_SECRET
         bucket: prestashop-core-nightly
-        skip_cleanup: true
         acl: public-read
-        local-dir: "/tmp/ps-release"
+        local_dir: "/tmp/ps-release"
         on:
           all_branches: true
 
@@ -78,11 +78,14 @@ before_install:
 
 install:
   - composer install --no-suggest --ansi --prefer-dist --no-interaction --no-progress --quiet;
-  - bash travis-scripts/install-prestashop;
+  - make assets
+  - if [ "$PRESTASHOP_TEST_TYPE" != "sanity" ]; then
+      bash travis-scripts/install-prestashop;
+    fi
 
 script:
   - if [ "$PRESTASHOP_TEST_TYPE" = "unit" ]; then
-        bash tests-legacy/check_file_syntax.sh;
+        bash tests/check_file_syntax.sh;
         bash tests-legacy/check_phpunit.sh;
     fi
 

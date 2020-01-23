@@ -14,7 +14,7 @@ module.exports = class CommonPage {
   /**
    * Get Text from element
    * @param selector, from where to get text
-   * @return textContent
+   * @return {Promise<string>}
    */
   async getTextContent(selector) {
     await this.page.waitForSelector(selector, {visible: true});
@@ -39,6 +39,20 @@ module.exports = class CommonPage {
   async elementVisible(selector, timeout = 10) {
     try {
       await this.page.waitForSelector(selector, {visible: true, timeout});
+      return true;
+    } catch (error) {
+      return false;
+    }
+  }
+
+  /**
+   * Is element not visible
+   * @param selector, element to check
+   * @return boolean, true if visible, false if not
+   */
+  async elementNotVisible(selector, timeout = 10) {
+    try {
+      await this.page.waitForSelector(selector, {hidden: true, timeout});
       return true;
     } catch (error) {
       return false;

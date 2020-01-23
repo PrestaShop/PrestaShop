@@ -62,12 +62,7 @@ class ShopId
     private function assertIntegerIsGreaterThanZero($shopId)
     {
         if (!is_int($shopId) || 0 > $shopId) {
-            throw new OrderException(
-                sprintf(
-                    'Shop id %s is invalid. Shop id must be number that is greater than zero.',
-                    var_export($shopId, true)
-                )
-            );
+            throw new OrderException(sprintf('Shop id %s is invalid. Shop id must be number that is greater than zero.', var_export($shopId, true)));
         }
     }
 }

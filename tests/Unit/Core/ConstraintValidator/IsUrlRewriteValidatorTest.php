@@ -26,11 +26,12 @@
 
 namespace Tests\Unit\Core\ConstraintValidator;
 
+use PHPUnit\Framework\MockObject\Builder\InvocationMocker;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\IsUrlRewrite;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\IsUrlRewriteValidator;
-use Symfony\Component\Validator\Exception\UnexpectedTypeException;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Exception\UnexpectedTypeException;
 use Symfony\Component\Validator\Test\ConstraintValidatorTestCase;
 
 /**
@@ -44,7 +45,7 @@ class IsUrlRewriteValidatorTest extends ConstraintValidatorTestCase
     private $useAscendedChars;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_Builder_InvocationMocker
+     * @var InvocationMocker
      */
     private $configurationMockWithAscendingCharsOn;
 

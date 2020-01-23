@@ -142,6 +142,10 @@ server {
     location ~ ^/(app|bin|cache|classes|config|controllers|docs|localization|override|src|tests|tools|translations|travis-scripts|vendor|var)/ {
         deny all;
     }
+    # vendor in modules directory
+    location ~ ^/modules/.*/vendor/ {
+        deny all;
+    }
     # Prevent exposing other sensitive files
     location ~ \.(yml|log|tpl|twig|sass)$ {
         deny all;

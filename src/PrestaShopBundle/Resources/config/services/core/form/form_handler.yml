@@ -129,3 +129,21 @@ services:
     factory: 'prestashop.core.form.identifiable_object.handler.form_handler_factory:create'
     arguments:
       - '@prestashop.core.form.identifiable_object.data_handler.catalog_price_rule_form_data_handler'
+
+  prestashop.core.form.identifiable_object.handler.attachment_form_handler:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandler'
+    factory: 'prestashop.core.form.identifiable_object.handler.form_handler_factory:create'
+    arguments:
+      - '@prestashop.core.form.identifiable_object.data_handler.attachment_form_data_handler'
+
+  prestashop.core.form.identifiable_object.partial_refund_form_handler:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandler'
+    factory: 'prestashop.core.form.identifiable_object.handler.form_handler_factory:create'
+    arguments:
+      - '@prestashop.core.form.identifiable_object.partial_refund_form_data_handler'
+
+  prestashop.core.form.identifiable_object.handler.address_form_handler:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandler'
+    factory: 'prestashop.core.form.identifiable_object.handler.form_handler_factory:create'
+    arguments:
+      - '@prestashop.core.form.identifiable_object.data_handler.address_form_data_handler'

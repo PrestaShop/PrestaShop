@@ -23,11 +23,11 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-import createOrderMap from './create-order-map';
-import CustomerRenderer from './customer-renderer';
-import {EventEmitter} from '../../../components/event-emitter';
-import eventMap from './event-map';
-import Router from '../../../components/router';
+import createOrderMap from '@pages/order/create/create-order-map';
+import CustomerRenderer from '@pages/order/create/customer-renderer';
+import {EventEmitter} from '@components/event-emitter';
+import eventMap from '@pages/order/create/event-map';
+import Router from '@components/router';
 
 const $ = window.$;
 
@@ -146,7 +146,7 @@ export default class CustomerManager {
    * @private
    */
   _search(searchPhrase) {
-    if (searchPhrase.length < 3) {
+    if (searchPhrase.length === 0) {
       return;
     }
 
@@ -170,4 +170,3 @@ export default class CustomerManager {
     });
   }
 }
-

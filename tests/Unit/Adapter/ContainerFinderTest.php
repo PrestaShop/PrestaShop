@@ -28,6 +28,7 @@ namespace Tests\Unit\Adapter;
 
 use Context;
 use Controller;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\ContainerFinder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -65,7 +66,7 @@ class ContainerFinderTest extends TestCase
     }
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject|Context
+     * @return MockObject|Context
      */
     private function getMockContext()
     {
@@ -75,7 +76,7 @@ class ContainerFinderTest extends TestCase
     }
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject|ContainerInterface
+     * @return MockObject|ContainerInterface
      */
     private function getMockContainerInterface()
     {
@@ -85,7 +86,7 @@ class ContainerFinderTest extends TestCase
     }
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject|Controller
+     * @return MockObject|Controller
      */
     private function getMockController()
     {

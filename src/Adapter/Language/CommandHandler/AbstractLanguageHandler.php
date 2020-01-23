@@ -57,24 +57,15 @@ abstract class AbstractLanguageHandler extends AbstractObjectModelHandler
         }
 
         if (!ImageManager::resize($temporaryImage, _PS_IMG_DIR_ . 'p/' . $isoCode->getValue() . '.jpg')) {
-            throw new CopyingNoPictureException(
-                sprintf('An error occurred while copying "No Picture" image to product directory'),
-                CopyingNoPictureException::PRODUCT_IMAGE_COPY_ERROR
-            );
+            throw new CopyingNoPictureException(sprintf('An error occurred while copying "No Picture" image to product directory'), CopyingNoPictureException::PRODUCT_IMAGE_COPY_ERROR);
         }
 
         if (!ImageManager::resize($temporaryImage, _PS_IMG_DIR_ . 'c/' . $isoCode->getValue() . '.jpg')) {
-            throw new CopyingNoPictureException(
-                sprintf('An error occurred while copying "No Picture" image to category directory'),
-                CopyingNoPictureException::CATEGORY_IMAGE_COPY_ERROR
-            );
+            throw new CopyingNoPictureException(sprintf('An error occurred while copying "No Picture" image to category directory'), CopyingNoPictureException::CATEGORY_IMAGE_COPY_ERROR);
         }
 
         if (!ImageManager::resize($temporaryImage, _PS_IMG_DIR_ . 'm/' . $isoCode->getValue() . '.jpg')) {
-            throw new CopyingNoPictureException(
-                sprintf('An error occurred while copying "No Picture" image to brand directory'),
-                CopyingNoPictureException::BRAND_IMAGE_COPY_ERROR
-            );
+            throw new CopyingNoPictureException(sprintf('An error occurred while copying "No Picture" image to brand directory'), CopyingNoPictureException::BRAND_IMAGE_COPY_ERROR);
         }
 
         $imagesTypes = ImageType::getImagesTypes('products');
@@ -85,24 +76,15 @@ abstract class AbstractLanguageHandler extends AbstractObjectModelHandler
             $imageHeight = $imagesType['height'];
 
             if (!ImageManager::resize($temporaryImage, _PS_IMG_DIR_ . 'p/' . $imageName, $imageWidth, $imageHeight)) {
-                throw new CopyingNoPictureException(
-                    sprintf('An error occurred while copying "No Picture" image to product directory'),
-                    CopyingNoPictureException::PRODUCT_IMAGE_COPY_ERROR
-                );
+                throw new CopyingNoPictureException(sprintf('An error occurred while copying "No Picture" image to product directory'), CopyingNoPictureException::PRODUCT_IMAGE_COPY_ERROR);
             }
 
             if (!ImageManager::resize($temporaryImage, _PS_IMG_DIR_ . 'c/' . $imageName, $imageWidth, $imageHeight)) {
-                throw new CopyingNoPictureException(
-                    sprintf('An error occurred while copying "No Picture" image to category directory'),
-                    CopyingNoPictureException::CATEGORY_IMAGE_COPY_ERROR
-                );
+                throw new CopyingNoPictureException(sprintf('An error occurred while copying "No Picture" image to category directory'), CopyingNoPictureException::CATEGORY_IMAGE_COPY_ERROR);
             }
 
             if (!ImageManager::resize($temporaryImage, _PS_IMG_DIR_ . 'm/' . $imageName, $imageWidth, $imageHeight)) {
-                throw new CopyingNoPictureException(
-                    sprintf('An error occurred while copying "No Picture" image to brand directory'),
-                    CopyingNoPictureException::BRAND_IMAGE_COPY_ERROR
-                );
+                throw new CopyingNoPictureException(sprintf('An error occurred while copying "No Picture" image to brand directory'), CopyingNoPictureException::BRAND_IMAGE_COPY_ERROR);
             }
         }
 
@@ -127,18 +109,12 @@ abstract class AbstractLanguageHandler extends AbstractObjectModelHandler
 
         // Evaluate the memory required to resize the image: if it's too much, you can't resize it.
         if (!ImageManager::checkImageMemoryLimit($temporaryImage)) {
-            throw new LanguageImageUploadingException(
-                'Due to memory limit restrictions, this image cannot be loaded. Increase your memory_limit value.',
-                LanguageImageUploadingException::MEMORY_LIMIT_RESTRICTION
-            );
+            throw new LanguageImageUploadingException('Due to memory limit restrictions, this image cannot be loaded. Increase your memory_limit value.', LanguageImageUploadingException::MEMORY_LIMIT_RESTRICTION);
         }
 
         // Copy new image
         if (!ImageManager::resize($temporaryImage, _PS_IMG_DIR_ . $imageDir . $languageId . '.jpg')) {
-            throw new LanguageImageUploadingException(
-                'An error occurred while uploading the image. Check your directory permissions.',
-                LanguageImageUploadingException::UNEXPECTED_ERROR
-            );
+            throw new LanguageImageUploadingException('An error occurred while uploading the image. Check your directory permissions.', LanguageImageUploadingException::UNEXPECTED_ERROR);
         }
 
         if (file_exists(_PS_LANG_IMG_DIR_ . $languageId . '.jpg')) {
@@ -163,10 +139,7 @@ abstract class AbstractLanguageHandler extends AbstractObjectModelHandler
         $language = new Language($languageId->getValue());
 
         if ($languageId->getValue() !== $language->id) {
-            throw new LanguageNotFoundException(
-                $languageId,
-                sprintf('Language with id "%s" was not found', $languageId->getValue())
-            );
+            throw new LanguageNotFoundException($languageId, sprintf('Language with id "%s" was not found', $languageId->getValue()));
         }
 
         return $language;

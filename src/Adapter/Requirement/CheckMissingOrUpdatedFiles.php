@@ -27,7 +27,6 @@
 namespace PrestaShop\PrestaShop\Adapter\Requirement;
 
 use AppKernel;
-use PrestaShop\PrestaShop\Core\Foundation\Version;
 
 /**
  * Part of requirements for a PrestaShop website
@@ -43,13 +42,13 @@ class CheckMissingOrUpdatedFiles
      */
     public function getListOfUpdatedFiles($dir = null, $path = '')
     {
-        $fileList = array(
-            'missing' => array(),
-            'updated' => array(),
-        );
+        $fileList = [
+            'missing' => [],
+            'updated' => [],
+        ];
 
         if (null === $dir) {
-            $xml = @simplexml_load_file(_PS_API_URL_ . '/xml/md5-1' . AppKernel::MAJOR_VERSION . '/' . AppKernel::VERSION . '.xml');
+            $xml = @simplexml_load_file(_PS_API_URL_ . '/xml/md5-' . AppKernel::MAJOR_VERSION . '/' . AppKernel::VERSION . '.xml');
             if (!$xml) {
                 return $fileList;
             }
@@ -74,7 +73,7 @@ class CheckMissingOrUpdatedFiles
         }
 
         foreach ($dir->dir as $subdir) {
-            $this->getListOfUpdatedFiles($subdir, $path . $subdir['name'] . '/');
+            $fileList = array_merge_recursive($fileList, $this->getListOfUpdatedFiles($subdir, $path . $subdir['name'] . '/'));
         }
 
         return $fileList;

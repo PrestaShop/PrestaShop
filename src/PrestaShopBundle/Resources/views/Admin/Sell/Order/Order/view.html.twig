@@ -33,30 +33,50 @@
 
 {% block content %}
   <div class="row">
+
+    {% set displayAdminOrderTopHookContent = renderhook('displayAdminOrderTop', {'id_order': orderForViewing.id}) %}
+
+    {% if displayAdminOrderTopHookContent != '' %}
+      <div class="col-md-12">
+        {{ displayAdminOrderTopHookContent|raw }}
+      </div>
+    {% endif %}
+
     <div class="col-md-12">
       {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/order_actions.html.twig' %}
     </div>
+  </div>
+
+  <div class="row d-none">
+    <div class="col-12" id="orderProductsModificationPosition"></div>
   </div>
 
   <div class="row">
     <div class="col-md-4">
       {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/customer.html.twig' %}
 
+      {{ renderhook('displayBackOfficeOrderActions', {'id_order': orderForViewing.id}) }}
+
       {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/messages.html.twig' %}
+
+      {{ renderhook('displayAdminOrderSide', {'id_order': orderForViewing.id}) }}
     </div>
 
     <div class="col-md-8">
-      {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/products.html.twig' %}
-
+      <div id="orderProductsOriginalPosition">
+        {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/products.html.twig' %}
+      </div>
       {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/details.html.twig' %}
+
+      {{ renderhook('displayAdminOrderMain', {'id_order': orderForViewing.id}) }}
 
       {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/payments.html.twig' %}
     </div>
   </div>
 
+  {{ renderhook('displayAdminOrder', {'id_order': orderForViewing.id}) }}
+
   {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/Modal/add_order_discount_modal.html.twig' %}
-  {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/Modal/add_product_modal.html.twig' %}
-  {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/Modal/update_product_modal.html.twig' %}
   {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/Modal/update_shipping_modal.html.twig' %}
   {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/Modal/update_customer_address_modal.html.twig' %}
   {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/Modal/view_all_messages_modal.html.twig' %}

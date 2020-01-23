@@ -23,10 +23,10 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-import createOrderPageMap from './create-order-map';
-import Router from '../../../components/router';
-import {EventEmitter} from '../../../components/event-emitter';
-import eventMap from './event-map';
+import createOrderPageMap from '@pages/order/create/create-order-map';
+import Router from '@components/router';
+import {EventEmitter} from '@components/event-emitter';
+import eventMap from '@pages/order/create/event-map';
 
 const $ = window.$;
 
@@ -61,7 +61,7 @@ export default class CartProvider {
    */
   loadEmptyCart(customerId) {
     $.post(this.router.generate('admin_carts_create'), {
-      customer_id: customerId,
+      customerId,
     }).then((cartInfo) => {
       EventEmitter.emit(eventMap.cartLoaded, cartInfo);
     });

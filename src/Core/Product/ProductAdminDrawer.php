@@ -58,7 +58,7 @@ class ProductAdminDrawer implements HookContentClassInterface
      */
     protected $title;
 
-    public function __construct(array $data = array())
+    public function __construct(array $data = [])
     {
         if (!empty($data['icon'])) {
             $this->setIcon($data['icon']);
@@ -124,11 +124,11 @@ class ProductAdminDrawer implements HookContentClassInterface
 
     public function toArray()
     {
-        return array(
+        return [
             'icon' => $this->icon,
             'id' => $this->id,
             'link' => $this->link,
             'title' => $this->title,
-        );
+        ];
     }
 }

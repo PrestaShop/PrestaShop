@@ -28,7 +28,7 @@ abstract class ModuleGridCore extends Module
     protected $_employee;
 
     /** @var array of strings graph data */
-    protected $_values = array();
+    protected $_values = [];
 
     /** @var int total number of values * */
     protected $_totalCount = 0;
@@ -96,13 +96,13 @@ abstract class ModuleGridCore extends Module
     public function engine($params)
     {
         if (!($render = Configuration::get('PS_STATS_GRID_RENDER'))) {
-            return Context::getContext()->getTranslator()->trans('No grid engine selected', array(), 'Admin.Modules.Notification');
+            return Context::getContext()->getTranslator()->trans('No grid engine selected', [], 'Admin.Modules.Notification');
         }
         if (!Validate::isModuleName($render)) {
             die(Tools::displayError());
         }
         if (!file_exists(_PS_ROOT_DIR_ . '/modules/' . $render . '/' . $render . '.php')) {
-            return Context::getContext()->getTranslator()->trans('Grid engine selected is unavailable.', array(), 'Admin.Modules.Notification');
+            return Context::getContext()->getTranslator()->trans('Grid engine selected is unavailable.', [], 'Admin.Modules.Notification');
         }
 
         $grider = Context::getContext()->link->getAdminLink('AdminStats', true, [], ['action' => 'graphGrid', 'ajax' => 1, 'render' => $render, 'module' => Tools::safeOutput(Tools::getValue('module'))]);
@@ -147,7 +147,7 @@ abstract class ModuleGridCore extends Module
 
         require_once _PS_ROOT_DIR_ . '/modules/' . $render . '/' . $render . '.php';
 
-        return call_user_func(array($render, 'hookGridEngine'), $params, $grider);
+        return call_user_func([$render, 'hookGridEngine'], $params, $grider);
     }
 
     protected function csvExport($datas)

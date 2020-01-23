@@ -127,7 +127,7 @@ class StockManager
 
             // How many packs can be made with the remaining product stocks
             $quantity_by_pack = $pack->pack_item_quantity;
-            $max_pack_quantity = max(array(0, floor($stock_available->quantity / $quantity_by_pack)));
+            $max_pack_quantity = max([0, floor($stock_available->quantity / $quantity_by_pack)]);
 
             $stock_available_pack = $stockManager->getStockAvailableByProduct($pack, null, $id_shop);
             if ($stock_available_pack->quantity > $max_pack_quantity) {
@@ -150,7 +150,7 @@ class StockManager
      * @param bool $add_movement Optional
      * @param array $params Optional
      */
-    public function updateQuantity($product, $id_product_attribute, $delta_quantity, $id_shop = null, $add_movement = false, $params = array())
+    public function updateQuantity($product, $id_product_attribute, $delta_quantity, $id_shop = null, $add_movement = false, $params = [])
     {
         /** @TODO We should call the needed classes with the Symfony dependency injection instead of the Homemade Service Locator */
         $serviceLocator = new ServiceLocator();
@@ -186,11 +186,11 @@ class StockManager
 
         $hookManager->exec(
             'actionUpdateQuantity',
-            array(
+            [
                 'id_product' => $product->id,
                 'id_product_attribute' => $id_product_attribute,
                 'quantity' => $stockAvailable->quantity,
-            )
+            ]
         );
 
         if ($this->checkIfMustSendLowStockAlert($product, $id_product_attribute, $stockAvailable->quantity)) {
@@ -284,12 +284,12 @@ class StockManager
         $idShop = (int) $context->shop->id;
         $idLang = (int) $context->language->id;
         $configuration = Configuration::getMultiple(
-            array(
+            [
                 'MA_LAST_QTIES',
                 'PS_STOCK_MANAGEMENT',
                 'PS_SHOP_EMAIL',
                 'PS_SHOP_NAME',
-            ),
+            ],
             null,
             null,
             $idShop
@@ -301,13 +301,13 @@ class StockManager
         } else {
             $lowStockThreshold = $product->low_stock_threshold;
         }
-        $templateVars = array(
+        $templateVars = [
             '{qty}' => $newQuantity,
             '{last_qty}' => $lowStockThreshold,
             '{product}' => $productName,
-        );
+        ];
         // get emails on employees who have right to run stock page
-        $emails = array();
+        $emails = [];
         $employees = Employee::getEmployees();
         foreach ($employees as $employeeData) {
             $employee = new Employee($employeeData['id_employee']);
@@ -345,7 +345,7 @@ class StockManager
      *
      * @return bool
      */
-    public function saveMovement($productId, $productAttributeId, $deltaQuantity, $params = array())
+    public function saveMovement($productId, $productAttributeId, $deltaQuantity, $params = [])
     {
         if ($deltaQuantity != 0) {
             $stockMvt = $this->prepareMovement($productId, $productAttributeId, $deltaQuantity, $params);
@@ -373,7 +373,7 @@ class StockManager
      *
      * @return bool|StockMvt
      */
-    private function prepareMovement($productId, $productAttributeId, $deltaQuantity, $params = array())
+    private function prepareMovement($productId, $productAttributeId, $deltaQuantity, $params = [])
     {
         $product = (new ProductDataProvider())->getProductInstance($productId);
 

@@ -80,11 +80,11 @@ final class CategoryCoverImageUploader extends AbstractImageUploader
     private function uploadImage($id, UploadedFile $image)
     {
         $temporaryImageName = tempnam(_PS_TMP_IMG_DIR_, 'PS');
-
         if (!$temporaryImageName) {
             throw new ImageUploadException('Failed to create temporary image file');
         }
-
+        // move_uploaded_file -  also checks that the given file is a file that was uploaded via the POST,
+        // this prevents for example that a local file is moved
         if (!move_uploaded_file($image->getPathname(), $temporaryImageName)) {
             throw new ImageUploadException('Failed to upload image');
         }

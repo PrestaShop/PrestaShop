@@ -33,8 +33,11 @@ class ShopFeatureContext extends AbstractPrestaShopFeatureContext
 {
     /**
      * @Given shop :reference with name :shopName exists
+     *
+     * @param string $reference
+     * @param string $shopName
      */
-    public function shopWithNameExists($reference, $shopName)
+    public function shopWithNameExists(string $reference, string $shopName)
     {
         $shopId = Shop::getIdByName($shopName);
 
@@ -43,5 +46,21 @@ class ShopFeatureContext extends AbstractPrestaShopFeatureContext
         }
 
         SharedStorage::getStorage()->set($reference, new Shop($shopId));
+    }
+
+    /**
+     * @Given single shop context is loaded
+     */
+    public function singleShopContextIsLoaded()
+    {
+        Shop::setContext(Shop::CONTEXT_SHOP);
+    }
+
+    /**
+     * @Given multiple shop context is loaded
+     */
+    public function multipleShopContextIsLoaded()
+    {
+        Shop::setContext(Shop::CONTEXT_ALL);
     }
 }

@@ -226,10 +226,10 @@ class ModuleDataProvider
             $this->logger->critical(
                 $this->translator->trans(
                     'Parse error detected in main class of module %module%: %parse_error%',
-                    array(
+                    [
                         '%module%' => $name,
                         '%parse_error%' => $exception->getMessage(),
-                    ),
+                    ],
                     'Admin.Modules.Notification'
                 )
             );
@@ -250,9 +250,9 @@ class ModuleDataProvider
                 $logger->error(
                     $this->translator->trans(
                         'Error while loading file of module %module%. %error_message%',
-                        array(
+                        [
                             '%module%' => $name,
-                            '%error_message%' => $e->getMessage(), ),
+                            '%error_message%' => $e->getMessage(), ],
                         'Admin.Modules.Notification'
                     )
                 );

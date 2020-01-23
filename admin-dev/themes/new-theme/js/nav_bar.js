@@ -24,7 +24,7 @@
  */
 
 import PerfectScrollbar from 'perfect-scrollbar';
-import '../node_modules/perfect-scrollbar/css/perfect-scrollbar.css';
+import '@node_modules/perfect-scrollbar/css/perfect-scrollbar.css';
 
 const $ = window.$;
 

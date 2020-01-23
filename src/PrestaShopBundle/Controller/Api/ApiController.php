@@ -66,7 +66,7 @@ abstract class ApiController
     {
         $this->logger->info($exception->getMessage());
 
-        return new JsonResponse(array('error' => $exception->getMessage()), $exception->getStatusCode());
+        return new JsonResponse(['error' => $exception->getMessage()], $exception->getStatusCode());
     }
 
     /**
@@ -113,11 +113,11 @@ abstract class ApiController
     protected function addAdditionalInfo(
         Request $request,
         QueryParamsCollection $queryParams = null,
-        $headers = array()
+        $headers = []
     ) {
         $router = $this->container->get('router');
 
-        $queryParamsArray = array();
+        $queryParamsArray = [];
         if (null !== $queryParams) {
             $queryParamsArray = $queryParams->getQueryParams();
         }
@@ -129,13 +129,13 @@ abstract class ApiController
         );
         unset($allParamsWithoutPagination['page_index'], $allParamsWithoutPagination['page_size']);
 
-        $info = array(
+        $info = [
             'current_url' => $router->generate($request->attributes->get('_route'), $allParams),
             'current_url_without_pagination' => $router->generate(
                 $request->attributes->get('_route'),
                 $allParamsWithoutPagination
             ),
-        );
+        ];
 
         if (array_key_exists('page_index', $allParams) && $allParams['page_index'] > 1) {
             $previousParams = $allParams;
@@ -181,12 +181,12 @@ abstract class ApiController
         Request $request,
         QueryParamsCollection $queryParams = null,
         $status = 200,
-        $headers = array()
+        $headers = []
     ) {
-        $response = array(
+        $response = [
             'info' => $this->addAdditionalInfo($request, $queryParams, $headers),
             'data' => $data,
-        );
+        ];
 
         return new JsonResponse($response, $status, $headers);
     }

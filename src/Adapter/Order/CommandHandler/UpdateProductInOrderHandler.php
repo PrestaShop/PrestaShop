@@ -34,9 +34,9 @@ use OrderDetail;
 use OrderInvoice;
 use PrestaShop\PrestaShop\Adapter\Order\AbstractOrderHandler;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\CannotEditDeliveredOrderProductException;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\UpdateProductInOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\CommandHandler\UpdateProductInOrderHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use StockAvailable;
 use Tools;
 use Validate;
@@ -57,8 +57,7 @@ final class UpdateProductInOrderHandler extends AbstractOrderHandler implements 
         $order = $this->getOrderObject($command->getOrderId());
         $orderDetail = new OrderDetail($command->getOrderDetailId());
         $orderInvoice = null;
-
-        if (null !== $command->getOrderInvoiceId()) {
+        if (!empty($command->getOrderInvoiceId())) {
             $orderInvoice = new OrderInvoice($command->getOrderInvoiceId());
         }
 

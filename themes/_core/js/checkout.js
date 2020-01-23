@@ -60,12 +60,13 @@ function handleCheckoutStepChange() {
 
 function handleSubmitButton() {
   // prevents rage clicking on submit button and related issues
-  const submitSelector = '.js-current-step button[type="submit"]';
-  $(document).on('click', submitSelector, function () {
-    $(this).addClass('disabled');
-    $('input[required]').on('invalid', function (e) {
-      $(submitSelector).removeClass('disabled');
-    });
+  const formSelector = '.checkout-step form';
+  $(formSelector).submit(function (e) {
+    if ($(this).data('disabled') === true) {
+      e.preventDefault();
+    }
+    $(this).data('disabled', true);
+    $('button[type="submit"]', this).addClass('disabled');
   });
 }
 

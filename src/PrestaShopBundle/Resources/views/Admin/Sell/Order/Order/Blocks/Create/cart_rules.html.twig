@@ -44,9 +44,9 @@
       </div>
       <div class="col">
         <span class="mr-2">{{ 'or'|trans({}, 'Admin.Global') }}</span>
-        <button class="btn btn-primary" type="button">
+        <a class="btn btn-primary" href="{{ getAdminLink('AdminCartRules', true, {'addcart_rule': 1}) }}">
           {{ 'Add new voucher'|trans({}, 'Admin.Orderscustomers.Feature') }}
-        </button>
+        </a>
       </div>
     </div>
 
@@ -70,7 +70,7 @@
     <td class="js-cart-rule-description"></td>
     <td class="js-cart-rule-value"></td>
     <td class="text-right">
-      <button class="btn btn-outline-danger js-cart-rule-delete-btn">{{ 'Delete'|trans({}, 'Admin.Global') }}</button>
+      <button class="btn btn-outline-danger js-cart-rule-delete-btn">{{ 'Remove'|trans({}, 'Admin.Global') }}</button>
     </td>
   </tr>
 </script>

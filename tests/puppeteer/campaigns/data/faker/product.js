@@ -14,5 +14,6 @@ module.exports = class Product {
       Color: ['White', 'Black'],
       Size: ['S', 'M'],
     };
+    this.taxRule = productToCreate.taxRule || 'FR Taux standard (20%)';
   }
 };

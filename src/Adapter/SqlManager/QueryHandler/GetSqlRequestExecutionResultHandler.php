@@ -55,9 +55,7 @@ final class GetSqlRequestExecutionResultHandler implements GetSqlRequestExecutio
             $entity = new RequestSql($id);
 
             if (0 >= $entity->id) {
-                throw new SqlRequestNotFoundException(
-                    sprintf('SqlRequest with id %s was not found', $id)
-                );
+                throw new SqlRequestNotFoundException(sprintf('SqlRequest with id %s was not found', $id));
             }
 
             $rows = Db::getInstance()->executeS($entity->sql);
@@ -74,11 +72,7 @@ final class GetSqlRequestExecutionResultHandler implements GetSqlRequestExecutio
                 $rows
             );
         } catch (PrestaShopException $e) {
-            throw new SqlRequestException(
-                'Unexpected error occurred',
-                0,
-                $e
-            );
+            throw new SqlRequestException('Unexpected error occurred', 0, $e);
         }
     }
 

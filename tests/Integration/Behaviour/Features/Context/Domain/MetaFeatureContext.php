@@ -224,14 +224,7 @@ class MetaFeatureContext extends AbstractDomainFeatureContext
         }
 
         if ($actualValue !== $value) {
-            throw new RuntimeException(
-                sprintf(
-                    'For given field "%s" expected value "%s" did not matched given value "%s"',
-                    $field,
-                    $value,
-                    $actualValue
-                )
-            );
+            throw new RuntimeException(sprintf('For given field "%s" expected value "%s" did not matched given value "%s"', $field, $value, $actualValue));
         }
     }
 
@@ -273,13 +266,7 @@ class MetaFeatureContext extends AbstractDomainFeatureContext
         ;
 
         if (!in_array($pageName, $pageNames, true)) {
-            throw new RuntimeException(
-                sprintf(
-                    'Page name "%s" not found in available customization layout pages "%s"',
-                    $pageName,
-                    var_export($pageNames, true)
-                )
-            );
+            throw new RuntimeException(sprintf('Page name "%s" not found in available customization layout pages "%s"', $pageName, var_export($pageNames, true)));
         }
     }
 }

@@ -26,9 +26,9 @@
  * These placeholders are used in CLDR number formatting templates.
  * They are meant to be replaced by the correct localized symbols in the number formatting process.
  */
-import NumberSymbol from './number-symbol';
-import PriceSpecification from './specifications/price';
-import NumberSpecification from './specifications/number';
+import NumberSymbol from '@app/cldr/number-symbol';
+import PriceSpecification from '@app/cldr/specifications/price';
+import NumberSpecification from '@app/cldr/specifications/number';
 
 const escapeRE = require('lodash.escaperegexp');
 
@@ -80,7 +80,7 @@ class NumberFormatter {
     }
 
     // Get the good CLDR formatting pattern. Sign is important here !
-    const pattern = this.getCldrPattern(majorDigits < 0);
+    const pattern = this.getCldrPattern(number < 0);
     formattedNumber = this.addPlaceholders(formattedNumber, pattern);
     formattedNumber = this.replaceSymbols(formattedNumber);
 
@@ -284,7 +284,13 @@ class NumberFormatter {
   }
 
   static build(specifications) {
-    const symbol = new NumberSymbol(...specifications.symbol);
+    let symbol;
+    if (undefined !== specifications.numberSymbols) {
+      symbol = new NumberSymbol(...specifications.numberSymbols);
+    } else {
+      symbol = new NumberSymbol(...specifications.symbol);
+    }
+
     let specification;
     if (specifications.currencySymbol) {
       specification = new PriceSpecification(

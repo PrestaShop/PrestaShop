@@ -141,12 +141,7 @@ final class Currency implements CurrencyInterface
     public function getDisplayName($countContext = CurrencyInterface::DISPLAY_NAME_COUNT_DEFAULT)
     {
         if (!in_array($countContext, [CurrencyInterface::DISPLAY_NAME_COUNT_DEFAULT, CurrencyInterface::DISPLAY_NAME_COUNT_ONE, CurrencyInterface::DISPLAY_NAME_COUNT_OTHER])) {
-            throw new LocalizationException(
-                sprintf(
-                    'Unknown display name: "%s"',
-                    print_r($countContext, true)
-                )
-            );
+            throw new LocalizationException(sprintf('Unknown display name: "%s"', print_r($countContext, true)));
         }
 
         return $this->displayNames[$countContext];
@@ -164,12 +159,7 @@ final class Currency implements CurrencyInterface
     public function getSymbol($type = CurrencyInterface::SYMBOL_TYPE_NARROW)
     {
         if (!in_array($type, [CurrencyInterface::SYMBOL_TYPE_NARROW, CurrencyInterface::SYMBOL_TYPE_DEFAULT])) {
-            throw new LocalizationException(
-                sprintf(
-                    'Unknown symbol type: "%s"',
-                    print_r($type, true)
-                )
-            );
+            throw new LocalizationException(sprintf('Unknown symbol type: "%s"', print_r($type, true)));
         }
 
         if (isset($this->symbols[$type])) {

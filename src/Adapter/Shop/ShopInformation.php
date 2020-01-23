@@ -54,11 +54,11 @@ class ShopInformation
      */
     public function getShopInformation()
     {
-        return array(
+        return [
             'version' => AppKernel::VERSION,
             'url' => $this->context->shop->getBaseURL(),
             'path' => _PS_ROOT_DIR_,
             'theme' => $this->context->shop->theme->getName(),
-        );
+        ];
     }
 }

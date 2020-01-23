@@ -26,8 +26,8 @@
 
 namespace PrestaShopBundle\Controller\Admin;
 
-use PrestaShop\PrestaShop\Adapter\Configuration;
 use Exception;
+use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\Shop\Context;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Grid\GridInterface;
@@ -347,11 +347,25 @@ class FrameworkBundleAdminController extends Controller
      *
      * @param string $type
      * @param string $code
+     * @param string $message
      *
      * @return string
      */
-    protected function getFallbackErrorMessage($type, $code)
+    protected function getFallbackErrorMessage($type, $code, $message = '')
     {
+        $isDebug = $this->get('kernel')->isDebug();
+        if ($isDebug && !empty($message)) {
+            return $this->trans(
+                'An unexpected error occurred. [%type% code %code%]: %message%',
+                'Admin.Notifications.Error',
+                [
+                    '%type%' => $type,
+                    '%code%' => $code,
+                    '%message%' => $message,
+                ]
+            );
+        }
+
         return $this->trans(
             'An unexpected error occurred. [%type% code %code%]',
             'Admin.Notifications.Error',
@@ -470,7 +484,8 @@ class FrameworkBundleAdminController extends Controller
 
         return $this->getFallbackErrorMessage(
             $exceptionType,
-            $exceptionCode
+            $exceptionCode,
+            $e->getMessage()
         );
     }
 }

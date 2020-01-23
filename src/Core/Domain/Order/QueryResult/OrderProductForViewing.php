@@ -36,6 +36,11 @@ class OrderProductForViewing
     /**
      * @var string
      */
+    private $location;
+
+    /**
+     * @var string
+     */
     private $name;
 
     /**
@@ -84,9 +89,39 @@ class OrderProductForViewing
     private $unitPriceTaxInclRaw;
 
     /**
+     * @var float
+     */
+    private $taxRate;
+
+    /**
      * @var int
      */
     private $orderDetailId;
+
+    /**
+     * @var string
+     */
+    private $amountRefunded;
+
+    /**
+     * @var int
+     */
+    private $quantityRefunded;
+
+    /**
+     * @var string
+     */
+    private $amountRefundable;
+
+    /**
+     * @var int
+     */
+    private $orderInvoiceId;
+
+    /**
+     * @var string
+     */
+    private $orderInvoiceNumber;
 
     public function __construct(
         int $orderDetailId,
@@ -100,7 +135,14 @@ class OrderProductForViewing
         int $availableQuantity,
         ?string $imagePath,
         float $unitPriceTaxExclRaw,
-        float $unitPriceTaxInclRaw
+        float $unitPriceTaxInclRaw,
+        float $taxRate,
+        string $amountRefunded,
+        int $quantityRefunded,
+        string $amountRefundable,
+        string $location,
+        ?int $orderInvoiceId,
+        string $orderInvoiceNumber
     ) {
         $this->id = $id;
         $this->name = $name;
@@ -113,10 +155,19 @@ class OrderProductForViewing
         $this->imagePath = $imagePath;
         $this->unitPriceTaxExclRaw = $unitPriceTaxExclRaw;
         $this->unitPriceTaxInclRaw = $unitPriceTaxInclRaw;
+        $this->taxRate = $taxRate;
         $this->orderDetailId = $orderDetailId;
+        $this->amountRefunded = $amountRefunded;
+        $this->quantityRefunded = $quantityRefunded;
+        $this->amountRefundable = $amountRefundable;
+        $this->location = $location;
+        $this->orderInvoiceId = $orderInvoiceId;
+        $this->orderInvoiceNumber = $orderInvoiceNumber;
     }
 
     /**
+     * Get product's order detail ID
+     *
      * @return int
      */
     public function getOrderDetailId(): int
@@ -125,6 +176,8 @@ class OrderProductForViewing
     }
 
     /**
+     * Get product ID
+     *
      * @return int
      */
     public function getId(): int
@@ -133,6 +186,8 @@ class OrderProductForViewing
     }
 
     /**
+     * Get product's name
+     *
      * @return string
      */
     public function getName(): string
@@ -141,6 +196,8 @@ class OrderProductForViewing
     }
 
     /**
+     * Product reference
+     *
      * @return string
      */
     public function getReference(): string
@@ -149,6 +206,8 @@ class OrderProductForViewing
     }
 
     /**
+     * Get product's supplier reference
+     *
      * @return string
      */
     public function getSupplierReference(): string
@@ -157,6 +216,28 @@ class OrderProductForViewing
     }
 
     /**
+     * get tax rate to be applied on this product
+     *
+     * @return float
+     */
+    public function getTaxRate(): float
+    {
+        return $this->taxRate;
+    }
+
+    /**
+     * Get product's location
+     *
+     * @return string
+     */
+    public function getLocation(): string
+    {
+        return $this->location;
+    }
+
+    /**
+     * Get product's quantity
+     *
      * @return int
      */
     public function getQuantity(): int
@@ -165,6 +246,8 @@ class OrderProductForViewing
     }
 
     /**
+     * Get product's unit price
+     *
      * @return string
      */
     public function getUnitPrice(): string
@@ -173,6 +256,8 @@ class OrderProductForViewing
     }
 
     /**
+     * Get product's formatted total price
+     *
      * @return string
      */
     public function getTotalPrice(): string
@@ -181,6 +266,8 @@ class OrderProductForViewing
     }
 
     /**
+     * Get available quantity for this product
+     *
      * @return int
      */
     public function getAvailableQuantity(): int
@@ -189,6 +276,8 @@ class OrderProductForViewing
     }
 
     /**
+     * Get image path for this product
+     *
      * @return string|null
      */
     public function getImagePath(): ?string
@@ -197,6 +286,8 @@ class OrderProductForViewing
     }
 
     /**
+     * Get unit price without taxes, as a float value
+     *
      * @return float
      */
     public function getUnitPriceTaxExclRaw(): float
@@ -205,10 +296,86 @@ class OrderProductForViewing
     }
 
     /**
+     * Get unit price including taxes, as a float value
+     *
      * @return float
      */
     public function getUnitPriceTaxInclRaw(): float
     {
         return $this->unitPriceTaxInclRaw;
+    }
+
+    /**
+     * How much (money) has already been refunded for this product
+     *
+     * @return string
+     */
+    public function getAmountRefunded(): string
+    {
+        return $this->amountRefunded;
+    }
+
+    /**
+     * How many (quantity) of this product has already been refunded
+     *
+     * @return int
+     */
+    public function getQuantityRefunded(): int
+    {
+        return $this->quantityRefunded;
+    }
+
+    /**
+     * How much (money) can be refunded for this product
+     *
+     * @return string
+     */
+    public function getAmountRefundable(): string
+    {
+        return $this->amountRefundable;
+    }
+
+    /**
+     * How many (quantity) of this product can be refunded
+     *
+     * @return int
+     */
+    public function getQuantityRefundable(): int
+    {
+        return $this->quantity - $this->quantityRefunded;
+    }
+
+    /**
+     * Can this product be refunded
+     *
+     * @return bool
+     */
+    public function isRefundable(): bool
+    {
+        if ($this->quantity <= $this->quantityRefunded) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Get the id of this product's invoice
+     *
+     * @return int
+     */
+    public function getOrderInvoiceId(): ?int
+    {
+        return $this->orderInvoiceId;
+    }
+
+    /**
+     * Get the number (reference) of this product's invoice
+     *
+     * @return string
+     */
+    public function getOrderInvoiceNumber(): string
+    {
+        return $this->orderInvoiceNumber;
     }
 }

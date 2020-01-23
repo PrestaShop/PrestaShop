@@ -6,6 +6,12 @@ default:
             contexts:
                 - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\SqlManagerFeatureContext
+        contact:
+            paths:
+                features: Features/Scenario/Contact
+            contexts:
+                - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\ContactFeatureContext
         customer:
             paths:
                 features: Features/Scenario/Customer
@@ -50,6 +56,7 @@ default:
             contexts:
                 - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\CustomerFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\CustomerManagerFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\EmployeeFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\ModuleFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\OrderFeatureContext
@@ -60,6 +67,12 @@ default:
                 - Tests\Integration\Behaviour\Features\Context\Domain\OrderFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\CarrierFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\CountryFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\OrderPaymentFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\OrderShippingFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\OrderCartFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\CustomerFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\AddressFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\OrderRefundFeatureContext
 
         currency:
             paths:
@@ -138,3 +151,21 @@ default:
                 - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\OrderMessageContext
                 - Tests\Integration\Behaviour\Features\Context\OrderMessageContext
+        misc:
+            paths:
+              features: Features/Scenario/Misc
+            contexts:
+              - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
+              - Tests\Integration\Behaviour\Features\Context\ShopFeatureContext
+              - Tests\Integration\Behaviour\Features\Context\Domain\EmployeeFeatureContext
+              - Tests\Integration\Behaviour\Features\Context\Domain\DebugModeFeatureContext
+              - Tests\Integration\Behaviour\Features\Context\Domain\ShowcaseCardFeatureContext
+              - Tests\Integration\Behaviour\Features\Context\Domain\ThemeMailTemplatesFeatureContext
+        address:
+            paths:
+              features: Features/Scenario/Address
+            contexts:
+              - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
+              - Tests\Integration\Behaviour\Features\Context\Domain\ManufacturerFeatureContext
+              - Tests\Integration\Behaviour\Features\Context\Domain\AddressFeatureContext
+              - Tests\Integration\Behaviour\Features\Context\Domain\CustomerFeatureContext

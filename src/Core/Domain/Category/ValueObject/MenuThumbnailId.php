@@ -67,13 +67,7 @@ class MenuThumbnailId
     private function assertMenuThumbnailIsWithinAllowedValueRange($menuThumbnailId)
     {
         if (!is_int($menuThumbnailId) || !in_array($menuThumbnailId, self::ALLOWED_ID_VALUES)) {
-            throw new CategoryException(
-                sprintf(
-                    'Category menu  thumbnail id "%s" invalid. Available values are: %s',
-                    var_export($menuThumbnailId, true),
-                    implode(',', self::ALLOWED_ID_VALUES)
-                )
-            );
+            throw new CategoryException(sprintf('Category menu  thumbnail id "%s" invalid. Available values are: %s', var_export($menuThumbnailId, true), implode(',', self::ALLOWED_ID_VALUES)));
         }
     }
 }

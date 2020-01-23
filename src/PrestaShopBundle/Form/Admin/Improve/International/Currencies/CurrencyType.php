@@ -138,9 +138,7 @@ class CurrencyType extends TranslatorAwareType
             ])
             ->add('symbols', TranslatableType::class, [
                 'type' => TextType::class,
-                'constraints' => [
-                    new DefaultLanguage(),
-                ],
+                'required' => false,
                 'options' => [
                     'constraints' => [
                         new Length([
@@ -223,6 +221,9 @@ class CurrencyType extends TranslatorAwareType
             ])
             ->add('active', SwitchType::class, [
                 'required' => false,
+            ])
+            ->add('transformations', TranslatableType::class, [
+                'type' => HiddenType::class,
             ])
         ;
 

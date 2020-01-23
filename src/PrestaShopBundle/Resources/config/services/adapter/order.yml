@@ -4,12 +4,16 @@ services:
 
   prestashop.adapter.order.command_handler.duplicate_order_cart_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Order\CommandHandler\DuplicateOrderCartHandler'
+    arguments:
+      - '@prestashop.adapter.context_state_manager'
     tags:
       - name: tactician.handler
         command: 'PrestaShop\PrestaShop\Core\Domain\Order\Command\DuplicateOrderCartCommand'
 
   prestashop.adapter.order.command_handler.add_order_from_back_office_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Order\CommandHandler\AddOrderFromBackOfficeHandler'
+    arguments:
+      - '@prestashop.adapter.context_state_manager'
     tags:
       - name: tactician.handler
         command: 'PrestaShop\PrestaShop\Core\Domain\Order\Command\AddOrderFromBackOfficeCommand'
@@ -91,10 +95,28 @@ services:
   prestashop.adapter.order.command_handler.issue_partial_refund_handler:
     class: PrestaShop\PrestaShop\Adapter\Order\CommandHandler\IssuePartialRefundHandler
     arguments:
-      - "@prestashop.core.localization.locale.context_locale"
+      - '@prestashop.adapter.legacy.configuration'
+      - '@prestashop.adapter.order.refund.order_refund_calculator'
+      - '@prestashop.adapter.order.refund.order_slip_creator'
+      - '@prestashop.adapter.order.refund.voucher_generator'
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Order\Command\IssuePartialRefundCommand
+
+  prestashop.adapter.order.refund.order_refund_calculator:
+    class: PrestaShop\PrestaShop\Adapter\Order\Refund\OrderRefundCalculator
+
+  prestashop.adapter.order.refund.order_slip_creator:
+    class: PrestaShop\PrestaShop\Adapter\Order\Refund\OrderSlipCreator
+    arguments:
+      - '@prestashop.adapter.legacy.configuration'
+      - '@translator'
+
+  prestashop.adapter.order.refund.voucher_generator:
+    class: PrestaShop\PrestaShop\Adapter\Order\Refund\VoucherGenerator
+    arguments:
+      - '@prestashop.core.localization.locale.context_locale'
+      - '@translator'
 
   prestashop.adapter.order.command_handler.delete_product_from_order_handler:
     class: PrestaShop\PrestaShop\Adapter\Order\CommandHandler\DeleteProductFromOrderHandler
@@ -135,3 +157,12 @@ services:
     tags:
       - name: tactician.handler
         command: 'PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderPreview'
+
+  prestashop.adapter.order.command_handler.send_process_order_email_handler:
+    class: PrestaShop\PrestaShop\Adapter\Order\CommandHandler\SendProcessOrderEmailHandler
+    arguments:
+      - '@translator'
+      - '@=service("prestashop.adapter.legacy.context").getContext().link'
+    tags:
+      - name: tactician.handler
+        command: PrestaShop\PrestaShop\Core\Domain\Order\Command\SendProcessOrderEmailCommand

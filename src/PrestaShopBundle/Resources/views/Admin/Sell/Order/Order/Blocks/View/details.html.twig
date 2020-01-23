@@ -66,3 +66,15 @@
     </div>
   </div>
 </div>
+
+<div class="mt-2" id="order_hook_tabs">
+  <ul class="nav nav nav-tabs" role="tablist">
+    {# Rendering of hook displayAdminOrderTabLink, we expect tab links #}
+    {{ renderhook('displayAdminOrderTabLink', {'id_order': orderForViewing.id}) }}
+  </ul>
+
+  <div class="tab-content">
+    {# Rendering of hook displayAdminOrderTabContent, we expect tab contents #}
+    {{ renderhook('displayAdminOrderTabContent', {'id_order': orderForViewing.id}) }}
+  </div>
+</div>

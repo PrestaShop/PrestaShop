@@ -49,28 +49,20 @@ final class ManufacturerImageUploader extends AbstractImageUploader
         $temporaryImageName = tempnam(_PS_TMP_IMG_DIR_, 'PS');
 
         if (!$temporaryImageName) {
-            throw new ImageUploadException(
-                'An error occurred while uploading the image. Check your directory permissions.'
-            );
+            throw new ImageUploadException('An error occurred while uploading the image. Check your directory permissions.');
         }
 
         if (!move_uploaded_file($image->getPathname(), $temporaryImageName)) {
-            throw new ImageUploadException(
-                'An error occurred while uploading the image. Check your directory permissions.'
-            );
+            throw new ImageUploadException('An error occurred while uploading the image. Check your directory permissions.');
         }
 
         // Evaluate the memory required to resize the image: if it's too much, you can't resize it.
         if (!ImageManager::checkImageMemoryLimit($temporaryImageName)) {
-            throw new MemoryLimitException(
-                'Due to memory limit restrictions, this image cannot be loaded. Increase your memory_limit value.'
-            );
+            throw new MemoryLimitException('Due to memory limit restrictions, this image cannot be loaded. Increase your memory_limit value.');
         }
         // Copy new image
         if (!ImageManager::resize($temporaryImageName, _PS_MANU_IMG_DIR_ . $manufacturerId . '.jpg')) {
-            throw new ImageOptimizationException(
-                'An error occurred while uploading the image. Check your directory permissions.'
-            );
+            throw new ImageOptimizationException('An error occurred while uploading the image. Check your directory permissions.');
         }
 
         $this->generateDifferentSizeImages($manufacturerId);
@@ -123,9 +115,7 @@ final class ManufacturerImageUploader extends AbstractImageUploader
         }
 
         if (!$resized) {
-            throw new ImageOptimizationException(
-                'Unable to resize one or more of your pictures.'
-            );
+            throw new ImageOptimizationException('Unable to resize one or more of your pictures.');
         }
 
         return $resized;

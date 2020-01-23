@@ -28,9 +28,6 @@ namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
 use Exception;
 use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\SupplierNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\Supplier\Query\GetSupplierForEditing;
-use PrestaShop\PrestaShop\Core\Domain\Supplier\QueryResult\EditableSupplier;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Command\BulkDeleteSupplierCommand;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Command\BulkDisableSupplierCommand;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Command\BulkEnableSupplierCommand;
@@ -40,7 +37,10 @@ use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\CannotDeleteSupplierExc
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\CannotToggleSupplierStatusException;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\CannotUpdateSupplierStatusException;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\SupplierConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\SupplierNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Supplier\Query\GetSupplierForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Query\GetSupplierForViewing;
+use PrestaShop\PrestaShop\Core\Domain\Supplier\QueryResult\EditableSupplier;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\QueryResult\ViewableSupplier;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
@@ -130,14 +130,16 @@ class SupplierController extends FrameworkBundleAdminController
      */
     public function createAction(Request $request)
     {
-        try {
-            $supplierData = $request->request->get('supplier');
-            $supplierForm = $this->getFormBuilder()->getForm(
-                [],
-                isset($supplierData['id_country']) ? ['country_id' => (int) $supplierData['id_country']] : []
-            );
-            $supplierForm->handleRequest($request);
+        $formData = [];
+        if ($request->request->has('supplier') && isset($request->request->get('supplier')['id_country'])) {
+            $formCountryId = (int) $request->request->get('supplier')['id_country'];
+            $formData['id_country'] = $formCountryId;
+        }
 
+        $supplierForm = $this->getFormBuilder()->getForm($formData);
+        $supplierForm->handleRequest($request);
+
+        try {
             $result = $this->getFormHandler()->handle($supplierForm);
 
             if (null !== $result->getIdentifiableObjectId()) {
@@ -320,13 +322,17 @@ class SupplierController extends FrameworkBundleAdminController
      */
     public function editAction(Request $request, $supplierId)
     {
+        $formData = [];
+        if ($request->request->has('supplier') && isset($request->request->get('supplier')['id_country'])) {
+            $formCountryId = (int) $request->request->get('supplier')['id_country'];
+            $formData['id_country'] = $formCountryId;
+        }
+
         try {
             /** @var EditableSupplier $editableSupplier */
             $editableSupplier = $this->getQueryBus()->handle(new GetSupplierForEditing((int) $supplierId));
 
-            $supplierForm = $this->getFormBuilder()->getFormFor((int) $supplierId, [], [
-                'country_id' => $editableSupplier->getCountryId(),
-            ]);
+            $supplierForm = $this->getFormBuilder()->getFormFor((int) $supplierId, $formData);
             $supplierForm->handleRequest($request);
 
             $result = $this->getFormHandler()->handleFor((int) $supplierId, $supplierForm);
@@ -430,6 +436,7 @@ class SupplierController extends FrameworkBundleAdminController
      */
     public function exportAction(SupplierFilters $filters)
     {
+        $filters = new SupplierFilters(['limit' => null] + $filters->all());
         $supplierGridFactory = $this->get('prestashop.core.grid.factory.supplier');
         $supplierGrid = $supplierGridFactory->getGrid($filters);
 

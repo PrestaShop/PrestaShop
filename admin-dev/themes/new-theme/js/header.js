@@ -22,7 +22,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-import refreshNotifications from './notifications.js';
+import refreshNotifications from '@js/notifications.js';
 
 const $ = window.$;
 
@@ -75,7 +75,7 @@ export default class Header {
             var quicklink_list = '';
             $.each(data, (index) => {
               if (typeof data[index]['name'] !== 'undefined')
-                quicklink_list += '<li><a href="' + data[index]['link'] + '&token=' + data[index]['token'] + '"><i class="icon-chevron-right"></i> ' + data[index]['name'] + '</a></li>';
+                quicklink_list += '<li><a href="' + data[index]['link'] + '"><i class="icon-chevron-right"></i> ' + data[index]['name'] + '</a></li>';
             });
 
             if (typeof data['has_errors'] !== 'undefined' && data['has_errors'])
@@ -87,7 +87,9 @@ export default class Header {
                   });
               });
             else if (quicklink_list) {
-              $("#header_quick ul.dropdown-menu").html(quicklink_list);
+              $('#header_quick ul.dropdown-menu .divider').prevAll().remove();
+              $('#header_quick ul.dropdown-menu').prepend(quicklink_list);
+              $(e.target).remove();
               window.showSuccessMessage(window.update_success_msg);
             }
           }

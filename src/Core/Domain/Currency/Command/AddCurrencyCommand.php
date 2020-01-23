@@ -27,8 +27,8 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Currency\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\ExchangeRate;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\AlphaIsoCode;
+use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\ExchangeRate;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\Precision;
 
 /**
@@ -151,10 +151,7 @@ abstract class AddCurrencyCommand
     public function setLocalizedNames(array $localizedNames): AddCurrencyCommand
     {
         if (empty($localizedNames)) {
-            throw new CurrencyConstraintException(
-                'Currency name cannot be empty',
-                CurrencyConstraintException::EMPTY_NAME
-            );
+            throw new CurrencyConstraintException('Currency name cannot be empty', CurrencyConstraintException::EMPTY_NAME);
         }
 
         $this->localizedNames = $localizedNames;
@@ -180,10 +177,7 @@ abstract class AddCurrencyCommand
     public function setLocalizedSymbols(array $localizedSymbols): AddCurrencyCommand
     {
         if (empty($localizedSymbols)) {
-            throw new CurrencyConstraintException(
-                'Currency symbol cannot be empty',
-                CurrencyConstraintException::EMPTY_SYMBOL
-            );
+            throw new CurrencyConstraintException('Currency symbol cannot be empty', CurrencyConstraintException::EMPTY_SYMBOL);
         }
 
         $this->localizedSymbols = $localizedSymbols;

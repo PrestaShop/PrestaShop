@@ -27,16 +27,28 @@
 namespace PrestaShopBundle\Controller\Admin\Sell\Address;
 
 use Exception;
+use PrestaShop\PrestaShop\Adapter\Customer\CustomerDataProvider;
 use PrestaShop\PrestaShop\Core\Domain\Address\Command\BulkDeleteAddressCommand;
 use PrestaShop\PrestaShop\Core\Domain\Address\Command\DeleteAddressCommand;
 use PrestaShop\PrestaShop\Core\Domain\Address\Command\SetRequiredFieldsForAddressCommand;
+use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressException;
 use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Address\Exception\BulkDeleteAddressException;
+use PrestaShop\PrestaShop\Core\Domain\Address\Exception\CannotAddAddressException;
 use PrestaShop\PrestaShop\Core\Domain\Address\Exception\CannotSetRequiredFieldsForAddressException;
+use PrestaShop\PrestaShop\Core\Domain\Address\Exception\CannotUpdateAddressException;
 use PrestaShop\PrestaShop\Core\Domain\Address\Exception\DeleteAddressException;
 use PrestaShop\PrestaShop\Core\Domain\Address\Exception\InvalidAddressRequiredFieldsException;
+use PrestaShop\PrestaShop\Core\Domain\Address\Query\GetCustomerAddressForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Address\Query\GetRequiredFieldsForAddress;
+use PrestaShop\PrestaShop\Core\Domain\Address\QueryResult\EditableCustomerAddress;
+use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerByEmailNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerException;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\State\Exception\StateConstraintException;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AddressGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters\AddressFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
@@ -244,13 +256,72 @@ class AddressController extends FrameworkBundleAdminController
      *     message="You do not have permission to create this."
      * )
      *
+     * @param Request $request
+     *
      * @return Response
      */
-    public function createAction(): Response
+    public function createAction(Request $request): Response
     {
-        $link = $this->getAdminLink('AdminAddresses', ['addaddress' => 1]);
+        $addressFormBuilder = $this->get(
+            'prestashop.core.form.identifiable_object.builder.address_form_builder'
+        );
 
-        return $this->redirect($link);
+        $addressFormHandler = $this->get(
+            'prestashop.core.form.identifiable_object.handler.address_form_handler'
+        );
+
+        $formData = [];
+        $customerInfo = null;
+        $customerId = null;
+        if ($request->request->has('customer_address')) {
+            if (isset($request->request->get('customer_address')['id_country'])) {
+                $formCountryId = (int) $request->request->get('customer_address')['id_country'];
+                $formData['id_country'] = $formCountryId;
+            }
+            if (isset($request->request->get('customer_address')['id_customer'])) {
+                $idCustomer = (int) $request->request->get('customer_address')['id_customer'];
+                $formData['id_customer'] = $idCustomer;
+            }
+        }
+
+        if (empty($formData['id_customer']) && $request->query->has('id_customer')) {
+            $formData['id_customer'] = (int) $request->query->get('id_customer');
+        }
+
+        if (!empty($formData['id_customer'])) {
+            /** @var CustomerDataProvider $customerDataProvider */
+            $customerDataProvider = $this->get('prestashop.adapter.data_provider.customer');
+            $customerId = $formData['id_customer'];
+            $customer = $customerDataProvider->getCustomer($customerId);
+            $formData['first_name'] = $customer->firstname;
+            $formData['last_name'] = $customer->lastname;
+            $formData['company'] = $customer->company;
+            $customerInfo = $customer->firstname . ' ' . $customer->lastname . ' (' . $customer->email . ')';
+        }
+
+        $addressForm = $addressFormBuilder->getForm($formData);
+        $addressForm->handleRequest($request);
+
+        try {
+            $handlerResult = $addressFormHandler->handle($addressForm);
+            if ($handlerResult->isSubmitted() && $handlerResult->isValid()) {
+                $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
+
+                return $this->redirectToRoute('admin_addresses_index');
+            }
+        } catch (Exception $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+
+            return $this->redirectToRoute('admin_addresses_index');
+        }
+
+        return $this->render('@PrestaShop/Admin/Sell/Address/add.html.twig', [
+            'customerId' => $customerId,
+            'customerInformation' => $customerInfo,
+            'enableSidebar' => true,
+            'addressForm' => $addressForm->createView(),
+            'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
+        ]);
     }
 
     /**
@@ -262,14 +333,56 @@ class AddressController extends FrameworkBundleAdminController
      * )
      *
      * @param int $addressId
+     * @param Request $request
      *
      * @return Response
      */
-    public function editAction(int $addressId): Response
+    public function editAction(int $addressId, Request $request): Response
     {
-        $link = $this->getAdminLink('AdminAddresses', ['id_address' => $addressId, 'updateaddress' => 1]);
+        try {
+            /** @var EditableCustomerAddress $editableAddress */
+            $editableAddress = $this->getQueryBus()->handle(new GetCustomerAddressForEditing((int) $addressId));
 
-        return $this->redirect($link);
+            $addressFormBuilder = $this->get(
+                'prestashop.core.form.identifiable_object.builder.address_form_builder'
+            );
+            $addressFormHandler = $this->get(
+                'prestashop.core.form.identifiable_object.handler.address_form_handler'
+            );
+
+            $formData = [];
+            if ($request->request->has('customer_address') && isset($request->request->get('customer_address')['id_country'])) {
+                $formCountryId = (int) $request->request->get('customer_address')['id_country'];
+                $formData['id_country'] = $formCountryId;
+            }
+
+            $addressForm = $addressFormBuilder->getFormFor($addressId, $formData);
+            $addressForm->handleRequest($request);
+            $result = $addressFormHandler->handleFor($addressId, $addressForm);
+
+            if ($result->isSubmitted() && $result->isValid()) {
+                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+
+                return $this->redirectToRoute('admin_addresses_index');
+            }
+        } catch (Exception $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+
+            return $this->redirectToRoute('admin_addresses_index');
+        }
+
+        $customerInfo = $editableAddress->getLastName() . ' ' .
+            $editableAddress->getFirstName() . ' (' .
+            $editableAddress->getCustomerEmail() . ')';
+
+        return $this->render('@PrestaShop/Admin/Sell/Address/edit.html.twig', [
+            'enableSidebar' => true,
+            'customerId' => $editableAddress->getCustomerId()->getValue(),
+            'customerInformation' => $customerInfo,
+            'layoutTitle' => $this->trans('Edit', 'Admin.Actions'),
+            'addressForm' => $addressForm->createView(),
+            'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
+        ]);
     }
 
     /**
@@ -311,6 +424,52 @@ class AddressController extends FrameworkBundleAdminController
             ),
             InvalidAddressRequiredFieldsException::class => $this->trans(
                 'Invalid data supplied.',
+                'Admin.Notifications.Error'
+            ),
+            AddressConstraintException::class => [
+                AddressConstraintException::INVALID_ID => $this->trans(
+                    'The object cannot be loaded (the identifier is missing or invalid)',
+                    'Admin.Notifications.Error'
+                ),
+                AddressConstraintException::INVALID_FIELDS => $this->trans(
+                    'An error occurred when attempting to update the required fields.',
+                    'Admin.Notifications.Error'
+                ),
+            ],
+            StateConstraintException::class => [
+                StateConstraintException::INVALID_ID => $this->trans(
+                    'The object cannot be loaded (the identifier is missing or invalid)',
+                    'Admin.Notifications.Error'
+                ),
+            ],
+            CannotUpdateAddressException::class => $this->trans(
+                'An error occurred while attempting to save.',
+                'Admin.Notifications.Error'
+            ),
+            CannotAddAddressException::class => $this->trans(
+                'An error occurred while attempting to save.',
+                'Admin.Notifications.Error'
+            ),
+            CustomerException::class => $this->trans(
+                'The object cannot be loaded (the identifier is missing or invalid)',
+                'Admin.Notifications.Error'
+            ),
+            CountryConstraintException::class => [
+                CountryConstraintException::INVALID_ID => $this->trans(
+                    'The object cannot be loaded (the identifier is missing or invalid)',
+                    'Admin.Notifications.Error'
+                ),
+            ],
+            CustomerNotFoundException::class => $this->trans(
+                'The object cannot be loaded (or found)',
+                'Admin.Notifications.Error'
+            ),
+            CountryNotFoundException::class => $this->trans(
+                'The object cannot be loaded (or found)',
+                'Admin.Notifications.Error'
+            ),
+            CustomerByEmailNotFoundException::class => $this->trans(
+                'The object cannot be loaded (or found)',
                 'Admin.Notifications.Error'
             ),
         ];

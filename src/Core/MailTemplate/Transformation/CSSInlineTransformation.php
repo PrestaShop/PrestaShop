@@ -26,12 +26,12 @@
 
 namespace PrestaShop\PrestaShop\Core\MailTemplate\Transformation;
 
+use DOMAttr;
+use DOMElement;
 use Pelago\Emogrifier;
 use Pelago\Emogrifier\HtmlProcessor\CssToAttributeConverter;
 use PrestaShop\PrestaShop\Core\MailTemplate\MailTemplateInterface;
 use Symfony\Component\DomCrawler\Crawler;
-use DOMElement;
-use DOMAttr;
 use TijsVerkoyen\CssToInlineStyles\CssToInlineStyles;
 
 /**
@@ -67,7 +67,7 @@ class CSSInlineTransformation extends AbstractTransformation
         $cssToInlineStyles = new CssToInlineStyles();
         $templateContent = $cssToInlineStyles->convert($templateContent, $cssContent);
 
-        $converter = new CssToAttributeConverter($templateContent);
+        $converter = CssToAttributeConverter::fromHtml($templateContent);
         $templateContent = $converter->convertCssToVisualAttributes()->render();
 
         return preg_replace('/@(\w+)@/', '{\1}', $templateContent);

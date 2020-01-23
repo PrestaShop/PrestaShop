@@ -35,7 +35,7 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerOrders;
 use PrestaShop\PrestaShop\Core\Domain\Customer\QueryHandler\GetCustomerOrdersHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\OrderSummary;
 use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
-use PrestaShop\PrestaShop\Core\Localization\Locale;
+use PrestaShop\PrestaShop\Core\Localization\LocaleInterface;
 
 /**
  * Handles GetCustomerOrders query using legacy object models
@@ -43,15 +43,15 @@ use PrestaShop\PrestaShop\Core\Localization\Locale;
 final class GetCustomerOrdersHandler extends AbstractCustomerHandler implements GetCustomerOrdersHandlerInterface
 {
     /**
-     * @var Locale
+     * @var LocaleInterface
      */
     private $locale;
 
     /**
-     * @param Locale $locale
+     * @param LocaleInterface $locale
      */
     public function __construct(
-        Locale $locale
+        LocaleInterface $locale
     ) {
         $this->locale = $locale;
     }
@@ -81,14 +81,15 @@ final class GetCustomerOrdersHandler extends AbstractCustomerHandler implements 
     {
         $summarizedOrders = [];
 
-        foreach (Order::getCustomerOrders($customerId) as $customerOrder) {
+        $customerOrders = Order::getCustomerOrders($customerId);
+        foreach ($customerOrders as $customerOrder) {
             $currency = new Currency((int) $customerOrder['id_currency']);
 
             $summarizedOrders[] = new OrderSummary(
                 (int) $customerOrder['id_order'],
                 $customerOrder['date_add'],
                 $customerOrder['payment'],
-                $customerOrder['order_state'],
+                $customerOrder['order_state'] ?: '',
                 $customerOrder['nb_products'],
                 $this->locale->formatPrice(
                     $customerOrder['total_paid_real'],

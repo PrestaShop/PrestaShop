@@ -83,10 +83,10 @@ class WebserviceSpecificManagementSearchCore implements WebserviceSpecificManage
     public function manage()
     {
         if (!isset($this->wsObject->urlFragments['query']) || !isset($this->wsObject->urlFragments['language'])) {
-            throw new WebserviceException('You have to set both the \'language\' and \'query\' parameters to get a result', array(100, 400));
+            throw new WebserviceException('You have to set both the \'language\' and \'query\' parameters to get a result', [100, 400]);
         }
-        $objects_products = array();
-        $objects_categories = array();
+        $objects_products = [];
+        $objects_categories = [];
         $objects_products['empty'] = new Product();
         $objects_categories['empty'] = new Category();
 
@@ -97,7 +97,7 @@ class WebserviceSpecificManagementSearchCore implements WebserviceSpecificManage
         }
 
         $results = Search::find($this->wsObject->urlFragments['language'], $this->wsObject->urlFragments['query'], 1, 1, 'position', 'desc', true, false);
-        $categories = array();
+        $categories = [];
         foreach ($results as $result) {
             $current = new Product($result['id_product']);
             $objects_products[] = $current;

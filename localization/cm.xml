@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<localizationPack name="Cameroon" version="1.0">
+	<currencies>
+		<currency name="Franc CFA" iso_code="XAF" iso_code_num="950" sign="FCFA" blank="1" format="2" decimals="0" />
+	</currencies>
+	<languages>
+		<language iso_code="fr" />
+		<language iso_code="en" />
+	</languages>
+	<taxes>
+		<tax id="1" name="TVA CM 19.25%" rate="19.25" />
+		<tax id="2" name="TVA CM 0%" rate="0" />
+
+		<taxRulesGroup name="CM Standard Rate (19.25%)">
+			<taxRule iso_code_country="cm" id_tax="1" />
+		</taxRulesGroup>
+
+		<taxRulesGroup name="CM Zero Rate (0%)">
+			<taxRule iso_code_country="cm" id_tax="2" />
+		</taxRulesGroup>
+	</taxes>
+	<units>
+		<unit type="weight" value="kg" />
+		<unit type="volume" value="L" />
+		<unit type="short_distance" value="cm" />
+		<unit type="base_distance" value="m" />
+		<unit type="long_distance" value="km" />
+	</units>
+</localizationPack>

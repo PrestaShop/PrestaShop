@@ -120,15 +120,16 @@ class InstallControllerConsoleProcess extends InstallControllerConsole implement
             if (!$this->processInstallDatabase()) {
                 $this->printErrors();
             }
+
+            // Deferred Kernel Init
+            $this->initKernel();
+
             if (!$this->processInstallDefaultData()) {
                 $this->printErrors();
             }
             if (!$this->processPopulateDatabase()) {
                 $this->printErrors();
             }
-
-            // Deferred Kernel Init
-            $this->initKernel();
 
             if (!$this->processConfigureShop()) {
                 $this->printErrors();
@@ -345,7 +346,6 @@ class InstallControllerConsoleProcess extends InstallControllerConsole implement
 
         global $kernel;
         $kernel = new AppKernel(_PS_ENV_, _PS_MODE_DEV_);
-        $kernel->loadClassCache();
         $kernel->boot();
     }
 }

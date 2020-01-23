@@ -26,6 +26,7 @@
 
 namespace Tests\Unit\Core\Search;
 
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters;
@@ -124,7 +125,7 @@ class SearchParametersTest extends TestCase
     /**
      * @param array|null $filters
      *
-     * @return \PHPUnit_Framework_MockObject_MockObject|AdminFilterRepository
+     * @return MockObject|AdminFilterRepository
      */
     private function buildAdminFilterRepositoryMock(array $filters = null)
     {
@@ -159,7 +160,7 @@ class SearchParametersTest extends TestCase
      * @param array $parameters
      * @param bool $postQuery
      *
-     * @return \PHPUnit_Framework_MockObject_MockObject|Request
+     * @return MockObject|Request
      */
     private function buildRequestMock(array $parameters, $postQuery = false)
     {

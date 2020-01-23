@@ -30,7 +30,6 @@ use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * This form class generates the "Caching" form in Performance page.
@@ -50,8 +49,11 @@ class CachingType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('use_cache', SwitchType::class)
+            ->add('use_cache', SwitchType::class, [
+                'label' => $this->trans('Use cache', 'Admin.Advparameters.Feature'),
+            ])
             ->add('caching_system', ChoiceType::class, [
+                'label' => $this->trans('Caching system', 'Admin.Advparameters.Feature'),
                 'choices' => [
                     'Memcached via PHP::Memcache' => 'CacheMemcache',
                     'Memcached via PHP::Memcached' => 'CacheMemcached',
@@ -87,17 +89,11 @@ class CachingType extends TranslatorAwareType
                 'expanded' => true,
                 'required' => false,
                 'placeholder' => false,
+                'row_attr' => [
+                    'class' => 'memcache',
+                ],
+                'choice_translation_domain' => 'Admin.Advparameters.Feature',
             ]);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function configureOptions(OptionsResolver $resolver)
-    {
-        $resolver->setDefaults([
-            'translation_domain' => 'Admin.Advparameters.Feature',
-        ]);
     }
 
     /**

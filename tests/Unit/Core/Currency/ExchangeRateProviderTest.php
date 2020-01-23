@@ -26,12 +26,13 @@
 
 namespace Tests\Unit\Core\Currency;
 
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\CircuitBreaker\Contract\CircuitBreakerInterface;
 use PrestaShop\PrestaShop\Core\Currency\ExchangeRateProvider;
+use Symfony\Component\Cache\Adapter\AdapterInterface as CacheInterface;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
 use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Cache\Adapter\AdapterInterface as CacheInterface;
 
 class ExchangeRateProviderTest extends TestCase
 {
@@ -305,7 +306,7 @@ class ExchangeRateProviderTest extends TestCase
      * @param string $feedContent
      * @param string $feedUrl
      *
-     * @return \PHPUnit_Framework_MockObject_MockObject|CircuitBreakerInterface
+     * @return MockObject|CircuitBreakerInterface
      */
     private function buildCircuitBreakerMock($feedContent, $feedUrl)
     {

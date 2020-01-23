@@ -74,10 +74,7 @@ class Password
         $length = function_exists('mb_strlen') ? mb_strlen($password, 'UTF-8') : strlen($password);
 
         if (self::MIN_LENGTH > $length || $length > self::MAX_LENGTH) {
-            throw new EmployeeConstraintException(
-                sprintf('Employee password length must be between %s and %s', self::MIN_LENGTH, self::MAX_LENGTH),
-                EmployeeConstraintException::INVALID_PASSWORD
-            );
+            throw new EmployeeConstraintException(sprintf('Employee password length must be between %s and %s', self::MIN_LENGTH, self::MAX_LENGTH), EmployeeConstraintException::INVALID_PASSWORD);
         }
     }
 }

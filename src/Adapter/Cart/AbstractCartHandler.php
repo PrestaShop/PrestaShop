@@ -50,21 +50,13 @@ abstract class AbstractCartHandler
     protected function getCart(CartId $cartId)
     {
         try {
-            //@todo: legacy uses context cart object.
-            //@todo: Make sure it is not necessary to set the context cart.
-            //@todo: else refactor to get context cart and set it after every edit
             $cart = new Cart($cartId->getValue());
         } catch (PrestaShopException $e) {
-            throw new CartException(sprintf(
-                'An error occurred when trying to load cart with id "%s',
-                $cartId->getValue()
-            ));
+            throw new CartException(sprintf('An error occurred when trying to load cart with id "%s', $cartId->getValue()));
         }
 
         if (!Validate::isLoadedObject($cart) || $cartId->getValue() !== (int) $cart->id) {
-            throw new CartNotFoundException(
-                sprintf('Cart with id "%s" was not found', $cartId->getValue())
-            );
+            throw new CartNotFoundException(sprintf('Cart with id "%s" was not found', $cartId->getValue()));
         }
 
         return $cart;

@@ -84,7 +84,7 @@ class OrderInvoiceCore extends ObjectModel
     public $date_add;
 
     /** @var array Total paid cache */
-    protected static $_total_paid_cache = array();
+    protected static $_total_paid_cache = [];
 
     /** @var Order * */
     private $order;
@@ -92,30 +92,30 @@ class OrderInvoiceCore extends ObjectModel
     /**
      * @see ObjectModel::$definition
      */
-    public static $definition = array(
+    public static $definition = [
         'table' => 'order_invoice',
         'primary' => 'id_order_invoice',
-        'fields' => array(
-            'id_order' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-            'number' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-            'delivery_number' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
-            'delivery_date' => array('type' => self::TYPE_DATE, 'validate' => 'isDateFormat'),
-            'total_discount_tax_excl' => array('type' => self::TYPE_FLOAT),
-            'total_discount_tax_incl' => array('type' => self::TYPE_FLOAT),
-            'total_paid_tax_excl' => array('type' => self::TYPE_FLOAT),
-            'total_paid_tax_incl' => array('type' => self::TYPE_FLOAT),
-            'total_products' => array('type' => self::TYPE_FLOAT),
-            'total_products_wt' => array('type' => self::TYPE_FLOAT),
-            'total_shipping_tax_excl' => array('type' => self::TYPE_FLOAT),
-            'total_shipping_tax_incl' => array('type' => self::TYPE_FLOAT),
-            'shipping_tax_computation_method' => array('type' => self::TYPE_INT),
-            'total_wrapping_tax_excl' => array('type' => self::TYPE_FLOAT),
-            'total_wrapping_tax_incl' => array('type' => self::TYPE_FLOAT),
-            'shop_address' => array('type' => self::TYPE_HTML, 'validate' => 'isCleanHtml', 'size' => 1000),
-            'note' => array('type' => self::TYPE_STRING, 'validate' => 'isCleanHtml', 'size' => 65000),
-            'date_add' => array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
-        ),
-    );
+        'fields' => [
+            'id_order' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
+            'number' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
+            'delivery_number' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId'],
+            'delivery_date' => ['type' => self::TYPE_DATE, 'validate' => 'isDateFormat'],
+            'total_discount_tax_excl' => ['type' => self::TYPE_FLOAT],
+            'total_discount_tax_incl' => ['type' => self::TYPE_FLOAT],
+            'total_paid_tax_excl' => ['type' => self::TYPE_FLOAT],
+            'total_paid_tax_incl' => ['type' => self::TYPE_FLOAT],
+            'total_products' => ['type' => self::TYPE_FLOAT],
+            'total_products_wt' => ['type' => self::TYPE_FLOAT],
+            'total_shipping_tax_excl' => ['type' => self::TYPE_FLOAT],
+            'total_shipping_tax_incl' => ['type' => self::TYPE_FLOAT],
+            'shipping_tax_computation_method' => ['type' => self::TYPE_INT],
+            'total_wrapping_tax_excl' => ['type' => self::TYPE_FLOAT],
+            'total_wrapping_tax_incl' => ['type' => self::TYPE_FLOAT],
+            'shop_address' => ['type' => self::TYPE_HTML, 'validate' => 'isCleanHtml', 'size' => 1000],
+            'note' => ['type' => self::TYPE_STRING, 'validate' => 'isCleanHtml', 'size' => 65000],
+            'date_add' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
+        ],
+    ];
 
     public function add($autodate = true, $null_values = false)
     {
@@ -143,7 +143,7 @@ class OrderInvoiceCore extends ObjectModel
         if (is_numeric($id_invoice)) {
             $id_invoice = (int) $id_invoice;
         } elseif (is_string($id_invoice)) {
-            $matches = array();
+            $matches = [];
             if (preg_match('/^(?:' . Configuration::get('PS_INVOICE_PREFIX', Context::getContext()->language->id) . ')\s*([0-9]+)$/i', $id_invoice, $matches)) {
                 $id_invoice = $matches[1];
             }
@@ -174,7 +174,7 @@ class OrderInvoiceCore extends ObjectModel
 
         $order = new Order($this->id_order);
 
-        $result_array = array();
+        $result_array = [];
         foreach ($products as $row) {
             // Change qty if selected
             if ($selected_qty) {
@@ -220,14 +220,14 @@ class OrderInvoiceCore extends ObjectModel
 
             $row['total_ecotax_tax'] = $row['total_ecotax_tax_incl'] - $row['total_ecotax_tax_excl'];
 
-            foreach (array(
+            foreach ([
                 'ecotax_tax_excl',
                 'ecotax_tax_incl',
                 'ecotax_tax',
                 'total_ecotax_tax_excl',
                 'total_ecotax_tax_incl',
                 'total_ecotax_tax',
-            ) as $ecotax_field) {
+            ] as $ecotax_field) {
                 $row[$ecotax_field] = Tools::ps_round($row[$ecotax_field], Context::getContext()->getComputingPrecision(), $round_mode);
             }
 
@@ -352,20 +352,20 @@ class OrderInvoiceCore extends ObjectModel
         // $breakdown will be an array with tax rates as keys and at least the columns:
         // 	- 'total_price_tax_excl'
         // 	- 'total_amount'
-        $breakdown = array();
+        $breakdown = [];
 
         $details = $order->getProductTaxesDetails();
 
         if ($sum_composite_taxes) {
-            $grouped_details = array();
+            $grouped_details = [];
             foreach ($details as $row) {
                 if (!isset($grouped_details[$row['id_order_detail']])) {
-                    $grouped_details[$row['id_order_detail']] = array(
+                    $grouped_details[$row['id_order_detail']] = [
                         'tax_rate' => 0,
                         'total_tax_base' => 0,
                         'total_amount' => 0,
                         'id_tax' => $row['id_tax'],
-                    );
+                    ];
                 }
 
                 $grouped_details[$row['id_order_detail']]['tax_rate'] += $row['tax_rate'];
@@ -379,12 +379,12 @@ class OrderInvoiceCore extends ObjectModel
         foreach ($details as $row) {
             $rate = sprintf('%.3f', $row['tax_rate']);
             if (!isset($breakdown[$rate])) {
-                $breakdown[$rate] = array(
+                $breakdown[$rate] = [
                     'total_price_tax_excl' => 0,
                     'total_amount' => 0,
                     'id_tax' => $row['id_tax'],
                     'rate' => $rate,
-                );
+                ];
             }
 
             $breakdown[$rate]['total_price_tax_excl'] += $row['total_tax_base'];
@@ -414,13 +414,13 @@ class OrderInvoiceCore extends ObjectModel
     {
         // No shipping breakdown if no shipping!
         if ($this->total_shipping_tax_excl == 0) {
-            return array();
+            return [];
         }
 
         // No shipping breakdown if it's free!
         foreach ($order->getCartRules() as $cart_rule) {
             if ($cart_rule['free_shipping']) {
-                return array();
+                return [];
             }
         }
 
@@ -461,14 +461,14 @@ class OrderInvoiceCore extends ObjectModel
                 Tools::spreadAmount($delta_base, Context::getContext()->getComputingPrecision(), $shipping_breakdown, 'total_tax_excl');
             }
         } else {
-            $shipping_breakdown = array(
-                array(
+            $shipping_breakdown = [
+                [
                     'total_tax_excl' => $this->total_shipping_tax_excl,
                     'rate' => $order->carrier_tax_rate,
                     'total_amount' => $shipping_tax_amount,
                     'id_tax' => null,
-                ),
-            );
+                ],
+            ];
         }
 
         return $shipping_breakdown;
@@ -482,7 +482,7 @@ class OrderInvoiceCore extends ObjectModel
     public function getWrappingTaxesBreakdown()
     {
         if ($this->total_wrapping_tax_excl == 0) {
-            return array();
+            return [];
         }
 
         $wrapping_tax_amount = $this->total_wrapping_tax_incl - $this->total_wrapping_tax_excl;
@@ -524,13 +524,13 @@ class OrderInvoiceCore extends ObjectModel
         }
 
         if (!Configuration::get('PS_INVOICE_TAXES_BREAKDOWN') && !Configuration::get('PS_ATCP_SHIPWRAP')) {
-            $wrapping_breakdown = array(
-                array(
+            $wrapping_breakdown = [
+                [
                     'total_tax_excl' => $this->total_wrapping_tax_excl,
                     'rate' => $total_tax_rate,
                     'total_amount' => $wrapping_tax_amount,
-                ),
-            );
+                ],
+            ];
         }
 
         return $wrapping_breakdown;
@@ -553,7 +553,7 @@ class OrderInvoiceCore extends ObjectModel
         GROUP BY `ecotax_tax_rate`');
 
         $priceDisplayPrecision = Context::getContext()->getComputingPrecision();
-        $taxes = array();
+        $taxes = [];
         foreach ($result as $row) {
             if ($row['ecotax_tax_excl'] > 0) {
                 $row['ecotax_tax_incl'] = Tools::ps_round($row['ecotax_tax_excl'] + ($row['ecotax_tax_excl'] * $row['rate'] / 100), $priceDisplayPrecision);
@@ -742,10 +742,10 @@ class OrderInvoiceCore extends ObjectModel
 
         $invoices = Db::getInstance()->executeS($query);
         if (!$invoices) {
-            return array();
+            return [];
         }
 
-        $invoice_list = array();
+        $invoice_list = [];
         foreach ($invoices as $invoice) {
             $invoice_list[] = $invoice['id_order_invoice'];
         }
@@ -858,12 +858,12 @@ class OrderInvoiceCore extends ObjectModel
      */
     public function getInvoiceNumberFormatted($id_lang, $id_shop = null)
     {
-        $invoice_formatted_number = Hook::exec('actionInvoiceNumberFormatted', array(
+        $invoice_formatted_number = Hook::exec('actionInvoiceNumberFormatted', [
             get_class($this) => $this,
             'id_lang' => (int) $id_lang,
             'id_shop' => (int) $id_shop,
             'number' => (int) $this->number,
-        ));
+        ]);
 
         if (!empty($invoice_formatted_number)) {
             return $invoice_formatted_number;
@@ -915,7 +915,7 @@ class OrderInvoiceCore extends ObjectModel
         $address->phone = Configuration::get('PS_SHOP_PHONE', null, null, $id_shop);
         $address->id_country = Configuration::get('PS_SHOP_COUNTRY_ID', null, null, $id_shop);
 
-        return AddressFormat::generateAddress($address, array(), '<br />', ' ');
+        return AddressFormat::generateAddress($address, [], '<br />', ' ');
     }
 
     /**

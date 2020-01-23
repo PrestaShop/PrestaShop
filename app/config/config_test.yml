@@ -23,6 +23,9 @@ services:
     prestashop.bundle.routing.converter.cache:
         class: Symfony\Component\Cache\Adapter\ArrayAdapter
 
+    prestashop.adapter.image.uploader.category_cover_image_uploader:
+      class: 'PrestaShop\PrestaShop\Adapter\Image\Uploader\CategoryCoverImageUploader'
+
 # Doctrine Configuration
 doctrine:
     dbal:

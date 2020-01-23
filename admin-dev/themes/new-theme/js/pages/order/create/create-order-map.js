@@ -27,12 +27,17 @@
  * Encapsulates selectors for "Create order" page
  */
 export default {
+  productCustomizationFieldTypeFile: 0,
+  productCustomizationFieldTypeText: 1,
+
   orderCreationContainer: '#order-creation-container',
+  requiredFieldMark: '.js-required-field-mark',
 
   // selectors related to customer block
   customerSearchInput: '#customer-search-input',
   customerSearchResultsBlock: '.js-customer-search-results',
   customerSearchResultTemplate: '#customer-search-result-template',
+  customerSearchEmptyResultWarning: '#customer-search-empty-result-warn',
   changeCustomerBtn: '.js-change-customer-btn',
   customerSearchRow: '.js-search-customer-row',
   chooseCustomerBtn: '.js-choose-customer-btn',
@@ -65,9 +70,8 @@ export default {
   orderProductsField: '.js-order-products',
   orderTotalField: '.js-order-total-paid',
   orderStatusField: '.js-order-status',
-
-  // selectors related to cart block
-  cartBlock: '#cart-block',
+  emptyListRowTemplate: '#js-empty-list-row',
+  emptyListRow: '.js-empty-row',
 
   // selectors related to cartRules block
   cartRulesBlock: '#cart-rules-block',
@@ -92,9 +96,26 @@ export default {
   addressSelect: '.js-address-select',
   addressesContent: '#addresses-content',
   addressesWarning: '#addresses-warning',
+  deliveryAddressEditBtn: '#js-delivery-address-edit-btn',
+  invoiceAddressEditBtn: '#js-invoice-address-edit-btn',
+  addressAddBtn: '#js-add-address-btn',
 
   // selectors related to summary block
   summaryBlock: '#summary-block',
+  summaryTotalProducts: '.js-total-products',
+  summaryTotalDiscount: '.js-total-discounts',
+  summaryTotalShipping: '.js-total-shipping',
+  summaryTotalTaxes: '.js-total-taxes',
+  summaryTotalWithoutTax: '.js-total-without-tax',
+  summaryTotalWithTax: '.js-total-with-tax',
+  placeOrderCartIdField: '.js-place-order-cart-id',
+  processOrderLinkTag: '#js-process-order-link',
+  orderMessageField: '#js-order-message-wrap textarea',
+  sendProcessOrderEmailBtn: '#js-send-process-order-email-btn',
+  summarySuccessAlertBlock: '#js-summary-success-block',
+  summaryErrorAlertBlock: '#js-summary-error-block',
+  summarySuccessAlertText: '#js-summary-success-block .alert-text',
+  summaryErrorAlertText: '#js-summary-error-block .alert-text',
 
   // selectors related to shipping block
   shippingBlock: '#shipping-block',
@@ -104,7 +125,10 @@ export default {
   totalShippingField: '.js-total-shipping',
   freeShippingSwitch: '.js-free-shipping-switch',
 
-  // selectors related to cart products block
+  // selectors related to cart block
+  cartBlock: '#cart-block',
+  cartCurrencySelect: '#js-cart-currency-select',
+  cartLanguageSelect: '#js-cart-language-select',
   productSearch: '#product-search',
   combinationsSelect: '#combination-select',
   productResultBlock: '#product-search-results',
@@ -124,13 +148,22 @@ export default {
   addToCartButton: '#add-product-to-cart-btn',
   productsTable: '#products-table',
   productsTableRowTemplate: '#products-table-row-template',
-  productImageField: '.js-product-image',
-  productNameField: '.js-product-name',
-  productAttrField: '.js-product-attr',
-  productReferenceField: '.js-product-ref',
-  productUnitPriceInput: '.js-product-unit-input',
+  listedProductImageField: '.js-product-image',
+  listedProductNameField: '.js-product-name',
+  listedProductAttrField: '.js-product-attr',
+  listedProductReferenceField: '.js-product-ref',
+  listedProductUnitPriceInput: '.js-product-unit-input',
+  listedProductQtyInput: '.js-product-qty-input',
   productTotalPriceField: '.js-product-total-price',
+  listedProductCustomizedTextTemplate: '#js-table-product-customized-text-template',
+  listedProductCustomizedFileTemplate: '#js-table-product-customized-file-template',
+  listedProductCustomizationName: '.js-customization-name',
+  listedProductCustomizationValue: '.js-customization-value',
+  listedProductDefinition: '.js-product-definition-td',
   productRemoveBtn: '.js-product-remove-btn',
   productTaxWarning: '.js-tax-warning',
   noProductsFoundWarning: '.js-no-products-found',
+  productAddForm: '#js-add-product-form',
+  cartErrorAlertBlock: '#js-cart-error-block',
+  cartErrorAlertText: '#js-cart-error-block .alert-text',
 };

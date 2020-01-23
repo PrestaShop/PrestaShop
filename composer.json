@@ -8,35 +8,37 @@
         "ext-fileinfo": "*",
         "ext-intl": "*",
         "ext-zip": "*",
+        "ext-iconv": "*",
+        "ext-json": "*",
+        "ext-gd": "*",
+        "ext-dom": "*",
         "beberlei/doctrineextensions": "^1.0",
         "composer/ca-bundle": "^1.0",
         "composer/installers": "^1.0.21",
-        "csa/guzzle-bundle": "~1.3",
+        "csa/guzzle-bundle": "1.3",
         "cssjanus/cssjanus": "dev-patch-1",
         "curl/curl": "^1.2.1",
         "defuse/php-encryption": "~2.0.1",
-        "doctrine/cache": "^1.6",
-        "doctrine/common": "~2.5.3",
-        "doctrine/dbal": "^2.5.3",
+        "doctrine/cache": "^1.8",
         "doctrine/doctrine-bundle": "^1.6",
-        "doctrine/orm": "~2.5.3",
+        "doctrine/orm": "^2.7",
         "ezyang/htmlpurifier": "^4.10",
         "friendsofsymfony/jsrouting-bundle": "^2.4",
         "geoip2/geoip2": "~2.4.2",
-        "greenlion/php-sql-parser": "^4.1",
+        "greenlion/php-sql-parser": "^4.3",
         "guzzlehttp/cache-subscriber": "^0.2.0",
         "guzzlehttp/guzzle": "~5.0",
         "incenteev/composer-parameter-handler": "~2.0",
         "ircmaxell/password-compat": "^1.0.4",
         "ircmaxell/random-lib": "^1.2.0",
         "jakeasmith/http_build_url": "^1",
-        "league/tactician-bundle": "^0.4.1",
+        "league/tactician-bundle": "^1.0",
         "martinlindhe/php-mb-helpers": "^0.1.6",
         "matthiasmullie/minify": "~1.3.0",
         "mobiledetect/mobiledetectlib": "~2.8.22",
         "mrclay/minify": "~2.3.0",
-        "nikic/php-parser": "^3",
-        "paragonie/random_compat": "^1.4|^2.0",
+        "nikic/php-parser": "^4.0",
+        "paragonie/random_compat": "^2.0",
         "pear/archive_tar": "^1.4.6",
         "pelago/emogrifier": "^2.1",
         "phpoffice/phpspreadsheet": "~1.5",
@@ -100,38 +102,42 @@
         "prestashop/statssearch": "^2",
         "prestashop/statsstock": "^2",
         "prestashop/statsvisits": "^2",
-        "prestashop/translationtools-bundle": "^3",
+        "prestashop/translationtools-bundle": "^4.0",
         "prestashop/welcome": "^6",
-        "sensio/distribution-bundle": "^5.0.19",
-        "sensio/framework-extra-bundle": "^5.0.0",
+        "sensio/distribution-bundle": "^5.0",
+        "sensio/framework-extra-bundle": "^5.1",
         "shudrum/array-finder": "^1.1.0",
         "smarty/smarty": "^3.1.31",
         "soundasleep/html2text": "^0.5.0",
-        "swiftmailer/swiftmailer": "~5.4.3",
+        "swiftmailer/swiftmailer": "~6.2",
         "symfony/monolog-bundle": "^3.1.0",
         "symfony/polyfill-apcu": "^1.0",
         "symfony/polyfill-mbstring": "^1.12",
         "symfony/polyfill-php73": "^1.10",
-        "symfony/swiftmailer-bundle": "^2.6.4",
+        "symfony/swiftmailer-bundle": "^3.1",
         "symfony/symfony": ">=3.4.26",
         "tecnickcom/tcpdf": "^6.2.12",
         "tijsverkoyen/css-to-inline-styles": "^2.2",
-        "twig/twig": "^1.38||^2.6.2"
+        "twig/twig": "^1.38"
     },
     "repositories": [
         {
             "type": "vcs",
             "url": "https://github.com/prestashop/php-cssjanus"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/prestashop/CsaGuzzleBundle"
         }
     ],
     "require-dev": {
         "behat/behat": "^3.5",
-        "friendsofphp/php-cs-fixer": "^2.15.1",
-        "johnkary/phpunit-speedtrap": "^1.1",
+        "friendsofphp/php-cs-fixer": "^2.16.1",
+        "johnkary/phpunit-speedtrap": "^3",
         "mikey179/vfsstream": "^1.6",
         "phake/phake": "@stable",
-        "phpunit/phpunit": "~5.7",
-        "symfony/phpunit-bridge": "^3.4.31"
+        "phpunit/phpunit": "~7.5.18",
+        "symfony/phpunit-bridge": "^3.4"
     },
     "autoload-dev": {
         "psr-4": {
@@ -164,13 +170,12 @@
             "@php ./tests-legacy/create-test-db.php"
         ],
         "test-all": [
+            "composer phpunit-admin",
             "composer phpunit-legacy",
             "composer unit-tests",
-            "composer phpunit-admin",
             "composer phpunit-sf",
             "composer integration-tests",
             "composer phpunit-controllers",
-            "composer phpunit-routing",
             "composer integration-behaviour-tests"
         ],
         "phpunit-legacy": [
@@ -191,10 +196,6 @@
             "@composer create-test-db",
             "@php -d date.timezone=UTC ./vendor/bin/phpunit -c tests-legacy/phpunit-admin.xml"
         ],
-        "phpunit-routing": [
-            "@composer create-test-db",
-            "@php -d date.timezone=UTC ./vendor/bin/phpunit -c tests-legacy/phpunit-routing.xml"
-        ],
         "phpunit-sf": [
             "@composer create-test-db",
             "@php -d date.timezone=UTC ./vendor/bin/phpunit -c tests-legacy/sf-tests.xml"
@@ -210,6 +211,11 @@
         "git-hook-install": "@php .github/contrib/install.php",
         "git-hook-uninstall": "@php .github/contrib/uninstall.php"
     },
+    "scripts-descriptions": {
+        "test-all": "Launch all PHPUnit test suites",
+        "create-test-db": "Create a Database for testing purposes",
+        "create-release": "Create a release of PrestaShop, run the command with -h/--help argument for more information."
+    },
     "config": {
         "platform": {
             "php": "7.1.3"
@@ -224,10 +230,10 @@
         "symfony-tests-dir": "tests",
         "symfony-assets-install": "relative",
         "incenteev-parameters": {
-            "file": "app/config/parameters.yml"
+          "file": "app/config/parameters.yml"
         },
-        "scripts-description": {
-            "create-release": "Create a release of PrestaShop, run the command with -h/--help argument for more information."
+        "symfony": {
+            "require": "~3.4"
         }
     },
     "authors": [

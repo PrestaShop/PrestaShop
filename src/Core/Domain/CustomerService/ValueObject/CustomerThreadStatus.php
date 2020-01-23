@@ -56,13 +56,7 @@ final class CustomerThreadStatus
         ];
 
         if (!in_array($status, $availableStatuses)) {
-            throw new CustomerServiceException(
-                sprintf(
-                    'Customer thread status "%s" is not defined, available statuses are "%s"',
-                    $status,
-                    implode(',', $availableStatuses)
-                )
-            );
+            throw new CustomerServiceException(sprintf('Customer thread status "%s" is not defined, available statuses are "%s"', $status, implode(',', $availableStatuses)));
         }
 
         $this->status = $status;

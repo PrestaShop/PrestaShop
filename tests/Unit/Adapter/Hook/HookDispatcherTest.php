@@ -26,6 +26,7 @@
 
 namespace Tests\Unit\Adapter\Hook;
 
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\Hook\HookDispatcher;
 use PrestaShopBundle\Service\Hook\HookEvent;
@@ -33,12 +34,12 @@ use PrestaShopBundle\Service\Hook\HookEvent;
 class HookDispatcherTest extends TestCase
 {
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject|HookEvent
+     * @var MockObject|HookEvent
      */
     private $hookEventMock;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject|HookDispatcher
+     * @var MockObject|HookDispatcher
      */
     private $hookDispatcherMock;
 
