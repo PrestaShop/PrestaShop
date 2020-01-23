@@ -142,7 +142,7 @@ export default class CustomerManager {
 
   /**
    * Searches for customers
-   * @todo: fix showing not found customers and rerender after change customer
+   * 
    * @private
    */
   _search(searchPhrase) {
