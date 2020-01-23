@@ -201,6 +201,13 @@ final class CartGridDefinitionFactory extends AbstractGridDefinitionFactory
             );
         }
 
+        $columns->addBefore('actions', (new DataColumn('shop_name'))
+            ->setName($this->trans('Shop', [], 'Admin.Global'))
+            ->setOptions([
+                'field' => 'shop_name',
+            ])
+        );
+
         return $columns;
     }
 
