@@ -113,6 +113,7 @@ export default {
     template: '#template-pack-table-row',
     product: {
       img: '.cell-product-img img',
+      link: '.cell-product-name a',
       name: '.cell-product-name .product-name',
       ref: '.cell-product-name .product-reference',
       supplierRef: '.cell-product-name .product-supplier-reference',
