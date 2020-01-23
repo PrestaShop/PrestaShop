@@ -31,6 +31,8 @@ export default {
   customerSearched: 'customerSearched',
   // when new customer is selected
   customerSelected: 'customerSelected',
+  // when no customers found by search
+  customersNotFound: 'customersNotFound',
   // when new cart is loaded, no matter if its empty, selected from carts list or duplicated by order.
   cartLoaded: 'cartLoaded',
   // when cart currency has been changed

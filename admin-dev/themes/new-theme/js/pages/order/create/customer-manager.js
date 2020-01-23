@@ -64,6 +64,7 @@ export default class CustomerManager {
     this.$container.on('click', createOrderMap.changeCustomerBtn, () => this._changeCustomer());
     this._onCustomerSearch();
     this._onCustomerSelect();
+    this._onCustomersNotFound();
   }
 
   /**
@@ -74,7 +75,27 @@ export default class CustomerManager {
   _onCustomerSearch() {
     EventEmitter.on(eventMap.customerSearched, (response) => {
       this.activeSearchRequest = null;
+      this.customerRenderer.clearShownCustomers();
+
+      if (response.customers.length === 0) {
+        EventEmitter.emit(eventMap.customersNotFound);
+
+        return;
+      }
+
       this.customerRenderer.renderSearchResults(response.customers);
+    });
+  }
+
+  /**
+   * Listens for event of when no customers were found by search
+   *
+   * @private
+   */
+  _onCustomersNotFound() {
+    EventEmitter.on(eventMap.customersNotFound, () => {
+      this.customerRenderer.showNotFoundCustomers();
+      this.customerRenderer.hideCheckoutHistoryBlock();
     });
   }
 
@@ -142,7 +163,7 @@ export default class CustomerManager {
 
   /**
    * Searches for customers
-   * 
+   *
    * @private
    */
   _search(searchPhrase) {

@@ -102,14 +102,14 @@ export default class CreateOrderPage {
   /**
    * Hides whole cart information wrapper
    */
-  static hideCartInfo() {
+  _hideCartInfo() {
     $(createOrderMap.cartInfoWrapper).addClass('d-none');
   }
 
   /**
    * Shows whole cart information wrapper
    */
-  static showCartInfo() {
+  _showCartInfo() {
     $(createOrderMap.cartInfoWrapper).removeClass('d-none');
   }
 
@@ -142,6 +142,8 @@ export default class CreateOrderPage {
     this.$container.on('blur', createOrderMap.cartRuleSearchInput, () => this.cartRuleManager.stopSearching());
     this._listenForCartEdit();
     this._onCartLoaded();
+    this._onCustomersNotFound();
+    this._onCustomerSelected();
   }
 
   /**
@@ -203,6 +205,28 @@ export default class CreateOrderPage {
       }
       this.customerManager.loadCustomerCarts(this.cartId);
       this.customerManager.loadCustomerOrders();
+    });
+  }
+
+  /**
+   * Listens for event when no customers were found by search
+   *
+   * @private
+   */
+  _onCustomersNotFound() {
+    EventEmitter.on(eventMap.customersNotFound, () => {
+      this._hideCartInfo();
+    });
+  }
+
+  /**
+   * Listens for event when customer is selected
+   *
+   * @private
+   */
+  _onCustomerSelected() {
+    EventEmitter.on(eventMap.customerSelected, () => {
+      this._showCartInfo();
     });
   }
 
@@ -437,7 +461,6 @@ export default class CreateOrderPage {
    * @private
    */
   _renderCartInfo(cartInfo) {
-    CreateOrderPage.showCartInfo();
     this.addressesRenderer.render(cartInfo.addresses);
     this.cartRulesRenderer.renderCartRulesBlock(cartInfo.cartRules, cartInfo.products.length === 0);
     this.shippingRenderer.render(cartInfo.shipping, cartInfo.products.length === 0);
