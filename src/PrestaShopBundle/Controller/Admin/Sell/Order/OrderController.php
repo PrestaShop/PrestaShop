@@ -45,8 +45,10 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Command\UpdateOrderShippingDetailsCo
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\UpdateOrderStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\CannotEditDeliveredOrderProductException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\ChangeOrderStatusException;
-use PrestaShop\PrestaShop\Core\Domain\Order\Exception\EmptyRefundAmountException;
-use PrestaShop\PrestaShop\Core\Domain\Order\Exception\EmptyRefundQuantityException;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\EmptyProductSelectionException;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidRefundAmountException;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidRefundQuantityException;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidCancelQuantityException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderEmailSendException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderNotFoundException;
@@ -1185,7 +1187,7 @@ class OrderController extends FrameworkBundleAdminController
                 $this->addFlash('success', $this->trans('The discount was successfully generated.', 'Admin.Catalog.Notification'));
             }
         } catch (Exception $e) {
-            $this->addFlash('error', $e->getMessage());
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }
 
         return $this->redirectToRoute('admin_orders_view', [
@@ -1223,6 +1225,11 @@ class OrderController extends FrameworkBundleAdminController
      */
     private function getErrorMessages(Exception $e)
     {
+        $refundableQuantity = 0;
+        if ($e instanceof InvalidRefundQuantityException) {
+            $refundableQuantity = $e->getRefundableQuantity();
+        }
+
         return [
             CannotEditDeliveredOrderProductException::class => $this->trans('You cannot edit the cart once the order delivered', 'Admin.Orderscustomers.Notification'),
             OrderNotFoundException::class => $e instanceof OrderNotFoundException ?
@@ -1239,12 +1246,33 @@ class OrderController extends FrameworkBundleAdminController
                 $e->getMessage(),
                 'Admin.Orderscustomers.Notification'
             ),
-            EmptyRefundQuantityException::class => $this->trans(
-                'Please enter a quantity to proceed with your refund.',
+            InvalidRefundQuantityException::class => [
+                InvalidRefundQuantityException::EMPTY_QUANTITY => $this->trans(
+                    'Please enter a positive quantity to proceed with your refund.',
+                    'Admin.Orderscustomers.Notification'
+                ),
+                InvalidRefundQuantityException::QUANTITY_TOO_HIGH => $this->trans(
+                    'Please enter a maximum quantity of [1] to proceed with your refund.',
+                    'Admin.Orderscustomers.Notification',
+                    ['[1]' => $refundableQuantity]
+                ),
+            ],
+            InvalidCancelQuantityException::class => [
+                InvalidCancelQuantityException::EMPTY_QUANTITY => $this->trans(
+                    'You must enter a quantity.',
+                    'Admin.Orderscustomers.Notification'
+                ),
+                InvalidCancelQuantityException::QUANTITY_TOO_HIGH => $this->trans(
+                    'An invalid quantity was selected for this product.',
+                    'Admin.Orderscustomers.Notification'
+                ),
+            ],
+            InvalidRefundAmountException::class => $this->trans(
+                'Please enter a positive amount to proceed with your refund.',
                 'Admin.Orderscustomers.Notification'
             ),
-            EmptyRefundAmountException::class => $this->trans(
-                'Please enter an amount to proceed with your refund.',
+            EmptyProductSelectionException::class => $this->trans(
+              'You must select a product.',
                 'Admin.Orderscustomers.Notification'
             ),
             ProductOutOfStockException::class => $this->trans(

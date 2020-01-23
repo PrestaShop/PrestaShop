@@ -37,7 +37,9 @@ use OrderDetail;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\CancelOrderProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler\CancelOrderProductHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\EmptyCancelQuantityException;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\EmptyProductSelectionException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidCancelQuantityException;
 use StockAvailable;
 use Validate;
 
@@ -70,8 +72,9 @@ final class CancelOrderProductHandler extends AbstractOrderCommandHandler implem
                 if (array_key_exists($orderDetail->product_id, $customizationQuantities) && array_key_exists($orderDetail->product_attribute_id, $customizationQuantities[$orderDetail->product_id])) {
                     $customizationQuantity = (int) $customizationQuantities[$orderDetail->product_id][$orderDetail->product_attribute_id];
                 }
-                if (($orderDetail->product_quantity - $customizationQuantity - $orderDetail->product_quantity_refunded - $orderDetail->product_quantity_return) < $cancelQuantity) {
-                    throw new OrderException($this->translator->trans('An invalid quantity was selected for this product.', [], 'Admin.Orderscustomers.Notification'));
+                $cancellableQuantity = $orderDetail->product_quantity - $customizationQuantity - $orderDetail->product_quantity_refunded - $orderDetail->product_quantity_return;
+                if ($cancellableQuantity < $cancelQuantity) {
+                    throw new InvalidCancelQuantityException(InvalidCancelQuantityException::QUANTITY_TOO_HIGH, $cancellableQuantity);
                 }
             }
         }
@@ -86,10 +89,12 @@ final class CancelOrderProductHandler extends AbstractOrderCommandHandler implem
                 $qtyCancelProduct = abs($orderDetails['customizedCancelQuantity'][$id_customization]);
                 $customization_quantity = $customization_quantities[$id_customization];
                 if (!$qtyCancelProduct) {
-                    throw new OrderException($this->trans('No quantity has been selected for this product.', [], 'Admin.Orderscustomers.Notification'));
+                    throw new InvalidCancelQuantityException(InvalidCancelQuantityException::EMPTY_QUANTITY);
                 }
-                if ($qtyCancelProduct > ($customization_quantity['quantity'] - ($customization_quantity['quantity_refunded'] + $customization_quantity['quantity_returned']))) {
-                    throw new OrderException($this->trans('An invalid quantity was selected for this product.', [], 'Admin.Orderscustomers.Notification'));
+                $cancellableQuantity = $customization_quantity['quantity'] - ($customization_quantity['quantity_refunded'] + $customization_quantity['quantity_returned']);
+                echo $cancellableQuantity; exit;
+                if ($qtyCancelProduct > $cancellableQuantity) {
+                    throw new InvalidCancelQuantityException(InvalidCancelQuantityException::QUANTITY_TOO_HIGH, $cancellableQuantity);
                 }
             }
         }
@@ -157,12 +162,12 @@ final class CancelOrderProductHandler extends AbstractOrderCommandHandler implem
     private function checkInput(CancelOrderProductCommand $command)
     {
         if (empty($command->getToBeCanceledProducts())) {
-            throw new OrderException($this->translator->trans('You must select a product.', [], 'Admin.Orderscustomers.Notification'));
+            throw new EmptyProductSelectionException();
         }
 
         foreach ($command->getToBeCanceledProducts() as $orderDetailId => $quantity) {
             if ((int) $quantity <= 0) {
-                throw new EmptyCancelQuantityException($this->translator->trans('You must enter a quantity.', [], 'Admin.Orderscustomers.Notification'));
+                throw new InvalidCancelQuantityException(InvalidCancelQuantityException::EMPTY_QUANTITY);
             }
         }
     }

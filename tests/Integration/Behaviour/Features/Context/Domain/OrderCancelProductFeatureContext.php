@@ -28,7 +28,7 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 use Behat\Gherkin\Node\TableNode;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\CancelOrderProductCommand;
-use PrestaShop\PrestaShop\Core\Domain\Order\Exception\EmptyCancelQuantityException;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidCancelQuantityException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderForViewing;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
@@ -74,6 +74,6 @@ class OrderCancelProductFeatureContext extends AbstractDomainFeatureContext
      */
     public function assertLastErrorIsEmptyCancelQuantity()
     {
-        $this->assertLastErrorIs(EmptyCancelQuantityException::class);
+        $this->assertLastErrorIs(InvalidCancelQuantityException::class);
     }
 }
