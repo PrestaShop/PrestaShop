@@ -1632,7 +1632,7 @@ class CartCore extends ObjectModel
     public function orderExists()
     {
         $result = (bool) Db::getInstance()->getValue('SELECT count(*) FROM `' . _DB_PREFIX_ . 'orders` WHERE `id_cart` = ' . (int) $this->id);
-        
+
         return $result;
     }
 
