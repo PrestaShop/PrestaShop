@@ -6,10 +6,10 @@ module.exports = class SeoAndUrls extends BOBasePage {
     super(page);
 
     this.pageTitle = 'SEO & URLs •';
-    this.successfulUpdateMessage = 'The settings have been successfully updated.';
 
     // Header selectors
     this.addNewSeoPageLink = '#page-header-desc-configuration-add';
+    this.successfulSettingsUpdateMessage = 'The settings have been successfully updated.';
 
     // Selectors grid panel
     this.gridPanel = '#meta_grid_panel';
