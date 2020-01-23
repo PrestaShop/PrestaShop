@@ -60,7 +60,7 @@
   </td>
   <td class="cellProductLocation">{{ product.location }}</td>
   <td>
-    <p>{{ product.quantityRefunded }}{% if product.amountRefunded %} ({{ product.amountRefunded }} {{ 'Refunded'|trans({}, 'Admin.Orderscustomers.Feature') }}){% endif %}</p>
+    {{ product.quantityRefunded }}{% if product.amountRefunded %} ({{ product.amountRefunded }} {{ 'Refunded'|trans({}, 'Admin.Orderscustomers.Feature') }}){% endif %}
   </td>
   <td class="cellProductAvailableQuantity">{{ product.availableQuantity }}</td>
   <td class="cellProductTotalPrice">{{ product.totalPrice }}</td>
@@ -100,15 +100,13 @@
   {% endif %}
   <td class="text-right">
     <div class="cancel-product-cell cancel-product-element{% if product.refundable == false %} hidden{% endif %}">
-      <div class="row form-group">
-        <div class="col-lg-5 cancel-product-selector">
-          <div class="input-group">
-            {{ form_widget(cancelProductForm['selected_' ~ product.orderDetailId]) }}
-          </div>
+      <div class="row">
+        <div class="col-xl-5 col-lg-12 cancel-product-selector form-group">
+          {{ form_widget(cancelProductForm['selected_' ~ product.orderDetailId]) }}
         </div>
-        <div class="col-lg-5 cancel-product-quantity">
+        <div class="col-xl-5 col-lg-12 cancel-product-quantity form-group">
+          {{ form_label(cancelProductForm['quantity_' ~ product.orderDetailId]) }}
           <div class="input-group">
-            <strong>{{ form_label(cancelProductForm['quantity_' ~ product.orderDetailId]) }}</strong>
             {% set quantityInputOptions = {
               'attr': {
                 'data-product-price-tax-incl': product.unitPriceTaxInclRaw,
@@ -120,16 +118,18 @@
             <div class="input-group-append"><div class="input-group-text">/ {{ product.quantityRefundable }}</div></div>
           </div>
         </div>
-        <div class="col-lg-7 cancel-product-amount">
+        <div class="col-xl-7 col-lg-12 cancel-product-amount form-group">
+          {{ form_label(cancelProductForm['amount_' ~ product.orderDetailId]) }}
           <div class="input-group">
-            <strong>{{ form_label(cancelProductForm['amount_' ~ product.orderDetailId]) }}</strong>
             {{ form_widget(cancelProductForm['amount_' ~ product.orderDetailId]) }}
             <div class="input-group-append"><div class="input-group-text">{{ orderCurrency.symbol }}</div></div>
+            <small class="text-left">
+              {{ '(Max %amount_refundable% %tax_method%)'|trans({
+                '%amount_refundable%': product.amountRefundable,
+                '%tax_method%': orderForViewing.taxMethod
+              }, 'Admin.Orderscustomers.Help')|raw }}
+            </small>
           </div>
-          <p class="text-center">{{ '(Max %amount_refundable% %tax_method%)'|trans({
-              '%amount_refundable%': product.amountRefundable,
-              '%tax_method%': orderForViewing.taxMethod
-            }, 'Admin.Orderscustomers.Help')|raw }}</p>
         </div>
       </div>
     </div>

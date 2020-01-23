@@ -27,7 +27,9 @@
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 use Behat\Behat\Context\Context;
+use Behat\Behat\Hook\Scope\AfterScenarioScope;
 use Behat\Testwork\Hook\Scope\BeforeSuiteScope;
+use Behat\Testwork\Tester\Result\TestResult;
 use Exception;
 use Language;
 use ObjectModel;
@@ -59,6 +61,16 @@ abstract class AbstractDomainFeatureContext implements Context
     {
         // Disable legacy object model cache to prevent conflicts between scenarios.
         ObjectModel::disableCache();
+    }
+
+    /**
+     * @AfterScenario
+     */
+    public function checkLastException(AfterScenarioScope $scope)
+    {
+        if (TestResult::FAILED === $scope->getTestResult()->getResultCode() && null !== $this->lastException) {
+            throw new RuntimeException(sprintf('Might be related to the last exception: %s %s', get_class($this->lastException), $this->lastException->getTraceAsString()));
+        }
     }
 
     /**

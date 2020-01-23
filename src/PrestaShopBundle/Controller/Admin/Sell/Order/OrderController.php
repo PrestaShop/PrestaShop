@@ -45,8 +45,7 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Command\UpdateOrderShippingDetailsCo
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\UpdateOrderStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\CannotEditDeliveredOrderProductException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\ChangeOrderStatusException;
-use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidRefundAmountException;
-use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidRefundQuantityException;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidRefundException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderEmailSendException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderNotFoundException;
@@ -1204,7 +1203,7 @@ class OrderController extends FrameworkBundleAdminController
     private function getErrorMessages(Exception $e)
     {
         $refundableQuantity = 0;
-        if ($e instanceof InvalidRefundQuantityException) {
+        if ($e instanceof InvalidRefundException) {
             $refundableQuantity = $e->getRefundableQuantity();
         }
 
@@ -1224,21 +1223,29 @@ class OrderController extends FrameworkBundleAdminController
                 $e->getMessage(),
                 'Admin.Orderscustomers.Notification'
             ),
-            InvalidRefundQuantityException::class => [
-                InvalidRefundQuantityException::EMPTY_QUANTITY => $this->trans(
+            InvalidRefundException::class => [
+                InvalidRefundException::INVALID_QUANTITY => $this->trans(
                     'Please enter a positive quantity to proceed with your refund.',
                     'Admin.Orderscustomers.Notification'
                 ),
-                InvalidRefundQuantityException::QUANTITY_TOO_HIGH => $this->trans(
+                InvalidRefundException::QUANTITY_TOO_HIGH => $this->trans(
                     'Please enter a maximum quantity of [1] to proceed with your refund.',
                     'Admin.Orderscustomers.Notification',
                     ['[1]' => $refundableQuantity]
                 ),
+                InvalidRefundException::INVALID_AMOUNT => $this->trans(
+                    'Please enter a positive amount to proceed with your refund.',
+                    'Admin.Orderscustomers.Notification'
+                ),
+                InvalidRefundException::NO_REFUNDS => $this->trans(
+                    'Please enter at least one refund.',
+                    'Admin.Orderscustomers.Notification'
+                ),
+                InvalidRefundException::NO_GENERATION => $this->trans(
+                    'Please generate at least one credit slip or voucher.',
+                    'Admin.Orderscustomers.Notification'
+                ),
             ],
-            InvalidRefundAmountException::class => $this->trans(
-                'Please enter a positive amount to proceed with your refund.',
-                'Admin.Orderscustomers.Notification'
-            ),
             ProductOutOfStockException::class => $this->trans(
                 'There are not enough products in stock',
                 'Admin.Notifications.Error'
