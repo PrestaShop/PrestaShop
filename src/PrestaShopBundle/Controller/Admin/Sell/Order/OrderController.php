@@ -46,6 +46,10 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Command\UpdateOrderStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\CannotEditDeliveredOrderProductException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\ChangeOrderStatusException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidRefundException;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\EmptyProductSelectionException;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidRefundAmountException;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidRefundQuantityException;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidCancelQuantityException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderEmailSendException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderNotFoundException;
@@ -1187,7 +1191,7 @@ class OrderController extends FrameworkBundleAdminController
                 $this->addFlash('success', $this->trans('The discount was successfully generated.', 'Admin.Catalog.Notification'));
             }
         } catch (Exception $e) {
-            $this->addFlash('error', $e->getMessage());
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }
 
         return $this->redirectToRoute('admin_orders_view', [
@@ -1252,6 +1256,7 @@ class OrderController extends FrameworkBundleAdminController
                     'Admin.Orderscustomers.Notification'
                 ),
                 InvalidRefundException::QUANTITY_TOO_HIGH => $this->trans(
+
                     'Please enter a maximum quantity of [1] to proceed with your refund.',
                     'Admin.Orderscustomers.Notification',
                     ['[1]' => $refundableQuantity]
@@ -1269,6 +1274,24 @@ class OrderController extends FrameworkBundleAdminController
                     'Admin.Orderscustomers.Notification'
                 ),
             ],
+            InvalidCancelQuantityException::class => [
+                InvalidCancelQuantityException::EMPTY_QUANTITY => $this->trans(
+                    'You must enter a quantity.',
+                    'Admin.Orderscustomers.Notification'
+                ),
+                InvalidCancelQuantityException::QUANTITY_TOO_HIGH => $this->trans(
+                    'An invalid quantity was selected for this product.',
+                    'Admin.Orderscustomers.Notification'
+                ),
+            ],
+            InvalidRefundAmountException::class => $this->trans(
+                'Please enter a positive amount to proceed with your refund.',
+                'Admin.Orderscustomers.Notification'
+            ),
+            EmptyProductSelectionException::class => $this->trans(
+              'You must select a product.',
+                'Admin.Orderscustomers.Notification'
+            ),
             ProductOutOfStockException::class => $this->trans(
                 'There are not enough products in stock',
                 'Admin.Notifications.Error'
