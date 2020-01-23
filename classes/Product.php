@@ -6127,7 +6127,7 @@ class ProductCore extends ObjectModel
                 500,
                 $this->trans(
                     'You cannot set 0 or a negative position, the minimum is 1.',
-                    array(),
+                    [],
                     'Admin.Catalog.Notification'
                 ),
                 134
@@ -6148,7 +6148,7 @@ class ProductCore extends ObjectModel
                 500,
                 $this->trans(
                     'You cannot set a position greater than the total number of products in the category, starting at 1.',
-                    array(),
+                    [],
                     'Admin.Catalog.Notification'
                 ),
                 135
