@@ -50,7 +50,7 @@ describe('Enable/Disable friendly URL', async () => {
 
   it('should disable friendly URL', async function () {
     const result = await this.pageObjects.seoAndUrlsPage.enableDisableFriendlyURL(false);
-    await expect(result).to.contains(this.pageObjects.seoAndUrlsPage.successfulUpdateMessage);
+    await expect(result).to.contains(this.pageObjects.seoAndUrlsPage.successfulSettingsUpdateMessage);
   });
 
   it('should go to FO and check the URL', async function () {
@@ -64,7 +64,7 @@ describe('Enable/Disable friendly URL', async () => {
 
   it('should enable friendly URL', async function () {
     const result = await this.pageObjects.seoAndUrlsPage.enableDisableFriendlyURL(true);
-    await expect(result).to.contains(this.pageObjects.seoAndUrlsPage.successfulUpdateMessage);
+    await expect(result).to.contains(this.pageObjects.seoAndUrlsPage.successfulSettingsUpdateMessage);
   });
 
   it('should go to FO and check the URL', async function () {

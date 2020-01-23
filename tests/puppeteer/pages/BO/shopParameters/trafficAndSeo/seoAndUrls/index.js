@@ -9,6 +9,7 @@ module.exports = class SeoAndUrls extends BOBasePage {
 
     // Header selectors
     this.addNewSeoPageLink = '#page-header-desc-configuration-add';
+    this.successfulSettingsUpdateMessage = 'The settings have been successfully updated.';
 
     // Selectors grid panel
     this.gridPanel = '#meta_grid_panel';
