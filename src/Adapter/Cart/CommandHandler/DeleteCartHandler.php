@@ -45,9 +45,7 @@ final class DeleteCartHandler extends AbstractCartHandler implements DeleteCartH
         $cart = $this->getCart($command->getCartId());
 
         if ($cart->orderExists()) {
-            throw new DeleteCartWithOrderException(
-                sprintf('Cart "%s" with order cannot be deleted.', $cart->id)
-            );
+            throw new DeleteCartWithOrderException(sprintf('Cart "%s" with order cannot be deleted.', $cart->id));
         }
 
         if (false === $cart->delete()) {
