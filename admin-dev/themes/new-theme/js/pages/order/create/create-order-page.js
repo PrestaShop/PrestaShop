@@ -100,6 +100,20 @@ export default class CreateOrderPage {
   }
 
   /**
+   * Hides whole cart information wrapper
+   */
+  static hideCartInfo() {
+    $(createOrderMap.cartInfoWrapper).addClass('d-none');
+  }
+
+  /**
+   * Shows whole cart information wrapper
+   */
+  static showCartInfo() {
+    $(createOrderMap.cartInfoWrapper).removeClass('d-none');
+  }
+
+  /**
    * Loads cart if query params contains valid cartId
    *
    * @private
@@ -423,6 +437,7 @@ export default class CreateOrderPage {
    * @private
    */
   _renderCartInfo(cartInfo) {
+    CreateOrderPage.showCartInfo();
     this.addressesRenderer.render(cartInfo.addresses);
     this.cartRulesRenderer.renderCartRulesBlock(cartInfo.cartRules, cartInfo.products.length === 0);
     this.shippingRenderer.render(cartInfo.shipping, cartInfo.products.length === 0);

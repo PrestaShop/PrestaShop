@@ -25,6 +25,7 @@
 
 import createOrderMap from '@pages/order/create/create-order-map';
 import Router from '@components/router';
+import CreateOrderPage from '@pages/order/create/create-order-page';
 
 const $ = window.$;
 
@@ -48,6 +49,8 @@ export default class CustomerRenderer {
 
     if (foundCustomers.length === 0) {
       this._showNotFoundCustomers();
+      this._hideCheckoutHistoryBlock()
+      CreateOrderPage.hideCartInfo();
 
       return;
     }
@@ -72,6 +75,9 @@ export default class CustomerRenderer {
    * @param $targetedBtn
    */
   displaySelectedCustomerBlock($targetedBtn) {
+    this._showCheckoutHistoryBlock();
+    CreateOrderPage.showCartInfo();
+
     $targetedBtn.addClass('d-none');
 
     const $customerCard = $targetedBtn.closest('.card');
@@ -208,6 +214,7 @@ export default class CustomerRenderer {
    */
   _renderFoundCustomer(customer) {
     this._hideNotFoundCustomers();
+
     const $customerSearchResultTemplate = $($(createOrderMap.customerSearchResultTemplate).html());
     const $template = $customerSearchResultTemplate.clone();
 
@@ -231,6 +238,15 @@ export default class CustomerRenderer {
    */
   _showCheckoutHistoryBlock() {
     $(createOrderMap.customerCheckoutHistory).removeClass('d-none');
+  }
+
+  /**
+   * Hides checkout history block where carts and orders are rendered
+   *
+   * @private
+   */
+  _hideCheckoutHistoryBlock() {
+    $(createOrderMap.customerCheckoutHistory).addClass('d-none');
   }
 
   /**
