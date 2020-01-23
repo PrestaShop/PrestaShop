@@ -128,6 +128,28 @@ class OrderProductForViewing
      */
     private $orderInvoiceNumber;
 
+    /**
+     * @param int $orderDetailId
+     * @param int $id
+     * @param string $name
+     * @param string $reference
+     * @param string $supplierReference
+     * @param int $quantity
+     * @param string $unitPrice
+     * @param string $totalPrice
+     * @param int $availableQuantity
+     * @param string|null $imagePath
+     * @param float $unitPriceTaxExclRaw
+     * @param float $unitPriceTaxInclRaw
+     * @param float $taxRate
+     * @param string $amountRefunded
+     * @param int $quantityRefunded
+     * @param string $amountRefundable
+     * @param float $amountRefundableRaw
+     * @param string $location
+     * @param int|null $orderInvoiceId
+     * @param string $orderInvoiceNumber
+     */
     public function __construct(
         int $orderDetailId,
         int $id,
