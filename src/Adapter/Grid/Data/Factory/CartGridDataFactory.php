@@ -128,6 +128,7 @@ final class CartGridDataFactory implements GridDataFactoryInterface
 
             $record['cart_total'] = Cart::getTotalCart($context->cart->id, true, Cart::BOTH_WITHOUT_SHIPPING);
             $record['is_order_placed'] = $context->cart->orderExists();
+            $record['shop_name'] = $context->shop->getShops()[$context->cart->id_shop]['name'];
 
             $modifiedRecords[] = $record;
         }
