@@ -26,20 +26,3 @@
 <div class="text-{{ column.options.text_align }}">
   {{ record[column.options.field]|raw }}
 </div>
-
-{% block content %}
-    {% block carts_listing %}
-      <div class="row">
-        <div class="col-12">
-          {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': cartGrid} %}
-        </div>
-      </div>
-    {% endblock %}
-{% endblock %}
-
-{% block javascripts %}
-  {{ parent() }}
-
-  <script src="{{ asset('themes/default/js/bundle/pagination.js') }}"></script>
-  <script src="{{ asset('themes/new-theme/public/cart.bundle.js') }}"></script>
-{% endblock %}

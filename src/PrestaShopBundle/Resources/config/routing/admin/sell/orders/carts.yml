@@ -1,3 +1,11 @@
+#@todo: legacy links after page is fully migrated
+admin_carts_index:
+  path: /
+  methods: [GET]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Order/Cart:index
+    _legacy_controller: AdminCarts
+
 admin_carts_view:
   path: /{cartId}/view
   methods: [GET]
