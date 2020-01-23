@@ -91,7 +91,7 @@ final class GetSupplierForEditingHandler extends AbstractSupplierHandler impleme
      *
      * @return array|null
      */
-    private function getLogoImage($imageId): ?array
+    private function getLogoImage(int $imageId): ?array
     {
         $imagePath = _PS_SUPP_IMG_DIR_ . $imageId . '.jpg';
         $imageTag = $this->getTmpImageTag($imagePath, $imageId, 'supplier');
