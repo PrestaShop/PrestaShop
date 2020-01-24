@@ -18,7 +18,6 @@ class GetProductExportableDataHandlerTest extends TestCase
                 [
                     'id' => 'id_product',
                     'name' => 'Product Id',
-
                 ],
                 [
                     'id' => 'price',
@@ -38,8 +37,8 @@ class GetProductExportableDataHandlerTest extends TestCase
                 ],
                 [
                     'id' => 'actions',
-                    'name' => 'Actions'
-                ]
+                    'name' => 'Actions',
+                ],
             ],
             [
                 [
@@ -47,7 +46,6 @@ class GetProductExportableDataHandlerTest extends TestCase
                     'name' => 'test1',
                     'price' => 50.5,
                     'active' => true,
-
                 ],
                 [
                     'price' => 100,
@@ -55,7 +53,7 @@ class GetProductExportableDataHandlerTest extends TestCase
                     'quantity' => 200,
                     'name' => 'test2',
                     'active' => false,
-                ]
+                ],
             ]
         );
 
@@ -81,7 +79,7 @@ class GetProductExportableDataHandlerTest extends TestCase
                         1 => 100,
                         2 => 200,
                         3 => 'test2',
-                    ]
+                    ],
                 ]
             ),
             $result
