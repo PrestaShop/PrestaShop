@@ -29,6 +29,7 @@ namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 use Exception;
 use PrestaShop\PrestaShop\Core\Domain\Address\Command\BulkDeleteAddressCommand;
 use PrestaShop\PrestaShop\Core\Domain\Address\Command\DeleteAddressCommand;
+use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressException;
 use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Address\Exception\DeleteAddressException;
@@ -222,6 +223,10 @@ class ManufacturerController extends FrameworkBundleAdminController
             }
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+
+            if ($e instanceof ManufacturerNotFoundException) {
+                return $this->redirectToRoute('admin_manufacturers_index');
+            }
         }
 
         if (!isset($editableManufacturer) || !isset($manufacturerForm)) {
@@ -595,6 +600,10 @@ class ManufacturerController extends FrameworkBundleAdminController
             $editableAddress = $this->getQueryBus()->handle(new GetManufacturerAddressForEditing($addressId));
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+
+            if ($e instanceof AddressNotFoundException || $e instanceof AddressConstraintException) {
+                return $this->redirectToRoute('admin_manufacturers_index');
+            }
         }
 
         if (!isset($editableAddress) || !isset($addressForm)) {
