@@ -299,16 +299,34 @@ td .editProductInvoice {
   display: none;
 }
 
-.cancel-product-cell .form-group .refund-quantity {
-  width: 30px;
-}
+    label {
+      min-width: 95px;
+      line-height: 30px;
+      padding: 0;
+      margin-bottom: 0;
+      font-weight: bold;
+    }
 
-.cancel-product-cell .cancel-product-quantity {
-  width: max-content;
-}
+    .input-group {
+      min-width: 90px;
 
-.cancel-product-cell .cancel-product-quantity .input-group {
-  flex-wrap: nowrap;
+      input {
+        height: 35px;
+        min-width: 30px;
+        max-width: 80px;
+      }
+      .input-group-append {
+        height: 35px;
+      }
+      small {
+        flex-basis: 100%;
+        padding-left: 10px;
+      }
+    }
+    .cancel-product-quantity .input-group {
+      flex-wrap: nowrap;
+    }
+  }
 }
 
 .voucher-refund-type-negative-error {

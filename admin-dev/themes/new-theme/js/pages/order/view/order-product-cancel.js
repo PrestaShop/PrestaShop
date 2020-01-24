@@ -168,6 +168,7 @@ export default class OrderProductCancel {
         cancelProductRoute
     );
     $(OrderViewPageMap.cancelProduct.form).attr('action', cancelProductRoute);
+    this.hideRefund();
     $(OrderViewPageMap.cancelProduct.toggle.cancel).show();
     $(OrderViewPageMap.cancelProduct.table.actions).hide();
     $(OrderViewPageMap.cancelProduct.containers.refundCheckboxes).hide();

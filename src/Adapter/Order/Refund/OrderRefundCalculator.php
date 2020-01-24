@@ -179,7 +179,7 @@ class OrderRefundCalculator
             ];
 
             // Compute max refund by product (based on quantity and already refunded amount)
-            $productMaxRefund = $isTaxIncluded ? (float) $orderDetail->unit_price_tax_excl : (float) $orderDetail->unit_price_tax_incl;
+            $productMaxRefund = $isTaxIncluded ? (float) $orderDetail->unit_price_tax_incl : (float) $orderDetail->unit_price_tax_excl;
             $productMaxRefund *= $quantity;
             $productMaxRefund -= $isTaxIncluded ? (float) $orderDetail->total_refunded_tax_incl : (float) $orderDetail->total_refunded_tax_excl;
 

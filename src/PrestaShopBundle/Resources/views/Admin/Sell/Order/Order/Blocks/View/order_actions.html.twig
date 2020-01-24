@@ -96,7 +96,11 @@
     </div>
   {% elseif merchandiseReturnEnabled %}
     <div class="form-inline d-inline-block form-horizontal ml-2">
-      <button class="btn btn-action cancel-product-display" type="button">{{ 'Cancel products'|trans({}, 'Admin.Orderscustomers.Feature') }}</button>
+      <div class="input-group">
+        <button class="btn btn-action cancel-product-display" type="button">
+          {{ 'Cancel products'|trans({}, 'Admin.Orderscustomers.Feature') }}
+        </button>
+      </div>
     </div>
   {% endif %}
 </div>
