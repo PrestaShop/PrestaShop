@@ -87,23 +87,14 @@ final class EditStateHandler extends AbstractStateHandler implements EditStateHa
             }
 
             if (!$state->validateFields(false)) {
-                throw new StateConstraintException(
-                    'State contains invalid field values',
-                    StateConstraintException::INVALID_FIELD_VALUES
-                );
+                throw new StateConstraintException('State contains invalid field values', StateConstraintException::INVALID_FIELD_VALUES);
             }
 
             if (false === $state->update()) {
-                throw new CannotUpdateStateException(
-                    'Failed to update state'
-                );
+                throw new CannotUpdateStateException('Failed to update state');
             }
         } catch (PrestaShopException $e) {
-            throw new StateException(
-                'An unexpected error occurred when updating state',
-                0,
-                $e
-            );
+            throw new StateException('An unexpected error occurred when updating state', 0, $e);
         }
     }
 }

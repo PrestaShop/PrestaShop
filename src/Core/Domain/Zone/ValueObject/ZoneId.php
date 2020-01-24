@@ -65,10 +65,7 @@ class ZoneId
     private function assertPositiveInt(int $value)
     {
         if (0 > $value) {
-            throw new ZoneConstraintException(
-                sprintf('Invalid zone id "%s".', var_export($value, true)),
-                ZoneConstraintException::INVALID_ID
-            );
+            throw new ZoneConstraintException(sprintf('Invalid zone id "%s".', var_export($value, true)), ZoneConstraintException::INVALID_ID);
         }
     }
 }

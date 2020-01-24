@@ -60,23 +60,14 @@ final class AddStateHandler extends AbstractStateHandler implements AddStateHand
             $state->active = $command->isActive();
 
             if (!$state->validateFields(false)) {
-                throw new StateConstraintException(
-                    'State contains invalid field values',
-                    StateConstraintException::INVALID_FIELD_VALUES
-                );
+                throw new StateConstraintException('State contains invalid field values', StateConstraintException::INVALID_FIELD_VALUES);
             }
 
             if (false === $state->add()) {
-                throw new CannotAddStateException(
-                    'Failed to add state'
-                );
+                throw new CannotAddStateException('Failed to add state');
             }
         } catch (PrestaShopException $e) {
-            throw new StateException(
-                'An unexpected error occurred when adding state',
-                0,
-                $e
-            );
+            throw new StateException('An unexpected error occurred when adding state', 0, $e);
         }
 
         return new StateId($state->id);
