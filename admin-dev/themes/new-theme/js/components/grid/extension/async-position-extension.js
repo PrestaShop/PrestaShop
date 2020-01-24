@@ -62,8 +62,7 @@ export default class AsyncPositionExtension {
       },
       function () {
         $(this).closest('tr').removeClass('hover');
-      },
-    );
+      });
   }
 
   /**
@@ -74,7 +73,7 @@ export default class AsyncPositionExtension {
    * @private
    */
   handlePositionChange(row) {
-    const $rowPositionContainer = $(row).find(`.js-${  this.grid.getId()  }-position:first`);
+    const $rowPositionContainer = $(row).find(`.js-${this.grid.getId()}-position:first`);
     const updateUrl = $rowPositionContainer.data('update-url');
     const paginationOffset = parseInt($rowPositionContainer.data('pagination-offset'), 10);
     const positions = this.getRowsPositions(paginationOffset);
@@ -96,7 +95,8 @@ export default class AsyncPositionExtension {
 
     const rowsNb = rowsData.length;
     const positions = [];
-    let rowData, i;
+    let rowData;
+    let i;
 
     for (i = 0; i < rowsNb; ++i) {
       rowData = regex.exec(rowsData[i]);
@@ -147,7 +147,7 @@ export default class AsyncPositionExtension {
         const positionColumnId = this.getOriginalColumnId($td);
         const displayPosition = parseInt(index, 10) + 1;
         $tr.find(`td[class="${positionColumnId}"] div`).text(displayPosition.toString());
-      })
+      });
   }
 
   /**
@@ -162,7 +162,7 @@ export default class AsyncPositionExtension {
     const classes = $positionWrapper.attr('class').split(/\s+/);
     const classEndsWith = '_handle-type';
 
-    const foundClass = classes.find((item) => item.endsWith(classEndsWith));
+    const foundClass = classes.find(item => item.endsWith(classEndsWith));
 
     if (typeof foundClass === 'undefined') {
       return '';
