@@ -77,26 +77,15 @@ final class DeleteProductHandler implements DeleteProductHandlerInterface
         );
 
         if (0 >= $product->id) {
-            throw new ProductNotFoundException(
-                sprintf('Product not found with given id %s', $command->getProductId()->getValue())
-            );
+            throw new ProductNotFoundException(sprintf('Product not found with given id %s', $command->getProductId()->getValue()));
         }
 
         try {
             if (false === $product->delete()) {
-                throw new CannotDeleteProductException(
-                    sprintf(
-                        'Cannot delete product widht id %s',
-                        $command->getProductId()->getValue()
-                    )
-                );
+                throw new CannotDeleteProductException(sprintf('Cannot delete product widht id %s', $command->getProductId()->getValue()));
             }
         } catch (PrestaShopException $exception) {
-            throw new CannotDeleteProductException(
-                'An unexpected error occurred when deleting product with id %s',
-                0,
-                $exception
-            );
+            throw new CannotDeleteProductException('An unexpected error occurred when deleting product with id %s', 0, $exception);
         }
 
         $this->hookDispatcher->dispatchWithParameters(

@@ -41,9 +41,7 @@ final class ToggleProductStatusHandler implements ToggleProductStatusHandlerInte
         $entity = new Product($command->getProductId()->getValue());
 
         if (0 >= $entity->id) {
-            throw new ProductNotFoundException(
-                sprintf('Product not found with given id %s', $command->getProductId()->getValue())
-            );
+            throw new ProductNotFoundException(sprintf('Product not found with given id %s', $command->getProductId()->getValue()));
         }
 
         $status = (bool) !$entity->active;
@@ -55,22 +53,10 @@ final class ToggleProductStatusHandler implements ToggleProductStatusHandlerInte
 
         try {
             if (false === $entity->update()) {
-                throw new CannotToggleProductException(
-                    sprintf(
-                        'Failed to toggle product with id %s',
-                        $command->getProductId()->getValue()
-                    )
-                );
+                throw new CannotToggleProductException(sprintf('Failed to toggle product with id %s', $command->getProductId()->getValue()));
             }
         } catch (PrestaShopException $exception) {
-            throw new CannotToggleProductException(
-                sprintf(
-                    'An unexpected error occurred when toggling product with id %s',
-                    $command->getProductId()->getValue()
-                ),
-                0,
-                $exception
-            );
+            throw new CannotToggleProductException(sprintf('An unexpected error occurred when toggling product with id %s', $command->getProductId()->getValue()), 0, $exception);
         }
 
         $this->dispatchAfterHooks($status, $command->getProductId()->getValue());

@@ -53,11 +53,7 @@ final class BulkDuplicateProductHandler implements BulkDuplicateProductHandlerIn
         try {
             $this->productDataUpdater->duplicateProductIdList($ids);
         } catch (UpdateProductException $exception) {
-            throw new CannotDuplicateProductException(
-                'Cannot duplicate products',
-                0,
-                $exception
-            );
+            throw new CannotDuplicateProductException('Cannot duplicate products', 0, $exception);
         }
 
         $this->hookDispatcher->dispatchWithParameters('actionAdminDuplicateAfter', $hookParameters);

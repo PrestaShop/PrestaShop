@@ -90,7 +90,6 @@ final class ProductPriceGridDataFactoryDecorator implements GridDataFactoryInter
         $currency = new Currency($this->defaultCurrencyId);
 
         foreach ($products as $i => $product) {
-
             $products[$i]['price_tax_excluded'] = $this->locale->formatPrice(
                 $products[$i]['price_tax_excluded'],
                 $currency->iso_code
