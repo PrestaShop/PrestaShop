@@ -2,7 +2,6 @@
 
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
-use Behat\Behat\Tester\Exception\PendingException;
 use Db;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkDeleteProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkDisableProductStatusCommand;
@@ -13,7 +12,6 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Command\DuplicateProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\ToggleProductStatusCommand;
 use Product;
 use RuntimeException;
-use Tests\Integration\Behaviour\Features\Context\CommonFeatureContext;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 
 class ProductFeatureContext extends AbstractDomainFeatureContext
@@ -26,12 +24,7 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
         $product = new Product($productId);
 
         if (0 >= $product->id) {
-            throw new RuntimeException(
-                sprintf(
-                    'Product with id %s does not exist',
-                    $productId
-                )
-            );
+            throw new RuntimeException(sprintf('Product with id %s does not exist', $productId));
         }
 
         SharedStorage::getStorage()->set($storageReference, $product);
@@ -47,13 +40,7 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
         $product = new Product($productFromStorage->id);
 
         if ((int) $product->active !== (int) $expectedStatus) {
-            throw new RuntimeException(
-                sprintf(
-                    'Expected status %s but received %s',
-                    (int) $expectedStatus,
-                    (int) $product->active
-                )
-            );
+            throw new RuntimeException(sprintf('Expected status %s but received %s', (int) $expectedStatus, (int) $product->active));
         }
     }
 
@@ -65,9 +52,7 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
         $product = new Product($productId);
 
         if ($product->id > 0) {
-            throw new RuntimeException(
-                sprintf('Expected product with id "%s" should not exist', $product->id)
-            );
+            throw new RuntimeException(sprintf('Expected product with id "%s" should not exist', $product->id));
         }
     }
 
@@ -84,14 +69,7 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
         $productWithReferenceCount = (int) Db::getInstance()->getValue($sql);
 
         if ($productWithReferenceCount !== (int) $expectedCount) {
-            throw new RuntimeException(
-                sprintf(
-                    'Expected product with reference %s to have %s count in database but got %s',
-                    $productReference,
-                    $expectedCount,
-                    $productWithReferenceCount
-                )
-            );
+            throw new RuntimeException(sprintf('Expected product with reference %s to have %s count in database but got %s', $productReference, $expectedCount, $productWithReferenceCount));
         }
     }
 

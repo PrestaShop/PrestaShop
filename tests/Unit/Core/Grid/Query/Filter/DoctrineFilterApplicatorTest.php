@@ -3,8 +3,8 @@
 namespace Tests\Unit\Core\Grid\Query\Filter;
 
 use Doctrine\DBAL\Connection;
-use PHPUnit\Framework\TestCase;
 use Doctrine\DBAL\Query\QueryBuilder;
+use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Grid\Query\Filter\DoctrineFilterApplicator;
 use PrestaShop\PrestaShop\Core\Grid\Query\Filter\SqlFilters;
 
