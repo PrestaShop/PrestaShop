@@ -88,7 +88,7 @@ export default class AsyncPositionExtension {
    * @returns {Array}
    * @private
    */
-  _getRowsPositions(paginationOffset) {
+  getRowsPositions(paginationOffset) {
     const tableData = JSON.parse($.tableDnD.jsonize());
     const rowsData = tableData[`${this.grid.getId()}_grid_table`];
     const regex = /^row_(\d+)_(\d+)$/;
