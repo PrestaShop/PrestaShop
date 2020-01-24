@@ -64,8 +64,8 @@ final class PartialRefundFormDataHandler implements FormDataHandlerInterface
         $refunds = [];
         foreach ($data['products'] as $product) {
             $orderDetailId = $product->getOrderDetailId();
-            if (!empty($data['quantity_' . $orderDetailId])) {
-                $refunds[$orderDetailId]['quantity'] = $data['quantity_' . $orderDetailId];
+            if (!empty($data['quantity_' . $orderDetailId]) || !empty($data['amount_' . $orderDetailId])) {
+                $refunds[$orderDetailId]['quantity'] = $data['quantity_' . $orderDetailId] ?? 0;
                 $refunds[$orderDetailId]['amount'] = $data['amount_' . $orderDetailId] ?? 0;
             }
         }

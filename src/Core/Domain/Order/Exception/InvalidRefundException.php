@@ -31,7 +31,7 @@ use Throwable;
 /**
  * Throw new when a partial refund's is asked without a specified quantity
  */
-class InvalidRefundQuantityException extends OrderException
+class InvalidRefundException extends OrderException
 {
     /**
      * @var int
@@ -41,12 +41,27 @@ class InvalidRefundQuantityException extends OrderException
     /**
      * Used when the quantity refunded is not strictly positive
      */
-    const EMPTY_QUANTITY = 1;
+    const INVALID_QUANTITY = 1;
 
     /**
-     * Use when the quantity refunded is higher than the remaining quantity
+     * Used when the quantity refunded is higher than the remaining quantity
      */
     const QUANTITY_TOO_HIGH = 2;
+
+    /**
+     * Used when the amount refunded is not strictly positive
+     */
+    const INVALID_AMOUNT = 3;
+
+    /**
+     * Used when no refund details have been supplied
+     */
+    const NO_REFUNDS = 4;
+
+    /**
+     * Used when no generation is set (no credit slip and no voucher generation)
+     */
+    const NO_GENERATION = 5;
 
     /**
      * @param int $code

@@ -92,7 +92,7 @@ final class CancelOrderProductHandler extends AbstractOrderCommandHandler implem
                     throw new InvalidCancelQuantityException(InvalidCancelQuantityException::EMPTY_QUANTITY);
                 }
                 $cancellableQuantity = $customization_quantity['quantity'] - ($customization_quantity['quantity_refunded'] + $customization_quantity['quantity_returned']);
-                echo $cancellableQuantity; exit;
+
                 if ($qtyCancelProduct > $cancellableQuantity) {
                     throw new InvalidCancelQuantityException(InvalidCancelQuantityException::QUANTITY_TOO_HIGH, $cancellableQuantity);
                 }
