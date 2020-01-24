@@ -33,6 +33,7 @@ use PrestaShop\PrestaShop\Core\Domain\Attachment\AttachmentFileUploaderInterface
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\AttachmentConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\AttachmentNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\AttachmentUploadFailedException;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\CannotUnlinkAttachmentException;
 use PrestaShopException;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 
@@ -72,12 +73,17 @@ final class AttachmentFileUploader implements AttachmentFileUploaderInterface
      * @throws AttachmentNotFoundException
      * @throws AttachmentUploadFailedException
      */
-    public function upload(string $filePath, string $uniqueFileName, int $fileSize, int $id = null): void
-    {
+    public function upload(
+        string $filePath,
+        string $uniqueFileName,
+        int $fileSize,
+        int $id = null,
+        $throwExceptionOnFailure = true
+    ): void {
         $this->checkFileAllowedForUpload($fileSize);
         $this->uploadFile($filePath, $uniqueFileName, $fileSize);
         if ($id !== null) {
-            $this->deleteOldFile($id);
+            $this->deleteOldFile($id, $throwExceptionOnFailure);
         }
     }
 
@@ -86,17 +92,24 @@ final class AttachmentFileUploader implements AttachmentFileUploaderInterface
      * @param bool $throwExceptionOnFailure
      *
      * @throws AttachmentNotFoundException
+     * @throws CannotUnlinkAttachmentException
      */
-    private function deleteOldFile(int $attachmentId, $throwExceptionOnFailure = true): void
+    private function deleteOldFile(int $attachmentId, $throwExceptionOnFailure): void
     {
         try {
             $attachment = new Attachment($attachmentId);
             $fileLink = _PS_DOWNLOAD_DIR_ . $attachment->file;
 
-            if ($throwExceptionOnFailure) {
-                unlink($fileLink);
-
-                return;
+            if ($throwExceptionOnFailure && !@unlink($fileLink)) {
+                throw new CannotUnlinkAttachmentException(
+                    sprintf(
+                        'Failed to unlink file %s from system',
+                        $fileLink
+                    ),
+                    0,
+                    null,
+                    $fileLink
+                );
             }
 
             @unlink($fileLink);

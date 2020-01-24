@@ -34,6 +34,7 @@ use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\AttachmentNotFoundExc
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\AttachmentUploadFailedException;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\BulkDeleteAttachmentsException;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\CannotAddAttachmentException;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\CannotUnlinkAttachmentException;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\CannotUpdateAttachmentException;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\DeleteAttachmentException;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\EmptyFileException;
@@ -150,8 +151,16 @@ class AttachmentController extends FrameworkBundleAdminController
 
                 return $this->redirectToRoute('admin_attachments_index');
             }
+        } catch (CannotUnlinkAttachmentException $e) {
+            $this->addFlash('warning', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+
+            return $this->redirectToRoute('admin_attachments_index');
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+
+            if ($e instanceof AttachmentNotFoundException) {
+                return $this->redirectToRoute('admin_attachments_index');
+            }
         }
 
         if (!isset($attachmentInformation) || !isset($attachmentForm)) {
@@ -311,6 +320,11 @@ class AttachmentController extends FrameworkBundleAdminController
                 $e instanceof BulkDeleteAttachmentsException ? implode(', ', $e->getAttachmentIds()) : ''
             ),
             EmptyFileException::class => $this->trans('No file has been selected', 'Admin.Notifications.Error'),
+            CannotUnlinkAttachmentException::class => $this->trans(
+                'An error occurred while trying to remove file %file%',
+                'Admin.Notifications.Error',
+                ['%file%' => $e->getFilePath()]
+            )
         ];
     }
 
