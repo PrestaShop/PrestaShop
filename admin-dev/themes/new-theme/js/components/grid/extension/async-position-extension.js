@@ -80,7 +80,7 @@ export default class AsyncPositionExtension {
     const positions = this._getRowsPositions(paginationOffset);
     const params = {positions};
 
-    this._updatePositionsForOriginalColumn();
+    this.updatePositionsForOriginalColumn();
     this._updatePosition(updateUrl, params);
   }
 
