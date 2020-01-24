@@ -144,7 +144,7 @@ export default class AsyncPositionExtension {
         const $tr = $positionWrapper.closest('tr');
         const $td = $positionWrapper.closest('td');
 
-        const positionColumnId = this._getOriginalColumnId($td);
+        const positionColumnId = this.getOriginalColumnId($td);
         const displayPosition = parseInt(index, 10) + 1;
         $tr.find(`td[class="${positionColumnId}"] div`).text(displayPosition.toString());
       })
