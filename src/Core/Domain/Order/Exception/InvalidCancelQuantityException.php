@@ -34,11 +34,6 @@ use Throwable;
 class InvalidCancelQuantityException extends OrderException
 {
     /**
-     * @var int
-     */
-    private $cancellableQuantity;
-
-    /**
      * Used when the quantity cancelled is not strictly positive
      */
     const EMPTY_QUANTITY = 1;
@@ -50,21 +45,11 @@ class InvalidCancelQuantityException extends OrderException
 
     /**
      * @param int $code
-     * @param int $cancellableQuantity
      * @param string $message
      * @param Throwable|null $previous
      */
-    public function __construct($code = 0, int $cancellableQuantity = 0, $message = '', Throwable $previous = null)
+    public function __construct($code = 0, $message = '', Throwable $previous = null)
     {
         parent::__construct($message, $code, $previous);
-        $this->cancellableQuantity = $cancellableQuantity;
-    }
-
-    /**
-     * @return int
-     */
-    public function getCancellableQuantity(): int
-    {
-        return $this->cancellableQuantity;
     }
 }
