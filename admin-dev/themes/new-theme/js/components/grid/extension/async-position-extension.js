@@ -50,7 +50,7 @@ export default class AsyncPositionExtension {
    */
   extend(grid) {
     this.grid = grid;
-    this._addIdsToGridTableRows();
+    this.addIdsToGridTableRows();
     grid.getContainer().find('.js-grid-table').tableDnD({
       onDragClass: 'position-row-while-drag',
       dragHandle: '.js-drag-handle',
