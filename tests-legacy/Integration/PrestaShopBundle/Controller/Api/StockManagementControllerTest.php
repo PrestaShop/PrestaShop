@@ -214,7 +214,7 @@ class StockManagementControllerTest extends ApiTestCase
         $this->assertTrue($headers->has('Total-Pages'), 'The response headers should contain the total pages.');
         $this->assertSame(
             $expectedTotalPages,
-            $headers->get('Total-Pages'),
+            (int) $headers->get('Total-Pages'),
             sprintf(
                 'There should be %d page(s) counting %d elements at most.',
                 $expectedTotalPages,
