@@ -115,7 +115,7 @@ export default class AsyncPositionExtension {
    *
    * @private
    */
-  _addIdsToGridTableRows() {
+  addIdsToGridTableRows() {
     this.grid.getContainer()
       .find(`.js-grid-table .js-${this.grid.getId()}-position`)
       .each((index, positionWrapper) => {
