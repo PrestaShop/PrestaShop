@@ -179,7 +179,7 @@ export default class AsyncPositionExtension {
    *
    * @private
    */
-  _updatePosition(url, params) {
+  updatePosition(url, params) {
     $.post({
       url,
       data: params,
