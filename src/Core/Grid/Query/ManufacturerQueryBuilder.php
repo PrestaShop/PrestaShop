@@ -26,8 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Query;
 
-use Doctrine\DBAL\Query\QueryBuilder;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Query\QueryBuilder;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 
 /**

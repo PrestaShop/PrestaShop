@@ -31,7 +31,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * AdminFilter.
  *
- * @ORM\Table(uniqueConstraints={@ORM\UniqueConstraint(name="admin_filter_search_id_idx",columns={"employee", "shop", "controller", "action", "filter_id"})})
+ * @ORM\Table(uniqueConstraints={@ORM\UniqueConstraint(name="admin_filter_search_id_idx", columns={"employee", "shop", "controller", "action", "filter_id"})})
  * @ORM\Entity(repositoryClass="PrestaShopBundle\Entity\Repository\AdminFilterRepository")
  */
 class AdminFilter
@@ -83,7 +83,7 @@ class AdminFilter
     /**
      * @var string
      *
-     * @ORM\Column(name="filter_id", type="string", length=255)
+     * @ORM\Column(name="filter_id", type="string", length=191)
      */
     private $filterId = '';
 
@@ -246,7 +246,7 @@ class AdminFilter
      */
     public static function getProductCatalogEmptyFilter()
     {
-        return array(
+        return [
             'filter_category' => '',
             'filter_column_id_product' => '',
             'filter_column_name' => '',
@@ -259,7 +259,7 @@ class AdminFilter
             'last_limit' => 20,
             'last_orderBy' => 'id_product',
             'last_sortOrder' => 'desc',
-        );
+        ];
     }
 
     /**
@@ -346,28 +346,28 @@ class AdminFilter
             };
         };
 
-        return filter_var_array($filter, array(
+        return filter_var_array($filter, [
             'filter_category' => FILTER_SANITIZE_NUMBER_INT,
-            'filter_column_id_product' => array(
+            'filter_column_id_product' => [
                 'filter' => FILTER_CALLBACK,
                 'options' => $filterMinMax(FILTER_SANITIZE_NUMBER_INT),
-            ),
+            ],
             'filter_column_name' => FILTER_SANITIZE_STRING,
             'filter_column_reference' => FILTER_SANITIZE_STRING,
             'filter_column_name_category' => FILTER_SANITIZE_STRING,
-            'filter_column_price' => array(
+            'filter_column_price' => [
                 'filter' => FILTER_CALLBACK,
                 'options' => $filterMinMax(FILTER_SANITIZE_NUMBER_FLOAT),
-            ),
-            'filter_column_sav_quantity' => array(
+            ],
+            'filter_column_sav_quantity' => [
                 'filter' => FILTER_CALLBACK,
                 'options' => $filterMinMax(FILTER_SANITIZE_NUMBER_INT),
-            ),
+            ],
             'filter_column_active' => FILTER_SANITIZE_NUMBER_INT,
             'last_offset' => FILTER_SANITIZE_NUMBER_INT,
             'last_limit' => FILTER_SANITIZE_NUMBER_INT,
             'last_orderBy' => FILTER_SANITIZE_STRING,
             'last_sortOrder' => FILTER_SANITIZE_STRING,
-        ));
+        ]);
     }
 }

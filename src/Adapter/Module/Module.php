@@ -68,7 +68,7 @@ class Module implements ModuleInterface
      *
      * @var array
      */
-    private $attributes_default = array(
+    private $attributes_default = [
         'id' => 0,
         'name' => '',
         'categoryName' => '',
@@ -80,22 +80,22 @@ class Module implements ModuleInterface
         'tab' => 'others',
         'is_configurable' => 0,
         'need_instance' => 0,
-        'limited_countries' => array(),
+        'limited_countries' => [],
         'parent_class' => 'Module',
         'is_paymentModule' => false,
         'productType' => 'module',
         'warning' => '',
         'img' => '',
-        'badges' => array(),
-        'cover' => array(),
-        'screenshotsUrls' => array(),
+        'badges' => [],
+        'cover' => [],
+        'screenshotsUrls' => [],
         'videoUrl' => null,
-        'refs' => array('unknown'),
-        'price' => array(
+        'refs' => ['unknown'],
+        'price' => [
             'EUR' => 0,
             'USD' => 0,
             'GBP' => 0,
-        ),
+        ],
         'type' => '',
         // From the marketplace
         'url' => null,
@@ -103,27 +103,27 @@ class Module implements ModuleInterface
         'nbRates' => 0,
         'fullDescription' => '',
         'confirmUninstall' => '',
-    );
+    ];
 
     /**
      * Default values for ParameterBag disk.
      *
      * @var array
      */
-    private $disk_default = array(
+    private $disk_default = [
         'filemtype' => 0,
         'is_present' => 0,
         'is_valid' => 0,
         'version' => null,
         'path' => '',
-    );
+    ];
 
     /**
      * Default values for ParameterBag database.
      *
      * @var array
      */
-    private $database_default = array(
+    private $database_default = [
         'installed' => 0,
         'active' => 0,
         'active_on_mobile' => true,
@@ -131,14 +131,14 @@ class Module implements ModuleInterface
         'last_access_date' => '0000-00-00 00:00:00',
         'date_add' => null,
         'date_upd' => null,
-    );
+    ];
 
     /**
      * @param array $attributes
      * @param array $disk
      * @param array $database
      */
-    public function __construct(array $attributes = array(), array $disk = array(), array $database = array())
+    public function __construct(array $attributes = [], array $disk = [], array $database = [])
     {
         $this->attributes = new ParameterBag($this->attributes_default);
         $this->disk = new ParameterBag($this->disk_default);
@@ -387,10 +387,10 @@ class Module implements ModuleInterface
      */
     private function convertType($value)
     {
-        $conversionTable = array(
+        $conversionTable = [
             AddonListFilterOrigin::ADDONS_CUSTOMER => 'addonsBought',
             AddonListFilterOrigin::ADDONS_MUST_HAVE => 'addonsMustHave',
-        );
+        ];
 
         return isset($conversionTable[$value]) ? $conversionTable[$value] : '';
     }
@@ -406,7 +406,7 @@ class Module implements ModuleInterface
         }
         $this->attributes->set('logo', __PS_BASE_URI__ . 'img/questionmark.png');
 
-        foreach (array('logo.png', 'logo.gif') as $logo) {
+        foreach (['logo.png', 'logo.gif'] as $logo) {
             $logo_path = _PS_MODULE_DIR_ . $this->get('name') . DIRECTORY_SEPARATOR . $logo;
             if (file_exists($logo_path)) {
                 $this->attributes->set('img', __PS_BASE_URI__ . basename(_PS_MODULE_DIR_) . '/' . $this->get('name') . '/' . $logo);

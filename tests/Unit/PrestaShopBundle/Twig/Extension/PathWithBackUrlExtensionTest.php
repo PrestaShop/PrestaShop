@@ -26,6 +26,7 @@
 
 namespace Tests\Unit\PrestaShopBundle\Twig\Extension;
 
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Util\Url\BackUrlProvider;
 use PrestaShopBundle\Twig\Extension\PathWithBackUrlExtension;
@@ -39,17 +40,17 @@ class PathWithBackUrlExtensionTest extends TestCase
     const FALLBACK_URL = 'https://www.prestashop.com/en';
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject|RoutingExtension
+     * @var MockObject|RoutingExtension
      */
     private $routingExtensionMock;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject|RequestStack
+     * @var MockObject|RequestStack
      */
     private $requestStackMock;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject|BackUrlProvider
+     * @var MockObject|BackUrlProvider
      */
     private $backUrlProviderMock;
 

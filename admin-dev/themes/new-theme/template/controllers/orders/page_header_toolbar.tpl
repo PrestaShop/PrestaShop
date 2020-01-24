@@ -22,11 +22,18 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
-<div class="header-toolbar">
-  <div class="container-fluid">
-      {literal}
-        {% block page_header_toolbar %}{% endblock %}
-      {/literal}
-  </div>
-  {hook h='displayDashboardTop'}
-</div>
+{extends file='page_header_toolbar.tpl'}
+
+{block name=pageTitle}
+  {if !isset($use_regular_h1_structure)}
+    {assign var="use_regular_h1_structure" value=true}
+  {/if}
+
+  {if $use_regular_h1_structure}
+    <h1 class="title">
+      {if is_array($title)}{$title|end|escape}{else}{$title|escape}{/if}
+    </h1>
+  {else}
+    {$title}
+  {/if}
+{/block}

@@ -59,22 +59,22 @@ class PrestaShopLoggerCore extends ObjectModel
     /**
      * @see ObjectModel::$definition
      */
-    public static $definition = array(
+    public static $definition = [
         'table' => 'log',
         'primary' => 'id_log',
-        'fields' => array(
-            'severity' => array('type' => self::TYPE_INT, 'validate' => 'isInt', 'required' => true),
-            'error_code' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
-            'message' => array('type' => self::TYPE_STRING, 'validate' => 'isString', 'required' => true),
-            'object_id' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
-            'id_employee' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
-            'object_type' => array('type' => self::TYPE_STRING, 'validate' => 'isName'),
-            'date_add' => array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
-            'date_upd' => array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
-        ),
-    );
+        'fields' => [
+            'severity' => ['type' => self::TYPE_INT, 'validate' => 'isInt', 'required' => true],
+            'error_code' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'],
+            'message' => ['type' => self::TYPE_STRING, 'validate' => 'isString', 'required' => true],
+            'object_id' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'],
+            'id_employee' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'],
+            'object_type' => ['type' => self::TYPE_STRING, 'validate' => 'isName'],
+            'date_add' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
+            'date_upd' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
+        ],
+    ];
 
-    protected static $is_present = array();
+    protected static $is_present = [];
 
     /**
      * Send e-mail to the shop owner only if the minimal severity level has been reached.
@@ -91,11 +91,11 @@ class PrestaShopLoggerCore extends ObjectModel
                 'log_alert',
                 Context::getContext()->getTranslator()->trans(
                     'Log: You have a new alert from your shop',
-                    array(),
+                    [],
                     'Emails.Subject',
                     $language->locale
                 ),
-                array(),
+                [],
                 Configuration::get('PS_SHOP_EMAIL')
             );
         }

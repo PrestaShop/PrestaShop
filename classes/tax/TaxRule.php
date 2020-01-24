@@ -37,28 +37,28 @@ class TaxRuleCore extends ObjectModel
     /**
      * @see ObjectModel::$definition
      */
-    public static $definition = array(
+    public static $definition = [
         'table' => 'tax_rule',
         'primary' => 'id_tax_rule',
-        'fields' => array(
-            'id_tax_rules_group' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-            'id_country' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-            'id_state' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
-            'zipcode_from' => array('type' => self::TYPE_STRING, 'validate' => 'isPostCode'),
-            'zipcode_to' => array('type' => self::TYPE_STRING, 'validate' => 'isPostCode'),
-            'id_tax' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-            'behavior' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
-            'description' => array('type' => self::TYPE_STRING, 'validate' => 'isString'),
-        ),
-    );
+        'fields' => [
+            'id_tax_rules_group' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
+            'id_country' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
+            'id_state' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId'],
+            'zipcode_from' => ['type' => self::TYPE_STRING, 'validate' => 'isPostCode'],
+            'zipcode_to' => ['type' => self::TYPE_STRING, 'validate' => 'isPostCode'],
+            'id_tax' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
+            'behavior' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'],
+            'description' => ['type' => self::TYPE_STRING, 'validate' => 'isString'],
+        ],
+    ];
 
-    protected $webserviceParameters = array(
-        'fields' => array(
-            'id_tax_rules_group' => array('xlink_resource' => 'tax_rule_groups'),
-            'id_state' => array('xlink_resource' => 'states'),
-            'id_country' => array('xlink_resource' => 'countries'),
-        ),
-    );
+    protected $webserviceParameters = [
+        'fields' => [
+            'id_tax_rules_group' => ['xlink_resource' => 'tax_rule_groups'],
+            'id_state' => ['xlink_resource' => 'states'],
+            'id_country' => ['xlink_resource' => 'countries'],
+        ],
+    ];
 
     public static function deleteByGroupId($id_group)
     {
@@ -165,7 +165,7 @@ class TaxRuleCore extends ObjectModel
             $to = 0;
         }
 
-        return array($from, $to);
+        return [$from, $to];
     }
 
     /**

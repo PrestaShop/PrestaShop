@@ -78,6 +78,8 @@ class OrderShippingForViewing
     }
 
     /**
+     * hint - collection of OrderCarrierForViewing objects would be better
+     *
      * @return OrderCarrierForViewing[]
      */
     public function getCarriers(): array

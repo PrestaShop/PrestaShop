@@ -75,10 +75,7 @@ final class AttributeGroupId
     private function assertIsIntegerGreaterThanZero($value)
     {
         if (!is_int($value) || 0 >= $value) {
-            throw new AttributeGroupConstraintException(
-                sprintf('Invalid attribute group id "%s".', var_export($value, true)),
-                AttributeGroupConstraintException::INVALID_ID
-            );
+            throw new AttributeGroupConstraintException(sprintf('Invalid attribute group id "%s".', var_export($value, true)), AttributeGroupConstraintException::INVALID_ID);
         }
     }
 }

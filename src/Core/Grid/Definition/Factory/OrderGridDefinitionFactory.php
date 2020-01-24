@@ -30,6 +30,7 @@ use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollection;
+use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\Type\ButtonBulkAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\Type\ModalFormSubmitBulkAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\AccessibilityChecker\AccessibilityCheckerInterface;
@@ -181,6 +182,7 @@ final class OrderGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ->setOptions([
                     'identifier_field' => 'id_order',
                     'preview' => $previewColumn,
+                    'clickable' => false,
                 ])
             )
             ->add((new DataColumn('reference'))
@@ -195,6 +197,7 @@ final class OrderGridDefinitionFactory extends AbstractGridDefinitionFactory
                     'field' => 'new',
                     'true_name' => $this->trans('Yes', [], 'Admin.Global'),
                     'false_name' => $this->trans('No', [], 'Admin.Global'),
+                    'clickable' => true,
                 ])
             )
             ->add((new LinkColumn('customer'))
@@ -211,6 +214,7 @@ final class OrderGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ->setOptions([
                     'field' => 'total_paid_tax_incl',
                     'is_paid_field' => 'paid',
+                    'clickable' => true,
                 ])
             )
             ->add((new DataColumn('payment'))
@@ -236,6 +240,7 @@ final class OrderGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ->setOptions([
                     'field' => 'date_add',
                     'format' => $this->contextDateFormat,
+                    'clickable' => true,
                 ])
             )
             ->add((new ActionColumn('actions'))
@@ -433,6 +438,21 @@ final class OrderGridDefinitionFactory extends AbstractGridDefinitionFactory
                     'modal_id' => 'changeOrdersStatusModal',
                 ])
             )
+            ->add((new ButtonBulkAction('open_tabs'))
+                ->setName($this->trans('Open in new tabs', [], 'Admin.Orderscustomers.Feature'))
+                ->setOptions([
+                    'class' => 'open_tabs',
+                    'attributes' => [
+                        'data-route' => 'admin_orders_view',
+                        'data-route-param-name' => 'orderId',
+                        'data-tabs-blocked-message' => $this->trans(
+                            'It looks like you have exceeded the number of tabs allowed. Check your browser settings to open multiple tabs.',
+                            [],
+                            'Admin.Orderscustomers.Feature'
+                        ),
+                    ],
+                ])
+            )
         ;
     }
 
@@ -475,6 +495,7 @@ final class OrderGridDefinitionFactory extends AbstractGridDefinitionFactory
                         'route_param_name' => 'orderId',
                         'route_param_field' => 'id_order',
                         'use_inline_display' => true,
+                        'clickable_row' => true,
                     ])
             )
         ;

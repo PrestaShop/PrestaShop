@@ -123,10 +123,7 @@ final class ToggleExchangeRateAutomatizationHandler implements ToggleExchangeRat
     public function handle(ToggleExchangeRateAutomatizationCommand $command)
     {
         if (!$this->isCronJobModuleInstalled) {
-            throw new AutomateExchangeRatesUpdateException(
-                'Live exchange rates feature cannot be modified because "cronjob" module is not installed',
-                AutomateExchangeRatesUpdateException::CRON_TASK_MANAGER_MODULE_NOT_INSTALLED
-            );
+            throw new AutomateExchangeRatesUpdateException('Live exchange rates feature cannot be modified because "cronjob" module is not installed', AutomateExchangeRatesUpdateException::CRON_TASK_MANAGER_MODULE_NOT_INSTALLED);
         }
 
         $this->configuration->restrictUpdatesTo($this->contextShop);
@@ -153,11 +150,7 @@ final class ToggleExchangeRateAutomatizationHandler implements ToggleExchangeRat
                 return;
             }
         } catch (Exception $exception) {
-            throw new CurrencyException(
-                'An unexpected error occurred when trying to update live exchange rates',
-                0,
-                $exception
-            );
+            throw new CurrencyException('An unexpected error occurred when trying to update live exchange rates', 0, $exception);
         }
     }
 
@@ -243,10 +236,7 @@ final class ToggleExchangeRateAutomatizationHandler implements ToggleExchangeRat
         $cronUrl = $this->getCronUrl();
 
         if (false === $this->createCronJob($cronUrl)) {
-            throw new AutomateExchangeRatesUpdateException(
-                'Failed to create a cron task for live exchange rate update',
-                AutomateExchangeRatesUpdateException::CRON_TASK_CREATION_FAILED
-            );
+            throw new AutomateExchangeRatesUpdateException('Failed to create a cron task for live exchange rate update', AutomateExchangeRatesUpdateException::CRON_TASK_CREATION_FAILED);
         }
     }
 

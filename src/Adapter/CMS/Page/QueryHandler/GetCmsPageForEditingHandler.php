@@ -91,9 +91,7 @@ final class GetCmsPageForEditingHandler extends AbstractCmsPageHandler implement
                 $this->link->getCMSLink($cms, null, null, $this->langId)
         );
         } catch (PrestaShopException $e) {
-            throw new CmsPageException(
-                sprintf('An error occurred when getting cms page for editing with id "%s"', $cmsPageId)
-            );
+            throw new CmsPageException(sprintf('An error occurred when getting cms page for editing with id "%s"', $cmsPageId));
         }
     }
 }

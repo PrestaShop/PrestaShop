@@ -284,32 +284,45 @@ services:
 
     form.type.performance.smarty:
         class: 'PrestaShopBundle\Form\Admin\AdvancedParameters\Performance\SmartyType'
+        parent: 'form.type.translatable.aware'
+        public: true
         tags:
             - { name: form.type }
 
     form.type.performance.debug_mode:
         class: 'PrestaShopBundle\Form\Admin\AdvancedParameters\Performance\DebugModeType'
+        parent: 'form.type.translatable.aware'
+        public: true
         tags:
             - { name: form.type }
 
     form.type.performance.optional_features:
         class: 'PrestaShopBundle\Form\Admin\AdvancedParameters\Performance\OptionalFeaturesType'
-        arguments: ['@=service("prestashop.adapter.combination_feature").isUsed()']
+        parent: 'form.type.translatable.aware'
+        public: true
+        arguments:
+            - '@=service("prestashop.adapter.combination_feature").isUsed()'
         tags:
             - { name: form.type }
 
     form.type.performance.ccc:
         class: 'PrestaShopBundle\Form\Admin\AdvancedParameters\Performance\CombineCompressCacheType'
+        parent: 'form.type.translatable.aware'
+        public: true
         tags:
             - { name: form.type }
 
     form.type.performance.media_servers:
         class: 'PrestaShopBundle\Form\Admin\AdvancedParameters\Performance\MediaServersType'
+        parent: 'form.type.translatable.aware'
+        public: true
         tags:
             - { name: form.type }
 
     form.type.performance.memcache_servers:
         class: 'PrestaShopBundle\Form\Admin\AdvancedParameters\Performance\MemcacheServerType'
+        parent: 'form.type.translatable.aware'
+        public: true
         tags:
             - { name: form.type }
 
@@ -618,6 +631,7 @@ services:
         class: 'PrestaShopBundle\Form\Admin\Type\CountryChoiceType'
         arguments:
             - '@prestashop.core.form.choice_provider.country_by_id'
+            - '@prestashop.core.form.choice_provider.country_by_id'
         tags:
             - { name: form.type }
 
@@ -901,6 +915,7 @@ services:
         class: 'PrestaShopBundle\Form\Admin\Sell\Supplier\SupplierType'
         arguments:
             - '@=service("prestashop.core.form.choice_provider.country_by_id").getChoices()'
+            - '@=service("prestashop.core.form.choice_provider.country_by_id").getChoicesAttributes()'
             - '@prestashop.adapter.form.choice_provider.country_state_by_id'
             - '@=service("prestashop.adapter.legacy.context").getContext().country.id'
             - '@translator'
@@ -948,6 +963,26 @@ services:
           - '@translator'
       tags:
           - { name: form.type }
+
+    form.type.order.add_product_row:
+      class: 'PrestaShopBundle\Form\Admin\Sell\Order\AddProductRowType'
+      parent: 'form.type.translatable.aware'
+      public: true
+      arguments:
+        - '@prestashop.adapter.form.choice_provider.order_invoice_by_id'
+        - '@=service("prestashop.adapter.legacy.context").getContext().language.id'
+      tags:
+        - { name: form.type }
+
+    form.type.order.edit_product_row:
+      class: 'PrestaShopBundle\Form\Admin\Sell\Order\EditProductRowType'
+      parent: 'form.type.translatable.aware'
+      public: true
+      arguments:
+          - '@prestashop.adapter.form.choice_provider.order_invoice_by_id'
+          - '@=service("prestashop.adapter.legacy.context").getContext().language.id'
+      tags:
+        - { name: form.type }
 
     form.type.order.update_order_status:
       class: 'PrestaShopBundle\Form\Admin\Sell\Order\UpdateOrderStatusType'
@@ -1020,3 +1055,82 @@ services:
             - '@prestashop.adapter.form.choice_provider.employee_name_by_id'
         tags:
             - { name: form.type }
+
+    form.type.order.credit_slip.generate_pdf_by_date:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Order\CreditSlip\GeneratePdfByDateType'
+        parent: 'form.type.common_type'
+        arguments:
+            - '@translator'
+        public: true
+        tags:
+            - { name: form.type }
+
+    form.type.order.credit_slip.credit_slip_options:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Order\CreditSlip\CreditSlipOptionsType'
+        parent: 'form.type.common_type'
+        arguments:
+            - '@translator'
+        public: true
+        tags:
+            - { name: form.type }
+
+    form.type.order.change_order_address:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Order\ChangeOrderAddressType'
+        arguments:
+            - '@prestashop.core.form.choice_provider.customer_addresses_by_id'
+        tags:
+            - { name: form.type }
+
+    form.type.order.message:
+        class: 'PrestaShopBundle\Form\Admin\Sell\CustomerService\OrderMessageType'
+        tags:
+            - { name: form.type }
+
+    form.type.order.customer_service_message:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Order\OrderMessageType'
+        arguments:
+            - '@prestashop.core.form.choice_provider.customer_service_order_messages_name'
+            - '@prestashop.core.form.choice_provider.customer_service_order_messages'
+        calls:
+            - { method: setTranslator, arguments: ['@translator'] }
+        tags:
+            - { name: form.type }
+
+    form.type.customer_address:
+      class: 'PrestaShopBundle\Form\Admin\Sell\Address\CustomerAddressType'
+      arguments:
+        - '@translator'
+        - '@prestashop.adapter.form.choice_provider.country_state_by_id'
+        - '@=service("prestashop.adapter.legacy.context").getContext().country.id'
+      tags:
+        - { name: form.type }
+
+    prestashop.bundle.form.admin.sell.attachment.attachment:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Attachment\AttachmentType'
+        calls:
+            - { method: setTranslator, arguments: ['@translator'] }
+        tags:
+            - { name: form.type }
+
+    form.type.order.cancel_product:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Order\CancelProductType'
+        parent: 'form.type.translatable.aware'
+        public: true
+        tags:
+            - { name: form.type }
+
+    form.type.order.cart_summary:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Order\CartSummaryType'
+        arguments:
+            - '@prestashop.core.form.choice_provider.order_state_by_id'
+            - '@prestashop.adapter.form.choice_provider.installed_payment_modules'
+        tags:
+            - { name: form.type }
+
+    form.type.configure.advanced_parameters.profile:
+      class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Profile\ProfileType'
+      public: true
+      arguments:
+        - '@translator'
+      tags:
+        - { name: form.type }

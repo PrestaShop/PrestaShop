@@ -23,18 +23,18 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-import createOrderPageMap from './create-order-map';
+import createOrderMap from './create-order-map';
 
 const $ = window.$;
 
 /**
- * Manupulates UI of Shipping block in Order creation page
+ * Manipulates UI of Shipping block in Order creation page
  */
 export default class ShippingRenderer {
   constructor() {
-    this.$container = $(createOrderPageMap.shippingBlock);
-    this.$form = $(createOrderPageMap.shippingForm);
-    this.$noCarrierBlock = $(createOrderPageMap.noCarrierBlock);
+    this.$container = $(createOrderMap.shippingBlock);
+    this.$form = $(createOrderMap.shippingForm);
+    this.$noCarrierBlock = $(createOrderMap.noCarrierBlock);
   }
 
   /**
@@ -42,11 +42,9 @@ export default class ShippingRenderer {
    * @param {Boolean} emptyCart
    */
   render(shipping, emptyCart) {
-    const shippingIsAvailable = typeof shipping !== 'undefined' && shipping !== null && shipping.length !== 0;
-
     if (emptyCart) {
       this._hideContainer();
-    } else if (shippingIsAvailable) {
+    } else if (shipping !== null) {
       this._displayForm(shipping);
     } else {
       this._displayNoCarriersWarning();
@@ -64,8 +62,26 @@ export default class ShippingRenderer {
     this._hideNoCarrierBlock();
     this._renderDeliveryOptions(shipping.deliveryOptions, shipping.selectedCarrierId);
     this._renderTotalShipping(shipping.shippingPrice);
+    this._renderFreeShippingSwitch(shipping.freeShipping);
     this._showForm();
     this._showContainer();
+  }
+
+  /**
+   * Renders free shipping switch depending on free shipping value
+   *
+   * @param isFreeShipping
+   *
+   * @private
+   */
+  _renderFreeShippingSwitch(isFreeShipping) {
+    $(createOrderMap.freeShippingSwitch).each((key, input) => {
+      if (input.value === '1') {
+        input.checked = isFreeShipping;
+      } else {
+        input.checked = !isFreeShipping;
+      }
+    });
   }
 
   /**
@@ -88,7 +104,7 @@ export default class ShippingRenderer {
    * @private
    */
   _renderDeliveryOptions(deliveryOptions, selectedVal) {
-    const $deliveryOptionSelect = $(createOrderPageMap.deliveryOptionSelect);
+    const $deliveryOptionSelect = $(createOrderMap.deliveryOptionSelect);
     $deliveryOptionSelect.empty();
 
     for (const key in Object.keys(deliveryOptions)) {
@@ -115,7 +131,7 @@ export default class ShippingRenderer {
    * @private
    */
   _renderTotalShipping(shippingPrice) {
-    const $totalShippingField = $(createOrderPageMap.totalShippingField);
+    const $totalShippingField = $(createOrderMap.totalShippingField);
     $totalShippingField.empty();
 
     $totalShippingField.append(shippingPrice);

@@ -40,12 +40,7 @@ class LanguageFeatureContext extends AbstractPrestaShopFeatureContext
         $languageId = Language::getIdByIso($isoCode);
 
         if (!$languageId) {
-            throw new RuntimeException(
-                sprintf(
-                    'Iso code %s does not exist',
-                    $isoCode
-                )
-            );
+            throw new RuntimeException(sprintf('Iso code %s does not exist', $isoCode));
         }
 
         Configuration::updateValue('PS_LANG_DEFAULT', $languageId);
@@ -88,12 +83,7 @@ class LanguageFeatureContext extends AbstractPrestaShopFeatureContext
         $language = SharedStorage::getStorage()->get($reference);
 
         if ($language->locale !== $locale) {
-            throw new RuntimeException(sprintf(
-                'Currency "%s" has "%s" iso code, but "%s" was expected.',
-                $reference,
-                $language->locale,
-                $locale
-            ));
+            throw new RuntimeException(sprintf('Currency "%s" has "%s" iso code, but "%s" was expected.', $reference, $language->locale, $locale));
         }
     }
 }

@@ -47,14 +47,14 @@ trait PrestaShopTranslatorTrait
      *
      * @throws InvalidArgumentException If the locale contains invalid characters
      */
-    public function trans($id, array $parameters = array(), $domain = null, $locale = null)
+    public function trans($id, array $parameters = [], $domain = null, $locale = null)
     {
         if (isset($parameters['legacy'])) {
             $legacy = $parameters['legacy'];
             unset($parameters['legacy']);
         }
 
-        $translated = parent::trans($id, array(), $this->normalizeDomain($domain), $locale);
+        $translated = parent::trans($id, [], $this->normalizeDomain($domain), $locale);
 
         // @todo to remove after the legacy translation system has ben phased out
         if ($this->shouldFallbackToLegacyModuleTranslation($id, $domain, $translated)) {
@@ -117,7 +117,7 @@ trait PrestaShopTranslatorTrait
      *
      * @throws InvalidArgumentException If the locale contains invalid characters
      */
-    public function transChoice($id, $number, array $parameters = array(), $domain = null, $locale = null)
+    public function transChoice($id, $number, array $parameters = [], $domain = null, $locale = null)
     {
         if (null !== $domain) {
             $domain = str_replace('.', '', $domain);
@@ -127,7 +127,7 @@ trait PrestaShopTranslatorTrait
             return parent::transChoice($id, $number, $parameters, $domain, $locale);
         }
 
-        return vsprintf(parent::transChoice($id, $number, array(), $domain, $locale), $parameters);
+        return vsprintf(parent::transChoice($id, $number, [], $domain, $locale), $parameters);
     }
 
     /**
@@ -163,8 +163,8 @@ trait PrestaShopTranslatorTrait
         $moduleName = strtolower($domainParts[1]);
         $sourceFile = (!empty($domainParts[2])) ? strtolower($domainParts[2]) : $moduleName;
 
-        // translate using the legacy system WITHOUT fallback to the new system (to avoid infinite loop)
-        return (new LegacyTranslator())->translate($moduleName, $message, $sourceFile, $parameters, false, $locale, false);
+        // translate using the legacy system WITHOUT fallback and escape to the new system (to avoid infinite loop)
+        return (new LegacyTranslator())->translate($moduleName, $message, $sourceFile, $parameters, false, $locale, false, false);
     }
 
     /**

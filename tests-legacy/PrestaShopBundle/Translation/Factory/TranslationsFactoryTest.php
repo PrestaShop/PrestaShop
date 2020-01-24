@@ -95,5 +95,6 @@ class TranslationsFactoryTest extends TestCase
 
         $expected = $this->factory
             ->createTranslationsArray($this->providerMock->getIdentifier());
+        $this->assertInternalType('array', $expected);
     }
 }

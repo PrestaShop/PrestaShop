@@ -159,7 +159,7 @@ class GetFileControllerCore extends FrontController
             $bName = explode('.', $bName);
             $bName = strtolower($bName[count($bName) - 1]);
 
-            $mimeTypes = array(
+            $mimeTypes = [
                 'ez' => 'application/andrew-inset',
                 'hqx' => 'application/mac-binhex40',
                 'cpt' => 'application/mac-compactpro',
@@ -287,7 +287,7 @@ class GetFileControllerCore extends FrontController
                 'avi' => 'video/x-msvideo',
                 'movie' => 'video/x-sgi-movie',
                 'ice' => 'x-conference-xcooltalk',
-            );
+            ];
 
             if (isset($mimeTypes[$bName])) {
                 $mimeType = $mimeTypes[$bName];
@@ -326,17 +326,17 @@ class GetFileControllerCore extends FrontController
      */
     protected function displayCustomError($msg)
     {
-        $translations = array(
-            'Invalid key.' => $this->trans('Invalid key.', array(), 'Shop.Notifications.Error'),
-            'This product does not exist in our store.' => $this->trans('This product does not exist in our store.', array(), 'Shop.Notifications.Error'),
-            'This product has been deleted.' => $this->trans('This product has been deleted.', array(), 'Shop.Notifications.Error'),
-            'This file no longer exists.' => $this->trans('This file no longer exists.', array(), 'Shop.Notifications.Error'),
-            'This product has been refunded.' => $this->trans('This product has been refunded.', array(), 'Shop.Notifications.Error'),
-            'The product deadline is in the past.' => $this->trans('The product deadline is in the past.', array(), 'Shop.Notifications.Error'),
-            'Expiration date exceeded' => $this->trans('The product expiration date has passed, preventing you from download this product.', array(), 'Shop.Notifications.Error'),
-            'Expiration date has passed, you cannot download this product' => $this->trans('Expiration date has passed, you cannot download this product.', array(), 'Shop.Notifications.Error'),
-            'You have reached the maximum number of allowed downloads.' => $this->trans('You have reached the maximum number of downloads allowed.', array(), 'Shop.Notifications.Error'),
-        ); ?>
+        $translations = [
+            'Invalid key.' => $this->trans('Invalid key.', [], 'Shop.Notifications.Error'),
+            'This product does not exist in our store.' => $this->trans('This product does not exist in our store.', [], 'Shop.Notifications.Error'),
+            'This product has been deleted.' => $this->trans('This product has been deleted.', [], 'Shop.Notifications.Error'),
+            'This file no longer exists.' => $this->trans('This file no longer exists.', [], 'Shop.Notifications.Error'),
+            'This product has been refunded.' => $this->trans('This product has been refunded.', [], 'Shop.Notifications.Error'),
+            'The product deadline is in the past.' => $this->trans('The product deadline is in the past.', [], 'Shop.Notifications.Error'),
+            'Expiration date exceeded' => $this->trans('The product expiration date has passed, preventing you from download this product.', [], 'Shop.Notifications.Error'),
+            'Expiration date has passed, you cannot download this product' => $this->trans('Expiration date has passed, you cannot download this product.', [], 'Shop.Notifications.Error'),
+            'You have reached the maximum number of allowed downloads.' => $this->trans('You have reached the maximum number of downloads allowed.', [], 'Shop.Notifications.Error'),
+        ]; ?>
         <script type="text/javascript">
         //<![CDATA[
         alert("<?php echo isset($translations[$msg]) ? html_entity_decode($translations[$msg], ENT_QUOTES, 'utf-8') : html_entity_decode($msg, ENT_QUOTES, 'utf-8'); ?>");

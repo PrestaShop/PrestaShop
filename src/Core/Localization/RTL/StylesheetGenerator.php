@@ -127,20 +127,13 @@ class StylesheetGenerator
         $content = file_get_contents($filePath);
 
         if ($content === false) {
-            throw new GenerationException(
-                sprintf(
-                    'Unable to read from CSS file: %s',
-                    $filePath
-                )
-            );
+            throw new GenerationException(sprintf('Unable to read from CSS file: %s', $filePath));
         }
 
         $rendered = CSSJanus::transform($content);
 
         if (strlen($rendered) === 0 && strlen($content) !== 0) {
-            throw new GenerationException(
-                sprintf('Failed to generate RTL CSS from file: %s', $filePath)
-            );
+            throw new GenerationException(sprintf('Failed to generate RTL CSS from file: %s', $filePath));
         }
 
         $content = $this->appendRtlFixIfNecessary(
@@ -209,12 +202,7 @@ class StylesheetGenerator
             $rtlFixContent = file_get_contents($rtlFixFilePath);
 
             if ($rtlFixContent === false) {
-                throw new GenerationException(
-                    sprintf(
-                        'Failed to read from file: %s',
-                        $rtlFixFilePath
-                    )
-                );
+                throw new GenerationException(sprintf('Failed to read from file: %s', $rtlFixFilePath));
             }
 
             return $content . PHP_EOL . $rtlFixContent;
@@ -236,12 +224,7 @@ class StylesheetGenerator
         $rtlFilePath = $this->getRtlFileName($baseFile);
 
         if (false === file_put_contents($rtlFilePath, $content)) {
-            throw new GenerationException(
-                sprintf(
-                    'Unable to write file to: %s',
-                    $rtlFilePath
-                )
-            );
+            throw new GenerationException(sprintf('Unable to write file to: %s', $rtlFilePath));
         }
 
         @chmod($rtlFilePath, FileSystem::DEFAULT_MODE_FILE);

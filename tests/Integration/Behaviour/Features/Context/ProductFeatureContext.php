@@ -29,13 +29,13 @@ namespace Tests\Integration\Behaviour\Features\Context;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Cart;
 use Combination;
-use Context;
-use SpecificPrice;
 use Configuration;
+use Context;
 use Customization;
 use CustomizationField;
 use Pack;
 use Product;
+use SpecificPrice;
 use StockAvailable;
 
 class ProductFeatureContext extends AbstractPrestaShopFeatureContext
@@ -106,12 +106,7 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
         $this->checkProductWithNameExists($productName);
         $result = $this->getCurrentCart()->updateQty($productQuantity, $this->products[$productName]->id);
         if (!$result) {
-            throw new \RuntimeException(
-                sprintf(
-                    'Expects true, got %s instead',
-                    $result
-                )
-            );
+            throw new \RuntimeException(sprintf('Expects true, got %s instead', $result));
         }
     }
 
@@ -124,13 +119,7 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
         $expected = $expectedStr == 'OK';
         $result = $this->getCurrentCart()->updateQty($productQuantity, $this->products[$productName]->id, null, false, $operator);
         if ($expected != $result) {
-            throw new \RuntimeException(
-                sprintf(
-                    'Expects %s, got %s instead',
-                    $expected,
-                    $result
-                )
-            );
+            throw new \RuntimeException(sprintf('Expects %s, got %s instead', $expected, $result));
         }
     }
 
@@ -142,24 +131,12 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
         if ($packItemsIncluded != 'including') {
             $nbProduct = $this->getCurrentCart()->getProductQuantity($this->products[$productName]->id, null, null);
             if ($productQuantity != $nbProduct['quantity']) {
-                throw new \RuntimeException(
-                    sprintf(
-                        'Expects %s, got %s instead (excluding items in pack)',
-                        $productQuantity,
-                        $nbProduct['quantity']
-                    )
-                );
+                throw new \RuntimeException(sprintf('Expects %s, got %s instead (excluding items in pack)', $productQuantity, $nbProduct['quantity']));
             }
         } else {
             $nbProduct = $this->getCurrentCart()->getProductQuantity($this->products[$productName]->id, null, null);
             if ($productQuantity != $nbProduct['deep_quantity']) {
-                throw new \RuntimeException(
-                    sprintf(
-                        'Expects %s, got %s instead (including items in pack)',
-                        $productQuantity,
-                        $nbProduct['deep_quantity']
-                    )
-                );
+                throw new \RuntimeException(sprintf('Expects %s, got %s instead (including items in pack)', $productQuantity, $nbProduct['deep_quantity']));
             }
         }
     }
@@ -172,13 +149,7 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
         $this->checkProductWithNameExists($productName);
         $nbProduct = Product::getQuantity($this->products[$productName]->id, null, null, $this->getCurrentCart(), null);
         if ($productQuantity != $nbProduct) {
-            throw new \RuntimeException(
-                sprintf(
-                    'Expects %s, got %s instead',
-                    $productQuantity,
-                    $nbProduct
-                )
-            );
+            throw new \RuntimeException(sprintf('Expects %s, got %s instead', $productQuantity, $nbProduct));
         }
     }
 
@@ -189,12 +160,7 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
     {
         $result = $this->getCurrentCart()->updateQty($productQuantity, $this->products[$productName]->id);
         if ($result) {
-            throw new \RuntimeException(
-                sprintf(
-                    'Expects false, got %s instead',
-                    $result
-                )
-            );
+            throw new \RuntimeException(sprintf('Expects false, got %s instead', $result));
         }
     }
 
@@ -342,13 +308,7 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
         $this->checkCombinationWithNameExists($productName, $combinationName);
         $nbProduct = Product::getQuantity($this->products[$productName]->id, $this->combinations[$productName][$combinationName]->id, null, $this->getCurrentCart(), null);
         if ($combinationQuantity != $nbProduct) {
-            throw new \RuntimeException(
-                sprintf(
-                    'Expects %s, got %s instead',
-                    $combinationQuantity,
-                    $nbProduct
-                )
-            );
+            throw new \RuntimeException(sprintf('Expects %s, got %s instead', $combinationQuantity, $nbProduct));
         }
     }
 
@@ -361,12 +321,7 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
         $this->checkCombinationWithNameExists($productName, $combinationName);
         $result = $this->getCurrentCart()->updateQty($combinationQuantity, $this->products[$productName]->id, $this->combinations[$productName][$combinationName]->id);
         if (!$result) {
-            throw new \RuntimeException(
-                sprintf(
-                    'Expects true, got %s instead',
-                    $result
-                )
-            );
+            throw new \RuntimeException(sprintf('Expects true, got %s instead', $result));
         }
     }
 
@@ -379,12 +334,7 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
         $this->checkCombinationWithNameExists($productName, $combinationName);
         $result = $this->getCurrentCart()->updateQty($combinationQuantity, $this->products[$productName]->id, $this->combinations[$productName][$combinationName]->id);
         if ($result) {
-            throw new \RuntimeException(
-                sprintf(
-                    'Expects false, got %s instead',
-                    $result
-                )
-            );
+            throw new \RuntimeException(sprintf('Expects false, got %s instead', $result));
         }
     }
 
@@ -397,13 +347,7 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
         $this->checkCombinationWithNameExists($productName, $combinationName);
         $nbProduct = $this->getCurrentCart()->getProductQuantity($this->products[$productName]->id, $this->combinations[$productName][$combinationName]->id, null);
         if ($combinationQuantity != $nbProduct['quantity']) {
-            throw new \RuntimeException(
-                sprintf(
-                    'Expects %s, got %s instead',
-                    $combinationQuantity,
-                    $nbProduct['quantity']
-                )
-            );
+            throw new \RuntimeException(sprintf('Expects %s, got %s instead', $combinationQuantity, $nbProduct['quantity']));
         }
     }
 
@@ -462,13 +406,7 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
         $this->checkCustomizationWithNameExists($productName, $customizationFieldName);
         $nbProduct = Product::getQuantity($this->products[$productName]->id, null, null, $this->getCurrentCart(), $this->customizationsInCart[$productName]->id);
         if ($customizationQuantity != $nbProduct) {
-            throw new \RuntimeException(
-                sprintf(
-                    'Expects %s, got %s instead',
-                    $customizationQuantity,
-                    $nbProduct
-                )
-            );
+            throw new \RuntimeException(sprintf('Expects %s, got %s instead', $customizationQuantity, $nbProduct));
         }
     }
 
@@ -481,12 +419,7 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
         $this->addCustomizationInCurrentCartForProductNamedIfNotExist($productName);
         $result = $this->getCurrentCart()->updateQty($customizationFieldQuantity, $this->products[$productName]->id, null, $this->customizationsInCart[$productName]->id);
         if (!$result) {
-            throw new \RuntimeException(
-                sprintf(
-                    'Expects true, got %s instead',
-                    $result
-                )
-            );
+            throw new \RuntimeException(sprintf('Expects true, got %s instead', $result));
         }
     }
 
@@ -500,12 +433,7 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
         $this->addCustomizationInCurrentCartForProductNamedIfNotExist($productName);
         $result = $this->getCurrentCart()->updateQty($customizationFieldQuantity, $this->products[$productName]->id, null, $this->customizationFields[$productName][$customizationFieldName]->id);
         if ($result) {
-            throw new \RuntimeException(
-                sprintf(
-                    'Expects false, got %s instead',
-                    $result
-                )
-            );
+            throw new \RuntimeException(sprintf('Expects false, got %s instead', $result));
         }
     }
 
@@ -518,13 +446,7 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
         $this->checkCustomizationWithNameExists($productName, $customizationFieldName);
         $nbProduct = $this->getCurrentCart()->getProductQuantity($this->products[$productName]->id, null, $this->customizationsInCart[$productName]->id);
         if ($customizationFieldQuantity != $nbProduct['quantity']) {
-            throw new \RuntimeException(
-                sprintf(
-                    'Expects %s, got %s instead',
-                    $customizationFieldQuantity,
-                    $nbProduct['quantity']
-                )
-            );
+            throw new \RuntimeException(sprintf('Expects %s, got %s instead', $customizationFieldQuantity, $nbProduct['quantity']));
         }
     }
 
@@ -621,13 +543,7 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
                 break;
         }
         if ($result !== $expected) {
-            throw new \RuntimeException(
-                sprintf(
-                    'Expects %s, got %s instead',
-                    $enoughStock,
-                    $result ? 'enough stock' : 'not enough stock'
-                )
-            );
+            throw new \RuntimeException(sprintf('Expects %s, got %s instead', $enoughStock, $result ? 'enough stock' : 'not enough stock'));
         }
     }
 
@@ -638,12 +554,7 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
     {
         $this->checkProductWithNameExists($productName);
         if (!Pack::isPack($this->products[$productName]->id)) {
-            throw new \RuntimeException(
-                sprintf(
-                    'Expects %s to be considered as a pack, it is not',
-                    $productName
-                )
-            );
+            throw new \RuntimeException(sprintf('Expects %s to be considered as a pack, it is not', $productName));
         }
     }
 
@@ -670,17 +581,5 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
         $this->products[$productName]->id_category_default = $category->id_category;
         $this->products[$productName]->addToCategories([$category->id]);
         $this->products[$productName]->save();
-    }
-
-    /**
-     * @Given there is product with reference :productReference
-     */
-    public function thereIsProductOfTypeWithReference($productReference)
-    {
-        $productId = Product::getIdByReference($productReference);
-
-        if (!$productId) {
-            throw new \RuntimeException(sprintf('Product with reference "%s" does not exist.', $productReference));
-        }
     }
 }

@@ -62,12 +62,7 @@ class WebserviceKeyId
     private function assertWebserviceKeyIdIsIntegerGreaterThanZero($webserviceKeyId)
     {
         if (!is_int($webserviceKeyId) || $webserviceKeyId <= 0) {
-            throw new WebserviceConstraintException(
-                sprintf(
-                    'Webservice key id must be integer greater than 0, but %s given',
-                    var_export($webserviceKeyId, true)
-                )
-            );
+            throw new WebserviceConstraintException(sprintf('Webservice key id must be integer greater than 0, but %s given', var_export($webserviceKeyId, true)));
         }
     }
 }

@@ -120,9 +120,7 @@ final class AddEmployeeHandler extends AbstractEmployeeHandler implements AddEmp
         $employee->id_last_customer = $employee->getLastElementsForNotify('customer');
 
         if (false === $employee->add()) {
-            throw new EmployeeException(
-                sprintf('Failed to add new employee with email "%s"', $command->getEmail()->getValue())
-            );
+            throw new EmployeeException(sprintf('Failed to add new employee with email "%s"', $command->getEmail()->getValue()));
         }
 
         return $employee;
@@ -136,10 +134,7 @@ final class AddEmployeeHandler extends AbstractEmployeeHandler implements AddEmp
     private function assertEmailIsNotAlreadyUsed($email)
     {
         if (Employee::employeeExists($email)) {
-            throw new EmailAlreadyUsedException(
-                $email,
-                'An account already exists for this email address'
-            );
+            throw new EmailAlreadyUsedException($email, 'An account already exists for this email address');
         }
     }
 }

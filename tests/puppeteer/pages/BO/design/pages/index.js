@@ -138,7 +138,7 @@ module.exports = class Pages extends BOBasePage {
     ]);
     // Click on delete and wait for modal
     await Promise.all([
-      this.page.click(bulkActionsDeleteButton),
+      this.clickAndWaitForNavigation(bulkActionsDeleteButton),
       this.page.waitForSelector(this.alertSuccessBlockParagraph, {visible: true}),
     ]);
     return this.getTextContent(this.alertSuccessBlockParagraph);

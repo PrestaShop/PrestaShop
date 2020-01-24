@@ -26,10 +26,11 @@
 
 namespace Tests\Integration\Behaviour\Features\Context;
 
-use PrestaShop\PrestaShop\Core\Localization\Locale\RepositoryInterface;
-use RuntimeException;
 use Currency;
 use Language;
+use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleRepository;
+use PrestaShop\PrestaShop\Core\Localization\Locale\RepositoryInterface;
+use RuntimeException;
 
 class CLDRFeatureContext extends AbstractPrestaShopFeatureContext
 {
@@ -103,11 +104,7 @@ class CLDRFeatureContext extends AbstractPrestaShopFeatureContext
         $displayedPrice = $locale->formatPrice($price, $currencyIsoCode);
 
         if ($expectedPrice !== $displayedPrice) {
-            throw new RuntimeException(sprintf(
-                'Displayed price is "%s" but "%s" was expected',
-                $displayedPrice,
-                $expectedPrice
-            ));
+            throw new RuntimeException(sprintf('Displayed price is "%s" but "%s" was expected', $displayedPrice, $expectedPrice));
         }
     }
 }

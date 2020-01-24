@@ -35,10 +35,8 @@ module.exports = class Cart extends FOBasePage {
    * Click on Proceed to checkout button
    */
   async clickOnProceedToCheckout() {
-    await Promise.all([
-      this.page.waitForNavigation({waitUntil: 'networkidle0'}),
-      this.page.click(this.proceedToCheckoutButton),
-    ]);
+    await this.page.waitForSelector(this.proceedToCheckoutButton, {visible: true});
+    await this.clickAndWaitForNavigation(this.proceedToCheckoutButton);
   }
 
   /**
@@ -47,7 +45,7 @@ module.exports = class Cart extends FOBasePage {
    * @param quantity
    */
   async editProductQuantity(productID, quantity) {
-    await this.setValue(this.productQuantity.replace('%NUMBER', productID), quantity);
+    await this.setValue(this.productQuantity.replace('%NUMBER', productID), quantity.toString());
     // click on price to see that its changed
     await this.page.click(this.productPrice.replace('%NUMBER', productID));
   }

@@ -23,14 +23,14 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-import Grid from '../../components/grid/grid';
-import ReloadListActionExtension from '../../components/grid/extension/reload-list-extension';
-import ExportToSqlManagerExtension from '../../components/grid/extension/export-to-sql-manager-extension';
-import FiltersResetExtension from '../../components/grid/extension/filters-reset-extension';
-import SortingExtension from '../../components/grid/extension/sorting-extension';
-import SubmitGridActionExtension from '../../components/grid/extension/submit-grid-action-extension';
+import Grid from '@components/grid/grid';
+import ReloadListActionExtension from '@components/grid/extension/reload-list-extension';
+import ExportToSqlManagerExtension from '@components/grid/extension/export-to-sql-manager-extension';
+import FiltersResetExtension from '@components/grid/extension/filters-reset-extension';
+import SortingExtension from '@components/grid/extension/sorting-extension';
+import SubmitGridActionExtension from '@components/grid/extension/submit-grid-action-extension';
 import FiltersSubmitButtonEnablerExtension
-  from '../../components/grid/extension/filters-submit-button-enabler-extension';
+  from '@components/grid/extension/filters-submit-button-enabler-extension';
 
 const $ = global.$;
 

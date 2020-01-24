@@ -63,16 +63,10 @@ final class EditOrderMessageHandler extends AbstractOrderMessageHandler implemen
 
         try {
             if (false === $orderMessage->update()) {
-                throw new OrderMessageException(
-                    sprintf('Failed to update order message with id "%s"', $command->getOrderMessageId()->getValue())
-                );
+                throw new OrderMessageException(sprintf('Failed to update order message with id "%s"', $command->getOrderMessageId()->getValue()));
             }
         } catch (PrestaShopException $e) {
-            throw new OrderMessageException(
-                sprintf('Failed to update order message with id "%s"', $command->getOrderMessageId()->getValue()),
-                0,
-                $e
-            );
+            throw new OrderMessageException(sprintf('Failed to update order message with id "%s"', $command->getOrderMessageId()->getValue()), 0, $e);
         }
     }
 }

@@ -25,7 +25,7 @@
  */
 class ConfigurationTestCore
 {
-    public static $test_files = array(
+    public static $test_files = [
         '/classes/log/index.php',
         '/classes/cache/index.php',
         '/config/index.php',
@@ -42,7 +42,7 @@ class ConfigurationTestCore
         '/webservice/dispatcher.php',
         '/index.php',
         '/vendor/autoload.php',
-    );
+    ];
 
     /**
      * getDefaultTests return an array of tests to executes.
@@ -53,7 +53,7 @@ class ConfigurationTestCore
      */
     public static function getDefaultTests()
     {
-        $tests = array(
+        $tests = [
             'upload' => false,
             'cache_dir' => 'var/cache',
             'log_dir' => 'var/logs',
@@ -67,15 +67,15 @@ class ConfigurationTestCore
             'virtual_products_dir' => 'download',
             'config_sf2_dir' => 'app/config',
             'translations_sf2' => 'app/Resources/translations',
-        );
+        ];
 
         if (!defined('_PS_HOST_MODE_')) {
-            $tests = array_merge($tests, array(
-                'system' => array(
+            $tests = array_merge($tests, [
+                'system' => [
                     'fopen', 'fclose', 'fread', 'fwrite',
                     'rename', 'file_exists', 'unlink', 'rmdir', 'mkdir',
                     'getcwd', 'chdir', 'chmod',
-                ),
+                ],
                 'phpversion' => false,
                 'apache_mod_rewrite' => false,
                 'curl' => false,
@@ -85,12 +85,13 @@ class ConfigurationTestCore
                 'config_dir' => 'config',
                 'files' => false,
                 'mails_dir' => 'mails',
-                'openssl' => 'false',
+                'openssl' => false,
                 'simplexml' => false,
                 'zip' => false,
                 'fileinfo' => false,
                 'intl' => false,
-            ));
+                'memory_limit' => false,
+            ]);
         }
 
         return $tests;
@@ -104,7 +105,7 @@ class ConfigurationTestCore
      */
     public static function getDefaultTestsOp()
     {
-        return array(
+        return [
             'new_phpversion' => false,
             'gz' => false,
             'mbstring' => false,
@@ -112,7 +113,8 @@ class ConfigurationTestCore
             'pdo_mysql' => false,
             'fopen' => false,
             'intl' => false,
-        );
+            'memory_limit' => false,
+        ];
     }
 
     /**
@@ -124,7 +126,7 @@ class ConfigurationTestCore
      */
     public static function check($tests)
     {
-        $res = array();
+        $res = [];
         foreach ($tests as $key => $test) {
             $res[$key] = ConfigurationTest::run($key, $test);
         }
@@ -134,7 +136,7 @@ class ConfigurationTestCore
 
     public static function run($ptr, $arg = 0)
     {
-        if (call_user_func(array('ConfigurationTest', 'test_' . $ptr), $arg)) {
+        if (call_user_func(['ConfigurationTest', 'test_' . $ptr], $arg)) {
             return 'ok';
         }
 
@@ -171,6 +173,13 @@ class ConfigurationTestCore
         return extension_loaded('intl');
     }
 
+    public static function test_memory_limit()
+    {
+        $memoryLimit = Tools::getMemoryLimit();
+
+        return $memoryLimit === '-1' || $memoryLimit >= Tools::getOctets('256M');
+    }
+
     public static function test_pdo_mysql()
     {
         return extension_loaded('pdo_mysql');
@@ -183,7 +192,7 @@ class ConfigurationTestCore
 
     public static function test_fopen()
     {
-        return in_array(ini_get('allow_url_fopen'), array('On', 'on', '1'));
+        return in_array(ini_get('allow_url_fopen'), ['On', 'on', '1']);
     }
 
     public static function test_system($funcs)
@@ -409,7 +418,7 @@ class ConfigurationTestCore
 
     public static function test_files($full = false)
     {
-        $return = array();
+        $return = [];
         foreach (ConfigurationTest::$test_files as $file) {
             if (!file_exists(rtrim(_PS_ROOT_DIR_, DIRECTORY_SEPARATOR) . str_replace('/', DIRECTORY_SEPARATOR, $file))) {
                 if ($full) {

@@ -23,7 +23,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-import resetSearch from '../../../app/utils/reset_search';
+import resetSearch from '@app/utils/reset_search';
 
 const $ = window.$;
 

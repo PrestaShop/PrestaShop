@@ -39,9 +39,9 @@
 </template>
 
 <script>
-  import PSTree from 'app/widgets/ps-tree/ps-tree';
-  import PSSpinner from 'app/widgets/ps-spinner';
-  import { EventBus } from 'app/utils/event-bus';
+  import PSTree from '@app/widgets/ps-tree/ps-tree';
+  import PSSpinner from '@app/widgets/ps-spinner';
+  import { EventBus } from '@app/utils/event-bus';
 
   export default {
     props: [

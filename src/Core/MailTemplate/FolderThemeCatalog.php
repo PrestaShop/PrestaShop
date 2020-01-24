@@ -77,6 +77,7 @@ final class FolderThemeCatalog implements ThemeCatalogInterface
         $this->checkThemesFolder();
 
         $finder = new Finder();
+        $finder->sortByName();
         $finder->directories()->in($this->mailThemesFolder)->depth(0);
         $mailThemes = new ThemeCollection();
         /** @var SplFileInfo $mailThemeFolder */
@@ -118,11 +119,7 @@ final class FolderThemeCatalog implements ThemeCatalogInterface
             $themeNames[] = $availableTheme->getName();
         }
 
-        throw new InvalidArgumentException(sprintf(
-            'Invalid requested theme "%s", only available themes are: %s',
-            $theme,
-            implode(', ', $themeNames)
-        ));
+        throw new InvalidArgumentException(sprintf('Invalid requested theme "%s", only available themes are: %s', $theme, implode(', ', $themeNames)));
     }
 
     /**
@@ -131,10 +128,7 @@ final class FolderThemeCatalog implements ThemeCatalogInterface
     private function checkThemesFolder()
     {
         if (!is_dir($this->mailThemesFolder)) {
-            throw new FileNotFoundException(sprintf(
-                'Invalid mail themes folder "%s": no such directory',
-                $this->mailThemesFolder
-            ));
+            throw new FileNotFoundException(sprintf('Invalid mail themes folder "%s": no such directory', $this->mailThemesFolder));
         }
     }
 }

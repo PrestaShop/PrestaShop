@@ -94,10 +94,10 @@
 
 <script>
   import ProductLine from './product-line';
-  import PSAlert from 'app/widgets/ps-alert';
-  import PSTable from 'app/widgets/ps-table/ps-table';
-  import PSSort from 'app/widgets/ps-table/ps-sort';
-  import PSLoader from 'app/widgets/ps-loader';
+  import PSAlert from '@app/widgets/ps-alert';
+  import PSTable from '@app/widgets/ps-table/ps-table';
+  import PSSort from '@app/widgets/ps-table/ps-sort';
+  import PSLoader from '@app/widgets/ps-loader';
 
   export default {
     props: ['isLoading'],

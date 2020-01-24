@@ -23,9 +23,9 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-import CountryStateSelectionToggler from '../../components/country-state-selection-toggler';
-import ManufacturerAddressMap from './manufacturer-address-map';
-import CountryDniRequiredToggler from '../../components/country-dni-required-toggler';
+import CountryStateSelectionToggler from '@components/country-state-selection-toggler';
+import ManufacturerAddressMap from '@pages/manufacturer/manufacturer-address-map';
+import CountryDniRequiredToggler from '@components/country-dni-required-toggler';
 
 const $ = window.$;
 

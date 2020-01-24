@@ -79,7 +79,7 @@ abstract class AbstractLazyArray implements Iterator, ArrayAccess, Countable, Js
     /**
      * @var array
      */
-    private $methodCacheResults = array();
+    private $methodCacheResults = [];
 
     /**
      * AbstractLazyArray constructor.
@@ -95,10 +95,10 @@ abstract class AbstractLazyArray implements Iterator, ArrayAccess, Countable, Js
             $methodDoc = $method->getDocComment();
             if (strpos($methodDoc, '@arrayAccess') !== false) {
                 $this->arrayAccessList[$this->convertMethodNameToIndex($method->getName())] =
-                    array(
+                    [
                         'type' => 'method',
                         'value' => $method->getName(),
-                    );
+                    ];
             }
         }
         $this->arrayAccessIterator = $this->arrayAccessList->getIterator();
@@ -113,7 +113,7 @@ abstract class AbstractLazyArray implements Iterator, ArrayAccess, Countable, Js
      */
     public function jsonSerialize()
     {
-        $arrayResult = array();
+        $arrayResult = [];
         foreach ($this->arrayAccessList as $key => $value) {
             $arrayResult[$key] = $this->offsetGet($key);
         }
@@ -133,10 +133,10 @@ abstract class AbstractLazyArray implements Iterator, ArrayAccess, Countable, Js
             if (!$this->arrayAccessList->offsetExists($key)) {
                 $this->arrayAccessList->offsetSet(
                     $key,
-                    array(
+                    [
                         'type' => 'variable',
                         'value' => $value,
-                    )
+                    ]
                 );
             }
         }
@@ -248,7 +248,7 @@ abstract class AbstractLazyArray implements Iterator, ArrayAccess, Countable, Js
             return $result;
         }
 
-        return array();
+        return [];
     }
 
     /**
@@ -352,16 +352,13 @@ abstract class AbstractLazyArray implements Iterator, ArrayAccess, Countable, Js
         if (!$force && $this->arrayAccessList->offsetExists($offset)) {
             $result = $this->arrayAccessList->offsetGet($offset);
             if ($result['type'] !== 'variable') {
-                throw new RuntimeException(
-                    'Trying to set the index ' . print_r($offset, true) . ' of the LazyArray ' . get_class($this) .
-                    ' already defined by a method is not allowed'
-                );
+                throw new RuntimeException('Trying to set the index ' . print_r($offset, true) . ' of the LazyArray ' . get_class($this) . ' already defined by a method is not allowed');
             }
         }
-        $this->arrayAccessList->offsetSet($offset, array(
+        $this->arrayAccessList->offsetSet($offset, [
             'type' => 'variable',
             'value' => $value,
-        ));
+        ]);
     }
 
     /**
@@ -376,10 +373,7 @@ abstract class AbstractLazyArray implements Iterator, ArrayAccess, Countable, Js
         if ($force || $result['type'] === 'variable') {
             $this->arrayAccessList->offsetUnset($offset);
         } else {
-            throw new RuntimeException(
-                'Trying to unset the index ' . print_r($offset, true) . ' of the LazyArray ' . get_class($this) .
-                ' already defined by a method is not allowed'
-            );
+            throw new RuntimeException('Trying to unset the index ' . print_r($offset, true) . ' of the LazyArray ' . get_class($this) . ' already defined by a method is not allowed');
         }
     }
 

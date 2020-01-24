@@ -42,9 +42,7 @@ class CartRuleController extends FrameworkBundleAdminController
     /**
      * Searches for cart rules by provided search phrase
      *
-     * //@todo security fallback to order create
-     *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller')) || is_granted('create', 'AdminOrders')")
      *
      * @param Request $request
      *

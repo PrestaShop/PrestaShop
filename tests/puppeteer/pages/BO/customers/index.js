@@ -49,7 +49,7 @@ module.exports = class Customers extends BOBasePage {
    * @return {Promise<integer>}
    */
   async resetFilter() {
-    if (await this.elementVisible(this.filterResetButton, 2000)) {
+    if (!(await this.elementNotVisible(this.filterResetButton, 2000))) {
       await this.clickAndWaitForNavigation(this.filterResetButton);
     }
   }

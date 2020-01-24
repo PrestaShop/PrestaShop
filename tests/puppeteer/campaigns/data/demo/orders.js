@@ -6,8 +6,9 @@ module.exports = {
     fourthOrder: {id: '4', ref: 'FFATNOMMJ'},
   },
   Statuses: {
-    paymentError: {index: '8', status: 'Payment error'},
-    paymentAccepted: {index: '7', status: 'Payment accepted'},
+    paymentError: {index: 8, status: 'Payment error'},
+    paymentAccepted: {index: 7, status: 'Payment accepted'},
+    shipped: {index: 14, status: 'Shipped'},
   },
   PaymentMethods: {
     wirePayment: {moduleName: 'ps_wirepayment'},

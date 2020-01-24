@@ -56,26 +56,26 @@ class ProductDownloadCore extends ObjectModel
     /** @var bool is_shareable indicates whether the product can be shared */
     public $is_shareable = 0;
 
-    protected static $_productIds = array();
+    protected static $_productIds = [];
 
     /**
      * @see ObjectModel::$definition
      */
-    public static $definition = array(
+    public static $definition = [
         'table' => 'product_download',
         'primary' => 'id_product_download',
-        'fields' => array(
-            'id_product' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-            'display_filename' => array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'size' => 255),
-            'filename' => array('type' => self::TYPE_STRING, 'validate' => 'isSha1', 'size' => 255),
-            'date_add' => array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
-            'date_expiration' => array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
-            'nb_days_accessible' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt', 'size' => 10),
-            'nb_downloadable' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt', 'size' => 10),
-            'active' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-            'is_shareable' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-        ),
-    );
+        'fields' => [
+            'id_product' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
+            'display_filename' => ['type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'size' => 255],
+            'filename' => ['type' => self::TYPE_STRING, 'validate' => 'isSha1', 'size' => 255],
+            'date_add' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
+            'date_expiration' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
+            'nb_days_accessible' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedInt', 'size' => 10],
+            'nb_downloadable' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedInt', 'size' => 10],
+            'active' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
+            'is_shareable' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
+        ],
+    ];
 
     /**
      * Build a virtual product.

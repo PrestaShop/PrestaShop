@@ -48,15 +48,10 @@ final class DeleteOrderMessageHandler extends AbstractOrderMessageHandler implem
 
         try {
             if (false === $orderMessage->delete()) {
-                throw new OrderMessageException(
-                    sprintf('Failed to delete Order message with id "%d"', $orderMessage->id),
-                    OrderMessageException::FAILED_DELETE
-                );
+                throw new OrderMessageException(sprintf('Failed to delete Order message with id "%d"', $orderMessage->id), OrderMessageException::FAILED_DELETE);
             }
         } catch (PrestaShopException $e) {
-            throw new OrderMessageException(
-                sprintf('Failed to delete Order message with id "%s"', $orderMessage->id)
-            );
+            throw new OrderMessageException(sprintf('Failed to delete Order message with id "%s"', $orderMessage->id));
         }
     }
 }

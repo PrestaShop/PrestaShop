@@ -118,17 +118,11 @@ class CurrencyData
         }
 
         if (null !== $currencyData->getDisplayNames()) {
-            if (null === $this->displayNames) {
-                $this->displayNames = [];
-            }
-            $this->displayNames = array_merge($this->displayNames, $currencyData->getDisplayNames());
+            $this->displayNames = array_merge($this->displayNames ?? [], $currencyData->getDisplayNames());
         }
 
         if (null !== $currencyData->getSymbols()) {
-            if (null === $this->symbols) {
-                $this->symbols = [];
-            }
-            $this->symbols = array_merge($this->symbols, $currencyData->getSymbols());
+            $this->symbols = array_merge($this->symbols ?? [], $currencyData->getSymbols());
         }
 
         return $this;

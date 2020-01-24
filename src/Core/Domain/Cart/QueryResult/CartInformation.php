@@ -30,10 +30,13 @@ use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation\CartAddre
 use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation\CartProduct;
 use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation\CartRule;
 use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation\CartShipping;
+use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation\CartSummary;
 
+/**
+ * Holds cart information data
+ */
 class CartInformation
 {
-    //@todo: implement DTO's instead of arrays
     /**
      * @var int
      */
@@ -70,7 +73,7 @@ class CartInformation
     private $shipping;
 
     /**
-     * @var array
+     * @var CartSummary
      */
     private $summary;
 
@@ -81,8 +84,8 @@ class CartInformation
      * @param int $langId
      * @param CartRule[] $cartRules
      * @param CartAddress[] $addresses
+     * @param CartSummary $summary
      * @param CartShipping $shipping
-     * @param array $summary
      */
     public function __construct(
         int $cartId,
@@ -91,8 +94,8 @@ class CartInformation
         int $langId,
         array $cartRules,
         array $addresses,
-        CartShipping $shipping = null,
-        array $summary = null
+        CartSummary $summary,
+        CartShipping $shipping = null
     ) {
         $this->cartId = $cartId;
         $this->products = $products;
@@ -161,9 +164,9 @@ class CartInformation
     }
 
     /**
-     * @return array
+     * @return CartSummary
      */
-    public function getSummary(): array
+    public function getSummary(): CartSummary
     {
         return $this->summary;
     }

@@ -55,9 +55,7 @@ abstract class AbstractCatalogPriceRuleHandler
         }
 
         if ($specificPriceRule->id !== $catalogPriceRuleId->getValue()) {
-            throw new CatalogPriceRuleNotFoundException(
-                sprintf('SpecificPriceRule with id "%s" was not found.', $catalogPriceRuleId->getValue())
-            );
+            throw new CatalogPriceRuleNotFoundException(sprintf('SpecificPriceRule with id "%s" was not found.', $catalogPriceRuleId->getValue()));
         }
 
         return $specificPriceRule;
@@ -77,10 +75,7 @@ abstract class AbstractCatalogPriceRuleHandler
         try {
             return $specificPriceRule->delete();
         } catch (PrestaShopException $e) {
-            throw new CatalogPriceRuleException(sprintf(
-                'An error occurred when deleting SpecificPriceRule object with id "%s".',
-                $specificPriceRule->id
-            ));
+            throw new CatalogPriceRuleException(sprintf('An error occurred when deleting SpecificPriceRule object with id "%s".', $specificPriceRule->id));
         }
     }
 
@@ -93,10 +88,7 @@ abstract class AbstractCatalogPriceRuleHandler
     protected function assertDateRangeIsNotInverse(DateTime $from, DateTime $to)
     {
         if ($from->diff($to)->invert) {
-            throw new CatalogPriceRuleConstraintException(
-                'The date time for catalog price rule cannot be inverse',
-                CatalogPriceRuleConstraintException::INVALID_DATE_RANGE
-            );
+            throw new CatalogPriceRuleConstraintException('The date time for catalog price rule cannot be inverse', CatalogPriceRuleConstraintException::INVALID_DATE_RANGE);
         }
     }
 }

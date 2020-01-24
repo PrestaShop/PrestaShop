@@ -70,8 +70,6 @@ final class DocumentationLinkProvider implements DocumentationLinkProviderInterf
             }
         }
 
-        throw new HelperCardDocumentationDoesNotExistException(
-            sprintf('Documentation for helper card "%s" does not exist', $cardType)
-        );
+        throw new HelperCardDocumentationDoesNotExistException(sprintf('Documentation for helper card "%s" does not exist', $cardType));
     }
 }

@@ -51,7 +51,7 @@
 </template>
 
 <script>
-  import PSNumber from 'app/widgets/ps-number';
+  import PSNumber from '@app/widgets/ps-number';
 
   const $ = global.$;
 

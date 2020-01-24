@@ -27,8 +27,27 @@
   }
 }
 
+#orderProductsPanel {
+  .cellProductActions .btn {
+    background-color: transparent;
+    color: $medium-gray;
+    &:hover {
+      color: $primary;
+    }
+  }
+  input[type="number"] {
+    width: 80px;
+  }
+}
+
+#addProductNewInvoiceInfo h4 {
+  margin-top: 8px;
+}
+
+$order-block-background-color: #F8F8F8;
+
 .info-block {
-  background-color: #F8F8F8;
+  background-color: $order-block-background-color;
   padding-top: 18px;
   padding-left: 18px;
   padding-right: 18px;
@@ -44,5 +63,159 @@
   #search-cart-rules-result-box {
     z-index: 10;
   }
+
+  #summary-block {
+    .badge {
+      font-size: 100%;
+    }
+  }
+
+  #customer-tab-content-container-toggler .material-icons::before {
+    content: 'keyboard_arrow_down';
+  }
+  #customer-tab-content-container-toggler[aria-expanded=false] .material-icons::before {
+    content: 'keyboard_arrow_up';
+  }
 }
 
+.messages-block {
+  background-color: $order-block-background-color;
+
+  $private-message-color: #7A8A8F;
+
+  .message {
+    padding: 10px;
+    border-radius: 5px;
+
+    &.customer-message {
+      background-color: #fff;
+    }
+    &.employee-message {
+      background-color: #d3f1f7;
+    }
+    &.employee-message--private {
+      background-color: $private-message-color;
+      color: #fff;
+    }
+  }
+
+  .employee-icon {
+    &:before {
+      font-family: "Material Icons";
+      content: 'account_circle';
+    }
+    color: #36b9d7;
+  }
+  .employee-icon--private {
+    &:before {
+      font-family: "Material Icons";
+      content: 'visibility_off';
+    }
+    color: $private-message-color;
+  }
+}
+
+.messages-block {
+  &#all-messages-list {
+    height: 80vh;
+    overflow-y: scroll;
+  }
+
+  li {
+    .row {
+      .col-md-1 {
+
+      }
+
+      .col-md-11 {
+
+      }
+    }
+  }
+}
+
+#view_all_messages_modal {
+  .modal-content {
+    background-color: inherit;
+    padding: 0;
+  }
+  .modal-body {
+    padding: 0;
+  }
+}
+
+td .editProductInvoice {
+  min-width: 130px;
+}
+
+
+@media only screen and (max-width: 1475px) {
+  .messages-block {
+    li {
+      .row {
+        .col-md-1 {
+          order: 1;
+          margin-bottom: 5px;
+        }
+
+        .col-md-11 {
+          order: 2;
+        }
+      }
+    }
+  }
+}
+
+.partial-refund {
+  display: none;
+}
+
+.partial-refund label {
+  height: 30px;
+  line-height: 30px;
+  padding: 0;
+}
+
+.partial-refund .form-group {
+  display: inline-flex;
+}
+
+.partial-refund .form-group .input-group {
+  display: flex;
+  flex: wrap;
+}
+
+.partial-refund.form-submit {
+  width: 100%;
+  margin-right: 20px;
+  margin-top: -10px;
+}
+
+.refund-checkboxes-container {
+  max-width: 90px;
+  margin: 16px auto;
+  display: none;
+}
+
+.refund-checkboxes-container .form-group {
+  width: max-content;
+}
+
+.partial-refund .shipping-price-container {
+  display: flex;
+  margin-top: 8px;
+}
+
+.partial-refund .form-group {
+  width: max-content;
+}
+
+input.refund-quantity {
+  max-width: 160px;
+  margin-left: 20px;
+}
+
+input.refund-amount, input#partial_refund_shipping {
+  max-width: 80px;
+  margin-left: 20px;
+}

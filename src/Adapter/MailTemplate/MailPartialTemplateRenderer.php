@@ -61,13 +61,13 @@ class MailPartialTemplateRenderer
      */
     public function render($partialTemplateName, LanguageInterface $language, array $variables = [], $cleanComments = false)
     {
-        $potentialPaths = array(
+        $potentialPaths = [
             _PS_THEME_DIR_ . 'mails' . DIRECTORY_SEPARATOR . $language->getIsoCode() . DIRECTORY_SEPARATOR . $partialTemplateName,
             _PS_MAIL_DIR_ . $language->getIsoCode() . DIRECTORY_SEPARATOR . $partialTemplateName,
             _PS_THEME_DIR_ . 'mails' . DIRECTORY_SEPARATOR . 'en' . DIRECTORY_SEPARATOR . $partialTemplateName,
             _PS_MAIL_DIR_ . 'en' . DIRECTORY_SEPARATOR . $partialTemplateName,
             _PS_MAIL_DIR_ . '_partials' . DIRECTORY_SEPARATOR . $partialTemplateName,
-        );
+        ];
 
         foreach ($potentialPaths as $path) {
             if (Tools::file_exists_cache($path)) {

@@ -23,9 +23,9 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-import ModuleCard from '../../components/module-card';
-import AdminModuleController from './controller';
-import ModuleLoader from './loader';
+import ModuleCard from '@components/module-card';
+import AdminModuleController from '@pages/module/controller';
+import ModuleLoader from '@pages/module/loader';
 
 const $ = window.$;
 

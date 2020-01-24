@@ -270,4 +270,12 @@ module.exports = class Taxes extends BOBasePage {
     ]);
     return this.getTextContent(this.alertSuccessBlockParagraph);
   }
+
+  /**
+   * Go to Tax Rules page
+   * @return {Promise<void>}
+   */
+  async goToTaxRulesPage() {
+    await this.clickAndWaitForNavigation(this.taxRulesSubTab);
+  }
 };

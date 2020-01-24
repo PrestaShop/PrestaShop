@@ -42,7 +42,7 @@
   import StockHeader from './header/stock-header';
   import Search from './header/search';
   import LowFilter from './header/filters/low-filter';
-  import PSPagination from 'app/widgets/ps-pagination';
+  import PSPagination from '@app/widgets/ps-pagination';
 
   export default {
     name: 'app',

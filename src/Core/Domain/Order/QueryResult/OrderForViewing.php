@@ -113,6 +113,11 @@ class OrderForViewing
     private $isDelivered;
 
     /**
+     * @var bool
+     */
+    private $isShipped;
+
+    /**
      * @var OrderPricesForViewing
      */
     private $prices;
@@ -148,6 +153,11 @@ class OrderForViewing
     private $carrierId;
 
     /**
+     * @var string
+     */
+    private $carrierName;
+
+    /**
      * @var int
      */
     private $shopId;
@@ -161,6 +171,7 @@ class OrderForViewing
         int $orderId,
         int $currencyId,
         int $carrierId,
+        string $carrierName,
         int $shopId,
         string $reference,
         bool $isVirtual,
@@ -169,6 +180,7 @@ class OrderForViewing
         bool $isValid,
         bool $hasInvoice,
         bool $isDelivered,
+        bool $isShipped,
         bool $invoiceManagementIsEnabled,
         DateTimeImmutable $createdAt,
         OrderCustomerForViewing $customer,
@@ -200,6 +212,7 @@ class OrderForViewing
         $this->orderId = $orderId;
         $this->currencyId = $currencyId;
         $this->isDelivered = $isDelivered;
+        $this->isShipped = $isShipped;
         $this->prices = $prices;
         $this->isTaxIncluded = $isTaxIncluded;
         $this->hasInvoice = $hasInvoice;
@@ -207,6 +220,7 @@ class OrderForViewing
         $this->createdAt = $createdAt;
         $this->isVirtual = $isVirtual;
         $this->carrierId = $carrierId;
+        $this->carrierName = $carrierName;
         $this->shopId = $shopId;
         $this->invoiceManagementIsEnabled = $invoiceManagementIsEnabled;
     }
@@ -233,6 +247,11 @@ class OrderForViewing
     public function getCarrierId(): int
     {
         return $this->carrierId;
+    }
+
+    public function getCarrierName(): string
+    {
+        return $this->carrierName;
     }
 
     /**
@@ -353,6 +372,14 @@ class OrderForViewing
     public function isDelivered(): bool
     {
         return $this->isDelivered;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isShipped(): bool
+    {
+        return $this->isShipped;
     }
 
     /**

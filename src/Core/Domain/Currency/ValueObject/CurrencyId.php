@@ -46,9 +46,7 @@ class CurrencyId
     public function __construct($currencyId)
     {
         if (!is_int($currencyId) || $currencyId <= 0) {
-            throw new CurrencyException(
-                sprintf('Invalid Currency id: %s', var_export($currencyId, true))
-            );
+            throw new CurrencyException(sprintf('Invalid Currency id: %s', var_export($currencyId, true)));
         }
 
         $this->currencyId = $currencyId;

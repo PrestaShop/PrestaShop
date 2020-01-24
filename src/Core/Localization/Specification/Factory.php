@@ -103,7 +103,7 @@ class Factory
         $currencyDisplayType,
         ?int $maxFractionDigits = null
     ) {
-        $currencyPattern = $cldrLocale->getCurrencyPattern();
+        $currencyPattern = $currency->getPattern($localeCode) ?: $cldrLocale->getCurrencyPattern();
         $numbersSymbols = $cldrLocale->getAllNumberSymbols();
         // Use positive pattern to retrieve information
         $positivePattern = $this->getPositivePattern($currencyPattern);

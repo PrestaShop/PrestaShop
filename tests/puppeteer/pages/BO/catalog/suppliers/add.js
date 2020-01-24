@@ -11,9 +11,8 @@ module.exports = class AddSupplier extends BOBasePage {
     // Selectors
     this.nameInput = '#supplier_name';
     this.descriptionDiv = '#supplier_description';
-    this.descriptionLangDropdownDiv = 'div.dropdown-menu';
-    this.descriptionLangSpan = `${this.descriptionLangDropdownDiv} span[data-locale='%LANG']`;
-    this.descriptionTextarea = '#supplier_description_%ID';
+    this.descriptionLangNavItemLink = `${this.descriptionDiv} ul li a[data-locale='%LANG']`;
+    this.descriptionIFrame = '#supplier_description_%ID_ifr';
     this.homePhoneInput = '#supplier_phone';
     this.mobilePhoneInput = '#supplier_mobile_phone';
     this.addressInput = '#supplier_address';
@@ -23,6 +22,8 @@ module.exports = class AddSupplier extends BOBasePage {
     this.countryInput = '#supplier_id_country';
     this.stateInput = '#supplier_id_state';
     this.logoFileInput = '#supplier_logo';
+    this.metaTitleLangButton = '#supplier_meta_title';
+    this.metaTitleLangSpan = 'div.dropdown-menu[aria-labelledby=\'supplier_meta_title\'] span[data-locale=\'%LANG\']';
     this.metaTitleInput = '#supplier_meta_title_%ID';
     this.metaDescriptionTextarea = '#supplier_meta_description_%ID';
     this.metaKeywordsInput = '#supplier_meta_keyword_%ID-tokenfield';
@@ -58,7 +59,7 @@ module.exports = class AddSupplier extends BOBasePage {
 
     // Fill Description, meta title, meta description and meta keywords in english
     await this.changeLanguageForSelectors('en');
-    await this.setValue(this.descriptionTextarea.replace('%ID', 1), supplierData.description);
+    await this.setValueOnTinymceInput(this.descriptionIFrame.replace('%ID', 1), supplierData.description);
     await this.setValue(this.metaTitleInput.replace('%ID', 1), supplierData.metaTitle);
     await this.setValue(this.metaDescriptionTextarea.replace('%ID', 1), supplierData.metaDescription);
     // delete Keywords and other new ones
@@ -67,7 +68,7 @@ module.exports = class AddSupplier extends BOBasePage {
 
     // Fill Description, meta title, meta description and meta keywords in french
     await this.changeLanguageForSelectors('fr');
-    await this.setValue(this.descriptionTextarea.replace('%ID', 2), supplierData.descriptionFr);
+    await this.setValueOnTinymceInput(this.descriptionIFrame.replace('%ID', 2), supplierData.descriptionFr);
     await this.setValue(this.metaTitleInput.replace('%ID', 2), supplierData.metaTitleFr);
     await this.setValue(this.metaDescriptionTextarea.replace('%ID', 2), supplierData.metaDescriptionFr);
     // delete Keywords and other new ones
@@ -122,10 +123,19 @@ module.exports = class AddSupplier extends BOBasePage {
    * @return {Promise<void>}
    */
   async changeLanguageForSelectors(lang = 'en') {
+    // Change language for Description input
     await Promise.all([
-      this.page.click(this.descriptionDiv),
-      this.page.waitForSelector(`${this.descriptionLangDropdownDiv}.show`, {visible: true}),
+      this.page.click(this.descriptionLangNavItemLink.replace('%LANG', lang)),
+      this.page.waitForSelector(`${this.descriptionLangNavItemLink.replace('%LANG', lang)}.active`, {visible: true}),
     ]);
-    await this.page.click(this.descriptionLangSpan.replace('%LANG', lang));
+    // Change language for meta selectors
+    await Promise.all([
+      this.page.click(this.metaTitleLangButton),
+      this.page.waitForSelector(`${this.metaTitleLangButton}[aria-expanded='true']`, {visible: true}),
+    ]);
+    await Promise.all([
+      this.page.click(this.metaTitleLangSpan.replace('%LANG', lang)),
+      this.page.waitForSelector(`${this.metaTitleLangButton}[aria-expanded='false']`, {visible: true}),
+    ]);
   }
 };

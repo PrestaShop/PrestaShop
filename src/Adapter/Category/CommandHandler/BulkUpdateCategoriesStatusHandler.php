@@ -52,17 +52,11 @@ final class BulkUpdateCategoriesStatusHandler implements BulkUpdateCategoriesSta
             $entity->active = $command->getNewStatus();
 
             if (!$entity->id) {
-                throw new CategoryNotFoundException(
-                    $categoryId,
-                    sprintf('Category with id "%s" was not found', $categoryId->getValue())
-                );
+                throw new CategoryNotFoundException($categoryId, sprintf('Category with id "%s" was not found', $categoryId->getValue()));
             }
 
             if (!$entity->update()) {
-                throw new CannotUpdateCategoryStatusException(sprintf(
-                    'Cannot update status for category with id "%s"',
-                    $categoryId->getValue()
-                ));
+                throw new CannotUpdateCategoryStatusException(sprintf('Cannot update status for category with id "%s"', $categoryId->getValue()));
             }
         }
     }

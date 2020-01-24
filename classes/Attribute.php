@@ -44,31 +44,31 @@ class AttributeCore extends ObjectModel
     /**
      * @see ObjectModel::$definition
      */
-    public static $definition = array(
+    public static $definition = [
         'table' => 'attribute',
         'primary' => 'id_attribute',
         'multilang' => true,
-        'fields' => array(
-            'id_attribute_group' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-            'color' => array('type' => self::TYPE_STRING, 'validate' => 'isColor'),
-            'position' => array('type' => self::TYPE_INT, 'validate' => 'isInt'),
+        'fields' => [
+            'id_attribute_group' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
+            'color' => ['type' => self::TYPE_STRING, 'validate' => 'isColor'],
+            'position' => ['type' => self::TYPE_INT, 'validate' => 'isInt'],
 
             /* Lang fields */
-            'name' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 128),
-        ),
-    );
+            'name' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 128],
+        ],
+    ];
 
     /** @var string $image_dir */
     protected $image_dir = _PS_COL_IMG_DIR_;
 
     /** @var array $webserviceParameters Web service parameters */
-    protected $webserviceParameters = array(
+    protected $webserviceParameters = [
         'objectsNodeName' => 'product_option_values',
         'objectNodeName' => 'product_option_value',
-        'fields' => array(
-            'id_attribute_group' => array('xlink_resource' => 'product_options'),
-        ),
-    );
+        'fields' => [
+            'id_attribute_group' => ['xlink_resource' => 'product_options'],
+        ],
+    ];
 
     /**
      * AttributeCore constructor.
@@ -90,7 +90,7 @@ class AttributeCore extends ObjectModel
     {
         if (!$this->hasMultishopEntries() || Shop::getContext() == Shop::CONTEXT_ALL) {
             $result = Db::getInstance()->executeS('SELECT id_product_attribute FROM ' . _DB_PREFIX_ . 'product_attribute_combination WHERE id_attribute = ' . (int) $this->id);
-            $products = array();
+            $products = [];
 
             foreach ($result as $row) {
                 $combination = new Combination($row['id_product_attribute']);
@@ -121,7 +121,7 @@ class AttributeCore extends ObjectModel
         }
         $return = parent::delete();
         if ($return) {
-            Hook::exec('actionAttributeDelete', array('id_attribute' => $this->id));
+            Hook::exec('actionAttributeDelete', ['id_attribute' => $this->id]);
         }
 
         return $return;
@@ -135,7 +135,7 @@ class AttributeCore extends ObjectModel
         $return = parent::update($nullValues);
 
         if ($return) {
-            Hook::exec('actionAttributeSave', array('id_attribute' => $this->id));
+            Hook::exec('actionAttributeSave', ['id_attribute' => $this->id]);
         }
 
         return $return;
@@ -161,7 +161,7 @@ class AttributeCore extends ObjectModel
         $return = parent::add($autoDate, $nullValues);
 
         if ($return) {
-            Hook::exec('actionAttributeSave', array('id_attribute' => $this->id));
+            Hook::exec('actionAttributeSave', ['id_attribute' => $this->id]);
         }
 
         return $return;
@@ -178,7 +178,7 @@ class AttributeCore extends ObjectModel
     public static function getAttributes($idLang, $notNull = false)
     {
         if (!Combination::isFeatureActive()) {
-            return array();
+            return [];
         }
 
         return Db::getInstance()->executeS('
@@ -209,7 +209,7 @@ class AttributeCore extends ObjectModel
     public static function isAttribute($idAttributeGroup, $name, $idLang)
     {
         if (!Combination::isFeatureActive()) {
-            return array();
+            return [];
         }
 
         $result = Db::getInstance()->getValue('

@@ -119,7 +119,7 @@ class LogRepository implements RepositoryInterface, DoctrineQueryBuilderInterfac
             return !empty($value);
         });
         $scalarFilters = array_filter($wheres, function ($key) {
-            return !in_array($key, array('date_from', 'date_to', 'employee'), true);
+            return !in_array($key, ['date_from', 'date_to', 'employee'], true);
         }, ARRAY_FILTER_USE_KEY);
 
         $qb = $queryBuilder
@@ -140,10 +140,10 @@ class LogRepository implements RepositoryInterface, DoctrineQueryBuilderInterfac
         /* Manage Dates interval */
         if (!empty($wheres['date_from']) && !empty($wheres['date_to'])) {
             $qb->andWhere('l.date_add BETWEEN :date_from AND :date_to');
-            $qb->setParameters(array(
+            $qb->setParameters([
                 'date_from' => $wheres['date_from'],
                 'date_to' => $wheres['date_to'],
-            ));
+            ]);
         }
 
         /* Manage Employee filter */
@@ -255,9 +255,9 @@ class LogRepository implements RepositoryInterface, DoctrineQueryBuilderInterfac
                 if (!empty($filterValue['from']) &&
                     !empty($filterValue['to'])
                 ) {
-                    $qb->andWhere('l.date_add BETWEEN :date_from AND :date_to');
-                    $qb->setParameter('date_from', $filterValue['from']);
-                    $qb->setParameter('date_to', $filterValue['to']);
+                    $qb->andWhere('l.date_add >= :date_from AND l.date_add <= :date_to');
+                    $qb->setParameter('date_from', sprintf('%s 0:0:0', $filterValue['from']));
+                    $qb->setParameter('date_to', sprintf('%s 23:59:59', $filterValue['to']));
                 }
 
                 continue;

@@ -62,9 +62,7 @@ class LanguageId
     private function assertIsIntegerGreaterThanZero($id)
     {
         if (!is_int($id) || 0 >= $id) {
-            throw new LanguageException(
-                sprintf('Invalid language id %s provided', var_export($id, true))
-            );
+            throw new LanguageException(sprintf('Invalid language id %s provided', var_export($id, true)));
         }
     }
 }

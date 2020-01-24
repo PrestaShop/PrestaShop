@@ -27,4 +27,6 @@ export default {
   supplierCountrySelect: '#supplier_id_country',
   supplierStateSelect: '#supplier_id_state',
   supplierStateBlock: '.js-supplier-state',
+  supplierDniInput: '#supplier_dni',
+  supplierDniInputLabel: 'label[for="supplier_dni"]',
 };

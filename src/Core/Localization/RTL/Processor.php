@@ -47,12 +47,12 @@ class Processor
     /**
      * @var string[] Names of the FO themes to process
      */
-    private $processFOThemes = array();
+    private $processFOThemes = [];
 
     /**
      * @var array Indicates additional paths to process
      */
-    private $processPaths = array();
+    private $processPaths = [];
 
     /**
      * @var bool Indicates if this is performed during install
@@ -67,7 +67,7 @@ class Processor
     /**
      * @var string[] Path to the default modules to process
      */
-    private $defaultModulesToProcess = array();
+    private $defaultModulesToProcess = [];
 
     /**
      * @var bool Indicates if the default modules should be processed

@@ -169,77 +169,77 @@ class OrderDetailCore extends ObjectModel
     /**
      * @see ObjectModel::$definition
      */
-    public static $definition = array(
+    public static $definition = [
         'table' => 'order_detail',
         'primary' => 'id_order_detail',
-        'fields' => array(
-            'id_order' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-            'id_order_invoice' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
-            'id_warehouse' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-            'id_shop' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-            'product_id' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
-            'product_attribute_id' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
-            'id_customization' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
-            'product_name' => array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => true),
-            'product_quantity' => array('type' => self::TYPE_INT, 'validate' => 'isInt', 'required' => true),
-            'product_quantity_in_stock' => array('type' => self::TYPE_INT, 'validate' => 'isInt'),
-            'product_quantity_return' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
-            'product_quantity_refunded' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
-            'product_quantity_reinjected' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
-            'product_price' => array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice', 'required' => true),
-            'reduction_percent' => array('type' => self::TYPE_FLOAT, 'validate' => 'isFloat'),
-            'reduction_amount' => array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice'),
-            'reduction_amount_tax_incl' => array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice'),
-            'reduction_amount_tax_excl' => array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice'),
-            'group_reduction' => array('type' => self::TYPE_FLOAT, 'validate' => 'isFloat'),
-            'product_quantity_discount' => array('type' => self::TYPE_FLOAT, 'validate' => 'isFloat'),
-            'product_ean13' => array('type' => self::TYPE_STRING, 'validate' => 'isEan13'),
-            'product_isbn' => array('type' => self::TYPE_STRING, 'validate' => 'isIsbn'),
-            'product_upc' => array('type' => self::TYPE_STRING, 'validate' => 'isUpc'),
-            'product_mpn' => array('type' => self::TYPE_STRING, 'validate' => 'isMpn'),
-            'product_reference' => array('type' => self::TYPE_STRING, 'validate' => 'isReference'),
-            'product_supplier_reference' => array('type' => self::TYPE_STRING, 'validate' => 'isReference'),
-            'product_weight' => array('type' => self::TYPE_FLOAT, 'validate' => 'isFloat'),
-            'tax_name' => array('type' => self::TYPE_STRING, 'validate' => 'isGenericName'),
-            'tax_rate' => array('type' => self::TYPE_FLOAT, 'validate' => 'isFloat'),
-            'tax_computation_method' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
-            'id_tax_rules_group' => array('type' => self::TYPE_INT, 'validate' => 'isInt'),
-            'ecotax' => array('type' => self::TYPE_FLOAT, 'validate' => 'isFloat'),
-            'ecotax_tax_rate' => array('type' => self::TYPE_FLOAT, 'validate' => 'isFloat'),
-            'discount_quantity_applied' => array('type' => self::TYPE_INT, 'validate' => 'isInt'),
-            'download_hash' => array('type' => self::TYPE_STRING, 'validate' => 'isGenericName'),
-            'download_nb' => array('type' => self::TYPE_INT, 'validate' => 'isInt'),
-            'download_deadline' => array('type' => self::TYPE_DATE, 'validate' => 'isDateFormat'),
-            'unit_price_tax_incl' => array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice'),
-            'unit_price_tax_excl' => array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice'),
-            'total_price_tax_incl' => array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice'),
-            'total_price_tax_excl' => array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice'),
-            'total_shipping_price_tax_excl' => array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice'),
-            'total_shipping_price_tax_incl' => array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice'),
-            'purchase_supplier_price' => array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice'),
-            'original_product_price' => array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice'),
-            'original_wholesale_price' => array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice'),
-        ),
-    );
+        'fields' => [
+            'id_order' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
+            'id_order_invoice' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId'],
+            'id_warehouse' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
+            'id_shop' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
+            'product_id' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId'],
+            'product_attribute_id' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId'],
+            'id_customization' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId'],
+            'product_name' => ['type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => true],
+            'product_quantity' => ['type' => self::TYPE_INT, 'validate' => 'isInt', 'required' => true],
+            'product_quantity_in_stock' => ['type' => self::TYPE_INT, 'validate' => 'isInt'],
+            'product_quantity_return' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'],
+            'product_quantity_refunded' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'],
+            'product_quantity_reinjected' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'],
+            'product_price' => ['type' => self::TYPE_FLOAT, 'validate' => 'isPrice', 'required' => true],
+            'reduction_percent' => ['type' => self::TYPE_FLOAT, 'validate' => 'isFloat'],
+            'reduction_amount' => ['type' => self::TYPE_FLOAT, 'validate' => 'isPrice'],
+            'reduction_amount_tax_incl' => ['type' => self::TYPE_FLOAT, 'validate' => 'isPrice'],
+            'reduction_amount_tax_excl' => ['type' => self::TYPE_FLOAT, 'validate' => 'isPrice'],
+            'group_reduction' => ['type' => self::TYPE_FLOAT, 'validate' => 'isFloat'],
+            'product_quantity_discount' => ['type' => self::TYPE_FLOAT, 'validate' => 'isFloat'],
+            'product_ean13' => ['type' => self::TYPE_STRING, 'validate' => 'isEan13'],
+            'product_isbn' => ['type' => self::TYPE_STRING, 'validate' => 'isIsbn'],
+            'product_upc' => ['type' => self::TYPE_STRING, 'validate' => 'isUpc'],
+            'product_mpn' => ['type' => self::TYPE_STRING, 'validate' => 'isMpn'],
+            'product_reference' => ['type' => self::TYPE_STRING, 'validate' => 'isReference'],
+            'product_supplier_reference' => ['type' => self::TYPE_STRING, 'validate' => 'isReference'],
+            'product_weight' => ['type' => self::TYPE_FLOAT, 'validate' => 'isFloat'],
+            'tax_name' => ['type' => self::TYPE_STRING, 'validate' => 'isGenericName'],
+            'tax_rate' => ['type' => self::TYPE_FLOAT, 'validate' => 'isFloat'],
+            'tax_computation_method' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId'],
+            'id_tax_rules_group' => ['type' => self::TYPE_INT, 'validate' => 'isInt'],
+            'ecotax' => ['type' => self::TYPE_FLOAT, 'validate' => 'isFloat'],
+            'ecotax_tax_rate' => ['type' => self::TYPE_FLOAT, 'validate' => 'isFloat'],
+            'discount_quantity_applied' => ['type' => self::TYPE_INT, 'validate' => 'isInt'],
+            'download_hash' => ['type' => self::TYPE_STRING, 'validate' => 'isGenericName'],
+            'download_nb' => ['type' => self::TYPE_INT, 'validate' => 'isInt'],
+            'download_deadline' => ['type' => self::TYPE_DATE, 'validate' => 'isDateFormat'],
+            'unit_price_tax_incl' => ['type' => self::TYPE_FLOAT, 'validate' => 'isPrice'],
+            'unit_price_tax_excl' => ['type' => self::TYPE_FLOAT, 'validate' => 'isPrice'],
+            'total_price_tax_incl' => ['type' => self::TYPE_FLOAT, 'validate' => 'isPrice'],
+            'total_price_tax_excl' => ['type' => self::TYPE_FLOAT, 'validate' => 'isPrice'],
+            'total_shipping_price_tax_excl' => ['type' => self::TYPE_FLOAT, 'validate' => 'isPrice'],
+            'total_shipping_price_tax_incl' => ['type' => self::TYPE_FLOAT, 'validate' => 'isPrice'],
+            'purchase_supplier_price' => ['type' => self::TYPE_FLOAT, 'validate' => 'isPrice'],
+            'original_product_price' => ['type' => self::TYPE_FLOAT, 'validate' => 'isPrice'],
+            'original_wholesale_price' => ['type' => self::TYPE_FLOAT, 'validate' => 'isPrice'],
+        ],
+    ];
 
-    protected $webserviceParameters = array(
-        'fields' => array(
-            'id_order' => array('xlink_resource' => 'orders'),
-            'product_id' => array('xlink_resource' => 'products'),
-            'product_attribute_id' => array('xlink_resource' => 'combinations'),
-            'product_quantity_reinjected' => array(),
-            'group_reduction' => array(),
-            'discount_quantity_applied' => array(),
-            'download_hash' => array(),
-            'download_deadline' => array(),
-        ),
-        'hidden_fields' => array('tax_rate', 'tax_name'),
-        'associations' => array(
-            'taxes' => array('resource' => 'tax', 'getter' => 'getWsTaxes', 'setter' => false,
-                'fields' => array('id' => array()),
-            ),
-        ),
-    );
+    protected $webserviceParameters = [
+        'fields' => [
+            'id_order' => ['xlink_resource' => 'orders'],
+            'product_id' => ['xlink_resource' => 'products'],
+            'product_attribute_id' => ['xlink_resource' => 'combinations'],
+            'product_quantity_reinjected' => [],
+            'group_reduction' => [],
+            'discount_quantity_applied' => [],
+            'download_hash' => [],
+            'download_deadline' => [],
+        ],
+        'hidden_fields' => ['tax_rate', 'tax_name'],
+        'associations' => [
+            'taxes' => ['resource' => 'tax', 'getter' => 'getWsTaxes', 'setter' => false,
+                'fields' => ['id' => []],
+            ],
+        ],
+    ];
 
     /** @var bool */
     protected $outOfStock = false;
@@ -345,7 +345,7 @@ class OrderDetailCore extends ObjectModel
                 WHERE d.`id_order_detail` = ' . (int) $id_order_detail;
 
         $computation_method = 1;
-        $taxes = array();
+        $taxes = [];
         if ($results = Db::getInstance()->executeS($sql)) {
             foreach ($results as $result) {
                 $taxes[] = new Tax((int) $result['id_tax']);
@@ -799,7 +799,7 @@ class OrderDetailCore extends ObjectModel
         }
 
         $front = true;
-        if (!in_array(Context::getContext()->controller->controller_type, array('front', 'modulefront'))) {
+        if (!in_array(Context::getContext()->controller->controller_type, ['front', 'modulefront'])) {
             $front = false;
         }
 

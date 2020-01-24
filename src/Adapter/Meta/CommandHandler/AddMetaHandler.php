@@ -115,16 +115,10 @@ final class AddMetaHandler implements AddMetaHandlerInterface
             $entity->add();
 
             if (0 >= $entity->id) {
-                throw new CannotAddMetaException(
-                    sprintf('Invalid entity id after creation: %s', $entity->id)
-                );
+                throw new CannotAddMetaException(sprintf('Invalid entity id after creation: %s', $entity->id));
             }
         } catch (PrestaShopException $exception) {
-            throw new MetaException(
-                'Failed to create meta entity',
-                0,
-                $exception
-            );
+            throw new MetaException('Failed to create meta entity', 0, $exception);
         }
 
         $this->hookDispatcher->dispatchWithParameters('actionAdminMetaSave');
@@ -145,10 +139,7 @@ final class AddMetaHandler implements AddMetaHandlerInterface
         );
 
         if (0 !== count($urlRewriteErrors) && 'index' !== $command->getPageName()->getValue()) {
-            throw new MetaConstraintException(
-                'The url rewrite is missing for the default language when creating new meta record',
-                MetaConstraintException::INVALID_URL_REWRITE
-            );
+            throw new MetaConstraintException('The url rewrite is missing for the default language when creating new meta record', MetaConstraintException::INVALID_URL_REWRITE);
         }
     }
 
@@ -163,14 +154,7 @@ final class AddMetaHandler implements AddMetaHandlerInterface
             $errors = $this->validator->validate($rewriteUrl, new IsUrlRewrite());
 
             if (0 !== count($errors)) {
-                throw new MetaConstraintException(
-                    sprintf(
-                        'Url rewrite %s for language with id %s is not valid',
-                        $rewriteUrl,
-                        $idLang
-                    ),
-                    MetaConstraintException::INVALID_URL_REWRITE
-                );
+                throw new MetaConstraintException(sprintf('Url rewrite %s for language with id %s is not valid', $rewriteUrl, $idLang), MetaConstraintException::INVALID_URL_REWRITE);
             }
         }
     }
@@ -184,14 +168,7 @@ final class AddMetaHandler implements AddMetaHandlerInterface
     {
         $availablePages = $this->metaDataProvider->getAvailablePages();
         if (!in_array($command->getPageName()->getValue(), $availablePages, true)) {
-            throw new MetaConstraintException(
-                sprintf(
-                    'Given page name %s is not available. Available values are %s',
-                    $command->getPageName()->getValue(),
-                    var_export($availablePages, true)
-                ),
-                MetaConstraintException::INVALID_PAGE_NAME
-            );
+            throw new MetaConstraintException(sprintf('Given page name %s is not available. Available values are %s', $command->getPageName()->getValue(), var_export($availablePages, true)), MetaConstraintException::INVALID_PAGE_NAME);
         }
     }
 }

@@ -36,5 +36,5 @@ interface UpdateCartCurrencyHandlerInterface
     /**
      * @param UpdateCartCurrencyCommand $command
      */
-    public function handle(UpdateCartCurrencyCommand $command);
+    public function handle(UpdateCartCurrencyCommand $command): void;
 }

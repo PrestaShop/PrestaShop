@@ -24,7 +24,7 @@
  */
 
 import Routing from 'fos-routing';
-import routes from '../fos_js_routes.json';
+import routes from '@js/fos_js_routes.json';
 
 const $ = window.$;
 

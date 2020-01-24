@@ -358,3 +358,13 @@ services:
             -
               'options': 'PrestaShopBundle\Form\Admin\Sell\CustomerService\MerchandiseReturn\MerchandiseReturnOptionsType'
             - 'MerchandiseReturn'
+
+    prestashop.admin.credit_slip_options.form_handler:
+        class: 'PrestaShop\PrestaShop\Core\Form\FormHandler'
+        arguments:
+            - '@=service("form.factory").createBuilder()'
+            - '@prestashop.core.hook.dispatcher'
+            - '@prestashop.admin.sell.order.credit_slip.credit_slip_options_form_data_provider'
+            -
+              'options': 'PrestaShopBundle\Form\Admin\Sell\Order\CreditSlip\CreditSlipOptionsType'
+            - 'CreditSlip'

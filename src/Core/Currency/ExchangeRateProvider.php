@@ -137,10 +137,7 @@ class ExchangeRateProvider
         }
 
         if (!isset($this->currencies[$currencyIsoCode])) {
-            throw new CurrencyFeedException(sprintf(
-                'Exchange rate for currency with ISO code %s was not found',
-                $currencyIsoCode
-            ));
+            throw new CurrencyFeedException(sprintf('Exchange rate for currency with ISO code %s was not found', $currencyIsoCode));
         }
 
         return $this->currencies[$currencyIsoCode];

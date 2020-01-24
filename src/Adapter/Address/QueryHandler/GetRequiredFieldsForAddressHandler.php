@@ -26,19 +26,17 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Address\QueryHandler;
 
-use Address;
-use CustomerAddress;
+use PrestaShop\PrestaShop\Adapter\Address\AbstractCustomerAddressHandler;
 use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressException;
 use PrestaShop\PrestaShop\Core\Domain\Address\Query\GetRequiredFieldsForAddress;
 use PrestaShop\PrestaShop\Core\Domain\Address\QueryHandler\GetRequiredFieldsForAddressHandlerInterface;
-use PrestaShopDatabaseException;
 
 /**
  * Handles query which gets required fields for address
  *
  * @internal
  */
-final class GetRequiredFieldsForAddressHandler implements GetRequiredFieldsForAddressHandlerInterface
+final class GetRequiredFieldsForAddressHandler extends AbstractCustomerAddressHandler implements GetRequiredFieldsForAddressHandlerInterface
 {
     /**
      * {@inheritdoc}
@@ -47,22 +45,6 @@ final class GetRequiredFieldsForAddressHandler implements GetRequiredFieldsForAd
      */
     public function handle(GetRequiredFieldsForAddress $query): array
     {
-        try {
-            $requiredFields = (new CustomerAddress())->getFieldsRequiredDatabase();
-        } catch (PrestaShopDatabaseException $e) {
-            throw new AddressException('Something went wrong while retrieving required fields for address', 0, $e);
-        }
-
-        if (empty($requiredFields)) {
-            return [];
-        }
-
-        $fields = [];
-
-        foreach ($requiredFields as $field) {
-            $fields[] = $field['field_name'];
-        }
-
-        return $fields;
+        return $this->getRequiredFields();
     }
 }

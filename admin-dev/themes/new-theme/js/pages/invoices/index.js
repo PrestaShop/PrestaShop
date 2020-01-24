@@ -23,8 +23,8 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-import initDatePickers from '../../app/utils/datepicker';
-import TranslatableInput from '../../components/translatable-input';
+import initDatePickers from '@app/utils/datepicker';
+import TranslatableInput from '@components/translatable-input';
 
 const $ = window.$;
 

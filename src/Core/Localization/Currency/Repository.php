@@ -27,8 +27,8 @@
 namespace PrestaShop\PrestaShop\Core\Localization\Currency;
 
 use PrestaShop\PrestaShop\Core\Localization\Currency;
-use PrestaShop\PrestaShop\Core\Localization\Currency\RepositoryInterface as CurrencyRepositoryInterface;
 use PrestaShop\PrestaShop\Core\Localization\Currency\DataSourceInterface as CurrencyDataSourceInterface;
+use PrestaShop\PrestaShop\Core\Localization\Currency\RepositoryInterface as CurrencyRepositoryInterface;
 
 /**
  * Currency repository class.
@@ -65,15 +65,7 @@ class Repository implements CurrencyRepositoryInterface
                 new LocalizedCurrencyId($currencyCode, $localeCode)
             );
 
-            $this->currencies[$currencyCode] = new Currency(
-                $data->isActive(),
-                $data->getConversionRate(),
-                $data->getIsoCode(),
-                $data->getNumericIsoCode(),
-                $data->getSymbols(),
-                $data->getPrecision(),
-                $data->getNames()
-            );
+            $this->currencies[$currencyCode] = $this->createCurrencyFromData($data);
         }
 
         return $this->currencies[$currencyCode];
@@ -84,7 +76,7 @@ class Repository implements CurrencyRepositoryInterface
      */
     public function getAvailableCurrencies($localeCode)
     {
-        return $this->formatCurrencies($this->dataSource->getAvailableCurrenciesData($localeCode));
+        return $this->createCurrenciesFromData($this->dataSource->getAvailableCurrenciesData($localeCode));
     }
 
     /**
@@ -92,7 +84,7 @@ class Repository implements CurrencyRepositoryInterface
      */
     public function getAllInstalledCurrencies($localeCode)
     {
-        return $this->formatCurrencies($this->dataSource->getAllInstalledCurrenciesData($localeCode));
+        return $this->createCurrenciesFromData($this->dataSource->getAllInstalledCurrenciesData($localeCode));
     }
 
     /**
@@ -100,22 +92,33 @@ class Repository implements CurrencyRepositoryInterface
      *
      * @return CurrencyCollection
      */
-    private function formatCurrencies(array $currenciesData)
+    private function createCurrenciesFromData(array $currenciesData)
     {
         $currencies = new CurrencyCollection();
         /** @var CurrencyData $currencyDatum */
         foreach ($currenciesData as $currencyDatum) {
-            $currencies->add(new Currency(
-                $currencyDatum->isActive(),
-                $currencyDatum->getConversionRate(),
-                $currencyDatum->getIsoCode(),
-                $currencyDatum->getNumericIsoCode(),
-                $currencyDatum->getSymbols(),
-                $currencyDatum->getPrecision(),
-                $currencyDatum->getNames()
-            ));
+            $currencies->add($this->createCurrencyFromData($currencyDatum));
         }
 
         return $currencies;
+    }
+
+    /**
+     * @param CurrencyData $currencyData
+     *
+     * @return Currency
+     */
+    private function createCurrencyFromData(CurrencyData $currencyData)
+    {
+        return new Currency(
+            $currencyData->isActive(),
+            $currencyData->getConversionRate(),
+            $currencyData->getIsoCode(),
+            $currencyData->getNumericIsoCode(),
+            $currencyData->getSymbols(),
+            $currencyData->getPrecision(),
+            $currencyData->getNames(),
+            $currencyData->getPatterns()
+        );
     }
 }

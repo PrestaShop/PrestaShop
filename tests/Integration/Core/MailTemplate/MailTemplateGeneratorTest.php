@@ -26,6 +26,7 @@
 
 namespace Tests\Integration\Core\MailTemplate;
 
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Exception\FileNotFoundException;
 use PrestaShop\PrestaShop\Core\Language\LanguageInterface;
@@ -248,7 +249,7 @@ class MailTemplateGeneratorTest extends TestCase
      * @param int|null $expectedHtmlRendered
      * @param int|null $expectedTxtRendered
      *
-     * @return \PHPUnit_Framework_MockObject_MockObject|MailTemplateRendererInterface
+     * @return MockObject|MailTemplateRendererInterface
      */
     private function createRendererMock($expectedHtmlRendered = null, $expectedTxtRendered = null)
     {
@@ -285,7 +286,7 @@ class MailTemplateGeneratorTest extends TestCase
     /**
      * @param string|null $isoCode
      *
-     * @return \PHPUnit_Framework_MockObject_MockObject|LanguageInterface
+     * @return MockObject|LanguageInterface
      */
     private function createLanguageMock($isoCode = null)
     {

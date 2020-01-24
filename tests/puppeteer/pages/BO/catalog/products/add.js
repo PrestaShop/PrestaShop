@@ -20,6 +20,7 @@ module.exports = class AddProduct extends BOBasePage {
     this.productOnlineSwitch = '.product-footer div.switch-input';
     this.productDescriotionTab = '#tab_description a';
     this.productDescriptionIframe = '#form_step1_description_1_ifr';
+    this.productTaxRuleSelect = '#step2_id_tax_rules_group_rendered';
     this.productDeleteLink = '.product-footer a.delete';
 
     // Form nav
@@ -39,7 +40,7 @@ module.exports = class AddProduct extends BOBasePage {
 
     // Growls : override value from BObasePage
     this.growlDefaultDiv = '#growls-default';
-    this.growlMessageBloc = `${this.growlDefaultDiv} .growl-message`;
+    this.growlMessageBlock = `${this.growlDefaultDiv} .growl-message:last-of-type`;
     this.growlCloseButton = `${this.growlDefaultDiv} .growl-close`;
   }
 
@@ -72,19 +73,20 @@ module.exports = class AddProduct extends BOBasePage {
       await this.page.click(this.productQuantityInput, {clickCount: 3});
       await this.page.type(this.productQuantityInput, productData.quantity);
     }
+    await this.selectByVisibleText(this.productTaxRuleSelect, productData.taxRule);
     // Switch product online before save
     if (switchProductOnline) {
       await Promise.all([
-        this.page.waitForSelector(this.growlMessageBloc, {visible: true}),
+        this.page.waitForSelector(this.growlMessageBlock, {visible: true}),
         this.page.click(this.productOnlineSwitch),
       ]);
     }
     // Save created product
     await Promise.all([
-      this.page.waitForSelector(this.growlMessageBloc, {visible: true}),
+      this.page.waitForSelector(this.growlMessageBlock, {visible: true}),
       this.page.click(this.saveProductButton),
     ]);
-    return this.getTextContent(this.growlMessageBloc);
+    return this.getTextContent(this.growlMessageBlock);
   }
 
   /**
@@ -127,7 +129,7 @@ module.exports = class AddProduct extends BOBasePage {
         {visible: true},
       ),
       this.page.click(this.generateCombinationsButton),
-      this.waitForSelectorAndClick(this.growlMessageBloc),
+      this.waitForSelectorAndClick(this.growlMessageBlock),
     ]);
     await this.closeCombinationsForm();
   }

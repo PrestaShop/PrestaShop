@@ -66,10 +66,10 @@
 </template>
 
 <script>
-  import PSNumber from 'app/widgets/ps-number';
-  import PSCheckbox from 'app/widgets/ps-checkbox';
-  import PSButton from 'app/widgets/ps-button';
-  import { EventBus } from 'app/utils/event-bus';
+  import PSNumber from '@app/widgets/ps-number';
+  import PSCheckbox from '@app/widgets/ps-checkbox';
+  import PSButton from '@app/widgets/ps-button';
+  import { EventBus } from '@app/utils/event-bus';
 
   export default {
     computed: {

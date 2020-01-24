@@ -274,7 +274,7 @@ class Tools
      *
      * @return bool|string
      */
-    public function truncateString($text, $length = 120, $options = array())
+    public function truncateString($text, $length = 120, $options = [])
     {
         return LegacyTools::truncateString($text, $length, $options);
     }

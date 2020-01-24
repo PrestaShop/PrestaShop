@@ -26,6 +26,18 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Cart\Exception;
 
+/**
+ * Thrown when cart constraints are violated
+ */
 class CartConstraintException extends CartException
 {
+    /**
+     * When cart product quantity is invalid
+     */
+    const INVALID_QUANTITY = 1;
+
+    /**
+     * When cart product quantity is already correct
+     */
+    const UNCHANGED_QUANTITY = 2;
 }

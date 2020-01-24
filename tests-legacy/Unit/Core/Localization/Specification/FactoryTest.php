@@ -86,6 +86,19 @@ class FactoryTest extends TestCase
                     'groupingUsed' => true,
                     'primaryGroupSize' => 3,
                     'secondaryGroupSize' => 3,
+                    'numberSymbols' => [
+                        ',',
+                        '.',
+                        ';',
+                        '%',
+                        '-',
+                        '+',
+                        'E',
+                        "\u{00d7}",
+                        "\u{2030}",
+                        "\u{221e}",
+                        'NaN',
+                    ],
                 ],
             ],
             [
@@ -103,6 +116,19 @@ class FactoryTest extends TestCase
                     'groupingUsed' => true,
                     'primaryGroupSize' => 3,
                     'secondaryGroupSize' => 3,
+                    'numberSymbols' => [
+                        ',',
+                        '.',
+                        ';',
+                        '%',
+                        '-',
+                        '+',
+                        'E',
+                        "\u{00d7}",
+                        "\u{2030}",
+                        "\u{221e}",
+                        'NaN',
+                    ],
                 ],
             ],
         ];
@@ -148,14 +174,14 @@ class FactoryTest extends TestCase
 
     /**
      * Given a valid CLDR locale
-     * Given a Max Fractions digts to display in a number's decimal
+     * Given a Max Fractions digits to display in a number's decimal
      * Given a boolean to define if we should group digits in a number's integer part
      * Given an integer to specify max fraction digits
      * Then calling buildPriceSpecification() should return an NumberSpecification
      *
      * @dataProvider getPriceData
      */
-    public function testBuildPriceSpecificationWithM($data, $expected)
+    public function testBuildPriceSpecificationWithMax($data, $expected)
     {
         $maxFractionDigits = 3;
         $specification = $this->factory->buildPriceSpecification(
@@ -208,6 +234,19 @@ class FactoryTest extends TestCase
                     'secondaryGroupSize' => 3,
                     'currencyCode' => 'EUR',
                     'currencySymbol' => '€',
+                    'numberSymbols' => [
+                        ',',
+                        '.',
+                        ';',
+                        '%',
+                        '-',
+                        '+',
+                        'E',
+                        "\u{00d7}",
+                        "\u{2030}",
+                        "\u{221e}",
+                        'NaN',
+                    ],
                 ],
             ],
             [
@@ -227,6 +266,19 @@ class FactoryTest extends TestCase
                     'secondaryGroupSize' => 3,
                     'currencyCode' => 'EUR',
                     'currencySymbol' => '€',
+                    'numberSymbols' => [
+                        ',',
+                        '.',
+                        ';',
+                        '%',
+                        '-',
+                        '+',
+                        'E',
+                        "\u{00d7}",
+                        "\u{2030}",
+                        "\u{221e}",
+                        'NaN',
+                    ],
                 ],
             ],
         ];

@@ -128,13 +128,13 @@ class EditableManufacturerAddress
         $city,
         $manufacturerId,
         $countryId,
-        $address2,
-        $postCode,
-        $stateId,
-        $homePhone,
-        $mobilePhone,
-        $other,
-        $dni
+        $address2 = null,
+        $postCode = null,
+        $stateId = null,
+        $homePhone = null,
+        $mobilePhone = null,
+        $other = null,
+        $dni = null
     ) {
         $this->addressId = $addressId;
         $this->lastName = $lastName;

@@ -47,7 +47,7 @@ class UploaderCore
     {
         $this->setName($name);
         $this->setCheckFileSize(true);
-        $this->files = array();
+        $this->files = [];
     }
 
     /**
@@ -107,7 +107,7 @@ class UploaderCore
     public function getFiles()
     {
         if (!isset($this->_files)) {
-            $this->_files = array();
+            $this->_files = [];
         }
 
         return $this->_files;
@@ -236,15 +236,15 @@ class UploaderCore
         $upload = isset($_FILES[$this->getName()]) ? $_FILES[$this->getName()] : null;
 
         if ($upload && is_array($upload['tmp_name'])) {
-            $tmp = array();
+            $tmp = [];
             foreach ($upload['tmp_name'] as $index => $value) {
-                $tmp[$index] = array(
+                $tmp[$index] = [
                     'tmp_name' => $upload['tmp_name'][$index],
                     'name' => $upload['name'][$index],
                     'size' => $upload['size'][$index],
                     'type' => $upload['type'][$index],
                     'error' => $upload['error'][$index],
-                );
+                ];
 
                 $this->files[] = $this->upload($tmp[$index], $dest);
             }
@@ -284,7 +284,7 @@ class UploaderCore
             } else {
                 $file['size'] = $fileSize;
                 unlink($filePath);
-                $file['error'] = Context::getContext()->getTranslator()->trans('Server file size is different from local file size', array(), 'Admin.Notifications.Error');
+                $file['error'] = Context::getContext()->getTranslator()->trans('Server file size is different from local file size', [], 'Admin.Notifications.Error');
             }
         }
 
@@ -301,31 +301,31 @@ class UploaderCore
         $error = 0;
         switch ($error_code) {
             case 1:
-                $error = Context::getContext()->getTranslator()->trans('The uploaded file exceeds %s', array(ini_get('upload_max_filesize')), 'Admin.Notifications.Error');
+                $error = Context::getContext()->getTranslator()->trans('The uploaded file exceeds %s', [ini_get('upload_max_filesize')], 'Admin.Notifications.Error');
 
                 break;
             case 2:
-                $error = Context::getContext()->getTranslator()->trans('The uploaded file exceeds %s', array(ini_get('post_max_size')), 'Admin.Notifications.Error');
+                $error = Context::getContext()->getTranslator()->trans('The uploaded file exceeds %s', [ini_get('post_max_size')], 'Admin.Notifications.Error');
 
                 break;
             case 3:
-                $error = Context::getContext()->getTranslator()->trans('The uploaded file was only partially uploaded', array(), 'Admin.Notifications.Error');
+                $error = Context::getContext()->getTranslator()->trans('The uploaded file was only partially uploaded', [], 'Admin.Notifications.Error');
 
                 break;
             case 4:
-                $error = Context::getContext()->getTranslator()->trans('No file was uploaded', array(), 'Admin.Notifications.Error');
+                $error = Context::getContext()->getTranslator()->trans('No file was uploaded', [], 'Admin.Notifications.Error');
 
                 break;
             case 6:
-                $error = Context::getContext()->getTranslator()->trans('Missing temporary folder', array(), 'Admin.Notifications.Error');
+                $error = Context::getContext()->getTranslator()->trans('Missing temporary folder', [], 'Admin.Notifications.Error');
 
                 break;
             case 7:
-                $error = Context::getContext()->getTranslator()->trans('Failed to write file to disk', array(), 'Admin.Notifications.Error');
+                $error = Context::getContext()->getTranslator()->trans('Failed to write file to disk', [], 'Admin.Notifications.Error');
 
                 break;
             case 8:
-                $error = Context::getContext()->getTranslator()->trans('A PHP extension stopped the file upload', array(), 'Admin.Notifications.Error');
+                $error = Context::getContext()->getTranslator()->trans('A PHP extension stopped the file upload', [], 'Admin.Notifications.Error');
 
                 break;
             default:
@@ -347,13 +347,13 @@ class UploaderCore
         $postMaxSize = $this->getPostMaxSizeBytes();
 
         if ($postMaxSize && ($this->_getServerVars('CONTENT_LENGTH') > $postMaxSize)) {
-            $file['error'] = Context::getContext()->getTranslator()->trans('The uploaded file exceeds the post_max_size directive in php.ini', array(), 'Admin.Notifications.Error');
+            $file['error'] = Context::getContext()->getTranslator()->trans('The uploaded file exceeds the post_max_size directive in php.ini', [], 'Admin.Notifications.Error');
 
             return false;
         }
 
         if (preg_match('/\%00/', $file['name'])) {
-            $file['error'] = Context::getContext()->getTranslator()->trans('Invalid file name', array(), 'Admin.Notifications.Error');
+            $file['error'] = Context::getContext()->getTranslator()->trans('Invalid file name', [], 'Admin.Notifications.Error');
 
             return false;
         }
@@ -362,13 +362,13 @@ class UploaderCore
 
         //TODO check mime type.
         if (isset($types) && !in_array(Tools::strtolower(pathinfo($file['name'], PATHINFO_EXTENSION)), $types)) {
-            $file['error'] = Context::getContext()->getTranslator()->trans('Filetype not allowed', array(), 'Admin.Notifications.Error');
+            $file['error'] = Context::getContext()->getTranslator()->trans('Filetype not allowed', [], 'Admin.Notifications.Error');
 
             return false;
         }
 
         if ($this->checkFileSize() && $file['size'] > $this->getMaxSize()) {
-            $file['error'] = Context::getContext()->getTranslator()->trans('File is too big. Current size is %1s, maximum size is %2s.', array($file['size'], $this->getMaxSize()), 'Admin.Notifications.Error');
+            $file['error'] = Context::getContext()->getTranslator()->trans('File is too big. Current size is %1s, maximum size is %2s.', [$file['size'], $this->getMaxSize()], 'Admin.Notifications.Error');
 
             return false;
         }
@@ -453,7 +453,7 @@ class UploaderCore
     {
         $last = $directory[strlen($directory) - 1];
 
-        if (in_array($last, array('/', '\\'))) {
+        if (in_array($last, ['/', '\\'])) {
             $directory[strlen($directory) - 1] = DIRECTORY_SEPARATOR;
 
             return $directory;

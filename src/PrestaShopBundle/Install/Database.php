@@ -46,23 +46,23 @@ class Database extends AbstractInstall
      */
     public function testDatabaseSettings($server, $database, $login, $password, $prefix, $clear = false)
     {
-        $errors = array();
+        $errors = [];
 
         // Check if fields are correctly typed
         if (!$server || !Validate::isUrl($server)) {
-            $errors[] = $this->translator->trans('Server name is not valid', array(), 'Install');
+            $errors[] = $this->translator->trans('Server name is not valid', [], 'Install');
         }
 
         if (!$database) {
-            $errors[] = $this->translator->trans('You must enter a database name', array(), 'Install');
+            $errors[] = $this->translator->trans('You must enter a database name', [], 'Install');
         }
 
         if (!$login) {
-            $errors[] = $this->translator->trans('You must enter a database login', array(), 'Install');
+            $errors[] = $this->translator->trans('You must enter a database login', [], 'Install');
         }
 
         if ($prefix && !Validate::isTablePrefix($prefix)) {
-            $errors[] = $this->translator->trans('Tables prefix is invalid', array(), 'Install');
+            $errors[] = $this->translator->trans('Tables prefix is invalid', [], 'Install');
         }
 
         if (!$errors) {
@@ -71,18 +71,18 @@ class Database extends AbstractInstall
             switch (Db::checkConnection($server, $login, $password, $database, true)) {
                 case 0:
                     if (!Db::checkEncoding($server, $login, $password)) {
-                        $errors[] = $this->translator->trans('Cannot convert database data to utf-8', array(), 'Install') . $dbtype;
+                        $errors[] = $this->translator->trans('Cannot convert database data to utf-8', [], 'Install') . $dbtype;
                     }
 
                     // Check if a table with same prefix already exists
                     if (!$clear && Db::hasTableWithSamePrefix($server, $login, $password, $database, $prefix)) {
-                        $errors[] = $this->translator->trans('At least one table with same prefix was already found, please change your prefix or drop your database', array(), 'Install');
+                        $errors[] = $this->translator->trans('At least one table with same prefix was already found, please change your prefix or drop your database', [], 'Install');
                     }
                     if (!Db::checkAutoIncrement($server, $login, $password)) {
-                        $errors[] = $this->translator->trans('The values of auto_increment increment and offset must be set to 1', array(), 'Install');
+                        $errors[] = $this->translator->trans('The values of auto_increment increment and offset must be set to 1', [], 'Install');
                     }
                     if (($create_error = Db::checkCreatePrivilege($server, $login, $password, $database, $prefix)) !== true) {
-                        $errors[] = $this->translator->trans('Your database login does not have the privileges to create table on the database "%s". Ask your hosting provider:', array('%database%' => $database), 'Install');
+                        $errors[] = $this->translator->trans('Your database login does not have the privileges to create table on the database "%s". Ask your hosting provider:', ['%database%' => $database], 'Install');
                         if ($create_error != false) {
                             $errors[] = $create_error;
                         }
@@ -91,14 +91,14 @@ class Database extends AbstractInstall
                     break;
 
                 case 1:
-                    $errors[] = $this->translator->trans('Database Server is not found. Please verify the login, password and server fields', array(), 'Install') . $dbtype;
+                    $errors[] = $this->translator->trans('Database Server is not found. Please verify the login, password and server fields', [], 'Install') . $dbtype;
 
                     break;
 
                 case 2:
-                    $error = $this->translator->trans('Connection to MySQL server succeeded, but database "%database%" not found', array('%database%' => $database), 'Install') . $dbtype;
+                    $error = $this->translator->trans('Connection to MySQL server succeeded, but database "%database%" not found', ['%database%' => $database], 'Install') . $dbtype;
                     if ($this->createDatabase($server, $database, $login, $password, true)) {
-                        $error .= '<p>' . sprintf('<input type="button" value="%s" class="button" id="btCreateDB">', $this->translator->trans('Attempt to create the database automatically', array(), 'Install')) . '</p>
+                        $error .= '<p>' . sprintf('<input type="button" value="%s" class="button" id="btCreateDB">', $this->translator->trans('Attempt to create the database automatically', [], 'Install')) . '</p>
 						<script type="text/javascript">bindCreateDB();</script>';
                     }
                     $errors[] = $error;
@@ -118,7 +118,7 @@ class Database extends AbstractInstall
     {
         $class = '\\' . Db::getClass();
 
-        return call_user_func(array($class, 'createDatabase'), $server, $login, $password, $database, $dropit);
+        return call_user_func([$class, 'createDatabase'], $server, $login, $password, $database, $dropit);
     }
 
     public function getBestEngine($server, $database, $login, $password)

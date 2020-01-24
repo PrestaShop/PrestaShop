@@ -9,11 +9,13 @@ global.BO = {
   PASSWD: process.env.PASSWD || DefaultAccount.password,
   FIRSTNAME: process.env.FIRSTNAME || DefaultAccount.firstName,
   LASTNAME: process.env.LASTNAME || DefaultAccount.lastName,
+  DOWNLOAD_PATH: process.env.DOWNLOAD_PATH || '/downloads',
 };
 global.INSTALL = {
   URL: process.env.URL_INSTALL || `${global.FO.URL}install-dev/`,
   LANGUAGE: process.env.INSTALL_LANGUAGE || 'en',
   COUNTRY: process.env.INSTALL_COUNTRY || 'fr',
+  DB_NAME: process.env.DB_NAME || 'prestashopdb',
   DB_USER: process.env.DB_USER || 'root',
   DB_PASSWD: process.env.DB_PASSWD || '',
   SHOPNAME: process.env.SHOPNAME || 'Prestashop',

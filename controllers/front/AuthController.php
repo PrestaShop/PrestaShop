@@ -51,7 +51,7 @@ class AuthControllerCore extends FrontController
 
             if (Tools::isSubmit('submitCreate')) {
                 $hookResult = array_reduce(
-                    Hook::exec('actionSubmitAccountBefore', array(), null, true),
+                    Hook::exec('actionSubmitAccountBefore', [], null, true),
                     function ($carry, $item) {
                         return $carry && $item;
                     },

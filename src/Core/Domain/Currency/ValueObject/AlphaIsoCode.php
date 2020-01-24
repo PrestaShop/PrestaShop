@@ -70,14 +70,7 @@ class AlphaIsoCode
     private function assertIsValidIsoCode($isoCode)
     {
         if (!is_string($isoCode) || !preg_match(self::PATTERN, $isoCode)) {
-            throw new CurrencyConstraintException(
-                sprintf(
-                    'Given iso code "%s" is not valid. It did not matched given regex %s',
-                    var_export($isoCode, true),
-                    self::PATTERN
-                ),
-                CurrencyConstraintException::INVALID_ISO_CODE
-            );
+            throw new CurrencyConstraintException(sprintf('Given iso code "%s" is not valid. It did not matched given regex %s', var_export($isoCode, true), self::PATTERN), CurrencyConstraintException::INVALID_ISO_CODE);
         }
     }
 }

@@ -7,6 +7,8 @@ Feature: Currency Management
 
   Background:
     Given shop "shop1" with name "test_shop" exists
+    And language "language1" with locale "en-US" exists
+    And language "language2" with locale "fr-FR" exists
 
   Scenario: Adding and editing currency
     When I add new currency "currency1" with following properties:
@@ -278,3 +280,87 @@ Feature: Currency Management
     And currency "currency15" should have modified true
     And currency "currency15" should have status enabled
     And currency "currency15" should be available in shop "shop1"
+
+  Scenario: Adding and edit official currency with custom pattern
+    When I add new currency "currency16" with following properties:
+      | iso_code         | JPY                 |
+      | exchange_rate    | 0.08                |
+      | is_enabled       | 1                   |
+      | is_unofficial    | 0                   |
+      | shop_association | shop1               |
+      | transformations  | fr-FR:leftWithSpace |
+    Then I should get no currency error
+    And currency "currency16" should be "JPY"
+    And currency "currency16" exchange rate should be 0.08
+    And currency "currency16" numeric iso code should be 392
+    And currency "currency16" name should be "Japanese Yen"
+    And currency "currency16" symbol should be "¥"
+    And currency "currency16" precision should be 0
+    And currency "currency16" should have unofficial false
+    And currency "currency16" should have modified false
+    And currency "currency16" should have status enabled
+    And currency "currency16" should be available in shop "shop1"
+    And currency "currency16" should have pattern "¤ #,##0.00" for language "fr-FR"
+    And currency "currency16" should have pattern empty for language "en-EN"
+    And database contains 1 rows of currency "JPY"
+    When I edit currency "currency16" with following properties:
+      | iso_code         | JPY                  |
+      | exchange_rate    | 0.08                 |
+      | is_enabled       | 1                    |
+      | is_unofficial    | 0                    |
+      | shop_association | shop1                |
+      | transformations  | en-US:rightWithSpace |
+    And currency "currency16" should be "JPY"
+    And currency "currency16" exchange rate should be 0.08
+    And currency "currency16" numeric iso code should be 392
+    And currency "currency16" name should be "Japanese Yen"
+    And currency "currency16" symbol should be "¥"
+    And currency "currency16" precision should be 0
+    And currency "currency16" should have unofficial false
+    And currency "currency16" should have modified false
+    And currency "currency16" should have status enabled
+    And currency "currency16" should be available in shop "shop1"
+    And currency "currency16" should have pattern empty for language "fr-FR"
+    And currency "currency16" should have pattern "#,##0.00 ¤" for language "en-US"
+
+  Scenario: Adding and edit unofficial currency with custom pattern
+    When I add new currency "currency17" with following properties:
+      | iso_code         | JPP                    |
+      | exchange_rate    | 0.8                    |
+      | is_enabled       | 1                      |
+      | is_unofficial    | 1                      |
+      | shop_association | shop1                  |
+      | transformations  | fr-FR:leftWithoutSpace |
+    Then I should get no currency error
+    And currency "currency17" should be "JPP"
+    And currency "currency17" exchange rate should be 0.8
+    And currency "currency17" numeric iso code should be null
+    And currency "currency17" name should be "JPP"
+    And currency "currency17" symbol should be "JPP"
+    And currency "currency17" precision should be 0
+    And currency "currency17" should have unofficial true
+    And currency "currency17" should have modified true
+    And currency "currency17" should have status enabled
+    And currency "currency17" should be available in shop "shop1"
+    And currency "currency17" should have pattern "¤#,##0.00" for language "fr-FR"
+    And currency "currency17" should have pattern empty for language "en-EN"
+    And database contains 1 rows of currency "JPP"
+    When I edit currency "currency17" with following properties:
+      | iso_code         | JPP                     |
+      | exchange_rate    | 0.8                     |
+      | is_enabled       | 1                       |
+      | is_unofficial    | 1                       |
+      | shop_association | shop1                   |
+      | transformations  | en-US:rightWithoutSpace |
+    And currency "currency17" should be "JPP"
+    And currency "currency17" exchange rate should be 0.8
+    And currency "currency17" numeric iso code should be null
+    And currency "currency17" name should be "JPP"
+    And currency "currency17" symbol should be "JPP"
+    And currency "currency17" precision should be 0
+    And currency "currency17" should have unofficial true
+    And currency "currency17" should have modified true
+    And currency "currency17" should have status enabled
+    And currency "currency17" should be available in shop "shop1"
+    And currency "currency17" should have pattern empty for language "fr-FR"
+    And currency "currency17" should have pattern "#,##0.00¤" for language "en-US"

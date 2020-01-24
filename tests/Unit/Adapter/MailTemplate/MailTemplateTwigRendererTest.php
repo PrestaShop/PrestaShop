@@ -26,8 +26,10 @@
 
 namespace Tests\Unit\Adapter\MailTemplate;
 
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\MailTemplate\MailTemplateTwigRenderer;
+use PrestaShop\PrestaShop\Core\Exception\FileNotFoundException;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShop\PrestaShop\Core\Language\LanguageInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\Layout\LayoutInterface;
@@ -36,7 +38,6 @@ use PrestaShop\PrestaShop\Core\MailTemplate\MailTemplateInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\MailTemplateRendererInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\Transformation\TransformationCollectionInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\Transformation\TransformationInterface;
-use PrestaShop\PrestaShop\Core\Exception\FileNotFoundException;
 use Symfony\Component\Templating\EngineInterface;
 
 class MailTemplateTwigRendererTest extends TestCase
@@ -64,7 +65,7 @@ class MailTemplateTwigRendererTest extends TestCase
 
     public function testFileNotFound()
     {
-        $this->setExpectedException(FileNotFoundException::class);
+        $this->expectException(FileNotFoundException::class);
 
         $templatePaths = [
             MailTemplateInterface::HTML_TYPE => 'path/to/non_existent_template.html.twig',
@@ -207,7 +208,7 @@ class MailTemplateTwigRendererTest extends TestCase
      * @param array $expectedVariables
      * @param string $templateType
      *
-     * @return \PHPUnit_Framework_MockObject_MockObject|TransformationInterface
+     * @return MockObject|TransformationInterface
      */
     private function createTransformationMock($initialTemplate, $expectedVariables, $templateType)
     {
@@ -248,7 +249,7 @@ class MailTemplateTwigRendererTest extends TestCase
      * @param array $expectedVariables
      * @param string $generatedTemplate
      *
-     * @return \PHPUnit_Framework_MockObject_MockObject|EngineInterface
+     * @return MockObject|EngineInterface
      */
     private function createEngineMock($expectedPath, array $expectedVariables, $generatedTemplate)
     {
@@ -275,7 +276,7 @@ class MailTemplateTwigRendererTest extends TestCase
      * @param string $templateType
      * @param int $transformationsCount
      *
-     * @return \PHPUnit_Framework_MockObject_MockObject|HookDispatcherInterface
+     * @return MockObject|HookDispatcherInterface
      */
     private function createHookDispatcherMock(LayoutInterface $mailLayout, $templateType, $transformationsCount = 0)
     {
@@ -307,7 +308,7 @@ class MailTemplateTwigRendererTest extends TestCase
      * @param array $variables
      * @param LanguageInterface $expectedLanguage
      *
-     * @return \PHPUnit_Framework_MockObject_MockObject|LayoutVariablesBuilderInterface
+     * @return MockObject|LayoutVariablesBuilderInterface
      */
     private function createVariablesBuilderMock(array $variables, LanguageInterface $expectedLanguage)
     {
@@ -330,7 +331,7 @@ class MailTemplateTwigRendererTest extends TestCase
     }
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject|LanguageInterface
+     * @return MockObject|LanguageInterface
      */
     private function createLanguageMock()
     {
@@ -344,7 +345,7 @@ class MailTemplateTwigRendererTest extends TestCase
     /**
      * @param array $expectedPaths
      *
-     * @return \PHPUnit_Framework_MockObject_MockObject|LayoutInterface
+     * @return MockObject|LayoutInterface
      */
     private function createMailLayoutMock(array $expectedPaths)
     {

@@ -27,7 +27,6 @@
 namespace PrestaShop\PrestaShop\Adapter\Currency\CommandHandler;
 
 use Currency;
-use Language;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\AddUnofficialCurrencyCommand;
 use PrestaShop\PrestaShop\Core\Domain\Currency\CommandHandler\AddUnofficialCurrencyHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotCreateCurrencyException;
@@ -44,11 +43,6 @@ use PrestaShopException;
  */
 final class AddUnofficialCurrencyHandler extends AbstractCurrencyHandler implements AddUnofficialCurrencyHandlerInterface
 {
-    /**
-     * @var Language
-     */
-    private $defaultLanguage;
-
     /**
      * @var CurrencyCommandValidator
      */
@@ -95,6 +89,9 @@ final class AddUnofficialCurrencyHandler extends AbstractCurrencyHandler impleme
             }
             if (!empty($command->getLocalizedSymbols())) {
                 $entity->setLocalizedSymbols($command->getLocalizedSymbols());
+            }
+            if (!empty($command->getLocalizedTransformations())) {
+                $this->applyPatternTransformations($entity, $command->getLocalizedTransformations());
             }
 
             $this->refreshLocalizedData($entity);

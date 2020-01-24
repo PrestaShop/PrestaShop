@@ -25,7 +25,7 @@
 <div class="ps-dropdown dropdown btn-group bordered mb-1">
   {% for menu in topMenuData %}
     {% set refMenu = menu.refMenu %}
-    <div id="{{refMenu}}" class="dropdown-label" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    <div id="{{refMenu}}" class="dropdown-label" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-flip="false">
       <span class="js-selected-item selected-item module-category-selector-label">
         {{ 'All Categories'|trans({}, 'Admin.Modules.Feature') }}
       </span>

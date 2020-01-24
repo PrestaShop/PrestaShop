@@ -351,6 +351,15 @@
     "language_code": "ka-ge",
     "locale": "ka-GE"
   },
+  "km": {
+    "name": "ភាសាខ្មែរ (Khmer)",
+    "iso_code": "km",
+    "date_format_lite": "Y-m-d",
+    "date_format_full": "Y-m-d H:i:s",
+    "is_rtl": "0",
+    "language_code": "km-kh",
+    "locale": "km-KH"
+  },
   "ko": {
     "name": "한국어 (Korean)",
     "iso_code": "ko",

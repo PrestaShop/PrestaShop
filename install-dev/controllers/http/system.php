@@ -104,6 +104,7 @@ class InstallControllerHttpSystem extends InstallControllerHttp implements HttpC
                         'zip' => $this->translator->trans('ZIP extension is not enabled', array(), 'Install'),
                         'fileinfo' => $this->translator->trans('Fileinfo extension is not enabled', array(), 'Install'),
                         'intl' => $this->translator->trans('Intl extension is not loaded', array(), 'Install'),
+                        'memory_limit' => $this->translator->trans('PHP\'s config "memory_limit" must be to a minimum of 256M', array(), 'Install'),
                     ),
                 ),
                 array(

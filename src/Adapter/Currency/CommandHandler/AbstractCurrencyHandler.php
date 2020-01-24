@@ -28,8 +28,11 @@ namespace PrestaShop\PrestaShop\Adapter\Currency\CommandHandler;
 
 use Currency;
 use PrestaShop\PrestaShop\Adapter\Domain\AbstractObjectModelHandler;
+use PrestaShop\PrestaShop\Core\Domain\Language\Exception\LanguageNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 use PrestaShop\PrestaShop\Core\Language\LanguageInterface;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleRepository;
+use PrestaShop\PrestaShop\Core\Localization\Currency\PatternTransformer;
 
 /**
  * Class AbstractCurrencyHandler is responsible for encapsulating common behavior for legacy currency object model.
@@ -96,5 +99,45 @@ abstract class AbstractCurrencyHandler extends AbstractObjectModelHandler
 
         //This method will insert the missing localized names/symbols and detect if the currency has been modified
         $entity->refreshLocalizedCurrencyData($languagesData, $this->localeRepoCLDR);
+    }
+
+    /**
+     * @param Currency $entity
+     * @param array $localizedTransformations
+     *
+     * @throws LanguageNotFoundException
+     */
+    protected function applyPatternTransformations(Currency $entity, array $localizedTransformations)
+    {
+        $transformer = new PatternTransformer();
+        $localizedPatterns = [];
+        foreach ($localizedTransformations as $langId => $transformationType) {
+            if (empty($transformationType)) {
+                continue;
+            }
+
+            $languageCurrencyPattern = $this->getCurrencyPatternByLanguageId($langId);
+            $localizedPatterns[$langId] = $transformer->transform($languageCurrencyPattern, $transformationType);
+        }
+        $entity->setLocalizedPatterns($localizedPatterns);
+    }
+
+    /**
+     * @param int $langId
+     *
+     * @return string
+     *
+     * @throws LanguageNotFoundException
+     */
+    private function getCurrencyPatternByLanguageId(int $langId)
+    {
+        /** @var LanguageInterface $language */
+        foreach ($this->languages as $language) {
+            if ($langId === $language->getId()) {
+                return $this->localeRepoCLDR->getLocale($language->getLocale())->getCurrencyPattern();
+            }
+        }
+
+        throw new LanguageNotFoundException(new LanguageId($langId));
     }
 }

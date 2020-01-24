@@ -23,9 +23,9 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-import ChoiceTree from '../../../components/form/choice-tree';
-import TranslatableInput from '../../../components/translatable-input';
-import currencyFormMap from "./currency-form-map";
+import ChoiceTree from '@components/form/choice-tree';
+import TranslatableInput from '@components/translatable-input';
+import currencyFormMap from './currency-form-map';
 import CurrencyForm from './currency-form';
 
 const $ = window.$;

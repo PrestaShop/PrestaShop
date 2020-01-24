@@ -27,12 +27,13 @@
 
 namespace PrestaShop\PrestaShop\Core\Localization\Currency\DataLayer;
 
+use Language;
 use PrestaShop\PrestaShop\Core\Currency\CurrencyDataProviderInterface;
 use PrestaShop\PrestaShop\Core\Data\Layer\AbstractDataLayer;
 use PrestaShop\PrestaShop\Core\Data\Layer\DataLayerException;
 use PrestaShop\PrestaShop\Core\Localization\Currency\CurrencyData;
-use PrestaShop\PrestaShop\Core\Localization\Currency\LocalizedCurrencyId;
 use PrestaShop\PrestaShop\Core\Localization\Currency\CurrencyDataLayerInterface;
+use PrestaShop\PrestaShop\Core\Localization\Currency\LocalizedCurrencyId;
 use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 
 /**
@@ -42,10 +43,24 @@ use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
  */
 class CurrencyDatabase extends AbstractDataLayer implements CurrencyDataLayerInterface
 {
+    /**
+     * @var CurrencyDataProviderInterface
+     */
     protected $dataProvider;
 
-    public function __construct(CurrencyDataProviderInterface $dataProvider)
-    {
+    /**
+     * This layer must be ready only, displaying a price should not change the database data
+     *
+     * @var bool
+     */
+    protected $isWritable = false;
+
+    /**
+     * @param CurrencyDataProviderInterface $dataProvider
+     */
+    public function __construct(
+        CurrencyDataProviderInterface $dataProvider
+    ) {
         $this->dataProvider = $dataProvider;
     }
 
@@ -95,12 +110,17 @@ class CurrencyDatabase extends AbstractDataLayer implements CurrencyDataLayerInt
         }
 
         $currencyData = new CurrencyData();
-
         $currencyData->setIsoCode($currencyEntity->iso_code);
-        $currencyData->setNames([$localeCode => $currencyEntity->name]);
         $currencyData->setNumericIsoCode($currencyEntity->numeric_iso_code);
-        $currencyData->setSymbols([$localeCode => $currencyEntity->symbol]);
         $currencyData->setPrecision($currencyEntity->precision);
+        $currencyData->setNames([$localeCode => $currencyEntity->name]);
+        $currencyData->setSymbols([$localeCode => $currencyEntity->symbol]);
+
+        $idLang = Language::getIdByLocale($localeCode, true);
+        $currencyPattern = $currencyEntity->getPattern($idLang);
+        if (!empty($currencyPattern)) {
+            $currencyData->setPatterns([$localeCode => $currencyEntity->getPattern($idLang)]);
+        }
 
         return $currencyData;
     }

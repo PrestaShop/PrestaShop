@@ -31,7 +31,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
 {
     public static function getVisits($unique, $date_from, $date_to, $granularity = false)
     {
-        $visits = ($granularity == false) ? 0 : array();
+        $visits = ($granularity == false) ? 0 : [];
         $moduleManagerBuilder = ModuleManagerBuilder::getInstance();
         $moduleManager = $moduleManagerBuilder->build();
 
@@ -262,7 +262,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
     public static function getTotalSales($date_from, $date_to, $granularity = false)
     {
         if ($granularity == 'day') {
-            $sales = array();
+            $sales = [];
             $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
                 '
 			SELECT LEFT(`invoice_date`, 10) AS date, SUM((total_paid_tax_excl - total_shipping_tax_excl) / o.conversion_rate) AS sales
@@ -278,7 +278,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
 
             return $sales;
         } elseif ($granularity == 'month') {
-            $sales = array();
+            $sales = [];
             $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
                 '
 			SELECT LEFT(`invoice_date`, 7) AS date, SUM((total_paid_tax_excl - total_shipping_tax_excl) / o.conversion_rate) AS sales
@@ -325,7 +325,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
     public static function getOrders($date_from, $date_to, $granularity = false)
     {
         if ($granularity == 'day') {
-            $orders = array();
+            $orders = [];
             $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
                 '
 			SELECT LEFT(`invoice_date`, 10) AS date, COUNT(*) AS orders
@@ -341,7 +341,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
 
             return $orders;
         } elseif ($granularity == 'month') {
-            $orders = array();
+            $orders = [];
             $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
                 '
 			SELECT LEFT(`invoice_date`, 7) AS date, COUNT(*) AS orders
@@ -404,12 +404,12 @@ class AdminStatsControllerCore extends AdminStatsTabController
         if (!$row['total']) {
             return false;
         } elseif ($row['male'] > $row['female'] && $row['male'] >= $row['neutral']) {
-            return array('type' => 'male', 'value' => round(100 * $row['male'] / $row['total']));
+            return ['type' => 'male', 'value' => round(100 * $row['male'] / $row['total'])];
         } elseif ($row['female'] >= $row['male'] && $row['female'] >= $row['neutral']) {
-            return array('type' => 'female', 'value' => round(100 * $row['female'] / $row['total']));
+            return ['type' => 'female', 'value' => round(100 * $row['female'] / $row['total'])];
         }
 
-        return array('type' => 'neutral', 'value' => round(100 * $row['neutral'] / $row['total']));
+        return ['type' => 'neutral', 'value' => round(100 * $row['neutral'] / $row['total'])];
     }
 
     public static function getBestCategory($date_from, $date_to)
@@ -531,7 +531,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
     public static function getPurchases($date_from, $date_to, $granularity = false)
     {
         if ($granularity == 'day') {
-            $purchases = array();
+            $purchases = [];
             $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
                 '
 			SELECT
@@ -572,7 +572,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
 
     public static function getExpenses($date_from, $date_to, $granularity = false)
     {
-        $expenses = ($granularity == 'day' ? array() : 0);
+        $expenses = ($granularity == 'day' ? [] : 0);
 
         $orders = Db::getInstance()->executeS(
             '
@@ -716,7 +716,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
                 $value = AdminStatsController::getPercentProductOutOfStock();
                 $tooltip = $this->trans(
                     '%value% of your products for sale are out of stock.',
-                    array('%value%' => $value),
+                    ['%value%' => $value],
                     'Admin.Stats.Help'
                 );
                 ConfigurationKPI::updateValue('PERCENT_PRODUCT_OUT_OF_STOCK', $value);
@@ -728,7 +728,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
                 $value = AdminStatsController::getProductAverageGrossMargin();
                 $tooltip = $this->trans(
                     'Gross margin expressed in percentage assesses how cost-effectively you sell your goods. Out of $100, you will retain $%value% to cover profit and expenses.',
-                    array('%value%' => $value),
+                    ['%value%' => $value],
                     'Admin.Stats.Help'
                 );
                 ConfigurationKPI::updateValue('PRODUCT_AVG_GROSS_MARGIN', $value);
@@ -750,7 +750,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
                     ) . '%';
                 $tooltip = $this->trans(
                     '%value% of your products are disabled and not visible to your customers',
-                    array('%value%' => $value),
+                    ['%value%' => $value],
                     'Admin.Stats.Help'
                 );
                 ConfigurationKPI::updateValue('DISABLED_PRODUCTS', $value);
@@ -762,10 +762,10 @@ class AdminStatsControllerCore extends AdminStatsTabController
                 $value = AdminStatsController::get8020SalesCatalog(date('Y-m-d', strtotime('-30 days')), date('Y-m-d'));
                 $tooltip = $this->trans(
                     'Within your catalog, %value% of your products have had sales in the last 30 days',
-                    array('%value%' => $value),
+                    ['%value%' => $value],
                     'Admin.Stats.Help'
                 );
-                $value = $this->trans('%value%% of your Catalog', array('%value%' => $value), 'Admin.Stats.Feature');
+                $value = $this->trans('%value%% of your Catalog', ['%value%' => $value], 'Admin.Stats.Feature');
                 ConfigurationKPI::updateValue('8020_SALES_CATALOG', $value);
                 ConfigurationKPI::updateValue('8020_SALES_CATALOG_EXPIRE', strtotime('+12 hour'));
 
@@ -782,29 +782,29 @@ class AdminStatsControllerCore extends AdminStatsTabController
                 $value = AdminStatsController::getCustomerMainGender();
 
                 if ($value === false) {
-                    $value = $this->trans('No customers', array(), 'Admin.Stats.Feature');
+                    $value = $this->trans('No customers', [], 'Admin.Stats.Feature');
                 } elseif ($value['type'] == 'female') {
-                    $value = $this->trans('%percentage%% Female Customers', array('%percentage%' => $value['value']), 'Admin.Stats.Feature');
+                    $value = $this->trans('%percentage%% Female Customers', ['%percentage%' => $value['value']], 'Admin.Stats.Feature');
                 } elseif ($value['type'] == 'male') {
-                    $value = $this->trans('%percentage%% Male Customers', array('%percentage%' => $value['value']), 'Admin.Stats.Feature');
+                    $value = $this->trans('%percentage%% Male Customers', ['%percentage%' => $value['value']], 'Admin.Stats.Feature');
                 } else {
-                    $value = $this->trans('%percentage%% Neutral Customers', array('%percentage%' => $value['value']), 'Admin.Stats.Feature');
+                    $value = $this->trans('%percentage%% Neutral Customers', ['%percentage%' => $value['value']], 'Admin.Stats.Feature');
                 }
 
-                ConfigurationKPI::updateValue('CUSTOMER_MAIN_GENDER', array($this->context->language->id => $value));
+                ConfigurationKPI::updateValue('CUSTOMER_MAIN_GENDER', [$this->context->language->id => $value]);
                 ConfigurationKPI::updateValue(
                     'CUSTOMER_MAIN_GENDER_EXPIRE',
-                    array($this->context->language->id => strtotime('+1 day'))
+                    [$this->context->language->id => strtotime('+1 day')]
                 );
 
                 break;
 
             case 'avg_customer_age':
-                $value = $this->trans('%value% years', array('%value%' => AdminStatsController::getAverageCustomerAge()), 'Admin.Stats.Feature');
-                ConfigurationKPI::updateValue('AVG_CUSTOMER_AGE', array($this->context->language->id => $value));
+                $value = $this->trans('%value% years', ['%value%' => AdminStatsController::getAverageCustomerAge()], 'Admin.Stats.Feature');
+                ConfigurationKPI::updateValue('AVG_CUSTOMER_AGE', [$this->context->language->id => $value]);
                 ConfigurationKPI::updateValue(
                     'AVG_CUSTOMER_AGE_EXPIRE',
-                    array($this->context->language->id => strtotime('+1 day'))
+                    [$this->context->language->id => strtotime('+1 day')]
                 );
 
                 break;
@@ -817,10 +817,10 @@ class AdminStatsControllerCore extends AdminStatsTabController
                 break;
 
             case 'avg_msg_response_time':
-                $value = $this->trans('%average% hours', array('%average%' => AdminStatsController::getAverageMessageResponseTime(
+                $value = $this->trans('%average% hours', ['%average%' => AdminStatsController::getAverageMessageResponseTime(
                     date('Y-m-d', strtotime('-31 day')),
                     date('Y-m-d', strtotime('-1 day'))
-                )), 'Admin.Stats.Feature');
+                )], 'Admin.Stats.Feature');
                 ConfigurationKPI::updateValue('AVG_MSG_RESPONSE_TIME', $value);
                 ConfigurationKPI::updateValue('AVG_MSG_RESPONSE_TIME_EXPIRE', strtotime('+4 hour'));
 
@@ -902,20 +902,20 @@ class AdminStatsControllerCore extends AdminStatsTabController
                     date('Y-m-d')
                 ))
                 ) {
-                    $value = $this->trans('No orders', array(), 'Admin.Stats.Feature');
+                    $value = $this->trans('No orders', [], 'Admin.Stats.Feature');
                 } else {
                     $country = new Country($row['id_country'], $this->context->language->id);
                     $value = $this->trans(
                         '%d%% %s',
-                        array('%d%%' => $row['orders'], '%s' => $country->name),
+                        ['%d%%' => $row['orders'], '%s' => $country->name],
                         'Admin.Stats.Feature'
                     );
                 }
 
-                ConfigurationKPI::updateValue('MAIN_COUNTRY', array($this->context->language->id => $value));
+                ConfigurationKPI::updateValue('MAIN_COUNTRY', [$this->context->language->id => $value]);
                 ConfigurationKPI::updateValue(
                     'MAIN_COUNTRY_EXPIRE',
-                    array($this->context->language->id => strtotime('+1 day'))
+                    [$this->context->language->id => strtotime('+1 day')]
                 );
 
                 break;
@@ -1007,16 +1007,16 @@ class AdminStatsControllerCore extends AdminStatsTabController
                     date('Y-m-d', strtotime('-1 month')),
                     date('Y-m-d')
                 ))) {
-                    $value = $this->trans('No category', array(), 'Admin.Stats.Feature');
+                    $value = $this->trans('No category', [], 'Admin.Stats.Feature');
                 } else {
                     $category = new Category($id_category, $this->context->language->id);
                     $value = $category->name;
                 }
 
-                ConfigurationKPI::updateValue('TOP_CATEGORY', array($this->context->language->id => $value));
+                ConfigurationKPI::updateValue('TOP_CATEGORY', [$this->context->language->id => $value]);
                 ConfigurationKPI::updateValue(
                     'TOP_CATEGORY_EXPIRE',
-                    array($this->context->language->id => strtotime('+1 day'))
+                    [$this->context->language->id => strtotime('+1 day')]
                 );
 
                 break;
@@ -1025,13 +1025,13 @@ class AdminStatsControllerCore extends AdminStatsTabController
                 $value = false;
         }
         if ($value !== false) {
-            $array = array('value' => $value, 'tooltip' => $tooltip);
+            $array = ['value' => $value, 'tooltip' => $tooltip];
             if (isset($data)) {
                 $array['data'] = $data;
             }
             die(json_encode($array));
         }
-        die(json_encode(array('has_errors' => true)));
+        die(json_encode(['has_errors' => true]));
     }
 
     /**

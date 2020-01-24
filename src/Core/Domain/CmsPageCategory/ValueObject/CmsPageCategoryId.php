@@ -72,9 +72,7 @@ class CmsPageCategoryId
     private function assertIsIntegerGreaterThanZero($cmsPageCategoryId)
     {
         if (!is_int($cmsPageCategoryId) || 0 >= $cmsPageCategoryId) {
-            throw new CmsPageCategoryException(
-                sprintf('Invalid cms page category id %s', var_export($cmsPageCategoryId, true))
-            );
+            throw new CmsPageCategoryException(sprintf('Invalid cms page category id %s', var_export($cmsPageCategoryId, true)));
         }
     }
 }

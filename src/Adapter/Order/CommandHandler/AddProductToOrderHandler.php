@@ -42,9 +42,9 @@ use OrderCartRule;
 use OrderDetail;
 use OrderInvoice;
 use PrestaShop\PrestaShop\Adapter\Order\AbstractOrderHandler;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\AddProductToOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\CommandHandler\AddProductToOrderHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use Product;
 use Shop;
@@ -125,7 +125,7 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
             $cart,
             $order->getCurrentOrderState(),
             $cart->getProducts(),
-            $command->getOrderInvoiceId() ?: 0
+            !empty($invoice->id) ? $invoice->id : 0
         );
 
         // update totals amount of order
@@ -188,10 +188,10 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
         foreach ($result as $cartRule) {
             // Create OrderCartRule
             $rule = new CartRule($cartRule['id_cart_rule']);
-            $values = array(
+            $values = [
                 'tax_incl' => $rule->getContextualValue(true),
                 'tax_excl' => $rule->getContextualValue(false),
-            );
+            ];
             $orderCartRule = new OrderCartRule();
             $orderCartRule->id_order = $order->id;
             $orderCartRule->id_cart_rule = $cartRule['id_cart_rule'];
@@ -237,7 +237,7 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
         if (0 !== $combinationId) {
             $combination = new Combination($combinationId);
 
-            if (Validate::isLoadedObject($combination)) {
+            if (!Validate::isLoadedObject($combination)) {
                 throw new OrderException('Product combination not found.');
             }
         }
@@ -256,9 +256,7 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
         $product = new Product($productId->getValue(), false, $langId);
 
         if ($product->id !== $productId->getValue()) {
-            throw new OrderException(
-                sprintf('Product with id "%d" is invalid.', $productId->getValue())
-            );
+            throw new OrderException(sprintf('Product with id "%d" is invalid.', $productId->getValue()));
         }
 
         return $product;

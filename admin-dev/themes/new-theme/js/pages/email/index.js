@@ -23,19 +23,19 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-import EmailSendingTest from './email-sending-test';
-import SmtpConfigurationToggler from './smtp-configuration-toggler';
-import Grid from '../../components/grid/grid';
-import ReloadListActionExtension from '../../components/grid/extension/reload-list-extension';
-import ExportToSqlManagerExtension from '../../components/grid/extension/export-to-sql-manager-extension';
-import FiltersResetExtension from '../../components/grid/extension/filters-reset-extension';
-import SortingExtension from '../../components/grid/extension/sorting-extension';
-import BulkActionCheckboxExtension from '../../components/grid/extension/bulk-action-checkbox-extension';
-import SubmitBulkExtension from '../../components/grid/extension/submit-bulk-action-extension';
-import SubmitGridExtension from '../../components/grid/extension/submit-grid-action-extension';
-import LinkRowActionExtension from '../../components/grid/extension/link-row-action-extension';
+import EmailSendingTest from '@pages/email/email-sending-test';
+import SmtpConfigurationToggler from '@pages/email/smtp-configuration-toggler';
+import Grid from '@components/grid/grid';
+import ReloadListActionExtension from '@components/grid/extension/reload-list-extension';
+import ExportToSqlManagerExtension from '@components/grid/extension/export-to-sql-manager-extension';
+import FiltersResetExtension from '@components/grid/extension/filters-reset-extension';
+import SortingExtension from '@components/grid/extension/sorting-extension';
+import BulkActionCheckboxExtension from '@components/grid/extension/bulk-action-checkbox-extension';
+import SubmitBulkExtension from '@components/grid/extension/submit-bulk-action-extension';
+import SubmitGridExtension from '@components/grid/extension/submit-grid-action-extension';
+import LinkRowActionExtension from '@components/grid/extension/link-row-action-extension';
 import FiltersSubmitButtonEnablerExtension
-  from '../../components/grid/extension/filters-submit-button-enabler-extension';
+  from '@components/grid/extension/filters-submit-button-enabler-extension';
 
 const $ = window.$;
 

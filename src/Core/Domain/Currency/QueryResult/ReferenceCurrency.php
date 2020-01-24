@@ -29,14 +29,19 @@ namespace PrestaShop\PrestaShop\Core\Domain\Currency\QueryResult;
 class ReferenceCurrency
 {
     /**
-     * @var array
+     * @var string[]
      */
     private $names;
 
     /**
-     * @var array
+     * @var string[]
      */
     private $symbols;
+
+    /**
+     * @var string[]
+     */
+    private $patterns;
 
     /**
      * @var string
@@ -55,9 +60,10 @@ class ReferenceCurrency
 
     /**
      * @param string $isoCode
-     * @param string|null $numericIsoCode
+     * @param string $numericIsoCode
      * @param array $names
      * @param array $symbols
+     * @param array $patterns
      * @param int $precision
      */
     public function __construct(
@@ -65,12 +71,14 @@ class ReferenceCurrency
         string $numericIsoCode,
         array $names,
         array $symbols,
+        array $patterns,
         int $precision
     ) {
         $this->isoCode = $isoCode;
         $this->numericIsoCode = $numericIsoCode;
         $this->names = $names;
         $this->symbols = $symbols;
+        $this->patterns = $patterns;
         $this->precision = $precision;
     }
 
@@ -87,9 +95,9 @@ class ReferenceCurrency
     /**
      * Currency numeric ISO code
      *
-     * @return string|null
+     * @return string
      */
-    public function getNumericIsoCode(): ?string
+    public function getNumericIsoCode(): string
     {
         return $this->numericIsoCode;
     }
@@ -112,6 +120,16 @@ class ReferenceCurrency
     public function getSymbols(): array
     {
         return $this->symbols;
+    }
+
+    /**
+     * Currency's patterns, indexed by language id.
+     *
+     * @return array
+     */
+    public function getPatterns(): array
+    {
+        return $this->patterns;
     }
 
     /**

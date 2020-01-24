@@ -33,6 +33,12 @@ export default {
   customerSelected: 'customerSelected',
   // when new cart is loaded, no matter if its empty, selected from carts list or duplicated by order.
   cartLoaded: 'cartLoaded',
+  // when cart currency has been changed
+  cartCurrencyChanged: 'cartCurrencyChanged',
+  // when cart currency changing fails
+  cartCurrencyChangeFailed: 'cartCurrencyChangeFailed',
+  // when cart language has been changed
+  cartLanguageChanged: 'cartLanguageChanged',
   // when cart addresses information has been changed
   cartAddressesChanged: 'cartAddressesChanged',
   // when cart delivery option has been changed
@@ -51,6 +57,18 @@ export default {
   productSearched: 'productSearched',
   // when product is added to cart
   productAddedToCart: 'productAddedToCart',
+  // when adding product to cart fails
+  productAddToCartFailed: 'productAddToCartFailed',
   // when product is removed from cart
   productRemovedFromCart: 'productRemovedFromCart',
+  // when product in cart price has been changed
+  productPriceChanged: 'productPriceChanged',
+  // when product quantity in cart has been changed
+  productQtyChanged: 'productQtyChanged',
+  // when changing product quantity in cart failed
+  productQtyChangeFailed: 'productQtyChangeFailed',
+  // when order process email has been sent to customer
+  processOrderEmailSent: 'processOrderEmailSent',
+  // when order process email sending failed
+  processOrderEmailFailed: 'processOrderEmailFailed',
 };

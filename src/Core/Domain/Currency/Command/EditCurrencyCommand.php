@@ -28,8 +28,8 @@ namespace PrestaShop\PrestaShop\Core\Domain\Currency\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyException;
-use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\ExchangeRate;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
+use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\ExchangeRate;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\Precision;
 
 /**
@@ -40,37 +40,42 @@ class EditCurrencyCommand
     /**
      * @var CurrencyId
      */
-    private $currencyId;
+    protected $currencyId;
 
     /**
      * @var ExchangeRate|null
      */
-    private $exchangeRate;
+    protected $exchangeRate;
 
     /**
      * @var Precision|null
      */
-    private $precision;
+    protected $precision;
 
     /**
      * @var string[]
      */
-    private $localizedNames = [];
+    protected $localizedNames = [];
 
     /**
      * @var string[]
      */
-    private $localizedSymbols = [];
+    protected $localizedSymbols = [];
 
     /**
      * @var bool
      */
-    private $isEnabled;
+    protected $isEnabled;
 
     /**
      * @var int[]
      */
-    private $shopIds = [];
+    protected $shopIds = [];
+
+    /**
+     * @var string[]
+     */
+    protected $localizedTransformations = [];
 
     /**
      * @param int $currencyId
@@ -152,10 +157,7 @@ class EditCurrencyCommand
     public function setLocalizedNames(array $localizedNames): EditCurrencyCommand
     {
         if (empty($localizedNames)) {
-            throw new CurrencyConstraintException(
-                'Currency name cannot be empty',
-                CurrencyConstraintException::EMPTY_NAME
-            );
+            throw new CurrencyConstraintException('Currency name cannot be empty', CurrencyConstraintException::EMPTY_NAME);
         }
 
         $this->localizedNames = $localizedNames;
@@ -181,10 +183,7 @@ class EditCurrencyCommand
     public function setLocalizedSymbols(array $localizedSymbols): EditCurrencyCommand
     {
         if (empty($localizedSymbols)) {
-            throw new CurrencyConstraintException(
-                'Currency symbol cannot be empty',
-                CurrencyConstraintException::EMPTY_SYMBOL
-            );
+            throw new CurrencyConstraintException('Currency symbol cannot be empty', CurrencyConstraintException::EMPTY_SYMBOL);
         }
 
         $this->localizedSymbols = $localizedSymbols;
@@ -228,6 +227,28 @@ class EditCurrencyCommand
     public function setShopIds(array $shopIds)
     {
         $this->shopIds = $shopIds;
+
+        return $this;
+    }
+
+    /**
+     * Returns the currency's localized transformations, indexed by language id
+     *
+     * @return string[]
+     */
+    public function getLocalizedTransformations(): array
+    {
+        return $this->localizedTransformations;
+    }
+
+    /**
+     * @param string[] $localizedTransformations currency's localized transformations, indexed by language id
+     *
+     * @return $this
+     */
+    public function setLocalizedTransformations(array $localizedTransformations): EditCurrencyCommand
+    {
+        $this->localizedTransformations = $localizedTransformations;
 
         return $this;
     }

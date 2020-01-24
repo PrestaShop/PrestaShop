@@ -55,14 +55,10 @@ final class AddManufacturerAddressHandler implements AddManufacturerAddressHandl
                 throw new InvalidAddressFieldException('Address contains invalid field values');
             }
             if (false === $address->add()) {
-                throw new AddressException(
-                    sprintf('Failed to add new address "%s"', $command->getAddress())
-                );
+                throw new AddressException(sprintf('Failed to add new address "%s"', $command->getAddress()));
             }
         } catch (PrestaShopException $e) {
-            throw new AddressException(
-                sprintf('An error occurred when adding new address "%s"', $command->getAddress())
-            );
+            throw new AddressException(sprintf('An error occurred when adding new address "%s"', $command->getAddress()));
         }
 
         return new AddressId((int) $address->id);

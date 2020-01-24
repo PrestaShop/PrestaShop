@@ -32,4 +32,16 @@ namespace PrestaShop\PrestaShop\Core\Domain\Attachment\Exception;
 class AttachmentConstraintException extends AttachmentException
 {
     const INVALID_ID = 1;
+
+    const INVALID_FILE_SIZE = 2;
+
+    const EMPTY_NAME = 3;
+
+    const EMPTY_DESCRIPTION = 4;
+
+    const INVALID_FIELDS = 5;
+
+    const INVALID_DESCRIPTION = 6;
+
+    const MISSING_NAME_IN_DEFAULT_LANGUAGE = 7;
 }

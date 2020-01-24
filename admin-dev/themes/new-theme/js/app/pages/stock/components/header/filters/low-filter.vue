@@ -48,7 +48,8 @@
 </template>
 
 <script>
-import PSCheckbox from 'app/widgets/ps-checkbox';
+import PSCheckbox from '@app/widgets/ps-checkbox';
+
 export default {
   props: {
     filters: {},

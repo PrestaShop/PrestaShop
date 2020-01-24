@@ -53,7 +53,7 @@
 
 <script>
   import PSTreeItem from './ps-tree-item';
-  import { EventBus } from 'app/utils/event-bus';
+  import { EventBus } from '@app/utils/event-bus';
 
   export default {
     name: 'PSTree',

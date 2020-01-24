@@ -28,18 +28,20 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 use Behat\Behat\Context\Context;
 use Behat\Testwork\Hook\Scope\BeforeSuiteScope;
+use Exception;
 use Language;
 use ObjectModel;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
-use Psr\Container\ContainerInterface;
 use RuntimeException;
+use Shop;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Tests\Integration\Behaviour\Features\Context\CommonFeatureContext;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 
 abstract class AbstractDomainFeatureContext implements Context
 {
     /**
-     * @var \Exception|null
+     * @var Exception|null
      */
     protected $lastException;
 
@@ -50,6 +52,8 @@ abstract class AbstractDomainFeatureContext implements Context
 
     /**
      * @BeforeSuite
+     *
+     * @param BeforeSuiteScope $scope
      */
     public static function prepare(BeforeSuiteScope $scope)
     {
@@ -89,11 +93,7 @@ abstract class AbstractDomainFeatureContext implements Context
     protected function assertLastErrorIsNull()
     {
         if (null !== $this->lastException) {
-            throw new RuntimeException(sprintf(
-                'An unexpected exception was thrown %s: %s',
-                get_class($this->lastException),
-                $this->lastException->getMessage()
-            ), 0, $this->lastException);
+            throw new RuntimeException(sprintf('An unexpected exception was thrown %s: %s', get_class($this->lastException), $this->lastException->getMessage()), 0, $this->lastException);
         }
     }
 
@@ -104,18 +104,10 @@ abstract class AbstractDomainFeatureContext implements Context
     protected function assertLastErrorIs($expectedError, $errorCode = null)
     {
         if (!$this->lastException instanceof $expectedError) {
-            throw new RuntimeException(sprintf(
-                'Last error should be "%s", but got "%s"',
-                $expectedError,
-                $this->lastException ? get_class($this->lastException) : 'null'
-            ), 0, $this->lastException);
+            throw new RuntimeException(sprintf('Last error should be "%s", but got "%s"', $expectedError, $this->lastException ? get_class($this->lastException) : 'null'), 0, $this->lastException);
         }
         if (null !== $errorCode && $this->lastException->getCode() !== $errorCode) {
-            throw new RuntimeException(sprintf(
-                'Last error should have code "%s", but has "%s"',
-                $errorCode,
-                $this->lastException ? $this->lastException->getCode() : 'null'
-            ), 0, $this->lastException);
+            throw new RuntimeException(sprintf('Last error should have code "%s", but has "%s"', $errorCode, $this->lastException ? $this->lastException->getCode() : 'null'), 0, $this->lastException);
         }
     }
 
@@ -145,5 +137,21 @@ abstract class AbstractDomainFeatureContext implements Context
         }
 
         return $localizedArray;
+    }
+
+    /**
+     * @Given single shop context is loaded
+     */
+    protected function singleShopContextIsLoaded()
+    {
+        Shop::setContext(Shop::CONTEXT_SHOP);
+    }
+
+    /**
+     * @Given multiple shop context is loaded
+     */
+    protected function multipleShopContextIsLoaded()
+    {
+        Shop::setContext(Shop::CONTEXT_ALL);
     }
 }

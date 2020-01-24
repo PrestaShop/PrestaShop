@@ -47,14 +47,7 @@ abstract class AbstractCmsPageCategoryCommand
     {
         foreach ($names as $name) {
             if (!preg_match(self::CATEGORY_NAME_REGEX_PATTERN, $name)) {
-                throw new CmsPageCategoryConstraintException(
-                    sprintf(
-                      'Given category name "%s" does not match pattern "%s"',
-                      $name,
-                      self::CATEGORY_NAME_REGEX_PATTERN
-                    ),
-                    CmsPageCategoryConstraintException::INVALID_CATEGORY_NAME
-                );
+                throw new CmsPageCategoryConstraintException(sprintf('Given category name "%s" does not match pattern "%s"', $name, self::CATEGORY_NAME_REGEX_PATTERN), CmsPageCategoryConstraintException::INVALID_CATEGORY_NAME);
             }
         }
     }
@@ -69,14 +62,7 @@ abstract class AbstractCmsPageCategoryCommand
         $assertionResult = $this->assertIsGenericName($localisedMetaTitles);
 
         if (true !== $assertionResult) {
-            throw new CmsPageCategoryConstraintException(
-                sprintf(
-                    'Given meta title "%s" does not match pattern "%s"',
-                    $assertionResult,
-                    self::GENERIC_NAME_REGEX_PATTERN
-                ),
-                CmsPageCategoryConstraintException::INVALID_META_TITLE
-            );
+            throw new CmsPageCategoryConstraintException(sprintf('Given meta title "%s" does not match pattern "%s"', $assertionResult, self::GENERIC_NAME_REGEX_PATTERN), CmsPageCategoryConstraintException::INVALID_META_TITLE);
         }
     }
 
@@ -90,14 +76,7 @@ abstract class AbstractCmsPageCategoryCommand
         $assertionResult = $this->assertIsGenericName($localisedMetaDescription);
 
         if (true !== $assertionResult) {
-            throw new CmsPageCategoryConstraintException(
-                sprintf(
-                    'Given meta description "%s" does not match pattern "%s"',
-                    $assertionResult,
-                    self::GENERIC_NAME_REGEX_PATTERN
-                ),
-                CmsPageCategoryConstraintException::INVALID_META_DESCRIPTION
-            );
+            throw new CmsPageCategoryConstraintException(sprintf('Given meta description "%s" does not match pattern "%s"', $assertionResult, self::GENERIC_NAME_REGEX_PATTERN), CmsPageCategoryConstraintException::INVALID_META_DESCRIPTION);
         }
     }
 
@@ -111,14 +90,7 @@ abstract class AbstractCmsPageCategoryCommand
         $assertionResult = $this->assertIsGenericName($localisedMetaKeywords);
 
         if (true !== $assertionResult) {
-            throw new CmsPageCategoryConstraintException(
-                sprintf(
-                    'Given meta keyword "%s" does not match pattern "%s"',
-                    $assertionResult,
-                    self::GENERIC_NAME_REGEX_PATTERN
-                ),
-                CmsPageCategoryConstraintException::INVALID_META_KEYWORDS
-            );
+            throw new CmsPageCategoryConstraintException(sprintf('Given meta keyword "%s" does not match pattern "%s"', $assertionResult, self::GENERIC_NAME_REGEX_PATTERN), CmsPageCategoryConstraintException::INVALID_META_KEYWORDS);
         }
     }
 

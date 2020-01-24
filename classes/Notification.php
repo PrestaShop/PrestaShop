@@ -36,7 +36,7 @@ class NotificationCore
      */
     public function __construct()
     {
-        $this->types = array('order', 'customer_message', 'customer');
+        $this->types = ['order', 'customer_message', 'customer'];
     }
 
     /**
@@ -47,7 +47,7 @@ class NotificationCore
      */
     public function getLastElements()
     {
-        $notifications = array();
+        $notifications = [];
         $employeeInfos = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
 		SELECT id_last_order, id_last_customer_message, id_last_customer
 		FROM `' . _DB_PREFIX_ . 'employee`
@@ -116,7 +116,7 @@ class NotificationCore
 
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql, true, false);
         $total = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('SELECT FOUND_ROWS()', false);
-        $json = array('total' => $total, 'results' => array());
+        $json = ['total' => $total, 'results' => []];
         foreach ($result as $value) {
             $customerName = '';
             if (isset($value['firstname'], $value['lastname'])) {
@@ -125,7 +125,7 @@ class NotificationCore
                 $customerName = Tools::safeOutput($value['email']);
             }
 
-            $json['results'][] = array(
+            $json['results'][] = [
                 'id_order' => ((!empty($value['id_order'])) ? (int) $value['id_order'] : 0),
                 'id_customer' => ((!empty($value['id_customer'])) ? (int) $value['id_customer'] : 0),
                 'id_customer_message' => ((!empty($value['id_customer_message'])) ? (int) $value['id_customer_message'] : 0),
@@ -145,7 +145,7 @@ class NotificationCore
                         'viewcustomer' => true,
                     ]
                 ),
-            );
+            ];
         }
 
         return $json;

@@ -34,6 +34,8 @@ use Symfony\Component\Form\FormFactoryInterface;
 /**
  * This class manages the data manipulated using forms
  * in "Configure > Advanced Parameters > Performance" page.
+ *
+ * @deprecated since 1.7.4.0, to be removed in the next major
  */
 final class PerformanceFormHandler extends AbstractFormHandler
 {

@@ -72,7 +72,7 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
     public function getHeader()
     {
         $this->assignCommonHeaderData();
-        $this->smarty->assign(array('header' => Context::getContext()->getTranslator()->trans('Invoice', array(), 'Shop.Pdf')));
+        $this->smarty->assign(['header' => Context::getContext()->getTranslator()->trans('Invoice', [], 'Shop.Pdf')]);
 
         return $this->smarty->fetch($this->getTemplate('header'));
     }
@@ -86,29 +86,29 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
      */
     protected function computeLayout($params)
     {
-        $layout = array(
-            'reference' => array(
+        $layout = [
+            'reference' => [
                 'width' => 15,
-            ),
-            'product' => array(
+            ],
+            'product' => [
                 'width' => 40,
-            ),
-            'quantity' => array(
+            ],
+            'quantity' => [
                 'width' => 8,
-            ),
-            'tax_code' => array(
+            ],
+            'tax_code' => [
                 'width' => 8,
-            ),
-            'unit_price_tax_excl' => array(
+            ],
+            'unit_price_tax_excl' => [
                 'width' => 0,
-            ),
-            'total_tax_excl' => array(
+            ],
+            'total_tax_excl' => [
                 'width' => 0,
-            ),
-        );
+            ],
+        ];
 
         if (isset($params['has_discount']) && $params['has_discount']) {
-            $layout['before_discount'] = array('width' => 0);
+            $layout['before_discount'] = ['width' => 0];
             $layout['product']['width'] -= 7;
             $layout['reference']['width'] -= 3;
         }
@@ -179,16 +179,16 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
 
             // Set tax_code
             $taxes = OrderDetail::getTaxListStatic($id);
-            $tax_temp = array();
+            $tax_temp = [];
             foreach ($taxes as $tax) {
                 $obj = new Tax($tax['id_tax']);
                 $translator = Context::getContext()->getTranslator();
                 $tax_temp[] = $translator->trans(
                     '%taxrate%%space%%',
-                    array(
+                    [
                         '%taxrate%' => ($obj->rate + 0),
                         '%space%' => '&nbsp;',
-                    ),
+                    ],
                     'Shop.Pdf'
                 );
             }
@@ -269,7 +269,7 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
 
         $total_taxes = $this->order_invoice->total_paid_tax_incl - $this->order_invoice->total_paid_tax_excl;
 
-        $footer = array(
+        $footer = [
             'products_before_discounts_tax_excl' => $this->order_invoice->total_products,
             'product_discounts_tax_excl' => $product_discounts_tax_excl,
             'products_after_discounts_tax_excl' => $products_after_discounts_tax_excl,
@@ -287,7 +287,7 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
             'total_taxes' => $total_taxes,
             'total_paid_tax_excl' => $this->order_invoice->total_paid_tax_excl,
             'total_paid_tax_incl' => $this->order_invoice->total_paid_tax_incl,
-        );
+        ];
 
         foreach ($footer as $key => $value) {
             $footer[$key] = Tools::ps_round($value, Context::getContext()->getComputingPrecision(), $this->order->round_mode);
@@ -319,14 +319,14 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
         $display_product_images = Configuration::get('PS_PDF_IMG_INVOICE');
         $tax_excluded_display = Group::getPriceDisplayMethod($customer->id_default_group);
 
-        $layout = $this->computeLayout(array('has_discount' => $has_discount));
+        $layout = $this->computeLayout(['has_discount' => $has_discount]);
 
-        $legal_free_text = Hook::exec('displayInvoiceLegalFreeText', array('order' => $this->order));
+        $legal_free_text = Hook::exec('displayInvoiceLegalFreeText', ['order' => $this->order]);
         if (!$legal_free_text) {
             $legal_free_text = Configuration::get('PS_INVOICE_LEGAL_FREE_TEXT', (int) Context::getContext()->language->id, null, (int) $this->order->id_shop);
         }
 
-        $data = array(
+        $data = [
             'order' => $this->order,
             'order_invoice' => $this->order_invoice,
             'order_details' => $order_details,
@@ -334,7 +334,7 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
             'cart_rules' => $cart_rules,
             'delivery_address' => $formatted_delivery_address,
             'invoice_address' => $formatted_invoice_address,
-            'addresses' => array('invoice' => $invoice_address, 'delivery' => $delivery_address),
+            'addresses' => ['invoice' => $invoice_address, 'delivery' => $delivery_address],
             'tax_excluded_display' => $tax_excluded_display,
             'display_product_images' => $display_product_images,
             'layout' => $layout,
@@ -344,7 +344,7 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
             'ps_price_compute_precision' => Context::getContext()->getComputingPrecision(),
             'round_type' => $round_type,
             'legal_free_text' => $legal_free_text,
-        );
+        ];
 
         if (Tools::getValue('debug')) {
             die(json_encode($data));
@@ -352,7 +352,7 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
 
         $this->smarty->assign($data);
 
-        $tpls = array(
+        $tpls = [
             'style_tab' => $this->smarty->fetch($this->getTemplate('invoice.style-tab')),
             'addresses_tab' => $this->smarty->fetch($this->getTemplate('invoice.addresses-tab')),
             'summary_tab' => $this->smarty->fetch($this->getTemplate('invoice.summary-tab')),
@@ -362,7 +362,7 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
             'note_tab' => $this->smarty->fetch($this->getTemplate('invoice.note-tab')),
             'total_tab' => $this->smarty->fetch($this->getTemplate('invoice.total-tab')),
             'shipping_tab' => $this->smarty->fetch($this->getTemplate('invoice.shipping-tab')),
-        );
+        ];
         $this->smarty->assign($tpls);
 
         return $this->smarty->fetch($this->getTemplateByCountry($country->iso_code));
@@ -385,7 +385,7 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
 
         $tax_breakdowns = $this->getTaxBreakdown();
 
-        $data = array(
+        $data = [
             'tax_exempt' => $tax_exempt,
             'use_one_after_another_method' => $this->order_invoice->useOneAfterAnotherTaxComputationMethod(),
             'display_tax_bases_in_breakdowns' => $this->order_invoice->displayTaxBasesInProductTaxesBreakdown(),
@@ -397,7 +397,7 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
             'order' => $debug ? null : $this->order,
             'order_invoice' => $debug ? null : $this->order_invoice,
             'carrier' => $debug ? null : $carrier,
-        );
+        ];
 
         if ($debug) {
             return $data;
@@ -415,12 +415,12 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
      */
     protected function getTaxBreakdown()
     {
-        $breakdowns = array(
+        $breakdowns = [
             'product_tax' => $this->order_invoice->getProductTaxesBreakdown($this->order),
             'shipping_tax' => $this->order_invoice->getShippingTaxesBreakdown($this->order),
             'ecotax_tax' => $this->order_invoice->getEcoTaxTaxesBreakdown(),
             'wrapping_tax' => $this->order_invoice->getWrappingTaxesBreakdown(),
-        );
+        ];
 
         foreach ($breakdowns as $type => $bd) {
             if (empty($bd)) {

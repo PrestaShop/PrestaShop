@@ -66,10 +66,7 @@ class EmployeeId
     private function assertIntegerIsGreaterThanZero($employeeId)
     {
         if (!is_int($employeeId) || 0 > $employeeId) {
-            throw new InvalidEmployeeIdException(sprintf(
-                'Invalid employee id %s supplied. Employee id must be positive integer.',
-                var_export($employeeId, true)
-            ));
+            throw new InvalidEmployeeIdException(sprintf('Invalid employee id %s supplied. Employee id must be positive integer.', var_export($employeeId, true)));
         }
     }
 }
