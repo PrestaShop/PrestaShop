@@ -195,7 +195,7 @@ export default class AsyncPositionExtension {
 
       showErrorMessage(response.message);
     }).always(() => {
-      this._addIdsToGridTableRows(true);
+      this.addIdsToGridTableRows(true);
     });
   }
 }
