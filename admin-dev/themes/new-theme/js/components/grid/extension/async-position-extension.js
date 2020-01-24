@@ -136,7 +136,7 @@ export default class AsyncPositionExtension {
    * Updates position for the column which actually is visible for the user.
    * @private
    */
-  _updatePositionsForOriginalColumn() {
+  updatePositionsForOriginalColumn() {
     this.grid.getContainer()
       .find(`.js-grid-table .js-${this.grid.getId()}-position`)
       .each((index, positionWrapper) => {
