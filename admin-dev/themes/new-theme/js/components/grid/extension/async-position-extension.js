@@ -77,7 +77,7 @@ export default class AsyncPositionExtension {
     const $rowPositionContainer = $(row).find(`.js-${  this.grid.getId()  }-position:first`);
     const updateUrl = $rowPositionContainer.data('update-url');
     const paginationOffset = parseInt($rowPositionContainer.data('pagination-offset'), 10);
-    const positions = this._getRowsPositions(paginationOffset);
+    const positions = this.getRowsPositions(paginationOffset);
     const params = {positions};
 
     this.updatePositionsForOriginalColumn();
