@@ -13,7 +13,6 @@ use PrestaShop\PrestaShop\Core\Grid\Column\ColumnInterface;
 final class GetProductExportableDataHandler implements GetProductExportableDataHandlerInterface
 {
     /**
-     * todo: quite universal export logic - maybe we should create a service for csv export data retrieval?
      * {@inheritdoc}
      */
     public function handle(GetProductExportableData $query)
