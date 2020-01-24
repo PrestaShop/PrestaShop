@@ -320,11 +320,6 @@ class AttachmentController extends FrameworkBundleAdminController
                 $e instanceof BulkDeleteAttachmentsException ? implode(', ', $e->getAttachmentIds()) : ''
             ),
             EmptyFileException::class => $this->trans('No file has been selected', 'Admin.Notifications.Error'),
-            CannotUnlinkAttachmentException::class => $this->trans(
-                'An error occurred while trying to remove file %file%',
-                'Admin.Notifications.Error',
-                ['%file%' => $e->getFilePath()]
-            )
         ];
     }
 
