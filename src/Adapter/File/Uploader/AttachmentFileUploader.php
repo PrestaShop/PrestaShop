@@ -55,10 +55,6 @@ final class AttachmentFileUploader implements AttachmentFileUploaderInterface
      */
     private $uploadSizeConfiguration;
 
-    /**
-     * @param ConfigurationInterface $configuration
-     * @param UploadSizeConfigurationInterface $uploadSizeConfiguration
-     */
     public function __construct(
         ConfigurationInterface $configuration,
         UploadSizeConfigurationInterface $uploadSizeConfiguration
@@ -89,7 +85,6 @@ final class AttachmentFileUploader implements AttachmentFileUploaderInterface
     }
 
     /**
-     * @param int $attachmentId
      * @param bool $throwExceptionOnFailure
      *
      * @throws AttachmentNotFoundException
@@ -105,12 +100,7 @@ final class AttachmentFileUploader implements AttachmentFileUploaderInterface
                 try {
                     unlink($fileLink);
                 } catch (ErrorException $e) {
-                    throw new CannotUnlinkAttachmentException(
-                        $e->getMessage(),
-                        0,
-                        null,
-                        $fileLink
-                    );
+                    throw new CannotUnlinkAttachmentException($e->getMessage(), 0, null, $fileLink);
                 }
             }
 
@@ -121,10 +111,6 @@ final class AttachmentFileUploader implements AttachmentFileUploaderInterface
     }
 
     /**
-     * @param string $filePath
-     * @param string $uniqid
-     * @param int $fileSize
-     *
      * @throws AttachmentConstraintException
      * @throws AttachmentUploadFailedException
      */
@@ -142,8 +128,6 @@ final class AttachmentFileUploader implements AttachmentFileUploaderInterface
     }
 
     /**
-     * @param int $fileSize
-     *
      * @throws AttachmentConstraintException
      */
     private function checkFileAllowedForUpload(int $fileSize): void
