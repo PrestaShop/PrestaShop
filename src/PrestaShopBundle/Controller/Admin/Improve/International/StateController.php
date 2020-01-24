@@ -161,6 +161,54 @@ class StateController extends FrameworkBundleAdminController
     }
 
     /**
+     * Handles edit form rendering and submission
+     *
+     * @AdminSecurity(
+     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     redirectRoute="admin_states_index"
+     * )
+     *
+     * @param int $stateId
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function editAction(int $stateId, Request $request): Response
+    {
+        // todo: replace when https://github.com/PrestaShop/PrestaShop/pull/15071 is merged
+        return $this->redirect(
+            $this->getAdminLink(
+                'AdminStates',
+                ['updatestate' => '', 'id_state' => $stateId ],
+                true)
+        );
+    }
+
+    /**
+     * Show "Add new" form and handle form submit.
+     *
+     * @AdminSecurity(
+     *     "is_granted(['create'], request.get('_legacy_controller'))",
+     *     redirectRoute="admin_states_index",
+     *     message="You do not have permission to create this."
+     * )
+     *
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function createAction(Request $request)
+    {
+        // todo: replace when https://github.com/PrestaShop/PrestaShop/pull/15071 is merged
+        return $this->redirect(
+            $this->getAdminLink(
+                'AdminStates',
+                ['addstate' => ''],
+                true)
+        );
+    }
+
+    /**
      * Toggles state status
      *
      * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute="admin_states_index")
