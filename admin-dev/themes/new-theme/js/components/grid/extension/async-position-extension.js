@@ -54,7 +54,7 @@ export default class AsyncPositionExtension {
     grid.getContainer().find('.js-grid-table').tableDnD({
       onDragClass: 'position-row-while-drag',
       dragHandle: '.js-drag-handle',
-      onDrop: (table, row) => this._handlePositionChange(row),
+      onDrop: (table, row) => this.handlePositionChange(row),
     });
     grid.getContainer().find('.js-drag-handle').hover(
       function () {
