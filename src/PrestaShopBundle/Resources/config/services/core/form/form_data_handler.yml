@@ -135,6 +135,11 @@ services:
     arguments:
       - '@prestashop.core.command_bus'
 
+  prestashop.core.form.identifiable_object.standard_refund_form_data_handler:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\StandardRefundFormDataHandler'
+    arguments:
+      - '@prestashop.core.command_bus'
+
   prestashop.core.form.identifiable_object.data_handler.address_form_data_handler:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\AddressFormDataHandler'
     arguments:

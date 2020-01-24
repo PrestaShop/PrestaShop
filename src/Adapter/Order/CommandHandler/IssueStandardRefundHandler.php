@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -35,14 +35,15 @@ use PrestaShop\PrestaShop\Adapter\Order\Refund\OrderRefundUpdater;
 use PrestaShop\PrestaShop\Adapter\Order\Refund\OrderSlipCreator;
 use PrestaShop\PrestaShop\Adapter\Order\Refund\VoucherGenerator;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
-use PrestaShop\PrestaShop\Core\Domain\Order\Command\IssuePartialRefundCommand;
-use PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler\IssuePartialRefundHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Order\Command\IssueStandardRefundCommand;
+use PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler\IssueStandardRefundHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\ReturnProductDisabledException;
 use Validate;
 
 /**
  * @internal
  */
-final class IssuePartialRefundHandler extends AbstractOrderCommandHandler implements IssuePartialRefundHandlerInterface
+class IssueStandardRefundHandler extends AbstractOrderCommandHandler implements IssueStandardRefundHandlerInterface
 {
     /**
      * @var ConfigurationInterface
@@ -93,20 +94,24 @@ final class IssuePartialRefundHandler extends AbstractOrderCommandHandler implem
     /**
      * {@inheritdoc}
      */
-    public function handle(IssuePartialRefundCommand $command): void
+    public function handle(IssueStandardRefundCommand $command): void
     {
+        if ((int) $this->configuration->get('PS_ORDER_RETURN') <= 0) {
+            throw new ReturnProductDisabledException();
+        }
+
         /** @var Order $order */
         $order = $this->getOrderObject($command->getOrderId());
+        $shippingRefundAmount = $command->refundShippingCost() ? $order->total_shipping_tax_incl : 0;
         /** @var OrderRefundSummary $orderRefundSummary */
         $orderRefundSummary = $this->orderRefundCalculator->computeOrderRefund(
             $order,
             $command->getOrderDetailRefunds(),
-            $command->getShippingCostRefundAmount(),
+            $shippingRefundAmount,
             $command->getVoucherRefundType(),
             $command->getVoucherRefundAmount()
         );
 
-        // @todo This part should probably be in a share abstract class as it will probably be common with other handlers
         // Update order details and reinject quantities
         foreach ($orderRefundSummary->getProductRefunds() as $orderDetailId => $productRefund) {
             $orderDetail = $orderRefundSummary->getOrderDetailById($orderDetailId);
@@ -129,8 +134,9 @@ final class IssuePartialRefundHandler extends AbstractOrderCommandHandler implem
             $this->orderSlipCreator->create($order, $orderRefundSummary);
         }
 
-        // Update refund details
+        // Update refund details (important order details must be updated before the delete or the operation is not valid)
         $this->refundUpdater->updateRefundData($order, $orderRefundSummary);
+        $this->refundUpdater->deleteFromOrder($order, $orderRefundSummary);
 
         // Generate voucher if needed
         if ($command->generateVoucher() && $orderRefundSummary->getRefundedAmount() > 0) {
