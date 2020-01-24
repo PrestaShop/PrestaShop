@@ -81,7 +81,7 @@ export default class AsyncPositionExtension {
     const params = {positions};
 
     this.updatePositionsForOriginalColumn();
-    this._updatePosition(updateUrl, params);
+    this.updatePosition(updateUrl, params);
   }
 
   /**
