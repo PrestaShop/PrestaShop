@@ -213,9 +213,6 @@ final class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
         }
 
         return $columns;
-
-//        todo: position when category filter is used
-        // @see https://github.com/sarjon/PrestaShop/blob/42a80d5931b50e641b8030b82845cec1a3bb5118/src/PrestaShopBundle/Resources/views/Admin/Product/CatalogPage/Lists/products_table.html.twig#L72
     }
 
     /**

@@ -30,8 +30,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * @todo: raise product list multishop list issue - maybe after all actions are performed. It does not work correctly when shop groups
- * are selected.
  * Manages "Sell -> Catalog -> Products" page actions.
  */
 class ProductController extends FrameworkBundleAdminController
