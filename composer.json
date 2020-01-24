@@ -154,7 +154,7 @@
         ],
         "create-test-db": [
             "@php ./tests-legacy/create-test-db.php",
-            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::clearCache"
+            "@php ./bin/console cache:clear -e test"
         ],
         "test-all": [
             "composer phpunit-admin",
