@@ -541,16 +541,16 @@ INSERT IGNORE INTO `PREFIX_hook` (`id_hook`, `name`, `title`, `description`, `po
 
 INSERT INTO `PREFIX_hook_alias` (`name`, `alias`) VALUES ('displayAdminOrderTop', 'displayInvoice');
 
-insert into PREFIX_configuration (`id_configuration`, `id_shop_group`, `id_shop`, `name`, `value`, `date_add`, `date_upd`)
-select NULL, NULL, NULL, 'PS_ECOTAX_TAX_RULES_GROUP_ID', '0', NOW(), NOW()
+INSERT INTO PREFIX_configuration (`id_configuration`, `id_shop_group`, `id_shop`, `name`, `value`, `date_add`, `date_upd`)
+SELECT NULL, NULL, NULL, 'PS_ECOTAX_TAX_RULES_GROUP_ID', '0', NOW(), NOW()
 FROM PREFIX_configuration
 WHERE NOT EXISTS
     (SELECT *
      FROM PREFIX_configuration
      WHERE `name` = 'PS_ECOTAX_TAX_RULES_GROUP_ID'
-       and `id_shop_group` = NULL
-       and `id_shop` = NULL)
-limit 1;
+       AND `id_shop_group` = NULL
+       AND `id_shop` = NULL)
+LIMIT 1;
 
 /* Add refund amount on order detail, and fill new columns via data in order_slip_detail table */
 ALTER TABLE `PREFIX_order_detail` ADD `total_refunded_tax_excl` DECIMAL(20, 6) NOT NULL AFTER `original_wholesale_price` DEFAULT '0.000000';
