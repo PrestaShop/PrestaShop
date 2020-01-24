@@ -54,7 +54,6 @@ export default class AsyncSubmitBulkActionExtension {
     const $submitBtn = $(event.currentTarget);
     const confirmMessage = $submitBtn.data('confirm-message');
     const confirmTitle = $submitBtn.data('confirmTitle');
-
     const hasConfirmTitle = confirmTitle !== undefined;
     const hasConfirmationMessage = confirmMessage !== undefined && confirmMessage.length > 0;
     const hasAllConfirmationMessages = hasConfirmationMessage && hasConfirmTitle;
@@ -149,7 +148,7 @@ export default class AsyncSubmitBulkActionExtension {
       confirmButtonLabel,
       closeButtonLabel,
       confirmButtonClass,
-    }, () => this.postForm($submitBtn, grid));
+    }, () => this.submitForm($submitBtn, grid));
 
     modal.show();
   }

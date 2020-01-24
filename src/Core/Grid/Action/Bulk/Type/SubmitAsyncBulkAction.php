@@ -3,6 +3,7 @@
 namespace PrestaShop\PrestaShop\Core\Grid\Action\Bulk\Type;
 
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\AbstractBulkAction;
+use PrestaShop\PrestaShop\Core\Grid\Action\ModalOptions;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
@@ -31,12 +32,14 @@ final class SubmitAsyncBulkAction extends AbstractBulkAction
             ->setDefaults([
                 'confirm_message' => null,
                 'submit_method' => 'POST',
+                'modal_options' => null,
                 'route_params' => [],
                 'step' => 1,
             ])
             ->setAllowedTypes('submit_route', 'string')
             ->setAllowedTypes('confirm_message', ['string', 'null'])
             ->setAllowedValues('submit_method', ['POST', 'GET', 'DELETE', 'PUT'])
+            ->setAllowedTypes('modal_options', [ModalOptions::class, 'null'])
             ->setAllowedTypes('route_params', 'array')
             ->setAllowedTypes('step', 'int')
         ;
