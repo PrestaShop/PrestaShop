@@ -43,7 +43,7 @@ final class GetProductExportableDataHandler implements GetProductExportableDataH
         $headerIteration = 0;
 
         /**
-         * @var string $columnId
+         * @var string
          * @var ColumnInterface $column
          */
         foreach ($columns as $column) {
@@ -54,7 +54,7 @@ final class GetProductExportableDataHandler implements GetProductExportableDataH
             $headers[$column['id']] = $column['name'];
             $headerRowPosition[$column['id']] = $headerIteration;
 
-            $headerIteration++;
+            ++$headerIteration;
         }
 
         return [$headers, $headerRowPosition];
@@ -78,7 +78,7 @@ final class GetProductExportableDataHandler implements GetProductExportableDataH
             $data[$dataIteration] = $this->getRecord($columnRecord, $headerRowPosition);
 
             ksort($data[$dataIteration]);
-            $dataIteration++;
+            ++$dataIteration;
         }
 
         return $data;

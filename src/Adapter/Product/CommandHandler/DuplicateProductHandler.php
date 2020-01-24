@@ -61,14 +61,7 @@ final class DuplicateProductHandler implements DuplicateProductHandlerInterface
         try {
             $productId = $this->productDataUpdater->duplicateProduct($command->getProductId()->getValue());
         } catch (UpdateProductException $exception) {
-            throw new CannotDuplicateProductException(
-                sprintf(
-                    'Cannot duplicate product with id %s',
-                    $command->getProductId()->getValue()
-                ),
-                0,
-                $exception
-            );
+            throw new CannotDuplicateProductException(sprintf('Cannot duplicate product with id %s', $command->getProductId()->getValue()), 0, $exception);
         }
 
         $this->hookDispatcher->dispatchWithParameters(

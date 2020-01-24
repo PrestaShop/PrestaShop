@@ -19,7 +19,6 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductExportableData;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductPreviewUrl;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductExportableData;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
-use PrestaShop\PrestaShop\Core\Grid\Column\ColumnInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\ProductFilters;
 use PrestaShopBundle\Component\CsvResponse;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
@@ -447,6 +446,6 @@ class ProductController extends FrameworkBundleAdminController
     {
         $productIds = $request->request->get('product_bulk');
 
-        return array_map(static function ($item){ return (int) $item; }, $productIds);
+        return array_map(static function ($item) { return (int) $item; }, $productIds);
     }
 }

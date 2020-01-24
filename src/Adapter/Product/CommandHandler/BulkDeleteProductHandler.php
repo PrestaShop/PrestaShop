@@ -50,22 +50,10 @@ final class BulkDeleteProductHandler implements BulkDeleteProductHandlerInterfac
             $result = (new Product())->deleteSelection($productIds);
 
             if (!$result) {
-                throw new CannotDeleteProductException(
-                    sprintf(
-                        'Failed to delete products with ids "%s"',
-                        var_export($productIds, true)
-                    )
-                );
+                throw new CannotDeleteProductException(sprintf('Failed to delete products with ids "%s"', var_export($productIds, true)));
             }
         } catch (PrestaShopException $exception) {
-            throw new CannotDeleteProductException(
-                sprintf(
-                    'An unexpected error occurred when trying to delete products with ids "%s"',
-                    var_export($productIds, true)
-                ),
-                0,
-                $exception
-            );
+            throw new CannotDeleteProductException(sprintf('An unexpected error occurred when trying to delete products with ids "%s"', var_export($productIds, true)), 0, $exception);
         }
 
         $this->hookDispatcher->dispatchWithParameters('actionAdminDeleteAfter', $hookParameters);
