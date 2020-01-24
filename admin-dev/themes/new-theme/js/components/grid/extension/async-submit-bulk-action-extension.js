@@ -23,6 +23,8 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+import ConfirmModal from '../../modal';
+
 const $ = window.$;
 
 export default class AsyncSubmitBulkActionExtension {
@@ -51,11 +53,22 @@ export default class AsyncSubmitBulkActionExtension {
   submit(event, grid) {
     const $submitBtn = $(event.currentTarget);
     const confirmMessage = $submitBtn.data('confirm-message');
+    const confirmTitle = $submitBtn.data('confirmTitle');
 
-    if (typeof confirmMessage !== 'undefined' && confirmMessage.length > 0 && !confirm(confirmMessage)) {
-      return;
+    const hasConfirmTitle = confirmTitle !== undefined;
+    const hasConfirmationMessage = confirmMessage !== undefined && confirmMessage.length > 0;
+    const hasAllConfirmationMessages = hasConfirmationMessage && hasConfirmTitle;
+
+    if (hasAllConfirmationMessages) {
+      this.showConfirmModal($submitBtn, grid, confirmMessage, confirmTitle);
+    } else if (hasConfirmationMessage && !hasAllConfirmationMessages && confirm(confirmMessage)) {
+      this.submitForm($submitBtn, grid);
+    } else {
+      this.submitForm($submitBtn, grid);
     }
+  }
 
+  submitForm($submitBtn, grid) {
     const $form = $(`#${grid.getId()}_filter_form`);
     const $checkedInputs = this.getCheckedInputs($form);
     const ids = this.getCheckedIds($checkedInputs);
@@ -116,6 +129,29 @@ export default class AsyncSubmitBulkActionExtension {
         showErrorMessage(response.message);
         window.location.reload();
       });
+  }
+
+  /**
+   * @param {jQuery} $submitBtn
+   * @param {Grid} grid
+   * @param {string} confirmMessage
+   * @param {string} confirmTitle
+   */
+  showConfirmModal($submitBtn, grid, confirmMessage, confirmTitle) {
+    const confirmButtonLabel = $submitBtn.data('confirmButtonLabel');
+    const closeButtonLabel = $submitBtn.data('closeButtonLabel');
+    const confirmButtonClass = $submitBtn.data('confirmButtonClass');
+
+    const modal = new ConfirmModal({
+      id: `${grid.getId()}_grid_confirm_modal`,
+      confirmTitle,
+      confirmMessage,
+      confirmButtonLabel,
+      closeButtonLabel,
+      confirmButtonClass,
+    }, () => this.postForm($submitBtn, grid));
+
+    modal.show();
   }
 
   /**
