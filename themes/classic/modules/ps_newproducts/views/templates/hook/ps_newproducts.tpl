@@ -22,7 +22,7 @@
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
-
+{if $products}
 <section class="featured-products clearfix mt-3">
   <h2 class="h2 products-section-title text-uppercase">
     {l s='New products' d='Shop.Theme.Catalog'}
@@ -36,4 +36,4 @@
     {l s='All new products' d='Shop.Theme.Catalog'}<i class="material-icons">&#xE315;</i>
   </a>
 </section>
-
+{/if}
