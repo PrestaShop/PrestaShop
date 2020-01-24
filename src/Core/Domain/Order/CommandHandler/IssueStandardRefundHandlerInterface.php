@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,22 +19,22 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Order\Command\IssuePartialRefundCommand;
+use PrestaShop\PrestaShop\Core\Domain\Order\Command\IssueStandardRefundCommand;
 
 /**
- * Interface for service that handles issuing partial refund for given order
+ * Interface for service that handles issuing standard refund for given order
  */
-interface IssuePartialRefundHandlerInterface
+interface IssueStandardRefundHandlerInterface
 {
     /**
-     * @param IssuePartialRefundCommand $command
+     * @param IssueStandardRefundCommand $command
      */
-    public function handle(IssuePartialRefundCommand $command): void;
+    public function handle(IssueStandardRefundCommand $command): void;
 }
