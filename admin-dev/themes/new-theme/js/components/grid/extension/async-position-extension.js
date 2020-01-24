@@ -158,7 +158,7 @@ export default class AsyncPositionExtension {
    * @return {string}
    * @private
    */
-  _getOriginalColumnId($positionWrapper) {
+  getOriginalColumnId($positionWrapper) {
     const classes = $positionWrapper.attr('class').split(/\s+/);
     const classEndsWith = '_handle-type';
 
