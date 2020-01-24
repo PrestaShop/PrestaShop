@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\File\Uploader;
 
 use Attachment;
+use ErrorException;
 use PrestaShop\PrestaShop\Core\Configuration\UploadSizeConfigurationInterface;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\AttachmentFileUploaderInterface;
@@ -100,16 +101,17 @@ final class AttachmentFileUploader implements AttachmentFileUploaderInterface
             $attachment = new Attachment($attachmentId);
             $fileLink = _PS_DOWNLOAD_DIR_ . $attachment->file;
 
-            if ($throwExceptionOnFailure && !@unlink($fileLink)) {
-                throw new CannotUnlinkAttachmentException(
-                    sprintf(
-                        'Failed to unlink file %s from system',
+            if ($throwExceptionOnFailure) {
+                try {
+                    unlink($fileLink);
+                } catch (ErrorException $e) {
+                    throw new CannotUnlinkAttachmentException(
+                        $e->getMessage(),
+                        0,
+                        null,
                         $fileLink
-                    ),
-                    0,
-                    null,
-                    $fileLink
-                );
+                    );
+                }
             }
 
             @unlink($fileLink);
