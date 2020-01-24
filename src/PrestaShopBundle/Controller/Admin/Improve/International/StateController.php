@@ -179,7 +179,7 @@ class StateController extends FrameworkBundleAdminController
         return $this->redirect(
             $this->getAdminLink(
                 'AdminStates',
-                ['updatestate' => '', 'id_state' => $stateId ],
+                ['updatestate' => '', 'id_state' => $stateId],
                 true)
         );
     }

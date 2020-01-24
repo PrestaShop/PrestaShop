@@ -52,15 +52,11 @@ abstract class AbstractStateHandler
         try {
             $state = new State($stateIdValue);
         } catch (PrestaShopException $e) {
-            throw new StateNotFoundException(
-                sprintf('State with id "%s" was not found.', $stateId->getValue())
-            );
+            throw new StateNotFoundException(sprintf('State with id "%s" was not found.', $stateId->getValue()));
         }
 
         if ($state->id !== $stateId->getValue()) {
-            throw new StateNotFoundException(
-                sprintf('State with id "%s" was not found.', $stateId->getValue())
-            );
+            throw new StateNotFoundException(sprintf('State with id "%s" was not found.', $stateId->getValue()));
         }
 
         return $state;
@@ -80,9 +76,7 @@ abstract class AbstractStateHandler
         try {
             return $state->delete();
         } catch (PrestaShopException $e) {
-            throw new DeleteStateException(
-                sprintf('An error occurred when deleting State object with id "%s".', $state->id)
-            );
+            throw new DeleteStateException(sprintf('An error occurred when deleting State object with id "%s".', $state->id));
         }
     }
 
@@ -103,10 +97,7 @@ abstract class AbstractStateHandler
         try {
             return $state->save();
         } catch (PrestaShopException $e) {
-            throw new StateException(sprintf(
-                'An error occurred when updating state status with id "%s"',
-                $state->id
-            ));
+            throw new StateException(sprintf('An error occurred when updating state status with id "%s"', $state->id));
         }
     }
 }

@@ -44,10 +44,7 @@ final class ToggleStateStatusHandler extends AbstractStateHandler implements Tog
         $state = $this->getState($command->getStateId());
 
         if (!$this->toggleStateStatus($state, $command->getExpectedStatus())) {
-            throw new UpdateStateException(
-                sprintf('Unable to toggle state status with id "%s"', $state->id),
-                UpdateStateException::FAILED_TOGGLE_STATUS
-            );
+            throw new UpdateStateException(sprintf('Unable to toggle state status with id "%s"', $state->id), UpdateStateException::FAILED_TOGGLE_STATUS);
         }
     }
 }
