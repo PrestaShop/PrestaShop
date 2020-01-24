@@ -55,10 +55,6 @@ final class AttachmentFileUploader implements AttachmentFileUploaderInterface
      */
     private $uploadSizeConfiguration;
 
-    /**
-     * @param ConfigurationInterface $configuration
-     * @param UploadSizeConfigurationInterface $uploadSizeConfiguration
-     */
     public function __construct(
         ConfigurationInterface $configuration,
         UploadSizeConfigurationInterface $uploadSizeConfiguration
@@ -89,7 +85,6 @@ final class AttachmentFileUploader implements AttachmentFileUploaderInterface
     }
 
     /**
-     * @param int $attachmentId
      * @param bool $throwExceptionOnFailure
      *
      * @throws AttachmentNotFoundException
@@ -105,12 +100,7 @@ final class AttachmentFileUploader implements AttachmentFileUploaderInterface
                 try {
                     unlink($fileLink);
                 } catch (ErrorException $e) {
-                    throw new CannotUnlinkAttachmentException(
-                        $e->getMessage(),
-                        0,
-                        null,
-                        $fileLink
-                    );
+                    throw new CannotUnlinkAttachmentException($e->getMessage(), 0, null, $fileLink);
                 }
             }
 
@@ -121,23 +111,13 @@ final class AttachmentFileUploader implements AttachmentFileUploaderInterface
     }
 
     /**
-     * @param string $filePath
-     * @param string $uniqid
-     * @param int $fileSize
-     *
      * @throws AttachmentConstraintException
      * @throws AttachmentUploadFailedException
      */
     private function uploadFile(string $filePath, string $uniqid, int $fileSize): void
     {
         if ($fileSize > ($this->configuration->get('PS_ATTACHMENT_MAXIMUM_SIZE') * 1024 * 1024)) {
-            throw new AttachmentConstraintException(sprintf(
-                'Max file size allowed is "%s" bytes. Uploaded file size is "%s".',
-                    (string) ($this->configuration->get('PS_ATTACHMENT_MAXIMUM_SIZE') * 1024),
-                    number_format(($fileSize / 1024), 2, '.', '')
-                ),
-                AttachmentConstraintException::INVALID_FILE_SIZE
-            );
+            throw new AttachmentConstraintException(sprintf('Max file size allowed is "%s" bytes. Uploaded file size is "%s".', (string) ($this->configuration->get('PS_ATTACHMENT_MAXIMUM_SIZE') * 1024), number_format(($fileSize / 1024), 2, '.', '')), AttachmentConstraintException::INVALID_FILE_SIZE);
         }
 
         try {
@@ -148,8 +128,6 @@ final class AttachmentFileUploader implements AttachmentFileUploaderInterface
     }
 
     /**
-     * @param int $fileSize
-     *
      * @throws AttachmentConstraintException
      */
     private function checkFileAllowedForUpload(int $fileSize): void
@@ -157,14 +135,7 @@ final class AttachmentFileUploader implements AttachmentFileUploaderInterface
         $maxFileSize = $this->uploadSizeConfiguration->getMaxUploadSizeInBytes();
 
         if ($maxFileSize > 0 && $fileSize > $maxFileSize) {
-            throw new AttachmentConstraintException(
-                sprintf(
-                    'Max file size allowed is "%s" bytes. Uploaded file size is "%s".',
-                    $maxFileSize,
-                    $fileSize
-                ),
-                AttachmentConstraintException::INVALID_FILE_SIZE
-            );
+            throw new AttachmentConstraintException(sprintf('Max file size allowed is "%s" bytes. Uploaded file size is "%s".', $maxFileSize, $fileSize), AttachmentConstraintException::INVALID_FILE_SIZE);
         }
     }
 }
