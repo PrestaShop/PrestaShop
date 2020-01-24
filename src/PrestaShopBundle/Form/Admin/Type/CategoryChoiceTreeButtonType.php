@@ -31,7 +31,8 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * Displays button which has category tree pre-rendered.
+ * Displays button which has category tree pre-rendered. Choose this component if you want to render categories in a
+ * button. If you want traditional category choice tree choose CategoryChoiceTreeType component.
  */
 class CategoryChoiceTreeButtonType extends AbstractType
 {
