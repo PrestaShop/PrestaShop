@@ -429,7 +429,16 @@ $(document).ready(function() {
 
     $('#id_order_carrier').val($(this).data('id-order-carrier'));
     $('#shipping_tracking_number').val($(this).data('tracking-number'));
-    $('#shipping_carrier option[value='+$(this).data('id-carrier')+']').prop('selected', true);
+
+    var keep_selected = $('#shipping_carrier option[value=-1]');
+    var selected = $('#shipping_carrier option[value=' + $(this).data('id-carrier') + ']');
+    if (selected.length) {
+      keep_selected.remove();
+    } else {
+      keep_selected.attr('value', $(this).data('id-carrier'));
+      selected = keep_selected;
+    }
+    selected.prop('selected', true);
 
     $('#modal-shipping').modal();
   });
