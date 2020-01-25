@@ -3,12 +3,29 @@ module.exports = class CommonPage {
     this.page = page;
   }
 
+  /**
+   * Get page title
+   * @returns {Promise<*>}
+   */
   async getPageTitle() {
     return this.page.title();
   }
 
-  async goTo(URL) {
-    await this.page.goto(URL);
+  /**
+   * Go to URL
+   * @param url
+   * @returns {Promise<void>}
+   */
+  async goTo(url) {
+    await this.page.goto(url);
+  }
+
+  /**
+   * Get current url
+   * @returns {Promise<void>}
+   */
+  async getCurrentURL() {
+    return this.page.url();
   }
 
   /**
@@ -249,7 +266,7 @@ module.exports = class CommonPage {
   }
 
   /**
-   * c
+   * Check if checkbox is selected
    * @param selector
    * @return {Promise<boolean>}
    */

@@ -13,7 +13,6 @@ module.exports = class Brands extends BOBasePage {
     this.newBrandLink = '#page-header-desc-configuration-add_manufacturer';
     this.newBrandAddressLink = '#page-header-desc-configuration-add_manufacturer_address';
 
-
     // Table Selectors
     this.gridPanel = '#%TABLE_grid_panel';
     this.gridTable = '#%TABLE_grid_table';
@@ -21,6 +20,8 @@ module.exports = class Brands extends BOBasePage {
     // Bulk Actions
     this.selectAllRowsLabel = `${this.gridPanel} .md-checkbox label`;
     this.bulkActionsToggleButton = `${this.gridPanel} button.js-bulk-actions-btn`;
+    this.confirmDeleteModal = '#%TABLE_grid_confirm_modal';
+    this.confirmDeleteButton = 'button.btn-confirm-submit';
     // Filters
     this.filterColumn = `${this.gridTable} #%TABLE_%FILTERBY`;
     this.filterSearchButton = `${this.gridTable} button[name='%TABLE[actions][search]']`;
@@ -53,7 +54,7 @@ module.exports = class Brands extends BOBasePage {
     // Brand Addresses Selectors
     this.editBrandAddressLink = `${this.actionsColumn} a[data-original-title='Edit']`
       .replace('%TABLE', 'manufacturer_address');
-    this.deleteAddressesButton = `${this.gridPanel} #manufacturer_address_grid_bulk_action_delete_manufacturer_address`
+    this.deleteAddressesButton = `${this.gridPanel} #manufacturer_address_grid_bulk_action_delete_selection`
       .replace('%TABLE', 'manufacturer_address');
   }
 
@@ -296,7 +297,6 @@ module.exports = class Brands extends BOBasePage {
    * @return {Promise<textContent>}
    */
   async deleteWithBulkActions(table) {
-    this.dialogListener(true);
     // Click on Select All
     await Promise.all([
       this.page.click(this.selectAllRowsLabel.replace('%TABLE', table)),
@@ -315,10 +315,13 @@ module.exports = class Brands extends BOBasePage {
     ]);
     // Click on delete and wait for modal
     if (table === 'manufacturer') {
-      await this.clickAndWaitForNavigation(this.deleteBrandsButton);
+      this.page.click(this.deleteBrandsButton);
+      await this.page.waitForSelector(`${this.confirmDeleteModal.replace('%TABLE', 'manufacturer')}.show`, {visible: true});
     } else if (table === 'manufacturer_address') {
-      await this.clickAndWaitForNavigation(this.deleteAddressesButton);
+      this.page.click(this.deleteAddressesButton);
+      await this.page.waitForSelector(`${this.confirmDeleteModal.replace('%TABLE', 'manufacturer_address')}.show`, {visible: true});
     }
+    await this.clickAndWaitForNavigation(this.confirmDeleteButton);
     return this.getTextContent(this.alertSuccessBlockParagraph);
   }
 
