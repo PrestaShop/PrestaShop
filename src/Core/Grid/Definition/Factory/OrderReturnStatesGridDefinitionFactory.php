@@ -54,10 +54,6 @@ final class OrderReturnStatesGridDefinitionFactory extends AbstractGridDefinitio
      */
     private $returnStatesChoiceProvider;
 
-    /**
-     * @param HookDispatcherInterface $hookDispatcher
-     * @param FormChoiceProviderInterface $returnStatesChoiceProvider
-     */
     public function __construct(
         HookDispatcherInterface $hookDispatcher,
         FormChoiceProviderInterface $returnStatesChoiceProvider
