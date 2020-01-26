@@ -27,8 +27,6 @@
 namespace PrestaShop\PrestaShop\Core\Grid\Data\Factory;
 
 use PrestaShop\PrestaShop\Core\Grid\Data\GridData;
-use PrestaShop\PrestaShop\Core\Grid\Record\RecordCollection;
-use PrestaShop\PrestaShop\Core\Grid\Record\RecordCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 
 /**
@@ -41,9 +39,6 @@ final class OrderReturnStatesGridDataFactoryDecorator implements GridDataFactory
      */
     private $returnStatesDoctrineGridDataFactory;
 
-    /**
-     * @param GridDataFactoryInterface $returnStatutesDoctrineGridDataFactory
-     */
     public function __construct(
         GridDataFactoryInterface $returnStatutesDoctrineGridDataFactory
     ) {
