@@ -34,7 +34,6 @@ use PrestaShop\PrestaShop\Core\Grid\Action\Type\SimpleGridAction;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\ColorColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
-use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ImageColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ToggleColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
 use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
@@ -57,10 +56,6 @@ final class OrderStatesGridDefinitionFactory extends AbstractGridDefinitionFacto
      */
     private $orderStatesChoiceProvider;
 
-    /**
-     * @param HookDispatcherInterface $hookDispatcher
-     * @param FormChoiceProviderInterface $orderStatesChoiceProvider
-     */
     public function __construct(
         HookDispatcherInterface $hookDispatcher,
         FormChoiceProviderInterface $orderStatesChoiceProvider
@@ -136,13 +131,6 @@ final class OrderStatesGridDefinitionFactory extends AbstractGridDefinitionFacto
                     ])
             )
             ->add(
-                (new DataColumn('delivery'))
-                    ->setName($this->trans('Delivery', [], 'Admin.Global'))
-                    ->setOptions([
-                        'field' => 'delivery',
-                    ])
-            )
-            ->add(
                 (new DataColumn('template'))
                     ->setName($this->trans('Email template', [], 'Admin.Shopparameters.Feature'))
                     ->setOptions([
@@ -158,9 +146,10 @@ final class OrderStatesGridDefinitionFactory extends AbstractGridDefinitionFacto
                             ->setName($this->trans('Edit', [], 'Admin.Actions'))
                             ->setIcon('edit')
                             ->setOptions([
-                                'route' => 'admin_order_states',
+                                'route' => 'admin_order_states_edit',
                                 'route_param_name' => 'orderStateId',
                                 'route_param_field' => 'id_order_state',
+                                'clickable_row' => true,
                             ])
                         ),
                 ])

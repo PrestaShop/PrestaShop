@@ -27,10 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Grid\Data\Factory;
 
 use PrestaShop\PrestaShop\Core\Grid\Data\GridData;
-use PrestaShop\PrestaShop\Core\Grid\Record\RecordCollection;
-use PrestaShop\PrestaShop\Core\Grid\Record\RecordCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
-use PrestaShop\PrestaShop\Core\Image\ImageProviderInterface;
 
 /**
  * Class OrderStatesGridDataFactoryDecorator decorates data from order_states doctrine data factory.
@@ -42,9 +39,6 @@ final class OrderStatesGridDataFactoryDecorator implements GridDataFactoryInterf
      */
     private $orderStatesDoctrineGridDataFactory;
 
-    /**
-     * @param GridDataFactoryInterface $orderStatutesDoctrineGridDataFactory
-     */
     public function __construct(
         GridDataFactoryInterface $orderStatutesDoctrineGridDataFactory
     ) {
