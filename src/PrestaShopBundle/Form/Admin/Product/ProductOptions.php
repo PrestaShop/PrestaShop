@@ -181,7 +181,7 @@ class ProductOptions extends CommonAbstractType
                 'error_bubbling' => true,
                 'label' => $this->translator->trans('EAN-13 or JAN barcode', [], 'Admin.Catalog.Feature'),
                 'constraints' => [
-                    new Assert\Regex('/^[0-9]{0,13}$/'),
+                    new Assert\Regex('/^[0-9]{0,14}$/'),
                 ],
                 'empty_data' => '',
             ])
