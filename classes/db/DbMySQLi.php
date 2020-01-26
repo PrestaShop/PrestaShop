@@ -390,6 +390,36 @@ class DbMySQLiCore extends Db
     }
 
     /**
+     * Initiates a new transaction.
+     *
+     * @return bool
+     */
+    public function beginTransaction()
+    {
+        return $this->link->autocommit(false);
+    }
+
+    /**
+     * Commits a transaction.
+     *
+     * @return bool
+     */
+    public function commit()
+    {
+        return $this->link->commit() && $this->link->autocommit(true);
+    }
+
+    /**
+     * Rolls back a transaction.
+     *
+     * @return bool
+     */
+    public function rollBack()
+    {
+	return $this->link->rollback() && $this->link->autocommit(true);
+    }
+
+    /**
      * Tries to connect to the database and create a table (checking creation privileges).
      *
      * @param string $server
