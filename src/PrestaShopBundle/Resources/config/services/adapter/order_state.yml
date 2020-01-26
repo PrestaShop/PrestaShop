@@ -1,0 +1,21 @@
+services:
+  _defaults:
+    public: true
+
+  prestashop.adapter.order_state.command_handler.add_order_state:
+    class: 'PrestaShop\PrestaShop\Adapter\OrderState\CommandHandler\AddOrderStateHandler'
+    tags:
+      - name: tactician.handler
+        command: 'PrestaShop\PrestaShop\Core\Domain\OrderState\Command\AddOrderStateCommand'
+
+  prestashop.adapter.order_state.query_handler.get_order_state_for_editing:
+    class: 'PrestaShop\PrestaShop\Adapter\OrderState\QueryHandler\GetOrderStateForEditingHandler'
+    tags:
+      - name: tactician.handler
+        command: 'PrestaShop\PrestaShop\Core\Domain\OrderState\Query\GetOrderStateForEditing'
+
+  prestashop.adapter.order_state.command_handler.edit_order_state_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\OrderState\CommandHandler\EditOrderStateHandler'
+    tags:
+      - name: tactician.handler
+        command: 'PrestaShop\PrestaShop\Core\Domain\OrderState\Command\EditOrderStateCommand'
