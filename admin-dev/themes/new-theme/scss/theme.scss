@@ -2,6 +2,7 @@
 @import "~prestakit/dist/css/bootstrap-prestashop-ui-kit";
 @import "~bourbon/app/assets/stylesheets/bourbon";
 @import "../node_modules/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css";
+@import "../node_modules/bootstrap-colorpicker/dist/css/bootstrap-colorpicker.min.css";
 @import "mixins/single_line_block";
 @import "mixins/notification_container";
 @import "mixins/notification_counter";
@@ -26,7 +27,9 @@
 @import "components/modulescards";
 @import "components/notifications";
 @import "components/datepicker";
+@import "components/colorpicker";
 @import "components/help_box";
+@import "components/hint_box";
 @import "components/ps_dropdown";
 @import "components/ps_number";
 @import "components/ps_radio";
