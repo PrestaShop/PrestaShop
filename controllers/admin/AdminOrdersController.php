@@ -2125,6 +2125,8 @@ class AdminOrdersControllerCore extends AdminController
         // Total method
         $total_method = Cart::BOTH_WITHOUT_SHIPPING;
 
+        Db::getInstance()->beginTransaction();
+
         // Create new cart
         $cart = new Cart();
         $cart->id_shop_group = $order->id_shop_group;
@@ -2420,6 +2422,8 @@ class AdminOrdersControllerCore extends AdminController
         // Update Order
         $res &= $order->update();
 
+        Db::getInstance()->commit();
+
         die(json_encode([
             'result' => true,
             'view' => $this->createTemplate('_product_line.tpl')->fetch(),
@@ -2491,6 +2495,8 @@ class AdminOrdersControllerCore extends AdminController
 
         // Check fields validity
         $this->doEditProductValidation($order_detail, $order, isset($order_invoice) ? $order_invoice : null);
+
+        Db::getInstance()->beginTransaction();
 
         // If multiple product_quantity, the order details concern a product customized
         $product_quantity = 0;
@@ -2595,6 +2601,8 @@ class AdminOrdersControllerCore extends AdminController
         // Update product available quantity
         StockAvailable::updateQuantity($order_detail->product_id, $order_detail->product_attribute_id, ($old_quantity - $order_detail->product_quantity), $order->id_shop);
 
+        Db::getInstance()->commit();
+
         $products = $this->getProducts($order);
         // Get the last product
         $product = $products[$order_detail->id];
@@ -2689,6 +2697,8 @@ class AdminOrdersControllerCore extends AdminController
 
         $this->doDeleteProductLineValidation($order_detail, $order);
 
+        Db::getInstance()->beginTransaction();
+
         // Update OrderInvoice of this OrderDetail
         if ($order_detail->id_order_invoice != 0) {
             $order_invoice = new OrderInvoice($order_detail->id_order_invoice);
@@ -2710,6 +2720,8 @@ class AdminOrdersControllerCore extends AdminController
 
         // Reinject quantity in stock
         $this->reinjectQuantity($order_detail, $order_detail->product_quantity, true);
+
+        Db::getInstance()->commit();
 
         // Update weight SUM
         $order_carrier = new OrderCarrier((int) $order->getIdOrderCarrier());
