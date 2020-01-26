@@ -25,12 +25,19 @@
 
 {% set enableSidebar = true %}
 {% set layoutTitle = 'Statuses'|trans({}, 'Admin.Navigation.Menu') %}
+{% set layoutHeaderToolbarBtn = {
+  'add': {
+    'href': path('admin_order_states_create'),
+    'desc': 'Add new order status'|trans({}, 'Admin.Shopparameters.Feature'),
+    'icon': 'add_circle_outline'
+  }
+} %}
 
 {% extends 'PrestaShopBundle:Admin:layout.html.twig' %}
 
 {% block content %}
 
-  {% block order_statuses_listing %}
+  {% block order_states_listing %}
     <div class="row">
       <div class="col-12">
         {% embed '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': orderStatesGrid} %}
@@ -39,7 +46,7 @@
     </div>
   {% endblock %}
 
-  {% block order_return_statuses_listing %}
+  {% block order_return_states_listing %}
     <div class="row">
       <div class="col-12">
         {% embed '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': orderReturnStatesGrid} %}
@@ -53,6 +60,7 @@
 {% block javascripts %}
   {{ parent() }}
 
-  {% include '@PrestaShop/Admin/Configure/ShopParameters/OrderStates/Blocks/javascript.html.twig' %}
+  <script src="{{ asset('themes/default/js/bundle/pagination.js') }}"></script>
+  <script src="{{ asset('themes/new-theme/public/order_states.bundle.js') }}"></script>
 {% endblock %}
 
