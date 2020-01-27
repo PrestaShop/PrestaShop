@@ -219,6 +219,17 @@ admin_orders_partial_refund:
   options:
     expose: true
 
+admin_orders_standard_refund:
+  path: /{orderId}/standard-refund
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Order/Order:standardRefund
+    _legacy_controller: AdminOrders
+  requirements:
+    orderId: \d+
+  options:
+    expose: true
+
 admin_orders_send_process_order_email:
   path: /process-order-email
   methods: [POST]

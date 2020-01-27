@@ -74,7 +74,16 @@
   {% endif %}
   {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/extra_order_button_actions.html.twig' %}
   {% if merchandiseReturnEnabled %}
-    {% if orderForViewing.hasInvoice() %}
+    {% if orderForViewing.isDelivered() %}
+      <div class="form-inline d-inline-block form-horizontal ml-2">
+        <div class="input-group">
+          <button class="btn btn-action return-products-display" type="button">
+            <i class="material-icons">swap_horiz</i>
+            {{ 'Return products'|trans({}, 'Admin.Orderscustomers.Feature') }}
+          </button>
+        </div>
+      </div>
+    {% elseif orderForViewing.hasInvoice() %}
       <div class="form-inline d-inline-block form-horizontal ml-2">
         <div class="input-group">
           <button class="btn btn-action standard-refund-display" type="button">

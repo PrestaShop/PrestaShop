@@ -184,14 +184,14 @@ class OrderRefundCalculator
                 'id_order_detail' => $orderDetailId,
             ];
 
-            // Compute max refund by product (based on quantity and already refunded amount)
-            $productMaxRefund = $isTaxIncluded ? (float) $orderDetail->unit_price_tax_incl : (float) $orderDetail->unit_price_tax_excl;
-            $productMaxRefund *= $quantity;
-            $productMaxRefund -= $isTaxIncluded ? (float) $orderDetail->total_refunded_tax_incl : (float) $orderDetail->total_refunded_tax_excl;
+            // Compute max refund by product (based on quantity left and already refunded amount)
+            $productUnitPrice = $isTaxIncluded ? (float) $orderDetail->unit_price_tax_incl : (float) $orderDetail->unit_price_tax_excl;
+            $productMaxRefund = (int) $quantity * $productUnitPrice;
 
             // If refunded amount is null it means the whole product is refunded (used for standard refund, and return product)
             if (null === $orderDetailRefund->getRefundedAmount()) {
-                $productRefundAmount = $productMaxRefund;
+                $productRefundAmount = $productUnitPrice * $quantity <= $productMaxRefund ?
+                    $productUnitPrice * $quantity : $productMaxRefund;
             } else {
                 $productRefundAmount = $orderDetailRefund->getRefundedAmount() <= $productMaxRefund ?
                     $orderDetailRefund->getRefundedAmount() : $productMaxRefund;

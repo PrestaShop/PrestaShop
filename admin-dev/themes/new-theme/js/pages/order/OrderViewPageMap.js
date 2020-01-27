@@ -145,6 +145,7 @@ export default {
     inputs: {
       quantity: '.cancel-product-quantity input',
       amount: '.cancel-product-amount input',
+      selector: '.cancel-product-selector input',
     },
     table: {
       cell: '.cancel-product-cell',
@@ -164,7 +165,7 @@ export default {
     },
     toggle: {
       partialRefund: '.cancel-product-element:not(.hidden):not(.shipping-refund), .cancel-product-amount',
-      standardRefund: '.cancel-product-element:not(.hidden):not(.shipping-refund), .cancel-product-selector',
+      standardRefund: '.cancel-product-element:not(.hidden):not(.shipping-refund-amount):not(.restock-products), .cancel-product-selector',
     },
   },
 };

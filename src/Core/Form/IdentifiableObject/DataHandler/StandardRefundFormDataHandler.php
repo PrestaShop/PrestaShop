@@ -64,7 +64,7 @@ final class StandardRefundFormDataHandler implements FormDataHandlerInterface
         $refunds = [];
         foreach ($data['products'] as $product) {
             $orderDetailId = $product->getOrderDetailId();
-            if (!isset($data['selector_' . $orderDetailId]) || !(bool) $data['selector_' . $orderDetailId]) {
+            if (!isset($data['selected_' . $orderDetailId]) || !(bool) $data['selected_' . $orderDetailId]) {
                 continue;
             }
             $refunds[$orderDetailId]['quantity'] = $data['quantity_' . $orderDetailId] ?? 0;

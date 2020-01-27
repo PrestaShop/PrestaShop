@@ -117,6 +117,7 @@
                 'data-product-price-tax-incl': product.unitPriceTaxInclRaw,
                 'data-product-price-tax-excl': product.unitPriceTaxExclRaw,
                 'data-amount-refundable': product.amountRefundableRaw,
+                'data-quantity-refundable': product.quantityRefundable,
               }
             } %}
             {{ form_widget(cancelProductForm['quantity_' ~ product.orderDetailId], quantityInputOptions) }}
