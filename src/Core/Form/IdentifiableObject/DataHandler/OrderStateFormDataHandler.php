@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -104,14 +104,14 @@ final class OrderStateFormDataHandler implements FormDataHandlerInterface
             ->setName($data['name'])
             ->setColor($data['color'])
             ->setLogable($data['logable'])
-            ->setInvoiceOn($data['invoice'])
-            ->setHiddenOn($data['hidden'])
-            ->setSendEmailOn($data['send_email'])
-            ->setPdfInvoiceOn($data['pdf_invoice'])
-            ->setPdfDeliveryOn($data['pdf_delivery'])
-            ->setShippedOn($data['shipped'])
-            ->setPaidOn($data['paid'])
-            ->setDeliveryOn($data['delivery'])
+            ->setInvoice($data['invoice'])
+            ->setHidden($data['hidden'])
+            ->setSendEmail($data['send_email'])
+            ->setPdfInvoice($data['pdf_invoice'])
+            ->setPdfDelivery($data['pdf_delivery'])
+            ->setShipped($data['shipped'])
+            ->setPaid($data['paid'])
+            ->setDelivery($data['delivery'])
             ->setTemplate($data['template'])
         ;
 

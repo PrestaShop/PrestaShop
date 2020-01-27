@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -48,35 +48,35 @@ class AddOrderStateCommand
     /**
      * @var bool
      */
-    private $invoiceOn;
+    private $invoice;
     /**
      * @var bool
      */
-    private $hiddenOn;
+    private $hidden;
     /**
      * @var bool
      */
-    private $sendEmailOn;
+    private $sendEmail;
     /**
      * @var bool
      */
-    private $pdfInvoiceOn;
+    private $pdfInvoice;
     /**
      * @var bool
      */
-    private $pdfDeliveryOn;
+    private $pdfDelivery;
     /**
      * @var bool
      */
-    private $shippedOn;
+    private $shipped;
     /**
      * @var bool
      */
-    private $paidOn;
+    private $paid;
     /**
      * @var bool
      */
-    private $deliveryOn;
+    private $delivery;
     /**
      * @var array
      */
@@ -90,28 +90,27 @@ class AddOrderStateCommand
         array $localizedNames,
         string $color,
         bool $logable,
-        bool $invoiceOn,
-        bool $hiddenOn,
-        bool $sendEmailOn,
-        bool $pdfInvoiceOn,
-        bool $pdfDeliveryOn,
-        bool $shippedOn,
-        bool $paidOn,
-        bool $deliveryOn,
+        bool $invoice,
+        bool $hidden,
+        bool $sendEmail,
+        bool $pdfInvoice,
+        bool $pdfDelivery,
+        bool $shipped,
+        bool $paid,
+        bool $delivery,
         array $localizedTemplates
     ) {
         $this->setLocalizedNames($localizedNames);
         $this->color = $color;
         $this->logable = $logable;
-        $this->invoiceOn = $invoiceOn;
-        $this->hiddenOn = $hiddenOn;
-        $this->sendEmailOn = $sendEmailOn;
-        $this->pdfInvoiceOn = $pdfInvoiceOn;
-        $this->pdfDeliveryOn = $pdfDeliveryOn;
-        $this->shippedOn = $shippedOn;
-        $this->paidOn = $paidOn;
-        $this->deliveryOn = $deliveryOn;
-        $this->localizedNames = $localizedNames;
+        $this->invoice = $invoice;
+        $this->hidden = $hidden;
+        $this->sendEmail = $sendEmail;
+        $this->pdfInvoice = $pdfInvoice;
+        $this->pdfDelivery = $pdfDelivery;
+        $this->shipped = $shipped;
+        $this->paid = $paid;
+        $this->delivery = $delivery;
         $this->localizedTemplates = $localizedTemplates;
     }
 
@@ -160,65 +159,65 @@ class AddOrderStateCommand
     /**
      * @return bool
      */
-    public function isInvoiceOn()
+    public function isInvoice()
     {
-        return $this->invoiceOn;
+        return $this->invoice;
     }
 
     /**
      * @return bool
      */
-    public function isHiddenOn()
+    public function isHidden()
     {
-        return $this->hiddenOn;
+        return $this->hidden;
     }
 
     /**
      * @return bool
      */
-    public function isSendEmailOn()
+    public function isSendEmail()
     {
-        return $this->sendEmailOn;
+        return $this->sendEmail;
     }
 
     /**
      * @return bool
      */
-    public function isPdfInvoiceOn()
+    public function isPdfInvoice()
     {
-        return $this->pdfInvoiceOn;
+        return $this->pdfInvoice;
     }
 
     /**
      * @return bool
      */
-    public function isPdfDeliveryOn()
+    public function isPdfDelivery()
     {
-        return $this->pdfDeliveryOn;
+        return $this->pdfDelivery;
     }
 
     /**
      * @return bool
      */
-    public function isShippedOn()
+    public function isShipped()
     {
-        return $this->shippedOn;
+        return $this->shipped;
     }
 
     /**
      * @return bool
      */
-    public function isPaidOn()
+    public function isPaid()
     {
-        return $this->paidOn;
+        return $this->paid;
     }
 
     /**
      * @return bool
      */
-    public function isDeliveryOn()
+    public function isDelivery()
     {
-        return $this->deliveryOn;
+        return $this->delivery;
     }
 
     /**

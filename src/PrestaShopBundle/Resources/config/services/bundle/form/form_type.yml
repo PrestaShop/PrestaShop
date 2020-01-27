@@ -1168,8 +1168,8 @@ services:
       parent: 'form.type.translatable.aware'
       public: true
       arguments:
-        - '@prestashop.adapter.data_provider.mail_template'
         - '@router'
+        - "@prestashop.core.mail_template.theme_catalog"
       tags:
         - { name: form.type }
 

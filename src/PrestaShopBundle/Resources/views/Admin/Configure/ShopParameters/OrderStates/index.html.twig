@@ -24,20 +24,48 @@
  *#}
 
 {% set enableSidebar = true %}
-{% set layoutTitle = 'Return statuses'|trans({}, 'Admin.Shopparameters.Feature') %}
+{% set layoutTitle = 'Statuses'|trans({}, 'Admin.Navigation.Menu') %}
+{% set layoutHeaderToolbarBtn = {
+  'add': {
+    'href': path('admin_order_states_create'),
+    'desc': 'Add new order status'|trans({}, 'Admin.Shopparameters.Feature'),
+    'icon': 'add_circle_outline'
+  },
+  'add_return_state': {
+    'href': path('admin_order_return_states_create'),
+    'desc': 'Add new order return status'|trans({}, 'Admin.Shopparameters.Feature'),
+    'icon': 'add_circle_outline'
+  }
+} %}
 
 {% extends 'PrestaShopBundle:Admin:layout.html.twig' %}
 
 {% block content %}
-  <div class="row justify-content-center">
-    <div class="col">
-      {% include '@PrestaShop/Admin/Configure/ShopParameters/OrderReturnStates/Blocks/form.html.twig' %}
+
+  {% block order_states_listing %}
+    <div class="row">
+      <div class="col-12">
+        {% embed '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': orderStatesGrid} %}
+        {% endembed %}
+      </div>
     </div>
-  </div>
+  {% endblock %}
+
+  {% block order_return_states_listing %}
+    <div class="row">
+      <div class="col-12">
+        {% embed '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': orderReturnStatesGrid} %}
+        {% endembed %}
+      </div>
+    </div>
+  {% endblock %}
+
 {% endblock %}
 
 {% block javascripts %}
   {{ parent() }}
 
-  <script src="{{ asset('themes/new-theme/public/order_return_states_form.bundle.js') }}"></script>
+  <script src="{{ asset('themes/default/js/bundle/pagination.js') }}"></script>
+  <script src="{{ asset('themes/new-theme/public/order_states.bundle.js') }}"></script>
 {% endblock %}
+

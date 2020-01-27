@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -58,14 +58,14 @@ final class OrderStateFormDataProvider implements FormDataProviderInterface
             'name' => $editableOrderState->getLocalizedNames(),
             'color' => $editableOrderState->getColor(),
             'logable' => $editableOrderState->isLogable(),
-            'invoice' => $editableOrderState->isInvoiceOn(),
-            'hidden' => $editableOrderState->isHiddenOn(),
-            'send_email' => $editableOrderState->isSendEmailOn(),
-            'pdf_invoice' => $editableOrderState->isPdfInvoiceOn(),
-            'pdf_delivery' => $editableOrderState->isPdfDeliveryOn(),
-            'shipped' => $editableOrderState->isShippedOn(),
-            'paid' => $editableOrderState->isPaidOn(),
-            'delivery' => $editableOrderState->isDeliveryOn(),
+            'invoice' => $editableOrderState->isInvoice(),
+            'hidden' => $editableOrderState->isHidden(),
+            'send_email' => $editableOrderState->isSendEmail(),
+            'pdf_invoice' => $editableOrderState->isPdfInvoice(),
+            'pdf_delivery' => $editableOrderState->isPdfDelivery(),
+            'shipped' => $editableOrderState->isShipped(),
+            'paid' => $editableOrderState->isPaid(),
+            'delivery' => $editableOrderState->isDelivery(),
             'template' => $editableOrderState->getLocalizedTemplates(),
         ];
     }
