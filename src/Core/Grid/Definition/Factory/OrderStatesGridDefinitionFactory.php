@@ -97,7 +97,7 @@ final class OrderStatesGridDefinitionFactory extends AbstractGridDefinitionFacto
             )
             ->add(
                 (new ToggleColumn('delivery'))
-                    ->setName($this->trans('Delivery', [], 'Admin.Global'))
+                    ->setName($this->trans('In transit', [], 'Admin.Global'))
                     ->setOptions([
                         'field' => 'delivery',
                         'primary_field' => 'id_order_state',
