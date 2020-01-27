@@ -101,7 +101,7 @@ class OrderProductForViewing
     /**
      * @var string
      */
-    private $amountRefund;
+    private $amountRefunded;
 
     /**
      * @var int
@@ -137,7 +137,7 @@ class OrderProductForViewing
         float $unitPriceTaxExclRaw,
         float $unitPriceTaxInclRaw,
         float $taxRate,
-        string $amountRefund,
+        string $amountRefunded,
         int $quantityRefunded,
         string $amountRefundable,
         string $location,
@@ -157,7 +157,7 @@ class OrderProductForViewing
         $this->unitPriceTaxInclRaw = $unitPriceTaxInclRaw;
         $this->taxRate = $taxRate;
         $this->orderDetailId = $orderDetailId;
-        $this->amountRefund = $amountRefund;
+        $this->amountRefunded = $amountRefunded;
         $this->quantityRefunded = $quantityRefunded;
         $this->amountRefundable = $amountRefundable;
         $this->location = $location;
@@ -312,7 +312,7 @@ class OrderProductForViewing
      */
     public function getAmountRefunded(): string
     {
-        return $this->amountRefund;
+        return $this->amountRefunded;
     }
 
     /**

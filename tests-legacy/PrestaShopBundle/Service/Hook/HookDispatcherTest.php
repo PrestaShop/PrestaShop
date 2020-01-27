@@ -47,9 +47,9 @@ class HookDispatcherTest extends KernelTestCase
         $kernel->boot();
         $hookDisptacher = $kernel->getContainer()->get('prestashop.hook.dispatcher');
 
-        $hookDisptacher->dispatch('unknown_hook_name');
-        $hookDisptacher->dispatch('unknown_hook_name', new HookEvent());
-        $hookDisptacher->dispatch('unknown_hook_name', new RenderingHookEvent());
+        $this->assertInstanceOf(HookEvent::class, $hookDisptacher->dispatch('unknown_hook_name'));
+        $this->assertInstanceOf(HookEvent::class, $hookDisptacher->dispatch('unknown_hook_name', new HookEvent()));
+        $this->assertInstanceOf(HookEvent::class, $hookDisptacher->dispatch('unknown_hook_name', new RenderingHookEvent()));
     }
 
     /**

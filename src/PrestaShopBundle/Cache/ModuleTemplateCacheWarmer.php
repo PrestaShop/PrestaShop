@@ -28,10 +28,10 @@ namespace PrestaShopBundle\Cache;
 
 use Psr\Container\ContainerInterface;
 use Symfony\Bundle\FrameworkBundle\CacheWarmer\TemplateFinderInterface;
+use Symfony\Bundle\TwigBundle\CacheWarmer\TemplateCacheCacheWarmer;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Templating\TemplateReference;
 use Twig\Error\Error;
-use Symfony\Bundle\TwigBundle\CacheWarmer\TemplateCacheCacheWarmer;
 
 /**
  * Generates the Twig cache for all paths, with a specific filter for given namespace
@@ -43,7 +43,7 @@ class ModuleTemplateCacheWarmer extends TemplateCacheCacheWarmer
     /**
      * {@inheritdoc}
      */
-    public function __construct(ContainerInterface $container, TemplateFinderInterface $finder = null, $paths = array())
+    public function __construct(ContainerInterface $container, TemplateFinderInterface $finder = null, $paths = [])
     {
         $this->paths = [];
         $keyToRemove = array_search('Modules', $paths);
@@ -95,10 +95,10 @@ class ModuleTemplateCacheWarmer extends TemplateCacheCacheWarmer
     private function findTemplatesInFolder($namespace, $dir)
     {
         if (!is_dir($dir)) {
-            return array();
+            return [];
         }
 
-        $templates = array();
+        $templates = [];
         $finder = new Finder();
 
         foreach ($finder->files()->followLinks()->name('*.twig')->in($dir) as $file) {

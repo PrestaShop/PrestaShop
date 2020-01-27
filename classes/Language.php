@@ -24,13 +24,13 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 use PrestaShop\PrestaShop\Adapter\Language\LanguageImageManager;
-use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder;
-use PrestaShop\PrestaShop\Core\Localization\RTL\Processor as RtlStylesheetProcessor;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
-use PrestaShop\PrestaShop\Core\Exception\CoreException;
-use PrestaShop\PrestaShop\Core\Domain\MailTemplate\Command\GenerateThemeMailTemplatesCommand;
+use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
+use PrestaShop\PrestaShop\Core\Domain\MailTemplate\Command\GenerateThemeMailTemplatesCommand;
+use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Language\LanguageInterface;
+use PrestaShop\PrestaShop\Core\Localization\RTL\Processor as RtlStylesheetProcessor;
 use PrestaShopBundle\Translation\TranslatorLanguageLoader;
 
 class LanguageCore extends ObjectModel implements LanguageInterface
@@ -74,20 +74,20 @@ class LanguageCore extends ObjectModel implements LanguageInterface
     /**
      * @see ObjectModel::$definition
      */
-    public static $definition = array(
+    public static $definition = [
         'table' => 'lang',
         'primary' => 'id_lang',
-        'fields' => array(
-            'name' => array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => true, 'size' => 32),
-            'iso_code' => array('type' => self::TYPE_STRING, 'validate' => 'isLanguageIsoCode', 'required' => true, 'size' => 2),
-            'locale' => array('type' => self::TYPE_STRING, 'validate' => 'isLocale', 'size' => 5),
-            'language_code' => array('type' => self::TYPE_STRING, 'validate' => 'isLanguageCode', 'size' => 5),
-            'active' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-            'is_rtl' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-            'date_format_lite' => array('type' => self::TYPE_STRING, 'validate' => 'isPhpDateFormat', 'required' => true, 'size' => 32),
-            'date_format_full' => array('type' => self::TYPE_STRING, 'validate' => 'isPhpDateFormat', 'required' => true, 'size' => 32),
-        ),
-    );
+        'fields' => [
+            'name' => ['type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => true, 'size' => 32],
+            'iso_code' => ['type' => self::TYPE_STRING, 'validate' => 'isLanguageIsoCode', 'required' => true, 'size' => 2],
+            'locale' => ['type' => self::TYPE_STRING, 'validate' => 'isLocale', 'size' => 5],
+            'language_code' => ['type' => self::TYPE_STRING, 'validate' => 'isLanguageCode', 'size' => 5],
+            'active' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
+            'is_rtl' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
+            'date_format_lite' => ['type' => self::TYPE_STRING, 'validate' => 'isPhpDateFormat', 'required' => true, 'size' => 32],
+            'date_format_full' => ['type' => self::TYPE_STRING, 'validate' => 'isPhpDateFormat', 'required' => true, 'size' => 32],
+        ],
+    ];
 
     /** @var array Languages cache */
     protected static $_checkedLangs;
@@ -97,20 +97,20 @@ class LanguageCore extends ObjectModel implements LanguageInterface
      * @see loadLanguages()
      */
     protected static $_LANGUAGES;
-    protected static $countActiveLanguages = array();
+    protected static $countActiveLanguages = [];
 
-    protected $webserviceParameters = array(
+    protected $webserviceParameters = [
         'objectNodeName' => 'language',
         'objectsNodeName' => 'languages',
-    );
+    ];
 
-    protected $translationsFilesAndVars = array(
+    protected $translationsFilesAndVars = [
         'fields' => '_FIELDS',
         'errors' => '_ERRORS',
         'admin' => '_LANGADM',
         'pdf' => '_LANGPDF',
         'tabs' => 'tabs',
-    );
+    ];
 
     public static function resetCache()
     {
@@ -302,10 +302,10 @@ class LanguageCore extends ObjectModel implements LanguageInterface
             $mPath_to = _PS_MAIL_DIR_ . (string) $iso_to . '/';
         }
 
-        $lFiles = array('admin.php', 'errors.php', 'fields.php', 'pdf.php', 'tabs.php');
+        $lFiles = ['admin.php', 'errors.php', 'fields.php', 'pdf.php', 'tabs.php'];
 
         // Added natives mails files
-        $mFiles = array(
+        $mFiles = [
             'account.html', 'account.txt',
             'backoffice_order.html', 'backoffice_order.txt',
             'bankwire.html', 'bankwire.txt',
@@ -339,15 +339,15 @@ class LanguageCore extends ObjectModel implements LanguageInterface
             'test.html', 'test.txt',
             'voucher.html', 'voucher.txt',
             'voucher_new.html', 'voucher_new.txt',
-        );
+        ];
 
         $number = -1;
 
-        $files = array();
-        $files_tr = array();
-        $files_theme = array();
-        $files_mail = array();
-        $files_modules = array();
+        $files = [];
+        $files_tr = [];
+        $files_theme = [];
+        $files_mail = [];
+        $files_modules = [];
 
         // When a copy is made from a theme in specific language
         // to an other theme for the same language,
@@ -418,7 +418,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
                 $files_theme[$pPath_from . 'lang/' . (string) $iso_from . '.php'] = ($copy ? $pPath_to . 'lang/' . (string) $iso_to . '.php' : ++$number);
             }
 
-            $module_theme_files = (file_exists($tPath_from . 'modules/') ? scandir($tPath_from . 'modules/', SCANDIR_SORT_NONE) : array());
+            $module_theme_files = (file_exists($tPath_from . 'modules/') ? scandir($tPath_from . 'modules/', SCANDIR_SORT_NONE) : []);
             foreach ($module_theme_files as $module) {
                 if ($module !== '.' && $module != '..' && $module !== '.svn' && file_exists($tPath_from . 'modules/' . $module . '/translations/' . (string) $iso_from . '.php')) {
                     $files_theme[$tPath_from . 'modules/' . $module . '/translations/' . (string) $iso_from . '.php'] = ($copy ? $tPath_to . 'modules/' . $module . '/translations/' . (string) $iso_to . '.php' : ++$number);
@@ -442,7 +442,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
     public function loadUpdateSQL()
     {
         $tables = Db::getInstance()->executeS('SHOW TABLES LIKE \'' . str_replace('_', '\\_', _DB_PREFIX_) . '%\_lang\' ');
-        $langTables = array();
+        $langTables = [];
 
         foreach ($tables as $table) {
             foreach ($table as $t) {
@@ -645,7 +645,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
             Language::loadLanguages();
         }
 
-        $languages = array();
+        $languages = [];
         foreach (self::$_LANGUAGES as $language) {
             if ($active && !$language['active'] || ($id_shop && !isset($language['shops'][(int) $id_shop])) || self::$locale_crowdin_lang === $language['locale']) {
                 continue;
@@ -720,17 +720,12 @@ class LanguageCore extends ObjectModel implements LanguageInterface
     public static function getJsonLanguageDetails($locale)
     {
         if (self::$_cache_all_language_json === null) {
-            self::$_cache_all_language_json = array();
+            self::$_cache_all_language_json = [];
             $allLanguages = file_get_contents(_PS_ROOT_DIR_ . self::ALL_LANGUAGES_FILE);
             $allLanguages = json_decode($allLanguages, true);
 
             if (JSON_ERROR_NONE !== json_last_error()) {
-                throw new Exception(
-                    sprintf(
-                        'The legacy to standard locales JSON could not be decoded %s',
-                        json_last_error_msg()
-                    )
-                );
+                throw new Exception(sprintf('The legacy to standard locales JSON could not be decoded %s', json_last_error_msg()));
             }
 
             foreach ($allLanguages as $isoCode => $langDetails) {
@@ -752,7 +747,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
     public static function getIdByIso($iso_code, $no_cache = false)
     {
         if (!Validate::isLanguageIsoCode($iso_code)) {
-            die(Tools::displayError(Context::getContext()->getTranslator()->trans('Fatal error: ISO code is not correct', array(), 'Admin.International.Notification') . ' ' . Tools::safeOutput($iso_code)));
+            die(Tools::displayError(Context::getContext()->getTranslator()->trans('Fatal error: ISO code is not correct', [], 'Admin.International.Notification') . ' ' . Tools::safeOutput($iso_code)));
         }
 
         $key = 'Language::getIdByIso_' . $iso_code;
@@ -806,12 +801,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
         $allLanguages = json_decode($allLanguages, true);
 
         if (JSON_ERROR_NONE !== json_last_error()) {
-            throw new Exception(
-                sprintf(
-                    'The legacy to standard locales JSON could not be decoded %s',
-                    json_last_error_msg()
-                )
-            );
+            throw new Exception(sprintf('The legacy to standard locales JSON could not be decoded %s', json_last_error_msg()));
         }
 
         return isset($allLanguages[$iso]) ? $allLanguages[$iso] : false;
@@ -873,7 +863,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
     public static function getLanguageCodeByIso($iso_code)
     {
         if (!Validate::isLanguageIsoCode($iso_code)) {
-            die(Tools::displayError(Context::getContext()->getTranslator()->trans('Fatal error: ISO code is not correct', array(), 'Admin.International.Notification') . ' ' . Tools::safeOutput($iso_code)));
+            die(Tools::displayError(Context::getContext()->getTranslator()->trans('Fatal error: ISO code is not correct', [], 'Admin.International.Notification') . ' ' . Tools::safeOutput($iso_code)));
         }
 
         return Db::getInstance()->getValue('SELECT `language_code` FROM `' . _DB_PREFIX_ . 'lang` WHERE `iso_code` = \'' . pSQL(strtolower($iso_code)) . '\'');
@@ -892,7 +882,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
     public static function getLanguageByIETFCode($code)
     {
         if (!Validate::isLanguageCode($code)) {
-            die(Tools::displayError(Context::getContext()->getTranslator()->trans('Fatal error: IETF code %s is not correct', array(Tools::safeOutput($code)), 'Admin.International.Notification')));
+            die(Tools::displayError(Context::getContext()->getTranslator()->trans('Fatal error: IETF code %s is not correct', [Tools::safeOutput($code)], 'Admin.International.Notification')));
         }
 
         // $code is in the form of 'xx-YY' where xx is the language code
@@ -978,7 +968,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
      */
     public static function loadLanguages()
     {
-        self::$_LANGUAGES = array();
+        self::$_LANGUAGES = [];
 
         $sql = 'SELECT l.*, ls.`id_shop`
 				FROM `' . _DB_PREFIX_ . 'lang` l
@@ -998,7 +988,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
 
     public static function loadLanguagesLegacy()
     {
-        self::$_LANGUAGES = array();
+        self::$_LANGUAGES = [];
 
         $result = Db::getInstance()->executeS('SELECT * FROM `' . _DB_PREFIX_ . 'lang`');
 
@@ -1055,7 +1045,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
             return false;
         }
 
-        if (isset($params_lang['allow_accented_chars_url']) && in_array($params_lang['allow_accented_chars_url'], array('1', 'true'))) {
+        if (isset($params_lang['allow_accented_chars_url']) && in_array($params_lang['allow_accented_chars_url'], ['1', 'true'])) {
             Configuration::updateGlobalValue('PS_ALLOW_ACCENTED_CHARS_URL', 1);
         }
 
@@ -1084,7 +1074,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
     public static function isInstalled($iso_code)
     {
         if (self::$_cache_language_installation === null) {
-            self::$_cache_language_installation = array();
+            self::$_cache_language_installation = [];
             $result = Db::getInstance()->executeS('SELECT `id_lang`, `iso_code` FROM `' . _DB_PREFIX_ . 'lang`');
             foreach ($result as $row) {
                 self::$_cache_language_installation[$row['iso_code']] = $row['id_lang'];
@@ -1097,7 +1087,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
     public static function isInstalledByLocale($locale)
     {
         if (self::$_cache_language_installation_by_locale === null) {
-            self::$_cache_language_installation_by_locale = array();
+            self::$_cache_language_installation_by_locale = [];
             $result = Db::getInstance()->executeS('SELECT `id_lang`, `locale` FROM `' . _DB_PREFIX_ . 'lang`');
             foreach ($result as $row) {
                 self::$_cache_language_installation_by_locale[$row['locale']] = $row['id_lang'];
@@ -1130,7 +1120,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
             return false;
         }
 
-        $errors = array();
+        $errors = [];
 
         if (Language::downloadLanguagePack($iso, $version, $errors)) {
             if ($install) {
@@ -1143,13 +1133,13 @@ class LanguageCore extends ObjectModel implements LanguageInterface
         return count($errors) ? $errors : true;
     }
 
-    public static function downloadLanguagePack($iso, $version, &$errors = array())
+    public static function downloadLanguagePack($iso, $version, &$errors = [])
     {
         $iso = (string) $iso; // $iso often comes from xml and is a SimpleXMLElement
 
         $lang_pack = self::getLangDetails($iso);
         if (!$lang_pack) {
-            $errors[] = Context::getContext()->getTranslator()->trans('Sorry this language is not available', array(), 'Admin.International.Notification');
+            $errors[] = Context::getContext()->getTranslator()->trans('Sorry this language is not available', [], 'Admin.International.Notification');
         } else {
             self::downloadXLFLanguagePack($lang_pack['locale'], $errors, 'sf');
         }
@@ -1157,38 +1147,38 @@ class LanguageCore extends ObjectModel implements LanguageInterface
         return !count($errors);
     }
 
-    public static function downloadXLFLanguagePack($locale, &$errors = array(), $type = 'sf')
+    public static function downloadXLFLanguagePack($locale, &$errors = [], $type = 'sf')
     {
         $file = _PS_TRANSLATIONS_DIR_ . $type . '-' . $locale . '.zip';
         $url = ('emails' === $type) ? self::EMAILS_LANGUAGE_PACK_URL : self::SF_LANGUAGE_PACK_URL;
         $url = str_replace(
-            array(
+            [
                 '%version%',
                 '%locale%',
-            ),
-            array(
+            ],
+            [
                 _PS_VERSION_,
                 $locale,
-            ),
+            ],
             $url
         );
 
         if (!is_writable(dirname($file))) {
             // @todo Throw exception
-            $errors[] = Context::getContext()->getTranslator()->trans('Server does not have permissions for writing.', array(), 'Admin.International.Notification') . ' (' . $file . ')';
+            $errors[] = Context::getContext()->getTranslator()->trans('Server does not have permissions for writing.', [], 'Admin.International.Notification') . ' (' . $file . ')';
         } elseif ($content = Tools::file_get_contents($url)) {
             file_put_contents($file, $content);
         } else {
-            $errors[] = Context::getContext()->getTranslator()->trans('Language pack unavailable.', array(), 'Admin.International.Notification') . ' ' . $url;
+            $errors[] = Context::getContext()->getTranslator()->trans('Language pack unavailable.', [], 'Admin.International.Notification') . ' ' . $url;
         }
     }
 
-    public static function installSfLanguagePack($locale, &$errors = array())
+    public static function installSfLanguagePack($locale, &$errors = [])
     {
         $zipFilePath = _PS_TRANSLATIONS_DIR_ . 'sf-' . $locale . '.zip';
         if (!file_exists($zipFilePath)) {
             // @todo Throw exception
-            $errors[] = Context::getContext()->getTranslator()->trans('Language pack unavailable.', array(), 'Admin.International.Notification');
+            $errors[] = Context::getContext()->getTranslator()->trans('Language pack unavailable.', [], 'Admin.International.Notification');
         } else {
             $zipArchive = new ZipArchive();
             $zipArchive->open($zipFilePath);
@@ -1202,14 +1192,14 @@ class LanguageCore extends ObjectModel implements LanguageInterface
      * @param array $errors
      * @param bool $overwriteTemplates
      */
-    private static function generateEmailsLanguagePack($langPack, &$errors = array(), $overwriteTemplates = false)
+    private static function generateEmailsLanguagePack($langPack, &$errors = [], $overwriteTemplates = false)
     {
         $locale = $langPack['locale'];
         $sfContainer = SymfonyContainer::getInstance();
         if (null === $sfContainer) {
             $errors[] = Context::getContext()->getTranslator()->trans(
                 'Cannot generate emails because the Symfony container is unavailable.',
-                array(),
+                [],
                 'Admin.Notifications.Error'
             );
 
@@ -1230,7 +1220,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
         } catch (CoreException $e) {
             $errors[] = Context::getContext()->getTranslator()->trans(
                 'Cannot generate email templates: %s.',
-                array($e->getMessage()),
+                [$e->getMessage()],
                 'Admin.Notifications.Error'
             );
         }
@@ -1242,7 +1232,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
      *
      * @deprecated This method is deprecated since 1.7.6.0 use GenerateThemeMailsCommand instead
      */
-    public static function installEmailsLanguagePack($lang_pack, &$errors = array())
+    public static function installEmailsLanguagePack($lang_pack, &$errors = [])
     {
         @trigger_error(
             'Language::installEmailsLanguagePack() is deprecated since version 1.7.6.0 Use GenerateThemeMailsCommand instead.',
@@ -1252,13 +1242,13 @@ class LanguageCore extends ObjectModel implements LanguageInterface
         self::generateEmailsLanguagePack($lang_pack, $errors, true);
     }
 
-    public static function installLanguagePack($iso, $params, &$errors = array())
+    public static function installLanguagePack($iso, $params, &$errors = [])
     {
         // Clear smarty modules cache
         Tools::clearCache();
 
         if (!Language::checkAndAddLanguage((string) $iso, false, false, $params)) {
-            $errors[] = Context::getContext()->getTranslator()->trans('An error occurred while creating the language: %s', array((string) $iso), 'Admin.International.Notification');
+            $errors[] = Context::getContext()->getTranslator()->trans('An error occurred while creating the language: %s', [(string) $iso], 'Admin.International.Notification');
         } else {
             // Reset cache
             Language::loadLanguages();
@@ -1272,7 +1262,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
         return count($errors) ? $errors : true;
     }
 
-    public static function updateLanguagePack($iso, &$errors = array())
+    public static function updateLanguagePack($iso, &$errors = [])
     {
         $lang_pack = self::getLangDetails($iso);
         if (!empty($lang_pack['locale'])) {
@@ -1322,7 +1312,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
         $languages = Language::getLanguages(false);
         foreach ($languages as $lang) {
             $gz = false;
-            $files_listing = array();
+            $files_listing = [];
             $filegz = _PS_TRANSLATIONS_DIR_ . $lang['iso_code'] . '.gzip';
 
             clearstatcache();
@@ -1380,7 +1370,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
                 }
             }
 
-            Hook::exec('actionUpdateLangAfter', array('lang' => $lang));
+            Hook::exec('actionUpdateLangAfter', ['lang' => $lang]);
         }
 
         return true;
@@ -1547,11 +1537,11 @@ class LanguageCore extends ObjectModel implements LanguageInterface
         $processor = new RtlStylesheetProcessor(
             $adminDir,
             $themesDir,
-            array(
+            [
                 _PS_MODULE_DIR_ . 'gamification',
                 _PS_MODULE_DIR_ . 'welcome',
                 _PS_MODULE_DIR_ . 'cronjobs',
-            )
+            ]
         );
 
         return $processor;

@@ -26,9 +26,9 @@
 
 namespace PrestaShop\PrestaShop\Core\Kpi\Row;
 
+use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShop\PrestaShop\Core\Kpi\Exception\InvalidArgumentException;
 use PrestaShop\PrestaShop\Core\Kpi\KpiInterface;
-use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 
 /**
  * Class KpiRowFactory builds a KPI row, able to dispatch a hook.

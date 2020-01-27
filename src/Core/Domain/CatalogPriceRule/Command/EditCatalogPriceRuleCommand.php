@@ -306,11 +306,7 @@ class EditCatalogPriceRuleCommand
         try {
             return new DateTime($dateTime);
         } catch (Exception $e) {
-            throw new CatalogPriceRuleConstraintException(
-                'Invalid date time format',
-                CatalogPriceRuleConstraintException::INVALID_DATETIME,
-                $e
-            );
+            throw new CatalogPriceRuleConstraintException('Invalid date time format', CatalogPriceRuleConstraintException::INVALID_DATETIME, $e);
         }
     }
 }

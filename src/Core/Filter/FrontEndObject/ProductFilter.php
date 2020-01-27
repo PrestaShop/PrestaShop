@@ -36,7 +36,7 @@ class ProductFilter extends HashMapWhitelistFilter
 {
     public function __construct()
     {
-        $whitelist = array(
+        $whitelist = [
             'add_to_cart_url',
             'allow_oosp',
             'attributes',
@@ -118,7 +118,7 @@ class ProductFilter extends HashMapWhitelistFilter
             'url',
             'weight_unit',
             'seo_availability',
-        );
+        ];
 
         $this->whitelist($whitelist);
     }

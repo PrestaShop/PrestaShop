@@ -40,41 +40,41 @@ class AdminZonesControllerCore extends AdminController
 
         parent::__construct();
 
-        $this->fields_list = array(
-            'id_zone' => array(
-                'title' => $this->trans('ID', array(), 'Admin.Global'),
+        $this->fields_list = [
+            'id_zone' => [
+                'title' => $this->trans('ID', [], 'Admin.Global'),
                 'align' => 'center',
                 'class' => 'fixed-width-xs',
-            ),
-            'name' => array(
-                'title' => $this->trans('Zone', array(), 'Admin.Global'),
-            ),
-            'active' => array(
-                'title' => $this->trans('Enabled', array(), 'Admin.Global'),
+            ],
+            'name' => [
+                'title' => $this->trans('Zone', [], 'Admin.Global'),
+            ],
+            'active' => [
+                'title' => $this->trans('Enabled', [], 'Admin.Global'),
                 'align' => 'center',
                 'active' => 'status',
                 'type' => 'bool',
                 'orderby' => false,
                 'class' => 'fixed-width-sm',
-            ),
-        );
-        $this->bulk_actions = array(
-            'delete' => array(
-                'text' => $this->trans('Delete selected', array(), 'Admin.Actions'),
-                'confirm' => $this->trans('Delete selected items?', array(), 'Admin.Notifications.Warning'),
+            ],
+        ];
+        $this->bulk_actions = [
+            'delete' => [
+                'text' => $this->trans('Delete selected', [], 'Admin.Actions'),
+                'confirm' => $this->trans('Delete selected items?', [], 'Admin.Notifications.Warning'),
                 'icon' => 'icon-trash',
-            ),
-        );
+            ],
+        ];
     }
 
     public function initPageHeaderToolbar()
     {
         if (empty($this->display)) {
-            $this->page_header_toolbar_btn['new_zone'] = array(
+            $this->page_header_toolbar_btn['new_zone'] = [
                 'href' => self::$currentIndex . '&addzone&token=' . $this->token,
-                'desc' => $this->trans('Add new zone', array(), 'Admin.International.Feature'),
+                'desc' => $this->trans('Add new zone', [], 'Admin.International.Feature'),
                 'icon' => 'process-icon-new',
-            );
+            ];
         }
 
         parent::initPageHeaderToolbar();
@@ -90,53 +90,53 @@ class AdminZonesControllerCore extends AdminController
 
     public function renderForm()
     {
-        $this->fields_form = array(
-            'legend' => array(
-                'title' => $this->trans('Zones', array(), 'Admin.International.Feature'),
+        $this->fields_form = [
+            'legend' => [
+                'title' => $this->trans('Zones', [], 'Admin.International.Feature'),
                 'icon' => 'icon-globe',
-            ),
-            'input' => array(
-                array(
+            ],
+            'input' => [
+                [
                     'type' => 'text',
-                    'label' => $this->trans('Name', array(), 'Admin.Global'),
+                    'label' => $this->trans('Name', [], 'Admin.Global'),
                     'name' => 'name',
                     'required' => true,
-                    'hint' => $this->trans('Zone name (e.g. Africa, West Coast, Neighboring Countries).', array(), 'Admin.International.Help'),
-                ),
-                array(
+                    'hint' => $this->trans('Zone name (e.g. Africa, West Coast, Neighboring Countries).', [], 'Admin.International.Help'),
+                ],
+                [
                     'type' => 'switch',
-                    'label' => $this->trans('Active', array(), 'Admin.Global'),
+                    'label' => $this->trans('Active', [], 'Admin.Global'),
                     'name' => 'active',
                     'required' => false,
                     'is_bool' => true,
-                    'values' => array(
-                        array(
+                    'values' => [
+                        [
                             'id' => 'active_on',
                             'value' => 1,
-                            'label' => $this->trans('Enabled', array(), 'Admin.Global'),
-                        ),
-                        array(
+                            'label' => $this->trans('Enabled', [], 'Admin.Global'),
+                        ],
+                        [
                             'id' => 'active_off',
                             'value' => 0,
-                            'label' => $this->trans('Disabled', array(), 'Admin.Global'),
-                        ),
-                    ),
-                    'hint' => $this->trans('Allow or disallow shipping to this zone.', array(), 'Admin.International.Help'),
-                ),
-            ),
-        );
+                            'label' => $this->trans('Disabled', [], 'Admin.Global'),
+                        ],
+                    ],
+                    'hint' => $this->trans('Allow or disallow shipping to this zone.', [], 'Admin.International.Help'),
+                ],
+            ],
+        ];
 
         if (Shop::isFeatureActive()) {
-            $this->fields_form['input'][] = array(
+            $this->fields_form['input'][] = [
                 'type' => 'shop',
-                'label' => $this->trans('Shop association', array(), 'Admin.Global'),
+                'label' => $this->trans('Shop association', [], 'Admin.Global'),
                 'name' => 'checkBoxShopAsso',
-            );
+            ];
         }
 
-        $this->fields_form['submit'] = array(
-            'title' => $this->trans('Save', array(), 'Admin.Actions'),
-        );
+        $this->fields_form['submit'] = [
+            'title' => $this->trans('Save', [], 'Admin.Actions'),
+        ];
 
         return parent::renderForm();
     }
@@ -146,15 +146,15 @@ class AdminZonesControllerCore extends AdminController
      */
     public function displayAjaxZones()
     {
-        $this->context->smarty->assign(array(
+        $this->context->smarty->assign([
             'zones' => Zone::getZones(),
-        ));
+        ]);
 
-        $array = array(
+        $array = [
             'hasError' => false,
             'errors' => '',
             'data' => $this->context->smarty->fetch('controllers/zones/select.tpl'),
-        );
+        ];
         $this->ajaxRender(json_encode($array));
     }
 }

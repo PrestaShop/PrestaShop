@@ -174,7 +174,7 @@ class SearchCore
             }
         } else {
             $words = explode(' ', $string);
-            $processed_words = array();
+            $processed_words = [];
             // search for aliases for each word of the query
             foreach ($words as $word) {
                 $alias = new Alias(null, $word);
@@ -200,7 +200,7 @@ class SearchCore
         }
 
         // If the language is constituted with symbol and there is no "words", then split every chars
-        if (in_array($iso_code, array('zh', 'tw', 'ja')) && function_exists('mb_strlen')) {
+        if (in_array($iso_code, ['zh', 'tw', 'ja']) && function_exists('mb_strlen')) {
             // Cut symbols from letters
             $symbols = '';
             $letters = '';
@@ -313,7 +313,7 @@ class SearchCore
         }
 
         if (!count($words)) {
-            return $ajax ? array() : array('total' => 0, 'result' => array());
+            return $ajax ? [] : ['total' => 0, 'result' => []];
         }
 
         $sqlScore = '';
@@ -357,7 +357,7 @@ class SearchCore
 
         $eligibleProducts = array_unique(array_intersect($eligibleProducts, array_unique($eligibleProducts2)));
         if (!count($eligibleProducts)) {
-            return $ajax ? array() : array('total' => 0, 'result' => array());
+            return $ajax ? [] : ['total' => 0, 'result' => []];
         }
 
         $product_pool = '';
@@ -368,7 +368,7 @@ class SearchCore
         }
 
         if (empty($product_pool)) {
-            return $ajax ? array() : array('total' => 0, 'result' => array());
+            return $ajax ? [] : ['total' => 0, 'result' => []];
         }
         $product_pool = ((strpos($product_pool, ',') === false) ? (' = ' . (int) $product_pool . ' ') : (' IN (' . rtrim($product_pool, ',') . ') '));
 
@@ -398,7 +398,7 @@ class SearchCore
         $alias = '';
         if ($order_by == 'price') {
             $alias = 'product_shop.';
-        } elseif (in_array($order_by, array('date_upd', 'date_add'))) {
+        } elseif (in_array($order_by, ['date_upd', 'date_add'])) {
             $alias = 'p.';
         }
         $sql = 'SELECT p.*, product_shop.*, stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity,
@@ -448,7 +448,7 @@ class SearchCore
             $result_properties = Product::getProductsProperties((int) $id_lang, $result);
         }
 
-        return array('total' => $total, 'result' => $result_properties);
+        return ['total' => $total, 'result' => $result_properties];
     }
 
     /**
@@ -564,7 +564,7 @@ class SearchCore
         return $sql;
     }
 
-    protected static function getProductsToIndex($total_languages, $id_product = false, $limit = 50, $weight_array = array())
+    protected static function getProductsToIndex($total_languages, $id_product = false, $limit = 50, $weight_array = [])
     {
         $ids = null;
         if (!$id_product) {
@@ -717,7 +717,7 @@ class SearchCore
         } elseif ($full) {
             $db->execute('TRUNCATE ' . _DB_PREFIX_ . 'search_index');
             $db->execute('TRUNCATE ' . _DB_PREFIX_ . 'search_word');
-            ObjectModel::updateMultishopTable('Product', array('indexed' => 0));
+            ObjectModel::updateMultishopTable('Product', ['indexed' => 0]);
         } else {
             $db->execute('DELETE si FROM `' . _DB_PREFIX_ . 'search_index` si
 				INNER JOIN `' . _DB_PREFIX_ . 'product` p ON (p.id_product = si.id_product)
@@ -735,7 +735,7 @@ class SearchCore
         }
 
         // Every fields are weighted according to the configuration in the backend
-        $weight_array = array(
+        $weight_array = [
             'pname' => Configuration::get('PS_SEARCH_WEIGHT_PNAME'),
             'reference' => Configuration::get('PS_SEARCH_WEIGHT_REF'),
             'pa_reference' => Configuration::get('PS_SEARCH_WEIGHT_REF'),
@@ -754,11 +754,11 @@ class SearchCore
             'tags' => Configuration::get('PS_SEARCH_WEIGHT_TAG'),
             'attributes' => Configuration::get('PS_SEARCH_WEIGHT_ATTRIBUTE'),
             'features' => Configuration::get('PS_SEARCH_WEIGHT_FEATURE'),
-        );
+        ];
 
         // Those are kind of global variables required to save the processed data in the database every X occurrences, in order to avoid overloading MySQL
         $count_words = 0;
-        $query_array3 = array();
+        $query_array3 = [];
 
         // Retrieve the number of languages
         $total_languages = count(Language::getIDs(false));
@@ -766,7 +766,7 @@ class SearchCore
         $sql_attribute = Search::getSQLProductAttributeFields($weight_array);
         // Products are processed 50 by 50 in order to avoid overloading MySQL
         while (($products = Search::getProductsToIndex($total_languages, $id_product, 50, $weight_array)) && (count($products) > 0)) {
-            $products_array = array();
+            $products_array = [];
             // Now each non-indexed product is processed one by one, langage by langage
             foreach ($products as $product) {
                 if ((int) $weight_array['tags']) {
@@ -786,7 +786,7 @@ class SearchCore
                 }
 
                 // Data must be cleaned of html, bad characters, spaces and anything, then if the resulting words are long enough, they're added to the array
-                $product_array = array();
+                $product_array = [];
                 foreach ($product as $key => $value) {
                     if ($key == 'attributes_fields') {
                         foreach ($value as $pa_array) {
@@ -801,7 +801,7 @@ class SearchCore
 
                 // If we find words that need to be indexed, they're added to the word table in the database
                 if (is_array($product_array) && !empty($product_array)) {
-                    $query_array = $query_array2 = array();
+                    $query_array = $query_array2 = [];
                     foreach ($product_array as $word => $weight) {
                         if ($weight) {
                             $query_array[$word] = '(' . (int) $product['id_lang'] . ', ' . (int) $product['id_shop'] . ', \'' . pSQL($word) . '\')';
@@ -815,7 +815,7 @@ class SearchCore
 						INSERT IGNORE INTO ' . _DB_PREFIX_ . 'search_word (id_lang, id_shop, word)
 						VALUES ' . implode(',', $query_array), false);
                     }
-                    $word_ids_by_word = array();
+                    $word_ids_by_word = [];
                     if (is_array($query_array2) && !empty($query_array2)) {
                         // ...then their IDs are retrieved
                         $added_words = $db->executeS('
@@ -865,14 +865,14 @@ class SearchCore
     {
         if (is_array($products) && !empty($products)) {
             Db::getInstance()->execute('DELETE FROM ' . _DB_PREFIX_ . 'search_index WHERE id_product IN (' . implode(',', array_unique(array_map('intval', $products))) . ')');
-            ObjectModel::updateMultishopTable('Product', array('indexed' => 0), 'a.id_product IN (' . implode(',', array_map('intval', $products)) . ')');
+            ObjectModel::updateMultishopTable('Product', ['indexed' => 0], 'a.id_product IN (' . implode(',', array_map('intval', $products)) . ')');
         }
     }
 
     protected static function setProductsAsIndexed(&$products)
     {
         if (is_array($products) && !empty($products)) {
-            ObjectModel::updateMultishopTable('Product', array('indexed' => 1), 'a.id_product IN (' . implode(',', array_map('intval', $products)) . ')');
+            ObjectModel::updateMultishopTable('Product', ['indexed' => 1], 'a.id_product IN (' . implode(',', array_map('intval', $products)) . ')');
         }
     }
 
@@ -886,7 +886,7 @@ class SearchCore
 
             Db::getInstance()->execute($query, false);
         }
-        $queryArray3 = array();
+        $queryArray3 = [];
     }
 
     public static function searchTag(
@@ -1006,7 +1006,7 @@ class SearchCore
      */
     public static function getSearchParamFromWord($word)
     {
-        $word = str_replace(array('%', '_'), array('\\%', '\\_'), $word);
+        $word = str_replace(['%', '_'], ['\\%', '\\_'], $word);
         $start_search = Configuration::get('PS_SEARCH_START') ? '%' : '';
         $end_search = Configuration::get('PS_SEARCH_END') ? '' : '%';
         $psSearchMawWordLenth = self::getMaximumWordLength();
@@ -1112,7 +1112,7 @@ class SearchCore
                  *  So, were looking for the smaller levenshtein distance, then the smallest weight (-SUM(weight))*/
                 return $a < $b ? $a : $b;
             },
-            array('word' => 'initial', 'weight' => 0, 'levenshtein' => 100)
+            ['word' => 'initial', 'weight' => 0, 'levenshtein' => 100]
         );
 
         return $closestWord['levenshtein'] < static::PS_DISTANCE_MAX ? $closestWord['word'] : '';

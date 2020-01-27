@@ -61,9 +61,7 @@ final class EditWebserviceKeyHandler extends AbstractWebserviceKeyHandler implem
         $webserviceKey = new WebserviceKey($webserviceKeyId->getValue());
 
         if ($webserviceKeyId->getValue() !== $webserviceKey->id) {
-            throw new WebserviceKeyNotFoundException(sprintf(
-                'Webservice key with id "%s was not found', $webserviceKeyId->getValue()
-            ));
+            throw new WebserviceKeyNotFoundException(sprintf('Webservice key with id "%s was not found', $webserviceKeyId->getValue()));
         }
 
         return $webserviceKey;
@@ -94,9 +92,7 @@ final class EditWebserviceKeyHandler extends AbstractWebserviceKeyHandler implem
         }
 
         if (false === $webserviceKey->update()) {
-            throw new WebserviceException(
-                sprintf('Failed to update WebserviceKey with id "%s"', $webserviceKey->id)
-            );
+            throw new WebserviceException(sprintf('Failed to update WebserviceKey with id "%s"', $webserviceKey->id));
         }
 
         if (null !== $command->getShopAssociation()) {

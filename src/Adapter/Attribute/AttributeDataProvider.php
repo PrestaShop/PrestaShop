@@ -62,7 +62,7 @@ class AttributeDataProvider
     public static function getAttributeIdsByGroup($id_group, $not_null = false)
     {
         if (!Combination::isFeatureActive()) {
-            return array();
+            return [];
         }
 
         $result = Db::getInstance()->executeS('

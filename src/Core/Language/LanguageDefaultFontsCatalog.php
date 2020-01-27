@@ -39,10 +39,10 @@ class LanguageDefaultFontsCatalog
      *
      * @var array
      */
-    private $languageDefaultFonts = array(
+    private $languageDefaultFonts = [
         'fa' => 'Tahoma',
         'ar' => 'Tahoma',
-    );
+    ];
 
     /**
      * @param array|null $languageDefaultFonts

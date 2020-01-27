@@ -64,19 +64,19 @@ class ImageCore extends ObjectModel
     /**
      * @see ObjectModel::$definition
      */
-    public static $definition = array(
+    public static $definition = [
         'table' => 'image',
         'primary' => 'id_image',
         'multilang' => true,
-        'fields' => array(
-            'id_product' => array('type' => self::TYPE_INT, 'shop' => 'both', 'validate' => 'isUnsignedId', 'required' => true),
-            'position' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
-            'cover' => array('type' => self::TYPE_BOOL, 'allow_null' => true, 'validate' => 'isBool', 'shop' => true),
-            'legend' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 128),
-        ),
-    );
+        'fields' => [
+            'id_product' => ['type' => self::TYPE_INT, 'shop' => 'both', 'validate' => 'isUnsignedId', 'required' => true],
+            'position' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'],
+            'cover' => ['type' => self::TYPE_BOOL, 'allow_null' => true, 'validate' => 'isBool', 'shop' => true],
+            'legend' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 128],
+        ],
+    ];
 
-    protected static $_cacheGetSize = array();
+    protected static $_cacheGetSize = [];
 
     /**
      * ImageCore constructor.
@@ -580,7 +580,7 @@ class ImageCore extends ObjectModel
             return false;
         }
 
-        $filesToDelete = array();
+        $filesToDelete = [];
 
         // Delete auto-generated images
         $image_types = ImageType::getImagesTypes();

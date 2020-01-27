@@ -60,18 +60,18 @@ class MemcacheServerManager
      */
     public function addServer($serverIp, $serverPort, $serverWeight)
     {
-        $this->connection->executeUpdate('INSERT INTO ' . $this->tableName . ' (ip, port, weight) VALUES(:serverIp, :serverPort, :serverWeight)', array(
+        $this->connection->executeUpdate('INSERT INTO ' . $this->tableName . ' (ip, port, weight) VALUES(:serverIp, :serverPort, :serverWeight)', [
             'serverIp' => $serverIp,
             'serverPort' => (int) $serverPort,
             'serverWeight' => (int) $serverWeight,
-        ));
+        ]);
 
-        return array(
+        return [
             'id' => $this->connection->lastInsertId(),
             'server_ip' => $serverIp,
             'server_port' => $serverPort,
             'server_weight' => $serverWeight,
-        );
+        ];
     }
 
     /**
@@ -104,7 +104,7 @@ class MemcacheServerManager
      */
     public function deleteServer($serverId)
     {
-        $deletionSuccess = $this->connection->delete($this->tableName, array('id_memcached_server' => $serverId));
+        $deletionSuccess = $this->connection->delete($this->tableName, ['id_memcached_server' => $serverId]);
 
         return 1 === $deletionSuccess;
     }
@@ -116,6 +116,6 @@ class MemcacheServerManager
      */
     public function getServers()
     {
-        return $this->connection->fetchAll('SELECT * FROM ' . $this->tableName, array());
+        return $this->connection->fetchAll('SELECT * FROM ' . $this->tableName, []);
     }
 }

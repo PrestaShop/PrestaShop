@@ -29,6 +29,7 @@ namespace PrestaShopBundle\Form\Admin\Sell\CatalogPriceRule;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CleanHtml;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DateRange;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\Reduction;
+use PrestaShop\PrestaShop\Core\Domain\ValueObject\Reduction as ReductionVO;
 use PrestaShopBundle\Form\Admin\Type\DateRangeType;
 use PrestaShopBundle\Form\Admin\Type\ReductionType;
 use Symfony\Component\Form\AbstractType;
@@ -39,7 +40,6 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraints\GreaterThanOrEqual;
-use PrestaShop\PrestaShop\Core\Domain\ValueObject\Reduction as ReductionVO;
 
 /**
  * Defines catalog price rule form for create/edit actions

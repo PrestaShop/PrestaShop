@@ -27,10 +27,10 @@
 namespace PrestaShop\PrestaShop\Adapter\Language\QueryHandler;
 
 use Language;
-use PrestaShop\PrestaShop\Core\Domain\Language\QueryResult\EditableLanguage;
 use PrestaShop\PrestaShop\Core\Domain\Language\Exception\LanguageNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Language\Query\GetLanguageForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Language\QueryHandler\GetLanguageForEditingHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Language\QueryResult\EditableLanguage;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\IsoCode;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\TagIETF;
@@ -72,10 +72,7 @@ final class GetLanguageForEditingHandler implements GetLanguageForEditingHandler
         $language = new Language($languageId->getValue());
 
         if ($languageId->getValue() !== (int) $language->id) {
-            throw new LanguageNotFoundException(
-                $languageId,
-                sprintf('Language with id "%s" was not found', $languageId->getValue())
-            );
+            throw new LanguageNotFoundException($languageId, sprintf('Language with id "%s" was not found', $languageId->getValue()));
         }
 
         return $language;

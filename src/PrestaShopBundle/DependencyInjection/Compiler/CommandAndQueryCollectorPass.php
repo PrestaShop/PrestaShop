@@ -39,7 +39,7 @@ class CommandAndQueryCollectorPass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container)
     {
-        if (!in_array($container->getParameter('kernel.environment'), array('dev', 'test'))) {
+        if (!in_array($container->getParameter('kernel.environment'), ['dev', 'test'])) {
             return;
         }
 

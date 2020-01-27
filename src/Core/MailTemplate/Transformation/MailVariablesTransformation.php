@@ -48,7 +48,7 @@ class MailVariablesTransformation extends AbstractTransformation
      *
      * @throws InvalidArgumentException
      */
-    public function __construct($type, array $replaceVariables = array())
+    public function __construct($type, array $replaceVariables = [])
     {
         parent::__construct($type);
         $this->replaceVariables = $replaceVariables;

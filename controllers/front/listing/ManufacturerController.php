@@ -78,23 +78,23 @@ class ManufacturerControllerCore extends ProductListingFrontController
                 $this->assignManufacturer();
                 $this->label = $this->trans(
                     'List of products by brand %brand_name%',
-                    array(
+                    [
                         '%brand_name%' => $this->manufacturer->name,
-                    ),
+                    ],
                     'Shop.Theme.Catalog'
                 );
                 $this->doProductSearch(
                     'catalog/listing/manufacturer',
-                    array('entity' => 'manufacturer', 'id' => $this->manufacturer->id)
+                    ['entity' => 'manufacturer', 'id' => $this->manufacturer->id]
                 );
             } else {
                 $this->assignAll();
                 $this->label = $this->trans(
                     'List of all brands',
-                    array(),
+                    [],
                     'Shop.Theme.Catalog'
                 );
-                $this->setTemplate('catalog/manufacturers', array('entity' => 'manufacturers'));
+                $this->setTemplate('catalog/manufacturers', ['entity' => 'manufacturers']);
             }
         } else {
             $this->redirect_after = '404';
@@ -129,7 +129,7 @@ class ManufacturerControllerCore extends ProductListingFrontController
 
         $filteredManufacturer = Hook::exec(
             'filterManufacturerContent',
-            array('filtered_content' => $manufacturerVar['description']),
+            ['filtered_content' => $manufacturerVar['description']],
             $id_module = null,
             $array_return = false,
             $check_exceptions = true,
@@ -141,9 +141,9 @@ class ManufacturerControllerCore extends ProductListingFrontController
             $manufacturerVar['description'] = $filteredManufacturer;
         }
 
-        $this->context->smarty->assign(array(
+        $this->context->smarty->assign([
             'manufacturer' => $manufacturerVar,
-        ));
+        ]);
     }
 
     /**
@@ -157,7 +157,7 @@ class ManufacturerControllerCore extends ProductListingFrontController
             foreach ($manufacturersVar as $k => $manufacturer) {
                 $filteredManufacturer = Hook::exec(
                     'filterManufacturerContent',
-                    array('filtered_content' => $manufacturer['text']),
+                    ['filtered_content' => $manufacturer['text']],
                     $id_module = null,
                     $array_return = false,
                     $check_exceptions = true,
@@ -171,22 +171,22 @@ class ManufacturerControllerCore extends ProductListingFrontController
             }
         }
 
-        $this->context->smarty->assign(array(
+        $this->context->smarty->assign([
             'brands' => $manufacturersVar,
-        ));
+        ]);
     }
 
     public function getTemplateVarManufacturers()
     {
         $manufacturers = Manufacturer::getManufacturers(true, $this->context->language->id, true, $this->p, $this->n, false);
-        $manufacturers_for_display = array();
+        $manufacturers_for_display = [];
 
         foreach ($manufacturers as $manufacturer) {
             $manufacturers_for_display[$manufacturer['id_manufacturer']] = $manufacturer;
             $manufacturers_for_display[$manufacturer['id_manufacturer']]['text'] = $manufacturer['short_description'];
             $manufacturers_for_display[$manufacturer['id_manufacturer']]['image'] = $this->context->link->getManufacturerImageLink($manufacturer['id_manufacturer'], 'small_default');
             $manufacturers_for_display[$manufacturer['id_manufacturer']]['url'] = $this->context->link->getmanufacturerLink($manufacturer['id_manufacturer']);
-            $manufacturers_for_display[$manufacturer['id_manufacturer']]['nb_products'] = $manufacturer['nb_products'] > 1 ? ($this->trans('%number% products', array('%number%' => $manufacturer['nb_products']), 'Shop.Theme.Catalog')) : $this->trans('%number% product', array('%number%' => $manufacturer['nb_products']), 'Shop.Theme.Catalog');
+            $manufacturers_for_display[$manufacturer['id_manufacturer']]['nb_products'] = $manufacturer['nb_products'] > 1 ? ($this->trans('%number% products', ['%number%' => $manufacturer['nb_products']], 'Shop.Theme.Catalog')) : $this->trans('%number% product', ['%number%' => $manufacturer['nb_products']], 'Shop.Theme.Catalog');
         }
 
         return $manufacturers_for_display;

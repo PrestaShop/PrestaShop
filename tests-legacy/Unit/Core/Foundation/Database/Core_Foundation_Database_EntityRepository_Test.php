@@ -50,8 +50,6 @@ class Core_Foundation_Database_EntityRepository_Test extends UnitTestCase
         );
     }
 
-    /**
-     */
     public function testCallToInvalidMethodThrowsException()
     {
         $this->expectException(\PrestaShop\PrestaShop\Core\Foundation\Database\Exception::class);
@@ -61,11 +59,11 @@ class Core_Foundation_Database_EntityRepository_Test extends UnitTestCase
 
     public function testCallToFindByDoesNotThrow()
     {
-        $this->repository->findByStuff('hey');
+        $this->assertInternalType('array', $this->repository->findByStuff('hey'));
     }
 
     public function testCallToFindOneByDoesNotThrow()
     {
-        $this->repository->findOneByStuff('hey');
+        $this->assertNull($this->repository->findOneByStuff('hey'));
     }
 }

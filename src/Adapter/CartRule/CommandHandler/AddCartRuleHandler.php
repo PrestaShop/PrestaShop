@@ -181,10 +181,7 @@ final class AddCartRuleHandler implements AddCartRuleHandlerInterface
         switch ($discountApplicationType->getValue()) {
             case DiscountApplicationType::SELECTED_PRODUCTS:
                 if (!$hasPercentageDiscount) {
-                    throw new CartRuleConstraintException(
-                        'Cart rule, which is applied to selected products, must have percent discount type.',
-                        CartRuleConstraintException::INCOMPATIBLE_CART_RULE_ACTIONS
-                    );
+                    throw new CartRuleConstraintException('Cart rule, which is applied to selected products, must have percent discount type.', CartRuleConstraintException::INCOMPATIBLE_CART_RULE_ACTIONS);
                 }
 
                 $cartRule->reduction_product = LegacyDiscountApplicationType::SELECTED_PRODUCTS;
@@ -192,10 +189,7 @@ final class AddCartRuleHandler implements AddCartRuleHandlerInterface
                 break;
             case DiscountApplicationType::CHEAPEST_PRODUCT:
                 if (!$hasPercentageDiscount) {
-                    throw new CartRuleConstraintException(
-                        'Cart rule, which is applied to cheapest product, must have percent discount type.',
-                        CartRuleConstraintException::INCOMPATIBLE_CART_RULE_ACTIONS
-                    );
+                    throw new CartRuleConstraintException('Cart rule, which is applied to cheapest product, must have percent discount type.', CartRuleConstraintException::INCOMPATIBLE_CART_RULE_ACTIONS);
                 }
 
                 $cartRule->reduction_product = LegacyDiscountApplicationType::CHEAPEST_PRODUCT;
@@ -203,18 +197,11 @@ final class AddCartRuleHandler implements AddCartRuleHandlerInterface
                 break;
             case DiscountApplicationType::SPECIFIC_PRODUCT:
                 if (!$hasPercentageDiscount && !$hasAmountDiscount) {
-                    throw new CartRuleConstraintException(
-                        'Cart rule, which is applied to a specific product, ' .
-                        'must have percentage or amount application type.',
-                        CartRuleConstraintException::INCOMPATIBLE_CART_RULE_ACTIONS
-                    );
+                    throw new CartRuleConstraintException('Cart rule, which is applied to a specific product, ' . 'must have percentage or amount application type.', CartRuleConstraintException::INCOMPATIBLE_CART_RULE_ACTIONS);
                 }
 
                 if (null === $command->getDiscountProductId()) {
-                    throw new CartRuleConstraintException(
-                        'Cart rule, which is applied to a specific product, must have a product specified.',
-                        CartRuleConstraintException::MISSING_DISCOUNT_APPLICATION_PRODUCT
-                    );
+                    throw new CartRuleConstraintException('Cart rule, which is applied to a specific product, must have a product specified.', CartRuleConstraintException::MISSING_DISCOUNT_APPLICATION_PRODUCT);
                 }
 
                 $cartRule->reduction_product = $command->getDiscountProductId()->getValue();
@@ -222,11 +209,7 @@ final class AddCartRuleHandler implements AddCartRuleHandlerInterface
                 break;
             case DiscountApplicationType::ORDER_WITHOUT_SHIPPING:
                 if (!$hasAmountDiscount && !$hasPercentageDiscount) {
-                    throw new CartRuleConstraintException(
-                        'Cart rule, which is applied to whole order without shipping, ' .
-                        'must have percentage or amount application type.',
-                        CartRuleConstraintException::INCOMPATIBLE_CART_RULE_ACTIONS
-                    );
+                    throw new CartRuleConstraintException('Cart rule, which is applied to whole order without shipping, ' . 'must have percentage or amount application type.', CartRuleConstraintException::INCOMPATIBLE_CART_RULE_ACTIONS);
                 }
 
                 $cartRule->reduction_product = LegacyDiscountApplicationType::ORDER_WITHOUT_SHIPPING;

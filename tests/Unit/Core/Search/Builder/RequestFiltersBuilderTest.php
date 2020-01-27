@@ -26,6 +26,7 @@
 
 namespace Tests\Unit\Core\Search\Builder;
 
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Search\Builder\RequestFiltersBuilder;
 use PrestaShop\PrestaShop\Core\Search\Filters;
@@ -181,7 +182,7 @@ class RequestFiltersBuilderTest extends TestCase
      * @param string $requestScope
      * @param bool $postQuery
      *
-     * @return \PHPUnit_Framework_MockObject_MockObject|Request
+     * @return MockObject|Request
      */
     private function buildRequestMock(array $parameters, $requestScope = '', $postQuery = false)
     {

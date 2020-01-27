@@ -3,7 +3,7 @@
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 use Behat\Gherkin\Node\TableNode;
-use PHPUnit_Framework_Assert;
+use PHPUnit\Framework\Assert as Assert;
 use PrestaShop\PrestaShop\Core\Domain\Contact\Command\AddContactCommand;
 use PrestaShop\PrestaShop\Core\Domain\Contact\Command\EditContactCommand;
 use PrestaShop\PrestaShop\Core\Domain\Contact\Query\GetContactForEditing;
@@ -72,7 +72,7 @@ class ContactFeatureContext extends AbstractDomainFeatureContext
         /** @var EditableContact $editableContact */
         $editableContact = $this->getQueryBus()->handle(new GetContactForEditing($contactId));
 
-        PHPUnit_Framework_Assert::assertEquals($expectedEditableContact, $editableContact);
+        Assert::assertEquals($expectedEditableContact, $editableContact);
     }
 
     /**

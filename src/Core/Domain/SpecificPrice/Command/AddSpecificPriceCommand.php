@@ -372,11 +372,7 @@ class AddSpecificPriceCommand
         try {
             return new DateTime($dateTime);
         } catch (Exception $e) {
-            throw new SpecificPriceConstraintException(
-                'An error occured when creating DateTime object for specific price',
-                SpecificPriceConstraintException::INVALID_DATETIME,
-                $e
-            );
+            throw new SpecificPriceConstraintException('An error occured when creating DateTime object for specific price', SpecificPriceConstraintException::INVALID_DATETIME, $e);
         }
     }
 }

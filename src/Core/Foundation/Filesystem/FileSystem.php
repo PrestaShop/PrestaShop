@@ -47,7 +47,7 @@ class FileSystem
     public function normalizePath($path)
     {
         return rtrim(
-            str_replace(array('/', '\\'), DIRECTORY_SEPARATOR, $path),
+            str_replace(['/', '\\'], DIRECTORY_SEPARATOR, $path),
             DIRECTORY_SEPARATOR
         );
     }
@@ -76,8 +76,8 @@ class FileSystem
             return $this->joinPaths(
                 $arg_0,
                 call_user_func_array(
-                    array($this,
-                        'joinPaths', ),
+                    [$this,
+                        'joinPaths', ],
                     array_slice($func_args, 1)
                 )
             );
@@ -95,24 +95,14 @@ class FileSystem
     public function listEntriesRecursively($path)
     {
         if (!file_exists($path)) {
-            throw new Exception(
-                sprintf(
-                    'No such file or directory: %s',
-                    $path
-                )
-            );
+            throw new Exception(sprintf('No such file or directory: %s', $path));
         }
 
         if (!is_dir($path)) {
-            throw new Exception(
-                sprintf(
-                    '%s is not a directory',
-                    $path
-                )
-            );
+            throw new Exception(sprintf('%s is not a directory', $path));
         }
 
-        $entries = array();
+        $entries = [];
 
         foreach (scandir($path) as $entry) {
             if ($entry === '.' || $entry === '..') {
@@ -150,7 +140,7 @@ class FileSystem
     {
         return array_filter(
             $this->listEntriesRecursively($path),
-            array($this, 'matchOnlyFiles')
+            [$this, 'matchOnlyFiles']
         );
     }
 }

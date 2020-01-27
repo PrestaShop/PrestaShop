@@ -80,17 +80,11 @@ class MailTemplateGenerator
         $overwriteTemplates = false
     ) {
         if (!is_dir($coreOutputFolder)) {
-            throw new FileNotFoundException(sprintf(
-                'Invalid core output folder "%s"',
-                $coreOutputFolder
-            ));
+            throw new FileNotFoundException(sprintf('Invalid core output folder "%s"', $coreOutputFolder));
         }
 
         if (!is_dir($modulesOutputFolder)) {
-            throw new FileNotFoundException(sprintf(
-                'Invalid modules output folder "%s"',
-                $modulesOutputFolder
-            ));
+            throw new FileNotFoundException(sprintf('Invalid modules output folder "%s"', $modulesOutputFolder));
         }
 
         $this->logger->info(sprintf('Exporting mail with theme %s for language %s', $theme->getName(), $language->getName()));

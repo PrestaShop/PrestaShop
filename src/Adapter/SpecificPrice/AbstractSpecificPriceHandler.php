@@ -60,9 +60,7 @@ abstract class AbstractSpecificPriceHandler
         }
 
         if ($specificPrice->id !== $specificPriceIdValue) {
-            throw new SpecificPriceNotFoundException(
-                sprintf('Specific price with id "%s" was not found.', $specificPriceIdValue)
-            );
+            throw new SpecificPriceNotFoundException(sprintf('Specific price with id "%s" was not found.', $specificPriceIdValue));
         }
 
         return $specificPrice;
@@ -79,10 +77,7 @@ abstract class AbstractSpecificPriceHandler
     protected function assertDateRangeIsNotInverse(DateTime $from, DateTime $to)
     {
         if ($from->diff($to)->invert) {
-            throw new SpecificPriceConstraintException(
-                'The date time for specific price cannot be inverse',
-                SpecificPriceConstraintException::INVALID_DATE_RANGE
-            );
+            throw new SpecificPriceConstraintException('The date time for specific price cannot be inverse', SpecificPriceConstraintException::INVALID_DATE_RANGE);
         }
     }
 }

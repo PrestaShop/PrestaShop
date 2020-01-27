@@ -26,10 +26,10 @@
 
 namespace PrestaShop\PrestaShop\Core\ConstraintValidator;
 
-use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\AlphaIsoCode;
-use PrestaShop\PrestaShop\Core\Domain\Address\Configuration\AddressConstraint;
-use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\IsoCode;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
+use PrestaShop\PrestaShop\Core\Domain\Address\Configuration\AddressConstraint;
+use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\AlphaIsoCode;
+use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\IsoCode;
 use PrestaShop\PrestaShop\Core\String\CharacterCleaner;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
@@ -112,11 +112,7 @@ class TypedRegexValidator extends ConstraintValidator
             return $typePatterns[$type];
         }
 
-        throw new InvalidArgumentException(sprintf(
-            'Type "%s" is not defined. Defined types are: %s',
-            $type,
-            implode(',', array_keys($typePatterns))
-        ));
+        throw new InvalidArgumentException(sprintf('Type "%s" is not defined. Defined types are: %s', $type, implode(',', array_keys($typePatterns))));
     }
 
     /**

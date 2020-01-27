@@ -4,7 +4,7 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 use Behat\Gherkin\Node\TableNode;
 use DateTimeImmutable;
-use PHPUnit_Framework_Assert;
+use PHPUnit\Framework\Assert as Assert;
 use PrestaShop\PrestaShop\Core\Domain\Order\Payment\Command\AddPaymentCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderForViewing;
@@ -60,12 +60,7 @@ class OrderPaymentFeatureContext extends AbstractDomainFeatureContext
 
         $countOfOrderPaymentsFromDb = count($orderPaymentForViewingArray);
         if (count($orderPaymentForViewingArray) !== $numberOfPayments) {
-            throw new RuntimeException(sprintf(
-                'Order "%s" number of payments  is "%s", but "%s" was expected',
-                $orderReference,
-                $countOfOrderPaymentsFromDb,
-                $numberOfPayments
-            ));
+            throw new RuntimeException(sprintf('Order "%s" number of payments  is "%s", but "%s" was expected', $orderReference, $countOfOrderPaymentsFromDb, $numberOfPayments));
         }
     }
 
@@ -84,7 +79,7 @@ class OrderPaymentFeatureContext extends AbstractDomainFeatureContext
         /** @var OrderPaymentForViewing $orderPaymentForViewing */
         $orderPaymentForViewing = $this->getFirstPaymentForViewing($orderId, $orderForViewing);
         $invoiceNumber = $orderPaymentForViewing->getInvoiceNumber();
-        PHPUnit_Framework_Assert::assertNotNull($invoiceNumber);
+        Assert::assertNotNull($invoiceNumber);
     }
 
     /**
@@ -107,7 +102,7 @@ class OrderPaymentFeatureContext extends AbstractDomainFeatureContext
             $orderPaymentForViewing->getPaymentId(), $dataArray
         );
 
-        PHPUnit_Framework_Assert::assertEquals($expectedOrderPaymentForViewing, $orderPaymentForViewing);
+        Assert::assertEquals($expectedOrderPaymentForViewing, $orderPaymentForViewing);
     }
 
     /**
@@ -138,10 +133,7 @@ class OrderPaymentFeatureContext extends AbstractDomainFeatureContext
             $msg = $exception->getMessage();
             $expectedMsg = 'Property Order->total_paid_real is not valid';
             if ($msg !== 'Property Order->total_paid_real is not valid') {
-                throw new RuntimeException(sprintf(
-                    'Not expected exception is thrown "%s" but "%s" was expected',
-                    $msg,
-                    $expectedMsg));
+                throw new RuntimeException(sprintf('Not expected exception is thrown "%s" but "%s" was expected', $msg, $expectedMsg));
             }
         }
     }

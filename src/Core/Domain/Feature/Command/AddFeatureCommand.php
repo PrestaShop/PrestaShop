@@ -81,10 +81,7 @@ class AddFeatureCommand
     private function assertNamesAreValid(array $names)
     {
         if (empty($names)) {
-            throw new FeatureConstraintException(
-                'Feature name cannot be empty',
-                FeatureConstraintException::EMPTY_NAME
-            );
+            throw new FeatureConstraintException('Feature name cannot be empty', FeatureConstraintException::EMPTY_NAME);
         }
     }
 }

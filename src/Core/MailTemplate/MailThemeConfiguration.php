@@ -60,9 +60,9 @@ final class MailThemeConfiguration implements DataConfigurationInterface
      */
     public function getConfiguration()
     {
-        return array(
+        return [
             'defaultTheme' => $this->configuration->get('PS_MAIL_THEME'),
-        );
+        ];
     }
 
     /**
@@ -70,7 +70,7 @@ final class MailThemeConfiguration implements DataConfigurationInterface
      */
     public function updateConfiguration(array $configuration)
     {
-        $errors = array();
+        $errors = [];
 
         try {
             $this->validateConfiguration($configuration);

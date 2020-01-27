@@ -66,7 +66,7 @@ module.exports = class BOBasePage extends CommonPage {
     // Design
     this.designParentLink = '#subtab-AdminParentThemes';
     // Email theme
-    this.emailThemeLink = '#subtab-AdminMailThemeParent';
+    this.emailThemeLink = '#subtab-AdminParentMailTheme';
     // Pages
     this.pagesLink = '#subtab-AdminCmsContent';
     // Link widget
@@ -83,6 +83,8 @@ module.exports = class BOBasePage extends CommonPage {
     this.shopParametersParentLink = '#subtab-ShopParameters';
     // General
     this.shopParametersGeneralLink = '#subtab-AdminParentPreferences';
+    // Product Settings
+    this.productSettingsLink = '#subtab-AdminPPreferences';
     // Contact
     this.contactLink = '#subtab-AdminParentStores';
     // traffic and SEO
@@ -100,8 +102,8 @@ module.exports = class BOBasePage extends CommonPage {
     this.onboardingStopButton = 'a.onboarding-button-stop';
 
     // Growls
-    this.growlMessageBloc = '#growls .growl-message';
-    this.growlDefaultMessageBloc = '#growls-default .growl-message';
+    this.growlMessageBlock = '#growls .growl-message';
+    this.growlDefaultMessageBlock = '#growls-default .growl-message';
 
     // Alert Text
     this.alertSuccessBloc = 'div.alert.alert-success:not([style=\'display: none;\'])';

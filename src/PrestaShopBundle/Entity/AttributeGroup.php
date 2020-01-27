@@ -83,11 +83,11 @@ class AttributeGroup
      */
     private $attributeGroupLangs;
 
-    private $groupTypeAvailable = array(
+    private $groupTypeAvailable = [
         'select',
         'radio',
         'color',
-    );
+    ];
 
     public function __construct()
     {

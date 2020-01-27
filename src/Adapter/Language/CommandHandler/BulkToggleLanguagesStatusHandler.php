@@ -53,11 +53,7 @@ final class BulkToggleLanguagesStatusHandler extends AbstractLanguageHandler imp
             $language->active = $command->getStatus();
 
             if (false === $language->update()) {
-                throw new LanguageException(sprintf(
-                    'Failed to toggle language "%s" to status %s',
-                    $language->id,
-                    var_export($command->getStatus(), true)
-                ));
+                throw new LanguageException(sprintf('Failed to toggle language "%s" to status %s', $language->id, var_export($command->getStatus(), true)));
             }
         }
     }
@@ -73,10 +69,7 @@ final class BulkToggleLanguagesStatusHandler extends AbstractLanguageHandler imp
         }
 
         if ($language->id === (int) Configuration::get('PS_LANG_DEFAULT')) {
-            throw new DefaultLanguageException(
-                sprintf('Default language "%s" cannot be disabled', $language->iso_code),
-                DefaultLanguageException::CANNOT_DISABLE_ERROR
-            );
+            throw new DefaultLanguageException(sprintf('Default language "%s" cannot be disabled', $language->iso_code), DefaultLanguageException::CANNOT_DISABLE_ERROR);
         }
     }
 }

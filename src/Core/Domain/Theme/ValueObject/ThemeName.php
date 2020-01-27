@@ -77,9 +77,7 @@ class ThemeName
     private function assertThemeNameMatchesPattern($themeName)
     {
         if (!preg_match('/^[a-zA-Z0-9_.-]+$/', $themeName)) {
-            throw new InvalidThemeNameException(
-                sprintf('Invalid theme name %s provided.', var_export($themeName, true))
-            );
+            throw new InvalidThemeNameException(sprintf('Invalid theme name %s provided.', var_export($themeName, true)));
         }
     }
 }

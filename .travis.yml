@@ -24,6 +24,7 @@ dist: trusty
 php:
   - 7.1
   - 7.2
+  - 7.3
 
 env:
   global:
@@ -43,7 +44,7 @@ stages:
 jobs:
   include:
     - stage: deploy
-      php: 7.2
+      php: 7.3
       before_install: skip
       before_script: skip
       install: skip

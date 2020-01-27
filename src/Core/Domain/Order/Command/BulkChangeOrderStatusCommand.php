@@ -51,12 +51,7 @@ class BulkChangeOrderStatusCommand
     public function __construct(array $orderIds, $newOrderStatusId)
     {
         if (!is_int($newOrderStatusId) || 0 >= $newOrderStatusId) {
-            throw new OrderException(
-                sprintf(
-                    'Order status Id must be integer greater than 0, but %s given.',
-                    var_export($newOrderStatusId, true)
-                )
-            );
+            throw new OrderException(sprintf('Order status Id must be integer greater than 0, but %s given.', var_export($newOrderStatusId, true)));
         }
 
         $this->newOrderStatusId = $newOrderStatusId;

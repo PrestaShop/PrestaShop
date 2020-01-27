@@ -89,7 +89,7 @@ class PerformanceController extends FrameworkBundleAdminController
      */
     public function processFormAction(Request $request)
     {
-        $this->dispatchHook('actionAdminPerformanceControllerPostProcessBefore', array('controller' => $this));
+        $this->dispatchHook('actionAdminPerformanceControllerPostProcessBefore', ['controller' => $this]);
         $form = $this->get('prestashop.adapter.performance.form_handler')->getForm();
         $form->handleRequest($request);
 

@@ -42,11 +42,11 @@ class PdfOrderReturnControllerCore extends FrontController
         }
 
         if (!isset($this->orderReturn) || !Validate::isLoadedObject($this->orderReturn)) {
-            die($this->trans('Order return not found.', array(), 'Shop.Notifications.Error'));
+            die($this->trans('Order return not found.', [], 'Shop.Notifications.Error'));
         } elseif (!$from_admin && $this->orderReturn->id_customer != $this->context->customer->id) {
-            die($this->trans('Order return not found.', array(), 'Shop.Notifications.Error'));
+            die($this->trans('Order return not found.', [], 'Shop.Notifications.Error'));
         } elseif ($this->orderReturn->state < 2) {
-            die($this->trans('Order return not confirmed.', array(), 'Shop.Notifications.Error'));
+            die($this->trans('Order return not confirmed.', [], 'Shop.Notifications.Error'));
         }
     }
 

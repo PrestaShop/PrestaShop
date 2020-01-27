@@ -27,8 +27,8 @@
 namespace PrestaShopBundle\Entity\Repository;
 
 use Doctrine\DBAL\Driver\Connection;
-use PrestaShopBundle\Exception\NotImplementedException;
 use PrestaShop\PrestaShop\Adapter\LegacyContext as ContextAdapter;
+use PrestaShopBundle\Exception\NotImplementedException;
 use RuntimeException;
 use Shop;
 

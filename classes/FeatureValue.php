@@ -41,26 +41,26 @@ class FeatureValueCore extends ObjectModel
     /**
      * @see ObjectModel::$definition
      */
-    public static $definition = array(
+    public static $definition = [
         'table' => 'feature_value',
         'primary' => 'id_feature_value',
         'multilang' => true,
-        'fields' => array(
-            'id_feature' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-            'custom' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+        'fields' => [
+            'id_feature' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
+            'custom' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
 
             /* Lang fields */
-            'value' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 255),
-        ),
-    );
+            'value' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 255],
+        ],
+    ];
 
-    protected $webserviceParameters = array(
+    protected $webserviceParameters = [
         'objectsNodeName' => 'product_feature_values',
         'objectNodeName' => 'product_feature_value',
-        'fields' => array(
-            'id_feature' => array('xlink_resource' => 'product_features'),
-        ),
-    );
+        'fields' => [
+            'id_feature' => ['xlink_resource' => 'product_features'],
+        ],
+    ];
 
     /**
      * Get all values for a given feature.
@@ -207,7 +207,7 @@ class FeatureValueCore extends ObjectModel
     {
         $return = parent::add($autoDate, $nullValues);
         if ($return) {
-            Hook::exec('actionFeatureValueSave', array('id_feature_value' => $this->id));
+            Hook::exec('actionFeatureValueSave', ['id_feature_value' => $this->id]);
         }
 
         return $return;
@@ -227,7 +227,7 @@ class FeatureValueCore extends ObjectModel
     {
         $return = parent::update($nullValues);
         if ($return) {
-            Hook::exec('actionFeatureValueSave', array('id_feature_value' => $this->id));
+            Hook::exec('actionFeatureValueSave', ['id_feature_value' => $this->id]);
         }
 
         return $return;
@@ -251,7 +251,7 @@ class FeatureValueCore extends ObjectModel
         $return = parent::delete();
 
         if ($return) {
-            Hook::exec('actionFeatureValueDelete', array('id_feature_value' => $this->id));
+            Hook::exec('actionFeatureValueDelete', ['id_feature_value' => $this->id]);
         }
 
         return $return;

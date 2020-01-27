@@ -38,13 +38,13 @@ use PrestaShop\PrestaShop\Core\Search\Filters;
  */
 interface FiltersBuilderInterface
 {
-    const FILTER_TYPES = array(
+    const FILTER_TYPES = [
         'limit',
         'offset',
         'orderBy',
         'sortOrder',
         'filters',
-    );
+    ];
 
     /**
      * Allows to set a config through an associative array, this method should

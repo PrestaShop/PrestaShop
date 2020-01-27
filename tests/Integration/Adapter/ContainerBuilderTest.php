@@ -101,7 +101,7 @@ class ContainerBuilderTest extends TestCase
 
     public function testNoAdminServicesInFront()
     {
-        $this->setExpectedException(ServiceNotFoundException::class);
+        $this->expectException(ServiceNotFoundException::class);
 
         $container = ContainerBuilder::getContainer('front', true);
         $container->get('ps_banner.admin_repository');
@@ -109,7 +109,7 @@ class ContainerBuilderTest extends TestCase
 
     public function testNoFrontServicesInAdmin()
     {
-        $this->setExpectedException(ServiceNotFoundException::class);
+        $this->expectException(ServiceNotFoundException::class);
 
         $container = ContainerBuilder::getContainer('admin', true);
         $container->get('ps_banner.front_repository');

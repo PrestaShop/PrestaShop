@@ -51,31 +51,17 @@ final class BulkEnableSupplierHandler implements BulkEnableSupplierHandlerInterf
                 $entity = new Supplier($supplierId->getValue());
 
                 if (0 >= $entity->id) {
-                    throw new SupplierNotFoundException(
-                        sprintf(
-                            'Supplier object with id "%s" has not been found for enabling status.',
-                            $supplierId->getValue()
-                        )
-                    );
+                    throw new SupplierNotFoundException(sprintf('Supplier object with id "%s" has not been found for enabling status.', $supplierId->getValue()));
                 }
 
                 $entity->active = true;
 
                 if (false === $entity->update()) {
-                    throw new CannotUpdateSupplierStatusException(
-                        sprintf(
-                            'Unable to enable supplier object with id "%s"',
-                            $supplierId->getValue()
-                        )
-                    );
+                    throw new CannotUpdateSupplierStatusException(sprintf('Unable to enable supplier object with id "%s"', $supplierId->getValue()));
                 }
             }
         } catch (PrestaShopException $e) {
-            throw new SupplierException(
-                'Unexpected error occurred when handling bulk enable supplier',
-                0,
-                $e
-            );
+            throw new SupplierException('Unexpected error occurred when handling bulk enable supplier', 0, $e);
         }
     }
 }

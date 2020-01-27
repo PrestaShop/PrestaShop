@@ -89,9 +89,7 @@ final class CategoryMenuThumbnailUploader implements ImageUploaderInterface
         $uploadedFiles = $helper->process();
 
         if (count($availableKeys) < count($uploadedFiles)) {
-            throw new MenuThumbnailsLimitException(
-                sprintf('Maximum number of menu thumbnails was reached for category "%s"', $categoryId)
-            );
+            throw new MenuThumbnailsLimitException(sprintf('Maximum number of menu thumbnails was reached for category "%s"', $categoryId));
         }
 
         foreach ($uploadedFiles as &$uploadedFile) {
@@ -99,12 +97,7 @@ final class CategoryMenuThumbnailUploader implements ImageUploaderInterface
 
             // Evaluate the memory required to resize the image: if it's too much, you can't resize it.
             if (isset($uploadedFile['save_path']) && !ImageManager::checkImageMemoryLimit($uploadedFile['save_path'])) {
-                throw new MemoryLimitException(
-                    sprintf(
-                        'Cannot resize menu thumbnail for category with id "%s" due to reached memory limit.',
-                        $categoryId
-                    )
-                );
+                throw new MemoryLimitException(sprintf('Cannot resize menu thumbnail for category with id "%s" due to reached memory limit.', $categoryId));
             }
 
             // Copy new image

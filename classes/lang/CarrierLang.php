@@ -28,7 +28,7 @@ class CarrierLangCore extends DataLangCore
     // Don't replace domain in init() with $this->domain for translation parsing
     protected $domain = 'Admin.Shipping.Feature';
 
-    protected $keys = array('id_carrier', 'id_shop');
+    protected $keys = ['id_carrier', 'id_shop'];
 
-    protected $fieldsToUpdate = array('delay');
+    protected $fieldsToUpdate = ['delay'];
 }

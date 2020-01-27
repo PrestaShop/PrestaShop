@@ -267,11 +267,7 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
         $defaultLanguageId = Configuration::get('PS_LANG_DEFAULT');
 
         if ($cartRule->name[$defaultLanguageId] !== $value) {
-            throw new RuntimeException(sprintf(
-                'Invalid cart rule name in default language: got "%s", expected "%s"',
-                $value,
-                $cartRule->name[$defaultLanguageId]
-            ));
+            throw new RuntimeException(sprintf('Invalid cart rule name in default language: got "%s", expected "%s"', $value, $cartRule->name[$defaultLanguageId]));
         }
     }
 
@@ -287,11 +283,7 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
         }
 
         if ($propertyToCheck !== $value) {
-            throw new RuntimeException(sprintf(
-                'Invalid cart rule property "%s", with value "%s"',
-                $property,
-                var_export($value, true)
-            ));
+            throw new RuntimeException(sprintf('Invalid cart rule property "%s", with value "%s"', $property, var_export($value, true)));
         }
     }
 
@@ -303,11 +295,7 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
         $formattedDate = $date->format('Y-m-d H:i:s');
 
         if ($cartRule->{$property} !== $formattedDate) {
-            throw new RuntimeException(sprintf(
-                'Invalid cart rule property "%s", with value "%s"',
-                $property,
-                var_export($formattedDate, true)
-            ));
+            throw new RuntimeException(sprintf('Invalid cart rule property "%s", with value "%s"', $property, var_export($formattedDate, true)));
         }
     }
 
@@ -317,10 +305,7 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
     public function assertCartRuleIsHighlightedInCart(CartRule $cartRule, bool $isHighlighted)
     {
         if ((bool) $cartRule->highlight !== $isHighlighted) {
-            throw new RuntimeException(sprintf(
-                'Invalid cart rule property "highlight", with value "%s"',
-                var_export($isHighlighted, true)
-            ));
+            throw new RuntimeException(sprintf('Invalid cart rule property "highlight", with value "%s"', var_export($isHighlighted, true)));
         }
     }
 
@@ -333,17 +318,11 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
         Currency $currency
     ) {
         if (!$this->areNumbersEqual($cartRule->minimum_amount, $minimumPurchaseAmount)) {
-            throw new RuntimeException(sprintf(
-                'Invalid cart rule minimum purchase amount value "%s"',
-                $minimumPurchaseAmount
-            ));
+            throw new RuntimeException(sprintf('Invalid cart rule minimum purchase amount value "%s"', $minimumPurchaseAmount));
         }
 
         if ((int) $cartRule->minimum_amount_currency !== (int) $currency->id) {
-            throw new RuntimeException(sprintf(
-                'Invalid cart rule minimum purchase amount currency with ID "%s"',
-                $currency->id
-            ));
+            throw new RuntimeException(sprintf('Invalid cart rule minimum purchase amount currency with ID "%s"', $currency->id));
         }
     }
 
@@ -388,24 +367,15 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
         string $discountApplicationType
     ) {
         if (!$this->areNumbersEqual($cartRule->reduction_amount, $reductionAmount)) {
-            throw new RuntimeException(sprintf(
-                'Cart rule reduction amount "%s" is not expected',
-                $reductionAmount
-            ));
+            throw new RuntimeException(sprintf('Cart rule reduction amount "%s" is not expected', $reductionAmount));
         }
 
         if ((int) $cartRule->reduction_currency !== (int) $currency->id) {
-            throw new RuntimeException(sprintf(
-                'Cart rule reduction currency ID "%s" is not expected',
-                $currency->id
-            ));
+            throw new RuntimeException(sprintf('Cart rule reduction currency ID "%s" is not expected', $currency->id));
         }
 
         if ((bool) $cartRule->reduction_tax !== $isTaxIncluded) {
-            throw new RuntimeException(sprintf(
-                'Cart rule reduction tax flag "%s" is not expected',
-                var_export($isTaxIncluded)
-            ));
+            throw new RuntimeException(sprintf('Cart rule reduction tax flag "%s" is not expected', var_export($isTaxIncluded)));
         }
 
         $this->assertDiscountApplicationTypeIsValid($cartRule, $discountApplicationType);
@@ -421,17 +391,11 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
         string $discountApplicationType
     ) {
         if (!$this->areNumbersEqual($cartRule->reduction_percent, $percentage)) {
-            throw new RuntimeException(sprintf(
-                'Cart rule reduction percentage "%s" is not expected',
-                $percentage
-            ));
+            throw new RuntimeException(sprintf('Cart rule reduction percentage "%s" is not expected', $percentage));
         }
 
         if ((bool) $cartRule->reduction_exclude_special !== !$includesDiscountedProducts) {
-            throw new RuntimeException(sprintf(
-                'Cart rule reduction_exclude_special flag "%s" is not expected',
-                var_export($includesDiscountedProducts)
-            ));
+            throw new RuntimeException(sprintf('Cart rule reduction_exclude_special flag "%s" is not expected', var_export($includesDiscountedProducts)));
         }
 
         $this->assertDiscountApplicationTypeIsValid($cartRule, $discountApplicationType);
@@ -501,17 +465,11 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
                 break;
 
             default:
-                throw new RuntimeException(sprintf(
-                    'Invalid cart rule discount application type "%s"',
-                    $discountApplicationType
-                ));
+                throw new RuntimeException(sprintf('Invalid cart rule discount application type "%s"', $discountApplicationType));
         }
 
         if ($hasError) {
-            throw new RuntimeException(sprintf(
-                'Cart rule discount application type "%s" was expected',
-                $discountApplicationType
-            ));
+            throw new RuntimeException(sprintf('Cart rule discount application type "%s" was expected', $discountApplicationType));
         }
     }
 

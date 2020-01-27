@@ -30,16 +30,16 @@ use Employee;
 use ErrorException;
 use Exception;
 use Language;
+use PrestaShop\PrestaShop\Core\Addon\AddonManagerInterface;
+use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 use PrestaShop\PrestaShop\Core\Addon\Theme\Exception\ThemeAlreadyExistsException;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Theme\Exception\FailedToEnableThemeModuleException;
 use PrestaShop\PrestaShop\Core\Domain\Theme\Exception\ThemeConstraintException;
 use PrestaShop\PrestaShop\Core\Exception\FileNotFoundException;
 use PrestaShop\PrestaShop\Core\Foundation\Filesystem\FileSystem as PsFileSystem;
-use PrestaShop\PrestaShop\Core\Module\HookConfigurator;
 use PrestaShop\PrestaShop\Core\Image\ImageTypeRepository;
-use PrestaShop\PrestaShop\Core\Addon\AddonManagerInterface;
-use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
+use PrestaShop\PrestaShop\Core\Module\HookConfigurator;
 use PrestaShopBundle\Service\TranslationService;
 use PrestaShopBundle\Translation\Provider\TranslationFinder;
 use PrestaShopLogger;
@@ -220,11 +220,11 @@ class ThemeManager implements AddonManagerInterface
 
         $this->disable($this->shop->theme_name);
 
-        $this->doCreateCustomHooks($theme->get('global_settings.hooks.custom_hooks', array()))
-                ->doApplyConfiguration($theme->get('global_settings.configuration', array()))
-                ->doDisableModules($theme->get('global_settings.modules.to_disable', array()))
+        $this->doCreateCustomHooks($theme->get('global_settings.hooks.custom_hooks', []))
+                ->doApplyConfiguration($theme->get('global_settings.configuration', []))
+                ->doDisableModules($theme->get('global_settings.modules.to_disable', []))
                 ->doEnableModules($theme->getModulesToEnable())
-                ->doResetModules($theme->get('global_settings.modules.to_reset', array()))
+                ->doResetModules($theme->get('global_settings.modules.to_reset', []))
                 ->doApplyImageTypes($theme->get('global_settings.image_types'))
                 ->doHookModules($theme->get('global_settings.hooks.modules_to_hook'));
 
@@ -344,10 +344,7 @@ class ThemeManager implements AddonManagerInterface
             if (!$moduleManager->isInstalled($moduleName)
                 && !$moduleManager->install($moduleName)
             ) {
-                throw new FailedToEnableThemeModuleException(
-                    $moduleName,
-                    $moduleManager->getError($moduleName)
-                );
+                throw new FailedToEnableThemeModuleException($moduleName, $moduleManager->getError($moduleName));
             }
             if (!$moduleManager->isEnabled($moduleName)) {
                 $moduleManager->enable($moduleName);
@@ -410,10 +407,7 @@ class ThemeManager implements AddonManagerInterface
         $themeConfigurationFile = $sandboxPath . '/config/theme.yml';
 
         if (!file_exists($themeConfigurationFile)) {
-            throw new ThemeConstraintException(
-                'Missing theme configuration file which should be in located in /config/theme.yml',
-                ThemeConstraintException::MISSING_CONFIGURATION_FILE
-            );
+            throw new ThemeConstraintException('Missing theme configuration file which should be in located in /config/theme.yml', ThemeConstraintException::MISSING_CONFIGURATION_FILE);
         }
 
         $theme_data = (new Parser())->parse(file_get_contents($themeConfigurationFile));
@@ -423,17 +417,7 @@ class ThemeManager implements AddonManagerInterface
         try {
             $theme = new Theme($theme_data);
         } catch (ErrorException $exception) {
-            throw new ThemeConstraintException(
-                sprintf(
-                    'Theme data %s is not valid',
-                    var_export(
-                        $theme_data,
-                        true
-                    )
-                ),
-                ThemeConstraintException::INVALID_DATA,
-                $exception
-            );
+            throw new ThemeConstraintException(sprintf('Theme data %s is not valid', var_export($theme_data, true)), ThemeConstraintException::INVALID_DATA, $exception);
         }
 
         if (!$this->themeValidator->isValid($theme)) {
@@ -441,16 +425,7 @@ class ThemeManager implements AddonManagerInterface
 
             $this->themeValidator->getErrors($theme->getName());
 
-            throw new ThemeConstraintException(
-                sprintf(
-                    'Theme configuration file is not valid - %s',
-                    var_export(
-                        $this->themeValidator->getErrors($theme->getName()),
-                        true
-                    )
-                ),
-                ThemeConstraintException::INVALID_CONFIGURATION
-            );
+            throw new ThemeConstraintException(sprintf('Theme configuration file is not valid - %s', var_export($this->themeValidator->getErrors($theme->getName()), true)), ThemeConstraintException::INVALID_CONFIGURATION);
         }
 
         $module_root_dir = $this->appConfiguration->get('_PS_MODULE_DIR_');
@@ -472,16 +447,7 @@ class ThemeManager implements AddonManagerInterface
 
         $themePath = $this->appConfiguration->get('_PS_ALL_THEMES_DIR_') . $theme->getName();
         if ($this->filesystem->exists($themePath)) {
-            throw new ThemeAlreadyExistsException(
-                $theme->getName(),
-                $this->translator->trans(
-                    'There is already a theme named '
-                    . $theme->getName()
-                    . ' in your themes/ folder. Remove it if you want to continue.',
-                    [],
-                    'Admin.Design.Notification'
-                )
-            );
+            throw new ThemeAlreadyExistsException($theme->getName(), $this->translator->trans('There is already a theme named ' . $theme->getName() . ' in your themes/ folder. Remove it if you want to continue.', [], 'Admin.Design.Notification'));
         }
 
         $this->filesystem->mkdir($themePath);
@@ -584,7 +550,7 @@ class ThemeManager implements AddonManagerInterface
      */
     private function getDefaultDomains($locale, $themeProvider)
     {
-        $allDomains = array();
+        $allDomains = [];
 
         $defaultCatalogue = $themeProvider
             ->setLocale($locale)

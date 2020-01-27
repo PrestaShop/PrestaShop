@@ -31,7 +31,7 @@ namespace PrestaShopBundle\Utils;
  */
 class FloatParser
 {
-    private static $translationTable = array(
+    private static $translationTable = [
         // arabic numbers
         '٠' => '0',
         '١' => '1',
@@ -54,7 +54,7 @@ class FloatParser
         '۷' => '7',
         '۸' => '8',
         '۹' => '9',
-    );
+    ];
 
     /**
      * Constructs a float value from an arbitrarily-formatted string.
@@ -104,9 +104,7 @@ class FloatParser
 
         foreach ($split as $part) {
             if ('' === $part) {
-                throw new \InvalidArgumentException(
-                    sprintf('Invalid argument: "%s" cannot be interpreted as a number', $value)
-                );
+                throw new \InvalidArgumentException(sprintf('Invalid argument: "%s" cannot be interpreted as a number', $value));
             }
         }
 

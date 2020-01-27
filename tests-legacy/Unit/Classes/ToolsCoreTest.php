@@ -82,7 +82,7 @@ class ToolsCoreTest extends TestCase
         $this->assertFalse(Tools::getValue(null, true));
     }
 
-    public function testGetValueStripsNullCharsFromReturnedStringsExamples()
+    public function getValueStripsNullCharsFromReturnedStringsExamples()
     {
         return array(
             array("\0", ''),
@@ -93,7 +93,7 @@ class ToolsCoreTest extends TestCase
     }
 
     /**
-     * @dataProvider testGetValueStripsNullCharsFromReturnedStringsExamples
+     * @dataProvider getValueStripsNullCharsFromReturnedStringsExamples
      */
     public function testGetValueStripsNullCharsFromReturnedStrings($rawString, $cleanedString)
     {
@@ -116,7 +116,7 @@ class ToolsCoreTest extends TestCase
         $this->assertEquals($cleanedString, Tools::getValue('NON EXISTING KEY', $rawString));
     }
 
-    public function testSpreadAmountExamples()
+    public function spreadAmountExamples()
     {
         return array(
             array(
@@ -225,7 +225,7 @@ class ToolsCoreTest extends TestCase
     }
 
     /**
-     * @dataProvider testSpreadAmountExamples
+     * @dataProvider spreadAmountExamples
      */
     public function testSpreadAmount($expectedRows, $amount, $precision, $rows, $column)
     {
@@ -236,7 +236,7 @@ class ToolsCoreTest extends TestCase
     /**
      * @return array of example taken from the installation of PrestaShop
      */
-    public function testCamelCaseExample()
+    public function getCamelCaseExample()
     {
         return array(
             array('address_format', 'addressFormat', false),
@@ -320,7 +320,7 @@ class ToolsCoreTest extends TestCase
     }
 
     /**
-     * @dataProvider testCamelCaseExample
+     * @dataProvider getCamelCaseExample
      */
     public function testToCamelCase($source, $expected, $firstCharUpperCase)
     {
@@ -334,7 +334,7 @@ class ToolsCoreTest extends TestCase
     }
 
     /**
-     * @dataProvider testStrReplaceFirstProvider
+     * @dataProvider getStrReplaceFirstProvider
      */
     public function testStrReplaceFirst($search, $replace, $subject, $cur, $expected) {
         $this->assertEquals($expected, Tools::StrReplaceFirst($search, $replace, $subject, $cur));
@@ -382,7 +382,7 @@ class ToolsCoreTest extends TestCase
         ];
     }
 
-    public function testStrReplaceFirstProvider() {
+    public function getStrReplaceFirstProvider() {
         return [
             ['s', 'f', 'seed', 0, 'feed'],
             ['s', 'f', 'seed', 1, 'seed'],

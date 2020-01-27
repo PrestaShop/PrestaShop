@@ -58,14 +58,10 @@ final class EditCustomerAddressHandler extends AbstractAddressHandler implements
             }
 
             if (false === $address->update()) {
-                throw new CannotUpdateAddressException(
-                    sprintf('Failed to update address "%s"', $address->id)
-                );
+                throw new CannotUpdateAddressException(sprintf('Failed to update address "%s"', $address->id));
             }
         } catch (PrestaShopException $e) {
-            throw new AddressException(
-                sprintf('An error occurred when updating address "%s"', $command->getAddressId()->getValue())
-            );
+            throw new AddressException(sprintf('An error occurred when updating address "%s"', $command->getAddressId()->getValue()));
         }
     }
 

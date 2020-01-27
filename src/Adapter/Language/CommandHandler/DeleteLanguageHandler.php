@@ -66,10 +66,7 @@ final class DeleteLanguageHandler extends AbstractLanguageHandler implements Del
     private function assertLanguageIsNotDefault(Language $language)
     {
         if ($language->id === (int) Configuration::get('PS_LANG_DEFAULT')) {
-            throw new DefaultLanguageException(
-                sprintf('Default language "%s" cannot be deleted', $language->iso_code),
-                DefaultLanguageException::CANNOT_DELETE_ERROR
-            );
+            throw new DefaultLanguageException(sprintf('Default language "%s" cannot be deleted', $language->iso_code), DefaultLanguageException::CANNOT_DELETE_ERROR);
         }
     }
 
@@ -79,10 +76,7 @@ final class DeleteLanguageHandler extends AbstractLanguageHandler implements Del
     private function assertLanguageIsNotInUse(Language $language)
     {
         if ($language->id === (int) Context::getContext()->language->id) {
-            throw new DefaultLanguageException(
-                sprintf('Used language "%s" cannot be deleted', $language->iso_code),
-                DefaultLanguageException::CANNOT_DELETE_IN_USE_ERROR
-            );
+            throw new DefaultLanguageException(sprintf('Used language "%s" cannot be deleted', $language->iso_code), DefaultLanguageException::CANNOT_DELETE_IN_USE_ERROR);
         }
     }
 }

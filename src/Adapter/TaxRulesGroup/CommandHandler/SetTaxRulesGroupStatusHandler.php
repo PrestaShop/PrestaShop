@@ -50,10 +50,7 @@ final class SetTaxRulesGroupStatusHandler extends AbstractTaxRulesGroupHandler i
         $taxRulesGroup = $this->getTaxRulesGroup($command->getTaxRulesGroupId());
 
         if (!$this->setTaxRulesGroupStatus($taxRulesGroup, $command->getExpectedStatus())) {
-            throw new CannotUpdateTaxRulesGroupException(
-                sprintf('Unable to toggle tax rules group status with id "%s"', $taxRulesGroup->id),
-                CannotUpdateTaxRulesGroupException::FAILED_TOGGLE_STATUS
-            );
+            throw new CannotUpdateTaxRulesGroupException(sprintf('Unable to toggle tax rules group status with id "%s"', $taxRulesGroup->id), CannotUpdateTaxRulesGroupException::FAILED_TOGGLE_STATUS);
         }
     }
 }

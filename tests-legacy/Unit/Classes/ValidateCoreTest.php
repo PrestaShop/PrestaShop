@@ -44,12 +44,6 @@ class ValidateCoreTest extends TestCase
         $this->assertTrue(Validate::isAnything());
     }
 
-    // TODO: Write test for testIsModuleUrl()
-    public function testIsModuleUrl()
-    {
-        //$this->assertSame($expected, Validate::isEmail($input));
-    }
-
     /**
      * @dataProvider isEmailDataProvider
      */

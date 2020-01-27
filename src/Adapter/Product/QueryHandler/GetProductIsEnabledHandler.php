@@ -45,9 +45,7 @@ final class GetProductIsEnabledHandler implements GetProductIsEnabledHandlerInte
         $product = new Product($productId);
 
         if ($product->id !== $productId) {
-            throw new ProductNotFoundException(
-                sprintf('Product with id "%s" was not found.', $productId)
-            );
+            throw new ProductNotFoundException(sprintf('Product with id "%s" was not found.', $productId));
         }
 
         return (bool) $product->active;

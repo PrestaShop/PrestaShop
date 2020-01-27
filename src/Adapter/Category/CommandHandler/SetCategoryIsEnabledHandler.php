@@ -49,17 +49,11 @@ final class SetCategoryIsEnabledHandler implements SetCategoryIsEnabledHandlerIn
         $entity = new Category($categoryId);
 
         if (!$entity->id) {
-            throw new CategoryNotFoundException(
-                $command->getCategoryId(),
-                sprintf('Category with id "%s" was not found', $categoryId)
-            );
+            throw new CategoryNotFoundException($command->getCategoryId(), sprintf('Category with id "%s" was not found', $categoryId));
         }
 
         if (!$entity->toggleStatus()) {
-            throw new CannotUpdateCategoryStatusException(sprintf(
-                'Cannot update status for category with id "%s"',
-                $categoryId
-            ));
+            throw new CannotUpdateCategoryStatusException(sprintf('Cannot update status for category with id "%s"', $categoryId));
         }
     }
 }

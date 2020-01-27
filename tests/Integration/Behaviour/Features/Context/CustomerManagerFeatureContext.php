@@ -254,10 +254,7 @@ class CustomerManagerFeatureContext extends AbstractPrestaShopFeatureContext
         }
 
         if ($this->latestResult->getMessage() !== $message) {
-            throw new \Exception(sprintf("Expected error message '%s', got '%s'",
-                $message,
-                $this->latestResult->getMessage()
-            ));
+            throw new \Exception(sprintf("Expected error message '%s', got '%s'", $message, $this->latestResult->getMessage()));
         }
 
         $this->latestResult = null;
@@ -369,10 +366,7 @@ class CustomerManagerFeatureContext extends AbstractPrestaShopFeatureContext
         }
 
         if (!$isValid) {
-            throw new \Exception(sprintf('genderId %s does not exist, available genders are %s',
-                $genderName,
-                implode(', ', array_keys($availableGenders))
-            ));
+            throw new \Exception(sprintf('genderId %s does not exist, available genders are %s', $genderName, implode(', ', array_keys($availableGenders))));
         }
 
         return $genderId;

@@ -46,9 +46,7 @@ final class SetRequiredFieldsForCustomerHandler implements SetRequiredFieldsForC
         $customer = new Customer();
 
         if (!$customer->addFieldsRequiredDatabase($command->getRequiredFields())) {
-            throw new CannotSetRequiredFieldsForCustomerException(
-                sprintf('Cannot set "%s" required fields for customer', implode(',', $command->getRequiredFields()))
-            );
+            throw new CannotSetRequiredFieldsForCustomerException(sprintf('Cannot set "%s" required fields for customer', implode(',', $command->getRequiredFields())));
         }
     }
 }

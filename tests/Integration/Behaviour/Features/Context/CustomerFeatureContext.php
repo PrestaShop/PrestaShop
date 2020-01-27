@@ -26,6 +26,7 @@
 
 namespace Tests\Integration\Behaviour\Features\Context;
 
+use CartRule;
 use Configuration;
 use Context;
 use Country;
@@ -88,10 +89,7 @@ class CustomerFeatureContext extends AbstractPrestaShopFeatureContext
             }
         }
 
-        throw new RuntimeException(sprintf(
-            'Customer does not have address in "%s" country',
-            $isoCode
-        ));
+        throw new RuntimeException(sprintf('Customer does not have address in "%s" country', $isoCode));
     }
 
     /**
@@ -112,10 +110,7 @@ class CustomerFeatureContext extends AbstractPrestaShopFeatureContext
         $customer = SharedStorage::getStorage()->get($reference);
 
         if ($customer->note) {
-            throw new RuntimeException(sprintf(
-                'It was expected that customer "%s" should not have private note.',
-                $reference
-            ));
+            throw new RuntimeException(sprintf('It was expected that customer "%s" should not have private note.', $reference));
         }
     }
 
@@ -128,12 +123,25 @@ class CustomerFeatureContext extends AbstractPrestaShopFeatureContext
         $customer = SharedStorage::getStorage()->get($reference);
 
         if ($customer->note !== $privateNote) {
-            throw new RuntimeException(sprintf(
-                'It was expected that customer "%s" private note should be "%s", but actually is "%s".',
-                $reference,
-                $privateNote,
-                $customer->note
-            ));
+            throw new RuntimeException(sprintf('It was expected that customer "%s" private note should be "%s", but actually is "%s".', $reference, $privateNote, $customer->note));
+        }
+    }
+
+    /**
+     * @Then customer :reference has voucher of :voucherAmount
+     */
+    public function checkCustomerHasVoucher(string $reference, float $voucherAmount)
+    {
+        /** @var Customer $customer */
+        $customer = SharedStorage::getStorage()->get($reference);
+        $cartRules = CartRule::getCustomerCartRules((int) Configuration::get('PS_LANG_DEFAULT'), $customer->id, true);
+        if (empty($cartRules)) {
+            throw new RuntimeException('Cannot find any cart rules for customer');
+        }
+
+        $voucher = $cartRules[0];
+        if ($voucherAmount !== (float) $voucher['reduction_amount']) {
+            throw new RuntimeException(sprintf('Invalid voucher amount, expected %s but got %s instead', $voucherAmount, $voucher['reduction_amount']));
         }
     }
 

@@ -39,17 +39,17 @@ class ConnectionsSourceCore extends ObjectModel
     /**
      * @see ObjectModel::$definition
      */
-    public static $definition = array(
+    public static $definition = [
         'table' => 'connections_source',
         'primary' => 'id_connections_source',
-        'fields' => array(
-            'id_connections' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-            'http_referer' => array('type' => self::TYPE_STRING, 'validate' => 'isAbsoluteUrl'),
-            'request_uri' => array('type' => self::TYPE_STRING, 'validate' => 'isUrl'),
-            'keywords' => array('type' => self::TYPE_STRING, 'validate' => 'isMessage'),
-            'date_add' => array('type' => self::TYPE_DATE, 'validate' => 'isDate', 'required' => true),
-        ),
-    );
+        'fields' => [
+            'id_connections' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
+            'http_referer' => ['type' => self::TYPE_STRING, 'validate' => 'isAbsoluteUrl'],
+            'request_uri' => ['type' => self::TYPE_STRING, 'validate' => 'isUrl'],
+            'keywords' => ['type' => self::TYPE_STRING, 'validate' => 'isMessage'],
+            'date_add' => ['type' => self::TYPE_DATE, 'validate' => 'isDate', 'required' => true],
+        ],
+    ];
 
     /**
      * Adds current ConnectionsSource as a new Object to the database.

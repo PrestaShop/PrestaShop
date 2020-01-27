@@ -27,11 +27,12 @@
 namespace Tests\Unit\Adapter;
 
 use Cart;
+use Context;
 use Country;
 use Currency;
 use Customer;
 use Language;
-use Context;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\ContextStateManager;
 
@@ -188,7 +189,7 @@ class ContextStateManagerTest extends TestCase
      * @param string $className
      * @param int $objectId
      *
-     * @return \PHPUnit_Framework_MockObject_MockObject|Cart|Country|Currency|Customer|Language
+     * @return MockObject|Cart|Country|Currency|Customer|Language
      */
     private function createContextFieldMock(string $className, int $objectId)
     {
@@ -204,7 +205,7 @@ class ContextStateManagerTest extends TestCase
     /**
      * @param array $contextFields
      *
-     * @return \PHPUnit_Framework_MockObject_MockObject|Context
+     * @return MockObject|Context
      */
     private function createContextMock(array $contextFields)
     {

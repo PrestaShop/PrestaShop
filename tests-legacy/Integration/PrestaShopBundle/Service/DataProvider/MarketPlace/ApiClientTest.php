@@ -27,6 +27,7 @@
 namespace LegacyTests\Integration\PrestaShopBundle\Service\DataProvider\MarketPlace;
 
 use Phake;
+use PHPUnit\Framework\MockObject\MockObject;
 use PrestaShopBundle\Service\DataProvider\Marketplace\ApiClient;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
@@ -62,7 +63,7 @@ class ApiClientTest extends KernelTestCase
     }
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject
+     * @return MockObject
      */
     protected function mockResponse()
     {
@@ -78,7 +79,7 @@ class ApiClientTest extends KernelTestCase
     }
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject
+     * @return MockObject
      */
     protected function mockClient()
     {

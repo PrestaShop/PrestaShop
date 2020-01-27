@@ -118,9 +118,7 @@ class HashMapWhitelistFilter implements FilterInterface
     public function removeFromWhitelist($key)
     {
         if (!is_scalar($key)) {
-            throw new FilterException(
-                sprintf('Invalid parameter %s', print_r($key, true))
-            );
+            throw new FilterException(sprintf('Invalid parameter %s', print_r($key, true)));
         }
 
         unset(

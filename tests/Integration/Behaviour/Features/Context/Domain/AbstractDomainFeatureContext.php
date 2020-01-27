@@ -93,11 +93,7 @@ abstract class AbstractDomainFeatureContext implements Context
     protected function assertLastErrorIsNull()
     {
         if (null !== $this->lastException) {
-            throw new RuntimeException(sprintf(
-                'An unexpected exception was thrown %s: %s',
-                get_class($this->lastException),
-                $this->lastException->getMessage()
-            ), 0, $this->lastException);
+            throw new RuntimeException(sprintf('An unexpected exception was thrown %s: %s', get_class($this->lastException), $this->lastException->getMessage()), 0, $this->lastException);
         }
     }
 
@@ -108,18 +104,10 @@ abstract class AbstractDomainFeatureContext implements Context
     protected function assertLastErrorIs($expectedError, $errorCode = null)
     {
         if (!$this->lastException instanceof $expectedError) {
-            throw new RuntimeException(sprintf(
-                'Last error should be "%s", but got "%s"',
-                $expectedError,
-                $this->lastException ? get_class($this->lastException) : 'null'
-            ), 0, $this->lastException);
+            throw new RuntimeException(sprintf('Last error should be "%s", but got "%s"', $expectedError, $this->lastException ? get_class($this->lastException) : 'null'), 0, $this->lastException);
         }
         if (null !== $errorCode && $this->lastException->getCode() !== $errorCode) {
-            throw new RuntimeException(sprintf(
-                'Last error should have code "%s", but has "%s"',
-                $errorCode,
-                $this->lastException ? $this->lastException->getCode() : 'null'
-            ), 0, $this->lastException);
+            throw new RuntimeException(sprintf('Last error should have code "%s", but has "%s"', $errorCode, $this->lastException ? $this->lastException->getCode() : 'null'), 0, $this->lastException);
         }
     }
 

@@ -49,15 +49,10 @@ final class BulkDeleteOrderMessageHandler extends AbstractOrderMessageHandler im
 
             try {
                 if (false === $orderMessage->delete()) {
-                    throw new OrderMessageException(
-                        sprintf('Failed to delete Order message with id "%d" during bulk delete', $orderMessage->id),
-                        OrderMessageException::FAILED_BULK_DELETE
-                    );
+                    throw new OrderMessageException(sprintf('Failed to delete Order message with id "%d" during bulk delete', $orderMessage->id), OrderMessageException::FAILED_BULK_DELETE);
                 }
             } catch (PrestaShopException $e) {
-                throw new OrderMessageException(
-                    sprintf('Failed to delete Order message with id "%s"', $orderMessage->id)
-                );
+                throw new OrderMessageException(sprintf('Failed to delete Order message with id "%s"', $orderMessage->id));
             }
         }
     }

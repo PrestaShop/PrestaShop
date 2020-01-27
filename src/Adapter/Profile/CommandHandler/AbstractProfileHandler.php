@@ -47,10 +47,7 @@ abstract class AbstractProfileHandler
         $profileEmployees = Employee::getEmployeesByProfile($profile->id);
 
         if (!empty($profileEmployees)) {
-            throw new FailedToDeleteProfileException(
-                sprintf('Failed to delete profile with id "%d", because it is assigned to employee.', $profile->id),
-                FailedToDeleteProfileException::PROFILE_IS_ASSIGNED_TO_EMPLOYEE
-            );
+            throw new FailedToDeleteProfileException(sprintf('Failed to delete profile with id "%d", because it is assigned to employee.', $profile->id), FailedToDeleteProfileException::PROFILE_IS_ASSIGNED_TO_EMPLOYEE);
         }
     }
 }

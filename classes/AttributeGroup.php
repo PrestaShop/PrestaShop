@@ -44,35 +44,35 @@ class AttributeGroupCore extends ObjectModel
     /**
      * @see ObjectModel::$definition
      */
-    public static $definition = array(
+    public static $definition = [
         'table' => 'attribute_group',
         'primary' => 'id_attribute_group',
         'multilang' => true,
-        'fields' => array(
-            'is_color_group' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-            'group_type' => array('type' => self::TYPE_STRING, 'required' => true),
-            'position' => array('type' => self::TYPE_INT, 'validate' => 'isInt'),
+        'fields' => [
+            'is_color_group' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
+            'group_type' => ['type' => self::TYPE_STRING, 'required' => true],
+            'position' => ['type' => self::TYPE_INT, 'validate' => 'isInt'],
 
             /* Lang fields */
-            'name' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 128),
-            'public_name' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 64),
-        ),
-    );
+            'name' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 128],
+            'public_name' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 64],
+        ],
+    ];
 
     /** @var array $webserviceParameters Web service parameters */
-    protected $webserviceParameters = array(
+    protected $webserviceParameters = [
         'objectsNodeName' => 'product_options',
         'objectNodeName' => 'product_option',
-        'fields' => array(),
-        'associations' => array(
-            'product_option_values' => array(
+        'fields' => [],
+        'associations' => [
+            'product_option_values' => [
                 'resource' => 'product_option_value',
-                'fields' => array(
-                    'id' => array(),
-                ),
-            ),
-        ),
-    );
+                'fields' => [
+                    'id' => [],
+                ],
+            ],
+        ],
+    ];
 
     /**
      * Adds current AttributeGroup as a new Object to the database.
@@ -98,7 +98,7 @@ class AttributeGroupCore extends ObjectModel
         }
 
         $return = parent::add($autoDate, true);
-        Hook::exec('actionAttributeGroupSave', array('id_attribute_group' => $this->id));
+        Hook::exec('actionAttributeGroupSave', ['id_attribute_group' => $this->id]);
 
         return $return;
     }
@@ -122,7 +122,7 @@ class AttributeGroupCore extends ObjectModel
         }
 
         $return = parent::update($nullValues);
-        Hook::exec('actionAttributeGroupSave', array('id_attribute_group' => $this->id));
+        Hook::exec('actionAttributeGroupSave', ['id_attribute_group' => $this->id]);
 
         return $return;
     }
@@ -141,7 +141,7 @@ class AttributeGroupCore extends ObjectModel
 			LEFT JOIN `' . _DB_PREFIX_ . 'product_attribute_combination` pac
 				ON (pa.`id_product_attribute` = pac.`id_product_attribute`)
 		');
-        $toRemove = array();
+        $toRemove = [];
         foreach ($attributeCombinations as $attributeCombination) {
             if ((int) $attributeCombination['id_attribute'] == 0) {
                 $toRemove[] = (int) $attributeCombination['id_product_attribute'];
@@ -179,7 +179,7 @@ class AttributeGroupCore extends ObjectModel
                 return false;
             }
             /* Removing attributes to the found combinations */
-            $toRemove = array();
+            $toRemove = [];
             foreach ($attributeIds as $attribute) {
                 $toRemove[] = (int) $attribute['id_attribute'];
             }
@@ -209,7 +209,7 @@ class AttributeGroupCore extends ObjectModel
         }
         $return = parent::delete();
         if ($return) {
-            Hook::exec('actionAttributeGroupDelete', array('id_attribute_group' => $this->id));
+            Hook::exec('actionAttributeGroupDelete', ['id_attribute_group' => $this->id]);
         }
 
         return $return;
@@ -226,7 +226,7 @@ class AttributeGroupCore extends ObjectModel
     public static function getAttributes($idLang, $idAttributeGroup)
     {
         if (!Combination::isFeatureActive()) {
-            return array();
+            return [];
         }
 
         return Db::getInstance()->executeS('
@@ -250,7 +250,7 @@ class AttributeGroupCore extends ObjectModel
     public static function getAttributesGroups($idLang)
     {
         if (!Combination::isFeatureActive()) {
-            return array();
+            return [];
         }
 
         return Db::getInstance()->executeS('
@@ -292,7 +292,7 @@ class AttributeGroupCore extends ObjectModel
      */
     public function setWsProductOptionValues($values)
     {
-        $ids = array();
+        $ids = [];
         foreach ($values as $value) {
             $ids[] = (int) ($value['id']);
         }

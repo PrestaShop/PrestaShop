@@ -54,15 +54,11 @@ final class GetCustomerForAddressCreationHandler implements GetCustomerForAddres
         try {
             $result = Customer::searchByName($email);
         } catch (PrestaShopDatabaseException $e) {
-            throw new CustomerException(
-                sprintf('Failed to fetch results for customers with email %s', $email)
-            );
+            throw new CustomerException(sprintf('Failed to fetch results for customers with email %s', $email));
         }
 
         if (empty($result)) {
-            throw new CustomerByEmailNotFoundException(
-                sprintf('Failed to find customer with email %s', $email)
-            );
+            throw new CustomerByEmailNotFoundException(sprintf('Failed to find customer with email %s', $email));
         }
 
         $customer = reset($result);

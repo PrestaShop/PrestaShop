@@ -36,7 +36,7 @@ class CustomerFilter extends HashMapWhitelistFilter
 {
     public function __construct()
     {
-        $whitelist = array(
+        $whitelist = [
             'addresses',
             'ape',
             'birthday',
@@ -44,10 +44,10 @@ class CustomerFilter extends HashMapWhitelistFilter
             'email',
             'firstname',
             'gender' => (new HashMapWhitelistFilter())
-                ->whitelist(array(
+                ->whitelist([
                     'type',
                     'name',
-                )),
+                ]),
             'is_logged',
             'lastname',
             'newsletter',
@@ -55,7 +55,7 @@ class CustomerFilter extends HashMapWhitelistFilter
             'optin',
             'siret',
             'website',
-        );
+        ];
 
         $this->whitelist($whitelist);
     }

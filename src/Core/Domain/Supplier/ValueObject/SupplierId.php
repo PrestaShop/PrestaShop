@@ -65,9 +65,7 @@ class SupplierId
     private function assertIsIntegerGreaterThanZero($supplierId)
     {
         if (!is_int($supplierId) || 0 >= $supplierId) {
-            throw new SupplierException(
-                sprintf('Invalid Supplier id: %s', var_export($supplierId, true))
-            );
+            throw new SupplierException(sprintf('Invalid Supplier id: %s', var_export($supplierId, true)));
         }
     }
 }

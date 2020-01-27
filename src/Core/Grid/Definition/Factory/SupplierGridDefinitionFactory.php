@@ -52,6 +52,8 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
  */
 final class SupplierGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
+    use BulkDeleteActionTrait;
+
     /**
      * {@inheritdoc}
      */
@@ -229,12 +231,8 @@ final class SupplierGridDefinitionFactory extends AbstractGridDefinitionFactory
                     'submit_route' => 'admin_suppliers_bulk_disable',
                 ])
             )
-            ->add((new SubmitBulkAction('suppliers_delete'))
-                ->setName($this->trans('Delete selected', [], 'Admin.Actions'))
-                ->setOptions([
-                    'submit_route' => 'admin_suppliers_bulk_delete',
-                    'confirm_message' => $this->trans('Delete selected items?', [], 'Admin.Notifications.Warning'),
-                ])
+            ->add(
+                $this->buildBulkDeleteAction('admin_suppliers_bulk_delete')
             )
         ;
     }

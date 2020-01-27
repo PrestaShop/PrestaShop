@@ -86,8 +86,8 @@ final class AddOrderFromBackOfficeHandler implements AddOrderFromBackOfficeHandl
             ->setCurrency(new Currency($cart->id_currency))
             ->setCustomer(new Customer($cart->id_customer))
             ->setLanguage(new Language($cart->id_lang))
-            //@TODO: investigate further which address should be used when setting context country (invoice or delivery)
-            ->setCountry(new Country((new Address($cart->id_address_invoice))->id_country));
+            ->setCountry($this->getTaxCountry($cart))
+        ;
 
         $translator = Context::getContext()->getTranslator();
         $employee = new Employee($command->getEmployeeId()->getValue());
@@ -151,17 +151,28 @@ final class AddOrderFromBackOfficeHandler implements AddOrderFromBackOfficeHandl
         $deliveryAddress = new Address($cart->id_address_delivery);
 
         if ($invoiceAddress->deleted) {
-            throw new OrderException(sprintf(
-                'The invoice address with id "%s" cannot be used, because it is deleted',
-                $invoiceAddress->id
-            ));
+            throw new OrderException(sprintf('The invoice address with id "%s" cannot be used, because it is deleted', $invoiceAddress->id));
         }
 
         if ($deliveryAddress->deleted) {
-            throw new OrderException(sprintf(
-                'The delivery address with id "%s" cannot be used, because it is deleted',
-                $deliveryAddress->id
-            ));
+            throw new OrderException(sprintf('The delivery address with id "%s" cannot be used, because it is deleted', $deliveryAddress->id));
         }
+    }
+
+    /**
+     * @param Cart $cart
+     *
+     * @return Country
+     *
+     * @throws \PrestaShopDatabaseException
+     * @throws \PrestaShopException
+     */
+    private function getTaxCountry(Cart $cart)
+    {
+        $taxAddressType = Configuration::get('PS_TAX_ADDRESS_TYPE');
+        $taxAddressId = property_exists($cart, $taxAddressType) ? $cart->{$taxAddressType} : $cart->id_address_delivery;
+        $taxAddress = new Address($taxAddressId);
+
+        return new Country($taxAddress->id_country);
     }
 }

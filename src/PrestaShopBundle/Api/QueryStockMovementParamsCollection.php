@@ -33,7 +33,7 @@ class QueryStockMovementParamsCollection extends QueryStockParamsCollection
      */
     protected function getValidFilterParams()
     {
-        return array(
+        return [
             'productId',
             'supplier_id',
             'category_id',
@@ -43,7 +43,7 @@ class QueryStockMovementParamsCollection extends QueryStockParamsCollection
             'date_add',
             'id_employee',
             'id_stock_mvt_reason',
-        );
+        ];
     }
 
     /**
@@ -51,12 +51,12 @@ class QueryStockMovementParamsCollection extends QueryStockParamsCollection
      */
     protected function getValidOrderParams()
     {
-        return array(
+        return [
             'product',
             'reference',
             'date_add',
             'id_stock_mvt',
-        );
+        ];
     }
 
     /**
@@ -66,7 +66,7 @@ class QueryStockMovementParamsCollection extends QueryStockParamsCollection
      */
     protected function setDefaultOrderParam($queryParams)
     {
-        $queryParams['order'] = array('id_stock_mvt DESC');
+        $queryParams['order'] = ['id_stock_mvt DESC'];
 
         return $queryParams;
     }

@@ -29,6 +29,7 @@ namespace LegacyTests\Unit\Core\Grid\Data\Factory;
 use Doctrine\DBAL\Query\QueryBuilder;
 use PDOStatement;
 use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\MockObject\MockObject;
 use PrestaShop\PrestaShop\Core\Grid\Data\Factory\DoctrineGridDataFactory;
 use PrestaShop\PrestaShop\Core\Grid\Data\GridDataInterface;
 use PrestaShop\PrestaShop\Core\Grid\Query\DoctrineQueryBuilderInterface;
@@ -67,7 +68,7 @@ class DoctrineGridDataFactoryTest extends TestCase
     }
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject
+     * @return MockObject
      */
     private function createDoctrineQueryBuilderMock()
     {
@@ -106,7 +107,7 @@ class DoctrineGridDataFactoryTest extends TestCase
     }
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject
+     * @return MockObject
      */
     private function createHookDispatcherMock()
     {
@@ -118,7 +119,7 @@ class DoctrineGridDataFactoryTest extends TestCase
     }
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject
+     * @return MockObject
      */
     private function createQueryParserMock()
     {

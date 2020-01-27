@@ -70,10 +70,7 @@ class IsoCode
     private function assertIsIsoCode($isoCode)
     {
         if (!is_string($isoCode) || !preg_match('/^[a-zA-Z]{2,3}$/', $isoCode)) {
-            throw new LanguageConstraintException(
-                sprintf('Invalid language ISO code %s supplied', var_export($isoCode, true)),
-                LanguageConstraintException::INVALID_ISO_CODE
-            );
+            throw new LanguageConstraintException(sprintf('Invalid language ISO code %s supplied', var_export($isoCode, true)), LanguageConstraintException::INVALID_ISO_CODE);
         }
     }
 }

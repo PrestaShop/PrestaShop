@@ -230,10 +230,7 @@ class CmsPageFeatureContext extends AbstractDomainFeatureContext
 
         try {
             $this->getQueryBus()->handle(new GetCmsPageForEditing($cmsPageId));
-            throw new NoExceptionAlthoughExpectedException(sprintf(
-                'CMS page "%s" was found, but it was expected to be deleted',
-                    $cmsPageReference
-            ));
+            throw new NoExceptionAlthoughExpectedException(sprintf('CMS page "%s" was found, but it was expected to be deleted', $cmsPageReference));
         } catch (CmsPageNotFoundException $e) {
             SharedStorage::getStorage()->clear($cmsPageReference);
         }
@@ -248,12 +245,7 @@ class CmsPageFeatureContext extends AbstractDomainFeatureContext
         $cmsPage = SharedStorage::getStorage()->get($cmsPageReference);
         $isEnabled = $status === 'enabled';
         if ($isEnabled !== (bool) $cmsPage->indexation) {
-            throw new RuntimeException(sprintf(
-                'Cms page "%s" indexation is %s, but it was expected to be %s',
-                $cmsPageReference,
-                $cmsPage->indexation ? 'enabled' : 'disabled',
-                $status
-            ));
+            throw new RuntimeException(sprintf('Cms page "%s" indexation is %s, but it was expected to be %s', $cmsPageReference, $cmsPage->indexation ? 'enabled' : 'disabled', $status));
         }
     }
 
@@ -276,12 +268,7 @@ class CmsPageFeatureContext extends AbstractDomainFeatureContext
         $cmsPage = SharedStorage::getStorage()->get($cmsPageReference);
         $isEnabled = $status === 'displayed';
         if ($isEnabled !== (bool) $cmsPage->active) {
-            throw new RuntimeException(sprintf(
-                'Cms page "%s" is %s, but it was expected to be %s',
-                $cmsPageReference,
-                $cmsPage->active ? 'displayed' : 'not displayed',
-                $status
-            ));
+            throw new RuntimeException(sprintf('Cms page "%s" is %s, but it was expected to be %s', $cmsPageReference, $cmsPage->active ? 'displayed' : 'not displayed', $status));
         }
     }
 
@@ -293,13 +280,7 @@ class CmsPageFeatureContext extends AbstractDomainFeatureContext
         /** @var CMS $cmsPage */
         $cmsPage = SharedStorage::getStorage()->get($cmsPageReference);
         if ($cmsPage->$field[$this->defaultLangId] !== $value) {
-            throw new RuntimeException(sprintf(
-                'Cms page "%s" has "%s" %s, but "%s" was expected.',
-                $cmsPageReference,
-                $cmsPage->$field[$this->defaultLangId],
-                $field,
-                $value
-            ));
+            throw new RuntimeException(sprintf('Cms page "%s" has "%s" %s, but "%s" was expected.', $cmsPageReference, $cmsPage->$field[$this->defaultLangId], $field, $value));
         }
     }
 
@@ -311,12 +292,7 @@ class CmsPageFeatureContext extends AbstractDomainFeatureContext
         /** @var CMS $cmsPage */
         $cmsPage = SharedStorage::getStorage()->get($cmsPageReference);
         if ($cmsPage->$field[$this->defaultLangId] !== '') {
-            throw new RuntimeException(sprintf(
-                'Cms page "%s" has "%s" %s, but it was expected to be empty',
-                $cmsPageReference,
-                $cmsPage->$field[$this->defaultLangId],
-                $field
-            ));
+            throw new RuntimeException(sprintf('Cms page "%s" has "%s" %s, but it was expected to be empty', $cmsPageReference, $cmsPage->$field[$this->defaultLangId], $field));
         }
     }
 
@@ -327,9 +303,7 @@ class CmsPageFeatureContext extends AbstractDomainFeatureContext
     {
         if ($this->latestException instanceof Exception) {
             if ($this->latestException->getMessage() !== $message) {
-                throw new RuntimeException(sprintf(
-                    'Got error message "%s", but expected %s', $this->latestException->getMessage(), $message)
-                );
+                throw new RuntimeException(sprintf('Got error message "%s", but expected %s', $this->latestException->getMessage(), $message));
             }
 
             return true;
@@ -347,9 +321,7 @@ class CmsPageFeatureContext extends AbstractDomainFeatureContext
             $query = new GetCmsPageCategoryForEditing((int) $id);
             $this->getQueryBus()->handle($query);
 
-            throw new NoExceptionAlthoughExpectedException(sprintf(
-                'Cms category with id "%s" expected to not exist, but it exists', $id)
-            );
+            throw new NoExceptionAlthoughExpectedException(sprintf('Cms category with id "%s" expected to not exist, but it exists', $id));
         } catch (CmsPageCategoryNotFoundException $e) {
         }
     }
