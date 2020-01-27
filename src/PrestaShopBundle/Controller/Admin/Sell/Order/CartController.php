@@ -59,6 +59,7 @@ use PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Command\AddSpecificPriceComm
 use PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Command\DeleteSpecificPriceByCartProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\Reduction;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CartGridDefinitionFactory;
+use PrestaShop\PrestaShop\Core\Grid\GridFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters\CartFilters;
 use PrestaShopBundle\Component\CsvResponse;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
@@ -229,6 +230,7 @@ class CartController extends FrameworkBundleAdminController
     public function exportAction(CartFilters $filters)
     {
         $filters = new CartFilters(['limit' => null] + $filters->all());
+        /** @var GridFactory $cartGridFactory */
         $cartGridFactory = $this->get('prestashop.core.grid.factory.cart');
         $cartGrid = $cartGridFactory->getGrid($filters);
 
@@ -236,7 +238,7 @@ class CartController extends FrameworkBundleAdminController
 
         $headers = [
             'id_cart' => $this->trans('ID', 'Admin.Global'),
-            'status' => $this->trans('Status', 'Admin.Orderscustomers.Feature'),
+            'id_order' => $this->trans('Order ID', 'Admin.Orderscustomers.Feature'),
             'customer_name' => $this->trans('Customer', 'Admin.Global'),
             'cart_total' => $this->trans('Total', 'Admin.Global'),
             'carrier_name' => $this->trans('Carrier', 'Admin.Shipping.Feature'),
