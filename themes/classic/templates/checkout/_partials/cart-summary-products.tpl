@@ -34,12 +34,12 @@
   </p>
 
   {block name='cart_summary_product_list'}
-  <div class="collapse" id="cart-summary-product-list">
-    <ul class="media-list">
-      {foreach from=$cart.products item=product}
-        <li class="media">{include file='checkout/_partials/cart-summary-product-line.tpl' product=$product}</li>
-      {/foreach}
-    </ul>
-  </div>
+    <div class="collapse" id="cart-summary-product-list">
+      <ul class="media-list">
+        {foreach from=$cart.products item=product}
+          <li class="media">{include file='checkout/_partials/cart-summary-product-line.tpl' product=$product}</li>
+        {/foreach}
+      </ul>
+    </div>
   {/block}
 </div>
