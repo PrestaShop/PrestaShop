@@ -36,10 +36,9 @@ use OrderCarrier;
 use OrderDetail;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\CancelOrderProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler\CancelOrderProductHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Order\Exception\EmptyCancelQuantityException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\EmptyProductSelectionException;
-use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidCancelQuantityException;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use StockAvailable;
 use Validate;
 

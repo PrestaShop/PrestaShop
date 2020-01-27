@@ -87,8 +87,8 @@ export default class OrderViewPage {
 
     EventEmitter.on(OrderViewEventMap.productUpdated, (event) => {
       this.orderProductRenderer.addOrUpdateProductToList(
-          $(OrderViewPageMap.productsTableRow(event.orderDetailId)),
-          event.newRow
+        $(OrderViewPageMap.productsTableRow(event.orderDetailId)),
+        event.newRow
       );
       this.orderProductRenderer.resetEditRow(event.orderDetailId);
       this.orderPricesRefresher.refresh(event.orderId);
@@ -108,8 +108,8 @@ export default class OrderViewPage {
       const numProducts = parseInt($(OrderViewPageMap.productsCount).html(), 10);
 
       this.orderProductRenderer.addOrUpdateProductToList(
-          $(`#${$(event.newRow).find('tr').attr('id')}`),
-          event.newRow
+        $(`#${$(event.newRow).find('tr').attr('id')}`),
+        event.newRow
       );
       this.listenForProductDelete();
       this.listenForProductEdit();
@@ -137,8 +137,8 @@ export default class OrderViewPage {
 
   listenForProductDelete() {
     $(OrderViewPageMap.productDeleteBtn)
-        .off('click')
-        .on('click', event => this.orderProductManager.handleDeleteProductEvent(event));
+      .off('click')
+      .on('click', event => this.orderProductManager.handleDeleteProductEvent(event));
   }
 
   listenForProductEdit() {
@@ -146,14 +146,14 @@ export default class OrderViewPage {
       const $btn = $(event.currentTarget);
       this.orderProductRenderer.moveProductsPanelToModificationPosition();
       this.orderProductRenderer.editProductFromList(
-          $btn.data('orderDetailId'),
-          $btn.data('productQuantity'),
-          $btn.data('productPriceTaxIncl'),
-          $btn.data('productPriceTaxExcl'),
-          $btn.data('taxRate'),
-          $btn.data('location'),
-          $btn.data('availableQuantity'),
-          $btn.data('orderInvoiceId'),
+        $btn.data('orderDetailId'),
+        $btn.data('productQuantity'),
+        $btn.data('productPriceTaxIncl'),
+        $btn.data('productPriceTaxExcl'),
+        $btn.data('taxRate'),
+        $btn.data('location'),
+        $btn.data('availableQuantity'),
+        $btn.data('orderInvoiceId'),
       );
     });
   }
@@ -194,14 +194,14 @@ export default class OrderViewPage {
 
   listenForProductAdd() {
     $(OrderViewPageMap.productAddBtn).on(
-        'click',
-        event => {
-          this.orderProductRenderer.toggleProductAddNewInvoiceInfo()
-          this.orderProductRenderer.moveProductsPanelToModificationPosition(OrderViewPageMap.productSearchInput)
-        }
+      'click',
+      event => {
+        this.orderProductRenderer.toggleProductAddNewInvoiceInfo()
+        this.orderProductRenderer.moveProductsPanelToModificationPosition(OrderViewPageMap.productSearchInput)
+      }
     );
     $(OrderViewPageMap.productCancelAddBtn).on(
-        'click', event => this.orderProductRenderer.moveProductPanelToOriginalPosition()
+      'click', event => this.orderProductRenderer.moveProductPanelToOriginalPosition()
     );
   }
 
@@ -277,17 +277,3 @@ export default class OrderViewPage {
     return $(OrderViewPageMap.productsTablePagination).find('.active span').get(0);
   }
 }
-
-
-
-/*
-listenForCancelProduct() {
-    $(OrderViewPageMap.cancelProduct.buttons.cancel).on('click', (event) => {
-      this.orderProductCancel.showCancelProductForm(event.currentTarget.dataset.orderId);
-      this.orderProductRenderer.moveProductsPanelToRefundPosition();
-    });
-    $(OrderViewPageMap.cancelProduct.inputs.selector).on('change', (event) => {
-      this.orderProductCancel.fillCancelProductQuantityInput($(event.currentTarget));
-    });
-  }
- */
