@@ -175,3 +175,10 @@ services:
     arguments:
       - 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\OrderStates\OrderStateType'
       - '@prestashop.core.form.identifiable_object.data_provider.order_state_form_data_provider'
+
+  prestashop.core.form.identifiable_object.builder.order_return_state_form_builder:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilder'
+    factory: 'prestashop.core.form.builder.form_builder_factory:create'
+    arguments:
+      - 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\OrderReturnStates\OrderReturnStateType'
+      - '@prestashop.core.form.identifiable_object.data_provider.order_return_state_form_data_provider'
