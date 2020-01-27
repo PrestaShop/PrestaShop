@@ -84,6 +84,9 @@ module.exports = {
     order_message_form: './js/pages/order_message/form',
     order_message: './js/pages/order_message',
     order_preferences: './js/pages/order-preferences',
+    order_states_form: './js/pages/order-states/form',
+    order_states: './js/pages/order-states',
+    order_return_states_form: './js/pages/order-return-states/form',
     order_view: './js/pages/order/view.js',
     payment_preferences: './js/pages/payment-preferences',
     product_page: './js/product-page/index',
@@ -173,6 +176,10 @@ module.exports = {
       },
       {
         test: /bootstrap-datetimepicker\.js/,
+        loader: 'imports-loader?define=>false&exports=>false&this=>window',
+      },
+      {
+        test: /bootstrap-colorpicker\.js/,
         loader: 'imports-loader?define=>false&exports=>false&this=>window',
       },
       {

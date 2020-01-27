@@ -32,7 +32,7 @@ use PrestaShop\PrestaShop\Core\Domain\OrderState\Exception\OrderStateNotFoundExc
 use PrestaShop\PrestaShop\Core\Domain\OrderState\ValueObject\OrderStateId;
 
 /**
- * Provides reusable methods for order_state command handlers.
+ * Provides reusable methods for order state command handlers.
  *
  * @internal
  */

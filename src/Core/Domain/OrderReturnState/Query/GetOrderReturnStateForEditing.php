@@ -24,38 +24,33 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Grid\Data\Factory;
+namespace PrestaShop\PrestaShop\Core\Domain\OrderReturnState\Query;
 
-use PrestaShop\PrestaShop\Core\Grid\Data\GridData;
-use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
+use PrestaShop\PrestaShop\Core\Domain\OrderReturnState\ValueObject\OrderReturnStateId;
 
 /**
- * Class OrderReturnStatesGridDataFactoryDecorator decorates data from order_states doctrine data factory.
+ * Gets order return state information for editing.
  */
-final class OrderReturnStatesGridDataFactoryDecorator implements GridDataFactoryInterface
+class GetOrderReturnStateForEditing
 {
     /**
-     * @var GridDataFactoryInterface
+     * @var OrderReturnStateId
      */
-    private $returnStatesDoctrineGridDataFactory;
+    private $orderReturnStateId;
 
-    public function __construct(
-        GridDataFactoryInterface $returnStatutesDoctrineGridDataFactory
-    ) {
-        $this->returnStatesDoctrineGridDataFactory = $returnStatutesDoctrineGridDataFactory;
+    /**
+     * @param int $orderReturnStateId
+     */
+    public function __construct($orderReturnStateId)
+    {
+        $this->orderReturnStateId = new OrderReturnStateId($orderReturnStateId);
     }
 
     /**
-     * {@inheritdoc}
+     * @return OrderReturnStateId
      */
-    public function getData(SearchCriteriaInterface $searchCriteria)
+    public function getOrderReturnStateId()
     {
-        $returnStatutesData = $this->returnStatesDoctrineGridDataFactory->getData($searchCriteria);
-
-        return new GridData(
-            $returnStatutesData->getRecords(),
-            $returnStatutesData->getRecordsTotal(),
-            $returnStatutesData->getQuery()
-        );
+        return $this->orderReturnStateId;
     }
 }

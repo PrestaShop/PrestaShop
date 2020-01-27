@@ -24,38 +24,43 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Grid\Data\Factory;
-
-use PrestaShop\PrestaShop\Core\Grid\Data\GridData;
-use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
+namespace PrestaShop\PrestaShop\Core\Domain\OrderReturnState\ValueObject;
 
 /**
- * Class OrderStatesGridDataFactoryDecorator decorates data from order_states doctrine data factory.
+ * Defines OrderReturnState ID with it's constraints
  */
-final class OrderStatesGridDataFactoryDecorator implements GridDataFactoryInterface
+class OrderReturnStateId
 {
     /**
-     * @var GridDataFactoryInterface
+     * @var int
      */
-    private $orderStatesDoctrineGridDataFactory;
+    private $orderReturnStateId;
 
-    public function __construct(
-        GridDataFactoryInterface $orderStatutesDoctrineGridDataFactory
-    ) {
-        $this->orderStatesDoctrineGridDataFactory = $orderStatutesDoctrineGridDataFactory;
+    /**
+     * @param int $orderReturnStateId
+     */
+    public function __construct($orderReturnStateId)
+    {
+        $this->assertIntegerIsGreaterThanZero($orderReturnStateId);
+
+        $this->orderReturnStateId = $orderReturnStateId;
     }
 
     /**
-     * {@inheritdoc}
+     * @return int
      */
-    public function getData(SearchCriteriaInterface $searchCriteria)
+    public function getValue()
     {
-        $orderStatesData = $this->orderStatesDoctrineGridDataFactory->getData($searchCriteria);
+        return $this->orderReturnStateId;
+    }
 
-        return new GridData(
-            $orderStatesData->getRecords(),
-            $orderStatesData->getRecordsTotal(),
-            $orderStatesData->getQuery()
-        );
+    /**
+     * @param int $orderReturnStateId
+     */
+    private function assertIntegerIsGreaterThanZero($orderReturnStateId)
+    {
+        if (!is_int($orderReturnStateId) || 0 > $orderReturnStateId) {
+            throw new OrderReturnStateException(sprintf('OrderReturnState id %s is invalid. OrderReturnState id must be number that is greater than zero.', var_export($orderReturnStateId, true)));
+        }
     }
 }
