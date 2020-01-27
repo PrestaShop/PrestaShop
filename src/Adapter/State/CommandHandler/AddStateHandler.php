@@ -28,7 +28,6 @@ namespace PrestaShop\PrestaShop\Adapter\State\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\State\AbstractStateHandler;
 use PrestaShop\PrestaShop\Core\Domain\State\Command\AddStateCommand;
-use PrestaShop\PrestaShop\Core\Domain\State\CommandHandler\AddStateHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\State\Exception\CannotAddStateException;
 use PrestaShop\PrestaShop\Core\Domain\State\Exception\StateConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\State\Exception\StateException;
@@ -39,7 +38,7 @@ use State;
 /**
  * Handles creation of state
  */
-final class AddStateHandler extends AbstractStateHandler implements AddStateHandlerInterface
+final class AddStateHandler extends AbstractStateHandler
 {
     /**
      * {@inheritdoc}
