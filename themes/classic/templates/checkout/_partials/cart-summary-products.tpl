@@ -39,7 +39,7 @@
         {foreach from=$cart.products item=product}
           <li class="media">{include file='checkout/_partials/cart-summary-product-line.tpl' product=$product}</li>
         {/foreach}
-     </ul>
+      </ul>
     </div>
   {/block}
 </div>
