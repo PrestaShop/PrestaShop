@@ -81,7 +81,7 @@ describe('Enable/Disable accented URL', async () => {
 
     it(`should ${test.args.action} accented URL`, async function () {
       const result = await this.pageObjects.seoAndUrlsPage.enableDisableAccentedURL(test.args.enable);
-      await expect(result).to.contains(this.pageObjects.seoAndUrlsPage.successfulUpdateMessage);
+      await expect(result).to.contains(this.pageObjects.seoAndUrlsPage.successfulSettingsUpdateMessage);
     });
 
     it('should go to \'Catalog > Products\' page', async function () {
