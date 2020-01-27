@@ -73,6 +73,7 @@ final class CartQueryBuilder extends AbstractDoctrineQueryBuilder
         $qb = $this->getBaseQuery($searchCriteria->getFilters());
         $qb->addSelect('SQL_CALC_FOUND_ROWS c.id_cart, c.date_add');
         $qb->addSelect($this->getStatusQuery() . ' AS status');
+        $qb->addSelect('o.id_order');
         $qb->addSelect('CONCAT(LEFT(cu.firstname, 1), ". ", cu.lastname) AS customer_name');
         $qb->addSelect('ca.name AS carrier_name, c.date_add, IF(con.id_guest, 1, 0) id_guest');
         $qb->setParameter('day_in_seconds', $dayInSeconds);
