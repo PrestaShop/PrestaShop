@@ -37,6 +37,7 @@ use PrestaShop\PrestaShop\Adapter\Order\Refund\VoucherGenerator;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\IssueStandardRefundCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler\IssueStandardRefundHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidOrderStateException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\ReturnProductDisabledException;
 use Validate;
 
@@ -102,6 +103,10 @@ class IssueStandardRefundHandler extends AbstractOrderCommandHandler implements 
 
         /** @var Order $order */
         $order = $this->getOrderObject($command->getOrderId());
+        if (!$order->hasInvoice() || $order->hasBeenDelivered()) {
+            throw new InvalidOrderStateException('Can not perform standard refund on order with no invoice, or already delivered');
+        }
+
         $shippingRefundAmount = $command->refundShippingCost() ? $order->total_shipping_tax_incl : 0;
         /** @var OrderRefundSummary $orderRefundSummary */
         $orderRefundSummary = $this->orderRefundCalculator->computeOrderRefund(
@@ -115,9 +120,8 @@ class IssueStandardRefundHandler extends AbstractOrderCommandHandler implements 
         // Update order details and reinject quantities
         foreach ($orderRefundSummary->getProductRefunds() as $orderDetailId => $productRefund) {
             $orderDetail = $orderRefundSummary->getOrderDetailById($orderDetailId);
-            if (!$order->hasBeenDelivered() || $command->restockRefundedProducts()) {
-                $this->reinjectQuantity($orderDetail, $productRefund['quantity']);
-            }
+            // For standard refund the order is necessarily NOT delivered yet, so reinjection is automatic
+            $this->reinjectQuantity($orderDetail, $productRefund['quantity']);
         }
 
         // Update order carrier weight
@@ -134,9 +138,8 @@ class IssueStandardRefundHandler extends AbstractOrderCommandHandler implements 
             $this->orderSlipCreator->create($order, $orderRefundSummary);
         }
 
-        // Update refund details (important order details must be updated before the delete or the operation is not valid)
-        $this->refundUpdater->updateRefundData($order, $orderRefundSummary);
-        $this->refundUpdater->deleteFromOrder($order, $orderRefundSummary);
+        // Update refund details (standard refund only happen for an order not delivered, so it can't return products)
+        $this->refundUpdater->updateRefundData($order, $orderRefundSummary, false);
 
         // Generate voucher if needed
         if ($command->generateVoucher() && $orderRefundSummary->getRefundedAmount() > 0) {
