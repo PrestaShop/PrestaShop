@@ -40,9 +40,16 @@ class ProfileId
 
     /**
      * @param int $profileId
+     *
+     * @throws ProfileException
      */
     public function __construct($profileId)
     {
+        // Strict type should be used in next major
+        if (!is_int($profileId)) {
+            @trigger_error('Invalid type, int is expected', E_STRICT);
+        }
+
         $this->setProfileId($profileId);
     }
 
@@ -56,13 +63,15 @@ class ProfileId
 
     /**
      * @param int $profileId
+     *
+     * @throws ProfileException
      */
     private function setProfileId($profileId)
     {
-        if (!is_int($profileId) || 0 >= $profileId) {
+        if ((!is_int($profileId) && !ctype_digit($profileId)) || 0 >= $profileId) {
             throw new ProfileException(sprintf('Invalid Profile id %s supplied', var_export($profileId, true)));
         }
 
-        $this->profileId = $profileId;
+        $this->profileId = (int) $profileId;
     }
 }
