@@ -233,7 +233,7 @@ final class CartGridDefinitionFactory extends AbstractGridDefinitionFactory
                         $this->trans('Abandoned cart', [], 'Admin.Orderscustomers.Feature') => CartStatusType::ABANDONED_CART,
                     ],
                     'attr' => [
-                        'placeholder' => $this->trans('Search Order ID / Status', [], 'Admin.Actions'),
+                        'placeholder' => $this->trans('Search order ID / status', [], 'Admin.Actions'),
                     ],
                     'required' => false,
                 ])
