@@ -236,7 +236,7 @@ class CartController extends FrameworkBundleAdminController
 
         $headers = [
             'id_cart' => $this->trans('ID', 'Admin.Global'),
-            'status' => $this->trans('Order ID', 'Admin.Orderscustomers.Feature'),
+            'status' => $this->trans('Status', 'Admin.Orderscustomers.Feature'),
             'customer_name' => $this->trans('Customer', 'Admin.Global'),
             'cart_total' => $this->trans('Total', 'Admin.Global'),
             'carrier_name' => $this->trans('Carrier', 'Admin.Shipping.Feature'),
