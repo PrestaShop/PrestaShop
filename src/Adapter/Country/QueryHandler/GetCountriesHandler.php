@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Country\QueryHandler;
 
 use PrestaShop\PrestaShop\Adapter\Country\CountryDataProvider;
+use PrestaShop\PrestaShop\Adapter\Country\ValueObject\Country;
 use PrestaShop\PrestaShop\Core\Domain\Country\Query\GetCountries;
 use PrestaShop\PrestaShop\Core\Domain\Country\QueryHandler\GetCountriesHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Country\QueryResult\Countries;
@@ -54,13 +55,18 @@ final class GetCountriesHandler implements GetCountriesHandlerInterface
      */
     public function handle(GetCountries $query): Countries
     {
-        return new Countries(
-            $this->countryDataProvider->getCountries(
-                $query->getLangId(),
-                $query->isActive(),
-                $query->doesContainStates(),
-                $query->doesIncludeStatesList()
-            )
+        $countries = $this->countryDataProvider->getCountries(
+            $query->getLangId(),
+            $query->isActive(),
+            $query->doesContainStates(),
+            $query->doesIncludeStatesList()
         );
+        $countriesVO = [];
+        foreach ($countries as $country) {
+            $countryVO = new Country((int) $country['id_country'], $country['name']);
+            $countriesVO[] = $countryVO;
+        }
+
+        return new Countries($countriesVO);
     }
 }

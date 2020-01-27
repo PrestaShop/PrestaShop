@@ -26,18 +26,20 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Country\QueryResult;
 
+use PrestaShop\PrestaShop\Adapter\Country\ValueObject\Country;
+
 /**
  * Holds list of countries found by query configuration
  */
 class Countries
 {
     /**
-     * @var array
+     * @var Country[]
      */
     private $countries;
 
     /**
-     * @param array $countries
+     * @param Country[]
      */
     public function __construct(array $countries)
     {
@@ -45,7 +47,7 @@ class Countries
     }
 
     /**
-     * @return array
+     * @return Country[]
      */
     public function getCountries(): array
     {
