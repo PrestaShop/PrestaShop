@@ -52,6 +52,12 @@ export default class CurrencyForm {
     this.$resetDefaultSettingsButton = $(this.map.resetDefaultSettingsInput);
     this.$loadingDataModal = $(this.map.loadingDataModal);
     this.currencyFormatterId = this.map.currencyFormatter.replace('#', '');
+    this.hideModal = true;
+    this.$loadingDataModal.on('shown.bs.modal', () => {
+      if (this.hideModal) {
+        this.$loadingDataModal.modal('hide');
+      }
+    });
   }
 
   init() {
@@ -143,6 +149,7 @@ export default class CurrencyForm {
   }
 
   async _resetCurrencyData(selectedISOCode) {
+    this.hideModal = false;
     this.$loadingDataModal.modal('show');
     this.$resetDefaultSettingsButton.addClass('spinner');
 
@@ -159,6 +166,7 @@ export default class CurrencyForm {
     });
     this.state.languages = [...this.originalLanguages];
 
+    this.hideModal = true;
     this.$loadingDataModal.modal('hide');
     this.$resetDefaultSettingsButton.removeClass('spinner');
   }
