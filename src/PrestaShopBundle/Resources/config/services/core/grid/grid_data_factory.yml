@@ -367,11 +367,6 @@ services:
         - '@prestashop.core.grid.query.doctrine_query_parser'
         - 'order_states'
 
-    prestashop.core.grid.data_provider.order_states_decorator:
-      class: 'PrestaShop\PrestaShop\Core\Grid\Data\Factory\OrderStatesGridDataFactoryDecorator'
-      arguments:
-        - '@prestashop.core.grid.data_provider.order_states'
-
     prestashop.core.grid.data_provider.order_return_states:
       class: '%prestashop.core.grid.data.factory.doctrine_grid_data_factory%'
       arguments:
@@ -379,8 +374,3 @@ services:
         - '@prestashop.core.hook.dispatcher'
         - '@prestashop.core.grid.query.doctrine_query_parser'
         - 'order_return_states'
-
-    prestashop.core.grid.data_provider.order_return_states_decorator:
-      class: 'PrestaShop\PrestaShop\Core\Grid\Data\Factory\OrderReturnStatesGridDataFactoryDecorator'
-      arguments:
-        - '@prestashop.core.grid.data_provider.order_return_states'
