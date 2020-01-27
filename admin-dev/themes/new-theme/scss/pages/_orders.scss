@@ -46,6 +46,7 @@
     color: $primary;
     cursor: pointer;
   }
+
   input[type="number"] {
     width: 80px;
   }
@@ -91,10 +92,9 @@
   margin-top: 8px;
 }
 
-$order-block-background-color: #f8f8f8;
+$order-block-background-color: #f8f8f8 !default;
 
 .info-block {
-  background-color: $order-block-background-color;
   padding-top: 18px;
   padding-right: 18px;
   padding-left: 18px;
@@ -137,9 +137,14 @@ $order-block-background-color: #f8f8f8;
 
   $private-message-color: #7a8a8f;
 
+  &#all-messages-list {
+    height: 80vh;
+    overflow-y: scroll;
+  }
+
   .message {
     padding: 10px;
-    border-radius: 5px;
+    @include border-radius(5px);
 
     &.customer-message {
       background-color: #fff;
@@ -148,21 +153,21 @@ $order-block-background-color: #f8f8f8;
       background-color: #d3f1f7;
     }
     &.employee-message--private {
-      background-color: $private-message-color;
       color: #fff;
+      background-color: $private-message-color;
     }
   }
 
   .employee-icon {
-    &:before {
-      font-family: "Material Icons";
+    &::before {
+      font-family: "Material Icons", sans-serif;
       content: "account_circle";
     }
     color: #36b9d7;
   }
   .employee-icon--private {
-    &:before {
-      font-family: "Material Icons";
+    &::before {
+      font-family: "Material Icons", sans-serif;
       content: "visibility_off";
     }
     color: $private-message-color;
@@ -217,8 +222,8 @@ $order-block-background-color: #f8f8f8;
 
 #view_all_messages_modal {
   .modal-content {
-    background-color: inherit;
     padding: 0;
+    background-color: inherit;
   }
   .modal-body {
     padding: 0;
@@ -273,6 +278,25 @@ td .editProductInvoice {
   }
 }
 
+.partial-refund {
+  display: none;
+
+  .shipping-price-container {
+    display: flex;
+    margin-top: 8px;
+  }
+  .form-group {
+    display: inline-flex;
+    width: max-content;
+  }
+}
+
+.partial-refund label {
+  height: 30px;
+  padding: 0;
+  line-height: 30px;
+}
+
 .cancel-product-element,
 .cancel-product-selector,
 .cancel-product-amount {
@@ -281,13 +305,14 @@ td .editProductInvoice {
 
 .cancel-product-element.form-submit {
   width: 100%;
-  margin-right: 20px;
   margin-top: -10px;
+  margin-right: 20px;
 }
 
 .refund-checkboxes-container {
   display: none;
   width: fit-content;
+  max-width: 90px;
   margin: 16px auto;
 }
 

@@ -9,6 +9,7 @@
     "selector-max-compound-selectors": null,
     "selector-no-qualifying-type": null,
     "selector-max-combinators": null,
-    "selector-class-pattern": null
+    "selector-class-pattern": null,
+    "selector-descendant-combinator-no-non-space": null
   }
 }
