@@ -174,10 +174,12 @@ class StateController extends FrameworkBundleAdminController
 
                 return $this->redirectToRoute('admin_states_index');
             }
-        } catch (Exception $e) {
+        } catch (StateNotFoundException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
 
             return $this->redirectToRoute('admin_states_index');
+        } catch (Exception $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
         return $this->render('@PrestaShop/Admin/Improve/International/Locations/State/edit.html.twig', [
