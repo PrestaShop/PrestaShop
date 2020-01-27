@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Country\QueryHandler;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use PrestaShop\PrestaShop\Adapter\Country\CountryDataProvider;
 use PrestaShop\PrestaShop\Adapter\Country\ValueObject\Country;
 use PrestaShop\PrestaShop\Core\Domain\Country\Query\GetCountries;
@@ -61,10 +62,10 @@ final class GetCountriesHandler implements GetCountriesHandlerInterface
             $query->doesContainStates(),
             $query->doesIncludeStatesList()
         );
-        $countriesVO = [];
+        $countriesVO = new ArrayCollection();
         foreach ($countries as $country) {
             $countryVO = new Country((int) $country['id_country'], $country['name']);
-            $countriesVO[] = $countryVO;
+            $countriesVO->add($countryVO);
         }
 
         return new Countries($countriesVO);

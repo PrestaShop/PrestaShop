@@ -26,30 +26,31 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Country\QueryResult;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use PrestaShop\PrestaShop\Adapter\Country\ValueObject\Country;
 
 /**
- * Holds list of countries found by query configuration
+ * Holds collection of Country VO found by query configuration
  */
 class Countries
 {
     /**
-     * @var Country[]
+     * @var ArrayCollection|Country[]
      */
     private $countries;
 
     /**
-     * @param Country[]
+     * @param ArrayCollection $countries
      */
-    public function __construct(array $countries)
+    public function __construct(ArrayCollection $countries)
     {
         $this->countries = $countries;
     }
 
     /**
-     * @return Country[]
+     * @return ArrayCollection|Country[]
      */
-    public function getCountries(): array
+    public function getCountries(): ArrayCollection
     {
         return $this->countries;
     }
