@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,13 +19,14 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShopBundle\Controller\Admin\Configure\ShopParameters;
 
+use PrestaShop\PrestaShop\Core\Domain\OrderReturnState\Exception\OrderReturnStateException;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturnState\Query\GetOrderReturnStateForEditing;
 use PrestaShop\PrestaShop\Core\Domain\OrderState\Command\EditOrderStateCommand;
 use PrestaShop\PrestaShop\Core\Domain\OrderState\Exception\DuplicateOrderStateNameException;
@@ -61,9 +62,7 @@ class OrderStateController extends FrameworkBundleAdminController
         OrderReturnStatesFilters $orderReturnStatesFilters
     ) {
         $orderStatesGridFactory = $this->get('prestashop.core.grid.factory.order_states');
-        $orderStatesGrid = $orderStatesGridFactory->getGrid(
-            $this->buildFiltersParamsByRequest($request, $orderStatesFilters)
-        );
+        $orderStatesGrid = $orderStatesGridFactory->getGrid($orderStatesFilters);
 
         $orderReturnStatesGridFactory = $this->get('prestashop.core.grid.factory.order_return_states');
         $orderReturnStatesGrid = $orderReturnStatesGridFactory->getGrid(
@@ -126,7 +125,7 @@ class OrderStateController extends FrameworkBundleAdminController
 
                 return $this->redirectToRoute('admin_order_states');
             }
-        } catch (\Exception $e) {
+        } catch (OrderStateException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }
 
@@ -161,12 +160,16 @@ class OrderStateController extends FrameworkBundleAdminController
         try {
             $result = $orderStateFormHandler->handleFor($orderStateId, $orderStateForm);
 
-            if ($result->isSubmitted() && $result->isValid()) {
-                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+            if ($result->isSubmitted()) {
+                if ($result->isValid()) {
+                    $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+                } else {
+                    $this->addFlashFormErrors($orderStateForm);
+                }
 
                 return $this->redirectToRoute('admin_order_states');
             }
-        } catch (\Exception $e) {
+        } catch (OrderStateException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }
 
@@ -207,7 +210,7 @@ class OrderStateController extends FrameworkBundleAdminController
 
                 return $this->redirectToRoute('admin_order_states');
             }
-        } catch (\Exception $e) {
+        } catch (OrderReturnStateException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }
 
@@ -234,12 +237,16 @@ class OrderStateController extends FrameworkBundleAdminController
         try {
             $result = $orderReturnStateFormHandler->handleFor($orderReturnStateId, $orderReturnStateForm);
 
-            if ($result->isSubmitted() && $result->isValid()) {
-                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+            if ($result->isSubmitted()) {
+                if ($result->isValid()) {
+                    $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+                } else {
+                    $this->addFlashFormErrors($orderReturnStateForm);
+                }
 
                 return $this->redirectToRoute('admin_order_states');
             }
-        } catch (\Exception $e) {
+        } catch (OrderReturnStateException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }
 
@@ -271,7 +278,7 @@ class OrderStateController extends FrameworkBundleAdminController
             $editableOrderState = $this->getQueryBus()->handle(new GetOrderStateForEditing((int) $orderStateId));
 
             $editOrderStateCommand = new EditOrderStateCommand((int) $orderStateId);
-            $editOrderStateCommand->setDeliveryOn(!$editableOrderState->isDeliveryOn());
+            $editOrderStateCommand->setDelivery(!$editableOrderState->isDeliveryOn());
 
             $this->getCommandBus()->handle($editOrderStateCommand);
 
@@ -306,7 +313,7 @@ class OrderStateController extends FrameworkBundleAdminController
             $editableOrderState = $this->getQueryBus()->handle(new GetOrderStateForEditing((int) $orderStateId));
 
             $editOrderStateCommand = new EditOrderStateCommand((int) $orderStateId);
-            $editOrderStateCommand->setInvoiceOn(!$editableOrderState->isInvoiceOn());
+            $editOrderStateCommand->setInvoice(!$editableOrderState->isInvoice());
 
             $this->getCommandBus()->handle($editOrderStateCommand);
 
@@ -341,7 +348,7 @@ class OrderStateController extends FrameworkBundleAdminController
             $editableOrderState = $this->getQueryBus()->handle(new GetOrderStateForEditing((int) $orderStateId));
 
             $editOrderStateCommand = new EditOrderStateCommand((int) $orderStateId);
-            $editOrderStateCommand->setSendEmailOn(!$editableOrderState->isSendEmailOn());
+            $editOrderStateCommand->setSendEmail(!$editableOrderState->isSendEmailOn());
 
             $this->getCommandBus()->handle($editOrderStateCommand);
 
@@ -368,10 +375,10 @@ class OrderStateController extends FrameworkBundleAdminController
                 'This order status does not exist.',
                 'Admin.Notifications.Error'
             ),
-            DuplicateOrderStateNameException::class => sprintf(
-                '%s %s',
-                $this->trans('An order status with the same name already exists:', 'Admin.Shopparameters.Notification'),
-                $e instanceof DuplicateOrderStateNameException ? $e->getName()->getValue() : ''
+            DuplicateOrderStateNameException::class => $this->trans(
+                'An order status with the same name already exists: %s',
+                'Admin.Shopparameters.Notification',
+                [$e instanceof DuplicateOrderStateNameException ? $e->getName()->getValue() : '']
             ),
             OrderStateConstraintException::class => [
                 OrderStateConstraintException::INVALID_NAME => $this->trans(

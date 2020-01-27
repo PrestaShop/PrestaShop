@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -27,8 +27,10 @@
 namespace PrestaShopBundle\Form\Admin\Configure\ShopParameters\OrderStates;
 
 use PrestaShop\PrestaShop\Adapter\Configuration;
-use PrestaShop\PrestaShop\Adapter\MailTemplate\MailTemplateDataProvider;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DefaultLanguage;
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
+use PrestaShop\PrestaShop\Core\MailTemplate\Layout\Layout;
+use PrestaShop\PrestaShop\Core\MailTemplate\ThemeCatalogInterface;
 use PrestaShopBundle\Form\Admin\Type\ColorPickerType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableChoiceType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
@@ -39,7 +41,6 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Routing\Router;
 use Symfony\Component\Translation\TranslatorInterface;
-use Symfony\Component\Validator\Constraints\Regex;
 
 /**
  * Type is used to created form for order state add/edit actions
@@ -50,10 +51,12 @@ class OrderStateType extends TranslatorAwareType
      * @var array
      */
     private $templates;
+
     /**
      * @var Router
      */
     private $routing;
+
     /**
      * @var array
      */
@@ -62,31 +65,37 @@ class OrderStateType extends TranslatorAwareType
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
-        MailTemplateDataProvider $mailTemplateDataProvider,
+        ThemeCatalogInterface $themeCatalog,
         Router $routing
     ) {
         parent::__construct($translator, $locales);
         $this->routing = $routing;
+        $mailTheme = Configuration::get('PS_MAIL_THEME', 'modern');
 
-        foreach ($mailTemplateDataProvider->getTemplates() as $languageId => $languageMailTemplate) {
+        $mailLayouts = $themeCatalog->getByName($mailTheme)->getLayouts();
+
+        foreach ($locales as $locale) {
+            $languageId = $locale['id_lang'];
             $this->templates[$languageId] = [];
             $this->templateAttributes[$languageId] = [];
-            foreach ($languageMailTemplate as $mailTemplate) {
-                if (array_key_exists('id', $mailTemplate) && array_key_exists('name', $mailTemplate)) {
-                    $this->templates[$languageId][$mailTemplate['name']] = $mailTemplate['id'];
 
-                    $this->templateAttributes[$languageId][$mailTemplate['name']] = [];
-
-                    $this->templateAttributes[$languageId][$mailTemplate['name']]['data-preview'] = $this->routing->generate(
-                        'admin_mail_theme_preview_layout',
+            /** @var Layout $mailLayout */
+            foreach ($mailLayouts as $mailLayout) {
+                $this->templates[$languageId][$mailLayout->getName()] = $mailLayout->getName();
+                $this->templateAttributes[$languageId][$mailLayout->getName()] = [
+                    'data-preview' => $this->routing->generate(
+                        empty($mailLayout->getModuleName()) ?
+                            'admin_mail_theme_preview_layout' :
+                            'admin_mail_theme_preview_module_layout',
                         [
-                            'locale' => $mailTemplate['language_code'],
-                            'theme' => Configuration::get('PS_MAIL_THEME', 'modern'),
-                            'layout' => $mailTemplate['name'],
+                            'theme' => $mailTheme,
+                            'layout' => $mailLayout->getName(),
                             'type' => 'html',
+                            'locale' => $locale['iso_code'],
+                            'module' => $mailLayout->getModuleName(),
                         ]
-                    );
-                }
+                    ),
+                ];
             }
         }
     }
@@ -104,9 +113,8 @@ class OrderStateType extends TranslatorAwareType
                 ],
                 'options' => [
                     'constraints' => [
-                        new Regex([
-                            'pattern' => '/^[^<>;=#{}]*$/u',
-                            'message' => $this->trans('%s is invalid.', 'Admin.Notifications.Error'),
+                        new TypedRegex([
+                            'type' => 'generic_name',
                         ]),
                     ],
                 ],
@@ -172,7 +180,7 @@ class OrderStateType extends TranslatorAwareType
             ])
             ->add('delivery', CheckboxType::class, [
                 'required' => false,
-                'label' => $this->trans('Show delivery PDF.', 'Admin.Shopparameters.Feature'),
+                'label' => $this->trans('Set the order as in transit.', 'Admin.Shopparameters.Feature'),
                 'attr' => [
                     'material_design' => true,
                 ],
