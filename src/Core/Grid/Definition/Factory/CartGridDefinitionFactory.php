@@ -27,7 +27,6 @@
 namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
-use PrestaShop\PrestaShop\Core\Domain\Cart\CartStatusType;
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\Type\SubmitBulkAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
@@ -45,7 +44,6 @@ use PrestaShop\PrestaShop\Core\Grid\Column\Type\HighlightedColumn;
 use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
-use PrestaShopBundle\Form\Admin\Type\DatalistType;
 use PrestaShopBundle\Form\Admin\Type\DateRangeType;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
 use PrestaShopBundle\Form\Admin\Type\YesAndNoChoiceType;
@@ -226,18 +224,14 @@ final class CartGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ])
                 ->setAssociatedColumn('id_cart')
             )
-            ->add((new Filter('status', DatalistType::class))
+            ->add((new Filter('status', NumberType::class))
                 ->setTypeOptions([
-                    'choices' => [
-                        $this->trans('Not placed', [], 'Admin.Orderscustomers.Feature') => CartStatusType::NOT_ORDERED,
-                        $this->trans('Abandoned cart', [], 'Admin.Orderscustomers.Feature') => CartStatusType::ABANDONED_CART,
-                    ],
                     'attr' => [
-                        'placeholder' => $this->trans('Search order ID / status', [], 'Admin.Actions'),
+                        'placeholder' => $this->trans('Search order ID', [], 'Admin.Actions'),
                     ],
                     'required' => false,
                 ])
-                ->setAssociatedColumn('status')
+                ->setAssociatedColumn('id_order')
             )
             ->add((new Filter('customer_name', TextType::class))
                 ->setTypeOptions([
