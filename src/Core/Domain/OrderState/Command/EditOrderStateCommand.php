@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -62,42 +62,42 @@ class EditOrderStateCommand
     /**
      * @var bool|null
      */
-    private $invoiceOn;
+    private $invoice;
 
     /**
      * @var bool|null
      */
-    private $hiddenOn;
+    private $hidden;
 
     /**
      * @var bool|null
      */
-    private $sendEmailOn;
+    private $sendEmail;
 
     /**
      * @var bool|null
      */
-    private $pdfInvoiceOn;
+    private $pdfInvoice;
 
     /**
      * @var bool|null
      */
-    private $pdfDeliveryOn;
+    private $pdfDelivery;
 
     /**
      * @var bool|null
      */
-    private $shippedOn;
+    private $shipped;
 
     /**
      * @var bool|null
      */
-    private $paidOn;
+    private $paid;
 
     /**
      * @var bool|null
      */
-    private $deliveryOn;
+    private $delivery;
 
     /**
      * @var array|null
@@ -179,17 +179,17 @@ class EditOrderStateCommand
     /**
      * @return bool|null
      */
-    public function isInvoiceOn()
+    public function isInvoice()
     {
-        return $this->invoiceOn;
+        return $this->invoice;
     }
 
     /**
      * @return self
      */
-    public function setInvoiceOn(?bool $invoiceOn)
+    public function setInvoice(?bool $invoice)
     {
-        $this->invoiceOn = $invoiceOn;
+        $this->invoice = $invoice;
 
         return $this;
     }
@@ -197,17 +197,17 @@ class EditOrderStateCommand
     /**
      * @return bool|null
      */
-    public function isHiddenOn()
+    public function isHidden()
     {
-        return $this->hiddenOn;
+        return $this->hidden;
     }
 
     /**
      * @return self
      */
-    public function setHiddenOn(?bool $hiddenOn)
+    public function setHidden(?bool $hidden)
     {
-        $this->hiddenOn = $hiddenOn;
+        $this->hidden = $hidden;
 
         return $this;
     }
@@ -215,17 +215,17 @@ class EditOrderStateCommand
     /**
      * @return bool|null
      */
-    public function isSendEmailOn()
+    public function isSendEmail()
     {
-        return $this->sendEmailOn;
+        return $this->sendEmail;
     }
 
     /**
      * @return self
      */
-    public function setSendEmailOn(?bool $sendEmailOn)
+    public function setSendEmail(?bool $sendEmail)
     {
-        $this->sendEmailOn = $sendEmailOn;
+        $this->sendEmail = $sendEmail;
 
         return $this;
     }
@@ -233,17 +233,17 @@ class EditOrderStateCommand
     /**
      * @return bool|null
      */
-    public function isPdfInvoiceOn()
+    public function isPdfInvoice()
     {
-        return $this->pdfInvoiceOn;
+        return $this->pdfInvoice;
     }
 
     /**
      * @return self
      */
-    public function setPdfInvoiceOn(?bool $pdfInvoiceOn)
+    public function setPdfInvoice(?bool $pdfInvoice)
     {
-        $this->pdfInvoiceOn = $pdfInvoiceOn;
+        $this->pdfInvoice = $pdfInvoice;
 
         return $this;
     }
@@ -251,17 +251,17 @@ class EditOrderStateCommand
     /**
      * @return bool|null
      */
-    public function isPdfDeliveryOn()
+    public function isPdfDelivery()
     {
-        return $this->pdfDeliveryOn;
+        return $this->pdfDelivery;
     }
 
     /**
      * @return self
      */
-    public function setPdfDeliveryOn(?bool $pdfDeliveryOn)
+    public function setPdfDelivery(?bool $pdfDelivery)
     {
-        $this->pdfDeliveryOn = $pdfDeliveryOn;
+        $this->pdfDelivery = $pdfDelivery;
 
         return $this;
     }
@@ -269,17 +269,17 @@ class EditOrderStateCommand
     /**
      * @return bool|null
      */
-    public function isShippedOn()
+    public function isShipped()
     {
-        return $this->shippedOn;
+        return $this->shipped;
     }
 
     /**
      * @return self
      */
-    public function setShippedOn(?bool $shippedOn)
+    public function setShipped(?bool $shipped)
     {
-        $this->shippedOn = $shippedOn;
+        $this->shipped = $shipped;
 
         return $this;
     }
@@ -287,17 +287,17 @@ class EditOrderStateCommand
     /**
      * @return bool|null
      */
-    public function isPaidOn()
+    public function isPaid()
     {
-        return $this->paidOn;
+        return $this->paid;
     }
 
     /**
      * @return self
      */
-    public function setPaidOn(?bool $paidOn)
+    public function setPaid(?bool $paid)
     {
-        $this->paidOn = $paidOn;
+        $this->paid = $paid;
 
         return $this;
     }
@@ -305,17 +305,17 @@ class EditOrderStateCommand
     /**
      * @return bool|null
      */
-    public function isDeliveryOn()
+    public function isDelivery()
     {
-        return $this->deliveryOn;
+        return $this->delivery;
     }
 
     /**
      * @return self
      */
-    public function setDeliveryOn(?bool $deliveryOn)
+    public function setDelivery(?bool $delivery)
     {
-        $this->deliveryOn = $deliveryOn;
+        $this->delivery = $delivery;
 
         return $this;
     }
