@@ -67,6 +67,7 @@ class OrderStateType extends TranslatorAwareType
     ) {
         parent::__construct($translator, $locales);
         $this->routing = $routing;
+        $mailTheme = Configuration::get('PS_MAIL_THEME', 'modern');
 
         foreach ($mailTemplateDataProvider->getTemplates() as $languageId => $languageMailTemplate) {
             $this->templates[$languageId] = [];
@@ -81,7 +82,7 @@ class OrderStateType extends TranslatorAwareType
                         'admin_mail_theme_preview_layout',
                         [
                             'locale' => $mailTemplate['language_code'],
-                            'theme' => Configuration::get('PS_MAIL_THEME', 'modern'),
+                            'theme' => $mailTheme,
                             'layout' => $mailTemplate['name'],
                             'type' => 'html',
                         ]

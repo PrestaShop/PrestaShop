@@ -26,6 +26,7 @@
 import initColorPickers from '@app/utils/colorpicker';
 import TranslatableChoice from '@components/form/translatable-choice';
 import TranslatableInput from '@components/translatable-input';
+import FormMap from '@pages/order-states/form-map';
 
 const {$} = window;
 
@@ -44,14 +45,14 @@ $(() => {
   }
 
   $(document).ready(() => {
-    if (!$('#order_state_send_email').is(':checked')) {
-      $('.order_state_template_select').hide();
+    if (!$(FormMap.sendEmailSelector).is(':checked')) {
+      $(FormMap.MailTemplateSelector).hide();
     }
-    $(document).on('change', '#order_state_send_email', () => {
-      $('.order_state_template_select').slideToggle();
+    $(document).on('change', FormMap.sendEmailSelector, () => {
+      $(FormMap.MailTemplateSelector).slideToggle();
     });
 
-    $(document).on('click', '#order_state_template_preview', (event) => {
+    $(document).on('click', FormMap.MailTemplatePreview, (event) => {
       const $element = $(event.currentTarget);
       const $select = $element.closest('.form-group').find('select.translatable_choice:visible');
       const $uri = $select.find('option:selected').attr('data-preview');
