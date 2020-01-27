@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -29,6 +29,7 @@ namespace PrestaShop\PrestaShop\Adapter\OrderState\CommandHandler;
 use OrderState;
 use PrestaShop\PrestaShop\Core\Domain\OrderState\Command\EditOrderStateCommand;
 use PrestaShop\PrestaShop\Core\Domain\OrderState\CommandHandler\EditOrderStateHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\OrderState\Exception\MissingOrderStateRequiredFieldsException;
 use PrestaShop\PrestaShop\Core\Domain\OrderState\Exception\OrderStateException;
 
 /**
@@ -61,6 +62,24 @@ final class EditOrderStateHandler extends AbstractOrderStateHandler implements E
         }
     }
 
+    /**
+     * @throws MissingOrderStateRequiredFieldsException
+     */
+    protected function assertRequiredFieldsAreNotMissing(OrderState $orderState)
+    {
+        // Check that we have templates for all languages when send_email is on
+        $haveMissingTemplates = (
+            !is_array($orderState->template) ||
+            count($orderState->template) != count(array_filter($orderState->template, 'strlen'))
+        );
+
+        if (true === $orderState->send_email && true === $haveMissingTemplates) {
+            throw new MissingOrderStateRequiredFieldsException(['template'], 'One or more required fields for order state are missing. Missing fields are: template');
+        }
+
+        parent::assertRequiredFieldsAreNotMissing($orderState);
+    }
+
     private function updateOrderStateWithCommandData(OrderState $orderState, EditOrderStateCommand $command)
     {
         if (null !== $command->getName()) {
@@ -75,36 +94,36 @@ final class EditOrderStateHandler extends AbstractOrderStateHandler implements E
             $orderState->logable = $command->isLogable();
         }
 
-        if (null !== $command->isHiddenOn()) {
-            $orderState->hidden = $command->isHiddenOn();
+        if (null !== $command->isHidden()) {
+            $orderState->hidden = $command->isHidden();
         }
 
-        if (null !== $command->isInvoiceOn()) {
-            $orderState->invoice = $command->isInvoiceOn();
+        if (null !== $command->isInvoice()) {
+            $orderState->invoice = $command->isInvoice();
         }
 
-        if (null !== $command->isSendEmailOn()) {
-            $orderState->send_email = $command->isSendEmailOn();
+        if (null !== $command->isSendEmail()) {
+            $orderState->send_email = $command->isSendEmail();
         }
 
-        if (null !== $command->isPdfInvoiceOn()) {
-            $orderState->pdf_invoice = $command->isPdfInvoiceOn();
+        if (null !== $command->isPdfInvoice()) {
+            $orderState->pdf_invoice = $command->isPdfInvoice();
         }
 
-        if (null !== $command->isPdfDeliveryOn()) {
-            $orderState->pdf_delivery = $command->isPdfDeliveryOn();
+        if (null !== $command->isPdfDelivery()) {
+            $orderState->pdf_delivery = $command->isPdfDelivery();
         }
 
-        if (null !== $command->isShippedOn()) {
-            $orderState->shipped = $command->isShippedOn();
+        if (null !== $command->isShipped()) {
+            $orderState->shipped = $command->isShipped();
         }
 
-        if (null !== $command->isPaidOn()) {
-            $orderState->paid = $command->isPaidOn();
+        if (null !== $command->isPaid()) {
+            $orderState->paid = $command->isPaid();
         }
 
-        if (null !== $command->isDeliveryOn()) {
-            $orderState->delivery = $command->isDeliveryOn();
+        if (null !== $command->isDelivery()) {
+            $orderState->delivery = $command->isDelivery();
         }
 
         if (null !== $command->getTemplate()) {

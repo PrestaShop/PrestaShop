@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -63,14 +63,14 @@ final class AddOrderStateHandler extends AbstractOrderStateHandler implements Ad
         $orderState->name = $command->getLocalizedNames();
         $orderState->color = $command->getColor();
         $orderState->logable = $command->isLogable();
-        $orderState->invoice = $command->isInvoiceOn();
-        $orderState->hidden = $command->isHiddenOn();
-        $orderState->send_email = $command->isSendEmailOn();
-        $orderState->pdf_invoice = $command->isPdfInvoiceOn();
-        $orderState->pdf_delivery = $command->isPdfDeliveryOn();
-        $orderState->shipped = $command->isShippedOn();
-        $orderState->paid = $command->isPaidOn();
-        $orderState->delivery = $command->isDeliveryOn();
+        $orderState->invoice = $command->isInvoice();
+        $orderState->hidden = $command->isHidden();
+        $orderState->send_email = $command->isSendEmail();
+        $orderState->pdf_invoice = $command->isPdfInvoice();
+        $orderState->pdf_delivery = $command->isPdfDelivery();
+        $orderState->shipped = $command->isShipped();
+        $orderState->paid = $command->isPaid();
+        $orderState->delivery = $command->isDelivery();
         $orderState->template = $command->getLocalizedTemplates();
     }
 }

@@ -1,4 +1,3 @@
-<?php
 /**
  * 2007-2020 PrestaShop SA and Contributors
  *
@@ -24,37 +23,11 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\OrderState\Exception;
-
-use PrestaShop\PrestaShop\Core\Domain\OrderState\ValueObject\OrderStateId;
-
 /**
- * Is thrown when order state is not found
+ * Defines all selectors that are used in currency add/edit form.
  */
-class OrderStateNotFoundException extends OrderStateException
-{
-    /**
-     * @var OrderStateId
-     */
-    private $orderStateId;
-
-    /**
-     * @param string $message
-     * @param int $code
-     * @param \Exception|null $previous
-     */
-    public function __construct(OrderStateId $orderStateId, $message = '', $code = 0, $previous = null)
-    {
-        $this->orderStateId = $orderStateId;
-
-        parent::__construct($message, $code, $previous);
-    }
-
-    /**
-     * @return OrderStateId
-     */
-    public function getOrderStateId()
-    {
-        return $this->orderStateId;
-    }
-}
+export default {
+  sendEmailSelector: '#order_state_send_email',
+  mailTemplateSelector: '.order_state_template_select',
+  mailTemplatePreview: '#order_state_template_preview',
+};
