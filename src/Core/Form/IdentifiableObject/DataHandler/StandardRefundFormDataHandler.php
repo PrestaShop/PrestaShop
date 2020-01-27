@@ -74,7 +74,6 @@ final class StandardRefundFormDataHandler implements FormDataHandlerInterface
             $id,
             $refunds,
             $data['shipping'],
-            $data['restock'],
             $data['credit_slip'],
             $data['voucher'],
             $data['voucher_refund_type'] ?? VoucherRefundType::PRODUCT_PRICES_EXCLUDING_VOUCHER_REFUND

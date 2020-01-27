@@ -33,19 +33,28 @@ use OrderSlip;
 use PHPUnit\Framework\Assert as Assert;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\IssuePartialRefundCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\IssueStandardRefundCommand;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidOrderStateException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidRefundException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\ReturnProductDisabledException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderProductForViewing;
-use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
 use PrestaShop\PrestaShop\Core\Domain\Order\VoucherRefundType;
 use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 
 class OrderRefundFeatureContext extends AbstractDomainFeatureContext
 {
+    /**
+     * @BeforeScenario
+     */
+    public function before()
+    {
+        // Merchandise return is disabled by default, use enabledReturnProduct() to enable it
+        Configuration::set('PS_ORDER_RETURN', 0);
+    }
+
     /**
      * @When /^I issue a partial refund on "(.*)" (with|without) restock (with|without) credit slip (with|without) voucher on following products:$/
      *
@@ -85,22 +94,19 @@ class OrderRefundFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @When /^I issue a standard refund on "(.*)" (with|without) restock (with|without) credit slip (with|without) voucher on following products:$/
+     * @When /^I issue a standard refund on "(.*)" (with|without) credit slip (with|without) voucher on following products:$/
      *
      * @param string $orderReference
-     * @param string $restockProducts
      * @param string $generateCreditSlip
      * @param string $generateVoucher
      * @param TableNode $table
      */
     public function issueStandardRefundOrder(
         string $orderReference,
-        string $restockProducts,
         string $generateCreditSlip,
         string $generateVoucher,
         TableNode $table
     ) {
-        $restockProducts = 'with' === $restockProducts;
         $generateCreditSlip = 'with' === $generateCreditSlip;
         $generateVoucher = 'with' === $generateVoucher;
         $orderId = SharedStorage::getStorage()->get($orderReference);
@@ -111,7 +117,6 @@ class OrderRefundFeatureContext extends AbstractDomainFeatureContext
             $command = $this->createIssueStandardRefundCommand(
                 $orderId,
                 $refundData,
-                $restockProducts,
                 $generateCreditSlip,
                 $generateVoucher
             );
@@ -229,6 +234,14 @@ class OrderRefundFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @Then I should get error that order state is invalid
+     */
+    public function assertLastErrorIsInvalidOrderState()
+    {
+        $this->assertLastErrorIs(InvalidOrderStateException::class);
+    }
+
+    /**
      * @param int $orderId
      * @param array $refunds
      * @param bool $restockRefundedProducts
@@ -289,7 +302,6 @@ class OrderRefundFeatureContext extends AbstractDomainFeatureContext
     /**
      * @param int $orderId
      * @param array $refunds
-     * @param bool $restockRefundedProducts
      * @param bool $generateCreditSlip
      * @param bool $generateVoucher
      * @param int $voucherRefundType
@@ -303,7 +315,6 @@ class OrderRefundFeatureContext extends AbstractDomainFeatureContext
     private function createIssueStandardRefundCommand(
         int $orderId,
         array $refunds,
-        bool $restockRefundedProducts,
         bool $generateCreditSlip,
         bool $generateVoucher,
         int $voucherRefundType = VoucherRefundType::PRODUCT_PRICES_EXCLUDING_VOUCHER_REFUND,
@@ -335,7 +346,6 @@ class OrderRefundFeatureContext extends AbstractDomainFeatureContext
             $orderId,
             $orderDetailsRefunds,
             $refundShippingCost,
-            $restockRefundedProducts,
             $generateCreditSlip,
             $generateVoucher,
             $voucherRefundType,

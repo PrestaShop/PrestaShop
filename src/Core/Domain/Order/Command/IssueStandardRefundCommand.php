@@ -53,7 +53,6 @@ class IssueStandardRefundCommand extends AbstractRefundCommand
      * @param int $orderId
      * @param array $orderDetailRefunds
      * @param bool $refundShippingCost
-     * @param bool $restockRefundedProducts
      * @param bool $generateCreditSlip
      * @param bool $generateVoucher
      * @param int $voucherRefundType
@@ -66,7 +65,6 @@ class IssueStandardRefundCommand extends AbstractRefundCommand
         int $orderId,
         array $orderDetailRefunds,
         bool $refundShippingCost,
-        bool $restockRefundedProducts,
         bool $generateCreditSlip,
         bool $generateVoucher,
         int $voucherRefundType,
@@ -75,7 +73,7 @@ class IssueStandardRefundCommand extends AbstractRefundCommand
         parent::__construct(
             $orderId,
             $orderDetailRefunds,
-            $restockRefundedProducts,
+            true,
             $generateCreditSlip,
             $generateVoucher,
             $voucherRefundType,
