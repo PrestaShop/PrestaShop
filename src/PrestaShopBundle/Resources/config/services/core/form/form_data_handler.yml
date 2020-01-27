@@ -145,3 +145,8 @@ services:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\OrderStateFormDataHandler'
     arguments:
       - '@prestashop.core.command_bus'
+
+  prestashop.core.form.identifiable_object.data_handler.order_return_state_form_data_handler:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\OrderReturnStateFormDataHandler'
+    arguments:
+      - '@prestashop.core.command_bus'
