@@ -63,14 +63,14 @@ final class AddOrderStateHandler extends AbstractOrderStateHandler implements Ad
         $orderState->name = $command->getLocalizedNames();
         $orderState->color = $command->getColor();
         $orderState->logable = $command->isLogable();
-        $orderState->invoice = $command->isInvoiceOn();
-        $orderState->hidden = $command->isHiddenOn();
-        $orderState->send_email = $command->isSendEmailOn();
-        $orderState->pdf_invoice = $command->isPdfInvoiceOn();
-        $orderState->pdf_delivery = $command->isPdfDeliveryOn();
-        $orderState->shipped = $command->isShippedOn();
-        $orderState->paid = $command->isPaidOn();
-        $orderState->delivery = $command->isDeliveryOn();
+        $orderState->invoice = $command->isInvoice();
+        $orderState->hidden = $command->isHidden();
+        $orderState->send_email = $command->isSendEmail();
+        $orderState->pdf_invoice = $command->isPdfInvoice();
+        $orderState->pdf_delivery = $command->isPdfDelivery();
+        $orderState->shipped = $command->isShipped();
+        $orderState->paid = $command->isPaid();
+        $orderState->delivery = $command->isDelivery();
         $orderState->template = $command->getLocalizedTemplates();
     }
 }

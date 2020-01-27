@@ -1,8 +1,8 @@
 // Tools
 @import "~prestakit/dist/css/bootstrap-prestashop-ui-kit";
 @import "~bourbon/app/assets/stylesheets/bourbon";
-@import "../node_modules/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css";
-@import "../node_modules/bootstrap-colorpicker/dist/css/bootstrap-colorpicker.min.css";
+@import "~eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css";
+@import "~bootstrap-colorpicker/dist/css/bootstrap-colorpicker.min.css";
 @import "mixins/single_line_block";
 @import "mixins/notification_container";
 @import "mixins/notification_counter";
