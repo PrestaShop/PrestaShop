@@ -27,12 +27,11 @@
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
 
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
-use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\OrderState\Query\GetOrderStateForEditing;
 use PrestaShop\PrestaShop\Core\Domain\OrderState\QueryResult\EditableOrderState;
 
 /**
- * Provides data for order_state forms
+ * Provides data for order state forms
  */
 final class OrderStateFormDataProvider implements FormDataProviderInterface
 {
@@ -41,17 +40,10 @@ final class OrderStateFormDataProvider implements FormDataProviderInterface
      */
     private $queryBus;
 
-    /**
-     * @var ConfigurationInterface
-     */
-    private $configuration;
-
     public function __construct(
-        CommandBusInterface $queryBus,
-        ConfigurationInterface $configuration
+        CommandBusInterface $queryBus
     ) {
         $this->queryBus = $queryBus;
-        $this->configuration = $configuration;
     }
 
     /**
