@@ -126,10 +126,10 @@ final class CartGridDefinitionFactory extends AbstractGridDefinitionFactory
                     'field' => 'id_cart',
                 ])
             )
-            ->add((new DataColumn('status'))
-                ->setName($this->trans('Order ID / Status', [], 'Admin.Orderscustomers.Feature'))
+            ->add((new DataColumn('id_order'))
+                ->setName($this->trans('Order ID', [], 'Admin.Orderscustomers.Feature'))
                 ->setOptions([
-                    'field' => 'status',
+                    'field' => 'id_order',
                     'text_align' => 'center',
                 ])
             )
