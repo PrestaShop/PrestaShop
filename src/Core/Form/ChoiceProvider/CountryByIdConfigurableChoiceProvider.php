@@ -40,7 +40,7 @@ final class CountryByIdConfigurableChoiceProvider implements ConfigurableFormCho
     /**
      * @var CommandBusInterface
      */
-    private $queryBud;
+    private $queryBus;
 
     /**
      * @var int
@@ -56,7 +56,7 @@ final class CountryByIdConfigurableChoiceProvider implements ConfigurableFormCho
         CommandBusInterface $queryBud
     ) {
         $this->langId = $langId;
-        $this->queryBud = $queryBud;
+        $this->queryBus = $queryBud;
     }
 
     /**
@@ -84,7 +84,7 @@ final class CountryByIdConfigurableChoiceProvider implements ConfigurableFormCho
             ->setIncludeStatesList($listStates);
 
         /** @var Countries $countries */
-        $countries = $this->queryBud->handle($query);
+        $countries = $this->queryBus->handle($query);
         $choices = [];
 
         /** @var Country $country */
