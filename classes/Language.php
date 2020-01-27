@@ -30,6 +30,7 @@ use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\MailTemplate\Command\GenerateThemeMailTemplatesCommand;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Language\LanguageInterface;
+use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleRepository;
 use PrestaShop\PrestaShop\Core\Localization\RTL\Processor as RtlStylesheetProcessor;
 use PrestaShopBundle\Translation\TranslatorLanguageLoader;
 
@@ -1262,6 +1263,30 @@ class LanguageCore extends ObjectModel implements LanguageInterface
         return count($errors) ? $errors : true;
     }
 
+    private static function updateCurrenciesCldr(Language $language)
+    {
+        /** @var Currency[] $currencies */
+        $currencies = Currency::getCurrencies(true, false, false);
+        $container = SymfonyContainer::getInstance();
+        /** @var LocaleRepository $localeRepoCLDR */
+        $localeRepoCLDR = $container->get('prestashop.core.localization.cldr.locale_repository');
+
+        foreach ($currencies as $currency) {
+            $names = $currency->getLocalizedNames();
+            $symbols = $currency->getLocalizedSymbols();
+
+            $cldrCurrency = $localeRepoCLDR->getLocale($language->locale)->getCurrency($currency->iso_code);
+
+            $names[$language->id] = $cldrCurrency->getDisplayName();
+            $symbols[$language->id] = $cldrCurrency->getSymbol();
+
+            $currency->setLocalizedNames($names);
+            $currency->setLocalizedSymbols($symbols);
+
+            $currency->save();
+        }
+    }
+
     public static function updateLanguagePack($iso, &$errors = [])
     {
         $lang_pack = self::getLangDetails($iso);
@@ -1364,6 +1389,8 @@ class LanguageCore extends ObjectModel implements LanguageInterface
 
                     if (_DB_PREFIX_ . 'country_lang' == $t) {
                         self::updateMultilangFromCldr($lang);
+                    } elseif (_DB_PREFIX_ . 'currency_lang' == $t) {
+                        self::updateCurrenciesCldr($lang);
                     } else {
                         self::updateMultilangFromClass($t, $className, $lang);
                     }
