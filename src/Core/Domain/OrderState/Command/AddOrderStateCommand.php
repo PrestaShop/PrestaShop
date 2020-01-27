@@ -111,7 +111,6 @@ class AddOrderStateCommand
         $this->shippedOn = $shippedOn;
         $this->paidOn = $paidOn;
         $this->deliveryOn = $deliveryOn;
-        $this->localizedNames = $localizedNames;
         $this->localizedTemplates = $localizedTemplates;
     }
 
