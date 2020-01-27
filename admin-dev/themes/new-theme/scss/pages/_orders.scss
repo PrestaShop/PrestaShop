@@ -46,10 +46,12 @@
 
 #addProductTableRow,
 .editProductRow {
+  /* stylelint-disable */
   // div selector is important here, it is used for empty labels regular labels must not be hidden
   div.form-control-label {
     display: none;
   }
+  /* stylelint-enable */
 }
 
 #addProductNewInvoiceInfo h4 {
@@ -201,9 +203,9 @@ td .editProductInvoice {
 }
 
 .refund-checkboxes-container {
+  display: none;
   width: fit-content;
   margin: 16px auto;
-  display: none;
 }
 
 .refund-checkboxes-container .form-group {
