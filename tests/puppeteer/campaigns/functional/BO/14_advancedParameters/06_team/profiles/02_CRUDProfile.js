@@ -35,11 +35,9 @@ const init = async function () {
     foBasePage: new FOBasePage(page),
   };
 };
-/*
-Test disabled because of issue described here https://github.com/PrestaShop/PrestaShop/issues/16899
- */
+
 // Create, Read, Update and Delete profile in BO
-describe.skip('Create, Read, Update and Delete profile in BO', async () => {
+describe('Create, Read, Update and Delete profile in BO', async () => {
   // before and after functions
   before(async function () {
     browser = await helper.createBrowser();
