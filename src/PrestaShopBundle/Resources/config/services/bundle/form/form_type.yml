@@ -1151,3 +1151,10 @@ services:
         - '@router'
       tags:
         - { name: form.type }
+
+    prestashop.bundle.form.admin.configure.shop_parameters.order_return_states.order_retrun_state:
+      class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\OrderReturnStates\OrderReturnStateType'
+      parent: 'form.type.translatable.aware'
+      public: true
+      tags:
+        - { name: form.type }

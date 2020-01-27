@@ -85,6 +85,7 @@ module.exports = {
     order_preferences: './js/pages/order-preferences',
     order_states_form: './js/pages/order-states/form',
     order_states: './js/pages/order-states',
+    order_return_states_form: './js/pages/order-return-states/form',
     order_view: './js/pages/order/view.js',
     payment_preferences: './js/pages/payment-preferences',
     product_page: './js/product-page/index',

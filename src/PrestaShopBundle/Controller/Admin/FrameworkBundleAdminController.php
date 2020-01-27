@@ -32,12 +32,14 @@ use PrestaShop\PrestaShop\Adapter\Shop\Context;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Grid\GridInterface;
 use PrestaShop\PrestaShop\Core\Module\Exception\ModuleErrorInterface;
+use PrestaShop\PrestaShop\Core\Search\Filters;
 use PrestaShopBundle\Security\Voter\PageVoter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -487,5 +489,23 @@ class FrameworkBundleAdminController extends Controller
             $exceptionCode,
             $e->getMessage()
         );
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @return Filters
+     */
+    protected function buildFiltersParamsByRequest(Request $request, Filters $filters)
+    {
+        $filtersParams = is_array($request->query->get($filters->getFilterId())) ?
+            array_merge($filters::getDefaults(), $request->query->get($filters->getFilterId())) :
+            $filters::getDefaults()
+        ;
+        foreach (array_keys($filters::getDefaults()) as $key) {
+            $filters->set($key, $filtersParams[$key]);
+        }
+
+        return $filters;
     }
 }
