@@ -45,6 +45,11 @@
         </p>
       {% endif %}
     </a>
+    {% if product.type == constant('PrestaShop\\PrestaShop\\Core\\Domain\\Order\\QueryResult\\OrderProductForViewing::TYPE_PACK') %}
+      <span class="btn-product-pack-modal" data-toggle="modal" data-target="#product-pack-modal" data-pack-items="{{ product.packItems|json_encode }}">
+        <strong>{{ 'View pack content'|trans({}, 'Admin.Orderscustomers.Feature') }}</strong>
+      </span>
+    {% endif %}
   </td>
   <td class="cellProductUnitPrice">{{ product.unitPrice }}</td>
   <td class="cellProductQuantity">
