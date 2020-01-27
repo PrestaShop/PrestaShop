@@ -1,6 +1,7 @@
 // Tools
 @import "~prestakit/dist/css/bootstrap-prestashop-ui-kit";
-@import "~bourbon/app/assets/stylesheets/bourbon";
+//@import "~bourbon/app/assets/stylesheets/bourbon";
+@import "bourbon";
 @import "../node_modules/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css";
 @import "mixins/single_line_block";
 @import "mixins/notification_container";
@@ -89,7 +90,7 @@ body {
   }
   > .nav-item > .nav-link {
     &.active {
-      border-bottom: 1px solid #FFFFFF;
+      border-bottom: 1px solid #ffffff;
     }
   }
 }
@@ -139,8 +140,8 @@ table.table {
 }
 
 // Needed to override the default inline style of modal header in translations-app
-.translations-app{
-  .modal-header{
+.translations-app {
+  .modal-header {
     display: initial;
   }
 }
