@@ -28,6 +28,7 @@ import ReloadListActionExtension from '@components/grid/extension/reload-list-ex
 import ExportToSqlManagerExtension from '@components/grid/extension/export-to-sql-manager-extension';
 import FiltersResetExtension from '@components/grid/extension/filters-reset-extension';
 import SortingExtension from '@components/grid/extension/sorting-extension';
+import ColumnTogglingExtension from '@components/grid/extension/column-toggling-extension';
 
 const {$} = window;
 
@@ -38,6 +39,7 @@ $(() => {
   orderStatesGrid.addExtension(new ExportToSqlManagerExtension());
   orderStatesGrid.addExtension(new FiltersResetExtension());
   orderStatesGrid.addExtension(new SortingExtension());
+  orderStatesGrid.addExtension(new ColumnTogglingExtension());
 
   const orderReturnStatusesGrid = new Grid('order_return_states');
 

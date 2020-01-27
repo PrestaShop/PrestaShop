@@ -24,38 +24,36 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Grid\Data\Factory;
-
-use PrestaShop\PrestaShop\Core\Grid\Data\GridData;
-use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
+namespace PrestaShop\PrestaShop\Core\Domain\OrderReturnState\Exception;
 
 /**
- * Class OrderReturnStatesGridDataFactoryDecorator decorates data from order_states doctrine data factory.
+ * Is thrown when adding/editing order return state with missing required fields
  */
-final class OrderReturnStatesGridDataFactoryDecorator implements GridDataFactoryInterface
+class MissingOrderReturnStateRequiredFieldsException extends OrderReturnStateException
 {
     /**
-     * @var GridDataFactoryInterface
+     * @var string[]
      */
-    private $returnStatesDoctrineGridDataFactory;
+    private $missingRequiredFields;
 
-    public function __construct(
-        GridDataFactoryInterface $returnStatutesDoctrineGridDataFactory
-    ) {
-        $this->returnStatesDoctrineGridDataFactory = $returnStatutesDoctrineGridDataFactory;
+    /**
+     * @param string[] $missingRequiredFields
+     * @param string $message
+     * @param int $code
+     * @param \Exception|null $previous
+     */
+    public function __construct(array $missingRequiredFields, $message = '', $code = 0, $previous = null)
+    {
+        parent::__construct($message, $code, $previous);
+
+        $this->missingRequiredFields = $missingRequiredFields;
     }
 
     /**
-     * {@inheritdoc}
+     * @return string[]
      */
-    public function getData(SearchCriteriaInterface $searchCriteria)
+    public function getMissingRequiredFields()
     {
-        $returnStatutesData = $this->returnStatesDoctrineGridDataFactory->getData($searchCriteria);
-
-        return new GridData(
-            $returnStatutesData->getRecords(),
-            $returnStatutesData->getRecordsTotal(),
-            $returnStatutesData->getQuery()
-        );
+        return $this->missingRequiredFields;
     }
 }

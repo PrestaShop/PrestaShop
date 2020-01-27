@@ -24,38 +24,51 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Grid\Data\Factory;
+namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
 
-use PrestaShop\PrestaShop\Core\Grid\Data\GridData;
-use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
+use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
+use PrestaShop\PrestaShop\Core\Domain\OrderReturnState\Query\GetOrderReturnStateForEditing;
+use PrestaShop\PrestaShop\Core\Domain\OrderReturnState\QueryResult\EditableOrderReturnState;
 
 /**
- * Class OrderStatesGridDataFactoryDecorator decorates data from order_states doctrine data factory.
+ * Provides data for order return state forms
  */
-final class OrderStatesGridDataFactoryDecorator implements GridDataFactoryInterface
+final class OrderReturnStateFormDataProvider implements FormDataProviderInterface
 {
     /**
-     * @var GridDataFactoryInterface
+     * @var CommandBusInterface
      */
-    private $orderStatesDoctrineGridDataFactory;
+    private $queryBus;
 
     public function __construct(
-        GridDataFactoryInterface $orderStatutesDoctrineGridDataFactory
+        CommandBusInterface $queryBus
     ) {
-        $this->orderStatesDoctrineGridDataFactory = $orderStatutesDoctrineGridDataFactory;
+        $this->queryBus = $queryBus;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getData(SearchCriteriaInterface $searchCriteria)
+    public function getData($orderStateId)
     {
-        $orderStatesData = $this->orderStatesDoctrineGridDataFactory->getData($searchCriteria);
+        /** @var EditableOrderReturnState $editableOrderReturnState */
+        $editableOrderReturnState = $this->queryBus->handle(new GetOrderReturnStateForEditing((int) $orderStateId));
 
-        return new GridData(
-            $orderStatesData->getRecords(),
-            $orderStatesData->getRecordsTotal(),
-            $orderStatesData->getQuery()
-        );
+        return [
+            'name' => $editableOrderReturnState->getLocalizedNames(),
+            'color' => $editableOrderReturnState->getColor(),
+        ];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getDefaultData()
+    {
+        $data = [
+            'is_enabled' => true,
+        ];
+
+        return $data;
     }
 }

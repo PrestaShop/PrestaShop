@@ -24,21 +24,43 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Adapter\OrderState;
-
-use OrderReturnState;
-use PrestaShop\PrestaShop\Core\Order\OrderReturnStateDataProviderInterface;
+namespace PrestaShop\PrestaShop\Core\Domain\OrderReturnState\ValueObject;
 
 /**
- * Class OrderReturnStateDataProvider provides OrderReturnState data using legacy code.
+ * Defines OrderReturnState ID with it's constraints
  */
-final class OrderReturnStateDataProvider implements OrderReturnStateDataProviderInterface
+class OrderReturnStateId
 {
     /**
-     * {@inheritdoc}
+     * @var int
      */
-    public function getOrderReturnStates($languageId)
+    private $orderReturnStateId;
+
+    /**
+     * @param int $orderReturnStateId
+     */
+    public function __construct($orderReturnStateId)
     {
-        return OrderReturnState::getOrderReturnStates($languageId);
+        $this->assertIntegerIsGreaterThanZero($orderReturnStateId);
+
+        $this->orderReturnStateId = $orderReturnStateId;
+    }
+
+    /**
+     * @return int
+     */
+    public function getValue()
+    {
+        return $this->orderReturnStateId;
+    }
+
+    /**
+     * @param int $orderReturnStateId
+     */
+    private function assertIntegerIsGreaterThanZero($orderReturnStateId)
+    {
+        if (!is_int($orderReturnStateId) || 0 > $orderReturnStateId) {
+            throw new OrderReturnStateException(sprintf('OrderReturnState id %s is invalid. OrderReturnState id must be number that is greater than zero.', var_export($orderReturnStateId, true)));
+        }
     }
 }

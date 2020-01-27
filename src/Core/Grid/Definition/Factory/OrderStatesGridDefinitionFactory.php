@@ -26,7 +26,6 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
-use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\LinkRowAction;
@@ -38,7 +37,6 @@ use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ToggleColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
 use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
-use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
 use PrestaShopBundle\Form\Admin\Type\YesAndNoChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
@@ -50,19 +48,6 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 final class OrderStatesGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
     const GRID_ID = 'order_states';
-
-    /**
-     * @var FormChoiceProviderInterface
-     */
-    private $orderStatesChoiceProvider;
-
-    public function __construct(
-        HookDispatcherInterface $hookDispatcher,
-        FormChoiceProviderInterface $orderStatesChoiceProvider
-    ) {
-        parent::__construct($hookDispatcher);
-        $this->orderStatesChoiceProvider = $orderStatesChoiceProvider;
-    }
 
     /**
      * {@inheritdoc}
@@ -106,7 +91,7 @@ final class OrderStatesGridDefinitionFactory extends AbstractGridDefinitionFacto
                     ->setOptions([
                         'field' => 'send_email',
                         'primary_field' => 'id_order_state',
-                        'route' => 'admin_order_states',
+                        'route' => 'admin_order_states_toggle_send_email',
                         'route_param_name' => 'orderStateId',
                     ])
             )
@@ -116,7 +101,7 @@ final class OrderStatesGridDefinitionFactory extends AbstractGridDefinitionFacto
                     ->setOptions([
                         'field' => 'delivery',
                         'primary_field' => 'id_order_state',
-                        'route' => 'admin_order_states',
+                        'route' => 'admin_order_states_toggle_delivery',
                         'route_param_name' => 'orderStateId',
                     ])
             )
@@ -126,7 +111,7 @@ final class OrderStatesGridDefinitionFactory extends AbstractGridDefinitionFacto
                     ->setOptions([
                         'field' => 'invoice',
                         'primary_field' => 'id_order_state',
-                        'route' => 'admin_order_states',
+                        'route' => 'admin_order_states_toggle_invoice',
                         'route_param_name' => 'orderStateId',
                     ])
             )

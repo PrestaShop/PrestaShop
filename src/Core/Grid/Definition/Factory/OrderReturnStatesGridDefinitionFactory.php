@@ -26,7 +26,6 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
-use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\LinkRowAction;
@@ -37,7 +36,6 @@ use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
 use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
-use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -48,19 +46,6 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 final class OrderReturnStatesGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
     const GRID_ID = 'order_return_states';
-
-    /**
-     * @var FormChoiceProviderInterface
-     */
-    private $returnStatesChoiceProvider;
-
-    public function __construct(
-        HookDispatcherInterface $hookDispatcher,
-        FormChoiceProviderInterface $returnStatesChoiceProvider
-    ) {
-        parent::__construct($hookDispatcher);
-        $this->returnStatesChoiceProvider = $returnStatesChoiceProvider;
-    }
 
     /**
      * {@inheritdoc}
@@ -107,9 +92,10 @@ final class OrderReturnStatesGridDefinitionFactory extends AbstractGridDefinitio
                             ->setName($this->trans('Edit', [], 'Admin.Actions'))
                             ->setIcon('edit')
                             ->setOptions([
-                                'route' => 'admin_order_states',
-                                'route_param_name' => 'returnStateId',
+                                'route' => 'admin_order_return_states_edit',
+                                'route_param_name' => 'orderReturnStateId',
                                 'route_param_field' => 'id_order_return_state',
+                                'clickable_row' => true,
                             ])
                         ),
                 ])

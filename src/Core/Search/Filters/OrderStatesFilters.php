@@ -30,7 +30,7 @@ use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\OrderStatesGridDefinition
 use PrestaShop\PrestaShop\Core\Search\Filters;
 
 /**
- * Class OrderStatesFilters provides default filters for order_states grid.
+ * Class OrderStatesFilters provides default filters for order states grid.
  */
 final class OrderStatesFilters extends Filters
 {
@@ -46,7 +46,7 @@ final class OrderStatesFilters extends Filters
             'limit' => 50,
             'offset' => 0,
             'orderBy' => 'id_order_state',
-            'sortOrder' => 'DESC',
+            'sortOrder' => 'ASC',
             'filters' => [],
         ];
     }

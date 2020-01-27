@@ -30,7 +30,7 @@ use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\OrderReturnStatesGridDefi
 use PrestaShop\PrestaShop\Core\Search\Filters;
 
 /**
- * Class OrderReturnStatesFilters provides default filters for order_states grid.
+ * Class OrderReturnStatesFilters provides default filters for order return states grid.
  */
 final class OrderReturnStatesFilters extends Filters
 {
@@ -46,7 +46,7 @@ final class OrderReturnStatesFilters extends Filters
             'limit' => 50,
             'offset' => 0,
             'orderBy' => 'id_order_return_state',
-            'sortOrder' => 'DESC',
+            'sortOrder' => 'ASC',
             'filters' => [],
         ];
     }

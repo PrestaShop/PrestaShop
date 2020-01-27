@@ -43,10 +43,10 @@ final class EditOrderStateHandler extends AbstractOrderStateHandler implements E
      */
     public function handle(EditOrderStateCommand $command)
     {
-        $orderStatusId = $command->getOrderStateId();
-        $orderState = new OrderState($orderStatusId->getValue());
+        $orderStateId = $command->getOrderStateId();
+        $orderState = new OrderState($orderStateId->getValue());
 
-        $this->assertOrderStateWasFound($orderStatusId, $orderState);
+        $this->assertOrderStateWasFound($orderStateId, $orderState);
 
         $this->updateOrderStateWithCommandData($orderState, $command);
 
