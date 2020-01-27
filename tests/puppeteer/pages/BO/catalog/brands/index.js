@@ -316,10 +316,16 @@ module.exports = class Brands extends BOBasePage {
     // Click on delete and wait for modal
     if (table === 'manufacturer') {
       this.page.click(this.deleteBrandsButton);
-      await this.page.waitForSelector(`${this.confirmDeleteModal.replace('%TABLE', 'manufacturer')}.show`, {visible: true});
+      await this.page.waitForSelector(
+        `${this.confirmDeleteModal.replace('%TABLE', 'manufacturer')}.show`,
+        {visible: true},
+      );
     } else if (table === 'manufacturer_address') {
       this.page.click(this.deleteAddressesButton);
-      await this.page.waitForSelector(`${this.confirmDeleteModal.replace('%TABLE', 'manufacturer_address')}.show`, {visible: true});
+      await this.page.waitForSelector(
+        `${this.confirmDeleteModal.replace('%TABLE', 'manufacturer_address')}.show`,
+        {visible: true},
+      );
     }
     await this.clickAndWaitForNavigation(this.confirmDeleteButton);
     return this.getTextContent(this.alertSuccessBlockParagraph);
