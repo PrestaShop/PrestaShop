@@ -32,7 +32,7 @@ use PrestaShop\PrestaShop\Core\Domain\OrderState\Command\EditOrderStateCommand;
 use PrestaShop\PrestaShop\Core\Domain\OrderState\ValueObject\OrderStateId;
 
 /**
- * Saves or updates order_state data submitted in form
+ * Saves or updates order state data submitted in form
  */
 final class OrderStateFormDataHandler implements FormDataHandlerInterface
 {
