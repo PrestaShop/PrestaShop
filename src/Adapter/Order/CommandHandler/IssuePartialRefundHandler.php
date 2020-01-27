@@ -37,6 +37,7 @@ use PrestaShop\PrestaShop\Adapter\Order\Refund\VoucherGenerator;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\IssuePartialRefundCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler\IssuePartialRefundHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidOrderStateException;
 use Validate;
 
 /**
@@ -97,6 +98,10 @@ final class IssuePartialRefundHandler extends AbstractOrderCommandHandler implem
     {
         /** @var Order $order */
         $order = $this->getOrderObject($command->getOrderId());
+        if (!$order->hasInvoice()) {
+            throw new InvalidOrderStateException('Can not perform partial refund on order with no invoice');
+        }
+
         /** @var OrderRefundSummary $orderRefundSummary */
         $orderRefundSummary = $this->orderRefundCalculator->computeOrderRefund(
             $order,
@@ -130,7 +135,8 @@ final class IssuePartialRefundHandler extends AbstractOrderCommandHandler implem
         }
 
         // Update refund details
-        $this->refundUpdater->updateRefundData($order, $orderRefundSummary);
+        $productsReturned = (int) $this->configuration->get('PS_ORDER_RETURN') === 1 && $order->hasBeenDelivered();
+        $this->refundUpdater->updateRefundData($order, $orderRefundSummary, $productsReturned);
 
         // Generate voucher if needed
         if ($command->generateVoucher() && $orderRefundSummary->getRefundedAmount() > 0) {

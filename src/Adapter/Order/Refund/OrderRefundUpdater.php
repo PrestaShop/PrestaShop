@@ -37,29 +37,13 @@ class OrderRefundUpdater
     /**
      * @param Order $order
      * @param OrderRefundSummary $orderRefundSummary
-     *
-     * @throws PrestaShopException
-     */
-    public function deleteFromOrder(Order $order, OrderRefundSummary $orderRefundSummary)
-    {
-        foreach ($orderRefundSummary->getProductRefunds() as $orderDetailId => $productRefund) {
-            $orderDetail = $orderRefundSummary->getOrderDetailById($orderDetailId);
-            $order->deleteProduct($order, $orderDetail, $productRefund['quantity']);
-            if ($orderDetail->id_customization > 0) {
-                $order->deleteCustomization($orderDetail->id_customization, $productRefund['quantity'], $orderDetail);
-            }
-        }
-    }
-
-    /**
-     * @param Order $order
-     * @param OrderRefundSummary $orderRefundSummary
+     * @param bool $returnedProducts
      *
      * @throws CancelProductFromOrderException
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
      */
-    public function updateRefundData(Order $order, OrderRefundSummary $orderRefundSummary)
+    public function updateRefundData(Order $order, OrderRefundSummary $orderRefundSummary, bool $returnedProducts)
     {
         // I wonder it this is really useful since partial refund is supposed to be enabled only once order
         // is paid Maybe this should be a more general check at the beginning of the handler and throw an error
@@ -70,11 +54,12 @@ class OrderRefundUpdater
         // Update order details (after credit slip to avoid updating refunded quantities while the credit slip fails)
         foreach ($orderRefundSummary->getProductRefunds() as $orderDetailId => $productRefund) {
             $orderDetail = $orderRefundSummary->getOrderDetailById($orderDetailId);
-            // It appears partial refund only manages product_quantity_refunded when Order::deleteProduct
-            // makes a distinction between product_quantity_refunded and product_quantity_returned depending
-            // on the order status (delivered or not) But this method could not be used as it can fail when
-            // merchandising return is disabled
-            $orderDetail->product_quantity_refunded += $productRefund['quantity'];
+            // There is a distinction between a product returned and refunded (depending if the order was delivered or not)
+            if ($returnedProducts) {
+                $orderDetail->product_quantity_return += $productRefund['quantity'];
+            } else {
+                $orderDetail->product_quantity_refunded += $productRefund['quantity'];
+            }
 
             // This was previously done in OrderSlip::create, but it was not consistent and too complicated
             // Besides this now allows to track refunded products even when credit slip is not generated
