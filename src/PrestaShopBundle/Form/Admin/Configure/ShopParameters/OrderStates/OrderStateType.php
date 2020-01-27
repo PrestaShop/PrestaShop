@@ -29,6 +29,7 @@ namespace PrestaShopBundle\Form\Admin\Configure\ShopParameters\OrderStates;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\MailTemplate\MailTemplateDataProvider;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DefaultLanguage;
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
 use PrestaShopBundle\Form\Admin\Type\ColorPickerType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableChoiceType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
@@ -39,7 +40,6 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Routing\Router;
 use Symfony\Component\Translation\TranslatorInterface;
-use Symfony\Component\Validator\Constraints\Regex;
 
 /**
  * Type is used to created form for order state add/edit actions
@@ -50,10 +50,12 @@ class OrderStateType extends TranslatorAwareType
      * @var array
      */
     private $templates;
+
     /**
      * @var Router
      */
     private $routing;
+
     /**
      * @var array
      */
@@ -67,6 +69,7 @@ class OrderStateType extends TranslatorAwareType
     ) {
         parent::__construct($translator, $locales);
         $this->routing = $routing;
+        $mailTheme = Configuration::get('PS_MAIL_THEME', 'modern');
 
         foreach ($mailTemplateDataProvider->getTemplates() as $languageId => $languageMailTemplate) {
             $this->templates[$languageId] = [];
@@ -81,7 +84,7 @@ class OrderStateType extends TranslatorAwareType
                         'admin_mail_theme_preview_layout',
                         [
                             'locale' => $mailTemplate['language_code'],
-                            'theme' => Configuration::get('PS_MAIL_THEME', 'modern'),
+                            'theme' => $mailTheme,
                             'layout' => $mailTemplate['name'],
                             'type' => 'html',
                         ]
@@ -104,9 +107,8 @@ class OrderStateType extends TranslatorAwareType
                 ],
                 'options' => [
                     'constraints' => [
-                        new Regex([
-                            'pattern' => '/^[^<>;=#{}]*$/u',
-                            'message' => $this->trans('%s is invalid.', 'Admin.Notifications.Error'),
+                        new TypedRegex([
+                            'type' => 'generic_name',
                         ]),
                     ],
                 ],

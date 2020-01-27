@@ -52,24 +52,27 @@ class MailTemplateDataProvider
     {
         $mailsTemplates = [];
 
+        // Mail templates can also be found in the theme folder
+        $themePath = _PS_THEME_DIR_ . 'mails' . DIRECTORY_SEPARATOR;
+        $mailsPath = _PS_ROOT_DIR_ . DIRECTORY_SEPARATOR . 'mails' . DIRECTORY_SEPARATOR;
+
         foreach ($this->languages as $language) {
             $languageIsoCode = $language['iso_code'];
             $languageId = $language['id_lang'];
 
-            $mailsPath = _PS_ROOT_DIR_ . DIRECTORY_SEPARATOR . 'mails' . DIRECTORY_SEPARATOR . $languageIsoCode;
-            // Mail templates can also be found in the theme folder
-            $themePath = _PS_THEME_DIR_ . 'mails' . DIRECTORY_SEPARATOR;
+            $languageMailsPath = $mailsPath . $languageIsoCode;
+            $themeTemplatesDir = $themePath . $languageIsoCode;
 
             // If there is no folder for the given iso_code in /mails or in /themes/[theme_name]/mails, we bypass this language
-            if (!@filemtime($mailsPath) && !@filemtime($themePath . $languageIsoCode)) {
-                return [];
+            if (!is_dir($languageMailsPath) && !is_dir($themeTemplatesDir)) {
+                $mailsTemplates[$languageId] = [];
+                continue;
             }
 
-            $themeTemplatesDir = $themePath . $languageIsoCode;
             $themeTemplates = is_dir($themeTemplatesDir) ? scandir($themeTemplatesDir, SCANDIR_SORT_NONE) : [];
 
             // We merge all available emails in one array
-            $templates = array_unique(array_merge(scandir($mailsPath, SCANDIR_SORT_NONE), $themeTemplates));
+            $templates = array_unique(array_merge(scandir($languageMailsPath, SCANDIR_SORT_NONE), $themeTemplates));
             foreach ($templates as $key => $template) {
                 if (!strncmp(strrev($template), 'lmth.', 5)) {
                     $searchResult = array_search($template, $themeTemplates);
