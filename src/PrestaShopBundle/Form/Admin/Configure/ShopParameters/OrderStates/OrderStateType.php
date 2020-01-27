@@ -42,7 +42,7 @@ use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraints\Regex;
 
 /**
- * Type is used to created form for order status add/edit actions
+ * Type is used to created form for order state add/edit actions
  */
 class OrderStateType extends TranslatorAwareType
 {
