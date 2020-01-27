@@ -413,3 +413,66 @@ Feature: Refund Order from Back Office (BO)
       | shipping_refund             | 1        |
     Then I should get error that no generation is invalid
     Then "bo_order_refund" has 0 credit slips
+
+  @order-refund
+  @order-standard-refund
+  Scenario: Multiple standard refund of products
+    Given I add order "bo_order_refund" with the following details:
+      | cart                | dummy_cart       |
+      | message             | test             |
+      | payment module name | dummy_payment    |
+      | status              | Payment accepted |
+    And product "Mug The best is yet to come" in order "bo_order_refund" has following details:
+      | product_quantity            | 2 |
+    And product "Mug Today is a good day" in order "bo_order_refund" has following details:
+      | product_quantity            | 1 |
+    And there are 2 less "Mug The best is yet to come" in stock
+    And there are 1 less "Mug Today is a good day" in stock
+    And return product is enabled
+    When I issue a standard refund on "bo_order_refund" with credit slip without voucher on following products:
+      | product_name                | quantity |
+      | Mug The best is yet to come | 1        |
+    Then "bo_order_refund" has 1 credit slips
+    Then "bo_order_refund" last credit slip is:
+      | amount                  | 11.9 |
+      | shipping_cost_amount    | 0.0  |
+      | total_products_tax_excl | 11.9 |
+      | total_products_tax_incl | 11.9 |
+    And product "Mug The best is yet to come" in order "bo_order_refund" has following details:
+      | product_quantity            | 2    |
+      | product_quantity_refunded   | 1    |
+      | product_quantity_reinjected | 1    |
+      | total_refunded_tax_excl     | 11.9 |
+      | total_refunded_tax_incl     | 11.9 |
+    And product "Mug Today is a good day" in order "bo_order_refund" has following details:
+      | product_quantity            | 1 |
+      | product_quantity_refunded   | 0 |
+      | product_quantity_reinjected | 0 |
+      | total_refunded_tax_excl     | 0 |
+      | total_refunded_tax_incl     | 0 |
+    And there are 1 more "Mug The best is yet to come" in stock
+    And there are 0 more "Mug Today is a good day" in stock
+    When I issue a standard refund on "bo_order_refund" with credit slip without voucher on following products:
+      | product_name                | quantity |
+      | Mug The best is yet to come | 1        |
+      | Mug Today is a good day     | 1        |
+    Then "bo_order_refund" has 2 credit slips
+    Then "bo_order_refund" last credit slip is:
+      | amount                  | 23.8 |
+      | shipping_cost_amount    | 0.0  |
+      | total_products_tax_excl | 23.8 |
+      | total_products_tax_incl | 23.8 |
+    And product "Mug The best is yet to come" in order "bo_order_refund" has following details:
+      | product_quantity            | 2    |
+      | product_quantity_refunded   | 2    |
+      | product_quantity_reinjected | 2    |
+      | total_refunded_tax_excl     | 23.8 |
+      | total_refunded_tax_incl     | 23.8 |
+    And product "Mug Today is a good day" in order "bo_order_refund" has following details:
+      | product_quantity            | 1    |
+      | product_quantity_refunded   | 1    |
+      | product_quantity_reinjected | 1    |
+      | total_refunded_tax_excl     | 11.9 |
+      | total_refunded_tax_incl     | 11.9 |
+    And there are 1 more "Mug The best is yet to come" in stock
+    And there are 1 more "Mug Today is a good day" in stock
