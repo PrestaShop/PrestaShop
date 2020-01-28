@@ -58,8 +58,9 @@ final class AddStateHandler extends AbstractStateHandler
             $state->id_zone = $command->getZoneId()->getValue();
             $state->active = $command->isActive();
 
-            if (!$state->validateFields(false)) {
-                throw new StateConstraintException('State contains invalid field values', StateConstraintException::INVALID_FIELD_VALUES);
+            $isValidMsg = $state->validateFields(false, true);
+            if ($isValidMsg !== true) {
+                throw new StateConstraintException($isValidMsg, StateConstraintException::INVALID_FIELD_VALUES);
             }
 
             if (false === $state->add()) {

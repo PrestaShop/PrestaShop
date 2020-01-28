@@ -86,8 +86,8 @@ final class EditStateHandler extends AbstractStateHandler implements EditStateHa
                 $state->active = $command->getActive();
             }
 
-            if (!$state->validateFields(false)) {
-                throw new StateConstraintException('State contains invalid field values', StateConstraintException::INVALID_FIELD_VALUES);
+            if ($msg = $state->validateFields(true) !== true) {
+                throw new StateConstraintException('State contains invalid field values: ' . $msg);
             }
 
             if (false === $state->update()) {

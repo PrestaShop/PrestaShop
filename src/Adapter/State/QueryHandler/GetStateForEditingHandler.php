@@ -27,14 +27,10 @@
 namespace PrestaShop\PrestaShop\Adapter\State\QueryHandler;
 
 use PrestaShop\PrestaShop\Adapter\State\AbstractStateHandler;
-use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
-use PrestaShop\PrestaShop\Core\Domain\State\Exception\StateException;
-use PrestaShop\PrestaShop\Core\Domain\State\Exception\StateNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\State\Query\GetStateForEditing;
 use PrestaShop\PrestaShop\Core\Domain\State\QueryHandler\GetStateForEditingHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\State\QueryResult\EditableState;
-use PrestaShop\PrestaShop\Core\Domain\Zone\Exception\ZoneConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Zone\ValueObject\ZoneId;
 
 /**
@@ -45,10 +41,9 @@ final class GetStateForEditingHandler extends AbstractStateHandler implements Ge
     /**
      * {@inheritdoc}
      *
-     * @throws StateNotFoundException
-     * @throws CountryConstraintException
-     * @throws ZoneConstraintException
-     * @throws StateException
+     * @param GetStateForEditing $query
+     *
+     * @return EditableState
      */
     public function handle(GetStateForEditing $query): EditableState
     {
