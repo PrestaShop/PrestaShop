@@ -64,7 +64,7 @@
       <td>
         <div class="btn-group-action text-right">
           <div class="btn-group">
-            <button type="button" class="btn" @click.prevent.stop="$emit('resetLanguage', language)">
+            <button type="button" class="btn" @click.prevent.stop="$emit('confirmResetLanguage', language)">
               <i class="material-icons">refresh</i>
             </button>
           </div>

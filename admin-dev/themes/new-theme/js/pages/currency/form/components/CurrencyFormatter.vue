@@ -28,8 +28,9 @@
       <language-list
         v-if="languagesCount"
         :languages="languages"
+        :translations="translations"
         @selectLanguage="selectLanguage"
-        @resetLanguage="resetLanguage"
+        @confirmResetLanguage="confirmResetLanguage"
       >
       </language-list>
 
@@ -46,6 +47,7 @@
 <script>
   import LanguageList from './LanguageList';
   import CurrencyModal from './CurrencyModal';
+  import ConfirmModal from '@components/modal';
 
   export default {
     name: 'currency-formatter',
@@ -57,6 +59,10 @@
       },
       languages: {
         type: Array,
+        required: true
+      },
+      translations: {
+        type: Object,
         required: true
       },
       currencyData: {
@@ -75,6 +81,22 @@
       },
       selectLanguage(language) {
         this.selectedLanguage = language;
+      },
+      confirmResetLanguage(language) {
+        const confirmTitle = this.translations['confirmTitle'];
+        const confirmMessage = this.translations['confirmMessage'];
+        const confirmButtonLabel = this.translations['confirmButtonLabel'];
+        const closeButtonLabel = this.translations['closeButtonLabel'];
+
+        const modal = new ConfirmModal({
+          id: 'currency_restore_default_settings',
+          confirmTitle,
+          confirmMessage,
+          confirmButtonLabel,
+          closeButtonLabel,
+        }, () => this.resetLanguage(language));
+
+        modal.show();
       },
       resetLanguage(language) {
         const patterns = language.currencyPattern.split(';');

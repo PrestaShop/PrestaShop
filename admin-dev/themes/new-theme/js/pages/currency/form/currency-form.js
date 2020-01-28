@@ -66,6 +66,7 @@ export default class CurrencyForm {
     this.state = {
       currencyData: this._getCurrencyDataFromForm(),
       languages: [...this.originalLanguages],
+      translations: this.translations,
     };
   }
 
@@ -85,7 +86,7 @@ export default class CurrencyForm {
         }),
         components: {CurrencyFormatter},
         data: this.state,
-        template: `<currency-formatter id="${this.currencyFormatterId}" :languages="languages" :currencyData="currencyData"></currency-formatter>`
+        template: `<currency-formatter id="${this.currencyFormatterId}" :languages="languages" :translations="translations" :currencyData="currencyData"></currency-formatter>`
     });
 
     this.currencyFormatter.$watch('currencyData', () => {
