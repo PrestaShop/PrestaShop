@@ -41,19 +41,20 @@
         'list.language': 'Language'|trans({}, 'Admin.Global'),
         'list.example': 'Example'|trans({}, 'Admin.Global'),
         'list.edit': 'Edit symbol / format'|trans({}, 'Admin.International.Feature'),
-        'list.reset': 'Reset settings'|trans({}, 'Admin.Actions'),
-        'list.example.format': 'Price: %price% (Special discount %discount%)'|trans({}, 'Admin.International.Feature'),
-        'confirmTitle': 'Restore currencies default settings'|trans({}, 'Admin.International.Feature'),
-        'confirmButtonLabel': 'Restore'|trans({}, 'Admin.Actions'),
-        'closeButtonLabel': 'Cancel'|trans({}, 'Admin.Actions'),
-        'confirmMessage': 'Are you sure you want to restore default settings?'|trans({}, 'Admin.Actions')
+        'list.reset': 'Reset'|trans({}, 'Admin.Actions'),
+        'list.reset.success': 'Your symbol and format customizations have been successfully reset for this language.'|trans({}, 'Admin.Notifications.Success'),
+        'list.example.format': '%price%'|trans({}, 'Admin.International.Feature'),
+        'modal.restore.title': 'Are you sure you want to restore default settings?'|trans({}, 'Admin.International.Feature'),
+        'modal.restore.apply': 'Restore'|trans({}, 'Admin.Actions'),
+        'modal.restore.cancel': 'Cancel'|trans({}, 'Admin.Actions'),
+        'modal.restore.body': 'Restoring your currency\'s default settings will delete all the customizations you made before. Parameters will look just the same as when the currency is freshly imported.'|trans({}, 'Admin.International.Feature')
       }|json_encode|replace("'", "&#39;")|raw
     }
   }) }}
 
   <div class="card">
     <div class="card-header">
-      {{ 'Currency'|trans({}, 'Admin.Global') }}
+      {{ 'Edit: %value%'|trans({'%value%': currencyName}, 'Admin.Actions') }}
     </div>
     <div class="card-block row">
       <div class="card-text">
@@ -113,40 +114,26 @@
           }) }}
         {% endif %}
 
-        {% if currencyForm.vars.data.id is defined and not currencyForm.vars.data.unofficial %}
-          <div class="form-group row">
-            <label for="currency_reset_default_settings" class="form-control-label">
-            </label>
-            <div class="col-sm">
-              <button type="button" id="currency_reset_default_settings" class="btn btn-outline-secondary">
-                <i class="material-icons">refresh</i>
-                {{ 'Restore default settings'|trans({}, 'Admin.International.Feature') }}
-              </button>
-            </div>
-          </div>
-        {% endif %}
-
         {% block currency_form_rest %}
           {{ form_rest(currencyForm) }}
         {% endblock %}
       </div>
     </div>
 
-    <div class="card-block row">
-      <div class="col-sm">
-        <h2>{{ 'Format settings'|trans({}, 'Admin.International.Feature') }}</h2>
-        <small class="form-text">{{ 'You might need to adapt the predefined format display of your currencies, or edit their symbol. Note that restoring default settings will erase symbol and format customizations'|trans({}, 'Admin.International.Feature') }}</small>
-      </div>
-    </div>
-
     <div class="card-footer">
-      <div class="d-inline-flex">
-        <a href="{{ path('admin_currencies_index') }}" class="btn btn-outline-secondary">
-          {{ 'Cancel'|trans({}, 'Admin.Actions') }}
-        </a>
-      </div>
-      <div class="d-inline-flex float-right">
-        <button type="submit" class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
+      {% if currencyForm.vars.data.id is defined and not currencyForm.vars.data.unofficial %}
+        <div class="d-inline-flex">
+          <button type="button" id="currency_reset_default_settings" class="btn btn-outline-primary">
+            <i class="material-icons">refresh</i>
+            {{ 'Restore default settings'|trans({}, 'Admin.International.Feature') }}
+          </button>
+        </div>
+      {% endif %}
+      <div class="d-block float-right col-sm-3">
+          <a href="{{ path('admin_currencies_index') }}" class="btn btn-outline-secondary float-left">
+            {{ 'Cancel'|trans({}, 'Admin.Actions') }}
+          </a>
+          <button type="submit" class="btn btn-primary float-right">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
       </div>
     </div>
 

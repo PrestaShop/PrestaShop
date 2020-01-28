@@ -23,22 +23,23 @@
  * International Registered Trademark & Property of PrestaShop SA
  *-->
 <template>
-  <div :id="id" class="card-block row">
+  <div
+    :id="id"
+    class="card-block row"
+  >
     <div class="col-sm">
       <language-list
         v-if="languagesCount"
         :languages="languages"
         @selectLanguage="selectLanguage"
         @resetLanguage="resetLanguage"
-      >
-      </language-list>
+      />
 
       <currency-modal
         :language="selectedLanguage"
         @close="closeModal"
         @applyCustomization="applyCustomization"
-      >
-      </currency-modal>
+      />
     </div>
   </div>
 </template>
@@ -46,30 +47,33 @@
 <script>
   import LanguageList from './LanguageList';
   import CurrencyModal from './CurrencyModal';
+  import {showGrowl} from '@app/utils/growl';
+
 
   export default {
-    name: 'currency-formatter',
+    name: 'CurrencyFormatter',
     data: () => ({selectedLanguage: null}),
     props: {
       id: {
         type: String,
-        required: true
+        required: true,
       },
       languages: {
         type: Array,
-        required: true
+        required: true,
       },
       currencyData: {
         type: Object,
-        required: true
-      }
+        required: true,
+      },
     },
     components: {LanguageList, CurrencyModal},
     computed: {
       languagesCount() {
         return this.languages.length;
-      }
-    }, methods: {
+      },
+    },
+    methods: {
       closeModal() {
         this.selectedLanguage = null;
       },
@@ -79,11 +83,13 @@
       resetLanguage(language) {
         const patterns = language.currencyPattern.split(';');
         language.priceSpecification.positivePattern = patterns[0];
-        language.priceSpecification.negativePattern = patterns.length > 1 ? patterns[1] : '-' + patterns[0];
+        language.priceSpecification.negativePattern = patterns.length > 1 ? patterns[1] : `-${patterns[0]}`;
         language.priceSpecification.currencySymbol = language.currencySymbol;
 
         this.currencyData.transformations[language.id] = '';
         this.currencyData.symbols[language.id] = language.currencySymbol;
+
+        showGrowl('notice', this.$t('list.reset.success'));
       },
       applyCustomization(customData) {
         const selectedPattern = this.selectedLanguage.transformations[customData.transformation];
@@ -91,13 +97,15 @@
 
         this.selectedLanguage.priceSpecification.currencySymbol = customData.symbol;
         this.selectedLanguage.priceSpecification.positivePattern = patterns[0];
-        this.selectedLanguage.priceSpecification.negativePattern = patterns.length > 1 ? patterns[1] : '-' + patterns[0];
+        this.selectedLanguage.priceSpecification.negativePattern = patterns.length > 1
+          ? patterns[1]
+          : `-${patterns[0]}`;
 
         this.currencyData.transformations[this.selectedLanguage.id] = customData.transformation;
         this.currencyData.symbols[this.selectedLanguage.id] = customData.symbol;
 
         this.closeModal();
-      }
-    }
-  }
+      },
+    },
+  };
 </script>
