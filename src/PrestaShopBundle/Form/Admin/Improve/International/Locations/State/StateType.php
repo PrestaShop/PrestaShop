@@ -31,6 +31,7 @@ use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\UniqueStateIsoCode;
 use PrestaShop\PrestaShop\Core\Domain\State\Config\StateValidationConfiguration;
 use PrestaShop\PrestaShop\Core\Domain\State\ValueObject\StateId;
+use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
 use PrestaShopBundle\Form\Admin\Type\ConfigurableCountryChoiceType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\ZoneChoiceType;
@@ -47,6 +48,19 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 class StateType extends AbstractType
 {
     use TranslatorAwareTrait;
+
+    /**
+     * @var ConfigurableFormChoiceProviderInterface
+     */
+    private $countriesChoiceProvider;
+
+    /**
+     * @param ConfigurableFormChoiceProviderInterface $countriesChoiceProvider
+     */
+    public function __construct(ConfigurableFormChoiceProviderInterface $countriesChoiceProvider)
+    {
+        $this->countriesChoiceProvider = $countriesChoiceProvider;
+    }
 
     /**
      * {@inheritdoc}
@@ -103,10 +117,15 @@ class StateType extends AbstractType
             ])
             ->add('id_country', ConfigurableCountryChoiceType::class, [
                 'required' => true,
-                'contains_states' => true,
                 'constraints' => [
                     new NotBlank(),
                 ],
+                'choices' => array_merge(
+                    ['--' => ''],
+                    $this->countriesChoiceProvider->getChoices([
+                        'contains_states' => true,
+                    ])
+                ),
             ])
             ->add('id_zone', ZoneChoiceType::class, [
                 'required' => true,

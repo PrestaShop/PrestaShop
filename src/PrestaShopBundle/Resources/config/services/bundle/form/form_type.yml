@@ -1144,14 +1144,14 @@ services:
 
     form.type.common.configurable_country_choice:
       class: 'PrestaShopBundle\Form\Admin\Type\ConfigurableCountryChoiceType'
-      arguments:
-        - '@prestashop.core.form.choice_provider.configurable_country_by_id'
       tags:
         - { name: form.type }
 
     form.type.states:
       class: 'PrestaShopBundle\Form\Admin\Improve\International\Locations\State\StateType'
       public: true
+      arguments:
+        - '@prestashop.core.form.choice_provider.configurable_country_by_id'
       calls:
         - { method: setTranslator, arguments: ['@translator'] }
       tags:

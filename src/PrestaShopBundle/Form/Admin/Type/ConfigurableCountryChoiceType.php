@@ -26,10 +26,8 @@
 
 namespace PrestaShopBundle\Form\Admin\Type;
 
-use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
@@ -38,39 +36,10 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class ConfigurableCountryChoiceType extends AbstractType
 {
     /**
-     * @var ConfigurableFormChoiceProviderInterface
-     */
-    private $countriesChoiceProvider;
-
-    /**
-     * @param ConfigurableFormChoiceProviderInterface $countriesChoiceProvider
-     */
-    public function __construct(ConfigurableFormChoiceProviderInterface $countriesChoiceProvider)
-    {
-        $this->countriesChoiceProvider = $countriesChoiceProvider;
-    }
-
-    /**
      * {@inheritdoc}
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        // Set normalizer enables to use closure for choice generation with options
-        $resolver->setNormalizer(
-            'choices', function (Options $options) {
-                $choices = array_merge(
-                    ['--' => ''],
-                    $this->countriesChoiceProvider->getChoices([
-                        'active' => $options['active'],
-                        'contains_states' => $options['contains_states'],
-                        'list_states' => $options['list_states'],
-                    ])
-                );
-
-                return $choices;
-            }
-        );
-
         $resolver->setDefaults([
             'active' => false,
             'contains_states' => false,
