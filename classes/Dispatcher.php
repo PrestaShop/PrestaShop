@@ -37,7 +37,7 @@ class DispatcherCore
     const FC_ADMIN = 2;
     const FC_MODULE = 3;
 
-    const REWRITE_PATTERN = '[_a-zA-Z0-9\x{0600}-\x{06FF}\pL\pS-]*';
+    const REWRITE_PATTERN = '[_a-zA-Z0-9\x{0600}-\x{06FF}\pL\pS-]*?';
 
     /**
      * @var Dispatcher

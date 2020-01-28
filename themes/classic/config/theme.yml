@@ -55,6 +55,10 @@ global_settings:
      - ps_linklist
   hooks:
     modules_to_hook:
+      displayAfterBodyOpeningTag:
+        - blockreassurance
+      displayNavFullWidth:
+        - blockreassurance
       displayNav1:
         - ps_contactinfo
       displayNav2:
@@ -71,12 +75,15 @@ global_settings:
         - ps_banner
         - ps_customtext
       displayFooterBefore:
+        - blockreassurance
         - ps_emailsubscription
         - ps_socialfollow
       displayFooter:
         - ps_linklist
         - ps_customeraccountlinks
         - ps_contactinfo
+      displayFooterAfter:
+        - blockreassurance
       displayLeftColumn:
         - ps_categorytree
         - ps_facetedsearch

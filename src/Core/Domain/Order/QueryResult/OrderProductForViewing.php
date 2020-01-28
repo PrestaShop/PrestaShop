@@ -26,8 +26,14 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Order\QueryResult;
 
-class OrderProductForViewing
+use JsonSerializable;
+
+class OrderProductForViewing implements JsonSerializable
 {
+    const TYPE_PACK = 'pack';
+    const TYPE_PRODUCT_WITH_COMBINATIONS = 'product_with_combinations';
+    const TYPE_PRODUCT_WITHOUT_COMBINATIONS = 'product_without_combinations';
+
     /**
      * @var int
      */
@@ -44,6 +50,11 @@ class OrderProductForViewing
     private $name;
 
     /**
+     * @var OrderProductForViewing[]
+     */
+    private $packItems;
+
+    /**
      * @var string
      */
     private $reference;
@@ -52,6 +63,11 @@ class OrderProductForViewing
      * @var string
      */
     private $supplierReference;
+
+    /**
+     * @var string
+     */
+    private $type;
 
     /**
      * @var int
@@ -124,7 +140,7 @@ class OrderProductForViewing
     private $orderInvoiceNumber;
 
     public function __construct(
-        int $orderDetailId,
+        ?int $orderDetailId,
         int $id,
         string $name,
         string $reference,
@@ -142,7 +158,9 @@ class OrderProductForViewing
         string $amountRefundable,
         string $location,
         ?int $orderInvoiceId,
-        string $orderInvoiceNumber
+        string $orderInvoiceNumber,
+        string $type,
+        array $packItems = []
     ) {
         $this->id = $id;
         $this->name = $name;
@@ -163,14 +181,16 @@ class OrderProductForViewing
         $this->location = $location;
         $this->orderInvoiceId = $orderInvoiceId;
         $this->orderInvoiceNumber = $orderInvoiceNumber;
+        $this->type = $type;
+        $this->packItems = $packItems;
     }
 
     /**
      * Get product's order detail ID
      *
-     * @return int
+     * @return int|null
      */
-    public function getOrderDetailId(): int
+    public function getOrderDetailId(): ?int
     {
         return $this->orderDetailId;
     }
@@ -193,6 +213,14 @@ class OrderProductForViewing
     public function getName(): string
     {
         return $this->name;
+    }
+
+    /**
+     * @return OrderProductForViewing[]
+     */
+    public function getPackItems(): array
+    {
+        return $this->packItems;
     }
 
     /**
@@ -223,6 +251,14 @@ class OrderProductForViewing
     public function getTaxRate(): float
     {
         return $this->taxRate;
+    }
+
+    /**
+     * @return string
+     */
+    public function getType(): string
+    {
+        return $this->type;
     }
 
     /**
@@ -377,5 +413,30 @@ class OrderProductForViewing
     public function getOrderInvoiceNumber(): string
     {
         return $this->orderInvoiceNumber;
+    }
+
+    /**
+     * @return array
+     */
+    public function jsonSerialize()
+    {
+        return [
+            'id' => $this->getId(),
+            'orderDetailId' => $this->getOrderDetailId(),
+            'name' => $this->getName(),
+            'reference' => $this->getReference(),
+            'supplierReference' => $this->getSupplierReference(),
+            'location' => $this->getLocation(),
+            'imagePath' => $this->getImagePath(),
+            'quantity' => $this->getQuantity(),
+            'availableQuantity' => $this->getAvailableQuantity(),
+            'unitPrice' => $this->getUnitPrice(),
+            'unitPriceTaxExclRaw' => $this->getUnitPriceTaxExclRaw(),
+            'unitPriceTaxInclRaw' => $this->getUnitPriceTaxInclRaw(),
+            'totalPrice' => $this->getTotalPrice(),
+            'taxRate' => $this->getTaxRate(),
+            'type' => $this->getType(),
+            'packItems' => $this->getPackItems(),
+        ];
     }
 }
