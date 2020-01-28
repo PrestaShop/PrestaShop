@@ -84,7 +84,7 @@
               <span class="slide-button"></span>
             </div>
           {% else %}
-            <div class="ps-switch ps-switch-sm ps-switch-nolabel ps-switch-center" onclick="unitProductAction(this, 'activate');">
+            <div class="ps-switch ps-switch-sm ps-switch-nolabel ps-switch-center" onclick="unitProductAction(this, 'deactivate');">
               <input type="radio" name="input-{{ product.id_product }}" id="input-false-{{ product.id_product }}" value="0">
               <label for="input-false-{{ product.id_product }}">Off</label>
               <input type="radio" name="input-{{ product.id_product }}" id="input-true-{{ product.id_product }}" value="1" checked>
