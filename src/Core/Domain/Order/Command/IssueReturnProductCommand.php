@@ -28,18 +28,12 @@ namespace PrestaShop\PrestaShop\Core\Domain\Order\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidRefundException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
-use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderDetailRefund;
 
 /**
- * Issues standard refund for given order.
+ * Issues return product for given order.
  */
-class IssueStandardRefundCommand extends AbstractRefundCommand
+class IssueReturnProductCommand extends IssueStandardRefundCommand
 {
-    /**
-     * @var bool
-     */
-    protected $refundShippingCost;
-
     /**
      * The expected format for $orderDetailRefunds is an associative array indexed
      * by OrderDetail id containing one fields quantity
@@ -52,6 +46,7 @@ class IssueStandardRefundCommand extends AbstractRefundCommand
      *
      * @param int $orderId
      * @param array $orderDetailRefunds
+     * @param bool $restockRefundedProducts
      * @param bool $refundShippingCost
      * @param bool $generateCreditSlip
      * @param bool $generateVoucher
@@ -64,6 +59,7 @@ class IssueStandardRefundCommand extends AbstractRefundCommand
     public function __construct(
         int $orderId,
         array $orderDetailRefunds,
+        bool $restockRefundedProducts,
         bool $refundShippingCost,
         bool $generateCreditSlip,
         bool $generateVoucher,
@@ -73,38 +69,12 @@ class IssueStandardRefundCommand extends AbstractRefundCommand
         parent::__construct(
             $orderId,
             $orderDetailRefunds,
-            true,
+            $refundShippingCost,
             $generateCreditSlip,
             $generateVoucher,
             $voucherRefundType,
             $voucherRefundAmount
         );
-        $this->refundShippingCost = $refundShippingCost;
-    }
-
-    /**
-     * @return bool
-     */
-    public function refundShippingCost(): bool
-    {
-        return $this->refundShippingCost;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function setOrderDetailRefunds(array $orderDetailRefunds)
-    {
-        $this->orderDetailRefunds = [];
-        if (0 >= count($orderDetailRefunds)) {
-            throw new InvalidRefundException(InvalidRefundException::NO_REFUNDS);
-        }
-
-        foreach ($orderDetailRefunds as $orderDetailId => $detailRefund) {
-            $this->orderDetailRefunds[] = OrderDetailRefund::createStandardRefund(
-                $orderDetailId,
-                $detailRefund['quantity']
-            );
-        }
+        $this->restockRefundedProducts = $restockRefundedProducts;
     }
 }
