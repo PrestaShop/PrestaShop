@@ -42,7 +42,11 @@
         'list.example': 'Example'|trans({}, 'Admin.Global'),
         'list.edit': 'Edit symbol / format'|trans({}, 'Admin.International.Feature'),
         'list.reset': 'Reset settings'|trans({}, 'Admin.Actions'),
-        'list.example.format': 'Price: %price% (Special discount %discount%)'|trans({}, 'Admin.International.Feature')
+        'list.example.format': 'Price: %price% (Special discount %discount%)'|trans({}, 'Admin.International.Feature'),
+        'confirmTitle': 'Restore currencies default settings'|trans({}, 'Admin.International.Feature'),
+        'confirmButtonLabel': 'Restore'|trans({}, 'Admin.Actions'),
+        'closeButtonLabel': 'Cancel'|trans({}, 'Admin.Actions'),
+        'confirmMessage': 'Are you sure you want to restore default settings?'|trans({}, 'Admin.Actions')
       }|json_encode|replace("'", "&#39;")|raw
     }
   }) }}
@@ -110,13 +114,13 @@
         {% endif %}
 
         {% if currencyForm.vars.data.id is defined and not currencyForm.vars.data.unofficial %}
-          <div class="form-group row ">
+          <div class="form-group row">
             <label for="currency_reset_default_settings" class="form-control-label">
             </label>
             <div class="col-sm">
               <button type="button" id="currency_reset_default_settings" class="btn btn-outline-secondary">
                 <i class="material-icons">refresh</i>
-                {{ 'Reset default settings'|trans({}, 'Admin.International.Feature') }}
+                {{ 'Restore default settings'|trans({}, 'Admin.International.Feature') }}
               </button>
             </div>
           </div>
@@ -125,6 +129,13 @@
         {% block currency_form_rest %}
           {{ form_rest(currencyForm) }}
         {% endblock %}
+      </div>
+    </div>
+
+    <div class="card-block row">
+      <div class="col-sm">
+        <h2>{{ 'Format settings'|trans({}, 'Admin.International.Feature') }}</h2>
+        <small class="form-text">{{ 'You might need to adapt the predefined format display of your currencies, or edit their symbol. Note that restoring default settings will erase symbol and format customizations'|trans({}, 'Admin.International.Feature') }}</small>
       </div>
     </div>
 
