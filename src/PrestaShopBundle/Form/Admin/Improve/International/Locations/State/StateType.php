@@ -47,6 +47,8 @@ use Symfony\Component\Validator\Constraints\NotBlank;
  */
 class StateType extends AbstractType
 {
+    private const DEFAULT_CHOICE_PLACEHOLDER = '--';
+
     use TranslatorAwareTrait;
 
     /**
@@ -120,12 +122,10 @@ class StateType extends AbstractType
                 'constraints' => [
                     new NotBlank(),
                 ],
-                'choices' => array_merge(
-                    ['--' => ''],
-                    $this->countriesChoiceProvider->getChoices([
+                'placeholder' => self::DEFAULT_CHOICE_PLACEHOLDER,
+                'choices' => $this->countriesChoiceProvider->getChoices([
                         'contains_states' => true,
                     ])
-                ),
             ])
             ->add('id_zone', ZoneChoiceType::class, [
                 'required' => true,
