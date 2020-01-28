@@ -65,6 +65,7 @@ $(() => {
   ].forEach((gridName) => {
     const grid = new Grid(gridName);
 
+    grid.addExtension(new SortingExtension());
     grid.addExtension(new ExportToSqlManagerExtension());
     grid.addExtension(new ReloadListActionExtension());
     grid.addExtension(new FiltersResetExtension());

@@ -30,6 +30,7 @@ import {EventEmitter} from '@components/event-emitter';
 import OrderProductRenderer from '@pages/order/view/order-product-renderer';
 import OrderPricesRefresher from '@pages/order/view/order-prices-refresher';
 import OrderInvoicesRefresher from './order-invoices-refresher';
+import Router from '@components/router';
 
 const $ = window.$;
 
@@ -147,6 +148,40 @@ export default class OrderViewPage {
         $btn.data('availableQuantity'),
         $btn.data('orderInvoiceId'),
       );
+    });
+  }
+
+  listenForProductPack() {
+    $(OrderViewPageMap.productPackModal.modal).on('show.bs.modal', function (event) {
+      const button = $(event.relatedTarget);
+      const packItems = button.data('packItems');
+      const modal = $(this);
+      const router = new Router();
+      $(OrderViewPageMap.productPackModal.rows).remove();
+      packItems.forEach(item => {
+        const $item = $(OrderViewPageMap.productPackModal.template).clone();
+        $item.attr('id', `productpack_${item.id}`).removeClass('d-none');
+        $item.find(OrderViewPageMap.productPackModal.product.img).attr('src', item.imagePath);
+        $item.find(OrderViewPageMap.productPackModal.product.name).html(item.name);
+        $item.find(OrderViewPageMap.productPackModal.product.link).attr('href', router.generate('admin_product_form', {'id': item.id}));
+        if (item.reference !== '') {
+          $item.find(OrderViewPageMap.productPackModal.product.ref).append(item.reference);
+        } else {
+          $item.find(OrderViewPageMap.productPackModal.product.ref).remove();
+        }
+        if (item.supplierReference !== '') {
+          $item.find(OrderViewPageMap.productPackModal.product.supplierRef).append(item.supplierReference);
+        } else {
+          $item.find(OrderViewPageMap.productPackModal.product.supplierRef).remove();
+        }
+        if (item.quantity > 1) {
+          $item.find(`${OrderViewPageMap.productPackModal.product.quantity} span`).html(item.quantity);
+        } else {
+          $item.find(OrderViewPageMap.productPackModal.product.quantity).html(item.quantity);
+        }
+        $item.find(OrderViewPageMap.productPackModal.product.availableQuantity).html(item.availableQuantity);
+        $(OrderViewPageMap.productPackModal.template).before($item);
+      });
     });
   }
 

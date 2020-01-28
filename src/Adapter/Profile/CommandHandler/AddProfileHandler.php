@@ -53,6 +53,6 @@ final class AddProfileHandler implements AddProfileHandlerInterface
             throw new ProfileException('Failed to create Profile');
         }
 
-        return new ProfileId($profile->id);
+        return new ProfileId((int) $profile->id);
     }
 }

@@ -105,6 +105,22 @@ export default {
   productEditLocationText: '.editProductLocation',
   productEditAvailableText: '.editProductAvailable',
   productEditTotalPriceText: '.editProductTotalPrice',
+  // Product Pack Modal
+  productPackModal: {
+    modal: '#product-pack-modal',
+    table: '#product-pack-modal-table tbody',
+    rows: '#product-pack-modal-table tbody tr:not(#template-pack-table-row)',
+    template: '#template-pack-table-row',
+    product: {
+      img: '.cell-product-img img',
+      link: '.cell-product-name a',
+      name: '.cell-product-name .product-name',
+      ref: '.cell-product-name .product-reference',
+      supplierRef: '.cell-product-name .product-supplier-reference',
+      quantity: '.cell-product-quantity',
+      availableQuantity: '.cell-product-available-quantity',
+    },
+  },
   // Order price elements
   orderProductsTotal: '#orderProductsTotal',
   orderDiscountsTotal: '#orderDiscountsTotal',
