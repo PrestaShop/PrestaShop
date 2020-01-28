@@ -74,7 +74,6 @@ describe('Enable/Disable accented URL', async () => {
         this.pageObjects.boBasePage.shopParametersParentLink,
         this.pageObjects.boBasePage.trafficAndSeoLink,
       );
-      await this.pageObjects.boBasePage.closeSfToolBar();
       const pageTitle = await this.pageObjects.seoAndUrlsPage.getPageTitle();
       await expect(pageTitle).to.contains(this.pageObjects.seoAndUrlsPage.pageTitle);
     });
@@ -89,7 +88,6 @@ describe('Enable/Disable accented URL', async () => {
         this.pageObjects.boBasePage.catalogParentLink,
         this.pageObjects.boBasePage.productsLink,
       );
-      await this.pageObjects.boBasePage.closeSfToolBar();
       const pageTitle = await this.pageObjects.productsPage.getPageTitle();
       await expect(pageTitle).to.contains(this.pageObjects.productsPage.pageTitle);
     });
