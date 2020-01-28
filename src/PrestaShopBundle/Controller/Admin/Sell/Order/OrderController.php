@@ -572,7 +572,7 @@ class OrderController extends FrameworkBundleAdminController
     /**
      * @AdminSecurity(
      *     "is_granted('update', request.get('_legacy_controller'))",
-     *      redirectRoute="admin_orders_view",
+     *     redirectRoute="admin_orders_view",
      *     redirectQueryParamsToKeep={"orderId"},
      *     message="You do not have permission to edit this."
      * )
@@ -624,7 +624,7 @@ class OrderController extends FrameworkBundleAdminController
     /**
      * @AdminSecurity(
      *     "is_granted('update', 'AdminOrders')",
-     *      redirectRoute="admin_orders_view",
+     *     redirectRoute="admin_orders_view",
      *     redirectQueryParamsToKeep={"orderId"},
      *     message="You do not have permission to edit this."
      * )
@@ -650,7 +650,7 @@ class OrderController extends FrameworkBundleAdminController
     /**
      * @AdminSecurity(
      *     "is_granted('update', 'AdminOrders')",
-     *      redirectRoute="admin_orders_view",
+     *     redirectRoute="admin_orders_view",
      *     redirectQueryParamsToKeep={"orderId"},
      *     message="You do not have permission to edit this."
      * )
@@ -807,7 +807,7 @@ class OrderController extends FrameworkBundleAdminController
     /**
      * @AdminSecurity(
      *     "is_granted('update', 'AdminOrders')",
-     *      redirectRoute="admin_orders_view",
+     *     redirectRoute="admin_orders_view",
      *     redirectQueryParamsToKeep={"orderId"},
      *     message="You do not have permission to edit this."
      * )
@@ -978,7 +978,7 @@ class OrderController extends FrameworkBundleAdminController
     /**
      * @AdminSecurity(
      *     "is_granted('update', 'AdminOrders')",
-     *      redirectRoute="admin_orders_view",
+     *     redirectRoute="admin_orders_view",
      *     redirectQueryParamsToKeep={"orderId"},
      *     message="You do not have permission to edit this."
      * )
@@ -1075,7 +1075,7 @@ class OrderController extends FrameworkBundleAdminController
     /**
      * @AdminSecurity(
      *     "is_granted('update', 'AdminOrders')",
-     *      redirectRoute="admin_orders_view",
+     *     redirectRoute="admin_orders_view",
      *     redirectQueryParamsToKeep={"orderId"},
      *     message="You do not have permission to edit this."
      * )
