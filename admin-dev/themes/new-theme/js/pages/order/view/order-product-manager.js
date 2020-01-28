@@ -27,7 +27,7 @@ import Router from '@components/router';
 import {EventEmitter} from '@components/event-emitter';
 import OrderViewEventMap from '@pages/order/view/order-view-event-map';
 
-const $ = window.$;
+const {$} = window;
 
 export default class OrderProductManager {
   constructor() {

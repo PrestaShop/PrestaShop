@@ -24,9 +24,9 @@
  */
 
 import createOrderMap from './create-order-map';
-import CreateOrderPage from "./create-order-page";
+import {ValidateAddresses} from './address-validator';
 
-const $ = window.$;
+const {$} = window;
 
 /**
  * Responsible for summary block rendering
@@ -50,13 +50,13 @@ export default class SummaryRenderer {
    * @param {Object} cartInfo
    */
   render(cartInfo) {
-    this._cleanSummary();
+    this.cleanSummary();
     const noProducts = cartInfo.products.length === 0;
     const noShippingOptions = cartInfo.shipping === null;
-    const addressesAreValid = CreateOrderPage.validateSelectedAddresses(cartInfo.addresses);
+    const addressesAreValid = ValidateAddresses(cartInfo.addresses);
 
     if (noProducts || noShippingOptions || !addressesAreValid) {
-      this._hideSummaryBlock();
+      this.hideSummaryBlock();
 
       return;
     }
@@ -72,7 +72,7 @@ export default class SummaryRenderer {
     this.$orderMessageField.text(cartSummary.orderMessage);
     this.$placeOrderCartIdField.val(cartInfo.cartId);
 
-    this._showSummaryBlock();
+    this.showSummaryBlock();
   }
 
   /**
@@ -82,7 +82,7 @@ export default class SummaryRenderer {
    */
   renderSuccessMessage(message) {
     $(createOrderMap.summarySuccessAlertText).text(message);
-    this._showSummarySuccessAlertBlock();
+    this.showSummarySuccessAlertBlock();
   }
 
   /**
@@ -92,7 +92,7 @@ export default class SummaryRenderer {
    */
   renderErrorMessage(message) {
     $(createOrderMap.summaryErrorAlertText).text(message);
-    this._showSummaryErrorAlertBlock();
+    this.showSummaryErrorAlertBlock();
   }
 
   /**
@@ -101,8 +101,8 @@ export default class SummaryRenderer {
   cleanAlerts() {
     $(createOrderMap.summarySuccessAlertText).text('');
     $(createOrderMap.summaryErrorAlertText).text('');
-    this._hideSummarySuccessAlertBlock();
-    this._hideSummaryErrorAlertBlock();
+    this.hideSummarySuccessAlertBlock();
+    this.hideSummaryErrorAlertBlock();
   }
 
   /**
@@ -110,7 +110,7 @@ export default class SummaryRenderer {
    *
    * @private
    */
-  _showSummaryBlock() {
+  showSummaryBlock() {
     $(createOrderMap.summaryBlock).removeClass('d-none');
   }
 
@@ -119,7 +119,7 @@ export default class SummaryRenderer {
    *
    * @private
    */
-  _hideSummaryBlock() {
+  hideSummaryBlock() {
     $(createOrderMap.summaryBlock).addClass('d-none');
   }
 
@@ -128,7 +128,7 @@ export default class SummaryRenderer {
    *
    * @private
    */
-  _showSummaryErrorAlertBlock() {
+  showSummaryErrorAlertBlock() {
     $(createOrderMap.summaryErrorAlertBlock).removeClass('d-none');
   }
 
@@ -137,7 +137,7 @@ export default class SummaryRenderer {
    *
    * @private
    */
-  _hideSummaryErrorAlertBlock() {
+  hideSummaryErrorAlertBlock() {
     $(createOrderMap.summaryErrorAlertBlock).addClass('d-none');
   }
 
@@ -146,7 +146,7 @@ export default class SummaryRenderer {
    *
    * @private
    */
-  _showSummarySuccessAlertBlock() {
+  showSummarySuccessAlertBlock() {
     $(createOrderMap.summarySuccessAlertBlock).removeClass('d-none');
   }
 
@@ -155,14 +155,14 @@ export default class SummaryRenderer {
    *
    * @private
    */
-  _hideSummarySuccessAlertBlock() {
+  hideSummarySuccessAlertBlock() {
     $(createOrderMap.summarySuccessAlertBlock).addClass('d-none');
   }
 
   /**
    * Empties cart summary fields
    */
-  _cleanSummary() {
+  cleanSummary() {
     this.$totalProducts.empty();
     this.$totalDiscount.empty();
     this.$totalShipping.empty();

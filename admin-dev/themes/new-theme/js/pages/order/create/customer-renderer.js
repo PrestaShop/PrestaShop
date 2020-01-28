@@ -26,7 +26,7 @@
 import createOrderMap from '@pages/order/create/create-order-map';
 import Router from '@components/router';
 
-const $ = window.$;
+const {$} = window;
 
 /**
  * Responsible for customer information rendering
@@ -44,16 +44,15 @@ export default class CustomerRenderer {
    * @param foundCustomers
    */
   renderSearchResults(foundCustomers) {
-    this._clearShownCustomers();
+    this.clearShownCustomers();
 
     if (foundCustomers.length === 0) {
-      this._showNotFoundCustomers();
+      this.showNotFoundCustomers();
 
       return;
     }
 
-    for (const customerId in foundCustomers) {
-      const customerResult = foundCustomers[customerId];
+    Object.entries(foundCustomers).forEach((customerId, customerResult) => {
       const customer = {
         id: customerId,
         firstName: customerResult.firstname,
@@ -62,8 +61,8 @@ export default class CustomerRenderer {
         birthday: customerResult.birthday !== '0000-00-00' ? customerResult.birthday : ' ',
       };
 
-      this._renderFoundCustomer(customer);
-    }
+      this.renderFoundCustomer(customer);
+    });
   }
 
   /**
@@ -82,8 +81,7 @@ export default class CustomerRenderer {
     this.$container.find(createOrderMap.customerSearchRow).addClass('d-none');
     this.$container.find(createOrderMap.notSelectedCustomerSearchResults)
       .closest(createOrderMap.customerSearchResultColumn)
-      .remove()
-    ;
+      .remove();
   }
 
   /**
@@ -104,20 +102,18 @@ export default class CustomerRenderer {
     const $cartsTableRowTemplate = $($(createOrderMap.customerCartsTableRowTemplate).html());
 
     $cartsTable.find('tbody').empty();
-    this._showCheckoutHistoryBlock();
-    this._removeEmptyListRowFromTable($cartsTable);
+    this.showCheckoutHistoryBlock();
+    this.removeEmptyListRowFromTable($cartsTable);
 
-    for (const key in carts) {
-      const cart = carts[key];
-
+    Object.values(carts).forEach((cart) => {
       // do not render current cart
       if (cart.cartId === currentCartId) {
         // render 'No records found' warn if carts only contain current cart
         if (carts.length === 1) {
-          this._renderEmptyList($cartsTable);
+          this.renderEmptyList($cartsTable);
         }
 
-        continue;
+        return;
       }
 
       const $cartsTableRow = $cartsTableRowTemplate.clone();
@@ -134,7 +130,7 @@ export default class CustomerRenderer {
 
       $cartsTable.find('thead').removeClass('d-none');
       $cartsTable.find('tbody').append($cartsTableRow);
-    }
+    });
   }
 
   /**
@@ -147,18 +143,18 @@ export default class CustomerRenderer {
     const $rowTemplate = $($(createOrderMap.customerOrdersTableRowTemplate).html());
 
     $ordersTable.find('tbody').empty();
-    this._showCheckoutHistoryBlock();
-    this._removeEmptyListRowFromTable($ordersTable);
+    this.showCheckoutHistoryBlock();
+    this.removeEmptyListRowFromTable($ordersTable);
 
-    //render 'No records found' when list is empty
+    // render 'No records found' when list is empty
     if (orders.length === 0) {
-      this._renderEmptyList($ordersTable);
+      this.renderEmptyList($ordersTable);
 
       return;
     }
 
-    for (const key in Object.keys(orders)) {
-      const order = orders[key];
+
+    Object.values(orders).forEach((order) => {
       const $template = $rowTemplate.clone();
 
       $template.find(createOrderMap.orderIdField).text(order.orderId);
@@ -175,7 +171,7 @@ export default class CustomerRenderer {
 
       $ordersTable.find('thead').removeClass('d-none');
       $ordersTable.find('tbody').append($template);
-    }
+    });
   }
 
   /**
@@ -185,7 +181,7 @@ export default class CustomerRenderer {
    *
    * @private
    */
-  _renderEmptyList($table) {
+  renderEmptyList($table) {
     const $emptyTableRow = $($(createOrderMap.emptyListRowTemplate).html()).clone();
     $table.find('tbody').append($emptyTableRow);
   }
@@ -193,7 +189,7 @@ export default class CustomerRenderer {
   /**
    * Removes empty list row in case it was rendered
    */
-  _removeEmptyListRowFromTable($table) {
+  removeEmptyListRowFromTable($table) {
     $table.find(createOrderMap.emptyListRow).remove();
   }
 
@@ -206,8 +202,8 @@ export default class CustomerRenderer {
    *
    * @private
    */
-  _renderFoundCustomer(customer) {
-    this._hideNotFoundCustomers();
+  renderFoundCustomer(customer) {
+    this.hideNotFoundCustomers();
     const $customerSearchResultTemplate = $($(createOrderMap.customerSearchResultTemplate).html());
     const $template = $customerSearchResultTemplate.clone();
 
@@ -229,7 +225,7 @@ export default class CustomerRenderer {
    *
    * @private
    */
-  _showCheckoutHistoryBlock() {
+  showCheckoutHistoryBlock() {
     $(createOrderMap.customerCheckoutHistory).removeClass('d-none');
   }
 
@@ -238,7 +234,7 @@ export default class CustomerRenderer {
    *
    * @private
    */
-  _clearShownCustomers() {
+  clearShownCustomers() {
     this.$customerSearchResultBlock.empty();
   }
 
@@ -247,7 +243,7 @@ export default class CustomerRenderer {
    *
    * @private
    */
-  _showNotFoundCustomers() {
+  showNotFoundCustomers() {
     $(createOrderMap.customerSearchEmptyResultWarning).removeClass('d-none');
   }
 
@@ -256,7 +252,7 @@ export default class CustomerRenderer {
    *
    * @private
    */
-  _hideNotFoundCustomers() {
+  hideNotFoundCustomers() {
     $(createOrderMap.customerSearchEmptyResultWarning).addClass('d-none');
   }
 }

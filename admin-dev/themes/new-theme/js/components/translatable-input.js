@@ -25,7 +25,7 @@
 
 import {EventEmitter} from './event-emitter';
 
-const $ = window.$;
+const {$} = window;
 
 /**
  * This class is used to automatically toggle translated inputs (displayed with one
@@ -34,11 +34,11 @@ const $ = window.$;
  */
 class TranslatableInput {
   constructor(options) {
-    options = options || {};
+    const opts = options || {};
 
-    this.localeItemSelector = options.localeItemSelector || '.js-locale-item';
-    this.localeButtonSelector = options.localeButtonSelector || '.js-locale-btn';
-    this.localeInputSelector = options.localeInputSelector || '.js-locale-input';
+    this.localeItemSelector = opts.localeItemSelector || '.js-locale-item';
+    this.localeButtonSelector = opts.localeButtonSelector || '.js-locale-btn';
+    this.localeInputSelector = opts.localeInputSelector || '.js-locale-input';
 
     $('body').on('click', this.localeItemSelector, this.toggleLanguage.bind(this));
     EventEmitter.on('languageSelected', this.toggleInputs.bind(this));
@@ -52,7 +52,7 @@ class TranslatableInput {
   toggleLanguage(event) {
     const localeItem = $(event.target);
     const form = localeItem.closest('form');
-    EventEmitter.emit('languageSelected', {selectedLocale: localeItem.data('locale'), form: form});
+    EventEmitter.emit('languageSelected', {selectedLocale: localeItem.data('locale'), form});
   }
 
   /**
@@ -61,8 +61,8 @@ class TranslatableInput {
    * @param {Event} event
    */
   toggleInputs(event) {
-    const form = event.form;
-    const selectedLocale = event.selectedLocale;
+    const {form} = event;
+    const {selectedLocale} = event;
     const localeButton = form.find(this.localeButtonSelector);
     const changeLanguageUrl = localeButton.data('change-language-url');
 
@@ -71,7 +71,7 @@ class TranslatableInput {
     form.find(`${this.localeInputSelector}.js-locale-${selectedLocale}`).removeClass('d-none');
 
     if (changeLanguageUrl) {
-      this._saveSelectedLanguage(changeLanguageUrl, selectedLocale);
+      this.saveSelectedLanguage(changeLanguageUrl, selectedLocale);
     }
   }
 
@@ -83,11 +83,11 @@ class TranslatableInput {
    *
    * @private
    */
-  _saveSelectedLanguage(changeLanguageUrl, selectedLocale) {
+  saveSelectedLanguage(changeLanguageUrl, selectedLocale) {
     $.post({
       url: changeLanguageUrl,
       data: {
-        language_iso_code: selectedLocale
+        language_iso_code: selectedLocale,
       },
     });
   }
