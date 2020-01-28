@@ -460,6 +460,7 @@ class OrderController extends FrameworkBundleAdminController
      *
      * @param int $orderId
      * @param Request $request
+     *
      * @return RedirectResponse
      */
     public function partialRefundAction(int $orderId, Request $request)
