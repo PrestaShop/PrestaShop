@@ -125,7 +125,7 @@ class StateType extends AbstractType
                 'placeholder' => self::DEFAULT_CHOICE_PLACEHOLDER,
                 'choices' => $this->countriesChoiceProvider->getChoices([
                         'contains_states' => true,
-                    ])
+                    ]),
             ])
             ->add('id_zone', ZoneChoiceType::class, [
                 'required' => true,
