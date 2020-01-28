@@ -29,8 +29,8 @@ import OrderViewEventMap from '@pages/order/view/order-view-event-map';
 import {EventEmitter} from '@components/event-emitter';
 import OrderProductRenderer from '@pages/order/view/order-product-renderer';
 import OrderPricesRefresher from '@pages/order/view/order-prices-refresher';
-import OrderInvoicesRefresher from './order-invoices-refresher';
 import Router from '@components/router';
+import OrderInvoicesRefresher from './order-invoices-refresher';
 
 const {$} = window;
 
@@ -152,18 +152,20 @@ export default class OrderViewPage {
   }
 
   listenForProductPack() {
-    $(OrderViewPageMap.productPackModal.modal).on('show.bs.modal', function (event) {
+    $(OrderViewPageMap.productPackModal.modal).on('show.bs.modal', (event) => {
       const button = $(event.relatedTarget);
       const packItems = button.data('packItems');
-      const modal = $(this);
       const router = new Router();
       $(OrderViewPageMap.productPackModal.rows).remove();
-      packItems.forEach(item => {
+      packItems.forEach((item) => {
         const $item = $(OrderViewPageMap.productPackModal.template).clone();
         $item.attr('id', `productpack_${item.id}`).removeClass('d-none');
         $item.find(OrderViewPageMap.productPackModal.product.img).attr('src', item.imagePath);
         $item.find(OrderViewPageMap.productPackModal.product.name).html(item.name);
-        $item.find(OrderViewPageMap.productPackModal.product.link).attr('href', router.generate('admin_product_form', {'id': item.id}));
+        $item.find(OrderViewPageMap.productPackModal.product.link).attr(
+          'href',
+          router.generate('admin_product_form', {id: item.id}),
+        );
         if (item.reference !== '') {
           $item.find(OrderViewPageMap.productPackModal.product.ref).append(item.reference);
         } else {
