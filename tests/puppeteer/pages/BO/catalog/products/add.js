@@ -211,7 +211,7 @@ module.exports = class AddProduct extends BOBasePage {
     const selector = this.forNavlistItemLink.replace('%ID', id);
     await Promise.all([
       this.page.waitForSelector(`${selector}[aria-selected='true']`, {visible: true}),
-      this.page.click(selector),
+      this.waitForSelectorAndClick(selector),
     ]);
   }
 
@@ -260,15 +260,12 @@ module.exports = class AddProduct extends BOBasePage {
   }
 
   /**
-   * Go to SEO step and reset friendly URL
+   * Reset friendly URL
    * @returns {Promise<void>}
    */
   async resetURL() {
-    await this.waitForSelectorAndClick(this.forNavlistItemLink.replace('%ID', 5));
-    await Promise.all([
-      this.page.waitForSelector(this.resetUrlButton, {visible: true}),
-      this.scrollTo(this.resetUrlButton),
-      this.page.click(this.resetUrlButton),
-    ]);
+    await this.page.waitForSelector(this.resetUrlButton, {visible: true});
+    await this.scrollTo(this.resetUrlButton);
+    await this.page.click(this.resetUrlButton);
   }
 };

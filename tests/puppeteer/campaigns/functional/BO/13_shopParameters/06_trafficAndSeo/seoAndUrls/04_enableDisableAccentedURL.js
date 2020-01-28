@@ -110,6 +110,7 @@ describe('Enable/Disable accented URL', async () => {
       await this.pageObjects.productsPage.goToProductPage(1);
       const pageTitle = await this.pageObjects.addProductPage.getPageTitle();
       await expect(pageTitle).to.contains(this.pageObjects.addProductPage.pageTitle);
+      await this.pageObjects.addProductPage.goToFormStep(5);
       await this.pageObjects.addProductPage.resetURL();
     });
 
