@@ -26,9 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\State\Command;
 
-use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
-use PrestaShop\PrestaShop\Core\Domain\Zone\Exception\ZoneConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Zone\ValueObject\ZoneId;
 
 /**
@@ -67,9 +65,6 @@ class AddStateCommand
      * @param string $name
      * @param string $isoCode
      * @param bool $active
-     *
-     * @throws CountryConstraintException
-     * @throws ZoneConstraintException
      */
     public function __construct(
         int $countryId,

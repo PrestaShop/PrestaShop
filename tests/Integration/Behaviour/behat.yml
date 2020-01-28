@@ -169,3 +169,9 @@ default:
               - Tests\Integration\Behaviour\Features\Context\Domain\ManufacturerFeatureContext
               - Tests\Integration\Behaviour\Features\Context\Domain\AddressFeatureContext
               - Tests\Integration\Behaviour\Features\Context\Domain\CustomerFeatureContext
+        location:
+            paths:
+              features: Features/Scenario/Location
+            contexts:
+              - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
+              - Tests\Integration\Behaviour\Features\Context\Domain\LocationFeatureContext
