@@ -39,17 +39,33 @@
         @applyCustomization="applyCustomization"
       >
       </currency-modal>
+
+      <modal
+        confirmation
+        v-if="confirmationLanguage !== null"
+        @confirm="applyResetLanguage"
+        @close="closeConfirmationModal"
+        :modalTitle="$t('modal.restore.title')"
+        :cancelLabel="$t('modal.restore.cancel')"
+        :confirmLabel="$t('modal.restore.apply')"
+      >
+        <template slot="body">{{ $t('modal.restore.body') }}</template>
+      </modal>
     </div>
   </div>
 </template>
 
 <script>
+  import Modal from '@vue/components/Modal';
   import LanguageList from './LanguageList';
   import CurrencyModal from './CurrencyModal';
 
   export default {
     name: 'currency-formatter',
-    data: () => ({selectedLanguage: null}),
+    data: () => ({
+      selectedLanguage: null,
+      confirmationLanguage: null,
+    }),
     props: {
       id: {
         type: String,
@@ -64,11 +80,11 @@
         required: true
       }
     },
-    components: {LanguageList, CurrencyModal},
+    components: {LanguageList, CurrencyModal, Modal},
     computed: {
       languagesCount() {
         return this.languages.length;
-      }
+      },
     }, methods: {
       closeModal() {
         this.selectedLanguage = null;
@@ -76,14 +92,21 @@
       selectLanguage(language) {
         this.selectedLanguage = language;
       },
+      closeConfirmationModal() {
+        this.confirmationLanguage = null;
+      },
       resetLanguage(language) {
-        const patterns = language.currencyPattern.split(';');
-        language.priceSpecification.positivePattern = patterns[0];
-        language.priceSpecification.negativePattern = patterns.length > 1 ? patterns[1] : '-' + patterns[0];
-        language.priceSpecification.currencySymbol = language.currencySymbol;
+        this.confirmationLanguage = language;
+      },
+      applyResetLanguage() {
+        const patterns = this.confirmationLanguage.currencyPattern.split(';');
+        this.confirmationLanguage.priceSpecification.positivePattern = patterns[0];
+        this.confirmationLanguage.priceSpecification.negativePattern = patterns.length > 1 ? patterns[1] : '-' + patterns[0];
+        this.confirmationLanguage.priceSpecification.currencySymbol = this.confirmationLanguage.currencySymbol;
 
-        this.currencyData.transformations[language.id] = '';
-        this.currencyData.symbols[language.id] = language.currencySymbol;
+        this.currencyData.transformations[this.confirmationLanguage.id] = '';
+        this.currencyData.symbols[this.confirmationLanguage.id] = this.confirmationLanguage.currencySymbol;
+        this.closeConfirmationModal();
       },
       applyCustomization(customData) {
         const selectedPattern = this.selectedLanguage.transformations[customData.transformation];

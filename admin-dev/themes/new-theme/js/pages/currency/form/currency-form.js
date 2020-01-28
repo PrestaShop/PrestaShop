@@ -146,10 +146,10 @@ export default class CurrencyForm {
   }
 
   _showResetDefaultSettingsConfirmModal() {
-    const confirmTitle = this.translations['confirmTitle'];
-    const confirmMessage = this.translations['confirmMessage'];
-    const confirmButtonLabel = this.translations['confirmButtonLabel'];
-    const closeButtonLabel = this.translations['closeButtonLabel'];
+    const confirmTitle = this.translations['modal.restore.title'];
+    const confirmMessage = this.translations['modal.restore.body'];
+    const confirmButtonLabel = this.translations['modal.restore.apply'];
+    const closeButtonLabel = this.translations['modal.restore.cancel'];
 
     const modal = new ConfirmModal({
       id: 'currency_restore_default_settings',
