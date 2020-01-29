@@ -1258,6 +1258,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
         $lang_pack = self::getLangDetails($iso);
         self::installSfLanguagePack(self::getLocaleByIso($iso), $errors);
         self::updateMultilangTable($iso);
+        self::updateCurrenciesCldr(new Language(self::getIdByIso($iso, true)));
         self::generateEmailsLanguagePack($lang_pack, $errors, true);
 
         return count($errors) ? $errors : true;
@@ -1270,15 +1271,19 @@ class LanguageCore extends ObjectModel implements LanguageInterface
         $container = SymfonyContainer::getInstance();
         /** @var LocaleRepository $localeRepoCLDR */
         $localeRepoCLDR = $container->get('prestashop.core.localization.cldr.locale_repository');
+        $localeCLDR = $localeRepoCLDR->getLocale($language->locale);
 
         foreach ($currencies as $currency) {
             $names = $currency->getLocalizedNames();
             $symbols = $currency->getLocalizedSymbols();
 
-            $cldrCurrency = $localeRepoCLDR->getLocale($language->locale)->getCurrency($currency->iso_code);
+            $currencyCLDR = $localeCLDR->getCurrency($currency->iso_code);
+            if (null === $currencyCLDR) {
+                continue;
+            }
 
-            $names[$language->id] = $cldrCurrency->getDisplayName();
-            $symbols[$language->id] = $cldrCurrency->getSymbol();
+            $names[$language->id] = $currencyCLDR->getDisplayName();
+            $symbols[$language->id] = $currencyCLDR->getSymbol();
 
             $currency->setLocalizedNames($names);
             $currency->setLocalizedSymbols($symbols);
@@ -1389,8 +1394,6 @@ class LanguageCore extends ObjectModel implements LanguageInterface
 
                     if (_DB_PREFIX_ . 'country_lang' == $t) {
                         self::updateMultilangFromCldr($lang);
-                    } elseif (_DB_PREFIX_ . 'currency_lang' == $t) {
-                        self::updateCurrenciesCldr($lang);
                     } else {
                         self::updateMultilangFromClass($t, $className, $lang);
                     }
