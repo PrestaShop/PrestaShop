@@ -124,22 +124,6 @@ module.exports = {
       '@vue': path.resolve(__dirname, '../js/vue')
     }
   },
-  optimization: {
-    splitChunks: {
-      cacheGroups: {
-        styles: {
-          name: 'styles',
-          //test: /\.(scss|css)$/,
-          test: (m, c, entry = 'foo') => {
-            console.log(m, c, entry);
-            return m.constructor.name === 'CssModule' && recursiveIssuer(m) === entry;
-          },
-          chunks: 'all',
-          enforce: true
-        }
-      }
-    }
-  },
   module: {
     rules: [
       {
