@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\State;
 
 use PrestaShop\PrestaShop\Core\Domain\State\Exception\CannotDeleteStateException;
+use PrestaShop\PrestaShop\Core\Domain\State\Exception\StateException;
 use PrestaShop\PrestaShop\Core\Domain\State\Exception\StateNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\State\ValueObject\StateId;
 use PrestaShopException;
@@ -76,6 +77,29 @@ abstract class AbstractStateHandler
             return $state->delete();
         } catch (PrestaShopException $e) {
             throw new CannotDeleteStateException(sprintf('An error occurred when deleting State object with id "%s".', $state->id));
+        }
+    }
+
+    /**
+     * Toggles legacy state status
+     *
+     * @param State $state
+     * @param bool $newStatus
+     *
+     * @return bool
+     *
+     * @throws StateException
+     */
+    protected function toggleStateStatus(State $state, bool $newStatus): bool
+    {
+        $state->active = $newStatus;
+
+        try {
+            return $state->save();
+        } catch (PrestaShopException $e) {
+            throw new StateException(sprintf(
+                'An error occurred when updating state status with id "%s" '.$e->getMessage(), $state->id)
+            );
         }
     }
 }

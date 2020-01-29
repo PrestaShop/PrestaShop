@@ -51,7 +51,11 @@ final class BulkToggleStateStatusHandler extends AbstractStateHandler implements
             try {
                 /** @var State $state */
                 $state = $this->getState($stateId);
+                $state->active = $command->getExpectedStatus();
                 $state->toggleStatus();
+                if (!$this->toggleStateStatus($state, $command->getExpectedStatus())) {
+                    $errors[] = $state->id;
+                }
             } catch (StateException $e) {
                 $errors[] = $stateId->getValue();
             }

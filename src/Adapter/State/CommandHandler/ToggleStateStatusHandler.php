@@ -29,6 +29,7 @@ namespace PrestaShop\PrestaShop\Adapter\State\CommandHandler;
 use PrestaShop\PrestaShop\Adapter\State\AbstractStateHandler;
 use PrestaShop\PrestaShop\Core\Domain\State\Command\ToggleStateStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\State\CommandHandler\ToggleStateStatusHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\State\Exception\UpdateStateException;
 
 /**
  * Handles states status toggle
@@ -37,10 +38,15 @@ final class ToggleStateStatusHandler extends AbstractStateHandler implements Tog
 {
     /**
      * {@inheritdoc}
+     *
+     * @throws UpdateStateException
      */
     public function handle(ToggleStateStatusCommand $command)
     {
         $state = $this->getState($command->getStateId());
-        $state->toggleStatus();
+
+        if (!$this->toggleStateStatus($state, $command->getExpectedStatus())) {
+            throw new UpdateStateException(sprintf('Unable to toggle state status with id "%s"', $state->id), UpdateStateException::FAILED_TOGGLE_STATUS);
+        }
     }
 }
