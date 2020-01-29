@@ -29,6 +29,6 @@ namespace PrestaShop\PrestaShop\Core\Domain\State\Exception;
 /**
  * Exception throw on failure to delete state
  */
-class DeleteStateException extends StateException
+class CannotDeleteStateException extends StateException
 {
 }

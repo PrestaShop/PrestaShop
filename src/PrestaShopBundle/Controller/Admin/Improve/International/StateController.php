@@ -33,7 +33,7 @@ use PrestaShop\PrestaShop\Core\Domain\State\Command\DeleteStateCommand;
 use PrestaShop\PrestaShop\Core\Domain\State\Command\ToggleStateStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\State\Exception\BulkDeleteStatesException;
 use PrestaShop\PrestaShop\Core\Domain\State\Exception\BulkUpdateStatesException;
-use PrestaShop\PrestaShop\Core\Domain\State\Exception\DeleteStateException;
+use PrestaShop\PrestaShop\Core\Domain\State\Exception\CannotDeleteStateException;
 use PrestaShop\PrestaShop\Core\Domain\State\Exception\StateConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\State\Exception\StateException;
 use PrestaShop\PrestaShop\Core\Domain\State\Exception\StateNotFoundException;
@@ -337,7 +337,7 @@ class StateController extends FrameworkBundleAdminController
     private function getErrorMessages(Exception $e = null): array
     {
         return [
-            DeleteStateException::class => $this->trans(
+            CannotDeleteStateException::class => $this->trans(
                 'An error occurred while deleting the object.',
                 'Admin.Notifications.Error'
             ),
@@ -361,7 +361,7 @@ class StateController extends FrameworkBundleAdminController
                     'An error occurred while deleting this selection.',
                     'Admin.Notifications.Error'
                 ),
-                $e instanceof BulkDeleteStatesException ? $e->getMessage() : ''
+                $e instanceof BulkDeleteStatesException ? $e->getStateIds() : ''
             ),
             BulkUpdateStatesException::class => sprintf(
                 '%s : %s',

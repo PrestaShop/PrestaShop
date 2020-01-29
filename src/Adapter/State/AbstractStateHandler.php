@@ -26,7 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Adapter\State;
 
-use PrestaShop\PrestaShop\Core\Domain\State\Exception\DeleteStateException;
+use PrestaShop\PrestaShop\Core\Domain\State\Exception\CannotDeleteStateException;
 use PrestaShop\PrestaShop\Core\Domain\State\Exception\StateException;
 use PrestaShop\PrestaShop\Core\Domain\State\Exception\StateNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\State\ValueObject\StateId;
@@ -69,14 +69,14 @@ abstract class AbstractStateHandler
      *
      * @return bool
      *
-     * @throws DeleteStateException
+     * @throws CannotDeleteStateException
      */
     protected function deleteState(State $state): bool
     {
         try {
             return $state->delete();
         } catch (PrestaShopException $e) {
-            throw new DeleteStateException(sprintf('An error occurred when deleting State object with id "%s".', $state->id));
+            throw new CannotDeleteStateException(sprintf('An error occurred when deleting State object with id "%s".', $state->id));
         }
     }
 

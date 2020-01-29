@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Adapter\State\CommandHandler;
 use PrestaShop\PrestaShop\Adapter\State\AbstractStateHandler;
 use PrestaShop\PrestaShop\Core\Domain\State\Command\DeleteStateCommand;
 use PrestaShop\PrestaShop\Core\Domain\State\CommandHandler\DeleteStateHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\State\Exception\DeleteStateException;
+use PrestaShop\PrestaShop\Core\Domain\State\Exception\CannotDeleteStateException;
 
 /**
  * Handles state deletion
@@ -44,7 +44,7 @@ final class DeleteStateHandler extends AbstractStateHandler implements DeleteSta
         $state = $this->getState($command->getStateId());
 
         if (!$this->deleteState($state)) {
-            throw new DeleteStateException(sprintf('Cannot delete State object with id "%s".', $state->id));
+            throw new CannotDeleteStateException(sprintf('Cannot delete State object with id "%s".', $state->id));
         }
     }
 }

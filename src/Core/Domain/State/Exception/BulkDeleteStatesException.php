@@ -26,9 +26,36 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\State\Exception;
 
+use Exception;
+
 /**
  * Thrown on failure to perform bulk delete without errors
  */
 class BulkDeleteStatesException extends StateException
 {
+    /**
+     * @var int[]
+     */
+    private $stateIds;
+
+    /**
+     * @param int[] $stateIds
+     * @param string $message
+     * @param int $code
+     * @param Exception $previous
+     */
+    public function __construct(array $stateIds, $message = '', $code = 0, Exception $previous = null)
+    {
+        parent::__construct($message, $code, $previous);
+
+        $this->stateIds = $stateIds;
+    }
+
+    /**
+     * @return int[]
+     */
+    public function getStateIds(): array
+    {
+        return $this->stateIds;
+    }
 }
