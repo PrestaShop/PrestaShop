@@ -45,7 +45,7 @@ abstract class AbstractStateHandler
      * @throws StateNotFoundException
      * @throws StateException
      */
-    protected function getState(StateId $stateId)
+    protected function getState(StateId $stateId): State
     {
         $stateIdValue = $stateId->getValue();
 

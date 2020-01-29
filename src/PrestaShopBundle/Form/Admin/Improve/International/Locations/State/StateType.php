@@ -92,16 +92,14 @@ class StateType extends AbstractType
                     new TypedRegex([
                         'type' => 'generic_name',
                     ]),
-                    new Length(
-                        [
+                    new Length([
                             'max' => StateValidationConfiguration::MAX_NAME_LENGTH,
                             'maxMessage' => $this->trans(
                                 'This field cannot be longer than %limit% characters',
                                 ['%limit%' => StateValidationConfiguration::MAX_NAME_LENGTH],
                                 'Admin.Notifications.Error'
                             ),
-                        ]
-                    ),
+                        ]),
                     new CleanHtml(),
                 ],
             ])
