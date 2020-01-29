@@ -29,10 +29,7 @@ const {CleanWebpackPlugin} = require('clean-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-
-var {MinChunkSizePlugin} = require('webpack').optimize;
-var RawBundlerPlugin = require('webpack-raw-bundler');
-
+const FixStyleOnlyEntriesPlugin = require('webpack-fix-style-only-entries');
 const cssExtractedFileName = 'theme';
 
 module.exports = {
@@ -103,72 +100,7 @@ module.exports = {
     translation_settings: './js/pages/translation-settings',
     translations: './js/app/pages/translations',
     webservice: './js/pages/webservice',
-    theme: [
-      './js/pages/address',
-      './js/pages/attachment',
-      './js/pages/attribute',
-      './js/pages/attribute-group',
-      './js/pages/backup',
-      './js/app/pages/catalog',
-      './js/pages/catalog/product',
-      './js/pages/catalog-price-rule',
-      './js/pages/catalog-price-rule/form',
-      './js/pages/category',
-      './js/app/cldr',
-      './js/pages/cms-page',
-      './js/pages/cms-page/form',
-      './js/pages/contacts',
-      './js/pages/credit-slip',
-      './js/pages/currency',
-      './js/pages/currency/form',
-      './js/pages/customer',
-      './js/pages/address/form.js',
-      './js/pages/customer-thread/view.js',
-      './js/pages/email',
-      './js/pages/employee/index',
-      './js/pages/employee/form',
-      './js/pages/error',
-      './js/pages/feature/form',
-      './js/components/form/form-popover-error',
-      './js/pages/geolocation',
-      './js/pages/import',
-      './js/pages/improve/design_positions',
-      './js/pages/invoices',
-      './js/pages/language',
-      './js/pages/localization',
-      './js/pages/logs',
-      './js/theme.js',
-      './js/pages/maintenance',
-      './js/pages/manufacturer',
-      './js/pages/manufacturer/manufacturer_address_form.js',
-      './js/pages/merchandise-return',
-      './js/pages/meta',
-      './js/pages/module',
-      './js/app/pages/module-card',
-      './js/pages/monitoring',
-      './js/pages/order',
-      './js/pages/order/create.js',
-      './js/pages/order/delivery',
-      './js/pages/order_message/form',
-      './js/pages/order_message',
-      './js/pages/order-preferences',
-      './js/pages/order/view.js',
-      './js/pages/payment-preferences',
-      './js/product-page/index',
-      './js/pages/product-preferences',
-      './js/pages/profiles',
-      './js/pages/sql-manager',
-      './js/app/pages/stock',
-      './js/pages/supplier',
-      './js/pages/supplier/supplier-form.js',
-      './js/pages/tax',
-      './js/pages/tax-rules-group',
-      './js/pages/themes',
-      './js/pages/translation-settings',
-      './js/app/pages/translations',
-      './js/pages/webservice',
-      './scss/theme.scss'
-    ]
+    theme: ['./scss/theme.scss']
   },
   output: {
     path: path.resolve(__dirname, '../public'),
@@ -197,7 +129,11 @@ module.exports = {
       cacheGroups: {
         styles: {
           name: 'styles',
-          test: /\.(vue|scss|css)$/,
+          //test: /\.(scss|css)$/,
+          test: (m, c, entry = 'foo') => {
+            console.log(m, c, entry);
+            return m.constructor.name === 'CssModule' && recursiveIssuer(m) === entry;
+          },
           chunks: 'all',
           enforce: true
         }
@@ -265,14 +201,7 @@ module.exports = {
       },
       {
         test: /\.vue$/,
-        loader: 'vue-loader',
-        options: {
-          loaders: {
-            js: 'babel-loader?presets[]=es2015&presets[]=stage-2',
-            css: 'postcss-loader',
-            scss: 'style-loader!css-loader!sass-loader'
-          }
-        }
+        loader: 'vue-loader'
       },
       {
         test: /\.css$/,
@@ -285,6 +214,8 @@ module.exports = {
       },
       {
         test: /\.scss$/,
+        include: /scss/,
+        exclude: /js/,
         use: [
           MiniCssExtractPlugin.loader,
           {
@@ -307,6 +238,11 @@ module.exports = {
           }
         ]
       },
+      {
+        test: /\.scss$/,
+        include: /js/,
+        use: ['vue-style-loader', 'css-loader', 'sass-loader']
+      },
       // FILES
       {
         test: /.(jpg|png|woff2?|eot|otf|ttf|svg|gif)$/,
@@ -315,6 +251,7 @@ module.exports = {
     ]
   },
   plugins: [
+    new FixStyleOnlyEntriesPlugin(),
     new CleanWebpackPlugin({
       root: path.resolve(__dirname, '../'),
       exclude: ['theme.rtlfix']
