@@ -8,7 +8,7 @@ admin_country_states:
     _legacy_controller: AdminStates
 
 admin_states_index:
-  path: /
+  path: /list
   methods: GET
   defaults:
     _controller: PrestaShopBundle:Admin\Improve\International\State:index
