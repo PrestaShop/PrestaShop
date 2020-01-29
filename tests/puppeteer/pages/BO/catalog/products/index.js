@@ -400,8 +400,8 @@ module.exports = class Product extends BOBasePage {
    */
   async goToProductPage(row = 1) {
     await Promise.all([
-      this.page.waitForSelector(this.productsListTableColumnName.replace('%ROW', row), {visible: true}),
-      this.page.click(this.productsListTableColumnName.replace('%ROW', row)),
+      this.waitForSelectorAndClick(this.productsListTableColumnName.replace('%ROW', row)),
+      this.page.waitForNavigation({waitUntil: 'networkidle0'}),
     ]);
   }
 };
