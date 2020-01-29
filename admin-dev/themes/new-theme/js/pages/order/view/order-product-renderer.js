@@ -80,6 +80,9 @@ export default class OrderProductRenderer {
     $(OrderViewPageMap.productsPanel).detach().appendTo($modificationPosition);
     $modificationPosition.closest('.row').removeClass('d-none');
 
+    // Show column location
+    this.toggleColumnLocation(OrderViewPageMap.productsCellLocation, true);
+
     // Show all rows, hide pagination controls
     const $rows = $(OrderViewPageMap.productsTable).find('tr[id^="orderProduct_"]');
     $rows.removeClass('d-none');
@@ -141,6 +144,9 @@ export default class OrderProductRenderer {
         .removeClass('d-none');
     // Remove all edition rows (careful not to remove the template)
     $(OrderViewPageMap.productEditRow).not(OrderViewPageMap.productEditRowTemplate).remove();
+
+    // Toggle Column Location
+    this.toggleColumnLocation(OrderViewPageMap.productsCellLocationDisplayed);
   }
 
   paginateUpdateControls(numPage) {
@@ -189,5 +195,20 @@ export default class OrderProductRenderer {
     } else {
       $(OrderViewPageMap.productAddNewInvoiceInfo).addClass('d-none');
     }
+  }
+
+  toggleColumnLocation(target, forceDisplay = null) {
+    let isColumnLocationDisplayed = false;
+    if (forceDisplay === null) {
+      $(target).filter('td').each(function() {
+        if ($(this).html() !== '') {
+          isColumnLocationDisplayed = true;
+          return false;
+        }
+      });
+    } else {
+      isColumnLocationDisplayed = forceDisplay;
+    }
+    $(target).toggleClass('d-none', !isColumnLocationDisplayed);
   }
 }
