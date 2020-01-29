@@ -19,21 +19,21 @@ class Country
      */
     public function __construct(int $id, string $name)
     {
-        $this->assertIsIntegerGreaterThanZero($id);
+        $this->assertIsGreaterThanZero($id);
         $this->id = $id;
         $this->name = $name;
     }
 
     /**
-     * Validates that the value is integer and is greater than zero
+     * Validates that the value is greater than zero int
      *
      * @param $value
      *
      * @throws CountryConstraintException
      */
-    private function assertIsIntegerGreaterThanZero($value)
+    private function assertIsGreaterThanZero(int $value)
     {
-        if (!is_int($value) || 0 >= $value) {
+        if (0 >= $value) {
             throw new CountryConstraintException(sprintf('Invalid country id "%s".', var_export($value, true)), CountryConstraintException::INVALID_ID);
         }
     }
