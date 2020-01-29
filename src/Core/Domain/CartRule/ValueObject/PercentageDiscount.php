@@ -33,6 +33,8 @@ use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleConstraintExcep
  */
 class PercentageDiscount
 {
+    const MAX_PERCENTAGE = 100;
+
     /**
      * @var float
      */
@@ -49,7 +51,7 @@ class PercentageDiscount
      */
     public function __construct(float $percentage, bool $appliesToDiscountedProducts)
     {
-        if ($percentage <= 0 || $percentage > 100) {
+        if ($percentage <= 0 || $percentage > self::MAX_PERCENTAGE) {
             throw new CartRuleConstraintException('Percentage must be greater than 0 and not greater than 100', CartRuleConstraintException::INVALID_PERCENTAGE);
         }
 
