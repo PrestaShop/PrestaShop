@@ -6,9 +6,14 @@ use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryConstraintExcepti
 
 class Country
 {
-    /** @var int */
+    /**
+     * @var int
+     */
     private $id;
-    /** @var string */
+
+    /**
+     * @var string
+     */
     private $name;
 
     /**
