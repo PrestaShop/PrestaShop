@@ -97,9 +97,7 @@ abstract class AbstractStateHandler
         try {
             return $state->save();
         } catch (PrestaShopException $e) {
-            throw new StateException(sprintf(
-                'An error occurred when updating state status with id "%s" '.$e->getMessage(), $state->id)
-            );
+            throw new StateException(sprintf('An error occurred when updating state status with id "%s" ' . $e->getMessage(), $state->id));
         }
     }
 }
