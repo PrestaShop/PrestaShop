@@ -1,14 +1,13 @@
+# used for Ajax
 admin_country_states:
-  path: /
+  path: /list
   methods: [GET]
-  #condition needed to differentiate from admin_states_index path
-  condition: "request.isXmlHttpRequest()"
   defaults:
     _controller: 'PrestaShopBundle:Admin\Improve\International\State:getStates'
     _legacy_controller: AdminStates
 
 admin_states_index:
-  path: /list
+  path: /
   methods: GET
   defaults:
     _controller: PrestaShopBundle:Admin\Improve\International\State:index
