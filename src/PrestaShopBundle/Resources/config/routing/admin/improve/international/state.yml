@@ -1,14 +1,13 @@
 admin_country_states:
-  path: /
+  path: /country-states
   methods: [GET]
-  condition: "request.isXmlHttpRequest()"
   defaults:
     _controller: 'PrestaShopBundle:Admin\Improve\International\State:getStates'
     _legacy_controller: AdminStates
 
 admin_states_index:
   path: /
-  methods: GET
+  methods: [GET]
   defaults:
     _controller: PrestaShopBundle:Admin\Improve\International\State:index
     _legacy_controller: AdminStates
