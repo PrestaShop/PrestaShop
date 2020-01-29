@@ -3,6 +3,9 @@ require('module-alias/register');
 const {expect} = require('chai');
 const helper = require('@utils/helpers');
 const loginCommon = require('@commonTests/loginBO');
+const testContext = require('@utils/testContext');
+
+const baseContext = 'sanity_ordersBO_editOrder';
 
 // importing pages
 const LoginPage = require('@pages/BO/login');
@@ -44,6 +47,7 @@ describe('Edit Order BO', async () => {
   loginCommon.loginBO();
 
   it('should go to the Orders page', async function () {
+    await testContext.addContextItem(this, 'stepIdentifier', `${baseContext}_goToOrdersPage`);
     await this.pageObjects.boBasePage.goToSubMenu(
       this.pageObjects.boBasePage.ordersParentLink,
       this.pageObjects.boBasePage.ordersLink,
@@ -53,24 +57,24 @@ describe('Edit Order BO', async () => {
   });
 
   it('should go to the first order page', async function () {
+    await testContext.addContextItem(this, 'stepIdentifier', `${baseContext}_goToFirstOrder`);
     await this.pageObjects.ordersPage.goToOrder('1');
     const pageTitle = await this.pageObjects.orderPage.getPageTitle();
     await expect(pageTitle).to.contains(this.pageObjects.orderPage.pageTitle);
   });
 
   it('should modify the product quantity and check the validation', async function () {
+    await testContext.addContextItem(this, 'stepIdentifier', `${baseContext}_editOrderQuantity`);
     const result = await this.pageObjects.orderPage.modifyProductQuantity('1', '5');
     await expect(result).to.be.true;
   });
 
   it('should modify the order status and check the validation', async function () {
+    await testContext.addContextItem(this, 'stepIdentifier', `${baseContext}_editOrderStatus`);
     const result = await this.pageObjects.orderPage.modifyOrderStatus(Statuses.paymentAccepted.status);
     await expect(result).to.be.true;
   });
 
-  it('should logout from the BO', async function () {
-    await this.pageObjects.boBasePage.logoutBO();
-    const pageTitle = await this.pageObjects.loginPage.getPageTitle();
-    await expect(pageTitle).to.contains(this.pageObjects.loginPage.pageTitle);
-  });
+  // Logout from BO
+  loginCommon.logoutBO();
 });

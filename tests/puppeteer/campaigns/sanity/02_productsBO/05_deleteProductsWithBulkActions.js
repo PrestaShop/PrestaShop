@@ -3,6 +3,9 @@ require('module-alias/register');
 const {expect} = require('chai');
 const helper = require('@utils/helpers');
 const loginCommon = require('@commonTests/loginBO');
+const testContext = require('@utils/testContext');
+
+const baseContext = 'sanity_productsBO_deleteProduct';
 
 // importing pages
 const LoginPage = require('@pages/BO/login');
@@ -49,6 +52,7 @@ describe('Create Standard product in BO and Delete it with Bulk Actions', async 
   loginCommon.loginBO();
 
   it('should go to Products page', async function () {
+    await testContext.addContextItem(this, 'stepIdentifier', `${baseContext}_goToProductsPage0`);
     await this.pageObjects.boBasePage.goToSubMenu(
       this.pageObjects.boBasePage.catalogParentLink,
       this.pageObjects.boBasePage.productsLink,
@@ -58,20 +62,23 @@ describe('Create Standard product in BO and Delete it with Bulk Actions', async 
   });
 
   it('should reset all filters', async function () {
+    await testContext.addContextItem(this, 'stepIdentifier', `${baseContext}_resetFilters0`);
     await this.pageObjects.productsPage.resetFilterCategory();
     const numberOfProducts = await this.pageObjects.productsPage.resetAndGetNumberOfLines();
     await expect(numberOfProducts).to.be.above(0);
   });
 
   const productsData = [firstProductData, secondProductData];
-  productsData.forEach((productData) => {
+  productsData.forEach((productData, index) => {
     it('should create new product', async function () {
+      await testContext.addContextItem(this, 'stepIdentifier', `${baseContext}_createProduct${index + 1}`);
       await this.pageObjects.productsPage.goToAddProductPage();
       const createProductMessage = await this.pageObjects.addProductPage.createEditProduct(productData);
       await expect(createProductMessage).to.equal(this.pageObjects.addProductPage.settingUpdatedMessage);
     });
 
     it('should go to Products page', async function () {
+      await testContext.addContextItem(this, 'stepIdentifier', `${baseContext}_goToProductsPage${index + 1}`);
       await this.pageObjects.boBasePage.goToSubMenu(this.pageObjects.boBasePage.catalogParentLink,
         this.pageObjects.boBasePage.productsLink);
       const pageTitle = await this.pageObjects.productsPage.getPageTitle();
@@ -80,6 +87,7 @@ describe('Create Standard product in BO and Delete it with Bulk Actions', async 
   });
 
   it('should delete products with bulk Actions', async function () {
+    await testContext.addContextItem(this, 'stepIdentifier', `${baseContext}_bulkDelete`);
     // Filter By reference first
     await this.pageObjects.productsPage.filterProducts('name', 'product To Delete ');
     const deleteTextResult = await this.pageObjects.productsPage.deleteAllProductsWithBulkActions();
@@ -87,6 +95,7 @@ describe('Create Standard product in BO and Delete it with Bulk Actions', async 
   });
 
   it('should reset all filters', async function () {
+    await testContext.addContextItem(this, 'stepIdentifier', `${baseContext}_resetFiltersLast`);
     await this.pageObjects.productsPage.resetFilterCategory();
     const numberOfProducts = await this.pageObjects.productsPage.resetAndGetNumberOfLines();
     await expect(numberOfProducts).to.be.above(0);

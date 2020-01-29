@@ -3,6 +3,9 @@ require('module-alias/register');
 const {expect} = require('chai');
 const helper = require('@utils/helpers');
 const loginCommon = require('@commonTests/loginBO');
+const testContext = require('@utils/testContext');
+
+const baseContext = 'sanity_productsBO_CRUDStandardProductInBO';
 
 // importing pages
 const LoginPage = require('@pages/BO/login');
@@ -50,6 +53,7 @@ describe('Create, read, update and delete Standard product in BO', async () => {
   loginCommon.loginBO();
 
   it('should go to Products page', async function () {
+    await testContext.addContextItem(this, 'stepIdentifier', `${baseContext}_goToProductsPage`);
     await this.pageObjects.boBasePage.goToSubMenu(
       this.pageObjects.boBasePage.catalogParentLink,
       this.pageObjects.boBasePage.productsLink,
@@ -60,18 +64,21 @@ describe('Create, read, update and delete Standard product in BO', async () => {
   });
 
   it('should reset all filters', async function () {
+    await testContext.addContextItem(this, 'stepIdentifier', `${baseContext}_resetFilters0`);
     await this.pageObjects.productsPage.resetFilterCategory();
     const numberOfProducts = await this.pageObjects.productsPage.resetAndGetNumberOfLines();
     await expect(numberOfProducts).to.be.above(0);
   });
 
   it('should create Product', async function () {
+    await testContext.addContextItem(this, 'stepIdentifier', `${baseContext}_createProduct`);
     await this.pageObjects.productsPage.goToAddProductPage();
     const createProductMessage = await this.pageObjects.addProductPage.createEditProduct(productData);
     await expect(createProductMessage).to.equal(this.pageObjects.addProductPage.settingUpdatedMessage);
   });
 
   it('should preview and check product in FO', async function () {
+    await testContext.addContextItem(this, 'stepIdentifier', `${baseContext}_previewProduct0`);
     page = await this.pageObjects.addProductPage.previewProduct();
     this.pageObjects = await init();
     const result = await this.pageObjects.foProductPage.checkProduct(productData);
@@ -87,11 +94,13 @@ describe('Create, read, update and delete Standard product in BO', async () => {
   });
 
   it('should edit Product', async function () {
+    await testContext.addContextItem(this, 'stepIdentifier', `${baseContext}_editProduct`);
     const createProductMessage = await this.pageObjects.addProductPage.createEditProduct(editedProductData, false);
     await expect(createProductMessage).to.equal(this.pageObjects.addProductPage.settingUpdatedMessage);
   });
 
   it('should preview and check product in FO', async function () {
+    await testContext.addContextItem(this, 'stepIdentifier', `${baseContext}_previewProduct1`);
     page = await this.pageObjects.addProductPage.previewProduct();
     this.pageObjects = await init();
     const result = await this.pageObjects.foProductPage.checkProduct(editedProductData);
@@ -107,6 +116,7 @@ describe('Create, read, update and delete Standard product in BO', async () => {
   });
 
   it('should delete Product and be on product list page', async function () {
+    await testContext.addContextItem(this, 'stepIdentifier', `${baseContext}_deleteProduct`);
     const testResult = await this.pageObjects.addProductPage.deleteProduct();
     await expect(testResult).to.equal(this.pageObjects.productsPage.productDeletedSuccessfulMessage);
     const pageTitle = await this.pageObjects.productsPage.getPageTitle();

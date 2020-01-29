@@ -3,6 +3,9 @@ require('module-alias/register');
 const {expect} = require('chai');
 const helper = require('@utils/helpers');
 const loginCommon = require('@commonTests/loginBO');
+const testContext = require('@utils/testContext');
+
+const baseContext = 'sanity_ordersBO_filterOrders';
 
 // importing pages
 const LoginPage = require('@pages/BO/login');
@@ -43,6 +46,7 @@ describe('Filter the Orders table by ID, REFERENCE, STATUS', async () => {
   loginCommon.loginBO();
 
   it('should go to the Orders page', async function () {
+    await testContext.addContextItem(this, 'stepIdentifier', `${baseContext}_goToOrdersPage`);
     await this.pageObjects.boBasePage.goToSubMenu(
       this.pageObjects.boBasePage.ordersParentLink,
       this.pageObjects.boBasePage.ordersLink,
@@ -52,6 +56,7 @@ describe('Filter the Orders table by ID, REFERENCE, STATUS', async () => {
   });
 
   it('should reset all filters and get number of orders', async function () {
+    await testContext.addContextItem(this, 'stepIdentifier', `${baseContext}_resetFilters0`);
     numberOfOrders = await this.pageObjects.ordersPage.resetAndGetNumberOfLines();
     await expect(numberOfOrders).to.be.above(0);
   });
@@ -62,8 +67,9 @@ describe('Filter the Orders table by ID, REFERENCE, STATUS', async () => {
     {args: {filterType: 'select', filterBy: 'order_state', filterValue: Statuses.paymentError.status}},
   ];
 
-  tests.forEach((test) => {
+  tests.forEach((test, index) => {
     it('should filter the Orders table by ID and check the result', async function () {
+      await testContext.addContextItem(this, 'stepIdentifier', `${baseContext}_filterOrders${index + 1}`);
       await this.pageObjects.ordersPage.filterOrders(
         test.args.filterType,
         test.args.filterBy,
@@ -74,6 +80,7 @@ describe('Filter the Orders table by ID, REFERENCE, STATUS', async () => {
     });
 
     it('should reset all filters', async function () {
+      await testContext.addContextItem(this, 'stepIdentifier', `${baseContext}_resetFilters${index + 1}`);
       const numberOfOrdersAfterReset = await this.pageObjects.ordersPage.resetAndGetNumberOfLines();
       await expect(numberOfOrdersAfterReset).to.be.equal(numberOfOrders);
     });

@@ -9,6 +9,6 @@ module.exports = {
    * @return {Promise<void>}
    */
   async addContextItem(testObj, title, value) {
-    addContext(testObj, title);
+    addContext(testObj, {title, value});
   },
 };
