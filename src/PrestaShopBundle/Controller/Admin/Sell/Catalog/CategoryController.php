@@ -836,14 +836,6 @@ class CategoryController extends FrameworkBundleAdminController
      */
     private function requestHasSearchParameters(Request $request)
     {
-        if (!$request->query->has('category')) {
-            return false;
-        }
-
-        if (!array_key_exists('filters', $request->query->get('category'))) {
-            return false;
-        }
-
         return !empty($request->query->get('category')['filters']);
     }
 }

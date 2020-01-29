@@ -220,7 +220,7 @@ final class CategoryQueryBuilder extends AbstractDoctrineQueryBuilder
      */
     private function isSearchRequestOnHomeCategory(array $filters)
     {
-        return (array_key_exists('is_home_category', $filters) && ($filters['is_home_category'] === true))
-            && (array_key_exists('is_search_request', $filters) && ($filters['is_search_request'] === true));
+        return (isset($filters['is_home_category']) && ($filters['is_home_category'] === true))
+            && (isset($filters['is_search_request']) && ($filters['is_search_request'] === true));
     }
 }
