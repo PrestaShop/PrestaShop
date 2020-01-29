@@ -64,7 +64,7 @@ export default class CustomerManager {
     this.$container.on('click', createOrderMap.changeCustomerBtn, () => this._changeCustomer());
     this._onCustomerSearch();
     this._onCustomerSelect();
-    this._onCustomersNotFound();
+    this.onCustomersNotFound();
   }
 
   /**
@@ -92,7 +92,7 @@ export default class CustomerManager {
    *
    * @private
    */
-  _onCustomersNotFound() {
+  onCustomersNotFound() {
     EventEmitter.on(eventMap.customersNotFound, () => {
       this.customerRenderer.showNotFoundCustomers();
       this.customerRenderer.hideCheckoutHistoryBlock();

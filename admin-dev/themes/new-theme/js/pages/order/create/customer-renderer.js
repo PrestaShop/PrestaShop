@@ -28,7 +28,7 @@ import Router from '@components/router';
 import eventMap from '@pages/order/create/event-map';
 import {EventEmitter} from '@components/event-emitter';
 
-const $ = window.$;
+const {$} = window;
 
 /**
  * Responsible for customer information rendering

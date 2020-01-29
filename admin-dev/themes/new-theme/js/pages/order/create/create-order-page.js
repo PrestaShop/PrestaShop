@@ -102,14 +102,14 @@ export default class CreateOrderPage {
   /**
    * Hides whole cart information wrapper
    */
-  _hideCartInfo() {
+  hideCartInfo() {
     $(createOrderMap.cartInfoWrapper).addClass('d-none');
   }
 
   /**
    * Shows whole cart information wrapper
    */
-  _showCartInfo() {
+  showCartInfo() {
     $(createOrderMap.cartInfoWrapper).removeClass('d-none');
   }
 
@@ -142,7 +142,7 @@ export default class CreateOrderPage {
     this.$container.on('blur', createOrderMap.cartRuleSearchInput, () => this.cartRuleManager.stopSearching());
     this._listenForCartEdit();
     this._onCartLoaded();
-    this._onCustomersNotFound();
+    this.onCustomersNotFound();
     this._onCustomerSelected();
   }
 
@@ -213,9 +213,9 @@ export default class CreateOrderPage {
    *
    * @private
    */
-  _onCustomersNotFound() {
+  onCustomersNotFound() {
     EventEmitter.on(eventMap.customersNotFound, () => {
-      this._hideCartInfo();
+      this.hideCartInfo();
     });
   }
 
@@ -226,7 +226,7 @@ export default class CreateOrderPage {
    */
   _onCustomerSelected() {
     EventEmitter.on(eventMap.customerSelected, () => {
-      this._showCartInfo();
+      this.showCartInfo();
     });
   }
 
