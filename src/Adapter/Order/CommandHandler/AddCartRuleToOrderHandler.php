@@ -32,6 +32,7 @@ use Order;
 use OrderCartRule;
 use OrderInvoice;
 use PrestaShop\PrestaShop\Adapter\Order\AbstractOrderHandler;
+use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\PercentageDiscount;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\AddCartRuleToOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler\AddCartRuleToOrderHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
@@ -154,7 +155,7 @@ final class AddCartRuleToOrderHandler extends AbstractOrderHandler implements Ad
      */
     private function buildPercentTypeCartRules(array &$cartRules, Order $order, float $discountValue, ?OrderInvoice $orderInvoice): void
     {
-        if ($discountValue < 100) {
+        if ($discountValue < PercentageDiscount::MAX_PERCENTAGE) {
             if (isset($orderInvoice)) {
                 $cartRules[$orderInvoice->id]['value_tax_incl'] = Tools::ps_round(
                     $orderInvoice->total_paid_tax_incl * $discountValue / 100,
