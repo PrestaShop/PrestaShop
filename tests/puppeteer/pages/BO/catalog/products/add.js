@@ -264,7 +264,6 @@ module.exports = class AddProduct extends BOBasePage {
    * @returns {Promise<void>}
    */
   async resetURL() {
-    await this.goToFormStep(5);
     await this.page.waitForSelector(this.resetUrlButton, {visible: true});
     await this.scrollTo(this.resetUrlButton);
     await this.page.click(this.resetUrlButton);
