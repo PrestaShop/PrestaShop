@@ -56,6 +56,6 @@ final class CategoryForViewAccessibilityChecker implements AccessibilityCheckerI
     {
         $CategoryHasChildren = Category::hasChildren($category['id_category'], $this->contextLangId, true);
 
-        return $CategoryHasChildren;
+        return !$CategoryHasChildren;
     }
 }
