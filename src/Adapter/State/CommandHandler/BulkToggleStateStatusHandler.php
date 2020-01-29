@@ -31,6 +31,7 @@ use PrestaShop\PrestaShop\Core\Domain\State\Command\BulkToggleStateStatusCommand
 use PrestaShop\PrestaShop\Core\Domain\State\CommandHandler\BulkToggleStateStatusHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\State\Exception\BulkUpdateStatesException;
 use PrestaShop\PrestaShop\Core\Domain\State\Exception\StateException;
+use State;
 
 /**
  * Handles bulk states status toggle
@@ -48,11 +49,9 @@ final class BulkToggleStateStatusHandler extends AbstractStateHandler implements
 
         foreach ($command->getStateIds() as $stateId) {
             try {
+                /** @var State $state */
                 $state = $this->getState($stateId);
-
-                if (!$this->toggleStateStatus($state, $command->getExpectedStatus())) {
-                    $errors[] = $state->id;
-                }
+                $state->toggleStatus();
             } catch (StateException $e) {
                 $errors[] = $stateId->getValue();
             }
