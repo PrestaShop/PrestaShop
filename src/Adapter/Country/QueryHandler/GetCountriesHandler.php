@@ -34,7 +34,7 @@ use PrestaShop\PrestaShop\Core\Domain\Country\QueryHandler\GetCountriesHandlerIn
 use PrestaShop\PrestaShop\Core\Domain\Country\QueryResult\Countries;
 
 /**
- * Handles get countries query and returns countries array list
+ * Handles get countries query and returns ArrayCollection|Country[] where Country is value object
  */
 final class GetCountriesHandler implements GetCountriesHandlerInterface
 {
