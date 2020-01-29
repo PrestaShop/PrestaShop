@@ -464,6 +464,7 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
                     $this->locale->formatPrice(0, $currency->iso_code),
                     0,
                     $this->locale->formatPrice(0, $currency->iso_code),
+                    0,
                     $pack_item['location'],
                     null,
                     '',
