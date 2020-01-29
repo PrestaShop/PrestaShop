@@ -36,7 +36,7 @@ import FormSubmitButton from '@components/form-submit-button';
 import FiltersSubmitButtonEnablerExtension from '@components/grid/extension/filters-submit-button-enabler-extension';
 import ColumnTogglingExtension from '@components/grid/extension/column-toggling-extension';
 
-const $ = window.$;
+const {$} = window.$;
 
 $(() => {
   const stateGrid = new Grid('state');
@@ -52,5 +52,5 @@ $(() => {
   stateGrid.addExtension(new FiltersSubmitButtonEnablerExtension());
   stateGrid.addExtension(new ColumnTogglingExtension());
 
-  new FormSubmitButton();
+  FormSubmitButton();
 });
