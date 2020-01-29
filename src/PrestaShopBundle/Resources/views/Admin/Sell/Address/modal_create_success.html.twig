@@ -39,7 +39,7 @@
 
     // symfony behavior
     if (typeof window.parent.order_create !== "undefined") {
-      window.parent.order_create.refreshAddressesList();
+      window.parent.order_create.refreshAddressesList({{ refreshCartAddresses }});
     }
 
     window.parent.$.fancybox.close();

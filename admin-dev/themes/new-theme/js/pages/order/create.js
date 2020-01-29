@@ -42,9 +42,9 @@ function searchCustomerByString(string) {
 /**
  * proxy to allow other scripts within the page to refresh addresses list
  */
-function refreshAddressesList() {
+function refreshAddressesList(refreshCartAddresses) {
   if (orderPageManager !== null) {
-    orderPageManager.refreshAddressesList();
+    orderPageManager.refreshAddressesList(refreshCartAddresses);
   } else {
     console.log('Error: Could not refresh addresses list as orderPageManager is null');
   }
