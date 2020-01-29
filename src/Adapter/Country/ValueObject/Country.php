@@ -17,8 +17,6 @@ class Country
     private $name;
 
     /**
-     * Country constructor.
-     *
      * @param int $id
      * @param string $name
      */
@@ -28,6 +26,7 @@ class Country
         $this->id = $id;
         $this->name = $name;
     }
+
 
     /**
      * Validates that the value is greater than zero int
