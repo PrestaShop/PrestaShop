@@ -85,7 +85,7 @@ class CategoryControllerCore extends ProductListingFrontController
             $this->context->language->id
         );
 
-        if (!Validate::isLoadedObject($this->category) || !$this->category->active) {
+        if (!Validate::isLoadedObject($this->category) || !$this->category->active || !$this->category->inShop() || !$this->category->isAssociatedToShop()) {
             Tools::redirect('index.php?controller=404');
         }
 
