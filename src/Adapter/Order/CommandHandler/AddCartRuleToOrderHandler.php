@@ -61,11 +61,11 @@ final class AddCartRuleToOrderHandler extends AbstractOrderHandler implements Ad
         foreach ($cartRules as &$cartRule) {
             $cartRuleObj = $this->createCartRule($command, $order, $cartRule, $discountValue);
 
-            if (false === $cartRuleObj->add()) {
+            if ($result = $cartRuleObj->add()) {
+                $cartRule['id'] = $cartRuleObj->id;
+            } else {
                 break;
             }
-
-            $cartRule['id'] = $cartRuleObj->id;
         }
 
         if ($result) {
