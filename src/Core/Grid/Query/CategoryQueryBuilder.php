@@ -195,6 +195,10 @@ final class CategoryQueryBuilder extends AbstractDoctrineQueryBuilder
             }
 
             if ('id_category_parent' === $filterName) {
+                if ($this->isSearchRequestOnHomeCategory($filters)) {
+                    continue;
+                }
+
                 $qb->andWhere("c.id_parent = :$filterName");
                 $qb->setParameter($filterName, $filterValue);
 
@@ -207,5 +211,16 @@ final class CategoryQueryBuilder extends AbstractDoctrineQueryBuilder
         }
 
         return $qb;
+    }
+
+    /**
+     * @param array $filters
+     *
+     * @return bool
+     */
+    private function isSearchRequestOnHomeCategory(array $filters)
+    {
+        return (array_key_exists('is_home_category', $filters) && ($filters['is_home_category'] === true))
+            && (array_key_exists('is_search_request', $filters) && ($filters['is_search_request'] === true));
     }
 }
