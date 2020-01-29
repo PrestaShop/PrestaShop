@@ -462,9 +462,9 @@ class OrderProductForViewing implements JsonSerializable
     }
 
     /**
-     * Get the customizations of this product
+     * Get customizations of this product
      *
-     * @return OrderProductCustomizationsForViewing
+     * @return OrderProductCustomizationsForViewing|null
      */
     public function getCustomizations(): ?OrderProductCustomizationsForViewing
     {

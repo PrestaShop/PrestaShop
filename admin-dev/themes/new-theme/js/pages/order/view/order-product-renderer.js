@@ -128,7 +128,7 @@ export default class OrderProductRenderer {
 
   paginate(numPage) {
     const $rows = $(OrderViewPageMap.productsTable).find('tr[id^="orderProduct_"]');
-    const $customizationRows = $(OrderViewPageMap.productsTable).find('.order-product-customization');
+    const $customizationRows = $(OrderViewPageMap.productsTableCustomizationRows);
     const $tablePagination = $(OrderViewPageMap.productsTablePagination);
     const numRowsPerPage = parseInt($tablePagination.data('numPerPage'), 10);
     const maxPage = Math.ceil($rows.length / numRowsPerPage);
