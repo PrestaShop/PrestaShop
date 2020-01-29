@@ -26,50 +26,17 @@
 
 namespace PrestaShopBundle\Form\Admin\Type;
 
-use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-/**
- * Class is responsible for providing configurable zone choices with -- symbol in front of array.
- */
 class ZoneChoiceType extends AbstractType
 {
-    /**
-     * @var ConfigurableFormChoiceProviderInterface
-     */
-    private $zonesChoiceProvider;
-
-    /**
-     * @param ConfigurableFormChoiceProviderInterface $zonesChoiceProvider
-     */
-    public function __construct(ConfigurableFormChoiceProviderInterface $zonesChoiceProvider)
-    {
-        $this->zonesChoiceProvider = $zonesChoiceProvider;
-    }
-
     /**
      * {@inheritdoc}
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        // Set normalizer enables to use closure for choice generation with options
-        $resolver->setNormalizer(
-            'choices', function (Options $options) {
-                $choices = array_merge(
-                    ['--' => ''],
-                    $this->zonesChoiceProvider->getChoices([
-                        'active' => $options['active'],
-                        'active_first' => $options['active_first'],
-                    ])
-                );
-
-                return $choices;
-            }
-        );
-
         $resolver->setDefaults([
             'active' => false,
             'active_first' => false,

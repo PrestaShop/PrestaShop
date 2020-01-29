@@ -57,11 +57,22 @@ class StateType extends AbstractType
     private $countriesChoiceProvider;
 
     /**
-     * @param ConfigurableFormChoiceProviderInterface $countriesChoiceProvider
+     * @var ConfigurableFormChoiceProviderInterface
      */
-    public function __construct(ConfigurableFormChoiceProviderInterface $countriesChoiceProvider)
-    {
+    private $zonesChoiceProvider;
+
+    /**
+     * StateType constructor.
+     *
+     * @param ConfigurableFormChoiceProviderInterface $countriesChoiceProvider
+     * @param ConfigurableFormChoiceProviderInterface $zonesChoiceProvider
+     */
+    public function __construct(
+        ConfigurableFormChoiceProviderInterface $countriesChoiceProvider,
+        ConfigurableFormChoiceProviderInterface $zonesChoiceProvider
+    ) {
         $this->countriesChoiceProvider = $countriesChoiceProvider;
+        $this->zonesChoiceProvider = $zonesChoiceProvider;
     }
 
     /**
@@ -132,6 +143,8 @@ class StateType extends AbstractType
                 'constraints' => [
                     new NotBlank(),
                 ],
+                'placeholder' => self::DEFAULT_CHOICE_PLACEHOLDER,
+                'choices' => $this->zonesChoiceProvider->getChoices([]),
             ])
             ->add('active', SwitchType::class, [
                 'required' => true,

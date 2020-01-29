@@ -1137,8 +1137,6 @@ services:
 
     form.type.common.zone_choice:
       class: 'PrestaShopBundle\Form\Admin\Type\ZoneChoiceType'
-      arguments:
-        - '@prestashop.core.form.choice_provider.zone_by_id'
       tags:
         - { name: form.type }
 
@@ -1152,6 +1150,7 @@ services:
       public: true
       arguments:
         - '@prestashop.core.form.choice_provider.configurable_country_by_id'
+        - '@prestashop.core.form.choice_provider.zone_by_id'
       calls:
         - { method: setTranslator, arguments: ['@translator'] }
       tags:
