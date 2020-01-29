@@ -230,6 +230,17 @@ admin_orders_standard_refund:
   options:
     expose: true
 
+admin_orders_return_product:
+  path: /{orderId}/return-product
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Order/Order:returnProduct
+    _legacy_controller: AdminOrders
+  requirements:
+    orderId: \d+
+  options:
+    expose: true
+
 admin_orders_send_process_order_email:
   path: /process-order-email
   methods: [POST]
