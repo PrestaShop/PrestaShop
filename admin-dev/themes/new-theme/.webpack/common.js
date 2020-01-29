@@ -49,6 +49,7 @@ module.exports = {
     cms_page: './js/pages/cms-page',
     cms_page_form: './js/pages/cms-page/form',
     contacts: './js/pages/contacts',
+    country: './js/pages/country',
     credit_slip: './js/pages/credit-slip',
     currency: './js/pages/currency',
     currency_form: './js/pages/currency/form',
@@ -98,7 +99,6 @@ module.exports = {
     translation_settings: './js/pages/translation-settings',
     translations: './js/app/pages/translations',
     webservice: './js/pages/webservice',
-    country: './js/pages/country',
   },
   output: {
     path: path.resolve(__dirname, '../public'),
