@@ -46,7 +46,7 @@
     </a>
     {% if product.type == constant('PrestaShop\\PrestaShop\\Core\\Domain\\Order\\QueryResult\\OrderProductForViewing::TYPE_PACK') and product.customizations is null %}
       <span class="btn-product-pack-modal" data-toggle="modal" data-target="#product-pack-modal" data-pack-items="{{ product.packItems|json_encode }}">
-        <strong>{{ 'View pack content'|trans({}, 'Admin.Orderscustomers.Feature') }}</strong>
+        <strong>{{ 'View pack content'|trans({}, 'Admin.Actions') }}</strong>
       </span>
     {% endif %}
   </td>
@@ -165,7 +165,7 @@
       {% endfor %}
       {% if product.type == constant('PrestaShop\\PrestaShop\\Core\\Domain\\Order\\QueryResult\\OrderProductForViewing::TYPE_PACK') %}
         <div class="btn-product-pack-modal mb-3" data-toggle="modal" data-target="#product-pack-modal" data-pack-items="{{ product.packItems|json_encode }}">
-          <strong>{{ 'View pack content'|trans({}, 'Admin.Orderscustomers.Feature') }}</strong>
+          <strong>{{ 'View pack content'|trans({}, 'Admin.Actions') }}</strong>
         </div>
       {% endif %}
     </td>
