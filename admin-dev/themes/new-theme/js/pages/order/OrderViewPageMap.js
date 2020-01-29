@@ -92,6 +92,7 @@ export default {
   productAddTotalPriceText: '#addProductTotalPrice',
   productAddInvoiceSelect: '#add_product_row_invoice',
   productAddFreeShippingSelect: '#add_product_row_free_shipping',
+  productAddNewInvoiceInfo: '#addProductNewInvoiceInfo',
   productEditSaveBtn: '.productEditSaveBtn',
   productEditCancelBtn: '.productEditCancelBtn',
   productEditRowTemplate: '#editProductTableRowTemplate',
@@ -129,9 +130,38 @@ export default {
   orderTaxesTotal: '#orderTaxesTotal',
   orderTotal: '#orderTotal',
   orderHookTabsContainer: '#order_hook_tabs',
-  displayPartialRefundBtn: 'button.partial-refund-display',
-  cancelPartialRefundBtn: 'button.partial-refund-cancel',
-  actionColumnElements: 'td.cellProductActions, th.product_actions',
-  togglePartialRefundForm: '.partial-refund:not(.hidden), .shipping-price, .refund-checkboxes-container',
-  productAddNewInvoiceInfo: '#addProductNewInvoiceInfo',
+  // Product cancel/refund elements
+  cancelProduct: {
+    form: 'form[name="cancel_product"]',
+    buttons: {
+      abort: 'button.cancel-product-element-abort',
+      save: '#cancel_product_save',
+      partialRefund: 'button.partial-refund-display',
+      standardRefund: 'button.standard-refund-display',
+    },
+    inputs: {
+      quantity: '.cancel-product-quantity input',
+      amount: '.cancel-product-amount input',
+    },
+    table: {
+      cell: '.cancel-product-cell',
+      header: 'th.cancel-product-element p',
+      actions: 'td.cellProductActions, th.product_actions',
+    },
+    checkboxes: {
+      restock: '#cancel_product_restock',
+      creditSlip: '#cancel_product_credit_slip',
+    },
+    radios: {
+      voucherRefundType: {
+        productPrices: 'input[voucher-refund-type="0"]',
+        productPricesVoucherExcluded: 'input[voucher-refund-type="1"]',
+        negativeErrorMessage: '.voucher-refund-type-negative-error',
+      },
+    },
+    toggle: {
+      partialRefund: '.cancel-product-element:not(.hidden):not(.shipping-refund), .cancel-product-amount',
+      standardRefund: '.cancel-product-element:not(.hidden):not(.shipping-refund), .cancel-product-selector',
+    },
+  },
 };

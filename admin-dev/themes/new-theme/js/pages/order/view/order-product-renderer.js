@@ -68,8 +68,8 @@ export default class OrderProductRenderer {
   }
 
   moveProductsPanelToRefundPosition() {
-    this.moveProductPanelToTop();
     $(`${OrderViewPageMap.productAddActionBtn}, ${OrderViewPageMap.productAddRow}, ${OrderViewPageMap.productActionBtn}`).addClass('d-none');
+    this.moveProductPanelToTop();
   }
 
   moveProductPanelToTop(scrollTarget = 'body') {
@@ -184,7 +184,7 @@ export default class OrderProductRenderer {
   }
 
   toggleProductAddNewInvoiceInfo() {
-    if ($(OrderViewPageMap.productAddInvoiceSelect).val() == 0) {
+    if ($(OrderViewPageMap.productAddInvoiceSelect).val() === 0) {
       $(OrderViewPageMap.productAddNewInvoiceInfo).removeClass('d-none');
     } else {
       $(OrderViewPageMap.productAddNewInvoiceInfo).addClass('d-none');

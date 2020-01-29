@@ -167,6 +167,35 @@ class OrderForViewing
      */
     private $invoiceManagementIsEnabled;
 
+    /**
+     * @param int $orderId
+     * @param int $currencyId
+     * @param int $carrierId
+     * @param string $carrierName
+     * @param int $shopId
+     * @param string $reference
+     * @param bool $isVirtual
+     * @param string $taxMethod
+     * @param bool $isTaxIncluded
+     * @param bool $isValid
+     * @param bool $hasInvoice
+     * @param bool $isDelivered
+     * @param bool $isShipped
+     * @param bool $invoiceManagementIsEnabled
+     * @param DateTimeImmutable $createdAt
+     * @param OrderCustomerForViewing $customer
+     * @param OrderShippingAddressForViewing $shippingAddress
+     * @param OrderInvoiceAddressForViewing $invoiceAddress
+     * @param OrderProductsForViewing $products
+     * @param OrderHistoryForViewing $history
+     * @param OrderDocumentsForViewing $documents
+     * @param OrderShippingForViewing $shipping
+     * @param OrderReturnsForViewing $returns
+     * @param OrderPaymentsForViewing $payments
+     * @param OrderMessagesForViewing $messages
+     * @param OrderPricesForViewing $prices
+     * @param OrderDiscountsForViewing $discounts
+     */
     public function __construct(
         int $orderId,
         int $currencyId,

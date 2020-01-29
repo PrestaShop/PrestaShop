@@ -45,8 +45,7 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Command\UpdateOrderShippingDetailsCo
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\UpdateOrderStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\CannotEditDeliveredOrderProductException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\ChangeOrderStatusException;
-use PrestaShop\PrestaShop\Core\Domain\Order\Exception\EmptyRefundAmountException;
-use PrestaShop\PrestaShop\Core\Domain\Order\Exception\EmptyRefundQuantityException;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidRefundException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderEmailSendException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderNotFoundException;
@@ -427,6 +426,8 @@ class OrderController extends FrameworkBundleAdminController
 
         $this->handleOutOfStockProduct($orderForViewing);
 
+        $merchandiseReturnEnabled = (bool) $this->configuration->get('PS_ORDER_RETURN');
+
         return $this->render('@PrestaShop/Admin/Sell/Order/Order/view.html.twig', [
             'showContentHeader' => true,
             'orderCurrency' => $orderCurrency,
@@ -447,6 +448,8 @@ class OrderController extends FrameworkBundleAdminController
             'addProductRowForm' => $addProductRowForm->createView(),
             'editProductRowForm' => $editProductRowForm->createView(),
             'backOfficeOrderButtons' => $backOfficeOrderButtons,
+            'merchandiseReturnEnabled' => $merchandiseReturnEnabled,
+            'priceSpecification' => $this->getContextLocale()->getPriceSpecification($orderCurrency->iso_code)->toArray(),
         ]);
     }
 
@@ -466,8 +469,12 @@ class OrderController extends FrameworkBundleAdminController
         try {
             $form->handleRequest($request);
             $result = $formHandler->handleFor($orderId, $form);
-            if ($result->isSubmitted() && $result->isValid()) {
-                $this->addFlash('success', $this->trans('A partial refund was successfully created.', 'Admin.Orderscustomers.Notification'));
+            if ($result->isSubmitted()) {
+                if ($result->isValid()) {
+                    $this->addFlash('success', $this->trans('A partial refund was successfully created.', 'Admin.Orderscustomers.Notification'));
+                } else {
+                    $this->addFlashFormErrors($form);
+                }
             }
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
@@ -537,9 +544,17 @@ class OrderController extends FrameworkBundleAdminController
 
         $products = $orderForViewing->getProducts()->getProducts();
 
+        $formBuilder = $this->get('prestashop.core.form.identifiable_object.builder.cancel_product_form_builder');
+        $cancelProductForm = $formBuilder->getFormFor($orderId);
+
+        $currencyDataProvider = $this->container->get('prestashop.adapter.data_provider.currency');
+        $orderCurrency = $currencyDataProvider->getCurrencyById($orderForViewing->getCurrencyId());
+
         return $this->render('@PrestaShop/Admin/Sell/Order/Order/Blocks/View/product.html.twig', [
             'orderForViewing' => $orderForViewing,
             'product' => $products[array_key_last($products)],
+            'cancelProductForm' => $cancelProductForm->createView(),
+            'orderCurrency' => $orderCurrency,
         ]);
     }
 
@@ -1187,6 +1202,11 @@ class OrderController extends FrameworkBundleAdminController
      */
     private function getErrorMessages(Exception $e)
     {
+        $refundableQuantity = 0;
+        if ($e instanceof InvalidRefundException) {
+            $refundableQuantity = $e->getRefundableQuantity();
+        }
+
         return [
             CannotEditDeliveredOrderProductException::class => $this->trans('You cannot edit the cart once the order delivered', 'Admin.Orderscustomers.Notification'),
             OrderNotFoundException::class => $e instanceof OrderNotFoundException ?
@@ -1203,14 +1223,29 @@ class OrderController extends FrameworkBundleAdminController
                 $e->getMessage(),
                 'Admin.Orderscustomers.Notification'
             ),
-            EmptyRefundQuantityException::class => $this->trans(
-                'Please enter a quantity to proceed with your refund.',
-                'Admin.Orderscustomers.Notification'
-            ),
-            EmptyRefundAmountException::class => $this->trans(
-                'Please enter an amount to proceed with your refund.',
-                'Admin.Orderscustomers.Notification'
-            ),
+            InvalidRefundException::class => [
+                InvalidRefundException::INVALID_QUANTITY => $this->trans(
+                    'Please enter a positive quantity to proceed with your refund.',
+                    'Admin.Orderscustomers.Notification'
+                ),
+                InvalidRefundException::QUANTITY_TOO_HIGH => $this->trans(
+                    'Please enter a maximum quantity of [1] to proceed with your refund.',
+                    'Admin.Orderscustomers.Notification',
+                    ['[1]' => $refundableQuantity]
+                ),
+                InvalidRefundException::INVALID_AMOUNT => $this->trans(
+                    'Please enter a positive amount to proceed with your refund.',
+                    'Admin.Orderscustomers.Notification'
+                ),
+                InvalidRefundException::NO_REFUNDS => $this->trans(
+                    'Please enter at least one refund.',
+                    'Admin.Orderscustomers.Notification'
+                ),
+                InvalidRefundException::NO_GENERATION => $this->trans(
+                    'Please generate at least one credit slip or voucher.',
+                    'Admin.Orderscustomers.Notification'
+                ),
+            ],
             ProductOutOfStockException::class => $this->trans(
                 'There are not enough products in stock',
                 'Admin.Notifications.Error'
