@@ -54,8 +54,8 @@ final class CategoryForViewAccessibilityChecker implements AccessibilityCheckerI
      */
     public function isGranted(array $category)
     {
-        $CategoryHasChildren = Category::hasChildren($category['id_category'], $this->contextLangId, true);
+        $CategoryHasChildren = Category::hasChildren($category['id_category'], $this->contextLangId, false);
 
-        return !$CategoryHasChildren;
+        return $CategoryHasChildren;
     }
 }
