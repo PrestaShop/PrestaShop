@@ -24,7 +24,8 @@
  *#}
 
 <div class="text-{{ column.options.text_align }}">
-  {% if record[column.options.field] matches '/^\\d+$/' %}
+  {% var isFieldLikeAnUrl = record[column.options.field] matches '/^\\d+$/' %}
+  {% if isFieldLikeAnUrl %}
     {{ record[column.options.field] }}
   {% else %}
     <span class="badge badge-danger rounded">
