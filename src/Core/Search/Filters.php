@@ -102,6 +102,16 @@ class Filters extends ParameterBag implements SearchCriteriaInterface
     }
 
     /**
+     * @param array $parameters
+     */
+    public function addFilter(array $parameters = [])
+    {
+        $filters = $this->getFilters();
+        $filters = array_replace($filters, $parameters);
+        $this->set('filters', $filters);
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function getFilters()
