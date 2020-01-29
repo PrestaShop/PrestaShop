@@ -50,10 +50,7 @@ final class ToggleCountryStatusHandler extends AbstractCountryHandler implements
         $country = $this->getCountry($command->getCountryId());
 
         if (!$this->toggleCountryStatus($country, $command->getExpectedStatus())) {
-            throw new UpdateCountryException(
-                sprintf('Unable to toggle country status with id "%s"', $country->id),
-                UpdateCountryException::FAILED_UPDATE_STATUS
-            );
+            throw new UpdateCountryException(sprintf('Unable to toggle country status with id "%s"', $country->id), UpdateCountryException::FAILED_UPDATE_STATUS);
         }
     }
 }

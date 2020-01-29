@@ -51,10 +51,7 @@ final class BulkToggleCountriesStatusHandler extends AbstractCountryHandler impl
             $country = $this->getCountry($countryId);
 
             if (!$this->toggleCountryStatus($country, $command->getExpectedStatus())) {
-                throw new UpdateCountryException(
-                    sprintf('Unable to toggle country status with id "%s"', $country->id),
-                    UpdateCountryException::FAILED_BULK_UPDATE_STATUS
-                );
+                throw new UpdateCountryException(sprintf('Unable to toggle country status with id "%s"', $country->id), UpdateCountryException::FAILED_BULK_UPDATE_STATUS);
             }
         }
     }

@@ -54,15 +54,11 @@ class AbstractCountryHandler
         try {
             $country = new Country($countryIdValue);
         } catch (PrestaShopException $e) {
-            throw new CountryNotFoundException(
-                sprintf('Country with id "%s" was not found.', $countryIdValue)
-            );
+            throw new CountryNotFoundException(sprintf('Country with id "%s" was not found.', $countryIdValue));
         }
 
         if ($country->id !== $countryIdValue) {
-            throw new CountryNotFoundException(
-                sprintf('Country with id "%s" was not found.', $countryIdValue)
-            );
+            throw new CountryNotFoundException(sprintf('Country with id "%s" was not found.', $countryIdValue));
         }
 
         return $country;
@@ -85,10 +81,7 @@ class AbstractCountryHandler
         try {
             return $country->save();
         } catch (PrestaShopException $e) {
-            throw new CountryException(sprintf(
-                'An error occurred when updating country status with id "%s"',
-                $country->id
-            ));
+            throw new CountryException(sprintf('An error occurred when updating country status with id "%s"', $country->id));
         }
     }
 
@@ -104,9 +97,7 @@ class AbstractCountryHandler
         try {
             return $country->delete();
         } catch (PrestaShopException $e) {
-            throw new DeleteCountryException(
-                sprintf('An error occurred when deleting Country object with id "%s".', $country->id)
-            );
+            throw new DeleteCountryException(sprintf('An error occurred when deleting Country object with id "%s".', $country->id));
         }
     }
 }

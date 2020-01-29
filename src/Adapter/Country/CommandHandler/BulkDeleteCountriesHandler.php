@@ -49,9 +49,7 @@ final class BulkDeleteCountriesHandler extends AbstractCountryHandler implements
             $country = $this->getCountry($countryId);
 
             if (!$this->deleteCountry($country)) {
-                throw new DeleteCountryException(
-                    sprintf('Cannot delete Country object with id "%s".', $country->id)
-                );
+                throw new DeleteCountryException(sprintf('Cannot delete Country object with id "%s".', $country->id));
             }
         }
     }
