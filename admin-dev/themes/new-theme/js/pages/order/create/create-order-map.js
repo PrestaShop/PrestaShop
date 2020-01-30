@@ -70,6 +70,7 @@ export default {
   orderDateField: '.js-order-date',
   orderProductsField: '.js-order-products',
   orderTotalField: '.js-order-total-paid',
+  orderPaymentMethod: '.js-order-payment-method',
   orderStatusField: '.js-order-status',
   emptyListRowTemplate: '#js-empty-list-row',
   emptyListRow: '.js-empty-row',
