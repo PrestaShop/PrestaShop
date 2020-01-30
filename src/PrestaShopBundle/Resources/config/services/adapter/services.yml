@@ -1,5 +1,5 @@
 imports:
-  - { resource: ./common.yml }
+    - { resource: ./common.yml }
 
 services:
     _defaults:
@@ -71,7 +71,7 @@ services:
         class: PrestaShop\PrestaShop\Adapter\LegacyHookSubscriber
 
     prestashop.adapter.legacy.block.helper.subscriber:
-            class: PrestaShop\PrestaShop\Adapter\Admin\LegacyBlockHelperSubscriber
+        class: PrestaShop\PrestaShop\Adapter\Admin\LegacyBlockHelperSubscriber
 
     prestashop.adapter.stock_manager:
         class: PrestaShop\PrestaShop\Adapter\StockManager

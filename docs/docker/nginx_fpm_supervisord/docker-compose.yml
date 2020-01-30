@@ -8,7 +8,7 @@ services:
             MYSQL_USER: prestashop
             MYSQL_PASSWORD: prestashop
         networks:
-          - default
+            - default
 
     nginx:
         build:
@@ -18,15 +18,15 @@ services:
         volumes:
             - ./prestashop/:/prestashop/
         environment:
-          PUID: "1001"
-          WEBROOT: "/prestashop"
-          SKIP_COMPOSER: 1
-          REMOVE_FILES: 0
-          REAL_IP_HEADER: 1
-          REAL_IP_FROM: "10.1.0.0/16"
-          PHP_ERRORS_STDERR: 1
+            PUID: "1001"
+            WEBROOT: "/prestashop"
+            SKIP_COMPOSER: 1
+            REMOVE_FILES: 0
+            REAL_IP_HEADER: 1
+            REAL_IP_FROM: "10.1.0.0/16"
+            PHP_ERRORS_STDERR: 1
         networks:
-          - default
+            - default
 
 networks:
-  default:
+    default:

@@ -5,4 +5,4 @@ admin_cart_rules_search:
         _controller: 'PrestaShopBundle:Admin/Sell/Catalog/CartRule:search'
         _legacy_controller: AdminCartRules
     options:
-      expose: true
+        expose: true

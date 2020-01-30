@@ -1,0 +1,10 @@
+-   pathsToCheck:
+        - ./
+    excludedPaths:
+        - ./var
+        - ./vendor
+        - ./modules
+    checkers:
+        -   pathToChecker: YamlStandards\Model\YamlIndent\YamlIndentChecker
+            parameters:
+                { indents: 4, indentsCommentsWithoutParent: preserved }

@@ -7,13 +7,13 @@ _invoices:
     prefix: /invoices/
 
 _carts:
-  resource: "carts.yml"
-  prefix: /carts/
+    resource: "carts.yml"
+    prefix: /carts/
 
 _orders:
-  resource: "orders.yml"
-  prefix: /orders/
+    resource: "orders.yml"
+    prefix: /orders/
 
 _credit_slips:
-  resource: "credit_slips.yml"
-  prefix: /credit-slips/
+    resource: "credit_slips.yml"
+    prefix: /credit-slips/

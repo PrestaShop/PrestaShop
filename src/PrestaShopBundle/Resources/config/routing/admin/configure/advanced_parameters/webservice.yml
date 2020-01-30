@@ -7,9 +7,9 @@ admin_webservice_keys_index:
         _legacy_link: AdminWebservice
 
 admin_webservice_keys_search:
-  path: /
-  methods: POST
-  defaults:
+    path: /
+    methods: POST
+    defaults:
         _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Webservice:search'
         _legacy_controller: AdminWebservice
         _legacy_link: AdminWebservice:submitFilterwebservice_account
@@ -52,7 +52,7 @@ admin_webservice_keys_delete:
         _legacy_parameters:
             id_webservice_account: webserviceKeyId
     requirements:
-      webserviceKeyId: \d+
+        webserviceKeyId: \d+
 
 admin_webservice_keys_bulk_delete:
     path: /bulk-delete

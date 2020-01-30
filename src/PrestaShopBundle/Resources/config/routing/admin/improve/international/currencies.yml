@@ -30,7 +30,7 @@ admin_currencies_edit:
         _legacy_controller: AdminCurrencies
         _legacy_link: AdminCurrencies:updatecurrency
         _legacy_parameters:
-          id_currency: currencyId
+            id_currency: currencyId
     requirements:
         currencyId: \d+
 
@@ -42,7 +42,7 @@ admin_currencies_delete:
         _legacy_controller: AdminCurrencies
         _legacy_link: AdminCurrencies:deletecurrency
         _legacy_parameters:
-          id_currency: currencyId
+            id_currency: currencyId
     requirements:
         currencyId: \d+
 
@@ -54,7 +54,7 @@ admin_currencies_toggle_status:
         _legacy_controller: AdminCurrencies
         _legacy_link: AdminCurrencies:statuscurrency
         _legacy_parameters:
-          id_currency: currencyId
+            id_currency: currencyId
     requirements:
         currencyId: \d+
 
@@ -74,9 +74,9 @@ admin_currencies_refresh_exchange_rates:
         _legacy_link: AdminCurrencies:SubmitExchangesRates
 
 admin_currencies_get_reference_data:
-  path: /reference-data/{currencyIsoCode}
-  methods: GET
-  defaults:
-    _controller: 'PrestaShopBundle:Admin\Improve\International\Currency:getReferenceData'
-    _legacy_controller: AdminCurrencies
-    _legacy_link: AdminCurrencies:getReferenceData
+    path: /reference-data/{currencyIsoCode}
+    methods: GET
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Improve\International\Currency:getReferenceData'
+        _legacy_controller: AdminCurrencies
+        _legacy_link: AdminCurrencies:getReferenceData

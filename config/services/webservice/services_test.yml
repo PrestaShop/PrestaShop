@@ -1,2 +1,2 @@
 imports:
-  - { resource: services_dev.yml }
+    - { resource: services_dev.yml }

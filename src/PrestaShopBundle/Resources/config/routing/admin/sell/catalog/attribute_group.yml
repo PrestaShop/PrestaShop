@@ -31,11 +31,11 @@ admin_attribute_groups_view:
     defaults:
         _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Attribute:index'
         _legacy_controller: AdminAttributesGroups
-#        _legacy_link: AdminAttributesGroups:viewattribute_group
-#        _legacy_parameters:
-#          id_attribute_group: attributeGroupId
+    #        _legacy_link: AdminAttributesGroups:viewattribute_group
+    #        _legacy_parameters:
+    #          id_attribute_group: attributeGroupId
     requirements:
-      attributeGroupId: \d+
+        attributeGroupId: \d+
 
 admin_attribute_groups_edit:
     path: /{attributeGroupId}/edit
@@ -43,7 +43,7 @@ admin_attribute_groups_edit:
     defaults:
         _controller: 'PrestaShopBundle:Admin/Sell/Catalog/AttributeGroup:edit'
         _legacy_controller: AdminAttributesGroups
-#        _legacy_link: AdminAttributesGroups:updateattribute_group
+        #        _legacy_link: AdminAttributesGroups:updateattribute_group
         _legacy_parameters:
             id_attribute_group: attributeGroupId
     requirements:
@@ -55,7 +55,7 @@ admin_attribute_groups_delete:
     defaults:
         _controller: 'PrestaShopBundle:Admin/Sell/Catalog/AttributeGroup:delete'
         _legacy_controller: AdminAttributesGroups
-#        _legacy_link: AdminAttributesGroups:deleteattribute_group
+        #        _legacy_link: AdminAttributesGroups:deleteattribute_group
         _legacy_parameters:
             id_attribute_group: attributeGroupId
     requirements:
@@ -78,9 +78,9 @@ admin_attribute_groups_export:
 #        _legacy_link: AdminAttributesGroups:exportattribute_group
 
 admin_attribute_groups_update_position:
-  path: /update-position
-  methods: [POST]
-  defaults:
-    _controller: 'PrestaShopBundle:Admin/Sell/Catalog/AttributeGroup:updatePosition'
-    _legacy_controller: AdminAttributesGroups
+    path: /update-position
+    methods: [POST]
+    defaults:
+        _controller: 'PrestaShopBundle:Admin/Sell/Catalog/AttributeGroup:updatePosition'
+        _legacy_controller: AdminAttributesGroups
 #    _legacy_link: AdminAttributesGroups:updateGroupsPositions

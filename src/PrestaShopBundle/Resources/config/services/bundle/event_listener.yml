@@ -28,9 +28,9 @@ services:
     prestashop.legacy_url_listener:
         class: PrestaShopBundle\EventListener\LegacyUrlListener
         arguments:
-        - "@prestashop.bundle.routing.converter.legacy_url_converter"
+            - "@prestashop.bundle.routing.converter.legacy_url_converter"
         tags:
-        - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 40 }
+            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 40 }
 
     prestashop.multishop_command_listener:
         class: PrestaShopBundle\EventListener\MultishopCommandListener
@@ -63,13 +63,13 @@ services:
     prestashop.module_activated.listener:
         class: PrestaShopBundle\EventListener\ModuleActivatedListener
         arguments:
-        - "@router"
-        - "@translator"
-        - "@session"
-        - "@annotation_reader"
-        - "@prestashop.core.admin.module.repository"
+            - "@router"
+            - "@translator"
+            - "@session"
+            - "@annotation_reader"
+            - "@prestashop.core.admin.module.repository"
         tags:
-        - { name: kernel.event_listener, event: kernel.controller, method: onKernelController }
+            - { name: kernel.event_listener, event: kernel.controller, method: onKernelController }
 
     prestashop.bundle.event_listener.filter_category_search_criteria:
         class: PrestaShopBundle\EventListener\FilterCategorySearchCriteriaListener
@@ -88,15 +88,15 @@ services:
     prestashop.bundle.event_listener.back_url_redirect_response_listener:
         class: PrestaShopBundle\EventListener\BackUrlRedirectResponseListener
         arguments:
-          - '@prestashop.core.uti.back_url_provider'
+            - '@prestashop.core.uti.back_url_provider'
         tags:
-          - { name: kernel.event_listener, event: kernel.response, method: onKernelResponse }
+            - { name: kernel.event_listener, event: kernel.response, method: onKernelResponse }
 
     prestashop.bundle.event_listener.module_guard_listener:
         class: PrestaShopBundle\EventListener\ModuleGuardListener
         arguments:
-          - '@prestashop.core.security.folder_guard.vendor'
-          - '%modules_dir%'
-          - '@logger'
+            - '@prestashop.core.security.folder_guard.vendor'
+            - '%modules_dir%'
+            - '@logger'
         tags:
-          - { name: kernel.event_subscriber }
+            - { name: kernel.event_subscriber }

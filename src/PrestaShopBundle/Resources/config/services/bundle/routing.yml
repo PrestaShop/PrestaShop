@@ -2,7 +2,7 @@ services:
     prestashop.bundle.routing.module_route_loader:
         class: 'PrestaShopBundle\Routing\YamlModuleLoader'
         arguments:
-          - '@=service("prestashop.module_kernel.repository").getActiveModulesPaths()'
+            - '@=service("prestashop.module_kernel.repository").getActiveModulesPaths()'
         tags: [routing.loader]
 
     prestashop.bundle.routing.converter.legacy_url_converter:
@@ -38,8 +38,8 @@ services:
     prestashop.bundle.routing.linter.security_annotation_linter:
         class: 'PrestaShopBundle\Routing\Linter\SecurityAnnotationLinter'
         arguments:
-          - '@annotation_reader'
-          - '@controller_name_converter'
+            - '@annotation_reader'
+            - '@controller_name_converter'
 
     prestashop.bundle.routing.linter.naming_convention_linter:
         class: 'PrestaShopBundle\Routing\Linter\NamingConventionLinter'
@@ -47,7 +47,7 @@ services:
             - '@controller_name_converter'
 
     prestashop.bundle.routing.linter.legacy_link_linter:
-      class: 'PrestaShopBundle\Routing\Linter\LegacyLinkLinter'
+        class: 'PrestaShopBundle\Routing\Linter\LegacyLinkLinter'
 
     prestashop.bundle.routing.linter.admin_route_provider:
         class: 'PrestaShopBundle\Routing\Linter\AdminRouteProvider'

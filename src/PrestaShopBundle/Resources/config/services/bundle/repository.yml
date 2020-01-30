@@ -16,7 +16,7 @@ services:
         class: 'PrestaShopBundle\Entity\Repository\ShopRepository'
         factory: ['@doctrine.orm.default_entity_manager', getRepository]
         arguments:
-        - 'PrestaShopBundle\Entity\Shop'
+            - 'PrestaShopBundle\Entity\Shop'
 
     prestashop.core.admin.translation.repository:
         class: PrestaShopBundle\Entity\Repository\TranslationRepository
@@ -99,10 +99,10 @@ services:
             - '%database_prefix%'
 
     prestashop.bundle.repository.module:
-            class: PrestaShopBundle\Entity\Repository\ModuleRepository
-            arguments:
-                - '@doctrine.dbal.default_connection'
-                - '%database_prefix%'
+        class: PrestaShopBundle\Entity\Repository\ModuleRepository
+        arguments:
+            - '@doctrine.dbal.default_connection'
+            - '%database_prefix%'
 
     prestashop.core.admin.request_sql.repository:
         class: PrestaShopBundle\Entity\Repository\RequestSqlRepository

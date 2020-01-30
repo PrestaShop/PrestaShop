@@ -68,11 +68,11 @@ services:
     prestashop.adapter.caching.configuration:
         class: 'PrestaShop\PrestaShop\Adapter\Cache\CachingConfiguration'
         arguments:
-          - '@prestashop.adapter.memcache_server.manager'
-          - '@prestashop.adapter.php_parameters'
-          - '@prestashop.adapter.cache.clearer.symfony_cache_clearer'
-          - '%ps_cache_enable%'
-          - '%ps_caching%'
+            - '@prestashop.adapter.memcache_server.manager'
+            - '@prestashop.adapter.php_parameters'
+            - '@prestashop.adapter.cache.clearer.symfony_cache_clearer'
+            - '%ps_cache_enable%'
+            - '%ps_caching%'
 
     prestashop.adapter.general.configuration:
         class: 'PrestaShop\PrestaShop\Adapter\GeneralConfiguration'
@@ -242,10 +242,10 @@ services:
             - '@prestashop.adapter.tax.ecotax.ecotax_resetter'
 
     prestashop.core.mail_theme.configuration:
-      class: 'PrestaShop\PrestaShop\Core\MailTemplate\MailThemeConfiguration'
-      arguments:
-        - '@prestashop.adapter.legacy.configuration'
-        - '@prestashop.core.mail_template.theme_catalog'
+        class: 'PrestaShop\PrestaShop\Core\MailTemplate\MailThemeConfiguration'
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'
+            - '@prestashop.core.mail_template.theme_catalog'
 
     prestashop.core.merchandise_return.configuration.merchandise_return_options_configuration:
         class: 'PrestaShop\PrestaShop\Core\MerchandiseReturn\Configuration\MerchandiseReturnOptionsConfiguration'
@@ -253,6 +253,6 @@ services:
             - '@prestashop.adapter.legacy.configuration'
 
     prestashop.core.credit_slip.credit_slip_options.configuration:
-      class: 'PrestaShop\PrestaShop\Core\CreditSlip\CreditSlipOptionsConfiguration'
-      arguments:
-        - '@prestashop.adapter.legacy.configuration'
+        class: 'PrestaShop\PrestaShop\Core\CreditSlip\CreditSlipOptionsConfiguration'
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'

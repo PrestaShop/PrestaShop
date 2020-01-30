@@ -9,8 +9,8 @@ services:
         arguments:
             - '@prestashop.adapter.legacy.configuration'
         tags:
-            - name: 'tactician.handler'
-              command: 'PrestaShop\PrestaShop\Core\Domain\SqlManagement\Command\SaveSqlRequestSettingsCommand'
+            -   name: 'tactician.handler'
+                command: 'PrestaShop\PrestaShop\Core\Domain\SqlManagement\Command\SaveSqlRequestSettingsCommand'
 
     # QUERY HANDLERS
 
@@ -19,5 +19,5 @@ services:
         arguments:
             - '@prestashop.adapter.legacy.configuration'
         tags:
-            - name: 'tactician.handler'
-              command: 'PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query\GetSqlRequestSettings'
+            -   name: 'tactician.handler'
+                command: 'PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query\GetSqlRequestSettings'

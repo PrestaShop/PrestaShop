@@ -86,8 +86,8 @@ services:
         parent: 'router.default'
         public: true
         calls:
-          - ['setTokenManager', ['@security.csrf.token_manager']]
-          - ['setUserProvider', ["@=service('prestashop.user_provider')"]]
+            - ['setTokenManager', ['@security.csrf.token_manager']]
+            - ['setUserProvider', ["@=service('prestashop.user_provider')"]]
 
     # Addons API Client
     prestashop.addons.client_api:

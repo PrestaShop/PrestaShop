@@ -10,16 +10,16 @@ services:
         arguments: ['@prestashop.hooks_registry']
         public: false
         tags:
-          - {name: data_collector, template: '@PrestaShop/Admin/WebProfiler/hooks_collector.html.twig', id: 'ps.hooks_collector'}
+            - {name: data_collector, template: '@PrestaShop/Admin/WebProfiler/hooks_collector.html.twig', id: 'ps.hooks_collector'}
 
     prestashop.bundle.data_collector.commands_and_queries_collector:
         class: PrestaShopBundle\DataCollector\CommandsAndQueriesDataCollector
         arguments:
-          - '@prestashop.core.command_bus.executed_command_registry'
+            - '@prestashop.core.command_bus.executed_command_registry'
         tags:
-          - name: data_collector
-            id: ps.commands_and_queries_collector
-            template: '@PrestaShop/Admin/WebProfiler/commands_and_queries.html.twig'
+            -   name: data_collector
+                id: ps.commands_and_queries_collector
+                template: '@PrestaShop/Admin/WebProfiler/commands_and_queries.html.twig'
 
     # Web Profiler Bundle
     data_collector.config:
@@ -27,6 +27,6 @@ services:
         arguments: ["PrestaShop", "@=service('prestashop.core.foundation.version').getVersion()"]
         public: false
         calls:
-          - ["setKernel", ["@kernel"]]
+            - ["setKernel", ["@kernel"]]
         tags:
-          - {name: data_collector, template: "@PrestaShop/Admin/WebProfiler/config.html.twig", id: "config", priority: "-255"}
+            - {name: data_collector, template: "@PrestaShop/Admin/WebProfiler/config.html.twig", id: "config", priority: "-255"}

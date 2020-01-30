@@ -18,17 +18,17 @@ services:
     prestashop.core.addon.theme.repository:
         class: PrestaShop\PrestaShop\Core\Addon\Theme\ThemeRepository
         arguments:
-          - "@prestashop.adapter.legacy.configuration"
-          - "@filesystem"
-          - "@=service('prestashop.adapter.legacy.context').getContext().shop"
+            - "@prestashop.adapter.legacy.configuration"
+            - "@filesystem"
+            - "@=service('prestashop.adapter.legacy.context').getContext().shop"
 
     prestashop.core.addon.theme.exporter:
         class: PrestaShop\PrestaShop\Core\Addon\Theme\ThemeExporter
         arguments:
-          - "@prestashop.adapter.legacy.configuration"
-          - "@filesystem"
-          - "@prestashop.core.admin.lang.repository"
-          - "@prestashop.translation.theme.exporter"
+            - "@prestashop.adapter.legacy.configuration"
+            - "@filesystem"
+            - "@prestashop.core.admin.lang.repository"
+            - "@prestashop.translation.theme.exporter"
 
     prestashop.core.addon.theme.theme_manager_builder:
         class: PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder
