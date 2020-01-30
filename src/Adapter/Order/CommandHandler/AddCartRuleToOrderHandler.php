@@ -147,6 +147,7 @@ final class AddCartRuleToOrderHandler extends AbstractOrderHandler implements Ad
      * @param array $orderInvoices
      *
      * @return array
+     *
      * @throws OrderException
      */
     private function calculatePercentReducedValues(Order $order, float $discountValue, array $orderInvoices): array
@@ -310,6 +311,7 @@ final class AddCartRuleToOrderHandler extends AbstractOrderHandler implements Ad
      * @param array $reducedValues
      *
      * @return OrderCartRule
+     *
      * @throws \PrestaShopDatabaseException
      * @throws \PrestaShopException
      */
@@ -359,8 +361,8 @@ final class AddCartRuleToOrderHandler extends AbstractOrderHandler implements Ad
         return [
             $invoiceId => [
                 'value_tax_incl' => $valueTaxIncl,
-                'value_tax_excl' => $valueTaxExcl
-            ]
+                'value_tax_excl' => $valueTaxExcl,
+            ],
         ];
     }
 }
