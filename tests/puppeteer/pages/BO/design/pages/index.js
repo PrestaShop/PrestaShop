@@ -122,7 +122,7 @@ module.exports = class Pages extends BOBasePage {
    * @param table
    * @return {Promise<textContent>}
    */
-  async deleteRowInTableBulkActions(table) {
+  async deleteWithBulkActions(table) {
     const selectAllRowsLabel = await this.replaceAll(this.selectAllRowsLabel, '%TABLE', table);
     const bulkActionsToggleButton = await this.replaceAll(this.bulkActionsToggleButton, '%TABLE', table);
     const bulkActionsDeleteButton = await this.replaceAll(this.bulkActionsDeleteButton, '%TABLE', table);

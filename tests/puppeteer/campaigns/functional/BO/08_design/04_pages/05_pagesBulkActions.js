@@ -130,7 +130,7 @@ describe('Create Pages, Then disable / Enable and Delete with Bulk actions', asy
     });
 
     it('should delete pages with Bulk Actions and check Result', async function () {
-      const deleteTextResult = await this.pageObjects.pagesPage.deleteRowInTableBulkActions('cms_page');
+      const deleteTextResult = await this.pageObjects.pagesPage.deleteWithBulkActions('cms_page');
       await expect(deleteTextResult).to.be.equal(this.pageObjects.pagesPage.successfulMultiDeleteMessage);
     });
 
