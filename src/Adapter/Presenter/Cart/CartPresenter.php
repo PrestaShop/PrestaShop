@@ -479,7 +479,7 @@ class CartPresenter implements PresenterInterface
                 '',
         ];
 
-        Hook::exec('overridePresentedCart',
+        Hook::exec('actionPresentCart',
             ['presentedCart' => &$result]
         );
 

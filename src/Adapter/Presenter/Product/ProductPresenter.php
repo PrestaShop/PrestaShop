@@ -92,7 +92,7 @@ class ProductPresenter
             $this->translator
         );
 
-        Hook::exec('overridePresentedProduct',
+        Hook::exec('actionPresentProduct',
             ['presentedProduct' => &$productLazyArray]
         );
 
