@@ -36,7 +36,7 @@ use PrestaShopBundle\Form\Admin\Type\ActiveZoneChoiceType;
 use PrestaShopBundle\Form\Admin\Type\ShopChoiceTreeType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
-use Symfony\Component\Form\AbstractType;
+use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -49,12 +49,9 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 /**
  * Form type for country add/edit
  */
-class CountryType extends AbstractType
+class CountryType extends TranslatorAwareType
 {
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
+    private const INVALID_CHARACTERS = '<>;=#{} ';
 
     /**
      * @var FormChoiceProviderInterface
@@ -66,17 +63,14 @@ class CountryType extends AbstractType
      */
     private $multistoreFeature;
 
-    /**
-     * @param TranslatorInterface $translator
-     * @param FormChoiceProviderInterface $currencyChoiceProvider
-     * @param FeatureInterface $multistoreFeature
-     */
     public function __construct(
         TranslatorInterface $translator,
+        array $locales,
         FormChoiceProviderInterface $currencyChoiceProvider,
         FeatureInterface $multistoreFeature
     ) {
-        $this->translator = $translator;
+        parent::__construct($translator, $locales);
+
         $this->currencyChoiceProvider = $currencyChoiceProvider;
         $this->multistoreFeature = $multistoreFeature;
     }
@@ -88,6 +82,13 @@ class CountryType extends AbstractType
     {
         $builder
             ->add('country', TranslatableType::class, [
+                'label' => $this->trans('Country', 'Admin.Global'),
+                'help' => sprintf(
+                    '%s %s %s',
+                    $this->trans('Country name', 'Admin.International.Feature'),
+                    $this->trans('Invalid characters:', 'Admin.Global'),
+                    self::INVALID_CHARACTERS
+                ),
                 'required' => true,
                 'options' => [
                     'constraints' => [
@@ -110,22 +111,22 @@ class CountryType extends AbstractType
                         'type' => 'language_iso_code',
                     ]),
                     new NotBlank([
-                        'message' => $this->translator->trans(
+                        'message' => $this->trans(
                             'The %s field is required.',
+                            'Admin.Notifications.Error',
                             [
-                                sprintf('"%s"', $this->translator->trans(
-                                    'ISO code', [], 'Admin.International.Feature'
+                                sprintf('"%s"', $this->trans(
+                                    'ISO code', 'Admin.International.Feature'
                                 )),
-                            ],
-                            'Admin.Notifications.Error'
+                            ]
                         ),
                     ]),
                     new Length([
                         'max' => CountryConstraintConfiguration::MAX_ISO_CODE_LENGTH,
-                        'maxMessage' => $this->translator->trans(
+                        'maxMessage' => $this->trans(
                             'This field cannot be longer than %limit% characters',
-                            ['%limit%' => CountryConstraintConfiguration::MAX_ISO_CODE_LENGTH],
-                            'Admin.Notifications.Error'
+                            'Admin.Notifications.Error',
+                            ['%limit%' => CountryConstraintConfiguration::MAX_ISO_CODE_LENGTH]
                         ),
                     ]),
                 ],
@@ -137,22 +138,23 @@ class CountryType extends AbstractType
                 ],
                 'constraints' => [
                     new NotBlank([
-                        'message' => $this->translator->trans(
+                        'message' => $this->trans(
                             'The %s field is required.',
+                            'Admin.Notifications.Error',
                             [
-                                sprintf('"%s"', $this->translator->trans(
-                                    'Call prefix', [], 'Admin.International.Feature'
+                                sprintf('"%s"', $this->trans(
+                                    'Call prefix',
+                                    'Admin.International.Feature'
                                 )),
-                            ],
-                            'Admin.Notifications.Error'
+                            ]
                         ),
                     ]),
                     new Length([
                         'max' => CountryConstraintConfiguration::MAX_CALL_PREFIX_LENGTH,
-                        'maxMessage' => $this->translator->trans(
+                        'maxMessage' => $this->trans(
                             'This field cannot be longer than %limit% characters',
-                            ['%limit%' => CountryConstraintConfiguration::MAX_CALL_PREFIX_LENGTH],
-                            'Admin.Notifications.Error'
+                            'Admin.Notifications.Error',
+                            ['%limit%' => CountryConstraintConfiguration::MAX_CALL_PREFIX_LENGTH]
                         ),
                     ]),
                 ],
@@ -161,9 +163,8 @@ class CountryType extends AbstractType
                 'required' => false,
                 'choices' => array_merge(
                     [
-                        $this->translator->trans(
+                        $this->trans(
                             'Default store currency',
-                            [],
                             'Admin.International.Feature'
                         ) => 0,
                     ],
@@ -175,14 +176,14 @@ class CountryType extends AbstractType
                 'required' => true,
                 'constraints' => [
                     new NotBlank([
-                        'message' => $this->translator->trans(
+                        'message' => $this->trans(
                             'The %s field is required.',
+                            'Admin.Notifications.Error',
                             [
-                                sprintf('"%s"', $this->translator->trans(
-                                    'Zone', [], 'Admin.Global'
+                                sprintf('"%s"', $this->trans(
+                                    'Zone', 'Admin.Global'
                                 )),
-                            ],
-                            'Admin.Notifications.Error'
+                            ]
                         ),
                     ]),
                 ],
