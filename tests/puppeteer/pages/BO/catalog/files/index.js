@@ -165,7 +165,7 @@ module.exports = class Files extends BOBasePage {
       this.page.click(this.bulkActionsDeleteButton),
       this.page.waitForSelector(`${this.confirmDeleteModal}.show`, {visible: true}),
     ]);
-    await this.confirmDeleteFiles(this.bulkActionsDeleteButton);
+    await this.confirmDeleteFiles();
     return this.getTextContent(this.alertSuccessBlockParagraph);
   }
 

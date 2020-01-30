@@ -233,7 +233,7 @@ module.exports = class Taxes extends BOBasePage {
       this.page.click(this.deleteSelectionButton),
       this.page.waitForSelector(`${this.confirmDeleteModal}.show`, {visible: true}),
     ]);
-    await this.confirmDeleteTaxes(this.bulkActionsDeleteButton);
+    await this.confirmDeleteTaxes();
     return this.getTextContent(this.alertSuccessBlockParagraph);
   }
 
