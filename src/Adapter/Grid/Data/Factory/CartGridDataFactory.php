@@ -31,7 +31,6 @@ use Context;
 use Currency;
 use Customer;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartException;
-use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopException;
 use PrestaShop\PrestaShop\Core\Grid\Data\Factory\GridDataFactoryInterface;
 use PrestaShop\PrestaShop\Core\Grid\Data\GridData;
 use PrestaShop\PrestaShop\Core\Grid\Record\RecordCollection;
@@ -91,6 +90,7 @@ final class CartGridDataFactory implements GridDataFactoryInterface
      * @param RecordCollectionInterface $records
      *
      * @return RecordCollection
+     *
      * @throws CartException
      */
     private function applyModifications(RecordCollectionInterface $records)
