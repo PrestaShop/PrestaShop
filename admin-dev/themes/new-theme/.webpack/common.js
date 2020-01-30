@@ -25,14 +25,16 @@
 const fs = require('fs');
 const path = require('path');
 const webpack = require('webpack');
-const CleanWebpackPlugin = require('clean-webpack-plugin');
+const {CleanWebpackPlugin} = require('clean-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const VueLoaderPlugin = require('vue-loader/lib/plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const FixStyleOnlyEntriesPlugin = require('webpack-fix-style-only-entries');
 const cssExtractedFileName = 'theme';
 
 module.exports = {
   externals: {
-    jquery: 'jQuery',
+    jquery: 'jQuery'
   },
   entry: {
     address: './js/pages/address',
@@ -98,12 +100,16 @@ module.exports = {
     translation_settings: './js/pages/translation-settings',
     translations: './js/app/pages/translations',
     webservice: './js/pages/webservice',
+    theme: ['./scss/theme.scss']
   },
   output: {
     path: path.resolve(__dirname, '../public'),
     filename: '[name].bundle.js',
     libraryTarget: 'window',
     library: '[name]',
+
+    sourceMapFilename: '[name].[hash:8].map',
+    chunkFilename: '[id].[hash:8].js'
   },
   resolve: {
     extensions: ['.js', '.vue', '.json'],
@@ -115,131 +121,132 @@ module.exports = {
       '@components': path.resolve(__dirname, '../js/components'),
       '@scss': path.resolve(__dirname, '../scss'),
       '@node_modules': path.resolve(__dirname, '../node_modules'),
-      '@vue': path.resolve(__dirname, '../js/vue'),
-    },
+      '@vue': path.resolve(__dirname, '../js/vue')
+    }
   },
   module: {
     rules: [
       {
         test: /\.js$/,
         include: path.resolve(__dirname, '../js'),
-        use: [{
-          loader: 'babel-loader',
-          options: {
-            presets: [
-              ['env', {useBuiltIns: 'usage', modules: false}],
-            ],
-            plugins: [
-              'transform-object-rest-spread',
-            ],
-          },
-        }],
+        use: [
+          {
+            loader: 'babel-loader',
+            options: {
+              presets: [['env', {useBuiltIns: 'usage', modules: false}]],
+              plugins: ['transform-object-rest-spread']
+            }
+          }
+        ]
       },
       {
         test: /jquery-ui\.js/,
-        use: 'imports-loader?define=>false&this=>window',
+        use: 'imports-loader?define=>false&this=>window'
       },
       {
         test: /jquery\.magnific-popup\.js/,
-        use: 'imports-loader?define=>false&exports=>false&this=>window',
+        use: 'imports-loader?define=>false&exports=>false&this=>window'
       },
       {
         test: /bloodhound\.min\.js/,
         use: [
           {
             loader: 'expose-loader',
-            query: 'Bloodhound',
-          },
-        ],
+            query: 'Bloodhound'
+          }
+        ]
       },
       {
         test: /dropzone\/dist\/dropzone\.js/,
-        loader: 'imports-loader?this=>window&module=>null',
+        loader: 'imports-loader?this=>window&module=>null'
       },
       {
         test: require.resolve('moment'),
-        loader: 'imports-loader?define=>false&this=>window',
+        loader: 'imports-loader?define=>false&this=>window'
       },
       {
         test: /typeahead\.jquery\.js/,
-        loader: 'imports-loader?define=>false&exports=>false&this=>window',
+        loader: 'imports-loader?define=>false&exports=>false&this=>window'
       },
       {
         test: /bootstrap-tokenfield\.js/,
-        loader: 'imports-loader?define=>false&exports=>false&this=>window',
+        loader: 'imports-loader?define=>false&exports=>false&this=>window'
       },
       {
         test: /bootstrap-datetimepicker\.js/,
-        loader: 'imports-loader?define=>false&exports=>false&this=>window',
+        loader: 'imports-loader?define=>false&exports=>false&this=>window'
       },
       {
         test: /jwerty\/jwerty\.js/,
-        loader: 'imports-loader?this=>window&module=>false',
+        loader: 'imports-loader?this=>window&module=>false'
       },
       {
         test: /\.vue$/,
-        loader: 'vue-loader',
-        options: {
-          loaders: {
-            js: 'babel-loader?presets[]=es2015&presets[]=stage-2',
-            css: 'postcss-loader',
-            scss: 'style-loader!css-loader!sass-loader',
-          },
-        },
+        loader: 'vue-loader'
       },
       {
         test: /\.css$/,
-        use: ExtractTextPlugin.extract({
-          fallback: 'style-loader',
-          use: ['css-loader'],
-        }),
+        use: [
+          {
+            loader: MiniCssExtractPlugin.loader
+          },
+          'css-loader'
+        ]
       },
       {
         test: /\.scss$/,
-        use: ExtractTextPlugin.extract({
-          use: [
-            {
-              loader: 'css-loader',
-              options: {
-                minimize: true,
-                sourceMap: true,
-              },
-            },
-            {
-              loader: 'postcss-loader',
-              options: {
-                sourceMap: true,
-              },
-            },
-            {
-              loader: 'sass-loader',
-              options: {
-                sourceMap: true,
-              },
-            },
-          ],
-        }),
+        include: /scss/,
+        exclude: /js/,
+        use: [
+          MiniCssExtractPlugin.loader,
+          {
+            loader: 'css-loader',
+            options: {
+              sourceMap: true
+            }
+          },
+          {
+            loader: 'postcss-loader',
+            options: {
+              sourceMap: true
+            }
+          },
+          {
+            loader: 'sass-loader',
+            options: {
+              sourceMap: true,
+              sassOptions: {
+                includePaths: [require('bourbon').includePaths]
+              }
+            }
+          }
+        ]
+      },
+      {
+        test: /\.scss$/,
+        include: /js/,
+        use: ['vue-style-loader', 'css-loader', 'sass-loader']
       },
       // FILES
       {
         test: /.(jpg|png|woff2?|eot|otf|ttf|svg|gif)$/,
-        loader: 'file-loader?name=[hash].[ext]',
-      },
-    ],
+        loader: 'file-loader?name=[hash].[ext]'
+      }
+    ]
   },
   plugins: [
-    new ExtractTextPlugin('theme.css'),
-    new CleanWebpackPlugin(['public'], {
+    new FixStyleOnlyEntriesPlugin(),
+    new CleanWebpackPlugin({
       root: path.resolve(__dirname, '../'),
       exclude: ['theme.rtlfix']
     }),
+    new MiniCssExtractPlugin({filename: '[name].css'}),
     new webpack.ProvidePlugin({
       moment: 'moment', // needed for bootstrap datetime picker
       $: 'jquery', // needed for jquery-ui
-      jQuery: 'jquery',
+      jQuery: 'jquery'
     }),
-    new CopyPlugin([
-      { from: 'static' },
-    ])
-  ],
+    new CopyPlugin([{from: 'static'}]),
+    new VueLoaderPlugin()
+  ]
 };

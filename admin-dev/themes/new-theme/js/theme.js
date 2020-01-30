@@ -36,11 +36,6 @@ import 'typeahead.js/dist/typeahead.jquery';
 import 'typeahead.js/dist/bloodhound.min';
 import 'sprintf-js';
 
-// Plugins CSS
-import 'dropzone/dist/min/dropzone.min.css';
-import 'magnific-popup/dist/magnific-popup.css';
-
-// Theme SCSS
 import '@scss/theme.scss';
 
 // Theme Javascript
