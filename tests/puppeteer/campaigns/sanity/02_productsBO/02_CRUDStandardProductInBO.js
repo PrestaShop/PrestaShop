@@ -64,7 +64,7 @@ describe('Create, read, update and delete Standard product in BO', async () => {
   });
 
   it('should reset all filters', async function () {
-    await testContext.addContextItem(this, 'stepIdentifier', 'resetFilters0', baseContext);
+    await testContext.addContextItem(this, 'stepIdentifier', 'resetFilters', baseContext);
     await this.pageObjects.productsPage.resetFilterCategory();
     const numberOfProducts = await this.pageObjects.productsPage.resetAndGetNumberOfLines();
     await expect(numberOfProducts).to.be.above(0);
@@ -78,7 +78,7 @@ describe('Create, read, update and delete Standard product in BO', async () => {
   });
 
   it('should preview and check product in FO', async function () {
-    await testContext.addContextItem(this, 'stepIdentifier', 'previewProduct0', baseContext);
+    await testContext.addContextItem(this, 'stepIdentifier', 'previewProduct1', baseContext);
     page = await this.pageObjects.addProductPage.previewProduct();
     this.pageObjects = await init();
     const result = await this.pageObjects.foProductPage.checkProduct(productData);
@@ -100,7 +100,7 @@ describe('Create, read, update and delete Standard product in BO', async () => {
   });
 
   it('should preview and check product in FO', async function () {
-    await testContext.addContextItem(this, 'stepIdentifier', 'previewProduct1', baseContext);
+    await testContext.addContextItem(this, 'stepIdentifier', 'previewProduct2', baseContext);
     page = await this.pageObjects.addProductPage.previewProduct();
     this.pageObjects = await init();
     const result = await this.pageObjects.foProductPage.checkProduct(editedProductData);

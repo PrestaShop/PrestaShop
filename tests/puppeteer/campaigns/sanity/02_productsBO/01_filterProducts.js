@@ -54,20 +54,20 @@ describe('Filter in Products Page', async () => {
   });
 
   it('should reset all filters and get Number of products in BO', async function () {
-    await testContext.addContextItem(this, 'stepIdentifier', 'resetFilters0', baseContext);
+    await testContext.addContextItem(this, 'stepIdentifier', 'resetFilters', baseContext);
     await this.pageObjects.productsPage.resetFilterCategory();
     numberOfProducts = await this.pageObjects.productsPage.resetAndGetNumberOfLines();
     await expect(numberOfProducts).to.be.above(0);
   });
 
   const tests = [
-    {args: {filterBy: 'name', filterValue: Products.demo_14.name}},
-    {args: {filterBy: 'reference', filterValue: Products.demo_1.reference}},
-    {args: {filterBy: 'category', filterValue: Categories.men.name}},
+    {args: {identifier: 'filterName', filterBy: 'name', filterValue: Products.demo_14.name}},
+    {args: {identifier: 'filterReference', filterBy: 'reference', filterValue: Products.demo_1.reference}},
+    {args: {identifier: 'filterCategory', filterBy: 'category', filterValue: Categories.men.name}},
   ];
-  tests.forEach((test, index) => {
+  tests.forEach((test) => {
     it(`should filter list by ${test.args.filterBy} and check result`, async function () {
-      await testContext.addContextItem(this, 'stepIdentifier', `filterBy${index + 1}`, baseContext);
+      await testContext.addContextItem(this, 'stepIdentifier', `filterBy_${test.args.identifier}`, baseContext);
       if (test.args.filterBy === 'category') {
         await this.pageObjects.productsPage.filterProductsByCategory(test.args.filterValue);
       } else {
@@ -78,7 +78,7 @@ describe('Filter in Products Page', async () => {
     });
 
     it('should reset filter and check result', async function () {
-      await testContext.addContextItem(this, 'stepIdentifier', `resetFilters${index + 1}`, baseContext);
+      await testContext.addContextItem(this, 'stepIdentifier', `resetFilters_${test.args.identifier}`, baseContext);
       let numberOfProductsAfterReset;
       if (test.args.filterBy === 'category') {
         await this.pageObjects.productsPage.resetFilterCategory();

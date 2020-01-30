@@ -52,7 +52,7 @@ describe('Create Standard product in BO and Delete it with Bulk Actions', async 
   loginCommon.loginBO();
 
   it('should go to Products page', async function () {
-    await testContext.addContextItem(this, 'stepIdentifier', 'goToProductsPage0', baseContext);
+    await testContext.addContextItem(this, 'stepIdentifier', 'goToProductsPage1', baseContext);
     await this.pageObjects.boBasePage.goToSubMenu(
       this.pageObjects.boBasePage.catalogParentLink,
       this.pageObjects.boBasePage.productsLink,
@@ -62,7 +62,7 @@ describe('Create Standard product in BO and Delete it with Bulk Actions', async 
   });
 
   it('should reset all filters', async function () {
-    await testContext.addContextItem(this, 'stepIdentifier', 'resetFilters0', baseContext);
+    await testContext.addContextItem(this, 'stepIdentifier', 'resetFilters', baseContext);
     await this.pageObjects.productsPage.resetFilterCategory();
     const numberOfProducts = await this.pageObjects.productsPage.resetAndGetNumberOfLines();
     await expect(numberOfProducts).to.be.above(0);

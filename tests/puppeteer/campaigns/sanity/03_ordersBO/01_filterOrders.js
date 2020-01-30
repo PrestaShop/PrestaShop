@@ -56,20 +56,44 @@ describe('Filter the Orders table by ID, REFERENCE, STATUS', async () => {
   });
 
   it('should reset all filters and get number of orders', async function () {
-    await testContext.addContextItem(this, 'stepIdentifier', 'resetFilters0', baseContext);
+    await testContext.addContextItem(this, 'stepIdentifier', 'resetFilters1', baseContext);
     numberOfOrders = await this.pageObjects.ordersPage.resetAndGetNumberOfLines();
     await expect(numberOfOrders).to.be.above(0);
   });
 
   const tests = [
-    {args: {filterType: 'input', filterBy: 'id_order', filterValue: Orders.firstOrder.id}},
-    {args: {filterType: 'input', filterBy: 'reference', filterValue: Orders.fourthOrder.ref}},
-    {args: {filterType: 'select', filterBy: 'order_state', filterValue: Statuses.paymentError.status}},
+    {
+      args:
+        {
+          identifier: 'filterId',
+          filterType: 'input',
+          filterBy: 'id_order',
+          filterValue: Orders.firstOrder.id,
+        },
+    },
+    {
+      args:
+        {
+          identifier: 'filterReference',
+          filterType: 'input',
+          filterBy: 'reference',
+          filterValue: Orders.fourthOrder.ref,
+        },
+    },
+    {
+      args:
+        {
+          identifier: 'filterState',
+          filterType: 'select',
+          filterBy: 'order_state',
+          filterValue: Statuses.paymentError.status,
+        },
+    },
   ];
 
-  tests.forEach((test, index) => {
+  tests.forEach((test) => {
     it('should filter the Orders table by ID and check the result', async function () {
-      await testContext.addContextItem(this, 'stepIdentifier', `filterOrders${index + 1}`, baseContext);
+      await testContext.addContextItem(this, 'stepIdentifier', `filterOrders_${test.args.identifier}`, baseContext);
       await this.pageObjects.ordersPage.filterOrders(
         test.args.filterType,
         test.args.filterBy,
@@ -80,7 +104,7 @@ describe('Filter the Orders table by ID, REFERENCE, STATUS', async () => {
     });
 
     it('should reset all filters', async function () {
-      await testContext.addContextItem(this, 'stepIdentifier', `resetFilters${index + 1}`, baseContext);
+      await testContext.addContextItem(this, 'stepIdentifier', `resetFilters_${test.args.identifier}`, baseContext);
       const numberOfOrdersAfterReset = await this.pageObjects.ordersPage.resetAndGetNumberOfLines();
       await expect(numberOfOrdersAfterReset).to.be.equal(numberOfOrders);
     });
