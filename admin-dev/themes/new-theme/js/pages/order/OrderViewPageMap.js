@@ -73,6 +73,7 @@ export default {
   productsTableRowEdited: productId => `#editOrderProduct_${productId}`,
   productsCellLocation: 'tr .cellProductLocation',
   productsCellLocationDisplayed: 'tr:not(.d-none) .cellProductLocation',
+  productsTableCustomizationRows: '#orderProductsTable .order-product-customization',
   productEditBtn: '.js-order-product-edit-btn',
   productAddBtn: '#addProductBtn',
   productActionBtn: '.js-product-action-btn',
