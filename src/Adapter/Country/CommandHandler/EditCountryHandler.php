@@ -32,10 +32,10 @@ use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressConstraintExcepti
 use PrestaShop\PrestaShop\Core\Domain\Address\Exception\CannotUpdateAddressFormatException;
 use PrestaShop\PrestaShop\Core\Domain\Country\Command\EditCountryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Country\CommandHandler\EditCountryHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CannotUpdateCountryException;
 use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryException;
 use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CannotUpdateCountryException;
 use PrestaShopException;
 
 /**
@@ -84,15 +84,11 @@ final class EditCountryHandler extends AbstractCountryHandler implements EditCou
             $addressFormat = $this->getValidAddressFormat((int) $country->id, $command->getAddressFormat());
 
             if (false === $country->update()) {
-                throw new CannotUpdateCountryException(
-                    'Failed to update country'
-                );
+                throw new CannotUpdateCountryException('Failed to update country');
             }
 
             if (false === $addressFormat->update()) {
-                throw new CannotUpdateAddressFormatException(
-                    'Failed to update address format'
-                );
+                throw new CannotUpdateAddressFormatException('Failed to update address format');
             }
         } catch (PrestaShopException $e) {
             throw new CountryException('An unexpected error occurred when updating country', 0, $e);

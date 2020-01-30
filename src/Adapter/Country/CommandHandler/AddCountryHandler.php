@@ -79,17 +79,13 @@ final class AddCountryHandler extends AbstractCountryHandler implements AddCount
             $this->validateCountryFields($country);
 
             if (false === $country->add()) {
-                throw new CannotAddCountryException(
-                    'Failed to add country'
-                );
+                throw new CannotAddCountryException('Failed to add country');
             }
 
             $addressFormat = $this->getValidAddressFormat((int) $country->id, $command->getAddressFormat());
 
             if (false === $addressFormat->add()) {
-                throw new CannotAddAddressFormatException(
-                    'Failed to add address format'
-                );
+                throw new CannotAddAddressFormatException('Failed to add address format');
             }
         } catch (PrestaShopException $e) {
             throw new CountryException('An unexpected error occurred when adding country', 0, $e);
