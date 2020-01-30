@@ -160,11 +160,17 @@ class TinyMCEEditor {
         const textareaLinkSelector = '.nav-item a[data-locale="' + textareaLocale + '"]';
 
         $(textareaLinkSelector, tabContainer).on('shown.bs.tab', () => {
+          const form = $(textarea).closest('form');
           const editor = tinyMCE.get(textarea.id);
           if (editor) {
             // Reset content to force refresh of editor
             editor.setContent(editor.getContent());
           }
+
+          EventEmitter.emit('languageSelected', {
+            selectedLocale: textareaLocale,
+            form
+          });
         });
       }
     });
