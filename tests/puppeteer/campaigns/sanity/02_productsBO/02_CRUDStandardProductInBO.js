@@ -53,7 +53,7 @@ describe('Create, read, update and delete Standard product in BO', async () => {
   loginCommon.loginBO();
 
   it('should go to Products page', async function () {
-    await testContext.addContextItem(this, 'stepIdentifier', 'goToProductsPage', baseContext);
+    await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPage', baseContext);
     await this.pageObjects.boBasePage.goToSubMenu(
       this.pageObjects.boBasePage.catalogParentLink,
       this.pageObjects.boBasePage.productsLink,
@@ -64,21 +64,21 @@ describe('Create, read, update and delete Standard product in BO', async () => {
   });
 
   it('should reset all filters', async function () {
-    await testContext.addContextItem(this, 'stepIdentifier', 'resetFilters', baseContext);
+    await testContext.addContextItem(this, 'testIdentifier', 'resetFilters', baseContext);
     await this.pageObjects.productsPage.resetFilterCategory();
     const numberOfProducts = await this.pageObjects.productsPage.resetAndGetNumberOfLines();
     await expect(numberOfProducts).to.be.above(0);
   });
 
   it('should create Product', async function () {
-    await testContext.addContextItem(this, 'stepIdentifier', 'createProduct', baseContext);
+    await testContext.addContextItem(this, 'testIdentifier', 'createProduct', baseContext);
     await this.pageObjects.productsPage.goToAddProductPage();
     const createProductMessage = await this.pageObjects.addProductPage.createEditProduct(productData);
     await expect(createProductMessage).to.equal(this.pageObjects.addProductPage.settingUpdatedMessage);
   });
 
   it('should preview and check product in FO', async function () {
-    await testContext.addContextItem(this, 'stepIdentifier', 'previewProduct1', baseContext);
+    await testContext.addContextItem(this, 'testIdentifier', 'previewProduct1', baseContext);
     page = await this.pageObjects.addProductPage.previewProduct();
     this.pageObjects = await init();
     const result = await this.pageObjects.foProductPage.checkProduct(productData);
@@ -94,13 +94,13 @@ describe('Create, read, update and delete Standard product in BO', async () => {
   });
 
   it('should edit Product', async function () {
-    await testContext.addContextItem(this, 'stepIdentifier', 'editProduct', baseContext);
+    await testContext.addContextItem(this, 'testIdentifier', 'editProduct', baseContext);
     const createProductMessage = await this.pageObjects.addProductPage.createEditProduct(editedProductData, false);
     await expect(createProductMessage).to.equal(this.pageObjects.addProductPage.settingUpdatedMessage);
   });
 
   it('should preview and check product in FO', async function () {
-    await testContext.addContextItem(this, 'stepIdentifier', 'previewProduct2', baseContext);
+    await testContext.addContextItem(this, 'testIdentifier', 'previewProduct2', baseContext);
     page = await this.pageObjects.addProductPage.previewProduct();
     this.pageObjects = await init();
     const result = await this.pageObjects.foProductPage.checkProduct(editedProductData);
@@ -116,7 +116,7 @@ describe('Create, read, update and delete Standard product in BO', async () => {
   });
 
   it('should delete Product and be on product list page', async function () {
-    await testContext.addContextItem(this, 'stepIdentifier', 'deleteProduct', baseContext);
+    await testContext.addContextItem(this, 'testIdentifier', 'deleteProduct', baseContext);
     const testResult = await this.pageObjects.addProductPage.deleteProduct();
     await expect(testResult).to.equal(this.pageObjects.productsPage.productDeletedSuccessfulMessage);
     const pageTitle = await this.pageObjects.productsPage.getPageTitle();

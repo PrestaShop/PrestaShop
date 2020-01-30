@@ -47,7 +47,7 @@ describe('Edit Order BO', async () => {
   loginCommon.loginBO();
 
   it('should go to the Orders page', async function () {
-    await testContext.addContextItem(this, 'stepIdentifier', 'goToOrdersPage', baseContext);
+    await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage', baseContext);
     await this.pageObjects.boBasePage.goToSubMenu(
       this.pageObjects.boBasePage.ordersParentLink,
       this.pageObjects.boBasePage.ordersLink,
@@ -57,20 +57,20 @@ describe('Edit Order BO', async () => {
   });
 
   it('should go to the first order page', async function () {
-    await testContext.addContextItem(this, 'stepIdentifier', 'goToFirstOrder', baseContext);
+    await testContext.addContextItem(this, 'testIdentifier', 'goToFirstOrder', baseContext);
     await this.pageObjects.ordersPage.goToOrder('1');
     const pageTitle = await this.pageObjects.orderPage.getPageTitle();
     await expect(pageTitle).to.contains(this.pageObjects.orderPage.pageTitle);
   });
 
   it('should modify the product quantity and check the validation', async function () {
-    await testContext.addContextItem(this, 'stepIdentifier', 'editOrderQuantity', baseContext);
+    await testContext.addContextItem(this, 'testIdentifier', 'editOrderQuantity', baseContext);
     const result = await this.pageObjects.orderPage.modifyProductQuantity('1', '5');
     await expect(result).to.be.true;
   });
 
   it('should modify the order status and check the validation', async function () {
-    await testContext.addContextItem(this, 'stepIdentifier', 'editOrderStatus', baseContext);
+    await testContext.addContextItem(this, 'testIdentifier', 'editOrderStatus', baseContext);
     const result = await this.pageObjects.orderPage.modifyOrderStatus(Statuses.paymentAccepted.status);
     await expect(result).to.be.true;
   });
