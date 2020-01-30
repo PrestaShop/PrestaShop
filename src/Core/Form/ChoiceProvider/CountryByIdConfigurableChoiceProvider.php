@@ -52,7 +52,7 @@ final class CountryByIdConfigurableChoiceProvider implements ConfigurableFormCho
      * @param CommandBusInterface $queryBud
      */
     public function __construct(
-        $langId,
+        int $langId,
         CommandBusInterface $queryBud
     ) {
         $this->langId = $langId;
