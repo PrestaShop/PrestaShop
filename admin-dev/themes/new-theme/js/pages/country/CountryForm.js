@@ -55,7 +55,7 @@ export default class CountryForm {
    * @param event
    */
   handlePatternClick(event) {
-    this.addFieldsToCursorPosition($(event.target).attr("id"));
+    this.addFieldsToCursorPosition($(event.target).attr('id'));
     this.lastLayoutModified = $(countryFormMap.formatTextAreaField).val();
   }
 
@@ -99,7 +99,7 @@ export default class CountryForm {
     }
 
     const content = $(countryFormMap.formatTextAreaField).val();
-    $(countryFormMap.formatTextAreaField).val('${content.substr(0, pos)} ${pattern} ${content.substr(pos)}');
+    $(countryFormMap.formatTextAreaField).val(`${content.substr(0, pos)} ${pattern} ${content.substr(pos)}`);
   }
 
   /**
