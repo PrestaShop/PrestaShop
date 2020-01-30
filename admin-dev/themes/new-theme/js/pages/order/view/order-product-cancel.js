@@ -47,38 +47,44 @@ export default class OrderProductCancel {
 
   showPartialRefund() {
     // Always start by hiding elements then show the others, since some elements are common
-    $(OrderViewPageMap.cancelProduct.toggle.standardRefund).hide();
+    this.hideRefundElements();
     $(OrderViewPageMap.cancelProduct.toggle.partialRefund).show();
-    $(OrderViewPageMap.cancelProduct.table.actions).hide();
     this.useAmountInputs = true;
     this.initForm(
       $(OrderViewPageMap.cancelProduct.buttons.save).data('partialRefundLabel'),
-      this.router.generate('admin_orders_partial_refund', {orderId: this.orderId})
+      this.router.generate('admin_orders_partial_refund', {orderId: this.orderId}),
+      'partial-refund'
     );
   }
 
   showStandardRefund() {
     // Always start by hiding elements then show the others, since some elements are common
-    $(OrderViewPageMap.cancelProduct.toggle.partialRefund).hide();
+    this.hideRefundElements();
     $(OrderViewPageMap.cancelProduct.toggle.standardRefund).show();
-    $(OrderViewPageMap.cancelProduct.table.actions).hide();
     this.useAmountInputs = false;
     this.initForm(
       $(OrderViewPageMap.cancelProduct.buttons.save).data('standardRefundLabel'),
-      this.router.generate('admin_orders_standard_refund', {orderId: this.orderId})
+      this.router.generate('admin_orders_standard_refund', {orderId: this.orderId}),
+      'standard-refund'
     );
   }
 
   hideRefund() {
-    $(OrderViewPageMap.cancelProduct.toggle.partialRefund).hide();
-    $(OrderViewPageMap.cancelProduct.toggle.standardRefund).hide();
+    this.hideRefundElements();
     $(OrderViewPageMap.cancelProduct.table.actions).show();
   }
 
-  initForm(actionName, formAction) {
+  hideRefundElements() {
+    $(OrderViewPageMap.cancelProduct.toggle.standardRefund).hide();
+    $(OrderViewPageMap.cancelProduct.toggle.partialRefund).hide();
+    $(OrderViewPageMap.cancelProduct.table.actions).hide();
+  }
+
+  initForm(actionName, formAction, formClass) {
     this.updateVoucherRefund();
 
     this.cancelProductForm.prop('action', formAction);
+    this.cancelProductForm.removeClass('standard-refund partial-refund').addClass(formClass);
     $(OrderViewPageMap.cancelProduct.buttons.save).html(actionName);
     $(OrderViewPageMap.cancelProduct.table.header).html(actionName);
     $(OrderViewPageMap.cancelProduct.checkboxes.restock).prop('checked', this.orderDelivered);

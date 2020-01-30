@@ -103,13 +103,13 @@
       </button>
     </td>
   {% endif %}
-  <td class="text-right">
+  <td class="text-right cancel-product-element">
     <div class="cancel-product-cell cancel-product-element{% if product.refundable == false %} hidden{% endif %}">
-      <div class="row">
-        <div class="col-xl-5 col-lg-12 cancel-product-selector form-group">
+      <div class="cancel-product-cell-elements">
+        <div class="cancel-product-selector form-group">
           {{ form_widget(cancelProductForm['selected_' ~ product.orderDetailId]) }}
         </div>
-        <div class="col-xl-5 col-lg-12 cancel-product-quantity form-group">
+        <div class="cancel-product-quantity form-group">
           {{ form_label(cancelProductForm['quantity_' ~ product.orderDetailId]) }}
           <div class="input-group">
             {% set quantityInputOptions = {
@@ -124,12 +124,12 @@
             <div class="input-group-append"><div class="input-group-text">/ {{ product.quantityRefundable }}</div></div>
           </div>
         </div>
-        <div class="col-xl-7 col-lg-12 cancel-product-amount form-group">
+        <div class="cancel-product-amount form-group">
           {{ form_label(cancelProductForm['amount_' ~ product.orderDetailId]) }}
           <div class="input-group">
             {{ form_widget(cancelProductForm['amount_' ~ product.orderDetailId]) }}
             <div class="input-group-append"><div class="input-group-text">{{ orderCurrency.symbol }}</div></div>
-            <small class="text-left">
+            <small class="max-refund text-left">
               {{ '(Max %amount_refundable% %tax_method%)'|trans({
                 '%amount_refundable%': product.amountRefundable,
                 '%tax_method%': orderForViewing.taxMethod

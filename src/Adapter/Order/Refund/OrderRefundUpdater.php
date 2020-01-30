@@ -73,7 +73,11 @@ class OrderRefundUpdater
             // Update customization
             if ($orderDetail->id_customization) {
                 $customization = new Customization($orderDetail->id_customization);
-                $customization->quantity_refunded += $productRefund['quantity'];
+                if ($returnedProducts) {
+                    $customization->quantity_returned += $productRefund['quantity'];
+                } else {
+                    $customization->quantity_refunded += $productRefund['quantity'];
+                }
 
                 if (!$customization->update()) {
                     throw new CancelProductFromOrderException('Cannot update customization');
