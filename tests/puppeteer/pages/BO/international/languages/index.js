@@ -35,6 +35,8 @@ module.exports = class Languages extends LocalizationBasePage {
     this.bulkActionsEnableButton = '#language_grid_bulk_action_enable_selection';
     this.bulkActionsDisableButton = '#language_grid_bulk_action_disable_selection';
     this.bulkActionsDeleteButton = '#language_grid_bulk_action_delete_selection';
+    this.confirmDeleteModal = '#language_grid_confirm_modal';
+    this.confirmDeleteButton = `${this.confirmDeleteModal} button.btn-confirm-submit`;
   }
 
   /* Header methods */
@@ -177,7 +179,19 @@ module.exports = class Languages extends LocalizationBasePage {
       this.page.waitForSelector(`${this.bulkActionsToggleButton}[aria-expanded='true']`, {visible: true}),
     ]);
     // Click on delete and wait for modal
-    await this.clickAndWaitForNavigation(this.bulkActionsDeleteButton);
+    await Promise.all([
+      this.page.click(this.bulkActionsDeleteButton),
+      this.page.waitForSelector(`${this.confirmDeleteModal}.show`, {visible: true}),
+    ]);
+    await this.confirmDeleteLanguages(this.bulkActionsDeleteButton);
     return this.getTextContent(this.alertSuccessBlockParagraph);
+  }
+
+  /**
+   * Confirm delete with in modal
+   * @return {Promise<void>}
+   */
+  async confirmDeleteLanguages() {
+    await this.clickAndWaitForNavigation(this.confirmDeleteButton);
   }
 };
