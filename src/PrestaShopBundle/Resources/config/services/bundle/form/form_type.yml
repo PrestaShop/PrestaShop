@@ -1137,10 +1137,11 @@ services:
 
     form.type.international.locations.country:
         class: 'PrestaShopBundle\Form\Admin\Improve\International\Locations\Country\CountryType'
+        parent: 'form.type.translatable.aware'
+        public: true
         arguments:
-          - '@translator'
-          - '@prestashop.core.form.choice_provider.currency_by_id'
-          - '@prestashop.adapter.multistore_feature'
+          - '@=service("prestashop.core.form.choice_provider.currency_by_id")'
+          - '@=service("prestashop.adapter.multistore_feature")'
         tags:
           - { name: form.type }
 
