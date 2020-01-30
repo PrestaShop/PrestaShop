@@ -30,6 +30,8 @@ use Cart;
 use Context;
 use Currency;
 use Customer;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartException;
+use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopException;
 use PrestaShop\PrestaShop\Core\Grid\Data\Factory\GridDataFactoryInterface;
 use PrestaShop\PrestaShop\Core\Grid\Data\GridData;
 use PrestaShop\PrestaShop\Core\Grid\Record\RecordCollection;
@@ -89,6 +91,7 @@ final class CartGridDataFactory implements GridDataFactoryInterface
      * @param RecordCollectionInterface $records
      *
      * @return RecordCollection
+     * @throws CartException
      */
     private function applyModifications(RecordCollectionInterface $records)
     {
@@ -128,6 +131,10 @@ final class CartGridDataFactory implements GridDataFactoryInterface
 
             $record['cart_total'] = Cart::getTotalCart($context->cart->id, true, Cart::BOTH_WITHOUT_SHIPPING);
             $record['is_order_placed'] = $context->cart->orderExists();
+
+            if (!isset($context->cart->id_shop)) {
+                throw new CartException('cart shop id is not set');
+            }
             $record['shop_name'] = $context->shop->getShops()[$context->cart->id_shop]['name'];
 
             $modifiedRecords[] = $record;
