@@ -33,7 +33,7 @@ use PrestaShop\PrestaShop\Adapter\Presenter\AbstractLazyArray;
  */
 class LazyArrayImplementation extends AbstractLazyArray
 {
-    private $propertOneWasCalled = false;
+    private $propertyOneWasCalled = false;
 
     /**
      * @arrayAccess
@@ -42,7 +42,7 @@ class LazyArrayImplementation extends AbstractLazyArray
      */
     public function getPropertyOne()
     {
-        $this->propertOneWasCalled = true;
+        $this->propertyOneWasCalled = true;
 
         return false;
     }
@@ -52,6 +52,6 @@ class LazyArrayImplementation extends AbstractLazyArray
      */
     public function wasPropertyOneCalled()
     {
-        return $this->propertOneWasCalled;
+        return $this->propertyOneWasCalled;
     }
 }
