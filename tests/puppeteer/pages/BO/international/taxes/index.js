@@ -23,6 +23,8 @@ module.exports = class Taxes extends BOBasePage {
     this.deleteSelectionButton = `${this.taxesGridPanelDiv} #tax_grid_bulk_action_delete_selection`;
     this.selectAllLabel = `${this.taxesGridPanelDiv} #tax_grid .md-checkbox label`;
     this.taxesGridTable = `${this.taxesGridPanelDiv} #tax_grid_table`;
+    this.confirmDeleteModal = '#tax_grid_confirm_modal';
+    this.confirmDeleteButton = `${this.confirmDeleteModal} button.btn-confirm-submit`;
     // Filters
     this.taxesFilterColumnInput = `${this.taxesGridTable} #tax_%FILTERBY`;
     this.resetFilterButton = `${this.taxesGridTable} button[name='tax[actions][reset]']`;
@@ -216,8 +218,6 @@ module.exports = class Taxes extends BOBasePage {
    * @return {Promise<textContent>}
    */
   async deleteTaxesBulkActions() {
-    // Add listener to dialog to accept deletion
-    this.dialogListener(true);
     // Click on Select All
     await Promise.all([
       this.page.click(this.selectAllLabel),
@@ -228,13 +228,21 @@ module.exports = class Taxes extends BOBasePage {
       this.page.click(this.bulkActionsToggleButton),
       this.page.waitForSelector(`${this.bulkActionsToggleButton}[aria-expanded='true']`, {visible: true}),
     ]);
-    // Click on delete
+    // Click on delete and wait for modal
     await Promise.all([
       this.page.click(this.deleteSelectionButton),
-      this.page.waitForNavigation({waitUntil: 'networkidle0'}),
-      this.page.waitForSelector(this.alertSuccessBlockParagraph, {visible: true}),
+      this.page.waitForSelector(`${this.confirmDeleteModal}.show`, {visible: true}),
     ]);
+    await this.confirmDeleteTaxes(this.bulkActionsDeleteButton);
     return this.getTextContent(this.alertSuccessBlockParagraph);
+  }
+
+  /**
+   * Confirm delete with in modal
+   * @return {Promise<void>}
+   */
+  async confirmDeleteTaxes() {
+    await this.clickAndWaitForNavigation(this.confirmDeleteButton);
   }
 
   /**
