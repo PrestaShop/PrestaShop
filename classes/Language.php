@@ -30,6 +30,7 @@ use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\MailTemplate\Command\GenerateThemeMailTemplatesCommand;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Language\LanguageInterface;
+use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleRepository;
 use PrestaShop\PrestaShop\Core\Localization\RTL\Processor as RtlStylesheetProcessor;
 use PrestaShopBundle\Translation\TranslatorLanguageLoader;
 
@@ -1257,9 +1258,38 @@ class LanguageCore extends ObjectModel implements LanguageInterface
         $lang_pack = self::getLangDetails($iso);
         self::installSfLanguagePack(self::getLocaleByIso($iso), $errors);
         self::updateMultilangTable($iso);
+        self::updateCurrenciesCldr(new Language(self::getIdByIso($iso, true)));
         self::generateEmailsLanguagePack($lang_pack, $errors, true);
 
         return count($errors) ? $errors : true;
+    }
+
+    private static function updateCurrenciesCldr(Language $language)
+    {
+        /** @var Currency[] $currencies */
+        $currencies = Currency::getCurrencies(true, false, false);
+        $container = SymfonyContainer::getInstance();
+        /** @var LocaleRepository $localeRepoCLDR */
+        $localeRepoCLDR = $container->get('prestashop.core.localization.cldr.locale_repository');
+        $localeCLDR = $localeRepoCLDR->getLocale($language->locale);
+
+        foreach ($currencies as $currency) {
+            $names = $currency->getLocalizedNames();
+            $symbols = $currency->getLocalizedSymbols();
+
+            $currencyCLDR = $localeCLDR->getCurrency($currency->iso_code);
+            if (null === $currencyCLDR) {
+                continue;
+            }
+
+            $names[$language->id] = $currencyCLDR->getDisplayName();
+            $symbols[$language->id] = $currencyCLDR->getSymbol();
+
+            $currency->setLocalizedNames($names);
+            $currency->setLocalizedSymbols($symbols);
+
+            $currency->save();
+        }
     }
 
     public static function updateLanguagePack($iso, &$errors = [])
