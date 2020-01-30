@@ -70,10 +70,7 @@ class CountryZipCodeFormat
     private function assertIsValidZipCodeFormat(string $zipCodeFormat): void
     {
         if (!preg_match('/^[NLCnlc 0-9-]+$/', $zipCodeFormat)) {
-            throw new CountryConstraintException(
-                sprintf('Invalid country zip code format: %s', $zipCodeFormat),
-                CountryConstraintException::INVALID_ZIP_CODE
-            );
+            throw new CountryConstraintException(sprintf('Invalid country zip code format: %s', $zipCodeFormat), CountryConstraintException::INVALID_ZIP_CODE);
         }
     }
 }

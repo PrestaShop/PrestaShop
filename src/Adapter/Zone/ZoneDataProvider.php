@@ -26,8 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Zone;
 
-use Zone;
 use PrestaShop\PrestaShop\Core\Domain\Zone\DataProvider\ActiveZoneDataProviderInterface;
+use Zone;
 
 /**
  * This class will provide data from DB / ORM about Zone

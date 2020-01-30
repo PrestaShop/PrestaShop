@@ -55,15 +55,11 @@ abstract class AbstractCountryHandler
         try {
             $country = new Country($countryIdValue);
         } catch (PrestaShopException $e) {
-            throw new CountryNotFoundException(
-                sprintf('Country with id "%s" was not found.', $countryIdValue)
-            );
+            throw new CountryNotFoundException(sprintf('Country with id "%s" was not found.', $countryIdValue));
         }
 
         if ($country->id !== $countryIdValue) {
-            throw new CountryNotFoundException(
-                sprintf('Country with id "%s" was not found.', $countryIdValue)
-            );
+            throw new CountryNotFoundException(sprintf('Country with id "%s" was not found.', $countryIdValue));
         }
 
         return $country;
@@ -89,17 +85,11 @@ abstract class AbstractCountryHandler
                 strlen($addressFormat->format) <= 0 ||
                 !$addressFormat->validateFields(false);
         } catch (PrestaShopException $e) {
-            throw new AddressConstraintException(
-                sprintf('Address format: "%s" is invalid', $format),
-                AddressConstraintException::INVALID_FORMAT
-            );
+            throw new AddressConstraintException(sprintf('Address format: "%s" is invalid', $format), AddressConstraintException::INVALID_FORMAT);
         }
 
         if ($isInvalidAddressFormat) {
-            throw new AddressConstraintException(
-                sprintf('Address format: "%s" is invalid', $addressFormat->format),
-                AddressConstraintException::INVALID_FORMAT
-            );
+            throw new AddressConstraintException(sprintf('Address format: "%s" is invalid', $addressFormat->format), AddressConstraintException::INVALID_FORMAT);
         }
 
         return $addressFormat;
@@ -114,9 +104,7 @@ abstract class AbstractCountryHandler
     protected function validateCountryFields(Country $country)
     {
         if (!$country->validateFields(false) || !$country->validateFieldsLang(false)) {
-            throw new CountryConstraintException(
-                'Country contains invalid field values'
-            );
+            throw new CountryConstraintException('Country contains invalid field values');
         }
     }
 }
