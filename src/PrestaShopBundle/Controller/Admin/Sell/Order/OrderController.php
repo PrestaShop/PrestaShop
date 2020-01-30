@@ -1260,7 +1260,7 @@ class OrderController extends FrameworkBundleAdminController
                 'Admin.Notifications.Error'
             ),
             NegativePaymentAmountException::class => $this->trans(
-                'The amount should be greater than 0.',
+                'Invalid value: the payment must be a positive amount.',
                 'Admin.Notifications.Error'
             ),
         ];
