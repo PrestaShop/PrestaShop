@@ -27,7 +27,6 @@ class Country
         $this->name = $name;
     }
 
-
     /**
      * Validates that the value is greater than zero int
      *
