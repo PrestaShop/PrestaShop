@@ -26,8 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Core\ConstraintValidator;
 
+use PrestaShop\PrestaShop\Adapter\State\CountryStateByIsoCodeProvider;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
-use PrestaShop\PrestaShop\Core\Domain\State\Query\GetStateWithIsoCodeExists;
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
@@ -60,16 +60,11 @@ final class UniqueStateIsoCodeValidator extends ConstraintValidator
     /**
      * {@inheritdoc}
      */
-    public function validate($value, Constraint $constraint)
+    public function validate($isoCode, Constraint $constraint)
     {
-        $isUniqueStateIsoCodeQuery = new GetStateWithIsoCodeExists($value);
-
-        if (null !== $constraint->excludeId) {
-            $isUniqueStateIsoCodeQuery->setExcludeStateId($constraint->excludeId);
-        }
-
-        /** @var bool $isFound */
-        $isFound = $this->queryBus->handle($isUniqueStateIsoCodeQuery);
+        $countrySTateByIsoCodeProvider = new CountryStateByIsoCodeProvider();
+        $stateId = $countrySTateByIsoCodeProvider->getStateIdByIsoCode($isoCode);
+        $isFound = $stateId ? true : false;
 
         if ($isFound) {
             $this->context
