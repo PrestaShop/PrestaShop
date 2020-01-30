@@ -69,5 +69,7 @@
       {/if}
     </section>
 
+    {hook h="displayFooterCategory"}
+
   </section>
 {/block}

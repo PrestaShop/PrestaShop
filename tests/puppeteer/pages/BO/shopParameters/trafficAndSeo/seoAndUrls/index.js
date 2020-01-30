@@ -32,6 +32,7 @@ module.exports = class SeoAndUrls extends BOBasePage {
     this.deleteRowLink = `${this.dropdownToggleMenu} a[data-url*='/delete']`;
     // Set up URL form
     this.switchFriendlyUrlLabel = 'label[for=\'meta_settings_form_set_up_urls_friendly_url_%TOGGLE\']';
+    this.switchAccentedUrlLabel = 'label[for=\'meta_settings_form_set_up_urls_accented_url_%TOGGLE\']';
     this.saveSeoAndUrlFormButton = '#main-div form:nth-child(1) div:nth-child(1) div.card-footer button';
   }
 
@@ -133,6 +134,17 @@ module.exports = class SeoAndUrls extends BOBasePage {
    */
   async enableDisableFriendlyURL(toEnable = true) {
     await this.waitForSelectorAndClick(this.switchFriendlyUrlLabel.replace('%TOGGLE', toEnable ? 1 : 0));
+    await this.clickAndWaitForNavigation(this.saveSeoAndUrlFormButton);
+    return this.getTextContent(this.alertSuccessBloc);
+  }
+
+  /**
+   * Enable/disable accented url
+   * @param toEnable, true to enable and false to disable
+   * @return {Promise<string>}
+   */
+  async enableDisableAccentedURL(toEnable = true) {
+    await this.waitForSelectorAndClick(this.switchAccentedUrlLabel.replace('%TOGGLE', toEnable ? 1 : 0));
     await this.clickAndWaitForNavigation(this.saveSeoAndUrlFormButton);
     return this.getTextContent(this.alertSuccessBloc);
   }

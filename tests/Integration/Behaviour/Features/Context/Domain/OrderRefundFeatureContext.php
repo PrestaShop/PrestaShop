@@ -31,8 +31,7 @@ use Order;
 use OrderSlip;
 use PHPUnit\Framework\Assert as Assert;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\IssuePartialRefundCommand;
-use PrestaShop\PrestaShop\Core\Domain\Order\Exception\EmptyRefundAmountException;
-use PrestaShop\PrestaShop\Core\Domain\Order\Exception\EmptyRefundQuantityException;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidRefundException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderForViewing;
@@ -45,16 +44,23 @@ use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 class OrderRefundFeatureContext extends AbstractDomainFeatureContext
 {
     /**
-     * @When /^I issue a partial refund on "(.*)" (with|without) restock (with|without) voucher on following products:$/
+     * @When /^I issue a partial refund on "(.*)" (with|without) restock (with|without) credit slip (with|without) voucher on following products:$/
      *
      * @param string $orderReference
      * @param string $restockProducts
+     * @param string $generateCreditSlip
      * @param string $generateVoucher
      * @param TableNode $table
      */
-    public function issuePartialRefundOrder(string $orderReference, $restockProducts, $generateVoucher, TableNode $table)
-    {
+    public function issuePartialRefundOrder(
+        string $orderReference,
+        string $restockProducts,
+        string $generateCreditSlip,
+        string $generateVoucher,
+        TableNode $table
+    ) {
         $restockProducts = 'with' === $restockProducts;
+        $generateCreditSlip = 'with' === $generateCreditSlip;
         $generateVoucher = 'with' === $generateVoucher;
         $orderId = SharedStorage::getStorage()->get($orderReference);
         $refundData = $table->getColumnsHash();
@@ -65,12 +71,31 @@ class OrderRefundFeatureContext extends AbstractDomainFeatureContext
                 $orderId,
                 $refundData,
                 $restockProducts,
+                $generateCreditSlip,
                 $generateVoucher
             );
 
             $this->getCommandBus()->handle($command);
         } catch (OrderException $e) {
             $this->lastException = $e;
+        }
+    }
+
+    /**
+     * @Given :orderReference has :creditSlipNumber credit slips
+     *
+     * @param $orderReference
+     * @param int $creditSlipNumber
+     */
+    public function checkOrderRefundsNumber($orderReference, int $creditSlipNumber)
+    {
+        $orderId = SharedStorage::getStorage()->get($orderReference);
+
+        $order = new Order($orderId);
+        $orderSlips = $order->getOrderSlipsCollection();
+        if ($creditSlipNumber !== $orderSlips->count()) {
+            $errorMessage = sprintf('Invalid number of credit slips on order %s, expected %s but got %s', $orderReference, $creditSlipNumber, $orderSlips->count());
+            throw new RuntimeException($errorMessage);
         }
     }
 
@@ -104,19 +129,46 @@ class OrderRefundFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Then I should get error that refund quantity is empty
+     * @Then I should get error that refund quantity is invalid
      */
-    public function assertLastErrorIsEmptyRefundQuantity()
+    public function assertLastErrorIsInvalidRefundQuantity()
     {
-        $this->assertLastErrorIs(EmptyRefundQuantityException::class);
+        $this->assertLastErrorIs(InvalidRefundException::class, InvalidRefundException::INVALID_QUANTITY);
     }
 
     /**
-     * @Then I should get error that refund amount is empty
+     * @Then I should get error that refund quantity is too high and max is :maxRefund
      */
-    public function assertLastErrorIsEmptyRefundAmount()
+    public function assertLastErrorIsRefundQuantityTooHigh(int $maxRefund)
     {
-        $this->assertLastErrorIs(EmptyRefundAmountException::class);
+        $this->assertLastErrorIs(InvalidRefundException::class, InvalidRefundException::QUANTITY_TOO_HIGH);
+        if ($maxRefund !== $this->lastException->getRefundableQuantity()) {
+            throw new RuntimeException(sprintf('Invalid refundable quantity in exception, expected %s but got %s', $maxRefund, $this->lastException->getRefundableQuantity()));
+        }
+    }
+
+    /**
+     * @Then I should get error that refund amount is invalid
+     */
+    public function assertLastErrorIsInvalidRefundAmount()
+    {
+        $this->assertLastErrorIs(InvalidRefundException::class, InvalidRefundException::INVALID_AMOUNT);
+    }
+
+    /**
+     * @Then I should get error that no generation is invalid
+     */
+    public function assertLastErrorIsInvalidNoGeneration()
+    {
+        $this->assertLastErrorIs(InvalidRefundException::class, InvalidRefundException::NO_GENERATION);
+    }
+
+    /**
+     * @Then I should get error that no refunds is invalid
+     */
+    public function assertLastErrorIsInvalidNoRefunds()
+    {
+        $this->assertLastErrorIs(InvalidRefundException::class, InvalidRefundException::NO_REFUNDS);
     }
 
     /**
@@ -133,6 +185,7 @@ class OrderRefundFeatureContext extends AbstractDomainFeatureContext
         int $orderId,
         array $refunds,
         bool $restockRefundedProducts,
+        bool $generateCreditSlip,
         bool $generateVoucher,
         int $voucherRefundType = VoucherRefundType::PRODUCT_PRICES_EXCLUDING_VOUCHER_REFUND,
         ?float $voucherRefundAmount = null
@@ -165,6 +218,7 @@ class OrderRefundFeatureContext extends AbstractDomainFeatureContext
             $orderDetailsRefunds,
             $shippingCostRefund,
             $restockRefundedProducts,
+            $generateCreditSlip,
             $generateVoucher,
             $voucherRefundType,
             $voucherRefundAmount

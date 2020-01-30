@@ -64,21 +64,20 @@ final class PartialRefundFormDataHandler implements FormDataHandlerInterface
         $refunds = [];
         foreach ($data['products'] as $product) {
             $orderDetailId = $product->getOrderDetailId();
-            if (!empty($data['quantity_' . $orderDetailId])) {
-                $refunds[$orderDetailId]['quantity'] = $data['quantity_' . $orderDetailId];
-            }
-            if (!empty($data['amount_' . $orderDetailId])) {
-                $refunds[$orderDetailId]['amount'] = $data['amount_' . $orderDetailId];
+            if (!empty($data['quantity_' . $orderDetailId]) || !empty($data['amount_' . $orderDetailId])) {
+                $refunds[$orderDetailId]['quantity'] = $data['quantity_' . $orderDetailId] ?? 0;
+                $refunds[$orderDetailId]['amount'] = $data['amount_' . $orderDetailId] ?? 0;
             }
         }
 
         $command = new IssuePartialRefundCommand(
             $id,
             $refunds,
-            $data['shipping'],
+            $data['shipping_amount'],
             $data['restock'],
+            $data['credit_slip'],
             $data['voucher'],
-            VoucherRefundType::PRODUCT_PRICES_EXCLUDING_VOUCHER_REFUND
+            $data['voucher_refund_type'] ?? VoucherRefundType::PRODUCT_PRICES_EXCLUDING_VOUCHER_REFUND
         );
 
         $this->commandBus->handle($command);
