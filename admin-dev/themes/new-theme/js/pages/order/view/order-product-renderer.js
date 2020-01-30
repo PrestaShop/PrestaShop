@@ -200,28 +200,22 @@ export default class OrderProductRenderer {
   }
 
   toggleProductAddNewInvoiceInfo() {
-<<<<<<< HEAD
-    $(OrderViewPageMap.productAddNewInvoiceInfo).toggleClass(
-      'd-none',
-      $(OrderViewPageMap.productAddInvoiceSelect).val() === 0,
-    );
-=======
     if ($(OrderViewPageMap.productAddInvoiceSelect).val() === 0) {
       $(OrderViewPageMap.productAddNewInvoiceInfo).removeClass('d-none');
     } else {
       $(OrderViewPageMap.productAddNewInvoiceInfo).addClass('d-none');
     }
->>>>>>> 8c4e6daf60b16280582ebe517aa9e43368268513
   }
 
   toggleColumnLocation(target, forceDisplay = null) {
     let isColumnLocationDisplayed = false;
     if (forceDisplay === null) {
-      $(target).filter('td').each(function() {
+      $(target).filter('td').each(function () {
         if ($(this).html() !== '') {
           isColumnLocationDisplayed = true;
           return false;
         }
+        return true;
       });
     } else {
       isColumnLocationDisplayed = forceDisplay;

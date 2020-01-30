@@ -137,8 +137,8 @@ export default class OrderProductAdd {
     this.combinationsSelect.empty();
     Object.values(combinations).forEach((val) => {
       this.combinationsSelect.append(
-          /* eslint-disable-next-line max-len */
-          `<option value="${val.attributeCombinationId}" data-price-tax-excluded="${val.priceTaxExcluded}" data-price-tax-included="${val.priceTaxIncluded}" data-stock="${val.stock}" data-location="${val.location}">${val.attribute}</option>`,
+        /* eslint-disable-next-line max-len */
+        `<option value="${val.attributeCombinationId}" data-price-tax-excluded="${val.priceTaxExcluded}" data-price-tax-included="${val.priceTaxIncluded}" data-stock="${val.stock}" data-location="${val.location}">${val.attribute}</option>`,
       );
     });
     this.combinationsBlock.toggleClass('d-none', Object.keys(combinations).length === 0);
