@@ -23,7 +23,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-import countryFormMap from "./country-form-map";
+import countryFormMap from './country-form-map';
 
 /**
  * Class responsible for javascript actions in country add/edit page.
@@ -32,7 +32,7 @@ export default class CountryForm {
   constructor() {
     this.lastLayoutModified = null;
 
-    this._initEvents();
+    this.initEvents();
 
     return {};
   }
@@ -42,11 +42,11 @@ export default class CountryForm {
    *
    * @private
    */
-  _initEvents() {
-    $(countryFormMap.addPatternBtn).on('click', (event) => this._handlePatternClick(event));
-    $(countryFormMap.customAddressFieldsTabBtn).on('click', (event) => this._handleTabShowClick(event));
-    $(countryFormMap.formatTextAreaField).on('keyup', (event) => this._saveLastModified(event));
-    $(countryFormMap.modifyAddressLayoutBtn).on('click', (event) => this._modifyLayout(event));
+  initEvents() {
+    $(countryFormMap.addPatternBtn).on('click', (event) => this.handlePatternClick(event));
+    $(countryFormMap.customAddressFieldsTabBtn).on('click', (event) => this.handleTabShowClick(event));
+    $(countryFormMap.formatTextAreaField).on('keyup', (event) => this.saveLastModified(event));
+    $(countryFormMap.modifyAddressLayoutBtn).on('click', (event) => this.modifyLayout(event));
   }
 
   /**
@@ -54,8 +54,8 @@ export default class CountryForm {
    *
    * @param event
    */
-  _handlePatternClick(event) {
-    this._addFieldsToCursorPosition($(event.target).attr("id"));
+  handlePatternClick(event) {
+    this.addFieldsToCursorPosition($(event.target).attr("id"));
     this.lastLayoutModified = $(countryFormMap.formatTextAreaField).val();
   }
 
@@ -64,7 +64,7 @@ export default class CountryForm {
    *
    * @param event
    */
-  _saveLastModified(event) {
+  saveLastModified(event) {
     this.lastLayoutModified = $(event.target).val();
   }
 
@@ -73,7 +73,7 @@ export default class CountryForm {
    *
    * @param event
    */
-  _handleTabShowClick(event) {
+  handleTabShowClick(event) {
     event.preventDefault();
     $(event.target).tab('show');
   }
@@ -83,7 +83,7 @@ export default class CountryForm {
    *
    * @param pattern
    */
-  _addFieldsToCursorPosition(pattern) {
+  addFieldsToCursorPosition(pattern) {
     const $el = $(countryFormMap.formatTextAreaField).get(0);
     let pos = 0;
 
@@ -99,7 +99,7 @@ export default class CountryForm {
     }
 
     const content = $(countryFormMap.formatTextAreaField).val();
-    $(countryFormMap.formatTextAreaField).val(content.substr(0, pos) + pattern + ' ' + content.substr(pos));
+    $(countryFormMap.formatTextAreaField).val('${content.substr(0, pos)} ${pattern} ${content.substr(pos)}');
   }
 
   /**
@@ -107,7 +107,7 @@ export default class CountryForm {
    *
    * @param event
    */
-  _modifyLayout(event) {
+  modifyLayout(event) {
     const confirmation = $(event.target).data('confirmation-message');
     let defaultLayout = $(event.target).data('default-layout');
 
