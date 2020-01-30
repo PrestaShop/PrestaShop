@@ -27,7 +27,7 @@ import ChoiceTree from '../../components/form/choice-tree';
 import TranslatableInput from '../../components/translatable-input';
 import CountryForm from './CountryForm';
 
-const $ = window.$;
+const { $ } = window.$;
 
 $(() => {
   // needed for shop association input in form

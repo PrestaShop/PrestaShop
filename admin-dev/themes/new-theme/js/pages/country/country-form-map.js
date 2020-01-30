@@ -31,4 +31,4 @@ export default {
   addPatternBtn: '.add-pattern',
   formatTextAreaField: '#country_address_format',
   modifyAddressLayoutBtn: '.modify-address-layout',
-}
+};
