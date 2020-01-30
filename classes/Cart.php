@@ -1024,6 +1024,10 @@ class CartCore extends ObjectModel
         $pa_implode = [];
         $separator = Configuration::get('PS_ATTRIBUTE_ANCHOR_SEPARATOR');
 
+        if ($separator === '-') {
+            $separator = ' -'; // Fix #17309 Add a space before the dash between attributes
+        }
+
         foreach ($ipa_list as $id_product_attribute) {
             if ((int) $id_product_attribute && !array_key_exists($id_product_attribute . '-' . $id_lang, self::$_attributesLists)) {
                 $pa_implode[] = (int) $id_product_attribute;
