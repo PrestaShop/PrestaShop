@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "956f5b7a0863ccdbec31308601948de9",
+    "content-hash": "f26a85f895aa7c31bb70b0bfc7b51829",
     "packages": [
         {
             "name": "beberlei/doctrineextensions",
@@ -2064,6 +2064,7 @@
                 }
             ],
             "description": "Provides a simple API and specification that abstracts away the details of HTTP into a single PHP function.",
+            "abandoned": true,
             "time": "2018-07-31T13:22:33+00:00"
         },
         {
@@ -2114,6 +2115,7 @@
                 "Guzzle",
                 "stream"
             ],
+            "abandoned": true,
             "time": "2014-10-12T19:18:40+00:00"
         },
         {
@@ -9751,6 +9753,75 @@
             "description": "Library that helps with managing the version number of Git-hosted PHP projects",
             "homepage": "https://github.com/sebastianbergmann/version",
             "time": "2016-10-03T07:35:21+00:00"
+        },
+        {
+            "name": "sspooky13/yaml-standards",
+            "version": "5.1.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/sspooky13/yaml-standards.git",
+                "reference": "21bcf36dae8bfeb0dcef40f78077ac11e997c7b2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/sspooky13/yaml-standards/zipball/21bcf36dae8bfeb0dcef40f78077ac11e997c7b2",
+                "reference": "21bcf36dae8bfeb0dcef40f78077ac11e997c7b2",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.1",
+                "sebastian/diff": "^1.4 || ^2.0 || ^3.0",
+                "symfony/config": "^3.0 || ^4.0.10 || ^5.0",
+                "symfony/console": "^3.0 || ^4.0.10 || ^5.0",
+                "symfony/yaml": "^3.0 || ^4.0.10 || ^5.0"
+            },
+            "require-dev": {
+                "jakub-onderka/php-parallel-lint": "^0.9",
+                "phing/phing": "^2.16",
+                "phpstan/phpstan": "^0.12",
+                "phpstan/phpstan-phpunit": "^0.12.1",
+                "phpunit/phpunit": "^7.5",
+                "shopsys/coding-standards": "^7.3",
+                "symfony/var-dumper": "^3.4 || ^4.3 || ^5.0",
+                "symplify/easy-coding-standard": "^5.4.3"
+            },
+            "bin": [
+                "bin/yaml-standards"
+            ],
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "YamlStandards\\": [
+                        "src"
+                    ]
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Peter Turek",
+                    "email": "peter.turek13@gmail.com"
+                }
+            ],
+            "description": "Standards for yaml files ",
+            "homepage": "https://github.com/sspooky13/yaml-standards",
+            "keywords": [
+                "alphabetical",
+                "checker",
+                "empty-line-at-end",
+                "fixer",
+                "indent",
+                "inline",
+                "service-aliasing",
+                "space-between-groups",
+                "standards",
+                "yaml",
+                "yaml-standards"
+            ],
+            "time": "2020-02-02T08:58:54+00:00"
         },
         {
             "name": "symfony/phpunit-bridge",

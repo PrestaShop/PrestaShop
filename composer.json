@@ -137,6 +137,7 @@
         "mikey179/vfsstream": "^1.6",
         "phake/phake": "@stable",
         "phpunit/phpunit": "~7.5.18",
+        "sspooky13/yaml-standards": "^5.1.2",
         "symfony/phpunit-bridge": "^3.4"
     },
     "autoload-dev": {
