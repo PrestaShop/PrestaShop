@@ -19,21 +19,29 @@ module.exports = {
   },
   extends: [
     'prestashop',
-    'plugin:vue/strongly-recommended'
+    'plugin:vue/strongly-recommended',
   ],
   plugins: [
     'import',
     'vue',
   ],
   rules: {
-    'no-new': 0,
+    'class-methods-use-this': 0,
     'func-names': 0,
+    'import/no-extraneous-dependencies': [
+      'error',
+      {
+        devDependencies: [
+          'tests/**/*.js',
+          '.webpack/**/*.js',
+        ],
+      },
+    ],
+    'max-len': ['error', {code: 120}],
     'no-alert': 0,
     'no-bitwise': 0,
-    'class-methods-use-this': 0,
-    'max-len': ['error', { code: 120 }],
-    'no-param-reassign': ['error', { props: false }],
-    'prefer-destructuring': ['error', {object: true, array: false}],
+    'no-new': 0,
+    'no-param-reassign': ['error', {props: false}],
     'no-restricted-globals': [
       'error',
       {
@@ -41,13 +49,14 @@ module.exports = {
         message: 'Use window variable instead.',
       },
     ],
+    'prefer-destructuring': ['error', {object: true, array: false}],
     'vue/script-indent': [
       'error',
       2,
       {
         baseIndent: 1,
         switchCase: 1,
-      }
+      },
     ],
   },
   settings: {

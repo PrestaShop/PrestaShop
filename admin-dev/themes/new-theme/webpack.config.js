@@ -27,7 +27,6 @@
 /**
  * Three mode available:
  *  build = production mode
- *  build:analyze = production mode with bundler analyzer
  *  dev = development mode
  */
 const prod = require('./.webpack/prod.js');
