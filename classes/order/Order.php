@@ -310,7 +310,11 @@ class OrderCore extends ObjectModel
     public function add($autodate = true, $null_values = true)
     {
         if (parent::add($autodate, $null_values)) {
-            return SpecificPrice::deleteByIdCart($this->id_cart);
+            if ($this->id_cart > 0) {
+                return SpecificPrice::deleteByIdCart($this->id_cart);
+            } else {
+                return true;
+            }
         }
 
         return false;
