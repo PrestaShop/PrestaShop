@@ -605,7 +605,7 @@ class MailCore extends ObjectModel
             if ($send && Configuration::get('PS_LOG_EMAILS')) {
                 $mail = new Mail();
                 $mail->template = Tools::substr($template, 0, 62);
-                $mail->subject = Tools::substr($subject, 0, 255);
+                $mail->subject = Tools::substr($message->getSubject(), 0, 255);
                 $mail->id_lang = (int) $idLang;
                 $recipientsTo = $message->getTo();
                 $recipientsCc = $message->getCc();
