@@ -1720,6 +1720,10 @@ class CategoryCore extends ObjectModel
      */
     public function updateGroup($list)
     {
+        // don't update group access if list is not set
+        if (!isset($list)) {
+            return;
+        }
         $this->cleanGroups();
         if (empty($list)) {
             $list = [Configuration::get('PS_UNIDENTIFIED_GROUP'), Configuration::get('PS_GUEST_GROUP'), Configuration::get('PS_CUSTOMER_GROUP')];
