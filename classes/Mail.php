@@ -598,6 +598,12 @@ class MailCore extends ObjectModel
                 'message' => &$message,
             ]);
 
+            // Hook to alter Swift Message before sending mail
+            Hook::exec('actionMailAlterSubjectBeforeSend', [
+                'subject' => &$subject,
+            ]);
+
+
             $send = $swift->send($message);
 
             ShopUrl::resetMainDomainCache();
