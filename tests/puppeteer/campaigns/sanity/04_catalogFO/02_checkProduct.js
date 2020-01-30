@@ -41,21 +41,21 @@ describe('Check the Product page', async () => {
 
   // Steps
   it('should open the shop page', async function () {
-    await testContext.addContextItem(this, 'stepIdentifier', `${baseContext}_goToShopFO`);
+    await testContext.addContextItem(this, 'stepIdentifier', 'goToShopFO', baseContext);
     await this.pageObjects.homePage.goTo(global.FO.URL);
     const result = await this.pageObjects.homePage.isHomePage();
     await expect(result).to.be.true;
   });
 
   it('should go to the first product page', async function () {
-    await testContext.addContextItem(this, 'stepIdentifier', `${baseContext}_goToProductPage`);
+    await testContext.addContextItem(this, 'stepIdentifier', 'goToProductPage', baseContext);
     await this.pageObjects.homePage.goToProductPage('1');
     const pageTitle = await this.pageObjects.productPage.getPageTitle();
     await expect(pageTitle.toUpperCase()).to.contains(ProductData.firstProductData.name);
   });
 
   it('should check the product page', async function () {
-    await testContext.addContextItem(this, 'stepIdentifier', `${baseContext}_checkProductPage`);
+    await testContext.addContextItem(this, 'stepIdentifier', 'checkProductPage', baseContext);
     const result = await this.pageObjects.productPage.checkProduct(ProductData.firstProductData);
     await Promise.all([
       expect(result.name).to.be.true,

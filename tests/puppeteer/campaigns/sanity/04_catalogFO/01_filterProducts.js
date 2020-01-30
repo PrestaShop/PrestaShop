@@ -40,28 +40,28 @@ describe('Filter Products by categories in Home page', async () => {
 
   // Steps
   it('should open the shop page', async function () {
-    await testContext.addContextItem(this, 'stepIdentifier', `${baseContext}_goToShopFO`);
+    await testContext.addContextItem(this, 'stepIdentifier', 'goToShopFO', baseContext);
     await this.pageObjects.homePage.goTo(global.FO.URL);
     const result = await this.pageObjects.homePage.isHomePage();
     await expect(result).to.be.true;
   });
 
   it('should check and get the products number', async function () {
-    await testContext.addContextItem(this, 'stepIdentifier', `${baseContext}_checkNumberOfProducts`);
+    await testContext.addContextItem(this, 'stepIdentifier', 'checkNumberOfProducts', baseContext);
     await this.pageObjects.homePage.waitForSelectorAndClick(this.pageObjects.homePage.allProductLink);
     allProductsNumber = await this.pageObjects.homePage.getNumberFromText(this.pageObjects.homePage.totalProducts);
     await expect(allProductsNumber).to.be.above(0);
   });
 
   it('should filter products by the category "Accessories" and check result', async function () {
-    await testContext.addContextItem(this, 'stepIdentifier', `${baseContext}_FilterProductByCategory`);
+    await testContext.addContextItem(this, 'stepIdentifier', 'FilterProductByCategory', baseContext);
     await this.pageObjects.homePage.goToCategory(Categories.accessories.id);
     const numberOfProducts = await this.pageObjects.homePage.getNumberFromText(this.pageObjects.homePage.totalProducts);
     await expect(numberOfProducts).to.be.below(allProductsNumber);
   });
 
   it('should filter products by the subcategory "Stationery" and check result', async function () {
-    await testContext.addContextItem(this, 'stepIdentifier', `${baseContext}_FilterProductBySubCategory`);
+    await testContext.addContextItem(this, 'stepIdentifier', 'FilterProductBySubCategory', baseContext);
     await this.pageObjects.homePage.goToSubCategory(Categories.accessories.id, Categories.stationery.id);
     const numberOfProducts = await this.pageObjects.homePage.getNumberFromText(this.pageObjects.homePage.totalProducts);
     await expect(numberOfProducts).to.be.below(allProductsNumber);

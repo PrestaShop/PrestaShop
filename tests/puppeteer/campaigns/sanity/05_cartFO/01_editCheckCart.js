@@ -49,21 +49,21 @@ describe('Check Cart in FO', async () => {
 
   // Steps
   it('should open the shop page', async function () {
-    await testContext.addContextItem(this, 'stepIdentifier', `${baseContext}_goToShopFO`);
+    await testContext.addContextItem(this, 'stepIdentifier', 'goToShopFO', baseContext);
     await this.pageObjects.homePage.goTo(global.FO.URL);
     const isHomePage = await this.pageObjects.homePage.isHomePage();
     await expect(isHomePage).to.be.true;
   });
 
   it('should go to the first product page', async function () {
-    await testContext.addContextItem(this, 'stepIdentifier', `${baseContext}_goToProductPage1`);
+    await testContext.addContextItem(this, 'stepIdentifier', 'goToProductPage1', baseContext);
     await this.pageObjects.homePage.goToProductPage('1');
     const pageTitle = await this.pageObjects.productPage.getPageTitle();
     await expect(pageTitle).to.contains(CartData.customCartData.firstProduct.name);
   });
 
   it('should add product to cart and check that the number of products was updated in cart header', async function () {
-    await testContext.addContextItem(this, 'stepIdentifier', `${baseContext}_addProductToCart1`);
+    await testContext.addContextItem(this, 'stepIdentifier', 'addProductToCart1', baseContext);
     await this.pageObjects.productPage.addProductToTheCart();
     // getNumberFromText is used to get the notifications number in the cart
     const notificationsNumber = await this.pageObjects.homePage.getNumberFromText(
@@ -73,21 +73,21 @@ describe('Check Cart in FO', async () => {
   });
 
   it('should go to the home page', async function () {
-    await testContext.addContextItem(this, 'stepIdentifier', `${baseContext}_goToHomePage`);
+    await testContext.addContextItem(this, 'stepIdentifier', 'goToHomePage', baseContext);
     await this.pageObjects.homePage.goToHomePage();
     const isHomePage = await this.pageObjects.homePage.isHomePage();
     await expect(isHomePage).to.be.true;
   });
 
   it('should go to the second product page', async function () {
-    await testContext.addContextItem(this, 'stepIdentifier', `${baseContext}_goToProductPage2`);
+    await testContext.addContextItem(this, 'stepIdentifier', 'goToProductPage2', baseContext);
     await this.pageObjects.homePage.goToProductPage('2');
     const pageTitle = await this.pageObjects.productPage.getPageTitle();
     await expect(pageTitle).to.contains(CartData.customCartData.secondProduct.name);
   });
 
   it('should add product to cart and check that the number of products was updated in cart header', async function () {
-    await testContext.addContextItem(this, 'stepIdentifier', `${baseContext}_addProductToCart2`);
+    await testContext.addContextItem(this, 'stepIdentifier', 'addProductToCart2', baseContext);
     await this.pageObjects.productPage.addProductToTheCart();
     // getNumberFromText is used to get the notifications number in the cart
     const notificationsNumber = await this.pageObjects.homePage
@@ -96,7 +96,7 @@ describe('Check Cart in FO', async () => {
   });
 
   it('should check the first product details', async function () {
-    await testContext.addContextItem(this, 'stepIdentifier', `${baseContext}_checkProductDetail1`);
+    await testContext.addContextItem(this, 'stepIdentifier', 'checkProductDetail1', baseContext);
     const result = await this.pageObjects.cartPage.checkProductInCart(CartData.customCartData.firstProduct, '1');
     await Promise.all([
       expect(result.name).to.be.true,
@@ -106,7 +106,7 @@ describe('Check Cart in FO', async () => {
   });
 
   it('should check the second product details', async function () {
-    await testContext.addContextItem(this, 'stepIdentifier', `${baseContext}_checkProductDetail2`);
+    await testContext.addContextItem(this, 'stepIdentifier', 'checkProductDetail2', baseContext);
     const result = await this.pageObjects.cartPage.checkProductInCart(CartData.customCartData.secondProduct, '2');
     await Promise.all([
       expect(result.name).to.be.true,
@@ -116,21 +116,21 @@ describe('Check Cart in FO', async () => {
   });
 
   it('should get the Total TTC', async function () {
-    await testContext.addContextItem(this, 'stepIdentifier', `${baseContext}_checkTotalTTC`);
+    await testContext.addContextItem(this, 'stepIdentifier', 'checkTotalTTC', baseContext);
     // getNumberFromText is used to get the Total TTC price
     totalTTC = await this.pageObjects.cartPage.getPriceFromText(this.pageObjects.cartPage.cartTotalTTC);
     await expect(totalTTC).to.be.equal(CartData.customCartData.cartTotalTTC);
   });
 
   it('should get the product number and check that is equal to 2', async function () {
-    await testContext.addContextItem(this, 'stepIdentifier', `${baseContext}_checkNumberOfProductsInCart`);
+    await testContext.addContextItem(this, 'stepIdentifier', 'checkNumberOfProductsInCart', baseContext);
     // getNumberFromText is used to get the products number
     itemsNumber = await this.pageObjects.cartPage.getNumberFromText(this.pageObjects.cartPage.itemsNumber);
     await expect(itemsNumber).to.be.equal(2);
   });
 
   it('should edit the quantity of the first product ordered', async function () {
-    await testContext.addContextItem(this, 'stepIdentifier', `${baseContext}_editProductQuantity1`);
+    await testContext.addContextItem(this, 'stepIdentifier', 'editProductQuantity1', baseContext);
     await this.pageObjects.cartPage.editProductQuantity('1', '3');
     // getNumberFromText is used to get the new Total TTC price
     const totalPrice = await this.pageObjects.cartPage.getPriceFromText(this.pageObjects.cartPage.cartTotalTTC, 2000);
@@ -141,7 +141,7 @@ describe('Check Cart in FO', async () => {
   });
 
   it('should edit the quantity of the second product ordered', async function () {
-    await testContext.addContextItem(this, 'stepIdentifier', `${baseContext}_editProductQuantity2`);
+    await testContext.addContextItem(this, 'stepIdentifier', 'editProductQuantity2', baseContext);
     await this.pageObjects.cartPage.editProductQuantity('2', '2');
     // getNumberFromText is used to get the new Total TTC price
     const totalPrice = await this.pageObjects.cartPage.getPriceFromText(this.pageObjects.cartPage.cartTotalTTC, 2000);
