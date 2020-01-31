@@ -117,6 +117,7 @@ final class CartGridDefinitionFactory extends AbstractGridDefinitionFactory
     protected function getColumns()
     {
         $columns = (new ColumnCollection())
+            // todo: to avoid hidden behavior instead of BulkActionColumn create CartBulkActionColumn
             ->add((new BulkActionColumn('cart_bulk_action'))
                 ->setOptions([
                     'bulk_field' => 'id_cart',
