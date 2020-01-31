@@ -25,12 +25,12 @@
 
 import ConfirmModal from '../../modal';
 
-const $ = window.$;
+const {$} = window;
 
 export default class AsyncSubmitBulkActionExtension {
   constructor() {
     return {
-      extend: grid => this.extend(grid),
+      extend: (grid) => this.extend(grid),
     };
   }
 
