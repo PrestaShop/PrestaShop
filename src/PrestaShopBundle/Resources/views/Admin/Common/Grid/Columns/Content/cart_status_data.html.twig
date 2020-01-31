@@ -23,9 +23,12 @@
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 
+{# No longer used - which results in different behavior than in legacy controller #}
+
 <div class="text-{{ column.options.text_align }}">
-  {% var isFieldLikeAnUrl = record[column.options.field] matches '/^\\d+$/' %}
-  {% if isFieldLikeAnUrl %}
+  {# \d+ is 1 or more digits in a string  #}
+  {% set doesFieldContainsDigits = record[column.options.field] matches '/^\\d+$/' %}
+  {% if doesFieldContainsDigits %}
     {{ record[column.options.field] }}
   {% else %}
     <span class="badge badge-danger rounded">
