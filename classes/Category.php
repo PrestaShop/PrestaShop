@@ -1722,7 +1722,7 @@ class CategoryCore extends ObjectModel
     {
         // don't update group access if list is not set
         if (!isset($list)) {
-            return;
+            return false;
         }
         $this->cleanGroups();
         if (empty($list)) {
