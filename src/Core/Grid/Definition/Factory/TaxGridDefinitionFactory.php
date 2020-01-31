@@ -49,6 +49,8 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
  */
 final class TaxGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
+    use BulkDeleteActionTrait;
+
     /**
      * {@inheritdoc}
      */
@@ -244,12 +246,7 @@ final class TaxGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ])
             )
             ->add(
-                (new SubmitBulkAction('delete_selection'))
-                ->setName($this->trans('Delete selected', [], 'Admin.Actions'))
-                ->setOptions([
-                    'submit_route' => 'admin_taxes_bulk_delete',
-                    'confirm_message' => $this->trans('Delete selected items?', [], 'Admin.Notifications.Warning'),
-                ])
+                $this->buildBulkDeleteAction('admin_taxes_bulk_delete')
             );
     }
 }
