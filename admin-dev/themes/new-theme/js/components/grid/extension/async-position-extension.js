@@ -98,7 +98,8 @@ export default class AsyncPositionExtension {
     let rowData;
     let i;
 
-    for (i = 0; i < rowsNb; ++i) {
+    Object.values(rowsData).forEach((row) > {
+      rowData = regex.exec(row);
       rowData = regex.exec(rowsData[i]);
       positions.push({
         rowId: rowData[1],
