@@ -28,10 +28,34 @@ import ConfirmModal from '../../modal';
 const {$} = window;
 
 export default class AsyncSubmitBulkActionExtension {
-  constructor() {
+
+  constructor({ successCallback = null, errorCallback = null, } = {}) {
+    this.successCallback = this.setSuccessCallback(successCallback);
+    this.errorCallback = this.setErrorCallback(errorCallback);
+
     return {
       extend: (grid) => this.extend(grid),
     };
+  }
+
+   setSuccessCallback(callback) {
+    return this.isCallback(callback) ? callback :
+      (response) => {
+        window.showSuccessMessage(response.message);
+        window.location.reload();
+      }
+  }
+
+  setErrorCallback(callback) {
+    return this.isCallback(callback) ? callback :
+      (response) => {
+        window.showErrorMessage(response.message);
+        window.location.reload();
+      }
+  }
+
+  isCallback(callback) {
+    return callback && typeof callback === "function";
   }
 
   /**
@@ -118,16 +142,7 @@ export default class AsyncSubmitBulkActionExtension {
       });
     };
 
-    asyncSubmit(
-      chunkedIds,
-      (response) => {
-        showSuccessMessage(response.message);
-        window.location.reload();
-      },
-      (response) => {
-        showErrorMessage(response.message);
-        window.location.reload();
-      });
+    asyncSubmit(chunkedIds, this.successCallback, this.errorCallback);
   }
 
   /**
