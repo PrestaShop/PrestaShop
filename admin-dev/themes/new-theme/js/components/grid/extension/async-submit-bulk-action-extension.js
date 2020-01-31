@@ -29,7 +29,12 @@ const {$} = window;
 
 export default class AsyncSubmitBulkActionExtension {
 
-  constructor({ successCallback = null, errorCallback = null, } = {}) {
+  constructor({
+                successCallback = null,
+                errorCallback = null,
+                progressCallback = () => {}
+  } = {}) {
+    this.progressCallback = progressCallback
     this.successCallback = this.setSuccessCallback(successCallback);
     this.errorCallback = this.setErrorCallback(errorCallback);
 
@@ -41,7 +46,10 @@ export default class AsyncSubmitBulkActionExtension {
    setSuccessCallback(callback) {
     return this.isCallback(callback) ? callback :
       (response) => {
-        window.showSuccessMessage(response.message);
+        if ('message' in response) {
+          window.showSuccessMessage(response.message);
+        }
+
         window.location.reload();
       }
   }
@@ -49,7 +57,10 @@ export default class AsyncSubmitBulkActionExtension {
   setErrorCallback(callback) {
     return this.isCallback(callback) ? callback :
       (response) => {
-        window.showErrorMessage(response.message);
+        if ('message' in response) {
+          window.showErrorMessage(response.message);
+        }
+
         window.location.reload();
       }
   }
@@ -98,7 +109,7 @@ export default class AsyncSubmitBulkActionExtension {
 
     const inputName = this.getInputName($checkedInputs);
     const chunkSize = parseInt($submitBtn.data('chunkSize'), 10);
-    const chunkedIds = this.chunkArray(ids, chunkSize);
+    const chunkedIds = this.chunkArray([...ids], chunkSize);
     const submitMethod = $submitBtn.data('form-method');
     const formUrl = $submitBtn.data('form-url');
 
@@ -127,6 +138,7 @@ export default class AsyncSubmitBulkActionExtension {
         data,
         dataType: 'json',
       }).then((response) => {
+        this.progressCallback(response, firstIdsChunk, ids);
         if (!response.success) {
           errorCallback(response);
         }
@@ -137,8 +149,8 @@ export default class AsyncSubmitBulkActionExtension {
           successCallback(response);
         }
       }).catch((error) => {
-        const response = error.responseJSON;
-        errorCallback(response);
+        this.progressCallback(error, firstIdsChunk, ids);
+        errorCallback(error);
       });
     };
 
@@ -183,7 +195,9 @@ export default class AsyncSubmitBulkActionExtension {
    * @return {*}
    */
   getCheckedIds($inputs) {
-    return $inputs.map((index, el) => parseInt($(el).val(), 10));
+    return $inputs
+      .toArray()
+      .map((el) => parseInt($(el).val(), 10));
   }
 
   /**
