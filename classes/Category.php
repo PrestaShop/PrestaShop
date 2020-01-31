@@ -215,7 +215,7 @@ class CategoryCore extends ObjectModel
             Category::regenerateEntireNtree();
         }
         // if access group is not set, initialize it with 3 default groups
-        $this->updateGroup(($this->groupBox === null)?$this->groupBox:[]);
+        $this->updateGroup(($this->groupBox !== null)?$this->groupBox:[]);
         Hook::exec('actionCategoryAdd', ['category' => $this]);
 
         return $ret;
