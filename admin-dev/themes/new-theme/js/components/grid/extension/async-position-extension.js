@@ -189,7 +189,7 @@ export default class AsyncPositionExtension {
       if (response.success) {
         showSuccessMessage(response.message);
       } else {
-        showErrorMessage(response.message);
+        window.showErrorMessage(response.message);
       }
     }).catch((error) => {
       const response = error.responseJSON;
