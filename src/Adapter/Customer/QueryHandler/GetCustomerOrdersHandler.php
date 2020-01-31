@@ -90,7 +90,7 @@ final class GetCustomerOrdersHandler extends AbstractCustomerHandler implements 
                 $customerOrder['date_add'],
                 $customerOrder['payment'],
                 $customerOrder['order_state'] ?: '',
-                $customerOrder['nb_products'],
+                (int) $customerOrder['nb_products'],
                 $this->locale->formatPrice(
                     $customerOrder['total_paid_real'],
                     $currency->iso_code

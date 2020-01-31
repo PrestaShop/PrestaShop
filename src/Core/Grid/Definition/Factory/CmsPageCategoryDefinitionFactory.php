@@ -54,6 +54,8 @@ use Symfony\Component\HttpFoundation\RequestStack;
  */
 final class CmsPageCategoryDefinitionFactory extends AbstractGridDefinitionFactory
 {
+    use BulkDeleteActionTrait;
+
     const GRID_ID = 'cms_page_category';
 
     /**
@@ -302,12 +304,8 @@ final class CmsPageCategoryDefinitionFactory extends AbstractGridDefinitionFacto
                     'submit_route' => 'admin_cms_pages_category_bulk_status_disable',
                 ])
             )
-            ->add((new SubmitBulkAction('delete_bulk'))
-                ->setName($this->trans('Delete selected', [], 'Admin.Actions'))
-                ->setOptions([
-                    'submit_route' => 'admin_cms_pages_category_delete_bulk',
-                    'confirm_message' => $this->trans('Delete selected items?', [], 'Admin.Notifications.Warning'),
-                ])
+            ->add(
+                $this->buildBulkDeleteAction('admin_cms_pages_category_delete_bulk')
             )
         ;
     }

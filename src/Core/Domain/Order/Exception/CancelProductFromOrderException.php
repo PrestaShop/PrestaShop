@@ -1,5 +1,6 @@
-{**
- * 2007-2019 PrestaShop SA and Contributors
+<?php
+/**
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,16 +19,16 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *}
-{extends file="helpers/list/list_header.tpl"}
-{block name='override_header'}
-{if $submit_form_ajax}
-	<script type="text/javascript">
-		parent.getSummary();
-		parent.$.fancybox.close();
-	</script>
-{/if}
-{/block}
+ */
+
+namespace PrestaShop\PrestaShop\Core\Domain\Order\Exception;
+
+/**
+ * Exception thrown when something went wrong during a product cancel action.
+ */
+class CancelProductFromOrderException extends OrderException
+{
+}
