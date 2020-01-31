@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Core\Grid\Action\Row\AccessibilityChecker;
 
 use PHPUnit\Framework\TestCase;
