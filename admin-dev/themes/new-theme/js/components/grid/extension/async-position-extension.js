@@ -23,7 +23,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-import tableDnD from 'tablednd/dist/jquery.tablednd.min';
+import tableDnD from 'tablednd/dist/jquery.tablednd.min'; // eslint-disable-line
 
 const {$} = window;
 
@@ -39,7 +39,7 @@ const {$} = window;
 export default class AsyncPositionExtension {
   constructor() {
     return {
-      extend: grid => this.extend(grid),
+      extend: (grid) => this.extend(grid),
     };
   }
 
@@ -92,21 +92,16 @@ export default class AsyncPositionExtension {
     const tableData = JSON.parse($.tableDnD.jsonize());
     const rowsData = tableData[`${this.grid.getId()}_grid_table`];
     const regex = /^row_(\d+)_(\d+)$/;
-
-    const rowsNb = rowsData.length;
     const positions = [];
-    let rowData;
-    let i;
 
-    Object.values(rowsData).forEach((row) => {
-      rowData = regex.exec(row);
-      rowData = regex.exec(rowsData[i]);
+    Object.values(rowsData).forEach((row, index) => {
+      let rowData = regex.exec(row);
       positions.push({
         rowId: rowData[1],
-        newPosition: paginationOffset + i,
+        newPosition: paginationOffset + index,
         oldPosition: parseInt(rowData[2], 10),
       });
-    })
+    });
 
     return positions;
   }
@@ -125,9 +120,10 @@ export default class AsyncPositionExtension {
         const position = $positionWrapper.data('position');
         const id = `row_${rowId}_${position}`;
 
-        $positionWrapper.closest('td').attr('id', id);
         const $tr = $positionWrapper.closest('tr');
+        const $td = $positionWrapper.closest('td');
 
+        $td.attr('id', id);
         $tr.attr('id', id);
         $td.addClass('js-drag-handle');
       });
