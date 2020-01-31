@@ -194,7 +194,7 @@ export default class AsyncPositionExtension {
     }).catch((error) => {
       const response = error.responseJSON;
 
-      showErrorMessage(response.message);
+      window.showErrorMessage(response.message);
     }).always(() => {
       this.addIdsToGridTableRows(true);
     });
