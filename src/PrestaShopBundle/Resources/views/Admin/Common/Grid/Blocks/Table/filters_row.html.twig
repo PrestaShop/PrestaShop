@@ -23,7 +23,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 
-<tr class="column-filters {% if 0 == grid.data.records_total and grid.filters is empty and grid.actions.bulk|length < 0 %}d-none{% endif %}">
+<tr class="column-filters {% if 0 == grid.data.records_total or (grid.filters is empty and grid.actions.bulk|length < 0) %}d-none{% endif %}">
   {% for column in grid.columns %}
     <td>
       {% if loop.first and grid.actions.bulk|length > 0 %}
