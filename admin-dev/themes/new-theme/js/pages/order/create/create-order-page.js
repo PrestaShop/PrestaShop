@@ -112,7 +112,7 @@ export default class CreateOrderPage {
     this.listenForCartEdit();
     this.onCartLoaded();
     this.onCustomersNotFound();
-    this._onCustomerSelected();
+    this.onCustomerSelected();
   }
 
   /**
@@ -204,7 +204,7 @@ export default class CreateOrderPage {
    *
    * @private
    */
-  _onCustomerSelected() {
+  onCustomerSelected() {
     EventEmitter.on(eventMap.customerSelected, () => {
       this.showCartInfo();
     });

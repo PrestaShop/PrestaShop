@@ -194,15 +194,6 @@ export default class CustomerRenderer {
   }
 
   /**
-   * Shows checkout history block where carts and orders are rendered
-   *
-   * @private
-   */
-  showCheckoutHistoryBlock() {
-    $(createOrderMap.customerCheckoutHistory).removeClass('d-none');
-  }
-
-  /**
    * Hides checkout history block where carts and orders are rendered
    */
   hideCheckoutHistoryBlock() {
@@ -270,23 +261,5 @@ export default class CustomerRenderer {
    */
   clearShownCustomers() {
     this.$customerSearchResultBlock.empty();
-  }
-
-  /**
-   * Shows empty result when customer is not found
-   *
-   * @private
-   */
-  showNotFoundCustomers() {
-    $(createOrderMap.customerSearchEmptyResultWarning).removeClass('d-none');
-  }
-
-  /**
-   * Hides not found customers warning
-   *
-   * @private
-   */
-  hideNotFoundCustomers() {
-    $(createOrderMap.customerSearchEmptyResultWarning).addClass('d-none');
   }
 }

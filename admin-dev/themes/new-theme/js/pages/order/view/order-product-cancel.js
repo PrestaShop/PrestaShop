@@ -25,7 +25,7 @@
 
 import Router from '@components/router';
 import OrderViewPageMap from '@pages/order/OrderViewPageMap';
-import { NumberFormatter } from '@app/cldr';
+import {NumberFormatter} from '@app/cldr';
 
 const {$} = window;
 
@@ -51,7 +51,7 @@ export default class OrderProductCancel {
     $(OrderViewPageMap.cancelProduct.table.actions).hide();
     this.initForm(
       $(OrderViewPageMap.cancelProduct.buttons.save).data('partialRefundLabel'),
-      this.router.generate('admin_orders_partial_refund', {orderId: this.orderId})
+      this.router.generate('admin_orders_partial_refund', {orderId: this.orderId}),
     );
   }
 
@@ -62,7 +62,7 @@ export default class OrderProductCancel {
     $(OrderViewPageMap.cancelProduct.table.actions).hide();
     this.initForm(
       $(OrderViewPageMap.cancelProduct.buttons.save).data('standardRefundLabel'),
-      ''
+      '',
     );
   }
 
@@ -97,8 +97,8 @@ export default class OrderProductCancel {
       const priceFieldName = this.isTaxIncluded ? 'productPriceTaxIncl' : 'productPriceTaxExcl';
       const productUnitPrice = parseFloat($productQuantityInput.data(priceFieldName));
       const amountRefundable = parseFloat($productQuantityInput.data('amountRefundable'));
-      const guessedAmount = (productUnitPrice * productQuantity) < amountRefundable ?
-        (productUnitPrice * productQuantity) : amountRefundable;
+      const guessedAmount = (productUnitPrice * productQuantity) < amountRefundable
+        ? (productUnitPrice * productQuantity) : amountRefundable;
       const amountValue = parseFloat($productAmount.val());
       if ($productAmount.val() === '' || amountValue === 0 || amountValue > guessedAmount) {
         $productAmount.val(guessedAmount);
@@ -120,12 +120,12 @@ export default class OrderProductCancel {
 
     this.updateVoucherRefundTypeLabel(
       $(OrderViewPageMap.cancelProduct.radios.voucherRefundType.productPrices),
-      totalAmount
+      totalAmount,
     );
     const refundVoucherExcluded = totalAmount - this.discountsAmount;
     this.updateVoucherRefundTypeLabel(
       $(OrderViewPageMap.cancelProduct.radios.voucherRefundType.productPricesVoucherExcluded),
-      refundVoucherExcluded
+      refundVoucherExcluded,
     );
 
     // Disable voucher excluded option when the voucher amount is too high

@@ -218,11 +218,12 @@ export default class OrderProductRenderer {
   toggleColumnLocation(target, forceDisplay = null) {
     let isColumnLocationDisplayed = false;
     if (forceDisplay === null) {
-      $(target).filter('td').each(function() {
+      $(target).filter('td').each(function () {
         if ($(this).html() !== '') {
           isColumnLocationDisplayed = true;
           return false;
         }
+        return true;
       });
     } else {
       isColumnLocationDisplayed = forceDisplay;
