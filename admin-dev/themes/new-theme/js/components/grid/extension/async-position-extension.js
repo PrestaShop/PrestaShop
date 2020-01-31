@@ -25,7 +25,7 @@
 
 import tableDnD from 'tablednd/dist/jquery.tablednd.min';
 
-const $ = window.$;
+const {$} = window;
 
 /**
  * A component which adds asynchronous position drag & drop functionality -
