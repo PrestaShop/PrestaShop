@@ -47,7 +47,7 @@
     <a href="{{ path('admin_import', {'import_type': 'products'}) }}">
       {% set fileTypes = ['.csv', '.xls', '.xlsx', '.xlst', '.0ds', '.ots'] %}
 
-      {{ 'Import a list of products (filetypes: %fileTypes%).'|trans({'%fileTypes%' : fileTypes|join(', ')}, 'Admin.Catalog.Feature') }}
+      {{ 'Import a list of products (filetypes: %fileTypes%).'|trans({'%fileTypes%' : fileTypes|join(', ')}, 'Admin.Actions') }}
     </a>
   </div>
 </div>
