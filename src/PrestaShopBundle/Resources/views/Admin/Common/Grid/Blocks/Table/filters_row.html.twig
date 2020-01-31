@@ -23,16 +23,20 @@
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 
-{% if grid.filter_form|length > 1 %}
-  <tr class="column-filters {% if 0 == grid.data.records_total and grid.filters is empty %}d-none{% endif %}">
-    {% for column in grid.columns %}
-      <td>
+<tr class="column-filters {% if 0 == grid.data.records_total and grid.filters is empty and grid.actions.bulk|length < 0 %}d-none{% endif %}">
+  {% for column in grid.columns %}
+    <td>
+      {% if loop.first and grid.actions.bulk|length > 0 %}
+        {{ include('@PrestaShop/Admin/Common/Grid/Blocks/bulk_actions_select_all.html.twig', {'grid': grid}) }}
+      {% endif %}
+
+      {% if grid.filter_form|length > 1 %}
         {% if grid.column_filters[column.id] is defined %}
           {% for filter_name in grid.column_filters[column.id] %}
             {{ form_widget(grid.filter_form[filter_name]) }}
           {% endfor %}
         {% endif %}
-      </td>
-    {% endfor %}
-  </tr>
-{% endif %}
+      {% endif %}
+    </td>
+  {% endfor %}
+</tr>
