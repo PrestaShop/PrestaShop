@@ -68,6 +68,7 @@ class CartFeatureContext extends AbstractDomainFeatureContext
 
     /**
      * @When I create an empty cart :cartReference for customer :customerReference
+     * @Given customer :customerReference has an empty cart :cartReference
      *
      * @param string $cartReference
      * @param string $customerReference
@@ -157,6 +158,7 @@ class CartFeatureContext extends AbstractDomainFeatureContext
 
     /**
      * @When I select :countryIsoCode address as delivery and invoice address for customer :customerReference in cart :cartReference
+     * @Given cart :cartReference delivery and invoice address country for customer :customeReferenceis is :countryIsoCode
      *
      * @param string $countryIsoCode
      * @param string $customerReference
