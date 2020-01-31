@@ -169,7 +169,7 @@ function updateProduct(event, eventType, updateUrl) {
 
         $('.quickview .product-prices, .page-product:not(.modal-open) .row .product-prices').replaceWith(data.product_prices);
         $('.quickview .product-customization, .page-product:not(.modal-open) .row .product-customization').replaceWith(data.product_customization);
-        $('.quickview .product-variants .page-product:not(.modal-open) .row .product-variants').replaceWith(data.product_variants);
+        $('.quickview .product-variants .page-product:not(.modal-open) .row .product-variants, .page-product:not(.modal-open) .product-information .product-variants').replaceWith(data.product_variants);
         $('.quickview .product-discounts, .page-product:not(.modal-open) .row .product-discounts').replaceWith(data.product_discounts);
         $('.quickview .product-additional-info, .page-product:not(.modal-open) .row .product-additional-info').replaceWith(data.product_additional_info);
         $('.quickview #product-details, #product-details').replaceWith(data.product_details);
