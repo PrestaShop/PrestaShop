@@ -96,10 +96,6 @@ class IssueStandardRefundCommand extends AbstractRefundCommand
     protected function setOrderDetailRefunds(array $orderDetailRefunds)
     {
         $this->orderDetailRefunds = [];
-        if (0 >= count($orderDetailRefunds)) {
-            throw new InvalidRefundException(InvalidRefundException::NO_REFUNDS);
-        }
-
         foreach ($orderDetailRefunds as $orderDetailId => $detailRefund) {
             $this->orderDetailRefunds[] = OrderDetailRefund::createStandardRefund(
                 $orderDetailId,

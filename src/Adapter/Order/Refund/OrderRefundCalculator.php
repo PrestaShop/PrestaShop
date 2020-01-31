@@ -113,6 +113,11 @@ class OrderRefundCalculator
             }
         }
 
+        // Something has to be refunded (check refunds count instead of the sum in case a voucher is implied)
+        if (count($productRefunds) <= 0 && $shippingCostAmount <= 0) {
+            throw new InvalidRefundException(InvalidRefundException::NO_REFUNDS);
+        }
+
         return new OrderRefundSummary(
             $orderDetailList,
             $productRefunds,

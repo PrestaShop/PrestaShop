@@ -412,6 +412,44 @@ Feature: Refund Order from Back Office (BO)
 
   @order-refund
   @order-partial-refund
+  Scenario: Refund shipping only is allowed
+    Given I add order "bo_order_refund" with the following details:
+      | cart                | dummy_cart       |
+      | message             | test             |
+      | payment module name | dummy_payment    |
+      | status              | Payment accepted |
+    And product "Mug The best is yet to come" in order "bo_order_refund" has following details:
+      | product_quantity            | 2 |
+    And product "Mug Today is a good day" in order "bo_order_refund" has following details:
+      | product_quantity            | 1 |
+    And there are 2 less "Mug The best is yet to come" in stock
+    And there are 1 less "Mug Today is a good day" in stock
+    When I issue a partial refund on "bo_order_refund" with restock with credit slip without voucher on following products:
+      | product_name    | quantity | amount |
+      | shipping_refund |          | 3.5    |
+    Then "bo_order_refund" has 1 credit slips
+    Then "bo_order_refund" last credit slip is:
+      | amount                  | 0   |
+      | shipping_cost_amount    | 3.5 |
+      | total_products_tax_excl | 0   |
+      | total_products_tax_incl | 0   |
+    And product "Mug The best is yet to come" in order "bo_order_refund" has following details:
+      | product_quantity            | 2 |
+      | product_quantity_refunded   | 0 |
+      | product_quantity_reinjected | 0 |
+      | total_refunded_tax_excl     | 0 |
+      | total_refunded_tax_incl     | 0 |
+    And product "Mug Today is a good day" in order "bo_order_refund" has following details:
+      | product_quantity            | 1 |
+      | product_quantity_refunded   | 0 |
+      | product_quantity_reinjected | 0 |
+      | total_refunded_tax_excl     | 0 |
+      | total_refunded_tax_incl     | 0 |
+    And there are 0 more "Mug The best is yet to come" in stock
+    And there are 0 more "Mug Today is a good day" in stock
+
+  @order-refund
+  @order-partial-refund
   Scenario: Quantity too high is forbidden
     Given I add order "bo_order_refund" with the following details:
       | cart                | dummy_cart                 |
