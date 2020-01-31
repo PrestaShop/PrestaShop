@@ -95,7 +95,7 @@ export default class AsyncPositionExtension {
     const positions = [];
 
     Object.values(rowsData).forEach((row, index) => {
-      let rowData = regex.exec(row);
+      const rowData = regex.exec(row);
       positions.push({
         rowId: rowData[1],
         newPosition: paginationOffset + index,
@@ -159,7 +159,7 @@ export default class AsyncPositionExtension {
     const classes = $positionWrapper.attr('class').split(/\s+/);
     const classEndsWith = '_handle-type';
 
-    const foundClass = classes.find(item => item.endsWith(classEndsWith));
+    const foundClass = classes.find((item) => item.endsWith(classEndsWith));
 
     if (typeof foundClass === 'undefined') {
       return '';
