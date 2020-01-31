@@ -23,15 +23,12 @@
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 
-{% if grid.actions.bulk|length > 0 and grid.data.records_total > 0 %}
-  <div class="md-checkbox mt-3">
-    <label>
-      <input type="checkbox"
-             class="js-bulk-action-select-all"
-             id="{{ grid.id }}_grid_bulk_action_select_all"
-      >
-      <i class="md-checkbox-control"></i>
-      {{ 'Select all'|trans({}, 'Admin.Actions') }}
-    </label>
-  </div>
-{% endif %}
+<div class="md-checkbox mt-3">
+  <label>
+    <input type="checkbox"
+           class="js-bulk-action-select-all"
+           id="{{ grid.id }}_grid_bulk_action_select_all"
+    >
+    <i class="md-checkbox-control"></i>
+  </label>
+</div>
