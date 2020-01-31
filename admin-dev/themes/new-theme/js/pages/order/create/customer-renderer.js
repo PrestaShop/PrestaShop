@@ -25,8 +25,10 @@
 
 import createOrderMap from '@pages/order/create/create-order-map';
 import Router from '@components/router';
+import eventMap from '@pages/order/create/event-map';
+import {EventEmitter} from '@components/event-emitter';
 
-const $ = window.$;
+const {$} = window;
 
 /**
  * Responsible for customer information rendering
@@ -44,10 +46,8 @@ export default class CustomerRenderer {
    * @param foundCustomers
    */
   renderSearchResults(foundCustomers) {
-    this._clearShownCustomers();
-
     if (foundCustomers.length === 0) {
-      this._showNotFoundCustomers();
+      EventEmitter.emit(eventMap.customersNotFound);
 
       return;
     }
@@ -72,6 +72,8 @@ export default class CustomerRenderer {
    * @param $targetedBtn
    */
   displaySelectedCustomerBlock($targetedBtn) {
+    this.showCheckoutHistoryBlock();
+
     $targetedBtn.addClass('d-none');
 
     const $customerCard = $targetedBtn.closest('.card');
@@ -104,7 +106,7 @@ export default class CustomerRenderer {
     const $cartsTableRowTemplate = $($(createOrderMap.customerCartsTableRowTemplate).html());
 
     $cartsTable.find('tbody').empty();
-    this._showCheckoutHistoryBlock();
+    this.showCheckoutHistoryBlock();
     this._removeEmptyListRowFromTable($cartsTable);
 
     for (const key in carts) {
@@ -147,7 +149,7 @@ export default class CustomerRenderer {
     const $rowTemplate = $($(createOrderMap.customerOrdersTableRowTemplate).html());
 
     $ordersTable.find('tbody').empty();
-    this._showCheckoutHistoryBlock();
+    this.showCheckoutHistoryBlock();
     this._removeEmptyListRowFromTable($ordersTable);
 
     //render 'No records found' when list is empty
@@ -179,6 +181,36 @@ export default class CustomerRenderer {
   }
 
   /**
+   * Shows empty result when customer is not found
+   */
+  showNotFoundCustomers() {
+    $(createOrderMap.customerSearchEmptyResultWarning).removeClass('d-none');
+  }
+
+  /**
+   * Hides not found customers warning
+   */
+  hideNotFoundCustomers() {
+    $(createOrderMap.customerSearchEmptyResultWarning).addClass('d-none');
+  }
+
+  /**
+   * Shows checkout history block where carts and orders are rendered
+   *
+   * @private
+   */
+  showCheckoutHistoryBlock() {
+    $(createOrderMap.customerCheckoutHistory).removeClass('d-none');
+  }
+
+  /**
+   * Hides checkout history block where carts and orders are rendered
+   */
+  hideCheckoutHistoryBlock() {
+    $(createOrderMap.customerCheckoutHistory).addClass('d-none');
+  }
+
+  /**
    * Renders 'No records' warning in list
    *
    * @param $table
@@ -207,7 +239,8 @@ export default class CustomerRenderer {
    * @private
    */
   _renderFoundCustomer(customer) {
-    this._hideNotFoundCustomers();
+    this.hideNotFoundCustomers();
+
     const $customerSearchResultTemplate = $($(createOrderMap.customerSearchResultTemplate).html());
     const $template = $customerSearchResultTemplate.clone();
 
@@ -225,38 +258,9 @@ export default class CustomerRenderer {
   }
 
   /**
-   * Shows checkout history block where carts and orders are rendered
-   *
-   * @private
-   */
-  _showCheckoutHistoryBlock() {
-    $(createOrderMap.customerCheckoutHistory).removeClass('d-none');
-  }
-
-  /**
    * Clears shown customers
-   *
-   * @private
    */
-  _clearShownCustomers() {
+  clearShownCustomers() {
     this.$customerSearchResultBlock.empty();
-  }
-
-  /**
-   * Shows empty result when customer is not found
-   *
-   * @private
-   */
-  _showNotFoundCustomers() {
-    $(createOrderMap.customerSearchEmptyResultWarning).removeClass('d-none');
-  }
-
-  /**
-   * Hides not found customers warning
-   *
-   * @private
-   */
-  _hideNotFoundCustomers() {
-    $(createOrderMap.customerSearchEmptyResultWarning).addClass('d-none');
   }
 }

@@ -100,6 +100,20 @@ export default class CreateOrderPage {
   }
 
   /**
+   * Hides whole cart information wrapper
+   */
+  hideCartInfo() {
+    $(createOrderMap.cartInfoWrapper).addClass('d-none');
+  }
+
+  /**
+   * Shows whole cart information wrapper
+   */
+  showCartInfo() {
+    $(createOrderMap.cartInfoWrapper).removeClass('d-none');
+  }
+
+  /**
    * Loads cart if query params contains valid cartId
    *
    * @private
@@ -128,6 +142,8 @@ export default class CreateOrderPage {
     this.$container.on('blur', createOrderMap.cartRuleSearchInput, () => this.cartRuleManager.stopSearching());
     this._listenForCartEdit();
     this._onCartLoaded();
+    this.onCustomersNotFound();
+    this._onCustomerSelected();
   }
 
   /**
@@ -189,6 +205,28 @@ export default class CreateOrderPage {
       }
       this.customerManager.loadCustomerCarts(this.cartId);
       this.customerManager.loadCustomerOrders();
+    });
+  }
+
+  /**
+   * Listens for event when no customers were found by search
+   *
+   * @private
+   */
+  onCustomersNotFound() {
+    EventEmitter.on(eventMap.customersNotFound, () => {
+      this.hideCartInfo();
+    });
+  }
+
+  /**
+   * Listens for event when customer is selected
+   *
+   * @private
+   */
+  _onCustomerSelected() {
+    EventEmitter.on(eventMap.customerSelected, () => {
+      this.showCartInfo();
     });
   }
 
