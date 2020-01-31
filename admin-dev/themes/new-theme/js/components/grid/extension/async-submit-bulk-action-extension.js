@@ -27,14 +27,26 @@ import ConfirmModal from '../../modal';
 
 const {$} = window;
 
+/**
+ * Performs submit actions by partially sending data to the server.
+ */
 export default class AsyncSubmitBulkActionExtension {
-
+  /**
+   *
+   * @param {function|null} successCallback - if defined it overrides current success callback. Accepts response object
+   * as argument
+   * @param {function|null} errorCallback - if defined it overrides current error callback. Accepts response object
+   * as argument
+   * @param {function|null} progressCallback - if defined it tracks progress of executed ajax calls. First parameter
+   * is response object.Second parameter is currently sent ids and last parameter is the total ids array
+   * @return {{extend: (function(*=): void)}}
+   */
   constructor({
-                successCallback = null,
-                errorCallback = null,
-                progressCallback = () => {}
+    successCallback = null,
+    errorCallback = null,
+    progressCallback = () => {},
   } = {}) {
-    this.progressCallback = progressCallback
+    this.progressCallback = progressCallback;
     this.successCallback = this.setSuccessCallback(successCallback);
     this.errorCallback = this.setErrorCallback(errorCallback);
 
@@ -43,30 +55,30 @@ export default class AsyncSubmitBulkActionExtension {
     };
   }
 
-   setSuccessCallback(callback) {
-    return this.isCallback(callback) ? callback :
-      (response) => {
+  setSuccessCallback(callback) {
+    return this.isCallback(callback) ? callback
+      : (response) => {
         if ('message' in response) {
           window.showSuccessMessage(response.message);
         }
 
         window.location.reload();
-      }
+      };
   }
 
   setErrorCallback(callback) {
-    return this.isCallback(callback) ? callback :
-      (response) => {
+    return this.isCallback(callback) ? callback
+      : (response) => {
         if ('message' in response) {
           window.showErrorMessage(response.message);
         }
 
         window.location.reload();
-      }
+      };
   }
 
   isCallback(callback) {
-    return callback && typeof callback === "function";
+    return callback && typeof callback === 'function';
   }
 
   /**
@@ -95,7 +107,7 @@ export default class AsyncSubmitBulkActionExtension {
 
     if (hasAllConfirmationMessages) {
       this.showConfirmModal($submitBtn, grid, confirmMessage, confirmTitle);
-    } else if (hasConfirmationMessage && confirm(confirmMessage)) {
+    } else if (hasConfirmationMessage && window.confirm(confirmMessage)) {
       this.submitForm($submitBtn, grid);
     } else {
       this.submitForm($submitBtn, grid);
@@ -131,9 +143,6 @@ export default class AsyncSubmitBulkActionExtension {
       const firstIdsChunk = items.shift();
       const data = {};
       data[inputName] = firstIdsChunk;
-
-      // initialises the start of an ajax call
-      this.progressCallback({}, ids, ids);
 
       $.ajax({
         type: submitMethod,
