@@ -32,7 +32,7 @@ import SubmitRowActionExtension from '@components/grid/extension/action/row/subm
 import LinkRowActionExtension from '@components/grid/extension/link-row-action-extension';
 import FiltersSubmitButtonEnablerExtension from '@components/grid/extension/filters-submit-button-enabler-extension';
 
-const {$} = window.$;
+const {$} = window;
 
 $(() => {
   const cartGrid = new Grid('cart');
