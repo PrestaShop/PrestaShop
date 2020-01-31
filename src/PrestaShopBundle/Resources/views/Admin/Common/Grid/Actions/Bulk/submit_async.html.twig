@@ -29,7 +29,7 @@
         data-form-url="{{ path(action.options.submit_route, action.options.route_params) }}"
         data-form-method="{{ action.options.submit_method }}"
         data-confirm-message="{{ action.options.confirm_message }}"
-        data-step="{{ action.options.step }}"
+        data-chunk-size="{{ action.options.chunk_size }}"
         {% if action.options.modal_options %}
           data-close-button-label="{{ action.options.modal_options.options.close_button_label|default('Close'|trans({}, 'Admin.Actions')) }}"
           data-confirm-title="{{ action.options.modal_options.options.title }}"

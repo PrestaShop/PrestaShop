@@ -60,7 +60,7 @@ export default class AsyncSubmitBulkActionExtension {
 
     if (hasAllConfirmationMessages) {
       this.showConfirmModal($submitBtn, grid, confirmMessage, confirmTitle);
-    } else if (hasConfirmationMessage && !hasAllConfirmationMessages && confirm(confirmMessage)) {
+    } else if (hasConfirmationMessage && confirm(confirmMessage)) {
       this.submitForm($submitBtn, grid);
     } else {
       this.submitForm($submitBtn, grid);
@@ -73,7 +73,7 @@ export default class AsyncSubmitBulkActionExtension {
     const ids = this.getCheckedIds($checkedInputs);
 
     const inputName = this.getInputName($checkedInputs);
-    const chunkSize = parseInt($submitBtn.data('step'), 10);
+    const chunkSize = parseInt($submitBtn.data('chunkSize'), 10);
     const chunkedIds = this.chunkArray(ids, chunkSize);
     const submitMethod = $submitBtn.data('form-method');
     const formUrl = $submitBtn.data('form-url');

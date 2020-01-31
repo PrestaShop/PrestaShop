@@ -34,7 +34,7 @@ final class SubmitAsyncBulkAction extends AbstractBulkAction
                 'submit_method' => 'POST',
                 'modal_options' => null,
                 'route_params' => [],
-                'step' => 1,
+                'chunk_size' => 1,
             ])
             ->setAllowedTypes('submit_route', 'string')
             ->setAllowedTypes('confirm_message', ['string', 'null'])
@@ -44,7 +44,7 @@ final class SubmitAsyncBulkAction extends AbstractBulkAction
             ->setAllowedTypes('step', 'int')
         ;
 
-        $resolver->setAllowedValues('step', static function ($value) {
+        $resolver->setAllowedValues('chunk_size', static function ($value) {
             return $value >= 1;
         });
     }
