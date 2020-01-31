@@ -33,11 +33,12 @@ final class DeleteCartAccessibilityChecker implements AccessibilityCheckerInterf
 {
     /**
      * {@inheritdoc}
+     *
+     * returns true if cart can be deleted or false if cart cannot be deleted
      */
     public function isGranted(array $record)
     {
         // if its number then the order has been placed so the cart cant be removed.
-        // this one is a little complicated so need a review to confirm it is correct
         return isset($record['status']) && !is_int($record['status']) && 0 == $record['status'];
     }
 }
