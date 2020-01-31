@@ -31,6 +31,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\FormBuilderInterface;
 
 /**
@@ -67,6 +68,9 @@ class DeleteCategoriesType extends AbstractType
                 'entry_type' => HiddenType::class,
                 'label' => false,
                 'allow_add' => true,
+            ])            ])
+            ->add('categories_to_delete_parent', HiddenType::class, [
+                'label' => false,
             ]);
     }
 }
