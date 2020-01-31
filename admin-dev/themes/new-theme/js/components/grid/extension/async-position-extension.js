@@ -125,7 +125,7 @@ export default class AsyncPositionExtension {
         const position = $positionWrapper.data('position');
         const id = `row_${rowId}_${position}`;
 
-        const $td = $positionWrapper.closest('td');
+        $positionWrapper.closest('td').attr('id', id);
         const $tr = $positionWrapper.closest('tr');
 
         $tr.attr('id', id);
