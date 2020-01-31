@@ -219,8 +219,10 @@ export default class ProductManager {
   _selectFirstResult() {
     this._unsetProduct();
 
-    if (this.products.length !== 0) {
-      this._selectProduct(this.products[0].productId);
+    const values = Object.values(this.products);
+
+    if (values.length !== 0) {
+      this._selectProduct(values[0].productId);
     }
   }
 
