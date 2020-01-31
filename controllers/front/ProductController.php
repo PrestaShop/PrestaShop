@@ -926,27 +926,6 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
     }
 
     /**
-     * Return id_product_attribute by id_product_attribute group parameter or request parameter.
-     *
-     * @return int|null
-     *
-     * @throws PrestaShopException
-     */
-    private function getIdProductAttributeByGroupOrRequest()
-    {
-        $idProductAttribute = $this->getIdProductAttributeByGroup();
-        if (null === $idProductAttribute) {
-            $idProductAttribute = (int) Tools::getValue('id_product_attribute');
-        }
-
-        if (0 === $idProductAttribute) {
-            $idProductAttribute = (int) Product::getDefaultAttribute($this->product->id);
-        }
-
-        return $idProductAttribute;
-    }
-
-    /**
      * Return id_product_attribute by id_product_attribute group parameter,
      * or request parameter, or the default attribute as a fallback.
      *
@@ -1036,7 +1015,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         $product['id_product'] = (int) $this->product->id;
         $product['out_of_stock'] = (int) $this->product->out_of_stock;
         $product['new'] = (int) $this->product->new;
-        $product['id_product_attribute'] = $this->getIdProductAttributeByGroupOrRequest();
+        $product['id_product_attribute'] = $this->getIdProductAttributeByGroupOrRequestOrDefault();
         $product['minimal_quantity'] = $this->getProductMinimalQuantity($product);
         $product['quantity_wanted'] = $this->getRequiredQuantity($product);
         $product['extraContent'] = $extraContentFinder->addParams(['product' => $this->product])->present();
