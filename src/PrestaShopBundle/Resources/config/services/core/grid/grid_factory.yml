@@ -297,6 +297,7 @@ services:
 
     prestashop.core.grid.factory.cart:
         class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
+        public: true
         arguments:
           - '@prestashop.core.grid.definition.factory.cart'
           - '@prestashop.adapter.grid.data_factory.cart_decorator'
