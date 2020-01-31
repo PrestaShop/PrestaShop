@@ -6931,7 +6931,7 @@ class ProductCore extends ObjectModel
     public function modifierWsLinkRewrite()
     {
         if (empty($this->link_rewrite)) {
-            $this->link_rewrite = array();
+            $this->link_rewrite = [];
         }
 
         foreach ($this->name as $id_lang => $name) {
