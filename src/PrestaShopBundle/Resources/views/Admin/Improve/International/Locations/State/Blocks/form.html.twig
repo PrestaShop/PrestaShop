@@ -24,6 +24,7 @@
  *#}
 
 {% import '@PrestaShop/Admin/macros.html.twig' as ps %}
+{% form_theme stateForm 'PrestaShopBundle:Admin/TwigTemplateForm:prestashop_ui_kit.html.twig' %}
 
 {{ form_start(stateForm) }}
 <div class="card">
@@ -95,7 +96,7 @@
         'label': 'Status'|trans({}, 'Admin.Global'),
       }) }}
 
-      {{ form_rest(stateForm) }}
+      {{ form_widget(stateForm) }}
     </div>
   </div>
 
