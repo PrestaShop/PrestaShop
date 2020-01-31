@@ -98,7 +98,7 @@ export default class AsyncPositionExtension {
     let rowData;
     let i;
 
-    Object.values(rowsData).forEach((row) > {
+    Object.values(rowsData).forEach((row) => {
       rowData = regex.exec(row);
       rowData = regex.exec(rowsData[i]);
       positions.push({
@@ -106,7 +106,7 @@ export default class AsyncPositionExtension {
         newPosition: paginationOffset + i,
         oldPosition: parseInt(rowData[2], 10),
       });
-    }
+    })
 
     return positions;
   }
