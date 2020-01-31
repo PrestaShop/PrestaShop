@@ -130,6 +130,11 @@ class OrderProductForViewing implements JsonSerializable
     private $amountRefundable;
 
     /**
+     * @var float
+     */
+    private $amountRefundableRaw;
+
+    /**
      * @var int
      */
     private $orderInvoiceId;
@@ -139,6 +144,33 @@ class OrderProductForViewing implements JsonSerializable
      */
     private $orderInvoiceNumber;
 
+    /**
+     * @var OrderProductCustomizationsForViewing
+     */
+    private $customizations;
+
+    /**
+     * @param int $orderDetailId
+     * @param int $id
+     * @param string $name
+     * @param string $reference
+     * @param string $supplierReference
+     * @param int $quantity
+     * @param string $unitPrice
+     * @param string $totalPrice
+     * @param int $availableQuantity
+     * @param string|null $imagePath
+     * @param float $unitPriceTaxExclRaw
+     * @param float $unitPriceTaxInclRaw
+     * @param float $taxRate
+     * @param string $amountRefunded
+     * @param int $quantityRefunded
+     * @param string $amountRefundable
+     * @param float $amountRefundableRaw
+     * @param string $location
+     * @param int|null $orderInvoiceId
+     * @param string $orderInvoiceNumber
+     */
     public function __construct(
         ?int $orderDetailId,
         int $id,
@@ -156,11 +188,13 @@ class OrderProductForViewing implements JsonSerializable
         string $amountRefunded,
         int $quantityRefunded,
         string $amountRefundable,
+        float $amountRefundableRaw,
         string $location,
         ?int $orderInvoiceId,
         string $orderInvoiceNumber,
         string $type,
-        array $packItems = []
+        array $packItems = [],
+        ?OrderProductCustomizationsForViewing $customizations = null
     ) {
         $this->id = $id;
         $this->name = $name;
@@ -178,11 +212,13 @@ class OrderProductForViewing implements JsonSerializable
         $this->amountRefunded = $amountRefunded;
         $this->quantityRefunded = $quantityRefunded;
         $this->amountRefundable = $amountRefundable;
+        $this->amountRefundableRaw = $amountRefundableRaw;
         $this->location = $location;
         $this->orderInvoiceId = $orderInvoiceId;
         $this->orderInvoiceNumber = $orderInvoiceNumber;
         $this->type = $type;
         $this->packItems = $packItems;
+        $this->customizations = $customizations;
     }
 
     /**
@@ -362,13 +398,23 @@ class OrderProductForViewing implements JsonSerializable
     }
 
     /**
-     * How much (money) can be refunded for this product
+     * How much (money) can be refunded for this product (formatted for display)
      *
      * @return string
      */
     public function getAmountRefundable(): string
     {
         return $this->amountRefundable;
+    }
+
+    /**
+     * How much (money) can be refunded for this product (raw float value)
+     *
+     * @return float
+     */
+    public function getAmountRefundableRaw(): float
+    {
+        return $this->amountRefundableRaw;
     }
 
     /**
@@ -413,6 +459,16 @@ class OrderProductForViewing implements JsonSerializable
     public function getOrderInvoiceNumber(): string
     {
         return $this->orderInvoiceNumber;
+    }
+
+    /**
+     * Get customizations of this product
+     *
+     * @return OrderProductCustomizationsForViewing|null
+     */
+    public function getCustomizations(): ?OrderProductCustomizationsForViewing
+    {
+        return $this->customizations;
     }
 
     /**

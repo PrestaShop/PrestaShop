@@ -66,6 +66,7 @@ export default class OrderProductAdd {
         $(event.currentTarget).find(':selected').data('priceTaxIncluded'),
         this.currencyPrecision,
       ));
+      this.locationText.html($(event.currentTarget).find(':selected').data('location'));
       this.available = $(event.currentTarget).find(':selected').data('stock');
       this.quantityInput.trigger('change');
     });
@@ -137,10 +138,13 @@ export default class OrderProductAdd {
     Object.values(combinations).forEach((val) => {
       this.combinationsSelect.append(
         /* eslint-disable-next-line max-len */
-        `<option value="${val.attributeCombinationId}" data-price-tax-excluded="${val.priceTaxExcluded}" data-price-tax-included="${val.priceTaxIncluded}" data-stock="${val.stock}">${val.attribute}</option>`,
+        `<option value="${val.attributeCombinationId}" data-price-tax-excluded="${val.priceTaxExcluded}" data-price-tax-included="${val.priceTaxIncluded}" data-stock="${val.stock}" data-location="${val.location}">${val.attribute}</option>`,
       );
     });
     this.combinationsBlock.toggleClass('d-none', Object.keys(combinations).length === 0);
+    if (Object.keys(combinations).length > 0) {
+      this.combinationsSelect.trigger('change');
+    }
   }
 
   addProduct(orderId) {

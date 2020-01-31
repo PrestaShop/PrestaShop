@@ -25,6 +25,8 @@
 
 import createOrderMap from '@pages/order/create/create-order-map';
 import Router from '@components/router';
+import eventMap from '@pages/order/create/event-map';
+import {EventEmitter} from '@components/event-emitter';
 
 const {$} = window;
 
@@ -47,6 +49,7 @@ export default class CustomerRenderer {
     this.clearShownCustomers();
 
     if (foundCustomers.length === 0) {
+      EventEmitter.emit(eventMap.customersNotFound);
       this.showNotFoundCustomers();
 
       return;
@@ -71,6 +74,8 @@ export default class CustomerRenderer {
    * @param $targetedBtn
    */
   displaySelectedCustomerBlock($targetedBtn) {
+    this.showCheckoutHistoryBlock();
+
     $targetedBtn.addClass('d-none');
 
     const $customerCard = $targetedBtn.closest('.card');
@@ -175,6 +180,27 @@ export default class CustomerRenderer {
   }
 
   /**
+   * Shows empty result when customer is not found
+   */
+  showNotFoundCustomers() {
+    $(createOrderMap.customerSearchEmptyResultWarning).removeClass('d-none');
+  }
+
+  /**
+   * Hides not found customers warning
+   */
+  hideNotFoundCustomers() {
+    $(createOrderMap.customerSearchEmptyResultWarning).addClass('d-none');
+  }
+
+  /**
+   * Hides checkout history block where carts and orders are rendered
+   */
+  hideCheckoutHistoryBlock() {
+    $(createOrderMap.customerCheckoutHistory).addClass('d-none');
+  }
+
+  /**
    * Renders 'No records' warning in list
    *
    * @param $table
@@ -204,6 +230,7 @@ export default class CustomerRenderer {
    */
   renderFoundCustomer(customer) {
     this.hideNotFoundCustomers();
+
     const $customerSearchResultTemplate = $($(createOrderMap.customerSearchResultTemplate).html());
     const $template = $customerSearchResultTemplate.clone();
 
@@ -231,28 +258,8 @@ export default class CustomerRenderer {
 
   /**
    * Clears shown customers
-   *
-   * @private
    */
   clearShownCustomers() {
     this.$customerSearchResultBlock.empty();
-  }
-
-  /**
-   * Shows empty result when customer is not found
-   *
-   * @private
-   */
-  showNotFoundCustomers() {
-    $(createOrderMap.customerSearchEmptyResultWarning).removeClass('d-none');
-  }
-
-  /**
-   * Hides not found customers warning
-   *
-   * @private
-   */
-  hideNotFoundCustomers() {
-    $(createOrderMap.customerSearchEmptyResultWarning).addClass('d-none');
   }
 }

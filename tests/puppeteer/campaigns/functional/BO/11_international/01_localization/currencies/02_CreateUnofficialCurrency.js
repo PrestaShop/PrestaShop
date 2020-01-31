@@ -36,9 +36,8 @@ Create unofficial currency
 Check data created in table
 Check Creation of currency in FO
 Delete currency
-Test disabled due to the issue described here : https://github.com/PrestaShop/PrestaShop/issues/17040
  */
-describe.skip('Create unofficial currency and check it in FO', async () => {
+describe('Create unofficial currency and check it in FO', async () => {
   // before and after functions
   before(async function () {
     browser = await helper.createBrowser();

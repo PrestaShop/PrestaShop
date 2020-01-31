@@ -32,6 +32,7 @@ export default {
 
   orderCreationContainer: '#order-creation-container',
   requiredFieldMark: '.js-required-field-mark',
+  cartInfoWrapper: '#js-cart-info-wrapper',
 
   // selectors related to customer block
   customerSearchInput: '#customer-search-input',

@@ -31,6 +31,7 @@ import OrderProductRenderer from '@pages/order/view/order-product-renderer';
 import OrderPricesRefresher from '@pages/order/view/order-prices-refresher';
 import Router from '@components/router';
 import OrderInvoicesRefresher from './order-invoices-refresher';
+import OrderProductCancel from './order-product-cancel';
 
 const {$} = window;
 
@@ -40,13 +41,19 @@ export default class OrderViewPage {
     this.orderProductRenderer = new OrderProductRenderer();
     this.orderPricesRefresher = new OrderPricesRefresher();
     this.orderInvoicesRefresher = new OrderInvoicesRefresher();
+    this.orderProductCancel = new OrderProductCancel();
     this.listenToEvents();
   }
 
   listenToEvents() {
     EventEmitter.on(OrderViewEventMap.productDeletedFromOrder, (event) => {
       // Remove the row
-      $(OrderViewPageMap.productsTableRow(event.oldOrderDetailId)).remove();
+      const $row = $(OrderViewPageMap.productsTableRow(event.oldOrderDetailId));
+      const $next = $row.next();
+      $row.remove();
+      if ($next.hasClass('order-product-customization')) {
+        $next.remove();
+      }
 
       const $tablePagination = $(OrderViewPageMap.productsTablePagination);
       const numPages = $tablePagination.data('numPages');
@@ -238,6 +245,23 @@ export default class OrderViewPage {
       this.orderProductRenderer.paginate(event.numPage);
       this.listenForProductDelete();
       this.listenForProductEdit();
+    });
+  }
+
+  listenForRefund() {
+    $(OrderViewPageMap.cancelProduct.buttons.partialRefund).on('click', () => {
+      this.orderProductRenderer.moveProductsPanelToRefundPosition();
+      this.orderProductCancel.showPartialRefund();
+    });
+
+    $(OrderViewPageMap.cancelProduct.buttons.standardRefund).on('click', () => {
+      this.orderProductRenderer.moveProductsPanelToRefundPosition();
+      this.orderProductCancel.showStandardRefund();
+    });
+
+    $(OrderViewPageMap.cancelProduct.buttons.abort).on('click', () => {
+      this.orderProductRenderer.moveProductPanelToOriginalPosition();
+      this.orderProductCancel.hideRefund();
     });
   }
 

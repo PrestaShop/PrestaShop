@@ -34,7 +34,7 @@
       <div class="col">
         <div class="alert alert-warning" role="alert">
           <span class="alert-text">
-            {{ 'In order to use Geolocation, please download [1]this file[/1] and extract it (using Winrar or Gzip) into the /app/Resources/geoip/ directory.'|trans({'[1]': '<a href="http://geolite.maxmind.com/download/geoip/database/GeoLite2-City.mmdb.gz" target="_blank">', '[/1]': '<a/>'})|raw }}
+            {{ 'Since December 30, 2019, you need to register for a [1]MaxMind[/1] account to get a license key to be able to download the geolocation data. Once downloaded, extract the data using Winrar or Gzip into the /app/Resources/geoip/ directory.'|trans({'[1]': '<a href="https://dev.maxmind.com/geoip/geoip2/geolite2" target="_blank">', '[/1]': '<a/>'}, 'Admin.Notifications.Warning')|raw }}
           </span>
         </div>
       </div>
