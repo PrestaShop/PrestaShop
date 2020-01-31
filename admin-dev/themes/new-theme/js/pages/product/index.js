@@ -35,7 +35,7 @@ import BulkActionCheckboxExtension from '../../components/grid/extension/bulk-ac
 import FiltersSubmitButtonEnablerExtension
   from '../../components/grid/extension/filters-submit-button-enabler-extension';
 
-const $ = window.$;
+const {$} = window;
 
 $(() => {
   const grid = new Grid('product');
@@ -49,4 +49,3 @@ $(() => {
   grid.addExtension(new BulkActionCheckboxExtension());
   grid.addExtension(new FiltersSubmitButtonEnablerExtension());
 });
-
