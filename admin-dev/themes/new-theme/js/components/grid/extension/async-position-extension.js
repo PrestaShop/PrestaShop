@@ -187,7 +187,7 @@ export default class AsyncPositionExtension {
       dataType: 'json',
     }).then((response) => {
       if (response.success) {
-        showSuccessMessage(response.message);
+        window.showSuccessMessage(response.message);
       } else {
         window.showErrorMessage(response.message);
       }
