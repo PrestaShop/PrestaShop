@@ -132,6 +132,9 @@ export default class AsyncSubmitBulkActionExtension {
       const data = {};
       data[inputName] = firstIdsChunk;
 
+      // initialises the start of an ajax call
+      this.progressCallback({}, ids, ids);
+
       $.ajax({
         type: submitMethod,
         url: formUrl,
