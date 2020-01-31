@@ -305,9 +305,9 @@ Feature: Refund Order from Back Office (BO)
   @order-return-product
   Scenario: Return product of products without credit slip (voucher generation is required then)
     Given I add order "bo_order_refund" with the following details:
-      | cart                | dummy_cart       |
-      | message             | test             |
-      | payment module name | dummy_payment    |
+      | cart                | dummy_cart             |
+      | message             | test                   |
+      | payment module name | dummy_payment          |
       | status              | Processing in progress |
     And product "Mug The best is yet to come" in order "bo_order_refund" has following details:
       | product_quantity            | 2 |
@@ -379,6 +379,47 @@ Feature: Refund Order from Back Office (BO)
       | product_name                | quantity |
     Then I should get error that no refunds is invalid
     And "bo_order_refund" has 0 credit slips
+
+  @order-refund
+  @order-return-refund
+  Scenario: Refund shipping only is allowed
+    Given I add order "bo_order_refund" with the following details:
+      | cart                | dummy_cart             |
+      | message             | test                   |
+      | payment module name | dummy_payment          |
+      | status              | Processing in progress |
+    And product "Mug The best is yet to come" in order "bo_order_refund" has following details:
+      | product_quantity            | 2 |
+    And product "Mug Today is a good day" in order "bo_order_refund" has following details:
+      | product_quantity            | 1 |
+    And there are 2 less "Mug The best is yet to come" in stock
+    And there are 1 less "Mug Today is a good day" in stock
+    And return product is enabled
+    When I issue a return product on "bo_order_refund" with restock with credit slip without voucher on following products:
+      | product_name    | quantity |
+      | shipping_refund | 1        |
+    Then "bo_order_refund" has 1 credit slips
+    Then "bo_order_refund" last credit slip is:
+      | amount                  | 0   |
+      | shipping_cost_amount    | 7.0 |
+      | total_products_tax_excl | 0   |
+      | total_products_tax_incl | 0   |
+    And product "Mug The best is yet to come" in order "bo_order_refund" has following details:
+      | product_quantity            | 2 |
+      | product_quantity_refunded   | 0 |
+      | product_quantity_return     | 0 |
+      | product_quantity_reinjected | 0 |
+      | total_refunded_tax_excl     | 0 |
+      | total_refunded_tax_incl     | 0 |
+    And product "Mug Today is a good day" in order "bo_order_refund" has following details:
+      | product_quantity            | 1 |
+      | product_quantity_refunded   | 0 |
+      | product_quantity_return     | 0 |
+      | product_quantity_reinjected | 0 |
+      | total_refunded_tax_excl     | 0 |
+      | total_refunded_tax_incl     | 0 |
+    And there are 0 more "Mug The best is yet to come" in stock
+    And there are 0 more "Mug Today is a good day" in stock
 
   @order-refund
   @order-return-product
