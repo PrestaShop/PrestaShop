@@ -51,10 +51,12 @@ use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProducts;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\Reduction;
 use PrestaShop\PrestaShop\Core\Form\ChoiceProvider\OrderStateByIdChoiceProvider;
+use PrestaShopCollection;
 use Product;
 use RuntimeException;
 use stdClass;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
+use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
 class OrderFeatureContext extends AbstractDomainFeatureContext
 {
@@ -163,7 +165,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
                 (float) $data['price'],
                 (float) $data['price'],
                 (int) $data['amount'],
-                $data['free_shipping']
+                PrimitiveUtils::castStringBooleanIntoBoolean($data['free_shipping'])
             )
         );
     }
@@ -224,31 +226,14 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
         $totalDiscounts = $orderForViewing->getPrices()->getDiscountsAmountFormatted();
         $totalShipping = $orderForViewing->getPrices()->getShippingPriceFormatted();
         $totalTaxes = $orderForViewing->getPrices()->getTaxesAmountFormatted();
+        $totalPrice = $orderForViewing->getPrices()->getTotalAmountFormatted();
 
-        if ($data['products'] !== $totalProducts) {
-            throw new RuntimeException(sprintf(
-                'Products total price should be [%s] but received [%s]',
-                $data['products'],
-                $totalProducts
-            ));
-        }
-//        if ($data['discounts'] !== $totalDiscounts) {}
-//        if ($data['shipping'] !== $totalShipping) {}
-//        if ($data['taxes'] !== $totalTaxes) {}
+        Assert::assertEquals($data['products'], $totalProducts);
+        Assert::assertEquals($data['discounts'], $totalDiscounts);
+        Assert::assertEquals($data['shipping'], $totalShipping);
+        Assert::assertEquals($data['taxes'], $totalTaxes);
+        Assert::assertEquals($data['total'], $totalPrice);
     }
-
-//    /**
-//     * @When /^I add discount of (?:\d{1,2})?(?:\.\d{1,2})?(\$|%) to order "(.*)"$/
-//     * @When /^I add free shipping to order :orderReference
-//     *
-//     * @param string $orderReference
-//     * @param string $cartRuleType
-//     * @param string $discount
-//     */
-//    public function addCartRuleToOrder(string $orderReference, string $cartRuleType, string $discount)
-//    {
-//
-//    }
 
     /**
      * @When I add discount to order :orderReference with following details:
@@ -265,26 +250,67 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
             $orderId,
             $data['name'],
             $data['type'],
-            $data['value'],
-            isset($data['invoiceId']) ? $data['invoiceId'] : null
+            $data['value']
         ));
     }
 
-//    /**
-//     * @Given /^Order "(.*)" (has one|has multiple|has no)? invoice$/
-//     *
-//     * @param string $orderReference
-//     * @param string $condition
-//     */
-//    public function assertOrderInvoices(string $orderReference, string $condition)
-//    {
-//        $orderId = SharedStorage::getStorage()->get($orderReference);
-//
-//        /** @var OrderForViewing $orderForViewing */
-//        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
-//
-//        $orderForViewing->hasInvoice()
-//    }
+    /**
+     * @When I add discount to order :orderReference with selected single invoice and following details:
+     *
+     * @param string $orderReference
+     * @param TableNode $table
+     *
+     * @throws \PrestaShopDatabaseException
+     * @throws \PrestaShopException
+     */
+    public function addAmountTypeCartRuleAndUpdateSingleInvoice(string $orderReference, TableNode $table)
+    {
+        $orderId = SharedStorage::getStorage()->get($orderReference);
+        $data = $table->getRowsHash();
+
+        $invoices = $this->getOrderInvoices($orderId);
+        Assert::assertEquals(1, $invoices->count());
+
+        $this->getQueryBus()->handle(new AddCartRuleToOrderCommand(
+            $orderId,
+            $data['name'],
+            $data['type'],
+            $data['value'],
+            (int) $invoices->getFirst()->id
+        ));
+    }
+
+    /**
+     * @Then invoice for order :orderReference should have following prices:
+     */
+    public function assertInvoicePrices(string $orderReference, TableNode $table)
+    {
+        $orderId = SharedStorage::getStorage()->get($orderReference);
+        $data = $table->getRowsHash();
+
+        $invoices = $this->getOrderInvoices($orderId);
+        Assert::assertEquals(1, $invoices->count());
+
+        $invoice = $invoices->getFirst();
+        Assert::assertEquals((float) $data['products'], $invoice->total_products);
+    }
+
+    /**
+     * @Then all invoices for order :orderReference should have following prices:
+     */
+    public function assertInvoicesPrices(string $orderReference, TableNode $table)
+    {
+        $orderId = SharedStorage::getStorage()->get($orderReference);
+        $data = $table->getRowsHash();
+
+        $invoices = $this->getOrderInvoices($orderId);
+        Assert::assertGreaterThan(0, $invoices->count());
+
+        foreach ($invoices as $invoice) {
+            Assert::assertEquals((float) $data['products'], $invoice->total_products);
+        }
+
+    }
 
     /**
      * @Then order :orderReference has status :status
@@ -442,7 +468,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Given order :orderReference does not have any invoices
+     * @Given Order :orderReference does not have any invoices
      *
      * @param string $orderReference
      */
@@ -454,6 +480,19 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
         /** @var OrderInvoiceAddressForViewing $invoiceAddress */
         $invoiceAddress = $orderForViewing->getInvoiceAddress();
         Assert::assertNotNull($invoiceAddress);
+    }
+
+    /**
+     * @Given Order :orderReference has invoices
+     *
+     * @param string $orderReference
+     */
+    public function assertOrderInvoiceExistsById(string $orderReference, string $invoiceId)
+    {
+        $orderId = SharedStorage::getStorage()->get($orderReference);
+        $invoicesCollection = $this->getOrderInvoices($orderId);
+
+        Assert::assertGreaterThan(0, $invoicesCollection->count());
     }
 
     /**
@@ -656,5 +695,22 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
         }
 
         return $productQuantities;
+    }
+
+    /**
+     * Gets order invoices collection
+     *
+     * @param int $orderId
+     *
+     * @return PrestaShopCollection
+     *
+     * @throws \PrestaShopDatabaseException
+     * @throws \PrestaShopException
+     */
+    private function getOrderInvoices(int $orderId): PrestaShopCollection
+    {
+        $order = new \Order($orderId);
+
+        return $order->getInvoicesCollection();
     }
 }
