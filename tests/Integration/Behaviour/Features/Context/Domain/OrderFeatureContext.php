@@ -262,8 +262,8 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
 
         $this->getQueryBus()->handle(new AddCartRuleToOrderCommand(
             $orderId,
-            'amount',
-            Reduction::TYPE_AMOUNT,
+            $data['name'],
+            $data['type'],
             $data['value'],
             isset($data['invoiceId']) ? $data['invoiceId'] : null
         ));
