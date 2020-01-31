@@ -35,6 +35,7 @@ use Order;
 use OrderState;
 use PHPUnit\Framework\Assert as Assert;
 use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\CartId;
+use PrestaShop\PrestaShop\Core\Domain\Order\Command\AddCartRuleToOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\AddOrderFromBackOfficeCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\BulkChangeOrderStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\DuplicateOrderCartCommand;
@@ -48,6 +49,7 @@ use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderInvoiceAddressForVi
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderProductForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProducts;
+use PrestaShop\PrestaShop\Core\Domain\ValueObject\Reduction;
 use PrestaShop\PrestaShop\Core\Form\ChoiceProvider\OrderStateByIdChoiceProvider;
 use Product;
 use RuntimeException;
@@ -205,6 +207,84 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
             )
         );
     }
+
+    /**
+     * @Given Order :orderReference has following prices:
+     * @Then Order :orderReference should have following prices:
+     */
+    public function assertOrderPrices(string $orderReference, TableNode $table)
+    {
+        $orderId = SharedStorage::getStorage()->get($orderReference);
+        $data = $table->getRowsHash();
+
+        /** @var OrderForViewing $orderForViewing */
+        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
+
+        $totalProducts = $orderForViewing->getPrices()->getProductsPriceFormatted();
+        $totalDiscounts = $orderForViewing->getPrices()->getDiscountsAmountFormatted();
+        $totalShipping = $orderForViewing->getPrices()->getShippingPriceFormatted();
+        $totalTaxes = $orderForViewing->getPrices()->getTaxesAmountFormatted();
+
+        if ($data['products'] !== $totalProducts) {
+            throw new RuntimeException(sprintf(
+                'Products total price should be [%s] but received [%s]',
+                $data['products'],
+                $totalProducts
+            ));
+        }
+//        if ($data['discounts'] !== $totalDiscounts) {}
+//        if ($data['shipping'] !== $totalShipping) {}
+//        if ($data['taxes'] !== $totalTaxes) {}
+    }
+
+//    /**
+//     * @When /^I add discount of (?:\d{1,2})?(?:\.\d{1,2})?(\$|%) to order "(.*)"$/
+//     * @When /^I add free shipping to order :orderReference
+//     *
+//     * @param string $orderReference
+//     * @param string $cartRuleType
+//     * @param string $discount
+//     */
+//    public function addCartRuleToOrder(string $orderReference, string $cartRuleType, string $discount)
+//    {
+//
+//    }
+
+    /**
+     * @When I add discount to order :orderReference with following details:
+     *
+     * @param string $orderReference
+     * @param TableNode $data
+     */
+    public function addAmountTypeCartRuleToOrder(string $orderReference, TableNode $table)
+    {
+        $orderId = SharedStorage::getStorage()->get($orderReference);
+        $data = $table->getRowsHash();
+
+        $this->getQueryBus()->handle(new AddCartRuleToOrderCommand(
+            $orderId,
+            'amount',
+            Reduction::TYPE_AMOUNT,
+            $data['value'],
+            isset($data['invoiceId']) ? $data['invoiceId'] : null
+        ));
+    }
+
+//    /**
+//     * @Given /^Order "(.*)" (has one|has multiple|has no)? invoice$/
+//     *
+//     * @param string $orderReference
+//     * @param string $condition
+//     */
+//    public function assertOrderInvoices(string $orderReference, string $condition)
+//    {
+//        $orderId = SharedStorage::getStorage()->get($orderReference);
+//
+//        /** @var OrderForViewing $orderForViewing */
+//        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
+//
+//        $orderForViewing->hasInvoice()
+//    }
 
     /**
      * @Then order :orderReference has status :status
