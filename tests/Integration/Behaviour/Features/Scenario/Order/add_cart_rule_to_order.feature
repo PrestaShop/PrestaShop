@@ -33,7 +33,7 @@ Feature: Add discounts to order from Back Office (BO)
       | total         | $22.00   |
 
   @add-discounts-to-order
-  Scenario: Add discount to order which has no invoices
+  Scenario: Add amount type discount to order which has no invoices
     Given order "bo_order1" does not have any invoices
     When I add discount to order "bo_order1" with following details:
       | name      | discount fpf |
@@ -45,3 +45,17 @@ Feature: Add discounts to order from Back Office (BO)
       | shipping      | 0         |
       | taxes         | 0         |
       | total         | $16.50    |
+
+  @add-discounts-to-order
+  Scenario: Add percent type discount to order which has no invoices
+    Given order "bo_order1" does not have any invoices
+    When I add discount to order "bo_order1" with following details:
+      | name      | discount fifty-fifty |
+      | type      | percent              |
+      | value     | 50                   |
+    Then Order "bo_order1" should have following prices:
+      | products      | $22.00    |
+      | discounts     | $11.00     |
+      | shipping      | 0         |
+      | taxes         | 0         |
+      | total         | $11.00    |
