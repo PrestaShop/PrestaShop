@@ -156,6 +156,7 @@ export default {
     checkboxes: {
       restock: '#cancel_product_restock',
       creditSlip: '#cancel_product_credit_slip',
+      voucher: '#cancel_product_voucher',
     },
     radios: {
       voucherRefundType: {

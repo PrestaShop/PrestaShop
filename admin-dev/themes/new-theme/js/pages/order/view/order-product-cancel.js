@@ -102,6 +102,7 @@ export default class OrderProductCancel {
     $(OrderViewPageMap.cancelProduct.table.header).html(actionName);
     $(OrderViewPageMap.cancelProduct.checkboxes.restock).prop('checked', this.orderDelivered);
     $(OrderViewPageMap.cancelProduct.checkboxes.creditSlip).prop('checked', true);
+    $(OrderViewPageMap.cancelProduct.checkboxes.voucher).prop('checked', false);
   }
 
   listenForInputs() {
@@ -122,10 +123,10 @@ export default class OrderProductCancel {
       const $parentCell = $productCheckbox.parents(OrderViewPageMap.cancelProduct.table.cell);
       const $productQuantity = $parentCell.find(OrderViewPageMap.cancelProduct.inputs.quantity);
       const refundableQuantity = parseInt($productQuantity.data('quantityRefundable'), 10);
-      if ($productCheckbox.is(':checked')) {
-        $productQuantity.val(refundableQuantity);
-      } else {
+      if (!$productCheckbox.is(':checked')) {
         $productQuantity.val(0);
+      } else if (parseInt($productQuantity.val(), 10) === 0) {
+        $productQuantity.val(refundableQuantity);
       }
       this.updateVoucherRefund();
     });
