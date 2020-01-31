@@ -29,7 +29,6 @@ const {$} = window;
  * Handles UI interactions of choice tree
  */
 export default class ChoiceTree {
-
   /**
    * @param {String} treeSelector
    */
@@ -54,7 +53,7 @@ export default class ChoiceTree {
       const hasCheckedElement = this.$container.find('.js-input-wrapper input:checked').length > 0;
 
       if (hasCheckedElement) {
-        this._unselectAll();
+        this.unselectAll();
       }
     });
 
@@ -90,7 +89,7 @@ export default class ChoiceTree {
    * @return {ChoiceTree}
    */
   enableRadioInputInstantSubmit() {
-    this.$container.on('change', '.js-input-wrapper input[type="radio"]', event => event.currentTarget.form.submit());
+    this.$container.on('change', '.js-input-wrapper input[type="radio"]', (event) => event.currentTarget.form.submit());
 
     return this;
   }
@@ -195,7 +194,7 @@ export default class ChoiceTree {
    * Unselects all inputs.
    * @private
    */
-  _unselectAll() {
+  unselectAll() {
     this.$container.find('.js-input-wrapper input').prop('checked', false);
   }
 }
