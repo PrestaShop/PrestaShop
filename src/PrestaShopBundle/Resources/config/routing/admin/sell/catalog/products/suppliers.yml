@@ -7,4 +7,3 @@ admin_supplier_refresh_product_supplier_combination_form:
         idProduct: 0
     requirements:
         idProduct: \d+
-
