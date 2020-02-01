@@ -79,27 +79,20 @@ before_install:
 install:
     - composer install --no-suggest --ansi --prefer-dist --no-interaction --no-progress --quiet;
     - make assets
-    - if [ "$PRESTASHOP_TEST_TYPE" != "sanity" ]; then
-        bash travis-scripts/install-prestashop;
-        fi
+    - if [ "$PRESTASHOP_TEST_TYPE" != "sanity" ]; then bash travis-scripts/install-prestashop; fi;
 
 script:
-    - if [ "$PRESTASHOP_TEST_TYPE" = "unit" ]; then
-        bash tests/check_file_syntax.sh;
-        bash tests-legacy/check_phpunit.sh;
+    - |
+        if [ "$PRESTASHOP_TEST_TYPE" = "unit" ]; then
+            bash tests/check_file_syntax.sh;
+            bash tests-legacy/check_phpunit.sh;
         fi
 
-    - if [ "$PRESTASHOP_TEST_TYPE" = "unit" ]; then
-        bash tests/check_unit.sh;
-        fi
+    - if [ "$PRESTASHOP_TEST_TYPE" = "unit" ]; then bash tests/check_unit.sh; fi;
 
-    - if [ "$PRESTASHOP_TEST_TYPE" = "integration" ]; then
-        bash tests/check_integration.sh;
-        fi
+    - if [ "$PRESTASHOP_TEST_TYPE" = "integration" ]; then bash tests/check_integration.sh; fi;
 
-    - if [ "$PRESTASHOP_TEST_TYPE" = "sanity" ]; then
-        bash tests/check_sanity.sh;
-        fi
+    - if [ "$PRESTASHOP_TEST_TYPE" = "sanity" ]; then bash tests/check_sanity.sh; fi;
 
 after_script:
     - sudo cat /var/log/apache2/error.log

@@ -4,7 +4,7 @@ admin_features_create:
     defaults:
         _controller: PrestaShopBundle:Admin\Sell\Catalog\Feature:create
         _legacy_controller: AdminFeatures
-#_legacy_link: AdminFeatures:addfeature
+#        _legacy_link: AdminFeatures:addfeature
 
 admin_features_edit:
     path: /{featureId}/edit

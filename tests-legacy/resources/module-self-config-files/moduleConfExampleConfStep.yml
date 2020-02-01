@@ -10,6 +10,6 @@ configuration:
         PAYPAL_SANDBOX_2:
             value: 1
             multilang: false
-    # Question: how to handle multi lang values ?
+    #   Question: how to handle multi lang values ?
     delete:
         - "PAYPAL_ONBOARDING"

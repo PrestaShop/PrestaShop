@@ -25,10 +25,10 @@ services:
     fpm:
         build:
             context: prestashop-fpm
-        #           If you want to change the prestashop user UID to match your local user UID
-        #           change it here and bellow
-        #           args:
-        #             UID: '1001'
+        #   If you want to change the prestashop user UID to match your local user UID
+        #   change it here and bellow
+        #   args:
+        #       UID: '1001'
         volumes:
             - ./prestashop/:/prestashop/
         depends_on:

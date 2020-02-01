@@ -15,8 +15,8 @@ services:
             - '@prestashop.core.admin.admin_filter.repository'
             - '@event_dispatcher'
             - '@=service("prestashop.adapter.legacy.context").getContext().shop.id'
-    #        tags:
-    #          - { name: controller.argument_value_resolver, priority: 50 }
+    #   tags:
+    #       - { name: controller.argument_value_resolver, priority: 50 }
 
     # Filters builder argument resolver
     prestashop.filters_builder.resolver:

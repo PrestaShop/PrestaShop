@@ -26,12 +26,12 @@ meta:
             description: Two columns with a small right column
 
 assets:
-# If you're using this theme as child and you want to load
-# the parent theme assets, uncomment this line.
+#   If you're using this theme as child and you want to load
+#   the parent theme assets, uncomment this line.
 #  use_parent_assets: true
 
-# The following lines are showing how to load assets in your page
-# Uncomment and change value to start loading css or js files
+#   The following lines are showing how to load assets in your page
+#   Uncomment and change value to start loading css or js files
 #  css:
 #    all:
 #      - id: custom-lib-style

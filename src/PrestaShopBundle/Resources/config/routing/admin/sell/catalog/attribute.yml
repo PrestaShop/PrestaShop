@@ -8,7 +8,7 @@ admin_attributes_index:
         _legacy_controller: AdminAttributesGroups
         redirectQueryParamsToKeep:
             - 'attributeGroupId'
-        #        _legacy_link: AdminAttributesGroups:viewattribute_group
+        #_legacy_link: AdminAttributesGroups:viewattribute_group
         _legacy_parameters:
             id_attribute_group: attributeGroupId
         requirements:
@@ -20,7 +20,7 @@ admin_attributes_search:
     defaults:
         _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Attribute:search'
         _legacy_controller: AdminAttributesGroups
-        #          _legacy_link: AdminAttributesGroups:submitFilterattribute_values
+        #_legacy_link: AdminAttributesGroups:submitFilterattribute_values
         redirectQueryParamsToKeep:
             - 'attributeGroupId'
 
@@ -81,4 +81,4 @@ admin_attributes_update_position:
     defaults:
         _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Attribute:updatePosition'
         _legacy_controller: AdminAttributesGroups
-#    _legacy_link: AdminAttributesGroups:updateAttributesPositions
+#        _legacy_link: AdminAttributesGroups:updateAttributesPositions
