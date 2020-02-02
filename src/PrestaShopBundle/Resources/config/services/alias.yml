@@ -3,11 +3,8 @@ services:
         public: true
 
     # Service aliases for backward campatibility
-    prestashop.core.api.stockMovement.repository:
-        alias: prestashop.core.api.stock_movement.repository
+    prestashop.core.api.stockMovement.repository: '@prestashop.core.api.stock_movement.repository'
 
-    prestashop.core.api.stockMovement.controller:
-        alias: prestashop.core.api.stock_movement.controller
+    prestashop.core.api.stockMovement.controller: '@prestashop.core.api.stock_movement.controller'
 
-    prestashop.twig.extension.dataFormatter:
-        alias: prestashop.twig.extension.data_formatter
+    prestashop.twig.extension.dataFormatter: '@prestashop.twig.extension.data_formatter'
