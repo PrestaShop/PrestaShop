@@ -265,7 +265,7 @@ GitHub contributors:
 - ha99y
 - Hatem Hadrich
 - harelguy
-- helgvor-stoll
+- Helgvor Stoll
 - hhennes
 - Hibatallah Aouadni
 - hiousi
