@@ -67,7 +67,7 @@ class TokenizedUrlsListener
         }
     }
 
-    public function onKernelRequest(KernelEvent $event)
+    public function onKernelController(KernelEvent $event)
     {
         $request = $event->getRequest();
 
