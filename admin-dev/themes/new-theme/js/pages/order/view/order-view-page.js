@@ -269,12 +269,9 @@ export default class OrderViewPage {
   }
 
   listenForCancelProduct() {
-    $(OrderViewPageMap.cancelProduct.buttons.cancel).on('click', (event) => {
+    $(OrderViewPageMap.cancelProduct.buttons.cancelProducts).on('click', (event) => {
       this.orderProductCancel.showCancelProductForm();
       this.orderProductRenderer.moveProductsPanelToRefundPosition();
-    });
-    $(OrderViewPageMap.cancelProduct.inputs.selector).on('change', (event) => {
-      this.orderProductCancel.fillCancelProductQuantityInput($(event.currentTarget));
     });
   }
 

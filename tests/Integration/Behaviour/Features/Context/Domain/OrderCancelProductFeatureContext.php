@@ -58,9 +58,8 @@ class OrderCancelProductFeatureContext extends AbstractDomainFeatureContext
         }
         try {
             $command = new CancelOrderProductCommand(
-                $products,
                 $toBeCanceledProducts,
-                $orderForViewing
+                $orderForViewing->getId()
             );
 
             $this->getCommandBus()->handle($command);

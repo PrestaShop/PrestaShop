@@ -68,8 +68,6 @@ final class CancellationFormDataHandler implements FormDataHandlerInterface
      */
     public function update($id, array $data)
     {
-        $orderForViewing = $this->queryBus->handle(new GetOrderForViewing($id));
-
         $toBeCanceledProducts = [];
         foreach ($data['products'] as $product) {
             if ($data['selected_' . $product->getOrderDetailId()]) {
@@ -78,9 +76,8 @@ final class CancellationFormDataHandler implements FormDataHandlerInterface
         }
 
         $command = new CancelOrderProductCommand(
-            $data['products'],
             $toBeCanceledProducts,
-            $orderForViewing
+            $id
         );
 
         $this->commandBus->handle($command);

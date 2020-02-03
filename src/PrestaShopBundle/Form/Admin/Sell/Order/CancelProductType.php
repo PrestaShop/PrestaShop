@@ -148,7 +148,7 @@ class CancelProductType extends TranslatorAwareType
             ])
             ->add('save', SubmitType::class, [
                 'attr' => [
-                    'class' => 'partial-refund save btn btn-primary ml-3',
+                    'class' => 'cancel-product-element save btn btn-primary ml-3',
                     'formnovalidate' => true,
                     'data-partial-refund-label' => $this->trans('Partial refund', 'Admin.Orderscustomers.Feature'),
                     'data-standard-refund-label' => $this->trans('Standard refund', 'Admin.Orderscustomers.Feature'),

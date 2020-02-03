@@ -27,61 +27,47 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Order\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderForViewing;
+use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
 
 class CancelOrderProductCommand
 {
     /**
      * @var array
-     */
-    private $products;
-
-    /**
-     * @var array
      *
      * key: orderDetailId, value: quantity
      */
-    private $toBeCanceledProducts;
+    private $cancelledProducts;
 
     /**
-     * @var OrderForViewing
+     * @var OrderId
      */
-    private $order;
+    private $orderId;
 
     /**
      * CancelOrderProductCommand constructor.
      *
-     * @param array $products
      * @param array $toBeCanceledProducts
-     * @param OrderForViewing $order
+     * @param int $orderId
      */
-    public function __construct(array $products, array $toBeCanceledProducts, OrderForViewing $order)
+    public function __construct(array $cancelledProducts, int $orderId)
     {
-        $this->products = $products;
-        $this->toBeCanceledProducts = $toBeCanceledProducts;
-        $this->order = $order;
+        $this->cancelledProducts = $cancelledProducts;
+        $this->orderId = new OrderId($orderId);
     }
 
     /**
      * @return array
      */
-    public function getToBeCanceledProducts()
+    public function getCancelledProducts()
     {
-        return $this->toBeCanceledProducts;
+        return $this->cancelledProducts;
     }
 
     /**
-     * @return array
+     * @return OrderId
      */
-    public function getProducts()
+    public function getOrderId()
     {
-        return $this->products;
-    }
-
-    /**
-     * @return OrderForViewing
-     */
-    public function getOrder()
-    {
-        return $this->order;
+        return $this->orderId;
     }
 }

@@ -39,7 +39,9 @@ use PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler\CancelOrderProductHan
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\EmptyProductSelectionException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidCancelQuantityException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
+use PrestaShop\PrestaShop\Core\Localization\Locale;
 use StockAvailable;
+use Symfony\Component\Translation\TranslatorInterface;
 use Validate;
 
 /**
@@ -47,18 +49,29 @@ use Validate;
  */
 final class CancelOrderProductHandler extends AbstractOrderCommandHandler implements CancelOrderProductHandlerInterface
 {
+    /**
+     * @var TranslatorInterface
+     */
     private $translator;
+
+    /**
+     * @param TranslatorInterface $translator
+     */
+    public function __construct(
+        TranslatorInterface $translator
+    ) {
+        $this->translator = $translator;
+    }
 
     /**
      * Legacy code for product cancellation handling in order page
      */
     public function handle(CancelOrderProductCommand $command)
     {
-        $this->translator = Context::getContext()->getTranslator();
-        $order = new Order($command->getOrder()->getId());
+        $order = new Order($command->getOrderId()->getValue());
         $this->checkInput($command);
 
-        $cartId = Cart::getCartIdByOrderId($command->getOrder()->getId());
+        $cartId = Cart::getCartIdByOrderId($command->getOrderId()->getValue());
         $customizationQuantities = Customization::countQuantityByCart($cartId);
         $details = [];
         $orderDetails = $this->getOrderDetails($command);
@@ -139,7 +152,7 @@ final class CancelOrderProductHandler extends AbstractOrderCommandHandler implem
         $customizedProductsList = [];
         $customizedCancelQuantity = [];
         $productCancelQuantity = [];
-        foreach ($command->getToBeCanceledProducts() as $orderDetailId => $cancelQuantity) {
+        foreach ($command->getCancelledProducts() as $orderDetailId => $cancelQuantity) {
             $orderDetail = new OrderDetail($orderDetailId);
             if ((int) $orderDetail->id_customization > 0) {
                 $customizedProductsList[] = $orderDetail;
@@ -160,11 +173,11 @@ final class CancelOrderProductHandler extends AbstractOrderCommandHandler implem
 
     private function checkInput(CancelOrderProductCommand $command)
     {
-        if (empty($command->getToBeCanceledProducts())) {
+        if (empty($command->getCancelledProducts())) {
             throw new EmptyProductSelectionException();
         }
 
-        foreach ($command->getToBeCanceledProducts() as $orderDetailId => $quantity) {
+        foreach ($command->getCancelledProducts() as $orderDetailId => $quantity) {
             if ((int) $quantity <= 0) {
                 throw new InvalidCancelQuantityException(InvalidCancelQuantityException::EMPTY_QUANTITY);
             }
