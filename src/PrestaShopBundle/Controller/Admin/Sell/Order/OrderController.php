@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -46,6 +46,7 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Command\UpdateOrderStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\CannotEditDeliveredOrderProductException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\ChangeOrderStatusException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidRefundException;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\NegativePaymentAmountException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderEmailSendException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderNotFoundException;
@@ -800,25 +801,31 @@ class OrderController extends FrameworkBundleAdminController
         ]);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $data = $form->getData();
+        if ($form->isSubmitted()) {
+            if ($form->isValid()) {
+                $data = $form->getData();
 
-            try {
-                $this->getCommandBus()->handle(
-                    new AddPaymentCommand(
-                        $orderId,
-                        $data['date'],
-                        $data['payment_method'],
-                        $data['amount'],
-                        $data['id_currency'],
-                        $data['id_invoice'],
-                        $data['transaction_id']
-                    )
-                );
+                try {
+                    $this->getCommandBus()->handle(
+                        new AddPaymentCommand(
+                            $orderId,
+                            $data['date'],
+                            $data['payment_method'],
+                            $data['amount'],
+                            $data['id_currency'],
+                            $data['id_invoice'],
+                            $data['transaction_id']
+                        )
+                    );
 
-                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
-            } catch (Exception $e) {
-                $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+                    $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+                } catch (Exception $e) {
+                    $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+                }
+            } else {
+                foreach ($form->getErrors(true) as $error) {
+                    $this->addFlash('error', $error->getMessage());
+                }
             }
         }
 
@@ -1250,6 +1257,10 @@ class OrderController extends FrameworkBundleAdminController
             ],
             ProductOutOfStockException::class => $this->trans(
                 'There are not enough products in stock',
+                'Admin.Notifications.Error'
+            ),
+            NegativePaymentAmountException::class => $this->trans(
+                'Invalid value: the payment must be a positive amount.',
                 'Admin.Notifications.Error'
             ),
         ];
