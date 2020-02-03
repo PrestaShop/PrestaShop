@@ -143,10 +143,10 @@ module.exports = class Languages extends LocalizationBasePage {
   /* Bulk Actions Methods */
   /**
    * Enable / disable Suppliers by Bulk Actions
-   * @param enable
+   * @param toEnable
    * @return {Promise<textContent>}
    */
-  async bulkEditEnabledColumn(enable = true) {
+  async bulkEditEnabledColumn(toEnable = true) {
     // Click on Select All
     await Promise.all([
       this.page.click(this.selectAllRowsLabel),
@@ -158,7 +158,7 @@ module.exports = class Languages extends LocalizationBasePage {
       this.page.waitForSelector(`${this.bulkActionsToggleButton}[aria-expanded='true']`, {visible: true}),
     ]);
     // Click on delete and wait for modal
-    await this.clickAndWaitForNavigation(enable ? this.bulkActionsEnableButton : this.bulkActionsDisableButton);
+    await this.clickAndWaitForNavigation(toEnable ? this.bulkActionsEnableButton : this.bulkActionsDisableButton);
     return this.getTextContent(this.alertSuccessBlockParagraph);
   }
 
