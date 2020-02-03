@@ -30,7 +30,7 @@ use Employee;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\Feature\TokenInUrls;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpKernel\Event\KernelEvent;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Csrf\CsrfToken;
 use Symfony\Component\Security\Csrf\CsrfTokenManager;
@@ -67,7 +67,7 @@ class TokenizedUrlsListener
         }
     }
 
-    public function onKernelRequest(GetResponseEvent $event)
+    public function onKernelController(KernelEvent $event)
     {
         $request = $event->getRequest();
 
@@ -101,9 +101,14 @@ class TokenizedUrlsListener
             }
         }
 
-        $token = urldecode($request->query->get('_token', false));
+        $token = false;
+        if ($request->query->has('_token')) {
+            $token = new CsrfToken($this->username, $request->query->get('_token'));
+        } elseif (isset($request->query->get('form')['_token'])) {
+            $token = new CsrfToken('form', $request->query->get('form')['_token']);
+        }
 
-        if (false === $token || !$this->tokenManager->isTokenValid(new CsrfToken($this->username, $token))) {
+        if (false === $token || !$this->tokenManager->isTokenValid($token)) {
             // remove token if any
             if (false !== strpos($uri, '_token=')) {
                 $uri = substr($uri, 0, strpos($uri, '_token='));
