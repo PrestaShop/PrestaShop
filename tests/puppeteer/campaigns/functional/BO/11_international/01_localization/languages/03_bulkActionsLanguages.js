@@ -97,8 +97,8 @@ describe('Disable, enable and delete with bulk actions languages', async () => {
 
   describe('Enable, disable and delete with bulk actions', async () => {
     const tests = [
-      {args: {action: 'disable', enabledValue: false}, expected: 'clear'},
-      {args: {action: 'enable', enabledValue: true}, expected: 'check'},
+      {args: {action: 'disable', toEnable: false}, expected: 'clear'},
+      {args: {action: 'enable', toEnable: true}, expected: 'check'},
     ];
 
     it('should filter language by name \'languageToDelete\'', async function () {
@@ -110,7 +110,7 @@ describe('Disable, enable and delete with bulk actions languages', async () => {
     tests.forEach((test) => {
       it(`should ${test.args.action} with bulk actions`, async function () {
         const disableTextResult = await this.pageObjects.languagesPage.bulkEditEnabledColumn(
-          test.args.enabledValue,
+          test.args.toEnable,
         );
         await expect(disableTextResult).to.be.equal(this.pageObjects.languagesPage.successfulUpdateStatusMessage);
         // Check that element in grid are disabled
