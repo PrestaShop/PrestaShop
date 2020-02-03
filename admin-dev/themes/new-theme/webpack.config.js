@@ -32,8 +32,4 @@
 const prod = require('./.webpack/prod.js');
 const dev = require('./.webpack/dev.js');
 
-module.exports = () => (
-  process.env.NODE_ENV === 'production'
-  ? prod()
-  : dev()
-);
+module.exports = (env, argv) => (argv.mode === 'production' ? prod() : dev());
