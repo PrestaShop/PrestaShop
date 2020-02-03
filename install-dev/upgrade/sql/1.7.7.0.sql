@@ -537,6 +537,7 @@ INSERT IGNORE INTO `PREFIX_hook` (`id_hook`, `name`, `title`, `description`, `po
   (NULL, 'displayAdminOrderTabLink', 'Admin Order Tab Link', 'This hook displays new tab links on the order view page', '1 '),
   (NULL, 'displayAdminOrderTabContent', 'Admin Order Tab Content', 'This hook displays new tab contents on the order view page', '1 '),
   (NULL, 'actionGetAdminOrderButtons', 'Admin Order Buttons', 'This hook is used to generate the buttons collection on the order view page thanks (see ActionsBarButtonsCollection)', '1 '),
+  (NULL, 'actionBackOfficeControllerSetVariables', 'Admin extra variables inside twig', 'This hook injects extra variables inside twig via controller parameters', '1')
 ;
 
 INSERT INTO `PREFIX_hook_alias` (`name`, `alias`) VALUES ('displayAdminOrderTop', 'displayInvoice');
