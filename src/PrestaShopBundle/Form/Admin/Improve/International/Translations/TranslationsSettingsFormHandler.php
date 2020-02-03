@@ -28,14 +28,14 @@ namespace PrestaShopBundle\Form\Admin\Improve\International\Translations;
 
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
-use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormFactoryInterface;
 
 final class TranslationsSettingsFormHandler implements FormHandlerInterface
 {
     /**
-     * @var FormBuilderInterface the form builder
+     * @var FormFactoryInterface the form builder
      */
-    protected $formBuilder;
+    protected $formFactory;
 
     /**
      * @var HookDispatcherInterface the event dispatcher
@@ -50,23 +50,23 @@ final class TranslationsSettingsFormHandler implements FormHandlerInterface
     /**
      * @var array the list of Form Types
      */
-    protected $formTypes;
+    protected $form;
 
     /**
-     * @param FormBuilderInterface $formBuilder
+     * @param FormFactoryInterface $formFactory
      * @param HookDispatcherInterface $hookDispatcher
-     * @param array $formTypes
+     * @param string $form
      * @param string $hookName
      */
     public function __construct(
-        FormBuilderInterface $formBuilder,
+        FormFactoryInterface $formFactory,
         HookDispatcherInterface $hookDispatcher,
-        array $formTypes,
-        $hookName
+        string $form,
+        string $hookName
     ) {
-        $this->formBuilder = $formBuilder;
+        $this->formFactory = $formFactory;
         $this->hookDispatcher = $hookDispatcher;
-        $this->formTypes = $formTypes;
+        $this->form = $form;
         $this->hookName = $hookName;
     }
 
@@ -75,18 +75,16 @@ final class TranslationsSettingsFormHandler implements FormHandlerInterface
      */
     public function getForm()
     {
-        foreach ($this->formTypes as $formName => $formType) {
-            $this->formBuilder->add($formName, $formType);
-        }
+        $form_builder = $this->formFactory->createNamedBuilder('form', $this->form);
 
         $this->hookDispatcher->dispatchWithParameters(
             "action{$this->hookName}Form",
             [
-                'form_builder' => $this->formBuilder,
+                'form_builder' => $form_builder,
             ]
         );
 
-        return $this->formBuilder->getForm();
+        return $form->getForm();
     }
 
     /**

@@ -38,18 +38,35 @@ use Symfony\Component\Security\Csrf\CsrfTokenManager;
  */
 class Router extends BaseRouter
 {
+    /**
+     * @var UserProvider
+     */
     private $userProvider;
+
+    /**
+     * @var CsrfTokenManager
+     */
     private $tokenManager;
+
+    /**
+     * @var array
+     */
+    private $tokens = [];
 
     /**
      * {@inheritdoc}
      */
     public function generate($name, $parameters = [], $referenceType = self::ABSOLUTE_PATH)
     {
-        $url = parent::generate($name, $parameters, $referenceType);
-        $token = $this->tokenManager->getToken($this->userProvider->getUsername())->getValue();
+        $username = $this->userProvider->getUsername();
+        // Do not generate token each time we want to generate a route for a user
+        if (!isset($this->tokens[$username])) {
+            $this->tokens[$username] = $this->tokenManager->getToken($username)->getValue();
+        }
 
-        return self::generateTokenizedUrl($url, $token);
+        $url = parent::generate($name, $parameters, $referenceType);
+
+        return self::generateTokenizedUrl($url, $this->tokens[$username]);
     }
 
     public function setTokenManager(CsrfTokenManager $tokenManager)
@@ -67,6 +84,7 @@ class Router extends BaseRouter
         if (TokenInUrls::isDisabled()) {
             return $url;
         }
+
         $components = parse_url($url);
         $baseUrl = (isset($components['path']) ? $components['path'] : '');
         $queryParams = [];
