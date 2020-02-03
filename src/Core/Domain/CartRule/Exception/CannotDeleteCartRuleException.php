@@ -1,4 +1,5 @@
-{**
+<?php
+/**
  * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
@@ -21,12 +22,10 @@
  * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *}
+ */
 
-{**
- * @deprecated since 1.7.6, to be removed in the next minor
- *}
+namespace PrestaShop\PrestaShop\Core\Domain\CartRule\Exception;
 
-<a href="{$href|escape:'html':'UTF-8'}" title="{$action}" class="btn btn-default">
-	<i class="icon-cloud-upload"></i> {$action}
-</a>
+class CannotDeleteCartRuleException extends CartRuleException
+{
+}
