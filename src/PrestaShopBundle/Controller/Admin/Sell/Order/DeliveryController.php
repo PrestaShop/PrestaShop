@@ -26,7 +26,7 @@
 
 namespace PrestaShopBundle\Controller\Admin\Sell\Order;
 
-use PrestaShop\PrestaShop\Core\Form\FormHandler;
+use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -51,7 +51,7 @@ class DeliveryController extends FrameworkBundleAdminController
      */
     public function slipAction(Request $request)
     {
-        /** @var $formHandler FormHandler */
+        /** @var $formHandler FormHandlerInterface */
         $formHandler = $this->get('prestashop.adapter.order.delivery.slip.options.form_handler');
         /** @var $form Form */
         $form = $formHandler->getForm();
@@ -94,7 +94,7 @@ class DeliveryController extends FrameworkBundleAdminController
      */
     public function generatePdfAction(Request $request)
     {
-        /** @var $formHandler FormHandler */
+        /** @var $formHandler FormHandlerInterface */
         $formHandler = $this->get('prestashop.adapter.order.delivery.slip.pdf.form_handler');
         /** @var $form Form */
         $form = $formHandler->getForm();
