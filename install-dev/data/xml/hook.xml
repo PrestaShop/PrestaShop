@@ -2145,5 +2145,10 @@
       <title>Admin Order Buttons</title>
       <description>This hook is used to generate the buttons collection on the order view page thanks (see ActionsBarButtonsCollection)</description>
     </hook>
+    <hook id="actionBackOfficeControllerSetVariables">
+      <name>actionBackOfficeControllerSetVariables</name>
+      <title>Admin extra variables inside twig</title>
+      <description>This hook injects extra variables inside twig via controller parameters</description>
+    </hook>
   </entities>
 </entity_hook>
