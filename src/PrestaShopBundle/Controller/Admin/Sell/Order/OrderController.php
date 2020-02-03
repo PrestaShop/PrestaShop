@@ -811,7 +811,7 @@ class OrderController extends FrameworkBundleAdminController
                             $orderId,
                             $data['date'],
                             $data['payment_method'],
-                            $data['amount'],
+                            (string) $data['amount'],
                             $data['id_currency'],
                             $data['id_invoice'],
                             $data['transaction_id']
