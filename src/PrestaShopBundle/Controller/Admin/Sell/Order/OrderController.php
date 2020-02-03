@@ -454,11 +454,17 @@ class OrderController extends FrameworkBundleAdminController
         ]);
     }
 
-    /***
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
+    /**
+     * @AdminSecurity(
+     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     redirectRoute="admin_orders_view",
+     *     redirectQueryParamsToKeep={"orderId"},
+     *     message="You do not have permission to edit this."
+     * )
      *
      * @param int $orderId
      * @param Request $request
+     *
      * @return RedirectResponse
      */
     public function partialRefundAction(int $orderId, Request $request)
@@ -582,6 +588,13 @@ class OrderController extends FrameworkBundleAdminController
     }
 
     /**
+     * @AdminSecurity(
+     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     redirectRoute="admin_orders_view",
+     *     redirectQueryParamsToKeep={"orderId"},
+     *     message="You do not have permission to edit this."
+     * )
+     *
      * @param int $orderId
      * @param Request $request
      *
@@ -627,6 +640,13 @@ class OrderController extends FrameworkBundleAdminController
     }
 
     /**
+     * @AdminSecurity(
+     *     "is_granted('update', 'AdminOrders')",
+     *     redirectRoute="admin_orders_view",
+     *     redirectQueryParamsToKeep={"orderId"},
+     *     message="You do not have permission to edit this."
+     * )
+     *
      * @param int $orderId
      * @param int $orderCartRuleId
      *
@@ -646,6 +666,13 @@ class OrderController extends FrameworkBundleAdminController
     }
 
     /**
+     * @AdminSecurity(
+     *     "is_granted('update', 'AdminOrders')",
+     *     redirectRoute="admin_orders_view",
+     *     redirectQueryParamsToKeep={"orderId"},
+     *     message="You do not have permission to edit this."
+     * )
+     *
      * @param int $orderId
      * @param int $orderInvoiceId
      * @param Request $request
@@ -704,6 +731,13 @@ class OrderController extends FrameworkBundleAdminController
     }
 
     /**
+     * @AdminSecurity(
+     *     "is_granted('update', 'AdminOrders')",
+     *     redirectRoute="admin_orders_view",
+     *     redirectQueryParamsToKeep={"orderId"},
+     *     message="You do not have permission to edit this."
+     * )
+     *
      * @param int $orderId
      * @param Request $request
      *
@@ -789,6 +823,13 @@ class OrderController extends FrameworkBundleAdminController
     }
 
     /**
+     * @AdminSecurity(
+     *     "is_granted('update', 'AdminOrders')",
+     *     redirectRoute="admin_orders_view",
+     *     redirectQueryParamsToKeep={"orderId"},
+     *     message="You do not have permission to edit this."
+     * )
+     *
      * @param int $orderId
      * @param Request $request
      *
@@ -959,6 +1000,13 @@ class OrderController extends FrameworkBundleAdminController
     }
 
     /**
+     * @AdminSecurity(
+     *     "is_granted('update', 'AdminOrders')",
+     *     redirectRoute="admin_orders_view",
+     *     redirectQueryParamsToKeep={"orderId"},
+     *     message="You do not have permission to edit this."
+     * )
+     *
      * @param Request $request
      *
      * @return RedirectResponse
@@ -1008,6 +1056,13 @@ class OrderController extends FrameworkBundleAdminController
     }
 
     /**
+     * @AdminSecurity(
+     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     redirectRoute="admin_orders_view",
+     *     redirectQueryParamsToKeep={"orderId"},
+     *     message="You do not have permission to edit this."
+     * )
+     *
      * @param int $orderId
      * @param Request $request
      *
@@ -1041,6 +1096,20 @@ class OrderController extends FrameworkBundleAdminController
         ]);
     }
 
+    /**
+     * @AdminSecurity(
+     *     "is_granted('update', 'AdminOrders')",
+     *     redirectRoute="admin_orders_view",
+     *     redirectQueryParamsToKeep={"orderId"},
+     *     message="You do not have permission to edit this."
+     * )
+     *
+     * @param int $orderId
+     * @param int $orderStatusId
+     * @param int $orderHistoryId
+     *
+     * @return RedirectResponse
+     */
     public function resendEmailAction(int $orderId, int $orderStatusId, int $orderHistoryId): RedirectResponse
     {
         try {
