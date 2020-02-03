@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\EventListener;
 
+use Hook;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -91,6 +92,7 @@ class ActionDispatcherLegacyHooksSubscriber implements EventSubscriberInterface
 
         $requestAttributes->set('controller_type', $controllerType);
         $requestAttributes->set('controller_name', get_class($controller));
+        $requestAttributes->set('view_parameters', Hook::exec('actionBackOfficeControllerSetVariables'));
     }
 
     public function callActionDispatcherAfterHook(FilterResponseEvent $event)
