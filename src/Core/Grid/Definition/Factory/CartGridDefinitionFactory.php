@@ -40,7 +40,7 @@ use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\SubmitRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Type\LinkGridAction;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
-use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\CartBulkActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\DateTimeColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\HighlightedColumn;
@@ -117,8 +117,7 @@ final class CartGridDefinitionFactory extends AbstractGridDefinitionFactory
     protected function getColumns()
     {
         $columns = (new ColumnCollection())
-            // todo: to avoid hidden behavior instead of BulkActionColumn create CartBulkActionColumn
-            ->add((new BulkActionColumn('cart_bulk_action'))
+            ->add((new CartBulkActionColumn('cart_bulk_action'))
                 ->setOptions([
                     'bulk_field' => 'id_cart',
                 ])
