@@ -30,6 +30,7 @@
     font-weight: normal;
     margin-bottom: 0;
     float: left;
+
     @include media-breakpoint-down(sm) {
       float: none;
     }
@@ -80,7 +81,8 @@
     position: relative;
 
     .notification-container {
-      @include notification_container(1.5rem) position: absolute;
+      @include notification_container(1.5rem);
+      position: absolute;
       bottom: -5px;
       right: 15px;
 
