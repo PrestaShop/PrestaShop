@@ -208,9 +208,7 @@ describe('Create different products and delete them from monitoring page', async
       });
 
       it('should reset filter check number of products', async function () {
-        const numberOfProductsAfterDelete = await this.pageObjects.productsPage.resetAndGetNumberOfLines(
-          test.args.gridName,
-        );
+        const numberOfProductsAfterDelete = await this.pageObjects.productsPage.resetAndGetNumberOfLines();
         await expect(numberOfProductsAfterDelete).to.be.equal(numberOfProducts);
       });
     });
