@@ -28,7 +28,6 @@ namespace PrestaShop\PrestaShop\Adapter\Order\CommandHandler;
 
 use Cart;
 use Configuration;
-use Context;
 use Customization;
 use Hook;
 use Order;
@@ -38,8 +37,8 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Command\CancelOrderProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler\CancelOrderProductHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\EmptyProductSelectionException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidCancelQuantityException;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidOrderStateException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
-use PrestaShop\PrestaShop\Core\Localization\Locale;
 use StockAvailable;
 use Symfony\Component\Translation\TranslatorInterface;
 use Validate;
@@ -70,6 +69,7 @@ final class CancelOrderProductHandler extends AbstractOrderCommandHandler implem
     {
         $order = new Order($command->getOrderId()->getValue());
         $this->checkInput($command);
+        $this->checkOrderState($order);
 
         $cartId = Cart::getCartIdByOrderId($command->getOrderId()->getValue());
         $customizationQuantities = Customization::countQuantityByCart($cartId);
@@ -181,6 +181,16 @@ final class CancelOrderProductHandler extends AbstractOrderCommandHandler implem
             if ((int) $quantity <= 0) {
                 throw new InvalidCancelQuantityException(InvalidCancelQuantityException::EMPTY_QUANTITY);
             }
+        }
+    }
+
+    /**
+     * @param Order $order*
+     */
+    private function checkOrderState(Order $order)
+    {
+        if ($order->hasInvoice() !== false) {
+            throw new InvalidOrderStateException(InvalidOrderStateException::HAS_INVOICE);
         }
     }
 }

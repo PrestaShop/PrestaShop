@@ -47,6 +47,7 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Exception\CannotEditDeliveredOrderPr
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\ChangeOrderStatusException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\EmptyProductSelectionException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidCancelQuantityException;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidOrderStateException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidRefundException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\NegativePaymentAmountException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderEmailSendException;
@@ -1432,6 +1433,12 @@ class OrderController extends FrameworkBundleAdminController
                 'Invalid value: the payment must be a positive amount.',
                 'Admin.Notifications.Error'
             ),
+            InvalidOrderStateException::class => [
+                InvalidOrderStateException::HAS_INVOICE => $this->trans(
+                    'Can not perform product cancellation on an order that already has an invoice.',
+                    'Admin.Notifications.Error'
+                ),
+            ]
         ];
     }
 

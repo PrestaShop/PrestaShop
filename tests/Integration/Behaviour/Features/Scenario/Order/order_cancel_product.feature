@@ -37,6 +37,18 @@ Feature: Cancel Order Product from Back Office (BO)
       | Mug Today is a good day     | 1        |
     Then order "bo_order_cancel_product" should contain 3 products "Mug The best is yet to come"
     And order "bo_order_cancel_product" should contain 2 products "Mug Today is a good day"
+    And product "Mug The best is yet to come" in order "bo_order_cancel_product" has following details:
+      | product_quantity            | 3           |
+      | product_quantity_refunded   | 0           |
+      | product_quantity_reinjected | 0           |
+      | total_refunded_tax_excl     | 0.000000    |
+      | total_refunded_tax_incl     | 0.000000    |
+    And product "Mug Today is a good day" in order "bo_order_cancel_product" has following details:
+      | product_quantity            | 2           |
+      | product_quantity_refunded   | 0           |
+      | product_quantity_reinjected | 0           |
+      | total_refunded_tax_excl     | 0.000000    |
+      | total_refunded_tax_incl     | 0.000000    |
     And there are 2 more "Mug The best is yet to come" in stock
     And there are 1 more "Mug Today is a good day" in stock
 
@@ -54,5 +66,22 @@ Feature: Cancel Order Product from Back Office (BO)
     When I do a cancel from order "bo_order_cancel_product" on the following products:
       | product_name                | quantity |
       | Mug The best is yet to come | 0        |
+      | Mug Today is a good day     | 1        |
+    Then I should get error that cancel quantity is empty
+
+  @order-cancel-product
+  Scenario: Quantity must be positive
+    Given I add order "bo_order_cancel_product" with the following details:
+      | cart                | dummy_cart                 |
+      | message             | test                       |
+      | payment module name | dummy_payment              |
+      | status              | Awaiting check payment     |
+    And order "bo_order_cancel_product" should contain 5 products "Mug The best is yet to come"
+    And order "bo_order_cancel_product" should contain 3 products "Mug Today is a good day"
+    And there are 5 less "Mug The best is yet to come" in stock
+    And there are 3 less "Mug Today is a good day" in stock
+    When I do a cancel from order "bo_order_cancel_product" on the following products:
+      | product_name                | quantity |
+      | Mug The best is yet to come | 565       |
       | Mug Today is a good day     | 1        |
     Then I should get error that cancel quantity is empty

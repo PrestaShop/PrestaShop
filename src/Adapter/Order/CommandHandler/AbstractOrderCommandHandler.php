@@ -63,8 +63,8 @@ abstract class AbstractOrderCommandHandler extends AbstractOrderHandler
             (int) Context::getContext()->language->id,
             (int) $orderDetail->id_shop
         );
-
-        $orderDetail->product_quantity_reinjected += $quantityToReinject;
+        // @todo to be moved in OrderDetailUpdater service (introduced in migrate standard refund PR)
+        // $orderDetail->product_quantity_reinjected = $quantityToReinject;
         if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT')
             && $product->advanced_stock_management
             && $orderDetail->id_warehouse != 0
@@ -138,8 +138,6 @@ abstract class AbstractOrderCommandHandler extends AbstractOrderHandler
 
             if ($delete) {
                 $orderDetail->delete();
-            } else {
-                $orderDetail->update();
             }
 
             StockAvailable::synchronize($productId);
@@ -167,8 +165,6 @@ abstract class AbstractOrderCommandHandler extends AbstractOrderHandler
 
             if ($delete) {
                 $orderDetail->delete();
-            } else {
-                $orderDetail->update();
             }
         } else {
             throw new OrderException('This product cannot be re-stocked.');

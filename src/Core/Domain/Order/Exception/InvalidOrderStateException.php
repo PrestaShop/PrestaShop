@@ -32,4 +32,33 @@ namespace PrestaShop\PrestaShop\Core\Domain\Order\Exception;
  */
 class InvalidOrderStateException extends OrderException
 {
+    /**
+     * Used when the order has no invoice (and it should have)
+     */
+    const HAS_NO_INVOICE = 1;
+
+    /**
+     * Used when the order has an invoice (and it should not)
+     */
+    const HAS_INVOICE = 2;
+
+    /**
+     * Used when the order has not been delivered (and it should have)
+     */
+    const HAS_NOT_BEEN_DELIVERED = 3;
+
+    /**
+     * Used when the order has been delivered (and it shouldn't have)
+     */
+    const HAS_BEEN_DELIVERED = 4;
+
+    /**
+     * @param int $code
+     * @param string $message
+     * @param Throwable|null $previous
+     */
+    public function __construct($code = 0, $message = '', Throwable $previous = null)
+    {
+        parent::__construct($message, $code, $previous);
+    }
 }
