@@ -32,6 +32,7 @@ use Cart;
 use Context;
 use Currency;
 use Customer;
+use PrestaShop\PrestaShop\Adapter\ContextStateManager;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartException;
 use PrestaShop\PrestaShop\Core\Grid\Data\Factory\GridDataFactoryInterface;
 use PrestaShop\PrestaShop\Core\Grid\Data\GridData;
@@ -62,18 +63,26 @@ final class CartGridDataFactory implements GridDataFactoryInterface
     private $locale;
 
     /**
+     * @var ContextStateManager
+     */
+    private $contextStateManager;
+
+    /**
      * @param GridDataFactoryInterface $doctrineDataFactory
      * @param TranslatorInterface $translator
      * @param LocaleInterface $locale
+     * @param ContextStateManager $contextStateManager
      */
     public function __construct(
         GridDataFactoryInterface $doctrineDataFactory,
         TranslatorInterface $translator,
-        LocaleInterface $locale
+        LocaleInterface $locale,
+        ContextStateManager $contextStateManager
     ) {
         $this->doctrineDataFactory = $doctrineDataFactory;
         $this->translator = $translator;
         $this->locale = $locale;
+        $this->contextStateManager = $contextStateManager;
     }
 
     /**
@@ -122,22 +131,22 @@ final class CartGridDataFactory implements GridDataFactoryInterface
             }
 
             $record['online'] = $record['id_guest'] ?
-                $this->translator->trans('Yes', [], 'Admin.Global') :
-                $this->translator->trans('No', [], 'Admin.Global');
+            $this->translator->trans('Yes', [], 'Admin.Global') :
+            $this->translator->trans('No', [], 'Admin.Global');
 
-            $context = Context::getContext();
-            $context->currentLocale = $this->locale;
-            $context->cart = new Cart($record['id_cart']);
-            $context->currency = new Currency((int) $context->cart->id_currency);
-            $context->customer = new Customer((int) $context->cart->id_customer);
+            $cart = new Cart($record['id_cart']);
+            $this->contextStateManager->setLocale($this->locale);
+            $this->contextStateManager->setCart($cart);
+            $this->contextStateManager->setCurrency(new Currency((int) $cart->id_currency));
+            $this->contextStateManager->setCustomer(new Customer((int) $cart->id_customer));
 
-            $record['cart_total'] = Cart::getTotalCart($context->cart->id, true, Cart::BOTH_WITHOUT_SHIPPING);
-            $record['is_order_placed'] = $context->cart->orderExists();
+            $record['cart_total'] = Cart::getTotalCart($cart->id, true, Cart::BOTH_WITHOUT_SHIPPING);
+            $record['is_order_placed'] = $cart->orderExists();
 
-            if (!isset($context->cart->id_shop)) {
+            if (!isset($cart->id_shop)) {
                 throw new CartException('cart shop id is not set');
             }
-            $record['shop_name'] = $context->shop->getShops()[$context->cart->id_shop]['name'];
+            $record['shop_name'] = Context::getContext()->shop->getShops()[$cart->id_shop]['name'];
 
             $modifiedRecords[] = $record;
         }

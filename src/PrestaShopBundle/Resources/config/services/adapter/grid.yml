@@ -24,3 +24,4 @@ services:
             - '@prestashop.core.grid.data_factory.cart'
             - '@translator'
             - "@prestashop.core.localization.locale.context_locale"
+            - '@prestashop.adapter.context_state_manager'
