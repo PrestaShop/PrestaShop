@@ -132,4 +132,5 @@
     <tab id="Webservice" name="Webservice" />
     <tab id="Zones" name="Zones" />
     <tab id="Marketing_tools" name="Module Selections" />
+    <tab id="Tabs" name="Menu" />
 </entity_tab>
