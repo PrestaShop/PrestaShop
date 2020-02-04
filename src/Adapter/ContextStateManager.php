@@ -34,6 +34,7 @@ use Country;
 use Currency;
 use Customer;
 use Language;
+use PrestaShop\PrestaShop\Core\Localization\LocaleInterface;
 
 /**
  * Allows manipulating context state.
@@ -134,6 +135,19 @@ final class ContextStateManager
     {
         $this->saveContextField('customer');
         $this->context->customer = $customer;
+
+        return $this;
+    }
+
+    /**
+     * @param LocaleInterface $locale
+     *
+     * @return $this
+     */
+    public function setLocale(LocaleInterface $locale)
+    {
+        $this->saveContextField('currentLocale');
+        $this->context->currentLocale = $locale;
 
         return $this;
     }
