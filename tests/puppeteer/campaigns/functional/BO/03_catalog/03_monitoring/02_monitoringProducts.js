@@ -28,6 +28,9 @@ const productWithCombinationsWithoutQuantity = new ProductFaker(
 const productWithoutPrice = new ProductFaker(
   {type: 'Standard product', productHasCombinations: false, price: '0'},
 );
+const productWithoutDescription = new ProductFaker(
+  {type: 'Standard product', productHasCombinations: false, description: ''},
+);
 
 // Init objects needed
 const init = async function () {
@@ -97,6 +100,14 @@ describe('Create different products and delete them from monitoring page', async
         productType: 'without price',
         productToCreate: productWithoutPrice,
         gridName: 'product_without_price',
+        enabled: true,
+      },
+    },
+    {
+      args: {
+        productType: 'without description',
+        productToCreate: productWithoutDescription,
+        gridName: 'product_without_description',
         enabled: true,
       },
     },
@@ -197,7 +208,9 @@ describe('Create different products and delete them from monitoring page', async
       });
 
       it('should reset filter check number of products', async function () {
-        const numberOfProductsAfterDelete = await this.pageObjects.productsPage.resetAndGetNumberOfLines();
+        const numberOfProductsAfterDelete = await this.pageObjects.productsPage.resetAndGetNumberOfLines(
+          test.args.gridName,
+        );
         await expect(numberOfProductsAfterDelete).to.be.equal(numberOfProducts);
       });
     });
