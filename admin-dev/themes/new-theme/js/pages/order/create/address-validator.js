@@ -1,4 +1,4 @@
-{**
+/**
  * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
@@ -21,12 +21,38 @@
  * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *}
+ */
 
-{**
- * @deprecated since 1.7.6, to be removed in the next minor
- *}
 
-<a href="{$href|escape:'html':'UTF-8'}" title="{$action}" class="btn btn-default">
-	<i class="icon-cloud-upload"></i> {$action}
-</a>
+/**
+ * Checks if correct addresses are selected.
+ * There is a case when options list cannot contain cart addresses 'selected' values
+ *  because those are outdated in db (e.g. deleted after cart creation or country is disabled)
+ *
+ * @param {Array} addresses
+ *
+ * @returns {boolean}
+ */
+export const ValidateAddresses = (addresses) => {
+  let deliveryValid = false;
+  let invoiceValid = false;
+
+  /* eslint-disable-next-line guard-for-in,no-restricted-syntax */
+  for (const address in Object.values(addresses)) {
+    if (address.delivery) {
+      deliveryValid = true;
+    }
+
+    if (address.invoice) {
+      invoiceValid = true;
+    }
+
+    if (deliveryValid && invoiceValid) {
+      return true;
+    }
+  }
+
+  return false;
+};
+
+export default ValidateAddresses;

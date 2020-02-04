@@ -24,11 +24,22 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Order\Exception;
+namespace Tests\Unit\Adapter\Presenter;
 
-/**
- * EmptyAmountQuantityException
- */
-class EmptyRefundAmountException extends OrderException
+class DummyLog
 {
+    private $pingCounter = 0;
+
+    public function ping()
+    {
+        ++$this->pingCounter;
+    }
+
+    /**
+     * @return int
+     */
+    public function getPingCounter(): int
+    {
+        return $this->pingCounter;
+    }
 }

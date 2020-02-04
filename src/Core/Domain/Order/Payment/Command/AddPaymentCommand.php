@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -29,6 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Order\Payment\Command;
 use DateTimeImmutable;
 use PrestaShop\Decimal\Number;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\NegativePaymentAmountException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
 
@@ -90,12 +91,14 @@ class AddPaymentCommand
         $orderInvoiceId = null,
         $transactionId = null
     ) {
+        $amount = new Number($paymentAmount);
+        $this->assertAmountIsPositive($amount);
         $this->assertPaymentMethodIsGenericName($paymentMethod);
 
         $this->orderId = new OrderId($orderId);
         $this->paymentDate = new DateTimeImmutable($paymentDate);
         $this->paymentMethod = $paymentMethod;
-        $this->paymentAmount = new Number($paymentAmount);
+        $this->paymentAmount = $amount;
         $this->paymentCurrencyId = new CurrencyId($paymentCurrencyId);
         $this->orderInvoiceId = $orderInvoiceId;
         $this->transactionId = $transactionId;
@@ -161,6 +164,13 @@ class AddPaymentCommand
     {
         if (empty($paymentMethod) || !preg_match('/^[^<>={}]*$/u', $paymentMethod)) {
             throw new OrderConstraintException('The selected payment method is invalid.');
+        }
+    }
+
+    private function assertAmountIsPositive(Number $amount)
+    {
+        if ($amount->isNegative()) {
+            throw new NegativePaymentAmountException('The amount should be greater than 0.');
         }
     }
 }

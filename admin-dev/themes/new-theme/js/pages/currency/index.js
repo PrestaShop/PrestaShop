@@ -34,7 +34,7 @@ import FiltersSubmitButtonEnablerExtension
   from '@components/grid/extension/filters-submit-button-enabler-extension';
 import LinkRowActionExtension from '@components/grid/extension/link-row-action-extension';
 
-const $ = window.$;
+const {$} = window;
 
 $(() => {
   const currency = new Grid('currency');

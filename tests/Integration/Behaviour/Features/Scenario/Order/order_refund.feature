@@ -27,23 +27,34 @@ Feature: Refund Order from Back Office (BO)
       | message             | test                       |
       | payment module name | dummy_payment              |
       | status              | Processing in progress     |
-    And order "bo_order_refund" should contain 2 products "Mug The best is yet to come"
-    And order "bo_order_refund" should contain 1 products "Mug Today is a good day"
+    And product "Mug The best is yet to come" in order "bo_order_refund" has following details:
+      | product_quantity            | 2 |
+    And product "Mug Today is a good day" in order "bo_order_refund" has following details:
+      | product_quantity            | 1 |
     And there are 2 less "Mug The best is yet to come" in stock
     And there are 1 less "Mug Today is a good day" in stock
-    When I issue a partial refund on "bo_order_refund" without restock without voucher on following products:
+    When I issue a partial refund on "bo_order_refund" without restock with credit slip without voucher on following products:
       | product_name                | quantity                 | amount |
       | Mug The best is yet to come | 1                        | 10.5   |
       | Mug Today is a good day     | 1                        | 3.5    |
+    Then "bo_order_refund" has 1 credit slips
     Then "bo_order_refund" last credit slip is:
       | amount                  | 14.0 |
       | shipping_cost_amount    | 0.0  |
       | total_products_tax_excl | 14.0 |
       | total_products_tax_incl | 14.0 |
-    And order "bo_order_refund" should contain 2 products "Mug The best is yet to come"
-    And order "bo_order_refund" should contain 1 products "Mug Today is a good day"
-    And order "bo_order_refund" should contain 1 refunded products "Mug The best is yet to come"
-    And order "bo_order_refund" should contain 1 refunded products "Mug Today is a good day"
+    And product "Mug The best is yet to come" in order "bo_order_refund" has following details:
+      | product_quantity            | 2    |
+      | product_quantity_refunded   | 1    |
+      | product_quantity_reinjected | 0    |
+      | total_refunded_tax_excl     | 10.5 |
+      | total_refunded_tax_incl     | 10.5 |
+    And product "Mug Today is a good day" in order "bo_order_refund" has following details:
+      | product_quantity            | 1   |
+      | product_quantity_refunded   | 1   |
+      | product_quantity_reinjected | 0   |
+      | total_refunded_tax_excl     | 3.5 |
+      | total_refunded_tax_incl     | 3.5 |
     And there are 0 more "Mug The best is yet to come" in stock
     And there are 0 more "Mug Today is a good day" in stock
 
@@ -54,22 +65,33 @@ Feature: Refund Order from Back Office (BO)
       | message             | test                       |
       | payment module name | dummy_payment              |
       | status              | Processing in progress     |
-    And order "bo_order_refund" should contain 2 products "Mug The best is yet to come"
-    And order "bo_order_refund" should contain 1 products "Mug Today is a good day"
+    And product "Mug The best is yet to come" in order "bo_order_refund" has following details:
+      | product_quantity            | 2 |
+    And product "Mug Today is a good day" in order "bo_order_refund" has following details:
+      | product_quantity            | 1 |
     And there are 2 less "Mug The best is yet to come" in stock
     And there are 1 less "Mug Today is a good day" in stock
-    When I issue a partial refund on "bo_order_refund" with restock without voucher on following products:
+    When I issue a partial refund on "bo_order_refund" with restock with credit slip without voucher on following products:
       | product_name                | quantity                 | amount |
       | Mug The best is yet to come | 2                        | 7.5    |
+    Then "bo_order_refund" has 1 credit slips
     Then "bo_order_refund" last credit slip is:
       | amount                  | 7.5  |
       | shipping_cost_amount    | 0.0  |
       | total_products_tax_excl | 7.5  |
       | total_products_tax_incl | 7.5  |
-    And order "bo_order_refund" should contain 2 products "Mug The best is yet to come"
-    And order "bo_order_refund" should contain 1 products "Mug Today is a good day"
-    And order "bo_order_refund" should contain 2 refunded products "Mug The best is yet to come"
-    And order "bo_order_refund" should contain 0 refunded products "Mug Today is a good day"
+    And product "Mug The best is yet to come" in order "bo_order_refund" has following details:
+      | product_quantity            | 2   |
+      | product_quantity_refunded   | 2   |
+      | product_quantity_reinjected | 2   |
+      | total_refunded_tax_excl     | 7.5 |
+      | total_refunded_tax_incl     | 7.5 |
+    And product "Mug Today is a good day" in order "bo_order_refund" has following details:
+      | product_quantity            | 1 |
+      | product_quantity_refunded   | 0 |
+      | product_quantity_reinjected | 0 |
+      | total_refunded_tax_excl     | 0 |
+      | total_refunded_tax_incl     | 0 |
     And there are 2 more "Mug The best is yet to come" in stock
     And there are 0 more "Mug Today is a good day" in stock
 
@@ -80,22 +102,33 @@ Feature: Refund Order from Back Office (BO)
       | message             | test                       |
       | payment module name | dummy_payment              |
       | status              | Payment accepted           |
-    And order "bo_order_refund" should contain 2 products "Mug The best is yet to come"
-    And order "bo_order_refund" should contain 1 products "Mug Today is a good day"
+    And product "Mug The best is yet to come" in order "bo_order_refund" has following details:
+      | product_quantity            | 2 |
+    And product "Mug Today is a good day" in order "bo_order_refund" has following details:
+      | product_quantity            | 1 |
     And there are 2 less "Mug The best is yet to come" in stock
     And there are 1 less "Mug Today is a good day" in stock
-    When I issue a partial refund on "bo_order_refund" without restock without voucher on following products:
+    When I issue a partial refund on "bo_order_refund" without restock with credit slip without voucher on following products:
       | product_name                | quantity                 | amount |
       | Mug The best is yet to come | 2                        | 7.5    |
+    Then "bo_order_refund" has 1 credit slips
     Then "bo_order_refund" last credit slip is:
       | amount                  | 7.5  |
       | shipping_cost_amount    | 0.0  |
       | total_products_tax_excl | 7.5  |
       | total_products_tax_incl | 7.5  |
-    And order "bo_order_refund" should contain 2 products "Mug The best is yet to come"
-    And order "bo_order_refund" should contain 1 products "Mug Today is a good day"
-    And order "bo_order_refund" should contain 2 refunded products "Mug The best is yet to come"
-    And order "bo_order_refund" should contain 0 refunded products "Mug Today is a good day"
+    And product "Mug The best is yet to come" in order "bo_order_refund" has following details:
+      | product_quantity            | 2   |
+      | product_quantity_refunded   | 2   |
+      | product_quantity_reinjected | 2   |
+      | total_refunded_tax_excl     | 7.5 |
+      | total_refunded_tax_incl     | 7.5 |
+    And product "Mug Today is a good day" in order "bo_order_refund" has following details:
+      | product_quantity            | 1 |
+      | product_quantity_refunded   | 0 |
+      | product_quantity_reinjected | 0 |
+      | total_refunded_tax_excl     | 0 |
+      | total_refunded_tax_incl     | 0 |
     And there are 2 more "Mug The best is yet to come" in stock
     And there are 0 more "Mug Today is a good day" in stock
 
@@ -106,23 +139,34 @@ Feature: Refund Order from Back Office (BO)
       | message             | test                       |
       | payment module name | dummy_payment              |
       | status              | Processing in progress     |
-    And order "bo_order_refund" should contain 2 products "Mug The best is yet to come"
-    And order "bo_order_refund" should contain 1 products "Mug Today is a good day"
+    And product "Mug The best is yet to come" in order "bo_order_refund" has following details:
+      | product_quantity            | 2 |
+    And product "Mug Today is a good day" in order "bo_order_refund" has following details:
+      | product_quantity            | 1 |
     And there are 2 less "Mug The best is yet to come" in stock
     And there are 1 less "Mug Today is a good day" in stock
-    When I issue a partial refund on "bo_order_refund" with restock without voucher on following products:
+    When I issue a partial refund on "bo_order_refund" with restock with credit slip without voucher on following products:
       | product_name                | quantity                 | amount |
       | Mug Today is a good day     | 1                        | 8      |
-      | shipping_refund             |                          | 7.5    |
+      | shipping_refund             |                          | 5.5    |
+    Then "bo_order_refund" has 1 credit slips
     Then "bo_order_refund" last credit slip is:
       | amount                  | 8.0  |
-      | shipping_cost_amount    | 7.5  |
+      | shipping_cost_amount    | 5.5  |
       | total_products_tax_excl | 8.0  |
       | total_products_tax_incl | 8.0  |
-    And order "bo_order_refund" should contain 2 products "Mug The best is yet to come"
-    And order "bo_order_refund" should contain 1 products "Mug Today is a good day"
-    And order "bo_order_refund" should contain 0 refunded products "Mug The best is yet to come"
-    And order "bo_order_refund" should contain 1 refunded products "Mug Today is a good day"
+    And product "Mug The best is yet to come" in order "bo_order_refund" has following details:
+      | product_quantity            | 2 |
+      | product_quantity_refunded   | 0 |
+      | product_quantity_reinjected | 0 |
+      | total_refunded_tax_excl     | 0 |
+      | total_refunded_tax_incl     | 0 |
+    And product "Mug Today is a good day" in order "bo_order_refund" has following details:
+      | product_quantity            | 1   |
+      | product_quantity_refunded   | 1   |
+      | product_quantity_reinjected | 1   |
+      | total_refunded_tax_excl     | 8.0 |
+      | total_refunded_tax_incl     | 8.0 |
     And there are 0 more "Mug The best is yet to come" in stock
     And there are 1 more "Mug Today is a good day" in stock
 
@@ -134,26 +178,37 @@ Feature: Refund Order from Back Office (BO)
       | message             | test                       |
       | payment module name | dummy_payment              |
       | status              | Processing in progress     |
-    And order "bo_order_refund" should contain 2 products "Mug The best is yet to come"
-    And order "bo_order_refund" should contain 1 products "Mug Today is a good day"
+    And product "Mug The best is yet to come" in order "bo_order_refund" has following details:
+      | product_quantity            | 2 |
+    And product "Mug Today is a good day" in order "bo_order_refund" has following details:
+      | product_quantity            | 1 |
     And there are 2 less "Mug The best is yet to come" in stock
     And there are 1 less "Mug Today is a good day" in stock
-    When I issue a partial refund on "bo_order_refund" without restock without voucher on following products:
+    When I issue a partial refund on "bo_order_refund" without restock with credit slip without voucher on following products:
       | product_name                | quantity                 | amount |
       | Mug Today is a good day     | 1                        | 8      |
-      | shipping_refund             |                          | 7.5    |
+      | shipping_refund             |                          | 5.5    |
+    Then "bo_order_refund" has 1 credit slips
     # Weird behavior, we are in tax EXCLUDED display, so total_products_tax_excl contains the initial refund
     # amount, and total_products_tax_incl the real one (minus voucher) If we had been in tax INCLUDED display
     # it would have been the opposite
     Then "bo_order_refund" last credit slip is:
       | amount                  | 8.0 |
-      | shipping_cost_amount    | 7.5 |
+      | shipping_cost_amount    | 5.5 |
       | total_products_tax_excl | 8.0 |
       | total_products_tax_incl | 3.0 |
-    And order "bo_order_refund" should contain 2 products "Mug The best is yet to come"
-    And order "bo_order_refund" should contain 1 products "Mug Today is a good day"
-    And order "bo_order_refund" should contain 0 refunded products "Mug The best is yet to come"
-    And order "bo_order_refund" should contain 1 refunded products "Mug Today is a good day"
+    And product "Mug The best is yet to come" in order "bo_order_refund" has following details:
+      | product_quantity            | 2 |
+      | product_quantity_refunded   | 0 |
+      | product_quantity_reinjected | 0 |
+      | total_refunded_tax_excl     | 0 |
+      | total_refunded_tax_incl     | 0 |
+    And product "Mug Today is a good day" in order "bo_order_refund" has following details:
+      | product_quantity            | 1   |
+      | product_quantity_refunded   | 1   |
+      | product_quantity_reinjected | 0   |
+      | total_refunded_tax_excl     | 8.0 |
+      | total_refunded_tax_incl     | 8.0 |
     And there are 0 more "Mug The best is yet to come" in stock
     And there are 0 more "Mug Today is a good day" in stock
 
@@ -164,26 +219,148 @@ Feature: Refund Order from Back Office (BO)
       | message             | test                       |
       | payment module name | dummy_payment              |
       | status              | Processing in progress     |
-    And order "bo_order_refund" should contain 2 products "Mug The best is yet to come"
-    And order "bo_order_refund" should contain 1 products "Mug Today is a good day"
+    And product "Mug The best is yet to come" in order "bo_order_refund" has following details:
+      | product_quantity            | 2 |
+    And product "Mug Today is a good day" in order "bo_order_refund" has following details:
+      | product_quantity            | 1 |
     And there are 2 less "Mug The best is yet to come" in stock
     And there are 1 less "Mug Today is a good day" in stock
-    When I issue a partial refund on "bo_order_refund" without restock with voucher on following products:
+    When I issue a partial refund on "bo_order_refund" without restock with credit slip with voucher on following products:
       | product_name                | quantity                 | amount |
       | Mug Today is a good day     | 1                        | 8      |
-      | shipping_refund             |                          | 7.5    |
+      | shipping_refund             |                          | 5.5    |
+    Then "bo_order_refund" has 1 credit slips
     Then "bo_order_refund" last credit slip is:
       | amount                  | 8.0 |
-      | shipping_cost_amount    | 7.5 |
+      | shipping_cost_amount    | 5.5 |
       | total_products_tax_excl | 8.0 |
       | total_products_tax_incl | 8.0 |
-    And order "bo_order_refund" should contain 2 products "Mug The best is yet to come"
-    And order "bo_order_refund" should contain 1 products "Mug Today is a good day"
-    And order "bo_order_refund" should contain 0 refunded products "Mug The best is yet to come"
-    And order "bo_order_refund" should contain 1 refunded products "Mug Today is a good day"
+    And product "Mug The best is yet to come" in order "bo_order_refund" has following details:
+      | product_quantity            | 2 |
+      | product_quantity_refunded   | 0 |
+      | product_quantity_reinjected | 0 |
+      | total_refunded_tax_excl     | 0 |
+      | total_refunded_tax_incl     | 0 |
+    And product "Mug Today is a good day" in order "bo_order_refund" has following details:
+      | product_quantity            | 1   |
+      | product_quantity_refunded   | 1   |
+      | product_quantity_reinjected | 0   |
+      | total_refunded_tax_excl     | 8.0 |
+      | total_refunded_tax_incl     | 8.0 |
     And there are 0 more "Mug The best is yet to come" in stock
     And there are 0 more "Mug Today is a good day" in stock
-    And customer "testCustomer" has voucher of 15.5
+    And customer "testCustomer" last voucher is 13.5
+
+  @order-refund
+  Scenario: Partial refund of products avoids refunding too much
+    Given I add order "bo_order_refund" with the following details:
+      | cart                | dummy_cart                 |
+      | message             | test                       |
+      | payment module name | dummy_payment              |
+      | status              | Processing in progress     |
+    And product "Mug The best is yet to come" in order "bo_order_refund" has following details:
+      | product_quantity            | 2 |
+    And product "Mug Today is a good day" in order "bo_order_refund" has following details:
+      | product_quantity            | 1 |
+    And there are 2 less "Mug The best is yet to come" in stock
+    And there are 1 less "Mug Today is a good day" in stock
+    When I issue a partial refund on "bo_order_refund" without restock with credit slip without voucher on following products:
+      | product_name                | quantity                 | amount |
+      | Mug The best is yet to come | 1                        | 1024   |
+      | Mug Today is a good day     | 1                        | 1024   |
+      | shipping_refund             |                          | 51     |
+    Then "bo_order_refund" has 1 credit slips
+    Then "bo_order_refund" last credit slip is:
+      | amount                  | 23.8 |
+      | shipping_cost_amount    | 7.0  |
+      | total_products_tax_excl | 23.8 |
+      | total_products_tax_incl | 23.8 |
+    And product "Mug The best is yet to come" in order "bo_order_refund" has following details:
+      | product_quantity            | 2    |
+      | product_quantity_refunded   | 1    |
+      | product_quantity_reinjected | 0    |
+      | total_refunded_tax_excl     | 11.9 |
+      | total_refunded_tax_incl     | 11.9 |
+    And product "Mug Today is a good day" in order "bo_order_refund" has following details:
+      | product_quantity            | 1    |
+      | product_quantity_refunded   | 1    |
+      | product_quantity_reinjected | 0    |
+      | total_refunded_tax_excl     | 11.9 |
+      | total_refunded_tax_incl     | 11.9 |
+    And there are 0 more "Mug The best is yet to come" in stock
+    And there are 0 more "Mug Today is a good day" in stock
+
+  @order-refund
+  Scenario: Partial refund of products without credit slip (voucher generation is required then)
+    Given I add order "bo_order_refund" with the following details:
+      | cart                | dummy_cart                 |
+      | message             | test                       |
+      | payment module name | dummy_payment              |
+      | status              | Processing in progress     |
+    And product "Mug The best is yet to come" in order "bo_order_refund" has following details:
+      | product_quantity            | 2 |
+    And product "Mug Today is a good day" in order "bo_order_refund" has following details:
+      | product_quantity            | 1 |
+    And there are 2 less "Mug The best is yet to come" in stock
+    And there are 1 less "Mug Today is a good day" in stock
+    When I issue a partial refund on "bo_order_refund" with restock without credit slip with voucher on following products:
+      | product_name                | quantity                 | amount |
+      | Mug The best is yet to come | 1                        | 10.5   |
+      | Mug Today is a good day     | 1                        | 3.5    |
+    Then "bo_order_refund" has 0 credit slips
+    And product "Mug The best is yet to come" in order "bo_order_refund" has following details:
+      | product_quantity            | 2    |
+      | product_quantity_refunded   | 1    |
+      | product_quantity_reinjected | 1    |
+      | total_refunded_tax_excl     | 10.5 |
+      | total_refunded_tax_incl     | 10.5 |
+    And product "Mug Today is a good day" in order "bo_order_refund" has following details:
+      | product_quantity            | 1   |
+      | product_quantity_refunded   | 1   |
+      | product_quantity_reinjected | 1   |
+      | total_refunded_tax_excl     | 3.5 |
+      | total_refunded_tax_incl     | 3.5 |
+    And there are 1 more "Mug The best is yet to come" in stock
+    And there are 1 more "Mug Today is a good day" in stock
+    And customer "testCustomer" last voucher is 14.0
+
+  @order-refund
+  Scenario: Partial refund of products with a lot of precision
+    Given I add order "bo_order_refund" with the following details:
+      | cart                | dummy_cart                 |
+      | message             | test                       |
+      | payment module name | dummy_payment              |
+      | status              | Processing in progress     |
+    And product "Mug The best is yet to come" in order "bo_order_refund" has following details:
+      | product_quantity            | 2 |
+    And product "Mug Today is a good day" in order "bo_order_refund" has following details:
+      | product_quantity            | 1 |
+    And there are 2 less "Mug The best is yet to come" in stock
+    And there are 1 less "Mug Today is a good day" in stock
+    When I issue a partial refund on "bo_order_refund" without restock with credit slip without voucher on following products:
+      | product_name                | quantity                 | amount              |
+      | Mug The best is yet to come | 1                        | 10.5456889623154870 |
+      | Mug Today is a good day     | 1                        | 3.5456889623154870  |
+    Then "bo_order_refund" has 1 credit slips
+    Then "bo_order_refund" last credit slip is:
+      | amount                  | 14.09     |
+      | shipping_cost_amount    | 0.0       |
+      | total_products_tax_excl | 14.091378 |
+      | total_products_tax_incl | 14.091378 |
+    And product "Mug The best is yet to come" in order "bo_order_refund" has following details:
+      | product_quantity            | 2         |
+      | product_quantity_refunded   | 1         |
+      | product_quantity_reinjected | 0         |
+      | total_refunded_tax_excl     | 10.545689 |
+      | total_refunded_tax_incl     | 10.545689 |
+    And product "Mug Today is a good day" in order "bo_order_refund" has following details:
+      | product_quantity            | 1        |
+      | product_quantity_refunded   | 1        |
+      | product_quantity_reinjected | 0        |
+      | total_refunded_tax_excl     | 3.545689 |
+      | total_refunded_tax_incl     | 3.545689 |
+    And there are 0 more "Mug The best is yet to come" in stock
+    And there are 0 more "Mug Today is a good day" in stock
 
   @order-refund
   Scenario: Quantity is required
@@ -192,14 +369,54 @@ Feature: Refund Order from Back Office (BO)
       | message             | test                       |
       | payment module name | dummy_payment              |
       | status              | Processing in progress     |
-    And order "bo_order_refund" should contain 2 products "Mug The best is yet to come"
-    And order "bo_order_refund" should contain 1 products "Mug Today is a good day"
+    And product "Mug The best is yet to come" in order "bo_order_refund" has following details:
+      | product_quantity            | 2 |
+    And product "Mug Today is a good day" in order "bo_order_refund" has following details:
+      | product_quantity            | 1 |
     And there are 2 less "Mug The best is yet to come" in stock
     And there are 1 less "Mug Today is a good day" in stock
-    When I issue a partial refund on "bo_order_refund" with restock without voucher on following products:
+    When I issue a partial refund on "bo_order_refund" with restock with credit slip without voucher on following products:
       | product_name                | quantity                 | amount |
       | Mug Today is a good day     | 0                        | 8      |
-    Then I should get error that refund quantity is empty
+    Then I should get error that refund quantity is invalid
+    And "bo_order_refund" has 0 credit slips
+
+  @order-refund
+  Scenario: Minimum one product refund
+    Given I add order "bo_order_refund" with the following details:
+      | cart                | dummy_cart                 |
+      | message             | test                       |
+      | payment module name | dummy_payment              |
+      | status              | Processing in progress     |
+    And product "Mug The best is yet to come" in order "bo_order_refund" has following details:
+      | product_quantity            | 2 |
+    And product "Mug Today is a good day" in order "bo_order_refund" has following details:
+      | product_quantity            | 1 |
+    And there are 2 less "Mug The best is yet to come" in stock
+    And there are 1 less "Mug Today is a good day" in stock
+    When I issue a partial refund on "bo_order_refund" with restock with credit slip without voucher on following products:
+      | product_name                | quantity                 | amount |
+    Then I should get error that no refunds is invalid
+    And "bo_order_refund" has 0 credit slips
+
+  @order-refund
+  Scenario: Quantity too high is forbidden
+    Given I add order "bo_order_refund" with the following details:
+      | cart                | dummy_cart                 |
+      | message             | test                       |
+      | payment module name | dummy_payment              |
+      | status              | Processing in progress     |
+    And product "Mug The best is yet to come" in order "bo_order_refund" has following details:
+      | product_quantity            | 2 |
+    And product "Mug Today is a good day" in order "bo_order_refund" has following details:
+      | product_quantity            | 1 |
+    And there are 2 less "Mug The best is yet to come" in stock
+    And there are 1 less "Mug Today is a good day" in stock
+    When I issue a partial refund on "bo_order_refund" with restock with credit slip without voucher on following products:
+      | product_name                | quantity                 | amount |
+      | Mug The best is yet to come | 3                        | 8      |
+    Then I should get error that refund quantity is too high and max is 2
+    And "bo_order_refund" has 0 credit slips
 
   @order-refund
   Scenario: Amount is required
@@ -208,11 +425,74 @@ Feature: Refund Order from Back Office (BO)
       | message             | test                       |
       | payment module name | dummy_payment              |
       | status              | Processing in progress     |
-    And order "bo_order_refund" should contain 2 products "Mug The best is yet to come"
-    And order "bo_order_refund" should contain 1 products "Mug Today is a good day"
+    And product "Mug The best is yet to come" in order "bo_order_refund" has following details:
+      | product_quantity            | 2 |
+    And product "Mug Today is a good day" in order "bo_order_refund" has following details:
+      | product_quantity            | 1 |
     And there are 2 less "Mug The best is yet to come" in stock
     And there are 1 less "Mug Today is a good day" in stock
-    When I issue a partial refund on "bo_order_refund" with restock without voucher on following products:
+    When I issue a partial refund on "bo_order_refund" with restock with credit slip without voucher on following products:
       | product_name                | quantity                 | amount |
       | Mug Today is a good day     | 1                        | 0      |
-    Then I should get error that refund amount is empty
+    Then I should get error that refund amount is invalid
+    And "bo_order_refund" has 0 credit slips
+
+  @order-refund
+  Scenario: Amount must be positive
+    Given I add order "bo_order_refund" with the following details:
+      | cart                | dummy_cart                 |
+      | message             | test                       |
+      | payment module name | dummy_payment              |
+      | status              | Processing in progress     |
+    And product "Mug The best is yet to come" in order "bo_order_refund" has following details:
+      | product_quantity            | 2 |
+    And product "Mug Today is a good day" in order "bo_order_refund" has following details:
+      | product_quantity            | 1 |
+    And there are 2 less "Mug The best is yet to come" in stock
+    And there are 1 less "Mug Today is a good day" in stock
+    When I issue a partial refund on "bo_order_refund" with restock with credit slip without voucher on following products:
+      | product_name                | quantity                 | amount |
+      | Mug Today is a good day     | 1                        | -2.5   |
+    Then I should get error that refund amount is invalid
+    And "bo_order_refund" has 0 credit slips
+
+  @order-refund
+  Scenario: Partial refund of products paid partially with a big voucher, too high refund
+    Given I use a voucher "PROMO20" for a discount of 20.0 on the cart "dummy_cart"
+    And I add order "bo_order_refund" with the following details:
+      | cart                | dummy_cart                 |
+      | message             | test                       |
+      | payment module name | dummy_payment              |
+      | status              | Processing in progress     |
+    And product "Mug The best is yet to come" in order "bo_order_refund" has following details:
+      | product_quantity            | 2 |
+    And product "Mug Today is a good day" in order "bo_order_refund" has following details:
+      | product_quantity            | 1 |
+    And there are 2 less "Mug The best is yet to come" in stock
+    And there are 1 less "Mug Today is a good day" in stock
+    When I issue a partial refund on "bo_order_refund" without restock with credit slip without voucher on following products:
+      | product_name                | quantity                 | amount |
+      | Mug Today is a good day     | 1                        | 8      |
+      | shipping_refund             |                          | 5.5    |
+    Then I should get error that refund amount is invalid
+    Then "bo_order_refund" has 0 credit slips
+
+  @order-refund
+  Scenario: Partial refund with no generation is invalid
+    And I add order "bo_order_refund" with the following details:
+      | cart                | dummy_cart                 |
+      | message             | test                       |
+      | payment module name | dummy_payment              |
+      | status              | Processing in progress     |
+    And product "Mug The best is yet to come" in order "bo_order_refund" has following details:
+      | product_quantity            | 2 |
+    And product "Mug Today is a good day" in order "bo_order_refund" has following details:
+      | product_quantity            | 1 |
+    And there are 2 less "Mug The best is yet to come" in stock
+    And there are 1 less "Mug Today is a good day" in stock
+    When I issue a partial refund on "bo_order_refund" without restock without credit slip without voucher on following products:
+      | product_name                | quantity                 | amount |
+      | Mug Today is a good day     | 1                        | 8      |
+      | shipping_refund             |                          | 5.5    |
+    Then I should get error that no generation is invalid
+    Then "bo_order_refund" has 0 credit slips

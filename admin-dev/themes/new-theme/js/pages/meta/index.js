@@ -38,10 +38,10 @@ import ShowcaseCardCloseExtension from '@components/showcase-card/extension/show
 import TaggableField from '@components/taggable-field';
 import TranslatableInput from '@components/translatable-input';
 import FiltersSubmitButtonEnablerExtension
-from '@components/grid/extension/filters-submit-button-enabler-extension';
+  from '@components/grid/extension/filters-submit-button-enabler-extension';
 import MetaPageNameOptionHandler from '@pages/meta/meta-page-name-option-handler';
 
-const $ = window.$;
+const {$} = window;
 
 $(() => {
   const meta = new Grid('meta');

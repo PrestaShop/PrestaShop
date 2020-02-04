@@ -41,7 +41,7 @@ import ExportToSqlManagerExtension
 import ShowcaseCard from '@components/showcase-card/showcase-card';
 import ShowcaseCardCloseExtension from '@components/showcase-card/extension/showcase-card-close-extension';
 
-const $ = window.$;
+const {$} = window;
 
 $(() => {
   const emptyCategoriesGrid = new Grid('empty_category');
@@ -65,6 +65,7 @@ $(() => {
   ].forEach((gridName) => {
     const grid = new Grid(gridName);
 
+    grid.addExtension(new SortingExtension());
     grid.addExtension(new ExportToSqlManagerExtension());
     grid.addExtension(new ReloadListActionExtension());
     grid.addExtension(new FiltersResetExtension());

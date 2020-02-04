@@ -23,7 +23,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-const $ = window.$;
+const {$} = window;
 
 /**
  * Class LinkRowActionExtension handles link row actions
@@ -48,7 +48,7 @@ export default class LinkRowActionExtension {
     grid.getContainer().on('click', '.js-link-row-action', (event) => {
       const confirmMessage = $(event.currentTarget).data('confirm-message');
 
-      if (confirmMessage.length && !confirm(confirmMessage)) {
+      if (confirmMessage.length && !window.confirm(confirmMessage)) {
         event.preventDefault();
       }
     });
@@ -66,15 +66,13 @@ export default class LinkRowActionExtension {
       $('.js-link-row-action[data-clickable-row=1]:first', $parentRow).each(function propagateFirstLinkAction() {
         const $rowAction = $(this);
         const $parentCell = $rowAction.closest('td');
-        
-        const clickableCells = $('td.clickable', $parentRow)
-          .not($parentCell)
-        ;
 
+        const clickableCells = $('td.clickable', $parentRow)
+          .not($parentCell);
         clickableCells.addClass('cursor-pointer').click(() => {
           const confirmMessage = $rowAction.data('confirm-message');
 
-          if (!confirmMessage.length || confirm(confirmMessage)) {
+          if (!confirmMessage.length || window.confirm(confirmMessage)) {
             document.location = $rowAction.attr('href');
           }
         });

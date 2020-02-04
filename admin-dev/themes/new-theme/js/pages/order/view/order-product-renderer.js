@@ -27,7 +27,7 @@ import OrderViewPageMap from '@pages/order/OrderViewPageMap';
 import OrderProductEdit from '@pages/order/view/order-product-edit';
 import Router from '@components/router';
 
-const $ = window.$;
+const {$} = window;
 
 export default class OrderProductRenderer {
   constructor() {
@@ -46,7 +46,16 @@ export default class OrderProductRenderer {
     $(OrderViewPageMap.productsCount).html(numProducts);
   }
 
-  editProductFromList(orderDetailId, quantity, priceTaxIncl, priceTaxExcl, taxRate, location, availableQuantity, orderInvoiceId) {
+  editProductFromList(
+    orderDetailId,
+    quantity,
+    priceTaxIncl,
+    priceTaxExcl,
+    taxRate,
+    location,
+    availableQuantity,
+    orderInvoiceId,
+  ) {
     const $orderEdit = new OrderProductEdit(orderDetailId);
     $orderEdit.displayProduct({
       price_tax_excl: priceTaxExcl,
@@ -68,8 +77,9 @@ export default class OrderProductRenderer {
   }
 
   moveProductsPanelToRefundPosition() {
-    this.moveProductPanelToTop();
+    /* eslint-disable-next-line max-len */
     $(`${OrderViewPageMap.productAddActionBtn}, ${OrderViewPageMap.productAddRow}, ${OrderViewPageMap.productActionBtn}`).addClass('d-none');
+    this.moveProductPanelToTop();
   }
 
   moveProductPanelToTop(scrollTarget = 'body') {
@@ -79,6 +89,9 @@ export default class OrderProductRenderer {
     }
     $(OrderViewPageMap.productsPanel).detach().appendTo($modificationPosition);
     $modificationPosition.closest('.row').removeClass('d-none');
+
+    // Show column location
+    this.toggleColumnLocation(OrderViewPageMap.productsCellLocation, true);
 
     // Show all rows, hide pagination controls
     const $rows = $(OrderViewPageMap.productsTable).find('tr[id^="orderProduct_"]');
@@ -123,24 +136,36 @@ export default class OrderProductRenderer {
     $productRow.removeClass('d-none');
   }
 
-  paginate(numPage) {
+  paginate(originalNumPage) {
     const $rows = $(OrderViewPageMap.productsTable).find('tr[id^="orderProduct_"]');
+    const $customizationRows = $(OrderViewPageMap.productsTableCustomizationRows);
     const $tablePagination = $(OrderViewPageMap.productsTablePagination);
     const numRowsPerPage = parseInt($tablePagination.data('numPerPage'), 10);
     const maxPage = Math.ceil($rows.length / numRowsPerPage);
-    numPage = Math.max(1, Math.min(numPage, maxPage));
+    const numPage = Math.max(1, Math.min(originalNumPage, maxPage));
     this.paginateUpdateControls(numPage);
 
     // Hide all rows...
     $rows.addClass('d-none');
+    $customizationRows.addClass('d-none');
     // ... and display good ones
 
     const startRow = ((numPage - 1) * numRowsPerPage) + 1;
-    const endRow = numPage * numRowsPerPage + 1;
+    const endRow = numPage * numRowsPerPage;
     $(OrderViewPageMap.productsTable).find(`tr[id^="orderProduct_"]:nth-child(n+${startRow}):nth-child(-n+${endRow})`)
-        .removeClass('d-none');
+      .removeClass('d-none');
+
+    $customizationRows.each(function () {
+      if (!$(this).prev().hasClass('d-none')) {
+        $(this).removeClass('d-none');
+      }
+    });
+
     // Remove all edition rows (careful not to remove the template)
     $(OrderViewPageMap.productEditRow).not(OrderViewPageMap.productEditRowTemplate).remove();
+
+    // Toggle Column Location
+    this.toggleColumnLocation(OrderViewPageMap.productsCellLocationDisplayed);
   }
 
   paginateUpdateControls(numPage) {
@@ -184,10 +209,25 @@ export default class OrderProductRenderer {
   }
 
   toggleProductAddNewInvoiceInfo() {
-    if ($(OrderViewPageMap.productAddInvoiceSelect).val() == 0) {
-      $(OrderViewPageMap.productAddNewInvoiceInfo).removeClass('d-none');
+    $(OrderViewPageMap.productAddNewInvoiceInfo).toggleClass(
+      'd-none',
+      $(OrderViewPageMap.productAddInvoiceSelect).val() === 0,
+    );
+  }
+
+  toggleColumnLocation(target, forceDisplay = null) {
+    let isColumnLocationDisplayed = false;
+    if (forceDisplay === null) {
+      $(target).filter('td').each(function () {
+        if ($(this).html() !== '') {
+          isColumnLocationDisplayed = true;
+          return false;
+        }
+        return true;
+      });
     } else {
-      $(OrderViewPageMap.productAddNewInvoiceInfo).addClass('d-none');
+      isColumnLocationDisplayed = forceDisplay;
     }
+    $(target).toggleClass('d-none', !isColumnLocationDisplayed);
   }
 }

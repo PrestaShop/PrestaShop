@@ -24,11 +24,34 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Order\Exception;
+namespace Tests\Unit\Adapter\Presenter;
+
+use PrestaShop\PrestaShop\Adapter\Presenter\AbstractLazyArray;
 
 /**
- * Throw new when a partial refund's is asked without a specified quantity
+ * Used for testing abstract class AbstractLazyArray
  */
-class EmptyRefundQuantityException extends OrderException
+class LazyArrayImplementation extends AbstractLazyArray
 {
+    private $propertyOneWasCalled = false;
+
+    /**
+     * @arrayAccess
+     *
+     * @return bool
+     */
+    public function getPropertyOne()
+    {
+        $this->propertyOneWasCalled = true;
+
+        return false;
+    }
+
+    /**
+     * @return bool
+     */
+    public function wasPropertyOneCalled()
+    {
+        return $this->propertyOneWasCalled;
+    }
 }
