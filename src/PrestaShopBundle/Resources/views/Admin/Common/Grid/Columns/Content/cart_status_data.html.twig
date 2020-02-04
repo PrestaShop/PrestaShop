@@ -23,8 +23,6 @@
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 
-{# No longer used - which results in different behavior than in legacy controller #}
-
 <div class="text-{{ column.options.text_align }}">
   {# \d+ is 1 or more digits in a string  #}
   {% set doesFieldContainsDigits = record[column.options.field] matches '/^\\d+$/' %}

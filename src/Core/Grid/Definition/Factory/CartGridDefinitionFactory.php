@@ -128,7 +128,7 @@ final class CartGridDefinitionFactory extends AbstractGridDefinitionFactory
                     'field' => 'id_cart',
                 ])
             )
-            ->add((new DataColumn('id_order'))
+            ->add((new DataColumn('status'))
                 ->setName($this->trans('Order ID', [], 'Admin.Orderscustomers.Feature'))
                 ->setOptions([
                     'field' => 'status',
@@ -240,7 +240,7 @@ final class CartGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ],
                     'required' => false,
                 ])
-                ->setAssociatedColumn('id_order')
+                ->setAssociatedColumn('status')
             )
             ->add((new Filter('customer_name', TextType::class))
                 ->setTypeOptions([
