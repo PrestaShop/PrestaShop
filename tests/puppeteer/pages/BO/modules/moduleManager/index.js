@@ -20,6 +20,10 @@ module.exports = class moduleManager extends BOBasePage {
     this.statusDropdownDiv = '#module-status-dropdown';
     this.statusDropdownMenu = 'div.ps-dropdown-menu[aria-labelledby=\'module-status-dropdown\']';
     this.statusDropdownItemLink = `${this.statusDropdownMenu} ul li[data-status-ref='%REF'] a`;
+    // Categories
+    this.categoriesSelectDiv = '#categories';
+    this.categoriesDropdownDiv = 'div.ps-dropdown-menu.dropdown-menu.module-category-selector';
+    this.categoryDropdownItem = `${this.categoriesDropdownDiv} li[data-category-display-name='%CAT']`;
   }
 
   /*
@@ -86,10 +90,40 @@ module.exports = class moduleManager extends BOBasePage {
     return modulesStatus;
   }
 
+  /**
+   * Get All modules names
+   * @return {Promise<table>}
+   */
   async getAllModulesNames() {
     return this.page.$$eval(
       this.allModulesBlock,
       all => all.map(el => el.getAttribute('data-name')),
     );
+  }
+
+  /**
+   * Filter by category
+   * @param category
+   * @return {Promise<void>}
+   */
+  async filterByCategory(category) {
+    await Promise.all([
+      this.page.click(this.categoriesSelectDiv),
+      this.page.waitForSelector(`${this.categoriesSelectDiv}[aria-expanded='true']`, {visible: true}),
+    ]);
+    await Promise.all([
+      this.page.click(this.categoryDropdownItem.replace('%CAT', category)),
+      this.page.waitForSelector(`${this.categoriesSelectDiv}[aria-expanded='false']`, {visible: true}),
+    ]);
+  }
+
+  /**
+   * Get modules block title (administration / payment ...)
+   * @param position
+   * @return {Promise<void>}
+   */
+  async getBlockModuleTitle(position) {
+    const modulesBlocks = await this.page.$$eval(this.modulesListBlockTitle, all => all.map(el => el.textContent));
+    return modulesBlocks[position - 1];
   }
 };
