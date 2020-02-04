@@ -406,6 +406,9 @@ class AdminControllerCore extends Controller
     /** @var string */
     protected $tabSlug;
 
+    /** @var int Auth cookie lifetime */
+    const AUTH_COOKIE_LIFETIME = 3600;
+
     public function __construct($forceControllerName = '', $default_theme_name = 'default')
     {
         global $timer_start;
@@ -2838,7 +2841,7 @@ class AdminControllerCore extends Controller
             $this->context->employee->logout();
         }
         if (isset(Context::getContext()->cookie->last_activity)) {
-            if ($this->context->cookie->last_activity + 900 < time()) {
+            if ($this->context->cookie->last_activity + self::AUTH_COOKIE_LIFETIME < time()) {
                 $this->context->employee->logout();
             } else {
                 $this->context->cookie->last_activity = time();
