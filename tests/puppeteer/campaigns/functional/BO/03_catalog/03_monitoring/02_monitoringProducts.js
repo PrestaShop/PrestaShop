@@ -28,6 +28,9 @@ const productWithCombinationsWithoutQuantity = new ProductFaker(
 const productWithoutPrice = new ProductFaker(
   {type: 'Standard product', productHasCombinations: false, price: '0'},
 );
+const productWithoutDescription = new ProductFaker(
+  {type: 'Standard product', productHasCombinations: false, description: ''},
+);
 
 // Init objects needed
 const init = async function () {
@@ -97,6 +100,14 @@ describe('Create different products and delete them from monitoring page', async
         productType: 'without price',
         productToCreate: productWithoutPrice,
         gridName: 'product_without_price',
+        enabled: true,
+      },
+    },
+    {
+      args: {
+        productType: 'without description',
+        productToCreate: productWithoutDescription,
+        gridName: 'product_without_description',
         enabled: true,
       },
     },
