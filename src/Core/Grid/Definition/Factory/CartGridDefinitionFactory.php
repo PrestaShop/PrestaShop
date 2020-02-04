@@ -146,6 +146,7 @@ final class CartGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ->setOptions([
                     'field' => 'cart_total',
                     'is_highlighted_field' => 'is_order_placed',
+                    'sortable' => false,
                 ])
             )
             ->add((new DataColumn('carrier_name'))
