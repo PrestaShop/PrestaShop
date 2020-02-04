@@ -92,7 +92,7 @@ class ActionDispatcherLegacyHooksSubscriber implements EventSubscriberInterface
 
         $requestAttributes->set('controller_type', $controllerType);
         $requestAttributes->set('controller_name', get_class($controller));
-        $requestAttributes->set('view_parameters', Hook::exec('actionBackOfficeControllerSetVariables'));
+        $requestAttributes->set('extra_var', Hook::exec('actionBackOfficeControllerSetVariables'));
     }
 
     public function callActionDispatcherAfterHook(FilterResponseEvent $event)
