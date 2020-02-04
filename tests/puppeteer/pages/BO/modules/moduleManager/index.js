@@ -10,10 +10,12 @@ module.exports = class moduleManager extends BOBasePage {
     // Selectors
     this.searchModuleTagInput = '#search-input-group input.pstaggerAddTagInput';
     this.searchModuleButton = '#module-search-button';
-    this.allModulesBloc = '.module-short-list .module-item-list';
-    this.moduleBloc = `${this.allModulesBloc}[data-name='%MODULENAME']`;
-    this.disableModuleButton = `${this.moduleBloc} button.module_action_menu_disable`;
-    this.configureModuleButton = `${this.moduleBloc} div.module-actions>a`;
+    this.modulesListBlock = '.module-short-list:not([style=\'display: none;\'])';
+    this.modulesListBlockTitle = `${this.modulesListBlock} span.module-search-result-title`;
+    this.allModulesBlock = `${this.modulesListBlock} .module-item-list`;
+    this.moduleBlock = `${this.allModulesBlock}[data-name='%MODULENAME']`;
+    this.disableModuleButton = `${this.moduleBlock} button.module_action_menu_disable`;
+    this.configureModuleButton = `${this.moduleBlock} div.module-actions>a`;
     // Status dropdown selectors
     this.statusDropdownDiv = '#module-status-dropdown';
     this.statusDropdownMenu = 'div.ps-dropdown-menu[aria-labelledby=\'module-status-dropdown\']';
@@ -33,7 +35,7 @@ module.exports = class moduleManager extends BOBasePage {
   async searchModule(moduleTag, moduleName) {
     await this.page.type(this.searchModuleTagInput, moduleTag);
     await this.page.click(this.searchModuleButton);
-    await this.page.waitForSelector(this.moduleBloc.replace('%MODULENAME', moduleName), {visible: true});
+    await this.page.waitForSelector(this.moduleBlock.replace('%MODULENAME', moduleName), {visible: true});
   }
 
   /**
@@ -53,11 +55,11 @@ module.exports = class moduleManager extends BOBasePage {
   async filterByStatus(enabled) {
     await Promise.all([
       this.page.click(this.statusDropdownDiv),
-      this.page.waitForSelector(`${this.statusDropdownDiv}[aria-expanded='true']`),
+      this.page.waitForSelector(`${this.statusDropdownDiv}[aria-expanded='true']`, {visible: true}),
     ]);
     await Promise.all([
       this.page.click(this.statusDropdownItemLink.replace('%REF', enabled ? 1 : 0)),
-      this.page.waitForSelector(`${this.statusDropdownDiv}[aria-expanded='false']`),
+      this.page.waitForSelector(`${this.statusDropdownDiv}[aria-expanded='false']`, {visible: true}),
     ]);
   }
 
@@ -86,7 +88,7 @@ module.exports = class moduleManager extends BOBasePage {
 
   async getAllModulesNames() {
     return this.page.$$eval(
-      this.allModulesBloc,
+      this.allModulesBlock,
       all => all.map(el => el.getAttribute('data-name')),
     );
   }
