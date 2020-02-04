@@ -52,7 +52,10 @@ class TranslatableInput {
   toggleLanguage(event) {
     const localeItem = $(event.target);
     const form = localeItem.closest('form');
-    EventEmitter.emit('languageSelected', {selectedLocale: localeItem.data('locale'), form: form});
+    EventEmitter.emit('languageSelected', {
+      selectedLocale: localeItem.data('locale'),
+      form: form
+    });
   }
 
   /**
@@ -88,7 +91,7 @@ class TranslatableInput {
       url: changeLanguageUrl,
       data: {
         language_iso_code: selectedLocale
-      },
+      }
     });
   }
 }
