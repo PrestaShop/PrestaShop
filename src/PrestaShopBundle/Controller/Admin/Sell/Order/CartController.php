@@ -630,7 +630,7 @@ class CartController extends FrameworkBundleAdminController
      */
     public function bulkDeleteAction(Request $request)
     {
-        $cartIds = $request->request->get('cart_carts_bulk');
+        $cartIds = $request->request->get('cart_cart_bulk_action');
         $cartIds = array_map(static function ($cartId) { return (int) $cartId; }, $cartIds);
 
         try {
