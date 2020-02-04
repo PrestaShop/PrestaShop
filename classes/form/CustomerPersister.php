@@ -198,9 +198,9 @@ class CustomerPersisterCore
             $this->context->updateCustomer($customer);
             $this->context->cart->update();
             $this->sendConfirmationMail($customer);
-            Hook::exec('actionCustomerAccountAdd', array(
+            Hook::exec('actionCustomerAccountAdd', [
                 'newCustomer' => $customer,
-            ));
+            ]);
         }
 
         return $ok;
@@ -217,14 +217,14 @@ class CustomerPersisterCore
             'account',
             $this->translator->trans(
                 'Welcome!',
-                array(),
+                [],
                 'Emails.Subject'
             ),
-            array(
+            [
                 '{firstname}' => $customer->firstname,
                 '{lastname}' => $customer->lastname,
                 '{email}' => $customer->email,
-            ),
+            ],
             $customer->email,
             $customer->firstname . ' ' . $customer->lastname
         );

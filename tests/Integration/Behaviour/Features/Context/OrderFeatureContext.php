@@ -92,13 +92,7 @@ class OrderFeatureContext extends AbstractPrestaShopFeatureContext
         $withTaxes = $taxes == ' tax excluded' ? false : true;
         $total = $withTaxes ? $order->total_products_wt : $order->total_products;
         if ((float) $expectedTotal != (float) $total) {
-            throw new RuntimeException(
-                sprintf(
-                    'Expects %s, got %s instead',
-                    $expectedTotal,
-                    $total
-                )
-            );
+            throw new RuntimeException(sprintf('Expects %s, got %s instead', $expectedTotal, $total));
         }
     }
 
@@ -111,13 +105,7 @@ class OrderFeatureContext extends AbstractPrestaShopFeatureContext
         $withTaxes = $taxes == ' tax excluded' ? false : true;
         $total = $withTaxes ? $order->total_discounts_tax_incl : $order->total_discounts_tax_excl;
         if ((float) $expectedTotal != (float) $total) {
-            throw new RuntimeException(
-                sprintf(
-                    'Expects %s, got %s instead',
-                    $expectedTotal,
-                    $total
-                )
-            );
+            throw new RuntimeException(sprintf('Expects %s, got %s instead', $expectedTotal, $total));
         }
     }
 
@@ -130,13 +118,7 @@ class OrderFeatureContext extends AbstractPrestaShopFeatureContext
         $withTaxes = $taxes == ' tax excluded' ? false : true;
         $total = $withTaxes ? $order->total_shipping_tax_incl : $order->total_shipping_tax_excl;
         if ((float) $expectedTotal != (float) $total) {
-            throw new RuntimeException(
-                sprintf(
-                    'Expects %s, got %s instead',
-                    $expectedTotal,
-                    $total
-                )
-            );
+            throw new RuntimeException(sprintf('Expects %s, got %s instead', $expectedTotal, $total));
         }
     }
 
@@ -148,13 +130,7 @@ class OrderFeatureContext extends AbstractPrestaShopFeatureContext
         $order = $this->getCurrentCartOrder();
         $count = count($order->getCartRules());
         if ($expectedCount != $count) {
-            throw new RuntimeException(
-                sprintf(
-                    'Expects %s, got %s instead',
-                    $expectedCount,
-                    $count
-                )
-            );
+            throw new RuntimeException(sprintf('Expects %s, got %s instead', $expectedCount, $count));
         }
     }
 
@@ -166,28 +142,14 @@ class OrderFeatureContext extends AbstractPrestaShopFeatureContext
         $order = $this->getCurrentCartOrder();
         $orderCartRulesData = $order->getCartRules();
         if (!isset($orderCartRulesData[$position - 1]['id_order_cart_rule'])) {
-            throw new Exception(
-                sprintf('Undefined order cart rule on position #%s', $position)
-            );
+            throw new Exception(sprintf('Undefined order cart rule on position #%s', $position));
         }
         $orderCartRule = new OrderCartRule($orderCartRulesData[$position - 1]['id_order_cart_rule']);
         if ((float) $discountTaxIncluded != (float) $orderCartRule->value) {
-            throw new RuntimeException(
-                sprintf(
-                    'Expects %s, got %s instead',
-                    $discountTaxIncluded,
-                    $orderCartRule->value
-                )
-            );
+            throw new RuntimeException(sprintf('Expects %s, got %s instead', $discountTaxIncluded, $orderCartRule->value));
         }
         if ((float) $discountTaxExcluded != (float) $orderCartRule->value_tax_excl) {
-            throw new RuntimeException(
-                sprintf(
-                    'Expects %s, got %s instead',
-                    $discountTaxExcluded,
-                    $orderCartRule->value_tax_excl
-                )
-            );
+            throw new RuntimeException(sprintf('Expects %s, got %s instead', $discountTaxExcluded, $orderCartRule->value_tax_excl));
         }
     }
 
@@ -227,11 +189,7 @@ class OrderFeatureContext extends AbstractPrestaShopFeatureContext
 
         // todo: think about a way to get paymentModuleName from domain classes
         if ($order->module !== $paymentModuleName) {
-            throw new RuntimeException(sprintf(
-                'Order should have "%s" payment method, but has "%s" instead.',
-                $paymentModuleName,
-                $order->payment
-            ));
+            throw new RuntimeException(sprintf('Order should have "%s" payment method, but has "%s" instead.', $paymentModuleName, $order->payment));
         }
     }
 }

@@ -24,6 +24,7 @@ dist: trusty
 php:
   - 7.1
   - 7.2
+  - 7.3
 
 env:
   global:
@@ -43,7 +44,7 @@ stages:
 jobs:
   include:
     - stage: deploy
-      php: 7.2
+      php: 7.3
       before_install: skip
       before_script: skip
       install: skip
@@ -77,13 +78,14 @@ before_install:
 
 install:
   - composer install --no-suggest --ansi --prefer-dist --no-interaction --no-progress --quiet;
+  - make assets
   - if [ "$PRESTASHOP_TEST_TYPE" != "sanity" ]; then
       bash travis-scripts/install-prestashop;
     fi
 
 script:
   - if [ "$PRESTASHOP_TEST_TYPE" = "unit" ]; then
-        bash tests-legacy/check_file_syntax.sh;
+        bash tests/check_file_syntax.sh;
         bash tests-legacy/check_phpunit.sh;
     fi
 

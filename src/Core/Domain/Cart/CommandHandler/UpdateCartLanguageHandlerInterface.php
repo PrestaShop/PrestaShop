@@ -36,5 +36,5 @@ interface UpdateCartLanguageHandlerInterface
     /**
      * @param UpdateCartLanguageCommand $command
      */
-    public function handle(UpdateCartLanguageCommand $command);
+    public function handle(UpdateCartLanguageCommand $command): void;
 }

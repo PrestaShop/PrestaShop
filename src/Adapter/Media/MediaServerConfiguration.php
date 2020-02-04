@@ -49,11 +49,11 @@ class MediaServerConfiguration implements DataConfigurationInterface
      */
     public function getConfiguration()
     {
-        return array(
+        return [
             'media_server_one' => $this->configuration->get('PS_MEDIA_SERVER_1'),
             'media_server_two' => $this->configuration->get('PS_MEDIA_SERVER_2'),
             'media_server_three' => $this->configuration->get('PS_MEDIA_SERVER_3'),
-        );
+        ];
     }
 
     /**
@@ -61,7 +61,7 @@ class MediaServerConfiguration implements DataConfigurationInterface
      */
     public function updateConfiguration(array $configuration)
     {
-        $errors = array();
+        $errors = [];
         $isValid = $this->validateConfiguration($configuration);
         if (true === $isValid) {
             $serverOne = $configuration['media_server_one'];
@@ -91,33 +91,33 @@ class MediaServerConfiguration implements DataConfigurationInterface
      */
     public function validateConfiguration(array $configuration)
     {
-        $errors = array();
+        $errors = [];
         $serverOne = $configuration['media_server_one'];
         $serverTwo = $configuration['media_server_two'];
         $serverThree = $configuration['media_server_three'];
 
         if (!empty($serverOne) && !$this->isValidDomain($serverOne)) {
-            $errors[] = array(
+            $errors[] = [
                 'key' => 'Media server #1 is invalid',
                 'domain' => 'Admin.Advparameters.Notification',
-                'parameters' => array(),
-            );
+                'parameters' => [],
+            ];
         }
 
         if (!empty($serverTwo) && !$this->isValidDomain($serverTwo)) {
-            $errors[] = array(
+            $errors[] = [
                 'key' => 'Media server #2 is invalid',
                 'domain' => 'Admin.Advparameters.Notification',
-                'parameters' => array(),
-            );
+                'parameters' => [],
+            ];
         }
 
         if (!empty($serverThree) && !$this->isValidDomain($serverThree)) {
-            $errors[] = array(
+            $errors[] = [
                 'key' => 'Media server #3 is invalid',
                 'domain' => 'Admin.Advparameters.Notification',
-                'parameters' => array(),
-            );
+                'parameters' => [],
+            ];
         }
 
         if (count($errors) > 0) {

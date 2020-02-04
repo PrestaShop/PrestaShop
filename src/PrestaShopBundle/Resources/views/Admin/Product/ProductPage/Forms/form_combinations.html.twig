@@ -149,8 +149,9 @@
                 <label class="attribute-label" for="attribute-{{ attribute.id }}">
                   <span
                     class="pretty-checkbox {% if attribute.color is empty and attribute.texture is empty %} not-color {% endif %}"
-                    {% if attribute.color is not empty %} style="background-color: {{ attribute.color }}" {% endif %}
-                    {% if attribute.texture is not empty %} style="content: url({{ attribute.texture }})" {% endif %}
+                    {% if attribute.texture is not empty %} style="content: url({{ attribute.texture }})"
+                    {% elseif attribute.color is not empty %} style="background-color: {{ attribute.color }}"
+                    {% endif %}
                   >
                   </span>
                   {{ attribute.name }}

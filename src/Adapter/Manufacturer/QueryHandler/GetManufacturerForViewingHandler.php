@@ -64,9 +64,7 @@ final class GetManufacturerForViewingHandler implements GetManufacturerForViewin
         $manufacturer = new Manufacturer($manufacturerId->getValue());
 
         if ($manufacturer->id !== $manufacturerId->getValue()) {
-            throw new ManufacturerNotFoundException(
-                sprintf('Manufacturer with id "%s" was not found.', $manufacturerId->getValue())
-            );
+            throw new ManufacturerNotFoundException(sprintf('Manufacturer with id "%s" was not found.', $manufacturerId->getValue()));
         }
 
         return $manufacturer;

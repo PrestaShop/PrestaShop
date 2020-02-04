@@ -54,15 +54,11 @@ abstract class AbstractTaxRulesGroupHandler
         try {
             $taxRulesGroup = new TaxRulesGroup($taxRulesGroupIdValue);
         } catch (PrestaShopException $e) {
-            throw new TaxRulesGroupNotFoundException(
-                sprintf('Tax rules group with id "%s" was not found.', $taxRulesGroupIdValue)
-            );
+            throw new TaxRulesGroupNotFoundException(sprintf('Tax rules group with id "%s" was not found.', $taxRulesGroupIdValue));
         }
 
         if ($taxRulesGroup->id !== $taxRulesGroupIdValue) {
-            throw new TaxRulesGroupNotFoundException(
-                sprintf('Tax rules group with id "%s" was not found.', $taxRulesGroupIdValue)
-            );
+            throw new TaxRulesGroupNotFoundException(sprintf('Tax rules group with id "%s" was not found.', $taxRulesGroupIdValue));
         }
 
         return $taxRulesGroup;
@@ -82,9 +78,7 @@ abstract class AbstractTaxRulesGroupHandler
         try {
             return $taxRulesGroup->delete();
         } catch (PrestaShopException $e) {
-            throw new CannotDeleteTaxRulesGroupException(
-                sprintf('An error occurred when deleting tax rules group object with id "%s".', $taxRulesGroup->id)
-            );
+            throw new CannotDeleteTaxRulesGroupException(sprintf('An error occurred when deleting tax rules group object with id "%s".', $taxRulesGroup->id));
         }
     }
 
@@ -105,10 +99,7 @@ abstract class AbstractTaxRulesGroupHandler
         try {
             return $taxRulesGroup->save();
         } catch (PrestaShopException $e) {
-            throw new TaxRulesGroupException(sprintf(
-                'An error occurred when updating tax rules group status with id "%s"',
-                $taxRulesGroup->id
-            ));
+            throw new TaxRulesGroupException(sprintf('An error occurred when updating tax rules group status with id "%s"', $taxRulesGroup->id));
         }
     }
 }

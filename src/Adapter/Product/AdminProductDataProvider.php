@@ -89,12 +89,12 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
 
         if (!$cachedFilters->isHit()) {
             $shop = Context::getContext()->shop;
-            $filter = $this->entityManager->getRepository('PrestaShopBundle:AdminFilter')->findOneBy(array(
+            $filter = $this->entityManager->getRepository('PrestaShopBundle:AdminFilter')->findOneBy([
                 'employee' => $employeeId,
                 'shop' => $shop->id ?: 0,
                 'controller' => 'ProductController',
                 'action' => 'catalogAction',
-            ));
+            ]);
 
             /** @var $filter AdminFilter */
             if (null === $filter) {
@@ -142,12 +142,12 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
     {
         $employee = Context::getContext()->employee;
         $shop = Context::getContext()->shop;
-        $filter = $this->entityManager->getRepository('PrestaShopBundle:AdminFilter')->findOneBy(array(
+        $filter = $this->entityManager->getRepository('PrestaShopBundle:AdminFilter')->findOneBy([
             'employee' => $employee->id ?: 0,
             'shop' => $shop->id ?: 0,
             'controller' => 'ProductController',
             'action' => 'catalogAction',
-        ));
+        ]);
 
         if (!$filter) {
             $filter = new AdminFilter();
@@ -158,7 +158,7 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
         $this->entityManager->persist($filter);
 
         // if each filter is == '', then remove item from DB :)
-        if (count(array_diff($filter->getProductCatalogFilter(), array(''))) == 0) {
+        if (count(array_diff($filter->getProductCatalogFilter(), [''])) == 0) {
             $this->entityManager->remove($filter);
         }
 
@@ -174,7 +174,7 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
     /**
      * {@inheritdoc}
      */
-    public function combinePersistentCatalogProductFilter($paramsIn = array(), $avoidPersistence = false)
+    public function combinePersistentCatalogProductFilter($paramsIn = [], $avoidPersistence = false)
     {
         // retrieve persisted filter parameters
         $persistedParams = $this->getPersistedFilterParameters();
@@ -227,74 +227,74 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
         $idShop = Context::getContext()->shop->id;
         $idLang = Context::getContext()->language->id;
 
-        $sqlSelect = array(
-            'id_product' => array('table' => 'p', 'field' => 'id_product', 'filtering' => ' %s '),
-            'reference' => array('table' => 'p', 'field' => 'reference', 'filtering' => self::FILTERING_LIKE_BOTH),
-            'price' => array('table' => 'sa', 'field' => 'price', 'filtering' => ' %s '),
-            'id_shop_default' => array('table' => 'p', 'field' => 'id_shop_default'),
-            'is_virtual' => array('table' => 'p', 'field' => 'is_virtual'),
-            'name' => array('table' => 'pl', 'field' => 'name', 'filtering' => self::FILTERING_LIKE_BOTH),
-            'link_rewrite' => array('table' => 'pl', 'field' => 'link_rewrite', 'filtering' => self::FILTERING_LIKE_BOTH),
-            'active' => array('table' => 'sa', 'field' => 'active', 'filtering' => self::FILTERING_EQUAL_NUMERIC),
-            'shopname' => array('table' => 'shop', 'field' => 'name'),
-            'id_image' => array('table' => 'image_shop', 'field' => 'id_image'),
-            'name_category' => array('table' => 'cl', 'field' => 'name', 'filtering' => self::FILTERING_LIKE_BOTH),
+        $sqlSelect = [
+            'id_product' => ['table' => 'p', 'field' => 'id_product', 'filtering' => ' %s '],
+            'reference' => ['table' => 'p', 'field' => 'reference', 'filtering' => self::FILTERING_LIKE_BOTH],
+            'price' => ['table' => 'sa', 'field' => 'price', 'filtering' => ' %s '],
+            'id_shop_default' => ['table' => 'p', 'field' => 'id_shop_default'],
+            'is_virtual' => ['table' => 'p', 'field' => 'is_virtual'],
+            'name' => ['table' => 'pl', 'field' => 'name', 'filtering' => self::FILTERING_LIKE_BOTH],
+            'link_rewrite' => ['table' => 'pl', 'field' => 'link_rewrite', 'filtering' => self::FILTERING_LIKE_BOTH],
+            'active' => ['table' => 'sa', 'field' => 'active', 'filtering' => self::FILTERING_EQUAL_NUMERIC],
+            'shopname' => ['table' => 'shop', 'field' => 'name'],
+            'id_image' => ['table' => 'image_shop', 'field' => 'id_image'],
+            'name_category' => ['table' => 'cl', 'field' => 'name', 'filtering' => self::FILTERING_LIKE_BOTH],
             'price_final' => '0',
-            'nb_downloadable' => array('table' => 'pd', 'field' => 'nb_downloadable'),
-            'sav_quantity' => array('table' => 'sav', 'field' => 'quantity', 'filtering' => ' %s '),
-            'badge_danger' => array('select' => 'IF(sav.`quantity`<=0, 1, 0)', 'filtering' => 'IF(sav.`quantity`<=0, 1, 0) = %s'),
-        );
-        $sqlTable = array(
+            'nb_downloadable' => ['table' => 'pd', 'field' => 'nb_downloadable'],
+            'sav_quantity' => ['table' => 'sav', 'field' => 'quantity', 'filtering' => ' %s '],
+            'badge_danger' => ['select' => 'IF(sav.`quantity`<=0, 1, 0)', 'filtering' => 'IF(sav.`quantity`<=0, 1, 0) = %s'],
+        ];
+        $sqlTable = [
             'p' => 'product',
-            'pl' => array(
+            'pl' => [
                 'table' => 'product_lang',
                 'join' => 'LEFT JOIN',
                 'on' => 'pl.`id_product` = p.`id_product` AND pl.`id_lang` = ' . $idLang . ' AND pl.`id_shop` = ' . $idShop,
-            ),
-            'sav' => array(
+            ],
+            'sav' => [
                 'table' => 'stock_available',
                 'join' => 'LEFT JOIN',
                 'on' => 'sav.`id_product` = p.`id_product` AND sav.`id_product_attribute` = 0' .
                 StockAvailable::addSqlShopRestriction(null, $idShop, 'sav'),
-            ),
-            'sa' => array(
+            ],
+            'sa' => [
                 'table' => 'product_shop',
                 'join' => 'JOIN',
                 'on' => 'p.`id_product` = sa.`id_product` AND sa.id_shop = ' . $idShop,
-            ),
-            'cl' => array(
+            ],
+            'cl' => [
                 'table' => 'category_lang',
                 'join' => 'LEFT JOIN',
                 'on' => 'sa.`id_category_default` = cl.`id_category` AND cl.`id_lang` = ' . $idLang . ' AND cl.id_shop = ' . $idShop,
-            ),
-            'c' => array(
+            ],
+            'c' => [
                 'table' => 'category',
                 'join' => 'LEFT JOIN',
                 'on' => 'c.`id_category` = cl.`id_category`',
-            ),
-            'shop' => array(
+            ],
+            'shop' => [
                 'table' => 'shop',
                 'join' => 'LEFT JOIN',
                 'on' => 'shop.id_shop = ' . $idShop,
-            ),
-            'image_shop' => array(
+            ],
+            'image_shop' => [
                 'table' => 'image_shop',
                 'join' => 'LEFT JOIN',
                 'on' => 'image_shop.`id_product` = p.`id_product` AND image_shop.`cover` = 1 AND image_shop.id_shop = ' . $idShop,
-            ),
-            'i' => array(
+            ],
+            'i' => [
                 'table' => 'image',
                 'join' => 'LEFT JOIN',
                 'on' => 'i.`id_image` = image_shop.`id_image`',
-            ),
-            'pd' => array(
+            ],
+            'pd' => [
                 'table' => 'product_download',
                 'join' => 'LEFT JOIN',
                 'on' => 'pd.`id_product` = p.`id_product`',
-            ),
-        );
-        $sqlWhere = array('AND', 1);
-        $sqlOrder = array($orderBy . ' ' . $sortOrder);
+            ],
+        ];
+        $sqlWhere = ['AND', 1];
+        $sqlOrder = [$orderBy . ' ' . $sortOrder];
         if ($orderBy != 'id_product') {
             $sqlOrder[] = 'id_product asc'; // secondary order by (useful when ordering by active, quantity, price, etc...)
         }
@@ -303,21 +303,21 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
         // Column 'position' added if filtering by category
         if ($showPositionColumn) {
             $filteredCategoryId = (int) $filterParams['filter_category'];
-            $sqlSelect['position'] = array('table' => 'cp', 'field' => 'position');
-            $sqlTable['cp'] = array(
+            $sqlSelect['position'] = ['table' => 'cp', 'field' => 'position'];
+            $sqlTable['cp'] = [
                 'table' => 'category_product',
                 'join' => 'INNER JOIN',
                 'on' => 'cp.`id_product` = p.`id_product` AND cp.`id_category` = ' . $filteredCategoryId,
-            );
+            ];
         } elseif ($orderBy == 'position') {
             // We do not show position column, so we do not join the table, so we do not order by position!
-            $sqlOrder = array('id_product ASC');
+            $sqlOrder = ['id_product ASC'];
         }
 
-        $sqlGroupBy = array();
+        $sqlGroupBy = [];
 
         // exec legacy hook but with different parameters (retro-compat < 1.7 is broken here)
-        Hook::exec('actionAdminProductsListingFieldsModifier', array(
+        Hook::exec('actionAdminProductsListingFieldsModifier', [
             '_ps_version' => AppKernel::VERSION,
             'sql_select' => &$sqlSelect,
             'sql_table' => &$sqlTable,
@@ -325,7 +325,7 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
             'sql_group_by' => &$sqlGroupBy,
             'sql_order' => &$sqlOrder,
             'sql_limit' => &$sqlLimit,
-        ));
+        ]);
         foreach ($filterParams as $filterParam => $filterValue) {
             if (!$filterValue && $filterValue !== '0') {
                 continue;
@@ -348,7 +348,7 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
         $sqlWhere[] = 'state = ' . Product::STATE_SAVED;
 
         // exec legacy hook but with different parameters (retro-compat < 1.7 is broken here)
-        Hook::exec('actionAdminProductsListingFieldsModifier', array(
+        Hook::exec('actionAdminProductsListingFieldsModifier', [
             '_ps_version' => AppKernel::VERSION,
             'sql_select' => &$sqlSelect,
             'sql_table' => &$sqlTable,
@@ -356,7 +356,7 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
             'sql_group_by' => &$sqlGroupBy,
             'sql_order' => &$sqlOrder,
             'sql_limit' => &$sqlLimit,
-        ));
+        ]);
 
         $sql = $this->compileSqlQuery($sqlSelect, $sqlTable, $sqlWhere, $sqlGroupBy, $sqlOrder, $sqlLimit);
         $products = Db::getInstance()->executeS($sql, true, false);
@@ -397,11 +397,11 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
 
         // post treatment by hooks
         // exec legacy hook but with different parameters (retro-compat < 1.7 is broken here)
-        Hook::exec('actionAdminProductsListingResultsModifier', array(
+        Hook::exec('actionAdminProductsListingResultsModifier', [
             '_ps_version' => AppKernel::VERSION,
             'products' => &$products,
             'total' => $total,
-        ));
+        ]);
 
         return $products;
     }
@@ -430,9 +430,9 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
      *
      * @return string[] The URL parameters for Legacy URL (GETs)
      */
-    public function mapLegacyParametersProductForm($coreParameters = array())
+    public function mapLegacyParametersProductForm($coreParameters = [])
     {
-        $params = array();
+        $params = [];
         if ($coreParameters['id'] == '0') {
             $params['addproduct'] = 1;
         } else {

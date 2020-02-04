@@ -52,33 +52,33 @@ class AdminOutstandingControllerCore extends AdminController
         $this->_where = 'AND number > 0';
         $this->_use_found_rows = false;
 
-        $risks = array();
+        $risks = [];
         foreach (Risk::getRisks() as $risk) {
             /* @var Risk $risk */
             $risks[$risk->id] = $risk->name;
         }
 
-        $this->fields_list = array(
-            'number' => array(
-                'title' => $this->trans('Invoice', array(), 'Admin.Global'),
-            ),
-            'date_add' => array(
-                'title' => $this->trans('Date', array(), 'Admin.Global'),
+        $this->fields_list = [
+            'number' => [
+                'title' => $this->trans('Invoice', [], 'Admin.Global'),
+            ],
+            'date_add' => [
+                'title' => $this->trans('Date', [], 'Admin.Global'),
                 'type' => 'date',
                 'align' => 'right',
                 'filter_key' => 'a!date_add',
-            ),
-            'customer' => array(
-                'title' => $this->trans('Customer', array(), 'Admin.Global'),
+            ],
+            'customer' => [
+                'title' => $this->trans('Customer', [], 'Admin.Global'),
                 'filter_key' => 'customer',
                 'tmpTableFilter' => true,
-            ),
-            'company' => array(
-                'title' => $this->trans('Company', array(), 'Admin.Global'),
+            ],
+            'company' => [
+                'title' => $this->trans('Company', [], 'Admin.Global'),
                 'align' => 'center',
-            ),
-            'risk' => array(
-                'title' => $this->trans('Risk', array(), 'Admin.Orderscustomers.Feature'),
+            ],
+            'risk' => [
+                'title' => $this->trans('Risk', [], 'Admin.Orderscustomers.Feature'),
                 'align' => 'center',
                 'orderby' => false,
                 'type' => 'select',
@@ -86,29 +86,29 @@ class AdminOutstandingControllerCore extends AdminController
                 'list' => $risks,
                 'filter_key' => 'r!id_risk',
                 'filter_type' => 'int',
-            ),
-            'outstanding_allow_amount' => array(
-                'title' => $this->trans('Outstanding Allowance', array(), 'Admin.Orderscustomers.Feature'),
+            ],
+            'outstanding_allow_amount' => [
+                'title' => $this->trans('Outstanding Allowance', [], 'Admin.Orderscustomers.Feature'),
                 'align' => 'center',
                 'prefix' => '<b>',
                 'suffix' => '</b>',
                 'type' => 'price',
-            ),
-            'outstanding' => array(
-                'title' => $this->trans('Current Outstanding', array(), 'Admin.Orderscustomers.Feature'),
+            ],
+            'outstanding' => [
+                'title' => $this->trans('Current Outstanding', [], 'Admin.Orderscustomers.Feature'),
                 'align' => 'center',
                 'callback' => 'printOutstandingCalculation',
                 'orderby' => false,
                 'search' => false,
-            ),
-            'id_invoice' => array(
-                'title' => $this->trans('Invoice', array(), 'Admin.Global'),
+            ],
+            'id_invoice' => [
+                'title' => $this->trans('Invoice', [], 'Admin.Global'),
                 'align' => 'center',
                 'callback' => 'printPDFIcons',
                 'orderby' => false,
                 'search' => false,
-            ),
-        );
+            ],
+        ];
     }
 
     /**
@@ -131,9 +131,9 @@ class AdminOutstandingControllerCore extends AdminController
      */
     public function printPDFIcons($id_invoice, $tr)
     {
-        $this->context->smarty->assign(array(
+        $this->context->smarty->assign([
             'id_invoice' => $id_invoice,
-        ));
+        ]);
 
         return $this->createTemplate('_print_pdf_icon.tpl')->fetch();
     }

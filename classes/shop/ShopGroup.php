@@ -39,18 +39,18 @@ class ShopGroupCore extends ObjectModel
     /**
      * @see ObjectModel::$definition
      */
-    public static $definition = array(
+    public static $definition = [
         'table' => 'shop_group',
         'primary' => 'id_shop_group',
-        'fields' => array(
-            'name' => array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => true, 'size' => 64),
-            'share_customer' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-            'share_order' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-            'share_stock' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-            'active' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-            'deleted' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-        ),
-    );
+        'fields' => [
+            'name' => ['type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => true, 'size' => 64],
+            'share_customer' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
+            'share_order' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
+            'share_stock' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
+            'active' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
+            'deleted' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
+        ],
+    ];
 
     /**
      * @see ObjectModel::getFields()

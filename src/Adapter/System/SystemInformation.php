@@ -65,7 +65,7 @@ class SystemInformation
      */
     public function getSummary()
     {
-        return array(
+        return [
             'notHostMode' => !$this->hostingInformation->isHostMode(),
             'server' => $this->hostingInformation->getServerInformation(),
             'instaWebInstalled' => $this->hostingInformation->isApacheInstawebModule(),
@@ -74,6 +74,6 @@ class SystemInformation
             'shop' => $this->shopInformation->getShopInformation(),
             'isNativePHPmail' => $this->mailingInformation->isNativeMailUsed(),
             'smtp' => $this->mailingInformation->getSmtpInformation(),
-        );
+        ];
     }
 }

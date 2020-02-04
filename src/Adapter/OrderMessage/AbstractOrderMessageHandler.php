@@ -47,10 +47,7 @@ abstract class AbstractOrderMessageHandler
         $orderMessage = new OrderMessage($orderMessageId->getValue());
 
         if ($orderMessage->id !== $orderMessageId->getValue()) {
-            throw new OrderMessageNotFoundException(
-                $orderMessageId,
-                sprintf('Order message with id "%s" was not found', $orderMessageId->getValue())
-            );
+            throw new OrderMessageNotFoundException($orderMessageId, sprintf('Order message with id "%s" was not found', $orderMessageId->getValue()));
         }
 
         return $orderMessage;

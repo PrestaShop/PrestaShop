@@ -81,10 +81,10 @@ class AddonsDataProvider implements AddonsInterface
      */
     public function downloadModule($module_id)
     {
-        $params = array(
+        $params = [
             'id_module' => $module_id,
             'format' => 'json',
-        );
+        ];
 
         // Module downloading
         try {
@@ -123,7 +123,7 @@ class AddonsDataProvider implements AddonsInterface
     /**
      * {@inheritdoc}
      */
-    public function request($action, $params = array())
+    public function request($action, $params = [])
     {
         if (!$this->isAddonsUp()) {
             throw new Exception('Previous call failed and disabled client.');
@@ -200,10 +200,10 @@ class AddonsDataProvider implements AddonsInterface
         $username = $this->encryption->decrypt($request->cookies->get('username_addons'));
         $password = $this->encryption->decrypt($request->cookies->get('password_addons'));
 
-        return array(
+        return [
             'username_addons' => $username,
             'password_addons' => $password,
-        );
+        ];
     }
 
     /** Does this function should be in a User related class ? **/
@@ -212,9 +212,9 @@ class AddonsDataProvider implements AddonsInterface
         $request = Request::createFromGlobals();
         $username = $this->encryption->decrypt($request->cookies->get('username_addons'));
 
-        return array(
+        return [
             'username_addons' => $username,
-        );
+        ];
     }
 
     /**

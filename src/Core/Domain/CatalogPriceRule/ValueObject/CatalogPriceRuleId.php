@@ -67,10 +67,7 @@ final class CatalogPriceRuleId
     private function assertIsGreaterThanZero(int $value)
     {
         if (0 >= $value) {
-            throw new CatalogPriceRuleConstraintException(
-                sprintf('Invalid catalog price rule id "%s".', $value),
-                CatalogPriceRuleConstraintException::INVALID_ID
-            );
+            throw new CatalogPriceRuleConstraintException(sprintf('Invalid catalog price rule id "%s".', $value), CatalogPriceRuleConstraintException::INVALID_ID);
         }
     }
 }

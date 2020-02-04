@@ -31,7 +31,7 @@ import SubmitRowActionExtension from '@components/grid/extension/action/row/subm
 import FiltersSubmitButtonEnablerExtension
   from '@components/grid/extension/filters-submit-button-enabler-extension';
 
-const $ = window.$;
+const {$} = window;
 
 $(() => {
   const backupGrid = new Grid('backup');

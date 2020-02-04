@@ -170,13 +170,13 @@ class TranslationService
         $translationProvider->setLocale($locale);
 
         $router = $this->container->get('router');
-        $domains = array(
-            'info' => array(
+        $domains = [
+            'info' => [
                 'edit_url' => $router->generate('api_translation_value_edit'),
                 'reset_url' => $router->generate('api_translation_value_reset'),
-            ),
-            'data' => array(),
-        );
+            ],
+            'data' => [],
+        ];
         $treeDomain = preg_split('/(?=[A-Z])/', $domain, -1, PREG_SPLIT_NO_EMPTY);
         if (!empty($theme) && 'classic' !== $theme) {
             $defaultCatalog = current($translationProvider->getThemeCatalogue()->all());
@@ -188,12 +188,12 @@ class TranslationService
         $dbCatalog = current($translationProvider->getDatabaseCatalogue($theme)->all());
 
         foreach ($defaultCatalog as $key => $message) {
-            $data = array(
+            $data = [
                 'default' => $key,
                 'xliff' => (array_key_exists($key, (array) $xliffCatalog) ? $xliffCatalog[$key] : null),
                 'database' => (array_key_exists($key, (array) $dbCatalog) ? $dbCatalog[$key] : null),
                 'tree_domain' => $treeDomain,
-            );
+            ];
             // if search is empty or is in catalog default|xlf|database
             if (empty($search) || $this->dataContainsSearchWord($search, $data)) {
                 if (empty($data['xliff']) && empty($data['database'])) {
@@ -262,12 +262,12 @@ class TranslationService
         }
 
         $translation = $entityManager->getRepository('PrestaShopBundle:Translation')
-            ->findOneBy(array(
+            ->findOneBy([
                 'lang' => $lang,
                 'domain' => $domain,
                 'key' => $key,
                 'theme' => $theme,
-            ));
+            ]);
 
         if (null === $translation) {
             $translation = new Translation();
@@ -324,11 +324,11 @@ class TranslationService
         $doctrine = $this->container->get('doctrine');
         $entityManager = $doctrine->getManager();
 
-        $searchTranslation = array(
+        $searchTranslation = [
             'lang' => $lang,
             'domain' => $domain,
             'key' => $key,
-        );
+        ];
         if (!empty($theme)) {
             $searchTranslation['theme'] = $theme;
         }

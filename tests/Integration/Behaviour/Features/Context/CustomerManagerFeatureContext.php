@@ -66,8 +66,6 @@ class CustomerManagerFeatureContext extends AbstractPrestaShopFeatureContext
     protected $customerRegistry = [];
 
     /**
-     * todo hint: move to domain context?
-     *
      * @When /^I create a customer "(.+)" with following properties:$/
      */
     public function createACustomerUsingCommand($customerReference, TableNode $table)
@@ -113,8 +111,6 @@ class CustomerManagerFeatureContext extends AbstractPrestaShopFeatureContext
 
         $this->latestResult = $id->getValue();
         $this->customerRegistry[$customerReference] = $id->getValue();
-
-        SharedStorage::getStorage()->set($customerReference, $id->getValue());
     }
 
     /**
@@ -258,10 +254,7 @@ class CustomerManagerFeatureContext extends AbstractPrestaShopFeatureContext
         }
 
         if ($this->latestResult->getMessage() !== $message) {
-            throw new \Exception(sprintf("Expected error message '%s', got '%s'",
-                $message,
-                $this->latestResult->getMessage()
-            ));
+            throw new \Exception(sprintf("Expected error message '%s', got '%s'", $message, $this->latestResult->getMessage()));
         }
 
         $this->latestResult = null;
@@ -373,10 +366,7 @@ class CustomerManagerFeatureContext extends AbstractPrestaShopFeatureContext
         }
 
         if (!$isValid) {
-            throw new \Exception(sprintf('genderId %s does not exist, available genders are %s',
-                $genderName,
-                implode(', ', array_keys($availableGenders))
-            ));
+            throw new \Exception(sprintf('genderId %s does not exist, available genders are %s', $genderName, implode(', ', array_keys($availableGenders))));
         }
 
         return $genderId;

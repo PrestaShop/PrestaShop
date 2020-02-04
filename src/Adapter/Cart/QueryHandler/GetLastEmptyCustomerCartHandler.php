@@ -59,25 +59,16 @@ final class GetLastEmptyCustomerCartHandler implements GetLastEmptyCustomerCartH
             $customer = new Customer($customerId);
 
             if ($customer->id !== $customerId) {
-                throw new CustomerNotFoundException(
-                    $query->getCustomerId(),
-                    sprintf('Customer with id "%s" was not found.', $customerId)
-                );
+                throw new CustomerNotFoundException($query->getCustomerId(), sprintf('Customer with id "%s" was not found.', $customerId));
             }
 
             $cartId = $customer->getLastEmptyCart(false);
 
             if (false === $cartId) {
-                throw new CartNotFoundException(sprintf(
-                    'Empty cart not found for customer with id "%s"',
-                    $customerId
-                ));
+                throw new CartNotFoundException(sprintf('Empty cart not found for customer with id "%s"', $customerId));
             }
         } catch (PrestaShopException $e) {
-            throw new CartException(sprintf(
-                'An error occurred while trying to find empty cart for customer with id "%s"',
-                $customerId
-            ));
+            throw new CartException(sprintf('An error occurred while trying to find empty cart for customer with id "%s"', $customerId));
         }
 
         return new CartId($cartId);

@@ -65,10 +65,7 @@ final class TransformGuestToCustomerHandler implements TransformGuestToCustomerH
         $this->assertCustomerIsGuest($customer);
 
         if (!$customer->transformToCustomer($this->contextLangId)) {
-            throw new CustomerTransformationException(
-                sprintf('Failed to transform guest into customer'),
-                CustomerTransformationException::TRANSFORMATION_FAILED
-            );
+            throw new CustomerTransformationException(sprintf('Failed to transform guest into customer'), CustomerTransformationException::TRANSFORMATION_FAILED);
         }
     }
 
@@ -81,10 +78,7 @@ final class TransformGuestToCustomerHandler implements TransformGuestToCustomerH
     private function assertCustomerExists(CustomerId $customerId, Customer $customer)
     {
         if ($customer->id !== $customerId->getValue()) {
-            throw new CustomerNotFoundException(
-                $customerId,
-                sprintf('Customer with id "%s" was not found', $customerId->getValue())
-            );
+            throw new CustomerNotFoundException($customerId, sprintf('Customer with id "%s" was not found', $customerId->getValue()));
         }
     }
 
@@ -96,10 +90,7 @@ final class TransformGuestToCustomerHandler implements TransformGuestToCustomerH
     private function assertCustomerIsGuest(Customer $customer)
     {
         if (Customer::customerExists($customer->email)) {
-            throw new CustomerTransformationException(
-                sprintf('Customer with id "%s" already exists as non-guest', $customer->id),
-                CustomerTransformationException::CUSTOMER_IS_NOT_GUEST
-            );
+            throw new CustomerTransformationException(sprintf('Customer with id "%s" already exists as non-guest', $customer->id), CustomerTransformationException::CUSTOMER_IS_NOT_GUEST);
         }
     }
 }

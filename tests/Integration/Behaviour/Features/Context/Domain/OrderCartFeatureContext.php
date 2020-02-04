@@ -2,7 +2,7 @@
 
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
-use PHPUnit_Framework_Assert;
+use PHPUnit\Framework\Assert as Assert;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartInformation;
 use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation;
 use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\CartId;
@@ -27,7 +27,7 @@ class OrderCartFeatureContext extends AbstractDomainFeatureContext
         /** @var OrderCustomerForViewing $orderCustomerForViewing */
         $orderCustomerForViewing = $orderForViewing->getCustomer();
         $customerIdReceived = $orderCustomerForViewing->getId();
-        PHPUnit_Framework_Assert::assertSame(
+        Assert::assertSame(
             $customerId,
             $customerIdReceived,
             sprintf('Expected customer with id "%s" but received "%s', $customerId, $customerIdReceived)
@@ -65,13 +65,37 @@ class OrderCartFeatureContext extends AbstractDomainFeatureContext
         /** @var CartInformation $duplicatedCartInformation */
         $duplicatedCartInformation = $this->getQueryBus()->handle(new GetCartInformation($duplicatedCartId));
 
-        PHPUnit_Framework_Assert::assertNotSame($cartInformation->getCartId(), $duplicatedCartInformation->getCartId());
+        Assert::assertNotSame($cartInformation->getCartId(), $duplicatedCartInformation->getCartId());
 
-        PHPUnit_Framework_Assert::assertEquals($cartInformation->getCartRules(), $duplicatedCartInformation->getCartRules());
-        PHPUnit_Framework_Assert::assertEquals($cartInformation->getAddresses(), $duplicatedCartInformation->getAddresses());
-        PHPUnit_Framework_Assert::assertEquals($cartInformation->getCurrencyId(), $duplicatedCartInformation->getCurrencyId());
-        PHPUnit_Framework_Assert::assertEquals($cartInformation->getProducts(), $duplicatedCartInformation->getProducts());
-        PHPUnit_Framework_Assert::assertEquals($cartInformation->getSummary(), $duplicatedCartInformation->getSummary());
-        PHPUnit_Framework_Assert::assertEquals($cartInformation->getLangId(), $duplicatedCartInformation->getLangId());
+        Assert::assertEquals($cartInformation->getCartRules(), $duplicatedCartInformation->getCartRules());
+        Assert::assertEquals($cartInformation->getAddresses(), $duplicatedCartInformation->getAddresses());
+        Assert::assertEquals($cartInformation->getCurrencyId(), $duplicatedCartInformation->getCurrencyId());
+        Assert::assertEquals($cartInformation->getProducts(), $duplicatedCartInformation->getProducts());
+        Assert::assertEquals($cartInformation->getLangId(), $duplicatedCartInformation->getLangId());
+        Assert::assertEquals(
+            $this->convertSummaryToArray($cartInformation->getSummary()),
+            $this->convertSummaryToArray($duplicatedCartInformation->getSummary())
+        );
+    }
+
+    /**
+     * We convert the summary to an array to filter data that won't be eaquals:
+     * - order message
+     * - process order link
+     *
+     * @param CartInformation\CartSummary $cartSummary
+     *
+     * @return array
+     */
+    private function convertSummaryToArray(CartInformation\CartSummary $cartSummary): array
+    {
+        return [
+            $cartSummary->getTotalDiscount(),
+            $cartSummary->getTotalPriceWithoutTaxes(),
+            $cartSummary->getTotalPriceWithTaxes(),
+            $cartSummary->getTotalProductsPrice(),
+            $cartSummary->getTotalShippingPrice(),
+            $cartSummary->getTotalTaxes(),
+        ];
     }
 }

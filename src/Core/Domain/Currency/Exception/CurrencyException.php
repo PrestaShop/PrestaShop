@@ -33,4 +33,13 @@ use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
  */
 class CurrencyException extends DomainException
 {
+    /**
+     * When currency cannot be used because it is disabled
+     */
+    const IS_DISABLED = 1;
+
+    /**
+     * When currency cannot be used because it is deleted
+     */
+    const IS_DELETED = 2;
 }

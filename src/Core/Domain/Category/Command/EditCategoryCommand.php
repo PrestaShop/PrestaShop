@@ -123,10 +123,7 @@ class EditCategoryCommand
     public function setParentCategoryId($parentCategoryId)
     {
         if (!is_numeric($parentCategoryId) || 0 >= $parentCategoryId) {
-            throw new CategoryConstraintException(
-                sprintf('Invalid Category parent id %s supplied', var_export($parentCategoryId, true)),
-                CategoryConstraintException::INVALID_PARENT_ID
-            );
+            throw new CategoryConstraintException(sprintf('Invalid Category parent id %s supplied', var_export($parentCategoryId, true)), CategoryConstraintException::INVALID_PARENT_ID);
         }
 
         if ($this->categoryId->isEqual(new CategoryId((int) $parentCategoryId))) {
@@ -156,10 +153,7 @@ class EditCategoryCommand
     public function setLocalizedNames(array $localizedNames)
     {
         if (empty($localizedNames)) {
-            throw new CategoryConstraintException(
-                'Category name cannot be empty',
-                CategoryConstraintException::EMPTY_NAME
-            );
+            throw new CategoryConstraintException('Category name cannot be empty', CategoryConstraintException::EMPTY_NAME);
         }
 
         $this->localizedNames = $localizedNames;
@@ -185,10 +179,7 @@ class EditCategoryCommand
     public function setLocalizedLinkRewrites(array $localizedLinkRewrites)
     {
         if (empty($localizedLinkRewrites)) {
-            throw new CategoryConstraintException(
-                'Category link rewrite cannot be empty',
-                CategoryConstraintException::EMPTY_LINK_REWRITE
-            );
+            throw new CategoryConstraintException('Category link rewrite cannot be empty', CategoryConstraintException::EMPTY_LINK_REWRITE);
         }
 
         $this->localizedLinkRewrites = $localizedLinkRewrites;
@@ -234,10 +225,7 @@ class EditCategoryCommand
     public function setIsActive($isActive)
     {
         if (!is_bool($isActive)) {
-            throw new CategoryConstraintException(
-                'Invalid Category status supplied',
-                CategoryConstraintException::INVALID_STATUS
-            );
+            throw new CategoryConstraintException('Invalid Category status supplied', CategoryConstraintException::INVALID_STATUS);
         }
 
         $this->isActive = $isActive;

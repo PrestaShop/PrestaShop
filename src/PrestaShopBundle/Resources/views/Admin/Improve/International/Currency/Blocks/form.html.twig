@@ -73,9 +73,10 @@
           'label': 'Currency name'|trans({}, 'Admin.International.Feature'),
         }) }}
 
+        {% set symbolsClass = currencyForm.symbols.vars.errors|length ? '' : 'd-none' %}
         {{ ps.form_group_row(currencyForm.symbols, {}, {
           'label': 'Symbol'|trans({}, 'Admin.International.Feature'),
-          'class': 'd-none'
+          'class': symbolsClass
         }) }}
 
         {{ ps.form_group_row(currencyForm.iso_code, {}, {

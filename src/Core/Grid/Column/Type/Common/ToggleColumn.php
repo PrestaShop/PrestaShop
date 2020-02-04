@@ -81,9 +81,7 @@ final class ToggleColumn extends AbstractColumn
                 return $options['route_param_id'];
             }
 
-            throw new MissingOptionsException(
-                sprintf('Option "%s" is missing for "%s" column options.', 'route_param_name', self::class)
-            );
+            throw new MissingOptionsException(sprintf('Option "%s" is missing for "%s" column options.', 'route_param_name', self::class));
         });
     }
 }

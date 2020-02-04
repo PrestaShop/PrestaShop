@@ -100,10 +100,7 @@ class BulkDeleteCategoriesCommand
     private function setCategoryIds(array $categoryIds)
     {
         if (empty($categoryIds)) {
-            throw new CategoryConstraintException(
-                'Missing Category data for bulk deleting',
-                CategoryConstraintException::EMPTY_BULK_DELETE_DATA
-            );
+            throw new CategoryConstraintException('Missing Category data for bulk deleting', CategoryConstraintException::EMPTY_BULK_DELETE_DATA);
         }
 
         foreach ($categoryIds as $categoryId) {

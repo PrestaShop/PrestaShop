@@ -137,6 +137,7 @@ class SupplierType extends TranslatorAwareType
                 ],
             ])
             ->add('description', TranslateType::class, [
+                'required' => false,
                 'type' => FormattedTextareaType::class,
                 'locales' => $this->locales,
                 'hideTabs' => false,

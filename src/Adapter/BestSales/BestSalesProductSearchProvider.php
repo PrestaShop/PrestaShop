@@ -66,7 +66,7 @@ class BestSalesProductSearchProvider implements ProductSearchProviderInterface
         ProductSearchQuery $query
     ) {
         $sortBySales = (new SortOrder('product', 'sales', 'desc'))->setLabel(
-            $this->translator->trans('Sales, highest to lowest', array(), 'Shop.Theme.Catalog')
+            $this->translator->trans('Sales, highest to lowest', [], 'Shop.Theme.Catalog')
         );
 
         if (!Tools::getValue('order', 0)) {
@@ -80,7 +80,7 @@ class BestSalesProductSearchProvider implements ProductSearchProviderInterface
             $query->getSortOrder()->toLegacyOrderBy(),
             $query->getSortOrder()->toLegacyOrderWay()
         )) {
-            $products = array();
+            $products = [];
         }
 
         $count = (int) ProductSale::getNbSales();
@@ -93,21 +93,21 @@ class BestSalesProductSearchProvider implements ProductSearchProviderInterface
                 ->setTotalProductsCount($count);
 
             $result->setAvailableSortOrders(
-                array(
+                [
                     $sortBySales,
                     (new SortOrder('product', 'name', 'asc'))->setLabel(
-                        $this->translator->trans('Name, A to Z', array(), 'Shop.Theme.Catalog')
+                        $this->translator->trans('Name, A to Z', [], 'Shop.Theme.Catalog')
                     ),
                     (new SortOrder('product', 'name', 'desc'))->setLabel(
-                        $this->translator->trans('Name, Z to A', array(), 'Shop.Theme.Catalog')
+                        $this->translator->trans('Name, Z to A', [], 'Shop.Theme.Catalog')
                     ),
                     (new SortOrder('product', 'price', 'asc'))->setLabel(
-                        $this->translator->trans('Price, low to high', array(), 'Shop.Theme.Catalog')
+                        $this->translator->trans('Price, low to high', [], 'Shop.Theme.Catalog')
                     ),
                     (new SortOrder('product', 'price', 'desc'))->setLabel(
-                        $this->translator->trans('Price, high to low', array(), 'Shop.Theme.Catalog')
+                        $this->translator->trans('Price, high to low', [], 'Shop.Theme.Catalog')
                     ),
-                )
+                ]
             );
         }
 

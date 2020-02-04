@@ -64,7 +64,10 @@
                   {{ 'Value'|trans({}, 'Admin.Global') }}
                 </label>
 
-                {{ form_widget(addOrderCartRuleForm.value) }}
+                <div class="input-group-append">
+                  <div class="input-group-text" id="add_order_cart_rule_value_unit" data-currency-symbol="{{ orderCurrency.symbol }}">%</div>
+                  {{ form_widget(addOrderCartRuleForm.value, {'type':'number'}) }}
+                </div>
                 <small class="text-muted js-cart-rule-value-help d-none">
                   {{ 'This value must include taxes.'|trans({}, 'Admin.Orderscustomers.Notification') }}
                 </small>
@@ -90,9 +93,10 @@
             <div class="row">
               <div class="col">
                 <div class="form-group mb-0">
-                  {{ form_widget(addOrderCartRuleForm.apply_on_all_invoices, {'material_design': true, 'attr': {
-                    'disabled': not orderForViewing.hasInvoice
-                  }}) }}
+                  {{ ps.form_widget_with_error(addOrderCartRuleForm.apply_on_all_invoices,
+                    {'material_design': true, 'attr': { 'disabled': not orderForViewing.hasInvoice }},
+                    {'help': 'If you chooses to create this discount for all invoices, only one discount will be created per order invoice.'|trans({}, 'Admin.Orderscustomers.Help')}
+                  ) }}
                 </div>
               </div>
             </div>

@@ -76,11 +76,7 @@ class PatternTransformer
     public function transform(string $currencyPattern, string $transformationType): string
     {
         if (!in_array($transformationType, self::ALLOWED_TRANSFORMATIONS)) {
-            throw new InvalidArgumentException(sprintf(
-                'Invalid transformation type "%s", allowed transformations are: %s',
-                $transformationType,
-                implode(',', self::ALLOWED_TRANSFORMATIONS)
-            ));
+            throw new InvalidArgumentException(sprintf('Invalid transformation type "%s", allowed transformations are: %s', $transformationType, implode(',', self::ALLOWED_TRANSFORMATIONS)));
         }
 
         $transformedPatterns = [];

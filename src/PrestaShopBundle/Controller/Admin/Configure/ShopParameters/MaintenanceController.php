@@ -56,7 +56,7 @@ class MaintenanceController extends FrameworkBundleAdminController
         }
 
         return $this->render('@PrestaShop/Admin/Configure/ShopParameters/maintenance.html.twig', [
-            'layoutHeaderToolbarBtn' => array(),
+            'layoutHeaderToolbarBtn' => [],
             'layoutTitle' => $this->trans('Maintenance', 'Admin.Navigation.Menu'),
             'requireAddonsSearch' => true,
             'requireBulkActions' => false,
@@ -83,7 +83,7 @@ class MaintenanceController extends FrameworkBundleAdminController
     {
         $redirectResponse = $this->redirectToRoute('admin_maintenance');
 
-        $this->dispatchHook('actionAdminMaintenanceControllerPostProcessBefore', array('controller' => $this));
+        $this->dispatchHook('actionAdminMaintenanceControllerPostProcessBefore', ['controller' => $this]);
         $form = $this->get('prestashop.adapter.maintenance.form_handler')->getForm();
         $form->handleRequest($request);
 

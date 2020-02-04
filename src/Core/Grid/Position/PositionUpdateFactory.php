@@ -118,17 +118,11 @@ final class PositionUpdateFactory implements PositionUpdateFactoryInterface
     private function validateData(array $data, PositionDefinition $positionDefinition)
     {
         if (empty($data[$this->positionsField])) {
-            throw new PositionDataException(
-                'Missing ' . $this->positionsField . ' in your data.',
-                'Admin.Notifications.Failure'
-            );
+            throw new PositionDataException('Missing ' . $this->positionsField . ' in your data.', 'Admin.Notifications.Failure');
         }
 
         if (null !== $positionDefinition->getParentIdField() && empty($data[$this->parentIdField])) {
-            throw new PositionDataException(
-                'Missing ' . $this->parentIdField . ' in your data.',
-                'Admin.Notifications.Failure'
-            );
+            throw new PositionDataException('Missing ' . $this->parentIdField . ' in your data.', 'Admin.Notifications.Failure');
         }
     }
 
@@ -143,25 +137,13 @@ final class PositionUpdateFactory implements PositionUpdateFactoryInterface
     private function validatePositionData(array $position, $index)
     {
         if (!isset($position[$this->rowIdField])) {
-            throw new PositionDataException(
-                self::POSITION_KEY,
-                'Admin.Notifications.Failure',
-                [$index, $this->rowIdField]
-            );
+            throw new PositionDataException(self::POSITION_KEY, 'Admin.Notifications.Failure', [$index, $this->rowIdField]);
         }
         if (!isset($position[$this->oldPositionField])) {
-            throw new PositionDataException(
-                self::POSITION_KEY,
-                'Admin.Notifications.Failure',
-                [$index, $this->oldPositionField]
-            );
+            throw new PositionDataException(self::POSITION_KEY, 'Admin.Notifications.Failure', [$index, $this->oldPositionField]);
         }
         if (!isset($position[$this->newPositionField])) {
-            throw new PositionDataException(
-                self::POSITION_KEY,
-                'Admin.Notifications.Failure',
-                [$index, $this->newPositionField]
-            );
+            throw new PositionDataException(self::POSITION_KEY, 'Admin.Notifications.Failure', [$index, $this->newPositionField]);
         }
     }
 }

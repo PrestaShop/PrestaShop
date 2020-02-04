@@ -131,11 +131,7 @@ final class ListParametersUpdater
         } elseif (isset($defaultFilterParameters[$parameterName])) {
             $value = $defaultFilterParameters[$parameterName];
         } else {
-            throw new ProductException(
-                'Could not find the parameter %s',
-                'Admin.Notifications.Error',
-                [$parameterName]
-            );
+            throw new ProductException('Could not find the parameter %s', 'Admin.Notifications.Error', [$parameterName]);
         }
 
         if ($value === 'last' && isset($persistedFilterParameters['last_' . $parameterName])) {

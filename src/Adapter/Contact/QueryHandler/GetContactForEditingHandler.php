@@ -66,12 +66,7 @@ final class GetContactForEditingHandler implements GetContactForEditingHandlerIn
             $contact = new Contact($query->getContactId()->getValue());
 
             if (0 >= $contact->id) {
-                throw new ContactNotFoundException(
-                    sprintf(
-                        'Contact object with id %s was not found',
-                        var_export($query->getContactId()->getValue(), true)
-                    )
-                );
+                throw new ContactNotFoundException(sprintf('Contact object with id %s was not found', var_export($query->getContactId()->getValue(), true)));
             }
             $editableContact = new EditableContact(
                 $query->getContactId()->getValue(),
@@ -82,14 +77,7 @@ final class GetContactForEditingHandler implements GetContactForEditingHandlerIn
                 $this->stringArrayToIntegerArrayDataTransformer->reverseTransform($contact->getAssociatedShops())
             );
         } catch (PrestaShopException $e) {
-            throw new ContactException(
-                sprintf(
-                    'An unexpected error occurred when retrieving contact with id %s',
-                    var_export($query->getContactId()->getValue(), true)
-                ),
-                0,
-                $e
-            );
+            throw new ContactException(sprintf('An unexpected error occurred when retrieving contact with id %s', var_export($query->getContactId()->getValue(), true)), 0, $e);
         }
 
         return $editableContact;

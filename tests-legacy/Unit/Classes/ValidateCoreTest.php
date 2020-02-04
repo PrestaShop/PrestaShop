@@ -44,12 +44,6 @@ class ValidateCoreTest extends TestCase
         $this->assertTrue(Validate::isAnything());
     }
 
-    // TODO: Write test for testIsModuleUrl()
-    public function testIsModuleUrl()
-    {
-        //$this->assertSame($expected, Validate::isEmail($input));
-    }
-
     /**
      * @dataProvider isEmailDataProvider
      */
@@ -63,7 +57,14 @@ class ValidateCoreTest extends TestCase
      */
     public function testIsBirthDate($expected, $input)
     {
-        $this->assertSame($expected, Validate::isBirthDate($input));
+        // data from isBirthDateProvider provider are in UTC
+        $defaultTz = date_default_timezone_get();
+        date_default_timezone_set('UTC');
+        try {
+            $this->assertSame($expected, Validate::isBirthDate($input));
+        } finally {
+            date_default_timezone_set($defaultTz);
+        }
     }
 
     /**

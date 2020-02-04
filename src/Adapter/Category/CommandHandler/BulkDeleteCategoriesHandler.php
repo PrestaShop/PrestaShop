@@ -51,25 +51,15 @@ final class BulkDeleteCategoriesHandler extends AbstractDeleteCategoryHandler im
             $category = new Category($categoryId->getValue());
 
             if (!$category->id) {
-                throw new CategoryNotFoundException(
-                    $categoryId,
-                    sprintf('Category with id %s cannot be found.', var_export($categoryId->getValue(), true))
-                );
+                throw new CategoryNotFoundException($categoryId, sprintf('Category with id %s cannot be found.', var_export($categoryId->getValue(), true)));
             }
 
             if ($category->isRootCategoryForAShop()) {
-                throw new CannotDeleteRootCategoryForShopException(
-                    sprintf(
-                        'Shop\'s root category with id %s cannot be deleted.',
-                        var_export($categoryId->getValue(), true)
-                    )
-                );
+                throw new CannotDeleteRootCategoryForShopException(sprintf('Shop\'s root category with id %s cannot be deleted.', var_export($categoryId->getValue(), true)));
             }
 
             if (!$category->delete()) {
-                throw new FailedToDeleteCategoryException(
-                    sprintf('Failed to delete category with id %s', var_export($categoryId->getValue(), true))
-                );
+                throw new FailedToDeleteCategoryException(sprintf('Failed to delete category with id %s', var_export($categoryId->getValue(), true)));
             }
 
             $this->handleProductsUpdate((int) $category->id_parent, $command->getDeleteMode());

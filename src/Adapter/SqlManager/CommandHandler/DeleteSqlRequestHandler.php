@@ -56,23 +56,14 @@ final class DeleteSqlRequestHandler implements DeleteSqlRequestHandlerInterface
             $entity = new RequestSql($entityId);
 
             if (0 >= $entity->id) {
-                throw new SqlRequestNotFoundException(
-                    sprintf('SqlRequest with id "%s" was not found for edit', var_export($entityId, true))
-                );
+                throw new SqlRequestNotFoundException(sprintf('SqlRequest with id "%s" was not found for edit', var_export($entityId, true)));
             }
 
             if (false === $entity->delete()) {
-                throw new CannotDeleteSqlRequestException(
-                    sprintf('Could not delete SqlRequest with id %s', var_export($entityId)),
-                    CannotDeleteSqlRequestException::CANNOT_SINGLE_DELETE
-                );
+                throw new CannotDeleteSqlRequestException(sprintf('Could not delete SqlRequest with id %s', var_export($entityId)), CannotDeleteSqlRequestException::CANNOT_SINGLE_DELETE);
             }
         } catch (PrestaShopException $e) {
-            throw new SqlRequestException(
-                sprintf('Unexpected error occurred when deleting SqlRequest with id %s', var_export($entityId, true)),
-                0,
-                $e
-            );
+            throw new SqlRequestException(sprintf('Unexpected error occurred when deleting SqlRequest with id %s', var_export($entityId, true)), 0, $e);
         }
     }
 }

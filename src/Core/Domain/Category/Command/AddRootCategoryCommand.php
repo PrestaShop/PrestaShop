@@ -111,10 +111,7 @@ class AddRootCategoryCommand
     public function setLocalizedNames(array $localizedNames)
     {
         if (empty($localizedNames)) {
-            throw new CategoryConstraintException(
-                'Category name cannot be empty',
-                CategoryConstraintException::EMPTY_NAME
-            );
+            throw new CategoryConstraintException('Category name cannot be empty', CategoryConstraintException::EMPTY_NAME);
         }
 
         $this->localizedNames = $localizedNames;
@@ -140,10 +137,7 @@ class AddRootCategoryCommand
     public function setLocalizedLinkRewrites(array $localizedLinkRewrites)
     {
         if (empty($localizedLinkRewrites)) {
-            throw new CategoryConstraintException(
-                'Category link rewrite cannot be empty',
-                CategoryConstraintException::EMPTY_LINK_REWRITE
-            );
+            throw new CategoryConstraintException('Category link rewrite cannot be empty', CategoryConstraintException::EMPTY_LINK_REWRITE);
         }
 
         $this->localizedLinkRewrites = $localizedLinkRewrites;
@@ -189,10 +183,7 @@ class AddRootCategoryCommand
     public function setIsActive($isActive)
     {
         if (!is_bool($isActive)) {
-            throw new CategoryConstraintException(
-                'Invalid Category status supplied',
-                CategoryConstraintException::INVALID_STATUS
-            );
+            throw new CategoryConstraintException('Invalid Category status supplied', CategoryConstraintException::INVALID_STATUS);
         }
 
         $this->isActive = $isActive;

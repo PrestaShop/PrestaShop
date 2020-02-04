@@ -67,9 +67,7 @@ final class GetWebserviceKeyForEditingHandler implements GetWebserviceKeyForEdit
         $webserviceKey = new WebserviceKey($webserviceKeyId->getValue());
 
         if ($webserviceKey->id !== $webserviceKeyId->getValue()) {
-            throw new WebserviceKeyNotFoundException(
-                sprintf('Webservice key with id "%s" was not found', $webserviceKeyId)
-            );
+            throw new WebserviceKeyNotFoundException(sprintf('Webservice key with id "%s" was not found', $webserviceKeyId));
         }
 
         return $webserviceKey;

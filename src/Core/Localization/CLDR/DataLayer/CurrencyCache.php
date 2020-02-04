@@ -29,8 +29,8 @@ namespace PrestaShop\PrestaShop\Core\Localization\CLDR\DataLayer;
 
 use PrestaShop\PrestaShop\Core\Data\Layer\AbstractDataLayer;
 use PrestaShop\PrestaShop\Core\Data\Layer\DataLayerException;
-use PrestaShop\PrestaShop\Core\Localization\CLDR\CurrencyDataLayerInterface;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\CurrencyData;
+use PrestaShop\PrestaShop\Core\Localization\CLDR\CurrencyDataLayerInterface;
 use PrestaShop\PrestaShop\Core\Localization\Currency\LocalizedCurrencyId;
 use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 use Symfony\Component\Cache\Adapter\AdapterInterface;
@@ -93,9 +93,7 @@ final class CurrencyCache extends AbstractDataLayer implements CurrencyDataLayer
     public function write($id, $data)
     {
         if (!($data instanceof CurrencyData)) {
-            throw new LocalizationException(
-                '$data must be an instance of ' . CurrencyData::class
-            );
+            throw new LocalizationException('$data must be an instance of ' . CurrencyData::class);
         }
 
         return parent::write($id, $data);

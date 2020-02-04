@@ -27,6 +27,7 @@
 namespace LegacyTests\PrestaShopBundle\Command;
 
 use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\MockObject\MockObject;
 use PrestaShopBundle\Command\ExportThemeCommand;
 use Symfony\Component\Console\Tester\CommandTester;
 
@@ -50,7 +51,7 @@ class ExportThemeCommandTest extends TestCase
     }
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject
+     * @return MockObject
      */
     protected function mockThemeRepository()
     {
@@ -69,7 +70,7 @@ class ExportThemeCommandTest extends TestCase
     }
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject
+     * @return MockObject
      */
     protected function mockTranslator()
     {
@@ -81,7 +82,7 @@ class ExportThemeCommandTest extends TestCase
     }
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject
+     * @return MockObject
      */
     protected function mockThemeExporter()
     {
@@ -93,7 +94,7 @@ class ExportThemeCommandTest extends TestCase
     }
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject
+     * @return MockObject
      */
     protected function mockContainer()
     {
@@ -124,7 +125,7 @@ class ExportThemeCommandTest extends TestCase
     }
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject
+     * @return MockObject
      */
     protected function mockHelperSet()
     {

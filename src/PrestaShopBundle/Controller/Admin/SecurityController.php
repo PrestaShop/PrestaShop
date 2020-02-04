@@ -47,8 +47,8 @@ class SecurityController extends FrameworkBundleAdminController
 
         $newUri = PrestaShopRouter::generateTokenizedUrl($requestUri, $newToken);
 
-        return $this->render('@PrestaShop/Admin/Security/compromised.html.twig', array(
+        return $this->render('@PrestaShop/Admin/Security/compromised.html.twig', [
             'requestUri' => $newUri,
-        ));
+        ]);
     }
 }

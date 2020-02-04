@@ -47,6 +47,17 @@
         </a>
       </div>
     </div>
+
+    <div id="customer-search-empty-result-warn" class="row d-none">
+      <div class="col">
+        <div class="col">
+          <div class="alert alert-warning" role="alert">
+            <p class="alert-text">{{ 'No customers found'|trans({}, 'Admin.Orderscustomers.Notification') }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div class="row">
       <div class="col">
         <div class="row js-customer-search-results"></div>
@@ -81,11 +92,21 @@
               {{ 'Orders'|trans({}, 'Admin.Global') }}
             </a>
           </li>
+          <li class="nav-item ml-auto">
+            <button class="navbar-toggler" type="button"
+                    data-toggle="collapse"
+                    data-target="#customer-tab-content-container"
+                    id="customer-tab-content-container-toggler"
+                    aria-expanded="true"
+                    aria-label="{{ 'Toggle'|trans({}, 'Admin.Global') }}">
+              <p class="mb-0 mt-2"><i class="material-icons"></i></p>
+            </button>
+          </li>
         </ul>
-        <div class="tab-content">
+        <div class="tab-content collapse show" id="customer-tab-content-container">
           <div class="tab-pane fade active show" id="customer-carts-tab-content" role="tabpanel" aria-labelledby="pills-home-tab">
             <table class="table" id="customer-carts-table">
-              <thead>
+              <thead class="d-none">
                 <tr>
                   <th>{{ 'ID'|trans({}, 'Admin.Global') }}</th>
                   <th>{{ 'Date'|trans({}, 'Admin.Global') }}</th>
@@ -98,7 +119,7 @@
           </div>
           <div class="tab-pane fade" id="customer-orders-tab-content" role="tabpanel" aria-labelledby="pills-home-tab">
             <table class="table" id="customer-orders-table">
-              <thead>
+              <thead class="d-none">
               <tr>
                 <th>{{ 'ID'|trans({}, 'Admin.Global') }}</th>
                 <th>{{ 'Date'|trans({}, 'Admin.Global') }}</th>
@@ -132,24 +153,16 @@
         <p class="mb-0 js-customer-birthday"></p>
       </div>
       <div class="card-footer">
-        <a class="btn btn-outline-secondary js-details-customer-btn" href="">
+        <a class="btn btn-outline-secondary js-details-customer-btn">
           {{ 'Details'|trans({}, 'Admin.Global') }}
         </a>
-        <button type="button" class="btn btn-primary float-right js-choose-customer-btn">
+        <button type="button" class="btn btn-outline-primary float-right js-choose-customer-btn">
           {{ 'Choose'|trans({}, 'Admin.Actions') }}
         </button>
-        <button type="button" class="btn btn-primary float-right js-change-customer-btn d-none">
+        <button type="button" class="btn btn-outline-primary float-right js-change-customer-btn d-none">
           {{ 'Change'|trans({}, 'Admin.Actions') }}
         </button>
       </div>
-    </div>
-  </div>
-</div>
-
-<div id="customer-search-empty-result-template" class="d-none">
-  <div class="col">
-    <div class="alert alert-warning" role="alert">
-      <p class="alert-text">{{ 'No customers found'|trans({}, 'Admin.Orderscustomers.Notification') }}</p>
     </div>
   </div>
 </div>
@@ -160,8 +173,17 @@
     <td class="js-cart-date"></td>
     <td class="js-cart-total"></td>
     <td class="text-right">
-      <a class="btn btn-primary js-cart-details-btn" href="">{{ 'Details'|trans({}, 'Admin.Global') }}</a>
-      <button class="btn btn-primary js-use-cart-btn">{{ 'Use'|trans({}, 'Admin.Orderscustomers.Feature') }}</button>
+      <a
+        title="{{ 'View this cart'|trans({}, 'Admin.Orderscustomers.Feature') }}"
+        class="btn btn-outline-primary js-cart-details-btn">
+        {{ 'Details'|trans({}, 'Admin.Global') }}
+      </a>
+
+      <button
+        title="{{ 'Use this cart'|trans({}, 'Admin.Orderscustomers.Feature') }}"
+        class="btn btn-outline-primary js-use-cart-btn">
+        {{ 'Use'|trans({}, 'Admin.Orderscustomers.Feature') }}
+      </button>
     </td>
   </tr>
 </script>
@@ -174,8 +196,28 @@
     <td class="js-order-total-paid"></td>
     <td class="js-order-status"></td>
     <td class="text-right">
-      <a class="btn btn-primary js-order-details-btn" href="">{{ 'Details'|trans({}, 'Admin.Global') }}</a>
-      <button class="btn btn-primary js-use-order-btn">{{ 'Use'|trans({}, 'Admin.Orderscustomers.Feature') }}</button>
+      <a
+        title="{{ 'View this order'|trans({}, 'Admin.Orderscustomers.Feature') }}"
+        class="btn btn-outline-primary js-order-details-btn">
+        {{ 'Details'|trans({}, 'Admin.Global') }}
+      </a>
+
+      <button
+        title="{{ 'Duplicate this order'|trans({}, 'Admin.Orderscustomers.Feature') }}"
+        class="btn btn-outline-primary js-use-order-btn">
+        {{ 'Use'|trans({}, 'Admin.Orderscustomers.Feature') }}
+      </button>
+    </td>
+  </tr>
+</script>
+
+<script id="js-empty-list-row" type="text/template">
+  <tr class="empty_row js-empty-row">
+    <td colspan="8" class="border-0">
+      <div class="text-center grid-table-empty">
+        <p class="mb-0 mt-2"><i class="material-icons">warning</i></p>
+        <p class="mb-2">{{ 'No records found'|trans({}, 'Admin.Global') }}</p>
+      </div>
     </td>
   </tr>
 </script>

@@ -167,9 +167,7 @@ class Locale implements LocaleInterface
         $currencyCode = (string) $currencyCode;
         $priceSpec = $this->priceSpecifications->get($currencyCode);
         if (null === $priceSpec) {
-            throw new LocalizationException(
-                'Price specification not found for currency: "' . $currencyCode . '"'
-            );
+            throw new LocalizationException('Price specification not found for currency: "' . $currencyCode . '"');
         }
 
         return $priceSpec;

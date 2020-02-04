@@ -126,9 +126,7 @@ class HookRepository
                 $id_hook = $this->createHook($hook_name);
             }
             if (!$id_hook) {
-                throw new Exception(
-                    sprintf('Could not create hook `%1$s`.', $hook_name)
-                );
+                throw new Exception(sprintf('Could not create hook `%1$s`.', $hook_name));
             }
 
             $this->unHookModulesFromHook($hook_name);

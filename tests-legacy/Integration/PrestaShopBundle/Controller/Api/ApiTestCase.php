@@ -33,6 +33,7 @@ use Shop;
 use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
 use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use PHPUnit\Framework\MockObject\MockObject;
 
 // bin/phpunit -c tests/phpunit-admin.xml --group api --stop-on-error --stop-on-failure --verbose --debug
 abstract class ApiTestCase extends WebTestCase
@@ -85,7 +86,7 @@ abstract class ApiTestCase extends WebTestCase
     }
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject
+     * @return MockObject
      */
     protected function mockContextAdapter()
     {
@@ -111,7 +112,7 @@ abstract class ApiTestCase extends WebTestCase
     }
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject
+     * @return MockObject
      */
     private function mockContext()
     {
@@ -140,7 +141,7 @@ abstract class ApiTestCase extends WebTestCase
     }
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject
+     * @return MockObject
      */
     private function mockEmployee()
     {
@@ -151,7 +152,7 @@ abstract class ApiTestCase extends WebTestCase
     }
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject
+     * @return MockObject
      */
     private function mockLanguage()
     {
@@ -164,7 +165,7 @@ abstract class ApiTestCase extends WebTestCase
     }
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject
+     * @return MockObject
      */
     private function mockLink()
     {
@@ -172,7 +173,7 @@ abstract class ApiTestCase extends WebTestCase
     }
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject
+     * @return MockObject
      */
     private function mockShop()
     {
@@ -208,7 +209,7 @@ abstract class ApiTestCase extends WebTestCase
     }
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject
+     * @return MockObject
      */
     private function mockController()
     {

@@ -26,9 +26,9 @@
 
 namespace Tests\Integration\Behaviour\Features\Context;
 
-use Symfony\Component\Filesystem\Filesystem;
-use Module;
 use Cache;
+use Module;
+use Symfony\Component\Filesystem\Filesystem;
 
 class ModuleFeatureContext extends AbstractPrestaShopFeatureContext
 {

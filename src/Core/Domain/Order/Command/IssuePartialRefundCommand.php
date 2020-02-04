@@ -26,6 +26,9 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Order\Command;
 
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidRefundException;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
+use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderDetailRefund;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
 
 /**
@@ -44,9 +47,9 @@ class IssuePartialRefundCommand
     private $orderDetailRefunds;
 
     /**
-     * @var int
+     * @var float
      */
-    private $shippingCostRefund;
+    private $shippingCostRefundAmount;
 
     /**
      * @var bool
@@ -56,57 +59,73 @@ class IssuePartialRefundCommand
     /**
      * @var bool
      */
-    private $generateCartRule;
+    private $generateCreditSlip;
 
     /**
      * @var bool
      */
-    private $taxMethod;
+    private $generateVoucher;
 
     /**
      * @var int
      */
-    private $cartRuleRefundType;
+    private $voucherRefundType;
 
     /**
      * @var float|null
      */
-    private $cartRuleRefundAmount;
+    private $voucherRefundAmount;
 
     /**
+     * The expected format for $orderDetailRefunds is an associative array indexed
+     * by OrderDetail id containing two fields amount and quantity
+     *
+     * ex: $orderDetailRefunds = [
+     *      {orderId} => [
+     *          'quantity' => 2,
+     *          'amount' => 23.56,
+     *      ],
+     * ];
+     *
      * @param int $orderId
      * @param array $orderDetailRefunds
-     * @param int $shippingCostRefund
+     * @param float $shippingCostRefundAmount
      * @param bool $restockRefundedProducts
-     * @param bool $generateCartRule
-     * @param bool $taxMethod
-     * @param int $cartRuleRefundType
-     * @param float|null $cartRuleRefundAmount
+     * @param bool $generateVoucher
+     * @param bool $generateCreditSlip
+     * @param int $voucherRefundType
+     * @param float|null $voucherRefundAmount
+     *
+     * @throws InvalidRefundException
+     * @throws OrderException
      */
     public function __construct(
-        $orderId,
+        int $orderId,
         array $orderDetailRefunds,
-        $shippingCostRefund,
-        $restockRefundedProducts,
-        $generateCartRule,
-        $taxMethod,
-        $cartRuleRefundType,
-        $cartRuleRefundAmount = null
+        float $shippingCostRefundAmount,
+        bool $restockRefundedProducts,
+        bool $generateCreditSlip,
+        bool $generateVoucher,
+        int $voucherRefundType,
+        float $voucherRefundAmount = null
     ) {
         $this->orderId = new OrderId($orderId);
-        $this->orderDetailRefunds = $orderDetailRefunds;
-        $this->shippingCostRefund = $shippingCostRefund;
+        $this->shippingCostRefundAmount = $shippingCostRefundAmount;
         $this->restockRefundedProducts = $restockRefundedProducts;
-        $this->generateCartRule = $generateCartRule;
-        $this->taxMethod = $taxMethod;
-        $this->cartRuleRefundType = $cartRuleRefundType;
-        $this->cartRuleRefundAmount = $cartRuleRefundAmount;
+        $this->generateCreditSlip = $generateCreditSlip;
+        $this->generateVoucher = $generateVoucher;
+        $this->voucherRefundType = $voucherRefundType;
+        $this->voucherRefundAmount = $voucherRefundAmount;
+        $this->setOrderDetailRefunds($orderDetailRefunds);
+        if (!$this->generateCreditSlip && !$this->generateVoucher) {
+            throw new InvalidRefundException(InvalidRefundException::NO_GENERATION);
+        }
     }
 
     /**
      * @return OrderId
      */
-    public function getOrderId()
+    public function getOrderId(): OrderId
     {
         return $this->orderId;
     }
@@ -114,31 +133,45 @@ class IssuePartialRefundCommand
     /**
      * @return array
      */
-    public function getOrderDetailRefunds()
+    public function getOrderDetailRefunds(): array
     {
         return $this->orderDetailRefunds;
     }
 
     /**
-     * @return bool
+     * @param array $orderDetailRefunds
+     *
+     * @throws InvalidRefundException
+     * @throws OrderException
      */
-    public function getTaxMethod()
+    private function setOrderDetailRefunds(array $orderDetailRefunds)
     {
-        return $this->taxMethod;
+        $this->orderDetailRefunds = [];
+        if (0 >= count($orderDetailRefunds)) {
+            throw new InvalidRefundException(InvalidRefundException::NO_REFUNDS);
+        }
+
+        foreach ($orderDetailRefunds as $orderDetailId => $detailRefund) {
+            $this->orderDetailRefunds[] = OrderDetailRefund::createPartialRefund(
+                $orderDetailId,
+                $detailRefund['quantity'],
+                $detailRefund['amount']
+            );
+        }
     }
 
     /**
-     * @return int
+     * @return float
      */
-    public function getShippingCostRefundAmount()
+    public function getShippingCostRefundAmount(): float
     {
-        return $this->shippingCostRefund;
+        return $this->shippingCostRefundAmount;
     }
 
     /**
      * @return bool
      */
-    public function restockRefundedProducts()
+    public function restockRefundedProducts(): bool
     {
         return $this->restockRefundedProducts;
     }
@@ -146,21 +179,32 @@ class IssuePartialRefundCommand
     /**
      * @return bool
      */
-    public function generateCartRule()
+    public function generateCreditSlip(): bool
     {
-        return $this->generateCartRule;
+        return $this->generateCreditSlip;
     }
 
     /**
-     * @return mixed
+     * @return bool
      */
-    public function getCartRuleRefundType()
+    public function generateVoucher(): bool
     {
-        return $this->cartRuleRefundType;
+        return $this->generateVoucher;
     }
 
-    public function getCartRuleRefundAmount()
+    /**
+     * @return int
+     */
+    public function getVoucherRefundType(): int
     {
-        return $this->cartRuleRefundAmount;
+        return $this->voucherRefundType;
+    }
+
+    /**
+     * @return float|null
+     */
+    public function getVoucherRefundAmount(): ?float
+    {
+        return $this->voucherRefundAmount;
     }
 }

@@ -73,19 +73,19 @@ class PDFCore
          * new themes don't use them. Although PDF haven't been
          * reworked so every PDF controller must extend this class.
          */
-        smartyRegisterFunction($this->smarty, 'function', 'convertPrice', array('Product', 'convertPrice'), true, $original_lazy_register);
-        smartyRegisterFunction($this->smarty, 'function', 'convertPriceWithCurrency', array('Product', 'convertPriceWithCurrency'), true, $original_lazy_register);
-        smartyRegisterFunction($this->smarty, 'function', 'displayWtPrice', array('Product', 'displayWtPrice'), true, $original_lazy_register);
-        smartyRegisterFunction($this->smarty, 'function', 'displayWtPriceWithCurrency', array('Product', 'displayWtPriceWithCurrency'), true, $original_lazy_register);
-        smartyRegisterFunction($this->smarty, 'function', 'displayPrice', array('Tools', 'displayPriceSmarty'), true, $original_lazy_register);
-        smartyRegisterFunction($this->smarty, 'modifier', 'convertAndFormatPrice', array('Product', 'convertAndFormatPrice'), true, $original_lazy_register); // used twice
-        smartyRegisterFunction($this->smarty, 'function', 'displayAddressDetail', array('AddressFormat', 'generateAddressSmarty'), true, $original_lazy_register);
-        smartyRegisterFunction($this->smarty, 'function', 'getWidthSize', array('Image', 'getWidth'), true, $original_lazy_register);
-        smartyRegisterFunction($this->smarty, 'function', 'getHeightSize', array('Image', 'getHeight'), true, $original_lazy_register);
+        smartyRegisterFunction($this->smarty, 'function', 'convertPrice', ['Product', 'convertPrice'], true, $original_lazy_register);
+        smartyRegisterFunction($this->smarty, 'function', 'convertPriceWithCurrency', ['Product', 'convertPriceWithCurrency'], true, $original_lazy_register);
+        smartyRegisterFunction($this->smarty, 'function', 'displayWtPrice', ['Product', 'displayWtPrice'], true, $original_lazy_register);
+        smartyRegisterFunction($this->smarty, 'function', 'displayWtPriceWithCurrency', ['Product', 'displayWtPriceWithCurrency'], true, $original_lazy_register);
+        smartyRegisterFunction($this->smarty, 'function', 'displayPrice', ['Tools', 'displayPriceSmarty'], true, $original_lazy_register);
+        smartyRegisterFunction($this->smarty, 'modifier', 'convertAndFormatPrice', ['Product', 'convertAndFormatPrice'], true, $original_lazy_register); // used twice
+        smartyRegisterFunction($this->smarty, 'function', 'displayAddressDetail', ['AddressFormat', 'generateAddressSmarty'], true, $original_lazy_register);
+        smartyRegisterFunction($this->smarty, 'function', 'getWidthSize', ['Image', 'getWidth'], true, $original_lazy_register);
+        smartyRegisterFunction($this->smarty, 'function', 'getHeightSize', ['Image', 'getHeight'], true, $original_lazy_register);
 
         $this->objects = $objects;
         if (!($objects instanceof Iterator) && !is_array($objects)) {
-            $this->objects = array($objects);
+            $this->objects = [$objects];
         }
 
         if (count($this->objects) > 1) { // when bulk mode only

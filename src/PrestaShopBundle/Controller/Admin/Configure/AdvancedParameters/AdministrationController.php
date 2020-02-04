@@ -79,7 +79,7 @@ class AdministrationController extends FrameworkBundleAdminController
      */
     public function processFormAction(Request $request)
     {
-        $this->dispatchHook('actionAdminAdminPreferencesControllerPostProcessBefore', array('controller' => $this));
+        $this->dispatchHook('actionAdminAdminPreferencesControllerPostProcessBefore', ['controller' => $this]);
 
         $form = $this->get('prestashop.adapter.administration.form_handler')->getForm();
         $form->handleRequest($request);

@@ -28,7 +28,7 @@ import Router from '@components/router';
 import {EventEmitter} from '@components/event-emitter';
 import eventMap from '@pages/order/create/event-map';
 
-const $ = window.$;
+const {$} = window;
 
 /**
  * Provides ajax calls for getting cart information
@@ -61,7 +61,7 @@ export default class CartProvider {
    */
   loadEmptyCart(customerId) {
     $.post(this.router.generate('admin_carts_create'), {
-      customer_id: customerId,
+      customerId,
     }).then((cartInfo) => {
       EventEmitter.emit(eventMap.cartLoaded, cartInfo);
     });

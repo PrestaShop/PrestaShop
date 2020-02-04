@@ -36,8 +36,8 @@ class JavascriptManagerCore extends AbstractAssetManager
         $default = [];
         foreach ($this->valid_position as $position) {
             $default[$position] = [
-                'external' => array(),
-                'inline' => array(),
+                'external' => [],
+                'inline' => [],
             ];
         }
 
@@ -87,7 +87,7 @@ class JavascriptManagerCore extends AbstractAssetManager
             $type = ($inline) ? 'inline' : 'external';
         }
 
-        $this->list[$position][$type][$id] = array(
+        $this->list[$position][$type][$id] = [
             'id' => $id,
             'type' => $type,
             'path' => $fullPath,
@@ -95,7 +95,7 @@ class JavascriptManagerCore extends AbstractAssetManager
             'priority' => $priority,
             'attribute' => $attribute,
             'server' => $server,
-        );
+        ];
     }
 
     public function getList()

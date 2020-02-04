@@ -25,9 +25,11 @@ module.exports = class Pages extends BOBasePage {
     // Bulk Actions
     this.selectAllRowsLabel = `${this.listForm} .md-checkbox label`;
     this.bulkActionsToggleButton = `${this.listForm} button.js-bulk-actions-btn`;
-    this.bulkActionsDeleteButton = `${this.listForm} #%TABLE_grid_bulk_action_delete_bulk`;
-    this.bulkActionsEnableButton = `${this.listForm} #%TABLE_grid_bulk_action_enable_selection`;
-    this.bulkActionsDisableButton = `${this.listForm} #%TABLE_grid_bulk_action_disable_selection`;
+    this.bulkActionsDeleteButton = '#%TABLE_grid_bulk_action_delete_selection';
+    this.bulkActionsEnableButton = '#%TABLE_grid_bulk_action_enable_selection';
+    this.bulkActionsDisableButton = '#%TABLE_grid_bulk_action_disable_selection';
+    this.confirmDeleteModal = '#%TABLE_grid_confirm_modal';
+    this.confirmDeleteButton = `${this.confirmDeleteModal} button.btn-confirm-submit`;
     // Filters
     this.filterColumn = `${this.gridTable} #%TABLE_%FILTERBY`;
     this.filterSearchButton = `${this.gridTable} button[name='%TABLE[actions][search]']`;
@@ -120,10 +122,11 @@ module.exports = class Pages extends BOBasePage {
    * @param table
    * @return {Promise<textContent>}
    */
-  async deleteRowInTableBulkActions(table) {
+  async deleteWithBulkActions(table) {
     const selectAllRowsLabel = await this.replaceAll(this.selectAllRowsLabel, '%TABLE', table);
     const bulkActionsToggleButton = await this.replaceAll(this.bulkActionsToggleButton, '%TABLE', table);
     const bulkActionsDeleteButton = await this.replaceAll(this.bulkActionsDeleteButton, '%TABLE', table);
+    const confirmDeleteModal = await this.replaceAll(this.confirmDeleteModal, '%TABLE', table);
     // Add listener to dialog to accept deletion
     this.dialogListener();
     // Click on Select All
@@ -138,10 +141,20 @@ module.exports = class Pages extends BOBasePage {
     ]);
     // Click on delete and wait for modal
     await Promise.all([
-      this.clickAndWaitForNavigation(bulkActionsDeleteButton),
-      this.page.waitForSelector(this.alertSuccessBlockParagraph, {visible: true}),
+      this.page.click(bulkActionsDeleteButton),
+      this.page.waitForSelector(`${confirmDeleteModal}.show`, {visible: true}),
     ]);
+    await this.confirmDeleteWithBulkActions(table);
     return this.getTextContent(this.alertSuccessBlockParagraph);
+  }
+
+  /**
+   * Confirm delete with in modal
+   * @param table
+   * @return {Promise<void>}
+   */
+  async confirmDeleteWithBulkActions(table) {
+    await this.clickAndWaitForNavigation(this.confirmDeleteButton.replace('%TABLE', table));
   }
 
   /**

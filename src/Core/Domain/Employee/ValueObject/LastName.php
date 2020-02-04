@@ -72,10 +72,7 @@ class LastName
         $matchesLastNamePattern = preg_match('/^[^0-9!<>,;?=+()@#"°{}_$%:¤|]*$/u', stripslashes($lastName));
 
         if (!$matchesLastNamePattern) {
-            throw new EmployeeConstraintException(
-                sprintf('Employee last name %s is invalid', var_export($lastName, true)),
-                EmployeeConstraintException::INVALID_LAST_NAME
-            );
+            throw new EmployeeConstraintException(sprintf('Employee last name %s is invalid', var_export($lastName, true)), EmployeeConstraintException::INVALID_LAST_NAME);
         }
     }
 
@@ -90,10 +87,7 @@ class LastName
 
         $length = function_exists('mb_strlen') ? mb_strlen($lastName, 'UTF-8') : strlen($lastName);
         if (self::MAX_LENGTH < $length) {
-            throw new EmployeeConstraintException(
-                sprintf('Employee last name is too long. Max allowed length is %s', self::MAX_LENGTH),
-                EmployeeConstraintException::INVALID_LAST_NAME
-            );
+            throw new EmployeeConstraintException(sprintf('Employee last name is too long. Max allowed length is %s', self::MAX_LENGTH), EmployeeConstraintException::INVALID_LAST_NAME);
         }
     }
 }

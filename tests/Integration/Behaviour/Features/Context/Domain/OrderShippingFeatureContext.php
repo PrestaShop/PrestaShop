@@ -2,7 +2,7 @@
 
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
-use PHPUnit_Framework_Assert;
+use PHPUnit\Framework\Assert as Assert;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\ChangeOrderDeliveryAddressCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\UpdateOrderShippingDetailsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderForViewing;
@@ -155,6 +155,6 @@ class OrderShippingFeatureContext extends AbstractDomainFeatureContext
         /** @var OrderForViewing $orderForViewing */
         $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
         $orderShippingAddressId = $orderForViewing->getShippingAddress()->getAddressId();
-        PHPUnit_Framework_Assert::assertSame($expectedShippingAddressId, $orderShippingAddressId);
+        Assert::assertSame($expectedShippingAddressId, $orderShippingAddressId);
     }
 }

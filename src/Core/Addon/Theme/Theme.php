@@ -75,8 +75,8 @@ class Theme implements AddonInterface
 
     public function getModulesToEnable()
     {
-        $modulesToEnable = $this->get('global_settings.modules.to_enable', array());
-        $modulesToHook = $this->get('global_settings.hooks.modules_to_hook', array());
+        $modulesToEnable = $this->get('global_settings.modules.to_enable', []);
+        $modulesToHook = $this->get('global_settings.hooks.modules_to_hook', []);
 
         foreach ($modulesToHook as $hookName => $modules) {
             if (is_array($modules)) {
@@ -96,7 +96,7 @@ class Theme implements AddonInterface
 
     public function getModulesToDisable()
     {
-        return $this->get('dependencies.modules', array());
+        return $this->get('dependencies.modules', []);
     }
 
     public function getPageSpecificAssets($pageId)

@@ -2,14 +2,14 @@
 
 namespace Tests\Unit\PrestaShopBundle\Utils;
 
+use PHPUnit\Framework\AssertionFailedError;
 use PHPUnit\Framework\TestCase;
-use PHPUnit_Framework_AssertionFailedError;
 use PrestaShop\PrestaShop\Core\Util\BoolParser;
 
 class BoolParserTest extends TestCase
 {
     /**
-     * @throws PHPUnit_Framework_AssertionFailedError
+     * @throws AssertionFailedError
      */
     public function testCastToBool()
     {

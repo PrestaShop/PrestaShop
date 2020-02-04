@@ -30,7 +30,6 @@ use AppKernel;
 use Context;
 use Employee;
 use LegacyTests\PrestaShopBundle\Utils\DatabaseCreator;
-use Shop;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class CommonFeatureContext extends AbstractPrestaShopFeatureContext
@@ -101,21 +100,5 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
     public static function getContainer()
     {
         return static::$kernel->getContainer();
-    }
-
-    /**
-     * @Given single shop context is loaded
-     */
-    public function singleShopContextIsLoaded()
-    {
-        Shop::setContext(Shop::CONTEXT_SHOP);
-    }
-
-    /**
-     * @Given multiple shop context is loaded
-     */
-    public function multipleShopContextIsLoaded()
-    {
-        Shop::setContext(Shop::CONTEXT_ALL);
     }
 }

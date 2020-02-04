@@ -29,8 +29,8 @@ namespace PrestaShop\PrestaShop\Adapter\Group\Provider;
 use Group;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Group\Provider\DefaultGroup;
-use PrestaShop\PrestaShop\Core\Group\Provider\DefaultGroupsProviderInterface;
 use PrestaShop\PrestaShop\Core\Group\Provider\DefaultGroups;
+use PrestaShop\PrestaShop\Core\Group\Provider\DefaultGroupsProviderInterface;
 
 /**
  * Provides default customer groups

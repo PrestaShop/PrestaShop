@@ -68,9 +68,7 @@ class DatabaseTablesList
         $filteredTables = array_filter($tables, 'is_string');
 
         if ($filteredTables !== $tables) {
-            throw new SqlRequestException(
-                'Invalid database table list provided. Database tables list must contain string values only.'
-            );
+            throw new SqlRequestException('Invalid database table list provided. Database tables list must contain string values only.');
         }
 
         $this->dbTables = $tables;

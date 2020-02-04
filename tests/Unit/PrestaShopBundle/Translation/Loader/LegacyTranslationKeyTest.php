@@ -26,9 +26,10 @@
 
 namespace Tests\Unit\PrestaShopBundle\Translation\Loader;
 
+use PHPUnit\Framework\TestCase;
 use PrestaShopBundle\Translation\Loader\LegacyTranslationKey;
 
-class LegacyTranslationKeyTest extends \PHPUnit_Framework_TestCase
+class LegacyTranslationKeyTest extends TestCase
 {
     /**
      * @param string $key

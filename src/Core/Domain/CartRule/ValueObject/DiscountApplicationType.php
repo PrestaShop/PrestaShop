@@ -71,14 +71,7 @@ class DiscountApplicationType
     public function __construct(string $type)
     {
         if (!in_array($type, self::AVAILABLE_TYPES)) {
-            throw new CartRuleConstraintException(
-                sprintf(
-                    'Invalid cart rule discount application type %s. Available types are: %s',
-                    var_export($type, true),
-                    implode(', ', self::AVAILABLE_TYPES)
-                ),
-                CartRuleConstraintException::INVALID_DISCOUNT_APPLICATION_TYPE
-            );
+            throw new CartRuleConstraintException(sprintf('Invalid cart rule discount application type %s. Available types are: %s', var_export($type, true), implode(', ', self::AVAILABLE_TYPES)), CartRuleConstraintException::INVALID_DISCOUNT_APPLICATION_TYPE);
         }
 
         $this->type = $type;

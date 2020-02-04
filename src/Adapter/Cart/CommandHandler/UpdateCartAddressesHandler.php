@@ -29,7 +29,9 @@ namespace PrestaShop\PrestaShop\Adapter\Cart\CommandHandler;
 use Cart;
 use PrestaShop\PrestaShop\Adapter\Cart\AbstractCartHandler;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartAddressesCommand;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartCarrierCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\CommandHandler\UpdateCartAddressesHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Cart\CommandHandler\UpdateCartCarrierHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartException;
 
 /**
@@ -37,6 +39,19 @@ use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartException;
  */
 final class UpdateCartAddressesHandler extends AbstractCartHandler implements UpdateCartAddressesHandlerInterface
 {
+    /**
+     * @var UpdateCartCarrierHandlerInterface
+     */
+    private $updateCartCarrierHandler;
+
+    /**
+     * @param UpdateCartCarrierHandlerInterface $updateCartCarrierHandler
+     */
+    public function __construct(UpdateCartCarrierHandlerInterface $updateCartCarrierHandler)
+    {
+        $this->updateCartCarrierHandler = $updateCartCarrierHandler;
+    }
+
     /**
      * @param UpdateCartAddressesCommand $command
      */
@@ -46,11 +61,10 @@ final class UpdateCartAddressesHandler extends AbstractCartHandler implements Up
         $this->fillCartWithCommandData($cart, $command);
 
         if (false === $cart->update()) {
-            throw new CartException(sprintf(
-                'Failed to update addresses for cart with id "%s"',
-                $cart->id
-            ));
+            throw new CartException(sprintf('Failed to update addresses for cart with id "%s"', $cart->id));
         }
+
+        $this->updateCartCarrierHandler->handle(new UpdateCartCarrierCommand($cart->id, $cart->id_carrier));
     }
 
     /**
@@ -62,7 +76,9 @@ final class UpdateCartAddressesHandler extends AbstractCartHandler implements Up
     private function fillCartWithCommandData(Cart $cart, UpdateCartAddressesCommand $command): void
     {
         if ($command->getNewDeliveryAddressId()) {
-            $cart->id_address_delivery = $command->getNewDeliveryAddressId()->getValue();
+            // updateAddressId() will actually allow the address change to be impacted on all
+            // other data linked to the cart delivery address
+            $cart->updateAddressId($cart->id_address_delivery, $command->getNewDeliveryAddressId()->getValue());
         }
 
         if ($command->getNewInvoiceAddressId()) {

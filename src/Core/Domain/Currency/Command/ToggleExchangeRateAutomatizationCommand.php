@@ -68,13 +68,7 @@ class ToggleExchangeRateAutomatizationCommand
     private function assertIsBool($isExchangeRateEnabled)
     {
         if (!is_bool($isExchangeRateEnabled)) {
-            throw new CurrencyConstraintException(
-                sprintf(
-                    'Unexpected type of live exchange rates. Expected bool, got "%s"',
-                    var_export($isExchangeRateEnabled, true)
-                ),
-                CurrencyConstraintException::INVALID_LIVE_EXCHANGE_RATES
-            );
+            throw new CurrencyConstraintException(sprintf('Unexpected type of live exchange rates. Expected bool, got "%s"', var_export($isExchangeRateEnabled, true)), CurrencyConstraintException::INVALID_LIVE_EXCHANGE_RATES);
         }
     }
 }

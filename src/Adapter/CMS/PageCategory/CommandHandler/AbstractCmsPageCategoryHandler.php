@@ -74,13 +74,7 @@ abstract class AbstractCmsPageCategoryHandler extends AbstractObjectModelHandler
             $errors = $this->validator->validate($localisedUrl, new IsUrlRewrite());
 
             if (0 !== count($errors)) {
-                throw new CmsPageCategoryConstraintException(
-                    sprintf(
-                        'Given friendly url "%s" is not valid for link rewrite',
-                        $localisedUrl
-                    ),
-                    CmsPageCategoryConstraintException::INVALID_LINK_REWRITE
-                );
+                throw new CmsPageCategoryConstraintException(sprintf('Given friendly url "%s" is not valid for link rewrite', $localisedUrl), CmsPageCategoryConstraintException::INVALID_LINK_REWRITE);
             }
         }
     }
@@ -96,13 +90,7 @@ abstract class AbstractCmsPageCategoryHandler extends AbstractObjectModelHandler
             $errors = $this->validator->validate($description, new CleanHtml());
 
             if (0 !== count($errors)) {
-                throw new CmsPageCategoryConstraintException(
-                    sprintf(
-                        'Given description "%s" contains javascript events or script tags',
-                        $description
-                    ),
-                    CmsPageCategoryConstraintException::INVALID_DESCRIPTION
-                );
+                throw new CmsPageCategoryConstraintException(sprintf('Given description "%s" contains javascript events or script tags', $description), CmsPageCategoryConstraintException::INVALID_DESCRIPTION);
             }
         }
     }

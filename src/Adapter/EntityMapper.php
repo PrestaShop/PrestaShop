@@ -84,7 +84,7 @@ class EntityMapper
                             foreach ($row as $key => $value) {
                                 if ($key != $entity_defs['primary'] && array_key_exists($key, $entity)) {
                                     if (!isset($object_datas[$key]) || !is_array($object_datas[$key])) {
-                                        $object_datas[$key] = array();
+                                        $object_datas[$key] = [];
                                     }
 
                                     $object_datas[$key][$row['id_lang']] = $value;

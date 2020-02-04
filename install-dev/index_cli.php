@@ -36,7 +36,6 @@ $_SERVER['REQUEST_URI'] = '/install/index_cli.php';
 require_once dirname(__FILE__).'/init.php';
 require_once(__DIR__).DIRECTORY_SEPARATOR.'autoload.php';
 require_once _PS_INSTALL_PATH_.'classes/datas.php';
-ini_set('memory_limit', '256M');
 
 try {
     require_once _PS_INSTALL_PATH_.'classes/controllerConsole.php';

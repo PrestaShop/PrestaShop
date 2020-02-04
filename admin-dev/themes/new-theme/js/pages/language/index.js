@@ -37,7 +37,7 @@ import ColumnTogglingExtension from '@components/grid/extension/column-toggling-
 import FiltersSubmitButtonEnablerExtension
   from '@components/grid/extension/filters-submit-button-enabler-extension';
 
-const $ = window.$;
+const {$} = window;
 
 $(document).ready(() => {
   const grid = new Grid('language');

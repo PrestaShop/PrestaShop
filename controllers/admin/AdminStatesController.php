@@ -46,10 +46,10 @@ class AdminStatesControllerCore extends AdminController
             $this->deleted = false;
         }
 
-        $this->bulk_actions = array(
-            'delete' => array('text' => $this->trans('Delete selected', array(), 'Admin.Actions'), 'confirm' => $this->trans('Delete selected items?', array(), 'Admin.Notifications.Warning')),
-            'AffectZone' => array('text' => $this->trans('Assign to a new zone', array(), 'Admin.International.Feature')),
-        );
+        $this->bulk_actions = [
+            'delete' => ['text' => $this->trans('Delete selected', [], 'Admin.Actions'), 'confirm' => $this->trans('Delete selected items?', [], 'Admin.Notifications.Warning')],
+            'AffectZone' => ['text' => $this->trans('Assign to a new zone', [], 'Admin.International.Feature')],
+        ];
 
         $this->_select = 'z.`name` AS zone, cl.`name` AS country';
         $this->_join = '
@@ -57,7 +57,7 @@ class AdminStatesControllerCore extends AdminController
 		LEFT JOIN `' . _DB_PREFIX_ . 'country_lang` cl ON (cl.`id_country` = a.`id_country` AND cl.id_lang = ' . (int) $this->context->language->id . ')';
         $this->_use_found_rows = false;
 
-        $countries_array = $zones_array = array();
+        $countries_array = $zones_array = [];
         $this->zones = Zone::getZones();
         $this->countries = Country::getCountries($this->context->language->id, false, true, false);
         foreach ($this->zones as $zone) {
@@ -67,57 +67,57 @@ class AdminStatesControllerCore extends AdminController
             $countries_array[$country['id_country']] = $country['name'];
         }
 
-        $this->fields_list = array(
-            'id_state' => array(
-                'title' => $this->trans('ID', array(), 'Admin.Global'),
+        $this->fields_list = [
+            'id_state' => [
+                'title' => $this->trans('ID', [], 'Admin.Global'),
                 'align' => 'center',
                 'class' => 'fixed-width-xs',
-            ),
-            'name' => array(
-                'title' => $this->trans('Name', array(), 'Admin.Global'),
+            ],
+            'name' => [
+                'title' => $this->trans('Name', [], 'Admin.Global'),
                 'filter_key' => 'a!name',
-            ),
-            'iso_code' => array(
-                'title' => $this->trans('ISO code', array(), 'Admin.International.Feature'),
+            ],
+            'iso_code' => [
+                'title' => $this->trans('ISO code', [], 'Admin.International.Feature'),
                 'align' => 'center',
                 'class' => 'fixed-width-xs',
-            ),
-            'zone' => array(
-                'title' => $this->trans('Zone', array(), 'Admin.Global'),
+            ],
+            'zone' => [
+                'title' => $this->trans('Zone', [], 'Admin.Global'),
                 'type' => 'select',
                 'list' => $zones_array,
                 'filter_key' => 'z!id_zone',
                 'filter_type' => 'int',
                 'order_key' => 'zone',
-            ),
-            'country' => array(
-                'title' => $this->trans('Country', array(), 'Admin.Global'),
+            ],
+            'country' => [
+                'title' => $this->trans('Country', [], 'Admin.Global'),
                 'type' => 'select',
                 'list' => $countries_array,
                 'filter_key' => 'cl!id_country',
                 'filter_type' => 'int',
                 'order_key' => 'country',
-            ),
-            'active' => array(
-                'title' => $this->trans('Enabled', array(), 'Admin.Global'),
+            ],
+            'active' => [
+                'title' => $this->trans('Enabled', [], 'Admin.Global'),
                 'active' => 'status',
                 'filter_key' => 'a!active',
                 'align' => 'center',
                 'type' => 'bool',
                 'orderby' => false,
                 'class' => 'fixed-width-sm',
-            ),
-        );
+            ],
+        ];
     }
 
     public function initPageHeaderToolbar()
     {
         if (empty($this->display)) {
-            $this->page_header_toolbar_btn['new_state'] = array(
+            $this->page_header_toolbar_btn['new_state'] = [
                 'href' => self::$currentIndex . '&addstate&token=' . $this->token,
-                'desc' => $this->trans('Add new state', array(), 'Admin.International.Feature'),
+                'desc' => $this->trans('Add new state', [], 'Admin.International.Feature'),
                 'icon' => 'process-icon-new',
-            );
+            ];
         }
 
         parent::initPageHeaderToolbar();
@@ -134,80 +134,80 @@ class AdminStatesControllerCore extends AdminController
 
     public function renderForm()
     {
-        $this->fields_form = array(
-            'legend' => array(
-                'title' => $this->trans('States', array(), 'Admin.International.Feature'),
+        $this->fields_form = [
+            'legend' => [
+                'title' => $this->trans('States', [], 'Admin.International.Feature'),
                 'icon' => 'icon-globe',
-            ),
-            'input' => array(
-                array(
+            ],
+            'input' => [
+                [
                     'type' => 'text',
-                    'label' => $this->trans('Name', array(), 'Admin.Global'),
+                    'label' => $this->trans('Name', [], 'Admin.Global'),
                     'name' => 'name',
                     'maxlength' => 32,
                     'required' => true,
-                    'hint' => $this->trans('Provide the state name to be displayed in addresses and on invoices.', array(), 'Admin.International.Help'),
-                ),
-                array(
+                    'hint' => $this->trans('Provide the state name to be displayed in addresses and on invoices.', [], 'Admin.International.Help'),
+                ],
+                [
                     'type' => 'text',
-                    'label' => $this->trans('ISO code', array(), 'Admin.International.Feature'),
+                    'label' => $this->trans('ISO code', [], 'Admin.International.Feature'),
                     'name' => 'iso_code',
                     'maxlength' => 7,
                     'required' => true,
                     'class' => 'uppercase',
-                    'hint' => $this->trans('1 to 4 letter ISO code.', array(), 'Admin.International.Help') . ' ' . $this->trans('You can prefix it with the country ISO code if needed.', array(), 'Admin.International.Help'),
-                ),
-                array(
+                    'hint' => $this->trans('1 to 4 letter ISO code.', [], 'Admin.International.Help') . ' ' . $this->trans('You can prefix it with the country ISO code if needed.', [], 'Admin.International.Help'),
+                ],
+                [
                     'type' => 'select',
-                    'label' => $this->trans('Country', array(), 'Admin.Global'),
+                    'label' => $this->trans('Country', [], 'Admin.Global'),
                     'name' => 'id_country',
                     'required' => true,
                     'default_value' => (int) $this->context->country->id,
-                    'options' => array(
+                    'options' => [
                         'query' => Country::getCountries($this->context->language->id, false, true),
                         'id' => 'id_country',
                         'name' => 'name',
-                    ),
-                    'hint' => $this->trans('Country where the state is located.', array(), 'Admin.International.Help') . ' ' . $this->trans('Only the countries with the option "contains states" enabled are displayed.', array(), 'Admin.International.Help'),
-                ),
-                array(
+                    ],
+                    'hint' => $this->trans('Country where the state is located.', [], 'Admin.International.Help') . ' ' . $this->trans('Only the countries with the option "contains states" enabled are displayed.', [], 'Admin.International.Help'),
+                ],
+                [
                     'type' => 'select',
-                    'label' => $this->trans('Zone', array(), 'Admin.Global'),
+                    'label' => $this->trans('Zone', [], 'Admin.Global'),
                     'name' => 'id_zone',
                     'required' => true,
-                    'options' => array(
+                    'options' => [
                         'query' => Zone::getZones(),
                         'id' => 'id_zone',
                         'name' => 'name',
-                    ),
-                    'hint' => array(
-                        $this->trans('Geographical region where this state is located.', array(), 'Admin.International.Help'),
-                        $this->trans('Used for shipping', array(), 'Admin.International.Help'),
-                    ),
-                ),
-                array(
+                    ],
+                    'hint' => [
+                        $this->trans('Geographical region where this state is located.', [], 'Admin.International.Help'),
+                        $this->trans('Used for shipping', [], 'Admin.International.Help'),
+                    ],
+                ],
+                [
                     'type' => 'switch',
-                    'label' => $this->trans('Status', array(), 'Admin.Global'),
+                    'label' => $this->trans('Status', [], 'Admin.Global'),
                     'name' => 'active',
                     'required' => true,
-                    'values' => array(
-                        array(
+                    'values' => [
+                        [
                             'id' => 'active_on',
                             'value' => 1,
-                            'label' => '<img src="../img/admin/enabled.gif" alt="' . $this->trans('Enabled', array(), 'Admin.Global') . '" title="' . $this->trans('Enabled', array(), 'Admin.Global') . '" />',
-                        ),
-                        array(
+                            'label' => '<img src="../img/admin/enabled.gif" alt="' . $this->trans('Enabled', [], 'Admin.Global') . '" title="' . $this->trans('Enabled', [], 'Admin.Global') . '" />',
+                        ],
+                        [
                             'id' => 'active_off',
                             'value' => 0,
-                            'label' => '<img src="../img/admin/disabled.gif" alt="' . $this->trans('Disabled', array(), 'Admin.Global') . '" title="' . $this->trans('Disabled', array(), 'Admin.Global') . '" />',
-                        ),
-                    ),
-                ),
-            ),
-            'submit' => array(
-                'title' => $this->trans('Save', array(), 'Admin.Actions'),
-            ),
-        );
+                            'label' => '<img src="../img/admin/disabled.gif" alt="' . $this->trans('Disabled', [], 'Admin.Global') . '" title="' . $this->trans('Disabled', [], 'Admin.Global') . '" />',
+                        ],
+                    ],
+                ],
+            ],
+            'submit' => [
+                'title' => $this->trans('Save', [], 'Admin.Actions'),
+            ],
+        ];
 
         return parent::renderForm();
     }
@@ -221,12 +221,12 @@ class AdminStatesControllerCore extends AdminController
         // Idiot-proof controls
         if (!Tools::getValue('id_' . $this->table)) {
             if (Validate::isStateIsoCode(Tools::getValue('iso_code')) && State::getIdByIso(Tools::getValue('iso_code'), Tools::getValue('id_country'))) {
-                $this->errors[] = $this->trans('This ISO code already exists. You cannot create two states with the same ISO code.', array(), 'Admin.International.Notification');
+                $this->errors[] = $this->trans('This ISO code already exists. You cannot create two states with the same ISO code.', [], 'Admin.International.Notification');
             }
         } elseif (Validate::isStateIsoCode(Tools::getValue('iso_code'))) {
             $id_state = State::getIdByIso(Tools::getValue('iso_code'), Tools::getValue('id_country'));
             if ($id_state && $id_state != Tools::getValue('id_' . $this->table)) {
-                $this->errors[] = $this->trans('This ISO code already exists. You cannot create two states with the same ISO code.', array(), 'Admin.International.Notification');
+                $this->errors[] = $this->trans('This ISO code already exists. You cannot create two states with the same ISO code.', [], 'Admin.International.Notification');
             }
         }
 
@@ -239,15 +239,15 @@ class AdminStatesControllerCore extends AdminController
                         if ($object->delete()) {
                             Tools::redirectAdmin(self::$currentIndex . '&conf=1&token=' . (Tools::getValue('token') ? Tools::getValue('token') : $this->token));
                         }
-                        $this->errors[] = $this->trans('An error occurred during deletion.', array(), 'Admin.Notifications.Error');
+                        $this->errors[] = $this->trans('An error occurred during deletion.', [], 'Admin.Notifications.Error');
                     } else {
-                        $this->errors[] = $this->trans('This state was used in at least one address. It cannot be removed.', array(), 'Admin.International.Notification');
+                        $this->errors[] = $this->trans('This state was used in at least one address. It cannot be removed.', [], 'Admin.International.Notification');
                     }
                 } else {
-                    $this->errors[] = $this->trans('An error occurred while deleting the object.', array(), 'Admin.Notifications.Error') . ' <b>' . $this->table . '</b> ' . $this->trans('(cannot load object)', array(), 'Admin.Notifications.Error');
+                    $this->errors[] = $this->trans('An error occurred while deleting the object.', [], 'Admin.Notifications.Error') . ' <b>' . $this->table . '</b> ' . $this->trans('(cannot load object)', [], 'Admin.Notifications.Error');
                 }
             } else {
-                $this->errors[] = $this->trans('You do not have permission to delete this.', array(), 'Admin.Notifications.Error');
+                $this->errors[] = $this->trans('You do not have permission to delete this.', [], 'Admin.Notifications.Error');
             }
         }
 

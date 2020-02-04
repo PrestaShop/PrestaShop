@@ -22,24 +22,23 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-import OrderViewPageMap from "./OrderViewPageMap";
+import OrderViewPageMap from './OrderViewPageMap';
 
-const $ = window.$;
+const {$} = window;
 
 /**
  * Manages adding/editing note for invoice documents.
  */
 export default class InvoiceNoteManager {
-
   constructor() {
-    this._initShowNoteFormEventHandler();
-    this._initCloseNoteFormEventHandler();
-    this._initEnterPaymentEventHandler();
+    this.initShowNoteFormEventHandler();
+    this.initCloseNoteFormEventHandler();
+    this.initEnterPaymentEventHandler();
 
     return {};
   }
 
-  _initShowNoteFormEventHandler() {
+  initShowNoteFormEventHandler() {
     $('.js-open-invoice-note-btn').on('click', (event) => {
       event.preventDefault();
 
@@ -50,19 +49,18 @@ export default class InvoiceNoteManager {
     });
   }
 
-  _initCloseNoteFormEventHandler() {
+  initCloseNoteFormEventHandler() {
     $('.js-cancel-invoice-note-btn').on('click', (event) => {
       $(event.currentTarget).closest('tr').addClass('d-none');
     });
   }
 
-  _initEnterPaymentEventHandler() {
+  initEnterPaymentEventHandler() {
     $('.js-enter-payment-btn').on('click', (event) => {
-
       const $btn = $(event.currentTarget);
-      let paymentAmount = $btn.data('payment-amount');
+      const paymentAmount = $btn.data('payment-amount');
 
-      $(OrderViewPageMap.viewOrderPaymentsBlock).get(0).scrollIntoView({behavior: "smooth"});
+      $(OrderViewPageMap.viewOrderPaymentsBlock).get(0).scrollIntoView({behavior: 'smooth'});
       $(OrderViewPageMap.orderPaymentFormAmountInput).val(paymentAmount);
     });
   }

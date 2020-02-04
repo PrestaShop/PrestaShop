@@ -23,7 +23,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-const $ = window.$;
+const {$} = window;
 
 /**
  * Enables/disables 'price' field depending from 'leave_initial_price' field checkbox value
@@ -32,8 +32,8 @@ export default class PriceFieldAvailabilityHandler {
   constructor(checkboxSelector, targetSelector) {
     this.$sourceSelector = $(checkboxSelector);
     this.$targetSelector = $(targetSelector);
-    this._handle();
-    this.$sourceSelector.on('change', () => this._handle());
+    this.handle();
+    this.$sourceSelector.on('change', () => this.handle());
 
     return {};
   }
@@ -43,7 +43,7 @@ export default class PriceFieldAvailabilityHandler {
    *
    * @private
    */
-  _handle() {
+  handle() {
     const checkboxVal = this.$sourceSelector.is(':checked');
 
     this.$targetSelector.prop('disabled', checkboxVal);

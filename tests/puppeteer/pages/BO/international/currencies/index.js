@@ -1,7 +1,7 @@
 require('module-alias/register');
-const BOBasePage = require('@pages/BO/BObasePage');
+const LocalizationBasePage = require('@pages/BO/international/localization/localizationBasePage');
 
-module.exports = class Currencies extends BOBasePage {
+module.exports = class Currencies extends LocalizationBasePage {
   constructor(page) {
     super(page);
 
@@ -9,9 +9,6 @@ module.exports = class Currencies extends BOBasePage {
     this.successfulUpdateStatusMessage = 'The status has been successfully updated.';
 
     // Header Selectors
-    this.languagesNavItemLink = '#subtab-AdminLanguages';
-    this.localizationNavItemLink = '#subtab-AdminLocalization';
-    this.geolocationNavItemLink = '#subtab-AdminGeolocation';
     this.newCurrencyLink = '#page-header-desc-configuration-add';
 
     // Selectors grid panel
@@ -41,30 +38,6 @@ module.exports = class Currencies extends BOBasePage {
   }
 
   /* Header Methods */
-  /**
-   * Go to languages page
-   * @return {Promise<void>}
-   */
-  async goToSubTabLanguages() {
-    await this.clickAndWaitForNavigation(this.languagesNavItemLink);
-  }
-
-  /**
-   * Go to localization page
-   * @return {Promise<void>}
-   */
-  async goToSubTabLocalization() {
-    await this.clickAndWaitForNavigation(this.localizationNavItemLink);
-  }
-
-  /**
-   * Go to geolocation page
-   * @return {Promise<void>}
-   */
-  async goToSubTabGeolocation() {
-    await this.clickAndWaitForNavigation(this.geolocationNavItemLink);
-  }
-
   /**
    * Go to add new currency page
    * @return {Promise<void>}

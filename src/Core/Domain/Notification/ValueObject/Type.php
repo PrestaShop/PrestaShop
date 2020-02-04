@@ -73,13 +73,7 @@ class Type
     {
         $allowedTypes = [self::ORDER, self::CUSTOMER, self::CUSTOMER_MESSAGE];
         if (!in_array($type, $allowedTypes)) {
-            throw new NotificationException(
-                sprintf(
-                    'Type %s is invalid. Supported types are: %s',
-                    var_export($type, true),
-                    implode(', ', $allowedTypes)
-                )
-            );
+            throw new NotificationException(sprintf('Type %s is invalid. Supported types are: %s', var_export($type, true), implode(', ', $allowedTypes)));
         }
     }
 }

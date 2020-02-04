@@ -32,7 +32,7 @@ use OrderHistory;
 use OrderState;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\ResendOrderEmailCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler\ResendOrderEmailHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderEmailResendException;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderEmailSendException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use Validate;
 
@@ -50,10 +50,7 @@ final class ResendOrderEmailHandler extends AbstractOrderCommandHandler implemen
         $orderState = new OrderState($command->getOrderStatusId());
 
         if (!Validate::isLoadedObject($orderState)) {
-            throw new OrderException(sprintf(
-                'An error occurred while loading order status. Order status with "%s" was not found.',
-                $command->getOrderId()->getValue()
-            ));
+            throw new OrderException(sprintf('An error occurred while loading order status. Order status with "%s" was not found.', $command->getOrderId()->getValue()));
         }
 
         $history = new OrderHistory($command->getOrderHistoryId());
@@ -66,7 +63,7 @@ final class ResendOrderEmailHandler extends AbstractOrderCommandHandler implemen
         }
 
         if (!$history->sendEmail($order, $templateVars)) {
-            throw new OrderEmailResendException('Failed to resend order email.');
+            throw new OrderEmailSendException('Failed to resend order email.', OrderEmailSendException::FAILED_RESEND);
         }
     }
 }

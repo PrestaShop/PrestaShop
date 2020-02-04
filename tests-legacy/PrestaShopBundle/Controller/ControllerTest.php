@@ -104,7 +104,7 @@ class ControllerTest extends TestCase
         }
 
         $this->prophesizeRequest($testedController);
-        $testedController->run();
+        $this->assertNull($testedController->run());
     }
 
     /**

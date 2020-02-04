@@ -138,9 +138,7 @@ class CurrencyType extends TranslatorAwareType
             ])
             ->add('symbols', TranslatableType::class, [
                 'type' => TextType::class,
-                'constraints' => [
-                    new DefaultLanguage(),
-                ],
+                'required' => false,
                 'options' => [
                     'constraints' => [
                         new Length([

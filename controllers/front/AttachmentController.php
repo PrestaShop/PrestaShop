@@ -32,7 +32,7 @@ class AttachmentControllerCore extends FrontController
             Tools::redirect('index.php');
         }
 
-        Hook::exec('actionDownloadAttachment', array('attachment' => &$a));
+        Hook::exec('actionDownloadAttachment', ['attachment' => &$a]);
 
         if (ob_get_level() && ob_get_length() > 0) {
             ob_end_clean();

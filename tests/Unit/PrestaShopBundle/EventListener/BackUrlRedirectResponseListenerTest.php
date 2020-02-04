@@ -26,6 +26,7 @@
 
 namespace Tests\Unit\PrestaShopBundle\EventListener;
 
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Util\Url\BackUrlProvider;
 use PrestaShopBundle\EventListener\BackUrlRedirectResponseListener;
@@ -36,7 +37,7 @@ use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 class BackUrlRedirectResponseListenerTest extends TestCase
 {
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject|FilterResponseEvent
+     * @var MockObject|FilterResponseEvent
      */
     private $filterResponseEventMock;
 

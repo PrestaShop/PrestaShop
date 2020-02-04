@@ -53,11 +53,7 @@ abstract class AbstractTransformation implements TransformationInterface
             MailTemplateInterface::TXT_TYPE,
         ];
         if (!in_array($type, $availableTypes)) {
-            throw new InvalidArgumentException(sprintf(
-                'Invalid type %s, available types are: %s',
-                $type,
-                implode(', ', $availableTypes)
-            ));
+            throw new InvalidArgumentException(sprintf('Invalid type %s, available types are: %s', $type, implode(', ', $availableTypes)));
         }
 
         $this->type = $type;

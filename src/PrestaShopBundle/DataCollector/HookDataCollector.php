@@ -54,11 +54,11 @@ final class HookDataCollector extends DataCollector
         $hooks = $this->registry->getHooks();
         $calledHooks = $this->registry->getCalledHooks();
         $notCalledHooks = $this->registry->getNotCalledHooks();
-        $this->data = array(
+        $this->data = [
             'hooks' => $this->stringifyHookArguments($hooks),
             'calledHooks' => $this->stringifyHookArguments($calledHooks),
             'notCalledHooks' => $this->stringifyHookArguments($notCalledHooks),
-        );
+        ];
     }
 
     /**

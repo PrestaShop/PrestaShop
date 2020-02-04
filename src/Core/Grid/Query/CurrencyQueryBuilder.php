@@ -26,9 +26,9 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Query;
 
-use PDO;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
+use PDO;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 
 /**

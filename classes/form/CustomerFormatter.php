@@ -216,7 +216,7 @@ class CustomerFormatterCore implements FormFormatterInterface
                 ->addAvailableValue('placeholder', Tools::getDateFormat())
                 ->addAvailableValue(
                     'comment',
-                    $this->translator->trans('(E.g.: %date_format%)', array('%date_format%' => Tools::formatDateStr('31 May 1970')), 'Shop.Forms.Help')
+                    $this->translator->trans('(E.g.: %date_format%)', ['%date_format%' => Tools::formatDateStr('31 May 1970')], 'Shop.Forms.Help')
                 );
         }
 

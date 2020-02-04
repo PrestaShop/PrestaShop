@@ -28,7 +28,7 @@ class ConfigurationLangCore extends DataLangCore
     // Don't replace domain in init() with $this->domain for translation parsing
     protected $domain = 'Admin.Shopparameters.Feature';
 
-    protected $keys = array('id_configuration');
+    protected $keys = ['id_configuration'];
 
-    protected $fieldsToUpdate = array('value');
+    protected $fieldsToUpdate = ['value'];
 }

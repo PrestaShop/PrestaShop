@@ -27,14 +27,14 @@
 namespace PrestaShop\PrestaShop\Adapter\Supplier\CommandHandler;
 
 use Address;
-use PrestaShopDatabaseException;
-use PrestaShopException;
-use Supplier;
 use PrestaShop\PrestaShop\Adapter\Supplier\AbstractSupplierHandler;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Command\AddSupplierCommand;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\CommandHandler\AddSupplierHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\SupplierException;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\ValueObject\SupplierId;
+use PrestaShopDatabaseException;
+use PrestaShopException;
+use Supplier;
 
 /**
  * Handles command which adds new supplier using legacy object model
@@ -56,24 +56,18 @@ final class AddSupplierHandler extends AbstractSupplierHandler implements AddSup
             $this->validateFields($supplier, $address);
 
             if (!$address->add()) {
-                throw new SupplierException(
-                    sprintf('Failed to add new supplier address "%s"', $address->address1)
-                );
+                throw new SupplierException(sprintf('Failed to add new supplier address "%s"', $address->address1));
             }
 
             if (!$supplier->add()) {
-                throw new SupplierException(
-                    sprintf('Failed to add new supplier "%s"', $command->getName())
-                );
+                throw new SupplierException(sprintf('Failed to add new supplier "%s"', $command->getName()));
             }
 
             $this->addShopAssociation($supplier, $command);
             $address->id_supplier = $supplier->id;
             $address->update();
         } catch (PrestaShopException $e) {
-            throw new SupplierException(
-                sprintf('Failed to add new supplier "%s"', $command->getName())
-            );
+            throw new SupplierException(sprintf('Failed to add new supplier "%s"', $command->getName()));
         }
 
         return new SupplierId((int) $supplier->id);

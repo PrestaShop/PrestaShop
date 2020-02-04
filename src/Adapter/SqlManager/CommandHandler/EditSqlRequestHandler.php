@@ -56,12 +56,7 @@ final class EditSqlRequestHandler implements EditSqlRequestHandlerInterface
             $entity = new RequestSql($command->getSqlRequestId()->getValue());
 
             if (0 >= $entity->id) {
-                throw new SqlRequestNotFoundException(
-                    sprintf(
-                        'SqlRequest with id "%s" was not found for edit',
-                        $command->getSqlRequestId()->getValue()
-                    )
-                );
+                throw new SqlRequestNotFoundException(sprintf('SqlRequest with id "%s" was not found for edit', $command->getSqlRequestId()->getValue()));
             }
 
             if (null !== $command->getName()) {
@@ -73,20 +68,10 @@ final class EditSqlRequestHandler implements EditSqlRequestHandlerInterface
             }
 
             if (false === $entity->update()) {
-                throw new CannotEditSqlRequestException(
-                    sprintf(
-                        'Error occurred when updating SqlRequest with id "%s"',
-                        $command->getSqlRequestId()->getValue()
-                    )
-                );
+                throw new CannotEditSqlRequestException(sprintf('Error occurred when updating SqlRequest with id "%s"', $command->getSqlRequestId()->getValue()));
             }
         } catch (PrestaShopException $e) {
-            throw new SqlRequestException(
-                sprintf(
-                    'Error occurred when updating SqlRequest with id "%s"',
-                    $command->getSqlRequestId()->getValue()
-                )
-            );
+            throw new SqlRequestException(sprintf('Error occurred when updating SqlRequest with id "%s"', $command->getSqlRequestId()->getValue()));
         }
     }
 }

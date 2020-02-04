@@ -54,9 +54,7 @@ abstract class AbstractAddressHandler
         }
 
         if ($address->id !== $addressId->getValue()) {
-            throw new AddressNotFoundException(
-                sprintf('Address with id "%s" was not found.', $addressId->getValue())
-            );
+            throw new AddressNotFoundException(sprintf('Address with id "%s" was not found.', $addressId->getValue()));
         }
 
         return $address;
@@ -76,10 +74,7 @@ abstract class AbstractAddressHandler
         try {
             return $address->delete();
         } catch (PrestaShopException $e) {
-            throw new AddressException(sprintf(
-                'An error occurred when deleting Address object with id "%s".',
-                $address->id
-            ));
+            throw new AddressException(sprintf('An error occurred when deleting Address object with id "%s".', $address->id));
         }
     }
 }

@@ -32,7 +32,7 @@ namespace PrestaShop\PrestaShop\Core\Crypto;
 class Hashing
 {
     /** @var array should contain hashing methods */
-    private $hashMethods = array();
+    private $hashMethods = [];
 
     /**
      * Check if it's the first function of the array that was used for hashing.
@@ -103,25 +103,25 @@ class Hashing
      */
     private function initHashMethods()
     {
-        $this->hashMethods = array(
-            'bcrypt' => array(
-                'option' => array(),
+        $this->hashMethods = [
+            'bcrypt' => [
+                'option' => [],
                 'hash' => function ($passwd, $staticSalt, $option) {
                     return password_hash($passwd, PASSWORD_BCRYPT);
                 },
                 'verify' => function ($passwd, $hash, $staticSalt) {
                     return password_verify($passwd, $hash);
                 },
-            ),
-            'md5' => array(
-                'option' => array(),
+            ],
+            'md5' => [
+                'option' => [],
                 'hash' => function ($passwd, $staticSalt, $option) {
                     return md5($staticSalt . $passwd);
                 },
                 'verify' => function ($passwd, $hash, $staticSalt) {
                     return md5($staticSalt . $passwd) === $hash;
                 },
-            ),
-        );
+            ],
+        ];
     }
 }

@@ -22,8 +22,6 @@ Feature: Order from Back Office (BO)
     And I am logged in as "test@prestashop.com" employee
      #    todo: use domain context to get customer: GetCustomerForViewing;
      #    todo: find a way how to get customer object/id by its properties without using legacy objects
-     #    possible solution can be create new customer with AddCustomerHandler
-     #    but then how to add Customer Address using domain classes???
     And there is customer "testCustomer" with email "pub@prestashop.com"
     And customer "testCustomer" has address in "US" country
     And I create an empty cart "dummy_cart" for customer "testCustomer"
@@ -45,16 +43,16 @@ Feature: Order from Back Office (BO)
     Then order "bo_order1" has Tracking number "TEST1234"
     And order "bo_order1" has Carrier "2 - My carrier (Delivery next day!)"
 
-#  failing scenario related to: https://github.com/PrestaShop/PrestaShop/issues/16582
-#  Scenario: pay order with negative amount and see it is not valid
-#    When order "bo_order1" has 0 payments
-#    And I pay order "bo_order1" with the invalid following details:
-#      | date           | 2019-11-26 13:56:22 |
-#      | payment_method | Payments by check   |
-#      | transaction_id | test!@#$%%^^&* OR 1 |
-#      | id_currency    | 1                   |
-#      | amount         | -5.548              |
-#    Then order "bo_order1" has 0 payments
+  Scenario: pay order with negative amount and see it is not valid
+    When order "bo_order1" has 0 payments
+    And I pay order "bo_order1" with the invalid following details:
+      | date           | 2019-11-26 13:56:22 |
+      | payment_method | Payments by check   |
+      | transaction_id | test!@#$%%^^&* OR 1 |
+      | id_currency    | 1                   |
+      | amount         | -5.548              |
+    Then I should get error that payment amount is negative
+    And order "bo_order1" has 0 payments
 
   Scenario: pay for order
     When I pay order "bo_order1" with the following details:
@@ -132,15 +130,19 @@ Feature: Order from Back Office (BO)
     And order "bo_order2" has status "Delivered"
 
   Scenario: Change order shipping address
-#   -------------- uses legacy clases from here ---------------
-#    avoid using the hows and there is and focus on the steps with bussiness value
-#   todo: When domain handler for adding address is available - use it here
-    Given there is a zone named "zone"
-    And there is a country named "country" and iso code "US" in zone "zone"
-    And there is a state named "state" with iso code "TEST-1" in country"country" and zone "zone"
-    And there is an address named "1601 Willow Rd Menlo Park" with postcode "1" in state "state"
-    And there is a customer named "customer1" whose email is "fake@prestashop.com"
-    And address "1601 Willow Rd Menlo Park" is associated to customer "customer1"
-    #   -------------- uses legacy clases up to here ---------------
-    When I change order "bo_order1" shipping address to "1601 Willow Rd Menlo Park"
-    Then order "bo_order1" shipping address should be "1601 Willow Rd Menlo Park"
+    Given I create customer "testFirstName" with following details:
+      | firstName        | testFirstName                      |
+      | lastName         | testLastName                       |
+      | email            | test.davidsonas@invertus.eu        |
+      | password         | secret                             |
+    When I add new address to customer "testFirstName" with following details:
+      | Address alias    | test-address                       |
+      | First name       | testFirstName                      |
+      | Last name        | testLastName                       |
+      | Address          | Work address st. 1234567890        |
+      | City             | Birmingham                         |
+      | Country          | United States                      |
+      | State            | Alabama                            |
+      | Postal code      | 12345                              |
+    When I change order "bo_order1" shipping address to "test-address"
+    Then order "bo_order1" shipping address should be "test-address"

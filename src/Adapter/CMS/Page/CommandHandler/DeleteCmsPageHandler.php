@@ -48,23 +48,10 @@ final class DeleteCmsPageHandler extends AbstractCmsPageHandler implements Delet
 
         try {
             if (false === $cms->delete()) {
-                throw new CannotDeleteCmsPageException(
-                    sprintf(
-                        'An error occurred when deleting cms page with id %s',
-                        $command->getCmsPageId()->getValue()
-                    ),
-                    CannotDeleteCmsPageException::FAILED_DELETE
-                );
+                throw new CannotDeleteCmsPageException(sprintf('An error occurred when deleting cms page with id %s', $command->getCmsPageId()->getValue()), CannotDeleteCmsPageException::FAILED_DELETE);
             }
         } catch (PrestaShopException $e) {
-            throw new CmsPageException(
-                sprintf(
-                    'An unexpected error occurred when deleting cms page with id %s',
-                    $command->getCmsPageId()->getValue()
-                ),
-                0,
-                $e
-            );
+            throw new CmsPageException(sprintf('An unexpected error occurred when deleting cms page with id %s', $command->getCmsPageId()->getValue()), 0, $e);
         }
     }
 }

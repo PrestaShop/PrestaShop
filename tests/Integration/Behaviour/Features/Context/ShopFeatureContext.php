@@ -47,4 +47,20 @@ class ShopFeatureContext extends AbstractPrestaShopFeatureContext
 
         SharedStorage::getStorage()->set($reference, new Shop($shopId));
     }
+
+    /**
+     * @Given single shop context is loaded
+     */
+    public function singleShopContextIsLoaded()
+    {
+        Shop::setContext(Shop::CONTEXT_SHOP);
+    }
+
+    /**
+     * @Given multiple shop context is loaded
+     */
+    public function multipleShopContextIsLoaded()
+    {
+        Shop::setContext(Shop::CONTEXT_ALL);
+    }
 }
