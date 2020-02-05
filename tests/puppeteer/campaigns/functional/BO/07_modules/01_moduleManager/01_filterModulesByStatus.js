@@ -1,4 +1,7 @@
 require('module-alias/register');
+const testContext = require('@utils/testContext');
+
+const baseContext = 'functional_BO_modules_moduleManager_filterModulesByStatus';
 // Using chai
 const {expect} = require('chai');
 const helper = require('@utils/helpers');
@@ -36,6 +39,7 @@ describe('Filter modules by status', async () => {
   loginCommon.loginBO();
 
   it('should go to module manager page', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'goToModuleManagerPage', baseContext);
     await this.pageObjects.boBasePage.goToSubMenu(
       this.pageObjects.boBasePage.modulesParentLink,
       this.pageObjects.boBasePage.moduleManagerLink,
@@ -52,6 +56,7 @@ describe('Filter modules by status', async () => {
     ];
     tests.forEach((test) => {
       it(`should filter by status enabled : '${test.enabled}'`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `filterByStatus${test.enabled}`, baseContext);
         await this.pageObjects.moduleManagerPage.filterByStatus(test.enabled);
         const modules = await this.pageObjects.moduleManagerPage.getAllModulesStatus();
         await modules.map(

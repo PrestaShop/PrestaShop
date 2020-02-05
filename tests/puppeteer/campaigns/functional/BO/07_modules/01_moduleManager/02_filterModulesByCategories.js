@@ -1,4 +1,7 @@
 require('module-alias/register');
+const testContext = require('@utils/testContext');
+
+const baseContext = 'functional_BO_modules_moduleManager_filterModulesByStatus';
 // Using chai
 const {expect} = require('chai');
 const helper = require('@utils/helpers');
@@ -36,6 +39,7 @@ describe('Filter modules by Categories', async () => {
   loginCommon.loginBO();
 
   it('should go to module manager page', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'goToModuleManagerPage', baseContext);
     await this.pageObjects.boBasePage.goToSubMenu(
       this.pageObjects.boBasePage.modulesParentLink,
       this.pageObjects.boBasePage.moduleManagerLink,
@@ -60,6 +64,7 @@ describe('Filter modules by Categories', async () => {
       'Other',
     ].forEach((category) => {
       it(`should filter by category : '${category}'`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `filterByCategory${category}`, baseContext);
         await this.pageObjects.moduleManagerPage.filterByCategory(category);
         const firstBlockTitle = await this.pageObjects.moduleManagerPage.getBlockModuleTitle(1);
         await expect(firstBlockTitle).to.equal(category);
