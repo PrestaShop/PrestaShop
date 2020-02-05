@@ -33,6 +33,7 @@ use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Grid\GridInterface;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShop\PrestaShop\Core\Hook\RenderedHook;
+use PrestaShop\PrestaShop\Core\Hook\RenderedHookInterface;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
 use PrestaShop\PrestaShop\Core\Localization\Locale\Repository as LocaleRepository;
 use PrestaShop\PrestaShop\Core\Module\Exception\ModuleErrorInterface;
@@ -531,10 +532,10 @@ class FrameworkBundleAdminController extends Controller
     {
         /** @var HookDispatcherInterface $hookDispatcher */
         $hookDispatcher = $this->get('prestashop.core.hook.dispatcher');
-        /** @var RenderedHook $renderedHook */
+        /** @var RenderedHookInterface $renderedHook */
         $renderedHook = $hookDispatcher->dispatchRenderingWithParameters('actionBackOfficeControllerSetVariables');
 
-        $parameters = array_merge($renderedHook->getContent(), $parameters);
+        $parameters = array_merge($parameters, $renderedHook->getContent());
 
         return parent::render($view, $parameters, $response);
     }
