@@ -237,7 +237,9 @@ class AddressFormatCore extends ObjectModel
                     }
                 }
             }
-            $this->checkRequiredFields($usedKeyList);
+            //Removed checking required fields to avoid cyclic dependency when saving address format in countries
+            // Address format in Country settings should override Customer->addresses required fields
+//            $this->checkRequiredFields($usedKeyList);
         }
 
         return (count($this->_errorFormatList)) ? false : true;
