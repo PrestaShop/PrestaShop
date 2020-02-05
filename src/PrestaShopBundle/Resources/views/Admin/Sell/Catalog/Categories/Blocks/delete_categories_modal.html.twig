@@ -46,6 +46,9 @@
       <div class="d-none">
         {{ form_widget(deleteCategoriesForm.categories_to_delete) }}
       </div>
+      <div class="d-none">
+        {{ form_widget(deleteCategoriesForm.categories_to_delete_parent, { 'attr': {'value': app.request.get('categoryId') } }) }}
+      </div>
     </div>
   {% endblock %}
 {% endembed %}
