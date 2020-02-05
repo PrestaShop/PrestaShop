@@ -22,6 +22,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+import Router from './router';
 
 const $ = window.$;
 
@@ -51,7 +52,7 @@ export default class CountryStateSelectionToggler {
     this.$stateSelectionBlock = $(stateSelectionBlockSelector);
     this.$countryStateSelector = $(countryStateSelector);
     this.$countryInput = $(countryInputSelector);
-
+    this.router = new Router();
     this.$countryInput.on('change', () => this.change());
 
     // toggle on page load
@@ -70,13 +71,7 @@ export default class CountryStateSelectionToggler {
     if (countryId === '') {
       return;
     }
-    $.get({
-      url: this.$countryInput.data('states-url'),
-      dataType: 'json',
-      data: {
-        id_country: countryId,
-      },
-    }).then((response) => {
+    $.get(this.router.generate('admin_country_states', {id_country: countryId})).then((response) => {
       this.$countryStateSelector.empty();
 
       Object.keys(response.states).forEach((value) => {

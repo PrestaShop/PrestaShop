@@ -40,6 +40,7 @@ use PrestaShop\PrestaShop\Core\Domain\Address\Exception\CannotSetRequiredFieldsF
 use PrestaShop\PrestaShop\Core\Domain\Address\Exception\CannotUpdateAddressException;
 use PrestaShop\PrestaShop\Core\Domain\Address\Exception\DeleteAddressException;
 use PrestaShop\PrestaShop\Core\Domain\Address\Exception\InvalidAddressRequiredFieldsException;
+use PrestaShop\PrestaShop\Core\Domain\Address\Query\GetAddressFieldsForCountry;
 use PrestaShop\PrestaShop\Core\Domain\Address\Query\GetCustomerAddressForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Address\Query\GetRequiredFieldsForAddress;
 use PrestaShop\PrestaShop\Core\Domain\Address\QueryResult\EditableCustomerAddress;
@@ -56,6 +57,7 @@ use PrestaShopBundle\Form\Admin\Sell\Address\RequiredFieldsAddressType;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Service\Grid\ResponseBuilder;
 use Symfony\Component\Form\FormInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -382,6 +384,21 @@ class AddressController extends FrameworkBundleAdminController
             'layoutTitle' => $this->trans('Edit', 'Admin.Actions'),
             'addressForm' => $addressForm->createView(),
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
+        ]);
+    }
+
+    /**
+     *
+     * @param int $countryId
+     *
+     * @return JsonResponse
+     */
+    public function getAddressFieldsForCountryAction(int $countryId): JsonResponse
+    {
+        $addressFieldsByCountry = $this->getQueryBus()->handle(new GetAddressFieldsForCountry($countryId));
+
+        return $this->json([
+            'fields' => $addressFieldsByCountry
         ]);
     }
 

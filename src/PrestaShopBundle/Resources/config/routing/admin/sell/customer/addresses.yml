@@ -65,3 +65,14 @@ admin_addresses_save_required_fields:
     _controller: PrestaShopBundle:Admin\Sell\Address\Address:saveRequiredFields
     _legacy_controller: AdminAddresses
     _legacy_link: AdminAddresses:submitFields
+
+admin_addresses_fields_for_country:
+  path: /fields-for-country/{countryId}
+  methods: [GET]
+  defaults:
+    _controller: 'PrestaShopBundle:Admin\Sell\Address\Address:getAddressFieldsForCountry'
+    _legacy_controller: AdminAddresses
+  requirements:
+    countryId: \d+
+  options:
+    expose: true

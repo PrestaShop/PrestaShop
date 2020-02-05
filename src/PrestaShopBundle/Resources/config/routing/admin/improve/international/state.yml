@@ -4,3 +4,5 @@ admin_country_states:
   defaults:
     _controller: 'PrestaShopBundle:Admin\Improve\International\State:getStates'
     _legacy_controller: AdminStates
+  options:
+    expose: true

@@ -28,6 +28,7 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
 
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Address\Query\GetAddressFieldsForCountry;
 use PrestaShop\PrestaShop\Core\Domain\Address\Query\GetCustomerAddressForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Address\Query\GetRequiredFieldsForAddress;
 use PrestaShop\PrestaShop\Core\Domain\Address\QueryResult\EditableCustomerAddress;
@@ -66,6 +67,7 @@ final class AddressFormDataProvider implements FormDataProviderInterface
     {
         /** @var EditableCustomerAddress $editableAddress */
         $editableAddress = $this->queryBus->handle(new GetCustomerAddressForEditing((int) $addressId));
+        $addressFieldsForCountry = $this->queryBus->handle(new GetAddressFieldsForCountry($this->defaultCountryId));
 
         $data = [
             'id_customer' => $editableAddress->getCustomerId()->getValue(),
@@ -86,6 +88,7 @@ final class AddressFormDataProvider implements FormDataProviderInterface
             'phone_mobile' => $editableAddress->getMobilePhone(),
             'other' => $editableAddress->getOther(),
             'required_fields' => $editableAddress->getRequiredFields(),
+            'address_fields_for_country' => $addressFieldsForCountry,
         ];
 
         return $data;
@@ -96,9 +99,12 @@ final class AddressFormDataProvider implements FormDataProviderInterface
      */
     public function getDefaultData()
     {
+        $addressFieldsForCountry = $this->queryBus->handle(new GetAddressFieldsForCountry($this->defaultCountryId));
+
         return [
             'id_country' => $this->defaultCountryId,
             'required_fields' => $this->queryBus->handle(new GetRequiredFieldsForAddress()),
+            'address_fields_for_country' => $addressFieldsForCountry
         ];
     }
 }

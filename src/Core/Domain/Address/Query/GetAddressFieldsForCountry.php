@@ -1,3 +1,4 @@
+<?php
 /**
  * 2007-2019 PrestaShop and Contributors
  *
@@ -23,21 +24,32 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-/**
- * Defines all selectors that are used in customers address add/edit form.
- */
-export default {
-  addressEmailInput: '#customer_address_customer_email',
-  addressFirstnameInput: '#customer_address_first_name',
-  addressLastnameInput: '#customer_address_last_name',
-  addressCompanyInput: '#customer_address_company',
-  addressCountrySelect: '#customer_address_id_country',
-  addressStateSelect: '#customer_address_id_state',
-  addressStateBlock: '.js-address-state-select',
-  addressDniInput: '#customer_address_dni',
-  addressDniInputLabel: 'label[for="customer_address_dni"]',
-  addressPostcodeInput: '#customer_address_postcode',
-  addressPostcodeInputLabel: 'label[for="customer_address_postcode"]',
-  companyFieldRow: '.js-company-row',
-  address2FieldRow: '.js-address2-row',
-};
+declare(strict_types=1);
+
+namespace PrestaShop\PrestaShop\Core\Domain\Address\Query;
+
+use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
+
+class GetAddressFieldsForCountry
+{
+    /**
+     * @var CountryId
+     */
+    private $countryId;
+
+    /**
+     * @param int $countryId
+     */
+    public function __construct(int $countryId)
+    {
+        $this->countryId = new CountryId($countryId);
+    }
+
+    /**
+     * @return CountryId
+     */
+    public function getCountryId(): CountryId
+    {
+        return $this->countryId;
+    }
+}

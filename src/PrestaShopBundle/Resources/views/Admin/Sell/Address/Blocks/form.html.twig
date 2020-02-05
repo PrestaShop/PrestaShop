@@ -55,7 +55,6 @@
         {% endif %}
         {% if addressForm.customer_email is defined %}
           {{ ps.form_group_row(addressForm.customer_email, {'attr': {
-            'class': 'js-manufacturer-country-select',
             'data-customer-information-url': path('admin_customer_for_address_information') }}, {
             'label': 'Customer email'|trans({}, 'Admin.Orderscustomers.Feature'),
           }) }}
@@ -64,12 +63,14 @@
 
       {{ ps.form_group_row(addressForm.dni, {}, {
         'label': 'Identification number'|trans({}, 'Admin.Orderscustomers.Feature'),
-        'help' : 'The national ID card number of this person, or a unique tax identification number.'|trans({}, 'Admin.Orderscustomers.Help')
+        'help' : 'The national ID card number of this person, or a unique tax identification number.'|trans({}, 'Admin.Orderscustomers.Help'),
+        'class': addressForm.dni.vars.attr.class,
       }) }}
 
       {{ ps.form_group_row(addressForm.alias, {}, {
         'label': 'Address alias'|trans({}, 'Admin.Orderscustomers.Feature'),
-        'help' : 'Invalid characters:'|trans({}, 'Admin.Notifications.Info') ~ ' <>;=#{}'
+        'help' : 'Invalid characters:'|trans({}, 'Admin.Notifications.Info') ~ ' <>;=#{}',
+        'class': addressForm.alias.vars.attr.class,
       }) }}
 
       {{ ps.form_group_row(addressForm.first_name, {}, {
@@ -84,11 +85,13 @@
 
       {{ ps.form_group_row(addressForm.company, {}, {
         'label': 'Company'|trans({}, 'Admin.Global'),
-        'help' : 'Invalid characters:'|trans({}, 'Admin.Notifications.Info') ~ ' <>;=#{}'
+        'help' : 'Invalid characters:'|trans({}, 'Admin.Notifications.Info') ~ ' <>;=#{}',
+        'class': addressForm.company.vars.attr.class ~ ' js-company-row'
       }) }}
 
       {{ ps.form_group_row(addressForm.vat_number, {}, {
         'label': 'VAT number'|trans({}, 'Admin.Orderscustomers.Feature'),
+        'class': addressForm.vat_number.vars.attr.class,
       }) }}
 
       {{ ps.form_group_row(addressForm.address1, {}, {
@@ -97,18 +100,19 @@
 
       {{ ps.form_group_row(addressForm.address2, {}, {
         'label': 'Address (2)'|trans({}, 'Admin.Global'),
+        'class': addressForm.address2.vars.attr.class ~ ' js-address2-row'
       }) }}
 
       {{ ps.form_group_row(addressForm.postcode, {}, {
-        'label': 'Zip/postal code'|trans({}, 'Admin.Global')
+        'label': 'Zip/postal code'|trans({}, 'Admin.Global'),
+        'class': addressForm.postcode.vars.attr.class,
       }) }}
 
       {{ ps.form_group_row(addressForm.city, {}, {
         'label': 'City'|trans({}, 'Admin.Global')
       }) }}
 
-      {{ ps.form_group_row(addressForm.id_country, {'attr': {
-        'data-states-url': path('admin_country_states') }}, {
+      {{ ps.form_group_row(addressForm.id_country, {}, {
         'label': 'Country'|trans({}, 'Admin.Global'),
       }) }}
 
@@ -118,18 +122,19 @@
       }) }}
 
       {{ ps.form_group_row(addressForm.phone, {}, {
-        'label': 'Phone'|trans({}, 'Admin.Global')
+        'label': 'Phone'|trans({}, 'Admin.Global'),
+        'class': addressForm.phone.vars.attr.class,
       }) }}
 
-      {% if addressForm.phone_mobile is defined %}
-        {{ ps.form_group_row(addressForm.phone_mobile, {}, {
-          'label': 'Mobile phone'|trans({}, 'Admin.Global')
-        }) }}
-      {% endif %}
+      {{ ps.form_group_row(addressForm.phone_mobile, {}, {
+        'label': 'Mobile phone'|trans({}, 'Admin.Global'),
+        'class': addressForm.phone_mobile.vars.attr.class,
+      }) }}
 
       {{ ps.form_group_row(addressForm.other, {}, {
         'label': 'Other'|trans({}, 'Admin.Global'),
-        'help' : 'Invalid characters:'|trans({}, 'Admin.Notifications.Info') ~ ' <>;=#{}'
+        'help' : 'Invalid characters:'|trans({}, 'Admin.Notifications.Info') ~ ' <>;=#{}',
+        'class': addressForm.other.vars.attr.class,
       }) }}
 
       {{ form_rest(addressForm) }}
