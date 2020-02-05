@@ -28,13 +28,14 @@
   {% if record.status is defined %}
     {# \d+ is 1 or more digits in a string  #}
     {% set doesFieldContainsDigits = record.status matches '/^\\d+$/' %}
-      {% if doesFieldContainsDigits %}
-        <span class="badge rounded badge-{{ column.options.badge_type }}">
-          {{ record[column.options.field] }}
-        </span>
-      {% else %}
+    {# puts a badge on the text only if record status is digit value; #}
+    {% if doesFieldContainsDigits %}
+      <span class="badge rounded badge-{{ column.options.badge_type }}">
         {{ record[column.options.field] }}
-      {% endif %}
+      </span>
+    {% else %}
+      {{ record[column.options.field] }}
+    {% endif %}
   {% else %}
     <span class="badge rounded badge-{{ column.options.badge_type }}">
       {{ record[column.options.field] }}
