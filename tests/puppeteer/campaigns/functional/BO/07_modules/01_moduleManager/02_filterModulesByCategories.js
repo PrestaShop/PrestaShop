@@ -3,6 +3,7 @@ require('module-alias/register');
 const {expect} = require('chai');
 const helper = require('@utils/helpers');
 const loginCommon = require('@commonTests/loginBO');
+const {moduleCategories} = require('@data/demo/moduleCategories');
 // Importing pages
 const BOBasePage = require('@pages/BO/BObasePage');
 const LoginPage = require('@pages/BO/login');
@@ -46,19 +47,7 @@ describe('Filter modules by Categories', async () => {
   });
 
   describe('Filter modules by categories', async () => {
-    [
-      'Administration',
-      'Design & Navigation',
-      'Promotions & Marketing',
-      'Product Page',
-      'Payment',
-      'Shipping & Logistics',
-      'Traffic & Marketplaces',
-      'Customers',
-      'Facebook & Social Networks',
-      'Specialized Platforms',
-      'Other',
-    ].forEach((category) => {
+    moduleCategories.forEach((category) => {
       it(`should filter by category : '${category}'`, async function () {
         await this.pageObjects.moduleManagerPage.filterByCategory(category);
         const firstBlockTitle = await this.pageObjects.moduleManagerPage.getBlockModuleTitle(1);
