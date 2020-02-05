@@ -40,10 +40,10 @@ use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\SubmitRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Type\LinkGridAction;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BadgeColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\CartBulkActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\DateTimeColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
-use PrestaShop\PrestaShop\Core\Grid\Column\Type\HighlightedColumn;
 use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
@@ -141,11 +141,10 @@ final class CartGridDefinitionFactory extends AbstractGridDefinitionFactory
                     'field' => 'customer_name',
                 ])
             )
-            ->add((new HighlightedColumn('cart_total'))
+            ->add((new BadgeColumn('cart_total'))
                 ->setName($this->trans('Total', [], 'Admin.Global'))
                 ->setOptions([
                     'field' => 'cart_total',
-                    'is_highlighted_field' => 'is_order_placed',
                     'sortable' => false,
                 ])
             )

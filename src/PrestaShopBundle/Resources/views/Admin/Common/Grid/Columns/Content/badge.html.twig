@@ -23,11 +23,23 @@
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 
-<div class="text-{{ column.options.text_align }}">
+<div class="text-right">
 {% if record[column.options.field] is not empty %}
-  <span class="badge rounded badge-{{ column.options.badge_type }}">
-    {{ record[column.options.field] }}
-  </span>
+  {% if record.status is defined %}
+    {# \d+ is 1 or more digits in a string  #}
+    {% set doesFieldContainsDigits = record.status matches '/^\\d+$/' %}
+      {% if doesFieldContainsDigits %}
+        <span class="badge rounded badge-{{ column.options.badge_type }}">
+          {{ record[column.options.field] }}
+        </span>
+      {% else %}
+        {{ record[column.options.field] }}
+      {% endif %}
+  {% else %}
+    <span class="badge rounded badge-{{ column.options.badge_type }}">
+      {{ record[column.options.field] }}
+    </span>
+  {% endif %}
 {% else %}
   {{ column.options.empty_value }}
 {% endif %}
