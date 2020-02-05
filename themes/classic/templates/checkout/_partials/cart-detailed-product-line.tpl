@@ -57,6 +57,7 @@
       {/if}
       <div class="current-price">
         <span class="price">{$product.price}</span>
+        {hook h='displayProductPriceBlock' product=$product type="unit_price"}
         {if $product.unit_price_full}
           <div class="unit-price-cart">{$product.unit_price_full}</div>
         {/if}
