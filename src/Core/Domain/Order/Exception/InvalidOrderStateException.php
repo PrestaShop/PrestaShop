@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,22 +19,17 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler;
-
-use PrestaShop\PrestaShop\Core\Domain\Order\Command\IssuePartialRefundCommand;
+namespace PrestaShop\PrestaShop\Core\Domain\Order\Exception;
 
 /**
- * Interface for service that handles issuing partial refund for given order
+ * Thrown when the order state is incompatible with an action (ex: standard
+ * refund on an order not paid yet).
  */
-interface IssuePartialRefundHandlerInterface
+class InvalidOrderStateException extends OrderException
 {
-    /**
-     * @param IssuePartialRefundCommand $command
-     */
-    public function handle(IssuePartialRefundCommand $command): void;
 }

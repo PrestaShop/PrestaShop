@@ -54,7 +54,7 @@ class InvalidRefundException extends OrderException
     const INVALID_AMOUNT = 3;
 
     /**
-     * Used when no refund details have been supplied
+     * Used when no refund details have been supplied (nor products nor shipping refund)
      */
     const NO_REFUNDS = 4;
 
