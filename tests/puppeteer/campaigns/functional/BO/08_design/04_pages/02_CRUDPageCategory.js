@@ -1,7 +1,4 @@
 require('module-alias/register');
-const testContext = require('@utils/testContext');
-
-const baseContext = 'functional_BO_design_pages_CRUDPageCategory';
 // Using chai
 const {expect} = require('chai');
 const helper = require('@utils/helpers');
@@ -18,6 +15,10 @@ const AddPagePage = require('@pages/BO/design/pages/add');
 const FOBasePage = require('@pages/FO/FObasePage');
 const SiteMapPage = require('@pages/FO/siteMap');
 const CMSPage = require('@pages/FO/cms');
+// Test context imports
+const testContext = require('@utils/testContext');
+
+const baseContext = 'functional_BO_design_pages_CRUDPageCategory';
 
 let browser;
 let page;

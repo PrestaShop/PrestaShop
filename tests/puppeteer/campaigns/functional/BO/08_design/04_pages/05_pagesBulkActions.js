@@ -1,7 +1,4 @@
 require('module-alias/register');
-const testContext = require('@utils/testContext');
-
-const baseContext = 'functional_BO_design_pages_pagesBulkAction';
 // Using chai
 const {expect} = require('chai');
 const helper = require('@utils/helpers');
@@ -14,6 +11,10 @@ const DashboardPage = require('@pages/BO/dashboard/index');
 const PagesPage = require('@pages/BO/design/pages/index');
 const AddPageCategoryPage = require('@pages/BO/design/pages/pageCategory/add');
 const AddPagePage = require('@pages/BO/design/pages/add');
+// Test context imports
+const testContext = require('@utils/testContext');
+
+const baseContext = 'functional_BO_design_pages_pagesBulkAction';
 
 let browser;
 let page;

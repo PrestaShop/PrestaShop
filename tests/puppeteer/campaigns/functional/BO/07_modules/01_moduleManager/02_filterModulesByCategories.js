@@ -1,7 +1,4 @@
 require('module-alias/register');
-const testContext = require('@utils/testContext');
-
-const baseContext = 'functional_BO_modules_moduleManager_filterModulesByCategory';
 // Using chai
 const {expect} = require('chai');
 const helper = require('@utils/helpers');
@@ -12,6 +9,10 @@ const BOBasePage = require('@pages/BO/BObasePage');
 const LoginPage = require('@pages/BO/login');
 const DashboardPage = require('@pages/BO/dashboard');
 const ModuleManagerPage = require('@pages/BO/modules/moduleManager');
+// Test context imports
+const testContext = require('@utils/testContext');
+
+const baseContext = 'functional_BO_modules_moduleManager_filterModulesByCategory';
 
 let browser;
 let page;

@@ -1,7 +1,4 @@
 require('module-alias/register');
-const testContext = require('@utils/testContext');
-
-const baseContext = 'functional_BO_design_pages_filterAndQuickEditCategories';
 // Using chai
 const {expect} = require('chai');
 const helper = require('@utils/helpers');
@@ -13,6 +10,10 @@ const LoginPage = require('@pages/BO/login/index');
 const DashboardPage = require('@pages/BO/dashboard/index');
 const AddPageCategoryPage = require('@pages/BO/design/pages/pageCategory/add');
 const PagesPage = require('@pages/BO/design/pages/index');
+// Test context imports
+const testContext = require('@utils/testContext');
+
+const baseContext = 'functional_BO_design_pages_filterAndQuickEditCategories';
 
 let browser;
 let page;

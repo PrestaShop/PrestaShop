@@ -1,7 +1,4 @@
 require('module-alias/register');
-const testContext = require('@utils/testContext');
-
-const baseContext = 'functional_BO_design_emailThemes_previewEmailThemes';
 // Using chai
 const {expect} = require('chai');
 const helper = require('@utils/helpers');
@@ -12,6 +9,10 @@ const LoginPage = require('@pages/BO/login');
 const DashboardPage = require('@pages/BO/dashboard');
 const EmailThemesPage = require('@pages/BO/design/emailThemes');
 const PreviewEmailThemesPage = require('@pages/BO/design/emailThemes/preview');
+// Test context imports
+const testContext = require('@utils/testContext');
+
+const baseContext = 'functional_BO_design_emailThemes_previewEmailThemes';
 
 let browser;
 let page;

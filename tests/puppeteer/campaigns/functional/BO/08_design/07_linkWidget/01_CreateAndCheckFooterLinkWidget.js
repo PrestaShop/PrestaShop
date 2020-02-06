@@ -1,7 +1,4 @@
 require('module-alias/register');
-const testContext = require('@utils/testContext');
-
-const baseContext = 'functional_BO_design_linkWidget_createAndCheckFooterLInkWidget';
 // Using chai
 const {expect} = require('chai');
 const helper = require('@utils/helpers');
@@ -14,6 +11,10 @@ const LinkWidgetsPage = require('@pages/BO/design/linkWidgets');
 const AddLinkWidgetPage = require('@pages/BO/design/linkWidgets/add');
 const FOBasePage = require('@pages/FO/FObasePage');
 const {LinkWidgets} = require('@data/demo/linkWidgets');
+// Test context imports
+const testContext = require('@utils/testContext');
+
+const baseContext = 'functional_BO_design_linkWidget_createAndCheckFooterLInkWidget';
 
 let browser;
 let page;
