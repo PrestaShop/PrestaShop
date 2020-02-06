@@ -16,7 +16,7 @@ admin_attachments_filter:
     redirectRoute: admin_attachments_index
     _legacy_link: AdminAttachments:submitFilterattachment
 
-admin_attachment_create:
+admin_attachments_create:
   path: /new
   methods: [GET, POST]
   defaults:
