@@ -270,8 +270,8 @@ export default class OrderViewPage {
 
   listenForCancelProduct() {
     $(OrderViewPageMap.cancelProduct.buttons.cancelProducts).on('click', (event) => {
-      this.orderProductCancel.showCancelProductForm();
       this.orderProductRenderer.moveProductsPanelToRefundPosition();
+      this.orderProductCancel.showCancelProductForm();
     });
   }
 

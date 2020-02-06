@@ -214,11 +214,10 @@ export default class OrderProductCancel {
     const cancelProductRoute = this.router.generate('admin_orders_cancellation', {orderId: this.orderId});
     this.initForm(
         $(OrderViewPageMap.cancelProduct.buttons.save).data('cancelLabel'),
-        cancelProductRoute
+        cancelProductRoute,
+        'cancel-product',
     );
     this.hideCancelElements();
     $(OrderViewPageMap.cancelProduct.toggle.cancelProducts).show();
-    $(OrderViewPageMap.cancelProduct.table.actions).hide();
-    $(OrderViewPageMap.cancelProduct.containers.refundCheckboxes).hide();
   }
 }
