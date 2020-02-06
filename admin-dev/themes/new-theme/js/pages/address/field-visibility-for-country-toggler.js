@@ -28,7 +28,8 @@ import Router from '@components/router';
 const $ = window.$;
 
 /**
- * Shows/hides dynamic fields in customer addresses page depending from country address format settings
+ * Shows/hides dynamic fields in customer addresses page
+ * depending from country address format settings
  */
 export default class FieldVisibilityForCountryToggler {
   constructor(countryInputSelector, fieldSelectorsByName) {

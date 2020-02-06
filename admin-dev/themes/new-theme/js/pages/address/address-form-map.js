@@ -38,6 +38,13 @@ export default {
   addressDniInputLabel: 'label[for="customer_address_dni"]',
   addressPostcodeInput: '#customer_address_postcode',
   addressPostcodeInputLabel: 'label[for="customer_address_postcode"]',
+  aliasFieldRow: '.js-alias-row',
+  dniFieldRow: '.js-dni-row',
   companyFieldRow: '.js-company-row',
+  vatNumberFieldRow: '.js-vat-number',
   address2FieldRow: '.js-address2-row',
+  postCodeFieldRow: '.js-post-code-row',
+  phoneFieldRow: '.js-phone-field-row',
+  phoneMobileFieldRow: '.js-phone-mobile-row',
+  otherFieldRow: '.js-other-row',
 };

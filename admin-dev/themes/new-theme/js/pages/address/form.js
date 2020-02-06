@@ -59,7 +59,14 @@ $(() => {
 
   //@todo: still have to add all fields. Handle required *
   new FieldVisibilityForCountryToggler(addressFormMap.addressCountrySelect, {
+    alias: addressFormMap.aliasFieldRow,
+    dni: addressFormMap.dniFieldRow,
     company: addressFormMap.companyFieldRow,
-    address2: addressFormMap.address2FieldRow
+    vat_number: addressFormMap.vatNumberFieldRow,
+    address2: addressFormMap.address2FieldRow,
+    postcode: addressFormMap.postCodeFieldRow,
+    phone: addressFormMap.phoneFieldRow,
+    phone_mobile: addressFormMap.phoneMobileFieldRow,
+    otherFieldRow: addressFormMap.otherFieldRow,
   });
 });

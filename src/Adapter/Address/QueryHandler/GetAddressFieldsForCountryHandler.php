@@ -28,7 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Address\QueryHandler;
 
-use AddressFormat;
+use AddressFormat as LegacyAddressFormat;
 use PrestaShop\PrestaShop\Core\Domain\Address\Query\GetAddressFieldsForCountry;
 use PrestaShop\PrestaShop\Core\Domain\Address\QueryHandler\GetAddressFormatFieldsHandlerInterface;
 
@@ -38,7 +38,7 @@ final class GetAddressFieldsForCountryHandler implements GetAddressFormatFieldsH
     {
         $countryId = $query->getCountryId()->getValue();
 //@todo: clean up.
-        $adr_fields = AddressFormat::getOrderedAddressFields($countryId, true, true);
+        $adr_fields = LegacyAddressFormat::getOrderedAddressFields($countryId, true, true);
 
         $all_fields = [];
         $out = [];
@@ -54,6 +54,6 @@ final class GetAddressFieldsForCountryHandler implements GetAddressFormatFieldsH
             $out[$adr_type . '_all_fields'] = $all_fields;
         }
 
-        return array_unique(array_merge($out['dlv_adr_fields'], AddressFormat::$requireFormFieldsList));
+        return array_unique(array_merge($out['dlv_adr_fields'], LegacyAddressFormat::$requireFormFieldsList));
     }
 }

@@ -34,7 +34,7 @@ use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\ExistingCustomerE
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\NotBlankWhenRequired;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
 use PrestaShop\PrestaShop\Core\Domain\Address\Configuration\AddressConstraint;
-use PrestaShop\PrestaShop\Core\Domain\Address\ValueObject\RequiredFields;
+use PrestaShop\PrestaShop\Core\Domain\Address\ValueObject\AddressFormat;
 use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
 use PrestaShopBundle\Form\Admin\Type\CountryChoiceType;
 use Symfony\Component\Form\AbstractType;
@@ -130,63 +130,11 @@ class CustomerAddressType extends AbstractType
             $builder->add('id_customer', HiddenType::class);
         }
 
-        $builder->add('phone_mobile', TextType::class, [
-            'required' => $this->isRequired('phone_mobile'),
-            'attr' => [
-                'class' => $this->isRequiredForCountry('phone_mobile') ? '' : 'd-none',
-            ],
-            'constraints' => [
-                new NotBlank([
-                    'message' => $this->translator->trans(
-                        'This field cannot be empty', [], 'Admin.Notifications.Error'
-                    ),
-                ]),
-                new CleanHtml(),
-                new TypedRegex([
-                    'type' => TypedRegex::TYPE_PHONE_NUMBER,
-                ]),
-                new Length(
-                    [
-                        'max' => AddressConstraint::MAX_PHONE_LENGTH,
-                        'maxMessage' => $this->translator->trans(
-                            'This field cannot be longer than %limit% characters',
-                            ['%limit%' => AddressConstraint::MAX_PHONE_LENGTH],
-                            'Admin.Notifications.Error'
-                        ),
-                    ]
-                ),
-            ],
-        ])->add('dni', TextType::class, [
-                'required' => $this->isRequired(RequiredFields::REQUIRED_FIELD_DNI),
-                'attr' => [
-                    'class' => $this->isRequiredForCountry('dni') ? '' : 'd-none',
-                ],
-                'empty_data' => '',
-                'constraints' => [
-                    new AddressDniRequired([
-                        'id_country' => $countryId,
-                        'required' => $this->isRequired(RequiredFields::REQUIRED_FIELD_DNI),
-                    ]),
-                    new CleanHtml(),
-                    new TypedRegex([
-                        'type' => TypedRegex::TYPE_DNI_LITE,
-                    ]),
-                    new Length(
-                        [
-                            'max' => AddressConstraint::MAX_DNI_LENGTH,
-                            'maxMessage' => $this->translator->trans(
-                                'This field cannot be longer than %limit% characters',
-                                ['%limit%' => AddressConstraint::MAX_DNI_LENGTH],
-                                'Admin.Notifications.Error'
-                            ),
-                        ]
-                    ),
-                ],
-            ])
+        $builder
             ->add('alias', TextType::class, [
-                'required' => $this->isRequired('alias'),
+                'required' => $this->isRequired(AddressFormat::FIELD_ALIAS),
                 'attr' => [
-                    'class' => $this->isRequiredForCountry('alias') ? '' : 'd-none',
+                    'class' => $this->isRequiredForCountry(AddressFormat::FIELD_ALIAS) ? '' : 'd-none',
                 ],
                 'constraints' => [
                     new CleanHtml(),
@@ -253,15 +201,42 @@ class CustomerAddressType extends AbstractType
                     ),
                 ],
             ])
-            ->add('company', TextType::class, [
-                'required' => $this->isRequired(RequiredFields::REQUIRED_FIELD_COMPANY),
+            ->add('dni', TextType::class, [
+                'required' => $this->isRequired(AddressFormat::FIELD_DNI),
                 'attr' => [
-                    'class' => $this->isRequiredForCountry('company') ? '' : 'd-none',
+                    'class' => $this->isRequiredForCountry(AddressFormat::FIELD_DNI) ? '' : 'd-none',
+                ],
+                'empty_data' => '',
+                'constraints' => [
+                    new AddressDniRequired([
+                        'id_country' => $countryId,
+                        'required' => $this->isRequired(AddressFormat::FIELD_DNI),
+                    ]),
+                    new CleanHtml(),
+                    new TypedRegex([
+                        'type' => TypedRegex::TYPE_DNI_LITE,
+                    ]),
+                    new Length(
+                        [
+                            'max' => AddressConstraint::MAX_DNI_LENGTH,
+                            'maxMessage' => $this->translator->trans(
+                                'This field cannot be longer than %limit% characters',
+                                ['%limit%' => AddressConstraint::MAX_DNI_LENGTH],
+                                'Admin.Notifications.Error'
+                            ),
+                        ]
+                    ),
+                ],
+            ])
+            ->add('company', TextType::class, [
+                'required' => $this->isRequired(AddressFormat::FIELD_COMPANY),
+                'attr' => [
+                    'class' => $this->isRequiredForCountry(AddressFormat::FIELD_COMPANY) ? '' : 'd-none',
                 ],
                 'empty_data' => '',
                 'constraints' => [
                     new NotBlankWhenRequired([
-                        'required' => $this->isRequired(RequiredFields::REQUIRED_FIELD_COMPANY),
+                        'required' => $this->isRequired(AddressFormat::FIELD_COMPANY),
                         'message' => $this->translator->trans(
                             'This field cannot be empty', [], 'Admin.Notifications.Error'
                         ),
@@ -283,14 +258,14 @@ class CustomerAddressType extends AbstractType
                 ],
             ])
             ->add('vat_number', TextType::class, [
-                'required' => $this->isRequired(RequiredFields::REQUIRED_FIELD_VAT_NUMBER),
+                'required' => $this->isRequired(AddressFormat::FIELD_VAT_NUMBER),
                 'attr' => [
-                    'class' => $this->isRequiredForCountry(RequiredFields::REQUIRED_FIELD_VAT_NUMBER) ? '' : 'd-none',
+                    'class' => $this->isRequiredForCountry(AddressFormat::FIELD_VAT_NUMBER) ? '' : 'd-none',
                 ],
                 'empty_data' => '',
                 'constraints' => [
                     new NotBlankWhenRequired([
-                        'required' => $this->isRequired(RequiredFields::REQUIRED_FIELD_VAT_NUMBER),
+                        'required' => $this->isRequired(AddressFormat::FIELD_VAT_NUMBER),
                         'message' => $this->translator->trans(
                             'This field cannot be empty', [], 'Admin.Notifications.Error'
                         ),
@@ -336,14 +311,14 @@ class CustomerAddressType extends AbstractType
                 ],
             ])
             ->add('address2', TextType::class, [
-                'required' => $this->isRequired(RequiredFields::REQUIRED_FIELD_ADDRESS_2),
+                'required' => $this->isRequired(AddressFormat::FIELD_ADDRESS_2),
                 'attr' => [
-                    'class' => $this->isRequiredForCountry(RequiredFields::REQUIRED_FIELD_ADDRESS_2) ? '' : 'd-none',
+                    'class' => $this->isRequiredForCountry(AddressFormat::FIELD_ADDRESS_2) ? '' : 'd-none',
                 ],
                 'empty_data' => '',
                 'constraints' => [
                     new NotBlankWhenRequired([
-                        'required' => $this->isRequired(RequiredFields::REQUIRED_FIELD_ADDRESS_2),
+                        'required' => $this->isRequired(AddressFormat::FIELD_ADDRESS_2),
                         'message' => $this->translator->trans(
                             'This field cannot be empty', [], 'Admin.Notifications.Error'
                         ),
@@ -358,30 +333,6 @@ class CustomerAddressType extends AbstractType
                             'maxMessage' => $this->translator->trans(
                                 'This field cannot be longer than %limit% characters',
                                 ['%limit%' => AddressConstraint::MAX_ADDRESS_LENGTH],
-                                'Admin.Notifications.Error'
-                            ),
-                        ]
-                    ),
-                ],
-            ])
-            ->add('city', TextType::class, [
-                'required' => true,
-                'constraints' => [
-                    new NotBlank([
-                        'message' => $this->translator->trans(
-                            'This field cannot be empty', [], 'Admin.Notifications.Error'
-                        ),
-                    ]),
-                    new CleanHtml(),
-                    new TypedRegex([
-                        'type' => TypedRegex::TYPE_CITY_NAME,
-                    ]),
-                    new Length(
-                        [
-                            'max' => AddressConstraint::MAX_CITY_LENGTH,
-                            'maxMessage' => $this->translator->trans(
-                                'This field cannot be longer than %limit% characters',
-                                ['%limit%' => AddressConstraint::MAX_CITY_LENGTH],
                                 'Admin.Notifications.Error'
                             ),
                         ]
@@ -427,8 +378,6 @@ class CustomerAddressType extends AbstractType
                     ]),
                 ],
             ])
-            //@todo: currently ignoring state requirement in addressFormat of country settings.
-            //  It only checks if Country->contains_state (in statesChoiceProvider), but ignores the format. (I think otherwise its confusing)
             ->add('id_state', ChoiceType::class, [
                 'required' => true,
                 'choices' => $stateChoices,
@@ -441,6 +390,30 @@ class CustomerAddressType extends AbstractType
                     'class' => $hideStates ? 'd-none' : '',
                 ],
             ])
+            ->add('city', TextType::class, [
+                'required' => true,
+                'constraints' => [
+                    new NotBlank([
+                        'message' => $this->translator->trans(
+                            'This field cannot be empty', [], 'Admin.Notifications.Error'
+                        ),
+                    ]),
+                    new CleanHtml(),
+                    new TypedRegex([
+                        'type' => TypedRegex::TYPE_CITY_NAME,
+                    ]),
+                    new Length(
+                        [
+                            'max' => AddressConstraint::MAX_CITY_LENGTH,
+                            'maxMessage' => $this->translator->trans(
+                                'This field cannot be longer than %limit% characters',
+                                ['%limit%' => AddressConstraint::MAX_CITY_LENGTH],
+                                'Admin.Notifications.Error'
+                            ),
+                        ]
+                    ),
+                ],
+            ])
             ->add('phone', TextType::class, [
                 'required' => $this->isRequired(RequiredFields::REQUIRED_FIELD_PHONE),
                 'attr' => [
@@ -450,6 +423,33 @@ class CustomerAddressType extends AbstractType
                 'constraints' => [
                     new NotBlankWhenRequired([
                         'required' => $this->isRequired(RequiredFields::REQUIRED_FIELD_PHONE),
+                        'message' => $this->translator->trans(
+                            'This field cannot be empty', [], 'Admin.Notifications.Error'
+                        ),
+                    ]),
+                    new CleanHtml(),
+                    new TypedRegex([
+                        'type' => TypedRegex::TYPE_PHONE_NUMBER,
+                    ]),
+                    new Length(
+                        [
+                            'max' => AddressConstraint::MAX_PHONE_LENGTH,
+                            'maxMessage' => $this->translator->trans(
+                                'This field cannot be longer than %limit% characters',
+                                ['%limit%' => AddressConstraint::MAX_PHONE_LENGTH],
+                                'Admin.Notifications.Error'
+                            ),
+                        ]
+                    ),
+                ],
+            ])
+            ->add('phone_mobile', TextType::class, [
+                'required' => $this->isRequired('phone_mobile'),
+                'attr' => [
+                    'class' => $this->isRequiredForCountry('phone_mobile') ? '' : 'd-none',
+                ],
+                'constraints' => [
+                    new NotBlank([
                         'message' => $this->translator->trans(
                             'This field cannot be empty', [], 'Admin.Notifications.Error'
                         ),

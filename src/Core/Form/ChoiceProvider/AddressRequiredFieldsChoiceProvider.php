@@ -26,7 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Form\ChoiceProvider;
 
-use PrestaShop\PrestaShop\Core\Domain\Address\ValueObject\RequiredFields;
+use PrestaShop\PrestaShop\Core\Domain\Address\ValueObject\AddressFormat;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 
 /**
@@ -39,6 +39,6 @@ final class AddressRequiredFieldsChoiceProvider implements FormChoiceProviderInt
      */
     public function getChoices()
     {
-        return array_combine(RequiredFields::ALLOWED_REQUIRED_FIELDS, RequiredFields::ALLOWED_REQUIRED_FIELDS);
+        return AddressFormat::getConfigurableRequiredFields();
     }
 }

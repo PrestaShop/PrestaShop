@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Address\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Address\ValueObject\RequiredFields;
+use PrestaShop\PrestaShop\Core\Domain\Address\ValueObject\AddressFormat;
 
 /**
  * Sets required fields for new address when adding
@@ -69,8 +69,8 @@ class SetRequiredFieldsForAddressCommand
         }
 
         foreach ($requiredFields as $requiredField) {
-            if (!in_array($requiredField, RequiredFields::ALLOWED_REQUIRED_FIELDS)) {
-                throw new AddressConstraintException(sprintf('Required field %s is invalid. Allowed fields are: %s', $requiredField, implode(',', RequiredFields::ALLOWED_REQUIRED_FIELDS)), AddressConstraintException::INVALID_FIELDS);
+            if (!in_array($requiredField, AddressFormat::getConfigurableRequiredFields())) {
+                throw new AddressConstraintException(sprintf('Required field %s is invalid. Allowed fields are: %s', $requiredField, implode(',', AddressFormat::getConfigurableRequiredFields())), AddressConstraintException::INVALID_FIELDS);
             }
         }
     }
