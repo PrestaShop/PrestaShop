@@ -483,8 +483,8 @@ class OrderProductForViewing implements JsonSerializable
     }
 
     /**
-    * @return bool
-    */
+     * @return bool
+     */
     public function isAvailableOutOfStock(): bool
     {
         return $this->availableOutOfStock;
