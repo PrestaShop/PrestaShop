@@ -26,7 +26,6 @@
 
 namespace PrestaShopBundle\Command;
 
-use PrestaShopBundle\Routing\Linter\Exception\LinterException;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -58,25 +57,25 @@ final class NamingConventionLinterCommand extends ContainerAwareCommand
         $namingConventionLinter = $this->getContainer()
             ->get('prestashop.bundle.routing.linter.naming_convention_linter');
 
-        $invalidRoutes = [];
-
+        $ioTableheaders = ['Invalid routes', 'Valid routes suggestions'];
+        $ioTableRows = [];
         /** @var Route $route */
         foreach ($adminRouteProvider->getRoutes() as $routeName => $route) {
-            try {
-                $namingConventionLinter->lint($routeName, $route);
-            } catch (LinterException $e) {
-                $invalidRoutes[] = $routeName;
+            $suggestedValidRoute = $namingConventionLinter->lint($routeName, $route);
+            if ($suggestedValidRoute) {
+                $ioTableRows[] = [$routeName, $suggestedValidRoute];
             }
         }
 
         $io = new SymfonyStyle($input, $output);
 
-        if (!empty($invalidRoutes)) {
+        if (!empty($ioTableRows)) {
+            $io->title('PrestaShop routes follow admin_{resources}_{action} naming convention structure');
             $io->warning(sprintf(
                 '%s routes are not following naming conventions:',
-                count($invalidRoutes)
+                count($ioTableRows)
             ));
-            $io->listing($invalidRoutes);
+            $io->table($ioTableheaders, $ioTableRows);
 
             return 1;
         }
