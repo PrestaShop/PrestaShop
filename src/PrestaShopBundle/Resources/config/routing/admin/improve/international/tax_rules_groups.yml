@@ -6,7 +6,11 @@ admin_tax_rules_groups_index:
     _legacy_controller: AdminTaxRulesGroup
 #    _legacy_link: AdminTaxRulesGroup
 
-admin_commons_search_grid:
+# not sure why this route appears in the list of routes that are not following naming conventions
+# linter suggest to change it to: admin_commons_search_grid
+# also some other pages controllers are suggested to be changed to same admin_commons_search_grid
+# however not sure if the legacy controllers routes won't stop working if I do that
+admin_tax_rules_groups_search:
   path: /
   methods: [POST]
   defaults:
