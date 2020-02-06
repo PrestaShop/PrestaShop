@@ -29,6 +29,7 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain;
 use Behat\Gherkin\Node\TableNode;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\CancelOrderProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidCancelProductException;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidOrderStateException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderForViewing;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
@@ -69,10 +70,32 @@ class OrderCancelProductFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Then I should get error that cancel quantity must be strictly positive
+     * @then I should get error that cancel quantity is too high
      */
-    public function assertLastErrorIsInvalidCancelProduct()
+    public function assertLastErrorIsQuantityTooHigh()
     {
-        $this->assertLastErrorIs(InvalidCancelProductException::class);
+        $this->assertLastErrorIs(
+            InvalidCancelProductException::class,
+            InvalidCancelProductException::QUANTITY_TOO_HIGH
+        );
+    }
+
+    /**
+     * @then I should get error that cancel quantity is invalid
+     */
+    public function assertLastErrorIsInvalidQuantity()
+    {
+        $this->assertLastErrorIs(
+            InvalidCancelProductException::class,
+            InvalidCancelProductException::INVALID_QUANTITY
+        );
+    }
+
+    /**
+     * @Then I should get error that the current state of the order is invalid
+     */
+    public function assertLastErrorIsInvalidOrderState()
+    {
+        $this->assertLastErrorIs(InvalidOrderStateException::class);
     }
 }

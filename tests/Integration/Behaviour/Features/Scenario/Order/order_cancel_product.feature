@@ -67,7 +67,7 @@ Feature: Cancel Order Product from Back Office (BO)
       | product_name                | quantity |
       | Mug The best is yet to come | 0        |
       | Mug Today is a good day     | 1        |
-    Then I should get error that cancel quantity is empty
+    Then I should get error that cancel quantity is invalid
 
   @order-cancel-product
   Scenario: Quantity must be positive
@@ -84,4 +84,21 @@ Feature: Cancel Order Product from Back Office (BO)
       | product_name                | quantity |
       | Mug The best is yet to come | 565       |
       | Mug Today is a good day     | 1        |
-    Then I should get error that cancel quantity must be strictly positive
+    Then I should get error that cancel quantity is too high
+
+  @order-cancel-product
+  Scenario: Order should not have invoice
+    Given I add order "bo_order_cancel_product" with the following details:
+      | cart                | dummy_cart                 |
+      | message             | test                       |
+      | payment module name | dummy_payment              |
+      | status              | Payment accepted     |
+    And order "bo_order_cancel_product" should contain 5 products "Mug The best is yet to come"
+    And order "bo_order_cancel_product" should contain 3 products "Mug Today is a good day"
+    And there are 5 less "Mug The best is yet to come" in stock
+    And there are 3 less "Mug Today is a good day" in stock
+    When I do a cancel from order "bo_order_cancel_product" on the following products:
+      | product_name                | quantity |
+      | Mug The best is yet to come | 1       |
+      | Mug Today is a good day     | 1        |
+    Then I should get error that the current state of the order is invalid
