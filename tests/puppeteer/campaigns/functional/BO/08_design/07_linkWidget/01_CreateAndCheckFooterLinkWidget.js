@@ -1,4 +1,7 @@
 require('module-alias/register');
+const testContext = require('@utils/testContext');
+
+const baseContext = 'functional_BO_design_linkWidget_createAndCheckFooterLInkWidget';
 // Using chai
 const {expect} = require('chai');
 const helper = require('@utils/helpers');
@@ -46,6 +49,7 @@ describe('Create footer link widget and check it in FO', async () => {
   loginCommon.loginBO();
 
   it('should go to link Widget page', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'goToLinkWidgetPage', baseContext);
     await this.pageObjects.boBasePage.goToSubMenu(
       this.pageObjects.boBasePage.designParentLink,
       this.pageObjects.boBasePage.linkWidgetLink,
@@ -57,12 +61,14 @@ describe('Create footer link widget and check it in FO', async () => {
 
   describe('Create link widget', async () => {
     it('should go to add new link widget page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToNewLinkWidgetPage', baseContext);
       await this.pageObjects.linkWidgetsPage.goToNewLinkWidgetPage();
       const pageTitle = await this.pageObjects.addLinkWidgetPage.getPageTitle();
       await expect(pageTitle).to.contains(this.pageObjects.addLinkWidgetPage.pageTitle);
     });
 
     it('should create link widget', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'createFooterLInkWidget', baseContext);
       const textResult = await this.pageObjects.addLinkWidgetPage.addLinkWidget(LinkWidgets.demo_1);
       await expect(textResult).to.equal(this.pageObjects.linkWidgetsPage.successfulCreationMessage);
       numberOfLinkWidgetInFooter = await this.pageObjects.linkWidgetsPage.getNumberOfElementInGrid(35);
@@ -72,6 +78,7 @@ describe('Create footer link widget and check it in FO', async () => {
 
   describe('Go to FO and check existence of link Widget created', async () => {
     it('should go to FO and check link widget in home page footer', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkLinkWidgetInFO', baseContext);
       page = await this.pageObjects.linkWidgetsPage.viewMyShop();
       this.pageObjects = await init();
       await this.pageObjects.foBasePage.changeLanguage('en');
@@ -91,6 +98,7 @@ describe('Create footer link widget and check it in FO', async () => {
 
   describe('Delete link widget created', async () => {
     it('should delete link widget created', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'deleteLinkWidget', baseContext);
       const textResult = await this.pageObjects.linkWidgetsPage.deleteLinkWidget(35, numberOfLinkWidgetInFooter);
       await expect(textResult).to.equal(this.pageObjects.linkWidgetsPage.successfulDeleteMessage);
       const numberOfLinkWidgetAfterDelete = await this.pageObjects.linkWidgetsPage.getNumberOfElementInGrid(35);
