@@ -190,7 +190,7 @@ final class CancelOrderProductHandler extends AbstractOrderCommandHandler implem
     private function checkOrderState(Order $order)
     {
         if ($order->hasInvoice() !== false) {
-            throw new InvalidOrderStateException(InvalidOrderStateException::HAS_INVOICE);
+            throw new InvalidOrderStateException(InvalidOrderStateException::UNEXPECTED_INVOICE);
         }
     }
 }

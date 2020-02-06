@@ -40,7 +40,7 @@ class InvalidOrderStateException extends OrderException
     /**
      * Used when the order has an invoice (and it should not)
      */
-    const HAS_INVOICE = 2;
+    const UNEXPECTED_INVOICE = 2;
 
     /**
      * Used when the order has not been delivered (and it should have)

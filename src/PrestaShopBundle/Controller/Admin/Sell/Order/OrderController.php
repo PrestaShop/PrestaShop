@@ -1424,7 +1424,7 @@ class OrderController extends FrameworkBundleAdminController
                 'Admin.Notifications.Error'
             ),
             InvalidOrderStateException::class => [
-                InvalidOrderStateException::HAS_INVOICE => $this->trans(
+                InvalidOrderStateException::UNEXPECTED_INVOICE => $this->trans(
                     'Can not perform product cancellation on an order that already has an invoice.',
                     'Admin.Notifications.Error'
                 ),
