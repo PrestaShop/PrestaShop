@@ -6,6 +6,7 @@ admin_tax_rules_groups_index:
     _legacy_controller: AdminTaxRulesGroup
 #    _legacy_link: AdminTaxRulesGroup
 
+# not sure why this route appears in the list of routes that are not following naming conventions
 admin_tax_rules_groups_search:
   path: /
   methods: [POST]
