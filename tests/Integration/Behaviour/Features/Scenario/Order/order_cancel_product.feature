@@ -53,6 +53,26 @@ Feature: Cancel Order Product from Back Office (BO)
     And there are 1 more "Mug Today is a good day" in stock
 
   @order-cancel-product
+  Scenario: Order status is set to canceled when all products have been cancelled
+    Given I add order "bo_order_cancel_product" with the following details:
+      | cart                | dummy_cart                 |
+      | message             | test                       |
+      | payment module name | dummy_payment              |
+      | status              | Awaiting check payment     |
+    And order "bo_order_cancel_product" should contain 5 products "Mug The best is yet to come"
+    And order "bo_order_cancel_product" should contain 3 products "Mug Today is a good day"
+    And there are 5 less "Mug The best is yet to come" in stock
+    And there are 3 less "Mug Today is a good day" in stock
+    When I do a cancel from order "bo_order_cancel_product" on the following products:
+      | product_name                | quantity |
+      | Mug The best is yet to come | 5        |
+      | Mug Today is a good day     | 3        |
+    Then order "bo_order_cancel_product" should contain 0 products "Mug The best is yet to come"
+    And order "bo_order_cancel_product" should contain 0 products "Mug Today is a good day"
+    And order "bo_order_cancel_product" has status "Canceled"
+
+
+  @order-cancel-product
   Scenario: Quantity is required
     Given I add order "bo_order_cancel_product" with the following details:
       | cart                | dummy_cart                 |
