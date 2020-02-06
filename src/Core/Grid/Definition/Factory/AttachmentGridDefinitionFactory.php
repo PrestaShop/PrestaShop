@@ -132,7 +132,7 @@ final class AttachmentGridDefinitionFactory extends AbstractGridDefinitionFactor
                                 ->setName($this->trans('Edit', [], 'Admin.Actions'))
                                 ->setIcon('edit')
                                 ->setOptions([
-                                    'route' => 'admin_attachment_edit',
+                                    'route' => 'admin_attachments_edit',
                                     'route_param_name' => 'attachmentId',
                                     'route_param_field' => 'id_attachment',
                                 ])

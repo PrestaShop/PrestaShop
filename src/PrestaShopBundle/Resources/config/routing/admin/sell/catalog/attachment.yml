@@ -24,7 +24,7 @@ admin_attachments_create:
     _legacy_controller: AdminAttachments
     _legacy_link: AdminAttachments:addattachment
 
-admin_attachment_edit:
+admin_attachments_edit:
   path: /{attachmentId}/edit
   methods: [GET, POST]
   defaults:

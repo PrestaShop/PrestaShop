@@ -241,7 +241,7 @@ class LegacyUrlConverterTest extends SymfonyIntegrationTestCase
             'admin_attachments_index' => ['/sell/attachments/', 'AdminAttachments'],
             'admin_attachments_filter' => ['/sell/attachments/', 'AdminAttachments', 'submitFilterattachment'],
             'admin_attachments_create' => ['/sell/attachments/new', 'AdminAttachments', 'addattachment'],
-            'admin_attachment_edit' => ['/sell/attachments/42/edit', 'AdminAttachments', 'updateattachment', ['id_attachment' => 42]],
+            'admin_attachments_edit' => ['/sell/attachments/42/edit', 'AdminAttachments', 'updateattachment', ['id_attachment' => 42]],
             'admin_attachment_view' => ['/sell/attachments/42/view', 'AdminAttachments', 'viewattachment', ['id_attachment' => 42]],
             'admin_attachments_delete_bulk' => ['/sell/attachments/delete-bulk', 'AdminAttachments', 'submitBulkdeleteattachment'],
             'admin_attachment_delete' => ['/sell/attachments/42/delete', 'AdminAttachments', 'deleteattachment', ['id_attachment' => 42]],
