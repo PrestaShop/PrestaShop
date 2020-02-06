@@ -1,7 +1,4 @@
 require('module-alias/register');
-const testContext = require('@utils/testContext');
-
-const baseContext = 'functional_BO_advancedParams_team_profiles_CRUDProfile';
 // Using chai
 const {expect} = require('chai');
 const helper = require('@utils/helpers');
@@ -17,6 +14,10 @@ const AddProfilePage = require('@pages/BO/advancedParameters/team/profiles/add')
 const ProductsPage = require('@pages/BO/catalog/products/index');
 const OrdersPage = require('@pages/BO/orders/index');
 const FOBasePage = require('@pages/FO/FObasePage');
+// Test context imports
+const testContext = require('@utils/testContext');
+
+const baseContext = 'functional_BO_advancedParams_team_profiles_CRUDProfile';
 
 let browser;
 let page;
