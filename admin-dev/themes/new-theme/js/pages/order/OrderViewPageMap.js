@@ -153,6 +153,7 @@ export default {
       cell: '.cancel-product-cell',
       header: 'th.cancel-product-element p',
       actions: 'td.cellProductActions, th.product_actions',
+      cellElements: '.cancel-product-cell-elements',
     },
     checkboxes: {
       restock: '#cancel_product_restock',

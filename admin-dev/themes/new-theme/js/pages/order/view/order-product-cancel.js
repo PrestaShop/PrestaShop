@@ -227,9 +227,9 @@ export default class OrderProductCancel {
   }
 
   fillCancelProductQuantityInput(productCheckbox) {
-    const productRow = productCheckbox.closest('tr');
-    const productId = productRow.data('productId');
-    const productQuantity = productRow.data('productQuantity');
+    const productCellElements = $(OrderViewPageMap.cancelProduct.table.cellElements);
+    const productId = productCellElements.data('productId');
+    const productQuantity = productCellElements.data('productQuantity');
     const productQuantityInput = $('#cancel_product_quantity_' + productId);
     if (productCheckbox.is(':checked')) {
       productQuantityInput.val(productQuantity);
