@@ -178,6 +178,13 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                 $this->errors[] = $this->trans('You do not have access to this product.', [], 'Shop.Notifications.Error');
                 $this->setTemplate('errors/forbidden');
             } else {
+                if (!$isAssociatedToProduct && $isPreview) {
+                    header('HTTP/1.1 403 Forbidden');
+                    header('Status: 403 Forbidden');
+                    $this->errors[] = $this->trans('You do not have access to this product.', [], 'Shop.Notifications.Error');
+                    $this->setTemplate('errors/forbidden');
+                }
+
                 if ($isAssociatedToProduct && $isPreview) {
                     $this->adminNotifications['inactive_product'] = [
                         'type' => 'warning',
