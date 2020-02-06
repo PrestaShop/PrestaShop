@@ -1,4 +1,7 @@
 require('module-alias/register');
+const testContext = require('@utils/testContext');
+
+const baseContext = 'functional_BO_advancedParams_team_employees_CRUDEmployee';
 // Using chai
 const {expect} = require('chai');
 const helper = require('@utils/helpers');
@@ -68,6 +71,7 @@ describe('Create, Read, Update and Delete Employee in BO', async () => {
   loginCommon.loginBO();
 
   it('should go to "Advanced parameters>Team" page', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'goToAdvancedParamsPage', baseContext);
     await this.pageObjects.boBasePage.goToSubMenu(
       this.pageObjects.boBasePage.advancedParametersLink,
       this.pageObjects.boBasePage.teamLink,
@@ -78,6 +82,7 @@ describe('Create, Read, Update and Delete Employee in BO', async () => {
   });
 
   it('should reset all filters and get number of employees', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
     numberOfEmployees = await this.pageObjects.employeesPage.resetAndGetNumberOfLines();
     await expect(numberOfEmployees).to.be.above(0);
   });
@@ -85,12 +90,14 @@ describe('Create, Read, Update and Delete Employee in BO', async () => {
   // 1 : Create employee and go to FO to check sign in is OK
   describe('Create employee in BO and check Sign in in BO', async () => {
     it('should go to add new employee page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToNewEmployeePage', baseContext);
       await this.pageObjects.employeesPage.goToAddNewEmployeePage();
       const pageTitle = await this.pageObjects.addEmployeePage.getPageTitle();
       await expect(pageTitle).to.contains(this.pageObjects.addEmployeePage.pageTitleCreate);
     });
 
     it('should create employee and check result', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'createEmployee', baseContext);
       const textResult = await this.pageObjects.addEmployeePage.createEditEmployee(createEmployeeData);
       await expect(textResult).to.equal(this.pageObjects.employeesPage.successfulCreationMessage);
       const numberOfEmployeesAfterCreation = await this.pageObjects.employeesPage.getNumberOfElementInGrid();
@@ -101,6 +108,7 @@ describe('Create, Read, Update and Delete Employee in BO', async () => {
     loginCommon.logoutBO();
 
     it('should sign in with new account and verify the default page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'signInWithCreatedEmployee', baseContext);
       await this.pageObjects.loginPage.login(createEmployeeData.email, createEmployeeData.password);
       const pageTitle = await this.pageObjects.productsPage.getPageTitle();
       await expect(pageTitle).to.contains(this.pageObjects.productsPage.pageTitle);
@@ -116,16 +124,17 @@ describe('Create, Read, Update and Delete Employee in BO', async () => {
     loginCommon.loginBO();
     describe('Update the password and the default page', async () => {
       it('should go to Employees page', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'goToEmployeePageForUpdate', baseContext);
         await this.pageObjects.boBasePage.goToSubMenu(
           this.pageObjects.boBasePage.advancedParametersLink,
           this.pageObjects.boBasePage.teamLink,
         );
-        await this.pageObjects.boBasePage.closeSfToolBar();
         const pageTitle = await this.pageObjects.employeesPage.getPageTitle();
         await expect(pageTitle).to.contains(this.pageObjects.employeesPage.pageTitle);
       });
 
       it('should filter list by email', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'filterForUpdate', baseContext);
         await this.pageObjects.employeesPage.filterEmployees(
           'input',
           'email',
@@ -136,17 +145,20 @@ describe('Create, Read, Update and Delete Employee in BO', async () => {
       });
 
       it('should go to edit employee page', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'goToEditEmployeePage', baseContext);
         await this.pageObjects.employeesPage.goToEditEmployeePage(1);
         const pageTitle = await this.pageObjects.addEmployeePage.getPageTitle();
         await expect(pageTitle).to.contains(this.pageObjects.addEmployeePage.pageTitleEdit);
       });
 
       it('should update the employee account', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'updateEmployee', baseContext);
         const textResult = await this.pageObjects.addEmployeePage.createEditEmployee(firstEditEmployeeData);
         await expect(textResult).to.equal(this.pageObjects.addEmployeePage.successfulUpdateMessage);
       });
 
       it('should click on cancel and verify the new employee\'s number', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'verifyNumberOfEmployeeAfterUpdate', baseContext);
         await this.pageObjects.addEmployeePage.cancel();
         const numberOfEmployeesAfterUpdate = await this.pageObjects.employeesPage.resetAndGetNumberOfLines();
         await expect(numberOfEmployeesAfterUpdate).to.be.equal(numberOfEmployees + 1);
@@ -156,6 +168,7 @@ describe('Create, Read, Update and Delete Employee in BO', async () => {
       loginCommon.logoutBO();
 
       it('should sign in with edited account and verify the default page', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'signInWithUpdatedEmployee', baseContext);
         await this.pageObjects.loginPage.login(firstEditEmployeeData.email, firstEditEmployeeData.password);
         const pageTitle = await this.pageObjects.ordersPage.getPageTitle();
         await expect(pageTitle).to.contains(this.pageObjects.ordersPage.pageTitle);
@@ -169,16 +182,17 @@ describe('Create, Read, Update and Delete Employee in BO', async () => {
       loginCommon.loginBO();
 
       it('should go to Employees page', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'goToEmployeesPageToDisable', baseContext);
         await this.pageObjects.boBasePage.goToSubMenu(
           this.pageObjects.boBasePage.advancedParametersLink,
           this.pageObjects.boBasePage.teamLink,
         );
-        await this.pageObjects.boBasePage.closeSfToolBar();
         const pageTitle = await this.pageObjects.employeesPage.getPageTitle();
         await expect(pageTitle).to.contains(this.pageObjects.employeesPage.pageTitle);
       });
 
       it('should filter list by email', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'filterEmployeesToDisable', baseContext);
         await this.pageObjects.employeesPage.filterEmployees(
           'input',
           'email',
@@ -189,12 +203,14 @@ describe('Create, Read, Update and Delete Employee in BO', async () => {
       });
 
       it('should go to edit employee page', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'goToEditEmployeePageToDisable', baseContext);
         await this.pageObjects.employeesPage.goToEditEmployeePage(1);
         const pageTitle = await this.pageObjects.addEmployeePage.getPageTitle();
         await expect(pageTitle).to.contains(this.pageObjects.addEmployeePage.pageTitleEdit);
       });
 
       it('should disable the employee account', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'disableEmployee', baseContext);
         const textResult = await this.pageObjects.addEmployeePage.createEditEmployee(secondEditEmployeeData);
         await expect(textResult).to.equal(this.pageObjects.addEmployeePage.successfulUpdateMessage);
       });
@@ -203,6 +219,7 @@ describe('Create, Read, Update and Delete Employee in BO', async () => {
       loginCommon.logoutBO();
 
       it('should test sign in with the disabled employee', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'signInWithDisabledEmployee', baseContext);
         await this.pageObjects.loginPage.login(secondEditEmployeeData.email, secondEditEmployeeData.password, false);
         const loginError = await this.pageObjects.loginPage.getLoginError();
         await expect(loginError).to.contains(this.pageObjects.loginPage.loginErrorText);
@@ -216,16 +233,17 @@ describe('Create, Read, Update and Delete Employee in BO', async () => {
     loginCommon.loginBO();
 
     it('should go to Employees page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToEmployeesPageToDelete', baseContext);
       await this.pageObjects.boBasePage.goToSubMenu(
         this.pageObjects.boBasePage.advancedParametersLink,
         this.pageObjects.boBasePage.teamLink,
       );
-      await this.pageObjects.boBasePage.closeSfToolBar();
       const pageTitle = await this.pageObjects.employeesPage.getPageTitle();
       await expect(pageTitle).to.contains(this.pageObjects.employeesPage.pageTitle);
     });
 
     it('should filter list by email', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'filterEmployeesToDelete', baseContext);
       await this.pageObjects.employeesPage.filterEmployees(
         'input',
         'email',
@@ -236,11 +254,13 @@ describe('Create, Read, Update and Delete Employee in BO', async () => {
     });
 
     it('should delete employee', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'deleteEmployee', baseContext);
       const textResult = await this.pageObjects.employeesPage.deleteEmployee(1);
       await expect(textResult).to.equal(this.pageObjects.employeesPage.successfulDeleteMessage);
     });
 
     it('should reset filter and check the number of employees', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'resetAfterDelete', baseContext);
       const numberOfEmployeesAfterDelete = await this.pageObjects.employeesPage.resetAndGetNumberOfLines();
       await expect(numberOfEmployeesAfterDelete).to.be.equal(numberOfEmployees);
     });

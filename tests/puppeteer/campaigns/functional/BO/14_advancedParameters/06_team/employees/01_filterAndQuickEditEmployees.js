@@ -1,4 +1,7 @@
 require('module-alias/register');
+const testContext = require('@utils/testContext');
+
+const baseContext = 'functional_BO_advancedParams_team_employees_filterAndQuickEditEmployees';
 // Using chai
 const {expect} = require('chai');
 const helper = require('@utils/helpers');
@@ -54,6 +57,7 @@ describe('Filter And Quick Edit Employees', async () => {
   loginCommon.loginBO();
 
   it('should go to "Advanced parameters>Team" page', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'goToAdvancedParamsPage', baseContext);
     await this.pageObjects.boBasePage.goToSubMenu(
       this.pageObjects.boBasePage.advancedParametersLink,
       this.pageObjects.boBasePage.teamLink,
@@ -64,6 +68,7 @@ describe('Filter And Quick Edit Employees', async () => {
   });
 
   it('should reset all filters and get number of employees', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
     numberOfEmployees = await this.pageObjects.employeesPage.resetAndGetNumberOfLines();
     await expect(numberOfEmployees).to.be.above(0);
   });
@@ -71,19 +76,62 @@ describe('Filter And Quick Edit Employees', async () => {
   // 1 : Create employee and Filter with all inputs and selects in grid table in BO
   describe('Create employee then filter the table', async () => {
     const tests = [
-      {args: {filterType: 'input', filterBy: 'id_employee', filterValue: 1}},
-      {args: {filterType: 'input', filterBy: 'firstname', filterValue: createEmployeeData.firstName}},
-      {args: {filterType: 'input', filterBy: 'lastname', filterValue: DefaultAccount.lastName}},
-      {args: {filterType: 'input', filterBy: 'email', filterValue: createEmployeeData.email}},
-      {args: {filterType: 'select', filterBy: 'active', filterValue: createEmployeeData.active}, expected: 'clear'},
+      {
+        args:
+          {
+            testIdentifier: 'filterId',
+            filterType: 'input',
+            filterBy: 'id_employee',
+            filterValue: 1,
+          },
+      },
+      {
+        args:
+          {
+            testIdentifier: 'filterFirstName',
+            filterType: 'input',
+            filterBy: 'firstname',
+            filterValue: createEmployeeData.firstName,
+          },
+      },
+      {
+        args:
+          {
+            testIdentifier: 'filterLastName',
+            filterType: 'input',
+            filterBy: 'lastname',
+            filterValue: DefaultAccount.lastName,
+          },
+      },
+      {
+        args:
+          {
+            testIdentifier: 'filterEmail',
+            filterType: 'input',
+            filterBy: 'email',
+            filterValue: createEmployeeData.email,
+          },
+      },
+      {
+        args:
+          {
+            testIdentifier: 'filterActive',
+            filterType: 'select',
+            filterBy: 'active',
+            filterValue: createEmployeeData.active,
+          },
+        expected: 'clear',
+      },
     ];
     it('should go to add new employee page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToNewEmployeePage', baseContext);
       await this.pageObjects.employeesPage.goToAddNewEmployeePage();
       const pageTitle = await this.pageObjects.addEmployeePage.getPageTitle();
       await expect(pageTitle).to.contains(this.pageObjects.addEmployeePage.pageTitleCreate);
     });
 
     it('should create employee', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'createEmployee', baseContext);
       const textResult = await this.pageObjects.addEmployeePage.createEditEmployee(createEmployeeData);
       await expect(textResult).to.equal(this.pageObjects.employeesPage.successfulCreationMessage);
       const numberOfEmployeesAfterCreation = await this.pageObjects.employeesPage.getNumberOfElementInGrid();
@@ -92,6 +140,7 @@ describe('Filter And Quick Edit Employees', async () => {
 
     tests.forEach((test) => {
       it(`should filter by ${test.args.filterBy} '${test.args.filterValue}'`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}`, baseContext);
         await this.pageObjects.employeesPage.filterEmployees(
           test.args.filterType,
           test.args.filterBy,
@@ -110,6 +159,7 @@ describe('Filter And Quick Edit Employees', async () => {
       });
 
       it('should reset all filters', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}Reset`, baseContext);
         const numberOfEmployeesAfterCreation = await this.pageObjects.employeesPage.resetAndGetNumberOfLines();
         await expect(numberOfEmployeesAfterCreation).to.be.above(numberOfEmployees);
       });
@@ -118,6 +168,7 @@ describe('Filter And Quick Edit Employees', async () => {
     // 2 : Editing Employees from grid table
     describe('Quick Edit Employees', async () => {
       it('should filter by Email address', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'filterForQuickEdit', baseContext);
         await this.pageObjects.employeesPage.filterEmployees('input', 'email', createEmployeeData.email);
         const numberOfEmployeesAfterFilter = await this.pageObjects.employeesPage.getNumberOfElementInGrid();
         await expect(numberOfEmployeesAfterFilter).to.be.at.most(numberOfEmployees);
@@ -133,6 +184,12 @@ describe('Filter And Quick Edit Employees', async () => {
       ];
       statuses.forEach((employeeStatus) => {
         it(`should ${employeeStatus.args.status} the employee`, async function () {
+          await testContext.addContextItem(
+            this,
+            'testIdentifier',
+            `${employeeStatus.args.status}Employee`,
+            baseContext,
+          );
           const isActionPerformed = await this.pageObjects.employeesPage.updateToggleColumnValue(
             1,
             employeeStatus.args.enable,
@@ -152,6 +209,7 @@ describe('Filter And Quick Edit Employees', async () => {
     // 3 : Delete employee
     describe('Delete employee', async () => {
       it('should filter list by email', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'filterForDelete', baseContext);
         await this.pageObjects.employeesPage.filterEmployees(
           'input',
           'email',
@@ -162,11 +220,13 @@ describe('Filter And Quick Edit Employees', async () => {
       });
 
       it('should delete employee', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'deleteEmployee', baseContext);
         const textResult = await this.pageObjects.employeesPage.deleteEmployee(1);
         await expect(textResult).to.equal(this.pageObjects.employeesPage.successfulDeleteMessage);
       });
 
       it('should reset filter and check the number of employees', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'resetAfterDelete', baseContext);
         const numberOfEmployeesAfterDelete = await this.pageObjects.employeesPage.resetAndGetNumberOfLines();
         await expect(numberOfEmployeesAfterDelete).to.be.equal(numberOfEmployees);
       });
