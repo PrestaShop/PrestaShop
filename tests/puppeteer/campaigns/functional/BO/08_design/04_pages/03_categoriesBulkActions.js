@@ -113,7 +113,7 @@ describe('Create Categories, Then disable / Enable and Delete with Bulk actions'
     ];
     statuses.forEach((categoryStatus) => {
       it(`should ${categoryStatus.args.status} categories with Bulk Actions and check Result`, async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `${statuses.args.status}Category`, baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', `${categoryStatus.args.status}Category`, baseContext);
         const textResult = await this.pageObjects.pagesPage.changeEnabledColumnBulkActions(
           'cms_page_category',
           categoryStatus.args.enable,
