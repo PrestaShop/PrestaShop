@@ -46,13 +46,10 @@ export default class ProductRenderer {
       return;
     }
 
-    const $productsTableRowTemplate = $($(createOrderMap.productsTableRowTemplate).html());
-    const $productsTableGiftRowTemplate = $($(createOrderMap.productsTableGiftRowTemplate).html());
-
     for (const key in products) {
       const product = products[key];
 
-      const $template = product.gift === true ? $productsTableGiftRowTemplate.clone() : $productsTableRowTemplate.clone();
+      const $template = this.cloneProductTemplate(product);
 
       let customizationId = 0;
 
@@ -174,6 +171,18 @@ export default class ProductRenderer {
   renderStock(stock) {
     $(createOrderMap.inStockCounter).text(stock);
     $(createOrderMap.quantityInput).attr('max', stock);
+  }
+
+  /**
+   * @param product
+   *
+   * @private
+   */
+  cloneProductTemplate(product) {
+    return product.gift === true ?
+      $($(createOrderMap.productsTableGiftRowTemplate).html()).clone() :
+      $($(createOrderMap.productsTableRowTemplate).html()).clone()
+    ;
   }
 
   /**
