@@ -112,21 +112,19 @@
         'label': 'Country'|trans({}, 'Admin.Global'),
       }) }}
 
-      <div class="js-address-state-select{% if addressForm.id_state.vars.choices is empty %} d-none{% endif %}">
-        {{ ps.form_group_row(addressForm.id_state, {}, {
-          'label': 'State'|trans({}, 'Admin.Global'),
-        }) }}
-      </div>
+      {{ ps.form_group_row(addressForm.id_state, {}, {
+        'label': 'State'|trans({}, 'Admin.Global'),
+        'class': 'js-address-state-select',
+        'class': addressForm.id_state.vars.attr.class ~ ' js-address-state-select',
+      }) }}
 
       {{ ps.form_group_row(addressForm.phone, {}, {
         'label': 'Phone'|trans({}, 'Admin.Global')
       }) }}
 
-      {% if addressForm.phone_mobile is defined %}
-        {{ ps.form_group_row(addressForm.phone_mobile, {}, {
-          'label': 'Mobile phone'|trans({}, 'Admin.Global')
-        }) }}
-      {% endif %}
+      {{ ps.form_group_row(addressForm.phone_mobile, {}, {
+        'label': 'Mobile phone'|trans({}, 'Admin.Global')
+      }) }}
 
       {{ ps.form_group_row(addressForm.other, {}, {
         'label': 'Other'|trans({}, 'Admin.Global'),
