@@ -50,7 +50,7 @@ class InvalidOrderStateException extends OrderException
     /**
      * Used when the order has been delivered (and it shouldn't have)
      */
-    const HAS_BEEN_DELIVERED = 4;
+    const UNEXPECTED_DELIVERY = 4;
 
     /**
      * @param int $code
