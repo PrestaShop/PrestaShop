@@ -67,7 +67,7 @@ final class CancellationFormDataHandler implements FormDataHandlerInterface
      */
     public function update($id, array $data)
     {
-        $toBeCanceledProducts = [];
+        $cancelledProducts = [];
         foreach ($data['products'] as $product) {
             if ($data['selected_' . $product->getOrderDetailId()]) {
                 $toBeCanceledProducts[$product->getOrderDetailId()] = $data['quantity_' . $product->getOrderDetailId()];
