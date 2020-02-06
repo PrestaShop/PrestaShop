@@ -45,7 +45,7 @@ class InvalidOrderStateException extends OrderException
     /**
      * Used when the order has not been delivered (and it should have)
      */
-    const HAS_NOT_BEEN_DELIVERED = 3;
+    const DELIVERY_NOT_FOUND = 3;
 
     /**
      * Used when the order has been delivered (and it shouldn't have)
