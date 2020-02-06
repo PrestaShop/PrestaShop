@@ -33,10 +33,11 @@
   <div class="card-body">
     <div class="info-block">
       <div class="row">
+        {% if orderForViewing.customer is not null %}
         <div class="col-md-7">
           <h2 class="mb-0">
             <i class="material-icons">account_box</i>
-            
+
             {{ orderForViewing.customer.gender }}
             {{ orderForViewing.customer.firstName }}
             {{ orderForViewing.customer.lastName }}
@@ -49,8 +50,14 @@
             {{ 'View full details'|trans({}, 'Admin.Actions') }}
           </a>
         </div>
+        {% else %}
+        <div class="col">
+          <h2 class="mb-0">{{ 'Deleted customer'|trans({}, 'Admin.Global') }}</h2>
+        </div>
+        {% endif %}
       </div>
     </div>
+    {% if orderForViewing.customer is not null %}
     <div class="row mt-3">
       <div class="col-md-6">
         <p class="mb-1">
@@ -83,11 +90,13 @@
         </p>
       </div>
     </div>
+    {% endif %}
     <div class="mt-2 info-block">
       <div class="row">
         <div class="col-md-6">
           <div class="row justify-content-between no-gutters">
             <strong>{{ 'Shipping address'|trans({}, 'Admin.Orderscustomers.Feature') }}</strong>
+            {% if orderForViewing.customer is not null %}
             <a class="tooltip-link" href="#" data-toggle="dropdown">
               <i class="material-icons">more_vert</i>
             </a>
@@ -115,6 +124,7 @@
                 {{ 'Change address'|trans({}, 'Admin.Actions') }}
               </a>
             </div>
+            {% endif %}
           </div>
 
           <p class="mb-0">{{ orderForViewing.shippingAddress.fullName }}</p>
@@ -142,6 +152,7 @@
           <div class="row justify-content-between no-gutters">
             <strong>{{ 'Invoice address'|trans({}, 'Admin.Orderscustomers.Feature') }}</strong>
 
+            {% if orderForViewing.customer is not null %}
             <a class="tooltip-link" href="#" data-toggle="dropdown">
               <i class="material-icons">more_vert</i>
             </a>
@@ -169,6 +180,7 @@
                 {{ 'Change address'|trans({}, 'Admin.Actions') }}
               </a>
             </div>
+            {% endif %}
           </div>
 
           <p class="mb-0">{{ orderForViewing.invoiceAddress.fullName }}</p>
@@ -194,6 +206,7 @@
         </div>
       </div>
     </div>
+    {% if orderForViewing.customer is not null %}
     <div class="mt-2 info-block">
       <div class="row">
         <div class="col-md-6">
@@ -240,5 +253,6 @@
         </div>
       </div>
     </div>
+    {% endif %}
   </div>
 </div>
