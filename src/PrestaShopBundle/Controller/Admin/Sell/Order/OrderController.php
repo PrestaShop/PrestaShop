@@ -46,7 +46,6 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Command\UpdateOrderStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\CannotEditDeliveredOrderProductException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\ChangeOrderStatusException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\EmptyProductSelectionException;
-use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidCancelQuantityException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidOrderStateException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidCancelProductException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\NegativePaymentAmountException;
@@ -1390,23 +1389,13 @@ class OrderController extends FrameworkBundleAdminController
             ),
             InvalidCancelProductException::class => [
                 InvalidCancelProductException::INVALID_QUANTITY => $this->trans(
-                    'Please enter a positive quantity to proceed with your refund.',
+                    'Please enter a positive quantity',
                     'Admin.Orderscustomers.Notification'
                 ),
                 InvalidCancelProductException::QUANTITY_TOO_HIGH => $this->trans(
-                    'Please enter a maximum quantity of [1] to proceed with your refund.',
+                    'Please enter a maximum quantity of [1]',
                     'Admin.Orderscustomers.Notification',
                     ['[1]' => $refundableQuantity]
-                ),
-            ],
-            InvalidCancelQuantityException::class => [
-                InvalidCancelQuantityException::EMPTY_QUANTITY => $this->trans(
-                    'You must enter a quantity.',
-                    'Admin.Orderscustomers.Notification'
-                ),
-                InvalidCancelQuantityException::QUANTITY_TOO_HIGH => $this->trans(
-                    'An invalid quantity was selected for this product.',
-                    'Admin.Orderscustomers.Notification'
                 ),
             ],
             InvalidCancelProductException::INVALID_AMOUNT => $this->trans(

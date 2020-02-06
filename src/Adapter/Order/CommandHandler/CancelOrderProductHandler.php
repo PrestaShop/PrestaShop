@@ -36,7 +36,7 @@ use OrderDetail;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\CancelOrderProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler\CancelOrderProductHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\EmptyProductSelectionException;
-use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidCancelQuantityException;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidCancelProductException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidOrderStateException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use StockAvailable;
@@ -86,7 +86,7 @@ final class CancelOrderProductHandler extends AbstractOrderCommandHandler implem
                 }
                 $cancellableQuantity = $orderDetail->product_quantity - $customizationQuantity - $orderDetail->product_quantity_refunded - $orderDetail->product_quantity_return;
                 if ($cancellableQuantity < $cancelQuantity) {
-                    throw new InvalidCancelQuantityException(InvalidCancelQuantityException::QUANTITY_TOO_HIGH, $cancellableQuantity);
+                    throw new InvalidCancelProductException(InvalidCancelProductException::QUANTITY_TOO_HIGH, $cancellableQuantity);
                 }
             }
         }
@@ -101,12 +101,12 @@ final class CancelOrderProductHandler extends AbstractOrderCommandHandler implem
                 $qtyCancelProduct = abs($orderDetails['customizedCancelQuantity'][$id_customization]);
                 $customization_quantity = $customization_quantities[$id_customization];
                 if (!$qtyCancelProduct) {
-                    throw new InvalidCancelQuantityException(InvalidCancelQuantityException::EMPTY_QUANTITY);
+                    throw new InvalidCancelProductException(InvalidCancelProductException::INVALID_QUANTITY);
                 }
                 $cancellableQuantity = $customization_quantity['quantity'] - ($customization_quantity['quantity_refunded'] + $customization_quantity['quantity_returned']);
 
                 if ($qtyCancelProduct > $cancellableQuantity) {
-                    throw new InvalidCancelQuantityException(InvalidCancelQuantityException::QUANTITY_TOO_HIGH, $cancellableQuantity);
+                    throw new InvalidCancelProductException(InvalidCancelProductException::QUANTITY_TOO_HIGH, $cancellableQuantity);
                 }
             }
         }
@@ -179,7 +179,7 @@ final class CancelOrderProductHandler extends AbstractOrderCommandHandler implem
 
         foreach ($command->getCancelledProducts() as $orderDetailId => $quantity) {
             if ((int) $quantity <= 0) {
-                throw new InvalidCancelQuantityException(InvalidCancelQuantityException::EMPTY_QUANTITY);
+                throw new InvalidCancelProductException(InvalidCancelProductException::INVALID_QUANTITY);
             }
         }
     }

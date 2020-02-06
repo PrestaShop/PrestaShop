@@ -28,7 +28,7 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 use Behat\Gherkin\Node\TableNode;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\CancelOrderProductCommand;
-use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidCancelQuantityException;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidCancelProductException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderForViewing;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
@@ -71,8 +71,8 @@ class OrderCancelProductFeatureContext extends AbstractDomainFeatureContext
     /**
      * @Then I should get error that cancel quantity is empty
      */
-    public function assertLastErrorIsEmptyCancelQuantity()
+    public function assertLastErrorIsInvalidCancelProduct()
     {
-        $this->assertLastErrorIs(InvalidCancelQuantityException::class);
+        $this->assertLastErrorIs(InvalidCancelProductException::class);
     }
 }
