@@ -160,7 +160,7 @@ final class EmptyCategoryGridDefinitionFactory extends AbstractGridDefinitionFac
                         'reset_route_params' => [
                             'filterId' => self::GRID_ID,
                         ],
-                        'redirect_route' => 'admin_monitoring_index',
+                        'redirect_route' => 'admin_monitorings_index',
                     ])
                     ->setAssociatedColumn('actions')
             );
