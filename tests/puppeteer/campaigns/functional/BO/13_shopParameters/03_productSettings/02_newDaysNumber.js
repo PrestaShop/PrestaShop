@@ -1,4 +1,7 @@
 require('module-alias/register');
+const testContext = require('@utils/testContext');
+
+const baseContext = 'functional_BO_product_settings_newDaysNumber';
 // Using chai
 const {expect} = require('chai');
 const helper = require('@utils/helpers');
@@ -45,6 +48,7 @@ describe('Test new days number', async () => {
   loginCommon.loginBO();
 
   it('should go to \'Shop parameters > Product Settings\' page', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'goToProductSettingsPage', baseContext);
     await this.pageObjects.boBasePage.goToSubMenu(
       this.pageObjects.boBasePage.shopParametersParentLink,
       this.pageObjects.boBasePage.productSettingsLink,
@@ -55,11 +59,13 @@ describe('Test new days number', async () => {
   });
 
   it('should update Number of days to 0', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'updateNumberOfDays', baseContext);
     const result = await this.pageObjects.productSettingsPage.updateNumberOfDays(0);
     await expect(result).to.contains(this.pageObjects.productSettingsPage.successfulUpdateMessage);
   });
 
   it('should check that there is no new flag in the product miniature in FO', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'firstCheckOfNewFlagInFO', baseContext);
     page = await this.pageObjects.boBasePage.viewMyShop();
     this.pageObjects = await init();
     const isNewFlagVisible = await this.pageObjects.homePage.isNewFlagVisible(1);
@@ -69,11 +75,13 @@ describe('Test new days number', async () => {
   });
 
   it('should go back to the default Number of days value', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'goBackToDefaultNumberOfDays', baseContext);
     const result = await this.pageObjects.productSettingsPage.updateNumberOfDays(20);
     await expect(result).to.contains(this.pageObjects.productSettingsPage.successfulUpdateMessage);
   });
 
   it('should check that there is a new flag in the product miniature in FO', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'secondCheckOfNewFlagInFO', baseContext);
     page = await this.pageObjects.boBasePage.viewMyShop();
     this.pageObjects = await init();
     const isNewFlagVisible = await this.pageObjects.homePage.isNewFlagVisible(1);
