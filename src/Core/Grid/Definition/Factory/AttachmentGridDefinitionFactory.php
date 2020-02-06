@@ -142,7 +142,7 @@ final class AttachmentGridDefinitionFactory extends AbstractGridDefinitionFactor
                                 ->setName($this->trans('View', [], 'Admin.Actions'))
                                 ->setIcon('zoom_in')
                                 ->setOptions([
-                                    'route' => 'admin_attachment_view',
+                                    'route' => 'admin_attachments_view',
                                     'route_param_name' => 'attachmentId',
                                     'route_param_field' => 'id_attachment',
                                 ])
