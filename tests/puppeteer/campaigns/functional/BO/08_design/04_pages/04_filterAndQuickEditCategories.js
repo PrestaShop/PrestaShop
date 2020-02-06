@@ -1,4 +1,7 @@
 require('module-alias/register');
+const testContext = require('@utils/testContext');
+
+const baseContext = 'functional_BO_design_pages_filterAndQuickEditCategories';
 // Using chai
 const {expect} = require('chai');
 const helper = require('@utils/helpers');
@@ -44,6 +47,7 @@ describe('Filter And Quick Edit Categories', async () => {
 
   // Go to Design>Pages page
   it('should go to "Design>Pages" page', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'goToCmsPagesPage', baseContext);
     await this.pageObjects.boBasePage.goToSubMenu(
       this.pageObjects.boBasePage.designParentLink,
       this.pageObjects.boBasePage.pagesLink,
@@ -58,19 +62,22 @@ describe('Filter And Quick Edit Categories', async () => {
     // Create 2 categories
     describe('Create Categories', async () => {
       const categoriesToCreate = [firstCategoryData, secondCategoryData];
-      categoriesToCreate.forEach((categoryToCreate) => {
+      categoriesToCreate.forEach((categoryToCreate, index) => {
         it('should go to add new page category', async function () {
+          await testContext.addContextItem(this, 'testIdentifier', `goToAddCategory${index + 1}`, baseContext);
           await this.pageObjects.pagesPage.goToAddNewPageCategory();
           const pageTitle = await this.pageObjects.addPageCategoryPage.getPageTitle();
           await expect(pageTitle).to.contains(this.pageObjects.addPageCategoryPage.pageTitleCreate);
         });
 
         it('should create category ', async function () {
+          await testContext.addContextItem(this, 'testIdentifier', `createCategory${index + 1}`, baseContext);
           const textResult = await this.pageObjects.addPageCategoryPage.createEditPageCategory(categoryToCreate);
           await expect(textResult).to.equal(this.pageObjects.pagesPage.successfulCreationMessage);
         });
 
         it('should go back to categories list', async function () {
+          await testContext.addContextItem(this, 'testIdentifier', `backToCategories${index + 1}`, baseContext);
           await this.pageObjects.pagesPage.backToList();
           const pageTitle = await this.pageObjects.pagesPage.getPageTitle();
           await expect(pageTitle).to.contains(this.pageObjects.pagesPage.pageTitle);
@@ -84,17 +91,55 @@ describe('Filter And Quick Edit Categories', async () => {
         await expect(numberOfCategories).to.be.above(0);
       });
       const tests = [
-        {args: {filterType: 'input', filterBy: 'id_cms_category', filterValue: 1}},
-        {args: {filterType: 'input', filterBy: 'name', filterValue: firstCategoryData.name}},
-        {args: {filterType: 'input', filterBy: 'description', filterValue: secondCategoryData.description}},
-        {args: {filterType: 'input', filterBy: 'position', filterValue: 5}},
         {
-          args: {filterType: 'select', filterBy: 'active', filterValue: secondCategoryData.displayed},
+          args:
+            {
+              testIdentifier: 'filterIdCategory',
+              filterType: 'input',
+              filterBy: 'id_cms_category',
+              filterValue: 1,
+            },
+        },
+        {
+          args:
+            {
+              testIdentifier: 'filterName',
+              filterType: 'input',
+              filterBy: 'name',
+              filterValue: firstCategoryData.name,
+            },
+        },
+        {
+          args:
+            {
+              testIdentifier: 'filterDescription',
+              filterType: 'input',
+              filterBy: 'description',
+              filterValue: secondCategoryData.description,
+            },
+        },
+        {
+          args: {
+            testIdentifier: 'filterPosition',
+            filterType: 'input',
+            filterBy: 'position',
+            filterValue: 5,
+          },
+        },
+        {
+          args:
+            {
+              testIdentifier: 'filterActive',
+              filterType: 'select',
+              filterBy: 'active',
+              filterValue: secondCategoryData.displayed,
+            },
           expected: 'check',
         },
       ];
       tests.forEach((test) => {
         it(`should filter by ${test.args.filterBy} '${test.args.filterValue}'`, async function () {
+          await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
           await this.pageObjects.pagesPage.filterTable(
             'cms_page_category',
             test.args.filterType,
@@ -120,6 +165,7 @@ describe('Filter And Quick Edit Categories', async () => {
         });
 
         it('should reset all filters', async function () {
+          await testContext.addContextItem(this, 'testIdentifier', `reset_${test.args.testIdentifier}`, baseContext);
           const numberOfCategoriesAfterFilter = await this.pageObjects.pagesPage.resetAndGetNumberOfLines(
             'cms_page_category',
           );
@@ -131,6 +177,7 @@ describe('Filter And Quick Edit Categories', async () => {
     // 2 : Editing Categories from grid table
     describe('Quick Edit Categories', async () => {
       it('should filter by category name', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'filterForBulkActions', baseContext);
         await this.pageObjects.pagesPage.filterTable(
           'cms_page_category',
           'input',
@@ -155,6 +202,7 @@ describe('Filter And Quick Edit Categories', async () => {
       ];
       statuses.forEach((categoryStatus) => {
         it(`should ${categoryStatus.args.status} the category`, async function () {
+          await testContext.addContextItem(this, 'testIdentifier', `bulk${categoryStatus.args.status}`, baseContext);
           const isActionPerformed = await this.pageObjects.pagesPage.updateToggleColumnValue(
             'cms_page_category',
             1,
@@ -171,6 +219,12 @@ describe('Filter And Quick Edit Categories', async () => {
         });
 
         it('should reset all filters', async function () {
+          await testContext.addContextItem(
+            this,
+            'testIdentifier',
+            `resetAfter${categoryStatus.args.status}`,
+            baseContext,
+          );
           const numberOfCategoriesAfterFilter = await this.pageObjects.pagesPage.resetAndGetNumberOfLines(
             'cms_page_category',
           );
@@ -179,6 +233,7 @@ describe('Filter And Quick Edit Categories', async () => {
       });
 
       it('should delete categories with Bulk Actions and check Result', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'bulkDeleteCategories', baseContext);
         const deleteTextResult = await this.pageObjects.pagesPage.deleteWithBulkActions('cms_page_category');
         await expect(deleteTextResult).to.be.equal(this.pageObjects.pagesPage.successfulMultiDeleteMessage);
       });
