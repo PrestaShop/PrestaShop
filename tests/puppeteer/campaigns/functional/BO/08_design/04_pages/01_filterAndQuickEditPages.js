@@ -166,7 +166,7 @@ describe('Filter And Quick Edit Pages', async () => {
     ];
     statuses.forEach((pageStatus) => {
       it(`should ${pageStatus.args.status} the page`, async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}Page`, baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', `${pageStatus.args.status}Page`, baseContext);
         const isActionPerformed = await this.pageObjects.pagesPage.updateToggleColumnValue(
           'cms_page',
           1,
