@@ -36,7 +36,7 @@ admin_attachments_edit:
   requirements:
     attachmentId: \d+
 
-admin_attachment_view:
+admin_attachments_view:
   path: /{attachmentId}/view
   methods: [GET, POST]
   defaults:
