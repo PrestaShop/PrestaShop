@@ -1,7 +1,7 @@
 require('module-alias/register');
 const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_BO_product_settings_newDaysNumber';
+const baseContext = 'functional_BO_productSettings_newDaysNumber';
 // Using chai
 const {expect} = require('chai');
 const helper = require('@utils/helpers');
