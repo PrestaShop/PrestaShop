@@ -27,7 +27,7 @@ const init = async function () {
 /*
 Update new days number to 0
 Check that there is no new products in FO
-Back to the default value
+Go back to the default value
 Check that all products are new in FO
  */
 describe('Test new days number', async () => {
