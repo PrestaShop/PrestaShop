@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\CancelOrderProductCommand;
 
 /**
- * Interface for service that handles issuing partial refund for given order
+ * Interface for service that handles issuing cancel product for given order
  */
 interface CancelOrderProductHandlerInterface
 {
