@@ -85,7 +85,6 @@ final class AddressFormDataProvider implements FormDataProviderInterface
             'phone' => $editableAddress->getHomePhone(),
             'phone_mobile' => $editableAddress->getMobilePhone(),
             'other' => $editableAddress->getOther(),
-            'required_fields' => $editableAddress->getRequiredFields(),
         ];
 
         return $data;
@@ -98,7 +97,6 @@ final class AddressFormDataProvider implements FormDataProviderInterface
     {
         return [
             'id_country' => $this->defaultCountryId,
-            'required_fields' => $this->queryBus->handle(new GetRequiredFieldsForAddress()),
         ];
     }
 }

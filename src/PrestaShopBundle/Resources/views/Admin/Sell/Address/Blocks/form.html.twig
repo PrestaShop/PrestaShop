@@ -122,11 +122,9 @@
         'label': 'Phone'|trans({}, 'Admin.Global')
       }) }}
 
-      {% if addressForm.phone_mobile is defined %}
-        {{ ps.form_group_row(addressForm.phone_mobile, {}, {
-          'label': 'Mobile phone'|trans({}, 'Admin.Global')
-        }) }}
-      {% endif %}
+      {{ ps.form_group_row(addressForm.phone_mobile, {}, {
+        'label': 'Mobile phone'|trans({}, 'Admin.Global')
+      }) }}
 
       {{ ps.form_group_row(addressForm.other, {}, {
         'label': 'Other'|trans({}, 'Admin.Global'),
