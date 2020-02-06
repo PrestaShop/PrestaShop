@@ -183,7 +183,7 @@ class OrderForViewing
      * @param bool $isShipped
      * @param bool $invoiceManagementIsEnabled
      * @param DateTimeImmutable $createdAt
-     * @param OrderCustomerForViewing $customer
+     * @param OrderCustomerForViewing|null $customer
      * @param OrderShippingAddressForViewing $shippingAddress
      * @param OrderInvoiceAddressForViewing $invoiceAddress
      * @param OrderProductsForViewing $products
@@ -212,7 +212,7 @@ class OrderForViewing
         bool $isShipped,
         bool $invoiceManagementIsEnabled,
         DateTimeImmutable $createdAt,
-        OrderCustomerForViewing $customer,
+        ?OrderCustomerForViewing $customer,
         OrderShippingAddressForViewing $shippingAddress,
         OrderInvoiceAddressForViewing $invoiceAddress,
         OrderProductsForViewing $products,
@@ -308,9 +308,9 @@ class OrderForViewing
     }
 
     /**
-     * @return OrderCustomerForViewing
+     * @return OrderCustomerForViewing|null
      */
-    public function getCustomer(): OrderCustomerForViewing
+    public function getCustomer(): ?OrderCustomerForViewing
     {
         return $this->customer;
     }

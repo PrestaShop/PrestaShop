@@ -23,31 +23,13 @@
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 
-<h1 class="d-inline">
-  <strong class="text-muted">#{{ orderForViewing.id }}</strong>
-  <strong>{{ orderForViewing.reference }}</strong>
-</h1>
+{% extends "@PrestaShop/Admin/Common/Grid/Columns/Content/link.html.twig" %}
 
-<p class="lead d-inline">
-  {{ 'from'|trans({}, 'Admin.Global') }}
 
-  {% if orderForViewing.customer is not null %}
-    {{ orderForViewing.customer.firstName }}
-    {{ orderForViewing.customer.lastName }}
-  {% else %}
+{% block link %}
+  {% if record[column.options.disabled_field] %}
     {{ 'Deleted customer'|trans({}, 'Admin.Global') }}
+  {% else %}
+    {{ parent() }}
   {% endif %}
-</p>
-
-<span class="badge rounded badge-dark ml-2 mr-2 font-size-100">
-    {{ orderForViewing.prices.totalAmountFormatted }}
-  </span>
-
-<p class="lead d-inline">
-  {{ orderForViewing.createdAt|date('Y-m-d') }}
-  <span class="text-muted">
-      {{ 'at'|trans({}, 'Admin.Global') }}
-
-    {{ orderForViewing.createdAt|date('H:i:s') }}
-    </span>
-</p>
+{% endblock %}
