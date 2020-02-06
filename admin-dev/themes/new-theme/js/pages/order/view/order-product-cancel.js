@@ -130,10 +130,6 @@ export default class OrderProductCancel {
       }
       this.updateVoucherRefund();
     });
-
-    $(OrderViewPageMap.cancelProduct.inputs.selector).on('change', (event) => {
-      this.fillCancelProductQuantityInput($(event.currentTarget));
-    });
   }
 
   updateAmountInput($productQuantityInput) {
@@ -220,21 +216,9 @@ export default class OrderProductCancel {
         $(OrderViewPageMap.cancelProduct.buttons.save).data('cancelLabel'),
         cancelProductRoute
     );
-    this.hideRefund();
+    this.hideCancelElements();
     $(OrderViewPageMap.cancelProduct.toggle.cancelProducts).show();
     $(OrderViewPageMap.cancelProduct.table.actions).hide();
     $(OrderViewPageMap.cancelProduct.containers.refundCheckboxes).hide();
-  }
-
-  fillCancelProductQuantityInput(productCheckbox) {
-    const productCellElements = $(productCheckbox).closest(OrderViewPageMap.cancelProduct.table.cellElements);
-    const productId = productCellElements.data('productId');
-    const productQuantity = productCellElements.data('productQuantity');
-    const productQuantityInput = $('#cancel_product_quantity_' + productId);
-    if (productCheckbox.is(':checked')) {
-      productQuantityInput.val(productQuantity);
-    } else {
-      productQuantityInput.val(0);
-    }
   }
 }
