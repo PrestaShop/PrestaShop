@@ -21,7 +21,7 @@ Feature: Cancel Order Product from Back Office (BO)
     And I watch the stock of product "Mug Today is a good day"
 
   @order-cancel-product
-  Scenario:
+  Scenario: Cancel product feature has expected behavior
     Given I add order "bo_order_cancel_product" with the following details:
       | cart                | dummy_cart                 |
       | message             | test                       |

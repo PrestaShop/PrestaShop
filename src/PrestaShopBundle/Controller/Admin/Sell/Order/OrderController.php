@@ -363,7 +363,6 @@ class OrderController extends FrameworkBundleAdminController
     {
         /** @var OrderForViewing $orderForViewing */
         $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
-
         $addOrderCartRuleForm = $this->createForm(AddOrderCartRuleType::class, [], [
             'order_id' => $orderId,
         ]);
@@ -1326,6 +1325,8 @@ class OrderController extends FrameworkBundleAdminController
             $result = $formHandler->handleFor($orderId, $form);
             if ($result->isSubmitted() && $result->isValid()) {
                 $this->addFlash('success', $this->trans('The discount was successfully generated.', 'Admin.Catalog.Notification'));
+            } else {
+                $this->addFlashFormErrors($form);
             }
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
