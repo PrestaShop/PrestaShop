@@ -15,7 +15,7 @@ admin_credit_slips_search:
     _legacy_link: AdminSlip:submitFilterorder_slip
 
 # found that it does not follow naming convention by linter
-admin_credit_slips_pdf:
+admin_credit_slips_generate_pdf:
   path: /{creditSlipId}/pdf
   methods: GET
   defaults:
