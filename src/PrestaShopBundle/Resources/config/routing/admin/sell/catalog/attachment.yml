@@ -56,7 +56,7 @@ admin_attachments_delete_bulk:
     _legacy_controller: AdminAttachments
     _legacy_link: AdminAttachments:submitBulkdeleteattachment
 
-admin_attachment_delete:
+admin_attachments_delete:
   path: /{attachmentId}/delete
   methods: [POST]
   defaults:
