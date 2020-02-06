@@ -92,24 +92,22 @@
           </button>
         </div>
       </div>
+      <div class="form-inline d-inline-block form-horizontal ml-2">
+        <div class="input-group">
+          <button class="btn btn-action partial-refund-display" type="button"{% if not orderForViewing.isRefundable() %} disabled{% endif %}>
+            <i class="material-icons">swap_horiz</i>
+            {{ 'Partial refund'|trans({}, 'Admin.Orderscustomers.Feature') }}
+          </button>
+        </div>
+      </div>
+    {% else %}
+      <div class="form-inline d-inline-block form-horizontal ml-2">
+        <div class="input-group">
+          <button class="btn btn-action cancel-product-display" type="button">
+            {{ 'Cancel products'|trans({}, 'Admin.Orderscustomers.Feature') }}
+          </button>
+        </div>
+      </div>
     {% endif %}
-  {% endif %}
-  {% if orderForViewing.hasInvoice() %}
-    <div class="form-inline d-inline-block form-horizontal ml-2">
-      <div class="input-group">
-        <button class="btn btn-action partial-refund-display" type="button"{% if not orderForViewing.isRefundable() %} disabled{% endif %}>
-          <i class="material-icons">swap_horiz</i>
-          {{ 'Partial refund'|trans({}, 'Admin.Orderscustomers.Feature') }}
-        </button>
-      </div>
-    </div>
-  {% elseif merchandiseReturnEnabled %}
-    <div class="form-inline d-inline-block form-horizontal ml-2">
-      <div class="input-group">
-        <button class="btn btn-action cancel-product-display" type="button">
-          {{ 'Cancel products'|trans({}, 'Admin.Orderscustomers.Feature') }}
-        </button>
-      </div>
-    </div>
   {% endif %}
 </div>
