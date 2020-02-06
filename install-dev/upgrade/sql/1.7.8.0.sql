@@ -1,5 +1,5 @@
 SET SESSION sql_mode='';
-SET NAMES 'utf8';
+SET NAMES 'utf8mb4';
 
 INSERT IGNORE INTO `PREFIX_hook` (`id_hook`, `name`, `title`, `description`, `position`) VALUES
   (NULL, 'displayFooterCategory', 'Category footer', 'This hook adds new blocks under the products listing in a category/search', '1'),
