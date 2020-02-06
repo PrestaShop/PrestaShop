@@ -34,7 +34,6 @@ _admin_credit_slips_pdf_by_date:
     _legacy_link: AdminSlip:submitAddorder_slip
     _legacy_controller: AdminSlip
 
-# linter suggest changing to admin_credit_slips_index however the that same route already exist for [GET] method
 admin_credit_slips_process_options:
   path: /
   methods: [POST]

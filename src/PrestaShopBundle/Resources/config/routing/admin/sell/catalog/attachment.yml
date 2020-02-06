@@ -6,8 +6,6 @@ admin_attachments_index:
     _legacy_controller: AdminAttachments
     _legacy_link: AdminAttachments
 
-# not sure why this route is in the list of not following naming convention
-# bin/console prestashop:linter:naming-convention
 admin_attachments_filter:
   path: /
   methods: [POST]
