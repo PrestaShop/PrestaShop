@@ -1,7 +1,7 @@
 require('module-alias/register');
 const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_BO_advancedParams_team_profiles_CRUDProfile';
+const baseContext = 'functional_BO_advancedParams_team_profiles_profileBulkActions';
 // Using chai
 const {expect} = require('chai');
 const helper = require('@utils/helpers');
