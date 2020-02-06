@@ -35,7 +35,7 @@ class InvalidOrderStateException extends OrderException
     /**
      * Used when the order has no invoice (and it should have)
      */
-    const HAS_NO_INVOICE = 1;
+    const INVOICE_NOT_FOUND = 1;
 
     /**
      * Used when the order has an invoice (and it should not)
