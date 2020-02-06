@@ -478,7 +478,8 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
                     $pack_item['location'],
                     null,
                     '',
-                    $packItemType
+                    $packItemType,
+                    (bool) Product::isAvailableWhenOutOfStock($pack_item['out_of_stock'])
                 );
             }
 
