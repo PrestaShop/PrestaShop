@@ -31,6 +31,7 @@ use Configuration;
 use Order;
 use OrderSlip;
 use PHPUnit\Framework\Assert as Assert;
+use PrestaShop\PrestaShop\Core\Domain\Order\Command\CancelOrderProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\IssuePartialRefundCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\IssueReturnProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\IssueStandardRefundCommand;
@@ -223,6 +224,7 @@ class OrderRefundFeatureContext extends AbstractDomainFeatureContext
 
     /**
      * @Then I should get error that refund quantity is invalid
+     * @then I should get error that cancel quantity is invalid
      */
     public function assertLastErrorIsInvalidRefundQuantity()
     {
@@ -234,10 +236,21 @@ class OrderRefundFeatureContext extends AbstractDomainFeatureContext
      */
     public function assertLastErrorIsRefundQuantityTooHigh(int $maxRefund)
     {
-        $this->assertLastErrorIs(InvalidCancelProductException::class, InvalidCancelProductException::QUANTITY_TOO_HIGH);
+        $this->assertLastErrorIsQuantityTooHigh();
         if ($maxRefund !== $this->lastException->getRefundableQuantity()) {
             throw new RuntimeException(sprintf('Invalid refundable quantity in exception, expected %s but got %s', $maxRefund, $this->lastException->getRefundableQuantity()));
         }
+    }
+
+    /**
+     * @then I should get error that cancel quantity is too high
+     */
+    public function assertLastErrorIsQuantityTooHigh()
+    {
+        $this->assertLastErrorIs(
+            InvalidCancelProductException::class,
+            InvalidCancelProductException::QUANTITY_TOO_HIGH
+        );
     }
 
     /**
@@ -447,5 +460,38 @@ class OrderRefundFeatureContext extends AbstractDomainFeatureContext
             $voucherRefundType,
             $voucherRefundAmount
         );
+    }
+
+    /**
+     * @When I do a cancel from order :orderReference on the following products:
+     *
+     * @param string $orderReference
+     * @param TableNode $table
+     */
+    public function cancelOrderProduct(string $orderReference, TableNode $table)
+    {
+        $cancelProductInfos = $table->getColumnsHash();
+        $orderId = SharedStorage::getStorage()->get($orderReference);
+        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing((int) $orderId));
+        $products = $orderForViewing->getProducts()->getProducts();
+        $toBeCanceledProducts = [];
+
+        foreach ($cancelProductInfos as $cancelledProductInfo) {
+            foreach ($products as $product) {
+                if ($product->getName() === $cancelledProductInfo['product_name']) {
+                    $toBeCanceledProducts[$product->getOrderDetailId()] = $cancelledProductInfo['quantity'];
+                }
+            }
+        }
+        try {
+            $command = new CancelOrderProductCommand(
+                $toBeCanceledProducts,
+                $orderForViewing->getId()
+            );
+
+            $this->getCommandBus()->handle($command);
+        } catch (OrderException $e) {
+            $this->lastException = $e;
+        }
     }
 }
