@@ -46,7 +46,7 @@ var PerformancePageUI = {
 
         if(cacheEnabledInput.value === CACHE_ENABLED) {
             for (var i = 0; i < cachingElements.length; i++) {
-                cachingElements[i].style.display = "block";
+                cachingElements[i].style.display = "";
             }
             return;
         }
