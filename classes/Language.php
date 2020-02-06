@@ -40,6 +40,11 @@ class LanguageCore extends ObjectModel implements LanguageInterface
     const SF_LANGUAGE_PACK_URL = 'https://i18n.prestashop.com/translations/%version%/%locale%/%locale%.zip';
     const EMAILS_LANGUAGE_PACK_URL = 'https://i18n.prestashop.com/mails/%version%/%locale%/%locale%.zip';
 
+    /**
+     * Timeout for downloading a translation pack, in seconds
+     */
+    const PACK_DOWNLOAD_TIMEOUT = 20;
+
     public $id;
 
     /** @var string Name */
@@ -1167,7 +1172,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
         if (!is_writable(dirname($file))) {
             // @todo Throw exception
             $errors[] = Context::getContext()->getTranslator()->trans('Server does not have permissions for writing.', [], 'Admin.International.Notification') . ' (' . $file . ')';
-        } elseif ($content = Tools::file_get_contents($url)) {
+        } elseif ($content = Tools::file_get_contents($url, false, null, self::PACK_DOWNLOAD_TIMEOUT)) {
             file_put_contents($file, $content);
         } else {
             $errors[] = Context::getContext()->getTranslator()->trans('Language pack unavailable.', [], 'Admin.International.Notification') . ' ' . $url;
