@@ -14,6 +14,7 @@ module.exports = class Home extends FOBasePage {
     this.allProductLink = '#content a.all-product-link';
     this.totalProducts = '#js-product-list-top .total-products > p';
     this.productPrice = `${this.productArticle} span[aria-label="Price"]`;
+    this.newFlag = `${this.productArticle} .product-flag.new`;
     // Quick View modal
     this.quickViewModalDiv = 'div[id*=\'quickview-modal\']';
     this.quantityWantedInput = `${this.quickViewModalDiv} input#quantity_wanted`;
@@ -100,5 +101,14 @@ module.exports = class Home extends FOBasePage {
    */
   async isPriceVisible(id = 1) {
     return this.elementVisible(this.productPrice.replace('%NUMBER', id), 1000);
+  }
+
+  /**
+   * Check new flag
+   * @param id
+   * @returns {Promise<boolean|true>}
+   */
+  async isNewFlagVisible(id = 1) {
+    return this.elementVisible(this.newFlag.replace('%NUMBER', id), 1000);
   }
 };
