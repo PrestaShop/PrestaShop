@@ -106,14 +106,14 @@
       </tr>
       </thead>
       <tbody>
-        {% for product in orderForViewing.products.products %}
-          {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/product.html.twig' with {
-            'product': product,
-            'productIndex': loop.index,
-            'paginationNum': paginationNum,
-            'isColumnLocationDisplayed': isColumnLocationDisplayed
-          } %}
-        {% endfor %}
+      {% for product in orderForViewing.products.products %}
+        {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/product.html.twig' with {
+          'product': product,
+          'productIndex': loop.index,
+          'paginationNum': paginationNum,
+          'isColumnLocationDisplayed': isColumnLocationDisplayed
+        } %}
+      {% endfor %}
       {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/add_product_row.html.twig' %}
       {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/edit_product_row.html.twig' %}
       </tbody>
