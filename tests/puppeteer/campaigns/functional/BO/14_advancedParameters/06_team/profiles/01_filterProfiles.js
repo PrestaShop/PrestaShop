@@ -1,4 +1,7 @@
 require('module-alias/register');
+const testContext = require('@utils/testContext');
+
+const baseContext = 'functional_BO_advancedParams_team_profiles_filterProfiles';
 // Using chai
 const {expect} = require('chai');
 const helper = require('@utils/helpers');
@@ -48,6 +51,7 @@ describe('Filter profiles', async () => {
   loginCommon.loginBO();
 
   it('should go to "Advanced parameters>Team" page', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'goToAdvancedParamsPage', baseContext);
     await this.pageObjects.boBasePage.goToSubMenu(
       this.pageObjects.boBasePage.advancedParametersLink,
       this.pageObjects.boBasePage.teamLink,
@@ -58,12 +62,14 @@ describe('Filter profiles', async () => {
   });
 
   it('should go to "Profiles" page', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'goToProfilesPage', baseContext);
     await this.pageObjects.employeesPage.goToProfilesPage();
     const pageTitle = await this.pageObjects.profilesPage.getPageTitle();
     await expect(pageTitle).to.contains(this.pageObjects.profilesPage.pageTitle);
   });
 
   it('should reset all filters and get number of profiles', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
     numberOfProfiles = await this.pageObjects.profilesPage.resetAndGetNumberOfLines();
     await expect(numberOfProfiles).to.be.above(0);
   });
@@ -71,11 +77,20 @@ describe('Filter profiles', async () => {
   // 1 : Filter profiles table
   describe('Filter profile in BO', async () => {
     const tests = [
-      {args: {filterType: 'input', filterBy: 'id_profile', filterValue: 4}},
-      {args: {filterType: 'input', filterBy: 'name', filterValue: 'Logistician'}},
+      {
+        args: {
+          testIdentifier: 'filterId', filterType: 'input', filterBy: 'id_profile', filterValue: 4,
+        },
+      },
+      {
+        args: {
+          testIdentifier: 'filterName', filterType: 'input', filterBy: 'name', filterValue: 'Logistician',
+        },
+      },
     ];
     tests.forEach((test) => {
       it(`should filter list by ${test.args.filterBy}`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}`, baseContext);
         await this.pageObjects.profilesPage.filterProfiles(
           test.args.filterType,
           test.args.filterBy,
@@ -90,6 +105,7 @@ describe('Filter profiles', async () => {
       });
 
       it('should reset filter', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}Reset`, baseContext);
         const numberOfProfilesAfterDelete = await this.pageObjects.profilesPage.resetAndGetNumberOfLines();
         await expect(numberOfProfilesAfterDelete).to.be.equal(numberOfProfiles);
       });
