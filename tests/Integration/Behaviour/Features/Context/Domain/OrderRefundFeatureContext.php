@@ -35,7 +35,7 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Command\IssuePartialRefundCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\IssueReturnProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\IssueStandardRefundCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidOrderStateException;
-use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidRefundException;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidCancelProductException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\ReturnProductDisabledException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderForViewing;
@@ -226,7 +226,7 @@ class OrderRefundFeatureContext extends AbstractDomainFeatureContext
      */
     public function assertLastErrorIsInvalidRefundQuantity()
     {
-        $this->assertLastErrorIs(InvalidRefundException::class, InvalidRefundException::INVALID_QUANTITY);
+        $this->assertLastErrorIs(InvalidCancelProductException::class, InvalidCancelProductException::INVALID_QUANTITY);
     }
 
     /**
@@ -234,7 +234,7 @@ class OrderRefundFeatureContext extends AbstractDomainFeatureContext
      */
     public function assertLastErrorIsRefundQuantityTooHigh(int $maxRefund)
     {
-        $this->assertLastErrorIs(InvalidRefundException::class, InvalidRefundException::QUANTITY_TOO_HIGH);
+        $this->assertLastErrorIs(InvalidCancelProductException::class, InvalidCancelProductException::QUANTITY_TOO_HIGH);
         if ($maxRefund !== $this->lastException->getRefundableQuantity()) {
             throw new RuntimeException(sprintf('Invalid refundable quantity in exception, expected %s but got %s', $maxRefund, $this->lastException->getRefundableQuantity()));
         }
@@ -245,7 +245,7 @@ class OrderRefundFeatureContext extends AbstractDomainFeatureContext
      */
     public function assertLastErrorIsInvalidRefundAmount()
     {
-        $this->assertLastErrorIs(InvalidRefundException::class, InvalidRefundException::INVALID_AMOUNT);
+        $this->assertLastErrorIs(InvalidCancelProductException::class, InvalidCancelProductException::INVALID_AMOUNT);
     }
 
     /**
@@ -253,7 +253,7 @@ class OrderRefundFeatureContext extends AbstractDomainFeatureContext
      */
     public function assertLastErrorIsInvalidNoGeneration()
     {
-        $this->assertLastErrorIs(InvalidRefundException::class, InvalidRefundException::NO_GENERATION);
+        $this->assertLastErrorIs(InvalidCancelProductException::class, InvalidCancelProductException::NO_GENERATION);
     }
 
     /**
@@ -261,7 +261,7 @@ class OrderRefundFeatureContext extends AbstractDomainFeatureContext
      */
     public function assertLastErrorIsInvalidNoRefunds()
     {
-        $this->assertLastErrorIs(InvalidRefundException::class, InvalidRefundException::NO_REFUNDS);
+        $this->assertLastErrorIs(InvalidCancelProductException::class, InvalidCancelProductException::NO_REFUNDS);
     }
 
     /**
@@ -291,7 +291,7 @@ class OrderRefundFeatureContext extends AbstractDomainFeatureContext
      *
      * @return IssuePartialRefundCommand
      *
-     * @throws InvalidRefundException
+     * @throws InvalidCancelProductException
      * @throws OrderException
      */
     private function createIssuePartialRefundCommand(
@@ -348,7 +348,7 @@ class OrderRefundFeatureContext extends AbstractDomainFeatureContext
      *
      * @return IssueStandardRefundCommand
      *
-     * @throws InvalidRefundException
+     * @throws InvalidCancelProductException
      * @throws OrderException
      */
     private function createIssueStandardRefundCommand(
@@ -403,7 +403,7 @@ class OrderRefundFeatureContext extends AbstractDomainFeatureContext
      *
      * @return IssueReturnProductCommand
      *
-     * @throws InvalidRefundException
+     * @throws InvalidCancelProductException
      * @throws OrderException
      */
     private function createIssueReturnProductCommand(
