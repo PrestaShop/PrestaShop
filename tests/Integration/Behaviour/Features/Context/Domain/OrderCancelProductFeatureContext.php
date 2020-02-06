@@ -69,7 +69,7 @@ class OrderCancelProductFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Then I should get error that cancel quantity is empty
+     * @Then I should get error that cancel quantity must be strictly positive
      */
     public function assertLastErrorIsInvalidCancelProduct()
     {

@@ -84,4 +84,4 @@ Feature: Cancel Order Product from Back Office (BO)
       | product_name                | quantity |
       | Mug The best is yet to come | 565       |
       | Mug Today is a good day     | 1        |
-    Then I should get error that cancel quantity is empty
+    Then I should get error that cancel quantity must be strictly positive
