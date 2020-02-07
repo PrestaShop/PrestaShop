@@ -125,7 +125,7 @@ export default class AsyncSubmitBulkActionExtension {
     const submitMethod = $submitBtn.data('formMethod');
     const formUrl = $submitBtn.data('formUrl');
 
-    if (!['POST', 'GET', 'DELETE', 'PUT'].includes(submitMethod)) {
+    if (!['POST', 'GET', 'DELETE', 'PUT'].includes(submitMethod.toUpperCase())) {
       return;
     }
 
