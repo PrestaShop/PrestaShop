@@ -463,7 +463,7 @@ class OrderRefundFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @When I do a cancel from order :orderReference on the following products:
+     * @When I cancel the following products from order :orderReference:
      *
      * @param string $orderReference
      * @param TableNode $table
@@ -474,18 +474,18 @@ class OrderRefundFeatureContext extends AbstractDomainFeatureContext
         $orderId = SharedStorage::getStorage()->get($orderReference);
         $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing((int) $orderId));
         $products = $orderForViewing->getProducts()->getProducts();
-        $toBeCanceledProducts = [];
+        $cancelledProducts = [];
 
         foreach ($cancelProductInfos as $cancelledProductInfo) {
             foreach ($products as $product) {
                 if ($product->getName() === $cancelledProductInfo['product_name']) {
-                    $toBeCanceledProducts[$product->getOrderDetailId()] = $cancelledProductInfo['quantity'];
+                    $cancelledProducts[$product->getOrderDetailId()] = $cancelledProductInfo['quantity'];
                 }
             }
         }
         try {
             $command = new CancelOrderProductCommand(
-                $toBeCanceledProducts,
+                $cancelledProducts,
                 $orderForViewing->getId()
             );
 

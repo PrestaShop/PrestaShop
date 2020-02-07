@@ -1415,7 +1415,7 @@ class OrderController extends FrameworkBundleAdminController
                 ),
             ],
             InvalidCancelProductException::INVALID_AMOUNT => $this->trans(
-                'Please enter a positive amount to proceed with your refund.',
+                'Please enter a positive amount.',
                 'Admin.Orderscustomers.Notification'
             ),
             InvalidCancelProductException::NO_REFUNDS => $this->trans(

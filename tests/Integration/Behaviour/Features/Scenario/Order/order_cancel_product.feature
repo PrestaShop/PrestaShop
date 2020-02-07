@@ -31,7 +31,7 @@ Feature: Cancel Order Product from Back Office (BO)
     And order "bo_order_cancel_product" should contain 3 products "Mug Today is a good day"
     And there are 5 less "Mug The best is yet to come" in stock
     And there are 3 less "Mug Today is a good day" in stock
-    When I do a cancel from order "bo_order_cancel_product" on the following products:
+    When I cancel the following products from order "bo_order_cancel_product":
       | product_name                | quantity |
       | Mug The best is yet to come | 2        |
       | Mug Today is a good day     | 1        |
@@ -63,7 +63,7 @@ Feature: Cancel Order Product from Back Office (BO)
     And order "bo_order_cancel_product" should contain 3 products "Mug Today is a good day"
     And there are 5 less "Mug The best is yet to come" in stock
     And there are 3 less "Mug Today is a good day" in stock
-    When I do a cancel from order "bo_order_cancel_product" on the following products:
+    When I cancel the following products from order "bo_order_cancel_product":
       | product_name                | quantity |
       | Mug The best is yet to come | 5        |
       | Mug Today is a good day     | 3        |
@@ -83,7 +83,7 @@ Feature: Cancel Order Product from Back Office (BO)
     And order "bo_order_cancel_product" should contain 3 products "Mug Today is a good day"
     And there are 5 less "Mug The best is yet to come" in stock
     And there are 3 less "Mug Today is a good day" in stock
-    When I do a cancel from order "bo_order_cancel_product" on the following products:
+    When I cancel the following products from order "bo_order_cancel_product":
       | product_name                | quantity |
       | Mug The best is yet to come | 0        |
       | Mug Today is a good day     | 1        |
@@ -100,7 +100,7 @@ Feature: Cancel Order Product from Back Office (BO)
     And order "bo_order_cancel_product" should contain 3 products "Mug Today is a good day"
     And there are 5 less "Mug The best is yet to come" in stock
     And there are 3 less "Mug Today is a good day" in stock
-    When I do a cancel from order "bo_order_cancel_product" on the following products:
+    When I cancel the following products from order "bo_order_cancel_product":
       | product_name                | quantity |
       | Mug The best is yet to come | 565       |
       | Mug Today is a good day     | 1        |
@@ -117,7 +117,7 @@ Feature: Cancel Order Product from Back Office (BO)
     And order "bo_order_cancel_product" should contain 3 products "Mug Today is a good day"
     And there are 5 less "Mug The best is yet to come" in stock
     And there are 3 less "Mug Today is a good day" in stock
-    When I do a cancel from order "bo_order_cancel_product" on the following products:
+    When I cancel the following products from order "bo_order_cancel_product":
       | product_name                | quantity |
       | Mug The best is yet to come | 1       |
       | Mug Today is a good day     | 1        |
