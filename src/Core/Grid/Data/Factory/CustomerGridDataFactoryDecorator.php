@@ -31,6 +31,7 @@ use PrestaShop\PrestaShop\Core\Grid\Record\RecordCollection;
 use PrestaShop\PrestaShop\Core\Grid\Record\RecordCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 use PrestaShop\PrestaShop\Core\Localization\LocaleInterface;
+use PrestaShop\PrestaShop\Core\Util\InternationalizedDomainNameConverter;
 
 /**
  * Class CustomerGridDataFactoryDecorator decorates data from customer doctrine data factory.
@@ -91,6 +92,7 @@ final class CustomerGridDataFactoryDecorator implements GridDataFactoryInterface
     private function applyModifications(RecordCollectionInterface $customers)
     {
         $modifiedCustomers = [];
+        $idn = new InternationalizedDomainNameConverter();
 
         foreach ($customers as $customer) {
             if (empty($customer['social_title'])) {
@@ -111,6 +113,8 @@ final class CustomerGridDataFactoryDecorator implements GridDataFactoryInterface
             if (null === $customer['connect']) {
                 $customer['connect'] = '--';
             }
+
+            $customer['email'] = $idn->emailToUtf8($customer['email']);
 
             $modifiedCustomers[] = $customer;
         }
