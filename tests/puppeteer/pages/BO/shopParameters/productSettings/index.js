@@ -58,6 +58,7 @@ module.exports = class productSettings extends BOBasePage {
   /**
    * Update max size of short description
    * @param size
+   * @returns {Promise<string|*>}
    */
   async UpdateMaxSizeOfSummary(size) {
     await this.setValue(this.maxSizeShortDescriptionInput, size.toString());
