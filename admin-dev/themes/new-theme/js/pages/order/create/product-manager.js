@@ -23,14 +23,14 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-import CartEditor from "@pages/order/create/cart-editor";
-import createOrderMap from "@pages/order/create/create-order-map";
-import eventMap from "@pages/order/create/event-map";
-import { EventEmitter } from "@components/event-emitter";
-import ProductRenderer from "@pages/order/create/product-renderer";
-import Router from "@components/router";
+import CartEditor from '@pages/order/create/cart-editor';
+import createOrderMap from '@pages/order/create/create-order-map';
+import eventMap from '@pages/order/create/event-map';
+import {EventEmitter} from '@components/event-emitter';
+import ProductRenderer from '@pages/order/create/product-renderer';
+import Router from '@components/router';
 
-const { $ } = window;
+const {$} = window;
 
 /**
  * Product component Object for "Create order" page
@@ -49,15 +49,12 @@ export default class ProductManager {
     this.initListeners();
 
     return {
-      search: searchPhrase => this.search(searchPhrase),
-      addProductToCart: cartId =>
-        this.cartEditor.addProduct(cartId, this.getProductData()),
-      removeProductFromCart: (cartId, product) =>
-        this.cartEditor.removeProductFromCart(cartId, product),
-      changeProductPrice: (cartId, customerId, updatedProduct) =>
-        this.cartEditor.changeProductPrice(cartId, customerId, updatedProduct),
-      changeProductQty: (cartId, updatedProduct) =>
-        this.cartEditor.changeProductQty(cartId, updatedProduct)
+      search: (searchPhrase) => this.search(searchPhrase),
+      addProductToCart: (cartId) => this.cartEditor.addProduct(cartId, this.getProductData()),
+      removeProductFromCart: (cartId, product) => this.cartEditor.removeProductFromCart(cartId, product),
+      /* eslint-disable-next-line max-len */
+      changeProductPrice: (cartId, customerId, updatedProduct) => this.cartEditor.changeProductPrice(cartId, customerId, updatedProduct),
+      changeProductQty: (cartId, updatedProduct) => this.cartEditor.changeProductQty(cartId, updatedProduct),
     };
   }
 
@@ -67,11 +64,9 @@ export default class ProductManager {
    * @private
    */
   initListeners() {
-    $(createOrderMap.productSelect).on("change", e =>
-      this.initProductSelect(e)
+    $(createOrderMap.productSelect).on('change', (e) => this.initProductSelect(e),
     );
-    $(createOrderMap.combinationsSelect).on("change", e =>
-      this.initCombinationSelect(e)
+    $(createOrderMap.combinationsSelect).on('change', (e) => this.initCombinationSelect(e),
     );
 
     this.onProductSearch();
@@ -87,7 +82,7 @@ export default class ProductManager {
    * @private
    */
   onProductSearch() {
-    EventEmitter.on(eventMap.productSearched, response => {
+    EventEmitter.on(eventMap.productSearched, (response) => {
       this.products = response.products;
       this.productRenderer.renderSearchResults(this.products);
       this.selectFirstResult();
@@ -101,13 +96,13 @@ export default class ProductManager {
    */
   onAddProductToCart() {
     // on success
-    EventEmitter.on(eventMap.productAddedToCart, cartInfo => {
+    EventEmitter.on(eventMap.productAddedToCart, (cartInfo) => {
       this.productRenderer.cleanCartBlockAlerts();
       EventEmitter.emit(eventMap.cartLoaded, cartInfo);
     });
 
     // on failure
-    EventEmitter.on(eventMap.productAddToCartFailed, errorMessage => {
+    EventEmitter.on(eventMap.productAddToCartFailed, (errorMessage) => {
       this.productRenderer.renderCartBlockErrorAlert(errorMessage);
     });
   }
@@ -118,7 +113,7 @@ export default class ProductManager {
    * @private
    */
   onRemoveProductFromCart() {
-    EventEmitter.on(eventMap.productRemovedFromCart, cartInfo => {
+    EventEmitter.on(eventMap.productRemovedFromCart, (cartInfo) => {
       EventEmitter.emit(eventMap.cartLoaded, cartInfo);
     });
   }
@@ -129,7 +124,7 @@ export default class ProductManager {
    * @private
    */
   onProductPriceChange() {
-    EventEmitter.on(eventMap.productPriceChanged, cartInfo => {
+    EventEmitter.on(eventMap.productPriceChanged, (cartInfo) => {
       this.productRenderer.cleanCartBlockAlerts();
       EventEmitter.emit(eventMap.cartLoaded, cartInfo);
     });
@@ -142,13 +137,13 @@ export default class ProductManager {
    */
   onProductQtyChange() {
     // on success
-    EventEmitter.on(eventMap.productQtyChanged, cartInfo => {
+    EventEmitter.on(eventMap.productQtyChanged, (cartInfo) => {
       this.productRenderer.cleanCartBlockAlerts();
       EventEmitter.emit(eventMap.cartLoaded, cartInfo);
     });
 
     // on failure
-    EventEmitter.on(eventMap.productQtyChangeFailed, e => {
+    EventEmitter.on(eventMap.productQtyChangeFailed, (e) => {
       this.productRenderer.renderCartBlockErrorAlert(e.responseJSON.message);
     });
   }
@@ -163,8 +158,8 @@ export default class ProductManager {
   initProductSelect(event) {
     const productId = Number(
       $(event.currentTarget)
-        .find(":selected")
-        .val()
+        .find(':selected')
+        .val(),
     );
     this.selectProduct(productId);
   }
@@ -179,8 +174,8 @@ export default class ProductManager {
   initCombinationSelect(event) {
     const combinationId = Number(
       $(event.currentTarget)
-        .find(":selected")
-        .val()
+        .find(':selected')
+        .val(),
     );
     this.selectCombination(combinationId);
   }
@@ -200,30 +195,30 @@ export default class ProductManager {
     }
 
     const params = {
-      search_phrase: searchPhrase
+      search_phrase: searchPhrase,
     };
 
     if (
-      $(createOrderMap.cartCurrencySelect).data("selectedCurrencyId") !==
-      undefined
+      $(createOrderMap.cartCurrencySelect).data('selectedCurrencyId')
+      !== undefined
     ) {
       params.currency_id = $(createOrderMap.cartCurrencySelect).data(
-        "selectedCurrencyId"
+        'selectedCurrencyId',
       );
     }
 
     const $searchRequest = $.get(
-      this.router.generate("admin_products_search"),
-      params
+      this.router.generate('admin_products_search'),
+      params,
     );
     this.activeSearchRequest = $searchRequest;
 
     $searchRequest
-      .then(response => {
+      .then((response) => {
         EventEmitter.emit(eventMap.productSearched, response);
       })
-      .catch(response => {
-        if (response.statusText === "abort") {
+      .catch((response) => {
+        if (response.statusText === 'abort') {
           return;
         }
 
@@ -255,7 +250,7 @@ export default class ProductManager {
     this.unsetCombination();
 
     const selectedProduct = Object.values(this.products).find(
-      product => product.productId === productId
+      (product) => product.productId === productId,
     );
     if (selectedProduct) {
       this.selectedProduct = selectedProduct;
@@ -313,10 +308,10 @@ export default class ProductManager {
    */
   getProductData() {
     const $fileInputs = $(createOrderMap.productCustomizationContainer).find(
-      'input[type="file"]'
+      'input[type="file"]',
     );
     const formData = new FormData(
-      document.querySelector(createOrderMap.productAddForm)
+      document.querySelector(createOrderMap.productAddForm),
     );
     const fileSizes = {};
 
@@ -324,14 +319,13 @@ export default class ProductManager {
     // in case formData size exceeds server settings.
     $.each($fileInputs, (key, input) => {
       if (input.files.length !== 0) {
-        fileSizes[$(input).data("customization-field-id")] =
-          input.files[0].size;
+        fileSizes[$(input).data('customization-field-id')] = input.files[0].size;
       }
     });
 
     return {
       product: formData,
-      fileSizes
+      fileSizes,
     };
   }
 }

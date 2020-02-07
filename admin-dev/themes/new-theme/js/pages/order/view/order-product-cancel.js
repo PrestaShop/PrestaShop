@@ -23,11 +23,11 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-import Router from "@components/router";
-import OrderViewPageMap from "@pages/order/OrderViewPageMap";
-import { NumberFormatter } from "@app/cldr";
+import Router from '@components/router';
+import OrderViewPageMap from '@pages/order/OrderViewPageMap';
+import {NumberFormatter} from '@app/cldr';
 
-const { $ } = window;
+const {$} = window;
 
 /**
  * manages all product cancel actions, that includes all refund operations
@@ -36,16 +36,14 @@ export default class OrderProductCancel {
   constructor() {
     this.router = new Router();
     this.cancelProductForm = $(OrderViewPageMap.cancelProduct.form);
-    this.orderId = this.cancelProductForm.data("orderId");
-    this.orderDelivered =
-      parseInt(this.cancelProductForm.data("isDelivered"), 10) === 1;
-    this.isTaxIncluded =
-      parseInt(this.cancelProductForm.data("isTaxIncluded"), 10) === 1;
+    this.orderId = this.cancelProductForm.data('orderId');
+    this.orderDelivered = parseInt(this.cancelProductForm.data('isDelivered'), 10) === 1;
+    this.isTaxIncluded = parseInt(this.cancelProductForm.data('isTaxIncluded'), 10) === 1;
     this.discountsAmount = parseFloat(
-      this.cancelProductForm.data("discountsAmount")
+      this.cancelProductForm.data('discountsAmount'),
     );
     this.currencyFormatter = NumberFormatter.build(
-      this.cancelProductForm.data("priceSpecification")
+      this.cancelProductForm.data('priceSpecification'),
     );
     this.useAmountInputs = true;
     this.listenForInputs();
@@ -57,11 +55,11 @@ export default class OrderProductCancel {
     $(OrderViewPageMap.cancelProduct.toggle.partialRefund).show();
     this.useAmountInputs = true;
     this.initForm(
-      $(OrderViewPageMap.cancelProduct.buttons.save).data("partialRefundLabel"),
-      this.router.generate("admin_orders_partial_refund", {
-        orderId: this.orderId
+      $(OrderViewPageMap.cancelProduct.buttons.save).data('partialRefundLabel'),
+      this.router.generate('admin_orders_partial_refund', {
+        orderId: this.orderId,
       }),
-      "partial-refund"
+      'partial-refund',
     );
   }
 
@@ -72,12 +70,12 @@ export default class OrderProductCancel {
     this.useAmountInputs = false;
     this.initForm(
       $(OrderViewPageMap.cancelProduct.buttons.save).data(
-        "standardRefundLabel"
+        'standardRefundLabel',
       ),
-      this.router.generate("admin_orders_standard_refund", {
-        orderId: this.orderId
+      this.router.generate('admin_orders_standard_refund', {
+        orderId: this.orderId,
       }),
-      "standard-refund"
+      'standard-refund',
     );
   }
 
@@ -87,11 +85,11 @@ export default class OrderProductCancel {
     $(OrderViewPageMap.cancelProduct.toggle.returnProduct).show();
     this.useAmountInputs = false;
     this.initForm(
-      $(OrderViewPageMap.cancelProduct.buttons.save).data("returnProductLabel"),
-      this.router.generate("admin_orders_return_product", {
-        orderId: this.orderId
+      $(OrderViewPageMap.cancelProduct.buttons.save).data('returnProductLabel'),
+      this.router.generate('admin_orders_return_product', {
+        orderId: this.orderId,
       }),
-      "return-product"
+      'return-product',
     );
   }
 
@@ -110,34 +108,34 @@ export default class OrderProductCancel {
   initForm(actionName, formAction, formClass) {
     this.updateVoucherRefund();
 
-    this.cancelProductForm.prop("action", formAction);
+    this.cancelProductForm.prop('action', formAction);
     this.cancelProductForm
-      .removeClass("standard-refund partial-refund return-product")
+      .removeClass('standard-refund partial-refund return-product')
       .addClass(formClass);
     $(OrderViewPageMap.cancelProduct.buttons.save).html(actionName);
     $(OrderViewPageMap.cancelProduct.table.header).html(actionName);
     $(OrderViewPageMap.cancelProduct.checkboxes.restock).prop(
-      "checked",
-      this.orderDelivered
+      'checked',
+      this.orderDelivered,
     );
     $(OrderViewPageMap.cancelProduct.checkboxes.creditSlip).prop(
-      "checked",
-      true
+      'checked',
+      true,
     );
-    $(OrderViewPageMap.cancelProduct.checkboxes.voucher).prop("checked", false);
+    $(OrderViewPageMap.cancelProduct.checkboxes.voucher).prop('checked', false);
   }
 
   listenForInputs() {
     $(document).on(
-      "change",
+      'change',
       OrderViewPageMap.cancelProduct.inputs.quantity,
-      event => {
+      (event) => {
         const $productQuantityInput = $(event.target);
         const $parentCell = $productQuantityInput.parents(
-          OrderViewPageMap.cancelProduct.table.cell
+          OrderViewPageMap.cancelProduct.table.cell,
         );
         const $productAmount = $parentCell.find(
-          OrderViewPageMap.cancelProduct.inputs.amount
+          OrderViewPageMap.cancelProduct.inputs.amount,
         );
         const productQuantity = parseInt($productQuantityInput.val(), 10);
         if (productQuantity <= 0) {
@@ -147,18 +145,17 @@ export default class OrderProductCancel {
           return;
         }
         const priceFieldName = this.isTaxIncluded
-          ? "productPriceTaxIncl"
-          : "productPriceTaxExcl";
+          ? 'productPriceTaxIncl'
+          : 'productPriceTaxExcl';
         const productUnitPrice = parseFloat(
-          $productQuantityInput.data(priceFieldName)
+          $productQuantityInput.data(priceFieldName),
         );
         const amountRefundable = parseFloat(
-          $productQuantityInput.data("amountRefundable")
+          $productQuantityInput.data('amountRefundable'),
         );
-        const guessedAmount =
-          productUnitPrice * productQuantity < amountRefundable
-            ? productUnitPrice * productQuantity
-            : amountRefundable;
+        const guessedAmount = productUnitPrice * productQuantity < amountRefundable
+          ? productUnitPrice * productQuantity
+          : amountRefundable;
         const amountValue = parseFloat($productAmount.val());
 
         if (this.useAmountInputs) {
@@ -166,55 +163,55 @@ export default class OrderProductCancel {
         }
 
         if (
-          $productAmount.val() === "" ||
-          amountValue === 0 ||
-          amountValue > guessedAmount
+          $productAmount.val() === ''
+          || amountValue === 0
+          || amountValue > guessedAmount
         ) {
           $productAmount.val(guessedAmount);
           this.updateVoucherRefund();
         }
-      }
+      },
     );
 
     $(document).on(
-      "change",
+      'change',
       OrderViewPageMap.cancelProduct.inputs.amount,
       () => {
         this.updateVoucherRefund();
-      }
+      },
     );
 
     $(document).on(
-      "change",
+      'change',
       OrderViewPageMap.cancelProduct.inputs.selector,
-      event => {
+      (event) => {
         const $productCheckbox = $(event.target);
         const $parentCell = $productCheckbox.parents(
-          OrderViewPageMap.cancelProduct.table.cell
+          OrderViewPageMap.cancelProduct.table.cell,
         );
         const $productQuantity = $parentCell.find(
-          OrderViewPageMap.cancelProduct.inputs.quantity
+          OrderViewPageMap.cancelProduct.inputs.quantity,
         );
         const refundableQuantity = parseInt(
-          $productQuantity.data("quantityRefundable"),
-          10
+          $productQuantity.data('quantityRefundable'),
+          10,
         );
-        if (!$productCheckbox.is(":checked")) {
+        if (!$productCheckbox.is(':checked')) {
           $productQuantity.val(0);
         } else if (parseInt($productQuantity.val(), 10) === 0) {
           $productQuantity.val(refundableQuantity);
         }
         this.updateVoucherRefund();
-      }
+      },
     );
   }
 
   updateAmountInput($productQuantityInput) {
     const $parentCell = $productQuantityInput.parents(
-      OrderViewPageMap.cancelProduct.table.cell
+      OrderViewPageMap.cancelProduct.table.cell,
     );
     const $productAmount = $parentCell.find(
-      OrderViewPageMap.cancelProduct.inputs.amount
+      OrderViewPageMap.cancelProduct.inputs.amount,
     );
     const productQuantity = parseInt($productQuantityInput.val(), 10);
     if (productQuantity <= 0) {
@@ -224,23 +221,22 @@ export default class OrderProductCancel {
     }
 
     const priceFieldName = this.isTaxIncluded
-      ? "productPriceTaxIncl"
-      : "productPriceTaxExcl";
+      ? 'productPriceTaxIncl'
+      : 'productPriceTaxExcl';
     const productUnitPrice = parseFloat(
-      $productQuantityInput.data(priceFieldName)
+      $productQuantityInput.data(priceFieldName),
     );
     const amountRefundable = parseFloat(
-      $productQuantityInput.data("amountRefundable")
+      $productQuantityInput.data('amountRefundable'),
     );
-    const guessedAmount =
-      productUnitPrice * productQuantity < amountRefundable
-        ? productUnitPrice * productQuantity
-        : amountRefundable;
+    const guessedAmount = productUnitPrice * productQuantity < amountRefundable
+      ? productUnitPrice * productQuantity
+      : amountRefundable;
     const amountValue = parseFloat($productAmount.val());
     if (
-      $productAmount.val() === "" ||
-      amountValue === 0 ||
-      amountValue > guessedAmount
+      $productAmount.val() === ''
+      || amountValue === 0
+      || amountValue > guessedAmount
     ) {
       $productAmount.val(guessedAmount);
     }
@@ -259,14 +255,14 @@ export default class OrderProductCancel {
         (index, quantity) => {
           const $quantityInput = $(quantity);
           const priceFieldName = this.isTaxIncluded
-            ? "productPriceTaxIncl"
-            : "productPriceTaxExcl";
+            ? 'productPriceTaxIncl'
+            : 'productPriceTaxExcl';
           const productUnitPrice = parseFloat(
-            $quantityInput.data(priceFieldName)
+            $quantityInput.data(priceFieldName),
           );
           const productQuantity = parseInt($quantityInput.val(), 10);
           totalAmount += productQuantity * productUnitPrice;
-        }
+        },
       );
     }
 
@@ -278,47 +274,47 @@ export default class OrderProductCancel {
 
     this.updateVoucherRefundTypeLabel(
       $(OrderViewPageMap.cancelProduct.radios.voucherRefundType.productPrices),
-      refundAmount
+      refundAmount,
     );
     const refundVoucherExcluded = refundAmount - this.discountsAmount;
     this.updateVoucherRefundTypeLabel(
       $(
         OrderViewPageMap.cancelProduct.radios.voucherRefundType
-          .productPricesVoucherExcluded
+          .productPricesVoucherExcluded,
       ),
-      refundVoucherExcluded
+      refundVoucherExcluded,
     );
 
     // Disable voucher excluded option when the voucher amount is too high
     if (refundVoucherExcluded < 0) {
       $(
         OrderViewPageMap.cancelProduct.radios.voucherRefundType
-          .productPricesVoucherExcluded
+          .productPricesVoucherExcluded,
       )
-        .prop("checked", false)
-        .prop("disabled", true);
+        .prop('checked', false)
+        .prop('disabled', true);
       $(
-        OrderViewPageMap.cancelProduct.radios.voucherRefundType.productPrices
-      ).prop("checked", true);
+        OrderViewPageMap.cancelProduct.radios.voucherRefundType.productPrices,
+      ).prop('checked', true);
       $(
         OrderViewPageMap.cancelProduct.radios.voucherRefundType
-          .negativeErrorMessage
+          .negativeErrorMessage,
       ).show();
     } else {
       $(
         OrderViewPageMap.cancelProduct.radios.voucherRefundType
-          .productPricesVoucherExcluded
-      ).prop("disabled", false);
+          .productPricesVoucherExcluded,
+      ).prop('disabled', false);
       $(
         OrderViewPageMap.cancelProduct.radios.voucherRefundType
-          .negativeErrorMessage
+          .negativeErrorMessage,
       ).hide();
     }
   }
 
   updateVoucherRefundTypeLabel($input, refundAmount) {
-    const defaultLabel = $input.data("defaultLabel");
-    const $label = $input.parents("label");
+    const defaultLabel = $input.data('defaultLabel');
+    const $label = $input.parents('label');
     const formattedAmount = this.currencyFormatter.format(refundAmount);
 
     // Change the ending text part only to avoid removing the input (the EOL is on purpose for better display)
