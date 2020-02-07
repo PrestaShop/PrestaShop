@@ -1,7 +1,7 @@
 require('module-alias/register');
 const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_BO_modules_productSettings_maxSizeShortDescription';
+const baseContext = 'functional_BO_modules_ShopParameters_productSettings_maxSizeShortDescription';
 // Using chai
 const {expect} = require('chai');
 const helper = require('@utils/helpers');
