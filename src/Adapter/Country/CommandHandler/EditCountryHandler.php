@@ -43,6 +43,7 @@ final class EditCountryHandler extends AbstractCountryHandler implements EditCou
 {
     /**
      * {@inheritdoc}
+     *
      * @param EditCountryCommand $command
      *
      * @throws CannotUpdateAddressFormatException
