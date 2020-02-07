@@ -40,8 +40,6 @@ class CountryId
 
     /**
      * @param int $id
-     *
-     * @throws CountryConstraintException
      */
     public function __construct(int $id)
     {

@@ -24,9 +24,10 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+declare(strict_types=1);
+
 namespace PrestaShop\PrestaShop\Core\Domain\Country\Command;
 
-use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
 use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryZipCodeFormat;
 
@@ -106,7 +107,7 @@ class EditCountryCommand
     private $shopAssociation;
 
     /**
-     * @param string $countryId
+     * @param int $countryId
      * @param array $localisedNames
      * @param string $isoCode
      * @param int $callPrefix
@@ -118,11 +119,9 @@ class EditCountryCommand
      * @param bool $needIdNumber
      * @param bool $displayTaxLabel
      * @param int $defaultCurrency
-     *
-     * @throws CountryConstraintException
      */
     public function __construct(
-        string $countryId,
+        int $countryId,
         array $localisedNames,
         string $isoCode,
         int $callPrefix,
@@ -265,10 +264,8 @@ class EditCountryCommand
      * @param string $zipCodeFormat
      *
      * @return EditCountryCommand
-     *
-     * @throws CountryConstraintException
      */
-    public function setZipCodeFormat(string $zipCodeFormat): EditCountryCommand
+    public function setZipCodeFormat(string $zipCodeFormat): self
     {
         $this->zipCodeFormat = new CountryZipCodeFormat($zipCodeFormat);
 
@@ -280,7 +277,7 @@ class EditCountryCommand
      *
      * @return EditCountryCommand
      */
-    public function setShopAssociation(array $shopAssociation): EditCountryCommand
+    public function setShopAssociation(array $shopAssociation): self
     {
         $this->shopAssociation = $shopAssociation;
 
