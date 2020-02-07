@@ -105,7 +105,7 @@
   {% endif %}
   <td class="text-right cancel-product-element">
     <div class="cancel-product-cell cancel-product-element{% if product.refundable == false %} hidden{% endif %}">
-      <div class="cancel-product-cell-elements" data-product-id="{{ product.orderDetailId }}" data-product-quantity="{{ product.quantity }}">
+      <div class="cancel-product-cell-elements">
         <div class="cancel-product-selector form-group">
           {{ form_widget(cancelProductForm['selected_' ~ product.orderDetailId]) }}
         </div>
