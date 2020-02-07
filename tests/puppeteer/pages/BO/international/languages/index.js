@@ -30,7 +30,7 @@ module.exports = class Languages extends LocalizationBasePage {
     this.dropdownToggleMenu = `${this.actionsColumn} div.dropdown-menu`;
     this.deleteRowLink = `${this.dropdownToggleMenu} a[data-url*='/delete']`;
     // Bulk Actions
-    this.selectAllRowsLabel = `${this.gridPanel} .md-checkbox label`;
+    this.selectAllRowsLabel = `${this.gridPanel} tr.column-filters .md-checkbox i`;
     this.bulkActionsToggleButton = `${this.gridPanel} button.js-bulk-actions-btn`;
     this.bulkActionsEnableButton = '#language_grid_bulk_action_enable_selection';
     this.bulkActionsDisableButton = '#language_grid_bulk_action_disable_selection';

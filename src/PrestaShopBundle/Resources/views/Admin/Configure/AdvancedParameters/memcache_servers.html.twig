@@ -36,31 +36,7 @@
 </div>
 
 <div id="server-form" class="collapse">
-    <div class="form-group row">
-        <label class="form-control-label">{{ 'IP Address'|trans }}</label>
-        <div class="col-sm">
-          {{ form_errors(form.memcache_ip) }}
-          {{ form_widget(form.memcache_ip) }}
-        </div>
-    </div>
-
-    <div class="form-group row">
-        <label class="form-control-label">{{ 'Port'|trans }}</label>
-        <div class="col-sm">
-          {{ form_errors(form.memcache_port) }}
-          {{ form_widget(form.memcache_port) }}
-        </div>
-    </div>
-
-    <div class="form-group row">
-        <label class="form-control-label">{{ 'Weight'|trans }}</label>
-        <div class="col-sm">
-          {{ form_errors(form.memcache_weight) }}
-          {{ form_widget(form.memcache_weight) }}
-        </div>
-    </div>
-
-    {{ form_rest(form) }}
+    {{ form_widget(form) }}
 
     <div class="form-group">
         <div class="float-right">

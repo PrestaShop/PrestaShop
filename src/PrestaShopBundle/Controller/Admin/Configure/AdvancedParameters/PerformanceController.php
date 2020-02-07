@@ -29,10 +29,10 @@ namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Responsible of "Configure > Advanced Parameters > Performance" page display.
@@ -44,14 +44,13 @@ class PerformanceController extends FrameworkBundleAdminController
     /**
      * Displays the Performance main page.
      *
-     * @Template("@PrestaShop/Admin/Configure/AdvancedParameters/performance.html.twig")
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message="Access denied.")
      *
      * @param FormInterface $form
      *
-     * @return array
+     * @return Response
      */
-    public function indexAction(FormInterface $form = null)
+    public function indexAction(FormInterface $form = null): Response
     {
         $toolbarButtons = [
             'clear_cache' => [
@@ -63,7 +62,7 @@ class PerformanceController extends FrameworkBundleAdminController
 
         $form = null === $form ? $this->get('prestashop.adapter.performance.form_handler')->getForm() : $form;
 
-        return [
+        return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/performance.html.twig', [
             'layoutHeaderToolbarBtn' => $toolbarButtons,
             'layoutTitle' => $this->trans('Performance', 'Admin.Navigation.Menu'),
             'requireAddonsSearch' => true,
@@ -74,7 +73,7 @@ class PerformanceController extends FrameworkBundleAdminController
             'requireFilterStatus' => false,
             'form' => $form->createView(),
             'servers' => $this->get('prestashop.adapter.memcache_server.manager')->getServers(),
-        ];
+        ]);
     }
 
     /**

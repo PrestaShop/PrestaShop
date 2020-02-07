@@ -26,7 +26,7 @@ module.exports = class Contacts extends BOBasePage {
     this.listTableEditLink = `${this.contactsListTableActionsColumn} a[href*='edit']`;
     this.deleteRowLink = `${this.contactsListTableActionsColumn} a[data-method='POST']`;
     // Bulk Actions
-    this.selectAllRowsLabel = `${this.contactsGridPanel} .md-checkbox label`;
+    this.selectAllRowsLabel = `${this.contactsGridPanel} tr.column-filters .md-checkbox i`;
     this.bulkActionsToggleButton = `${this.contactsGridPanel} button.js-bulk-actions-btn`;
     this.bulkActionsDeleteButton = '#contact_grid_bulk_action_delete_all';
   }
