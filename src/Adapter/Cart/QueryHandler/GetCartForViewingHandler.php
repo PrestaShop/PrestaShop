@@ -156,7 +156,7 @@ final class GetCartForViewingHandler implements GetCartForViewingHandlerInterfac
             'first_name' => $customer->firstname,
             'last_name' => $customer->lastname,
             'gender' => $gender->name,
-            'email' => $customer->email,
+            'email' => $customer->getEmailForDisplay(),
             'registration_date' => (new DateTime($customer->date_add))->format($context->language->date_format_lite),
             'valid_orders_count' => $customerStats['nb_orders'],
             'total_spent_since_registration' => $this->locale->formatPrice(
