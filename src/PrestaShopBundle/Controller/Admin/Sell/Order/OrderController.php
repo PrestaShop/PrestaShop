@@ -1435,7 +1435,19 @@ class OrderController extends FrameworkBundleAdminController
             ),
             InvalidOrderStateException::class => [
                 InvalidOrderStateException::UNEXPECTED_INVOICE => $this->trans(
-                    'Can not perform product cancellation on an order that already has an invoice.',
+                    'Can not proceed on an order that already has an invoice.',
+                    'Admin.Notifications.Error'
+                ),
+                InvalidOrderStateException::DELIVERY_NOT_FOUND => $this->trans(
+                    'Can not proceed on an order that has not been delivered.',
+                    'Admin.Notifications.Error'
+                ),
+                InvalidOrderStateException::UNEXPECTED_DELIVERY => $this->trans(
+                    'Can not proceed on an order that has already been delivered.',
+                    'Admin.Notifications.Error'
+                ),
+                InvalidOrderStateException::INVOICE_NOT_FOUND => $this->trans(
+                    'Can not proceed on an order that has no invoice.',
                     'Admin.Notifications.Error'
                 ),
             ],
