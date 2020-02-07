@@ -34,7 +34,7 @@ final class ColorBrightnessCalculator
     /**
      * Minimum color value after which it's considered bright
      */
-    const BRIGHT_COLOR_MIN = 129;
+    const BRIGHT_COLOR_MIN = 130;
 
     /**
      * @param string $hexColor
