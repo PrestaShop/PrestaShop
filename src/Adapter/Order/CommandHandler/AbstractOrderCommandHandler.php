@@ -64,7 +64,7 @@ abstract class AbstractOrderCommandHandler extends AbstractOrderHandler
             (int) $orderDetail->id_shop
         );
 
-        $orderDetail->product_quantity_reinjected = $quantityToReinject;
+        $orderDetail->product_quantity_reinjected += $quantityToReinject;
         if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT')
             && $product->advanced_stock_management
             && $orderDetail->id_warehouse != 0
@@ -77,13 +77,11 @@ abstract class AbstractOrderCommandHandler extends AbstractOrderHandler
                 $quantityToReinject
             );
 
-            $leftToReinject = $quantityToReinject;
             foreach ($movements as $movement) {
-                if ($leftToReinject > $movement['physical_quantity']) {
+                if ($quantityToReinject > $movement['physical_quantity']) {
                     $quantityToReinject = $movement['physical_quantity'];
                 }
 
-                $leftToReinject -= $quantityToReinject;
                 if (Pack::isPack((int) $product->id)) {
                     // Gets items
                     if ($product->pack_stock_type == Pack::STOCK_TYPE_PRODUCTS_ONLY

@@ -492,6 +492,70 @@ class OrderController extends FrameworkBundleAdminController
         ]);
     }
 
+    /***
+     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))")
+     *
+     * @param int $orderId
+     * @param Request $request
+     * @return RedirectResponse
+     */
+    public function standardRefundAction(int $orderId, Request $request)
+    {
+        $formBuilder = $this->get('prestashop.core.form.identifiable_object.builder.cancel_product_form_builder');
+        $formHandler = $this->get('prestashop.core.form.identifiable_object.standard_refund_form_handler');
+        $form = $formBuilder->getFormFor($orderId);
+
+        try {
+            $form->handleRequest($request);
+            $result = $formHandler->handleFor($orderId, $form);
+            if ($result->isSubmitted()) {
+                if ($result->isValid()) {
+                    $this->addFlash('success', $this->trans('A standard refund was successfully created.', 'Admin.Orderscustomers.Notification'));
+                } else {
+                    $this->addFlashFormErrors($form);
+                }
+            }
+        } catch (Exception $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+        }
+
+        return $this->redirectToRoute('admin_orders_view', [
+            'orderId' => $orderId,
+        ]);
+    }
+
+    /***
+     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))")
+     *
+     * @param int $orderId
+     * @param Request $request
+     * @return RedirectResponse
+     */
+    public function returnProductAction(int $orderId, Request $request)
+    {
+        $formBuilder = $this->get('prestashop.core.form.identifiable_object.builder.cancel_product_form_builder');
+        $formHandler = $this->get('prestashop.core.form.identifiable_object.return_product_form_handler');
+        $form = $formBuilder->getFormFor($orderId);
+
+        try {
+            $form->handleRequest($request);
+            $result = $formHandler->handleFor($orderId, $form);
+            if ($result->isSubmitted()) {
+                if ($result->isValid()) {
+                    $this->addFlash('success', $this->trans('A return product was successfully created.', 'Admin.Orderscustomers.Notification'));
+                } else {
+                    $this->addFlashFormErrors($form);
+                }
+            }
+        } catch (Exception $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+        }
+
+        return $this->redirectToRoute('admin_orders_view', [
+            'orderId' => $orderId,
+        ]);
+    }
+
     /**
      * @param OrderForViewing $orderForViewing
      */

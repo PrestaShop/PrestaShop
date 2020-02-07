@@ -259,6 +259,11 @@ export default class OrderViewPage {
       this.orderProductCancel.showStandardRefund();
     });
 
+    $(OrderViewPageMap.cancelProduct.buttons.returnProduct).on('click', () => {
+      this.orderProductRenderer.moveProductsPanelToRefundPosition();
+      this.orderProductCancel.showReturnProduct();
+    });
+
     $(OrderViewPageMap.cancelProduct.buttons.abort).on('click', () => {
       this.orderProductRenderer.moveProductPanelToOriginalPosition();
       this.orderProductCancel.hideRefund();

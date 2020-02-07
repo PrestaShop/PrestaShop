@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -29,35 +29,32 @@ namespace PrestaShop\PrestaShop\Core\Domain\Order\Command;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidRefundException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderDetailRefund;
-use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
 
 /**
- * Issues partial refund for given order.
+ * Issues standard refund for given order.
  */
-class IssuePartialRefundCommand extends AbstractRefundCommand
+class IssueStandardRefundCommand extends AbstractRefundCommand
 {
     /**
-     * @var float
+     * @var bool
      */
-    private $shippingCostRefundAmount;
+    protected $refundShippingCost;
 
     /**
      * The expected format for $orderDetailRefunds is an associative array indexed
-     * by OrderDetail id containing two fields amount and quantity
+     * by OrderDetail id containing one fields quantity
      *
      * ex: $orderDetailRefunds = [
      *      {orderId} => [
      *          'quantity' => 2,
-     *          'amount' => 23.56,
      *      ],
      * ];
      *
      * @param int $orderId
      * @param array $orderDetailRefunds
-     * @param float $shippingCostRefundAmount
-     * @param bool $restockRefundedProducts
-     * @param bool $generateVoucher
+     * @param bool $refundShippingCost
      * @param bool $generateCreditSlip
+     * @param bool $generateVoucher
      * @param int $voucherRefundType
      * @param float|null $voucherRefundAmount
      *
@@ -67,8 +64,7 @@ class IssuePartialRefundCommand extends AbstractRefundCommand
     public function __construct(
         int $orderId,
         array $orderDetailRefunds,
-        float $shippingCostRefundAmount,
-        bool $restockRefundedProducts,
+        bool $refundShippingCost,
         bool $generateCreditSlip,
         bool $generateVoucher,
         int $voucherRefundType,
@@ -77,21 +73,21 @@ class IssuePartialRefundCommand extends AbstractRefundCommand
         parent::__construct(
             $orderId,
             $orderDetailRefunds,
-            $restockRefundedProducts,
+            true,
             $generateCreditSlip,
             $generateVoucher,
             $voucherRefundType,
             $voucherRefundAmount
         );
-        $this->shippingCostRefundAmount = $shippingCostRefundAmount;
+        $this->refundShippingCost = $refundShippingCost;
     }
 
     /**
-     * @return float
+     * @return bool
      */
-    public function getShippingCostRefundAmount(): float
+    public function refundShippingCost(): bool
     {
-        return $this->shippingCostRefundAmount;
+        return $this->refundShippingCost;
     }
 
     /**
@@ -101,10 +97,9 @@ class IssuePartialRefundCommand extends AbstractRefundCommand
     {
         $this->orderDetailRefunds = [];
         foreach ($orderDetailRefunds as $orderDetailId => $detailRefund) {
-            $this->orderDetailRefunds[] = OrderDetailRefund::createPartialRefund(
+            $this->orderDetailRefunds[] = OrderDetailRefund::createStandardRefund(
                 $orderDetailId,
-                $detailRefund['quantity'],
-                $detailRefund['amount']
+                $detailRefund['quantity']
             );
         }
     }

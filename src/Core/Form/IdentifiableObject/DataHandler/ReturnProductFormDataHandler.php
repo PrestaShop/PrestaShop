@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -27,13 +27,10 @@
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler;
 
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
-use PrestaShop\PrestaShop\Core\Domain\Order\Command\IssuePartialRefundCommand;
+use PrestaShop\PrestaShop\Core\Domain\Order\Command\IssueReturnProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\VoucherRefundType;
 
-/**
- * Class PartialRefundFormDataHandler
- */
-final class PartialRefundFormDataHandler implements FormDataHandlerInterface
+class ReturnProductFormDataHandler implements FormDataHandlerInterface
 {
     /**
      * @var CommandBusInterface
@@ -64,17 +61,17 @@ final class PartialRefundFormDataHandler implements FormDataHandlerInterface
         $refunds = [];
         foreach ($data['products'] as $product) {
             $orderDetailId = $product->getOrderDetailId();
-            if (!empty($data['quantity_' . $orderDetailId]) || !empty($data['amount_' . $orderDetailId])) {
-                $refunds[$orderDetailId]['quantity'] = $data['quantity_' . $orderDetailId] ?? 0;
-                $refunds[$orderDetailId]['amount'] = $data['amount_' . $orderDetailId] ?? 0;
+            if (!isset($data['selected_' . $orderDetailId]) || !(bool) $data['selected_' . $orderDetailId]) {
+                continue;
             }
+            $refunds[$orderDetailId]['quantity'] = $data['quantity_' . $orderDetailId] ?? 0;
         }
 
-        $command = new IssuePartialRefundCommand(
+        $command = new IssueReturnProductCommand(
             $id,
             $refunds,
-            $data['shipping_amount'],
             $data['restock'],
+            $data['shipping'],
             $data['credit_slip'],
             $data['voucher'],
             $data['voucher_refund_type'] ?? VoucherRefundType::PRODUCT_PRICES_EXCLUDING_VOUCHER_REFUND

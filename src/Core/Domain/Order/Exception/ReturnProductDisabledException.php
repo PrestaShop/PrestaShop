@@ -1,5 +1,6 @@
-{#**
- * 2007-2019 PrestaShop SA and Contributors
+<?php
+/**
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,17 +19,16 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *#}
+ */
 
-<div class="md-checkbox">
-  <label>
-    <input type="checkbox"
-           class="js-bulk-action-select-all"
-           id="{{ grid.id }}_grid_bulk_action_select_all"
-    >
-    <i class="md-checkbox-control"></i>
-  </label>
-</div>
+namespace PrestaShop\PrestaShop\Core\Domain\Order\Exception;
+
+/**
+ * Thrown when trying to perform a return product operation while it is disabled
+ */
+class ReturnProductDisabledException extends OrderException
+{
+}

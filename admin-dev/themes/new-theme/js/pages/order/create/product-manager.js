@@ -52,11 +52,8 @@ export default class ProductManager {
       search: (searchPhrase) => this.search(searchPhrase),
       addProductToCart: (cartId) => this.cartEditor.addProduct(cartId, this.getProductData()),
       removeProductFromCart: (cartId, product) => this.cartEditor.removeProductFromCart(cartId, product),
-      changeProductPrice: (cartId, customerId, updatedProduct) => this.cartEditor.changeProductPrice(
-        cartId,
-        customerId,
-        updatedProduct,
-      ),
+      /* eslint-disable-next-line max-len */
+      changeProductPrice: (cartId, customerId, updatedProduct) => this.cartEditor.changeProductPrice(cartId, customerId, updatedProduct),
       changeProductQty: (cartId, updatedProduct) => this.cartEditor.changeProductQty(cartId, updatedProduct),
     };
   }
@@ -67,8 +64,10 @@ export default class ProductManager {
    * @private
    */
   initListeners() {
-    $(createOrderMap.productSelect).on('change', (e) => this.initProductSelect(e));
-    $(createOrderMap.combinationsSelect).on('change', (e) => this.initCombinationSelect(e));
+    $(createOrderMap.productSelect).on('change', (e) => this.initProductSelect(e),
+    );
+    $(createOrderMap.combinationsSelect).on('change', (e) => this.initCombinationSelect(e),
+    );
 
     this.onProductSearch();
     this.onAddProductToCart();
@@ -157,7 +156,11 @@ export default class ProductManager {
    * @private
    */
   initProductSelect(event) {
-    const productId = Number($(event.currentTarget).find(':selected').val());
+    const productId = Number(
+      $(event.currentTarget)
+        .find(':selected')
+        .val(),
+    );
     this.selectProduct(productId);
   }
 
@@ -169,7 +172,11 @@ export default class ProductManager {
    * @private
    */
   initCombinationSelect(event) {
-    const combinationId = Number($(event.currentTarget).find(':selected').val());
+    const combinationId = Number(
+      $(event.currentTarget)
+        .find(':selected')
+        .val(),
+    );
     this.selectCombination(combinationId);
   }
 
@@ -191,22 +198,32 @@ export default class ProductManager {
       search_phrase: searchPhrase,
     };
 
-    if ($(createOrderMap.cartCurrencySelect).data('selectedCurrencyId') !== undefined) {
-      params.currency_id = $(createOrderMap.cartCurrencySelect).data('selectedCurrencyId');
+    if (
+      $(createOrderMap.cartCurrencySelect).data('selectedCurrencyId')
+      !== undefined
+    ) {
+      params.currency_id = $(createOrderMap.cartCurrencySelect).data(
+        'selectedCurrencyId',
+      );
     }
 
-    const $searchRequest = $.get(this.router.generate('admin_products_search'), params);
+    const $searchRequest = $.get(
+      this.router.generate('admin_products_search'),
+      params,
+    );
     this.activeSearchRequest = $searchRequest;
 
-    $searchRequest.then((response) => {
-      EventEmitter.emit(eventMap.productSearched, response);
-    }).catch((response) => {
-      if (response.statusText === 'abort') {
-        return;
-      }
+    $searchRequest
+      .then((response) => {
+        EventEmitter.emit(eventMap.productSearched, response);
+      })
+      .catch((response) => {
+        if (response.statusText === 'abort') {
+          return;
+        }
 
-      window.showErrorMessage(response.responseJSON.message);
-    });
+        window.showErrorMessage(response.responseJSON.message);
+      });
   }
 
   /**
@@ -232,7 +249,9 @@ export default class ProductManager {
   selectProduct(productId) {
     this.unsetCombination();
 
-    const selectedProduct = Object.values(this.products).find((product) => product.productId === productId);
+    const selectedProduct = Object.values(this.products).find(
+      (product) => product.productId === productId,
+    );
     if (selectedProduct) {
       this.selectedProduct = selectedProduct;
     }
@@ -288,8 +307,12 @@ export default class ProductManager {
    * @private
    */
   getProductData() {
-    const $fileInputs = $(createOrderMap.productCustomizationContainer).find('input[type="file"]');
-    const formData = new FormData(document.querySelector(createOrderMap.productAddForm));
+    const $fileInputs = $(createOrderMap.productCustomizationContainer).find(
+      'input[type="file"]',
+    );
+    const formData = new FormData(
+      document.querySelector(createOrderMap.productAddForm),
+    );
     const fileSizes = {};
 
     // adds key value pairs {input name: file size} of each file in separate object

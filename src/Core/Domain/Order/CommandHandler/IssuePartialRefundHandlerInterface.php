@@ -36,5 +36,5 @@ interface IssuePartialRefundHandlerInterface
     /**
      * @param IssuePartialRefundCommand $command
      */
-    public function handle(IssuePartialRefundCommand $command);
+    public function handle(IssuePartialRefundCommand $command): void;
 }
