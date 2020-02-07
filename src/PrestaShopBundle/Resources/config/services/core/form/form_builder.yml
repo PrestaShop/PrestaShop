@@ -168,6 +168,3 @@ services:
     arguments:
       - 'PrestaShopBundle\Form\Admin\Sell\Address\CustomerAddressType'
       - '@prestashop.core.form.identifiable_object.data_provider.address_form_data_provider'
-
-
-

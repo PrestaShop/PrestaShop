@@ -50,7 +50,6 @@ class CancelProductType extends TranslatorAwareType
                         'label' => false,
                         'attr' => [
                             'material_design' => true,
-                            'class' => 'selected-product',
                         ],
                     ]
                 )
