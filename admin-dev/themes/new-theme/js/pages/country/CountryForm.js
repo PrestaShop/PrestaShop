@@ -108,8 +108,8 @@ export default class CountryForm {
    * @param event
    */
   modifyLayout(event) {
-    const confirmation = $(event.target).data('confirmation-message');
-    let defaultLayout = $(event.target).data('default-layout');
+    const confirmation = $(event.target).data('confirmationMessage');
+    let defaultLayout = $(event.target).data('defaultLayout');
 
     if (typeof defaultLayout === 'undefined') {
       defaultLayout = this.lastLayoutModified;
