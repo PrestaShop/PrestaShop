@@ -207,6 +207,14 @@ table .column-filters td:last-child .grid-reset-button {
               }
             }
           }
+
+          &.order_price-type {
+            .badge {
+              font-size: 100%;
+              font-weight: 600;
+              padding: 5px;
+            }
+          }
         }
       }
     }
