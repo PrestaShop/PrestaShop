@@ -28,7 +28,6 @@ namespace Tests\Unit\PrestaShopBundle\Routing\Linter;
 
 use PHPUnit\Framework\TestCase;
 use PrestaShopBundle\PrestaShopBundle;
-use PrestaShopBundle\Routing\Linter\Exception\NamingConventionException;
 use PrestaShopBundle\Routing\Linter\NamingConventionLinter;
 use Symfony\Bundle\FrameworkBundle\Controller\ControllerNameParser;
 use Symfony\Component\HttpKernel\KernelInterface;
@@ -60,11 +59,12 @@ class NamingConventionLinterTest extends TestCase
     /**
      * @dataProvider getRoutesThatDoNotFollowNamingConventions
      */
-    public function testLinterThrowsExceptionWhenRouteAndControllerDoesNotFollowNamingConventions($routeName, Route $route)
-    {
-        $this->expectException(NamingConventionException::class);
-
-        $this->namingConventionLinter->lint($routeName, $route);
+    public function testLinterReturnsExpectedRouteNameWhenRouteAndControllerDoesNotFollowNamingConventions(
+        $routeName,
+        Route $route
+    ) {
+        $expectedRouteName = $this->namingConventionLinter->lint($routeName, $route);
+        $this->assertIsString($expectedRouteName);
     }
 
     public function getRoutesThatFollowNamingConventions()
