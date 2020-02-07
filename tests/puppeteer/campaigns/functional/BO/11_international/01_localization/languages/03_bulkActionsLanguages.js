@@ -13,6 +13,10 @@ const LanguagesPage = require('@pages/BO/international/languages');
 const AddLanguagePage = require('@pages/BO/international/languages/add');
 // Importing data
 const LanguageFaker = require('@data/faker/language');
+// Test context imports
+const testContext = require('@utils/testContext');
+
+const baseContext = 'functional_BO_international_localization_languages_CRUDLanguages';
 
 let browser;
 let page;
@@ -59,6 +63,7 @@ describe('Disable, enable and delete with bulk actions languages', async () => {
   loginCommon.loginBO();
 
   it('should go to localization page', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'goToLocalizationPage', baseContext);
     await this.pageObjects.boBasePage.goToSubMenu(
       this.pageObjects.boBasePage.internationalParentLink,
       this.pageObjects.boBasePage.localizationLink,
@@ -69,12 +74,14 @@ describe('Disable, enable and delete with bulk actions languages', async () => {
   });
 
   it('should go to languages page', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'goToLanguagesPage', baseContext);
     await this.pageObjects.localizationPage.goToSubTabLanguages();
     const pageTitle = await this.pageObjects.languagesPage.getPageTitle();
     await expect(pageTitle).to.contains(this.pageObjects.languagesPage.pageTitle);
   });
 
   it('should reset all filters and get number of languages in BO', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
     numberOfLanguages = await this.pageObjects.languagesPage.resetAndGetNumberOfLines();
     await expect(numberOfLanguages).to.be.above(0);
   });
@@ -82,11 +89,13 @@ describe('Disable, enable and delete with bulk actions languages', async () => {
   describe('Create 2 Languages', async () => {
     [firstLanguageData, secondLanguageData].forEach((languageToCreate, index) => {
       it('should go to add new language page', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `goToAddNewLanguage${index + 1}`, baseContext);
         await this.pageObjects.languagesPage.goToAddNewLanguage();
         const pageTitle = await this.pageObjects.addLanguagePage.getPageTitle();
         await expect(pageTitle).to.contains(this.pageObjects.addLanguagePage.pageTitle);
       });
       it('should create new language', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `createLanguage${index + 1}`, baseContext);
         const textResult = await this.pageObjects.addLanguagePage.createEditLanguage(languageToCreate);
         await expect(textResult).to.to.contains(this.pageObjects.languagesPage.successfulCreationMessage);
         const numberOfLanguagesAfterCreation = await this.pageObjects.languagesPage.getNumberOfElementInGrid();
@@ -102,6 +111,7 @@ describe('Disable, enable and delete with bulk actions languages', async () => {
     ];
 
     it('should filter language by name \'languageToDelete\'', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'filterLanguageToChangeStatus', baseContext);
       await this.pageObjects.languagesPage.filterTable('input', 'name', 'languageToDelete');
       const numberOfLanguagesAfterFilter = await this.pageObjects.languagesPage.getNumberOfElementInGrid();
       await expect(numberOfLanguagesAfterFilter).to.be.at.least(2);
@@ -109,6 +119,7 @@ describe('Disable, enable and delete with bulk actions languages', async () => {
 
     tests.forEach((test) => {
       it(`should ${test.args.action} with bulk actions`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `bulk${test.args.action}`, baseContext);
         const disableTextResult = await this.pageObjects.languagesPage.bulkEditEnabledColumn(
           test.args.toEnable,
         );
@@ -124,11 +135,13 @@ describe('Disable, enable and delete with bulk actions languages', async () => {
     });
 
     it('should delete with bulk actions', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'bulkDelete', baseContext);
       const deleteTextResult = await this.pageObjects.languagesPage.deleteWithBulkActions();
       await expect(deleteTextResult).to.be.equal(this.pageObjects.languagesPage.successfulMultiDeleteMessage);
     });
 
     it('should reset all filters', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'resetAfterDelete', baseContext);
       const numberOfLanguagesAfterDelete = await this.pageObjects.languagesPage.resetAndGetNumberOfLines();
       await expect(numberOfLanguagesAfterDelete).to.be.equal(numberOfLanguages);
     });
