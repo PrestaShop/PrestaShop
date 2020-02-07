@@ -93,6 +93,14 @@ class Admin
             return true;
         }
 
+        // This is to disable the redirection when a proxy is configured
+        // and we want to make calls with different base_url than the one configured for the application
+        // The security for this URL is managed inside the controller or by a listener
+        $routeParams = $event->getRequest()->attributes->get('_route_params');
+        if (array_key_exists('_prevent_redirect', $routeParams) && true === $routeParams['_prevent_redirect']) {
+            return true;
+        }
+
         //employee not logged in
         $event->stopPropagation();
 
