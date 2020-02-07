@@ -61,7 +61,7 @@ final class SecurityAnnotationLinter implements RouteLinterInterface
     /**
      * {@inheritdoc}
      */
-    public function lint(string $routeName, Route $route): string
+    public function lint(string $routeName, Route $route)
     {
         $controllerAndMethod = $this->extractControllerAndMethodNamesFromRoute($route);
 

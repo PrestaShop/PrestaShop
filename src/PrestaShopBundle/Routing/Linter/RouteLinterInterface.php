@@ -36,8 +36,6 @@ interface RouteLinterInterface
     /**
      * @param string $routeName
      * @param Route $route
-     *
-     * @return string
      */
-    public function lint(string $routeName, Route $route): string;
+    public function lint(string $routeName, Route $route);
 }
