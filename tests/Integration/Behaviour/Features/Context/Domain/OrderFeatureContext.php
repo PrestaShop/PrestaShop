@@ -295,7 +295,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Then all invoices for order :orderReference should have following prices:
+     * @Then all invoices for order :orderReference should have following discounts:
      */
     public function assertInvoicesPrices(string $orderReference, TableNode $table)
     {
@@ -306,9 +306,9 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
         Assert::assertGreaterThan(0, $invoices->count());
 
         foreach ($invoices as $invoice) {
-            Assert::assertEquals((float) $data['products'], $invoice->total_products);
+            Assert::assertEquals((float) $data['discounts tax excluded'], $invoice->total_discount_tax_excl);
+            Assert::assertEquals((float) $data['discounts tax included'], $invoice->total_discount_tax_incl);
         }
-
     }
 
     /**
