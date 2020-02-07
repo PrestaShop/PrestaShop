@@ -36,9 +36,9 @@ class TinyMCEEditor {
   constructor(options) {
     const opts = options || {};
     this.tinyMCELoaded = false;
-    if (typeof options.baseAdminUrl === 'undefined') {
+    if (typeof opts.baseAdminUrl === 'undefined') {
       if (typeof window.baseAdminDir !== 'undefined') {
-        options.baseAdminUrl = window.baseAdminDir;
+        opts.baseAdminUrl = window.baseAdminDir;
       } else {
         const pathParts = window.location.pathname.split('/');
         pathParts.every((pathPart) => {
