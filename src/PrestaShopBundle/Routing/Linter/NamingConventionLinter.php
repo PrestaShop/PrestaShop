@@ -51,7 +51,7 @@ final class NamingConventionLinter implements RouteLinterInterface
     /**
      * {@inheritdoc}
      */
-    public function lint(string $routeName, Route $route): string
+    public function lint(string $routeName, Route $route)
     {
         $controllerAndMethodName = $this->getControllerAndMethodName($route);
 
