@@ -202,7 +202,7 @@ final class GetCustomerForViewingHandler implements GetCustomerForViewingHandler
         return new PersonalInformation(
             $customer->firstname,
             $customer->lastname,
-            $customer->email,
+            $customer->getEmailForDisplay(),
             $customer->isGuest(),
             $socialTitle,
             $birthday,
