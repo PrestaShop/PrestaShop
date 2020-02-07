@@ -1,13 +1,8 @@
-# ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s order
+# ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s order --tags add-discounts-to-order
 @reset-database-before-feature
 Feature: Add discounts to order from Back Office (BO)
   As a BO user
   I need to be able to add discounts to existing orders from the BO
-
-  #  todo: fix the failing scenarios/code
-  #  todo: make scenarios independent
-  #  todo: change legacy classes with domain where possible
-  #  todo: increase code re-use
 
   Background:
     Given the current currency is "USD"
@@ -105,7 +100,6 @@ Feature: Add discounts to order from Back Office (BO)
       | total paid tex excluded   | 16.50     |
       | total paid tex included   | 14.50     |
 
-
   @add-discounts-to-order
   Scenario: Add percent type discount to order and update all invoices
     When I generate invoice for "bo_order1" order
@@ -115,28 +109,23 @@ Feature: Add discounts to order from Back Office (BO)
       | amount        | 1                       |
       | price         | 11                      |
       | free_shipping | true                    |
-      #todo:following step fails- should we count shipping for only that single product? Should the shipping reflect in discounts/shipping totals?
     Then Order "bo_order1" should have following prices:
       | products      | $33.00    |
-      | discounts     | $0.00     |
-      | shipping      | $7.00     |
+      | discounts     | $7.00     |
+      | shipping      | $14.00    |
       | taxes         | $0.00     |
-      | total         | $33.00    |
+      | total         | $40.00    |
     When I add discount to order "bo_order1" with following details:
       | name      | discount fifty-fifty |
       | type      | percent              |
       | value     | 50                   |
-    Then Order "bo_order1" should have following prices:
-      | products      | $33.00    |
-      | discounts     | $20.00    |
-      | shipping      | $7.00     |
-      | taxes         | $0.00     |
-      | total         | $20.00    |
-    And all invoices for order "bo_order1" should have following prices:
-      | products                  | 33.00     |
+    And all invoices for order "bo_order1" should have following discounts:
       | discounts tax excluded    | 20.00     |
       | discounts tax included    | 20.00     |
-      | shipping                  | 7.00      |
-      | taxes                     | 0.00      |
-      | total paid tex excluded   | 20.00     |
-      | total paid tex included   | 20.00     |
+    Then Order "bo_order1" should have following prices:
+      | products      | $33.00    |
+      | discounts     | $27.00    |
+      | shipping      | $14.00    |
+      | taxes         | $0.00     |
+      | total         | $20.00    |
+

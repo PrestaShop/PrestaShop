@@ -87,12 +87,6 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
     {
         $order = $this->getOrderObject($command->getOrderId());
 
-        if ($this->context->cart !== null) {
-            $oldCartRules = $this->context->cart->getCartRules();
-        } else {
-            $oldCartRules = [];
-        }
-
         $this->assertOrderWasNotShipped($order);
 
         $product = $this->getProductObject($command->getProductId(), (int) $order->id_lang);
@@ -111,7 +105,7 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
         $this->addProductToCart($cart, $product, $combination, $command->getProductQuantity());
 
         if ($command->isFreeShipping()) {
-            $this->createFreeShippingCartRule($cart, $order);
+            $freeShippingCartRule = $this->createFreeShippingCartRule($cart, $order);
         }
 
         $this->updateOrderTotals($order, $cart, $command->getOrderInvoiceId());
@@ -126,13 +120,6 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
             $cart->getProducts(),
             !empty($invoice->id) ? $invoice->id : 0
         );
-
-//        if (null !== $invoice && Validate::isLoadedObject($invoice)) {
-//            $order->total_shipping = $invoice->total_shipping_tax_incl;
-//            $order->total_shipping_tax_incl = $invoice->total_shipping_tax_incl;
-//            $order->total_shipping_tax_excl = $invoice->total_shipping_tax_excl;
-//            $order->total_wrapping = $invoice->total_wrapping_tax_incl;
-//        }
 
         // Save changes of order
         $order->update();
@@ -156,47 +143,38 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
             $specificPrice->delete();
         }
 
-//        $order = $order->refreshShippingCost();
-
         Hook::exec('actionOrderEdited', ['order' => $order]);
 
-        $newCartRules = $this->context->cart->getCartRules();
-
-        sort($oldCartRules);
-        sort($newCartRules);
-
-        if (!empty($newCartRules) && !empty($oldCartRules)) {
-            $result = array_diff($newCartRules, $oldCartRules);
-        } else {
-            $result = [];
-        }
-
-        foreach ($result as $cartRule) {
-            // Create OrderCartRule
-            $rule = new CartRule($cartRule['id_cart_rule']);
-            $values = [
-                'tax_incl' => $rule->getContextualValue(true),
-                'tax_excl' => $rule->getContextualValue(false),
-            ];
-            $orderCartRule = new OrderCartRule();
-            $orderCartRule->id_order = $order->id;
-            $orderCartRule->id_cart_rule = $cartRule['id_cart_rule'];
-            $orderCartRule->id_order_invoice = $invoice->id;
-            $orderCartRule->name = $cartRule['name'];
-            $orderCartRule->value = $values['tax_incl'];
-            $orderCartRule->value_tax_excl = $values['tax_excl'];
-            $orderCartRule->add();
-
-            // @todo: use https://github.com/PrestaShop/decimal
-            $order->total_discounts += $orderCartRule->value;
-            $order->total_discounts_tax_incl += $orderCartRule->value;
-            $order->total_discounts_tax_excl += $orderCartRule->value_tax_excl;
-            $order->total_paid -= $orderCartRule->value;
-            $order->total_paid_tax_incl -= $orderCartRule->value;
-            $order->total_paid_tax_excl -= $orderCartRule->value_tax_excl;
+        if (isset($freeShippingCartRule)) {
+            $orderCartRule = $this->createOrderCartRule($freeShippingCartRule, $order, !empty($invoice->id) ? $invoice->id : 0);
         }
 
         $order->update();
+    }
+
+    /**
+     * @param CartRule $cartRule
+     * @param Order $order
+     * @param int $invoiceId
+     *
+     * @return OrderCartRule
+     */
+    private function createOrderCartRule(CartRule $cartRule, Order $order, int $invoiceId): OrderCartRule
+    {
+        $values = [
+            'tax_incl' => $cartRule->getContextualValue(true),
+            'tax_excl' => $cartRule->getContextualValue(false),
+        ];
+        $orderCartRule = new OrderCartRule();
+        $orderCartRule->id_order = $order->id;
+        $orderCartRule->id_cart_rule = $cartRule->id;
+        $orderCartRule->id_order_invoice = $invoiceId;
+        $orderCartRule->name = $cartRule->name[$this->context->language->id];
+        $orderCartRule->value = $values['tax_incl'];
+        $orderCartRule->value_tax_excl = $values['tax_excl'];
+        $orderCartRule->add();
+
+        return $orderCartRule;
     }
 
     /**
@@ -487,7 +465,7 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
         $order->total_shipping_tax_excl += (float) abs($cart->getOrderTotal(false, Cart::ONLY_SHIPPING));
     }
 
-    private function createFreeShippingCartRule(Cart $cart, Order $order)
+    private function createFreeShippingCartRule(Cart $cart, Order $order): CartRule
     {
         $freeShippingCartRule = new CartRule();
         $freeShippingCartRule->id_customer = $order->id_customer;
@@ -520,5 +498,7 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
             $freeShippingCartRule->name[Configuration::get('PS_LANG_DEFAULT')],
             $values
         );
+
+        return $freeShippingCartRule;
     }
 }

@@ -34,6 +34,7 @@ use OrderInvoice;
 use PrestaShop\PrestaShop\Adapter\Order\AbstractOrderHandler;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\PercentageDiscount;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\AddCartRuleToOrderCommand;
+use PrestaShop\PrestaShop\Core\Domain\Order\Command\DuplicateOrderCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler\AddCartRuleToOrderHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\OrderDiscountType;
@@ -61,12 +62,18 @@ final class AddCartRuleToOrderHandler extends AbstractOrderHandler implements Ad
         }
 
         $discountValue = (float) $command->getDiscountValue()->toPrecision(CommonAbstractType::PRESTASHOP_DECIMALS);
-        $reducedValuesByInvoiceId = $this->getReducedValuesByInvoiceId($command->getCartRuleType(), $order, $discountValue, $orderInvoices);
-        $this->updateInvoicesDiscount($orderInvoices, $reducedValuesByInvoiceId);
+        $reductionValues = $this->getReductionValues($command->getCartRuleType(), $discountValue, $order);
+        $reductionValuesByInvoiceId = $this->getReductionValuesByInvoiceId(
+            $reductionValues,
+            $command->getCartRuleType(),
+            $discountValue,
+            $orderInvoices
+        );
+        $this->updateInvoicesDiscount($orderInvoices, $reductionValuesByInvoiceId);
 
         $result = true;
 
-        foreach ($reducedValuesByInvoiceId as &$reducedValues) {
+        foreach ($reductionValuesByInvoiceId as &$reducedValues) {
             $cartRuleObj = $this->createCartRule($command, $order, $reducedValues, $discountValue);
 
             if ($result = $cartRuleObj->add()) {
@@ -77,15 +84,12 @@ final class AddCartRuleToOrderHandler extends AbstractOrderHandler implements Ad
         }
 
         if ($result) {
-            foreach ($reducedValuesByInvoiceId as $orderInvoiceId => $reducedValues) {
+            foreach ($reductionValuesByInvoiceId as $orderInvoiceId => $reducedValues) {
                 $orderCartRule = $this->createOrderCartRule($command->getCartRuleName(), $order, $orderInvoiceId, $reducedValues);
                 $result &= $orderCartRule->add();
-
-                $this->fillOrderWithDiscountValues($order, $orderCartRule);
             }
 
-            // Update Order
-            $result &= $order->update();
+            $result &= $this->applyReductionToOrder($order, $reductionValues);
         }
 
         if (!$result) {
@@ -94,164 +98,73 @@ final class AddCartRuleToOrderHandler extends AbstractOrderHandler implements Ad
     }
 
     /**
-     * @param Order $order
-     * @param OrderCartRule $orderCartRule
-     */
-    private function fillOrderWithDiscountValues(Order $order, OrderCartRule $orderCartRule): void
-    {
-        $order->total_discounts += $orderCartRule->value;
-        $order->total_discounts_tax_incl += $orderCartRule->value;
-        $order->total_discounts_tax_excl += $orderCartRule->value_tax_excl;
-        $order->total_paid -= $orderCartRule->value;
-        $order->total_paid_tax_incl -= $orderCartRule->value;
-        $order->total_paid_tax_excl -= $orderCartRule->value_tax_excl;
-    }
-
-    /**
+     * @param array $reductionValues
      * @param string $cartRuleType
-     * @param Order $order
      * @param float $discountValue
      * @param array $orderInvoices
      *
      * @return array
-     *
-     * @throws OrderException
      */
-    private function getReducedValuesByInvoiceId(
+    private function getReductionValuesByInvoiceId(
+        array $reductionValues,
         string $cartRuleType,
-        Order $order,
         float $discountValue,
         array $orderInvoices
     ): array {
+        $reducedValuesByInvoiceId = [];
+
+        if (empty($orderInvoices)) {
+            return [$reductionValues];
+        } else {
+            foreach ($orderInvoices as $orderInvoice) {
+                $isAlreadyFreeShipping = OrderDiscountType::FREE_SHIPPING === $cartRuleType && $orderInvoice->total_shipping_tax_incl <= 0;
+                $discountAmountIsTooBig = OrderDiscountType::DISCOUNT_AMOUNT === $cartRuleType && $discountValue > $orderInvoice->total_paid_tax_incl;
+
+                if ($isAlreadyFreeShipping) {
+                    continue;
+                } elseif ($discountAmountIsTooBig) {
+                    throw new OrderException('The discount value is greater than the order invoice total.');
+                }
+
+                $reducedValuesByInvoiceId[$orderInvoice->id] = $reductionValues;
+            }
+        }
+
+        return $reducedValuesByInvoiceId;
+    }
+
+    private function getReductionValues(string $cartRuleType, float $discountValue, Order $order): array
+    {
+        $totalPaidTaxIncl = (float) $order->total_paid_tax_incl;
+        $totalPaidTaxExcl = (float) $order->total_paid_tax_excl;
+
         switch ($cartRuleType) {
             case OrderDiscountType::DISCOUNT_PERCENT:
-                return $this->calculatePercentReducedValues($order, $discountValue, $orderInvoices);
+                if ($discountValue > PercentageDiscount::MAX_PERCENTAGE) {
+                    throw new OrderException('Percentage discount value cannot be higher than 100%.');
+                }
+                $reductionValues = $this->calculatePercentReduction($discountValue, $totalPaidTaxIncl, $totalPaidTaxExcl);
 
                 break;
             case OrderDiscountType::DISCOUNT_AMOUNT:
-                return $this->calculateAmountReducedValues($order, $discountValue, $orderInvoices);
+                if ($discountValue > $totalPaidTaxIncl) {
+                    throw new OrderException('The discount value is greater than the order total.');
+                }
+                $reductionValues = $this->calculateAmountReduction($discountValue, $order->getTaxesAverageUsed());
 
                 break;
             case OrderDiscountType::FREE_SHIPPING:
-                return $this->calculateFreeShippingReducedValues($order, $orderInvoices);
+                $reductionValues = $this->calculateFreeShippingReduction(
+                    $order->total_shipping_tax_incl,
+                    $order->total_shipping_tax_excl
+                );
 
                 break;
             default:
                 throw new OrderException('The discount type is invalid.');
         }
-    }
 
-    /**
-     * @param Order $order
-     * @param float $discountValue
-     * @param array $orderInvoices
-     *
-     * @return array
-     *
-     * @throws OrderException
-     */
-    private function calculatePercentReducedValues(Order $order, float $discountValue, array $orderInvoices): array
-    {
-        $reducedValuesByInvoiceId = [];
-
-        if ($discountValue > PercentageDiscount::MAX_PERCENTAGE) {
-            throw new OrderException('Percentage discount value cannot be higher than 100%.');
-        }
-
-        if (empty($orderInvoices)) {
-            return [
-                $this->buildReducedValues(
-                    Tools::ps_round($order->total_paid_tax_incl * $discountValue / 100, 2),
-                    Tools::ps_round($order->total_paid_tax_excl * $discountValue / 100, 2)
-                ),
-            ]
-;
-        } else {
-            foreach ($orderInvoices as $orderInvoice) {
-                $reducedValuesByInvoiceId[$orderInvoice->id] = $this->buildReducedValues(
-                    Tools::ps_round($orderInvoice->total_paid_tax_incl * $discountValue / 100, 2),
-                    Tools::ps_round($orderInvoice->total_paid_tax_excl * $discountValue / 100, 2)
-                );
-            }
-        }
-
-        return $reducedValuesByInvoiceId;
-    }
-
-    /**
-     * @param Order $order
-     * @param float $discountValue
-     * @param array $orderInvoices
-     *
-     * @return array
-     *
-     * @throws OrderException
-     */
-    private function calculateAmountReducedValues(Order $order, float $discountValue, array $orderInvoices): array
-    {
-        $reducedValuesByInvoiceId = [];
-
-        if (empty($orderInvoices)) {
-            if ($discountValue > $order->total_paid_tax_incl) {
-                throw new OrderException('The discount value is greater than the order total.');
-            }
-
-            return [
-                $this->buildReducedValues(
-                    Tools::ps_round($discountValue, 2),
-                    Tools::ps_round($discountValue / (1 + ($order->getTaxesAverageUsed() / 100)), 2)
-                ),
-            ];
-        } else {
-            foreach ($orderInvoices as $orderInvoice) {
-                /** @var OrderInvoice $orderInvoice */
-                if ($discountValue > $orderInvoice->total_paid_tax_incl) {
-                    throw new OrderException('The discount value is greater than the order invoice total.');
-                }
-
-                $reducedValuesByInvoiceId = [
-                    $orderInvoice->id => $this->buildReducedValues(
-                        Tools::ps_round($discountValue, 2),
-                        Tools::ps_round($discountValue / (1 + ($order->getTaxesAverageUsed() / 100)), 2)
-                    ),
-                ];
-            }
-        }
-
-        return $reducedValuesByInvoiceId;
-    }
-
-    /**
-     * @param Order $order
-     * @param array $orderInvoices
-     *
-     * @return array
-     */
-    private function calculateFreeShippingReducedValues(Order $order, array $orderInvoices): array
-    {
-        $reducedValuesByInvoiceId = [];
-
-        if (empty($orderInvoices)) {
-            return [
-                $this->buildReducedValues($order->total_shipping_tax_incl, $order->total_shipping_tax_excl),
-            ];
-        } else {
-            foreach ($orderInvoices as $orderInvoice) {
-                /** @var OrderInvoice $orderInvoice */
-                if ($orderInvoice->total_shipping_tax_incl <= 0) {
-                    continue;
-                }
-
-                $reducedValuesByInvoiceId = [
-                    $orderInvoice->id => $this->buildReducedValues(
-                        $orderInvoice->total_shipping_tax_incl,
-                        $orderInvoice->total_shipping_tax_excl
-                    ),
-                ];
-            }
-        }
-
-        return $reducedValuesByInvoiceId;
+        return $reductionValues;
     }
 
     /**
@@ -272,6 +185,7 @@ final class AddCartRuleToOrderHandler extends AbstractOrderHandler implements Ad
             $orderInvoice->total_discount_tax_excl += $valueTaxExcl;
             $orderInvoice->total_paid_tax_incl -= $valueTaxIncl;
             $orderInvoice->total_paid_tax_excl -= $valueTaxExcl;
+
             $orderInvoice->update();
         }
     }
@@ -317,9 +231,6 @@ final class AddCartRuleToOrderHandler extends AbstractOrderHandler implements Ad
      * @param array $reducedValues
      *
      * @return OrderCartRule
-     *
-     * @throws \PrestaShopDatabaseException
-     * @throws \PrestaShopException
      */
     private function createOrderCartRule(string $cartRuleName, Order $order, int $orderInvoiceId, array $reducedValues): OrderCartRule
     {
@@ -356,6 +267,53 @@ final class AddCartRuleToOrderHandler extends AbstractOrderHandler implements Ad
     }
 
     /**
+     * @param float $discountValue
+     * @param float $totalPaidTaxIncl
+     * @param float $totalPaidTaxExcl
+     *
+     * @return array
+     */
+    private function calculatePercentReduction(
+        float $discountValue,
+        float $totalPaidTaxIncl,
+        float $totalPaidTaxExcl
+    ): array {
+        return $this->buildReducedValues(
+            Tools::ps_round($totalPaidTaxIncl * $discountValue / 100, 2),
+            Tools::ps_round($totalPaidTaxExcl * $discountValue / 100, 2)
+        );
+    }
+
+    /**
+     * @param float $discountValue
+     * @param float $taxesAverageUsed
+     *
+     * @return array
+     */
+    private function calculateAmountReduction(
+        float $discountValue,
+        float $taxesAverageUsed
+    ) {
+        return $this->buildReducedValues(
+            Tools::ps_round($discountValue, 2),
+            Tools::ps_round($discountValue / (1 + ($taxesAverageUsed / 100)), 2)
+        );
+    }
+
+    /**
+     * @param float $totalShippingTaxIncl
+     * @param float $totalShippingTaxExcl
+     *
+     * @return array
+     */
+    private function calculateFreeShippingReduction(float $totalShippingTaxIncl, float $totalShippingTaxExcl) {
+        return $this->buildReducedValues(
+            $totalShippingTaxIncl,
+            $totalShippingTaxExcl
+        );
+    }
+
+    /**
      * @param float $valueTaxIncl
      * @param float $valueTaxExcl
      *
@@ -367,5 +325,23 @@ final class AddCartRuleToOrderHandler extends AbstractOrderHandler implements Ad
             'value_tax_incl' => $valueTaxIncl,
             'value_tax_excl' => $valueTaxExcl,
         ];
+    }
+
+    /**
+     * @param Order $order
+     * @param array $reductionValues
+     *
+     * @return bool
+     */
+    private function applyReductionToOrder(Order $order, array $reductionValues): bool
+    {
+        $order->total_discounts += $reductionValues['value_tax_incl'];
+        $order->total_discounts_tax_incl += $reductionValues['value_tax_incl'];
+        $order->total_discounts_tax_excl += $reductionValues['value_tax_excl'];
+        $order->total_paid -= $reductionValues['value_tax_incl'];
+        $order->total_paid_tax_incl -= $reductionValues['value_tax_incl'];
+        $order->total_paid_tax_excl -= $reductionValues['value_tax_excl'];
+
+        return $order->update();
     }
 }
