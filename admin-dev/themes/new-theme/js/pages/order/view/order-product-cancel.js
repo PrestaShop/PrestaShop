@@ -16,7 +16,7 @@
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
  * needs please refer to https://www.prestashop.com for more information.
-:*
+ *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
@@ -39,11 +39,9 @@ export default class OrderProductCancel {
     this.orderId = this.cancelProductForm.data('orderId');
     this.orderDelivered = parseInt(this.cancelProductForm.data('isDelivered'), 10) === 1;
     this.isTaxIncluded = parseInt(this.cancelProductForm.data('isTaxIncluded'), 10) === 1;
-    this.discountsAmount = parseFloat(
-      this.cancelProductForm.data('discountsAmount'),
-    );
+    this.discountsAmount = parseFloat(this.cancelProductForm.data('discountsAmount'));
     this.currencyFormatter = NumberFormatter.build(
-      this.cancelProductForm.data('priceSpecification'),
+      this.cancelProductForm.data('priceSpecification')
     );
     this.useAmountInputs = true;
     this.listenForInputs();
@@ -57,9 +55,9 @@ export default class OrderProductCancel {
     this.initForm(
       $(OrderViewPageMap.cancelProduct.buttons.save).data('partialRefundLabel'),
       this.router.generate('admin_orders_partial_refund', {
-        orderId: this.orderId,
+        orderId: this.orderId
       }),
-      'partial-refund',
+      'partial-refund'
     );
   }
 
@@ -69,13 +67,11 @@ export default class OrderProductCancel {
     $(OrderViewPageMap.cancelProduct.toggle.standardRefund).show();
     this.useAmountInputs = false;
     this.initForm(
-      $(OrderViewPageMap.cancelProduct.buttons.save).data(
-        'standardRefundLabel',
-      ),
+      $(OrderViewPageMap.cancelProduct.buttons.save).data('standardRefundLabel'),
       this.router.generate('admin_orders_standard_refund', {
-        orderId: this.orderId,
+        orderId: this.orderId
       }),
-      'standard-refund',
+      'standard-refund'
     );
   }
 
@@ -87,9 +83,9 @@ export default class OrderProductCancel {
     this.initForm(
       $(OrderViewPageMap.cancelProduct.buttons.save).data('returnProductLabel'),
       this.router.generate('admin_orders_return_product', {
-        orderId: this.orderId,
+        orderId: this.orderId
       }),
-      'return-product',
+      'return-product'
     );
   }
 
@@ -114,105 +110,63 @@ export default class OrderProductCancel {
       .addClass(formClass);
     $(OrderViewPageMap.cancelProduct.buttons.save).html(actionName);
     $(OrderViewPageMap.cancelProduct.table.header).html(actionName);
-    $(OrderViewPageMap.cancelProduct.checkboxes.restock).prop(
-      'checked',
-      this.orderDelivered,
-    );
-    $(OrderViewPageMap.cancelProduct.checkboxes.creditSlip).prop(
-      'checked',
-      true,
-    );
+    $(OrderViewPageMap.cancelProduct.checkboxes.restock).prop('checked', this.orderDelivered);
+    $(OrderViewPageMap.cancelProduct.checkboxes.creditSlip).prop('checked', true);
     $(OrderViewPageMap.cancelProduct.checkboxes.voucher).prop('checked', false);
   }
 
   listenForInputs() {
-    $(document).on(
-      'change',
-      OrderViewPageMap.cancelProduct.inputs.quantity,
-      (event) => {
-        const $productQuantityInput = $(event.target);
-        const $parentCell = $productQuantityInput.parents(
-          OrderViewPageMap.cancelProduct.table.cell,
-        );
-        const $productAmount = $parentCell.find(
-          OrderViewPageMap.cancelProduct.inputs.amount,
-        );
-        const productQuantity = parseInt($productQuantityInput.val(), 10);
-        if (productQuantity <= 0) {
-          $productAmount.val(0);
-          this.updateVoucherRefund();
+    $(document).on('change', OrderViewPageMap.cancelProduct.inputs.quantity, event => {
+      const $productQuantityInput = $(event.target);
+      const $parentCell = $productQuantityInput.parents(OrderViewPageMap.cancelProduct.table.cell);
+      const $productAmount = $parentCell.find(OrderViewPageMap.cancelProduct.inputs.amount);
+      const productQuantity = parseInt($productQuantityInput.val(), 10);
+      if (productQuantity <= 0) {
+        $productAmount.val(0);
+        this.updateVoucherRefund();
 
-          return;
-        }
-        const priceFieldName = this.isTaxIncluded
-          ? 'productPriceTaxIncl'
-          : 'productPriceTaxExcl';
-        const productUnitPrice = parseFloat(
-          $productQuantityInput.data(priceFieldName),
-        );
-        const amountRefundable = parseFloat(
-          $productQuantityInput.data('amountRefundable'),
-        );
-        const guessedAmount = productUnitPrice * productQuantity < amountRefundable
+        return;
+      }
+      const priceFieldName = this.isTaxIncluded ? 'productPriceTaxIncl' : 'productPriceTaxExcl';
+      const productUnitPrice = parseFloat($productQuantityInput.data(priceFieldName));
+      const amountRefundable = parseFloat($productQuantityInput.data('amountRefundable'));
+      const guessedAmount =
+        productUnitPrice * productQuantity < amountRefundable
           ? productUnitPrice * productQuantity
           : amountRefundable;
-        const amountValue = parseFloat($productAmount.val());
+      const amountValue = parseFloat($productAmount.val());
 
-        if (this.useAmountInputs) {
-          this.updateAmountInput($productQuantityInput);
-        }
+      if (this.useAmountInputs) {
+        this.updateAmountInput($productQuantityInput);
+      }
 
-        if (
-          $productAmount.val() === ''
-          || amountValue === 0
-          || amountValue > guessedAmount
-        ) {
-          $productAmount.val(guessedAmount);
-          this.updateVoucherRefund();
-        }
-      },
-    );
-
-    $(document).on(
-      'change',
-      OrderViewPageMap.cancelProduct.inputs.amount,
-      () => {
+      if ($productAmount.val() === '' || amountValue === 0 || amountValue > guessedAmount) {
+        $productAmount.val(guessedAmount);
         this.updateVoucherRefund();
-      },
-    );
+      }
+    });
 
-    $(document).on(
-      'change',
-      OrderViewPageMap.cancelProduct.inputs.selector,
-      (event) => {
-        const $productCheckbox = $(event.target);
-        const $parentCell = $productCheckbox.parents(
-          OrderViewPageMap.cancelProduct.table.cell,
-        );
-        const $productQuantity = $parentCell.find(
-          OrderViewPageMap.cancelProduct.inputs.quantity,
-        );
-        const refundableQuantity = parseInt(
-          $productQuantity.data('quantityRefundable'),
-          10,
-        );
-        if (!$productCheckbox.is(':checked')) {
-          $productQuantity.val(0);
-        } else if (parseInt($productQuantity.val(), 10) === 0) {
-          $productQuantity.val(refundableQuantity);
-        }
-        this.updateVoucherRefund();
-      },
-    );
+    $(document).on('change', OrderViewPageMap.cancelProduct.inputs.amount, () => {
+      this.updateVoucherRefund();
+    });
+
+    $(document).on('change', OrderViewPageMap.cancelProduct.inputs.selector, event => {
+      const $productCheckbox = $(event.target);
+      const $parentCell = $productCheckbox.parents(OrderViewPageMap.cancelProduct.table.cell);
+      const $productQuantity = $parentCell.find(OrderViewPageMap.cancelProduct.inputs.quantity);
+      const refundableQuantity = parseInt($productQuantity.data('quantityRefundable'), 10);
+      if (!$productCheckbox.is(':checked')) {
+        $productQuantity.val(0);
+      } else if (parseInt($productQuantity.val(), 10) === 0) {
+        $productQuantity.val(refundableQuantity);
+      }
+      this.updateVoucherRefund();
+    });
   }
 
   updateAmountInput($productQuantityInput) {
-    const $parentCell = $productQuantityInput.parents(
-      OrderViewPageMap.cancelProduct.table.cell,
-    );
-    const $productAmount = $parentCell.find(
-      OrderViewPageMap.cancelProduct.inputs.amount,
-    );
+    const $parentCell = $productQuantityInput.parents(OrderViewPageMap.cancelProduct.table.cell);
+    const $productAmount = $parentCell.find(OrderViewPageMap.cancelProduct.inputs.amount);
     const productQuantity = parseInt($productQuantityInput.val(), 10);
     if (productQuantity <= 0) {
       $productAmount.val(0);
@@ -220,24 +174,15 @@ export default class OrderProductCancel {
       return;
     }
 
-    const priceFieldName = this.isTaxIncluded
-      ? 'productPriceTaxIncl'
-      : 'productPriceTaxExcl';
-    const productUnitPrice = parseFloat(
-      $productQuantityInput.data(priceFieldName),
-    );
-    const amountRefundable = parseFloat(
-      $productQuantityInput.data('amountRefundable'),
-    );
-    const guessedAmount = productUnitPrice * productQuantity < amountRefundable
-      ? productUnitPrice * productQuantity
-      : amountRefundable;
+    const priceFieldName = this.isTaxIncluded ? 'productPriceTaxIncl' : 'productPriceTaxExcl';
+    const productUnitPrice = parseFloat($productQuantityInput.data(priceFieldName));
+    const amountRefundable = parseFloat($productQuantityInput.data('amountRefundable'));
+    const guessedAmount =
+      productUnitPrice * productQuantity < amountRefundable
+        ? productUnitPrice * productQuantity
+        : amountRefundable;
     const amountValue = parseFloat($productAmount.val());
-    if (
-      $productAmount.val() === ''
-      || amountValue === 0
-      || amountValue > guessedAmount
-    ) {
+    if ($productAmount.val() === '' || amountValue === 0 || amountValue > guessedAmount) {
       $productAmount.val(guessedAmount);
     }
   }
@@ -251,19 +196,13 @@ export default class OrderProductCancel {
         totalAmount += !Number.isNaN(floatValue) ? floatValue : 0;
       });
     } else {
-      $(OrderViewPageMap.cancelProduct.inputs.quantity).each(
-        (index, quantity) => {
-          const $quantityInput = $(quantity);
-          const priceFieldName = this.isTaxIncluded
-            ? 'productPriceTaxIncl'
-            : 'productPriceTaxExcl';
-          const productUnitPrice = parseFloat(
-            $quantityInput.data(priceFieldName),
-          );
-          const productQuantity = parseInt($quantityInput.val(), 10);
-          totalAmount += productQuantity * productUnitPrice;
-        },
-      );
+      $(OrderViewPageMap.cancelProduct.inputs.quantity).each((index, quantity) => {
+        const $quantityInput = $(quantity);
+        const priceFieldName = this.isTaxIncluded ? 'productPriceTaxIncl' : 'productPriceTaxExcl';
+        const productUnitPrice = parseFloat($quantityInput.data(priceFieldName));
+        const productQuantity = parseInt($quantityInput.val(), 10);
+        totalAmount += productQuantity * productUnitPrice;
+      });
     }
 
     return totalAmount;
@@ -274,41 +213,30 @@ export default class OrderProductCancel {
 
     this.updateVoucherRefundTypeLabel(
       $(OrderViewPageMap.cancelProduct.radios.voucherRefundType.productPrices),
-      refundAmount,
+      refundAmount
     );
     const refundVoucherExcluded = refundAmount - this.discountsAmount;
     this.updateVoucherRefundTypeLabel(
-      $(
-        OrderViewPageMap.cancelProduct.radios.voucherRefundType
-          .productPricesVoucherExcluded,
-      ),
-      refundVoucherExcluded,
+      $(OrderViewPageMap.cancelProduct.radios.voucherRefundType.productPricesVoucherExcluded),
+      refundVoucherExcluded
     );
 
     // Disable voucher excluded option when the voucher amount is too high
     if (refundVoucherExcluded < 0) {
-      $(
-        OrderViewPageMap.cancelProduct.radios.voucherRefundType
-          .productPricesVoucherExcluded,
-      )
+      $(OrderViewPageMap.cancelProduct.radios.voucherRefundType.productPricesVoucherExcluded)
         .prop('checked', false)
         .prop('disabled', true);
-      $(
-        OrderViewPageMap.cancelProduct.radios.voucherRefundType.productPrices,
-      ).prop('checked', true);
-      $(
-        OrderViewPageMap.cancelProduct.radios.voucherRefundType
-          .negativeErrorMessage,
-      ).show();
+      $(OrderViewPageMap.cancelProduct.radios.voucherRefundType.productPrices).prop(
+        'checked',
+        true
+      );
+      $(OrderViewPageMap.cancelProduct.radios.voucherRefundType.negativeErrorMessage).show();
     } else {
-      $(
-        OrderViewPageMap.cancelProduct.radios.voucherRefundType
-          .productPricesVoucherExcluded,
-      ).prop('disabled', false);
-      $(
-        OrderViewPageMap.cancelProduct.radios.voucherRefundType
-          .negativeErrorMessage,
-      ).hide();
+      $(OrderViewPageMap.cancelProduct.radios.voucherRefundType.productPricesVoucherExcluded).prop(
+        'disabled',
+        false
+      );
+      $(OrderViewPageMap.cancelProduct.radios.voucherRefundType.negativeErrorMessage).hide();
     }
   }
 
