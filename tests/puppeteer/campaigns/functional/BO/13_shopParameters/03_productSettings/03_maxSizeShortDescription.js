@@ -1,7 +1,7 @@
 require('module-alias/register');
 const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_BO_modules_ShopParameters_productSettings_maxSizeShortDescription';
+const baseContext = 'functional_BO_modules_shopParameters_productSettings_maxSizeShortDescription';
 // Using chai
 const {expect} = require('chai');
 const helper = require('@utils/helpers');
@@ -82,7 +82,6 @@ describe('Update max size of short description', async () => {
         this.pageObjects.boBasePage.catalogParentLink,
         this.pageObjects.boBasePage.productsLink,
       );
-      await this.pageObjects.boBasePage.closeSfToolBar();
       const pageTitle = await this.pageObjects.productsPage.getPageTitle();
       await expect(pageTitle).to.contains(this.pageObjects.productsPage.pageTitle);
     });
@@ -94,9 +93,9 @@ describe('Update max size of short description', async () => {
         let errorMessage = await this.pageObjects.addProductPage.createEditProduct(productData, false);
         await expect(errorMessage).to.equal(this.pageObjects.addProductPage.errorMessage);
         errorMessage = await this.pageObjects.addProductPage.getErrorMessageWhenSummaryIsTooLong();
-        await expect(errorMessage)
-          .to.equal(this.pageObjects.addProductPage.errorMessageWhenSummaryTooLong
-            .replace('%NUMBER', maxSummarySizeValue));
+        await expect(errorMessage).to.equal(
+          this.pageObjects.addProductPage.errorMessageWhenSummaryTooLong.replace('%NUMBER', maxSummarySizeValue),
+        );
       });
     } else {
       it(`should create a product with a summary less than ${test.args.descriptionSize} characters`, async function () {
