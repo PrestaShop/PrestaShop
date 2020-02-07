@@ -78,7 +78,6 @@ before_install:
 
 install:
   - composer install --no-suggest --ansi --prefer-dist --no-interaction --no-progress --quiet;
-  - make assets
   - if [ "$PRESTASHOP_TEST_TYPE" != "sanity" ]; then
       bash travis-scripts/install-prestashop;
     fi
@@ -94,10 +93,12 @@ script:
     fi
 
   - if [ "$PRESTASHOP_TEST_TYPE" = "integration" ]; then
+        make assets;
         bash tests/check_integration.sh;
     fi
 
   - if [ "$PRESTASHOP_TEST_TYPE" = "sanity" ]; then
+        make assets;
         bash tests/check_sanity.sh;
     fi
 
