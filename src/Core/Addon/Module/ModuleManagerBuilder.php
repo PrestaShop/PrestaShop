@@ -235,7 +235,7 @@ class ModuleManagerBuilder
         // get the environment to load the good routing file
         $routeFileName = _PS_MODE_DEV_ === true ? 'routing_dev.yml' : 'routing.yml';
         $routesDirectory = $this->getConfigDir();
-        $locator = new FileLocator(array($routesDirectory));
+        $locator = new FileLocator([$routesDirectory]);
         $loader = new YamlFileLoader($locator);
 
         return new Router($loader, $routeFileName);

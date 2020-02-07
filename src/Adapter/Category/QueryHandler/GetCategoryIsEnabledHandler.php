@@ -45,10 +45,7 @@ final class GetCategoryIsEnabledHandler implements GetCategoryIsEnabledHandlerIn
         $category = new Category($categoryId);
 
         if ($category->id !== $categoryId) {
-            throw new CategoryNotFoundException(
-                $query->getCategoryId(),
-                sprintf('Category with id "%s" was not found.', $categoryId)
-            );
+            throw new CategoryNotFoundException($query->getCategoryId(), sprintf('Category with id "%s" was not found.', $categoryId));
         }
 
         return (bool) $category->active;

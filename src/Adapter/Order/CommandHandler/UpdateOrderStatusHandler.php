@@ -94,12 +94,7 @@ final class UpdateOrderStatusHandler extends AbstractOrderHandler implements Upd
             return;
         }
 
-        throw new ChangeOrderStatusException(
-            [],
-            [$command->getOrderId()],
-            [],
-            'Failed to update status or sent email when changing order status.'
-        );
+        throw new ChangeOrderStatusException([], [$command->getOrderId()], [], 'Failed to update status or sent email when changing order status.');
     }
 
     /**

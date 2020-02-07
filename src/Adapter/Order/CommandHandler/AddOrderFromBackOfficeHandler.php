@@ -151,17 +151,11 @@ final class AddOrderFromBackOfficeHandler implements AddOrderFromBackOfficeHandl
         $deliveryAddress = new Address($cart->id_address_delivery);
 
         if ($invoiceAddress->deleted) {
-            throw new OrderException(sprintf(
-                'The invoice address with id "%s" cannot be used, because it is deleted',
-                $invoiceAddress->id
-            ));
+            throw new OrderException(sprintf('The invoice address with id "%s" cannot be used, because it is deleted', $invoiceAddress->id));
         }
 
         if ($deliveryAddress->deleted) {
-            throw new OrderException(sprintf(
-                'The delivery address with id "%s" cannot be used, because it is deleted',
-                $deliveryAddress->id
-            ));
+            throw new OrderException(sprintf('The delivery address with id "%s" cannot be used, because it is deleted', $deliveryAddress->id));
         }
     }
 

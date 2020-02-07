@@ -24,6 +24,7 @@
  */
 import $ from 'jquery';
 import prestashop from 'prestashop';
+import ProductSelect from './components/product-select';
 
 $(document).ready(function () {
   createProductSpin();
@@ -45,6 +46,9 @@ $(document).ready(function () {
     imageScrollBox();
     $($('.tabs .nav-link.active').attr('href')).addClass('active').removeClass('fade');
     $('.js-product-images-modal').replaceWith(event.product_images_modal);
+
+    let productSelect  = new ProductSelect();
+    productSelect.init();
   });
 
   function coverImage() {
@@ -106,12 +110,21 @@ $(document).ready(function () {
       max: 1000000
     });
 
+    $quantityInput.focusout(() => {
+      if ($quantityInput.val() === '' || $quantityInput.val() < $quantityInput.attr('min')) {
+        $quantityInput.val($quantityInput.attr('min'));
+        $quantityInput.trigger('change');
+      }
+    });
+
     $('body').on('change keyup', '#quantity_wanted', (e) => {
-      $(e.currentTarget).trigger('touchspin.stopspin');
-      prestashop.emit('updateProduct', {
-          eventType: 'updatedProductQuantity',
-          event: e
-      });
+      if ($quantityInput.val() !== '') {
+        $(e.currentTarget).trigger('touchspin.stopspin');
+        prestashop.emit('updateProduct', {
+            eventType: 'updatedProductQuantity',
+            event: e
+        });
+      }
     });
   }
 });

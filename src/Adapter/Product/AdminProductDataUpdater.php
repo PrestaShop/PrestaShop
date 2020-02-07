@@ -70,7 +70,7 @@ class AdminProductDataUpdater implements ProductInterface
             throw new \Exception('AdminProductDataUpdater->activateProductIdList() should always receive at least one ID. Zero given.', 5003);
         }
 
-        $failedIdList = array();
+        $failedIdList = [];
         foreach ($productListId as $productId) {
             $product = new Product($productId);
             if (!Validate::isLoadedObject($product)
@@ -82,10 +82,10 @@ class AdminProductDataUpdater implements ProductInterface
             }
             $product->active = ($activate ? 1 : 0);
             $product->update();
-            if (in_array($product->visibility, array('both', 'search')) && Configuration::get('PS_SEARCH_INDEXATION')) {
+            if (in_array($product->visibility, ['both', 'search']) && Configuration::get('PS_SEARCH_INDEXATION')) {
                 Search::indexation(false, $product->id);
             }
-            $this->hookDispatcher->dispatchWithParameters('actionProductActivation', array('id_product' => (int) $product->id, 'product' => $product, 'activated' => $activate));
+            $this->hookDispatcher->dispatchWithParameters('actionProductActivation', ['id_product' => (int) $product->id, 'product' => $product, 'activated' => $activate]);
         }
 
         if (count($failedIdList) > 0) {
@@ -124,7 +124,7 @@ class AdminProductDataUpdater implements ProductInterface
             throw new \Exception('AdminProductDataUpdater->duplicateProductIdList() should always receive at least one ID. Zero given.', 5005);
         }
 
-        $failedIdList = array();
+        $failedIdList = [];
         foreach ($productIdList as $productId) {
             try {
                 $this->duplicateProduct($productId);
@@ -229,8 +229,8 @@ class AdminProductDataUpdater implements ProductInterface
             if (!Image::duplicateProductImages($id_product_old, $product->id, $combination_images)) {
                 throw new UpdateProductException('An error occurred while copying images.', 5008);
             } else {
-                $this->hookDispatcher->dispatchWithParameters('actionProductAdd', array('id_product_old' => $id_product_old, 'id_product' => (int) $product->id, 'product' => $product));
-                if (in_array($product->visibility, array('both', 'search')) && Configuration::get('PS_SEARCH_INDEXATION')) {
+                $this->hookDispatcher->dispatchWithParameters('actionProductAdd', ['id_product_old' => $id_product_old, 'id_product' => (int) $product->id, 'product' => $product]);
+                if (in_array($product->visibility, ['both', 'search']) && Configuration::get('PS_SEARCH_INDEXATION')) {
                     Search::indexation(false, $product->id);
                 }
 

@@ -51,12 +51,12 @@ class StockRepository extends StockManagementRepository
     /**
      * @var array
      */
-    private $orderStates = array();
+    private $orderStates = [];
 
     /**
      * @var array
      */
-    private $totalCombinations = array();
+    private $totalCombinations = [];
 
     /**
      * StockRepository constructor.
@@ -131,9 +131,9 @@ class StockRepository extends StockManagementRepository
                     $delta,
                     $this->contextAdapter->getContext()->shop->id,
                     true,
-                    array(
+                    [
                         'id_stock_mvt_reason' => ($delta >= 1 ? $configurationAdapter->get('PS_STOCK_MVT_INC_EMPLOYEE_EDITION') : $configurationAdapter->get('PS_STOCK_MVT_DEC_EMPLOYEE_EDITION')),
-                    )
+                    ]
                 );
             }
 
@@ -179,13 +179,7 @@ class StockRepository extends StockManagementRepository
         $this->foundRows = $this->getFoundRows();
 
         if (count($rows) === 0) {
-            throw new ProductNotFoundException(
-                sprintf(
-                    'Product with id %d and combination id %d can not be found',
-                    $productIdentity->getProductId(),
-                    $productIdentity->getCombinationId()
-                )
-            );
+            throw new ProductNotFoundException(sprintf('Product with id %d and combination id %d can not be found', $productIdentity->getProductId(), $productIdentity->getCombinationId()));
         }
 
         $rows = $this->addAdditionalData($rows);
@@ -243,20 +237,20 @@ class StockRepository extends StockManagementRepository
         $combinationNameQuery = $this->getCombinationNameSubquery();
 
         return str_replace(
-            array(
+            [
                 '{and_where}',
                 '{having}',
                 '{order_by}',
                 '{table_prefix}',
                 '{combination_name}',
-            ),
-            array(
+            ],
+            [
                 $andWhereClause,
                 $having,
                 $orderByClause,
                 $this->tablePrefix,
                 $combinationNameQuery,
-            ),
+            ],
             'SELECT SQL_CALC_FOUND_ROWS
           p.id_product                                                                      AS product_id,
           COALESCE(pa.id_product_attribute, 0)                                              AS combination_id,
@@ -375,19 +369,19 @@ class StockRepository extends StockManagementRepository
         $router = $this->container->get('router');
 
         foreach ($rows as &$row) {
-            $row['combinations_product_url'] = $router->generate('api_stock_list_product_combinations', array(
+            $row['combinations_product_url'] = $router->generate('api_stock_list_product_combinations', [
                 'productId' => $row['product_id'],
-            ));
+            ]);
 
             if (!empty($row['combination_id'])) {
-                $row['edit_url'] = $router->generate('api_stock_edit_product_combination', array(
+                $row['edit_url'] = $router->generate('api_stock_edit_product_combination', [
                     'productId' => $row['product_id'],
                     'combinationId' => $row['combination_id'],
-                ));
+                ]);
             } else {
-                $row['edit_url'] = $router->generate('api_stock_edit_product', array(
+                $row['edit_url'] = $router->generate('api_stock_edit_product', [
                     'productId' => $row['product_id'],
-                ));
+                ]);
             }
         }
 

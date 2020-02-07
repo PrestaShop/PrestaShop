@@ -98,10 +98,7 @@ final class AddProductToCartHandler implements AddProductToCartHandlerInterface
     private function assertQuantityIsPositiveInt(int $quantity): void
     {
         if (0 > $quantity) {
-            throw new CartConstraintException(
-                sprintf('Quantity must be positive integer, but %s given.', $quantity),
-                CartConstraintException::INVALID_QUANTITY
-            );
+            throw new CartConstraintException(sprintf('Quantity must be positive integer, but %s given.', $quantity), CartConstraintException::INVALID_QUANTITY);
         }
     }
 }

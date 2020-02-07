@@ -34,8 +34,8 @@ class ModuleTemplateIteratorTest extends TestCase
     public function testGetIterator()
     {
         $kernel = $this->getMockBuilder('Symfony\Component\HttpKernel\Kernel')->disableOriginalConstructor()->getMock();
-        $kernel->expects($this->any())->method('getBundles')->will($this->returnValue(array()));
-        $iterator = new ModuleTemplateIterator($kernel, __DIR__ . '/../Fixtures', array(__DIR__ . '/../Fixtures/modules' => 'Modules'), __DIR__ . '/Fixtures/templates');
+        $kernel->expects($this->any())->method('getBundles')->will($this->returnValue([]));
+        $iterator = new ModuleTemplateIterator($kernel, __DIR__ . '/../Fixtures', [__DIR__ . '/../Fixtures/modules' => 'Modules'], __DIR__ . '/Fixtures/templates');
 
         $templates = iterator_to_array($iterator->getIterator());
 

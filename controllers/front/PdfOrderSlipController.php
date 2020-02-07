@@ -42,9 +42,9 @@ class PdfOrderSlipControllerCore extends FrontController
         }
 
         if (!isset($this->order_slip) || !Validate::isLoadedObject($this->order_slip)) {
-            die($this->trans('Order return not found.', array(), 'Shop.Notifications.Error'));
+            die($this->trans('Order return not found.', [], 'Shop.Notifications.Error'));
         } elseif ($this->order_slip->id_customer != $this->context->customer->id) {
-            die($this->trans('Order return not found.', array(), 'Shop.Notifications.Error'));
+            die($this->trans('Order return not found.', [], 'Shop.Notifications.Error'));
         }
     }
 

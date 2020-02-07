@@ -39,7 +39,7 @@ class ThemeValidator
     private $translator;
     private $appConfiguration;
 
-    private $errors = array();
+    private $errors = [];
 
     public function __construct(TranslatorInterface $translator, ConfigurationInterface $configuration)
     {
@@ -65,12 +65,12 @@ class ThemeValidator
         foreach ($this->getRequiredProperties() as $prop) {
             if (!$theme->has($prop)) {
                 if (!array_key_exists($themeName, $this->errors)) {
-                    $this->errors[$themeName] = array();
+                    $this->errors[$themeName] = [];
                 }
 
                 $this->errors[$themeName] = $this->translator->trans(
                     'An error occurred. The information "%s" is missing.',
-                    array($prop),
+                    [$prop],
                     'Admin.Design.Notification'
                 );
             }
@@ -81,7 +81,7 @@ class ThemeValidator
 
     public function getRequiredProperties()
     {
-        return array(
+        return [
             'name',
             'display_name',
             'version',
@@ -95,7 +95,7 @@ class ThemeValidator
             'global_settings.image_types.home_default',
             'global_settings.image_types.category_default',
             'theme_settings.default_layout',
-        );
+        ];
     }
 
     private function hasRequiredFiles(Theme $theme)
@@ -112,10 +112,10 @@ class ThemeValidator
 
             if (!file_exists($childFile) && !file_exists($parentFile)) {
                 if (!array_key_exists($themeName, $this->errors)) {
-                    $this->errors[$themeName] = array();
+                    $this->errors[$themeName] = [];
                 }
 
-                $this->errors[$themeName] = $this->translator->trans('An error occurred. The template "%s" is missing.', array($file), 'Admin.Design.Notification');
+                $this->errors[$themeName] = $this->translator->trans('An error occurred. The template "%s" is missing.', [$file], 'Admin.Design.Notification');
             }
         }
 
@@ -124,7 +124,7 @@ class ThemeValidator
 
     public function getRequiredFiles()
     {
-        return array(
+        return [
             'preview.png',
             'config/theme.yml',
             'assets/js/theme.js',
@@ -158,6 +158,6 @@ class ThemeValidator
             'templates/customer/authentication.tpl',
             'templates/customer/registration.tpl',
             'templates/contact.tpl',
-        );
+        ];
     }
 }

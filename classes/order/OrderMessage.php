@@ -37,25 +37,25 @@ class OrderMessageCore extends ObjectModel
     /**
      * @see ObjectModel::$definition
      */
-    public static $definition = array(
+    public static $definition = [
         'table' => 'order_message',
         'primary' => 'id_order_message',
         'multilang' => true,
-        'fields' => array(
-            'date_add' => array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
+        'fields' => [
+            'date_add' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
 
             /* Lang fields */
-            'name' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 128),
-            'message' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isMessage', 'required' => true, 'size' => 1200),
-        ),
-    );
+            'name' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 128],
+            'message' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isMessage', 'required' => true, 'size' => 1200],
+        ],
+    ];
 
-    protected $webserviceParameters = array(
-        'fields' => array(
-            'id' => array('sqlId' => 'id_discount_type', 'xlink_resource' => 'order_message_lang'),
-            'date_add' => array('sqlId' => 'date_add'),
-        ),
-    );
+    protected $webserviceParameters = [
+        'fields' => [
+            'id' => ['sqlId' => 'id_discount_type', 'xlink_resource' => 'order_message_lang'],
+            'date_add' => ['sqlId' => 'date_add'],
+        ],
+    ];
 
     public static function getOrderMessages($id_lang)
     {

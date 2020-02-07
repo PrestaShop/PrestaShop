@@ -63,13 +63,7 @@ class CartRuleId
     private function assertIsPositiveInt(int $value): void
     {
         if (0 > $value) {
-            throw new CartRuleConstraintException(
-                sprintf(
-                    'Invalid cart rule id "%s".',
-                    $value
-                ),
-                CartRuleConstraintException::INVALID_ID
-            );
+            throw new CartRuleConstraintException(sprintf('Invalid cart rule id "%s".', $value), CartRuleConstraintException::INVALID_ID);
         }
     }
 }

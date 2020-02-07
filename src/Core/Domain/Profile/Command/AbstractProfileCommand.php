@@ -68,14 +68,7 @@ abstract class AbstractProfileCommand
     protected function assertNameIsStringAndRequiredLength($name)
     {
         if (null !== $name && !is_string($name) || strlen($name) > ProfileSettings::NAME_MAX_LENGTH) {
-            throw new ProfileConstraintException(
-                sprintf(
-                    'Profile name should not exceed %d characters length but %s given',
-                    ProfileSettings::NAME_MAX_LENGTH,
-                    var_export($name, true)
-                ),
-                ProfileConstraintException::INVALID_NAME
-            );
+            throw new ProfileConstraintException(sprintf('Profile name should not exceed %d characters length but %s given', ProfileSettings::NAME_MAX_LENGTH, var_export($name, true)), ProfileConstraintException::INVALID_NAME);
         }
     }
 }

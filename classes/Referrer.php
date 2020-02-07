@@ -51,26 +51,26 @@ class ReferrerCore extends ObjectModel
     /**
      * @see ObjectModel::$definition
      */
-    public static $definition = array(
+    public static $definition = [
         'table' => 'referrer',
         'primary' => 'id_referrer',
-        'fields' => array(
-            'name' => array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => true, 'size' => 64),
-            'passwd' => array('type' => self::TYPE_STRING, 'validate' => 'isPasswd', 'size' => 255),
-            'http_referer_regexp' => array('type' => self::TYPE_STRING, 'validate' => 'isCleanHtml', 'size' => 64),
-            'request_uri_regexp' => array('type' => self::TYPE_STRING, 'validate' => 'isCleanHtml', 'size' => 64),
-            'http_referer_like' => array('type' => self::TYPE_STRING, 'validate' => 'isCleanHtml', 'size' => 64),
-            'request_uri_like' => array('type' => self::TYPE_STRING, 'validate' => 'isCleanHtml', 'size' => 64),
-            'http_referer_regexp_not' => array('type' => self::TYPE_STRING, 'validate' => 'isCleanHtml'),
-            'request_uri_regexp_not' => array('type' => self::TYPE_STRING, 'validate' => 'isCleanHtml'),
-            'http_referer_like_not' => array('type' => self::TYPE_STRING, 'validate' => 'isCleanHtml'),
-            'request_uri_like_not' => array('type' => self::TYPE_STRING, 'validate' => 'isCleanHtml'),
-            'base_fee' => array('type' => self::TYPE_FLOAT, 'validate' => 'isFloat'),
-            'percent_fee' => array('type' => self::TYPE_FLOAT, 'validate' => 'isPercentage'),
-            'click_fee' => array('type' => self::TYPE_FLOAT, 'validate' => 'isFloat'),
-            'date_add' => array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
-        ),
-    );
+        'fields' => [
+            'name' => ['type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => true, 'size' => 64],
+            'passwd' => ['type' => self::TYPE_STRING, 'validate' => 'isPasswd', 'size' => 255],
+            'http_referer_regexp' => ['type' => self::TYPE_STRING, 'validate' => 'isCleanHtml', 'size' => 64],
+            'request_uri_regexp' => ['type' => self::TYPE_STRING, 'validate' => 'isCleanHtml', 'size' => 64],
+            'http_referer_like' => ['type' => self::TYPE_STRING, 'validate' => 'isCleanHtml', 'size' => 64],
+            'request_uri_like' => ['type' => self::TYPE_STRING, 'validate' => 'isCleanHtml', 'size' => 64],
+            'http_referer_regexp_not' => ['type' => self::TYPE_STRING, 'validate' => 'isCleanHtml'],
+            'request_uri_regexp_not' => ['type' => self::TYPE_STRING, 'validate' => 'isCleanHtml'],
+            'http_referer_like_not' => ['type' => self::TYPE_STRING, 'validate' => 'isCleanHtml'],
+            'request_uri_like_not' => ['type' => self::TYPE_STRING, 'validate' => 'isCleanHtml'],
+            'base_fee' => ['type' => self::TYPE_FLOAT, 'validate' => 'isFloat'],
+            'percent_fee' => ['type' => self::TYPE_FLOAT, 'validate' => 'isPercentage'],
+            'click_fee' => ['type' => self::TYPE_FLOAT, 'validate' => 'isFloat'],
+            'date_add' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
+        ],
+    ];
 
     protected static $_join = '(r.http_referer_like IS NULL OR r.http_referer_like = \'\' OR cs.http_referer LIKE r.http_referer_like)
 			AND (r.request_uri_like IS NULL OR r.request_uri_like = \'\' OR cs.request_uri LIKE r.request_uri_like)
@@ -86,8 +86,8 @@ class ReferrerCore extends ObjectModel
         if (!($result = parent::add($autoDate, $nullValues))) {
             return false;
         }
-        Referrer::refreshCache(array(array('id_referrer' => $this->id)));
-        Referrer::refreshIndex(array(array('id_referrer' => $this->id)));
+        Referrer::refreshCache([['id_referrer' => $this->id]]);
+        Referrer::refreshIndex([['id_referrer' => $this->id]]);
 
         return $result;
     }
@@ -245,7 +245,7 @@ class ReferrerCore extends ObjectModel
 
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 
-        $implode = array();
+        $implode = [];
         foreach ($result as $row) {
             if ((int) $row['id_order']) {
                 $implode[] = (int) $row['id_order'];
@@ -271,7 +271,7 @@ class ReferrerCore extends ObjectModel
 
             return Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql);
         } else {
-            return array('orders' => 0, 'sales' => 0);
+            return ['orders' => 0, 'sales' => 0];
         }
     }
 
@@ -299,7 +299,7 @@ class ReferrerCore extends ObjectModel
                 $registrations = $referrer->getRegistrations(null, $employee);
                 $statsSales = $referrer->getStatsSales(null, $employee);
 
-                Db::getInstance()->update('referrer_shop', array(
+                Db::getInstance()->update('referrer_shop', [
                     'cache_visitors' => (int) $statsVisits['uniqs'],
                     'cache_visits' => (int) $statsVisits['visits'],
                     'cache_pages' => (int) $statsVisits['pages'],
@@ -308,7 +308,7 @@ class ReferrerCore extends ObjectModel
                     'cache_sales' => number_format($statsSales['sales'], 2, '.', ''),
                     'cache_reg_rate' => $statsVisits['uniqs'] ? $registrations / $statsVisits['uniqs'] : 0,
                     'cache_order_rate' => $statsVisits['uniqs'] ? $statsSales['orders'] / $statsVisits['uniqs'] : 0,
-                ), 'id_referrer = ' . (int) $referrer->id . ' AND id_shop = ' . (int) $idShop);
+                ], 'id_referrer = ' . (int) $referrer->id . ' AND id_shop = ' . (int) $idShop);
             }
         }
 
@@ -369,7 +369,7 @@ class ReferrerCore extends ObjectModel
             return;
         }
 
-        $jsonArray = array(
+        $jsonArray = [
             'id_product' => (int) $product->id,
             'product_name' => htmlspecialchars($product->name),
             'uniqs' => (int) $statsVisits['uniqs'],
@@ -385,7 +385,7 @@ class ReferrerCore extends ObjectModel
             'click_fee' => Context::getContext()->getCurrentLocale()->formatPrice((int) $statsVisits['visits'] * $referrer->click_fee, $currency->iso_code),
             'base_fee' => Context::getContext()->getCurrentLocale()->formatPrice($statsSales['orders'] * $referrer->base_fee, $currency->iso_code),
             'percent_fee' => Context::getContext()->getCurrentLocale()->formatPrice($statsSales['sales'] * $referrer->percent_fee / 100, $currency->iso_code),
-        );
+        ];
 
         return json_encode([$jsonArray]);
     }

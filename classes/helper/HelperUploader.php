@@ -104,7 +104,7 @@ class HelperUploaderCore extends Uploader
     public function getFiles()
     {
         if (!isset($this->_files)) {
-            $this->_files = array();
+            $this->_files = [];
         }
 
         return $this->_files;
@@ -287,7 +287,7 @@ class HelperUploaderCore extends Uploader
             $this->getContext()->smarty
         );
 
-        $template->assign(array(
+        $template->assign([
             'id' => $this->getId(),
             'name' => $this->getName(),
             'url' => $this->getUrl(),
@@ -297,7 +297,7 @@ class HelperUploaderCore extends Uploader
             'max_files' => $this->getMaxFiles(),
             'post_max_size' => $this->getPostMaxSizeBytes(),
             'drop_zone' => $this->getDropZone(),
-        ));
+        ]);
 
         return $template->fetch();
     }

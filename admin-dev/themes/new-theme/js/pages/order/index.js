@@ -40,7 +40,7 @@ import PreviewExtension from '@components/grid/extension/preview-extension';
 import previewProductsToggler from '@pages/order/preview-products-toggler';
 import BulkOpenTabsExtension from '@components/grid/extension/bulk-open-tabs-extension';
 
-const $ = window.$;
+const {$} = window;
 
 $(() => {
   const orderGrid = new Grid('order');

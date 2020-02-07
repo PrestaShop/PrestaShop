@@ -341,19 +341,19 @@ class PaymentOption implements HookContentClassInterface
         }
 
         if (array_key_exists('cta_text', $legacyOption)) {
-            $legacyOption = array($legacyOption);
+            $legacyOption = [$legacyOption];
         }
 
-        $newOptions = array();
+        $newOptions = [];
 
-        $defaults = array(
+        $defaults = [
             'additionalInformation' => null,
             'action' => null,
             'form' => null,
             'method' => null,
-            'inputs' => array(),
+            'inputs' => [],
             'logo' => null,
-        );
+        ];
 
         foreach ($legacyOption as $option) {
             $option = array_merge($defaults, $option);

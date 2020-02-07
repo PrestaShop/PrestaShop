@@ -35,9 +35,23 @@
       color: $primary;
     }
   }
+  .btn-product-pack-modal {
+    color: $primary;
+    cursor: pointer;
+  }
   input[type="number"] {
     width: 80px;
   }
+}
+
+#addProductTableRow,
+.editProductRow {
+  /* stylelint-disable */
+  // div selector is important here, it is used for empty labels regular labels must not be hidden
+  div.form-control-label {
+    display: none;
+  }
+  /* stylelint-enable */
 }
 
 #addProductNewInvoiceInfo h4 {
@@ -166,56 +180,116 @@ td .editProductInvoice {
   }
 }
 
-.partial-refund {
+.shipping-price {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.shipping-refund-amount {
+  margin-left: 10px;
+}
+
+.cancel-product-element,
+.cancel-product-selector,
+.cancel-product-amount {
   display: none;
 }
 
-.partial-refund label {
-  height: 30px;
-  line-height: 30px;
-  padding: 0;
-}
-
-.partial-refund .form-group {
-  display: inline-flex;
-}
-
-.partial-refund .form-group .input-group {
-  display: flex;
-  flex: wrap;
-}
-
-.partial-refund.form-submit {
+.cancel-product-element.form-submit {
   width: 100%;
   margin-right: 20px;
   margin-top: -10px;
 }
 
 .refund-checkboxes-container {
-  max-width: 90px;
-  margin: 16px auto;
   display: none;
+  width: fit-content;
+  margin: 16px auto;
 }
 
 .refund-checkboxes-container .form-group {
   width: max-content;
 }
 
-.partial-refund .shipping-price-container {
-  display: flex;
-  margin-top: 8px;
+@media (min-width: 1410px) {
+  .cancel-product-cell {
+    min-width: 430px;
+
+    .form-group.row {
+      margin-bottom: 0;
+
+      .col-xl-4,
+      .col-xl-8 {
+        padding-right: 0;
+      }
+    }
+  }
+}
+@media (max-width: 1410px) {
+  .cancel-product-cell {
+    .form-group {
+      .input-group {
+        min-width: 150px;
+      }
+    }
+
+    .col-xl-5,
+    .col-xl-7,
+    .col-xl-4,
+    .col-xl-8 {
+      flex: 0 0 100%;
+      max-width: 100%;
+    }
+  }
 }
 
-.partial-refund .form-group {
-  width: max-content;
+.cancel-product-cell {
+  margin-right: 0;
+  padding-right: 0;
+
+  .form-group {
+    display: flex;
+    flex-direction: row;
+
+    label {
+      min-width: 95px;
+      line-height: 30px;
+      padding: 0;
+      margin-bottom: 0;
+      font-weight: bold;
+    }
+
+    .input-group {
+      min-width: 90px;
+
+      input {
+        height: 35px;
+        min-width: 30px;
+        max-width: 80px;
+      }
+      .input-group-append {
+        height: 35px;
+      }
+      small {
+        flex-basis: 100%;
+        padding-left: 10px;
+      }
+    }
+  }
+}
+
+.voucher-refund-type-negative-error {
+  color: $color-error;
+  display: none;
 }
 
 input.refund-quantity {
   max-width: 160px;
-  margin-left: 20px;
+  margin-left: 10px;
 }
 
 input.refund-amount, input#partial_refund_shipping {
   max-width: 80px;
-  margin-left: 20px;
+  margin-left: 10px;
 }

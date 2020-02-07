@@ -26,20 +26,20 @@
 
 namespace Tests\Unit\PrestaShopBundle\Controller\ArgumentResolver;
 
-use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Search\Filters;
 use PrestaShop\PrestaShop\Core\Search\SearchParametersInterface;
 use PrestaShopBundle\Controller\ArgumentResolver\SearchParametersResolver;
 use PrestaShopBundle\Entity\Repository\AdminFilterRepository;
 use PrestaShopBundle\Event\FilterSearchCriteriaEvent;
+use PrestaShopBundle\Security\Admin\Employee;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadata;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-use PrestaShopBundle\Security\Admin\Employee;
 
 class SearchParametersResolverTest extends TestCase
 {

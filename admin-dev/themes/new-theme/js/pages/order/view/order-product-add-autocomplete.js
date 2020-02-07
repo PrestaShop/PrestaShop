@@ -25,7 +25,7 @@
 import Router from '@components/router';
 import OrderViewPageMap from '@pages/order/OrderViewPageMap';
 
-const $ = window.$;
+const {$} = window;
 
 export default class OrderProductAutocomplete {
   constructor(input) {
@@ -44,13 +44,13 @@ export default class OrderProductAutocomplete {
       event.stopImmediatePropagation();
       this.updateResults(this.results);
     });
-    this.input.on('keyup', event => this.search(event.target.value));
+    this.input.on('keyup', (event) => this.search(event.target.value));
     $(document).on('click', () => this.dropdownMenu.hide());
   }
 
   search(search) {
     $.get(this.router.generate('admin_products_search', {search_phrase: search}))
-      .then(response => this.updateResults(response));
+      .then((response) => this.updateResults(response));
   }
 
   updateResults(results) {
@@ -63,9 +63,9 @@ export default class OrderProductAutocomplete {
     this.results = results.products;
     Object.values(this.results).forEach((val) => {
       const link = $(`<a class="dropdown-item" data-id="${val.productId}" href="#">${val.name}</a>`);
-      link.on('click', event => {
+      link.on('click', (event) => {
         event.preventDefault();
-        this.onItemClicked($(event.target).data('id'))
+        this.onItemClicked($(event.target).data('id'));
       });
       this.dropdownMenu.append(link);
     });

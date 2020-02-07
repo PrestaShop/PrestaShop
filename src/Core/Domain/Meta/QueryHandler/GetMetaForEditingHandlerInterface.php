@@ -26,8 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Meta\QueryHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Meta\QueryResult\EditableMeta;
 use PrestaShop\PrestaShop\Core\Domain\Meta\Query\GetMetaForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Meta\QueryResult\EditableMeta;
 
 /**
  * Interface GetMetaForEditingHandlerInterface defines contract for GetMetaForEditingHandler.

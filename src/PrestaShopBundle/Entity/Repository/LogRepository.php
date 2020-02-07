@@ -119,7 +119,7 @@ class LogRepository implements RepositoryInterface, DoctrineQueryBuilderInterfac
             return !empty($value);
         });
         $scalarFilters = array_filter($wheres, function ($key) {
-            return !in_array($key, array('date_from', 'date_to', 'employee'), true);
+            return !in_array($key, ['date_from', 'date_to', 'employee'], true);
         }, ARRAY_FILTER_USE_KEY);
 
         $qb = $queryBuilder
@@ -140,10 +140,10 @@ class LogRepository implements RepositoryInterface, DoctrineQueryBuilderInterfac
         /* Manage Dates interval */
         if (!empty($wheres['date_from']) && !empty($wheres['date_to'])) {
             $qb->andWhere('l.date_add BETWEEN :date_from AND :date_to');
-            $qb->setParameters(array(
+            $qb->setParameters([
                 'date_from' => $wheres['date_from'],
                 'date_to' => $wheres['date_to'],
-            ));
+            ]);
         }
 
         /* Manage Employee filter */

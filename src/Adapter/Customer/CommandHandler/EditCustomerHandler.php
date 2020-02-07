@@ -219,10 +219,7 @@ final class EditCustomerHandler extends AbstractCustomerHandler implements EditC
         $customerByEmail->getByEmail($command->getEmail()->getValue());
 
         if ($customerByEmail->id) {
-            throw new DuplicateCustomerEmailException(
-                $command->getEmail(),
-                sprintf('Customer with email "%s" already exists', $command->getEmail()->getValue())
-            );
+            throw new DuplicateCustomerEmailException($command->getEmail(), sprintf('Customer with email "%s" already exists', $command->getEmail()->getValue()));
         }
     }
 
@@ -251,9 +248,7 @@ final class EditCustomerHandler extends AbstractCustomerHandler implements EditC
          ;
 
         if (!in_array($defaultGroupId, $groupIds)) {
-            throw new CustomerDefaultGroupAccessException(
-                sprintf('Customer default group with id "%s" must be in access groups', $command->getDefaultGroupId())
-            );
+            throw new CustomerDefaultGroupAccessException(sprintf('Customer default group with id "%s" must be in access groups', $command->getDefaultGroupId()));
         }
     }
 }

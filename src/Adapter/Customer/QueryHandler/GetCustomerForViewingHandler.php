@@ -41,6 +41,9 @@ use Language;
 use Link;
 use Order;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerForViewing;
+use PrestaShop\PrestaShop\Core\Domain\Customer\QueryHandler\GetCustomerForViewingHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\AddressInformation;
 use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\BoughtProductInformation;
 use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\CartInformation;
@@ -56,11 +59,8 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\ProductsInformation;
 use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\ReferrerInformation;
 use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\SentEmailInformation;
 use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\Subscriptions;
-use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\ViewedProductInformation;
 use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\ViewableCustomer;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerForViewing;
-use PrestaShop\PrestaShop\Core\Domain\Customer\QueryHandler\GetCustomerForViewingHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\ViewedProductInformation;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
 use Product;
@@ -595,10 +595,7 @@ final class GetCustomerForViewingHandler implements GetCustomerForViewingHandler
     private function assertCustomerWasFound(CustomerId $customerId, Customer $customer)
     {
         if (!$customer->id) {
-            throw new CustomerNotFoundException(
-                $customerId,
-                sprintf('Customer with id "%s" was not found.', $customerId->getValue())
-            );
+            throw new CustomerNotFoundException($customerId, sprintf('Customer with id "%s" was not found.', $customerId->getValue()));
         }
     }
 }

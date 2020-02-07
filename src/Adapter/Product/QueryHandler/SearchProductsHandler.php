@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Product\QueryHandler;
 
 use Currency;
+use PrestaShop\PrestaShop\Adapter\ContextStateManager;
 use PrestaShop\PrestaShop\Adapter\Currency\CurrencyDataProvider;
 use PrestaShop\PrestaShop\Adapter\Tools;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProducts;
@@ -36,7 +37,6 @@ use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductCombination;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductCustomizationField;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\ComputingPrecision;
 use PrestaShop\PrestaShop\Core\Localization\LocaleInterface;
-use PrestaShop\PrestaShop\Adapter\ContextStateManager;
 use Product;
 
 /**
@@ -214,7 +214,8 @@ final class SearchProductsHandler implements SearchProductsHandlerInterface
                     $combination['quantity'],
                     $this->contextLocale->formatPrice($priceTaxExcluded, $currencyIsoCode),
                     $priceTaxExcluded,
-                    $priceTaxIncluded
+                    $priceTaxIncluded,
+                    $combination['location']
                 );
 
                 $productCombinations[$productCombination->getAttributeCombinationId()] = $productCombination;

@@ -48,9 +48,7 @@ final class DeleteTaxRulesGroupHandler extends AbstractTaxRulesGroupHandler impl
         $taxRulesGroup = $this->getTaxRulesGroup($command->getTaxRulesGroupId());
 
         if (!$this->deleteTaxRulesGroup($taxRulesGroup)) {
-            throw new CannotDeleteTaxRulesGroupException(
-                sprintf('Cannot delete tax rules group object with id "%s".', $taxRulesGroup->id)
-            );
+            throw new CannotDeleteTaxRulesGroupException(sprintf('Cannot delete tax rules group object with id "%s".', $taxRulesGroup->id));
         }
     }
 }

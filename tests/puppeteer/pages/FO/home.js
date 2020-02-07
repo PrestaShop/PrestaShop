@@ -13,6 +13,7 @@ module.exports = class Home extends FOBasePage {
     this.productQuickViewLink = `${this.productArticle} a.quick-view`;
     this.allProductLink = '#content a.all-product-link';
     this.totalProducts = '#js-product-list-top .total-products > p';
+    this.productPrice = `${this.productArticle} span[aria-label="Price"]`;
     // Quick View modal
     this.quickViewModalDiv = 'div[id*=\'quickview-modal\']';
     this.quantityWantedInput = `${this.quickViewModalDiv} input#quantity_wanted`;
@@ -90,5 +91,14 @@ module.exports = class Home extends FOBasePage {
       this.page.waitForNavigation({waitUntil: 'networkidle0'}),
       this.page.click(this.blockCartModalCheckoutLink),
     ]);
+  }
+
+  /**
+   * Check product price
+   * @param id, index of product in list of products
+   * @return {Promise<boolean>}
+   */
+  async isPriceVisible(id = 1) {
+    return this.elementVisible(this.productPrice.replace('%NUMBER', id), 1000);
   }
 };

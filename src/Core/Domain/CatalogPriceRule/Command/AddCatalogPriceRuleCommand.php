@@ -250,11 +250,7 @@ class AddCatalogPriceRuleCommand
         try {
             return new DateTime($dateTime);
         } catch (Exception $e) {
-            throw new CatalogPriceRuleConstraintException(
-                'An error occured when creating DateTime object for catalog price rule',
-                CatalogPriceRuleConstraintException::INVALID_DATETIME,
-                $e
-            );
+            throw new CatalogPriceRuleConstraintException('An error occured when creating DateTime object for catalog price rule', CatalogPriceRuleConstraintException::INVALID_DATETIME, $e);
         }
     }
 }

@@ -50,10 +50,7 @@ final class EditCategoryHandler extends AbstractObjectModelHandler implements Ed
         $category = new Category($command->getCategoryId()->getValue());
 
         if (!$category->id) {
-            throw new CategoryNotFoundException(
-                $command->getCategoryId(),
-                sprintf('Category with id "%s" cannot be found.', $command->getCategoryId()->getValue())
-            );
+            throw new CategoryNotFoundException($command->getCategoryId(), sprintf('Category with id "%s" cannot be found.', $command->getCategoryId()->getValue()));
         }
 
         $this->updateCategoryFromCommandData($category, $command);
@@ -114,9 +111,7 @@ final class EditCategoryHandler extends AbstractObjectModelHandler implements Ed
         }
 
         if (false === $category->update()) {
-            throw new CannotEditCategoryException(
-                sprintf('Failed to edit Category with id "%s".', $category->id)
-            );
+            throw new CannotEditCategoryException(sprintf('Failed to edit Category with id "%s".', $category->id));
         }
 
         if ($command->getAssociatedShopIds()) {

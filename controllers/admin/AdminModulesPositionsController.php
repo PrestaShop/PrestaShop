@@ -48,14 +48,14 @@ class AdminModulesPositionsControllerCore extends AdminController
             $this->display_key = (int) Tools::getValue('show_modules');
         }
 
-        $this->addjQueryPlugin(array(
+        $this->addjQueryPlugin([
             'select2',
-        ));
+        ]);
 
-        $this->addJS(array(
+        $this->addJS([
             _PS_JS_DIR_ . 'admin/modules-position.js',
             _PS_JS_DIR_ . 'jquery/plugins/select2/select2_locale_' . $this->context->language->iso_code . '.js',
-        ));
+        ]);
 
         $baseUrl = $this->context->link->getAdminLink('AdminModulesPositions');
         if (strpos($baseUrl, '?') === false) {
@@ -72,10 +72,10 @@ class AdminModulesPositionsControllerCore extends AdminController
                     $module->updatePosition($id_hook, (int) Tools::getValue('direction'));
                     Tools::redirectAdmin($baseUrl . ($this->display_key ? '&show_modules=' . $this->display_key : '') . '&token=' . $this->token);
                 } else {
-                    $this->errors[] = $this->trans('This module cannot be loaded.', array(), 'Admin.Modules.Notification');
+                    $this->errors[] = $this->trans('This module cannot be loaded.', [], 'Admin.Modules.Notification');
                 }
             } else {
-                $this->errors[] = $this->trans('You do not have permission to edit this.', array(), 'Admin.Notifications.Error');
+                $this->errors[] = $this->trans('You do not have permission to edit this.', [], 'Admin.Notifications.Error');
             }
         } elseif (Tools::isSubmit('submitAddToHook')) {
             // Add new module in hook
@@ -87,20 +87,20 @@ class AdminModulesPositionsControllerCore extends AdminController
                 $hook = new Hook($id_hook);
 
                 if (!$id_module || !Validate::isLoadedObject($module)) {
-                    $this->errors[] = $this->trans('This module cannot be loaded.', array(), 'Admin.Modules.Notification');
+                    $this->errors[] = $this->trans('This module cannot be loaded.', [], 'Admin.Modules.Notification');
                 } elseif (!$id_hook || !Validate::isLoadedObject($hook)) {
-                    $this->errors[] = $this->trans('Hook cannot be loaded.', array(), 'Admin.Modules.Notification');
+                    $this->errors[] = $this->trans('Hook cannot be loaded.', [], 'Admin.Modules.Notification');
                 } elseif (Hook::getModulesFromHook($id_hook, $id_module)) {
-                    $this->errors[] = $this->trans('This module has already been transplanted to this hook.', array(), 'Admin.Modules.Notification');
+                    $this->errors[] = $this->trans('This module has already been transplanted to this hook.', [], 'Admin.Modules.Notification');
                 } elseif (!$module->isHookableOn($hook->name)) {
-                    $this->errors[] = $this->trans('This module cannot be transplanted to this hook.', array(), 'Admin.Modules.Notification');
+                    $this->errors[] = $this->trans('This module cannot be transplanted to this hook.', [], 'Admin.Modules.Notification');
                 } else {
                     // Adding vars...
                     if (!$module->registerHook($hook->name, Shop::getContextListShopID())) {
-                        $this->errors[] = $this->trans('An error occurred while transplanting the module to its hook.', array(), 'Admin.Modules.Notification');
+                        $this->errors[] = $this->trans('An error occurred while transplanting the module to its hook.', [], 'Admin.Modules.Notification');
                     } else {
                         $exceptions = Tools::getValue('exceptions');
-                        $exceptions = (isset($exceptions[0])) ? $exceptions[0] : array();
+                        $exceptions = (isset($exceptions[0])) ? $exceptions[0] : [];
                         $exceptions = explode(',', str_replace(' ', '', $exceptions));
                         $exceptions = array_unique($exceptions);
 
@@ -108,11 +108,11 @@ class AdminModulesPositionsControllerCore extends AdminController
                             if (empty($except)) {
                                 unset($exceptions[$key]);
                             } elseif (!empty($except) && !Validate::isFileName($except)) {
-                                $this->errors[] = $this->trans('No valid value for field exceptions has been defined.', array(), 'Admin.Notifications.Error');
+                                $this->errors[] = $this->trans('No valid value for field exceptions has been defined.', [], 'Admin.Notifications.Error');
                             }
                         }
                         if (!$this->errors && !$module->registerExceptions($id_hook, $exceptions, Shop::getContextListShopID())) {
-                            $this->errors[] = $this->trans('An error occurred while transplanting the module to its hook.', array(), 'Admin.Notifications.Error');
+                            $this->errors[] = $this->trans('An error occurred while transplanting the module to its hook.', [], 'Admin.Notifications.Error');
                         }
                     }
                     if (!$this->errors) {
@@ -120,7 +120,7 @@ class AdminModulesPositionsControllerCore extends AdminController
                     }
                 }
             } else {
-                $this->errors[] = $this->trans('You do not have permission to add this.', array(), 'Admin.Notifications.Error');
+                $this->errors[] = $this->trans('You do not have permission to add this.', [], 'Admin.Notifications.Error');
             }
         } elseif (Tools::isSubmit('submitEditGraft')) {
             // Edit module from hook
@@ -133,19 +133,19 @@ class AdminModulesPositionsControllerCore extends AdminController
                 $hook = new Hook($new_hook);
 
                 if (!$id_module || !Validate::isLoadedObject($module)) {
-                    $this->errors[] = $this->trans('This module cannot be loaded.', array(), 'Admin.Modules.Notification');
+                    $this->errors[] = $this->trans('This module cannot be loaded.', [], 'Admin.Modules.Notification');
                 } elseif (!$id_hook || !Validate::isLoadedObject($hook)) {
-                    $this->errors[] = $this->trans('Hook cannot be loaded.', array(), 'Admin.Modules.Notification');
+                    $this->errors[] = $this->trans('Hook cannot be loaded.', [], 'Admin.Modules.Notification');
                 } else {
                     if ($new_hook !== $id_hook) {
                         /* Connect module to a newer hook */
                         if (!$module->registerHook($hook->name, Shop::getContextListShopID())) {
-                            $this->errors[] = $this->trans('An error occurred while transplanting the module to its hook.', array(), 'Admin.Modules.Notification');
+                            $this->errors[] = $this->trans('An error occurred while transplanting the module to its hook.', [], 'Admin.Modules.Notification');
                         }
                         /* Unregister module from hook & exceptions linked to module */
                         if (!$module->unregisterHook($id_hook, Shop::getContextListShopID())
                             || !$module->unregisterExceptions($id_hook, Shop::getContextListShopID())) {
-                            $this->errors[] = $this->trans('An error occurred while deleting the module from its hook.', array(), 'Admin.Modules.Notification');
+                            $this->errors[] = $this->trans('An error occurred while deleting the module from its hook.', [], 'Admin.Modules.Notification');
                         }
                         $id_hook = $new_hook;
                     }
@@ -157,7 +157,7 @@ class AdminModulesPositionsControllerCore extends AdminController
                             // Check files name
                             foreach ($exception as $except) {
                                 if (!empty($except) && !Validate::isFileName($except)) {
-                                    $this->errors[] = $this->trans('No valid value for field exceptions has been defined.', array(), 'Admin.Notifications.Error');
+                                    $this->errors[] = $this->trans('No valid value for field exceptions has been defined.', [], 'Admin.Notifications.Error');
                                 }
                             }
 
@@ -166,7 +166,7 @@ class AdminModulesPositionsControllerCore extends AdminController
 
                         // Add files exceptions
                         if (!$module->editExceptions($id_hook, $exceptions)) {
-                            $this->errors[] = $this->trans('An error occurred while transplanting the module to its hook.', array(), 'Admin.Modules.Notification');
+                            $this->errors[] = $this->trans('An error occurred while transplanting the module to its hook.', [], 'Admin.Modules.Notification');
                         }
 
                         if (!$this->errors) {
@@ -179,20 +179,20 @@ class AdminModulesPositionsControllerCore extends AdminController
                         // Check files name
                         foreach ($exceptions as $except) {
                             if (!empty($except) && !Validate::isFileName($except)) {
-                                $this->errors[] = $this->trans('No valid value for field exceptions has been defined.', array(), 'Admin.Notifications.Error');
+                                $this->errors[] = $this->trans('No valid value for field exceptions has been defined.', [], 'Admin.Notifications.Error');
                             }
                         }
 
                         // Add files exceptions
                         if (!$module->editExceptions($id_hook, $exceptions, Shop::getContextListShopID())) {
-                            $this->errors[] = $this->trans('An error occurred while transplanting the module to its hook.', array(), 'Admin.Modules.Notification');
+                            $this->errors[] = $this->trans('An error occurred while transplanting the module to its hook.', [], 'Admin.Modules.Notification');
                         } else {
                             Tools::redirectAdmin($baseUrl . '&conf=16' . ($this->display_key ? '&show_modules=' . $this->display_key : '') . '&token=' . $this->token);
                         }
                     }
                 }
             } else {
-                $this->errors[] = $this->trans('You do not have permission to add this.', array(), 'Admin.Notifications.Error');
+                $this->errors[] = $this->trans('You do not have permission to add this.', [], 'Admin.Notifications.Error');
             }
         } elseif (array_key_exists('deleteGraft', $_GET)) {
             // Delete module from hook
@@ -202,23 +202,23 @@ class AdminModulesPositionsControllerCore extends AdminController
                 $id_hook = (int) Tools::getValue('id_hook');
                 $hook = new Hook($id_hook);
                 if (!Validate::isLoadedObject($module)) {
-                    $this->errors[] = $this->trans('This module cannot be loaded.', array(), 'Admin.Modules.Notification');
+                    $this->errors[] = $this->trans('This module cannot be loaded.', [], 'Admin.Modules.Notification');
                 } elseif (!$id_hook || !Validate::isLoadedObject($hook)) {
-                    $this->errors[] = $this->trans('Hook cannot be loaded.', array(), 'Admin.Modules.Notification');
+                    $this->errors[] = $this->trans('Hook cannot be loaded.', [], 'Admin.Modules.Notification');
                 } else {
                     if (!$module->unregisterHook($id_hook, Shop::getContextListShopID())
                         || !$module->unregisterExceptions($id_hook, Shop::getContextListShopID())) {
-                        $this->errors[] = $this->trans('An error occurred while deleting the module from its hook.', array(), 'Admin.Modules.Notification');
+                        $this->errors[] = $this->trans('An error occurred while deleting the module from its hook.', [], 'Admin.Modules.Notification');
                     } else {
                         Tools::redirectAdmin($baseUrl . '&conf=17' . ($this->display_key ? '&show_modules=' . $this->display_key : '') . '&token=' . $this->token);
                     }
                 }
             } else {
-                $this->errors[] = $this->trans('You do not have permission to delete this.', array(), 'Admin.Notifications.Error');
+                $this->errors[] = $this->trans('You do not have permission to delete this.', [], 'Admin.Notifications.Error');
             }
         } elseif (Tools::isSubmit('unhookform')) {
             if (!($unhooks = Tools::getValue('unhooks')) || !is_array($unhooks)) {
-                $this->errors[] = $this->trans('Please select a module to unhook.', array(), 'Admin.Modules.Notification');
+                $this->errors[] = $this->trans('Please select a module to unhook.', [], 'Admin.Modules.Notification');
             } else {
                 foreach ($unhooks as $unhook) {
                     $explode = explode('_', $unhook);
@@ -227,12 +227,12 @@ class AdminModulesPositionsControllerCore extends AdminController
                     $module = Module::getInstanceById((int) $id_module);
                     $hook = new Hook((int) $id_hook);
                     if (!Validate::isLoadedObject($module)) {
-                        $this->errors[] = $this->trans('This module cannot be loaded.', array(), 'Admin.Modules.Notification');
+                        $this->errors[] = $this->trans('This module cannot be loaded.', [], 'Admin.Modules.Notification');
                     } elseif (!$id_hook || !Validate::isLoadedObject($hook)) {
-                        $this->errors[] = $this->trans('Hook cannot be loaded.', array(), 'Admin.Modules.Notification');
+                        $this->errors[] = $this->trans('Hook cannot be loaded.', [], 'Admin.Modules.Notification');
                     } else {
                         if (!$module->unregisterHook((int) $id_hook) || !$module->unregisterExceptions((int) $id_hook)) {
-                            $this->errors[] = $this->trans('An error occurred while deleting the module from its hook.', array(), 'Admin.Modules.Notification');
+                            $this->errors[] = $this->trans('An error occurred while deleting the module from its hook.', [], 'Admin.Modules.Notification');
                         }
                     }
                 }
@@ -257,18 +257,18 @@ class AdminModulesPositionsControllerCore extends AdminController
             $this->content .= $this->initMain();
         }
 
-        $this->context->smarty->assign(array(
+        $this->context->smarty->assign([
             'content' => $this->content,
-        ));
+        ]);
     }
 
     public function initPageHeaderToolbar()
     {
-        $this->page_header_toolbar_btn['save'] = array(
+        $this->page_header_toolbar_btn['save'] = [
             'href' => self::$currentIndex . '&addToHook' . ($this->display_key ? '&show_modules=' . $this->display_key : '') . '&token=' . $this->token,
-            'desc' => $this->trans('Transplant a module', array(), 'Admin.Design.Feature'),
+            'desc' => $this->trans('Transplant a module', [], 'Admin.Design.Feature'),
             'icon' => 'process-icon-anchor',
-        );
+        ];
 
         return parent::initPageHeaderToolbar();
     }
@@ -281,7 +281,7 @@ class AdminModulesPositionsControllerCore extends AdminController
         $admin_dir = basename(_PS_ADMIN_DIR_);
         $modules = Module::getModulesInstalled();
 
-        $assoc_modules_id = array();
+        $assoc_modules_id = [];
         foreach ($modules as $module) {
             if ($tmp_instance = Module::getInstanceById((int) $module['id_module'])) {
                 // We want to be able to sort modules by display name
@@ -314,12 +314,12 @@ class AdminModulesPositionsControllerCore extends AdminController
 
         $this->addJqueryPlugin('tablednd');
 
-        $this->toolbar_btn['save'] = array(
+        $this->toolbar_btn['save'] = [
             'href' => self::$currentIndex . '&addToHook' . ($this->display_key ? '&show_modules=' . $this->display_key : '') . '&token=' . $this->token,
-            'desc' => $this->trans('Transplant a module', array(), 'Admin.Design.Feature'),
-        );
+            'desc' => $this->trans('Transplant a module', [], 'Admin.Design.Feature'),
+        ];
 
-        $this->context->smarty->assign(array(
+        $this->context->smarty->assign([
             'show_toolbar' => true,
             'toolbar_btn' => $this->toolbar_btn,
             'title' => $this->toolbar_title,
@@ -332,7 +332,7 @@ class AdminModulesPositionsControllerCore extends AdminController
             'hooks' => $hooks,
             'url_submit' => self::$currentIndex . '&token=' . $this->token,
             'can_move' => (Shop::isFeatureActive() && Shop::getContext() != Shop::CONTEXT_SHOP) ? false : true,
-        ));
+        ]);
 
         return $this->createTemplate('list_modules.tpl')->fetch();
     }
@@ -380,11 +380,11 @@ class AdminModulesPositionsControllerCore extends AdminController
             }
         } else {
             $excepts_diff = false;
-            $excepts_list = Tools::getValue('exceptions', array(array()));
+            $excepts_list = Tools::getValue('exceptions', [[]]);
         }
         $modules = Module::getModulesInstalled(0);
 
-        $instances = array();
+        $instances = [];
         foreach ($modules as $module) {
             if ($tmp_instance = Module::getInstanceById($module['id_module'])) {
                 $instances[$tmp_instance->displayName] = $tmp_instance;
@@ -393,19 +393,19 @@ class AdminModulesPositionsControllerCore extends AdminController
         ksort($instances);
         $modules = $instances;
 
-        $hooks = array();
+        $hooks = [];
         if ($show_modules || (Tools::getValue('id_hook') > 0)) {
             $module_instance = Module::getInstanceById((int) Tools::getValue('id_module', $show_modules));
             $hooks = $module_instance->getPossibleHooksList();
         }
 
-        $exception_list_diff = array();
+        $exception_list_diff = [];
         foreach ($excepts_list as $shop_id => $file_list) {
             $exception_list_diff[] = $this->displayModuleExceptionList($file_list, $shop_id);
         }
 
         $tpl = $this->createTemplate('form.tpl');
-        $tpl->assign(array(
+        $tpl->assign([
             'url_submit' => self::$currentIndex . '&token=' . $this->token,
             'edit_graft' => Tools::isSubmit('editGraft'),
             'id_module' => (int) Tools::getValue('id_module'),
@@ -422,7 +422,7 @@ class AdminModulesPositionsControllerCore extends AdminController
             'toolbar_scroll' => $this->toolbar_scroll,
             'title' => $this->toolbar_title,
             'table' => 'hook_module',
-        ));
+        ]);
 
         return $tpl->fetch();
     }
@@ -430,10 +430,10 @@ class AdminModulesPositionsControllerCore extends AdminController
     public function displayModuleExceptionList($file_list, $shop_id)
     {
         if (!is_array($file_list)) {
-            $file_list = ($file_list) ? array($file_list) : array();
+            $file_list = ($file_list) ? [$file_list] : [];
         }
 
-        $content = '<p><input type="text" name="exceptions[' . $shop_id . ']" value="' . implode(', ', $file_list) . '" id="em_text_' . $shop_id . '" placeholder="' . $this->trans('E.g. address, addresses, attachment', array(), 'Admin.Design.Help') . '"/></p>';
+        $content = '<p><input type="text" name="exceptions[' . $shop_id . ']" value="' . implode(', ', $file_list) . '" id="em_text_' . $shop_id . '" placeholder="' . $this->trans('E.g. address, addresses, attachment', [], 'Admin.Design.Help') . '"/></p>';
 
         if ($shop_id) {
             $shop = new Shop($shop_id);
@@ -443,7 +443,7 @@ class AdminModulesPositionsControllerCore extends AdminController
         $content .= '<p>
 					<select size="25" id="em_list_' . $shop_id . '" multiple="multiple">
 					<option disabled="disabled">'
-                    . $this->trans('___________ CUSTOM ___________', array(), 'Admin.Design.Feature')
+                    . $this->trans('___________ CUSTOM ___________', [], 'Admin.Design.Feature')
                     . '</option>';
 
         /** @todo do something better with controllers */
@@ -456,13 +456,13 @@ class AdminModulesPositionsControllerCore extends AdminController
             }
         }
 
-        $content .= '<option disabled="disabled">' . $this->trans('____________ CORE ____________', array(), 'Admin.Design.Feature') . '</option>';
+        $content .= '<option disabled="disabled">' . $this->trans('____________ CORE ____________', [], 'Admin.Design.Feature') . '</option>';
 
         foreach ($controllers as $k => $v) {
             $content .= '<option value="' . $k . '">' . $k . '</option>';
         }
 
-        $modules_controllers_type = array('admin' => $this->trans('Admin modules controller', array(), 'Admin.Design.Feature'), 'front' => $this->trans('Front modules controller', array(), 'Admin.Design.Feature'));
+        $modules_controllers_type = ['admin' => $this->trans('Admin modules controller', [], 'Admin.Design.Feature'), 'front' => $this->trans('Front modules controller', [], 'Admin.Design.Feature')];
         foreach ($modules_controllers_type as $type => $label) {
             $content .= '<option disabled="disabled">____________ ' . $label . ' ____________</option>';
             $all_modules_controllers = Dispatcher::getModuleControllers($type);
@@ -514,7 +514,7 @@ class AdminModulesPositionsControllerCore extends AdminController
 
             $modules_list = Tools::getValue('modules_list');
             $hooks_list = Tools::getValue('hooks_list');
-            $hookableList = array();
+            $hookableList = [];
 
             foreach ($modules_list as $module) {
                 $module = trim($module);
@@ -533,7 +533,7 @@ class AdminModulesPositionsControllerCore extends AdminController
                         continue;
                     }
                     if (!array_key_exists($hook_name, $hookableList)) {
-                        $hookableList[$hook_name] = array();
+                        $hookableList[$hook_name] = [];
                     }
                     if ($moduleInstance->isHookableOn($hook_name)) {
                         $hookableList[$hook_name][] = str_replace('_', '-', $module);
@@ -555,7 +555,7 @@ class AdminModulesPositionsControllerCore extends AdminController
             /* PrestaShop demo mode*/
 
             $hook_name = Tools::getValue('hook');
-            $hookableModulesList = array();
+            $hookableModulesList = [];
             $modules = Db::getInstance()->executeS('SELECT id_module, name FROM `' . _DB_PREFIX_ . 'module` ');
             foreach ($modules as $module) {
                 if (!Validate::isModuleName($module['name'])) {
@@ -567,7 +567,7 @@ class AdminModulesPositionsControllerCore extends AdminController
                     /** @var Module $mod */
                     $mod = new $module['name']();
                     if ($mod->isHookableOn($hook_name)) {
-                        $hookableModulesList[] = array('id' => (int) $mod->id, 'name' => $mod->displayName, 'display' => Hook::exec($hook_name, array(), (int) $mod->id));
+                        $hookableModulesList[] = ['id' => (int) $mod->id, 'name' => $mod->displayName, 'display' => Hook::exec($hook_name, [], (int) $mod->id)];
                     }
                 }
             }
@@ -590,7 +590,7 @@ class AdminModulesPositionsControllerCore extends AdminController
             }
 
             $res = true;
-            $hookableList = array();
+            $hookableList = [];
             // $_POST['hook'] is an array of id_module
             $hooks_list = Tools::getValue('hook');
 
@@ -601,7 +601,7 @@ class AdminModulesPositionsControllerCore extends AdminController
 
                 $i = 1;
                 $value = '';
-                $ids = array();
+                $ids = [];
                 // then prepare sql query to rehook all chosen modules(id_module, id_shop, id_hook, position)
                 // position is i (autoincremented)
                 if (is_array($modules) && count($modules)) {

@@ -31,7 +31,7 @@ class AdminLegacyLayoutControllerCore extends AdminController
     /** @var string[] */
     public $jsRouterMetadata;
     /** @var array */
-    protected $headerToolbarBtn = array();
+    protected $headerToolbarBtn = [];
     /** @var string */
     protected $title;
     /** @var bool */
@@ -61,7 +61,7 @@ class AdminLegacyLayoutControllerCore extends AdminController
     public function __construct(
         $controllerName = '',
         $title = '',
-        $headerToolbarBtn = array(),
+        $headerToolbarBtn = [],
         $displayType = '',
         $showContentHeader = true,
         $headerTabContent = '',
@@ -142,7 +142,7 @@ class AdminLegacyLayoutControllerCore extends AdminController
         // @todo remove once the product page has been made responsive
         $isProductPage = ('AdminProducts' === $this->controller_name);
 
-        $vars = array(
+        $vars = [
             'viewport_scale' => $isProductPage ? '0.75' : '1',
             'maintenance_mode' => !(bool) Configuration::get('PS_SHOP_ENABLE'),
             'debug_mode' => (bool) _PS_MODE_DEV_,
@@ -163,7 +163,7 @@ class AdminLegacyLayoutControllerCore extends AdminController
             'js_router_metadata' => $this->jsRouterMetadata,
             /* allow complex <h1> structure. @since 1.7.7 */
             'use_regular_h1_structure' => $this->useRegularH1Structure,
-        );
+        ];
 
         if ($this->helpLink === false || !empty($this->helpLink)) {
             $vars['help_link'] = $this->helpLink;

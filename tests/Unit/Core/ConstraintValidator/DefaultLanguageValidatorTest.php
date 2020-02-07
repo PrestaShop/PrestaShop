@@ -27,9 +27,9 @@
 namespace Tests\Unit\Core\ConstraintValidator;
 
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DefaultLanguage;
+use PrestaShop\PrestaShop\Core\ConstraintValidator\DefaultLanguageValidator;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Exception\UnexpectedTypeException;
-use PrestaShop\PrestaShop\Core\ConstraintValidator\DefaultLanguageValidator;
 use Symfony\Component\Validator\Test\ConstraintValidatorTestCase;
 
 /**

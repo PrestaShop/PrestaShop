@@ -53,9 +53,7 @@ final class BulkChangeOrderStatusHandler implements BulkChangeOrderStatusHandler
         $orderState = new OrderState($command->getNewOrderStatusId());
 
         if ($orderState->id !== $command->getNewOrderStatusId()) {
-            throw new OrderException(
-                sprintf('Order state with ID "%s" was not found.', $command->getNewOrderStatusId())
-            );
+            throw new OrderException(sprintf('Order state with ID "%s" was not found.', $command->getNewOrderStatusId()));
         }
 
         $ordersWithFailedToUpdateStatus = [];
@@ -111,12 +109,7 @@ final class BulkChangeOrderStatusHandler implements BulkChangeOrderStatusHandler
             || !empty($ordersWithFailedToSendEmail)
             || !empty($ordersWithAssignedStatus)
         ) {
-            throw new ChangeOrderStatusException(
-                $ordersWithFailedToUpdateStatus,
-                $ordersWithFailedToSendEmail,
-                $ordersWithAssignedStatus,
-                'Failed to update status or sent email when changing order status.'
-            );
+            throw new ChangeOrderStatusException($ordersWithFailedToUpdateStatus, $ordersWithFailedToSendEmail, $ordersWithAssignedStatus, 'Failed to update status or sent email when changing order status.');
         }
     }
 

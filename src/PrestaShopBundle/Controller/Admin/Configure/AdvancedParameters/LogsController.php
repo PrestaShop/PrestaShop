@@ -90,7 +90,7 @@ class LogsController extends FrameworkBundleAdminController
         $searchParametersForm = $gridFilterFormFactory->create($logsDefinition);
 
         $searchParametersForm->handleRequest($request);
-        $filters = array();
+        $filters = [];
 
         $this->dispatchHook('actionAdminLogsControllerPostProcessBefore', ['controller' => $this]);
 
@@ -114,7 +114,7 @@ class LogsController extends FrameworkBundleAdminController
         $logsByEmailForm = $this->getFormHandler()->getForm();
         $logsByEmailForm->handleRequest($request);
 
-        $this->dispatchHook('actionAdminLogsControllerPostProcessBefore', array('controller' => $this));
+        $this->dispatchHook('actionAdminLogsControllerPostProcessBefore', ['controller' => $this]);
 
         if ($logsByEmailForm->isSubmitted()) {
             $data = $logsByEmailForm->getData();

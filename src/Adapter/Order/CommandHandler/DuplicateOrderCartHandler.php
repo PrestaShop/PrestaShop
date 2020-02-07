@@ -71,9 +71,7 @@ final class DuplicateOrderCartHandler implements DuplicateOrderCartHandlerInterf
 
         if (false === $result || !isset($result['cart'])) {
             $this->contextStateManager->restoreContext();
-            throw new DuplicateOrderCartException(
-                sprintf('Cannot duplicate cart from order "%s"', $command->getOrderId()->getValue())
-            );
+            throw new DuplicateOrderCartException(sprintf('Cannot duplicate cart from order "%s"', $command->getOrderId()->getValue()));
         }
 
         $this->contextStateManager->restoreContext();

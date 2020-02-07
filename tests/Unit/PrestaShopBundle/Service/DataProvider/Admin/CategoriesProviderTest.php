@@ -28,8 +28,8 @@ namespace Tests\Unit\PrestaShopBundle\Service\DataProvider\Admin;
 
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\Module\Module;
-use PrestaShopBundle\Service\DataProvider\Admin\CategoriesProvider;
 use PrestaShop\PrestaShop\Core\Util\File\YamlParser;
+use PrestaShopBundle\Service\DataProvider\Admin\CategoriesProvider;
 
 class CategoriesProviderTest extends TestCase
 {

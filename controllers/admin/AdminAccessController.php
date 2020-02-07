@@ -30,7 +30,7 @@
 class AdminAccessControllerCore extends AdminController
 {
     /** @var array : Black list of id_tab that do not have access */
-    public $accesses_black_list = array();
+    public $accesses_black_list = [];
 
     public function __construct()
     {
@@ -59,7 +59,7 @@ class AdminAccessControllerCore extends AdminController
         $profiles = Profile::getProfiles($this->context->language->id);
         $tabs = Tab::getTabs($this->context->language->id);
 
-        $accesses = array();
+        $accesses = [];
         foreach ($profiles as $profile) {
             $accesses[$profile['id_profile']] = Profile::getProfileAccesses($profile['id_profile']);
         }
@@ -78,14 +78,14 @@ class AdminAccessControllerCore extends AdminController
             }
         }
 
-        $modules = array();
+        $modules = [];
         foreach ($profiles as $profile) {
             $modules[$profile['id_profile']] = Module::getModulesAccessesByIdProfile($profile['id_profile']);
-            uasort($modules[$profile['id_profile']], array($this, 'sortModuleByName'));
+            uasort($modules[$profile['id_profile']], [$this, 'sortModuleByName']);
         }
 
-        $this->fields_form = array('');
-        $this->tpl_form_vars = array(
+        $this->fields_form = [''];
+        $this->tpl_form_vars = [
             'profiles' => $profiles,
             'accesses' => $accesses,
             'id_tab_parentmodule' => (int) Tab::getIdFromClassName('AdminParentModules'),
@@ -94,12 +94,12 @@ class AdminAccessControllerCore extends AdminController
             'current_profile' => (int) $current_profile,
             'admin_profile' => (int) _PS_ADMIN_PROFILE_,
             'access_edit' => $this->access('edit'),
-            'perms' => array('view', 'add', 'edit', 'delete'),
-            'id_perms' => array('view' => 0, 'add' => 1, 'edit' => 2, 'delete' => 3, 'all' => 4),
+            'perms' => ['view', 'add', 'edit', 'delete'],
+            'id_perms' => ['view' => 0, 'add' => 1, 'edit' => 2, 'delete' => 3, 'all' => 4],
             'modules' => $modules,
             'link' => $this->context->link,
             'employee_profile_id' => (int) $this->context->employee->id_profile,
-        );
+        ];
 
         return parent::renderForm();
     }
@@ -119,9 +119,9 @@ class AdminAccessControllerCore extends AdminController
 
         $this->content .= $this->renderForm();
 
-        $this->context->smarty->assign(array(
+        $this->context->smarty->assign([
             'content' => $this->content,
-        ));
+        ]);
     }
 
     public function initToolbarTitle()
@@ -138,16 +138,16 @@ class AdminAccessControllerCore extends AdminController
     public function ajaxProcessUpdateAccess()
     {
         if (_PS_MODE_DEMO_) {
-            throw new PrestaShopException($this->trans('This functionality has been disabled.', array(), 'Admin.Notifications.Error'));
+            throw new PrestaShopException($this->trans('This functionality has been disabled.', [], 'Admin.Notifications.Error'));
         }
         if ($this->access('edit') != '1') {
-            throw new PrestaShopException($this->trans('You do not have permission to edit this.', array(), 'Admin.Notifications.Error'));
+            throw new PrestaShopException($this->trans('You do not have permission to edit this.', [], 'Admin.Notifications.Error'));
         }
 
         if (Tools::isSubmit('submitAddAccess')) {
             $access = new Access();
             $perm = Tools::getValue('perm');
-            if (!in_array($perm, array('view', 'add', 'edit', 'delete', 'all'))) {
+            if (!in_array($perm, ['view', 'add', 'edit', 'delete', 'all'])) {
                 throw new PrestaShopException('permission does not exist');
             }
 
@@ -163,10 +163,10 @@ class AdminAccessControllerCore extends AdminController
     public function ajaxProcessUpdateModuleAccess()
     {
         if (_PS_MODE_DEMO_) {
-            throw new PrestaShopException($this->trans('This functionality has been disabled.', array(), 'Admin.Notifications.Error'));
+            throw new PrestaShopException($this->trans('This functionality has been disabled.', [], 'Admin.Notifications.Error'));
         }
         if ($this->access('edit') != '1') {
-            throw new PrestaShopException($this->trans('You do not have permission to edit this.', array(), 'Admin.Notifications.Error'));
+            throw new PrestaShopException($this->trans('You do not have permission to edit this.', [], 'Admin.Notifications.Error'));
         }
 
         if (Tools::isSubmit('changeModuleAccess')) {
@@ -176,7 +176,7 @@ class AdminAccessControllerCore extends AdminController
             $id_module = (int) Tools::getValue('id_module');
             $id_profile = (int) Tools::getValue('id_profile');
 
-            if (!in_array($perm, array('view', 'configure', 'uninstall'))) {
+            if (!in_array($perm, ['view', 'configure', 'uninstall'])) {
                 throw new PrestaShopException('permission does not exist');
             }
 

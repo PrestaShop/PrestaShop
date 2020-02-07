@@ -26,8 +26,8 @@
 
 namespace Tests\TestCase;
 
-use PHPUnit\Framework\TestListenerDefaultImplementation;
 use PHPUnit\Framework\TestListener;
+use PHPUnit\Framework\TestListenerDefaultImplementation;
 use PHPUnit\Framework\TestSuite;
 
 class ErrorsDataListener implements TestListener

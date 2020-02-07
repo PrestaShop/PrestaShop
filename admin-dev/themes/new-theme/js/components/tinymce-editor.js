@@ -23,7 +23,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-const $ = window.$;
+const {$} = window;
 
 /**
  * This class init TinyMCE instances in the back-office. It is wildly inspired by
@@ -33,16 +33,16 @@ const $ = window.$;
  */
 class TinyMCEEditor {
   constructor(options) {
-    options = options || {};
+    const opts = options || {};
     this.tinyMCELoaded = false;
-    if (typeof options.baseAdminUrl == 'undefined') {
-      if (typeof window.baseAdminDir != 'undefined') {
-        options.baseAdminUrl = window.baseAdminDir;
+    if (typeof opts.baseAdminUrl === 'undefined') {
+      if (typeof window.baseAdminDir !== 'undefined') {
+        opts.baseAdminUrl = window.baseAdminDir;
       } else {
         const pathParts = window.location.pathname.split('/');
-        pathParts.every(function(pathPart) {
+        pathParts.every((pathPart) => {
           if (pathPart !== '') {
-            options.baseAdminUrl = `/${pathPart}/`;
+            opts.baseAdminUrl = `/${pathPart}/`;
 
             return false;
           }
@@ -51,10 +51,11 @@ class TinyMCEEditor {
         });
       }
     }
-    if (typeof options.langIsRtl == 'undefined') {
-      options.langIsRtl = typeof window.lang_is_rtl != 'undefined' ? window.lang_is_rtl === '1' : false;
+
+    if (typeof opts.langIsRtl === 'undefined') {
+      opts.langIsRtl = typeof window.lang_is_rtl !== 'undefined' ? window.lang_is_rtl === '1' : false;
     }
-    this.setupTinyMCE(options);
+    this.setupTinyMCE(opts);
   }
 
   /**
@@ -76,19 +77,20 @@ class TinyMCEEditor {
    * @param config
    */
   initTinyMCE(config) {
-    config = Object.assign({
+    const cfg = {
       selector: '.rte',
       plugins: 'align colorpicker link image filemanager table media placeholder advlist code table autoresize',
       browser_spellcheck: true,
+      /* eslint-disable-next-line max-len */
       toolbar1: 'code,colorpicker,bold,italic,underline,strikethrough,blockquote,link,align,bullist,numlist,table,image,media,formatselect',
       toolbar2: '',
-      external_filemanager_path: config.baseAdminUrl + 'filemanager/',
+      external_filemanager_path: `${config.baseAdminUrl}filemanager/`,
       filemanager_title: 'File manager',
       external_plugins: {
-        'filemanager': config.baseAdminUrl + 'filemanager/plugin.min.js'
+        filemanager: `${config.baseAdminUrl}filemanager/plugin.min.js`,
       },
-      language: iso_user,
-      content_style : (config.langIsRtl ? 'body {direction:rtl;}' : ''),
+      language: window.iso_user,
+      content_style: (config.langIsRtl ? 'body {direction:rtl;}' : ''),
       skin: 'prestashop',
       menubar: false,
       statusbar: false,
@@ -98,23 +100,24 @@ class TinyMCEEditor {
       extended_valid_elements: 'em[class|name|id],@[role|data-*|aria-*]',
       valid_children: '+*[*]',
       valid_elements: '*[*]',
-      rel_list:[
-        { title: 'nofollow', value: 'nofollow' }
+      rel_list: [
+        {title: 'nofollow', value: 'nofollow'},
       ],
-      editor_selector :'autoload_rte',
+      editor_selector: 'autoload_rte',
       init_instance_callback: () => { this.changeToMaterial(); },
-      setup : (editor) => { this.setupEditor(editor); },
-    }, config);
+      setup: (editor) => { this.setupEditor(editor); },
+      ...config,
+    };
 
-    if (typeof config.editor_selector != 'undefined') {
-      config.selector = '.' + config.editor_selector;
+    if (typeof cfg.editor_selector !== 'undefined') {
+      cfg.selector = `.${cfg.editor_selector}`;
     }
 
     // Change icons in popups
     $('body').on('click', '.mce-btn, .mce-open, .mce-menu-item', () => { this.changeToMaterial(); });
 
-    tinyMCE.init(config);
-    this.watchTabChanges(config);
+    window.tinyMCE.init(cfg);
+    this.watchTabChanges(cfg);
   }
 
   /**
@@ -127,11 +130,11 @@ class TinyMCEEditor {
       this.handleCounterTiny(event.target.id);
     });
     editor.on('change', (event) => {
-      tinyMCE.triggerSave();
+      window.tinyMCE.triggerSave();
       this.handleCounterTiny(event.target.id);
     });
     editor.on('blur', () => {
-      tinyMCE.triggerSave();
+      window.tinyMCE.triggerSave();
     });
   }
 
@@ -149,12 +152,12 @@ class TinyMCEEditor {
 
       if (translatedField.length && tabContainer.length) {
         const textareaLocale = translatedField.data('locale');
-        const textareaLinkSelector = '.nav-item a[data-locale="'+textareaLocale+'"]';
+        const textareaLinkSelector = `.nav-item a[data-locale="${textareaLocale}"]`;
 
         $(textareaLinkSelector, tabContainer).on('shown.bs.tab', () => {
-          const editor = tinyMCE.get(textarea.id);
+          const editor = window.tinyMCE.get(textarea.id);
           if (editor) {
-            //Reset content to force refresh of editor
+            // Reset content to force refresh of editor
             editor.setContent(editor.getContent());
           }
         });
@@ -177,16 +180,16 @@ class TinyMCEEditor {
     pathArray.splice((pathArray.length - 2), 2);
     const finalPath = pathArray.join('/');
     window.tinyMCEPreInit = {};
-    window.tinyMCEPreInit.base = finalPath+'/js/tiny_mce';
+    window.tinyMCEPreInit.base = `${finalPath}/js/tiny_mce`;
     window.tinyMCEPreInit.suffix = '.min';
-    $.getScript(`${finalPath}/js/tiny_mce/tinymce.min.js`, () => {this.setupTinyMCE(config)});
+    $.getScript(`${finalPath}/js/tiny_mce/tinymce.min.js`, () => { this.setupTinyMCE(config); });
   }
 
   /**
    * Replace initial TinyMCE icons with material icons
    */
   changeToMaterial() {
-    let materialIconAssoc = {
+    const materialIconAssoc = {
       'mce-i-code': '<i class="material-icons">code</i>',
       'mce-i-none': '<i class="material-icons">format_color_text</i>',
       'mce-i-bold': '<i class="material-icons">format_bold</i>',
@@ -208,7 +211,7 @@ class TinyMCEEditor {
       'mce-i-checkbox': '<i class="mce-ico mce-i-checkbox"></i>',
     };
 
-    $.each(materialIconAssoc, function (index, value) {
+    $.each(materialIconAssoc, (index, value) => {
       $(`.${index}`).replaceWith(value);
     });
   }
@@ -222,10 +225,10 @@ class TinyMCEEditor {
     const textarea = $(`#${id}`);
     const counter = textarea.attr('counter');
     const counterType = textarea.attr('counter_type');
-    const max = tinyMCE.activeEditor.getBody().textContent.length;
+    const max = window.tinyMCE.activeEditor.getBody().textContent.length;
 
     textarea.parent().find('span.currentLength').text(max);
-    if ('recommended' !== counterType && max > counter) {
+    if (counterType !== 'recommended' && max > counter) {
       textarea.parent().find('span.maxLength').addClass('text-danger');
     } else {
       textarea.parent().find('span.maxLength').removeClass('text-danger');

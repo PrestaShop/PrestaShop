@@ -52,23 +52,23 @@ class OrderCartRuleCore extends ObjectModel
     /**
      * @see ObjectModel::$definition
      */
-    public static $definition = array(
+    public static $definition = [
         'table' => 'order_cart_rule',
         'primary' => 'id_order_cart_rule',
-        'fields' => array(
-            'id_order' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-            'id_cart_rule' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-            'id_order_invoice' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
-            'name' => array('type' => self::TYPE_STRING, 'validate' => 'isCleanHtml', 'required' => true),
-            'value' => array('type' => self::TYPE_FLOAT, 'validate' => 'isFloat', 'required' => true),
-            'value_tax_excl' => array('type' => self::TYPE_FLOAT, 'validate' => 'isFloat', 'required' => true),
-            'free_shipping' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-        ),
-    );
+        'fields' => [
+            'id_order' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
+            'id_cart_rule' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
+            'id_order_invoice' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId'],
+            'name' => ['type' => self::TYPE_STRING, 'validate' => 'isCleanHtml', 'required' => true],
+            'value' => ['type' => self::TYPE_FLOAT, 'validate' => 'isFloat', 'required' => true],
+            'value_tax_excl' => ['type' => self::TYPE_FLOAT, 'validate' => 'isFloat', 'required' => true],
+            'free_shipping' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
+        ],
+    ];
 
-    protected $webserviceParameters = array(
-        'fields' => array(
-            'id_order' => array('xlink_resource' => 'orders'),
-        ),
-    );
+    protected $webserviceParameters = [
+        'fields' => [
+            'id_order' => ['xlink_resource' => 'orders'],
+        ],
+    ];
 }

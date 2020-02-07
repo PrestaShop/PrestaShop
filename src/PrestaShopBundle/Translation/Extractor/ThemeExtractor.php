@@ -50,7 +50,7 @@ class ThemeExtractor
     /**
      * @var array the list of Translation dumpers
      */
-    private $dumpers = array();
+    private $dumpers = [];
 
     /**
      * @var string the format of extracted files
@@ -110,11 +110,11 @@ class ThemeExtractor
         // remove the last "/"
         $themeDirectory = substr($theme->getDirectory(), 0, -1);
 
-        $options = array(
+        $options = [
             'path' => $themeDirectory,
             'default_locale' => $locale,
             'root_dir' => $rootDir,
-        );
+        ];
         $this->smartyExtractor->extract($themeDirectory, $this->catalog);
 
         $this->overrideFromDefaultCatalog($locale, $this->catalog);

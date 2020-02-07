@@ -27,13 +27,13 @@
 namespace Tests\Unit\Adapter;
 
 use Cart;
+use Context;
 use Country;
 use Currency;
 use Customer;
 use Language;
-use Context;
-use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\ContextStateManager;
 
 class ContextStateManagerTest extends TestCase

@@ -28,7 +28,7 @@ class QuickAccessLangCore extends DataLangCore
     // Don't replace domain in init() with $this->domain for translation parsing
     protected $domain = 'Admin.Navigation.Header';
 
-    protected $keys = array('id_quick_access');
+    protected $keys = ['id_quick_access'];
 
-    protected $fieldsToUpdate = array('name');
+    protected $fieldsToUpdate = ['name'];
 }

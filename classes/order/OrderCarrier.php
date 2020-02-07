@@ -55,28 +55,28 @@ class OrderCarrierCore extends ObjectModel
     /**
      * @see ObjectModel::$definition
      */
-    public static $definition = array(
+    public static $definition = [
         'table' => 'order_carrier',
         'primary' => 'id_order_carrier',
-        'fields' => array(
-            'id_order' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-            'id_carrier' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-            'id_order_invoice' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
-            'weight' => array('type' => self::TYPE_FLOAT, 'validate' => 'isFloat'),
-            'shipping_cost_tax_excl' => array('type' => self::TYPE_FLOAT, 'validate' => 'isFloat'),
-            'shipping_cost_tax_incl' => array('type' => self::TYPE_FLOAT, 'validate' => 'isFloat'),
-            'tracking_number' => array('type' => self::TYPE_STRING, 'validate' => 'isTrackingNumber'),
-            'date_add' => array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
-        ),
-    );
+        'fields' => [
+            'id_order' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
+            'id_carrier' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
+            'id_order_invoice' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId'],
+            'weight' => ['type' => self::TYPE_FLOAT, 'validate' => 'isFloat'],
+            'shipping_cost_tax_excl' => ['type' => self::TYPE_FLOAT, 'validate' => 'isFloat'],
+            'shipping_cost_tax_incl' => ['type' => self::TYPE_FLOAT, 'validate' => 'isFloat'],
+            'tracking_number' => ['type' => self::TYPE_STRING, 'validate' => 'isTrackingNumber'],
+            'date_add' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
+        ],
+    ];
 
-    protected $webserviceParameters = array(
-        'objectMethods' => array('update' => 'updateWs'),
-        'fields' => array(
-            'id_order' => array('xlink_resource' => 'orders'),
-            'id_carrier' => array('xlink_resource' => 'carriers'),
-        ),
-    );
+    protected $webserviceParameters = [
+        'objectMethods' => ['update' => 'updateWs'],
+        'fields' => [
+            'id_order' => ['xlink_resource' => 'orders'],
+            'id_carrier' => ['xlink_resource' => 'carriers'],
+        ],
+    ];
 
     /**
      * @param Order $order Required
@@ -127,7 +127,7 @@ class OrderCarrierCore extends ObjectModel
         }
 
         $orderLanguage = new Language((int) $order->id_lang);
-        $templateVars = array(
+        $templateVars = [
             '{followup}' => str_replace('@', $this->tracking_number, $carrier->url),
             '{firstname}' => $customer->firstname,
             '{lastname}' => $customer->lastname,
@@ -140,14 +140,14 @@ class OrderCarrierCore extends ObjectModel
             '{postcode}' => $address->postcode,
             '{city}' => $address->city,
             '{meta_products}' => $metadata,
-        );
+        ];
 
         if (@Mail::Send(
             (int) $order->id_lang,
             'in_transit',
             $this->trans(
                 'Package in transit',
-                array(),
+                [],
                 'Emails.Subject',
                 $orderLanguage->locale
             ),

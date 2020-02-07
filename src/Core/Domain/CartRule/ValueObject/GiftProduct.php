@@ -82,17 +82,11 @@ class GiftProduct
     private function assertGiftProductIsValid(int $productId, ?int $productAttributeId): void
     {
         if (0 >= $productId) {
-            throw new CartRuleConstraintException(
-                'Gift product ID must be a positive integer',
-                CartRuleConstraintException::INVALID_GIFT_PRODUCT
-            );
+            throw new CartRuleConstraintException('Gift product ID must be a positive integer', CartRuleConstraintException::INVALID_GIFT_PRODUCT);
         }
 
         if (null !== $productAttributeId && 0 >= $productAttributeId) {
-            throw new CartRuleConstraintException(
-                'Gift product attribute ID must be a positive integer',
-                CartRuleConstraintException::INVALID_GIFT_PRODUCT_ATTRIBUTE
-            );
+            throw new CartRuleConstraintException('Gift product attribute ID must be a positive integer', CartRuleConstraintException::INVALID_GIFT_PRODUCT_ATTRIBUTE);
         }
     }
 }

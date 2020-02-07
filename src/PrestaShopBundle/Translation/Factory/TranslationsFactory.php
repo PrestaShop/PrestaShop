@@ -40,7 +40,7 @@ class TranslationsFactory implements TranslationsFactoryInterface
     /**
      * @var array the list of translation providers
      */
-    private $providers = array();
+    private $providers = [];
 
     /**
      * {@inheritdoc}

@@ -29,9 +29,11 @@ import OrderViewEventMap from '@pages/order/view/order-view-event-map';
 import {EventEmitter} from '@components/event-emitter';
 import OrderProductRenderer from '@pages/order/view/order-product-renderer';
 import OrderPricesRefresher from '@pages/order/view/order-prices-refresher';
+import Router from '@components/router';
 import OrderInvoicesRefresher from './order-invoices-refresher';
+import OrderProductCancel from './order-product-cancel';
 
-const $ = window.$;
+const {$} = window;
 
 export default class OrderViewPage {
   constructor() {
@@ -39,16 +41,22 @@ export default class OrderViewPage {
     this.orderProductRenderer = new OrderProductRenderer();
     this.orderPricesRefresher = new OrderPricesRefresher();
     this.orderInvoicesRefresher = new OrderInvoicesRefresher();
+    this.orderProductCancel = new OrderProductCancel();
     this.listenToEvents();
   }
 
   listenToEvents() {
     EventEmitter.on(OrderViewEventMap.productDeletedFromOrder, (event) => {
       // Remove the row
-      $(OrderViewPageMap.productsTableRow(event.oldOrderDetailId)).remove();
+      const $row = $(OrderViewPageMap.productsTableRow(event.oldOrderDetailId));
+      const $next = $row.next();
+      $row.remove();
+      if ($next.hasClass('order-product-customization')) {
+        $next.remove();
+      }
 
       const $tablePagination = $(OrderViewPageMap.productsTablePagination);
-      let numPages = $tablePagination.data('numPages');
+      const numPages = $tablePagination.data('numPages');
       const numRowsPerPage = $tablePagination.data('numPerPage');
       const numRows = $(OrderViewPageMap.productsTable).find('tr[id^="orderProduct_"]:not(.d-none)').length;
       let currentPage = parseInt($(OrderViewPageMap.productsTablePaginationActive).html(), 10);
@@ -61,7 +69,7 @@ export default class OrderViewPage {
       }
       EventEmitter.emit(OrderViewEventMap.productListPaginated, {
         orderId: event.orderId,
-        numPage: currentPage
+        numPage: currentPage,
       });
 
       this.orderProductRenderer.updateNumProducts(numProducts - 1);
@@ -80,7 +88,7 @@ export default class OrderViewPage {
     EventEmitter.on(OrderViewEventMap.productUpdated, (event) => {
       this.orderProductRenderer.addOrUpdateProductToList(
         $(OrderViewPageMap.productsTableRow(event.orderDetailId)),
-        event.newRow
+        event.newRow,
       );
       this.orderProductRenderer.resetEditRow(event.orderDetailId);
       this.orderPricesRefresher.refresh(event.orderId);
@@ -101,7 +109,7 @@ export default class OrderViewPage {
 
       this.orderProductRenderer.addOrUpdateProductToList(
         $(`#${$(event.newRow).find('tr').attr('id')}`),
-        event.newRow
+        event.newRow,
       );
       this.listenForProductDelete();
       this.listenForProductEdit();
@@ -116,7 +124,7 @@ export default class OrderViewPage {
         // Move to last page
         EventEmitter.emit(OrderViewEventMap.productListPaginated, {
           orderId: event.orderId,
-          numPage: numPages
+          numPage: numPages,
         });
       }
       this.orderProductRenderer.updateNumProducts(numProducts + 1);
@@ -130,7 +138,7 @@ export default class OrderViewPage {
   listenForProductDelete() {
     $(OrderViewPageMap.productDeleteBtn)
       .off('click')
-      .on('click', event => this.orderProductManager.handleDeleteProductEvent(event));
+      .on('click', (event) => this.orderProductManager.handleDeleteProductEvent(event));
   }
 
   listenForProductEdit() {
@@ -150,16 +158,52 @@ export default class OrderViewPage {
     });
   }
 
+  listenForProductPack() {
+    $(OrderViewPageMap.productPackModal.modal).on('show.bs.modal', (event) => {
+      const button = $(event.relatedTarget);
+      const packItems = button.data('packItems');
+      const router = new Router();
+      $(OrderViewPageMap.productPackModal.rows).remove();
+      packItems.forEach((item) => {
+        const $item = $(OrderViewPageMap.productPackModal.template).clone();
+        $item.attr('id', `productpack_${item.id}`).removeClass('d-none');
+        $item.find(OrderViewPageMap.productPackModal.product.img).attr('src', item.imagePath);
+        $item.find(OrderViewPageMap.productPackModal.product.name).html(item.name);
+        $item.find(OrderViewPageMap.productPackModal.product.link).attr(
+          'href',
+          router.generate('admin_product_form', {id: item.id}),
+        );
+        if (item.reference !== '') {
+          $item.find(OrderViewPageMap.productPackModal.product.ref).append(item.reference);
+        } else {
+          $item.find(OrderViewPageMap.productPackModal.product.ref).remove();
+        }
+        if (item.supplierReference !== '') {
+          $item.find(OrderViewPageMap.productPackModal.product.supplierRef).append(item.supplierReference);
+        } else {
+          $item.find(OrderViewPageMap.productPackModal.product.supplierRef).remove();
+        }
+        if (item.quantity > 1) {
+          $item.find(`${OrderViewPageMap.productPackModal.product.quantity} span`).html(item.quantity);
+        } else {
+          $item.find(OrderViewPageMap.productPackModal.product.quantity).html(item.quantity);
+        }
+        $item.find(OrderViewPageMap.productPackModal.product.availableQuantity).html(item.availableQuantity);
+        $(OrderViewPageMap.productPackModal.template).before($item);
+      });
+    });
+  }
+
   listenForProductAdd() {
     $(OrderViewPageMap.productAddBtn).on(
       'click',
-      event => {
-        this.orderProductRenderer.toggleProductAddNewInvoiceInfo()
-        this.orderProductRenderer.moveProductsPanelToModificationPosition(OrderViewPageMap.productSearchInput)
-      }
+      () => {
+        this.orderProductRenderer.toggleProductAddNewInvoiceInfo();
+        this.orderProductRenderer.moveProductsPanelToModificationPosition(OrderViewPageMap.productSearchInput);
+      },
     );
     $(OrderViewPageMap.productCancelAddBtn).on(
-      'click', event => this.orderProductRenderer.moveProductPanelToOriginalPosition()
+      'click', () => this.orderProductRenderer.moveProductPanelToOriginalPosition(),
     );
   }
 
@@ -169,7 +213,7 @@ export default class OrderViewPage {
       const $btn = $(event.currentTarget);
       EventEmitter.emit(OrderViewEventMap.productListPaginated, {
         orderId: $btn.data('orderId'),
-        numPage: $btn.data('page')
+        numPage: $btn.data('page'),
       });
     });
     $(OrderViewPageMap.productsTablePaginationNext).on('click', (event) => {
@@ -181,7 +225,7 @@ export default class OrderViewPage {
       const activePage = this.getActivePage();
       EventEmitter.emit(OrderViewEventMap.productListPaginated, {
         orderId: $(activePage).data('orderId'),
-        numPage: parseInt($(activePage).html(), 10) + 1
+        numPage: parseInt($(activePage).html(), 10) + 1,
       });
     });
     $(OrderViewPageMap.productsTablePaginationPrev).on('click', (event) => {
@@ -193,7 +237,7 @@ export default class OrderViewPage {
       const activePage = this.getActivePage();
       EventEmitter.emit(OrderViewEventMap.productListPaginated, {
         orderId: $(activePage).data('orderId'),
-        numPage: parseInt($(activePage).html(), 10) - 1
+        numPage: parseInt($(activePage).html(), 10) - 1,
       });
     });
 
@@ -201,6 +245,23 @@ export default class OrderViewPage {
       this.orderProductRenderer.paginate(event.numPage);
       this.listenForProductDelete();
       this.listenForProductEdit();
+    });
+  }
+
+  listenForRefund() {
+    $(OrderViewPageMap.cancelProduct.buttons.partialRefund).on('click', () => {
+      this.orderProductRenderer.moveProductsPanelToRefundPosition();
+      this.orderProductCancel.showPartialRefund();
+    });
+
+    $(OrderViewPageMap.cancelProduct.buttons.standardRefund).on('click', () => {
+      this.orderProductRenderer.moveProductsPanelToRefundPosition();
+      this.orderProductCancel.showStandardRefund();
+    });
+
+    $(OrderViewPageMap.cancelProduct.buttons.abort).on('click', () => {
+      this.orderProductRenderer.moveProductPanelToOriginalPosition();
+      this.orderProductCancel.hideRefund();
     });
   }
 

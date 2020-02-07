@@ -58,10 +58,7 @@ final class UpdateCartLanguageHandler extends AbstractCartHandler implements Upd
                 throw new CartException('Failed to update cart language');
             }
         } catch (PrestaShopException $e) {
-            throw new CartException(sprintf(
-                'An error occurred while trying to update language for cart with id "%s"',
-                $cart->id
-            ));
+            throw new CartException(sprintf('An error occurred while trying to update language for cart with id "%s"', $cart->id));
         }
     }
 
@@ -78,17 +75,11 @@ final class UpdateCartLanguageHandler extends AbstractCartHandler implements Upd
         try {
             $lang = new Language($languageId->getValue());
         } catch (PrestaShopException $e) {
-            throw new LanguageException(
-                $languageId,
-                sprintf('An error occurred when fetching language object with id %s', $languageId->getValue())
-            );
+            throw new LanguageException($languageId, sprintf('An error occurred when fetching language object with id %s', $languageId->getValue()));
         }
 
         if ($languageId->getValue() !== $lang->id) {
-            throw new LanguageNotFoundException(
-                $languageId,
-                sprintf('Language with id "%s" was not found', $languageId->getValue())
-            );
+            throw new LanguageNotFoundException($languageId, sprintf('Language with id "%s" was not found', $languageId->getValue()));
         }
 
         return $lang;
@@ -102,11 +93,7 @@ final class UpdateCartLanguageHandler extends AbstractCartHandler implements Upd
     private function assertLanguageIsActive(Language $lang): void
     {
         if (!$lang->active) {
-            throw new LanguageException(sprintf(
-                'Language with id "%s" is not active',
-                $lang->id),
-                LanguageException::NOT_ACTIVE
-            );
+            throw new LanguageException(sprintf('Language with id "%s" is not active', $lang->id), LanguageException::NOT_ACTIVE);
         }
     }
 }

@@ -28,7 +28,7 @@ class GroupLangCore extends DataLangCore
     // Don't replace domain in init() with $this->domain for translation parsing
     protected $domain = 'Admin.Shopparameters.Feature';
 
-    protected $keys = array('id_group');
+    protected $keys = ['id_group'];
 
-    protected $fieldsToUpdate = array('name');
+    protected $fieldsToUpdate = ['name'];
 }

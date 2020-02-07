@@ -61,10 +61,7 @@ final class UpdateCartAddressesHandler extends AbstractCartHandler implements Up
         $this->fillCartWithCommandData($cart, $command);
 
         if (false === $cart->update()) {
-            throw new CartException(sprintf(
-                'Failed to update addresses for cart with id "%s"',
-                $cart->id
-            ));
+            throw new CartException(sprintf('Failed to update addresses for cart with id "%s"', $cart->id));
         }
 
         $this->updateCartCarrierHandler->handle(new UpdateCartCarrierCommand($cart->id, $cart->id_carrier));

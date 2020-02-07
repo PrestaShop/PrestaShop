@@ -26,12 +26,12 @@
 
 namespace Tests\Unit\Core\MailTemplate;
 
-use PHPUnit\Framework\TestCase;
+use DOMElement;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Language\LanguageInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\Transformation\CSSInlineTransformation;
 use Symfony\Component\DomCrawler\Crawler;
-use DOMElement;
 
 class CSSInlineTransformationTest extends TestCase
 {

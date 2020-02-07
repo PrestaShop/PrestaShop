@@ -27,10 +27,10 @@
 namespace PrestaShop\PrestaShop\Adapter\Currency\QueryHandler;
 
 use Currency;
-use PrestaShop\PrestaShop\Core\Domain\Currency\QueryResult\EditableCurrency;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Query\GetCurrencyForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Currency\QueryHandler\GetCurrencyForEditingHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Currency\QueryResult\EditableCurrency;
 use PrestaShop\PrestaShop\Core\Localization\Currency\PatternTransformer;
 
 /**
@@ -65,12 +65,7 @@ final class GetCurrencyForEditingHandler implements GetCurrencyForEditingHandler
         );
 
         if (0 >= $entity->id) {
-            throw new CurrencyNotFoundException(
-                sprintf(
-                    'Currency object with id "%s" was not found for editing',
-                    $query->getCurrencyId()->getValue()
-                )
-            );
+            throw new CurrencyNotFoundException(sprintf('Currency object with id "%s" was not found for editing', $query->getCurrencyId()->getValue()));
         }
 
         $transformer = new PatternTransformer();

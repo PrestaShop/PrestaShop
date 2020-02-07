@@ -176,110 +176,110 @@ class OrderCore extends ObjectModel
     /**
      * @see ObjectModel::$definition
      */
-    public static $definition = array(
+    public static $definition = [
         'table' => 'orders',
         'primary' => 'id_order',
-        'fields' => array(
-            'id_address_delivery' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-            'id_address_invoice' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-            'id_cart' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-            'id_currency' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-            'id_shop_group' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
-            'id_shop' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
-            'id_lang' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-            'id_customer' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-            'id_carrier' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-            'current_state' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
-            'secure_key' => array('type' => self::TYPE_STRING, 'validate' => 'isMd5'),
-            'payment' => array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => true),
-            'module' => array('type' => self::TYPE_STRING, 'validate' => 'isModuleName', 'required' => true),
-            'recyclable' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-            'gift' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-            'gift_message' => array('type' => self::TYPE_STRING, 'validate' => 'isMessage'),
-            'mobile_theme' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-            'total_discounts' => array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice'),
-            'total_discounts_tax_incl' => array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice'),
-            'total_discounts_tax_excl' => array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice'),
-            'total_paid' => array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice', 'required' => true),
-            'total_paid_tax_incl' => array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice'),
-            'total_paid_tax_excl' => array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice'),
-            'total_paid_real' => array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice', 'required' => true),
-            'total_products' => array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice', 'required' => true),
-            'total_products_wt' => array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice', 'required' => true),
-            'total_shipping' => array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice'),
-            'total_shipping_tax_incl' => array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice'),
-            'total_shipping_tax_excl' => array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice'),
-            'carrier_tax_rate' => array('type' => self::TYPE_FLOAT, 'validate' => 'isFloat'),
-            'total_wrapping' => array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice'),
-            'total_wrapping_tax_incl' => array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice'),
-            'total_wrapping_tax_excl' => array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice'),
-            'round_mode' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
-            'round_type' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
-            'shipping_number' => array('type' => self::TYPE_STRING, 'validate' => 'isTrackingNumber'),
-            'conversion_rate' => array('type' => self::TYPE_FLOAT, 'validate' => 'isFloat', 'required' => true),
-            'invoice_number' => array('type' => self::TYPE_INT),
-            'delivery_number' => array('type' => self::TYPE_INT),
-            'invoice_date' => array('type' => self::TYPE_DATE),
-            'delivery_date' => array('type' => self::TYPE_DATE),
-            'valid' => array('type' => self::TYPE_BOOL),
-            'reference' => array('type' => self::TYPE_STRING),
-            'date_add' => array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
-            'date_upd' => array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
-        ),
-    );
+        'fields' => [
+            'id_address_delivery' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
+            'id_address_invoice' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
+            'id_cart' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
+            'id_currency' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
+            'id_shop_group' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId'],
+            'id_shop' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId'],
+            'id_lang' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
+            'id_customer' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
+            'id_carrier' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
+            'current_state' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId'],
+            'secure_key' => ['type' => self::TYPE_STRING, 'validate' => 'isMd5'],
+            'payment' => ['type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => true],
+            'module' => ['type' => self::TYPE_STRING, 'validate' => 'isModuleName', 'required' => true],
+            'recyclable' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
+            'gift' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
+            'gift_message' => ['type' => self::TYPE_STRING, 'validate' => 'isMessage'],
+            'mobile_theme' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
+            'total_discounts' => ['type' => self::TYPE_FLOAT, 'validate' => 'isPrice'],
+            'total_discounts_tax_incl' => ['type' => self::TYPE_FLOAT, 'validate' => 'isPrice'],
+            'total_discounts_tax_excl' => ['type' => self::TYPE_FLOAT, 'validate' => 'isPrice'],
+            'total_paid' => ['type' => self::TYPE_FLOAT, 'validate' => 'isPrice', 'required' => true],
+            'total_paid_tax_incl' => ['type' => self::TYPE_FLOAT, 'validate' => 'isPrice'],
+            'total_paid_tax_excl' => ['type' => self::TYPE_FLOAT, 'validate' => 'isPrice'],
+            'total_paid_real' => ['type' => self::TYPE_FLOAT, 'validate' => 'isPrice', 'required' => true],
+            'total_products' => ['type' => self::TYPE_FLOAT, 'validate' => 'isPrice', 'required' => true],
+            'total_products_wt' => ['type' => self::TYPE_FLOAT, 'validate' => 'isPrice', 'required' => true],
+            'total_shipping' => ['type' => self::TYPE_FLOAT, 'validate' => 'isPrice'],
+            'total_shipping_tax_incl' => ['type' => self::TYPE_FLOAT, 'validate' => 'isPrice'],
+            'total_shipping_tax_excl' => ['type' => self::TYPE_FLOAT, 'validate' => 'isPrice'],
+            'carrier_tax_rate' => ['type' => self::TYPE_FLOAT, 'validate' => 'isFloat'],
+            'total_wrapping' => ['type' => self::TYPE_FLOAT, 'validate' => 'isPrice'],
+            'total_wrapping_tax_incl' => ['type' => self::TYPE_FLOAT, 'validate' => 'isPrice'],
+            'total_wrapping_tax_excl' => ['type' => self::TYPE_FLOAT, 'validate' => 'isPrice'],
+            'round_mode' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId'],
+            'round_type' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId'],
+            'shipping_number' => ['type' => self::TYPE_STRING, 'validate' => 'isTrackingNumber'],
+            'conversion_rate' => ['type' => self::TYPE_FLOAT, 'validate' => 'isFloat', 'required' => true],
+            'invoice_number' => ['type' => self::TYPE_INT],
+            'delivery_number' => ['type' => self::TYPE_INT],
+            'invoice_date' => ['type' => self::TYPE_DATE],
+            'delivery_date' => ['type' => self::TYPE_DATE],
+            'valid' => ['type' => self::TYPE_BOOL],
+            'reference' => ['type' => self::TYPE_STRING],
+            'date_add' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
+            'date_upd' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
+        ],
+    ];
 
-    protected $webserviceParameters = array(
-        'objectMethods' => array('add' => 'addWs'),
+    protected $webserviceParameters = [
+        'objectMethods' => ['add' => 'addWs'],
         'objectNodeName' => 'order',
         'objectsNodeName' => 'orders',
-        'fields' => array(
-            'id_address_delivery' => array('xlink_resource' => 'addresses'),
-            'id_address_invoice' => array('xlink_resource' => 'addresses'),
-            'id_cart' => array('xlink_resource' => 'carts'),
-            'id_currency' => array('xlink_resource' => 'currencies'),
-            'id_lang' => array('xlink_resource' => 'languages'),
-            'id_customer' => array('xlink_resource' => 'customers'),
-            'id_carrier' => array('xlink_resource' => 'carriers'),
-            'current_state' => array(
+        'fields' => [
+            'id_address_delivery' => ['xlink_resource' => 'addresses'],
+            'id_address_invoice' => ['xlink_resource' => 'addresses'],
+            'id_cart' => ['xlink_resource' => 'carts'],
+            'id_currency' => ['xlink_resource' => 'currencies'],
+            'id_lang' => ['xlink_resource' => 'languages'],
+            'id_customer' => ['xlink_resource' => 'customers'],
+            'id_carrier' => ['xlink_resource' => 'carriers'],
+            'current_state' => [
                 'xlink_resource' => 'order_states',
                 'setter' => 'setWsCurrentState',
-            ),
-            'module' => array('required' => true),
-            'invoice_number' => array(),
-            'invoice_date' => array(),
-            'delivery_number' => array(),
-            'delivery_date' => array(),
-            'valid' => array(),
-            'date_add' => array(),
-            'date_upd' => array(),
-            'shipping_number' => array(
+            ],
+            'module' => ['required' => true],
+            'invoice_number' => [],
+            'invoice_date' => [],
+            'delivery_number' => [],
+            'delivery_date' => [],
+            'valid' => [],
+            'date_add' => [],
+            'date_upd' => [],
+            'shipping_number' => [
                 'getter' => 'getWsShippingNumber',
                 'setter' => 'setWsShippingNumber',
-            ),
-        ),
-        'associations' => array(
-            'order_rows' => array('resource' => 'order_row', 'setter' => false, 'virtual_entity' => true,
-                'fields' => array(
-                    'id' => array(),
-                    'product_id' => array('required' => true, 'xlink_resource' => 'products'),
-                    'product_attribute_id' => array('required' => true),
-                    'product_quantity' => array('required' => true),
-                    'product_name' => array('setter' => false),
-                    'product_reference' => array('setter' => false),
-                    'product_ean13' => array('setter' => false),
-                    'product_isbn' => array('setter' => false),
-                    'product_upc' => array('setter' => false),
-                    'product_price' => array('setter' => false),
-                    'id_customization' => array('required' => false, 'xlink_resource' => 'customizations'),
-                    'unit_price_tax_incl' => array('setter' => false),
-                    'unit_price_tax_excl' => array('setter' => false),
-                ), ),
-        ),
-    );
+            ],
+        ],
+        'associations' => [
+            'order_rows' => ['resource' => 'order_row', 'setter' => false, 'virtual_entity' => true,
+                'fields' => [
+                    'id' => [],
+                    'product_id' => ['required' => true, 'xlink_resource' => 'products'],
+                    'product_attribute_id' => ['required' => true],
+                    'product_quantity' => ['required' => true],
+                    'product_name' => ['setter' => false],
+                    'product_reference' => ['setter' => false],
+                    'product_ean13' => ['setter' => false],
+                    'product_isbn' => ['setter' => false],
+                    'product_upc' => ['setter' => false],
+                    'product_price' => ['setter' => false],
+                    'id_customization' => ['required' => false, 'xlink_resource' => 'customizations'],
+                    'unit_price_tax_incl' => ['setter' => false],
+                    'unit_price_tax_excl' => ['setter' => false],
+                ], ],
+        ],
+    ];
 
     protected $_taxCalculationMethod = PS_TAX_EXC;
 
-    protected static $_historyCache = array();
+    protected static $_historyCache = [];
 
     public function __construct($id = null, $id_lang = null)
     {
@@ -363,7 +363,7 @@ class OrderCore extends ObjectModel
      */
     public function getCartProducts()
     {
-        $product_id_list = array();
+        $product_id_list = [];
         $products = $this->getProducts();
         foreach ($products as &$product) {
             $product['id_product_attribute'] = $product['product_attribute_id'];
@@ -375,7 +375,7 @@ class OrderCore extends ObjectModel
         }
         unset($product);
 
-        $product_list = array();
+        $product_list = [];
         foreach ($products as $product) {
             $key = $this->id_address_delivery . '_'
                 . $product['id_product'] . '_'
@@ -423,7 +423,7 @@ class OrderCore extends ObjectModel
         $this->total_paid_tax_excl -= $product_price_tax_excl + $shipping_diff_tax_excl;
         $this->total_paid_real -= $product_price_tax_incl + $shipping_diff_tax_incl;
 
-        $fields = array(
+        $fields = [
             'total_shipping',
             'total_shipping_tax_excl',
             'total_shipping_tax_incl',
@@ -433,7 +433,7 @@ class OrderCore extends ObjectModel
             'total_paid_tax_incl',
             'total_paid_tax_excl',
             'total_paid_real',
-        );
+        ];
 
         /* Prevent from floating precision issues */
         foreach ($fields as $field) {
@@ -635,7 +635,7 @@ class OrderCore extends ObjectModel
             return $products;
         }
 
-        $result_array = array();
+        $result_array = [];
         foreach ($products as $row) {
             // Change qty if selected
             if ($selected_qty) {
@@ -929,7 +929,7 @@ class OrderCore extends ObjectModel
         }
 
         $orderStates = OrderState::getOrderStates((int) $context->language->id);
-        $indexedOrderStates = array();
+        $indexedOrderStates = [];
         foreach ($orderStates as $orderState) {
             $indexedOrderStates[$orderState['id_order_state']] = $orderState;
         }
@@ -948,7 +948,7 @@ class OrderCore extends ObjectModel
         ORDER BY o.`date_add` DESC');
 
         if (!$res) {
-            return array();
+            return [];
         }
 
         foreach ($res as $key => $val) {
@@ -972,7 +972,7 @@ class OrderCore extends ObjectModel
                     . ($id_customer ? ' AND id_customer = ' . (int) $id_customer : '');
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 
-        $orders = array();
+        $orders = [];
         foreach ($result as $order) {
             $orders[] = (int) $order['id_order'];
         }
@@ -1025,7 +1025,7 @@ class OrderCore extends ObjectModel
                 ' ORDER BY invoice_date ASC';
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 
-        $orders = array();
+        $orders = [];
         foreach ($result as $order) {
             $orders[] = (int) $order['id_order'];
         }
@@ -1050,7 +1050,7 @@ class OrderCore extends ObjectModel
                 ORDER BY invoice_date ASC';
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 
-        $orders = array();
+        $orders = [];
         foreach ($result as $order) {
             $orders[] = (int) $order['id_order'];
         }
@@ -1195,7 +1195,7 @@ class OrderCore extends ObjectModel
     {
         Tools::displayAsDeprecated('Use Order::addCartRule($id_cart_rule, $name, array(\'tax_incl\' => $value, \'tax_excl\' => \'0.00\')) instead');
 
-        return Order::addCartRule($id_cart_rule, $name, array('tax_incl' => $value, 'tax_excl' => '0.00'));
+        return Order::addCartRule($id_cart_rule, $name, ['tax_incl' => $value, 'tax_excl' => '0.00']);
     }
 
     /**
@@ -1385,11 +1385,11 @@ class OrderCore extends ObjectModel
 
             if (Configuration::get('PS_INVOICE')) {
                 $this->invoice_number = $this->getInvoiceNumber($order_invoice->id);
-                $invoice_number = Hook::exec('actionSetInvoice', array(
+                $invoice_number = Hook::exec('actionSetInvoice', [
                     get_class($this) => $this,
                     get_class($order_invoice) => $order_invoice,
                     'use_existing_payment' => (bool) $use_existing_payment,
-                ));
+                ]);
 
                 if (is_numeric($invoice_number)) {
                     $this->invoice_number = (int) $invoice_number;
@@ -1700,7 +1700,7 @@ class OrderCore extends ObjectModel
         /** @var PaymentModule $payment_module */
         $payment_module = Module::getInstanceByName($this->module);
         $customer = new Customer($this->id_customer);
-        $payment_module->validateOrder($this->id_cart, Configuration::get('PS_OS_WS_PAYMENT'), $this->total_paid, $this->payment, null, array(), null, false, $customer->secure_key);
+        $payment_module->validateOrder($this->id_cart, Configuration::get('PS_OS_WS_PAYMENT'), $this->total_paid, $this->payment, null, [], null, false, $customer->secure_key);
         $this->id = $payment_module->currentOrder;
 
         return true;
@@ -1903,7 +1903,7 @@ class OrderCore extends ObjectModel
         $order_slips = $this->getOrderSlipsCollection()->getResults();
 
         $documents = array_merge($invoices, $order_slips, $delivery_slips);
-        usort($documents, array('Order', 'sortDocuments'));
+        usort($documents, ['Order', 'sortDocuments']);
 
         return $documents;
     }
@@ -2093,7 +2093,7 @@ class OrderCore extends ObjectModel
      */
     public function getProductTaxesBreakdown()
     {
-        $tmp_tax_infos = array();
+        $tmp_tax_infos = [];
         if ($this->useOneAfterAnotherTaxComputationMethod()) {
             // sum by taxes
             $taxes_by_tax = Db::getInstance()->executeS('
@@ -2106,7 +2106,7 @@ class OrderCore extends ObjectModel
             ');
 
             // format response
-            $tmp_tax_infos = array();
+            $tmp_tax_infos = [];
             foreach ($taxes_by_tax as $tax_infos) {
                 $tmp_tax_infos[$tax_infos['rate']]['total_amount'] = $tax_infos['tax_amount'];
                 $tmp_tax_infos[$tax_infos['rate']]['name'] = $tax_infos['name'];
@@ -2123,13 +2123,13 @@ class OrderCore extends ObjectModel
             ');
 
             // sum by taxes
-            $tmp_tax_infos = array();
+            $tmp_tax_infos = [];
             foreach ($taxes_infos as $tax_infos) {
                 if (!isset($tmp_tax_infos[$tax_infos['rate']])) {
-                    $tmp_tax_infos[$tax_infos['rate']] = array('total_amount' => 0,
+                    $tmp_tax_infos[$tax_infos['rate']] = ['total_amount' => 0,
                         'name' => 0,
                         'total_price_tax_excl' => 0,
-                    );
+                    ];
                 }
 
                 $tmp_tax_infos[$tax_infos['rate']]['total_amount'] += $tax_infos['total_amount'];
@@ -2150,15 +2150,15 @@ class OrderCore extends ObjectModel
      */
     public function getShippingTaxesBreakdown()
     {
-        $taxes_breakdown = array();
+        $taxes_breakdown = [];
 
         $shipping_tax_amount = $this->total_shipping_tax_incl - $this->total_shipping_tax_excl;
 
         if ($shipping_tax_amount > 0) {
-            $taxes_breakdown[] = array(
+            $taxes_breakdown[] = [
                 'rate' => $this->carrier_tax_rate,
                 'total_amount' => $shipping_tax_amount,
-            );
+            ];
         }
 
         return $taxes_breakdown;
@@ -2175,7 +2175,7 @@ class OrderCore extends ObjectModel
      */
     public function getWrappingTaxesBreakdown()
     {
-        $taxes_breakdown = array();
+        $taxes_breakdown = [];
 
         return $taxes_breakdown;
     }
@@ -2252,10 +2252,10 @@ class OrderCore extends ObjectModel
             GROUP BY id_warehouse'
         );
         if (!$results) {
-            return array();
+            return [];
         }
 
-        $warehouse_list = array();
+        $warehouse_list = [];
         foreach ($results as $row) {
             $warehouse_list[] = $row['id_warehouse'];
         }
@@ -2447,7 +2447,7 @@ class OrderCore extends ObjectModel
         $order_discount_tax_excl = $this->total_discounts_tax_excl;
 
         $free_shipping_tax = 0;
-        $product_specific_discounts = array();
+        $product_specific_discounts = [];
 
         $expected_total_base = $this->total_products - $this->total_discounts_tax_excl;
 
@@ -2478,16 +2478,16 @@ class OrderCore extends ObjectModel
         $actual_total_tax = 0;
         $actual_total_base = 0;
 
-        $order_detail_tax_rows = array();
+        $order_detail_tax_rows = [];
 
-        $breakdown = array();
+        $breakdown = [];
 
         // Get order_details
         $order_details = $limitToOrderDetails ? $limitToOrderDetails : $this->getOrderDetailList();
 
         $order_ecotax_tax = 0;
 
-        $tax_rates = array();
+        $tax_rates = [];
 
         foreach ($order_details as $order_detail) {
             $id_order_detail = $order_detail['id_order_detail'];
@@ -2539,13 +2539,13 @@ class OrderCore extends ObjectModel
                 }
 
                 if (!isset($breakdown[$id_tax])) {
-                    $breakdown[$id_tax] = array('tax_base' => 0, 'tax_amount' => 0);
+                    $breakdown[$id_tax] = ['tax_base' => 0, 'tax_amount' => 0];
                 }
 
                 $breakdown[$id_tax]['tax_base'] += $total_tax_base;
                 $breakdown[$id_tax]['tax_amount'] += $total_amount;
 
-                $order_detail_tax_rows[] = array(
+                $order_detail_tax_rows[] = [
                     'id_order_detail' => $id_order_detail,
                     'id_tax' => $id_tax,
                     'tax_rate' => $tax_rates[$id_tax],
@@ -2553,7 +2553,7 @@ class OrderCore extends ObjectModel
                     'total_tax_base' => $total_tax_base,
                     'unit_amount' => $unit_amount,
                     'total_amount' => $total_amount,
-                );
+                ];
             }
         }
 
@@ -2597,8 +2597,8 @@ class OrderCore extends ObjectModel
             return;
         }
 
-        $old_id_order_details = array();
-        $values = array();
+        $old_id_order_details = [];
+        $values = [];
         foreach ($order_detail_tax_rows_to_insert as $row) {
             $old_id_order_details[] = (int) $row['id_order_detail'];
             $values[] = '(' . (int) $row['id_order_detail'] . ', ' . (int) $row['id_tax'] . ', ' . (float) $row['unit_amount'] . ', ' . (float) $row['total_amount'] . ')';

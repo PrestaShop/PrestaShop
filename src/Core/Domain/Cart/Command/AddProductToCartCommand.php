@@ -133,10 +133,7 @@ class AddProductToCartCommand
     private function assertQtyIsPositive(int $qty)
     {
         if (0 >= $qty) {
-            throw new CartConstraintException(
-                sprintf('Quantity must be positive integer. "%s" given.', $qty),
-                CartConstraintException::INVALID_QUANTITY
-            );
+            throw new CartConstraintException(sprintf('Quantity must be positive integer. "%s" given.', $qty), CartConstraintException::INVALID_QUANTITY);
         }
     }
 

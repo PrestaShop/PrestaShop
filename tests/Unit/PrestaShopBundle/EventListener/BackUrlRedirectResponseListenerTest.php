@@ -26,8 +26,8 @@
 
 namespace Tests\Unit\PrestaShopBundle\EventListener;
 
-use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Util\Url\BackUrlProvider;
 use PrestaShopBundle\EventListener\BackUrlRedirectResponseListener;
 use Symfony\Component\HttpFoundation\RedirectResponse;

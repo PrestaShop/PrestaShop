@@ -64,11 +64,7 @@ final class AdaptThemeToRTLLanguagesHandler implements AdaptThemeToRTLLanguagesH
                 ->process()
             ;
         } catch (GenerationException $e) {
-            throw new CannotAdaptThemeToRTLLanguagesException(
-                sprintf('Cannot adapt "%s" theme to RTL languages.', $plainThemeName),
-                0,
-                $e
-            );
+            throw new CannotAdaptThemeToRTLLanguagesException(sprintf('Cannot adapt "%s" theme to RTL languages.', $plainThemeName), 0, $e);
         }
     }
 }

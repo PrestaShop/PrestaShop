@@ -26,9 +26,10 @@
 
 namespace Tests\Unit\Core\MailTemplate;
 
-use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Exception\FileNotFoundException;
+use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\FolderThemeCatalog;
 use PrestaShop\PrestaShop\Core\MailTemplate\FolderThemeScanner;
@@ -41,7 +42,6 @@ use PrestaShop\PrestaShop\Core\MailTemplate\ThemeCollection;
 use PrestaShop\PrestaShop\Core\MailTemplate\ThemeCollectionInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\ThemeInterface;
 use Symfony\Component\Filesystem\Filesystem;
-use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 
 class FolderThemeCatalogTest extends TestCase
 {

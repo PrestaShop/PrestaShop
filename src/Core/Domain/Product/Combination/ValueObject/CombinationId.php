@@ -65,10 +65,7 @@ class CombinationId
     private function assertValueIsPositive(int $value)
     {
         if (0 >= $value) {
-            throw new CombinationConstraintException(
-                sprintf('Combination id must be positive integer. "%s" given', $value),
-                CombinationConstraintException::INVALID_ID
-            );
+            throw new CombinationConstraintException(sprintf('Combination id must be positive integer. "%s" given', $value), CombinationConstraintException::INVALID_ID);
         }
     }
 }

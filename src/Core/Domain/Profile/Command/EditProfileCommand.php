@@ -48,7 +48,7 @@ class EditProfileCommand extends AbstractProfileCommand
     public function __construct($profileId, array $localizedNames)
     {
         parent::__construct($localizedNames);
-        $this->profileId = new ProfileId($profileId);
+        $this->profileId = new ProfileId((int) $profileId);
     }
 
     /**

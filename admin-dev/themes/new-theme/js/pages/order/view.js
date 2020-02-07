@@ -29,10 +29,10 @@ import InvoiceNoteManager from '@pages/order/invoice-note-manager';
 import OrderViewPage from '@pages/order/view/order-view-page';
 import OrderProductAutocomplete from '@pages/order/view/order-product-add-autocomplete';
 import OrderProductAdd from '@pages/order/view/order-product-add';
-import OrderViewPageMessagesHandler from './message/order-view-page-messages-handler';
 import TextWithLengthCounter from '@components/form/text-with-length-counter';
+import OrderViewPageMessagesHandler from './message/order-view-page-messages-handler';
 
-const $ = window.$;
+const {$} = window;
 
 $(() => {
   const DISCOUNT_TYPE_AMOUNT = 'amount';
@@ -45,13 +45,15 @@ $(() => {
   const orderAddAutocomplete = new OrderProductAutocomplete($(OrderViewPageMap.productSearchInput));
   const orderAdd = new OrderProductAdd();
 
+  orderViewPage.listenForProductPack();
   orderViewPage.listenForProductDelete();
   orderViewPage.listenForProductEdit();
   orderViewPage.listenForProductAdd();
   orderViewPage.listenForProductPagination();
+  orderViewPage.listenForRefund();
 
   orderAddAutocomplete.listenForSearch();
-  orderAddAutocomplete.onItemClickedCallback = product => orderAdd.setProduct(product);
+  orderAddAutocomplete.onItemClickedCallback = (product) => orderAdd.setProduct(product);
 
   handlePaymentDetailsToggle();
   handlePrivateNoteChange();
@@ -159,8 +161,9 @@ $(() => {
 
   function initChangeAddressFormHandler() {
     const $modal = $(OrderViewPageMap.updateCustomerAddressModal);
+    const $btn = $(OrderViewPageMap.updateOrderStatusActionBtn);
 
-    $(OrderViewPageMap.openOrderAddressUpdateModalBtn).on('click', (event) => {
+    $(OrderViewPageMap.openOrderAddressUpdateModalBtn).on('click', () => {
       $modal.find(OrderViewPageMap.updateOrderAddressTypeInput).val($btn.data('address-type'));
     });
   }

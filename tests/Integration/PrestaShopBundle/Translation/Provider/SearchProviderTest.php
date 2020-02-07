@@ -28,8 +28,8 @@ namespace Tests\Integration\PrestaShopBundle\Translation\Provider;
 
 use PHPUnit\Framework\TestCase;
 use PrestaShopBundle\Translation\Provider\ExternalModuleLegacySystemProvider;
-use Symfony\Component\Translation\Loader\LoaderInterface;
 use PrestaShopBundle\Translation\Provider\SearchProvider;
+use Symfony\Component\Translation\Loader\LoaderInterface;
 use Symfony\Component\Translation\MessageCatalogue;
 
 /**

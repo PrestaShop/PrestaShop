@@ -23,7 +23,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-const $ = window.$;
+const {$} = window;
 
 /**
  * ConfirmModal component
@@ -72,15 +72,14 @@ export default function ConfirmModal(params, confirmCallback) {
  * @param {Object} params
  *
  */
-function Modal(
-  {
-    id = 'confirm_modal',
-    confirmTitle,
-    confirmMessage = '',
-    closeButtonLabel = 'Close',
-    confirmButtonLabel = 'Accept',
-    confirmButtonClass = 'btn-primary',
-  }) {
+function Modal({
+  id = 'confirm_modal',
+  confirmTitle,
+  confirmMessage = '',
+  closeButtonLabel = 'Close',
+  confirmButtonLabel = 'Accept',
+  confirmButtonClass = 'btn-primary',
+}) {
   const modal = {};
 
   // Main modal element

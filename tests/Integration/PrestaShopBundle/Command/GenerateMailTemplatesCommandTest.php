@@ -27,12 +27,12 @@
 namespace Tests\Integration\PrestaShopBundle\Command;
 
 use PrestaShop\PrestaShop\Core\MailTemplate\MailTemplateInterface;
-use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
+use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Symfony\Component\Console\Exception\RuntimeException;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
-use Symfony\Component\Console\Exception\RuntimeException;
 
 class GenerateMailTemplatesCommandTest extends KernelTestCase
 {
@@ -55,9 +55,9 @@ class GenerateMailTemplatesCommandTest extends KernelTestCase
         $command = $application->find('prestashop:mail:generate');
         $this->assertNotNull($command);
         $commandTester = new CommandTester($command);
-        $commandTester->execute(array(
+        $commandTester->execute([
             'command' => $command->getName(),
-        ));
+        ]);
     }
 
     public function testGenerateTemplates()
@@ -70,12 +70,12 @@ class GenerateMailTemplatesCommandTest extends KernelTestCase
         $command = $application->find('prestashop:mail:generate');
         $this->assertNotNull($command);
         $commandTester = new CommandTester($command);
-        $commandTester->execute(array(
+        $commandTester->execute([
             'command' => $command->getName(),
             'theme' => 'classic',
             'locale' => 'en',
             'coreOutputFolder' => $outputFolder,
-        ));
+        ]);
         $this->assertEquals(0, $commandTester->getStatusCode());
 
         $finder = new Finder();
@@ -111,13 +111,13 @@ class GenerateMailTemplatesCommandTest extends KernelTestCase
         $command = $application->find('prestashop:mail:generate');
         $this->assertNotNull($command);
         $commandTester = new CommandTester($command);
-        $commandTester->execute(array(
+        $commandTester->execute([
             'command' => $command->getName(),
             'theme' => 'classic',
             'locale' => 'en',
             'coreOutputFolder' => $coreOutputFolder,
             'modulesOutputFolder' => $modulesOutputFolder,
-        ));
+        ]);
         $this->assertEquals(0, $commandTester->getStatusCode());
 
         $finder = new Finder();

@@ -62,10 +62,7 @@ final class ExportCsvFileWriter implements FileWriterInterface
         try {
             $exportFile = new SplFileObject($filePath, 'w');
         } catch (Exception $e) {
-            throw new FileWritingException(
-                sprintf('Cannot open export file for writing'),
-                FileWritingException::CANNOT_OPEN_FILE_FOR_WRITING
-            );
+            throw new FileWritingException(sprintf('Cannot open export file for writing'), FileWritingException::CANNOT_OPEN_FILE_FOR_WRITING);
         }
 
         $exportFile->fputcsv($data->getTitles(), ';');

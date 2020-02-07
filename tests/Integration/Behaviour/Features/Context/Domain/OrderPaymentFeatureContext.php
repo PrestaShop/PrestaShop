@@ -5,12 +5,12 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain;
 use Behat\Gherkin\Node\TableNode;
 use DateTimeImmutable;
 use PHPUnit\Framework\Assert as Assert;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\NegativePaymentAmountException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Payment\Command\AddPaymentCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderPaymentForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderPaymentsForViewing;
-use PrestaShopException;
 use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 
@@ -60,12 +60,7 @@ class OrderPaymentFeatureContext extends AbstractDomainFeatureContext
 
         $countOfOrderPaymentsFromDb = count($orderPaymentForViewingArray);
         if (count($orderPaymentForViewingArray) !== $numberOfPayments) {
-            throw new RuntimeException(sprintf(
-                'Order "%s" number of payments  is "%s", but "%s" was expected',
-                $orderReference,
-                $countOfOrderPaymentsFromDb,
-                $numberOfPayments
-            ));
+            throw new RuntimeException(sprintf('Order "%s" number of payments  is "%s", but "%s" was expected', $orderReference, $countOfOrderPaymentsFromDb, $numberOfPayments));
         }
     }
 
@@ -123,6 +118,7 @@ class OrderPaymentFeatureContext extends AbstractDomainFeatureContext
         $data = $table->getRowsHash();
 
         try {
+            $this->lastException = null;
             $this->getCommandBus()->handle(
                 new AddPaymentCommand(
                     $orderId,
@@ -134,16 +130,17 @@ class OrderPaymentFeatureContext extends AbstractDomainFeatureContext
                     $data['transaction_id']
                 )
             );
-        } catch (PrestaShopException $exception) {
-            $msg = $exception->getMessage();
-            $expectedMsg = 'Property Order->total_paid_real is not valid';
-            if ($msg !== 'Property Order->total_paid_real is not valid') {
-                throw new RuntimeException(sprintf(
-                    'Not expected exception is thrown "%s" but "%s" was expected',
-                    $msg,
-                    $expectedMsg));
-            }
+        } catch (NegativePaymentAmountException $exception) {
+            $this->lastException = $exception;
         }
+    }
+
+    /**
+     * @Then I should get error that payment amount is negative
+     */
+    public function assertLastErrorIsNegativePaymentAmount()
+    {
+        $this->assertLastErrorIs(NegativePaymentAmountException::class);
     }
 
     private function mapToOrderPaymentForViewing(int $paymentId, array $data)

@@ -26,8 +26,8 @@
 
 namespace Tests\Unit\Adapter\MailTemplate;
 
-use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\MailTemplate\MailPartialTemplateRenderer;
 use PrestaShop\PrestaShop\Core\Language\LanguageInterface;
 use Smarty;

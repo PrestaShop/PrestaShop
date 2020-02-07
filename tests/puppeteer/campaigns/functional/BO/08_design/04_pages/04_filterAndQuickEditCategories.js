@@ -179,7 +179,7 @@ describe('Filter And Quick Edit Categories', async () => {
       });
 
       it('should delete categories with Bulk Actions and check Result', async function () {
-        const deleteTextResult = await this.pageObjects.pagesPage.deleteRowInTableBulkActions('cms_page_category');
+        const deleteTextResult = await this.pageObjects.pagesPage.deleteWithBulkActions('cms_page_category');
         await expect(deleteTextResult).to.be.equal(this.pageObjects.pagesPage.successfulMultiDeleteMessage);
       });
     });

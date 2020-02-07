@@ -46,27 +46,27 @@ class AdminSuppliersControllerCore extends AdminController
         $this->_defaultOrderBy = 'name';
         $this->_defaultOrderWay = 'ASC';
 
-        $this->bulk_actions = array(
-            'delete' => array(
-                'text' => $this->trans('Delete selected', array(), 'Admin.Actions'),
+        $this->bulk_actions = [
+            'delete' => [
+                'text' => $this->trans('Delete selected', [], 'Admin.Actions'),
                 'icon' => 'icon-trash',
-                'confirm' => $this->trans('Delete selected items?', array(), 'Admin.Notifications.Warning'),
-            ),
-        );
+                'confirm' => $this->trans('Delete selected items?', [], 'Admin.Notifications.Warning'),
+            ],
+        ];
 
         $this->_select = 'COUNT(DISTINCT ps.`id_product`) AS products';
         $this->_join = 'LEFT JOIN `' . _DB_PREFIX_ . 'product_supplier` ps ON (a.`id_supplier` = ps.`id_supplier`)';
         $this->_group = 'GROUP BY a.`id_supplier`';
 
-        $this->fieldImageSettings = array('name' => 'logo', 'dir' => 'su');
+        $this->fieldImageSettings = ['name' => 'logo', 'dir' => 'su'];
 
-        $this->fields_list = array(
-            'id_supplier' => array('title' => $this->trans('ID', array(), 'Admin.Global'), 'align' => 'center', 'class' => 'fixed-width-xs'),
-            'logo' => array('title' => $this->trans('Logo', array(), 'Admin.Global'), 'align' => 'center', 'image' => 'su', 'orderby' => false, 'search' => false),
-            'name' => array('title' => $this->trans('Name', array(), 'Admin.Global')),
-            'products' => array('title' => $this->trans('Number of products', array(), 'Admin.Catalog.Feature'), 'align' => 'right', 'filter_type' => 'int', 'tmpTableFilter' => true),
-            'active' => array('title' => $this->trans('Enabled', array(), 'Admin.Global'), 'align' => 'center', 'active' => 'status', 'type' => 'bool', 'orderby' => false, 'class' => 'fixed-width-xs'),
-        );
+        $this->fields_list = [
+            'id_supplier' => ['title' => $this->trans('ID', [], 'Admin.Global'), 'align' => 'center', 'class' => 'fixed-width-xs'],
+            'logo' => ['title' => $this->trans('Logo', [], 'Admin.Global'), 'align' => 'center', 'image' => 'su', 'orderby' => false, 'search' => false],
+            'name' => ['title' => $this->trans('Name', [], 'Admin.Global')],
+            'products' => ['title' => $this->trans('Number of products', [], 'Admin.Catalog.Feature'), 'align' => 'right', 'filter_type' => 'int', 'tmpTableFilter' => true],
+            'active' => ['title' => $this->trans('Enabled', [], 'Admin.Global'), 'align' => 'center', 'active' => 'status', 'type' => 'bool', 'orderby' => false, 'class' => 'fixed-width-xs'],
+        ];
     }
 
     public function setMedia($isNewTheme = false)
@@ -79,11 +79,11 @@ class AdminSuppliersControllerCore extends AdminController
     public function initPageHeaderToolbar()
     {
         if (empty($this->display)) {
-            $this->page_header_toolbar_btn['new_supplier'] = array(
+            $this->page_header_toolbar_btn['new_supplier'] = [
                 'href' => self::$currentIndex . '&addsupplier&token=' . $this->token,
-                'desc' => $this->trans('Add new supplier', array(), 'Admin.Catalog.Feature'),
+                'desc' => $this->trans('Add new supplier', [], 'Admin.Catalog.Feature'),
                 'icon' => 'process-icon-new',
-            );
+            ];
         }
 
         parent::initPageHeaderToolbar();
@@ -109,197 +109,197 @@ class AdminSuppliersControllerCore extends AdminController
 
         $tmp_addr = new Address();
         $res = $tmp_addr->getFieldsRequiredDatabase();
-        $required_fields = array();
+        $required_fields = [];
         foreach ($res as $row) {
             $required_fields[(int) $row['id_required_field']] = $row['field_name'];
         }
 
-        $this->fields_form = array(
-            'legend' => array(
-                'title' => $this->trans('Suppliers', array(), 'Admin.Global'),
+        $this->fields_form = [
+            'legend' => [
+                'title' => $this->trans('Suppliers', [], 'Admin.Global'),
                 'icon' => 'icon-truck',
-            ),
-            'input' => array(
-                array(
+            ],
+            'input' => [
+                [
                     'type' => 'hidden',
                     'name' => 'id_address',
-                ),
-                array(
+                ],
+                [
                     'type' => 'text',
-                    'label' => $this->trans('Name', array(), 'Admin.Global'),
+                    'label' => $this->trans('Name', [], 'Admin.Global'),
                     'name' => 'name',
                     'required' => true,
                     'col' => 4,
-                    'hint' => $this->trans('Invalid characters:', array(), 'Admin.Notifications.Info') . ' &lt;&gt;;=#{}',
-                ),
+                    'hint' => $this->trans('Invalid characters:', [], 'Admin.Notifications.Info') . ' &lt;&gt;;=#{}',
+                ],
                 (
                     in_array('company', $required_fields) ?
-                    array(
+                    [
                         'type' => 'text',
-                        'label' => $this->trans('Company', array(), 'Admin.Global'),
+                        'label' => $this->trans('Company', [], 'Admin.Global'),
                         'name' => 'company',
                         'display' => in_array('company', $required_fields),
                         'required' => in_array('company', $required_fields),
                         'maxlength' => 16,
                         'col' => 4,
-                        'hint' => $this->trans('Company name for this supplier', array(), 'Admin.Catalog.Help'),
-                    )
+                        'hint' => $this->trans('Company name for this supplier', [], 'Admin.Catalog.Help'),
+                    ]
                     : null
                 ),
-                array(
+                [
                     'type' => 'textarea',
-                    'label' => $this->trans('Description', array(), 'Admin.Global'),
+                    'label' => $this->trans('Description', [], 'Admin.Global'),
                     'name' => 'description',
                     'lang' => true,
-                    'hint' => array(
-                        $this->trans('Invalid characters:', array(), 'Admin.Notifications.Info') . ' &lt;&gt;;=#{}',
-                        $this->trans('Will appear in the list of suppliers.', array(), 'Admin.Catalog.Help'),
-                    ),
+                    'hint' => [
+                        $this->trans('Invalid characters:', [], 'Admin.Notifications.Info') . ' &lt;&gt;;=#{}',
+                        $this->trans('Will appear in the list of suppliers.', [], 'Admin.Catalog.Help'),
+                    ],
                     'autoload_rte' => 'rte', //Enable TinyMCE editor for short description
-                ),
-                array(
+                ],
+                [
                     'type' => 'text',
-                    'label' => $this->trans('Phone', array(), 'Admin.Global'),
+                    'label' => $this->trans('Phone', [], 'Admin.Global'),
                     'name' => 'phone',
                     'required' => in_array('phone', $required_fields),
                     'maxlength' => 16,
                     'col' => 4,
-                    'hint' => $this->trans('Phone number for this supplier', array(), 'Admin.Catalog.Help'),
-                ),
-                array(
+                    'hint' => $this->trans('Phone number for this supplier', [], 'Admin.Catalog.Help'),
+                ],
+                [
                     'type' => 'text',
-                    'label' => $this->trans('Mobile phone', array(), 'Admin.Global'),
+                    'label' => $this->trans('Mobile phone', [], 'Admin.Global'),
                     'name' => 'phone_mobile',
                     'required' => in_array('phone_mobile', $required_fields),
                     'maxlength' => 16,
                     'col' => 4,
-                    'hint' => $this->trans('Mobile phone number for this supplier.', array(), 'Admin.Catalog.Help'),
-                ),
-                array(
+                    'hint' => $this->trans('Mobile phone number for this supplier.', [], 'Admin.Catalog.Help'),
+                ],
+                [
                     'type' => 'text',
-                    'label' => $this->trans('Address', array(), 'Admin.Global'),
+                    'label' => $this->trans('Address', [], 'Admin.Global'),
                     'name' => 'address',
                     'maxlength' => 128,
                     'col' => 6,
                     'required' => true,
-                ),
-                array(
+                ],
+                [
                     'type' => 'text',
-                    'label' => $this->trans('Address (2)', array(), 'Admin.Global'),
+                    'label' => $this->trans('Address (2)', [], 'Admin.Global'),
                     'name' => 'address2',
                     'required' => in_array('address2', $required_fields),
                     'col' => 6,
                     'maxlength' => 128,
-                ),
-                array(
+                ],
+                [
                     'type' => 'text',
-                    'label' => $this->trans('Zip/postal code', array(), 'Admin.Global'),
+                    'label' => $this->trans('Zip/postal code', [], 'Admin.Global'),
                     'name' => 'postcode',
                     'required' => in_array('postcode', $required_fields),
                     'maxlength' => 12,
                     'col' => 2,
-                ),
-                array(
+                ],
+                [
                     'type' => 'text',
-                    'label' => $this->trans('City', array(), 'Admin.Global'),
+                    'label' => $this->trans('City', [], 'Admin.Global'),
                     'name' => 'city',
                     'maxlength' => 32,
                     'col' => 4,
                     'required' => true,
-                ),
-                array(
+                ],
+                [
                     'type' => 'select',
-                    'label' => $this->trans('Country', array(), 'Admin.Global'),
+                    'label' => $this->trans('Country', [], 'Admin.Global'),
                     'name' => 'id_country',
                     'required' => true,
                     'col' => 4,
                     'default_value' => (int) $this->context->country->id,
-                    'options' => array(
+                    'options' => [
                         'query' => Country::getCountries($this->context->language->id, false),
                         'id' => 'id_country',
                         'name' => 'name',
-                    ),
-                ),
-                array(
+                    ],
+                ],
+                [
                     'type' => 'select',
-                    'label' => $this->trans('State', array(), 'Admin.Global'),
+                    'label' => $this->trans('State', [], 'Admin.Global'),
                     'name' => 'id_state',
                     'col' => 4,
-                    'options' => array(
+                    'options' => [
                         'id' => 'id_state',
-                        'query' => array(),
+                        'query' => [],
                         'name' => 'name',
-                    ),
-                ),
-                array(
+                    ],
+                ],
+                [
                     'type' => 'text',
-                    'label' => $this->trans('DNI', array(), 'Admin.Global'),
+                    'label' => $this->trans('DNI', [], 'Admin.Global'),
                     'name' => 'dni',
                     'maxlength' => 16,
                     'col' => 4,
                     'required' => true, // Only required in case of specifics countries
-                ),
-                array(
+                ],
+                [
                     'type' => 'file',
-                    'label' => $this->trans('Logo', array(), 'Admin.Global'),
+                    'label' => $this->trans('Logo', [], 'Admin.Global'),
                     'name' => 'logo',
                     'display_image' => true,
                     'image' => $image_url ? $image_url : false,
                     'size' => $image_size,
-                    'hint' => $this->trans('Upload a supplier logo from your computer.', array(), 'Admin.Catalog.Help'),
-                ),
-                array(
+                    'hint' => $this->trans('Upload a supplier logo from your computer.', [], 'Admin.Catalog.Help'),
+                ],
+                [
                     'type' => 'text',
-                    'label' => $this->trans('Meta title', array(), 'Admin.Global'),
+                    'label' => $this->trans('Meta title', [], 'Admin.Global'),
                     'name' => 'meta_title',
                     'lang' => true,
                     'col' => 4,
-                    'hint' => $this->trans('Invalid characters:', array(), 'Admin.Notifications.Info') . ' &lt;&gt;;=#{}',
-                ),
-                array(
+                    'hint' => $this->trans('Invalid characters:', [], 'Admin.Notifications.Info') . ' &lt;&gt;;=#{}',
+                ],
+                [
                     'type' => 'text',
-                    'label' => $this->trans('Meta description', array(), 'Admin.Global'),
+                    'label' => $this->trans('Meta description', [], 'Admin.Global'),
                     'name' => 'meta_description',
                     'lang' => true,
                     'col' => 6,
-                    'hint' => $this->trans('Invalid characters:', array(), 'Admin.Notifications.Info') . ' &lt;&gt;;=#{}',
-                ),
-                array(
+                    'hint' => $this->trans('Invalid characters:', [], 'Admin.Notifications.Info') . ' &lt;&gt;;=#{}',
+                ],
+                [
                     'type' => 'tags',
-                    'label' => $this->trans('Meta keywords', array(), 'Admin.Global'),
+                    'label' => $this->trans('Meta keywords', [], 'Admin.Global'),
                     'name' => 'meta_keywords',
                     'lang' => true,
                     'col' => 6,
-                    'hint' => array(
-                        $this->trans('To add tags, click in the field, write something, and then press the "Enter" key.', array(), 'Admin.Shopparameters.Help'),
-                        $this->trans('Invalid characters:', array(), 'Admin.Notifications.Info') . ' &lt;&gt;;=#{}',
-                    ),
-                ),
-                array(
+                    'hint' => [
+                        $this->trans('To add tags, click in the field, write something, and then press the "Enter" key.', [], 'Admin.Shopparameters.Help'),
+                        $this->trans('Invalid characters:', [], 'Admin.Notifications.Info') . ' &lt;&gt;;=#{}',
+                    ],
+                ],
+                [
                     'type' => 'switch',
-                    'label' => $this->trans('Enable', array(), 'Admin.Actions'),
+                    'label' => $this->trans('Enable', [], 'Admin.Actions'),
                     'name' => 'active',
                     'required' => false,
                     'class' => 't',
                     'is_bool' => true,
-                    'values' => array(
-                        array(
+                    'values' => [
+                        [
                             'id' => 'active_on',
                             'value' => 1,
-                            'label' => $this->trans('Enabled', array(), 'Admin.Global'),
-                        ),
-                        array(
+                            'label' => $this->trans('Enabled', [], 'Admin.Global'),
+                        ],
+                        [
                             'id' => 'active_off',
                             'value' => 0,
-                            'label' => $this->trans('Disabled', array(), 'Admin.Global'),
-                        ),
-                    ),
-                ),
-            ),
-            'submit' => array(
-                'title' => $this->trans('Save', array(), 'Admin.Actions'),
-            ),
-        );
+                            'label' => $this->trans('Disabled', [], 'Admin.Global'),
+                        ],
+                    ],
+                ],
+            ],
+            'submit' => [
+                'title' => $this->trans('Save', [], 'Admin.Actions'),
+            ],
+        ];
 
         // loads current address for this supplier - if possible
         $address = null;
@@ -313,7 +313,7 @@ class AdminSuppliersControllerCore extends AdminController
 
         // force specific fields values (address)
         if ($address != null) {
-            $this->fields_value = array(
+            $this->fields_value = [
                 'id_address' => $address->id,
                 'phone' => $address->phone,
                 'phone_mobile' => $address->phone_mobile,
@@ -324,20 +324,20 @@ class AdminSuppliersControllerCore extends AdminController
                 'id_country' => $address->id_country,
                 'id_state' => $address->id_state,
                 'dni' => $address->dni,
-            );
+            ];
         } else {
-            $this->fields_value = array(
+            $this->fields_value = [
                 'id_address' => 0,
                 'id_country' => Configuration::get('PS_COUNTRY_DEFAULT'),
-            );
+            ];
         }
 
         if (Shop::isFeatureActive()) {
-            $this->fields_form['input'][] = array(
+            $this->fields_form['input'][] = [
                 'type' => 'shop',
-                'label' => $this->trans('Shop association', array(), 'Admin.Global'),
+                'label' => $this->trans('Shop association', [], 'Admin.Global'),
                 'name' => 'checkBoxShopAsso',
-            );
+            ];
         }
 
         return parent::renderForm();
@@ -354,10 +354,10 @@ class AdminSuppliersControllerCore extends AdminController
         $this->addPageHeaderToolBarModulesListButton();
 
         if (empty($this->display) && $this->can_import) {
-            $this->toolbar_btn['import'] = array(
+            $this->toolbar_btn['import'] = [
                 'href' => $this->context->link->getAdminLink('AdminImport', true) . '&import_type=suppliers',
-                'desc' => $this->trans('Import', array(), 'Admin.Actions'),
-            );
+                'desc' => $this->trans('Import', [], 'Admin.Actions'),
+            ];
         }
     }
 
@@ -386,11 +386,11 @@ class AdminSuppliersControllerCore extends AdminController
                 $comb_array[$combination['id_product_attribute']]['upc'] = $combination['upc'];
                 $comb_array[$combination['id_product_attribute']]['mpn'] = $combination['mpn'];
                 $comb_array[$combination['id_product_attribute']]['quantity'] = $combination['quantity'];
-                $comb_array[$combination['id_product_attribute']]['attributes'][] = array(
+                $comb_array[$combination['id_product_attribute']]['attributes'][] = [
                     $combination['group_name'],
                     $combination['attribute_name'],
                     $combination['id_attribute'],
-                );
+                ];
             }
 
             if (isset($comb_array)) {
@@ -415,12 +415,12 @@ class AdminSuppliersControllerCore extends AdminController
             }
         }
 
-        $this->tpl_view_vars = array(
+        $this->tpl_view_vars = [
             'supplier' => $this->object,
             'products' => $products,
             'stock_management' => Configuration::get('PS_STOCK_MANAGEMENT'),
             'shopContext' => Shop::getContext(),
-        );
+        ];
 
         return parent::renderView();
     }
@@ -466,7 +466,7 @@ class AdminSuppliersControllerCore extends AdminController
     {
         // checks access
         if (Tools::isSubmit('submitAdd' . $this->table) && !($this->access('add'))) {
-            $this->errors[] = $this->trans('You do not have permission to add suppliers.', array(), 'Admin.Catalog.Notification');
+            $this->errors[] = $this->trans('You do not have permission to add suppliers.', [], 'Admin.Catalog.Notification');
 
             return parent::postProcess();
         }
@@ -506,9 +506,9 @@ class AdminSuppliersControllerCore extends AdminController
             if ($address->validateField('dni', $address->dni) !== true) {
                 $validation['dni'] = $this->trans(
                     '%s is invalid.',
-                    array(
+                    [
                         '<b>dni</b>',
-                    ),
+                    ],
                     'Admin.Notifications.Error'
                 );
             }
@@ -518,7 +518,7 @@ class AdminSuppliersControllerCore extends AdminController
                 foreach ($validation as $item) {
                     $this->errors[] = $item;
                 }
-                $this->errors[] = $this->trans('The address is not correct. Please make sure all of the required fields are completed.', array(), 'Admin.Catalog.Notification');
+                $this->errors[] = $this->trans('The address is not correct. Please make sure all of the required fields are completed.', [], 'Admin.Catalog.Notification');
             } else {
                 if (Tools::isSubmit('id_address') && Tools::getValue('id_address') > 0) {
                     $address->update();
@@ -533,7 +533,7 @@ class AdminSuppliersControllerCore extends AdminController
             if (!($obj = $this->loadObject(true))) {
                 return;
             } elseif (SupplyOrder::supplierHasPendingOrders($obj->id)) {
-                $this->errors[] = $this->trans('It is not possible to delete a supplier if there are pending supplier orders.', array(), 'Admin.Catalog.Notification');
+                $this->errors[] = $this->trans('It is not possible to delete a supplier if there are pending supplier orders.', [], 'Admin.Catalog.Notification');
             } else {
                 //delete all product_supplier linked to this supplier
                 Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . 'product_supplier` WHERE `id_supplier`=' . (int) $obj->id);
