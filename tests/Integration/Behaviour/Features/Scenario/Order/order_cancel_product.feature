@@ -121,4 +121,4 @@ Feature: Cancel Order Product from Back Office (BO)
       | product_name                | quantity |
       | Mug The best is yet to come | 1       |
       | Mug Today is a good day     | 1        |
-    Then I should get error that order state is invalid
+    Then I should get error that order has unexpected invoice

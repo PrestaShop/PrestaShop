@@ -286,11 +286,47 @@ class OrderRefundFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Then I should get error that order state is invalid
+     * @Then I should get error that order has unexpected invoice
      */
-    public function assertLastErrorIsInvalidOrderState()
+    public function assertLastErrorIsOrderHasUnexpectedInvoice()
     {
-        $this->assertLastErrorIs(InvalidOrderStateException::class);
+        $this->assertLastErrorIs(
+            InvalidOrderStateException::class,
+            InvalidOrderStateException::UNEXPECTED_INVOICE
+        );
+    }
+
+    /**
+     * @Then I should get error that order has no invoice
+     */
+    public function assertLastErrorIsOrderHasNoInvoice()
+    {
+        $this->assertLastErrorIs(
+            InvalidOrderStateException::class,
+            InvalidOrderStateException::INVOICE_NOT_FOUND
+        );
+    }
+
+    /**
+     * @Then I should get error that order is delivered
+     */
+    public function assertLastErrorIsOrderIsDelivered()
+    {
+        $this->assertLastErrorIs(
+            InvalidOrderStateException::class,
+            InvalidOrderStateException::UNEXPECTED_DELIVERY
+        );
+    }
+
+    /**
+     * @Then I should get error that order is not delivered
+     */
+    public function assertLastErrorIsOrderIsNotDelivered()
+    {
+        $this->assertLastErrorIs(
+            InvalidOrderStateException::class,
+            InvalidOrderStateException::DELIVERY_NOT_FOUND
+        );
     }
 
     /**

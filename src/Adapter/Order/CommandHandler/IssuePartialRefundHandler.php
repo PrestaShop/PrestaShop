@@ -99,7 +99,10 @@ final class IssuePartialRefundHandler extends AbstractOrderCommandHandler implem
         /** @var Order $order */
         $order = $this->getOrderObject($command->getOrderId());
         if (!$order->hasInvoice()) {
-            throw new InvalidOrderStateException('Can not perform partial refund on order with no invoice');
+            throw new InvalidOrderStateException(
+                InvalidOrderStateException::INVOICE_NOT_FOUND,
+                'Can not perform partial refund on order with no invoice'
+            );
         }
 
         /** @var OrderRefundSummary $orderRefundSummary */
