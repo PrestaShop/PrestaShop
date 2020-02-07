@@ -24,6 +24,8 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+declare(strict_types=1);
+
 namespace PrestaShop\PrestaShop\Adapter\Country\QueryHandler;
 
 use AddressFormat;
@@ -82,9 +84,7 @@ final class GetAddressFormatDataHandler implements GetAddressFormatDataHandlerIn
      */
     private function getAddressFormat(int $countryId): string
     {
-        $addressLayout = AddressFormat::getAddressCountryFormat($countryId);
-
-        return $addressLayout;
+        return AddressFormat::getAddressCountryFormat($countryId);
     }
 
     /**

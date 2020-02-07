@@ -24,6 +24,8 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+declare(strict_types=1);
+
 namespace PrestaShop\PrestaShop\Core\Domain\Country\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryConstraintException;
@@ -184,7 +186,7 @@ class AddCountryCommand
      *
      * @return AddCountryCommand
      */
-    public function setDefaultCurrency(int $defaultCurrency): AddCountryCommand
+    public function setDefaultCurrency(int $defaultCurrency): self
     {
         $this->defaultCurrency = $defaultCurrency;
 
@@ -204,7 +206,7 @@ class AddCountryCommand
      *
      * @return AddCountryCommand
      */
-    public function setZone(int $zone): AddCountryCommand
+    public function setZone(int $zone): self
     {
         $this->zone = $zone;
 
@@ -224,7 +226,7 @@ class AddCountryCommand
      *
      * @return AddCountryCommand
      */
-    public function setNeedZipCode(bool $needZipCode): AddCountryCommand
+    public function setNeedZipCode(bool $needZipCode): self
     {
         $this->needZipCode = $needZipCode;
 
@@ -244,7 +246,7 @@ class AddCountryCommand
      *
      * @return AddCountryCommand
      */
-    public function setEnabled(bool $enabled): AddCountryCommand
+    public function setEnabled(bool $enabled): self
     {
         $this->enabled = $enabled;
 
@@ -264,7 +266,7 @@ class AddCountryCommand
      *
      * @return AddCountryCommand
      */
-    public function setContainsStates(bool $containsStates): AddCountryCommand
+    public function setContainsStates(bool $containsStates): self
     {
         $this->containsStates = $containsStates;
 
@@ -284,7 +286,7 @@ class AddCountryCommand
      *
      * @return AddCountryCommand
      */
-    public function setNeedIdNumber(bool $needIdNumber): AddCountryCommand
+    public function setNeedIdNumber(bool $needIdNumber): self
     {
         $this->needIdNumber = $needIdNumber;
 
@@ -304,7 +306,7 @@ class AddCountryCommand
      *
      * @return AddCountryCommand
      */
-    public function setDisplayTaxLabel(bool $displayTaxLabel): AddCountryCommand
+    public function setDisplayTaxLabel(bool $displayTaxLabel): self
     {
         $this->displayTaxLabel = $displayTaxLabel;
 
@@ -324,7 +326,7 @@ class AddCountryCommand
      *
      * @return AddCountryCommand
      */
-    public function setShopAssociation(array $shopAssociation): AddCountryCommand
+    public function setShopAssociation(array $shopAssociation): self
     {
         $this->shopAssociation = $shopAssociation;
 
