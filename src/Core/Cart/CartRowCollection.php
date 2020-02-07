@@ -31,7 +31,7 @@ class CartRowCollection implements \Iterator, \Countable
     /**
      * @var CartRow[]
      */
-    protected $cartRows = array();
+    protected $cartRows = [];
     protected $iteratorPosition = 0;
 
     public function addCartRow(CartRow $cartRow)
@@ -93,7 +93,7 @@ class CartRowCollection implements \Iterator, \Countable
      */
     public function getProducts()
     {
-        $products = array();
+        $products = [];
         foreach ($this->cartRows as $cartRow) {
             $products[] = $cartRow->getRowData();
         }

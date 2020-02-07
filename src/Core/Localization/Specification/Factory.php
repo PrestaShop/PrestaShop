@@ -100,9 +100,10 @@ class Factory
         CldrLocaleInterface $cldrLocale,
         Currency $currency,
         $numberGroupingUsed,
-        $currencyDisplayType
+        $currencyDisplayType,
+        ?int $maxFractionDigits = null
     ) {
-        $currencyPattern = $cldrLocale->getCurrencyPattern();
+        $currencyPattern = $currency->getPattern($localeCode) ?: $cldrLocale->getCurrencyPattern();
         $numbersSymbols = $cldrLocale->getAllNumberSymbols();
         // Use positive pattern to retrieve information
         $positivePattern = $this->getPositivePattern($currencyPattern);
@@ -111,7 +112,7 @@ class Factory
             $positivePattern,
             $this->getNegativePattern($currencyPattern),
             $this->computeNumberSymbolLists($numbersSymbols),
-            $this->getMaxFractionDigits($positivePattern),
+            $maxFractionDigits ?? $this->getMaxFractionDigits($positivePattern),
             $this->getMinFractionDigits($positivePattern),
             $numberGroupingUsed && $this->getPrimaryGroupSize($positivePattern) > 1,
             $this->getPrimaryGroupSize($positivePattern),

@@ -32,7 +32,7 @@
         >
           <p>
             {{ product.product_name }}
-            <small v-if="hasCombination"><br />
+            <small v-if="hasCombination"><br>
               {{ combinationName }}
             </small>
           </p>
@@ -43,13 +43,20 @@
       {{ product.product_reference }}
     </td>
     <td>
-      <a v-if="orderLink" :href="orderLink" target="_blank">
+      <a
+        v-if="orderLink"
+        :href="orderLink"
+        target="_blank"
+      >
         {{ product.movement_reason }}
       </a>
       <span v-else>{{ product.movement_reason }}</span>
     </td>
     <td class="text-sm-center">
-      <span class="qty-number" :class="{'is-positive' : isPositive}">
+      <span
+        class="qty-number"
+        :class="{'is-positive' : isPositive}"
+      >
         <span v-if="isPositive">+</span>
         <span v-else>-</span>
         {{ qty }}
@@ -65,11 +72,16 @@
 </template>
 
 <script>
-  import PSMedia from 'app/widgets/ps-media';
-  import productDesc from 'app/pages/stock/mixins/product-desc';
+  import PSMedia from '@app/widgets/ps-media';
+  import productDesc from '@app/pages/stock/mixins/product-desc';
 
   export default {
-    props: ['product'],
+    props: {
+      product: {
+        type: Object,
+        required: true,
+      },
+    },
     mixins: [productDesc],
     computed: {
       qty() {

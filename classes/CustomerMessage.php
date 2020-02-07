@@ -63,34 +63,34 @@ class CustomerMessageCore extends ObjectModel
     /**
      * @see ObjectModel::$definition
      */
-    public static $definition = array(
+    public static $definition = [
         'table' => 'customer_message',
         'primary' => 'id_customer_message',
-        'fields' => array(
-            'id_employee' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
-            'id_customer_thread' => array('type' => self::TYPE_INT),
-            'ip_address' => array('type' => self::TYPE_STRING, 'validate' => 'isIp2Long', 'size' => 15),
-            'message' => array('type' => self::TYPE_STRING, 'validate' => 'isCleanHtml', 'required' => true, 'size' => 16777216),
-            'file_name' => array('type' => self::TYPE_STRING),
-            'user_agent' => array('type' => self::TYPE_STRING),
-            'private' => array('type' => self::TYPE_INT),
-            'date_add' => array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
-            'date_upd' => array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
-            'read' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-        ),
-    );
+        'fields' => [
+            'id_employee' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId'],
+            'id_customer_thread' => ['type' => self::TYPE_INT],
+            'ip_address' => ['type' => self::TYPE_STRING, 'validate' => 'isIp2Long', 'size' => 15],
+            'message' => ['type' => self::TYPE_STRING, 'validate' => 'isCleanHtml', 'required' => true, 'size' => 16777216],
+            'file_name' => ['type' => self::TYPE_STRING],
+            'user_agent' => ['type' => self::TYPE_STRING],
+            'private' => ['type' => self::TYPE_INT],
+            'date_add' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
+            'date_upd' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
+            'read' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
+        ],
+    ];
 
     /** @var array $webserviceParameters */
-    protected $webserviceParameters = array(
-        'fields' => array(
-            'id_employee' => array(
+    protected $webserviceParameters = [
+        'fields' => [
+            'id_employee' => [
                 'xlink_resource' => 'employees',
-            ),
-            'id_customer_thread' => array(
+            ],
+            'id_customer_thread' => [
                 'xlink_resource' => 'customer_threads',
-            ),
-        ),
-    );
+            ],
+        ],
+    ];
 
     /**
      * Get CustomerMessages by Order ID.

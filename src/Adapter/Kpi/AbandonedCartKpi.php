@@ -45,8 +45,8 @@ final class AbandonedCartKpi implements KpiInterface
 
         $helper = new HelperKpi();
         $helper->id = 'box-carts';
-        $helper->icon = 'shopping_cart';
-        $helper->color = 'color2';
+        $helper->icon = 'remove_shopping_cart';
+        $helper->color = 'color1';
         $helper->title = $translator->trans('Abandoned Carts', [], 'Admin.Global');
         $helper->subtitle = $translator->trans('Today', [], 'Admin.Global');
         $helper->href = Context::getContext()->link->getAdminLink('AdminCarts') . '&action=filterOnlyAbandonedCarts';

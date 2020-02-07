@@ -44,7 +44,7 @@ class SaveSqlRequestSettingsHandlerTest extends TestCase
             ->with('PS_ENCODING_FILE_MANAGER_SQL', $expectedValueFormat);
 
         $handler = new SaveSqlRequestSettingsHandler($configuration);
-        $handler->handle(new SaveSqlRequestSettingsCommand($configuredValue));
+        $this->assertNull($handler->handle(new SaveSqlRequestSettingsCommand($configuredValue)));
     }
 
     public function getSettings()

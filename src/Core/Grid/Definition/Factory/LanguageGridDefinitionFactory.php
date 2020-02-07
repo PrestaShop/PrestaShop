@@ -52,6 +52,8 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
  */
 final class LanguageGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
+    use BulkDeleteActionTrait;
+
     const GRID_ID = 'language';
 
     /**
@@ -157,6 +159,7 @@ final class LanguageGridDefinitionFactory extends AbstractGridDefinitionFactory
                                 'route' => 'admin_languages_edit',
                                 'route_param_name' => 'languageId',
                                 'route_param_field' => 'id_lang',
+                                'clickable_row' => true,
                             ])
                         )
                         ->add(
@@ -320,12 +323,7 @@ final class LanguageGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ])
             )
             ->add(
-                (new SubmitBulkAction('delete_selection'))
-                ->setName($this->trans('Delete selected', [], 'Admin.Actions'))
-                ->setOptions([
-                    'submit_route' => 'admin_languages_bulk_delete',
-                    'confirm_message' => $this->trans('Delete selected items?', [], 'Admin.Notifications.Warning'),
-                ])
+                $this->buildBulkDeleteAction('admin_languages_bulk_delete')
             );
     }
 }

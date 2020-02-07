@@ -9,9 +9,19 @@
 	</languages>
 	<taxes>
 		<tax id="1" name="IVA CO 19%" rate="19" />
-		
+		<tax id="2" name="IVA CO 5%" rate="5" />
+		<tax id="3" name="IVA CO 0%" rate="0" />
+
 		<taxRulesGroup name="CO Standard Rate (19%)">
 			<taxRule iso_code_country="co" id_tax="1" />
+		</taxRulesGroup>
+
+		<taxRulesGroup name="CO Reduced Rate (5%)">
+			<taxRule iso_code_country="co" id_tax="2" />
+		</taxRulesGroup>
+    
+		<taxRulesGroup name="CO Zero Rate (0%)">
+			<taxRule iso_code_country="co" id_tax="3" />
 		</taxRulesGroup>
 	</taxes>
 	<units>

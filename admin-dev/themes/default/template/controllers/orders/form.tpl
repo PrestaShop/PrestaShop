@@ -125,17 +125,16 @@
 			setupCustomer({$cart->id_customer|intval});
 			useCart('{$cart->id|intval}');
 		{/if}
-
-		$('.delete_product').live('click', function(e) {
+		$(document).on('click', '.delete_product', function(e) {
 			e.preventDefault();
 			var to_delete = $(this).attr('rel').split('_');
 			deleteProduct(to_delete[1], to_delete[2], to_delete[3]);
 		});
-		$('.delete_discount').live('click', function(e) {
+		$(document).on('click', '.delete_discount', function(e) {
 			e.preventDefault();
 			deleteVoucher($(this).attr('rel'));
 		});
-		$('.use_cart').live('click', function(e) {
+		$(document).on('click', '.use_cart', function(e) {
 			e.preventDefault();
 			useCart($(this).attr('rel'));
 			return false;
@@ -163,12 +162,11 @@
 				}
 			});
 		});
-
-		$('.duplicate_order').live('click', function(e) {
+		$(document).on('click', '.duplicate_order', function(e) {
 			e.preventDefault();
 			duplicateOrder($(this).attr('rel'));
 		});
-		$('.cart_quantity').live('change', function(e) {
+		$(document).on('change', '.cart_quantity', function(e) {
 			e.preventDefault();
 			if ($(this).val() != cart_quantity[$(this).attr('rel')])
 			{
@@ -176,7 +174,7 @@
 				updateQty(product[0], product[1], product[2], $(this).val() - cart_quantity[$(this).attr('rel')]);
 			}
 		});
-		$('.increaseqty_product, .decreaseqty_product').live('click', function(e) {
+		$(document).on('click', '.increaseqty_product, .decreaseqty_product', function(e) {
 			e.preventDefault();
 			var product = $(this).attr('rel').split('_');
 			var sign = '';
@@ -184,24 +182,24 @@
 				sign = '-';
 			updateQty(product[0], product[1],product[2], sign+1);
 		});
-		$('#id_product').live('keydown', function(e) {
+		$(document).on('keydown', '#id_product', function(e) {
 			$(this).click();
 			return true;
 		});
-		$('#id_product, .id_product_attribute').live('change', function(e) {
+		$(document).on('change', '#id_product, .id_product_attribute', function(e) {
 			e.preventDefault();
 			displayQtyInStock(this.id);
 		});
-		$('#id_product, .id_product_attribute').live('keydown', function(e) {
+		$(document).on('keydown', '#id_product, .id_product_attribute', function(e) {
 			$(this).change();
 			return true;
 		});
-		$('.product_unit_price').live('change', function(e) {
+		$(document).on('change', '.product_unit_price', function(e) {
 			e.preventDefault();
 			var product = $(this).attr('rel').split('_');
 			updateProductPrice(product[0], product[1], $(this).val());
 		});
-		$('#order_message').live('change', function(e) {
+		$(document).on('change', '#order_message', function(e) {
 			e.preventDefault();
 			$.ajax({
 				type:"POST",
@@ -633,7 +631,7 @@
 				action: "searchProducts",
 				id_cart: id_cart,
 				id_customer: id_customer,
-				id_currency: id_currency,
+				id_currency: $('#id_currency option:selected').val(),
 				product_search: $('#product').val()},
 			success : function(res)
 			{
@@ -1050,13 +1048,21 @@
 			if (this.id_address == id_address_invoice)
 			{
 				address_invoice_detail = this.formated_address;
-				invoice_address_edit_link = "{$link->getAdminLink('AdminAddresses', true, [], ['updateaddress' => 1, 'realedit' => 1, 'liteDisplaying' => 1, 'submitFormAjax' => 1])}&id_address="+this.id_address+"#";
+        // id_address parameter is required to generate url
+        // in this case id_address is dynamic
+        // so 0 is used as placeholder and later replaced with actual id_address
+				invoice_address_edit_link = "{$link->getAdminLink('AdminAddresses', true, [], ['updateaddress' => 1, 'realedit' => 1, 'liteDisplaying' => 1, 'submitFormAjax' => 1, 'id_address' => 0])}#";
+        invoice_address_edit_link.replace('/0/', '/' + this.id_address + '/');
 			}
 
 			if(this.id_address == id_address_delivery)
 			{
 				address_delivery_detail = this.formated_address;
-				delivery_address_edit_link = "{$link->getAdminLink('AdminAddresses', true, [], ['updateaddress' => 1, 'realedit' => 1, 'liteDisplaying' => 1, 'submitFormAjax' => 1])}&id_address="+this.id_address+"#";
+        // id_address parameter is required to generate url
+        // in this case id_address is dynamic
+        // so 0 is used as placeholder and later replaced with actual id_address
+				delivery_address_edit_link = "{$link->getAdminLink('AdminAddresses', true, [], ['updateaddress' => 1, 'realedit' => 1, 'liteDisplaying' => 1, 'submitFormAjax' => 1, 'id_address' => 0])}#";
+        invoice_address_edit_link.replace('/0/', '/' + this.id_address + '/');
 			}
 
 			addresses_delivery_options += '<option value="'+this.id_address+'" '+(this.id_address == id_address_delivery ? 'selected="selected"' : '')+'>'+this.alias+'</option>';

@@ -103,24 +103,12 @@ class EditContactCommand extends AbstractContactCommand
     public function setLocalisedTitles(array $localisedTitles)
     {
         if (!$this->assertIsNotEmptyAndContainsAllNonEmptyStringValues($localisedTitles)) {
-            throw new ContactConstraintException(
-                sprintf(
-                    'Expected to have not empty titles array but received %s',
-                    var_export($localisedTitles, true)
-                ),
-                ContactConstraintException::INVALID_TITLE
-            );
+            throw new ContactConstraintException(sprintf('Expected to have not empty titles array but received %s', var_export($localisedTitles, true)), ContactConstraintException::INVALID_TITLE);
         }
 
         foreach ($localisedTitles as $title) {
             if (!$this->assertIsGenericName($title)) {
-                throw new ContactConstraintException(
-                    sprintf(
-                        'Expected value %s to match given regex /^[^<>={}]*$/u but failed',
-                        var_export($title, true)
-                    ),
-                    ContactConstraintException::INVALID_TITLE
-                );
+                throw new ContactConstraintException(sprintf('Expected value %s to match given regex /^[^<>={}]*$/u but failed', var_export($title, true)), ContactConstraintException::INVALID_TITLE);
             }
         }
 
@@ -209,13 +197,7 @@ class EditContactCommand extends AbstractContactCommand
     public function setShopAssociation(array $shopAssociation)
     {
         if (!$this->assertArrayContainsAllIntegerValues($shopAssociation)) {
-            throw new ContactConstraintException(
-                sprintf(
-                    'Given shop association %s must contain all integer values',
-                    var_export($shopAssociation, true)
-                ),
-                ContactConstraintException::INVALID_SHOP_ASSOCIATION
-            );
+            throw new ContactConstraintException(sprintf('Given shop association %s must contain all integer values', var_export($shopAssociation, true)), ContactConstraintException::INVALID_SHOP_ASSOCIATION);
         }
 
         $this->shopAssociation = $shopAssociation;

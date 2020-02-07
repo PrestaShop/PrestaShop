@@ -142,6 +142,13 @@ abstract class AbstractRowAction implements RowActionInterface
      */
     protected function configureOptions(OptionsResolver $resolver)
     {
+        $resolver
+            ->setDefaults([
+                'use_inline_display' => false,
+            ])
+            // if set to true then it displays only icons
+            ->setAllowedTypes('use_inline_display', 'bool')
+        ;
     }
 
     /**

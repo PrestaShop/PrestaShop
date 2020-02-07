@@ -23,15 +23,21 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-import CountryStateSelectionToggler from '../../components/country-state-selection-toggler';
-import ManufacturerAddressMap from './manufacturer-address-map';
+import CountryStateSelectionToggler from '@components/country-state-selection-toggler';
+import ManufacturerAddressMap from '@pages/manufacturer/manufacturer-address-map';
+import CountryDniRequiredToggler from '@components/country-dni-required-toggler';
 
-const $ = window.$;
+const {$} = window;
 
 $(document).ready(() => {
   new CountryStateSelectionToggler(
     ManufacturerAddressMap.manufacturerAddressCountrySelect,
     ManufacturerAddressMap.manufacturerAddressStateSelect,
-    ManufacturerAddressMap.manufacturerAddressStateBlock
+    ManufacturerAddressMap.manufacturerAddressStateBlock,
+  );
+  new CountryDniRequiredToggler(
+    ManufacturerAddressMap.manufacturerAddressCountrySelect,
+    ManufacturerAddressMap.manufacturerAddressDniInput,
+    ManufacturerAddressMap.manufacturerAddressDniInputLabel,
   );
 });

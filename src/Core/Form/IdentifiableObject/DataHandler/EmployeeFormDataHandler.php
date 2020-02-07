@@ -111,7 +111,6 @@ final class EmployeeFormDataHandler implements FormDataHandlerInterface
             $data['lastname'],
             $data['email'],
             $data['password'],
-            $data['optin'],
             $data['default_page'],
             $data['language'],
             $data['active'],
@@ -131,7 +130,6 @@ final class EmployeeFormDataHandler implements FormDataHandlerInterface
             ->setFirstName($data['firstname'])
             ->setLastName($data['lastname'])
             ->setEmail($data['email'])
-            ->setIsSubscribedToNewsletter((bool) $data['optin'])
             ->setDefaultPageId((int) $data['default_page'])
             ->setLanguageId((int) $data['language'])
             ->setActive((bool) $data['active'])
@@ -174,10 +172,7 @@ final class EmployeeFormDataHandler implements FormDataHandlerInterface
         $oldPassword = $this->employeeDataProvider->getEmployeeHashedPassword($employeeId);
 
         if (!$this->hashing->checkHash($plainPassword, $oldPassword)) {
-            throw new EmployeeConstraintException(
-                'Old and new passwords do not match.',
-                EmployeeConstraintException::INCORRECT_PASSWORD
-            );
+            throw new EmployeeConstraintException('Old and new passwords do not match.', EmployeeConstraintException::INCORRECT_PASSWORD);
         }
     }
 

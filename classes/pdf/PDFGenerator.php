@@ -37,7 +37,7 @@ class PDFGeneratorCore extends TCPDF
     public $content;
     public $font;
 
-    public $font_by_lang = array(
+    public $font_by_lang = [
         'ja' => 'cid0jp',
         'bg' => 'freeserif',
         'ru' => 'freeserif',
@@ -68,7 +68,7 @@ class PDFGeneratorCore extends TCPDF
         'zh' => 'cid0cs',
         'tw' => 'cid0cs',
         'th' => 'freeserif',
-    );
+    ];
 
     /**
      * @param bool $use_cache
@@ -143,8 +143,8 @@ class PDFGeneratorCore extends TCPDF
             $this->font = self::DEFAULT_FONT;
         }
 
-        $this->setHeaderFont(array($this->font, '', PDF_FONT_SIZE_MAIN, '', false));
-        $this->setFooterFont(array($this->font, '', PDF_FONT_SIZE_MAIN, '', false));
+        $this->setHeaderFont([$this->font, '', PDF_FONT_SIZE_MAIN, '', false]);
+        $this->setFooterFont([$this->font, '', PDF_FONT_SIZE_MAIN, '', false]);
 
         $this->setFont($this->font, '', PDF_FONT_SIZE_MAIN, '', false);
     }

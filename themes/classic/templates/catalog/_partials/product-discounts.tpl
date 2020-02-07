@@ -39,7 +39,7 @@
           <tr data-discount-type="{$quantity_discount.reduction_type}" data-discount="{$quantity_discount.real_value}" data-discount-quantity="{$quantity_discount.quantity}">
             <td>{$quantity_discount.quantity}</td>
             <td>{$quantity_discount.discount}</td>
-            <td>{l s='Up to %discount%' d='Shop.Theme.Catalog' sprintf=['%discount%' => $quantity_discount.save]}</td>
+            <td>{$quantity_discount.save}</td>
           </tr>
         {/foreach}
         </tbody>

@@ -90,6 +90,9 @@ class ResponseBuilder
             if ($request->query->has($paramName)) {
                 $redirectParams[$paramName] = $request->query->get($paramName);
             }
+            if ($request->attributes->has($paramName)) {
+                $redirectParams[$paramName] = $request->attributes->get($paramName);
+            }
         }
 
         $redirectUrl = $this->router->generate($redirectRoute, $redirectParams);

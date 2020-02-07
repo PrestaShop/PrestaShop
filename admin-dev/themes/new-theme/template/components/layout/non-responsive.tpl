@@ -35,6 +35,6 @@
   </p>
   <a href="{$default_tab_link|escape:'html':'UTF-8'}" class="btn btn-primary py-1 mt-3">
     <i class="material-icons">arrow_back</i>
-    {l s='Back'}
+    {l s='Back' d='Admin.Global'}
   </a>
 </div>

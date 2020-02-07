@@ -23,7 +23,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-import TableSorting from '../../../app/utils/table-sorting';
+import TableSorting from '@app/utils/table-sorting';
 
 /**
  * Class ReloadListExtension extends grid with "List reload" action

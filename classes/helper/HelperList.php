@@ -23,10 +23,10 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
-use PrestaShop\PrestaShop\Core\Routing\EntityLinkBuilderFactory;
 use PrestaShop\PrestaShop\Adapter\Routing\AdminLinkBuilder;
 use PrestaShop\PrestaShop\Adapter\Routing\LegacyHelperLinkBuilder;
+use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
+use PrestaShop\PrestaShop\Core\Routing\EntityLinkBuilderFactory;
 use PrestaShop\PrestaShop\Core\Routing\Exception\BuilderNotFoundException;
 
 /**
@@ -38,7 +38,7 @@ class HelperListCore extends Helper
     const LIST_THUMBNAIL_SIZE = 45;
 
     /** @var array Cache for query results */
-    protected $_list = array();
+    protected $_list = [];
 
     /** @var int Number of results in list */
     public $listTotal = 0;
@@ -47,7 +47,7 @@ class HelperListCore extends Helper
     protected $_filter;
 
     /** @var array Number of results in list per page (used in select field) */
-    public $_pagination = array(20, 50, 100, 300, 1000);
+    public $_pagination = [20, 50, 100, 300, 1000];
 
     /** @var int Default number of results in list per page */
     public $_default_pagination = 50;
@@ -59,7 +59,7 @@ class HelperListCore extends Helper
     public $_defaultOrderBy = false;
 
     /** @var array : list of vars for button delete */
-    public $tpl_delete_link_vars = array();
+    public $tpl_delete_link_vars = [];
 
     /** @var string Order way (ASC, DESC) determined by arrows in list header */
     public $orderWay;
@@ -69,7 +69,7 @@ class HelperListCore extends Helper
     protected $deleted = 0;
 
     /** @var array $cache_lang use to cache texts in current language */
-    public static $cache_lang = array();
+    public static $cache_lang = [];
 
     public $is_cms = false;
 
@@ -105,10 +105,10 @@ class HelperListCore extends Helper
     protected $footer_tpl = 'list_footer.tpl';
 
     /** @var array list of required actions for each list row */
-    public $actions = array();
+    public $actions = [];
 
     /** @var array list of row ids associated with a given action for witch this action have to not be available */
-    public $list_skip_actions = array();
+    public $list_skip_actions = [];
 
     public $bulk_actions = false;
     public $force_show_bulk_actions = false;
@@ -124,7 +124,7 @@ class HelperListCore extends Helper
     /** @var bool ask for simple header : no filters, no paginations and no sorting */
     public $simple_header = false;
 
-    public $ajax_params = array();
+    public $ajax_params = [];
 
     public $page;
 
@@ -160,7 +160,7 @@ class HelperListCore extends Helper
     {
         // Append when we get a syntax error in SQL query
         if ($list === false) {
-            $this->context->controller->warnings[] = Context::getContext()->getTranslator()->trans('Bad SQL query', array(), 'Admin.Notifications.Error');
+            $this->context->controller->warnings[] = Context::getContext()->getTranslator()->trans('Bad SQL query', [], 'Admin.Notifications.Error');
 
             return false;
         }
@@ -173,20 +173,20 @@ class HelperListCore extends Helper
         $this->_list = $list;
         $this->fields_list = $fields_display;
 
-        $patternsOrderBy = array(
+        $patternsOrderBy = [
             '/^([a-z _]*!)/Ui',     // remove a. for example
             '/^([a-z _]*\.)/Ui',    // remove a! for example
             '/`/',                  // remove ` char
-        );
+        ];
         $this->orderBy = preg_replace($patternsOrderBy, '', $this->orderBy);
 
         $this->orderWay = preg_replace('/^([a-z _]*!)/Ui', '', $this->orderWay);
 
-        $this->tpl->assign(array(
+        $this->tpl->assign([
             'header' => $this->displayListHeader(), // Display list header (filtering, pagination and column names)
             'content' => $this->displayListContent(), // Show the content of the table
             'footer' => $this->displayListFooter(), // Close list table and submit button
-        ));
+        ]);
 
         return parent::generate();
     }
@@ -206,12 +206,12 @@ class HelperListCore extends Helper
     public function displayEnableLink($token, $id, $value, $active, $id_category = null, $id_product = null, $ajax = false)
     {
         $tpl_enable = $this->createTemplate('list_action_enable.tpl');
-        $tpl_enable->assign(array(
+        $tpl_enable->assign([
             'ajax' => $ajax,
             'enabled' => (bool) $value,
             'url_enable' => $this->currentIndex . '&' . $this->identifier . '=' . $id . '&' . $active . $this->table . ($ajax ? '&action=' . $active . $this->table . '&ajax=' . (int) $ajax : '') .
                 ((int) $id_category && (int) $id_product ? '&id_category=' . (int) $id_category : '') . ($this->page && $this->page > 1 ? '&page=' . (int) $this->page : '') . '&token=' . ($token != null ? $token : $this->token),
-        ));
+        ]);
 
         return $tpl_enable->fetch();
     }
@@ -234,7 +234,7 @@ class HelperListCore extends Helper
         }
 
         // key_to_get is used to display the correct product category or cms category after a position change
-        $identifier = in_array($this->identifier, array('id_category', 'id_cms_category')) ? '_parent' : '';
+        $identifier = in_array($this->identifier, ['id_category', 'id_cms_category']) ? '_parent' : '';
         if ($identifier) {
             $key_to_get = 'id_' . ($this->is_cms ? 'cms_' : '') . 'category' . $identifier;
         }
@@ -318,7 +318,7 @@ class HelperListCore extends Helper
                 } elseif (isset($params['activeVisu'])) {
                     $this->_list[$index][$key] = (bool) $tr[$key];
                 } elseif (isset($params['position'])) {
-                    $this->_list[$index][$key] = array(
+                    $this->_list[$index][$key] = [
                         'position' => $tr[$key],
                         'position_url_down' => $this->currentIndex .
                             (isset($key_to_get) ? '&' . $key_to_get . '=' . (int) $position_group_identifier : '') .
@@ -328,7 +328,7 @@ class HelperListCore extends Helper
                             (isset($key_to_get) ? '&' . $key_to_get . '=' . (int) $position_group_identifier : '') .
                             '&' . $this->position_identifier . '=' . $id .
                             '&way=0&position=' . ((int) $tr['position'] - 1) . '&token=' . $this->token,
-                    );
+                    ];
                 } elseif (isset($params['image'])) {
                     // item_id is the product id in a product image context, else it is the image id.
                     $item_id = isset($params['image_id']) ? $tr[$params['image_id']] : $id;
@@ -341,15 +341,15 @@ class HelperListCore extends Helper
                 } elseif (isset($params['icon'], $tr[$key]) && (isset($params['icon'][$tr[$key]]) || isset($params['icon']['default']))) {
                     if (!$this->bootstrap) {
                         if (isset($params['icon'][$tr[$key]]) && is_array($params['icon'][$tr[$key]])) {
-                            $this->_list[$index][$key] = array(
+                            $this->_list[$index][$key] = [
                                 'src' => $params['icon'][$tr[$key]]['src'],
                                 'alt' => $params['icon'][$tr[$key]]['alt'],
-                            );
+                            ];
                         } else {
-                            $this->_list[$index][$key] = array(
+                            $this->_list[$index][$key] = [
                                 'src' => isset($params['icon'][$tr[$key]]) ? $params['icon'][$tr[$key]] : $params['icon']['default'],
                                 'alt' => isset($params['icon'][$tr[$key]]) ? $params['icon'][$tr[$key]] : $params['icon']['default'],
-                            );
+                            ];
                         }
                     } elseif (isset($params['icon'][$tr[$key]])) {
                         $this->_list[$index][$key] = $params['icon'][$tr[$key]];
@@ -360,7 +360,7 @@ class HelperListCore extends Helper
                     $echo = $tr[$key];
                     if (isset($params['callback'])) {
                         $callback_obj = (isset($params['callback_object'])) ? $params['callback_object'] : $this->context->controller;
-                        $this->_list[$index][$key] = call_user_func_array(array($callback_obj, $params['callback']), array($echo, $tr));
+                        $this->_list[$index][$key] = call_user_func_array([$callback_obj, $params['callback']], [$echo, $tr]);
                     } else {
                         $this->_list[$index][$key] = $echo;
                     }
@@ -372,7 +372,7 @@ class HelperListCore extends Helper
 
         $isMultiShopActive = Configuration::get('PS_MULTISHOP_FEATURE_ACTIVE');
 
-        $this->content_tpl->assign(array_merge($this->tpl_vars, array(
+        $this->content_tpl->assign(array_merge($this->tpl_vars, [
             'shop_link_type' => $showShopColumn,
             'multishop_active' => $isMultiShopActive,
             'name' => isset($name) ? $name : null,
@@ -399,7 +399,7 @@ class HelperListCore extends Helper
             'row_hover' => $this->row_hover,
             'list_id' => isset($this->list_id) ? $this->list_id : $this->table,
             'checked_boxes' => Tools::getValue((isset($this->list_id) ? $this->list_id : $this->table) . 'Box'),
-        )));
+        ]));
 
         return $this->content_tpl->fetch();
     }
@@ -411,11 +411,11 @@ class HelperListCore extends Helper
     {
         $tpl = $this->createTemplate('list_action_duplicate.tpl');
         if (!array_key_exists('Bad SQL query', self::$cache_lang)) {
-            self::$cache_lang['Duplicate'] = Context::getContext()->getTranslator()->trans('Duplicate', array(), 'Admin.Actions');
+            self::$cache_lang['Duplicate'] = Context::getContext()->getTranslator()->trans('Duplicate', [], 'Admin.Actions');
         }
 
         if (!array_key_exists('Copy images too?', self::$cache_lang)) {
-            self::$cache_lang['Copy images too?'] = Context::getContext()->getTranslator()->trans('This will copy the images too. If you wish to proceed, click "Yes". If not, click "No".', array(), 'Admin.Catalog.Notification');
+            self::$cache_lang['Copy images too?'] = Context::getContext()->getTranslator()->trans('This will copy the images too. If you wish to proceed, click "Yes". If not, click "No".', [], 'Admin.Catalog.Notification');
         }
 
         $duplicate = $this->currentIndex . '&' . $this->identifier . '=' . $id . '&duplicate' . $this->table;
@@ -426,13 +426,13 @@ class HelperListCore extends Helper
             $confirm = '';
         }
 
-        $tpl->assign(array(
+        $tpl->assign([
             'href' => $this->currentIndex . '&' . $this->identifier . '=' . $id . '&view' . $this->table . '&token=' . ($token != null ? $token : $this->token),
             'action' => self::$cache_lang['Duplicate'],
             'confirm' => $confirm,
             'location_ok' => $duplicate . '&token=' . ($token != null ? $token : $this->token),
             'location_ko' => $duplicate . '&noimage=1&token=' . ($token ? $token : $this->token),
-        ));
+        ]);
 
         return $tpl->fetch();
     }
@@ -460,7 +460,7 @@ class HelperListCore extends Helper
     {
         $tpl = $this->createTemplate('list_action_details.tpl');
         if (!array_key_exists('Details', self::$cache_lang)) {
-            self::$cache_lang['Details'] = Context::getContext()->getTranslator()->trans('Details', array(), 'Admin.Global');
+            self::$cache_lang['Details'] = Context::getContext()->getTranslator()->trans('Details', [], 'Admin.Global');
         }
 
         $ajax_params = $this->ajax_params;
@@ -468,7 +468,7 @@ class HelperListCore extends Helper
             $ajax_params['action'] = 'details';
         }
 
-        $tpl->assign(array(
+        $tpl->assign([
             'id' => $id,
             'href' => $this->currentIndex . '&' . $this->identifier . '=' . $id . '&details' . $this->table . '&token=' . ($token != null ? $token : $this->token),
             'controller' => str_replace('Controller', '', get_class($this->context->controller)),
@@ -476,7 +476,7 @@ class HelperListCore extends Helper
             'action' => self::$cache_lang['Details'],
             'params' => $ajax_params,
             'json_params' => json_encode($ajax_params),
-        ));
+        ]);
 
         return $tpl->fetch();
     }
@@ -488,14 +488,14 @@ class HelperListCore extends Helper
     {
         $tpl = $this->createTemplate('list_action_view.tpl');
         if (!array_key_exists('View', self::$cache_lang)) {
-            self::$cache_lang['View'] = Context::getContext()->getTranslator()->trans('View', array(), 'Admin.Actions');
+            self::$cache_lang['View'] = Context::getContext()->getTranslator()->trans('View', [], 'Admin.Actions');
         }
 
         $href = $this->getViewLink($token, $id);
-        $tpl->assign(array(
+        $tpl->assign([
             'href' => $href,
             'action' => self::$cache_lang['View'],
-        ));
+        ]);
 
         return $tpl->fetch();
     }
@@ -507,15 +507,15 @@ class HelperListCore extends Helper
     {
         $tpl = $this->createTemplate('list_action_edit.tpl');
         if (!array_key_exists('Edit', self::$cache_lang)) {
-            self::$cache_lang['Edit'] = Context::getContext()->getTranslator()->trans('Edit', array(), 'Admin.Actions');
+            self::$cache_lang['Edit'] = Context::getContext()->getTranslator()->trans('Edit', [], 'Admin.Actions');
         }
 
         $href = $this->getEditLink($token, $id);
-        $tpl->assign(array(
+        $tpl->assign([
             'href' => $href,
             'action' => self::$cache_lang['Edit'],
             'id' => $id,
-        ));
+        ]);
 
         return $tpl->fetch();
     }
@@ -528,15 +528,15 @@ class HelperListCore extends Helper
         $tpl = $this->createTemplate('list_action_delete.tpl');
 
         if (!array_key_exists('Delete', self::$cache_lang)) {
-            self::$cache_lang['Delete'] = Context::getContext()->getTranslator()->trans('Delete', array(), 'Admin.Actions');
+            self::$cache_lang['Delete'] = Context::getContext()->getTranslator()->trans('Delete', [], 'Admin.Actions');
         }
 
         if (!array_key_exists('DeleteItem', self::$cache_lang)) {
-            self::$cache_lang['DeleteItem'] = Context::getContext()->getTranslator()->trans('Delete selected item?', array(), 'Admin.Notifications.Info');
+            self::$cache_lang['DeleteItem'] = Context::getContext()->getTranslator()->trans('Delete selected item?', [], 'Admin.Notifications.Info');
         }
 
         if (!array_key_exists('Name', self::$cache_lang)) {
-            self::$cache_lang['Name'] = Context::getContext()->getTranslator()->trans('Name:', array(), 'Admin.Global');
+            self::$cache_lang['Name'] = Context::getContext()->getTranslator()->trans('Name:', [], 'Admin.Global');
         }
 
         if (null !== $name) {
@@ -559,11 +559,11 @@ class HelperListCore extends Helper
             default:
         }
 
-        $data = array(
+        $data = [
             $this->identifier => $id,
             'href' => $href,
             'action' => self::$cache_lang['Delete'],
-        );
+        ];
 
         if ($this->specificConfirmDelete !== false) {
             $data['confirm'] = null !== $this->specificConfirmDelete ? '\r' . $this->specificConfirmDelete : Tools::safeOutput(self::$cache_lang['DeleteItem'] . $name);
@@ -581,14 +581,14 @@ class HelperListCore extends Helper
     {
         $tpl = $this->createTemplate('list_action_default.tpl');
         if (!array_key_exists('Default', self::$cache_lang)) {
-            self::$cache_lang['Default'] = Context::getContext()->getTranslator()->trans('Default', array(), 'Admin.Global');
+            self::$cache_lang['Default'] = Context::getContext()->getTranslator()->trans('Default', [], 'Admin.Global');
         }
 
-        $tpl->assign(array(
+        $tpl->assign([
             'href' => $this->currentIndex . '&' . $this->identifier . '=' . (int) $id . '&default' . $this->table . '&token=' . ($token != null ? $token : $this->token),
             'action' => self::$cache_lang['Default'],
             'name' => $name,
-        ));
+        ]);
 
         return $tpl->fetch();
     }
@@ -653,7 +653,7 @@ class HelperListCore extends Helper
             $table_dnd = true;
         }
 
-        $prefix = isset($this->controller_name) ? str_replace(array('admin', 'controller'), '', Tools::strtolower($this->controller_name)) : '';
+        $prefix = isset($this->controller_name) ? str_replace(['admin', 'controller'], '', Tools::strtolower($this->controller_name)) : '';
         $ajax = false;
         foreach ($this->fields_list as $key => $params) {
             if (!isset($params['type'])) {
@@ -735,7 +735,7 @@ class HelperListCore extends Helper
             }
         }
 
-        Context::getContext()->smarty->assign(array(
+        Context::getContext()->smarty->assign([
             'page' => $page,
             'simple_header' => $this->simple_header,
             'total_pages' => $total_pages,
@@ -751,7 +751,7 @@ class HelperListCore extends Helper
             'toolbar_btn' => $this->toolbar_btn,
             'has_bulk_actions' => $this->hasBulkActions($has_value),
             'filters_has_value' => (bool) $has_value,
-        ));
+        ]);
 
         if (null !== $this->title_icon) {
             Context::getContext()->smarty->assign(['icon' => $this->title_icon]);
@@ -759,7 +759,7 @@ class HelperListCore extends Helper
 
         $isMultiShopActive = Configuration::get('PS_MULTISHOP_FEATURE_ACTIVE');
 
-        $this->header_tpl->assign(array_merge(array(
+        $this->header_tpl->assign(array_merge([
             'ajax' => $ajax,
             'title' => array_key_exists('title', $this->tpl_vars) ? $this->tpl_vars['title'] : $this->title,
             'show_filters' => ((count($this->_list) > 1 && $has_search_field) || $has_value),
@@ -781,7 +781,7 @@ class HelperListCore extends Helper
             'name_id' => isset($name_id) ? $name_id : null,
             'row_hover' => $this->row_hover,
             'list_id' => isset($this->list_id) ? $this->list_id : $this->table,
-        ), $this->tpl_vars));
+        ], $this->tpl_vars));
 
         return $this->header_tpl->fetch();
     }
@@ -823,10 +823,10 @@ class HelperListCore extends Helper
             $this->list_id = $this->table;
         }
 
-        $this->footer_tpl->assign(array_merge($this->tpl_vars, array(
+        $this->footer_tpl->assign(array_merge($this->tpl_vars, [
             'current' => $this->currentIndex,
             'list_id' => $this->list_id,
-        )));
+        ]));
 
         return $this->footer_tpl->fetch();
     }

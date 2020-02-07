@@ -26,10 +26,12 @@
 
 namespace Tests\Unit\Core\ConstraintValidator;
 
+use PHPUnit\Framework\MockObject\Builder\InvocationMocker;
+use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\IsUrlRewrite;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\IsUrlRewriteValidator;
-use Symfony\Component\Validator\Exception\UnexpectedTypeException;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Exception\UnexpectedTypeException;
 use Symfony\Component\Validator\Test\ConstraintValidatorTestCase;
 
 /**
@@ -42,9 +44,28 @@ class IsUrlRewriteValidatorTest extends ConstraintValidatorTestCase
      */
     private $useAscendedChars;
 
+    /**
+     * @var InvocationMocker
+     */
+    private $configurationMockWithAscendingCharsOn;
+
     public function setUp()
     {
         $this->useAscendedChars = false;
+
+        $this->configurationMockWithAscendingCharsOff = $this->getMockBuilder(ConfigurationInterface::class)
+            ->getMock()
+        ;
+
+        $this->configurationMockWithAscendingCharsOn = $this->getMockBuilder(ConfigurationInterface::class)
+            ->getMock()
+        ;
+
+        $this->configurationMockWithAscendingCharsOn
+            ->method('get')
+            ->with('PS_ALLOW_ACCENTED_CHARS_URL')
+            ->willReturn(true)
+        ;
 
         parent::setUp();
     }
@@ -97,6 +118,7 @@ class IsUrlRewriteValidatorTest extends ConstraintValidatorTestCase
         $this->useAscendedChars = true;
 
         $validator = $this->createValidator();
+        $validator->initialize($this->context);
 
         $validator->validate($correctRewriteUrl, new IsUrlRewrite());
 
@@ -165,6 +187,11 @@ class IsUrlRewriteValidatorTest extends ConstraintValidatorTestCase
 
     protected function createValidator()
     {
-        return new IsUrlRewriteValidator($this->useAscendedChars);
+        $configuration = $this->useAscendedChars ?
+             $this->configurationMockWithAscendingCharsOn :
+             0
+         ;
+
+        return new IsUrlRewriteValidator($configuration);
     }
 }

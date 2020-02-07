@@ -91,6 +91,13 @@ ul.category-tree {
     }
   }
 
+  label.form-control-label {
+    color: $gray-medium;
+    width: 100%;
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+
   #choice_tree {
     .category-tree {
       margin-bottom: 0;

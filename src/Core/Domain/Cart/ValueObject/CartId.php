@@ -46,9 +46,7 @@ class CartId
     public function __construct($cartId)
     {
         if (!is_int($cartId) || 0 >= $cartId) {
-            throw new CartConstraintException(
-                sprintf('Cart id must be integer greater than zero, but %s given.', var_export($cartId, true))
-            );
+            throw new CartConstraintException(sprintf('Cart id must be integer greater than zero, but %s given.', var_export($cartId, true)));
         }
 
         $this->cartId = $cartId;

@@ -34,7 +34,7 @@
       <table class="table">
         <thead>
           <tr>
-            <th>{{ 'Date'|trans({}, 'Admin.Global') }}</th>
+            <th>{{ 'ID'|trans({}, 'Admin.Global') }}</th>
             <th>{{ 'Name'|trans({}, 'Admin.Global') }}</th>
           </tr>
         </thead>
@@ -44,7 +44,7 @@
               <td>{{ product.productId }}</td>
               <td>
                 <a href="{{ product.productUrl }}">
-                  {{ product.productName|convert_encoding('UTF-8', 'HTML-ENTITIES') }}
+                  {{ product.productName }}
                 </a>
               </td>
             </tr>

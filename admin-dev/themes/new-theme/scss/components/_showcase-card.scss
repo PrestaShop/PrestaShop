@@ -18,6 +18,10 @@
     background-image: url('img/helper-card/wave-shape-background.png');
   }
 
+  &__attribute, &__monitoring {
+    background-image: url('img/helper-card/content-background@3x.png');
+  }
+
   &__category {
     background-image: url('img/helper-card/seo-background@3x.png');
   }
@@ -80,6 +84,12 @@
     @include media-breakpoint-down(md) {
       width: inherit;
       text-align: center;
+    }
+  }
+
+  &__monitoring {
+    img {
+      padding: 35px 60px 0 60px;
     }
   }
 

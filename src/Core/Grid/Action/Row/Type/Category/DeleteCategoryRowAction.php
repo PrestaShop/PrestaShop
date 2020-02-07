@@ -47,6 +47,8 @@ final class DeleteCategoryRowAction extends AbstractRowAction
      */
     protected function configureOptions(OptionsResolver $resolver)
     {
+        parent::configureOptions($resolver);
+
         $resolver
             ->setRequired([
                 'category_id_field',

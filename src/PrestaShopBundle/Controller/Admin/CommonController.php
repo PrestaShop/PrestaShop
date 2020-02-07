@@ -26,9 +26,14 @@
 
 namespace PrestaShopBundle\Controller\Admin;
 
+use Context;
 use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
 use PrestaShop\PrestaShop\Core\Addon\AddonsCollection;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
+use PrestaShop\PrestaShop\Core\Domain\Notification\Command\UpdateEmployeeNotificationLastElementCommand;
+use PrestaShop\PrestaShop\Core\Domain\Notification\Exception\TypeException;
+use PrestaShop\PrestaShop\Core\Domain\Notification\Query\GetNotificationLastElements;
+use PrestaShop\PrestaShop\Core\Domain\Notification\QueryResult\NotificationsResults;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\GridDefinitionFactoryInterface;
 use PrestaShop\PrestaShop\Core\Grid\Definition\GridDefinitionInterface;
 use PrestaShop\PrestaShop\Core\Kpi\Row\KpiRowInterface;
@@ -56,20 +61,26 @@ class CommonController extends FrameworkBundleAdminController
      */
     public function notificationsAction()
     {
-        // TODO: Use CQRS
-        return new JsonResponse((new \Notification())->getLastElements());
+        $employeeId = Context::getContext()->employee->id;
+        /** @var NotificationsResults $elements */
+        $elements = $this->getQueryBus()->handle(new GetNotificationLastElements($employeeId));
+
+        return new JsonResponse($elements->getNotificationsResultsForJS());
     }
 
     /**
      * Update the last time a notification type has been seen.
      *
      * @param Request $request
+     *
+     * @throws TypeException
      */
     public function notificationsAckAction(Request $request)
     {
         $type = $request->request->get('type');
-        // TODO: Use CQRS
-        return new JsonResponse((new \Notification())->updateEmployeeLastElement($type));
+        $this->getCommandBus()->handle(new UpdateEmployeeNotificationLastElementCommand($type));
+
+        return new JsonResponse(true);
     }
 
     /**
@@ -112,60 +123,61 @@ class CommonController extends FrameworkBundleAdminController
         $to = $offset + $limit - 1;
 
         // urls from route
-        $callerParameters = $request->attributes->get('caller_parameters', array());
+        $callerParameters = $request->attributes->get('caller_parameters', []);
         foreach ($callerParameters as $k => $v) {
             if (strpos($k, '_') === 0) {
                 unset($callerParameters[$k]);
             }
         }
-        $routeName = $request->attributes->get('caller_route', $request->attributes->get('caller_parameters', ['_route' => false])['_route']);
+        $callerParameters += ['_route' => false];
+        $routeName = $request->attributes->get('caller_route', $callerParameters['_route']);
         $nextPageUrl = (!$routeName || ($offset + $limit >= $total)) ? false : $this->generateUrl($routeName, array_merge(
             $callerParameters,
-            array(
+            [
                 $offsetParam => min($total - 1, $offset + $limit),
                 $limitParam => $limit,
-            )
+            ]
         ));
 
         $previousPageUrl = (!$routeName || ($offset == 0)) ? false : $this->generateUrl($routeName, array_merge(
             $callerParameters,
-            array(
+            [
                 $offsetParam => max(0, $offset - $limit),
                 $limitParam => $limit,
-            )
+            ]
         ));
         $firstPageUrl = (!$routeName || ($offset == 0)) ? false : $this->generateUrl($routeName, array_merge(
             $callerParameters,
-            array(
+            [
                 $offsetParam => 0,
                 $limitParam => $limit,
-            )
+            ]
         ));
         $lastPageUrl = (!$routeName || ($offset + $limit >= $total)) ? false : $this->generateUrl($routeName, array_merge(
             $callerParameters,
-            array(
+            [
                 $offsetParam => ($pageCount - 1) * $limit,
                 $limitParam => $limit,
-            )
+            ]
         ));
         $changeLimitUrl = (!$routeName) ? false : $this->generateUrl($routeName, array_merge(
             $callerParameters,
-            array(
+            [
                 $offsetParam => 0,
                 $limitParam => '_limit',
-            )
+            ]
         ));
         $jumpPageUrl = (!$routeName) ? false : $this->generateUrl($routeName, array_merge(
             $callerParameters,
-            array(
+            [
                 $offsetParam => 999999,
                 $limitParam => $limit,
-            )
+            ]
         ));
-        $limitChoices = $request->attributes->get('limit_choices', array(10, 20, 50, 100));
+        $limitChoices = $request->attributes->get('limit_choices', [10, 20, 50, 100]);
 
         // Template vars injection
-        $vars = array(
+        $vars = [
             'limit' => $limit,
             'changeLimitUrl' => $changeLimitUrl,
             'first_url' => $firstPageUrl,
@@ -179,7 +191,7 @@ class CommonController extends FrameworkBundleAdminController
             'last_url' => $lastPageUrl,
             'jump_page_url' => $jumpPageUrl,
             'limit_choices' => $limitChoices,
-        );
+        ];
         if ($view != 'full') {
             return $this->render('@PrestaShop/Admin/Common/pagination_' . $view . '.html.twig', $vars);
         }
@@ -208,7 +220,7 @@ class CommonController extends FrameworkBundleAdminController
         /** @var $modulesProvider AdminModuleDataProvider */
         $modulesRepository = ModuleManagerBuilder::getInstance()->buildRepository();
 
-        $modules = array();
+        $modules = [];
         foreach ($moduleIdList as $id) {
             try {
                 $module = $modulesRepository->getModule($id);
@@ -226,10 +238,10 @@ class CommonController extends FrameworkBundleAdminController
         $collection = AddonsCollection::createFrom($modules);
         $modules = $modulesProvider->generateAddonsUrls($collection);
 
-        return array(
+        return [
             'domain' => $domain,
             'modules' => array_slice($modules, 0, $limit, true),
-        );
+        ];
     }
 
     /**
@@ -313,11 +325,11 @@ class CommonController extends FrameworkBundleAdminController
      */
     public function renderFieldAction($formName, $formType, $fieldName, $fieldData)
     {
-        $formData = array(
-            $formName => array(
+        $formData = [
+            $formName => [
                 $fieldName => $fieldData,
-            ),
-        );
+            ],
+        ];
 
         $form = $this->createFormBuilder($formData);
         $form->add($formName, $formType);

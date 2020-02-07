@@ -67,10 +67,7 @@ class AddressId
     private function assertIsIntegerGreaterThanZero($value)
     {
         if (!is_int($value) || 0 >= $value) {
-            throw new AddressConstraintException(
-                sprintf('Invalid address id "%s".', var_export($value, true)),
-                AddressConstraintException::INVALID_ID
-            );
+            throw new AddressConstraintException(sprintf('Invalid address id "%s".', var_export($value, true)), AddressConstraintException::INVALID_ID);
         }
     }
 }

@@ -96,3 +96,19 @@ services:
         - '@prestashop.core.util.color_brightness_calculator'
       tags:
         - { name: twig.extension }
+
+    prestashop.bundle.twig.extension.js_router_metadata_extension:
+      class: PrestaShopBundle\Twig\Extension\JsRouterMetadataExtension
+      arguments:
+        - '@=service("request_stack")'
+        - '@=service("security.csrf.token_manager")'
+        - '@=service("prestashop.user_provider").getUsername()'
+      tags:
+        - { name: twig.extension }
+
+    prestashop.bundle.twig.extension.localization_extension:
+      class: 'PrestaShopBundle\Twig\Extension\LocalizationExtension'
+      arguments:
+        - '@=service("prestashop.adapter.legacy.context").getContext().language.date_format_full'
+      tags:
+        - { name: twig.extension }

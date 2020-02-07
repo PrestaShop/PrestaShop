@@ -24,13 +24,12 @@
  */
 
 import PerfectScrollbar from 'perfect-scrollbar';
-import '../node_modules/perfect-scrollbar/css/perfect-scrollbar.css';
+import '@node_modules/perfect-scrollbar/css/perfect-scrollbar.css';
 
-const $ = window.$;
+const {$} = window;
 
 export default class NavBar {
   constructor() {
-
     $(() => {
       const $navBar = $('.nav-bar');
       new PerfectScrollbar($navBar.get(0));
@@ -41,7 +40,7 @@ export default class NavBar {
         },
         function onMouseLeave() {
           $(this).removeClass('-hover');
-        }
+        },
       );
 
       $('.nav-bar li.link-levelone.has_submenu > a').on(
@@ -114,7 +113,7 @@ export default class NavBar {
               shouldCollapse: Number($('body').hasClass('page-sidebar-closed')),
             },
           });
-        }
+        },
       );
 
       addMobileBodyClickListener();
@@ -144,7 +143,7 @@ export default class NavBar {
               $('.nav-bar li.link-levelone.has_submenu.ul-open').removeClass('ul-open open -hover');
               $('.nav-bar li.link-levelone.has_submenu.ul-open ul.submenu').removeAttr('style');
             }
-          }
+          },
         );
       }
     });
@@ -156,7 +155,8 @@ export default class NavBar {
     const profileLink = $('.profile-link').attr('href');
     const $mainMenu = $('.main-menu');
 
-    $('.nav-bar li.link-levelone.has_submenu:not(.open) a > i.material-icons.sub-tabs-arrow').text('keyboard_arrow_down');
+    $('.nav-bar li.link-levelone.has_submenu:not(.open) a > i.material-icons.sub-tabs-arrow')
+      .text('keyboard_arrow_down');
     $('body').addClass('mobile');
     $('.nav-bar').addClass('mobile-nav').attr('style', 'margin-left: -100%;');
     $('.panel-collapse').addClass('collapse');
@@ -171,7 +171,7 @@ export default class NavBar {
     $mainMenu.prepend(`<li class='link-levelone'>${$employee}</li>`);
 
     $('.collapse').collapse({
-      toggle: false
+      toggle: false,
     });
 
     $mainMenu.find('.employee_avatar .material-icons, .employee_avatar span').wrap(`<a href='${profileLink}'></a>`);
@@ -180,7 +180,7 @@ export default class NavBar {
       height: window.innerHeight,
     });
 
-    function expand(e) {
+    function expand() {
       if ($('div.notification-center.dropdown').hasClass('open')) {
         return;
       }
@@ -193,7 +193,7 @@ export default class NavBar {
               $('.nav-bar, .mobile-layer').removeClass('expanded');
               $('.nav-bar, .mobile-layer').addClass('d-none');
             },
-          }
+          },
         );
         $('.mobile-layer').off();
         return;

@@ -68,14 +68,7 @@ class DatabaseTableFields
     {
         foreach ($fields as $field) {
             if (!$field instanceof DatabaseTableField) {
-                throw new SqlManagementConstraintException(
-                    sprintf(
-                        'Invalid database field %s supplied. Expected instance of %s',
-                        var_export($field, true),
-                        DatabaseTableField::class
-                    ),
-                    SqlManagementConstraintException::INVALID_DATABASE_TABLE_FIELD
-                );
+                throw new SqlManagementConstraintException(sprintf('Invalid database field %s supplied. Expected instance of %s', var_export($field, true), DatabaseTableField::class), SqlManagementConstraintException::INVALID_DATABASE_TABLE_FIELD);
             }
         }
 

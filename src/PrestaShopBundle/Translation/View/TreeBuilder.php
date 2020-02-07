@@ -66,17 +66,17 @@ class TreeBuilder
             $missingTranslations = 0;
 
             foreach ($messages as $translationKey => $translationValue) {
-                $data = array(
+                $data = [
                     'xlf' => $xliffCatalogue->defines($translationKey, $domain)
                         ? $xliffCatalogue->get($translationKey, $domain)
                         : null,
                     'db' => $databaseCatalogue->defines($translationKey, $domain)
                         ? $databaseCatalogue->get($translationKey, $domain)
                         : null,
-                );
+                ];
 
                 // if search is empty or is in catalog default|xlf|database
-                if (empty($search) || $this->dataContainsSearchWord($search, array_merge(array('default' => $translationKey), $data))) {
+                if (empty($search) || $this->dataContainsSearchWord($search, array_merge(['default' => $translationKey], $data))) {
                     $translations[$domain][$translationKey] = $data;
 
                     if (empty($data['xlf'])
@@ -87,7 +87,7 @@ class TreeBuilder
                 }
             }
 
-            $translations[$domain]['__metadata'] = array('missing_translations' => $missingTranslations);
+            $translations[$domain]['__metadata'] = ['missing_translations' => $missingTranslations];
         }
 
         ksort($translations);
@@ -145,13 +145,13 @@ class TreeBuilder
                 $subdomain = ucfirst($part);
 
                 if (!array_key_exists($subdomain, $subtree)) {
-                    $subtree[$subdomain] = array();
+                    $subtree[$subdomain] = [];
                 }
 
                 $subtree = &$subtree[$subdomain];
             }
 
-            $subtree['__messages'] = array($domain => $messages);
+            $subtree['__messages'] = [$domain => $messages];
             if (isset($messages['__metadata'])) {
                 $subtree['__fixed_length_id'] = '_' . sha1($domain);
                 list($subtree['__domain']) = explode('.', $domain);
@@ -292,12 +292,12 @@ class TreeBuilder
     private function addTreeInfo(Router $router, &$tree, $index, $name, $fullName, $theme = false, $search = null, $module = false)
     {
         if (!isset($tree[$index])) {
-            $routeParams = array(
+            $routeParams = [
                 'locale' => $this->locale,
                 'domain' => $fullName,
                 'theme' => $theme,
                 'module' => $module,
-            );
+            ];
 
             if (!empty($search)) {
                 $routeParams['search'] = $search;
@@ -308,7 +308,7 @@ class TreeBuilder
             $tree[$index]['domain_catalog_link'] = $router->generate('api_translation_domain_catalog', $routeParams);
             $tree[$index]['total_translations'] = 0;
             $tree[$index]['total_missing_translations'] = 0;
-            $tree[$index]['children'] = array();
+            $tree[$index]['children'] = [];
         }
 
         return $tree;

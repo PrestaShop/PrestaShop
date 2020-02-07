@@ -36,7 +36,7 @@ class ConfigurationFilter extends HashMapWhitelistFilter
 {
     public function __construct()
     {
-        $whitelist = array(
+        $whitelist = [
             'display_taxes_label',
             'display_prices_tax_incl',
             'is_catalog',
@@ -45,7 +45,7 @@ class ConfigurationFilter extends HashMapWhitelistFilter
             'return_enabled',
             'show_prices',
             'voucher_enabled',
-        );
+        ];
 
         $this->whitelist($whitelist);
     }

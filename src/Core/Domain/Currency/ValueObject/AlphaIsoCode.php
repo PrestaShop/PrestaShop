@@ -34,6 +34,11 @@ use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyConstraintExcep
 class AlphaIsoCode
 {
     /**
+     * @var string ISO Code validation pattern
+     */
+    const PATTERN = '/^[a-zA-Z]{2,3}$/';
+
+    /**
      * @var string
      */
     private $isoCode;
@@ -64,16 +69,8 @@ class AlphaIsoCode
      */
     private function assertIsValidIsoCode($isoCode)
     {
-        $regex = '/^[a-zA-Z]{2,3}$/';
-        if (!is_string($isoCode) || !preg_match($regex, $isoCode)) {
-            throw new CurrencyConstraintException(
-                sprintf(
-                    'Given iso code "%s" is not valid. It did not matched given regex %s',
-                    var_export($isoCode, true),
-                    $regex
-                ),
-                CurrencyConstraintException::INVALID_ISO_CODE
-            );
+        if (!is_string($isoCode) || !preg_match(self::PATTERN, $isoCode)) {
+            throw new CurrencyConstraintException(sprintf('Given iso code "%s" is not valid. It did not matched given regex %s', var_export($isoCode, true), self::PATTERN), CurrencyConstraintException::INVALID_ISO_CODE);
         }
     }
 }

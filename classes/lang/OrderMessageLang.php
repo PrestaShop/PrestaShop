@@ -28,7 +28,7 @@ class OrderMessageLangCore extends DataLangCore
     // Don't replace domain in init() with $this->domain for translation parsing
     protected $domain = 'Admin.Orderscustomers.Feature';
 
-    protected $keys = array('id_order_message');
+    protected $keys = ['id_order_message'];
 
-    protected $fieldsToUpdate = array('name', 'message');
+    protected $fieldsToUpdate = ['name', 'message'];
 }

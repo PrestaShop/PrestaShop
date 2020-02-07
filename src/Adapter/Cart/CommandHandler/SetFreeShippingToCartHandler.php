@@ -26,11 +26,15 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Cart\CommandHandler;
 
+use Cart;
 use CartRule;
 use PrestaShop\PrestaShop\Adapter\Cart\AbstractCartHandler;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\SetFreeShippingToCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\CommandHandler\SetFreeShippingToCartHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CannotDeleteCartRuleException;
+use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleException;
+use PrestaShopException;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
@@ -61,56 +65,74 @@ final class SetFreeShippingToCartHandler extends AbstractCartHandler implements 
     /**
      * {@inheritdoc}
      */
-    public function handle(SetFreeShippingToCartCommand $command)
+    public function handle(SetFreeShippingToCartCommand $command): void
     {
-        $cart = $this->getContextCartObject($command->getCartId());
+        $cart = $this->getCart($command->getCartId());
 
         $backOfficeOrderCode = sprintf('%s%s', CartRule::BO_ORDER_CODE_PREFIX, $cart->id);
 
         $freeShippingCartRule = $this->getCartRuleForBackOfficeFreeShipping($backOfficeOrderCode);
 
-        if (false === $freeShippingCartRule) {
-            $freeShippingCartRule = new CartRule();
-            $freeShippingCartRule->code = $backOfficeOrderCode;
-            $freeShippingCartRule->name = [
-                $this->configuration->get('PS_LANG_DEFAULT') => $this->translator->trans(
-                    'Free Shipping',
-                    [],
-                    'Admin.Orderscustomers.Feature'
-                ),
-            ];
-            $freeShippingCartRule->id_customer = (int) $cart->id_customer;
-            $freeShippingCartRule->free_shipping = true;
-            $freeShippingCartRule->quantity = 1;
-            $freeShippingCartRule->quantity_per_user = 1;
-            $freeShippingCartRule->minimum_amount_currency = (int) $cart->id_currency;
-            $freeShippingCartRule->reduction_currency = (int) $cart->id_currency;
-            $freeShippingCartRule->date_from = date('Y-m-d H:i:s');
-            $freeShippingCartRule->date_to = date('Y-m-d H:i:s', time() + 24 * 36000);
-            $freeShippingCartRule->active = 1;
-            $freeShippingCartRule->add();
+        if ($command->allowFreeShipping()) {
+            if (null === $freeShippingCartRule) {
+                $freeShippingCartRule = $this->createCartRule($cart, $backOfficeOrderCode);
+            }
+            $cart->addCartRule((int) $freeShippingCartRule->id);
+
+            return;
         }
 
         $cart->removeCartRule((int) $freeShippingCartRule->id);
 
-        if ($command->allowFreeShipping()) {
-            $cart->addCartRule((int) $freeShippingCartRule->id);
+        try {
+            if (false === $freeShippingCartRule->delete()) {
+                throw new CannotDeleteCartRuleException(sprintf('Failed deleting cart rule #%s', $freeShippingCartRule->id));
+            }
+        } catch (PrestaShopException $e) {
+            throw new CartRuleException(sprintf('An error occurred when trying to delete cart rule #%s', $freeShippingCartRule->id));
         }
     }
 
     /**
      * @param string $code
      *
-     * @return false|CartRule
+     * @return CartRule|null
+     *
+     * @throws PrestaShopException
      */
-    private function getCartRuleForBackOfficeFreeShipping($code)
+    private function getCartRuleForBackOfficeFreeShipping($code): ?CartRule
     {
         $cartRuleId = CartRule::getIdByCode($code);
 
         if (!$cartRuleId) {
-            return false;
+            return null;
         }
 
         return new CartRule((int) $cartRuleId);
+    }
+
+    private function createCartRule(Cart $cart, string $backOfficeOrderCode): CartRule
+    {
+        $freeShippingCartRule = new CartRule();
+        $freeShippingCartRule->code = $backOfficeOrderCode;
+        $freeShippingCartRule->name = [
+            $this->configuration->get('PS_LANG_DEFAULT') => $this->translator->trans(
+                'Free Shipping',
+                [],
+                'Admin.Orderscustomers.Feature'
+            ),
+        ];
+        $freeShippingCartRule->id_customer = (int) $cart->id_customer;
+        $freeShippingCartRule->free_shipping = true;
+        $freeShippingCartRule->quantity = 1;
+        $freeShippingCartRule->quantity_per_user = 1;
+        $freeShippingCartRule->minimum_amount_currency = (int) $cart->id_currency;
+        $freeShippingCartRule->reduction_currency = (int) $cart->id_currency;
+        $freeShippingCartRule->date_from = date('Y-m-d H:i:s');
+        $freeShippingCartRule->date_to = date('Y-m-d H:i:s', time() + 24 * 36000);
+        $freeShippingCartRule->active = 1;
+        $freeShippingCartRule->add();
+
+        return $freeShippingCartRule;
     }
 }

@@ -52,15 +52,11 @@ final class AddManufacturerHandler extends AbstractManufacturerHandler implement
             }
 
             if (!$manufacturer->add()) {
-                throw new ManufacturerException(
-                    sprintf('Failed to add new manufacturer "%s"', $command->getName())
-                );
+                throw new ManufacturerException(sprintf('Failed to add new manufacturer "%s"', $command->getName()));
             }
             $this->addShopAssociation($manufacturer, $command);
         } catch (\PrestaShopException $e) {
-            throw new ManufacturerException(
-                sprintf('Failed to add new manufacturer "%s"', $command->getName())
-            );
+            throw new ManufacturerException(sprintf('Failed to add new manufacturer "%s"', $command->getName()));
         }
 
         return new ManufacturerId((int) $manufacturer->id);

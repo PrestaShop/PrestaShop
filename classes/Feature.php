@@ -38,23 +38,23 @@ class FeatureCore extends ObjectModel
     /**
      * @see ObjectModel::$definition
      */
-    public static $definition = array(
+    public static $definition = [
         'table' => 'feature',
         'primary' => 'id_feature',
         'multilang' => true,
-        'fields' => array(
-            'position' => array('type' => self::TYPE_INT, 'validate' => 'isInt'),
+        'fields' => [
+            'position' => ['type' => self::TYPE_INT, 'validate' => 'isInt'],
 
             /* Lang fields */
-            'name' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 128),
-        ),
-    );
+            'name' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 128],
+        ],
+    ];
 
-    protected $webserviceParameters = array(
+    protected $webserviceParameters = [
         'objectsNodeName' => 'product_features',
         'objectNodeName' => 'product_feature',
-        'fields' => array(),
-    );
+        'fields' => [],
+    ];
 
     /**
      * Get a feature data for a given id_feature and id_lang.
@@ -131,7 +131,7 @@ class FeatureCore extends ObjectModel
         }
 
         $return = parent::add($autoDate, true);
-        Hook::exec('actionFeatureSave', array('id_feature' => $this->id));
+        Hook::exec('actionFeatureSave', ['id_feature' => $this->id]);
 
         return $return;
     }
@@ -173,7 +173,7 @@ class FeatureCore extends ObjectModel
         if ($result) {
             $result &= parent::update($nullValues);
             if ($result) {
-                Hook::exec('actionFeatureSave', array('id_feature' => $this->id));
+                Hook::exec('actionFeatureSave', ['id_feature' => $this->id]);
             }
         }
 
@@ -214,7 +214,7 @@ class FeatureCore extends ObjectModel
 
         $return = parent::delete();
         if ($return) {
-            Hook::exec('actionFeatureDelete', array('id_feature' => $this->id));
+            Hook::exec('actionFeatureDelete', ['id_feature' => $this->id]);
         }
 
         /* Reinitializing position */

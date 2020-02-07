@@ -26,9 +26,9 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Query;
 
-use PDO;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
+use PDO;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 
 /**
@@ -79,7 +79,7 @@ final class CurrencyQueryBuilder extends AbstractDoctrineQueryBuilder
         $qb = $this->getQueryBuilder($searchCriteria->getFilters());
 
         $qb
-            ->select('c.`id_currency`, c.`iso_code`, cs.`conversion_rate`, c.`active`, cl.`name`, cl.`symbol`')
+            ->select('c.`id_currency`, c.`iso_code`, cs.`conversion_rate`, c.`active`, c.`modified`, c.`unofficial`, cl.`name`, cl.`symbol`')
             ->groupBy('c.`id_currency`')
         ;
 

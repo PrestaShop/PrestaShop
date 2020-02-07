@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Adapter\CatalogPriceRule\CommandHandler;
 use PrestaShop\PrestaShop\Adapter\CatalogPriceRule\AbstractCatalogPriceRuleHandler;
 use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Command\BulkDeleteCatalogPriceRuleCommand;
 use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\CommandHandler\BulkDeleteCatalogPriceRuleHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Exception\DeleteCatalogPriceRuleException;
+use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Exception\CannotDeleteCatalogPriceRuleException;
 
 /**
  * Deletes catalog prices rules in bulk action using legacy object model
@@ -45,10 +45,7 @@ final class BulkDeleteCatalogPriceRuleHandler extends AbstractCatalogPriceRuleHa
             $specificPriceRule = $this->getSpecificPriceRule($catalogPriceRuleId);
 
             if (null === $this->deleteSpecificPriceRule($specificPriceRule)) {
-                throw new DeleteCatalogPriceRuleException(
-                    sprintf('Cannot delete SpecificPriceRule object with id "%s".', $catalogPriceRuleId->getValue()),
-                    DeleteCatalogPriceRuleException::FAILED_BULK_DELETE
-                );
+                throw new CannotDeleteCatalogPriceRuleException(sprintf('Cannot delete SpecificPriceRule object with id "%s".', $catalogPriceRuleId->getValue()), CannotDeleteCatalogPriceRuleException::FAILED_BULK_DELETE);
             }
         }
     }

@@ -127,7 +127,7 @@ final class ImageCopier
         }
 
         if (isset($parsedUrl['query'])) {
-            $query_parts = array();
+            $query_parts = [];
             parse_str($parsedUrl['query'], $query_parts);
             $parsedUrl['query'] = http_build_query($query_parts);
         }
@@ -190,7 +190,7 @@ final class ImageCopier
                     )) {
                         // the last image should not be added in the candidate list if it's bigger than the original image
                         if ($targetWidth <= $sourceWidth && $targetHeight <= $sourceHeight) {
-                            $pathInfos[] = array($targetWidth, $targetHeight, $path . '-' . stripslashes($imageType['name']) . '.jpg');
+                            $pathInfos[] = [$targetWidth, $targetHeight, $path . '-' . stripslashes($imageType['name']) . '.jpg'];
                         }
                         if ($entity == 'products') {
                             $file = $tmpDir . 'product_mini_' . (int) $entityId . '.jpg';

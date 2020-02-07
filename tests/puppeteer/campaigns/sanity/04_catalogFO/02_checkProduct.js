@@ -1,8 +1,14 @@
-const helper = require('../../utils/helpers');
+require('module-alias/register');
+// Using chai
+const {expect} = require('chai');
+const helper = require('@utils/helpers');
+const testContext = require('@utils/testContext');
+
+const baseContext = 'sanity_catalogFO_checkProduct';
 // Importing pages
-const HomePage = require('../../../pages/FO/home');
-const ProductPage = require('../../../pages/FO/product');
-const ProductData = require('../../data/FO/product');
+const HomePage = require('@pages/FO/home');
+const ProductPage = require('@pages/FO/product');
+const ProductData = require('@data/FO/product');
 
 let browser;
 let page;
@@ -32,15 +38,30 @@ describe('Check the Product page', async () => {
   after(async () => {
     await helper.closeBrowser(browser);
   });
+
   // Steps
   it('should open the shop page', async function () {
-    await this.pageObjects.homePage.goTo(global.URL_FO);
-    await this.pageObjects.homePage.checkHomePage();
+    await testContext.addContextItem(this, 'testIdentifier', 'goToShopFO', baseContext);
+    await this.pageObjects.homePage.goTo(global.FO.URL);
+    const result = await this.pageObjects.homePage.isHomePage();
+    await expect(result).to.be.true;
   });
+
   it('should go to the first product page', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'goToProductPage', baseContext);
     await this.pageObjects.homePage.goToProductPage('1');
+    const pageTitle = await this.pageObjects.productPage.getPageTitle();
+    await expect(pageTitle.toUpperCase()).to.contains(ProductData.firstProductData.name);
   });
+
   it('should check the product page', async function () {
-    await this.pageObjects.productPage.checkProduct(ProductData.firstProductData);
+    await testContext.addContextItem(this, 'testIdentifier', 'checkProductPage', baseContext);
+    const result = await this.pageObjects.productPage.checkProduct(ProductData.firstProductData);
+    await Promise.all([
+      expect(result.name).to.be.true,
+      expect(result.price).to.be.true,
+      expect(result.quantity_wanted).to.be.true,
+      expect(result.description).to.be.true,
+    ]);
   });
 });

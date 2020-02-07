@@ -23,9 +23,9 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-import TinyMCEEditor from '../../components/tinymce-editor';
+import TinyMCEEditor from '@components/tinymce-editor';
 
-const $ = window.$;
+const {$} = window;
 
 $(() => {
   new TinyMCEEditor();

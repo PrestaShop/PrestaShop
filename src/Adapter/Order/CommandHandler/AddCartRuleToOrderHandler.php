@@ -31,10 +31,10 @@ use Configuration;
 use OrderCartRule;
 use OrderInvoice;
 use PrestaShop\PrestaShop\Adapter\Order\AbstractOrderHandler;
-use PrestaShop\PrestaShop\Core\Domain\Order\OrderDiscountType;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\AddCartRuleToOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler\AddCartRuleToOrderHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
+use PrestaShop\PrestaShop\Core\Domain\Order\OrderDiscountType;
 use Tools;
 use Validate;
 
@@ -46,13 +46,13 @@ final class AddCartRuleToOrderHandler extends AbstractOrderHandler implements Ad
     /**
      * {@inheritdoc}
      */
-    public function handle(AddCartRuleToOrderCommand $command)
+    public function handle(AddCartRuleToOrderCommand $command): void
     {
         $order = $this->getOrderObject($command->getOrderId());
 
         // If the discount is for only one invoice
-        if ($order->hasInvoice() && null === $command->getOrderInvoiceId()) {
-            $orderInvoice = new OrderInvoice($command->getOrderInvoiceId());
+        if ($order->hasInvoice() && null !== $command->getOrderInvoiceId()) {
+            $orderInvoice = new OrderInvoice($command->getOrderInvoiceId()->getValue());
             if (!Validate::isLoadedObject($orderInvoice)) {
                 throw new OrderException('Can\'t load Order Invoice object');
             }
@@ -111,7 +111,7 @@ final class AddCartRuleToOrderHandler extends AbstractOrderHandler implements Ad
                         );
                     }
                 } else {
-                    throw new OrderException('The discount value is invalid.');
+                    throw new OrderException('Percentage discount value cannot be higher than 100%.');
                 }
 
                 break;
@@ -215,7 +215,7 @@ final class AddCartRuleToOrderHandler extends AbstractOrderHandler implements Ad
             $cartRuleObj = new CartRule();
             $cartRuleObj->date_from = date('Y-m-d H:i:s', strtotime('-1 hour', strtotime($order->date_add)));
             $cartRuleObj->date_to = date('Y-m-d H:i:s', strtotime('+1 hour'));
-            $cartRuleObj->name[Configuration::get('PS_LANG_DEFAULT')] = Tools::getValue('discount_name');
+            $cartRuleObj->name[Configuration::get('PS_LANG_DEFAULT')] = $command->getCartRuleName();
             $cartRuleObj->quantity = 0;
             $cartRuleObj->quantity_per_user = 1;
 

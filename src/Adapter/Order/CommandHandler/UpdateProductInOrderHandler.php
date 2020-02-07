@@ -27,15 +27,17 @@
 namespace PrestaShop\PrestaShop\Adapter\Order\CommandHandler;
 
 use Configuration;
+use Customization;
 use Hook;
 use Order;
 use OrderCarrier;
 use OrderDetail;
 use OrderInvoice;
 use PrestaShop\PrestaShop\Adapter\Order\AbstractOrderHandler;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\CannotEditDeliveredOrderProductException;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\UpdateProductInOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\CommandHandler\UpdateProductInOrderHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use StockAvailable;
 use Tools;
 use Validate;
@@ -56,31 +58,23 @@ final class UpdateProductInOrderHandler extends AbstractOrderHandler implements 
         $order = $this->getOrderObject($command->getOrderId());
         $orderDetail = new OrderDetail($command->getOrderDetailId());
         $orderInvoice = null;
-
-        if (null !== $command->getOrderInvoiceId()) {
+        if (!empty($command->getOrderInvoiceId())) {
             $orderInvoice = new OrderInvoice($command->getOrderInvoiceId());
         }
 
         // Check fields validity
         $this->assertProductCanBeUpdated($command, $orderDetail, $order, $orderInvoice);
 
-        // @todo: check if quantity can be array
-        // If multiple product_quantity, the order details concern a product customized
-//        $product_quantity = 0;
-//        if (is_array(Tools::getValue('product_quantity'))) {
-//            foreach (Tools::getValue('product_quantity') as $id_customization => $qty) {
-//                // Update quantity of each customization
-//                Db::getInstance()->update('customization', array('quantity' => (int)$qty), 'id_customization = ' . (int)$id_customization);
-//                // Calculate the real quantity of the product
-//                $product_quantity += $qty;
-//            }
-//        }
-
+        if (0 < $orderDetail->id_customization) {
+            $customization = new Customization($orderDetail->id_customization);
+            $customization->quantity = $command->getQuantity();
+            $customization->save();
+        }
         $product_quantity = $command->getQuantity();
 
         // @todo: use https://github.com/PrestaShop/decimal for price computations
-        $product_price_tax_incl = Tools::ps_round(Tools::getValue('product_price_tax_incl'), 2);
-        $product_price_tax_excl = Tools::ps_round(Tools::getValue('product_price_tax_excl'), 2);
+        $product_price_tax_incl = Tools::ps_round($command->getPriceTaxIncluded(), 2);
+        $product_price_tax_excl = Tools::ps_round($command->getPriceTaxExcluded(), 2);
         $total_products_tax_incl = $product_price_tax_incl * $product_quantity;
         $total_products_tax_excl = $product_price_tax_excl * $product_quantity;
 
@@ -215,7 +209,7 @@ final class UpdateProductInOrderHandler extends AbstractOrderHandler implements 
 
         // We can't edit a delivered order
         if ($order->hasBeenDelivered()) {
-            throw new OrderException('You cannot edit a delivered order.');
+            throw new CannotEditDeliveredOrderProductException('You cannot edit a delivered order.');
         }
 
         if (null !== $orderInvoice && $orderInvoice->id_order != $order->id) {
@@ -233,7 +227,7 @@ final class UpdateProductInOrderHandler extends AbstractOrderHandler implements 
         }
 
         if (!is_array($command->getQuantity())
-            && !Validate::isUnsignedInt(Tools::getValue('product_quantity'))
+            && !Validate::isUnsignedInt($command->getQuantity())
         ) {
             throw new OrderException('Invalid quantity');
         }

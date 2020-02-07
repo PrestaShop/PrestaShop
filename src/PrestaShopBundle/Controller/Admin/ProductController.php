@@ -27,10 +27,19 @@
 namespace PrestaShopBundle\Controller\Admin;
 
 use Category;
+use Configuration;
+use Currency;
 use Exception;
 use PrestaShop\PrestaShop\Adapter\Product\ListParametersUpdater;
 use PrestaShop\PrestaShop\Adapter\Tax\TaxRuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Warehouse\WarehouseDataProvider;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductIsEnabled;
+use PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProducts;
+use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\FoundProduct;
 use PrestaShopBundle\Component\CsvResponse;
 use PrestaShopBundle\Entity\AdminFilter;
 use PrestaShopBundle\Exception\UpdateProductException;
@@ -44,6 +53,7 @@ use PrestaShopBundle\Form\Admin\Product\ProductQuantity;
 use PrestaShopBundle\Form\Admin\Product\ProductSeo;
 use PrestaShopBundle\Form\Admin\Product\ProductShipping;
 use PrestaShopBundle\Model\Product\AdminModelAdapter;
+use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Voter\PageVoter;
 use PrestaShopBundle\Service\DataProvider\Admin\ProductInterface as ProductInterfaceProvider;
 use PrestaShopBundle\Service\DataProvider\StockInterface;
@@ -114,7 +124,7 @@ class ProductController extends FrameworkBundleAdminController
         $orderBy = 'id_product',
         $sortOrder = 'desc'
     ) {
-        if (!$this->isGranted(array(PageVoter::READ, PageVoter::UPDATE, PageVoter::CREATE), self::PRODUCT_OBJECT)) {
+        if (!$this->isGranted([PageVoter::READ, PageVoter::UPDATE, PageVoter::CREATE], self::PRODUCT_OBJECT)) {
             return $this->redirect('admin_dashboard');
         }
 
@@ -320,14 +330,14 @@ class ProductController extends FrameworkBundleAdminController
         $activateDragAndDrop = 'position_ordering' === $orderBy && $hasCategoryFilter;
 
         // Template vars injection
-        $vars = array(
+        $vars = [
             'activate_drag_and_drop' => $activateDragAndDrop,
             'products' => $products,
             'product_count' => $totalCount,
             'last_sql_query' => $lastSql,
             'has_category_filter' => $productProvider->isCategoryFiltered(),
             'is_shop_context' => $this->get('prestashop.adapter.shop.context')->isShopContext(),
-        );
+        ];
         if ($view !== 'full') {
             return $this->render(
                 '@Product/CatalogPage/Lists/list_' . $view . '.html.twig',
@@ -352,13 +362,13 @@ class ProductController extends FrameworkBundleAdminController
      */
     private function getToolbarButtons()
     {
-        $toolbarButtons = array();
-        $toolbarButtons['add'] = array(
+        $toolbarButtons = [];
+        $toolbarButtons['add'] = [
             'href' => $this->generateUrl('admin_product_new'),
             'desc' => $this->trans('New product', 'Admin.Actions'),
             'icon' => 'add_circle_outline',
             'help' => $this->trans('Create a new product: CTRL+P', 'Admin.Catalog.Help'),
-        );
+        ];
 
         return $toolbarButtons;
     }
@@ -426,7 +436,7 @@ class ProductController extends FrameworkBundleAdminController
     {
         gc_disable();
 
-        if (!$this->isGranted(array(PageVoter::READ, PageVoter::UPDATE, PageVoter::CREATE), self::PRODUCT_OBJECT)) {
+        if (!$this->isGranted([PageVoter::READ, PageVoter::UPDATE, PageVoter::CREATE], self::PRODUCT_OBJECT)) {
             return $this->redirect('admin_dashboard');
         }
 
@@ -453,8 +463,6 @@ class ProductController extends FrameworkBundleAdminController
                 'iso_code' => $this
                     ->get('prestashop.adapter.legacy.context')
                     ->getContext()->currency->iso_code,
-                'price_display_precision' => $this->configuration
-                    ->get('_PS_PRICE_DISPLAY_PRECISION_'),
             ]
         );
 
@@ -685,7 +693,7 @@ class ProductController extends FrameworkBundleAdminController
                     $this->trans(
                         'The value of the PHP.ini setting "max_input_vars" must be increased to %value% in order to be able to submit the product form.',
                         'Admin.Notifications.Error',
-                        array('%value%' => $combinationsInputs)
+                        ['%value%' => $combinationsInputs]
                     )
                 );
             }
@@ -861,10 +869,7 @@ class ProductController extends FrameworkBundleAdminController
                      */
                     $logger->error('Bulk action from ProductController received a bad parameter.');
 
-                    throw new Exception(
-                        'Bad action received from call to ProductController::bulkAction: "' . $action . '"',
-                        2001
-                    );
+                    throw new Exception('Bad action received from call to ProductController::bulkAction: "' . $action . '"', 2001);
             }
         } catch (UpdateProductException $due) {
             //TODO : need to translate this with an domain name
@@ -973,10 +978,7 @@ class ProductController extends FrameworkBundleAdminController
                      */
                     $logger->error('Mass edit action from ProductController received a bad parameter.');
 
-                    throw new Exception(
-                        'Bad action received from call to ProductController::massEditAction: "' . $action . '"',
-                        2001
-                    );
+                    throw new Exception('Bad action received from call to ProductController::massEditAction: "' . $action . '"', 2001);
             }
         } catch (UpdateProductException $due) {
             //TODO : need to translate with domain name
@@ -1135,10 +1137,7 @@ class ProductController extends FrameworkBundleAdminController
                      */
                     $logger->error('Unit action from ProductController received a bad parameter.');
 
-                    throw new Exception(
-                        'Bad action received from call to ProductController::unitAction: "' . $action . '"',
-                        2002
-                    );
+                    throw new Exception('Bad action received from call to ProductController::unitAction: "' . $action . '"', 2002);
             }
         } catch (UpdateProductException $due) {
             //TODO : need to translate with a domain name
@@ -1148,6 +1147,45 @@ class ProductController extends FrameworkBundleAdminController
         }
 
         return $this->redirect($this->get('prestashop.core.admin.url_generator')->generate('admin_product_catalog'));
+    }
+
+    /**
+     * Toggle product status
+     *
+     * @AdminSecurity(
+     *     "is_granted(['update'], request.get('_legacy_controller'))",
+     *     message="You do not have permission to update this."
+     * )
+     *
+     * @param $productId
+     *
+     * @return JsonResponse
+     */
+    public function toggleStatusAction($productId)
+    {
+        if ($this->isDemoModeEnabled()) {
+            return $this->json([
+                'status' => false,
+                'message' => $this->getDemoModeErrorMessage(),
+            ]);
+        }
+
+        try {
+            $isEnabled = $this->getQueryBus()->handle(new GetProductIsEnabled($productId));
+
+            $this->getCommandBus()->handle(new UpdateProductStatusCommand($productId, !$isEnabled));
+            $response = [
+                'status' => true,
+                'message' => $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success'),
+            ];
+        } catch (ProductException $e) {
+            $response = [
+                'status' => false,
+                'message' => $this->getErrorMessageForException($e, $this->getErrorMessages()),
+            ];
+        }
+
+        return $this->json($response);
     }
 
     /**
@@ -1254,5 +1292,44 @@ class ProductController extends FrameworkBundleAdminController
             'form' => $form->getForm()->get($step)->get($fieldName)->createView(),
             'formId' => $step . '_' . $fieldName . '_rendered',
         ]);
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function searchProductsAction(Request $request): JsonResponse
+    {
+        try {
+            $searchPhrase = $request->query->get('search_phrase');
+            $currencyId = $request->query->get('currency_id');
+            $currencyIsoCode = $currencyId !== null
+                ? Currency::getIsoCodeById((int) $currencyId)
+                : Currency::getIsoCodeById((int) Configuration::get('PS_CURRENCY_DEFAULT'));
+
+            /** @var FoundProduct[] $foundProducts */
+            $foundProducts = $this->getQueryBus()->handle(new SearchProducts($searchPhrase, 10, $currencyIsoCode));
+
+            return $this->json([
+                'products' => $foundProducts,
+            ]);
+        } catch (Exception $e) {
+            return $this->json(
+                [$e, 'message' => $this->getErrorMessageForException($e, [])],
+                Response::HTTP_INTERNAL_SERVER_ERROR
+            );
+        }
+    }
+
+    /**
+     * @return array
+     */
+    private function getErrorMessages(): array
+    {
+        return [
+            ProductNotFoundException::class => $this->trans('The object cannot be loaded (or found)', 'Admin.Notifications.Error'),
+            CannotUpdateProductException::class => $this->trans('An error occurred while updating the status for an object.', 'Admin.Notifications.Error'),
+        ];
     }
 }

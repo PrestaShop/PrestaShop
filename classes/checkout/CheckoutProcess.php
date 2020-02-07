@@ -34,7 +34,7 @@ class CheckoutProcessCore implements RenderableInterface
      * @var CheckoutSession
      */
     private $checkoutSession;
-    private $steps = array();
+    private $steps = [];
     private $has_errors;
 
     private $template = 'checkout/checkout-process.tpl';
@@ -53,7 +53,7 @@ class CheckoutProcessCore implements RenderableInterface
         return $this->template;
     }
 
-    public function handleRequest(array $requestParameters = array())
+    public function handleRequest(array $requestParameters = [])
     {
         foreach ($this->getSteps() as $step) {
             $step->handleRequest($requestParameters);
@@ -87,20 +87,20 @@ class CheckoutProcessCore implements RenderableInterface
         return $this;
     }
 
-    public function render(array $extraParams = array())
+    public function render(array $extraParams = [])
     {
         $scope = $this->smarty->createData(
             $this->smarty
         );
 
-        $params = array(
+        $params = [
             'steps' => array_map(function (CheckoutStepInterface $step) {
-                return array(
+                return [
                     'identifier' => $step->getIdentifier(),
                     'ui' => new RenderableProxy($step),
-                );
+                ];
             }, $this->getSteps()),
-        );
+        ];
 
         $scope->assign(array_merge($extraParams, $params));
 
@@ -128,10 +128,10 @@ class CheckoutProcessCore implements RenderableInterface
     {
         $data = [];
         foreach ($this->getSteps() as $step) {
-            $defaultStepData = array(
+            $defaultStepData = [
                 'step_is_reachable' => $step->isReachable(),
                 'step_is_complete' => $step->isComplete(),
-            );
+            ];
 
             $stepData = array_merge($defaultStepData, $step->getDataToPersist());
 

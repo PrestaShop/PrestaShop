@@ -47,7 +47,11 @@ class DatabaseCreator
         $install = new Install();
         \DbPDOCore::createDatabase(_DB_SERVER_, _DB_USER_, _DB_PASSWD_, _DB_NAME_, false);
         $install->clearDatabase(false);
-        $install->installDatabase(true);
+        if (!$install->installDatabase(true)) {
+            // Something went wrong during installation
+            exit(1);
+        }
+
         $process = new Process(PHP_BINARY . ' bin/console prestashop:schema:update-without-foreign --env=test');
         $process->run();
         $install->initializeTestContext();

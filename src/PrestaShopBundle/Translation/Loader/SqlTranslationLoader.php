@@ -29,10 +29,10 @@ namespace PrestaShopBundle\Translation\Loader;
 
 use Db;
 use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
+use Symfony\Component\Translation\Exception\NotFoundResourceException;
 use Symfony\Component\Translation\Loader\LoaderInterface;
 use Symfony\Component\Translation\MessageCatalogue;
 use Symfony\Component\Translation\MessageCatalogueInterface;
-use Symfony\Component\Translation\Exception\NotFoundResourceException;
 
 class SqlTranslationLoader implements LoaderInterface
 {
@@ -58,7 +58,7 @@ class SqlTranslationLoader implements LoaderInterface
      */
     public function load($resource, $locale, $domain = 'messages')
     {
-        static $localeResults = array();
+        static $localeResults = [];
 
         if (!array_key_exists($locale, $localeResults)) {
             $locale = Db::getInstance()->escape($locale, false, true);

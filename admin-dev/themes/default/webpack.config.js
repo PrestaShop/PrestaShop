@@ -27,6 +27,7 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const keepLicense = require('uglify-save-license');
 const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
+const CleanWebpackPlugin = require('clean-webpack-plugin');
 
 module.exports = (env, argv) => {
   const devMode = argv.mode === 'development';
@@ -76,13 +77,25 @@ module.exports = (env, argv) => {
         ]
       }, {
         test: /.(gif|png|woff(2)?|eot|ttf|svg)(\?[a-z0-9=\.]+)?$/,
-        loader: 'file-loader?name=[hash].[ext]'
+        use: [{
+          loader: 'file-loader',
+          options: {
+            name: '[hash].[ext]'
+          }
+        }]
       }]
     },
     optimization: {
 
     },
     plugins: [
+      new CleanWebpackPlugin({
+        root: path.resolve(__dirname),
+        cleanOnceBeforeBuildPatterns: [
+          '**/*', // required
+          '!theme.rtlfix' // exclusion
+        ]
+      }),
       new MiniCssExtractPlugin({
         filename: 'theme.css'
       })

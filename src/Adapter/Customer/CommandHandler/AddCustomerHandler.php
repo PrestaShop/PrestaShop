@@ -100,10 +100,7 @@ final class AddCustomerHandler extends AbstractCustomerHandler implements AddCus
         $customer->getByEmail($email->getValue());
 
         if ($customer->id) {
-            throw new DuplicateCustomerEmailException(
-                $email,
-                sprintf('Customer with email "%s" already exists', $email->getValue())
-            );
+            throw new DuplicateCustomerEmailException($email, sprintf('Customer with email "%s" already exists', $email->getValue()));
         }
     }
 
@@ -150,9 +147,7 @@ final class AddCustomerHandler extends AbstractCustomerHandler implements AddCus
     private function assertCustomerCanAccessDefaultGroup(AddCustomerCommand $command)
     {
         if (!in_array($command->getDefaultGroupId(), $command->getGroupIds())) {
-            throw new CustomerDefaultGroupAccessException(
-                sprintf('Customer default group with id "%s" must be in access groups', $command->getDefaultGroupId())
-            );
+            throw new CustomerDefaultGroupAccessException(sprintf('Customer default group with id "%s" must be in access groups', $command->getDefaultGroupId()));
         }
     }
 }

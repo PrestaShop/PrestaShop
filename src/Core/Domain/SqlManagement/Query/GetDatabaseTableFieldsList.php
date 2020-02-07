@@ -66,10 +66,7 @@ class GetDatabaseTableFieldsList
     public function setTableName($tableName)
     {
         if (!is_string($tableName) || empty($tableName)) {
-            throw new SqlManagementConstraintException(
-                sprintf('Invalid database table name %s supplied', var_export($tableName, true)),
-                SqlManagementConstraintException::INVALID_DATABASE_TABLE_NAME
-            );
+            throw new SqlManagementConstraintException(sprintf('Invalid database table name %s supplied', var_export($tableName, true)), SqlManagementConstraintException::INVALID_DATABASE_TABLE_NAME);
         }
 
         $this->tableName = $tableName;

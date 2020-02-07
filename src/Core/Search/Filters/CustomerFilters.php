@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Search\Filters;
 
+use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CustomerGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters;
 
 /**
@@ -33,6 +34,9 @@ use PrestaShop\PrestaShop\Core\Search\Filters;
  */
 final class CustomerFilters extends Filters
 {
+    /** @var string */
+    protected $filterId = CustomerGridDefinitionFactory::GRID_ID;
+
     /**
      * {@inheritdoc}
      */

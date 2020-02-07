@@ -28,7 +28,7 @@ namespace PrestaShop\PrestaShop\Core\Cart;
 
 class CartRuleData
 {
-    protected $ruleData = array();
+    protected $ruleData = [];
 
     /**
      * @var AmountImmutable

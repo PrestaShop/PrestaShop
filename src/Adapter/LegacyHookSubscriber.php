@@ -222,7 +222,7 @@ class LegacyHookSubscriber implements EventSubscriberInterface
      */
     public static function getSubscribedEvents()
     {
-        $listeners = array();
+        $listeners = [];
 
         //Hack SF2 cache clear : if context not mounted, bypass legacy call
         $legacyContext = Context::getContext();
@@ -237,8 +237,8 @@ class LegacyHookSubscriber implements EventSubscriberInterface
                 $name = strtolower($hook['name']);
                 $id = $hook['id_hook'];
 
-                $moduleListeners = array();
-                $modules = array();
+                $moduleListeners = [];
+                $modules = [];
                 //SF2 cache clear bug fix : call bqSQL alias function
                 if (function_exists('bqSQL')) {
                     $modules = Hook::getHookModuleExecList($name);
@@ -248,10 +248,10 @@ class LegacyHookSubscriber implements EventSubscriberInterface
                     foreach ($modules as $order => $module) {
                         $moduleId = $module['id_module'];
                         $functionName = 'call_' . $id . '_' . $moduleId;
-                        $moduleListeners[] = array($functionName, 2000 - $order);
+                        $moduleListeners[] = [$functionName, 2000 - $order];
                     }
                 } else {
-                    $moduleListeners[] = array('call_' . $id . '_0', 2000);
+                    $moduleListeners[] = ['call_' . $id . '_0', 2000];
                 }
 
                 $listeners[$name] = $moduleListeners;

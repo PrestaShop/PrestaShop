@@ -57,6 +57,14 @@ class MetaDataProvider implements MetaDataProviderInterface
     }
 
     /**
+     * @return array
+     */
+    public function getAvailablePages()
+    {
+        return Meta::getPages(true);
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function getDefaultMetaPageNameById($metaId)

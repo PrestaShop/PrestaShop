@@ -1,6 +1,7 @@
-const CommonPage = require('../../pages/commonPage');
+require('module-alias/register');
+const FOBasePage = require('@pages/FO/FObasePage');
 
-module.exports = class Login extends CommonPage {
+module.exports = class Login extends FOBasePage {
   constructor(page) {
     super(page);
 

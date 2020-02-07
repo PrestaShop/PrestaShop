@@ -93,12 +93,12 @@ class LayoutExtension extends \Twig_Extension implements \Twig_Extension_Globals
             $rootUrl = null;
         }
 
-        return array(
+        return [
             'theme' => $this->context->getContext()->shop->theme,
             'default_currency' => $defaultCurrency,
             'root_url' => $rootUrl,
-            'js_translatable' => array(),
-        );
+            'js_translatable' => [],
+        ];
     }
 
     /**
@@ -108,9 +108,9 @@ class LayoutExtension extends \Twig_Extension implements \Twig_Extension_Globals
      */
     public function getFilters()
     {
-        return array(
-            new \Twig_SimpleFilter('configuration', array($this, 'getConfiguration')),
-        );
+        return [
+            new \Twig_SimpleFilter('configuration', [$this, 'getConfiguration']),
+        ];
     }
 
     /**
@@ -120,11 +120,11 @@ class LayoutExtension extends \Twig_Extension implements \Twig_Extension_Globals
      */
     public function getFunctions()
     {
-        return array(
-            new \Twig_SimpleFunction('getLegacyLayout', array($this, 'getLegacyLayout')),
-            new \Twig_SimpleFunction('getAdminLink', array($this, 'getAdminLink')),
-            new \Twig_SimpleFunction('youtube_link', array($this, 'getYoutubeLink')),
-        );
+        return [
+            new \Twig_SimpleFunction('getLegacyLayout', [$this, 'getLegacyLayout']),
+            new \Twig_SimpleFunction('getAdminLink', [$this, 'getAdminLink']),
+            new \Twig_SimpleFunction('youtube_link', [$this, 'getYoutubeLink']),
+        ];
     }
 
     /**
@@ -153,6 +153,8 @@ class LayoutExtension extends \Twig_Extension implements \Twig_Extension_Globals
      * @param array|string $headerTabContent Tabs labels
      * @param bool $enableSidebar Allow to use right sidebar to display docs for instance
      * @param string $helpLink If specified, will be used instead of legacy one
+     * @param string $metaTitle
+     * @param bool $useRegularH1Structure allows complex <h1> structure if set to false
      *
      * @throws Exception if legacy layout has no $content var replacement
      *
@@ -161,12 +163,15 @@ class LayoutExtension extends \Twig_Extension implements \Twig_Extension_Globals
     public function getLegacyLayout(
         $controllerName = '',
         $title = '',
-        $headerToolbarBtn = array(),
+        $headerToolbarBtn = [],
         $displayType = '',
         $showContentHeader = true,
         $headerTabContent = '',
         $enableSidebar = false,
-        $helpLink = ''
+        $helpLink = '',
+        $jsRouterMetadata = [],
+        $metaTitle = '',
+        $useRegularH1Structure = true
     ) {
         if ($this->environment == 'test') {
             return <<<'EOF'
@@ -195,7 +200,10 @@ EOF;
             $showContentHeader,
             $headerTabContent,
             $enableSidebar,
-            $helpLink
+            $helpLink,
+            $jsRouterMetadata,
+            $metaTitle,
+            $useRegularH1Structure
         );
 
         //test if legacy template from "content.tpl" has '{$content}'
@@ -204,13 +212,13 @@ EOF;
         }
 
         $content = str_replace(
-            array(
+            [
                 '{$content}',
                 'var currentIndex = \'index.php\';',
                 '</head>',
                 '</body>',
-            ),
-            array(
+            ],
+            [
                 '{% block content_header %}{% endblock %}
                  {% block content %}{% endblock %}
                  {% block content_footer %}{% endblock %}
@@ -218,7 +226,7 @@ EOF;
                 'var currentIndex = \'' . $this->context->getAdminLink($controllerName) . '\';',
                 '{% block stylesheets %}{% endblock %}{% block extra_stylesheets %}{% endblock %}</head>',
                 '{% block javascripts %}{% endblock %}{% block extra_javascripts %}{% endblock %}{% block translate_javascripts %}{% endblock %}</body>',
-            ),
+            ],
             $layout
         );
 
@@ -234,7 +242,7 @@ EOF;
      *
      * @return string
      */
-    public function getAdminLink($controllerName, $withToken = true, $extraParams = array())
+    public function getAdminLink($controllerName, $withToken = true, $extraParams = [])
     {
         return $this->context->getAdminLink($controllerName, $withToken, $extraParams);
     }
@@ -244,7 +252,7 @@ EOF;
      */
     public function getYoutubeLink($watchUrl)
     {
-        $embedUrl = str_replace(array('watch?v=', 'youtu.be/'), array('embed/', 'youtube.com/embed/'), $watchUrl);
+        $embedUrl = str_replace(['watch?v=', 'youtu.be/'], ['embed/', 'youtube.com/embed/'], $watchUrl);
 
         return '<iframe width="560" height="315" src="' . $embedUrl .
             '" frameborder="0" allowfullscreen class="youtube-iframe m-x-auto"></iframe>';

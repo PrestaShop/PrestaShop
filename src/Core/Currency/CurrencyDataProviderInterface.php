@@ -47,13 +47,20 @@ interface CurrencyDataProviderInterface
     public function getCurrencies($object = false, $active = true, $group_by = false);
 
     /**
-     * Return raw currencies data from the database.
+     * Return raw currencies data from the database (not deleted + active currencies).
      *
      * @param bool $currentShopOnly If true returns only currencies associated to current shop
      *
-     * @return array[] Installed currencies
+     * @return array[] Available currencies
      */
     public function findAll($currentShopOnly = true);
+
+    /**
+     * Return raw data of all installed currencies in the database (regardless of their active or soft deleted status).
+     *
+     * @return array[] Currencies installed in database
+     */
+    public function findAllInstalled();
 
     /**
      * Get a Currency entity instance by ISO code.

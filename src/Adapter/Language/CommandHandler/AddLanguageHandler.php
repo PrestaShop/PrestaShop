@@ -69,10 +69,7 @@ final class AddLanguageHandler extends AbstractLanguageHandler implements AddLan
     private function assertLanguageWithIsoCodeDoesNotExist(IsoCode $isoCode)
     {
         if (Language::getIdByIso($isoCode->getValue())) {
-            throw new LanguageConstraintException(
-                sprintf('Language with ISO code "%s" already exists', $isoCode->getValue()),
-                LanguageConstraintException::DUPLICATE_ISO_CODE
-            );
+            throw new LanguageConstraintException(sprintf('Language with ISO code "%s" already exists', $isoCode->getValue()), LanguageConstraintException::DUPLICATE_ISO_CODE);
         }
     }
 
@@ -114,9 +111,7 @@ final class AddLanguageHandler extends AbstractLanguageHandler implements AddLan
         }
 
         if (false === $language->add()) {
-            throw new LanguageException(
-                sprintf('Failed to add new language "%s"', $command->getName())
-            );
+            throw new LanguageException(sprintf('Failed to add new language "%s"', $command->getName()));
         }
 
         return $language;

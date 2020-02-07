@@ -30,11 +30,11 @@ use Exception;
 use PrestaShop\PrestaShop\Core\Translation\Locale\Converter;
 use PrestaShopBundle\Api\QueryTranslationParamsCollection;
 use PrestaShopBundle\Service\TranslationService;
+use PrestaShopBundle\Translation\Exception\UnsupportedLocaleException;
 use PrestaShopBundle\Translation\View\TreeBuilder;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
-use PrestaShopBundle\Translation\Exception\UnsupportedLocaleException;
 use Symfony\Component\Validator\Constraints\Locale;
 
 class TranslationController extends ApiController
@@ -82,9 +82,9 @@ class TranslationController extends ApiController
             }
 
             $catalog = $translationService->listDomainTranslation($locale, $domain, $theme, $search, $module);
-            $info = array(
+            $info = [
                 'Total-Pages' => ceil(count($catalog['data']) / $queryParams['page_size']),
-            );
+            ];
 
             $catalog['info'] = array_merge(
                 $catalog['info'],
@@ -136,7 +136,7 @@ class TranslationController extends ApiController
 
             $search = $request->query->get('search');
 
-            if (in_array($type, array('modules', 'themes')) && empty($selected)) {
+            if (in_array($type, ['modules', 'themes']) && empty($selected)) {
                 throw new Exception('This \'selected\' param is not valid.');
             }
 
@@ -150,9 +150,11 @@ class TranslationController extends ApiController
                     break;
 
                 case 'mails':
-                    // when emails body will be implemented, it should be a different type
-                    // because domain routes only support "type" & "selected/theme" as parameters
                     $tree = $this->getMailsSubjectTree($lang, $search);
+                    break;
+
+                case 'mails_body':
+                    $tree = $this->getMailsBodyTree($lang, $search);
                     break;
 
                 default:
@@ -367,6 +369,22 @@ class TranslationController extends ApiController
 
         $treeBuilder = new TreeBuilder($this->translationService->langToLocale($lang), $theme);
         $catalogue = $this->translationService->getTranslationsCatalogue($lang, 'mails', $theme, $search);
+
+        return $this->getCleanTree($treeBuilder, $catalogue, $theme, $search);
+    }
+
+    /**
+     * @param string $lang Two-letter iso code
+     * @param null $search
+     *
+     * @return array
+     */
+    private function getMailsBodyTree($lang, $search = null)
+    {
+        $theme = null;
+
+        $treeBuilder = new TreeBuilder($this->translationService->langToLocale($lang), $theme);
+        $catalogue = $this->translationService->getTranslationsCatalogue($lang, 'mails_body', $theme, $search);
 
         return $this->getCleanTree($treeBuilder, $catalogue, $theme, $search);
     }

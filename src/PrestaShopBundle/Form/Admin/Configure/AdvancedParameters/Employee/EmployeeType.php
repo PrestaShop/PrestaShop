@@ -30,8 +30,8 @@ use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\FirstName;
 use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\LastName;
 use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\Password;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\Email as EmployeeEmail;
-use PrestaShopBundle\Form\Admin\Type\ChangePasswordType;
 use PrestaShopBundle\Form\Admin\Type\AddonsConnectType;
+use PrestaShopBundle\Form\Admin\Type\ChangePasswordType;
 use PrestaShopBundle\Form\Admin\Type\ShopChoiceTreeType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Translation\TranslatorAwareTrait;
@@ -152,9 +152,6 @@ final class EmployeeType extends AbstractType
         }
 
         $builder
-            ->add('optin', SwitchType::class, [
-                'required' => false,
-            ])
             ->add('default_page', ChoiceType::class, [
                 'choices' => $this->tabChoices,
             ])

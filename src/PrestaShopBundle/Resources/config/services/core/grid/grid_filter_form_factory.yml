@@ -16,8 +16,23 @@ services:
             - '@request_stack'
 
     prestashop.core.grid.filter.cms_page_form_factory:
-      class: 'PrestaShop\PrestaShop\Core\Grid\Filter\CmsPageFilterFormFactory'
-      arguments:
-        - '@prestashop.core.grid.filter.form_factory'
-        - '@router'
-        - '@request_stack'
+        class: 'PrestaShop\PrestaShop\Core\Grid\Filter\CmsPageFilterFormFactory'
+        arguments:
+            - '@prestashop.core.grid.filter.form_factory'
+            - '@router'
+            - '@request_stack'
+
+    prestashop.core.grid.filter.merchandise_return_form_factory:
+        class: 'PrestaShop\PrestaShop\Core\Grid\Filter\FilterFormFactoryFormActionDecorator'
+        arguments:
+            - '@prestashop.core.grid.filter.form_factory'
+            - '@router'
+            - 'admin_merchandise_returns_filter'
+
+
+    prestashop.core.grid.filter.credit_slip_form_factory:
+        class: 'PrestaShop\PrestaShop\Core\Grid\Filter\FilterFormFactoryFormActionDecorator'
+        arguments:
+            - '@prestashop.core.grid.filter.form_factory'
+            - '@router'
+            - 'admin_credit_slips_search'

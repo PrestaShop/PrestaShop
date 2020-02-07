@@ -28,9 +28,9 @@ namespace PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult;
 
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\Birthday;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
-use PrestaShop\PrestaShop\Core\Domain\ValueObject\Email;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\FirstName;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\LastName;
+use PrestaShop\PrestaShop\Core\Domain\ValueObject\Email;
 
 /**
  * Stores editable data for customer

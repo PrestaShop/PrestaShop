@@ -48,7 +48,7 @@ abstract class TreeToolbarButtonCore
     public function setAttribute($name, $value)
     {
         if (!isset($this->_attributes)) {
-            $this->_attributes = array();
+            $this->_attributes = [];
         }
 
         $this->_attributes[$name] = $value;
@@ -75,7 +75,7 @@ abstract class TreeToolbarButtonCore
     public function getAttributes()
     {
         if (!isset($this->_attributes)) {
-            $this->_attributes = array();
+            $this->_attributes = [];
         }
 
         return $this->_attributes;
@@ -212,7 +212,7 @@ abstract class TreeToolbarButtonCore
     {
         $last = $directory[strlen($directory) - 1];
 
-        if (in_array($last, array('/', '\\'))) {
+        if (in_array($last, ['/', '\\'])) {
             $directory[strlen($directory) - 1] = DIRECTORY_SEPARATOR;
 
             return $directory;

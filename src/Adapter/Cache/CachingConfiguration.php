@@ -86,11 +86,11 @@ class CachingConfiguration implements DataConfigurationInterface
      */
     public function getConfiguration()
     {
-        return array(
+        return [
             'use_cache' => $this->isCachingEnabled,
             'caching_system' => $this->cachingSystem,
             'servers' => $this->memcacheServerManager->getServers(),
-        );
+        ];
     }
 
     /**
@@ -98,7 +98,7 @@ class CachingConfiguration implements DataConfigurationInterface
      */
     public function updateConfiguration(array $configuration)
     {
-        $errors = array();
+        $errors = [];
 
         if ($this->validateConfiguration($configuration)) {
             $errors = $this->updatePhpCacheConfiguration($configuration);
@@ -126,7 +126,7 @@ class CachingConfiguration implements DataConfigurationInterface
      */
     private function updatePhpCacheConfiguration(array $configuration)
     {
-        $errors = array();
+        $errors = [];
 
         if (
             $configuration['use_cache'] !== $this->isCachingEnabled
@@ -143,11 +143,11 @@ class CachingConfiguration implements DataConfigurationInterface
         }
 
         if (false === $this->phpParameters->saveConfiguration()) {
-            $errors[] = array(
+            $errors[] = [
                 'key' => 'The settings file cannot be overwritten.',
                 'domain' => 'Admin.Advparameters.Notification',
-                'parameters' => array(),
-            );
+                'parameters' => [],
+            ];
         }
 
         $this->symfonyCacheClearer->clear();

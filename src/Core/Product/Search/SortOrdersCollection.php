@@ -51,20 +51,20 @@ final class SortOrdersCollection
     public function getDefaults()
     {
         return [
-            (new SortOrder('product', 'position', 'desc'))->setLabel(
-                $this->translator->trans('Relevance', array(), 'Shop.Theme.Catalog')
+            (new SortOrder('product', 'position', 'asc'))->setLabel(
+                $this->translator->trans('Relevance', [], 'Shop.Theme.Catalog')
             ),
             (new SortOrder('product', 'name', 'asc'))->setLabel(
-                $this->translator->trans('Name, A to Z', array(), 'Shop.Theme.Catalog')
+                $this->translator->trans('Name, A to Z', [], 'Shop.Theme.Catalog')
             ),
             (new SortOrder('product', 'name', 'desc'))->setLabel(
-                $this->translator->trans('Name, Z to A', array(), 'Shop.Theme.Catalog')
+                $this->translator->trans('Name, Z to A', [], 'Shop.Theme.Catalog')
             ),
             (new SortOrder('product', 'price', 'asc'))->setLabel(
-                $this->translator->trans('Price, low to high', array(), 'Shop.Theme.Catalog')
+                $this->translator->trans('Price, low to high', [], 'Shop.Theme.Catalog')
             ),
             (new SortOrder('product', 'price', 'desc'))->setLabel(
-                $this->translator->trans('Price, high to low', array(), 'Shop.Theme.Catalog')
+                $this->translator->trans('Price, high to low', [], 'Shop.Theme.Catalog')
             ),
         ];
     }

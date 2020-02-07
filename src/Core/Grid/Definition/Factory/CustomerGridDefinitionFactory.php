@@ -56,6 +56,8 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
  */
 final class CustomerGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
+    const GRID_ID = 'customer';
+
     /**
      * @var bool
      */
@@ -94,7 +96,7 @@ final class CustomerGridDefinitionFactory extends AbstractGridDefinitionFactory
      */
     protected function getId()
     {
-        return 'customer';
+        return self::GRID_ID;
     }
 
     /**
@@ -226,6 +228,7 @@ final class CustomerGridDefinitionFactory extends AbstractGridDefinitionFactory
                                 'route' => 'admin_customers_view',
                                 'route_param_name' => 'customerId',
                                 'route_param_field' => 'id_customer',
+                                'clickable_row' => true,
                             ])
                         )
                         ->add((new DeleteCustomerRowAction('delete'))
@@ -344,10 +347,9 @@ final class CustomerGridDefinitionFactory extends AbstractGridDefinitionFactory
             ->add(
                 (new Filter('actions', SearchAndResetType::class))
                 ->setTypeOptions([
-                    'reset_route' => 'admin_common_reset_search',
+                    'reset_route' => 'admin_common_reset_search_by_filter_id',
                     'reset_route_params' => [
-                        'controller' => 'customer',
-                        'action' => 'index',
+                        'filterId' => self::GRID_ID,
                     ],
                     'redirect_route' => 'admin_customers_index',
                 ])

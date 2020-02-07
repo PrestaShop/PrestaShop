@@ -196,6 +196,8 @@ class CarrierFeatureContext extends AbstractPrestaShopFeatureContext
         $address->alias = 'alias';
         $address->add();
         $this->addresses[$addressName] = $address;
+
+        SharedStorage::getStorage()->set($addressName, $address->id);
     }
 
     /**

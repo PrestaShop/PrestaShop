@@ -280,6 +280,7 @@ class ReleaseCreator
             ->setupShopVersion()
             ->generateLicensesFile()
             ->runComposerInstall()
+            ->runBuildAssets()
             ->createPackage();
         $endTime = date('H:i:s');
         $this->consoleWriter->displayText(
@@ -352,8 +353,8 @@ class ReleaseCreator
     {
         $configDefinesPath = $this->tempProjectPath . '/config/defines.inc.php';
         $configDefinesContent = file_get_contents($configDefinesPath);
-        $configDefinesNewContent = preg_replace('/(.*(define).*)_PS_MODE_DEV_(.*);/Ui', 'define(\'_PS_MODE_DEV_\', false);', $configDefinesContent);
-        $configDefinesNewContent = preg_replace('/(.*)_PS_DISPLAY_COMPATIBILITY_WARNING_(.*);/Ui', 'define(\'_PS_DISPLAY_COMPATIBILITY_WARNING_\', false);', $configDefinesNewContent);
+        $configDefinesNewContent = preg_replace('/(.*(define).*)["\']_PS_MODE_DEV_["\'](.*);/Ui', 'define(\'_PS_MODE_DEV_\', false);', $configDefinesContent);
+        $configDefinesNewContent = preg_replace('/(.*)["\']_PS_DISPLAY_COMPATIBILITY_WARNING_["\'](.*);/Ui', 'define(\'_PS_DISPLAY_COMPATIBILITY_WARNING_\', false);', $configDefinesNewContent);
 
         if (!file_put_contents($configDefinesPath, $configDefinesNewContent)) {
             throw new BuildException("Unable to update contents of '$configDefinesPath'");
@@ -509,9 +510,32 @@ class ReleaseCreator
         $command = "cd {$argProjectPath} && export SYMFONY_ENV=prod && composer install --no-dev --optimize-autoloader --classmap-authoritative --no-interaction 2>&1";
         exec($command, $output, $returnCode);
 
-        if ($returnCode != 0) {
+        if ($returnCode !== 0) {
             throw new BuildException('Unable to run composer install.');
         }
+
+        $this->consoleWriter->displayText(" DONE{$this->lineSeparator}", ConsoleWriter::COLOR_GREEN);
+
+        return $this;
+    }
+
+    /**
+     * Build assets.
+     *
+     * @return $this
+     * @throws BuildException
+     */
+    protected function runBuildAssets()
+    {
+        $this->consoleWriter->displayText("Running build assets...", ConsoleWriter::COLOR_YELLOW);
+        $argProjectPath = escapeshellarg($this->tempProjectPath);
+        $command = "cd {$argProjectPath} && make assets 2>&1";
+        exec($command, $output, $returnCode);
+
+        if ($returnCode !== 0) {
+            throw new BuildException('Unable to build assets.');
+        }
+
         $this->consoleWriter->displayText(" DONE{$this->lineSeparator}", ConsoleWriter::COLOR_GREEN);
 
         return $this;

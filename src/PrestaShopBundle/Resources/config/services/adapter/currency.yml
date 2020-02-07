@@ -2,7 +2,15 @@ services:
     _defaults:
         public: true
 
-    # Command handlers
+    # Command validator
+    prestashop.adapter.currency.command_handler.command_validator:
+      class: 'PrestaShop\PrestaShop\Adapter\Currency\CommandHandler\CurrencyCommandValidator'
+      arguments:
+        - '@prestashop.core.localization.cldr.locale_repository'
+        - '@prestashop.adapter.data_provider.currency'
+        - '@=service("prestashop.adapter.legacy.configuration").get("PS_CURRENCY_DEFAULT")'
+
+  # Command handlers
 
     prestashop.adapter.currency.command_handler.toggle_currency_status:
         class: 'PrestaShop\PrestaShop\Adapter\Currency\CommandHandler\ToggleCurrencyStatusHandler'
@@ -19,21 +27,40 @@ services:
             - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Currency\Command\DeleteCurrencyCommand' }
 
     prestashop.adapter.currency.command_handler.create_currency:
-        class: 'PrestaShop\PrestaShop\Adapter\Currency\CommandHandler\AddCurrencyHandler'
+        class: 'PrestaShop\PrestaShop\Adapter\Currency\CommandHandler\AddOfficialCurrencyHandler'
         arguments:
             - '@prestashop.core.localization.cldr.locale_repository'
-            - "@=service('prestashop.adapter.legacy.configuration').getInt('PS_LANG_DEFAULT')"
+            - "@=service('prestashop.core.admin.lang.repository').findAll()"
+            - "@prestashop.adapter.currency.command_handler.command_validator"
         tags:
-            - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Currency\Command\AddCurrencyCommand' }
+            - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Currency\Command\AddOfficialCurrencyCommand' }
 
-    prestashop.adapter.currency.command_handler.update_currency:
-        class: 'PrestaShop\PrestaShop\Adapter\Currency\CommandHandler\EditCurrencyHandler'
+    prestashop.adapter.currency.command_handler.create_unofficial_currency:
+      class: 'PrestaShop\PrestaShop\Adapter\Currency\CommandHandler\AddUnofficialCurrencyHandler'
+      arguments:
+        - '@prestashop.core.localization.cldr.locale_repository'
+        - "@=service('prestashop.core.admin.lang.repository').findAll()"
+        - "@prestashop.adapter.currency.command_handler.command_validator"
+      tags:
+        - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Currency\Command\AddUnofficialCurrencyCommand' }
+
+    prestashop.adapter.currency.command_handler.update_official_currency:
+        class: 'PrestaShop\PrestaShop\Adapter\Currency\CommandHandler\EditOfficialCurrencyHandler'
         arguments:
-          - '@=service("prestashop.adapter.legacy.configuration").get("PS_CURRENCY_DEFAULT")'
           - '@prestashop.core.localization.cldr.locale_repository'
-          - '@=service("prestashop.adapter.legacy.context").getContext().language.getLocale()'
+          - "@=service('prestashop.core.admin.lang.repository').findAll()"
+          - "@prestashop.adapter.currency.command_handler.command_validator"
         tags:
             - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Currency\Command\EditCurrencyCommand' }
+
+    prestashop.adapter.currency.command_handler.update_unofficial_currency:
+      class: 'PrestaShop\PrestaShop\Adapter\Currency\CommandHandler\EditUnofficialCurrencyHandler'
+      arguments:
+        - '@prestashop.core.localization.cldr.locale_repository'
+        - "@=service('prestashop.core.admin.lang.repository').findAll()"
+        - "@prestashop.adapter.currency.command_handler.command_validator"
+      tags:
+        - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Currency\Command\EditUnofficialCurrencyCommand' }
 
     prestashop.adapter.currency.command_handler.update_exchange_rates:
         class: 'PrestaShop\PrestaShop\Adapter\Currency\CommandHandler\RefreshExchangeRatesHandler'
@@ -62,3 +89,19 @@ services:
             - '@=service("prestashop.adapter.legacy.context").getContext().shop.id'
         tags:
             - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Currency\Query\GetCurrencyForEditing' }
+
+    prestashop.adapter.currency.query_handler.get_currency_exchange_rate:
+      class: 'PrestaShop\PrestaShop\Adapter\Currency\QueryHandler\GetCurrencyExchangeRateHandler'
+      arguments:
+        - '@prestashop.core.exchange_rate.provider'
+      tags:
+        - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Currency\Query\GetCurrencyExchangeRate' }
+
+    prestashop.adapter.currency.query_handler.get_reference_currency:
+      class: 'PrestaShop\PrestaShop\Adapter\Currency\QueryHandler\GetReferenceCurrencyHandler'
+      arguments:
+        - '@prestashop.core.localization.cldr.locale_repository'
+        - '@prestashop.core.query_bus'
+        - '@=service("prestashop.core.admin.lang.repository").findAll()'
+      tags:
+        - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Currency\Query\GetReferenceCurrency' }

@@ -41,12 +41,10 @@ final class RemoveCartRuleFromCartHandler extends AbstractCartHandler implements
      */
     public function handle(RemoveCartRuleFromCartCommand $command)
     {
-        $cart = $this->getContextCartObject($command->getCartId());
+        $cart = $this->getCart($command->getCartId());
 
         if (!$cart->removeCartRule($command->getCartRuleId()->getValue())) {
-            throw new CartException(
-                sprintf('Failed to remove cart rule with id "%d" from cart', $command->getCartRuleId()->getValue())
-            );
+            throw new CartException(sprintf('Failed to remove cart rule with id "%d" from cart', $command->getCartRuleId()->getValue()));
         }
     }
 }

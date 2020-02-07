@@ -113,8 +113,6 @@ class AppendHooksListForSqlUpgradeFileCommand extends ContainerAwareCommand
      */
     private function initContext()
     {
-        require_once $this->getContainer()->get('kernel')->getRootDir() . '/../config/config.inc.php';
-
         /** @var LegacyContext $legacyContext */
         $legacyContext = $this->getContainer()->get('prestashop.adapter.legacy.context');
         //We need to have an employee or the listing hooks don't work
@@ -179,13 +177,7 @@ class AppendHooksListForSqlUpgradeFileCommand extends ContainerAwareCommand
         $filesCount = $filesFinder->count();
 
         if (1 !== $filesCount) {
-            throw new FileNotFoundException(
-                sprintf(
-                    'Expected to find 1 file but %s files found with name %s',
-                    $filesFinder->count(),
-                    $sqlUpgradeFile
-                )
-            );
+            throw new FileNotFoundException(sprintf('Expected to find 1 file but %s files found with name %s', $filesFinder->count(), $sqlUpgradeFile));
         }
 
         foreach ($filesFinder as $sqlInfo) {

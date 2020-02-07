@@ -23,9 +23,9 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-import TableSorting from '../../utils/table-sorting';
+import TableSorting from '@app/utils/table-sorting';
 
-const $ = global.$;
+const {$} = window;
 
 $(() => {
   new TableSorting($('table.table')).attach();

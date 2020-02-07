@@ -50,13 +50,7 @@ abstract class AbstractEmployeeHandler extends AbstractObjectModelHandler
     protected function assertEmployeeWasFoundById(EmployeeId $employeeId, Employee $employee)
     {
         if (!$employee->id) {
-            throw new EmployeeNotFoundException(
-                $employeeId,
-                sprintf(
-                    'Employee with id "%s" cannot be found.',
-                    $employeeId->getValue()
-                )
-            );
+            throw new EmployeeNotFoundException($employeeId, sprintf('Employee with id "%s" cannot be found.', $employeeId->getValue()));
         }
     }
 
@@ -68,13 +62,7 @@ abstract class AbstractEmployeeHandler extends AbstractObjectModelHandler
     protected function assertEmployeeIsNotTheOnlyAdminInShop(Employee $employee)
     {
         if ($employee->isLastAdmin()) {
-            throw new AdminEmployeeException(
-                sprintf(
-                    'Employee with id %s is the only admin in shop and status cannot be changed.',
-                    $employee->id
-                ),
-                AdminEmployeeException::CANNOT_CHANGE_LAST_ADMIN
-            );
+            throw new AdminEmployeeException(sprintf('Employee with id %s is the only admin in shop and status cannot be changed.', $employee->id), AdminEmployeeException::CANNOT_CHANGE_LAST_ADMIN);
         }
     }
 
@@ -86,10 +74,7 @@ abstract class AbstractEmployeeHandler extends AbstractObjectModelHandler
     protected function assertLoggedInEmployeeIsNotTheSameAsBeingUpdatedEmployee(Employee $employee)
     {
         if (Context::getContext()->employee->id === $employee->id) {
-            throw new EmployeeCannotChangeItselfException(
-                'Employee cannot change status of itself.',
-                EmployeeCannotChangeItselfException::CANNOT_CHANGE_STATUS
-            );
+            throw new EmployeeCannotChangeItselfException('Employee cannot change status of itself.', EmployeeCannotChangeItselfException::CANNOT_CHANGE_STATUS);
         }
     }
 
@@ -107,9 +92,7 @@ abstract class AbstractEmployeeHandler extends AbstractObjectModelHandler
         $warehouses = Warehouse::getWarehousesByEmployee($employee->id);
 
         if (count($warehouses) > 0) {
-            throw new CannotDeleteWarehouseManagerException(
-                sprintf('Employee with id %s is warehouse manager and cannot be deleted.', $employee->id)
-            );
+            throw new CannotDeleteWarehouseManagerException(sprintf('Employee with id %s is warehouse manager and cannot be deleted.', $employee->id));
         }
     }
 }

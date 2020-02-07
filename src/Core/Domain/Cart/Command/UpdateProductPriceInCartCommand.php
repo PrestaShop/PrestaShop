@@ -109,10 +109,7 @@ class UpdateProductPriceInCartCommand
     private function assertPriceIsPositiveFloat($price)
     {
         if (!is_float($price) || 0 > $price) {
-            throw new CartException(sprintf(
-                'Price %s is invalid. Price must be float greater than zero.',
-                var_export($price, true)
-            ));
+            throw new CartException(sprintf('Price %s is invalid. Price must be float greater than zero.', var_export($price, true)));
         }
     }
 }

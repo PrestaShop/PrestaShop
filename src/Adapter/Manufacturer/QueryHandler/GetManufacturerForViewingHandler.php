@@ -64,9 +64,7 @@ final class GetManufacturerForViewingHandler implements GetManufacturerForViewin
         $manufacturer = new Manufacturer($manufacturerId->getValue());
 
         if ($manufacturer->id !== $manufacturerId->getValue()) {
-            throw new ManufacturerNotFoundException(
-                sprintf('Manufacturer with id "%s" was not found.', $manufacturerId->getValue())
-            );
+            throw new ManufacturerNotFoundException(sprintf('Manufacturer with id "%s" was not found.', $manufacturerId->getValue()));
         }
 
         return $manufacturer;
@@ -98,6 +96,7 @@ final class GetManufacturerForViewingHandler implements GetManufacturerForViewin
                         'reference' => $combination['reference'],
                         'ean13' => $combination['ean13'],
                         'upc' => $combination['upc'],
+                        'mpn' => $combination['mpn'],
                         'quantity' => $combination['quantity'],
                         'attributes' => '',
                     ];
@@ -122,6 +121,7 @@ final class GetManufacturerForViewingHandler implements GetManufacturerForViewin
                 'reference' => $product->reference,
                 'ean13' => $product->ean13,
                 'upc' => $product->upc,
+                'mpn' => $product->mpn,
                 'quantity' => $product->quantity,
                 'combinations' => $combinations,
             ];

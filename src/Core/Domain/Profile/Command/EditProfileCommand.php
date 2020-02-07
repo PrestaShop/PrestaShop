@@ -32,17 +32,12 @@ use PrestaShop\PrestaShop\Core\Domain\Profile\ValueObject\ProfileId;
 /**
  * Edits existing Profile
  */
-class EditProfileCommand
+class EditProfileCommand extends AbstractProfileCommand
 {
     /**
      * @var ProfileId
      */
     private $profileId;
-
-    /**
-     * @var string[]
-     */
-    private $localizedNames;
 
     /**
      * @param int $profileId
@@ -52,12 +47,8 @@ class EditProfileCommand
      */
     public function __construct($profileId, array $localizedNames)
     {
-        if (empty($localizedNames)) {
-            throw new ProfileException('Profile name cannot be empty');
-        }
-
-        $this->profileId = new ProfileId($profileId);
-        $this->localizedNames = $localizedNames;
+        parent::__construct($localizedNames);
+        $this->profileId = new ProfileId((int) $profileId);
     }
 
     /**
@@ -66,13 +57,5 @@ class EditProfileCommand
     public function getProfileId()
     {
         return $this->profileId;
-    }
-
-    /**
-     * @return string[]
-     */
-    public function getLocalizedNames()
-    {
-        return $this->localizedNames;
     }
 }

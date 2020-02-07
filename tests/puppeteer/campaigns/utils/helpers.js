@@ -4,21 +4,18 @@ const puppeteer = require('puppeteer');
 
 module.exports = {
   async createBrowser() {
-    return puppeteer.launch({
-      headless: JSON.parse(global.HEADLESS),
-      timeout: 0,
-      slowMo: 25,
-      args: ['--start-maximized', '--no-sandbox', '--lang=fr-FR'],
-      defaultViewport: {
-        width: 1680,
-        height: 900,
-      },
-    });
+    return puppeteer.launch(global.BROWSER_CONFIG);
   },
   async newTab(browser) {
     return browser.newPage();
   },
   async closeBrowser(browser) {
     return browser.close();
+  },
+  async setDownloadBehavior(page) {
+    await page._client.send('Page.setDownloadBehavior', {
+      behavior: 'allow',
+      downloadPath: global.BO.DOWNLOAD_PATH,
+    });
   },
 };

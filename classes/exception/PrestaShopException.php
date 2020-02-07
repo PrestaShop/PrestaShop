@@ -64,7 +64,7 @@ class PrestaShopExceptionCore extends Exception
             // Display debug backtrace
             echo '<ul>';
             foreach ($this->getTrace() as $id => $trace) {
-                $relative_file = (isset($trace['file'])) ? ltrim(str_replace(array(_PS_ROOT_DIR_, '\\'), array('', '/'), $trace['file']), '/') : '';
+                $relative_file = (isset($trace['file'])) ? ltrim(str_replace([_PS_ROOT_DIR_, '\\'], ['', '/'], $trace['file']), '/') : '';
                 $current_line = (isset($trace['line'])) ? $trace['line'] : '';
                 if (defined('_PS_ADMIN_DIR_')) {
                     $relative_file = str_replace(basename(_PS_ADMIN_DIR_) . DIRECTORY_SEPARATOR, 'admin' . DIRECTORY_SEPARATOR, $relative_file);
@@ -232,7 +232,7 @@ class PrestaShopExceptionCore extends Exception
             $format,
             $this->getMessage(),
             $this->getLine(),
-            ltrim(str_replace(array(_PS_ROOT_DIR_, '\\'), array('', '/'), $this->getFile()), '/')
+            ltrim(str_replace([_PS_ROOT_DIR_, '\\'], ['', '/'], $this->getFile()), '/')
         );
     }
 }

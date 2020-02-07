@@ -100,6 +100,11 @@ class EditManufacturerAddressCommand
     private $other;
 
     /**
+     * @var string|null
+     */
+    private $dni;
+
+    /**
      * @param int $addressId
      *
      * @throws AddressConstraintException
@@ -321,6 +326,22 @@ class EditManufacturerAddressCommand
     }
 
     /**
+     * @return string|null
+     */
+    public function getDni()
+    {
+        return $this->dni;
+    }
+
+    /**
+     * @param string|null $dni
+     */
+    public function setDni($dni)
+    {
+        $this->dni = $dni;
+    }
+
+    /**
      * @param $value
      *
      * @throws AddressConstraintException
@@ -330,9 +351,6 @@ class EditManufacturerAddressCommand
         if (null === $value || is_int($value) || 0 <= $value) {
             return;
         }
-        throw new AddressConstraintException(
-            sprintf('Invalid manufacturer id "%s" provided for address.', var_export($value, true)),
-            AddressConstraintException::INVALID_MANUFACTURER_ID
-        );
+        throw new AddressConstraintException(sprintf('Invalid manufacturer id "%s" provided for address.', var_export($value, true)), AddressConstraintException::INVALID_MANUFACTURER_ID);
     }
 }

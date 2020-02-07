@@ -453,8 +453,8 @@ class CartGetOrderTotalTest extends IntegrationTestCase
         $cart->updateQty(1, $product_a->id);
         $cart->updateQty(1, $product_b->id);
 
-        $this->assertEquals(3.59, $cart->getOrderTotal(false, Cart::ONLY_PRODUCTS));
-        $this->assertEquals(4.29, $cart->getOrderTotal(true, Cart::ONLY_PRODUCTS));
+        $this->assertEquals(3.581, $cart->getOrderTotal(false, Cart::ONLY_PRODUCTS));
+        $this->assertEquals(4.2972, $cart->getOrderTotal(true, Cart::ONLY_PRODUCTS));
     }
 
     public function testBasicRoundTypeTotal()
@@ -469,8 +469,8 @@ class CartGetOrderTotalTest extends IntegrationTestCase
         $cart->updateQty(1, $product_a->id);
         $cart->updateQty(1, $product_b->id);
 
-        $this->assertEquals(3.58, $cart->getOrderTotal(false, Cart::ONLY_PRODUCTS));
-        $this->assertEquals(4.30, $cart->getOrderTotal(true, Cart::ONLY_PRODUCTS));
+        $this->assertEquals(3.581, $cart->getOrderTotal(false, Cart::ONLY_PRODUCTS));
+        $this->assertEquals(4.2972, $cart->getOrderTotal(true, Cart::ONLY_PRODUCTS));
     }
 
     public function testBasicCartRuleAmountBeforeTax()

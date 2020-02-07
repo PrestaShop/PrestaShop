@@ -44,16 +44,16 @@ class PrestaShopAutoload
     /**
      *  @var array array('classname' => 'path/to/override', 'classnamecore' => 'path/to/class/core')
      */
-    public $index = array();
+    public $index = [];
 
     public $_include_override_path = true;
 
-    protected static $class_aliases = array(
+    protected static $class_aliases = [
         'Collection' => 'PrestaShopCollection',
         'Autoload' => 'PrestaShopAutoload',
         'Backup' => 'PrestaShopBackup',
         'Logger' => 'PrestaShopLogger',
-    );
+    ];
 
     protected function __construct()
     {
@@ -88,13 +88,7 @@ class PrestaShopAutoload
      */
     public static function getCacheFileIndex()
     {
-        if (defined('_PS_IN_TEST_')) {
-            $env = 'test';
-        } else {
-            $env = (_PS_MODE_DEV_) ? 'dev' : 'prod';
-        }
-
-        return _PS_ROOT_DIR_ . DIRECTORY_SEPARATOR . 'var' . DIRECTORY_SEPARATOR . 'cache' . DIRECTORY_SEPARATOR . $env . DIRECTORY_SEPARATOR . 'class_index.php';
+        return _PS_CACHE_DIR_ . 'class_index.php';
     }
 
     /**
@@ -104,13 +98,7 @@ class PrestaShopAutoload
      */
     public static function getNamespacedStubFileIndex()
     {
-        if (defined('_PS_IN_TEST_')) {
-            $env = 'test';
-        } else {
-            $env = (_PS_MODE_DEV_) ? 'dev' : 'prod';
-        }
-
-        return _PS_ROOT_DIR_ . DIRECTORY_SEPARATOR . 'var' . DIRECTORY_SEPARATOR . 'cache' . DIRECTORY_SEPARATOR . $env . DIRECTORY_SEPARATOR . 'namespaced_class_stub.php';
+        return _PS_CACHE_DIR_ . 'namespaced_class_stub.php';
     }
 
     /**
@@ -120,13 +108,7 @@ class PrestaShopAutoload
      */
     public static function getStubFileIndex()
     {
-        if (defined('_PS_IN_TEST_')) {
-            $env = 'test';
-        } else {
-            $env = (_PS_MODE_DEV_) ? 'dev' : 'prod';
-        }
-
-        return _PS_ROOT_DIR_ . DIRECTORY_SEPARATOR . 'var' . DIRECTORY_SEPARATOR . 'cache' . DIRECTORY_SEPARATOR . $env . DIRECTORY_SEPARATOR . 'class_stub.php';
+        return _PS_CACHE_DIR_ . 'class_stub.php';
     }
 
     /**
@@ -294,7 +276,7 @@ class PrestaShopAutoload
      */
     protected function getClassesFromDir($path, $hostMode = false)
     {
-        $classes = array();
+        $classes = [];
         $rootDir = $hostMode ? $this->normalizeDirectory(_PS_ROOT_DIR_) : $this->root_dir;
 
         foreach (scandir($rootDir . $path, SCANDIR_SORT_NONE) as $file) {
@@ -320,18 +302,18 @@ class PrestaShopAutoload
                     }
 
                     if (!$usesNamespace && preg_match($pattern, $content, $m)) {
-                        $classes[$m['classname']] = array(
+                        $classes[$m['classname']] = [
                             'path' => $path . $file,
                             'type' => trim($m[1]),
                             'override' => $hostMode,
-                        );
+                        ];
 
                         if (substr($m['classname'], -4) == 'Core') {
-                            $classes[substr($m['classname'], 0, -4)] = array(
+                            $classes[substr($m['classname'], 0, -4)] = [
                                 'path' => '',
                                 'type' => $classes[$m['classname']]['type'],
                                 'override' => $hostMode,
-                            );
+                            ];
                         }
                     }
                 }
@@ -364,4 +346,4 @@ class PrestaShopAutoload
     }
 }
 
-spl_autoload_register(array(PrestaShopAutoload::getInstance(), 'load'));
+spl_autoload_register([PrestaShopAutoload::getInstance(), 'load']);

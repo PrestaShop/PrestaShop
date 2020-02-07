@@ -201,11 +201,6 @@
           </div>
         {% endif %}
 
-        {{ ps.form_group_row(employeeForm.optin, {}, {
-          'label': 'Subscribe to PrestaShop newsletter'|trans,
-          'help': 'PrestaShop can provide you with guidance on a regular basis by sending you tips on how to optimize the management of your store which will help you grow your business. If you do not wish to receive these tips, you can disable this option.'|trans({}, 'Admin.Advparameters.Help')
-        }) }}
-
         {{ ps.form_group_row(employeeForm.default_page, {'attr': {'data-minimumResultsForSearch': '7', 'data-toggle': 'select2'}}, {
           'label': 'Default page'|trans,
           'help': 'This page will be displayed just after login.'|trans({}, 'Admin.Advparameters.Help')

@@ -1,18 +1,19 @@
+require('module-alias/register');
 // Using chai
 const {expect} = require('chai');
-const helper = require('../utils/helpers');
+const helper = require('@utils/helpers');
 
 // importing pages
-const LoginPage = require('../../pages/BO/login');
-const DashboardPage = require('../../pages/BO/dashboard');
-const BOBasePage = require('../../pages/BO/BObasePage');
-const ModuleCatalogPage = require('../../pages/BO/moduleCatalog');
-const ModuleManagerPage = require('../../pages/BO/moduleManager');
-const ShopParamsGeneralPage = require('../../pages/BO/shopParamsGeneral');
-const ShopParamsMaintenancePage = require('../../pages/BO/shopParamsMaintenance');
-const AutoUpgradePage = require('../../pages/BO/modulesPages/autoUpgrade');
-const HomePage = require('../../pages/FO/home');
-const loginCommon = require('../commonTests/loginBO');
+const LoginPage = require('@pages/BO/login');
+const DashboardPage = require('@pages/BO/dashboard');
+const BOBasePage = require('@pages/BO/BObasePage');
+const ModuleCatalogPage = require('@pages/BO/modules/moduleCatalog');
+const ModuleManagerPage = require('@pages/BO/modules/moduleManager');
+const ShopParamsGeneralPage = require('@pages/BO/shopParameters/general');
+const ShopParamsMaintenancePage = require('@pages/BO/shopParameters/general/maintenance');
+const AutoUpgradePage = require('@pages/BO/modules/autoUpgrade');
+const HomePage = require('@pages/FO/home');
+const loginCommon = require('@commonTests/loginBO');
 
 let browser;
 let page;
@@ -86,6 +87,8 @@ describe('Upgrade Prestashop to last Stable', async () => {
 
   it('should upgrade Prestashop', async function () {
     await this.pageObjects.autoUpgradePage.upgradePrestashop('major');
+    await expect(this.actualStepsDoneForUpgradeTable).to.include
+      .members(this.pageObjects.autoUpgradePage.expectedStepsDoneForUpgradeTable);
   });
 
   it('should reload and check that user was automatically logged out', async function () {
@@ -95,12 +98,12 @@ describe('Upgrade Prestashop to last Stable', async () => {
   });
 
   it('should login and verify version in BO', async function () {
-    await this.pageObjects.loginPage.goTo(global.URL_BO);
-    await this.pageObjects.loginPage.login(global.EMAIL, global.PASSWD);
+    await this.pageObjects.loginPage.goTo(global.BO.URL);
+    await this.pageObjects.loginPage.login(global.BO.EMAIL, global.BO.PASSWD);
     const pageTitle = await this.pageObjects.dashboardPage.getPageTitle();
     await expect(pageTitle).to.contains(this.pageObjects.dashboardPage.pageTitle);
     const version = await this.pageObjects.boBasePage.getTextContent(this.pageObjects.boBasePage.shopVersionBloc);
-    expect(version).to.be.equal(global.PS_VERSION);
+    expect(version).to.be.equal(global.INSTALL.PS_VERSION);
   });
 
   it('should enable Shop', async function () {

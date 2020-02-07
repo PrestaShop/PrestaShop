@@ -26,13 +26,13 @@
 
 namespace PrestaShopBundle\Command;
 
+use Context;
+use Employee;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
-use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Context;
-use Employee;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
 final class ThemeEnablerCommand extends ContainerAwareCommand
 {
@@ -51,8 +51,6 @@ final class ThemeEnablerCommand extends ContainerAwareCommand
      */
     protected function init(InputInterface $input, OutputInterface $output)
     {
-        require $this->getContainer()->get('kernel')->getRootDir() . '/../config/config.inc.php';
-
         Context::getContext()->employee = new Employee();
     }
 

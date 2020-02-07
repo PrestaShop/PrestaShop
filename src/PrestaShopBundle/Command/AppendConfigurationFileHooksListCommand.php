@@ -91,7 +91,6 @@ class AppendConfigurationFileHooksListCommand extends ContainerAwareCommand
      */
     private function initContext()
     {
-        require_once $this->getContainer()->get('kernel')->getRootDir() . '/../config/config.inc.php';
         /** @var LegacyContext $legacyContext */
         $legacyContext = $this->getContainer()->get('prestashop.adapter.legacy.context');
         //We need to have an employee or the listing hooks don't work
@@ -165,9 +164,7 @@ class AppendConfigurationFileHooksListCommand extends ContainerAwareCommand
         }
 
         if (!$hookFileContent) {
-            throw new Exception(
-                sprintf('File %s has not been found', $fullFilePath)
-            );
+            throw new Exception(sprintf('File %s has not been found', $fullFilePath));
         }
 
         $xmlFileContent = new SimpleXMLElement($hookFileContent);
@@ -195,12 +192,7 @@ class AppendConfigurationFileHooksListCommand extends ContainerAwareCommand
         }
 
         if (!$xmlFileContent->saveXML($fullFilePath)) {
-            throw new Exception(
-                sprintf(
-                    'Failed to save new xml content to file %s',
-                    $fullFilePath
-                )
-            );
+            throw new Exception(sprintf('Failed to save new xml content to file %s', $fullFilePath));
         }
 
         return $addedHooks;

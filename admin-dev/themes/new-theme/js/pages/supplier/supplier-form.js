@@ -23,13 +23,15 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-import CountryStateSelectionToggler from '../../components/country-state-selection-toggler';
+import CountryStateSelectionToggler from '@components/country-state-selection-toggler';
+import CountryDniRequiredToggler from '@components/country-dni-required-toggler';
+import TranslatableInput from '@components/translatable-input';
+import TaggableField from '@components/taggable-field';
+import ChoiceTree from '@components/form/choice-tree';
+import TinyMCEEditor from '@components/tinymce-editor';
 import SupplierMap from './supplier-map';
-import TranslatableInput from '../../components/translatable-input';
-import TaggableField from '../../components/taggable-field';
-import ChoiceTree from '../../components/form/choice-tree';
 
-const $ = window.$;
+const {$} = window;
 
 $(document).ready(() => {
   const shopChoiceTree = new ChoiceTree('#supplier_shop_association');
@@ -41,6 +43,13 @@ $(document).ready(() => {
     SupplierMap.supplierStateBlock,
   );
 
+  new CountryDniRequiredToggler(
+    SupplierMap.supplierCountrySelect,
+    SupplierMap.supplierDniInput,
+    SupplierMap.supplierDniInputLabel,
+  );
+
+  new TinyMCEEditor();
   new TranslatableInput();
   new TaggableField({
     tokenFieldSelector: 'input.js-taggable-field',

@@ -53,14 +53,14 @@ class OrderReturnControllerCore extends FrontController
                 $order = new Order((int) ($order_return->id_order));
                 if (Validate::isLoadedObject($order)) {
                     if ($order_return->state == 1) {
-                        $this->warning[] = $this->trans('You must wait for confirmation before returning any merchandise.', array(), 'Shop.Notifications.Warning');
+                        $this->warning[] = $this->trans('You must wait for confirmation before returning any merchandise.', [], 'Shop.Notifications.Warning');
                     }
 
                     // StarterTheme: Use presenters!
-                    $this->context->smarty->assign(array(
+                    $this->context->smarty->assign([
                         'return' => $this->getTemplateVarOrderReturn($order_return),
                         'products' => $this->getTemplateVarProducts((int) $order_return->id, $order),
-                    ));
+                    ]);
                 } else {
                     $this->redirect_after = '404';
                     $this->redirect();
@@ -106,13 +106,13 @@ class OrderReturnControllerCore extends FrontController
 
     public function getTemplateVarProducts($order_return_id, $order)
     {
-        $products = array();
+        $products = [];
         $return_products = OrderReturn::getOrdersReturnProducts((int) $order_return_id, $order);
 
         foreach ($return_products as $id_return_product => $return_product) {
             if (!isset($return_product['deleted'])) {
                 $products[$id_return_product] = $return_product;
-                $products[$id_return_product]['customizations'] = ($return_product['customizedDatas']) ? $this->getTemplateVarCustomization($return_product) : array();
+                $products[$id_return_product]['customizations'] = ($return_product['customizedDatas']) ? $this->getTemplateVarCustomization($return_product) : [];
             }
         }
 
@@ -121,19 +121,19 @@ class OrderReturnControllerCore extends FrontController
 
     public function getTemplateVarCustomization(array $product)
     {
-        $product_customizations = array();
+        $product_customizations = [];
         $imageRetriever = new ImageRetriever($this->context->link);
 
         foreach ($product['customizedDatas'] as $byAddress) {
             foreach ($byAddress as $customization) {
-                $presentedCustomization = array(
+                $presentedCustomization = [
                     'quantity' => $customization['quantity'],
-                    'fields' => array(),
+                    'fields' => [],
                     'id_customization' => null,
-                );
+                ];
 
                 foreach ($customization['datas'] as $byType) {
-                    $field = array();
+                    $field = [];
                     foreach ($byType as $data) {
                         switch ($data['type']) {
                             case Product::CUSTOMIZE_FILE:
@@ -172,10 +172,10 @@ class OrderReturnControllerCore extends FrontController
         $breadcrumb['links'][] = $this->addMyAccountToBreadcrumb();
 
         if (($id_order_return = (int) Tools::getValue('id_order_return')) && Validate::isUnsignedId($id_order_return)) {
-            $breadcrumb['links'][] = array(
-                'title' => $this->trans('Merchandise returns', array(), 'Shop.Theme.Global'),
+            $breadcrumb['links'][] = [
+                'title' => $this->trans('Merchandise returns', [], 'Shop.Theme.Global'),
                 'url' => $this->context->link->getPageLink('order-follow'),
-            );
+            ];
         }
 
         return $breadcrumb;

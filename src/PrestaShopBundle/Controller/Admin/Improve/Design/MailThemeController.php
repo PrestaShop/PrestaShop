@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Controller\Admin\Improve\Design;
 
+use Mail;
 use PrestaShop\PrestaShop\Adapter\MailTemplate\MailPreviewVariablesBuilder;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\MailTemplate\Command\GenerateThemeMailTemplatesCommand;
@@ -44,12 +45,13 @@ use PrestaShop\PrestaShop\Core\MailTemplate\ThemeInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\Transformation\MailVariablesTransformation;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Form\Admin\Improve\Design\MailTheme\GenerateMailsType;
+use PrestaShopBundle\Form\Admin\Improve\Design\MailTheme\TranslateMailsBodyType;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use PrestaShopBundle\Service\TranslationService;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Mail;
 
 /**
  * Class MailThemeController manages mail theme generation, you can define the shop
@@ -72,6 +74,7 @@ class MailThemeController extends FrameworkBundleAdminController
     {
         $legacyController = $request->attributes->get('_legacy_controller');
         $generateThemeMailsForm = $this->createForm(GenerateMailsType::class);
+        $translateMailsBodyForm = $this->createForm(TranslateMailsBodyType::class);
         /** @var ThemeCatalogInterface $themeCatalog */
         $themeCatalog = $this->get('prestashop.core.mail_template.theme_catalog');
         $mailThemes = $themeCatalog->listThemes();
@@ -83,6 +86,7 @@ class MailThemeController extends FrameworkBundleAdminController
             'help_link' => $this->generateSidebarLink($legacyController),
             'mailThemeConfigurationForm' => $this->getMailThemeFormHandler()->getForm()->createView(),
             'generateMailsForm' => $generateThemeMailsForm->createView(),
+            'translateMailsBodyForm' => $translateMailsBodyForm->createView(),
             'mailThemes' => $mailThemes,
         ]);
     }
@@ -354,6 +358,41 @@ class MailThemeController extends FrameworkBundleAdminController
     }
 
     /**
+     * @param Request $request
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    public function translateBodyAction(Request $request)
+    {
+        $translateMailsBodyForm = $this->createForm(TranslateMailsBodyType::class);
+        $translateMailsBodyForm->handleRequest($request);
+
+        if (!$translateMailsBodyForm->isSubmitted() || !$translateMailsBodyForm->isValid()) {
+            $this->addFlash(
+                'error',
+                $this->trans(
+                    'Cannot translate emails body contents',
+                    'Admin.Notifications.Error'
+                )
+            );
+
+            return $this->redirectToRoute('admin_mail_theme_index');
+        }
+
+        $translateData = $translateMailsBodyForm->getData();
+        $language = $translateData['language'];
+        /** @var TranslationService $translationService */
+        $translationService = $this->get('prestashop.service.translation');
+        $locale = $translationService->langToLocale($language);
+
+        return $this->redirectToRoute('admin_international_translation_overview', [
+            'lang' => $language,
+            'locale' => $locale,
+            'type' => 'mails_body',
+        ]);
+    }
+
+    /**
      * Preview a mail layout from a defined theme
      *
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
@@ -451,11 +490,7 @@ class MailThemeController extends FrameworkBundleAdminController
                 $renderedLayout = $renderer->renderTxt($layout, $language);
                 break;
             default:
-                throw new NotFoundHttpException(sprintf(
-                    'Requested type %s is not managed, please use one of these: %s',
-                    $type,
-                    implode(',', [MailTemplateInterface::HTML_TYPE, MailTemplateInterface::TXT_TYPE])
-                ));
+                throw new NotFoundHttpException(sprintf('Requested type %s is not managed, please use one of these: %s', $type, implode(',', [MailTemplateInterface::HTML_TYPE, MailTemplateInterface::TXT_TYPE])));
                 break;
         }
 
@@ -492,12 +527,7 @@ class MailThemeController extends FrameworkBundleAdminController
         }
 
         if (null === $layout) {
-            throw new FileNotFoundException(sprintf(
-                'Cannot find layout %s%s in theme %s',
-                empty($module) ? '' : $module . ':',
-                $layoutName,
-                $themeName
-            ));
+            throw new FileNotFoundException(sprintf('Cannot find layout %s%s in theme %s', empty($module) ? '' : $module . ':', $layoutName, $themeName));
         }
 
         return $layout;

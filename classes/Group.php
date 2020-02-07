@@ -48,30 +48,30 @@ class GroupCore extends ObjectModel
     /**
      * @see ObjectModel::$definition
      */
-    public static $definition = array(
+    public static $definition = [
         'table' => 'group',
         'primary' => 'id_group',
         'multilang' => true,
-        'fields' => array(
-            'reduction' => array('type' => self::TYPE_FLOAT, 'validate' => 'isFloat'),
-            'price_display_method' => array('type' => self::TYPE_INT, 'validate' => 'isPriceDisplayMethod', 'required' => true),
-            'show_prices' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-            'date_add' => array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
-            'date_upd' => array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
+        'fields' => [
+            'reduction' => ['type' => self::TYPE_FLOAT, 'validate' => 'isFloat'],
+            'price_display_method' => ['type' => self::TYPE_INT, 'validate' => 'isPriceDisplayMethod', 'required' => true],
+            'show_prices' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
+            'date_add' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
+            'date_upd' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
 
             /* Lang fields */
-            'name' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 32),
-        ),
-    );
+            'name' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 32],
+        ],
+    ];
 
-    protected static $cache_reduction = array();
-    protected static $group_price_display_method = array();
+    protected static $cache_reduction = [];
+    protected static $group_price_display_method = [];
     protected static $ps_group_feature_active = null;
-    protected static $groups = array();
+    protected static $groups = [];
     protected static $ps_unidentified_group = null;
     protected static $ps_customer_group = null;
 
-    protected $webserviceParameters = array();
+    protected $webserviceParameters = [];
 
     public function __construct($id = null, $id_lang = null, $id_shop = null)
     {
@@ -86,10 +86,10 @@ class GroupCore extends ObjectModel
      */
     public static function clearCachedValues()
     {
-        self::$cache_reduction = array();
-        self::$group_price_display_method = array();
+        self::$cache_reduction = [];
+        self::$group_price_display_method = [];
         self::$ps_group_feature_active = null;
-        self::$groups = array();
+        self::$groups = [];
         self::$ps_unidentified_group = null;
         self::$ps_customer_group = null;
     }
@@ -316,7 +316,7 @@ class GroupCore extends ObjectModel
      *
      * @return bool
      */
-    public static function addModulesRestrictions($id_group, $modules, $shops = array(1))
+    public static function addModulesRestrictions($id_group, $modules, $shops = [1])
     {
         if (!is_array($modules) || !count($modules) || !is_array($shops) || !count($shops)) {
             return false;
@@ -351,7 +351,7 @@ class GroupCore extends ObjectModel
      *
      * @return bool
      */
-    public static function addRestrictionsForModule($id_module, $shops = array(1))
+    public static function addRestrictionsForModule($id_module, $shops = [1])
     {
         if (!is_array($shops) || !count($shops)) {
             return false;

@@ -63,9 +63,7 @@ final class GetProfileForEditingHandler implements GetProfileForEditingHandlerIn
         $profile = new Profile($profileId->getValue());
 
         if ($profile->id !== $profileId->getValue()) {
-            throw new ProfileNotFoundException(
-                sprintf('Profile with id "%s" was not found', $profileId->getValue())
-            );
+            throw new ProfileNotFoundException(sprintf('Profile with id "%s" was not found', $profileId->getValue()));
         }
 
         return $profile;

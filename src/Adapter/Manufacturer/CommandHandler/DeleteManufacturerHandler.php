@@ -43,10 +43,7 @@ final class DeleteManufacturerHandler extends AbstractManufacturerCommandHandler
         $manufacturer = $this->getManufacturer($command->getManufacturerId());
 
         if (!$this->deleteManufacturer($manufacturer)) {
-            throw new DeleteManufacturerException(sprintf(
-                'Cannot delete Manufacturer object with id "%s".', $manufacturer->id),
-                DeleteManufacturerException::FAILED_DELETE
-            );
+            throw new DeleteManufacturerException(sprintf('Cannot delete Manufacturer object with id "%s".', $manufacturer->id), DeleteManufacturerException::FAILED_DELETE);
         }
     }
 }

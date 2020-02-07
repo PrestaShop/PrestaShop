@@ -26,8 +26,10 @@
 
 namespace Tests\Unit\Core\MailTemplate;
 
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Exception\FileNotFoundException;
+use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\FolderThemeCatalog;
 use PrestaShop\PrestaShop\Core\MailTemplate\FolderThemeScanner;
@@ -40,7 +42,6 @@ use PrestaShop\PrestaShop\Core\MailTemplate\ThemeCollection;
 use PrestaShop\PrestaShop\Core\MailTemplate\ThemeCollectionInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\ThemeInterface;
 use Symfony\Component\Filesystem\Filesystem;
-use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 
 class FolderThemeCatalogTest extends TestCase
 {
@@ -165,7 +166,7 @@ class FolderThemeCatalogTest extends TestCase
 
     public function testInvalidTheme()
     {
-        $this->setExpectedException(InvalidArgumentException::class, 'Invalid requested theme "unknown", only available themes are: classic, modern');
+        $this->expectException(InvalidArgumentException::class, 'Invalid requested theme "unknown", only available themes are: classic, modern');
 
         /** @var HookDispatcherInterface $dispatcherMock */
         $dispatcherMock = $this->getMockBuilder(HookDispatcherInterface::class)
@@ -272,7 +273,7 @@ class FolderThemeCatalogTest extends TestCase
     /**
      * @param int $layoutsCount
      *
-     * @return \PHPUnit_Framework_MockObject_MockObject|HookDispatcherInterface
+     * @return MockObject|HookDispatcherInterface
      */
     private function createHookDispatcherMock($layoutsCount)
     {

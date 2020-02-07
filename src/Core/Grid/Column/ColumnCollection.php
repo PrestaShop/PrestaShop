@@ -118,10 +118,7 @@ final class ColumnCollection extends AbstractCollection implements ColumnCollect
     public function move($id, $position)
     {
         if (!isset($this->items[$id])) {
-            throw new ColumnNotFoundException(sprintf(
-                'Cannot insert new column into collection. Column with id "%s" was not found.',
-                $id
-            ));
+            throw new ColumnNotFoundException(sprintf('Cannot insert new column into collection. Column with id "%s" was not found.', $id));
         }
 
         $column = $this->items[$id];
@@ -148,10 +145,7 @@ final class ColumnCollection extends AbstractCollection implements ColumnCollect
     private function insertByPosition($id, ColumnInterface $newColumn, $position)
     {
         if (!isset($this->items[$id])) {
-            throw new ColumnNotFoundException(sprintf(
-                'Cannot insert new column into collection. Column with id "%s" was not found.',
-                $id
-            ));
+            throw new ColumnNotFoundException(sprintf('Cannot insert new column into collection. Column with id "%s" was not found.', $id));
         }
 
         $existingColumnKeyPosition = array_search($id, array_keys($this->items));

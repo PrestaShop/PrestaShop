@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Command;
 
+use Employee;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\MailTemplate\Command\GenerateThemeMailTemplatesCommand;
@@ -34,7 +35,6 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Employee;
 
 class GenerateMailTemplatesCommand extends ContainerAwareCommand
 {
@@ -96,7 +96,6 @@ class GenerateMailTemplatesCommand extends ContainerAwareCommand
      */
     private function initContext()
     {
-        require_once $this->getContainer()->get('kernel')->getRootDir() . '/../config/config.inc.php';
         /** @var LegacyContext $legacyContext */
         $legacyContext = $this->getContainer()->get('prestashop.adapter.legacy.context');
         //We need to have an employee or the module hooks don't work

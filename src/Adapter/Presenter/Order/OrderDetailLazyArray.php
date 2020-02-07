@@ -29,32 +29,48 @@ namespace PrestaShop\PrestaShop\Adapter\Presenter\Order;
 use Cart;
 use Configuration;
 use Context;
+use Currency;
 use HistoryController;
 use Order;
 use PrestaShop\PrestaShop\Adapter\Presenter\AbstractLazyArray;
+use PrestaShop\PrestaShop\Core\Localization\Locale;
 use PrestaShopBundle\Translation\TranslatorComponent;
 use PrestaShopException;
 use Tools;
 
 class OrderDetailLazyArray extends AbstractLazyArray
 {
-    /** @var Order */
+    /**
+     * @var Locale
+     */
+    private $locale;
+
+    /**
+     * @var Order
+     */
     private $order;
 
-    /** @var Context */
+    /**
+     * @var Context
+     */
     private $context;
 
-    /** @var TranslatorComponent */
+    /**
+     * @var TranslatorComponent
+     */
     private $translator;
 
     /**
      * OrderDetailLazyArray constructor.
+     *
+     * @param Order $order
      */
     public function __construct(Order $order)
     {
         $this->order = $order;
         $this->context = Context::getContext();
         $this->translator = Context::getContext()->getTranslator();
+        $this->locale = $this->context->getCurrentLocale();
         parent::__construct();
     }
 
@@ -202,7 +218,7 @@ class OrderDetailLazyArray extends AbstractLazyArray
         $order = $this->order;
 
         $shippingList = $order->getShipping();
-        $orderShipping = array();
+        $orderShipping = [];
 
         foreach ($shippingList as $shippingId => $shipping) {
             if (isset($shipping['carrier_name']) && $shipping['carrier_name']) {
@@ -216,8 +232,8 @@ class OrderDetailLazyArray extends AbstractLazyArray
                     (!$order->getTaxCalculationMethod()) ? $shipping['shipping_cost_tax_excl']
                         : $shipping['shipping_cost_tax_incl'];
                 $orderShipping[$shippingId]['shipping_cost'] =
-                    ($shippingCost > 0) ? Tools::displayPrice($shippingCost, (int) $order->id_currency)
-                        : $this->translator->trans('Free', array(), 'Shop.Theme.Checkout');
+                    ($shippingCost > 0) ? $this->locale->formatPrice($shippingCost, (Currency::getIsoCodeById((int) $order->id_currency)))
+                        : $this->translator->trans('Free', [], 'Shop.Theme.Checkout');
 
                 $tracking_line = '-';
                 if ($shipping['tracking_number']) {

@@ -59,7 +59,7 @@ class AttachementProductController extends FrameworkBundleAdminController
         $form = $this->createForm(
             'PrestaShopBundle\Form\Admin\Product\ProductAttachement',
             null,
-            array('csrf_protection' => false)
+            ['csrf_protection' => false]
         );
 
         $form->handleRequest($request);

@@ -44,7 +44,7 @@ class HelperViewCore extends Helper
     {
         $this->tpl = $this->createTemplate($this->base_tpl);
 
-        $this->tpl->assign(array(
+        $this->tpl->assign([
             'title' => $this->title,
             'current' => $this->currentIndex,
             'token' => $this->token,
@@ -53,7 +53,7 @@ class HelperViewCore extends Helper
             'toolbar_scroll' => $this->toolbar_scroll,
             'toolbar_btn' => $this->toolbar_btn,
             'link' => $this->context->link,
-        ));
+        ]);
 
         return parent::generate();
     }

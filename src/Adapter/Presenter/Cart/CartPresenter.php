@@ -126,7 +126,7 @@ class CartPresenter implements PresenterInterface
             $rawProduct['id_product_attribute']
         );
 
-        $resetFields = array(
+        $resetFields = [
             'ecotax_rate',
             'specific_prices',
             'customizable',
@@ -136,7 +136,7 @@ class CartPresenter implements PresenterInterface
             'new',
             'condition',
             'pack',
-        );
+        ];
         foreach ($resetFields as $field) {
             if (!array_key_exists($field, $rawProduct)) {
                 $rawProduct[$field] = '';
@@ -187,12 +187,12 @@ class CartPresenter implements PresenterInterface
     public function addCustomizedData(array $products, Cart $cart)
     {
         return array_map(function ($product) use ($cart) {
-            $customizations = array();
+            $customizations = [];
 
             $data = Product::getAllCustomizedDatas($cart->id, null, true, null, (int) $product['id_customization']);
 
             if (!$data) {
-                $data = array();
+                $data = [];
             }
             $id_product = (int) $product['id_product'];
             $id_product_attribute = (int) $product['id_product_attribute'];
@@ -201,15 +201,15 @@ class CartPresenter implements PresenterInterface
                     foreach ($data[$id_product] as $byAddress) {
                         foreach ($byAddress as $byAddressCustomizations) {
                             foreach ($byAddressCustomizations as $customization) {
-                                $presentedCustomization = array(
+                                $presentedCustomization = [
                                     'quantity' => $customization['quantity'],
-                                    'fields' => array(),
+                                    'fields' => [],
                                     'id_customization' => null,
-                                );
+                                ];
 
                                 foreach ($customization['datas'] as $byType) {
                                     foreach ($byType as $data) {
-                                        $field = array();
+                                        $field = [];
                                         switch ($data['type']) {
                                             case Product::CUSTOMIZE_FILE:
                                                 $field['type'] = 'image';
@@ -319,9 +319,9 @@ class CartPresenter implements PresenterInterface
             $rawProducts = $cart->getProducts(true);
         }
 
-        $products = array_map(array($this, 'presentProduct'), $rawProducts);
+        $products = array_map([$this, 'presentProduct'], $rawProducts);
         $products = $this->addCustomizedData($products, $cart);
-        $subtotals = array();
+        $subtotals = [];
 
         $productsTotalExcludingTax = $cart->getOrderTotal(false, Cart::ONLY_PRODUCTS);
         $total_excluding_tax = $cart->getOrderTotal(false);
@@ -329,20 +329,20 @@ class CartPresenter implements PresenterInterface
         $total_discount = $cart->getDiscountSubtotalWithoutGifts($this->includeTaxes());
         $totalCartAmount = $cart->getOrderTotal($this->includeTaxes(), Cart::ONLY_PRODUCTS);
 
-        $subtotals['products'] = array(
+        $subtotals['products'] = [
             'type' => 'products',
-            'label' => $this->translator->trans('Subtotal', array(), 'Shop.Theme.Checkout'),
+            'label' => $this->translator->trans('Subtotal', [], 'Shop.Theme.Checkout'),
             'amount' => $totalCartAmount,
             'value' => $this->priceFormatter->format($totalCartAmount),
-        );
+        ];
 
         if ($total_discount) {
-            $subtotals['discounts'] = array(
+            $subtotals['discounts'] = [
                 'type' => 'discount',
-                'label' => $this->translator->trans('Discount(s)', array(), 'Shop.Theme.Checkout'),
+                'label' => $this->translator->trans('Discount(s)', [], 'Shop.Theme.Checkout'),
                 'amount' => $total_discount,
                 'value' => $this->priceFormatter->format($total_discount),
-            );
+            ];
         } else {
             $subtotals['discounts'] = null;
         }
@@ -352,14 +352,14 @@ class CartPresenter implements PresenterInterface
                 ? $cart->getGiftWrappingPrice($this->includeTaxes())
                 : 0;
 
-            $subtotals['gift_wrapping'] = array(
+            $subtotals['gift_wrapping'] = [
                 'type' => 'gift_wrapping',
-                'label' => $this->translator->trans('Gift wrapping', array(), 'Shop.Theme.Checkout'),
+                'label' => $this->translator->trans('Gift wrapping', [], 'Shop.Theme.Checkout'),
                 'amount' => $giftWrappingPrice,
                 'value' => ($giftWrappingPrice > 0)
                     ? $this->priceFormatter->convertAndFormat($giftWrappingPrice)
-                    : $this->translator->trans('Free', array(), 'Shop.Theme.Checkout'),
-            );
+                    : $this->translator->trans('Free', [], 'Shop.Theme.Checkout'),
+            ];
         }
 
         if (!$cart->isVirtualCart()) {
@@ -367,74 +367,72 @@ class CartPresenter implements PresenterInterface
         } else {
             $shippingCost = 0;
         }
-        $subtotals['shipping'] = array(
+        $subtotals['shipping'] = [
             'type' => 'shipping',
-            'label' => $this->translator->trans('Shipping', array(), 'Shop.Theme.Checkout'),
+            'label' => $this->translator->trans('Shipping', [], 'Shop.Theme.Checkout'),
             'amount' => $shippingCost,
-            'value' => $shippingCost != 0
-                ? $this->priceFormatter->format($shippingCost)
-                : $this->translator->trans('Free', array(), 'Shop.Theme.Checkout'),
-        );
+            'value' => $this->getShippingDisplayValue($cart, $shippingCost),
+        ];
 
         $subtotals['tax'] = null;
         if (Configuration::get('PS_TAX_DISPLAY')) {
             $taxAmount = $total_including_tax - $total_excluding_tax;
-            $subtotals['tax'] = array(
+            $subtotals['tax'] = [
                 'type' => 'tax',
                 'label' => ($this->includeTaxes())
-                    ? $this->translator->trans('Included taxes', array(), 'Shop.Theme.Checkout')
-                    : $this->translator->trans('Taxes', array(), 'Shop.Theme.Checkout'),
+                    ? $this->translator->trans('Included taxes', [], 'Shop.Theme.Checkout')
+                    : $this->translator->trans('Taxes', [], 'Shop.Theme.Checkout'),
                 'amount' => $taxAmount,
                 'value' => $this->priceFormatter->format($taxAmount),
-            );
+            ];
         }
 
-        $totals = array(
-            'total' => array(
+        $totals = [
+            'total' => [
                 'type' => 'total',
-                'label' => $this->translator->trans('Total', array(), 'Shop.Theme.Checkout'),
+                'label' => $this->translator->trans('Total', [], 'Shop.Theme.Checkout'),
                 'amount' => $this->includeTaxes() ? $total_including_tax : $total_excluding_tax,
                 'value' => $this->priceFormatter->format(
                     $this->includeTaxes() ? $total_including_tax : $total_excluding_tax
                 ),
-            ),
-            'total_including_tax' => array(
+            ],
+            'total_including_tax' => [
                 'type' => 'total',
-                'label' => $this->translator->trans('Total (tax incl.)', array(), 'Shop.Theme.Checkout'),
+                'label' => $this->translator->trans('Total (tax incl.)', [], 'Shop.Theme.Checkout'),
                 'amount' => $total_including_tax,
                 'value' => $this->priceFormatter->format($total_including_tax),
-            ),
-            'total_excluding_tax' => array(
+            ],
+            'total_excluding_tax' => [
                 'type' => 'total',
-                'label' => $this->translator->trans('Total (tax excl.)', array(), 'Shop.Theme.Checkout'),
+                'label' => $this->translator->trans('Total (tax excl.)', [], 'Shop.Theme.Checkout'),
                 'amount' => $total_excluding_tax,
                 'value' => $this->priceFormatter->format($total_excluding_tax),
-            ),
-        );
+            ],
+        ];
 
         $products_count = array_reduce($products, function ($count, $product) {
             return $count + $product['quantity'];
         }, 0);
 
         $summary_string = $products_count === 1 ?
-            $this->translator->trans('1 item', array(), 'Shop.Theme.Checkout') :
-            $this->translator->trans('%count% items', array('%count%' => $products_count), 'Shop.Theme.Checkout');
+            $this->translator->trans('1 item', [], 'Shop.Theme.Checkout') :
+            $this->translator->trans('%count% items', ['%count%' => $products_count], 'Shop.Theme.Checkout');
 
         $minimalPurchase = $this->priceFormatter->convertAmount((float) Configuration::get('PS_PURCHASE_MINIMUM'));
 
-        Hook::exec('overrideMinimalPurchasePrice', array(
+        Hook::exec('overrideMinimalPurchasePrice', [
             'minimalPurchase' => &$minimalPurchase,
-        ));
+        ]);
 
         // TODO: move it to a common parent, since it's copied in OrderPresenter and ProductPresenter
-        $labels = array(
+        $labels = [
             'tax_short' => ($this->includeTaxes())
-                ? $this->translator->trans('(tax incl.)', array(), 'Shop.Theme.Global')
-                : $this->translator->trans('(tax excl.)', array(), 'Shop.Theme.Global'),
+                ? $this->translator->trans('(tax incl.)', [], 'Shop.Theme.Global')
+                : $this->translator->trans('(tax excl.)', [], 'Shop.Theme.Global'),
             'tax_long' => ($this->includeTaxes())
-                ? $this->translator->trans('(tax included)', array(), 'Shop.Theme.Global')
-                : $this->translator->trans('(tax excluded)', array(), 'Shop.Theme.Global'),
-        );
+                ? $this->translator->trans('(tax included)', [], 'Shop.Theme.Global')
+                : $this->translator->trans('(tax excluded)', [], 'Shop.Theme.Global'),
+        ];
 
         $discounts = $cart->getDiscounts();
         $vouchers = $this->getTemplateVarVouchers($cart);
@@ -446,11 +444,17 @@ class CartPresenter implements PresenterInterface
             $vouchers['added']
         ));
 
-        $discounts = array_filter($discounts, function ($discount) use ($cartRulesIds) {
+        $discounts = array_filter($discounts, function ($discount) use ($cartRulesIds, $cart) {
+            $voucherCustomerId = (int) $discount['id_customer'];
+            $voucherIsRestrictedToASingleCustomer = ($voucherCustomerId !== 0);
+            if ($voucherIsRestrictedToASingleCustomer && $cart->id_customer !== $voucherCustomerId) {
+                return false;
+            }
+
             return !array_key_exists($discount['id_cart_rule'], $cartRulesIds);
         });
 
-        return array(
+        $result = [
             'products' => $products,
             'totals' => $totals,
             'subtotals' => $subtotals,
@@ -466,23 +470,69 @@ class CartPresenter implements PresenterInterface
             'minimalPurchaseRequired' => ($productsTotalExcludingTax < $minimalPurchase) ?
                 $this->translator->trans(
                     'A minimum shopping cart total of %amount% (tax excl.) is required to validate your order. Current cart total is %total% (tax excl.).',
-                    array(
+                    [
                         '%amount%' => $this->priceFormatter->format($minimalPurchase),
                         '%total%' => $this->priceFormatter->format($productsTotalExcludingTax),
-                    ),
+                    ],
                     'Shop.Theme.Checkout'
                 ) :
                 '',
+        ];
+
+        Hook::exec('actionPresentCart',
+            ['presentedCart' => &$result]
         );
+
+        return $result;
+    }
+
+    /**
+     * Accepts a cart object with the shipping cost amount and formats the shipping cost display value accordingly.
+     * If the shipping cost is 0, then we must check if this is because of a free carrier and thus display 'Free' or
+     * simply because the system was unable to determine shipping cost at this point and thus send an empty string to hide the shipping line.
+     *
+     * @param Cart $cart
+     * @param float $shippingCost
+     *
+     * @return string
+     */
+    private function getShippingDisplayValue($cart, $shippingCost)
+    {
+        $shippingDisplayValue = '';
+
+        if ($shippingCost != 0) {
+            $shippingDisplayValue = $this->priceFormatter->format($shippingCost);
+        } else {
+            $defaultCountry = null;
+
+            if (isset(Context::getContext()->cookie->id_country)) {
+                $defaultCountry = new Country(Context::getContext()->cookie->id_country);
+            }
+
+            $deliveryOptionList = $cart->getDeliveryOptionList($defaultCountry);
+
+            if (isset($deliveryOptionList) && count($deliveryOptionList) > 0) {
+                foreach ($deliveryOptionList as $option) {
+                    foreach ($option as $currentCarrier) {
+                        if (isset($currentCarrier['is_free']) && $currentCarrier['is_free'] > 0) {
+                            $shippingDisplayValue = $this->translator->trans('Free', [], 'Shop.Theme.Checkout');
+                            break 2;
+                        }
+                    }
+                }
+            }
+        }
+
+        return $shippingDisplayValue;
     }
 
     private function getTemplateVarVouchers(Cart $cart)
     {
         $cartVouchers = $cart->getCartRules();
-        $vouchers = array();
+        $vouchers = [];
 
         $cartHasTax = null === $cart->id ? false : $cart::getTaxesAverageUsed($cart);
-
+        $freeShippingAlreadySet = false;
         foreach ($cartVouchers as $cartVoucher) {
             $vouchers[$cartVoucher['id_cart_rule']]['id_cart_rule'] = $cartVoucher['id_cart_rule'];
             $vouchers[$cartVoucher['id_cart_rule']]['name'] = $cartVoucher['name'];
@@ -502,43 +552,98 @@ class CartPresenter implements PresenterInterface
                 $cartVoucher['reduction_amount'] = $cartVoucher['value_real'];
             }
 
-            if (isset($cartVoucher['reduction_percent']) && $cartVoucher['reduction_amount'] == '0.00') {
-                $cartVoucher['reduction_formatted'] = $cartVoucher['reduction_percent'] . '%';
-            } elseif (isset($cartVoucher['reduction_amount']) && $cartVoucher['reduction_amount'] > 0) {
-                $value = $this->includeTaxes() ? $cartVoucher['reduction_amount'] : $cartVoucher['value_tax_exc'];
+            $shippingReduction = $amountReduction = $percentageReduction = 0;
+            $freeShippingOnly = false;
+
+            if ($this->cartVoucherHasFreeShipping($cartVoucher)) {
+                if (!$freeShippingAlreadySet) {
+                    $shippingReduction = $cart->getTotalShippingCost(null, $this->includeTaxes());
+                    $freeShippingAlreadySet = true;
+                }
+                $freeShippingOnly = true;
+            }
+            if ($this->cartVoucherHasPercentReduction($cartVoucher)) {
+                $productsTotalExcludingTax = $cart->getOrderTotal($this->includeTaxes(), Cart::ONLY_PRODUCTS);
+                $percentageReduction = ($productsTotalExcludingTax / 100) * $cartVoucher['reduction_percent'];
+                $freeShippingOnly = false;
+            } elseif ($this->cartVoucherHasAmountReduction($cartVoucher)) {
+                $amountReduction = $this->includeTaxes() ? $cartVoucher['reduction_amount'] : $cartVoucher['value_tax_exc'];
                 $currencyFrom = new \Currency($cartVoucher['reduction_currency']);
                 $currencyTo = new \Currency($cart->id_currency);
                 if ($currencyFrom->conversion_rate == 0) {
-                    $value = 0;
+                    $amountReduction = 0;
                 } else {
                     // convert to default currency
                     $defaultCurrencyId = (int) Configuration::get('PS_CURRENCY_DEFAULT');
-                    $value /= $currencyFrom->conversion_rate;
+                    $amountReduction /= $currencyFrom->conversion_rate;
                     if ($defaultCurrencyId == $currencyTo->id) {
                         // convert to destination currency
-                        $value *= $currencyTo->conversion_rate;
+                        $amountReduction *= $currencyTo->conversion_rate;
                     }
                 }
-                // following will do currency conversion to current one
-                $cartVoucher['reduction_formatted'] = $this->priceFormatter->convertAndFormat($value);
+                $freeShippingOnly = false;
+            }
+            // when a voucher has only a shipping reduction, the value displayed must be "Free Shipping"
+            if ($freeShippingOnly) {
+                $cartVoucher['reduction_formatted'] = $this->translator->trans(
+                    'Free shipping',
+                    [],
+                    'Admin.Shipping.Feature'
+                );
+            } else {
+                // In all other cases, the value displayed should be the total of applied reductions for the current voucher
+                $totalCartVoucherReduction = $shippingReduction + $amountReduction + $percentageReduction;
+                $cartVoucher['reduction_formatted'] = '-' . $this->priceFormatter->convertAndFormat($totalCartVoucherReduction);
             }
 
-            $vouchers[$cartVoucher['id_cart_rule']]['reduction_formatted'] = '-' . $cartVoucher['reduction_formatted'];
+            $vouchers[$cartVoucher['id_cart_rule']]['reduction_formatted'] = $cartVoucher['reduction_formatted'];
             $vouchers[$cartVoucher['id_cart_rule']]['delete_url'] = $this->link->getPageLink(
                 'cart',
                 true,
                 null,
-                array(
+                [
                     'deleteDiscount' => $cartVoucher['id_cart_rule'],
                     'token' => Tools::getToken(false),
-                )
+                ]
             );
         }
 
-        return array(
+        return [
             'allowed' => (int) CartRule::isFeatureActive(),
             'added' => $vouchers,
-        );
+        ];
+    }
+
+    /**
+     * @param array $cartVoucher
+     *
+     * @return bool
+     */
+    private function cartVoucherHasFreeShipping($cartVoucher)
+    {
+        return !empty($cartVoucher['free_shipping']);
+    }
+
+    /**
+     * @param array $cartVoucher
+     *
+     * @return bool
+     */
+    private function cartVoucherHasPercentReduction($cartVoucher)
+    {
+        return isset($cartVoucher['reduction_percent'])
+            && $cartVoucher['reduction_percent'] > 0
+            && $cartVoucher['reduction_amount'] == '0.00';
+    }
+
+    /**
+     * @param array $cartVoucher
+     *
+     * @return bool
+     */
+    private function cartVoucherHasAmountReduction($cartVoucher)
+    {
+        return isset($cartVoucher['reduction_amount']) && $cartVoucher['reduction_amount'] > 0;
     }
 
     /**
@@ -552,8 +657,8 @@ class CartPresenter implements PresenterInterface
     {
         $separator = Configuration::get('PS_ATTRIBUTE_ANCHOR_SEPARATOR');
         $pattern = '/(?>(?P<attribute>[^:]+:[^:]+)' . $separator . '+(?!' . $separator . '([^:' . $separator . '])+:))/';
-        $attributesArray = array();
-        $matches = array();
+        $attributesArray = [];
+        $matches = [];
         if (!preg_match_all($pattern, $attributes . $separator, $matches)) {
             return $attributesArray;
         }

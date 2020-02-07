@@ -26,7 +26,6 @@
 {* ajaxBox allows*}
 <div id="ajaxBox" style="display:none"></div>
 
-
 <div class="row">
 	<div class="col-lg-12">
 		{if isset($content)}

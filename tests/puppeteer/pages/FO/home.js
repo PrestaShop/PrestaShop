@@ -1,21 +1,19 @@
-const CommonPage = require('../commonPage');
+require('module-alias/register');
+const FOBasePage = require('@pages/FO/FObasePage');
 
-module.exports = class Home extends CommonPage {
+module.exports = class Home extends FOBasePage {
   constructor(page) {
     super(page);
 
     // Selectors for home page
-    this.logoHomePage = '#_desktop_logo';
-    this.cartProductsCount = '#_desktop_cart span.cart-products-count';
+    this.homePageSection = 'section#content.page-home';
     this.productArticle = '#content .products div:nth-child(%NUMBER) article';
     this.productImg = `${this.productArticle} img`;
+    this.productDescriptionDiv = `${this.productArticle} div.product-description`;
     this.productQuickViewLink = `${this.productArticle} a.quick-view`;
-    this.userInfoLink = '#_desktop_user_info';
-    this.logoutLink = `${this.userInfoLink} .user-info a.logout`;
-    this.contactLink = '#contact-link';
     this.allProductLink = '#content a.all-product-link';
     this.totalProducts = '#js-product-list-top .total-products > p';
-    this.categoryMenu = '#category-%ID > a';
+    this.productPrice = `${this.productArticle} span[aria-label="Price"]`;
     // Quick View modal
     this.quickViewModalDiv = 'div[id*=\'quickview-modal\']';
     this.quantityWantedInput = `${this.quickViewModalDiv} input#quantity_wanted`;
@@ -28,16 +26,8 @@ module.exports = class Home extends CommonPage {
   /**
    * Check home page
    */
-  async checkHomePage() {
-    await this.page.waitForSelector(this.logoHomePage, {visible: true});
-  }
-
-  /**
-   * go to the home page
-   */
-  async goToHomePage() {
-    await this.waitForSelectorAndClick(this.logoHomePage);
-    this.page.waitForNavigation({waitUntil: 'networkidle0'});
+  async isHomePage() {
+    return this.elementVisible(this.homePageSection, 3000);
   }
 
   /**
@@ -45,45 +35,10 @@ module.exports = class Home extends CommonPage {
    * @param id, product id
    */
   async goToProductPage(id) {
-    await this.page.waitForSelector(this.logoHomePage, {visible: true});
-    await this.waitForSelectorAndClick(this.productImg.replace('%NUMBER', id), 5000);
-  }
-
-  /**
-   * Filter by category
-   * @param categoryID, category id from the BO
-   */
-  async filterByCategory(categoryID) {
-    await this.waitForSelectorAndClick(this.categoryMenu.replace('%ID', categoryID));
-  }
-
-  /**
-   * Filter by subcategory
-   * @param categoryID, category id from the BO
-   * @param subCategoryID, subcategory id from the BO
-   */
-  async filterSubCategory(categoryID, subCategoryID) {
-    await this.page.hover(this.categoryMenu.replace('%ID', categoryID));
-    await this.waitForSelectorAndClick(this.categoryMenu.replace('%ID', subCategoryID));
-  }
-
-  /**
-   * Go to login Page
-   * @return {Promise<void>}
-   */
-  async goToLoginPage() {
     await Promise.all([
       this.page.waitForNavigation({waitUntil: 'networkidle0'}),
-      this.page.click(this.userInfoLink),
+      this.page.click(this.productImg.replace('%NUMBER', id)),
     ]);
-  }
-
-  /**
-   * Check if customer is connected
-   * @return {Promise<boolean|true>}
-   */
-  async isCustomerConnected() {
-    return this.elementVisible(this.logoutLink, 1000);
   }
 
   /**
@@ -92,12 +47,22 @@ module.exports = class Home extends CommonPage {
    * @return {Promise<void>}
    */
   async quickViewProduct(id) {
+    await this.page.hover(this.productImg.replace('%NUMBER', id));
+    let displayed = false;
+    /* eslint-disable no-await-in-loop */
+    // Only way to detect if element is displayed is to get value of computed style 'product description' after hover
+    // and compare it with value 'block'
+    for (let i = 0; i < 10 && !displayed; i++) {
+      displayed = await this.page.evaluate(
+        selector => window.getComputedStyle(document.querySelector(selector), ':after')
+          .getPropertyValue('display') === 'block',
+        this.productDescriptionDiv.replace('%NUMBER', id),
+      );
+      await this.page.waitFor(100);
+    }
+    /* eslint-enable no-await-in-loop */
     await Promise.all([
-      this.page.waitForSelector(`${this.productQuickViewLink.replace('%NUMBER', id)}`),
-      this.page.hover(this.productImg.replace('%NUMBER', id)),
-    ]);
-    await Promise.all([
-      this.page.waitForSelector(this.quickViewModalDiv),
+      this.page.waitForSelector(this.quickViewModalDiv, {visible: true}),
       this.page.$eval(this.productQuickViewLink.replace('%NUMBER', id), el => el.click()),
     ]);
   }
@@ -112,7 +77,7 @@ module.exports = class Home extends CommonPage {
     await this.quickViewProduct(id);
     await this.setValue(this.quantityWantedInput, quantity_wanted);
     await Promise.all([
-      this.page.waitForSelector(this.blockCartModalDiv),
+      this.page.waitForSelector(this.blockCartModalDiv, {visible: true}),
       this.page.click(this.addToCartButton),
     ]);
   }
@@ -126,5 +91,14 @@ module.exports = class Home extends CommonPage {
       this.page.waitForNavigation({waitUntil: 'networkidle0'}),
       this.page.click(this.blockCartModalCheckoutLink),
     ]);
+  }
+
+  /**
+   * Check product price
+   * @param id, index of product in list of products
+   * @return {Promise<boolean>}
+   */
+  async isPriceVisible(id = 1) {
+    return this.elementVisible(this.productPrice.replace('%NUMBER', id), 1000);
   }
 };

@@ -179,7 +179,7 @@ class Number implements NumberInterface
      *
      * @throws LocalizationException
      */
-    public function getSymbolsByNumberingSystem($numberingSystem = null)
+    public function getSymbolsByNumberingSystem($numberingSystem = NumberInterface::NUMBERING_SYSTEM_LATIN)
     {
         if (!isset($this->symbols[$numberingSystem])) {
             throw new LocalizationException('Unknown or invalid numbering system');
@@ -325,16 +325,6 @@ class Number implements NumberInterface
     }
 
     /**
-     * @deprecated https://github.com/PrestaShop/PrestaShop/issues/13168
-     *
-     * @param int $maxFractionDigits
-     */
-    public function setMaxFractionDigits($maxFractionDigits)
-    {
-        $this->maxFractionDigits = $maxFractionDigits;
-    }
-
-    /**
      * To array function
      *
      * @return array
@@ -342,6 +332,7 @@ class Number implements NumberInterface
     public function toArray()
     {
         return [
+            'numberSymbols' => $this->getSymbolsByNumberingSystem()->toArray(),
             'positivePattern' => $this->getPositivePattern(),
             'negativePattern' => $this->getNegativePattern(),
             'maxFractionDigits' => $this->getMaxFractionDigits(),

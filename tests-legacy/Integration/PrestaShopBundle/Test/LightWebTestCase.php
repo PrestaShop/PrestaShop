@@ -76,6 +76,7 @@ class LightWebTestCase extends TestCase
         $employeeMock = $this->getMockBuilder(Employee::class)
             ->getMock();
         $employeeMock->id_profile = 1;
+        $employeeMock->id_lang = 1;
 
         $contextMock = $this->getMockBuilder(Context::class)
             ->setMethods(array('getTranslator', 'getContext'))
@@ -131,6 +132,11 @@ class LightWebTestCase extends TestCase
             ->getMockBuilder(Link::class)
             ->disableOriginalConstructor()
             ->getMock();
+
+        // If getCMSLink() is not mocked,
+        // it returns null, thus breaking code that expects it to return string,
+        // as string is the only valid return type for this method.
+        $linkMock->method('getCMSLink')->willReturn('');
 
         $contextMock->link = $linkMock;
 

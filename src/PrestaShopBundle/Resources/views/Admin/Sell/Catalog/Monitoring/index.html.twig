@@ -26,10 +26,32 @@
 {% extends 'PrestaShopBundle:Admin:layout.html.twig' %}
 
 {% block content %}
+  {% block monitoring_showcase_card %}
+    <div class="row">
+      <div class="col">
+        {% include '@PrestaShop/Admin/Sell/Catalog/Monitoring/Blocks/showcase_card.html.twig' %}
+      </div>
+    </div>
+  {% endblock %}
+
   {% block empty_categories_listing %}
     <div class="row">
       <div class="col">
         {% embed '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': emptyCategoryGrid} %}
+
+          {% block grid_panel_body %}
+            <div class="card-body">
+              <div class="alert alert-info">
+                <div class="alert-text">
+                  {{ 'An empty category is a category that has no product directly associated to it. An empty category may however contain products through its subcategories.'|trans({}, 'Admin.Catalog.Help') }}
+                </div>
+              </div>
+              {% block grid_view_block %}
+                {{ include('@PrestaShop/Admin/Common/Grid/grid.html.twig', {'grid': emptyCategoryGrid }) }}
+              {% endblock %}
+            </div>
+          {% endblock %}
+
           {% block grid_panel_extra_content %}
             {% include '@PrestaShop/Admin/Sell/Catalog/Categories/Blocks/delete_categories_modal.html.twig'
               with {'deleteCategoriesForm': deleteCategoryForm }

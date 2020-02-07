@@ -34,14 +34,15 @@
         @click="sendQty"
       >
         <i class="material-icons">edit</i>
-        {{trans('button_movement_type')}}
+        {{ trans('button_movement_type') }}
       </PSButton>
     </div>
   </div>
 </template>
 
 <script>
-  import PSButton from 'app/widgets/ps-button';
+  import PSButton from '@app/widgets/ps-button';
+
   export default {
     computed: {
       disabled() {
@@ -65,7 +66,8 @@
 </script>
 
 <style lang="scss" scoped>
-  @import "../../../../../../scss/config/_settings.scss";
+  @import '~@scss/config/_settings.scss';
+
   .update-qty {
     color: white;
     transition: background-color 0.2s ease;

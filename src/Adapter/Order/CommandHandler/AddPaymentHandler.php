@@ -46,7 +46,6 @@ final class AddPaymentHandler extends AbstractOrderHandler implements AddPayment
     {
         $order = $this->getOrderObject($command->getOrderId());
 
-        $amount = str_replace(',', '.', $command->getPaymentAmount());
         $currency = new Currency($command->getPaymentCurrencyId()->getValue());
         $orderHasInvoice = $order->hasInvoice();
 
@@ -65,7 +64,7 @@ final class AddPaymentHandler extends AbstractOrderHandler implements AddPayment
         }
 
         $paymentAdded = $order->addOrderPayment(
-            $amount,
+            (string) $command->getPaymentAmount(),
             $command->getPaymentMethod(),
             $command->getPaymentTransactionId(),
             $currency,

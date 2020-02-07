@@ -26,21 +26,25 @@
 
 namespace PrestaShopBundle\Form\Admin\Sell\Supplier;
 
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\AddressDniRequired;
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\AddressStateRequired;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CleanHtml;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
 use PrestaShop\PrestaShop\Core\Domain\Address\AddressSettings;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\SupplierSettings;
 use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
+use PrestaShopBundle\Form\Admin\Type\CountryChoiceType;
+use PrestaShopBundle\Form\Admin\Type\FormattedTextareaType;
 use PrestaShopBundle\Form\Admin\Type\ShopChoiceTreeType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
-use Symfony\Component\Form\AbstractType;
+use PrestaShopBundle\Form\Admin\Type\TranslateType;
+use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -48,12 +52,17 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 /**
  * Defines form for supplier create/edit actions (Sell > Catalog > Brands & Suppliers > Supplier)
  */
-class SupplierType extends AbstractType
+class SupplierType extends TranslatorAwareType
 {
     /**
      * @var array
      */
     private $countryChoices;
+
+    /**
+     * @var array
+     */
+    private $countryChoicesAttributes;
 
     /**
      * @var ConfigurableFormChoiceProviderInterface
@@ -81,16 +90,21 @@ class SupplierType extends AbstractType
      * @param $contextCountryId
      * @param TranslatorInterface $translator
      * @param $isMultistoreEnabled
+     * @param array $locales
      */
     public function __construct(
         array $countryChoices,
+        array $countryChoicesAttributes,
         ConfigurableFormChoiceProviderInterface $statesChoiceProvider,
         $contextCountryId,
         TranslatorInterface $translator,
-        $isMultistoreEnabled
+        $isMultistoreEnabled,
+        array $locales = []
     ) {
-        $this->translator = $translator;
+        parent::__construct($translator, $locales);
+
         $this->countryChoices = $countryChoices;
+        $this->countryChoicesAttributes = $countryChoicesAttributes;
         $this->statesChoiceProvider = $statesChoiceProvider;
         $this->contextCountryId = $contextCountryId;
         $this->isMultistoreEnabled = $isMultistoreEnabled;
@@ -98,28 +112,23 @@ class SupplierType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        // By default the country id for states choices is taken from context country id
-        $countryIdForStateChoices = $this->contextCountryId;
-
-        // In case custom states country id is provided it is used instead (for example if it's edit action).
-        if (null !== $options['country_id']) {
-            $countryIdForStateChoices = $options['country_id'];
-        }
+        $data = $builder->getData();
+        $countryId = 0 !== $data['id_country'] ? $data['id_country'] : $this->contextCountryId;
 
         $builder
             ->add('name', TextType::class, [
                 'constraints' => [
                     new NotBlank([
-                        'message' => $this->translator->trans(
-                            'This field cannot be empty', [], 'Admin.Notifications.Error'
+                        'message' => $this->trans(
+                            'This field cannot be empty', 'Admin.Notifications.Error'
                         ),
                     ]),
                     new Length([
                         'max' => SupplierSettings::MAX_NAME_LENGTH,
-                        'maxMessage' => $this->translator->trans(
+                        'maxMessage' => $this->trans(
                             'This field cannot be longer than %limit% characters',
-                            ['%limit%' => SupplierSettings::MAX_NAME_LENGTH],
-                            'Admin.Notifications.Error'
+                            'Admin.Notifications.Error',
+                            ['%limit%' => SupplierSettings::MAX_NAME_LENGTH]
                         ),
                     ]),
                     new TypedRegex([
@@ -127,23 +136,16 @@ class SupplierType extends AbstractType
                     ]),
                 ],
             ])
-            ->add('description', TranslatableType::class, [
-                'type' => TextareaType::class,
+            ->add('description', TranslateType::class, [
                 'required' => false,
+                'type' => FormattedTextareaType::class,
+                'locales' => $this->locales,
+                'hideTabs' => false,
                 'options' => [
                     'constraints' => [
                         new CleanHtml([
-                            'message' => $this->translator->trans(
+                            'message' => $this->trans(
                                 '%s is invalid.',
-                                [],
-                                'Admin.Notifications.Error'
-                            ),
-                        ]),
-                        new TypedRegex([
-                            'type' => 'catalog_name',
-                            'message' => $this->translator->trans(
-                                '%s is invalid.',
-                                [],
                                 'Admin.Notifications.Error'
                             ),
                         ]),
@@ -173,10 +175,10 @@ class SupplierType extends AbstractType
                     ]),
                     new Length([
                         'max' => AddressSettings::MAX_POST_CODE_LENGTH,
-                        'maxMessage' => $this->translator->trans(
+                        'maxMessage' => $this->trans(
                             'This field cannot be longer than %limit% characters',
-                            ['%limit%' => AddressSettings::MAX_POST_CODE_LENGTH],
-                            'Admin.Notifications.Error'
+                            'Admin.Notifications.Error',
+                            ['%limit%' => AddressSettings::MAX_POST_CODE_LENGTH]
                         ),
                     ]),
                 ],
@@ -184,8 +186,8 @@ class SupplierType extends AbstractType
             ->add('city', TextType::class, [
                 'constraints' => [
                     new NotBlank([
-                        'message' => $this->translator->trans(
-                            'This field cannot be empty', [], 'Admin.Notifications.Error'
+                        'message' => $this->trans(
+                            'This field cannot be empty', 'Admin.Notifications.Error'
                         ),
                     ]),
                     new TypedRegex([
@@ -193,32 +195,54 @@ class SupplierType extends AbstractType
                     ]),
                     new Length([
                         'max' => AddressSettings::MAX_CITY_NAME_LENGTH,
-                        'maxMessage' => $this->translator->trans(
+                        'maxMessage' => $this->trans(
                             'This field cannot be longer than %limit% characters',
-                            ['%limit%' => AddressSettings::MAX_CITY_NAME_LENGTH],
-                            'Admin.Notifications.Error'
+                            'Admin.Notifications.Error',
+                            ['%limit%' => AddressSettings::MAX_CITY_NAME_LENGTH]
                         ),
                     ]),
                 ],
             ])
-            ->add('id_country', ChoiceType::class, [
+            ->add('id_country', CountryChoiceType::class, [
                 'required' => true,
-                'choices' => $this->countryChoices,
-                'translation_domain' => false,
+                'withDniAttr' => true,
                 'constraints' => [
                     new NotBlank([
-                        'message' => $this->translator->trans(
-                            'This field cannot be empty', [], 'Admin.Notifications.Error'
+                        'message' => $this->trans(
+                            'This field cannot be empty', 'Admin.Notifications.Error'
                         ),
                     ]),
                 ],
             ])
             ->add('id_state', ChoiceType::class, [
+                'required' => true,
+                'choices' => $this->statesChoiceProvider->getChoices(['id_country' => $countryId]),
+                'constraints' => [
+                    new AddressStateRequired([
+                        'id_country' => $countryId,
+                    ]),
+                ],
+            ])
+            ->add('dni', TextType::class, [
                 'required' => false,
-                'translation_domain' => false,
-                'choices' => $this->statesChoiceProvider->getChoices([
-                    'id_country' => $countryIdForStateChoices,
-                ]),
+                'empty_data' => '',
+                'constraints' => [
+                    new AddressDniRequired([
+                        'required' => false,
+                        'id_country' => $countryId,
+                    ]),
+                    new TypedRegex([
+                        'type' => 'dni_lite',
+                    ]),
+                    new Length([
+                        'max' => 16,
+                        'maxMessage' => $this->trans(
+                            'This field cannot be longer than %limit% characters',
+                            'Admin.Notifications.Error',
+                            ['%limit%' => 16]
+                        ),
+                    ]),
+                ],
             ])
             ->add('logo', FileType::class, [
                 'required' => false,
@@ -233,10 +257,10 @@ class SupplierType extends AbstractType
                         ]),
                         new Length([
                             'max' => SupplierSettings::MAX_META_TITLE_LENGTH,
-                            'maxMessage' => $this->translator->trans(
+                            'maxMessage' => $this->trans(
                                 'This field cannot be longer than %limit% characters',
-                                ['%limit%' => SupplierSettings::MAX_META_TITLE_LENGTH],
-                                'Admin.Notifications.Error'
+                                'Admin.Notifications.Error',
+                                ['%limit%' => SupplierSettings::MAX_META_TITLE_LENGTH]
                             ),
                         ]),
                     ],
@@ -252,10 +276,10 @@ class SupplierType extends AbstractType
                         ]),
                         new Length([
                             'max' => SupplierSettings::MAX_META_DESCRIPTION_LENGTH,
-                            'maxMessage' => $this->translator->trans(
+                            'maxMessage' => $this->trans(
                                 'This field cannot be longer than %limit% characters',
-                                ['%limit%' => SupplierSettings::MAX_META_DESCRIPTION_LENGTH],
-                                'Admin.Notifications.Error'
+                                'Admin.Notifications.Error',
+                                ['%limit%' => SupplierSettings::MAX_META_DESCRIPTION_LENGTH]
                             ),
                         ]),
                     ],
@@ -267,7 +291,7 @@ class SupplierType extends AbstractType
                 'options' => [
                     'attr' => [
                         'class' => 'js-taggable-field',
-                        'placeholder' => $this->translator->trans('Add tag', [], 'Admin.Actions'),
+                        'placeholder' => $this->trans('Add tag', 'Admin.Actions'),
                     ],
                     'constraints' => [
                         new TypedRegex([
@@ -275,10 +299,10 @@ class SupplierType extends AbstractType
                         ]),
                         new Length([
                             'max' => SupplierSettings::MAX_META_KEYWORD_LENGTH,
-                            'maxMessage' => $this->translator->trans(
+                            'maxMessage' => $this->trans(
                                 'This field cannot be longer than %limit% characters',
-                                ['%limit%' => SupplierSettings::MAX_META_KEYWORD_LENGTH],
-                                'Admin.Notifications.Error'
+                                'Admin.Notifications.Error',
+                                ['%limit%' => SupplierSettings::MAX_META_KEYWORD_LENGTH]
                             ),
                         ]),
                     ],
@@ -294,27 +318,13 @@ class SupplierType extends AbstractType
                 'required' => false,
                 'constraints' => [
                     new NotBlank([
-                        'message' => $this->translator->trans(
-                            'This field cannot be empty', [], 'Admin.Notifications.Error'
+                        'message' => $this->trans(
+                            'This field cannot be empty', 'Admin.Notifications.Error'
                         ),
                     ]),
                 ],
             ]);
         }
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function configureOptions(OptionsResolver $resolver)
-    {
-        $resolver
-            // country_id for states choices provider.
-            ->setDefaults([
-                'country_id' => null,
-            ])
-            ->setAllowedTypes('country_id', ['integer', 'null'])
-        ;
     }
 
     /**
@@ -330,10 +340,10 @@ class SupplierType extends AbstractType
             ]),
             new Length([
                 'max' => AddressSettings::MAX_ADDRESS_LENGTH,
-                'maxMessage' => $this->translator->trans(
+                'maxMessage' => $this->trans(
                     'This field cannot be longer than %limit% characters',
-                    ['%limit%' => AddressSettings::MAX_ADDRESS_LENGTH],
-                    'Admin.Notifications.Error'
+                    'Admin.Notifications.Error',
+                    ['%limit%' => AddressSettings::MAX_ADDRESS_LENGTH]
                 ),
             ]),
         ];
@@ -352,10 +362,10 @@ class SupplierType extends AbstractType
             ]),
             new Length([
                 'max' => AddressSettings::MAX_PHONE_LENGTH,
-                'maxMessage' => $this->translator->trans(
+                'maxMessage' => $this->trans(
                     'This field cannot be longer than %limit% characters',
-                    ['%limit%' => AddressSettings::MAX_PHONE_LENGTH],
-                    'Admin.Notifications.Error'
+                    'Admin.Notifications.Error',
+                    ['%limit%' => AddressSettings::MAX_PHONE_LENGTH]
                 ),
             ]),
         ];

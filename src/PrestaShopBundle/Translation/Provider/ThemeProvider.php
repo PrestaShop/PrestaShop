@@ -26,12 +26,12 @@
 
 namespace PrestaShopBundle\Translation\Provider;
 
-use PrestaShop\TranslationToolsBundle\Translation\Extractor\Util\Flattenizer;
-use Symfony\Component\Translation\MessageCatalogueInterface;
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeRepository;
+use PrestaShop\TranslationToolsBundle\Translation\Extractor\Util\Flattenizer;
 use PrestaShopBundle\Translation\Extractor\ThemeExtractor;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
+use Symfony\Component\Translation\MessageCatalogueInterface;
 
 class ThemeProvider extends AbstractProvider
 {

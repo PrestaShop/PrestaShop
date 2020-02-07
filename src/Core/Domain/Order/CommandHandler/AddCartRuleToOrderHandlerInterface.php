@@ -36,5 +36,5 @@ interface AddCartRuleToOrderHandlerInterface
     /**
      * @param AddCartRuleToOrderCommand $command
      */
-    public function handle(AddCartRuleToOrderCommand $command);
+    public function handle(AddCartRuleToOrderCommand $command): void;
 }

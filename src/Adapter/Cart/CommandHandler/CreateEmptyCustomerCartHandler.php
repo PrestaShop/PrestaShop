@@ -28,12 +28,11 @@ namespace PrestaShop\PrestaShop\Adapter\Cart\CommandHandler;
 
 use Cart;
 use Configuration;
-use Context;
-use Currency;
 use Customer;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\CreateEmptyCustomerCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\CommandHandler\CreateEmptyCustomerCartHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\CartId;
+use PrestaShopException;
 
 /**
  * @internal
@@ -47,6 +46,26 @@ final class CreateEmptyCustomerCartHandler implements CreateEmptyCustomerCartHan
     {
         $customer = new Customer($command->getCustomerId()->getValue());
 
+        $lastEmptyCartId = $customer->getLastEmptyCart(false);
+
+        if ($lastEmptyCartId) {
+            $cart = new Cart($lastEmptyCartId);
+        } else {
+            $cart = $this->createEmptyCustomerCart($customer);
+        }
+
+        return new CartId((int) $cart->id);
+    }
+
+    /**
+     * @param Customer $customer
+     *
+     * @return Cart
+     *
+     * @throws PrestaShopException
+     */
+    private function createEmptyCustomerCart(Customer $customer): Cart
+    {
         $cart = new Cart();
 
         $cart->recyclable = 0;
@@ -54,7 +73,7 @@ final class CreateEmptyCustomerCartHandler implements CreateEmptyCustomerCartHan
         $cart->id_customer = $customer->id;
         $cart->secure_key = $customer->secure_key;
 
-        $cart->id_shop = $command->getShopId()->getValue();
+        $cart->id_shop = $customer->id_shop;
         $cart->id_lang = (int) Configuration::get('PS_LANG_DEFAULT');
         $cart->id_currency = (int) Configuration::get('PS_CURRENCY_DEFAULT');
 
@@ -66,11 +85,6 @@ final class CreateEmptyCustomerCartHandler implements CreateEmptyCustomerCartHan
         $cart->setNoMultishipping();
         $cart->save();
 
-        Context::getContext()->cart = $cart;
-
-        $currency = new Currency((int) $cart->id_currency);
-        Context::getContext()->currency = $currency;
-
-        return new CartId((int) $cart->id);
+        return $cart;
     }
 }

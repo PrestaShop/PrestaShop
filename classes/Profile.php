@@ -40,17 +40,17 @@ class ProfileCore extends ObjectModel
     /**
      * @see ObjectModel::$definition
      */
-    public static $definition = array(
+    public static $definition = [
         'table' => 'profile',
         'primary' => 'id_profile',
         'multilang' => true,
-        'fields' => array(
+        'fields' => [
             /* Lang fields */
-            'name' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 32),
-        ),
-    );
+            'name' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 32],
+        ],
+    ];
 
-    protected static $_cache_accesses = array();
+    protected static $_cache_accesses = [];
 
     /**
      * Get all available profiles.
@@ -137,11 +137,11 @@ class ProfileCore extends ObjectModel
         }
 
         if (!isset(self::$_cache_accesses[$idProfile])) {
-            self::$_cache_accesses[$idProfile] = array();
+            self::$_cache_accesses[$idProfile] = [];
         }
 
         if (!isset(self::$_cache_accesses[$idProfile][$type])) {
-            self::$_cache_accesses[$idProfile][$type] = array();
+            self::$_cache_accesses[$idProfile][$type] = [];
             // Super admin profile has full auth
             if ($idProfile == _PS_ADMIN_PROFILE_) {
                 $defaultPermission = [
@@ -184,7 +184,7 @@ class ProfileCore extends ObjectModel
 
     public static function resetCacheAccesses()
     {
-        self::$_cache_accesses = array();
+        self::$_cache_accesses = [];
     }
 
     /**
@@ -202,10 +202,10 @@ class ProfileCore extends ObjectModel
 
             foreach (self::ALLOWED_PROFILE_TYPE_CHECK as $type) {
                 self::$_cache_accesses[$idProfile][$type][$tab[$type]] = array_merge(
-                    array(
+                    [
                         'id_tab' => $tab['id_tab'],
                         'class_name' => $tab['class_name'],
-                    ),
+                    ],
                     $defaultData,
                     $accessData
                 );

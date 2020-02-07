@@ -22,7 +22,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-import LocalizationException from './exception/localization';
+import LocalizationException from '@app/cldr/exception/localization';
 
 class NumberSymbol {
   /**

@@ -64,10 +64,10 @@
 		$('#move_to_left').click(function(){
 			return !$('#select_right option:selected').remove().appendTo('#select_left');
 		});
-		$('#select_left option').live('dblclick', function(){
+		$(document).on('dblclick', '#select_left option', function(e) {
 			$(this).remove().appendTo('#select_right');
 		});
-		$('#select_right option').live('dblclick', function(){
+		$(document).on('dblclick', '#select_right option', function(e) {
 			$(this).remove().appendTo('#select_left');
 		});
 	});

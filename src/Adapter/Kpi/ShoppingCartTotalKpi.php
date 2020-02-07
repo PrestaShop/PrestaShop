@@ -28,11 +28,12 @@ namespace PrestaShop\PrestaShop\Adapter\Kpi;
 
 use Cart;
 use Context;
+use Currency;
 use Group;
 use HelperKpi;
 use Order;
 use PrestaShop\PrestaShop\Core\Kpi\KpiInterface;
-use Tools;
+use PrestaShop\PrestaShop\Core\Localization\Locale;
 use Validate;
 
 /**
@@ -40,8 +41,23 @@ use Validate;
  */
 final class ShoppingCartTotalKpi implements KpiInterface
 {
-    /** @var array */
+    /**
+     * @var Locale
+     */
+    private $locale;
+
+    /**
+     * @var array
+     */
     private $options;
+
+    /**
+     * @param Locale $locale
+     */
+    public function __construct(Locale $locale)
+    {
+        $this->locale = $locale;
+    }
 
     /**
      * {@inheritdoc}
@@ -57,9 +73,9 @@ final class ShoppingCartTotalKpi implements KpiInterface
         $helper->color = 'color1';
         $helper->title = $translator->trans('Total Cart', [], 'Admin.Orderscustomers.Feature');
         $helper->subtitle = $translator->trans('Cart #%ID%', ['%ID%' => $cart->id], 'Admin.Orderscustomers.Feature');
-        $helper->value = Tools::displayPrice(
+        $helper->value = $this->locale->formatPrice(
             $this->getCartTotalPrice($cart),
-            (int) $cart->id_currency
+            Currency::getIsoCodeById((int) $cart->id_currency)
         );
 
         return $helper->generate();

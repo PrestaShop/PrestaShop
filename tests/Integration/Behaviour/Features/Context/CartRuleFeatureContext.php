@@ -26,12 +26,12 @@
 
 namespace Tests\Integration\Behaviour\Features\Context;
 
+use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Cache;
 use CartRule;
 use Configuration;
 use DateInterval;
 use DateTime;
-use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Db;
 
 class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
@@ -59,6 +59,11 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
     protected $customerFeatureContext;
 
     /**
+     * @var CategoryFeatureContext
+     */
+    protected $categoryFeatureContext;
+
+    /**
      * This hook can be used to perform a database cleaning of added objects
      *
      * @AfterScenario
@@ -77,6 +82,7 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
         $this->productFeatureContext = $scope->getEnvironment()->getContext(ProductFeatureContext::class);
         $this->carrierFeatureContext = $scope->getEnvironment()->getContext(CarrierFeatureContext::class);
         $this->customerFeatureContext = $scope->getEnvironment()->getContext(CustomerFeatureContext::class);
+        $this->categoryFeatureContext = $scope->getEnvironment()->getContext(CategoryFeatureContext::class);
     }
 
     /**
@@ -121,6 +127,33 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
         $cartRule->active = 1;
         $cartRule->add();
         $this->cartRules[$cartRuleName] = $cartRule;
+    }
+
+    /**
+     * @Given /^cart rule "(.+?)" is restricted to the category "(.+?)" with a quantity of (\d+)$/
+     */
+    public function cartRuleWithProductRuleRestriction($cartRuleName, $categoryName)
+    {
+        $this->checkCartRuleWithNameExists($cartRuleName);
+        $this->categoryFeatureContext->checkCategoryWithNameExists($categoryName);
+        $category = $this->categoryFeatureContext->getCategoryWithName($categoryName);
+
+        Db::getInstance()->execute(
+            'INSERT INTO `' . _DB_PREFIX_ . 'cart_rule_product_rule_group` (`id_cart_rule`, `quantity`) ' .
+            'VALUES (' . (int) $this->cartRules[$cartRuleName]->id . ', 1)'
+        );
+        $idProductRuleGroup = Db::getInstance()->Insert_ID();
+
+        Db::getInstance()->execute(
+            'INSERT INTO `' . _DB_PREFIX_ . 'cart_rule_product_rule` (`id_product_rule_group`, `type`) ' .
+            'VALUES (' . (int) $idProductRuleGroup . ', "categories")'
+        );
+        $idProductRule = Db::getInstance()->Insert_ID();
+
+        Db::getInstance()->execute(
+            'INSERT INTO `' . _DB_PREFIX_ . 'cart_rule_product_rule_value` (`id_product_rule`, `id_item`) ' .
+            'VALUES (' . (int) $idProductRuleGroup . ', ' . $category->id . ')'
+        );
     }
 
     /**
@@ -174,6 +207,26 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
+     * @Given /^cart rule "(.+)" is disabled$/
+     */
+    public function cartRuleIsDisabled($cartRuleName)
+    {
+        $this->checkCartRuleWithNameExists($cartRuleName);
+        $this->cartRules[$cartRuleName]->active = 0;
+        $this->cartRules[$cartRuleName]->save();
+    }
+
+    /**
+     * @When /^I enable cart rule "(.+)"$/
+     */
+    public function enableCartRule($cartRuleName)
+    {
+        $this->checkCartRuleWithNameExists($cartRuleName);
+        $this->cartRules[$cartRuleName]->active = 1;
+        $this->cartRules[$cartRuleName]->save();
+    }
+
+    /**
      * @Given /^cart rule "(.+)" does not apply to already discounted products$/
      */
     public function cartRuleDoesNotApplyToDiscountedProduct($cartRuleName)
@@ -222,12 +275,7 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
         $this->checkCartRuleWithNameExists($cartRuleName);
         $result = $this->cartRules[$cartRuleName]->checkValidity(\Context::getContext(), false, false);
         if ($result) {
-            throw new \RuntimeException(
-                sprintf(
-                    'Expects false, got %s instead',
-                    $result
-                )
-            );
+            throw new \RuntimeException(sprintf('Expects false, got %s instead', $result));
         }
     }
 
@@ -239,12 +287,7 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
         $this->checkCartRuleWithNameExists($cartRuleName);
         $result = $this->cartRules[$cartRuleName]->checkValidity(\Context::getContext(), false, false);
         if (!$result) {
-            throw new \RuntimeException(
-                sprintf(
-                    'Expects true, got %s instead',
-                    $result
-                )
-            );
+            throw new \RuntimeException(sprintf('Expects true, got %s instead', $result));
         }
     }
 
@@ -266,12 +309,7 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
     {
         $result = CartRule::haveCartRuleToday($customerId);
         if (!$result) {
-            throw new \RuntimeException(
-                sprintf(
-                    'Expects true, got %s instead',
-                    $result
-                )
-            );
+            throw new \RuntimeException(sprintf('Expects true, got %s instead', $result));
         }
     }
 
@@ -282,13 +320,7 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
     {
         $result = count($this->getCurrentCart()->getCartRules());
         if ($result != $cartRuleCount) {
-            throw new \RuntimeException(
-                sprintf(
-                    'Expects %s, got %s instead',
-                    $cartRuleCount,
-                    $result
-                )
-            );
+            throw new \RuntimeException(sprintf('Expects %s, got %s instead', $cartRuleCount, $result));
         }
     }
 
@@ -309,13 +341,7 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
         $customer = $this->customerFeatureContext->getCustomerWithName($customerName);
         $cartRules = CartRule::getCustomerCartRules($customer->id_lang, $customer->id, true, false);
         if ($expectedCount != count($cartRules)) {
-            throw new \RuntimeException(
-                sprintf(
-                    'Expects %s, got %s instead',
-                    $expectedCount,
-                    count($cartRules)
-                )
-            );
+            throw new \RuntimeException(sprintf('Expects %s, got %s instead', $expectedCount, count($cartRules)));
         }
     }
 
@@ -328,19 +354,11 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
         $customer = $this->customerFeatureContext->getCustomerWithName($customerName);
         $cartRules = CartRule::getCustomerCartRules($customer->id_lang, $customer->id, true, false);
         if (!isset($cartRules[$position - 1]['id_cart_rule'])) {
-            throw new \Exception(
-                sprintf('Undefined cartRule on position #%s', $position - 1)
-            );
+            throw new \Exception(sprintf('Undefined cartRule on position #%s', $position - 1));
         }
         $cartRule = new CartRule($cartRules[$position - 1]['id_cart_rule']);
         if ($expectedValue != $cartRule->reduction_amount) {
-            throw new \RuntimeException(
-                sprintf(
-                    'Expects %s, got %s instead',
-                    $expectedValue,
-                    $cartRule->reduction_amount
-                )
-            );
+            throw new \RuntimeException(sprintf('Expects %s, got %s instead', $expectedValue, $cartRule->reduction_amount));
         }
     }
 }

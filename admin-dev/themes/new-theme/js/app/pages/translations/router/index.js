@@ -24,7 +24,7 @@
  */
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-import Overview from 'app/pages/translations/components/app';
+import Overview from '@app/pages/translations/components/app';
 
 Vue.use(VueRouter);
 

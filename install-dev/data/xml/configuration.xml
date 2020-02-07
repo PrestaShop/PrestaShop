@@ -5,9 +5,6 @@
     <field name="value"/>
   </fields>
   <entities>
-  <configuration id="PS_SEARCH_INDEXATION" name="PS_SEARCH_INDEXATION">
-    <value>1</value>
-  </configuration>
   <configuration id="PS_CARRIER_DEFAULT" name="PS_CARRIER_DEFAULT">
     <value>1</value>
   </configuration>
@@ -142,6 +139,18 @@
   </configuration>
   <configuration id="PS_DISP_UNAVAILABLE_ATTR" name="PS_DISP_UNAVAILABLE_ATTR">
     <value>1</value>
+  </configuration>
+  <configuration id="PS_SEARCH_INDEXATION" name="PS_SEARCH_INDEXATION">
+    <value>1</value>
+  </configuration>
+  <configuration id="PS_SEARCH_FUZZY" name="PS_SEARCH_FUZZY">
+    <value>1</value>
+  </configuration>
+  <configuration id="PS_SEARCH_FUZZY_MAX_LOOP" name="PS_SEARCH_FUZZY_MAX_LOOP">
+    <value>4</value>
+  </configuration>
+  <configuration id="PS_SEARCH_MAX_WORD_LENGTH" name="PS_SEARCH_MAX_WORD_LENGTH">
+    <value>15</value>
   </configuration>
   <configuration id="PS_SEARCH_MINWORDLEN" name="PS_SEARCH_MINWORDLEN">
     <value>3</value>
@@ -303,6 +312,9 @@
     <value>1</value>
   </configuration>
   <configuration id="PS_DISPLAY_SUPPLIERS" name="PS_DISPLAY_SUPPLIERS">
+    <value>0</value>
+  </configuration>
+  <configuration id="PS_DISPLAY_MANUFACTURERS" name="PS_DISPLAY_MANUFACTURERS">
     <value>1</value>
   </configuration>
   <configuration id="PS_DISPLAY_BEST_SELLERS" name="PS_DISPLAY_BEST_SELLERS">
@@ -791,9 +803,6 @@ Country</value>
     <value>1</value>
   </configuration>
   <configuration id="PS_ROUND_TYPE" name="PS_ROUND_TYPE">
-    <value>2</value>
-  </configuration>
-  <configuration id="PS_PRICE_DISPLAY_PRECISION" name="PS_PRICE_DISPLAY_PRECISION">
     <value>2</value>
   </configuration>
   <configuration id="PS_LOG_EMAILS" name="PS_LOG_EMAILS">

@@ -114,8 +114,10 @@ abstract class AbstractColumn implements ColumnInterface
         $resolver
             ->setDefaults([
                 'sortable' => true,
+                'clickable' => false,
             ])
-            ->setAllowedTypes('sortable', 'bool');
+            ->setAllowedTypes('sortable', 'bool')
+            ->setAllowedTypes('clickable', 'bool');
     }
 
     /**

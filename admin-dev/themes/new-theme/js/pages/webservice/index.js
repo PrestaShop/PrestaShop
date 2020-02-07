@@ -23,21 +23,22 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-import Grid from "../../components/grid/grid";
-import FiltersResetExtension from "../../components/grid/extension/filters-reset-extension";
-import ReloadListActionExtension from "../../components/grid/extension/reload-list-extension";
-import ExportToSqlManagerExtension from "../../components/grid/extension/export-to-sql-manager-extension";
-import BulkActionCheckboxExtension from "../../components/grid/extension/bulk-action-checkbox-extension";
-import SubmitBulkActionExtension from "../../components/grid/extension/submit-bulk-action-extension";
-import SortingExtension from "../../components/grid/extension/sorting-extension";
-import SubmitRowActionExtension from "../../components/grid/extension/action/row/submit-row-action-extension";
-import ColumnTogglingExtension from "../../components/grid/extension/column-toggling-extension";
-import ChoiceTree from "../../components/form/choice-tree";
-import GeneratableInput from "../../components/generatable-input";
-import MultipleChoiceTable from "../../components/multiple-choice-table";
-import PermissionsRowSelector from "./permissions-row-selector";
+import Grid from '../../components/grid/grid';
+import FiltersResetExtension from '../../components/grid/extension/filters-reset-extension';
+import ReloadListActionExtension from '../../components/grid/extension/reload-list-extension';
+import ExportToSqlManagerExtension from '../../components/grid/extension/export-to-sql-manager-extension';
+import BulkActionCheckboxExtension from '../../components/grid/extension/bulk-action-checkbox-extension';
+import SubmitBulkActionExtension from '../../components/grid/extension/submit-bulk-action-extension';
+import SortingExtension from '../../components/grid/extension/sorting-extension';
+import SubmitRowActionExtension from '../../components/grid/extension/action/row/submit-row-action-extension';
+import ColumnTogglingExtension from '../../components/grid/extension/column-toggling-extension';
+import ChoiceTree from '../../components/form/choice-tree';
+import GeneratableInput from '../../components/generatable-input';
+import MultipleChoiceTable from '../../components/multiple-choice-table';
+import PermissionsRowSelector from './permissions-row-selector';
+import LinkRowActionExtension from '../../components/grid/extension/link-row-action-extension';
 
-const $ = window.$;
+const {$} = window;
 
 $(() => {
   const webserviceGrid = new Grid('webservice_key');
@@ -50,6 +51,7 @@ $(() => {
   webserviceGrid.addExtension(new SubmitBulkActionExtension());
   webserviceGrid.addExtension(new SubmitRowActionExtension());
   webserviceGrid.addExtension(new BulkActionCheckboxExtension());
+  webserviceGrid.addExtension(new LinkRowActionExtension());
 
   // needed for shop association input in form
   new ChoiceTree('#webservice_key_shop_association').enableAutoCheckChildren();

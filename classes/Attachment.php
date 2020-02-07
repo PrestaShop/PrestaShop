@@ -42,21 +42,21 @@ class AttachmentCore extends ObjectModel
     /**
      * @see ObjectModel::$definition
      */
-    public static $definition = array(
+    public static $definition = [
         'table' => 'attachment',
         'primary' => 'id_attachment',
         'multilang' => true,
-        'fields' => array(
-            'file' => array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => true, 'size' => 40),
-            'mime' => array('type' => self::TYPE_STRING, 'validate' => 'isCleanHtml', 'required' => true, 'size' => 128),
-            'file_name' => array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'size' => 128),
-            'file_size' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
+        'fields' => [
+            'file' => ['type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => true, 'size' => 40],
+            'mime' => ['type' => self::TYPE_STRING, 'validate' => 'isCleanHtml', 'required' => true, 'size' => 128],
+            'file_name' => ['type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'size' => 128],
+            'file_size' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId'],
 
             /* Lang fields */
-            'name' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 32),
-            'description' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isCleanHtml'),
-        ),
-    );
+            'name' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 32],
+            'description' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isCleanHtml'],
+        ],
+    ];
 
     /**
      * @see ObjectModel::add()
@@ -198,10 +198,10 @@ class AttachmentCore extends ObjectModel
         $result1 = Attachment::deleteProductAttachments($idProduct);
 
         if (is_array($array)) {
-            $ids = array();
+            $ids = [];
             foreach ($array as $idAttachment) {
                 if ((int) $idAttachment > 0) {
-                    $ids[] = array('id_product' => (int) $idProduct, 'id_attachment' => (int) $idAttachment);
+                    $ids[] = ['id_product' => (int) $idProduct, 'id_attachment' => (int) $idAttachment];
                 }
             }
 
@@ -228,7 +228,7 @@ class AttachmentCore extends ObjectModel
      */
     public static function getProductAttached($idLang, $list)
     {
-        $idsAttachments = array();
+        $idsAttachments = [];
         if (is_array($list)) {
             foreach ($list as $attachment) {
                 $idsAttachments[] = $attachment['id_attachment'];
@@ -239,7 +239,7 @@ class AttachmentCore extends ObjectModel
 					WHERE `id_attachment` IN (' . implode(',', array_map('intval', $idsAttachments)) . ')
 						AND pl.`id_lang` = ' . (int) $idLang;
             $tmp = Db::getInstance()->executeS($sql);
-            $productAttachments = array();
+            $productAttachments = [];
             foreach ($tmp as $t) {
                 $productAttachments[$t['id_attachment']][] = $t['name'];
             }

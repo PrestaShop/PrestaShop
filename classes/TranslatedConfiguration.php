@@ -29,29 +29,29 @@
  */
 class TranslatedConfigurationCore extends Configuration
 {
-    protected $webserviceParameters = array(
+    protected $webserviceParameters = [
         'objectNodeName' => 'translated_configuration',
         'objectsNodeName' => 'translated_configurations',
-        'fields' => array(
-            'value' => array(),
-            'date_add' => array(),
-            'date_upd' => array(),
-        ),
-    );
+        'fields' => [
+            'value' => [],
+            'date_add' => [],
+            'date_upd' => [],
+        ],
+    ];
 
-    public static $definition = array(
+    public static $definition = [
         'table' => 'configuration',
         'primary' => 'id_configuration',
         'multilang' => true,
-        'fields' => array(
-            'name' => array('type' => self::TYPE_STRING, 'validate' => 'isConfigName', 'required' => true, 'size' => 32),
-            'id_shop_group' => array('type' => self::TYPE_NOTHING, 'validate' => 'isUnsignedId'),
-            'id_shop' => array('type' => self::TYPE_NOTHING, 'validate' => 'isUnsignedId'),
-            'value' => array('type' => self::TYPE_STRING, 'lang' => true),
-            'date_add' => array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
-            'date_upd' => array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
-        ),
-    );
+        'fields' => [
+            'name' => ['type' => self::TYPE_STRING, 'validate' => 'isConfigName', 'required' => true, 'size' => 32],
+            'id_shop_group' => ['type' => self::TYPE_NOTHING, 'validate' => 'isUnsignedId'],
+            'id_shop' => ['type' => self::TYPE_NOTHING, 'validate' => 'isUnsignedId'],
+            'value' => ['type' => self::TYPE_STRING, 'lang' => true],
+            'date_add' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
+            'date_upd' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
+        ],
+    ];
 
     /**
      * TranslatedConfigurationCore constructor.

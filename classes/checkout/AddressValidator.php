@@ -43,11 +43,11 @@ class AddressValidatorCore
      */
     public function validateCartAddresses(Cart $cart)
     {
-        $invalidAddressIds = array();
-        $addressesIds = array(
+        $invalidAddressIds = [];
+        $addressesIds = [
             $cart->id_address_delivery,
             $cart->id_address_invoice,
-        );
+        ];
 
         foreach ($addressesIds as $idAddress) {
             $address = new CustomerAddress((int) $idAddress);
@@ -76,7 +76,7 @@ class AddressValidatorCore
      */
     public function validateCustomerAddresses(Customer $customer, Language $language)
     {
-        $invalidAddresses = array();
+        $invalidAddresses = [];
         $addresses = $customer->getAddresses($language->id);
 
         if (is_array($addresses)) {

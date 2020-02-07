@@ -196,7 +196,7 @@ class LocaleTest extends TestCase
      */
     public function testGetNumberSymbolsByNumberingSystemWithUnknownNumberingSystem()
     {
-        $this->setExpectedException(LocalizationException::class);
+        $this->expectException(LocalizationException::class);
 
         $this->cldrLocale->getNumberSymbolsByNumberingSystem('foobar');
     }
@@ -227,7 +227,7 @@ class LocaleTest extends TestCase
      */
     public function testGetDecimalPatternWithUnknownNumberingSystem()
     {
-        $this->setExpectedException(LocalizationException::class);
+        $this->expectException(LocalizationException::class);
 
         $this->cldrLocale->getDecimalPattern('foobar');
     }
@@ -258,7 +258,7 @@ class LocaleTest extends TestCase
      */
     public function testGetPercentPatternWithUnknownNumberingSystem()
     {
-        $this->setExpectedException(LocalizationException::class);
+        $this->expectException(LocalizationException::class);
 
         $this->cldrLocale->getPercentPattern('foobar');
     }
@@ -289,7 +289,7 @@ class LocaleTest extends TestCase
      */
     public function testGetCurrencyPatternWithUnknownNumberingSystem()
     {
-        $this->setExpectedException(LocalizationException::class);
+        $this->expectException(LocalizationException::class);
 
         $this->cldrLocale->getCurrencyPattern('foobar');
     }

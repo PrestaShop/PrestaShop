@@ -38,11 +38,12 @@ use PrestaShopException;
 abstract class AbstractAddressHandler
 {
     /**
-     * Gets legacy address
-     *
      * @param AddressId $addressId
      *
      * @return Address
+     *
+     * @throws AddressException
+     * @throws AddressNotFoundException
      */
     protected function getAddress(AddressId $addressId)
     {
@@ -53,9 +54,7 @@ abstract class AbstractAddressHandler
         }
 
         if ($address->id !== $addressId->getValue()) {
-            throw new AddressNotFoundException(
-                sprintf('Address with id "%s" was not found.', $addressId->getValue())
-            );
+            throw new AddressNotFoundException(sprintf('Address with id "%s" was not found.', $addressId->getValue()));
         }
 
         return $address;
@@ -70,15 +69,12 @@ abstract class AbstractAddressHandler
      *
      * @throws AddressException
      */
-    protected function deleteAddress(Address $address)
+    protected function deleteAddress(Address $address): bool
     {
         try {
             return $address->delete();
         } catch (PrestaShopException $e) {
-            throw new AddressException(sprintf(
-                'An error occurred when deleting Address object with id "%s".',
-                $address->id
-            ));
+            throw new AddressException(sprintf('An error occurred when deleting Address object with id "%s".', $address->id));
         }
     }
 }

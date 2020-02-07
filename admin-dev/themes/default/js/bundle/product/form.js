@@ -1156,15 +1156,6 @@ var attachmentProduct = (function() {
       var buttonSave = $('#form_step6_attachment_product_add');
       var buttonCancel = $('#form_step6_attachment_product_cancel');
 
-      /** check all attachments files */
-      $('#product-attachment-files-check').change(function() {
-        if ($(this).is(":checked")) {
-          $('#product-attachment-file input[type="checkbox"]').prop('checked', true);
-        } else {
-          $('#product-attachment-file input[type="checkbox"]').prop('checked', false);
-        }
-      });
-
       buttonCancel.click(function (){
         resetAttachmentForm();
       });

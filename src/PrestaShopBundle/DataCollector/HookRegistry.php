@@ -48,10 +48,10 @@ final class HookRegistry
 
     public function __construct()
     {
-        $this->hooks = array(
-            self::HOOK_CALLED => array(),
-            self::HOOK_NOT_CALLED => array(),
-        );
+        $this->hooks = [
+            self::HOOK_CALLED => [],
+            self::HOOK_NOT_CALLED => [],
+        ];
     }
 
     /**
@@ -62,13 +62,13 @@ final class HookRegistry
      */
     public function selectHook($hookName, $hookArguments, $file, $line)
     {
-        $this->currentHook = array(
+        $this->currentHook = [
             'name' => $hookName,
             'args' => $hookArguments,
             'location' => "$file:$line",
             'status' => self::HOOK_NOT_CALLED,
-            'modules' => array(),
-        );
+            'modules' => [],
+        ];
     }
 
     /**
@@ -84,10 +84,10 @@ final class HookRegistry
      */
     public function hookedByModule(ModuleInterface $module)
     {
-        $this->currentHook['modules'][$module->name] = array(
-            'callback' => array(),
-            'widget' => array(),
-        );
+        $this->currentHook['modules'][$module->name] = [
+            'callback' => [],
+            'widget' => [],
+        ];
     }
 
     /**
@@ -98,9 +98,9 @@ final class HookRegistry
      */
     public function hookedByCallback(ModuleInterface $module, $args)
     {
-        $this->currentHook['modules'][$module->name]['callback'] = array(
+        $this->currentHook['modules'][$module->name]['callback'] = [
             'args' => $args,
-        );
+        ];
     }
 
     /**
@@ -111,9 +111,9 @@ final class HookRegistry
      */
     public function hookedByWidget(ModuleInterface $module, $args)
     {
-        $this->currentHook['modules'][$module->name]['widget'] = array(
+        $this->currentHook['modules'][$module->name]['widget'] = [
             'args' => $args,
-        );
+        ];
     }
 
     /**
@@ -150,12 +150,12 @@ final class HookRegistry
         $name = $this->currentHook['name'];
         $status = $this->currentHook['status'];
 
-        $hook = array(
+        $hook = [
             'args' => $this->currentHook['args'],
             'name' => $name,
             'location' => $this->currentHook['location'],
             'modules' => $this->currentHook['modules'],
-        );
+        ];
 
         $this->hooks[$status][$name][] = $hook;
     }

@@ -27,6 +27,7 @@
 namespace LegacyTests\Unit\Core\Grid\Column;
 
 use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\MockObject\MockObject;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnInterface;
 use PrestaShop\PrestaShop\Core\Grid\Exception\ColumnNotFoundException;
@@ -234,7 +235,7 @@ class ColumnCollectionTest extends TestCase
     /**
      * @param string $id
      *
-     * @return \PHPUnit_Framework_MockObject_MockObject|ColumnInterface
+     * @return MockObject|ColumnInterface
      */
     private function createColumnMock($id)
     {

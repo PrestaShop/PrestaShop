@@ -85,7 +85,7 @@ final class ImportDataFormatter
      */
     public function createMultiLangField($field)
     {
-        $result = array();
+        $result = [];
 
         foreach (Language::getIDs(false) as $languageId) {
             $result[$languageId] = $field;

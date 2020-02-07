@@ -28,3 +28,5 @@ services:
       - '@prestashop.adapter.legacy.context'
       - '@prestashop.adapter.data_provider.employee'
       - "@prestashop.adapter.mail_template.partial_template_renderer"
+      - "@prestashop.core.localization.locale.context_locale"
+      - "@translator"

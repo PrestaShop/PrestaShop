@@ -37,14 +37,14 @@ class PageCore extends ObjectModel
     /**
      * @see ObjectModel::$definition
      */
-    public static $definition = array(
+    public static $definition = [
         'table' => 'page',
         'primary' => 'id_page',
-        'fields' => array(
-            'id_page_type' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-            'id_object' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
-        ),
-    );
+        'fields' => [
+            'id_page_type' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
+            'id_object' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId'],
+        ],
+    ];
 
     /**
      * @return int Current page ID
@@ -59,17 +59,17 @@ class PageCore extends ObjectModel
          *
          * @todo dispatcher module
          */
-        $specialArray = array(
+        $specialArray = [
             'product' => 'id_product',
             'category' => 'id_category',
             'order' => 'step',
             'manufacturer' => 'id_manufacturer',
-        );
+        ];
 
         $where = '';
-        $insertData = array(
+        $insertData = [
             'id_page_type' => $pageTypeId,
-        );
+        ];
 
         if (array_key_exists($controller, $specialArray)) {
             $objectId = Tools::getValue($specialArray[$controller], null);
@@ -107,7 +107,7 @@ class PageCore extends ObjectModel
             return $value;
         }
 
-        Db::getInstance()->insert('page_type', array('name' => pSQL($name)));
+        Db::getInstance()->insert('page_type', ['name' => pSQL($name)]);
 
         return Db::getInstance()->Insert_ID();
     }
@@ -134,13 +134,13 @@ class PageCore extends ObjectModel
         if (Db::getInstance()->Affected_Rows() == 0) {
             Db::getInstance()->insert(
                 'page_viewed',
-                array(
+                [
                     'id_date_range' => (int) $idDateRange,
                     'id_page' => (int) $idPage,
                     'counter' => 1,
                     'id_shop' => (int) $context->shop->id,
                     'id_shop_group' => (int) $context->shop->id_shop_group,
-                )
+                ]
             );
         }
     }

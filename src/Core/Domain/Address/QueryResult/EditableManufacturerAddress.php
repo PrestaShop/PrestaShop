@@ -100,6 +100,11 @@ class EditableManufacturerAddress
     private $other;
 
     /**
+     * @var string
+     */
+    private $dni;
+
+    /**
      * @param AddressId $addressId
      * @param string $lastName
      * @param string $firstName
@@ -113,6 +118,7 @@ class EditableManufacturerAddress
      * @param string $homePhone
      * @param string $mobilePhone
      * @param string $other
+     * @param string $dni
      */
     public function __construct(
         AddressId $addressId,
@@ -122,12 +128,13 @@ class EditableManufacturerAddress
         $city,
         $manufacturerId,
         $countryId,
-        $address2,
-        $postCode,
-        $stateId,
-        $homePhone,
-        $mobilePhone,
-        $other
+        $address2 = null,
+        $postCode = null,
+        $stateId = null,
+        $homePhone = null,
+        $mobilePhone = null,
+        $other = null,
+        $dni = null
     ) {
         $this->addressId = $addressId;
         $this->lastName = $lastName;
@@ -142,6 +149,7 @@ class EditableManufacturerAddress
         $this->homePhone = $homePhone;
         $this->mobilePhone = $mobilePhone;
         $this->other = $other;
+        $this->dni = $dni;
     }
 
     /**
@@ -246,5 +254,13 @@ class EditableManufacturerAddress
     public function getOther()
     {
         return $this->other;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDni()
+    {
+        return $this->dni;
     }
 }

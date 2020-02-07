@@ -34,6 +34,7 @@ use PrestaShop\PrestaShop\Adapter\Order\AbstractOrderHandler;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\UpdateOrderShippingDetailsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler\UpdateOrderShippingDetailsHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\TransistEmailSendingException;
 use Validate;
 
 /**
@@ -52,7 +53,7 @@ final class UpdateOrderShippingDetailsHandler extends AbstractOrderHandler imple
         $carrierId = $command->getNewCarrierId();
         $oldTrackingNumber = $order->shipping_number;
 
-        $orderCarrier = new OrderCarrier($order->getIdOrderCarrier());
+        $orderCarrier = new OrderCarrier($command->getCurrentOrderCarrierId());
         if (!Validate::isLoadedObject($orderCarrier)) {
             throw new OrderException('The order carrier ID is invalid.');
         }
@@ -87,7 +88,7 @@ final class UpdateOrderShippingDetailsHandler extends AbstractOrderHandler imple
         //send mail only if tracking number is different AND not empty
         if (!empty($trackingNumber) && $oldTrackingNumber != $trackingNumber) {
             if (!$orderCarrier->sendInTransitEmail($order)) {
-                throw new OrderException('An error occurred while sending an email to the customer.');
+                throw new TransistEmailSendingException('An error occurred while sending an email to the customer.');
             }
 
             $customer = new Customer((int) $order->id_customer);
