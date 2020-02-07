@@ -123,7 +123,7 @@ export default class AsyncSubmitBulkActionExtension {
     const chunkSize = parseInt($submitBtn.data('chunkSize'), 10);
     const chunkedIds = this.chunkArray([...ids], chunkSize);
     const submitMethod = $submitBtn.data('formMethod');
-    const formUrl = $submitBtn.data('form-url');
+    const formUrl = $submitBtn.data('formUrl');
 
     if (!['POST', 'GET', 'DELETE', 'PUT'].includes(submitMethod)) {
       return;
