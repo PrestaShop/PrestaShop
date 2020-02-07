@@ -28,7 +28,7 @@ module.exports = class Categories extends BOBasePage {
     this.filterSearchButton = `${this.categoriesListForm} button[name='category[actions][search]']`;
     this.filterResetButton = `${this.categoriesListForm} button[name='category[actions][reset]']`;
     // Bulk Actions
-    this.selectAllRowsLabel = `${this.categoriesListForm} .md-checkbox label`;
+    this.selectAllRowsLabel = `${this.categoriesListForm} tr.column-filters .md-checkbox i`;
     this.bulkActionsToggleButton = `${this.categoriesListForm} button.dropdown-toggle`;
     this.bulkActionsEnableButton = `${this.categoriesListForm} #category_grid_bulk_action_enable_selection`;
     this.bulkActionsDisableButton = `${this.categoriesListForm} #category_grid_bulk_action_disable_selection`;
