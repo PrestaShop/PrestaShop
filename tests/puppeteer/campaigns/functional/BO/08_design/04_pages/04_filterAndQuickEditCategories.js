@@ -120,12 +120,13 @@ describe('Filter And Quick Edit Categories', async () => {
             },
         },
         {
-          args: {
-            testIdentifier: 'filterPosition',
-            filterType: 'input',
-            filterBy: 'position',
-            filterValue: 5,
-          },
+          args:
+            {
+              testIdentifier: 'filterPosition',
+              filterType: 'input',
+              filterBy: 'position',
+              filterValue: 5,
+            },
         },
         {
           args:
