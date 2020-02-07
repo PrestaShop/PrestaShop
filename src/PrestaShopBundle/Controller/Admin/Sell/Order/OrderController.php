@@ -1315,6 +1315,19 @@ class OrderController extends FrameworkBundleAdminController
         }
     }
 
+    /**
+     * @AdminSecurity(
+     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     redirectRoute="admin_orders_view",
+     *     redirectQueryParamsToKeep={"orderId"},
+     *     message="You do not have permission to edit this."
+     * )
+     *
+     * @param int $orderId
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
     public function cancellationAction(int $orderId, Request $request)
     {
         $formBuilder = $this->get('prestashop.core.form.identifiable_object.builder.cancel_product_form_builder');
@@ -1323,10 +1336,12 @@ class OrderController extends FrameworkBundleAdminController
         try {
             $form->handleRequest($request);
             $result = $formHandler->handleFor($orderId, $form);
-            if ($result->isSubmitted() && $result->isValid()) {
-                $this->addFlash('success', $this->trans('The discount was successfully generated.', 'Admin.Catalog.Notification'));
-            } else {
-                $this->addFlashFormErrors($form);
+            if ($result->isSubmitted()) {
+                if ($result->isValid()) {
+                    $this->addFlash('success', $this->trans('Selected products were successfully cancelled.', 'Admin.Catalog.Notification'));
+                } else {
+                    $this->addFlashFormErrors($form);
+                }
             }
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));

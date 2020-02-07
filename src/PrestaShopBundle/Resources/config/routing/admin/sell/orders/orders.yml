@@ -309,6 +309,7 @@ admin_orders_cancellation:
   methods: [POST]
   defaults:
     _controller: PrestaShopBundle:Admin/Sell/Order/Order:cancellation
+    _legacy_controller: AdminOrders
   requirements:
     orderId: \d+
   options:
