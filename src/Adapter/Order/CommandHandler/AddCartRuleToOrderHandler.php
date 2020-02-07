@@ -159,15 +159,16 @@ final class AddCartRuleToOrderHandler extends AbstractOrderHandler implements Ad
         }
 
         if (empty($orderInvoices)) {
-            return $this->buildReducedValuesByInvoiceId(
-                0,
-                Tools::ps_round($order->total_paid_tax_incl * $discountValue / 100, 2),
-                Tools::ps_round($order->total_paid_tax_excl * $discountValue / 100, 2)
-            );
+            return [
+                $this->buildReducedValues(
+                    Tools::ps_round($order->total_paid_tax_incl * $discountValue / 100, 2),
+                    Tools::ps_round($order->total_paid_tax_excl * $discountValue / 100, 2)
+                ),
+            ]
+;
         } else {
             foreach ($orderInvoices as $orderInvoice) {
-                $reducedValuesByInvoiceId = $this->buildReducedValuesByInvoiceId(
-                    $orderInvoice->id,
+                $reducedValuesByInvoiceId[$orderInvoice->id] = $this->buildReducedValues(
                     Tools::ps_round($orderInvoice->total_paid_tax_incl * $discountValue / 100, 2),
                     Tools::ps_round($orderInvoice->total_paid_tax_excl * $discountValue / 100, 2)
                 );
@@ -195,11 +196,12 @@ final class AddCartRuleToOrderHandler extends AbstractOrderHandler implements Ad
                 throw new OrderException('The discount value is greater than the order total.');
             }
 
-            return $this->buildReducedValuesByInvoiceId(
-                0,
-                Tools::ps_round($discountValue, 2),
-                Tools::ps_round($discountValue / (1 + ($order->getTaxesAverageUsed() / 100)), 2)
-            );
+            return [
+                $this->buildReducedValues(
+                    Tools::ps_round($discountValue, 2),
+                    Tools::ps_round($discountValue / (1 + ($order->getTaxesAverageUsed() / 100)), 2)
+                ),
+            ];
         } else {
             foreach ($orderInvoices as $orderInvoice) {
                 /** @var OrderInvoice $orderInvoice */
@@ -207,11 +209,12 @@ final class AddCartRuleToOrderHandler extends AbstractOrderHandler implements Ad
                     throw new OrderException('The discount value is greater than the order invoice total.');
                 }
 
-                $reducedValuesByInvoiceId = $this->buildReducedValuesByInvoiceId(
-                    $orderInvoice->id,
-                    Tools::ps_round($discountValue, 2),
-                    Tools::ps_round($discountValue / (1 + ($order->getTaxesAverageUsed() / 100)), 2)
-                );
+                $reducedValuesByInvoiceId = [
+                    $orderInvoice->id => $this->buildReducedValues(
+                        Tools::ps_round($discountValue, 2),
+                        Tools::ps_round($discountValue / (1 + ($order->getTaxesAverageUsed() / 100)), 2)
+                    ),
+                ];
             }
         }
 
@@ -229,7 +232,9 @@ final class AddCartRuleToOrderHandler extends AbstractOrderHandler implements Ad
         $reducedValuesByInvoiceId = [];
 
         if (empty($orderInvoices)) {
-            return $this->buildReducedValuesByInvoiceId(0, $order->total_shipping_tax_incl, $order->total_shipping_tax_excl);
+            return [
+                $this->buildReducedValues($order->total_shipping_tax_incl, $order->total_shipping_tax_excl),
+            ];
         } else {
             foreach ($orderInvoices as $orderInvoice) {
                 /** @var OrderInvoice $orderInvoice */
@@ -237,11 +242,12 @@ final class AddCartRuleToOrderHandler extends AbstractOrderHandler implements Ad
                     continue;
                 }
 
-                $reducedValuesByInvoiceId = $this->buildReducedValuesByInvoiceId(
-                    $orderInvoice->id,
-                    $orderInvoice->total_shipping_tax_incl,
-                    $orderInvoice->total_shipping_tax_excl
-                );
+                $reducedValuesByInvoiceId = [
+                    $orderInvoice->id => $this->buildReducedValues(
+                        $orderInvoice->total_shipping_tax_incl,
+                        $orderInvoice->total_shipping_tax_excl
+                    ),
+                ];
             }
         }
 
@@ -350,19 +356,16 @@ final class AddCartRuleToOrderHandler extends AbstractOrderHandler implements Ad
     }
 
     /**
-     * @param int $invoiceId
      * @param float $valueTaxIncl
      * @param float $valueTaxExcl
      *
      * @return array
      */
-    private function buildReducedValuesByInvoiceId(int $invoiceId, float $valueTaxIncl, float $valueTaxExcl): array
+    private function buildReducedValues(float $valueTaxIncl, float $valueTaxExcl): array
     {
         return [
-            $invoiceId => [
-                'value_tax_incl' => $valueTaxIncl,
-                'value_tax_excl' => $valueTaxExcl,
-            ],
+            'value_tax_incl' => $valueTaxIncl,
+            'value_tax_excl' => $valueTaxExcl,
         ];
     }
 }
