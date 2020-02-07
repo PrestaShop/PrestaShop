@@ -24,18 +24,16 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+declare(strict_types=1);
+
 namespace PrestaShop\PrestaShop\Adapter\Country\CommandHandler;
 
-use Country;
 use PrestaShop\PrestaShop\Adapter\Country\AbstractCountryHandler;
-use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Address\Exception\CannotUpdateAddressFormatException;
 use PrestaShop\PrestaShop\Core\Domain\Country\Command\EditCountryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Country\CommandHandler\EditCountryHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CannotUpdateCountryException;
-use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryException;
-use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryNotFoundException;
 use PrestaShopException;
 
 /**
@@ -45,13 +43,11 @@ final class EditCountryHandler extends AbstractCountryHandler implements EditCou
 {
     /**
      * {@inheritdoc}
+     * @param EditCountryCommand $command
      *
-     * @throws AddressConstraintException
      * @throws CannotUpdateAddressFormatException
      * @throws CannotUpdateCountryException
-     * @throws CountryConstraintException
      * @throws CountryException
-     * @throws CountryNotFoundException
      */
     public function handle(EditCountryCommand $command): void
     {

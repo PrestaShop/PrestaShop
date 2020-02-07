@@ -1,11 +1,7 @@
-{% set tabActive = 'active show' %}
 <ul class="nav nav-tabs address-format-tabs" id="custom-address-fields">
   {% for key, rows in availableFields %}
-    {% if loop.index != 1 %}
-      {% set tabActive = '' %}
-    {% endif %}
     <li class="nav-item">
-      <a href="#availableListFieldsFor_{{ key }}" class="nav-link  {{ tabActive }}">
+      <a href="#availableListFieldsFor_{{ key }}" class="nav-link  {{ loop.index == 1 ? 'active show' : '' }}">
         {{ key }}
       </a>
     </li>
