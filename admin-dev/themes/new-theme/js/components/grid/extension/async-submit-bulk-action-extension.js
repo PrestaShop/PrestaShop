@@ -149,12 +149,12 @@ export default class AsyncSubmitBulkActionExtension {
         url: formUrl,
         data,
         dataType: 'json',
-      }).then((response) => {
+      }).always((response) => {
         this.progressCallback(response, firstIdsChunk, ids);
 
-        if (!response.success) {
-          errorCallback(response);
-        } else if (response.success && items.length > 0) {
+        const isSuccessfulResponse = 'success' in response && response.success;
+
+        if (isSuccessfulResponse && items.length > 0) {
           asyncSubmit(items, successCallback, errorCallback);
         } else {
           successCallback(response);
