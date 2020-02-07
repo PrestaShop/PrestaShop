@@ -104,7 +104,7 @@ Feature: Cancel Order Product from Back Office (BO)
       | product_name                | quantity |
       | Mug The best is yet to come | 565       |
       | Mug Today is a good day     | 1        |
-    Then I should get error that cancel quantity is too high
+    Then I should get error that cancel quantity is too high and max is 5
 
   @order-cancel-product
   Scenario: Order should not have invoice

@@ -233,24 +233,17 @@ class OrderRefundFeatureContext extends AbstractDomainFeatureContext
 
     /**
      * @Then I should get error that refund quantity is too high and max is :maxRefund
+     * @then I should get error that cancel quantity is too high and max is :maxRefund
      */
     public function assertLastErrorIsRefundQuantityTooHigh(int $maxRefund)
-    {
-        $this->assertLastErrorIsQuantityTooHigh();
-        if ($maxRefund !== $this->lastException->getRefundableQuantity()) {
-            throw new RuntimeException(sprintf('Invalid refundable quantity in exception, expected %s but got %s', $maxRefund, $this->lastException->getRefundableQuantity()));
-        }
-    }
-
-    /**
-     * @then I should get error that cancel quantity is too high
-     */
-    public function assertLastErrorIsQuantityTooHigh()
     {
         $this->assertLastErrorIs(
             InvalidCancelProductException::class,
             InvalidCancelProductException::QUANTITY_TOO_HIGH
         );
+        if ($maxRefund !== $this->lastException->getRefundableQuantity()) {
+            throw new RuntimeException(sprintf('Invalid refundable quantity in exception, expected %s but got %s', $maxRefund, $this->lastException->getRefundableQuantity()));
+        }
     }
 
     /**
