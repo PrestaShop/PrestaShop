@@ -10,6 +10,10 @@ const DashboardPage = require('@pages/BO/dashboard');
 const ContactsPage = require('@pages/BO/shopParameters/contact/index');
 // Importing data
 const {Contacts} = require('@data/demo/contacts');
+// Test context imports
+const testContext = require('@utils/testContext');
+
+const baseContext = 'functional_BO_shopParams_contact_filterContacts';
 
 let browser;
 let page;
@@ -41,6 +45,7 @@ describe('Filter Contacts', async () => {
   loginCommon.loginBO();
 
   it('should go to \'Shop parameters>Contact\' page', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'goToContactsPage', baseContext);
     await this.pageObjects.boBasePage.goToSubMenu(
       this.pageObjects.boBasePage.shopParametersParentLink,
       this.pageObjects.boBasePage.contactLink,
@@ -51,20 +56,29 @@ describe('Filter Contacts', async () => {
   });
 
   it('should reset all filters and get number of contacts in BO', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
     numberOfContacts = await this.pageObjects.contactsPage.resetAndGetNumberOfLines();
     await expect(numberOfContacts).to.be.above(0);
   });
   // 1 : Filter Contacts with all inputs and selects in grid table
   describe('Filter Contacts', async () => {
     const tests = [
-      {args: {filterBy: 'id_contact', filterValue: Contacts.webmaster.id}},
-      {args: {filterBy: 'name', filterValue: Contacts.customerService.title}},
-      {args: {filterBy: 'email', filterValue: Contacts.webmaster.email}},
-      {args: {filterBy: 'description', filterValue: Contacts.customerService.description}},
+      {args: {testIdentifier: 'filterId', filterBy: 'id_contact', filterValue: Contacts.webmaster.id}},
+      {args: {testIdentifier: 'filterName', filterBy: 'name', filterValue: Contacts.customerService.title}},
+      {args: {testIdentifier: 'filterEmail', filterBy: 'email', filterValue: Contacts.webmaster.email}},
+      {
+        args:
+          {
+            testIdentifier: 'filterDescription',
+            filterBy: 'description',
+            filterValue: Contacts.customerService.description,
+          },
+      },
     ];
 
     tests.forEach((test) => {
       it(`should filter by ${test.args.filterBy} '${test.args.filterValue}'`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}`, baseContext);
         await this.pageObjects.contactsPage.filterContacts(
           test.args.filterBy,
           test.args.filterValue,
@@ -81,6 +95,7 @@ describe('Filter Contacts', async () => {
       });
 
       it('should reset all filters', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}Reset`, baseContext);
         const numberOfContactsAfterReset = await this.pageObjects.contactsPage.resetAndGetNumberOfLines();
         await expect(numberOfContactsAfterReset).to.equal(numberOfContacts);
       });
