@@ -164,8 +164,9 @@ export default class CustomerRenderer {
 
       $template.find(createOrderMap.orderIdField).text(order.orderId);
       $template.find(createOrderMap.orderDateField).text(order.orderPlacedDate);
-      $template.find(createOrderMap.orderProductsField).text(order.totalProductsCount);
+      $template.find(createOrderMap.orderProductsField).text(order.orderProductsCount);
       $template.find(createOrderMap.orderTotalField).text(order.totalPaid);
+      $template.find(createOrderMap.orderPaymentMethod).text(order.paymentMethodName);
       $template.find(createOrderMap.orderStatusField).text(order.orderStatus);
       $template.find(createOrderMap.orderDetailsBtn).prop(
         'href',

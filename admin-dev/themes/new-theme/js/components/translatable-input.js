@@ -23,9 +23,9 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-import {EventEmitter} from './event-emitter';
+import { EventEmitter } from "./event-emitter";
 
-const {$} = window;
+const { $ } = window;
 
 /**
  * This class is used to automatically toggle translated inputs (displayed with one
@@ -36,12 +36,16 @@ class TranslatableInput {
   constructor(options) {
     const opts = options || {};
 
-    this.localeItemSelector = opts.localeItemSelector || '.js-locale-item';
-    this.localeButtonSelector = opts.localeButtonSelector || '.js-locale-btn';
-    this.localeInputSelector = opts.localeInputSelector || '.js-locale-input';
+    this.localeItemSelector = opts.localeItemSelector || ".js-locale-item";
+    this.localeButtonSelector = opts.localeButtonSelector || ".js-locale-btn";
+    this.localeInputSelector = opts.localeInputSelector || ".js-locale-input";
 
-    $('body').on('click', this.localeItemSelector, this.toggleLanguage.bind(this));
-    EventEmitter.on('languageSelected', this.toggleInputs.bind(this));
+    $("body").on(
+      "click",
+      this.localeItemSelector,
+      this.toggleLanguage.bind(this)
+    );
+    EventEmitter.on("languageSelected", this.toggleInputs.bind(this));
   }
 
   /**
@@ -51,8 +55,11 @@ class TranslatableInput {
    */
   toggleLanguage(event) {
     const localeItem = $(event.target);
-    const form = localeItem.closest('form');
-    EventEmitter.emit('languageSelected', {selectedLocale: localeItem.data('locale'), form});
+    const form = localeItem.closest("form");
+    EventEmitter.emit("languageSelected", {
+      selectedLocale: localeItem.data("locale"),
+      form: form
+    });
   }
 
   /**
@@ -61,14 +68,16 @@ class TranslatableInput {
    * @param {Event} event
    */
   toggleInputs(event) {
-    const {form} = event;
-    const {selectedLocale} = event;
+    const { form } = event;
+    const { selectedLocale } = event;
     const localeButton = form.find(this.localeButtonSelector);
-    const changeLanguageUrl = localeButton.data('change-language-url');
+    const changeLanguageUrl = localeButton.data("change-language-url");
 
     localeButton.text(selectedLocale);
-    form.find(this.localeInputSelector).addClass('d-none');
-    form.find(`${this.localeInputSelector}.js-locale-${selectedLocale}`).removeClass('d-none');
+    form.find(this.localeInputSelector).addClass("d-none");
+    form
+      .find(`${this.localeInputSelector}.js-locale-${selectedLocale}`)
+      .removeClass("d-none");
 
     if (changeLanguageUrl) {
       this.saveSelectedLanguage(changeLanguageUrl, selectedLocale);
@@ -87,8 +96,8 @@ class TranslatableInput {
     $.post({
       url: changeLanguageUrl,
       data: {
-        language_iso_code: selectedLocale,
-      },
+        language_iso_code: selectedLocale
+      }
     });
   }
 }

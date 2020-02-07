@@ -30,6 +30,7 @@ use Address;
 use Carrier;
 use Currency;
 use Customer;
+use Customization;
 use Group;
 use Order;
 use OrderDetail;
@@ -112,6 +113,11 @@ class OrderRefundCalculator
             }
         }
 
+        // Something has to be refunded (check refunds count instead of the sum in case a voucher is implied)
+        if (count($productRefunds) <= 0 && $shippingCostAmount <= 0) {
+            throw new InvalidRefundException(InvalidRefundException::NO_REFUNDS);
+        }
+
         return new OrderRefundSummary(
             $orderDetailList,
             $productRefunds,
@@ -168,7 +174,12 @@ class OrderRefundCalculator
             /** @var OrderDetail $orderDetail */
             $orderDetail = $orderDetails[$orderDetailId];
             $quantity = $orderDetailRefund->getProductQuantity();
-            $quantityLeft = (int) $orderDetail->product_quantity - (int) $orderDetail->product_quantity_refunded - (int) $orderDetail->product_quantity_return;
+            if ($orderDetail->id_customization) {
+                $customization = new Customization($orderDetail->id_customization);
+                $quantityLeft = (int) $customization->quantity - (int) $customization->quantity_refunded - $customization->quantity_returned;
+            } else {
+                $quantityLeft = (int) $orderDetail->product_quantity - (int) $orderDetail->product_quantity_refunded - (int) $orderDetail->product_quantity_return;
+            }
             if ($quantity > $quantityLeft) {
                 throw new InvalidRefundException(InvalidRefundException::QUANTITY_TOO_HIGH, $quantityLeft);
             }
@@ -178,14 +189,14 @@ class OrderRefundCalculator
                 'id_order_detail' => $orderDetailId,
             ];
 
-            // Compute max refund by product (based on quantity and already refunded amount)
-            $productMaxRefund = $isTaxIncluded ? (float) $orderDetail->unit_price_tax_incl : (float) $orderDetail->unit_price_tax_excl;
-            $productMaxRefund *= $quantity;
-            $productMaxRefund -= $isTaxIncluded ? (float) $orderDetail->total_refunded_tax_incl : (float) $orderDetail->total_refunded_tax_excl;
+            // Compute max refund by product (based on quantity left and already refunded amount)
+            $productUnitPrice = $isTaxIncluded ? (float) $orderDetail->unit_price_tax_incl : (float) $orderDetail->unit_price_tax_excl;
+            $productMaxRefund = (int) $quantity * $productUnitPrice;
 
             // If refunded amount is null it means the whole product is refunded (used for standard refund, and return product)
             if (null === $orderDetailRefund->getRefundedAmount()) {
-                $productRefundAmount = $productMaxRefund;
+                $productRefundAmount = $productUnitPrice * $quantity <= $productMaxRefund ?
+                    $productUnitPrice * $quantity : $productMaxRefund;
             } else {
                 $productRefundAmount = $orderDetailRefund->getRefundedAmount() <= $productMaxRefund ?
                     $orderDetailRefund->getRefundedAmount() : $productMaxRefund;

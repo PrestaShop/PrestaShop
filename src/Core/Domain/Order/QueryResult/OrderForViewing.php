@@ -466,4 +466,19 @@ class OrderForViewing
     {
         return $this->invoiceManagementIsEnabled;
     }
+
+    /**
+     * @return bool
+     */
+    public function isRefundable(): bool
+    {
+        /** @var OrderProductForViewing $product */
+        foreach ($this->products as $product) {
+            if ($product->getQuantity() > $product->getQuantityRefunded()) {
+                return true;
+            }
+        }
+
+        return $this->prices->getShippingRefundableAmountRaw() > 0;
+    }
 }

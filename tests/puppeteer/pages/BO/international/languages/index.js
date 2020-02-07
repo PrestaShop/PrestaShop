@@ -6,6 +6,7 @@ module.exports = class Languages extends LocalizationBasePage {
     super(page);
 
     this.pageTitle = 'Languages •';
+    this.successfulUpdateStatusMessage = 'The status has been successfully updated.';
 
     // Header selectors
     this.addNewLanguageLink = '#page-header-desc-configuration-add';
@@ -28,6 +29,14 @@ module.exports = class Languages extends LocalizationBasePage {
     this.dropdownToggleButton = `${this.actionsColumn} a.dropdown-toggle`;
     this.dropdownToggleMenu = `${this.actionsColumn} div.dropdown-menu`;
     this.deleteRowLink = `${this.dropdownToggleMenu} a[data-url*='/delete']`;
+    // Bulk Actions
+    this.selectAllRowsLabel = `${this.gridPanel} .md-checkbox label`;
+    this.bulkActionsToggleButton = `${this.gridPanel} button.js-bulk-actions-btn`;
+    this.bulkActionsEnableButton = '#language_grid_bulk_action_enable_selection';
+    this.bulkActionsDisableButton = '#language_grid_bulk_action_disable_selection';
+    this.bulkActionsDeleteButton = '#language_grid_bulk_action_delete_selection';
+    this.confirmDeleteModal = '#language_grid_confirm_modal';
+    this.confirmDeleteButton = `${this.confirmDeleteModal} button.btn-confirm-submit`;
   }
 
   /* Header methods */
@@ -129,5 +138,60 @@ module.exports = class Languages extends LocalizationBasePage {
     ]);
     await this.clickAndWaitForNavigation(this.deleteRowLink.replace('%ROW', row));
     return this.getTextContent(this.alertSuccessBlockParagraph);
+  }
+
+  /* Bulk Actions Methods */
+  /**
+   * Enable / disable Suppliers by Bulk Actions
+   * @param toEnable
+   * @return {Promise<textContent>}
+   */
+  async bulkEditEnabledColumn(toEnable = true) {
+    // Click on Select All
+    await Promise.all([
+      this.page.click(this.selectAllRowsLabel),
+      this.page.waitForSelector(`${this.selectAllRowsLabel}:not([disabled])`, {visible: true}),
+    ]);
+    // Click on Button Bulk actions
+    await Promise.all([
+      this.page.click(this.bulkActionsToggleButton),
+      this.page.waitForSelector(`${this.bulkActionsToggleButton}[aria-expanded='true']`, {visible: true}),
+    ]);
+    // Click on delete and wait for modal
+    await this.clickAndWaitForNavigation(toEnable ? this.bulkActionsEnableButton : this.bulkActionsDisableButton);
+    return this.getTextContent(this.alertSuccessBlockParagraph);
+  }
+
+  /**
+   * Delete with bulk actions
+   * @return {Promise<textContent>}
+   */
+  async deleteWithBulkActions() {
+    this.dialogListener(true);
+    // Click on Select All
+    await Promise.all([
+      this.page.click(this.selectAllRowsLabel),
+      this.page.waitForSelector(`${this.selectAllRowsLabel}:not([disabled])`, {visible: true}),
+    ]);
+    // Click on Button Bulk actions
+    await Promise.all([
+      this.page.click(this.bulkActionsToggleButton),
+      this.page.waitForSelector(`${this.bulkActionsToggleButton}[aria-expanded='true']`, {visible: true}),
+    ]);
+    // Click on delete and wait for modal
+    await Promise.all([
+      this.page.click(this.bulkActionsDeleteButton),
+      this.page.waitForSelector(`${this.confirmDeleteModal}.show`, {visible: true}),
+    ]);
+    await this.confirmDeleteLanguages(this.bulkActionsDeleteButton);
+    return this.getTextContent(this.alertSuccessBlockParagraph);
+  }
+
+  /**
+   * Confirm delete with in modal
+   * @return {Promise<void>}
+   */
+  async confirmDeleteLanguages() {
+    await this.clickAndWaitForNavigation(this.confirmDeleteButton);
   }
 };

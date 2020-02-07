@@ -31,7 +31,7 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Command\IssuePartialRefundCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\VoucherRefundType;
 
 /**
- * Class CurrencyFormDataHandler
+ * Class PartialRefundFormDataHandler
  */
 final class PartialRefundFormDataHandler implements FormDataHandlerInterface
 {
