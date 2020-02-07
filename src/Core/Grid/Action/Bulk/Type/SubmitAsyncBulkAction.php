@@ -32,7 +32,7 @@ final class SubmitAsyncBulkAction extends AbstractBulkAction
             ])
             ->setDefaults([
                 'confirm_message' => null,
-                'submit_method' => 'POST',
+                'submit_method' => Request::METHOD_POST,
                 'modal_options' => null,
                 'route_params' => [],
                 'chunk_size' => 1,
