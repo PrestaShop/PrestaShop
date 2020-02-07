@@ -16,7 +16,7 @@ const LanguageFaker = require('@data/faker/language');
 // Test context imports
 const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_BO_international_localization_languages_CRUDLanguages';
+const baseContext = 'functional_BO_international_localization_languages_bulkActionsLanguages';
 
 let browser;
 let page;
