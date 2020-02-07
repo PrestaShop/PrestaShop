@@ -86,7 +86,15 @@ install:
 script:
   - if [ "$PRESTASHOP_TEST_TYPE" = "unit" ]; then
         bash tests/check_file_syntax.sh;
+        file_syntax_result=$?;
         bash tests-legacy/check_phpunit.sh;
+        phpunit_result=$?;
+
+        if [[ "file_syntax_result" == "0" && "phpunit_result" == "0" ]]; then
+              exit 0;
+        else
+              exit 255;
+        fi
     fi
 
   - if [ "$PRESTASHOP_TEST_TYPE" = "unit" ]; then
