@@ -110,13 +110,12 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
 
         $this->addProductToCart($cart, $product, $combination, $command->getProductQuantity());
 
-        $invoice = $this->createNewOrEditExistingInvoice(
-            $command,
-            $order,
-            $cart
-        );
+        if ($command->isFreeShipping()) {
+            $this->createFreeShippingCartRule($cart, $order);
+        }
 
-        $totalMethod = $command->getOrderInvoiceId() ? Cart::BOTH_WITHOUT_SHIPPING : Cart::BOTH;
+        $this->updateOrderTotals($order, $cart, $command->getOrderInvoiceId());
+        $invoice = $this->createNewOrEditExistingInvoice($command, $cart, $order);
 
         // Create Order detail information
         $orderDetail = new OrderDetail();
@@ -128,25 +127,12 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
             !empty($invoice->id) ? $invoice->id : 0
         );
 
-        // update totals amount of order
-        // @todo: use https://github.com/PrestaShop/decimal for prices computations
-        $order->total_products += (float) $cart->getOrderTotal(false, Cart::ONLY_PRODUCTS);
-        $order->total_products_wt += (float) $cart->getOrderTotal(true, Cart::ONLY_PRODUCTS);
-
-        $order->total_paid += Tools::ps_round((float) $cart->getOrderTotal(true, $totalMethod), 2);
-        $order->total_paid_tax_excl += Tools::ps_round((float) $cart->getOrderTotal(false, $totalMethod), 2);
-        $order->total_paid_tax_incl += Tools::ps_round((float) $cart->getOrderTotal(true, $totalMethod), 2);
-
-        if (null !== $invoice && Validate::isLoadedObject($invoice)) {
-            $order->total_shipping = $invoice->total_shipping_tax_incl;
-            $order->total_shipping_tax_incl = $invoice->total_shipping_tax_incl;
-            $order->total_shipping_tax_excl = $invoice->total_shipping_tax_excl;
-        }
-
-        // discount
-        $order->total_discounts += (float) abs($cart->getOrderTotal(true, Cart::ONLY_DISCOUNTS));
-        $order->total_discounts_tax_excl += (float) abs($cart->getOrderTotal(false, Cart::ONLY_DISCOUNTS));
-        $order->total_discounts_tax_incl += (float) abs($cart->getOrderTotal(true, Cart::ONLY_DISCOUNTS));
+//        if (null !== $invoice && Validate::isLoadedObject($invoice)) {
+//            $order->total_shipping = $invoice->total_shipping_tax_incl;
+//            $order->total_shipping_tax_incl = $invoice->total_shipping_tax_incl;
+//            $order->total_shipping_tax_excl = $invoice->total_shipping_tax_excl;
+//            $order->total_wrapping = $invoice->total_wrapping_tax_incl;
+//        }
 
         // Save changes of order
         $order->update();
@@ -170,7 +156,7 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
             $specificPrice->delete();
         }
 
-        $order = $order->refreshShippingCost();
+//        $order = $order->refreshShippingCost();
 
         Hook::exec('actionOrderEdited', ['order' => $order]);
 
@@ -381,19 +367,18 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
     /**
      * @param AddProductToOrderCommand $command
      * @param Order $order
-     * @param Cart $cart
      *
      * @return OrderInvoice|null
      */
     private function createNewOrEditExistingInvoice(
         AddProductToOrderCommand $command,
-        Order $order,
-        Cart $cart
+        Cart $cart,
+        Order $order
     ) {
         if ($order->hasInvoice()) {
             return $command->getOrderInvoiceId() ?
-                $this->updateExistingInvoice($command->getOrderInvoiceId(), $cart) :
-                $this->createNewInvoice($order, $cart, $command->isFreeShipping());
+                $this->updateExistingInvoice($command->getOrderInvoiceId(), $order) :
+                $this->createNewInvoice($order, $cart);
         }
 
         return null;
@@ -404,48 +389,9 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
      * @param Cart $cart
      * @param bool $isFreeShipping
      */
-    private function createNewInvoice(Order $order, Cart $cart, $isFreeShipping)
+    private function createNewInvoice(Order $order, Cart $cart)
     {
         $invoice = new OrderInvoice();
-
-        // If we create a new invoice, we calculate shipping cost
-        $totalMethod = Cart::BOTH;
-
-        // Create Cart rule in order to make free shipping
-        if ($isFreeShipping) {
-            // @todo: use private method to create cart rule
-            $freeShippingCartRule = new CartRule();
-            $freeShippingCartRule->id_customer = $order->id_customer;
-            $freeShippingCartRule->name = [
-                Configuration::get('PS_LANG_DEFAULT') => $this->translator->trans(
-                    '[Generated] CartRule for Free Shipping',
-                    [],
-                    'Admin.Orderscustomers.Notification'
-                ),
-            ];
-            $freeShippingCartRule->date_from = date('Y-m-d H:i:s');
-            $freeShippingCartRule->date_to = date('Y-m-d H:i:s', time() + 24 * 3600);
-            $freeShippingCartRule->quantity = 1;
-            $freeShippingCartRule->quantity_per_user = 1;
-            $freeShippingCartRule->minimum_amount_currency = $order->id_currency;
-            $freeShippingCartRule->reduction_currency = $order->id_currency;
-            $freeShippingCartRule->free_shipping = true;
-            $freeShippingCartRule->active = 1;
-            $freeShippingCartRule->add();
-
-            // Add cart rule to cart and in order
-            $cart->addCartRule($freeShippingCartRule->id);
-            $values = [
-                'tax_incl' => $freeShippingCartRule->getContextualValue(true),
-                'tax_excl' => $freeShippingCartRule->getContextualValue(false),
-            ];
-
-            $order->addCartRule(
-                $freeShippingCartRule->id,
-                $freeShippingCartRule->name[Configuration::get('PS_LANG_DEFAULT')],
-                $values
-            );
-        }
 
         $invoice->id_order = $order->id;
         if ($invoice->number) {
@@ -461,25 +407,17 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
         $taxCalculator = $carrier->getTaxCalculator($invoice_address);
 
         // @todo: use https://github.com/PrestaShop/decimal to compute prices and taxes
-        $invoice->total_paid_tax_excl = Tools::ps_round((float) $cart->getOrderTotal(false, $totalMethod), 2);
-        $invoice->total_paid_tax_incl = Tools::ps_round((float) $cart->getOrderTotal(true, $totalMethod), 2);
-        $invoice->total_products = (float) $cart->getOrderTotal(false, Cart::ONLY_PRODUCTS);
-        $invoice->total_products_wt = (float) $cart->getOrderTotal(true, Cart::ONLY_PRODUCTS);
-        $invoice->total_shipping_tax_excl = (float) $cart->getTotalShippingCost(null, false);
-        $invoice->total_shipping_tax_incl = (float) $cart->getTotalShippingCost();
+        $invoice->total_paid_tax_excl = $order->total_paid_tax_excl;
+        $invoice->total_paid_tax_incl = $order->total_paid_tax_incl;
+        $invoice->total_products = $order->total_products;
+        $invoice->total_products_wt = $order->total_products_wt;
+        $invoice->total_shipping_tax_excl = $order->total_shipping_tax_excl;
+        $invoice->total_shipping_tax_incl = $order->total_shipping_tax_incl;
 
-        $invoice->total_wrapping_tax_excl = abs($cart->getOrderTotal(false, Cart::ONLY_WRAPPING));
-        $invoice->total_wrapping_tax_incl = abs($cart->getOrderTotal(true, Cart::ONLY_WRAPPING));
+        $invoice->total_wrapping_tax_excl = $order->total_wrapping_tax_excl;
+        $invoice->total_wrapping_tax_incl = $order->total_shipping_tax_incl;
         $invoice->shipping_tax_computation_method = (int) $taxCalculator->computation_method;
 
-        // Update current order field, only shipping because other field is updated later
-        $order->total_shipping += $invoice->total_shipping_tax_incl;
-        $order->total_shipping_tax_excl += $invoice->total_shipping_tax_excl;
-        $order->total_shipping_tax_incl += $invoice->total_shipping_tax_incl;
-
-        $order->total_wrapping += abs($cart->getOrderTotal(true, Cart::ONLY_WRAPPING));
-        $order->total_wrapping_tax_excl += abs($cart->getOrderTotal(false, Cart::ONLY_WRAPPING));
-        $order->total_wrapping_tax_incl += abs($cart->getOrderTotal(true, Cart::ONLY_WRAPPING));
         $invoice->add();
 
         $invoice->saveCarrierTaxCalculator($taxCalculator->getTaxesAmount($invoice->total_shipping_tax_excl));
@@ -498,27 +436,89 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
 
     /**
      * @param int $orderInvoiceId
-     * @param Cart $cart
+     * @param Order $order
      *
      * @return OrderInvoice
      */
-    private function updateExistingInvoice($orderInvoiceId, Cart $cart)
+    private function updateExistingInvoice($orderInvoiceId, Order $order)
     {
         $invoice = new OrderInvoice($orderInvoiceId);
 
-        $invoice->total_paid_tax_excl += Tools::ps_round(
-            (float) $cart->getOrderTotal(false, Cart::BOTH_WITHOUT_SHIPPING),
-            2
-        );
-        $invoice->total_paid_tax_incl += Tools::ps_round(
-            (float) $cart->getOrderTotal(true, Cart::BOTH_WITHOUT_SHIPPING),
-            2
-        );
-        $invoice->total_products += (float) $cart->getOrderTotal(false, Cart::ONLY_PRODUCTS);
-        $invoice->total_products_wt += (float) $cart->getOrderTotal(true, Cart::ONLY_PRODUCTS);
+        $invoice->total_paid_tax_excl += $order->total_paid_tax_excl;
+        $invoice->total_paid_tax_incl += $order->total_paid_tax_incl;
+        $invoice->total_products += $order->total_products;
+        $invoice->total_products_wt += $order->total_products_wt;
+        $invoice->total_wrapping_tax_excl += $order->total_wrapping_tax_excl;
+        $invoice->total_wrapping_tax_incl += $order->total_wrapping_tax_incl;
+        $invoice->total_discount_tax_excl += $order->total_discounts_tax_excl;
+        $invoice->total_discount_tax_incl += $order->total_discounts_tax_incl;
 
         $invoice->update();
 
         return $invoice;
+    }
+
+    private function updateOrderTotals(Order $order, Cart $cart, ?int $invoiceId): void
+    {
+        $totalMethod = $invoiceId ? Cart::BOTH_WITHOUT_SHIPPING : Cart::BOTH;
+
+        // update totals amount of order
+        // @todo: use https://github.com/PrestaShop/decimal for prices computations
+        $order->total_products += (float) $cart->getOrderTotal(false, Cart::ONLY_PRODUCTS);
+        $order->total_products_wt += (float) $cart->getOrderTotal(true, Cart::ONLY_PRODUCTS);
+
+        $order->total_paid += Tools::ps_round((float) $cart->getOrderTotal(true, $totalMethod), 2);
+        $order->total_paid_tax_excl += Tools::ps_round((float) $cart->getOrderTotal(false, $totalMethod), 2);
+        $order->total_paid_tax_incl += Tools::ps_round((float) $cart->getOrderTotal(true, $totalMethod), 2);
+
+        // discount
+        $order->total_discounts += (float) abs($cart->getOrderTotal(true, Cart::ONLY_DISCOUNTS));
+        $order->total_discounts_tax_excl += (float) abs($cart->getOrderTotal(false, Cart::ONLY_DISCOUNTS));
+        $order->total_discounts_tax_incl += (float) abs($cart->getOrderTotal(true, Cart::ONLY_DISCOUNTS));
+
+        //wrapping
+        $order->total_wrapping_tax_excl += (float) abs($cart->getOrderTotal(false, Cart::ONLY_WRAPPING));
+        $order->total_wrapping_tax_incl += (float) abs($cart->getOrderTotal(true, Cart::ONLY_WRAPPING));
+        $order->total_wrapping += (float) abs($cart->getOrderTotal(true, Cart::ONLY_WRAPPING));
+
+        //shipping
+        $order->total_shipping += (float) abs($cart->getOrderTotal(true, Cart::ONLY_SHIPPING));
+        $order->total_shipping_tax_incl += (float) abs($cart->getOrderTotal(true, Cart::ONLY_SHIPPING));
+        $order->total_shipping_tax_excl += (float) abs($cart->getOrderTotal(false, Cart::ONLY_SHIPPING));
+    }
+
+    private function createFreeShippingCartRule(Cart $cart, Order $order)
+    {
+        $freeShippingCartRule = new CartRule();
+        $freeShippingCartRule->id_customer = $order->id_customer;
+        $freeShippingCartRule->name = [
+            Configuration::get('PS_LANG_DEFAULT') => $this->translator->trans(
+                '[Generated] CartRule for Free Shipping',
+                [],
+                'Admin.Orderscustomers.Notification'
+            ),
+        ];
+        $freeShippingCartRule->date_from = date('Y-m-d H:i:s');
+        $freeShippingCartRule->date_to = date('Y-m-d H:i:s', time() + 24 * 3600);
+        $freeShippingCartRule->quantity = 1;
+        $freeShippingCartRule->quantity_per_user = 1;
+        $freeShippingCartRule->minimum_amount_currency = $order->id_currency;
+        $freeShippingCartRule->reduction_currency = $order->id_currency;
+        $freeShippingCartRule->free_shipping = true;
+        $freeShippingCartRule->active = 1;
+        $freeShippingCartRule->add();
+
+        // Add cart rule to cart and in order
+        $cart->addCartRule($freeShippingCartRule->id);
+        $values = [
+            'tax_incl' => $freeShippingCartRule->getContextualValue(true),
+            'tax_excl' => $freeShippingCartRule->getContextualValue(false),
+        ];
+
+        $order->addCartRule(
+            $freeShippingCartRule->id,
+            $freeShippingCartRule->name[Configuration::get('PS_LANG_DEFAULT')],
+            $values
+        );
     }
 }
