@@ -37,6 +37,10 @@
     width: calc(100% - 30px);
     min-width: calc(100% - 30px);
     z-index: 18;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.5s ease, visibility 0.5s ease;
+
     ul[data-depth="1"] > li {
       float: left;
       margin: 0 1.25rem;
@@ -173,6 +177,16 @@
         display: block;
         width: 100%;
       }
+    }
+  }
+}
+
+@include media-breakpoint-down(sm) {
+  .top-menu {
+    .sub-menu {
+      opacity: 1;
+      visibility: visible;
+      transition: 0.5s ease-out;
     }
   }
 }
