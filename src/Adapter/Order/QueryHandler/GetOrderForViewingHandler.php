@@ -241,7 +241,7 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
             $customer->firstname,
             $customer->lastname,
             $genderName,
-            $customer->email,
+            $customer->getEmailForDisplay(),
             new DateTimeImmutable($customer->date_add),
             $totalSpentSinceRegistration !== null ? $this->locale->formatPrice($totalSpentSinceRegistration, $currency->iso_code) : '',
             $customerStats['nb_orders'],
