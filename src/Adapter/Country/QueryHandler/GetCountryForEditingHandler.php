@@ -24,13 +24,13 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+declare(strict_types=1);
+
 namespace PrestaShop\PrestaShop\Adapter\Country\QueryHandler;
 
 use AddressFormat;
 use Country;
 use PrestaShop\PrestaShop\Adapter\Country\AbstractCountryHandler;
-use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Country\Query\GetCountryForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Country\QueryHandler\GetCountryForEditingHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Country\QueryResult\EditableCountry;
@@ -43,9 +43,6 @@ final class GetCountryForEditingHandler extends AbstractCountryHandler implement
 {
     /**
      * {@inheritdoc}
-     *
-     * @throws CountryNotFoundException
-     * @throws CountryConstraintException
      */
     public function handle(GetCountryForEditing $command): EditableCountry
     {

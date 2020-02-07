@@ -24,9 +24,10 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+declare(strict_types=1);
+
 namespace PrestaShop\PrestaShop\Core\Domain\Country\Query;
 
-use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
 
 /**
@@ -35,14 +36,12 @@ use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
 class GetCountryForEditing
 {
     /**
-     * @var CountryId
+     * @var CountryId|null
      */
     private $countryId;
 
     /**
      * @param int $countryId
-     *
-     * @throws CountryConstraintException
      */
     public function __construct(int $countryId)
     {
@@ -52,7 +51,7 @@ class GetCountryForEditing
     /**
      * @return CountryId
      */
-    public function getCountryId(): CountryId
+    public function getCountryId(): ?CountryId
     {
         return $this->countryId;
     }
