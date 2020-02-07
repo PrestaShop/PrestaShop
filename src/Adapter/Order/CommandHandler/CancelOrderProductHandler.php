@@ -35,7 +35,6 @@ use OrderCarrier;
 use OrderDetail;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\CancelOrderProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler\CancelOrderProductHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Order\Exception\EmptyProductSelectionException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidCancelProductException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidOrderStateException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
@@ -174,7 +173,7 @@ final class CancelOrderProductHandler extends AbstractOrderCommandHandler implem
     private function checkInput(CancelOrderProductCommand $command)
     {
         if (empty($command->getCancelledProducts())) {
-            throw new EmptyProductSelectionException();
+            throw new InvalidCancelProductException(InvalidCancelProductException::NO_REFUNDS);
         }
 
         foreach ($command->getCancelledProducts() as $orderDetailId => $quantity) {

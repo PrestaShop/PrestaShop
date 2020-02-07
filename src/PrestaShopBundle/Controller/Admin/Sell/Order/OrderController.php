@@ -45,7 +45,6 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Command\UpdateOrderShippingDetailsCo
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\UpdateOrderStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\CannotEditDeliveredOrderProductException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\ChangeOrderStatusException;
-use PrestaShop\PrestaShop\Core\Domain\Order\Exception\EmptyProductSelectionException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidCancelProductException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidOrderStateException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\NegativePaymentAmountException;
@@ -1419,15 +1418,11 @@ class OrderController extends FrameworkBundleAdminController
                 'Admin.Orderscustomers.Notification'
             ),
             InvalidCancelProductException::NO_REFUNDS => $this->trans(
-                'Please enter at least one refund.',
+                'Please select at least one product.',
                 'Admin.Orderscustomers.Notification'
             ),
             InvalidCancelProductException::NO_GENERATION => $this->trans(
                 'Please generate at least one credit slip or voucher.',
-                'Admin.Orderscustomers.Notification'
-            ),
-            EmptyProductSelectionException::class => $this->trans(
-              'You must select a product.',
                 'Admin.Orderscustomers.Notification'
             ),
             ProductOutOfStockException::class => $this->trans(
