@@ -97,6 +97,7 @@
       {/if}
       {hook h='displayProductPriceBlock' product=$product type="price"}
       {hook h='displayProductPriceBlock' product=$product type="after_price"}
+      {if $product.is_virtual	== 0}
       {if $product.additional_delivery_times == 1}
         {if $product.delivery_information}
           <span class="delivery-information">{$product.delivery_information}</span>
@@ -108,6 +109,7 @@
         {elseif $product.quantity <= 0 && $product.add_to_cart_url}
           <span class="delivery-information">{$product.delivery_out_stock}</span>
         {/if}
+      {/if}
       {/if}
     </div>
   </div>
