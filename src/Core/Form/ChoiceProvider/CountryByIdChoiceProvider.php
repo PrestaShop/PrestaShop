@@ -73,7 +73,7 @@ final class CountryByIdChoiceProvider implements FormChoiceProviderInterface, Fo
     }
 
     /**
-     * Get currency choices.
+     * Get country choices.
      *
      * @return array
      */
@@ -83,7 +83,7 @@ final class CountryByIdChoiceProvider implements FormChoiceProviderInterface, Fo
         $choices = [];
 
         foreach ($countries as $country) {
-            $choices[$country['name']] = $country['id_country'];
+            $choices[$country['name']] = (int) $country['id_country'];
         }
 
         return $choices;

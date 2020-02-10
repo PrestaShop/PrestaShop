@@ -58,3 +58,11 @@ services:
       - '@prestashop.adapter.country.country_required_fields_provider'
     tags:
       - { name: validator.constraint_validator }
+
+  prestashop.validator.constraint.unique_state_iso_code:
+    class: 'PrestaShop\PrestaShop\Core\ConstraintValidator\UniqueStateIsoCodeValidator'
+    arguments:
+      - "@translator"
+      - "@prestashop.core.query_bus"
+    tags:
+      - { name: validator.constraint_validator }

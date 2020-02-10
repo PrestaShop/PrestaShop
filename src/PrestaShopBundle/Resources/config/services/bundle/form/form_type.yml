@@ -1135,3 +1135,24 @@ services:
         - '@translator'
       tags:
         - { name: form.type }
+
+    form.type.common.zone_choice:
+      class: 'PrestaShopBundle\Form\Admin\Type\ZoneChoiceType'
+      tags:
+        - { name: form.type }
+
+    form.type.common.configurable_country_choice:
+      class: 'PrestaShopBundle\Form\Admin\Type\ConfigurableCountryChoiceType'
+      tags:
+        - { name: form.type }
+
+    form.type.states:
+      class: 'PrestaShopBundle\Form\Admin\Improve\International\Locations\State\StateType'
+      public: true
+      arguments:
+        - '@prestashop.core.form.choice_provider.configurable_country_by_id'
+        - '@prestashop.core.form.choice_provider.zone_by_id'
+      calls:
+        - { method: setTranslator, arguments: ['@translator'] }
+      tags:
+        - { name: form.type }

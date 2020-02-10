@@ -1,0 +1,23 @@
+services:
+  _defaults:
+    public: true
+
+  prestashop.adapter.state.command_handler.create_state_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\State\CommandHandler\AddStateHandler'
+    tags:
+      - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\State\Command\AddStateCommand' }
+
+  prestashop.adapter.state.command_handler.edit_state_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\State\CommandHandler\EditStateHandler'
+    tags:
+      - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\State\Command\EditStateCommand' }
+
+  prestashop.adapter.state.query_handler.get_state_for_editing:
+    class: 'PrestaShop\PrestaShop\Adapter\State\QueryHandler\GetStateForEditingHandler'
+    arguments:
+      - '@validator'
+    tags:
+      - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\State\Query\GetStateForEditing' }
+
+  prestashop.adapter.state.provider.country_state_by_iso_code:
+    class: 'PrestaShop\PrestaShop\Adapter\State\CountryStateByIsoCodeProvider'

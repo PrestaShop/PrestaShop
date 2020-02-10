@@ -20,3 +20,10 @@ services:
     class: 'PrestaShop\PrestaShop\Adapter\Country\CountryRequiredFieldsProvider'
     arguments:
       - '@prestashop.adapter.data_provider.country'
+      -
+  prestashop.adapter.country.query_handler.get_countries_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\Country\QueryHandler\GetCountriesHandler'
+    arguments:
+      - '@prestashop.adapter.data_provider.country'
+    tags:
+      - { name: tactician.handler, command: 'PrestaShop\PrestaShop\Core\Domain\Country\Query\GetCountries' }
