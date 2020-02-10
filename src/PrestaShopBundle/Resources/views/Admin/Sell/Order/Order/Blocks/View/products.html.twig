@@ -160,16 +160,9 @@
               {{ discount.amountFormatted }}
             </td>
             <td class="text-right">
-              <form action="{{ path('admin_orders_remove_cart_rule', {'orderId': orderForViewing.id, 'orderCartRuleId': discount.orderCartRuleId}) }}" method="post">
-                <button type="submit"
-                        class="ml-2 tooltip-link btn btn-text"
-                        data-toggle="pstooltip"
-                        data-placement="top"
-                        data-original-title="{{ 'Delete'|trans({}, 'Admin.Actions') }}"
-                >
+              <a class="delete-cart-rule" href="{{ path('admin_orders_remove_cart_rule', {'orderId': orderForViewing.id, 'orderCartRuleId': discount.orderCartRuleId}) }}">
                   <i class="material-icons">delete</i>
-                </button>
-              </form>
+              </a>
             </td>
           </tr>
         {% endfor %}
