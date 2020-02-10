@@ -24,8 +24,12 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 use PrestaShopBundle\Kernel\ModuleRepositoryFactory;
+use PrestaShopBundle\Utils\PhpFileParser;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\Finder\Finder;
+use Symfony\Component\Finder\SplFileInfo;
+use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Symfony\Component\HttpKernel\Kernel;
 
 class AppKernel extends Kernel
@@ -78,6 +82,8 @@ class AppKernel extends Kernel
             } catch (\Exception $e) {
             }
         }
+
+        $this->loadModulesBundles($bundles);
 
         return $bundles;
     }
@@ -173,6 +179,53 @@ class AppKernel extends Kernel
                 include_once $autoloader;
             }
         }
+    }
+
+
+    /**
+     * Add Bundles from active Modules to the collection.
+     */
+    private function loadModulesBundles(array &$bundles)
+    {
+        $activeModules = $this->getActiveModules();
+        /** @var SplFileInfo $moduleFolder */
+        foreach ($this->getModulesFolders() as $moduleFolder) {
+            if (in_array($moduleFolder->getFilename(), $activeModules)) {
+                $this->loadModuleBundle($moduleFolder, $bundles);
+            }
+        }
+    }
+
+    /**
+     * Checks if a single module has bundle file and add it to the collection.
+     */
+    private function loadModuleBundle(SplFileInfo $moduleFolder, array &$bundles)
+    {
+        $moduleSrcDirectory = $moduleFolder->getRealPath() . DIRECTORY_SEPARATOR . 'src';
+        if (!is_dir($moduleSrcDirectory)) {
+            return;
+        }
+
+        $finder = new Finder();
+        $finder->files()
+            ->in($moduleSrcDirectory)
+            ->depth(0)
+            ->name('*Bundle.php')
+        ;
+        foreach ($finder as $phpFile) {
+            $className = PhpFileParser::getCLassName($phpFile);
+            if (is_a($className, Bundle::class, true)) {
+                $bundles[] = new $className();
+            }
+        }
+    }
+
+    /**
+     * @return Finder
+     */
+    private function getModulesFolders()
+    {
+        return Finder::create()->directories()->in(_PS_MODULE_DIR_)->depth(0);
     }
 
     /**
