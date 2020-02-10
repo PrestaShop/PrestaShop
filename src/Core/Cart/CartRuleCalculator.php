@@ -147,17 +147,7 @@ class CartRuleCalculator
             // Discount (%) on the cheapest product
             if ($cartRule->reduction_product == -1) {
                 /** @var CartRow|null $cartRowCheapest */
-                $cartRowCheapest = null;
-                foreach ($this->cartRows as $cartRow) {
-                    $product = $cartRow->getRowData();
-                    if (((($cartRule->reduction_exclude_special && !$product['reduction_applies'])
-                            || !$cartRule->reduction_exclude_special)) && ($cartRowCheapest === null
-                            || $cartRowCheapest->getInitialUnitPrice()->getTaxIncluded() > $cartRow->getInitialUnitPrice()
-                                ->getTaxIncluded())
-                    ) {
-                        $cartRowCheapest = $cartRow;
-                    }
-                }
+                $cartRowCheapest = $this->getRowCheapestProduct($cartRule, $cart);
                 if ($cartRowCheapest !== null) {
                     // apply only on one product of the cheapest row
                     $discountTaxIncluded = $cartRowCheapest->getInitialUnitPrice()->getTaxIncluded()
