@@ -18,7 +18,7 @@ module.exports = class Brands extends BOBasePage {
     this.gridTable = '#%TABLE_grid_table';
     this.gridHeaderTitle = `${this.gridPanel} h3.card-header-title`;
     // Bulk Actions
-    this.selectAllRowsLabel = `${this.gridPanel} .md-checkbox label`;
+    this.selectAllRowsLabel = `${this.gridPanel} tr.column-filters .md-checkbox i`;
     this.bulkActionsToggleButton = `${this.gridPanel} button.js-bulk-actions-btn`;
     this.confirmDeleteModal = '#%TABLE_grid_confirm_modal';
     this.confirmDeleteButton = 'button.btn-confirm-submit';
@@ -274,7 +274,7 @@ module.exports = class Brands extends BOBasePage {
     await Promise.all([
       this.page.click(this.selectAllRowsLabel.replace('%TABLE', 'manufacturer')),
       this.page.waitForSelector(
-        `${this.selectAllRowsLabel}:not([disabled])`.replace('%TABLE', 'manufacturer'),
+        `${this.bulkActionsToggleButton}:not([disabled])`.replace('%TABLE', 'manufacturer'),
         {visible: true},
       ),
     ]);

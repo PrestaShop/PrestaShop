@@ -1,5 +1,5 @@
 {#**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,12 +18,12 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 
-<tr class="column-filters {% if 0 == grid.data.records_total or (grid.filters is empty and grid.actions.bulk|length < 0) %}d-none{% endif %}">
+<tr class="column-filters {% if 0 == grid.data.records_total and grid.filters is empty and grid.actions.bulk|length < 0 %}d-none{% endif %}">
   {% for column in grid.columns %}
     <td>
       {% if loop.first and grid.actions.bulk|length > 0 %}

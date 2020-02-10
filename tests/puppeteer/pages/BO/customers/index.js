@@ -28,7 +28,7 @@ module.exports = class Customers extends BOBasePage {
     this.filterSearchButton = `${this.customersListForm} button[name='customer[actions][search]']`;
     this.filterResetButton = `${this.customersListForm} button[name='customer[actions][reset]']`;
     // Bulk Actions
-    this.selectAllRowsLabel = `${this.customersListForm} .md-checkbox label`;
+    this.selectAllRowsLabel = `${this.customersListForm} tr.column-filters .md-checkbox i`;
     this.bulkActionsToggleButton = `${this.customersListForm} button.dropdown-toggle`;
     this.bulkActionsEnableButton = `${this.customersListForm} #customer_grid_bulk_action_enable_selection`;
     this.bulkActionsDisableButton = `${this.customersListForm} #customer_grid_bulk_action_disable_selection`;
