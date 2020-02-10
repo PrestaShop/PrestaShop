@@ -47,6 +47,8 @@ use Symfony\Component\Translation\TranslatorInterface;
  */
 final class CartGridDataFactory implements GridDataFactoryInterface
 {
+    private const DEFAULT_TWO_DASHES_VALUE = '--';
+
     /**
      * @var GridDataFactoryInterface
      */
@@ -111,7 +113,6 @@ final class CartGridDataFactory implements GridDataFactoryInterface
             $record = $this->setRecordData($record);
             $modifiedRecords[] = $record;
         }
-        $this->contextStateManager->restoreContext();
 
         return new RecordCollection($modifiedRecords);
     }
@@ -139,11 +140,11 @@ final class CartGridDataFactory implements GridDataFactoryInterface
         }
 
         if (empty($record['carrier_name'])) {
-            $record['carrier_name'] = '--';
+            $record['carrier_name'] = self::DEFAULT_TWO_DASHES_VALUE;
         }
 
         if (empty($record['customer_name'])) {
-            $record['customer_name'] = '--';
+            $record['customer_name'] = self::DEFAULT_TWO_DASHES_VALUE;
         }
 
         $record['online'] = $record['id_guest'] ?
@@ -163,6 +164,7 @@ final class CartGridDataFactory implements GridDataFactoryInterface
             throw new CartException('cart shop id is not set');
         }
         $record['shop_name'] = Context::getContext()->shop->getShops()[$cart->id_shop]['name'];
+        $this->contextStateManager->restoreContext();
 
         return $record;
     }
