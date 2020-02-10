@@ -2147,7 +2147,7 @@
     </hook>
     <hook id="actionAdminAdminPreferencesControllerPostProcessBefore">
       <name>actionAdminAdminPreferencesControllerPostProcessBefore</name>
-      <title>On post-process in Admin Preferences </title>
+      <title>On post-process in Admin Preferences</title>
       <description>This hook is called on Admin Preferences post-process before processing the form</description>
     </hook>
     <hook id="actionFeatureFormBuilderModifier">

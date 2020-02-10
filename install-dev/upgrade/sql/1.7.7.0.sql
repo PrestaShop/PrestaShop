@@ -560,7 +560,10 @@ SET
     ), 0)
 ;
 INSERT IGNORE INTO `PREFIX_hook` (`id_hook`, `name`, `title`, `description`, `position`)
-VALUES (NULL, 'actionOrderMessageFormBuilderModifier', 'Modify order message identifiable object form',
+VALUES (NULL, 'actionAdminAdminPreferencesControllerPostProcessBefore', 'On post-process in Admin Preferences',
+        'This hook is called on Admin Preferences post-process before processing the form',
+        '1'),
+       (NULL, 'actionOrderMessageFormBuilderModifier', 'Modify order message identifiable object form',
         'This hook allows to modify order message identifiable object forms content by modifying form builder data or FormBuilder itself',
         '1'),
        (NULL, 'actionCatalogPriceRuleFormBuilderModifier', 'Modify catalog price rule identifiable object form',
