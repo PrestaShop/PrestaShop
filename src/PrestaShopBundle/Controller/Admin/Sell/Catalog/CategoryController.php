@@ -134,7 +134,8 @@ class CategoryController extends FrameworkBundleAdminController
             $this->get('prestashop.core.grid.definition.factory.category'),
             $request,
             CategoryGridDefinitionFactory::GRID_ID,
-            'admin_categories_index'
+            'admin_categories_index',
+            ['categoryId']
         );
     }
 

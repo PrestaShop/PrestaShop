@@ -59,6 +59,20 @@ final class FilterCollection implements FilterCollectionInterface
     }
 
     /**
+     * @param string $filterName
+     *
+     * @return null|FilterInterface return null if no filter with given filter name
+     */
+    public function get($filterName)
+    {
+        if (isset($this->filters[$filterName])) {
+            return $this->filters[$filterName];
+        }
+
+        return null;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function all()
