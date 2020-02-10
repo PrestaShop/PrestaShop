@@ -49,8 +49,7 @@ class OrderRefundUpdater
         OrderRefundSummary $orderRefundSummary,
         bool $returnedProducts,
         bool $restock
-    )
-    {
+    ) {
         // I wonder it this is really useful since partial refund is supposed to be enabled only once order
         // is paid Maybe this should be a more general check at the beginning of the handler and throw an error
         if (!$order->hasBeenPaid()) {
