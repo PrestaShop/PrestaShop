@@ -456,7 +456,7 @@ class OrderController extends FrameworkBundleAdminController
 
     /**
      * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     "is_granted(['update', 'delete'], request.get('_legacy_controller'))",
      *     redirectRoute="admin_orders_view",
      *     redirectQueryParamsToKeep={"orderId"},
      *     message="You do not have permission to edit this."
@@ -493,7 +493,7 @@ class OrderController extends FrameworkBundleAdminController
     }
 
     /***
-     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted(['update', 'delete'], request.get('_legacy_controller'))")
      *
      * @param int $orderId
      * @param Request $request
@@ -525,7 +525,7 @@ class OrderController extends FrameworkBundleAdminController
     }
 
     /***
-     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted(['update', 'delete'], request.get('_legacy_controller'))")
      *
      * @param int $orderId
      * @param Request $request
@@ -1316,7 +1316,7 @@ class OrderController extends FrameworkBundleAdminController
 
     /**
      * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     "is_granted(['update', 'delete'], request.get('_legacy_controller'))",
      *     redirectRoute="admin_orders_view",
      *     redirectQueryParamsToKeep={"orderId"},
      *     message="You do not have permission to edit this."
@@ -1435,7 +1435,7 @@ class OrderController extends FrameworkBundleAdminController
             ),
             InvalidOrderStateException::class => [
                 InvalidOrderStateException::UNEXPECTED_INVOICE => $this->trans(
-                    'Can not proceed on an order that already has an invoice.',
+                    'Invalid action: this order already has an invoice.',
                     'Admin.Notifications.Error'
                 ),
                 InvalidOrderStateException::DELIVERY_NOT_FOUND => $this->trans(

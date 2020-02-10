@@ -172,8 +172,5 @@ export default {
       returnProduct: '.cancel-product-element:not(.hidden):not(.shipping-refund-amount), .cancel-product-selector',
       cancelProducts: '.cancel-product-element:not(.hidden):not(.shipping-refund):not(.restock-products):not(.refund-credit-slip):not(.refund-voucher), .cancel-product-selector',
     },
-    containers: {
-      refundCheckboxes: '.refund-checkboxes-container',
-    },
   },
 };
