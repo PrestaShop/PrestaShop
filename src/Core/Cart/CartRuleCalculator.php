@@ -325,4 +325,28 @@ class CartRuleCalculator
         return $cartRowCheapest;
     }
 
+    /**
+     * Get the amount of the percentage reduction of a cart rule that contains specific row calculation
+     * ( as example: cheapest product and specific product
+     *
+     * @todo Rename this method name and signature
+     * @param CartRow $cartRow
+     * @param CartRule $cartRule
+     *
+     * @return AmountImmutable $amount
+     */
+    public function getAmountReductionFromRow($cartRow, $cartRule)
+    {
+
+        $amount = null;
+        if ($cartRow !== null) {
+            $discountTaxIncluded = $cartRow->getInitialUnitPrice()->getTaxIncluded()
+                * $cartRule->reduction_percent / 100;
+            $discountTaxExcluded = $cartRow->getInitialUnitPrice()->getTaxExcluded()
+                * $cartRule->reduction_percent / 100;
+            $amount = new AmountImmutable($discountTaxIncluded, $discountTaxExcluded);
+
+        }
+        return $amount;
+    }
 }
