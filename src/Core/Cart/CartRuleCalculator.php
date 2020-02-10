@@ -307,4 +307,32 @@ class CartRuleCalculator
     {
         return $this->cartRules;
     }
+
+    /**
+     * Get the row of the cheapest product
+     *
+     * @param CartRuleData $cartRule
+     * @param Cart $cart
+     *
+     * @return CartRow $cartRowCheapest
+     */
+    public function getRowCheapestProduct($cartRule, $cart)
+    {
+
+        $cartRowCheapest = null;
+        foreach ($this->cartRows as $cartRow) {
+            $cartRow->processCalculation($cart);
+            $product = $cartRow->getRowData();
+            if (((($cartRule->reduction_exclude_special && !$product['reduction_applies'])
+                    || !$cartRule->reduction_exclude_special)) && ($cartRowCheapest === null
+                    || $cartRowCheapest->getInitialUnitPrice()->getTaxIncluded() > $cartRow->getInitialUnitPrice()
+                        ->getTaxIncluded())
+            ) {
+                $cartRowCheapest = $cartRow;
+            }
+        }
+
+        return $cartRowCheapest;
+    }
+
 }
