@@ -89,7 +89,7 @@ script:
         bash tests-legacy/check_phpunit.sh;
         phpunit_result=$?;
 
-        if [[ "file_syntax_result" == "0" && "phpunit_result" == "0" ]]; then
+        if [ $file_syntax_result -eq 0 ] && [ $phpunit_result -eq 0 ]; then
               exit 0;
         else
               exit 255;
