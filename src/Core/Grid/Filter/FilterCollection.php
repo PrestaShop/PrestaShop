@@ -61,7 +61,7 @@ final class FilterCollection implements FilterCollectionInterface
     /**
      * @param string $filterName
      *
-     * @return null|FilterInterface return null if no filter with given filter name
+     * @return FilterInterface|null return null if no filter with given filter name
      */
     public function get($filterName)
     {
