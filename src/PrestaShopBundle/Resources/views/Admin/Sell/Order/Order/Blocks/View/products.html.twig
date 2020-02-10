@@ -1,5 +1,5 @@
 {#**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *#}
@@ -253,7 +253,7 @@
           </small>
         </p>
         <div class="cancel-product-element refund-checkboxes-container">
-          <div class="form-group">
+          <div class="cancel-product-element form-group restock-products">
             {{ form_widget(cancelProductForm.restock) }}
           </div>
           <div class="form-group">
@@ -262,8 +262,11 @@
           <div class="form-group">
             {{ form_widget(cancelProductForm.voucher) }}
           </div>
-          <div class="cancel-product-element form-group shipping-refund{% if orderForViewing.prices.shippingPriceRaw %} hidden{% endif %}">
-            {{ form_widget(cancelProductForm.shipping) }}
+          <div class="cancel-product-element shipping-refund{% if orderForViewing.prices.shippingRefundableAmountRaw <= 0 %} hidden{% endif %}">
+            <div class="form-group">
+              {{ form_widget(cancelProductForm.shipping) }}
+              <small class="shipping-refund-amount">({{ orderForViewing.prices.shippingRefundableAmountFormatted }})</small>
+            </div>
           </div>
           <div class="cancel-product-element form-group voucher-refund-type{% if orderForViewing.prices.discountsAmountRaw <= 0 %} hidden{% endif %}">
             {{ 'This order has been partially paid by voucher. Choose the amount you want to refund:'|trans({}, 'Admin.Orderscustomers.Feature') }}

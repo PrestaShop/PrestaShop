@@ -1,5 +1,5 @@
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -143,10 +143,12 @@ export default {
       save: '#cancel_product_save',
       partialRefund: 'button.partial-refund-display',
       standardRefund: 'button.standard-refund-display',
+      returnProduct: 'button.return-product-display',
     },
     inputs: {
       quantity: '.cancel-product-quantity input',
       amount: '.cancel-product-amount input',
+      selector: '.cancel-product-selector input',
     },
     table: {
       cell: '.cancel-product-cell',
@@ -156,6 +158,7 @@ export default {
     checkboxes: {
       restock: '#cancel_product_restock',
       creditSlip: '#cancel_product_credit_slip',
+      voucher: '#cancel_product_voucher',
     },
     radios: {
       voucherRefundType: {
@@ -166,7 +169,8 @@ export default {
     },
     toggle: {
       partialRefund: '.cancel-product-element:not(.hidden):not(.shipping-refund), .cancel-product-amount',
-      standardRefund: '.cancel-product-element:not(.hidden):not(.shipping-refund), .cancel-product-selector',
+      standardRefund: '.cancel-product-element:not(.hidden):not(.shipping-refund-amount):not(.restock-products), .cancel-product-selector',
+      returnProduct: '.cancel-product-element:not(.hidden):not(.shipping-refund-amount), .cancel-product-selector',
     },
   },
 };

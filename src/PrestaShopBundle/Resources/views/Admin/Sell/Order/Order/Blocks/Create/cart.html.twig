@@ -1,5 +1,5 @@
 {#**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *#}
@@ -61,7 +61,7 @@
                 <span class="float-right">{{ 'Product'|trans({}, 'Admin.Global') }}</span>
               </div>
               <div class="col-4">
-                <select name="product_id" id="product-select" class="form-control" data-customization-label="{{ 'Customization'|trans({}, 'Admin.Catalog.Feature') }}"></select>
+                <select name="product_id" id="product-select" class="form-control custom-select" data-customization-label="{{ 'Customization'|trans({}, 'Admin.Catalog.Feature') }}"></select>
               </div>
             </div>
 
@@ -70,7 +70,7 @@
                 <span class="float-right">{{ 'Combination'|trans({}, 'Admin.Global') }}</span>
               </div>
               <div class="col-4">
-                <select name="combination_id" id="combination-select" class="form-control"></select>
+                <select name="combination_id" id="combination-select" class="form-control custom-select"></select>
               </div>
             </div>
 
@@ -146,7 +146,7 @@
             </span>
           </div>
           <div class="col-4">
-            <select class="form-control" id="js-cart-currency-select">
+            <select class="form-control custom-select" id="js-cart-currency-select">
               {% for name, id in currencies %}
                 <option value="{{ id }}">{{ name }}</option>
               {% endfor %}
@@ -160,7 +160,7 @@
             </span>
           </div>
           <div class="col-4">
-            <select class="form-control" id="js-cart-language-select">
+            <select class="form-control custom-select" id="js-cart-language-select">
               {% for name, id in languages %}
                 <option value="{{ id }}">{{ name }}</option>
               {% endfor %}

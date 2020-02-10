@@ -1,5 +1,5 @@
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -164,8 +164,9 @@ export default class CustomerRenderer {
 
       $template.find(createOrderMap.orderIdField).text(order.orderId);
       $template.find(createOrderMap.orderDateField).text(order.orderPlacedDate);
-      $template.find(createOrderMap.orderProductsField).text(order.totalProductsCount);
+      $template.find(createOrderMap.orderProductsField).text(order.orderProductsCount);
       $template.find(createOrderMap.orderTotalField).text(order.totalPaid);
+      $template.find(createOrderMap.orderPaymentMethod).text(order.paymentMethodName);
       $template.find(createOrderMap.orderStatusField).text(order.orderStatus);
       $template.find(createOrderMap.orderDetailsBtn).prop(
         'href',

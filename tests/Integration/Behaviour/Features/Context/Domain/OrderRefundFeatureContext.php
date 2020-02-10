@@ -27,22 +27,35 @@
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 use Behat\Gherkin\Node\TableNode;
+use Configuration;
 use Order;
 use OrderSlip;
 use PHPUnit\Framework\Assert as Assert;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\IssuePartialRefundCommand;
+use PrestaShop\PrestaShop\Core\Domain\Order\Command\IssueReturnProductCommand;
+use PrestaShop\PrestaShop\Core\Domain\Order\Command\IssueStandardRefundCommand;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidOrderStateException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidRefundException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\ReturnProductDisabledException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderProductForViewing;
-use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
 use PrestaShop\PrestaShop\Core\Domain\Order\VoucherRefundType;
 use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 
 class OrderRefundFeatureContext extends AbstractDomainFeatureContext
 {
+    /**
+     * @BeforeScenario
+     */
+    public function before()
+    {
+        // Merchandise return is disabled by default, use enabledReturnProduct() to enable it
+        Configuration::set('PS_ORDER_RETURN', 0);
+    }
+
     /**
      * @When /^I issue a partial refund on "(.*)" (with|without) restock (with|without) credit slip (with|without) voucher on following products:$/
      *
@@ -68,6 +81,78 @@ class OrderRefundFeatureContext extends AbstractDomainFeatureContext
         try {
             $this->lastException = null;
             $command = $this->createIssuePartialRefundCommand(
+                $orderId,
+                $refundData,
+                $restockProducts,
+                $generateCreditSlip,
+                $generateVoucher
+            );
+
+            $this->getCommandBus()->handle($command);
+        } catch (OrderException $e) {
+            $this->lastException = $e;
+        }
+    }
+
+    /**
+     * @When /^I issue a standard refund on "(.*)" (with|without) credit slip (with|without) voucher on following products:$/
+     *
+     * @param string $orderReference
+     * @param string $generateCreditSlip
+     * @param string $generateVoucher
+     * @param TableNode $table
+     */
+    public function issueStandardRefundOrder(
+        string $orderReference,
+        string $generateCreditSlip,
+        string $generateVoucher,
+        TableNode $table
+    ) {
+        $generateCreditSlip = 'with' === $generateCreditSlip;
+        $generateVoucher = 'with' === $generateVoucher;
+        $orderId = SharedStorage::getStorage()->get($orderReference);
+        $refundData = $table->getColumnsHash();
+
+        try {
+            $this->lastException = null;
+            $command = $this->createIssueStandardRefundCommand(
+                $orderId,
+                $refundData,
+                $generateCreditSlip,
+                $generateVoucher
+            );
+
+            $this->getCommandBus()->handle($command);
+        } catch (OrderException $e) {
+            $this->lastException = $e;
+        }
+    }
+
+    /**
+     * @When /^I issue a return product on "(.*)" (with|without) restock (with|without) credit slip (with|without) voucher on following products:$/
+     *
+     * @param string $orderReference
+     * @param string $restockProducts
+     * @param string $generateCreditSlip
+     * @param string $generateVoucher
+     * @param TableNode $table
+     */
+    public function issueReturnProductOrder(
+        string $orderReference,
+        string $restockProducts,
+        string $generateCreditSlip,
+        string $generateVoucher,
+        TableNode $table
+    ) {
+        $restockProducts = 'with' === $restockProducts;
+        $generateCreditSlip = 'with' === $generateCreditSlip;
+        $generateVoucher = 'with' === $generateVoucher;
+        $orderId = SharedStorage::getStorage()->get($orderReference);
+        $refundData = $table->getColumnsHash();
+
+        try {
+            $this->lastException = null;
+            $command = $this->createIssueReturnProductCommand(
                 $orderId,
                 $refundData,
                 $restockProducts,
@@ -129,6 +214,14 @@ class OrderRefundFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @Given return product is enabled
+     */
+    public function enabledReturnProduct()
+    {
+        Configuration::set('PS_ORDER_RETURN', 1);
+    }
+
+    /**
      * @Then I should get error that refund quantity is invalid
      */
     public function assertLastErrorIsInvalidRefundQuantity()
@@ -172,14 +265,34 @@ class OrderRefundFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @Then I should get error that return product is disabled
+     */
+    public function assertLastErrorIsReturnProductDisabled()
+    {
+        $this->assertLastErrorIs(ReturnProductDisabledException::class);
+    }
+
+    /**
+     * @Then I should get error that order state is invalid
+     */
+    public function assertLastErrorIsInvalidOrderState()
+    {
+        $this->assertLastErrorIs(InvalidOrderStateException::class);
+    }
+
+    /**
      * @param int $orderId
      * @param array $refunds
      * @param bool $restockRefundedProducts
+     * @param bool $generateCreditSlip
      * @param bool $generateVoucher
      * @param int $voucherRefundType
      * @param float|null $voucherRefundAmount
      *
      * @return IssuePartialRefundCommand
+     *
+     * @throws InvalidRefundException
+     * @throws OrderException
      */
     private function createIssuePartialRefundCommand(
         int $orderId,
@@ -218,6 +331,117 @@ class OrderRefundFeatureContext extends AbstractDomainFeatureContext
             $orderDetailsRefunds,
             $shippingCostRefund,
             $restockRefundedProducts,
+            $generateCreditSlip,
+            $generateVoucher,
+            $voucherRefundType,
+            $voucherRefundAmount
+        );
+    }
+
+    /**
+     * @param int $orderId
+     * @param array $refunds
+     * @param bool $generateCreditSlip
+     * @param bool $generateVoucher
+     * @param int $voucherRefundType
+     * @param float|null $voucherRefundAmount
+     *
+     * @return IssueStandardRefundCommand
+     *
+     * @throws InvalidRefundException
+     * @throws OrderException
+     */
+    private function createIssueStandardRefundCommand(
+        int $orderId,
+        array $refunds,
+        bool $generateCreditSlip,
+        bool $generateVoucher,
+        int $voucherRefundType = VoucherRefundType::PRODUCT_PRICES_EXCLUDING_VOUCHER_REFUND,
+        ?float $voucherRefundAmount = null
+    ): IssueStandardRefundCommand {
+        /** @var OrderForViewing $orderForViewing */
+        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing((int) $orderId));
+
+        $refundShippingCost = false;
+        $orderDetailsRefunds = [];
+        foreach ($refunds as $refund) {
+            if ('shipping_refund' === $refund['product_name']) {
+                $refundShippingCost = (int) $refund['quantity'] > 0;
+                continue;
+            }
+            $products = $orderForViewing->getProducts()->getProducts();
+            /** @var OrderProductForViewing $product */
+            foreach ($products as $product) {
+                if ($product->getName() === $refund['product_name']) {
+                    $orderDetailsRefunds[$product->getOrderDetailId()]['quantity'] = $refund['quantity'];
+                    continue 2;
+                }
+            }
+
+            throw new RuntimeException(sprintf('Product %s not found in orders products', $refund['product_name']));
+        }
+
+        return new IssueStandardRefundCommand(
+            $orderId,
+            $orderDetailsRefunds,
+            $refundShippingCost,
+            $generateCreditSlip,
+            $generateVoucher,
+            $voucherRefundType,
+            $voucherRefundAmount
+        );
+    }
+
+    /**
+     * @param int $orderId
+     * @param array $refunds
+     * @param bool $restockRefundedProducts
+     * @param bool $generateCreditSlip
+     * @param bool $generateVoucher
+     * @param int $voucherRefundType
+     * @param float|null $voucherRefundAmount
+     *
+     * @return IssueReturnProductCommand
+     *
+     * @throws InvalidRefundException
+     * @throws OrderException
+     */
+    private function createIssueReturnProductCommand(
+        int $orderId,
+        array $refunds,
+        bool $restockRefundedProducts,
+        bool $generateCreditSlip,
+        bool $generateVoucher,
+        int $voucherRefundType = VoucherRefundType::PRODUCT_PRICES_EXCLUDING_VOUCHER_REFUND,
+        ?float $voucherRefundAmount = null
+    ): IssueReturnProductCommand {
+        /** @var OrderForViewing $orderForViewing */
+        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing((int) $orderId));
+
+        $refundShippingCost = false;
+        $orderDetailsRefunds = [];
+        foreach ($refunds as $refund) {
+            if ('shipping_refund' === $refund['product_name']) {
+                $refundShippingCost = (int) $refund['quantity'] > 0;
+                continue;
+            }
+            $products = $orderForViewing->getProducts()->getProducts();
+            /** @var OrderProductForViewing $product */
+            foreach ($products as $product) {
+                if ($product->getName() === $refund['product_name']) {
+                    $orderDetailsRefunds[$product->getOrderDetailId()]['quantity'] = $refund['quantity'];
+                    continue 2;
+                }
+            }
+
+            throw new RuntimeException(sprintf('Product %s not found in orders products', $refund['product_name']));
+        }
+
+        return new IssueReturnProductCommand(
+            $orderId,
+            $orderDetailsRefunds,
+            $restockRefundedProducts,
+            $refundShippingCost,
             $generateCreditSlip,
             $generateVoucher,
             $voucherRefundType,

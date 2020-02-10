@@ -1,5 +1,5 @@
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,10 +18,11 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+import {EventEmitter} from './event-emitter';
 
 const {$} = window;
 
@@ -51,9 +52,10 @@ class TinyMCEEditor {
         });
       }
     }
-
     if (typeof opts.langIsRtl === 'undefined') {
-      opts.langIsRtl = typeof window.lang_is_rtl !== 'undefined' ? window.lang_is_rtl === '1' : false;
+      opts.langIsRtl = typeof window.lang_is_rtl !== 'undefined'
+        ? window.lang_is_rtl === '1'
+        : false;
     }
     this.setupTinyMCE(opts);
   }
@@ -79,10 +81,12 @@ class TinyMCEEditor {
   initTinyMCE(config) {
     const cfg = {
       selector: '.rte',
-      plugins: 'align colorpicker link image filemanager table media placeholder advlist code table autoresize',
+      plugins:
+        'align colorpicker link image filemanager table media placeholder advlist code table autoresize',
       browser_spellcheck: true,
-      /* eslint-disable-next-line max-len */
-      toolbar1: 'code,colorpicker,bold,italic,underline,strikethrough,blockquote,link,align,bullist,numlist,table,image,media,formatselect',
+      toolbar1:
+        /* eslint-disable-next-line max-len */
+        'code,colorpicker,bold,italic,underline,strikethrough,blockquote,link,align,bullist,numlist,table,image,media,formatselect',
       toolbar2: '',
       external_filemanager_path: `${config.baseAdminUrl}filemanager/`,
       filemanager_title: 'File manager',
@@ -90,7 +94,7 @@ class TinyMCEEditor {
         filemanager: `${config.baseAdminUrl}filemanager/plugin.min.js`,
       },
       language: window.iso_user,
-      content_style: (config.langIsRtl ? 'body {direction:rtl;}' : ''),
+      content_style: config.langIsRtl ? 'body {direction:rtl;}' : '',
       skin: 'prestashop',
       menubar: false,
       statusbar: false,
@@ -100,12 +104,14 @@ class TinyMCEEditor {
       extended_valid_elements: 'em[class|name|id],@[role|data-*|aria-*]',
       valid_children: '+*[*]',
       valid_elements: '*[*]',
-      rel_list: [
-        {title: 'nofollow', value: 'nofollow'},
-      ],
+      rel_list: [{title: 'nofollow', value: 'nofollow'}],
       editor_selector: 'autoload_rte',
-      init_instance_callback: () => { this.changeToMaterial(); },
-      setup: (editor) => { this.setupEditor(editor); },
+      init_instance_callback: () => {
+        this.changeToMaterial();
+      },
+      setup: (editor) => {
+        this.setupEditor(editor);
+      },
       ...config,
     };
 
@@ -114,7 +120,9 @@ class TinyMCEEditor {
     }
 
     // Change icons in popups
-    $('body').on('click', '.mce-btn, .mce-open, .mce-menu-item', () => { this.changeToMaterial(); });
+    $('body').on('click', '.mce-btn, .mce-open, .mce-menu-item', () => {
+      this.changeToMaterial();
+    });
 
     window.tinyMCE.init(cfg);
     this.watchTabChanges(cfg);
@@ -155,13 +163,25 @@ class TinyMCEEditor {
         const textareaLinkSelector = `.nav-item a[data-locale="${textareaLocale}"]`;
 
         $(textareaLinkSelector, tabContainer).on('shown.bs.tab', () => {
+          const form = $(textarea).closest('form');
           const editor = window.tinyMCE.get(textarea.id);
           if (editor) {
             // Reset content to force refresh of editor
             editor.setContent(editor.getContent());
           }
+
+          EventEmitter.emit('languageSelected', {
+            selectedLocale: textareaLocale,
+            form,
+          });
         });
       }
+    });
+
+    EventEmitter.on('languageSelected', (data) => {
+      const textareaLinkSelector = `.nav-item a[data-locale="${data.selectedLocale}"]`;
+
+      $(textareaLinkSelector).click();
     });
   }
 
@@ -177,12 +197,14 @@ class TinyMCEEditor {
 
     this.tinyMCELoaded = true;
     const pathArray = config.baseAdminUrl.split('/');
-    pathArray.splice((pathArray.length - 2), 2);
+    pathArray.splice(pathArray.length - 2, 2);
     const finalPath = pathArray.join('/');
     window.tinyMCEPreInit = {};
     window.tinyMCEPreInit.base = `${finalPath}/js/tiny_mce`;
     window.tinyMCEPreInit.suffix = '.min';
-    $.getScript(`${finalPath}/js/tiny_mce/tinymce.min.js`, () => { this.setupTinyMCE(config); });
+    $.getScript(`${finalPath}/js/tiny_mce/tinymce.min.js`, () => {
+      this.setupTinyMCE(config);
+    });
   }
 
   /**
@@ -195,13 +217,15 @@ class TinyMCEEditor {
       'mce-i-bold': '<i class="material-icons">format_bold</i>',
       'mce-i-italic': '<i class="material-icons">format_italic</i>',
       'mce-i-underline': '<i class="material-icons">format_underlined</i>',
-      'mce-i-strikethrough': '<i class="material-icons">format_strikethrough</i>',
+      'mce-i-strikethrough':
+        '<i class="material-icons">format_strikethrough</i>',
       'mce-i-blockquote': '<i class="material-icons">format_quote</i>',
       'mce-i-link': '<i class="material-icons">link</i>',
       'mce-i-alignleft': '<i class="material-icons">format_align_left</i>',
       'mce-i-aligncenter': '<i class="material-icons">format_align_center</i>',
       'mce-i-alignright': '<i class="material-icons">format_align_right</i>',
-      'mce-i-alignjustify': '<i class="material-icons">format_align_justify</i>',
+      'mce-i-alignjustify':
+        '<i class="material-icons">format_align_justify</i>',
       'mce-i-bullist': '<i class="material-icons">format_list_bulleted</i>',
       'mce-i-numlist': '<i class="material-icons">format_list_numbered</i>',
       'mce-i-image': '<i class="material-icons">image</i>',
@@ -227,11 +251,20 @@ class TinyMCEEditor {
     const counterType = textarea.attr('counter_type');
     const max = window.tinyMCE.activeEditor.getBody().textContent.length;
 
-    textarea.parent().find('span.currentLength').text(max);
+    textarea
+      .parent()
+      .find('span.currentLength')
+      .text(max);
     if (counterType !== 'recommended' && max > counter) {
-      textarea.parent().find('span.maxLength').addClass('text-danger');
+      textarea
+        .parent()
+        .find('span.maxLength')
+        .addClass('text-danger');
     } else {
-      textarea.parent().find('span.maxLength').removeClass('text-danger');
+      textarea
+        .parent()
+        .find('span.maxLength')
+        .removeClass('text-danger');
     }
   }
 }

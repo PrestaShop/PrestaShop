@@ -1,5 +1,5 @@
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -40,7 +40,11 @@ class TranslatableInput {
     this.localeButtonSelector = opts.localeButtonSelector || '.js-locale-btn';
     this.localeInputSelector = opts.localeInputSelector || '.js-locale-input';
 
-    $('body').on('click', this.localeItemSelector, this.toggleLanguage.bind(this));
+    $('body').on(
+      'click',
+      this.localeItemSelector,
+      this.toggleLanguage.bind(this),
+    );
     EventEmitter.on('languageSelected', this.toggleInputs.bind(this));
   }
 
@@ -52,7 +56,10 @@ class TranslatableInput {
   toggleLanguage(event) {
     const localeItem = $(event.target);
     const form = localeItem.closest('form');
-    EventEmitter.emit('languageSelected', {selectedLocale: localeItem.data('locale'), form});
+    EventEmitter.emit('languageSelected', {
+      selectedLocale: localeItem.data('locale'),
+      form,
+    });
   }
 
   /**
@@ -68,7 +75,9 @@ class TranslatableInput {
 
     localeButton.text(selectedLocale);
     form.find(this.localeInputSelector).addClass('d-none');
-    form.find(`${this.localeInputSelector}.js-locale-${selectedLocale}`).removeClass('d-none');
+    form
+      .find(`${this.localeInputSelector}.js-locale-${selectedLocale}`)
+      .removeClass('d-none');
 
     if (changeLanguageUrl) {
       this.saveSelectedLanguage(changeLanguageUrl, selectedLocale);
