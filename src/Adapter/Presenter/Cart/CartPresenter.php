@@ -436,7 +436,7 @@ class CartPresenter implements PresenterInterface
         ];
 
         $discounts = $cart->getDiscounts();
-        $vouchers = $this->getTemplateVarVouchers($cart);
+        $vouchers = $this->getTemplateVarVouchers($cart, $products);
 
         $cartRulesIds = array_flip(array_map(
             function ($voucher) {
@@ -521,7 +521,7 @@ class CartPresenter implements PresenterInterface
         return $shippingDisplayValue;
     }
 
-    private function getTemplateVarVouchers(Cart $cart)
+    private function getTemplateVarVouchers(Cart $cart, $products)
     {
         $cartVouchers = $cart->getCartRules();
         $vouchers = [];
@@ -558,8 +558,8 @@ class CartPresenter implements PresenterInterface
                 $freeShippingOnly = true;
             }
             if ($this->cartVoucherHasPercentReduction($cartVoucher)) {
-                $productsTotalExcludingTax = $cart->getOrderTotal($this->includeTaxes(), Cart::ONLY_PRODUCTS);
-                $percentageReduction = ($productsTotalExcludingTax / 100) * $cartVoucher['reduction_percent'];
+                $percentageReductionAmount = $this->getAmountVoucherReductionPercentage($cart, $products, $cartVoucher);
+                $percentageReduction = $percentageReductionAmount->getTaxExcluded();
                 $freeShippingOnly = false;
             } elseif ($this->cartVoucherHasAmountReduction($cartVoucher)) {
                 $amountReduction = $this->includeTaxes() ? $cartVoucher['reduction_amount'] : $cartVoucher['value_tax_exc'];
@@ -681,7 +681,7 @@ class CartPresenter implements PresenterInterface
     {
         $amount = null;
         $calculator = $cart->newCalculator($products, $cart->getCartRules(),null);
-        $cartRowCheapest = $calculator->getCheapestRow($cartVoucher);
+        $cartRowCheapest = $calculator->getRowCheapest($cartVoucher);
         $cartRowCheapest->processCalculation($cart);
         $amount = $calculator->getAmountPercentageReduction($cartRowCheapest, $cartVoucher['obj']);
 
