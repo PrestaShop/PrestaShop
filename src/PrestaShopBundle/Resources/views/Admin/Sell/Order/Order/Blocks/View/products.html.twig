@@ -143,7 +143,7 @@
     </div>
 
     {% if orderForViewing.discounts.discounts is not empty %}
-      <table class="table">
+      <table class="table discountList">
         <thead>
         <tr>
           <th>{{ 'Name'|trans({}, 'Admin.Global') }}</th>
@@ -160,7 +160,7 @@
               {{ discount.amountFormatted }}
             </td>
             <td class="text-right">
-              <a class="delete-cart-rule" href="{{ path('admin_orders_remove_cart_rule', {'orderId': orderForViewing.id, 'orderCartRuleId': discount.orderCartRuleId}) }}">
+              <a class="delete-cart-rule btn btn-text" href="{{ path('admin_orders_remove_cart_rule', {'orderId': orderForViewing.id, 'orderCartRuleId': discount.orderCartRuleId}) }}">
                   <i class="material-icons">delete</i>
               </a>
             </td>

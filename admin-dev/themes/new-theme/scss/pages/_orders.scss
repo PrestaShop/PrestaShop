@@ -28,13 +28,6 @@
 }
 
 #orderProductsPanel {
-  .cellProductActions .btn {
-    background-color: transparent;
-    color: $medium-gray;
-    &:hover {
-      color: $primary;
-    }
-  }
   .btn-product-pack-modal {
     color: $primary;
     cursor: pointer;
@@ -313,7 +306,13 @@ input.refund-amount, input#partial_refund_shipping {
   margin-left: 10px;
 }
 
-a.delete-cart-rule {
+.cellProductActions .btn,
+.discountList .btn {
   background-color: transparent;
-  color: #6c868e;
+  color: $medium-gray;
+}
+
+.cellProductActions .btn:hover,
+.discountList .btn:hover {
+  color: $primary;
 }
