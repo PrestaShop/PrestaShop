@@ -58,3 +58,10 @@ services:
       - '@prestashop.adapter.country.country_required_fields_provider'
     tags:
       - { name: validator.constraint_validator }
+
+  prestashop.core.constraint_validator.address_format_validator:
+    class: 'PrestaShop\PrestaShop\Core\ConstraintValidator\AddressFormatValidator'
+    arguments:
+      - '@prestashop.core.query_bus'
+    tags:
+      - { name: validator.constraint_validator }

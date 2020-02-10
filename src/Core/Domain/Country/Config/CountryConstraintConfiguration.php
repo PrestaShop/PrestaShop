@@ -24,11 +24,27 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Address\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\Country\Config;
 
 /**
- * Thrown on failure to create address
+ * Stores country form constraints configuration values
  */
-class CannotAddAddressException extends AddressException
+final class CountryConstraintConfiguration
 {
+    /**
+     * Maximum length for iso code (value is constrained by database)
+     */
+    const MAX_ISO_CODE_LENGTH = 3;
+
+    /**
+     * Maximum length for call prefix
+     */
+    const MAX_CALL_PREFIX_LENGTH = 3;
+
+    /**
+     * Prevents class to be instantiated
+     */
+    private function __construct()
+    {
+    }
 }

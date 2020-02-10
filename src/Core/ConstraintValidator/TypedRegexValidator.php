@@ -106,6 +106,7 @@ class TypedRegexValidator extends ConstraintValidator
             TypedRegex::TYPE_CURRENCY_ISO_CODE => AlphaIsoCode::PATTERN,
             TypedRegex::TYPE_FILE_NAME => '/^[a-zA-Z0-9_.-]+$/',
             TypedRegex::TYPE_DNI_LITE => AddressConstraint::DNI_LITE_PATTERN,
+            TypedRegex::TYPE_ZIP_CODE_FORMAT => '/^[NLCnlc 0-9-]+$/',
         ];
 
         if (isset($typePatterns[$type])) {
