@@ -473,7 +473,7 @@ class OrderForViewing
     public function isRefundable(): bool
     {
         /** @var OrderProductForViewing $product */
-        foreach ($this->products as $product) {
+        foreach ($this->products->getProducts() as $product) {
             if ($product->getQuantity() > $product->getQuantityRefunded()) {
                 return true;
             }

@@ -63,8 +63,7 @@ abstract class AbstractOrderCommandHandler extends AbstractOrderHandler
             (int) Context::getContext()->language->id,
             (int) $orderDetail->id_shop
         );
-        // @todo to be moved in OrderDetailUpdater service (introduced in migrate standard refund PR)
-        // $orderDetail->product_quantity_reinjected = $quantityToReinject;
+
         if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT')
             && $product->advanced_stock_management
             && $orderDetail->id_warehouse != 0

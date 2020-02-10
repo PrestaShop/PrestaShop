@@ -148,7 +148,12 @@ class IssueStandardRefundHandler extends AbstractOrderCommandHandler implements 
         }
 
         // Update refund details (standard refund only happen for an order not delivered, so it can't return products)
-        $this->refundUpdater->updateRefundData($order, $orderRefundSummary, false);
+        $this->refundUpdater->updateRefundData(
+            $order,
+            $orderRefundSummary,
+            false,
+            true
+        );
 
         // Generate voucher if needed
         if ($command->generateVoucher() && $orderRefundSummary->getRefundedAmount() > 0) {
