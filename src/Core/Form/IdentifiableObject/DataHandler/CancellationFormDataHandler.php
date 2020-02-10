@@ -69,7 +69,7 @@ final class CancellationFormDataHandler implements FormDataHandlerInterface
     {
         $cancelledProducts = [];
         foreach ($data['products'] as $product) {
-            if ($data['selected_' . $product->getOrderDetailId()]) {
+            if (isset($data['selected_' . $product->getOrderDetailId()]) && $data['selected_' . $product->getOrderDetailId()]) {
                 $cancelledProducts[$product->getOrderDetailId()] = $data['quantity_' . $product->getOrderDetailId()];
             }
         }

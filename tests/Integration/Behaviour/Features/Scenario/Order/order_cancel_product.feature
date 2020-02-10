@@ -90,7 +90,7 @@ Feature: Cancel Order Product from Back Office (BO)
     Then I should get error that cancel quantity is invalid
 
   @order-cancel-product
-  Scenario: Quantity must be positive
+  Scenario: Quantity is too high
     Given I add order "bo_order_cancel_product" with the following details:
       | cart                | dummy_cart                 |
       | message             | test                       |

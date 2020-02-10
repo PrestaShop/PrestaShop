@@ -97,7 +97,7 @@ export default class OrderProductCancel {
     this.updateVoucherRefund();
 
     this.cancelProductForm.prop('action', formAction);
-    this.cancelProductForm.removeClass('standard-refund partial-refund return-product').addClass(formClass);
+    this.cancelProductForm.removeClass('standard-refund partial-refund return-product cancel-product').addClass(formClass);
     $(OrderViewPageMap.cancelProduct.buttons.save).html(actionName);
     $(OrderViewPageMap.cancelProduct.table.header).html(actionName);
     $(OrderViewPageMap.cancelProduct.checkboxes.restock).prop('checked', this.orderDelivered);

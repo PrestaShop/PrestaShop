@@ -63,7 +63,7 @@
           <p>{{ 'Quantity'|trans({}, 'Admin.Global') }}</p>
         </th>
         <th class="cellProductLocation{% if not isColumnLocationDisplayed %} d-none{% endif %}">
-          <p>{{ 'Stock Location'|trans({}, 'Admin.Global') }}</p>
+          <p>{{ 'Stock location'|trans({}, 'Admin.Orderscustomers.Feature') }}</p>
         </th>
         <th>
           <p>{{ 'Refunded'|trans({}, 'Admin.Orderscustomers.Feature') }}</p>
@@ -256,10 +256,10 @@
           <div class="cancel-product-element form-group restock-products">
             {{ form_widget(cancelProductForm.restock) }}
           </div>
-          <div class="form-group">
+          <div class="cancel-product-element form-group refund-credit-slip">
             {{ form_widget(cancelProductForm.credit_slip) }}
           </div>
-          <div class="form-group">
+          <div class="cancel-product-element form-group refund-voucher">
             {{ form_widget(cancelProductForm.voucher) }}
           </div>
           <div class="cancel-product-element shipping-refund{% if orderForViewing.prices.shippingRefundableAmountRaw <= 0 %} hidden{% endif %}">

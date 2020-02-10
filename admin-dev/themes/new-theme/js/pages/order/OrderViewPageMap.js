@@ -153,7 +153,6 @@ export default {
       cell: '.cancel-product-cell',
       header: 'th.cancel-product-element p',
       actions: 'td.cellProductActions, th.product_actions',
-      cellElements: '.cancel-product-cell-elements',
     },
     checkboxes: {
       restock: '#cancel_product_restock',
@@ -171,7 +170,7 @@ export default {
       partialRefund: '.cancel-product-element:not(.hidden):not(.shipping-refund), .cancel-product-amount',
       standardRefund: '.cancel-product-element:not(.hidden):not(.shipping-refund-amount):not(.restock-products), .cancel-product-selector',
       returnProduct: '.cancel-product-element:not(.hidden):not(.shipping-refund-amount), .cancel-product-selector',
-      cancelProducts: '.cancel-product-element:not(.hidden):not(.shipping-refund), .cancel-product-selector',
+      cancelProducts: '.cancel-product-element:not(.hidden):not(.shipping-refund):not(.restock-products):not(.refund-credit-slip):not(.refund-voucher), .cancel-product-selector',
     },
     containers: {
       refundCheckboxes: '.refund-checkboxes-container',

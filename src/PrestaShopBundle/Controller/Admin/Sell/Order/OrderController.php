@@ -1390,7 +1390,7 @@ class OrderController extends FrameworkBundleAdminController
             CannotEditDeliveredOrderProductException::class => $this->trans('You cannot edit the cart once the order delivered', 'Admin.Orderscustomers.Notification'),
             OrderNotFoundException::class => $e instanceof OrderNotFoundException ?
                 $this->trans(
-                    'Order #%d cannot be loaded',
+                    'Order #%d cannot be loaded.',
                     'Admin.Orderscustomers.Notification',
                     ['#%d' => $e->getOrderId()->getValue()]
                 ) : '',
@@ -1404,21 +1404,21 @@ class OrderController extends FrameworkBundleAdminController
             ),
             InvalidCancelProductException::class => [
                 InvalidCancelProductException::INVALID_QUANTITY => $this->trans(
-                    'Please enter a positive quantity',
+                    'Please enter a positive quantity.',
                     'Admin.Orderscustomers.Notification'
                 ),
                 InvalidCancelProductException::QUANTITY_TOO_HIGH => $this->trans(
-                    'Please enter a maximum quantity of [1]',
+                    'Please enter a maximum quantity of [1].',
                     'Admin.Orderscustomers.Notification',
                     ['[1]' => $refundableQuantity]
+                ),
+                InvalidCancelProductException::NO_REFUNDS => $this->trans(
+                    'Please select at least one product.',
+                    'Admin.Orderscustomers.Notification'
                 ),
             ],
             InvalidCancelProductException::INVALID_AMOUNT => $this->trans(
                 'Please enter a positive amount.',
-                'Admin.Orderscustomers.Notification'
-            ),
-            InvalidCancelProductException::NO_REFUNDS => $this->trans(
-                'Please select at least one product.',
                 'Admin.Orderscustomers.Notification'
             ),
             InvalidCancelProductException::NO_GENERATION => $this->trans(
@@ -1426,7 +1426,7 @@ class OrderController extends FrameworkBundleAdminController
                 'Admin.Orderscustomers.Notification'
             ),
             ProductOutOfStockException::class => $this->trans(
-                'There are not enough products in stock',
+                'There are not enough products in stock.',
                 'Admin.Notifications.Error'
             ),
             NegativePaymentAmountException::class => $this->trans(
