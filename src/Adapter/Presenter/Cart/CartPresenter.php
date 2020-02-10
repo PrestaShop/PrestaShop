@@ -36,6 +36,7 @@ use PrestaShop\PrestaShop\Adapter\Presenter\PresenterInterface;
 use PrestaShop\PrestaShop\Adapter\Presenter\Product\ProductListingPresenter;
 use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
 use PrestaShop\PrestaShop\Adapter\Product\ProductColorsRetriever;
+use PrestaShop\PrestaShop\Core\Cart\AmountImmutable;
 use PrestaShop\PrestaShop\Core\Product\ProductPresentationSettings;
 use Product;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -663,5 +664,27 @@ class CartPresenter implements PresenterInterface
         }
 
         return $attributesArray;
+    }
+
+    /**
+     * Calculate the amount of reduction when cart rule contains percent reduction
+     *
+     * @todo renaming of method name and signature
+     *
+     * @param Cart $cart
+     * @param array $products
+     * @param array $cartVoucher
+     *
+     * @return AmountImmutable $amount
+     */
+    protected function getAmountVoucherReductionPercentage(Cart $cart, $products, $cartVoucher)
+    {
+        $amount = null;
+        $calculator = $cart->newCalculator($products, $cart->getCartRules(),null);
+        $cartRowCheapest = $calculator->getCheapestRow($cartVoucher);
+        $cartRowCheapest->processCalculation($cart);
+        $amount = $calculator->getAmountPercentageReduction($cartRowCheapest, $cartVoucher['obj']);
+
+        return $amount;
     }
 }
