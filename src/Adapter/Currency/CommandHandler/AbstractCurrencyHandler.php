@@ -27,12 +27,10 @@
 namespace PrestaShop\PrestaShop\Adapter\Currency\CommandHandler;
 
 use Currency;
-use PrestaShop\PrestaShop\Core\Domain\Currency\Command\AddCurrencyCommand;
-use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotCreateCurrencyException;
-use PrestaShopDatabaseException;
-use PrestaShopException;
 use PrestaShop\PrestaShop\Adapter\Domain\AbstractObjectModelHandler;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Command\AddCurrencyCommand;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\EditCurrencyCommand;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotCreateCurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotUpdateCurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Language\Exception\LanguageNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
@@ -40,6 +38,8 @@ use PrestaShop\PrestaShop\Core\Language\LanguageInterface;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleRepository;
 use PrestaShop\PrestaShop\Core\Localization\Currency\PatternTransformer;
 use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
+use PrestaShopDatabaseException;
+use PrestaShopException;
 
 /**
  * Class AbstractCurrencyHandler is responsible for encapsulating common behavior for legacy currency object model.

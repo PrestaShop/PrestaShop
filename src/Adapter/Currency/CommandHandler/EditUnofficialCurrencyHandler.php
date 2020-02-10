@@ -38,7 +38,6 @@ use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\DefaultCurrencyInMultiS
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\InvalidUnofficialCurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Language\Exception\LanguageNotFoundException;
 use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
-use PrestaShopDatabaseException;
 use PrestaShopException;
 
 /**
