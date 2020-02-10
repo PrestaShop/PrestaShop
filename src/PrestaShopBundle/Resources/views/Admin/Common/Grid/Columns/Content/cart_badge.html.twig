@@ -1,5 +1,5 @@
 {#**
- * 2007-2020 PrestaShop SA and Contributors
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,18 +18,20 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 
-<div class="text-right">
-{% if record[column.options.field] is not empty %}
-  <span class="badge rounded badge-{{ column.options.badge_type }}">
+<div class="text-{{ column.options.text_align }}">
+  {# \d+ is 1 or more digits in a string  #}
+  {% set doesFieldContainsDigits = record.status matches '/^\\d+$/' %}
+  {# puts a badge on the text only if record status is digit value; #}
+  {% if doesFieldContainsDigits %}
+    <span class="badge rounded badge-{{ column.options.badge_type }}">
+        {{ record[column.options.field] }}
+      </span>
+  {% else %}
     {{ record[column.options.field] }}
-  </span>
-{% else %}
-  {{ column.options.empty_value }}
-{% endif %}
+  {% endif %}
 </div>
-
