@@ -30,7 +30,6 @@ use PrestaShopBundle\DependencyInjection\Compiler\CommandAndQueryCollectorPass;
 use PrestaShopBundle\DependencyInjection\Compiler\DynamicRolePass;
 use PrestaShopBundle\DependencyInjection\Compiler\GridDefinitionServiceIdsCollectorPass;
 use PrestaShopBundle\DependencyInjection\Compiler\IdentifiableObjectFormTypesCollectorPass;
-use PrestaShopBundle\DependencyInjection\Compiler\LoadCheckServicesPass;
 use PrestaShopBundle\DependencyInjection\Compiler\LoadServicesFromModulesPass;
 use PrestaShopBundle\DependencyInjection\Compiler\ModulesDoctrineCompilerPass;
 use PrestaShopBundle\DependencyInjection\Compiler\OptionsFormHookNameCollectorPass;
@@ -40,8 +39,11 @@ use PrestaShopBundle\DependencyInjection\Compiler\PopulateTranslationProvidersPa
 use PrestaShopBundle\DependencyInjection\Compiler\RemoveXmlCompiledContainerPass;
 use PrestaShopBundle\DependencyInjection\Compiler\RouterPass;
 use PrestaShopBundle\DependencyInjection\PrestaShopExtension;
+use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\Compiler\PassConfig;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\Finder\Finder;
+use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 class PrestaShopBundle extends Bundle
@@ -63,7 +65,6 @@ class PrestaShopBundle extends Bundle
         $container->addCompilerPass(new PopulateTranslationProvidersPass());
         $container->addCompilerPass(new LoadServicesFromModulesPass(), PassConfig::TYPE_BEFORE_OPTIMIZATION, 1);
         $container->addCompilerPass(new LoadServicesFromModulesPass('admin'), PassConfig::TYPE_BEFORE_OPTIMIZATION, 1);
-        $container->addCompilerPass(new LoadCheckServicesPass('admin'), PassConfig::TYPE_BEFORE_OPTIMIZATION, 1);
         $container->addCompilerPass(new RemoveXmlCompiledContainerPass(), PassConfig::TYPE_AFTER_REMOVING);
         $container->addCompilerPass(new RouterPass(), PassConfig::TYPE_AFTER_REMOVING);
         $container->addCompilerPass(new OverrideTranslatorServiceCompilerPass());
@@ -73,5 +74,52 @@ class PrestaShopBundle extends Bundle
         $container->addCompilerPass(new OptionsFormHookNameCollectorPass());
         $container->addCompilerPass(new GridDefinitionServiceIdsCollectorPass());
         $container->addCompilerPass(new IdentifiableObjectFormTypesCollectorPass());
+
+        $this->loadModulesCompilerPass($container);
+    }
+
+    /**
+     * Returns a list of CompilerPassInterface indexed with their associated resource.
+     */
+    private function loadModulesCompilerPass(ContainerBuilder $container)
+    {
+        $activeModules = $container->getParameter('kernel.active_modules');
+        /** @var SplFileInfo $moduleFolder */
+        foreach ($this->getModulesFolders() as $moduleFolder) {
+            if (in_array($moduleFolder->getFilename(), $activeModules)
+                && is_dir($moduleFolder . '/src/DependencyInjection/Compiler')
+            ) {
+                $this->loadModuleCompilerPass($moduleFolder, $container);
+            }
+        }
+    }
+
+    private function loadModuleCompilerPass(SplFileInfo $moduleFolder, ContainerBuilder $container)
+    {
+        $finder = new Finder();
+        $finder->files()
+            ->in($moduleFolder->getRealPath() . '/src/DependencyInjection/Compiler')
+            ->name('*.php')
+        ;
+        foreach ($finder as $phpFile) {
+            $phpContent = file_get_contents($phpFile->getRealPath());
+            if (preg_match('~namespace[ \t]+(.+)[ \t]*;~Um', $phpContent, $matches)) {
+                $className = sprintf('%s\%s', $matches[1], $phpFile->getBasename('.php'));
+                if (
+                    class_exists($className) &&
+                    in_array(CompilerPassInterface::class, class_implements($className), true)
+                ) {
+                    $container->addCompilerPass(new $className());
+                }
+            }
+        }
+    }
+
+    /**
+     * @return Finder
+     */
+    private function getModulesFolders()
+    {
+        return Finder::create()->directories()->in(_PS_MODULE_DIR_)->depth(0);
     }
 }
