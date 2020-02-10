@@ -25,23 +25,11 @@
 
 <div class="text-right">
 {% if record[column.options.field] is not empty %}
-  {% if record.status is defined %}
-    {# \d+ is 1 or more digits in a string  #}
-    {% set doesFieldContainsDigits = record.status matches '/^\\d+$/' %}
-    {# puts a badge on the text only if record status is digit value; #}
-    {% if doesFieldContainsDigits %}
-      <span class="badge rounded badge-{{ column.options.badge_type }}">
-        {{ record[column.options.field] }}
-      </span>
-    {% else %}
-      {{ record[column.options.field] }}
-    {% endif %}
-  {% else %}
-    <span class="badge rounded badge-{{ column.options.badge_type }}">
-      {{ record[column.options.field] }}
-    </span>
-  {% endif %}
+  <span class="badge rounded badge-{{ column.options.badge_type }}">
+    {{ record[column.options.field] }}
+  </span>
 {% else %}
   {{ column.options.empty_value }}
 {% endif %}
 </div>
+
