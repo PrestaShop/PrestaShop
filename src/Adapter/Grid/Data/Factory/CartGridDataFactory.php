@@ -107,50 +107,63 @@ final class CartGridDataFactory implements GridDataFactoryInterface
     private function applyModifications(RecordCollectionInterface $records)
     {
         $modifiedRecords = [];
-
         foreach ($records as $record) {
-            switch ($record['status']) {
-                case 'abandoned_cart':
-                    $record['status'] = $this->translator->trans(
-                        'Abandoned cart',
-                        [],
-                        'Admin.Orderscustomers.Feature'
-                    );
-                    break;
-                case 'not_ordered':
-                    $record['status'] = $this->translator->trans('Not placed', [], 'Admin.Orderscustomers.Feature');
-                    break;
-            }
+            $record = $this->setRecordData($record);
+            $modifiedRecords[] = $record;
+        }
+        $this->contextStateManager->restoreContext();
 
-            if (empty($record['carrier_name'])) {
-                $record['carrier_name'] = '--';
-            }
+        return new RecordCollection($modifiedRecords);
+    }
 
-            if (empty($record['customer_name'])) {
-                $record['customer_name'] = '--';
-            }
+    /**
+     * @param $record
+     *
+     * @return mixed
+     *
+     * @throws CartException
+     */
+    private function setRecordData($record)
+    {
+        switch ($record['status']) {
+            case 'abandoned_cart':
+                $record['status'] = $this->translator->trans(
+                    'Abandoned cart',
+                    [],
+                    'Admin.Orderscustomers.Feature'
+                );
+                break;
+            case 'not_ordered':
+                $record['status'] = $this->translator->trans('Not placed', [], 'Admin.Orderscustomers.Feature');
+                break;
+        }
 
-            $record['online'] = $record['id_guest'] ?
+        if (empty($record['carrier_name'])) {
+            $record['carrier_name'] = '--';
+        }
+
+        if (empty($record['customer_name'])) {
+            $record['customer_name'] = '--';
+        }
+
+        $record['online'] = $record['id_guest'] ?
             $this->translator->trans('Yes', [], 'Admin.Global') :
             $this->translator->trans('No', [], 'Admin.Global');
 
-            $cart = new Cart($record['id_cart']);
-            $this->contextStateManager->setLocale($this->locale);
-            $this->contextStateManager->setCart($cart);
-            $this->contextStateManager->setCurrency(new Currency((int) $cart->id_currency));
-            $this->contextStateManager->setCustomer(new Customer((int) $cart->id_customer));
+        $cart = new Cart($record['id_cart']);
+        $this->contextStateManager->setLocale($this->locale);
+        $this->contextStateManager->setCart($cart);
+        $this->contextStateManager->setCurrency(new Currency((int) $cart->id_currency));
+        $this->contextStateManager->setCustomer(new Customer((int) $cart->id_customer));
 
-            $record['cart_total'] = Cart::getTotalCart($cart->id, true, Cart::BOTH_WITHOUT_SHIPPING);
-            $record['is_order_placed'] = $cart->orderExists();
+        $record['cart_total'] = Cart::getTotalCart($cart->id, true, Cart::BOTH_WITHOUT_SHIPPING);
+        $record['is_order_placed'] = $cart->orderExists();
 
-            if (!isset($cart->id_shop)) {
-                throw new CartException('cart shop id is not set');
-            }
-            $record['shop_name'] = Context::getContext()->shop->getShops()[$cart->id_shop]['name'];
-
-            $modifiedRecords[] = $record;
+        if (!isset($cart->id_shop)) {
+            throw new CartException('cart shop id is not set');
         }
+        $record['shop_name'] = Context::getContext()->shop->getShops()[$cart->id_shop]['name'];
 
-        return new RecordCollection($modifiedRecords);
+        return $record;
     }
 }
