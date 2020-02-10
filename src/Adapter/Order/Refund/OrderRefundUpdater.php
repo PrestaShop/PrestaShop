@@ -38,12 +38,18 @@ class OrderRefundUpdater
      * @param Order $order
      * @param OrderRefundSummary $orderRefundSummary
      * @param bool $returnedProducts
+     * @param bool $restock
      *
      * @throws CancelProductFromOrderException
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
      */
-    public function updateRefundData(Order $order, OrderRefundSummary $orderRefundSummary, bool $returnedProducts)
+    public function updateRefundData(
+        Order $order,
+        OrderRefundSummary $orderRefundSummary,
+        bool $returnedProducts,
+        bool $restock
+    )
     {
         // I wonder it this is really useful since partial refund is supposed to be enabled only once order
         // is paid Maybe this should be a more general check at the beginning of the handler and throw an error
@@ -65,6 +71,12 @@ class OrderRefundUpdater
             // Besides this now allows to track refunded products even when credit slip is not generated
             $orderDetail->total_refunded_tax_excl += $productRefund['total_refunded_tax_excl'];
             $orderDetail->total_refunded_tax_incl += $productRefund['total_refunded_tax_incl'];
+
+            if ($restock) {
+                $reinjectableQuantity = (int) $orderDetail->product_quantity - (int) $orderDetail->product_quantity_reinjected;
+                $quantityToReinject = $productRefund['quantity'] > $reinjectableQuantity ? $reinjectableQuantity : $productRefund['quantity'];
+                $orderDetail->product_quantity_reinjected += $quantityToReinject;
+            }
 
             if (!$orderDetail->update()) {
                 throw new CancelProductFromOrderException('Cannot update order detail');
