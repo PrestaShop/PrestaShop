@@ -675,7 +675,7 @@ class ValidateCore
      */
     public static function isEan13($ean13)
     {
-        return !$ean13 || preg_match('/^[0-9]{0,13}$/', $ean13);
+        return !$ean13 || preg_match('/^[0-9]{0,14}$/', $ean13);
     }
 
     /**
