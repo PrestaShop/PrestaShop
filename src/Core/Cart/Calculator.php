@@ -327,4 +327,34 @@ class Calculator
     {
         return $this->cartRuleCalculator->getCartRulesData();
     }
+
+    /**
+     * @param array $cartVoucher
+     *
+     * @return CartRow
+     */
+    public function getRowCheapest($cartVoucher)
+    {
+
+        $this->cartRuleCalculator->setCartRules($this->cartRules)
+            ->setCartRows($this->cartRows)
+            ->setCalculator($this);
+
+        $rowCheapest = $this->cartRuleCalculator->getRowCheapestProduct($cartVoucher['obj'], $this->cart);
+
+        return $rowCheapest;
+    }
+
+    /**
+     * @param CartRow $cartRow
+     * @param array $cartVoucher
+     *
+     * @return AmountImmutable
+     */
+    public function getAmountPercentageReduction($cartRow, $cartVoucher)
+    {
+        $amount = $this->cartRuleCalculator->getAmountReductionFromRow($cartRow, $cartVoucher);
+
+        return $amount;
+    }
 }
