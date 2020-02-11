@@ -16,6 +16,7 @@ module.exports = class productSettings extends BOBasePage {
     this.maxSizeShortDescriptionInput = '#form_general_short_description_limit';
     this.newDaysNumberInput = '#form_general_new_days_number';
     this.switchForceUpdateFriendlyURLLabel = 'label[for=\'form_general_force_friendly_url_%TOGGLE\']';
+    this.quantityDiscountBasedOnSelect = '#form_general_quantity_discount';
     this.switchDefaultActivationStatusLabel = 'label[for=\'form_general_default_status_%TOGGLE\']';
     this.saveProductGeneralFormButton = `${this.productGeneralForm} .card-footer button`;
     // Product page selectors
@@ -93,6 +94,17 @@ module.exports = class productSettings extends BOBasePage {
     await this.waitForSelectorAndClick(this.switchDefaultActivationStatusLabel.replace('%TOGGLE', toEnable ? 1 : 0));
     await this.clickAndWaitForNavigation(this.saveProductGeneralFormButton);
     return this.getTextContent(this.alertSuccessBlock);
+  }
+
+  /**
+   * Choose quantity discounts based on
+   * @param basedOn
+   * @returns {Promise<string|*>}
+   */
+  async chooseQuantityDiscountsBasedOn(basedOn) {
+    await this.selectByVisibleText(this.quantityDiscountBasedOnSelect, basedOn);
+    await this.clickAndWaitForNavigation(this.saveProductGeneralFormButton);
+    return this.getTextContent(this.alertSuccessBloc);
   }
 
   /**

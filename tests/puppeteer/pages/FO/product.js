@@ -10,10 +10,12 @@ module.exports = class Product extends FOBasePage {
     this.productPrice = '#main span[itemprop="price"]';
     this.productQuantity = '#quantity_wanted';
     this.productDescription = '#description';
+    this.colorInput = '#group_2 li input[title=%COLOR]';
     this.addToCartButton = '#add-to-cart-or-refresh button[data-button-action="add-to-cart"]';
     this.proceedToCheckoutButton = '#blockcart-modal div.cart-content-btn a';
     this.productQuantitySpan = '#product-details div.product-quantities label';
     this.productDetail = 'div.product-information  a[href=\'#product-details\']';
+    this.continueShoppingButton = '#blockcart-modal div.cart-content-btn button';
     this.productAvailabilityIcon = '#product-availability i';
   }
 
@@ -32,10 +34,24 @@ module.exports = class Product extends FOBasePage {
 
   /**
    * Click on Add to cart button then on Proceed to checkout button in the modal
+   * @param attributeToChoose
+   * @param proceedToCheckout
+   * @returns {Promise<void>}
    */
-  async addProductToTheCart() {
+  async addProductToTheCart(attributeToChoose, proceedToCheckout = true) {
+    await this.page.waitFor(1000);
+    if (attributeToChoose.color) {
+      await Promise.all([
+        this.page.waitForSelector(this.colorInput.replace('%COLOR', attributeToChoose.color), {visible: true}),
+        this.page.click(this.colorInput.replace('%COLOR', attributeToChoose.color)),
+      ]);
+    }
+    if (attributeToChoose.quantity) {
+      await this.setValue(this.productQuantity, attributeToChoose.quantity.toString());
+    }
     await this.waitForSelectorAndClick(this.addToCartButton);
-    await this.waitForSelectorAndClick(this.proceedToCheckoutButton);
+    if (proceedToCheckout) await this.waitForSelectorAndClick(this.proceedToCheckoutButton);
+    else await this.waitForSelectorAndClick(this.continueShoppingButton);
   }
 
   /**
