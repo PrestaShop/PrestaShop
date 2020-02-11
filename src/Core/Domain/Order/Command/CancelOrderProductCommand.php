@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2020 PrestaShop SA and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,46 +19,54 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Order\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\Order\Command;
 
-/**
- * Thrown when the order state is incompatible with an action (ex: standard
- * refund on an order not paid yet).
- */
-class InvalidOrderStateException extends OrderException
+use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
+
+class CancelOrderProductCommand
 {
     /**
-     * Used when the order has no invoice (and it should have)
+     * @var array
+     *
+     * key: orderDetailId, value: quantity
      */
-    const INVOICE_NOT_FOUND = 1;
+    private $cancelledProducts;
 
     /**
-     * Used when the order has an invoice (and it should not)
+     * @var OrderId
      */
-    const UNEXPECTED_INVOICE = 2;
+    private $orderId;
 
     /**
-     * Used when the order has not been delivered (and it should have)
+     * CancelOrderProductCommand constructor.
+     *
+     * @param array $toBeCanceledProducts
+     * @param int $orderId
      */
-    const DELIVERY_NOT_FOUND = 3;
-
-    /**
-     * Used when the order has been delivered (and it shouldn't have)
-     */
-    const UNEXPECTED_DELIVERY = 4;
-
-    /**
-     * @param int $code
-     * @param string $message
-     * @param Throwable|null $previous
-     */
-    public function __construct($code = 0, $message = '', Throwable $previous = null)
+    public function __construct(array $cancelledProducts, int $orderId)
     {
-        parent::__construct($message, $code, $previous);
+        $this->cancelledProducts = $cancelledProducts;
+        $this->orderId = new OrderId($orderId);
+    }
+
+    /**
+     * @return array
+     */
+    public function getCancelledProducts()
+    {
+        return $this->cancelledProducts;
+    }
+
+    /**
+     * @return OrderId
+     */
+    public function getOrderId()
+    {
+        return $this->orderId;
     }
 }

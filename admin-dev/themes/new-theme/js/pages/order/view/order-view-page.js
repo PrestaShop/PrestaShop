@@ -268,6 +268,13 @@ export default class OrderViewPage {
     });
   }
 
+  listenForCancelProduct() {
+    $(OrderViewPageMap.cancelProduct.buttons.cancelProducts).on('click', (event) => {
+      this.orderProductRenderer.moveProductsPanelToRefundPosition();
+      this.orderProductCancel.showCancelProductForm();
+    });
+  }
+
   getActivePage() {
     return $(OrderViewPageMap.productsTablePagination).find('.active span').get(0);
   }

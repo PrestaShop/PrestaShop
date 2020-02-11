@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2020 PrestaShop SA and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,46 +19,67 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Core\Domain\Order\Exception;
 
+use Throwable;
+
 /**
- * Thrown when the order state is incompatible with an action (ex: standard
- * refund on an order not paid yet).
+ * Throw new when a partial refund's is asked without a specified quantity
  */
-class InvalidOrderStateException extends OrderException
+class InvalidCancelProductException extends OrderException
 {
     /**
-     * Used when the order has no invoice (and it should have)
+     * @var int
      */
-    const INVOICE_NOT_FOUND = 1;
+    private $refundableQuantity;
 
     /**
-     * Used when the order has an invoice (and it should not)
+     * Used when the quantity refunded is not strictly positive
      */
-    const UNEXPECTED_INVOICE = 2;
+    const INVALID_QUANTITY = 1;
 
     /**
-     * Used when the order has not been delivered (and it should have)
+     * Used when the quantity refunded is higher than the remaining quantity
      */
-    const DELIVERY_NOT_FOUND = 3;
+    const QUANTITY_TOO_HIGH = 2;
 
     /**
-     * Used when the order has been delivered (and it shouldn't have)
+     * Used when the amount refunded is not strictly positive
      */
-    const UNEXPECTED_DELIVERY = 4;
+    const INVALID_AMOUNT = 3;
+
+    /**
+     * Used when no refund details have been supplied (nor products nor shipping refund)
+     */
+    const NO_REFUNDS = 4;
+
+    /**
+     * Used when no generation is set (no credit slip and no voucher generation)
+     */
+    const NO_GENERATION = 5;
 
     /**
      * @param int $code
+     * @param int $refundableQuantity
      * @param string $message
      * @param Throwable|null $previous
      */
-    public function __construct($code = 0, $message = '', Throwable $previous = null)
+    public function __construct($code = 0, int $refundableQuantity = 0, $message = '', Throwable $previous = null)
     {
         parent::__construct($message, $code, $previous);
+        $this->refundableQuantity = $refundableQuantity;
+    }
+
+    /**
+     * @return int
+     */
+    public function getRefundableQuantity(): int
+    {
+        return $this->refundableQuantity;
     }
 }
