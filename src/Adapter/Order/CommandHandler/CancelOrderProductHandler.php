@@ -117,7 +117,7 @@ final class CancelOrderProductHandler extends AbstractOrderCommandHandler implem
 
                 // Delete product
                 if (!$order->deleteProduct($order, $orderDetail, $qty_cancel_product)) {
-                    throw new OrderException($this->trans('An error occurred while attempting to delete the product.', [], 'Admin.Orderscustomers.Notification'));
+                    throw new OrderException($this->translator->trans('An error occurred while attempting to delete the product.', [], 'Admin.Orderscustomers.Notification'));
                 }
 
                 // Update weight SUM
@@ -139,7 +139,7 @@ final class CancelOrderProductHandler extends AbstractOrderCommandHandler implem
             foreach ($orderDetails['customizedProductsOrderDetail'] as $orderDetail) {
                 $qtyCancelProduct = abs($orderDetails['customizedCancelQuantity'][$orderDetail->id_customization]);
                 if (!$order->deleteCustomization($orderDetail->id_customization, $qtyCancelProduct, $orderDetail)) {
-                    $this->errors[] = $this->trans('An error occurred while attempting to delete product customization.', [], 'Admin.Orderscustomers.Notification') . ' ' . $id_customization;
+                    $this->errors[] = $this->translator->trans('An error occurred while attempting to delete product customization.', [], 'Admin.Orderscustomers.Notification') . ' ' . $id_customization;
                 }
             }
         }
