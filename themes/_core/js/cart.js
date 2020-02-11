@@ -29,7 +29,7 @@ import {refreshCheckoutPage} from './common';
 $(document).ready(() => {
   prestashop.on('updateCart', (event) => {
     prestashop.cart = event.resp.cart;
-    var getCartViewUrl = $('.js-cart').data('refresh-url');
+    let getCartViewUrl = $('.js-cart').data('refresh-url');
 
     if (!getCartViewUrl) {
       return;
