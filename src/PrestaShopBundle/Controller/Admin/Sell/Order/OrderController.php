@@ -1427,7 +1427,7 @@ class OrderController extends FrameworkBundleAdminController
             ),
             ProductOutOfStockException::class => $this->trans(
                 'There are not enough products in stock.',
-                'Admin.Notifications.Error'
+                'Admin.Catalog.Notification'
             ),
             NegativePaymentAmountException::class => $this->trans(
                 'Invalid value: the payment must be a positive amount.',
