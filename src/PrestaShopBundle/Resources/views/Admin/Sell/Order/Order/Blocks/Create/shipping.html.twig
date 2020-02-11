@@ -56,13 +56,14 @@
         </span>
         </div>
         <div class="col-4">
-        <span class="ps-switch">
-          <input id="free-shipping_0" class="js-free-shipping-switch" name="free_shipping" value="0" type="radio">
-          <label for="free-shipping_0">{{ 'No'|trans({}, 'Admin.Global') }}</label>
-          <input id="free-shipping_1" class="js-free-shipping-switch" name="free_shipping" value="1" checked="" type="radio">
-          <label for="free-shipping_1">{{ 'Yes'|trans({}, 'Admin.Global') }}</label>
-          <span class="slide-button"></span>
-        </span>
+          <span class="ps-switch">
+            <input id="free-shipping_0" class="js-free-shipping-switch" name="free_shipping" value="0" type="radio">
+            <label for="free-shipping_0">{{ 'No'|trans({}, 'Admin.Global') }}</label>
+            <input id="free-shipping_1" class="js-free-shipping-switch" name="free_shipping" value="1" checked="" type="radio">
+            <label for="free-shipping_1">{{ 'Yes'|trans({}, 'Admin.Global') }}</label>
+            <span class="slide-button"></span>
+          </span>
+          <label class="js-free-shipping-switch-help row d-none">{{ 'Free shipping is already enabled by voucher'|trans({}, 'Admin.Shipping.Feature') }}</label>
         </div>
       </div>
     </form>
