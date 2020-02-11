@@ -9,7 +9,6 @@ module.exports = class AddWebserviceKey extends BOBasePage {
     this.pageTitleEdit = 'Webservice •';
 
     // Selectors
-    this.webserviceKeyInput = '#webservice_key_key';
     this.generateButton = 'button.js-generator-btn';
     this.keyDescriptionTextarea = '#webservice_key_description';
     this.statusSwitchLabel = 'label[for="webservice_key_status_%ID"]';
@@ -23,12 +22,10 @@ module.exports = class AddWebserviceKey extends BOBasePage {
   /**
    * Fill form for add/edit webservice key
    * @param webserviceData
-   * @param toGenerate
    * @return {Promise<textContent>}
    */
-  async createEditWebservice(webserviceData, toGenerate = true) {
-    if (toGenerate) await this.page.click(this.generateButton);
-    else await this.setValue(this.webserviceKeyInput, webserviceData.key);
+  async createEditWebservice(webserviceData) {
+    await this.page.click(this.generateButton);
     await this.setValue(this.keyDescriptionTextarea, webserviceData.keyDescription);
     // replace %ID by 1 in the selector if active = YES / 0 if active = NO
     await this.page.click(this.statusSwitchLabel.replace('%ID', webserviceData.status ? 1 : 0));
