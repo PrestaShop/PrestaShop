@@ -126,6 +126,7 @@ export default {
   deliveryOptionSelect: '#delivery-option-select',
   totalShippingField: '.js-total-shipping',
   freeShippingSwitch: '.js-free-shipping-switch',
+  freeShippingSwitchHelp: '.js-free-shipping-switch-help',
 
   // selectors related to cart block
   cartBlock: '#cart-block',

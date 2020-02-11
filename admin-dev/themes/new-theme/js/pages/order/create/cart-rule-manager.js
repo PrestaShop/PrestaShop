@@ -90,7 +90,7 @@ export default class CartRuleManager {
     EventEmitter.on(eventMap.cartRuleAdded, (cartInfo) => {
       const cartIsEmpty = cartInfo.products.length === 0;
       this.cartRulesRenderer.renderCartRulesBlock(cartInfo.cartRules, cartIsEmpty);
-      this.shippingRenderer.render(cartInfo.shipping, cartIsEmpty);
+      this.shippingRenderer.render(cartInfo.shipping, cartIsEmpty, cartInfo.cartRules);
       this.summaryRenderer.render(cartInfo);
     });
   }

@@ -35,17 +35,19 @@ export default class ShippingRenderer {
     this.$container = $(createOrderMap.shippingBlock);
     this.$form = $(createOrderMap.shippingForm);
     this.$noCarrierBlock = $(createOrderMap.noCarrierBlock);
+    this.$freeShippingSwitchHelp = $(createOrderMap.freeShippingSwitchHelp);
   }
 
   /**
    * @param {Object} shipping
    * @param {Boolean} emptyCart
+   * @param {Object} cartRules
    */
-  render(shipping, emptyCart) {
+  render(shipping, emptyCart, cartRules) {
     if (emptyCart) {
       this._hideContainer();
-    } else if (shipping !== null) {
-      this._displayForm(shipping);
+    } else if (shipping !== null && cartRules !== null) {
+      this._displayForm(shipping, cartRules);
     } else {
       this._displayNoCarriersWarning();
     }
@@ -55,14 +57,15 @@ export default class ShippingRenderer {
    * Show form block with rendered delivery options instead of warning message
    *
    * @param shipping
+   * @param cartRules
    *
    * @private
    */
-  _displayForm(shipping) {
+  _displayForm(shipping, cartRules) {
     this._hideNoCarrierBlock();
     this._renderDeliveryOptions(shipping.deliveryOptions, shipping.selectedCarrierId);
     this._renderTotalShipping(shipping.shippingPrice);
-    this._renderFreeShippingSwitch(shipping.freeShipping);
+    this._renderFreeShippingSwitch(shipping, cartRules);
     this._showForm();
     this._showContainer();
   }
@@ -70,18 +73,40 @@ export default class ShippingRenderer {
   /**
    * Renders free shipping switch depending on free shipping value
    *
-   * @param isFreeShipping
-   *
    * @private
+   *
+   * @param shipping
+   * @param cartRules
    */
-  _renderFreeShippingSwitch(isFreeShipping) {
-    $(createOrderMap.freeShippingSwitch).each((key, input) => {
-      if (input.value === '1') {
-        input.checked = isFreeShipping;
-      } else {
-        input.checked = !isFreeShipping;
-      }
-    });
+  _renderFreeShippingSwitch(shipping, cartRules) {
+    let isFreeShipping = shipping.freeShipping;
+    let enableFreeShippingToggle = true;
+    if (typeof cartRules !== 'undefined' && cartRules.length > 0) {
+      cartRules.forEach((item) => {
+        let shippingPrice = parseInt(shipping.shippingPrice);
+        if (shippingPrice !== 0 && parseInt(item.value) === shippingPrice) {
+          enableFreeShippingToggle = false;
+        }
+      });
+    }
+    if (enableFreeShippingToggle) {
+      $(createOrderMap.freeShippingSwitch).prop('disabled', false);
+      $(createOrderMap.freeShippingSwitch).each((key, input) => {
+        if (input.value === '1') {
+          input.checked = isFreeShipping;
+        } else {
+          input.checked = !isFreeShipping;
+        }
+      });
+      this._hideFreeShippingSwitchHelp();
+    } else {
+      $(createOrderMap.freeShippingSwitch).each((key, input) => {
+          input.checked = !isFreeShipping;
+      });
+      this._showNoFreeShippingSwitchHelp();
+      $(createOrderMap.freeShippingSwitch).prop('disabled', true);
+    }
+
   }
 
   /**
@@ -189,5 +214,23 @@ export default class ShippingRenderer {
    */
   _hideNoCarrierBlock() {
     this.$noCarrierBlock.addClass('d-none');
+  }
+
+  /**
+   * Show warning message block which warns that free shipping is already added
+   *
+   * @private
+   */
+  _showNoFreeShippingSwitchHelp() {
+    this.$freeShippingSwitchHelp.removeClass('d-none');
+  }
+
+  /**
+   * Hide warning message block which warns that free shipping is already added
+   *
+   * @private
+   */
+  _hideFreeShippingSwitchHelp() {
+    this.$freeShippingSwitchHelp.addClass('d-none');
   }
 }
