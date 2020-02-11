@@ -14,6 +14,7 @@ module.exports = class productSettings extends BOBasePage {
     this.switchCatalogModeLabel = 'label[for=\'form_general_catalog_mode_%TOGGLE\']';
     this.switchShowPricesLabel = 'label[for=\'form_general_catalog_mode_with_prices_%TOGGLE\']';
     this.newDaysNumberInput = '#form_general_new_days_number';
+    this.switchDefaultActivationStatusLabel = 'label[for=\'form_general_default_status_%TOGGLE\']';
     this.saveProductGeneralFormButton = `${this.productGeneralForm} .card-footer button`;
   }
 
@@ -50,6 +51,17 @@ module.exports = class productSettings extends BOBasePage {
    */
   async updateNumberOfDays(numberOfDays) {
     await this.setValue(this.newDaysNumberInput, numberOfDays.toString());
+    await this.clickAndWaitForNavigation(this.saveProductGeneralFormButton);
+    return this.getTextContent(this.alertSuccessBloc);
+  }
+
+  /**
+   * Change default activation status
+   * @param toEnable
+   * @returns {Promise<string|*>}
+   */
+  async changeDefaultActivationStatus(toEnable = true) {
+    await this.waitForSelectorAndClick(this.switchDefaultActivationStatusLabel.replace('%TOGGLE', toEnable ? 1 : 0));
     await this.clickAndWaitForNavigation(this.saveProductGeneralFormButton);
     return this.getTextContent(this.alertSuccessBloc);
   }
