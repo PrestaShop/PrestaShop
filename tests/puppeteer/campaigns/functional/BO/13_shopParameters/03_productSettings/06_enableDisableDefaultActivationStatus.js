@@ -48,6 +48,7 @@ describe('Enable/Disable default activation status', async () => {
   loginCommon.loginBO();
 
   it('should go to \'Shop parameters > Product Settings\' page', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'goToProductSettingsPageToEnableStatus', baseContext);
     await this.pageObjects.boBasePage.goToSubMenu(
       this.pageObjects.boBasePage.shopParametersParentLink,
       this.pageObjects.boBasePage.productSettingsLink,
@@ -58,6 +59,7 @@ describe('Enable/Disable default activation status', async () => {
   });
 
   it('should enable default activation status', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'enableDefaultActivationStatus', baseContext);
     const result = await this.pageObjects.productSettingsPage.changeDefaultActivationStatus(true);
     await expect(result).to.contains(this.pageObjects.productSettingsPage.successfulUpdateMessage);
   });
@@ -73,13 +75,14 @@ describe('Enable/Disable default activation status', async () => {
   });
 
   it('should go to create product page and check that the new product is online by default', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'createProduct', baseContext);
+    await testContext.addContextItem(this, 'testIdentifier', 'goToAddProductPageToCheckStatus', baseContext);
     await this.pageObjects.productsPage.goToAddProductPage();
     const online = await this.pageObjects.addProductPage.getOnlineButtonStatus();
     await expect(online).to.be.true;
   });
 
   it('should go to \'Shop parameters > Product Settings\' page', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'goToProductSettingsPageToDisableStatus', baseContext);
     await this.pageObjects.boBasePage.goToSubMenu(
       this.pageObjects.boBasePage.shopParametersParentLink,
       this.pageObjects.boBasePage.productSettingsLink,
@@ -90,6 +93,7 @@ describe('Enable/Disable default activation status', async () => {
   });
 
   it('should disable default activation status', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'disableDefaultActivationStatus', baseContext);
     const result = await this.pageObjects.productSettingsPage.changeDefaultActivationStatus(false);
     await expect(result).to.contains(this.pageObjects.productSettingsPage.successfulUpdateMessage);
   });
