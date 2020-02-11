@@ -9,6 +9,7 @@ module.exports = class Home extends CommonPage {
     this.content = '#content';
     this.desktopLogo = '#_desktop_logo';
     this.cartProductsCount = '#_desktop_cart span.cart-products-count';
+    this.cartLink = '#_desktop_cart a';
     this.userInfoLink = '#_desktop_user_info';
     this.logoutLink = `${this.userInfoLink} .user-info a.logout`;
     this.contactLink = '#contact-link';
@@ -148,5 +149,16 @@ module.exports = class Home extends CommonPage {
    */
   async getCartNotificationsNumber() {
     return this.getNumberFromText(this.cartProductsCount);
+  }
+
+  /**
+   * Go to cart page
+   * @returns {Promise<void>}
+   */
+  async goToCartPage() {
+    await Promise.all([
+      this.page.waitForNavigation({waitUntil: 'networkidle0'}),
+      this.page.click(this.cartLink),
+    ]);
   }
 };
