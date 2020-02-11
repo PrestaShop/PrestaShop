@@ -101,6 +101,11 @@
       <title>Very top of pages</title>
       <description>Use this hook for advertisement or modals you want to load first</description>
     </hook>
+    <hook id="displayBanner">
+      <name>displayBanner</name>
+      <title>Very top of pages</title>
+      <description>Use this hook for banners on top of every pages</description>
+    </hook>
     <hook id="displayBeforeBodyClosingTag">
       <name>displayBeforeBodyClosingTag</name>
       <title>Very bottom of pages</title>
