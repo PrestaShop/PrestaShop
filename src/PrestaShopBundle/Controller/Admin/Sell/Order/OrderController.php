@@ -1416,15 +1416,15 @@ class OrderController extends FrameworkBundleAdminController
                     'Please select at least one product.',
                     'Admin.Orderscustomers.Notification'
                 ),
+                InvalidCancelProductException::INVALID_AMOUNT => $this->trans(
+                    'Please enter a positive amount.',
+                    'Admin.Orderscustomers.Notification'
+                ),
+                InvalidCancelProductException::NO_GENERATION => $this->trans(
+                    'Please generate at least one credit slip or voucher.',
+                    'Admin.Orderscustomers.Notification'
+                ),
             ],
-            InvalidCancelProductException::INVALID_AMOUNT => $this->trans(
-                'Please enter a positive amount.',
-                'Admin.Orderscustomers.Notification'
-            ),
-            InvalidCancelProductException::NO_GENERATION => $this->trans(
-                'Please generate at least one credit slip or voucher.',
-                'Admin.Orderscustomers.Notification'
-            ),
             ProductOutOfStockException::class => $this->trans(
                 'There are not enough products in stock.',
                 'Admin.Catalog.Notification'
