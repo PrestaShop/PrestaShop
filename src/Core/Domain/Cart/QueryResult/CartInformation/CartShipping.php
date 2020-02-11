@@ -54,21 +54,29 @@ class CartShipping
     private $deliveryOptions;
 
     /**
+     * @var bool
+     */
+    private $cartHasFreeShippingCartRule;
+
+    /**
      * @param string $shippingPrice
      * @param bool $freeShipping
      * @param CartDeliveryOption[] $deliveryOptions
      * @param int|null $selectedCarrierId
+     * @param bool $hasFreeShippingCartRule
      */
     public function __construct(
         string $shippingPrice,
         bool $freeShipping,
         array $deliveryOptions,
-        ?int $selectedCarrierId
+        ?int $selectedCarrierId,
+        bool $hasFreeShippingCartRule
     ) {
         $this->shippingPrice = $shippingPrice;
         $this->freeShipping = $freeShipping;
         $this->deliveryOptions = $deliveryOptions;
         $this->selectedCarrierId = $selectedCarrierId;
+        $this->cartHasFreeShippingCartRule = $hasFreeShippingCartRule;
     }
 
     /**
