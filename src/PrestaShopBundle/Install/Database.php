@@ -82,7 +82,7 @@ class Database extends AbstractInstall
                         $errors[] = $this->translator->trans('The values of auto_increment increment and offset must be set to 1', [], 'Install');
                     }
                     if (($create_error = Db::checkCreatePrivilege($server, $login, $password, $database, $prefix, $this->getBestEngine($server, $database, $login, $password))) !== true) {
-                        $errors[] = $this->translator->trans('Your database login does not have the privileges to create table on the database "%s". Ask your hosting provider:', array('%database%' => $database), 'Install');
+                        $errors[] = $this->translator->trans('Your database login does not have the privileges to create table on the database "%s". Ask your hosting provider:', ['%database%' => $database], 'Install');
                         if ($create_error != false) {
                             $errors[] = $create_error;
                         }
