@@ -23,6 +23,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+use Egulias\EmailValidator\EmailValidator;
+use Egulias\EmailValidator\Validation\RFCValidation;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CustomerName;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Factory\CustomerNameValidatorFactory;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\NumericIsoCode;
@@ -53,7 +55,7 @@ class ValidateCore
      */
     public static function isEmail($email)
     {
-        return !empty($email) && filter_var($email, FILTER_VALIDATE_EMAIL);
+        return !empty($email) && (new EmailValidator())->isValid($email, new RFCValidation());
     }
 
     /**
