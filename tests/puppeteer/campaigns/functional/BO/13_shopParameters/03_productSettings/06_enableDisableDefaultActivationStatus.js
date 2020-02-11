@@ -31,7 +31,9 @@ const init = async function () {
 };
 
 /*
-
+Enable default activation status
+Check that a new product is online by default
+Disable default activation status
  */
 describe('Enable/Disable default activation status', async () => {
   // before and after functions
