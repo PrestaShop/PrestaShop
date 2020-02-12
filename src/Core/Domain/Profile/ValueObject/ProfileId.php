@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -40,9 +40,16 @@ class ProfileId
 
     /**
      * @param int $profileId
+     *
+     * @throws ProfileException
      */
     public function __construct($profileId)
     {
+        // Strict type should be used in next major
+        if (!is_int($profileId)) {
+            @trigger_error('Invalid type, int is expected', E_STRICT);
+        }
+
         $this->setProfileId($profileId);
     }
 
@@ -56,15 +63,15 @@ class ProfileId
 
     /**
      * @param int $profileId
+     *
+     * @throws ProfileException
      */
     private function setProfileId($profileId)
     {
-        if (!is_numeric($profileId) || 0 >= $profileId) {
-            throw new ProfileException(
-                sprintf('Invalid Profile id %s supplied', var_export($profileId, true))
-            );
+        if ((!is_int($profileId) && !ctype_digit($profileId)) || 0 >= $profileId) {
+            throw new ProfileException(sprintf('Invalid Profile id %s supplied', var_export($profileId, true)));
         }
 
-        $this->profileId = $profileId;
+        $this->profileId = (int) $profileId;
     }
 }

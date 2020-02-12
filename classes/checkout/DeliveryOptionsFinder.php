@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -76,7 +76,7 @@ class DeliveryOptionsFinderCore
         $include_taxes = !Product::getTaxCalculationMethod((int) $this->context->cart->id_customer) && (int) Configuration::get('PS_TAX');
         $display_taxes_label = (Configuration::get('PS_TAX') && !Configuration::get('AEUC_LABEL_TAX_INC_EXC'));
 
-        $carriers_available = array();
+        $carriers_available = [];
 
         if (isset($delivery_option_list[$this->context->cart->id_address_delivery])) {
             foreach ($delivery_option_list[$this->context->cart->id_address_delivery] as $id_carriers_list => $carriers_list) {
@@ -90,7 +90,7 @@ class DeliveryOptionsFinderCore
                             if ($this->isFreeShipping($this->context->cart, $carriers_list)) {
                                 $carrier['price'] = $this->translator->trans(
                                     'Free',
-                                    array(),
+                                    [],
                                     'Shop.Theme.Checkout'
                                 );
                             } else {
@@ -99,7 +99,7 @@ class DeliveryOptionsFinderCore
                                     if ($display_taxes_label) {
                                         $carrier['price'] = $this->translator->trans(
                                             '%price% tax incl.',
-                                            array('%price%' => $carrier['price']),
+                                            ['%price%' => $carrier['price']],
                                             'Shop.Theme.Checkout'
                                         );
                                     }
@@ -108,7 +108,7 @@ class DeliveryOptionsFinderCore
                                     if ($display_taxes_label) {
                                         $carrier['price'] = $this->translator->trans(
                                             '%price% tax excl.',
-                                            array('%price%' => $carrier['price']),
+                                            ['%price%' => $carrier['price']],
                                             'Shop.Theme.Checkout'
                                         );
                                     }
@@ -125,7 +125,7 @@ class DeliveryOptionsFinderCore
                             $carrier['extraContent'] = '';
                             if ($carrier['is_module']) {
                                 if ($moduleId = Module::getModuleIdByName($carrier['external_module_name'])) {
-                                    $carrier['extraContent'] = Hook::exec('displayCarrierExtraContent', array('carrier' => $carrier), $moduleId);
+                                    $carrier['extraContent'] = Hook::exec('displayCarrierExtraContent', ['carrier' => $carrier], $moduleId);
                                 }
                             }
 

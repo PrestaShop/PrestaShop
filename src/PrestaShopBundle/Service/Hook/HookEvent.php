@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -37,7 +37,7 @@ use Symfony\Component\EventDispatcher\Event;
  */
 class HookEvent extends Event
 {
-    private $hookParameters = array();
+    private $hookParameters = [];
 
     /**
      * Sets the Hook parameters.
@@ -64,7 +64,7 @@ class HookEvent extends Event
      */
     public function getHookParameters()
     {
-        $globalParameters = array('_ps_version' => AppKernel::VERSION);
+        $globalParameters = ['_ps_version' => AppKernel::VERSION];
 
         $sfContainer = SymfonyContainer::getInstance();
         if (null !== $sfContainer && null !== $sfContainer->get('request_stack')->getCurrentRequest()) {

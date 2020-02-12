@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -69,10 +69,7 @@ final class AddLanguageHandler extends AbstractLanguageHandler implements AddLan
     private function assertLanguageWithIsoCodeDoesNotExist(IsoCode $isoCode)
     {
         if (Language::getIdByIso($isoCode->getValue())) {
-            throw new LanguageConstraintException(
-                sprintf('Language with ISO code "%s" already exists', $isoCode->getValue()),
-                LanguageConstraintException::DUPLICATE_ISO_CODE
-            );
+            throw new LanguageConstraintException(sprintf('Language with ISO code "%s" already exists', $isoCode->getValue()), LanguageConstraintException::DUPLICATE_ISO_CODE);
         }
     }
 
@@ -114,9 +111,7 @@ final class AddLanguageHandler extends AbstractLanguageHandler implements AddLan
         }
 
         if (false === $language->add()) {
-            throw new LanguageException(
-                sprintf('Failed to add new language "%s"', $command->getName())
-            );
+            throw new LanguageException(sprintf('Failed to add new language "%s"', $command->getName()));
         }
 
         return $language;

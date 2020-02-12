@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -63,11 +63,11 @@ class DebugModeConfiguration implements DataConfigurationInterface
      */
     public function getConfiguration()
     {
-        return array(
+        return [
             'disable_non_native_modules' => $this->configuration->getBoolean('PS_DISABLE_NON_NATIVE_MODULE'),
             'disable_overrides' => $this->configuration->getBoolean('PS_DISABLE_OVERRIDES'),
             'debug_mode' => $this->debugMode->isDebugModeEnabled(),
-        );
+        ];
     }
 
     /**
@@ -75,7 +75,7 @@ class DebugModeConfiguration implements DataConfigurationInterface
      */
     public function updateConfiguration(array $configuration)
     {
-        $errors = array();
+        $errors = [];
 
         if ($this->validateConfiguration($configuration)) {
             $this->configuration->set('PS_DISABLE_NON_NATIVE_MODULE', $configuration['disable_non_native_modules']);
@@ -87,35 +87,35 @@ class DebugModeConfiguration implements DataConfigurationInterface
                 case DebugMode::DEBUG_MODE_SUCCEEDED:
                     break;
                 case DebugMode::DEBUG_MODE_ERROR_NO_WRITE_ACCESS:
-                    $errors[] = array(
+                    $errors[] = [
                         'key' => 'Error: Could not write to file. Make sure that the correct permissions are set on the file %s',
                         'domain' => 'Admin.Advparameters.Notification',
-                        'parameters' => array($this->configDefinesPath),
-                    );
+                        'parameters' => [$this->configDefinesPath],
+                    ];
 
                     break;
                 case DebugMode::DEBUG_MODE_ERROR_NO_DEFINITION_FOUND:
-                    $errors[] = array(
+                    $errors[] = [
                         'key' => 'Error: Could not find whether debug mode is enabled. Make sure that the correct permissions are set on the file %s',
                         'domain' => 'Admin.Advparameters.Notification',
-                        'parameters' => array($this->configDefinesPath),
-                    );
+                        'parameters' => [$this->configDefinesPath],
+                    ];
 
                     break;
                 case DebugMode::DEBUG_MODE_ERROR_NO_WRITE_ACCESS_CUSTOM:
-                    $errors[] = array(
+                    $errors[] = [
                         'key' => 'Error: Could not write to file. Make sure that the correct permissions are set on the file %s',
                         'domain' => 'Admin.Advparameters.Notification',
-                        'parameters' => array($this->configDefinesPath),
-                    );
+                        'parameters' => [$this->configDefinesPath],
+                    ];
 
                     break;
                 case DebugMode::DEBUG_MODE_ERROR_NO_READ_ACCESS:
-                    $errors[] = array(
+                    $errors[] = [
                         'key' => 'Error: Could not write to file. Make sure that the correct permissions are set on the file %s',
                         'domain' => 'Admin.Advparameters.Notification',
-                        'parameters' => array($this->configDefinesPath),
-                    );
+                        'parameters' => [$this->configDefinesPath],
+                    ];
 
                     break;
                 default:

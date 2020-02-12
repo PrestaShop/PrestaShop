@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,13 +19,14 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace Tests\Unit\PrestaShopBundle\Twig\Extension;
 
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Util\Url\BackUrlProvider;
 use PrestaShopBundle\Twig\Extension\PathWithBackUrlExtension;
@@ -39,17 +40,17 @@ class PathWithBackUrlExtensionTest extends TestCase
     const FALLBACK_URL = 'https://www.prestashop.com/en';
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject|RoutingExtension
+     * @var MockObject|RoutingExtension
      */
     private $routingExtensionMock;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject|RequestStack
+     * @var MockObject|RequestStack
      */
     private $requestStackMock;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject|BackUrlProvider
+     * @var MockObject|BackUrlProvider
      */
     private $backUrlProviderMock;
 

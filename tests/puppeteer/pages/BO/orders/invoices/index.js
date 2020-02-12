@@ -26,7 +26,16 @@ module.exports = class Invoice extends BOBasePage {
     // Invoice options form
     this.invoiceOptionsForm = '[name="invoice_options"]';
     this.invoiceOptionsEnable = `${this.invoiceOptionsForm} label[for="form_invoice_options_enable_invoices_%ID"]`;
+    this.taxBreakdownEnable = `${this.invoiceOptionsForm} label[for="form_invoice_options_enable_tax_breakdown_%ID"]`;
+    this.invoiceOptionEnableProductImage = `${this.invoiceOptionsForm} 
+    label[for="form_invoice_options_enable_product_images_%ID"]`;
+    this.invoiceNumberInput = '#form_invoice_options_invoice_number';
+    this.legalFreeTextInput = '#form_invoice_options_legal_free_text_1';
+    this.footerTextInput = '#form_invoice_options_footer_text_1';
     this.saveInvoiceOptionsButton = `${this.invoiceOptionsForm} .btn.btn-primary`;
+    this.invoicePrefixInput = '#form_invoice_options_invoice_prefix_1';
+    this.invoiceAddCurrentYear = `${this.invoiceOptionsForm} label[for="form_invoice_options_add_current_year_%ID"]`;
+    this.optionYearPositionRadioButton = '#form_invoice_options_year_position_%ID';
   }
 
   /*
@@ -78,5 +87,60 @@ module.exports = class Invoice extends BOBasePage {
   async saveInvoiceOptions() {
     await this.clickAndWaitForNavigation(this.saveInvoiceOptionsButton);
     return this.getTextContent(this.alertSuccessBlockParagraph);
+  }
+
+  /**
+   * Enable disable product image
+   * @param enable
+   * @return {Promise<void>}
+   */
+  async enableProductImage(enable = true) {
+    await this.page.click(this.invoiceOptionEnableProductImage.replace('%ID', enable ? 1 : 0));
+  }
+
+  /**
+   * Enable tax breakdown
+   * @param enable
+   * @return {Promise<void>}
+   */
+  async enableTaxBreakdown(enable = true) {
+    await this.page.click(this.taxBreakdownEnable.replace('%ID', enable ? 1 : 0));
+  }
+
+  /**
+   * Set invoiceNumber, LegalFreeText, footerText
+   * @param data
+   * @return {Promise<void>}
+   */
+  async setInputOptions(data) {
+    await this.setValue(this.invoiceNumberInput, data.invoiceNumber);
+    await this.setValue(this.legalFreeTextInput, data.legalFreeText);
+    await this.setValue(this.footerTextInput, data.footerText);
+  }
+
+  /**
+   * Enable add current year to invoice
+   * @param enable
+   * @return {Promise<void>}
+   */
+  async enableAddCurrentYearToInvoice(enable = true) {
+    await this.page.click(this.invoiceAddCurrentYear.replace('%ID', enable ? 1 : 0));
+  }
+
+  /**
+   * Choose the position of the year
+   * @param id
+   * @return {Promise<void>}
+   */
+  async chooseInvoiceOptionsYearPosition(id) {
+    await this.page.click(this.optionYearPositionRadioButton.replace('%ID', id));
+  }
+
+  /** Edit invoice Prefix
+   * @param prefix
+   * @return {Promise<void>}
+   */
+  async changePrefix(prefix) {
+    await this.setValue(this.invoicePrefixInput, prefix);
   }
 };

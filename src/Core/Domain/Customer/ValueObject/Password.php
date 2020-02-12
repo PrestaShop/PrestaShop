@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -77,10 +77,7 @@ class Password
         $length = function_exists('mb_strlen') ? mb_strlen($password, 'UTF-8') : strlen($password);
 
         if (self::MIN_LENGTH > $length || $length > self::MAX_LENGTH) {
-            throw new CustomerConstraintException(
-                sprintf('Customer password length must be between %s and %s', self::MIN_LENGTH, self::MAX_LENGTH),
-                CustomerConstraintException::INVALID_PASSWORD
-            );
+            throw new CustomerConstraintException(sprintf('Customer password length must be between %s and %s', self::MIN_LENGTH, self::MAX_LENGTH), CustomerConstraintException::INVALID_PASSWORD);
         }
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -55,9 +55,7 @@ final class GetSqlRequestExecutionResultHandler implements GetSqlRequestExecutio
             $entity = new RequestSql($id);
 
             if (0 >= $entity->id) {
-                throw new SqlRequestNotFoundException(
-                    sprintf('SqlRequest with id %s was not found', $id)
-                );
+                throw new SqlRequestNotFoundException(sprintf('SqlRequest with id %s was not found', $id));
             }
 
             $rows = Db::getInstance()->executeS($entity->sql);
@@ -74,11 +72,7 @@ final class GetSqlRequestExecutionResultHandler implements GetSqlRequestExecutio
                 $rows
             );
         } catch (PrestaShopException $e) {
-            throw new SqlRequestException(
-                'Unexpected error occurred',
-                0,
-                $e
-            );
+            throw new SqlRequestException('Unexpected error occurred', 0, $e);
         }
     }
 

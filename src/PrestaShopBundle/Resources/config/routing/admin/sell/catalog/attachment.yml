@@ -4,7 +4,7 @@ admin_attachments_index:
   defaults:
     _controller: PrestaShopBundle:Admin/Sell/Catalog/Attachment:index
     _legacy_controller: AdminAttachments
-#    _legacy_link: AdminAttachments
+    _legacy_link: AdminAttachments
 
 admin_attachments_filter:
   path: /
@@ -14,7 +14,7 @@ admin_attachments_filter:
     _legacy_controller: AdminAttachments
     gridDefinitionFactoryServiceId: prestashop.core.grid.definition.factory.attachment
     redirectRoute: admin_attachments_index
-#    _legacy_link: AdminAttachments:submitFilterattachment
+    _legacy_link: AdminAttachments:submitFilterattachment
 
 admin_attachment_create:
   path: /new
@@ -22,7 +22,7 @@ admin_attachment_create:
   defaults:
     _controller: PrestaShopBundle:Admin/Sell/Catalog/Attachment:create
     _legacy_controller: AdminAttachments
-#    _legacy_link: AdminAttachments:addattachment
+    _legacy_link: AdminAttachments:addattachment
 
 admin_attachment_edit:
   path: /{attachmentId}/edit
@@ -30,7 +30,7 @@ admin_attachment_edit:
   defaults:
     _controller: PrestaShopBundle:Admin/Sell/Catalog/Attachment:edit
     _legacy_controller: AdminAttachments
-#    _legacy_link: AdminAttachments:updateattachment
+    _legacy_link: AdminAttachments:updateattachment
     _legacy_parameters:
       id_attachment: attachmentId
   requirements:
@@ -42,7 +42,7 @@ admin_attachment_view:
   defaults:
     _controller: PrestaShopBundle:Admin/Sell/Catalog/Attachment:view
     _legacy_controller: AdminAttachments
-#    _legacy_link: AdminAttachments:viewattachment
+    _legacy_link: AdminAttachments:viewattachment
     _legacy_parameters:
       id_attachment: attachmentId
   requirements:
@@ -54,7 +54,7 @@ admin_attachments_delete_bulk:
   defaults:
     _controller: PrestaShopBundle:Admin/Sell/Catalog/Attachment:deleteBulk
     _legacy_controller: AdminAttachments
-#    _legacy_link: AdminAttachments:submitBulkdeleteattachment
+    _legacy_link: AdminAttachments:submitBulkdeleteattachment
 
 admin_attachment_delete:
   path: /{attachmentId}/delete
@@ -62,7 +62,7 @@ admin_attachment_delete:
   defaults:
     _controller: PrestaShopBundle:Admin/Sell/Catalog/Attachment:delete
     _legacy_controller: AdminAttachments
-#    _legacy_link: AdminAttachments:deleteattachment
+    _legacy_link: AdminAttachments:deleteattachment
     _legacy_parameters:
       id_attachment: attachmentId
   requirements:

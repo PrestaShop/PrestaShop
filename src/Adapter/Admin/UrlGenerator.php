@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -69,7 +69,7 @@ class UrlGenerator implements UrlGeneratorInterface
     /**
      * {@inheritdoc}
      */
-    public function generate($name, $parameters = array(), $referenceType = self::ABSOLUTE_PATH)
+    public function generate($name, $parameters = [], $referenceType = self::ABSOLUTE_PATH)
     {
         // By default, consider given parameters in legacy format (no mapping if route not found).
         $legacyController = $name;
@@ -91,7 +91,7 @@ class UrlGenerator implements UrlGeneratorInterface
      *
      * @return array[] An array with: the legacy controller name, then the parameters array
      */
-    final public function getLegacyOptions($routeName, $parameters = array())
+    final public function getLegacyOptions($routeName, $parameters = [])
     {
         $legacyController = $routeName;
         $legacyParameters = $parameters;
@@ -109,7 +109,7 @@ class UrlGenerator implements UrlGeneratorInterface
             }
         }
 
-        return array($legacyController, $legacyParameters);
+        return [$legacyController, $legacyParameters];
     }
 
     /**

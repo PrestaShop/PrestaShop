@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -71,7 +71,7 @@ interface ProductInterface
      *
      * @return string[] The new filter params values
      */
-    public function combinePersistentCatalogProductFilter($paramsIn = array(), $avoidPersistence = false);
+    public function combinePersistentCatalogProductFilter($paramsIn = [], $avoidPersistence = false);
 
     /**
      * Returns a collection of products, using default language, currency and others, from Context.
@@ -86,7 +86,7 @@ interface ProductInterface
      *
      * @return array[mixed[]] A list of products, as an array of arrays of raw data
      */
-    public function getCatalogProductList($offset, $limit, $orderBy, $sortOrder, $post = array(), $avoidPersistence = false, $formatCldr = true);
+    public function getCatalogProductList($offset, $limit, $orderBy, $sortOrder, $post = [], $avoidPersistence = false, $formatCldr = true);
 
     /**
      * Retrieve global product count (for the current shop).

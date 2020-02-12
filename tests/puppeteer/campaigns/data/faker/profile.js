@@ -1,7 +1,7 @@
 const faker = require('faker');
 
-module.exports = class Employee {
+module.exports = class Profile {
   constructor(profileToCreate = {}) {
-    this.name = profileToCreate.name || faker.name.jobTitle();
+    this.name = profileToCreate.name || faker.name.jobType();
   }
 };

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -77,6 +77,7 @@ final class FolderThemeCatalog implements ThemeCatalogInterface
         $this->checkThemesFolder();
 
         $finder = new Finder();
+        $finder->sortByName();
         $finder->directories()->in($this->mailThemesFolder)->depth(0);
         $mailThemes = new ThemeCollection();
         /** @var SplFileInfo $mailThemeFolder */
@@ -118,11 +119,7 @@ final class FolderThemeCatalog implements ThemeCatalogInterface
             $themeNames[] = $availableTheme->getName();
         }
 
-        throw new InvalidArgumentException(sprintf(
-            'Invalid requested theme "%s", only available themes are: %s',
-            $theme,
-            implode(', ', $themeNames)
-        ));
+        throw new InvalidArgumentException(sprintf('Invalid requested theme "%s", only available themes are: %s', $theme, implode(', ', $themeNames)));
     }
 
     /**
@@ -131,10 +128,7 @@ final class FolderThemeCatalog implements ThemeCatalogInterface
     private function checkThemesFolder()
     {
         if (!is_dir($this->mailThemesFolder)) {
-            throw new FileNotFoundException(sprintf(
-                'Invalid mail themes folder "%s": no such directory',
-                $this->mailThemesFolder
-            ));
+            throw new FileNotFoundException(sprintf('Invalid mail themes folder "%s": no such directory', $this->mailThemesFolder));
         }
     }
 }

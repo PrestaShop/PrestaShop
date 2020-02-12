@@ -43,6 +43,7 @@ module.exports = class Install extends CommonPage {
     // Selectors for step 5
     this.fifthStepPageTitle = '#dbPart h2';
     this.dbLoginInput = '#dbLogin';
+    this.dbNameInput = '#dbName';
     this.dbPasswordInput = '#dbPassword';
     this.testDbConnectionButton = '#btTestDB';
     this.createDbButton = '#btCreateDB';
@@ -120,6 +121,7 @@ module.exports = class Install extends CommonPage {
    * Fill Database Form in step 5
    */
   async fillDatabaseForm() {
+    await this.setValue(this.dbNameInput, global.INSTALL.DB_NAME);
     await this.setValue(this.dbLoginInput, global.INSTALL.DB_USER);
     await this.setValue(this.dbPasswordInput, global.INSTALL.DB_PASSWD);
   }

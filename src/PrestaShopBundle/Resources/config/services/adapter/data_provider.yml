@@ -105,8 +105,6 @@ services:
     prestashop.categories_provider:
         class: PrestaShopBundle\Service\DataProvider\Admin\CategoriesProvider
         arguments:
-            - '@prestashop.addons.client_api'
-            - '@logger'
             - "%prestashop.addons.categories%"
             - "@=service('prestashop.adapter.legacy.context').getContext().shop.theme_name?service('prestashop.core.addon.theme.repository').getInstanceByName(service('prestashop.adapter.legacy.context').getContext().shop.theme_name).getModulesToEnable():[]"
 

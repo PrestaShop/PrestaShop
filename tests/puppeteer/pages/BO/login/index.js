@@ -6,10 +6,13 @@ module.exports = class Login extends BOBasePage {
     super(page);
 
     this.pageTitle = 'PrestaShop';
+    this.loginErrorText = 'The employee does not exist, or the password provided is incorrect.';
 
     this.emailInput = '#email';
     this.passwordInput = '#passwd';
     this.submitLoginButton = '#submit_login';
+    this.alertDangerDiv = '#error';
+    this.alertDangerTextBlock = `${this.alertDangerDiv} li`;
   }
 
   /*
@@ -20,11 +23,24 @@ module.exports = class Login extends BOBasePage {
    * Enter credentials and submit login form
    * @param email
    * @param passwd
+   * @param waitForNavigation, false if login should fail
    * @returns {Promise<void>}
    */
-  async login(email, passwd) {
+  async login(email, passwd, waitForNavigation = true) {
     await this.page.type(this.emailInput, email);
     await this.page.type(this.passwordInput, passwd);
-    await this.clickAndWaitForNavigation(this.submitLoginButton);
+    if (waitForNavigation) {
+      await this.clickAndWaitForNavigation(this.submitLoginButton);
+    } else {
+      await this.page.click(this.submitLoginButton);
+    }
+  }
+
+  /**
+   * Get login error
+   * @return {Promise<string>}
+   */
+  async getLoginError() {
+    return this.getTextContent(this.alertDangerTextBlock);
   }
 };

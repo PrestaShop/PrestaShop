@@ -3,18 +3,35 @@ module.exports = class CommonPage {
     this.page = page;
   }
 
+  /**
+   * Get page title
+   * @returns {Promise<*>}
+   */
   async getPageTitle() {
     return this.page.title();
   }
 
-  async goTo(URL) {
-    await this.page.goto(URL);
+  /**
+   * Go to URL
+   * @param url
+   * @returns {Promise<void>}
+   */
+  async goTo(url) {
+    await this.page.goto(url);
+  }
+
+  /**
+   * Get current url
+   * @returns {Promise<string>}
+   */
+  async getCurrentURL() {
+    return decodeURIComponent(this.page.url());
   }
 
   /**
    * Get Text from element
    * @param selector, from where to get text
-   * @return textContent
+   * @return {Promise<string>}
    */
   async getTextContent(selector) {
     await this.page.waitForSelector(selector, {visible: true});
@@ -39,6 +56,20 @@ module.exports = class CommonPage {
   async elementVisible(selector, timeout = 10) {
     try {
       await this.page.waitForSelector(selector, {visible: true, timeout});
+      return true;
+    } catch (error) {
+      return false;
+    }
+  }
+
+  /**
+   * Is element not visible
+   * @param selector, element to check
+   * @return boolean, true if visible, false if not
+   */
+  async elementNotVisible(selector, timeout = 10) {
+    try {
+      await this.page.waitForSelector(selector, {hidden: true, timeout});
       return true;
     } catch (error) {
       return false;
@@ -235,7 +266,7 @@ module.exports = class CommonPage {
   }
 
   /**
-   * c
+   * Check if checkbox is selected
    * @param selector
    * @return {Promise<boolean>}
    */

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -100,7 +100,7 @@ class CombinationDataProvider
     {
         $productId = (new Combination($combinationIds[0]))->id_product;
         $product = new Product($productId);
-        $combinations = array();
+        $combinations = [];
 
         foreach ($combinationIds as $combinationId) {
             $combinations[$combinationId] = $this->completeCombination(
@@ -150,7 +150,7 @@ class CombinationDataProvider
             ->plus(new Number((string) $combination['price']))
             ->toPrecision(CommonAbstractType::PRESTASHOP_DECIMALS);
 
-        return array(
+        return [
             'id_product_attribute' => $combination['id_product_attribute'],
             'attribute_reference' => $combination['reference'],
             'attribute_ean13' => $combination['ean13'],
@@ -177,7 +177,7 @@ class CombinationDataProvider
             'attribute_quantity' => $this->productAdapter->getQuantity($product->id, $combination['id_product_attribute']),
             'name' => $this->getCombinationName($attributesCombinations),
             'id_product' => $product->id,
-        );
+        ];
     }
 
     /**
@@ -187,7 +187,7 @@ class CombinationDataProvider
      */
     private function getCombinationName($attributesCombinations)
     {
-        $name = array();
+        $name = [];
 
         foreach ($attributesCombinations as $attribute) {
             $name[] = $attribute['group_name'] . ' - ' . $attribute['attribute_name'];

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -39,17 +39,17 @@ class ConnectionsSourceCore extends ObjectModel
     /**
      * @see ObjectModel::$definition
      */
-    public static $definition = array(
+    public static $definition = [
         'table' => 'connections_source',
         'primary' => 'id_connections_source',
-        'fields' => array(
-            'id_connections' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-            'http_referer' => array('type' => self::TYPE_STRING, 'validate' => 'isAbsoluteUrl'),
-            'request_uri' => array('type' => self::TYPE_STRING, 'validate' => 'isUrl'),
-            'keywords' => array('type' => self::TYPE_STRING, 'validate' => 'isMessage'),
-            'date_add' => array('type' => self::TYPE_DATE, 'validate' => 'isDate', 'required' => true),
-        ),
-    );
+        'fields' => [
+            'id_connections' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
+            'http_referer' => ['type' => self::TYPE_STRING, 'validate' => 'isAbsoluteUrl'],
+            'request_uri' => ['type' => self::TYPE_STRING, 'validate' => 'isUrl'],
+            'keywords' => ['type' => self::TYPE_STRING, 'validate' => 'isMessage'],
+            'date_add' => ['type' => self::TYPE_DATE, 'validate' => 'isDate', 'required' => true],
+        ],
+    ];
 
     /**
      * Adds current ConnectionsSource as a new Object to the database.

@@ -24,10 +24,8 @@ if [ -f /var/www/html/config/settings.inc.php -o -f /var/www/html/app/config/par
   rm -rf /var/www/html/var/cache/*
 fi
 
-if [ $PS_DEV_MODE -ne 0 ]; then
-  echo "\n* Enabling DEV mode ...";
-  sed -ie "s/define('_PS_MODE_DEV_', false);/define('_PS_MODE_DEV_',\ true);/g" /var/www/html/config/defines.inc.php
-fi
+echo "\n* Disabling DEV mode ...";
+sed -ie "s/define('_PS_MODE_DEV_', true);/define('_PS_MODE_DEV_',\ false);/g" /var/www/html/config/defines.inc.php
 
 if [ $PS_HOST_MODE -ne 0 -a ! $(grep "define('_PS_HOST_MODE_', true);" /var/www/html/config/defines.inc.php) ]; then
   echo "\n* Enabling HOST mode ...";
@@ -61,9 +59,9 @@ if [ $PS_INSTALL_AUTO = 1 ]; then
   done
 
   echo "\n* Installing PrestaShop, this may take a while ...";
-  if [ $PS_ERASE_DB = 1 ]; then
+  if [ "${PS_ERASE_DB}" = 1 ]; then
     echo "\n* Drop & recreate mysql database...";
-    if [ $DB_PASSWD = "" ]; then
+    if [ "${DB_PASSWD}" = "" ]; then
       mysqladmin -h $DB_SERVER -P $DB_PORT -u $DB_USER drop $DB_NAME --force
       mysqladmin -h $DB_SERVER -P $DB_PORT -u $DB_USER create $DB_NAME --force
     else
@@ -79,6 +77,7 @@ if [ $PS_INSTALL_AUTO = 1 ]; then
   cd /var/www/html
   echo "\n* Install Dependencies...";
   /usr/bin/composer install --no-suggest --ansi --prefer-dist --no-interaction --no-progress --quiet --no-dev
+  /usr/bin/make assets
 
   echo "\n* Install PrestaShop...";
   php /var/www/html/$PS_FOLDER_INSTALL/index_cli.php --domain="$PS_DOMAIN" --db_server=$DB_SERVER:$DB_PORT --db_name="$DB_NAME" --db_user=$DB_USER \

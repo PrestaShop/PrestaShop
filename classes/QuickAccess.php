@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -41,18 +41,18 @@ class QuickAccessCore extends ObjectModel
     /**
      * @see ObjectModel::$definition
      */
-    public static $definition = array(
+    public static $definition = [
         'table' => 'quick_access',
         'primary' => 'id_quick_access',
         'multilang' => true,
-        'fields' => array(
-            'link' => array('type' => self::TYPE_STRING, 'validate' => 'isUrl', 'required' => true, 'size' => 255),
-            'new_window' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool', 'required' => true),
+        'fields' => [
+            'link' => ['type' => self::TYPE_STRING, 'validate' => 'isUrl', 'required' => true, 'size' => 255],
+            'new_window' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool', 'required' => true],
 
             /* Lang fields */
-            'name' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isCleanHtml', 'required' => true, 'size' => 32),
-        ),
-    );
+            'name' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isCleanHtml', 'required' => true, 'size' => 32],
+        ],
+    ];
 
     /**
      * Get all available quick_accesses.
@@ -129,7 +129,7 @@ class QuickAccessCore extends ObjectModel
             throw new PrestaShopException('property "new_window" is missing in object ' . get_class($this));
         }
 
-        $this->setFieldsToUpdate(array('new_window' => true));
+        $this->setFieldsToUpdate(['new_window' => true]);
 
         $this->new_window = !(int) $this->new_window;
 

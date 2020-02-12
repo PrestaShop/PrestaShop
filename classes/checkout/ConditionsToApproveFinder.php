@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -50,7 +50,7 @@ class ConditionsToApproveFinderCore
         $termsAndConditions = new TermsAndConditions();
         $termsAndConditions
             ->setText(
-                $this->translator->trans('I agree to the [terms of service] and will adhere to them unconditionally.', array(), 'Shop.Theme.Checkout'),
+                $this->translator->trans('I agree to the [terms of service] and will adhere to them unconditionally.', [], 'Shop.Theme.Checkout'),
                 $link
             )
             ->setIdentifier('terms-and-conditions');
@@ -60,10 +60,10 @@ class ConditionsToApproveFinderCore
 
     private function getConditionsToApprove()
     {
-        $allConditions = array();
-        $hookedConditions = Hook::exec('termsAndConditions', array(), null, true);
+        $allConditions = [];
+        $hookedConditions = Hook::exec('termsAndConditions', [], null, true);
         if (!is_array($hookedConditions)) {
-            $hookedConditions = array();
+            $hookedConditions = [];
         }
         foreach ($hookedConditions as $hookedCondition) {
             if ($hookedCondition instanceof TermsAndConditions) {
@@ -87,7 +87,7 @@ class ConditionsToApproveFinderCore
          * This allows a module to override the default checkbox
          * in a consistent manner.
          */
-        $reducedConditions = array();
+        $reducedConditions = [];
         foreach ($allConditions as $condition) {
             if ($condition instanceof TermsAndConditions) {
                 $reducedConditions[$condition->getIdentifier()] = $condition;

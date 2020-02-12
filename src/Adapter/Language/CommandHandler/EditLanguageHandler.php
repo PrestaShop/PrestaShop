@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -106,9 +106,7 @@ final class EditLanguageHandler extends AbstractLanguageHandler implements EditL
         }
 
         if (false === $language->update()) {
-            throw new LanguageException(
-                sprintf('Cannot update language with id "%s"', $language->id)
-            );
+            throw new LanguageException(sprintf('Cannot update language with id "%s"', $language->id));
         }
     }
 
@@ -146,12 +144,7 @@ final class EditLanguageHandler extends AbstractLanguageHandler implements EditL
         if (false === $command->isActive()
             && $command->getLanguageId()->getValue() === (int) Configuration::get('PS_LANG_DEFAULT')
         ) {
-            throw new CannotDisableDefaultLanguageException(
-                sprintf(
-                    'Language with id "%s" is default language and thus it cannot be disabled',
-                    $command->getLanguageId()->getValue()
-                )
-            );
+            throw new CannotDisableDefaultLanguageException(sprintf('Language with id "%s" is default language and thus it cannot be disabled', $command->getLanguageId()->getValue()));
         }
     }
 
@@ -240,10 +233,7 @@ final class EditLanguageHandler extends AbstractLanguageHandler implements EditL
         if ($language->iso_code === $command->getIsoCode()->getValue()
             && Language::getIdByIso($command->getIsoCode()->getValue())
         ) {
-            throw new LanguageConstraintException(
-                sprintf('Language with ISO code "%s" already exists', $command->getIsoCode()->getValue()),
-                LanguageConstraintException::INVALID_ISO_CODE
-            );
+            throw new LanguageConstraintException(sprintf('Language with ISO code "%s" already exists', $command->getIsoCode()->getValue()), LanguageConstraintException::INVALID_ISO_CODE);
         }
     }
 }

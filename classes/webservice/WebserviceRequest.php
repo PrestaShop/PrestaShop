@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -35,7 +35,7 @@ class WebserviceRequestCore
      *
      * @var array
      */
-    public $errors = array();
+    public $errors = [];
 
     /**
      * Set if return should display content or not.
@@ -84,14 +84,14 @@ class WebserviceRequestCore
      *
      * @var array
      */
-    public $urlSegment = array();
+    public $urlSegment = [];
 
     /**
      * The segment list of the URL after the "api" segment.
      *
      * @var array
      */
-    public $urlFragments = array();
+    public $urlFragments = [];
 
     /**
      * The time in microseconds of the start of the execution of the web service request.
@@ -209,7 +209,7 @@ class WebserviceRequestCore
     /**
      * @var array the list of shop ids, can be empty
      */
-    public static $shopIDs = array();
+    public static $shopIDs = [];
 
     public function getOutputEnabled()
     {
@@ -382,7 +382,7 @@ class WebserviceRequestCore
     public function getPriceForProduct($field, $entity_object, $ws_params)
     {
         if (is_int($entity_object->id)) {
-            $arr_return = $this->specificPriceForProduct($entity_object, array('default_price' => ''));
+            $arr_return = $this->specificPriceForProduct($entity_object, ['default_price' => '']);
             $field['value'] = $arr_return['default_price']['value'];
         }
 
@@ -411,7 +411,7 @@ class WebserviceRequestCore
 
     public function specificPriceCalculation($parameters)
     {
-        $arr_return = array();
+        $arr_return = [];
         foreach ($parameters as $name => $value) {
             $id_shop = (int) Context::getContext()->shop->id;
             $id_country = (int) (isset($value['country']) ? $value['country'] : (Configuration::get('PS_COUNTRY_DEFAULT')));
@@ -445,7 +445,7 @@ class WebserviceRequestCore
                 $specific_price_output,
                 null
             );
-            $arr_return[$name] = array('sqlId' => strtolower($name), 'value' => sprintf('%f', $return_value));
+            $arr_return[$name] = ['sqlId' => strtolower($name), 'value' => sprintf('%f', $return_value)];
         }
 
         return $arr_return;
@@ -493,10 +493,10 @@ class WebserviceRequestCore
     {
         // Time logger
         $this->_startTime = microtime(true);
-        $this->objects = array();
+        $this->objects = [];
 
         // Error handler
-        set_error_handler(array($this, 'webserviceErrorHandler'));
+        set_error_handler([$this, 'webserviceErrorHandler']);
         ini_set('html_errors', 'off');
 
         // Two global vars, for compatibility with the PS core...
@@ -656,7 +656,7 @@ class WebserviceRequestCore
         if (isset($this->objOutput)) {
             $this->objOutput->setStatus($status);
         }
-        $this->errors[] = array($code, $label);
+        $this->errors[] = [$code, $label];
     }
 
     /**
@@ -718,7 +718,7 @@ class WebserviceRequestCore
             return;
         }
 
-        $errortype = array(
+        $errortype = [
             E_ERROR => 'Error',
             E_WARNING => 'Warning',
             E_PARSE => 'Parse',
@@ -732,7 +732,7 @@ class WebserviceRequestCore
             E_USER_NOTICE => 'User notice',
             E_STRICT => 'Runtime Notice',
             E_RECOVERABLE_ERROR => 'Recoverable error',
-        );
+        ];
         $type = (isset($errortype[$errno]) ? $errortype[$errno] : 'Unknown error');
         Tools::error_log('[PHP ' . $type . ' #' . $errno . '] ' . $errstr . ' (' . $errfile . ', line ' . $errline . ')');
 
@@ -933,7 +933,7 @@ class WebserviceRequestCore
      */
     protected function checkHTTPMethod()
     {
-        if (!in_array($this->method, array('GET', 'POST', 'PUT', 'DELETE', 'HEAD'))) {
+        if (!in_array($this->method, ['GET', 'POST', 'PUT', 'DELETE', 'HEAD'])) {
             $this->setError(405, 'Method ' . $this->method . ' is not valid', 23);
         } elseif (isset($this->urlSegment[0], $this->resourceList[$this->urlSegment[0]]['forbidden_method']) && in_array($this->method, $this->resourceList[$this->urlSegment[0]]['forbidden_method'])) {
             $this->setError(405, 'Method ' . $this->method . ' is not allowed for the resource ' . $this->urlSegment[0], 101);
@@ -974,9 +974,9 @@ class WebserviceRequestCore
 
     protected function setObjects()
     {
-        $objects = array();
-        $arr_avoid_id = array();
-        $ids = array();
+        $objects = [];
+        $arr_avoid_id = [];
+        $ids = [];
         if (isset($this->urlFragments['id'])) {
             preg_match('#^\[(.*)\]$#Ui', $this->urlFragments['id'], $matches);
             if (count($matches) > 1) {
@@ -1005,7 +1005,7 @@ class WebserviceRequestCore
     protected function parseDisplayFields($str)
     {
         $bracket_level = 0;
-        $part = array();
+        $part = [];
         $tmp = '';
         $str_len = strlen($str);
         for ($i = 0; $i < $str_len; ++$i) {
@@ -1025,7 +1025,7 @@ class WebserviceRequestCore
         if ($tmp != '') {
             $part[] = $tmp;
         }
-        $fields = array();
+        $fields = [];
         foreach ($part as $str) {
             $field_name = trim(substr($str, 0, (strpos($str, '[') === false ? strlen($str) : strpos($str, '['))));
             if (!isset($fields[$field_name])) {
@@ -1033,11 +1033,11 @@ class WebserviceRequestCore
             }
             if (strpos($str, '[') !== false) {
                 $sub_fields = substr($str, strpos($str, '[') + 1, strlen($str) - strpos($str, '[') - 2);
-                $tmp_array = array();
+                $tmp_array = [];
                 if (strpos($sub_fields, ',') !== false) {
                     $tmp_array = explode(',', $sub_fields);
                 } else {
-                    $tmp_array = array($sub_fields);
+                    $tmp_array = [$sub_fields];
                 }
                 $fields[$field_name] = (is_array($fields[$field_name])) ? array_merge($fields[$field_name], $tmp_array) : $tmp_array;
             }
@@ -1096,9 +1096,9 @@ class WebserviceRequestCore
     protected function manageFilters()
     {
         // filtered fields which can not use filters : hidden_fields
-        $available_filters = array();
+        $available_filters = [];
         // filtered i18n fields which can use filters
-        $i18n_available_filters = array();
+        $i18n_available_filters = [];
         foreach ($this->resourceConfiguration['fields'] as $fieldName => $field) {
             if ((!isset($this->resourceConfiguration['hidden_fields']) ||
                 (isset($this->resourceConfiguration['hidden_fields']) && !in_array($fieldName, $this->resourceConfiguration['hidden_fields'])))) {
@@ -1120,10 +1120,10 @@ class WebserviceRequestCore
                 $available_filters[] = 'date_upd';
             }
             if (!array_key_exists('date_add', $this->resourceConfiguration['fields'])) {
-                $this->resourceConfiguration['fields']['date_add'] = array('sqlId' => 'date_add');
+                $this->resourceConfiguration['fields']['date_add'] = ['sqlId' => 'date_add'];
             }
             if (!array_key_exists('date_upd', $this->resourceConfiguration['fields'])) {
-                $this->resourceConfiguration['fields']['date_upd'] = array('sqlId' => 'date_upd');
+                $this->resourceConfiguration['fields']['date_upd'] = ['sqlId' => 'date_upd'];
             }
         } else {
             foreach ($available_filters as $key => $value) {
@@ -1174,7 +1174,7 @@ class WebserviceRequestCore
                                     }
                                 } elseif ($url_param != '' && in_array($field, $i18n_available_filters)) {
                                     if (!is_array($url_param)) {
-                                        $url_param = array($url_param);
+                                        $url_param = [$url_param];
                                     }
                                     $sql_join .= 'LEFT JOIN `' . bqSQL(_DB_PREFIX_ . $this->resourceConfiguration['retrieveData']['table']) . '_lang` AS main_i18n ON (main.`' . bqSQL($this->resourceConfiguration['fields']['id']['sqlId']) . '` = main_i18n.`' . bqSQL($this->resourceConfiguration['fields']['id']['sqlId']) . '`)' . "\n";
                                     foreach ($url_param as $field2 => $value) {
@@ -1230,7 +1230,7 @@ class WebserviceRequestCore
             if (count($matches) > 1) {
                 $sorts = explode(',', $matches[1]);
             } else {
-                $sorts = array($this->urlFragments['sort']);
+                $sorts = [$this->urlFragments['sort']];
             }
 
             $sql_sort .= ' ORDER BY ';
@@ -1241,7 +1241,7 @@ class WebserviceRequestCore
                     $fieldName = substr($sort, 0, $delimiterPosition);
                     $direction = strtoupper(substr($sort, $delimiterPosition + 1));
                 }
-                if ($delimiterPosition === false || !in_array($direction, array('ASC', 'DESC'))) {
+                if ($delimiterPosition === false || !in_array($direction, ['ASC', 'DESC'])) {
                     $this->setError(400, 'The "sort" value has to be formed as this example: "field_ASC" or \'[field_1_DESC,field_2_ASC,field_3_ASC,...]\' ("field" has to be an available field)', 37);
 
                     return false;
@@ -1292,12 +1292,12 @@ class WebserviceRequestCore
 
     public function getFilteredObjectList()
     {
-        $objects = array();
+        $objects = [];
         $filters = $this->manageFilters();
 
         /* If we only need to display the synopsis, analyzing the first row is sufficient */
-        if (isset($this->urlFragments['schema']) && in_array($this->urlFragments['schema'], array('blank', 'synopsis'))) {
-            $filters = array('sql_join' => '', 'sql_filter' => '', 'sql_sort' => '', 'sql_limit' => ' LIMIT 1');
+        if (isset($this->urlFragments['schema']) && in_array($this->urlFragments['schema'], ['blank', 'synopsis'])) {
+            $filters = ['sql_join' => '', 'sql_filter' => '', 'sql_sort' => '', 'sql_limit' => ' LIMIT 1'];
         }
 
         $this->resourceConfiguration['retrieveData']['params'][] = $filters['sql_join'];
@@ -1307,7 +1307,7 @@ class WebserviceRequestCore
         //list entities
 
         $tmp = new $this->resourceConfiguration['retrieveData']['className']();
-        $sqlObjects = call_user_func_array(array($tmp, $this->resourceConfiguration['retrieveData']['retrieveMethod']), $this->resourceConfiguration['retrieveData']['params']);
+        $sqlObjects = call_user_func_array([$tmp, $this->resourceConfiguration['retrieveData']['retrieveMethod']], $this->resourceConfiguration['retrieveData']['params']);
         if ($sqlObjects) {
             foreach ($sqlObjects as $sqlObject) {
                 if ($this->fieldsToDisplay == 'minimum') {
@@ -1325,7 +1325,7 @@ class WebserviceRequestCore
 
     public function getFilteredObjectDetails()
     {
-        $objects = array();
+        $objects = [];
         if (!isset($this->urlFragments['display'])) {
             $this->fieldsToDisplay = 'full';
         }
@@ -1427,9 +1427,9 @@ class WebserviceRequestCore
      */
     protected function executeEntityDelete()
     {
-        $objects = array();
-        $arr_avoid_id = array();
-        $ids = array();
+        $objects = [];
+        $arr_avoid_id = [];
+        $ids = [];
         if (isset($this->urlFragments['id'])) {
             preg_match('#^\[(.*)\]$#Ui', $this->urlFragments['id'], $matches);
             if (count($matches) > 1) {
@@ -1506,7 +1506,7 @@ class WebserviceRequestCore
         $xmlEntities = $xml->children();
         $object = null;
 
-        $ids = array();
+        $ids = [];
         foreach ($xmlEntities as $entity) {
             // To cast in string allow to check null values
             if ((string) $entity->id != '') {
@@ -1514,7 +1514,7 @@ class WebserviceRequestCore
             }
         }
         if ($this->method == 'PUT') {
-            $ids2 = array();
+            $ids2 = [];
             $ids2 = array_unique($ids);
             if (count($ids2) != count($ids)) {
                 $this->setError(400, 'id is duplicate in request', 89);
@@ -1629,11 +1629,11 @@ class WebserviceRequestCore
                                 // associations
                                 if (isset($this->resourceConfiguration['associations'][$association->getName()])) {
                                     $assocItems = $association->children();
-                                    $values = array();
+                                    $values = [];
                                     foreach ($assocItems as $assocItem) {
                                         /** @var SimpleXMLElement $assocItem */
                                         $fields = $assocItem->children();
-                                        $entry = array();
+                                        $entry = [];
                                         foreach ($fields as $fieldName => $fieldValue) {
                                             $entry[$fieldName] = (string) $fieldValue;
                                         }
@@ -1739,7 +1739,7 @@ class WebserviceRequestCore
 
     public function filterLanguage()
     {
-        $arr_languages = array();
+        $arr_languages = [];
         $length_values = strlen($this->urlFragments['language']);
         // if just one language is asked
         if (is_numeric($this->urlFragments['language'])) {
@@ -1749,7 +1749,7 @@ class WebserviceRequestCore
             && strpos($this->urlFragments['language'], ']') === $length_values - 1) {
             if (strpos($this->urlFragments['language'], '|') !== false
                 xor strpos($this->urlFragments['language'], ',') !== false) {
-                $params_values = str_replace(array(']', '['), '', $this->urlFragments['language']);
+                $params_values = str_replace([']', '['], '', $this->urlFragments['language']);
                 // it's a list
                 if (strpos($params_values, '|') !== false) {
                     $list_enabled_lang = explode('|', $params_values);
@@ -1800,7 +1800,7 @@ class WebserviceRequestCore
      */
     protected function returnOutput()
     {
-        $return = array();
+        $return = [];
 
         // write headers
         $this->objOutput->setHeaderParams('Access-Time', time())
@@ -1848,7 +1848,7 @@ class WebserviceRequestCore
                         $type_of_view = WebserviceOutputBuilder::VIEW_LIST;
                     }
 
-                    if (in_array($this->method, array('PUT', 'POST'))) {
+                    if (in_array($this->method, ['PUT', 'POST'])) {
                         $type_of_view = WebserviceOutputBuilder::VIEW_DETAILS;
                         $this->fieldsToDisplay = 'full';
                     }
@@ -1898,8 +1898,8 @@ class WebserviceRequestCore
 
     public static function getallheaders()
     {
-        $retarr = array();
-        $headers = array();
+        $retarr = [];
+        $headers = [];
 
         if (function_exists('apache_request_headers')) {
             $headers = apache_request_headers();
@@ -1918,7 +1918,7 @@ class WebserviceRequestCore
         //Normalize this array to Cased-Like-This structure.
         foreach ($headers as $key => $value) {
             $key = preg_replace('/^HTTP_/i', '', $key);
-            $key = str_replace(' ', '-', ucwords(strtolower(str_replace(array('-', '_'), ' ', $key))));
+            $key = str_replace(' ', '-', ucwords(strtolower(str_replace(['-', '_'], ' ', $key))));
             $retarr[$key] = $value;
         }
         ksort($retarr);

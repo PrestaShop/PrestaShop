@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -45,14 +45,14 @@ final class RoundingMapper
      */
     public static function mapRounding($legacyRoundingMode)
     {
-        $roundModes = array(
+        $roundModes = [
             PS_ROUND_UP => Rounding::ROUND_CEIL,
             PS_ROUND_DOWN => Rounding::ROUND_FLOOR,
             PS_ROUND_HALF_UP => Rounding::ROUND_HALF_UP,
             PS_ROUND_HALF_DOWN => Rounding::ROUND_HALF_DOWN,
             PS_ROUND_HALF_EVEN => Rounding::ROUND_HALF_EVEN,
             PS_ROUND_HALF_ODD => Rounding::ROUND_HALF_EVEN, // Rounding::ROUND_HALF_ODD does not exist (never used)
-        );
+        ];
         if (!array_key_exists((int) $legacyRoundingMode, $roundModes)) {
             throw new \InvalidArgumentException('Unknown legacy rounding mode : ' . (int) $legacyRoundingMode);
         }

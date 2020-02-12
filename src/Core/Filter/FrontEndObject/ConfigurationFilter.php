@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -36,7 +36,7 @@ class ConfigurationFilter extends HashMapWhitelistFilter
 {
     public function __construct()
     {
-        $whitelist = array(
+        $whitelist = [
             'display_taxes_label',
             'display_prices_tax_incl',
             'is_catalog',
@@ -45,7 +45,7 @@ class ConfigurationFilter extends HashMapWhitelistFilter
             'return_enabled',
             'show_prices',
             'voucher_enabled',
-        );
+        ];
 
         $this->whitelist($whitelist);
     }

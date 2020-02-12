@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Grid\Action\Bulk\Type;
 
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\AbstractBulkAction;
+use PrestaShop\PrestaShop\Core\Grid\Action\ModalOptions;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
@@ -53,11 +54,13 @@ final class SubmitBulkAction extends AbstractBulkAction
             ])
             ->setDefaults([
                 'confirm_message' => null,
+                'modal_options' => null,
                 'submit_method' => 'POST',
                 'route_params' => [],
             ])
             ->setAllowedTypes('submit_route', 'string')
             ->setAllowedTypes('confirm_message', ['string', 'null'])
+            ->setAllowedTypes('modal_options', [ModalOptions::class, 'null'])
             ->setAllowedValues('submit_method', ['POST', 'GET'])
             ->setAllowedTypes('route_params', 'array');
     }

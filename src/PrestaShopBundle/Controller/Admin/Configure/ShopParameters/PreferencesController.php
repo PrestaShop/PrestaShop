@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -67,8 +67,8 @@ class PreferencesController extends FrameworkBundleAdminController
         $sslUri = 'https://' . $toolsAdapter->getShopDomainSsl() . $request->getRequestUri();
 
         return $this->render('@PrestaShop/Admin/Configure/ShopParameters/preferences.html.twig', [
-            'layoutHeaderToolbarBtn' => array(),
-            'layoutTitle' => $this->get('translator')->trans('Preferences', array(), 'Admin.Navigation.Menu'),
+            'layoutHeaderToolbarBtn' => [],
+            'layoutTitle' => $this->get('translator')->trans('Preferences', [], 'Admin.Navigation.Menu'),
             'requireAddonsSearch' => true,
             'requireBulkActions' => false,
             'showContentHeader' => true,
@@ -96,7 +96,7 @@ class PreferencesController extends FrameworkBundleAdminController
      */
     public function processFormAction(Request $request)
     {
-        $this->dispatchHook('actionAdminPreferencesControllerPostProcessBefore', array('controller' => $this));
+        $this->dispatchHook('actionAdminPreferencesControllerPostProcessBefore', ['controller' => $this]);
 
         /** @var FormInterface $form */
         $form = $this->get('prestashop.adapter.preferences.form_handler')->getForm();

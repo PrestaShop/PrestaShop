@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -51,6 +51,8 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
  */
 final class ManufacturerGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
+    use BulkDeleteActionTrait;
+
     const GRID_ID = 'manufacturer';
 
     /**
@@ -157,8 +159,7 @@ final class ManufacturerGridDefinitionFactory extends AbstractGridDefinitionFact
                             ])
                         ),
                 ])
-            )
-        ;
+            );
     }
 
     /**
@@ -195,8 +196,7 @@ final class ManufacturerGridDefinitionFactory extends AbstractGridDefinitionFact
             ->add((new SimpleGridAction('common_export_sql_manager'))
                 ->setName($this->trans('Export to SQL Manager', [], 'Admin.Actions'))
                 ->setIcon('storage')
-            )
-        ;
+            );
     }
 
     /**
@@ -236,8 +236,7 @@ final class ManufacturerGridDefinitionFactory extends AbstractGridDefinitionFact
                     'redirect_route' => 'admin_manufacturers_index',
                 ])
                 ->setAssociatedColumn('actions')
-            )
-        ;
+            );
     }
 
     /**
@@ -257,14 +256,8 @@ final class ManufacturerGridDefinitionFactory extends AbstractGridDefinitionFact
                 ->setOptions([
                     'submit_route' => 'admin_manufacturers_bulk_disable_status',
                 ])
-            )
-            ->add((new SubmitBulkAction('delete_selection'))
-                ->setName($this->trans('Delete selected', [], 'Admin.Actions'))
-                ->setOptions([
-                    'submit_route' => 'admin_manufacturers_bulk_delete',
-                    'confirm_message' => $this->trans('Delete selected items?', [], 'Admin.Notifications.Warning'),
-                ])
-            )
-        ;
+            )->add(
+                $this->buildBulkDeleteAction('admin_manufacturers_bulk_delete')
+            );
     }
 }

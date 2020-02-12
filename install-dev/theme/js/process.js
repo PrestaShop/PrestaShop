@@ -1,5 +1,5 @@
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -91,13 +91,13 @@ function process_install(step)
 						process_install(process_steps[current_step]);
 				}
 			}
-			// An error occured during this step
+			// An error occurred during this step
 			else
 			{
 				install_error(step, (json) ? json.message : '');
 			}
 		},
-		// An error HTTP (page not found, json not valid, etc.) occured during this step
+		// An error HTTP (page not found, json not valid, etc.) occurred during this step
 		error: function( jqXHR, textStatus ) {
                     var errorMsg = 'HTTP '+ jqXHR.status + ' - '+ textStatus +' - '+ jqXHR.responseText;
                     install_error(step, errorMsg);
@@ -151,7 +151,7 @@ function process_install_subtask(step, current_subtask)
 			else
 				install_error(step, (json) ? json.message : '');
 		},
-		// An error HTTP (page not found, json not valid, etc.) occured during this step
+		// An error HTTP (page not found, json not valid, etc.) occurred during this step
                 error: function( jqXHR, textStatus ) {
                     var errorMsg = 'HTTP '+ jqXHR.status + ' - '+ textStatus +' - '+ jqXHR.responseText;
                     install_error(step, errorMsg);

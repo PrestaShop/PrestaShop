@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -56,7 +56,7 @@ class MaintenanceController extends FrameworkBundleAdminController
         }
 
         return $this->render('@PrestaShop/Admin/Configure/ShopParameters/maintenance.html.twig', [
-            'layoutHeaderToolbarBtn' => array(),
+            'layoutHeaderToolbarBtn' => [],
             'layoutTitle' => $this->trans('Maintenance', 'Admin.Navigation.Menu'),
             'requireAddonsSearch' => true,
             'requireBulkActions' => false,
@@ -83,7 +83,7 @@ class MaintenanceController extends FrameworkBundleAdminController
     {
         $redirectResponse = $this->redirectToRoute('admin_maintenance');
 
-        $this->dispatchHook('actionAdminMaintenanceControllerPostProcessBefore', array('controller' => $this));
+        $this->dispatchHook('actionAdminMaintenanceControllerPostProcessBefore', ['controller' => $this]);
         $form = $this->get('prestashop.adapter.maintenance.form_handler')->getForm();
         $form->handleRequest($request);
 

@@ -1,5 +1,5 @@
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,32 +18,32 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-import Grid from '../../components/grid/grid';
-import SortingExtension from '../../components/grid/extension/sorting-extension';
-import SubmitRowActionExtension from '../../components/grid/extension/action/row/submit-row-action-extension';
-import FiltersResetExtension from '../../components/grid/extension/filters-reset-extension';
-import ReloadListActionExtension from '../../components/grid/extension/reload-list-extension';
-import ExportToSqlManagerExtension from '../../components/grid/extension/export-to-sql-manager-extension';
-import LinkRowActionExtension from '../../components/grid/extension/link-row-action-extension';
-import SubmitBulkExtension from '../../components/grid/extension/submit-bulk-action-extension';
-import BulkActionCheckboxExtension from '../../components/grid/extension/bulk-action-checkbox-extension';
-import ColumnTogglingExtension from '../../components/grid/extension/column-toggling-extension';
-import PositionExtension from '../../components/grid/extension/position-extension';
-import ChoiceTree from '../../components/form/choice-tree';
-import TranslatableInput from '../../components/translatable-input';
-import textToLinkRewriteCopier from '../../components/text-to-link-rewrite-copier';
+import Grid from '@components/grid/grid';
+import SortingExtension from '@components/grid/extension/sorting-extension';
+import SubmitRowActionExtension from '@components/grid/extension/action/row/submit-row-action-extension';
+import FiltersResetExtension from '@components/grid/extension/filters-reset-extension';
+import ReloadListActionExtension from '@components/grid/extension/reload-list-extension';
+import ExportToSqlManagerExtension from '@components/grid/extension/export-to-sql-manager-extension';
+import LinkRowActionExtension from '@components/grid/extension/link-row-action-extension';
+import SubmitBulkExtension from '@components/grid/extension/submit-bulk-action-extension';
+import BulkActionCheckboxExtension from '@components/grid/extension/bulk-action-checkbox-extension';
+import ColumnTogglingExtension from '@components/grid/extension/column-toggling-extension';
+import PositionExtension from '@components/grid/extension/position-extension';
+import ChoiceTree from '@components/form/choice-tree';
+import TranslatableInput from '@components/translatable-input';
+import textToLinkRewriteCopier from '@components/text-to-link-rewrite-copier';
 import FiltersSubmitButtonEnablerExtension
-  from '../../components/grid/extension/filters-submit-button-enabler-extension';
-import TaggableField from '../../components/taggable-field';
-import ShowcaseCard from '../../components/showcase-card/showcase-card';
-import ShowcaseCardCloseExtension from '../../components/showcase-card/extension/showcase-card-close-extension';
+  from '@components/grid/extension/filters-submit-button-enabler-extension';
+import TaggableField from '@components/taggable-field';
+import ShowcaseCard from '@components/showcase-card/showcase-card';
+import ShowcaseCardCloseExtension from '@components/showcase-card/extension/showcase-card-close-extension';
 
-const $ = window.$;
+const {$} = window;
 
 $(() => {
   const cmsCategory = new Grid('cms_page_category');
@@ -64,6 +64,7 @@ $(() => {
 
   textToLinkRewriteCopier({
     sourceElementSelector: 'input[name^="cms_page_category[name]"]',
+    /* eslint-disable-next-line max-len */
     destinationElementSelector: `${translatorInput.localeInputSelector}:not(.d-none) input[name^="cms_page_category[friendly_url]"]`,
   });
 

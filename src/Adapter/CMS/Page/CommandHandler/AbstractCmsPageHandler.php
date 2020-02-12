@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -57,14 +57,10 @@ abstract class AbstractCmsPageHandler extends AbstractObjectModelHandler
             $cms = new CMS($cmsId);
 
             if (0 >= $cms->id) {
-                throw new CmsPageNotFoundException(
-                    sprintf('Cms page with id "%s" not found', $cmsId)
-                );
+                throw new CmsPageNotFoundException(sprintf('Cms page with id "%s" not found', $cmsId));
             }
         } catch (PrestaShopException $exception) {
-            throw new CmsPageException(
-                sprintf('An error occurred when trying to get cms page with id %s', $cmsId)
-            );
+            throw new CmsPageException(sprintf('An error occurred when trying to get cms page with id %s', $cmsId));
         }
 
         return $cms;
@@ -82,14 +78,10 @@ abstract class AbstractCmsPageHandler extends AbstractObjectModelHandler
         try {
             $cmsCategory = new CMSCategory($cmsCategoryId);
             if (0 >= $cmsCategory->id) {
-                throw new CmsPageCategoryNotFoundException(
-                    sprintf('Cms page category with id "%s" not found', $cmsCategoryId)
-                );
+                throw new CmsPageCategoryNotFoundException(sprintf('Cms page category with id "%s" not found', $cmsCategoryId));
             }
         } catch (PrestaShopException $exception) {
-            throw new CmsPageCategoryException(
-                sprintf('An error occurred when trying to get cms page category with id %s', $cmsCategoryId)
-            );
+            throw new CmsPageCategoryException(sprintf('An error occurred when trying to get cms page category with id %s', $cmsCategoryId));
         }
     }
 }

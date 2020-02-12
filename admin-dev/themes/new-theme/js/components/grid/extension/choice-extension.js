@@ -1,5 +1,5 @@
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,12 +18,12 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-const $ = global.$;
+const {$} = window;
 
 /**
  * This extension enables submit functionality of the choice fields in grid.
@@ -48,7 +48,7 @@ export default class ChoiceExtension {
       const $parent = $button.closest('.js-choice-options');
       const url = $parent.data('url');
 
-      this._submitForm(url, $button);
+      this.submitForm(url, $button);
     });
   }
 
@@ -58,10 +58,10 @@ export default class ChoiceExtension {
    * @param {jQuery} $button
    * @private
    */
-  _submitForm(url, $button) {
+  submitForm(url, $button) {
     const selectedStatusId = $button.data('value');
 
-    if (this._isLocked(url)) {
+    if (this.isLocked(url)) {
       return;
     }
 
@@ -78,7 +78,7 @@ export default class ChoiceExtension {
     $form.appendTo('body');
     $form.submit();
 
-    this._lock(url);
+    this.lock(url);
   }
 
   /**
@@ -89,7 +89,7 @@ export default class ChoiceExtension {
    *
    * @private
    */
-  _isLocked(url) {
+  isLocked(url) {
     return this.lock.includes(url);
   }
 
@@ -98,7 +98,7 @@ export default class ChoiceExtension {
    * @param url
    * @private
    */
-  _lock(url) {
+  lock(url) {
     this.lock.push(url);
   }
 }

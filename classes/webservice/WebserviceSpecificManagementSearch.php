@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -83,10 +83,10 @@ class WebserviceSpecificManagementSearchCore implements WebserviceSpecificManage
     public function manage()
     {
         if (!isset($this->wsObject->urlFragments['query']) || !isset($this->wsObject->urlFragments['language'])) {
-            throw new WebserviceException('You have to set both the \'language\' and \'query\' parameters to get a result', array(100, 400));
+            throw new WebserviceException('You have to set both the \'language\' and \'query\' parameters to get a result', [100, 400]);
         }
-        $objects_products = array();
-        $objects_categories = array();
+        $objects_products = [];
+        $objects_categories = [];
         $objects_products['empty'] = new Product();
         $objects_categories['empty'] = new Category();
 
@@ -97,7 +97,7 @@ class WebserviceSpecificManagementSearchCore implements WebserviceSpecificManage
         }
 
         $results = Search::find($this->wsObject->urlFragments['language'], $this->wsObject->urlFragments['query'], 1, 1, 'position', 'desc', true, false);
-        $categories = array();
+        $categories = [];
         foreach ($results as $result) {
             $current = new Product($result['id_product']);
             $objects_products[] = $current;
