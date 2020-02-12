@@ -28,6 +28,7 @@ namespace PrestaShopBundle\Form\Admin\Improve\International\Tax;
 
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DefaultLanguage;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
+use PrestaShop\PrestaShop\Core\ConstraintValidator\TypedRegexValidator;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use Symfony\Component\Form\AbstractType;
@@ -62,7 +63,7 @@ class TaxType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $invalidCharsText = sprintf(
-            '%s <>;=#{}',
+            '%s ' . TypedRegexValidator::CATALOG_CHARS,
             $this->translator->trans('Invalid characters:', [], 'Admin.Notifications.Info')
         );
 
