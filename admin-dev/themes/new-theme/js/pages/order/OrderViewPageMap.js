@@ -33,8 +33,7 @@ export default {
   privateNoteInput: "#private_note_note",
   privateNoteSubmitBtn: ".js-private-note-btn",
   addCartRuleModal: "#addOrderDiscountModal",
-  addCartRuleApplyOnAllInvoicesCheckbox:
-    "#add_order_cart_rule_apply_on_all_invoices",
+  addCartRuleApplyOnAllInvoicesCheckbox: "#add_order_cart_rule_apply_on_all_invoices",
   addCartRuleInvoiceIdSelect: "#add_order_cart_rule_invoice_id",
   addCartRuleTypeSelect: "#add_order_cart_rule_type",
   addCartRuleValueInput: "#add_order_cart_rule_value",
@@ -44,10 +43,8 @@ export default {
   updateOrderStatusActionInput: "#update_order_status_action_input",
   updateOrderStatusActionForm: "#update_order_status_action_form",
   showOrderShippingUpdateModalBtn: ".js-update-shipping-btn",
-  updateOrderShippingTrackingNumberInput:
-    "#update_order_shipping_tracking_number",
-  updateOrderShippingCurrentOrderCarrierIdInput:
-    "#update_order_shipping_current_order_carrier_id",
+  updateOrderShippingTrackingNumberInput: "#update_order_shipping_tracking_number",
+  updateOrderShippingCurrentOrderCarrierIdInput: "#update_order_shipping_current_order_carrier_id",
   updateCustomerAddressModal: "#updateCustomerAddressModal",
   openOrderAddressUpdateModalBtn: ".js-update-customer-address-modal-btn",
   updateOrderAddressTypeInput: "#change_order_address_address_type",
@@ -69,18 +66,14 @@ export default {
   productsTablePagination: "#orderProductsTablePagination",
   productsTablePaginationNext: "#orderProductsTablePaginationNext",
   productsTablePaginationPrev: "#orderProductsTablePaginationPrev",
-  productsTablePaginationLink:
-    ".page-item:not(.d-none):not(#orderProductsTablePaginationNext):not(#orderProductsTablePaginationPrev) .page-link",
-  productsTablePaginationActive:
-    "#orderProductsTablePagination .page-item.active span",
-  productsTablePaginationTemplate:
-    "#orderProductsTablePagination .page-item.d-none",
-  productsTableRow: productId => `#orderProduct_${productId}`,
-  productsTableRowEdited: productId => `#editOrderProduct_${productId}`,
+  productsTablePaginationLink: ".page-item:not(.d-none):not(#orderProductsTablePaginationNext):not(#orderProductsTablePaginationPrev) .page-link",
+  productsTablePaginationActive: "#orderProductsTablePagination .page-item.active span",
+  productsTablePaginationTemplate: "#orderProductsTablePagination .page-item.d-none",
+  productsTableRow: (productId) => `#orderProduct_${productId}`,
+  productsTableRowEdited: (productId) => `#editOrderProduct_${productId}`,
   productsCellLocation: "tr .cellProductLocation",
   productsCellLocationDisplayed: "tr:not(.d-none) .cellProductLocation",
-  productsTableCustomizationRows:
-    "#orderProductsTable .order-product-customization",
+  productsTableCustomizationRows: "#orderProductsTable .order-product-customization",
   productEditBtn: ".js-order-product-edit-btn",
   productAddBtn: "#addProductBtn",
   productActionBtn: ".js-product-action-btn",
@@ -89,8 +82,7 @@ export default {
   productAddRow: "#addProductTableRow",
   productSearchInput: "#add_product_row_search",
   productSearchInputAutocomplete: "#addProductTableRow .dropdown",
-  productSearchInputAutocompleteMenu:
-    "#addProductTableRow .dropdown .dropdown-menu",
+  productSearchInputAutocompleteMenu: "#addProductTableRow .dropdown .dropdown-menu",
   productAddIdInput: "#add_product_row_product_id",
   productAddTaxRateInput: "#add_product_row_tax_rate",
   productAddCombinationsBlock: "#addProductCombinations",
@@ -175,14 +167,10 @@ export default {
       }
     },
     toggle: {
-      partialRefund:
-        ".cancel-product-element:not(.hidden):not(.shipping-refund), .cancel-product-amount",
-      standardRefund:
-        ".cancel-product-element:not(.hidden):not(.shipping-refund-amount):not(.restock-products), .cancel-product-selector",
-      returnProduct:
-        ".cancel-product-element:not(.hidden):not(.shipping-refund-amount), .cancel-product-selector",
-      cancelProducts:
-        ".cancel-product-element:not(.hidden):not(.shipping-refund-amount):not(.shipping-refund):not(.restock-products):not(.refund-credit-slip):not(.refund-voucher), .cancel-product-selector"
+      partialRefund: ".cancel-product-element:not(.hidden):not(.shipping-refund), .cancel-product-amount",
+      standardRefund: ".cancel-product-element:not(.hidden):not(.shipping-refund-amount):not(.restock-products), .cancel-product-selector",
+      returnProduct: ".cancel-product-element:not(.hidden):not(.shipping-refund-amount), .cancel-product-selector",
+      cancelProducts: ".cancel-product-element:not(.hidden):not(.shipping-refund-amount):not(.shipping-refund):not(.restock-products):not(.refund-credit-slip):not(.refund-voucher), .cancel-product-selector"
     }
   },
   printOrderViewPageButton: ".js-print-order-view-page"
