@@ -59,6 +59,8 @@ use Product;
  */
 final class GetCartInformationHandler extends AbstractCartHandler implements GetCartInformationHandlerInterface
 {
+    private const FREE_SHIPPING_NAME = 'Free Shipping';
+
     /**
      * @var LocaleInterface
      */
@@ -241,7 +243,7 @@ final class GetCartInformationHandler extends AbstractCartHandler implements Get
 
         $hasFreeShippingCartRule = false;
         foreach ($legacySummary['discounts'] as $discount) {
-            if ((bool) $discount['free_shipping']) {
+            if ((bool) $discount['free_shipping'] && $discount['name'] != self::FREE_SHIPPING_NAME) {
                 $hasFreeShippingCartRule = true;
             }
         }
