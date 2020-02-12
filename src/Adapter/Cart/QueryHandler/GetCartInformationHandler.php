@@ -239,10 +239,10 @@ final class GetCartInformationHandler extends AbstractCartHandler implements Get
         /** @var Carrier $carrier */
         $carrier = $legacySummary['carrier'];
 
-        $freeShipping = false;
+        $hasFreeShippingCartRule = false;
         foreach ($legacySummary['discounts'] as $discount) {
             if ((bool) $discount['free_shipping']) {
-                $freeShipping = true;
+                $hasFreeShippingCartRule = true;
             }
         }
 
@@ -251,7 +251,7 @@ final class GetCartInformationHandler extends AbstractCartHandler implements Get
             $this->getFreeShippingValue($cart),
             $this->fetchCartDeliveryOptions($deliveryOptionsByAddress, $deliveryAddress),
             (int) $carrier->id ?: null,
-            $freeShipping
+            $hasFreeShippingCartRule
         );
     }
 

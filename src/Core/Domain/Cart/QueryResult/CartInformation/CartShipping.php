@@ -56,7 +56,7 @@ class CartShipping
     /**
      * @var bool
      */
-    private $cartHasFreeShippingCartRule;
+    private $hasFreeShippingCartRule;
 
     /**
      * @param string $shippingPrice
@@ -76,7 +76,7 @@ class CartShipping
         $this->freeShipping = $freeShipping;
         $this->deliveryOptions = $deliveryOptions;
         $this->selectedCarrierId = $selectedCarrierId;
-        $this->cartHasFreeShippingCartRule = $hasFreeShippingCartRule;
+        $this->hasFreeShippingCartRule = $hasFreeShippingCartRule;
     }
 
     /**
@@ -109,5 +109,13 @@ class CartShipping
     public function getSelectedCarrierId()
     {
         return $this->selectedCarrierId;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isHasFreeShippingCartRule(): bool
+    {
+        return $this->hasFreeShippingCartRule;
     }
 }
