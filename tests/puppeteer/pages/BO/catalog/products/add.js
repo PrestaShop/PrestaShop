@@ -45,6 +45,7 @@ module.exports = class AddProduct extends BOBasePage {
     this.productCombinationsBulkFormTitle = `${this.productCombinationsBulkForm} p[aria-controls]`;
     // Selector of Step 5 : SEO
     this.resetUrlButton = '#seo-url-regenerate';
+    this.friendlyUrlInput = '#form_step5_link_rewrite_1';
     // Growls : override value from BObasePage
     this.growlDefaultDiv = '#growls-default';
     this.growlMessageBlock = `${this.growlDefaultDiv} .growl-message:last-of-type`;
@@ -283,5 +284,15 @@ module.exports = class AddProduct extends BOBasePage {
    */
   async getErrorMessageWhenSummaryIsTooLong() {
     return this.getTextContent(this.dangerMessageShortDescription);
+  }
+
+  /**
+   * Get friendly URL
+   * @returns {Promise<string|*>}
+   */
+  async getFriendlyURL() {
+    await this.reloadPage();
+    await this.goToFormStep(5);
+    return this.getAttributeContent(this.friendlyUrlInput, 'value');
   }
 };
