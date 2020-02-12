@@ -34,7 +34,6 @@ use OrderInvoice;
 use PrestaShop\PrestaShop\Adapter\Order\AbstractOrderHandler;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\PercentageDiscount;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\AddCartRuleToOrderCommand;
-use PrestaShop\PrestaShop\Core\Domain\Order\Command\DuplicateOrderCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler\AddCartRuleToOrderHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\OrderDiscountType;
@@ -306,7 +305,8 @@ final class AddCartRuleToOrderHandler extends AbstractOrderHandler implements Ad
      *
      * @return array
      */
-    private function calculateFreeShippingReduction(float $totalShippingTaxIncl, float $totalShippingTaxExcl) {
+    private function calculateFreeShippingReduction(float $totalShippingTaxIncl, float $totalShippingTaxExcl)
+    {
         return $this->buildReducedValues(
             $totalShippingTaxIncl,
             $totalShippingTaxExcl
