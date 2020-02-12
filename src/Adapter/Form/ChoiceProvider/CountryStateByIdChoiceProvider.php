@@ -46,6 +46,7 @@ final class CountryStateByIdChoiceProvider implements ConfigurableFormChoiceProv
         $resolver = new OptionsResolver();
         $this->configureOptions($resolver);
         $resolvedOptions = $resolver->resolve($options);
+        $choices = [];
 
         try {
             $countryId = $resolvedOptions['id_country'];
@@ -56,7 +57,6 @@ final class CountryStateByIdChoiceProvider implements ConfigurableFormChoiceProv
             }
 
             $states = State::getStatesByIdCountry($countryId, $resolvedOptions['only_active']);
-            $choices = [];
 
             foreach ($states as $state) {
                 $choices[$state['name']] = $state['id_state'];
