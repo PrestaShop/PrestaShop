@@ -122,16 +122,23 @@ final class GetCartInformationHandler extends AbstractCartHandler implements Get
 
         $legacySummary = $cart->getSummaryDetails(null, true);
         $addresses = $this->getAddresses($cart);
+        $cartRules = $this->extractCartRulesFromLegacySummary($legacySummary, $currency);
+        $hasFreeShippingCartRule = false;
+        foreach ($legacySummary['discounts'] as $discount) {
+            if ((bool) $discount['free_shipping'] && $discount['name'] != self::FREE_SHIPPING_NAME) {
+                $hasFreeShippingCartRule = true;
+            }
+        }
 
         $result = new CartInformation(
             $cart->id,
             $this->extractProductsFromLegacySummary($cart, $legacySummary, $currency),
             (int) $currency->id,
             (int) $language->id,
-            $this->extractCartRulesFromLegacySummary($legacySummary, $currency),
+            $cartRules,
             $addresses,
             $this->extractSummaryFromLegacySummary($legacySummary, $currency, $cart),
-            $addresses ? $this->extractShippingFromLegacySummary($cart, $legacySummary) : null
+            $addresses ? $this->extractShippingFromLegacySummary($cart, $legacySummary, $hasFreeShippingCartRule) : null
         );
 
         $this->contextStateManager->restoreContext();
@@ -225,10 +232,15 @@ final class GetCartInformationHandler extends AbstractCartHandler implements Get
     /**
      * @param Cart $cart
      * @param array $legacySummary
+     * @param bool $hasFreeShippingCartRule
      *
      * @return CartShipping|null
      */
-    private function extractShippingFromLegacySummary(Cart $cart, array $legacySummary): ?CartShipping
+    private function extractShippingFromLegacySummary(
+        Cart $cart,
+        array $legacySummary,
+        bool $hasFreeShippingCartRule
+    ): ?CartShipping
     {
         $deliveryOptionsByAddress = $cart->getDeliveryOptionList();
         $deliveryAddress = (int) $cart->id_address_delivery;
@@ -240,13 +252,6 @@ final class GetCartInformationHandler extends AbstractCartHandler implements Get
 
         /** @var Carrier $carrier */
         $carrier = $legacySummary['carrier'];
-
-        $hasFreeShippingCartRule = false;
-        foreach ($legacySummary['discounts'] as $discount) {
-            if ((bool) $discount['free_shipping'] && $discount['name'] != self::FREE_SHIPPING_NAME) {
-                $hasFreeShippingCartRule = true;
-            }
-        }
 
         return new CartShipping(
             (string) $legacySummary['total_shipping'],
