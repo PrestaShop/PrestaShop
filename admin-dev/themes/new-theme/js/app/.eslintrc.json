@@ -1,0 +1,42 @@
+{
+  "extends": "airbnb-base",
+  "env": {
+    "browser": true
+  },
+  "plugins": [
+    "import",
+    "html"
+  ],
+  "settings": {
+  "import/resolver": {
+    "webpack": {
+      "config": "../../webpack.config.js"
+      }
+    }
+  },
+  "rules": {
+    "import/extensions": [
+      "error",
+      "always",
+      {
+        "js": "never",
+        "vue": "never"
+      }
+    ],
+    "no-param-reassign": [
+      "error",
+      {
+        "props": false
+      }
+    ],
+    "no-underscore-dangle": "off",
+    "no-trailing-spaces": [
+      "error",
+      {
+        "skipBlankLines": true
+      }
+    ],
+    "class-methods-use-this": "off",
+    "no-unused-vars": "warn"
+  }
+}

@@ -25,7 +25,7 @@
 
 import createOrderMap from './create-order-map';
 
-const {$} = window;
+const $ = window.$;
 
 /**
  * Manipulates UI of Shipping block in Order creation page
@@ -43,11 +43,11 @@ export default class ShippingRenderer {
    */
   render(shipping, emptyCart) {
     if (emptyCart) {
-      this.hideContainer();
+      this._hideContainer();
     } else if (shipping !== null) {
-      this.displayForm(shipping);
+      this._displayForm(shipping);
     } else {
-      this.displayNoCarriersWarning();
+      this._displayNoCarriersWarning();
     }
   }
 
@@ -58,13 +58,13 @@ export default class ShippingRenderer {
    *
    * @private
    */
-  displayForm(shipping) {
-    this.hideNoCarrierBlock();
-    this.renderDeliveryOptions(shipping.deliveryOptions, shipping.selectedCarrierId);
-    this.renderTotalShipping(shipping.shippingPrice);
-    this.renderFreeShippingSwitch(shipping.freeShipping);
-    this.showForm();
-    this.showContainer();
+  _displayForm(shipping) {
+    this._hideNoCarrierBlock();
+    this._renderDeliveryOptions(shipping.deliveryOptions, shipping.selectedCarrierId);
+    this._renderTotalShipping(shipping.shippingPrice);
+    this._renderFreeShippingSwitch(shipping.freeShipping);
+    this._showForm();
+    this._showContainer();
   }
 
   /**
@@ -74,7 +74,7 @@ export default class ShippingRenderer {
    *
    * @private
    */
-  renderFreeShippingSwitch(isFreeShipping) {
+  _renderFreeShippingSwitch(isFreeShipping) {
     $(createOrderMap.freeShippingSwitch).each((key, input) => {
       if (input.value === '1') {
         input.checked = isFreeShipping;
@@ -89,10 +89,10 @@ export default class ShippingRenderer {
    *
    * @private
    */
-  displayNoCarriersWarning() {
-    this.showContainer();
-    this.hideForm();
-    this.showNoCarrierBlock();
+  _displayNoCarriersWarning() {
+    this._showContainer();
+    this._hideForm();
+    this._showNoCarrierBlock();
   }
 
   /**
@@ -103,11 +103,13 @@ export default class ShippingRenderer {
    *
    * @private
    */
-  renderDeliveryOptions(deliveryOptions, selectedVal) {
+  _renderDeliveryOptions(deliveryOptions, selectedVal) {
     const $deliveryOptionSelect = $(createOrderMap.deliveryOptionSelect);
     $deliveryOptionSelect.empty();
 
-    Object.values(deliveryOptions).forEach((option) => {
+    for (const key in Object.keys(deliveryOptions)) {
+      const option = deliveryOptions[key];
+
       const deliveryOption = {
         value: option.carrierId,
         text: `${option.carrierName} - ${option.carrierDelay}`,
@@ -118,7 +120,7 @@ export default class ShippingRenderer {
       }
 
       $deliveryOptionSelect.append($('<option>', deliveryOption));
-    });
+    }
   }
 
   /**
@@ -128,7 +130,7 @@ export default class ShippingRenderer {
    *
    * @private
    */
-  renderTotalShipping(shippingPrice) {
+  _renderTotalShipping(shippingPrice) {
     const $totalShippingField = $(createOrderMap.totalShippingField);
     $totalShippingField.empty();
 
@@ -140,7 +142,7 @@ export default class ShippingRenderer {
    *
    * @private
    */
-  showContainer() {
+  _showContainer() {
     this.$container.removeClass('d-none');
   }
 
@@ -149,7 +151,7 @@ export default class ShippingRenderer {
    *
    * @private
    */
-  hideContainer() {
+  _hideContainer() {
     this.$container.addClass('d-none');
   }
 
@@ -158,7 +160,7 @@ export default class ShippingRenderer {
    *
    * @private
    */
-  showForm() {
+  _showForm() {
     this.$form.removeClass('d-none');
   }
 
@@ -167,7 +169,7 @@ export default class ShippingRenderer {
    *
    * @private
    */
-  hideForm() {
+  _hideForm() {
     this.$form.addClass('d-none');
   }
 
@@ -176,7 +178,7 @@ export default class ShippingRenderer {
    *
    * @private
    */
-  showNoCarrierBlock() {
+  _showNoCarrierBlock() {
     this.$noCarrierBlock.removeClass('d-none');
   }
 
@@ -185,7 +187,7 @@ export default class ShippingRenderer {
    *
    * @private
    */
-  hideNoCarrierBlock() {
+  _hideNoCarrierBlock() {
     this.$noCarrierBlock.addClass('d-none');
   }
 }

@@ -29,7 +29,7 @@ import {EventEmitter} from '@components/event-emitter';
 import eventMap from '@pages/order/create/event-map';
 import Router from '@components/router';
 
-const {$} = window;
+const $ = window.$;
 
 /**
  * Responsible for customers managing. (search, select, get customer info etc.)
@@ -45,13 +45,13 @@ export default class CustomerManager {
     this.$customerSearchResultBlock = $(createOrderMap.customerSearchResultsBlock);
     this.customerRenderer = new CustomerRenderer();
 
-    this.initListeners();
+    this._initListeners();
 
     return {
-      search: (searchPhrase) => this.search(searchPhrase),
-      selectCustomer: (event) => this.selectCustomer(event),
-      loadCustomerCarts: (currentCartId) => this.loadCustomerCarts(currentCartId),
-      loadCustomerOrders: () => this.loadCustomerOrders(),
+      search: searchPhrase => this._search(searchPhrase),
+      selectCustomer: event => this._selectCustomer(event),
+      loadCustomerCarts: currentCartId => this._loadCustomerCarts(currentCartId),
+      loadCustomerOrders: () => this._loadCustomerOrders(),
     };
   }
 
@@ -60,10 +60,10 @@ export default class CustomerManager {
    *
    * @private
    */
-  initListeners() {
-    this.$container.on('click', createOrderMap.changeCustomerBtn, () => this.changeCustomer());
-    this.onCustomerSearch();
-    this.onCustomerSelect();
+  _initListeners() {
+    this.$container.on('click', createOrderMap.changeCustomerBtn, () => this._changeCustomer());
+    this._onCustomerSearch();
+    this._onCustomerSelect();
     this.onCustomersNotFound();
   }
 
@@ -72,7 +72,7 @@ export default class CustomerManager {
    *
    * @private
    */
-  onCustomerSearch() {
+  _onCustomerSearch() {
     EventEmitter.on(eventMap.customerSearched, (response) => {
       this.activeSearchRequest = null;
       this.customerRenderer.clearShownCustomers();
@@ -104,7 +104,7 @@ export default class CustomerManager {
    *
    * @private
    */
-  onCustomerSelect() {
+  _onCustomerSelect() {
     EventEmitter.on(eventMap.customerSelected, (event) => {
       const $chooseBtn = $(event.currentTarget);
       this.customerId = $chooseBtn.data('customer-id');
@@ -118,7 +118,7 @@ export default class CustomerManager {
    *
    * @private
    */
-  changeCustomer() {
+  _changeCustomer() {
     this.customerRenderer.showCustomerSearch();
   }
 
@@ -127,26 +127,26 @@ export default class CustomerManager {
    *
    * @param currentCartId
    */
-  loadCustomerCarts(currentCartId) {
-    const {customerId} = this;
+  _loadCustomerCarts(currentCartId) {
+    const customerId = this.customerId;
 
     $.get(this.router.generate('admin_customers_carts', {customerId})).then((response) => {
       this.customerRenderer.renderCarts(response.carts, currentCartId);
     }).catch((e) => {
-      window.showErrorMessage(e.responseJSON.message);
+      showErrorMessage(e.responseJSON.message);
     });
   }
 
   /**
    * Loads customer orders list
    */
-  loadCustomerOrders() {
-    const {customerId} = this;
+  _loadCustomerOrders() {
+    const customerId = this.customerId;
 
     $.get(this.router.generate('admin_customers_orders', {customerId})).then((response) => {
       this.customerRenderer.renderOrders(response.orders);
     }).catch((e) => {
-      window.showErrorMessage(e.responseJSON.message);
+      showErrorMessage(e.responseJSON.message);
     });
   }
 
@@ -155,7 +155,7 @@ export default class CustomerManager {
    *
    * @return {Number}
    */
-  selectCustomer(chooseCustomerEvent) {
+  _selectCustomer(chooseCustomerEvent) {
     EventEmitter.emit(eventMap.customerSelected, chooseCustomerEvent);
 
     return this.customerId;
@@ -166,7 +166,7 @@ export default class CustomerManager {
    *
    * @private
    */
-  search(searchPhrase) {
+  _search(searchPhrase) {
     if (searchPhrase.length === 0) {
       return;
     }
@@ -187,7 +187,7 @@ export default class CustomerManager {
         return;
       }
 
-      window.showErrorMessage(response.responseJSON.message);
+      showErrorMessage(response.responseJSON.message);
     });
   }
 }

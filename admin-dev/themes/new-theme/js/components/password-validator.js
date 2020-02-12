@@ -29,6 +29,7 @@
  * If password confirmation input is provided, can validate if entered password is matching confirmation.
  */
 export default class PasswordValidator {
+
   /**
    * @param {String} passwordInputSelector selector of the password input.
    * @param {String|null} confirmPasswordInputSelector (optional) selector for the password confirmation input.
@@ -74,7 +75,7 @@ export default class PasswordValidator {
    */
   isPasswordMatchingConfirmation() {
     if (!this.confirmPasswordInput) {
-      throw new Error('Confirm password input is not provided for the password validator.');
+      throw 'Confirm password input is not provided for the password validator.';
     }
 
     if (this.confirmPasswordInput.value === '') {

@@ -30,7 +30,7 @@
       class="form-control search search-input mb-2"
       :tags="tags"
       :placeholder="hasPlaceholder?placeholder:''"
-      :has-icon="true"
+      :hasIcon="true"
       @tagChange="onTagChanged"
       @typing="onTyping"
     />
@@ -39,27 +39,28 @@
         v-if="isOverview"
         v-once
         ref="tree"
-        :has-checkbox="true"
+        :hasCheckbox="true"
         :model="list"
         @checked="onCheck"
         :translations="PSTreeTranslations"
-      />
+      >
+      </PSTree>
       <PSTree
         v-else
         ref="tree"
-        :has-checkbox="true"
+        :hasCheckbox="true"
         :model="list"
         @checked="onCheck"
         :translations="PSTreeTranslations"
-      />
+      >
+      </PSTree>
     </div>
     <ul
       class="mt-1"
       v-else
     >
       <li
-        v-for="(item, index) in getItems()"
-        :key="index"
+        v-for="(item, index) in items"
         v-show="item.visible"
         class="item"
       >
@@ -67,7 +68,7 @@
           :label="item[label]"
           :model="item"
           @checked="onCheck"
-          :has-checkbox="true"
+          :hasCheckbox="true"
         />
       </li>
     </ul>
@@ -78,28 +79,11 @@
   import PSTags from '@app/widgets/ps-tags';
   import PSTreeItem from '@app/widgets/ps-tree/ps-tree-item';
   import PSTree from '@app/widgets/ps-tree/ps-tree';
-  import {EventBus} from '@app/utils/event-bus';
+  import { EventBus } from '@app/utils/event-bus';
+  import _ from 'lodash';
 
   export default {
-    props: {
-      placeholder: {
-        type: String,
-        required: false,
-        default: '',
-      },
-      itemId: {
-        type: String,
-        required: true,
-      },
-      label: {
-        type: String,
-        required: true,
-      },
-      list: {
-        type: Array,
-        required: true,
-      },
-    },
+    props: ['placeholder', 'itemID', 'label', 'list'],
     computed: {
       isOverview() {
         return this.$route.name === 'overview';
@@ -107,15 +91,7 @@
       hasPlaceholder() {
         return !this.tags.length;
       },
-      PSTreeTranslations() {
-        return {
-          expand: this.trans('tree_expand'),
-          reduce: this.trans('tree_reduce'),
-        };
-      },
-    },
-    methods: {
-      getItems() {
+      items() {
         const matchList = [];
         this.list.filter((data) => {
           const label = data[this.label].toLowerCase();
@@ -137,6 +113,14 @@
         }
         return this.list;
       },
+      PSTreeTranslations() {
+        return {
+          expand: this.trans('tree_expand'),
+          reduce: this.trans('tree_reduce'),
+        };
+      },
+    },
+    methods: {
       onCheck(obj) {
         const itemLabel = obj.item[this.label];
         const filterType = this.hasChildren ? 'category' : 'supplier';
@@ -173,13 +157,13 @@
       },
       filterList(tags) {
         const idList = [];
-        const {categoryList} = this.$store.state;
+        const categoryList = this.$store.state.categoryList;
         const list = this.hasChildren ? categoryList : this.list;
 
         list.map((data) => {
-          const isInIdList = idList.indexOf(Number(data[this.itemId])) === -1;
+          const isInIdList = idList.indexOf(Number(data[this.itemID])) === -1;
           if (tags.indexOf(data[this.label]) !== -1 && isInIdList) {
-            idList.push(Number(data[this.itemId]));
+            idList.push(Number(data[this.itemID]));
           }
           return idList;
         });

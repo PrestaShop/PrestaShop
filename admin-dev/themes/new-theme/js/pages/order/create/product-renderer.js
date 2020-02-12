@@ -25,7 +25,7 @@
 
 import createOrderMap from './create-order-map';
 
-const {$} = window;
+const $ = window.$;
 
 export default class ProductRenderer {
   constructor() {
@@ -38,23 +38,24 @@ export default class ProductRenderer {
    * @param products
    */
   renderList(products) {
-    this.cleanProductsList();
+    this._cleanProductsList();
 
     if (products.length === 0) {
-      this.hideProductsList();
+      this._hideProductsList();
 
       return;
     }
 
     const $productsTableRowTemplate = $($(createOrderMap.productsTableRowTemplate).html());
 
-    Object.values(products).forEach((product) => {
+    for (const key in products) {
+      const product = products[key];
       const $template = $productsTableRowTemplate.clone();
       let customizationId = 0;
 
       if (product.customization) {
-        ({customizationId} = product.customization);
-        this.renderListedProductCustomization(product.customization, $template);
+        customizationId = product.customization.customizationId;
+        this._renderListedProductCustomization(product.customization, $template);
       }
 
       $template.find(createOrderMap.listedProductImageField).prop('src', product.imageLink);
@@ -76,10 +77,10 @@ export default class ProductRenderer {
       $template.find(createOrderMap.productRemoveBtn).data('customization-id', customizationId);
 
       this.$productsTable.find('tbody').append($template);
-    });
+    }
 
-    this.showTaxWarning();
-    this.showProductsList();
+    this._showTaxWarning();
+    this._showProductsList();
   }
 
   /**
@@ -90,11 +91,13 @@ export default class ProductRenderer {
    *
    * @private
    */
-  renderListedProductCustomization(customization, $productRowTemplate) {
+  _renderListedProductCustomization(customization, $productRowTemplate) {
     const $customizedTextTemplate = $($(createOrderMap.listedProductCustomizedTextTemplate).html());
     const $customizedFileTemplate = $($(createOrderMap.listedProductCustomizedFileTemplate).html());
 
-    Object.values(customization.customizationFieldsData).forEach((customizedData) => {
+    for (const key in customization.customizationFieldsData) {
+      const customizedData =  customization.customizationFieldsData[key];
+
       let $customizationTemplate = $customizedTextTemplate.clone();
 
       if (customizedData.type === createOrderMap.productCustomizationFieldTypeFile) {
@@ -102,14 +105,16 @@ export default class ProductRenderer {
         $customizationTemplate.find(createOrderMap.listedProductCustomizationName).text(customizedData.name);
         $customizationTemplate
           .find(`${createOrderMap.listedProductCustomizationValue} img`)
-          .prop('src', customizedData.value);
+          .prop('src', customizedData.value)
+        ;
+
       } else {
         $customizationTemplate.find(createOrderMap.listedProductCustomizationName).text(customizedData.name);
         $customizationTemplate.find(createOrderMap.listedProductCustomizationValue).text(customizedData.value);
       }
 
       $productRowTemplate.find(createOrderMap.listedProductDefinition).append($customizationTemplate);
-    });
+    }
   }
 
   /**
@@ -118,25 +123,25 @@ export default class ProductRenderer {
    * @param foundProducts
    */
   renderSearchResults(foundProducts) {
-    this.cleanSearchResults();
+    this._cleanSearchResults();
     if (foundProducts.length === 0) {
-      this.showNotFound();
-      this.hideTaxWarning();
+      this._showNotFound();
+      this._hideTaxWarning();
 
       return;
     }
 
-    this.renderFoundProducts(foundProducts);
+    this._renderFoundProducts(foundProducts);
 
-    this.hideNotFound();
-    this.showTaxWarning();
-    this.showResultBlock();
+    this._hideNotFound();
+    this._showTaxWarning();
+    this._showResultBlock();
   }
 
   reset() {
-    this.cleanSearchResults();
-    this.hideTaxWarning();
-    this.hideResultBlock();
+    this._cleanSearchResults();
+    this._hideTaxWarning();
+    this._hideResultBlock();
   }
 
   /**
@@ -146,8 +151,8 @@ export default class ProductRenderer {
    */
   renderProductMetadata(product) {
     this.renderStock(product.stock);
-    this.renderCombinations(product.combinations);
-    this.renderCustomizations(product.customizationFields);
+    this._renderCombinations(product.combinations);
+    this._renderCustomizations(product.customizationFields);
   }
 
   /**
@@ -167,15 +172,17 @@ export default class ProductRenderer {
    *
    * @private
    */
-  renderFoundProducts(foundProducts) {
-    Object.values(foundProducts).forEach((product) => {
-      let {name} = product;
+  _renderFoundProducts(foundProducts) {
+    for (const key in foundProducts) {
+      const product = foundProducts[key];
+
+      let name = product.name;
       if (product.combinations.length === 0) {
         name += ` - ${product.formattedPrice}`;
       }
 
       $(createOrderMap.productSelect).append(`<option value="${product.productId}">${name}</option>`);
-    });
+    }
   }
 
   /**
@@ -183,7 +190,7 @@ export default class ProductRenderer {
    *
    * @private
    */
-  cleanSearchResults() {
+  _cleanSearchResults() {
     $(createOrderMap.productSelect).empty();
     $(createOrderMap.combinationsSelect).empty();
     $(createOrderMap.quantityInput).empty();
@@ -196,25 +203,27 @@ export default class ProductRenderer {
    *
    * @private
    */
-  renderCombinations(combinations) {
-    this.cleanCombinations();
+  _renderCombinations(combinations) {
+    this._cleanCombinations();
 
     if (combinations.length === 0) {
-      this.hideCombinations();
+      this._hideCombinations();
 
       return;
     }
 
-    Object.values(combinations).forEach((combination) => {
+    for (const key in combinations) {
+      const combination = combinations[key];
+
       $(createOrderMap.combinationsSelect).append(
         `<option
           value="${combination.attributeCombinationId}">
           ${combination.attribute} - ${combination.formattedPrice}
         </option>`,
       );
-    });
+    }
 
-    this.showCombinations();
+    this._showCombinations();
   }
 
   /**
@@ -224,15 +233,15 @@ export default class ProductRenderer {
    *
    * @private
    */
-  renderCustomizations(customizationFields) {
+  _renderCustomizations(customizationFields) {
     // represents customization field type "file".
     const fieldTypeFile = createOrderMap.productCustomizationFieldTypeFile;
     // represents customization field type "text".
     const fieldTypeText = createOrderMap.productCustomizationFieldTypeText;
 
-    this.cleanCustomizations();
+    this._cleanCustomizations();
     if (customizationFields.length === 0) {
-      this.hideCustomizations();
+      this._hideCustomizations();
 
       return;
     }
@@ -246,7 +255,8 @@ export default class ProductRenderer {
       [fieldTypeText]: $textInputTemplate,
     };
 
-    Object.values(customizationFields).forEach((customField) => {
+    for (const key in customizationFields) {
+      const customField = customizationFields[key];
       const $template = templateTypeMap[customField.type].clone();
 
       $template.find(createOrderMap.productCustomInput)
@@ -261,9 +271,9 @@ export default class ProductRenderer {
       }
 
       $customFieldsContainer.append($template);
-    });
+    }
 
-    this.showCustomizations();
+    this._showCustomizations();
   }
 
   /**
@@ -273,7 +283,7 @@ export default class ProductRenderer {
    */
   renderCartBlockErrorAlert(message) {
     $(createOrderMap.cartErrorAlertText).text(message);
-    this.showCartBlockError();
+    this._showCartBlockError()
   }
 
   /**
@@ -281,7 +291,7 @@ export default class ProductRenderer {
    */
   cleanCartBlockAlerts() {
     $(createOrderMap.cartErrorAlertText).text('');
-    this.hideCartBlockError();
+    this._hideCartBlockError();
   }
 
   /**
@@ -289,8 +299,8 @@ export default class ProductRenderer {
    *
    * @private
    */
-  showCartBlockError() {
-    $(createOrderMap.cartErrorAlertBlock).removeClass('d-none');
+  _showCartBlockError() {
+    $(createOrderMap.cartErrorAlertBlock).removeClass('d-none')
   }
 
   /**
@@ -298,8 +308,8 @@ export default class ProductRenderer {
    *
    * @private
    */
-  hideCartBlockError() {
-    $(createOrderMap.cartErrorAlertBlock).addClass('d-none');
+  _hideCartBlockError() {
+    $(createOrderMap.cartErrorAlertBlock).addClass('d-none')
   }
 
   /**
@@ -307,7 +317,7 @@ export default class ProductRenderer {
    *
    * @private
    */
-  showCustomizations() {
+  _showCustomizations() {
     $(createOrderMap.productCustomizationContainer).removeClass('d-none');
   }
 
@@ -316,7 +326,7 @@ export default class ProductRenderer {
    *
    * @private
    */
-  hideCustomizations() {
+  _hideCustomizations() {
     $(createOrderMap.productCustomizationContainer).addClass('d-none');
   }
 
@@ -325,7 +335,7 @@ export default class ProductRenderer {
    *
    * @private
    */
-  cleanCustomizations() {
+  _cleanCustomizations() {
     $(createOrderMap.productCustomFieldsContainer).empty();
   }
 
@@ -334,16 +344,26 @@ export default class ProductRenderer {
    *
    * @private
    */
-  showResultBlock() {
+  _showResultBlock() {
     $(createOrderMap.productResultBlock).removeClass('d-none');
   }
+
+  /**
+   * Hides result block
+   *
+   * @private
+   */
+  _hideResultBlock() {
+    $(createOrderMap.productResultBlock).addClass('d-none');
+  }
+
 
   /**
    * Shows products list
    *
    * @private
    */
-  showProductsList() {
+  _showProductsList() {
     this.$productsTable.removeClass('d-none');
   }
 
@@ -352,7 +372,7 @@ export default class ProductRenderer {
    *
    * @private
    */
-  hideProductsList() {
+  _hideProductsList() {
     this.$productsTable.addClass('d-none');
   }
 
@@ -361,7 +381,7 @@ export default class ProductRenderer {
    *
    * @private
    */
-  cleanProductsList() {
+  _cleanProductsList() {
     this.$productsTable.find('tbody').empty();
   }
 
@@ -370,7 +390,7 @@ export default class ProductRenderer {
    *
    * @private
    */
-  cleanCombinations() {
+  _cleanCombinations() {
     $(createOrderMap.combinationsSelect).empty();
   }
 
@@ -379,7 +399,7 @@ export default class ProductRenderer {
    *
    * @private
    */
-  showCombinations() {
+  _showCombinations() {
     $(createOrderMap.combinationsRow).removeClass('d-none');
   }
 
@@ -388,7 +408,7 @@ export default class ProductRenderer {
    *
    * @private
    */
-  hideCombinations() {
+  _hideCombinations() {
     $(createOrderMap.combinationsRow).addClass('d-none');
   }
 
@@ -397,7 +417,7 @@ export default class ProductRenderer {
    *
    * @private
    */
-  showTaxWarning() {
+  _showTaxWarning() {
     $(createOrderMap.productTaxWarning).removeClass('d-none');
   }
 
@@ -406,7 +426,7 @@ export default class ProductRenderer {
    *
    * @private
    */
-  hideTaxWarning() {
+  _hideTaxWarning() {
     $(createOrderMap.productTaxWarning).addClass('d-none');
   }
 
@@ -415,7 +435,7 @@ export default class ProductRenderer {
    *
    * @private
    */
-  showNotFound() {
+  _showNotFound() {
     $(createOrderMap.noProductsFoundWarning).removeClass('d-none');
   }
 
@@ -424,7 +444,7 @@ export default class ProductRenderer {
    *
    * @private
    */
-  hideNotFound() {
+  _hideNotFound() {
     $(createOrderMap.noProductsFoundWarning).addClass('d-none');
   }
 }

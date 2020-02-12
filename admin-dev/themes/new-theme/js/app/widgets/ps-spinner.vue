@@ -23,5 +23,5 @@
  * International Registered Trademark & Property of PrestaShop SA
  *-->
 <template>
-  <div class="ps-spinner" />
+  <div class="ps-spinner"></div>
 </template>

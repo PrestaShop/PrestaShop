@@ -24,23 +24,15 @@
  *-->
 <template>
   <div class="ps-select">
-    <select
-      class="form-control"
-      v-model="selected"
-      @change="onChange"
-    >
-      <option
-        value="default"
-        selected
-      >
+    <select class="form-control" v-model="selected" @change="onChange">
+      <option value="default" selected>
         <slot />
       </option>
       <option
-        v-for="(item, index) in items"
-        :key="index"
-        :value="item[itemId]"
+        v-for="item in items"
+        :value="item[itemID]"
       >
-        {{ item[itemName] }}
+        {{item[itemName]}}
       </option>
     </select>
   </div>
@@ -48,37 +40,21 @@
 
 <script>
   export default {
-    props: {
-      items: {
-        type: Array,
-        required: true,
-      },
-      itemId: {
-        type: String,
-        required: false,
-        default: '',
-      },
-      itemName: {
-        type: String,
-        required: false,
-        default: '',
-      },
-    },
+    props: ['items', 'itemID', 'itemName'],
     methods: {
       onChange() {
         this.$emit('change', {
           value: this.selected,
-          itemId: this.itemId,
+          itemID: this.itemID,
         });
       },
     },
-    data: () => ({selected: 'default'}),
+    data: () => ({ selected: 'default' }),
   };
 </script>
 
 <style lang="scss" scoped>
-  @import '~@scss/config/_settings.scss';
-
+  @import "../../../scss/config/_settings.scss";
   .ps-select {
     position: relative;
     select {

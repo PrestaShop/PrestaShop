@@ -27,12 +27,9 @@ export default {
     thumbnail() {
       if (this.product.combination_thumbnail !== 'N/A') {
         return `${this.product.combination_thumbnail}`;
-      }
-
-      if (this.product.product_thumbnail !== 'N/A') {
+      } else if (this.product.product_thumbnail !== 'N/A') {
         return `${this.product.product_thumbnail}`;
       }
-
       return null;
     },
     combinationName() {

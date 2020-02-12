@@ -23,30 +23,15 @@
  * International Registered Trademark & Property of PrestaShop SA
  *-->
 <template>
-  <div
-    v-if="isReady"
-    id="app"
-    class="stock-app container-fluid"
-  >
+  <div v-if="isReady" id="app" class="stock-app container-fluid">
     <StockHeader />
-    <Search
-      @search="onSearch"
-      @applyFilter="applyFilter"
-    />
-    <LowFilter
-      v-if="isOverview"
-      :filters="filters"
-      @lowStockChecked="onLowStockChecked"
-    />
+    <Search @search="onSearch" @applyFilter="applyFilter" />
+    <LowFilter v-if="isOverview" :filters="filters" @lowStockChecked="onLowStockChecked" />
     <div class="card container-fluid pa-2 clearfix">
-      <router-view
-        class="view"
-        @resetFilters="resetFilters"
-        @fetch="fetch"
-      />
+      <router-view class="view" @resetFilters="resetFilters" @fetch="fetch"></router-view>
       <PSPagination
-        :current-index="currentPagination"
-        :pages-count="pagesCount"
+        :currentIndex="currentPagination"
+        :pagesCount="pagesCount"
         @pageChanged="onPageChanged"
       />
     </div>
@@ -54,13 +39,13 @@
 </template>
 
 <script>
-  import PSPagination from '@app/widgets/ps-pagination';
   import StockHeader from './header/stock-header';
   import Search from './header/search';
   import LowFilter from './header/filters/low-filter';
+  import PSPagination from '@app/widgets/ps-pagination';
 
   export default {
-    name: 'App',
+    name: 'app',
     computed: {
       isReady() {
         return this.$store.state.isReady;
@@ -85,13 +70,12 @@
         const sorting = (sortDirection === 'desc') ? ' desc' : '';
         this.$store.dispatch('isLoading');
 
-        this.filters = {
-          ...this.filters,
+        this.filters = Object.assign({}, this.filters, {
           order: `${this.$store.state.order}${sorting}`,
           page_size: this.$store.state.productsPerPage,
           page_index: this.$store.state.pageIndex,
           keywords: this.$store.state.keywords,
-        };
+        });
 
         this.$store.dispatch(action, this.filters);
       },
@@ -107,7 +91,9 @@
         this.filters = {};
       },
       onLowStockChecked(isChecked) {
-        this.filters = {...this.filters, low_stock: isChecked};
+        this.filters = Object.assign({}, this.filters, {
+          low_stock: isChecked,
+        });
         this.fetch();
       },
     },

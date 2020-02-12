@@ -24,11 +24,7 @@
  *-->
 <template>
   <div class="input-group date">
-    <input
-      ref="datepicker"
-      type="text"
-      class="form-control"
-    >
+    <input ref="datepicker" type="text" class="form-control" />
     <div class="input-group-append">
       <span class="input-group-text">
         <i class="material-icons">event</i>
@@ -66,7 +62,7 @@
 </script>
 
 <style lang="scss">
-  @import '~@scss/config/_settings.scss';
+  @import "../../../scss/config/_settings.scss";
 
   .date {
     a[data-action='clear']::before {

@@ -23,12 +23,13 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-const {$} = window;
+const $ = window.$;
 
 /**
  * Class CategoryDeleteRowActionExtension handles submitting of row action
  */
 export default class DeleteCategoryRowActionExtension {
+
   constructor() {
     return {
       extend: (grid) => this.extend(grid),
@@ -44,7 +45,7 @@ export default class DeleteCategoryRowActionExtension {
     grid.getContainer().on('click', '.js-delete-category-row-action', (event) => {
       event.preventDefault();
 
-      const $deleteCategoriesModal = $(`#${grid.getId()}_grid_delete_categories_modal`);
+      const $deleteCategoriesModal = $('#' + grid.getId() + '_grid_delete_categories_modal');
       $deleteCategoriesModal.modal('show');
 
       $deleteCategoriesModal.on('click', '.js-submit-delete-categories', () => {

@@ -23,17 +23,15 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-const {$} = window;
+const $ = window.$;
 
 /**
  * Component which allows to copy regular text to url friendly text
  *
  * Usage example in template:
  *
- * <input name="source-input"
- *        class="js-link-rewrite-copier-source"> // The original text will be taken from this element
- * <input name="destination-input"
- *        class="js-link-rewrite-copier-destination"> // Modified text will be added to this input
+ * <input name="source-input" class="js-link-rewrite-copier-source"> // The original text will be taken from this element
+ * <input name="destination-input" class="js-link-rewrite-copier-destination"> // Modified text will be added to this input
  *
  * in javascript:
  *
@@ -43,8 +41,7 @@ const {$} = window;
  * });
  *
  * If the source-input has value "test name" the link rewrite value will be "test-name".
- * If the source-input has value "test name #$" link rewrite will be "test-name-" since #$
- * are un allowed characters in url.
+ * If the source-input has value "test name #$" link rewrite will be "test-name-" since #$ are un allowed characters in url.
  *
  * You can also pass additional options to change the event name, or encoding format:
  *
@@ -57,15 +54,9 @@ const {$} = window;
  * });
  *
  */
-const textToLinkRewriteCopier = (
-  {
-    sourceElementSelector,
-    destinationElementSelector,
-    options = {eventName: 'input'},
-  },
-) => {
+const textToLinkRewriteCopier = ({sourceElementSelector, destinationElementSelector, options = {eventName: 'input'}}) => {
   $(document).on(options.eventName, `${sourceElementSelector}`, (event) => {
-    $(destinationElementSelector).val(window.str2url($(event.currentTarget).val(), 'UTF-8'));
+    $(destinationElementSelector).val(str2url($(event.currentTarget).val(), 'UTF-8'));
   });
 };
 

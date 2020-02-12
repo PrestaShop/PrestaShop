@@ -23,11 +23,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  *-->
 <template>
-  <div
-    class="ps-alert alert"
-    :class="classObject"
-    role="alert"
-  >
+  <div class="ps-alert alert" :class="classObject" role="alert">
     <button
       v-if="hasClose"
       type="button"
@@ -52,19 +48,9 @@
 
   export default {
     props: {
-      duration: {
-        type: Boolean,
-        required: false,
-        default: false,
-      },
-      alertType: {
-        type: String,
-        required: true,
-      },
-      hasClose: {
-        type: Boolean,
-        required: true,
-      },
+      duration: false,
+      alertType: { type: String, required: true },
+      hasClose: { type: Boolean, required: true },
     },
     computed: {
       classObject() {

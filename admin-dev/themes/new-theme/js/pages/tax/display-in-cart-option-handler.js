@@ -23,16 +23,16 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-const {$} = window;
+const $ = window.$;
 
 /**
  * Responsible for 'display tax in cart' option presentation.
  */
 export default class DisplayInCartOptionHandler {
   constructor() {
-    this.handle();
+    this._handle();
 
-    $('.js-enable-tax').on('change', () => this.handle());
+    $('.js-enable-tax').on('change', () => this._handle());
   }
 
   /**
@@ -40,7 +40,7 @@ export default class DisplayInCartOptionHandler {
    *
    * @private
    */
-  handle() {
+  _handle() {
     const enabledVal = $('.js-enable-tax:checked').val();
     const isTaxEnabled = parseInt(enabledVal, 10);
 

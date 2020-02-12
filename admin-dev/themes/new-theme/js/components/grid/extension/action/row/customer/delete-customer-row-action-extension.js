@@ -23,12 +23,13 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-const {$} = window;
+const $ = window.$;
 
 /**
  * Class DeleteCustomerRowActionExtension handles submitting of row action
  */
 export default class DeleteCustomerRowActionExtension {
+
   constructor() {
     return {
       extend: (grid) => this.extend(grid),
@@ -51,7 +52,7 @@ export default class DeleteCustomerRowActionExtension {
         const $button = $(event.currentTarget);
         const customerId = $button.data('customer-id');
 
-        this.addCustomerInput(customerId);
+        this._addCustomerInput(customerId);
 
         const $form = $deleteCustomersModal.find('form');
 
@@ -68,7 +69,7 @@ export default class DeleteCustomerRowActionExtension {
    *
    * @private
    */
-  addCustomerInput(customerId) {
+  _addCustomerInput(customerId) {
     const $customersToDeleteInputBlock = $('#delete_customers_customers_to_delete');
 
     const customerInput = $customersToDeleteInputBlock

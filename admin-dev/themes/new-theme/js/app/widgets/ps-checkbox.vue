@@ -25,14 +25,9 @@
 <template>
   <div class="md-checkbox">
     <label>
-      <input
-        type="checkbox"
-        :id="id"
-        v-model="checked"
-        :class="{'indeterminate' : isIndeterminate }"
-      >
-      <i class="md-checkbox-control" />
-      <slot name="label" />
+      <input type="checkbox" :id="id" v-model="checked" :class="{'indeterminate' : isIndeterminate }">
+      <i class="md-checkbox-control"></i>
+      <slot name="label"></slot>
     </label>
   </div>
 </template>
@@ -42,13 +37,10 @@
     props: {
       id: {
         type: String,
-        required: false,
-        default: '',
       },
       model: {
         type: Object,
         required: false,
-        default: () => ({}),
       },
       isIndeterminate: {
         type: Boolean,

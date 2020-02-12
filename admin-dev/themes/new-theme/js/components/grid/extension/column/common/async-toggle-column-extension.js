@@ -23,16 +23,17 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-const {$} = window;
+const $ = window.$;
 
 /**
  * Class AsyncToggleColumnExtension submits toggle action using AJAX
  */
 export default class AsyncToggleColumnExtension {
+
   constructor() {
     return {
       extend: (grid) => this.extend(grid),
-    };
+    }
   }
 
   /**
@@ -50,18 +51,18 @@ export default class AsyncToggleColumnExtension {
         url: $button.data('toggle-url'),
       }).then((response) => {
         if (response.status) {
-          window.showSuccessMessage(response.message);
+          showSuccessMessage(response.message);
 
-          this.toggleButtonDisplay($button);
+          this._toggleButtonDisplay($button);
 
           return;
         }
 
-        window.showErrorMessage(response.message);
+        showErrorMessage(response.message);
       }).catch((error) => {
         const response = error.responseJSON;
 
-        window.showErrorMessage(response.message);
+        showErrorMessage(response.message);
       });
     });
   }
@@ -73,7 +74,7 @@ export default class AsyncToggleColumnExtension {
    *
    * @private
    */
-  toggleButtonDisplay($button) {
+  _toggleButtonDisplay($button) {
     const isActive = $button.hasClass('grid-toggler-icon-valid');
 
     const classToAdd = isActive ? 'grid-toggler-icon-not-valid' : 'grid-toggler-icon-valid';

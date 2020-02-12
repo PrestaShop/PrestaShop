@@ -23,7 +23,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-const {$} = window;
+const $ = window.$;
 
 /**
  * Class SmtpConfigurationToggler is responsible for showing/hiding SMTP configuration form
@@ -33,11 +33,7 @@ class SmtpConfigurationToggler {
     $('.js-email-method').on('change', 'input[type="radio"]', (event) => {
       const mailMethod = $(event.currentTarget).val();
 
-      if (this.getSmtpMailMethodOption() === mailMethod) {
-        this.showSmtpConfiguration();
-      } else {
-        this.hideSmtpConfiguration();
-      }
+      this._getSmtpMailMethodOption() == mailMethod ? this._showSmtpConfiguration() : this._hideSmtpConfiguration();
     });
   }
 
@@ -46,7 +42,7 @@ class SmtpConfigurationToggler {
    *
    * @private
    */
-  showSmtpConfiguration() {
+  _showSmtpConfiguration() {
     $('.js-smtp-configuration').removeClass('d-none');
   }
 
@@ -55,7 +51,7 @@ class SmtpConfigurationToggler {
    *
    * @private
    */
-  hideSmtpConfiguration() {
+  _hideSmtpConfiguration() {
     $('.js-smtp-configuration').addClass('d-none');
   }
 
@@ -66,7 +62,7 @@ class SmtpConfigurationToggler {
    *
    * @returns {String}
    */
-  getSmtpMailMethodOption() {
+  _getSmtpMailMethodOption() {
     return $('.js-email-method').data('smtp-mail-method');
   }
 }

@@ -196,7 +196,7 @@ class ConfigurationCore extends ObjectModel
      * @param string $key Key wanted
      * @param int $idLang Language ID
      *
-     * @return string|false Value
+     * @return string Value
      */
     public static function get($key, $idLang = null, $idShopGroup = null, $idShop = null, $default = false)
     {

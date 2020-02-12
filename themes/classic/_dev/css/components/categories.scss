@@ -363,20 +363,13 @@
         margin-bottom: 1rem;
       }
       #search_filters {
-        margin-bottom: 20px;
+        margin-bottom: 0;
         box-shadow: none;
         padding: 0;
         border-top: 1px solid $gray-lighter;
-
-        .ui-slider-horizontal {
-          margin-bottom: 20px;
-        }
-
         .facet {
           .title {
             cursor: pointer;
-            align-items: center;
-
             .collapse-icons .remove {
               display: none;
             }
@@ -399,13 +392,12 @@
           }
           .h6 {
             margin-bottom: 0;
-            padding: 1.250rem;
+            padding: 0.625rem;
             display: inline-block;
           }
           .navbar-toggler {
             display: inline-block;
-            padding: 0 0.625rem 0 0;
-            height: inherit;
+            padding: 0.625rem 0.625rem 0 0;
           }
           .collapse {
             display: none;
@@ -422,7 +414,7 @@
             margin-bottom: 0;
             li {
               border-top: 1px solid $gray-lighter;
-              padding: 1.250rem;
+              padding: 0.625rem;
             }
           }
         }

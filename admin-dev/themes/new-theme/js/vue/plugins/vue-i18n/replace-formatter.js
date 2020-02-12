@@ -37,12 +37,11 @@ export default class ReplaceFormatter {
    *
    * @returns {array}
    */
-  interpolate(message, values) {
-    let msg = message;
-    Object.keys(values).forEach((param) => {
-      msg = msg.replace(param, values[param]);
-    });
+  interpolate (message, values) {
+    for (let param in values) {
+      message = message.replace(param, values[param]);
+    }
 
-    return [msg];
+    return [message];
   }
 }

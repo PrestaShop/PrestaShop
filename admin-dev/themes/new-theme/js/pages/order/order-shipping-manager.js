@@ -24,14 +24,14 @@
  */
 import OrderViewPageMap from './OrderViewPageMap';
 
-const {$} = window;
+const $ = window.$;
 
 export default class OrderShippingManager {
   constructor() {
-    this.initOrderShippingUpdateEventHandler();
+    this._initOrderShippingUpdateEventHandler();
   }
 
-  initOrderShippingUpdateEventHandler() {
+  _initOrderShippingUpdateEventHandler() {
     $(OrderViewPageMap.showOrderShippingUpdateModalBtn).on('click', (event) => {
       const $btn = $(event.currentTarget);
 

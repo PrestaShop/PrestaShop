@@ -23,8 +23,6 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-/* eslint-disable max-len */
-
 export default {
   orderPaymentDetailsBtn: ".js-payment-details-btn",
   orderPaymentFormAmountInput: "#order_payment_amount",

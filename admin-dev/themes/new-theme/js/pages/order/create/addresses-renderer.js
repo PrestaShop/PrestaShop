@@ -26,7 +26,7 @@
 import createOrderMap from './create-order-map';
 import Router from '../../../components/router';
 
-const {$} = window;
+const $ = window.$;
 
 /**
  * Renders Delivery & Invoice addresses select
@@ -35,29 +35,30 @@ export default class AddressesRenderer {
   constructor() {
     this.router = new Router();
   }
-
   /**
    * @param {Array} addresses
    */
   render(addresses) {
-    this.cleanAddresses();
+    this._cleanAddresses();
     if (addresses.length === 0) {
-      this.hideAddressesContent();
-      this.showEmptyAddressesWarning();
-      this.showAddressesBlock();
+      this._hideAddressesContent();
+      this._showEmptyAddressesWarning();
+      this._showAddressesBlock();
 
       return;
     }
 
-    this.showAddressesContent();
-    this.hideEmptyAddressesWarning();
+    this._showAddressesContent();
+    this._hideEmptyAddressesWarning();
 
-    Object.values(addresses).forEach((address) => {
-      this.renderDeliveryAddress(address);
-      this.renderInvoiceAddress(address);
-    });
+    for (const key in addresses) {
+      const address = addresses[key];
 
-    this.showAddressesBlock();
+      this._renderDeliveryAddress(address);
+      this._renderInvoiceAddress(address);
+    }
+
+    this._showAddressesBlock();
   }
 
   /**
@@ -67,7 +68,7 @@ export default class AddressesRenderer {
    *
    * @private
    */
-  renderDeliveryAddress(address) {
+  _renderDeliveryAddress(address) {
     const deliveryAddressOption = {
       value: address.addressId,
       text: address.alias,
@@ -91,7 +92,7 @@ export default class AddressesRenderer {
    *
    * @private
    */
-  renderInvoiceAddress(address) {
+  _renderInvoiceAddress(address) {
     const invoiceAddressOption = {
       value: address.addressId,
       text: address.alias,
@@ -113,7 +114,7 @@ export default class AddressesRenderer {
    *
    * @private
    */
-  showAddressesBlock() {
+  _showAddressesBlock() {
     $(createOrderMap.addressesBlock).removeClass('d-none');
   }
 
@@ -122,7 +123,7 @@ export default class AddressesRenderer {
    *
    * @private
    */
-  cleanAddresses() {
+  _cleanAddresses() {
     $(createOrderMap.deliveryAddressDetails).empty();
     $(createOrderMap.deliveryAddressSelect).empty();
     $(createOrderMap.invoiceAddressDetails).empty();
@@ -134,7 +135,7 @@ export default class AddressesRenderer {
    *
    * @private
    */
-  showAddressesContent() {
+  _showAddressesContent() {
     $(createOrderMap.addressesContent).removeClass('d-none');
     $(createOrderMap.addressesWarning).addClass('d-none');
   }
@@ -144,7 +145,7 @@ export default class AddressesRenderer {
    *
    * @private
    */
-  hideAddressesContent() {
+  _hideAddressesContent() {
     $(createOrderMap.addressesContent).addClass('d-none');
     $(createOrderMap.addressesWarning).removeClass('d-none');
   }
@@ -154,7 +155,7 @@ export default class AddressesRenderer {
    *
    * @private
    */
-  showEmptyAddressesWarning() {
+  _showEmptyAddressesWarning() {
     $(createOrderMap.addressesWarning).removeClass('d-none');
   }
 
@@ -163,7 +164,7 @@ export default class AddressesRenderer {
    *
    * @private
    */
-  hideEmptyAddressesWarning() {
+  _hideEmptyAddressesWarning() {
     $(createOrderMap.addressesWarning).addClass('d-none');
   }
 }

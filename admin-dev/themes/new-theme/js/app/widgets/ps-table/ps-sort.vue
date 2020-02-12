@@ -23,19 +23,9 @@
  * International Registered Trademark & Property of PrestaShop SA
  *-->
 <template>
-  <div
-    class="ps-sortable-column"
-    data-sort-col-name="id_product"
-    :data-sort-is-current="isCurrent"
-    :data-sort-direction="sortDirection"
-    @click="sortToggle"
-  >
+  <div class="ps-sortable-column" data-sort-col-name="id_product" :data-sort-is-current="isCurrent" :data-sort-direction="sortDirection" @click="sortToggle">
     <span role="columnheader"><slot /></span>
-    <span
-      role="button"
-      class="ps-sort"
-      aria-label="Tri"
-    />
+    <span role="button" class="ps-sort" aria-label="Tri"></span>
   </div>
 </template>
 
@@ -43,15 +33,9 @@
   export default {
     props: {
       // column name
-      order: {
-        type: String,
-        required: true,
-      },
+      order: String,
       // indicates the currently sorted column in the table
-      currentSort: {
-        type: String,
-        required: true,
-      },
+      currentSort: String,
     },
     methods: {
       sortToggle() {
@@ -70,3 +54,4 @@
     },
   };
 </script>
+

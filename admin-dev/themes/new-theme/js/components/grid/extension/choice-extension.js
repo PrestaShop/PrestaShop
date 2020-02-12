@@ -23,7 +23,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-const {$} = window;
+const $ = global.$;
 
 /**
  * This extension enables submit functionality of the choice fields in grid.
@@ -48,7 +48,7 @@ export default class ChoiceExtension {
       const $parent = $button.closest('.js-choice-options');
       const url = $parent.data('url');
 
-      this.submitForm(url, $button);
+      this._submitForm(url, $button);
     });
   }
 
@@ -58,10 +58,10 @@ export default class ChoiceExtension {
    * @param {jQuery} $button
    * @private
    */
-  submitForm(url, $button) {
+  _submitForm(url, $button) {
     const selectedStatusId = $button.data('value');
 
-    if (this.isLocked(url)) {
+    if (this._isLocked(url)) {
       return;
     }
 
@@ -78,7 +78,7 @@ export default class ChoiceExtension {
     $form.appendTo('body');
     $form.submit();
 
-    this.lock(url);
+    this._lock(url);
   }
 
   /**
@@ -89,7 +89,7 @@ export default class ChoiceExtension {
    *
    * @private
    */
-  isLocked(url) {
+  _isLocked(url) {
     return this.lock.includes(url);
   }
 
@@ -98,7 +98,7 @@ export default class ChoiceExtension {
    * @param url
    * @private
    */
-  lock(url) {
+  _lock(url) {
     this.lock.push(url);
   }
 }

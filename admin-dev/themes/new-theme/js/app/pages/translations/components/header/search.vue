@@ -23,30 +23,15 @@
  * International Registered Trademark & Property of PrestaShop SA
  *-->
 <template>
-  <div
-    id="search"
-    class="col-md-8 mb-4"
-  >
-    <form
-      class="search-form"
-      @submit.prevent
-    >
-      <label>{{ trans('search_label') }}</label>
+  <div id="search" class="col-md-8 mb-4">
+    <form class="search-form" @submit.prevent>
+      <label>{{trans('search_label')}}</label>
       <div class="input-group">
-        <PSTags
-          ref="psTags"
-          :tags="tags"
-          @tagChange="onSearch"
-          :placeholder="trans('search_placeholder')"
-        />
+        <PSTags ref="psTags" :tags="tags" @tagChange="onSearch" :placeholder="trans('search_placeholder')" />
         <div class="input-group-append">
-          <PSButton
-            @click="onClick"
-            class="search-button"
-            :primary="true"
-          >
-            <i class="material-icons">search</i>
-            {{ trans('button_search') }}
+          <PSButton @click="onClick" class="search-button" :primary="true">
+              <i class="material-icons">search</i>
+              {{trans('button_search')}}
           </PSButton>
         </div>
       </div>
@@ -65,7 +50,7 @@
     },
     methods: {
       onClick() {
-        const {tag} = this.$refs.psTags;
+        const tag = this.$refs.psTags.tag;
         this.$refs.psTags.add(tag);
       },
       onSearch() {

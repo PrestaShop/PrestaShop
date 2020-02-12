@@ -23,6 +23,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+const $ = global.$;
 // Dependencies
 
 import 'prestakit/dist/js/prestashop-ui-kit';
@@ -44,6 +45,7 @@ import 'magnific-popup/dist/magnific-popup.css';
 import '@scss/theme.scss';
 
 // Theme Javascript
+window.Dropzone.autoDiscover = false;
 import NavBar from '@js/nav_bar';
 
 // this needs to be ported into the UI kit
@@ -54,16 +56,11 @@ import '@js/translation-page/index';
 
 import Header from '@js/header';
 
-import initDatePickers from '@js/app/utils/datepicker';
-import initInvalidFields from '@js/app/utils/fields';
-
-const {$} = window;
-
-// Theme Javascript
-window.Dropzone.autoDiscover = false;
-
 new NavBar();
 new Header();
+
+import initDatePickers from '@js/app/utils/datepicker';
+import initInvalidFields from '@js/app/utils/fields';
 
 $(() => {
   initDatePickers();

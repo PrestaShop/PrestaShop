@@ -25,8 +25,8 @@
 
 export default function (search) {
   $('.reset-translation-value').each((buttonIndex, button) => {
-    const $editTranslationForm = $(button).parents('form');
-    const defaultTranslationValue = $editTranslationForm.find('*[name=default]').val();
+    let $editTranslationForm = $(button).parents('form');
+    let defaultTranslationValue = $editTranslationForm.find('*[name=default]').val();
 
     $(button).click(() => {
       $editTranslationForm.find('*[name=translation_value]').val(defaultTranslationValue);
@@ -34,22 +34,22 @@ export default function (search) {
     });
   });
 
-  const showFlashMessageOnEdit = (form) => {
+  let showFlashMessageOnEdit = (form) => {
     $(form).submit((event) => {
       event.preventDefault();
 
-      const $editTranslationForm = $(event.target);
-      const url = $editTranslationForm.attr('action');
+      let $editTranslationForm = $(event.target);
+      let url = $editTranslationForm.attr('action');
 
       $.post(url, $editTranslationForm.serialize(), (response) => {
         let flashMessage;
-        if (response.successful_update) {
+        if (response['successful_update']) {
           flashMessage = $editTranslationForm.find('.alert-info');
 
           // Propagate edition
-          const hash = $editTranslationForm.data('hash');
-          const $editTranslationForms = $(`[data-hash=${hash}]`);
-          const $translationValueFields = $($editTranslationForms.find('textarea'));
+          let hash = $editTranslationForm.data('hash');
+          let $editTranslationForms = $('[data-hash=' + hash + ']');
+          let $translationValueFields = $($editTranslationForms.find('textarea'));
           $translationValueFields.val($editTranslationForm.find('textarea').val());
 
           // Refresh search index

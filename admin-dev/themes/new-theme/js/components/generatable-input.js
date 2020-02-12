@@ -52,7 +52,7 @@
 export default class GeneratableInput {
   constructor() {
     return {
-      attachOn: (btnSelector) => this.attachOn(btnSelector),
+      'attachOn': (btnSelector) => this._attachOn(btnSelector),
     };
   }
 
@@ -63,19 +63,20 @@ export default class GeneratableInput {
    *
    * @private
    */
-  attachOn(generatorBtnSelector) {
+  _attachOn(generatorBtnSelector) {
     const generatorBtn = document.querySelector(generatorBtnSelector);
-    if (generatorBtn !== null) {
-      generatorBtn.addEventListener('click', (event) => {
-        const {attributes} = event.currentTarget;
-
-        const targetInputId = attributes.getNamedItem('data-target-input-id').value;
-        const generatedValueLength = parseInt(attributes.getNamedItem('data-generated-value-length').value, 10);
-
-        const targetInput = document.querySelector(`#${targetInputId}`);
-        targetInput.value = this.generateValue(generatedValueLength);
-      });
+    if (generatorBtn === null) {
+      return null;
     }
+    generatorBtn.addEventListener('click', (event) => {
+      const attributes = event.currentTarget.attributes;
+
+      const targetInputId = attributes.getNamedItem('data-target-input-id').value;
+      const generatedValueLength = parseInt(attributes.getNamedItem('data-generated-value-length').value);
+
+      const targetInput = document.querySelector('#' + targetInputId);
+      targetInput.value = this._generateValue(generatedValueLength)
+    });
   }
 
   /**
@@ -87,11 +88,11 @@ export default class GeneratableInput {
    *
    * @private
    */
-  generateValue(length) {
+  _generateValue(length) {
     const chars = '123456789ABCDEFGHIJKLMNPQRSTUVWXYZ';
     let generatedValue = '';
 
-    for (let i = 1; i <= length; i += 1) {
+    for (let i = 1; i <= length; ++i) {
       generatedValue += chars.charAt(Math.floor(Math.random() * chars.length));
     }
 

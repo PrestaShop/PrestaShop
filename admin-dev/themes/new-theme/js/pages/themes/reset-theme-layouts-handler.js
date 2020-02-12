@@ -23,14 +23,14 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-const {$} = window;
+const $ = window.$;
 
 /**
  * Handles "Reset to defaults" action submitting on button click.
  */
 export default class ResetThemeLayoutsHandler {
   constructor() {
-    $(document).on('click', '.js-reset-theme-layouts-btn', (e) => this.handleResetting(e));
+    $(document).on('click', '.js-reset-theme-layouts-btn', (e) => this._handleResetting(e));
 
     return {};
   }
@@ -40,16 +40,16 @@ export default class ResetThemeLayoutsHandler {
    *
    * @private
    */
-  handleResetting(event) {
+  _handleResetting(event) {
     const $btn = $(event.currentTarget);
 
     const $form = $('<form>', {
-      action: $btn.data('submit-url'),
-      method: 'POST',
+      'action': $btn.data('submit-url'),
+      'method': 'POST'
     }).append($('<input>', {
-      name: 'token',
-      value: $btn.data('csrf-token'),
-      type: 'hidden',
+      'name': 'token',
+      'value': $btn.data('csrf-token'),
+      'type': 'hidden'
     }));
 
     $form.appendTo('body');

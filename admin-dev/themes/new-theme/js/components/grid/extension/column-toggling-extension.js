@@ -23,12 +23,13 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-const {$} = window;
+const $ = global.$;
 
 /**
  * Class ReloadListExtension extends grid with "Column toggling" feature
  */
 export default class ColumnTogglingExtension {
+
   /**
    * Extend grid
    *
@@ -38,7 +39,7 @@ export default class ColumnTogglingExtension {
     const $table = grid.getContainer().find('table.table');
     $table.find('.ps-togglable-row').on('click', (e) => {
       e.preventDefault();
-      this.toggleValue($(e.delegateTarget));
+      this._toggleValue($(e.delegateTarget));
     });
   }
 
@@ -46,10 +47,10 @@ export default class ColumnTogglingExtension {
    * @param {jQuery} row
    * @private
    */
-  toggleValue(row) {
+  _toggleValue(row) {
     const toggleUrl = row.data('toggleUrl');
 
-    this.submitAsForm(toggleUrl);
+    this._submitAsForm(toggleUrl);
   }
 
   /**
@@ -58,7 +59,7 @@ export default class ColumnTogglingExtension {
    * @param {string} toggleUrl
    * @private
    */
-  submitAsForm(toggleUrl) {
+  _submitAsForm(toggleUrl) {
     const $form = $('<form>', {
       action: toggleUrl,
       method: 'POST',

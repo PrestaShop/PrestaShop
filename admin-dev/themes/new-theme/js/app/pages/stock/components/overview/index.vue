@@ -26,7 +26,7 @@
   <section class="stock-overview">
     <ProductsActions />
     <ProductsTable
-      :is-loading="isLoading"
+      :isLoading="isLoading"
       @sort="sort"
     />
   </section>

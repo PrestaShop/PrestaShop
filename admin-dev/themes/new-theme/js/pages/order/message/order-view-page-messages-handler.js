@@ -25,7 +25,7 @@
 
 import OrderViewPageMap from '../OrderViewPageMap';
 
-const {$} = window;
+const $ = window.$;
 
 /**
  * All actions for order view page messages are registered in this class.
@@ -36,8 +36,8 @@ export default class OrderViewPageMessagesHandler {
     this.$messagesContainer = $(OrderViewPageMap.orderMessagesContainer);
 
     return {
-      listenForPredefinedMessageSelection: () => this.handlePredefinedMessageSelection(),
-      listenForFullMessagesOpen: () => this.onFullMessagesOpen(),
+      listenForPredefinedMessageSelection: () => this._handlePredefinedMessageSelection(),
+      listenForFullMessagesOpen: () => this._onFullMessagesOpen(),
     };
   }
 
@@ -46,7 +46,7 @@ export default class OrderViewPageMessagesHandler {
    *
    * @private
    */
-  handlePredefinedMessageSelection() {
+  _handlePredefinedMessageSelection() {
     $(document).on('change', OrderViewPageMap.orderMessageNameSelect, (e) => {
       const $currentItem = $(e.currentTarget);
       const valueId = $currentItem.val();
@@ -63,7 +63,7 @@ export default class OrderViewPageMessagesHandler {
         return;
       }
 
-      if ($orderMessage.val() && !window.confirm(this.$orderMessageChangeWarning.text())) {
+      if ($orderMessage.val() && !confirm(this.$orderMessageChangeWarning.text())) {
         return;
       }
 
@@ -76,8 +76,8 @@ export default class OrderViewPageMessagesHandler {
    *
    * @private
    */
-  onFullMessagesOpen() {
-    $(document).on('click', OrderViewPageMap.openAllMessagesBtn, () => this.scrollToMsgListBottom());
+  _onFullMessagesOpen() {
+    $(document).on('click', OrderViewPageMap.openAllMessagesBtn, () => this._scrollToMsgListBottom());
   }
 
   /**
@@ -85,7 +85,7 @@ export default class OrderViewPageMessagesHandler {
    *
    * @private
    */
-  scrollToMsgListBottom() {
+  _scrollToMsgListBottom() {
     const $msgModal = $(OrderViewPageMap.allMessagesModal);
     const msgList = document.querySelector(OrderViewPageMap.allMessagesList);
 
@@ -95,5 +95,7 @@ export default class OrderViewPageMessagesHandler {
         clearInterval(classCheckInterval);
       }
     }, 10);
+
+
   }
 }

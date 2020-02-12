@@ -23,7 +23,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-const {$} = window;
+const $ = window.$;
 
 class TermsAndConditionsOptionHandler {
   constructor() {
@@ -34,7 +34,7 @@ class TermsAndConditionsOptionHandler {
 
   handle() {
     const tosEnabledVal = $('input[name="form[general][enable_tos]"]:checked').val();
-    const isTosEnabled = parseInt(tosEnabledVal, 10);
+    const isTosEnabled = parseInt(tosEnabledVal);
 
     this.handleTermsAndConditionsCmsSelect(isTosEnabled);
   }

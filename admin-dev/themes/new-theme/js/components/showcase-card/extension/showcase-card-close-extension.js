@@ -23,12 +23,13 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-const {$} = window;
+const $ = window.$;
 
 /**
  * Class ShowcaseCardCloseExtension is responsible for providing helper block closing behavior
  */
 export default class ShowcaseCardCloseExtension {
+
   /**
    * Extend helper block.
    *
@@ -49,8 +50,8 @@ export default class ShowcaseCardCloseExtension {
           url,
           {
             close: 1,
-            name: cardName,
-          },
+            name: cardName
+          }
         );
       }
     });

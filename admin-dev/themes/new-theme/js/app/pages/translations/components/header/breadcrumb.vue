@@ -25,8 +25,8 @@
 <template>
   <div class="mb-1">
     <small>
-      <a :href="internationalLink">{{ trans('link_international') }}</a> /
-      <a :href="translationLink">{{ trans('link_translations') }}</a>
+      <a :href="internationalLink">{{trans('link_international')}}</a> /
+      <a :href="translationLink">{{trans('link_translations')}}</a>
     </small>
   </div>
 </template>

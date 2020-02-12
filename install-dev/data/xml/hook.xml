@@ -141,11 +141,6 @@
       <title>Product footer</title>
       <description>This hook adds new blocks under the product's description</description>
     </hook>
-    <hook id="displayFooterCategory">
-      <name>displayFooterCategory</name>
-      <title>Category footer</title>
-      <description>This hook adds new blocks under the products listing in a category/search</description>
-    </hook>
     <hook id="displayInvoice">
       <name>displayInvoice</name>
       <title>Invoice</title>
@@ -2149,26 +2144,6 @@
       <name>actionGetAdminOrderButtons</name>
       <title>Admin Order Buttons</title>
       <description>This hook is used to generate the buttons collection on the order view page thanks (see ActionsBarButtonsCollection)</description>
-    </hook>
-    <hook id="actionPresentCart">
-      <name>actionPresentCart</name>
-      <title>Cart Presenter</title>
-      <description>This hook is called before a cart is presented</description>
-    </hook>
-    <hook id="actionPresentOrder">
-      <name>actionPresentOrder</name>
-      <title>Order Presenter</title>
-      <description>This hook is called before an order is presented</description>
-    </hook>
-    <hook id="actionPresentOrderReturn">
-      <name>actionPresentOrderReturn</name>
-      <title>Order Return Presenter</title>
-      <description>This hook is called before an order return is presented</description>
-    </hook>
-    <hook id="actionPresentProduct">
-      <name>actionPresentProduct</name>
-      <title>Product Presenter</title>
-      <description>This hook is called before a product is presented</description>
     </hook>
   </entities>
 </entity_hook>

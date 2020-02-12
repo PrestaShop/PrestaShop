@@ -22,11 +22,13 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+const fs = require('fs');
 const path = require('path');
 const webpack = require('webpack');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const cssExtractedFileName = 'theme';
 
 module.exports = {
   externals: {
@@ -125,11 +127,10 @@ module.exports = {
           loader: 'babel-loader',
           options: {
             presets: [
-              ['env', {useBuiltIns: 'usage', modules: false}],
+              ['es2015', {modules: false}],
+              ['env', {'useBuiltIns': 'usage'}]
             ],
-            plugins: [
-              'transform-object-rest-spread',
-            ],
+            'plugins': ['transform-runtime']
           },
         }],
       },
@@ -229,7 +230,7 @@ module.exports = {
     new ExtractTextPlugin('theme.css'),
     new CleanWebpackPlugin(['public'], {
       root: path.resolve(__dirname, '../'),
-      exclude: ['theme.rtlfix'],
+      exclude: ['theme.rtlfix']
     }),
     new webpack.ProvidePlugin({
       moment: 'moment', // needed for bootstrap datetime picker
@@ -237,7 +238,7 @@ module.exports = {
       jQuery: 'jquery',
     }),
     new CopyPlugin([
-      {from: 'static'},
-    ]),
+      { from: 'static' },
+    ])
   ],
 };

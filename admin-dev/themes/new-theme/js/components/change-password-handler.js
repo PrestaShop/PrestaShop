@@ -23,7 +23,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-const {$} = window;
+const $ = window.$;
 
 /**
  * Generates a password and informs about it's strength.
@@ -59,7 +59,7 @@ export default class ChangePasswordHandler {
       $outputContainer.insertAfter($(element));
 
       $(element).passy((strength, valid) => {
-        this.displayFeedback($outputContainer, strength, valid);
+        this._displayFeedback($outputContainer, strength, valid);
       });
     });
   }
@@ -82,8 +82,8 @@ export default class ChangePasswordHandler {
    *
    * @private
    */
-  displayFeedback($outputContainer, passwordStrength, isPasswordValid) {
-    const feedback = this.getPasswordStrengthFeedback(passwordStrength);
+  _displayFeedback($outputContainer, passwordStrength, isPasswordValid) {
+    const feedback = this._getPasswordStrengthFeedback(passwordStrength);
     $outputContainer.text(feedback.message);
     $outputContainer.removeClass('text-danger text-warning text-success');
     $outputContainer.addClass(feedback.elementClass);
@@ -98,7 +98,7 @@ export default class ChangePasswordHandler {
    *
    * @private
    */
-  getPasswordStrengthFeedback(strength) {
+  _getPasswordStrengthFeedback(strength) {
     switch (strength) {
       case $.passy.strength.LOW:
         return {
@@ -123,9 +123,8 @@ export default class ChangePasswordHandler {
           message: this.$feedbackContainer.find('.strength-extreme').text(),
           elementClass: 'text-success',
         };
-
-      default:
-        throw new Error('Invalid password strength indicator.');
     }
+
+    throw 'Invalid password strength indicator.';
   }
 }

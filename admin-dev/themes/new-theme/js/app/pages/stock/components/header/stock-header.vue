@@ -28,9 +28,7 @@
     <div class="container-fluid">
       <Breadcrumb />
       <div class="title-row">
-        <h1 class="title">
-          {{ trans('head_title') }}
-        </h1>
+        <h1 class="title">{{trans('head_title')}}</h1>
       </div>
     </div>
     <Tabs />
@@ -41,7 +39,7 @@
   import Breadcrumb from './breadcrumb';
   import Tabs from './tabs';
 
-  const {$} = window;
+  const $ = global.$;
 
   function getOldHeaderToolbarButtons() {
     return $('.header-toolbar')

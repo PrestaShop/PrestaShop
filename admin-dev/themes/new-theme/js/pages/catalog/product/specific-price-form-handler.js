@@ -23,15 +23,16 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-const {$} = window;
+const $ = window.$;
 
 class SpecificPriceFormHandler {
+
   constructor() {
     this.prefixCreateForm = 'form_step2_specific_price_';
     this.prefixEditForm = 'form_modal_';
     this.editModalIsOpen = false;
 
-    this.$createPriceFormDefaultValues = {};
+    this.$createPriceFormDefaultValues = new Object();
     this.storePriceFormDefaultValues();
 
     this.loadAndDisplayExistingSpecificPricesList();
@@ -49,27 +50,27 @@ class SpecificPriceFormHandler {
    * @private
    */
   loadAndDisplayExistingSpecificPricesList() {
-    const listContainer = $('#js-specific-price-list');
-    const url = listContainer.data('listingUrl').replace(/list\/\d+/, `list/${this.getProductId()}`);
+    var listContainer = $('#js-specific-price-list');
+    var url = listContainer.data('listingUrl').replace(/list\/\d+/, 'list/' + this.getProductId());
 
     $.ajax({
       type: 'GET',
-      url,
+      url: url,
     })
-      .done((specificPrices) => {
-        const tbody = listContainer.find('tbody');
-        tbody.find('tr').remove();
+        .done(specificPrices => {
+          var tbody = listContainer.find('tbody');
+          tbody.find('tr').remove();
 
-        if (specificPrices.length > 0) {
-          listContainer.removeClass('hide');
-        } else {
-          listContainer.addClass('hide');
-        }
+          if (specificPrices.length > 0) {
+            listContainer.removeClass('hide');
+          } else {
+            listContainer.addClass('hide');
+          }
 
-        const specificPricesList = this.renderSpecificPricesListingAsHtml(specificPrices);
+          var specificPricesList = this.renderSpecificPricesListingAsHtml(specificPrices);
 
-        tbody.append(specificPricesList);
-      });
+          tbody.append(specificPricesList);
+        });
   }
 
   /**
@@ -80,17 +81,15 @@ class SpecificPriceFormHandler {
    * @private
    */
   renderSpecificPricesListingAsHtml(specificPrices) {
-    let specificPricesList = '';
+    var specificPricesList = '';
 
-    const self = this;
+    var self = this;
 
     $.each(specificPrices, (index, specificPrice) => {
-      const deleteUrl = $('#js-specific-price-list')
-        .attr('data-action-delete')
-        .replace(/delete\/\d+/, `delete/${specificPrice.id_specific_price}`);
-      const row = self.renderSpecificPriceRow(specificPrice, deleteUrl);
+      var deleteUrl = $('#js-specific-price-list').attr('data-action-delete').replace(/delete\/\d+/, 'delete/' + specificPrice.id_specific_price);
+      var row = self.renderSpecificPriceRow(specificPrice, deleteUrl);
 
-      specificPricesList += row;
+      specificPricesList = specificPricesList + row;
     });
 
     return specificPricesList;
@@ -105,29 +104,23 @@ class SpecificPriceFormHandler {
    * @private
    */
   renderSpecificPriceRow(specificPrice, deleteUrl) {
-    const specificPriceId = specificPrice.id_specific_price;
 
-    /* eslint-disable max-len */
-    const canDelete = specificPrice.can_delete
-      ? `<a href="${deleteUrl}" class="js-delete delete btn tooltip-link delete pl-0 pr-0"><i class="material-icons">delete</i></a>`
-      : '';
-    const canEdit = specificPrice.can_edit
-      ? `<a href="#" data-specific-price-id="${specificPriceId}" class="js-edit edit btn tooltip-link delete pl-0 pr-0"><i class="material-icons">edit</i></a>`
-      : '';
-    const row = `<tr> \
-    <td>${specificPrice.rule_name}</td> \
-    <td>${specificPrice.attributes_name}</td> \
-    <td>${specificPrice.currency}</td> \
-    <td>${specificPrice.country}</td> \
-    <td>${specificPrice.group}</td> \
-    <td>${specificPrice.customer}</td> \
-    <td>${specificPrice.fixed_price}</td> \
-    <td>${specificPrice.impact}</td> \
-    <td>${specificPrice.period}</td> \
-    <td>${specificPrice.from_quantity}</td> \
-    <td>${canDelete}</td> \
-    <td>${canEdit}</td></tr>`;
-    /* eslint-enable max-len */
+    var specificPriceId = specificPrice.id_specific_price;
+
+    var row = '<tr>' +
+        '<td>' + specificPrice.rule_name + '</td>' +
+        '<td>' + specificPrice.attributes_name + '</td>' +
+        '<td>' + specificPrice.currency + '</td>' +
+        '<td>' + specificPrice.country + '</td>' +
+        '<td>' + specificPrice.group + '</td>' +
+        '<td>' + specificPrice.customer + '</td>' +
+        '<td>' + specificPrice.fixed_price + '</td>' +
+        '<td>' + specificPrice.impact + '</td>' +
+        '<td>' + specificPrice.period + '</td>' +
+        '<td>' + specificPrice.from_quantity + '</td>' +
+        '<td>' + (specificPrice.can_delete ? '<a href="' + deleteUrl + '" class="js-delete delete btn tooltip-link delete pl-0 pr-0"><i class="material-icons">delete</i></a>' : '') + '</td>' +
+        '<td>' + (specificPrice.can_edit ? '<a href="#" data-specific-price-id="' + specificPriceId + '" class="js-edit edit btn tooltip-link delete pl-0 pr-0"><i class="material-icons">edit</i></a>' : '') + '</td>' +
+        '</tr>';
 
     return row;
   }
@@ -137,32 +130,20 @@ class SpecificPriceFormHandler {
    */
   configureAddPriceFormBehavior() {
     const usePrefixForCreate = true;
-    const selectorPrefix = this.getPrefixSelector(usePrefixForCreate);
+    var selectorPrefix = this.getPrefixSelector(usePrefixForCreate);
 
     $('#specific_price_form .js-cancel').click(() => {
       this.resetCreatePriceFormDefaultValues();
       $('#specific_price_form').collapse('hide');
     });
 
-    $('#specific_price_form .js-save').on(
-      'click',
-      () => this.submitCreatePriceForm(),
-    );
+    $('#specific_price_form .js-save').on('click', () => this.submitCreatePriceForm());
 
-    $('#js-open-create-specific-price-form').on(
-      'click',
-      () => this.loadAndFillOptionsForSelectCombinationInput(usePrefixForCreate),
-    );
+    $('#js-open-create-specific-price-form').on('click', () => this.loadAndFillOptionsForSelectCombinationInput(usePrefixForCreate));
 
-    $(`${selectorPrefix}leave_bprice`).on(
-      'click',
-      () => this.enableSpecificPriceFieldIfEligible(usePrefixForCreate),
-    );
+    $(selectorPrefix + 'leave_bprice').on('click', () => this.enableSpecificPriceFieldIfEligible(usePrefixForCreate));
 
-    $(`${selectorPrefix}sp_reduction_type`).on(
-      'change',
-      () => this.enableSpecificPriceTaxFieldIfEligible(usePrefixForCreate),
-    );
+    $(selectorPrefix + 'sp_reduction_type').on('change', () => this.enableSpecificPriceTaxFieldIfEligible(usePrefixForCreate));
   }
 
   /**
@@ -170,7 +151,7 @@ class SpecificPriceFormHandler {
    */
   configureEditPriceFormInsideModalBehavior() {
     const usePrefixForCreate = false;
-    const selectorPrefix = this.getPrefixSelector(usePrefixForCreate);
+    var selectorPrefix = this.getPrefixSelector(usePrefixForCreate);
 
     $('#form_modal_cancel').click(() => this.closeEditPriceModalAndRemoveForm());
     $('#form_modal_close').click(() => this.closeEditPriceModalAndRemoveForm());
@@ -179,12 +160,9 @@ class SpecificPriceFormHandler {
 
     this.loadAndFillOptionsForSelectCombinationInput(usePrefixForCreate);
 
-    $(`${selectorPrefix}leave_bprice`).on('click', () => this.enableSpecificPriceFieldIfEligible(usePrefixForCreate));
+    $(selectorPrefix + 'leave_bprice').on('click', () => this.enableSpecificPriceFieldIfEligible(usePrefixForCreate));
 
-    $(`${selectorPrefix}sp_reduction_type`).on(
-      'change',
-      () => this.enableSpecificPriceTaxFieldIfEligible(usePrefixForCreate),
-    );
+    $(selectorPrefix + 'sp_reduction_type').on('change', () => this.enableSpecificPriceTaxFieldIfEligible(usePrefixForCreate));
 
     this.reinitializeDatePickers();
 
@@ -205,11 +183,11 @@ class SpecificPriceFormHandler {
    * @private
    */
   initializeLeaveBPriceField(usePrefixForCreate) {
-    const selectorPrefix = this.getPrefixSelector(usePrefixForCreate);
+    var selectorPrefix = this.getPrefixSelector(usePrefixForCreate);
 
-    if ($(`${selectorPrefix}sp_price`).val() !== '') {
-      $(`${selectorPrefix}sp_price`).prop('disabled', false);
-      $(`${selectorPrefix}leave_bprice`).prop('checked', false);
+    if ($(selectorPrefix + 'sp_price').val() != '') {
+      $(selectorPrefix + 'sp_price').prop('disabled', false);
+      $(selectorPrefix + 'leave_bprice').prop('checked', false);
     }
   }
 
@@ -220,10 +198,11 @@ class SpecificPriceFormHandler {
     $(document).on('click', '#js-specific-price-list .js-edit', (event) => {
       event.preventDefault();
 
-      const specificPriceId = $(event.currentTarget).data('specificPriceId');
+      var specificPriceId = $(event.currentTarget).data('specificPriceId');
 
       this.openEditPriceModalAndLoadForm(specificPriceId);
     });
+
   }
 
   /**
@@ -236,6 +215,9 @@ class SpecificPriceFormHandler {
     });
   }
 
+  /**
+   * @see https://vijayasankarn.wordpress.com/2017/02/24/quick-fix-scrolling-and-focus-when-multiple-bootstrap-modals-are-open/
+   */
   configureMultipleModalsBehavior() {
     $('.modal').on('hidden.bs.modal', () => {
       if (this.editModalIsOpen) {
@@ -248,6 +230,7 @@ class SpecificPriceFormHandler {
    * @private
    */
   submitCreatePriceForm() {
+
     const url = $('#specific_price_form').attr('data-action');
     const data = $('#specific_price_form input, #specific_price_form select, #form_id_product').serialize();
 
@@ -255,20 +238,23 @@ class SpecificPriceFormHandler {
 
     $.ajax({
       type: 'POST',
-      url,
-      data,
-    }).done(() => {
-      window.showSuccessMessage(window.translate_javascripts['Form update success']);
-      this.resetCreatePriceFormDefaultValues();
-      $('#specific_price_form').collapse('hide');
-      this.loadAndDisplayExistingSpecificPricesList();
+      url: url,
+      data: data,
+    })
+        .done(response => {
+          showSuccessMessage(translate_javascripts['Form update success']);
+          this.resetCreatePriceFormDefaultValues();
+          $('#specific_price_form').collapse('hide');
+          this.loadAndDisplayExistingSpecificPricesList();
 
-      $('#specific_price_form .js-save').removeAttr('disabled');
-    }).fail((errors) => {
-      window.showErrorMessage(errors.responseJSON);
+          $('#specific_price_form .js-save').removeAttr('disabled');
 
-      $('#specific_price_form .js-save').removeAttr('disabled');
-    });
+        })
+        .fail(errors => {
+          showErrorMessage(errors.responseJSON);
+
+          $('#specific_price_form .js-save').removeAttr('disabled');
+        });
   }
 
   /**
@@ -277,29 +263,28 @@ class SpecificPriceFormHandler {
   submitEditPriceForm() {
     const baseUrl = $('#edit-specific-price-modal-form').attr('data-action');
     const specificPriceId = $('#edit-specific-price-modal-form').data('specificPriceId');
-    const url = baseUrl.replace(/update\/\d+/, `update/${specificPriceId}`);
+    const url = baseUrl.replace(/update\/\d+/, 'update/' + specificPriceId);
 
-    /* eslint-disable-next-line max-len */
     const data = $('#edit-specific-price-modal-form input, #edit-specific-price-modal-form select, #form_id_product').serialize();
 
     $('#edit-specific-price-modal-form .js-save').attr('disabled', 'disabled');
 
     $.ajax({
       type: 'POST',
-      url,
-      data,
+      url: url,
+      data: data,
     })
-      .done(() => {
-        window.showSuccessMessage(window.translate_javascripts['Form update success']);
-        this.closeEditPriceModalAndRemoveForm();
-        this.loadAndDisplayExistingSpecificPricesList();
-        $('#edit-specific-price-modal-form .js-save').removeAttr('disabled');
-      })
-      .fail((errors) => {
-        window.showErrorMessage(errors.responseJSON);
+        .done(response => {
+          showSuccessMessage(translate_javascripts['Form update success']);
+          this.closeEditPriceModalAndRemoveForm();
+          this.loadAndDisplayExistingSpecificPricesList();
+          $('#edit-specific-price-modal-form .js-save').removeAttr('disabled');
+        })
+        .fail(errors => {
+          showErrorMessage(errors.responseJSON);
 
-        $('#edit-specific-price-modal-form .js-save').removeAttr('disabled');
-      });
+          $('#edit-specific-price-modal-form .js-save').removeAttr('disabled');
+        });
   }
 
   /**
@@ -308,28 +293,28 @@ class SpecificPriceFormHandler {
    * @private
    */
   deleteSpecificPrice(clickedLink) {
-    window.modalConfirmation.create(
-      window.translate_javascripts['This will delete the specific price. Do you wish to proceed?'],
-      null,
-      {
-        onContinue: () => {
-          const url = $(clickedLink).attr('href');
-          $(clickedLink).attr('disabled', 'disabled');
+    modalConfirmation.create(translate_javascripts['This will delete the specific price. Do you wish to proceed?'], null, {
+      onContinue: () => {
 
-          $.ajax({
-            type: 'GET',
-            url,
-          }).done((response) => {
-            this.loadAndDisplayExistingSpecificPricesList();
-            window.showSuccessMessage(response);
-            $(clickedLink).removeAttr('disabled');
-          }).fail((errors) => {
-            window.showErrorMessage(errors.responseJSON);
-            $(clickedLink).removeAttr('disabled');
-          });
-        },
-      },
-    ).show();
+        var url = $(clickedLink).attr('href');
+        $(clickedLink).attr('disabled', 'disabled');
+
+        $.ajax({
+          type: 'GET',
+          url: url,
+        })
+            .done(response => {
+              this.loadAndDisplayExistingSpecificPricesList();
+              showSuccessMessage(response);
+              $(clickedLink).removeAttr('disabled');
+            })
+            .fail(errors => {
+              showErrorMessage(errors.responseJSON);
+              $(clickedLink).removeAttr('disabled');
+
+            });
+      }
+    }).show();
   }
 
   /**
@@ -339,7 +324,7 @@ class SpecificPriceFormHandler {
    * @private
    */
   storePriceFormDefaultValues() {
-    const storage = this.$createPriceFormDefaultValues;
+    var storage = this.$createPriceFormDefaultValues;
 
     $('#specific_price_form').find('select,input').each((index, value) => {
       storage[$(value).attr('id')] = $(value).val();
@@ -358,28 +343,28 @@ class SpecificPriceFormHandler {
    * @private
    */
   loadAndFillOptionsForSelectCombinationInput(usePrefixForCreate) {
-    const selectorPrefix = this.getPrefixSelector(usePrefixForCreate);
 
-    const inputField = $(`${selectorPrefix}sp_id_product_attribute`);
-    const url = inputField
-      .attr('data-action')
-      .replace(/product-combinations\/\d+/, `product-combinations/${this.getProductId()}`);
+    var selectorPrefix = this.getPrefixSelector(usePrefixForCreate);
+
+    var inputField = $(selectorPrefix + 'sp_id_product_attribute');
+    var url = inputField.attr('data-action').replace(/product-combinations\/\d+/, 'product-combinations/' + this.getProductId());
 
     $.ajax({
       type: 'GET',
-      url,
-    }).done((combinations) => {
-      /** remove all options except first one */
-      inputField.find('option:gt(0)').remove();
+      url: url,
+    })
+        .done(combinations => {
+          /** remove all options except first one */
+          inputField.find('option:gt(0)').remove();
 
-      $.each(combinations, (index, combination) => {
-        inputField.append(`<option value="${combination.id}">${combination.name}</option>`);
-      });
+          $.each(combinations, (index, combination) => {
+            inputField.append('<option value="' + combination.id + '">' + combination.name + '</option>');
+          });
 
-      if (inputField.data('selectedAttribute') !== '0') {
-        inputField.val(inputField.data('selectedAttribute')).trigger('change');
-      }
-    });
+          if (inputField.data('selectedAttribute') != '0') {
+            inputField.val(inputField.data('selectedAttribute')).trigger('change');
+          }
+        });
   }
 
   /**
@@ -388,12 +373,13 @@ class SpecificPriceFormHandler {
    * @private
    */
   enableSpecificPriceTaxFieldIfEligible(usePrefixForCreate) {
-    const selectorPrefix = this.getPrefixSelector(usePrefixForCreate);
 
-    if ($(`${selectorPrefix}sp_reduction_type`).val() === 'percentage') {
-      $(`${selectorPrefix}sp_reduction_tax`).hide();
+    var selectorPrefix = this.getPrefixSelector(usePrefixForCreate);
+
+    if ($(selectorPrefix + 'sp_reduction_type').val() === 'percentage') {
+      $(selectorPrefix + 'sp_reduction_tax').hide();
     } else {
-      $(`${selectorPrefix}sp_reduction_tax`).show();
+      $(selectorPrefix + 'sp_reduction_tax').show();
     }
   }
 
@@ -404,7 +390,7 @@ class SpecificPriceFormHandler {
    * @private
    */
   resetCreatePriceFormDefaultValues() {
-    const previouslyStoredValues = this.$createPriceFormDefaultValues;
+    var previouslyStoredValues = this.$createPriceFormDefaultValues;
 
     $('#specific_price_form').find('input').each((index, value) => {
       $(value).val(previouslyStoredValues[$(value).attr('id')]);
@@ -415,7 +401,7 @@ class SpecificPriceFormHandler {
     });
 
     $('#specific_price_form').find('input:checkbox').each((index, value) => {
-      $(value).prop('checked', true);
+      $(value).prop("checked", true);
     });
   }
 
@@ -425,9 +411,9 @@ class SpecificPriceFormHandler {
    * @private
    */
   enableSpecificPriceFieldIfEligible(usePrefixForCreate) {
-    const selectorPrefix = this.getPrefixSelector(usePrefixForCreate);
+    var selectorPrefix = this.getPrefixSelector(usePrefixForCreate);
 
-    $(`${selectorPrefix}sp_price`).prop('disabled', $(`${selectorPrefix}leave_bprice`).is(':checked')).val('');
+    $(selectorPrefix + 'sp_price').prop('disabled', $(selectorPrefix + 'leave_bprice').is(':checked')).val('');
   }
 
   /**
@@ -438,33 +424,33 @@ class SpecificPriceFormHandler {
    * @private
    */
   openEditPriceModalAndLoadForm(specificPriceId) {
-    const url = $('#js-specific-price-list').data('actionEdit').replace(/form\/\d+/, `form/${specificPriceId}`);
+    const url = $('#js-specific-price-list').data('actionEdit').replace(/form\/\d+/, 'form/' + specificPriceId);
 
-    $('#edit-specific-price-modal').modal('show');
+    $('#edit-specific-price-modal').modal("show");
     this.editModalIsOpen = true;
 
     $.ajax({
       type: 'GET',
-      url,
+      url: url,
     })
-      .done((response) => {
-        this.insertEditSpecificPriceFormIntoModal(response);
-        $('#edit-specific-price-modal-form').data('specificPriceId', specificPriceId);
-        this.configureEditPriceFormInsideModalBehavior();
-      })
-      .fail((errors) => {
-        window.showErrorMessage(errors.responseJSON);
-      });
+        .done(response => {
+          this.insertEditSpecificPriceFormIntoModal(response);
+          $('#edit-specific-price-modal-form').data('specificPriceId', specificPriceId);
+          this.configureEditPriceFormInsideModalBehavior();
+        })
+        .fail(errors => {
+          showErrorMessage(errors.responseJSON);
+        });
   }
 
   /**
    * @private
    */
   closeEditPriceModalAndRemoveForm() {
-    $('#edit-specific-price-modal').modal('hide');
+    $('#edit-specific-price-modal').modal("hide");
     this.editModalIsOpen = false;
 
-    const formLocationHolder = $('#edit-specific-price-modal-form');
+    var formLocationHolder = $('#edit-specific-price-modal-form');
 
     formLocationHolder.empty();
   }
@@ -475,7 +461,7 @@ class SpecificPriceFormHandler {
    * @private
    */
   insertEditSpecificPriceFormIntoModal(form) {
-    const formLocationHolder = $('#edit-specific-price-modal-form');
+    var formLocationHolder = $('#edit-specific-price-modal-form');
 
     formLocationHolder.empty();
     formLocationHolder.append(form);
@@ -500,11 +486,11 @@ class SpecificPriceFormHandler {
    * @private
    */
   getPrefixSelector(usePrefixForCreate) {
-    if (usePrefixForCreate) {
-      return `#${this.prefixCreateForm}`;
+    if (usePrefixForCreate == true) {
+      return '#' + this.prefixCreateForm;
+    } else {
+      return '#' + this.prefixEditForm;
     }
-
-    return `#${this.prefixEditForm}`;
   }
 }
 

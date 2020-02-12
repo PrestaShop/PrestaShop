@@ -45,13 +45,14 @@ export default class ImportProgressModal {
    * @param {number} total number of items in total.
    */
   updateProgress(completed, total) {
-    const progressCompleted = parseInt(completed, 10);
-    const progressTotal = parseInt(total, 10);
-    const $progressBar = this.progressBar;
-    const percentage = (progressCompleted / progressTotal) * 100;
+    completed = parseInt(completed);
+    total = parseInt(total);
+
+    let $progressBar = this.progressBar,
+        percentage = completed / total * 100;
 
     $progressBar.css('width', `${percentage}%`);
-    $progressBar.find('> span').text(`${progressCompleted}/${progressTotal}`);
+    $progressBar.find('> span').text(`${completed}/${total}`);
   }
 
   /**
@@ -83,7 +84,7 @@ export default class ImportProgressModal {
    * @param {Array} messages
    */
   showInfoMessages(messages) {
-    this.showMessages(this.infoMessageBlock, messages);
+    this._showMessages(this.infoMessageBlock, messages);
   }
 
   /**
@@ -92,7 +93,7 @@ export default class ImportProgressModal {
    * @param {Array} messages
    */
   showWarningMessages(messages) {
-    this.showMessages(this.warningMessageBlock, messages);
+    this._showMessages(this.warningMessageBlock, messages);
   }
 
   /**
@@ -101,7 +102,7 @@ export default class ImportProgressModal {
    * @param {Array} messages
    */
   showErrorMessages(messages) {
-    this.showMessages(this.errorMessageBlock, messages);
+    this._showMessages(this.errorMessageBlock, messages);
   }
 
   /**
@@ -128,19 +129,19 @@ export default class ImportProgressModal {
    * @param {Array} messages
    * @private
    */
-  showMessages($messageBlock, messages) {
+  _showMessages($messageBlock, messages) {
     let showMessagesBlock = false;
 
-    Object.values(messages).forEach((msg) => {
+    for (let key in messages) {
       // Indicate that the messages block should be displayed
       showMessagesBlock = true;
 
-      const message = $('<div>');
-      message.text(msg);
+      let message = $('<div>');
+      message.text(messages[key]);
       message.addClass('message');
 
       $messageBlock.append(message);
-    });
+    }
 
     if (showMessagesBlock) {
       $messageBlock.removeClass('d-none');
@@ -151,7 +152,7 @@ export default class ImportProgressModal {
    * Show the "Ignore warnings and continue" button.
    */
   showContinueImportButton() {
-    this.continueImportButton.removeClass('d-none');
+    this.continueImportButton.removeClass('d-none')
   }
 
   /**

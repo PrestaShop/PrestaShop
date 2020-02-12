@@ -23,7 +23,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-const {$} = window;
+const $ = window.$;
 
 export default class EntityFieldsValidator {
   /**
@@ -34,7 +34,7 @@ export default class EntityFieldsValidator {
   static validate() {
     $('.js-validation-error').addClass('d-none');
 
-    return this.checkDuplicateSelectedValues() && this.checkRequiredFields();
+    return this._checkDuplicateSelectedValues() && this._checkRequiredFields();
   }
 
   /**
@@ -43,12 +43,12 @@ export default class EntityFieldsValidator {
    * @returns {boolean}
    * @private
    */
-  static checkDuplicateSelectedValues() {
+  static _checkDuplicateSelectedValues() {
     const uniqueFields = [];
     let valid = true;
 
     $('.js-entity-field select').each(function () {
-      const value = $(this).val();
+      let value = $(this).val();
 
       if (value === 'no') {
         return;
@@ -72,19 +72,17 @@ export default class EntityFieldsValidator {
    * @returns {boolean}
    * @private
    */
-  static checkRequiredFields() {
-    const requiredImportFields = $('.js-import-data-table').data('required-fields');
+  static _checkRequiredFields() {
+    let requiredImportFields = $('.js-import-data-table').data('required-fields');
 
-    /* eslint-disable-next-line */
-    for (const key in requiredImportFields) {
-      if ($(`option[value="${requiredImportFields[key]}"]:selected`).length === 0) {
+    for (let key in requiredImportFields) {
+      if (0 === $(`option[value="${requiredImportFields[key]}"]:selected`).length) {
         $('.js-missing-column-warning').removeClass('d-none');
         $('.js-missing-column').text($(`option[value="${requiredImportFields[key]}"]:first`).text());
 
         return false;
       }
     }
-
     return true;
   }
 }

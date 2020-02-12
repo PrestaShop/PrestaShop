@@ -23,13 +23,14 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-const {$} = window;
+const $ = global.$;
 
 /**
  * Makes a table sortable by columns.
  * This forces a page reload with more query parameters.
  */
 class TableSorting {
+
   /**
    * @param {jQuery} table
    */
@@ -44,7 +45,7 @@ class TableSorting {
   attach() {
     this.columns.on('click', (e) => {
       const $column = $(e.delegateTarget);
-      this.sortByColumn($column, this.getToggledSortDirection($column));
+      this._sortByColumn($column, this._getToggledSortDirection($column));
     });
   }
 
@@ -59,7 +60,7 @@ class TableSorting {
       throw new Error(`Cannot sort by "${columnName}": invalid column`);
     }
 
-    this.sortByColumn($column, direction);
+    this._sortByColumn($column, direction);
   }
 
   /**
@@ -68,12 +69,8 @@ class TableSorting {
    * @param {string} direction "asc" or "desc"
    * @private
    */
-  sortByColumn(column, direction) {
-    window.location = this.getUrl(
-      column.data('sortColName'),
-      (direction === 'desc') ? 'desc' : 'asc',
-      column.data('sortPrefix'),
-    );
+  _sortByColumn(column, direction) {
+    window.location = this._getUrl(column.data('sortColName'), (direction === 'desc') ? 'desc' : 'asc', column.data('sortPrefix'));
   }
 
   /**
@@ -82,7 +79,7 @@ class TableSorting {
    * @return {string}
    * @private
    */
-  getToggledSortDirection(column) {
+  _getToggledSortDirection(column) {
     return column.data('sortDirection') === 'asc' ? 'desc' : 'asc';
   }
 
@@ -94,13 +91,13 @@ class TableSorting {
    * @return {string}
    * @private
    */
-  getUrl(colName, direction, prefix) {
+  _getUrl(colName, direction, prefix) {
     const url = new URL(window.location.href);
     const params = url.searchParams;
 
     if (prefix) {
-      params.set(`${prefix}[orderBy]`, colName);
-      params.set(`${prefix}[sortOrder]`, direction);
+      params.set(prefix+'[orderBy]', colName);
+      params.set(prefix+'[sortOrder]', direction);
     } else {
       params.set('orderBy', colName);
       params.set('sortOrder', direction);

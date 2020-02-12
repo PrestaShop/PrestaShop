@@ -25,7 +25,7 @@
 
 import {EventEmitter} from './event-emitter';
 
-const {$} = window;
+const $ = window.$;
 
 /**
  * This class is used to automatically toggle translated fields (displayed with tabs
@@ -34,10 +34,10 @@ const {$} = window;
  */
 class TranslatableField {
   constructor(options) {
-    const opts = options || {};
+    options = options || {};
 
-    this.localeButtonSelector = opts.localeButtonSelector || '.translationsLocales.nav .nav-item a[data-toggle="tab"]';
-    this.localeNavigationSelector = opts.localeNavigationSelector || '.translationsLocales.nav';
+    this.localeButtonSelector = options.localeButtonSelector || '.translationsLocales.nav .nav-item a[data-toggle="tab"]';
+    this.localeNavigationSelector = options.localeNavigationSelector || '.translationsLocales.nav';
 
     $('body').on('shown.bs.tab', this.localeButtonSelector, this.toggleLanguage.bind(this));
     EventEmitter.on('languageSelected', this.toggleFields.bind(this));
@@ -51,7 +51,7 @@ class TranslatableField {
   toggleLanguage(event) {
     const localeLink = $(event.target);
     const form = localeLink.closest('form');
-    EventEmitter.emit('languageSelected', {selectedLocale: localeLink.data('locale'), form});
+    EventEmitter.emit('languageSelected', {selectedLocale: localeLink.data('locale'), form: form});
   }
 
   /**
@@ -64,7 +64,7 @@ class TranslatableField {
       const selectedLink = $('.nav-item a.active', navigation);
       const selectedLocale = selectedLink.data('locale');
       if (event.selectedLocale !== selectedLocale) {
-        $(`.nav-item a[data-locale="${event.selectedLocale}"]`, navigation).tab('show');
+        $('.nav-item a[data-locale="'+event.selectedLocale+'"]', navigation).tab('show');
       }
     });
   }
