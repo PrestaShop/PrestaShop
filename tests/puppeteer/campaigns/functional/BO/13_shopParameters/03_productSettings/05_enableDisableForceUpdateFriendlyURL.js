@@ -34,6 +34,10 @@ const init = async function () {
 };
 
 /*
+Enable force update friendly URL
+Create then edit product
+Check that the friendly URL is updated successfully
+Disable force update friendly URL
  */
 describe('Enable/Disable force update friendly URL', async () => {
   // before and after functions
