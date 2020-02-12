@@ -34,10 +34,6 @@
   <div class="card-block row">
     <div class="card-text">
 
-      {% set invalidGenericNameHint %}
-        {{ 'Invalid characters:'|trans({}, 'Admin.Notifications.Info') ~ ' <>={}' }}
-      {% endset %}
-
       {% if logoImage is defined and logoImage is not null %}
         <div class="form-group row">
           <label class="form-control-label"></label>
