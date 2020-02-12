@@ -17,7 +17,7 @@ yaml_trad=$?
 php bin/console lint:twig src/PrestaShopBundle/Resources/views/
 twig_src=$?
 
-if [[ "$yaml_src" == "0" && "$yaml_app" == "0" && "$yaml_themes" == "0" && "$yaml_trad" == "0" && "twig_src" == "0" ]]; then
+if [[ "$yaml_src" == "0" && "$yaml_app" == "0" && "$yaml_themes" == "0" && "$yaml_trad" == "0" && "$twig_src" == "0" ]]; then
   echo -e "\e[92mSYNTAX TESTS OK"
   exit 0;
 else
