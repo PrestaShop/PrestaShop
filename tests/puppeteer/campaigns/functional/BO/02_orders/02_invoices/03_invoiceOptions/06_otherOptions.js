@@ -159,13 +159,13 @@ describe('Edit \'Invoice number, Legal free text, Footer text\' and check the ge
     it('should check that the invoice contain the \'legal free text\'', async () => {
       // Check the existence of the legal free text
       const exist = await files.checkTextInPDF(`${fileName}.pdf`, invoiceData.legalFreeText);
-      await expect(exist, `PDf does not contains this text : ${invoiceData.legalFreeText}`).to.be.true;
+      await expect(exist, `PDF does not contains this text : ${invoiceData.legalFreeText}`).to.be.true;
     });
 
     it('should check that the invoice contain the \'Footer text\'', async () => {
       // Check the existence of the Footer text
       const exist = await files.checkTextInPDF(`${fileName}.pdf`, invoiceData.footerText);
-      await expect(exist, `PDf does not contains this text : ${invoiceData.footerText}`).to.be.true;
+      await expect(exist, `PDF does not contains this text : ${invoiceData.footerText}`).to.be.true;
     });
   });
 });
