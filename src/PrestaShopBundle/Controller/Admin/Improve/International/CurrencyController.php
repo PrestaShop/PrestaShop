@@ -153,6 +153,7 @@ class CurrencyController extends FrameworkBundleAdminController
         return $this->render('@PrestaShop/Admin/Improve/International/Currency/create.html.twig', [
             'isShopFeatureEnabled' => $multiStoreFeature->isUsed(),
             'currencyForm' => $currencyForm->createView(),
+            'currencyName' => null !== $currencyForm ? array_values($currencyForm->getData()['names'])[0] : null,
         ]);
     }
 
