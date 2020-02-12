@@ -214,7 +214,8 @@ class CategoryCore extends ObjectModel
         if (!$this->doNotRegenerateNTree) {
             Category::regenerateEntireNtree();
         }
-        $this->updateGroup($this->groupBox);
+        // if access group is not set, initialize it with 3 default groups
+        $this->updateGroup(($this->groupBox !== null) ? $this->groupBox : []);
         Hook::exec('actionCategoryAdd', ['category' => $this]);
 
         return $ret;
@@ -1714,17 +1715,25 @@ class CategoryCore extends ObjectModel
     }
 
     /**
-     * Update customer groups associated to the object.
+     * Update customer groups associated to the object. Don't update group access if list is null.
      *
      * @param array $list groups
+     *
+     * @return bool
      */
     public function updateGroup($list)
     {
+        // don't update group access if list is null
+        if ($list === null) {
+            return false;
+        }
         $this->cleanGroups();
         if (empty($list)) {
             $list = [Configuration::get('PS_UNIDENTIFIED_GROUP'), Configuration::get('PS_GUEST_GROUP'), Configuration::get('PS_CUSTOMER_GROUP')];
         }
         $this->addGroups($list);
+
+        return true;
     }
 
     /**
