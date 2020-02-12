@@ -62,7 +62,7 @@ describe('Enable/Disable default activation status', async () => {
 
   it('should enable default activation status', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'enableDefaultActivationStatus', baseContext);
-    const result = await this.pageObjects.productSettingsPage.changeDefaultActivationStatus(true);
+    const result = await this.pageObjects.productSettingsPage.setDefaultActivationStatus(true);
     await expect(result).to.contains(this.pageObjects.productSettingsPage.successfulUpdateMessage);
   });
 
@@ -96,7 +96,7 @@ describe('Enable/Disable default activation status', async () => {
 
   it('should disable default activation status', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'disableDefaultActivationStatus', baseContext);
-    const result = await this.pageObjects.productSettingsPage.changeDefaultActivationStatus(false);
+    const result = await this.pageObjects.productSettingsPage.setDefaultActivationStatus(false);
     await expect(result).to.contains(this.pageObjects.productSettingsPage.successfulUpdateMessage);
   });
 });

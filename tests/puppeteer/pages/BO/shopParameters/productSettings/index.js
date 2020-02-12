@@ -84,7 +84,7 @@ module.exports = class productSettings extends BOBasePage {
    * @param toEnable
    * @returns {Promise<string|*>}
    */
-  async changeDefaultActivationStatus(toEnable = true) {
+  async setDefaultActivationStatus(toEnable = true) {
     await this.waitForSelectorAndClick(this.switchDefaultActivationStatusLabel.replace('%TOGGLE', toEnable ? 1 : 0));
     await this.clickAndWaitForNavigation(this.saveProductGeneralFormButton);
     return this.getTextContent(this.alertSuccessBloc);
