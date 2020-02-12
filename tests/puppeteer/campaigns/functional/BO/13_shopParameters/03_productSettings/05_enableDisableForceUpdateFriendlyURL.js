@@ -66,7 +66,7 @@ describe('Enable/Disable force update friendly URL', async () => {
 
   it('should enable force update friendly URL', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'enableForceUpdateFriendlyURL', baseContext);
-    const result = await this.pageObjects.productSettingsPage.enableDisableForceUpdateFriendlyURL(true);
+    const result = await this.pageObjects.productSettingsPage.setForceUpdateFriendlyURL(true);
     await expect(result).to.contains(this.pageObjects.productSettingsPage.successfulUpdateMessage);
   });
 
@@ -113,7 +113,7 @@ describe('Enable/Disable force update friendly URL', async () => {
 
   it('should disable force update friendly URL', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'disableForceUpdateFriendlyURL', baseContext);
-    const result = await this.pageObjects.productSettingsPage.enableDisableForceUpdateFriendlyURL(true);
+    const result = await this.pageObjects.productSettingsPage.setForceUpdateFriendlyURL(true);
     await expect(result).to.contains(this.pageObjects.productSettingsPage.successfulUpdateMessage);
   });
 });
