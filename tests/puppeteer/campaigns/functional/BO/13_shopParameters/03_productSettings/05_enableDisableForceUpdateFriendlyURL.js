@@ -107,7 +107,6 @@ describe('Enable/Disable force update friendly URL', async () => {
       this.pageObjects.boBasePage.shopParametersParentLink,
       this.pageObjects.boBasePage.productSettingsLink,
     );
-    await this.pageObjects.boBasePage.closeSfToolBar();
     const pageTitle = await this.pageObjects.productSettingsPage.getPageTitle();
     await expect(pageTitle).to.contains(this.pageObjects.productSettingsPage.pageTitle);
   });
