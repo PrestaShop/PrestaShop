@@ -44,6 +44,7 @@ class TypedRegexValidator extends ConstraintValidator
     const GENERIC_NAME_CHARS = '<>={}';
     const MESSAGE_CHARS = '<>{}';
     const NAME_CHARS = '0-9!<>,;?=+()@#"°{}_$%:¤|';
+    const CATALOG_CHARS = '<>;=#{}';
 
     /**
      * @var CharacterCleaner
@@ -100,7 +101,7 @@ class TypedRegexValidator extends ConstraintValidator
     {
         $typePatterns = [
             TypedRegex::TYPE_NAME => $this->characterCleaner->cleanNonUnicodeSupport('/^[^' . self::NAME_CHARS . ']*$/u'),
-            TypedRegex::TYPE_CATALOG_NAME => $this->characterCleaner->cleanNonUnicodeSupport('/^[^<>;=#{}]*$/u'),
+            TypedRegex::TYPE_CATALOG_NAME => $this->characterCleaner->cleanNonUnicodeSupport('/^[^' . self::CATALOG_CHARS . ']*$/u'),
             TypedRegex::TYPE_GENERIC_NAME => $this->characterCleaner->cleanNonUnicodeSupport('/^[^' . self::GENERIC_NAME_CHARS . ']*$/u'),
             TypedRegex::TYPE_CITY_NAME => $this->characterCleaner->cleanNonUnicodeSupport('/^[^!<>;?=+@#"°{}_$%]*$/u'),
             TypedRegex::TYPE_ADDRESS => $this->characterCleaner->cleanNonUnicodeSupport('/^[^!<>?=+@{}_$%]*$/u'),

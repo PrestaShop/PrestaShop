@@ -30,6 +30,7 @@ use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\AddressDniRequire
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\AddressStateRequired;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CleanHtml;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
+use PrestaShop\PrestaShop\Core\ConstraintValidator\TypedRegexValidator;
 use PrestaShop\PrestaShop\Core\Domain\Address\AddressSettings;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\SupplierSettings;
 use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
@@ -124,7 +125,7 @@ class SupplierType extends TranslatorAwareType
         $countryId = 0 !== $data['id_country'] ? $data['id_country'] : $this->contextCountryId;
 
         $invalidCharsText = sprintf(
-            '%s <>;=#{}',
+            '%s ' . TypedRegexValidator::GENERIC_NAME_CHARS,
             $this->trans('Invalid characters:', 'Admin.Notifications.Info')
         );
 
