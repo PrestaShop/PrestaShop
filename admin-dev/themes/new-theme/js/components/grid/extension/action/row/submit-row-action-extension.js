@@ -23,7 +23,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-const $ = window.$;
+const {$} = window;
 
 /**
  * Class SubmitRowActionExtension handles submitting of row action
@@ -41,7 +41,7 @@ export default class SubmitRowActionExtension {
       const $button = $(event.currentTarget);
       const confirmMessage = $button.data('confirm-message');
 
-      if (confirmMessage.length && !confirm(confirmMessage)) {
+      if (confirmMessage.length && !window.confirm(confirmMessage)) {
         return;
       }
 
@@ -49,15 +49,15 @@ export default class SubmitRowActionExtension {
       const isGetOrPostMethod = ['GET', 'POST'].includes(method);
 
       const $form = $('<form>', {
-        'action': $button.data('url'),
-        'method': isGetOrPostMethod ? method : 'POST',
+        action: $button.data('url'),
+        method: isGetOrPostMethod ? method : 'POST',
       }).appendTo('body');
 
       if (!isGetOrPostMethod) {
         $form.append($('<input>', {
-          'type': '_hidden',
-          'name': '_method',
-          'value': method
+          type: '_hidden',
+          name: '_method',
+          value: method,
         }));
       }
 

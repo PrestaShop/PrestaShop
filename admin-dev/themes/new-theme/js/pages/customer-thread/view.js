@@ -25,7 +25,7 @@
 
 import CustomerThreadViewPageMap from './customer-thread-view-page-map';
 
-const $ = window.$;
+const {$} = window;
 
 $(() => {
   $(CustomerThreadViewPageMap.forwardEmployeeInput).on('change', (event) => {

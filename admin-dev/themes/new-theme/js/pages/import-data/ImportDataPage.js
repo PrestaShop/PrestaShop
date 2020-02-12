@@ -50,20 +50,20 @@ export default class ImportDataPage {
       return;
     }
 
-    let configuration = {};
+    const configuration = {};
 
     // Collect the configuration from the form into an array.
     $('.import-data-configuration-form').find(
-      '#skip, select[name^=type_value], #csv, #iso_lang, #entity,' +
-      '#truncate, #match_ref, #regenerate, #forceIDs, #sendemail,' +
-      '#separator, #multiple_value_separator'
+      '#skip, select[name^=type_value], #csv, #iso_lang, #entity,'
+      + '#truncate, #match_ref, #regenerate, #forceIDs, #sendemail,'
+      + '#separator, #multiple_value_separator',
     ).each((index, $input) => {
       configuration[$($input).attr('name')] = $($input).val();
     });
 
     this.importer.import(
       $('.js-import-process-button').data('import_url'),
-      configuration
+      configuration,
     );
   }
 }

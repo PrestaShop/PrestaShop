@@ -32,17 +32,23 @@ use PHPUnit\Framework\Assert as Assert;
 use PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\CategoryTreeChoiceProvider;
 use PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\GroupByIdChoiceProvider;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\AddCategoryCommand;
+use PrestaShop\PrestaShop\Core\Domain\Category\Command\AddRootCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\BulkDeleteCategoriesCommand;
+use PrestaShop\PrestaShop\Core\Domain\Category\Command\BulkUpdateCategoriesStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\DeleteCategoryCommand;
+use PrestaShop\PrestaShop\Core\Domain\Category\Command\DeleteCategoryCoverImageCommand;
+use PrestaShop\PrestaShop\Core\Domain\Category\Command\DeleteCategoryMenuThumbnailImageCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\EditCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\EditRootCategoryCommand;
+use PrestaShop\PrestaShop\Core\Domain\Category\Command\SetCategoryIsEnabledCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\UpdateCategoryPositionCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoryForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoryIsEnabled;
 use PrestaShop\PrestaShop\Core\Domain\Category\QueryResult\EditableCategory;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
-use Psr\Container\ContainerInterface;
 use RuntimeException;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 use Tests\Integration\Behaviour\Features\Context\Util\CategoryTreeIterator;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
@@ -50,6 +56,13 @@ use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 class CategoryFeatureContext extends AbstractDomainFeatureContext
 {
     const EMPTY_VALUE = '';
+    const DEFAULT_ROOT_CATEGORY_ID = 1;
+    const JPG_IMAGE_TYPE = '.jpg';
+    const THUMB0 = '0_thumb';
+    const JPG_IMAGE_STRING = 'iVBORw0KGgoAAAANSUhEUgAAABwAAAASCAMAAAB/2U7WAAAABl'
+        . 'BMVEUAAAD///+l2Z/dAAAASUlEQVR4XqWQUQoAIAxC2/0vXZDr'
+        . 'EX4IJTRkb7lobNUStXsB0jIXIAMSsQnWlsV+wULF4Avk9fLq2r'
+        . '8a5HSE35Q3eO2XP1A1wQkZSgETvDtKdQAAAABJRU5ErkJggg==';
 
     const CATEGORY_POSITION_WAYS_MAP = [
         0 => 'Up',
@@ -60,6 +73,8 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
     private $container;
     /** @var int */
     private $defaultLanguageId;
+    /** @var string */
+    private $psCatImgDir;
 
     /**
      * CategoryFeatureContext constructor.
@@ -68,6 +83,7 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
     {
         $this->container = $this->getContainer();
         $this->defaultLanguageId = Configuration::get('PS_LANG_DEFAULT');
+        $this->psCatImgDir = _PS_CAT_IMG_DIR_;
     }
 
     /**
@@ -98,31 +114,6 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @When I add new category :reference with specified properties
-     */
-    public function addCategoryWithSpecifiedProperties($reference)
-    {
-        $properties = SharedStorage::getStorage()->get(sprintf('%s_properties', $reference));
-        $defaultLanguageId = Configuration::get('PS_LANG_DEFAULT');
-
-        $command = new AddCategoryCommand(
-            [$defaultLanguageId => $properties['name']],
-            [$defaultLanguageId => $properties['link_rewrite']],
-            $properties['is_enabled'],
-            $properties['parent_category_id']
-        );
-        $command->setLocalizedDescriptions([$defaultLanguageId => $properties['description']]);
-        $command->setAssociatedGroupIds($properties['group_ids']);
-        $command->setLocalizedMetaTitles([$defaultLanguageId => $properties['meta_title']]);
-        $command->setLocalizedMetaDescriptions([$defaultLanguageId => $properties['meta_description']]);
-
-        /** @var CategoryId $categoryIdObject */
-        $categoryIdObject = $this->getCommandBus()->handle($command);
-
-        SharedStorage::getStorage()->set($reference, $categoryIdObject->getValue());
-    }
-
-    /**
      * @Then category :categoryReference should have following details:
      *
      * @param string $categoryReference
@@ -131,20 +122,14 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
     public function categoryShouldHaveFollowingDetails(string $categoryReference, TableNode $table)
     {
         $testCaseData = $table->getRowsHash();
-        $categoryId = SharedStorage::getStorage()->get($categoryReference);
-
-        /** @var EditableCategory $editableCategory */
-        $editableCategory = $this->getQueryBus()->handle(new GetCategoryForEditing($categoryId));
-        // coverImage array has unique properties generated based on time
-        $coverImage = $editableCategory->getCoverImage();
+        $editableCategory = $this->getEditableCategory($categoryReference);
         $subCategories = $editableCategory->getSubCategories();
 
         /** @var EditableCategory $expectedEditableCategory */
         $expectedEditableCategory = $this->mapDataToEditableCategory(
             $testCaseData,
-            $categoryId,
-            $subCategories,
-            $coverImage
+            $editableCategory->getId()->getValue(),
+            $subCategories
         );
 
         Assert::assertEquals($expectedEditableCategory, $editableCategory);
@@ -274,7 +259,7 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
         $editableRootCategoryTestCaseData = $this->mapDataToEditableCategory($testCaseData, $categoryId);
 
         /** @var EditCategoryCommand $command */
-        $command = new EditCategoryCommand($categoryId);
+        $command = new EditRootCategoryCommand($categoryId);
         $command->setIsActive($editableRootCategoryTestCaseData->isActive());
         $command->setLocalizedLinkRewrites($editableRootCategoryTestCaseData->getLinkRewrite());
         $command->setLocalizedNames($editableRootCategoryTestCaseData->getName());
@@ -285,8 +270,190 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
         $command->setAssociatedGroupIds($editableRootCategoryTestCaseData->getGroupAssociationIds());
 
         $this->getCommandBus()->handle($command);
+    }
 
-        $this->getCommandBus()->handle(new EditRootCategoryCommand($categoryId));
+    /**
+     * @When I add new root category :categoryReference with following details:
+     *
+     * @param string $categoryReference
+     * @param TableNode $table
+     */
+    public function addNewRootCategoryWithFollowingDetails(string $categoryReference, TableNode $table)
+    {
+        $testCaseData = $table->getRowsHash();
+        $editableRootCategoryTestCaseData = $this->mapDataToEditableCategory($testCaseData);
+
+        /** @var EditCategoryCommand $command */
+        $command = new AddRootCategoryCommand(
+            $editableRootCategoryTestCaseData->getName(),
+            $editableRootCategoryTestCaseData->getLinkRewrite(),
+            $editableRootCategoryTestCaseData->isActive()
+        );
+        $command->setLocalizedDescriptions($editableRootCategoryTestCaseData->getDescription());
+        $command->setLocalizedMetaTitles($editableRootCategoryTestCaseData->getMetaTitle());
+        $command->setLocalizedMetaDescriptions($editableRootCategoryTestCaseData->getMetaDescription());
+        $command->setLocalizedMetaKeywords($editableRootCategoryTestCaseData->getMetaKeywords());
+        $command->setAssociatedGroupIds($editableRootCategoryTestCaseData->getGroupAssociationIds());
+
+        /** @var CategoryId $categoryIdObj */
+        $categoryIdObj = $this->getCommandBus()->handle($command);
+        SharedStorage::getStorage()->set($categoryReference, $categoryIdObj->getValue());
+    }
+
+    /**
+     * @When I delete category :categoryReference cover image
+     *
+     * @param string $categoryReference
+     */
+    public function deleteCategoryCoverImage(string $categoryReference)
+    {
+        $categoryId = SharedStorage::getStorage()->get($categoryReference);
+        $this->getCommandBus()->handle(new DeleteCategoryCoverImageCommand($categoryId));
+    }
+
+    /**
+     * @Given category :categoryReference has cover image
+     *
+     * @param string $categoryReference
+     */
+    public function categoryHasCoverImage(string $categoryReference)
+    {
+        $editableCategory = $this->getEditableCategory($categoryReference);
+        $coverImage = $editableCategory->getCoverImage();
+        ASSERT::assertNotNull($coverImage);
+    }
+
+    /**
+     * @Then category :categoryReference does not have cover image
+     *
+     * @param string $categoryReference
+     */
+    public function categoryDoesNotHaveCoverImage(string $categoryReference)
+    {
+        $editableCategory = $this->getEditableCategory($categoryReference);
+        $coverImage = $editableCategory->getCoverImage();
+        ASSERT::assertNull($coverImage);
+    }
+
+    /**
+     * @Given category :categoryReference has menu thumbnail image
+     *
+     * @param string $categoryReference
+     */
+    public function categoryHasMenuThumbnailImage(string $categoryReference)
+    {
+        $editableCategory = $this->getEditableCategory($categoryReference);
+        $menuThumbnailImages = $editableCategory->getMenuThumbnailImages();
+        ASSERT::assertCount(1, $menuThumbnailImages);
+    }
+
+    /**
+     * @When I delete category :categoryReference menu thumbnail image
+     *
+     * @param string $categoryReference
+     */
+    public function deleteCategoryMenuThumbnailImage(string $categoryReference)
+    {
+        $categoryId = SharedStorage::getStorage()->get($categoryReference);
+        $editableCategory = $this->getEditableCategory($categoryReference);
+
+        /** @var array $menuThumbnailImages - collection of objects returned would be better style */
+        $menuThumbnailImages = $editableCategory->getMenuThumbnailImages();
+        $menuThumbnailImageId = $menuThumbnailImages[0]['id'];
+
+        $this->getCommandBus()->handle(new DeleteCategoryMenuThumbnailImageCommand($categoryId, $menuThumbnailImageId));
+    }
+
+    /**
+     * @Then category :categoryReference does not have menu thumbnail image
+     *
+     * @param string $categoryReference
+     */
+    public function categoryDoesNotHaveMenuThumbnailImage(string $categoryReference)
+    {
+        $editableCategory = $this->getEditableCategory($categoryReference);
+        $menuThumbnailImages = $editableCategory->getMenuThumbnailImages();
+        ASSERT::assertCount(0, $menuThumbnailImages);
+    }
+
+    /**
+     * @Given category :categoryReference is disabled
+     *
+     * @param $categoryReference
+     */
+    public function categoryIsDisabled(string $categoryReference)
+    {
+        $categoryIsEnabled = $this->getCategoryIsEnabled($categoryReference);
+        ASSERT::assertFalse($categoryIsEnabled);
+    }
+
+    /**
+     * @When I enable category :categoryReference
+     *
+     * @param string $categoryReference
+     */
+    public function enableCategory(string $categoryReference)
+    {
+        $editableCategory = $this->getEditableCategory($categoryReference);
+        $this->getCommandBus()->handle(new SetCategoryIsEnabledCommand(
+            $editableCategory->getId()->getValue(),
+            true)
+        );
+    }
+
+    /**
+     * @When I disable category :categoryReference
+     *
+     * @param $categoryReference
+     */
+    public function disableCategory(string $categoryReference)
+    {
+        $editableCategory = $this->getEditableCategory($categoryReference);
+        $this->getCommandBus()->handle(new SetCategoryIsEnabledCommand(
+                $editableCategory->getId()->getValue(),
+                false)
+        );
+    }
+
+    /**
+     * @Then category :categoryReference is enabled
+     *
+     * @param string $categoryReference
+     */
+    public function categoryIsEnabled(string $categoryReference)
+    {
+        $categoryIsEnabled = $this->getCategoryIsEnabled($categoryReference);
+        ASSERT::assertTrue($categoryIsEnabled);
+    }
+
+    /**
+     * @When I bulk enable categories :categoriesReferences
+     *
+     * @param string $categoriesReferences
+     */
+    public function bulkEnableCategories(string $categoriesReferences)
+    {
+        $categoriesReferencesArray = explode(',', $categoriesReferences);
+        $categoryIds = [];
+        foreach ($categoriesReferencesArray as $categoryReference) {
+            $categoryIds[] = SharedStorage::getStorage()->get($categoryReference);
+        }
+        $this->getCommandBus()->handle(new BulkUpdateCategoriesStatusCommand($categoryIds, true));
+    }
+
+    /**
+     * @When I bulk disable categories :categoriesReferences
+     *
+     * @param string $categoriesReferences
+     */
+    public function bulkDisableCategories(string $categoriesReferences)
+    {
+        $categoriesReferencesArray = explode(',', $categoriesReferences);
+        $categoryIds = [];
+        foreach ($categoriesReferencesArray as $categoryReference) {
+            $categoryIds[] = SharedStorage::getStorage()->get($categoryReference);
+        }
+        $this->getCommandBus()->handle(new BulkUpdateCategoriesStatusCommand($categoryIds, false));
     }
 
     /**
@@ -299,39 +466,12 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
      */
     private function mapDataToEditableCategory(
         array $testCaseData,
-        int $categoryId,
+        int $categoryId = self::DEFAULT_ROOT_CATEGORY_ID,
         array $subcategories = [],
         array $coverImage = null
     ): EditableCategory {
-        $parentCategoryId = null;
-        if (isset($testCaseData['Parent category'])) {
-            /** @var CategoryTreeChoiceProvider $categoryTreeChoiceProvider */
-            $categoryTreeChoiceProvider = $this->container->get(
-                'prestashop.adapter.form.choice_provider.category_tree_choice_provider');
-            $categoryTreeIterator = new CategoryTreeIterator($categoryTreeChoiceProvider);
-            $parentCategoryId = $categoryTreeIterator->getCategoryId($testCaseData['Parent category']);
-        }
-
-        /** @var GroupByIdChoiceProvider $groupByIdChoiceProvider */
-        $groupByIdChoiceProvider = $this->container->get(
-            'prestashop.adapter.form.choice_provider.group_by_id_choice_provider'
-        );
-        $groupChoicesArray = $groupByIdChoiceProvider->getChoices();
-
-        $groupAssociationIds = [];
-        if (isset($testCaseData['Group access'])) {
-            $groupAssociations = explode(',', $testCaseData['Group access']);
-            foreach ($groupAssociations as $groupAssociation) {
-                $groupAssociationIds[] = (int) $groupChoicesArray[$groupAssociation];
-            }
-        } else {
-            $groupAssociationIds = [
-                0 => '1',
-                1 => '2',
-                2 => '3',
-            ];
-        }
-
+        $parentCategoryId = $this->getParentCategoryId($testCaseData);
+        $groupAssociationIds = $this->getGroupAssociationIds($testCaseData);
         $isActive = PrimitiveUtils::castElementInType($testCaseData['Displayed'], PrimitiveUtils::TYPE_BOOLEAN);
 
         $name = [$this->defaultLanguageId => self::EMPTY_VALUE];
@@ -361,6 +501,17 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
         if ($parentCategoryId === null) {
             $parentCategoryId = CategoryTreeIterator::ROOT_CATEGORY_ID;
         }
+        if (isset($testCaseData['Category cover image'])) {
+            $coverImage = $this->pretendImageUploaded($testCaseData, $categoryId);
+        }
+        $menuThumbNailsImages = [];
+        if (isset($testCaseData['Menu thumbnails'])) {
+            $menuThumbNailsImages = $this->pretendMenuThumbnailImagesUploaded(
+                $testCaseData,
+                $menuThumbNailsImages,
+                $categoryId
+            );
+        }
 
         return new EditableCategory(
             new CategoryId($categoryId),
@@ -377,8 +528,140 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
             $parentCategoryId === null || $parentCategoryId === 1 ? true : false,
             $coverImage,
             null,
-            [],
+            $menuThumbNailsImages,
             $subcategories
         );
+    }
+
+    /**
+     * @param array $testCaseData
+     *
+     * @return int
+     */
+    private function getParentCategoryId(array $testCaseData)
+    {
+        $parentCategoryId = null;
+        if (isset($testCaseData['Parent category'])) {
+            /** @var CategoryTreeChoiceProvider $categoryTreeChoiceProvider */
+            $categoryTreeChoiceProvider = $this->container->get(
+                'prestashop.adapter.form.choice_provider.category_tree_choice_provider');
+            $categoryTreeIterator = new CategoryTreeIterator($categoryTreeChoiceProvider);
+            $parentCategoryId = $categoryTreeIterator->getCategoryId($testCaseData['Parent category']);
+        }
+        if ($parentCategoryId === null) {
+            $parentCategoryId = CategoryTreeIterator::ROOT_CATEGORY_ID;
+        }
+
+        return $parentCategoryId;
+    }
+
+    /**
+     * @param array $testCaseData
+     * @param int $categoryId
+     *
+     * @return string
+     */
+    private function pretendImageUploaded(array $testCaseData, int $categoryId): string
+    {
+        $categoryCoverImageName = $testCaseData['Category cover image'];
+        $data = base64_decode(self::JPG_IMAGE_STRING);
+        $im = imagecreatefromstring($data);
+        if ($im !== false) {
+            header('Content-Type: image/jpg');
+            imagejpeg(
+                $im,
+                $this->psCatImgDir . $categoryId . self::JPG_IMAGE_TYPE,
+                0
+            );
+            imagedestroy($im);
+        }
+
+        return $categoryCoverImageName;
+    }
+
+    /**
+     * @param array $testCaseData
+     *
+     * @return array
+     */
+    private function getGroupAssociationIds(array $testCaseData): array
+    {
+        /** @var GroupByIdChoiceProvider $groupByIdChoiceProvider */
+        $groupByIdChoiceProvider = $this->container->get(
+            'prestashop.adapter.form.choice_provider.group_by_id_choice_provider'
+        );
+        $groupChoicesArray = $groupByIdChoiceProvider->getChoices();
+
+        $groupAssociationIds = [];
+        if (isset($testCaseData['Group access'])) {
+            $groupAssociations = explode(',', $testCaseData['Group access']);
+            foreach ($groupAssociations as $groupAssociation) {
+                $groupAssociationIds[] = (int) $groupChoicesArray[$groupAssociation];
+            }
+        } else {
+            $groupAssociationIds = [
+                0 => '1',
+                1 => '2',
+                2 => '3',
+            ];
+        }
+
+        return $groupAssociationIds;
+    }
+
+    /**
+     * @param string $categoryReference
+     *
+     * @return EditableCategory
+     */
+    private function getEditableCategory(string $categoryReference): EditableCategory
+    {
+        $categoryId = SharedStorage::getStorage()->get($categoryReference);
+        /** @var EditableCategory $editableCategory */
+        $editableCategory = $this->getQueryBus()->handle(new GetCategoryForEditing($categoryId));
+
+        return $editableCategory;
+    }
+
+    /**
+     * @param string $categoryReference
+     *
+     * @return mixed
+     */
+    private function getCategoryIsEnabled(string $categoryReference)
+    {
+        $categoryId = SharedStorage::getStorage()->get($categoryReference);
+        $categoryIsEnabled = $this->getQueryBus()->handle(new GetCategoryIsEnabled($categoryId));
+
+        return $categoryIsEnabled;
+    }
+
+    /**
+     * @param array $testCaseData
+     * @param array $menuThumbNailsImages
+     * @param int $categoryId
+     *
+     * @return array
+     */
+    private function pretendMenuThumbnailImagesUploaded(
+        array $testCaseData,
+        array $menuThumbNailsImages,
+        int $categoryId
+    ): array {
+        $data = base64_decode(self::JPG_IMAGE_STRING);
+        $im = imagecreatefromstring($data);
+        if ($im !== false) {
+            header('Content-Type: image/jpg');
+            imagejpeg(
+                $im,
+                $this->psCatImgDir . $categoryId . '-' . self::THUMB0 . self::JPG_IMAGE_TYPE,
+                0
+            );
+            imagedestroy($im);
+        }
+        $menuThumbnailImage = $testCaseData['Menu thumbnails'];
+        $menuThumbNailsImages[] = $menuThumbnailImage;
+
+        return $menuThumbNailsImages;
     }
 }

@@ -25,7 +25,7 @@
 import Vue from 'vue';
 import serp from './serp.vue';
 
-const $ = window.$;
+const {$} = window;
 
 /**
  * Vue component displaying a search page result, Google style.
@@ -41,8 +41,8 @@ class SerpApp {
     }
 
     this.originalUrl = url;
-    this.useMultiLang = selectors.multiLanguageInput !== undefined &&
-                        selectors.multiLanguageItem !== undefined;
+    this.useMultiLang = selectors.multiLanguageInput !== undefined
+                        && selectors.multiLanguageItem !== undefined;
 
     if (this.useMultiLang) {
       this.multiLangInputSelector = selectors.multiLanguageInput;
@@ -58,7 +58,7 @@ class SerpApp {
     this.vm = new Vue({
       el: selectors.container,
       template: '<serp ref="serp" :url="url" :title="title" :description="description" />',
-      components: { serp },
+      components: {serp},
       data: this.data,
     });
 
@@ -114,8 +114,8 @@ class SerpApp {
   }
 
   checkTitle() {
-    let defaultTitle = this.defaultTitle;
-    let watchedTitle = this.watchedTitle;
+    let {defaultTitle} = this;
+    let {watchedTitle} = this;
 
     if (this.useMultiLang) {
       watchedTitle = watchedTitle.closest(this.multiLangInputSelector).find('input');
@@ -131,8 +131,8 @@ class SerpApp {
   }
 
   checkDesc() {
-    let watchedDescription = this.watchedDescription;
-    let defaultDescription = this.defaultDescription;
+    let {watchedDescription} = this;
+    let {defaultDescription} = this;
 
     if (this.useMultiLang) {
       watchedDescription = watchedDescription
@@ -150,7 +150,7 @@ class SerpApp {
   }
 
   checkUrl() {
-    let watchedMetaUrl = this.watchedMetaUrl;
+    let {watchedMetaUrl} = this;
     if (this.useMultiLang) {
       watchedMetaUrl = watchedMetaUrl.closest(this.multiLangInputSelector).find('input');
     }

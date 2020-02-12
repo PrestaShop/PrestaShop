@@ -29,7 +29,7 @@ import {EventEmitter} from '@components/event-emitter';
 import OrderViewEventMap from '@pages/order/view/order-view-event-map';
 import OrderPrices from '@pages/order/view/order-prices';
 
-const $ = window.$;
+const {$} = window;
 
 export default class OrderProductEdit {
   constructor(orderDetailId) {
@@ -55,7 +55,7 @@ export default class OrderProductEdit {
       const taxExcluded = this.priceTaxCalculator.calculateTaxExcluded(
         this.taxIncluded,
         this.taxRate,
-        this.currencyPrecision
+        this.currencyPrecision,
       );
       this.priceTaxExcludedInput.val(taxExcluded);
       this.updateTotal();
@@ -65,7 +65,7 @@ export default class OrderProductEdit {
       this.taxIncluded = this.priceTaxCalculator.calculateTaxIncluded(
         taxExcluded,
         this.taxRate,
-        this.currencyPrecision
+        this.currencyPrecision,
       );
       this.priceTaxIncludedInput.val(this.taxIncluded);
       this.updateTotal();
@@ -79,7 +79,7 @@ export default class OrderProductEdit {
       $btn.prop('disabled', true);
       this.editProduct(
         $(event.currentTarget).data('orderId'),
-        this.orderDetailId
+        this.orderDetailId,
       );
     });
     this.productEditCancelBtn.on('click', () => {
@@ -88,7 +88,11 @@ export default class OrderProductEdit {
   }
 
   updateTotal() {
-    const updatedTotal = this.priceTaxCalculator.calculateTotalPrice(this.quantity, this.taxIncluded, this.currencyPrecision);
+    const updatedTotal = this.priceTaxCalculator.calculateTotalPrice(
+      this.quantity,
+      this.taxIncluded,
+      this.currencyPrecision,
+    );
     this.priceTotalText.html(updatedTotal);
     this.productEditSaveBtn.prop('disabled', updatedTotal === this.initialTotal);
   }
@@ -112,10 +116,10 @@ export default class OrderProductEdit {
 
     // Init input values
     this.priceTaxExcludedInput.val(
-      window.ps_round(product.price_tax_excl, this.currencyPrecision)
+      window.ps_round(product.price_tax_excl, this.currencyPrecision),
     );
     this.priceTaxIncludedInput.val(
-      window.ps_round(product.price_tax_incl, this.currencyPrecision)
+      window.ps_round(product.price_tax_incl, this.currencyPrecision),
     );
     this.quantityInput.val(product.quantity);
 
@@ -131,7 +135,7 @@ export default class OrderProductEdit {
     this.initialTotal = this.priceTaxCalculator.calculateTotalPrice(
       product.quantity,
       product.price_tax_incl,
-      this.currencyPrecision
+      this.currencyPrecision,
     );
     this.quantity = product.quantity;
     this.taxIncluded = product.price_tax_incl;
@@ -164,7 +168,7 @@ export default class OrderProductEdit {
       EventEmitter.emit(OrderViewEventMap.productUpdated, {
         orderId,
         orderDetailId,
-        newRow: response
+        newRow: response,
       });
     }, (response) => {
       if (response.message) {

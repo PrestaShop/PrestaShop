@@ -36,7 +36,7 @@
 <?php endif; ?>
 
 <h2><?php echo $this->translator->trans('Welcome to the PrestaShop %version% Installer', array('%version%' => _PS_INSTALL_VERSION_), 'Install') ?></h2>
-<p><?php echo $this->translator->trans('Installing PrestaShop is quick and easy. In just a few moments, you will become part of a community consisting of more than 250,000 merchants. You are on the way to creating your own unique online store that you can manage easily every day.', array(), 'Install'); ?></p>
+<p><?php echo $this->translator->trans('Installing PrestaShop is quick and easy. In just a few moments, you will become part of a community consisting of more than 300,000 merchants. You are on the way to creating your own unique online store that you can manage easily every day.', array(), 'Install'); ?></p>
 <p><?php echo $this->translator->trans('If you need help, do not hesitate to <a href="%tutoriellink%" target="_blank">watch this short tutorial</a>, or check <a href="%linkdoc%" target="_blank">our documentation</a>.', array('%tutoriellink%' => $this->getTutorialLink(), '%linkdoc%' => $this->getDocumentationLink()), 'Install') ?></p>
 
 <!-- List of languages -->

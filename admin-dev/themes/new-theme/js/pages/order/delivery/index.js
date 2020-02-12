@@ -25,7 +25,7 @@
 
 import TranslatableInput from '@components/translatable-input';
 
-const $ = window.$;
+const {$} = window;
 
 $(() => {
   new TranslatableInput();

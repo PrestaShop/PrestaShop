@@ -23,16 +23,17 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-import OrderViewPageMap from "@pages/order/OrderViewPageMap";
-import OrderShippingManager from "@pages/order/order-shipping-manager";
-import InvoiceNoteManager from "@pages/order/invoice-note-manager";
-import OrderViewPage from "@pages/order/view/order-view-page";
-import OrderProductAutocomplete from "@pages/order/view/order-product-add-autocomplete";
-import OrderProductAdd from "@pages/order/view/order-product-add";
-import OrderViewPageMessagesHandler from "./message/order-view-page-messages-handler";
-import TextWithLengthCounter from "@components/form/text-with-length-counter";
 
-const $ = window.$;
+import OrderViewPageMap from '@pages/order/OrderViewPageMap';
+import OrderShippingManager from '@pages/order/order-shipping-manager';
+import InvoiceNoteManager from '@pages/order/invoice-note-manager';
+import OrderViewPage from '@pages/order/view/order-view-page';
+import OrderProductAutocomplete from '@pages/order/view/order-product-add-autocomplete';
+import OrderProductAdd from '@pages/order/view/order-product-add';
+import TextWithLengthCounter from '@components/form/text-with-length-counter';
+import OrderViewPageMessagesHandler from './message/order-view-page-messages-handler';
+
+const {$} = window;
 
 $(() => {
   const DISCOUNT_TYPE_AMOUNT = "amount";
@@ -56,8 +57,8 @@ $(() => {
   orderViewPage.listenForCancelProduct();
 
   orderAddAutocomplete.listenForSearch();
-  orderAddAutocomplete.onItemClickedCallback = product =>
-    orderAdd.setProduct(product);
+  orderAddAutocomplete.onItemClickedCallback = (product) => orderAdd.setProduct(product);
+
 
   handlePaymentDetailsToggle();
   handlePrivateNoteChange();
@@ -180,11 +181,10 @@ $(() => {
 
   function initChangeAddressFormHandler() {
     const $modal = $(OrderViewPageMap.updateCustomerAddressModal);
-
-    $(OrderViewPageMap.openOrderAddressUpdateModalBtn).on("click", event => {
-      $modal
-        .find(OrderViewPageMap.updateOrderAddressTypeInput)
-        .val($btn.data("address-type"));
+    const $btn = $(OrderViewPageMap.updateOrderStatusActionBtn);
+    
+    $(OrderViewPageMap.openOrderAddressUpdateModalBtn).on('click', () => {
+      $modal.find(OrderViewPageMap.updateOrderAddressTypeInput).val($btn.data('address-type'));
     });
   }
 });

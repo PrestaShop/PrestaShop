@@ -37,7 +37,7 @@ import LinkRowActionExtension from '@components/grid/extension/link-row-action-e
 import FiltersSubmitButtonEnablerExtension
   from '@components/grid/extension/filters-submit-button-enabler-extension';
 
-const $ = window.$;
+const {$} = window;
 
 $(() => {
   const emailLogsGrid = new Grid('email_logs');
