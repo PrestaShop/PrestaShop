@@ -238,7 +238,7 @@ export default class CreateOrderPage {
   _onCartAddressesChanged() {
     EventEmitter.on(eventMap.cartAddressesChanged, (cartInfo) => {
       this.addressesRenderer.render(cartInfo.addresses);
-      this.shippingRenderer.render(cartInfo.shipping, cartInfo.products.length === 0, cartInfo.cartRules);
+      this.shippingRenderer.render(cartInfo.shipping, cartInfo.products.length === 0);
       this.summaryRenderer.render(cartInfo);
     });
   }
@@ -250,7 +250,7 @@ export default class CreateOrderPage {
    */
   _onDeliveryOptionChanged() {
     EventEmitter.on(eventMap.cartDeliveryOptionChanged, (cartInfo) => {
-      this.shippingRenderer.render(cartInfo.shipping, cartInfo.products.length === 0, cartInfo.cartRules);
+      this.shippingRenderer.render(cartInfo.shipping, cartInfo.products.length === 0);
       this.summaryRenderer.render(cartInfo);
     });
   }
@@ -263,7 +263,7 @@ export default class CreateOrderPage {
   _onFreeShippingChanged() {
     EventEmitter.on(eventMap.cartFreeShippingSet, (cartInfo) => {
       this.cartRulesRenderer.renderCartRulesBlock(cartInfo.cartRules, cartInfo.products.length === 0);
-      this.shippingRenderer.render(cartInfo.shipping, cartInfo.products.length === 0, cartInfo.cartRules);
+      this.shippingRenderer.render(cartInfo.shipping, cartInfo.products.length === 0);
       this.summaryRenderer.render(cartInfo);
     });
   }
