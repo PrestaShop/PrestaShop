@@ -69,10 +69,10 @@
       {{ renderhook('displayAdminOrderSide', {'id_order': orderForViewing.id}) }}
       </div>
 
-      <div class="col-md-8">
+      <div class="col-md-8 d-print-block right-column">
         <div id="orderProductsOriginalPosition">
-        {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/products.html.twig' %}
-      </div>
+         {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/products.html.twig' %}
+        </div>
         {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/details.html.twig' %}
 
       {{ renderhook('displayAdminOrderMain', {'id_order': orderForViewing.id}) }}
