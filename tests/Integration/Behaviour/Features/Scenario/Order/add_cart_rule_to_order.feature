@@ -111,6 +111,8 @@ Feature: Add discounts to order from Back Office (BO)
       | free_shipping | true                    |
     Then Order "bo_order1" should have following prices:
       | products      | $33.00    |
+      # discount of $7 appears due to single product free shipping (the shipping price is $7)
+      # this discount does not reflect in invoice discounts.
       | discounts     | $7.00     |
       | shipping      | $14.00    |
       | taxes         | $0.00     |
@@ -129,3 +131,195 @@ Feature: Add discounts to order from Back Office (BO)
       | taxes         | $0.00     |
       | total         | $20.00    |
 
+  @add-discounts-to-order
+  Scenario: Add amount type discount to order and update all invoices
+    When I generate invoice for "bo_order1" order
+    Then order "bo_order1" should have invoice
+    When I add products to order "bo_order1" with new invoice and the following products details:
+      | name          | Mug Today is a good day |
+      | amount        | 1                       |
+      | price         | 11                      |
+      | free_shipping | true                    |
+    Then Order "bo_order1" should have following prices:
+      | products      | $33.00    |
+      | discounts     | $7.00     |
+      | shipping      | $14.00    |
+      | taxes         | $0.00     |
+      | total         | $40.00    |
+    When I add discount to order "bo_order1" with following details:
+      | name      | discount five |
+      | type      | amount        |
+      | value     | 5             |
+    And all invoices for order "bo_order1" should have following discounts:
+      | discounts tax excluded    | 5.00     |
+      | discounts tax included    | 5.00     |
+    Then Order "bo_order1" should have following prices:
+      | products      | $33.00    |
+      | discounts     | $12.00    |
+      | shipping      | $14.00    |
+      | taxes         | $0.00     |
+      | total         | $35.00    |
+
+  @add-discounts-to-order
+  Scenario: Add amount type discount twice to order and update all invoices
+    When I generate invoice for "bo_order1" order
+    Then order "bo_order1" should have invoice
+    When I add products to order "bo_order1" with new invoice and the following products details:
+      | name          | Mug Today is a good day |
+      | amount        | 1                       |
+      | price         | 11                      |
+      | free_shipping | true                    |
+    Then Order "bo_order1" should have following prices:
+      | products      | $33.00    |
+      | discounts     | $7.00     |
+      | shipping      | $14.00    |
+      | taxes         | $0.00     |
+      | total         | $40.00    |
+    When I add discount to order "bo_order1" with following details:
+      | name      | discount five |
+      | type      | amount        |
+      | value     | 5             |
+    And all invoices for order "bo_order1" should have following discounts:
+      | discounts tax excluded    | 5.00     |
+      | discounts tax included    | 5.00     |
+    Then Order "bo_order1" should have following prices:
+      | products      | $33.00    |
+      | discounts     | $12.00    |
+      | shipping      | $14.00    |
+      | taxes         | $0.00     |
+      | total         | $35.00    |
+    When I add discount to order "bo_order1" with following details:
+      | name      | discount five |
+      | type      | amount        |
+      | value     | 5             |
+    And all invoices for order "bo_order1" should have following discounts:
+      | discounts tax excluded    | 10.00     |
+      | discounts tax included    | 10.00     |
+    Then Order "bo_order1" should have following prices:
+      | products      | $33.00    |
+      | discounts     | $17.00    |
+      | shipping      | $14.00    |
+      | taxes         | $0.00     |
+      | total         | $30.00    |
+
+  @add-discounts-to-order
+  Scenario: Add percent type discount to order twice and update all invoices
+    When I generate invoice for "bo_order1" order
+    Then order "bo_order1" should have invoice
+    When I add products to order "bo_order1" with new invoice and the following products details:
+      | name          | Mug Today is a good day |
+      | amount        | 1                       |
+      | price         | 11                      |
+      | free_shipping | true                    |
+    Then Order "bo_order1" should have following prices:
+      | products      | $33.00    |
+      | discounts     | $7.00     |
+      | shipping      | $14.00    |
+      | taxes         | $0.00     |
+      | total         | $40.00    |
+    When I add discount to order "bo_order1" with following details:
+      | name      | discount fifty-fifty |
+      | type      | percent              |
+      | value     | 50                   |
+    And all invoices for order "bo_order1" should have following discounts:
+      | discounts tax excluded    | 20.00     |
+      | discounts tax included    | 20.00     |
+    Then Order "bo_order1" should have following prices:
+      | products      | $33.00    |
+      | discounts     | $27.00    |
+      | shipping      | $14.00    |
+      | taxes         | $0.00     |
+      | total         | $20.00    |
+    When I add discount to order "bo_order1" with following details:
+      | name      | discount fifty-fifty |
+      | type      | percent              |
+      | value     | 50                   |
+    And all invoices for order "bo_order1" should have following discounts:
+      | discounts tax excluded    | 30.00     |
+      | discounts tax included    | 30.00     |
+    Then Order "bo_order1" should have following prices:
+      | products      | $33.00    |
+      | discounts     | $37.00    |
+      | shipping      | $14.00    |
+      | taxes         | $0.00     |
+      | total         | $10.00    |
+
+  @add-discounts-to-order
+  Scenario: Add amount type discount and update all invoices to order in which products were added twice
+    When I generate invoice for "bo_order1" order
+    Then order "bo_order1" should have invoice
+    When I add products to order "bo_order1" with new invoice and the following products details:
+      | name          | Mug Today is a good day |
+      | amount        | 1                       |
+      | price         | 11                      |
+      | free_shipping | true                    |
+    Then Order "bo_order1" should have following prices:
+      | products      | $33.00    |
+      | discounts     | $7.00     |
+      | shipping      | $14.00    |
+      | taxes         | $0.00     |
+      | total         | $40.00    |
+    When I add products to order "bo_order1" with new invoice and the following products details:
+      | name          | Mug Today is a good day |
+      | amount        | 1                       |
+      | price         | 11                      |
+      | free_shipping | true                    |
+    Then Order "bo_order1" should have following prices:
+      | products      | $44.00    |
+      | discounts     | $14.00    |
+      | shipping      | $21.00    |
+      | taxes         | $0.00     |
+      | total         | $51.00    |
+    When I add discount to order "bo_order1" with following details:
+      | name      | discount five |
+      | type      | amount        |
+      | value     | 5             |
+    And all invoices for order "bo_order1" should have following discounts:
+      | discounts tax excluded    | 5.00     |
+      | discounts tax included    | 5.00     |
+    Then Order "bo_order1" should have following prices:
+      | products      | $44.00    |
+      | discounts     | $19.00    |
+      | shipping      | $21.00    |
+      | taxes         | $0.00     |
+      | total         | $46.00    |
+
+  @add-discounts-to-order
+  Scenario: Add percent type discount and update all invoices to order in which products were added twice
+    When I generate invoice for "bo_order1" order
+    Then order "bo_order1" should have invoice
+    When I add products to order "bo_order1" with new invoice and the following products details:
+      | name          | Mug Today is a good day |
+      | amount        | 1                       |
+      | price         | 11                      |
+      | free_shipping | true                    |
+    Then Order "bo_order1" should have following prices:
+      | products      | $33.00    |
+      | discounts     | $7.00     |
+      | shipping      | $14.00    |
+      | taxes         | $0.00     |
+      | total         | $40.00    |
+    When I add products to order "bo_order1" with new invoice and the following products details:
+      | name          | Mug Today is a good day |
+      | amount        | 1                       |
+      | price         | 11                      |
+      | free_shipping | true                    |
+    Then Order "bo_order1" should have following prices:
+      | products      | $44.00    |
+      | discounts     | $14.00     |
+      | shipping      | $21.00    |
+      | taxes         | $0.00     |
+      | total         | $51.00    |
+    When I add discount to order "bo_order1" with following details:
+      | name      | discount fifty-fifty |
+      | type      | percent              |
+      | value     | 50                   |
+    And all invoices for order "bo_order1" should have following discounts:
+      | discounts tax excluded    | 25.50     |
+      | discounts tax included    | 25.50     |
+    Then Order "bo_order1" should have following prices:
+      | products      | $44.00    |
+      | discounts     | $39.50    |
+      | shipping      | $21.00    |
+      | taxes         | $0.00     |
+      | total         | $25.50    |
