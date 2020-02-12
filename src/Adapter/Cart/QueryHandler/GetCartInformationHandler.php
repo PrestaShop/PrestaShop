@@ -240,8 +240,7 @@ final class GetCartInformationHandler extends AbstractCartHandler implements Get
         Cart $cart,
         array $legacySummary,
         bool $hasFreeShippingCartRule
-    ): ?CartShipping
-    {
+    ): ?CartShipping {
         $deliveryOptionsByAddress = $cart->getDeliveryOptionList();
         $deliveryAddress = (int) $cart->id_address_delivery;
 
