@@ -5,7 +5,7 @@
         <p>
           <strong>{{ 'Date'|trans({}, 'Admin.Global') }}</strong>
         </p>
-        <strong>{{ orderForViewing.createdAt|date('Y-m-d') }}</strong>
+        <strong>{{ orderForViewing.createdAt|date_format_full }}</strong>
       </div>
       <div class="col-sm">
         <p>
