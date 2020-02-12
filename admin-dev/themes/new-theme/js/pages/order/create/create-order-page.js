@@ -463,7 +463,7 @@ export default class CreateOrderPage {
   _renderCartInfo(cartInfo) {
     this.addressesRenderer.render(cartInfo.addresses);
     this.cartRulesRenderer.renderCartRulesBlock(cartInfo.cartRules, cartInfo.products.length === 0);
-    this.shippingRenderer.render(cartInfo.shipping, cartInfo.products.length === 0, cartInfo.cartRules);
+    this.shippingRenderer.render(cartInfo.shipping, cartInfo.products.length === 0);
     this.productRenderer.cleanCartBlockAlerts();
     this.productRenderer.renderList(cartInfo.products);
     this.summaryRenderer.render(cartInfo);

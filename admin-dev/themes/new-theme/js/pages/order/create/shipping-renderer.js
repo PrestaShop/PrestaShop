@@ -55,7 +55,7 @@ export default class ShippingRenderer {
   /**
    * Show form block with rendered delivery options instead of warning message
    *
-   * @param shipping
+   * @param {Object} shipping
    *
    * @private
    */
@@ -73,11 +73,11 @@ export default class ShippingRenderer {
    *
    * @private
    *
-   * @param shipping
+   * @param {Object} shipping
    */
   _renderFreeShippingSwitch(shipping) {
-    let isFreeShipping = shipping.freeShipping;
-    let isFreeShippingCartRuleAdded = shipping.freeShippingCartRuleAdded;
+    const isFreeShipping = shipping.freeShipping;
+    const isFreeShippingCartRuleAdded = shipping.freeShippingCartRuleAdded;
     if (!isFreeShippingCartRuleAdded) {
       $(createOrderMap.freeShippingSwitch).prop('disabled', false);
       $(createOrderMap.freeShippingSwitch).each((key, input) => {
@@ -87,12 +87,12 @@ export default class ShippingRenderer {
           input.checked = !isFreeShipping;
         }
       });
-      this._hideFreeShippingSwitchHelp();
+      this.hideFreeShippingSwitchHelp();
     } else {
       $(createOrderMap.freeShippingSwitch).each((key, input) => {
           input.checked = !isFreeShipping;
       });
-      this._showNoFreeShippingSwitchHelp();
+      this.showNoFreeShippingSwitchHelp();
       $(createOrderMap.freeShippingSwitch).prop('disabled', true);
     }
 
@@ -210,7 +210,7 @@ export default class ShippingRenderer {
    *
    * @private
    */
-  _showNoFreeShippingSwitchHelp() {
+  showNoFreeShippingSwitchHelp() {
     this.$freeShippingSwitchHelp.removeClass('d-none');
   }
 
@@ -219,7 +219,7 @@ export default class ShippingRenderer {
    *
    * @private
    */
-  _hideFreeShippingSwitchHelp() {
+  hideFreeShippingSwitchHelp() {
     this.$freeShippingSwitchHelp.addClass('d-none');
   }
 }
