@@ -33,7 +33,9 @@
   <div class="card-block row">
     <div class="card-text">
       {% for child in taxOptionsForm -%}
-        {{ form_widget(child) }}
+        {% block tax_options_form_widget %}
+          {{ form_widget(child) }}
+        {% endblock %}
       {% endfor %}
     </div>
   </div>
