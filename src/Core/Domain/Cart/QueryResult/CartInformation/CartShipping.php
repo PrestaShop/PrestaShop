@@ -114,7 +114,7 @@ class CartShipping
     /**
      * @return bool
      */
-    public function isHasFreeShippingCartRule(): bool
+    public function hasFreeShippingCartRule(): bool
     {
         return $this->hasFreeShippingCartRule;
     }

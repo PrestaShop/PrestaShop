@@ -44,6 +44,7 @@ use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartInformation;
 use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleValidityException;
+use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\FreeShippingCartRuleAlreadyExistException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Exception\FileUploadException;
 use PrestaShop\PrestaShop\Core\Domain\Language\Exception\LanguageException;
@@ -289,9 +290,14 @@ class CartController extends FrameworkBundleAdminController
     {
         $cartRuleId = $request->request->getInt('cartRuleId');
         try {
+            /** @var CartInformation $cartInfo */
+            $cartInfo = $this->getCartInfo($cartId);
+            if ($cartInfo->getShipping()->hasFreeShippingCartRule()) {
+                throw new FreeShippingCartRuleAlreadyExistException('Free shipping cart rule already exist!');
+            }
             $this->getCommandBus()->handle(new AddCartRuleToCartCommand($cartId, $cartRuleId));
 
-            return $this->json($this->getCartInfo($cartId));
+            return $this->json($cartInfo);
         } catch (Exception $e) {
             return $this->json(
                 ['message' => $this->getErrorMessageForException($e, $this->getErrorMessages($e))],
