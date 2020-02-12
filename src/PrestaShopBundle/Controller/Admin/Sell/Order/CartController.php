@@ -290,14 +290,13 @@ class CartController extends FrameworkBundleAdminController
     {
         $cartRuleId = $request->request->getInt('cartRuleId');
         try {
-            /** @var CartInformation $cartInfo */
-            $cartInfo = $this->getCartInfo($cartId);
-            if ($cartInfo->getShipping()->hasFreeShippingCartRule()) {
+            $cartInfo = $this->getCartInfo($cartId)->getShipping();
+            if ($cartInfo->isFreeShippingCartRuleAdded() || $cartInfo->isFreeShipping()) {
                 throw new FreeShippingCartRuleAlreadyExistException('Free shipping cart rule already exist!');
             }
             $this->getCommandBus()->handle(new AddCartRuleToCartCommand($cartId, $cartRuleId));
 
-            return $this->json($cartInfo);
+            return $this->json($this->getCartInfo($cartId));
         } catch (Exception $e) {
             return $this->json(
                 ['message' => $this->getErrorMessageForException($e, $this->getErrorMessages($e))],

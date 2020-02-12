@@ -77,8 +77,8 @@ export default class ShippingRenderer {
    */
   _renderFreeShippingSwitch(shipping) {
     let isFreeShipping = shipping.freeShipping;
-    let hasFreeShippingCartRule = shipping.hasFreeShippingCartRule;
-    if (!hasFreeShippingCartRule) {
+    let isFreeShippingCartRuleAdded = shipping.freeShippingCartRuleAdded;
+    if (!isFreeShippingCartRuleAdded) {
       $(createOrderMap.freeShippingSwitch).prop('disabled', false);
       $(createOrderMap.freeShippingSwitch).each((key, input) => {
         if (input.value === '1') {
