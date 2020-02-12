@@ -55,7 +55,9 @@
           </div>
         {% endif %}
       {% endblock %}
-      {{ form_widget(addressForm) }}
+      {% block address_form_widget %}
+        {{ form_widget(addressForm) }}
+      {% endblock %}
     </div>
   </div>
 
