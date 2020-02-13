@@ -87,12 +87,12 @@ class TinyMCEEditor {
         /* eslint-disable-next-line max-len */
         'code,colorpicker,bold,italic,underline,strikethrough,blockquote,link,align,bullist,numlist,table,image,media,formatselect',
       toolbar2: '',
+      language: window.iso_user,
       external_filemanager_path: `${config.baseAdminUrl}filemanager/`,
       filemanager_title: 'File manager',
       external_plugins: {
         filemanager: `${config.baseAdminUrl}filemanager/plugin.min.js`,
       },
-      language: window.iso_user,
       content_style: config.langIsRtl ? 'body {direction:rtl;}' : '',
       skin: 'prestashop',
       menubar: false,
@@ -236,7 +236,7 @@ class TinyMCEEditor {
     const textarea = $(`#${id}`);
     const counter = textarea.attr('counter');
     const counterType = textarea.attr('counter_type');
-    const max = window.tinyMCE.activeEditor.getBody().textContent.length;
+    const max = window.tinyMCE.activeEditor.getContent().textContent;
 
     textarea
       .parent()

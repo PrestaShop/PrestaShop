@@ -1,6 +1,10 @@
 <?php
 /**
+<<<<<<< HEAD
  * 2007-2020 PrestaShop SA and Contributors
+=======
+ * 2007-2020 PrestaShop and Contributors
+>>>>>>> Update tinymce from 4.0.16 modified to 4.9.8
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +24,11 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2020 PrestaShop SA and Contributors
+<<<<<<< HEAD
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+=======
+ * @license   http://opensource.org/licenses/afl-3.0.php Academic Free License (AFL 3.0)
+>>>>>>> Update tinymce from 4.0.16 modified to 4.9.8
  * International Registered Trademark & Property of PrestaShop SA
  */
 
