@@ -25,14 +25,24 @@
 
 import PerfectScrollbar from 'perfect-scrollbar';
 import '@node_modules/perfect-scrollbar/css/perfect-scrollbar.css';
+import getAnimationEvent from './app/utils/animations';
+import NavbarTransitionHandler from './components/navbar-transition-handler';
 
 const {$} = window;
 
 export default class NavBar {
   constructor() {
     $(() => {
+      const $mainMenu = $('.main-menu');
       const $navBar = $('.nav-bar');
+      const $body = $('body');
       new PerfectScrollbar($navBar.get(0));
+      const NavBarTransitions = new NavbarTransitionHandler(
+        $navBar,
+        $mainMenu,
+        getAnimationEvent('transition', 'end'),
+        $body,
+      );
 
       $navBar.find('.link-levelone').hover(
         function onMouseEnter() {
@@ -90,6 +100,8 @@ export default class NavBar {
         '.menu-collapse',
         function onNavBarClick() {
           $('body').toggleClass('page-sidebar-closed');
+
+          NavBarTransitions.toggle();
 
           $('.popover.show').remove();
           $('.help-box[aria-describedby]').removeAttr('aria-describedby');
