@@ -121,7 +121,6 @@ final class SupplierFormDataHandler implements FormDataHandlerInterface
      * Fills command with provided data
      *
      * @param EditSupplierCommand $command
-     *
      * @param array $data
      */
     private function fillCommandWithData(EditSupplierCommand $command, array $data)
