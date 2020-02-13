@@ -78,7 +78,7 @@ $order-block-background-color: #f8f8f8;
   }
 
   #customer-tab-content-container-toggler .material-icons::before {
-    content: "keyboard_arrow_down";
+    content: 'keyboard_arrow_down';
   }
   #customer-tab-content-container-toggler[aria-expanded="false"].material-icons::before {
     content: 'keyboard_arrow_up';
@@ -298,8 +298,7 @@ input.refund-quantity {
   margin-left: 10px;
 }
 
-input.refund-amount,
-input#partial_refund_shipping {
+input.refund-amount, input#partial_refund_shipping {
   max-width: 80px;
   margin-left: 10px;
 }
