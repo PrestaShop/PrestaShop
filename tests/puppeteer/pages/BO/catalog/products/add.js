@@ -8,6 +8,8 @@ module.exports = class AddProduct extends BOBasePage {
     this.pageTitle = 'Product •';
     // Text Message
     this.settingUpdatedMessage = 'Settings updated.';
+    this.errorMessage = 'Unable to update settings.';
+    this.errorMessageWhenSummaryTooLong = 'This value is too long. It should have %NUMBER characters or less.';
     // Selectors
     this.productNameInput = '#form_step1_name_1';
     this.productTypeSelect = '#form_step1_type_product';
@@ -19,10 +21,13 @@ module.exports = class AddProduct extends BOBasePage {
     this.saveProductButton = 'input#submit[value=\'Save\']';
     this.previewProductLink = 'a#product_form_preview_btn';
     this.productOnlineSwitch = '.product-footer div.switch-input';
-    this.productDescriotionTab = '#tab_description a';
+    this.productShortDescriptionTab = '#tab_description_short a';
+    this.productShortDescriptionIframe = '#form_step1_description_short_1_ifr';
+    this.productDescriptionTab = '#tab_description a';
     this.productDescriptionIframe = '#form_step1_description_1_ifr';
     this.productTaxRuleSelect = '#step2_id_tax_rules_group_rendered';
     this.productDeleteLink = '.product-footer a.delete';
+    this.dangerMessageShortDescription = '#form_step1_description_short .has-danger li';
 
     // Form nav
     this.formNavList = '#form-nav';
@@ -40,6 +45,7 @@ module.exports = class AddProduct extends BOBasePage {
     this.productCombinationsBulkFormTitle = `${this.productCombinationsBulkForm} p[aria-controls]`;
     // Selector of Step 5 : SEO
     this.resetUrlButton = '#seo-url-regenerate';
+    this.friendlyUrlInput = '#form_step5_link_rewrite_1';
     // Growls : override value from BObasePage
     this.growlDefaultDiv = '#growls-default';
     this.growlMessageBlock = `${this.growlDefaultDiv} .growl-message:last-of-type`;
@@ -65,8 +71,11 @@ module.exports = class AddProduct extends BOBasePage {
     await this.page.click(this.productPriceTtcInput, {clickCount: 3});
     await this.page.type(this.productPriceTtcInput, productData.price);
     // Set description value
-    await this.page.click(this.productDescriotionTab);
+    await this.page.click(this.productDescriptionTab);
     await this.setValueOnTinymceInput(this.productDescriptionIframe, productData.description);
+    // Set short description value
+    await this.page.click(this.productShortDescriptionTab);
+    await this.setValueOnTinymceInput(this.productShortDescriptionIframe, productData.summary);
     // Add combinations if exists
     if (productData.withCombination) {
       await this.page.click(this.productWithCombinationsInput);
@@ -267,5 +276,23 @@ module.exports = class AddProduct extends BOBasePage {
     await this.page.waitForSelector(this.resetUrlButton, {visible: true});
     await this.scrollTo(this.resetUrlButton);
     await this.page.click(this.resetUrlButton);
+  }
+
+  /**
+   * Get the error message when short description is too long
+   * @returns {Promise<string|*>}
+   */
+  async getErrorMessageWhenSummaryIsTooLong() {
+    return this.getTextContent(this.dangerMessageShortDescription);
+  }
+
+  /**
+   * Get friendly URL
+   * @returns {Promise<string|*>}
+   */
+  async getFriendlyURL() {
+    await this.reloadPage();
+    await this.goToFormStep(5);
+    return this.getAttributeContent(this.friendlyUrlInput, 'value');
   }
 };

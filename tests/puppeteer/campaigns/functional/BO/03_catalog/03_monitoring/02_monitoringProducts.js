@@ -33,7 +33,9 @@ const productWithoutPrice = new ProductFaker(
   {type: 'Standard product', productHasCombinations: false, price: '0'},
 );
 const productWithoutDescription = new ProductFaker(
-  {type: 'Standard product', productHasCombinations: false, description: ''},
+  {
+    type: 'Standard product', productHasCombinations: false, description: '', summary: '',
+  },
 );
 
 // Init objects needed
