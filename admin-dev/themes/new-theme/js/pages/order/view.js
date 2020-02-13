@@ -83,9 +83,7 @@ $(() => {
 
   function handlePaymentDetailsToggle() {
     $(OrderViewPageMap.orderPaymentDetailsBtn).on('click', (event) => {
-      const $paymentDetailRow = $(event.currentTarget)
-        .closest('tr')
-        .next(':first');
+      const $paymentDetailRow = $(event.currentTarget).closest('tr').next(':first');
 
       $paymentDetailRow.toggleClass('d-none');
     });
@@ -126,10 +124,10 @@ $(() => {
     const $valueFormGroup = $valueInput.closest('.form-group');
 
     $form.find(OrderViewPageMap.addCartRuleApplyOnAllInvoicesCheckbox).on('change', (event) => {
-        const isChecked = $(event.currentTarget).is(':checked');
+      const isChecked = $(event.currentTarget).is(':checked');
 
-        $invoiceSelect.attr('disabled', isChecked);
-      });
+      $invoiceSelect.attr('disabled', isChecked);
+    });
 
     $form.find(OrderViewPageMap.addCartRuleTypeSelect).on('change', (event) => {
       const selectedCartRuleType = $(event.currentTarget).val();
@@ -162,10 +160,7 @@ $(() => {
     $(OrderViewPageMap.updateOrderStatusActionInput).on('change', (event) => {
       const selectedOrderStatusId = $(event.currentTarget).val();
 
-      $btn.prop(
-        'disabled',
-        parseInt(selectedOrderStatusId, 10) === $btn.data('orderStatusId')
-      );
+      $btn.prop('disabled', parseInt(selectedOrderStatusId, 10) === $btn.data('orderStatusId'));
     });
   }
 

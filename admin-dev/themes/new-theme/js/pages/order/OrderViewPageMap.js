@@ -122,8 +122,8 @@ export default {
       ref: '.cell-product-name .product-reference',
       supplierRef: '.cell-product-name .product-supplier-reference',
       quantity: '.cell-product-quantity',
-      availableQuantity: '.cell-product-available-quantity'
-    }
+      availableQuantity: '.cell-product-available-quantity',
+    },
   },
   // Order price elements
   orderProductsTotal: '#orderProductsTotal',
@@ -135,42 +135,42 @@ export default {
   orderHookTabsContainer: '#order_hook_tabs',
   // Product cancel/refund elements
   cancelProduct: {
-    form: 'form[name='cancel_product']',
+    form: 'form[name="cancel_product"]',
     buttons: {
       abort: 'button.cancel-product-element-abort',
       save: '#cancel_product_save',
       partialRefund: 'button.partial-refund-display',
       standardRefund: 'button.standard-refund-display',
       returnProduct: 'button.return-product-display',
-      cancelProducts: 'button.cancel-product-display'
+      cancelProducts: 'button.cancel-product-display',
     },
     inputs: {
       quantity: '.cancel-product-quantity input',
       amount: '.cancel-product-amount input',
-      selector: '.cancel-product-selector input'
+      selector: '.cancel-product-selector input',
     },
     table: {
       cell: '.cancel-product-cell',
       header: 'th.cancel-product-element p',
-      actions: 'td.cellProductActions, th.product_actions'
+      actions: 'td.cellProductActions, th.product_actions',
     },
     checkboxes: {
       restock: '#cancel_product_restock',
       creditSlip: '#cancel_product_credit_slip',
-      voucher: '#cancel_product_voucher'
+      voucher: '#cancel_product_voucher',
     },
     radios: {
       voucherRefundType: {
-        productPrices: 'input[voucher-refund-type='0']',
-        productPricesVoucherExcluded: 'input[voucher-refund-type='1']',
-        negativeErrorMessage: '.voucher-refund-type-negative-error'
+        productPrices: 'input[voucher-refund-type="0"]',
+        productPricesVoucherExcluded: 'input[voucher-refund-type="1"]',
+        negativeErrorMessage: '.voucher-refund-type-negative-error',
       }
     },
     toggle: {
       partialRefund: '.cancel-product-element:not(.hidden):not(.shipping-refund), .cancel-product-amount',
       standardRefund: '.cancel-product-element:not(.hidden):not(.shipping-refund-amount):not(.restock-products), .cancel-product-selector',
       returnProduct: '.cancel-product-element:not(.hidden):not(.shipping-refund-amount), .cancel-product-selector',
-      cancelProducts: '.cancel-product-element:not(.hidden):not(.shipping-refund-amount):not(.shipping-refund):not(.restock-products):not(.refund-credit-slip):not(.refund-voucher), .cancel-product-selector'
+      cancelProducts: '.cancel-product-element:not(.hidden):not(.shipping-refund-amount):not(.shipping-refund):not(.restock-products):not(.refund-credit-slip):not(.refund-voucher), .cancel-product-selector',
     }
   },
   printOrderViewPageButton: '.js-print-order-view-page',
