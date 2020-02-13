@@ -117,7 +117,11 @@ final class CancelOrderProductHandler extends AbstractOrderCommandHandler implem
 
                 // Delete product
                 if (!$order->deleteProduct($order, $orderDetail, $qty_cancel_product)) {
-                    throw new OrderException($this->translator->trans('An error occurred while attempting to delete the product.', [], 'Admin.Orderscustomers.Notification'));
+                    throw new OrderException($this->translator->trans(
+                        'An error occurred while attempting to delete the product, or we were unable to send an email to the customer',
+                        [],
+                        'Admin.Orderscustomers.Notification'
+                    ));
                 }
 
                 // Update weight SUM
