@@ -118,7 +118,7 @@ final class CancelOrderProductHandler extends AbstractOrderCommandHandler implem
                 // Delete product
                 if (!$order->deleteProduct($order, $orderDetail, $qty_cancel_product)) {
                     throw new OrderException($this->translator->trans(
-                        'An error occurred while attempting to delete the product, or we were unable to send an email to the customer',
+                        'An error occurred while attempting to delete the product. It might be your email configuration, test it in the Advanced Parameters > E-mail section of your back office to make sure you properly reach your customers.',
                         [],
                         'Admin.Orderscustomers.Notification'
                     ));
