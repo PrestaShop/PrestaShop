@@ -24,13 +24,10 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 use PrestaShopBundle\Kernel\ModuleRepositoryFactory;
-use PrestaShopBundle\Utils\PhpFileParser;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\Finder\Finder;
-use Symfony\Component\Finder\SplFileInfo;
-use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Symfony\Component\HttpKernel\Kernel;
+use Symfony\Component\Debug\Exception\ClassNotFoundException;
 
 class AppKernel extends Kernel
 {
@@ -187,45 +184,26 @@ class AppKernel extends Kernel
      */
     private function loadModulesBundles(array &$bundles)
     {
-        $activeModules = $this->getActiveModules();
-        /** @var SplFileInfo $moduleFolder */
-        foreach ($this->getModulesFolders() as $moduleFolder) {
-            if (in_array($moduleFolder->getFilename(), $activeModules)) {
-                $this->loadModuleBundle($moduleFolder, $bundles);
-            }
-        }
-    }
-
-    /**
-     * Checks if a single module has bundle file and add it to the collection.
-     */
-    private function loadModuleBundle(SplFileInfo $moduleFolder, array &$bundles)
-    {
-        $moduleSrcDirectory = $moduleFolder->getRealPath() . DIRECTORY_SEPARATOR . 'src';
-        if (!is_dir($moduleSrcDirectory)) {
+        $configFile = _PS_CONFIG_DIR_ . DIRECTORY_SEPARATOR . 'module_bundles.php';
+        if (! file_exists($configFile)) {
             return;
         }
 
-        $finder = new Finder();
-        $finder->files()
-            ->in($moduleSrcDirectory)
-            ->depth(0)
-            ->name('*Bundle.php')
-        ;
-        foreach ($finder as $phpFile) {
-            $className = PhpFileParser::getCLassName($phpFile);
-            if (is_a($className, Bundle::class, true)) {
-                $bundles[] = new $className();
-            }
+        try {
+            $moduleBundles = include $configFile;
+        } catch(ClassNotFoundException $exception) {
+            // this happens when a module is manually deleted
+            // we skip loading module bundles
+            return;
         }
-    }
 
-    /**
-     * @return Finder
-     */
-    private function getModulesFolders()
-    {
-        return Finder::create()->directories()->in(_PS_MODULE_DIR_)->depth(0);
+        foreach ($moduleBundles as $moduleName => $bundleList) {
+            if (! in_array($moduleName, $this->getActiveModules(), true)) {
+                continue;
+            }
+            $bundles = array_merge($bundles, $bundleList);
+        }
+
     }
 
     /**

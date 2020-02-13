@@ -120,6 +120,7 @@ config/settings.old.php
 config/xml/*
 config/themes/*
 !config/xml/themes/default.xml
+config/module_bundles.php
 themes/*/config/settings_*.json
 app/config/parameters.old.yml
 app/config/config.php

@@ -29,6 +29,7 @@ use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShop\PrestaShop\Core\Foundation\Filesystem\FileSystem;
 use PrestaShop\PrestaShop\Core\Module\ModuleInterface;
+use PrestaShop\PrestaShop\Core\Module\ModuleManifestLoader;
 use PrestaShop\PrestaShop\Core\Module\WidgetInterface;
 use PrestaShop\TranslationToolsBundle\Translation\Helper\DomainHelper;
 
@@ -266,6 +267,13 @@ abstract class ModuleCore implements ModuleInterface
      */
     public function __construct($name = null, Context $context = null)
     {
+        $manifestLoader = new ModuleManifestLoader(
+            dirname((new ReflectionClass($this))->getFileName())
+        );
+        if (false !== $manifestLoader->isLoaded()) {
+            $this->registerBundles($manifestLoader);
+        }
+
         if (isset($this->ps_versions_compliancy) && !isset($this->ps_versions_compliancy['min'])) {
             $this->ps_versions_compliancy['min'] = '1.4.0.0';
         }
@@ -338,6 +346,58 @@ abstract class ModuleCore implements ModuleInterface
             }
             $this->local_path = _PS_MODULE_DIR_ . $this->name . '/';
         }
+    }
+
+    private function registerBundles(ModuleManifestLoader $moduleManifestLoader)
+    {
+        $manifestValues = $moduleManifestLoader->getValues();
+
+        $configFile = _PS_CONFIG_DIR_ . DIRECTORY_SEPARATOR . 'module_bundles.php';
+        if (!file_exists($configFile)) {
+            $this->writeBundlesFile([], $configFile);
+        }
+
+        $registeredBundles = include $configFile;
+        $moduleBundles = [];
+        foreach ($manifestValues['bundles'] as $bundle) {
+            $moduleBundles[] = $bundle;
+        }
+        $registeredBundles[$this->name] = $moduleBundles;
+
+        $this->writeBundlesFile($registeredBundles, $configFile);
+    }
+
+    private function writeBundlesFile(array $moduleBundles, string $configFile)
+    {
+        $content = "<?php\nreturn [\n";
+        foreach ($moduleBundles as $moduleName => $bundles) {
+            $content .= sprintf("\t'%s' => [\n", $moduleName);
+            foreach ($bundles as $bundle) {
+                $content .= sprintf("\t\tnew %s(),\n", get_class($bundle));
+            }
+            $content .= "\t],\n";
+        }
+        $content .= '];';
+
+        file_put_contents($configFile, $content);
+    }
+
+    private function unregisterBundles(string $moduleName)
+    {
+        $configFile = _PS_CONFIG_DIR_ . DIRECTORY_SEPARATOR . 'module_bundles.php';
+        if (!file_exists($configFile)) {
+            return;
+        }
+
+        $registeredBundles = include $configFile;
+
+        if (!array_key_exists($moduleName, $registeredBundles)) {
+            return;
+        }
+
+        unset($registeredBundles[$moduleName]);
+
+        $this->writeBundlesFile($registeredBundles, $configFile);
     }
 
     /**
@@ -694,6 +754,8 @@ abstract class ModuleCore implements ModuleInterface
 
             return false;
         }
+
+        $this->unregisterBundles($this->name);
 
         // Uninstall overrides
         if (!$this->uninstallOverrides()) {
