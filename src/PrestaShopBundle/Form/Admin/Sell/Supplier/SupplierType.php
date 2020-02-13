@@ -75,11 +75,6 @@ class SupplierType extends TranslatorAwareType
     private $contextCountryId;
 
     /**
-     * @var TranslatorInterface
-     */
-    private $translator;
-
-    /**
      * @var bool
      */
     private $isMultistoreEnabled;
@@ -117,6 +112,7 @@ class SupplierType extends TranslatorAwareType
 
         $builder
             ->add('name', TextType::class, [
+                'empty_data' => '',
                 'constraints' => [
                     new NotBlank([
                         'message' => $this->trans(
@@ -153,21 +149,26 @@ class SupplierType extends TranslatorAwareType
                 ],
             ])
             ->add('phone', TextType::class, [
+                'empty_data' => '',
                 'required' => false,
                 'constraints' => $this->getPhoneCommonConstraints(),
             ])
             ->add('mobile_phone', TextType::class, [
+                'empty_data' => '',
                 'required' => false,
                 'constraints' => $this->getPhoneCommonConstraints(),
             ])
             ->add('address', TextType::class, [
+                'empty_data' => '',
                 'constraints' => $this->getAddressCommonConstraints(),
             ])
             ->add('address2', TextType::class, [
+                'empty_data' => '',
                 'required' => false,
                 'constraints' => $this->getAddressCommonConstraints(),
             ])
             ->add('post_code', TextType::class, [
+                'empty_data' => '',
                 'required' => false,
                 'constraints' => [
                     new TypedRegex([
@@ -184,6 +185,7 @@ class SupplierType extends TranslatorAwareType
                 ],
             ])
             ->add('city', TextType::class, [
+                'empty_data' => '',
                 'constraints' => [
                     new NotBlank([
                         'message' => $this->trans(

@@ -121,25 +121,50 @@ final class SupplierFormDataHandler implements FormDataHandlerInterface
      * Fills command with provided data
      *
      * @param EditSupplierCommand $command
+     *
      * @param array $data
      */
     private function fillCommandWithData(EditSupplierCommand $command, array $data)
     {
-        $command->setName($data['name'])
-            ->setLocalizedDescriptions($data['description'])
-            ->setPhone($data['phone'])
-            ->setMobilePhone($data['mobile_phone'])
-            ->setAddress($data['address'])
-            ->setAddress2($data['address2'])
-            ->setPostCode($data['post_code'])
-            ->setCity($data['city'])
-            ->setCountryId((int) $data['id_country'])
-            ->setLocalizedMetaTitles($data['meta_title'])
-            ->setLocalizedMetaDescriptions($data['meta_description'])
-            ->setLocalizedMetaKeywords($data['meta_keyword'])
-            ->setEnabled((bool) $data['is_enabled'])
-            ->setDni($data['dni'])
-        ;
+        if (null !== $data['name']) {
+            $command->setName($data['name']);
+        }
+        if (null !== $data['description']) {
+            $command->setLocalizedDescriptions($data['description']);
+        }
+        if (null !== $data['phone']) {
+            $command->setPhone($data['phone']);
+        }
+        if (null !== $data['mobile_phone']) {
+            $command->setMobilePhone($data['mobile_phone']);
+        }
+        if (null !== $data['address']) {
+            $command->setAddress($data['address']);
+        }
+        if (null !== $data['address2']) {
+            $command->setAddress2($data['address2']);
+        }
+        if (null !== $data['post_code']) {
+            $command->setPostCode($data['post_code']);
+        }
+        if (null !== $data['city']) {
+            $command->setCity($data['city']);
+        }
+        if (null !== $data['id_country']) {
+            $command->setCountryId((int) $data['id_country']);
+        }
+        if (null !== $data['meta_title']) {
+            $command->setLocalizedMetaTitles($data['meta_title']);
+        }
+        if (null !== $data['meta_description']) {
+            $command->setLocalizedMetaDescriptions($data['meta_description']);
+        }
+        if (null !== $data['is_enabled']) {
+            $command->setEnabled((bool) $data['is_enabled']);
+        }
+        if (null !== $data['dni']) {
+            $command->setDni($data['dni']);
+        }
 
         if (isset($data['id_state'])) {
             $command->setStateId((int) $data['id_state']);

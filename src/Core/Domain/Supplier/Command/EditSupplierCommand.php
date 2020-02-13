@@ -90,11 +90,6 @@ class EditSupplierCommand
     private $mobilePhone;
 
     /**
-     * @var array|null
-     */
-    private $logoImage;
-
-    /**
      * @var string[]|null
      */
     private $localizedMetaTitles;
@@ -151,11 +146,11 @@ class EditSupplierCommand
     }
 
     /**
-     * @param string|null $name
+     * @param string $name
      *
      * @return EditSupplierCommand
      */
-    public function setName(?string $name): self
+    public function setName(string $name): self
     {
         $this->name = $name;
 
@@ -171,11 +166,11 @@ class EditSupplierCommand
     }
 
     /**
-     * @param string[]|null $localizedDescriptions
+     * @param string[] $localizedDescriptions
      *
      * @return EditSupplierCommand
      */
-    public function setLocalizedDescriptions(?array $localizedDescriptions): self
+    public function setLocalizedDescriptions(array $localizedDescriptions): self
     {
         $this->localizedDescriptions = $localizedDescriptions;
 
@@ -191,11 +186,11 @@ class EditSupplierCommand
     }
 
     /**
-     * @param string|null $address
+     * @param string $address
      *
      * @return EditSupplierCommand
      */
-    public function setAddress(?string $address): self
+    public function setAddress(string $address): self
     {
         $this->address = $address;
 
@@ -211,11 +206,11 @@ class EditSupplierCommand
     }
 
     /**
-     * @param string|null $city
+     * @param string $city
      *
      * @return EditSupplierCommand
      */
-    public function setCity(?string $city): self
+    public function setCity(string $city): self
     {
         $this->city = $city;
 
@@ -231,11 +226,11 @@ class EditSupplierCommand
     }
 
     /**
-     * @param string|null $address2
+     * @param string $address2
      *
      * @return EditSupplierCommand
      */
-    public function setAddress2(?string $address2): self
+    public function setAddress2(string $address2): self
     {
         $this->address2 = $address2;
 
@@ -251,11 +246,11 @@ class EditSupplierCommand
     }
 
     /**
-     * @param int|null $countryId
+     * @param int $countryId
      *
      * @return EditSupplierCommand
      */
-    public function setCountryId(?int $countryId): self
+    public function setCountryId(int $countryId): self
     {
         $this->countryId = $countryId;
 
@@ -271,11 +266,11 @@ class EditSupplierCommand
     }
 
     /**
-     * @param string|null $postCode
+     * @param string $postCode
      *
      * @return EditSupplierCommand
      */
-    public function setPostCode(?string $postCode): self
+    public function setPostCode(string $postCode): self
     {
         $this->postCode = $postCode;
 
@@ -291,11 +286,11 @@ class EditSupplierCommand
     }
 
     /**
-     * @param int|null $stateId
+     * @param int $stateId
      *
      * @return EditSupplierCommand
      */
-    public function setStateId(?int $stateId): self
+    public function setStateId(int $stateId): self
     {
         $this->stateId = $stateId;
 
@@ -311,11 +306,11 @@ class EditSupplierCommand
     }
 
     /**
-     * @param string|null $phone
+     * @param string $phone
      *
      * @return EditSupplierCommand
      */
-    public function setPhone(?string $phone): self
+    public function setPhone(string $phone): self
     {
         $this->phone = $phone;
 
@@ -331,11 +326,11 @@ class EditSupplierCommand
     }
 
     /**
-     * @param string|null $mobilePhone
+     * @param string $mobilePhone
      *
      * @return EditSupplierCommand
      */
-    public function setMobilePhone(?string $mobilePhone): self
+    public function setMobilePhone(string $mobilePhone): self
     {
         $this->mobilePhone = $mobilePhone;
 
@@ -351,11 +346,11 @@ class EditSupplierCommand
     }
 
     /**
-     * @param string[]|null $localizedMetaTitles
+     * @param string[] $localizedMetaTitles
      *
      * @return EditSupplierCommand
      */
-    public function setLocalizedMetaTitles(?array $localizedMetaTitles): self
+    public function setLocalizedMetaTitles(array $localizedMetaTitles): self
     {
         $this->localizedMetaTitles = $localizedMetaTitles;
 
@@ -371,11 +366,11 @@ class EditSupplierCommand
     }
 
     /**
-     * @param string[]|null $localizedMetaDescriptions
+     * @param string[] $localizedMetaDescriptions
      *
      * @return EditSupplierCommand
      */
-    public function setLocalizedMetaDescriptions(?array $localizedMetaDescriptions): self
+    public function setLocalizedMetaDescriptions(array $localizedMetaDescriptions): self
     {
         $this->localizedMetaDescriptions = $localizedMetaDescriptions;
 
@@ -391,11 +386,11 @@ class EditSupplierCommand
     }
 
     /**
-     * @param string[]|null $localizedMetaKeywords
+     * @param string[] $localizedMetaKeywords
      *
      * @return EditSupplierCommand
      */
-    public function setLocalizedMetaKeywords(?array $localizedMetaKeywords): self
+    public function setLocalizedMetaKeywords(array $localizedMetaKeywords): self
     {
         $this->localizedMetaKeywords = $localizedMetaKeywords;
 
@@ -411,11 +406,11 @@ class EditSupplierCommand
     }
 
     /**
-     * @param bool|null $enabled
+     * @param bool $enabled
      *
      * @return EditSupplierCommand
      */
-    public function setEnabled(?bool $enabled): self
+    public function setEnabled(bool $enabled): self
     {
         $this->enabled = $enabled;
 
@@ -431,11 +426,11 @@ class EditSupplierCommand
     }
 
     /**
-     * @param array|null $associatedShops
+     * @param array $associatedShops
      *
      * @return EditSupplierCommand
      */
-    public function setAssociatedShops(?array $associatedShops): self
+    public function setAssociatedShops(array $associatedShops): self
     {
         $this->associatedShops = $associatedShops;
 
@@ -451,11 +446,11 @@ class EditSupplierCommand
     }
 
     /**
-     * @param string|null $dni
+     * @param string $dni
      *
      * @return EditSupplierCommand
      */
-    public function setDni(?string $dni): self
+    public function setDni(string $dni): self
     {
         $this->dni = $dni;
 
