@@ -36,7 +36,7 @@
         <div class="col-md-7">
           <h2 class="mb-0">
             <i class="material-icons">account_box</i>
-            
+
             {{ orderForViewing.customer.gender }}
             {{ orderForViewing.customer.firstName }}
             {{ orderForViewing.customer.lastName }}
@@ -96,7 +96,7 @@
               <a class="dropdown-item"
                 href="{{ getAdminLink('AdminAddresses', true, {
                   'realedit': 1,
-                  'addaddress': 1,
+                  'updateaddress': 1,
                   'address_type': 1,
                   'id_order': orderForViewing.id,
                   'id_address': orderForViewing.shippingAddress.addressId,
@@ -150,7 +150,7 @@
               <a class="dropdown-item"
                 href="{{ getAdminLink('AdminAddresses', true, {
                   'realedit': 1,
-                  'addaddress': 1,
+                  'updateaddress': 1,
                   'address_type': 2,
                   'id_order': orderForViewing.id,
                   'id_address': orderForViewing.invoiceAddress.addressId,
