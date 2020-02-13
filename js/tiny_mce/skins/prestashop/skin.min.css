@@ -107,6 +107,8 @@ i.mce-i-checkbox {
   font-style: normal;
   font-weight: normal;
   font-variant: normal;
+  font-size: @icon-size;
+  line-height: @icon-size;
   speak: none;
   vertical-align: text-top;
   -webkit-font-smoothing: antialiased;
@@ -114,7 +116,9 @@ i.mce-i-checkbox {
   display: inline-block;
   background: transparent center center;
   background-size: cover;
-  color: #000000;
+  width: @icon-box;
+  height: @icon-box;
+  color: @btn-text;
 }
 
 .mce-btn-small .mce-ico {
@@ -512,5 +516,5 @@ i.mce-i-checkbox {
 }
 i.mce-i-backcolor {
   text-shadow: none;
-  background: #000000;
+  background: @colorbtn-backcolor-bg;
 }
