@@ -24,41 +24,41 @@
  */
 $(document).ready(function() {
   tinySetup({
-    editor_selector: "autoload_rte",
+    editor_selector: 'autoload_rte',
     setup: function(ed) {
-      ed.on("loadContent", function(ed, e) {
+      ed.on('loadContent', function(ed, e) {
         handleCounterTiny(tinymce.activeEditor.id);
       });
-      ed.on("change", function(ed, e) {
+      ed.on('change', function(ed, e) {
         tinyMCE.triggerSave();
         handleCounterTiny(tinymce.activeEditor.id);
       });
-      ed.on("blur", function(ed) {
+      ed.on('blur', function(ed) {
         tinyMCE.triggerSave();
       });
     }
   });
 
   function handleCounterTiny(id) {
-    let textarea = $("#" + id);
-    let counter = textarea.attr("counter");
-    let counter_type = textarea.attr("counter_type");
+    let textarea = $('#' + id);
+    let counter = textarea.attr('counter');
+    let counter_type = textarea.attr('counter_type');
     let max = tinyMCE.activeEditor.getContent().length;
 
     textarea
       .parent()
-      .find("span.currentLength")
+      .find('span.currentLength')
       .text(max);
-    if ("recommended" !== counter_type && max > counter) {
+    if ('recommended' !== counter_type && max > counter) {
       textarea
         .parent()
-        .find("span.maxLength")
-        .addClass("text-danger");
+        .find('span.maxLength')
+        .addClass('text-danger');
     } else {
       textarea
         .parent()
-        .find("span.maxLength")
-        .removeClass("text-danger");
+        .find('span.maxLength')
+        .removeClass('text-danger');
     }
   }
 });
