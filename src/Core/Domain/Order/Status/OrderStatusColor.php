@@ -35,7 +35,7 @@ class OrderStatusColor
      * Used for statuses that are waiting for customer actions.
      * Example statuses: Awaiting bank wire payment, Awaiting check payment, On backorder (not paid).
      */
-    public const AWAITING_PAYMENT = '#34219E';
+    public const AWAITING_PAYMENT = '#34209E';
 
     /**
      * Used for statuses when further merchant action is required.
@@ -47,7 +47,7 @@ class OrderStatusColor
      * Used for statuses when no actions are required anymore.
      * Example statuses: Shipped, Refunded, Delivered.
      */
-    public const COMPLETED = '#2ECC71';
+    public const COMPLETED = '#01b887';
 
     /**
      * Used for error statuses.
