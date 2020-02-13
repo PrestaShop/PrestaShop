@@ -164,14 +164,14 @@ export default {
         productPrices: 'input[voucher-refund-type="0"]',
         productPricesVoucherExcluded: 'input[voucher-refund-type="1"]',
         negativeErrorMessage: '.voucher-refund-type-negative-error',
-      }
+      },
     },
     toggle: {
       partialRefund: '.cancel-product-element:not(.hidden):not(.shipping-refund), .cancel-product-amount',
       standardRefund: '.cancel-product-element:not(.hidden):not(.shipping-refund-amount):not(.restock-products), .cancel-product-selector',
       returnProduct: '.cancel-product-element:not(.hidden):not(.shipping-refund-amount), .cancel-product-selector',
       cancelProducts: '.cancel-product-element:not(.hidden):not(.shipping-refund-amount):not(.shipping-refund):not(.restock-products):not(.refund-credit-slip):not(.refund-voucher), .cancel-product-selector',
-    }
+    },
   },
   printOrderViewPageButton: '.js-print-order-view-page',
 };
