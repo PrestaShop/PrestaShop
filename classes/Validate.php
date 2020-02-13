@@ -638,7 +638,8 @@ class ValidateCore
         if (!empty(DateTime::getLastErrors()['warning_count']) || false === $d) {
             return false;
         }
-        $twoHundredYearsAgo = time()-(200*365*24*60*60);
+        $twoHundredYearsAgo = time() - (200 * 365 * 24 * 60 * 60);
+
         return $d->setTime(0, 0, 0)->getTimestamp() <= time() && $d->setTime(0, 0, 0)->getTimestamp() >= $twoHundredYearsAgo;
     }
 
