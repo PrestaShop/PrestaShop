@@ -11,6 +11,10 @@ const ProductsPage = require('@pages/BO/catalog/products');
 const AddProductPage = require('@pages/BO/catalog/products/add');
 const MonitoringPage = require('@pages/BO/catalog/monitoring');
 const ProductFaker = require('@data/faker/product');
+// Test context imports
+const testContext = require('@utils/testContext');
+
+const baseContext = 'functional_BO_catalog_monitoring_monitoringProducts';
 
 let browser;
 let page;
@@ -64,31 +68,38 @@ describe('Create different products and delete them from monitoring page', async
 
   const tests = [
     {
-      args: {
-        productType: 'without image',
-        productToCreate: productWithoutCombinations,
-        gridName: 'product_without_image',
-        enabled: true,
-      },
+      args:
+        {
+          testIdentifier: 'productWithoutImage',
+          productType: 'without image',
+          productToCreate: productWithoutCombinations,
+          gridName: 'product_without_image',
+          enabled: true,
+        },
+    },
+    {
+      args:
+        {
+          testIdentifier: 'disabledProduct',
+          productType: 'disabled',
+          productToCreate: productWithoutCombinations,
+          gridName: 'disabled_product',
+          enabled: false,
+        },
+    },
+    {
+      args:
+        {
+          testIdentifier: 'productWithoutCombinationsWithoutQuantity',
+          productType: 'without combinations and without available quantities',
+          productToCreate: productWithoutCombinationsWithoutQuantity,
+          gridName: 'no_qty_product_without_combination',
+          enabled: true,
+        },
     },
     {
       args: {
-        productType: 'disabled',
-        productToCreate: productWithoutCombinations,
-        gridName: 'disabled_product',
-        enabled: false,
-      },
-    },
-    {
-      args: {
-        productType: 'without combinations and without available quantities',
-        productToCreate: productWithoutCombinationsWithoutQuantity,
-        gridName: 'no_qty_product_without_combination',
-        enabled: true,
-      },
-    },
-    {
-      args: {
+        testIdentifier: 'productWithCombinationsWithQuantity',
         productType: 'with combinations and without available quantities',
         productToCreate: productWithCombinationsWithoutQuantity,
         gridName: 'no_qty_product_with_combination',
@@ -97,6 +108,7 @@ describe('Create different products and delete them from monitoring page', async
     },
     {
       args: {
+        testIdentifier: 'productWithoutPrice',
         productType: 'without price',
         productToCreate: productWithoutPrice,
         gridName: 'product_without_price',
@@ -105,6 +117,7 @@ describe('Create different products and delete them from monitoring page', async
     },
     {
       args: {
+        testIdentifier: 'productWithoutDescription',
         productType: 'without description',
         productToCreate: productWithoutDescription,
         gridName: 'product_without_description',
@@ -116,6 +129,12 @@ describe('Create different products and delete them from monitoring page', async
   tests.forEach((test) => {
     describe(`Create product ${test.args.productType} in BO`, async () => {
       it('should go to catalog > products page', async function () {
+        await testContext.addContextItem(
+          this,
+          'testIdentifier',
+          `${test.args.testIdentifier}_goToProductsPage`,
+          baseContext,
+        );
         await this.pageObjects.boBasePage.goToSubMenu(
           this.pageObjects.boBasePage.catalogParentLink,
           this.pageObjects.boBasePage.productsLink,
@@ -127,11 +146,13 @@ describe('Create different products and delete them from monitoring page', async
       });
 
       it('should reset all filters and get number of products in BO', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}_resetFirst`, baseContext);
         numberOfProducts = await this.pageObjects.productsPage.resetAndGetNumberOfLines();
         await expect(numberOfProducts).to.be.above(0);
       });
 
       it('should create product and check the products number', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}_create`, baseContext);
         await this.pageObjects.productsPage.goToAddProductPage();
         const createProductMessage = await this.pageObjects.addProductPage.createEditProduct(
           test.args.productToCreate,
@@ -144,6 +165,12 @@ describe('Create different products and delete them from monitoring page', async
 
     describe('Check created product in monitoring page', async () => {
       it('should go to catalog > monitoring page', async function () {
+        await testContext.addContextItem(
+          this,
+          'testIdentifier',
+          `${test.args.testIdentifier}_goToMonitoringPage`,
+          baseContext,
+        );
         await this.pageObjects.addProductPage.goToSubMenu(
           this.pageObjects.boBasePage.catalogParentLink,
           this.pageObjects.boBasePage.monitoringLink,
@@ -160,6 +187,12 @@ describe('Create different products and delete them from monitoring page', async
       });
 
       it(`should filter products ${test.args.productType} grid and check existence of new product`, async function () {
+        await testContext.addContextItem(
+          this,
+          'testIdentifier',
+          `${test.args.testIdentifier}_checkProduct`,
+          baseContext,
+        );
         await this.pageObjects.monitoringPage.filterTable(
           test.args.gridName,
           'input',
@@ -177,6 +210,12 @@ describe('Create different products and delete them from monitoring page', async
       });
 
       it(`should reset filter in products ${test.args.productType} grid`, async function () {
+        await testContext.addContextItem(
+          this,
+          'testIdentifier',
+          `${test.args.testIdentifier}_resetInMonitoringPage`,
+          baseContext,
+        );
         numberOfProductsIngrid = await this.pageObjects.monitoringPage.resetAndGetNumberOfLines(test.args.gridName);
         await expect(numberOfProductsIngrid).to.be.at.least(1);
       });
@@ -184,6 +223,12 @@ describe('Create different products and delete them from monitoring page', async
 
     describe('Delete product from monitoring page', async () => {
       it(`should filter products ${test.args.productType} grid`, async function () {
+        await testContext.addContextItem(
+          this,
+          'testIdentifier',
+          `${test.args.testIdentifier}_filterToDelete`,
+          baseContext,
+        );
         await this.pageObjects.monitoringPage.filterTable(
           test.args.gridName,
           'input',
@@ -201,6 +246,12 @@ describe('Create different products and delete them from monitoring page', async
       });
 
       it('should delete product', async function () {
+        await testContext.addContextItem(
+          this,
+          'testIdentifier',
+          `${test.args.testIdentifier}_deleteProduct`,
+          baseContext,
+        );
         const textResult = await this.pageObjects.monitoringPage.deleteProductInGrid(test.args.gridName, 1);
         await expect(textResult).to.equal(this.pageObjects.productsPage.productDeletedSuccessfulMessage);
         const pageTitle = await this.pageObjects.productsPage.getPageTitle();
@@ -208,6 +259,12 @@ describe('Create different products and delete them from monitoring page', async
       });
 
       it('should reset filter check number of products', async function () {
+        await testContext.addContextItem(
+          this,
+          'testIdentifier',
+          `${test.args.testIdentifier}_resetInProductsPage`,
+          baseContext,
+        );
         const numberOfProductsAfterDelete = await this.pageObjects.productsPage.resetAndGetNumberOfLines();
         await expect(numberOfProductsAfterDelete).to.be.equal(numberOfProducts);
       });
