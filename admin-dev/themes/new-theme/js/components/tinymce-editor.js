@@ -41,7 +41,7 @@ class TinyMCEEditor {
         opts.baseAdminUrl = window.baseAdminDir;
       } else {
         const pathParts = window.location.pathname.split('/');
-        pathParts.every((pathPart) => {
+        pathParts.every(pathPart => {
           if (pathPart !== '') {
             opts.baseAdminUrl = `/${pathPart}/`;
 
@@ -53,9 +53,8 @@ class TinyMCEEditor {
       }
     }
     if (typeof opts.langIsRtl === 'undefined') {
-      opts.langIsRtl = typeof window.lang_is_rtl !== 'undefined'
-        ? window.lang_is_rtl === '1'
-        : false;
+      opts.langIsRtl =
+        typeof window.lang_is_rtl !== 'undefined' ? window.lang_is_rtl === '1' : false;
     }
     this.setupTinyMCE(opts);
   }
@@ -88,12 +87,12 @@ class TinyMCEEditor {
         /* eslint-disable-next-line max-len */
         'code,colorpicker,bold,italic,underline,strikethrough,blockquote,link,align,bullist,numlist,table,image,media,formatselect',
       toolbar2: '',
+      language: window.iso_user,
       external_filemanager_path: `${config.baseAdminUrl}filemanager/`,
       filemanager_title: 'File manager',
       external_plugins: {
-        filemanager: `${config.baseAdminUrl}filemanager/plugin.min.js`,
+        filemanager: `${config.baseAdminUrl}filemanager/plugin.min.js`
       },
-      language: window.iso_user,
       content_style: config.langIsRtl ? 'body {direction:rtl;}' : '',
       skin: 'prestashop',
       menubar: false,
@@ -109,10 +108,10 @@ class TinyMCEEditor {
       init_instance_callback: () => {
         this.changeToMaterial();
       },
-      setup: (editor) => {
+      setup: editor => {
         this.setupEditor(editor);
       },
-      ...config,
+      ...config
     };
 
     if (typeof cfg.editor_selector !== 'undefined') {
@@ -134,10 +133,10 @@ class TinyMCEEditor {
    * @param editor
    */
   setupEditor(editor) {
-    editor.on('loadContent', (event) => {
+    editor.on('loadContent', event => {
       this.handleCounterTiny(event.target.id);
     });
-    editor.on('change', (event) => {
+    editor.on('change', event => {
       window.tinyMCE.triggerSave();
       this.handleCounterTiny(event.target.id);
     });
@@ -172,13 +171,13 @@ class TinyMCEEditor {
 
           EventEmitter.emit('languageSelected', {
             selectedLocale: textareaLocale,
-            form,
+            form
           });
         });
       }
     });
 
-    EventEmitter.on('languageSelected', (data) => {
+    EventEmitter.on('languageSelected', data => {
       const textareaLinkSelector = `.nav-item a[data-locale="${data.selectedLocale}"]`;
 
       $(textareaLinkSelector).click();
@@ -217,22 +216,20 @@ class TinyMCEEditor {
       'mce-i-bold': '<i class="material-icons">format_bold</i>',
       'mce-i-italic': '<i class="material-icons">format_italic</i>',
       'mce-i-underline': '<i class="material-icons">format_underlined</i>',
-      'mce-i-strikethrough':
-        '<i class="material-icons">format_strikethrough</i>',
+      'mce-i-strikethrough': '<i class="material-icons">format_strikethrough</i>',
       'mce-i-blockquote': '<i class="material-icons">format_quote</i>',
       'mce-i-link': '<i class="material-icons">link</i>',
       'mce-i-alignleft': '<i class="material-icons">format_align_left</i>',
       'mce-i-aligncenter': '<i class="material-icons">format_align_center</i>',
       'mce-i-alignright': '<i class="material-icons">format_align_right</i>',
-      'mce-i-alignjustify':
-        '<i class="material-icons">format_align_justify</i>',
+      'mce-i-alignjustify': '<i class="material-icons">format_align_justify</i>',
       'mce-i-bullist': '<i class="material-icons">format_list_bulleted</i>',
       'mce-i-numlist': '<i class="material-icons">format_list_numbered</i>',
       'mce-i-image': '<i class="material-icons">image</i>',
       'mce-i-table': '<i class="material-icons">grid_on</i>',
       'mce-i-media': '<i class="material-icons">video_library</i>',
       'mce-i-browse': '<i class="material-icons">attachment</i>',
-      'mce-i-checkbox': '<i class="mce-ico mce-i-checkbox"></i>',
+      'mce-i-checkbox': '<i class="mce-ico mce-i-checkbox"></i>'
     };
 
     $.each(materialIconAssoc, (index, value) => {
