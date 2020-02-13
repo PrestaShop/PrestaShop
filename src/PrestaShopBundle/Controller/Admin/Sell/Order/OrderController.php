@@ -787,11 +787,19 @@ class OrderController extends FrameworkBundleAdminController
             return $item->getOrderDetailId() == $orderDetailId ? $item : $result;
         });
 
+        $formBuilder = $this->get('prestashop.core.form.identifiable_object.builder.cancel_product_form_builder');
+        $cancelProductForm = $formBuilder->getFormFor($orderId);
+
+        $currencyDataProvider = $this->container->get('prestashop.adapter.data_provider.currency');
+        $orderCurrency = $currencyDataProvider->getCurrencyById($orderForViewing->getCurrencyId());
+
         return $this->render('@PrestaShop/Admin/Sell/Order/Order/Blocks/View/product.html.twig', [
-                'orderForViewing' => $orderForViewing,
-                'product' => $product,
-            ]
-        );
+            'cancelProductForm' => $cancelProductForm->createView(),
+            'isColumnLocationDisplayed' => ($product->getLocation() !== ''),
+            'orderCurrency' => $orderCurrency,
+            'orderForViewing' => $orderForViewing,
+            'product' => $product,
+        ]);
     }
 
     /**
