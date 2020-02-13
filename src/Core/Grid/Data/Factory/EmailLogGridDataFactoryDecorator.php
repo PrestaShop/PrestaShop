@@ -45,11 +45,18 @@ class EmailLogGridDataFactoryDecorator implements GridDataFactoryInterface
     private $emailLogDoctrineGridDataFactory;
 
     /**
-     * @param GridDataFactoryInterface $emailLogDoctrineGridDataFactory
+     * @var InternationalizedDomainNameConverter
      */
-    public function __construct(GridDataFactoryInterface $emailLogDoctrineGridDataFactory)
+    private $idnConverter;
+
+    /**
+     * @param GridDataFactoryInterface $emailLogDoctrineGridDataFactory
+     * @param InternationalizedDomainNameConverter $idnConverter
+     */
+    public function __construct(GridDataFactoryInterface $emailLogDoctrineGridDataFactory, InternationalizedDomainNameConverter $idnConverter)
     {
         $this->emailLogDoctrineGridDataFactory = $emailLogDoctrineGridDataFactory;
+        $this->idnConverter = $idnConverter;
     }
 
     /**
@@ -76,9 +83,8 @@ class EmailLogGridDataFactoryDecorator implements GridDataFactoryInterface
     private function applyModifications(RecordCollectionInterface $emails): RecordCollectionInterface
     {
         $modifiedEmails = [];
-        $idn = new InternationalizedDomainNameConverter();
         foreach ($emails as $email) {
-            $email['recipient'] = $idn->emailToUtf8($email['recipient']);
+            $email['recipient'] = $this->idnConverter->emailToUtf8($email['recipient']);
             $modifiedEmails[] = $email;
         }
 

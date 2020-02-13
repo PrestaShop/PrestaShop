@@ -54,18 +54,26 @@ final class CustomerGridDataFactoryDecorator implements GridDataFactoryInterface
     private $contextCurrencyIsoCode;
 
     /**
+     * @var InternationalizedDomainNameConverter
+     */
+    private $idnConverter;
+
+    /**
      * @param GridDataFactoryInterface $customerDoctrineGridDataFactory
      * @param LocaleInterface $locale
      * @param string $contextCurrencyIsoCode
+     * @param InternationalizedDomainNameConverter $idnConverter
      */
     public function __construct(
         GridDataFactoryInterface $customerDoctrineGridDataFactory,
         LocaleInterface $locale,
-        $contextCurrencyIsoCode
+        $contextCurrencyIsoCode,
+        InternationalizedDomainNameConverter $idnConverter
     ) {
         $this->customerDoctrineGridDataFactory = $customerDoctrineGridDataFactory;
         $this->locale = $locale;
         $this->contextCurrencyIsoCode = $contextCurrencyIsoCode;
+        $this->idnConverter = $idnConverter;
     }
 
     /**
@@ -92,8 +100,6 @@ final class CustomerGridDataFactoryDecorator implements GridDataFactoryInterface
     private function applyModifications(RecordCollectionInterface $customers)
     {
         $modifiedCustomers = [];
-        $idn = new InternationalizedDomainNameConverter();
-
         foreach ($customers as $customer) {
             if (empty($customer['social_title'])) {
                 $customer['social_title'] = '--';
@@ -114,7 +120,7 @@ final class CustomerGridDataFactoryDecorator implements GridDataFactoryInterface
                 $customer['connect'] = '--';
             }
 
-            $customer['email'] = $idn->emailToUtf8($customer['email']);
+            $customer['email'] = $this->idnConverter->emailToUtf8($customer['email']);
 
             $modifiedCustomers[] = $customer;
         }

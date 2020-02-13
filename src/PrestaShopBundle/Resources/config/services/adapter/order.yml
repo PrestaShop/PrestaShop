@@ -167,6 +167,7 @@ services:
       - "@prestashop.core.localization.locale.context_locale"
       - '@=service("prestashop.adapter.legacy.context").getContext()'
       - '@prestashop.adapter.data_provider.customer'
+      - '@prestashop.core.util.internationalized_domain_name_converter'
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderForViewing

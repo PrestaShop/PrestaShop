@@ -25,7 +25,6 @@
  */
 use PrestaShop\PrestaShop\Adapter\CoreException;
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
-use PrestaShop\PrestaShop\Core\Util\InternationalizedDomainNameConverter;
 
 /***
  * Class CustomerCore
@@ -445,16 +444,6 @@ class CustomerCore extends ObjectModel
         }
 
         return $this;
-    }
-
-    /**
-     * Convert the host part of the email from punycode to utf8 (e.g,. email@xn--e1aybc.xn--p1ai -> email@тест.рф)
-     *
-     * @return string
-     */
-    public function getEmailForDisplay(): string
-    {
-        return (new InternationalizedDomainNameConverter())->emailToUtf8($this->email);
     }
 
     /**

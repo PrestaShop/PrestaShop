@@ -44,6 +44,7 @@ use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderPreviewProductDetai
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderPreviewShippingDetails;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
 use PrestaShop\PrestaShop\Core\Localization\Locale\Repository as LocaleRepository;
+use PrestaShop\PrestaShop\Core\Util\InternationalizedDomainNameConverter;
 use State;
 use StockAvailable;
 use Validate;
@@ -64,15 +65,23 @@ final class GetOrderPreviewHandler implements GetOrderPreviewHandlerInterface
     private $locale;
 
     /**
+     * @var InternationalizedDomainNameConverter
+     */
+    private $idnConverter;
+
+    /**
      * @param LocaleRepository $localeRepository
      * @param string $locale
+     * @param InternationalizedDomainNameConverter $idnConverter
      */
     public function __construct(
         LocaleRepository $localeRepository,
-        string $locale
+        string $locale,
+        InternationalizedDomainNameConverter $idnConverter
     ) {
         $this->localeRepository = $localeRepository;
         $this->locale = $locale;
+        $this->idnConverter = $idnConverter;
     }
 
     /**
@@ -133,7 +142,7 @@ final class GetOrderPreviewHandler implements GetOrderPreviewHandlerInterface
             $address->postcode,
             $stateName,
             $country->name[$order->id_lang],
-            $customer->getEmailForDisplay(),
+            $this->idnConverter->emailToUtf8($customer->email),
             $address->phone
         );
     }

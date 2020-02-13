@@ -40,6 +40,7 @@ use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Cart\QueryHandler\GetCartForViewingHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartView;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
+use PrestaShop\PrestaShop\Core\Util\InternationalizedDomainNameConverter;
 use Product;
 use StockAvailable;
 use Validate;
@@ -60,13 +61,20 @@ final class GetCartForViewingHandler implements GetCartForViewingHandlerInterfac
     private $locale;
 
     /**
+     * @var InternationalizedDomainNameConverter
+     */
+    private $idnConverter;
+
+    /**
      * @param ImageManager $imageManager
      * @param Locale $locale
+     * @param InternationalizedDomainNameConverter $idnConverter
      */
-    public function __construct(ImageManager $imageManager, Locale $locale)
+    public function __construct(ImageManager $imageManager, Locale $locale, InternationalizedDomainNameConverter $idnConverter)
     {
         $this->imageManager = $imageManager;
         $this->locale = $locale;
+        $this->idnConverter = $idnConverter;
     }
 
     /**
@@ -156,7 +164,7 @@ final class GetCartForViewingHandler implements GetCartForViewingHandlerInterfac
             'first_name' => $customer->firstname,
             'last_name' => $customer->lastname,
             'gender' => $gender->name,
-            'email' => $customer->getEmailForDisplay(),
+            'email' => $this->idnConverter->emailToUtf8($customer->email),
             'registration_date' => (new DateTime($customer->date_add))->format($context->language->date_format_lite),
             'valid_orders_count' => $customerStats['nb_orders'],
             'total_spent_since_registration' => $this->locale->formatPrice(
