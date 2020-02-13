@@ -63,6 +63,7 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\ViewableCustomer;
 use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\ViewedProductInformation;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
+use PrestaShop\PrestaShop\Core\Util\InternationalizedDomainNameConverter;
 use Product;
 use Referrer;
 use Shop;
@@ -103,22 +104,30 @@ final class GetCustomerForViewingHandler implements GetCustomerForViewingHandler
     private $locale;
 
     /**
+     * @var InternationalizedDomainNameConverter
+     */
+    private $idnConverter;
+
+    /**
      * @param TranslatorInterface $translator
      * @param int $contextLangId
      * @param Link $link
      * @param Locale $locale
+     * @param InternationalizedDomainNameConverter $idnConverter
      */
     public function __construct(
         TranslatorInterface $translator,
         $contextLangId,
         Link $link,
-        Locale $locale
+        Locale $locale,
+        InternationalizedDomainNameConverter $idnConverter
     ) {
         $this->context = new LegacyContext();
         $this->contextLangId = $contextLangId;
         $this->translator = $translator;
         $this->link = $link;
         $this->locale = $locale;
+        $this->idnConverter = $idnConverter;
     }
 
     /**
@@ -202,7 +211,7 @@ final class GetCustomerForViewingHandler implements GetCustomerForViewingHandler
         return new PersonalInformation(
             $customer->firstname,
             $customer->lastname,
-            $customer->getEmailForDisplay(),
+            $this->idnConverter->emailToUtf8($customer->email),
             $customer->isGuest(),
             $socialTitle,
             $birthday,

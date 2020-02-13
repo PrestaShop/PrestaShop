@@ -87,6 +87,7 @@ services:
     arguments:
       - '@prestashop.adapter.image_manager'
       - "@prestashop.core.localization.locale.context_locale"
+      - '@prestashop.core.util.internationalized_domain_name_converter'
     tags:
       - name: tactician.handler
         command: 'PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartForViewing'

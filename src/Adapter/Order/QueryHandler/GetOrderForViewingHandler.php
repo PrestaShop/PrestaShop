@@ -79,6 +79,7 @@ use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
 use PrestaShop\PrestaShop\Core\Image\Parser\ImageTagSourceParserInterface;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\ComputingPrecision;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
+use PrestaShop\PrestaShop\Core\Util\InternationalizedDomainNameConverter;
 use Shop;
 use State;
 use StockAvailable;
@@ -126,12 +127,18 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
     private $context;
 
     /**
+     * @var InternationalizedDomainNameConverter
+     */
+    private $idnConverter;
+
+    /**
      * @param ImageTagSourceParserInterface $imageTagSourceParser
      * @param TranslatorInterface $translator
      * @param int $contextLanguageId
      * @param Locale $locale
      * @param Context $context
      * @param CustomerDataProvider $customerDataProvider
+     * @param InternationalizedDomainNameConverter $idnConverter
      */
     public function __construct(
         ImageTagSourceParserInterface $imageTagSourceParser,
@@ -139,7 +146,8 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
         int $contextLanguageId,
         Locale $locale,
         Context $context,
-        CustomerDataProvider $customerDataProvider
+        CustomerDataProvider $customerDataProvider,
+        InternationalizedDomainNameConverter $idnConverter
     ) {
         $this->imageTagSourceParser = $imageTagSourceParser;
         $this->translator = $translator;
@@ -149,6 +157,7 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
         $this->translator = $translator;
         $this->context = $context;
         $this->customerDataProvider = $customerDataProvider;
+        $this->idnConverter = $idnConverter;
     }
 
     /**
@@ -241,7 +250,7 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
             $customer->firstname,
             $customer->lastname,
             $genderName,
-            $customer->getEmailForDisplay(),
+            $this->idnConverter->emailToUtf8($customer->email),
             new DateTimeImmutable($customer->date_add),
             $totalSpentSinceRegistration !== null ? $this->locale->formatPrice($totalSpentSinceRegistration, $currency->iso_code) : '',
             $customerStats['nb_orders'],

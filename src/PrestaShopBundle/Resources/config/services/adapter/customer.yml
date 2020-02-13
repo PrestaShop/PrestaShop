@@ -9,6 +9,7 @@ services:
       - "@=service('prestashop.adapter.legacy.context').getContext().language.id"
       - "@=service('prestashop.adapter.legacy.context').getContext().link"
       - "@prestashop.core.localization.locale.context_locale"
+      - '@prestashop.core.util.internationalized_domain_name_converter'
     tags:
       - name: tactician.handler
         command: 'PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerForViewing'

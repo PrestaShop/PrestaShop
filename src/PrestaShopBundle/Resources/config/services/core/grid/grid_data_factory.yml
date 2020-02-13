@@ -18,6 +18,12 @@ services:
             - '@prestashop.core.grid.query.doctrine_query_parser'
             - 'email_logs'
 
+    prestashop.core.grid.data_factory.email_logs_decorator:
+      class: 'PrestaShop\PrestaShop\Core\Grid\Data\Factory\EmailLogGridDataFactoryDecorator'
+      arguments:
+        - '@prestashop.core.grid.data_factory.email_logs'
+        - '@prestashop.core.util.internationalized_domain_name_converter'
+
     prestashop.core.grid.data_factory.request_sql:
         class: '%prestashop.core.grid.data.factory.doctrine_grid_data_factory%'
         arguments:
@@ -85,19 +91,7 @@ services:
             - '@prestashop.core.grid.data_provider.customer'
             - "@prestashop.core.localization.locale.context_locale"
             - "@=service('prestashop.adapter.legacy.context').getContext().currency.iso_code"
-
-    prestashop.core.grid.data_provider.email_logs:
-      class: '%prestashop.core.grid.data.factory.doctrine_grid_data_factory%'
-      arguments:
-        - '@prestashop.core.grid.query_builder.email_logs'
-        - '@prestashop.core.hook.dispatcher'
-        - '@prestashop.core.grid.query.doctrine_query_parser'
-        - 'email_logs'
-
-    prestashop.core.grid.data_provider.email_logs_decorator:
-      class: 'PrestaShop\PrestaShop\Core\Grid\Data\Factory\EmailLogGridDataFactoryDecorator'
-      arguments:
-        - '@prestashop.core.grid.data_provider.email_logs'
+            - '@prestashop.core.util.internationalized_domain_name_converter'
 
     prestashop.core.grid.data.factory.language:
         class: '%prestashop.core.grid.data.factory.doctrine_grid_data_factory%'
