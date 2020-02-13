@@ -141,4 +141,12 @@ module.exports = class Home extends CommonPage {
   async getFooterLinksBlockTitle(position) {
     return this.getTextContent(this.wrapperTitle.replace('%POSITION', position));
   }
+
+  /**
+   * Get cart notifications number
+   * @returns {Promise<integer>}
+   */
+  async getCartNotificationsNumber() {
+    return this.getNumberFromText(this.cartProductsCount);
+  }
 };
