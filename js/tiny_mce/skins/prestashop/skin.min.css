@@ -107,19 +107,14 @@ i.mce-i-checkbox {
   font-style: normal;
   font-weight: normal;
   font-variant: normal;
-  font-size: @icon-size;
-  line-height: @icon-size;
   speak: none;
   vertical-align: text-top;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-
   display: inline-block;
   background: transparent center center;
   background-size: cover;
-  width: @icon-box;
-  height: @icon-box;
-  color: @btn-text;
+  color: #000000;
 }
 
 .mce-btn-small .mce-ico {
@@ -258,4 +253,4 @@ i.mce-i-checkbox {
 
 .mce-i-insert                { font-size: 14px; }
 .mce-i-selected              { visibility: hidden; }
-i.mce-i-backcolor            { text-shadow: none; background: @colorbtn-backcolor-bg; }
+i.mce-i-backcolor            { text-shadow: none; background: #000000 }
