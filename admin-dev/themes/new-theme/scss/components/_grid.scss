@@ -93,6 +93,9 @@ table .column-filters td:last-child .grid-reset-button {
             display: inline-block;
             width: 60px;
           }
+          .d-inline-block.md-checkbox ~ .d-inline-block.form-control {
+            width: calc(100% - 29px);
+          }
         }
       }
     }
