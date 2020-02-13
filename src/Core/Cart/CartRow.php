@@ -447,7 +447,7 @@ class CartRow
 
     /**
      * @param float $percent 0-100
-     * @param boolean $onUnitPrice;
+     * @param bool $onUnitPrice;
      *
      * @return AmountImmutable
      */
@@ -462,8 +462,7 @@ class CartRow
             $discountTaxIncluded = $this->initialUnitPrice->getTaxIncluded() * $percent / 100;
             $discountTaxExcluded = $this->initialUnitPrice->getTaxExcluded() * $percent / 100;
             $amount = new AmountImmutable($discountTaxIncluded, $discountTaxExcluded);
-        }
-        else{
+        } else{
             $discountTaxIncluded = $this->finalTotalPrice->getTaxIncluded() * $percent / 100;
             $discountTaxExcluded = $this->finalTotalPrice->getTaxExcluded() * $percent / 100;
             $amount = new AmountImmutable($discountTaxIncluded, $discountTaxExcluded);
