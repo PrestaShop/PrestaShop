@@ -128,7 +128,7 @@ class CartRuleCalculator
                     $product = $cartRow->getRowData();
                     if ((($cartRule->reduction_exclude_special && !$product['reduction_applies'])
                         || !$cartRule->reduction_exclude_special)) {
-                        $amount = $cartRow->applyPercentageDiscount($cartRule->reduction_percent);
+                        $amount = $cartRow->applyPercentageDiscount($cartRule->reduction_percent, false);
                         $cartRuleData->addDiscountApplied($amount);
                     }
                 }
@@ -159,13 +159,7 @@ class CartRuleCalculator
                     }
                 }
                 if ($cartRowCheapest !== null) {
-                    // apply only on one product of the cheapest row
-                    $discountTaxIncluded = $cartRowCheapest->getInitialUnitPrice()->getTaxIncluded()
-                        * $cartRule->reduction_percent / 100;
-                    $discountTaxExcluded = $cartRowCheapest->getInitialUnitPrice()->getTaxExcluded()
-                        * $cartRule->reduction_percent / 100;
-                    $amount = new AmountImmutable($discountTaxIncluded, $discountTaxExcluded);
-                    $cartRowCheapest->applyFlatDiscount($amount);
+                    $amount = $cartRowCheapest->applyPercentageDiscount($cartRule->reduction_percent);
                     $cartRuleData->addDiscountApplied($amount);
                 }
             }
