@@ -680,7 +680,7 @@ class CartPresenter implements PresenterInterface
     protected function getAmountVoucherReductionPercentage(Cart $cart, $products, $cartVoucher)
     {
         $amount = null;
-        $calculator = $cart->newCalculator($products, $cart->getCartRules(),null);
+        $calculator = $cart->newCalculator($products, $cart->getCartRules(), null);
         $cartRowCheapest = $calculator->getRowCheapest($cartVoucher);
         $cartRowCheapest->processCalculation($cart);
         $amount = $calculator->getAmountPercentageReduction($cartRowCheapest, $cartVoucher['obj']);

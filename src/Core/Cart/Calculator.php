@@ -335,7 +335,6 @@ class Calculator
      */
     public function getRowCheapest($cartVoucher)
     {
-
         $this->cartRuleCalculator->setCartRules($this->cartRules)
             ->setCartRows($this->cartRows)
             ->setCalculator($this);
