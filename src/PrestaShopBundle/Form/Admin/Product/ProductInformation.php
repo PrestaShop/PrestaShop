@@ -222,6 +222,7 @@ class ProductInformation extends CommonAbstractType
                 'allow_delete' => true,
             ])
             ->add('id_manufacturer', FormType\ChoiceType::class, [
+                'placeholder' => false,
                 'choices' => $this->manufacturers,
                 'required' => false,
                 'attr' => [
