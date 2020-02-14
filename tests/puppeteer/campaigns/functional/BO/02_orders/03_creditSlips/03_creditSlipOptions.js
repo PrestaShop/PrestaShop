@@ -12,6 +12,10 @@ const OrdersPage = require('@pages/BO/orders/index');
 const ViewOrderPage = require('@pages/BO/orders/view');
 // Importing data
 const {Statuses} = require('@data/demo/orders');
+// Test context imports
+const testContext = require('@utils/testContext');
+
+const baseContext = 'functional_BO_orders_deliverSlips_creditSlips_creditSlipOptions';
 
 let browser;
 let page;
@@ -53,6 +57,7 @@ describe('Edit credit slip prefix and check the generated file name', async () =
 
   describe(`Change the credit slip prefix to '${prefixToEdit}'`, async () => {
     it('should go to Credit slips page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToCreditSlipsPage', baseContext);
       await this.pageObjects.boBasePage.goToSubMenu(
         this.pageObjects.boBasePage.ordersParentLink,
         this.pageObjects.boBasePage.creditSlipsLink,
@@ -63,6 +68,7 @@ describe('Edit credit slip prefix and check the generated file name', async () =
     });
 
     it(`should change the credit slip prefix to ${prefixToEdit}`, async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'changePrefix', baseContext);
       await this.pageObjects.creditSlipsPage.changePrefix(prefixToEdit);
       const textMessage = await this.pageObjects.creditSlipsPage.saveCreditSlipOptions();
       await expect(textMessage).to.contains(this.pageObjects.creditSlipsPage.successfulUpdateMessage);
@@ -71,6 +77,7 @@ describe('Edit credit slip prefix and check the generated file name', async () =
 
   describe(`Change the order status to '${Statuses.shipped.status}' and check the credit slip file name`, async () => {
     it('should go to the orders page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage', baseContext);
       await this.pageObjects.boBasePage.goToSubMenu(
         this.pageObjects.boBasePage.ordersParentLink,
         this.pageObjects.boBasePage.ordersLink,
@@ -80,17 +87,20 @@ describe('Edit credit slip prefix and check the generated file name', async () =
     });
 
     it('should go to the first order page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToFirstOrderPage', baseContext);
       await this.pageObjects.ordersPage.goToOrder(1);
       const pageTitle = await this.pageObjects.viewOrderPage.getPageTitle();
       await expect(pageTitle).to.contains(this.pageObjects.viewOrderPage.pageTitle);
     });
 
     it(`should change the order status to '${Statuses.shipped.status}' and check it`, async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'updateOrderStatus', baseContext);
       const result = await this.pageObjects.viewOrderPage.modifyOrderStatus(Statuses.shipped.status);
       await expect(result).to.be.true;
     });
 
     it(`should check that the credit slip file name contain the prefix '${prefixToEdit}'`, async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkUpdatedPrefixOnFileName', baseContext);
       fileName = await this.pageObjects.viewOrderPage.getFileName(4);
       expect(fileName).to.contains(prefixToEdit);
     });
@@ -98,6 +108,7 @@ describe('Edit credit slip prefix and check the generated file name', async () =
 
   describe(`Back to the default credit slip prefix value '${prefixToEdit}'`, async () => {
     it('should go to Credit slips page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToCreditSlipsPageToResetPrefix', baseContext);
       await this.pageObjects.boBasePage.goToSubMenu(
         this.pageObjects.boBasePage.ordersParentLink,
         this.pageObjects.boBasePage.creditSlipsLink,
@@ -108,6 +119,7 @@ describe('Edit credit slip prefix and check the generated file name', async () =
     });
 
     it('should delete the credit slip prefix', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'deletePrefix', baseContext);
       await this.pageObjects.creditSlipsPage.changePrefix(' ');
       const textMessage = await this.pageObjects.creditSlipsPage.saveCreditSlipOptions();
       await expect(textMessage).to.contains(this.pageObjects.creditSlipsPage.successfulUpdateMessage);
@@ -116,6 +128,7 @@ describe('Edit credit slip prefix and check the generated file name', async () =
 
   describe('Check that the edited prefix does not exist in the credit slip file name', async () => {
     it('should go to the orders page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPageToCheckDeletedPrefix', baseContext);
       await this.pageObjects.boBasePage.goToSubMenu(
         this.pageObjects.boBasePage.ordersParentLink,
         this.pageObjects.boBasePage.ordersLink,
@@ -125,12 +138,14 @@ describe('Edit credit slip prefix and check the generated file name', async () =
     });
 
     it('should go to the first order page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToFirstOrderToCheckDeletedPrefix', baseContext);
       await this.pageObjects.ordersPage.goToOrder(1);
       const pageTitle = await this.pageObjects.viewOrderPage.getPageTitle();
       await expect(pageTitle).to.contains(this.pageObjects.viewOrderPage.pageTitle);
     });
 
     it('should check the credit slip file name', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkDeletedPrefix', baseContext);
       fileName = await this.pageObjects.viewOrderPage.getFileName(4);
       expect(fileName).to.not.contains(prefixToEdit);
     });
