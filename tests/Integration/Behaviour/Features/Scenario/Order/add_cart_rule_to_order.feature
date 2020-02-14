@@ -20,11 +20,11 @@ Feature: Add discounts to order from Back Office (BO)
       | payment module name | dummy_payment              |
       | status              | Awaiting bank wire payment |
     And Order "bo_order1" has following prices:
-      | products      | $22.00   |
+      | products      | $23.80   |
       | discounts     | $0.00    |
       | shipping      | $7.00    |
       | taxes         | $0.00    |
-      | total         | $29.00   |
+      | total         | $30.80   |
 
   @add-discounts-to-order
   Scenario: Add amount type discount to order which has no invoices
@@ -34,11 +34,11 @@ Feature: Add discounts to order from Back Office (BO)
       | type      | amount       |
       | value     | 5.50         |
     Then Order "bo_order1" should have following prices:
-      | products      | $22.00    |
+      | products      | $23.80    |
       | discounts     | $5.50     |
       | shipping      | $7.00     |
       | taxes         | $0.00     |
-      | total         | $23.50    |
+      | total         | $25.30    |
 
   @add-discounts-to-order
   Scenario: Add percent type discount to order which has no invoices
@@ -48,11 +48,11 @@ Feature: Add discounts to order from Back Office (BO)
       | type      | percent              |
       | value     | 50                   |
     Then Order "bo_order1" should have following prices:
-      | products      | $22.00    |
-      | discounts     | $14.50    |
+      | products      | $23.80    |
+      | discounts     | $15.40    |
       | shipping      | $7.00     |
       | taxes         | $0.00     |
-      | total         | $14.50    |
+      | total         | $15.40    |
 
   @add-discounts-to-order
   Scenario: Add amount type discount to order and update single invoice
@@ -63,19 +63,19 @@ Feature: Add discounts to order from Back Office (BO)
       | type      | amount       |
       | value     | 5.50         |
     Then Order "bo_order1" should have following prices:
-      | products      | $22.00    |
+      | products      | $23.80    |
       | discounts     | $5.50     |
       | shipping      | $7.00     |
       | taxes         | $0.00     |
-      | total         | $23.50    |
+      | total         | $25.30    |
     And invoice for order "bo_order1" should have following prices:
-      | products                  | 22.00     |
+      | products                  | 23.80     |
       | discounts tax excluded    | 5.50      |
       | discounts tax included    | 5.50      |
-      | shipping                  | 7.00      |
-      | taxes                     | 0.00      |
-      | total paid tex excluded   | 16.50     |
-      | total paid tex included   | 16.50     |
+      | shipping tax excluded     | 7.00      |
+      | shipping tax included     | 7.00      |
+      | total paid tax excluded   | 25.30     |
+      | total paid tax included   | 25.30     |
 
   @add-discounts-to-order
   Scenario: Add percent type discount to order and update single invoice
@@ -86,19 +86,19 @@ Feature: Add discounts to order from Back Office (BO)
       | type      | percent              |
       | value     | 50                   |
     Then Order "bo_order1" should have following prices:
-      | products      | $22.00    |
-      | discounts     | $14.50    |
+      | products      | $23.80    |
+      | discounts     | $15.40    |
       | shipping      | $7.00     |
       | taxes         | $0.00     |
-      | total         | $14.50    |
+      | total         | $15.40    |
     And invoice for order "bo_order1" should have following prices:
-      | products                  | 22.00     |
-      | discounts tax excluded    | 14.50     |
-      | discounts tax included    | 14.50     |
-      | shipping                  | 7.00      |
-      | taxes                     | 0.00      |
-      | total paid tex excluded   | 16.50     |
-      | total paid tex included   | 14.50     |
+      | products                  | 23.80     |
+      | discounts tax excluded    | 15.40     |
+      | discounts tax included    | 15.40     |
+      | shipping tax excluded     | 7.00      |
+      | shipping tax included     | 7.00      |
+      | total paid tax excluded   | 15.40     |
+      | total paid tax included   | 15.40     |
 
   @add-discounts-to-order
   Scenario: Add percent type discount to order and update all invoices
@@ -110,26 +110,26 @@ Feature: Add discounts to order from Back Office (BO)
       | price         | 11                      |
       | free_shipping | true                    |
     Then Order "bo_order1" should have following prices:
-      | products      | $33.00    |
+      | products      | $34.80    |
       # discount of $7 appears due to single product free shipping (the shipping price is $7)
       # this discount does not reflect in invoice discounts.
       | discounts     | $7.00     |
       | shipping      | $14.00    |
       | taxes         | $0.00     |
-      | total         | $40.00    |
+      | total         | $41.80    |
     When I add discount to order "bo_order1" with following details:
       | name      | discount fifty-fifty |
       | type      | percent              |
       | value     | 50                   |
     And all invoices for order "bo_order1" should have following discounts:
-      | discounts tax excluded    | 20.00     |
-      | discounts tax included    | 20.00     |
+      | discounts tax excluded    | 20.90     |
+      | discounts tax included    | 20.90     |
     Then Order "bo_order1" should have following prices:
-      | products      | $33.00    |
-      | discounts     | $27.00    |
+      | products      | $34.80    |
+      | discounts     | $27.90    |
       | shipping      | $14.00    |
       | taxes         | $0.00     |
-      | total         | $20.00    |
+      | total         | $20.90    |
 
   @add-discounts-to-order
   Scenario: Add amount type discount to order and update all invoices
@@ -141,11 +141,11 @@ Feature: Add discounts to order from Back Office (BO)
       | price         | 11                      |
       | free_shipping | true                    |
     Then Order "bo_order1" should have following prices:
-      | products      | $33.00    |
+      | products      | $34.80    |
       | discounts     | $7.00     |
       | shipping      | $14.00    |
       | taxes         | $0.00     |
-      | total         | $40.00    |
+      | total         | $41.80    |
     When I add discount to order "bo_order1" with following details:
       | name      | discount five |
       | type      | amount        |
@@ -154,11 +154,11 @@ Feature: Add discounts to order from Back Office (BO)
       | discounts tax excluded    | 5.00     |
       | discounts tax included    | 5.00     |
     Then Order "bo_order1" should have following prices:
-      | products      | $33.00    |
+      | products      | $34.80    |
       | discounts     | $12.00    |
       | shipping      | $14.00    |
       | taxes         | $0.00     |
-      | total         | $35.00    |
+      | total         | $36.80    |
 
   @add-discounts-to-order
   Scenario: Add amount type discount twice to order and update all invoices
@@ -170,11 +170,11 @@ Feature: Add discounts to order from Back Office (BO)
       | price         | 11                      |
       | free_shipping | true                    |
     Then Order "bo_order1" should have following prices:
-      | products      | $33.00    |
+      | products      | $34.80    |
       | discounts     | $7.00     |
       | shipping      | $14.00    |
       | taxes         | $0.00     |
-      | total         | $40.00    |
+      | total         | $41.80    |
     When I add discount to order "bo_order1" with following details:
       | name      | discount five |
       | type      | amount        |
@@ -183,11 +183,11 @@ Feature: Add discounts to order from Back Office (BO)
       | discounts tax excluded    | 5.00     |
       | discounts tax included    | 5.00     |
     Then Order "bo_order1" should have following prices:
-      | products      | $33.00    |
+      | products      | $34.80    |
       | discounts     | $12.00    |
       | shipping      | $14.00    |
       | taxes         | $0.00     |
-      | total         | $35.00    |
+      | total         | $36.80    |
     When I add discount to order "bo_order1" with following details:
       | name      | discount five |
       | type      | amount        |
@@ -196,11 +196,11 @@ Feature: Add discounts to order from Back Office (BO)
       | discounts tax excluded    | 10.00     |
       | discounts tax included    | 10.00     |
     Then Order "bo_order1" should have following prices:
-      | products      | $33.00    |
+      | products      | $34.80    |
       | discounts     | $17.00    |
       | shipping      | $14.00    |
       | taxes         | $0.00     |
-      | total         | $30.00    |
+      | total         | $31.80    |
 
   @add-discounts-to-order
   Scenario: Add percent type discount to order twice and update all invoices
@@ -212,37 +212,37 @@ Feature: Add discounts to order from Back Office (BO)
       | price         | 11                      |
       | free_shipping | true                    |
     Then Order "bo_order1" should have following prices:
-      | products      | $33.00    |
+      | products      | $34.80    |
       | discounts     | $7.00     |
       | shipping      | $14.00    |
       | taxes         | $0.00     |
-      | total         | $40.00    |
+      | total         | $41.80    |
     When I add discount to order "bo_order1" with following details:
       | name      | discount fifty-fifty |
       | type      | percent              |
       | value     | 50                   |
     And all invoices for order "bo_order1" should have following discounts:
-      | discounts tax excluded    | 20.00     |
-      | discounts tax included    | 20.00     |
+      | discounts tax excluded    | 20.90     |
+      | discounts tax included    | 20.90     |
     Then Order "bo_order1" should have following prices:
-      | products      | $33.00    |
-      | discounts     | $27.00    |
+      | products      | $34.80    |
+      | discounts     | $27.90    |
       | shipping      | $14.00    |
       | taxes         | $0.00     |
-      | total         | $20.00    |
+      | total         | $20.90    |
     When I add discount to order "bo_order1" with following details:
       | name      | discount fifty-fifty |
       | type      | percent              |
       | value     | 50                   |
     And all invoices for order "bo_order1" should have following discounts:
-      | discounts tax excluded    | 30.00     |
-      | discounts tax included    | 30.00     |
+      | discounts tax excluded    | 31.35     |
+      | discounts tax included    | 31.35     |
     Then Order "bo_order1" should have following prices:
-      | products      | $33.00    |
-      | discounts     | $37.00    |
+      | products      | $34.80    |
+      | discounts     | $38.35    |
       | shipping      | $14.00    |
       | taxes         | $0.00     |
-      | total         | $10.00    |
+      | total         | $10.45    |
 
   @add-discounts-to-order
   Scenario: Add amount type discount and update all invoices to order in which products were added twice
@@ -254,22 +254,22 @@ Feature: Add discounts to order from Back Office (BO)
       | price         | 11                      |
       | free_shipping | true                    |
     Then Order "bo_order1" should have following prices:
-      | products      | $33.00    |
+      | products      | $34.80    |
       | discounts     | $7.00     |
       | shipping      | $14.00    |
       | taxes         | $0.00     |
-      | total         | $40.00    |
+      | total         | $41.80    |
     When I add products to order "bo_order1" with new invoice and the following products details:
       | name          | Mug Today is a good day |
       | amount        | 1                       |
       | price         | 11                      |
       | free_shipping | true                    |
     Then Order "bo_order1" should have following prices:
-      | products      | $44.00    |
+      | products      | $45.80    |
       | discounts     | $14.00    |
       | shipping      | $21.00    |
       | taxes         | $0.00     |
-      | total         | $51.00    |
+      | total         | $52.80    |
     When I add discount to order "bo_order1" with following details:
       | name      | discount five |
       | type      | amount        |
@@ -278,11 +278,11 @@ Feature: Add discounts to order from Back Office (BO)
       | discounts tax excluded    | 5.00     |
       | discounts tax included    | 5.00     |
     Then Order "bo_order1" should have following prices:
-      | products      | $44.00    |
+      | products      | $45.80    |
       | discounts     | $19.00    |
       | shipping      | $21.00    |
       | taxes         | $0.00     |
-      | total         | $46.00    |
+      | total         | $47.80    |
 
   @add-discounts-to-order
   Scenario: Add percent type discount and update all invoices to order in which products were added twice
@@ -294,32 +294,32 @@ Feature: Add discounts to order from Back Office (BO)
       | price         | 11                      |
       | free_shipping | true                    |
     Then Order "bo_order1" should have following prices:
-      | products      | $33.00    |
+      | products      | $34.80    |
       | discounts     | $7.00     |
       | shipping      | $14.00    |
       | taxes         | $0.00     |
-      | total         | $40.00    |
+      | total         | $41.80    |
     When I add products to order "bo_order1" with new invoice and the following products details:
       | name          | Mug Today is a good day |
       | amount        | 1                       |
       | price         | 11                      |
       | free_shipping | true                    |
     Then Order "bo_order1" should have following prices:
-      | products      | $44.00    |
-      | discounts     | $14.00     |
+      | products      | $45.80    |
+      | discounts     | $14.00    |
       | shipping      | $21.00    |
       | taxes         | $0.00     |
-      | total         | $51.00    |
+      | total         | $52.80    |
     When I add discount to order "bo_order1" with following details:
       | name      | discount fifty-fifty |
       | type      | percent              |
       | value     | 50                   |
     And all invoices for order "bo_order1" should have following discounts:
-      | discounts tax excluded    | 25.50     |
-      | discounts tax included    | 25.50     |
+      | discounts tax excluded    | 26.40     |
+      | discounts tax included    | 26.40     |
     Then Order "bo_order1" should have following prices:
-      | products      | $44.00    |
-      | discounts     | $39.50    |
+      | products      | $45.80    |
+      | discounts     | $40.40    |
       | shipping      | $21.00    |
       | taxes         | $0.00     |
-      | total         | $25.50    |
+      | total         | $26.40    |
