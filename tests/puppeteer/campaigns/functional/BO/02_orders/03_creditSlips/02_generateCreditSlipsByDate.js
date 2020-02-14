@@ -24,7 +24,7 @@ const {Statuses} = require('@data/demo/orders');
 // Test context imports
 const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_BO_orders_deliverSlips_creditSlips_generateCreditSlipByDate';
+const baseContext = 'functional_BO_orders_creditSlips_generateCreditSlipByDate';
 
 let browser;
 let page;
