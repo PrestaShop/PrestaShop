@@ -27,12 +27,15 @@
 namespace PrestaShop\PrestaShop\Adapter\Order\CommandHandler;
 
 use Currency;
+use Order;
 use OrderCarrier;
 use OrderDetail;
 use PrestaShop\PrestaShop\Adapter\Order\AbstractOrderHandler;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\ChangeOrderCurrencyCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler\ChangeOrderCurrencyHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
+use PrestaShopCollection;
+use PrestaShopException;
 use Tools;
 use Validate;
 
@@ -52,17 +55,62 @@ final class ChangeOrderCurrencyHandler extends AbstractOrderHandler implements C
             throw new OrderException('You cannot change the currency.');
         }
 
-        $oldCurrency = new Currency($order->id_currency);
-        $currency = new Currency($command->getNewCurrencyId()->getValue());
+        try {
+            $oldCurrency = new Currency($order->id_currency);
+            $newCurrency = new Currency($command->getNewCurrencyId()->getValue());
 
-        if (!Validate::isLoadedObject($currency)) {
-            throw new OrderException('Can\'t load Currency object');
+            if (!Validate::isLoadedObject($newCurrency)) {
+                throw new OrderException('Can\'t load Currency object');
+            }
+
+            $this->updateOrderDetail($order, $oldCurrency, $newCurrency);
+            $this->updateOrderCarrier((int) $order->getIdOrderCarrier(), $oldCurrency, $newCurrency);
+            $this->updateInvoices($order->getInvoicesCollection(), $oldCurrency, $newCurrency);
+            $this->updateOrder($order, $oldCurrency, $newCurrency);
+        } catch (PrestaShopException $e) {
+            throw new OrderException(
+                sprintf(
+                    'Error occurred when trying to change currency for order #%s',
+                    $order->id
+                ),
+                0,
+                $e
+            );
         }
+    }
 
-        // Update order detail amount
-        foreach ($order->getOrderDetailList() as $orderDetail) {
-            $order_detail = new OrderDetail($orderDetail['id_order_detail']);
-            // @todo: use private method to handle this
+    /**
+     * @param int $orderCarrierId
+     * @param Currency $oldCurrency
+     * @param Currency $newCurrency
+     */
+    private function updateOrderCarrier(int $orderCarrierId, Currency $oldCurrency, Currency $newCurrency): void
+    {
+        if ($orderCarrierId) {
+            $order_carrier = new OrderCarrier($orderCarrierId);
+            $order_carrier->shipping_cost_tax_excl = (float) Tools::convertPriceFull(
+                $order_carrier->shipping_cost_tax_excl,
+                $oldCurrency,
+                $newCurrency
+            );
+            $order_carrier->shipping_cost_tax_incl = (float) Tools::convertPriceFull(
+                $order_carrier->shipping_cost_tax_incl,
+                $oldCurrency,
+                $newCurrency
+            );
+            $order_carrier->update();
+        }
+    }
+
+    /**
+     * @param Order $order
+     * @param Currency $oldCurrency
+     * @param Currency $newCurrency
+     */
+    private function updateOrderDetail(Order $order, Currency $oldCurrency, Currency $newCurrency): void
+    {
+        foreach ($order->getOrderDetailList() as $orderDetailItem) {
+            $orderDetail = new OrderDetail($orderDetailItem['id_order_detail']);
             $fields = [
                 'ecotax',
                 'product_price',
@@ -82,33 +130,64 @@ final class ChangeOrderCurrencyHandler extends AbstractOrderHandler implements C
             ];
 
             foreach ($fields as $field) {
-                $order_detail->{$field} = Tools::convertPriceFull($order_detail->{$field}, $oldCurrency, $currency);
+                $orderDetail->{$field} = Tools::convertPriceFull($orderDetail->{$field}, $oldCurrency, $newCurrency);
             }
 
-            $order_detail->update();
-            $order_detail->updateTaxAmount($order);
+            $orderDetail->update();
+            $orderDetail->updateTaxAmount($order);
+        }
+    }
+
+    /**
+     * @param PrestaShopCollection $invoices
+     * @param Currency $oldCurrency
+     * @param Currency $newCurrency
+     */
+    private function updateInvoices(PrestaShopCollection $invoices, Currency $oldCurrency, Currency $newCurrency): void
+    {
+        $fields = $this->getSharedAmountFields();
+
+        if ($invoices->count()) {
+            foreach ($invoices as $invoice) {
+                foreach ($fields as $field) {
+                    if (isset($invoice->$field)) {
+                        $invoice->{$field} = Tools::convertPriceFull($invoice->{$field}, $oldCurrency, $newCurrency);
+                    }
+                }
+
+                $invoice->save();
+            }
+        }
+    }
+
+    /**
+     * @param Order $order
+     * @param Currency $oldCurrency
+     * @param Currency $newCurrency
+     */
+    private function updateOrder(Order $order, Currency $oldCurrency, Currency $newCurrency): void
+    {
+        $fields = $this->getSharedAmountFields();
+
+        foreach ($fields as $field) {
+            if (isset($order->$field)) {
+                $order->{$field} = Tools::convertPriceFull($order->{$field}, $oldCurrency, $newCurrency);
+            }
         }
 
-        $id_order_carrier = (int) $order->getIdOrderCarrier();
+        $order->id_currency = $newCurrency->id;
+        $order->conversion_rate = (float) $newCurrency->conversion_rate;
+        $order->update();
+    }
 
-        if ($id_order_carrier) {
-            $order_carrier = new OrderCarrier((int) $order->getIdOrderCarrier());
-            $order_carrier->shipping_cost_tax_excl = (float) Tools::convertPriceFull(
-                $order_carrier->shipping_cost_tax_excl,
-                $oldCurrency,
-                $currency
-            );
-            $order_carrier->shipping_cost_tax_incl = (float) Tools::convertPriceFull(
-                $order_carrier->shipping_cost_tax_incl,
-                $oldCurrency,
-                $currency
-            );
-            $order_carrier->update();
-        }
-
-        // Update order && order_invoice amount
-        // @todo: use private method to handle this
-        $fields = [
+    /**
+     * Provides fields for Order and OrderInvoice amounts update
+     *
+     * @return array
+     */
+    private function getSharedAmountFields(): array
+    {
+        return [
             'total_discounts',
             'total_discounts_tax_incl',
             'total_discounts_tax_excl',
@@ -127,30 +206,5 @@ final class ChangeOrderCurrencyHandler extends AbstractOrderHandler implements C
             'total_wrapping_tax_incl',
             'total_wrapping_tax_excl',
         ];
-
-        $invoices = $order->getInvoicesCollection();
-
-        if ($invoices) {
-            foreach ($invoices as $invoice) {
-                foreach ($fields as $field) {
-                    if (isset($invoice->$field)) {
-                        $invoice->{$field} = Tools::convertPriceFull($invoice->{$field}, $oldCurrency, $currency);
-                    }
-                }
-                $invoice->save();
-            }
-        }
-
-        foreach ($fields as $field) {
-            if (isset($order->$field)) {
-                $order->{$field} = Tools::convertPriceFull($order->{$field}, $oldCurrency, $currency);
-            }
-        }
-
-        // Update currency in order
-        $order->id_currency = $currency->id;
-        // Update exchange rate
-        $order->conversion_rate = (float) $currency->conversion_rate;
-        $order->update();
     }
 }
