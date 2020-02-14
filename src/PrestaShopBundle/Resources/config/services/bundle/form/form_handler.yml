@@ -230,13 +230,12 @@ services:
             - 'EmailConfiguration'
 
     prestashop.admin.request_sql_settings.form_handler:
-        class: 'PrestaShop\PrestaShop\Core\Form\FormHandler'
+        class: 'PrestaShop\PrestaShop\Core\Form\Handler'
         arguments:
-            - '@=service("form.factory").createBuilder()'
+            - '@form.factory'
             - '@prestashop.core.hook.dispatcher'
             - '@prestashop.admin.request_sql_settings.form_data_provider'
-            -
-              'settings': 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\RequestSql\SqlRequestSettingsType'
+            - 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\RequestSql\SqlRequestSettingsType'
             - 'RequestSql'
 
     prestashop.admin.backup.form_handler:
