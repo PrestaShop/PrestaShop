@@ -250,13 +250,12 @@ services:
             - 'Backup'
 
     prestashop.adapter.webservice.form_handler:
-        class: 'PrestaShop\PrestaShop\Core\Form\FormHandler'
+        class: 'PrestaShop\PrestaShop\Core\Form\Handler'
         arguments:
-            - '@=service("form.factory").createBuilder()'
+            - '@form.factory'
             - '@prestashop.core.hook.dispatcher'
             - '@prestashop.admin.webservice.form_data_provider'
-            -
-              'webservice_configuration': 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Webservice\WebserviceConfigurationType'
+            - 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Webservice\WebserviceConfigurationType'
             - 'WebservicePage'
 
     prestashop.admin.translations_settings.modify_translations.form_handler:
