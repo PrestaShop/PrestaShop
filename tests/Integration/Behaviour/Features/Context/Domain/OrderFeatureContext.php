@@ -39,8 +39,10 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Command\AddOrderFromBackOfficeComman
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\BulkChangeOrderStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\DuplicateOrderCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\UpdateOrderStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Invoice\Command\GenerateInvoiceCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\AddProductToOrderCommand;
+use PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\DeleteProductFromOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderDiscountForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderForViewing;
@@ -257,46 +259,26 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @deprecated
+     * @When I delete product :productName from order :orderReference
      *
-     * @param TableNode $table
-     *
-     * @return array
-     *
-     * @throws RuntimeException
+     * @param string $productName
+     * @param string $orderReference
      */
-    private function extractFirstRowFromProperties(TableNode $table): array
+    public function deleteProductFromOrder(string $productName, string $orderReference)
     {
-        $hash = $table->getHash();
-        if (count($hash) != 1) {
-            throw new RuntimeException('Properties are invalid');
+        $orderId = SharedStorage::getStorage()->get($orderReference);
+        $productId = $this->getProductIdByName($productName);
+
+        $orderProductForViewing = $this->getOrderProductForViewing($orderId, $productId);
+
+        try {
+            $this->getCommandBus()->handle(new DeleteProductFromOrderCommand(
+                $orderId,
+                $orderProductForViewing->getOrderDetailId()
+            ));
+        } catch (OrderException $e) {
+            $this->lastException = $e;
         }
-        /** @var array $data */
-        $data = $hash[0];
-
-        return $data;
-    }
-
-    /**
-     * @param array $testCaseData
-     *
-     * @return array
-     */
-    private function mapAddOrderFromBackOfficeData(array $testCaseData)
-    {
-        $data = [];
-        $cartId = SharedStorage::getStorage()->get($testCaseData['cart']);
-        $data['cartId'] = $cartId;
-        $data['employeeId'] = Context::getContext()->employee->id;
-        $data['orderMessage'] = $testCaseData['message'];
-        $data['paymentModuleName'] = $testCaseData['payment module name'];
-
-        /** @var OrderStateByIdChoiceProvider $orderStateChoiceProvider */
-        $orderStateChoiceProvider = $this->getContainer()->get('prestashop.core.form.choice_provider.order_state_by_id');
-        $availableOrderStates = $orderStateChoiceProvider->getChoices();
-        $data['orderStateId'] = (int) $availableOrderStates[$testCaseData['status']];
-
-        return $data;
     }
 
     /**
@@ -528,6 +510,86 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
             throw new RuntimeException(sprintf('Invalid difference for product %s expected %s, got %s instead', $productName, $expectedDifference, $nbProduct - $initialQuantity));
         }
         $this->productStock[$productName] = $expectedQuantity;
+    }
+
+    /**
+     * @Then I should get an error :errorMessage
+     *
+     * @param string $expectedMessage
+     */
+    public function assertLastErrorMessage(string $expectedMessage)
+    {
+        Assert::assertNotNull($this->lastException, 'Expected exception, but none was thrown');
+        Assert::assertEquals($expectedMessage, $this->lastException->getMessage());
+    }
+
+
+    /**
+     * @param int $orderId
+     * @param int $productId
+     *
+     * @return OrderProductForViewing
+     */
+    private function getOrderProductForViewing(int $orderId, int $productId): OrderProductForViewing
+    {
+        /** @var OrderForViewing $orderForViewing */
+        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
+
+        /** @var OrderProductForViewing $productForViewing */
+        foreach ($orderForViewing->getProducts()->getProducts() as $productForViewing) {
+            if ($productForViewing->getId() === $productId) {
+                return $productForViewing;
+            }
+        }
+
+        throw new RuntimeException(sprintf(
+            'Product #%s for viewing not found for order #%s',
+            $productId,
+            $orderId
+        ));
+    }
+
+    /**
+     * @deprecated
+     *
+     * @param TableNode $table
+     *
+     * @return array
+     *
+     * @throws RuntimeException
+     */
+    private function extractFirstRowFromProperties(TableNode $table): array
+    {
+        $hash = $table->getHash();
+        if (count($hash) != 1) {
+            throw new RuntimeException('Properties are invalid');
+        }
+        /** @var array $data */
+        $data = $hash[0];
+
+        return $data;
+    }
+
+    /**
+     * @param array $testCaseData
+     *
+     * @return array
+     */
+    private function mapAddOrderFromBackOfficeData(array $testCaseData)
+    {
+        $data = [];
+        $cartId = SharedStorage::getStorage()->get($testCaseData['cart']);
+        $data['cartId'] = $cartId;
+        $data['employeeId'] = Context::getContext()->employee->id;
+        $data['orderMessage'] = $testCaseData['message'];
+        $data['paymentModuleName'] = $testCaseData['payment module name'];
+
+        /** @var OrderStateByIdChoiceProvider $orderStateChoiceProvider */
+        $orderStateChoiceProvider = $this->getContainer()->get('prestashop.core.form.choice_provider.order_state_by_id');
+        $availableOrderStates = $orderStateChoiceProvider->getChoices();
+        $data['orderStateId'] = (int) $availableOrderStates[$testCaseData['status']];
+
+        return $data;
     }
 
     /**
