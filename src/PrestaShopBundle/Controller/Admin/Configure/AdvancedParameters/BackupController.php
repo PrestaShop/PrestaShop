@@ -293,7 +293,7 @@ class BackupController extends FrameworkBundleAdminController
      *
      * @return FormHandlerInterface
      */
-    protected function getBackupFormHandler()
+    protected function getBackupFormHandler(): FormHandlerInterface
     {
         return $this->get('prestashop.admin.backup.form_handler');
     }
