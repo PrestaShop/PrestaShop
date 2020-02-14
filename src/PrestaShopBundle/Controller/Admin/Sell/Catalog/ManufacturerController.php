@@ -583,7 +583,7 @@ class ManufacturerController extends FrameworkBundleAdminController
         }
 
         try {
-            /** @var EditableManufacturerAddress $address */
+            /** @var EditableManufacturerAddress $editableAddress */
             $editableAddress = $this->getQueryBus()->handle(new GetManufacturerAddressForEditing($addressId));
             $addressForm = $addressFormBuilder->getFormFor($addressId, $formData);
             $addressForm->handleRequest($request);
@@ -595,9 +595,6 @@ class ManufacturerController extends FrameworkBundleAdminController
 
                 return $this->redirectToRoute('admin_manufacturers_index');
             }
-
-            /** @var EditableManufacturerAddress $editableAddress */
-            $editableAddress = $this->getQueryBus()->handle(new GetManufacturerAddressForEditing($addressId));
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
 
