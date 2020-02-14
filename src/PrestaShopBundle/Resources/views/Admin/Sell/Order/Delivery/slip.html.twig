@@ -78,22 +78,22 @@
                 <div class="form-group row">
                   {{ ps.label_with_help(('Delivery prefix'|trans), ('Prefix used for delivery slips.'|trans({}, 'Admin.Orderscustomers.Help'))) }}
                   <div class="col-sm">
-                    {{ form_errors(optionsForm.options.prefix) }}
-                    {{ form_widget(optionsForm.options.prefix) }}
+                    {{ form_errors(optionsForm.prefix) }}
+                    {{ form_widget(optionsForm.prefix) }}
                   </div>
                 </div>
                 <div class="form-group row">
                   {{ ps.label_with_help(('Delivery Number'|trans), ('The next delivery slip will begin with this number and then increase with each additional slip.'|trans({}, 'Admin.Orderscustomers.Help'))) }}
                   <div class="col-sm">
-                    {{ form_errors(optionsForm.options.number) }}
-                    {{ form_widget(optionsForm.options.number) }}
+                    {{ form_errors(optionsForm.number) }}
+                    {{ form_widget(optionsForm.number) }}
                   </div>
                 </div>
                 <div class="form-group row">
                   {{ ps.label_with_help(('Enable product image'|trans), ('Adds an image before product name on Delivery-slip'|trans({}, 'Admin.Orderscustomers.Help'))) }}
                   <div class="col-sm">
-                    {{ form_errors(optionsForm.options.enable_product_image) }}
-                    {{ form_widget(optionsForm.options.enable_product_image) }}
+                    {{ form_errors(optionsForm.enable_product_image) }}
+                    {{ form_widget(optionsForm.enable_product_image) }}
                   </div>
                 </div>
                 {{ form_rest(optionsForm) }}
