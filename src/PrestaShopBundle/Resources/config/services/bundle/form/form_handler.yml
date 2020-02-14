@@ -138,13 +138,12 @@ services:
             - 'GeneralPage'
 
     prestashop.adapter.logs.form_handler:
-        class: 'PrestaShop\PrestaShop\Core\Form\FormHandler'
+        class: 'PrestaShop\PrestaShop\Core\Form\Handler'
         arguments:
-            - '@=service("form.factory").createBuilder()'
+            - '@form.factory'
             - '@prestashop.core.hook.dispatcher'
             - '@prestashop.adapter.logs.form_provider'
-            -
-              'logs_by_email': 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Logs\LogsByEmailType'
+            - 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Logs\LogsByEmailType'
             - 'LogsPage'
 
     prestashop.admin.import.form_handler:
