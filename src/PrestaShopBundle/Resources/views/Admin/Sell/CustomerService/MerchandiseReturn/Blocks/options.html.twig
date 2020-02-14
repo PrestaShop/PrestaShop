@@ -32,17 +32,17 @@
   </h3>
   <div class="card-block row">
     <div class="card-text">
-      {{ ps.form_group_row(merchandiseReturnsOptionsForm.options.enable_order_return, {}, {
+      {{ ps.form_group_row(merchandiseReturnsOptionsForm.enable_order_return, {}, {
         label: 'Enable returns'|trans({}, 'Admin.Orderscustomers.Feature'),
         help: 'Would you like to allow merchandise returns in your shop?'|trans({}, 'Admin.Orderscustomers.Help')
       }) }}
 
-      {{ ps.form_group_row(merchandiseReturnsOptionsForm.options.order_return_period_in_days, {}, {
+      {{ ps.form_group_row(merchandiseReturnsOptionsForm.order_return_period_in_days, {}, {
         label: 'Time limit of validity'|trans({}, 'Admin.Orderscustomers.Feature'),
         help: 'How many days after the delivery date does the customer have to return a product?'|trans({}, 'Admin.Orderscustomers.Help')
       }) }}
 
-      {{ ps.form_group_row(merchandiseReturnsOptionsForm.options.order_return_prefix, {}, {
+      {{ ps.form_group_row(merchandiseReturnsOptionsForm.order_return_prefix, {}, {
         label: 'Returns prefix'|trans({}, 'Admin.Orderscustomers.Feature'),
         help: 'Prefix used for return name (e.g. RE00001).'|trans({}, 'Admin.Orderscustomers.Help')
       }) }}
@@ -61,4 +61,3 @@
   </div>
 </div>
 {{ form_end(merchandiseReturnsOptionsForm) }}
-
