@@ -86,7 +86,7 @@ class Email
      */
     private function assertEmailIsValid($email)
     {
-        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        if (!preg_match('/^.+\@.+$/', $email)) {
             throw new DomainConstraintException(sprintf('Email %s is invalid.', var_export($email, true)), DomainConstraintException::INVALID_EMAIL);
         }
     }
