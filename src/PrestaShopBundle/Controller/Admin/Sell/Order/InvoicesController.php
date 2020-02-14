@@ -63,7 +63,7 @@ class InvoicesController extends FrameworkBundleAdminController
             'help_link' => $this->generateSidebarLink($legacyController),
             'byDateForm' => $byDateForm->createView(),
             'byStatusForm' => $byStatusForm->createView(),
-            'optionsForm' => $optionsForm->createView(),
+            'invoiceOptionsForm' => $optionsForm->createView(),
         ];
     }
 
