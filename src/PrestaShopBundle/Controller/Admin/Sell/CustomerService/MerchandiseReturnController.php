@@ -43,7 +43,7 @@ class MerchandiseReturnController extends FrameworkBundleAdminController
      *
      * @AdminSecurity(
      *     "is_granted(['read'], request.get('_legacy_controller'))",
-     *     redirectRoute="admin_merchandise_return_index"
+     *     redirectRoute="admin_merchandise_returns_index"
      * )
      *
      * @param Request $request
