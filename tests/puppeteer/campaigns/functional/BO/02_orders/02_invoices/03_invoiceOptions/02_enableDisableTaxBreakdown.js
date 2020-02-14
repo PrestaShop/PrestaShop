@@ -262,7 +262,7 @@ describe('Test enable/disable tax breakdown', async () => {
         await expect(exist).to.be.true;
       });
 
-      it('should check the tax breakdown', async () => {
+      it('should check the tax breakdown', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkTaxBreakdownInFile', baseContext);
         // Check the existence of the first tax
         let exist = await files.checkTextInPDF(`${firstInvoiceFileName}.pdf`, '10.000 %');
@@ -322,7 +322,7 @@ describe('Test enable/disable tax breakdown', async () => {
         await expect(exist).to.be.true;
       });
 
-      it('should check that there is no tax breakdown', async () => {
+      it('should check that there is no tax breakdown', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkNoTaxBreakdownInFile', baseContext);
         let exist = await files.checkTextInPDF(`${secondInvoiceFileName}.pdf`, '10.000 %');
         await expect(exist).to.be.false;

@@ -189,7 +189,7 @@ describe('Test enable/disable product image in delivery slips', async () => {
           await expect(exist).to.be.true;
         });
 
-        it('should check the product images in the PDF File', async () => {
+        it('should check the product images in the PDF File', async function () {
           await testContext.addContextItem(
             this,
             'testIdentifier',
