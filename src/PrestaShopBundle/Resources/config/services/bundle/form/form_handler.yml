@@ -316,13 +316,12 @@ services:
             - 'Employee'
 
     prestashop.admin.currency_settings.form_handler:
-        class: 'PrestaShop\PrestaShop\Core\Form\FormHandler'
+        class: 'PrestaShop\PrestaShop\Core\Form\Handler'
         arguments:
-            - '@=service("form.factory").createBuilder()'
+            - '@form.factory'
             - '@prestashop.core.hook.dispatcher'
             - '@prestashop.admin.currency.form_data_provider'
-            -
-              'exchange_rates': 'PrestaShopBundle\Form\Admin\Improve\International\Currencies\CurrencyExchangeRateType'
+            - 'PrestaShopBundle\Form\Admin\Improve\International\Currencies\CurrencyExchangeRateType'
             - 'Currency'
 
     prestashop.admin.shop_logos_settings.form_handler:
