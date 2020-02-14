@@ -40,15 +40,15 @@
                 <div class="form-group row">
                   {{ ps.label_with_help('From'|trans({}, 'Admin.Global'), ('Format: 2011-12-31 (inclusive).'|trans({}, 'Admin.Orderscustomers.Help'))) }}
                   <div class="col-sm">
-                    {{ form_errors(pdfForm.pdf.date_from) }}
-                    {{ form_widget(pdfForm.pdf.date_from) }}
+                    {{ form_errors(pdfForm.date_from) }}
+                    {{ form_widget(pdfForm.date_from) }}
                   </div>
                 </div>
                 <div class="form-group row">
                   {{ ps.label_with_help('To'|trans({}, 'Admin.Global'), ('Format: 2011-12-31 (inclusive).'|trans({}, 'Admin.Orderscustomers.Help'))) }}
                   <div class="col-sm">
-                    {{ form_errors(pdfForm.pdf.date_to) }}
-                    {{ form_widget(pdfForm.pdf.date_to) }}
+                    {{ form_errors(pdfForm.date_to) }}
+                    {{ form_widget(pdfForm.date_to) }}
                   </div>
                 </div>
                 {{ form_rest(pdfForm) }}
