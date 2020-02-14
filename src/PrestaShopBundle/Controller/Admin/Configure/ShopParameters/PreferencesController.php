@@ -75,7 +75,7 @@ class PreferencesController extends FrameworkBundleAdminController
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink('AdminPreferences'),
             'requireFilterStatus' => false,
-            'form' => $form->createView(),
+            'generalForm' => $form->createView(),
             'isSslEnabled' => $this->configuration->get('PS_SSL_ENABLED'),
             'sslUri' => $sslUri,
         ]);
