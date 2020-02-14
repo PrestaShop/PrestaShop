@@ -32,6 +32,7 @@ use Order;
 use OrderCarrier;
 use OrderDetail;
 use OrderInvoice;
+use PrestaShop\Decimal\Number;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\DeleteProductFromOrderCommand;
@@ -102,11 +103,31 @@ final class DeleteProductFromOrderHandler extends AbstractOrderCommandHandler im
     private function updateOrder(Order $order, OrderDetail $orderDetail)
     {
         // @todo: use https://github.com/PrestaShop/decimal for price computations
+        //@todo: this is the old code. After #17348 merged, create+run tests to accept this and then refactor to Number
         $order->total_paid -= $orderDetail->total_price_tax_incl;
         $order->total_paid_tax_incl -= $orderDetail->total_price_tax_incl;
         $order->total_paid_tax_excl -= $orderDetail->total_price_tax_excl;
         $order->total_products -= $orderDetail->total_price_tax_excl;
         $order->total_products_wt -= $orderDetail->total_price_tax_incl;
+
+        //@todo: WIP REFACTORING to Number calc. Blocked by #17348
+//        $orderPaid = new Number((string) $order->total_paid);
+//        $detailPriceTaxIncl = new Number((string) $orderDetail->total_price_tax_incl);
+//        $order->total_paid = (float) (string) $orderPaid->minus($detailPriceTaxIncl);
+//
+//        $orderPaidTaxIncl = new Number((string) $order->total_paid_tax_incl);
+//        $detailPaidTaxIncl = new Number((string) $orderDetail->total_price_tax_incl);
+//        $order->total_paid_tax_incl = (float) (string) $orderPaidTaxIncl->minus($detailPaidTaxIncl);
+//
+//        $orderPaidTaxExcl = new Number((string) $order->total_paid_tax_excl);
+//        $detailPriceTaxExcl = new Number((string) $orderDetail->total_price_tax_excl);
+//        $order->total_paid_tax_excl = (float) (string) $orderPaidTaxExcl->minus($detailPriceTaxExcl);
+//
+//        $orderProducts = new Number((string) $order->total_products);
+//        $order->total_products = (float) (string) $orderProducts->minus($detailPriceTaxExcl);
+//
+//        $orderProductsWt = new Number((string) $order->total_products_wt);
+//        $order->total_products_wt = $orderProductsWt->minus($detailPriceTaxExcl);
 
         return $order->update();
     }

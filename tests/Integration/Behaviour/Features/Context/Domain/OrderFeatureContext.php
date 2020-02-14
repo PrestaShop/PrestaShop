@@ -55,6 +55,7 @@ use Product;
 use RuntimeException;
 use stdClass;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
+use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
 class OrderFeatureContext extends AbstractDomainFeatureContext
 {
@@ -163,7 +164,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
                 (float) $data['price'],
                 (float) $data['price'],
                 (int) $data['amount'],
-                $data['free_shipping']
+                PrimitiveUtils::castStringBooleanIntoBoolean($data['free_shipping'])
             )
         );
     }
@@ -206,6 +207,31 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
                 $ordersIds, $statusId
             )
         );
+    }
+
+    /**
+     * @Given Order :orderReference has following prices:
+     * @Then Order :orderReference should have following prices:
+     */
+    public function assertOrderPrices(string $orderReference, TableNode $table)
+    {
+        $orderId = SharedStorage::getStorage()->get($orderReference);
+        $data = $table->getRowsHash();
+
+        /** @var OrderForViewing $orderForViewing */
+        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
+
+        $totalProducts = $orderForViewing->getPrices()->getProductsPriceFormatted();
+        $totalDiscounts = $orderForViewing->getPrices()->getDiscountsAmountFormatted();
+        $totalShipping = $orderForViewing->getPrices()->getShippingPriceFormatted();
+        $totalTaxes = $orderForViewing->getPrices()->getTaxesAmountFormatted();
+        $totalPrice = $orderForViewing->getPrices()->getTotalAmountFormatted();
+
+        Assert::assertEquals($data['products'], $totalProducts);
+        Assert::assertEquals($data['discounts'], $totalDiscounts);
+        Assert::assertEquals($data['shipping'], $totalShipping);
+        Assert::assertEquals($data['taxes'], $totalTaxes);
+        Assert::assertEquals($data['total'], $totalPrice);
     }
 
     /**

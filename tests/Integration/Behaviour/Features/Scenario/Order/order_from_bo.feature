@@ -158,9 +158,34 @@ Feature: Order from Back Office (BO)
     When I change order "bo_order1" shipping address to "test-address"
     Then order "bo_order1" shipping address should be "test-address"
 
-  @order-from-bo
-  Scenario: Product cannot be deleted from delivered order
+  @order-from-bo-del
+  Scenario: Cannot delete product from delivered order
     When I update order "bo_order1" status to "Delivered"
     Then order "bo_order1" has status "Delivered"
     When I delete product "Mug The best is yet to come" from order "bo_order1"
     Then I should get an error "Delivered order cannot be modified."
+
+  @order-from-bo-del
+  Scenario: Delete product from order
+    Given order "bo_order1" has status "Awaiting bank wire payment"
+    When I add products to order "bo_order1" with new invoice and the following products details:
+      | name          | Mug Today is a good day |
+      | amount        | 2                       |
+      | price         | 5                       |
+      | free_shipping | true                    |
+    And order "bo_order1" should have 4 products in total
+    And Order "bo_order1" has following prices:
+    #todo: blocked by #17348
+      | products      | $33.80   |
+      | discounts     | $7.00    |
+      | shipping      | $14.00   |
+      | taxes         | $0.00    |
+      | total         | $40.80   |
+    When I delete product "Mug Today is a good day" from order "bo_order1"
+    And order "bo_order1" should have 2 products in total
+    And Order "bo_order1" has following prices:
+      | products      | $23.80   |
+      | discounts     | $0.00    |
+      | shipping      | $7.00    |
+      | taxes         | $0.00    |
+      | total         | $30.80   |
