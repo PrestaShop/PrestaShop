@@ -29,8 +29,13 @@ namespace PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\Email as BaseEmail;
 
 /**
- * @deprecated use PrestaShop\PrestaShop\Core\Domain\ValueObject\Email instead
+ * @deprecated since version 1.7.7 use PrestaShop\PrestaShop\Core\Domain\ValueObject\Email instead
  */
 class Email extends BaseEmail
 {
+    public function __construct($email)
+    {
+        @trigger_error(self::class . ' is deprecated. Use ' . BaseEmail::class . ' instead', E_USER_DEPRECATED);
+        parent::__construct($email);
+    }
 }
