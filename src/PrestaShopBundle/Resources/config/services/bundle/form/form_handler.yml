@@ -209,13 +209,12 @@ services:
             - 'LocalizationPage'
 
     prestashop.admin.payment_preferences.form_handler:
-        class: 'PrestaShop\PrestaShop\Core\Form\FormHandler'
+        class: 'PrestaShop\PrestaShop\Core\Form\Handler'
         arguments:
-            - '@=service("form.factory").createBuilder()'
+            - '@form.factory'
             - '@prestashop.core.hook.dispatcher'
             - '@prestashop.admin.payment_preferences.form_data_provider'
-            -
-              'payment_module_preferences': 'PrestaShopBundle\Form\Admin\Improve\Payment\Preferences\PaymentModulePreferencesType'
+            - 'PrestaShopBundle\Form\Admin\Improve\Payment\Preferences\PaymentModulePreferencesType'
             - 'PaymentPreferences'
 
     prestashop.admin.email_configuration.form_handler:
