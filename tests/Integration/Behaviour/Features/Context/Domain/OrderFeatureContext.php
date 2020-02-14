@@ -292,6 +292,12 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
 
         $invoice = $invoices->getFirst();
         Assert::assertEquals((float) $data['products'], $invoice->total_products);
+        Assert::assertEquals((float) $data['discounts tax excluded'], $invoice->total_discount_tax_excl);
+        Assert::assertEquals((float) $data['discounts tax included'], $invoice->total_discount_tax_incl);
+        Assert::assertEquals((float) $data['shipping tax excluded'], $invoice->total_shipping_tax_excl);
+        Assert::assertEquals((float) $data['shipping tax included'], $invoice->total_shipping_tax_incl);
+        Assert::assertEquals((float) $data['total paid tax excluded'], $invoice->total_paid_tax_excl);
+        Assert::assertEquals((float) $data['total paid tax included'], $invoice->total_paid_tax_incl);
     }
 
     /**
