@@ -683,7 +683,7 @@ class CartPresenter implements PresenterInterface
         $calculator = $cart->newCalculator($products, $cart->getCartRules(), null);
         $cartRowCheapest = $calculator->getRowCheapest($cartVoucher);
         $cartRowCheapest->processCalculation($cart);
-        $amount = $calculator->getAmountPercentageReduction($cartRowCheapest, $cartVoucher['reduction_percent']);
+        $amount = $cartRowCheapest->applyPercentageDiscount($cartVoucher['reduction_percent'], true);
 
         return $amount;
     }

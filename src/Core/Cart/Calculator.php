@@ -343,17 +343,4 @@ class Calculator
 
         return $rowCheapest;
     }
-
-    /**
-     * @param CartRow $cartRow
-     * @param float $percent
-     *
-     * @return AmountImmutable
-     */
-    public function getAmountPercentageReduction($cartRow, $percent)
-    {
-        $amount = $cartRow->applyPercentageDiscount($percent, true);
-
-        return $amount;
-    }
 }

@@ -148,7 +148,7 @@ class CartRuleCalculator
             if ($cartRule->reduction_product == -1) {
                 /** @var CartRow|null $cartRowCheapest */
                 $cartRowCheapest = $this->getRowCheapestProduct($cartRule, $cart);
-                if($cartRowCheapest !== null) {
+                if ($cartRowCheapest !== null) {
                     $amount = $cartRowCheapest->applyPercentageDiscount($cartRule->reduction_percent, true);
                     $cartRuleData->addDiscountApplied($amount);
                 }
