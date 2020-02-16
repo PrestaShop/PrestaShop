@@ -148,9 +148,10 @@ class CartRuleCalculator
             if ($cartRule->reduction_product == -1) {
                 /** @var CartRow|null $cartRowCheapest */
                 $cartRowCheapest = $this->getRowCheapestProduct($cartRule, $cart);
-                $amount = $this->getAmountReductionFromRow($cartRowCheapest, $cartRule);
-                $cartRowCheapest->applyFlatDiscount($amount);
-                $cartRuleData->addDiscountApplied($amount);
+                if($cartRowCheapest !== null) {
+                    $amount = $cartRowCheapest->applyPercentageDiscount($cartRule->reduction_percent, true);
+                    $cartRuleData->addDiscountApplied($amount);
+                }
             }
 
             // Discount (%) on the selection of products
@@ -315,28 +316,5 @@ class CartRuleCalculator
         }
 
         return $cartRowCheapest;
-    }
-
-    /**
-     * Get the amount of the percentage reduction of a cart rule that contains specific row calculation
-     * ( as example: cheapest product and specific product
-     *
-     * @param CartRow $cartRow
-     * @param CartRule $cartRule
-     *
-     * @return AmountImmutable $amount
-     */
-    public function getAmountReductionFromRow($cartRow, $cartRule)
-    {
-        $amount = null;
-        if ($cartRow !== null) {
-            $discountTaxIncluded = $cartRow->getInitialUnitPrice()->getTaxIncluded()
-                * $cartRule->reduction_percent / 100;
-            $discountTaxExcluded = $cartRow->getInitialUnitPrice()->getTaxExcluded()
-                * $cartRule->reduction_percent / 100;
-            $amount = new AmountImmutable($discountTaxIncluded, $discountTaxExcluded);
-        }
-
-        return $amount;
     }
 }

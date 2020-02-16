@@ -346,13 +346,13 @@ class Calculator
 
     /**
      * @param CartRow $cartRow
-     * @param array $cartVoucher
+     * @param float $percent
      *
      * @return AmountImmutable
      */
-    public function getAmountPercentageReduction($cartRow, $cartVoucher)
+    public function getAmountPercentageReduction($cartRow, $percent)
     {
-        $amount = $this->cartRuleCalculator->getAmountReductionFromRow($cartRow, $cartVoucher);
+        $amount = $cartRow->applyPercentageDiscount($percent, true);
 
         return $amount;
     }

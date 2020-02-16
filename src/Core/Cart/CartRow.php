@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -447,17 +447,19 @@ class CartRow
 
     /**
      * @param float $percent 0-100
+     * @param bool $onUnitPrice
      *
      * @return AmountImmutable
      */
-    public function applyPercentageDiscount($percent)
+    public function applyPercentageDiscount($percent, $onUnitPrice = false)
     {
         $percent = (float) $percent;
         if ($percent < 0 || $percent > 100) {
             throw new \Exception('Invalid percentage discount given: ' . $percent);
         }
-        $discountTaxIncluded = $this->finalTotalPrice->getTaxIncluded() * $percent / 100;
-        $discountTaxExcluded = $this->finalTotalPrice->getTaxExcluded() * $percent / 100;
+        $priceUsed = (bool) $onUnitPrice ? $this->initialUnitPrice : $this->finalTotalPrice;
+        $discountTaxIncluded = $priceUsed->getTaxIncluded() * $percent / 100;
+        $discountTaxExcluded = $priceUsed->getTaxExcluded() * $percent / 100;
         $amount = new AmountImmutable($discountTaxIncluded, $discountTaxExcluded);
         $this->applyFlatDiscount($amount);
 
