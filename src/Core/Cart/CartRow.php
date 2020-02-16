@@ -455,7 +455,6 @@ class CartRow
     public function applyPercentageDiscount($percent, $onUnitPrice = false)
     {
         $percent = (float) $percent;
-        $amount = null;
         if ($percent < 0 || $percent > 100) {
             throw new \Exception('Invalid percentage discount given: ' . $percent);
         }
