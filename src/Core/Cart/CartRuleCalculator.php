@@ -159,7 +159,7 @@ class CartRuleCalculator
                     }
                 }
                 if ($cartRowCheapest !== null) {
-                    $cartRowCheapest->applyPercentageDiscount($cartRule->reduction_percent, true);
+                    $amount = $cartRowCheapest->applyPercentageDiscount($cartRule->reduction_percent, true);
                     $cartRuleData->addDiscountApplied($amount);
                 }
             }
