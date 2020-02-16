@@ -466,6 +466,7 @@ class CartRow
 
         return $amount;
     }
+    
     /**
      * when final row price is calculated, we need to update unit price.
      */
