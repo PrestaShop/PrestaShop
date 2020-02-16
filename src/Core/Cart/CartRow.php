@@ -445,25 +445,28 @@ class CartRow
         $this->updateFinalUnitPrice();
     }
 
+
     /**
      * @param float $percent 0-100
+     * @param bool $onUnitPrice;
      *
      * @return AmountImmutable
      */
-    public function applyPercentageDiscount($percent)
+    public function applyPercentageDiscount($percent, $onUnitPrice = false)
     {
         $percent = (float) $percent;
+        $amount = null;
         if ($percent < 0 || $percent > 100) {
             throw new \Exception('Invalid percentage discount given: ' . $percent);
         }
-        $discountTaxIncluded = $this->finalTotalPrice->getTaxIncluded() * $percent / 100;
-        $discountTaxExcluded = $this->finalTotalPrice->getTaxExcluded() * $percent / 100;
+        $rowPrice = $onUnitPrice ? $this->initialUnitPrice : $this->finalTotalPrice;
+        $discountTaxIncluded = $rowPrice->getTaxIncluded() * $percent / 100;
+        $discountTaxExcluded = $rowPrice->getTaxExcluded() * $percent / 100;
         $amount = new AmountImmutable($discountTaxIncluded, $discountTaxExcluded);
         $this->applyFlatDiscount($amount);
 
         return $amount;
     }
-
     /**
      * when final row price is calculated, we need to update unit price.
      */
