@@ -297,4 +297,17 @@ module.exports = class CommonPage {
       await this.page.click(checkboxSelector);
     }
   }
+
+  /**
+   * Sort array of strings or numbers
+   * @param arrayToSort
+   * @param isFloat
+   * @return {Promise<*>}
+   */
+  async sortArray(arrayToSort, isFloat = false) {
+    if (isFloat) {
+      return arrayToSort.sort((a, b) => a - b);
+    }
+    return arrayToSort.sort((a, b) => a.localeCompare(b));
+  }
 };
