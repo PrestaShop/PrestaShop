@@ -83,7 +83,7 @@ module.exports = class Order extends BOBasePage {
    * @return {Promise<void>}
    */
   async goToOrder(orderRow) {
-    await this.clickAndWaitForNavigation(this.viewRowLink);
+    await this.clickAndWaitForNavigation(this.viewRowLink.replace('%ROW', orderRow));
   }
 
   /**

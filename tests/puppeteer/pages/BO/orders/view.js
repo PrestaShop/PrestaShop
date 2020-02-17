@@ -17,11 +17,8 @@ module.exports = class Order extends BOBasePage {
     this.UpdateProductButton = `${this.orderProductsRowTable} .submitProductChange`;
     this.partialRefundButton = '#desc-order-partial_refund';
     // Status tab
-    this.orderStatusesSelect = '#id_order_state_chosen';
-    this.orderStatusesSearchInput = `${this.orderStatusesSelect} input[type='text']`;
-    this.orderStatusSearchResult = `${this.orderStatusesSelect} li:nth-child(1)`;
-    this.updateStatusButton = '#submit_state';
-    this.statusValidation = '#status tr:nth-child(1) > td:nth-child(2)';
+    this.orderStatusesSelect = '#update_order_status_action_input';
+    this.updateStatusButton = '#update_order_status_action_btn';
     // Document tab
     this.documentTab = '#tabOrder a[href=\'#documents\']';
     this.documentNumberLink = '#documents_table tr:nth-child(%ID) td:nth-child(3) a';
@@ -59,11 +56,17 @@ module.exports = class Order extends BOBasePage {
    * @returns {Promise<void>}
    */
   async modifyOrderStatus(status) {
-    await this.waitForSelectorAndClick(this.orderStatusesSelect);
-    await this.page.type(this.orderStatusesSearchInput, status);
-    await this.page.click(this.orderStatusSearchResult);
-    await this.page.click(this.updateStatusButton);
-    return this.checkTextValue(this.statusValidation, status);
+    await this.selectByVisibleText(this.orderStatusesSelect, status);
+    await this.clickAndWaitForNavigation(this.updateStatusButton);
+    return this.getOrderStatus();
+  }
+
+  /**
+   * Get order status
+   * @return {Promise<string>}
+   */
+  async getOrderStatus() {
+    return this.getTextContent(`${this.orderStatusesSelect} option[selected='selected']`, false);
   }
 
   /**

@@ -33,8 +33,10 @@ module.exports = class CommonPage {
    * @param selector, from where to get text
    * @return {Promise<string>}
    */
-  async getTextContent(selector) {
-    await this.page.waitForSelector(selector, {visible: true});
+  async getTextContent(selector, waitForSelector = true) {
+    if(waitForSelector) {
+      await this.page.waitForSelector(selector, {visible: true});
+    }
     const textContent = await this.page.$eval(selector, el => el.textContent);
     return textContent.replace(/\s+/g, ' ').trim();
   }

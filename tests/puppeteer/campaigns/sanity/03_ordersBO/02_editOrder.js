@@ -71,8 +71,8 @@ describe('Edit Order BO', async () => {
 
   it('should modify the order status and check the validation', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'editOrderStatus', baseContext);
-    const result = await this.pageObjects.orderPage.modifyOrderStatus(Statuses.paymentAccepted.status);
-    await expect(result).to.be.true;
+    const orderStatus = await this.pageObjects.orderPage.modifyOrderStatus(Statuses.paymentAccepted.status);
+    await expect(orderStatus).to.equal(Statuses.paymentAccepted.status);
   });
 
   // Logout from BO
