@@ -113,7 +113,10 @@ describe('Choose quantity discount based on', async () => {
   it('should create product with combinations and add a specific price', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'createProduct', baseContext);
     await this.pageObjects.productsPage.goToAddProductPage();
-    const createProductMessage = await this.pageObjects.addProductPage.createEditProduct(productWithCombinations);
+    const createProductMessage = await this.pageObjects.addProductPage.createEditProduct(
+      productWithCombinations, true,
+      true,
+    );
     await expect(createProductMessage).to.equal(this.pageObjects.addProductPage.settingUpdatedMessage);
     await this.pageObjects.addProductPage.goToFormStep(1);
   });
