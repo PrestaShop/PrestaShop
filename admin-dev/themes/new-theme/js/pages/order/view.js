@@ -70,7 +70,10 @@ $(() => {
   });
 
   $(OrderViewPageMap.printOrderViewPageButton).on('click', () => {
+    const tempTitle = document.title;
+    document.title = $(OrderViewPageMap.mainDiv).data('orderTitle');
     window.print();
+    document.title = tempTitle;
   });
 
   initAddCartRuleFormHandler();

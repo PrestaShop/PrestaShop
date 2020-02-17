@@ -24,6 +24,7 @@
  */
 
 export default {
+  mainDiv: '#order-view-page',
   orderPaymentDetailsBtn: '.js-payment-details-btn',
   orderPaymentFormAmountInput: '#order_payment_amount',
   orderPaymentInvoiceSelect: '#order_payment_id_invoice',

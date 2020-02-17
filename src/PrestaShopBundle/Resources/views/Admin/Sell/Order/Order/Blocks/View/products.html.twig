@@ -106,7 +106,7 @@
     </table>
 
     <div class="row mb-3">
-      <div class="col-md-6 text-left">
+      <div class="col-md-6 text-left d-print-none">
         {% set numPages = (orderForViewing.products.products|length / paginationNum)|round(0, 'ceil') %}
         <nav aria-label="Products Navigation"{% if orderForViewing.products.products|length <= paginationNum %} class="d-none"{% endif %} id="orderProductsNavPagination">
           <ul class="pagination" id="orderProductsTablePagination" data-num-per-page="{{ paginationNum }}" data-num-pages="{{ numPages }}">

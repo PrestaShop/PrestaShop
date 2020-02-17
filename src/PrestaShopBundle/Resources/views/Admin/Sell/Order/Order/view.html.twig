@@ -32,7 +32,7 @@
 
 
 {% block content %}
-  <div id="order-view-page">
+  <div id="order-view-page" data-order-title="{{ 'Order'|trans({}, 'Admin.Global') }} #{{ orderForViewing.id }} {{ orderForViewing.reference }}">
     <div class="row d-print-none">
     {% set displayAdminOrderTopHookContent = renderhook('displayAdminOrderTop', {'id_order': orderForViewing.id}) %}
 
