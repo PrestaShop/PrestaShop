@@ -23,6 +23,8 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+import ConfirmModal from '@components/modal';
+
 const {$} = window;
 
 /**
@@ -40,28 +42,61 @@ export default class SubmitRowActionExtension {
 
       const $button = $(event.currentTarget);
       const confirmMessage = $button.data('confirm-message');
-
-      if (confirmMessage.length && !window.confirm(confirmMessage)) {
-        return;
-      }
+      const confirmTitle = $button.data('title');
 
       const method = $button.data('method');
       const isGetOrPostMethod = ['GET', 'POST'].includes(method);
+      if (confirmTitle !== undefined) {
+        this.showConfirmModal($button, grid, confirmMessage, confirmTitle, isGetOrPostMethod, method);
+      } else {
+        if (confirmMessage.length && !window.confirm(confirmMessage)) {
+          return;
+        }
 
-      const $form = $('<form>', {
-        action: $button.data('url'),
-        method: isGetOrPostMethod ? method : 'POST',
-      }).appendTo('body');
-
-      if (!isGetOrPostMethod) {
-        $form.append($('<input>', {
-          type: '_hidden',
-          name: '_method',
-          value: method,
-        }));
+        this.postForm($button, isGetOrPostMethod, method);
       }
-
-      $form.submit();
     });
+  }
+
+  postForm($button, isGetOrPostMethod, method) {
+    const $form = $('<form>', {
+      action: $button.data('url'),
+      method: isGetOrPostMethod ? method : 'POST',
+    }).appendTo('body');
+
+    if (!isGetOrPostMethod) {
+      $form.append($('<input>', {
+        type: '_hidden',
+        name: '_method',
+        value: method,
+      }));
+    }
+
+    $form.submit();
+  }
+
+  /**
+   * @param {jQuery} $submitBtn
+   * @param {Grid} grid
+   * @param {string} confirmMessage
+   * @param {string} confirmTitle
+   * @param {boolean} isGetOrPostMethod
+   * @param {string} method
+   */
+  showConfirmModal($submitBtn, grid, confirmMessage, confirmTitle, isGetOrPostMethod, method) {
+    const confirmButtonLabel = $submitBtn.data('confirm-button-label');
+    const closeButtonLabel = $submitBtn.data('close-button-label');
+    const confirmButtonClass = $submitBtn.data('confirm-button-class');
+
+    const modal = new ConfirmModal({
+      id: `${grid.getId()}_grid_confirm_modal`,
+      confirmTitle,
+      confirmMessage,
+      confirmButtonLabel,
+      closeButtonLabel,
+      confirmButtonClass,
+    }, () => this.postForm($submitBtn, isGetOrPostMethod, method));
+
+    modal.show();
   }
 }
