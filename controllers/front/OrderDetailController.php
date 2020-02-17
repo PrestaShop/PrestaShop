@@ -214,10 +214,10 @@ class OrderDetailControllerCore extends FrontController
         ];
 
         if (!empty($this->reference)) {
-            $breadcrumb['links'][] = array(
+            $breadcrumb['links'][] = [
                 'title' => $this->reference,
                 'url' => '#',
-            );
+            ];
         }
 
         return $breadcrumb;

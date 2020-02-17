@@ -269,7 +269,7 @@ class PasswordControllerCore extends FrontController
         $breadcrumb = parent::getBreadcrumbLinks();
 
         $breadcrumb['links'][] = [
-            'title' => $this->trans('Reset your password', array(), 'Shop.Theme.Customeraccount'),
+            'title' => $this->trans('Reset your password', [], 'Shop.Theme.Customeraccount'),
             'url' => $this->context->link->getPageLink('password'),
         ];
 

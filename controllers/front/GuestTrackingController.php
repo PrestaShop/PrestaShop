@@ -155,10 +155,10 @@ class GuestTrackingControllerCore extends FrontController
         ];
 
         if (Validate::isLoadedObject($this->order)) {
-            $breadcrumbLinks['links'][] = array(
+            $breadcrumbLinks['links'][] = [
                 'title' => $this->order->reference,
                 'url' => '#',
-            );
+            ];
         }
 
         return $breadcrumbLinks;
