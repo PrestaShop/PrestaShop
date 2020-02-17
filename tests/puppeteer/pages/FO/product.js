@@ -38,7 +38,7 @@ module.exports = class Product extends FOBasePage {
    * @param proceedToCheckout
    * @returns {Promise<void>}
    */
-  async addProductToTheCart(attributeToChoose, proceedToCheckout = true) {
+  async addProductToTheCart(attributeToChoose = '', proceedToCheckout = true) {
     await this.page.waitFor(1000);
     if (attributeToChoose.color) {
       await Promise.all([
