@@ -161,7 +161,7 @@
               {{ discount.amountFormatted }}
             </td>
             <td class="text-right">
-              <a class="delete-cart-rule btn btn-text" href="{{ path('admin_orders_remove_cart_rule', {'orderId': orderForViewing.id, 'orderCartRuleId': discount.orderCartRuleId}) }}">
+              <a class="delete-cart-rule btn btn-text d-print-none" href="{{ path('admin_orders_remove_cart_rule', {'orderId': orderForViewing.id, 'orderCartRuleId': discount.orderCartRuleId}) }}">
                   <i class="material-icons">delete</i>
               </a>
             </td>
@@ -183,7 +183,7 @@
             {% if orderForViewing.prices.discountsAmountRaw %}
               <div class="col-sm text-center">
                 <p class="text-muted mb-0"><strong>{{ 'Discounts'|trans({}, 'Admin.Global') }}</strong></p>
-                <strong class="orderDiscountsTotal">-{{ orderForViewing.prices.discountsAmountFormatted }}</strong>
+                <strong id="orderDiscountsTotal">-{{ orderForViewing.prices.discountsAmountFormatted }}</strong>
               </div>
             {% endif %}
 
@@ -226,7 +226,8 @@
 
             <div class="col-sm text-center">
               <p class="text-muted mb-0"><strong>{{ 'Total'|trans({}, 'Admin.Global') }}</strong></p>
-              <span class="badge rounded badge-dark font-size-100" id="orderTotal">{{ orderForViewing.prices.totalAmountFormatted }}</span>
+              <span class="badge rounded badge-dark font-size-100 d-print-none" id="orderTotal">{{ orderForViewing.prices.totalAmountFormatted }}</span>
+              <span class="badge rounded font-size-100 d-none d-print-inline-block" id="orderTotal">{{ orderForViewing.prices.totalAmountFormatted }}</span>
             </div>
 
           </div>
