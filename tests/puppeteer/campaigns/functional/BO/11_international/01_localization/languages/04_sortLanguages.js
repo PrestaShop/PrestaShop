@@ -67,34 +67,32 @@ describe('Sort Languages', async () => {
     await expect(numberOfLanguages).to.be.above(0);
   });
 
-  describe('Sort languages', async () => {
-    const tests = [
-      {args: {testIdentifier: 'sortByIdDesc', sortBy: 'id_lang', sortDirection: 'desc'}},
-      {args: {testIdentifier: 'sortByNameAsc', sortBy: 'name', sortDirection: 'asc'}},
-      {args: {testIdentifier: 'sortByNameDesc', sortBy: 'name', sortDirection: 'desc'}},
-      {args: {testIdentifier: 'sortByIsoCodeAsc', sortBy: 'iso_code', sortDirection: 'asc'}},
-      {args: {testIdentifier: 'sortByIsoCodeDesc', sortBy: 'iso_code', sortDirection: 'desc'}},
-      {args: {testIdentifier: 'sortByLanguageCodeAsc', sortBy: 'language_code', sortDirection: 'asc'}},
-      {args: {testIdentifier: 'sortByLanguageCodeDesc', sortBy: 'language_code', sortDirection: 'desc'}},
-      {args: {testIdentifier: 'sortByDateFormatLiteAsc', sortBy: 'date_format_lite', sortDirection: 'asc'}},
-      {args: {testIdentifier: 'sortByDateFormatLiteDesc', sortBy: 'date_format_lite', sortDirection: 'desc'}},
-      {args: {testIdentifier: 'sortByDateFormatFullAsc', sortBy: 'date_format_full', sortDirection: 'asc'}},
-      {args: {testIdentifier: 'sortByDateFormatFullDesc', sortBy: 'date_format_full', sortDirection: 'desc'}},
-      {args: {testIdentifier: 'sortByIdAsc', sortBy: 'id_lang', sortDirection: 'asc'}},
-    ];
+  const tests = [
+    {args: {testIdentifier: 'sortByIdDesc', sortBy: 'id_lang', sortDirection: 'desc'}},
+    {args: {testIdentifier: 'sortByNameAsc', sortBy: 'name', sortDirection: 'asc'}},
+    {args: {testIdentifier: 'sortByNameDesc', sortBy: 'name', sortDirection: 'desc'}},
+    {args: {testIdentifier: 'sortByIsoCodeAsc', sortBy: 'iso_code', sortDirection: 'asc'}},
+    {args: {testIdentifier: 'sortByIsoCodeDesc', sortBy: 'iso_code', sortDirection: 'desc'}},
+    {args: {testIdentifier: 'sortByLanguageCodeAsc', sortBy: 'language_code', sortDirection: 'asc'}},
+    {args: {testIdentifier: 'sortByLanguageCodeDesc', sortBy: 'language_code', sortDirection: 'desc'}},
+    {args: {testIdentifier: 'sortByDateFormatLiteAsc', sortBy: 'date_format_lite', sortDirection: 'asc'}},
+    {args: {testIdentifier: 'sortByDateFormatLiteDesc', sortBy: 'date_format_lite', sortDirection: 'desc'}},
+    {args: {testIdentifier: 'sortByDateFormatFullAsc', sortBy: 'date_format_full', sortDirection: 'asc'}},
+    {args: {testIdentifier: 'sortByDateFormatFullDesc', sortBy: 'date_format_full', sortDirection: 'desc'}},
+    {args: {testIdentifier: 'sortByIdAsc', sortBy: 'id_lang', sortDirection: 'asc'}},
+  ];
 
-    tests.forEach((test) => {
-      it(`should sort by '${test.args.sortBy}' '${test.args.sortDirection}' And check result`, async function () {
-        await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
-        const nonSortedTable = await this.pageObjects.languagesPage.getAllRowsColumnContent(test.args.sortBy);
-        await this.pageObjects.languagesPage.sortTable(test.args.sortBy, test.args.sortDirection);
-        const sortedTable = await this.pageObjects.languagesPage.getAllRowsColumnContent(test.args.sortBy);
-        if (test.args.sortDirection === 'asc') {
-          await expect(sortedTable).to.deep.equal(nonSortedTable.sort());
-        } else {
-          await expect(sortedTable).to.deep.equal(nonSortedTable.sort().reverse());
-        }
-      });
+  tests.forEach((test) => {
+    it(`should sort by '${test.args.sortBy}' '${test.args.sortDirection}' And check result`, async function () {
+      await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
+      const nonSortedTable = await this.pageObjects.languagesPage.getAllRowsColumnContent(test.args.sortBy);
+      await this.pageObjects.languagesPage.sortTable(test.args.sortBy, test.args.sortDirection);
+      const sortedTable = await this.pageObjects.languagesPage.getAllRowsColumnContent(test.args.sortBy);
+      if (test.args.sortDirection === 'asc') {
+        await expect(sortedTable).to.deep.equal(nonSortedTable.sort());
+      } else {
+        await expect(sortedTable).to.deep.equal(nonSortedTable.sort().reverse());
+      }
     });
   });
 });
