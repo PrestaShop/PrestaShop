@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -34,7 +34,7 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerCarts;
 use PrestaShop\PrestaShop\Core\Domain\Customer\QueryHandler\GetCustomerCartsHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\CartSummary;
 use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
-use PrestaShop\PrestaShop\Core\Localization\Locale;
+use PrestaShop\PrestaShop\Core\Localization\LocaleInterface;
 
 /**
  * Handles GetCustomerCartsQuery using legacy object models
@@ -42,15 +42,15 @@ use PrestaShop\PrestaShop\Core\Localization\Locale;
 final class GetCustomerCartsHandler extends AbstractCustomerHandler implements GetCustomerCartsHandlerInterface
 {
     /**
-     * @var Locale
+     * @var LocaleInterface
      */
     private $locale;
 
     /**
-     * @param Locale $locale
+     * @param LocaleInterface $locale
      */
     public function __construct(
-        Locale $locale
+        LocaleInterface $locale
     ) {
         $this->locale = $locale;
     }

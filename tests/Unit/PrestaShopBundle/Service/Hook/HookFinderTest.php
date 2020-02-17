@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -37,7 +37,7 @@ class HookFinderTest extends TestCase
         $finder->addExpectedInstanceClasses(__CLASS__);
 
         $this->assertSame(
-            array(__CLASS__),
+            [__CLASS__],
             $finder->getExpectedInstanceClasses()
         );
     }
@@ -49,7 +49,7 @@ class HookFinderTest extends TestCase
         $finder->addExpectedInstanceClasses([HookFinder::class, TestCase::class]);
 
         $this->assertSame(
-            array(__CLASS__, HookFinder::class, TestCase::class),
+            [__CLASS__, HookFinder::class, TestCase::class],
             $finder->getExpectedInstanceClasses()
         );
     }

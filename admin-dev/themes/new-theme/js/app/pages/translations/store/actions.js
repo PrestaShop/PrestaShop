@@ -1,5 +1,5 @@
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,18 +18,18 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 import Vue from 'vue';
 import VueResource from 'vue-resource';
 import * as types from '@app/pages/translations/store/mutation-types';
-import { showGrowl } from '@app/utils/growl';
+import {showGrowl} from '@app/utils/growl';
 
 Vue.use(VueResource);
 
-export const getTranslations = ({ commit }) => {
+export const getTranslations = ({commit}) => {
   const url = window.data.translationUrl;
   Vue.http.get(url).then((response) => {
     commit(types.SET_TRANSLATIONS, response.body);
@@ -39,7 +39,7 @@ export const getTranslations = ({ commit }) => {
   });
 };
 
-export const getCatalog = ({ commit }, payload) => {
+export const getCatalog = ({commit}, payload) => {
   commit(types.PRINCIPAL_LOADING, true);
   Vue.http.get(payload.url, {
     params: {
@@ -55,7 +55,7 @@ export const getCatalog = ({ commit }, payload) => {
   });
 };
 
-export const getDomainsTree = ({ commit }, payload) => {
+export const getDomainsTree = ({commit}, payload) => {
   const url = window.data.domainsTreeUrl;
   const params = {};
 
@@ -77,7 +77,7 @@ export const getDomainsTree = ({ commit }, payload) => {
   });
 };
 
-export const refreshCounts = ({ commit }, payload) => {
+export const refreshCounts = ({commit}, payload) => {
   const url = window.data.domainsTreeUrl;
   const params = {};
 
@@ -88,16 +88,16 @@ export const refreshCounts = ({ commit }, payload) => {
   Vue.http.get(url, {
     params,
   }).then((response) => {
-    payload.store.state.currentDomainTotalMissingTranslations -= payload.successfullySaved;
+    commit(types.DECREASE_CURRENT_DOMAIN_TOTAL_MISSING_TRANSLATIONS, payload.successfullySaved);
     commit(types.SET_DOMAINS_TREE, response.body);
   }, (error) => {
     showGrowl('error', error.bodyText ? JSON.parse(error.bodyText).error : error.statusText);
   });
 };
 
-export const saveTranslations = ({ commit }, payload) => {
-  const url = payload.url;
-  const translations = payload.translations;
+export const saveTranslations = ({commit}, payload) => {
+  const {url} = payload;
+  const {translations} = payload;
 
   Vue.http.post(url, {
     translations,
@@ -106,16 +106,17 @@ export const saveTranslations = ({ commit }, payload) => {
       successfullySaved: translations.length,
       store: payload.store,
     });
-    payload.store.state.modifiedTranslations = [];
+    commit(types.RESET_MODIFIED_TRANSLATIONS);
     return showGrowl('notice', 'Translations successfully updated');
   }, (error) => {
     showGrowl('error', error.bodyText ? JSON.parse(error.bodyText).error : error.statusText);
   });
 };
 
-export const resetTranslation = ({ commit }, payload) => {
-  const url = payload.url;
-  const translations = payload.translations;
+/* eslint-disable-next-line no-unused-vars */
+export const resetTranslation = ({commit}, payload) => {
+  const {url} = payload;
+  const {translations} = payload;
 
   Vue.http.post(url, {
     translations,
@@ -126,18 +127,18 @@ export const resetTranslation = ({ commit }, payload) => {
   });
 };
 
-export const updatePageIndex = ({ commit }, pageIndex) => {
+export const updatePageIndex = ({commit}, pageIndex) => {
   commit(types.SET_PAGE_INDEX, pageIndex);
 };
 
-export const updateCurrentDomain = ({ commit }, currentDomain) => {
+export const updateCurrentDomain = ({commit}, currentDomain) => {
   commit(types.SET_CURRENT_DOMAIN, currentDomain);
 };
 
-export const updatePrincipalLoading = ({ commit }, principalLoading) => {
+export const updatePrincipalLoading = ({commit}, principalLoading) => {
   commit(types.PRINCIPAL_LOADING, principalLoading);
 };
 
-export const updateSearch = ({ commit }, searchTags) => {
+export const updateSearch = ({commit}, searchTags) => {
   commit(types.SEARCH_TAGS, searchTags);
 };

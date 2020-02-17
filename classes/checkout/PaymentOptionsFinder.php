@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -42,7 +42,7 @@ class PaymentOptionsFinderCore extends HookFinder
         $this->hookName = 'displayPaymentEU';
         $rawDisplayPaymentEUOptions = parent::find();
         $paymentOptions = array_map(
-            array('PrestaShop\PrestaShop\Core\Payment\PaymentOption', 'convertLegacyOption'),
+            ['PrestaShop\PrestaShop\Core\Payment\PaymentOption', 'convertLegacyOption'],
             $rawDisplayPaymentEUOptions
         );
 
@@ -52,7 +52,7 @@ class PaymentOptionsFinderCore extends HookFinder
 
         // Payment options coming from regular Advanced API
         $this->hookName = 'paymentOptions';
-        $this->expectedInstanceClasses = array('PrestaShop\PrestaShop\Core\Payment\PaymentOption');
+        $this->expectedInstanceClasses = ['PrestaShop\PrestaShop\Core\Payment\PaymentOption'];
         $paymentOptions = array_merge($paymentOptions, parent::find());
 
         // Safety check
@@ -69,10 +69,10 @@ class PaymentOptionsFinderCore extends HookFinder
     {
         $freeOption = new PaymentOption();
         $freeOption->setModuleName('free_order')
-            ->setCallToActionText(Context::getContext()->getTranslator()->trans('Free order', array(), 'Admin.Orderscustomers.Feature'))
+            ->setCallToActionText(Context::getContext()->getTranslator()->trans('Free order', [], 'Admin.Orderscustomers.Feature'))
             ->setAction(Context::getContext()->link->getPageLink('order-confirmation', null, null, 'free_order=1'));
 
-        return array('free_order' => array($freeOption));
+        return ['free_order' => [$freeOption]];
     }
 
     public function present($free = false) //getPaymentOptionsForTemplate()

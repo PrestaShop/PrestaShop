@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -53,10 +53,10 @@ class SearchControllerCore extends ProductListingFrontController
         $this->search_tag = Tools::getValue('tag');
 
         $this->context->smarty->assign(
-            array(
+            [
                 'search_string' => $this->search_string,
                 'search_tag' => $this->search_tag,
-            )
+            ]
         );
     }
 
@@ -79,7 +79,7 @@ class SearchControllerCore extends ProductListingFrontController
     {
         parent::initContent();
 
-        $this->doProductSearch('catalog/listing/search', array('entity' => 'search'));
+        $this->doProductSearch('catalog/listing/search', ['entity' => 'search']);
     }
 
     protected function getProductSearchQuery()
@@ -102,16 +102,16 @@ class SearchControllerCore extends ProductListingFrontController
 
     public function getListingLabel()
     {
-        return $this->getTranslator()->trans('Search results', array(), 'Shop.Theme.Catalog');
+        return $this->getTranslator()->trans('Search results', [], 'Shop.Theme.Catalog');
     }
 
     public function getBreadcrumbLinks()
     {
         $breadcrumb = parent::getBreadcrumbLinks();
-        $breadcrumb['links'][] = array(
-            'title' => $this->getTranslator()->trans('Search results', array(), 'Shop.Theme.Catalog'),
+        $breadcrumb['links'][] = [
+            'title' => $this->getTranslator()->trans('Search results', [], 'Shop.Theme.Catalog'),
             'url' => $this->getCurrentUrl(),
-        );
+        ];
 
         return $breadcrumb;
     }

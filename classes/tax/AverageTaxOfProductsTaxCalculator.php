@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -59,15 +59,15 @@ class AverageTaxOfProductsTaxCalculator
 
     public function getTaxesAmount($price_before_tax, $price_after_tax = null, $round_precision = 2, $round_mode = null)
     {
-        $amounts = array();
+        $amounts = [];
         $total_base = 0;
 
         foreach ($this->getProductTaxes() as $row) {
             if (!array_key_exists($row['id_tax'], $amounts)) {
-                $amounts[$row['id_tax']] = array(
+                $amounts[$row['id_tax']] = [
                     'rate' => $row['rate'],
                     'base' => 0,
-                );
+                ];
             }
 
             $amounts[$row['id_tax']]['base'] += $row['total_price_tax_excl'];

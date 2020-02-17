@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -48,6 +48,11 @@ class EditableCurrency
      * @var array
      */
     private $symbols;
+
+    /**
+     * @var array
+     */
+    private $transformations;
 
     /**
      * @var string
@@ -84,6 +89,7 @@ class EditableCurrency
      * @param string $isoCode
      * @param array $names
      * @param array $symbols
+     * @param array $transformations
      * @param float $exchangeRate
      * @param int $precision
      * @param bool $isEnabled
@@ -97,6 +103,7 @@ class EditableCurrency
         $isoCode,
         array $names,
         array $symbols,
+        array $transformations,
         $exchangeRate,
         int $precision,
         $isEnabled,
@@ -107,6 +114,7 @@ class EditableCurrency
         $this->isoCode = $isoCode;
         $this->names = $names;
         $this->symbols = $symbols;
+        $this->transformations = $transformations;
         $this->exchangeRate = $exchangeRate;
         $this->precision = $precision;
         $this->isEnabled = $isEnabled;
@@ -150,6 +158,16 @@ class EditableCurrency
     public function getSymbols(): array
     {
         return $this->symbols;
+    }
+
+    /**
+     * Currency's transformations, indexed by language id.
+     *
+     * @return array
+     */
+    public function getTransformations(): array
+    {
+        return $this->transformations;
     }
 
     /**

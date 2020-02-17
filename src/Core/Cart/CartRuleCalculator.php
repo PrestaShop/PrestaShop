@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -122,8 +122,9 @@ class CartRuleCalculator
             }
         }
 
-        // Discount (%) on the whole order
+        // Percentage discount
         if ((float) $cartRule->reduction_percent > 0) {
+            // Discount (%) on the whole order
             if ($cartRule->reduction_product == 0) {
                 foreach ($this->cartRows as $cartRow) {
                     $product = $cartRow->getRowData();
@@ -189,7 +190,7 @@ class CartRuleCalculator
             }
         }
 
-        // Discount (¤) : weighted calculation on all concerned rows
+        // Amount discount (¤) : weighted calculation on all concerned rows
         //                weight factor got from price with same tax (incl/excl) as voucher
         if ((float) $cartRule->reduction_amount > 0) {
             $concernedRows = new CartRowCollection();

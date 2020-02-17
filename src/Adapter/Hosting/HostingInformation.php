@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -39,7 +39,7 @@ class HostingInformation
      */
     public function getDatabaseInformation()
     {
-        return array(
+        return [
             'version' => Db::getInstance()->getVersion(),
             'server' => _DB_SERVER_,
             'name' => _DB_NAME_,
@@ -47,7 +47,7 @@ class HostingInformation
             'prefix' => _DB_PREFIX_,
             'engine' => _MYSQL_ENGINE_,
             'driver' => Db::getClass(),
-        );
+        ];
     }
 
     /**
@@ -66,12 +66,12 @@ class HostingInformation
      */
     private function getPhpInformation()
     {
-        return array(
+        return [
             'version' => PHP_VERSION,
             'memoryLimit' => ini_get('memory_limit'),
             'maxExecutionTime' => ini_get('max_execution_time'),
             'maxFileSizeUpload' => ini_get('upload_max_filesize'),
-        );
+        ];
     }
 
     /**

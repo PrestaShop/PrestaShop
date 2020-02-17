@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -20,14 +20,14 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace Tests\Integration\PrestaShopBundle\Translation;
 
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\Translation\MessageCatalogue;
 
 /**
@@ -36,14 +36,14 @@ use Symfony\Component\Translation\MessageCatalogue;
 class CatalogueVerifier
 {
     /**
-     * @var PHPUnit_Framework_TestCase
+     * @var TestCase
      */
     private $test;
 
     /**
-     * @param PHPUnit_Framework_TestCase $test The test class
+     * @param TestCase $test The test class
      */
-    public function __construct(PHPUnit_Framework_TestCase $test)
+    public function __construct(TestCase $test)
     {
         $this->test = $test;
     }

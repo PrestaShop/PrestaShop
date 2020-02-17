@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -111,10 +111,7 @@ class AddRootCategoryCommand
     public function setLocalizedNames(array $localizedNames)
     {
         if (empty($localizedNames)) {
-            throw new CategoryConstraintException(
-                'Category name cannot be empty',
-                CategoryConstraintException::EMPTY_NAME
-            );
+            throw new CategoryConstraintException('Category name cannot be empty', CategoryConstraintException::EMPTY_NAME);
         }
 
         $this->localizedNames = $localizedNames;
@@ -140,10 +137,7 @@ class AddRootCategoryCommand
     public function setLocalizedLinkRewrites(array $localizedLinkRewrites)
     {
         if (empty($localizedLinkRewrites)) {
-            throw new CategoryConstraintException(
-                'Category link rewrite cannot be empty',
-                CategoryConstraintException::EMPTY_LINK_REWRITE
-            );
+            throw new CategoryConstraintException('Category link rewrite cannot be empty', CategoryConstraintException::EMPTY_LINK_REWRITE);
         }
 
         $this->localizedLinkRewrites = $localizedLinkRewrites;
@@ -189,10 +183,7 @@ class AddRootCategoryCommand
     public function setIsActive($isActive)
     {
         if (!is_bool($isActive)) {
-            throw new CategoryConstraintException(
-                'Invalid Category status supplied',
-                CategoryConstraintException::INVALID_STATUS
-            );
+            throw new CategoryConstraintException('Invalid Category status supplied', CategoryConstraintException::INVALID_STATUS);
         }
 
         $this->isActive = $isActive;

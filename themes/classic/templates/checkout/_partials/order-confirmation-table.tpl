@@ -1,5 +1,5 @@
 {**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
@@ -39,7 +39,11 @@
         <div class="order-line row">
           <div class="col-sm-2 col-xs-3">
             <span class="image">
-              <img src="{$product.cover.medium.url}" />
+              {if $product.cover}
+                <img src="{$product.cover.medium.url}" />
+              {else}
+                <img src="{$urls.no_picture_image.bySize.medium_default.url}" />
+              {/if}
             </span>
           </div>
           <div class="col-sm-4 col-xs-9 details">

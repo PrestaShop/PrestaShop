@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -48,9 +48,7 @@ final class DeleteTaxRulesGroupHandler extends AbstractTaxRulesGroupHandler impl
         $taxRulesGroup = $this->getTaxRulesGroup($command->getTaxRulesGroupId());
 
         if (!$this->deleteTaxRulesGroup($taxRulesGroup)) {
-            throw new CannotDeleteTaxRulesGroupException(
-                sprintf('Cannot delete tax rules group object with id "%s".', $taxRulesGroup->id)
-            );
+            throw new CannotDeleteTaxRulesGroupException(sprintf('Cannot delete tax rules group object with id "%s".', $taxRulesGroup->id));
         }
     }
 }

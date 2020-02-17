@@ -1,5 +1,5 @@
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,12 +18,12 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-const $ = window.$;
+const {$} = window;
 
 class StockManagementOptionHandler {
   constructor() {
@@ -34,7 +34,7 @@ class StockManagementOptionHandler {
 
   handle() {
     const stockManagementVal = $('input[name="form[stock][stock_management]"]:checked').val();
-    const isStockManagementEnabled = parseInt(stockManagementVal);
+    const isStockManagementEnabled = parseInt(stockManagementVal, 10);
 
     this.handleAllowOrderingOutOfStockOption(isStockManagementEnabled);
     this.handleDisplayAvailableQuantitiesOption(isStockManagementEnabled);
@@ -51,10 +51,10 @@ class StockManagementOptionHandler {
     const allowOrderingOosRadios = $('input[name="form[stock][allow_ordering_oos]"]');
 
     if (isStockManagementEnabled) {
-        allowOrderingOosRadios.removeAttr('disabled');
+      allowOrderingOosRadios.removeAttr('disabled');
     } else {
-        allowOrderingOosRadios.val([1]);
-        allowOrderingOosRadios.attr('disabled', 'disabled');
+      allowOrderingOosRadios.val([1]);
+      allowOrderingOosRadios.attr('disabled', 'disabled');
     }
   }
 
@@ -69,10 +69,10 @@ class StockManagementOptionHandler {
     const displayQuantitiesRadio = $('input[name="form[page][display_quantities]"]');
 
     if (isStockManagementEnabled) {
-        displayQuantitiesRadio.removeAttr('disabled');
+      displayQuantitiesRadio.removeAttr('disabled');
     } else {
-        displayQuantitiesRadio.val([0]);
-        displayQuantitiesRadio.attr('disabled', 'disabled');
+      displayQuantitiesRadio.val([0]);
+      displayQuantitiesRadio.attr('disabled', 'disabled');
     }
   }
 }

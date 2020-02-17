@@ -1,5 +1,5 @@
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,17 +18,15 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-const fs = require('fs');
 const path = require('path');
 const webpack = require('webpack');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
-const cssExtractedFileName = 'theme';
 
 module.exports = {
   externals: {
@@ -53,6 +51,7 @@ module.exports = {
     currency: './js/pages/currency',
     currency_form: './js/pages/currency/form',
     customer: './js/pages/customer',
+    customer_address_form: './js/pages/address/form.js',
     customer_thread_view: './js/pages/customer-thread/view.js',
     email: './js/pages/email',
     employee: './js/pages/employee/index',
@@ -114,6 +113,7 @@ module.exports = {
       '@components': path.resolve(__dirname, '../js/components'),
       '@scss': path.resolve(__dirname, '../scss'),
       '@node_modules': path.resolve(__dirname, '../node_modules'),
+      '@vue': path.resolve(__dirname, '../js/vue'),
     },
   },
   module: {
@@ -125,7 +125,10 @@ module.exports = {
           loader: 'babel-loader',
           options: {
             presets: [
-              ['es2015', {modules: false}],
+              ['env', {useBuiltIns: 'usage', modules: false}],
+            ],
+            plugins: [
+              'transform-object-rest-spread',
             ],
           },
         }],
@@ -226,7 +229,7 @@ module.exports = {
     new ExtractTextPlugin('theme.css'),
     new CleanWebpackPlugin(['public'], {
       root: path.resolve(__dirname, '../'),
-      exclude: ['theme.rtlfix']
+      exclude: ['theme.rtlfix'],
     }),
     new webpack.ProvidePlugin({
       moment: 'moment', // needed for bootstrap datetime picker
@@ -234,7 +237,7 @@ module.exports = {
       jQuery: 'jquery',
     }),
     new CopyPlugin([
-      { from: 'static' },
-    ])
+      {from: 'static'},
+    ]),
   ],
 };

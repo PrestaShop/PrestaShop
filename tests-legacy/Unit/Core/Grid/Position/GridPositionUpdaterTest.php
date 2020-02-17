@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -27,6 +27,7 @@
 namespace LegacyTests\Unit\Core\Grid\Position;
 
 use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\MockObject\MockObject;
 use PrestaShop\PrestaShop\Core\Grid\Position\Exception\PositionException;
 use PrestaShop\PrestaShop\Core\Grid\Position\Exception\PositionUpdateException;
 use PrestaShop\PrestaShop\Core\Grid\Position\GridPositionUpdater;
@@ -46,7 +47,7 @@ class GridPositionUpdaterTest extends TestCase
         $updateHandler = $this->createUpdateHandlerMockWithAssertions();
         $gridUpdater = new GridPositionUpdater($updateHandler);
 
-        $gridUpdater->update($positionUpdate);
+        $this->assertNull($gridUpdater->update($positionUpdate));
     }
 
     public function testUpdateException()
@@ -62,6 +63,7 @@ class GridPositionUpdaterTest extends TestCase
         } catch (PositionException $e) {
             $caughtException = $e;
         }
+
         $this->assertNotNull($caughtException);
         $this->assertInstanceOf(PositionUpdateException::class, $caughtException);
         $this->assertEquals('Could not update #%i', $caughtException->getKey());
@@ -89,7 +91,7 @@ class GridPositionUpdaterTest extends TestCase
     }
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject|PositionUpdateHandlerInterface
+     * @return MockObject|PositionUpdateHandlerInterface
      */
     private function createUpdateHandlerMockWithAssertions()
     {

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -30,9 +30,9 @@ use DateTime;
 use PrestaShop\PrestaShop\Adapter\CatalogPriceRule\AbstractCatalogPriceRuleHandler;
 use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Command\EditCatalogPriceRuleCommand;
 use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\CommandHandler\EditCatalogPriceRuleHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Exception\CannotUpdateCatalogPriceRuleException;
 use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Exception\CatalogPriceRuleConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Exception\CatalogPriceRuleException;
-use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Exception\CannotUpdateCatalogPriceRuleException;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as UtilsDateTime;
 use PrestaShopException;
 use SpecificPriceRule;
@@ -55,21 +55,12 @@ final class EditCatalogPriceRuleHandler extends AbstractCatalogPriceRuleHandler 
             }
 
             if (false === $specificPriceRule->update()) {
-                throw new CannotUpdateCatalogPriceRuleException(
-                    sprintf('Failed to update specific price rule with id %s', $specificPriceRule->id)
-                );
+                throw new CannotUpdateCatalogPriceRuleException(sprintf('Failed to update specific price rule with id %s', $specificPriceRule->id));
             }
             $specificPriceRule->deleteConditions();
             $specificPriceRule->apply();
         } catch (PrestaShopException $e) {
-            throw new CatalogPriceRuleException(
-                sprintf(
-                    'An unexpected error occurred when editing specific price rule with id %s',
-                    $command->getCatalogPriceRuleId()->getValue()
-                ),
-                0,
-                $e
-            );
+            throw new CatalogPriceRuleException(sprintf('An unexpected error occurred when editing specific price rule with id %s', $command->getCatalogPriceRuleId()->getValue()), 0, $e);
         }
     }
 

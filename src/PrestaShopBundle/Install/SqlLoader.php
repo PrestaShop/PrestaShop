@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -39,12 +39,12 @@ class SqlLoader
     /**
      * @var array List of keywords which will be replaced in queries
      */
-    protected $metadata = array();
+    protected $metadata = [];
 
     /**
      * @var array List of errors during last parsing
      */
-    protected $errors = array();
+    protected $errors = [];
 
     /**
      * @param Db $db
@@ -105,7 +105,7 @@ class SqlLoader
      */
     public function parse($content, $stop_when_fail = true)
     {
-        $this->errors = array();
+        $this->errors = [];
 
         $content = str_replace(array_keys($this->metadata), array_values($this->metadata), $content);
         $queries = preg_split('#;\s*[\r\n]+#', $content);
@@ -116,11 +116,11 @@ class SqlLoader
             }
 
             if (!$this->db->execute($query)) {
-                $this->errors[] = array(
+                $this->errors[] = [
                     'errno' => $this->db->getNumberError(),
                     'error' => $this->db->getMsgError(),
                     'query' => $query,
-                );
+                ];
 
                 if ($stop_when_fail) {
                     return false;

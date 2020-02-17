@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -118,10 +118,7 @@ final class ColumnCollection extends AbstractCollection implements ColumnCollect
     public function move($id, $position)
     {
         if (!isset($this->items[$id])) {
-            throw new ColumnNotFoundException(sprintf(
-                'Cannot insert new column into collection. Column with id "%s" was not found.',
-                $id
-            ));
+            throw new ColumnNotFoundException(sprintf('Cannot insert new column into collection. Column with id "%s" was not found.', $id));
         }
 
         $column = $this->items[$id];
@@ -148,10 +145,7 @@ final class ColumnCollection extends AbstractCollection implements ColumnCollect
     private function insertByPosition($id, ColumnInterface $newColumn, $position)
     {
         if (!isset($this->items[$id])) {
-            throw new ColumnNotFoundException(sprintf(
-                'Cannot insert new column into collection. Column with id "%s" was not found.',
-                $id
-            ));
+            throw new ColumnNotFoundException(sprintf('Cannot insert new column into collection. Column with id "%s" was not found.', $id));
         }
 
         $existingColumnKeyPosition = array_search($id, array_keys($this->items));

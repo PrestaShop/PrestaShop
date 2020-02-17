@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -27,9 +27,9 @@
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Domain\AbstractObjectModelHandler;
-use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\AssignProductToCategoryHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Product\Command\AssignProductToCategoryCommand;
 use PrestaShop\PrestaShop\Adapter\Product\ProductDataProvider;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\AssignProductToCategoryCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\AssignProductToCategoryHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotAssignProductToCategoryException;
 
 /**
@@ -58,12 +58,7 @@ final class AssignProductToCategoryHandler extends AbstractObjectModelHandler im
         $product = $productDataProvider->getProductInstance($command->getProductId()->getValue());
         $product->addToCategories($command->getCategoryId()->getValue());
         if (false === $product->save()) {
-            throw new CannotAssignProductToCategoryException(
-                sprintf(
-                    'Failed to add category to product %d',
-                    $command->getProductId()->getValue()
-                )
-            );
+            throw new CannotAssignProductToCategoryException(sprintf('Failed to add category to product %d', $command->getProductId()->getValue()));
         }
     }
 }

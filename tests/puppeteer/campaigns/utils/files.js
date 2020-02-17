@@ -78,4 +78,18 @@ module.exports = {
     }
     return imageNumber;
   },
+  /**
+   * Create file with content
+   * @param path
+   * @param filename
+   * @param content
+   * @return {Promise<void>}
+   */
+  async createFile(path, filename, content) {
+    await fs.writeFile(`${path}/${filename}`, content, (err) => {
+      if (err) {
+        throw new Error(err);
+      }
+    });
+  },
 };

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -44,12 +44,6 @@ class ValidateCoreTest extends TestCase
         $this->assertTrue(Validate::isAnything());
     }
 
-    // TODO: Write test for testIsModuleUrl()
-    public function testIsModuleUrl()
-    {
-        //$this->assertSame($expected, Validate::isEmail($input));
-    }
-
     /**
      * @dataProvider isEmailDataProvider
      */
@@ -63,7 +57,14 @@ class ValidateCoreTest extends TestCase
      */
     public function testIsBirthDate($expected, $input)
     {
-        $this->assertSame($expected, Validate::isBirthDate($input));
+        // data from isBirthDateProvider provider are in UTC
+        $defaultTz = date_default_timezone_get();
+        date_default_timezone_set('UTC');
+        try {
+            $this->assertSame($expected, Validate::isBirthDate($input));
+        } finally {
+            date_default_timezone_set($defaultTz);
+        }
     }
 
     /**

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -87,7 +87,7 @@ class TreeCore
     public function setAttribute($name, $value)
     {
         if (!isset($this->_attributes)) {
-            $this->_attributes = array();
+            $this->_attributes = [];
         }
 
         $this->_attributes[$name] = $value;
@@ -126,7 +126,7 @@ class TreeCore
     public function getAttributes()
     {
         if (!isset($this->_attributes)) {
-            $this->_attributes = array();
+            $this->_attributes = [];
         }
 
         return $this->_attributes;
@@ -162,7 +162,7 @@ class TreeCore
     public function getDataSearch()
     {
         if (!isset($this->_data_search)) {
-            $this->_data_search = array();
+            $this->_data_search = [];
         }
 
         return $this->_data_search;
@@ -182,7 +182,7 @@ class TreeCore
     public function getData()
     {
         if (!isset($this->_data)) {
-            $this->_data = array();
+            $this->_data = [];
         }
 
         return $this->_data;
@@ -430,20 +430,20 @@ class TreeCore
             );
             $headerTemplate->assign($this->getAttributes())
                 ->assign(
-                    array(
+                    [
                         'title' => $this->getTitle(),
                         'toolbar' => $this->useToolbar() ? $this->renderToolbar() : null,
-                    )
+                    ]
             );
             $template->assign('header', $headerTemplate->fetch());
         }
 
         //Assign Tree nodes
-        $template->assign($this->getAttributes())->assign(array(
+        $template->assign($this->getAttributes())->assign([
             'id' => $this->getId(),
             'nodes' => $this->renderNodes($data),
             'id_tree' => $this->getIdTree(),
-        ));
+        ]);
 
         return (isset($html) ? $html : '') . $template->fetch();
     }
@@ -466,17 +466,17 @@ class TreeCore
                 $html .= $this->getContext()->smarty->createTemplate(
                     $this->getTemplateFile($this->getNodeFolderTemplate()),
                     $this->getContext()->smarty
-                )->assign(array(
+                )->assign([
                     'children' => $this->renderNodes($item['children']),
                     'node' => $item,
-                ))->fetch();
+                ])->fetch();
             } else {
                 $html .= $this->getContext()->smarty->createTemplate(
                     $this->getTemplateFile($this->getNodeItemTemplate()),
                     $this->getContext()->smarty
-                )->assign(array(
+                )->assign([
                     'node' => $item,
-                ))->fetch();
+                ])->fetch();
             }
         }
 
@@ -502,7 +502,7 @@ class TreeCore
     {
         $last = $directory[strlen($directory) - 1];
 
-        if (in_array($last, array('/', '\\'))) {
+        if (in_array($last, ['/', '\\'])) {
             $directory[strlen($directory) - 1] = DIRECTORY_SEPARATOR;
 
             return $directory;

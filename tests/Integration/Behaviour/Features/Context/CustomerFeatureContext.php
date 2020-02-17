@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,13 +19,14 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace Tests\Integration\Behaviour\Features\Context;
 
+use CartRule;
 use Configuration;
 use Context;
 use Country;
@@ -88,10 +89,7 @@ class CustomerFeatureContext extends AbstractPrestaShopFeatureContext
             }
         }
 
-        throw new Exception(sprintf(
-            'Customer does not have address in "%s" country',
-            $isoCode
-        ));
+        throw new RuntimeException(sprintf('Customer does not have address in "%s" country', $isoCode));
     }
 
     /**
@@ -112,10 +110,7 @@ class CustomerFeatureContext extends AbstractPrestaShopFeatureContext
         $customer = SharedStorage::getStorage()->get($reference);
 
         if ($customer->note) {
-            throw new RuntimeException(sprintf(
-                'It was expected that customer "%s" should not have private note.',
-                $reference
-            ));
+            throw new RuntimeException(sprintf('It was expected that customer "%s" should not have private note.', $reference));
         }
     }
 
@@ -128,12 +123,25 @@ class CustomerFeatureContext extends AbstractPrestaShopFeatureContext
         $customer = SharedStorage::getStorage()->get($reference);
 
         if ($customer->note !== $privateNote) {
-            throw new RuntimeException(sprintf(
-                'It was expected that customer "%s" private note should be "%s", but actually is "%s".',
-                $reference,
-                $privateNote,
-                $customer->note
-            ));
+            throw new RuntimeException(sprintf('It was expected that customer "%s" private note should be "%s", but actually is "%s".', $reference, $privateNote, $customer->note));
+        }
+    }
+
+    /**
+     * @Then customer :reference last voucher is :voucherAmount
+     */
+    public function checkCustomerHasVoucher(string $reference, float $voucherAmount)
+    {
+        /** @var Customer $customer */
+        $customer = SharedStorage::getStorage()->get($reference);
+        $cartRules = CartRule::getCustomerCartRules((int) Configuration::get('PS_LANG_DEFAULT'), $customer->id, true, false);
+        if (empty($cartRules)) {
+            throw new RuntimeException('Cannot find any cart rules for customer');
+        }
+
+        $voucher = $cartRules[count($cartRules) - 1];
+        if ($voucherAmount !== (float) $voucher['reduction_amount']) {
+            throw new RuntimeException(sprintf('Invalid voucher amount, expected %s but got %s instead', $voucherAmount, $voucher['reduction_amount']));
         }
     }
 

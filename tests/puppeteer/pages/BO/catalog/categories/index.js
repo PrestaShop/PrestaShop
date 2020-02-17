@@ -28,7 +28,7 @@ module.exports = class Categories extends BOBasePage {
     this.filterSearchButton = `${this.categoriesListForm} button[name='category[actions][search]']`;
     this.filterResetButton = `${this.categoriesListForm} button[name='category[actions][reset]']`;
     // Bulk Actions
-    this.selectAllRowsLabel = `${this.categoriesListForm} .md-checkbox label`;
+    this.selectAllRowsLabel = `${this.categoriesListForm} tr.column-filters .md-checkbox i`;
     this.bulkActionsToggleButton = `${this.categoriesListForm} button.dropdown-toggle`;
     this.bulkActionsEnableButton = `${this.categoriesListForm} #category_grid_bulk_action_enable_selection`;
     this.bulkActionsDisableButton = `${this.categoriesListForm} #category_grid_bulk_action_disable_selection`;
@@ -43,11 +43,19 @@ module.exports = class Categories extends BOBasePage {
   Methods
    */
   /**
+   * Go to add new category page
+   * @return {Promise<void>}
+   */
+  async goToAddNewCategoryPage() {
+    await this.clickAndWaitForNavigation(this.addNewCategoryLink);
+  }
+
+  /**
    * Reset input filters
    * @return {Promise<integer>}
    */
   async resetFilter() {
-    if (await this.elementVisible(this.filterResetButton, 2000)) {
+    if (!(await this.elementNotVisible(this.filterResetButton, 2000))) {
       await this.clickAndWaitForNavigation(this.filterResetButton);
     }
   }

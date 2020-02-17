@@ -39,7 +39,7 @@ module.exports = class moduleCatalog extends BOBasePage {
    */
   async installModule(moduleName) {
     await this.page.click(this.installModuleButton.replace('%MODULENAME', moduleName));
-    await this.page.waitForSelector(this.growlMessageBloc, {visible: true});
-    return this.getTextContent(this.growlMessageBloc);
+    await this.page.waitForSelector(this.growlMessageBlock, {visible: true});
+    return this.getTextContent(this.growlMessageBlock);
   }
 };

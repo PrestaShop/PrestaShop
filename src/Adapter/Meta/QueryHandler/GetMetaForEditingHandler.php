@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -27,10 +27,10 @@
 namespace PrestaShop\PrestaShop\Adapter\Meta\QueryHandler;
 
 use Meta;
-use PrestaShop\PrestaShop\Core\Domain\Meta\QueryResult\EditableMeta;
 use PrestaShop\PrestaShop\Core\Domain\Meta\Exception\MetaNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Meta\Query\GetMetaForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Meta\QueryHandler\GetMetaForEditingHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Meta\QueryResult\EditableMeta;
 
 /**
  * Class GetMetaForEditingHandler is responsible for retrieving meta data.
@@ -51,19 +51,11 @@ final class GetMetaForEditingHandler implements GetMetaForEditingHandlerInterfac
         $entity = new Meta($metaId->getValue());
 
         if (0 >= $entity->id) {
-            throw new MetaNotFoundException(
-                sprintf('Meta with id "%s" cannot be found', $metaId->getValue())
-            );
+            throw new MetaNotFoundException(sprintf('Meta with id "%s" cannot be found', $metaId->getValue()));
         }
 
         if ((int) $entity->id !== $metaId->getValue()) {
-            throw new MetaNotFoundException(
-                sprintf(
-                    'The retrieved id "%s" does not match requested Meta id "%s"',
-                    $entity->id,
-                    $metaId->getValue()
-                )
-            );
+            throw new MetaNotFoundException(sprintf('The retrieved id "%s" does not match requested Meta id "%s"', $entity->id, $metaId->getValue()));
         }
 
         return new EditableMeta(
