@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -44,7 +44,7 @@ class CheckoutPersonalInformationStepCore extends AbstractCheckoutStep
         $this->registerForm = $registerForm;
     }
 
-    public function handleRequest(array $requestParameters = array())
+    public function handleRequest(array $requestParameters = [])
     {
         // personal info step is always reachable
         $this->setReachable(true);
@@ -93,24 +93,24 @@ class CheckoutPersonalInformationStepCore extends AbstractCheckoutStep
         $this->setTitle(
             $this->getTranslator()->trans(
                 'Personal Information',
-                array(),
+                [],
                 'Shop.Theme.Checkout'
             )
         );
     }
 
-    public function render(array $extraParams = array())
+    public function render(array $extraParams = [])
     {
         return $this->renderTemplate(
             $this->getTemplate(),
             $extraParams,
-            array(
+            [
                 'show_login_form' => $this->show_login_form,
                 'login_form' => $this->loginForm->getProxy(),
                 'register_form' => $this->registerForm->getProxy(),
                 'guest_allowed' => $this->getCheckoutSession()->isGuestAllowed(),
                 'empty_cart_on_logout' => !Configuration::get('PS_CART_FOLLOWING'),
-            )
+            ]
         );
     }
 }

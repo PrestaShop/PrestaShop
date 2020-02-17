@@ -12,7 +12,6 @@ module.exports = class AddCurrency extends BOBasePage {
     this.selectResultOption = 'li.select2-results__option:nth-child(%ID)';
     this.alternativeCurrencyCheckBox = '#currency_unofficial + i';
     this.currencyNameInput = '#currency_names_%ID';
-    this.symbolInput = '#currency_symbols_%ID';
     this.isoCodeInput = '#currency_iso_code';
     this.exchangeRateInput = '#currency_exchange_rate';
     this.decimalsInput = '#currency_precision';
@@ -48,6 +47,21 @@ module.exports = class AddCurrency extends BOBasePage {
       );
       await this.page.waitFor(200);
     }
+    await this.page.click(this.statusSwitch.replace('%ID', currencyData.enabled ? 1 : 0));
+    await this.clickAndWaitForNavigation(this.saveButton);
+    return this.getTextContent(this.alertSuccessBlockParagraph);
+  }
+
+  /**
+   * Create unofficial currency
+   * @param currencyData
+   * @return {Promise<textContent>}
+   */
+  async createUnOfficialCurrency(currencyData) {
+    await this.changeCheckboxValue(this.alternativeCurrencyCheckBox, true);
+    await this.setValue(this.currencyNameInput.replace('%ID', 1), currencyData.name);
+    await this.setValue(this.isoCodeInput, currencyData.isoCode);
+    await this.setValue(this.exchangeRateInput, currencyData.exchangeRate.toString());
     await this.page.click(this.statusSwitch.replace('%ID', currencyData.enabled ? 1 : 0));
     await this.clickAndWaitForNavigation(this.saveButton);
     return this.getTextContent(this.alertSuccessBlockParagraph);

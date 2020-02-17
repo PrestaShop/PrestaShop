@@ -166,6 +166,14 @@ admin_customers_search:
   options:
     expose: true
 
+admin_customer_for_address_information:
+  path: /customer-information
+  methods: [GET]
+  defaults:
+    _controller: PrestaShopBundle:Admin\Sell\Customer\Customer:getCustomerInformation
+    _legacy_controller: AdminAddresses
+    _legacy_link: AdminAddresses:loadNames
+
 admin_customers_carts:
   path: /{customerId}/carts
   methods: [GET]

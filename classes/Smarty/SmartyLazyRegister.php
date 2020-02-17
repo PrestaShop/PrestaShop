@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -28,8 +28,8 @@
  */
 class SmartyLazyRegister
 {
-    protected $registry = array();
-    protected static $instances = array();
+    protected $registry = [];
+    protected static $instances = [];
 
     /**
      * Register a function or method to be dynamically called later.
@@ -68,9 +68,9 @@ class SmartyLazyRegister
 
         // case 1: call to static method - case 2 : call to static function
         if (is_array($item[1])) {
-            return call_user_func_array($item[1] . '::' . $item[0], array($arguments[0], &$arguments[1]));
+            return call_user_func_array($item[1] . '::' . $item[0], [$arguments[0], &$arguments[1]]);
         } else {
-            $args = array();
+            $args = [];
 
             foreach ($arguments as $a => $argument) {
                 if ($a == 0) {

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -46,7 +46,7 @@ class ObjectPresenter implements PresenterInterface
             throw new Exception('ObjectPresenter can only present ObjectModel classes');
         }
 
-        $presentedObject = array();
+        $presentedObject = [];
 
         $fields = $object::$definition['fields'];
         foreach ($fields as $fieldName => $null) {
@@ -78,11 +78,11 @@ class ObjectPresenter implements PresenterInterface
         if (!empty($htmlFields) && is_array($htmlFields)) {
             $filteredHtml = Hook::exec(
                 'filterHtmlContent',
-                array(
+                [
                     'type' => $type,
                     'htmlFields' => $htmlFields,
                     'object' => $presentedObject,
-                ),
+                ],
                 null,
                 false,
                 true,

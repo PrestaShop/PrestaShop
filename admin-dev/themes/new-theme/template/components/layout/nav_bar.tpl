@@ -1,5 +1,5 @@
 {**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
@@ -28,8 +28,7 @@
     <i class="material-icons">chevron_left</i>
   </span>
 
-  <ul class="main-menu">
-
+  <ul class="main-menu{if $collapse_menu} sidebar-closed{/if}">
     {foreach $tabs as $level1}
       {if $level1.active}
 
@@ -44,7 +43,6 @@
         {/if}
 
         {if $level1.icon != ''}
-
           <li class="link-levelone {if $level1.current}-active{/if}" data-submenu="{$level1.id_tab}" id="tab-{$level1.class_name}">
             <a href="{$level1Href}" class="link" >
               <i class="material-icons">{$level1.icon}</i> <span>{$level1Name}</span>

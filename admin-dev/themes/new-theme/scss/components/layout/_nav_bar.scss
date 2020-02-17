@@ -168,6 +168,20 @@
   padding: 0 0 5.313rem 0;
   margin: 0;
 
+  &.sidebar-closed {
+    .link-levelone {
+      .link > span {
+        display: none;
+      }
+
+      &.open {
+        > .submenu {
+          display: none;
+        }
+      }
+    }
+  }
+
   .category-title > .title {
     text-transform: uppercase;
   }
@@ -374,6 +388,10 @@
   & > .title {
     color: white;
     background: $gray-dark;
+
+    @at-root .sidebar-closed & {
+      display: none;
+    }
   }
 }
 
@@ -402,7 +420,6 @@
 }
 
 .page-sidebar-closed:not(.mobile) {
-
   .menu-collapse {
     transform: rotate(180deg);
     padding-right: .8rem;

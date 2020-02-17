@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -35,7 +35,7 @@ use PrestaShopBundle\Service\Hook\HookFinder;
 class ProductExtraContentFinder extends HookFinder
 {
     protected $hookName = 'displayProductExtraContent';
-    protected $expectedInstanceClasses = array('PrestaShop\PrestaShop\Core\Product\ProductExtraContent');
+    protected $expectedInstanceClasses = ['PrestaShop\PrestaShop\Core\Product\ProductExtraContent'];
 
     /**
      * Execute hook to get all addionnal product content, and check if valid

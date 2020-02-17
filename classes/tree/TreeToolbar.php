@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -53,7 +53,7 @@ class TreeToolbarCore implements ITreeToolbarCore
     public function getActions()
     {
         if (!isset($this->_actions)) {
-            $this->_actions = array();
+            $this->_actions = [];
         }
 
         return $this->_actions;
@@ -174,7 +174,7 @@ class TreeToolbarCore implements ITreeToolbarCore
         }
 
         if (!isset($this->_actions)) {
-            $this->_actions = array();
+            $this->_actions = [];
         }
 
         if (isset($this->_template_directory)) {
@@ -210,7 +210,7 @@ class TreeToolbarCore implements ITreeToolbarCore
     {
         $last = $directory[strlen($directory) - 1];
 
-        if (in_array($last, array('/', '\\'))) {
+        if (in_array($last, ['/', '\\'])) {
             $directory[strlen($directory) - 1] = DIRECTORY_SEPARATOR;
 
             return $directory;

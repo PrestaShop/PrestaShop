@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -59,25 +59,16 @@ final class GetLastEmptyCustomerCartHandler implements GetLastEmptyCustomerCartH
             $customer = new Customer($customerId);
 
             if ($customer->id !== $customerId) {
-                throw new CustomerNotFoundException(
-                    $query->getCustomerId(),
-                    sprintf('Customer with id "%s" was not found.', $customerId)
-                );
+                throw new CustomerNotFoundException($query->getCustomerId(), sprintf('Customer with id "%s" was not found.', $customerId));
             }
 
             $cartId = $customer->getLastEmptyCart(false);
 
             if (false === $cartId) {
-                throw new CartNotFoundException(sprintf(
-                    'Empty cart not found for customer with id "%s"',
-                    $customerId
-                ));
+                throw new CartNotFoundException(sprintf('Empty cart not found for customer with id "%s"', $customerId));
             }
         } catch (PrestaShopException $e) {
-            throw new CartException(sprintf(
-                'An error occurred while trying to find empty cart for customer with id "%s"',
-                $customerId
-            ));
+            throw new CartException(sprintf('An error occurred while trying to find empty cart for customer with id "%s"', $customerId));
         }
 
         return new CartId($cartId);

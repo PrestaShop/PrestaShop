@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -100,10 +100,7 @@ final class AddCustomerHandler extends AbstractCustomerHandler implements AddCus
         $customer->getByEmail($email->getValue());
 
         if ($customer->id) {
-            throw new DuplicateCustomerEmailException(
-                $email,
-                sprintf('Customer with email "%s" already exists', $email->getValue())
-            );
+            throw new DuplicateCustomerEmailException($email, sprintf('Customer with email "%s" already exists', $email->getValue()));
         }
     }
 
@@ -150,9 +147,7 @@ final class AddCustomerHandler extends AbstractCustomerHandler implements AddCus
     private function assertCustomerCanAccessDefaultGroup(AddCustomerCommand $command)
     {
         if (!in_array($command->getDefaultGroupId(), $command->getGroupIds())) {
-            throw new CustomerDefaultGroupAccessException(
-                sprintf('Customer default group with id "%s" must be in access groups', $command->getDefaultGroupId())
-            );
+            throw new CustomerDefaultGroupAccessException(sprintf('Customer default group with id "%s" must be in access groups', $command->getDefaultGroupId()));
         }
     }
 }

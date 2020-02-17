@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -55,7 +55,7 @@ abstract class AbstractAdminQueryBuilder
     private function compileSqlWhere(array $whereArray)
     {
         $operator = 'AND';
-        $s = array();
+        $s = [];
         while ($item = array_shift($whereArray)) {
             if ($item == 'OR') {
                 $operator = 'OR';
@@ -128,12 +128,12 @@ abstract class AbstractAdminQueryBuilder
      *
      * @return string the SQL query ready to be executed
      */
-    protected function compileSqlQuery(array $select, array $table, array $where = array(), array $groupBy = array(), array $order = array(), $limit = null)
+    protected function compileSqlQuery(array $select, array $table, array $where = [], array $groupBy = [], array $order = [], $limit = null)
     {
-        $sql = array();
+        $sql = [];
 
         // SELECT
-        $s = array();
+        $s = [];
         foreach ($select as $alias => $field) {
             $a = is_string($alias) ? ' AS `' . $alias . '`' : '';
             if (is_array($field)) {
@@ -152,7 +152,7 @@ abstract class AbstractAdminQueryBuilder
         $sql[] = 'SELECT SQL_CALC_FOUND_ROWS' . implode(',' . PHP_EOL, $s);
 
         // FROM / JOIN
-        $s = array();
+        $s = [];
         foreach ($table as $alias => $join) {
             if (!is_array($join)) {
                 if (count($s) > 0) {
@@ -186,7 +186,7 @@ abstract class AbstractAdminQueryBuilder
 
         // ORDER
         if (count($order) > 0) {
-            $goodOrder = array();
+            $goodOrder = [];
             foreach ($order as $o) {
                 $value = explode(' ', $o);
                 if (!empty($value) && 2 === count($value) && Validate::isOrderBy($value[0]) && Validate::isOrderWay($value[1])) {

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -47,12 +47,12 @@ class Processor
     /**
      * @var string[] Names of the FO themes to process
      */
-    private $processFOThemes = array();
+    private $processFOThemes = [];
 
     /**
      * @var array Indicates additional paths to process
      */
-    private $processPaths = array();
+    private $processPaths = [];
 
     /**
      * @var bool Indicates if this is performed during install
@@ -67,7 +67,7 @@ class Processor
     /**
      * @var string[] Path to the default modules to process
      */
-    private $defaultModulesToProcess = array();
+    private $defaultModulesToProcess = [];
 
     /**
      * @var bool Indicates if the default modules should be processed

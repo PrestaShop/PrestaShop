@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -38,7 +38,7 @@ class ModuleTemplateLoader extends FilesystemLoader
      * @param array $namespaces a collection of path namespaces with namespace names
      * @param array $modulePaths A path or an array of paths where to look for module templates
      */
-    public function __construct(array $namespaces, array $modulePaths = array())
+    public function __construct(array $namespaces, array $modulePaths = [])
     {
         if (!empty($modulePaths)) {
             $this->registerNamespacesFromConfig($modulePaths, $namespaces);
@@ -54,7 +54,7 @@ class ModuleTemplateLoader extends FilesystemLoader
     private function registerNamespacesFromConfig(array $modulePaths, array $namespaces)
     {
         foreach ($namespaces as $namespace => $namespacePath) {
-            $templatePaths = array();
+            $templatePaths = [];
 
             foreach ($modulePaths as $path) {
                 if (is_dir($dir = $path . '/views/PrestaShop/' . $namespacePath)) {

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -29,11 +29,13 @@ namespace PrestaShopBundle\Controller\Admin\Improve\Design;
 use Exception;
 use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
 use PrestaShop\PrestaShop\Core\Domain\Exception\FileUploadException;
-use PrestaShop\PrestaShop\Core\Domain\Meta\QueryResult\LayoutCustomizationPage;
 use PrestaShop\PrestaShop\Core\Domain\Meta\Query\GetPagesForLayoutCustomization;
+use PrestaShop\PrestaShop\Core\Domain\Meta\QueryResult\LayoutCustomizationPage;
 use PrestaShop\PrestaShop\Core\Domain\Shop\DTO\ShopLogoSettings;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\NotSupportedFaviconExtensionException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\NotSupportedLogoImageExtensionException;
+use PrestaShop\PrestaShop\Core\Domain\Shop\Query\GetLogosPaths;
+use PrestaShop\PrestaShop\Core\Domain\Shop\QueryResult\LogosPaths;
 use PrestaShop\PrestaShop\Core\Domain\Theme\Command\AdaptThemeToRTLLanguagesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Theme\Command\DeleteThemeCommand;
 use PrestaShop\PrestaShop\Core\Domain\Theme\Command\EnableThemeCommand;
@@ -46,8 +48,6 @@ use PrestaShop\PrestaShop\Core\Domain\Theme\Exception\FailedToEnableThemeModuleE
 use PrestaShop\PrestaShop\Core\Domain\Theme\Exception\ImportedThemeAlreadyExistsException;
 use PrestaShop\PrestaShop\Core\Domain\Theme\Exception\ThemeConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Theme\Exception\ThemeException;
-use PrestaShop\PrestaShop\Core\Domain\Shop\Query\GetLogosPaths;
-use PrestaShop\PrestaShop\Core\Domain\Shop\QueryResult\LogosPaths;
 use PrestaShop\PrestaShop\Core\Domain\Theme\ValueObject\ThemeImportSource;
 use PrestaShop\PrestaShop\Core\Domain\Theme\ValueObject\ThemeName;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;

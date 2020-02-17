@@ -1,5 +1,5 @@
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,15 +18,17 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 import createOrderMap from '@pages/order/create/create-order-map';
 import Router from '@components/router';
+import eventMap from '@pages/order/create/event-map';
+import {EventEmitter} from '@components/event-emitter';
 
-const $ = window.$;
+const {$} = window;
 
 /**
  * Responsible for customer information rendering
@@ -44,16 +46,16 @@ export default class CustomerRenderer {
    * @param foundCustomers
    */
   renderSearchResults(foundCustomers) {
-    this._clearShownCustomers();
+    this.clearShownCustomers();
 
     if (foundCustomers.length === 0) {
-      this._showNotFoundCustomers();
+      EventEmitter.emit(eventMap.customersNotFound);
+      this.showNotFoundCustomers();
 
       return;
     }
 
-    for (const customerId in foundCustomers) {
-      const customerResult = foundCustomers[customerId];
+    Object.entries(foundCustomers).forEach((customerId, customerResult) => {
       const customer = {
         id: customerId,
         firstName: customerResult.firstname,
@@ -62,8 +64,8 @@ export default class CustomerRenderer {
         birthday: customerResult.birthday !== '0000-00-00' ? customerResult.birthday : ' ',
       };
 
-      this._renderFoundCustomer(customer);
-    }
+      this.renderFoundCustomer(customer);
+    });
   }
 
   /**
@@ -72,6 +74,8 @@ export default class CustomerRenderer {
    * @param $targetedBtn
    */
   displaySelectedCustomerBlock($targetedBtn) {
+    this.showCheckoutHistoryBlock();
+
     $targetedBtn.addClass('d-none');
 
     const $customerCard = $targetedBtn.closest('.card');
@@ -82,8 +86,7 @@ export default class CustomerRenderer {
     this.$container.find(createOrderMap.customerSearchRow).addClass('d-none');
     this.$container.find(createOrderMap.notSelectedCustomerSearchResults)
       .closest(createOrderMap.customerSearchResultColumn)
-      .remove()
-    ;
+      .remove();
   }
 
   /**
@@ -104,33 +107,35 @@ export default class CustomerRenderer {
     const $cartsTableRowTemplate = $($(createOrderMap.customerCartsTableRowTemplate).html());
 
     $cartsTable.find('tbody').empty();
+    this.showCheckoutHistoryBlock();
+    this.removeEmptyListRowFromTable($cartsTable);
 
-    if (carts.length === 0) {
-      return;
-    }
-
-    this._showCheckoutHistoryBlock();
-
-    for (const key in carts) {
-      const cart = carts[key];
+    Object.values(carts).forEach((cart) => {
       // do not render current cart
       if (cart.cartId === currentCartId) {
-        continue;
-      }
-      const $template = $cartsTableRowTemplate.clone();
+        // render 'No records found' warn if carts only contain current cart
+        if (carts.length === 1) {
+          this.renderEmptyList($cartsTable);
+        }
 
-      $template.find(createOrderMap.cartIdField).text(cart.cartId);
-      $template.find(createOrderMap.cartDateField).text(cart.creationDate);
-      $template.find(createOrderMap.cartTotalField).text(cart.totalPrice);
-      $template.find(createOrderMap.cartDetailsBtn).prop(
+        return;
+      }
+
+      const $cartsTableRow = $cartsTableRowTemplate.clone();
+
+      $cartsTableRow.find(createOrderMap.cartIdField).text(cart.cartId);
+      $cartsTableRow.find(createOrderMap.cartDateField).text(cart.creationDate);
+      $cartsTableRow.find(createOrderMap.cartTotalField).text(cart.totalPrice);
+      $cartsTableRow.find(createOrderMap.cartDetailsBtn).prop(
         'href',
-        this.router.generate('admin_carts_view', {cartId: cart.cartId})
+        this.router.generate('admin_carts_view', {cartId: cart.cartId}),
       );
 
-      $template.find(createOrderMap.useCartBtn).data('cart-id', cart.cartId);
+      $cartsTableRow.find(createOrderMap.useCartBtn).data('cart-id', cart.cartId);
 
-      $cartsTable.find('tbody').append($template);
-    }
+      $cartsTable.find('thead').removeClass('d-none');
+      $cartsTable.find('tbody').append($cartsTableRow);
+    });
   }
 
   /**
@@ -143,31 +148,76 @@ export default class CustomerRenderer {
     const $rowTemplate = $($(createOrderMap.customerOrdersTableRowTemplate).html());
 
     $ordersTable.find('tbody').empty();
+    this.showCheckoutHistoryBlock();
+    this.removeEmptyListRowFromTable($ordersTable);
 
+    // render 'No records found' when list is empty
     if (orders.length === 0) {
+      this.renderEmptyList($ordersTable);
+
       return;
     }
 
-    this._showCheckoutHistoryBlock();
 
-    for (const key in Object.keys(orders)) {
-      const order = orders[key];
+    Object.values(orders).forEach((order) => {
       const $template = $rowTemplate.clone();
 
       $template.find(createOrderMap.orderIdField).text(order.orderId);
       $template.find(createOrderMap.orderDateField).text(order.orderPlacedDate);
-      $template.find(createOrderMap.orderProductsField).text(order.totalProductsCount);
+      $template.find(createOrderMap.orderProductsField).text(order.orderProductsCount);
       $template.find(createOrderMap.orderTotalField).text(order.totalPaid);
+      $template.find(createOrderMap.orderPaymentMethod).text(order.paymentMethodName);
       $template.find(createOrderMap.orderStatusField).text(order.orderStatus);
       $template.find(createOrderMap.orderDetailsBtn).prop(
         'href',
-        this.router.generate('admin_orders_view', {orderId: order.orderId})
+        this.router.generate('admin_orders_view', {orderId: order.orderId}),
       );
 
       $template.find(createOrderMap.useOrderBtn).data('order-id', order.orderId);
 
+      $ordersTable.find('thead').removeClass('d-none');
       $ordersTable.find('tbody').append($template);
-    }
+    });
+  }
+
+  /**
+   * Shows empty result when customer is not found
+   */
+  showNotFoundCustomers() {
+    $(createOrderMap.customerSearchEmptyResultWarning).removeClass('d-none');
+  }
+
+  /**
+   * Hides not found customers warning
+   */
+  hideNotFoundCustomers() {
+    $(createOrderMap.customerSearchEmptyResultWarning).addClass('d-none');
+  }
+
+  /**
+   * Hides checkout history block where carts and orders are rendered
+   */
+  hideCheckoutHistoryBlock() {
+    $(createOrderMap.customerCheckoutHistory).addClass('d-none');
+  }
+
+  /**
+   * Renders 'No records' warning in list
+   *
+   * @param $table
+   *
+   * @private
+   */
+  renderEmptyList($table) {
+    const $emptyTableRow = $($(createOrderMap.emptyListRowTemplate).html()).clone();
+    $table.find('tbody').append($emptyTableRow);
+  }
+
+  /**
+   * Removes empty list row in case it was rendered
+   */
+  removeEmptyListRowFromTable($table) {
+    $table.find(createOrderMap.emptyListRow).remove();
   }
 
   /**
@@ -179,7 +229,9 @@ export default class CustomerRenderer {
    *
    * @private
    */
-  _renderFoundCustomer(customer) {
+  renderFoundCustomer(customer) {
+    this.hideNotFoundCustomers();
+
     const $customerSearchResultTemplate = $($(createOrderMap.customerSearchResultTemplate).html());
     const $template = $customerSearchResultTemplate.clone();
 
@@ -190,7 +242,7 @@ export default class CustomerRenderer {
     $template.find(createOrderMap.chooseCustomerBtn).data('customer-id', customer.id);
     $template.find(createOrderMap.customerDetailsBtn).prop(
       'href',
-      this.router.generate('admin_customers_view', {customerId: customer.id})
+      this.router.generate('admin_customers_view', {customerId: customer.id}),
     );
 
     return this.$customerSearchResultBlock.append($template);
@@ -201,27 +253,14 @@ export default class CustomerRenderer {
    *
    * @private
    */
-  _showCheckoutHistoryBlock() {
+  showCheckoutHistoryBlock() {
     $(createOrderMap.customerCheckoutHistory).removeClass('d-none');
   }
 
   /**
    * Clears shown customers
-   *
-   * @private
    */
-  _clearShownCustomers() {
+  clearShownCustomers() {
     this.$customerSearchResultBlock.empty();
-  }
-
-  /**
-   * Shows empty result when customer is not found
-   *
-   * @private
-   */
-  _showNotFoundCustomers() {
-    const $emptyResultTemplate = $($('#customerSearchEmptyResultTemplate').html());
-
-    this.$customerSearchResultBlock.append($emptyResultTemplate);
   }
 }

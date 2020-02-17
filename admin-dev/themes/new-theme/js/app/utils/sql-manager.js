@@ -1,5 +1,5 @@
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,12 +18,12 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-const $ = global.$;
+const {$} = window;
 
 /**
  * Allow to display the last SQL query in a modal and redirect to SQL Manager.
@@ -47,26 +47,29 @@ class SqlManager {
     let container = false;
     let current = false;
     if ($('.breadcrumb')) {
-      container = $('.breadcrumb li').eq(0).text().replace(/\s+/g, ' ').trim();
-      current = $('.breadcrumb li').eq(-1).text().replace(/\s+/g, ' ').trim();
+      container = $('.breadcrumb li').eq(0).text().replace(/\s+/g, ' ')
+        .trim();
+      current = $('.breadcrumb li').eq(-1).text().replace(/\s+/g, ' ')
+        .trim();
     }
     let title = false;
     if ($('h2.title')) {
-      title = $('h2.title').first().text().replace(/\s+/g, ' ').trim();
+      title = $('h2.title').first().text().replace(/\s+/g, ' ')
+        .trim();
     }
 
     let name = false;
-    if (container && current && container != current) {
-      name = container + ' > ' + current;
+    if (container && current && container !== current) {
+      name = `${container} > ${current}`;
     } else if (container) {
       name = container;
     } else if (current) {
       name = current;
     }
 
-    if (title && title != current && title != container) {
+    if (title && title !== current && title !== container) {
       if (name) {
-        name = name + ' > ' + title;
+        name = `${name} > ${title}`;
       } else {
         name = title;
       }

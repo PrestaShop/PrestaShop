@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -44,10 +44,7 @@ final class BulkToggleManufacturerStatusHandler extends AbstractManufacturerComm
             $manufacturer = $this->getManufacturer($manufacturerId);
 
             if (!$this->toggleManufacturerStatus($manufacturer, $command->getExpectedStatus())) {
-                throw new UpdateManufacturerException(
-                    sprintf('Unable to toggle manufacturer status with id "%s"', $manufacturer->id),
-                    UpdateManufacturerException::FAILED_BULK_UPDATE_STATUS
-                );
+                throw new UpdateManufacturerException(sprintf('Unable to toggle manufacturer status with id "%s"', $manufacturer->id), UpdateManufacturerException::FAILED_BULK_UPDATE_STATUS);
             }
         }
     }

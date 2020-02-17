@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -43,7 +43,7 @@ class AdminNotFoundControllerCore extends AdminController
 
     public function initContent()
     {
-        $this->errors[] = $this->trans('Page not found', array(), 'Admin.Notifications.Error');
+        $this->errors[] = $this->trans('Page not found', [], 'Admin.Notifications.Error');
         $tpl_vars['controller'] = Tools::getValue('controllerUri', Tools::getValue('controller'));
         $this->context->smarty->assign($tpl_vars);
         parent::initContent();

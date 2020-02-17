@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,13 +19,14 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace Tests\Unit\Core\MailTemplate;
 
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShop\PrestaShop\Core\Language\LanguageDefaultFontsCatalog;
@@ -139,7 +140,7 @@ class LayoutVariablesBuilderTest extends TestCase
      * @param array $expectedVariables
      * @param LayoutInterface $mailLayout
      *
-     * @return \PHPUnit_Framework_MockObject_MockObject|HookDispatcherInterface
+     * @return MockObject|HookDispatcherInterface
      */
     private function createHookDispatcherMock(array $expectedVariables, LayoutInterface $mailLayout)
     {
@@ -170,7 +171,7 @@ class LayoutVariablesBuilderTest extends TestCase
      * @param string $isoCode
      * @param bool $isRTL
      *
-     * @return \PHPUnit_Framework_MockObject_MockObject|LanguageInterface
+     * @return MockObject|LanguageInterface
      */
     private function buildLanguageMock($isoCode = 'en', $isRTL = false)
     {
@@ -201,7 +202,7 @@ class LayoutVariablesBuilderTest extends TestCase
     /**
      * @param array $expectedMethods
      *
-     * @return \PHPUnit_Framework_MockObject_MockObject|LayoutInterface
+     * @return MockObject|LayoutInterface
      */
     private function buildLayoutMock(array $expectedMethods)
     {
@@ -222,7 +223,7 @@ class LayoutVariablesBuilderTest extends TestCase
     }
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject|LanguageDefaultFontsCatalog
+     * @return MockObject|LanguageDefaultFontsCatalog
      */
     private function buildFontCatalog()
     {

@@ -1,5 +1,5 @@
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -35,7 +35,7 @@ import LinkRowActionExtension from '@components/grid/extension/link-row-action-e
 import FiltersSubmitButtonEnablerExtension
   from '@components/grid/extension/filters-submit-button-enabler-extension';
 
-const $ = window.$;
+const {$} = window;
 
 class SqlManagerPage {
   constructor() {
@@ -66,7 +66,7 @@ class SqlManagerPage {
       .then((response) => {
         $('.js-table-alert').addClass('d-none');
 
-        const columns = response.columns;
+        const {columns} = response;
 
         $table.removeClass('d-none');
         $table.find('tbody').empty();
@@ -79,8 +79,8 @@ class SqlManagerPage {
               .append($('<button>')
                 .addClass('btn btn-sm btn-outline-secondary js-add-db-table-column-to-query-btn')
                 .attr('data-column', column.name)
-                .html($table.data('action-btn'))
-              )
+                .html($table.data('action-btn')),
+              ),
             );
 
           $table.find('tbody').append($row);
@@ -121,7 +121,7 @@ class SqlManagerPage {
    */
   addToQuery(data) {
     const $queryInput = $('#sql_request_sql');
-    $queryInput.val($queryInput.val() + ' ' + data);
+    $queryInput.val(`${$queryInput.val()} ${data}`);
   }
 }
 

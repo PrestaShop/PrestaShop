@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,13 +19,15 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Query;
 
+use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\AlphaIsoCode;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 
 /**
@@ -44,16 +46,32 @@ class SearchProducts
     private $resultsLimit;
 
     /**
+     * @var AlphaIsoCode
+     */
+    private $alphaIsoCode;
+
+    /**
      * @param string $phrase
      * @param int $resultsLimit
+     * @param string $isoCode
      *
      * @throws ProductException
+     * @throws CurrencyConstraintException
      */
-    public function __construct(string $phrase, int $resultsLimit)
+    public function __construct(string $phrase, int $resultsLimit, string $isoCode)
     {
         $this->assertIsNotEmptyString($phrase);
         $this->phrase = $phrase;
         $this->resultsLimit = $resultsLimit;
+        $this->alphaIsoCode = new AlphaIsoCode($isoCode);
+    }
+
+    /**
+     * @return AlphaIsoCode
+     */
+    public function getAlphaIsoCode(): AlphaIsoCode
+    {
+        return $this->alphaIsoCode;
     }
 
     /**

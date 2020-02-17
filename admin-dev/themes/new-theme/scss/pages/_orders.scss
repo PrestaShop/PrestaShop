@@ -27,6 +27,37 @@
   }
 }
 
+#orderProductsPanel {
+  .cellProductActions .btn {
+    background-color: transparent;
+    color: $medium-gray;
+    &:hover {
+      color: $primary;
+    }
+  }
+  .btn-product-pack-modal {
+    color: $primary;
+    cursor: pointer;
+  }
+  input[type="number"] {
+    width: 80px;
+  }
+}
+
+#addProductTableRow,
+.editProductRow {
+  /* stylelint-disable */
+  // div selector is important here, it is used for empty labels regular labels must not be hidden
+  div.form-control-label {
+    display: none;
+  }
+  /* stylelint-enable */
+}
+
+#addProductNewInvoiceInfo h4 {
+  margin-top: 8px;
+}
+
 $order-block-background-color: #F8F8F8;
 
 .info-block {
@@ -37,7 +68,6 @@ $order-block-background-color: #F8F8F8;
   padding-bottom: 16px;
 }
 
-
 #order-creation-container {
   .found-cart-rule:hover {
     cursor: pointer;
@@ -46,6 +76,19 @@ $order-block-background-color: #F8F8F8;
 
   #search-cart-rules-result-box {
     z-index: 10;
+  }
+
+  #summary-block {
+    .badge {
+      font-size: 100%;
+    }
+  }
+
+  #customer-tab-content-container-toggler .material-icons::before {
+    content: 'keyboard_arrow_down';
+  }
+  #customer-tab-content-container-toggler[aria-expanded=false] .material-icons::before {
+    content: 'keyboard_arrow_up';
   }
 }
 
@@ -115,20 +158,157 @@ $order-block-background-color: #F8F8F8;
   }
 }
 
+td .editProductInvoice {
+  min-width: 130px;
+}
+
 
 @media only screen and (max-width: 1475px) {
-  .messages-block {  
+  .messages-block {
     li {
       .row {
         .col-md-1 {
           order: 1;
           margin-bottom: 5px;
         }
-  
+
         .col-md-11 {
           order: 2;
         }
       }
     }
-  } 
+  }
+}
+
+/* Cancel/refund products */
+.shipping-price {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.shipping-refund-amount {
+  margin-left: 10px;
+}
+
+.shipping-refund .form-group {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+
+  .shipping-refund-amount {
+    margin-left: 5px;
+  }
+}
+
+.cancel-product-element,
+.cancel-product-selector,
+.cancel-product-amount {
+  display: none;
+}
+
+.cancel-product-element.form-submit {
+  width: 100%;
+  margin-right: 20px;
+  margin-top: -10px;
+}
+
+.refund-checkboxes-container {
+  display: none;
+  width: fit-content;
+  margin: 16px auto;
+}
+
+.refund-checkboxes-container .form-group {
+  width: max-content;
+}
+
+th.cancel-product-element,
+td.cancel-product-element {
+  max-width: 420px;
+}
+
+@include media-breakpoint-down(lg) {
+  .partial-refund {
+    .cancel-product-cell {
+      .cancel-product-cell-elements {
+        flex-direction: column;
+        align-items: flex-end;
+
+        .cancel-product-quantity {
+          margin-bottom: 10px;
+        }
+      }
+    }
+  }
+}
+
+.cancel-product-cell {
+  margin-right: 0;
+  padding-right: 0;
+  max-width: 400px;
+
+  .cancel-product-cell-elements {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: flex-start;
+
+    .cancel-product-selector {
+      width: 30px;
+      align-self: center;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: row;
+      margin-bottom: 0;
+
+      .form-control-label {
+        line-height: 30px;
+        padding: 0;
+        margin-bottom: 0;
+        font-weight: bold;
+      }
+
+      .input-group {
+        min-width: 90px;
+        max-width: 130px;
+
+        .form-control {
+          height: 35px;
+          min-width: 30px;
+          max-width: 80px;
+        }
+        .input-group-append {
+          height: 35px;
+        }
+        .max-refund {
+          flex-basis: 100%;
+          padding-left: 10px;
+        }
+      }
+
+      &.cancel-product-amount {
+        .input-group {
+          min-width: 125px;
+        }
+      }
+    }
+  }
+}
+
+.voucher-refund-type-negative-error {
+  color: $color-error;
+  display: none;
+}
+
+input.refund-quantity {
+  max-width: 160px;
+  margin-left: 10px;
+}
+
+input.refund-amount, input#partial_refund_shipping {
+  max-width: 80px;
+  margin-left: 10px;
 }
