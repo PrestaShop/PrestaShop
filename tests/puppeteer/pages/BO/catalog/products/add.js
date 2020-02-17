@@ -68,7 +68,7 @@ module.exports = class AddProduct extends BOBasePage {
    * @param switchProductOnline
    * @return {Promise<textContent>}
    */
-  async createEditProduct(productData, switchProductOnline = true) {
+  async createEditProduct(productData, switchProductOnline = true, withSpecificPrice = false) {
     // Set Name, type of product, Reference, price ttc and quantity, and with combinations
     await this.page.click(this.productNameInput, {clickCount: 3});
     await this.page.type(this.productNameInput, productData.name);
@@ -99,7 +99,7 @@ module.exports = class AddProduct extends BOBasePage {
         this.page.click(this.productOnlineSwitch),
       ]);
     }
-    if (productData.specificPrice) {
+    if (withSpecificPrice) {
       await this.reloadPage();
       // Go to pricing tab : id = 2
       await this.goToFormStep(2);
