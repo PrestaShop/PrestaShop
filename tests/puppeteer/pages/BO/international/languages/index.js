@@ -37,6 +37,10 @@ module.exports = class Languages extends LocalizationBasePage {
     this.bulkActionsDeleteButton = '#language_grid_bulk_action_delete_selection';
     this.confirmDeleteModal = '#language_grid_confirm_modal';
     this.confirmDeleteButton = `${this.confirmDeleteModal} button.btn-confirm-submit`;
+    // Sort Selectors
+    this.tableHead = `${this.gridTable} thead`;
+    this.sortColumnDiv = `${this.tableHead} div.ps-sortable-column[data-sort-col-name='%COLUMN']`;
+    this.sortColumnSpanButton = `${this.sortColumnDiv} span.ps-sort`;
   }
 
   /* Header methods */
@@ -112,6 +116,21 @@ module.exports = class Languages extends LocalizationBasePage {
         .replace('%ROW', row)
         .replace('%COLUMN', column),
     );
+  }
+
+  /**
+   * Get content from all rows
+   * @param column
+   * @return {Promise<[]>}
+   */
+  async getAllRowsColumnContent(column) {
+    const rowsNumber = await this.getNumberOfElementInGrid();
+    const allRowsContentTable = [];
+    for (let i = 1; i <= rowsNumber; i++) {
+      const rowContent = await this.getTextColumnFromTable(i, column);
+      await allRowsContentTable.push(rowContent);
+    }
+    return allRowsContentTable;
   }
 
   /**
@@ -193,5 +212,23 @@ module.exports = class Languages extends LocalizationBasePage {
    */
   async confirmDeleteLanguages() {
     await this.clickAndWaitForNavigation(this.confirmDeleteButton);
+  }
+
+  /* Sort functions */
+  /**
+   *
+   * @param sortBy, column to sort with
+   * @param sortDirection, asc or desc
+   * @return {Promise<void>}
+   */
+  async sortTable(sortBy, sortDirection = 'asc') {
+    const sortColumnDiv = `${this.sortColumnDiv.replace('%COLUMN', sortBy)}[data-sort-direction='${sortDirection}']`;
+    const sortColumnSpanButton = this.sortColumnSpanButton.replace('%COLUMN', sortBy);
+    let i = 0;
+    while (await this.elementNotVisible(sortColumnDiv, 1000) && i < 2) {
+      await this.clickAndWaitForNavigation(sortColumnSpanButton);
+      i += 1;
+    }
+    await this.page.waitForSelector(sortColumnDiv, {visible: true});
   }
 };
