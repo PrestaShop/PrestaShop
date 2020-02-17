@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -66,10 +66,7 @@ final class DeleteLanguageHandler extends AbstractLanguageHandler implements Del
     private function assertLanguageIsNotDefault(Language $language)
     {
         if ($language->id === (int) Configuration::get('PS_LANG_DEFAULT')) {
-            throw new DefaultLanguageException(
-                sprintf('Default language "%s" cannot be deleted', $language->iso_code),
-                DefaultLanguageException::CANNOT_DELETE_ERROR
-            );
+            throw new DefaultLanguageException(sprintf('Default language "%s" cannot be deleted', $language->iso_code), DefaultLanguageException::CANNOT_DELETE_ERROR);
         }
     }
 
@@ -79,10 +76,7 @@ final class DeleteLanguageHandler extends AbstractLanguageHandler implements Del
     private function assertLanguageIsNotInUse(Language $language)
     {
         if ($language->id === (int) Context::getContext()->language->id) {
-            throw new DefaultLanguageException(
-                sprintf('Used language "%s" cannot be deleted', $language->iso_code),
-                DefaultLanguageException::CANNOT_DELETE_IN_USE_ERROR
-            );
+            throw new DefaultLanguageException(sprintf('Used language "%s" cannot be deleted', $language->iso_code), DefaultLanguageException::CANNOT_DELETE_IN_USE_ERROR);
         }
     }
 }

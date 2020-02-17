@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -33,7 +33,7 @@ class QueryStockMovementParamsCollection extends QueryStockParamsCollection
      */
     protected function getValidFilterParams()
     {
-        return array(
+        return [
             'productId',
             'supplier_id',
             'category_id',
@@ -43,7 +43,7 @@ class QueryStockMovementParamsCollection extends QueryStockParamsCollection
             'date_add',
             'id_employee',
             'id_stock_mvt_reason',
-        );
+        ];
     }
 
     /**
@@ -51,12 +51,12 @@ class QueryStockMovementParamsCollection extends QueryStockParamsCollection
      */
     protected function getValidOrderParams()
     {
-        return array(
+        return [
             'product',
             'reference',
             'date_add',
             'id_stock_mvt',
-        );
+        ];
     }
 
     /**
@@ -66,7 +66,7 @@ class QueryStockMovementParamsCollection extends QueryStockParamsCollection
      */
     protected function setDefaultOrderParam($queryParams)
     {
-        $queryParams['order'] = array('id_stock_mvt DESC');
+        $queryParams['order'] = ['id_stock_mvt DESC'];
 
         return $queryParams;
     }

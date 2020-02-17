@@ -1,5 +1,5 @@
 {**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
@@ -29,33 +29,12 @@
     {/block}
 
     {block name='cart_summary_products'}
-      <div class="cart-summary-products">
-
-        <p>{$cart.summary_string}</p>
-
-        <p>
-          <a href="#" data-toggle="collapse" data-target="#cart-summary-product-list">
-            {l s='show details' d='Shop.Theme.Actions'}
-            <i class="material-icons">expand_more</i>
-          </a>
-        </p>
-
-        {block name='cart_summary_product_list'}
-          <div class="collapse" id="cart-summary-product-list">
-            <ul class="media-list">
-              {foreach from=$cart.products item=product}
-                <li class="media">{include file='checkout/_partials/cart-summary-product-line.tpl' product=$product}</li>
-              {/foreach}
-            </ul>
-          </div>
-        {/block}
-      </div>
+      {include file='checkout/_partials/cart-summary-products.tpl' cart=$cart}
     {/block}
 
-  {block name='cart_summary_subtotals'}
-    {include file='checkout/_partials/cart-summary-subtotals.tpl' cart=$cart}
-  {/block}
-
+    {block name='cart_summary_subtotals'}
+      {include file='checkout/_partials/cart-summary-subtotals.tpl' cart=$cart}
+    {/block}
   </div>
 
   {block name='cart_summary_totals'}

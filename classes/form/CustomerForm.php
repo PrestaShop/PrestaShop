@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -110,7 +110,7 @@ class CustomerFormCore extends AbstractForm
         if ($id_customer && $id_customer != $customer->id) {
             $emailField->addError($this->translator->trans(
                 'The email is already used, please choose another one or sign in',
-                array(),
+                [],
                 'Shop.Notifications.Error'
             ));
         }
@@ -160,7 +160,7 @@ class CustomerFormCore extends AbstractForm
     {
         return $this->translator->trans(
             'The %1$s field is too long (%2$d chars max).',
-            array('email', 255),
+            ['email', 255],
             'Shop.Notifications.Error'
         );
     }
@@ -169,7 +169,7 @@ class CustomerFormCore extends AbstractForm
     {
         return $this->translator->trans(
             'The %1$s field is too long (%2$d chars max).',
-            array('first name', 255),
+            ['first name', 255],
             'Shop.Notifications.Error'
         );
     }
@@ -178,7 +178,7 @@ class CustomerFormCore extends AbstractForm
     {
         return $this->translator->trans(
             'The %1$s field is too long (%2$d chars max).',
-            array('last name', 255),
+            ['last name', 255],
             'Shop.Notifications.Error'
         );
     }
@@ -233,7 +233,7 @@ class CustomerFormCore extends AbstractForm
      */
     private function validateByModules()
     {
-        $formFieldsAssociated = array();
+        $formFieldsAssociated = [];
         // Group FormField instances by module name
         foreach ($this->formFields as $formField) {
             if (!empty($formField->moduleName)) {
@@ -245,7 +245,7 @@ class CustomerFormCore extends AbstractForm
         foreach ($formFieldsAssociated as $moduleName => $formFields) {
             if ($moduleId = Module::getModuleIdByName($moduleName)) {
                 // ToDo : replace Hook::exec with HookFinder, because we expect a specific class here
-                $validatedCustomerFormFields = Hook::exec('validateCustomerFormFields', array('fields' => $formFields), $moduleId, true);
+                $validatedCustomerFormFields = Hook::exec('validateCustomerFormFields', ['fields' => $formFields], $moduleId, true);
 
                 if (is_array($validatedCustomerFormFields)) {
                     array_merge($this->formFields, $validatedCustomerFormFields);

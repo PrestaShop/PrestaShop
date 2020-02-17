@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,148 +19,93 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Core\Domain\Order\Command;
 
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidRefundException;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
+use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderDetailRefund;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
 
 /**
  * Issues partial refund for given order.
  */
-class IssuePartialRefundCommand
+class IssuePartialRefundCommand extends AbstractRefundCommand
 {
     /**
-     * @var OrderId
+     * @var float
      */
-    private $orderId;
+    private $shippingCostRefundAmount;
 
     /**
-     * @var array
-     */
-    private $orderDetailRefunds;
-
-    /**
-     * @var int
-     */
-    private $shippingCostRefund;
-
-    /**
-     * @var bool
-     */
-    private $restockRefundedProducts;
-
-    /**
-     * @var bool
-     */
-    private $generateCartRule;
-
-    /**
-     * @var bool
-     */
-    private $taxMethod;
-
-    /**
-     * @var int
-     */
-    private $cartRuleRefundType;
-
-    /**
-     * @var float|null
-     */
-    private $cartRuleRefundAmount;
-
-    /**
+     * The expected format for $orderDetailRefunds is an associative array indexed
+     * by OrderDetail id containing two fields amount and quantity
+     *
+     * ex: $orderDetailRefunds = [
+     *      {orderId} => [
+     *          'quantity' => 2,
+     *          'amount' => 23.56,
+     *      ],
+     * ];
+     *
      * @param int $orderId
      * @param array $orderDetailRefunds
-     * @param int $shippingCostRefund
+     * @param float $shippingCostRefundAmount
      * @param bool $restockRefundedProducts
-     * @param bool $generateCartRule
-     * @param bool $taxMethod
-     * @param int $cartRuleRefundType
-     * @param float|null $cartRuleRefundAmount
+     * @param bool $generateVoucher
+     * @param bool $generateCreditSlip
+     * @param int $voucherRefundType
+     * @param float|null $voucherRefundAmount
+     *
+     * @throws InvalidRefundException
+     * @throws OrderException
      */
     public function __construct(
-        $orderId,
+        int $orderId,
         array $orderDetailRefunds,
-        $shippingCostRefund,
-        $restockRefundedProducts,
-        $generateCartRule,
-        $taxMethod,
-        $cartRuleRefundType,
-        $cartRuleRefundAmount = null
+        float $shippingCostRefundAmount,
+        bool $restockRefundedProducts,
+        bool $generateCreditSlip,
+        bool $generateVoucher,
+        int $voucherRefundType,
+        ?float $voucherRefundAmount = null
     ) {
-        $this->orderId = new OrderId($orderId);
-        $this->orderDetailRefunds = $orderDetailRefunds;
-        $this->shippingCostRefund = $shippingCostRefund;
-        $this->restockRefundedProducts = $restockRefundedProducts;
-        $this->generateCartRule = $generateCartRule;
-        $this->taxMethod = $taxMethod;
-        $this->cartRuleRefundType = $cartRuleRefundType;
-        $this->cartRuleRefundAmount = $cartRuleRefundAmount;
+        parent::__construct(
+            $orderId,
+            $orderDetailRefunds,
+            $restockRefundedProducts,
+            $generateCreditSlip,
+            $generateVoucher,
+            $voucherRefundType,
+            $voucherRefundAmount
+        );
+        $this->shippingCostRefundAmount = $shippingCostRefundAmount;
     }
 
     /**
-     * @return OrderId
+     * @return float
      */
-    public function getOrderId()
+    public function getShippingCostRefundAmount(): float
     {
-        return $this->orderId;
+        return $this->shippingCostRefundAmount;
     }
 
     /**
-     * @return array
+     * {@inheritdoc}
      */
-    public function getOrderDetailRefunds()
+    protected function setOrderDetailRefunds(array $orderDetailRefunds)
     {
-        return $this->orderDetailRefunds;
-    }
-
-    /**
-     * @return bool
-     */
-    public function getTaxMethod()
-    {
-        return $this->taxMethod;
-    }
-
-    /**
-     * @return int
-     */
-    public function getShippingCostRefundAmount()
-    {
-        return $this->shippingCostRefund;
-    }
-
-    /**
-     * @return bool
-     */
-    public function restockRefundedProducts()
-    {
-        return $this->restockRefundedProducts;
-    }
-
-    /**
-     * @return bool
-     */
-    public function generateCartRule()
-    {
-        return $this->generateCartRule;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCartRuleRefundType()
-    {
-        return $this->cartRuleRefundType;
-    }
-
-    public function getCartRuleRefundAmount()
-    {
-        return $this->cartRuleRefundAmount;
+        $this->orderDetailRefunds = [];
+        foreach ($orderDetailRefunds as $orderDetailId => $detailRefund) {
+            $this->orderDetailRefunds[] = OrderDetailRefund::createPartialRefund(
+                $orderDetailId,
+                $detailRefund['quantity'],
+                $detailRefund['amount']
+            );
+        }
     }
 }

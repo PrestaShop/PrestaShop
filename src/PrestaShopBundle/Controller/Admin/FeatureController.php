@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -44,7 +44,7 @@ class FeatureController extends FrameworkBundleAdminController
     {
         $response = new JsonResponse();
         $locales = $this->get('prestashop.adapter.legacy.context')->getLanguages();
-        $data = array();
+        $data = [];
 
         if ($idFeature == 0) {
             return $response;
@@ -53,20 +53,20 @@ class FeatureController extends FrameworkBundleAdminController
         $featuresValues = $this->get('prestashop.adapter.data_provider.feature')->getFeatureValuesWithLang($locales[0]['id_lang'], $idFeature);
 
         if (count($featuresValues) !== 0) {
-            $data['0'] = array(
+            $data['0'] = [
                 'id' => 0,
                 'value' => $this->trans('Choose a value', 'Admin.Catalog.Feature'),
-            );
+            ];
         }
 
         foreach ($featuresValues as $featureValue) {
             if (isset($featureValue['custom']) && $featureValue['custom'] == 1) {
                 continue;
             }
-            $data[] = array(
+            $data[] = [
                 'id' => $featureValue['id_feature_value'],
                 'value' => $featureValue['value'],
-            );
+            ];
         }
 
         $response->setData($data);

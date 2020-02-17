@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -96,13 +96,7 @@ class Birthday
         $now = new DateTime();
 
         if ($birthdayDateTime > $now) {
-            throw new CustomerConstraintException(
-                sprintf(
-                    'Invalid birthday "%s" provided. Birthday must be a past date.',
-                    $birthdayDateTime->format('Y-m-d')
-                ),
-                CustomerConstraintException::INVALID_BIRTHDAY
-            );
+            throw new CustomerConstraintException(sprintf('Invalid birthday "%s" provided. Birthday must be a past date.', $birthdayDateTime->format('Y-m-d')), CustomerConstraintException::INVALID_BIRTHDAY);
         }
     }
 
@@ -118,10 +112,7 @@ class Birthday
         }
 
         if (!is_string($birthday) || false === strtotime($birthday)) {
-            throw new CustomerConstraintException(
-                sprintf('Invalid birthday %s value provided.', var_export($birthday, true)),
-                CustomerConstraintException::INVALID_BIRTHDAY
-            );
+            throw new CustomerConstraintException(sprintf('Invalid birthday %s value provided.', var_export($birthday, true)), CustomerConstraintException::INVALID_BIRTHDAY);
         }
     }
 }

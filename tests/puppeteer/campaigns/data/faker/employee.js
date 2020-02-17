@@ -10,7 +10,8 @@ module.exports = class Employee {
     this.email = employeeToCreate.email || faker.internet.email(this.firstName, this.lastName, 'prestashop.com');
     this.password = employeeToCreate.password || 'prestashop_demo';
     this.defaultPage = employeeToCreate.defaultPage || faker.random.arrayElement(Pages);
-    this.language = employeeToCreate.language || faker.random.arrayElement(Languages);
+    this.language = employeeToCreate.language
+      || faker.random.arrayElement(Object.values(Languages).map(lang => lang.name));
     this.active = employeeToCreate.active === undefined ? true : employeeToCreate.active;
     this.permissionProfile = employeeToCreate.permissionProfile || faker.random.arrayElement(Profiles);
   }

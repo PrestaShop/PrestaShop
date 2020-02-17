@@ -1,5 +1,5 @@
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -52,7 +52,7 @@
 export default class GeneratableInput {
   constructor() {
     return {
-      'attachOn': (btnSelector) => this._attachOn(btnSelector),
+      attachOn: (btnSelector) => this.attachOn(btnSelector),
     };
   }
 
@@ -63,16 +63,19 @@ export default class GeneratableInput {
    *
    * @private
    */
-  _attachOn(generatorBtnSelector) {
-    document.querySelector(generatorBtnSelector).addEventListener('click', (event) => {
-      const attributes = event.currentTarget.attributes;
+  attachOn(generatorBtnSelector) {
+    const generatorBtn = document.querySelector(generatorBtnSelector);
+    if (generatorBtn !== null) {
+      generatorBtn.addEventListener('click', (event) => {
+        const {attributes} = event.currentTarget;
 
-      const targetInputId = attributes.getNamedItem('data-target-input-id').value;
-      const generatedValueLength = parseInt(attributes.getNamedItem('data-generated-value-length').value);
+        const targetInputId = attributes.getNamedItem('data-target-input-id').value;
+        const generatedValueLength = parseInt(attributes.getNamedItem('data-generated-value-length').value, 10);
 
-      const targetInput = document.querySelector('#' + targetInputId);
-      targetInput.value = this._generateValue(generatedValueLength)
-    });
+        const targetInput = document.querySelector(`#${targetInputId}`);
+        targetInput.value = this.generateValue(generatedValueLength);
+      });
+    }
   }
 
   /**
@@ -84,11 +87,11 @@ export default class GeneratableInput {
    *
    * @private
    */
-  _generateValue(length) {
+  generateValue(length) {
     const chars = '123456789ABCDEFGHIJKLMNPQRSTUVWXYZ';
     let generatedValue = '';
 
-    for (let i = 1; i <= length; ++i) {
+    for (let i = 1; i <= length; i += 1) {
       generatedValue += chars.charAt(Math.floor(Math.random() * chars.length));
     }
 

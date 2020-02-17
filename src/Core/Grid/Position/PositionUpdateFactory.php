@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -118,17 +118,11 @@ final class PositionUpdateFactory implements PositionUpdateFactoryInterface
     private function validateData(array $data, PositionDefinition $positionDefinition)
     {
         if (empty($data[$this->positionsField])) {
-            throw new PositionDataException(
-                'Missing ' . $this->positionsField . ' in your data.',
-                'Admin.Notifications.Failure'
-            );
+            throw new PositionDataException('Missing ' . $this->positionsField . ' in your data.', 'Admin.Notifications.Failure');
         }
 
         if (null !== $positionDefinition->getParentIdField() && empty($data[$this->parentIdField])) {
-            throw new PositionDataException(
-                'Missing ' . $this->parentIdField . ' in your data.',
-                'Admin.Notifications.Failure'
-            );
+            throw new PositionDataException('Missing ' . $this->parentIdField . ' in your data.', 'Admin.Notifications.Failure');
         }
     }
 
@@ -143,25 +137,13 @@ final class PositionUpdateFactory implements PositionUpdateFactoryInterface
     private function validatePositionData(array $position, $index)
     {
         if (!isset($position[$this->rowIdField])) {
-            throw new PositionDataException(
-                self::POSITION_KEY,
-                'Admin.Notifications.Failure',
-                [$index, $this->rowIdField]
-            );
+            throw new PositionDataException(self::POSITION_KEY, 'Admin.Notifications.Failure', [$index, $this->rowIdField]);
         }
         if (!isset($position[$this->oldPositionField])) {
-            throw new PositionDataException(
-                self::POSITION_KEY,
-                'Admin.Notifications.Failure',
-                [$index, $this->oldPositionField]
-            );
+            throw new PositionDataException(self::POSITION_KEY, 'Admin.Notifications.Failure', [$index, $this->oldPositionField]);
         }
         if (!isset($position[$this->newPositionField])) {
-            throw new PositionDataException(
-                self::POSITION_KEY,
-                'Admin.Notifications.Failure',
-                [$index, $this->newPositionField]
-            );
+            throw new PositionDataException(self::POSITION_KEY, 'Admin.Notifications.Failure', [$index, $this->newPositionField]);
         }
     }
 }

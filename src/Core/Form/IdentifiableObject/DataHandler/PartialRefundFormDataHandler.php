@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -28,10 +28,10 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler;
 
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\IssuePartialRefundCommand;
-use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderForViewing;
+use PrestaShop\PrestaShop\Core\Domain\Order\VoucherRefundType;
 
 /**
- * Class CurrencyFormDataHandler
+ * Class PartialRefundFormDataHandler
  */
 final class PartialRefundFormDataHandler implements FormDataHandlerInterface
 {
@@ -41,18 +41,11 @@ final class PartialRefundFormDataHandler implements FormDataHandlerInterface
     private $commandBus;
 
     /**
-     * @var CommandBusInterface
-     */
-    private $queryBus;
-
-    /**
      * @param CommandBusInterface $commandBus
-     * @param CommandBusInterface $queryBus
      */
-    public function __construct(CommandBusInterface $commandBus, CommandBusInterface $queryBus)
+    public function __construct(CommandBusInterface $commandBus)
     {
         $this->commandBus = $commandBus;
-        $this->queryBus = $queryBus;
     }
 
     /**
@@ -68,26 +61,23 @@ final class PartialRefundFormDataHandler implements FormDataHandlerInterface
      */
     public function update($id, array $data)
     {
-        $orderForViewing = $this->queryBus->handle(new GetOrderForViewing($id));
         $refunds = [];
         foreach ($data['products'] as $product) {
             $orderDetailId = $product->getOrderDetailId();
-            if (!empty($data['quantity_' . $orderDetailId])) {
-                $refunds[$orderDetailId]['quantity'] = $data['quantity_' . $orderDetailId];
-            }
-            if (!empty($data['amount_' . $orderDetailId])) {
-                $refunds[$orderDetailId]['amount'] = $data['amount_' . $orderDetailId];
+            if (!empty($data['quantity_' . $orderDetailId]) || !empty($data['amount_' . $orderDetailId])) {
+                $refunds[$orderDetailId]['quantity'] = $data['quantity_' . $orderDetailId] ?? 0;
+                $refunds[$orderDetailId]['amount'] = $data['amount_' . $orderDetailId] ?? 0;
             }
         }
 
         $command = new IssuePartialRefundCommand(
             $id,
             $refunds,
-            $data['shipping'],
+            $data['shipping_amount'],
             $data['restock'],
+            $data['credit_slip'],
             $data['voucher'],
-            $orderForViewing->isTaxIncluded(),
-            1
+            $data['voucher_refund_type'] ?? VoucherRefundType::PRODUCT_PRICES_EXCLUDING_VOUCHER_REFUND
         );
 
         $this->commandBus->handle($command);

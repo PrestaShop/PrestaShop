@@ -1,5 +1,5 @@
 <!--**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,40 +18,54 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *-->
 <template>
   <div class="form-group">
-    <label>{{label}}</label>
-    <textarea class="form-control" rows="2" v-model="getTranslated" :class="{ missing : isMissing }"></textarea>
-    <PSButton class="mt-3 float-sm-right" :primary="false" ghost @click="resetTranslation">
+    <label>{{ label }}</label>
+    <textarea
+      class="form-control"
+      rows="2"
+      v-model="getTranslated"
+      :class="{ missing : isMissing }"
+    />
+    <PSButton
+      class="mt-3 float-sm-right"
+      :primary="false"
+      ghost
+      @click="resetTranslation"
+    >
       {{ trans('button_reset') }}
     </PSButton>
-    <small class="mt-3">{{extraInfo}}</small>
+    <small class="mt-3">{{ extraInfo }}</small>
   </div>
 </template>
 
 <script>
   import PSButton from '@app/widgets/ps-button';
-  import { EventBus } from '@app/utils/event-bus';
+  import {EventBus} from '@app/utils/event-bus';
 
   export default {
     name: 'TranslationInput',
     props: {
       id: {
         type: Number,
+        required: false,
+        default: 0,
       },
       extraInfo: {
         type: String,
         required: false,
+        default: '',
       },
       label: {
         type: String,
         required: true,
       },
       translated: {
+        type: Object,
         required: true,
       },
     },
@@ -88,7 +102,7 @@
 </script>
 
 <style lang="scss" scoped>
-  @import "../../../../../../scss/config/_settings.scss";
+  @import '~@scss/config/_settings.scss';
 
   .form-group {
     overflow: hidden;

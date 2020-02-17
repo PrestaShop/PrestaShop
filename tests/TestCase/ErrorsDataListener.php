@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,18 +19,20 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace Tests\TestCase;
 
-use PHPUnit\Framework\BaseTestListener;
-use PHPUnit_Framework_TestSuite;
+use PHPUnit\Framework\TestListener;
+use PHPUnit\Framework\TestListenerDefaultImplementation;
+use PHPUnit\Framework\TestSuite;
 
-class ErrorsDataListener extends BaseTestListener
+class ErrorsDataListener implements TestListener
 {
+    use TestListenerDefaultImplementation;
     /**
      * @var PhpErrorsCounter a dedicated error handler
      */
@@ -54,7 +56,7 @@ class ErrorsDataListener extends BaseTestListener
         $this->errorsCounter = new PhpErrorsCounter();
     }
 
-    public function startTestSuite(PHPUnit_Framework_TestSuite $suite)
+    public function startTestSuite(TestSuite $suite): void
     {
         ++$this->suites;
         if (!$this->isRegistered) {
@@ -63,7 +65,7 @@ class ErrorsDataListener extends BaseTestListener
         }
     }
 
-    public function endTestSuite(PHPUnit_Framework_TestSuite $suite)
+    public function endTestSuite(TestSuite $suite): void
     {
         --$this->suites;
 

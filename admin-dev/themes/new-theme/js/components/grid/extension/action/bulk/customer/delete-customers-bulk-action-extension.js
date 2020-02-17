@@ -1,5 +1,5 @@
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,18 +18,17 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-const $ = window.$;
+const {$} = window;
 
 /**
  * Handles bulk delete for "Customers" grid.
  */
 export default class DeleteCustomersBulkActionExtension {
-
   constructor() {
     return {
       extend: (grid) => this.extend(grid),
@@ -56,7 +55,7 @@ export default class DeleteCustomersBulkActionExtension {
         $selectedCustomerCheckboxes.each((i, checkbox) => {
           const $input = $(checkbox);
 
-          this._addCustomerToDeleteCollectionInput($input.val());
+          this.addCustomerToDeleteCollectionInput($input.val());
         });
 
         const $form = $modal.find('form');
@@ -72,14 +71,12 @@ export default class DeleteCustomersBulkActionExtension {
    *
    * @private
    */
-  _addCustomerToDeleteCollectionInput(customerId) {
+  addCustomerToDeleteCollectionInput(customerId) {
     const $customersInput = $('#delete_customers_customers_to_delete');
 
     const customerInput = $customersInput
       .data('prototype')
-      .replace(/__name__/g, customerId)
-    ;
-
+      .replace(/__name__/g, customerId);
     const $item = $($.parseHTML(customerInput)[0]);
     $item.val(customerId);
 

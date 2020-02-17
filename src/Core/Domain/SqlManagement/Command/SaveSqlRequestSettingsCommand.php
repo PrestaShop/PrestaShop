@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -68,10 +68,7 @@ class SaveSqlRequestSettingsCommand
     private function setFileEncoding($fileEncoding)
     {
         if (!is_string($fileEncoding) || empty($fileEncoding)) {
-            throw new SqlRequestSettingsConstraintException(
-                sprintf('Invalid File Encoding %s supplied', var_export($fileEncoding, true)),
-                SqlRequestSettingsConstraintException::INVALID_FILE_ENCODING
-            );
+            throw new SqlRequestSettingsConstraintException(sprintf('Invalid File Encoding %s supplied', var_export($fileEncoding, true)), SqlRequestSettingsConstraintException::INVALID_FILE_ENCODING);
         }
 
         $supportedFileEncodings = [
@@ -80,14 +77,7 @@ class SaveSqlRequestSettingsCommand
         ];
 
         if (!in_array($fileEncoding, $supportedFileEncodings)) {
-            throw new SqlRequestSettingsConstraintException(
-                sprintf(
-                    'Not supported File Encoding %s supplied. Supported encodings are %s',
-                    var_export($fileEncoding, true),
-                    var_export(implode(',', $supportedFileEncodings), true)
-                ),
-                SqlRequestSettingsConstraintException::NOT_SUPPORTED_FILE_ENCODING
-            );
+            throw new SqlRequestSettingsConstraintException(sprintf('Not supported File Encoding %s supplied. Supported encodings are %s', var_export($fileEncoding, true), var_export(implode(',', $supportedFileEncodings), true)), SqlRequestSettingsConstraintException::NOT_SUPPORTED_FILE_ENCODING);
         }
 
         $this->fileEncoding = $fileEncoding;

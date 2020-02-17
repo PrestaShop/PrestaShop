@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -105,15 +105,7 @@ class Reduction
     private function assertIsAllowedType(string $type)
     {
         if (!in_array($type, self::ALLOWED_TYPES, true)) {
-            throw new DomainConstraintException(
-                sprintf(
-                    'The reduction type "%s" is invalid. Valid types are: "%s", "%s".',
-                    $type,
-                    self::TYPE_AMOUNT,
-                    self::TYPE_PERCENTAGE
-                ),
-                DomainConstraintException::INVALID_REDUCTION_TYPE
-            );
+            throw new DomainConstraintException(sprintf('The reduction type "%s" is invalid. Valid types are: "%s", "%s".', $type, self::TYPE_AMOUNT, self::TYPE_PERCENTAGE), DomainConstraintException::INVALID_REDUCTION_TYPE);
         }
     }
 
@@ -127,24 +119,12 @@ class Reduction
     {
         if (self::TYPE_PERCENTAGE === $type) {
             if (!$this->assertIsNotNegative($value) || self::MAX_ALLOWED_PERCENTAGE < $value) {
-                throw new DomainConstraintException(
-                    sprintf(
-                        'Invalid reduction percentage "%s". It must be from 0 to %s%%',
-                        $value,
-                        self::MAX_ALLOWED_PERCENTAGE),
-                    DomainConstraintException::INVALID_REDUCTION_PERCENTAGE
-                );
+                throw new DomainConstraintException(sprintf('Invalid reduction percentage "%s". It must be from 0 to %s%%', $value, self::MAX_ALLOWED_PERCENTAGE), DomainConstraintException::INVALID_REDUCTION_PERCENTAGE);
             }
         }
 
         if (!$this->assertIsNotNegative($value)) {
-            throw new DomainConstraintException(
-                sprintf(
-                    'Invalid reduction amount "%s". It cannot be less than 0',
-                    $value
-                ),
-                DomainConstraintException::INVALID_REDUCTION_AMOUNT
-            );
+            throw new DomainConstraintException(sprintf('Invalid reduction amount "%s". It cannot be less than 0', $value), DomainConstraintException::INVALID_REDUCTION_AMOUNT);
         }
     }
 

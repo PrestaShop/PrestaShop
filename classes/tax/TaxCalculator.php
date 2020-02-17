@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -57,7 +57,7 @@ class TaxCalculatorCore
      * @param array $taxes
      * @param int $computation_method (COMBINE_METHOD | ONE_AFTER_ANOTHER_METHOD)
      */
-    public function __construct(array $taxes = array(), $computation_method = TaxCalculator::COMBINE_METHOD)
+    public function __construct(array $taxes = [], $computation_method = TaxCalculator::COMBINE_METHOD)
     {
         // sanity check
         foreach ($taxes as $tax) {
@@ -138,7 +138,7 @@ class TaxCalculatorCore
      */
     public function getTaxesAmount($price_te)
     {
-        $taxes_amounts = array();
+        $taxes_amounts = [];
 
         foreach ($this->taxes as $tax) {
             if ($this->computation_method == TaxCalculator::ONE_AFTER_ANOTHER_METHOD) {

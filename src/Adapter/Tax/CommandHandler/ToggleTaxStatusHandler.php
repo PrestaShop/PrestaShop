@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -49,15 +49,10 @@ final class ToggleTaxStatusHandler extends AbstractTaxHandler implements ToggleT
 
         try {
             if (!$tax->save()) {
-                throw new UpdateTaxException(
-                    sprintf('Unable to toggle Tax with id "%s"', $taxIdValue),
-                    UpdateTaxException::FAILED_UPDATE_STATUS
-                );
+                throw new UpdateTaxException(sprintf('Unable to toggle Tax with id "%s"', $taxIdValue), UpdateTaxException::FAILED_UPDATE_STATUS);
             }
         } catch (PrestaShopException $e) {
-            throw new TaxException(
-                sprintf('An error occurred when enabling ETax with id "%s"', $taxIdValue)
-            );
+            throw new TaxException(sprintf('An error occurred when enabling ETax with id "%s"', $taxIdValue));
         }
     }
 }

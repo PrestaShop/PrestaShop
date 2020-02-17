@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -226,10 +226,10 @@ class ModuleDataProvider
             $this->logger->critical(
                 $this->translator->trans(
                     'Parse error detected in main class of module %module%: %parse_error%',
-                    array(
+                    [
                         '%module%' => $name,
                         '%parse_error%' => $exception->getMessage(),
-                    ),
+                    ],
                     'Admin.Modules.Notification'
                 )
             );
@@ -250,9 +250,9 @@ class ModuleDataProvider
                 $logger->error(
                     $this->translator->trans(
                         'Error while loading file of module %module%. %error_message%',
-                        array(
+                        [
                             '%module%' => $name,
-                            '%error_message%' => $e->getMessage(), ),
+                            '%error_message%' => $e->getMessage(), ],
                         'Admin.Modules.Notification'
                     )
                 );

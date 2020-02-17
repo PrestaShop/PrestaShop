@@ -79,4 +79,4 @@ admin_currencies_get_reference_data:
   defaults:
     _controller: 'PrestaShopBundle:Admin\Improve\International\Currency:getReferenceData'
     _legacy_controller: AdminCurrencies
-    _legacy_link: AdminCurrencies:getCLDRDataAction
+    _legacy_link: AdminCurrencies:getReferenceData

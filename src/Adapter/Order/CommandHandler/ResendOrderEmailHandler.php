@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -32,7 +32,7 @@ use OrderHistory;
 use OrderState;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\ResendOrderEmailCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler\ResendOrderEmailHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderEmailResendException;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderEmailSendException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use Validate;
 
@@ -50,10 +50,7 @@ final class ResendOrderEmailHandler extends AbstractOrderCommandHandler implemen
         $orderState = new OrderState($command->getOrderStatusId());
 
         if (!Validate::isLoadedObject($orderState)) {
-            throw new OrderException(sprintf(
-                'An error occurred while loading order status. Order status with "%s" was not found.',
-                $command->getOrderId()->getValue()
-            ));
+            throw new OrderException(sprintf('An error occurred while loading order status. Order status with "%s" was not found.', $command->getOrderId()->getValue()));
         }
 
         $history = new OrderHistory($command->getOrderHistoryId());
@@ -66,7 +63,7 @@ final class ResendOrderEmailHandler extends AbstractOrderCommandHandler implemen
         }
 
         if (!$history->sendEmail($order, $templateVars)) {
-            throw new OrderEmailResendException('Failed to resend order email.');
+            throw new OrderEmailSendException('Failed to resend order email.', OrderEmailSendException::FAILED_RESEND);
         }
     }
 }

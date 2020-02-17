@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -94,23 +94,23 @@ class SupplierController extends FrameworkBundleAdminController
                 continue;
             }
 
-            $simpleSubForm->add('supplier_combination_' . $idSupplier, 'Symfony\Component\Form\Extension\Core\Type\CollectionType', array(
+            $simpleSubForm->add('supplier_combination_' . $idSupplier, 'Symfony\Component\Form\Extension\Core\Type\CollectionType', [
                 'entry_type' => 'PrestaShopBundle\Form\Admin\Product\ProductSupplierCombination',
-                'entry_options' => array(
+                'entry_options' => [
                     'id_supplier' => $idSupplier,
-                ),
+                ],
                 'prototype' => true,
                 'allow_add' => true,
                 'required' => false,
                 'label' => $this->get('prestashop.adapter.data_provider.supplier')->getNameById($idSupplier),
-            ));
+            ]);
         }
 
         $form->add($simpleSubForm);
 
-        return $this->render('@Product/ProductPage/Forms/form_supplier_combination.html.twig', array(
+        return $this->render('@Product/ProductPage/Forms/form_supplier_combination.html.twig', [
             'suppliers' => $suppliers,
             'form' => $form->getForm()['step6']->createView(),
-        ));
+        ]);
     }
 }

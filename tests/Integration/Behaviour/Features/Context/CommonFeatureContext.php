@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -27,7 +27,10 @@
 namespace Tests\Integration\Behaviour\Features\Context;
 
 use AppKernel;
+use Context;
+use Employee;
 use LegacyTests\PrestaShopBundle\Utils\DatabaseCreator;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class CommonFeatureContext extends AbstractPrestaShopFeatureContext
 {
@@ -53,8 +56,8 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
         global $kernel;
         $kernel = self::$kernel;
 
-        $employee = new \Employee();
-        \Context::getContext()->employee = $employee->getByEmail('test@prestashop.com');
+        $employee = new Employee();
+        Context::getContext()->employee = $employee->getByEmail('test@prestashop.com');
     }
 
     /**
@@ -92,7 +95,7 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
     /**
      * Return PrestaShop Symfony services container
      *
-     * @return \Symfony\Component\DependencyInjection\ContainerInterface
+     * @return ContainerInterface
      */
     public static function getContainer()
     {
