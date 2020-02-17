@@ -49,6 +49,12 @@
         color: #8a8a8a;
       }
     }
+
+    .badge-dark, .badge-print-light {
+      color: black;
+      background-color: white;
+      border-radius: 0;
+    }
   }
 }
 

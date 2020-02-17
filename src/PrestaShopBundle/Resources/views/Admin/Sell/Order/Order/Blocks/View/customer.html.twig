@@ -72,16 +72,14 @@
           <strong>{{ 'Validated orders placed:'|trans({}, 'Admin.Orderscustomers.Feature') }}</strong>
         </p>
         <p>
-          <span class="badge rounded badge-dark d-print-none">{{ orderForViewing.customer.validOrdersPlaced }}</span>
-          <span class="badge rounded d-none d-print-inline-block">{{ orderForViewing.customer.validOrdersPlaced }}</span>
+          <span class="badge rounded badge-dark">{{ orderForViewing.customer.validOrdersPlaced }}</span>
         </p>
 
         <p class="mb-1">
           <strong>{{ 'Total spent since registration:'|trans({}, 'Admin.Orderscustomers.Feature') }}</strong>
         </p>
         <p>
-          <span class="badge rounded badge-dark d-print-none">{{ orderForViewing.customer.totalSpentSinceRegistration }}</span>
-          <span class="badge rounded d-none d-print-inline-block">{{ orderForViewing.customer.totalSpentSinceRegistration }}</span>
+          <span class="badge rounded badge-dark">{{ orderForViewing.customer.totalSpentSinceRegistration }}</span>
         </p>
       </div>
     </div>
