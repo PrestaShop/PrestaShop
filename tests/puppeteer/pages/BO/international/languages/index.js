@@ -216,7 +216,7 @@ module.exports = class Languages extends LocalizationBasePage {
 
   /* Sort functions */
   /**
-   *
+   * Sort table by clicking on column name
    * @param sortBy, column to sort with
    * @param sortDirection, asc or desc
    * @return {Promise<void>}
