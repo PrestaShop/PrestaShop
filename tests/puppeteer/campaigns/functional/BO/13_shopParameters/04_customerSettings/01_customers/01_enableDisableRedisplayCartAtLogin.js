@@ -1,4 +1,7 @@
 require('module-alias/register');
+const testContext = require('@utils/testContext');
+
+const baseContext = 'functional_BO_customerSettings_customer_enableDisableRedisplayCartAtLogin';
 // Using chai
 const {expect} = require('chai');
 const helper = require('@utils/helpers');
@@ -51,6 +54,7 @@ describe('Enable/Disable re-display cart at login', async () => {
   loginCommon.loginBO();
 
   it('should go to \'Shop parameters > Customer Settings\' page', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'goToCustomerSettingsPage', baseContext);
     await this.pageObjects.boBasePage.goToSubMenu(
       this.pageObjects.boBasePage.shopParametersParentLink,
       this.pageObjects.boBasePage.customerSettingsLink,
@@ -61,11 +65,13 @@ describe('Enable/Disable re-display cart at login', async () => {
   });
 
   it('should enable re-display cart at login', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'enableRedisplayCartAtLogin', baseContext);
     const result = await this.pageObjects.customerSettingsPage.setRedisplayCartAtLogin(true);
     await expect(result).to.contains(this.pageObjects.customerSettingsPage.successfulUpdateMessage);
   });
 
   it('should login FO and add the first product to the cart then logout ', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'addProductToTheCart', baseContext);
     page = await this.pageObjects.boBasePage.viewMyShop();
     this.pageObjects = await init();
     // Login FO
@@ -84,6 +90,7 @@ describe('Enable/Disable re-display cart at login', async () => {
   });
 
   it('should login FO and check that the cart is not empty', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'loginFOAndCheckNotificationNumber', baseContext);
     // Login FO
     await this.pageObjects.homePage.goToLoginPage();
     await this.pageObjects.loginFOPage.customerLogin(DefaultAccount);
@@ -98,6 +105,7 @@ describe('Enable/Disable re-display cart at login', async () => {
   });
 
   it('should disable re-display cart at login', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'disableRedisplayCartAtLogin', baseContext);
     const result = await this.pageObjects.customerSettingsPage.setRedisplayCartAtLogin(false);
     await expect(result).to.contains(this.pageObjects.customerSettingsPage.successfulUpdateMessage);
   });
