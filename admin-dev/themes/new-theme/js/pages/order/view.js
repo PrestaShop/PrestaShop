@@ -164,7 +164,7 @@ $(() => {
     const $modal = $(OrderViewPageMap.updateCustomerAddressModal);
 
     $(OrderViewPageMap.openOrderAddressUpdateModalBtn).on('click', (event) => {
-      $modal.find(OrderViewPageMap.updateOrderAddressTypeInput).val($btn.data('address-type'));
+      $modal.find(OrderViewPageMap.updateOrderAddressTypeInput).val($(event.currentTarget).data('address-type'));
     });
   }
 });
