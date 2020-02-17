@@ -68,7 +68,11 @@ describe('Sort Languages', async () => {
   });
 
   const tests = [
-    {args: {testIdentifier: 'sortByIdDesc', sortBy: 'id_lang', sortDirection: 'desc'}},
+    {
+      args: {
+        testIdentifier: 'sortByIdDesc', sortBy: 'id_lang', sortDirection: 'desc', isFloat: true,
+      },
+    },
     {args: {testIdentifier: 'sortByNameAsc', sortBy: 'name', sortDirection: 'asc'}},
     {args: {testIdentifier: 'sortByNameDesc', sortBy: 'name', sortDirection: 'desc'}},
     {args: {testIdentifier: 'sortByIsoCodeAsc', sortBy: 'iso_code', sortDirection: 'asc'}},
@@ -79,19 +83,28 @@ describe('Sort Languages', async () => {
     {args: {testIdentifier: 'sortByDateFormatLiteDesc', sortBy: 'date_format_lite', sortDirection: 'desc'}},
     {args: {testIdentifier: 'sortByDateFormatFullAsc', sortBy: 'date_format_full', sortDirection: 'asc'}},
     {args: {testIdentifier: 'sortByDateFormatFullDesc', sortBy: 'date_format_full', sortDirection: 'desc'}},
-    {args: {testIdentifier: 'sortByIdAsc', sortBy: 'id_lang', sortDirection: 'asc'}},
+    {
+      args: {
+        testIdentifier: 'sortByIdAsc', sortBy: 'id_lang', sortDirection: 'asc', isFloat: true,
+      },
+    },
   ];
 
   tests.forEach((test) => {
     it(`should sort by '${test.args.sortBy}' '${test.args.sortDirection}' And check result`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
-      const nonSortedTable = await this.pageObjects.languagesPage.getAllRowsColumnContent(test.args.sortBy);
+      let nonSortedTable = await this.pageObjects.languagesPage.getAllRowsColumnContent(test.args.sortBy);
       await this.pageObjects.languagesPage.sortTable(test.args.sortBy, test.args.sortDirection);
-      const sortedTable = await this.pageObjects.languagesPage.getAllRowsColumnContent(test.args.sortBy);
+      let sortedTable = await this.pageObjects.languagesPage.getAllRowsColumnContent(test.args.sortBy);
+      if (test.args.isFloat) {
+        nonSortedTable = await nonSortedTable.map(text => parseFloat(text, 10));
+        sortedTable = await sortedTable.map(text => parseFloat(text, 10));
+      }
+      const expectedResult = await this.pageObjects.languagesPage.sortArray(nonSortedTable, test.args.isFloat);
       if (test.args.sortDirection === 'asc') {
-        await expect(sortedTable).to.deep.equal(nonSortedTable.sort());
+        await expect(sortedTable).to.deep.equal(expectedResult);
       } else {
-        await expect(sortedTable).to.deep.equal(nonSortedTable.sort().reverse());
+        await expect(sortedTable).to.deep.equal(nonSortedTable.reverse());
       }
     });
   });
