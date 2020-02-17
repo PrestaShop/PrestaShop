@@ -26,14 +26,14 @@
 
 namespace PrestaShopBundle\Form\Admin\Configure\ShopParameters\CustomerPreferences;
 
-use PrestaShop\PrestaShop\Core\Form\FormHandler;
+use PrestaShop\PrestaShop\Core\Form\Handler;
 use PrestaShopBundle\Entity\Repository\TabRepository;
 
 /**
  * Class manages "Configure > Shop Parameters > Customer Settings" page
  * form handling.
  */
-final class CustomerPreferencesFormHandler extends FormHandler
+final class CustomerPreferencesFormHandler extends Handler
 {
     /**
      * @var TabRepository
