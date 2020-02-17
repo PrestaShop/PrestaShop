@@ -13,6 +13,10 @@ const ViewOrderPage = require('@pages/BO/orders/view');
 // Importing data
 const {Statuses} = require('@data/demo/orders');
 const InvoiceOptionsFaker = require('@data/faker/invoice');
+// Test context imports
+const testContext = require('@utils/testContext');
+
+const baseContext = 'functional_BO_orders_invoices_invoiceOptions_invoicePrefix';
 
 let browser;
 let page;
@@ -57,6 +61,7 @@ describe('Edit invoice prefix and check the generated invoice file name', async 
   describe(`Change the invoice prefix to '${invoiceData.prefix}'then check the invoice file name`, async () => {
     describe(`Change the invoice prefix to '${invoiceData.prefix}'`, async () => {
       it('should go to invoices page', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'goToInvoicesPageToUpdatePrefix', baseContext);
         await this.pageObjects.boBasePage.goToSubMenu(
           this.pageObjects.boBasePage.ordersParentLink,
           this.pageObjects.boBasePage.invoicesLink,
@@ -67,6 +72,7 @@ describe('Edit invoice prefix and check the generated invoice file name', async 
       });
 
       it(`should change the invoice prefix to ${invoiceData.prefix}`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'updateInvoicePrefix', baseContext);
         await this.pageObjects.invoicesPage.changePrefix(invoiceData.prefix);
         const textMessage = await this.pageObjects.invoicesPage.saveInvoiceOptions();
         await expect(textMessage).to.contains(this.pageObjects.invoicesPage.successfulUpdateMessage);
@@ -75,6 +81,7 @@ describe('Edit invoice prefix and check the generated invoice file name', async 
 
     describe(`Change the order status to '${Statuses.shipped.status}' and check the invoice file Name`, async () => {
       it('should go to the orders page', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPageForUpdatedPrefix', baseContext);
         await this.pageObjects.boBasePage.goToSubMenu(
           this.pageObjects.boBasePage.ordersParentLink,
           this.pageObjects.boBasePage.ordersLink,
@@ -84,17 +91,20 @@ describe('Edit invoice prefix and check the generated invoice file name', async 
       });
 
       it('should go to the first order page', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'goToFirstOrderPageForUpdatedPrefix', baseContext);
         await this.pageObjects.ordersPage.goToOrder(1);
         const pageTitle = await this.pageObjects.viewOrderPage.getPageTitle();
         await expect(pageTitle).to.contains(this.pageObjects.viewOrderPage.pageTitle);
       });
 
       it(`should change the order status to '${Statuses.shipped.status}' and check it`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'UpdateStatusForUpdatedPrefix', baseContext);
         const result = await this.pageObjects.viewOrderPage.modifyOrderStatus(Statuses.shipped.status);
         await expect(result).to.be.true;
       });
 
       it(`should check that the invoice file name contain the prefix '${invoiceData.prefix}'`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'goToFirstOrderPageForUpdatedPrefix', baseContext);
         fileName = await this.pageObjects.viewOrderPage.getFileName();
         expect(fileName).to.contains(invoiceData.prefix.replace('#', '').trim());
       });
@@ -104,16 +114,17 @@ describe('Edit invoice prefix and check the generated invoice file name', async 
   describe('Back to the default invoice prefix value then check the invoice file name', async () => {
     describe(`Back to the default invoice prefix value '${defaultPrefix}'`, async () => {
       it('should go to invoices page', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'goToInvoicesPageForDefaultPrefix', baseContext);
         await this.pageObjects.boBasePage.goToSubMenu(
           this.pageObjects.boBasePage.ordersParentLink,
           this.pageObjects.boBasePage.invoicesLink,
         );
-        await this.pageObjects.boBasePage.closeSfToolBar();
         const pageTitle = await this.pageObjects.invoicesPage.getPageTitle();
         await expect(pageTitle).to.contains(this.pageObjects.invoicesPage.pageTitle);
       });
 
       it(`should change the invoice prefix to '${defaultPrefix}'`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'backToDefaultPrefix', baseContext);
         await this.pageObjects.invoicesPage.changePrefix(defaultPrefix);
         const textMessage = await this.pageObjects.invoicesPage.saveInvoiceOptions();
         await expect(textMessage).to.contains(this.pageObjects.invoicesPage.successfulUpdateMessage);
@@ -122,6 +133,7 @@ describe('Edit invoice prefix and check the generated invoice file name', async 
 
     describe('Check the default prefix in the invoice file Name', async () => {
       it('should go to the orders page', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPageForDefaultPrefix', baseContext);
         await this.pageObjects.boBasePage.goToSubMenu(
           this.pageObjects.boBasePage.ordersParentLink,
           this.pageObjects.boBasePage.ordersLink,
@@ -131,12 +143,14 @@ describe('Edit invoice prefix and check the generated invoice file name', async 
       });
 
       it('should go to the first order page', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'goToFirstOrderPageForDefaultPrefix', baseContext);
         await this.pageObjects.ordersPage.goToOrder(1);
         const pageTitle = await this.pageObjects.viewOrderPage.getPageTitle();
         await expect(pageTitle).to.contains(this.pageObjects.viewOrderPage.pageTitle);
       });
 
       it(`should check that the invoice file name contain the default prefix ${defaultPrefix}`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'checkDefaultPrefixInInvoice', baseContext);
         fileName = await this.pageObjects.viewOrderPage.getFileName();
         expect(fileName).to.contains(defaultPrefix.replace('#', '').trim());
       });
