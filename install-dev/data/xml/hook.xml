@@ -2713,5 +2713,10 @@
       <description>This hook allows to modify data which is about to be used in template for credit slip grid
       </description>
     </hook>
+    <hook id="displayAdditionalCustomerAddressFields">
+      <name>displayAdditionalCustomerAddressFields</name>
+      <title>Display additional customer address fields</title>
+      <description>This hook allows to display the extra field values added in an address from using hook 'additionalCustomerAddressFields'</description>
+    </hook>
   </entities>
 </entity_hook>
