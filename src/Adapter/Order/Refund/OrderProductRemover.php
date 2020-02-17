@@ -45,11 +45,6 @@ class OrderProductRemover
     private $logger;
 
     /**
-     * @var int
-     */
-    private $cartId;
-
-    /**
      * OrderProductRemover constructor.
      * @param LoggerInterface $logger
      */
