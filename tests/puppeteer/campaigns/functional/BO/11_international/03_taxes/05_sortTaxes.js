@@ -109,7 +109,7 @@ describe('Sort taxes', async () => {
       if (test.args.sortDirection === 'asc') {
         await expect(sortedTable).to.deep.equal(expectedResult);
       } else {
-        await expect(sortedTable).to.deep.equal(nonSortedTable.reverse());
+        await expect(sortedTable).to.deep.equal(expectedResult.reverse());
       }
     });
   });
