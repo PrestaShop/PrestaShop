@@ -15,7 +15,8 @@ module.exports = class Product extends BOBasePage {
     // Selectors
     // List of products
     this.productListForm = '#product_catalog_list';
-    this.productRow = `${this.productListForm} table tbody tr`;
+    this.productTable = `${this.productListForm} table`;
+    this.productRow = `${this.productTable} tbody tr`;
     this.productListfooterRow = `${this.productListForm} div.row:nth-of-type(3)`;
     this.productNumberBloc = `${this.productListfooterRow} label.col-form-label`;
     this.dropdownToggleButton = `${this.productRow}:nth-of-type(%ROW) button.dropdown-toggle`;
@@ -177,13 +178,13 @@ module.exports = class Product extends BOBasePage {
     switch (filterType) {
       case 'input':
         switch (filterBy) {
-          case 'product_id':
+          case 'id_product':
             await this.filterIDProducts(value.min, value.max);
             break;
           case 'price':
             await this.filterPriceProducts(value.min, value.max);
             break;
-          case 'quantity':
+          case 'sav_quantity':
             await this.filterQuantityProducts(value.min, value.max);
             break;
           default:
@@ -206,11 +207,11 @@ module.exports = class Product extends BOBasePage {
    * Get Text Column
    * @param columnName
    * @param row
-   * @return {Promise<void>, Float}
+   * @return {Promise<Float|string>}
    */
   async getTextColumn(columnName, row) {
     switch (columnName) {
-      case 'product_id':
+      case 'id_product':
         return this.getProductIDFromList(row);
       case 'name':
         return this.getProductNameFromList(row);
@@ -220,7 +221,7 @@ module.exports = class Product extends BOBasePage {
         return this.getProductCategoryFromList(row);
       case 'price':
         return this.getProductPriceFromList(row);
-      case 'quantity':
+      case 'sav_quantity':
         return this.getProductQuantityFromList(row);
       case 'active':
         return this.getProductStatusFromList(row);
