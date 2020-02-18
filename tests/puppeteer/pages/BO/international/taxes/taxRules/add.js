@@ -40,7 +40,7 @@ module.exports = class AddTaxRules extends BOBasePage {
     await this.page.click(this.enabledSwitchlabel.replace('%ID', taxRuleGroupData.enabled ? 'on' : 'off'));
     // Save Tax rules group
     await this.clickAndWaitForNavigation(this.saveTaxButton);
-    return this.getTextContent(this.alertSuccessBloc);
+    return this.getTextContent(this.alertSuccessBlock);
   }
 
   /**
@@ -55,7 +55,7 @@ module.exports = class AddTaxRules extends BOBasePage {
     await this.setValue(this.descriptionInput, taxRuleData.description);
     // Save Tax rules
     await this.clickAndWaitForNavigation(this.saveAndStayButton);
-    return this.getTextContent(this.alertSuccessBloc);
+    return this.getTextContent(this.alertSuccessBlock);
   }
 
   /**

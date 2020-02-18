@@ -9,6 +9,10 @@ const BOBasePage = require('@pages/BO/BObasePage');
 const LoginPage = require('@pages/BO/login');
 const DashboardPage = require('@pages/BO/dashboard');
 const StocksPage = require('@pages/BO/catalog/stocks');
+// Test context imports
+const testContext = require('@utils/testContext');
+
+const baseContext = 'functional_BO_catalog_stocks_updateQuantity';
 
 let browser;
 let page;
@@ -40,6 +44,7 @@ describe('Update Quantity', async () => {
   loginCommon.loginBO();
 
   it('should go to "Catalog>Stocks" page', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'goToStocksPage', baseContext);
     await this.pageObjects.boBasePage.goToSubMenu(
       this.pageObjects.boBasePage.catalogParentLink,
       this.pageObjects.boBasePage.stocksLink,
@@ -50,6 +55,7 @@ describe('Update Quantity', async () => {
   });
 
   it('should get number of products in list', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'getNumberOfProducts', baseContext);
     numberOfProducts = await this.pageObjects.stocksPage.getNumberOfProductsFromList();
     await expect(numberOfProducts).to.be.above(0);
   });
@@ -60,6 +66,7 @@ describe('Update Quantity', async () => {
    */
   describe('Update quantity by setting input value', async () => {
     it(`should filter by name '${productStock.name}'`, async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'filterToUpdateQuantity', baseContext);
       await this.pageObjects.stocksPage.simpleFilter(productStock.name);
       const numberOfProductsAfterFilter = await this.pageObjects.stocksPage.getNumberOfProductsFromList();
       await expect(numberOfProductsAfterFilter).to.be.at.most(numberOfProducts);
@@ -80,6 +87,7 @@ describe('Update Quantity', async () => {
     ];
     tests.forEach((test) => {
       it(`should ${test.args.action} quantity by setting input value`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}ToQuantity`, baseContext);
         // Update Quantity and check successful message
         const updateMessage = await this.pageObjects.stocksPage.updateRowQuantityWithInput(1, test.args.updateValue);
         await expect(updateMessage).to.contains(this.pageObjects.stocksPage.successfulUpdateMessage);
@@ -93,6 +101,7 @@ describe('Update Quantity', async () => {
     });
 
     it('should reset all filters', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'resetAfterEditQuantity', baseContext);
       const numberOfProductsAfterReset = await this.pageObjects.stocksPage.resetFilter();
       await expect(numberOfProductsAfterReset).to.equal(numberOfProducts);
     });

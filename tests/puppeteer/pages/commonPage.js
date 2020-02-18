@@ -40,6 +40,18 @@ module.exports = class CommonPage {
   }
 
   /**
+   * Get attribute from element
+   * @param selector
+   * @param attribute
+   * @returns {Promise<!Promise<!Object|undefined>|*>}
+   */
+  async getAttributeContent(selector, attribute) {
+    await this.page.waitForSelector(selector);
+    return this.page.$eval(selector, (el, attr) => el
+      .getAttribute(attr), attribute);
+  }
+
+  /**
    * Is checkBox have checked status
    * @param selector, checkbox to check
    * @return boolean, true if checked, false if not
@@ -284,5 +296,18 @@ module.exports = class CommonPage {
     if (valueWanted !== (await this.isCheckboxSelected(checkboxSelector))) {
       await this.page.click(checkboxSelector);
     }
+  }
+
+  /**
+   * Sort array of strings or numbers
+   * @param arrayToSort
+   * @param isFloat
+   * @return {Promise<*>}
+   */
+  async sortArray(arrayToSort, isFloat = false) {
+    if (isFloat) {
+      return arrayToSort.sort((a, b) => a - b);
+    }
+    return arrayToSort.sort((a, b) => a.localeCompare(b));
   }
 };
