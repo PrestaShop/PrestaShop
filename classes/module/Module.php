@@ -23,14 +23,18 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+use PrestaShop\PrestaShop\Adapter\ContainerFinder;
 use PrestaShop\PrestaShop\Adapter\LegacyLogger;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
+use PrestaShop\PrestaShop\Core\Exception\ContainerNotFoundException;
 use PrestaShop\PrestaShop\Core\Foundation\Filesystem\FileSystem;
 use PrestaShop\PrestaShop\Core\Module\ModuleInterface;
 use PrestaShop\PrestaShop\Core\Module\WidgetInterface;
 use PrestaShop\TranslationToolsBundle\Translation\Helper\DomainHelper;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 abstract class ModuleCore implements ModuleInterface
 {
@@ -3432,13 +3436,17 @@ abstract class ModuleCore implements ModuleInterface
      */
     public function isSymfonyContext()
     {
-        return !$this->isAdminLegacyContext() && defined('_PS_ADMIN_DIR_');
+        $container = $this->getContainer();
+        if (null === $container) {
+            false;
+        }
+
+        return $container === SymfonyContainer::getInstance();
     }
 
     /**
-     * Access the Symfony Container if we are in Symfony Context.
-     * Note: in this case, we must get a container from SymfonyContainer class.
-     * Note: if not in Symfony context, fallback to legacy Container for FO/BO.
+     * Access a service from the container (found from the controller or the context
+     * depending on cases). It uses ContainerFinder to find the appropriate container.
      *
      * @param string $serviceName
      *
@@ -3446,19 +3454,29 @@ abstract class ModuleCore implements ModuleInterface
      */
     public function get($serviceName)
     {
-        if ($this->isSymfonyContext()) {
-            if (null === $this->container) {
-                $this->container = SymfonyContainer::getInstance();
-            }
-
-            return $this->container->get($serviceName);
-        }
-
-        if ($this->context->controller instanceof Controller) {
-            return $this->context->controller->get($serviceName);
+        $container = $this->getContainer();
+        if (null !== $container) {
+            return $container->get($serviceName);
         }
 
         return false;
+    }
+
+    /**
+     * @return ContainerBuilder|ContainerInterface|null
+     */
+    public function getContainer()
+    {
+        if (null === $this->container) {
+            $finder = new ContainerFinder($this->context);
+            try {
+                $this->container = $finder->getContainer();
+            } catch (ContainerNotFoundException $e) {
+                // We catch this exception since the initial behaviour is to return false
+            }
+        }
+
+        return $this->container;
     }
 }
 
