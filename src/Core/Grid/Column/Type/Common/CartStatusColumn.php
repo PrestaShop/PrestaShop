@@ -1,17 +1,14 @@
 <?php
 
-
 namespace PrestaShop\PrestaShop\Core\Grid\Column\Type\Common;
-
 
 use PrestaShop\PrestaShop\Core\Grid\Column\AbstractColumn;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 final class CartStatusColumn extends AbstractColumn
 {
-
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function getType()
     {
