@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace LegacyTests\Unit\Core\Util\File;
+namespace Tests\Unit\Core\Util;
 
 use LegacyTests\TestCase\UnitTestCase;
 use PrestaShop\PrestaShop\Core\Util\File\YamlParser;
