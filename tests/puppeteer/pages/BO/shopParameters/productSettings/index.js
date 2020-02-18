@@ -99,6 +99,6 @@ module.exports = class productSettings extends BOBasePage {
   async chooseQuantityDiscountsBasedOn(basedOn) {
     await this.selectByVisibleText(this.quantityDiscountBasedOnSelect, basedOn);
     await this.clickAndWaitForNavigation(this.saveProductGeneralFormButton);
-    return this.getTextContent(this.alertSuccessBloc);
+    return this.getTextContent(this.alertSuccessBlock);
   }
 };
