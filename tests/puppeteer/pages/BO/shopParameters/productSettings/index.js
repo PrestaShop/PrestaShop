@@ -18,6 +18,10 @@ module.exports = class productSettings extends BOBasePage {
     this.switchForceUpdateFriendlyURLLabel = 'label[for=\'form_general_force_friendly_url_%TOGGLE\']';
     this.switchDefaultActivationStatusLabel = 'label[for=\'form_general_default_status_%TOGGLE\']';
     this.saveProductGeneralFormButton = `${this.productGeneralForm} .card-footer button`;
+    // Product page selectors
+    this.productPageForm = '#configuration_fieldset_fo_product_page';
+    this.switchDisplayAvailableQuantities = 'label[for=\'form_page_display_quantities_%TOGGLE\']';
+    this.saveProductPageFormButton = `${this.productPageForm} .card-footer button`;
   }
 
   /*
@@ -87,6 +91,17 @@ module.exports = class productSettings extends BOBasePage {
   async setDefaultActivationStatus(toEnable = true) {
     await this.waitForSelectorAndClick(this.switchDefaultActivationStatusLabel.replace('%TOGGLE', toEnable ? 1 : 0));
     await this.clickAndWaitForNavigation(this.saveProductGeneralFormButton);
+    return this.getTextContent(this.alertSuccessBlock);
+  }
+
+  /**
+   * Enable/ Disable display available quantities
+   * @param toEnable
+   * @returns {Promise<string|*>}
+   */
+  async setDisplayAvailableQuantities(toEnable = true) {
+    await this.waitForSelectorAndClick(this.switchDisplayAvailableQuantities.replace('%TOGGLE', toEnable ? 1 : 0));
+    await this.clickAndWaitForNavigation(this.saveProductPageFormButton);
     return this.getTextContent(this.alertSuccessBlock);
   }
 };
