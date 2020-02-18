@@ -61,6 +61,10 @@ module.exports = class Product extends BOBasePage {
     // Modal Dialog
     this.catalogDeletionModalDialog = '#catalog_deletion_modal div.modal-dialog';
     this.modalDialogDeleteNowButton = `${this.catalogDeletionModalDialog} button[value='confirm']`;
+    // Sort Selectors
+    this.tableHead = `${this.productTable} thead`;
+    this.sortColumnDiv = `${this.tableHead} div.ps-sortable-column[data-sort-col-name='%COLUMN']`;
+    this.sortColumnSpanButton = `${this.sortColumnDiv} span.ps-sort`;
   }
 
   /*
@@ -229,6 +233,21 @@ module.exports = class Product extends BOBasePage {
       // Do nothing
     }
     throw new Error(`${columnName} was not found as column`);
+  }
+
+  /**
+   * Get content from all rows
+   * @param column
+   * @return {Promise<[]>}
+   */
+  async getAllRowsColumnContent(column) {
+    const rowsNumber = await this.getNumberOfProductsFromList();
+    const allRowsContentTable = [];
+    for (let i = 1; i <= rowsNumber; i++) {
+      const rowContent = await this.getTextColumn(column, i);
+      await allRowsContentTable.push(rowContent);
+    }
+    return allRowsContentTable;
   }
 
   /**
@@ -404,5 +423,24 @@ module.exports = class Product extends BOBasePage {
       this.waitForSelectorAndClick(this.productsListTableColumnName.replace('%ROW', row)),
       this.page.waitForNavigation({waitUntil: 'networkidle0'}),
     ]);
+  }
+
+  /* Sort methods */
+  /**
+   * Sort table by clicking on column name
+   * @param sortBy, column to sort with
+   * @param sortDirection, asc or desc
+   * @return {Promise<void>}
+   */
+  async sortTable(sortBy, sortDirection = 'asc') {
+    const sortColumnDiv = `${this.sortColumnDiv.replace('%COLUMN', sortBy)}[data-sort-direction='${sortDirection}']`;
+    const sortColumnSpanButton = this.sortColumnSpanButton.replace('%COLUMN', sortBy);
+    let i = 0;
+    while (await this.elementNotVisible(sortColumnDiv, 500) && i < 2) {
+      await this.page.hover(this.sortColumnDiv.replace('%COLUMN', sortBy));
+      await this.clickAndWaitForNavigation(sortColumnSpanButton);
+      i += 1;
+    }
+    await this.page.waitForSelector(sortColumnDiv, {visible: true});
   }
 };
