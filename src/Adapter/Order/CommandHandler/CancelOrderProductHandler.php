@@ -39,7 +39,6 @@ use PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler\CancelOrderProductHan
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidCancelProductException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidOrderStateException;
 use StockAvailable;
-use Symfony\Component\Translation\TranslatorInterface;
 use Validate;
 
 /**
@@ -48,11 +47,6 @@ use Validate;
 final class CancelOrderProductHandler extends AbstractOrderCommandHandler implements CancelOrderProductHandlerInterface
 {
     /**
-     * @var TranslatorInterface
-     */
-    private $translator;
-
-    /**
      * @var OrderProductRemover
      */
     private $orderProductRemover;
@@ -60,14 +54,11 @@ final class CancelOrderProductHandler extends AbstractOrderCommandHandler implem
     /**
      * CancelOrderProductHandler constructor.
      *
-     * @param TranslatorInterface $translator
      * @param OrderProductRemover $orderProductRemover
      */
     public function __construct(
-        TranslatorInterface $translator,
         OrderProductRemover $orderProductRemover
     ) {
-        $this->translator = $translator;
         $this->orderProductRemover = $orderProductRemover;
     }
 

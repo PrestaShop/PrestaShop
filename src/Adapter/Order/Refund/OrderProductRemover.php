@@ -77,7 +77,8 @@ class OrderProductRemover
             null,
             $order->getCartProducts()
         );
-        $packageShippingCostTaxExcl = $cart->getPackageShippingCost($order->id_carrier,
+        $packageShippingCostTaxExcl = $cart->getPackageShippingCost(
+            $order->id_carrier,
             false,
             null,
             $order->getCartProducts()
@@ -215,7 +216,6 @@ class OrderProductRemover
                     $this->logger->warning(
                         'Order history email could not be sent, test your email configuration in the Advanced Parameters > E-mail section of your back office'
                     );
-                    $order->update();
                 }
             }
 
