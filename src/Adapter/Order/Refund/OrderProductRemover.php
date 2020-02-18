@@ -36,6 +36,7 @@ use OrderHistory;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\DeleteCustomizedProductFromOrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\DeleteProductFromOrderException;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class OrderProductRemover
 {
@@ -45,13 +46,19 @@ class OrderProductRemover
     private $logger;
 
     /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
+    /**
      * OrderProductRemover constructor.
      *
      * @param LoggerInterface $logger
      */
-    public function __construct(LoggerInterface $logger)
+    public function __construct(LoggerInterface $logger, TranslatorInterface $translator)
     {
         $this->logger = $logger;
+        $this->translator = $translator;
     }
 
     /**
@@ -214,7 +221,11 @@ class OrderProductRemover
                 if (!$history->addWithemail()) {
                     // email failure must not block order update process
                     $this->logger->warning(
-                        'Order history email could not be sent, test your email configuration in the Advanced Parameters > E-mail section of your back office'
+                        $this->translator->trans(
+                            'Order history email could not be sent, test your email configuration in the Advanced Parameters > E-mail section of your back office.',
+                            [],
+                            'Admin.Orderscustomers.Notification'
+                        )
                     );
                 }
             }

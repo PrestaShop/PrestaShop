@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Order\Exception;
 
 /**
- * Exception thrown when something went wrong during a customized product deletion action.
+ * Exception thrown when something went wrong while deleting a customized product from an order.
  */
 class DeleteCustomizedProductFromOrderException extends OrderException
 {
