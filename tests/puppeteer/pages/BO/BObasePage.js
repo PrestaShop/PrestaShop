@@ -110,8 +110,8 @@ module.exports = class BOBasePage extends CommonPage {
     this.growlDefaultMessageBlock = '#growls-default .growl-message';
 
     // Alert Text
-    this.alertSuccessBloc = 'div.alert.alert-success:not([style=\'display: none;\'])';
-    this.alertSuccessBlockParagraph = `${this.alertSuccessBloc} div.alert-text p`;
+    this.alertSuccessBlock = 'div.alert.alert-success:not([style=\'display: none;\'])';
+    this.alertSuccessBlockParagraph = `${this.alertSuccessBlock} div.alert-text p`;
     this.alertTextBlock = '.alert-text';
 
     // Alert Box

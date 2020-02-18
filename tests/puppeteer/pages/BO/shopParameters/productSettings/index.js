@@ -32,7 +32,7 @@ module.exports = class productSettings extends BOBasePage {
   async changeCatalogModeStatus(toEnable = true) {
     await this.waitForSelectorAndClick(this.switchCatalogModeLabel.replace('%TOGGLE', toEnable ? 1 : 0));
     await this.clickAndWaitForNavigation(this.saveProductGeneralFormButton);
-    return this.getTextContent(this.alertSuccessBloc);
+    return this.getTextContent(this.alertSuccessBlock);
   }
 
   /**
@@ -43,7 +43,7 @@ module.exports = class productSettings extends BOBasePage {
   async changeShowPricesStatus(toEnable = true) {
     await this.waitForSelectorAndClick(this.switchShowPricesLabel.replace('%TOGGLE', toEnable ? 1 : 0));
     await this.clickAndWaitForNavigation(this.saveProductGeneralFormButton);
-    return this.getTextContent(this.alertSuccessBloc);
+    return this.getTextContent(this.alertSuccessBlock);
   }
 
   /**
@@ -54,7 +54,7 @@ module.exports = class productSettings extends BOBasePage {
   async updateNumberOfDays(numberOfDays) {
     await this.setValue(this.newDaysNumberInput, numberOfDays.toString());
     await this.clickAndWaitForNavigation(this.saveProductGeneralFormButton);
-    return this.getTextContent(this.alertSuccessBloc);
+    return this.getTextContent(this.alertSuccessBlock);
   }
 
   /**
@@ -65,7 +65,7 @@ module.exports = class productSettings extends BOBasePage {
   async UpdateMaxSizeOfSummary(size) {
     await this.setValue(this.maxSizeShortDescriptionInput, size.toString());
     await this.clickAndWaitForNavigation(this.saveProductGeneralFormButton);
-    return this.getTextContent(this.alertSuccessBloc);
+    return this.getTextContent(this.alertSuccessBlock);
   }
 
   /**
@@ -76,7 +76,7 @@ module.exports = class productSettings extends BOBasePage {
   async setForceUpdateFriendlyURL(toEnable = true) {
     await this.waitForSelectorAndClick(this.switchForceUpdateFriendlyURLLabel.replace('%TOGGLE', toEnable ? 1 : 0));
     await this.clickAndWaitForNavigation(this.saveProductGeneralFormButton);
-    return this.getTextContent(this.alertSuccessBloc);
+    return this.getTextContent(this.alertSuccessBlock);
   }
 
   /**
@@ -87,6 +87,6 @@ module.exports = class productSettings extends BOBasePage {
   async setDefaultActivationStatus(toEnable = true) {
     await this.waitForSelectorAndClick(this.switchDefaultActivationStatusLabel.replace('%TOGGLE', toEnable ? 1 : 0));
     await this.clickAndWaitForNavigation(this.saveProductGeneralFormButton);
-    return this.getTextContent(this.alertSuccessBloc);
+    return this.getTextContent(this.alertSuccessBlock);
   }
 };
