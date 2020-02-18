@@ -62,7 +62,12 @@
     .badge-print-light {
       color: black;
       background-color: white;
-      border-radius: 0;
+    }
+
+    .badge-print-light {
+      color: black !important;
+      background-color: white !important;
+      font-weight: normal;
     }
   }
 }

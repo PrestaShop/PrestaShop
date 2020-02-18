@@ -101,7 +101,6 @@
       {% endfor %}
       {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/add_product_row.html.twig' %}
       {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/edit_product_row.html.twig' %}
-
       </tbody>
     </table>
 
@@ -149,7 +148,7 @@
         <tr>
           <th>{{ 'Name'|trans({}, 'Admin.Global') }}</th>
           <th>{{ 'Value'|trans({}, 'Admin.Global') }}</th>
-          <th class="text-right">{{ 'Actions'|trans({}, 'Admin.Global') }}</th>
+          <th class="text-right d-print-none">{{ 'Actions'|trans({}, 'Admin.Global') }}</th>
         </tr>
         </thead>
         <tbody>
@@ -160,8 +159,8 @@
               {% if discount.amountRaw %}-{% endif %}
               {{ discount.amountFormatted }}
             </td>
-            <td class="text-right">
-              <a class="delete-cart-rule btn btn-text d-print-none" href="{{ path('admin_orders_remove_cart_rule', {'orderId': orderForViewing.id, 'orderCartRuleId': discount.orderCartRuleId}) }}">
+            <td class="text-right d-print-none">
+              <a class="delete-cart-rule btn btn-text" href="{{ path('admin_orders_remove_cart_rule', {'orderId': orderForViewing.id, 'orderCartRuleId': discount.orderCartRuleId}) }}">
                   <i class="material-icons">delete</i>
               </a>
             </td>
