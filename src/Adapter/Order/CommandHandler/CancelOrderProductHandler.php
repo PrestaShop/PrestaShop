@@ -33,11 +33,11 @@ use Hook;
 use Order;
 use OrderCarrier;
 use OrderDetail;
+use PrestaShop\PrestaShop\Adapter\Order\Refund\OrderProductRemover;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\CancelOrderProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler\CancelOrderProductHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidCancelProductException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidOrderStateException;
-use PrestaShop\PrestaShop\Adapter\Order\Refund\OrderProductRemover;
 use StockAvailable;
 use Symfony\Component\Translation\TranslatorInterface;
 use Validate;
@@ -59,6 +59,7 @@ final class CancelOrderProductHandler extends AbstractOrderCommandHandler implem
 
     /**
      * CancelOrderProductHandler constructor.
+     *
      * @param TranslatorInterface $translator
      * @param OrderProductRemover $orderProductRemover
      */
