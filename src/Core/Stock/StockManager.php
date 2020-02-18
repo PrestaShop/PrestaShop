@@ -251,7 +251,6 @@ class StockManager
     }
 
     /**
-     * @param Combination $combination
      * @param int $newQuantity
      *
      * @return bool
