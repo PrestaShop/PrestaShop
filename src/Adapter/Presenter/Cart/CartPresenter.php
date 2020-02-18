@@ -557,8 +557,7 @@ class CartPresenter implements PresenterInterface
                 $freeShippingOnly = true;
             }
             if ($this->cartVoucherHasPercentReduction($cartVoucher)) {
-                $percentageReductionAmount = $cartVoucher['obj']->getContextualValue(false);
-                $percentageReduction = ($percentageReductionAmount / 100) * $cartVoucher['reduction_percent'];
+                $percentageReduction = $this->includeTaxes() ? $cartVoucher['value_real'] : $cartVoucher['value_tax_exc'];
                 $freeShippingOnly = false;
             } elseif ($this->cartVoucherHasAmountReduction($cartVoucher)) {
                 $amountReduction = $this->includeTaxes() ? $cartVoucher['reduction_amount'] : $cartVoucher['value_tax_exc'];
