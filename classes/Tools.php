@@ -48,6 +48,7 @@ class ToolsCore
     protected static $_user_browser;
     protected static $request;
     protected static $cldr_cache = [];
+    protected static $colorBrightnessCalculator;
 
     public static $round_mode = null;
 
@@ -2347,7 +2348,11 @@ class ToolsCore
 
     public static function isBright($hex)
     {
-        return (new ColorBrightnessCalculator())->isBright($hex);
+        if (null === self::$colorBrightnessCalculator) {
+            self::$colorBrightnessCalculator = new ColorBrightnessCalculator();
+        }
+
+        return self::$colorBrightnessCalculator->isBright($hex);
     }
 
     public static function parserSQL($sql)
