@@ -1,4 +1,3 @@
-<<<<<<< HEAD:tests/Unit/Adapter/Presenter/DummyLog.php
 <?php
 /**
  * 2007-2020 PrestaShop SA and Contributors

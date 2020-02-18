@@ -1,4 +1,3 @@
-<<<<<<< HEAD:tests/Unit/Adapter/Presenter/LazyArrayImplementation.php
 <?php
 /**
  * 2007-2020 PrestaShop SA and Contributors
