@@ -23,25 +23,25 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-import PreviewOpener from "../../../components/form/preview-opener";
-import ChoiceTree from "../../../components/form/choice-tree";
-import TaggableField from "../../../components/taggable-field";
-import TranslatableInput from "../../../components/translatable-input";
-import textToLinkRewriteCopier from "../../../components/text-to-link-rewrite-copier";
-import TranslatableField from "../../../components/translatable-field";
-import TinyMCEEditor from "../../../components/tinymce-editor";
-import Serp from "../../../app/utils/serp/index";
+import PreviewOpener from '../../../components/form/preview-opener';
+import ChoiceTree from '../../../components/form/choice-tree';
+import TaggableField from '../../../components/taggable-field';
+import TranslatableInput from '../../../components/translatable-input';
+import textToLinkRewriteCopier from '../../../components/text-to-link-rewrite-copier';
+import TranslatableField from '../../../components/translatable-field';
+import TinyMCEEditor from '../../../components/tinymce-editor';
+import Serp from '../../../app/utils/serp/index';
 
 const $ = window.$;
 
 $(() => {
-  new ChoiceTree("#cms_page_page_category_id");
+  new ChoiceTree('#cms_page_page_category_id');
 
   const translatorInput = new TranslatableInput();
 
   new Serp(
     {
-      container: "#serp-app",
+      container: '#serp-app',
       defaultTitle: 'input[name^="cms_page[title]"]',
       watchedTitle: 'input[name^="cms_page[meta_title]"]',
       defaultDescription: 'input[name^="cms_page[description]"]',
@@ -50,25 +50,25 @@ $(() => {
       multiLanguageInput: `${translatorInput.localeInputSelector}:not(.d-none)`,
       multiLanguageItem: translatorInput.localeItemSelector
     },
-    $("#serp-app").data("cms-url")
+    $('#serp-app').data('cms-url')
   );
 
   new TranslatableField();
   new TinyMCEEditor();
 
   new TaggableField({
-    tokenFieldSelector: "input.js-taggable-field",
+    tokenFieldSelector: 'input.js-taggable-field',
     options: {
       createTokensOnBlur: true
     }
   });
 
-  new PreviewOpener(".js-preview-url");
+  new PreviewOpener('.js-preview-url');
 
   textToLinkRewriteCopier({
-    sourceElementSelector: "input.js-copier-source-title",
+    sourceElementSelector: 'input.js-copier-source-title',
     destinationElementSelector: `${translatorInput.localeInputSelector}:not(.d-none) input.js-copier-destination-friendly-url`
   });
 
-  new ChoiceTree("#cms_page_shop_association").enableAutoCheckChildren();
+  new ChoiceTree('#cms_page_shop_association').enableAutoCheckChildren();
 });
