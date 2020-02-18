@@ -33,8 +33,8 @@ use Db;
 use Order;
 use OrderDetail;
 use OrderHistory;
-use PrestaShop\PrestaShop\Core\Domain\Order\Exception\DeleteProductFromOrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\DeleteCustomizedProductFromOrderException;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\DeleteProductFromOrderException;
 use Psr\Log\LoggerInterface;
 
 class OrderProductRemover
@@ -46,6 +46,7 @@ class OrderProductRemover
 
     /**
      * OrderProductRemover constructor.
+     *
      * @param LoggerInterface $logger
      */
     public function __construct(LoggerInterface $logger)
@@ -87,9 +88,10 @@ class OrderProductRemover
 
         $this->updateOrder(
             $order,
-            $cart,
             $productPriceTaxIncl,
-            $productPriceTaxExcl
+            $productPriceTaxExcl,
+            $shippingDiffTaxIncl,
+            $shippingDiffTaxExcl
         );
 
         $this->updateOrderDetail(
@@ -125,21 +127,18 @@ class OrderProductRemover
 
     /**
      * @param Order $order
-     * @param Cart $cart
      * @param float $productPriceTaxIncl
      * @param float $productPriceTaxExcl
+     * @param float $shippingDiffTaxIncl
+     * @param float $shippingDiffTaxExcl
      */
     private function updateOrder(
         Order $order,
-        Cart $cart,
         float $productPriceTaxIncl,
-        float $productPriceTaxExcl
-    )
-    {
-        $packageShippingCostTaxIncl = $cart->getPackageShippingCost($order->id_carrier, true, null, $order->getCartProducts());
-        $packageShippingCostTaxExcl = $cart->getPackageShippingCost($order->id_carrier, false, null, $order->getCartProducts());
-        $shippingDiffTaxIncl = $order->total_shipping_tax_incl - $packageShippingCostTaxIncl;
-        $shippingDiffTaxExcl = $order->total_shipping_tax_excl - $packageShippingCostTaxExcl;
+        float $productPriceTaxExcl,
+        float $shippingDiffTaxIncl,
+        float $shippingDiffTaxExcl
+    ) {
         $order->total_shipping -= $shippingDiffTaxIncl;
         $order->total_shipping_tax_excl -= $shippingDiffTaxExcl;
         $order->total_shipping_tax_incl -= $shippingDiffTaxIncl;
@@ -184,22 +183,24 @@ class OrderProductRemover
      * @param Order $order
      * @param OrderDetail $orderDetail
      * @param int $quantity
-     * @param float $shippingDiffTaxIncl
-     * @param float $shippingDiffTaxExcl
      * @param float $productPriceTaxIncl
      * @param float $productPriceTaxExcl
+     * @param float $shippingDiffTaxIncl
+     * @param float $shippingDiffTaxExcl
      *
+     * @throws DeleteProductFromOrderException
+     * @throws \PrestaShopDatabaseException
+     * @throws \PrestaShopException
      */
     private function updateOrderDetail(
         Order $order,
         OrderDetail $orderDetail,
         int $quantity,
-        float $shippingDiffTaxIncl,
-        float $shippingDiffTaxExcl,
         float $productPriceTaxIncl,
-        float $productPriceTaxExcl
-    )
-    {
+        float $productPriceTaxExcl,
+        float $shippingDiffTaxIncl,
+        float $shippingDiffTaxExcl
+    ) {
         $orderDetail->product_quantity -= (int) $quantity;
         if ($orderDetail->product_quantity == 0) {
             if (!$orderDetail->delete()) {
