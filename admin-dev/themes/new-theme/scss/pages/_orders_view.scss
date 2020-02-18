@@ -9,8 +9,15 @@
     }
   }
 
+  > .row:not(.d-print-none) {
+    @media print {
+      display: block !important;
+    }
+  }
+
   @media print {
-    button, select {
+    button,
+    select {
       display: none;
     }
 
@@ -25,7 +32,8 @@
       max-width: 100%;
       width: 100%;
 
-      .card, .tab-pane {
+      .card,
+      .tab-pane {
         page-break-inside: avoid;
       }
     }
@@ -50,7 +58,8 @@
       }
     }
 
-    .badge-dark, .badge-print-light {
+    .badge-dark,
+    .badge-print-light {
       color: black;
       background-color: white;
       border-radius: 0;
@@ -60,6 +69,8 @@
 
 .adminorders {
   @media print {
+    display: block;
+
     .header-toolbar {
       position: initial;
     }
@@ -73,6 +84,10 @@
 
     .toolbar-icons {
       display: none;
+    }
+
+    .content-div > .row {
+      display: block;
     }
   }
 }
