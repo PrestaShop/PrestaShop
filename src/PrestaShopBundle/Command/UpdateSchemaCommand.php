@@ -61,6 +61,9 @@ class UpdateSchemaCommand extends ContainerAwareCommand
         $container = $this->getContainer();
 
         $this->dbName = $container->getParameter('database_name');
+        if ('test' === $input->getOption('env')) {
+            $this->dbName = 'test_' . $this->dbName;
+        }
         $this->dbPrefix = $container->getParameter('database_prefix');
 
         $this->em = $container->get('doctrine')->getManager();

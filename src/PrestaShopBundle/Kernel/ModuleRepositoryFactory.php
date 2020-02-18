@@ -145,6 +145,9 @@ class ModuleRepositoryFactory
         if (null === $this->parameters && !empty($this->getParametersFile())) {
             $config = require $this->getParametersFile();
             $this->parameters = $config['parameters'];
+            if ('test' === $this->environment) {
+                $this->parameters['database_name'] = 'test_' . $this->parameters['database_name'];
+            }
         }
 
         return $this->parameters;
