@@ -42,6 +42,7 @@ use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\CartBadgeColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\CartBulkActionColumn;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\CartStatusColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\DateTimeColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
 use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
@@ -128,7 +129,7 @@ final class CartGridDefinitionFactory extends AbstractGridDefinitionFactory
                     'field' => 'id_cart',
                 ])
             )
-            ->add((new DataColumn('status'))
+            ->add((new CartStatusColumn('status'))
                 ->setName($this->trans('Order ID', [], 'Admin.Orderscustomers.Feature'))
                 ->setOptions([
                     'field' => 'status',
