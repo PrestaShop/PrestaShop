@@ -36,8 +36,13 @@ use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\SubmitRowAction;
  */
 trait DeleteActionTrait
 {
-    protected function buildDeleteAction(string $deleteRouteName, string $deleteRouteParamName, string $deleteRouteParamField): RowActionInterface
-    {
+    protected function buildDeleteAction(
+        string $deleteRouteName,
+        string $deleteRouteParamName,
+        string $deleteRouteParamField,
+        array $extraRouteParams = [],
+        array $translations = []
+    ): RowActionInterface {
         return (new SubmitRowAction('delete'))
             ->setName($this->trans('Delete', [], 'Admin.Actions'))
             ->setIcon('delete')
@@ -45,11 +50,20 @@ trait DeleteActionTrait
                 'route' => $deleteRouteName,
                 'route_param_name' => $deleteRouteParamName,
                 'route_param_field' => $deleteRouteParamField,
-                'confirm_message' => $this->trans('Are you sure you want to delete the selected item?', [], 'Admin.Notifications.Warning'),
+                'extra_route_params' => $extraRouteParams,
+                'confirm_message' => array_key_exists('confirm_message', $translations) ?
+                    $translations['confirm_message'] :
+                    $this->trans('Are you sure you want to delete the selected item?', [], 'Admin.Notifications.Warning'),
                 'modal_options' => new ModalOptions([
-                    'title' => $this->trans('Delete selection', [], 'Admin.Actions'),
-                    'confirm_button_label' => $this->trans('Delete', [], 'Admin.Actions'),
-                    'close_button_label' => $this->trans('Cancel', [], 'Admin.Actions'),
+                    'title' => array_key_exists('modal_options.title', $translations) ?
+                        $translations['modal_options.title'] :
+                        $this->trans('Delete selection', [], 'Admin.Actions'),
+                    'confirm_button_label' => array_key_exists('modal_options.confirm_button_label', $translations) ?
+                        $translations['modal_options.confirm_button_label'] :
+                        $this->trans('Delete', [], 'Admin.Actions'),
+                    'close_button_label' => array_key_exists('modal_options.close_button_label', $translations) ?
+                        $translations['modal_options.close_button_label'] :
+                        $this->trans('Cancel', [], 'Admin.Actions'),
                     'confirm_button_class' => 'btn-danger',
                 ]),
             ])
