@@ -16,6 +16,7 @@ module.exports = class productSettings extends BOBasePage {
     this.maxSizeShortDescriptionInput = '#form_general_short_description_limit';
     this.newDaysNumberInput = '#form_general_new_days_number';
     this.switchForceUpdateFriendlyURLLabel = 'label[for=\'form_general_force_friendly_url_%TOGGLE\']';
+    this.switchDefaultActivationStatusLabel = 'label[for=\'form_general_default_status_%TOGGLE\']';
     this.saveProductGeneralFormButton = `${this.productGeneralForm} .card-footer button`;
   }
 
@@ -74,6 +75,17 @@ module.exports = class productSettings extends BOBasePage {
    */
   async setForceUpdateFriendlyURL(toEnable = true) {
     await this.waitForSelectorAndClick(this.switchForceUpdateFriendlyURLLabel.replace('%TOGGLE', toEnable ? 1 : 0));
+    await this.clickAndWaitForNavigation(this.saveProductGeneralFormButton);
+    return this.getTextContent(this.alertSuccessBloc);
+  }
+
+  /**
+   * Change default activation status
+   * @param toEnable
+   * @returns {Promise<string|*>}
+   */
+  async setDefaultActivationStatus(toEnable = true) {
+    await this.waitForSelectorAndClick(this.switchDefaultActivationStatusLabel.replace('%TOGGLE', toEnable ? 1 : 0));
     await this.clickAndWaitForNavigation(this.saveProductGeneralFormButton);
     return this.getTextContent(this.alertSuccessBloc);
   }

@@ -21,6 +21,7 @@ module.exports = class AddProduct extends BOBasePage {
     this.saveProductButton = 'input#submit[value=\'Save\']';
     this.previewProductLink = 'a#product_form_preview_btn';
     this.productOnlineSwitch = '.product-footer div.switch-input';
+    this.productOnlineTitle = 'h2.for-switch.online-title';
     this.productShortDescriptionTab = '#tab_description_short a';
     this.productShortDescriptionIframe = '#form_step1_description_short_1_ifr';
     this.productDescriptionTab = '#tab_description a';
@@ -294,5 +295,13 @@ module.exports = class AddProduct extends BOBasePage {
     await this.reloadPage();
     await this.goToFormStep(5);
     return this.getAttributeContent(this.friendlyUrlInput, 'value');
+  }
+
+  /**
+   * Get online product status
+   * @returns {Promise<boolean>}
+   */
+  getOnlineButtonStatus() {
+    return this.elementVisible(this.productOnlineTitle, 1000);
   }
 };
