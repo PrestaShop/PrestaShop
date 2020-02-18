@@ -51,8 +51,8 @@ class Email
     public function __construct($email)
     {
         $this->assertEmailIsString($email);
+        $this->assertEmailIsNotEmpty($email);
         $this->assertEmailDoesNotExceedAllowedLength($email);
-        $this->assertEmailIsValid($email);
 
         $this->email = $email;
     }
@@ -78,19 +78,16 @@ class Email
     }
 
     /**
-     * Assert that email is in valid format
+     * Check that email is not an empty string
      *
-     * @param string $email
+     * @param $email
      *
      * @throws DomainConstraintException
      */
-    private function assertEmailIsValid($email)
+    public function assertEmailIsNotEmpty($email)
     {
-        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            throw new DomainConstraintException(
-                sprintf('Email %s is invalid.', var_export($email, true)),
-                DomainConstraintException::INVALID_EMAIL
-            );
+        if (0 === strlen($email)) {
+            throw new DomainConstraintException('Email must not be empty', DomainConstraintException::INVALID_EMAIL);
         }
     }
 
