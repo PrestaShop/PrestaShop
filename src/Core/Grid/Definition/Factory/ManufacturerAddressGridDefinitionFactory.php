@@ -30,7 +30,6 @@ use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\LinkRowAction;
-use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\SubmitRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Type\LinkGridAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Type\SimpleGridAction;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
@@ -49,6 +48,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 final class ManufacturerAddressGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
     use BulkDeleteActionTrait;
+    use DeleteActionTrait;
 
     const GRID_ID = 'manufacturer_address';
 
@@ -135,19 +135,12 @@ final class ManufacturerAddressGridDefinitionFactory extends AbstractGridDefinit
                                 'clickable_row' => true,
                             ])
                         )
-                        ->add((new SubmitRowAction('delete'))
-                            ->setName($this->trans('Delete', [], 'Admin.Actions'))
-                            ->setIcon('delete')
-                            ->setOptions([
-                                'route' => 'admin_manufacturer_addresses_delete',
-                                'route_param_name' => 'addressId',
-                                'route_param_field' => 'id_address',
-                                'confirm_message' => $this->trans(
-                                    'Delete selected item?',
-                                    [],
-                                    'Admin.Notifications.Warning'
-                                ),
-                            ])
+                        ->add(
+                            $this->buildDeleteAction(
+                                'admin_manufacturer_addresses_delete',
+                                'addressId',
+                                'id_address'
+                            )
                         ),
                 ])
             )
