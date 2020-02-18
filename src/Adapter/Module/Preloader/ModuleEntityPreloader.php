@@ -28,8 +28,9 @@ namespace PrestaShop\PrestaShop\Adapter\Module\Preloader;
 
 use Doctrine\Common\Inflector\Inflector;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModulePreloaderInterface;
+use PrestaShop\PrestaShop\Core\Exception\FileNotFoundException;
+use PrestaShop\PrestaShop\Core\Util\Exception\NamespaceNotFoundException;
 use PrestaShopBundle\Service\Database\DoctrineRuntimeEntityMapper;
-use PrestaShopBundle\Service\Database\Exception\DatabaseException;
 
 /**
  * Class ModuleEntityPreloader preloads module's doctrine entities.
@@ -71,8 +72,10 @@ class ModuleEntityPreloader implements ModulePreloaderInterface
 
         try {
             $this->entityMapper->addDoctrineMapping($entityFolder, $moduleAlias);
-        } catch (DatabaseException $e) {
-            // Do nothing, the module has no entities or no namespace
+        } catch (NamespaceNotFoundException $e) {
+            // Do nothing, the module has no namespace
+        } catch (FileNotFoundException $e) {
+            // Do nothing, the module has no entity folder (already checked, but better safe than sorry)
         }
     }
 }

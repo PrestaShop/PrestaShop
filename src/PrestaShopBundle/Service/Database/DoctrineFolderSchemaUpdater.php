@@ -31,9 +31,9 @@ use Doctrine\ORM\Configuration;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\Tools\SchemaTool;
-use PrestaShopBundle\Service\Database\Exception\EntityFolderNotFoundException;
-use PrestaShopBundle\Service\Database\Exception\EntityNamespaceNotFoundException;
-use Symfony\Component\Finder\Finder;
+use PrestaShop\PrestaShop\Core\Exception\FileNotFoundException;
+use PrestaShop\PrestaShop\Core\Util\Exception\NamespaceNotFoundException;
+use PrestaShop\PrestaShop\Core\Util\NamespaceFinder;
 
 class DoctrineFolderSchemaUpdater
 {
@@ -46,6 +46,11 @@ class DoctrineFolderSchemaUpdater
      * @var Configuration
      */
     private $configuration;
+
+    /**
+     * @var NamespaceFinder
+     */
+    private $namespaceFinder;
 
     /**
      * @var SchemaTool
@@ -70,13 +75,16 @@ class DoctrineFolderSchemaUpdater
     /**
      * @param EntityManagerInterface $em
      * @param Configuration $configuration
+     * @param NamespaceFinder $namespaceFinder
      */
     public function __construct(
         EntityManagerInterface $em,
-        Configuration $configuration
+        Configuration $configuration,
+        NamespaceFinder $namespaceFinder
     ) {
         $this->em = $em;
         $this->configuration = $configuration;
+        $this->namespaceFinder = $namespaceFinder;
         $this->schemaTool = new SchemaTool($this->em);
     }
 
@@ -86,10 +94,10 @@ class DoctrineFolderSchemaUpdater
      *
      * @param string $entitiesFolder
      *
-     * @return string[]
+     * @return array
      *
-     * @throws EntityFolderNotFoundException
-     * @throws EntityNamespaceNotFoundException
+     * @throws FileNotFoundException
+     * @throws NamespaceNotFoundException
      */
     public function getFolderSchemaUpdate(string $entitiesFolder): array
     {
@@ -106,9 +114,9 @@ class DoctrineFolderSchemaUpdater
      *
      * @param string $entitiesFolder
      *
-     * @throws EntityFolderNotFoundException
-     * @throws EntityNamespaceNotFoundException
      * @throws DBALException
+     * @throws FileNotFoundException
+     * @throws NamespaceNotFoundException
      */
     public function updateFolderSchema(string $entitiesFolder)
     {
@@ -123,10 +131,10 @@ class DoctrineFolderSchemaUpdater
      *
      * @param string $entitiesFolder
      *
-     * @return string[]
+     * @return array
      *
-     * @throws EntityFolderNotFoundException
-     * @throws EntityNamespaceNotFoundException
+     * @throws FileNotFoundException
+     * @throws NamespaceNotFoundException
      */
     public function getFolderSchemaRemoval(string $entitiesFolder): array
     {
@@ -145,8 +153,8 @@ class DoctrineFolderSchemaUpdater
      * @param string $entitiesFolder
      *
      * @throws DBALException
-     * @throws EntityFolderNotFoundException
-     * @throws EntityNamespaceNotFoundException
+     * @throws FileNotFoundException
+     * @throws NamespaceNotFoundException
      */
     public function removeFolderSchema(string $entitiesFolder)
     {
@@ -158,19 +166,19 @@ class DoctrineFolderSchemaUpdater
     /**
      * @param string $entitiesFolder
      *
-     * @throws EntityFolderNotFoundException
-     * @throws EntityNamespaceNotFoundException
+     * @throws FileNotFoundException
+     * @throws NamespaceNotFoundException
      */
     private function fetchEntityFolderClassList(string $entitiesFolder): void
     {
         if (!is_dir($entitiesFolder)) {
-            throw new EntityFolderNotFoundException(sprintf(
+            throw new FileNotFoundException(sprintf(
                 'Cannot find entity folder %s',
                 $entitiesFolder
             ));
         }
 
-        $entitiesNamespace = $this->getFolderNamespace($entitiesFolder);
+        $entitiesNamespace = $this->namespaceFinder->findNamespaceFromFolder($entitiesFolder);
 
         $this->allClasses = $this->em->getMetadataFactory()->getAllMetadata();
         $this->namespaceClasses = [];
@@ -180,18 +188,6 @@ class DoctrineFolderSchemaUpdater
                 $this->namespaceClasses[] = $metadata;
             }
         }
-    }
-
-    /**
-     * @param string $entitiesFolder
-     *
-     * @return string
-     *
-     * @throws EntityNamespaceNotFoundException
-     */
-    private function getFolderNamespace(string $entitiesFolder)
-    {
-
     }
 
     /**

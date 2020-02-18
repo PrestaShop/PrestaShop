@@ -48,12 +48,14 @@ services:
         - "@annotation_reader"
         - "@doctrine.orm.default_metadata_driver"
         - "@doctrine.orm.default_configuration"
+        - "@prestashop.core.util.namespace_finder"
 
     prestashop.database.doctrine_folder_schema_updater:
       class: PrestaShopBundle\Service\Database\DoctrineFolderSchemaUpdater
       arguments:
         - "@doctrine.orm.entity_manager"
         - "@doctrine.orm.default_configuration"
+        - "@prestashop.core.util.namespace_finder"
 
     prestashop.data_provider.modules.recommended:
         class: PrestaShopBundle\Service\DataProvider\Admin\RecommendedModules
