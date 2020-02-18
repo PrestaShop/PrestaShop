@@ -48,6 +48,27 @@ services:
             - "@translator"
             - "@event_dispatcher"
             - "@prestashop.adapter.cache.clearer.symfony_cache_clearer"
+            -
+                - "@prestashop.module.adapter.preloader.autoload_preloader"
+                - "@prestashop.module.adapter.preloader.entity_preloader"
+                - "@prestashop.module.adapter.preloader.service_preloader"
+
+    prestashop.module.adapter.preloader.autoload_preloader:
+        class: PrestaShop\PrestaShop\Adapter\Module\Preloader\ModuleAutoloadFilePreloader
+        arguments:
+            - "%modules_dir%"
+
+    prestashop.module.adapter.preloader.service_preloader:
+        class: PrestaShop\PrestaShop\Adapter\Module\Preloader\ModuleServicePreloader
+        arguments:
+            - "@service_container"
+            - "%modules_dir%"
+
+    prestashop.module.adapter.preloader.entity_preloader:
+        class: PrestaShop\PrestaShop\Adapter\Module\Preloader\ModuleEntityPreloader
+        arguments:
+            - "@prestashop.database.doctrine_runtime_entity_mapper"
+            - "%modules_dir%"
 
     prestashop.module.zip.manager:
         class: PrestaShop\PrestaShop\Adapter\Module\ModuleZipManager
