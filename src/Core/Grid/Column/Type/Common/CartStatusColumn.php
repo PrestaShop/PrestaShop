@@ -7,7 +7,7 @@ namespace PrestaShop\PrestaShop\Core\Grid\Column\Type\Common;
 use PrestaShop\PrestaShop\Core\Grid\Column\AbstractColumn;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class CartStatusColumn extends AbstractColumn
+final class CartStatusColumn extends AbstractColumn
 {
 
     /**
@@ -29,6 +29,7 @@ class CartStatusColumn extends AbstractColumn
                 'field',
             ])
             ->setDefaults([
+                'badge_type' => 'success',
                 'empty_value' => '',
                 'clickable' => true,
                 'text_align' => 'right',
