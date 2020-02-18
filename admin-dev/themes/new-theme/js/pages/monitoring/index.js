@@ -70,6 +70,7 @@ $(() => {
     grid.addExtension(new ReloadListActionExtension());
     grid.addExtension(new FiltersResetExtension());
     grid.addExtension(new AsyncToggleColumnExtension());
+    grid.addExtension(new SubmitRowActionExtension());
     grid.addExtension(new LinkRowActionExtension());
     grid.addExtension(new FiltersSubmitButtonEnablerExtension());
   });
