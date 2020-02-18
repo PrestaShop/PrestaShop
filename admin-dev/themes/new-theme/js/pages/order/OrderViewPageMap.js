@@ -24,6 +24,7 @@
  */
 
 export default {
+  mainDiv: '#order-view-page',
   orderPaymentDetailsBtn: '.js-payment-details-btn',
   orderPaymentFormAmountInput: '#order_payment_amount',
   orderPaymentInvoiceSelect: '#order_payment_id_invoice',
@@ -69,8 +70,8 @@ export default {
   productsTablePaginationLink: '.page-item:not(.d-none):not(#orderProductsTablePaginationNext):not(#orderProductsTablePaginationPrev) .page-link',
   productsTablePaginationActive: '#orderProductsTablePagination .page-item.active span',
   productsTablePaginationTemplate: '#orderProductsTablePagination .page-item.d-none',
-  productsTableRow: productId => `#orderProduct_${productId}`,
-  productsTableRowEdited: productId => `#editOrderProduct_${productId}`,
+  productsTableRow: (productId) => `#orderProduct_${productId}`,
+  productsTableRowEdited: (productId) => `#editOrderProduct_${productId}`,
   productsCellLocation: 'tr .cellProductLocation',
   productsCellLocationDisplayed: 'tr:not(.d-none) .cellProductLocation',
   productsTableCustomizationRows: '#orderProductsTable .order-product-customization',
@@ -173,4 +174,5 @@ export default {
       cancelProducts: '.cancel-product-element:not(.hidden):not(.shipping-refund-amount):not(.shipping-refund):not(.restock-products):not(.refund-credit-slip):not(.refund-voucher), .cancel-product-selector',
     },
   },
+  printOrderViewPageButton: '.js-print-order-view-page',
 };

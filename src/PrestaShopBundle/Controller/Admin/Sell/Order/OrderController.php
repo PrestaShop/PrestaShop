@@ -1266,7 +1266,7 @@ class OrderController extends FrameworkBundleAdminController
 
         $products = $orderForViewing->getProducts()->getProducts();
         if (null !== $limit && null !== $offset) {
-            // @todo Optimize this by using a GetPartialOrderForViewing query which loads only the relevant products
+            // @todo: Optimize this by using a GetPartialOrderForViewing query which loads only the relevant products
             $products = array_slice($products, (int) $offset, (int) $limit);
         }
 

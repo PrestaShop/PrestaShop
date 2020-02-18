@@ -81,7 +81,7 @@
           </th>
         {% endif %}
         {% if not orderForViewing.delivered %}
-          <th class="text-right product_actions">
+          <th class="text-right product_actions d-print-none">
             <p>{{ 'Actions'|trans({}, 'Admin.Global') }}</p>
           </th>
         {% endif %}
@@ -105,7 +105,7 @@
     </table>
 
     <div class="row mb-3">
-      <div class="col-md-6 text-left">
+      <div class="col-md-6 text-left d-print-none">
         {% set numPages = (orderForViewing.products.products|length / paginationNum)|round(0, 'ceil') %}
         <nav aria-label="Products Navigation"{% if orderForViewing.products.products|length <= paginationNum %} class="d-none"{% endif %} id="orderProductsNavPagination">
           <ul class="pagination" id="orderProductsTablePagination" data-num-per-page="{{ paginationNum }}" data-num-pages="{{ numPages }}">
@@ -148,7 +148,7 @@
         <tr>
           <th>{{ 'Name'|trans({}, 'Admin.Global') }}</th>
           <th>{{ 'Value'|trans({}, 'Admin.Global') }}</th>
-          <th class="text-right">{{ 'Actions'|trans({}, 'Admin.Global') }}</th>
+          <th class="text-right d-print-none">{{ 'Actions'|trans({}, 'Admin.Global') }}</th>
         </tr>
         </thead>
         <tbody>
@@ -159,7 +159,7 @@
               {% if discount.amountRaw %}-{% endif %}
               {{ discount.amountFormatted }}
             </td>
-            <td class="text-right">
+            <td class="text-right d-print-none">
               <a class="delete-cart-rule btn btn-text" href="{{ path('admin_orders_remove_cart_rule', {'orderId': orderForViewing.id, 'orderCartRuleId': discount.orderCartRuleId}) }}">
                   <i class="material-icons">delete</i>
               </a>
@@ -182,7 +182,7 @@
             {% if orderForViewing.prices.discountsAmountRaw %}
               <div class="col-sm text-center">
                 <p class="text-muted mb-0"><strong>{{ 'Discounts'|trans({}, 'Admin.Global') }}</strong></p>
-                <strong class="orderDiscountsTotal">-{{ orderForViewing.prices.discountsAmountFormatted }}</strong>
+                <strong id="orderDiscountsTotal">-{{ orderForViewing.prices.discountsAmountFormatted }}</strong>
               </div>
             {% endif %}
 

@@ -1,0 +1,42 @@
+<div class="card">
+  <div class="card-body">
+    <div class="row">
+      <div class="col-sm">
+        <p>
+          <strong>{{ 'Date'|trans({}, 'Admin.Global') }}</strong>
+        </p>
+        <strong>{{ orderForViewing.createdAt|date_format_full }}</strong>
+      </div>
+      <div class="col-sm">
+        <p>
+          <strong>{{ 'Total'|trans({}, 'Admin.Global') }}</strong>
+        </p>
+        <p>
+          <span class="badge rounded font-size-100">
+            {{ orderForViewing.prices.totalAmountFormatted }}
+          </span>
+        </p>
+      </div>
+      <div class="col-sm">
+        <p>
+          <strong>
+            {{ 'Message'|trans({}, 'Admin.Global') }}
+          </strong>
+        </p>
+        <strong>
+          {{ orderForViewing.messages.total }}
+        </strong>
+      </div>
+      <div class="col-sm">
+        <p>
+          <strong>
+            {{ 'Products'|trans({}, 'Admin.Global') }}
+          </strong>
+        </p>
+        <strong>
+          {{ orderForViewing.products.products|length }}
+        </strong>
+      </div>
+    </div>
+  </div>
+</div>

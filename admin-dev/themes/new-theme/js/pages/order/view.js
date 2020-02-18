@@ -54,7 +54,7 @@ $(() => {
   orderViewPage.listenForCancelProduct();
 
   orderAddAutocomplete.listenForSearch();
-  orderAddAutocomplete.onItemClickedCallback = product => orderAdd.setProduct(product);
+  orderAddAutocomplete.onItemClickedCallback = (product) => orderAdd.setProduct(product);
 
   handlePaymentDetailsToggle();
   handlePrivateNoteChange();
@@ -67,6 +67,13 @@ $(() => {
   $(OrderViewPageMap.privateNoteToggleBtn).on('click', (event) => {
     event.preventDefault();
     togglePrivateNoteBlock();
+  });
+
+  $(OrderViewPageMap.printOrderViewPageButton).on('click', () => {
+    const tempTitle = document.title;
+    document.title = $(OrderViewPageMap.mainDiv).data('orderTitle');
+    window.print();
+    document.title = tempTitle;
   });
 
   initAddCartRuleFormHandler();
