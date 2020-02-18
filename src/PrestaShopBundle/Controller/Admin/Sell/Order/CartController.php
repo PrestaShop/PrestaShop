@@ -291,7 +291,7 @@ class CartController extends FrameworkBundleAdminController
         $cartRuleId = $request->request->getInt('cartRuleId');
         try {
             $cartInfo = $this->getCartInfo($cartId)->getShipping();
-            if ($cartInfo->isFreeShippingCartRuleAdded() || $cartInfo->isFreeShipping()) {
+            if ($cartInfo->hasFreeShippingCartRule() || $cartInfo->isFreeShipping()) {
                 throw new FreeShippingCartRuleAlreadyExistException('Free shipping cart rule already exist!');
             }
             $this->getCommandBus()->handle(new AddCartRuleToCartCommand($cartId, $cartRuleId));
