@@ -40,7 +40,7 @@ use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\SubmitRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Type\LinkGridAction;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
-use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\CartBadgeColumn;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\CartTotalColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\CartBulkActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\CartStatusColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\DateTimeColumn;
@@ -134,6 +134,7 @@ final class CartGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ->setOptions([
                     'field' => 'status',
                     'text_align' => 'center',
+                    'badge_type' => 'danger',
                 ])
             )
             ->add((new DataColumn('customer_name'))
@@ -142,7 +143,7 @@ final class CartGridDefinitionFactory extends AbstractGridDefinitionFactory
                     'field' => 'customer_name',
                 ])
             )
-            ->add((new CartBadgeColumn('cart_total'))
+            ->add((new CartTotalColumn('cart_total'))
                 ->setName($this->trans('Total', [], 'Admin.Global'))
                 ->setOptions([
                     'field' => 'cart_total',

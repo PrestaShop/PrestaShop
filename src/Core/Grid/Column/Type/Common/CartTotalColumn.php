@@ -5,14 +5,14 @@ namespace PrestaShop\PrestaShop\Core\Grid\Column\Type\Common;
 use PrestaShop\PrestaShop\Core\Grid\Column\AbstractColumn;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class CartBadgeColumn extends AbstractColumn
+final class CartTotalColumn extends AbstractColumn
 {
     /**
      * {@inheritdoc}
      */
     public function getType()
     {
-        return 'cart_badge';
+        return 'cart_total';
     }
 
     /**
