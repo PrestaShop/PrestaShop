@@ -24,10 +24,10 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 use PrestaShop\PrestaShop\Adapter\ContainerFinder;
+use PrestaShop\PrestaShop\Adapter\LegacyContainerInterface;
 use PrestaShop\PrestaShop\Adapter\LegacyLogger;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
-use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShop\PrestaShop\Core\Exception\ContainerNotFoundException;
 use PrestaShop\PrestaShop\Core\Foundation\Filesystem\FileSystem;
 use PrestaShop\PrestaShop\Core\Module\ModuleInterface;
@@ -3438,10 +3438,10 @@ abstract class ModuleCore implements ModuleInterface
     {
         $container = $this->getContainer();
         if (null === $container) {
-            false;
+            return false;
         }
 
-        return $container === SymfonyContainer::getInstance();
+        return $container instanceof LegacyContainerInterface;
     }
 
     /**
