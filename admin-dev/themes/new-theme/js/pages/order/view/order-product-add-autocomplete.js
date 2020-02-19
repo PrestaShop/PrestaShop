@@ -78,14 +78,11 @@ export default class OrderProductAutocomplete {
   }
 
   onItemClicked(id) {
-    // eslint-disable-next-line no-restricted-syntax
-    for (const product of this.results) {
-      if (id === product.productId) {
-        this.input.val(product.name);
-        this.onItemClickedCallback(product);
+    const selectedProduct = this.results.filter(product => product.productId === id);
 
-        break;
-      }
+    if (selectedProduct.length !== 0) {
+      this.input.val(selectedProduct[0].name);
+      this.onItemClickedCallback(selectedProduct[0]);
     }
   }
 }
