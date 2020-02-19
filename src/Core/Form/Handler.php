@@ -99,18 +99,18 @@ class Handler implements FormHandlerInterface
      */
     public function getForm()
     {
-        $formFactory = $this->formFactory->createNamedBuilder($this->formName, $this->form);
+        $formBuilder = $this->formFactory->createNamedBuilder($this->formName, $this->form);
 
-        $formFactory->setData($this->formDataProvider->getData());
+        $formBuilder->setData($this->formDataProvider->getData());
 
         $this->hookDispatcher->dispatchWithParameters(
             "action{$this->hookName}Form",
             [
-                'form_builder' => $formFactory,
+                'form_builder' => $formBuilder,
             ]
         );
 
-        return $formFactory->getForm();
+        return $formBuilder->getForm();
     }
 
     /**
