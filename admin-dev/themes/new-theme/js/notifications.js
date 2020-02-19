@@ -69,7 +69,6 @@ let fillTpl = function (results, eltAppendTo, tpl) {
     eltAppendTo.addClass('empty');
     return;
   }
-  let router = new Router();
   $.each(results, function (property, value) {
     if (undefined === tpl) {
       return;
