@@ -76,7 +76,7 @@ module.exports = class Home extends FOBasePage {
    */
   async addProductToCartByQuickView(id, quantity_wanted = '1') {
     await this.quickViewProduct(id);
-    await this.setValue(this.quantityWantedInput, quantity_wanted);
+    await this.setValue(this.quantityWantedInput, quantity_wanted.toString());
     await Promise.all([
       this.page.waitForSelector(this.blockCartModalDiv, {visible: true}),
       this.page.click(this.addToCartButton),

@@ -11,6 +11,10 @@ const AddressesPage = require('@pages/BO/customers/addresses');
 const AddAddressPage = require('@pages/BO/customers/addresses/add');
 // Importing data
 const AddressFaker = require('@data/faker/address');
+// Test context imports
+const testContext = require('@utils/testContext');
+
+const baseContext = 'functional_BO_customers_addresses_CRUDAddressesInBO';
 
 let browser;
 let page;
@@ -44,6 +48,7 @@ describe('Create, Read, Update and Delete address in BO', async () => {
   loginCommon.loginBO();
 
   it('should go to \'Customers>Addresses\' page', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'goToAddressesPage', baseContext);
     await this.pageObjects.boBasePage.goToSubMenu(
       this.pageObjects.boBasePage.customersParentLink,
       this.pageObjects.boBasePage.addressesLink,
@@ -54,18 +59,21 @@ describe('Create, Read, Update and Delete address in BO', async () => {
   });
 
   it('should reset all filters', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'resetFirst', baseContext);
     numberOfAddresses = await this.pageObjects.addressesPage.resetAndGetNumberOfLines();
     await expect(numberOfAddresses).to.be.above(0);
   });
   // 1 : Create address
   describe('Create address in BO', async () => {
     it('should go to add new address page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToAddNewAddressPage', baseContext);
       await this.pageObjects.addressesPage.goToAddNewAddressPage();
       const pageTitle = await this.pageObjects.addAddressPage.getPageTitle();
       await expect(pageTitle).to.contains(this.pageObjects.addAddressPage.pageTitleCreate);
     });
 
     it('should create address and check result', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'createAddress', baseContext);
       const textResult = await this.pageObjects.addAddressPage.createEditAddress(createAddressData);
       await expect(textResult).to.equal(this.pageObjects.addressesPage.successfulCreationMessage);
       const numberOfAddressesAfterCreation = await this.pageObjects.addressesPage.getNumberOfElementInGrid();
@@ -75,6 +83,7 @@ describe('Create, Read, Update and Delete address in BO', async () => {
   // 2 : Update address
   describe('Update address Created', async () => {
     it('should go to \'Customers>Addresses\' page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToAddressesPageToUpdate', baseContext);
       await this.pageObjects.boBasePage.goToSubMenu(
         this.pageObjects.boBasePage.customersParentLink,
         this.pageObjects.boBasePage.addressesLink,
@@ -84,6 +93,7 @@ describe('Create, Read, Update and Delete address in BO', async () => {
     });
 
     it('should filter list by first name and last name', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'filterToUpdate', baseContext);
       await this.pageObjects.addressesPage.resetFilter();
       await this.pageObjects.addressesPage.filterAddresses(
         'input',
@@ -102,12 +112,14 @@ describe('Create, Read, Update and Delete address in BO', async () => {
     });
 
     it('should go to edit address page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToEditAddressPage', baseContext);
       await this.pageObjects.addressesPage.goToEditAddressPage(1);
       const pageTitle = await this.pageObjects.addAddressPage.getPageTitle();
       await expect(pageTitle).to.contains(this.pageObjects.addAddressPage.pageTitleEdit);
     });
 
     it('should update address', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'updateAddress', baseContext);
       const textResult = await this.pageObjects.addAddressPage.createEditAddress(editAddressData);
       await expect(textResult).to.equal(this.pageObjects.addressesPage.successfulUpdateMessage);
       const numberOfAddressesAfterUpdate = await this.pageObjects.addressesPage.resetAndGetNumberOfLines();
@@ -117,6 +129,7 @@ describe('Create, Read, Update and Delete address in BO', async () => {
   // 3 : Delete address from BO
   describe('Delete address', async () => {
     it('should go to \'Customers>Addresses\' page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToAddressesPageToDelete', baseContext);
       await this.pageObjects.boBasePage.goToSubMenu(
         this.pageObjects.boBasePage.customersParentLink,
         this.pageObjects.boBasePage.addressesLink,
@@ -126,6 +139,7 @@ describe('Create, Read, Update and Delete address in BO', async () => {
     });
 
     it('should filter list by first name and last name', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'filterToDelete', baseContext);
       await this.pageObjects.addressesPage.resetFilter();
       await this.pageObjects.addressesPage.filterAddresses(
         'input',
@@ -144,6 +158,7 @@ describe('Create, Read, Update and Delete address in BO', async () => {
     });
 
     it('should delete address', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'deleteAddress', baseContext);
       const textResult = await this.pageObjects.addressesPage.deleteAddress(1);
       await expect(textResult).to.equal(this.pageObjects.addressesPage.successfulDeleteMessage);
       const numberOfAddressesAfterDelete = await this.pageObjects.addressesPage.resetAndGetNumberOfLines();

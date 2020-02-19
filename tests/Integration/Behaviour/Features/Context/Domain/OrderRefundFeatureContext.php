@@ -31,11 +31,12 @@ use Configuration;
 use Order;
 use OrderSlip;
 use PHPUnit\Framework\Assert as Assert;
+use PrestaShop\PrestaShop\Core\Domain\Order\Command\CancelOrderProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\IssuePartialRefundCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\IssueReturnProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\IssueStandardRefundCommand;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidCancelProductException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidOrderStateException;
-use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidRefundException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\ReturnProductDisabledException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderForViewing;
@@ -223,18 +224,23 @@ class OrderRefundFeatureContext extends AbstractDomainFeatureContext
 
     /**
      * @Then I should get error that refund quantity is invalid
+     * @Then I should get error that cancel quantity is invalid
      */
     public function assertLastErrorIsInvalidRefundQuantity()
     {
-        $this->assertLastErrorIs(InvalidRefundException::class, InvalidRefundException::INVALID_QUANTITY);
+        $this->assertLastErrorIs(InvalidCancelProductException::class, InvalidCancelProductException::INVALID_QUANTITY);
     }
 
     /**
      * @Then I should get error that refund quantity is too high and max is :maxRefund
+     * @then I should get error that cancel quantity is too high and max is :maxRefund
      */
     public function assertLastErrorIsRefundQuantityTooHigh(int $maxRefund)
     {
-        $this->assertLastErrorIs(InvalidRefundException::class, InvalidRefundException::QUANTITY_TOO_HIGH);
+        $this->assertLastErrorIs(
+            InvalidCancelProductException::class,
+            InvalidCancelProductException::QUANTITY_TOO_HIGH
+        );
         if ($maxRefund !== $this->lastException->getRefundableQuantity()) {
             throw new RuntimeException(sprintf('Invalid refundable quantity in exception, expected %s but got %s', $maxRefund, $this->lastException->getRefundableQuantity()));
         }
@@ -245,7 +251,7 @@ class OrderRefundFeatureContext extends AbstractDomainFeatureContext
      */
     public function assertLastErrorIsInvalidRefundAmount()
     {
-        $this->assertLastErrorIs(InvalidRefundException::class, InvalidRefundException::INVALID_AMOUNT);
+        $this->assertLastErrorIs(InvalidCancelProductException::class, InvalidCancelProductException::INVALID_AMOUNT);
     }
 
     /**
@@ -253,7 +259,7 @@ class OrderRefundFeatureContext extends AbstractDomainFeatureContext
      */
     public function assertLastErrorIsInvalidNoGeneration()
     {
-        $this->assertLastErrorIs(InvalidRefundException::class, InvalidRefundException::NO_GENERATION);
+        $this->assertLastErrorIs(InvalidCancelProductException::class, InvalidCancelProductException::NO_GENERATION);
     }
 
     /**
@@ -261,7 +267,7 @@ class OrderRefundFeatureContext extends AbstractDomainFeatureContext
      */
     public function assertLastErrorIsInvalidNoRefunds()
     {
-        $this->assertLastErrorIs(InvalidRefundException::class, InvalidRefundException::NO_REFUNDS);
+        $this->assertLastErrorIs(InvalidCancelProductException::class, InvalidCancelProductException::NO_REFUNDS);
     }
 
     /**
@@ -273,11 +279,47 @@ class OrderRefundFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Then I should get error that order state is invalid
+     * @Then I should get error that order has unexpected invoice
      */
-    public function assertLastErrorIsInvalidOrderState()
+    public function assertLastErrorIsOrderHasUnexpectedInvoice()
     {
-        $this->assertLastErrorIs(InvalidOrderStateException::class);
+        $this->assertLastErrorIs(
+            InvalidOrderStateException::class,
+            InvalidOrderStateException::UNEXPECTED_INVOICE
+        );
+    }
+
+    /**
+     * @Then I should get error that order has no invoice
+     */
+    public function assertLastErrorIsOrderHasNoInvoice()
+    {
+        $this->assertLastErrorIs(
+            InvalidOrderStateException::class,
+            InvalidOrderStateException::INVOICE_NOT_FOUND
+        );
+    }
+
+    /**
+     * @Then I should get error that order is delivered
+     */
+    public function assertLastErrorIsOrderIsDelivered()
+    {
+        $this->assertLastErrorIs(
+            InvalidOrderStateException::class,
+            InvalidOrderStateException::UNEXPECTED_DELIVERY
+        );
+    }
+
+    /**
+     * @Then I should get error that order is not delivered
+     */
+    public function assertLastErrorIsOrderIsNotDelivered()
+    {
+        $this->assertLastErrorIs(
+            InvalidOrderStateException::class,
+            InvalidOrderStateException::DELIVERY_NOT_FOUND
+        );
     }
 
     /**
@@ -291,7 +333,7 @@ class OrderRefundFeatureContext extends AbstractDomainFeatureContext
      *
      * @return IssuePartialRefundCommand
      *
-     * @throws InvalidRefundException
+     * @throws InvalidCancelProductException
      * @throws OrderException
      */
     private function createIssuePartialRefundCommand(
@@ -348,7 +390,7 @@ class OrderRefundFeatureContext extends AbstractDomainFeatureContext
      *
      * @return IssueStandardRefundCommand
      *
-     * @throws InvalidRefundException
+     * @throws InvalidCancelProductException
      * @throws OrderException
      */
     private function createIssueStandardRefundCommand(
@@ -403,7 +445,7 @@ class OrderRefundFeatureContext extends AbstractDomainFeatureContext
      *
      * @return IssueReturnProductCommand
      *
-     * @throws InvalidRefundException
+     * @throws InvalidCancelProductException
      * @throws OrderException
      */
     private function createIssueReturnProductCommand(
@@ -447,5 +489,38 @@ class OrderRefundFeatureContext extends AbstractDomainFeatureContext
             $voucherRefundType,
             $voucherRefundAmount
         );
+    }
+
+    /**
+     * @When I cancel the following products from order :orderReference:
+     *
+     * @param string $orderReference
+     * @param TableNode $table
+     */
+    public function cancelOrderProduct(string $orderReference, TableNode $table)
+    {
+        $cancelProductInfos = $table->getColumnsHash();
+        $orderId = SharedStorage::getStorage()->get($orderReference);
+        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing((int) $orderId));
+        $products = $orderForViewing->getProducts()->getProducts();
+        $cancelledProducts = [];
+
+        foreach ($cancelProductInfos as $cancelledProductInfo) {
+            foreach ($products as $product) {
+                if ($product->getName() === $cancelledProductInfo['product_name']) {
+                    $cancelledProducts[$product->getOrderDetailId()] = $cancelledProductInfo['quantity'];
+                }
+            }
+        }
+        try {
+            $command = new CancelOrderProductCommand(
+                $cancelledProducts,
+                $orderForViewing->getId()
+            );
+
+            $this->getCommandBus()->handle($command);
+        } catch (OrderException $e) {
+            $this->lastException = $e;
+        }
     }
 }

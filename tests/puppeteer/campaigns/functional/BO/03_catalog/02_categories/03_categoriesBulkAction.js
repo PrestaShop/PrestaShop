@@ -11,6 +11,10 @@ const DashboardPage = require('@pages/BO/dashboard');
 const CategoriesPage = require('@pages/BO/catalog/categories');
 const AddCategoryPage = require('@pages/BO/catalog/categories/add');
 const CategoryFaker = require('@data/faker/category');
+// Test context imports
+const testContext = require('@utils/testContext');
+
+const baseContext = 'functional_BO_catalog_categories_categoriesBulkActions';
 
 let browser;
 let page;
@@ -49,6 +53,7 @@ describe('Create Categories, Then disable / Enable and Delete with Bulk actions'
   loginCommon.loginBO();
 
   it('should go to "Catalog>Categories" page', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'goToCategoriesPage', baseContext);
     await this.pageObjects.boBasePage.goToSubMenu(
       this.pageObjects.boBasePage.catalogParentLink,
       this.pageObjects.boBasePage.categoriesLink,
@@ -59,6 +64,7 @@ describe('Create Categories, Then disable / Enable and Delete with Bulk actions'
   });
 
   it('should reset all filters and get Number of Categories in BO', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'resetFirst', baseContext);
     numberOfCategories = await this.pageObjects.categoriesPage.resetAndGetNumberOfLines();
     await expect(numberOfCategories).to.be.above(0);
   });
@@ -71,6 +77,7 @@ describe('Create Categories, Then disable / Enable and Delete with Bulk actions'
 
     tests.forEach((test, index) => {
       it('should go to add new category page', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `goToAddCategoryPage${index + 1}`, baseContext);
         await this.pageObjects.categoriesPage.clickAndWaitForNavigation(
           this.pageObjects.categoriesPage.addNewCategoryLink,
         );
@@ -79,6 +86,7 @@ describe('Create Categories, Then disable / Enable and Delete with Bulk actions'
       });
 
       it('should create category and check result', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `createCategory${index + 1}`, baseContext);
         const textResult = await this.pageObjects.addCategoryPage.createEditCategory(test.args.categoryToCreate);
         await expect(textResult).to.equal(this.pageObjects.categoriesPage.successfulCreationMessage);
         const numberOfCategoriesAfterCreation = await this.pageObjects.categoriesPage.getNumberOfElementInGrid();
@@ -89,6 +97,7 @@ describe('Create Categories, Then disable / Enable and Delete with Bulk actions'
   // 2 : Enable/Disable categories created with bulk actions
   describe('Enable and Disable categories with Bulk Actions', async () => {
     it('should filter list by Name', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'filterToBulkEditStatus', baseContext);
       await this.pageObjects.categoriesPage.filterCategories(
         'input',
         'name',
@@ -105,6 +114,7 @@ describe('Create Categories, Then disable / Enable and Delete with Bulk actions'
 
     tests.forEach((test) => {
       it(`should ${test.args.action} with bulk actions and check Result`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `goToAddCategoryPage${test.args.action}`, baseContext);
         const textResult = await this.pageObjects.categoriesPage.changeCategoriesEnabledColumnBulkActions(
           test.args.enabledValue,
         );
@@ -121,6 +131,7 @@ describe('Create Categories, Then disable / Enable and Delete with Bulk actions'
   // 3 : Delete Categories created with bulk actions
   describe('Delete categories with Bulk Actions', async () => {
     it('should filter list by Name', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'filterToBulkDelete', baseContext);
       await this.pageObjects.categoriesPage.filterCategories(
         'input',
         'name',
@@ -131,11 +142,13 @@ describe('Create Categories, Then disable / Enable and Delete with Bulk actions'
     });
 
     it('should delete categories with Bulk Actions and check Result', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'bulkDelete', baseContext);
       const deleteTextResult = await this.pageObjects.categoriesPage.deleteCategoriesBulkActions();
       await expect(deleteTextResult).to.be.equal(this.pageObjects.categoriesPage.successfulMultiDeleteMessage);
     });
 
     it('should reset all filters', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'resetAfterDelete', baseContext);
       const numberOfCategoriesAfterReset = await this.pageObjects.categoriesPage.resetAndGetNumberOfLines();
       await expect(numberOfCategoriesAfterReset).to.equal(numberOfCategories);
     });
