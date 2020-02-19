@@ -58,6 +58,6 @@ final class SlipPdfFormDataProvider implements FormDataProviderInterface
      */
     public function setData(array $data)
     {
-        return $this->configuration->updateConfiguration($data['pdf']);
+        return $this->configuration->updateConfiguration($data);
     }
 }
