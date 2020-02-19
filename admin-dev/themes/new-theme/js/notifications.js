@@ -92,22 +92,26 @@ let fillTpl = function (results, eltAppendTo, tpl) {
       .replace(/_status_/g, value.status);
 
     switch (eltAppendTo[0].id) {
-      case 'orders-notifications':
+      case 'orders-notifications': {
+        const token = `${window.token_admin_orders}&vieworder&id_order=${value.id_order}`;
         tplReplaced = tplReplaced.replace(
           /order_url/g,
-          `${window.baseAdminDir}index.php?tab=AdminOrders&token=${window.token_admin_orders}&vieworder&id_order=${value.id_order}`
+          `${window.baseAdminDir}index.php?tab=AdminOrders&token=${token}`,
         );
         break;
-      case 'customers-notifications':
+      }
+      case 'customers-notifications': {
         const customerId = parseInt(value.id_customer, 10);
         route = router.generate('admin_customers_view', {customerId});
         tplReplaced = tplReplaced.replace(/customer_url/g, route);
         break;
-      case 'messages-notifications':
+      }
+      case 'messages-notifications': {
         const customerThreadId = parseInt(value.id_customer_thread, 10);
         route = router.generate('admin_customer_threads_view', {customerThreadId});
         tplReplaced = tplReplaced.replace(/message_url/g, route);
         break;
+      }
       default:
         break;
     }
