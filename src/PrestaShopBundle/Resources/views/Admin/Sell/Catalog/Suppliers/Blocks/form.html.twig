@@ -90,7 +90,7 @@
         'label': 'Country'|trans({}, 'Admin.Global'),
       }) }}
 
-      <div class="js-supplier-state">
+      <div class="js-supplier-state {{ supplierForm.children.id_state.vars.attr.class }}">
         {{ ps.form_group_row(supplierForm.id_state, {}, {
           'label': 'State'|trans({}, 'Admin.Global'),
         }) }}
