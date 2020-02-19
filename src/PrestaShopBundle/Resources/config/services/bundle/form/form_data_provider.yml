@@ -46,14 +46,33 @@ services:
             - '@prestashop.adapter.product_stock.configuration'
             - '@translator'
 
-    prestashop.adapter.performance.form_provider:
+    prestashop.adapter.performance.smarty.form_provider:
         class: 'PrestaShopBundle\Form\Admin\AdvancedParameters\Performance\PerformanceFormDataProvider'
         arguments:
             - '@prestashop.adapter.smarty_cache.configuration'
+    prestashop.adapter.performance.debug_mode.form_provider:
+        class: 'PrestaShopBundle\Form\Admin\AdvancedParameters\Performance\PerformanceFormDataProvider'
+        arguments:
             - '@prestashop.adapter.debug_mode.configuration'
+
+    prestashop.adapter.performance.optional_features.form_provider:
+        class: 'PrestaShopBundle\Form\Admin\AdvancedParameters\Performance\PerformanceFormDataProvider'
+        arguments:
             - '@prestashop.adapter.optional_features.configuration'
+
+    prestashop.adapter.performance.ccc.form_provider:
+        class: 'PrestaShopBundle\Form\Admin\AdvancedParameters\Performance\PerformanceFormDataProvider'
+        arguments:
             - '@prestashop.adapter.ccc.configuration'
+
+    prestashop.adapter.performance.media_servers.form_provider:
+        class: 'PrestaShopBundle\Form\Admin\AdvancedParameters\Performance\PerformanceFormDataProvider'
+        arguments:
             - '@prestashop.adapter.media_servers.configuration'
+
+    prestashop.adapter.performance.caching.form_provider:
+        class: 'PrestaShopBundle\Form\Admin\AdvancedParameters\Performance\PerformanceFormDataProvider'
+        arguments:
             - '@prestashop.adapter.caching.configuration'
 
     prestashop.adapter.maintenance.form_provider:
