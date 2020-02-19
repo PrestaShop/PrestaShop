@@ -25,6 +25,8 @@
 
 import AutocompleteWithEmail from '@components/form/autocomplete-with-email';
 import CountryStateSelectionToggler from '@components/country-state-selection-toggler';
+import CountryDniRequiredToggler from '@components/country-dni-required-toggler';
+import CountryPostcodeRequiredToggler from '@components/country-postcode-required-toggler';
 import addressFormMap from './address-form-map';
 
 const {$} = window;
@@ -41,6 +43,16 @@ $(document).ready(() => {
   new CountryStateSelectionToggler(
     addressFormMap.addressCountrySelect,
     addressFormMap.addressStateSelect,
-    addressFormMap.addressStateBlock,
+    addressFormMap.addressStateBlock
+  );
+  new CountryDniRequiredToggler(
+    addressFormMap.addressCountrySelect,
+    addressFormMap.addressDniInput,
+    addressFormMap.addressDniInputLabel
+  );
+  new CountryPostcodeRequiredToggler(
+    addressFormMap.addressCountrySelect,
+    addressFormMap.addressPostcodeInput,
+    addressFormMap.addressPostcodeInputLabel
   );
 });
