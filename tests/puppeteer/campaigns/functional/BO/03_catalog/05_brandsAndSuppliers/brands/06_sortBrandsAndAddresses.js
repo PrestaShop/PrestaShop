@@ -93,8 +93,8 @@ describe('Sort brands and addresses', async () => {
           await this.pageObjects.brandsPage.sortTableBrands(test.args.sortBy, test.args.sortDirection);
           let sortedTable = await this.pageObjects.brandsPage.getAllRowsColumnContentBrandsTable(test.args.sortBy);
           if (test.args.isFloat) {
-            nonSortedTable = await nonSortedTable.map(text => parseFloat(text, 10));
-            sortedTable = await sortedTable.map(text => parseFloat(text, 10));
+            nonSortedTable = await nonSortedTable.map(text => parseFloat(text));
+            sortedTable = await sortedTable.map(text => parseFloat(text));
           }
           const expectedResult = await this.pageObjects.brandsPage.sortArray(nonSortedTable, test.args.isFloat);
           if (test.args.sortDirection === 'asc') {
@@ -205,8 +205,8 @@ describe('Sort brands and addresses', async () => {
           await this.pageObjects.brandsPage.sortTableAddresses(test.args.sortBy, test.args.sortDirection);
           let sortedTable = await this.pageObjects.brandsPage.getAllRowsColumnContentAddressesTable(test.args.sortBy);
           if (test.args.isFloat) {
-            nonSortedTable = await nonSortedTable.map(text => parseFloat(text, 10));
-            sortedTable = await sortedTable.map(text => parseFloat(text, 10));
+            nonSortedTable = await nonSortedTable.map(text => parseFloat(text));
+            sortedTable = await sortedTable.map(text => parseFloat(text));
           }
           const expectedResult = await this.pageObjects.brandsPage.sortArray(nonSortedTable, test.args.isFloat);
           if (test.args.sortDirection === 'asc') {
