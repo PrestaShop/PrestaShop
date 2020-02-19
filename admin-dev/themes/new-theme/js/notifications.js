@@ -79,21 +79,24 @@ let fillTpl = function (results, eltAppendTo, tpl) {
     let route = '';
 
     tplReplaced = tpl
-      .replace(/_id_order_/g, parseInt(value.id_order))
+      .replace(/_id_order_/g, parseInt(value.id_order, 10))
       .replace(/_customer_name_/g, value.customer_name)
       .replace(/_iso_code_/g, value.iso_code)
-      .replace(/_carrier_/g, (value.carrier !== "" ? ` - ${value.carrier}` : ""))
+      .replace(/_carrier_/g, (value.carrier !== '' ? ` - ${value.carrier}` : ''))
       .replace(/_total_paid_/g, value.total_paid)
       .replace(/_company_/g, (value.company !== '' ? ` (${value.company}) ` : ''))
       .replace(/_date_add_/g, value.date_add)
-      .replace(/_id_customer_/g, parseInt(value.id_customer))
+      .replace(/_id_customer_/g, parseInt(value.id_customer, 10))
       .replace(/_company_/g, (value.company !== '' ? ` (${value.company}) ` : ''))
       .replace(/_date_add_/g, value.date_add)
       .replace(/_status_/g, value.status);
 
     switch (eltAppendTo[0].id) {
       case 'orders-notifications':
-        tplReplaced = tplReplaced.replace(/order_url/g, `${baseAdminDir}index.php?tab=AdminOrders&token=${token_admin_orders}&vieworder&id_order=${value.id_order}`);
+        tplReplaced = tplReplaced.replace(
+          /order_url/g,
+          `${window.baseAdminDir}index.php?tab=AdminOrders&token=${window.token_admin_orders}&vieworder&id_order=${value.id_order}`
+        );
         break;
       case 'customers-notifications':
         const customerId = parseInt(value.id_customer, 10);
@@ -104,6 +107,8 @@ let fillTpl = function (results, eltAppendTo, tpl) {
         const customerThreadId = parseInt(value.id_customer_thread, 10);
         route = router.generate('admin_customer_threads_view', {customerThreadId});
         tplReplaced = tplReplaced.replace(/message_url/g, route);
+        break;
+      default:
         break;
     }
 
