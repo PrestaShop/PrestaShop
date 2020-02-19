@@ -26,16 +26,17 @@ import Router from './components/router';
 
 const refreshNotifications = function () {
   let timer = null;
-
+  debugger;
   $.ajax({
     type: 'POST',
     headers: {'cache-control': 'no-cache'},
-    url: `${window.adminNotificationGetLink}&rand=${new Date().getTime()}`,
+    url: `${window.admin_notification_get_link}&rand=${new Date().getTime()}`,
     async: true,
     cache: false,
     dataType: 'json',
     success(json) {
       if (json) {
+        debugger;
         const nbOrders = parseInt(json.order.total, 10);
         const nbCustomers = parseInt(json.customer.total, 10);
         const nbCustomerMessages = parseInt(json.customer_message.total, 10);
@@ -64,9 +65,6 @@ const refreshNotifications = function () {
 
   clearTimeout(timer);
 };
-
-}
-
 let fillTpl = function (results, eltAppendTo, tpl) {
   eltAppendTo.children('.notification-elements').empty();
   if (results.length === 0) {
@@ -83,46 +81,38 @@ let fillTpl = function (results, eltAppendTo, tpl) {
     let tplReplaced = '';
     let route = '';
 
-    $.each(results, function (property, value) {
-      if (undefined === tpl) {
-        return;
-      }
+    tplReplaced = tpl
+      .replace(/_id_order_/g, parseInt(value.id_order))
+      .replace(/_customer_name_/g, value.customer_name)
+      .replace(/_iso_code_/g, value.iso_code)
+      .replace(/_carrier_/g, (value.carrier !== "" ? ` - ${value.carrier}` : ""))
+      .replace(/_total_paid_/g, value.total_paid)
+      .replace(/_company_/g, (value.company !== '' ? ` (${value.company}) ` : ''))
+      .replace(/_date_add_/g, value.date_add)
+      .replace(/_id_customer_/g, parseInt(value.id_customer))
+      .replace(/_company_/g, (value.company !== '' ? ` (${value.company}) ` : ''))
+      .replace(/_date_add_/g, value.date_add)
+      .replace(/_status_/g, value.status);
 
-      tplReplaced = tpl
-        .replace(/_id_order_/g, parseInt(value.id_order))
-        .replace(/_customer_name_/g, value.customer_name)
-        .replace(/_iso_code_/g, value.iso_code)
-        .replace(/_carrier_/g, (value.carrier !== "" ? ` - ${value.carrier}` : ""))
-        .replace(/_total_paid_/g, value.total_paid)
-        .replace(/_company_/g, (value.company !== '' ? ` (${value.company}) ` : ''))
-        .replace(/_date_add_/g, value.date_add)
-        .replace(/_id_customer_/g, parseInt(value.id_customer))
-        .replace(/_company_/g, (value.company !== '' ? ` (${value.company}) ` : ''))
-        .replace(/_date_add_/g, value.date_add)
-        .replace(/_status_/g, value.status);
+    switch (eltAppendTo[0].id) {
+      case 'orders-notifications':
+        tplReplaced = tplReplaced.replace(/order_url/g, `${baseAdminDir}index.php?tab=AdminOrders&token=${token_admin_orders}&vieworder&id_order=${value.id_order}`);
+        break;
+      case 'customers-notifications':
+        const customerId = parseInt(value.id_customer, 10);
+        route = router.generate('admin_customers_view', {customerId});
+        tplReplaced = tplReplaced.replace(/customer_url/g, route);
+        break;
+      case 'messages-notifications':
+        const customerThreadId = parseInt(value.id_customer_thread, 10);
+        route = router.generate('admin_customer_threads_view', {customerThreadId});
+        tplReplaced = tplReplaced.replace(/message_url/g, route);
+        break;
+    }
 
-      switch (eltAppendTo[0].id) {
-        case 'orders-notifications':
-          tplReplaced = tplReplaced.replace(/order_url/g, `${baseAdminDir}index.php?tab=AdminOrders&token=${token_admin_orders}&vieworder&id_order=${value.id_order}`);
-          break;
-        case 'customers-notifications':
-          const customerId = parseInt(value.id_customer, 10);
-          route = router.generate('admin_customers_view', {customerId});
-          tplReplaced = tplReplaced.replace(/customer_url/g, route);
-          break;
-        case 'messages-notifications':
-          const customerThreadId = parseInt(value.id_customer_thread, 10);
-          route = router.generate('admin_customer_threads_view', {customerThreadId});
-          tplReplaced = tplReplaced.replace(/message_url/g, route);
-          break;
-      }
-
-      eltAppendTo.children('.notification-elements').append(tplReplaced);
-    });
-  } else {
-    eltAppendTo.addClass('empty');
-  }
-}
+    eltAppendTo.children('.notification-elements').append(tplReplaced);
+  });
+};
 let setNotificationsNumber = function (id, number) {
   if (number > 0) {
     $(`#${id}`).text(` (${number})`);
