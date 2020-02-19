@@ -65,11 +65,10 @@ class OrderProductRemover
      * @param Order $order
      * @param OrderDetail $orderDetail
      * @param int $quantity
-     * @param bool $isCustomized
      */
-    public function deleteProductFromOrder(Order $order, OrderDetail $orderDetail, int $quantity, $isCustomized = false)
+    public function deleteProductFromOrder(Order $order, OrderDetail $orderDetail, int $quantity)
     {
-        if ($isCustomized) {
+        if ((int) $orderDetail->id_customization > 0) {
             $this->deleteCustomization($order, $orderDetail, $quantity);
         }
         $productPriceTaxExcl = $orderDetail->unit_price_tax_excl * $quantity;

@@ -116,7 +116,7 @@ final class CancelOrderProductHandler extends AbstractOrderCommandHandler implem
                 $qty_cancel_product = $orderDetails['productCancelQuantity'][$orderDetail->id_order_detail];
                 $this->reinjectQuantity($orderDetail, $qty_cancel_product);
 
-                $this->orderProductRemover->deleteProductFromOrder($order, $orderDetail, $qty_cancel_product, false);
+                $this->orderProductRemover->deleteProductFromOrder($order, $orderDetail, $qty_cancel_product);
 
                 // Update weight SUM
                 $order_carrier = new OrderCarrier((int) $order->getIdOrderCarrier());
@@ -136,7 +136,7 @@ final class CancelOrderProductHandler extends AbstractOrderCommandHandler implem
         if (!empty($orderDetails['customizedProductsOrderDetail'])) {
             foreach ($orderDetails['customizedProductsOrderDetail'] as $orderDetail) {
                 $qtyCancelProduct = abs($orderDetails['customizedCancelQuantity'][$orderDetail->id_customization]);
-                $this->orderProductRemover->deleteProductFromOrder($order, $orderDetail, $qtyCancelProduct, true);
+                $this->orderProductRemover->deleteProductFromOrder($order, $orderDetail, $qtyCancelProduct);
             }
         }
     }
