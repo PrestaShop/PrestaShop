@@ -27,6 +27,7 @@ const init = async function () {
   };
 };
 
+// Sort contacts by id, name, email and description
 describe('Sort Contacts', async () => {
   // before and after functions
   before(async function () {
@@ -58,6 +59,7 @@ describe('Sort Contacts', async () => {
     await expect(numberOfContacts).to.be.above(0);
   });
 
+  // Start sorting contacts
   const tests = [
     {
       args:
