@@ -539,7 +539,7 @@ class ConfigurationCore extends ObjectModel
 
         Configuration::set($key, $values, $idShopGroup, $idShop);
 
-        return $result;
+        return (bool) $result;
     }
 
     /**
