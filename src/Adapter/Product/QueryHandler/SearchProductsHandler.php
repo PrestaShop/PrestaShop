@@ -54,7 +54,7 @@ final class SearchProductsHandler implements SearchProductsHandlerInterface
      */
     private $contextLocale;
 
-    /*
+    /**
      * @var ContextStateManager
      */
     private $contextStateManager;
