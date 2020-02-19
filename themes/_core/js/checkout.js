@@ -1,5 +1,5 @@
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -60,12 +60,13 @@ function handleCheckoutStepChange() {
 
 function handleSubmitButton() {
   // prevents rage clicking on submit button and related issues
-  const submitSelector = '.js-current-step button[type="submit"]';
-  $(document).on('click', submitSelector, function () {
-    $(this).addClass('disabled');
-    $('input[required]').on('invalid', function (e) {
-      $(submitSelector).removeClass('disabled');
-    });
+  const formSelector = '.checkout-step form';
+  $(formSelector).submit(function (e) {
+    if ($(this).data('disabled') === true) {
+      e.preventDefault();
+    }
+    $(this).data('disabled', true);
+    $('button[type="submit"]', this).addClass('disabled');
   });
 }
 

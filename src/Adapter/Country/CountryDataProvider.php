@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -63,6 +63,46 @@ class CountryDataProvider
             ->select('c.`id_country`')
             ->from('country', 'c')
             ->where('c.`need_identification_number` = 1')
+        ;
+        $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
+
+        return array_map(function ($country) { return $country['id_country']; }, $result);
+    }
+
+    /**
+     * Returns list of countries IDs which need Postcode
+     *
+     * @return array
+     *
+     * @throws \PrestaShopDatabaseException
+     */
+    public function getCountriesIdWhichNeedPostcode()
+    {
+        $query = new DbQuery();
+        $query
+            ->select('c.`id_country`')
+            ->from('country', 'c')
+            ->where('c.`need_zip_code` = 1')
+        ;
+        $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
+
+        return array_map(function ($country) { return $country['id_country']; }, $result);
+    }
+
+    /**
+     * Returns list of countries IDS which need a state
+     *
+     * @return array
+     *
+     * @throws \PrestaShopDatabaseException
+     */
+    public function getCountriesIdWhichNeedState()
+    {
+        $query = new DbQuery();
+        $query
+            ->select('c.`id_country`')
+            ->from('country', 'c')
+            ->where('c.`contains_states` = 1')
         ;
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
 

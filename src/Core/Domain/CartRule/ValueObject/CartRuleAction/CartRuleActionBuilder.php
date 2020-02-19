@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -130,10 +130,7 @@ final class CartRuleActionBuilder implements CartRuleActionBuilderInterface
     private function assertCartRuleActionsAreValid()
     {
         if (null !== $this->percentageDiscount && null !== $this->amountDiscount) {
-            throw new CartRuleConstraintException(
-                'Cart rule cannot have both percentage and amount discount actions.',
-                CartRuleConstraintException::INCOMPATIBLE_CART_RULE_ACTIONS
-            );
+            throw new CartRuleConstraintException('Cart rule cannot have both percentage and amount discount actions.', CartRuleConstraintException::INCOMPATIBLE_CART_RULE_ACTIONS);
         }
 
         if (null === $this->percentageDiscount &&
@@ -141,10 +138,7 @@ final class CartRuleActionBuilder implements CartRuleActionBuilderInterface
             null === $this->giftProduct &&
             false === $this->isFreeShipping
         ) {
-            throw new CartRuleConstraintException(
-                'Cart rule must have at least one action',
-                CartRuleConstraintException::MISSING_ACTION
-            );
+            throw new CartRuleConstraintException('Cart rule must have at least one action', CartRuleConstraintException::MISSING_ACTION);
         }
     }
 }

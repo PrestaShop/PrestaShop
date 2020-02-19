@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -50,7 +50,7 @@ class GenerateThemeMailTemplatesCommand
 
     /**
      * @param string $themeName
-     * @param string $language
+     * @param string $language locale, for example: 'en'
      * @param bool $overwriteTemplates
      * @param string $coreMailsFolder Output folder for core emails (if left empty the default mails folder will be used)
      * @param string $modulesMailFolder Output folder for modules emails (if left empty the module mails folder will be used)

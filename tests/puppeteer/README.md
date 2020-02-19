@@ -24,7 +24,7 @@ npm install
 | DB_USER             | Login user of your MySql (default to **`root`**) |
 | DB_PASSWD           | Password for your MySql (default to **`empty`**) |
 | HEADLESS            | Boolean to run tests in headless or not (default to **`true`**) |
-| DOWNLOAD_PATH       | PATH of your download folder (default to **`empty`**)|
+| DOWNLOAD_PATH       | PATH of your download folder (default to **`/downloads`**)|
 
 Before running tests, you should install your shop manually or run the install script **`campaigns/sanity/01_installShop/*`** with the [`specific-test` command](README.md#specific-test).
 
@@ -53,8 +53,19 @@ If you want to run all sanity tests "safely", you can use the Travis-specific co
 npm run sanity-travis
 ```
 
+## Functional tests 
+This campaign verifies that each function of the software application operate in conformance with the functional requirements. 
+Each and every functionality of the system is tested by providing appropriate input, verifying the output, and comparing the actual results with the expected results.
+
+### Launch all scripts
+If you want to run all functional tests, you need to specify **`DOWNLOAD_PATH`** env param.
+
+```bash
+DOWNLOAD_PATH="/home/user/Downloads" URL_FO="Your_Shop_URL_FO" npm run functional-tests
+```
+
 ## Specific test 
-If you want to run only one test from the campaign or a couple of tests in the same folder, you can use **`specific-test`** command.
+If you want to run only one test from a campaign or a couple of tests in the same folder, you can use **`specific-test`** command.
 
 To specify which test to run, you can add the **`TEST_PATH`** parameter in the beginning of the command
 

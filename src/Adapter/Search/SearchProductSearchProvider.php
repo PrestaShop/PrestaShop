@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -87,13 +87,13 @@ class SearchProductSearchProvider implements ProductSearchProviderInterface
             $products = $result['result'];
             $count = $result['total'];
 
-            Hook::exec('actionSearch', array(
+            Hook::exec('actionSearch', [
                 'searched_query' => $queryString,
                 'total' => $count,
 
                 // deprecated since 1.7.x
                 'expr' => $queryString,
-            ));
+            ]);
         } elseif (($tag = $query->getSearchTag())) {
             $queryString = urldecode($tag);
 
@@ -121,13 +121,13 @@ class SearchProductSearchProvider implements ProductSearchProviderInterface
                 null
             );
 
-            Hook::exec('actionSearch', array(
+            Hook::exec('actionSearch', [
                 'searched_query' => $queryString,
                 'total' => $count,
 
                 // deprecated since 1.7.x
                 'expr' => $queryString,
-            ));
+            ]);
         }
 
         $result = new ProductSearchResult();

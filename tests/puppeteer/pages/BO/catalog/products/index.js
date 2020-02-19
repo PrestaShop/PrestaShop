@@ -39,7 +39,7 @@ module.exports = class Product extends BOBasePage {
     // Products list
     this.productsListTableRow = `${this.productRow}:nth-child(%ROW)`;
     this.productsListTableColumnID = `${this.productsListTableRow}[data-product-id]`;
-    this.productsListTableColumnName = `${this.productsListTableRow} td:nth-child(4)`;
+    this.productsListTableColumnName = `${this.productsListTableRow} td:nth-child(4) a`;
     this.productsListTableColumnReference = `${this.productsListTableRow} td:nth-child(5)`;
     this.productsListTableColumnCategory = `${this.productsListTableRow} td:nth-child(6)`;
     this.productsListTableColumnPrice = `${this.productsListTableRow} td:nth-child(7)`;
@@ -249,7 +249,7 @@ module.exports = class Product extends BOBasePage {
    * @return {Promise<void>}
    */
   async resetFilter() {
-    if (await this.elementVisible(this.filterResetButton, 2000)) {
+    if (!(await this.elementNotVisible(this.filterResetButton, 2000))) {
       await this.clickAndWaitForNavigation(this.filterResetButton);
     }
   }
@@ -391,5 +391,17 @@ module.exports = class Product extends BOBasePage {
       return true;
     }
     return false;
+  }
+
+  /**
+   * Go to product page
+   * @param row
+   * @returns {Promise<void>}
+   */
+  async goToProductPage(row = 1) {
+    await Promise.all([
+      this.waitForSelectorAndClick(this.productsListTableColumnName.replace('%ROW', row)),
+      this.page.waitForNavigation({waitUntil: 'networkidle0'}),
+    ]);
   }
 };

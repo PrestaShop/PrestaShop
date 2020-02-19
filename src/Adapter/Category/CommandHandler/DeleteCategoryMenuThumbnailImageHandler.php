@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -84,10 +84,7 @@ final class DeleteCategoryMenuThumbnailImageHandler implements DeleteCategoryMen
         $category = new Category($categoryId->getValue());
 
         if ($category->id !== $categoryId->getValue()) {
-            throw new CategoryNotFoundException(
-                $categoryId,
-                sprintf('Category with id "%s" was not found', $categoryId)
-            );
+            throw new CategoryNotFoundException($categoryId, sprintf('Category with id "%s" was not found', $categoryId));
         }
 
         $thumbnailPath = sprintf(
@@ -104,15 +101,7 @@ final class DeleteCategoryMenuThumbnailImageHandler implements DeleteCategoryMen
                 $this->smartyCacheClearer->clear();
             }
         } catch (IOException $e) {
-            throw new CannotDeleteImageException(
-                sprintf(
-                    'Cannot delete menu thumbnail with id "%s" for category with id "%s".',
-                    $menuThumbnailId->getValue(),
-                    $categoryId->getValue()
-                ),
-                CannotDeleteImageException::MENU_THUMBNAIL_IMAGE,
-                $e
-            );
+            throw new CannotDeleteImageException(sprintf('Cannot delete menu thumbnail with id "%s" for category with id "%s".', $menuThumbnailId->getValue(), $categoryId->getValue()), CannotDeleteImageException::MENU_THUMBNAIL_IMAGE, $e);
         }
     }
 }

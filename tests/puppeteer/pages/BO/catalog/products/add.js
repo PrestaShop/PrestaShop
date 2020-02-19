@@ -5,8 +5,11 @@ module.exports = class AddProduct extends BOBasePage {
   constructor(page) {
     super(page);
 
+    this.pageTitle = 'Product •';
     // Text Message
     this.settingUpdatedMessage = 'Settings updated.';
+    this.errorMessage = 'Unable to update settings.';
+    this.errorMessageWhenSummaryTooLong = 'This value is too long. It should have %NUMBER characters or less.';
     // Selectors
     this.productNameInput = '#form_step1_name_1';
     this.productTypeSelect = '#form_step1_type_product';
@@ -18,9 +21,14 @@ module.exports = class AddProduct extends BOBasePage {
     this.saveProductButton = 'input#submit[value=\'Save\']';
     this.previewProductLink = 'a#product_form_preview_btn';
     this.productOnlineSwitch = '.product-footer div.switch-input';
-    this.productDescriotionTab = '#tab_description a';
+    this.productOnlineTitle = 'h2.for-switch.online-title';
+    this.productShortDescriptionTab = '#tab_description_short a';
+    this.productShortDescriptionIframe = '#form_step1_description_short_1_ifr';
+    this.productDescriptionTab = '#tab_description a';
     this.productDescriptionIframe = '#form_step1_description_1_ifr';
+    this.productTaxRuleSelect = '#step2_id_tax_rules_group_rendered';
     this.productDeleteLink = '.product-footer a.delete';
+    this.dangerMessageShortDescription = '#form_step1_description_short .has-danger li';
 
     // Form nav
     this.formNavList = '#form-nav';
@@ -36,10 +44,12 @@ module.exports = class AddProduct extends BOBasePage {
     this.deleteCombinationsButton = '#delete-combinations';
     this.productCombinationsBulkForm = '#combinations-bulk-form';
     this.productCombinationsBulkFormTitle = `${this.productCombinationsBulkForm} p[aria-controls]`;
-
+    // Selector of Step 5 : SEO
+    this.resetUrlButton = '#seo-url-regenerate';
+    this.friendlyUrlInput = '#form_step5_link_rewrite_1';
     // Growls : override value from BObasePage
     this.growlDefaultDiv = '#growls-default';
-    this.growlMessageBloc = `${this.growlDefaultDiv} .growl-message`;
+    this.growlMessageBlock = `${this.growlDefaultDiv} .growl-message:last-of-type`;
     this.growlCloseButton = `${this.growlDefaultDiv} .growl-close`;
   }
 
@@ -62,8 +72,11 @@ module.exports = class AddProduct extends BOBasePage {
     await this.page.click(this.productPriceTtcInput, {clickCount: 3});
     await this.page.type(this.productPriceTtcInput, productData.price);
     // Set description value
-    await this.page.click(this.productDescriotionTab);
+    await this.page.click(this.productDescriptionTab);
     await this.setValueOnTinymceInput(this.productDescriptionIframe, productData.description);
+    // Set short description value
+    await this.page.click(this.productShortDescriptionTab);
+    await this.setValueOnTinymceInput(this.productShortDescriptionIframe, productData.summary);
     // Add combinations if exists
     if (productData.withCombination) {
       await this.page.click(this.productWithCombinationsInput);
@@ -72,19 +85,20 @@ module.exports = class AddProduct extends BOBasePage {
       await this.page.click(this.productQuantityInput, {clickCount: 3});
       await this.page.type(this.productQuantityInput, productData.quantity);
     }
+    await this.selectByVisibleText(this.productTaxRuleSelect, productData.taxRule);
     // Switch product online before save
     if (switchProductOnline) {
       await Promise.all([
-        this.page.waitForSelector(this.growlMessageBloc, {visible: true}),
+        this.page.waitForSelector(this.growlMessageBlock, {visible: true}),
         this.page.click(this.productOnlineSwitch),
       ]);
     }
     // Save created product
     await Promise.all([
-      this.page.waitForSelector(this.growlMessageBloc, {visible: true}),
+      this.page.waitForSelector(this.growlMessageBlock, {visible: true}),
       this.page.click(this.saveProductButton),
     ]);
-    return this.getTextContent(this.growlMessageBloc);
+    return this.getTextContent(this.growlMessageBlock);
   }
 
   /**
@@ -127,7 +141,7 @@ module.exports = class AddProduct extends BOBasePage {
         {visible: true},
       ),
       this.page.click(this.generateCombinationsButton),
-      this.waitForSelectorAndClick(this.growlMessageBloc),
+      this.waitForSelectorAndClick(this.growlMessageBlock),
     ]);
     await this.closeCombinationsForm();
   }
@@ -169,6 +183,7 @@ module.exports = class AddProduct extends BOBasePage {
    * @return page opened
    */
   async previewProduct() {
+    await this.page.waitForSelector(this.previewProductLink);
     this.page = await this.openLinkWithTargetBlank(this.page, this.previewProductLink);
     const textBody = await this.getTextContent('body');
     if (await textBody.includes('[Debug] This page has moved')) {
@@ -198,7 +213,7 @@ module.exports = class AddProduct extends BOBasePage {
   }
 
   /**
-   * Navigate beetween forms in add product
+   * Navigate between forms in add product
    * @param id
    * @return {Promise<void>}
    */
@@ -206,7 +221,7 @@ module.exports = class AddProduct extends BOBasePage {
     const selector = this.forNavlistItemLink.replace('%ID', id);
     await Promise.all([
       this.page.waitForSelector(`${selector}[aria-selected='true']`, {visible: true}),
-      this.page.click(selector),
+      this.waitForSelectorAndClick(selector),
     ]);
   }
 
@@ -252,5 +267,41 @@ module.exports = class AddProduct extends BOBasePage {
         this.page.waitForSelector(`${this.productCombinationsBulkFormTitle}[aria-expanded='false']`, {visible: true}),
       ]);
     }
+  }
+
+  /**
+   * Reset friendly URL
+   * @returns {Promise<void>}
+   */
+  async resetURL() {
+    await this.page.waitForSelector(this.resetUrlButton, {visible: true});
+    await this.scrollTo(this.resetUrlButton);
+    await this.page.click(this.resetUrlButton);
+  }
+
+  /**
+   * Get the error message when short description is too long
+   * @returns {Promise<string|*>}
+   */
+  async getErrorMessageWhenSummaryIsTooLong() {
+    return this.getTextContent(this.dangerMessageShortDescription);
+  }
+
+  /**
+   * Get friendly URL
+   * @returns {Promise<string|*>}
+   */
+  async getFriendlyURL() {
+    await this.reloadPage();
+    await this.goToFormStep(5);
+    return this.getAttributeContent(this.friendlyUrlInput, 'value');
+  }
+
+  /**
+   * Get online product status
+   * @returns {Promise<boolean>}
+   */
+  getOnlineButtonStatus() {
+    return this.elementVisible(this.productOnlineTitle, 1000);
   }
 };

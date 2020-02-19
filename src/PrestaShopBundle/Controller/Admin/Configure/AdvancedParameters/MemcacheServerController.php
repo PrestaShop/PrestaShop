@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -28,12 +28,12 @@ namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
 use PrestaShop\PrestaShop\Adapter\Cache\MemcacheServerManager;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
 use PrestaShopBundle\Security\Voter\PageVoter;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use PrestaShopBundle\Security\Annotation\AdminSecurity;
 
 /**
  * Responsible of "Configure > Advanced Parameters > Performance" servers block management.
@@ -71,10 +71,10 @@ class MemcacheServerController extends FrameworkBundleAdminController
                     $queryValues->getInt('server_port')
                 );
 
-            return new JsonResponse(array('test' => $isValid));
+            return new JsonResponse(['test' => $isValid]);
         }
 
-        return new JsonResponse(array('errors' => 'error'), Response::HTTP_BAD_REQUEST);
+        return new JsonResponse(['errors' => 'error'], Response::HTTP_BAD_REQUEST);
     }
 
     /**
@@ -89,19 +89,19 @@ class MemcacheServerController extends FrameworkBundleAdminController
     {
         if (!in_array(
             $this->authorizationLevel($this::CONTROLLER_NAME),
-            array(
+            [
                 PageVoter::LEVEL_READ,
                 PageVoter::LEVEL_UPDATE,
                 PageVoter::LEVEL_CREATE,
                 PageVoter::LEVEL_DELETE,
-            )
+            ]
         )) {
             return new JsonResponse(
-                array(
-                    'errors' => array(
+                [
+                    'errors' => [
                         $this->trans('You do not have permission to create this.', 'Admin.Notifications.Error'),
-                    ),
-                ),
+                    ],
+                ],
                 Response::HTTP_BAD_REQUEST
             );
         }
@@ -127,11 +127,11 @@ class MemcacheServerController extends FrameworkBundleAdminController
         }
 
         return new JsonResponse(
-            array(
-                'errors' => array(
+            [
+                'errors' => [
                     $this->trans('The Memcached server cannot be added.', 'Admin.Advparameters.Notification'),
-                ),
-            ),
+                ],
+            ],
             Response::HTTP_BAD_REQUEST
         );
     }
@@ -148,19 +148,19 @@ class MemcacheServerController extends FrameworkBundleAdminController
     {
         if (!in_array(
             $this->authorizationLevel($this::CONTROLLER_NAME),
-            array(
+            [
                 PageVoter::LEVEL_READ,
                 PageVoter::LEVEL_UPDATE,
                 PageVoter::LEVEL_CREATE,
                 PageVoter::LEVEL_DELETE,
-            )
+            ]
         )) {
             return new JsonResponse(
-                array(
-                    'errors' => array(
+                [
+                    'errors' => [
                         $this->trans('You do not have permission to delete this.', 'Admin.Notifications.Error'),
-                    ),
-                ),
+                    ],
+                ],
                 Response::HTTP_BAD_REQUEST
             );
         }
@@ -172,14 +172,14 @@ class MemcacheServerController extends FrameworkBundleAdminController
         }
 
         return new JsonResponse(
-            array(
-                'errors' => array(
+            [
+                'errors' => [
                     $this->trans(
                         'There was an error when attempting to delete the Memcached server.',
                         'Admin.Advparameters.Notification'
                     ),
-                ),
-            ),
+                ],
+            ],
             Response::HTTP_BAD_REQUEST
         );
     }

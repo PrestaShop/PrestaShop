@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -106,11 +106,7 @@ final class DoctrinePositionUpdateHandler implements PositionUpdateHandlerInterf
 
                 $statement = $qb->execute();
                 if ($statement instanceof Statement && $statement->errorCode()) {
-                    throw new PositionUpdateException(
-                        'Could not update #%i',
-                        'Admin.Catalog.Notification',
-                        [$rowId]
-                    );
+                    throw new PositionUpdateException('Could not update #%i', 'Admin.Catalog.Notification', [$rowId]);
                 }
                 ++$positionIndex;
             }
@@ -118,10 +114,7 @@ final class DoctrinePositionUpdateHandler implements PositionUpdateHandlerInterf
         } catch (ConnectionException $e) {
             $this->connection->rollBack();
 
-            throw new PositionUpdateException(
-                'Could not update.',
-                'Admin.Catalog.Notification'
-            );
+            throw new PositionUpdateException('Could not update.', 'Admin.Catalog.Notification');
         }
     }
 }

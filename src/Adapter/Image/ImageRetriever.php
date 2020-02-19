@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -99,7 +99,7 @@ class ImageRetriever
             return $image;
         }, $images);
 
-        $filteredImages = array();
+        $filteredImages = [];
 
         foreach ($images as $image) {
             if (in_array($productAttributeId, $image['associatedVariants'])) {
@@ -128,10 +128,10 @@ class ImageRetriever
             $type = 'products';
             $getImageURL = 'getImageLink';
             $root = _PS_PROD_IMG_DIR_;
-            $imageFolderPath = implode(DIRECTORY_SEPARATOR, array(
+            $imageFolderPath = implode(DIRECTORY_SEPARATOR, [
                 rtrim($root, DIRECTORY_SEPARATOR),
                 rtrim(Image::getImgFolderStatic($id_image), DIRECTORY_SEPARATOR),
-            ));
+            ]);
         } elseif (get_class($object) === 'Store') {
             $type = 'stores';
             $getImageURL = 'getStoreImageLink';
@@ -193,13 +193,13 @@ class ImageRetriever
         $large = end($urls);
         $medium = $urls[$keys[ceil((count($keys) - 1) / 2)]];
 
-        return array(
+        return [
             'bySize' => $urls,
             'small' => $small,
             'medium' => $medium,
             'large' => $large,
             'legend' => isset($object->meta_title) ? $object->meta_title : $object->name,
-        );
+        ];
     }
 
     /**
@@ -272,12 +272,12 @@ class ImageRetriever
         $large = end($urls);
         $medium = $urls[$keys[ceil((count($keys) - 1) / 2)]];
 
-        return array(
+        return [
             'bySize' => $urls,
             'small' => $small,
             'medium' => $medium,
             'large' => $large,
             'legend' => '',
-        );
+        ];
     }
 }

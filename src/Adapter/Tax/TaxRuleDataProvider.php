@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -70,22 +70,22 @@ class TaxRuleDataProvider
         $address = new Address();
         $address->id_country = (int) Context::getContext()->country->id;
         $tax_rules_groups = $this->getTaxRulesGroups();
-        $tax_rates = array(
-            0 => array(
+        $tax_rates = [
+            0 => [
                 'id_tax_rules_group' => 0,
-                'rates' => array(0),
+                'rates' => [0],
                 'computation_method' => 0,
-            ),
-        );
+            ],
+        ];
 
         foreach ($tax_rules_groups as $tax_rules_group) {
             $id_tax_rules_group = (int) $tax_rules_group['id_tax_rules_group'];
             $tax_calculator = TaxManagerFactory::getManager($address, $id_tax_rules_group)->getTaxCalculator();
-            $tax_rates[$id_tax_rules_group] = array(
+            $tax_rates[$id_tax_rules_group] = [
                 'id_tax_rules_group' => $id_tax_rules_group,
-                'rates' => array(),
+                'rates' => [],
                 'computation_method' => (int) $tax_calculator->computation_method,
-            );
+            ];
 
             if (isset($tax_calculator->taxes) && count($tax_calculator->taxes)) {
                 foreach ($tax_calculator->taxes as $tax) {

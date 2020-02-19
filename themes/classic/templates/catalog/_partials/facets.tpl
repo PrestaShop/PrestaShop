@@ -1,5 +1,5 @@
 {**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
@@ -80,10 +80,10 @@
                           type="checkbox"
                           {if $filter.active }checked{/if}
                         >
-                        {if isset($filter.properties.color)}
-                          <span class="color" style="background-color:{$filter.properties.color}"></span>
-                        {elseif isset($filter.properties.texture)}
+                        {if isset($filter.properties.texture)}
                           <span class="color texture" style="background-image:url({$filter.properties.texture})"></span>
+                        {elseif isset($filter.properties.color)}
+                          <span class="color" style="background-color:{$filter.properties.color}"></span>
                         {else}
                           <span {if !$js_enabled} class="ps-shown-by-js" {/if}><i class="material-icons rtl-no-flip checkbox-checked">&#xE5CA;</i></span>
                         {/if}

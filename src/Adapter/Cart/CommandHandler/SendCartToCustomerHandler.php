@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -97,10 +97,7 @@ final class SendCartToCustomerHandler implements SendCartToCustomerHanlderInterf
         $cart = new Cart($cartId->getValue());
 
         if (!Validate::isLoadedObject($cart)) {
-            throw new CartNotFoundException(sprintf(
-                'Cart with id "%d" was not found',
-                $cartId->getValue()
-            ));
+            throw new CartNotFoundException(sprintf('Cart with id "%d" was not found', $cartId->getValue()));
         }
 
         return $cart;
@@ -118,10 +115,7 @@ final class SendCartToCustomerHandler implements SendCartToCustomerHanlderInterf
         $customer = new Customer($customerId);
 
         if (!Validate::isLoadedObject($customer)) {
-            throw new CartException(sprintf(
-                'Customer with id "%d" was not found',
-                $customerId
-            ));
+            throw new CartException(sprintf('Customer with id "%d" was not found', $customerId));
         }
 
         return $customer;

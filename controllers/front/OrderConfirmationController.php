@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -92,12 +92,12 @@ class OrderConfirmationControllerCore extends FrontController
 
         parent::initContent();
 
-        $this->context->smarty->assign(array(
+        $this->context->smarty->assign([
             'HOOK_ORDER_CONFIRMATION' => $this->displayOrderConfirmation($order),
             'HOOK_PAYMENT_RETURN' => $this->displayPaymentReturn($order),
             'order' => $presentedOrder,
             'register_form' => $register_form,
-        ));
+        ]);
 
         if ($this->context->customer->is_guest) {
             /* If guest we clear the cookie for security reason */
@@ -115,7 +115,7 @@ class OrderConfirmationControllerCore extends FrontController
             return false;
         }
 
-        return Hook::exec('displayPaymentReturn', array('order' => $order), $this->id_module);
+        return Hook::exec('displayPaymentReturn', ['order' => $order], $this->id_module);
     }
 
     /**
@@ -123,7 +123,7 @@ class OrderConfirmationControllerCore extends FrontController
      */
     public function displayOrderConfirmation($order)
     {
-        return Hook::exec('displayOrderConfirmation', array('order' => $order));
+        return Hook::exec('displayOrderConfirmation', ['order' => $order]);
     }
 
     /**
@@ -151,9 +151,9 @@ class OrderConfirmationControllerCore extends FrontController
             $cart->id,
             Configuration::get('PS_OS_PAYMENT'),
             0,
-            $this->trans('Free order', array(), 'Admin.Orderscustomers.Feature'),
+            $this->trans('Free order', [], 'Admin.Orderscustomers.Feature'),
             null,
-            array(),
+            [],
             null,
             false,
             $cart->secure_key

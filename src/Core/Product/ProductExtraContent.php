@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -52,10 +52,10 @@ class ProductExtraContent implements HookContentClassInterface
      *
      * @var array
      */
-    private $attr = array(
+    private $attr = [
         'id' => '',
         'class' => '',
-    );
+    ];
 
     public function getTitle()
     {
@@ -97,20 +97,20 @@ class ProductExtraContent implements HookContentClassInterface
     {
         // We declare default values for if and class which
         // could be mandatory in the template
-        $this->attr = array_merge(array(
+        $this->attr = array_merge([
             'id' => '',
             'class' => '',
-        ), $attr);
+        ], $attr);
 
         return $this;
     }
 
     public function toArray()
     {
-        return array(
+        return [
             'title' => $this->title,
             'content' => $this->content,
             'attr' => $this->attr,
-        );
+        ];
     }
 }

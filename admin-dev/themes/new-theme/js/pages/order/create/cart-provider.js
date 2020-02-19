@@ -1,5 +1,5 @@
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,17 +18,17 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-import createOrderPageMap from './create-order-map';
-import Router from '../../../components/router';
-import {EventEmitter} from '../../../components/event-emitter';
-import eventMap from './event-map';
+import createOrderPageMap from '@pages/order/create/create-order-map';
+import Router from '@components/router';
+import {EventEmitter} from '@components/event-emitter';
+import eventMap from '@pages/order/create/event-map';
 
-const $ = window.$;
+const {$} = window;
 
 /**
  * Provides ajax calls for getting cart information
@@ -61,7 +61,7 @@ export default class CartProvider {
    */
   loadEmptyCart(customerId) {
     $.post(this.router.generate('admin_carts_create'), {
-      customer_id: customerId,
+      customerId,
     }).then((cartInfo) => {
       EventEmitter.emit(eventMap.cartLoaded, cartInfo);
     });

@@ -114,6 +114,7 @@ describe('Crawl every page for defects and issues', async () => {
       if (err) {
         return console.error(err);
       }
+      return console.log('No error found');
     });
   });
 

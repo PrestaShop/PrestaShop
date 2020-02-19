@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -33,8 +33,11 @@ class ShopFeatureContext extends AbstractPrestaShopFeatureContext
 {
     /**
      * @Given shop :reference with name :shopName exists
+     *
+     * @param string $reference
+     * @param string $shopName
      */
-    public function shopWithNameExists($reference, $shopName)
+    public function shopWithNameExists(string $reference, string $shopName)
     {
         $shopId = Shop::getIdByName($shopName);
 
@@ -43,5 +46,21 @@ class ShopFeatureContext extends AbstractPrestaShopFeatureContext
         }
 
         SharedStorage::getStorage()->set($reference, new Shop($shopId));
+    }
+
+    /**
+     * @Given single shop context is loaded
+     */
+    public function singleShopContextIsLoaded()
+    {
+        Shop::setContext(Shop::CONTEXT_SHOP);
+    }
+
+    /**
+     * @Given multiple shop context is loaded
+     */
+    public function multipleShopContextIsLoaded()
+    {
+        Shop::setContext(Shop::CONTEXT_ALL);
     }
 }

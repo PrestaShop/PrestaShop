@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -30,7 +30,7 @@ use PrestaShopBundle\Entity\ProductIdentity;
 
 class MovementsCollection
 {
-    private $movements = array();
+    private $movements = [];
 
     /**
      * @param array $stockMovementsParams
@@ -39,7 +39,7 @@ class MovementsCollection
      */
     public function fromArray(array $stockMovementsParams)
     {
-        $movements = array();
+        $movements = [];
 
         array_walk($stockMovementsParams, function ($item) use (&$movements) {
             $combinationId = 0;
@@ -49,10 +49,10 @@ class MovementsCollection
                     $combinationId = $item['combination_id'];
                 }
 
-                $productIdentity = ProductIdentity::fromArray(array(
+                $productIdentity = ProductIdentity::fromArray([
                     'product_id' => $item['product_id'],
                     'combination_id' => $combinationId,
-                ));
+                ]);
 
                 $movements[] = new Movement($productIdentity, $item['delta']);
             }

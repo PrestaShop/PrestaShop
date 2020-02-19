@@ -1,5 +1,5 @@
 <!--**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,21 +18,29 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *-->
 <template>
   <div class="ps-select">
-    <select class="form-control" v-model="selected" @change="onChange">
-      <option value="default" selected>
+    <select
+      class="form-control"
+      v-model="selected"
+      @change="onChange"
+    >
+      <option
+        value="default"
+        selected
+      >
         <slot />
       </option>
       <option
-        v-for="item in items"
-        :value="item[itemID]"
+        v-for="(item, index) in items"
+        :key="index"
+        :value="item[itemId]"
       >
-        {{item[itemName]}}
+        {{ item[itemName] }}
       </option>
     </select>
   </div>
@@ -40,21 +48,37 @@
 
 <script>
   export default {
-    props: ['items', 'itemID', 'itemName'],
+    props: {
+      items: {
+        type: Array,
+        required: true,
+      },
+      itemId: {
+        type: String,
+        required: false,
+        default: '',
+      },
+      itemName: {
+        type: String,
+        required: false,
+        default: '',
+      },
+    },
     methods: {
       onChange() {
         this.$emit('change', {
           value: this.selected,
-          itemID: this.itemID,
+          itemId: this.itemId,
         });
       },
     },
-    data: () => ({ selected: 'default' }),
+    data: () => ({selected: 'default'}),
   };
 </script>
 
 <style lang="scss" scoped>
-  @import "../../../scss/config/_settings.scss";
+  @import '~@scss/config/_settings.scss';
+
   .ps-select {
     position: relative;
     select {

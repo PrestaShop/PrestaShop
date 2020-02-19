@@ -1,5 +1,5 @@
 <!--**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,20 +18,35 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *-->
 <template>
-  <div v-if="isReady" id="app" class="stock-app container-fluid">
+  <div
+    v-if="isReady"
+    id="app"
+    class="stock-app container-fluid"
+  >
     <StockHeader />
-    <Search @search="onSearch" @applyFilter="applyFilter" />
-    <LowFilter v-if="isOverview" :filters="filters" @lowStockChecked="onLowStockChecked" />
+    <Search
+      @search="onSearch"
+      @applyFilter="applyFilter"
+    />
+    <LowFilter
+      v-if="isOverview"
+      :filters="filters"
+      @lowStockChecked="onLowStockChecked"
+    />
     <div class="card container-fluid pa-2 clearfix">
-      <router-view class="view" @resetFilters="resetFilters" @fetch="fetch"></router-view>
+      <router-view
+        class="view"
+        @resetFilters="resetFilters"
+        @fetch="fetch"
+      />
       <PSPagination
-        :currentIndex="currentPagination"
-        :pagesCount="pagesCount"
+        :current-index="currentPagination"
+        :pages-count="pagesCount"
         @pageChanged="onPageChanged"
       />
     </div>
@@ -39,13 +54,13 @@
 </template>
 
 <script>
+  import PSPagination from '@app/widgets/ps-pagination';
   import StockHeader from './header/stock-header';
   import Search from './header/search';
   import LowFilter from './header/filters/low-filter';
-  import PSPagination from 'app/widgets/ps-pagination';
 
   export default {
-    name: 'app',
+    name: 'App',
     computed: {
       isReady() {
         return this.$store.state.isReady;
@@ -70,12 +85,13 @@
         const sorting = (sortDirection === 'desc') ? ' desc' : '';
         this.$store.dispatch('isLoading');
 
-        this.filters = Object.assign({}, this.filters, {
+        this.filters = {
+          ...this.filters,
           order: `${this.$store.state.order}${sorting}`,
           page_size: this.$store.state.productsPerPage,
           page_index: this.$store.state.pageIndex,
           keywords: this.$store.state.keywords,
-        });
+        };
 
         this.$store.dispatch(action, this.filters);
       },
@@ -91,9 +107,7 @@
         this.filters = {};
       },
       onLowStockChecked(isChecked) {
-        this.filters = Object.assign({}, this.filters, {
-          low_stock: isChecked,
-        });
+        this.filters = {...this.filters, low_stock: isChecked};
         this.fetch();
       },
     },

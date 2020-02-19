@@ -59,3 +59,15 @@ services:
           'es': 'https://doc.prestashop.com/display/PS17/Monitorear+el+catalogo'
           'it': 'https://doc.prestashop.com/display/PS17/Monitorare+il+Catalogo'
           '_fallback': 'https://doc.prestashop.com/display/PS17/Monitoring+your+Catalog'
+        'attachment':
+          'en': 'https://doc.prestashop.com/display/PS17/Managing+Files'
+          'fr': 'https://doc.prestashop.com/display/PS17/Gerer+les+fichiers'
+          'es': 'https://doc.prestashop.com/display/PS17/Gestionar+Archivos'
+          'it': 'https://doc.prestashop.com/display/PS17/Gestire+i+Files'
+          '_fallback': 'https://doc.prestashop.com/display/PS17/Managing+Files'
+        'credit_slip':
+          'en': 'https://doc.prestashop.com/display/PS17/Credit+Slips'
+          'fr': 'https://doc.prestashop.com/display/PS17/Avoirs'
+          'es': 'https://doc.prestashop.com/display/PS17/Facturas+por+abono'
+          'it': 'https://doc.prestashop.com/display/PS17/Note+di+credito'
+          '_fallback': 'https://doc.prestashop.com/display/PS17/Credit+Slips'

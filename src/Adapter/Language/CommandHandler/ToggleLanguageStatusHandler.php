@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -52,11 +52,7 @@ final class ToggleLanguageStatusHandler extends AbstractLanguageHandler implemen
         $language->active = $command->getStatus();
 
         if (false === $language->update()) {
-            throw new LanguageException(sprintf(
-                'Failed to toggle language "%s" to status %s',
-                $language->id,
-                var_export($command->getStatus(), true)
-            ));
+            throw new LanguageException(sprintf('Failed to toggle language "%s" to status %s', $language->id, var_export($command->getStatus(), true)));
         }
     }
 
@@ -71,10 +67,7 @@ final class ToggleLanguageStatusHandler extends AbstractLanguageHandler implemen
         }
 
         if ($language->id === (int) Configuration::get('PS_LANG_DEFAULT')) {
-            throw new DefaultLanguageException(
-                sprintf('Default language "%s" cannot be disabled', $language->iso_code),
-                DefaultLanguageException::CANNOT_DISABLE_ERROR
-            );
+            throw new DefaultLanguageException(sprintf('Default language "%s" cannot be disabled', $language->iso_code), DefaultLanguageException::CANNOT_DISABLE_ERROR);
         }
     }
 }

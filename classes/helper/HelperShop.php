@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -48,7 +48,7 @@ class HelperShopCore extends Helper
         }
 
         $tpl = $this->createTemplate('helpers/shops_list/list.tpl');
-        $tpl->assign(array(
+        $tpl->assign([
             'link' => $context->link,
             'tree' => Shop::getTree(),
             'current_shop_name' => $this->getCurrentShopName(),
@@ -60,7 +60,7 @@ class HelperShopCore extends Helper
             'is_all_context' => ($context->controller->multishop_context & Shop::CONTEXT_ALL),
             'shop_context' => $shop_context,
             'url' => $_SERVER['REQUEST_URI'] . (($_SERVER['QUERY_STRING']) ? '&' : '?') . 'setShopContext=',
-        ));
+        ]);
 
         return $tpl->fetch();
     }
