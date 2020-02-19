@@ -39,9 +39,9 @@ function PerformancePage(addServerUrl, removeServerUrl, testServerUrl) {
     };
 
     this.getFormValues = function() {
-        var serverIpInput = document.getElementById('form_add_memcache_server_memcache_ip');
-        var serverPortInput = document.getElementById('form_add_memcache_server_memcache_port');
-        var serverWeightInput = document.getElementById('form_add_memcache_server_memcache_weight');
+        var serverIpInput = document.getElementById('memcache_ip');
+        var serverPortInput = document.getElementById('memcache_port');
+        var serverWeightInput = document.getElementById('memcache_weight');
 
         return {
             'server_ip': serverIpInput.value,

@@ -46,11 +46,9 @@ class PerformanceController extends FrameworkBundleAdminController
      *
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message="Access denied.")
      *
-     * @param FormInterface $form
-     *
      * @return Response
      */
-    public function indexAction(FormInterface $form = null): Response
+    public function indexAction(): Response
     {
         $toolbarButtons = [
             'clear_cache' => [
@@ -60,7 +58,13 @@ class PerformanceController extends FrameworkBundleAdminController
             ],
         ];
 
-        $form = null === $form ? $this->get('prestashop.adapter.performance.form_handler')->getForm() : $form;
+        $smartyForm = $this->get('prestashop.adapter.performance.smarty.form_handler')->getForm();
+        $debugModeForm = $this->get('prestashop.adapter.performance.debug_mode.form_handler')->getForm();
+        $optionalFeaturesForm = $this->get('prestashop.adapter.performance.optional_features.form_handler')->getForm();
+        $combineCompressCacheForm = $this->get('prestashop.adapter.performance.ccc.form_handler')->getForm();
+        $mediaServersForm = $this->get('prestashop.adapter.performance.media_servers.form_handler')->getForm();
+        $cachingForm = $this->get('prestashop.adapter.performance.caching.form_handler')->getForm();
+        $memcacheForm = $this->get('prestashop.admin.advanced_parameters.performance.memcache.form_builder')->getForm();
 
         return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/performance.html.twig', [
             'layoutHeaderToolbarBtn' => $toolbarButtons,
@@ -71,13 +75,86 @@ class PerformanceController extends FrameworkBundleAdminController
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink('AdminPerformance'),
             'requireFilterStatus' => false,
-            'form' => $form->createView(),
+            'smartyForm' => $smartyForm->createView(),
+            'debugModeForm' => $debugModeForm->createView(),
+            'optionalFeaturesForm' => $optionalFeaturesForm->createView(),
+            'combineCompressCacheForm' => $combineCompressCacheForm->createView(),
+            'mediaServersForm' => $mediaServersForm->createView(),
+            'cachingForm' => $cachingForm->createView(),
+            'memcacheForm' => $memcacheForm->createView(),
             'servers' => $this->get('prestashop.adapter.memcache_server.manager')->getServers(),
         ]);
     }
 
     /**
-     * Process the Performance configuration form.
+     * Process the Performance Smarty configuration form.
+     *
+     * @AdminSecurity("is_granted(['read','update', 'create','delete'], request.get('_legacy_controller'))", message="You do not have permission to update this.")
+     * @DemoRestricted(redirectRoute="admin_performance")
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    public function processSmartyFormAction(Request $request)
+    {
+        $this->dispatchHook(
+            'actionAdminPerformanceControllerPostProcessSmartyBefore',
+            ['controller' => $this]
+        );
+
+        return $this->processForm(
+            $request,
+            'prestashop.adapter.performance.smarty.form_handler'
+        );
+    }
+
+    /**
+     * Process the Performance Debug Mode configuration form.
+     *
+     * @AdminSecurity("is_granted(['read','update', 'create','delete'], request.get('_legacy_controller'))", message="You do not have permission to update this.")
+     * @DemoRestricted(redirectRoute="admin_performance")
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    public function processDebugModeFormAction(Request $request)
+    {
+        $this->dispatchHook(
+            'actionAdminPerformanceControllerPostProcessDebugModeBefore',
+            ['controller' => $this]
+        );
+
+        return $this->processForm(
+            $request,
+            'prestashop.adapter.performance.debug_mode.form_handler'
+        );
+    }
+    /**
+     * Process the Performance Optional Features configuration form.
+     *
+     * @AdminSecurity("is_granted(['read','update', 'create','delete'], request.get('_legacy_controller'))", message="You do not have permission to update this.")
+     * @DemoRestricted(redirectRoute="admin_performance")
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    public function processOptionalFeaturesFormAction(Request $request)
+    {
+        $this->dispatchHook(
+            'actionAdminPerformanceControllerPostProcessOptionalFeaturesBefore',
+            ['controller' => $this]
+        );
+
+        return $this->processForm(
+            $request,
+            'prestashop.adapter.performance.optional_featuers.form_handler'
+        );
+    }
+    /**
+     * Process the Performance Combine Compress Cache configuration form.
      *
      * @AdminSecurity("is_granted(['update', 'create', 'delete'], request.get('_legacy_controller'))", message="You do not have permission to update this.")
      * @DemoRestricted(redirectRoute="admin_performance")
@@ -86,24 +163,87 @@ class PerformanceController extends FrameworkBundleAdminController
      *
      * @return RedirectResponse
      */
-    public function processFormAction(Request $request)
+    public function processCombineCompressCacheFormAction(Request $request)
+    {
+        $this->dispatchHook(
+            'actionAdminPerformanceControllerPostProcessCombineCompressCacheBefore',
+            ['controller' => $this]
+        );
+
+        return $this->processForm(
+            $request,
+            'prestashop.adapter.performance.combine_compress_cache.form_handler'
+        );
+    }
+    /**
+     * Process the Performance Media Servers configuration form.
+     *
+     * @AdminSecurity("is_granted(['read','update', 'create','delete'], request.get('_legacy_controller'))", message="You do not have permission to update this.")
+     * @DemoRestricted(redirectRoute="admin_performance")
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    public function processMediaServersFormAction(Request $request)
+    {
+        $this->dispatchHook(
+            'actionAdminPerformanceControllerPostProcessMediaServersBefore',
+            ['controller' => $this]
+        );
+
+        return $this->processForm(
+            $request,
+            'prestashop.adapter.performance.media_servers.form_handler'
+        );
+    }
+    /**
+     * Process the Performance Caching configuration form.
+     *
+     * @AdminSecurity("is_granted(['read','update', 'create','delete'], request.get('_legacy_controller'))", message="You do not have permission to update this.")
+     * @DemoRestricted(redirectRoute="admin_performance")
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    public function processCachingFormAction(Request $request)
+    {
+        $this->dispatchHook(
+            'actionAdminPerformanceControllerPostProcessCachingBefore',
+            ['controller' => $this]
+        );
+
+        return $this->processForm(
+            $request,
+            'prestashop.adapter.performance.caching.form_handler'
+        );
+    }
+
+    /**
+     * Process the Performance configuration form.
+     *
+     * @param Request $request
+     * @param string $formHandlerName
+     *
+     * @return RedirectResponse
+     */
+    protected function processForm(Request $request, string $formHandlerName)
     {
         $this->dispatchHook('actionAdminPerformanceControllerPostProcessBefore', ['controller' => $this]);
-        $form = $this->get('prestashop.adapter.performance.form_handler')->getForm();
+        $formHandler = $this->get($formHandlerName);
+        $form = $formHandler->getForm();
         $form->handleRequest($request);
 
         if ($form->isSubmitted()) {
             $data = $form->getData();
-
-            $saveErrors = $this->get('prestashop.adapter.performance.form_handler')->save($data);
+            $saveErrors = $formHandler->save($data);
 
             if (0 === count($saveErrors)) {
                 $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
-
-                return $this->redirectToRoute('admin_performance');
+            } else {
+                $this->flashErrors($saveErrors);
             }
-
-            $this->flashErrors($saveErrors);
         }
 
         return $this->redirectToRoute('admin_performance');
