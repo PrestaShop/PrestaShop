@@ -27,9 +27,11 @@
 namespace PrestaShop\PrestaShop\Adapter\Order\CommandHandler;
 
 use Currency;
+use ObjectModel;
 use Order;
 use OrderCarrier;
 use OrderDetail;
+use OrderInvoice;
 use PrestaShop\PrestaShop\Adapter\Order\AbstractOrderHandler;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\ChangeOrderCurrencyCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler\ChangeOrderCurrencyHandlerInterface;
@@ -129,9 +131,7 @@ final class ChangeOrderCurrencyHandler extends AbstractOrderHandler implements C
                 'original_product_price',
             ];
 
-            foreach ($fields as $field) {
-                $orderDetail->{$field} = Tools::convertPriceFull($orderDetail->{$field}, $oldCurrency, $newCurrency);
-            }
+            $this->convertPriceFields($orderDetail, $fields, $oldCurrency, $newCurrency);
 
             $orderDetail->update();
             $orderDetail->updateTaxAmount($order);
@@ -145,16 +145,9 @@ final class ChangeOrderCurrencyHandler extends AbstractOrderHandler implements C
      */
     private function updateInvoices(PrestaShopCollection $invoices, Currency $oldCurrency, Currency $newCurrency): void
     {
-        $fields = $this->getSharedAmountFields();
-
         if ($invoices->count()) {
             foreach ($invoices as $invoice) {
-                foreach ($fields as $field) {
-                    if (isset($invoice->$field)) {
-                        $invoice->{$field} = Tools::convertPriceFull($invoice->{$field}, $oldCurrency, $newCurrency);
-                    }
-                }
-
+                $this->convertPriceFields($invoice, $this->getSharedAmountFields(), $oldCurrency, $newCurrency);
                 $invoice->save();
             }
         }
@@ -167,13 +160,7 @@ final class ChangeOrderCurrencyHandler extends AbstractOrderHandler implements C
      */
     private function updateOrder(Order $order, Currency $oldCurrency, Currency $newCurrency): void
     {
-        $fields = $this->getSharedAmountFields();
-
-        foreach ($fields as $field) {
-            if (isset($order->$field)) {
-                $order->{$field} = Tools::convertPriceFull($order->{$field}, $oldCurrency, $newCurrency);
-            }
-        }
+        $this->convertPriceFields($order, $this->getSharedAmountFields(), $oldCurrency, $newCurrency);
 
         $order->id_currency = $newCurrency->id;
         $order->conversion_rate = (float) $newCurrency->conversion_rate;
@@ -206,5 +193,24 @@ final class ChangeOrderCurrencyHandler extends AbstractOrderHandler implements C
             'total_wrapping_tax_incl',
             'total_wrapping_tax_excl',
         ];
+    }
+
+    /**
+     * @param Order|OrderDetail|OrderInvoice $object
+     * @param array $fields
+     * @param Currency $oldCurrency
+     * @param Currency $newCurrency
+     */
+    private function convertPriceFields(
+        ObjectModel $object,
+        array $fields,
+        Currency $oldCurrency,
+        Currency $newCurrency
+    ) {
+        foreach ($fields as $field) {
+            if (isset($object->$field)) {
+                $object->{$field} = Tools::convertPriceFull($object->{$field}, $oldCurrency, $newCurrency);
+            }
+        }
     }
 }
