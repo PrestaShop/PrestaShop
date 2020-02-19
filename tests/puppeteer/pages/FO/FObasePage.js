@@ -165,9 +165,6 @@ module.exports = class Home extends CommonPage {
    * @returns {Promise<void>}
    */
   async goToCartPage() {
-    await Promise.all([
-      this.page.waitForNavigation({waitUntil: 'networkidle0'}),
-      this.page.click(this.cartLink),
-    ]);
+    await this.clickAndWaitForNavigation(this.cartLink);
   }
 };

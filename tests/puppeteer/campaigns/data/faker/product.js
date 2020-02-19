@@ -16,6 +16,7 @@ module.exports = class Product {
       Size: ['S', 'M'],
     };
     this.taxRule = productToCreate.taxRule || 'FR Taux standard (20%)';
+    this.withSpecificPrice = productToCreate.withSpecificPrice || false;
     this.specificPrice = productToCreate.specificPrice || {
       combinations: 'Size - S, Color - White',
       discount: faker.random.number({min: 10, max: 100}),

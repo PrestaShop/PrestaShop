@@ -29,6 +29,7 @@ const productWithCombinations = new ProductFaker({
     Size: ['S'],
   },
   quantity: 10,
+  withSpecificPrice: true,
   specificPrice: {
     combinations: 'Size - S, Color - White',
     discount: 50,
@@ -113,21 +114,17 @@ describe('Choose quantity discount based on', async () => {
   it('should create product with combinations and add a specific price', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'createProduct', baseContext);
     await this.pageObjects.productsPage.goToAddProductPage();
-    const createProductMessage = await this.pageObjects.addProductPage.createEditProduct(
-      productWithCombinations, true,
-      true,
-    );
+    const createProductMessage = await this.pageObjects.addProductPage.createEditProduct(productWithCombinations);
     await expect(createProductMessage).to.equal(this.pageObjects.addProductPage.settingUpdatedMessage);
     await this.pageObjects.addProductPage.goToFormStep(1);
   });
 
-  it('should preview, add first and second combination to the cart and check price TTC in FO', async function () {
+  it('should preview product and check price TTC in FO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'previewProductAndCheckPriceTTC', baseContext);
     page = await this.pageObjects.addProductPage.previewProduct();
     this.pageObjects = await init();
     await this.pageObjects.foProductPage.addProductToTheCart(firstAttributeToChoose, false);
     await this.pageObjects.foProductPage.addProductToTheCart(secondAttributeToChoose, true);
-    // Check that total TTC price is correct
     const priceTTC = await this.pageObjects.cartPage.getTTCPrice();
     await expect(priceTTC).to.equal(firstCartTotalTTC);
     page = await this.pageObjects.cartPage.closePage(browser, 1);
@@ -150,12 +147,11 @@ describe('Choose quantity discount based on', async () => {
     await expect(result).to.contains(this.pageObjects.productSettingsPage.successfulUpdateMessage);
   });
 
-  it('should view my shop, add first and second combination to the cart and check price TTC in FO', async function () {
+  it('should view my shop and check price TTC in FO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'ViewMyShopAndCheckPriceTTC', baseContext);
     page = await this.pageObjects.productSettingsPage.viewMyShop();
     this.pageObjects = await init();
     await this.pageObjects.foProductPage.goToCartPage();
-    // Check that total TTC price is correct
     const priceTTC = await this.pageObjects.cartPage.getTTCPrice();
     await expect(priceTTC).to.equal(secondCartTotalTTC);
     page = await this.pageObjects.cartPage.closePage(browser, 1);
@@ -172,7 +168,7 @@ describe('Choose quantity discount based on', async () => {
     await expect(pageTitle).to.contains(this.pageObjects.productsPage.pageTitle);
   });
 
-  it('should delete product with from DropDown Menu', async function () {
+  it('should delete product from DropDown Menu', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'deleteProduct', baseContext);
     const deleteTextResult = await this.pageObjects.productsPage.deleteProduct(productWithCombinations);
     await expect(deleteTextResult).to.equal(this.pageObjects.productsPage.productDeletedSuccessfulMessage);
