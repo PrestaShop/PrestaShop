@@ -47,7 +47,7 @@ trait DeleteActionTrait
                 'route_param_field' => $deleteRouteParamField,
                 'confirm_message' => $this->trans('Delete selected item?', [], 'Admin.Notifications.Warning'),
                 'modal_options' => new ModalOptions([
-                    'title' => $this->trans('Delete selected item', [], 'Admin.Actions'),
+                    'title' => $this->trans('Delete selection', [], 'Admin.Actions'),
                     'confirm_button_label' => $this->trans('Delete', [], 'Admin.Actions'),
                     'close_button_label' => $this->trans('Cancel', [], 'Admin.Actions'),
                     'confirm_button_class' => 'btn-danger',
