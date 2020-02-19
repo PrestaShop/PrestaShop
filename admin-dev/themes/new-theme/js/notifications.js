@@ -26,7 +26,6 @@ import Router from './components/router';
 
 const refreshNotifications = function () {
   let timer = null;
-  debugger;
   $.ajax({
     type: 'POST',
     headers: {'cache-control': 'no-cache'},
@@ -36,7 +35,6 @@ const refreshNotifications = function () {
     dataType: 'json',
     success(json) {
       if (json) {
-        debugger;
         const nbOrders = parseInt(json.order.total, 10);
         const nbCustomers = parseInt(json.customer.total, 10);
         const nbCustomerMessages = parseInt(json.customer_message.total, 10);
