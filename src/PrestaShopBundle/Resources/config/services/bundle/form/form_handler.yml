@@ -2,21 +2,65 @@ services:
     _defaults:
         public: true
 
-    prestashop.adapter.performance.form_handler:
-        class: 'PrestaShop\PrestaShop\Core\Form\FormHandler'
+    prestashop.adapter.performance.smarty.form_handler:
+        class: 'PrestaShop\PrestaShop\Core\Form\Handler'
         arguments:
-            - '@=service("form.factory").createBuilder()'
+            - '@form.factory'
             - '@prestashop.core.hook.dispatcher'
-            - '@prestashop.adapter.performance.form_provider'
-            -
-              'smarty': 'PrestaShopBundle\Form\Admin\AdvancedParameters\Performance\SmartyType'
-              'debug_mode': 'PrestaShopBundle\Form\Admin\AdvancedParameters\Performance\DebugModeType'
-              'optional_features': 'PrestaShopBundle\Form\Admin\AdvancedParameters\Performance\OptionalFeaturesType'
-              'ccc': 'PrestaShopBundle\Form\Admin\AdvancedParameters\Performance\CombineCompressCacheType'
-              'media_servers': 'PrestaShopBundle\Form\Admin\AdvancedParameters\Performance\MediaServersType'
-              'caching': 'PrestaShopBundle\Form\Admin\AdvancedParameters\Performance\CachingType'
-              'add_memcache_server': 'PrestaShopBundle\Form\Admin\AdvancedParameters\Performance\MemcacheServerType'
+            - '@prestashop.adapter.performance.smarty.form_provider'
+            - 'PrestaShopBundle\Form\Admin\AdvancedParameters\Performance\SmartyType'
             - 'PerformancePage'
+            - 'smarty'
+
+    prestashop.adapter.performance.debug_mode.form_handler:
+        class: 'PrestaShop\PrestaShop\Core\Form\Handler'
+        arguments:
+            - '@form.factory'
+            - '@prestashop.core.hook.dispatcher'
+            - '@prestashop.adapter.performance.debug_mode.form_provider'
+            - 'PrestaShopBundle\Form\Admin\AdvancedParameters\Performance\DebugModeType'
+            - 'PerformancePage'
+            - 'debug_mode'
+
+    prestashop.adapter.performance.optional_features.form_handler:
+        class: 'PrestaShop\PrestaShop\Core\Form\Handler'
+        arguments:
+            - '@form.factory'
+            - '@prestashop.core.hook.dispatcher'
+            - '@prestashop.adapter.performance.optional_features.form_provider'
+            - 'PrestaShopBundle\Form\Admin\AdvancedParameters\Performance\OptionalFeaturesType'
+            - 'PerformancePage'
+            - 'optional_features'
+
+    prestashop.adapter.performance.ccc.form_handler:
+        class: 'PrestaShop\PrestaShop\Core\Form\Handler'
+        arguments:
+            - '@form.factory'
+            - '@prestashop.core.hook.dispatcher'
+            - '@prestashop.adapter.performance.ccc.form_provider'
+            - 'PrestaShopBundle\Form\Admin\AdvancedParameters\Performance\CombineCompressCacheType'
+            - 'PerformancePage'
+            - 'ccc'
+
+    prestashop.adapter.performance.media_servers.form_handler:
+        class: 'PrestaShop\PrestaShop\Core\Form\Handler'
+        arguments:
+            - '@form.factory'
+            - '@prestashop.core.hook.dispatcher'
+            - '@prestashop.adapter.performance.media_servers.form_provider'
+            - 'PrestaShopBundle\Form\Admin\AdvancedParameters\Performance\MediaServersType'
+            - 'PerformancePage'
+            - 'media_servers'
+
+    prestashop.adapter.performance.caching.form_handler:
+        class: 'PrestaShop\PrestaShop\Core\Form\Handler'
+        arguments:
+            - '@form.factory'
+            - '@prestashop.core.hook.dispatcher'
+            - '@prestashop.adapter.performance.caching.form_provider'
+            - 'PrestaShopBundle\Form\Admin\AdvancedParameters\Performance\CachingType'
+            - 'PerformancePage'
+            - 'caching'
 
     prestashop.adapter.maintenance.form_handler:
         class: 'PrestaShop\PrestaShop\Core\Form\Handler'
