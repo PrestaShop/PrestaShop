@@ -66,13 +66,13 @@ class ModuleEntityPreloader implements ModulePreloaderInterface
     public function preload(string $moduleName): void
     {
         $moduleAlias = 'Module' . Inflector::camelize($moduleName);
-        $entityFolder = realpath($this->modulesFolder . '/' . $moduleName . '/src/Entity');
+        $entityFolder = $this->modulesFolder . '/' . $moduleName . '/src/Entity';
         if (!is_dir($entityFolder)) {
             return;
         }
 
         try {
-            $this->entityMapper->addDoctrineMapping($entityFolder, $moduleAlias);
+            $this->entityMapper->addDoctrineMapping(realpath($entityFolder), $moduleAlias);
         } catch (NamespaceNotFoundException $e) {
             // Do nothing, the module has no namespace
         } catch (FileNotFoundException $e) {
