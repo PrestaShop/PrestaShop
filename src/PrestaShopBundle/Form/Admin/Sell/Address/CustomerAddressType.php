@@ -91,6 +91,7 @@ class CustomerAddressType extends AbstractType
         $data = $builder->getData();
         $requiredFields = $data['required_fields'];
         $countryId = 0 !== $data['id_country'] ? $data['id_country'] : $this->contextCountryId;
+        $stateChoices = $this->stateChoiceProvider->getChoices(['id_country' => $countryId]);
 
         if (!isset($data['id_customer'])) {
             $builder->add('customer_email', EmailType::class, [
@@ -400,7 +401,10 @@ class CustomerAddressType extends AbstractType
             ])
             ->add('id_state', ChoiceType::class, [
                 'required' => true,
-                'choices' => $this->stateChoiceProvider->getChoices(['id_country' => $countryId]),
+                'attr' => [
+                    'class' => empty($stateChoices) ? 'd-none' : '',
+                ],
+                'choices' => $stateChoices,
                 'constraints' => [
                     new AddressStateRequired([
                         'id_country' => $countryId,
