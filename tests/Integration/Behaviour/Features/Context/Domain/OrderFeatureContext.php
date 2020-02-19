@@ -48,6 +48,7 @@ use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderInvoiceAddressForVi
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderProductForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProducts;
+use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\FoundProduct;
 use PrestaShop\PrestaShop\Core\Form\ChoiceProvider\OrderStateByIdChoiceProvider;
 use Product;
 use RuntimeException;
@@ -538,14 +539,16 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     private function getProductIdByName(string $productName)
     {
         /** @var array $productsMap */
-        $productsMap = $this->getQueryBus()->handle(new SearchProducts($productName, 1, Context::getContext()->currency->iso_code));
-        $productId = array_key_first($productsMap);
+        $products = $this->getQueryBus()->handle(new SearchProducts($productName, 1, Context::getContext()->currency->iso_code));
 
-        if (!$productId) {
-            throw new RuntimeException('Product with name "%s" does not exist', $productName);
+        if (empty($products)) {
+            throw new RuntimeException(sprintf('Product with name "%s" was not found', $productName));
         }
 
-        return (int) $productId;
+        /** @var FoundProduct $product */
+        $product = $products[0];
+
+        return (int) $product->getProductId();
     }
 
     /**
