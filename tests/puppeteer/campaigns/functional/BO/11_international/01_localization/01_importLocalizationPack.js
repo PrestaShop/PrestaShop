@@ -44,13 +44,13 @@ const init = async function () {
 };
 
 /*
-Import localization pack for 'chili' in BO
+Import localization pack for 'chile' in BO
 Check Language 'Spanish' and currency 'Chilean Peso' in FO
 Delete 'spanish' language
 Delete 'Chilean Peso' currency
  */
 
-describe('Import a localization pack with language and currency', async () => {
+describe('Import a localization pack including a language and a currency', async () => {
   before(async function () {
     browser = await helper.createBrowser();
     page = await helper.newTab(browser);
