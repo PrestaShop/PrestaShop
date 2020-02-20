@@ -997,7 +997,7 @@ class CategoryCore extends ObjectModel
         $orderByPrefix = false;
         if ($orderBy === 'id_product' || $orderBy === 'date_add' || $orderBy === 'date_upd') {
             $orderByPrefix = 'p';
-        } elseif ($orderBy == 'name') {
+        } elseif ($orderBy === 'name') {
             $orderByPrefix = 'pl';
         } elseif ($orderBy == 'manufacturer' || $orderBy == 'manufacturer_name') {
             $orderByPrefix = 'm';
