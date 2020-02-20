@@ -10,7 +10,7 @@ module.exports = class Localization extends LocalizationBasePage {
 
     // Import localization pack selectors
     this.importLocalizationPackForm = 'form[name=\'import_localization_pack\']';
-    this.localizationPackToImportSelect = '#import_localization_pack_iso_localization_pack';
+    this.importlocalizationPackSelect = '#import_localization_pack_iso_localization_pack';
     this.importStatesCheckbox = '#import_localization_pack_content_to_import_0';
     this.importTaxesCheckbox = '#import_localization_pack_content_to_import_1';
     this.importCurrenciesCheckbox = '#import_localization_pack_content_to_import_2';
@@ -31,7 +31,7 @@ module.exports = class Localization extends LocalizationBasePage {
    */
   async importLocalizationPack(country, contentToImport, downloadPackData = true) {
     // Choose which country to import
-    await this.selectByVisibleText(this.localizationPackToImportSelect, country);
+    await this.selectByVisibleText(this.importlocalizationPackSelect, country);
     // Set content import checkboxes
     await this.updateCheckboxValue(this.importStatesCheckbox, contentToImport.importStates);
     await this.updateCheckboxValue(this.importTaxesCheckbox, contentToImport.importTaxes);
