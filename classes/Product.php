@@ -2952,7 +2952,7 @@ class ProductCore extends ObjectModel
             return false;
         }
 
-        if ($finalOrderBy == 'price') {
+        if ($finalOrderBy === 'price') {
             Tools::orderbyPrice($result, $order_way);
             $result = array_slice($result, (int) (($page_number - 1) * $nb_products), (int) $nb_products);
         }
