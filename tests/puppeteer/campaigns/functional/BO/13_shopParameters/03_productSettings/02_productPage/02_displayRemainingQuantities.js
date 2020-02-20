@@ -101,8 +101,8 @@ describe('Test display remaining quantities', async () => {
     this.pageObjects = await init();
     await this.pageObjects.homePage.searchProduct(productData.name);
     await this.pageObjects.searchResultsPage.goToProductPage(1);
-    const AvailableQuantityIsVisible = await this.pageObjects.productPage.isAvailabilityQuantityDisplayed();
-    await expect(AvailableQuantityIsVisible).to.be.false;
+    const lastQuantityIsVisible = await this.pageObjects.productPage.isAvailabilityQuantityDisplayed();
+    await expect(lastQuantityIsVisible).to.be.false;
     page = await this.pageObjects.productPage.closePage(browser, 1);
     this.pageObjects = await init();
   });
@@ -120,8 +120,8 @@ describe('Test display remaining quantities', async () => {
     await this.pageObjects.homePage.searchProduct(productData.name);
     await this.pageObjects.searchResultsPage.goToProductPage(1);
     this.pageObjects = await init();
-    const AvailableQuantityIsVisible = await this.pageObjects.productPage.isAvailabilityQuantityDisplayed();
-    await expect(AvailableQuantityIsVisible).to.be.true;
+    const lastQuantityIsVisible = await this.pageObjects.productPage.isAvailabilityQuantityDisplayed();
+    await expect(lastQuantityIsVisible).to.be.true;
     page = await this.pageObjects.productPage.closePage(browser, 1);
     this.pageObjects = await init();
   });
