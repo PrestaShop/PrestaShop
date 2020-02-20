@@ -1,7 +1,7 @@
 require('module-alias/register');
 const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_BO_productSettings_displayAvailableQuantitiesOnProductPage';
+const baseContext = 'functional_BO_productSettings_displayRemainingQuantitiesOnProductPage';
 // Using chai
 const {expect} = require('chai');
 const helper = require('@utils/helpers');
@@ -67,6 +67,7 @@ describe('Test display remaining quantities', async () => {
       this.pageObjects.boBasePage.catalogParentLink,
       this.pageObjects.boBasePage.productsLink,
     );
+    await this.pageObjects.boBasePage.closeSfToolBar();
     const pageTitle = await this.pageObjects.productsPage.getPageTitle();
     await expect(pageTitle).to.contains(this.pageObjects.productsPage.pageTitle);
   });
@@ -84,7 +85,6 @@ describe('Test display remaining quantities', async () => {
       this.pageObjects.boBasePage.shopParametersParentLink,
       this.pageObjects.boBasePage.productSettingsLink,
     );
-    await this.pageObjects.boBasePage.closeSfToolBar();
     const pageTitle = await this.pageObjects.productSettingsPage.getPageTitle();
     await expect(pageTitle).to.contains(this.pageObjects.productSettingsPage.pageTitle);
   });
@@ -96,7 +96,7 @@ describe('Test display remaining quantities', async () => {
   });
 
   it('should check that the product availability is not displayed in FO product page', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'checkRemainingQuantityAlert', baseContext);
+    await testContext.addContextItem(this, 'testIdentifier', 'checkThatRemainingQuantityAlertNotVisible', baseContext);
     page = await this.pageObjects.productSettingsPage.viewMyShop();
     this.pageObjects = await init();
     await this.pageObjects.homePage.searchProduct(productData.name);
@@ -107,16 +107,6 @@ describe('Test display remaining quantities', async () => {
     this.pageObjects = await init();
   });
 
-  it('should go to \'Shop parameters > Product Settings\' page', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'goToProductSettingsPage', baseContext);
-    await this.pageObjects.boBasePage.goToSubMenu(
-      this.pageObjects.boBasePage.shopParametersParentLink,
-      this.pageObjects.boBasePage.productSettingsLink,
-    );
-    const pageTitle = await this.pageObjects.productSettingsPage.getPageTitle();
-    await expect(pageTitle).to.contains(this.pageObjects.productSettingsPage.pageTitle);
-  });
-
   it('should update Display remaining quantities to the default value', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'setDisplayRemainingQuantityDefaultValue', baseContext);
     const result = await this.pageObjects.productSettingsPage.setDisplayRemainingQuantities(defaultRemainingQuantity);
@@ -124,7 +114,7 @@ describe('Test display remaining quantities', async () => {
   });
 
   it('should check that the product availability is displayed in FO product page', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'checkRemainingQuantityAlert', baseContext);
+    await testContext.addContextItem(this, 'testIdentifier', 'checkThatRemainingQuantityAlertIsVisible', baseContext);
     page = await this.pageObjects.productSettingsPage.viewMyShop();
     this.pageObjects = await init();
     await this.pageObjects.homePage.searchProduct(productData.name);

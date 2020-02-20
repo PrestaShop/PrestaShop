@@ -15,9 +15,6 @@ module.exports = class SearchResults extends FOBasePage {
    * @param id, product id
    */
   async goToProductPage(id) {
-    await Promise.all([
-      this.page.waitForNavigation({waitUntil: 'networkidle0'}),
-      this.page.click(this.productImg.replace('%NUMBER', id)),
-    ]);
+    await this.clickAndWaitForNavigation(this.productImg.replace('%NUMBER', id));
   }
 };

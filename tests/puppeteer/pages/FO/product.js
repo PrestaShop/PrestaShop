@@ -49,7 +49,7 @@ module.exports = class Product extends FOBasePage {
 
   /**
    * Is availability product displayed
-   * @returns {boolean|true}
+   * @returns {boolean}
    */
   isAvailabilityQuantityDisplayed() {
     return this.elementVisible(this.productAvailabilityIcon, 1000);
