@@ -1006,7 +1006,7 @@ class CategoryCore extends ObjectModel
             $orderByPrefix = 'cp';
         }
 
-        if ($orderBy == 'price') {
+        if ($orderBy === 'price') {
             $orderBy = 'orderprice';
         }
 
