@@ -500,7 +500,7 @@ class ManufacturerCore extends ObjectModel
             return false;
         }
 
-        if ($finalOrderBy == 'price') {
+        if ($finalOrderBy === 'price') {
             Tools::orderbyPrice($result, $orderWay);
             $result = array_slice($result, (int) (($p - 1) * $n), (int) $n);
         }
