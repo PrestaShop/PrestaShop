@@ -11,7 +11,7 @@ const CustomersPage = require('@pages/BO/customers');
 // Test context imports
 const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_BO_customers_customers_filterAndQuickEditCustomers';
+const baseContext = 'functional_BO_customers_customers_sortCustomers';
 
 let browser;
 let page;
