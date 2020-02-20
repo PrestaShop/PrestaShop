@@ -52,88 +52,24 @@ final class AddCartRuleToOrderHandler extends AbstractOrderHandler implements Ad
     public function handle(AddCartRuleToOrderCommand $command): void
     {
         $order = $this->getOrderObject($command->getOrderId());
-        $orderInvoice = $this->createSingleOrderInvoice($order, $command);
-
-        if (null !== $orderInvoice) {
-            $orderInvoices = [$orderInvoice];
-        } else {
-            $orderInvoices = $order->getInvoicesCollection()->getResults();
-        }
 
         $discountValue = $command->getDiscountValue() ?
             (float) $command->getDiscountValue()->toPrecision(CommonAbstractType::PRESTASHOP_DECIMALS) :
             null
         ;
 
-        $reductionValues = $this->getReductionValues($command->getCartRuleType(), $order, $discountValue);
-        $reductionValuesByInvoiceId = $this->getReductionValuesByInvoiceId(
-            $reductionValues,
-            $command->getCartRuleType(),
-            $orderInvoices,
-            $discountValue
-        );
-        $this->updateInvoicesDiscount($orderInvoices, $reductionValuesByInvoiceId);
+        $orderInvoice = $this->getInvoiceForUpdate($order, $command);
+        $cartRuleType = $command->getCartRuleType();
+        $reductionValues = $this->getReductionValues($cartRuleType, $order, $discountValue);
 
-        $result = true;
-
-        foreach ($reductionValuesByInvoiceId as &$reducedValues) {
-            $cartRuleObj = $this->createCartRule($command, $order, $reducedValues, $discountValue);
-
-            if ($result = $cartRuleObj->add()) {
-                $reducedValues['cart_rule_id'] = $cartRuleObj->id;
-            } else {
-                break;
-            }
+        if (null !== $orderInvoice) {
+            $this->updateInvoiceDiscount($orderInvoice, $cartRuleType, $discountValue, $reductionValues);
         }
 
-        if ($result) {
-            foreach ($reductionValuesByInvoiceId as $orderInvoiceId => $reducedValues) {
-                $orderCartRule = $this->createOrderCartRule($command->getCartRuleName(), $order, $orderInvoiceId, $reducedValues);
-                $result &= $orderCartRule->add();
-            }
+        $cartRule = $this->addCartRule($command, $order, $reductionValues, $discountValue);
+        $this->addOrderCartRule($command->getCartRuleName(), $cartRule->id, $orderInvoice, $reductionValues);
 
-            $result &= $this->applyReductionToOrder($order, $reductionValues);
-        }
-
-        if (!$result) {
-            throw new OrderException('An error occurred during the OrderCartRule creation');
-        }
-    }
-
-    /**
-     * @param array $reductionValues
-     * @param string $cartRuleType
-     * @param array $orderInvoices
-     * @param float $discountValue
-     *
-     * @return array
-     */
-    private function getReductionValuesByInvoiceId(
-        array $reductionValues,
-        string $cartRuleType,
-        array $orderInvoices,
-        ?float $discountValue
-    ): array {
-        $reducedValuesByInvoiceId = [];
-
-        if (empty($orderInvoices)) {
-            return [$reductionValues];
-        } else {
-            foreach ($orderInvoices as $orderInvoice) {
-                $isAlreadyFreeShipping = OrderDiscountType::FREE_SHIPPING === $cartRuleType && $orderInvoice->total_shipping_tax_incl <= 0;
-                $discountAmountIsTooBig = OrderDiscountType::DISCOUNT_AMOUNT === $cartRuleType && $discountValue > $orderInvoice->total_paid_tax_incl;
-
-                if ($isAlreadyFreeShipping) {
-                    continue;
-                } elseif ($discountAmountIsTooBig) {
-                    throw new OrderException('The discount value is greater than the order invoice total.');
-                }
-
-                $reducedValuesByInvoiceId[$orderInvoice->id] = $reductionValues;
-            }
-        }
-
-        return $reducedValuesByInvoiceId;
+        $this->applyReductionToOrder($order, $reductionValues);
     }
 
     private function getReductionValues(string $cartRuleType, Order $order, ?float $discountValue): array
@@ -171,26 +107,31 @@ final class AddCartRuleToOrderHandler extends AbstractOrderHandler implements Ad
     }
 
     /**
-     * @param array $orderInvoices
-     * @param array $reducedValuesByInvoiceId
+     * @param OrderInvoice $orderInvoice
+     * @param string $cartRuleType
+     * @param float|null $discountValue
+     * @param array $reductionValues
      */
-    private function updateInvoicesDiscount(array $orderInvoices, array $reducedValuesByInvoiceId): void
+    private function updateInvoiceDiscount(OrderInvoice $orderInvoice, string $cartRuleType, ?float $discountValue, array $reductionValues): void
     {
-        if (empty($orderInvoices)) {
+        $isAlreadyFreeShipping = OrderDiscountType::FREE_SHIPPING === $cartRuleType && $orderInvoice->total_shipping_tax_incl <= 0;
+        $discountAmountIsTooBig = OrderDiscountType::DISCOUNT_AMOUNT === $cartRuleType && $discountValue > $orderInvoice->total_paid_tax_incl;
+
+        if ($isAlreadyFreeShipping) {
             return;
+        } elseif ($discountAmountIsTooBig) {
+            throw new OrderException('The discount value is greater than the order invoice total.');
         }
 
-        foreach ($orderInvoices as $orderInvoice) {
-            $valueTaxIncl = $reducedValuesByInvoiceId[$orderInvoice->id]['value_tax_incl'];
-            $valueTaxExcl = $reducedValuesByInvoiceId[$orderInvoice->id]['value_tax_excl'];
+        $valueTaxIncl = $reductionValues['value_tax_incl'];
+        $valueTaxExcl = $reductionValues['value_tax_excl'];
 
-            $orderInvoice->total_discount_tax_incl += $valueTaxIncl;
-            $orderInvoice->total_discount_tax_excl += $valueTaxExcl;
-            $orderInvoice->total_paid_tax_incl -= $valueTaxIncl;
-            $orderInvoice->total_paid_tax_excl -= $valueTaxExcl;
+        $orderInvoice->total_discount_tax_incl += $valueTaxIncl;
+        $orderInvoice->total_discount_tax_excl += $valueTaxExcl;
+        $orderInvoice->total_paid_tax_incl -= $valueTaxIncl;
+        $orderInvoice->total_paid_tax_excl -= $valueTaxExcl;
 
-            $orderInvoice->update();
-        }
+        $orderInvoice->update();
     }
 
     /**
@@ -201,7 +142,7 @@ final class AddCartRuleToOrderHandler extends AbstractOrderHandler implements Ad
      *
      * @return CartRule
      */
-    private function createCartRule(
+    private function addCartRule(
         AddCartRuleToOrderCommand $command,
         Order $order,
         array $reducedValues,
@@ -224,28 +165,32 @@ final class AddCartRuleToOrderHandler extends AbstractOrderHandler implements Ad
 
         $cartRuleObj->active = 0;
 
+        if (false === $cartRuleObj->add()) {
+            throw new OrderException('An error occurred during the CartRule creation');
+        }
+
         return $cartRuleObj;
     }
 
     /**
      * @param string $cartRuleName
-     * @param Order $order
-     * @param int $orderInvoiceId
+     * @param int $cartRuleId
+     * @param OrderInvoice $orderInvoice
      * @param array $reducedValues
-     *
-     * @return OrderCartRule
      */
-    private function createOrderCartRule(string $cartRuleName, Order $order, int $orderInvoiceId, array $reducedValues): OrderCartRule
+    private function addOrderCartRule(string $cartRuleName, int $cartRuleId, OrderInvoice $orderInvoice, array $reducedValues): void
     {
         $orderCartRule = new OrderCartRule();
-        $orderCartRule->id_order = $order->id;
-        $orderCartRule->id_cart_rule = $reducedValues['cart_rule_id'];
-        $orderCartRule->id_order_invoice = $orderInvoiceId;
+        $orderCartRule->id_order = $orderInvoice->id_order;
+        $orderCartRule->id_cart_rule = $cartRuleId;
+        $orderCartRule->id_order_invoice = $orderInvoice->id;
         $orderCartRule->name = $cartRuleName;
         $orderCartRule->value = $reducedValues['value_tax_incl'];
         $orderCartRule->value_tax_excl = $reducedValues['value_tax_excl'];
 
-        return $orderCartRule;
+        if (false === $orderCartRule->add()) {
+            throw new OrderException('An error occurred during the OrderCartRule creation');
+        }
     }
 
     /**
@@ -254,7 +199,7 @@ final class AddCartRuleToOrderHandler extends AbstractOrderHandler implements Ad
      *
      * @return OrderInvoice|null
      */
-    private function createSingleOrderInvoice(Order $order, AddCartRuleToOrderCommand $command): ?OrderInvoice
+    private function getInvoiceForUpdate(Order $order, AddCartRuleToOrderCommand $command): ?OrderInvoice
     {
         // If the discount is for only one invoice
         if ($order->hasInvoice() && null !== $command->getOrderInvoiceId()) {
@@ -335,9 +280,9 @@ final class AddCartRuleToOrderHandler extends AbstractOrderHandler implements Ad
      * @param Order $order
      * @param array $reductionValues
      *
-     * @return bool
+     * @return void
      */
-    private function applyReductionToOrder(Order $order, array $reductionValues): bool
+    private function applyReductionToOrder(Order $order, array $reductionValues): void
     {
         $order->total_discounts += $reductionValues['value_tax_incl'];
         $order->total_discounts_tax_incl += $reductionValues['value_tax_incl'];
@@ -346,6 +291,8 @@ final class AddCartRuleToOrderHandler extends AbstractOrderHandler implements Ad
         $order->total_paid_tax_incl -= $reductionValues['value_tax_incl'];
         $order->total_paid_tax_excl -= $reductionValues['value_tax_excl'];
 
-        return $order->update();
+        if (false === $order->update()) {
+            throw new OrderException('An error occurred trying to apply cart rule to order');
+        }
     }
 }
