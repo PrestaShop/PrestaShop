@@ -1360,6 +1360,52 @@ class OrderController extends FrameworkBundleAdminController
     }
 
     /**
+     * @AdminSecurity("is_granted('read'")
+     * @param int $currentOrderId
+     *
+     * @return void
+     */
+    public function nextOrderAction(int $currentOrderId)
+    {
+        try {
+            $nextOrderId = $currentOrderId++;
+            /** @var OrderForViewing $orderForViewing */
+            $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($nextOrderId));
+            $this->redirectToRoute('admin_orders_view', [
+                'orderId' => $orderForViewing->getId(),
+            ]);
+        } catch (Exception $e) {
+            $this->redirectToRoute('admin_orders_view', [
+                'orderId' => $currentOrderId,
+            ]);
+        }
+    }
+
+    /**
+     * @AdminSecurity("is_granted('read'")
+     * @param int $currentOrderId
+     *
+     * @return void
+     */
+    public function prevOrderAction(int $currentOrderId)
+    {
+        try {
+            $nextOrderId = $currentOrderId--;
+            /** @var OrderForViewing $orderForViewing */
+            $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($nextOrderId));
+            $this->redirectToRoute('admin_orders_view', [
+                'orderId' => $orderForViewing->getId(),
+            ]);
+        } catch (Exception $e) {
+            $this->redirectToRoute('admin_orders_view', [
+                'orderId' => $currentOrderId,
+            ]);
+        }
+    }
+
+
+
+    /**
      * Initializes order status update
      *
      * @param int $orderId
