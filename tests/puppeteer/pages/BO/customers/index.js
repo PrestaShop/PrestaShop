@@ -303,7 +303,7 @@ module.exports = class Customers extends BOBasePage {
    * @param sortDirection, asc or desc
    * @return {Promise<void>}
    */
-  async sortTable(sortBy, sortDirection = 'asc') {
+  async sortTable(sortBy, sortDirection) {
     const sortColumnDiv = `${this.sortColumnDiv.replace('%COLUMN', sortBy)}[data-sort-direction='${sortDirection}']`;
     const sortColumnSpanButton = this.sortColumnSpanButton.replace('%COLUMN', sortBy);
     let i = 0;
