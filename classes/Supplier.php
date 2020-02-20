@@ -395,7 +395,7 @@ class SupplierCore extends ObjectModel
 					' . ($front ? ' AND product_shop.`visibility` IN ("both", "catalog")' : '') . '
 				GROUP BY ps.id_product';
 
-        if ($finalOrderBy != 'price') {
+        if ($finalOrderBy !== 'price') {
             $sql .= '
 				ORDER BY ' . $alias . '`' . bqSQL($orderBy) . '` ' . pSQL($orderWay) . '
 				LIMIT ' . (((int) $p - 1) * (int) $n) . ',' . (int) $n;
