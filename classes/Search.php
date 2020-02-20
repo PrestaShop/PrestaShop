@@ -431,7 +431,7 @@ class SearchCore
 				WHERE p.`id_product` ' . $product_pool . '
 				GROUP BY product_shop.id_product';
 
-        if ($finalOrderBy != 'price') {
+        if ($finalOrderBy !== 'price') {
             $sql .= ($order_by ? ' ORDER BY  ' . $alias . $order_by : '') . ($order_way ? ' ' . $order_way : '') . '
 				LIMIT ' . (int) (($page_number - 1) * $page_size) . ',' . (int) $page_size;
         }
