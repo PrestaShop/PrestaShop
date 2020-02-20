@@ -273,7 +273,7 @@ class EditableSupplier
     }
 
     /**
-     * @return array|null ?array
+     * @return array|null
      */
     public function getLogoImage(): ?array
     {
