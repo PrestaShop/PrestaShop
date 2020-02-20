@@ -8,6 +8,18 @@
     }
   }
 
+  .order {
+    &-actions {
+      > * {
+        margin-bottom: 0.9375rem;
+
+        &:not(:last-child) {
+          margin-right: 0.625rem;
+        }
+      }
+    }
+  }
+
   // Todo: Change it in the UIKit for 1.7.8 but this change is for 1.7.7
   #orderProductsOriginalPosition {
     .cellProductQuantity {
