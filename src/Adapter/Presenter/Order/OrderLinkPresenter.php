@@ -26,12 +26,13 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Order\Presenter;
+namespace PrestaShop\PrestaShop\Adapter\Presenter\Order;
 
 use Order;
+use PrestaShop\PrestaShop\Core\Foundation\Templating\PresenterInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
-class OrderLinkPresenter
+class OrderLinkPresenter implements PresenterInterface
 {
     /**
      * @var UrlGeneratorInterface
@@ -43,7 +44,12 @@ class OrderLinkPresenter
         $this->urlGenerator = $urlGenerator;
     }
 
-    public function present(?int $orderId): array
+    /**
+     * @param int $orderId
+     *
+     * @return array
+     */
+    public function present($orderId): array
     {
         $order = new Order($orderId);
 
