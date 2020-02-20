@@ -438,7 +438,7 @@ class SearchCore
 
         $result = $db->executeS($sql, true, false);
 
-        if ($finalOrderBy == 'price') {
+        if ($finalOrderBy === 'price') {
             Tools::orderbyPrice($result, $order_way);
             $result = array_slice($result, (int) (($page_number - 1) * $page_size), (int) $page_size);
         }
