@@ -133,17 +133,46 @@ $order-block-background-color: #f8f8f8;
 }
 
 .messages-block {
+  padding: 3rem 0;
+
   &#all-messages-list {
     height: 80vh;
     overflow-y: scroll;
   }
 
   li {
+    &.messages-block-employee {
+      padding-left: 3.7rem;
+
+      .row {
+        justify-content: flex-end;
+      }
+    }
+
+    &.messages-block-customer {
+      padding-right: 3.7rem;
+    }
+
     .row {
-      .col-md-1 {
+      flex-wrap: nowrap;
+
+      .messages-block-icon {
+        text-align: center;
+        width: 100%;
+        max-width: 3.7rem;
       }
 
-      .col-md-11 {
+      .messages-block-content {
+        width: 100%;
+
+        .message {
+          box-shadow: 0 6px 12px 0 $background-grey;
+          padding: 0.7rem;
+        }
+      }
+
+      .text-muted {
+        margin-top: 0.6rem;
       }
     }
   }
@@ -165,17 +194,19 @@ td .editProductInvoice {
 
 @media only screen and (max-width: map-get($grid-breakpoints, xxl)) {
   .messages-block {
-    li {
-      .row {
-        .col-md-1 {
-          order: 1;
-          margin-bottom: 5px;
-        }
-
-        .col-md-11 {
-          order: 2;
-        }
+    li .row {
+      .messages-block-icon {
+        width: 100%;
+        max-width: 2.5rem;
       }
+    }
+
+    li.messages-block-customer {
+      padding-right: 2rem;
+    }
+
+    li.messages-block-employee {
+      padding-left: 2rem;
     }
   }
 }
