@@ -173,8 +173,8 @@ export default class OrderProductEdit {
         newRow: response
       });
     }, (response) => {
-      if (response.message) {
-        $.growl.error({message: response.message});
+      if (response.responseJSON !== undefined && response.responseJSON.message !== undefined) {
+        $.growl.error({message: response.responseJSON.message});
       }
     });
   }
