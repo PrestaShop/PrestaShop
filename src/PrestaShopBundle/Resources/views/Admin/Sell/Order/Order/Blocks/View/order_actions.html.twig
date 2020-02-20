@@ -23,7 +23,6 @@
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 
-<div class="mb-3 col-md-10">
   {{ form_start(updateOrderStatusActionBarForm, {
     'action': path('admin_orders_update_status', {'orderId': orderForViewing.id}),
     'attr': {
@@ -50,7 +49,7 @@
   {{ form_end(updateOrderStatusActionBarForm) }}
 
   {% if orderForViewing.documents.canGenerateInvoice %}
-    <form class="form-inline d-inline-block form-horizontal ml-2">
+    <form class="form-inline d-inline-block form-horizontal">
       <div class="input-group">
         <a href="{{ path('admin_orders_generate_invoice_pdf', {'orderId': orderForViewing.id}) }}"
            class="btn btn-action">
@@ -61,7 +60,7 @@
     </form>
   {% endif %}
 
-  <form class="form-inline d-inline-block form-horizontal ml-2">
+  <form class="form-inline d-inline-block form-horizontal">
     <div class="input-group">
       <button type="button" class="btn btn-action js-print-order-view-page">
         <i class="material-icons" aria-hidden="true">print</i>
@@ -71,7 +70,7 @@
   </form>
 
   {% if orderForViewing.documents.canGenerateDeliverySlip %}
-    <form class="form-inline d-inline-block form-horizontal ml-2">
+    <form class="form-inline d-inline-block form-horizontal">
       <div class="input-group">
         <a href="{{ path('admin_orders_generate_delivery_slip_pdf', {'orderId': orderForViewing.id}) }}"
            class="btn btn-action">
@@ -84,7 +83,7 @@
   {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/extra_order_button_actions.html.twig' %}
   {% if merchandiseReturnEnabled %}
     {% if orderForViewing.isDelivered() %}
-      <div class="form-inline d-inline-block form-horizontal ml-2">
+      <div class="form-inline d-inline-block form-horizontal">
         <div class="input-group">
           <button class="btn btn-action return-product-display" type="button"{% if not orderForViewing.isRefundable() %} disabled{% endif %}>
             <i class="material-icons">swap_horiz</i>
@@ -93,7 +92,7 @@
         </div>
       </div>
     {% elseif orderForViewing.hasBeenPaid() or orderForViewing.hasPayments() %}
-      <div class="form-inline d-inline-block form-horizontal ml-2">
+      <div class="form-inline d-inline-block form-horizontal">
         <div class="input-group">
           <button class="btn btn-action standard-refund-display" type="button"{% if not orderForViewing.isRefundable() %} disabled{% endif %}>
             <i class="material-icons">swap_horiz</i>
@@ -102,7 +101,7 @@
         </div>
       </div>
     {% else %}
-      <div class="form-inline d-inline-block form-horizontal ml-2">
+      <div class="form-inline d-inline-block form-horizontal">
         <div class="input-group">
           <button class="btn btn-action cancel-product-display" type="button">
             {{ 'Cancel products'|trans({}, 'Admin.Orderscustomers.Feature') }}
@@ -112,7 +111,7 @@
     {% endif %}
   {% endif %}
   {% if orderForViewing.hasBeenPaid() or orderForViewing.hasPayments() %}
-    <div class="form-inline d-inline-block form-horizontal ml-2">
+    <div class="form-inline d-inline-block form-horizontal">
       <div class="input-group">
         <button class="btn btn-action partial-refund-display" type="button"{% if not orderForViewing.isRefundable() %} disabled{% endif %}>
           <i class="material-icons">swap_horiz</i>
@@ -121,4 +120,3 @@
       </div>
     </div>
   {% endif %}
-</div>
