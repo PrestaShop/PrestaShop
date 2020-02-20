@@ -1051,7 +1051,7 @@ class CategoryCore extends ObjectModel
 
         if ($random === true) {
             $sql .= ' ORDER BY RAND() LIMIT ' . (int) $randomNumberProducts;
-        } elseif ($finalOrderBy != 'orderprice') {
+        } elseif ($finalOrderBy !== 'orderprice') {
             $sql .= ' ORDER BY ' . (!empty($orderByPrefix) ? $orderByPrefix . '.' : '') . '`' . bqSQL($orderBy) . '` ' . pSQL($orderWay) . '
 			LIMIT ' . (((int) $p - 1) * (int) $n) . ',' . (int) $n;
         }
