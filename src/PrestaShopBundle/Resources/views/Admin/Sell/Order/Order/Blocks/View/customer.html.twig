@@ -98,9 +98,9 @@
       </div>
     </div>
     {% endif %}
-    <div class="mt-2 info-block">
+    <div class="info-block mt-2">
       <div class="row">
-        <div class="col-md-6">
+        <div class="info-block-col col-xl-6">
           <div class="row justify-content-between no-gutters">
             <strong>{{ 'Shipping address'|trans({}, 'Admin.Orderscustomers.Feature') }}</strong>
             {% if orderForViewing.customer is not null %}
@@ -155,7 +155,7 @@
             {{ orderForViewing.shippingAddress.mobilePhoneNumber }}
           </p>
         </div>
-        <div class="col-md-6">
+        <div class="info-block-col col-xl-6">
           <div class="row justify-content-between no-gutters">
             <strong>{{ 'Invoice address'|trans({}, 'Admin.Orderscustomers.Feature') }}</strong>
 
