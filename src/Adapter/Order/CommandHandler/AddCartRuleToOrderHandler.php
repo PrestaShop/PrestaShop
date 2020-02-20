@@ -60,13 +60,17 @@ final class AddCartRuleToOrderHandler extends AbstractOrderHandler implements Ad
             $orderInvoices = $order->getInvoicesCollection()->getResults();
         }
 
-        $discountValue = (float) $command->getDiscountValue()->toPrecision(CommonAbstractType::PRESTASHOP_DECIMALS);
-        $reductionValues = $this->getReductionValues($command->getCartRuleType(), $discountValue, $order);
+        $discountValue = $command->getDiscountValue() ?
+            (float) $command->getDiscountValue()->toPrecision(CommonAbstractType::PRESTASHOP_DECIMALS) :
+            null
+        ;
+
+        $reductionValues = $this->getReductionValues($command->getCartRuleType(), $order, $discountValue);
         $reductionValuesByInvoiceId = $this->getReductionValuesByInvoiceId(
             $reductionValues,
             $command->getCartRuleType(),
-            $discountValue,
-            $orderInvoices
+            $orderInvoices,
+            $discountValue
         );
         $this->updateInvoicesDiscount($orderInvoices, $reductionValuesByInvoiceId);
 
@@ -99,16 +103,16 @@ final class AddCartRuleToOrderHandler extends AbstractOrderHandler implements Ad
     /**
      * @param array $reductionValues
      * @param string $cartRuleType
-     * @param float $discountValue
      * @param array $orderInvoices
+     * @param float $discountValue
      *
      * @return array
      */
     private function getReductionValuesByInvoiceId(
         array $reductionValues,
         string $cartRuleType,
-        float $discountValue,
-        array $orderInvoices
+        array $orderInvoices,
+        ?float $discountValue
     ): array {
         $reducedValuesByInvoiceId = [];
 
@@ -132,7 +136,7 @@ final class AddCartRuleToOrderHandler extends AbstractOrderHandler implements Ad
         return $reducedValuesByInvoiceId;
     }
 
-    private function getReductionValues(string $cartRuleType, float $discountValue, Order $order): array
+    private function getReductionValues(string $cartRuleType, Order $order, ?float $discountValue): array
     {
         $totalPaidTaxIncl = (float) $order->total_paid_tax_incl;
         $totalPaidTaxExcl = (float) $order->total_paid_tax_excl;
@@ -201,7 +205,7 @@ final class AddCartRuleToOrderHandler extends AbstractOrderHandler implements Ad
         AddCartRuleToOrderCommand $command,
         Order $order,
         array $reducedValues,
-        float $discountValue
+        ?float $discountValue
     ): CartRule {
         $cartRuleObj = new CartRule();
         $cartRuleObj->date_from = date('Y-m-d H:i:s', strtotime('-1 hour', strtotime($order->date_add)));
