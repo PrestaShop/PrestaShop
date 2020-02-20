@@ -1062,7 +1062,7 @@ class CategoryCore extends ObjectModel
             return [];
         }
 
-        if ($finalOrderBy == 'orderprice') {
+        if ($finalOrderBy === 'orderprice') {
             Tools::orderbyPrice($result, $orderWay);
             $result = array_slice($result, (int) (($p - 1) * $n), (int) $n);
         }
