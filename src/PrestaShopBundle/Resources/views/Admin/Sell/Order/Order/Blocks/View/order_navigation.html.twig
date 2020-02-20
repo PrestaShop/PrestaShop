@@ -25,18 +25,22 @@
 
 <div class="col-xs-2 mb-3 row ml-auto">
   <div class="col-xs-1 d-inline mr-1">
-    {% if previousOrder.enabled %}
-      <a href="{{ previousOrder.href }}" class="btn btn-action">
+      <a
+        href="{{ previousOrder.href }}"
+        role="button"
+        class="btn btn-action {% if not previousOrder.enabled %} disabled {% endif %}"
+       >
         <span class="material-icons">arrow_back</span>
       </a>
-    {% endif %}
   </div>
 
-  <div class="col-xs-1 ui-button d-inline">
-    {% if nextOrder.enabled %}
-      <a href="{{ nextOrder.href }}" class="btn btn-action">
+  <div class="col-xs-1 d-inline">
+      <a
+        href="{{ nextOrder.href }}"
+        role="button"
+        class="btn btn-action {% if not nextOrder.enabled %} disabled {% endif %}"
+      >
         <span class="material-icons">arrow_forward</span>
       </a>
-    {% endif %}
   </div>
 </div>
