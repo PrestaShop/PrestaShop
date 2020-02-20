@@ -456,7 +456,6 @@ class OrderController extends FrameworkBundleAdminController
             'priceSpecification' => $this->getContextLocale()->getPriceSpecification($orderCurrency->iso_code)->toArray(),
             'previousOrder' => $orderLinkPresenter->present($this->getPreviousOrderId($orderId)),
             'nextOrder' => $orderLinkPresenter->present($this->getNextOrderId($orderId)),
-
         ]);
     }
 
@@ -1565,5 +1564,4 @@ class OrderController extends FrameworkBundleAdminController
 
         return $nextOrderId;
     }
-
 }
