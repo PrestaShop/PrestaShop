@@ -999,7 +999,7 @@ class CategoryCore extends ObjectModel
             $orderByPrefix = 'p';
         } elseif ($orderBy === 'name') {
             $orderByPrefix = 'pl';
-        } elseif ($orderBy == 'manufacturer' || $orderBy == 'manufacturer_name') {
+        } elseif ($orderBy === 'manufacturer' || $orderBy === 'manufacturer_name') {
             $orderByPrefix = 'm';
             $orderBy = 'name';
         } elseif ($orderBy === 'position') {
