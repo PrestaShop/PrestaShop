@@ -8,6 +8,16 @@
     }
   }
 
+  // Todo: Change it in the UIKit for 1.7.8 but this change is for 1.7.7
+  #orderProductsOriginalPosition {
+    .cellProductQuantity {
+      .rounded-circle {
+        border-radius: 100px !important;
+        min-width: 22px;
+      }
+    }
+  }
+
   @media not print {
     .card-details {
       border: none;
