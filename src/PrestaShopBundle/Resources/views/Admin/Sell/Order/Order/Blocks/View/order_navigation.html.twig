@@ -26,7 +26,7 @@
 <div class="row col-md-2 mb-3 pull-right">
   <div class="col text-right ">
     {% if previousOrder.enabled %}
-      <a href="{{ previousOrder.href }}" class="btn btn-primary">
+      <a href="{{ previousOrder.href }}" class="btn btn-action">
         <span class="material-icons">arrow_back</span>
       </a>
     {% endif %}
@@ -34,7 +34,7 @@
 
   <div class="col text-right">
     {% if nextOrder.enabled %}
-      <a href="{{ nextOrder.href }}" class="btn btn-primary">
+      <a href="{{ nextOrder.href }}" class="btn btn-action">
         <span class="material-icons">arrow_forward</span>
       </a>
     {% endif %}
