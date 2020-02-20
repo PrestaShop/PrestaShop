@@ -207,3 +207,6 @@ services:
     class: PrestaShop\PrestaShop\Core\Domain\Order\Presenter\OrderLinkPresenter
     arguments:
       - '@router.default'
+
+  prestashop.adapter.order.order_sibling_provider:
+    class: PrestaShop\PrestaShop\Adapter\Order\OrderSiblingProvider

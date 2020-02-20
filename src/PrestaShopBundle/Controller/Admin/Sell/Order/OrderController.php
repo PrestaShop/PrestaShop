@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Controller\Admin\Sell\Order;
 
 use Exception;
+use PrestaShop\PrestaShop\Adapter\Order\OrderSiblingProvider;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartInformation;
 use PrestaShop\PrestaShop\Core\Domain\CustomerMessage\Command\AddOrderCustomerMessageCommand;
 use PrestaShop\PrestaShop\Core\Domain\CustomerMessage\Exception\CannotSendEmailException;
@@ -56,6 +57,7 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Invoice\Command\GenerateInvoiceComma
 use PrestaShop\PrestaShop\Core\Domain\Order\Invoice\Command\UpdateInvoiceNoteCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\OrderConstraints;
 use PrestaShop\PrestaShop\Core\Domain\Order\Payment\Command\AddPaymentCommand;
+use PrestaShop\PrestaShop\Core\Domain\Order\Presenter\OrderLinkPresenter;
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\AddProductToOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\DeleteProductFromOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\UpdateProductInOrderCommand;
@@ -69,6 +71,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductOutOfStockExcepti
 use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\OrderGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Multistore\MultistoreContextCheckerInterface;
+use PrestaShop\PrestaShop\Core\Order\OrderSiblingProviderInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\OrderFilters;
 use PrestaShopBundle\Component\CsvResponse;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
@@ -429,7 +432,7 @@ class OrderController extends FrameworkBundleAdminController
 
         $merchandiseReturnEnabled = (bool) $this->configuration->get('PS_ORDER_RETURN');
 
-        /** @var \PrestaShop\PrestaShop\Core\Domain\Order\Presenter\OrderLinkPresenter $orderLinkPresenter */
+        /** @var OrderLinkPresenter $orderLinkPresenter */
         $orderLinkPresenter = $this->get('prestashop.adapter.presenter.order_link_presenter');
 
         return $this->render('@PrestaShop/Admin/Sell/Order/Order/view.html.twig', [
@@ -1536,15 +1539,10 @@ class OrderController extends FrameworkBundleAdminController
      */
     private function getPreviousOrderId(int $orderId)
     {
-        try {
-            /** @var OrderForViewing $previousOrderForViewing */
-            $previousOrderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId - 1));
-            $previousOrderId = $previousOrderForViewing->getId();
-        } catch (Exception $e) {
-            $previousOrderId = null;
-        }
+        /** @var OrderSiblingProviderInterface $orderSiblingProvider */
+        $orderSiblingProvider = $this->get('prestashop.adapter.order.order_sibling_provider');
 
-        return $previousOrderId;
+        return $orderSiblingProvider->getPreviousOrder($orderId) ?: null;
     }
 
     /**
@@ -1554,14 +1552,9 @@ class OrderController extends FrameworkBundleAdminController
      */
     private function getNextOrderId(int $orderId)
     {
-        try {
-            /** @var OrderForViewing $nextOrderForViewing */
-            $nextOrderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId + 1));
-            $nextOrderId = $nextOrderForViewing->getId();
-        } catch (Exception $e) {
-            $nextOrderId = null;
-        }
+        /** @var OrderSiblingProviderInterface $orderSiblingProvider */
+        $orderSiblingProvider = $this->get('prestashop.adapter.order.order_sibling_provider');
 
-        return $nextOrderId;
+        return $orderSiblingProvider->getNextOrder($orderId) ?: null;
     }
 }
