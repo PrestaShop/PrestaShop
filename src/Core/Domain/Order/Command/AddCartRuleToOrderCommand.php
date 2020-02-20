@@ -48,12 +48,12 @@ class AddCartRuleToOrderCommand
     private $cartRuleName;
 
     /**
-     * @var int
+     * @var string
      */
     private $cartRuleType;
 
     /**
-     * @var float
+     * @var Number|null
      */
     private $value;
 
@@ -103,7 +103,7 @@ class AddCartRuleToOrderCommand
     }
 
     /**
-     * @return int
+     * @return string
      */
     public function getCartRuleType(): string
     {
