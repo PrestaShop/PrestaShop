@@ -45,6 +45,7 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Command\UpdateOrderShippingDetailsCo
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\UpdateOrderStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\CannotEditDeliveredOrderProductException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\ChangeOrderStatusException;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidAmountException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidCancelProductException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidOrderStateException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\NegativePaymentAmountException;
@@ -600,28 +601,35 @@ class OrderController extends FrameworkBundleAdminController
     public function addProductAction(int $orderId, Request $request): Response
     {
         $invoiceId = (int) $request->get('invoice_id');
-        if ($invoiceId > 0) {
-            $addProductCommand = AddProductToOrderCommand::toExistingInvoice(
-                $orderId,
-                $invoiceId,
-                (int) $request->get('product_id'),
-                (int) $request->get('combination_id'),
-                (float) $request->get('price_tax_incl'),
-                (float) $request->get('price_tax_excl'),
-                (int) $request->get('quantity')
-            );
-        } else {
-            $addProductCommand = AddProductToOrderCommand::withNewInvoice(
-                $orderId,
-                (int) $request->get('product_id'),
-                (int) $request->get('combination_id'),
-                (float) $request->get('price_tax_incl'),
-                (float) $request->get('price_tax_excl'),
-                (int) $request->get('quantity'),
-                filter_var($request->get('free_shipping'), FILTER_VALIDATE_BOOLEAN)
+        try {
+            if ($invoiceId > 0) {
+                $addProductCommand = AddProductToOrderCommand::toExistingInvoice(
+                    $orderId,
+                    $invoiceId,
+                    (int) $request->get('product_id'),
+                    (int) $request->get('combination_id'),
+                    $request->get('price_tax_incl'),
+                    $request->get('price_tax_excl'),
+                    (int) $request->get('quantity')
+                );
+            } else {
+                $addProductCommand = AddProductToOrderCommand::withNewInvoice(
+                    $orderId,
+                    (int) $request->get('product_id'),
+                    (int) $request->get('combination_id'),
+                    $request->get('price_tax_incl'),
+                    $request->get('price_tax_excl'),
+                    (int) $request->get('quantity'),
+                    filter_var($request->get('free_shipping'), FILTER_VALIDATE_BOOLEAN)
+                );
+            }
+            $this->getCommandBus()->handle($addProductCommand);
+        } catch (Exception $e) {
+            return $this->json(
+                ['message' => $this->getErrorMessageForException($e, $this->getErrorMessages($e))],
+                Response::HTTP_BAD_REQUEST
             );
         }
-        $this->getCommandBus()->handle($addProductCommand);
 
         /** @var OrderForViewing $orderForViewing */
         $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
@@ -781,16 +789,23 @@ class OrderController extends FrameworkBundleAdminController
      */
     public function updateProductAction(int $orderId, int $orderDetailId, Request $request): Response
     {
-        $this->getCommandBus()->handle(
-            new UpdateProductInOrderCommand(
-                $orderId,
-                $orderDetailId,
-                (float) $request->get('price_tax_incl'),
-                (float) $request->get('price_tax_excl'),
-                (int) $request->get('quantity'),
-                (int) $request->get('invoice')
-            )
-        );
+        try {
+            $this->getCommandBus()->handle(
+                new UpdateProductInOrderCommand(
+                    $orderId,
+                    $orderDetailId,
+                    $request->get('price_tax_incl'),
+                    $request->get('price_tax_excl'),
+                    (int) $request->get('quantity'),
+                    (int) $request->get('invoice')
+                )
+            );
+        } catch (Exception $e) {
+            return $this->json(
+                ['message' => $this->getErrorMessageForException($e, $this->getErrorMessages($e))],
+                Response::HTTP_BAD_REQUEST
+            );
+        }
 
         /** @var OrderForViewing $orderForViewing */
         $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
@@ -1421,6 +1436,10 @@ class OrderController extends FrameworkBundleAdminController
             ),
             OrderException::class => $this->trans(
                 $e->getMessage(),
+                'Admin.Orderscustomers.Notification'
+            ),
+            InvalidAmountException::class => $this->trans(
+                'Only numbers and decimal points (".") are allowed in the amount fields, e.g. 10.50 or 1050.',
                 'Admin.Orderscustomers.Notification'
             ),
             InvalidCancelProductException::class => [
