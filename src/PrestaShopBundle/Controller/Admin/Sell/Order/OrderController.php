@@ -1541,7 +1541,7 @@ class OrderController extends FrameworkBundleAdminController
         /** @var OrderSiblingProviderInterface $orderSiblingProvider */
         $orderSiblingProvider = $this->get('prestashop.adapter.order.order_sibling_provider');
 
-        return $orderSiblingProvider->getPreviousOrder($orderId) ?: null;
+        return $orderSiblingProvider->getPreviousOrderId($orderId) ?: null;
     }
 
     /**
@@ -1554,6 +1554,6 @@ class OrderController extends FrameworkBundleAdminController
         /** @var OrderSiblingProviderInterface $orderSiblingProvider */
         $orderSiblingProvider = $this->get('prestashop.adapter.order.order_sibling_provider');
 
-        return $orderSiblingProvider->getNextOrder($orderId) ?: null;
+        return $orderSiblingProvider->getNextOrderId($orderId) ?: null;
     }
 }

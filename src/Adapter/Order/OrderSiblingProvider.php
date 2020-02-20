@@ -36,20 +36,20 @@ class OrderSiblingProvider implements OrderSiblingProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function getNextOrder(int $orderId): int
+    public function getNextOrderId(int $orderId): int
     {
         $order = new Order($orderId);
 
-        return $order->getNextOrderId();
+        return (int) $order->getNextOrderId();
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getPreviousOrder(int $orderId): int
+    public function getPreviousOrderId(int $orderId): int
     {
         $order = new Order($orderId);
 
-        return $order->getPreviousOrderId();
+        return (int) $order->getPreviousOrderId();
     }
 }

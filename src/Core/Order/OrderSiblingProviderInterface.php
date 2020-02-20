@@ -35,12 +35,12 @@ interface OrderSiblingProviderInterface
      *
      * @return int
      */
-    public function getNextOrder(int $orderId): int;
+    public function getNextOrderId(int $orderId): int;
 
     /**
      * @param int $orderId
      *
      * @return int
      */
-    public function getPreviousOrder(int $orderId): int;
+    public function getPreviousOrderId(int $orderId): int;
 }
