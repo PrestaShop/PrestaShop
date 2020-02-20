@@ -995,7 +995,7 @@ class CategoryCore extends ObjectModel
         $orderWay = Validate::isOrderWay($orderWay) ? Tools::strtoupper($orderWay) : 'ASC';
 
         $orderByPrefix = false;
-        if ($orderBy == 'id_product' || $orderBy == 'date_add' || $orderBy == 'date_upd') {
+        if ($orderBy === 'id_product' || $orderBy === 'date_add' || $orderBy === 'date_upd') {
             $orderByPrefix = 'p';
         } elseif ($orderBy == 'name') {
             $orderByPrefix = 'pl';
