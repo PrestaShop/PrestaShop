@@ -473,9 +473,13 @@ class Install extends AbstractInstall
 
         try {
             if ($entity) {
-                $xml_loader->populateEntity($entity);
+                $this->callWithUnityAutoincrement(function () use ($xml_loader, $entity) {
+                    $xml_loader->populateEntity($entity);
+                });
             } else {
-                $xml_loader->populateFromXmlFiles();
+                $this->callWithUnityAutoincrement(function () use ($xml_loader) {
+                    $xml_loader->populateFromXmlFiles();
+                });
             }
             if ($errors = $xml_loader->getErrors()) {
                 $this->setError($errors);
@@ -525,6 +529,8 @@ class Install extends AbstractInstall
 
         // Create default shop
         $shop = new Shop();
+        $shop->id = 1;
+        $shop->force_id = true;
         $shop->active = true;
         $shop->id_shop_group = $shop_group->id;
         $shop->id_category = 2;
@@ -573,7 +579,9 @@ class Install extends AbstractInstall
 
         foreach ($languages_list as $iso) {
             if (!in_array($iso, $languages_available)) {
-                EntityLanguage::downloadAndInstallLanguagePack($iso);
+                $this->callWithUnityAutoincrement(function () use ($iso) {
+                    EntityLanguage::downloadAndInstallLanguagePack($iso);
+                });
 
                 continue;
             }
@@ -595,7 +603,9 @@ class Install extends AbstractInstall
             ];
 
             if (InstallSession::getInstance()->safe_mode) {
-                EntityLanguage::checkAndAddLanguage($iso, false, true, $params_lang);
+                $this->callWithUnityAutoincrement(function () use ($iso, $params_lang) {
+                    EntityLanguage::checkAndAddLanguage($iso, false, true, $params_lang);
+                });
             } else {
                 if (file_exists(_PS_TRANSLATIONS_DIR_ . (string) $iso . '.gzip') == false) {
                     $language = EntityLanguage::downloadLanguagePack($iso, _PS_INSTALL_VERSION_);
@@ -606,7 +616,9 @@ class Install extends AbstractInstall
                 }
 
                 $errors = [];
-                EntityLanguage::installLanguagePack($iso, $params_lang, $errors);
+                $this->callWithUnityAutoincrement(function () use ($iso, $params_lang, &$errors) {
+                    EntityLanguage::installLanguagePack($iso, $params_lang, $errors);
+                });
             }
 
             EntityLanguage::loadLanguages();
@@ -804,11 +816,15 @@ class Install extends AbstractInstall
         $localization_file_content = $this->getLocalizationPackContent($version, $data['shop_country']);
 
         $locale = new LocalizationPack();
-        $locale->loadLocalisationPack($localization_file_content, false, true);
+        $this->callWithUnityAutoincrement(function () use ($locale, $localization_file_content) {
+            $locale->loadLocalisationPack($localization_file_content, false, true);
+        });
 
         // Create default employee
         if (isset($data['admin_firstname'], $data['admin_lastname'], $data['admin_password'], $data['admin_email'])) {
             $employee = new Employee();
+            $employee->id = 1;
+            $employee->force_id = true;
             $employee->firstname = Tools::ucfirst($data['admin_firstname']);
             $employee->lastname = Tools::ucfirst($data['admin_lastname']);
             $employee->email = $data['admin_email'];
@@ -1112,9 +1128,13 @@ class Install extends AbstractInstall
         $xml_loader->setLanguages($languages);
 
         if ($entity) {
-            $xml_loader->populateEntity($entity);
+            $this->callWithUnityAutoincrement(function () use ($xml_loader, $entity) {
+                $xml_loader->populateEntity($entity);
+            });
         } else {
-            $xml_loader->populateFromXmlFiles();
+            $this->callWithUnityAutoincrement(function () use ($xml_loader) {
+                $xml_loader->populateFromXmlFiles();
+            });
             Tools::deleteDirectory($temp_dir, true);
             @unlink($zip_file);
         }
@@ -1170,5 +1190,29 @@ class Install extends AbstractInstall
         }
 
         return true;
+    }
+
+    /**
+     * Call callback with database connection temporary
+     * configured with auto increment value and offset to 1.
+     */
+    public function callWithUnityAutoincrement(callable $callback, ...$args)
+    {
+        $db = Db::getInstance();
+
+        $backupAiIncrement = $db->executeS('SELECT @@SESSION.auto_increment_increment AS v;', true, false)[0]['v'];
+        $backupAiOffset = $db->executeS('SELECT @@SESSION.auto_increment_offset AS v;', true, false)[0]['v'];
+        if ($backupAiIncrement > 1 || $backupAiOffset > 1) {
+            $db->execute('SET SESSION auto_increment_offset = 1', false);
+            $db->execute('SET SESSION auto_increment_increment = 1', false);
+        }
+        try {
+            return $callback(...$args);
+        } finally {
+            if ($backupAiIncrement > 1 || $backupAiOffset > 1) {
+                $db->execute('SET SESSION auto_increment_offset = ' . (int) $backupAiOffset, false);
+                $db->execute('SET SESSION auto_increment_increment = ' . (int) $backupAiIncrement, false);
+            }
+        }
     }
 }
