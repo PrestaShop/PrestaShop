@@ -412,12 +412,10 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
                     }
                 }
             }
-
             unset($pack_item);
 
             $product['pack_items'] = $pack_items;
         }
-
         unset($product);
 
         ksort($products);

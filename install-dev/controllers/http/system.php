@@ -173,6 +173,7 @@ class InstallControllerHttpSystem extends InstallControllerHttp implements HttpC
                 }
             }
         }
+        unset($category);
 
         //if sf2 requirement error found, force the required success to false
         if (count($testsRequiredsf2) > 0) {

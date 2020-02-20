@@ -755,6 +755,7 @@ class Install extends AbstractInstall
                 $group_default = $group_default['name'];
             }
         }
+        unset($group_default);
 
         if (is_array($groups) && count($groups)) {
             foreach ($groups as $key => $group) {
@@ -772,6 +773,7 @@ class Install extends AbstractInstall
                 $state_default = $state_default['name'];
             }
         }
+        unset($state_default);
 
         if (is_array($states) && count($states)) {
             foreach ($states as $key => $state) {
