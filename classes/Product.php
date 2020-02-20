@@ -2672,7 +2672,7 @@ class ProductCore extends ObjectModel
             WHERE cp.`id_product` = p.`id_product`)');
         }
 
-        if ($finalOrderBy != 'price') {
+        if ($finalOrderBy !== 'price') {
             $sql->orderBy((isset($order_by_prefix) ? pSQL($order_by_prefix) . '.' : '') . '`' . pSQL($order_by) . '` ' . pSQL($order_way));
             $sql->limit($nb_products, (int) (($page_number - 1) * $nb_products));
         }
