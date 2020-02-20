@@ -1,4 +1,13 @@
 #order-view-page {
+  #historyTabContent {
+    .badge {
+      font-size: 0.875rem;
+      line-height: 1.5;
+      padding: 0 5px;
+      font-weight: 600;
+    }
+  }
+
   @media not print {
     .card-details {
       border: none;
