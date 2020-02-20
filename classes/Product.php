@@ -2689,7 +2689,7 @@ class ProductCore extends ObjectModel
             return false;
         }
 
-        if ($finalOrderBy == 'price') {
+        if ($finalOrderBy === 'price') {
             Tools::orderbyPrice($result, $order_way);
             $result = array_slice($result, (int) (($nb_products - 1) * $page_number), (int) $page_number);
         }
