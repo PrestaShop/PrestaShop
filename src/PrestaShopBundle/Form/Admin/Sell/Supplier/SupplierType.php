@@ -217,9 +217,6 @@ class SupplierType extends TranslatorAwareType
             ])
             ->add('id_state', ChoiceType::class, [
                 'required' => true,
-                'attr' => [
-                    'class' => empty($stateChoices) ? 'd-none' : '',
-                ],
                 'choices' => $stateChoices,
                 'constraints' => [
                     new AddressStateRequired([

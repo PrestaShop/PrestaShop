@@ -90,7 +90,7 @@
         'label': 'Country'|trans({}, 'Admin.Global'),
       }) }}
 
-      <div class="js-supplier-state {{ supplierForm.children.id_state.vars.attr.class }}">
+      <div class="js-supplier-state {% if supplierForm.id_state.vars.choices is empty %} d-none{% endif %}">
         {{ ps.form_group_row(supplierForm.id_state, {}, {
           'label': 'State'|trans({}, 'Admin.Global'),
         }) }}
