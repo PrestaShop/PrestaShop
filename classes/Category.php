@@ -1002,7 +1002,7 @@ class CategoryCore extends ObjectModel
         } elseif ($orderBy == 'manufacturer' || $orderBy == 'manufacturer_name') {
             $orderByPrefix = 'm';
             $orderBy = 'name';
-        } elseif ($orderBy == 'position') {
+        } elseif ($orderBy === 'position') {
             $orderByPrefix = 'cp';
         }
 
