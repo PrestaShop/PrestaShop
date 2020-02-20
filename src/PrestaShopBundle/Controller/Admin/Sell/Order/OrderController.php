@@ -429,6 +429,9 @@ class OrderController extends FrameworkBundleAdminController
 
         $merchandiseReturnEnabled = (bool) $this->configuration->get('PS_ORDER_RETURN');
 
+        /** @var \PrestaShop\PrestaShop\Core\Domain\Order\Presenter\OrderLinkPresenter $orderLinkPresenter */
+        $orderLinkPresenter = $this->get('prestashop.adapter.presenter.order_link_presenter');
+
         return $this->render('@PrestaShop/Admin/Sell/Order/Order/view.html.twig', [
             'showContentHeader' => true,
             'orderCurrency' => $orderCurrency,
@@ -451,6 +454,9 @@ class OrderController extends FrameworkBundleAdminController
             'backOfficeOrderButtons' => $backOfficeOrderButtons,
             'merchandiseReturnEnabled' => $merchandiseReturnEnabled,
             'priceSpecification' => $this->getContextLocale()->getPriceSpecification($orderCurrency->iso_code)->toArray(),
+            'previousOrder' => $orderLinkPresenter->present($this->getPreviousOrderId($orderId)),
+            'nextOrder' => $orderLinkPresenter->present($this->getNextOrderId($orderId)),
+
         ]);
     }
 
@@ -1360,52 +1366,6 @@ class OrderController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('read'")
-     *
-     * @param int $currentOrderId
-     *
-     * @return void
-     */
-    public function nextOrderAction(int $currentOrderId)
-    {
-        try {
-            $nextOrderId = $currentOrderId++;
-            /** @var OrderForViewing $orderForViewing */
-            $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($nextOrderId));
-            $this->redirectToRoute('admin_orders_view', [
-                'orderId' => $orderForViewing->getId(),
-            ]);
-        } catch (Exception $e) {
-            $this->redirectToRoute('admin_orders_view', [
-                'orderId' => $currentOrderId,
-            ]);
-        }
-    }
-
-    /**
-     * @AdminSecurity("is_granted('read'")
-     *
-     * @param int $currentOrderId
-     *
-     * @return void
-     */
-    public function previousOrderAction(int $currentOrderId)
-    {
-        try {
-            $nextOrderId = $currentOrderId--;
-            /** @var OrderForViewing $orderForViewing */
-            $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($nextOrderId));
-            $this->redirectToRoute('admin_orders_view', [
-                'orderId' => $orderForViewing->getId(),
-            ]);
-        } catch (Exception $e) {
-            $this->redirectToRoute('admin_orders_view', [
-                'orderId' => $currentOrderId,
-            ]);
-        }
-    }
-
-    /**
      * Initializes order status update
      *
      * @param int $orderId
@@ -1569,4 +1529,41 @@ class OrderController extends FrameworkBundleAdminController
             ],
         ];
     }
+
+    /**
+     * @param int $orderId
+     *
+     * @return int|null
+     */
+    private function getPreviousOrderId(int $orderId)
+    {
+        try {
+            /** @var OrderForViewing $previousOrderForViewing */
+            $previousOrderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId - 1));
+            $previousOrderId = $previousOrderForViewing->getId();
+        } catch (Exception $e) {
+            $previousOrderId = null;
+        }
+
+        return $previousOrderId;
+    }
+
+    /**
+     * @param int $orderId
+     *
+     * @return int|null
+     */
+    private function getNextOrderId(int $orderId)
+    {
+        try {
+            /** @var OrderForViewing $nextOrderForViewing */
+            $nextOrderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId + 1));
+            $nextOrderId = $nextOrderForViewing->getId();
+        } catch (Exception $e) {
+            $nextOrderId = null;
+        }
+
+        return $nextOrderId;
+    }
+
 }

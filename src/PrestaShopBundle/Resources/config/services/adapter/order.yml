@@ -202,3 +202,8 @@ services:
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Order\Command\CancelOrderProductCommand
+
+  prestashop.adapter.presenter.order_link_presenter:
+    class: PrestaShop\PrestaShop\Core\Domain\Order\Presenter\OrderLinkPresenter
+    arguments:
+      - '@router.default'

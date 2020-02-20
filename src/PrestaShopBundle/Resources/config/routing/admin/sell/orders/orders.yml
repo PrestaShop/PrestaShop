@@ -314,15 +314,3 @@ admin_orders_cancellation:
     orderId: \d+
   options:
     expose: true
-
-admin_orders_next_order:
-  path: /
-  methods: [GET]
-  defaults:
-    _controller: PrestaShopBundle:Admin/Sell/Order/Order:nextOrder
-
-admin_orders_previous_order:
-  path: /
-  methods: [GET]
-  defaults:
-    _controller: PrestaShopBundle:Admin/Sell/Order/Order:previousOrder
