@@ -62,9 +62,7 @@ class DeliveryControllerTest extends WebTestCase
             ),
             [
                 'form' => [
-                    'options' => [
-                        'number' => 'foo',
-                    ],
+                    'number' => 'foo',
                     '_token' => $token->getValue(),
                 ],
             ]
@@ -87,9 +85,7 @@ class DeliveryControllerTest extends WebTestCase
             ),
             [
                 'form' => [
-                    'options' => [
-                        'number' => '100',
-                    ],
+                    'number' => '100',
                     '_token' => $token->getValue(),
                 ],
             ]
@@ -116,9 +112,7 @@ class DeliveryControllerTest extends WebTestCase
             ),
             [
                 'slip_pdf_form' => [
-                    'pdf' => [
-                        'date_from' => 'foo',
-                    ],
+                    'date_from' => 'foo',
                     '_token' => $token->getValue(),
                 ],
             ]
@@ -145,7 +139,6 @@ class DeliveryControllerTest extends WebTestCase
             ),
             [
                 'slip_pdf_form' => [
-                    'pdf' => [],
                     '_token' => $token->getValue(),
                 ],
             ]
