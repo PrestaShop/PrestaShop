@@ -1361,6 +1361,7 @@ class OrderController extends FrameworkBundleAdminController
 
     /**
      * @AdminSecurity("is_granted('read'")
+     *
      * @param int $currentOrderId
      *
      * @return void
@@ -1383,11 +1384,12 @@ class OrderController extends FrameworkBundleAdminController
 
     /**
      * @AdminSecurity("is_granted('read'")
+     *
      * @param int $currentOrderId
      *
      * @return void
      */
-    public function prevOrderAction(int $currentOrderId)
+    public function previousOrderAction(int $currentOrderId)
     {
         try {
             $nextOrderId = $currentOrderId--;
@@ -1402,8 +1404,6 @@ class OrderController extends FrameworkBundleAdminController
             ]);
         }
     }
-
-
 
     /**
      * Initializes order status update
