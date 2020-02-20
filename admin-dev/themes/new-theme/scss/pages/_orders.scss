@@ -72,6 +72,12 @@ $order-block-background-color: #f8f8f8;
   padding-left: 18px;
   padding-right: 18px;
   padding-bottom: 16px;
+
+  & &-col {
+    > .row {
+      flex-wrap: nowrap;
+    }
+  }
 }
 
 #order-creation-container {
