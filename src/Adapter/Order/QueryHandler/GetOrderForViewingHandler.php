@@ -221,12 +221,17 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
     /**
      * @param Order $order
      *
-     * @return OrderCustomerForViewing
+     * @return OrderCustomerForViewing|null
      */
-    private function getOrderCustomer(Order $order): OrderCustomerForViewing
+    private function getOrderCustomer(Order $order): ?OrderCustomerForViewing
     {
         $currency = new Currency($order->id_currency);
         $customer = new Customer($order->id_customer);
+
+        if (!Validate::isLoadedObject($customer)) {
+            return null;
+        }
+
         $gender = new Gender($customer->id_gender);
         $genderName = '';
 
