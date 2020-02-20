@@ -23,13 +23,14 @@
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 
-<li class="mb-2">
-  <div class="row">
+ <li class="mb-2{% if message.employeeId %} messages-block-employee{% else %} messages-block-customer{% endif %}">
+  <div class="row no-gutters">
     {% if not message.employeeId %}
-      <div class="col-md-1">
+      <div class="messages-block-icon">
         <i class="material-icons">account_circle</i>
       </div>
-      <div class="col-md-11">
+
+      <div class="messages-block-content">
         <p class="mb-0 message customer-message">
           {{ message.message|nl2br }}
         </p>
@@ -41,7 +42,7 @@
     {% endif %}
 
     {% if message.employeeId %}
-      <div class="col-md-11">
+      <div class="messages-block-content">
         <p class="mb-0 message employee-message{{ message.isPrivate ? '--private' : '' }}">
           {{ message.message|nl2br }}
         </p>
@@ -55,7 +56,8 @@
           {{ message.messageDate.format }}
         </p>
       </div>
-      <div class="col-md-1">
+
+      <div class="messages-block-icon">
         <i class="material-icons employee-icon{{ message.isPrivate ? '--private' : '' }}"></i>
       </div>
     {% endif %}
