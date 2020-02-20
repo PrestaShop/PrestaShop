@@ -69,7 +69,7 @@ let fillTpl = function (results, eltAppendTo, tpl) {
     eltAppendTo.addClass('empty');
     return;
   }
-  results.forEach(function (value) {
+  results.forEach(value => {
     if (undefined === tpl) {
       return;
     }
