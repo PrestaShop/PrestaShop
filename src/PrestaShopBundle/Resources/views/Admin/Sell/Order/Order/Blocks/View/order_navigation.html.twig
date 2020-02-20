@@ -23,8 +23,8 @@
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 
-<div class="row col-md-2 mb-3">
-  <div class="col-md-1 ml-auto">
+<div class="col-md-2 mb-3 row">
+  <div class="col-md-1 ml-auto d-inline">
     {% if previousOrder.enabled %}
       <a href="{{ previousOrder.href }}" class="btn btn-action">
         <span class="material-icons">arrow_back</span>
@@ -32,7 +32,7 @@
     {% endif %}
   </div>
 
-  <div class="col-md-1 ml-auto">
+  <div class="col-md-1 ml-auto ui-button d-inline">
     {% if nextOrder.enabled %}
       <a href="{{ nextOrder.href }}" class="btn btn-action">
         <span class="material-icons">arrow_forward</span>
