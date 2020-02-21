@@ -27,8 +27,8 @@ const init = async function () {
   };
 };
 
-// Sort customers by id, social title, firstname, lastname and email
-describe('Sort customers', async () => {
+// Sort addresses by id, firstname, lastname, address, post code, city and country
+describe('Sort addresses', async () => {
   // before and after functions
   before(async function () {
     browser = await helper.createBrowser();
