@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2020 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -77,7 +77,7 @@ final class CartQueryBuilder extends AbstractDoctrineQueryBuilder
         $qb->addSelect($this->getStatusQuery() . ' AS status');
         $qb->addSelect('o.id_order');
         $qb->addSelect('CONCAT(LEFT(cu.firstname, 1), ". ", cu.lastname) AS customer_name');
-        $qb->addSelect('ca.name AS carrier_name, c.date_add, IF(con.id_guest, 1, 0) id_guest');
+        $qb->addSelect('ca.name AS carrier_name, c.date_add, IF(con.id_guest, 1, 0) AS id_guest');
         $qb->setParameter('day_in_seconds', $dayInSeconds);
 
         $this->criteriaApplicator->applyPagination($searchCriteria, $qb);

@@ -48,6 +48,8 @@ use Symfony\Component\Translation\TranslatorInterface;
 final class CartGridDataFactory implements GridDataFactoryInterface
 {
     private const DEFAULT_TWO_DASHES_VALUE = '--';
+    private const ABANDONED_CART = 'abandoned_cart';
+    private const NOT_ORDERED = 'not_ordered';
 
     /**
      * @var GridDataFactoryInterface
@@ -123,32 +125,24 @@ final class CartGridDataFactory implements GridDataFactoryInterface
      *
      * @throws CartException
      */
-    private function setRecordData($record)
+    private function setRecordData(array $record)
     {
         switch ($record['status']) {
-            case 'abandoned_cart':
+            case self::ABANDONED_CART:
                 $record['status'] = $this->translator->trans(
                     'Abandoned cart',
                     [],
                     'Admin.Orderscustomers.Feature'
                 );
                 break;
-            case 'not_ordered':
+            case self::NOT_ORDERED:
                 $record['status'] = $this->translator->trans('Not placed', [], 'Admin.Orderscustomers.Feature');
                 break;
         }
 
-        if (empty($record['carrier_name'])) {
-            $record['carrier_name'] = self::DEFAULT_TWO_DASHES_VALUE;
-        }
-
-        if (empty($record['customer_name'])) {
-            $record['customer_name'] = self::DEFAULT_TWO_DASHES_VALUE;
-        }
-
-        $record['online'] = $record['id_guest'] ?
-            $this->translator->trans('Yes', [], 'Admin.Global') :
-            $this->translator->trans('No', [], 'Admin.Global');
+        $record['carrier_name'] = $record['carrier_name'] ?: self::DEFAULT_TWO_DASHES_VALUE;
+        $record['customer_name'] = $record['customer_name'] ?: self::DEFAULT_TWO_DASHES_VALUE;
+        $record['online'] = $this->translator->trans($record['id_guest'] ? 'Yes' : 'No', [], 'Admin.Global');
 
         $cart = new Cart($record['id_cart']);
         $this->contextStateManager->setLocale($this->locale);
