@@ -96,15 +96,13 @@ final class AttachmentFileUploader implements AttachmentFileUploaderInterface
             $attachment = new Attachment($attachmentId);
             $fileLink = _PS_DOWNLOAD_DIR_ . $attachment->file;
 
-            if ($throwExceptionOnFailure) {
-                try {
-                    unlink($fileLink);
-                } catch (ErrorException $e) {
+            try {
+                unlink($fileLink);
+            } catch (ErrorException $e) {
+                if ($throwExceptionOnFailure) {
                     throw new CannotUnlinkAttachmentException($e->getMessage(), 0, null, $fileLink);
                 }
             }
-
-            @unlink($fileLink);
         } catch (PrestaShopException $e) {
             throw new AttachmentNotFoundException(sprintf('Attachment with id "%s" was not found.', $attachmentId));
         }
