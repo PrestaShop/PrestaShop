@@ -132,7 +132,7 @@ final class AttachmentGridDefinitionFactory extends AbstractGridDefinitionFactor
                                 ->setName($this->trans('Edit', [], 'Admin.Actions'))
                                 ->setIcon('edit')
                                 ->setOptions([
-                                    'route' => 'admin_attachment_edit',
+                                    'route' => 'admin_attachments_edit',
                                     'route_param_name' => 'attachmentId',
                                     'route_param_field' => 'id_attachment',
                                 ])
@@ -142,7 +142,7 @@ final class AttachmentGridDefinitionFactory extends AbstractGridDefinitionFactor
                                 ->setName($this->trans('View', [], 'Admin.Actions'))
                                 ->setIcon('zoom_in')
                                 ->setOptions([
-                                    'route' => 'admin_attachment_view',
+                                    'route' => 'admin_attachments_view',
                                     'route_param_name' => 'attachmentId',
                                     'route_param_field' => 'id_attachment',
                                 ])
@@ -152,7 +152,7 @@ final class AttachmentGridDefinitionFactory extends AbstractGridDefinitionFactor
                             ->setName($this->trans('Delete', [], 'Admin.Actions'))
                             ->setIcon('delete')
                             ->setOptions([
-                                'route' => 'admin_attachment_delete',
+                                'route' => 'admin_attachments_delete',
                                 'route_param_name' => 'attachmentId',
                                 'route_param_field' => 'id_attachment',
                                 'confirm_message' => $this->trans(
