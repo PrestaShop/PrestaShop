@@ -130,7 +130,6 @@ class CartFeatureContext extends AbstractDomainFeatureContext
      */
     public function addProductsToCarts(int $quantity, string $productName, string $cartReference)
     {
-        /** @var array $products */
         $products = $this->getQueryBus()->handle(new SearchProducts($productName, 1, Context::getContext()->currency->iso_code));
 
         if (empty($products)) {
@@ -138,7 +137,7 @@ class CartFeatureContext extends AbstractDomainFeatureContext
         }
 
         /** @var FoundProduct $product */
-        $product = $products[0];
+        $product = reset($products);
 
         $this->getCommandBus()->handle(
             new UpdateProductQuantityInCartCommand(

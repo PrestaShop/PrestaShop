@@ -745,7 +745,6 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
      */
     private function getProductIdByName(string $productName)
     {
-        /** @var array $productsMap */
         $products = $this->getQueryBus()->handle(new SearchProducts($productName, 1, Context::getContext()->currency->iso_code));
 
         if (empty($products)) {
@@ -753,7 +752,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
         }
 
         /** @var FoundProduct $product */
-        $product = $products[0];
+        $product = reset($products);
 
         return (int) $product->getProductId();
     }
