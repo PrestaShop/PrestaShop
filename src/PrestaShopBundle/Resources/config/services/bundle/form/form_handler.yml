@@ -219,17 +219,35 @@ services:
             - 'OrderDeliverySlipPdf'
             - 'slip_pdf_form'
 
-    prestashop.admin.geolocation.form_handler:
-        class: 'PrestaShop\PrestaShop\Core\Form\FormHandler'
+    prestashop.admin.geolocation.by_ip_address.form_handler:
+        class: 'PrestaShop\PrestaShop\Core\Form\Handler'
         arguments:
-            - '@=service("form.factory").createBuilder()'
+            - '@form.factory'
             - '@prestashop.core.hook.dispatcher'
-            - '@prestashop.admin.geolocation.form_data_provider'
-            -
-              'geolocation_by_id_address': 'PrestaShopBundle\Form\Admin\Improve\International\Geolocation\GeolocationByIpAddressType'
-              'geolocation_ip_address_whitelist': 'PrestaShopBundle\Form\Admin\Improve\International\Geolocation\GeolocationIpAddressWhitelistType'
-              'geolocation_options': 'PrestaShopBundle\Form\Admin\Improve\International\Geolocation\GeolocationOptionsType'
-            - 'GeolocationPage'
+            - '@prestashop.admin.geolocation.by_ip_address.form_data_provider'
+            - 'PrestaShopBundle\Form\Admin\Improve\International\Geolocation\GeolocationByIpAddressType'
+            - 'GeolocationPageByAddress'
+            - 'geolocation_by_ip_address'
+
+    prestashop.admin.geolocation.whitelist.form_handler:
+        class: 'PrestaShop\PrestaShop\Core\Form\Handler'
+        arguments:
+            - '@form.factory'
+            - '@prestashop.core.hook.dispatcher'
+            - '@prestashop.admin.geolocation.whitelist.form_data_provider'
+            - 'PrestaShopBundle\Form\Admin\Improve\International\Geolocation\GeolocationIpAddressWhitelistType'
+            - 'GeolocationPageWhitelist'
+            - 'geolocation_whitelist'
+
+    prestashop.admin.geolocation.options.form_handler:
+        class: 'PrestaShop\PrestaShop\Core\Form\Handler'
+        arguments:
+            - '@form.factory'
+            - '@prestashop.core.hook.dispatcher'
+            - '@prestashop.admin.geolocation.options.form_data_provider'
+            - 'PrestaShopBundle\Form\Admin\Improve\International\Geolocation\GeolocationOptionsType'
+            - 'GeolocationPageOptions'
+            - 'geolocation_options'
 
     prestashop.admin.localization.form_handler:
         class: 'PrestaShop\PrestaShop\Core\Form\FormHandler'
