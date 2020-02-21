@@ -98,8 +98,12 @@ class GeolocationController extends FrameworkBundleAdminController
     /**
      * Process the Geolocation Whitelist configuration form.
      *
-     * @AdminSecurity("is_granted(['read','update', 'create','delete'], request.get('_legacy_controller'))", message="You do not have permission to update this.")
-     * @DemoRestricted(redirectRoute="admin_performance")
+     * @AdminSecurity(
+     *     "is_granted(['read', 'update', 'create', 'delete'], request.get('_legacy_controller'))",
+     *     message="You do not have permission to edit this.",
+     *     redirectRoute="admin_geolocation"
+     * )
+     * @DemoRestricted(redirectRoute="admin_geolocation_index")
      *
      * @param Request $request
      *
@@ -121,8 +125,12 @@ class GeolocationController extends FrameworkBundleAdminController
     /**
      * Process the Geolocation Options configuration form.
      *
-     * @AdminSecurity("is_granted(['read','update', 'create','delete'], request.get('_legacy_controller'))", message="You do not have permission to update this.")
-     * @DemoRestricted(redirectRoute="admin_performance")
+     * @AdminSecurity(
+     *     "is_granted(['read', 'update', 'create', 'delete'], request.get('_legacy_controller'))",
+     *     message="You do not have permission to edit this.",
+     *     redirectRoute="admin_geolocation"
+     * )
+     * @DemoRestricted(redirectRoute="admin_geolocation_index")
      *
      * @param Request $request
      *

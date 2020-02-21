@@ -9,7 +9,7 @@ services:
             - '@prestashop.core.hook.dispatcher'
             - '@prestashop.adapter.performance.smarty.form_provider'
             - 'PrestaShopBundle\Form\Admin\AdvancedParameters\Performance\SmartyType'
-            - 'PerformancePage'
+            - 'PerformancePageSmarty'
             - 'smarty'
 
     prestashop.adapter.performance.debug_mode.form_handler:
@@ -19,7 +19,7 @@ services:
             - '@prestashop.core.hook.dispatcher'
             - '@prestashop.adapter.performance.debug_mode.form_provider'
             - 'PrestaShopBundle\Form\Admin\AdvancedParameters\Performance\DebugModeType'
-            - 'PerformancePage'
+            - 'PerformancePageDebugMode'
             - 'debug_mode'
 
     prestashop.adapter.performance.optional_features.form_handler:
@@ -29,7 +29,7 @@ services:
             - '@prestashop.core.hook.dispatcher'
             - '@prestashop.adapter.performance.optional_features.form_provider'
             - 'PrestaShopBundle\Form\Admin\AdvancedParameters\Performance\OptionalFeaturesType'
-            - 'PerformancePage'
+            - 'PerformancePageOptionalFeatures'
             - 'optional_features'
 
     prestashop.adapter.performance.ccc.form_handler:
@@ -39,7 +39,7 @@ services:
             - '@prestashop.core.hook.dispatcher'
             - '@prestashop.adapter.performance.ccc.form_provider'
             - 'PrestaShopBundle\Form\Admin\AdvancedParameters\Performance\CombineCompressCacheType'
-            - 'PerformancePage'
+            - 'PerformancePageCombineCompressCache'
             - 'ccc'
 
     prestashop.adapter.performance.media_servers.form_handler:
@@ -49,7 +49,7 @@ services:
             - '@prestashop.core.hook.dispatcher'
             - '@prestashop.adapter.performance.media_servers.form_provider'
             - 'PrestaShopBundle\Form\Admin\AdvancedParameters\Performance\MediaServersType'
-            - 'PerformancePage'
+            - 'PerformancePageMediaServers'
             - 'media_servers'
 
     prestashop.adapter.performance.caching.form_handler:
@@ -59,7 +59,7 @@ services:
             - '@prestashop.core.hook.dispatcher'
             - '@prestashop.adapter.performance.caching.form_provider'
             - 'PrestaShopBundle\Form\Admin\AdvancedParameters\Performance\CachingType'
-            - 'PerformancePage'
+            - 'PerformancePagecaching'
             - 'caching'
 
     prestashop.adapter.maintenance.form_handler:
