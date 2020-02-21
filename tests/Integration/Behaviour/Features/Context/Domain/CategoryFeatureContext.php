@@ -223,7 +223,8 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
 
         /** @var CategoryTreeChoiceProvider $categoryTreeChoiceProvider */
         $categoryTreeChoiceProvider = $this->container->get(
-            'prestashop.adapter.form.choice_provider.category_tree_choice_provider');
+            'prestashop.adapter.form.choice_provider.category_tree_choice_provider'
+        );
         $categoryTreeIterator = new CategoryTreeIterator($categoryTreeChoiceProvider);
         $parentCategoryId = $categoryTreeIterator->getCategoryId($testCaseData['Parent category']);
 
