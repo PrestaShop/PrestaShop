@@ -26,9 +26,9 @@
 <div class="col-xs-2 mb-3 row ml-auto">
   <div class="col-xs-1 d-inline mr-1">
       <a
-        href="{{ previousOrder.href }}"
+        href="{{ path('admin_orders_view', {'orderId': previousOrderId}) }}"
         role="button"
-        class="btn btn-action {% if not previousOrder.enabled %} disabled {% endif %}"
+        class="btn btn-action {% if not previousOrderId %} disabled {% endif %}"
        >
         <span class="material-icons">arrow_back</span>
       </a>
@@ -36,9 +36,9 @@
 
   <div class="col-xs-1 d-inline">
       <a
-        href="{{ nextOrder.href }}"
+        href="{{ path('admin_orders_view', {'orderId': nextOrderId}) }}"
         role="button"
-        class="btn btn-action {% if not nextOrder.enabled %} disabled {% endif %}"
+        class="btn btn-action {% if not nextOrderId %} disabled {% endif %}"
       >
         <span class="material-icons">arrow_forward</span>
       </a>

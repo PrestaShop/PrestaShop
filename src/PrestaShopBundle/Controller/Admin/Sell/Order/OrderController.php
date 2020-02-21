@@ -27,7 +27,6 @@
 namespace PrestaShopBundle\Controller\Admin\Sell\Order;
 
 use Exception;
-use PrestaShop\PrestaShop\Adapter\Presenter\Order\OrderLinkPresenter;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartInformation;
 use PrestaShop\PrestaShop\Core\Domain\CustomerMessage\Command\AddOrderCustomerMessageCommand;
 use PrestaShop\PrestaShop\Core\Domain\CustomerMessage\Exception\CannotSendEmailException;
@@ -431,8 +430,8 @@ class OrderController extends FrameworkBundleAdminController
 
         $merchandiseReturnEnabled = (bool) $this->configuration->get('PS_ORDER_RETURN');
 
-        /** @var OrderLinkPresenter $orderLinkPresenter */
-        $orderLinkPresenter = $this->get('prestashop.adapter.presenter.order_link_presenter');
+        /** @var OrderSiblingProviderInterface $orderSiblingProvider */
+        $orderSiblingProvider = $this->get('prestashop.adapter.order.order_sibling_provider');
 
         return $this->render('@PrestaShop/Admin/Sell/Order/Order/view.html.twig', [
             'showContentHeader' => true,
@@ -456,8 +455,8 @@ class OrderController extends FrameworkBundleAdminController
             'backOfficeOrderButtons' => $backOfficeOrderButtons,
             'merchandiseReturnEnabled' => $merchandiseReturnEnabled,
             'priceSpecification' => $this->getContextLocale()->getPriceSpecification($orderCurrency->iso_code)->toArray(),
-            'previousOrder' => $orderLinkPresenter->present($this->getPreviousOrderId($orderId)),
-            'nextOrder' => $orderLinkPresenter->present($this->getNextOrderId($orderId)),
+            'previousOrderId' => $orderSiblingProvider->getPreviousOrderId($orderId),
+            'nextOrderId' => $orderSiblingProvider->getNextOrderId($orderId),
         ]);
     }
 
@@ -1529,31 +1528,5 @@ class OrderController extends FrameworkBundleAdminController
                     ),
             ],
         ];
-    }
-
-    /**
-     * @param int $orderId
-     *
-     * @return int|null
-     */
-    private function getPreviousOrderId(int $orderId)
-    {
-        /** @var OrderSiblingProviderInterface $orderSiblingProvider */
-        $orderSiblingProvider = $this->get('prestashop.adapter.order.order_sibling_provider');
-
-        return $orderSiblingProvider->getPreviousOrderId($orderId);
-    }
-
-    /**
-     * @param int $orderId
-     *
-     * @return int|null
-     */
-    private function getNextOrderId(int $orderId)
-    {
-        /** @var OrderSiblingProviderInterface $orderSiblingProvider */
-        $orderSiblingProvider = $this->get('prestashop.adapter.order.order_sibling_provider');
-
-        return $orderSiblingProvider->getNextOrderId($orderId);
     }
 }
