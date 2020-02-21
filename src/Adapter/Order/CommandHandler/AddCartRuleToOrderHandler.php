@@ -58,20 +58,30 @@ final class AddCartRuleToOrderHandler extends AbstractOrderHandler implements Ad
             null
         ;
 
-        $orderInvoice = $this->getInvoiceForUpdate($order, $command);
         $cartRuleType = $command->getCartRuleType();
         $reductionValues = $this->getReductionValues($cartRuleType, $order, $discountValue);
 
+        $invoiceId = 0;
+        $orderInvoice = $this->getInvoiceForUpdate($order, $command);
+
         if (null !== $orderInvoice) {
+            $invoiceId = (int) $orderInvoice->id;
             $this->updateInvoiceDiscount($orderInvoice, $cartRuleType, $discountValue, $reductionValues);
         }
 
         $cartRule = $this->addCartRule($command, $order, $reductionValues, $discountValue);
-        $this->addOrderCartRule($command->getCartRuleName(), $cartRule->id, $orderInvoice, $reductionValues);
+        $this->addOrderCartRule($order->id, $command->getCartRuleName(), $cartRule->id, $invoiceId, $reductionValues);
 
         $this->applyReductionToOrder($order, $reductionValues);
     }
 
+    /**
+     * @param string $cartRuleType
+     * @param Order $order
+     * @param float|null $discountValue
+     *
+     * @return array
+     */
     private function getReductionValues(string $cartRuleType, Order $order, ?float $discountValue): array
     {
         $totalPaidTaxIncl = (float) $order->total_paid_tax_incl;
@@ -173,17 +183,23 @@ final class AddCartRuleToOrderHandler extends AbstractOrderHandler implements Ad
     }
 
     /**
+     * @param int $orderId
      * @param string $cartRuleName
      * @param int $cartRuleId
-     * @param OrderInvoice $orderInvoice
+     * @param int $invoiceId
      * @param array $reducedValues
      */
-    private function addOrderCartRule(string $cartRuleName, int $cartRuleId, OrderInvoice $orderInvoice, array $reducedValues): void
-    {
+    private function addOrderCartRule(
+        int $orderId,
+        string $cartRuleName,
+        int $cartRuleId,
+        int $invoiceId,
+        array $reducedValues
+    ): void {
         $orderCartRule = new OrderCartRule();
-        $orderCartRule->id_order = $orderInvoice->id_order;
+        $orderCartRule->id_order = $orderId;
         $orderCartRule->id_cart_rule = $cartRuleId;
-        $orderCartRule->id_order_invoice = $orderInvoice->id;
+        $orderCartRule->id_order_invoice = $invoiceId;
         $orderCartRule->name = $cartRuleName;
         $orderCartRule->value = $reducedValues['value_tax_incl'];
         $orderCartRule->value_tax_excl = $reducedValues['value_tax_excl'];
