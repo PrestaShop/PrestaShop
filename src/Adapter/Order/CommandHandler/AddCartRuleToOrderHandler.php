@@ -31,6 +31,7 @@ use Configuration;
 use Order;
 use OrderCartRule;
 use OrderInvoice;
+use PrestaShop\Decimal\Number;
 use PrestaShop\PrestaShop\Adapter\Order\AbstractOrderHandler;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\PercentageDiscount;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\AddCartRuleToOrderCommand;
@@ -53,10 +54,7 @@ final class AddCartRuleToOrderHandler extends AbstractOrderHandler implements Ad
     {
         $order = $this->getOrderObject($command->getOrderId());
 
-        $discountValue = $command->getDiscountValue() ?
-            (float) $command->getDiscountValue()->toPrecision(CommonAbstractType::PRESTASHOP_DECIMALS) :
-            null
-        ;
+        $discountValue = $command->getDiscountValue();
 
         $cartRuleType = $command->getCartRuleType();
         $reductionValues = $this->getReductionValues($cartRuleType, $order, $discountValue);
@@ -66,7 +64,7 @@ final class AddCartRuleToOrderHandler extends AbstractOrderHandler implements Ad
 
         if (null !== $orderInvoice) {
             $invoiceId = (int) $orderInvoice->id;
-            $this->updateInvoiceDiscount($orderInvoice, $cartRuleType, $discountValue, $reductionValues);
+            $this->updateInvoiceDiscount($orderInvoice, $cartRuleType, $reductionValues);
         }
 
         $cartRule = $this->addCartRule($command, $order, $reductionValues, $discountValue);
@@ -78,34 +76,35 @@ final class AddCartRuleToOrderHandler extends AbstractOrderHandler implements Ad
     /**
      * @param string $cartRuleType
      * @param Order $order
-     * @param float|null $discountValue
+     * @param Number|null $discountValue
      *
      * @return array
+     * @throws OrderException
      */
-    private function getReductionValues(string $cartRuleType, Order $order, ?float $discountValue): array
+    private function getReductionValues(string $cartRuleType, Order $order, ?Number $discountValue): array
     {
-        $totalPaidTaxIncl = (float) $order->total_paid_tax_incl;
-        $totalPaidTaxExcl = (float) $order->total_paid_tax_excl;
+        $totalPaidTaxIncl = new Number((string) $order->total_paid_tax_incl);
+        $totalPaidTaxExcl = new Number((string) $order->total_paid_tax_excl);
 
         switch ($cartRuleType) {
             case OrderDiscountType::DISCOUNT_PERCENT:
-                if ($discountValue > PercentageDiscount::MAX_PERCENTAGE) {
+                if ($discountValue->isGreaterThan(new Number((string) PercentageDiscount::MAX_PERCENTAGE))) {
                     throw new OrderException('Percentage discount value cannot be higher than 100%.');
                 }
                 $reductionValues = $this->calculatePercentReduction($discountValue, $totalPaidTaxIncl, $totalPaidTaxExcl);
 
                 break;
             case OrderDiscountType::DISCOUNT_AMOUNT:
-                if ($discountValue > $totalPaidTaxIncl) {
+                if ($discountValue->isGreaterThan($totalPaidTaxIncl)) {
                     throw new OrderException('The discount value is greater than the order total.');
                 }
-                $reductionValues = $this->calculateAmountReduction($discountValue, $order->getTaxesAverageUsed());
+                $reductionValues = $this->calculateAmountReduction($discountValue, new Number((string) $order->getTaxesAverageUsed()));
 
                 break;
             case OrderDiscountType::FREE_SHIPPING:
                 $reductionValues = $this->calculateFreeShippingReduction(
-                    $order->total_shipping_tax_incl,
-                    $order->total_shipping_tax_excl
+                    new Number ((string) $order->total_shipping_tax_incl),
+                    new Number ((string) $order->total_shipping_tax_excl)
                 );
 
                 break;
@@ -119,13 +118,17 @@ final class AddCartRuleToOrderHandler extends AbstractOrderHandler implements Ad
     /**
      * @param OrderInvoice $orderInvoice
      * @param string $cartRuleType
-     * @param float|null $discountValue
-     * @param array $reductionValues
+     * @param Number|null $discountValue
+     * @param Number[] $reductionValues
      */
-    private function updateInvoiceDiscount(OrderInvoice $orderInvoice, string $cartRuleType, ?float $discountValue, array $reductionValues): void
+    private function updateInvoiceDiscount(OrderInvoice $orderInvoice, string $cartRuleType, array $reductionValues): void
     {
+        $orderTotalPaidTaxExcl = new Number((string) $orderInvoice->total_paid_tax_incl);
+
         $isAlreadyFreeShipping = OrderDiscountType::FREE_SHIPPING === $cartRuleType && $orderInvoice->total_shipping_tax_incl <= 0;
-        $discountAmountIsTooBig = OrderDiscountType::DISCOUNT_AMOUNT === $cartRuleType && $discountValue > $orderInvoice->total_paid_tax_incl;
+        $discountAmountIsTooBig = OrderDiscountType::DISCOUNT_AMOUNT === $cartRuleType &&
+            $reductionValues['value_tax_incl']->isGreaterThan($orderTotalPaidTaxExcl)
+        ;
 
         if ($isAlreadyFreeShipping) {
             return;
@@ -133,13 +136,29 @@ final class AddCartRuleToOrderHandler extends AbstractOrderHandler implements Ad
             throw new OrderException('The discount value is greater than the order invoice total.');
         }
 
+        $orderTotalDiscountTaxIncl = new Number((string) $orderInvoice->total_discount_tax_incl);
+        $orderTotalDiscountTaxExcl = new Number((string) $orderInvoice->total_discount_tax_excl);
+        $orderTotalPaidTaxIncl = new Number((string) $orderInvoice->total_paid_tax_incl);
+
         $valueTaxIncl = $reductionValues['value_tax_incl'];
         $valueTaxExcl = $reductionValues['value_tax_excl'];
 
-        $orderInvoice->total_discount_tax_incl += $valueTaxIncl;
-        $orderInvoice->total_discount_tax_excl += $valueTaxExcl;
-        $orderInvoice->total_paid_tax_incl -= $valueTaxIncl;
-        $orderInvoice->total_paid_tax_excl -= $valueTaxExcl;
+        $orderInvoice->total_discount_tax_incl = (float) $orderTotalDiscountTaxIncl
+            ->plus($valueTaxIncl)
+            ->toPrecision(CommonAbstractType::PRESTASHOP_DECIMALS)
+        ;
+        $orderInvoice->total_discount_tax_excl = (float) $orderTotalDiscountTaxExcl
+            ->plus($valueTaxExcl)
+            ->toPrecision(CommonAbstractType::PRESTASHOP_DECIMALS)
+        ;
+        $orderInvoice->total_paid_tax_incl = (float) $orderTotalPaidTaxIncl
+            ->minus($valueTaxIncl)
+            ->toPrecision(CommonAbstractType::PRESTASHOP_DECIMALS)
+        ;
+        $orderInvoice->total_paid_tax_excl = (float) $orderTotalDiscountTaxExcl
+            ->minus($valueTaxExcl)
+            ->toPrecision(CommonAbstractType::PRESTASHOP_DECIMALS)
+        ;
 
         $orderInvoice->update();
     }
@@ -147,7 +166,7 @@ final class AddCartRuleToOrderHandler extends AbstractOrderHandler implements Ad
     /**
      * @param AddCartRuleToOrderCommand $command
      * @param Order $order
-     * @param array $reducedValues
+     * @param Number[] $reducedValues
      * @param float $discountValue
      *
      * @return CartRule
@@ -156,7 +175,7 @@ final class AddCartRuleToOrderHandler extends AbstractOrderHandler implements Ad
         AddCartRuleToOrderCommand $command,
         Order $order,
         array $reducedValues,
-        ?float $discountValue
+        ?Number $discountValue
     ): CartRule {
         $cartRuleObj = new CartRule();
         $cartRuleObj->date_from = date('Y-m-d H:i:s', strtotime('-1 hour', strtotime($order->date_add)));
@@ -166,9 +185,9 @@ final class AddCartRuleToOrderHandler extends AbstractOrderHandler implements Ad
         $cartRuleObj->quantity_per_user = 1;
 
         if ($command->getCartRuleType() === OrderDiscountType::DISCOUNT_PERCENT) {
-            $cartRuleObj->reduction_percent = $discountValue;
+            $cartRuleObj->reduction_percent = (float) $discountValue->toPrecision(CommonAbstractType::PRESTASHOP_DECIMALS);
         } elseif ($command->getCartRuleType() === OrderDiscountType::DISCOUNT_AMOUNT) {
-            $cartRuleObj->reduction_amount = $reducedValues['value_tax_excl'];
+            $cartRuleObj->reduction_amount = (float) $reducedValues['value_tax_excl']->toPrecision(CommonAbstractType::PRESTASHOP_DECIMALS);
         } elseif ($command->getCartRuleType() === OrderDiscountType::FREE_SHIPPING) {
             $cartRuleObj->free_shipping = 1;
         }
@@ -187,22 +206,22 @@ final class AddCartRuleToOrderHandler extends AbstractOrderHandler implements Ad
      * @param string $cartRuleName
      * @param int $cartRuleId
      * @param int $invoiceId
-     * @param array $reducedValues
+     * @param Number[] $reductionValues
      */
     private function addOrderCartRule(
         int $orderId,
         string $cartRuleName,
         int $cartRuleId,
         int $invoiceId,
-        array $reducedValues
+        array $reductionValues
     ): void {
         $orderCartRule = new OrderCartRule();
         $orderCartRule->id_order = $orderId;
         $orderCartRule->id_cart_rule = $cartRuleId;
         $orderCartRule->id_order_invoice = $invoiceId;
         $orderCartRule->name = $cartRuleName;
-        $orderCartRule->value = $reducedValues['value_tax_incl'];
-        $orderCartRule->value_tax_excl = $reducedValues['value_tax_excl'];
+        $orderCartRule->value = (float) $reductionValues['value_tax_incl']->toPrecision(CommonAbstractType::PRESTASHOP_DECIMALS);
+        $orderCartRule->value_tax_excl = (float) $reductionValues['value_tax_excl']->toPrecision(CommonAbstractType::PRESTASHOP_DECIMALS);
 
         if (false === $orderCartRule->add()) {
             throw new OrderException('An error occurred during the OrderCartRule creation');
@@ -231,46 +250,65 @@ final class AddCartRuleToOrderHandler extends AbstractOrderHandler implements Ad
     }
 
     /**
-     * @param float $discountValue
-     * @param float $totalPaidTaxIncl
-     * @param float $totalPaidTaxExcl
+     * @param Number $discountValue
+     * @param Number $totalPaidTaxIncl
+     * @param Number $totalPaidTaxExcl
      *
      * @return array
      */
     private function calculatePercentReduction(
-        float $discountValue,
-        float $totalPaidTaxIncl,
-        float $totalPaidTaxExcl
+        Number $discountValue,
+        Number $totalPaidTaxIncl,
+        Number $totalPaidTaxExcl
     ): array {
+        $hundredPercent = new Number('100');
+
+        $valueTaxIncl = $discountValue
+            ->times($totalPaidTaxIncl)
+            ->dividedBy($hundredPercent)
+        ;
+
+        $valueTaxExcl = $discountValue
+            ->times($totalPaidTaxExcl)
+            ->dividedBy($hundredPercent)
+        ;
+
         return $this->buildReducedValues(
-            Tools::ps_round($totalPaidTaxIncl * $discountValue / 100, 2),
-            Tools::ps_round($totalPaidTaxExcl * $discountValue / 100, 2)
+            $valueTaxIncl,
+            $valueTaxExcl
         );
     }
 
     /**
-     * @param float $discountValue
-     * @param float $taxesAverageUsed
+     * @param Number $discountValue
+     * @param Number $taxesAverageUsed
      *
      * @return array
      */
     private function calculateAmountReduction(
-        float $discountValue,
-        float $taxesAverageUsed
+        Number $discountValue,
+        Number $taxesAverageUsed
     ) {
+        $hundredPercent = new Number('100');
+        $avgTax = (new Number('1'))->plus($taxesAverageUsed->dividedBy($hundredPercent));
+
+        $totalTaxExcl = $discountValue
+            ->dividedBy($avgTax)
+        ;
+
         return $this->buildReducedValues(
-            Tools::ps_round($discountValue, 2),
-            Tools::ps_round($discountValue / (1 + ($taxesAverageUsed / 100)), 2)
+            $discountValue,
+            $totalTaxExcl
         );
     }
 
     /**
-     * @param float $totalShippingTaxIncl
-     * @param float $totalShippingTaxExcl
+     * @param Number $totalShippingTaxIncl
+     * @param Number $totalShippingTaxExcl
      *
      * @return array
      */
-    private function calculateFreeShippingReduction(float $totalShippingTaxIncl, float $totalShippingTaxExcl)
+    private function calculateFreeShippingReduction(Number $totalShippingTaxIncl, Number $totalShippingTaxExcl)
     {
         return $this->buildReducedValues(
             $totalShippingTaxIncl,
@@ -279,12 +317,12 @@ final class AddCartRuleToOrderHandler extends AbstractOrderHandler implements Ad
     }
 
     /**
-     * @param float $valueTaxIncl
-     * @param float $valueTaxExcl
+     * @param Number $valueTaxIncl
+     * @param Number $valueTaxExcl
      *
      * @return array
      */
-    private function buildReducedValues(float $valueTaxIncl, float $valueTaxExcl): array
+    private function buildReducedValues(Number $valueTaxIncl, Number $valueTaxExcl): array
     {
         return [
             'value_tax_incl' => $valueTaxIncl,
@@ -294,18 +332,41 @@ final class AddCartRuleToOrderHandler extends AbstractOrderHandler implements Ad
 
     /**
      * @param Order $order
-     * @param array $reductionValues
-     *
-     * @return void
+     * @param Number[] $reductionValues
      */
     private function applyReductionToOrder(Order $order, array $reductionValues): void
     {
-        $order->total_discounts += $reductionValues['value_tax_incl'];
-        $order->total_discounts_tax_incl += $reductionValues['value_tax_incl'];
-        $order->total_discounts_tax_excl += $reductionValues['value_tax_excl'];
-        $order->total_paid -= $reductionValues['value_tax_incl'];
-        $order->total_paid_tax_incl -= $reductionValues['value_tax_incl'];
-        $order->total_paid_tax_excl -= $reductionValues['value_tax_excl'];
+        $orderTotalDiscounts = new Number((string) $order->total_discounts);
+        $orderTotalDiscountsTaxExcl = new Number((string) $order->total_discounts_tax_excl);
+        $orderTotalDiscountsTaxIncl = new Number((string) $order->total_discounts_tax_incl);
+        $orderTotalPaid = new Number((string) $order->total_paid);
+        $orderTotalPaidTaxIncl = new Number((string) $order->total_paid_tax_incl);
+        $orderTotalPaidTaxExcl = new Number((string) $order->total_paid_tax_excl);
+
+        $order->total_discounts = (float) $orderTotalDiscounts
+            ->plus($reductionValues['value_tax_incl'])
+            ->toPrecision(CommonAbstractType::PRESTASHOP_DECIMALS)
+        ;
+        $order->total_discounts_tax_incl = (float) $orderTotalDiscountsTaxIncl
+            ->plus($reductionValues['value_tax_incl'])
+            ->toPrecision(CommonAbstractType::PRESTASHOP_DECIMALS)
+        ;
+        $order->total_discounts_tax_excl = (float) $orderTotalDiscountsTaxExcl
+            ->plus($reductionValues['value_tax_excl'])
+            ->toPrecision(CommonAbstractType::PRESTASHOP_DECIMALS)
+        ;
+        $order->total_paid = (float) $orderTotalPaid
+            ->minus($reductionValues['value_tax_incl'])
+            ->toPrecision(CommonAbstractType::PRESTASHOP_DECIMALS)
+        ;
+        $order->total_paid_tax_incl = (float) $orderTotalPaidTaxIncl
+            ->minus($reductionValues['value_tax_incl'])
+            ->toPrecision(CommonAbstractType::PRESTASHOP_DECIMALS)
+        ;
+        $order->total_paid_tax_excl = (float) $orderTotalPaidTaxExcl
+            ->minus($reductionValues['value_tax_excl'])
+            ->toPrecision(CommonAbstractType::PRESTASHOP_DECIMALS)
+        ;
 
         if (false === $order->update()) {
             throw new OrderException('An error occurred trying to apply cart rule to order');
