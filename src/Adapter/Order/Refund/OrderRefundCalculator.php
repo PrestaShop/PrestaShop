@@ -35,6 +35,7 @@ use Group;
 use Order;
 use OrderDetail;
 use OrderSlip;
+use PrestaShop\Decimal\Number;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidCancelProductException;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderDetailRefund;
 use PrestaShop\PrestaShop\Core\Domain\Order\VoucherRefundType;
@@ -53,9 +54,9 @@ class OrderRefundCalculator
     /**
      * @param Order $order
      * @param array $orderDetailRefunds
-     * @param float $shippingRefund
+     * @param Number $shippingRefund
      * @param int $voucherRefundType
-     * @param float|null $chosenVoucherAmount
+     * @param Number|null $chosenVoucherAmount
      *
      * @return OrderRefundSummary
      *
@@ -66,9 +67,9 @@ class OrderRefundCalculator
     public function computeOrderRefund(
         Order $order,
         array $orderDetailRefunds,
-        float $shippingRefund,
+        Number $shippingRefund,
         int $voucherRefundType,
-        ?float $chosenVoucherAmount
+        ?Number $chosenVoucherAmount
     ): OrderRefundSummary {
         $isTaxIncluded = $this->isTaxIncludedInOrder($order);
         $precision = $this->getPrecision($order);
@@ -97,7 +98,7 @@ class OrderRefundCalculator
             $refundedAmount = $voucherAmount = $chosenVoucherAmount;
         }
 
-        $shippingCostAmount = $shippingRefund ?: false;
+        $shippingCostAmount = (float) (string) $shippingRefund;
         if ($shippingCostAmount > 0) {
             $shippingMaxRefund = $isTaxIncluded ? $order->total_shipping_tax_incl : $order->total_shipping_tax_excl;
             $shippingSlipResume = OrderSlip::getShippingSlipResume($order->id);
@@ -195,11 +196,10 @@ class OrderRefundCalculator
 
             // If refunded amount is null it means the whole product is refunded (used for standard refund, and return product)
             if (null === $orderDetailRefund->getRefundedAmount()) {
-                $productRefundAmount = $productUnitPrice * $quantity <= $productMaxRefund ?
-                    $productUnitPrice * $quantity : $productMaxRefund;
+                $productRefundAmount = (float) (string) $productMaxRefund;
             } else {
-                $productRefundAmount = $orderDetailRefund->getRefundedAmount() <= $productMaxRefund ?
-                    $orderDetailRefund->getRefundedAmount() : $productMaxRefund;
+                $productRefundAmount = (float) (string) $orderDetailRefund->getRefundedAmount() <= $productMaxRefund ?
+                    (float) (string) $orderDetailRefund->getRefundedAmount() : $productMaxRefund;
             }
 
             $productRefunds[$orderDetailId]['amount'] = $productRefundAmount;
