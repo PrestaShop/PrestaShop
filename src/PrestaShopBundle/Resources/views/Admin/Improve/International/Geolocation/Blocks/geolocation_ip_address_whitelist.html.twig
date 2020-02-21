@@ -51,6 +51,10 @@
             {{ form_widget(geolocationIpAddressWhitelistForm.geolocation_whitelist) }}
           </div>
         </div>
+
+        {% block geolocation_whitelist_form_rest %}
+          {{ form_rest(geolocationIpAddressWhitelistForm) }}
+        {% endblock %}
       </div>
     </div>
     <div class="card-footer">
