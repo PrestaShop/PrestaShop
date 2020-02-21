@@ -28,7 +28,6 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Presenter\Order;
 
-use Order;
 use PrestaShop\PrestaShop\Core\Foundation\Templating\PresenterInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
@@ -51,12 +50,9 @@ class OrderLinkPresenter implements PresenterInterface
      */
     public function present($orderId): array
     {
-        $order = new Order($orderId);
-
         return [
             'href' => $orderId ? $this->urlGenerator->generate('admin_orders_view', ['orderId' => $orderId]) : null,
-            'enabled' => $orderId !== null,
-            'text' => $order->reference,
+            'enabled' => $orderId !== 0,
         ];
     }
 }
