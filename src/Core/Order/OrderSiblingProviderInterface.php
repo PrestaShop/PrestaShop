@@ -31,16 +31,16 @@ namespace PrestaShop\PrestaShop\Core\Order;
 interface OrderSiblingProviderInterface
 {
     /**
-     * @param int $orderId - returns previous order id or 0 if it does not exist
+     * @param int $orderId
      *
-     * @return int
+     * @return int returns previous order id or 0 if it does not exist
      */
     public function getNextOrderId(int $orderId): int;
 
     /**
-     * @param int $orderId - returns next order id or 0 if it does not exist
+     * @param int $orderId
      *
-     * @return int
+     * @return int returns next order id or 0 if it does not exist
      */
     public function getPreviousOrderId(int $orderId): int;
 }
