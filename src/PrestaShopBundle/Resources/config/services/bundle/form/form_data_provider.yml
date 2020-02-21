@@ -129,11 +129,23 @@ services:
             - '@prestashop.adapter.local_units.configuration'
             - '@prestashop.adapter.localization_advanced.configuration'
 
-    prestashop.admin.geolocation.form_data_provider:
-        class: 'PrestaShopBundle\Form\Admin\Improve\International\Geolocation\GeolocationFormDataProvider'
+    prestashop.admin.geolocation.by_ip_address.form_data_provider:
+        class: 'PrestaShopBundle\Form\Admin\Improve\International\Geolocation\GeolocationByIpAddressFormDataProvider'
         arguments:
             - '@prestashop.adapter.geolocation_by_ip_address.configuration'
+            - '@prestashop.core.geolocation.geo_lite_city.checker'
+            - '@prestashop.core.validation.validator'
+
+    prestashop.admin.geolocation.whitelist.form_data_provider:
+        class: 'PrestaShopBundle\Form\Admin\Improve\International\Geolocation\GeolocationWhitelistFormDataProvider'
+        arguments:
             - '@prestashop.adapter.geolocation_ip_address_whitelist.configuration'
+            - '@prestashop.core.geolocation.geo_lite_city.checker'
+            - '@prestashop.core.validation.validator'
+
+    prestashop.admin.geolocation.options.form_data_provider:
+        class: 'PrestaShopBundle\Form\Admin\Improve\International\Geolocation\GeolocationOptionsFormDataProvider'
+        arguments:
             - '@prestashop.adapter.geolocation_options.configuration'
             - '@prestashop.core.geolocation.geo_lite_city.checker'
             - '@prestashop.core.validation.validator'
