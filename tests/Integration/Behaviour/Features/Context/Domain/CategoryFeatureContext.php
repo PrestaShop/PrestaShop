@@ -209,12 +209,12 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @When I update category :categoryReference position with following details:
+     * @When I update category :categoryReference with generated position and following details:
      *
      * @param string $categoryReference
      * @param TableNode $table
      */
-    public function updateCategoryPositionWithFollowingDetails(string $categoryReference, TableNode $table)
+    public function updateCategoryWithGeneratedPositionAndFollowingDetails(string $categoryReference, TableNode $table)
     {
         /** @var array $testCaseData */
         $testCaseData = $table->getRowsHash();
@@ -228,13 +228,12 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
         $parentCategoryId = $categoryTreeIterator->getCategoryId($testCaseData['Parent category']);
 
         $wayId = array_flip(self::CATEGORY_POSITION_WAYS_MAP)[$testCaseData['Way']];
-        $positionsArray = explode(',', $testCaseData['Positions']);
 
         $this->getCommandBus()->handle(new UpdateCategoryPositionCommand(
             $categoryId,
             $parentCategoryId,
             $wayId,
-            $positionsArray,
+            ['tr_' . $parentCategoryId . '_' . $categoryId], // generated position
             $testCaseData['Found first']
         ));
     }
