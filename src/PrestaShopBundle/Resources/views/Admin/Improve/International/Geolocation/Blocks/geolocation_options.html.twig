@@ -74,6 +74,10 @@
             </div>
           </div>
         </div>
+
+        {% block geolocation_options_form_rest %}
+          {{ form_rest(geolocationOptionsForm) }}
+        {% endblock %}
       </div>
     </div>
     <div class="card-footer">

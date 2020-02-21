@@ -26,10 +26,11 @@
 
 namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
+use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
-use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -58,13 +59,13 @@ class PerformanceController extends FrameworkBundleAdminController
             ],
         ];
 
-        $smartyForm = $this->get('prestashop.adapter.performance.smarty.form_handler')->getForm();
-        $debugModeForm = $this->get('prestashop.adapter.performance.debug_mode.form_handler')->getForm();
-        $optionalFeaturesForm = $this->get('prestashop.adapter.performance.optional_features.form_handler')->getForm();
-        $combineCompressCacheForm = $this->get('prestashop.adapter.performance.ccc.form_handler')->getForm();
-        $mediaServersForm = $this->get('prestashop.adapter.performance.media_servers.form_handler')->getForm();
-        $cachingForm = $this->get('prestashop.adapter.performance.caching.form_handler')->getForm();
-        $memcacheForm = $this->get('prestashop.admin.advanced_parameters.performance.memcache.form_builder')->getForm();
+        $smartyForm = $this->getSmartyFormHandler()->getForm();
+        $debugModeForm = $this->getDebugModeFormHandler()->getForm();
+        $optionalFeaturesForm = $this->getOptionalFeaturesFormHandler()->getForm();
+        $combineCompressCacheForm = $this->getCombineCompressCacheFormHandler()->getForm();
+        $mediaServersForm = $this->getMediaServersFormHandler()->getForm();
+        $cachingForm = $this->getCachingFormHandler()->getForm();
+        $memcacheForm = $this->getMemcacheFormBuilder()->getForm();
 
         return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/performance.html.twig', [
             'layoutHeaderToolbarBtn' => $toolbarButtons,
@@ -105,7 +106,7 @@ class PerformanceController extends FrameworkBundleAdminController
 
         return $this->processForm(
             $request,
-            'prestashop.adapter.performance.smarty.form_handler'
+            $this->getSmartyFormHandler()
         );
     }
 
@@ -128,9 +129,10 @@ class PerformanceController extends FrameworkBundleAdminController
 
         return $this->processForm(
             $request,
-            'prestashop.adapter.performance.debug_mode.form_handler'
+            $this->getDebugModeFormHandler()
         );
     }
+
     /**
      * Process the Performance Optional Features configuration form.
      *
@@ -150,9 +152,10 @@ class PerformanceController extends FrameworkBundleAdminController
 
         return $this->processForm(
             $request,
-            'prestashop.adapter.performance.optional_featuers.form_handler'
+            $this->getOptionalFeaturesFormHandler()
         );
     }
+
     /**
      * Process the Performance Combine Compress Cache configuration form.
      *
@@ -172,9 +175,10 @@ class PerformanceController extends FrameworkBundleAdminController
 
         return $this->processForm(
             $request,
-            'prestashop.adapter.performance.combine_compress_cache.form_handler'
+            $this->getCombineCompressCacheFormHandler()
         );
     }
+
     /**
      * Process the Performance Media Servers configuration form.
      *
@@ -194,9 +198,10 @@ class PerformanceController extends FrameworkBundleAdminController
 
         return $this->processForm(
             $request,
-            'prestashop.adapter.performance.media_servers.form_handler'
+            $this->getMediaServersFormHandler()
         );
     }
+
     /**
      * Process the Performance Caching configuration form.
      *
@@ -216,7 +221,7 @@ class PerformanceController extends FrameworkBundleAdminController
 
         return $this->processForm(
             $request,
-            'prestashop.adapter.performance.caching.form_handler'
+            $this->getCachingFormHandler()
         );
     }
 
@@ -224,14 +229,13 @@ class PerformanceController extends FrameworkBundleAdminController
      * Process the Performance configuration form.
      *
      * @param Request $request
-     * @param string $formHandlerName
+     * @param FormHandlerInterface $formHandler
      *
      * @return RedirectResponse
      */
-    protected function processForm(Request $request, string $formHandlerName)
+    protected function processForm(Request $request, FormHandlerInterface $formHandler)
     {
         $this->dispatchHook('actionAdminPerformanceControllerPostProcessBefore', ['controller' => $this]);
-        $formHandler = $this->get($formHandlerName);
         $form = $formHandler->getForm();
         $form->handleRequest($request);
 
@@ -263,5 +267,61 @@ class PerformanceController extends FrameworkBundleAdminController
         $this->addFlash('success', $this->trans('All caches cleared successfully', 'Admin.Advparameters.Notification'));
 
         return $this->redirectToRoute('admin_performance');
+    }
+
+    /**
+     * @return FormHandlerInterface
+     */
+    protected function getSmartyFormHandler(): FormHandlerInterface
+    {
+        return $this->get('prestashop.adapter.performance.smarty.form_handler');
+    }
+
+    /**
+     * @return FormHandlerInterface
+     */
+    protected function getDebugModeFormHandler(): FormHandlerInterface
+    {
+        return $this->get('prestashop.adapter.performance.debug_mode.form_handler');
+    }
+
+    /**
+     * @return FormHandlerInterface
+     */
+    protected function getOptionalFeaturesFormHandler(): FormHandlerInterface
+    {
+        return $this->get('prestashop.adapter.performance.optional_features.form_handler');
+    }
+
+    /**
+     * @return FormHandlerInterface
+     */
+    protected function getCombineCompressCacheFormHandler(): FormHandlerInterface
+    {
+        return $this->get('prestashop.adapter.performance.ccc.form_handler');
+    }
+
+    /**
+     * @return FormHandlerInterface
+     */
+    protected function getMediaServersFormHandler(): FormHandlerInterface
+    {
+        return $this->get('prestashop.adapter.performance.media_servers.form_handler');
+    }
+
+    /**
+     * @return FormHandlerInterface
+     */
+    protected function getCachingFormHandler(): FormHandlerInterface
+    {
+        return $this->get('prestashop.adapter.performance.caching.form_handler');
+    }
+
+    /**
+     * @return FormBuilderInterface
+     */
+    protected function getMemcacheFormBuilder(): FormBuilderInterface
+    {
+        return $this->get('prestashop.admin.advanced_parameters.performance.memcache.form_builder');
     }
 }
