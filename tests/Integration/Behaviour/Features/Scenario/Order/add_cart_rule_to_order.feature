@@ -81,7 +81,7 @@ Feature: Add discounts to order from Back Office (BO)
   Scenario: Add percent type discount to order and update single invoice
     When I generate invoice for "bo_order1" order
     Then order "bo_order1" should have invoice
-    When I add discount to order "bo_order1" with following details:
+    When I add discount to order "bo_order1" with selected single invoice and following details:
       | name      | discount fifty-fifty |
       | type      | percent              |
       | value     | 50                   |
