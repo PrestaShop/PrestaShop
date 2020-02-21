@@ -1,7 +1,7 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
-module.exports = class Emails extends BOBasePage {
+module.exports = class Email extends BOBasePage {
   constructor(page) {
     super(page);
 
@@ -13,7 +13,7 @@ module.exports = class Emails extends BOBasePage {
     this.emailGridTitle = `${this.emailGridPanel} h3.card-header-title`;
     this.emailsListForm = '#email_logs_grid_table';
     // Filters
-    this.emailFilterColumnInput = `${this.emailsListForm} #email_logs_%FILTERBY`;
+    this.emailFilterColumnInput = '#email_logs_%FILTERBY';
     this.filterSearchButton = `${this.emailsListForm} button[name='email_logs[actions][search]']`;
     this.filterResetButton = `${this.emailsListForm} button[name='email_logs[actions][reset]']`;
   }
