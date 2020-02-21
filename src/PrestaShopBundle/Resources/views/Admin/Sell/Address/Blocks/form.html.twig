@@ -112,7 +112,7 @@
         'label': 'Country'|trans({}, 'Admin.Global'),
       }) }}
 
-      <div class="js-address-state-select {% if addressForm.id_state.vars.choices is empty %} d-none{% endif %}">
+      <div class="js-address-state-select{% if addressForm.id_state.vars.choices is empty %} d-none{% endif %}">
         {{ ps.form_group_row(addressForm.id_state, {}, {
           'label': 'State'|trans({}, 'Admin.Global'),
         }) }}
