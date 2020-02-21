@@ -115,7 +115,6 @@ let fillTpl = function (results, eltAppendTo, tpl) {
       default:
         break;
     }
-
     eltAppendTo.children('.notification-elements').append(tplReplaced);
   });
 };
