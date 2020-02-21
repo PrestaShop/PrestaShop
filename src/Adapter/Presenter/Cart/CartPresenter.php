@@ -546,36 +546,33 @@ class CartPresenter implements PresenterInterface
                 $cartVoucher['reduction_amount'] = $cartVoucher['value_real'];
             }
 
-            $shippingReduction = $amountReduction = $percentageReduction = 0;
-            $freeShippingOnly = false;
+            $totalCartVoucherReduction = 0;
 
-            if ($this->cartVoucherHasFreeShipping($cartVoucher)) {
-                if (!$freeShippingAlreadySet) {
-                    $shippingReduction = $cart->getTotalShippingCost(null, $this->includeTaxes());
-                    $freeShippingAlreadySet = true;
-                }
+            if (!$this->cartVoucherHasPercentReduction($cartVoucher)
+                && !$this->cartVoucherHasAmountReduction($cartVoucher)
+                && !$this->cartVoucherHasGiftProductReduction($cartVoucher)
+            ) {
                 $freeShippingOnly = true;
+                $freeShippingAlreadySet = !$freeShippingAlreadySet ? true : false;
             }
-            if ($this->cartVoucherHasPercentReduction($cartVoucher)) {
-                $percentageReduction = $this->includeTaxes() ? $cartVoucher['value_real'] : $cartVoucher['value_tax_exc'];
+            else{
                 $freeShippingOnly = false;
-            } elseif ($this->cartVoucherHasAmountReduction($cartVoucher)) {
-                $amountReduction = $this->includeTaxes() ? $cartVoucher['reduction_amount'] : $cartVoucher['value_tax_exc'];
+                $totalCartVoucherReduction = $this->includeTaxes() ? $cartVoucher['value_real'] : $cartVoucher['value_tax_exc'];
                 $currencyFrom = new \Currency($cartVoucher['reduction_currency']);
                 $currencyTo = new \Currency($cart->id_currency);
                 if ($currencyFrom->conversion_rate == 0) {
-                    $amountReduction = 0;
+                    $totalCartVoucherReduction= 0;
                 } else {
                     // convert to default currency
                     $defaultCurrencyId = (int) Configuration::get('PS_CURRENCY_DEFAULT');
-                    $amountReduction /= $currencyFrom->conversion_rate;
+                    $totalCartVoucherReduction /= $currencyFrom->conversion_rate;
                     if ($defaultCurrencyId == $currencyTo->id) {
                         // convert to destination currency
-                        $amountReduction *= $currencyTo->conversion_rate;
+                        $totalCartVoucherReduction *= $currencyTo->conversion_rate;
                     }
                 }
-                $freeShippingOnly = false;
             }
+
             // when a voucher has only a shipping reduction, the value displayed must be "Free Shipping"
             if ($freeShippingOnly) {
                 $cartVoucher['reduction_formatted'] = $this->translator->trans(
@@ -584,8 +581,6 @@ class CartPresenter implements PresenterInterface
                     'Admin.Shipping.Feature'
                 );
             } else {
-                // In all other cases, the value displayed should be the total of applied reductions for the current voucher
-                $totalCartVoucherReduction = $shippingReduction + $amountReduction + $percentageReduction;
                 $cartVoucher['reduction_formatted'] = '-' . $this->priceFormatter->convertAndFormat($totalCartVoucherReduction);
             }
 
@@ -637,6 +632,16 @@ class CartPresenter implements PresenterInterface
     private function cartVoucherHasAmountReduction($cartVoucher)
     {
         return isset($cartVoucher['reduction_amount']) && $cartVoucher['reduction_amount'] > 0;
+    }
+
+    /**
+     * @param array $cartVoucher
+     *
+     * @return bool
+     */
+    private function cartVoucherHasGiftProductReduction($cartVoucher)
+    {
+        return array_key_exists('gift_product', $cartVoucher) && $cartVoucher['gift_product'];
     }
 
     /**
