@@ -61,7 +61,7 @@ final class ChangeOrderCurrencyHandler extends AbstractOrderHandler implements C
             $oldCurrency = new Currency($order->id_currency);
             $newCurrency = new Currency($command->getNewCurrencyId()->getValue());
 
-            if (!Validate::isLoadedObject($newCurrency)) {
+            if (!Validate::isLoadedObject($oldCurrency) || !Validate::isLoadedObject($newCurrency)) {
                 throw new OrderException('Can\'t load Currency object');
             }
 
