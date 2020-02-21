@@ -94,6 +94,8 @@ module.exports = class BOBasePage extends CommonPage {
 
     // Advanced Parameters
     this.advancedParametersLink = '#subtab-AdminAdvancedParameters';
+    // E-mail
+    this.emailLink = '#subtab-AdminEmails';
     // Team
     this.teamLink = '#subtab-AdminParentEmployees';
     // Database
