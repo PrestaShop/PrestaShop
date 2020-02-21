@@ -33,13 +33,12 @@ use Hook;
 use Order;
 use OrderCarrier;
 use OrderDetail;
+use PrestaShop\PrestaShop\Adapter\Order\Refund\OrderProductRemover;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\CancelOrderProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler\CancelOrderProductHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidCancelProductException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidOrderStateException;
-use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use StockAvailable;
-use Symfony\Component\Translation\TranslatorInterface;
 use Validate;
 
 /**
@@ -48,17 +47,19 @@ use Validate;
 final class CancelOrderProductHandler extends AbstractOrderCommandHandler implements CancelOrderProductHandlerInterface
 {
     /**
-     * @var TranslatorInterface
+     * @var OrderProductRemover
      */
-    private $translator;
+    private $orderProductRemover;
 
     /**
-     * @param TranslatorInterface $translator
+     * CancelOrderProductHandler constructor.
+     *
+     * @param OrderProductRemover $orderProductRemover
      */
     public function __construct(
-        TranslatorInterface $translator
+        OrderProductRemover $orderProductRemover
     ) {
-        $this->translator = $translator;
+        $this->orderProductRemover = $orderProductRemover;
     }
 
     /**
@@ -115,10 +116,7 @@ final class CancelOrderProductHandler extends AbstractOrderCommandHandler implem
                 $qty_cancel_product = $orderDetails['productCancelQuantity'][$orderDetail->id_order_detail];
                 $this->reinjectQuantity($orderDetail, $qty_cancel_product);
 
-                // Delete product
-                if (!$order->deleteProduct($order, $orderDetail, $qty_cancel_product)) {
-                    throw new OrderException($this->translator->trans('An error occurred while attempting to delete the product.', [], 'Admin.Orderscustomers.Notification'));
-                }
+                $this->orderProductRemover->deleteProductFromOrder($order, $orderDetail, $qty_cancel_product);
 
                 // Update weight SUM
                 $order_carrier = new OrderCarrier((int) $order->getIdOrderCarrier());
@@ -138,9 +136,7 @@ final class CancelOrderProductHandler extends AbstractOrderCommandHandler implem
         if (!empty($orderDetails['customizedProductsOrderDetail'])) {
             foreach ($orderDetails['customizedProductsOrderDetail'] as $orderDetail) {
                 $qtyCancelProduct = abs($orderDetails['customizedCancelQuantity'][$orderDetail->id_customization]);
-                if (!$order->deleteCustomization($orderDetail->id_customization, $qtyCancelProduct, $orderDetail)) {
-                    $this->errors[] = $this->translator->trans('An error occurred while attempting to delete product customization.', [], 'Admin.Orderscustomers.Notification') . ' ' . $id_customization;
-                }
+                $this->orderProductRemover->deleteProductFromOrder($order, $orderDetail, $qtyCancelProduct);
             }
         }
     }

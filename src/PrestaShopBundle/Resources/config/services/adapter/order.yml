@@ -146,6 +146,12 @@ services:
   prestashop.adapter.order.refund.updater:
     class: PrestaShop\PrestaShop\Adapter\Order\Refund\OrderRefundUpdater
 
+  prestashop.adapter.order.product.remover:
+    class: PrestaShop\PrestaShop\Adapter\Order\Refund\OrderProductRemover
+    arguments:
+      - "@logger"
+      - "@translator"
+
   prestashop.adapter.order.command_handler.delete_product_from_order_handler:
     class: PrestaShop\PrestaShop\Adapter\Order\CommandHandler\DeleteProductFromOrderHandler
     tags:
@@ -198,7 +204,7 @@ services:
   prestashop.adapter.order.command_handler.cancel_order_product_handler:
     class: PrestaShop\PrestaShop\Adapter\Order\CommandHandler\CancelOrderProductHandler
     arguments:
-      - "@translator"
+      - "@prestashop.adapter.order.product.remover"
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Order\Command\CancelOrderProductCommand
