@@ -88,20 +88,22 @@ final class ChangeOrderCurrencyHandler extends AbstractOrderHandler implements C
      */
     private function updateOrderCarrier(int $orderCarrierId, Currency $oldCurrency, Currency $newCurrency): void
     {
-        if ($orderCarrierId) {
-            $order_carrier = new OrderCarrier($orderCarrierId);
-            $order_carrier->shipping_cost_tax_excl = (float) Tools::convertPriceFull(
-                $order_carrier->shipping_cost_tax_excl,
-                $oldCurrency,
-                $newCurrency
-            );
-            $order_carrier->shipping_cost_tax_incl = (float) Tools::convertPriceFull(
-                $order_carrier->shipping_cost_tax_incl,
-                $oldCurrency,
-                $newCurrency
-            );
-            $order_carrier->update();
+        if (!$orderCarrierId) {
+            return;
         }
+
+        $order_carrier = new OrderCarrier($orderCarrierId);
+        $order_carrier->shipping_cost_tax_excl = (float) Tools::convertPriceFull(
+            $order_carrier->shipping_cost_tax_excl,
+            $oldCurrency,
+            $newCurrency
+        );
+        $order_carrier->shipping_cost_tax_incl = (float) Tools::convertPriceFull(
+            $order_carrier->shipping_cost_tax_incl,
+            $oldCurrency,
+            $newCurrency
+        );
+        $order_carrier->update();
     }
 
     /**
@@ -145,11 +147,13 @@ final class ChangeOrderCurrencyHandler extends AbstractOrderHandler implements C
      */
     private function updateInvoices(PrestaShopCollection $invoices, Currency $oldCurrency, Currency $newCurrency): void
     {
-        if ($invoices->count()) {
-            foreach ($invoices as $invoice) {
-                $this->convertPriceFields($invoice, $this->getSharedAmountFields(), $oldCurrency, $newCurrency);
-                $invoice->save();
-            }
+        if (!$invoices->count()) {
+            return;
+        }
+
+        foreach ($invoices as $invoice) {
+            $this->convertPriceFields($invoice, $this->getSharedAmountFields(), $oldCurrency, $newCurrency);
+            $invoice->save();
         }
     }
 
