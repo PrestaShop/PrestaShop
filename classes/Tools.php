@@ -376,29 +376,19 @@ class ToolsCore
      */
     public static function getRemoteAddr()
     {
-        if (function_exists('apache_request_headers')) {
-            $headers = apache_request_headers();
-        } else {
-            $headers = $_SERVER;
+        if (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])
+            && (
+                empty($_SERVER['REMOTE_ADDR'])
+                || preg_match('/^127\..*/i', $_SERVER['REMOTE_ADDR']) 
+                || preg_match('/^172\.(16|17|18|19|2\d|30|31)\.*/i', $_SERVER['REMOTE_ADDR'])
+                || preg_match('/^192\.168\.*/i', $_SERVER['REMOTE_ADDR']) 
+                || preg_match('/^10\..*/i', $_SERVER['REMOTE_ADDR'])
+            )
+        ) {
+            return explode(',', $_SERVER['HTTP_X_FORWARDED_FOR'])[0];
         }
 
-        if (array_key_exists('X-Forwarded-For', $headers)) {
-            $_SERVER['HTTP_X_FORWARDED_FOR'] = $headers['X-Forwarded-For'];
-        }
-
-        if (isset($_SERVER['HTTP_X_FORWARDED_FOR']) && $_SERVER['HTTP_X_FORWARDED_FOR'] && (!isset($_SERVER['REMOTE_ADDR'])
-            || preg_match('/^127\..*/i', trim($_SERVER['REMOTE_ADDR'])) || preg_match('/^172\.(1[6-9]|2\d|30|31)\..*/i', trim($_SERVER['REMOTE_ADDR']))
-            || preg_match('/^192\.168\.*/i', trim($_SERVER['REMOTE_ADDR'])) || preg_match('/^10\..*/i', trim($_SERVER['REMOTE_ADDR'])))) {
-            if (strpos($_SERVER['HTTP_X_FORWARDED_FOR'], ',')) {
-                $ips = explode(',', $_SERVER['HTTP_X_FORWARDED_FOR']);
-
-                return $ips[0];
-            } else {
-                return $_SERVER['HTTP_X_FORWARDED_FOR'];
-            }
-        } else {
-            return $_SERVER['REMOTE_ADDR'];
-        }
+        return $_SERVER['REMOTE_ADDR'];
     }
 
     /**
