@@ -214,8 +214,12 @@ td .editProductInvoice {
 /* Cancel/refund products */
 .shipping-price {
   display: flex;
-  flex-direction: row;
-  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+
+  .cancel-product-element {
+    margin-top: 10px;
+  }
 }
 
 .shipping-refund-amount {
@@ -324,6 +328,7 @@ td.cancel-product-element {
 
       &.cancel-product-amount {
         .input-group {
+          margin-top: 12px;
           min-width: 125px;
         }
       }
