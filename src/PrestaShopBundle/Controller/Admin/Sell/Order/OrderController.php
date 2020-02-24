@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Controller\Admin\Sell\Order;
 
 use Exception;
+use InvalidArgumentException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartInformation;
 use PrestaShop\PrestaShop\Core\Domain\CustomerMessage\Command\AddOrderCustomerMessageCommand;
 use PrestaShop\PrestaShop\Core\Domain\CustomerMessage\Exception\CannotSendEmailException;
@@ -961,7 +962,7 @@ class OrderController extends FrameworkBundleAdminController
 
                     $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
                 } catch (Exception $e) {
-                    $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+                    $this->addFlash('error', $this->getErrorMessageForException($e, $this->getPaymentErrorMessages($e)));
                 }
             } else {
                 foreach ($form->getErrors(true) as $error) {
@@ -1492,6 +1493,16 @@ class OrderController extends FrameworkBundleAdminController
                 ),
             ],
         ];
+    }
+
+    private function getPaymentErrorMessages(Exception $e)
+    {
+        return array_merge($this->getErrorMessages($e), [
+            InvalidArgumentException::class => $this->trans(
+                'Only numbers and decimal points (".") are allowed in the amount fields of the payment block, e.g. 10.50 or 1050.',
+                'Admin.Orderscustomers.Notification'
+            ),
+        ]);
     }
 
     /**
