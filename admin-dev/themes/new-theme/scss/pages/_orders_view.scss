@@ -13,6 +13,14 @@
       margin-top: 5px;
       display: block;
     }
+
+    .info-block {
+      .col-sm:not(:last-child) {
+        .text-muted {
+          margin-bottom: 4px !important;
+        }
+      }
+    }
   }
 
   #product-pack-modal-table {
