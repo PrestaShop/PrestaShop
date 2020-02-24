@@ -80,11 +80,19 @@ services:
         arguments:
             - '@prestashop.adapter.maintenance.configuration'
 
-    prestashop.adapter.administration.form_provider:
+    prestashop.adapter.administration.general.form_provider:
         class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administration\FormDataProvider'
         arguments:
             - '@prestashop.adapter.general.configuration'
+
+    prestashop.adapter.administration.upload_quota.form_provider:
+        class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administration\FormDataProvider'
+        arguments:
             - '@prestashop.adapter.upload_quota.configuration'
+
+    prestashop.adapter.administration.notifications.form_provider:
+        class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administration\FormDataProvider'
+        arguments:
             - '@prestashop.adapter.notifications.configuration'
 
     prestashop.adapter.preferences.form_provider:

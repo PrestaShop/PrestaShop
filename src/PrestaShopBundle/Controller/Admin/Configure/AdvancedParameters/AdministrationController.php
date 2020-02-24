@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
+use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
@@ -46,13 +47,13 @@ class AdministrationController extends FrameworkBundleAdminController
      *
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message="Access denied.")
      *
-     * @param FormInterface $form
-     *
      * @return Response
      */
-    public function indexAction(FormInterface $form = null)
+    public function indexAction()
     {
-        $form = null === $form ? $this->get('prestashop.adapter.administration.form_handler')->getForm() : $form;
+        $generalForm = $this->getGeneralFormHandler()->getForm();
+        $uploadQuotaForm = $this->getUploadQuotaFormHandler()->getForm();
+        $notificationsForm = $this->getNotificationsFormHandler()->getForm();
 
         return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/administration.html.twig', [
             'layoutHeaderToolbarBtn' => [],
@@ -63,12 +64,14 @@ class AdministrationController extends FrameworkBundleAdminController
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink('AdminAdminPreferences'),
             'requireFilterStatus' => false,
-            'form' => $form->createView(),
+            'generalForm' => $generalForm->createView(),
+            'uploadQuotaForm' => $uploadQuotaForm->createView(),
+            'notificationsForm' => $notificationsForm->createView(),
         ]);
     }
 
     /**
-     * Process the Administration configuration form.
+     * Process the Performance Smarty configuration form.
      *
      * @AdminSecurity("is_granted(['update', 'create', 'delete'], request.get('_legacy_controller'))", message="You do not have permission to update this.", redirectRoute="admin_administration")
      * @DemoRestricted(redirectRoute="admin_administration")
@@ -77,27 +80,115 @@ class AdministrationController extends FrameworkBundleAdminController
      *
      * @return RedirectResponse
      */
-    public function processFormAction(Request $request)
+    public function processGeneralFormAction(Request $request)
+    {
+        $this->dispatchHook(
+            'actionAdminAdminPreferencesControllerPostProcessBefore',
+            ['controller' => $this]
+        );
+
+        return $this->processForm(
+            $request,
+            $this->getGeneralFormHandler()
+        );
+    }
+
+    /**
+     * Process the Performance Smarty configuration form.
+     *
+     * @AdminSecurity("is_granted(['update', 'create', 'delete'], request.get('_legacy_controller'))", message="You do not have permission to update this.", redirectRoute="admin_administration")
+     * @DemoRestricted(redirectRoute="admin_administration")
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    public function processUploadQuotaFormAction(Request $request)
+    {
+        $this->dispatchHook(
+            'actionAdminAdminPreferencesControllerPostProcessBefore',
+            ['controller' => $this]
+        );
+
+        return $this->processForm(
+            $request,
+            $this->getUploadQuotaFormHandler()
+        );
+    }
+
+    /**
+     * Process the Performance Smarty configuration form.
+     *
+     * @AdminSecurity("is_granted(['update', 'create', 'delete'], request.get('_legacy_controller'))", message="You do not have permission to update this.", redirectRoute="admin_administration")
+     * @DemoRestricted(redirectRoute="admin_administration")
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    public function processNotificationsFormAction(Request $request)
+    {
+        $this->dispatchHook(
+            'actionAdminAdminPreferencesControllerPostProcessBefore',
+            ['controller' => $this]
+        );
+
+        return $this->processForm(
+            $request,
+            $this->getNotificationsFormHandler()
+        );
+    }
+
+    /**
+     * Process the Performance configuration form.
+     *
+     * @param Request $request
+     * @param FormHandlerInterface $formHandler
+     *
+     * @return RedirectResponse
+     */
+    protected function processForm(Request $request, FormHandlerInterface $formHandler)
     {
         $this->dispatchHook('actionAdminAdminPreferencesControllerPostProcessBefore', ['controller' => $this]);
 
-        $form = $this->get('prestashop.adapter.administration.form_handler')->getForm();
+        $form = $formHandler->getForm();
         $form->handleRequest($request);
 
         if ($form->isSubmitted()) {
             $data = $form->getData();
-
-            $saveErrors = $this->get('prestashop.adapter.administration.form_handler')->save($data);
+            $saveErrors = $formHandler->save($data);
 
             if (0 === count($saveErrors)) {
                 $this->addFlash('success', $this->trans('Update successful', 'Admin.Notifications.Success'));
-
-                return $this->redirectToRoute('admin_administration');
+            } else {
+                $this->flashErrors($saveErrors);
             }
-
-            $this->flashErrors($saveErrors);
         }
 
         return $this->redirectToRoute('admin_administration');
+    }
+
+    /**
+     * @return FormHandlerInterface
+     */
+    protected function getGeneralFormHandler(): FormHandlerInterface
+    {
+        return $this->get('prestashop.adapter.administration.general.form_handler');
+    }
+
+    /**
+     * @return FormHandlerInterface
+     */
+    protected function getUploadQuotaFormHandler(): FormHandlerInterface
+    {
+        return $this->get('prestashop.adapter.administration.upload_quota.form_handler');
+    }
+
+    /**
+     * @return FormHandlerInterface
+     */
+    protected function getNotificationsFormHandler(): FormHandlerInterface
+    {
+        return $this->get('prestashop.adapter.administration.notifications.form_handler');
     }
 }
