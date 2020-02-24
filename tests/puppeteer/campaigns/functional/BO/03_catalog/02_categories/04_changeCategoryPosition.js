@@ -52,7 +52,7 @@ describe('Change category position', async () => {
     await expect(pageTitle).to.contains(this.pageObjects.categoriesPage.pageTitle);
   });
 
-  it('should reset all filters and get Number of Categories in BO', async function () {
+  it('should reset all filters and get number of categories in BO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFirst', baseContext);
     numberOfCategories = await this.pageObjects.categoriesPage.resetAndGetNumberOfLines();
     await expect(numberOfCategories).to.be.above(0);
