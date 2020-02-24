@@ -1258,11 +1258,6 @@
         <target>N/A</target>
         <note>Line: 69</note>
       </trans-unit>
-      <trans-unit id="294598238a4d88a9920c7e6fba9bb843">
-        <source>MPN</source>
-        <target>MPN</target>
-        <note>Line: 41</note>
-      </trans-unit>
     </body>
   </file>
   <file original="admin-dev/themes/default/template/controllers/themes/configurelayouts.tpl" source-language="en-US" target-language="en" datatype="plaintext">

@@ -333,6 +333,15 @@
       </trans-unit>
     </body>
   </file>
+  <file original="admin-dev/themes/default/template/controllers/suppliers/helpers/view/view.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="294598238a4d88a9920c7e6fba9bb843">
+        <source>MPN</source>
+        <target>MPN</target>
+        <note>Line: 41</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="classes/lang/KeysReference/CategoryLang.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="fa03eb688ad8aa1db593d33dabd89bad">
