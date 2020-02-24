@@ -554,14 +554,13 @@ class CartPresenter implements PresenterInterface
             ) {
                 $freeShippingOnly = true;
                 $freeShippingAlreadySet = !$freeShippingAlreadySet ? true : false;
-            }
-            else{
+            } else{
                 $freeShippingOnly = false;
                 $totalCartVoucherReduction = $this->includeTaxes() ? $cartVoucher['value_real'] : $cartVoucher['value_tax_exc'];
                 $currencyFrom = new \Currency($cartVoucher['reduction_currency']);
                 $currencyTo = new \Currency($cart->id_currency);
                 if ($currencyFrom->conversion_rate == 0) {
-                    $totalCartVoucherReduction= 0;
+                    $totalCartVoucherReduction = 0;
                 } else {
                     // convert to default currency
                     $defaultCurrencyId = (int) Configuration::get('PS_CURRENCY_DEFAULT');
