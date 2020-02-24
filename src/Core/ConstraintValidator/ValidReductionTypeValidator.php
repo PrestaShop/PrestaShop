@@ -59,7 +59,7 @@ final class ValidReductionTypeValidator extends ConstraintValidator
                 $constraint->message,
                 [
                     '%type%' => $value,
-                    '%types%' => implode(', ', [Reduction::TYPE_PERCENTAGE, Reduction::TYPE_AMOUNT]),
+                    '%types%' => implode(', ', [Reduction::TYPE_PERCENTAGE, Reduction::TYPE_AMOUNT, Reduction::TYPE_FREE_SHIPPING]),
                 ],
                 '[type]'
             );
