@@ -63,7 +63,7 @@
       <input type="text" value="{{ product.quantity }}" class="form-control">
     </div>
   </td>
-  <td class="cellProductLocation{% if not isColumnLocationDisplayed and product.location %} d-none{% endif %}">{{ product.location }}</td>
+  <td class="cellProductLocation{% if not isColumnLocationDisplayed %} d-none{% endif %}">{{ product.location }}</td>
   <td>
     {{ product.quantityRefunded }}{% if product.amountRefunded %} ({{ product.amountRefunded }} {{ 'Refunded'|trans({}, 'Admin.Orderscustomers.Feature') }}){% endif %}
   </td>
@@ -160,7 +160,7 @@
         </div>
       {% endif %}
       {% for customization in product.customizations.textCustomizations %}
-        <p><strong>{{ customization.name }}</strong> {{ customization.value }}</p>
+        <p><strong>{{ customization.name }} :</strong> {{ customization.value }}</p>
       {% endfor %}
       {% if product.type == constant('PrestaShop\\PrestaShop\\Core\\Domain\\Order\\QueryResult\\OrderProductForViewing::TYPE_PACK') %}
         <div class="btn-product-pack-modal mb-3 d-print-none" data-toggle="modal" data-target="#product-pack-modal" data-pack-items="{{ product.packItems|json_encode }}">
