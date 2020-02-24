@@ -34,9 +34,10 @@ use Symfony\Component\Validator\Constraint;
  */
 final class ValidReductionValue extends Constraint
 {
-    public $invalidAmountValueMessage = 'Reduction value "%value%" is invalid. Value cannot be negative';
+    const INVALID_AMOUNT_VALUE_MESSAGE = 'Reduction value "%value%" is invalid. Value cannot be negative';
 
-    public $invalidPercentageValueMessage = 'Reduction value "%value%" is invalid. Allowed values from 0 to %max%';
+    const INVALID_PERCENT_VALUE_MESSAGE = 'Reduction value "%value%" is invalid. Allowed values from 0 to %max%';
+
 
     public $propertyPath;
 
