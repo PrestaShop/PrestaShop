@@ -91,7 +91,7 @@ module.exports = class Checkout extends FOBasePage {
   /**
    * Check payment method existence
    * @param paymentModuleName
-   * @returns {Promise<boolean|true>}
+   * @returns {Promise<boolean>}
    */
   isPaymentMethodExist(paymentModuleName) {
     return this.elementVisible(this.paymentOptionInput.replace('%NAME', paymentModuleName), 2000);
