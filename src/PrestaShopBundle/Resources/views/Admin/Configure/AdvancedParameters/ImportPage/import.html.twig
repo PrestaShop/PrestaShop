@@ -36,12 +36,12 @@
               {% include '@PrestaShop/Admin/Configure/AdvancedParameters/Blocks/import_panel.html.twig' %}
             {% endblock %}
           </div>
-
+          
           <div class="col-12 col-md-4">
             {% block import_available_fields %}
               {% include '@PrestaShop/Admin/Configure/AdvancedParameters/Blocks/import_available_fields.html.twig' %}
             {% endblock %}
-
+            
             {% block import_sample_files %}
               {% include '@PrestaShop/Admin/Configure/AdvancedParameters/Blocks/import_sample_files.html.twig' %}
             {% endblock %}
@@ -54,6 +54,6 @@
 
 {% block javascripts %}
   {{ parent() }}
-
+  
   <script src="{{ asset('themes/new-theme/public/imports.bundle.js') }}"></script>
 {% endblock %}

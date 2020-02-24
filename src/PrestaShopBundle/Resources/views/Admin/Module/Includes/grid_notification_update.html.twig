@@ -25,11 +25,11 @@
 {% extends '@PrestaShop/Admin/Module/Includes/grid.html.twig' %}
 
 {% block addon_card %}
-    {% include '@PrestaShop/Admin/Module/Includes/card_notification_update.html.twig'
+  {% include '@PrestaShop/Admin/Module/Includes/card_notification_update.html.twig'
         with {
             'module': module,
             'display_type': display_type,
             'origin': origin|default('none')
         }
-    %}
+  %}
 {% endblock %}

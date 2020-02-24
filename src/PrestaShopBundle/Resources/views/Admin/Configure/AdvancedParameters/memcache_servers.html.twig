@@ -25,7 +25,7 @@
 {% trans_default_domain "Admin.Advparameters.Feature" %}
 
 {% block perfs_memcache_servers %}
-<div class="form-group row memcache" id="new-server-btn">
+  <div class="form-group row memcache" id="new-server-btn">
     <a
         class="btn btn-default"
         data-toggle="collapse"
@@ -33,46 +33,46 @@
         aria-expanded="false"
         aria-controls="server-form"
     ><i class="material-icons">add_circle</i> {{ 'Add server'|trans }}</a>
-</div>
-
-<div id="server-form" class="collapse">
+  </div>
+  
+  <div id="server-form" class="collapse">
     {{ form_widget(form) }}
-
+    
     <div class="form-group">
-        <div class="float-right">
-            <button id="add-server-btn" class="btn btn-primary">{{ 'Add Server'|trans }}</button>
-            <button id="test-server-btn" class="btn btn-primary">{{ 'Test Server'|trans }}</button>
-        </div>
+      <div class="float-right">
+        <button id="add-server-btn" class="btn btn-primary">{{ 'Add Server'|trans }}</button>
+        <button id="test-server-btn" class="btn btn-primary">{{ 'Test Server'|trans }}</button>
+      </div>
     </div>
-</div>
-
-<div id="servers-list" class="memcache">
+  </div>
+  
+  <div id="servers-list" class="memcache">
     <div class="form-group">
-        <table class="table" id="servers-table">
-            <thead>
-            <tr>
-                <th class="fixed-width-xs"><span class="title_box">{{ 'ID'|trans({}, 'Admin.Global') }}</span></th>
-                <th><span class="title_box">{{ 'IP Address'|trans }}</span></th>
-                <th class="fixed-width-xs"><span class="title_box">{{ 'Port'|trans }}</span></th>
-                <th class="fixed-width-xs"><span class="title_box">{{ 'Weight'|trans }}</span></th>
-                <th>&nbsp;</th>
+      <table class="table" id="servers-table">
+        <thead>
+          <tr>
+            <th class="fixed-width-xs"><span class="title_box">{{ 'ID'|trans({}, 'Admin.Global') }}</span></th>
+            <th><span class="title_box">{{ 'IP Address'|trans }}</span></th>
+            <th class="fixed-width-xs"><span class="title_box">{{ 'Port'|trans }}</span></th>
+            <th class="fixed-width-xs"><span class="title_box">{{ 'Weight'|trans }}</span></th>
+            <th>&nbsp;</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for server in servers %}
+            <tr id="row_{{ server.id_memcached_server }}">
+              <td>{{ server.id_memcached_server }}</td>
+              <td>{{ server.ip }}</td>
+              <td>{{ server.port }}</td>
+              <td>{{ server.weight }}</td>
+              <td>
+                {% set removeMsg = 'Do you really want to remove the server %serverIp%:%serverPort% ?'|trans({'%serverIp%': server.ip, '%serverPort%': server.port}, 'Admin.Advparameters.Notification')|json_encode|raw  %}
+                <a class="btn btn-default" href="" onclick="app.removeServer({{ server.id_memcached_server }}, {{ removeMsg }});"><i class="material-icons">remove_circle</i> {{ 'Remove'|trans({}, 'Admin.Actions') }}</a>
+              </td>
             </tr>
-            </thead>
-            <tbody>
-            {% for server in servers %}
-                <tr id="row_{{ server.id_memcached_server }}">
-                    <td>{{ server.id_memcached_server }}</td>
-                    <td>{{ server.ip }}</td>
-                    <td>{{ server.port }}</td>
-                    <td>{{ server.weight }}</td>
-                    <td>
-                        {% set removeMsg = 'Do you really want to remove the server %serverIp%:%serverPort% ?'|trans({'%serverIp%': server.ip, '%serverPort%': server.port}, 'Admin.Advparameters.Notification')|json_encode|raw  %}
-                        <a class="btn btn-default" href="" onclick="app.removeServer({{ server.id_memcached_server }}, {{ removeMsg }});"><i class="material-icons">remove_circle</i> {{ 'Remove'|trans({}, 'Admin.Actions') }}</a>
-                    </td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
+          {% endfor %}
+        </tbody>
+      </table>
     </div>
-</div>
+  </div>
 {% endblock %}

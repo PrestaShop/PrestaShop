@@ -29,41 +29,41 @@
 
 {% block sql_request_form %}
   {{ form_start(requestSqlForm) }}
-    <div class="card">
-      <h3 class="card-header">
-        {{ 'SQL query'|trans }}
-      </h3>
-      <div class="card-block row">
-        <div class="card-text">
-          {{ form_errors(requestSqlForm) }}
-
-          <div class="form-group row">
-            <label for="{{ requestSqlForm.name.vars.id }}" class="form-control-label">{{ 'SQL query name'|trans }}</label>
-
-            <div class="col-sm">
-              {{ ps.form_widget_with_error(requestSqlForm.name) }}
-            </div>
-          </div>
-
-          <div class="form-group row">
-            <label for="{{ requestSqlForm.sql.vars.id }}" class="form-control-label">{{ 'SQL query'|trans }}</label>
-
-            <div class="col-sm">
-              {{ ps.form_widget_with_error(requestSqlForm.sql, {'attr': {'rows': 10}}) }}
-            </div>
+  <div class="card">
+    <h3 class="card-header">
+      {{ 'SQL query'|trans }}
+    </h3>
+    <div class="card-block row">
+      <div class="card-text">
+        {{ form_errors(requestSqlForm) }}
+        
+        <div class="form-group row">
+          <label for="{{ requestSqlForm.name.vars.id }}" class="form-control-label">{{ 'SQL query name'|trans }}</label>
+          
+          <div class="col-sm">
+            {{ ps.form_widget_with_error(requestSqlForm.name) }}
           </div>
         </div>
-
-        {{ form_rest(requestSqlForm) }}
+        
+        <div class="form-group row">
+          <label for="{{ requestSqlForm.sql.vars.id }}" class="form-control-label">{{ 'SQL query'|trans }}</label>
+          
+          <div class="col-sm">
+            {{ ps.form_widget_with_error(requestSqlForm.sql, {'attr': {'rows': 10}}) }}
+          </div>
+        </div>
       </div>
-      <div class="card-footer">
-        <a href="{{ path('admin_sql_requests_index') }}" class="btn btn-outline-secondary">
-          {{ 'Cancel'|trans({}, 'Admin.Actions') }}
-        </a>
-        <button class="btn btn-primary float-right">
-          {{ 'Save'|trans({}, 'Admin.Actions') }}
-        </button>
-      </div>
+      
+      {{ form_rest(requestSqlForm) }}
     </div>
+    <div class="card-footer">
+      <a href="{{ path('admin_sql_requests_index') }}" class="btn btn-outline-secondary">
+        {{ 'Cancel'|trans({}, 'Admin.Actions') }}
+      </a>
+      <button class="btn btn-primary float-right">
+        {{ 'Save'|trans({}, 'Admin.Actions') }}
+      </button>
+    </div>
+  </div>
   {{ form_end(requestSqlForm) }}
 {% endblock %}

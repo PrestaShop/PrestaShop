@@ -30,10 +30,10 @@
       {% set formattedKeyword %}
         {{ keyword }}{% if value['param'] is defined %}*{% endif %}
       {% endset %}
-
+      
       {% set formattedKeywords = formattedKeywords|merge([formattedKeyword]) %}
     {% endfor %}
-
+    
     {{ 'Keywords: %keywords%'|trans({'%keywords%': formattedKeywords|join(', ')}, 'Admin.Shopparameters.Feature') }}
   {% endif %}
 {% endblock %}

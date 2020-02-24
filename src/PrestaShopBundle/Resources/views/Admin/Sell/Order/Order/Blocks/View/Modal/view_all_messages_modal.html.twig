@@ -44,9 +44,9 @@
       </div>
       <div class="modal-body">
         <ul class="list-unstyled p-4 messages-block" id="all-messages-list">
-          {% for message in orderForViewing.messages.messages|reverse %}
-            {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/msg_list_item.html.twig' %}
-          {% endfor %}
+        {% for message in orderForViewing.messages.messages|reverse %}
+          {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/msg_list_item.html.twig' %}
+        {% endfor %}
         </ul>
       </div>
     </div>

@@ -52,18 +52,18 @@
             </tr>
           </thead>
           <tbody>
-          {% for supplier_combination in form[collectionName] %}
-            <tr>
-              <td>{{ supplier_combination.vars.value.label }}</td>
-              <td>{{ form_widget(supplier_combination.supplier_reference) }}</td>
-              <td>{{ form_widget(supplier_combination.product_price) }}</td>
-              <td>
-                {{ form_widget(supplier_combination.product_price_currency) }}
-                {{ form_widget(supplier_combination.id_product_attribute) }}
-                {{ form_widget(supplier_combination.supplier_id) }}
-              </td>
-            </tr>
-          {% endfor %}
+            {% for supplier_combination in form[collectionName] %}
+              <tr>
+                <td>{{ supplier_combination.vars.value.label }}</td>
+                <td>{{ form_widget(supplier_combination.supplier_reference) }}</td>
+                <td>{{ form_widget(supplier_combination.product_price) }}</td>
+                <td>
+                  {{ form_widget(supplier_combination.product_price_currency) }}
+                  {{ form_widget(supplier_combination.id_product_attribute) }}
+                  {{ form_widget(supplier_combination.supplier_id) }}
+                </td>
+              </tr>
+            {% endfor %}
           </tbody>
         </table>
       </div>

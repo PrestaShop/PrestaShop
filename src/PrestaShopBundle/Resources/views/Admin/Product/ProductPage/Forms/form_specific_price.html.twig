@@ -39,130 +39,130 @@
 <div class="card card-block">
   <h4><b>{{ 'Specific price conditions'|trans({}, 'Admin.Catalog.Feature') }}</b></h4>
   {{ form_errors(form) }}
-
+  
   {% if form.sp_id_shop.vars.choices is defined %}
-  <div class="row">
-    <div class="col-md-4">
-      <fieldset class="form-group">
+    <div class="row">
+      <div class="col-md-4">
+        <fieldset class="form-group">
         <label>{{ 'Shop'|trans({}, 'Admin.Global') }}</label>
         {{ form_errors(form.sp_id_shop) }}
         {{ form_widget(form.sp_id_shop) }}
-      </fieldset>
+        </fieldset>
+      </div>
     </div>
-  </div>
   {% else %}
-      {{ form_widget(form.sp_id_shop) }}
+    {{ form_widget(form.sp_id_shop) }}
   {% endif %}
-
+  
   <div class="row">
     <div class="{{ column_default_md_3 }}">
       <fieldset class="form-group">
-        <label>{{ 'For'|trans({}, 'Admin.Global') }}</label>
-        {{ form_errors(form.sp_id_currency) }}
-        {{ form_widget(form.sp_id_currency) }}
+      <label>{{ 'For'|trans({}, 'Admin.Global') }}</label>
+      {{ form_errors(form.sp_id_currency) }}
+      {{ form_widget(form.sp_id_currency) }}
       </fieldset>
     </div>
     <div class="{{ column_default_md_3 }}">
       <fieldset class="form-group">
-        <label>&nbsp;</label>
-        {{ form_errors(form.sp_id_country) }}
-        {{ form_widget(form.sp_id_country) }}
+      <label>&nbsp;</label>
+      {{ form_errors(form.sp_id_country) }}
+      {{ form_widget(form.sp_id_country) }}
       </fieldset>
     </div>
     <div class="{{ column_default_md_3 }}">
       <fieldset class="form-group">
-        <label>&nbsp;</label>
-        {{ form_errors(form.sp_id_group) }}
-        {{ form_widget(form.sp_id_group) }}
+      <label>&nbsp;</label>
+      {{ form_errors(form.sp_id_group) }}
+      {{ form_widget(form.sp_id_group) }}
       </fieldset>
     </div>
     <div class="col-md-6">
       <fieldset class="form-group">
-        <label>{{ 'Customer'|trans({}, 'Admin.Global') }}</label>
-        {{ form_errors(form.sp_id_customer) }}
-        {{ form_widget(form.sp_id_customer) }}
+      <label>{{ 'Customer'|trans({}, 'Admin.Global') }}</label>
+      {{ form_errors(form.sp_id_customer) }}
+      {{ form_widget(form.sp_id_customer) }}
       </fieldset>
     </div>
   </div>
   <div class="row">
     <div id="specific-price-combination-selector" class="col-md-6 {{ has_combinations ? '' : 'hide' }}">
       <fieldset class="form-group">
-        <label>{{ form.sp_id_product_attribute.vars.label }}</label>
-        {{ form_errors(form.sp_id_product_attribute) }}
-        {{ form_widget(form.sp_id_product_attribute) }}
+      <label>{{ form.sp_id_product_attribute.vars.label }}</label>
+      {{ form_errors(form.sp_id_product_attribute) }}
+      {{ form_widget(form.sp_id_product_attribute) }}
       </fieldset>
     </div>
     <div class="clearfix"></div>
     <div class="{{ column_default_md_3 }}">
       <fieldset class="form-group">
-        <label>{{ form.sp_from.vars.label }}</label>
-        {{ form_errors(form.sp_from) }}
-        {{ form_widget(form.sp_from) }}
+      <label>{{ form.sp_from.vars.label }}</label>
+      {{ form_errors(form.sp_from) }}
+      {{ form_widget(form.sp_from) }}
       </fieldset>
     </div>
     <div class="{{ column_default_md_3 }}">
       <fieldset class="form-group">
-        <label>{{ 'to'|trans({}, 'Admin.Global')|raw }}</label>
-        {{ form_errors(form.sp_to) }}
-        {{ form_widget(form.sp_to) }}
+      <label>{{ 'to'|trans({}, 'Admin.Global')|raw }}</label>
+      {{ form_errors(form.sp_to) }}
+      {{ form_widget(form.sp_to) }}
       </fieldset>
     </div>
-  {% if is_modal == true %}
-  </div>
-  <div class="row">
-  {% endif %}
+    {% if is_modal == true %}
+    </div>
+    <div class="row">
+    {% endif %}
     <div class="{{ column_default_md_2 }}">
       <fieldset class="form-group">
-        <label>{{ form.sp_from_quantity.vars.label }}</label>
-        {{ form_errors(form.sp_from_quantity) }}
-        <div class="input-group">
-          {{ form_widget(form.sp_from_quantity) }}
-          <div class="input-group-append">
-            <span class="input-group-text">{{ 'Unit(s)'|trans({}, 'Admin.Catalog.Feature') }}</span>
-          </div>
+      <label>{{ form.sp_from_quantity.vars.label }}</label>
+      {{ form_errors(form.sp_from_quantity) }}
+      <div class="input-group">
+        {{ form_widget(form.sp_from_quantity) }}
+        <div class="input-group-append">
+          <span class="input-group-text">{{ 'Unit(s)'|trans({}, 'Admin.Catalog.Feature') }}</span>
         </div>
+      </div>
       </fieldset>
     </div>
   </div>
   <br>
-
+  
   <h4><b>{{ 'Impact on price'|trans({}, 'Admin.Catalog.Feature') }}</b></h4>
   <div class="row">
     <div class="{{ column_default_md_3 }}">
       <fieldset class="form-group">
-        <label>{{ form.sp_price.vars.label }}</label>
-        {{ form_errors(form.sp_price) }}
-        {{ form_widget(form.sp_price) }}
+      <label>{{ form.sp_price.vars.label }}</label>
+      {{ form_errors(form.sp_price) }}
+      {{ form_widget(form.sp_price) }}
       </fieldset>
     </div>
     <div class="{{ column_default_md_3 }}">
       <fieldset class="form-group">
-        <label>&nbsp;</label>
-        {{ form_errors(form.leave_bprice) }}
-        {{ form_widget(form.leave_bprice) }}
+      <label>&nbsp;</label>
+      {{ form_errors(form.leave_bprice) }}
+      {{ form_widget(form.leave_bprice) }}
       </fieldset>
     </div>
   </div>
   <div class="row">
     <div class="{{ column_default_xl_2 }} col-lg-3">
       <fieldset class="form-group">
-        <label>{{ 'Apply a discount of'|trans({}, 'Admin.Catalog.Feature') }}</label>
-        {{ form_errors(form.sp_reduction) }}
-        {{ form_widget(form.sp_reduction) }}
+      <label>{{ 'Apply a discount of'|trans({}, 'Admin.Catalog.Feature') }}</label>
+      {{ form_errors(form.sp_reduction) }}
+      {{ form_widget(form.sp_reduction) }}
       </fieldset>
     </div>
     <div class="{{ column_default_xl_2 }} col-lg-3">
       <fieldset class="form-group">
-        <label>&nbsp;</label>
-        {{ form_errors(form.sp_reduction_type) }}
-        {{ form_widget(form.sp_reduction_type) }}
+      <label>&nbsp;</label>
+      {{ form_errors(form.sp_reduction_type) }}
+      {{ form_widget(form.sp_reduction_type) }}
       </fieldset>
     </div>
     <div class="{{ column_default_xl_2 }} col-lg-3">
       <fieldset class="form-group">
-        <label>&nbsp;</label>
-        {{ form_errors(form.sp_reduction_tax) }}
-        {{ form_widget(form.sp_reduction_tax) }}
+      <label>&nbsp;</label>
+      {{ form_errors(form.sp_reduction_tax) }}
+      {{ form_widget(form.sp_reduction_tax) }}
       </fieldset>
     </div>
   </div>

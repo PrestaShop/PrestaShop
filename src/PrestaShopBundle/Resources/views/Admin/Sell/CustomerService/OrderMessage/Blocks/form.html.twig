@@ -24,7 +24,7 @@
  *#}
 
 {{ form_start(orderMessageForm) }}
-  <div class="card">
+<div class="card">
   <h3 class="card-header">
     <i class="material-icons">person</i>
     {{ 'Order messages'|trans({}, 'Admin.Orderscustomers.Feature') }}
@@ -32,15 +32,15 @@
   <div class="card-block row">
     <div class="card-text">
       {{ form_errors(orderMessageForm) }}
-
+      
       {{ ps.form_group_row(orderMessageForm.name, {}, {
         'label': 'Name'|trans({}, 'Admin.Global')
       }) }}
-
+      
       {{ ps.form_group_row(orderMessageForm.message, {}, {
         'label': 'Message'|trans({}, 'Admin.Global')
       }) }}
-
+      
       {% block order_message_form_rest %}
         {{ form_rest(orderMessageForm) }}
       {% endblock %}

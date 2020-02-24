@@ -31,7 +31,7 @@
     <h3 class="card-header">
       <i class="material-icons">language</i> {{ 'Local units'|trans }}
     </h3>
-
+    
     <div class="card-block row">
       <div class="card-text">
         <div class="form-group row">
@@ -41,7 +41,7 @@
             {{ form_widget(localUnitsForm.weight_unit) }}
           </div>
         </div>
-
+        
         <div class="form-group row">
           {{ ps.label_with_help(('Distance unit'|trans), ('The default distance unit for your shop (e.g. "km" for kilometer, "mi" for mile, etc.).'|trans({}, 'Admin.International.Help'))) }}
           <div class="col-sm">
@@ -49,7 +49,7 @@
             {{ form_widget(localUnitsForm.distance_unit) }}
           </div>
         </div>
-
+        
         <div class="form-group row">
           {{ ps.label_with_help(('Volume unit'|trans), ('The default volume unit for your shop (e.g. "L" for liter, "gal" for gallon, etc.).'|trans({}, 'Admin.International.Help'))) }}
           <div class="col-sm">
@@ -57,7 +57,7 @@
             {{ form_widget(localUnitsForm.volume_unit) }}
           </div>
         </div>
-
+        
         <div class="form-group row">
           {{ ps.label_with_help(('Dimension unit'|trans), ('The default dimension unit for your shop (e.g. "cm" for centimeter, "in" for inch, etc.).'|trans({}, 'Admin.International.Help'))) }}
           <div class="col-sm">
@@ -67,7 +67,7 @@
         </div>
       </div>
     </div>
-
+    
     <div class="card-footer">
       <div class="d-flex justify-content-end">
         <button class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>

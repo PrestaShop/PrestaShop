@@ -24,23 +24,23 @@
  *#}
 
 {% block kpi_row %}
-    <div class="container">
-        <div class="kpi-container">
-            <div class="row justify-content-around">
-                {% for kpi in kpiRow.kpis %}
-                    <div>
-                        {{ kpi|raw }}
-                    </div>
-                {% endfor %}
-            </div>
-        </div>
-    </div>
-
-    {% if kpiRow.allowRefresh %}
-      <div class="kpi-refresh">
-        <button class="refresh-kpis btn btn-primary" type="button">
-          <i class="material-icons">refresh</i>
-        </button>
+  <div class="container">
+    <div class="kpi-container">
+      <div class="row justify-content-around">
+        {% for kpi in kpiRow.kpis %}
+          <div>
+            {{ kpi|raw }}
+          </div>
+        {% endfor %}
       </div>
-    {% endif %}
+    </div>
+  </div>
+  
+  {% if kpiRow.allowRefresh %}
+    <div class="kpi-refresh">
+      <button class="refresh-kpis btn btn-primary" type="button">
+        <i class="material-icons">refresh</i>
+      </button>
+    </div>
+  {% endif %}
 {% endblock %}

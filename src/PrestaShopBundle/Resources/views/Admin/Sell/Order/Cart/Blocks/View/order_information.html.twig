@@ -38,14 +38,14 @@
               }, 'Admin.Orderscustomers.Feature') }}
             </a>
           </h2>
-
+          
           <p class="mb-0">
             {{ 'Made on:'|trans({}, 'Admin.Orderscustomers.Feature') }}
             {{ cartView.orderInformation.placed_date }}
           </p>
         {% else %}
           <h2>{{ 'No order was created from this cart.'|trans({}, 'Admin.Orderscustomers.Feature') }}</h2>
-
+          
           {% if cartView.customerInformation.id %}
             <a href="{{ createOrderFromCartLink }}"
                class="btn btn-outline-secondary"

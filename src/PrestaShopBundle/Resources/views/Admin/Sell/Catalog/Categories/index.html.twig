@@ -37,7 +37,7 @@
       </div>
     </div>
   {% endblock %}
-
+  
   {% block categories_kpis %}
     <div class="row">
       <div class="col">
@@ -52,7 +52,7 @@
       </div>
     </div>
   {% endblock %}
-
+  
   {% block categories_breadcrumb %}
     <div class="row">
       <div class="col">
@@ -60,18 +60,18 @@
       </div>
     </div>
   {% endblock %}
-
+  
   {% block categories_listing %}
     <div class="row">
       <div class="col">
         {% embed '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': categoriesGrid} %}
-          {% block grid_panel_footer %}
-            {% include '@PrestaShop/Admin/Sell/Catalog/Categories/Blocks/listing_panel_footer.html.twig' %}
-          {% endblock %}
-
-          {% block grid_panel_extra_content %}
-            {% include '@PrestaShop/Admin/Sell/Catalog/Categories/Blocks/delete_categories_modal.html.twig' %}
-          {% endblock %}
+        {% block grid_panel_footer %}
+          {% include '@PrestaShop/Admin/Sell/Catalog/Categories/Blocks/listing_panel_footer.html.twig' %}
+        {% endblock %}
+        
+        {% block grid_panel_extra_content %}
+          {% include '@PrestaShop/Admin/Sell/Catalog/Categories/Blocks/delete_categories_modal.html.twig' %}
+        {% endblock %}
         {% endembed %}
       </div>
     </div>
@@ -80,7 +80,7 @@
 
 {% block javascripts %}
   {{ parent() }}
-
+  
   <script src="{{ asset('themes/default/js/bundle/pagination.js') }}"></script>
   <script src="{{ asset('themes/new-theme/public/category.bundle.js') }}"></script>
 {% endblock %}

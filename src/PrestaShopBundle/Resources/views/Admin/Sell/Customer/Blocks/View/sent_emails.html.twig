@@ -33,22 +33,22 @@
     <div class="card-body">
       <table class="table">
         <thead>
-        <tr>
-          <th>{{ 'Date'|trans({}, 'Admin.Global') }}</th>
-          <th>{{ 'Language'|trans({}, 'Admin.Global') }}</th>
-          <th>{{ 'Subject'|trans({}, 'Admin.Global') }}</th>
-          <th>{{ 'Template'|trans({}, 'Admin.Global') }}</th>
-        </tr>
+          <tr>
+            <th>{{ 'Date'|trans({}, 'Admin.Global') }}</th>
+            <th>{{ 'Language'|trans({}, 'Admin.Global') }}</th>
+            <th>{{ 'Subject'|trans({}, 'Admin.Global') }}</th>
+            <th>{{ 'Template'|trans({}, 'Admin.Global') }}</th>
+          </tr>
         </thead>
         <tbody>
-        {% for sentEmail in customerInformation.sentEmailsInformation %}
-          <tr>
-            <td>{{ sentEmail.date }}</td>
-            <td>{{ sentEmail.language }}</td>
-            <td>{{ sentEmail.subject }}</td>
-            <td>{{ sentEmail.template }}</td>
-          </tr>
-        {% endfor %}
+          {% for sentEmail in customerInformation.sentEmailsInformation %}
+            <tr>
+              <td>{{ sentEmail.date }}</td>
+              <td>{{ sentEmail.language }}</td>
+              <td>{{ sentEmail.subject }}</td>
+              <td>{{ sentEmail.template }}</td>
+            </tr>
+          {% endfor %}
         </tbody>
       </table>
     </div>

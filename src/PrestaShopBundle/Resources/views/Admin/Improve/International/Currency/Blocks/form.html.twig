@@ -46,7 +46,7 @@
       }|json_encode|replace("'", "&#39;")|raw
     }
   }) }}
-
+  
   <div class="card">
     <div class="card-header">
       {{ 'Currency'|trans({}, 'Admin.Global') }}
@@ -54,61 +54,61 @@
     <div class="card-block row">
       <div class="card-text">
         {{ form_errors(currencyForm) }}
-
+        
         {% if not currencyForm.vars.data.id is defined %}
           {% set selectIsoCodeHelp %}
-            {{ 'By default, PrestaShop comes with a list of official currencies. If you want to use a local currency, you will have to add it manually. For example, to accept the Iranian Toman on your store, you need to create it before.'|trans({}, 'Admin.International.Help') }}
+          {{ 'By default, PrestaShop comes with a list of official currencies. If you want to use a local currency, you will have to add it manually. For example, to accept the Iranian Toman on your store, you need to create it before.'|trans({}, 'Admin.International.Help') }}
           {% endset %}
           {{ ps.form_group_row(currencyForm.selected_iso_code, {}, {
             'label': 'Select a currency'|trans({}, 'Admin.International.Feature'),
             'help': selectIsoCodeHelp
           }) }}
-
+          
           {{ ps.form_group_row(currencyForm.unofficial, {}, {
             'label': 'or'|trans({}, 'Admin.Global'),
           }) }}
         {% endif %}
-
+        
         {{ ps.form_group_row(currencyForm.names, {}, {
           'label': 'Currency name'|trans({}, 'Admin.International.Feature'),
         }) }}
-
+        
         {% set symbolsClass = currencyForm.symbols.vars.errors|length ? '' : 'd-none' %}
         {{ ps.form_group_row(currencyForm.symbols, {}, {
           'label': 'Symbol'|trans({}, 'Admin.International.Feature'),
           'class': symbolsClass
         }) }}
-
+        
         {{ ps.form_group_row(currencyForm.iso_code, {}, {
           'label': 'ISO code'|trans({}, 'Admin.International.Feature'),
           'help': 'ISO 4217 code (e.g. USD for Dollars, EUR for Euros, etc.)'|trans({}, 'Admin.International.Help')
         }) }}
-
+        
         {% set exchangeRateHelp %}
-          {{ 'Exchange rates are calculated from one unit of your shop\'s default currency. For example, if the default currency is euros and your chosen currency is dollars, type "1.20" (1&euro; = $1.20).'|trans({}, 'Admin.International.Help') }}
+        {{ 'Exchange rates are calculated from one unit of your shop\'s default currency. For example, if the default currency is euros and your chosen currency is dollars, type "1.20" (1&euro; = $1.20).'|trans({}, 'Admin.International.Help') }}
         {% endset %}
-
+        
         {{ ps.form_group_row(currencyForm.exchange_rate, {}, {
           'label': 'Exchange rate'|trans({}, 'Admin.International.Feature'),
           'help': exchangeRateHelp
         }) }}
-
+        
         {{ ps.form_group_row(currencyForm.precision, {}, {
           'label': 'Decimals'|trans({}, 'Admin.International.Feature')
         }) }}
-
+        
         {{ ps.form_group_row(currencyForm.active, {}, {
           'label': 'Status'|trans({}, 'Admin.Global'),
         }) }}
-
+        
         {{ ps.form_group_row(currencyForm.transformations, {}, {'class': 'd-none'}) }}
-
+        
         {% if isShopFeatureEnabled %}
           {{ ps.form_group_row(currencyForm.shop_association, {}, {
             'label': 'Shop association'|trans({}, 'Admin.Global'),
           }) }}
         {% endif %}
-
+        
         {% if currencyForm.vars.data.id is defined and not currencyForm.vars.data.unofficial %}
           <div class="form-group row ">
             <label for="currency_reset_default_settings" class="form-control-label">
@@ -121,13 +121,13 @@
             </div>
           </div>
         {% endif %}
-
+        
         {% block currency_form_rest %}
           {{ form_rest(currencyForm) }}
         {% endblock %}
       </div>
     </div>
-
+    
     <div class="card-footer">
       <div class="d-inline-flex">
         <a href="{{ path('admin_currencies_index') }}" class="btn btn-outline-secondary">
@@ -138,10 +138,10 @@
         <button type="submit" class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
       </div>
     </div>
-
+    
   </div>
   {{ form_end(currencyForm) }}
-
+  
   <!-- Modal -->
   <div class="modal fade" id="currency_loading_data_modal" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
     <div class="modal-dialog modal-dialog-centered" role="document">

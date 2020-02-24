@@ -31,8 +31,8 @@
 {% block javascripts %}
   <script type="text/javascript">
     {# Script dedicated to close "Create a customer" fancybox used in Add an Order #}
-    $('#customer', window.parent.document).val('{{ customerEmail }}');
-    parent.setupCustomer({{ customerId }});
-    parent.$.fancybox.close();
+  $('#customer', window.parent.document).val('{{ customerEmail }}');
+  parent.setupCustomer({{ customerId }});
+  parent.$.fancybox.close();
   </script>
 {% endblock %}

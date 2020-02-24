@@ -42,7 +42,7 @@
       </div>
     </div>
   {% endblock %}
-
+  
   {% block employee_listing %}
     <div class="row">
       <div class="col">
@@ -50,7 +50,7 @@
       </div>
     </div>
   {% endblock %}
-
+  
   {% block employee_options %}
     {% include '@PrestaShop/Admin/Configure/AdvancedParameters/Employee/Blocks/employee_options.html.twig' %}
   {% endblock %}
@@ -58,7 +58,7 @@
 
 {% block javascripts %}
   {{ parent() }}
-
+  
   <script src="{{ asset('themes/default/js/bundle/pagination.js') }}"></script>
   <script src="{{ asset('themes/new-theme/public/employee.bundle.js') }}"></script>
 {% endblock %}

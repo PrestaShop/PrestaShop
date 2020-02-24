@@ -27,22 +27,22 @@
   <div id="attributesShowcaseCard" class="helper-card card">
     <div class="helper-card__left helper-card__attribute shape-one">
       <img src="{{ asset('themes/new-theme/scss/img/helper-card/attributes@3x.png') }}" class="img-fluid img-rtl">
-    </div>
-    <div class="helper-card__right">
-      <h2>{{ 'Create attributes'|trans({}, 'Admin.Catalog.Feature') }}</h2>
-      <p>{{ 'Color, dimension, size, disk space... think about attributes as properties that change from one product to another. As a consequence, attributes allow you to build product combinations.'|trans({}, 'Admin.Catalog.Feature') }}</p>
-      <a class="btn btn-outline-secondary"
+      </div>
+      <div class="helper-card__right">
+        <h2>{{ 'Create attributes'|trans({}, 'Admin.Catalog.Feature') }}</h2>
+        <p>{{ 'Color, dimension, size, disk space... think about attributes as properties that change from one product to another. As a consequence, attributes allow you to build product combinations.'|trans({}, 'Admin.Catalog.Feature') }}</p>
+        <a class="btn btn-outline-secondary"
          href="{{ documentation_link('attribute') }}"
          target="_blank"
-      >
-        {{ 'Learn more'|trans({}, 'Admin.Actions') }}
-      </a>
-    </div>
-    <i class="showcase-card__close material-icons js-remove-helper-block"
+        >
+          {{ 'Learn more'|trans({}, 'Admin.Actions') }}
+        </a>
+      </div>
+      <i class="showcase-card__close material-icons js-remove-helper-block"
        data-card-name="{{ showcaseCardName }}"
        data-close-url="{{ path('admin_close_showcase_card') }}"
-    >
-      close
-    </i>
-  </div>
-{% endif %}
+      >
+        close
+      </i>
+    </div>
+  {% endif %}

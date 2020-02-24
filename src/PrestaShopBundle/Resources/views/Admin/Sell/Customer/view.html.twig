@@ -36,7 +36,7 @@
       {% include '@PrestaShop/Admin/Sell/Customer/Blocks/View/bought_products.html.twig' %}
       {% include '@PrestaShop/Admin/Sell/Customer/Blocks/View/viewed_products.html.twig' %}
     </div>
-
+    
     <div class="col">
       {% include '@PrestaShop/Admin/Sell/Customer/Blocks/View/private_note.html.twig' %}
       {% include '@PrestaShop/Admin/Sell/Customer/Blocks/View/messages.html.twig' %}
@@ -46,10 +46,10 @@
       {% include '@PrestaShop/Admin/Sell/Customer/Blocks/View/groups.html.twig' %}
     </div>
   </div>
-
+  
   <div class="row">
     {{ renderhook('displayAdminCustomers', {'id_customer': customerInformation.customerId.value}) }}
-
+    
     <div class="col">
       {% include '@PrestaShop/Admin/Sell/Customer/Blocks/View/addresses.html.twig' %}
     </div>
@@ -58,6 +58,6 @@
 
 {% block javascripts %}
   {{ parent() }}
-
+  
   {% include '@PrestaShop/Admin/Sell/Customer/Blocks/javascript.html.twig' %}
 {% endblock %}

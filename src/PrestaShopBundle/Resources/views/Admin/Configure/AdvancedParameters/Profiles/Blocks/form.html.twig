@@ -34,11 +34,11 @@
   <div class="card-block row">
     <div class="card-text">
       {{ form_errors(profileForm) }}
-
+      
       {{ ps.form_group_row(profileForm.name, {}, {
         'label': 'Name'|trans({}, 'Admin.Global')
       }) }}
-
+      
       {% block profile_form_rest %}
         {{ form_rest(profileForm) }}
       {% endblock %}

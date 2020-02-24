@@ -25,44 +25,44 @@
 
 {# Rendering of hook actionGetAdminOrderButtons, see ActionsBarButtonsCollection #}
 {% if (backOfficeOrderButtons.isEmpty() != true) %}
-
+  
   {% set buttons = backOfficeOrderButtons.toArray() %}
   {% if buttons|length > 2 %}
-
+    
     {% set firstButton = buttons|first %}
     <div class="d-inline-block ml-2">
       <div class="input-group">
         <a class="btn {{ firstButton.class }}"
-        {% for propertyName, propertyContent in firstButton.properties %}
-          {{ propertyName }}="{{ propertyContent }}"
-        {% endfor %}
-        >
-        {{ firstButton.content|raw }}
+          {% for propertyName, propertyContent in firstButton.properties %}
+            {{ propertyName }}="{{ propertyContent }}"
+          {% endfor %}
+          >
+          {{ firstButton.content|raw }}
         </a>
       </div>
     </div>
-
+    
     {# Display other buttons into a dropdown #}
     {% set buttons = buttons|slice(1, buttons|length) %}
-
+    
     <div class="d-inline-block ml-2">
       <div class="input-group">
         <div class="dropdown">
           <button class="btn btn-action dropdown-toggle" type="button" id="dropdownOrderActionBar"
-                  data-toggle="dropdown"
-                  aria-haspopup="true" aria-expanded="false">
+            data-toggle="dropdown"
+            aria-haspopup="true" aria-expanded="false">
             <i class="material-icons form-error-icon">more_horiz</i>
-
+            
             {{ 'More actions'|trans({}, 'Admin.Global') }}
           </button>
-
+          
           <div class="dropdown-menu" aria-labelledby="dropdownOrderActionBar">
             {% for button in buttons %}
               <a class="dropdown-item btn {{ button.class }}"
-              {% for propertyName, propertyContent in button.properties %}
-                {{ propertyName }}="{{ propertyContent }}"
-              {% endfor %}>
-              {{ button.content|raw }}
+                {% for propertyName, propertyContent in button.properties %}
+                  {{ propertyName }}="{{ propertyContent }}"
+                {% endfor %}>
+                {{ button.content|raw }}
               </a>
             {% endfor %}
           </div>
@@ -71,20 +71,20 @@
     </div>
   {% else %}
     {# If only 2 buttons, display them like this #}
-
+    
     {% for button in buttons %}
       <div class="d-inline-block ml-2">
         <div class="input-group">
           <a class="btn {{ button.class }}"
-          {% for propertyName, propertyContent in button.properties %}
-            {{ propertyName }}="{{ propertyContent }}"
-          {% endfor %}
-          >
-          {{ button.content|raw }}
+            {% for propertyName, propertyContent in button.properties %}
+              {{ propertyName }}="{{ propertyContent }}"
+            {% endfor %}
+            >
+            {{ button.content|raw }}
           </a>
         </div>
       </div>
     {% endfor %}
   {% endif %}
-
+  
 {% endif %}

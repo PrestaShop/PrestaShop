@@ -29,20 +29,20 @@
     </span>
     <i class="material-icons arrow-down float-right">keyboard_arrow_down</i>
   </div>
-
+  
   <div class="ps-dropdown-menu dropdown-menu module-category-selector">
     <ul class="items-list js-items-list">
-      {% for key, name in bulkActions %}
-        <li
+    {% for key, name in bulkActions %}
+      <li
           class="module-bulk-menu"
           data-ref="{{key}}"
           data-display-name="{{name}}"
-        >
-          <a class="dropdown-item" href="#">
-            {{ name }}
-          </a>
-        </li>
-      {% endfor %}
+      >
+      <a class="dropdown-item" href="#">
+        {{ name }}
+      </a>
+      </li>
+    {% endfor %}
     </ul>
   </div>
 </div>

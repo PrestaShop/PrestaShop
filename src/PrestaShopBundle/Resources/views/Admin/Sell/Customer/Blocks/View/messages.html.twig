@@ -31,28 +31,28 @@
   </h3>
   <div class="card-body">
     {% if customerInformation.messagesInformation is not empty %}
-    <table class="table">
-      <thead>
-        <tr>
-          <th>{{ 'Status'|trans({}, 'Admin.Global') }}</th>
-          <th>{{ 'Message'|trans({}, 'Admin.Global') }}</th>
-          <th>{{ 'Sent on'|trans({}, 'Admin.Orderscustomers.Feature') }}</th>
-        </tr>
-      </thead>
-      <tbody>
-      {% for message in customerInformation.messagesInformation %}
-        <tr>
-          <td>{{ message.status }}</td>
-          <td>
-            <a href="{{ getAdminLink('AdminCustomerThreads', true, {'id_customer_thread': message.customerThreadId, 'viewcustomer_thread': 1}) }}">
-              {{ message.message }}...
-            </a>
-          </td>
-          <td>{{ message.date }}</td>
-        </tr>
-      {% endfor %}
-      </tbody>
-    </table>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>{{ 'Status'|trans({}, 'Admin.Global') }}</th>
+            <th>{{ 'Message'|trans({}, 'Admin.Global') }}</th>
+            <th>{{ 'Sent on'|trans({}, 'Admin.Orderscustomers.Feature') }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for message in customerInformation.messagesInformation %}
+            <tr>
+              <td>{{ message.status }}</td>
+              <td>
+                <a href="{{ getAdminLink('AdminCustomerThreads', true, {'id_customer_thread': message.customerThreadId, 'viewcustomer_thread': 1}) }}">
+                  {{ message.message }}...
+                </a>
+              </td>
+              <td>{{ message.date }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
     {% else %}
       <p class="text-muted text-center mb-0">
         {{ '%firstname% %lastname% has never contacted you'|trans({'%firstname%': customerInformation.personalInformation.firstName, '%lastname%': customerInformation.personalInformation.lastName}, 'Admin.Orderscustomers.Feature') }}

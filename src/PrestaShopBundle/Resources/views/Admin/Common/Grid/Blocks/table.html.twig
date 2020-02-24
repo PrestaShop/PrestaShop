@@ -29,27 +29,27 @@
        data-query="{{ grid.data.query }}"
 >
   <thead class="thead-default">
-  {% block grid_table_head %}
-    {{ include('@PrestaShop/Admin/Common/Grid/Blocks/Table/headers_row.html.twig', {'grid': grid}) }}
-    {{ include('@PrestaShop/Admin/Common/Grid/Blocks/Table/filters_row.html.twig', {'grid': grid}) }}
-  {% endblock %}
+    {% block grid_table_head %}
+      {{ include('@PrestaShop/Admin/Common/Grid/Blocks/Table/headers_row.html.twig', {'grid': grid}) }}
+      {{ include('@PrestaShop/Admin/Common/Grid/Blocks/Table/filters_row.html.twig', {'grid': grid}) }}
+    {% endblock %}
   </thead>
   <tbody>
-  {% block grid_table_body %}
-    {% if grid.data.records is not empty %}
-      {% for record in grid.data.records %}
-        <tr>
-          {% for column in grid.columns %}
-            <td class="{{ column.type }}-type column-{{ column.id }}{% if column.options.clickable is defined and column.options.clickable %} clickable{% endif %}">
-              {{ column_content(record, column, grid) }}
-            </td>
-          {% endfor %}
-        </tr>
-      {% endfor %}
-    {% else %}
-      {{ include('@PrestaShop/Admin/Common/Grid/Blocks/Table/empty_row.html.twig', {'grid': grid}) }}
-    {% endif %}
-  {% endblock %}
+    {% block grid_table_body %}
+      {% if grid.data.records is not empty %}
+        {% for record in grid.data.records %}
+          <tr>
+            {% for column in grid.columns %}
+              <td class="{{ column.type }}-type column-{{ column.id }}{% if column.options.clickable is defined and column.options.clickable %} clickable{% endif %}">
+                {{ column_content(record, column, grid) }}
+              </td>
+            {% endfor %}
+          </tr>
+        {% endfor %}
+      {% else %}
+        {{ include('@PrestaShop/Admin/Common/Grid/Blocks/Table/empty_row.html.twig', {'grid': grid}) }}
+      {% endif %}
+    {% endblock %}
   </tbody>
   {% block grid_table_footer %}{% endblock %}
 </table>

@@ -27,7 +27,7 @@
   <h3 class="card-header">
     <i class="material-icons">location_on</i>
     {{ 'Addresses'|trans({}, 'Admin.Global') }}
-
+    
     <a href="{{ getAdminLink('AdminAddresses', true, {'id_customer': customerInformation.customerId.value, 'addaddress': 1}) }}"
        class="tooltip-link float-right"
        data-toggle="pstooltip"
@@ -38,7 +38,7 @@
       <i class="material-icons">add_circle</i>
     </a>
   </h3>
-
+  
   <div class="card-body">
     {% if customerInformation.addressesInformation is not empty %}
       <table class="table">
@@ -55,7 +55,7 @@
         <tbody>
           {% for address in customerInformation.addressesInformation %}
             {% set addressEditUrl = getAdminLink('AdminAddresses', true, {'id_address': address.addressId, 'updateaddress': 1, 'back': app.request.uri}) %}
-
+            
             <tr>
               <td class="js-linkable-item cursor-pointer" data-linkable-href="{{ addressEditUrl }}">{{ address.company }}</td>
               <td class="js-linkable-item cursor-pointer" data-linkable-href="{{ addressEditUrl }}">{{ address.fullName }}</td>
@@ -84,13 +84,13 @@
                     >
                       <i class="material-icons">edit</i>
                     </a>
-
+                    
                     <a class="btn btn-link dropdown-toggle dropdown-toggle-dots dropdown-toggle-split"
                        data-toggle="dropdown"
                        aria-haspopup="true"
                        aria-expanded="false"
                     ></a>
-
+                    
                     <div class="dropdown-menu dropdown-menu-right">
                       <a class="btn tooltip-link dropdown-item"
                          href="{{ getAdminLink('AdminAddresses', true, {'id_address': address.addressId, 'deleteaddress': 1, 'back': app.request.uri}) }}"
@@ -98,7 +98,7 @@
                         <i class="material-icons">delete</i>
                         {{ 'Delete'|trans({}, 'Admin.Actions') }}
                       </a>
-
+                      
                       {{ renderhook('displayAdminCustomersAddressesItemAction', {'id_address': address.addressId}) }}
                     </div>
                   </div>

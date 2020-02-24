@@ -43,7 +43,7 @@
                   -
                 {% endif %}
               </p>
-
+              
               <p class="mb-0">
                 <strong>{{ 'Tracking number'|trans({}, 'Admin.Shipping.Feature') }}:</strong>
                 {% if not orderPreview.isVirtual and orderPreview.shippingDetails.trackingNumber is not empty %}
@@ -52,14 +52,14 @@
                   -
                 {% endif %}
               </p>
-
+              
               <p class="mb-2">
                 <strong>{{ 'Shipping details'|trans({}, 'Admin.Orderscustomers.Feature') }}:</strong>
                 {% if orderPreview.virtual %}
                   -
                 {% endif %}
               </p>
-
+              
               {% if not orderPreview.virtual %}
                 <p class="mb-0">{{ orderPreview.shippingDetails.firstName }} {{ orderPreview.shippingDetails.lastName }}</p>
                 {% if orderPreview.shippingDetails.company %}
@@ -94,7 +94,7 @@
               <p class="mb-1">
                 <strong>{{ 'Invoice details'|trans({}, 'Admin.Orderscustomers.Feature') }}:</strong>
               </p>
-
+              
               <p class="mb-0">{{ orderPreview.invoiceDetails.firstName }} {{ orderPreview.invoiceDetails.lastName }}</p>
               {% if orderPreview.invoiceDetails.company %}
                 <p class="mb-0">{{ orderPreview.invoiceDetails.company }}</p>
@@ -123,63 +123,63 @@
       <div class="table-responsive">
         <table class="table product table-borderless border-bottom-0">
           <thead>
-          <tr>
-            {% if orderPreview.taxIncluded %}
-              {% set taxInclusion = 'Tax included'|trans({}, 'Admin.Global') %}
-            {% else %}
-              {% set taxInclusion = 'Tax excluded'|trans({}, 'Admin.Global') %}
-            {% endif %}
-
-            <th>
-              {{ 'Products'|trans({}, 'Admin.Global') }}
-              ({{ orderPreview.productDetails|length }})
-            </th>
-            <th>{{ 'Reference'|trans({}, 'Admin.Global') }}</th>
-            <th>{{ 'Stock location'|trans({}, 'Admin.Orderscustomers.Feature') }}</th>
-            {% if orderPreview.taxIncluded == false %}
-              <th class="text-center">
-                {{ 'Tax'|trans({}, 'Admin.Global') }}
+            <tr>
+              {% if orderPreview.taxIncluded %}
+                {% set taxInclusion = 'Tax included'|trans({}, 'Admin.Global') %}
+              {% else %}
+                {% set taxInclusion = 'Tax excluded'|trans({}, 'Admin.Global') %}
+              {% endif %}
+              
+              <th>
+                {{ 'Products'|trans({}, 'Admin.Global') }}
+                ({{ orderPreview.productDetails|length }})
               </th>
-            {% endif %}
-            <th class="text-center">{{ 'Quantity'|trans({}, 'Admin.Global') }}</th>
-            <th class="text-center">
-              {{ 'Total'|trans({}, 'Admin.Global') }}
-              <small>{{ taxInclusion }}</small>
-            </th>
-          </tr>
+              <th>{{ 'Reference'|trans({}, 'Admin.Global') }}</th>
+              <th>{{ 'Stock location'|trans({}, 'Admin.Orderscustomers.Feature') }}</th>
+              {% if orderPreview.taxIncluded == false %}
+                <th class="text-center">
+                  {{ 'Tax'|trans({}, 'Admin.Global') }}
+                </th>
+              {% endif %}
+              <th class="text-center">{{ 'Quantity'|trans({}, 'Admin.Global') }}</th>
+              <th class="text-center">
+                {{ 'Total'|trans({}, 'Admin.Global') }}
+                <small>{{ taxInclusion }}</small>
+              </th>
+            </tr>
           </thead>
           <tbody>
-          {% for productDetail in orderPreview.productDetails %}
-            <tr class="{% if loop.index > productsPreviewLimit %}js-product-preview-more d-none{% endif %}">
-              <td class="p-1">{{ productDetail.name }}</td>
-              <td class="p-1">{{ productDetail.reference }}</td>
-              <td class="p-1">
-                {% if productDetail.location is not empty %}{{ productDetail.location }}{% else %}-{% endif %}
-              </td>
-              {% if orderPreview.taxIncluded == false %}
-                <td class="p-1 text-center">{{ productDetail.totalTax }}</td>
-              {% endif %}
-              <td class="p-1 text-center">{{ productDetail.quantity }}</td>
-              <td class="p-1 text-center">{{ productDetail.totalPrice }}</td>
-            </tr>
-          {% endfor %}
-
-          {% if orderPreview.productDetails|length > productsPreviewLimit %}
-            <tr>
-              <td colspan="6">
-                <a href="#" class="js-preview-more-products-btn text-dark">
-                  <i class="material-icons">more_horiz</i>
-                  {{ '(%count% more)'|trans({
+            {% for productDetail in orderPreview.productDetails %}
+              <tr class="{% if loop.index > productsPreviewLimit %}js-product-preview-more d-none{% endif %}">
+                <td class="p-1">{{ productDetail.name }}</td>
+                <td class="p-1">{{ productDetail.reference }}</td>
+                <td class="p-1">
+                  {% if productDetail.location is not empty %}{{ productDetail.location }}{% else %}-{% endif %}
+                </td>
+                {% if orderPreview.taxIncluded == false %}
+                  <td class="p-1 text-center">{{ productDetail.totalTax }}</td>
+                {% endif %}
+                <td class="p-1 text-center">{{ productDetail.quantity }}</td>
+                <td class="p-1 text-center">{{ productDetail.totalPrice }}</td>
+              </tr>
+            {% endfor %}
+            
+            {% if orderPreview.productDetails|length > productsPreviewLimit %}
+              <tr>
+                <td colspan="6">
+                  <a href="#" class="js-preview-more-products-btn text-dark">
+                    <i class="material-icons">more_horiz</i>
+                    {{ '(%count% more)'|trans({
                     '%count%': orderPreview.productDetails|length - productsPreviewLimit
                   }, 'Admin.Global') }}
-                </a>
-              </td>
-            </tr>
-          {% endif %}
+                  </a>
+                </td>
+              </tr>
+            {% endif %}
           </tbody>
         </table>
       </div>
-
+      
       <div class="text-right">
         <a href="{{ path('admin_orders_view', {'orderId': orderId}) }}" class="btn btn-primary btn-sm mb-3">
           {{ 'Open details'|trans({}, 'Admin.Orderscustomers.Feature') }}

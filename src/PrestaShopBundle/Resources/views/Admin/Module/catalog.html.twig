@@ -27,7 +27,7 @@
 {% block javascripts %}
   {{ parent() }}
   <script>
-    $('body').on(
+  $('body').on(
       'moduleCatalogLoaded',
       function() {
         {% if app.request.get('filterCategoryTab') %}
@@ -37,7 +37,7 @@
         $('.module-category-menu[data-category-ref="{{ app.request.get('filterCategoryRef') }}"]').click();
         {% endif %}
       }
-    );
+  );
   </script>
 {% endblock %}
 

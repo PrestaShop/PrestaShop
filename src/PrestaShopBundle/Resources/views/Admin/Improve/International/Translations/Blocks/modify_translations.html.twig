@@ -27,12 +27,12 @@
 
 {% block modify_translations %}
   {{ form_start(modifyTranslationsForm, {method: 'get', action: path('admin_international_translations_modify')}) }}
-
+  
   <div class="card">
     <h3 class="card-header">
       <i class="material-icons">description</i> {{ 'Modify translations'|trans }}
     </h3>
-
+    
     <div class="card-block row">
       <div class="card-text">
         <div class="row">
@@ -46,7 +46,7 @@
             </div>
           </div>
         </div>
-
+        
         <div class="form-group row">
           <label class="form-control-label">
             {{ 'Type of translation'|trans }}
@@ -95,7 +95,7 @@
         {{ form_rest(modifyTranslationsForm) }}
       </div>
     </div>
-
+    
     <div class="card-footer">
       <div class="d-flex justify-content-end">
         <button class="btn btn-primary">
@@ -105,6 +105,6 @@
       </div>
     </div>
   </div>
-
+  
   {{ form_end(modifyTranslationsForm) }}
 {% endblock %}

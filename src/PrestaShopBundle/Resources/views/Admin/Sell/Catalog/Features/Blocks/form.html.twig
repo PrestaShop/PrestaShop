@@ -27,43 +27,43 @@
 
 {% block feature_form_block %}
   {{ form_start(featureForm) }}
-
+  
   <div class="card">
     <h3 class="card-header">
       {{ 'Feature'|trans({}, 'Admin.Catalog.Feature') }}
     </h3>
-
+    
     <div class="card-block row">
       <div class="card-text">
         {{ ps.form_group_row(featureForm.name, {}, {
           'label': 'Name'|trans({}, 'Admin.Global'),
           'help': 'Invalid characters:'|trans({}, 'Admin.Notifications.Info') ~ ' <>={}'
         }) }}
-
+        
         {{ renderhook('displayFeatureForm', {'id_feature': featureId}) }}
-
+        
         {% if featureForm.shop_association is defined %}
           {{ ps.form_group_row(featureForm.shop_association, {}, {
             'label': 'Shop association'|trans({}, 'Admin.Global')
           }) }}
         {% endif %}
-
+        
         {% block feature_form_rest %}
           {{ form_rest(featureForm) }}
         {% endblock %}
       </div>
     </div>
-
+    
     <div class="card-footer">
       {#@todo uncomment path when index is migrated#}
       <a href="{#{{ path('admin_features_index') }}#}" class="btn btn-outline-secondary">
-        {{ 'Cancel'|trans({}, 'Admin.Actions') }}
-      </a>
-      <button class="btn btn-primary float-right">
-        {{ 'Save'|trans({}, 'Admin.Actions') }}
-      </button>
-    </div>
+      {{ 'Cancel'|trans({}, 'Admin.Actions') }}
+    </a>
+    <button class="btn btn-primary float-right">
+      {{ 'Save'|trans({}, 'Admin.Actions') }}
+    </button>
   </div>
+</div>
 
-  {{ form_end(featureForm) }}
+{{ form_end(featureForm) }}
 {% endblock %}

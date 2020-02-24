@@ -40,23 +40,23 @@
               {{ cartView.customerInformation.last_name }}
             </a>
           </h2>
-
+          
           <p class="mb-0">
             {{ 'Account registration date:'|trans({}, 'Admin.Orderscustomers.Feature') }}
             {{ cartView.customerInformation.registration_date }}
           </p>
-
+          
           <p class="mb-0">
             {{ 'Valid orders placed:'|trans({}, 'Admin.Orderscustomers.Feature') }}
             {{ cartView.customerInformation.valid_orders_count }}
           </p>
-
+          
           <p class="mb-0">
             {{ 'Total spent since registration:'|trans({}, 'Admin.Orderscustomers.Feature') }}
             {{ cartView.customerInformation.total_spent_since_registration }}
           </p>
         </div>
-
+        
         <div class="col text-right">
           <a href="mailto:{{ cartView.customerInformation.email }}" class="btn btn-outline-secondary">
             {{ cartView.customerInformation.email }}

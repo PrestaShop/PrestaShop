@@ -37,17 +37,17 @@
             <div class="col">
               <div class="alert alert-info" role="alert">
                 <ul>
-                  <li>
-                    {{ 'If you set these parameters to 0, they will be disabled.'|trans({}, 'Admin.Shipping.Help') }}
-                  </li>
-                  <li>
-                    {{ 'Coupons are not taken into account when calculating free shipping.'|trans({}, 'Admin.Shipping.Help') }}
-                  </li>
+                <li>
+                {{ 'If you set these parameters to 0, they will be disabled.'|trans({}, 'Admin.Shipping.Help') }}
+                </li>
+                <li>
+                {{ 'Coupons are not taken into account when calculating free shipping.'|trans({}, 'Admin.Shipping.Help') }}
+                </li>
                 </ul>
               </div>
             </div>
           </div>
-
+          
           <div class="form-group row">
             <label class="form-control-label">{{ 'Handling charges'|trans }}</label>
             <div class="col-sm">
@@ -55,7 +55,7 @@
               {{ form_widget(handlingForm.shipping_handling_charges) }}
             </div>
           </div>
-
+          
           <div class="form-group row">
             <label class="form-control-label">{{ 'Free shipping starts at'|trans }}</label>
             <div class="col-sm">
@@ -63,7 +63,7 @@
               {{ form_widget(handlingForm.free_shipping_price) }}
             </div>
           </div>
-
+          
           <div class="form-group row">
             <label class="form-control-label">{{ 'Free shipping starts at'|trans }}</label>
             <div class="col-sm">

@@ -40,7 +40,7 @@
               {{ form_widget(emailConfigurationForm.smtp_config.domain) }}
             </div>
           </div>
-
+          
           <div class="form-group row">
             {{ ps.label_with_help(('SMTP server'|trans), ('IP address or server name (e.g. smtp.mydomain.com).'|trans({}, 'Admin.Advparameters.Help'))) }}
             <div class="col-sm">
@@ -48,7 +48,7 @@
               {{ form_widget(emailConfigurationForm.smtp_config.server) }}
             </div>
           </div>
-
+          
           <div class="form-group row">
             {{ ps.label_with_help(('SMTP username'|trans), ('Leave blank if not applicable.'|trans({}, 'Admin.Advparameters.Help'))) }}
             <div class="col-sm">
@@ -56,7 +56,7 @@
               {{ form_widget(emailConfigurationForm.smtp_config.username) }}
             </div>
           </div>
-
+          
           <div class="form-group row">
             {{ ps.label_with_help(('SMTP password'|trans), ('Leave blank if not applicable.'|trans({}, 'Admin.Advparameters.Help'))) }}
             <div class="col-sm">
@@ -64,7 +64,7 @@
               {{ form_widget(emailConfigurationForm.smtp_config.password) }}
             </div>
           </div>
-
+          
           <div class="form-group row">
             <label class="form-control-label">{{ 'Encryption'|trans }}</label>
             <div class="col-sm">
@@ -72,12 +72,12 @@
               {{ form_widget(emailConfigurationForm.smtp_config.encryption) }}
               {% if not isOpenSslExtensionLoaded %}
                 <small class="form-text">
-                  {{ 'SSL does not seem to be available on your server.'|trans({}, 'Admin.Advparameters.Notification') }}
+                {{ 'SSL does not seem to be available on your server.'|trans({}, 'Admin.Advparameters.Notification') }}
                 </small>
               {% endif %}
             </div>
           </div>
-
+          
           <div class="form-group row">
             {{ ps.label_with_help(('Port'|trans), ('Port number to use.'|trans)) }}
             <div class="col-sm">
@@ -85,7 +85,7 @@
               {{ form_widget(emailConfigurationForm.smtp_config.port) }}
             </div>
           </div>
-
+          
           {% block smtp_configuration_form_rest %}
             {{ form_rest(emailConfigurationForm.smtp_config) }}
           {% endblock %}

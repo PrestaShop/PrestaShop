@@ -24,40 +24,40 @@
  *#}
 
 <li class="mb-2">
-  <div class="row">
-    {% if not message.employeeId %}
-      <div class="col-md-1">
-        <i class="material-icons">account_circle</i>
-      </div>
-      <div class="col-md-11">
-        <p class="mb-0 message customer-message">
-          {{ message.message|nl2br }}
-        </p>
-        <p class="text-muted mb-0">
-          {{ message.customerFirstName ~ ' ' ~ message.customerLastName }}
-          {{ message.messageDate.format }}
-        </p>
-      </div>
-    {% endif %}
-
-    {% if message.employeeId %}
-      <div class="col-md-11">
-        <p class="mb-0 message employee-message{{ message.isPrivate ? '--private' : '' }}">
-          {{ message.message|nl2br }}
-        </p>
-        <p class="text-muted mb-0 text-right">
-          {% if message.isCurrentEmployeesMessage %}
-            {{ 'Me'|trans({}, 'Admin.Global') }}
-          {% else %}
-            {{ message.employeeFirstName ~ ' ' ~ message.employeeLastName }}
-          {% endif %}
-
-          {{ message.messageDate.format }}
-        </p>
-      </div>
-      <div class="col-md-1">
-        <i class="material-icons employee-icon{{ message.isPrivate ? '--private' : '' }}"></i>
-      </div>
-    {% endif %}
-  </div>
+<div class="row">
+  {% if not message.employeeId %}
+    <div class="col-md-1">
+      <i class="material-icons">account_circle</i>
+    </div>
+    <div class="col-md-11">
+      <p class="mb-0 message customer-message">
+        {{ message.message|nl2br }}
+      </p>
+      <p class="text-muted mb-0">
+        {{ message.customerFirstName ~ ' ' ~ message.customerLastName }}
+        {{ message.messageDate.format }}
+      </p>
+    </div>
+  {% endif %}
+  
+  {% if message.employeeId %}
+    <div class="col-md-11">
+      <p class="mb-0 message employee-message{{ message.isPrivate ? '--private' : '' }}">
+        {{ message.message|nl2br }}
+      </p>
+      <p class="text-muted mb-0 text-right">
+        {% if message.isCurrentEmployeesMessage %}
+          {{ 'Me'|trans({}, 'Admin.Global') }}
+        {% else %}
+          {{ message.employeeFirstName ~ ' ' ~ message.employeeLastName }}
+        {% endif %}
+        
+        {{ message.messageDate.format }}
+      </p>
+    </div>
+    <div class="col-md-1">
+      <i class="material-icons employee-icon{{ message.isPrivate ? '--private' : '' }}"></i>
+    </div>
+  {% endif %}
+</div>
 </li>

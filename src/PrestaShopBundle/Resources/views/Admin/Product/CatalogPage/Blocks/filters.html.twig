@@ -34,10 +34,10 @@
                   aria-haspopup="true"
                   aria-expanded="false"
           >
-              {{ 'Filter by categories'|trans({}, 'Admin.Actions') }}
-              {% if selected_category is defined and selected_category is not null %}
-                  ({{ selected_category.getName() }})
-              {% endif %}
+            {{ 'Filter by categories'|trans({}, 'Admin.Actions') }}
+            {% if selected_category is defined and selected_category is not null %}
+              ({{ selected_category.getName() }})
+            {% endif %}
           </button>
           <div id="tree-categories" class="dropdown-menu">
             <div class="categories-tree-actions">
@@ -48,7 +48,7 @@
                 id="product_catalog_category_tree_filter_expand"
               >
                 <i class="material-icons">expand_more</i>
-                  {{ 'Expand'|trans({}, 'Admin.Actions') }}
+                {{ 'Expand'|trans({}, 'Admin.Actions') }}
               </a>
               <a
                 href="#"
@@ -57,7 +57,7 @@
                 id="product_catalog_category_tree_filter_collapse"
               >
                 <i class="material-icons">expand_less</i>
-                  {{ 'Collapse'|trans({}, 'Admin.Actions') }}
+                {{ 'Collapse'|trans({}, 'Admin.Actions') }}
               </a>
               <a
                 href="#"
@@ -66,14 +66,14 @@
                 id="product_catalog_category_tree_filter_reset"
               >
                 <i class="material-icons">radio_button_unchecked</i>
-                  {{ 'Unselect'|trans({}, 'Admin.Actions') }}
+                {{ 'Unselect'|trans({}, 'Admin.Actions') }}
               </a>
             </div>
-              {{ form_widget(categories) }}
+            {{ form_widget(categories) }}
           </div>
         </div>
       {% endblock %}
-
+      
       {% block product_catalog_filter_bulk_actions %}
         <div
             class="d-inline-block"
@@ -93,7 +93,7 @@
               "label": "Deactivate selection"|trans({}, 'Admin.Actions')
             }
           ] %}
-
+          
           {% set buttons_action = buttons_action|merge([
             {
               "divider": true
@@ -103,8 +103,8 @@
               "label": "Duplicate selection"|trans({}, 'Admin.Actions')
             }
           ]) %}
-
-
+          
+          
           {% set buttons_action = buttons_action|merge([
             {
               "divider": true
@@ -114,7 +114,7 @@
               "label": "Delete selection"|trans({}, 'Admin.Actions')
             }
           ]) %}
-
+          
           {% include '@PrestaShop/Admin/Helpers/dropdown_menu.html.twig' with {
             'div_style': "btn-group dropdown bulk-catalog",
             'button_id': "product_bulk_menu",
@@ -128,23 +128,23 @@
       {% endblock %}
     </div>
   </div>
-
+  
   {% block product_catalog_filter_select_all %}
-  <div class="row">
-    <div class="col">
-      <div class="md-checkbox">
-        <label>
-          <input
+    <div class="row">
+      <div class="col">
+        <div class="md-checkbox">
+          <label>
+            <input
             type="checkbox"
             id="bulk_action_select_all"
             onclick="$('#product_catalog_list').find('table td.checkbox-column input:checkbox').prop('checked', $(this).prop('checked')); updateBulkMenu();"
             value=""
-          >
-          <i class="md-checkbox-control"></i>
-            {{ "Select all"|trans({}, 'Admin.Actions') }}
-        </label>
+            >
+              <i class="md-checkbox-control"></i>
+              {{ "Select all"|trans({}, 'Admin.Actions') }}
+            </label>
+          </div>
+        </div>
       </div>
-    </div>
+    {% endblock %}
   </div>
-  {% endblock %}
-</div>

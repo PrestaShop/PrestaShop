@@ -25,28 +25,28 @@
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 
 {% block content %}
-
-    {% if is_shop_context %}
-        <div id="stock-app"></div>
-
-    {% else %}
-        <div class="col-md-12">
-            <div class="alert alert-danger" role="alert">
-                <i class="material-icons">info_outline</i><p class="alert-text">{{ 'You can\'t manage your stock in this shop context: select a shop instead of a group of shops.'|trans({}, 'Admin.Catalog.Notification') }}</p>
-            </div>
-        </div>
-    {% endif %}
-
+  
+  {% if is_shop_context %}
+    <div id="stock-app"></div>
+    
+  {% else %}
+    <div class="col-md-12">
+      <div class="alert alert-danger" role="alert">
+        <i class="material-icons">info_outline</i><p class="alert-text">{{ 'You can\'t manage your stock in this shop context: select a shop instead of a group of shops.'|trans({}, 'Admin.Catalog.Notification') }}</p>
+      </div>
+    </div>
+  {% endif %}
+  
 {% endblock %}
 
 {% block javascripts %}
-
-    {% if is_shop_context %}
-        {{ parent() }}
-
-        {% set productId = app.request.query.get('productId') ? app.request.query.get('productId') : false %}
-        <script>
-            var data = {
+  
+  {% if is_shop_context %}
+    {{ parent() }}
+    
+    {% set productId = app.request.query.get('productId') ? app.request.query.get('productId') : false %}
+    <script>
+    var data = {
                 baseUrl: '{{ app.request.getBasePath() }}',
                 catalogUrl: '{{ url('admin_product_catalog') }}',
                 stockUrl: '{{ url('admin_stock_overview') }}',
@@ -60,14 +60,14 @@
                 movementsTypesUrl: '{{ url('api_stock_list_movements_types', {'grouped': true}) }}',
                 translationUrl: '{{ url('api_i18n_translations_list', {'page' : 'stock'}) }}',
                 locale: '{{ app.request.locale }}'
-            }
-        </script>
-
-        {% if webpack_server %}
-            <script src="http://localhost:8080/stock.bundle.js"></script>
-        {% else %}
-            <script src="{{ asset('themes/new-theme/public/stock.bundle.js') }}"></script>
-        {% endif %}
+    }
+    </script>
+    
+    {% if webpack_server %}
+      <script src="http://localhost:8080/stock.bundle.js"></script>
+    {% else %}
+      <script src="{{ asset('themes/new-theme/public/stock.bundle.js') }}"></script>
     {% endif %}
-
+  {% endif %}
+  
 {% endblock %}

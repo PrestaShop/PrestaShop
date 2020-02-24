@@ -35,36 +35,36 @@
       <div class="col-4" id="cart-rules-search-block">
         <div class="col p-0">
           <input type="text" class="form-control" id="search-cart-rules-input">
-          <ul id="search-cart-rules-result-box" class="position-absolute bg-white w-100 form-control d-none list-unstyled"></ul>
-          <div class="text-danger align-top d-none" id="js-cart-rule-error-block">
-            <i class="material-icons form-error-icon">error_outline</i>
-            <span id="js-cart-rule-error-text"></span>
+            <ul id="search-cart-rules-result-box" class="position-absolute bg-white w-100 form-control d-none list-unstyled"></ul>
+            <div class="text-danger align-top d-none" id="js-cart-rule-error-block">
+              <i class="material-icons form-error-icon">error_outline</i>
+              <span id="js-cart-rule-error-text"></span>
+            </div>
           </div>
         </div>
+        <div class="col">
+          <span class="mr-2">{{ 'or'|trans({}, 'Admin.Global') }}</span>
+          <a class="btn btn-primary" href="{{ getAdminLink('AdminCartRules', true, {'addcart_rule': 1}) }}">
+            {{ 'Add new voucher'|trans({}, 'Admin.Orderscustomers.Feature') }}
+          </a>
+        </div>
       </div>
-      <div class="col">
-        <span class="mr-2">{{ 'or'|trans({}, 'Admin.Global') }}</span>
-        <a class="btn btn-primary" href="{{ getAdminLink('AdminCartRules', true, {'addcart_rule': 1}) }}">
-          {{ 'Add new voucher'|trans({}, 'Admin.Orderscustomers.Feature') }}
-        </a>
-      </div>
+      
+      <table class="table d-none mt-2" id="cart-rules-table">
+        <thead>
+          <tr>
+            <th>{{ 'Name'|trans({}, 'Admin.Global') }}</th>
+            <th>{{ 'Description'|trans({}, 'Admin.Global') }}</th>
+            <th>{{ 'Value'|trans({}, 'Admin.Global') }}</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
     </div>
-
-    <table class="table d-none mt-2" id="cart-rules-table">
-      <thead>
-      <tr>
-        <th>{{ 'Name'|trans({}, 'Admin.Global') }}</th>
-        <th>{{ 'Description'|trans({}, 'Admin.Global') }}</th>
-        <th>{{ 'Value'|trans({}, 'Admin.Global') }}</th>
-        <th></th>
-      </tr>
-      </thead>
-      <tbody></tbody>
-    </table>
   </div>
-</div>
-
-<script id="cart-rules-table-row-template" type="text/template">
+  
+  <script id="cart-rules-table-row-template" type="text/template">
   <tr>
     <td class="js-cart-rule-name"></td>
     <td class="js-cart-rule-description"></td>
@@ -73,13 +73,13 @@
       <button class="btn btn-outline-danger js-cart-rule-delete-btn">{{ 'Remove'|trans({}, 'Admin.Global') }}</button>
     </td>
   </tr>
-</script>
-
-<script id="cart-rules-not-found-template" type="text/template">
+  </script>
+  
+  <script id="cart-rules-not-found-template" type="text/template">
   <li>{{ 'No voucher was found'|trans({}, 'Admin.Orderscustomers.Feature') }}</li>
-</script>
-
-<script id="found-cart-rule-template" type="text/template">
+  </script>
+  
+  <script id="found-cart-rule-template" type="text/template">
   <li data-cart-rule-id="" class="js-found-cart-rule found-cart-rule"></li>
-</script>
-
+  </script>
+  

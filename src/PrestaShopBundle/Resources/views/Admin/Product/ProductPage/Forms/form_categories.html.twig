@@ -24,13 +24,13 @@
  *#}
 <h2>{{ "Categories"|trans({}, 'Admin.Catalog.Feature') }}
   <span class="help-box" data-toggle="popover"
-    data-content="{{ "Where should the product be available on your site? The main category is where the product appears by default: this is the category which is seen in the product page's URL. Disabled categories are written in italics."|trans({}, 'Admin.Catalog.Help') }}" ></span>
+  data-content="{{ "Where should the product be available on your site? The main category is where the product appears by default: this is the category which is seen in the product page's URL. Disabled categories are written in italics."|trans({}, 'Admin.Catalog.Help') }}" ></span>
 </h2>
 <div class="categories-tree js-categories-tree">
   <fieldset class="form-group">
-    <div class="ui-widget">
-      <div class="search search-with-icon">
-        <input type="text" id="ps-select-product-category" class="form-control autocomplete search mb-1" placeholder="{{ 'Search categories'|trans({}, 'Admin.Catalog.Help') }}">
+  <div class="ui-widget">
+    <div class="search search-with-icon">
+      <input type="text" id="ps-select-product-category" class="form-control autocomplete search mb-1" placeholder="{{ 'Search categories'|trans({}, 'Admin.Catalog.Help') }}">
       </div>
       <label class="form-control-label text-uppercase">{{ 'Associated categories'|trans({}, 'Admin.Catalog.Feature') }}</label>
       {{ include('@PrestaShop/Admin/Category/categories.html.twig', {'categories': categories }) }}
@@ -42,39 +42,39 @@
       </div>
       {{ form_widget(form.categories, {'defaultCategory': true}) }} {# see bootstrap_4_layout.html.twig #}
     </div>
-  </fieldset>
-  {{ form_errors(form.categories) }}
+    </fieldset>
+    {{ form_errors(form.categories) }}
   {{ form_widget(form.categories) }} {# see bootstrap_4_layout.html.twig #}
-</div>
-<div id="add-categories">
-  <h2>
-    {{ "Create a new category"|trans({}, 'Admin.Catalog.Feature') }}
-    <span class="help-box" data-toggle="popover"
+  </div>
+  <div id="add-categories">
+    <h2>
+      {{ "Create a new category"|trans({}, 'Admin.Catalog.Feature') }}
+      <span class="help-box" data-toggle="popover"
       data-content="{{ "If you want to quickly create a new category, you can do it here. Don’t forget to then go to the Categories page to fill in the needed details (description, image, etc.).  A new category will not automatically appear in your shop's menu, please read the Help about it."|trans({}, 'Admin.Catalog.Help') }}" ></span>
-  </h2>
-  <div id="add-categories-content" class="hide">
-    <div id="form_step1_new_category" data-action="{{ path('admin_category_simple_add_form', {'id_product': productId }) }}">
-      <fieldset class="form-group">
+    </h2>
+    <div id="add-categories-content" class="hide">
+      <div id="form_step1_new_category" data-action="{{ path('admin_category_simple_add_form', {'id_product': productId }) }}">
+        <fieldset class="form-group">
         <label class="form-control-label">{{ "New category name"|trans({}, 'Admin.Catalog.Feature') }}</label>
         {{ form_errors(form.new_category) }}
         {{ form_widget(form.new_category.name) }}
-      </fieldset>
-
-    </div>
-
+        </fieldset>
+        
+      </div>
+      
       <fieldset class="form-group">
-        <label class="form-control-label">{{ form.new_category.id_parent.vars.label }}</label>
-        {{ form_widget(form.new_category.id_parent) }}
+      <label class="form-control-label">{{ form.new_category.id_parent.vars.label }}</label>
+      {{ form_widget(form.new_category.id_parent) }}
       </fieldset>
-
+      
       <fieldset class="form-group text-sm-right">
-        <button type="reset" id="form_step1_new_category_reset" class="btn btn-outline-secondary btn-sm">{{ 'Cancel'|trans({}, 'Admin.Actions') }}</button>
-        <button type="button" id="form_step1_new_category_save" class="btn btn-primary save btn-sm">{{ 'Create'|trans({}, 'Admin.Actions') }}</button>
+      <button type="reset" id="form_step1_new_category_reset" class="btn btn-outline-secondary btn-sm">{{ 'Cancel'|trans({}, 'Admin.Actions') }}</button>
+      <button type="button" id="form_step1_new_category_save" class="btn btn-primary save btn-sm">{{ 'Create'|trans({}, 'Admin.Actions') }}</button>
       </fieldset>
     </div>
-
-  <a href="#" class="btn btn-outline-secondary open" id="add-category-button">
-    <i class="material-icons">add_circle</i>
-    {{ 'Create a category'|trans({}, 'Admin.Catalog.Feature') }}
-  </a>
-</div>
+    
+    <a href="#" class="btn btn-outline-secondary open" id="add-category-button">
+      <i class="material-icons">add_circle</i>
+      {{ 'Create a category'|trans({}, 'Admin.Catalog.Feature') }}
+    </a>
+  </div>

@@ -33,21 +33,21 @@
     'class': 'btn btn-danger btn-lg js-submit-delete-customers',
   }],
 } %}
-  {% block content %}
-    <div class="modal-body">
-      <p>{{ 'There are two ways of deleting a customer. Please choose your preferred method.'|trans({}, 'Admin.Orderscustomers.Notification') }}</p>
-
-      {{ form_start(deleteCustomersForm, {'action': path('admin_customers_index'), 'method': 'post'}) }}
-
-      <div class="form-group mb-0">
-        {{ form_widget(deleteCustomersForm.delete_method) }}
-      </div>
-
-      <div class="d-none">
-        {{ form_widget(deleteCustomersForm.customers_to_delete) }}
-      </div>
-
-      {{ form_end(deleteCustomersForm) }}
+{% block content %}
+  <div class="modal-body">
+    <p>{{ 'There are two ways of deleting a customer. Please choose your preferred method.'|trans({}, 'Admin.Orderscustomers.Notification') }}</p>
+    
+    {{ form_start(deleteCustomersForm, {'action': path('admin_customers_index'), 'method': 'post'}) }}
+    
+    <div class="form-group mb-0">
+      {{ form_widget(deleteCustomersForm.delete_method) }}
     </div>
-  {% endblock %}
+    
+    <div class="d-none">
+      {{ form_widget(deleteCustomersForm.customers_to_delete) }}
+    </div>
+    
+    {{ form_end(deleteCustomersForm) }}
+  </div>
+{% endblock %}
 {% endembed %}

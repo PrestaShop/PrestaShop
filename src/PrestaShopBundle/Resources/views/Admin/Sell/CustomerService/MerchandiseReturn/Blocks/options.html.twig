@@ -36,17 +36,17 @@
         label: 'Enable returns'|trans({}, 'Admin.Orderscustomers.Feature'),
         help: 'Would you like to allow merchandise returns in your shop?'|trans({}, 'Admin.Orderscustomers.Help')
       }) }}
-
+      
       {{ ps.form_group_row(merchandiseReturnsOptionsForm.options.order_return_period_in_days, {}, {
         label: 'Time limit of validity'|trans({}, 'Admin.Orderscustomers.Feature'),
         help: 'How many days after the delivery date does the customer have to return a product?'|trans({}, 'Admin.Orderscustomers.Help')
       }) }}
-
+      
       {{ ps.form_group_row(merchandiseReturnsOptionsForm.options.order_return_prefix, {}, {
         label: 'Returns prefix'|trans({}, 'Admin.Orderscustomers.Feature'),
         help: 'Prefix used for return name (e.g. RE00001).'|trans({}, 'Admin.Orderscustomers.Help')
       }) }}
-
+      
       {% block merchandise_return_options_form_rest %}
         {{ form_rest(merchandiseReturnsOptionsForm) }}
       {% endblock %}

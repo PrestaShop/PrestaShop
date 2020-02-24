@@ -78,7 +78,7 @@
         </div>
       </div>
     {% endblock %}
-
+    
     {% block administration_form_upload_quota %}
       <div class="col-xl-10">
         <div class="card" id="configuration_fieldset_upload">
@@ -119,7 +119,7 @@
         </div>
       </div>
     {% endblock %}
-
+    
     {% block administration_form_notifications %}
       <div class="col-xl-10">
         <div class="card" id="configuration_fieldset_notifications">
@@ -128,13 +128,13 @@
           </h3>
           <div class="card-block row">
             <div class="card-text">
-
+              
               <div class="row">
                 <div class="col">
                   {{ ps.infotip("Notifications are numbered bubbles displayed at the very top of your back office, right next to the shop's name. They display the number of new items since you last clicked on them."|trans({}, 'Admin.Advparameters.Help')) }}
                 </div>
               </div>
-
+              
               <div class="form-group row">
                 {{ ps.label_with_help(('Show notifications for new orders'|trans), ("This will display notifications when new orders are made in your shop."|trans({}, 'Admin.Advparameters.Help'))) }}
                 <div class="col-sm">

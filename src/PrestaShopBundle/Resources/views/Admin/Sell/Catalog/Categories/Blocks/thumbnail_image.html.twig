@@ -27,9 +27,9 @@
   {% if thumbnailImage is defined and thumbnailImage is not null %}
     <div>
       <figure class="figure">
-        <img src="{{ thumbnailImage.path }}" class="figure-img img-fluid img-thumbnail">
+      <img src="{{ thumbnailImage.path }}" class="figure-img img-fluid img-thumbnail">
         <figcaption class="figure-caption">{{ 'File size'|trans({}, 'Admin.Advparameters.Feature') }} {{ thumbnailImage.size }}</figcaption>
-      </figure>
-    </div>
-  {% endif %}
-{% endblock %}
+        </figure>
+      </div>
+    {% endif %}
+  {% endblock %}

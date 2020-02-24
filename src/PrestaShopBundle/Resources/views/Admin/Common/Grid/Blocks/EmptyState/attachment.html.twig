@@ -25,15 +25,15 @@
 
 <div class="text-center showcase-list-card">
   <img class="img-responsive mt-3 img-rtl" src="{{ asset('themes/new-theme/img/empty_state/attachment.png') }}">
-
-  <p class="mt-4 showcase-list-card__header">{{ 'Upload files here'|trans({}, 'Admin.Catalog.Feature') }}</p>
-
-  <p class="mx-auto showcase-list-card__message">
-    {{ 'Make some files available to your customers and facilitate their purchasing environment by adding them just here! It can be instruction manuals, technical works or anything you want to attach to a product.'|trans({}, 'Admin.Catalog.Feature') }}
-  </p>
-
-  <div class="mt-4">
-    <a href="{{ documentation_link('attachment') }}" target="_blank" class="btn btn-outline-secondary mr-1">{{ 'Learn more'|trans({}, 'Admin.Actions') }}</a>
-    <a href="{{ path('admin_attachment_create') }}" class="btn btn-primary ml-1">{{ 'Add new file'|trans({}, 'Admin.Catalog.Feature') }}</a>
+    
+    <p class="mt-4 showcase-list-card__header">{{ 'Upload files here'|trans({}, 'Admin.Catalog.Feature') }}</p>
+    
+    <p class="mx-auto showcase-list-card__message">
+      {{ 'Make some files available to your customers and facilitate their purchasing environment by adding them just here! It can be instruction manuals, technical works or anything you want to attach to a product.'|trans({}, 'Admin.Catalog.Feature') }}
+    </p>
+    
+    <div class="mt-4">
+      <a href="{{ documentation_link('attachment') }}" target="_blank" class="btn btn-outline-secondary mr-1">{{ 'Learn more'|trans({}, 'Admin.Actions') }}</a>
+      <a href="{{ path('admin_attachment_create') }}" class="btn btn-primary ml-1">{{ 'Add new file'|trans({}, 'Admin.Catalog.Feature') }}</a>
+    </div>
   </div>
-</div>

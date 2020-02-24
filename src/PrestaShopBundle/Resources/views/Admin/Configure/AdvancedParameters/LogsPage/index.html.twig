@@ -32,7 +32,7 @@
       {{ include('@PrestaShop/Admin/Configure/AdvancedParameters/LogsPage/Blocks/severity_levels.html.twig') }}
     </div>
   {% endblock %}
-
+  
   {% block logs_main_panel %}
     <div class="row">
       <div class="col">
@@ -40,7 +40,7 @@
       </div>
     </div>
   {% endblock %}
-
+  
   {% block logs_by_mail %}
     {{ form_start(logsByEmailForm, {'action': path('admin_logs_save_settings')}) }}
     <div class="row justify-content-center">
@@ -59,7 +59,7 @@
                   {{ form_widget(logsByEmailForm.logs_by_email) }}
                 </div>
               </div>
-
+              
               {% block logs_by_email_form_rest %}
                 {{ form_rest(logsByEmailForm) }}
               {% endblock %}

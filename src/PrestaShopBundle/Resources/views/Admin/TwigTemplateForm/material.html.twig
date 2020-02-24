@@ -24,46 +24,46 @@
  *#}
 
 {% block material_choice_tree_widget %}
-<div class="material-choice-tree-container js-choice-tree-container" id="{{ form.vars.id }}">
-  <div class="choice-tree-actions">
-    <span class="form-control-label js-toggle-choice-tree-action"
+  <div class="material-choice-tree-container js-choice-tree-container" id="{{ form.vars.id }}">
+    <div class="choice-tree-actions">
+      <span class="form-control-label js-toggle-choice-tree-action"
           data-expanded-text="{{ 'Expand'|trans({}, 'Admin.Actions') }}"
           data-expanded-icon="expand_more"
           data-collapsed-text="{{ 'Collapse'|trans({}, 'Admin.Actions') }}"
           data-collapsed-icon="expand_less"
           data-action="expand"
-    >
-      <i class="material-icons">expand_more</i>
-      <span class="js-toggle-text">{{ 'Expand'|trans({}, 'Admin.Actions') }}</span>
-    </span>
-  </div>
-
-  <ul class="choice-tree">
+      >
+        <i class="material-icons">expand_more</i>
+        <span class="js-toggle-text">{{ 'Expand'|trans({}, 'Admin.Actions') }}</span>
+      </span>
+    </div>
+    
+    <ul class="choice-tree">
     {% for choice in choices_tree %}
       {{ block('material_choice_tree_item_widget') }}
     {% endfor %}
-  </ul>
-</div>
+    </ul>
+  </div>
 {% endblock material_choice_tree_widget %}
 
 {% block material_choice_tree_item_widget %}
   {% set has_children = choice[choice_children] is defined %}
-
+  
   <li class="{% if choice.has_selected_children %}expanded{% elseif has_children %}collapsed{% endif %}">
-    {% if multiple %}
-      {{ block('material_choice_tree_item_checkbox_widget') }}
-    {% else %}
-      {{ block('material_choice_tree_item_radio_widget') }}
-    {% endif %}
-
-    {% if has_children %}
-      <ul>
-        {% for item in choice[choice_children] %}
-          {% set choice = item %}
-          {{ block('material_choice_tree_item_widget') }}
-        {% endfor %}
-      </ul>
-    {% endif %}
+  {% if multiple %}
+    {{ block('material_choice_tree_item_checkbox_widget') }}
+  {% else %}
+    {{ block('material_choice_tree_item_radio_widget') }}
+  {% endif %}
+  
+  {% if has_children %}
+    <ul>
+    {% for item in choice[choice_children] %}
+      {% set choice = item %}
+      {{ block('material_choice_tree_item_widget') }}
+    {% endfor %}
+    </ul>
+  {% endif %}
   </li>
 {% endblock material_choice_tree_item_widget %}
 
@@ -79,23 +79,23 @@
                {% endif %}
                {% if disabled or choice[choice_value] in disabled_values %}disabled{% endif %}
         >
-        <i class="md-checkbox-control"></i>
-        {{ choice[choice_label] }}
-      </label>
+          <i class="md-checkbox-control"></i>
+          {{ choice[choice_label] }}
+        </label>
+      </div>
     </div>
-  </div>
-{% endblock material_choice_tree_item_checkbox_widget %}
-
-{% block material_choice_tree_item_radio_widget %}
-  <div class="radio js-input-wrapper">
-    <label>
-      <input type="radio"
+  {% endblock material_choice_tree_item_checkbox_widget %}
+  
+  {% block material_choice_tree_item_radio_widget %}
+    <div class="radio js-input-wrapper">
+      <label>
+        <input type="radio"
              name="{{ form.vars.full_name }}"
              value="{{ choice[choice_value] }}"
              {% if choice[choice_value] in selected_values %}checked{% endif %}
              {% if disabled or choice[choice_value] in disabled_values %}disabled{% endif %}
-      >
-      {{ choice[choice_label] }}
-    </label>
-  </div>
-{% endblock material_choice_tree_item_radio_widget %}
+        >
+          {{ choice[choice_label] }}
+        </label>
+      </div>
+    {% endblock material_choice_tree_item_radio_widget %}

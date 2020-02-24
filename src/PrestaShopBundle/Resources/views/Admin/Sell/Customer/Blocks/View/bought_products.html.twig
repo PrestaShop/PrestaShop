@@ -24,13 +24,13 @@
  *#}
 
 {% if customerInformation.productsInformation.boughtProductsInformation is not empty %}
-<div class="card">
-  <h3 class="card-header">
-    <i class="material-icons">attach_money</i>
-    {{ 'Purchased products'|trans({}, 'Admin.Orderscustomers.Feature') }}
-    <span class="badge badge-primary rounded">{{ customerInformation.productsInformation.boughtProductsInformation|length }}</span>
-  </h3>
-  <div class="card-body">
+  <div class="card">
+    <h3 class="card-header">
+      <i class="material-icons">attach_money</i>
+      {{ 'Purchased products'|trans({}, 'Admin.Orderscustomers.Feature') }}
+      <span class="badge badge-primary rounded">{{ customerInformation.productsInformation.boughtProductsInformation|length }}</span>
+    </h3>
+    <div class="card-body">
       <table class="table">
         <thead>
           <tr>
@@ -40,19 +40,19 @@
           </tr>
         </thead>
         <tbody>
-        {% for product in customerInformation.productsInformation.boughtProductsInformation %}
-          <tr>
-            <td>{{ product.boughtDate }}</td>
-            <td>
-              <a href="{{ getAdminLink('AdminOrders', true, {'id_order': product.orderId, 'vieworder': 1}) }}">
-                {{ product.productName }}
-              </a>
-            </td>
-            <td>{{ product.boughtQuantity }}</td>
-          </tr>
-        {% endfor %}
+          {% for product in customerInformation.productsInformation.boughtProductsInformation %}
+            <tr>
+              <td>{{ product.boughtDate }}</td>
+              <td>
+                <a href="{{ getAdminLink('AdminOrders', true, {'id_order': product.orderId, 'vieworder': 1}) }}">
+                  {{ product.productName }}
+                </a>
+              </td>
+              <td>{{ product.boughtQuantity }}</td>
+            </tr>
+          {% endfor %}
         </tbody>
       </table>
+    </div>
   </div>
-</div>
 {% endif %}

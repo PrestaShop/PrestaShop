@@ -27,7 +27,7 @@
 
 {% block content %}
   {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/change_orders_status_modal.html.twig' %}
-
+  
   {% block orders_kpi %}
     <div class="row">
       <div class="col-md-12">
@@ -42,7 +42,7 @@
       </div>
     </div>
   {% endblock %}
-
+  
   {% block order_grid_row %}
     <div class="row">
       <div class="col-12">
@@ -54,7 +54,7 @@
 
 {% block javascripts %}
   {{ parent() }}
-
+  
   <script src="{{ asset('themes/default/js/bundle/pagination.js') }}"></script>
   <script src="{{ asset('themes/new-theme/public/order.bundle.js') }}"></script>
 {% endblock %}

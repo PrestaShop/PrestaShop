@@ -29,21 +29,21 @@
       <div class="card">
         <div class="card-block">
           <nav>
-            <ol class="breadcrumb">
-              {% for category in cmsPageView.breadcrumb_tree %}
-                <li class="breadcrumb-item">
-                  {% set cmsPageRouteParameters = {} %}
-
-                  {% if category.cmsPageCategoryId.value != cmsPageView.root_category_id %}
-                    {% set cmsPageRouteParameters = {'id_cms_category' : category.cmsPageCategoryId.value} %}
-                  {% endif %}
-
-                  <a href="{{ path('admin_cms_pages_index', cmsPageRouteParameters) }}">
-                    {{ category.name }}
-                  </a>
-                </li>
-              {% endfor %}
-            </ol>
+          <ol class="breadcrumb">
+          {% for category in cmsPageView.breadcrumb_tree %}
+            <li class="breadcrumb-item">
+            {% set cmsPageRouteParameters = {} %}
+            
+            {% if category.cmsPageCategoryId.value != cmsPageView.root_category_id %}
+              {% set cmsPageRouteParameters = {'id_cms_category' : category.cmsPageCategoryId.value} %}
+            {% endif %}
+            
+            <a href="{{ path('admin_cms_pages_index', cmsPageRouteParameters) }}">
+              {{ category.name }}
+            </a>
+            </li>
+          {% endfor %}
+          </ol>
           </nav>
         </div>
       </div>

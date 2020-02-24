@@ -29,18 +29,18 @@
       {{ 'Customer'|trans({}, 'Admin.Global') }}
     </h3>
   </div>
-
+  
   <div class="card-body">
     <div class="info-block">
       <div class="row">
         <div class="col-md-6">
           <h2 class="mb-0">
             <i class="material-icons">account_box</i>
-
+            
             {{ orderForViewing.customer.gender }}
             {{ orderForViewing.customer.firstName }}
             {{ orderForViewing.customer.lastName }}
-
+            
             <strong class="text-muted ml-2">#{{ orderForViewing.customer.id }}</strong>
           </h2>
         </div>
@@ -61,7 +61,7 @@
             {{ orderForViewing.customer.email }}
           </a>
         </p>
-
+        
         <p class="mb-1">
           <strong>{{ 'Account registered:'|trans({}, 'Admin.Orderscustomers.Feature') }}</strong>
         </p>
@@ -74,7 +74,7 @@
         <p>
           <span class="badge rounded badge-dark">{{ orderForViewing.customer.validOrdersPlaced }}</span>
         </p>
-
+        
         <p class="mb-1">
           <strong>{{ 'Total spent since registration:'|trans({}, 'Admin.Orderscustomers.Feature') }}</strong>
         </p>
@@ -91,7 +91,7 @@
             <a class="tooltip-link d-print-none" href="#" data-toggle="dropdown">
               <i class="material-icons">more_vert</i>
             </a>
-
+            
             <div class="dropdown-menu dropdown-menu-right">
               <a class="dropdown-item"
                 href="{{ getAdminLink('AdminAddresses', true, {
@@ -105,7 +105,7 @@
               >
                 {{ 'Edit address'|trans({}, 'Admin.Actions') }}
               </a>
-
+              
               <a href="#"
                 class="dropdown-item js-update-customer-address-modal-btn"
                 data-toggle="modal"
@@ -116,7 +116,7 @@
               </a>
             </div>
           </div>
-
+          
           <p class="mb-0">{{ orderForViewing.shippingAddress.fullName }}</p>
           {% if orderForViewing.shippingAddress.companyName is not empty %}
             <p class="mb-0">{{ orderForViewing.shippingAddress.companyName }}</p>
@@ -141,11 +141,11 @@
         <div class="col-md-6">
           <div class="row justify-content-between no-gutters">
             <strong>{{ 'Invoice address'|trans({}, 'Admin.Orderscustomers.Feature') }}</strong>
-
+            
             <a class="tooltip-link d-print-none" href="#" data-toggle="dropdown">
               <i class="material-icons">more_vert</i>
             </a>
-
+            
             <div class="dropdown-menu dropdown-menu-right">
               <a class="dropdown-item"
                 href="{{ getAdminLink('AdminAddresses', true, {
@@ -159,7 +159,7 @@
               >
                 {{ 'Edit address'|trans({}, 'Admin.Actions') }}
               </a>
-
+              
               <a href="#"
                 class="dropdown-item js-update-customer-address-modal-btn"
                 data-toggle="modal"
@@ -170,7 +170,7 @@
               </a>
             </div>
           </div>
-
+          
           <p class="mb-0">{{ orderForViewing.invoiceAddress.fullName }}</p>
           {% if orderForViewing.invoiceAddress.companyName is not empty %}
             <p class="mb-0">{{ orderForViewing.invoiceAddress.companyName }}</p>
@@ -197,7 +197,7 @@
     <div class="mt-2 info-block">
       <div class="row">
         {% set isPrivateNoteOpen = not orderForViewing.customer.privateNote is empty %}
-
+        
         <div class="col-md-6">
           <h3 class="mb-0{{ not isPrivateNoteOpen ? ' d-print-none': '' }}">
             {{ 'Private note'|trans({}, 'Admin.Orderscustomers.Feature') }}
@@ -214,7 +214,7 @@
             {% endif %}
           </a>
         </div>
-
+        
         <div class="col-md-12 mt-3 js-private-note-block {% if not isPrivateNoteOpen %}d-none{% endif %}">
           {{ form_start(privateNoteForm, {
             'action': path('admin_customers_set_private_note', {
@@ -222,20 +222,20 @@
               'back': path('admin_orders_view', {'orderId': orderForViewing.id})
             })
           }) }}
-
+          
           {{ form_widget(privateNoteForm.note) }}
-            <div class="d-none">
-              {{ form_rest(privateNoteForm) }}
-            </div>
-
-            <div class="mt-2 text-right">
-              <button type="submit"
+          <div class="d-none">
+            {{ form_rest(privateNoteForm) }}
+          </div>
+          
+          <div class="mt-2 text-right">
+            <button type="submit"
                       class="btn btn-primary btn-sm js-private-note-btn"
                       {% if orderForViewing.customer.privateNote is empty %}disabled{% endif %}
-              >
-                {{ 'Save'|trans({}, 'Admin.Actions') }}
-              </button>
-            </div>
+            >
+              {{ 'Save'|trans({}, 'Admin.Actions') }}
+            </button>
+          </div>
           {{ form_end(privateNoteForm) }}
         </div>
       </div>

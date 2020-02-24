@@ -33,11 +33,11 @@
         <button class="btn btn-outline-secondary">{{ action.label }}</button>
       </form>
     {% endfor %}
-
+    
     <button class="btn btn-outline-secondary" type="button" data-toggle="modal" data-target="#forwardThreadModal">
       {{ 'Forward this discussion to another employee'|trans({}, 'Admin.Orderscustomers.Feature') }}
     </button>
-
+    
     {% include '@PrestaShop/Admin/Sell/CustomerService/CustomerThread/Block/forward_thread_modal.html.twig' %}
   </div>
 </div>

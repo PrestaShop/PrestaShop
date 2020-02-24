@@ -51,37 +51,37 @@
     }
   ],
 } %}
-  {% block content %}
-    <div class="modal-body"
+{% block content %}
+  <div class="modal-body"
          data-importing-label="{{ 'Importing your data...'|trans({}, 'Admin.Advparameters.Notification') }}"
          data-imported-label="{{ 'Data imported!'|trans({}, 'Admin.Advparameters.Notification') }}"
-    >
-      <div class="alert alert-success js-import-success d-none" role="alert">
-        <span class="alert-text">
-          {{ 'Data imported!'|trans({}, 'Admin.Advparameters.Notification') }}
-          {{ "Look at your listings to make sure it's all there as you wished."|trans({}, 'Admin.Advparameters.Notification') }}
-        </span>
-      </div>
-      <div class="alert alert-warning js-post-limit-warning d-none" role="alert">
-        <div class="alert-text">
-          {{ "Warning, the current import may require a PHP setting update, to allow more data to be transferred. If the current import stops before the end, you should increase your PHP \"post_max_size\" setting to [1]%size%[/1]MB at least, and try again."|trans({}, 'Admin.Advparameters.Notification')|replace({'[1]': '<span id="post_limit_value">','%size%': '16','[/1]': '</span>'})|raw }}
-        </div>
-      </div>
-      <div class="alert alert-warning js-import-warnings d-none" role="alert">
-        <span class="alert-text">
-          {{ 'Some errors were detected. Please check the details:'|trans({}, 'Admin.Advparameters.Notification') }}
-        </span>
-      </div>
-      <div class="alert alert-danger js-import-errors d-none" role="alert">
-        <span class="alert-text">
-          {{ 'Errors occurred:'|trans({}, 'Admin.Advparameters.Notification') }}
-        </span>
-      </div>
-      <div class="alert alert-info js-import-info d-none" role="alert">
-        <span class="alert-text">
-          {{ 'We made the following adjustments:'|trans({}, 'Admin.Advparameters.Notification') }}
-        </span>
+  >
+    <div class="alert alert-success js-import-success d-none" role="alert">
+      <span class="alert-text">
+        {{ 'Data imported!'|trans({}, 'Admin.Advparameters.Notification') }}
+        {{ "Look at your listings to make sure it's all there as you wished."|trans({}, 'Admin.Advparameters.Notification') }}
+      </span>
+    </div>
+    <div class="alert alert-warning js-post-limit-warning d-none" role="alert">
+      <div class="alert-text">
+        {{ "Warning, the current import may require a PHP setting update, to allow more data to be transferred. If the current import stops before the end, you should increase your PHP \"post_max_size\" setting to [1]%size%[/1]MB at least, and try again."|trans({}, 'Admin.Advparameters.Notification')|replace({'[1]': '<span id="post_limit_value">','%size%': '16','[/1]': '</span>'})|raw }}
       </div>
     </div>
-  {% endblock %}
+    <div class="alert alert-warning js-import-warnings d-none" role="alert">
+      <span class="alert-text">
+        {{ 'Some errors were detected. Please check the details:'|trans({}, 'Admin.Advparameters.Notification') }}
+      </span>
+    </div>
+    <div class="alert alert-danger js-import-errors d-none" role="alert">
+      <span class="alert-text">
+        {{ 'Errors occurred:'|trans({}, 'Admin.Advparameters.Notification') }}
+      </span>
+    </div>
+    <div class="alert alert-info js-import-info d-none" role="alert">
+      <span class="alert-text">
+        {{ 'We made the following adjustments:'|trans({}, 'Admin.Advparameters.Notification') }}
+      </span>
+    </div>
+  </div>
+{% endblock %}
 {% endembed %}

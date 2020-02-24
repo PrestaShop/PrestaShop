@@ -50,7 +50,7 @@
               </tr>
             </thead>
             <tbody>
-            {% if product.combinations is not empty %}
+              {% if product.combinations is not empty %}
                 {% for combination in product.combinations %}
                   <tr>
                     <td>{{ combination.attributes|default('N/A'|trans({}, 'Admin.Global')) }}</td>
@@ -76,7 +76,7 @@
                     <td>{{ product.quantity|default('N/A'|trans({}, 'Admin.Global')) }}</td>
                   {% endif %}
                 </tr>
-            {% endif %}
+              {% endif %}
             </tbody>
           </table>
         </div>

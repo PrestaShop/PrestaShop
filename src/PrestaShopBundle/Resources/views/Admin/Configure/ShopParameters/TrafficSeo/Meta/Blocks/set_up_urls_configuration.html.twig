@@ -33,7 +33,7 @@
     </h3>
     <div class="card-block row">
       <div class="card-text">
-
+        
         {% if not isHtaccessFileValid %}
           <div class="row">
             <div class="col-sm">
@@ -49,7 +49,7 @@
             </div>
           </div>
         {% endif %}
-
+        
         <div class="form-group row">
           {% if isModRewriteActive %}
             {{ ps.label_with_help('Friendly URL'|trans({}, 'Admin.Global'), ('Enable this option only if your server allows URL rewriting (recommended).'|trans({}, 'Admin.Shopparameters.Help'))) }}
@@ -57,15 +57,15 @@
           <div class="col-sm">
             {{ form_errors(metaForm.set_up_urls.friendly_url) }}
             {{ form_widget(metaForm.set_up_urls.friendly_url) }}
-
+            
             {% if not isModRewriteActive %}
               <small class="form-text">
-                {{ 'URL rewriting (mod_rewrite) is not active on your server, or it is not possible to check your server configuration. If you want to use Friendly URLs, you must activate this mod.'|trans({}, 'Admin.Shopparameters.Help') }}
+              {{ 'URL rewriting (mod_rewrite) is not active on your server, or it is not possible to check your server configuration. If you want to use Friendly URLs, you must activate this mod.'|trans({}, 'Admin.Shopparameters.Help') }}
               </small>
             {% endif %}
           </div>
         </div>
-
+        
         <div class="form-group row">
           {{ ps.label_with_help(('Accented URL'|trans), ('Enable this option if you want to allow accented characters in your friendly URLs.'|trans({}, 'Admin.Shopparameters.Help') ~ ' ' ~ 'You should only activate this option if you are using non-latin characters ; for all the latin charsets, your SEO will be better without this option.'|trans({}, 'Admin.Shopparameters.Help'))) }}
           <div class="col-sm">
@@ -73,7 +73,7 @@
             {{ form_widget(metaForm.set_up_urls.accented_url) }}
           </div>
         </div>
-
+        
         <div class="form-group row">
           <label class="form-control-label">{{ 'Redirect to the canonical URL'|trans }}</label>
           <div class="col-sm">
@@ -81,7 +81,7 @@
             {{ form_widget(metaForm.set_up_urls.canonical_url_redirection) }}
           </div>
         </div>
-
+        
         {% if metaForm.set_up_urls.disable_apache_multiview is defined %}
           <div class="form-group row">
             {{ ps.label_with_help(("Disable Apache's MultiViews option"|trans), ('Enable this option only if you have problems with URL rewriting.'|trans({}, 'Admin.Shopparameters.Help'))) }}
@@ -91,7 +91,7 @@
             </div>
           </div>
         {% endif %}
-
+        
         {% if metaForm.set_up_urls.disable_apache_mod_security is defined %}
           <div class="form-group row">
             {{ ps.label_with_help(("Disable Apache's mod_security module"|trans), ("Some of PrestaShop's features might not work correctly with a specific configuration of Apache's mod_security module. We recommend to turn it off."|trans({}, 'Admin.Shopparameters.Help'))) }}
@@ -101,7 +101,7 @@
             </div>
           </div>
         {% endif %}
-
+        
         {% block meta_form_rest %}
           {{ form_rest(metaForm.set_up_urls) }}
         {% endblock %}

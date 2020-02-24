@@ -83,22 +83,22 @@
     <h2>
       {{ form.additional_delivery_times.vars.label }}
       <span class="help-box" data-toggle="popover"
-        data-content="{{ "Display delivery time for a product is advised for merchants selling in Europe to comply with the local laws."|trans({}, 'Admin.Catalog.Help') }}" ></span>
+      data-content="{{ "Display delivery time for a product is advised for merchants selling in Europe to comply with the local laws."|trans({}, 'Admin.Catalog.Help') }}" ></span>
     </h2>
     <div class="row">
-       <div class="col-md-12" {% if block('widget_container_attributes') is defined %} {{ block('widget_container_attributes') }} {% endif %}>
-          {% for child in form.additional_delivery_times %}
-            {% if child.vars.value == 1 %}
-              <div class="widget-radio-inline">
-                {{ form_widget(child) }}
-                <a href="{{ path('admin_product_preferences') }}" class="btn sensitive px-0" target=_blank><i class="material-icons">open_in_new</i> {{ "edit"|trans({}, 'Admin.Catalog.Help') }}</a>
-              </div>
-            {% else %}
+      <div class="col-md-12" {% if block('widget_container_attributes') is defined %} {{ block('widget_container_attributes') }} {% endif %}>
+        {% for child in form.additional_delivery_times %}
+          {% if child.vars.value == 1 %}
+            <div class="widget-radio-inline">
               {{ form_widget(child) }}
-            {% endif %}
-          {% endfor %}
-        </div>
-     </div>
+              <a href="{{ path('admin_product_preferences') }}" class="btn sensitive px-0" target=_blank><i class="material-icons">open_in_new</i> {{ "edit"|trans({}, 'Admin.Catalog.Help') }}</a>
+            </div>
+          {% else %}
+            {{ form_widget(child) }}
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
   </div>
 </div>
 
@@ -124,7 +124,7 @@
     <h2>
       {{ form.additional_shipping_cost.vars.label }}
       <span class="help-box" data-toggle="popover"
-        data-content="{{ "If a carrier has a tax, it will be added to the shipping fees. Does not apply to free shipping."|trans({}, 'Admin.Catalog.Help') }}" ></span>
+      data-content="{{ "If a carrier has a tax, it will be added to the shipping fees. Does not apply to free shipping."|trans({}, 'Admin.Catalog.Help') }}" ></span>
     </h2>
     <label class="form-control-label">{{ 'Does this product incur additional shipping costs?'|trans({}, 'Admin.Catalog.Feature') }}</label>
     <div class="row">
@@ -145,7 +145,7 @@
 <div class="col-md-12">
   <div class="alert alert-warning" role="alert">
     <p class="alert-text">
-        {{ 'If no carrier is selected then all the carriers will be available for customers orders.'|trans({}, 'Admin.Catalog.Notification')|raw }}
+      {{ 'If no carrier is selected then all the carriers will be available for customers orders.'|trans({}, 'Admin.Catalog.Notification')|raw }}
     </p>
   </div>
 </div>

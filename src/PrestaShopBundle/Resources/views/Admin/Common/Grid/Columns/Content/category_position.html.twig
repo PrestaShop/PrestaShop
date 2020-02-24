@@ -32,15 +32,15 @@
          data-position-update-url="{{ path(column.options.update_route) }}"
          data-pagination-offset="{{ grid.pagination.offset }}"
     >
-    <span class="js-position position">
-      {{ record[column.options.field] + 1 }}
-    </span>
+      <span class="js-position position">
+        {{ record[column.options.field] + 1 }}
+      </span>
     </div>
   {% else %}
     <div class="text-center">
-    <span class="position">
-      {{ record[column.options.field] + 1 }}
-    </span>
+      <span class="position">
+        {{ record[column.options.field] + 1 }}
+      </span>
     </div>
   {% endif %}
 </div>

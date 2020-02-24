@@ -26,35 +26,35 @@
 <div class="card">
   <div class="card-block">
     <nav>
-      <ol class="breadcrumb">
-        {% for category in currentCategoryView.breadcrumb_tree %}
-          <li class="breadcrumb-item">
-            {% if category.id_parent == 0 and isSingleShopContext %}
-              {% if category.id_category == currentCategoryView.id %}
-                <span>{{ category.name }}</span>
-                <a href="{{ path('admin_categories_edit', {'categoryId': category.id_category}) }}">
-                  <i style="font-size: 16px;" class="material-icons">edit</i>
-                  {{ 'Edit'|trans({}, 'Admin.Actions') }}
-                </a>
-              {% else %}
-                <a href="{{ path('admin_categories_index') }}">
-                  {{ category.name }}
-                </a>
-              {% endif %}
-            {% elseif category.id_category == currentCategoryView.id %}
-              <span>{{ category.name }}</span>
-              <a href="{{ path('admin_categories_edit', {'categoryId': category.id_category}) }}">
-                <i style="font-size: 16px;" class="material-icons">edit</i>
-                {{ 'Edit'|trans({}, 'Admin.Actions') }}
-              </a>
-            {% else %}
-              <a href="{{ path('admin_categories_index', {'categoryId': category.id_category}) }}">
-                {{ category.name }}
-              </a>
-            {% endif %}
-          </li>
-        {% endfor %}
-      </ol>
+    <ol class="breadcrumb">
+    {% for category in currentCategoryView.breadcrumb_tree %}
+      <li class="breadcrumb-item">
+      {% if category.id_parent == 0 and isSingleShopContext %}
+        {% if category.id_category == currentCategoryView.id %}
+          <span>{{ category.name }}</span>
+          <a href="{{ path('admin_categories_edit', {'categoryId': category.id_category}) }}">
+            <i style="font-size: 16px;" class="material-icons">edit</i>
+            {{ 'Edit'|trans({}, 'Admin.Actions') }}
+          </a>
+        {% else %}
+          <a href="{{ path('admin_categories_index') }}">
+            {{ category.name }}
+          </a>
+        {% endif %}
+      {% elseif category.id_category == currentCategoryView.id %}
+        <span>{{ category.name }}</span>
+        <a href="{{ path('admin_categories_edit', {'categoryId': category.id_category}) }}">
+          <i style="font-size: 16px;" class="material-icons">edit</i>
+          {{ 'Edit'|trans({}, 'Admin.Actions') }}
+        </a>
+      {% else %}
+        <a href="{{ path('admin_categories_index', {'categoryId': category.id_category}) }}">
+          {{ category.name }}
+        </a>
+      {% endif %}
+      </li>
+    {% endfor %}
+    </ol>
     </nav>
   </div>
 </div>

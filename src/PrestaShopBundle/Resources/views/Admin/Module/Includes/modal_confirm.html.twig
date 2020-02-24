@@ -64,61 +64,61 @@
                     <br>
                     <label>
                       <input type="checkbox" id="force_deletion" name="force_deletion" data-tech-name="{{module.attributes.name}}"> {{ "Optional: delete module folder after uninstall."|trans({}, 'Admin.Modules.Feature') }}
-                    </label>
-                    <br>
-                    <span class="italic red">
-                      {{ "This action cannot be undone."|trans({}, 'Admin.Modules.Notification') }}
-                    </span>
+                      </label>
+                      <br>
+                      <span class="italic red">
+                        {{ "This action cannot be undone."|trans({}, 'Admin.Modules.Notification') }}
+                      </span>
+                    {% endif %}
+                    {% if module_action == 'reset' %}
+                      {{ "You're about to reset %moduleName% module."|trans({'%moduleName%': module.attributes.displayName}, 'Admin.Modules.Notification') }}
+                      <br>
+                      <br>
+                      {{ "This will restore the defaults settings."|trans({}, 'Admin.Modules.Notification') }}
+                      <br>
+                      <span class="italic red">
+                        {{ "This action cannot be undone."|trans({}, 'Admin.Modules.Notification') }}
+                      </span>
+                    {% endif %}
+                  </p>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <input type="button" class="btn btn-outline-secondary" data-dismiss="modal" value="{{ "Cancel"|trans({}, 'Admin.Actions') }}" />
+                  {% if module_action == 'disable' %}
+                    <a
+                      class="btn btn-primary uppercase module_action_modal_{{ module_action }}"
+                      href="{{ module_url }}"
+                      data-dismiss="modal"
+                      data-tech-name="{{module.attributes.name}}"
+                      >
+                      {{ "Yes, disable it"|trans({}, 'Admin.Modules.Feature') }}
+                    </a>
+                  {% endif %}
+                  {% if module_action == 'uninstall' %}
+                    <a
+                      class="btn btn-primary uppercase module_action_modal_{{ module_action }}"
+                      href="{{ module_url }}"
+                      data-dismiss="modal"
+                      data-tech-name="{{module.attributes.name}}"
+                      >
+                      {{ "Yes, uninstall it"|trans({}, 'Admin.Modules.Feature') }}
+                    </a>
                   {% endif %}
                   {% if module_action == 'reset' %}
-                    {{ "You're about to reset %moduleName% module."|trans({'%moduleName%': module.attributes.displayName}, 'Admin.Modules.Notification') }}
-                    <br>
-                    <br>
-                    {{ "This will restore the defaults settings."|trans({}, 'Admin.Modules.Notification') }}
-                    <br>
-                    <span class="italic red">
-                      {{ "This action cannot be undone."|trans({}, 'Admin.Modules.Notification') }}
-                    </span>
+                    <a
+                      class="btn btn-primary uppercase module_action_modal_{{ module_action }}"
+                      href="{{ module_url }}"
+                      data-dismiss="modal"
+                      data-tech-name="{{module.attributes.name}}"
+                      >
+                      {{ "Yes, reset it"|trans({}, 'Admin.Modules.Feature') }}
+                    </a>
                   {% endif %}
-                </p>
+                </div>
               </div>
             </div>
-            <div class="modal-footer">
-              <input type="button" class="btn btn-outline-secondary" data-dismiss="modal" value="{{ "Cancel"|trans({}, 'Admin.Actions') }}" />
-              {% if module_action == 'disable' %}
-                <a
-                  class="btn btn-primary uppercase module_action_modal_{{ module_action }}"
-                  href="{{ module_url }}"
-                  data-dismiss="modal"
-                  data-tech-name="{{module.attributes.name}}"
-                >
-                  {{ "Yes, disable it"|trans({}, 'Admin.Modules.Feature') }}
-                </a>
-              {% endif %}
-              {% if module_action == 'uninstall' %}
-                <a
-                  class="btn btn-primary uppercase module_action_modal_{{ module_action }}"
-                  href="{{ module_url }}"
-                  data-dismiss="modal"
-                  data-tech-name="{{module.attributes.name}}"
-                >
-                  {{ "Yes, uninstall it"|trans({}, 'Admin.Modules.Feature') }}
-                </a>
-              {% endif %}
-              {% if module_action == 'reset' %}
-                <a
-                  class="btn btn-primary uppercase module_action_modal_{{ module_action }}"
-                  href="{{ module_url }}"
-                  data-dismiss="modal"
-                  data-tech-name="{{module.attributes.name}}"
-                >
-                  {{ "Yes, reset it"|trans({}, 'Admin.Modules.Feature') }}
-                </a>
-              {% endif %}
-            </div>
           </div>
-        </div>
-      </div>
+        {% endif %}
+      {% endfor %}
     {% endif %}
-  {% endfor %}
-{% endif %}

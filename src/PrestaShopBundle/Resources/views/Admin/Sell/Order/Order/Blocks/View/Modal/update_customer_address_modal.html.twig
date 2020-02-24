@@ -25,37 +25,37 @@
 
 <div class="modal fade" id="updateCustomerAddressModal">
   {{ form_start(changeOrderAddressForm,
-    {'action': path('admin_orders_change_customer_address', {'orderId': orderForViewing.id, 'customerId': orderForViewing.customer.id})}) }}
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">
-            {{ 'Change address'|trans({}, 'Admin.Actions') }}
-          </h5>
-
-          <button type="button" class="close" data-dismiss="modal" aria-label="{{ 'Close'|trans({}, 'Admin.Actions') }}">
-            <span aria-hidden="true">×</span>
-          </button>
-        </div>
+  {'action': path('admin_orders_change_customer_address', {'orderId': orderForViewing.id, 'customerId': orderForViewing.customer.id})}) }}
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">
+          {{ 'Change address'|trans({}, 'Admin.Actions') }}
+        </h5>
         
-        <div class="modal-body">
+        <button type="button" class="close" data-dismiss="modal" aria-label="{{ 'Close'|trans({}, 'Admin.Actions') }}">
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      
+      <div class="modal-body">
         <div class="form-group m-0">
-            {{ form_widget(changeOrderAddressForm.new_address_id) }}
-          </div>
-        </div>
-
-        {{ form_widget(changeOrderAddressForm.address_type) }}
-
-        <div class="modal-footer">
-          <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">
-            {{ 'Cancel'|trans({}, 'Admin.Actions') }}
-          </button>
-          
-          <button type="submit" class="btn btn-primary">
-            {{ 'Change'|trans({}, 'Admin.Actions') }}
-          </button>
+          {{ form_widget(changeOrderAddressForm.new_address_id) }}
         </div>
       </div>
+      
+      {{ form_widget(changeOrderAddressForm.address_type) }}
+      
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">
+          {{ 'Cancel'|trans({}, 'Admin.Actions') }}
+        </button>
+        
+        <button type="submit" class="btn btn-primary">
+          {{ 'Change'|trans({}, 'Admin.Actions') }}
+        </button>
+      </div>
     </div>
+  </div>
   {{ form_end(changeOrderAddressForm) }}
 </div>

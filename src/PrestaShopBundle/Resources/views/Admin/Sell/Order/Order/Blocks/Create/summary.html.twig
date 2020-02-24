@@ -80,47 +80,47 @@
         </div>
       </div>
     </div>
-
+    
     {{ form_start(summaryForm, {'action': path('admin_orders_place')}) }}
-      <div class="row mt-3">
-        <div class="col col-10">
-
-          <div id="js-order-message-wrap">
-            {{ ps.form_group_row(summaryForm.order_message, {}, {
+    <div class="row mt-3">
+      <div class="col col-10">
+        
+        <div id="js-order-message-wrap">
+          {{ ps.form_group_row(summaryForm.order_message, {}, {
               'label': 'Order message'|trans({}, 'Admin.Orderscustomers.Feature'),
-            }) }}
+          }) }}
+        </div>
+        
+        <div class="form-group row mb-2">
+          <div class="col-sm offset-sm-4">
+            <button type="button" class="btn btn-outline-primary" id="js-send-process-order-email-btn">
+              {{ 'Send an email to the customer with the link to process the payment.'|trans({}, 'Admin.Orderscustomers.Help') }}
+            </button>
+            <a id="js-process-order-link" href="#" target="_blank">
+              {{ 'Go on payment page to process the payment.'|trans({}, 'Admin.Orderscustomers.Help') }}
+            </a>
           </div>
-
-          <div class="form-group row mb-2">
-            <div class="col-sm offset-sm-4">
-              <button type="button" class="btn btn-outline-primary" id="js-send-process-order-email-btn">
-                {{ 'Send an email to the customer with the link to process the payment.'|trans({}, 'Admin.Orderscustomers.Help') }}
-              </button>
-              <a id="js-process-order-link" href="#" target="_blank">
-                {{ 'Go on payment page to process the payment.'|trans({}, 'Admin.Orderscustomers.Help') }}
-              </a>
-            </div>
-          </div>
-
-          {{ ps.form_group_row(summaryForm.payment_module, {}, {
+        </div>
+        
+        {{ ps.form_group_row(summaryForm.payment_module, {}, {
             'label': 'Payment'|trans({}, 'Admin.Global'),
-          }) }}
-
-          {{ ps.form_group_row(summaryForm.order_state, {}, {
+        }) }}
+        
+        {{ ps.form_group_row(summaryForm.order_state, {}, {
             'label': 'Order status'|trans({}, 'Admin.Orderscustomers.Feature'),
-          }) }}
-
-          <div class="form-group row mt-4">
-            <div class="col-sm offset-sm-4">
-              <button class="btn btn-primary" type="submit">
-                {{ 'Create the order'|trans({}, 'Admin.Orderscustomers.Feature') }}
-              </button>
-              {{ form_row(summaryForm.cart_id, {'attr': {'class': 'js-place-order-cart-id'}}) }}
-            </div>
+        }) }}
+        
+        <div class="form-group row mt-4">
+          <div class="col-sm offset-sm-4">
+            <button class="btn btn-primary" type="submit">
+              {{ 'Create the order'|trans({}, 'Admin.Orderscustomers.Feature') }}
+            </button>
+            {{ form_row(summaryForm.cart_id, {'attr': {'class': 'js-place-order-cart-id'}}) }}
           </div>
         </div>
       </div>
+    </div>
     {{ form_end(summaryForm) }}
-
+    
   </div>
 </div>

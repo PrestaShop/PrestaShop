@@ -35,13 +35,13 @@
 %}
 
 {% block content %}
-
+  
   <div class="row">
     <div class="col">
       {{ include('@PrestaShop/Admin/Common/Grid/grid_panel.html.twig', {'grid': currencyGrid }) }}
     </div>
   </div>
-
+  
   {% block exchange_rates_block %}
     <div class="row">
       <div class="col-lg-6 col-md-8">
@@ -49,12 +49,12 @@
       </div>
     </div>
   {% endblock %}
-
+  
 {% endblock %}
 
 {% block javascripts %}
   {{ parent() }}
-
+  
   <script src="{{ asset('themes/new-theme/public/currency.bundle.js') }}"></script>
   <script src="{{ asset('themes/default/js/bundle/pagination.js') }}"></script>
 {% endblock %}

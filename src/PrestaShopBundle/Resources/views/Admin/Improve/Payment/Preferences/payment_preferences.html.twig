@@ -51,7 +51,7 @@
               {{ 'If it is not checked then this means that the payment module is disabled.'|trans({}, 'Admin.Payment.Help') }}
             </p>
           </div>
-
+          
           {% include '@PrestaShop/Admin/Improve/Payment/Preferences/Blocks/payment_preferences_form_block.html.twig' %}
         {% endif %}
       </div>
@@ -61,6 +61,6 @@
 
 {% block javascripts %}
   {{ parent() }}
-
+  
   <script src="{{ asset('themes/new-theme/public/payment_preferences.bundle.js') }}"></script>
 {% endblock %}

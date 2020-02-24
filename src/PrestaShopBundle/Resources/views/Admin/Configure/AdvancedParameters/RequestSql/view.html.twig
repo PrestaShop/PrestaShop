@@ -37,8 +37,8 @@
               {{ 'SQL query result'|trans }} ({{ sqlRequestResult.rows|length }})
             </h3>
           </div>
-            <div class="card-block">
-              {% if sqlRequestResult.rows is not empty %}
+          <div class="card-block">
+            {% if sqlRequestResult.rows is not empty %}
               <div class="table-responsive">
                 <table class="table">
                   <thead>
@@ -50,27 +50,27 @@
                   </thead>
                   <tbody>
                     {% for row in sqlRequestResult.rows %}
-                    <tr>
-                      {% for column in sqlRequestResult.columns %}
-                        {% if requestSqlView.attributes[column] is defined %}
-                          <td>{{ requestSqlView.attributes[column] }}</td>
-                        {% else %}
-                          <td>{{ row[column] }}</td>
-                        {% endif %}
-                      {% endfor %}
-                    </tr>
+                      <tr>
+                        {% for column in sqlRequestResult.columns %}
+                          {% if requestSqlView.attributes[column] is defined %}
+                            <td>{{ requestSqlView.attributes[column] }}</td>
+                          {% else %}
+                            <td>{{ row[column] }}</td>
+                          {% endif %}
+                        {% endfor %}
+                      </tr>
                     {% endfor %}
                   </tbody>
                 </table>
               </div>
-              {% else %}
-                <div class="alert alert-warning">
-                  <p class="alert-text">
-                    {{ 'This SQL query has no result.'|trans({}, 'Admin.Advparameters.Notification') }}
-                  </p>
-                </div>
-              {% endif %}
-            </div>
+            {% else %}
+              <div class="alert alert-warning">
+                <p class="alert-text">
+                  {{ 'This SQL query has no result.'|trans({}, 'Admin.Advparameters.Notification') }}
+                </p>
+              </div>
+            {% endif %}
+          </div>
         </div>
       </div>
     </div>

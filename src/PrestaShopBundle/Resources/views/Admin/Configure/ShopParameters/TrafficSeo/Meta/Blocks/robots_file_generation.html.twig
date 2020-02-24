@@ -30,7 +30,7 @@
     <h3 class="card-header">
       <i class="material-icons">settings</i> {{ 'Robots file generation'|trans }}
     </h3>
-
+    
     <div class="card-block row">
       <div class="card-text">
         <div class="row">
@@ -39,13 +39,13 @@
               <div class="alert-text">
                 {% set defaultDescription = 'Your robots.txt file MUST be in your website\'s root directory and nowhere else (e.g. http://www.example.com/robots.txt).'|trans({}, 'Admin.Shopparameters.Notification') %}
                 {% if isRobotsTextFileValid %}
-                    {{ defaultDescription }} <br>
-                    {{ 'Generate your "robots.txt" file by clicking on the following button (this will erase the old robots.txt file)'|trans({}, 'Admin.Shopparameters.Notification') }}
-                  {% else %}
-                    {{ defaultDescription }} <br>
-                    {{ 'Before you can use this tool, you need to:'|trans({}, 'Admin.Shopparameters.Notification') }} <br>
-                    {{ '1) Create a blank robots.txt file in your root directory.'|trans({}, 'Admin.Shopparameters.Notification') }} <br>
-                    {{ '2) Give it write permissions (CHMOD 666 on Unix system).'|trans({}, 'Admin.Shopparameters.Notification') }}
+                  {{ defaultDescription }} <br>
+                  {{ 'Generate your "robots.txt" file by clicking on the following button (this will erase the old robots.txt file)'|trans({}, 'Admin.Shopparameters.Notification') }}
+                {% else %}
+                  {{ defaultDescription }} <br>
+                  {{ 'Before you can use this tool, you need to:'|trans({}, 'Admin.Shopparameters.Notification') }} <br>
+                  {{ '1) Create a blank robots.txt file in your root directory.'|trans({}, 'Admin.Shopparameters.Notification') }} <br>
+                  {{ '2) Give it write permissions (CHMOD 666 on Unix system).'|trans({}, 'Admin.Shopparameters.Notification') }}
                 {% endif %}
               </div>
             </div>

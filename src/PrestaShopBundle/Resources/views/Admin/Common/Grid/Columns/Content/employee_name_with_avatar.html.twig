@@ -29,8 +29,8 @@
   %}
   <span class="employee_avatar_small">
     <img class="img rounded-circle" alt="{{ employeeName }}" src="{{ employeeImage }}" height="32" width="32" />
-  </span>
-  {{ employeeName }}
-{% else %}
-  {{ 'N/A'|trans({}, 'Admin.Global') }}
-{% endif %}
+    </span>
+    {{ employeeName }}
+  {% else %}
+    {{ 'N/A'|trans({}, 'Admin.Global') }}
+  {% endif %}

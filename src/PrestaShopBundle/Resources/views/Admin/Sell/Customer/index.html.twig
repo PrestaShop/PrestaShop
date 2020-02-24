@@ -46,7 +46,7 @@
       </div>
     </div>
   {% endblock %}
-
+  
   {% block customers_kpis %}
     <div class="row">
       <div class="col-md-12">
@@ -61,7 +61,7 @@
       </div>
     </div>
   {% endblock %}
-
+  
   {% block customers_listing %}
     {% if not isSingleShopContext %}
       <div class="row">
@@ -74,18 +74,18 @@
         </div>
       </div>
     {% endif %}
-
+    
     <div class="row">
       <div class="col-12">
         {% embed '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': customerGrid} %}
-          {% block grid_panel_extra_content %}
-            {% include '@PrestaShop/Admin/Sell/Customer/Blocks/delete_modal.html.twig' %}
-          {% endblock %}
+        {% block grid_panel_extra_content %}
+          {% include '@PrestaShop/Admin/Sell/Customer/Blocks/delete_modal.html.twig' %}
+        {% endblock %}
         {% endembed %}
       </div>
     </div>
   {% endblock %}
-
+  
   {% block customer_required_fields_form %}
     <div class="row">
       <div class="col-md-12">
@@ -102,7 +102,7 @@
           </button>
         </p>
       </div>
-
+      
       <div class="col-md-12">
         {% include '@PrestaShop/Admin/Sell/Customer/Blocks/Index/required_fields.html.twig' %}
       </div>
@@ -112,7 +112,7 @@
 
 {% block javascripts %}
   {{ parent() }}
-
+  
   {% include '@PrestaShop/Admin/Sell/Customer/Blocks/javascript.html.twig' %}
 {% endblock %}
 

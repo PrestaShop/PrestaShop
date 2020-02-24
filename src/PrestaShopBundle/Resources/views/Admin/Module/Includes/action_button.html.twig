@@ -26,17 +26,17 @@
 {% set displayAction = action|title|replace({'_': " "})|trans({}, transDomain[action]) %}
 
 {% if (action == 'configure') %}
-
-    <a class="{{ classes }}" href="{{ url }}">
-      {{ displayAction }}
-    </a>
-
+  
+  <a class="{{ classes }}" href="{{ url }}">
+    {{ displayAction }}
+  </a>
+  
 {% else %}
-
-    <form class='{{classes_form|default() }}' method="post" action="{{ url }}">
-      <button type="submit" class="{{ classes }} module_action_menu_{{ action }}" data-confirm_modal="module-modal-confirm-{{ name }}-{{ action }}">
-        {{ displayAction }}
-      </button>
-    </form>
-
+  
+  <form class='{{classes_form|default() }}' method="post" action="{{ url }}">
+    <button type="submit" class="{{ classes }} module_action_menu_{{ action }}" data-confirm_modal="module-modal-confirm-{{ name }}-{{ action }}">
+      {{ displayAction }}
+    </button>
+  </form>
+  
 {% endif %}

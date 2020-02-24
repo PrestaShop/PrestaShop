@@ -26,7 +26,7 @@
 {% set right = right|default(false) %}
 
 <div class="{{ div_style|default("btn-group") }}">
-
+  
   {% if default_item is defined %}
     <a
       href="{{ default_item.href|default("#") }}"
@@ -40,11 +40,11 @@
       {{ default_item.label|default('') }}
     </a>
   {% endif %}
-
+  
   <button class="btn btn-link dropdown-toggle dropdown-toggle-split product-edit" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
     {{ menu_label|default('') }}
   </button>
-
+  
   <div class="dropdown-menu{% if right %} dropdown-menu-right{% endif %}" x-placement="bottom-start" >
     {% for entry in items %}
       {% if entry.divider is defined and entry.divider==true %}
@@ -63,5 +63,5 @@
       {% endif %}
     {% endfor %}
   </div>
-
+  
 </div>

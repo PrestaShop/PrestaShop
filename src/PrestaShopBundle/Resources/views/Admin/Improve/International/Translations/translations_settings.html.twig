@@ -45,19 +45,19 @@
         {% endblock %}
       </div>
     </div>
-
+    
     <div class="col-xl-10">
       {% include '@PrestaShop/Admin/Improve/International/Translations/Blocks/modify_translations.html.twig' %}
     </div>
-
+    
     <div class="col-xl-10">
       {% include '@PrestaShop/Admin/Improve/International/Translations/Blocks/add_update_language.html.twig' %}
     </div>
-
+    
     <div class="col-xl-10">
       {% include '@PrestaShop/Admin/Improve/International/Translations/Blocks/export_language.html.twig' %}
     </div>
-
+    
     <div class="col-xl-10">
       {% include '@PrestaShop/Admin/Improve/International/Translations/Blocks/copy_language.html.twig' %}
     </div>
@@ -66,6 +66,6 @@
 
 {% block javascripts %}
   {{ parent() }}
-
+  
   <script src="{{ asset('themes/new-theme/public/translation_settings.bundle.js') }}"></script>
 {% endblock %}

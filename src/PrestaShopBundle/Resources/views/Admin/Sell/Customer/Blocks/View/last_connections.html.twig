@@ -33,26 +33,26 @@
     <div class="card-body">
       <table class="table">
         <thead>
-        <tr>
-          <th>{{ 'ID'|trans({}, 'Admin.Global') }}</th>
-          <th>{{ 'Date'|trans({}, 'Admin.Global') }}</th>
-          <th>{{ 'Pages viewed'|trans({}, 'Admin.Orderscustomers.Feature') }}</th>
-          <th>{{ 'Total time'|trans({}, 'Admin.Orderscustomers.Feature') }}</th>
-          <th>{{ 'Origin'|trans({}, 'Admin.Orderscustomers.Feature') }}</th>
-          <th>{{ 'IP Address'|trans({}, 'Admin.Orderscustomers.Feature') }}</th>
-        </tr>
+          <tr>
+            <th>{{ 'ID'|trans({}, 'Admin.Global') }}</th>
+            <th>{{ 'Date'|trans({}, 'Admin.Global') }}</th>
+            <th>{{ 'Pages viewed'|trans({}, 'Admin.Orderscustomers.Feature') }}</th>
+            <th>{{ 'Total time'|trans({}, 'Admin.Orderscustomers.Feature') }}</th>
+            <th>{{ 'Origin'|trans({}, 'Admin.Orderscustomers.Feature') }}</th>
+            <th>{{ 'IP Address'|trans({}, 'Admin.Orderscustomers.Feature') }}</th>
+          </tr>
         </thead>
         <tbody>
-        {% for connection in customerInformation.lastConnectionsInformation %}
-          <tr>
-            <td>{{ connection.connectionId }}</td>
-            <td>{{ connection.connectionDate }}</td>
-            <td>{{ connection.pagesViewed }}</td>
-            <td>{{ connection.totalTime }}</td>
-            <td>{{ connection.httpReferer }}</td>
-            <td>{{ connection.ipAddress }}</td>
-          </tr>
-        {% endfor %}
+          {% for connection in customerInformation.lastConnectionsInformation %}
+            <tr>
+              <td>{{ connection.connectionId }}</td>
+              <td>{{ connection.connectionDate }}</td>
+              <td>{{ connection.pagesViewed }}</td>
+              <td>{{ connection.totalTime }}</td>
+              <td>{{ connection.httpReferer }}</td>
+              <td>{{ connection.ipAddress }}</td>
+            </tr>
+          {% endfor %}
         </tbody>
       </table>
     </div>

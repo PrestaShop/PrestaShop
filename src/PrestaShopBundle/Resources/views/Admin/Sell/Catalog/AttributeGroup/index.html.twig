@@ -34,7 +34,7 @@
 %}
 
 {% block content %}
-
+  
   {% block attribute_group_showcase_card %}
     <div class="row">
       <div class="col">
@@ -42,7 +42,7 @@
       </div>
     </div>
   {% endblock %}
-
+  
   {% block attributes_listing %}
     <div class="row">
       <div class="col">
@@ -54,7 +54,7 @@
 
 {% block javascripts %}
   {{ parent() }}
-
+  
   <script src="{{ asset('themes/default/js/bundle/pagination.js') }}"></script>
   <script src="{{ asset('themes/new-theme/public/attribute_group.bundle.js') }}"></script>
 {% endblock %}

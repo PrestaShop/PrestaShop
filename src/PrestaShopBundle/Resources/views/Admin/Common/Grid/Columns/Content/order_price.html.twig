@@ -26,8 +26,8 @@
 <div class="text-left">
   {% if record[column.options.is_paid_field] %}
     <span class="badge badge-success rounded">
-    {{ record[column.options.field] }}
-  </span>
+      {{ record[column.options.field] }}
+    </span>
   {% else %}
     {{ record[column.options.field] }}
   {% endif %}

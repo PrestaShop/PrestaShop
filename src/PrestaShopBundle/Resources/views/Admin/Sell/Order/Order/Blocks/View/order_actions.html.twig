@@ -31,10 +31,10 @@
       'id': 'update_order_status_action_form'
     }
   }) }}
-
+  
   <div class="input-group">
     {{ form_widget(updateOrderStatusActionBarForm.new_order_status_id, {'attr': {'class': 'mr-1'}, 'id': 'update_order_status_action_input'}) }}
-
+    
     <button class="btn btn-action ml-2"
             id="update_order_status_action_btn"
             disabled
@@ -43,24 +43,24 @@
       {{ 'Update status'|trans({}, 'Admin.Orderscustomers.Feature') }}
     </button>
   </div>
-
+  
   <div class="d-none">
     {{ form_rest(updateOrderStatusActionBarForm) }}
   </div>
   {{ form_end(updateOrderStatusActionBarForm) }}
-
+  
   {% if orderForViewing.documents.canGenerateInvoice %}
     <form class="form-inline d-inline-block form-horizontal ml-2">
       <div class="input-group">
         <a href="{{ path('admin_orders_generate_invoice_pdf', {'orderId': orderForViewing.id}) }}"
-           class="btn btn-action">
+        class="btn btn-action">
           <i class="material-icons">receipt</i>
           {{ 'View invoice'|trans({}, 'Admin.Orderscustomers.Feature') }}
         </a>
       </div>
     </form>
   {% endif %}
-
+  
   <form class="form-inline d-inline-block form-horizontal ml-2">
     <div class="input-group">
       <button type="button" class="btn btn-action js-print-order-view-page">
@@ -69,12 +69,12 @@
       </button>
     </div>
   </form>
-
+  
   {% if orderForViewing.documents.canGenerateDeliverySlip %}
     <form class="form-inline d-inline-block form-horizontal ml-2">
       <div class="input-group">
         <a href="{{ path('admin_orders_generate_delivery_slip_pdf', {'orderId': orderForViewing.id}) }}"
-           class="btn btn-action">
+        class="btn btn-action">
           <i class="material-icons">local_shipping</i>
           {{ 'View delivery slip'|trans({}, 'Admin.Orderscustomers.Feature') }}
         </a>

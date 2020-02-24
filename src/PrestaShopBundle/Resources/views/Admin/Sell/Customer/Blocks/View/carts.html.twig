@@ -42,30 +42,30 @@
           </tr>
         </thead>
         <tbody>
-        {% for cart in customerInformation.cartsInformation %}
-          {% set cartViewUrl = getAdminLink('AdminCarts', true, {'id_cart': cart.cartId, 'viewcart': 1}) %}
-
-          <tr>
-            <td class="js-linkable-item cursor-pointer" data-linkable-href="{{ cartViewUrl }}">{{ cart.cartId }}</td>
-            <td class="js-linkable-item cursor-pointer" data-linkable-href="{{ cartViewUrl }}">{{ cart.cartCreationDate }}</td>
-            <td class="js-linkable-item cursor-pointer" data-linkable-href="{{ cartViewUrl }}">{{ cart.carrierName }}</td>
-            <td class="js-linkable-item cursor-pointer" data-linkable-href="{{ cartViewUrl }}">{{ cart.cartTotal }}</td>
-            <td class="text-right">
-              <div class="btn-group-action">
-                <div class="btn-group">
-                  <a href="{{ cartViewUrl }}"
+          {% for cart in customerInformation.cartsInformation %}
+            {% set cartViewUrl = getAdminLink('AdminCarts', true, {'id_cart': cart.cartId, 'viewcart': 1}) %}
+            
+            <tr>
+              <td class="js-linkable-item cursor-pointer" data-linkable-href="{{ cartViewUrl }}">{{ cart.cartId }}</td>
+              <td class="js-linkable-item cursor-pointer" data-linkable-href="{{ cartViewUrl }}">{{ cart.cartCreationDate }}</td>
+              <td class="js-linkable-item cursor-pointer" data-linkable-href="{{ cartViewUrl }}">{{ cart.carrierName }}</td>
+              <td class="js-linkable-item cursor-pointer" data-linkable-href="{{ cartViewUrl }}">{{ cart.cartTotal }}</td>
+              <td class="text-right">
+                <div class="btn-group-action">
+                  <div class="btn-group">
+                    <a href="{{ cartViewUrl }}"
                      class="btn tooltip-link dropdown-item"
                      data-toggle="pstooltip"
                      data-placement="top"
                      data-original-title="{{ 'View'|trans({}, 'Admin.Actions') }}"
-                  >
-                    <i class="material-icons">zoom_in</i>
-                  </a>
+                    >
+                      <i class="material-icons">zoom_in</i>
+                    </a>
+                  </div>
                 </div>
-              </div>
-            </td>
-          </tr>
-        {% endfor %}
+              </td>
+            </tr>
+          {% endfor %}
         </tbody>
       </table>
     {% else %}

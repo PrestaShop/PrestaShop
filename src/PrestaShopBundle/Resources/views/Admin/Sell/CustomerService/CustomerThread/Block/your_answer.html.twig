@@ -26,39 +26,39 @@
 {{ form_start(replyToCustomerThreadForm, {
   'action': path('admin_customer_threads_reply', {'customerThreadId': customerThreadView.customerThreadId.value})
 }) }}
-  <div class="card">
-    <h3 class="card-header">
-      {{ 'Your answer to'|trans({}, 'Admin.Orderscustomers.Feature') }}
-
-      {% if customerThreadView.customerInformation.firstName %}
-        {{ customerThreadView.customerInformation.firstName }}
-        {{ customerThreadView.customerInformation.lastName }}
-      {% else %}
-        {{ customerThreadView.customerInformation.email }}
-      {% endif %}
-    </h3>
-
-    <div class="card-body">
-      <div class="media">
-        <img src="{{ employeeAvatarUrl }}" class="mr-3 rounded-circle thread-message-employee-image">
+<div class="card">
+  <h3 class="card-header">
+    {{ 'Your answer to'|trans({}, 'Admin.Orderscustomers.Feature') }}
+    
+    {% if customerThreadView.customerInformation.firstName %}
+      {{ customerThreadView.customerInformation.firstName }}
+      {{ customerThreadView.customerInformation.lastName }}
+    {% else %}
+      {{ customerThreadView.customerInformation.email }}
+    {% endif %}
+  </h3>
+  
+  <div class="card-body">
+    <div class="media">
+      <img src="{{ employeeAvatarUrl }}" class="mr-3 rounded-circle thread-message-employee-image">
         <div class="media-body">
           {{ form_widget(replyToCustomerThreadForm.reply_message, {'attr': {'rows': 5}}) }}
         </div>
       </div>
-
+      
       <div class="d-none">
         {{ form_widget(replyToCustomerThreadForm._token) }}
       </div>
-
+      
       {% block reply_to_customer_form_rest %}
         {{ form_rest(replyToCustomerThreadForm) }}
       {% endblock %}
     </div>
-
+    
     <div class="card-footer">
       <div class="d-flex justify-content-end">
         <button class="btn btn-primary">{{ 'Send'|trans({}, 'Admin.Actions') }}</button>
       </div>
     </div>
   </div>
-{{ form_end(replyToCustomerThreadForm) }}
+  {{ form_end(replyToCustomerThreadForm) }}

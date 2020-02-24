@@ -43,30 +43,30 @@
         </div>
       </div>
     </div>
-
+    
     <div class="panel panel-default">
       <div class="panel-body">
         <div>
           {{ form_errors(form.suppliers) }}
           <table class="table" id="form_step6_suppliers">
             <thead class="thead-default">
-            <tr>
-              <th width="70%">{{ 'Choose the suppliers associated with this product'|trans({}, 'Admin.Catalog.Feature') }}</th>
-              <th width="30%">{{ 'Default supplier'|trans({}, 'Admin.Catalog.Feature') }}</th>
-            </tr>
+              <tr>
+                <th width="70%">{{ 'Choose the suppliers associated with this product'|trans({}, 'Admin.Catalog.Feature') }}</th>
+                <th width="30%">{{ 'Default supplier'|trans({}, 'Admin.Catalog.Feature') }}</th>
+              </tr>
             </thead>
             <tbody>
-            {% for key, supplier in form.suppliers %}
-              <tr>
-                <td>{{ form_widget(supplier) }}</td>
-                <td>{{ form_widget(form.default_supplier[key]) }}</td>
-              </tr>
-            {% endfor %}
+              {% for key, supplier in form.suppliers %}
+                <tr>
+                  <td>{{ form_widget(supplier) }}</td>
+                  <td>{{ form_widget(form.default_supplier[key]) }}</td>
+                </tr>
+              {% endfor %}
             </tbody>
           </table>
         </div>
       </div>
     </div>
-
+    
   </div>
 {% endif %}

@@ -27,21 +27,21 @@
 {% trans_default_domain 'Admin.Advparameters.Feature' %}
 
 {% block content %}
-<div class="row justify-content-center">
-  <div class="col-xl-10">
-    {% block import_data_configuration_panel %}
-      {% include '@PrestaShop/Admin/Configure/AdvancedParameters/ImportDataConfiguration/Blocks/import_data_configuration.html.twig' %}
-    {% endblock %}
-
-    {% block import_modal %}
-      {% include '@PrestaShop/Admin/Configure/AdvancedParameters/ImportDataConfiguration/Blocks/import_modal.html.twig' %}
-    {% endblock %}
+  <div class="row justify-content-center">
+    <div class="col-xl-10">
+      {% block import_data_configuration_panel %}
+        {% include '@PrestaShop/Admin/Configure/AdvancedParameters/ImportDataConfiguration/Blocks/import_data_configuration.html.twig' %}
+      {% endblock %}
+      
+      {% block import_modal %}
+        {% include '@PrestaShop/Admin/Configure/AdvancedParameters/ImportDataConfiguration/Blocks/import_modal.html.twig' %}
+      {% endblock %}
+    </div>
   </div>
-</div>
 {% endblock %}
 
 {% block javascripts %}
   {{ parent() }}
-
+  
   <script src="{{ asset('themes/new-theme/public/imports_data.bundle.js') }}"></script>
 {% endblock %}

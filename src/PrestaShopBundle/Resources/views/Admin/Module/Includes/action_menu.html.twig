@@ -31,7 +31,7 @@
   module.attributes.name,
   module.attributes.actionTranslationDomains
 %}
- <div class="btn-group module-actions">
+<div class="btn-group module-actions">
   {% if url_active == 'buy' %}
     <a class="btn btn-primary btn-primary-reverse btn-block btn-outline-primary module_action_menu_go_to_addons" href="{{ url }}" target="_blank">
       {{ 'Discover'|trans({}, 'Admin.Modules.Feature') }}
@@ -46,7 +46,7 @@
         'transDomain': transDomains}
     %}
     {% if (urls|length > 1) %}
-        <input type="hidden" class="btn" /> 
+      <input type="hidden" class="btn" /> 
         <button type="button" class="btn btn-outline-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> 
           <span class="caret"></span> 
         </button>
@@ -54,18 +54,18 @@
         <div class="dropdown-menu">
           {% for module_action, module_url in urls %}
             {% if module_action != url_active %}
-                <li>
-                  {% include '@PrestaShop/Admin/Module/Includes/action_button.html.twig' with {
+              <li>
+              {% include '@PrestaShop/Admin/Module/Includes/action_button.html.twig' with {
                       'name': name,
                       'classes' : 'dropdown-item',
                       'url': module_url,
                       'action': module_action,
-                      'transDomain': transDomains}
-                  %}
-                </li>
+              'transDomain': transDomains}
+              %}
+              </li>
             {% endif %}
           {% endfor %}
         </div>
+      {% endif %}
     {% endif %}
-  {% endif %}
-</div>
+  </div>

@@ -31,7 +31,7 @@
     <h3 class="card-header">
       <i class="material-icons">settings</i> {{ 'Configuration'|trans({}, 'Admin.Global') }}
     </h3>
-
+    
     <div class="card-block row">
       <div class="card-text">
         <div class="form-group row">
@@ -41,7 +41,7 @@
             {{ form_widget(configurationForm.default_language, {'attr': {'data-minimumResultsForSearch': '7', 'data-toggle': 'select2'}}) }}
           </div>
         </div>
-
+        
         <div class="form-group row">
           <label class="form-control-label">
             {{ 'Set language from browser'|trans }}
@@ -52,7 +52,7 @@
             <small class="form-text">{{ 'Set browser language as default language'|trans({}, 'Admin.International.Help') }}</small>
           </div>
         </div>
-
+        
         <div class="form-group row">
           {{ ps.label_with_help(('Default country'|trans), ('The default country used in your shop.'|trans({}, 'Admin.International.Help'))) }}
           <div class="col-sm">
@@ -60,7 +60,7 @@
             {{ form_widget(configurationForm.default_country, {'attr': {'data-minimumResultsForSearch': '7', 'data-toggle': 'select2'}}) }}
           </div>
         </div>
-
+        
         <div class="form-group row">
           <label class="form-control-label">
             {{ 'Set default country from browser language'|trans }}
@@ -71,17 +71,17 @@
             <small class="form-text">{{ 'Set country corresponding to browser language'|trans({}, 'Admin.International.Help') }}</small>
           </div>
         </div>
-
+        
         <div class="form-group row js-default-currency-block">
           {% set currencyChangeWarningMessage = 'Before changing the default currency, we strongly recommend that you enable maintenance mode. Indeed, any change on the default currency requires a manual adjustment of the price of each product and its combinations.'|trans({}, 'Admin.International.Notification') %}
-
+          
           {{ ps.label_with_help(('Default currency'|trans), ('The default currency used in your shop.'|trans({}, 'Admin.International.Help'))) }}
           <div class="col-sm">
             {{ form_errors(configurationForm.default_currency) }}
             {{ form_widget(configurationForm.default_currency, {'attr': {'data-warning-message': currencyChangeWarningMessage, 'data-minimumResultsForSearch': '7', 'data-toggle': 'select2'}}) }}
           </div>
         </div>
-
+        
         <div class="form-group row">
           <label class="form-control-label">
             {{ 'Time zone'|trans }}
@@ -93,7 +93,7 @@
         </div>
       </div>
     </div>
-
+    
     <div class="card-footer">
       <div class="d-flex justify-content-end">
         <button class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>

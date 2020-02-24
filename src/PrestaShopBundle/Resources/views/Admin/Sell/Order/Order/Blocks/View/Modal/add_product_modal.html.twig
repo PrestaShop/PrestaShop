@@ -42,31 +42,31 @@
               <label class="form-control-label" for="{{ addProductToOrderForm.product_id.vars.id }}">
                 {{ 'Product'|trans({}, 'Admin.Global') }}
               </label>
-
+              
               {{ form_widget(addProductToOrderForm.product_id) }}
             </div>
           </div>
         </div>
-
+        
         <div class="row">
           <div class="col">
             <div class="form-group">
               <label class="form-control-label" for="{{ addProductToOrderForm.combination_id.vars.id }}">
                 {{ 'Combination'|trans({}, 'Admin.Global') }}
               </label>
-
+              
               {{ form_widget(addProductToOrderForm.combination_id) }}
             </div>
           </div>
         </div>
-
+        
         <div class="row">
           <div class="col">
             <div class="form-group">
               <label class="form-control-label" for="{{ addProductToOrderForm.price_tax_excl.vars.id }}">
                 {{ 'Price tax excluded'|trans({}, 'Admin.Advparameters.Feature') }}
               </label>
-
+              
               <div class="input-group">
                 {{ form_widget(addProductToOrderForm.price_tax_excl) }}
                 <div class="input-group-append">
@@ -80,7 +80,7 @@
               <label class="form-control-label" for="{{ addProductToOrderForm.price_tax_incl.vars.id }}">
                 {{ 'Price tax included'|trans({}, 'Admin.Advparameters.Feature') }}
               </label>
-
+              
               <div class="input-group">
                 {{ form_widget(addProductToOrderForm.price_tax_incl) }}
                 <div class="input-group-append">
@@ -90,14 +90,14 @@
             </div>
           </div>
         </div>
-
+        
         <div class="row">
           <div class="col">
             <div class="form-group">
               <label class="form-control-label" for="{{ addProductToOrderForm.quantity.vars.id }}">
                 {{ 'Quantity'|trans({}, 'Admin.Global') }}
               </label>
-
+              
               {{ form_widget(addProductToOrderForm.quantity) }}
             </div>
           </div>

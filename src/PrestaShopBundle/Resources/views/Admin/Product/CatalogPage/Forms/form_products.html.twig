@@ -33,13 +33,13 @@
   <div class="row">
     <div class="col-md-12">
       <input type="hidden" name="filter_category" value="{{ filter_category|default('') }}" />
+      </div>
     </div>
-  </div>
-
-  <div class="row">
-    <div class="col-md-12">
-      {% block product_catalog_form_table %}
-        {{ include('@Product/CatalogPage/Lists/products_table.html.twig', {
+    
+    <div class="row">
+      <div class="col-md-12">
+        {% block product_catalog_form_table %}
+          {{ include('@Product/CatalogPage/Lists/products_table.html.twig', {
           'limit': limit,
           'orderBy': orderBy,
           'offset': offset,
@@ -57,16 +57,16 @@
           'products': products,
           'last_sql': last_sql
           })
-        }}
-      {% endblock %}
+          }}
+        {% endblock %}
+      </div>
     </div>
-  </div>
-
-  {% if product_count_filtered > 20 %}
-    <div class="row">
-      <div class="col-md-12">
-
-        {{ render(controller('PrestaShopBundle:Admin\\Common:pagination', {
+    
+    {% if product_count_filtered > 20 %}
+      <div class="row">
+        <div class="col-md-12">
+          
+          {{ render(controller('PrestaShopBundle:Admin\\Common:pagination', {
           'limit': limit,
           'offset': offset,
           'total': product_count_filtered,
@@ -74,7 +74,7 @@
           'caller_parameters': pagination_parameters,
           'limit_choices': pagination_limit_choices
           })) }}
+        </div>
       </div>
-    </div>
-  {% endif %}
-</form>
+    {% endif %}
+  </form>

@@ -30,40 +30,40 @@
         <h3 class="card-header">
           <i class="material-icons">email</i> {{ 'Email themes'|trans({}, 'Admin.Design.Feature') }}
         </h3>
-
+        
         <div class="card-block">
-
-            <table class="grid-table table">
-              <thead class="thead-default">
-                <tr class="column-headers">
-                  <th scope="col">
-                    {{ 'Name'|trans({}, 'Admin.Global') }}
-                  </th>
-                  <th scope="col">
-                    <div class="grid-actions-header-text">
-                      {{ 'Actions'|trans({}, 'Admin.Global') }}
+          
+          <table class="grid-table table">
+            <thead class="thead-default">
+              <tr class="column-headers">
+                <th scope="col">
+                  {{ 'Name'|trans({}, 'Admin.Global') }}
+                </th>
+                <th scope="col">
+                  <div class="grid-actions-header-text">
+                    {{ 'Actions'|trans({}, 'Admin.Global') }}
+                  </div>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for theme in mailThemes %}
+                <tr>
+                  <td class="data-type">
+                    {{ theme.name }}
+                  </td>
+                  <td class="action-type">
+                    <div class="btn-group-action text-right">
+                      <a class="btn tooltip-link" href="{{ path('admin_mail_theme_preview', {'theme': theme.name}) }}">
+                        <i class="material-icons">search</i>
+                      </a>
                     </div>
-                  </th>
+                  </td>
                 </tr>
-              </thead>
-              <tbody>
-                {% for theme in mailThemes %}
-                  <tr>
-                    <td class="data-type">
-                      {{ theme.name }}
-                    </td>
-                    <td class="action-type">
-                      <div class="btn-group-action text-right">
-                        <a class="btn tooltip-link" href="{{ path('admin_mail_theme_preview', {'theme': theme.name}) }}">
-                          <i class="material-icons">search</i>
-                        </a>
-                      </div>
-                    </td>
-                  </tr>
-                {% endfor %}
-              </tbody>
-            </table>
-
+              {% endfor %}
+            </tbody>
+          </table>
+          
         </div>
       </div>
     </div>

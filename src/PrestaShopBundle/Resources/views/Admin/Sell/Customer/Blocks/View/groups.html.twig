@@ -28,7 +28,7 @@
     <i class="material-icons">group</i>
     {{ 'Groups'|trans({}, 'Admin.Global') }}
     <span class="badge badge-primary rounded">{{ customerInformation.groupsInformation|length }}</span>
-
+    
     <a href="{{ getAdminLink('AdminCustomers', true, {'id_customer': customerInformation.customerId.value, 'updatecustomer': 1}) }}"
        class="tooltip-link float-right"
        data-toggle="pstooltip"
@@ -48,16 +48,16 @@
           </tr>
         </thead>
         <tbody>
-        {% for group in customerInformation.groupsInformation %}
-          <tr>
-            <td>{{ group.groupId }}</td>
-            <td>
-              <a href="{{ getAdminLink('AdminGroups', true, {'id_group': group.groupId, 'viewgroup': 1}) }}">
-                {{ group.name }}
-              </a>
-            </td>
-          </tr>
-        {% endfor %}
+          {% for group in customerInformation.groupsInformation %}
+            <tr>
+              <td>{{ group.groupId }}</td>
+              <td>
+                <a href="{{ getAdminLink('AdminGroups', true, {'id_group': group.groupId, 'viewgroup': 1}) }}">
+                  {{ group.name }}
+                </a>
+              </td>
+            </tr>
+          {% endfor %}
         </tbody>
       </table>
     {% else %}

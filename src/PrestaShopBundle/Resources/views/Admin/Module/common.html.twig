@@ -27,12 +27,12 @@
 {% block javascripts %}
   {{ parent() }}
   <script>
-    var moduleURLs = {
+  var moduleURLs = {
       'catalogRefresh': '{{ path('admin_module_catalog_refresh')|e('js') }}',
       'configurationPage': '{{ path('admin_module_configure_action', {'module_name': ':number:'})|e('js') }}',
       'moduleImport': '{{ path('admin_module_import')|e('js') }}',
       'notificationsCount': '{{ path('admin_module_notification_count')|e('js') }}',
-    };
+  };
   </script>
   <script src="{{ asset('themes/default/js/bundle/plugins/jquery.pstagger.js') }}"></script>
   <script src="{{ asset('themes/new-theme/public/module.bundle.js') }}"></script>

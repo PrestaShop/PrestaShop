@@ -59,15 +59,15 @@
           <th scope="col" class="text-center" style="width: 9%">
             {{ "Price (tax incl.)"|trans({}, 'Admin.Catalog.Feature') }}
           </th>
-
+          
           {% if 'PS_STOCK_MANAGEMENT'|configuration %}
-          <th scope="col" class="text-center" style="width: 9%">
-            {{ ps.sortable_column_header("Quantity"|trans({}, 'Admin.Catalog.Feature'), 'sav_quantity', orderBy, sortOrder) }}
-          </th>
+            <th scope="col" class="text-center" style="width: 9%">
+              {{ ps.sortable_column_header("Quantity"|trans({}, 'Admin.Catalog.Feature'), 'sav_quantity', orderBy, sortOrder) }}
+            </th>
           {% else %}
             <th></th>
           {% endif %}
-
+          
           <th scope="col" class="text-center">
             {{ ps.sortable_column_header("Status"|trans({}, 'Admin.Global'), 'active', orderBy, sortOrder) }}
           </th>
@@ -77,11 +77,11 @@
             </th>
           {% endif %}
           <th scope="col" class="text-right" style="width: 3rem; padding-right: 2rem">
-              {{ "Actions"|trans({}, 'Admin.Global') }}
+            {{ "Actions"|trans({}, 'Admin.Global') }}
           </th>
         </tr>
       {% endblock %}
-
+      
       {% block product_catalog_form_table_filters %}
         {% set filters_disabled = activate_drag_and_drop %}
         <tr class="column-filters">
@@ -106,29 +106,29 @@
               value="{{ filter_column_name }}"
               {% if filters_disabled %}disabled{% endif %}
             />
-          </th>
-          <th>
-            <input
+            </th>
+            <th>
+              <input
               type="text"
               class="form-control"
               placeholder="{{ "Search ref."|trans({}, 'Admin.Catalog.Help') }}"
               name="filter_column_reference"
               value="{{ filter_column_reference }}"
               {% if filters_disabled %}disabled{% endif %}
-            />
-          </th>
-          <th>
-            <input
+              />
+              </th>
+              <th>
+                <input
               type="text"
               class="form-control"
               placeholder="{{ "Search category"|trans({}, 'Admin.Catalog.Help') }}"
               name="filter_column_name_category"
               value="{{ filter_column_name_category }}"
               {% if filters_disabled %}disabled{% endif %}
-            />
-          </th>
-          <th class="text-center">
-            {% include '@PrestaShop/Admin/Helpers/range_inputs.html.twig' with {
+                />
+                </th>
+                <th class="text-center">
+                  {% include '@PrestaShop/Admin/Helpers/range_inputs.html.twig' with {
               'input_name': "filter_column_price",
               'min': '0',
               'max': '1000000',
@@ -136,12 +136,12 @@
               'maxLabel': "Max"|trans({}, 'Admin.Global'),
               'value': filter_column_price,
               'disabled': filters_disabled,
-            } %}
-          </th>
-          <th class="text-center"></th>
-          {% if 'PS_STOCK_MANAGEMENT'|configuration %}
-          <th class="text-center">
-            {% include '@PrestaShop/Admin/Helpers/range_inputs.html.twig' with {
+                  } %}
+                </th>
+                <th class="text-center"></th>
+                {% if 'PS_STOCK_MANAGEMENT'|configuration %}
+                  <th class="text-center">
+                    {% include '@PrestaShop/Admin/Helpers/range_inputs.html.twig' with {
               'input_name': "filter_column_sav_quantity",
               'min': '-1000000',
               'max': '1000000',
@@ -149,63 +149,63 @@
               'maxLabel': "Max"|trans({}, 'Admin.Global'),
               'value': filter_column_sav_quantity,
               'disabled': filters_disabled,
-            } %}
-          </th>
-          {% else %}
-            <th></th>
-          {% endif %}
-
-          <th id="product_filter_column_active" class="text-center">
-            <div class="form-select">
-              <select class="custom-select"  name="filter_column_active" {% if filters_disabled %}disabled{% endif %}>
-                <option value=""></option>
-                <option value="1" {% if (filter_column_active is defined) and filter_column_active == '1' %}selected="selected"{% endif %}>Active</option>
-                <option value="0" {% if (filter_column_active is defined) and filter_column_active == '0' %}selected="selected"{% endif %}>Inactive</option>
-              </select>
-            </div>
-          </th>
-          {% if has_category_filter == true %}
-            <th>
-              {% if not(activate_drag_and_drop) %}
-                <input type="button" class="btn btn-outline-secondary" name="products_filter_position_asc" value="{{ "Reorder"|trans({}, 'Admin.Actions') }}" onclick="productOrderPrioritiesTable();" />
+                    } %}
+                  </th>
                 {% else %}
-                <input type="button" id="bulk_edition_save_keep" class="btn" onclick="bulkProductAction(this, 'edition');" value="{{ "Save & refresh"|trans({}, 'Admin.Actions')|raw }}" />
-              {% endif %}
-            </th>
-          {% endif %}
-          <th class="text-right" style="width: 5rem">
-            <button
+                  <th></th>
+                {% endif %}
+                
+                <th id="product_filter_column_active" class="text-center">
+                  <div class="form-select">
+                    <select class="custom-select"  name="filter_column_active" {% if filters_disabled %}disabled{% endif %}>
+                    <option value=""></option>
+                    <option value="1" {% if (filter_column_active is defined) and filter_column_active == '1' %}selected="selected"{% endif %}>Active</option>
+                    <option value="0" {% if (filter_column_active is defined) and filter_column_active == '0' %}selected="selected"{% endif %}>Inactive</option>
+                    </select>
+                  </div>
+                </th>
+                {% if has_category_filter == true %}
+                  <th>
+                    {% if not(activate_drag_and_drop) %}
+                      <input type="button" class="btn btn-outline-secondary" name="products_filter_position_asc" value="{{ "Reorder"|trans({}, 'Admin.Actions') }}" onclick="productOrderPrioritiesTable();" />
+                      {% else %}
+                        <input type="button" id="bulk_edition_save_keep" class="btn" onclick="bulkProductAction(this, 'edition');" value="{{ "Save & refresh"|trans({}, 'Admin.Actions')|raw }}" />
+                        {% endif %}
+                      </th>
+                    {% endif %}
+                    <th class="text-right" style="width: 5rem">
+                      <button
               type="submit"
               class="btn btn-primary"
               name="products_filter_submit"
               title="{{ "Search"|trans({}, 'Admin.Actions') }}"
-            >
-              <i class="material-icons">search</i>
-              {{ "Search"|trans({}, 'Admin.Actions') }}
-            </button>
-            <button
+                      >
+                        <i class="material-icons">search</i>
+                        {{ "Search"|trans({}, 'Admin.Actions') }}
+                      </button>
+                      <button
               type="reset"
               class="btn btn-link"
               name="products_filter_reset"
               onclick="productColumnFilterReset($(this).closest('tr.column-filters'))"
               title="{{ "Reset"|trans({}, 'Admin.Actions') }}"
-            >
-              <i class="material-icons">clear</i>
-              {{ "Reset"|trans({}, 'Admin.Actions') }}
-            </button>
-          </th>
-        </tr>
-      {% endblock %}
-    </thead>
-    {% block product_catalog_form_table_items %}
-      {{ render(controller('PrestaShopBundle\\Controller\\Admin\\ProductController::listAction', {
+                      >
+                        <i class="material-icons">clear</i>
+                        {{ "Reset"|trans({}, 'Admin.Actions') }}
+                      </button>
+                    </th>
+                  </tr>
+                {% endblock %}
+              </thead>
+              {% block product_catalog_form_table_items %}
+                {{ render(controller('PrestaShopBundle\\Controller\\Admin\\ProductController::listAction', {
         'limit': limit,
         'offset': offset,
         'orderBy': orderBy,
         'sortOrder': sortOrder,
         'products': products,
         'last_sql': last_sql
-      })) }}
-    {% endblock %}
-  </table>
-</div>
+                })) }}
+              {% endblock %}
+            </table>
+          </div>

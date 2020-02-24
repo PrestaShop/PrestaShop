@@ -28,19 +28,19 @@
 {% set generalForm, giftOptionsForm = form.general, form.gift_options %}
 
 {% block content %}
-    {{ form_start(form, {'attr': {'class': 'form', 'id': 'configuration_form'}}) }}
-    <div class="row justify-content-center">
+  {{ form_start(form, {'attr': {'class': 'form', 'id': 'configuration_form'}}) }}
+  <div class="row justify-content-center">
         {# General options block #}
-        {% include '@PrestaShop/Admin/Configure/ShopParameters/OrderPreferences/Blocks/order_preferences_general.html.twig' %}
-
+    {% include '@PrestaShop/Admin/Configure/ShopParameters/OrderPreferences/Blocks/order_preferences_general.html.twig' %}
+    
         {# Gift options block #}
-        {% include '@PrestaShop/Admin/Configure/ShopParameters/OrderPreferences/Blocks/order_preferences_gift_options.html.twig' %}
-    </div>
-    {{ form_end(form) }}
+    {% include '@PrestaShop/Admin/Configure/ShopParameters/OrderPreferences/Blocks/order_preferences_gift_options.html.twig' %}
+  </div>
+  {{ form_end(form) }}
 {% endblock %}
 
 {% block javascripts %}
-    {{ parent() }}
-
-    <script src="{{ asset('themes/new-theme/public/order_preferences.bundle.js') }}"></script>
+  {{ parent() }}
+  
+  <script src="{{ asset('themes/new-theme/public/order_preferences.bundle.js') }}"></script>
 {% endblock %}

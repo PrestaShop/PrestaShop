@@ -147,7 +147,7 @@
           <button
             class="btn btn-outline-primary js-import-next-page{% if not showPagingArrows %} d-none{% endif %}"
             type="button"
-          >
+            >
             <i class="material-icons">arrow_forward</i>
           </button>
         </div>
@@ -158,9 +158,9 @@
   <div class="card-footer">
     <div class="d-flex justify-content-between">
       <a class="btn btn-outline-secondary js-import-process-button"
-         href="{{ path('admin_import') }}"
-              data-import_url="{{ path('admin_import_process') }}"
-      >
+        href="{{ path('admin_import') }}"
+        data-import_url="{{ path('admin_import_process') }}"
+        >
         <i class="material-icons">cancel</i>
         {{ 'Cancel'|trans({}, 'Admin.Actions') }}
       </a>

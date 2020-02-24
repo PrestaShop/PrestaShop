@@ -24,14 +24,14 @@
  *#}
 
 {% embed '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with { 'grid': emailLogsGrid } %}
-  {% trans_default_domain 'Admin.Advparameters.Feature' %}
+{% trans_default_domain 'Admin.Advparameters.Feature' %}
 
-  {% block grid_footer %}
-    <div class="card-footer">
-      <a href="{{ getAdminLink('AdminDashboard') }}" class="btn btn-outline-secondary">
-        <i class="material-icons">arrow_back</i>
-        {{ 'Back to the dashboard'|trans() }}
-      </a>
-    </div>
-  {% endblock %}
+{% block grid_footer %}
+  <div class="card-footer">
+    <a href="{{ getAdminLink('AdminDashboard') }}" class="btn btn-outline-secondary">
+      <i class="material-icons">arrow_back</i>
+      {{ 'Back to the dashboard'|trans() }}
+    </a>
+  </div>
+{% endblock %}
 {% endembed %}

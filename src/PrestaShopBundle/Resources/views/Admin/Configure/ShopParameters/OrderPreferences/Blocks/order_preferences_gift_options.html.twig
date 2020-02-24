@@ -27,23 +27,23 @@
 {% import '@PrestaShop/Admin/macros.html.twig' as ps %}
 
 {% block order_preferences_gift_options %}
-<div class="col-xl-10">
+  <div class="col-xl-10">
     <div class="card">
-        <h3 class="card-header">
-            <i class="material-icons">cake</i> {{ 'Gift options'|trans({}, 'Admin.Shopparameters.Feature') }}
-        </h3>
-        <div class="card-block row">
-            <div class="card-text">
-                {% block order_gift_options_preferences_form_rest %}
-                  {{ form_rest(giftOptionsForm) }}
-                {% endblock %}
-            </div>
+      <h3 class="card-header">
+        <i class="material-icons">cake</i> {{ 'Gift options'|trans({}, 'Admin.Shopparameters.Feature') }}
+      </h3>
+      <div class="card-block row">
+        <div class="card-text">
+          {% block order_gift_options_preferences_form_rest %}
+            {{ form_rest(giftOptionsForm) }}
+          {% endblock %}
         </div>
-        <div class="card-footer">
-            <div class="d-flex justify-content-end">
-                <button class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
-            </div>
+      </div>
+      <div class="card-footer">
+        <div class="d-flex justify-content-end">
+          <button class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
         </div>
+      </div>
     </div>
-</div>
+  </div>
 {% endblock %}

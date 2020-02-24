@@ -38,18 +38,18 @@
               >
                 <i class="material-icons text-white">{{ timelineItem.icon }}</i>
               </span>
-
+              
               <span class="timeline-date">
                 <i class="material-icons font-16">calendar_today</i>
                 {{ format_date(timelineItem.date) }}
                 <i class="material-icons font-16">access_time</i>
                 {{ timelineItem.date|date('H:i') }}
               </span>
-
+              
               <span>
                 {{ timelineItem.content|raw|nl2br }}
               </span>
-
+              
               {% if timelineItem.relatedOrderId %}
                 <p class="mb-0 mt-2">
                   <a href="{{ getAdminLink('AdminOrders', true, {'vieworder': 1, 'id_order': timelineItem.relatedOrderId}) }}"

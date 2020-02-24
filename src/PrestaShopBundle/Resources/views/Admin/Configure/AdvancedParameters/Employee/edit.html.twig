@@ -39,7 +39,7 @@
       {% endfor %}
     </div>
   {% endif %}
-
+  
   <div class="row justify-content-center">
     <div class="col">
       {% include '@PrestaShop/Admin/Configure/AdvancedParameters/Employee/Blocks/form.html.twig' with {
@@ -58,9 +58,9 @@
 
 {% block javascripts %}
   {{ parent() }}
-
+  
   {# Password generation plugin #}
   <script src="{{ asset('themes/default/js/vendor/jquery-passy.js') }}"></script>
-
+  
   <script src="{{ asset('themes/new-theme/public/employee_form.bundle.js') }}"></script>
 {% endblock %}

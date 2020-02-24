@@ -36,7 +36,7 @@
     meta_title is defined ? meta_title : '',
     use_regular_h1_structure is defined ? use_regular_h1_structure : true
   )
-  )) %}
+)) %}
 
 {% import '@PrestaShop/Admin/macros.html.twig' as ps %}
 
@@ -48,34 +48,34 @@
 
 {% block translate_javascripts %}
   <script>
-    var translate_javascripts = {{ js_translatable|json_encode()|raw }};
-    var PS_ALLOW_ACCENTED_CHARS_URL = {{ 'PS_ALLOW_ACCENTED_CHARS_URL'|configuration|intCast }};
+  var translate_javascripts = {{ js_translatable|json_encode()|raw }};
+  var PS_ALLOW_ACCENTED_CHARS_URL = {{ 'PS_ALLOW_ACCENTED_CHARS_URL'|configuration|intCast }};
   </script>
 {% endblock %}
 
 {% block content_header %}
   {% macro alert(type, flashbagContent) %}
-    <div class="alert alert-{{ type }} d-print-none" role="alert">
-      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-        <span aria-hidden="true"><i class="material-icons">close</i></span>
-      </button>
-      {% if flashbagContent|length > 1 %}
-        <ul class="alert-text">
-          {% for flashMessage in flashbagContent %}
-            <li>{{ flashMessage|raw }}</li>
-          {% endfor %}
-        </ul>
-      {% else %}
-        <div class="alert-text">
-          {% for flashMessage in flashbagContent %}
-            <p>{{ flashMessage|raw }}</p>
-          {% endfor %}
-        </div>
-      {% endif %}
-    </div>
+  <div class="alert alert-{{ type }} d-print-none" role="alert">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true"><i class="material-icons">close</i></span>
+    </button>
+    {% if flashbagContent|length > 1 %}
+      <ul class="alert-text">
+      {% for flashMessage in flashbagContent %}
+        <li>{{ flashMessage|raw }}</li>
+      {% endfor %}
+      </ul>
+    {% else %}
+      <div class="alert-text">
+        {% for flashMessage in flashbagContent %}
+          <p>{{ flashMessage|raw }}</p>
+        {% endfor %}
+      </div>
+    {% endif %}
+  </div>
   {% endmacro %}
   {% import _self as layout %}
-
+  
   {% if app.session.flashbag.peek('error')|length() > 0 %}
     {{ layout.alert('danger', app.session.flashbag.get('error')) }}
   {% endif %}
@@ -92,13 +92,13 @@
 
 {% block sidebar_right %}
   <nav
-    id="right-sidebar"
-    role="navigation"
-    class="col-xs-5 col-sm-4 col-md-4 col-lg-3 sidebar sidebar-right sidebar-animate text-sm-center"
+  id="right-sidebar"
+  role="navigation"
+  class="col-xs-5 col-sm-4 col-md-4 col-lg-3 sidebar sidebar-right sidebar-animate text-sm-center"
   >
-    <img
-      src="{{ asset('themes/default/img/bundle/dashboard_loading.gif') }}"
-      style="margin-top: 10em;" alt="{{ 'Loading...'|trans({}, 'Admin.Global') }}"
+  <img
+    src="{{ asset('themes/default/img/bundle/dashboard_loading.gif') }}"
+    style="margin-top: 10em;" alt="{{ 'Loading...'|trans({}, 'Admin.Global') }}"
     />
-  </nav>
-{% endblock %}
+    </nav>
+  {% endblock %}

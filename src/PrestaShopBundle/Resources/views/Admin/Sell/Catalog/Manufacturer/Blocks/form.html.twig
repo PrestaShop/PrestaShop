@@ -34,37 +34,37 @@
   <div class="card-block row">
     <div class="card-text">
       {{ form_errors(manufacturerForm) }}
-
+      
       {% set invalidCatalogNameHint %}
-        {{ 'Invalid characters:'|trans({}, 'Admin.Notifications.Info') ~ ' <>;=#{}' }}
+      {{ 'Invalid characters:'|trans({}, 'Admin.Notifications.Info') ~ ' <>;=#{}' }}
       {% endset %}
-
+      
       {{ ps.form_group_row(manufacturerForm.name, {}, {
         'label': 'Name'|trans({}, 'Admin.Global'),
         'help': invalidCatalogNameHint
       }) }}
-
+      
       {% set invalidGenericNameHint %}
-        {{ 'Invalid characters:'|trans({}, 'Admin.Notifications.Info') ~ ' <>={}' }}
+      {{ 'Invalid characters:'|trans({}, 'Admin.Notifications.Info') ~ ' <>={}' }}
       {% endset %}
-
+      
       {{ ps.form_group_row(manufacturerForm.short_description, {}, {
         'label': 'Short description'|trans({}, 'Admin.Catalog.Feature'),
       }) }}
-
+      
       {{ ps.form_group_row(manufacturerForm.description, {}, {
         'label': 'Description'|trans({}, 'Admin.Global')
       }) }}
-
+      
       {% set logoHint %}
-        {{ 'Upload a brand logo from your computer.'|trans({}, 'Admin.Catalog.Help') }}
+      {{ 'Upload a brand logo from your computer.'|trans({}, 'Admin.Catalog.Help') }}
       {% endset %}
-
+      
       {{ ps.form_group_row(manufacturerForm.logo, {}, {
         'label': 'Logo'|trans({}, 'Admin.Global'),
         'help': logoHint
       }) }}
-
+      
       {% if logoImage is defined and logoImage is not null %}
         <div class="form-group row">
           <label for="" class="form-control-label"></label>
@@ -73,37 +73,37 @@
           </div>
         </div>
       {% endif %}
-
+      
       {{ ps.form_group_row(manufacturerForm.meta_title, {}, {
         'label': 'Meta title'|trans({}, 'Admin.Catalog.Feature'),
         'help': invalidGenericNameHint
       }) }}
-
+      
       {{ ps.form_group_row(manufacturerForm.meta_description, {}, {
         'label': 'Meta description'|trans({}, 'Admin.Global'),
         'help': invalidGenericNameHint
       }) }}
-
+      
       {% set keywordHint %}
-        {{ 'To add tags, click in the field, write something, and then press the "Enter" key.'|trans({}, 'Admin.Shopparameters.Help') }}
-        {{ invalidGenericNameHint }}
+      {{ 'To add tags, click in the field, write something, and then press the "Enter" key.'|trans({}, 'Admin.Shopparameters.Help') }}
+      {{ invalidGenericNameHint }}
       {% endset %}
-
+      
       {{ ps.form_group_row(manufacturerForm.meta_keyword, {}, {
         'label': 'Meta keywords'|trans({}, 'Admin.Global'),
         'help': keywordHint
       }) }}
-
+      
       {{ ps.form_group_row(manufacturerForm.is_enabled, {}, {
         'label': 'Enabled'|trans({}, 'Admin.Global')
       }) }}
-
+      
       {% if manufacturerForm.shop_association is defined %}
         {{ ps.form_group_row(manufacturerForm.shop_association, {}, {
           'label': 'Shop association'|trans({}, 'Admin.Global')
         }) }}
       {% endif %}
-
+      
       {% block manufacturer_form_rest %}
         {{ form_rest(manufacturerForm) }}
       {% endblock %}

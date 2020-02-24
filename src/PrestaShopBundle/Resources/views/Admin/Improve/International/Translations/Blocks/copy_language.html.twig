@@ -28,12 +28,12 @@
 
 {% block copy_language %}
   {{ form_start(copyLanguageForm, {action: path('admin_international_translations_copy_language')}) }}
-
+  
   <div class="card">
     <h3 class="card-header">
       <i class="material-icons">file_copy</i> {{ 'Copy'|trans({}, 'Admin.Actions') }}
     </h3>
-
+    
     <div class="card-block row">
       <div class="card-text">
         <div class="row">
@@ -47,7 +47,7 @@
             </div>
           </div>
         </div>
-
+        
         <div class="form-group row">
           <label class="form-control-label">
             {{ ps.label_with_help('From'|trans({}, 'Admin.Global'), 'Language files must be complete to allow copying of translations.'|trans({}, 'Admin.International.Notification')) }}
@@ -56,13 +56,13 @@
             <div class="input-group">
               {{ form_errors(copyLanguageForm.from_language) }}
               {{ form_widget(copyLanguageForm.from_language) }}
-
+              
               {{ form_errors(copyLanguageForm.from_theme) }}
               {{ form_widget(copyLanguageForm.from_theme) }}
             </div>
           </div>
         </div>
-
+        
         <div class="form-group row">
           <label class="form-control-label">
             {{ 'To'|trans({}, 'Admin.Global') }}
@@ -71,7 +71,7 @@
             <div class="input-group">
               {{ form_errors(copyLanguageForm.to_language) }}
               {{ form_widget(copyLanguageForm.to_language) }}
-
+              
               {{ form_errors(copyLanguageForm.to_theme) }}
               {{ form_widget(copyLanguageForm.to_theme) }}
             </div>
@@ -80,7 +80,7 @@
         {{ form_rest(copyLanguageForm) }}
       </div>
     </div>
-
+    
     <div class="card-footer">
       <div class="d-flex justify-content-end">
         <button class="btn btn-primary">
@@ -90,6 +90,6 @@
       </div>
     </div>
   </div>
-
+  
   {{ form_end(copyLanguageForm) }}
 {% endblock %}

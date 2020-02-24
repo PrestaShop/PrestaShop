@@ -33,35 +33,35 @@
       </div>
     </div>
   {% endblock %}
-
+  
   {% block empty_categories_listing %}
     <div class="row">
       <div class="col">
         {% embed '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': emptyCategoryGrid} %}
-
-          {% block grid_panel_body %}
-            <div class="card-body">
-              <div class="alert alert-info">
-                <div class="alert-text">
-                  {{ 'An empty category is a category that has no product directly associated to it. An empty category may however contain products through its subcategories.'|trans({}, 'Admin.Catalog.Help') }}
-                </div>
+        
+        {% block grid_panel_body %}
+          <div class="card-body">
+            <div class="alert alert-info">
+              <div class="alert-text">
+                {{ 'An empty category is a category that has no product directly associated to it. An empty category may however contain products through its subcategories.'|trans({}, 'Admin.Catalog.Help') }}
               </div>
-              {% block grid_view_block %}
-                {{ include('@PrestaShop/Admin/Common/Grid/grid.html.twig', {'grid': emptyCategoryGrid }) }}
-              {% endblock %}
             </div>
-          {% endblock %}
-
-          {% block grid_panel_extra_content %}
-            {% include '@PrestaShop/Admin/Sell/Catalog/Categories/Blocks/delete_categories_modal.html.twig'
+            {% block grid_view_block %}
+              {{ include('@PrestaShop/Admin/Common/Grid/grid.html.twig', {'grid': emptyCategoryGrid }) }}
+            {% endblock %}
+          </div>
+        {% endblock %}
+        
+        {% block grid_panel_extra_content %}
+          {% include '@PrestaShop/Admin/Sell/Catalog/Categories/Blocks/delete_categories_modal.html.twig'
               with {'deleteCategoriesForm': deleteCategoryForm }
-            %}
-          {% endblock %}
+          %}
+        {% endblock %}
         {% endembed %}
       </div>
     </div>
   {% endblock %}
-
+  
   {% block no_qty_product_with_combinations_listing %}
     <div class="row">
       <div class="col">
@@ -69,7 +69,7 @@
       </div>
     </div>
   {% endblock %}
-
+  
   {% block no_qty_product_without_combinations_listing %}
     <div class="row">
       <div class="col">
@@ -77,7 +77,7 @@
       </div>
     </div>
   {% endblock %}
-
+  
   {% block disabled_product_listing %}
     <div class="row">
       <div class="col">
@@ -85,7 +85,7 @@
       </div>
     </div>
   {% endblock %}
-
+  
   {% block product_without_image_listing %}
     <div class="row">
       <div class="col">
@@ -93,7 +93,7 @@
       </div>
     </div>
   {% endblock %}
-
+  
   {% block product_without_description_listing %}
     <div class="row">
       <div class="col">
@@ -101,7 +101,7 @@
       </div>
     </div>
   {% endblock %}
-
+  
   {% block product_without_price_listing %}
     <div class="row">
       <div class="col">
@@ -109,12 +109,12 @@
       </div>
     </div>
   {% endblock %}
-
+  
 {% endblock %}
 
 {% block javascripts %}
   {{ parent() }}
-
+  
   <script src="{{ asset('themes/default/js/bundle/pagination.js') }}"></script>
   <script src="{{ asset('themes/new-theme/public/monitoring.bundle.js') }}"></script>
 {% endblock %}

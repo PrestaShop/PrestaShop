@@ -36,7 +36,7 @@
       {{ 'Products'|trans({}, 'Admin.Global') }} (<span id="orderProductsPanelCount">{{ orderForViewing.products.products|length }}</span>)
     </h3>
   </div>
-
+  
   <div class="card-body">
     {% set formOptions = {
       'attr': {
@@ -50,60 +50,60 @@
     {{ form_start(cancelProductForm, formOptions) }}
     <table class="table" id="orderProductsTable" data-currency-precision="{{ orderCurrency.precision }}">
       <thead>
-      <tr>
-        <th>
-          <p>{{ 'Product'|trans({}, 'Admin.Global') }}</p>
-        </th>
-        <th></th>
-        <th>
-          <p class="mb-0">{{ 'Price per unit'|trans({}, 'Admin.Advparameters.Feature') }}</p>
-          <small class="text-muted">{{ orderForViewing.taxMethod }}</small>
-        </th>
-        <th>
-          <p>{{ 'Quantity'|trans({}, 'Admin.Global') }}</p>
-        </th>
-        <th class="cellProductLocation{% if not isColumnLocationDisplayed %} d-none{% endif %}">
-          <p>{{ 'Stock location'|trans({}, 'Admin.Orderscustomers.Feature') }}</p>
-        </th>
-        <th>
-          <p>{{ 'Refunded'|trans({}, 'Admin.Orderscustomers.Feature') }}</p>
-        </th>
-        <th>
-          <p>{{ 'Available'|trans({}, 'Admin.Global') }}</p>
-        </th>
-        <th>
-          <p class="mb-0">{{ 'Total'|trans({}, 'Admin.Global') }}</p>
-          <small class="text-muted">{{ orderForViewing.taxMethod }}</small>
-        </th>
-        {% if orderForViewing.hasInvoice() %}
+        <tr>
           <th>
-            <p>{{ 'Invoice'|trans({}, 'Admin.Global') }}</p>
+            <p>{{ 'Product'|trans({}, 'Admin.Global') }}</p>
           </th>
-        {% endif %}
-        {% if not orderForViewing.delivered %}
-          <th class="text-right product_actions d-print-none">
-            <p>{{ 'Actions'|trans({}, 'Admin.Global') }}</p>
+          <th></th>
+          <th>
+            <p class="mb-0">{{ 'Price per unit'|trans({}, 'Admin.Advparameters.Feature') }}</p>
+            <small class="text-muted">{{ orderForViewing.taxMethod }}</small>
           </th>
-        {% endif %}
-        <th class="text-center cancel-product-element">
-          <p>{{ 'Partial refund'|trans({}, 'Admin.Orderscustomers.Feature') }}</p>
-        </th>
-      </tr>
+          <th>
+            <p>{{ 'Quantity'|trans({}, 'Admin.Global') }}</p>
+          </th>
+          <th class="cellProductLocation{% if not isColumnLocationDisplayed %} d-none{% endif %}">
+            <p>{{ 'Stock location'|trans({}, 'Admin.Orderscustomers.Feature') }}</p>
+          </th>
+          <th>
+            <p>{{ 'Refunded'|trans({}, 'Admin.Orderscustomers.Feature') }}</p>
+          </th>
+          <th>
+            <p>{{ 'Available'|trans({}, 'Admin.Global') }}</p>
+          </th>
+          <th>
+            <p class="mb-0">{{ 'Total'|trans({}, 'Admin.Global') }}</p>
+            <small class="text-muted">{{ orderForViewing.taxMethod }}</small>
+          </th>
+          {% if orderForViewing.hasInvoice() %}
+            <th>
+              <p>{{ 'Invoice'|trans({}, 'Admin.Global') }}</p>
+            </th>
+          {% endif %}
+          {% if not orderForViewing.delivered %}
+            <th class="text-right product_actions d-print-none">
+              <p>{{ 'Actions'|trans({}, 'Admin.Global') }}</p>
+            </th>
+          {% endif %}
+          <th class="text-center cancel-product-element">
+            <p>{{ 'Partial refund'|trans({}, 'Admin.Orderscustomers.Feature') }}</p>
+          </th>
+        </tr>
       </thead>
       <tbody>
-      {% for product in orderForViewing.products.products %}
-        {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/product.html.twig' with {
+        {% for product in orderForViewing.products.products %}
+          {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/product.html.twig' with {
           'product': product,
           'productIndex': loop.index,
           'paginationNum': paginationNum,
           'isColumnLocationDisplayed': isColumnLocationDisplayed
-        } %}
-      {% endfor %}
-      {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/add_product_row.html.twig' %}
-      {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/edit_product_row.html.twig' %}
+          } %}
+        {% endfor %}
+        {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/add_product_row.html.twig' %}
+        {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/edit_product_row.html.twig' %}
       </tbody>
     </table>
-
+    
     <div class="row mb-3">
       <div class="col-md-6 text-left d-print-none">
         {% set numPages = (orderForViewing.products.products|length / paginationNum)|round(0, 'ceil') %}

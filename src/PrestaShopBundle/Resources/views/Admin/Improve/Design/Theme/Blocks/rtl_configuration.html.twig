@@ -37,34 +37,34 @@
           {{ 'Be careful! Please check your theme in an RTL language before generating the RTL stylesheet: your theme could be already adapted to RTL.\nOnce you click on "Adapt to RTL", any RTL-specific file that you might have added to your theme might be deleted by the created stylesheet.'|trans({}, 'Admin.Design.Help') }}
         </p>
       </div>
-
+      
       {{ ps.form_group_row(adaptThemeToRtlLanguagesForm.theme_to_adapt, {}, {
         'label': 'Theme to adapt'|trans({}, 'Admin.Design.Feature')
       }) }}
-
+      
       {{ ps.form_group_row(adaptThemeToRtlLanguagesForm.generate_rtl_css, {}, {
         'label': 'Generate RTL stylesheet'|trans({}, 'Admin.Design.Feature')
       }) }}
     </div>
   </div>
-
+  
   {% if isMultiShopFeatureUsed and isSingleShopContext %}
     <hr>
-    <div class="card-block row">
-      <div class="card-text">
-        {{ ps.multistore_switch(shopLogosForm.shop_logos, {
+      <div class="card-block row">
+        <div class="card-text">
+          {{ ps.multistore_switch(shopLogosForm.shop_logos, {
           'label': 'Multistore'|trans({}, 'Admin.Global'),
-        }) }}
+          }) }}
+        </div>
+      </div>
+    {% endif %}
+    <div class="card-footer">
+      <div class="d-flex justify-content-end">
+        <button class="btn btn-primary">
+          {{ 'Save'|trans({}, 'Admin.Actions') }}
+        </button>
       </div>
     </div>
-  {% endif %}
-  <div class="card-footer">
-    <div class="d-flex justify-content-end">
-      <button class="btn btn-primary">
-        {{ 'Save'|trans({}, 'Admin.Actions') }}
-      </button>
-    </div>
   </div>
-</div>
-{{ form_rest(adaptThemeToRtlLanguagesForm) }}
-{{ form_end(adaptThemeToRtlLanguagesForm) }}
+  {{ form_rest(adaptThemeToRtlLanguagesForm) }}
+  {{ form_end(adaptThemeToRtlLanguagesForm) }}

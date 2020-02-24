@@ -29,12 +29,12 @@
 
 {% block content %}
   {{ form_start(form, {'attr': {'class': 'form', 'id': 'configuration_form'}}) }}
-    <div class="row justify-content-center">
+  <div class="row justify-content-center">
       {# Block for "Handling" fieldset #}
-      {% include '@PrestaShop/Admin/Improve/Shipping/Preferences/Blocks/shipping_preferences_handling.html.twig' %}
-
+    {% include '@PrestaShop/Admin/Improve/Shipping/Preferences/Blocks/shipping_preferences_handling.html.twig' %}
+    
       {# Block for "Carrier options" fieldset #}
-      {% include '@PrestaShop/Admin/Improve/Shipping/Preferences/Blocks/shipping_preferences_carrier_options.html.twig' %}
-    </div>
+    {% include '@PrestaShop/Admin/Improve/Shipping/Preferences/Blocks/shipping_preferences_carrier_options.html.twig' %}
+  </div>
   {{ form_end(form) }}
 {% endblock %}

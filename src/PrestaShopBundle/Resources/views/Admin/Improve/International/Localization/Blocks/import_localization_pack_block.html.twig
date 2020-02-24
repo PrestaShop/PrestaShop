@@ -31,7 +31,7 @@
     <h3 class="card-header">
       <i class="material-icons">language</i> {{ 'Import a localization pack'|trans }}
     </h3>
-
+    
     <div class="card-block row">
       <div class="card-text">
         <div class="form-group row">
@@ -43,7 +43,7 @@
             {{ form_widget(localizationPackImportForm.iso_localization_pack, {'attr': {'data-minimumResultsForSearch': '7', 'data-toggle': 'select2'}}) }}
           </div>
         </div>
-
+        
         <div class="form-group row">
           <label class="form-control-label">
             {{ 'Content to import'|trans }}
@@ -53,7 +53,7 @@
             {{ form_widget(localizationPackImportForm.content_to_import) }}
           </div>
         </div>
-
+        
         <div class="form-group row">
           <label class="form-control-label">
             {{ 'Download pack data'|trans }}
@@ -66,7 +66,7 @@
         </div>
       </div>
     </div>
-
+    
     <div class="card-footer">
       <div class="d-flex justify-content-end">
         <button class="btn btn-primary">

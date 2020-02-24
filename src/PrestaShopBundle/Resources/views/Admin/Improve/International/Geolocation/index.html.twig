@@ -35,35 +35,35 @@
         <div class="alert alert-warning" role="alert">
           <span class="alert-text">
             {{ 'Since December 30, 2019, you need to register for a [1]MaxMind[/1] account to get a license key to be able to download the geolocation data. Once downloaded, extract the data using Winrar or Gzip into the /app/Resources/geoip/ directory.'|trans({'[1]': '<a href="https://dev.maxmind.com/geoip/geoip2/geolite2" target="_blank">', '[/1]': '<a/>'}, 'Admin.Notifications.Warning')|raw }}
-          </span>
+            </span>
+          </div>
         </div>
       </div>
-    </div>
-  {% endif %}
-
-  {{ form_start(geolocationForm, {'action': path('admin_geolocation_save_options')}) }}
+    {% endif %}
+    
+    {{ form_start(geolocationForm, {'action': path('admin_geolocation_save_options')}) }}
     <div class="row justify-content-center">
       <div class="col-xl-10">
         {% include '@PrestaShop/Admin/Improve/International/Geolocation/Blocks/geolocation_by_ip_address.html.twig' %}
       </div>
-
+      
       <div class="col-xl-10">
         {% include '@PrestaShop/Admin/Improve/International/Geolocation/Blocks/geolocation_options.html.twig' %}
       </div>
-
+      
       <div class="col-xl-10">
         {% include '@PrestaShop/Admin/Improve/International/Geolocation/Blocks/geolocation_ip_address_whitelist.html.twig' %}
       </div>
     </div>
-
+    
     {% block geolocation_form_rest %}
       {{ form_rest(geolocationForm) }}
     {% endblock %}
-  {{ form_end(geolocationForm) }}
-{% endblock %}
-
-{% block javascripts %}
-  {{ parent() }}
-
-  <script src="{{ asset('themes/new-theme/public/geolocation.bundle.js') }}"></script>
-{% endblock %}
+    {{ form_end(geolocationForm) }}
+  {% endblock %}
+  
+  {% block javascripts %}
+    {{ parent() }}
+    
+    <script src="{{ asset('themes/new-theme/public/geolocation.bundle.js') }}"></script>
+  {% endblock %}

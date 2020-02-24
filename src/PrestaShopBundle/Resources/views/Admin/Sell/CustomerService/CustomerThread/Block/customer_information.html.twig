@@ -37,7 +37,7 @@
           person
         </i>
       {% endif %}
-
+      
       <div class="media-body">
         <h2 class="mt-0 mb-0">
           {% if customerThreadView.customerInformation.firstName %}
@@ -57,7 +57,7 @@
           {% endif %}
         </p>
       </div>
-
+      
     </div>
   </div>
   <div class="col">
@@ -73,7 +73,7 @@
     {% else %}
       {{ 'No order validated for the moment. By default, an order is considered validated when its payment is accepted.'|trans({}, 'Admin.Orderscustomers.Feature') }}
     {% endif %}
-
+    
     <p class="text-muted">
       {{ 'Customer since: %s'|trans(
         {'%s': customerThreadView.customerInformation.customerSinceDate},

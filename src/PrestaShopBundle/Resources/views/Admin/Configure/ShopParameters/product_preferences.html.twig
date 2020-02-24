@@ -28,25 +28,25 @@
 {% set generalForm, paginationForm, pageForm, stockForm = form.general, form.pagination, form.page, form.stock %}
 
 {% block content %}
-    {{ form_start(form, {'attr': {'class': 'form', 'id': 'configuration_form'}}) }}
-    <div class="row justify-content-center">
+  {{ form_start(form, {'attr': {'class': 'form', 'id': 'configuration_form'}}) }}
+  <div class="row justify-content-center">
         {# Product preferences General block #}
-        {% include '@PrestaShop/Admin/Configure/ShopParameters/Blocks/product_preferences_general.html.twig' %}
-
+    {% include '@PrestaShop/Admin/Configure/ShopParameters/Blocks/product_preferences_general.html.twig' %}
+    
         {# Product preferences Page block #}
-        {% include '@PrestaShop/Admin/Configure/ShopParameters/Blocks/product_preferences_page.html.twig' %}
-
+    {% include '@PrestaShop/Admin/Configure/ShopParameters/Blocks/product_preferences_page.html.twig' %}
+    
         {# Product preferences Stock block #}
-        {% include '@PrestaShop/Admin/Configure/ShopParameters/Blocks/product_preferences_stock.html.twig' %}
-
+    {% include '@PrestaShop/Admin/Configure/ShopParameters/Blocks/product_preferences_stock.html.twig' %}
+    
         {# Product preferences Pagination block #}
-        {% include '@PrestaShop/Admin/Configure/ShopParameters/Blocks/product_preferences_pagination.html.twig' %}
-    </div>
-    {{ form_end(form) }}
+    {% include '@PrestaShop/Admin/Configure/ShopParameters/Blocks/product_preferences_pagination.html.twig' %}
+  </div>
+  {{ form_end(form) }}
 {% endblock %}
 
 {% block javascripts %}
-    {{ parent() }}
-
-    <script src="{{ asset('themes/new-theme/public/product_preferences.bundle.js') }}"></script>
+  {{ parent() }}
+  
+  <script src="{{ asset('themes/new-theme/public/product_preferences.bundle.js') }}"></script>
 {% endblock %}

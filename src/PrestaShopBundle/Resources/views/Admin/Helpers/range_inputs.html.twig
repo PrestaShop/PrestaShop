@@ -24,7 +24,7 @@
  *#}
 {# Display a range input with min/max controls #}
 <script>
-    $(document).ready(function() {
+$(document).ready(function() {
         var sliderInput = $('#{{ input_name }}');
         var minInput = $('#{{ input_name }}_min');
         var maxInput = $('#{{ input_name }}_max');
@@ -107,17 +107,17 @@
             };
             afterUpdate();
             {% endif %}
-        }
-        minInput.on('change', function(event) {
+}
+minInput.on('change', function(event) {
             updater($(event.srcElement));
-        });
-        maxInput.on('change', function(event) {
+});
+maxInput.on('change', function(event) {
             updater($(event.srcElement));
-        });
-    });
+});
+});
 </script>
 <div id="{{ input_name }}_div">
-    <input type="hidden" id="{{ input_name }}" name="{{ input_name }}" value="" sql="{{ value }}" />
+  <input type="hidden" id="{{ input_name }}" name="{{ input_name }}" value="" sql="{{ value }}" />
     <input class="form-control form-min-max" type="text" id="{{ input_name }}_min" value="" placeholder="{{ minLabel|default('Min') }}" {% if disabled|default(false) %}disabled{% endif %} />
-    <input class="form-control form-min-max" type="text" id="{{ input_name }}_max" value="" placeholder="{{ maxLabel|default('Max') }}" {% if disabled|default(false) %}disabled{% endif %} />
-</div>
+      <input class="form-control form-min-max" type="text" id="{{ input_name }}_max" value="" placeholder="{{ maxLabel|default('Max') }}" {% if disabled|default(false) %}disabled{% endif %} />
+      </div>

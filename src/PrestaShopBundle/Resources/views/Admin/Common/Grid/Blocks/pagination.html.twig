@@ -28,11 +28,11 @@
     <div class="row">
       <div class="col-md-12">
         {% set route_params = {} %}
-
+        
         {% for param_name, param_value in app.request.attributes.get('_route_params') %}
           {% set route_params = route_params|merge({ (param_name) : (param_value) }) %}
         {% endfor %}
-
+        
         {{ render(controller('PrestaShopBundle:Admin\\Common:pagination', {
           'limit': grid.pagination.limit,
           'offset': grid.pagination.offset,

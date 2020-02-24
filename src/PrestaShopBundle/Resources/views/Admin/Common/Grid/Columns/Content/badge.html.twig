@@ -24,12 +24,12 @@
  *#}
 
 <div class="text-right">
-{% if record[column.options.field] is not empty %}
-  <span class="badge rounded badge-{{ column.options.badge_type }}">
-    {{ record[column.options.field] }}
-  </span>
-{% else %}
-  {{ column.options.empty_value }}
-{% endif %}
+  {% if record[column.options.field] is not empty %}
+    <span class="badge rounded badge-{{ column.options.badge_type }}">
+      {{ record[column.options.field] }}
+    </span>
+  {% else %}
+    {{ column.options.empty_value }}
+  {% endif %}
 </div>
 

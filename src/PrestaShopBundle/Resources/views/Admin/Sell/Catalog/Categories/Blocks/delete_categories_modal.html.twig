@@ -33,19 +33,19 @@
     'class': 'btn btn-danger btn-lg js-submit-delete-categories',
   }],
 } %}
-  {% block content %}
-    <div class="modal-body">
-      {{ form_start(deleteCategoriesForm, {'action': path('admin_categories_delete')}) }}
-
-      <div class="form-group mb-0">
-        {{ form_widget(deleteCategoriesForm.delete_mode) }}
-      </div>
-      <span class="form-text text-muted">
-        {{ 'Note that if they have another category, your products will logically remain associated with it.'|trans({}, 'Admin.Catalog.Notification') }}
-      </span>
-      <div class="d-none">
-        {{ form_widget(deleteCategoriesForm.categories_to_delete) }}
-      </div>
+{% block content %}
+  <div class="modal-body">
+    {{ form_start(deleteCategoriesForm, {'action': path('admin_categories_delete')}) }}
+    
+    <div class="form-group mb-0">
+      {{ form_widget(deleteCategoriesForm.delete_mode) }}
     </div>
-  {% endblock %}
+    <span class="form-text text-muted">
+      {{ 'Note that if they have another category, your products will logically remain associated with it.'|trans({}, 'Admin.Catalog.Notification') }}
+    </span>
+    <div class="d-none">
+      {{ form_widget(deleteCategoriesForm.categories_to_delete) }}
+    </div>
+  </div>
+{% endblock %}
 {% endembed %}

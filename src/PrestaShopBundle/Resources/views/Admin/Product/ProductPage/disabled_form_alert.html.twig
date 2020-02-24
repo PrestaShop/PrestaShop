@@ -25,11 +25,11 @@
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 
 {% block content %}
-    <div class="col-md-12">
-        <div class="alert alert-danger" role="alert">
-            <p class="alert-text">
-                {{ 'You can\'t add or edit a product in this shop context: select a shop instead of a group of shops.'|trans({}, 'Admin.Catalog.Notification') }}
-            </p>
-        </div>
+  <div class="col-md-12">
+    <div class="alert alert-danger" role="alert">
+      <p class="alert-text">
+        {{ 'You can\'t add or edit a product in this shop context: select a shop instead of a group of shops.'|trans({}, 'Admin.Catalog.Notification') }}
+      </p>
     </div>
+  </div>
 {% endblock %}

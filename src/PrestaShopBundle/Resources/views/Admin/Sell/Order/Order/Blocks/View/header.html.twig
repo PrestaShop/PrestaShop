@@ -30,20 +30,20 @@
 
 <p class="lead d-inline">
   {{ 'from'|trans({}, 'Admin.Global') }}
-
+  
   {{ orderForViewing.customer.firstName }}
   {{ orderForViewing.customer.lastName }}
 </p>
 
 <span class="badge rounded badge-dark ml-2 mr-2 font-size-100">
-    {{ orderForViewing.prices.totalAmountFormatted }}
-  </span>
+  {{ orderForViewing.prices.totalAmountFormatted }}
+</span>
 
 <p class="lead d-inline">
   {{ orderForViewing.createdAt|date('Y-m-d') }}
   <span class="text-muted">
-      {{ 'at'|trans({}, 'Admin.Global') }}
-
+    {{ 'at'|trans({}, 'Admin.Global') }}
+    
     {{ orderForViewing.createdAt|date('H:i:s') }}
-    </span>
+  </span>
 </p>

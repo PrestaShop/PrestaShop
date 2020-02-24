@@ -28,19 +28,19 @@
 {% block content %}
   <div class="card theme-card">
     <div class="active-card-overlay {{ isActive ? 'active' : '' }}"></div>
-
+    
     {% block image %}
     {% endblock %}
-
+    
     <div class="actions-container {{ isActive ? 'active' : '' }}">
       {% block button_container %}
       {% endblock %}
     </div>
   </div>
-
+  
   <div class="text-center theme-card-description">
     <b class="theme-name">
-      {{ themeName }}
+    {{ themeName }}
     </b>
     <span class="theme-version">
       {{ 'Version'|trans({}, 'Admin.Global') }} {{ themeVersion }}

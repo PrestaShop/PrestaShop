@@ -27,21 +27,21 @@
 {% import '@PrestaShop/Admin/macros.html.twig' as ps %}
 
 <div class="card">
-    <h3 class="card-header">
-        <i class="material-icons">file_download</i> {{ 'Download sample csv files'|trans({}, 'Admin.Advparameters.Feature') }}
-    </h3>
-
-    <div class="card-block">
-        <div class="list-group">
-            {{ ps.import_file_sample('Sample Categories file', 'categories_import') }}
-            {{ ps.import_file_sample('Sample Products file', 'products_import') }}
-            {{ ps.import_file_sample('Sample Combinations file', 'combinations_import') }}
-            {{ ps.import_file_sample('Sample Customers file', 'customers_import') }}
-            {{ ps.import_file_sample('Sample Addresses file', 'addresses_import') }}
-            {{ ps.import_file_sample('Sample Brands file', 'manufacturers_import') }}
-            {{ ps.import_file_sample('Sample Suppliers file', 'suppliers_import') }}
-            {{ ps.import_file_sample('Sample Aliases file', 'alias_import') }}
-            {{ ps.import_file_sample('Sample Store Contacts file', 'store_contacts') }}
-        </div>
+  <h3 class="card-header">
+    <i class="material-icons">file_download</i> {{ 'Download sample csv files'|trans({}, 'Admin.Advparameters.Feature') }}
+  </h3>
+  
+  <div class="card-block">
+    <div class="list-group">
+      {{ ps.import_file_sample('Sample Categories file', 'categories_import') }}
+      {{ ps.import_file_sample('Sample Products file', 'products_import') }}
+      {{ ps.import_file_sample('Sample Combinations file', 'combinations_import') }}
+      {{ ps.import_file_sample('Sample Customers file', 'customers_import') }}
+      {{ ps.import_file_sample('Sample Addresses file', 'addresses_import') }}
+      {{ ps.import_file_sample('Sample Brands file', 'manufacturers_import') }}
+      {{ ps.import_file_sample('Sample Suppliers file', 'suppliers_import') }}
+      {{ ps.import_file_sample('Sample Aliases file', 'alias_import') }}
+      {{ ps.import_file_sample('Sample Store Contacts file', 'store_contacts') }}
     </div>
+  </div>
 </div>
