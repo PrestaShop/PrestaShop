@@ -105,8 +105,6 @@ describe('Configure currency restrictions', async () => {
       const isVisible = await this.pageObjects.checkoutPage.isPaymentMethodExist(test.args.paymentModule);
       await expect(isVisible).to.be.equal(test.args.exist);
       // Logout from FO
-      /* await this.pageObjects.foBasePage.goToHomePage();
-      await this.pageObjects.foBasePage.logout(); */
       page = await this.pageObjects.checkoutPage.closePage(browser, 1);
       this.pageObjects = await init();
     });
