@@ -78,6 +78,8 @@ class CccReducerCore
             'priority' => StylesheetManager::DEFAULT_PRIORITY,
         ];
 
+        $cssFileList = $this->sortCssList($cssFileList);
+
         return $cssFileList;
     }
 
@@ -124,11 +126,46 @@ class CccReducerCore
             $list['external'] = array_merge($cccItem, $list['external']);
         }
 
+        $jsFileList = $this->sortJsList($jsFileList);
+        
         return $jsFileList;
     }
 
     private function getFileNameIdentifierFromList(array $files)
     {
         return substr(sha1(implode('|', $files)), 0, 6);
+    }
+
+    private function sortJsList($jsFileList)
+    {
+        foreach ($jsFileList as $position => &$list) {
+            foreach ($jsFileList[$position] as $type => $items) {
+                Tools::uasort($items, function ($a, $b) {
+                    if ($a['priority'] === $b['priority']) {
+                        return 0;
+                    }
+
+                    return ($a['priority'] < $b['priority']) ? -1 : 1;
+                });
+                $jsFileList[$position][$type] = $items;
+            }
+        }
+        return $jsFileList;
+    }
+
+    private function sortCssList($cssFileList)
+    {
+        Tools::uasort(
+            $cssFileList['external'],
+            function ($a, $b) {
+                if ($a['priority'] === $b['priority']) {
+                    return 0;
+                }
+
+                return ($a['priority'] < $b['priority']) ? -1 : 1;
+            }
+        );
+    
+        return $cssFileList;
     }
 }
