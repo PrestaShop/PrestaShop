@@ -61,6 +61,19 @@ module.exports = class CommonPage {
   }
 
   /**
+   * Update checkbox value
+   * @param selector
+   * @param expectedValue
+   * @return {Promise<void>}
+   */
+  async updateCheckboxValue(selector, expectedValue) {
+    const actualValue = await this.elementChecked(selector);
+    if (actualValue !== expectedValue) {
+      await this.page.click(selector);
+    }
+  }
+
+  /**
    * Is element visible
    * @param selector, element to check
    * @return boolean, true if visible, false if not
