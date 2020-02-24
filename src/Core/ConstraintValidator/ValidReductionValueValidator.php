@@ -33,8 +33,8 @@ use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
-use Symfony\Component\Validator\Exception\UnexpectedTypeException;
 use Symfony\Component\Validator\Exception\ConstraintDefinitionException;
+use Symfony\Component\Validator\Exception\UnexpectedTypeException;
 
 
 /**
@@ -54,7 +54,6 @@ final class ValidReductionValueValidator extends ConstraintValidator
      */
     public function validate($value, Constraint $constraint)
     {
-
         if (!$constraint instanceof ValueConstraint) {
             throw new UnexpectedTypeException($constraint, ValueConstraint::class);
         }
@@ -71,10 +70,8 @@ final class ValidReductionValueValidator extends ConstraintValidator
             if (null === $object = $this->context->getObject()) {
                 return;
             }
-
             try {
                 $reductionType = $this->getPropertyAccessor()->getValue($object, $path);
-
             } catch (NoSuchPropertyException $e) {
                 throw new ConstraintDefinitionException(sprintf('Invalid property path "%s" provided to "%s" constraint: %s', $path, \get_class($constraint), $e->getMessage()), 0, $e);
             }
@@ -102,7 +99,6 @@ final class ValidReductionValueValidator extends ConstraintValidator
                 );
             }
         }
-
     }
 
     /**

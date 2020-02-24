@@ -27,6 +27,8 @@
 namespace PrestaShopBundle\Form\Admin\Sell\Order;
 
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CleanHtml;
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\ValidReductionType;
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\ValidReductionValue;
 use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use PrestaShopBundle\Translation\TranslatorAwareTrait;
@@ -103,14 +105,14 @@ class AddOrderCartRuleType extends AbstractType
             ])
             ->add('type', ChoiceType::class, [
                 'choices' => $this->orderDiscountTypeChoiceProvider->getChoices(),
+                'constraints' => new ValidReductionType(),
             ])
             ->add('value', NumberType::class, [
                 'attr' => [
                     'step' => 0.01,
                 ],
-                'constraints' => new Type([
-                    'type' => 'numeric',
-                    'message' => $this->trans('Discount value must be a number', [], 'Admin.Notifications.Error'),
+                'constraints' => new ValidReductionValue([
+                    'propertyPath' => 'parent.all[type].data'
                 ]),
             ])
             ->add('invoice_id', ChoiceType::class, [
