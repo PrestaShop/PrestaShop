@@ -51,7 +51,7 @@ describe('Sort addresses', async () => {
     await expect(pageTitle).to.contains(this.pageObjects.addressesPage.pageTitle);
   });
 
-  it('should reset all filters and get Number of customers in BO', async function () {
+  it('should reset all filters and get number of addresses in BO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFirst', baseContext);
     numberOfAddresses = await this.pageObjects.addressesPage.resetAndGetNumberOfLines();
     await expect(numberOfAddresses).to.be.above(0);
