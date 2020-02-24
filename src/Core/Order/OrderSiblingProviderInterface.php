@@ -26,12 +26,21 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\Order;
+namespace PrestaShop\PrestaShop\Core\Order;
 
-/**
- * @deprecated since 1.7.4.0
- * @see \PrestaShop\PrestaShop\Adapter\Presenter\Order\OrderReturnPresenter
- */
-class OrderReturnPresenter extends \PrestaShop\PrestaShop\Adapter\Presenter\Order\OrderReturnPresenter
+interface OrderSiblingProviderInterface
 {
+    /**
+     * @param int $orderId
+     *
+     * @return int returns previous order id or 0 if it does not exist
+     */
+    public function getNextOrderId(int $orderId): int;
+
+    /**
+     * @param int $orderId
+     *
+     * @return int returns next order id or 0 if it does not exist
+     */
+    public function getPreviousOrderId(int $orderId): int;
 }

@@ -28,10 +28,28 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Order;
 
-/**
- * @deprecated since 1.7.4.0
- * @see \PrestaShop\PrestaShop\Adapter\Presenter\Order\OrderReturnPresenter
- */
-class OrderReturnPresenter extends \PrestaShop\PrestaShop\Adapter\Presenter\Order\OrderReturnPresenter
+use Order;
+use PrestaShop\PrestaShop\Core\Order\OrderSiblingProviderInterface;
+
+class OrderSiblingProvider implements OrderSiblingProviderInterface
 {
+    /**
+     * {@inheritdoc}
+     */
+    public function getNextOrderId(int $orderId): int
+    {
+        $order = new Order($orderId);
+
+        return (int) $order->getNextOrderId();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getPreviousOrderId(int $orderId): int
+    {
+        $order = new Order($orderId);
+
+        return (int) $order->getPreviousOrderId();
+    }
 }

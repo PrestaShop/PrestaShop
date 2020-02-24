@@ -208,3 +208,11 @@ services:
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Order\Command\CancelOrderProductCommand
+
+  prestashop.adapter.presenter.order_link_presenter:
+    class: PrestaShop\PrestaShop\Adapter\Presenter\Order\OrderLinkPresenter
+    arguments:
+      - '@router.default'
+
+  prestashop.adapter.order.order_sibling_provider:
+    class: PrestaShop\PrestaShop\Adapter\Order\OrderSiblingProvider
