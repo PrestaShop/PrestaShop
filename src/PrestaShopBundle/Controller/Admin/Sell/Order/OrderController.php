@@ -360,8 +360,8 @@ class OrderController extends FrameworkBundleAdminController
      */
     public function viewAction(int $orderId, Request $request): Response
     {
-        /** @var OrderForViewing $orderForViewing */
         try {
+            /* @var OrderForViewing $orderForViewing */
             $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
         } catch (OrderNotFoundException $e) {
             return $this->redirectToRoute('admin_orders_index');
