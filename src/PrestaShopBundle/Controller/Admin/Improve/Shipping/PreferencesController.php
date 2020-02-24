@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Controller\Admin\Improve\Shipping;
 
+use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -49,14 +50,16 @@ class PreferencesController extends FrameworkBundleAdminController
     {
         $legacyController = $request->attributes->get('_legacy_controller');
 
-        $form = $this->get('prestashop.admin.shipping_preferences.form_handler')->getForm();
+        $handlingForm = $this->getHandlingFormHandler()->getForm();
+        $carrierOptionsForm = $this->getCarrierOptionsFormHandler()->getForm();
 
         return $this->render('@PrestaShop/Admin/Improve/Shipping/Preferences/preferences.html.twig', [
             'layoutTitle' => $this->trans('Preferences', 'Admin.Navigation.Menu'),
             'requireAddonsSearch' => true,
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($legacyController),
-            'form' => $form->createView(),
+            'handlingForm' => $handlingForm->createView(),
+            'carrierOptionsForm' => $carrierOptionsForm->createView(),
         ]);
     }
 
@@ -87,5 +90,21 @@ class PreferencesController extends FrameworkBundleAdminController
         }
 
         return $this->redirectToRoute('admin_shipping_preferences');
+    }
+
+    /**
+     * @return FormHandlerInterface
+     */
+    protected function getHandlingFormHandler(): FormHandlerInterface
+    {
+        return $this->get('prestashop.admin.shipping_preferences.handling.form_handler');
+    }
+
+    /**
+     * @return FormHandlerInterface
+     */
+    protected function getCarrierOptionsFormHandler(): FormHandlerInterface
+    {
+        return $this->get('prestashop.admin.shipping_preferences.carrier_options.form_handler');
     }
 }
