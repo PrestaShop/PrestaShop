@@ -283,7 +283,7 @@ td.cancel-product-element {
     display: flex;
     flex-direction: row;
     justify-content: flex-start;
-    align-items: flex-start;
+    align-items: center;
 
     .cancel-product-selector {
       width: 30px;
@@ -294,9 +294,11 @@ td.cancel-product-element {
       display: flex;
       flex-direction: row;
       margin-bottom: 0;
+      padding: 0 5px;
 
       .form-control-label {
-        line-height: 30px;
+        flex-shrink: 0;
+        align-self: center;
         padding: 0;
         margin-bottom: 0;
         font-weight: bold;
@@ -304,12 +306,12 @@ td.cancel-product-element {
 
       .input-group {
         min-width: 90px;
-        max-width: 130px;
+        max-width: 110px;
 
         .form-control {
           height: 35px;
           min-width: 30px;
-          max-width: 80px;
+          max-width: 76px;
         }
         .input-group-append {
           height: 35px;
