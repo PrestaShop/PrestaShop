@@ -156,7 +156,7 @@
           <tr>
             <td>{{ discount.name }}</td>
             <td>
-              {% if discount.amountRaw %}-{% endif %}
+              {% if discount.amountRaw.greaterThan(number(0)) %}-{% endif %}
               {{ discount.amountFormatted }}
             </td>
             <td class="text-right d-print-none">
@@ -179,26 +179,26 @@
               <strong id="orderProductsTotal">{{ orderForViewing.prices.productsPriceFormatted }}</strong>
             </div>
 
-            {% if orderForViewing.prices.discountsAmountRaw %}
+            {% if orderForViewing.prices.discountsAmountRaw.greaterThan((number(0))) %}
               <div class="col-sm text-center">
                 <p class="text-muted mb-0"><strong>{{ 'Discounts'|trans({}, 'Admin.Global') }}</strong></p>
                 <strong id="orderDiscountsTotal">-{{ orderForViewing.prices.discountsAmountFormatted }}</strong>
               </div>
             {% endif %}
 
-            {% if orderForViewing.prices.wrappingPriceRaw %}
+            {% if orderForViewing.prices.wrappingPriceRaw.greaterThan(number(0)) %}
               <div class="col-sm text-center">
                 <p class="text-muted mb-0"><strong>{{ 'Wrapping'|trans({}, 'Admin.Orderscustomers.Feature') }}</strong></p>
                 <strong id="orderWrappingTotal">{{ orderForViewing.prices.wrappingPriceFormatted }}</strong>
               </div>
             {% endif %}
 
-            {% if orderForViewing.prices.shippingPriceRaw %}
+            {% if orderForViewing.prices.shippingPriceRaw.greaterThan(number(0)) %}
               <div class="col-sm text-center">
                 <p class="text-muted mb-0"><strong>{{ 'Shipping'|trans({}, 'Admin.Catalog.Feature') }}</strong></p>
                 <div class="shipping-price">
                   <strong id="orderShippingTotal">{{ orderForViewing.prices.shippingPriceFormatted }}</strong>
-                  <div class="cancel-product-element shipping-refund-amount{% if orderForViewing.prices.shippingRefundableAmountRaw <= 0 %} hidden{% endif %}">
+                  <div class="cancel-product-element shipping-refund-amount{% if orderForViewing.prices.shippingRefundableAmountRaw.lowerOrEqualThan(number(0)) %} hidden{% endif %}">
                     <div class="input-group">
                       {{ form_widget(cancelProductForm.shipping_amount) }}
                       <div class="input-group-append">
@@ -255,13 +255,13 @@
           <div class="cancel-product-element form-group refund-voucher">
             {{ form_widget(cancelProductForm.voucher) }}
           </div>
-          <div class="cancel-product-element shipping-refund{% if orderForViewing.prices.shippingRefundableAmountRaw <= 0 %} hidden{% endif %}">
+          <div class="cancel-product-element shipping-refund{% if orderForViewing.prices.shippingRefundableAmountRaw.lowerOrEqualThan(number(0)) %} hidden{% endif %}">
             <div class="form-group">
               {{ form_widget(cancelProductForm.shipping) }}
               <small class="shipping-refund-amount">({{ orderForViewing.prices.shippingRefundableAmountFormatted }})</small>
             </div>
           </div>
-          <div class="cancel-product-element form-group voucher-refund-type{% if orderForViewing.prices.discountsAmountRaw <= 0 %} hidden{% endif %}">
+          <div class="cancel-product-element form-group voucher-refund-type{% if orderForViewing.prices.discountsAmountRaw.lowerOrEqualThan(number(0)) %} hidden{% endif %}">
             {{ 'This order has been partially paid by voucher. Choose the amount you want to refund:'|trans({}, 'Admin.Orderscustomers.Feature') }}
             {{ form_widget(cancelProductForm.voucher_refund_type) }}
             <div class="voucher-refund-type-negative-error">
