@@ -45,11 +45,17 @@ class Reduction
     const TYPE_PERCENTAGE = 'percent';
 
     /**
+     * For reducing shipping fees from order total
+     */
+    const TYPE_FREE_SHIPPING = 'free_shipping';
+
+    /**
      * Allowed reduction types
      */
     const ALLOWED_TYPES = [
         self::TYPE_AMOUNT,
         self::TYPE_PERCENTAGE,
+        self::TYPE_FREE_SHIPPING,
     ];
 
     /**
