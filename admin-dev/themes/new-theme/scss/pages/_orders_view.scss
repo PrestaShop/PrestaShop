@@ -8,6 +8,29 @@
     }
   }
 
+  #orderProductsPanel {
+    .btn-product-pack-modal {
+      margin-top: 5px;
+      display: block;
+    }
+  }
+
+  #product-pack-modal-table {
+    .cell-product-quantity {
+      .badge {
+        font-size: 100%;
+        min-width: 26px;
+        border-radius: 1000px !important;
+      }
+    }
+  }
+
+  .customer {
+    .badge-dark {
+      font-size: 100%;
+    }
+  }
+
   .order {
     &-actions {
       > * {
