@@ -26,8 +26,7 @@
 
 namespace PrestaShopBundle\Form\Admin\Improve\Shipping\Preferences;
 
-use PrestaShop\PrestaShop\Adapter\Carrier\CarrierOptionsConfiguration;
-use PrestaShop\PrestaShop\Adapter\Carrier\HandlingConfiguration;
+use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
@@ -38,14 +37,9 @@ use Symfony\Component\Translation\TranslatorInterface;
 class PreferencesFormDataProvider implements FormDataProviderInterface
 {
     /**
-     * @var HandlingConfiguration
+     * @var DataConfigurationInterface
      */
-    private $handlingConfiguration;
-
-    /**
-     * @var CarrierOptionsConfiguration
-     */
-    private $carrierOptionsConfiguration;
+    private $dataConfiguration;
 
     /**
      * @var TranslatorInterface
@@ -53,12 +47,10 @@ class PreferencesFormDataProvider implements FormDataProviderInterface
     private $translator;
 
     public function __construct(
-        HandlingConfiguration $handlingConfiguration,
-        CarrierOptionsConfiguration $carrierOptionsConfiguration,
+        DataConfigurationInterface $dataConfiguration,
         TranslatorInterface $translator
     ) {
-        $this->handlingConfiguration = $handlingConfiguration;
-        $this->carrierOptionsConfiguration = $carrierOptionsConfiguration;
+        $this->dataConfiguration = $dataConfiguration;
         $this->translator = $translator;
     }
 
@@ -67,10 +59,7 @@ class PreferencesFormDataProvider implements FormDataProviderInterface
      */
     public function getData()
     {
-        return [
-            'handling' => $this->handlingConfiguration->getConfiguration(),
-            'carrier_options' => $this->carrierOptionsConfiguration->getConfiguration(),
-        ];
+        return $this->dataConfiguration->getConfiguration();
     }
 
     /**
@@ -82,10 +71,7 @@ class PreferencesFormDataProvider implements FormDataProviderInterface
             return $errors;
         }
 
-        return array_merge(
-            $this->handlingConfiguration->updateConfiguration($data['handling']),
-            $this->carrierOptionsConfiguration->updateConfiguration($data['carrier_options'])
-        );
+        return $this->dataConfiguration->updateConfiguration($data);
     }
 
     /**
@@ -100,15 +86,15 @@ class PreferencesFormDataProvider implements FormDataProviderInterface
         $errors = [];
         $numericFields = [
             [
-                'value' => $data['handling']['shipping_handling_charges'],
+                'value' => $data['shipping_handling_charges'],
                 'name' => $this->translator->trans('Handling charges', [], 'Admin.Shipping.Feature'),
             ],
             [
-                'value' => $data['handling']['free_shipping_price'],
+                'value' => $data['free_shipping_price'],
                 'name' => $this->translator->trans('Free shipping starts at', [], 'Admin.Shipping.Feature'),
             ],
             [
-                'value' => $data['handling']['free_shipping_weight'],
+                'value' => $data['free_shipping_weight'],
                 'name' => $this->translator->trans('Free shipping starts at', [], 'Admin.Shipping.Feature'),
             ],
         ];
