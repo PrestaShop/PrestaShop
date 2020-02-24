@@ -36,7 +36,6 @@ use Symfony\Component\Validator\ConstraintValidator;
 use Symfony\Component\Validator\Exception\ConstraintDefinitionException;
 use Symfony\Component\Validator\Exception\UnexpectedTypeException;
 
-
 /**
  * Validates reduction value
  */

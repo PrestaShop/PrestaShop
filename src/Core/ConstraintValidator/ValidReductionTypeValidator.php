@@ -32,7 +32,6 @@ use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 use Symfony\Component\Validator\Exception\UnexpectedTypeException;
 
-
 /**
  * Validates reduction type
  */
@@ -79,7 +78,13 @@ final class ValidReductionTypeValidator extends ConstraintValidator
         return in_array($type, Reduction::ALLOWED_TYPES, true);
     }
 
-
+    /**
+     * Builds violation dependent from exception code
+     *
+     * @param string $message
+     * @param array $params
+     * @param string $errorPath
+     */
     private function buildViolation(string $message, array $params, string $errorPath)
     {
         $this->context->buildViolation($message, $params)

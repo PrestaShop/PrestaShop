@@ -42,7 +42,7 @@ class Reduction
     /**
      * For reducing certain percentage calculated from price
      */
-    const TYPE_PERCENTAGE = 'percentage';
+    const TYPE_PERCENTAGE = 'percent';
 
     /**
      * Allowed reduction types

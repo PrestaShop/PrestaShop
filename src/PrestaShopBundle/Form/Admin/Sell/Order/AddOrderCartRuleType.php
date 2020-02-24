@@ -40,7 +40,6 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Translation\TranslatorInterface;
-use Symfony\Component\Validator\Constraints\Type;
 
 class AddOrderCartRuleType extends AbstractType
 {
@@ -112,7 +111,7 @@ class AddOrderCartRuleType extends AbstractType
                     'step' => 0.01,
                 ],
                 'constraints' => new ValidReductionValue([
-                    'propertyPath' => 'parent.all[type].data'
+                    'propertyPath' => 'parent.all[type].data',
                 ]),
             ])
             ->add('invoice_id', ChoiceType::class, [
