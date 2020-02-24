@@ -23,6 +23,13 @@
     }
   }
 
+  .configure {
+    &-link {
+      display: block;
+      margin-top: 5px;
+    }
+  }
+
   #product-pack-modal-table {
     .cell-product-quantity {
       .badge {
