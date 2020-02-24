@@ -177,7 +177,7 @@ class CustomerController extends AbstractAdminController
 
                 return $this->redirectToRoute('admin_customers_index');
             }
-        } catch (PrestaShopException $e) {
+        } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }
 
