@@ -276,6 +276,102 @@ td.cancel-product-element {
       }
     }
   }
+
+  #order-view-page {
+    .table {
+      display: block;
+      overflow-y: scroll;
+    }
+  }
+}
+
+@include media-breakpoint-down(sm) {
+  .adminorders {
+    .header-toolbar {
+      h1 {
+        font-size: 1.2rem;
+      }
+
+      .lead {
+        font-size: 1rem;
+      }
+
+      .toolbar-icons {
+        margin-top: 5px;
+      }
+    }
+  }
+
+  #order-view-page {
+    padding: 0 10px;
+
+    .card-details {
+      &-form {
+        width: 100%;
+      }
+
+      &-actions {
+        width: 100%;
+        display: flex;
+      }
+    }
+
+    .cancel-product-element {
+      margin-top: 10px;
+
+      p {
+        margin-bottom: 0;
+      }
+    }
+
+    .order-actions {
+      #update_order_status_action_form {
+        select {
+          margin-bottom: 0.9375rem;
+        }
+      }
+
+      > * {
+        a,
+        button,
+        & {
+          width: 100%;
+          margin-left: 0 !important;
+        }
+      }
+
+      a,
+      button {
+        text-align: left;
+
+        i {
+          margin-right: 20px;
+        }
+      }
+    }
+
+    #orderProductsPanel {
+      .cellProductName {
+        min-width: 130px;
+      }
+
+      .info-block {
+        .row > * {
+          &:not(:last-child) {
+            margin-bottom: 10px;
+          }
+        }
+      }
+
+      .discount-action {
+        margin-bottom: 10px;
+
+        button {
+          width: 100%;
+        }
+      }
+    }
+  }
 }
 
 .cancel-product-cell {
