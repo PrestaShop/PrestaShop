@@ -82,7 +82,7 @@ class AdministrationController extends FrameworkBundleAdminController
     public function processGeneralFormAction(Request $request)
     {
         $this->dispatchHook(
-            'actionAdminAdminPreferencesControllerPostProcessBefore',
+            'actionAdminAdminPreferencesControllerPostProcessGeneralBefore',
             ['controller' => $this]
         );
 
@@ -105,7 +105,7 @@ class AdministrationController extends FrameworkBundleAdminController
     public function processUploadQuotaFormAction(Request $request)
     {
         $this->dispatchHook(
-            'actionAdminAdminPreferencesControllerPostProcessBefore',
+            'actionAdminAdminPreferencesControllerPostProcessUploadQuotaBefore',
             ['controller' => $this]
         );
 
