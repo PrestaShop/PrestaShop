@@ -97,7 +97,7 @@ class TypeaheadProductCollectionType extends CommonAbstractType
                         $product = $this->productAdapter->getProduct($id, false, $langId);
                         $collection[] = [
                             'id' => $id,
-                            'name' => reset($product->name) . ' (ref:' . $product->reference . ')',
+                            'name' => $product->name . ' (ref:' . $product->reference . ')',
                             'image' => $product->image,
                         ];
 
