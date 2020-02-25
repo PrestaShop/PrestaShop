@@ -266,7 +266,7 @@ class CartRow
     public function processCalculation(Cart $cart)
     {
         $rowData = $this->getRowData();
-        $quantity = (int) $rowData['cart_quantity'];
+        $quantity = (int) $rowData['quantity'];
         $this->initialUnitPrice = $this->getProductPrice($cart, $rowData);
         // store not rounded values
         $this->initialTotalPrice = new AmountImmutable(
@@ -282,7 +282,7 @@ class CartRow
     protected function getProductPrice(Cart $cart, $rowData)
     {
         $productId = (int) $rowData['id_product'];
-        $quantity = (int) $rowData['cart_quantity'];
+        $quantity = (int) $rowData['quantity'];
 
         $addressId = $cart->getProductAddressId($rowData);
         if (!$addressId) {
@@ -385,7 +385,7 @@ class CartRow
         $this->finalUnitPrice = clone $this->initialUnitPrice;
 
         $rowData = $this->getRowData();
-        $quantity = (int) $rowData['cart_quantity'];
+        $quantity = (int) $rowData['quantity'];
         $tools = new Tools();
         switch ($this->roundType) {
             case self::ROUND_MODE_TOTAL:
@@ -470,7 +470,7 @@ class CartRow
     protected function updateFinalUnitPrice()
     {
         $rowData = $this->getRowData();
-        $quantity = (int) $rowData['cart_quantity'];
+        $quantity = (int) $rowData['quantity'];
         $taxIncluded = $this->finalTotalPrice->getTaxIncluded();
         $taxExcluded = $this->finalTotalPrice->getTaxExcluded();
         $this->finalUnitPrice = new AmountImmutable(
