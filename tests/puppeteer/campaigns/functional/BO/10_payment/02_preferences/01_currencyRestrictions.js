@@ -68,7 +68,7 @@ describe('Configure currency restrictions', async () => {
     {args: {action: 'check', paymentModule: 'ps_checkpayment', exist: true}},
   ];
   deleteTests.forEach((test, index) => {
-    it(`should ${test.args.action} the euro currency for ${test.args.paymentModule} payment`, async function () {
+    it(`should ${test.args.action} the euro currency for '${test.args.paymentModule}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', test.args.action + test.args.paymentModule, baseContext);
       const result = await this.pageObjects.preferencesPage.setCurrencyRestriction(
         test.args.paymentModule,
@@ -78,14 +78,19 @@ describe('Configure currency restrictions', async () => {
     });
 
     it(`should go to FO and check the '${test.args.paymentModule}' payment module`, async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkNotExistenceWirePaymentModule', baseContext);
+      await testContext.addContextItem(
+        this,
+        'testIdentifier',
+        `check_${test.args.paymentModule}_${test.args.exist}`,
+        baseContext,
+      );
       // Click on view my shop
       page = await this.pageObjects.boBasePage.viewMyShop();
       this.pageObjects = await init();
       await this.pageObjects.foBasePage.changeLanguage('en');
       // Go to the first product page
       await this.pageObjects.homePage.goToProductPage(1);
-      // Add the created product to the cart
+      // Add the product to the cart
       await this.pageObjects.productPage.addProductToTheCart();
       // Proceed to checkout the shopping cart
       await this.pageObjects.cartPage.clickOnProceedToCheckout();
