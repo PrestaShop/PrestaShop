@@ -117,6 +117,7 @@ class CartRuleCalculator
                 ) {
                     $cartRuleData->addDiscountApplied($cartRow->getInitialUnitPrice());
                     $cartRow->applyFlatDiscount($cartRow->getInitialUnitPrice());
+                    break;
                 }
             }
         }
