@@ -61,13 +61,13 @@ describe('Configure currency restrictions', async () => {
     await expect(pageTitle).to.contains(this.pageObjects.preferencesPage.pageTitle);
   });
 
-  const deleteTests = [
+  const tests = [
     {args: {action: 'uncheck', paymentModule: 'ps_wirepayment', exist: false}},
     {args: {action: 'check', paymentModule: 'ps_wirepayment', exist: true}},
     {args: {action: 'uncheck', paymentModule: 'ps_checkpayment', exist: false}},
     {args: {action: 'check', paymentModule: 'ps_checkpayment', exist: true}},
   ];
-  deleteTests.forEach((test, index) => {
+  tests.forEach((test, index) => {
     it(`should ${test.args.action} the euro currency for '${test.args.paymentModule}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', test.args.action + test.args.paymentModule, baseContext);
       const result = await this.pageObjects.preferencesPage.setCurrencyRestriction(
@@ -109,7 +109,6 @@ describe('Configure currency restrictions', async () => {
       // Payment step - Choose payment step
       const isVisible = await this.pageObjects.checkoutPage.isPaymentMethodExist(test.args.paymentModule);
       await expect(isVisible).to.be.equal(test.args.exist);
-      // Logout from FO
       page = await this.pageObjects.checkoutPage.closePage(browser, 1);
       this.pageObjects = await init();
     });
