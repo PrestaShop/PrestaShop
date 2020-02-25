@@ -307,14 +307,12 @@ services:
             - 'PaymentPreferences'
 
     prestashop.admin.email_configuration.form_handler:
-        class: 'PrestaShop\PrestaShop\Core\Form\FormHandler'
+        class: 'PrestaShop\PrestaShop\Core\Form\Handler'
         arguments:
-            - '@=service("form.factory").createBuilder()'
+            - '@form.factory'
             - '@prestashop.core.hook.dispatcher'
             - '@prestashop.admin.email_configuration.form_data_provider'
-            -
-              'email_config': 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Email\EmailConfigurationType'
-              'smtp_config': 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Email\SmtpConfigurationType'
+            - 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Email\EmailConfigurationType'
             - 'EmailConfiguration'
 
     prestashop.admin.request_sql_settings.form_handler:
