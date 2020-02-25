@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Form\Admin\Type;
 
+use Configuration;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -40,6 +41,7 @@ class TypeaheadProductCollectionType extends CommonAbstractType
 {
     protected $productAdapter;
     protected $categoryAdapter;
+    private $configuration;
 
     /**
      * {@inheritdoc}
@@ -50,6 +52,7 @@ class TypeaheadProductCollectionType extends CommonAbstractType
     {
         $this->productAdapter = $productAdapter;
         $this->categoryAdapter = $categoryAdapter;
+        $this->configuration = new Configuration();
     }
 
     /**
@@ -71,6 +74,7 @@ class TypeaheadProductCollectionType extends CommonAbstractType
         //if form is submitted, inject datas to display collection
         if (!empty($view->vars['value']) && !empty($view->vars['value']['data'])) {
             $collection = [];
+            $langId = (int) $this->configuration->get('PS_LANG_DEFAULT');
 
             $i = 0;
             foreach ($view->vars['value']['data'] as $id) {
@@ -90,7 +94,7 @@ class TypeaheadProductCollectionType extends CommonAbstractType
                         break;
 
                     default:
-                        $product = $this->productAdapter->getProduct($id);
+                        $product = $this->productAdapter->getProduct($id, false, $langId);
                         $collection[] = [
                             'id' => $id,
                             'name' => reset($product->name) . ' (ref:' . $product->reference . ')',

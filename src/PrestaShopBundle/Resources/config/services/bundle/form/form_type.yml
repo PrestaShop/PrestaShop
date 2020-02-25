@@ -212,6 +212,7 @@ services:
         arguments:
             - "@prestashop.adapter.data_provider.product"
             - "@prestashop.adapter.data_provider.category"
+            - "@prestashop.adapter.legacy.configuration"
         tags:
             - { name: form.type }
 
