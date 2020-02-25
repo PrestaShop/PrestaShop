@@ -64,7 +64,7 @@ class PreferencesController extends FrameworkBundleAdminController
     }
 
     /**
-     * Handle form submit.
+     * Process the Performance Smarty configuration form.
      *
      * @AdminSecurity("is_granted(['update', 'create', 'delete'], request.get('_legacy_controller'))",
      *     message="You do not have permission to edit this.",
@@ -74,18 +74,66 @@ class PreferencesController extends FrameworkBundleAdminController
      *
      * @return RedirectResponse
      */
-    public function processFormAction(Request $request)
+    public function processHandlingFormAction(Request $request)
     {
-        $formHandler = $this->get('prestashop.admin.shipping_preferences.form_handler');
+        $this->dispatchHook(
+            'actionAdminAdminPreferencesControllerPostProcessHandlingBefore',
+            ['controller' => $this]
+        );
+
+        return $this->processForm(
+            $request,
+            $this->getHandlingFormHandler()
+        );
+    }
+
+    /**
+     * Process the Performance Smarty configuration form.
+     *
+     * @AdminSecurity("is_granted(['update', 'create', 'delete'], request.get('_legacy_controller'))",
+     *     message="You do not have permission to edit this.",
+     *     redirectRoute="admin_shipping_preferences")
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    public function processCarrierOptionsFormAction(Request $request)
+    {
+        $this->dispatchHook(
+            'actionAdminAdminPreferencesControllerPostProcessCarrierOptionsBefore',
+            ['controller' => $this]
+        );
+
+        return $this->processForm(
+            $request,
+            $this->getCarrierOptionsFormHandler()
+        );
+    }
+
+    /**
+     * Process the Performance configuration form.
+     *
+     * @param Request $request
+     * @param FormHandlerInterface $formHandler
+     *
+     * @return RedirectResponse
+     */
+    protected function processForm(Request $request, FormHandlerInterface $formHandler)
+    {
+        $this->dispatchHook('actionAdminAdminPreferencesControllerPostProcessBefore', ['controller' => $this]);
 
         $form = $formHandler->getForm();
         $form->handleRequest($request);
 
         if ($form->isSubmitted()) {
-            if ($errors = $formHandler->save($form->getData())) {
-                $this->flashErrors($errors);
-            } else {
+            $data = $form->getData();
+            $saveErrors = $formHandler->save($data);
+
+            if (0 === count($saveErrors)) {
                 $this->addFlash('success', $this->trans('Update successful', 'Admin.Notifications.Success'));
+            } else {
+                $this->flashErrors($saveErrors);
             }
         }
 
