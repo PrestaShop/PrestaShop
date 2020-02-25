@@ -323,4 +323,17 @@ module.exports = class CommonPage {
     }
     return arrayToSort.sort((a, b) => a.localeCompare(b));
   }
+
+  /**
+   * Drag and drop element
+   * @param selectorToDrag
+   * @param selectorWhereToDrop
+   * @return {Promise<void>}
+   */
+  async dragAndDrop(selectorToDrag, selectorWhereToDrop) {
+    await this.page.hover(selectorToDrag);
+    await this.page.mouse.down();
+    await this.page.hover(selectorWhereToDrop);
+    await this.page.mouse.up();
+  }
 };
