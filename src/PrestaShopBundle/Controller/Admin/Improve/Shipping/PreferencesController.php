@@ -112,7 +112,7 @@ class PreferencesController extends FrameworkBundleAdminController
     }
 
     /**
-     * Process the Performance configuration form.
+     * Process the Preferences configuration form.
      *
      * @param Request $request
      * @param FormHandlerInterface $formHandler
