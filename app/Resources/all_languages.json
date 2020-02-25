@@ -684,5 +684,14 @@
     "is_rtl": "0",
     "language_code": "zh-cn",
     "locale": "zh-CN"
+  },
+  "kr": {
+    "name": "كوردی",
+    "iso_code": "kr",
+    "date_format_lite": "Y-m-d",
+    "date_format_full": "Y-m-d H:i:s",
+    "is_rtl": "1",
+    "language_code": "kr-iq",
+    "locale": "kr-IQ"
   }
 }
