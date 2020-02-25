@@ -486,7 +486,7 @@ class FrontControllerCore extends Controller
 
     protected function assignGeneralPurposeVariables()
     {
-        $templateVars = [
+        $templateVars = array(
             'cart' => $this->cart_presenter->present($this->context->cart, true),
             'currency' => $this->getTemplateVarCurrency(),
             'customer' => $this->getTemplateVarCustomer(),
