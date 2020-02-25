@@ -26,7 +26,6 @@
   {{ form_start(updateOrderStatusActionBarForm, {
     'action': path('admin_orders_update_status', {'orderId': orderForViewing.id}),
     'attr': {
-      'class': 'form-inline d-inline-block',
       'id': 'update_order_status_action_form'
     }
   }) }}
@@ -51,7 +50,7 @@
   {{ form_end(updateOrderStatusActionBarForm) }}
 
   {% if orderForViewing.documents.canGenerateInvoice %}
-    <form class="form-inline d-inline-block form-horizontal">
+    <form class="order-actions-invoice">
       <div class="input-group">
         <a href="{{ path('admin_orders_generate_invoice_pdf', {'orderId': orderForViewing.id}) }}"
            class="btn btn-action">
@@ -62,7 +61,7 @@
     </form>
   {% endif %}
 
-  <form class="form-inline d-inline-block form-horizontal">
+  <form class="order-actions-print">
     <div class="input-group">
       <button type="button" class="btn btn-action js-print-order-view-page">
         <i class="material-icons" aria-hidden="true">print</i>
@@ -72,7 +71,7 @@
   </form>
 
   {% if orderForViewing.documents.canGenerateDeliverySlip %}
-    <form class="form-inline d-inline-block form-horizontal">
+    <form class="order-actions-delivery">
       <div class="input-group">
         <a href="{{ path('admin_orders_generate_delivery_slip_pdf', {'orderId': orderForViewing.id}) }}"
            class="btn btn-action">
@@ -82,43 +81,31 @@
       </div>
     </form>
   {% endif %}
+
   {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/extra_order_button_actions.html.twig' %}
+
   {% if merchandiseReturnEnabled %}
     {% if orderForViewing.isDelivered() %}
-      <div class="form-inline d-inline-block form-horizontal">
-        <div class="input-group">
-          <button class="btn btn-action return-product-display" type="button"{% if not orderForViewing.isRefundable() %} disabled{% endif %}>
-            <i class="material-icons">swap_horiz</i>
-            {{ 'Return products'|trans({}, 'Admin.Orderscustomers.Feature') }}
-          </button>
-        </div>
-      </div>
+      <button class="btn btn-action return-product-display" type="button"{% if not orderForViewing.isRefundable() %} disabled{% endif %}>
+        <i class="material-icons">swap_horiz</i>
+        {{ 'Return products'|trans({}, 'Admin.Orderscustomers.Feature') }}
+      </button>
     {% elseif orderForViewing.hasInvoice() %}
-      <div class="form-inline d-inline-block form-horizontal">
-        <div class="input-group">
-          <button class="btn btn-action standard-refund-display" type="button"{% if not orderForViewing.isRefundable() %} disabled{% endif %}>
-            <i class="material-icons">swap_horiz</i>
-            {{ 'Standard refund'|trans({}, 'Admin.Orderscustomers.Feature') }}
-          </button>
-        </div>
-      </div>
+      <button class="btn btn-action standard-refund-display" type="button"{% if not orderForViewing.isRefundable() %} disabled{% endif %}>
+        <i class="material-icons">swap_horiz</i>
+        {{ 'Standard refund'|trans({}, 'Admin.Orderscustomers.Feature') }}
+      </button>
     {% else %}
-      <div class="form-inline d-inline-block form-horizontal">
-        <div class="input-group">
-          <button class="btn btn-action cancel-product-display" type="button">
-            {{ 'Cancel products'|trans({}, 'Admin.Orderscustomers.Feature') }}
-          </button>
-        </div>
-      </div>
+      <button class="btn btn-action cancel-product-display" type="button">
+        {{ 'Cancel products'|trans({}, 'Admin.Orderscustomers.Feature') }}
+      </button>
     {% endif %}
   {% endif %}
   {% if orderForViewing.hasInvoice() %}
-    <div class="form-inline d-inline-block form-horizontal">
-      <div class="input-group">
-        <button class="btn btn-action partial-refund-display" type="button"{% if not orderForViewing.isRefundable() %} disabled{% endif %}>
-          <i class="material-icons">swap_horiz</i>
-          {{ 'Partial refund'|trans({}, 'Admin.Orderscustomers.Feature') }}
-        </button>
-      </div>
-    </div>
+      <button class="btn btn-action partial-refund-display" type="button"{% if not orderForViewing.isRefundable() %} disabled{% endif %}>
+        <i class="material-icons">swap_horiz</i>
+        {{ 'Partial refund'|trans({}, 'Admin.Orderscustomers.Feature') }}
+      </button>
   {% endif %}
+
+  {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/order_navigation.html.twig' %}
