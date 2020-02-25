@@ -488,7 +488,7 @@ class ManufacturerCore extends ObjectModel
 				' . ($front ? ' AND product_shop.`visibility` IN ("both", "catalog")' : '') . '
 				GROUP BY p.id_product';
 
-        if ($finalOrderBy !== 'price') {
+        if ($orderBy !== 'price') {
             $sql .= '
 				ORDER BY ' . $alias . '`' . bqSQL($orderBy) . '` ' . pSQL($orderWay) . '
 				LIMIT ' . (((int) $p - 1) * (int) $n) . ',' . (int) $n;
@@ -500,7 +500,7 @@ class ManufacturerCore extends ObjectModel
             return false;
         }
 
-        if ($finalOrderBy === 'price') {
+        if ($orderBy === 'price') {
             Tools::orderbyPrice($result, $orderWay);
             $result = array_slice($result, (int) (($p - 1) * $n), (int) $n);
         }

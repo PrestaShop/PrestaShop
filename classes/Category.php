@@ -1015,7 +1015,6 @@ class CategoryCore extends ObjectModel
             $nbDaysNewProduct = 20;
         }
 
-        $finalOrderBy = $orderBy;
 
         $sql = 'SELECT p.*, product_shop.*, stock.out_of_stock, IFNULL(stock.quantity, 0) AS quantity' . (Combination::isFeatureActive() ? ', IFNULL(product_attribute_shop.id_product_attribute, 0) AS id_product_attribute,
 					product_attribute_shop.minimal_quantity AS product_attribute_minimal_quantity' : '') . ', pl.`description`, pl.`description_short`, pl.`available_now`,
@@ -1051,7 +1050,7 @@ class CategoryCore extends ObjectModel
 
         if ($random === true) {
             $sql .= ' ORDER BY RAND() LIMIT ' . (int) $randomNumberProducts;
-        } elseif ($finalOrderBy !== 'orderprice') {
+        } elseif ($orderBy !== 'orderprice') {
             $sql .= ' ORDER BY ' . (!empty($orderByPrefix) ? $orderByPrefix . '.' : '') . '`' . bqSQL($orderBy) . '` ' . pSQL($orderWay) . '
 			LIMIT ' . (((int) $p - 1) * (int) $n) . ',' . (int) $n;
         }
@@ -1062,7 +1061,7 @@ class CategoryCore extends ObjectModel
             return [];
         }
 
-        if ($finalOrderBy === 'orderprice') {
+        if ($orderBy === 'orderprice') {
             Tools::orderbyPrice($result, $orderWay);
             $result = array_slice($result, (int) (($p - 1) * $n), (int) $n);
         }
