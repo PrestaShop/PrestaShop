@@ -88,10 +88,11 @@ $order-block-background-color: #f8f8f8;
   }
 
   #customer-tab-content-container-toggler .material-icons::before {
-    content: "keyboard_arrow_down";
-  }
-  #customer-tab-content-container-toggler[aria-expanded="false"].material-icons::before {
     content: "keyboard_arrow_up";
+  }
+  #customer-tab-content-container-toggler[aria-expanded="false"]
+    .material-icons::before {
+    content: "keyboard_arrow_down";
   }
 }
 
