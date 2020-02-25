@@ -3,16 +3,15 @@ services:
         public: true
 
     prestashop.admin.shipping_preferences.handling.data_provider:
-        class: 'PrestaShopBundle\Form\Admin\Improve\Shipping\Preferences\PreferencesFormDataProvider'
+        class: 'PrestaShopBundle\Form\Admin\Improve\Shipping\Preferences\PreferencesHandlingFormDataProvider'
         arguments:
             - '@prestashop.adapter.shipping_preferences.handling_configuration'
             - '@translator'
 
     prestashop.admin.shipping_preferences.carrier_options.data_provider:
-        class: 'PrestaShopBundle\Form\Admin\Improve\Shipping\Preferences\PreferencesFormDataProvider'
+        class: 'PrestaShopBundle\Form\Admin\Improve\Shipping\Preferences\PreferencesCarrierOptionsFormDataProvider'
         arguments:
             - '@prestashop.adapter.shipping_preferences.carrier_options_configuration'
-            - '@translator'
 
     prestashop.admin.order.invoices.by_date.data_provider:
         class: 'PrestaShopBundle\Form\Admin\Sell\Order\Invoices\InvoicesByDateDataProvider'
