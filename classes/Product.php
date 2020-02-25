@@ -2672,7 +2672,7 @@ class ProductCore extends ObjectModel
             WHERE cp.`id_product` = p.`id_product`)');
         }
 
-        if ($finalOrderBy !== 'price') {
+        if ($order_by !== 'price') {
             $sql->orderBy((isset($order_by_prefix) ? pSQL($order_by_prefix) . '.' : '') . '`' . pSQL($order_by) . '` ' . pSQL($order_way));
             $sql->limit($nb_products, (int) (($page_number - 1) * $nb_products));
         }
@@ -2689,7 +2689,7 @@ class ProductCore extends ObjectModel
             return false;
         }
 
-        if ($finalOrderBy === 'price') {
+        if ($order_by === 'price') {
             Tools::orderbyPrice($result, $order_way);
             $result = array_slice($result, (int) (($nb_products - 1) * $page_number), (int) $page_number);
         }
@@ -2940,7 +2940,7 @@ class ProductCore extends ObjectModel
         ' . ((!$beginning && !$ending) ? ' AND p.`id_product` IN (' . ((is_array($tab_id_product) && count($tab_id_product)) ? implode(', ', $tab_id_product) : 0) . ')' : '') . '
         ' . $sql_groups;
 
-        if ($finalOrderBy != 'price') {
+        if ($order_by != 'price') {
             $sql .= '
 				ORDER BY ' . (isset($order_by_prefix) ? pSQL($order_by_prefix) . '.' : '') . pSQL($order_by) . ' ' . pSQL($order_way) . '
 				LIMIT ' . (int) (($page_number - 1) * $nb_products) . ', ' . (int) $nb_products;
@@ -2952,7 +2952,7 @@ class ProductCore extends ObjectModel
             return false;
         }
 
-        if ($finalOrderBy === 'price') {
+        if ($order_by === 'price') {
             Tools::orderbyPrice($result, $order_way);
             $result = array_slice($result, (int) (($page_number - 1) * $nb_products), (int) $nb_products);
         }

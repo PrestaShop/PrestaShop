@@ -431,14 +431,14 @@ class SearchCore
 				WHERE p.`id_product` ' . $product_pool . '
 				GROUP BY product_shop.id_product';
 
-        if ($finalOrderBy !== 'price') {
+        if ($order_by !== 'price') {
             $sql .= ($order_by ? ' ORDER BY  ' . $alias . $order_by : '') . ($order_way ? ' ' . $order_way : '') . '
 				LIMIT ' . (int) (($page_number - 1) * $page_size) . ',' . (int) $page_size;
         }
 
         $result = $db->executeS($sql, true, false);
 
-        if ($finalOrderBy === 'price') {
+        if ($order_by === 'price') {
             Tools::orderbyPrice($result, $order_way);
             $result = array_slice($result, (int) (($page_number - 1) * $page_size), (int) $page_size);
         }
