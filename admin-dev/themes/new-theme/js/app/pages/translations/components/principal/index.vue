@@ -1,5 +1,5 @@
 <!--**
- * 2007-2020 PrestaShop SA and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,55 +18,37 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *-->
 <template>
   <transition name="fade">
-    <div
-      class="col-sm-9 card"
-      v-if="principalReady"
-    >
+    <div class="col-sm-9 card" v-if="principalReady">
       <div class="p-3 translations-wrapper">
-        <PSAlert
-          v-if="noResult"
-          alert-type="ALERT_TYPE_WARNING"
-          :has-close="false"
-        >
-          {{ noResultInfo }}
+        <PSAlert v-if="noResult" alertType="ALERT_TYPE_WARNING" :hasClose="false">
+          {{noResultInfo}}
         </PSAlert>
-        <div
-          class="translations-catalog row p-0"
-          v-else
-        >
-          <PSAlert
-            v-if="searchActive"
-            class="col-sm-12"
-            alert-type="ALERT_TYPE_INFO"
-            :has-close="false"
-          >
-            {{ searchInfo }}
+        <div class="translations-catalog row p-0" v-else>
+          <PSAlert v-if="searchActive" class="col-sm-12" alertType="ALERT_TYPE_INFO" :hasClose="false">
+            {{searchInfo}}
           </PSAlert>
           <div class="col-sm-8 pt-3">
             <h3 class="domain-info">
               <span>{{ currentDomain }}</span>
               <span>{{ currentDomainTotalTranslations }}</span>
-              <span
-                v-show="currentDomainTotalMissingTranslations"
-              > - <span class="missing">{{ currentDomainTotalMissingTranslationsString }}</span></span>
+              <span v-show="currentDomainTotalMissingTranslations"> - <span class="missing">{{ currentDomainTotalMissingTranslationsString }}</span></span>
             </h3>
           </div>
           <div class="col-sm-4">
             <PSPagination
-              :current-index="currentPagination"
-              :pages-count="pagesCount"
+              :currentIndex="currentPagination"
+              :pagesCount="pagesCount"
               class="float-sm-right"
               @pageChanged="onPageChanged"
             />
           </div>
-          <form
-            class="col-sm-12"
+          <form class="col-sm-12"
             method="post"
             :action="saveAction"
             :isEdited="isEdited"
@@ -74,11 +56,7 @@
           >
             <div class="row">
               <div class="col-sm-12 mb-2">
-                <PSButton
-                  :primary="true"
-                  type="submit"
-                  class="float-sm-right"
-                >
+                <PSButton :primary="true" type="submit" class="float-sm-right">
                   {{ trans('button_save') }}
                 </PSButton>
               </div>
@@ -90,17 +68,14 @@
               :id="key"
               :translated="translation"
               :label="translation.default"
-              :extra-info="getDomain(translation.tree_domain)"
+              :extraInfo="getDomain(translation.tree_domain)"
               @editedAction="isEdited"
-            />
+              >
+            </TranslationInput>
 
             <div class="row">
               <div class="col-sm-12">
-                <PSButton
-                  :primary="true"
-                  type="submit"
-                  class="float-sm-right mt-3"
-                >
+                <PSButton :primary="true" type="submit" class="float-sm-right mt-3">
                   {{ trans('button_save') }}
                 </PSButton>
               </div>
@@ -108,8 +83,8 @@
           </form>
           <div class="col-sm-12">
             <PSPagination
-              :current-index="currentPagination"
-              :pages-count="pagesCount"
+              :currentIndex="currentPagination"
+              :pagesCount="pagesCount"
               @pageChanged="onPageChanged"
             />
           </div>
@@ -120,30 +95,23 @@
 </template>
 
 <script>
+  import TranslationInput from './translation-input';
   import PSButton from '@app/widgets/ps-button';
   import PSPagination from '@app/widgets/ps-pagination';
   import PSAlert from '@app/widgets/ps-alert';
-  import {EventBus} from '@app/utils/event-bus';
-  import TranslationInput from './translation-input';
+  import { EventBus } from '@app/utils/event-bus';
 
   export default {
-    props: {
-      modal: {
-        type: Object,
-        required: false,
-        default: () => ({}),
-      },
-    },
-    data: () => ({
-      originalTranslations: [],
-      modifiedTranslations: [],
-    }),
+    props: [
+      'modal',
+    ],
     computed: {
       principalReady() {
         return !this.$store.state.principalLoading;
       },
       translationsCatalog() {
-        return this.$store.getters.catalog.data.data;
+        this.translations = this.$store.getters.catalog.data.data;
+        return this.translations;
       },
       saveAction() {
         return this.$store.getters.catalog.data.info ? this.$store.getters.catalog.data.info.edit_url : '';
@@ -161,11 +129,9 @@
         return this.$store.state.currentDomain;
       },
       currentDomainTotalTranslations() {
-        /* eslint-disable max-len */
         return (this.$store.state.currentDomainTotalTranslations <= 1)
           ? `- ${this.trans('label_total_domain_singular').replace('%nb_translation%', this.$store.state.currentDomainTotalTranslations)}`
           : `- ${this.trans('label_total_domain').replace('%nb_translations%', this.$store.state.currentDomainTotalTranslations)}`;
-        /* eslint-enable max-len */
       },
       currentDomainTotalMissingTranslations() {
         return this.$store.state.currentDomainTotalMissingTranslations;
@@ -177,8 +143,7 @@
           if (this.currentDomainTotalMissingTranslations === 1) {
             totalMissingTranslationsString = this.trans('label_missing_singular');
           } else {
-            totalMissingTranslationsString = this.trans('label_missing')
-              .replace('%d', this.currentDomainTotalMissingTranslations);
+            totalMissingTranslationsString = this.trans('label_missing').replace('%d', this.currentDomainTotalMissingTranslations);
           }
         }
 
@@ -217,7 +182,7 @@
         } else {
           this.$store.state.modifiedTranslations.splice(
             this.$store.state.modifiedTranslations.indexOf(input.id),
-            1,
+            1
           );
         }
       },
@@ -245,7 +210,7 @@
       getDomain(domains) {
         let domain = '';
         domains.forEach((d) => {
-          domain += `${d} > `;
+          domain += d + ' > ';
         });
         return domain.slice(0, -3);
       },
@@ -280,6 +245,11 @@
         return this.$store.state.modifiedTranslations.length > 0;
       },
     },
+    data: () => ({
+      translations: [],
+      originalTranslations: [],
+      modifiedTranslations: [],
+    }),
     mounted() {
       EventBus.$on('resetTranslation', (el) => {
         const translations = [];
@@ -307,7 +277,7 @@
 </script>
 
 <style lang="scss" scoped>
-  @import '~@scss/config/_settings.scss';
+  @import "../../../../../../scss/config/_settings.scss";
 
   .fade-enter-active, .fade-leave-active {
     transition: opacity .5s

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2020 PrestaShop SA and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -60,38 +60,38 @@ class StockAvailableCore extends ObjectModel
     /**
      * @see ObjectModel::$definition
      */
-    public static $definition = [
+    public static $definition = array(
         'table' => 'stock_available',
         'primary' => 'id_stock_available',
-        'fields' => [
-            'id_product' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
-            'id_product_attribute' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
-            'id_shop' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId'],
-            'id_shop_group' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId'],
-            'quantity' => ['type' => self::TYPE_INT, 'validate' => 'isInt', 'required' => true],
-            'depends_on_stock' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool', 'required' => true],
-            'out_of_stock' => ['type' => self::TYPE_INT, 'validate' => 'isInt', 'required' => true],
-            'location' => ['type' => self::TYPE_STRING, 'validate' => 'isString', 'size' => 255],
-        ],
-    ];
+        'fields' => array(
+            'id_product' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
+            'id_product_attribute' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
+            'id_shop' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
+            'id_shop_group' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
+            'quantity' => array('type' => self::TYPE_INT, 'validate' => 'isInt', 'required' => true),
+            'depends_on_stock' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool', 'required' => true),
+            'out_of_stock' => array('type' => self::TYPE_INT, 'validate' => 'isInt', 'required' => true),
+            'location' => array('type' => self::TYPE_STRING, 'validate' => 'isString', 'size' => 255),
+        ),
+    );
 
     /**
      * @see ObjectModel::$webserviceParameters
      */
-    protected $webserviceParameters = [
-        'fields' => [
-            'id_product' => ['xlink_resource' => 'products'],
-            'id_product_attribute' => ['xlink_resource' => 'combinations'],
-            'id_shop' => ['xlink_resource' => 'shops'],
-            'id_shop_group' => ['xlink_resource' => 'shop_groups'],
-        ],
-        'hidden_fields' => [
-        ],
-        'objectMethods' => [
+    protected $webserviceParameters = array(
+        'fields' => array(
+            'id_product' => array('xlink_resource' => 'products'),
+            'id_product_attribute' => array('xlink_resource' => 'combinations'),
+            'id_shop' => array('xlink_resource' => 'shops'),
+            'id_shop_group' => array('xlink_resource' => 'shop_groups'),
+        ),
+        'hidden_fields' => array(
+        ),
+        'objectMethods' => array(
             'add' => 'addWs',
             'update' => 'updateWs',
-        ],
-    ];
+        ),
+    );
 
     /**
      * For a given {id_product, id_product_attribute and id_shop}, gets the stock available id associated.
@@ -105,7 +105,7 @@ class StockAvailableCore extends ObjectModel
     public function updateWs()
     {
         if ($this->depends_on_stock) {
-            return WebserviceRequest::getInstance()->setError(500, $this->trans('You cannot update the available stock when it depends on stock.', [], 'Admin.Catalog.Notification'), 133);
+            return WebserviceRequest::getInstance()->setError(500, $this->trans('You cannot update the available stock when it depends on stock.', array(), 'Admin.Catalog.Notification'), 133);
         }
 
         return $this->update();
@@ -163,7 +163,7 @@ class StockAvailableCore extends ObjectModel
         // gets warehouse ids grouped by shops
         $ids_warehouse = Warehouse::getWarehousesGroupedByShops();
         if ($order_id_shop !== null) {
-            $order_warehouses = [];
+            $order_warehouses = array();
             $wh = Warehouse::getWarehouses(false, (int) $order_id_shop);
             foreach ($wh as $warehouse) {
                 $order_warehouses[] = $warehouse['id_warehouse'];
@@ -171,7 +171,7 @@ class StockAvailableCore extends ObjectModel
         }
 
         // gets all product attributes ids
-        $ids_product_attribute = [];
+        $ids_product_attribute = array();
         foreach (Product::getProductAttributesIds($id_product) as $id_product_attribute) {
             $ids_product_attribute[] = $id_product_attribute['id_product_attribute'];
         }
@@ -190,7 +190,7 @@ class StockAvailableCore extends ObjectModel
                 // if it's a simple product
                 if (empty($ids_product_attribute)) {
                     $allowed_warehouse_for_product = WareHouse::getProductWarehouseList((int) $id_product, 0, (int) $id_shop);
-                    $allowed_warehouse_for_product_clean = [];
+                    $allowed_warehouse_for_product_clean = array();
                     foreach ($allowed_warehouse_for_product as $warehouse) {
                         $allowed_warehouse_for_product_clean[] = (int) $warehouse['id_warehouse'];
                     }
@@ -203,18 +203,18 @@ class StockAvailableCore extends ObjectModel
 
                     Hook::exec(
                         'actionUpdateQuantity',
-                                    [
+                                    array(
                                         'id_product' => $id_product,
                                         'id_product_attribute' => 0,
                                         'quantity' => $product_quantity,
                                         'id_shop' => $id_shop,
-                                    ]
+                                    )
                     );
                 } else {
                     // else this product has attributes, hence loops on $ids_product_attribute
                     foreach ($ids_product_attribute as $id_product_attribute) {
                         $allowed_warehouse_for_combination = WareHouse::getProductWarehouseList((int) $id_product, (int) $id_product_attribute, (int) $id_shop);
-                        $allowed_warehouse_for_combination_clean = [];
+                        $allowed_warehouse_for_combination_clean = array();
                         foreach ($allowed_warehouse_for_combination as $warehouse) {
                             $allowed_warehouse_for_combination_clean[] = (int) $warehouse['id_warehouse'];
                         }
@@ -232,24 +232,24 @@ class StockAvailableCore extends ObjectModel
                             StockAvailable::addSqlShopRestriction(null, $id_shop));
 
                         if ((int) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query)) {
-                            $query = [
+                            $query = array(
                                 'table' => 'stock_available',
-                                'data' => ['quantity' => $quantity],
+                                'data' => array('quantity' => $quantity),
                                 'where' => 'id_product = ' . (int) $id_product . ' AND id_product_attribute = ' . (int) $id_product_attribute .
                                 StockAvailable::addSqlShopRestriction(null, $id_shop),
-                            ];
+                            );
                             Db::getInstance()->update($query['table'], $query['data'], $query['where']);
                         } else {
-                            $query = [
+                            $query = array(
                                 'table' => 'stock_available',
-                                'data' => [
+                                'data' => array(
                                     'quantity' => $quantity,
                                     'depends_on_stock' => 1,
                                     'out_of_stock' => $out_of_stock,
                                     'id_product' => (int) $id_product,
                                     'id_product_attribute' => (int) $id_product_attribute,
-                                ],
-                            ];
+                                ),
+                            );
                             StockAvailable::addSqlShopParams($query['data'], $id_shop);
                             Db::getInstance()->insert($query['table'], $query['data']);
                         }
@@ -258,31 +258,31 @@ class StockAvailableCore extends ObjectModel
 
                         Hook::exec(
                             'actionUpdateQuantity',
-                                    [
+                                    array(
                                         'id_product' => $id_product,
                                         'id_product_attribute' => $id_product_attribute,
                                         'quantity' => $quantity,
                                         'id_shop' => $id_shop,
-                                    ]
+                                    )
                         );
                     }
                 }
                 // updates
                 // if $id_product has attributes, it also updates the sum for all attributes
                 if (($order_id_shop != null && array_intersect($warehouses, $order_warehouses)) || $order_id_shop == null) {
-                    $query = [
+                    $query = array(
                         'table' => 'stock_available',
-                        'data' => ['quantity' => $product_quantity],
+                        'data' => array('quantity' => $product_quantity),
                         'where' => 'id_product = ' . (int) $id_product . ' AND id_product_attribute = 0' .
                         StockAvailable::addSqlShopRestriction(null, $id_shop),
-                    ];
+                    );
                     Db::getInstance()->update($query['table'], $query['data'], $query['where']);
                 }
             }
         }
         // In case there are no warehouses, removes product from StockAvailable
         if (count($ids_warehouse) == 0 && StockAvailable::dependsOnStock((int) $id_product)) {
-            Db::getInstance()->update('stock_available', ['quantity' => 0], 'id_product = ' . (int) $id_product);
+            Db::getInstance()->update('stock_available', array('quantity' => 0), 'id_product = ' . (int) $id_product);
         }
 
         Cache::clean('StockAvailable::getQuantityAvailableByProduct_' . (int) $id_product . '*');
@@ -303,15 +303,15 @@ class StockAvailableCore extends ObjectModel
 
         $existing_id = StockAvailable::getStockAvailableIdByProductId((int) $id_product, (int) $id_product_attribute, $id_shop);
         if ($existing_id > 0) {
-            Db::getInstance()->update('stock_available', [
+            Db::getInstance()->update('stock_available', array(
                 'depends_on_stock' => (int) $depends_on_stock,
-            ], 'id_stock_available = ' . (int) $existing_id);
+            ), 'id_stock_available = ' . (int) $existing_id);
         } else {
-            $params = [
+            $params = array(
                 'depends_on_stock' => (int) $depends_on_stock,
                 'id_product' => (int) $id_product,
                 'id_product_attribute' => (int) $id_product_attribute,
-            ];
+            );
 
             StockAvailable::addSqlShopParams($params, $id_shop);
 
@@ -342,17 +342,17 @@ class StockAvailableCore extends ObjectModel
         if ($existing_id > 0) {
             Db::getInstance()->update(
                 'stock_available',
-                ['out_of_stock' => (int) $out_of_stock],
+                array('out_of_stock' => (int) $out_of_stock),
                 'id_product = ' . (int) $id_product .
                 (($id_product_attribute) ? ' AND id_product_attribute = ' . (int) $id_product_attribute : '') .
                 StockAvailable::addSqlShopRestriction(null, $id_shop)
             );
         } else {
-            $params = [
+            $params = array(
                 'out_of_stock' => (int) $out_of_stock,
                 'id_product' => (int) $id_product,
                 'id_product_attribute' => (int) $id_product_attribute,
-            ];
+            );
 
             StockAvailable::addSqlShopParams($params, $id_shop);
             Db::getInstance()->insert('stock_available', $params, false, true, Db::ON_DUPLICATE_KEY);
@@ -384,7 +384,10 @@ class StockAvailableCore extends ObjectModel
                 'location' => $location,
             ];
 
-            throw new \InvalidArgumentException(sprintf('Could not update location as input data is not valid: %s', json_encode($serializedInputData)));
+            throw new \InvalidArgumentException(sprintf(
+                'Could not update location as input data is not valid: %s',
+                json_encode($serializedInputData)
+            ));
         }
 
         $existing_id = StockAvailable::getStockAvailableIdByProductId($id_product, $id_product_attribute, $id_shop);
@@ -392,17 +395,17 @@ class StockAvailableCore extends ObjectModel
         if ($existing_id > 0) {
             Db::getInstance()->update(
                 'stock_available',
-                ['location' => $location],
+                array('location' => $location),
                 'id_product = ' . $id_product .
                 (($id_product_attribute) ? ' AND id_product_attribute = ' . $id_product_attribute : '') .
                 StockAvailable::addSqlShopRestriction(null, $id_shop)
             );
         } else {
-            $params = [
+            $params = array(
                 'location' => $location,
                 'id_product' => $id_product,
                 'id_product_attribute' => $id_product_attribute,
-            ];
+            );
 
             StockAvailable::addSqlShopParams($params, $id_shop);
             Db::getInstance()->insert('stock_available', $params, false, true, Db::ON_DUPLICATE_KEY);
@@ -531,7 +534,7 @@ class StockAvailableCore extends ObjectModel
      * @param bool $add_movement Optional
      * @param array $params Optional
      */
-    public static function updateQuantity($id_product, $id_product_attribute, $delta_quantity, $id_shop = null, $add_movement = false, $params = [])
+    public static function updateQuantity($id_product, $id_product_attribute, $delta_quantity, $id_shop = null, $add_movement = false, $params = array())
     {
         if (!Validate::isUnsignedId($id_product)) {
             return false;
@@ -614,11 +617,11 @@ class StockAvailableCore extends ObjectModel
 
             Hook::exec(
                 'actionUpdateQuantity',
-                [
+                array(
                     'id_product' => $id_product,
                     'id_product_attribute' => $id_product_attribute,
                     'quantity' => $stock_available->quantity,
-                ]
+                )
             );
         }
         Cache::clean('StockAvailable::getQuantityAvailableByProduct_' . (int) $id_product . '*');
@@ -666,7 +669,7 @@ class StockAvailableCore extends ObjectModel
 
         if ($id_product_attribute) {
             if ($shop === null || !Validate::isLoadedObject($shop)) {
-                $shop_datas = [];
+                $shop_datas = array();
                 StockAvailable::addSqlShopParams($shop_datas);
                 $id_shop = (int) $shop_datas['id_shop'];
             } else {
@@ -701,9 +704,9 @@ class StockAvailableCore extends ObjectModel
         if (count($shop_list) > 0) {
             $id_shops_list = implode(', ', $shop_list);
 
-            return Db::getInstance()->update('stock_available', ['quantity' => 0], 'id_shop IN (' . $id_shops_list . ')');
+            return Db::getInstance()->update('stock_available', array('quantity' => 0), 'id_shop IN (' . $id_shops_list . ')');
         } else {
-            return Db::getInstance()->update('stock_available', ['quantity' => 0], 'id_shop_group = ' . $shop_group->id);
+            return Db::getInstance()->update('stock_available', array('quantity' => 0), 'id_shop_group = ' . $shop_group->id);
         }
     }
 

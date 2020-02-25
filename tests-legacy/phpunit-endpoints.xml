@@ -1,4 +1,5 @@
-<phpunit stopOnFailure="true"
+<phpunit color="true"
+         stopOnFailure="true"
          convertErrorsToExceptions="true"
          convertNoticesToExceptions="true"
          convertWarningsToExceptions="true"

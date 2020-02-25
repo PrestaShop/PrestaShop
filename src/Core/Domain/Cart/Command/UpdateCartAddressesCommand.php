@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2020 PrestaShop SA and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -28,7 +28,6 @@ namespace PrestaShop\PrestaShop\Core\Domain\Cart\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Address\ValueObject\AddressId;
-use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\CartId;
 
 class UpdateCartAddressesCommand
@@ -39,22 +38,17 @@ class UpdateCartAddressesCommand
     private $cartId;
 
     /**
-     * @var AddressId
+     * @var AddressId|null
      */
     private $newDeliveryAddressId;
 
     /**
-     * @var AddressId
+     * @var AddressId|null
      */
     private $newInvoiceAddressId;
 
     /**
      * @param int $cartId
-     * @param int $newDeliveryAddressId
-     * @param int $newInvoiceAddressId
-     *
-     * @throws AddressConstraintException
-     * @throws CartConstraintException
      */
     public function __construct(int $cartId, int $newDeliveryAddressId, int $newInvoiceAddressId)
     {
@@ -74,7 +68,7 @@ class UpdateCartAddressesCommand
     /**
      * @return AddressId
      */
-    public function getNewDeliveryAddressId(): AddressId
+    public function getNewDeliveryAddressId(): ?AddressId
     {
         return $this->newDeliveryAddressId;
     }
@@ -82,7 +76,7 @@ class UpdateCartAddressesCommand
     /**
      * @return AddressId
      */
-    public function getNewInvoiceAddressId(): AddressId
+    public function getNewInvoiceAddressId(): ?AddressId
     {
         return $this->newInvoiceAddressId;
     }
@@ -92,7 +86,7 @@ class UpdateCartAddressesCommand
      *
      * @throws AddressConstraintException
      */
-    private function setNewDeliveryAddressId(int $newDeliveryAddressId): void
+    public function setNewDeliveryAddressId(int $newDeliveryAddressId): void
     {
         $this->newDeliveryAddressId = new AddressId($newDeliveryAddressId);
     }
@@ -102,7 +96,7 @@ class UpdateCartAddressesCommand
      *
      * @throws AddressConstraintException
      */
-    private function setNewInvoiceAddressId(int $newInvoiceAddressId): void
+    public function setNewInvoiceAddressId(int $newInvoiceAddressId): void
     {
         $this->newInvoiceAddressId = new AddressId($newInvoiceAddressId);
     }

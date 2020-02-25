@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2020 PrestaShop SA and Contributors
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -116,7 +116,13 @@ final class AttachmentFileUploader implements AttachmentFileUploaderInterface
     private function uploadFile(string $filePath, string $uniqid, int $fileSize): void
     {
         if ($fileSize > ($this->configuration->get('PS_ATTACHMENT_MAXIMUM_SIZE') * 1024 * 1024)) {
-            throw new AttachmentConstraintException(sprintf('Max file size allowed is "%s" bytes. Uploaded file size is "%s".', (string) ($this->configuration->get('PS_ATTACHMENT_MAXIMUM_SIZE') * 1024), number_format(($fileSize / 1024), 2, '.', '')), AttachmentConstraintException::INVALID_FILE_SIZE);
+            throw new AttachmentConstraintException(sprintf(
+                'Max file size allowed is "%s" bytes. Uploaded file size is "%s".',
+                    (string) ($this->configuration->get('PS_ATTACHMENT_MAXIMUM_SIZE') * 1024),
+                    number_format(($fileSize / 1024), 2, '.', '')
+                ),
+                AttachmentConstraintException::INVALID_FILE_SIZE
+            );
         }
 
         try {
@@ -136,7 +142,14 @@ final class AttachmentFileUploader implements AttachmentFileUploaderInterface
         $maxFileSize = $this->uploadSizeConfiguration->getMaxUploadSizeInBytes();
 
         if ($maxFileSize > 0 && $fileSize > $maxFileSize) {
-            throw new AttachmentConstraintException(sprintf('Max file size allowed is "%s" bytes. Uploaded file size is "%s".', $maxFileSize, $fileSize), AttachmentConstraintException::INVALID_FILE_SIZE);
+            throw new AttachmentConstraintException(
+                sprintf(
+                    'Max file size allowed is "%s" bytes. Uploaded file size is "%s".',
+                    $maxFileSize,
+                    $fileSize
+                ),
+                AttachmentConstraintException::INVALID_FILE_SIZE
+            );
         }
     }
 }

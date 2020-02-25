@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2020 PrestaShop SA and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -44,86 +44,86 @@ class AdminCountriesControllerCore extends AdminController
 
         parent::__construct();
 
-        $this->bulk_actions = [
-            'delete' => ['text' => $this->trans('Delete selected', [], 'Admin.Actions'), 'confirm' => $this->trans('Delete selected items?', [], 'Admin.Actions')],
-            'AffectZone' => ['text' => $this->trans('Assign to a new zone', [], 'Admin.International.Feature')],
-        ];
+        $this->bulk_actions = array(
+            'delete' => array('text' => $this->trans('Delete selected', array(), 'Admin.Actions'), 'confirm' => $this->trans('Delete selected items?', array(), 'Admin.Actions')),
+            'AffectZone' => array('text' => $this->trans('Assign to a new zone', array(), 'Admin.International.Feature')),
+        );
 
-        $this->fieldImageSettings = [
+        $this->fieldImageSettings = array(
             'name' => 'logo',
             'dir' => 'st',
-        ];
+        );
 
-        $this->fields_options = [
-            'general' => [
-                'title' => $this->trans('Country options', [], 'Admin.International.Feature'),
-                'fields' => [
-                    'PS_RESTRICT_DELIVERED_COUNTRIES' => [
-                        'title' => $this->trans('Restrict country selections in front office to those covered by active carriers', [], 'Admin.International.Help'),
+        $this->fields_options = array(
+            'general' => array(
+                'title' => $this->trans('Country options', array(), 'Admin.International.Feature'),
+                'fields' => array(
+                    'PS_RESTRICT_DELIVERED_COUNTRIES' => array(
+                        'title' => $this->trans('Restrict country selections in front office to those covered by active carriers', array(), 'Admin.International.Help'),
                         'cast' => 'intval',
                         'type' => 'bool',
                         'default' => '0',
-                    ],
-                ],
-                'submit' => ['title' => $this->trans('Save', [], 'Admin.Actions')],
-            ],
-        ];
+                    ),
+                ),
+                'submit' => array('title' => $this->trans('Save', array(), 'Admin.Actions')),
+            ),
+        );
 
-        $zones_array = [];
+        $zones_array = array();
         $this->zones = Zone::getZones();
         foreach ($this->zones as $zone) {
             $zones_array[$zone['id_zone']] = $zone['name'];
         }
 
-        $this->fields_list = [
-            'id_country' => [
-                'title' => $this->trans('ID', [], 'Admin.Global'),
+        $this->fields_list = array(
+            'id_country' => array(
+                'title' => $this->trans('ID', array(), 'Admin.Global'),
                 'align' => 'center',
                 'class' => 'fixed-width-xs',
-            ],
-            'name' => [
-                'title' => $this->trans('Country', [], 'Admin.Global'),
+            ),
+            'name' => array(
+                'title' => $this->trans('Country', array(), 'Admin.Global'),
                 'filter_key' => 'b!name',
-            ],
-            'iso_code' => [
-                'title' => $this->trans('ISO code', [], 'Admin.International.Feature'),
+            ),
+            'iso_code' => array(
+                'title' => $this->trans('ISO code', array(), 'Admin.International.Feature'),
                 'align' => 'center',
                 'class' => 'fixed-width-xs',
-            ],
-            'call_prefix' => [
-                'title' => $this->trans('Call prefix', [], 'Admin.International.Feature'),
+            ),
+            'call_prefix' => array(
+                'title' => $this->trans('Call prefix', array(), 'Admin.International.Feature'),
                 'align' => 'center',
                 'callback' => 'displayCallPrefix',
                 'class' => 'fixed-width-sm',
-            ],
-            'zone' => [
-                'title' => $this->trans('Zone', [], 'Admin.Global'),
+            ),
+            'zone' => array(
+                'title' => $this->trans('Zone', array(), 'Admin.Global'),
                 'type' => 'select',
                 'list' => $zones_array,
                 'filter_key' => 'z!id_zone',
                 'filter_type' => 'int',
                 'order_key' => 'z!name',
-            ],
-            'active' => [
-                'title' => $this->trans('Enabled', [], 'Admin.Global'),
+            ),
+            'active' => array(
+                'title' => $this->trans('Enabled', array(), 'Admin.Global'),
                 'align' => 'center',
                 'active' => 'status',
                 'type' => 'bool',
                 'orderby' => false,
                 'filter_key' => 'a!active',
                 'class' => 'fixed-width-sm',
-            ],
-        ];
+            ),
+        );
     }
 
     public function initPageHeaderToolbar()
     {
         if (empty($this->display)) {
-            $this->page_header_toolbar_btn['new_country'] = [
+            $this->page_header_toolbar_btn['new_country'] = array(
                 'href' => self::$currentIndex . '&addcountry&token=' . $this->token,
-                'desc' => $this->trans('Add new country', [], 'Admin.International.Feature'),
+                'desc' => $this->trans('Add new country', array(), 'Admin.International.Feature'),
                 'icon' => 'process-icon-new',
-            ];
+            );
         }
 
         parent::initPageHeaderToolbar();
@@ -169,205 +169,205 @@ class AdminCountriesControllerCore extends AdminController
 
         // TODO: Use format from XML
         $default_layout_tab = [
-            ['firstname', 'lastname'],
-            ['company'],
-            ['vat_number'],
-            ['address1'],
-            ['address2'],
-            ['postcode', 'city'],
-            ['Country:name'],
-            ['phone'],
+            array('firstname', 'lastname'),
+            array('company'),
+            array('vat_number'),
+            array('address1'),
+            array('address2'),
+            array('postcode', 'city'),
+            array('Country:name'),
+            array('phone'),
         ];
 
         foreach ($default_layout_tab as $line) {
             $default_layout .= implode(' ', $line) . AddressFormat::FORMAT_NEW_LINE;
         }
 
-        $this->fields_form = [
-            'legend' => [
-                'title' => $this->trans('Countries', [], 'Admin.International.Feature'),
+        $this->fields_form = array(
+            'legend' => array(
+                'title' => $this->trans('Countries', array(), 'Admin.International.Feature'),
                 'icon' => 'icon-globe',
-            ],
-            'input' => [
-                [
+            ),
+            'input' => array(
+                array(
                     'type' => 'text',
-                    'label' => $this->trans('Country', [], 'Admin.Global'),
+                    'label' => $this->trans('Country', array(), 'Admin.Global'),
                     'name' => 'name',
                     'lang' => true,
                     'required' => true,
-                    'hint' => $this->trans('Country name', [], 'Admin.International.Feature') . ' - ' . $this->trans('Invalid characters:', [], 'Admin.Global') . ' &lt;&gt;;=#{} ',
-                ],
-                [
+                    'hint' => $this->trans('Country name', array(), 'Admin.International.Feature') . ' - ' . $this->trans('Invalid characters:', array(), 'Admin.Global') . ' &lt;&gt;;=#{} ',
+                ),
+                array(
                     'type' => 'text',
-                    'label' => $this->trans('ISO code', [], 'Admin.International.Feature'),
+                    'label' => $this->trans('ISO code', array(), 'Admin.International.Feature'),
                     'name' => 'iso_code',
                     'maxlength' => 3,
                     'class' => 'uppercase',
                     'required' => true,
-                    'hint' => $this->trans('Two -- or three -- letter ISO code (e.g. "us" for United States).', [], 'Admin.International.Help'),
+                    'hint' => $this->trans('Two -- or three -- letter ISO code (e.g. "us" for United States).', array(), 'Admin.International.Help'),
                     /* @TODO - add two lines for the hint? */
                     /*'desc' => $this->trans('Two -- or three -- letter ISO code (e.g. U.S. for United States)', [], 'Admin.International.Help').'.
                             <a href="http://www.iso.org/iso/country_codes/iso_3166_code_lists/country_names_and_code_elements.htm" target="_blank">'.
                                 $this->trans('Official list here', [], 'Admin.International.Feature').'
                             </a>.'*/
-                ],
-                [
+                ),
+                array(
                     'type' => 'text',
-                    'label' => $this->trans('Call prefix', [], 'Admin.International.Feature'),
+                    'label' => $this->trans('Call prefix', array(), 'Admin.International.Feature'),
                     'name' => 'call_prefix',
                     'maxlength' => 3,
                     'class' => 'uppercase',
                     'required' => true,
-                    'hint' => $this->trans('International call prefix, (e.g. 1 for United States).', [], 'Admin.International.Help'),
-                ],
-                [
+                    'hint' => $this->trans('International call prefix, (e.g. 1 for United States).', array(), 'Admin.International.Help'),
+                ),
+                array(
                     'type' => 'select',
-                    'label' => $this->trans('Default currency', [], 'Admin.International.Feature'),
+                    'label' => $this->trans('Default currency', array(), 'Admin.International.Feature'),
                     'name' => 'id_currency',
-                    'options' => [
+                    'options' => array(
                         'query' => Currency::getCurrencies(false, true, true),
                         'id' => 'id_currency',
                         'name' => 'name',
-                        'default' => [
-                            'label' => $this->trans('Default store currency', [], 'Admin.International.Feature'),
+                        'default' => array(
+                            'label' => $this->trans('Default store currency', array(), 'Admin.International.Feature'),
                             'value' => 0,
-                        ],
-                    ],
-                ],
-                [
+                        ),
+                    ),
+                ),
+                array(
                     'type' => 'select',
-                    'label' => $this->trans('Zone', [], 'Admin.Global'),
+                    'label' => $this->trans('Zone', array(), 'Admin.Global'),
                     'name' => 'id_zone',
-                    'options' => [
+                    'options' => array(
                         'query' => Zone::getZones(),
                         'id' => 'id_zone',
                         'name' => 'name',
-                    ],
-                    'hint' => $this->trans('Geographical region.', [], 'Admin.International.Help'),
-                ],
-                [
+                    ),
+                    'hint' => $this->trans('Geographical region.', array(), 'Admin.International.Help'),
+                ),
+                array(
                     'type' => 'switch',
-                    'label' => $this->trans('Does it need Zip/postal code?', [], 'Admin.International.Feature'),
+                    'label' => $this->trans('Does it need Zip/postal code?', array(), 'Admin.International.Feature'),
                     'name' => 'need_zip_code',
                     'required' => false,
                     'is_bool' => true,
-                    'values' => [
-                        [
+                    'values' => array(
+                        array(
                             'id' => 'need_zip_code_on',
                             'value' => 1,
-                            'label' => $this->trans('Yes', [], 'Admin.Global'),
-                        ],
-                        [
+                            'label' => $this->trans('Yes', array(), 'Admin.Global'),
+                        ),
+                        array(
                             'id' => 'need_zip_code_off',
                             'value' => 0,
-                            'label' => $this->trans('No', [], 'Admin.Global'),
-                        ],
-                    ],
-                ],
-                [
+                            'label' => $this->trans('No', array(), 'Admin.Global'),
+                        ),
+                    ),
+                ),
+                array(
                     'type' => 'text',
-                    'label' => $this->trans('Zip/postal code format', [], 'Admin.International.Feature'),
+                    'label' => $this->trans('Zip/postal code format', array(), 'Admin.International.Feature'),
                     'name' => 'zip_code_format',
                     'required' => true,
-                    'desc' => $this->trans('Indicate the format of the postal code: use L for a letter, N for a number, and C for the country\'s ISO 3166-1 alpha-2 code. For example, NNNNN for the United States, France, Poland and many other; LNNNNLLL for Argentina, etc. If you do not want PrestaShop to verify the postal code for this country, leave it blank.', [], 'Admin.International.Help'),
-                ],
-                [
+                    'desc' => $this->trans('Indicate the format of the postal code: use L for a letter, N for a number, and C for the country\'s ISO 3166-1 alpha-2 code. For example, NNNNN for the United States, France, Poland and many other; LNNNNLLL for Argentina, etc. If you do not want PrestaShop to verify the postal code for this country, leave it blank.', array(), 'Admin.International.Help'),
+                ),
+                array(
                     'type' => 'address_layout',
-                    'label' => $this->trans('Address format', [], 'Admin.International.Feature'),
+                    'label' => $this->trans('Address format', array(), 'Admin.International.Feature'),
                     'name' => 'address_layout',
                     'address_layout' => $address_layout,
                     'encoding_address_layout' => urlencode($address_layout),
                     'encoding_default_layout' => urlencode($default_layout),
                     'display_valid_fields' => $this->displayValidFields(),
-                ],
-                [
+                ),
+                array(
                     'type' => 'switch',
-                    'label' => $this->trans('Active', [], 'Admin.Global'),
+                    'label' => $this->trans('Active', array(), 'Admin.Global'),
                     'name' => 'active',
                     'required' => false,
                     'is_bool' => true,
-                    'values' => [
-                        [
+                    'values' => array(
+                        array(
                             'id' => 'active_on',
                             'value' => 1,
-                            'label' => $this->trans('Enabled', [], 'Admin.Global'),
-                        ],
-                        [
+                            'label' => $this->trans('Enabled', array(), 'Admin.Global'),
+                        ),
+                        array(
                             'id' => 'active_off',
                             'value' => 0,
-                            'label' => $this->trans('Disabled', [], 'Admin.Global'),
-                        ],
-                    ],
-                    'hint' => $this->trans('Display this country to your customers (the selected country will always be displayed in the Back Office).', [], 'Admin.International.Help'),
-                ],
-                [
+                            'label' => $this->trans('Disabled', array(), 'Admin.Global'),
+                        ),
+                    ),
+                    'hint' => $this->trans('Display this country to your customers (the selected country will always be displayed in the Back Office).', array(), 'Admin.International.Help'),
+                ),
+                array(
                     'type' => 'switch',
-                    'label' => $this->trans('Contains states', [], 'Admin.International.Feature'),
+                    'label' => $this->trans('Contains states', array(), 'Admin.International.Feature'),
                     'name' => 'contains_states',
                     'required' => false,
-                    'values' => [
-                        [
+                    'values' => array(
+                        array(
                             'id' => 'contains_states_on',
                             'value' => 1,
-                            'label' => '<img src="../img/admin/enabled.gif" alt="' . $this->trans('Yes', [], 'Admin.Global') . '" title="' . $this->trans('Yes', [], 'Admin.Global') . '" />' . $this->trans('Yes', [], 'Admin.Global'),
-                        ],
-                        [
+                            'label' => '<img src="../img/admin/enabled.gif" alt="' . $this->trans('Yes', array(), 'Admin.Global') . '" title="' . $this->trans('Yes', array(), 'Admin.Global') . '" />' . $this->trans('Yes', array(), 'Admin.Global'),
+                        ),
+                        array(
                             'id' => 'contains_states_off',
                             'value' => 0,
-                            'label' => '<img src="../img/admin/disabled.gif" alt="' . $this->trans('No', [], 'Admin.Global') . '" title="' . $this->trans('No', [], 'Admin.Global') . '" />' . $this->trans('No', [], 'Admin.Global'),
-                        ],
-                    ],
-                ],
-                [
+                            'label' => '<img src="../img/admin/disabled.gif" alt="' . $this->trans('No', array(), 'Admin.Global') . '" title="' . $this->trans('No', array(), 'Admin.Global') . '" />' . $this->trans('No', array(), 'Admin.Global'),
+                        ),
+                    ),
+                ),
+                array(
                     'type' => 'switch',
-                    'label' => $this->trans('Do you need a tax identification number?', [], 'Admin.International.Feature'),
+                    'label' => $this->trans('Do you need a tax identification number?', array(), 'Admin.International.Feature'),
                     'name' => 'need_identification_number',
                     'required' => false,
-                    'values' => [
-                        [
+                    'values' => array(
+                        array(
                             'id' => 'need_identification_number_on',
                             'value' => 1,
-                            'label' => '<img src="../img/admin/enabled.gif" alt="' . $this->trans('Yes', [], 'Admin.Global') . '" title="' . $this->trans('Yes', [], 'Admin.Global') . '" />' . $this->trans('Yes', [], 'Admin.Global'),
-                        ],
-                        [
+                            'label' => '<img src="../img/admin/enabled.gif" alt="' . $this->trans('Yes', array(), 'Admin.Global') . '" title="' . $this->trans('Yes', array(), 'Admin.Global') . '" />' . $this->trans('Yes', array(), 'Admin.Global'),
+                        ),
+                        array(
                             'id' => 'need_identification_number_off',
                             'value' => 0,
-                            'label' => '<img src="../img/admin/disabled.gif" alt="' . $this->trans('No', [], 'Admin.Global') . '" title="' . $this->trans('No', [], 'Admin.Global') . '" />' . $this->trans('No', [], 'Admin.Global'),
-                        ],
-                    ],
-                ],
-                [
+                            'label' => '<img src="../img/admin/disabled.gif" alt="' . $this->trans('No', array(), 'Admin.Global') . '" title="' . $this->trans('No', array(), 'Admin.Global') . '" />' . $this->trans('No', array(), 'Admin.Global'),
+                        ),
+                    ),
+                ),
+                array(
                     'type' => 'switch',
-                    'label' => $this->trans('Display tax label (e.g. "Tax incl.")', [], 'Admin.International.Feature'),
+                    'label' => $this->trans('Display tax label (e.g. "Tax incl.")', array(), 'Admin.International.Feature'),
                     'name' => 'display_tax_label',
                     'required' => false,
-                    'values' => [
-                        [
+                    'values' => array(
+                        array(
                             'id' => 'display_tax_label_on',
                             'value' => 1,
-                            'label' => '<img src="../img/admin/enabled.gif" alt="' . $this->trans('Yes', [], 'Admin.Global') . '" title="' . $this->trans('Yes', [], 'Admin.Global') . '" />' . $this->trans('Yes', [], 'Admin.Global'),
-                        ],
-                        [
+                            'label' => '<img src="../img/admin/enabled.gif" alt="' . $this->trans('Yes', array(), 'Admin.Global') . '" title="' . $this->trans('Yes', array(), 'Admin.Global') . '" />' . $this->trans('Yes', array(), 'Admin.Global'),
+                        ),
+                        array(
                             'id' => 'display_tax_label_off',
                             'value' => 0,
-                            'label' => '<img src="../img/admin/disabled.gif" alt="' . $this->trans('No', [], 'Admin.Global') . '" title="' . $this->trans('No', [], 'Admin.Global') . '" />' . $this->trans('No', [], 'Admin.Global'),
-                        ],
-                    ],
-                ],
-            ],
-        ];
+                            'label' => '<img src="../img/admin/disabled.gif" alt="' . $this->trans('No', array(), 'Admin.Global') . '" title="' . $this->trans('No', array(), 'Admin.Global') . '" />' . $this->trans('No', array(), 'Admin.Global'),
+                        ),
+                    ),
+                ),
+            ),
+        );
 
         if (Shop::isFeatureActive()) {
-            $this->fields_form['input'][] = [
+            $this->fields_form['input'][] = array(
                 'type' => 'shop',
-                'label' => $this->trans('Shop association', [], 'Admin.Global'),
+                'label' => $this->trans('Shop association', array(), 'Admin.Global'),
                 'name' => 'checkBoxShopAsso',
-            ];
+            );
         }
 
-        $this->fields_form['submit'] = [
-            'title' => $this->trans('Save', [], 'Admin.Actions'),
-        ];
+        $this->fields_form['submit'] = array(
+            'title' => $this->trans('Save', array(), 'Admin.Actions'),
+        );
 
         return parent::renderForm();
     }
@@ -381,7 +381,7 @@ class AdminCountriesControllerCore extends AdminController
             $results = Db::getInstance()->executeS('SELECT `id_state` FROM `' . _DB_PREFIX_ . 'state` WHERE `id_country` = ' . (int) $country->id . ' AND `id_zone` = ' . (int) $old_id_zone);
 
             if ($results && count($results)) {
-                $ids = [];
+                $ids = array();
                 foreach ($results as $res) {
                     $ids[] = (int) $res['id_state'];
                 }
@@ -403,12 +403,12 @@ class AdminCountriesControllerCore extends AdminController
     {
         if (!Tools::getValue('id_' . $this->table)) {
             if (Validate::isLanguageIsoCode(Tools::getValue('iso_code')) && (int) Country::getByIso(Tools::getValue('iso_code'))) {
-                $this->errors[] = $this->trans('This ISO code already exists.You cannot create two countries with the same ISO code.', [], 'Admin.International.Notification');
+                $this->errors[] = $this->trans('This ISO code already exists.You cannot create two countries with the same ISO code.', array(), 'Admin.International.Notification');
             }
         } elseif (Validate::isLanguageIsoCode(Tools::getValue('iso_code'))) {
             $id_country = (int) Country::getByIso(Tools::getValue('iso_code'));
             if ($id_country != 0 && $id_country != Tools::getValue('id_' . $this->table)) {
-                $this->errors[] = $this->trans('This ISO code already exists.You cannot create two countries with the same ISO code.', [], 'Admin.International.Notification');
+                $this->errors[] = $this->trans('This ISO code already exists.You cannot create two countries with the same ISO code.', array(), 'Admin.International.Notification');
             }
         }
 
@@ -432,7 +432,7 @@ class AdminCountriesControllerCore extends AdminController
             }
         }
         if (strlen($tmp_addr_format->format) <= 0) {
-            $this->errors[] = $this->trans('Address format invalid', [], 'Admin.Notifications.Error');
+            $this->errors[] = $this->trans('Address format invalid', array(), 'Admin.Notifications.Error');
         }
 
         $country = parent::processSave();
@@ -443,7 +443,7 @@ class AdminCountriesControllerCore extends AdminController
             }
 
             if (!$tmp_addr_format->save()) {
-                $this->errors[] = $this->trans('Invalid address layout %s', [Db::getInstance()->getMsgError()], 'Admin.International.Notification');
+                $this->errors[] = $this->trans('Invalid address layout %s', array(Db::getInstance()->getMsgError()), 'Admin.International.Notification');
             }
         }
 
@@ -456,7 +456,7 @@ class AdminCountriesControllerCore extends AdminController
 
         /** @var Country $object */
         if (Validate::isLoadedObject($object = $this->loadObject()) && $object->active == 1) {
-            return Country::addModuleRestrictions([], [['id_country' => $object->id]], []);
+            return Country::addModuleRestrictions(array(), array(array('id_country' => $object->id)), array());
         }
 
         return false;
@@ -500,7 +500,7 @@ class AdminCountriesControllerCore extends AdminController
             if ($i != 0) {
                 $class_tab_active = '';
             }
-            $fields = [];
+            $fields = array();
             $html_tabnav .= '<li' . ($class_tab_active ? ' class="' . $class_tab_active . '"' : '') . '>
 				<a href="#availableListFieldsFor_' . $class_name . '"><i class="icon-caret-down"></i>&nbsp;' . Translate::getAdminTranslation($class_name, 'AdminCountries') . '</a></li>';
 

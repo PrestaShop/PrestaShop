@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2020 PrestaShop SA and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -35,7 +35,7 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerOrders;
 use PrestaShop\PrestaShop\Core\Domain\Customer\QueryHandler\GetCustomerOrdersHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\OrderSummary;
 use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
-use PrestaShop\PrestaShop\Core\Localization\LocaleInterface;
+use PrestaShop\PrestaShop\Core\Localization\Locale;
 
 /**
  * Handles GetCustomerOrders query using legacy object models
@@ -43,15 +43,15 @@ use PrestaShop\PrestaShop\Core\Localization\LocaleInterface;
 final class GetCustomerOrdersHandler extends AbstractCustomerHandler implements GetCustomerOrdersHandlerInterface
 {
     /**
-     * @var LocaleInterface
+     * @var Locale
      */
     private $locale;
 
     /**
-     * @param LocaleInterface $locale
+     * @param Locale $locale
      */
     public function __construct(
-        LocaleInterface $locale
+        Locale $locale
     ) {
         $this->locale = $locale;
     }
@@ -81,16 +81,15 @@ final class GetCustomerOrdersHandler extends AbstractCustomerHandler implements 
     {
         $summarizedOrders = [];
 
-        $customerOrders = Order::getCustomerOrders($customerId);
-        foreach ($customerOrders as $customerOrder) {
+        foreach (Order::getCustomerOrders($customerId) as $customerOrder) {
             $currency = new Currency((int) $customerOrder['id_currency']);
 
             $summarizedOrders[] = new OrderSummary(
                 (int) $customerOrder['id_order'],
                 $customerOrder['date_add'],
                 $customerOrder['payment'],
-                $customerOrder['order_state'] ?: '',
-                (int) $customerOrder['nb_products'],
+                $customerOrder['order_state'],
+                $customerOrder['nb_products'],
                 $this->locale->formatPrice(
                     $customerOrder['total_paid_real'],
                     $currency->iso_code

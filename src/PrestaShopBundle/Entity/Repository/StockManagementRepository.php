@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2020 PrestaShop SA and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -98,7 +98,7 @@ abstract class StockManagementRepository
     /**
      * @var array
      */
-    protected $productFeatures = [];
+    protected $productFeatures = array();
 
     /**
      * @param ContainerInterface $container
@@ -258,14 +258,14 @@ abstract class StockManagementRepository
     protected function andWhere(QueryParamsCollection $queryParams)
     {
         $filters = $queryParams->getSqlFilters();
-        $filters = strtr($filters[$queryParams::SQL_CLAUSE_WHERE], [
+        $filters = strtr($filters[$queryParams::SQL_CLAUSE_WHERE], array(
             '{product_id}' => 'p.id_product',
             '{supplier_id}' => 'p.id_supplier',
             '{id_employee}' => 'sm.id_employee',
             '{date_add}' => 'sm.date_add',
             '{id_stock_mvt_reason}' => 'sm.id_stock_mvt_reason',
             '{active}' => 'p.active',
-        ]);
+        ));
 
         return $filters;
     }
@@ -283,12 +283,12 @@ abstract class StockManagementRepository
             return '';
         }
 
-        return strtr($filters['having'], [
+        return strtr($filters['having'], array(
             '{combination_name}' => 'combination_name',
             '{product_reference}' => 'product_reference',
             '{supplier_name}' => 'supplier_name',
             '{product_name}' => 'product_name',
-        ]);
+        ));
     }
 
     /**
@@ -307,7 +307,7 @@ abstract class StockManagementRepository
             $productColumns = 'product_id DESC, combination_id DESC';
         }
 
-        return strtr($orderByClause, [
+        return strtr($orderByClause, array(
             '{product} DESC' => $productColumns,
             '{product}' => $productColumns,
             '{reference}' => 'product_reference',
@@ -317,7 +317,7 @@ abstract class StockManagementRepository
             '{id_stock_mvt}' => 'id_stock_mvt',
             '{date_add}' => 'date_add',
             '{product_low_stock_alert}' => 'product_low_stock_alert',
-        ]);
+        ));
     }
 
     /**

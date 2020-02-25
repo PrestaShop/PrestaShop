@@ -1,5 +1,5 @@
 <!--**
- * 2007-2020 PrestaShop SA and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,45 +18,33 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *-->
 <template>
   <div class="ps-tree">
     <div class="mb-3 tree-header">
-      <button
-        class="btn btn-text text-uppercase pointer"
-        @click="expand"
-      >
+      <button class="btn btn-text text-uppercase pointer" @click="expand">
         <i class="material-icons">keyboard_arrow_down</i>
-        <span v-if="translations">{{ translations.expand }}</span>
+        <span v-if="translations">{{translations.expand}}</span>
       </button>
-      <button
-        class="btn btn-text float-right text-uppercase pointer"
-        @click="reduce"
-      >
+      <button class="btn btn-text float-right text-uppercase pointer" @click="reduce">
         <i class="material-icons">keyboard_arrow_up</i>
-        <span v-if="translations">{{ translations.reduce }}</span>
+        <span v-if="translations">{{translations.reduce}}</span>
       </button>
     </div>
-    <ul
-      class="tree"
-      :class="className"
-    >
-      <li
-        v-for="(element, index) in model"
-        :key="index"
-      >
+    <ul class="tree" :class="className">
+      <li v-for="(element, index) in model">
         <PSTreeItem
           ref="item"
-          :has-checkbox="hasCheckbox"
+          :hasCheckbox="hasCheckbox"
           :model="element"
           :label="element.name"
           :translations="translations"
-          :current-item="currentItem"
+          :currentItem="currentItem"
           @checked="onCheck"
-          @setCurrentElement="setCurrentElement"
+          @setCurrentElement ="setCurrentElement"
         />
       </li>
     </ul>
@@ -64,32 +52,19 @@
 </template>
 
 <script>
-  import {EventBus} from '@app/utils/event-bus';
   import PSTreeItem from './ps-tree-item';
+  import { EventBus } from '@app/utils/event-bus';
 
   export default {
     name: 'PSTree',
     props: {
-      model: {
-        type: Array,
-        default: () => ([]),
-      },
-      className: {
-        type: String,
-        default: '',
-      },
-      currentItem: {
-        type: String,
-        default: '',
-      },
-      hasCheckbox: {
-        type: Boolean,
-        default: false,
-      },
+      model: Array,
+      className: String,
+      currentItem: String,
+      hasCheckbox: Boolean,
       translations: {
         type: Object,
         required: false,
-        default: () => ({}),
       },
     },
     methods: {

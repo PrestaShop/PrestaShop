@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2020 PrestaShop SA and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -157,10 +157,10 @@ class ModuleTabRegister
                 continue;
             }
 
-            $tabs[] = [
+            $tabs[] = array(
                 'class_name' => $adminControllerName,
                 'visible' => false,
-            ];
+            );
         }
 
         return $tabs;
@@ -213,7 +213,7 @@ class ModuleTabRegister
                 '/' . $moduleName . '/controllers/admin/';
 
         if (!$this->filesystem->exists($modulePath)) {
-            return [];
+            return array();
         }
 
         $moduleFolder = Finder::create()->files()
@@ -250,7 +250,7 @@ class ModuleTabRegister
      */
     protected function getTabNames($names)
     {
-        $translatedNames = [];
+        $translatedNames = array();
 
         foreach ($this->languages as $lang) {
             // In case we just receive a string, we apply it to all languages
@@ -299,7 +299,13 @@ class ModuleTabRegister
         $tab->id_parent = $this->findParentId($tabDetails);
 
         if (!$tab->save()) {
-            throw new Exception($this->translator->trans('Failed to install admin tab "%name%".', ['%name%' => $tab->name], 'Admin.Modules.Notification'));
+            throw new Exception(
+                $this->translator->trans(
+                    'Failed to install admin tab "%name%".',
+                    array('%name%' => $tab->name),
+                    'Admin.Modules.Notification'
+                )
+            );
         }
     }
 

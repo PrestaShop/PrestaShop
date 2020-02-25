@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2020 PrestaShop SA and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Requirement;
 
 use AppKernel;
+use PrestaShop\PrestaShop\Core\Foundation\Version;
 
 /**
  * Part of requirements for a PrestaShop website
@@ -42,13 +43,13 @@ class CheckMissingOrUpdatedFiles
      */
     public function getListOfUpdatedFiles($dir = null, $path = '')
     {
-        $fileList = [
-            'missing' => [],
-            'updated' => [],
-        ];
+        $fileList = array(
+            'missing' => array(),
+            'updated' => array(),
+        );
 
         if (null === $dir) {
-            $xml = @simplexml_load_file(_PS_API_URL_ . '/xml/md5-' . AppKernel::MAJOR_VERSION . '/' . AppKernel::VERSION . '.xml');
+            $xml = @simplexml_load_file(_PS_API_URL_ . '/xml/md5-1' . AppKernel::MAJOR_VERSION . '/' . AppKernel::VERSION . '.xml');
             if (!$xml) {
                 return $fileList;
             }
@@ -73,7 +74,7 @@ class CheckMissingOrUpdatedFiles
         }
 
         foreach ($dir->dir as $subdir) {
-            $fileList = array_merge_recursive($fileList, $this->getListOfUpdatedFiles($subdir, $path . $subdir['name'] . '/'));
+            $this->getListOfUpdatedFiles($subdir, $path . $subdir['name'] . '/');
         }
 
         return $fileList;

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2020 PrestaShop SA and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -40,25 +40,25 @@ class TaxCore extends ObjectModel
     /**
      * @see ObjectModel::$definition
      */
-    public static $definition = [
+    public static $definition = array(
         'table' => 'tax',
         'primary' => 'id_tax',
         'multilang' => true,
-        'fields' => [
-            'rate' => ['type' => self::TYPE_FLOAT, 'validate' => 'isFloat', 'required' => true],
-            'active' => ['type' => self::TYPE_BOOL],
-            'deleted' => ['type' => self::TYPE_BOOL],
+        'fields' => array(
+            'rate' => array('type' => self::TYPE_FLOAT, 'validate' => 'isFloat', 'required' => true),
+            'active' => array('type' => self::TYPE_BOOL),
+            'deleted' => array('type' => self::TYPE_BOOL),
             /* Lang fields */
-            'name' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 32],
-        ],
-    ];
+            'name' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 32),
+        ),
+    );
 
-    protected static $_product_country_tax = [];
-    protected static $_product_tax_via_rules = [];
+    protected static $_product_country_tax = array();
+    protected static $_product_tax_via_rules = array();
 
-    protected $webserviceParameters = [
+    protected $webserviceParameters = array(
         'objectsNodeName' => 'taxes',
-    ];
+    );
 
     public function delete()
     {

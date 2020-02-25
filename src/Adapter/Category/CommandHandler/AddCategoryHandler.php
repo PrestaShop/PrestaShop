@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2020 PrestaShop SA and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -31,6 +31,7 @@ use PrestaShop\PrestaShop\Adapter\Domain\AbstractObjectModelHandler;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\AddCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\CommandHandler\AddCategoryHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CannotAddCategoryException;
+use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
 
 /**
@@ -43,9 +44,7 @@ final class AddCategoryHandler extends AbstractObjectModelHandler implements Add
     /**
      * {@inheritdoc}
      *
-     * @param AddCategoryCommand $command
-     *
-     * @return CategoryId
+     * @throws CannotAddCategoryException
      */
     public function handle(AddCategoryCommand $command)
     {
@@ -58,9 +57,6 @@ final class AddCategoryHandler extends AbstractObjectModelHandler implements Add
      * @param AddCategoryCommand $command
      *
      * @return Category
-     *
-     * @throws CannotAddCategoryException
-     * @throws CategoryConstraintException
      */
     private function createCategoryFromCommand(AddCategoryCommand $command)
     {
@@ -97,11 +93,11 @@ final class AddCategoryHandler extends AbstractObjectModelHandler implements Add
         }
 
         if (false === $category->validateFields(false)) {
-            throw new CannotAddCategoryException('Invalid category data');
+            throw new CategoryConstraintException('Invalid category data');
         }
 
         if (false === $category->validateFieldsLang(false)) {
-            throw new CannotAddCategoryException('Invalid category data');
+            throw new CategoryConstraintException('Invalid category data');
         }
 
         if (false === $category->add()) {

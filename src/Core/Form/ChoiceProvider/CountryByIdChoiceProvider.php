@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2020 PrestaShop SA and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -54,11 +54,6 @@ final class CountryByIdChoiceProvider implements FormChoiceProviderInterface, Fo
      * @var int[]
      */
     private $dniCountriesId;
-
-    /**
-     * @var int[]
-     */
-    private $postcodeCountriesId;
 
     /**
      * @param int $langId
@@ -96,15 +91,11 @@ final class CountryByIdChoiceProvider implements FormChoiceProviderInterface, Fo
     {
         $countries = $this->getCountries();
         $dniCountriesId = $this->getDniCountriesId();
-        $postcodeCountriesId = $this->getPostcodeCountriesId();
         $choicesAttributes = [];
 
         foreach ($countries as $country) {
             if (in_array($country['id_country'], $dniCountriesId)) {
-                $choicesAttributes[$country['name']]['need_dni'] = 1;
-            }
-            if (in_array($country['id_country'], $postcodeCountriesId)) {
-                $choicesAttributes[$country['name']]['need_postcode'] = 1;
+                $choicesAttributes[$country['name']] = ['need_dni' => 1];
             }
         }
 
@@ -133,14 +124,5 @@ final class CountryByIdChoiceProvider implements FormChoiceProviderInterface, Fo
         }
 
         return $this->dniCountriesId;
-    }
-
-    private function getPostcodeCountriesId()
-    {
-        if (null === $this->postcodeCountriesId) {
-            $this->postcodeCountriesId = $this->countryDataProvider->getCountriesIdWhichNeedPostcode();
-        }
-
-        return $this->postcodeCountriesId;
     }
 }

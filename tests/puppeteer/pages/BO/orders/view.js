@@ -6,7 +6,6 @@ module.exports = class Order extends BOBasePage {
     super(page);
 
     this.pageTitle = 'Order';
-    this.partialRefundValidationMessage = 'A partial refund was successfully created.';
 
     // Order page
     this.orderProductsTable = '#orderProducts';
@@ -15,7 +14,6 @@ module.exports = class Order extends BOBasePage {
     this.editProductQuantityInput = `${this.orderProductsRowTable} span.product_quantity_edit > input`;
     this.productQuantitySpan = `${this.orderProductsRowTable} span.product_quantity_show.badge`;
     this.UpdateProductButton = `${this.orderProductsRowTable} .submitProductChange`;
-    this.partialRefundButton = '#desc-order-partial_refund';
     // Status tab
     this.orderStatusesSelect = '#id_order_state_chosen';
     this.orderStatusesSearchInput = `${this.orderStatusesSelect} input[type='text']`;
@@ -24,15 +22,8 @@ module.exports = class Order extends BOBasePage {
     this.statusValidation = '#status tr:nth-child(1) > td:nth-child(2)';
     // Document tab
     this.documentTab = '#tabOrder a[href=\'#documents\']';
-    this.documentNumberLink = '#documents_table tr:nth-child(%ID) td:nth-child(3) a';
-    this.documentName = '#documents_table tr:nth-child(%ID) td:nth-child(2)';
-    // Refund form
-    this.refundProductQuantity = `${this.orderProductsTable} tr:nth-child(%ID)
-    input[onchange*='checkPartialRefundProductQuantity']`;
-    this.refundProductAmount = `${this.orderProductsTable} tr:nth-child(%ID)
-    input[onchange*='checkPartialRefundProductAmount']`;
-    this.refundShippingCost = 'input[name="partialRefundShippingCost"]';
-    this.partialRefundSubmitButton = '[name=\'partialRefund\']';
+    this.documentName = '#documents_table tr td:nth-child(2)';
+    this.documentNumberLink = '#documents_table tr td:nth-child(3) a';
   }
 
   /*
@@ -68,22 +59,20 @@ module.exports = class Order extends BOBasePage {
 
   /**
    * Get document name
-   * @param rowChild
    * @returns {Promise<void>}
    */
-  async getDocumentName(rowChild = 1) {
+  async getDocumentName() {
     await this.page.click(this.documentTab);
-    return this.getTextContent(this.documentName.replace('%ID', rowChild));
+    return this.getTextContent(this.documentName);
   }
 
   /**
    * Get file name
-   * @param rowChild
    * @returns fileName
    */
-  async getFileName(rowChild = 1) {
+  async getFileName() {
     await this.page.click(this.documentTab);
-    const fileName = await this.getTextContent(this.documentNumberLink.replace('%ID', rowChild));
+    const fileName = await this.getTextContent(this.documentNumberLink);
     return fileName.replace('#', '').trim();
   }
 
@@ -92,46 +81,10 @@ module.exports = class Order extends BOBasePage {
    * @returns {Promise<void>}
    */
   async downloadInvoice() {
-    /* eslint-disable no-return-assign */
-    // Delete the target because a new tab is opened when downloading the file
-    await this.page.$eval(this.documentNumberLink.replace('%ID', 1), el => el.target = '');
-    await this.page.click(this.documentNumberLink.replace('%ID', 1));
-    /* eslint-enable no-return-assign, no-param-reassign */
-  }
-
-  /**
-   * Click on partial refund button
-   * @returns {Promise<void>}
-   */
-  async clickOnPartialRefund() {
-    await this.page.click(this.partialRefundButton);
-  }
-
-  /**
-   * Add partial refund product
-   * @param productID
-   * @param quantity
-   * @param amount
-   * @param shipping
-   * @returns {Promise<textContent>}
-   */
-  async addPartialRefundProduct(productID, quantity = 0, amount = 0, shipping = 0) {
-    await this.setValue(this.refundProductQuantity.replace('%ID', productID), quantity.toString());
-    await this.setValue(this.refundProductAmount.replace('%ID', productID), amount.toString());
-    await this.setValue(this.refundShippingCost, shipping.toString());
-    await this.page.click(this.partialRefundSubmitButton);
-    return this.getTextContent(this.alertSuccessBloc);
-  }
-
-  /**
-   * Download delivery slip
-   * @returns {Promise<void>}
-   */
-  async downloadDeliverySlip() {
     /* eslint-disable no-return-assign, no-param-reassign */
     // Delete the target because a new tab is opened when downloading the file
-    await this.page.$eval(this.documentNumberLink.replace('%ID', 3), el => el.target = '');
-    await this.page.click(this.documentNumberLink.replace('%ID', 3));
+    await this.page.$eval(this.documentNumberLink, el => el.target = '');
+    await this.page.click(this.documentNumberLink);
     /* eslint-enable no-return-assign, no-param-reassign */
   }
 };

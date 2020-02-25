@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2020 PrestaShop SA and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -34,7 +34,6 @@ use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartException;
 use PrestaShop\PrestaShop\Core\Domain\Language\Exception\LanguageException;
 use PrestaShop\PrestaShop\Core\Domain\Language\Exception\LanguageNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
-use PrestaShopException;
 
 /**
  * @internal
@@ -44,7 +43,7 @@ final class UpdateCartLanguageHandler extends AbstractCartHandler implements Upd
     /**
      * {@inheritdoc}
      */
-    public function handle(UpdateCartLanguageCommand $command): void
+    public function handle(UpdateCartLanguageCommand $command)
     {
         $language = $this->getLanguageObject($command->getNewLanguageId());
 
@@ -53,47 +52,38 @@ final class UpdateCartLanguageHandler extends AbstractCartHandler implements Upd
         $cart = $this->getCart($command->getCartId());
         $cart->id_lang = (int) $language->id;
 
-        try {
-            if (false === $cart->update()) {
-                throw new CartException('Failed to update cart language');
-            }
-        } catch (PrestaShopException $e) {
-            throw new CartException(sprintf('An error occurred while trying to update language for cart with id "%s"', $cart->id));
+        if (false === $cart->save()) {
+            throw new CartException('Failed to update cart');
         }
+
+        // @todo: Should context be changed at controller layer instead?
+        \Context::getContext()->cart = $cart;
     }
 
     /**
      * @param LanguageId $languageId
      *
-     * @return Language
-     *
-     * @throws LanguageException
      * @throws LanguageNotFoundException
      */
-    private function getLanguageObject(LanguageId $languageId): Language
+    private function getLanguageObject(LanguageId $languageId)
     {
-        try {
-            $lang = new Language($languageId->getValue());
-        } catch (PrestaShopException $e) {
-            throw new LanguageException($languageId, sprintf('An error occurred when fetching language object with id %s', $languageId->getValue()));
-        }
+        $lang = new Language($languageId->getValue());
 
         if ($languageId->getValue() !== $lang->id) {
-            throw new LanguageNotFoundException($languageId, sprintf('Language with id "%s" was not found', $languageId->getValue()));
+            throw new LanguageNotFoundException(
+                $languageId,
+                sprintf('Language with id "%s" was not found', $languageId->getValue())
+            );
         }
-
-        return $lang;
     }
 
     /**
      * @param Language $lang
-     *
-     * @throws LanguageException
      */
-    private function assertLanguageIsActive(Language $lang): void
+    private function assertLanguageIsActive(Language $lang)
     {
-        if (!$lang->active) {
-            throw new LanguageException(sprintf('Language with id "%s" is not active', $lang->id), LanguageException::NOT_ACTIVE);
+        if ($lang->active) {
+            throw new LanguageException('Language with id "%s" is not active ');
         }
     }
 }

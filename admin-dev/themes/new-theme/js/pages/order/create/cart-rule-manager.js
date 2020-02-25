@@ -1,5 +1,5 @@
 /**
- * 2007-2020 PrestaShop SA and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -29,29 +29,23 @@ import createOrderMap from '@pages/order/create/create-order-map';
 import {EventEmitter} from '@components/event-emitter';
 import eventMap from '@pages/order/create/event-map';
 import Router from '@components/router';
-import SummaryRenderer from '@pages/order/create/summary-renderer';
-import ShippingRenderer from '@pages/order/create/shipping-renderer';
 
-const {$} = window;
+const $ = window.$;
 
 /**
  * Responsible for searching cart rules and managing cart rules search block
  */
 export default class CartRuleManager {
   constructor() {
-    this.activeSearchRequest = null;
-
     this.router = new Router();
     this.$searchInput = $(createOrderMap.cartRuleSearchInput);
     this.cartRulesRenderer = new CartRulesRenderer();
     this.cartEditor = new CartEditor();
-    this.summaryRenderer = new SummaryRenderer();
-    this.shippingRenderer = new ShippingRenderer();
 
-    this.initListeners();
+    this._initListeners();
 
     return {
-      search: (searchPhrase) => this.search(searchPhrase),
+      search: () => this._search(),
       stopSearching: () => this.cartRulesRenderer.hideResultsDropdown(),
       addCartRuleToCart: (cartRuleId, cartId) => this.cartEditor.addCartRuleToCart(cartRuleId, cartId),
       removeCartRuleFromCart: (cartRuleId, cartId) => this.cartEditor.removeCartRuleFromCart(cartRuleId, cartId),
@@ -63,11 +57,11 @@ export default class CartRuleManager {
    *
    * @private
    */
-  initListeners() {
-    this.onCartRuleSearch();
-    this.onAddCartRuleToCart();
-    this.onAddCartRuleToCartFailure();
-    this.onRemoveCartRuleFromCart();
+  _initListeners() {
+    this._onCartRuleSearch();
+    this._onAddCartRuleToCart();
+    this._onAddCartRuleToCartFailure();
+    this._onRemoveCartRuleFromCart();
   }
 
   /**
@@ -75,7 +69,7 @@ export default class CartRuleManager {
    *
    * @private
    */
-  onCartRuleSearch() {
+  _onCartRuleSearch() {
     EventEmitter.on(eventMap.cartRuleSearched, (cartRules) => {
       this.cartRulesRenderer.renderSearchResults(cartRules);
     });
@@ -86,12 +80,9 @@ export default class CartRuleManager {
    *
    * @private
    */
-  onAddCartRuleToCart() {
+  _onAddCartRuleToCart() {
     EventEmitter.on(eventMap.cartRuleAdded, (cartInfo) => {
-      const cartIsEmpty = cartInfo.products.length === 0;
-      this.cartRulesRenderer.renderCartRulesBlock(cartInfo.cartRules, cartIsEmpty);
-      this.shippingRenderer.render(cartInfo.shipping, cartIsEmpty);
-      this.summaryRenderer.render(cartInfo);
+      this.cartRulesRenderer.renderCartRulesBlock(cartInfo.cartRules, cartInfo.products.length === 0);
     });
   }
 
@@ -100,7 +91,7 @@ export default class CartRuleManager {
    *
    * @private
    */
-  onAddCartRuleToCartFailure() {
+  _onAddCartRuleToCartFailure() {
     EventEmitter.on(eventMap.cartRuleFailedToAdd, (message) => {
       this.cartRulesRenderer.displayErrorMessage(message);
     });
@@ -111,12 +102,9 @@ export default class CartRuleManager {
    *
    * @private
    */
-  onRemoveCartRuleFromCart() {
+  _onRemoveCartRuleFromCart() {
     EventEmitter.on(eventMap.cartRuleRemoved, (cartInfo) => {
-      const cartIsEmpty = cartInfo.products.length === 0;
-      this.shippingRenderer.render(cartInfo.shipping, cartIsEmpty);
-      this.cartRulesRenderer.renderCartRulesBlock(cartInfo.cartRules, cartIsEmpty);
-      this.summaryRenderer.render(cartInfo);
+      this.cartRulesRenderer.renderCartRulesBlock(cartInfo.cartRules, cartInfo.products.length === 0);
     });
   }
 
@@ -125,23 +113,17 @@ export default class CartRuleManager {
    *
    * @private
    */
-  search(searchPhrase) {
-    if (this.activeSearchRequest !== null) {
-      this.activeSearchRequest.abort();
+  _search(searchPhrase) {
+    if (searchPhrase.length < 3) {
+      return;
     }
 
-    this.activeSearchRequest = $.get(this.router.generate('admin_cart_rules_search'), {
+    $.get(this.router.generate('admin_cart_rules_search'), {
       search_phrase: searchPhrase,
-    });
-
-    this.activeSearchRequest.then((cartRules) => {
+    }).then((cartRules) => {
       EventEmitter.emit(eventMap.cartRuleSearched, cartRules);
     }).catch((e) => {
-      if (e.statusText === 'abort') {
-        return;
-      }
-
-      window.showErrorMessage(e.responseJSON.message);
+      showErrorMessage(e.responseJSON.message);
     });
   }
 }

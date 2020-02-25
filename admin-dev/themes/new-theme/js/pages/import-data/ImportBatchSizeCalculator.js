@@ -1,5 +1,5 @@
 /**
- * 2007-2020 PrestaShop SA and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -31,14 +31,14 @@
 export default class ImportBatchSizeCalculator {
   constructor() {
     // Target execution time in milliseconds.
-    this.targetExecutionTime = 5000;
+    this._targetExecutionTime = 5000;
 
     // Maximum batch size increase multiplier.
-    this.maxAcceleration = 4;
+    this._maxAcceleration = 4;
 
     // Minimum and maximum import batch sizes.
-    this.minBatchSize = 5;
-    this.maxBatchSize = 100;
+    this._minBatchSize = 5;
+    this._maxBatchSize = 100;
   }
 
   /**
@@ -47,7 +47,7 @@ export default class ImportBatchSizeCalculator {
    * to be able to calculate the import batch size later on.
    */
   markImportStart() {
-    this.importStartTime = new Date().getTime();
+    this._importStartTime = new Date().getTime();
   }
 
   /**
@@ -56,7 +56,7 @@ export default class ImportBatchSizeCalculator {
    * to be able to calculate the import batch size later on.
    */
   markImportEnd() {
-    this.actualExecutionTime = new Date().getTime() - this.importStartTime;
+    this._actualExecutionTime = new Date().getTime() - this._importStartTime;
   }
 
   /**
@@ -65,8 +65,8 @@ export default class ImportBatchSizeCalculator {
    * @returns {number}
    * @private
    */
-  calculateAcceleration() {
-    return Math.min(this.maxAcceleration, this.targetExecutionTime / this.actualExecutionTime);
+  _calculateAcceleration() {
+    return Math.min(this._maxAcceleration, this._targetExecutionTime / this._actualExecutionTime);
   }
 
   /**
@@ -78,17 +78,17 @@ export default class ImportBatchSizeCalculator {
    * @returns {number} recommended import batch size
    */
   calculateBatchSize(currentBatchSize, maxBatchSize = 0) {
-    if (!this.importStartTime) {
-      throw new Error('Import start is not marked.');
+    if (!this._importStartTime) {
+      throw 'Import start is not marked.';
     }
 
-    if (!this.actualExecutionTime) {
-      throw new Error('Import end is not marked.');
+    if (!this._actualExecutionTime) {
+      throw 'Import end is not marked.';
     }
 
-    const candidates = [
-      this.maxBatchSize,
-      Math.max(this.minBatchSize, Math.floor(currentBatchSize * this.calculateAcceleration())),
+    let candidates = [
+      this._maxBatchSize,
+      Math.max(this._minBatchSize, Math.floor(currentBatchSize * this._calculateAcceleration()))
     ];
 
     if (maxBatchSize > 0) {

@@ -1,5 +1,5 @@
 /**
- * 2007-2020 PrestaShop SA and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,27 +18,28 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-import OrderViewPageMap from './OrderViewPageMap';
+import OrderViewPageMap from "./OrderViewPageMap";
 
-const {$} = window;
+const $ = window.$;
 
 /**
  * Manages adding/editing note for invoice documents.
  */
 export default class InvoiceNoteManager {
+
   constructor() {
-    this.initShowNoteFormEventHandler();
-    this.initCloseNoteFormEventHandler();
-    this.initEnterPaymentEventHandler();
+    this._initShowNoteFormEventHandler();
+    this._initCloseNoteFormEventHandler();
+    this._initEnterPaymentEventHandler();
 
     return {};
   }
 
-  initShowNoteFormEventHandler() {
+  _initShowNoteFormEventHandler() {
     $('.js-open-invoice-note-btn').on('click', (event) => {
       event.preventDefault();
 
@@ -49,18 +50,19 @@ export default class InvoiceNoteManager {
     });
   }
 
-  initCloseNoteFormEventHandler() {
+  _initCloseNoteFormEventHandler() {
     $('.js-cancel-invoice-note-btn').on('click', (event) => {
       $(event.currentTarget).closest('tr').addClass('d-none');
     });
   }
 
-  initEnterPaymentEventHandler() {
+  _initEnterPaymentEventHandler() {
     $('.js-enter-payment-btn').on('click', (event) => {
-      const $btn = $(event.currentTarget);
-      const paymentAmount = $btn.data('payment-amount');
 
-      $(OrderViewPageMap.viewOrderPaymentsBlock).get(0).scrollIntoView({behavior: 'smooth'});
+      const $btn = $(event.currentTarget);
+      let paymentAmount = $btn.data('payment-amount');
+
+      $(OrderViewPageMap.viewOrderPaymentsBlock).get(0).scrollIntoView({behavior: "smooth"});
       $(OrderViewPageMap.orderPaymentFormAmountInput).val(paymentAmount);
     });
   }

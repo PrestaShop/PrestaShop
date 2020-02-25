@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2020 PrestaShop SA and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -48,7 +48,7 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
     /**
      * @var array Object definition
      */
-    protected $definition = [];
+    protected $definition = array();
 
     /**
      * @var DbQuery
@@ -58,7 +58,7 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
     /**
      * @var array Collection of objects in an array
      */
-    protected $results = [];
+    protected $results = array();
 
     /**
      * @var bool Is current collection already hydrated
@@ -85,11 +85,11 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
      */
     protected $page_size = 0;
 
-    protected $fields = [];
-    protected $alias = [];
+    protected $fields = array();
+    protected $alias = array();
     protected $alias_iterator = 0;
-    protected $join_list = [];
-    protected $association_definition = [];
+    protected $join_list = array();
+    protected $association_definition = array();
 
     const LANG_ALIAS = 'l';
 
@@ -131,11 +131,11 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
             $definition = $this->getDefinition($association);
             $on = '{' . $definition['asso']['complete_field'] . '} = {' . $definition['asso']['complete_foreign_field'] . '}';
             $type = self::LEFT_JOIN;
-            $this->join_list[$association] = [
+            $this->join_list[$association] = array(
                 'table' => ($definition['is_lang']) ? $definition['table'] . '_lang' : $definition['table'],
                 'alias' => $this->generateAlias($association),
-                'on' => [],
-            ];
+                'on' => array(),
+            );
         }
 
         if ($on) {
@@ -665,7 +665,7 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
     {
         $info = $this->getFieldInfo($field);
         if (is_array($value)) {
-            $results = [];
+            $results = array();
             foreach ($value as $item) {
                 $results[] = ObjectModel::formatValue($item, $info['type'], true);
             }
@@ -720,12 +720,12 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
                 $type = $definition['fields'][$fieldname]['type'];
             }
 
-            $this->fields[$field] = [
+            $this->fields[$field] = array(
                 'name' => $fieldname,
                 'association' => $association,
                 'alias' => $this->generateAlias($association),
                 'type' => $type,
-            ];
+            );
         }
 
         return $this->fields[$field];

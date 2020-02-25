@@ -1,7 +1,7 @@
 require('module-alias/register');
-const LocalizationBasePage = require('@pages/BO/international/localization/localizationBasePage');
+const BOBasePage = require('@pages/BO/BObasePage');
 
-module.exports = class Currencies extends LocalizationBasePage {
+module.exports = class Currencies extends BOBasePage {
   constructor(page) {
     super(page);
 
@@ -9,6 +9,9 @@ module.exports = class Currencies extends LocalizationBasePage {
     this.successfulUpdateStatusMessage = 'The status has been successfully updated.';
 
     // Header Selectors
+    this.languagesNavItemLink = '#subtab-AdminLanguages';
+    this.localizationNavItemLink = '#subtab-AdminCurrencies';
+    this.geolocationNavItemLink = '#subtab-AdminGeolocation';
     this.newCurrencyLink = '#page-header-desc-configuration-add';
 
     // Selectors grid panel
@@ -20,6 +23,11 @@ module.exports = class Currencies extends LocalizationBasePage {
     this.filterColumn = `${this.gridTable} #currency_%FILTERBY`;
     this.filterSearchButton = `${this.gridTable} button[name='currency[actions][search]']`;
     this.filterResetButton = `${this.gridTable} button[name='currency[actions][reset]']`;
+
+    // Table rows and columns
+    this.tableBody = `${this.gridTable} tbody`;
+    this.tableRow = `${this.tableBody} tr:nth-child(%ROW)`;
+    this.tableEmptyRow = `${this.tableBody} tr.empty_row`;
 
     // Table rows and columns
     this.tableBody = `${this.gridTable} tbody`;
@@ -38,6 +46,30 @@ module.exports = class Currencies extends LocalizationBasePage {
   }
 
   /* Header Methods */
+  /**
+   * Go to languages page
+   * @return {Promise<void>}
+   */
+  async goToSubTabLanguages() {
+    await this.clickAndWaitForNavigation(this.languagesNavItemLink);
+  }
+
+  /**
+   * Go to currencies page
+   * @return {Promise<void>}
+   */
+  async goToSubTabLocalization() {
+    await this.clickAndWaitForNavigation(this.localizationNavItemLink);
+  }
+
+  /**
+   * Go to geolocation page
+   * @return {Promise<void>}
+   */
+  async goToSubTabGeolocation() {
+    await this.clickAndWaitForNavigation(this.geolocationNavItemLink);
+  }
+
   /**
    * Go to add new currency page
    * @return {Promise<void>}

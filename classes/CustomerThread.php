@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2020 PrestaShop SA and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -41,87 +41,87 @@ class CustomerThreadCore extends ObjectModel
     /**
      * @see ObjectModel::$definition
      */
-    public static $definition = [
+    public static $definition = array(
         'table' => 'customer_thread',
         'primary' => 'id_customer_thread',
-        'fields' => [
-            'id_lang' => [
+        'fields' => array(
+            'id_lang' => array(
                 'type' => self::TYPE_INT,
                 'validate' => 'isUnsignedId',
                 'required' => true,
-            ],
-            'id_contact' => [
+            ),
+            'id_contact' => array(
                 'type' => self::TYPE_INT,
                 'validate' => 'isUnsignedId',
                 'required' => true,
-            ],
-            'id_shop' => [
+            ),
+            'id_shop' => array(
                 'type' => self::TYPE_INT,
                 'validate' => 'isUnsignedId',
-            ],
-            'id_customer' => [
+            ),
+            'id_customer' => array(
                 'type' => self::TYPE_INT,
                 'validate' => 'isUnsignedId',
-            ],
-            'id_order' => [
+            ),
+            'id_order' => array(
                 'type' => self::TYPE_INT,
                 'validate' => 'isUnsignedId',
-            ],
-            'id_product' => [
+            ),
+            'id_product' => array(
                 'type' => self::TYPE_INT,
                 'validate' => 'isUnsignedId',
-            ],
-            'email' => [
+            ),
+            'email' => array(
                 'type' => self::TYPE_STRING,
                 'validate' => 'isEmail',
                 'size' => 255,
-            ],
-            'token' => [
+            ),
+            'token' => array(
                 'type' => self::TYPE_STRING,
                 'validate' => 'isGenericName',
                 'required' => true,
-            ],
-            'status' => [
+            ),
+            'status' => array(
                 'type' => self::TYPE_STRING,
-            ],
-            'date_add' => [
+            ),
+            'date_add' => array(
                 'type' => self::TYPE_DATE,
                 'validate' => 'isDate',
-            ],
-            'date_upd' => [
+            ),
+            'date_upd' => array(
                 'type' => self::TYPE_DATE,
                 'validate' => 'isDate',
-            ],
-        ],
-    ];
+            ),
+        ),
+    );
 
-    protected $webserviceParameters = [
-        'fields' => [
-            'id_lang' => [
+    protected $webserviceParameters = array(
+        'fields' => array(
+            'id_lang' => array(
                 'xlink_resource' => 'languages',
-            ],
-            'id_shop' => [
+            ),
+            'id_shop' => array(
                 'xlink_resource' => 'shops',
-            ],
-            'id_customer' => [
+            ),
+            'id_customer' => array(
                 'xlink_resource' => 'customers',
-            ],
-            'id_order' => [
+            ),
+            'id_order' => array(
                 'xlink_resource' => 'orders',
-            ],
-            'id_product' => [
+            ),
+            'id_product' => array(
                 'xlink_resource' => 'products',
-            ],
-        ],
-        'associations' => [
-            'customer_messages' => [
+            ),
+        ),
+        'associations' => array(
+            'customer_messages' => array(
                 'resource' => 'customer_message',
-                'id' => [
+                'id' => array(
                     'required' => true,
-                ],
-            ],
-        ],
-    ];
+                ),
+            ),
+        ),
+    );
 
     public function getWsCustomerMessages()
     {

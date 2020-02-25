@@ -17,13 +17,11 @@ module.exports = class Suppliers extends BOBasePage {
     this.gridTable = '#supplier_grid_table';
     this.gridHeaderTitle = `${this.gridPanel} h3.card-header-title`;
     // Bulk Actions
-    this.selectAllRowsLabel = `${this.gridPanel} tr.column-filters .md-checkbox i`;
+    this.selectAllRowsLabel = `${this.gridPanel} .md-checkbox label`;
     this.bulkActionsToggleButton = `${this.gridPanel} button.js-bulk-actions-btn`;
     this.bulkActionsEnableButton = `${this.gridPanel} #supplier_grid_bulk_action_suppliers_enable_selection`;
     this.bulkActionsDisableButton = `${this.gridPanel} #supplier_grid_bulk_action_suppliers_disable_selection`;
-    this.bulkActionsDeleteButton = `${this.gridPanel} #supplier_grid_bulk_action_delete_selection`;
-    this.confirmDeleteModal = '#supplier_grid_confirm_modal';
-    this.confirmDeleteButton = `${this.confirmDeleteModal} button.btn-confirm-submit`;
+    this.bulkActionsDeleteButton = `${this.gridPanel} #supplier_grid_bulk_action_suppliers_delete`;
     // Filters
     this.filterColumn = `${this.gridTable} #supplier_%FILTERBY`;
     this.filterSearchButton = `${this.gridTable} button[name='supplier[actions][search]']`;
@@ -237,6 +235,7 @@ module.exports = class Suppliers extends BOBasePage {
    * @return {Promise<textContent>}
    */
   async deleteWithBulkActions() {
+    this.dialogListener(true);
     // Click on Select All
     await Promise.all([
       this.page.click(this.selectAllRowsLabel),
@@ -248,11 +247,7 @@ module.exports = class Suppliers extends BOBasePage {
       this.page.waitForSelector(`${this.bulkActionsToggleButton}[aria-expanded='true']`, {visible: true}),
     ]);
     // Click on delete and wait for modal
-    await Promise.all([
-      this.page.click(this.bulkActionsDeleteButton),
-      this.page.waitForSelector(`${this.confirmDeleteModal}.show`, {visible: true}),
-    ]);
-    await this.clickAndWaitForNavigation(this.confirmDeleteButton);
+    await this.clickAndWaitForNavigation(this.bulkActionsDeleteButton);
     await this.page.waitForSelector(this.alertSuccessBlockParagraph, {visible: true});
     return this.getTextContent(this.alertSuccessBlockParagraph);
   }

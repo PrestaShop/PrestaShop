@@ -1,5 +1,5 @@
 /**
- * 2007-2020 PrestaShop SA and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,12 +18,12 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-const {$} = window;
+const $ = window.$;
 
 /**
  * Responsible for connecting to addons marketplace.
@@ -32,12 +32,12 @@ const {$} = window;
 export default class AddonsConnector {
   constructor(
     addonsConnectFormSelector,
-    loadingSpinnerSelector,
+    loadingSpinnerSelector
   ) {
     this.addonsConnectFormSelector = addonsConnectFormSelector;
     this.$loadingSpinner = $(loadingSpinnerSelector);
 
-    this.initEvents();
+    this._initEvents();
 
     return {};
   }
@@ -47,18 +47,14 @@ export default class AddonsConnector {
    *
    * @private
    */
-  initEvents() {
-    $('body').on(
-      'submit',
-      this.addonsConnectFormSelector,
-      (event) => {
-        const $form = $(event.currentTarget);
-        event.preventDefault();
-        event.stopPropagation();
+  _initEvents() {
+    $('body').on('submit', this.addonsConnectFormSelector, (event) => {
+      const $form = $(event.currentTarget);
+      event.preventDefault();
+      event.stopPropagation();
 
-        this.connect($form.attr('action'), $form.serialize());
-      },
-    );
+      this._connect($form.attr('action'), $form.serialize());
+    });
   }
 
   /**
@@ -69,7 +65,7 @@ export default class AddonsConnector {
    *
    * @private
    */
-  connect(addonsConnectUrl, formData) {
+  _connect(addonsConnectUrl, formData) {
     $.ajax({
       method: 'POST',
       url: addonsConnectUrl,
@@ -78,13 +74,13 @@ export default class AddonsConnector {
       beforeSend: () => {
         this.$loadingSpinner.show();
         $('button.btn[type="submit"]', this.addonsConnectFormSelector).hide();
-      },
+      }
     }).then((response) => {
       if (response.success === 1) {
-        window.location.reload();
+        location.reload();
       } else {
         $.growl.error({
-          message: response.message,
+          message: response.message
         });
 
         this.$loadingSpinner.hide();

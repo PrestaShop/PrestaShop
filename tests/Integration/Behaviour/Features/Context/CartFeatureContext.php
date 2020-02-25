@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2020 PrestaShop SA and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -111,7 +111,13 @@ class CartFeatureContext extends AbstractPrestaShopFeatureContext
     {
         $currentCartProducts = $this->getCurrentCart()->getProducts(true);
         if ($productCount != count($currentCartProducts)) {
-            throw new \RuntimeException(sprintf('Expects %s, got %s instead', $productCount, count($currentCartProducts)));
+            throw new \RuntimeException(
+                sprintf(
+                    'Expects %s, got %s instead',
+                    $productCount,
+                    count($currentCartProducts)
+                )
+            );
         }
     }
 
@@ -122,7 +128,13 @@ class CartFeatureContext extends AbstractPrestaShopFeatureContext
     {
         $currentCartProducts = Cart::getNbProducts($this->getCurrentCart()->id);
         if ($productCount != $currentCartProducts) {
-            throw new \RuntimeException(sprintf('Expects %s, got %s instead', $productCount, $currentCartProducts));
+            throw new \RuntimeException(
+                sprintf(
+                    'Expects %s, got %s instead',
+                    $productCount,
+                    $currentCartProducts
+                )
+            );
         }
     }
 
@@ -173,7 +185,13 @@ class CartFeatureContext extends AbstractPrestaShopFeatureContext
             $total = round($total, 1);
         }
         if ($expectedTotal != $total) {
-            throw new \RuntimeException(sprintf('Expects %s, got %s instead', $expectedTotal, $total));
+            throw new \RuntimeException(
+                sprintf(
+                    'Expects %s, got %s instead',
+                    $expectedTotal,
+                    $total
+                )
+            );
         }
     }
 
@@ -194,7 +212,13 @@ class CartFeatureContext extends AbstractPrestaShopFeatureContext
         $expectedTotal = round($expectedShippingFees, 1);
         $shippingFees = round($this->getCurrentCart()->getPackageShippingCost($this->getCurrentCart()->id_carrier, $withTaxes), 1);
         if ($expectedTotal != $shippingFees) {
-            throw new \RuntimeException(sprintf('Expects %s, got %s instead', $expectedTotal, $shippingFees));
+            throw new \RuntimeException(
+                sprintf(
+                    'Expects %s, got %s instead',
+                    $expectedTotal,
+                    $shippingFees
+                )
+            );
         }
     }
 }

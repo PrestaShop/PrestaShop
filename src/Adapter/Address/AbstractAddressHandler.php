@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2020 PrestaShop SA and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -38,12 +38,11 @@ use PrestaShopException;
 abstract class AbstractAddressHandler
 {
     /**
+     * Gets legacy address
+     *
      * @param AddressId $addressId
      *
      * @return Address
-     *
-     * @throws AddressException
-     * @throws AddressNotFoundException
      */
     protected function getAddress(AddressId $addressId)
     {
@@ -54,7 +53,9 @@ abstract class AbstractAddressHandler
         }
 
         if ($address->id !== $addressId->getValue()) {
-            throw new AddressNotFoundException(sprintf('Address with id "%s" was not found.', $addressId->getValue()));
+            throw new AddressNotFoundException(
+                sprintf('Address with id "%s" was not found.', $addressId->getValue())
+            );
         }
 
         return $address;
@@ -69,12 +70,15 @@ abstract class AbstractAddressHandler
      *
      * @throws AddressException
      */
-    protected function deleteAddress(Address $address): bool
+    protected function deleteAddress(Address $address)
     {
         try {
             return $address->delete();
         } catch (PrestaShopException $e) {
-            throw new AddressException(sprintf('An error occurred when deleting Address object with id "%s".', $address->id));
+            throw new AddressException(sprintf(
+                'An error occurred when deleting Address object with id "%s".',
+                $address->id
+            ));
         }
     }
 }

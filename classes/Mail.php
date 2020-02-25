@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2020 PrestaShop SA and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -294,8 +294,7 @@ class MailCore extends ObjectModel
         }
 
         /* Construct multiple recipients list if needed */
-        $message = new Swift_Message();
-
+        $message = \Swift_Message::newInstance();
         if (is_array($to) && isset($to)) {
             foreach ($to as $key => $addr) {
                 $addr = trim($addr);
@@ -348,29 +347,22 @@ class MailCore extends ObjectModel
                     return false;
                 }
 
-                $connection = (new Swift_SmtpTransport(
+                $connection = \Swift_SmtpTransport::newInstance(
                     $configuration['PS_MAIL_SERVER'],
                     $configuration['PS_MAIL_SMTP_PORT'],
                     $configuration['PS_MAIL_SMTP_ENCRYPTION']
-                ))
+                )
                     ->setUsername($configuration['PS_MAIL_USER'])
                     ->setPassword($configuration['PS_MAIL_PASSWD']);
             } else {
-                /**
-                 * mail() support was removed from SwiftMailer for security reasons
-                 * previously => $connection = \Swift_MailTransport::newInstance();
-                 * Use Swift_SendmailTransport instead
-                 *
-                 * @see https://github.com/swiftmailer/swiftmailer/issues/866
-                 */
-                $connection = new Swift_SendmailTransport();
+                $connection = \Swift_MailTransport::newInstance();
             }
 
             if (!$connection) {
                 return false;
             }
 
-            $swift = new Swift_Mailer($connection);
+            $swift = \Swift_Mailer::newInstance($connection);
             /* Get templates content */
             $iso = Language::getIsoById((int) $idLang);
             $isoDefault = Language::getIsoById((int) Configuration::get('PS_LANG_DEFAULT'));
@@ -473,7 +465,7 @@ class MailCore extends ObjectModel
             );
 
             /* Create mail and attach differents parts */
-            $subject = '[' . strip_tags($configuration['PS_SHOP_NAME']) . '] ' . $subject;
+            $subject = '[' . Tools::safeOutput($configuration['PS_SHOP_NAME']) . '] ' . $subject;
             $message->setSubject($subject);
 
             $message->setCharset('utf-8');
@@ -561,7 +553,7 @@ class MailCore extends ObjectModel
                 true
             );
             $templateVars = array_merge($templateVars, $extraTemplateVars);
-            $swift->registerPlugin(new Swift_Plugins_DecoratorPlugin([self::toPunycode($toPlugin) => $templateVars]));
+            $swift->registerPlugin(new \Swift_Plugins_DecoratorPlugin(array(self::toPunycode($toPlugin) => $templateVars)));
             if ($configuration['PS_MAIL_TYPE'] == Mail::TYPE_BOTH ||
                 $configuration['PS_MAIL_TYPE'] == Mail::TYPE_TEXT
             ) {
@@ -576,13 +568,13 @@ class MailCore extends ObjectModel
             if ($fileAttachment && !empty($fileAttachment)) {
                 // Multiple attachments?
                 if (!is_array(current($fileAttachment))) {
-                    $fileAttachment = [$fileAttachment];
+                    $fileAttachment = array($fileAttachment);
                 }
 
                 foreach ($fileAttachment as $attachment) {
                     if (isset($attachment['content'], $attachment['name'], $attachment['mime'])) {
                         $message->attach(
-                            (new Swift_Attachment())->setFilename(
+                            \Swift_Attachment::newInstance()->setFilename(
                                 $attachment['name']
                             )->setContentType($attachment['mime'])
                             ->setBody($attachment['content'])
@@ -591,7 +583,7 @@ class MailCore extends ObjectModel
                 }
             }
             /* Send mail */
-            $message->setFrom([$from => $fromName]);
+            $message->setFrom(array($from => $fromName));
 
             // Hook to alter Swift Message before sending mail
             Hook::exec('actionMailAlterMessageBeforeSend', [
@@ -628,7 +620,7 @@ class MailCore extends ObjectModel
             }
 
             return $send;
-        } catch (Swift_SwiftException $e) {
+        } catch (\Swift_SwiftException $e) {
             PrestaShopLogger::addLog(
                 'Swift Error: ' . $e->getMessage(),
                 3,
@@ -686,7 +678,7 @@ class MailCore extends ObjectModel
      * Send a test email.
      *
      * @param bool $smtpChecked Is SMTP checked?
-     * @param string $smtpServer SMTP Server hostname
+     * @param string $smtp_server SMTP Server hostname
      * @param string $content Content of the email
      * @param string $subject Subject of the email
      * @param bool $type Deprecated
@@ -701,7 +693,7 @@ class MailCore extends ObjectModel
      */
     public static function sendMailTest(
         $smtpChecked,
-        $smtpServer,
+        $smtp_server,
         $content,
         $subject,
         $type,
@@ -719,26 +711,15 @@ class MailCore extends ObjectModel
                 if (Tools::strtolower($smtpEncryption) === 'off') {
                     $smtpEncryption = false;
                 }
-                $connection = (new Swift_SmtpTransport(
-                    $smtpServer,
-                    $smtpPort,
-                    $smtpEncryption
-                ))
+                $smtp = \Swift_SmtpTransport::newInstance($smtp_server, $smtpPort, $smtpEncryption)
                     ->setUsername($smtpLogin)
                     ->setPassword($smtpPassword);
+                $swift = \Swift_Mailer::newInstance($smtp);
             } else {
-                /**
-                 * mail() support was removed from SwiftMailer for security reasons
-                 * previously => $connection = \Swift_MailTransport::newInstance();
-                 * Use Swift_SendmailTransport instead
-                 *
-                 * @see https://github.com/swiftmailer/swiftmailer/issues/866
-                 */
-                $connection = new Swift_SendmailTransport();
+                $swift = \Swift_Mailer::newInstance(\Swift_MailTransport::newInstance());
             }
 
-            $swift = new Swift_Mailer($connection);
-            $message = new Swift_Message();
+            $message = \Swift_Message::newInstance();
 
             $message
                 ->setFrom($from)

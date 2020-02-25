@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2020 PrestaShop SA and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,24 +19,26 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Adapter\Address\QueryHandler;
 
-use PrestaShop\PrestaShop\Adapter\Address\AbstractCustomerAddressHandler;
+use Address;
+use CustomerAddress;
 use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressException;
 use PrestaShop\PrestaShop\Core\Domain\Address\Query\GetRequiredFieldsForAddress;
 use PrestaShop\PrestaShop\Core\Domain\Address\QueryHandler\GetRequiredFieldsForAddressHandlerInterface;
+use PrestaShopDatabaseException;
 
 /**
  * Handles query which gets required fields for address
  *
  * @internal
  */
-final class GetRequiredFieldsForAddressHandler extends AbstractCustomerAddressHandler implements GetRequiredFieldsForAddressHandlerInterface
+final class GetRequiredFieldsForAddressHandler implements GetRequiredFieldsForAddressHandlerInterface
 {
     /**
      * {@inheritdoc}
@@ -45,6 +47,22 @@ final class GetRequiredFieldsForAddressHandler extends AbstractCustomerAddressHa
      */
     public function handle(GetRequiredFieldsForAddress $query): array
     {
-        return $this->getRequiredFields();
+        try {
+            $requiredFields = (new CustomerAddress())->getFieldsRequiredDatabase();
+        } catch (PrestaShopDatabaseException $e) {
+            throw new AddressException('Something went wrong while retrieving required fields for address', 0, $e);
+        }
+
+        if (empty($requiredFields)) {
+            return [];
+        }
+
+        $fields = [];
+
+        foreach ($requiredFields as $field) {
+            $fields[] = $field['field_name'];
+        }
+
+        return $fields;
     }
 }

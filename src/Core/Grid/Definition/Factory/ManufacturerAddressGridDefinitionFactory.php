@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2020 PrestaShop SA and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollection;
+use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\Type\SubmitBulkAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\LinkRowAction;
@@ -48,8 +49,6 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
  */
 final class ManufacturerAddressGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
-    use BulkDeleteActionTrait;
-
     const GRID_ID = 'manufacturer_address';
 
     /**
@@ -240,8 +239,12 @@ final class ManufacturerAddressGridDefinitionFactory extends AbstractGridDefinit
     protected function getBulkActions()
     {
         return (new BulkActionCollection())
-            ->add(
-                $this->buildBulkDeleteAction('admin_manufacturer_addresses_bulk_delete')
+            ->add((new SubmitBulkAction('delete_manufacturer_address'))
+                ->setName($this->trans('Delete selected', [], 'Admin.Actions'))
+                ->setOptions([
+                    'submit_route' => 'admin_manufacturer_addresses_bulk_delete',
+                    'confirm_message' => $this->trans('Delete selected items?', [], 'Admin.Notifications.Warning'),
+                ])
             )
         ;
     }

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2020 PrestaShop SA and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -82,7 +82,7 @@ class ToolsCoreTest extends TestCase
         $this->assertFalse(Tools::getValue(null, true));
     }
 
-    public function getValueStripsNullCharsFromReturnedStringsExamples()
+    public function testGetValueStripsNullCharsFromReturnedStringsExamples()
     {
         return array(
             array("\0", ''),
@@ -93,7 +93,7 @@ class ToolsCoreTest extends TestCase
     }
 
     /**
-     * @dataProvider getValueStripsNullCharsFromReturnedStringsExamples
+     * @dataProvider testGetValueStripsNullCharsFromReturnedStringsExamples
      */
     public function testGetValueStripsNullCharsFromReturnedStrings($rawString, $cleanedString)
     {
@@ -116,7 +116,7 @@ class ToolsCoreTest extends TestCase
         $this->assertEquals($cleanedString, Tools::getValue('NON EXISTING KEY', $rawString));
     }
 
-    public function spreadAmountExamples()
+    public function testSpreadAmountExamples()
     {
         return array(
             array(
@@ -225,7 +225,7 @@ class ToolsCoreTest extends TestCase
     }
 
     /**
-     * @dataProvider spreadAmountExamples
+     * @dataProvider testSpreadAmountExamples
      */
     public function testSpreadAmount($expectedRows, $amount, $precision, $rows, $column)
     {
@@ -236,7 +236,7 @@ class ToolsCoreTest extends TestCase
     /**
      * @return array of example taken from the installation of PrestaShop
      */
-    public function getCamelCaseExample()
+    public function testCamelCaseExample()
     {
         return array(
             array('address_format', 'addressFormat', false),
@@ -320,7 +320,7 @@ class ToolsCoreTest extends TestCase
     }
 
     /**
-     * @dataProvider getCamelCaseExample
+     * @dataProvider testCamelCaseExample
      */
     public function testToCamelCase($source, $expected, $firstCharUpperCase)
     {
@@ -334,7 +334,7 @@ class ToolsCoreTest extends TestCase
     }
 
     /**
-     * @dataProvider getStrReplaceFirstProvider
+     * @dataProvider testStrReplaceFirstProvider
      */
     public function testStrReplaceFirst($search, $replace, $subject, $cur, $expected) {
         $this->assertEquals($expected, Tools::StrReplaceFirst($search, $replace, $subject, $cur));
@@ -382,7 +382,7 @@ class ToolsCoreTest extends TestCase
         ];
     }
 
-    public function getStrReplaceFirstProvider() {
+    public function testStrReplaceFirstProvider() {
         return [
             ['s', 'f', 'seed', 0, 'feed'],
             ['s', 'f', 'seed', 1, 'seed'],

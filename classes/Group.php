@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2020 PrestaShop SA and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -48,30 +48,30 @@ class GroupCore extends ObjectModel
     /**
      * @see ObjectModel::$definition
      */
-    public static $definition = [
+    public static $definition = array(
         'table' => 'group',
         'primary' => 'id_group',
         'multilang' => true,
-        'fields' => [
-            'reduction' => ['type' => self::TYPE_FLOAT, 'validate' => 'isFloat'],
-            'price_display_method' => ['type' => self::TYPE_INT, 'validate' => 'isPriceDisplayMethod', 'required' => true],
-            'show_prices' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
-            'date_add' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
-            'date_upd' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
+        'fields' => array(
+            'reduction' => array('type' => self::TYPE_FLOAT, 'validate' => 'isFloat'),
+            'price_display_method' => array('type' => self::TYPE_INT, 'validate' => 'isPriceDisplayMethod', 'required' => true),
+            'show_prices' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+            'date_add' => array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
+            'date_upd' => array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
 
             /* Lang fields */
-            'name' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 32],
-        ],
-    ];
+            'name' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 32),
+        ),
+    );
 
-    protected static $cache_reduction = [];
-    protected static $group_price_display_method = [];
+    protected static $cache_reduction = array();
+    protected static $group_price_display_method = array();
     protected static $ps_group_feature_active = null;
-    protected static $groups = [];
+    protected static $groups = array();
     protected static $ps_unidentified_group = null;
     protected static $ps_customer_group = null;
 
-    protected $webserviceParameters = [];
+    protected $webserviceParameters = array();
 
     public function __construct($id = null, $id_lang = null, $id_shop = null)
     {
@@ -86,10 +86,10 @@ class GroupCore extends ObjectModel
      */
     public static function clearCachedValues()
     {
-        self::$cache_reduction = [];
-        self::$group_price_display_method = [];
+        self::$cache_reduction = array();
+        self::$group_price_display_method = array();
         self::$ps_group_feature_active = null;
-        self::$groups = [];
+        self::$groups = array();
         self::$ps_unidentified_group = null;
         self::$ps_customer_group = null;
     }
@@ -316,7 +316,7 @@ class GroupCore extends ObjectModel
      *
      * @return bool
      */
-    public static function addModulesRestrictions($id_group, $modules, $shops = [1])
+    public static function addModulesRestrictions($id_group, $modules, $shops = array(1))
     {
         if (!is_array($modules) || !count($modules) || !is_array($shops) || !count($shops)) {
             return false;
@@ -351,7 +351,7 @@ class GroupCore extends ObjectModel
      *
      * @return bool
      */
-    public static function addRestrictionsForModule($id_module, $shops = [1])
+    public static function addRestrictionsForModule($id_module, $shops = array(1))
     {
         if (!is_array($shops) || !count($shops)) {
             return false;

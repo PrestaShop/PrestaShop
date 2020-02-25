@@ -1,5 +1,5 @@
 /**
- * 2007-2020 PrestaShop SA and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,21 +18,22 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-const {$} = window;
+const $ = window.$;
 
 /**
  * Class AsyncToggleColumnExtension submits toggle action using AJAX
  */
 export default class AsyncToggleColumnExtension {
+
   constructor() {
     return {
       extend: (grid) => this.extend(grid),
-    };
+    }
   }
 
   /**
@@ -50,18 +51,18 @@ export default class AsyncToggleColumnExtension {
         url: $button.data('toggle-url'),
       }).then((response) => {
         if (response.status) {
-          window.showSuccessMessage(response.message);
+          showSuccessMessage(response.message);
 
-          this.toggleButtonDisplay($button);
+          this._toggleButtonDisplay($button);
 
           return;
         }
 
-        window.showErrorMessage(response.message);
+        showErrorMessage(response.message);
       }).catch((error) => {
         const response = error.responseJSON;
 
-        window.showErrorMessage(response.message);
+        showErrorMessage(response.message);
       });
     });
   }
@@ -73,7 +74,7 @@ export default class AsyncToggleColumnExtension {
    *
    * @private
    */
-  toggleButtonDisplay($button) {
+  _toggleButtonDisplay($button) {
     const isActive = $button.hasClass('grid-toggler-icon-valid');
 
     const classToAdd = isActive ? 'grid-toggler-icon-not-valid' : 'grid-toggler-icon-valid';

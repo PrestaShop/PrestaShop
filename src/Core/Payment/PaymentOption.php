@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2020 PrestaShop SA and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -341,19 +341,19 @@ class PaymentOption implements HookContentClassInterface
         }
 
         if (array_key_exists('cta_text', $legacyOption)) {
-            $legacyOption = [$legacyOption];
+            $legacyOption = array($legacyOption);
         }
 
-        $newOptions = [];
+        $newOptions = array();
 
-        $defaults = [
+        $defaults = array(
             'additionalInformation' => null,
             'action' => null,
             'form' => null,
             'method' => null,
-            'inputs' => [],
+            'inputs' => array(),
             'logo' => null,
-        ];
+        );
 
         foreach ($legacyOption as $option) {
             $option = array_merge($defaults, $option);

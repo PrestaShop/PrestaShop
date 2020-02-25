@@ -3,9 +3,6 @@ require('module-alias/register');
 const {expect} = require('chai');
 const helper = require('@utils/helpers');
 const loginCommon = require('@commonTests/loginBO');
-const testContext = require('@utils/testContext');
-
-const baseContext = 'sanity_productsBO_filterProducts';
 
 // importing pages
 const LoginPage = require('@pages/BO/login');
@@ -44,7 +41,6 @@ describe('Filter in Products Page', async () => {
   loginCommon.loginBO();
 
   it('should go to Products page', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPage', baseContext);
     await this.pageObjects.boBasePage.goToSubMenu(
       this.pageObjects.boBasePage.catalogParentLink,
       this.pageObjects.boBasePage.productsLink,
@@ -54,20 +50,18 @@ describe('Filter in Products Page', async () => {
   });
 
   it('should reset all filters and get Number of products in BO', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'resetFilters', baseContext);
     await this.pageObjects.productsPage.resetFilterCategory();
     numberOfProducts = await this.pageObjects.productsPage.resetAndGetNumberOfLines();
     await expect(numberOfProducts).to.be.above(0);
   });
 
   const tests = [
-    {args: {identifier: 'filterName', filterBy: 'name', filterValue: Products.demo_14.name}},
-    {args: {identifier: 'filterReference', filterBy: 'reference', filterValue: Products.demo_1.reference}},
-    {args: {identifier: 'filterCategory', filterBy: 'category', filterValue: Categories.men.name}},
+    {args: {filterBy: 'name', filterValue: Products.demo_14.name}},
+    {args: {filterBy: 'reference', filterValue: Products.demo_1.reference}},
+    {args: {filterBy: 'category', filterValue: Categories.men.name}},
   ];
   tests.forEach((test) => {
     it(`should filter list by ${test.args.filterBy} and check result`, async function () {
-      await testContext.addContextItem(this, 'testIdentifier', `filterBy_${test.args.identifier}`, baseContext);
       if (test.args.filterBy === 'category') {
         await this.pageObjects.productsPage.filterProductsByCategory(test.args.filterValue);
       } else {
@@ -78,7 +72,6 @@ describe('Filter in Products Page', async () => {
     });
 
     it('should reset filter and check result', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', `resetFilters_${test.args.identifier}`, baseContext);
       let numberOfProductsAfterReset;
       if (test.args.filterBy === 'category') {
         await this.pageObjects.productsPage.resetFilterCategory();

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2020 PrestaShop SA and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -42,24 +42,9 @@ class ProductCombination
     private $attribute;
 
     /**
-     * @var string
-     */
-    private $location;
-
-    /**
      * @var int
      */
     private $stock;
-
-    /**
-     * @var float
-     */
-    private $priceTaxExcluded;
-
-    /**
-     * @var float
-     */
-    private $priceTaxIncluded;
 
     /**
      * @var string
@@ -71,26 +56,13 @@ class ProductCombination
      * @param string $attribute
      * @param int $stock
      * @param string $formattedPrice
-     * @param float $priceTaxExcluded
-     * @param float $priceTaxIncluded
-     * @param string $location
      */
-    public function __construct(
-        int $attributeCombinationId,
-        string $attribute,
-        int $stock,
-        string $formattedPrice,
-        float $priceTaxExcluded,
-        float $priceTaxIncluded,
-        string $location
-    ) {
+    public function __construct(int $attributeCombinationId, string $attribute, int $stock, string $formattedPrice)
+    {
         $this->attributeCombinationId = $attributeCombinationId;
         $this->attribute = $attribute;
         $this->stock = $stock;
         $this->formattedPrice = $formattedPrice;
-        $this->priceTaxExcluded = $priceTaxExcluded;
-        $this->priceTaxIncluded = $priceTaxIncluded;
-        $this->location = $location;
     }
 
     /**
@@ -107,30 +79,6 @@ class ProductCombination
     public function getAttribute(): string
     {
         return $this->attribute;
-    }
-
-    /**
-     * @return string
-     */
-    public function getLocation(): string
-    {
-        return $this->location;
-    }
-
-    /**
-     * @return float
-     */
-    public function getPriceTaxExcluded(): float
-    {
-        return $this->priceTaxExcluded;
-    }
-
-    /**
-     * @return float
-     */
-    public function getPriceTaxIncluded(): float
-    {
-        return $this->priceTaxIncluded;
     }
 
     /**

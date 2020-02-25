@@ -1,5 +1,5 @@
 /**
- * 2007-2020 PrestaShop SA and Contributors
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,12 +18,12 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-const {$} = window;
+const $ = window.$;
 
 /**
  * Toggle DNI input requirement on country selection
@@ -49,16 +49,10 @@ export default class CountryDniRequiredToggler {
     this.countryInputSelectedSelector = `${countryInputSelector}>option:selected`;
     this.countryDniInputLabelDangerSelector = `${countryDniInputLabel}>span.text-danger`;
 
-    // If field is required regardless of the country
-    // keep it required
-    if (this.$countryDniInput.attr('required')) {
-      return;
-    }
-
-    this.$countryInput.on('change', () => this.toggle());
+    this.$countryInput.on('change', () => this._toggle());
 
     // toggle on page load
-    this.toggle();
+    this._toggle();
   }
 
   /**
@@ -66,11 +60,12 @@ export default class CountryDniRequiredToggler {
    *
    * @private
    */
-  toggle() {
+  _toggle() {
+    const $countrySelectedOption = $(this.countryInputSelectedSelector);
     $(this.countryDniInputLabelDangerSelector).remove();
-    this.$countryDniInput.prop('required', false);
-    if (parseInt($(this.countryInputSelectedSelector).attr('need_dni'), 10) === 1) {
-      this.$countryDniInput.prop('required', true);
+    this.$countryDniInput.attr('required', false);
+    if (1 === parseInt($countrySelectedOption.attr('need_dni'), 10)) {
+      this.$countryDniInput.attr('required', true);
       this.$countryDniInputLabel.prepend($('<span class="text-danger">*</span>'));
     }
   }

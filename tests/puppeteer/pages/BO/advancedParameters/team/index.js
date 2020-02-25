@@ -22,16 +22,16 @@ module.exports = class Employees extends BOBasePage {
     this.employeesListTableToggleDropDown = `${this.employeesListTableColumnAction} a[data-toggle='dropdown']`;
     this.employeesListTableDeleteLink = `${this.employeesListTableColumnAction} a[data-url]`;
     this.employeesListTableEditLink = `${this.employeesListTableColumnAction} a[href*='edit']`;
-    this.employeesListColumnValidIcon = `${this.employeesListTableColumn.replace('%COLUMN', 'active')}
+    this.employeesListColumnValidIcon = `${this.employeesListTableColumn.replace('%COLUMN', 'active')} 
     i.grid-toggler-icon-valid`;
-    this.employeesListColumnNotValidIcon = `${this.employeesListTableColumn.replace('%COLUMN', 'active')}
+    this.employeesListColumnNotValidIcon = `${this.employeesListTableColumn.replace('%COLUMN', 'active')} 
     i.grid-toggler-icon-not-valid`;
     // Filters
     this.employeeFilterInput = `${this.employeesListForm} #employee_%FILTERBY`;
     this.filterSearchButton = `${this.employeesListForm} button[name='employee[actions][search]']`;
     this.filterResetButton = `${this.employeesListForm} button[name='employee[actions][reset]']`;
     // Bulk Actions
-    this.selectAllRowsLabel = `${this.employeesListForm} tr.column-filters .md-checkbox i`;
+    this.selectAllRowsLabel = `${this.employeesListForm} .md-checkbox label`;
     this.bulkActionsToggleButton = `${this.employeesListForm} button.dropdown-toggle`;
     this.bulkActionsEnableButton = `${this.employeesListForm} #employee_grid_bulk_action_enable_selection`;
     this.bulkActionsDisableButton = `${this.employeesListForm} #employee_grid_bulk_action_disable_selection`;

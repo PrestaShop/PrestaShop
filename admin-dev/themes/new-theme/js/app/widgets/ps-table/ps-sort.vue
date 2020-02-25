@@ -1,5 +1,5 @@
 <!--**
- * 2007-2020 PrestaShop SA and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,24 +18,14 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *-->
 <template>
-  <div
-    class="ps-sortable-column"
-    data-sort-col-name="id_product"
-    :data-sort-is-current="isCurrent"
-    :data-sort-direction="sortDirection"
-    @click="sortToggle"
-  >
+  <div class="ps-sortable-column" data-sort-col-name="id_product" :data-sort-is-current="isCurrent" :data-sort-direction="sortDirection" @click="sortToggle">
     <span role="columnheader"><slot /></span>
-    <span
-      role="button"
-      class="ps-sort"
-      aria-label="Tri"
-    />
+    <span role="button" class="ps-sort" aria-label="Tri"></span>
   </div>
 </template>
 
@@ -43,15 +33,9 @@
   export default {
     props: {
       // column name
-      order: {
-        type: String,
-        required: true,
-      },
+      order: String,
       // indicates the currently sorted column in the table
-      currentSort: {
-        type: String,
-        required: true,
-      },
+      currentSort: String,
     },
     methods: {
       sortToggle() {
@@ -70,3 +54,4 @@
     },
   };
 </script>
+

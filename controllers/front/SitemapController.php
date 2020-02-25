@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2020 PrestaShop SA and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -35,18 +35,18 @@ class SitemapControllerCore extends FrontController
     public function initContent()
     {
         $this->context->smarty->assign(
-            [
-                'our_offers' => $this->trans('Our Offers', [], 'Shop.Theme.Global'),
-                'categories' => $this->trans('Categories', [], 'Shop.Theme.Catalog'),
-                'your_account' => $this->trans('Your account', [], 'Shop.Theme.Customeraccount'),
-                'pages' => $this->trans('Pages', [], 'Shop.Theme.Catalog'),
-                'links' => [
+            array(
+                'our_offers' => $this->trans('Our Offers', array(), 'Shop.Theme.Global'),
+                'categories' => $this->trans('Categories', array(), 'Shop.Theme.Catalog'),
+                'your_account' => $this->trans('Your account', array(), 'Shop.Theme.Customeraccount'),
+                'pages' => $this->trans('Pages', array(), 'Shop.Theme.Catalog'),
+                'links' => array(
                     'offers' => $this->getOffersLinks(),
                     'pages' => $this->getPagesLinks(),
                     'user_account' => $this->getUserAccountLinks(),
                     'categories' => $this->getCategoriesLinks(),
-                ],
-            ]
+                ),
+            )
         );
 
         parent::initContent();
@@ -55,7 +55,7 @@ class SitemapControllerCore extends FrontController
 
     public function getCategoriesLinks()
     {
-        return [Category::getRootCategory()->recurseLiteCategTree(0, 0, null, null, 'sitemap')];
+        return array(Category::getRootCategory()->recurseLiteCategTree(0, 0, null, null, 'sitemap'));
     }
 
     /**
@@ -66,23 +66,23 @@ class SitemapControllerCore extends FrontController
         $cms = CMSCategory::getRecurseCategory($this->context->language->id, 1, 1, 1);
         $links = $this->getCmsTree($cms);
 
-        $links[] = [
+        $links[] = array(
             'id' => 'stores-page',
-            'label' => $this->trans('Our stores', [], 'Shop.Theme.Global'),
+            'label' => $this->trans('Our stores', array(), 'Shop.Theme.Global'),
             'url' => $this->context->link->getPageLink('stores'),
-        ];
+        );
 
-        $links[] = [
+        $links[] = array(
             'id' => 'contact-page',
-            'label' => $this->trans('Contact us', [], 'Shop.Theme.Global'),
+            'label' => $this->trans('Contact us', array(), 'Shop.Theme.Global'),
             'url' => $this->context->link->getPageLink('contact'),
-        ];
+        );
 
-        $links[] = [
+        $links[] = array(
             'id' => 'sitemap-page',
-            'label' => $this->trans('Sitemap', [], 'Shop.Theme.Global'),
+            'label' => $this->trans('Sitemap', array(), 'Shop.Theme.Global'),
             'url' => $this->context->link->getPageLink('sitemap'),
-        ];
+        );
 
         return $links;
     }
@@ -92,24 +92,24 @@ class SitemapControllerCore extends FrontController
      */
     protected function getCmsTree($cms)
     {
-        $links = [];
+        $links = array();
 
         foreach ($cms['cms'] as $p) {
-            $links[] = [
+            $links[] = array(
                 'id' => 'cms-page-' . $p['id_cms'],
                 'label' => $p['meta_title'],
                 'url' => $p['link'],
-            ];
+            );
         }
 
         if (isset($cms['children'])) {
             foreach ($cms['children'] as $c) {
-                $links[] = [
+                $links[] = array(
                     'id' => 'cms-category-' . $c['id_cms_category'],
                     'label' => $c['name'],
                     'url' => $c['link'],
                     'children' => $this->getCmsTree($c),
-                ];
+                );
             }
         }
 
@@ -121,19 +121,19 @@ class SitemapControllerCore extends FrontController
      */
     protected function getUserAccountLinks()
     {
-        $links = [];
+        $links = array();
 
-        $links[] = [
+        $links[] = array(
             'id' => 'login-page',
-            'label' => $this->trans('Log in', [], 'Shop.Theme.Global'),
+            'label' => $this->trans('Log in', array(), 'Shop.Theme.Global'),
             'url' => $this->context->link->getPageLink('authentication'),
-        ];
+        );
 
-        $links[] = [
+        $links[] = array(
             'id' => 'register-page',
-            'label' => $this->trans('Create new account', [], 'Shop.Theme.Global'),
-            'url' => $this->context->link->getPageLink('authentication', null, null, ['create_account' => 1]),
-        ];
+            'label' => $this->trans('Create new account', array(), 'Shop.Theme.Global'),
+            'url' => $this->context->link->getPageLink('authentication', null, null, array('create_account' => 1)),
+        );
 
         return $links;
     }
@@ -143,45 +143,45 @@ class SitemapControllerCore extends FrontController
      */
     protected function getOffersLinks()
     {
-        $links = [
-            [
+        $links = array(
+            array(
                 'id' => 'new-product-page',
-                'label' => $this->trans('New products', [], 'Shop.Theme.Catalog'),
+                'label' => $this->trans('New products', array(), 'Shop.Theme.Catalog'),
                 'url' => $this->context->link->getPageLink('new-products'),
-            ],
-        ];
+            ),
+        );
 
         if (Configuration::isCatalogMode() && Configuration::get('PS_DISPLAY_BEST_SELLERS')) {
-            $links[] = [
+            $links[] = array(
                 'id' => 'best-sales-page',
-                'label' => $this->trans('Best sellers', [], 'Shop.Theme.Catalog'),
+                'label' => $this->trans('Best sellers', array(), 'Shop.Theme.Catalog'),
                 'url' => $this->context->link->getPageLink('best-sales'),
-            ];
-            $links[] = [
+            );
+            $links[] = array(
                 'id' => 'prices-drop-page',
-                'label' => $this->trans('Price drop', [], 'Shop.Theme.Catalog'),
+                'label' => $this->trans('Price drop', array(), 'Shop.Theme.Catalog'),
                 'url' => $this->context->link->getPageLink('prices-drop'),
-            ];
+            );
         }
 
         if (Configuration::get('PS_DISPLAY_MANUFACTURERS')) {
             $manufacturers = Manufacturer::getLiteManufacturersList($this->context->language->id, 'sitemap');
-            $links[] = [
+            $links[] = array(
                 'id' => 'manufacturer-page',
-                'label' => $this->trans('Brands', [], 'Shop.Theme.Catalog'),
+                'label' => $this->trans('Brands', array(), 'Shop.Theme.Catalog'),
                 'url' => $this->context->link->getPageLink('manufacturer'),
                 'children' => $manufacturers,
-            ];
+            );
         }
 
         if (Configuration::get('PS_DISPLAY_SUPPLIERS')) {
             $suppliers = Supplier::getLiteSuppliersList($this->context->language->id, 'sitemap');
-            $links[] = [
+            $links[] = array(
                 'id' => 'supplier-page',
-                'label' => $this->trans('Suppliers', [], 'Shop.Theme.Catalog'),
+                'label' => $this->trans('Suppliers', array(), 'Shop.Theme.Catalog'),
                 'url' => $this->context->link->getPageLink('supplier'),
                 'children' => $suppliers,
-            ];
+            );
         }
 
         return $links;

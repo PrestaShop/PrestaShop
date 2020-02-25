@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2020 PrestaShop SA and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,13 +19,13 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 class ConfigurationTestCore
 {
-    public static $test_files = [
+    public static $test_files = array(
         '/classes/log/index.php',
         '/classes/cache/index.php',
         '/config/index.php',
@@ -42,7 +42,7 @@ class ConfigurationTestCore
         '/webservice/dispatcher.php',
         '/index.php',
         '/vendor/autoload.php',
-    ];
+    );
 
     /**
      * getDefaultTests return an array of tests to executes.
@@ -53,7 +53,7 @@ class ConfigurationTestCore
      */
     public static function getDefaultTests()
     {
-        $tests = [
+        $tests = array(
             'upload' => false,
             'cache_dir' => 'var/cache',
             'log_dir' => 'var/logs',
@@ -67,15 +67,15 @@ class ConfigurationTestCore
             'virtual_products_dir' => 'download',
             'config_sf2_dir' => 'app/config',
             'translations_sf2' => 'app/Resources/translations',
-        ];
+        );
 
         if (!defined('_PS_HOST_MODE_')) {
-            $tests = array_merge($tests, [
-                'system' => [
+            $tests = array_merge($tests, array(
+                'system' => array(
                     'fopen', 'fclose', 'fread', 'fwrite',
                     'rename', 'file_exists', 'unlink', 'rmdir', 'mkdir',
                     'getcwd', 'chdir', 'chmod',
-                ],
+                ),
                 'phpversion' => false,
                 'apache_mod_rewrite' => false,
                 'curl' => false,
@@ -91,7 +91,7 @@ class ConfigurationTestCore
                 'fileinfo' => false,
                 'intl' => false,
                 'memory_limit' => false,
-            ]);
+            ));
         }
 
         return $tests;
@@ -105,7 +105,7 @@ class ConfigurationTestCore
      */
     public static function getDefaultTestsOp()
     {
-        return [
+        return array(
             'new_phpversion' => false,
             'gz' => false,
             'mbstring' => false,
@@ -114,7 +114,7 @@ class ConfigurationTestCore
             'fopen' => false,
             'intl' => false,
             'memory_limit' => false,
-        ];
+        );
     }
 
     /**
@@ -126,7 +126,7 @@ class ConfigurationTestCore
      */
     public static function check($tests)
     {
-        $res = [];
+        $res = array();
         foreach ($tests as $key => $test) {
             $res[$key] = ConfigurationTest::run($key, $test);
         }
@@ -136,7 +136,7 @@ class ConfigurationTestCore
 
     public static function run($ptr, $arg = 0)
     {
-        if (call_user_func(['ConfigurationTest', 'test_' . $ptr], $arg)) {
+        if (call_user_func(array('ConfigurationTest', 'test_' . $ptr), $arg)) {
             return 'ok';
         }
 
@@ -192,7 +192,7 @@ class ConfigurationTestCore
 
     public static function test_fopen()
     {
-        return in_array(ini_get('allow_url_fopen'), ['On', 'on', '1']);
+        return in_array(ini_get('allow_url_fopen'), array('On', 'on', '1'));
     }
 
     public static function test_system($funcs)
@@ -418,7 +418,7 @@ class ConfigurationTestCore
 
     public static function test_files($full = false)
     {
-        $return = [];
+        $return = array();
         foreach (ConfigurationTest::$test_files as $file) {
             if (!file_exists(rtrim(_PS_ROOT_DIR_, DIRECTORY_SEPARATOR) . str_replace('/', DIRECTORY_SEPARATOR, $file))) {
                 if ($full) {

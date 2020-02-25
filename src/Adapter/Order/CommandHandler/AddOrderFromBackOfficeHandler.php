@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2020 PrestaShop SA and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -31,14 +31,11 @@ use BoOrderCore;
 use Cart;
 use Configuration;
 use Context;
-use Country;
 use Currency;
 use Customer;
 use Employee;
 use Exception;
-use Language;
 use Module;
-use PrestaShop\PrestaShop\Adapter\ContextStateManager;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\AddOrderFromBackOfficeCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler\AddOrderFromBackOfficeHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
@@ -49,19 +46,6 @@ use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
  */
 final class AddOrderFromBackOfficeHandler implements AddOrderFromBackOfficeHandlerInterface
 {
-    /**
-     * @var ContextStateManager
-     */
-    private $contextStateManager;
-
-    /**
-     * @param ContextStateManager $contextStateManager
-     */
-    public function __construct(ContextStateManager $contextStateManager)
-    {
-        $this->contextStateManager = $contextStateManager;
-    }
-
     /**
      * {@inheritdoc}
      */
@@ -77,17 +61,10 @@ final class AddOrderFromBackOfficeHandler implements AddOrderFromBackOfficeHandl
 
         $cart = new Cart($command->getCartId()->getValue());
 
-        $this->assertAddressesAreNotDeleted($cart);
-        $this->assertAddressesAreNotDisabled($cart);
+        Context::getContext()->currency = new Currency((int) $cart->id_currency);
+        Context::getContext()->customer = new Customer((int) $cart->id_customer);
 
-        //Context country, language and currency is used in PaymentModule::validateOrder (it should rely on cart address country instead)
-        $this->contextStateManager
-            ->setCart($cart)
-            ->setCurrency(new Currency($cart->id_currency))
-            ->setCustomer(new Customer($cart->id_customer))
-            ->setLanguage(new Language($cart->id_lang))
-            ->setCountry($this->getTaxCountry($cart))
-        ;
+        $this->assertAddressesAreNotDisabled($cart);
 
         $translator = Context::getContext()->getTranslator();
         $employee = new Employee($command->getEmployeeId()->getValue());
@@ -111,9 +88,7 @@ final class AddOrderFromBackOfficeHandler implements AddOrderFromBackOfficeHandl
                 $cart->secure_key
             );
         } catch (Exception $e) {
-            throw new OrderException('Failed to add order. ' . $e->getMessage(), 0, $e);
-        } finally {
-            $this->contextStateManager->restoreContext();
+            throw new OrderException('Failed to add order.', 0, $e);
         }
 
         if (!$paymentModule->currentOrder) {
@@ -138,41 +113,5 @@ final class AddOrderFromBackOfficeHandler implements AddOrderFromBackOfficeHandl
         if ($isInvoiceCountryDisabled) {
             throw new OrderException(sprintf('Invoice country for cart with id "%d" is disabled.', $cart->id));
         }
-    }
-
-    /**
-     * @param Cart $cart
-     *
-     * @throws OrderException
-     */
-    private function assertAddressesAreNotDeleted(Cart $cart)
-    {
-        $invoiceAddress = new Address($cart->id_address_invoice);
-        $deliveryAddress = new Address($cart->id_address_delivery);
-
-        if ($invoiceAddress->deleted) {
-            throw new OrderException(sprintf('The invoice address with id "%s" cannot be used, because it is deleted', $invoiceAddress->id));
-        }
-
-        if ($deliveryAddress->deleted) {
-            throw new OrderException(sprintf('The delivery address with id "%s" cannot be used, because it is deleted', $deliveryAddress->id));
-        }
-    }
-
-    /**
-     * @param Cart $cart
-     *
-     * @return Country
-     *
-     * @throws \PrestaShopDatabaseException
-     * @throws \PrestaShopException
-     */
-    private function getTaxCountry(Cart $cart)
-    {
-        $taxAddressType = Configuration::get('PS_TAX_ADDRESS_TYPE');
-        $taxAddressId = property_exists($cart, $taxAddressType) ? $cart->{$taxAddressType} : $cart->id_address_delivery;
-        $taxAddress = new Address($taxAddressId);
-
-        return new Country($taxAddress->id_country);
     }
 }

@@ -4,10 +4,10 @@
   top: $size-header-height;
   left: $size-navbar-width;
   right: 0;
-  z-index: 501; // popup menus' z-index is 502, so it has to be just below that
+  z-index: 990; // popup menus' z-index is 1000, so it has to be just below that
   border-bottom: 0.0625rem solid $color-separator;
 
-  transition: left 0.5s ease; // transition when collapsing the nav menu
+  transition: left .5s ease; // transition when collapsing the nav menu
 
   .mobile & {
     top: $size-header-height + ($header-mobile-padding-y * 2);
@@ -30,7 +30,6 @@
     font-weight: normal;
     margin-bottom: 0;
     float: left;
-
     @include media-breakpoint-down(sm) {
       float: none;
     }
@@ -43,6 +42,7 @@
 
   // toolbar buttons
   .toolbar-icons {
+
     @include media-breakpoint-down(sm) {
       overflow-x: auto;
       float: none;
@@ -71,6 +71,7 @@
 }
 
 .page-head-tabs {
+
   background: #fff;
 
   > ul {
@@ -81,7 +82,7 @@
     position: relative;
 
     .notification-container {
-      @include notification_container(1.5rem);
+      @include notification_container(1.5rem)
       position: absolute;
       bottom: -5px;
       right: 15px;
@@ -97,6 +98,7 @@
       }
     }
   }
+
 }
 
 .page-sidebar-closed:not(.mobile) {

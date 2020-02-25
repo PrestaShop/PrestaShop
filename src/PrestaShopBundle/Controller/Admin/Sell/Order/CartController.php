@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2020 PrestaShop SA and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -28,15 +28,13 @@ namespace PrestaShopBundle\Controller\Admin\Sell\Order;
 
 use Exception;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\AddCartRuleToCartCommand;
-use PrestaShop\PrestaShop\Core\Domain\Cart\Command\AddProductToCartCommand;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Command\AddCustomizationFieldsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\CreateEmptyCustomerCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\RemoveCartRuleFromCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\RemoveProductFromCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\SetFreeShippingToCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartAddressesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartCarrierCommand;
-use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartCurrencyCommand;
-use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartLanguageCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateProductQuantityInCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartNotFoundException;
@@ -44,15 +42,7 @@ use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartInformation;
 use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleValidityException;
-use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyException;
-use PrestaShop\PrestaShop\Core\Domain\Exception\FileUploadException;
-use PrestaShop\PrestaShop\Core\Domain\Language\Exception\LanguageException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Customization\CustomizationSettings;
-use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Exception\CustomizationConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductOutOfStockException;
-use PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Command\AddSpecificPriceCommand;
-use PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Command\DeleteSpecificPriceByCartProductCommand;
-use PrestaShop\PrestaShop\Core\Domain\ValueObject\Reduction;
+use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\QuantityAction;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -61,6 +51,14 @@ use Symfony\Component\HttpFoundation\Response;
 
 class CartController extends FrameworkBundleAdminController
 {
+    /**
+     * @return Response
+     */
+    public function indexAction()
+    {
+        return $this->render('@PrestaShop/Admin/Sell/Order/Cart/index.html.twig');
+    }
+
     /**
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *
@@ -76,7 +74,7 @@ class CartController extends FrameworkBundleAdminController
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
 
-            return $this->redirect($this->getAdminLink('AdminCarts', [], true));
+            return $this->redirectToRoute('admin_carts_index');
         }
 
         $kpiRowFactory = $this->get('prestashop.core.kpi_row.factory.cart');
@@ -90,16 +88,13 @@ class CartController extends FrameworkBundleAdminController
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'cartKpi' => $kpiRowFactory->build(),
-            'createOrderFromCartLink' => $this->generateUrl('admin_orders_create', [
-                'cartId' => $cartId,
-            ]),
         ]);
     }
 
     /**
      * Gets requested cart information
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller')) || is_granted('create', 'AdminOrders')")
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *
      * @param int $cartId
      *
@@ -122,7 +117,7 @@ class CartController extends FrameworkBundleAdminController
     /**
      * Creates empty cart
      *
-     * @AdminSecurity("is_granted('create', request.get('_legacy_controller')) || is_granted('create', 'AdminOrders')")
+     * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))")
      *
      * @param Request $request
      *
@@ -131,7 +126,7 @@ class CartController extends FrameworkBundleAdminController
     public function createAction(Request $request): JsonResponse
     {
         try {
-            $customerId = $request->request->getInt('customerId');
+            $customerId = $request->request->getInt('customer_id');
             $cartId = $this->getCommandBus()->handle(new CreateEmptyCustomerCartCommand($customerId))->getValue();
 
             return $this->json($this->getCartInfo($cartId));
@@ -146,7 +141,7 @@ class CartController extends FrameworkBundleAdminController
     /**
      * Changes the cart address information
      *
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller')) || is_granted('create', 'AdminOrders')")
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
      *
      * @param int $cartId
      * @param Request $request
@@ -155,15 +150,17 @@ class CartController extends FrameworkBundleAdminController
      */
     public function editAddressesAction(int $cartId, Request $request): JsonResponse
     {
-        $invoiceAddressId = $request->request->getInt('invoiceAddressId');
-        $deliveryAddressId = $request->request->getInt('deliveryAddressId');
-
         try {
-            $this->getCommandBus()->handle(new UpdateCartAddressesCommand(
-                $cartId,
-                $deliveryAddressId,
-                $invoiceAddressId
-            ));
+            $updateAddressCommand = new UpdateCartAddressesCommand($cartId);
+            if ($deliveryAddressId = $request->request->getInt('delivery_address_id')) {
+                $updateAddressCommand->setNewDeliveryAddressId($deliveryAddressId);
+            }
+
+            if ($invoiceAddressId = $request->request->getInt('invoice_address_id')) {
+                $updateAddressCommand->setNewInvoiceAddressId($invoiceAddressId);
+            }
+
+            $this->getCommandBus()->handle($updateAddressCommand);
 
             return $this->json($this->getCartInfo($cartId));
         } catch (Exception $e) {
@@ -175,58 +172,6 @@ class CartController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller')) || is_granted('create', 'AdminOrders')")
-     *
-     * @param int $cartId
-     * @param Request $request
-     *
-     * @return JsonResponse
-     */
-    public function editCurrencyAction(int $cartId, Request $request): JsonResponse
-    {
-        try {
-            $this->getCommandBus()->handle(new UpdateCartCurrencyCommand(
-                $cartId,
-                $request->request->getInt('currencyId')
-            ));
-
-            return $this->json($this->getCartInfo($cartId));
-        } catch (Exception $e) {
-            return $this->json(
-                ['message' => $this->getErrorMessageForException($e, $this->getErrorMessages($e))],
-                Response::HTTP_INTERNAL_SERVER_ERROR
-            );
-        }
-    }
-
-    /**
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller')) || is_granted('create', 'AdminOrders')")
-     *
-     * @param int $cartId
-     * @param Request $request
-     *
-     * @return JsonResponse
-     */
-    public function editLanguageAction(int $cartId, Request $request): JsonResponse
-    {
-        try {
-            $this->getCommandBus()->handle(new UpdateCartLanguageCommand(
-                $cartId,
-                $request->request->getInt('languageId')
-            ));
-
-            return $this->json($this->getCartInfo($cartId));
-        } catch (Exception $e) {
-            return $this->json(
-                ['message' => $this->getErrorMessageForException($e, $this->getErrorMessages($e))],
-                Response::HTTP_INTERNAL_SERVER_ERROR
-            );
-        }
-    }
-
-    /**
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller')) || is_granted('create', 'AdminOrders')")
-     *
      * @param Request $request
      * @param int $cartId
      *
@@ -278,7 +223,7 @@ class CartController extends FrameworkBundleAdminController
     /**
      * Adds cart rule to cart
      *
-     * @AdminSecurity("is_granted('create', request.get('_legacy_controller')) || is_granted('create', 'AdminOrders')")
+     * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))")
      *
      * @param Request $request
      * @param int $cartId
@@ -303,7 +248,7 @@ class CartController extends FrameworkBundleAdminController
     /**
      * Deletes cart rule from cart
      *
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller')) || is_granted('create', 'AdminOrders')")
+     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))")
      *
      * @param int $cartId
      * @param int $cartRuleId
@@ -327,7 +272,7 @@ class CartController extends FrameworkBundleAdminController
     /**
      * Adds product to cart
      *
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller')) || is_granted('create', 'AdminOrders')")
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
      *
      * @param Request $request
      * @param int $cartId
@@ -336,114 +281,31 @@ class CartController extends FrameworkBundleAdminController
      */
     public function addProductAction(Request $request, int $cartId): JsonResponse
     {
-        $productId = $request->request->getInt('product_id');
-        $quantity = $request->request->getInt('product_quantity');
-        $combinationId = $request->request->getInt('combination_id');
-
-        $textCustomizations = $request->request->get('customizations') ?: [];
-        $fileCustomizations = $request->files->get('customizations') ?: [];
-
-        $customizations = $textCustomizations + $fileCustomizations;
+        $productId = $request->request->getInt('productId');
+        $quantity = $request->request->getInt('quantity');
+        $combinationId = $request->request->getInt('combinationId');
+        $customizationId = null;
 
         try {
-            $this->assertAllUploadedFilesReachedRequest($request->headers->get('file-sizes'), $fileCustomizations);
-
-            $this->getCommandBus()->handle(new AddProductToCartCommand(
-                $cartId,
-                $productId,
-                $quantity,
-                $combinationId ?: null,
-                $customizations
-            ));
-
-            return $this->json($this->getCartInfo($cartId));
-        } catch (Exception $e) {
-            return $this->json(
-                ['message' => $this->getErrorMessageForException($e, $this->getErrorMessages($e))],
-                Response::HTTP_INTERNAL_SERVER_ERROR
-            );
-        }
-    }
-
-    /**
-     * Modifying a price for a product in the cart is actually performed by using generated specific prices,
-     * that are used only for this cart and this product.
-     *
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller')) || is_granted('create', 'AdminOrders')")
-     *
-     * @param Request $request
-     * @param int $cartId
-     * @param int $productId
-     *
-     * @return JsonResponse
-     */
-    public function editProductPriceAction(Request $request, int $cartId, int $productId): JsonResponse
-    {
-        $commandBus = $this->getCommandBus();
-
-        try {
-            $deleteSpecificPriceCommand = new DeleteSpecificPriceByCartProductCommand($cartId, $productId);
-
-            $addSpecificPriceCommand = new AddSpecificPriceCommand(
-                $productId,
-                Reduction::TYPE_AMOUNT,
-                0,
-                true,
-                (float) $request->request->get('newPrice'),
-                1
-            );
-            $addSpecificPriceCommand->setCartId($cartId);
-            $addSpecificPriceCommand->setCustomerId($request->request->getInt('customerId'));
-
-            if ($attributeId = $request->query->getInt('productAttributeId')) {
-                $deleteSpecificPriceCommand->setProductAttributeId($attributeId);
-                $addSpecificPriceCommand->setProductAttributeId($attributeId);
+            if ($customizations = $request->request->get('customizations')) {
+                $customizationId = $this->getCommandBus()->handle(new AddCustomizationFieldsCommand(
+                    $cartId,
+                    $productId,
+                    $customizations
+                ));
             }
-
-            // delete previous specific prices
-            $commandBus->handle($deleteSpecificPriceCommand);
-            // add new specific price
-            $commandBus->handle($addSpecificPriceCommand);
-
-            return $this->json($this->getCartInfo($cartId));
-        } catch (Exception $e) {
-            return $this->json(
-                ['message' => $this->getErrorMessageForException($e, $this->getErrorMessages($e))],
-                Response::HTTP_INTERNAL_SERVER_ERROR
-            );
-        }
-    }
-
-    /**
-     * Changes product in cart quantity
-     *
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller')) || is_granted('create', 'AdminOrders')")
-     *
-     * @param Request $request
-     * @param int $cartId
-     * @param int $productId
-     *
-     * @return JsonResponse
-     */
-    public function editProductQuantityAction(Request $request, int $cartId, int $productId)
-    {
-        try {
-            $newQty = $request->request->getInt('newQty');
 
             $this->getCommandBus()->handle(new UpdateProductQuantityInCartCommand(
                 $cartId,
-                $productId,
-                $newQty,
-                $request->request->getInt('attributeId') ?: null,
-                $request->request->getInt('customizationId') ?: null
+                (int) $productId,
+                (int) $quantity,
+                QuantityAction::INCREASE_PRODUCT_QUANTITY,
+                $combinationId ?: null,
+                $customizationId
             ));
 
             return $this->json($this->getCartInfo($cartId));
         } catch (Exception $e) {
-            if ($e instanceof CartConstraintException && $e->getCode() === CartConstraintException::UNCHANGED_QUANTITY) {
-                return $this->json($this->getCartInfo($cartId));
-            }
-
             return $this->json(
                 ['message' => $this->getErrorMessageForException($e, $this->getErrorMessages($e))],
                 Response::HTTP_INTERNAL_SERVER_ERROR
@@ -454,7 +316,7 @@ class CartController extends FrameworkBundleAdminController
     /**
      * Deletes product from cart
      *
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller')) || is_granted('create', 'AdminOrders')")
+     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))")
      *
      * @param Request $request
      * @param int $cartId
@@ -497,87 +359,13 @@ class CartController extends FrameworkBundleAdminController
     }
 
     /**
-     * Checks if all submitted files reached the request.
-     * If submitted form size exceeds php.ini post_max_size setting the $_FILES global doesn't contain the file.
-     * For this reason custom headers where passed containing submitted file sizes
-     *  to check if request contains all files that were submitted in browser
-     *
-     * @param string $fileSizeHeaders
-     * @param array $fileCustomizations
-     *
-     * @throws FileUploadException
-     */
-    private function assertAllUploadedFilesReachedRequest(string $fileSizeHeaders, array $fileCustomizations): void
-    {
-        if (!empty($fileSizeHeaders)) {
-            $fileSizesByInputName = json_decode($fileSizeHeaders, true);
-            foreach ($fileSizesByInputName as $name => $size) {
-                if (!isset($fileCustomizations[$name])) {
-                    throw new FileUploadException('Some files were possibly not uploaded due to post_max_size limit', UPLOAD_ERR_INI_SIZE);
-                }
-            }
-        }
-    }
-
-    /**
-     * @param Exception $e
-     *
      * @return array
      */
     private function getErrorMessages(Exception $e)
     {
-        $iniConfig = $this->get('prestashop.core.configuration.ini_configuration');
-
         return [
             CartNotFoundException::class => $this->trans('The object cannot be loaded (or found)', 'Admin.Notifications.Error'),
             CartRuleValidityException::class => $e->getMessage(),
-            CartConstraintException::class => [
-                CartConstraintException::INVALID_QUANTITY => $this->trans(
-                    'Positive product quantity is required',
-                    'Admin.Notifications.Error'
-                ),
-            ],
-            LanguageException::class => [
-                LanguageException::NOT_ACTIVE => $this->trans(
-                    'Selected language cannot be used because is disabled',
-                    'Admin.Notifications.Error'
-                ),
-            ],
-            CurrencyException::class => [
-                CurrencyException::IS_DELETED => $this->trans(
-                    'Selected currency cannot be used because it is deleted',
-                    'Admin.Notifications.Error'
-                ),
-                CurrencyException::IS_DISABLED => $this->trans(
-                    'Selected currency cannot be used because it is disabled',
-                    'Admin.Notifications.Error'
-                ),
-            ],
-            CustomizationConstraintException::class => [
-                CustomizationConstraintException::FIELD_IS_REQUIRED => $this->trans(
-                    'Please fill in all the required fields.',
-                    'Admin.Notifications.Error'
-                ),
-                CustomizationConstraintException::FIELD_IS_TOO_LONG => $this->trans(
-                    'Custom field text cannot be longer than %limit% characters',
-                    'Admin.Notifications.Error',
-                    ['%limit%' => CustomizationSettings::MAX_TEXT_LENGTH]
-                ),
-            ],
-            ProductOutOfStockException::class => $this->trans(
-                'There are not enough products in stock',
-                'Admin.Notifications.Error'
-            ),
-            FileUploadException::class => [
-                UPLOAD_ERR_INI_SIZE => $this->trans(
-                    'Max file size allowed is "%s" bytes.', 'Admin.Notifications.Error', [
-                    $iniConfig->getUploadMaxSizeInBytes(),
-                ]),
-                UPLOAD_ERR_EXTENSION => $this->trans(
-                    'Image format not recognized, allowed formats are: .gif, .jpg, .png',
-                    'Admin.Notifications.Error'
-                ),
-            ],
         ];
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2020 PrestaShop SA and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -40,17 +40,17 @@ class ProfileCore extends ObjectModel
     /**
      * @see ObjectModel::$definition
      */
-    public static $definition = [
+    public static $definition = array(
         'table' => 'profile',
         'primary' => 'id_profile',
         'multilang' => true,
-        'fields' => [
+        'fields' => array(
             /* Lang fields */
-            'name' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 32],
-        ],
-    ];
+            'name' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 32),
+        ),
+    );
 
-    protected static $_cache_accesses = [];
+    protected static $_cache_accesses = array();
 
     /**
      * Get all available profiles.
@@ -137,11 +137,11 @@ class ProfileCore extends ObjectModel
         }
 
         if (!isset(self::$_cache_accesses[$idProfile])) {
-            self::$_cache_accesses[$idProfile] = [];
+            self::$_cache_accesses[$idProfile] = array();
         }
 
         if (!isset(self::$_cache_accesses[$idProfile][$type])) {
-            self::$_cache_accesses[$idProfile][$type] = [];
+            self::$_cache_accesses[$idProfile][$type] = array();
             // Super admin profile has full auth
             if ($idProfile == _PS_ADMIN_PROFILE_) {
                 $defaultPermission = [
@@ -184,7 +184,7 @@ class ProfileCore extends ObjectModel
 
     public static function resetCacheAccesses()
     {
-        self::$_cache_accesses = [];
+        self::$_cache_accesses = array();
     }
 
     /**
@@ -202,10 +202,10 @@ class ProfileCore extends ObjectModel
 
             foreach (self::ALLOWED_PROFILE_TYPE_CHECK as $type) {
                 self::$_cache_accesses[$idProfile][$type][$tab[$type]] = array_merge(
-                    [
+                    array(
                         'id_tab' => $tab['id_tab'],
                         'class_name' => $tab['class_name'],
-                    ],
+                    ),
                     $defaultData,
                     $accessData
                 );

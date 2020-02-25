@@ -30,6 +30,9 @@ function build {
   popd
 }
 
+echo ">>> Make sur you have the latest npm version"
+npm install -g npm
+
 echo ">>> Building admin default theme..."
 build "$ADMIN_DIR/themes/default"
 

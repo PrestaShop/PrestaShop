@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2020 PrestaShop SA and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,14 +19,13 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace Tests\Unit\Core\Search;
 
-use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters;
@@ -125,7 +124,7 @@ class SearchParametersTest extends TestCase
     /**
      * @param array|null $filters
      *
-     * @return MockObject|AdminFilterRepository
+     * @return \PHPUnit_Framework_MockObject_MockObject|AdminFilterRepository
      */
     private function buildAdminFilterRepositoryMock(array $filters = null)
     {
@@ -160,7 +159,7 @@ class SearchParametersTest extends TestCase
      * @param array $parameters
      * @param bool $postQuery
      *
-     * @return MockObject|Request
+     * @return \PHPUnit_Framework_MockObject_MockObject|Request
      */
     private function buildRequestMock(array $parameters, $postQuery = false)
     {

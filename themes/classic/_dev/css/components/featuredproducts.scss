@@ -135,7 +135,6 @@ $product-description-height: 70px;
     color: $gray;
     text-decoration: line-through;
     font-size: $font-size-sm;
-    display: inline-block;
   }
   .count {
     color: $gray;
@@ -167,6 +166,6 @@ $product-description-height: 70px;
   .featured-products {
     .products {
       justify-content: center;
-    }
+    } 
   }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2020 PrestaShop SA and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -48,10 +48,10 @@ final class HookRegistry
 
     public function __construct()
     {
-        $this->hooks = [
-            self::HOOK_CALLED => [],
-            self::HOOK_NOT_CALLED => [],
-        ];
+        $this->hooks = array(
+            self::HOOK_CALLED => array(),
+            self::HOOK_NOT_CALLED => array(),
+        );
     }
 
     /**
@@ -62,13 +62,13 @@ final class HookRegistry
      */
     public function selectHook($hookName, $hookArguments, $file, $line)
     {
-        $this->currentHook = [
+        $this->currentHook = array(
             'name' => $hookName,
             'args' => $hookArguments,
             'location' => "$file:$line",
             'status' => self::HOOK_NOT_CALLED,
-            'modules' => [],
-        ];
+            'modules' => array(),
+        );
     }
 
     /**
@@ -84,10 +84,10 @@ final class HookRegistry
      */
     public function hookedByModule(ModuleInterface $module)
     {
-        $this->currentHook['modules'][$module->name] = [
-            'callback' => [],
-            'widget' => [],
-        ];
+        $this->currentHook['modules'][$module->name] = array(
+            'callback' => array(),
+            'widget' => array(),
+        );
     }
 
     /**
@@ -98,9 +98,9 @@ final class HookRegistry
      */
     public function hookedByCallback(ModuleInterface $module, $args)
     {
-        $this->currentHook['modules'][$module->name]['callback'] = [
+        $this->currentHook['modules'][$module->name]['callback'] = array(
             'args' => $args,
-        ];
+        );
     }
 
     /**
@@ -111,9 +111,9 @@ final class HookRegistry
      */
     public function hookedByWidget(ModuleInterface $module, $args)
     {
-        $this->currentHook['modules'][$module->name]['widget'] = [
+        $this->currentHook['modules'][$module->name]['widget'] = array(
             'args' => $args,
-        ];
+        );
     }
 
     /**
@@ -150,12 +150,12 @@ final class HookRegistry
         $name = $this->currentHook['name'];
         $status = $this->currentHook['status'];
 
-        $hook = [
+        $hook = array(
             'args' => $this->currentHook['args'],
             'name' => $name,
             'location' => $this->currentHook['location'],
             'modules' => $this->currentHook['modules'],
-        ];
+        );
 
         $this->hooks[$status][$name][] = $hook;
     }

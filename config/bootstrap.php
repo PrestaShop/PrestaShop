@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2020 PrestaShop SA and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -61,7 +61,7 @@ $exportPhpConfigFile = function ($config, $destination) use ($filesystem) {
 
 // Bootstrap an application with parameters.yml, which has been installed before PHP parameters file support
 if (!file_exists($phpParametersFilepath) && file_exists($yamlParametersFilepath)) {
-    $parameters = Yaml::parseFile($yamlParametersFilepath);
+    $parameters = Yaml::parse($yamlParametersFilepath);
     if ($exportPhpConfigFile($parameters, $phpParametersFilepath)) {
         $filesystem->dumpFile($yamlParametersFilepath, 'parameters:' . "\n");
     }
@@ -79,7 +79,7 @@ if ($lastParametersModificationTime) {
             $config = require $phpParametersFilepath;
             $exportPhpConfigFile($config, $cachedParameters);
         } elseif (file_exists($yamlParametersFilepath)) {
-            $config = Yaml::parseFile($yamlParametersFilepath);
+            $config = Yaml::parse($yamlParametersFilepath);
             $exportPhpConfigFile($config, $cachedParameters);
         }
     }

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2020 PrestaShop SA and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -53,19 +53,19 @@ class ConnectionCore extends ObjectModel
     /**
      * @see ObjectModel::$definition
      */
-    public static $definition = [
+    public static $definition = array(
         'table' => 'connections',
         'primary' => 'id_connections',
-        'fields' => [
-            'id_guest' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
-            'id_page' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
-            'ip_address' => ['type' => self::TYPE_INT, 'validate' => 'isInt'],
-            'http_referer' => ['type' => self::TYPE_STRING, 'validate' => 'isAbsoluteUrl'],
-            'id_shop' => ['type' => self::TYPE_INT, 'required' => true],
-            'id_shop_group' => ['type' => self::TYPE_INT, 'required' => true],
-            'date_add' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
-        ],
-    ];
+        'fields' => array(
+            'id_guest' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
+            'id_page' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
+            'ip_address' => array('type' => self::TYPE_INT, 'validate' => 'isInt'),
+            'http_referer' => array('type' => self::TYPE_STRING, 'validate' => 'isAbsoluteUrl'),
+            'id_shop' => array('type' => self::TYPE_INT, 'required' => true),
+            'id_shop_group' => array('type' => self::TYPE_INT, 'required' => true),
+            'date_add' => array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
+        ),
+    );
 
     /**
      * @see ObjectModel::getFields()
@@ -98,36 +98,36 @@ class ConnectionCore extends ObjectModel
         }
         // If we do not track the pages, no need to get the page id
         if (!Configuration::get('PS_STATSDATA_PAGESVIEWS') && !Configuration::get('PS_STATSDATA_CUSTOMER_PAGESVIEWS')) {
-            return [];
+            return array();
         }
         if (!$idPage) {
             $idPage = Page::getCurrentId();
         }
         // If we do not track the page views by customer, the id_page is the only information needed
         if (!Configuration::get('PS_STATSDATA_CUSTOMER_PAGESVIEWS')) {
-            return ['id_page' => $idPage];
+            return array('id_page' => $idPage);
         }
 
         // The ending time will be updated by an ajax request when the guest will close the page
         $timeStart = date('Y-m-d H:i:s');
         Db::getInstance()->insert(
             'connections_page',
-            [
+            array(
                 'id_connections' => (int) $cookie->id_connections,
                 'id_page' => (int) $idPage,
                 'time_start' => $timeStart,
-            ],
+            ),
             false,
             true,
             Db::INSERT_IGNORE
         );
 
         // This array is serialized and used by the ajax request to identify the page
-        return [
+        return array(
             'id_connections' => (int) $cookie->id_connections,
             'id_page' => (int) $idPage,
             'time_start' => $timeStart,
-        ];
+        );
     }
 
     /**

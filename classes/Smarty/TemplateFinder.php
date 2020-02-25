@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 2007-2020 PrestaShop SA and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -34,10 +34,10 @@ class TemplateFinderCore
 {
     private $directories;
     private $extension;
-    private $productListEntities = ['category', 'manufacturer', 'supplier'];
-    private $productListSearchEntities = ['search', 'price-drop', 'best-sale'];
-    private $productEntities = ['product'];
-    private $brandListEntities = ['manufacturers', 'suppliers'];
+    private $productListEntities = array('category', 'manufacturer', 'supplier');
+    private $productListSearchEntities = array('search', 'price-drop', 'best-sale');
+    private $productEntities = array('product');
+    private $brandListEntities = array('manufacturers', 'suppliers');
 
     public function __construct(array $directories, $extension)
     {
@@ -74,37 +74,37 @@ class TemplateFinderCore
         $id = (int) $id;
 
         if (in_array($entity, $this->getProductListEntities())) {
-            $templates = [
+            $templates = array(
                 'catalog/listing/' . $entity . '-' . $id,
                 'catalog/listing/' . $entity,
                 $template,
                 'catalog/listing/product-list',
-            ];
+            );
         } elseif (in_array($entity, $this->getProductListSearchEntities())) {
-            $templates = [
+            $templates = array(
                 'catalog/listing/' . $entity,
                 $template,
                 'catalog/listing/product-list',
-            ];
+            );
         } elseif (in_array($entity, $this->getProductEntities())) {
-            $templates = [
+            $templates = array(
                 'catalog/' . $entity . '-' . $id,
                 $template,
                 'catalog/product',
-            ];
+            );
         } elseif (in_array($entity, $this->getBrandListEntities())) {
-            $templates = [
+            $templates = array(
                 $template,
                 'catalog/brands',
-            ];
+            );
         } elseif ('cms' === $entity) {
-            $templates = [
+            $templates = array(
                 'cms/page-' . $id,
                 $template,
                 'cms/page',
-            ];
+            );
         } else {
-            $templates = [$template];
+            $templates = array($template);
         }
 
         return array_unique($templates);

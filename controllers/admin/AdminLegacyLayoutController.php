@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 2007-2020 PrestaShop SA and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -31,7 +31,7 @@ class AdminLegacyLayoutControllerCore extends AdminController
     /** @var string[] */
     public $jsRouterMetadata;
     /** @var array */
-    protected $headerToolbarBtn = [];
+    protected $headerToolbarBtn = array();
     /** @var string */
     protected $title;
     /** @var bool */
@@ -61,7 +61,7 @@ class AdminLegacyLayoutControllerCore extends AdminController
     public function __construct(
         $controllerName = '',
         $title = '',
-        $headerToolbarBtn = [],
+        $headerToolbarBtn = array(),
         $displayType = '',
         $showContentHeader = true,
         $headerTabContent = '',
@@ -142,7 +142,7 @@ class AdminLegacyLayoutControllerCore extends AdminController
         // @todo remove once the product page has been made responsive
         $isProductPage = ('AdminProducts' === $this->controller_name);
 
-        $vars = [
+        $vars = array(
             'viewport_scale' => $isProductPage ? '0.75' : '1',
             'maintenance_mode' => !(bool) Configuration::get('PS_SHOP_ENABLE'),
             'debug_mode' => (bool) _PS_MODE_DEV_,
@@ -163,7 +163,7 @@ class AdminLegacyLayoutControllerCore extends AdminController
             'js_router_metadata' => $this->jsRouterMetadata,
             /* allow complex <h1> structure. @since 1.7.7 */
             'use_regular_h1_structure' => $this->useRegularH1Structure,
-        ];
+        );
 
         if ($this->helpLink === false || !empty($this->helpLink)) {
             $vars['help_link'] = $this->helpLink;

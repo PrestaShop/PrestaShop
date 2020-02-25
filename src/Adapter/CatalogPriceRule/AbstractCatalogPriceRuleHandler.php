@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2020 PrestaShop SA and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -55,7 +55,9 @@ abstract class AbstractCatalogPriceRuleHandler
         }
 
         if ($specificPriceRule->id !== $catalogPriceRuleId->getValue()) {
-            throw new CatalogPriceRuleNotFoundException(sprintf('SpecificPriceRule with id "%s" was not found.', $catalogPriceRuleId->getValue()));
+            throw new CatalogPriceRuleNotFoundException(
+                sprintf('SpecificPriceRule with id "%s" was not found.', $catalogPriceRuleId->getValue())
+            );
         }
 
         return $specificPriceRule;
@@ -75,7 +77,10 @@ abstract class AbstractCatalogPriceRuleHandler
         try {
             return $specificPriceRule->delete();
         } catch (PrestaShopException $e) {
-            throw new CatalogPriceRuleException(sprintf('An error occurred when deleting SpecificPriceRule object with id "%s".', $specificPriceRule->id));
+            throw new CatalogPriceRuleException(sprintf(
+                'An error occurred when deleting SpecificPriceRule object with id "%s".',
+                $specificPriceRule->id
+            ));
         }
     }
 
@@ -88,7 +93,10 @@ abstract class AbstractCatalogPriceRuleHandler
     protected function assertDateRangeIsNotInverse(DateTime $from, DateTime $to)
     {
         if ($from->diff($to)->invert) {
-            throw new CatalogPriceRuleConstraintException('The date time for catalog price rule cannot be inverse', CatalogPriceRuleConstraintException::INVALID_DATE_RANGE);
+            throw new CatalogPriceRuleConstraintException(
+                'The date time for catalog price rule cannot be inverse',
+                CatalogPriceRuleConstraintException::INVALID_DATE_RANGE
+            );
         }
     }
 }

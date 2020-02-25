@@ -1,5 +1,5 @@
 /**
- * 2007-2020 PrestaShop SA and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -28,50 +28,29 @@
  */
 export default {
   // when customer search action is done
-  customerSearched: 'OrderCreateCustomerSearched',
+  customerSearched: 'customerSearched',
   // when new customer is selected
-  customerSelected: 'OrderCreateCustomerSelected',
-  // when no customers found by search
-  customersNotFound: 'OrderCreateSearchCustomerNotFound',
-  // when new cart is loaded,
-  //  no matter if its empty, selected from carts list or duplicated by order.
-  cartLoaded: 'OrderCreateCartLoaded',
-  // when cart currency has been changed
-  cartCurrencyChanged: 'OrderCreateCartCurrencyChanged',
-  // when cart currency changing fails
-  cartCurrencyChangeFailed: 'OrderCreateCartCurrencyChangeFailed',
-  // when cart language has been changed
-  cartLanguageChanged: 'OrderCreateCartLanguageChanged',
+  customerSelected: 'customerSelected',
+  // when new cart is loaded, no matter if its empty, selected from carts list or duplicated by order.
+  cartLoaded: 'cartLoaded',
   // when cart addresses information has been changed
-  cartAddressesChanged: 'OrderCreateCartAddressesChanged',
+  cartAddressesChanged: 'cartAddressesChanged',
   // when cart delivery option has been changed
-  cartDeliveryOptionChanged: 'OrderCreateCartDeliveryOptionChanged',
+  cartDeliveryOptionChanged: 'cartDeliveryOptionChanged',
   // when cart free shipping value has been changed
-  cartFreeShippingSet: 'OrderCreateCartFreeShippingSet',
+  cartFreeShippingSet: 'cartFreeShippingSet',
   // when cart rules search action is done
-  cartRuleSearched: 'OrderCreateCartRuleSearched',
+  cartRuleSearched: 'cartRuleSearched',
   // when cart rule is removed from cart
-  cartRuleRemoved: 'OrderCreateCartRuleRemoved',
+  cartRuleRemoved: 'cartRuleRemoved',
   // when cart rule is added to cart
-  cartRuleAdded: 'OrderCreateCartRuleAdded',
+  cartRuleAdded: 'cartRuleAdded',
   // when cart rule cannot be added to cart
-  cartRuleFailedToAdd: 'OrderCreateCartRuleFailedToAdd',
+  cartRuleFailedToAdd: 'cartRuleFailedToAdd',
   // when product search action is done
-  productSearched: 'OrderCreateProductSearched',
+  productSearched: 'productSearched',
   // when product is added to cart
-  productAddedToCart: 'OrderCreateProductAddedToCart',
-  // when adding product to cart fails
-  productAddToCartFailed: 'OrderCreateProductAddToCartFailed',
+  productAddedToCart: 'productAddedToCart',
   // when product is removed from cart
-  productRemovedFromCart: 'OrderCreateProductRemovedFromCart',
-  // when product in cart price has been changed
-  productPriceChanged: 'OrderCreateProductPriceChanged',
-  // when product quantity in cart has been changed
-  productQtyChanged: 'OrderCreateProductQtyChanged',
-  // when changing product quantity in cart failed
-  productQtyChangeFailed: 'OrderCreateProductQtyChangeFailed',
-  // when order process email has been sent to customer
-  processOrderEmailSent: 'OrderCreateProcessOrderEmailSent',
-  // when order process email sending failed
-  processOrderEmailFailed: 'OrderCreateProcessOrderEmailFailed',
+  productRemovedFromCart: 'productRemovedFromCart',
 };

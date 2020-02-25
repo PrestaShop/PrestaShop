@@ -3,35 +3,18 @@ module.exports = class CommonPage {
     this.page = page;
   }
 
-  /**
-   * Get page title
-   * @returns {Promise<*>}
-   */
   async getPageTitle() {
     return this.page.title();
   }
 
-  /**
-   * Go to URL
-   * @param url
-   * @returns {Promise<void>}
-   */
-  async goTo(url) {
-    await this.page.goto(url);
-  }
-
-  /**
-   * Get current url
-   * @returns {Promise<string>}
-   */
-  async getCurrentURL() {
-    return decodeURIComponent(this.page.url());
+  async goTo(URL) {
+    await this.page.goto(URL);
   }
 
   /**
    * Get Text from element
    * @param selector, from where to get text
-   * @return {Promise<string>}
+   * @return textContent
    */
   async getTextContent(selector) {
     await this.page.waitForSelector(selector, {visible: true});
@@ -266,7 +249,7 @@ module.exports = class CommonPage {
   }
 
   /**
-   * Check if checkbox is selected
+   * c
    * @param selector
    * @return {Promise<boolean>}
    */

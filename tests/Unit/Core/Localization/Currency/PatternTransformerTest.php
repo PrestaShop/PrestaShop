@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2020 PrestaShop SA and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -119,66 +119,6 @@ class PatternTransformerTest extends TestCase
                     PatternTransformer::TYPE_LEFT_SYMBOL_WITHOUT_SPACE => "\u{200F}¤#,##0.00;\u{200F}¤-#,##0.00",
                     PatternTransformer::TYPE_RIGHT_SYMBOL_WITH_SPACE => "\u{200F}#,##0.00\u{00A0}¤;\u{200F}-#,##0.00\u{00A0}¤",
                     PatternTransformer::TYPE_RIGHT_SYMBOL_WITHOUT_SPACE => "\u{200F}#,##0.00¤;\u{200F}-#,##0.00¤",
-                ],
-            ],
-        ];
-    }
-
-    /**
-     * @param string $expectedTransformationType
-     * @param array $patterns
-     *
-     * @dataProvider getTransformationTypes
-     */
-    public function testGetTransformationType(string $expectedTransformationType, array $patterns)
-    {
-        $transformer = new PatternTransformer();
-        foreach ($patterns as $pattern) {
-            $transformationType = $transformer->getTransformationType($pattern);
-            $this->assertEquals($expectedTransformationType, $transformationType, 'Invalid pattern match ' . $pattern);
-        }
-    }
-
-    /**
-     * @return array
-     */
-    public function getTransformationTypes()
-    {
-        return [
-            PatternTransformer::TYPE_LEFT_SYMBOL_WITH_SPACE => [
-                PatternTransformer::TYPE_LEFT_SYMBOL_WITH_SPACE,
-                [
-                    "¤\u{00A0}#,##0.00",
-                    "¤\u{00A0}#,##,##0.00",
-                    "¤\u{00A0}#,##0.00;¤\u{00A0}-#,##0.00",
-                    "\u{200F}¤\u{00A0}#,##0.00;\u{200F}¤\u{00A0}-#,##0.00",
-                ],
-            ],
-            PatternTransformer::TYPE_LEFT_SYMBOL_WITHOUT_SPACE => [
-                PatternTransformer::TYPE_LEFT_SYMBOL_WITHOUT_SPACE,
-                [
-                    '¤#,##0.00',
-                    '¤#,##,##0.00',
-                    '¤#,##0.00;¤-#,##0.00',
-                    "\u{200F}¤#,##0.00;\u{200F}¤-#,##0.00",
-                ],
-            ],
-            PatternTransformer::TYPE_RIGHT_SYMBOL_WITH_SPACE => [
-                PatternTransformer::TYPE_RIGHT_SYMBOL_WITH_SPACE,
-                [
-                    "#,##0.00\u{a0}¤",
-                    "#,##,##0.00\u{00A0}¤",
-                    "#,##0.00\u{00A0}¤;-#,##0.00\u{00A0}¤",
-                    "\u{200F}#,##0.00\u{00A0}¤;\u{200F}-#,##0.00\u{00A0}¤",
-                ],
-            ],
-            PatternTransformer::TYPE_RIGHT_SYMBOL_WITHOUT_SPACE => [
-                PatternTransformer::TYPE_RIGHT_SYMBOL_WITHOUT_SPACE,
-                [
-                    '#,##0.00¤',
-                    '#,##,##0.00¤',
-                    '#,##0.00¤;-#,##0.00¤',
-                    "\u{200F}#,##0.00¤;\u{200F}-#,##0.00¤",
                 ],
             ],
         ];

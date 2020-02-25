@@ -1,5 +1,5 @@
 /**
- * 2007-2020 PrestaShop SA and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,12 +18,12 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-const {$} = window;
+const $ = window.$;
 
 /**
  * Class ExportToSqlManagerExtension extends grid with exporting query to SQL Manager
@@ -35,12 +35,8 @@ export default class ExportToSqlManagerExtension {
    * @param {Grid} grid
    */
   extend(grid) {
-    grid.getHeaderContainer().on('click', '.js-common_show_query-grid-action', () => this.onShowSqlQueryClick(grid));
-    grid.getHeaderContainer().on(
-      'click',
-      '.js-common_export_sql_manager-grid-action',
-      () => this.onExportSqlManagerClick(grid),
-    );
+    grid.getHeaderContainer().on('click', '.js-common_show_query-grid-action', () => this._onShowSqlQueryClick(grid));
+    grid.getHeaderContainer().on('click', '.js-common_export_sql_manager-grid-action', () => this._onExportSqlManagerClick(grid));
   }
 
   /**
@@ -50,11 +46,11 @@ export default class ExportToSqlManagerExtension {
    *
    * @private
    */
-  onShowSqlQueryClick(grid) {
-    const $sqlManagerForm = $(`#${grid.getId()}_common_show_query_modal_form`);
-    this.fillExportForm($sqlManagerForm, grid);
+  _onShowSqlQueryClick(grid) {
+    const $sqlManagerForm = $('#' + grid.getId() + '_common_show_query_modal_form');
+    this._fillExportForm($sqlManagerForm, grid);
 
-    const $modal = $(`#${grid.getId()}_grid_common_show_query_modal`);
+    const $modal = $('#' + grid.getId() + '_grid_common_show_query_modal');
     $modal.modal('show');
 
     $modal.on('click', '.btn-sql-submit', () => $sqlManagerForm.submit());
@@ -67,10 +63,10 @@ export default class ExportToSqlManagerExtension {
    *
    * @private
    */
-  onExportSqlManagerClick(grid) {
-    const $sqlManagerForm = $(`#${grid.getId()}_common_show_query_modal_form`);
+  _onExportSqlManagerClick(grid) {
+    const $sqlManagerForm = $('#' + grid.getId() + '_common_show_query_modal_form');
 
-    this.fillExportForm($sqlManagerForm, grid);
+    this._fillExportForm($sqlManagerForm, grid);
 
     $sqlManagerForm.submit();
   }
@@ -83,11 +79,11 @@ export default class ExportToSqlManagerExtension {
    *
    * @private
    */
-  fillExportForm($sqlManagerForm, grid) {
+  _fillExportForm($sqlManagerForm, grid) {
     const query = grid.getContainer().find('.js-grid-table').data('query');
 
     $sqlManagerForm.find('textarea[name="sql"]').val(query);
-    $sqlManagerForm.find('input[name="name"]').val(this.getNameFromBreadcrumb());
+    $sqlManagerForm.find('input[name="name"]').val(this._getNameFromBreadcrumb());
   }
 
   /**
@@ -97,18 +93,18 @@ export default class ExportToSqlManagerExtension {
    *
    * @private
    */
-  getNameFromBreadcrumb() {
+  _getNameFromBreadcrumb() {
     const $breadcrumbs = $('.header-toolbar').find('.breadcrumb-item');
     let name = '';
 
     $breadcrumbs.each((i, item) => {
       const $breadcrumb = $(item);
 
-      const breadcrumbTitle = $breadcrumb.find('a').length > 0
-        ? $breadcrumb.find('a').text()
-        : $breadcrumb.text();
+      const breadcrumbTitle = 0 < $breadcrumb.find('a').length ?
+        $breadcrumb.find('a').text() :
+        $breadcrumb.text();
 
-      if (name.length > 0) {
+      if (0 < name.length) {
         name = name.concat(' > ');
       }
 

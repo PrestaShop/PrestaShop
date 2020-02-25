@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2020 PrestaShop SA and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -300,8 +300,8 @@ class DbPDOCore extends Db
      */
     public function _escape($str)
     {
-        $search = ['\\', "\0", "\n", "\r", "\x1a", "'", '"'];
-        $replace = ['\\\\', '\\0', '\\n', '\\r', "\Z", "\'", '\"'];
+        $search = array('\\', "\0", "\n", "\r", "\x1a", "'", '"');
+        $replace = array('\\\\', '\\0', '\\n', '\\r', "\Z", "\'", '\"');
 
         return str_replace($search, $replace, $str);
     }
@@ -439,7 +439,7 @@ class DbPDOCore extends Db
         $result = $this->link->query($sql);
         while ($row = $result->fetch()) {
             if ($row['Engine'] == 'InnoDB') {
-                if (in_array($row['Support'], ['DEFAULT', 'YES'])) {
+                if (in_array($row['Support'], array('DEFAULT', 'YES'))) {
                     $value = 'InnoDB';
                 }
 

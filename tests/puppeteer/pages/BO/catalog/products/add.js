@@ -5,7 +5,6 @@ module.exports = class AddProduct extends BOBasePage {
   constructor(page) {
     super(page);
 
-    this.pageTitle = 'Product •';
     // Text Message
     this.settingUpdatedMessage = 'Settings updated.';
     // Selectors
@@ -38,11 +37,10 @@ module.exports = class AddProduct extends BOBasePage {
     this.deleteCombinationsButton = '#delete-combinations';
     this.productCombinationsBulkForm = '#combinations-bulk-form';
     this.productCombinationsBulkFormTitle = `${this.productCombinationsBulkForm} p[aria-controls]`;
-    // Selector of Step 5 : SEO
-    this.resetUrlButton = '#seo-url-regenerate';
+
     // Growls : override value from BObasePage
     this.growlDefaultDiv = '#growls-default';
-    this.growlMessageBlock = `${this.growlDefaultDiv} .growl-message:last-of-type`;
+    this.growlMessageBloc = `${this.growlDefaultDiv} .growl-message`;
     this.growlCloseButton = `${this.growlDefaultDiv} .growl-close`;
   }
 
@@ -79,16 +77,16 @@ module.exports = class AddProduct extends BOBasePage {
     // Switch product online before save
     if (switchProductOnline) {
       await Promise.all([
-        this.page.waitForSelector(this.growlMessageBlock, {visible: true}),
+        this.page.waitForSelector(this.growlMessageBloc, {visible: true}),
         this.page.click(this.productOnlineSwitch),
       ]);
     }
     // Save created product
     await Promise.all([
-      this.page.waitForSelector(this.growlMessageBlock, {visible: true}),
+      this.page.waitForSelector(this.growlMessageBloc, {visible: true}),
       this.page.click(this.saveProductButton),
     ]);
-    return this.getTextContent(this.growlMessageBlock);
+    return this.getTextContent(`${this.growlMessageBloc}:last-of-type`);
   }
 
   /**
@@ -131,7 +129,7 @@ module.exports = class AddProduct extends BOBasePage {
         {visible: true},
       ),
       this.page.click(this.generateCombinationsButton),
-      this.waitForSelectorAndClick(this.growlMessageBlock),
+      this.waitForSelectorAndClick(this.growlMessageBloc),
     ]);
     await this.closeCombinationsForm();
   }
@@ -173,7 +171,6 @@ module.exports = class AddProduct extends BOBasePage {
    * @return page opened
    */
   async previewProduct() {
-    await this.page.waitForSelector(this.previewProductLink);
     this.page = await this.openLinkWithTargetBlank(this.page, this.previewProductLink);
     const textBody = await this.getTextContent('body');
     if (await textBody.includes('[Debug] This page has moved')) {
@@ -203,7 +200,7 @@ module.exports = class AddProduct extends BOBasePage {
   }
 
   /**
-   * Navigate between forms in add product
+   * Navigate beetween forms in add product
    * @param id
    * @return {Promise<void>}
    */
@@ -211,7 +208,7 @@ module.exports = class AddProduct extends BOBasePage {
     const selector = this.forNavlistItemLink.replace('%ID', id);
     await Promise.all([
       this.page.waitForSelector(`${selector}[aria-selected='true']`, {visible: true}),
-      this.waitForSelectorAndClick(selector),
+      this.page.click(selector),
     ]);
   }
 
@@ -257,15 +254,5 @@ module.exports = class AddProduct extends BOBasePage {
         this.page.waitForSelector(`${this.productCombinationsBulkFormTitle}[aria-expanded='false']`, {visible: true}),
       ]);
     }
-  }
-
-  /**
-   * Reset friendly URL
-   * @returns {Promise<void>}
-   */
-  async resetURL() {
-    await this.page.waitForSelector(this.resetUrlButton, {visible: true});
-    await this.scrollTo(this.resetUrlButton);
-    await this.page.click(this.resetUrlButton);
   }
 };

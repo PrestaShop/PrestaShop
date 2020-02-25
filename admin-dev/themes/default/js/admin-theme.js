@@ -1,5 +1,5 @@
 /**
- * 2007-2020 PrestaShop SA and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -103,17 +103,6 @@ function scroll_if_anchor(href) {
 }
 
 $(document).ready(function() {
-    const $mainMenu = $('.main-menu');
-    const $navBar = $('.nav-bar');
-    const $body = $('body');
-
-    const NavBarTransitions = new NavbarTransitionHandler(
-      $navBar,
-      $mainMenu,
-      getAnimationEvent('transition', 'end'),
-      $body
-    );
-
     $(".nav-bar").find(".link-levelone").hover(function() {
         $(this).addClass("-hover");
     }, function() {
@@ -161,8 +150,6 @@ $(document).ready(function() {
 
     $('.nav-bar').on('click', '.menu-collapse', function() {
         $('body').toggleClass('page-sidebar-closed');
-
-        NavBarTransitions.toggle();
 
         if ($('body').hasClass('page-sidebar-closed')) {
             $('nav.nav-bar ul.main-menu > li')

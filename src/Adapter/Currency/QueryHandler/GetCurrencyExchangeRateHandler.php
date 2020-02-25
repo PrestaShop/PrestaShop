@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2020 PrestaShop SA and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -58,7 +58,14 @@ class GetCurrencyExchangeRateHandler implements GetCurrencyExchangeRateHandlerIn
         try {
             $currencyExchangeRate = $this->exchangeRateProvider->getExchangeRate($query->getIsoCode()->getValue());
         } catch (CurrencyFeedException $e) {
-            throw new ExchangeRateNotFoundException(sprintf('Exchange rate for Currency with iso code %s was not found', $query->getIsoCode()->getValue()), 0, $e);
+            throw new ExchangeRateNotFoundException(
+                sprintf(
+                    'Exchange rate for Currency with iso code %s was not found',
+                    $query->getIsoCode()->getValue()
+                ),
+                0,
+                $e
+            );
         }
 
         return new ExchangeRate($currencyExchangeRate);

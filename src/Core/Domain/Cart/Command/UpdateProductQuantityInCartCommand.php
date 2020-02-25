@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2020 PrestaShop SA and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -27,10 +27,8 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Cart\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\CartId;
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
-use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationId;
+use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\QuantityAction;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
 /**
@@ -51,15 +49,20 @@ class UpdateProductQuantityInCartCommand
     /**
      * @var int
      */
-    private $newQuantity;
+    private $quantity;
 
     /**
-     * @var CombinationId|null
+     * @var QuantityAction
+     */
+    private $action;
+
+    /**
+     * @var int|null
      */
     private $combinationId;
 
     /**
-     * @var CustomizationId|null
+     * @var int|null
      */
     private $customizationId;
 
@@ -67,26 +70,28 @@ class UpdateProductQuantityInCartCommand
      * @param int $cartId
      * @param int $productId
      * @param int $quantity
+     * @param string $action
      * @param int|null $combinationId
      * @param int|null $customizationId
-     *
-     * @throws CartConstraintException
-     * @throws CartException
      */
     public function __construct(
         $cartId,
         $productId,
         $quantity,
+        $action,
         $combinationId = null,
         $customizationId = null
     ) {
-        $this->setCombinationId($combinationId);
-        $this->setCustomizationId($customizationId);
-        $this->assertQuantityIsPositive($quantity);
+        $this->assertCombinationIdIsPositiveIntOrNull($combinationId);
+        $this->assertCustomizationIdIsPositiveIntOrNull($customizationId);
+        $this->assertQuantityIsPositiveInt($quantity);
 
         $this->cartId = new CartId($cartId);
         $this->productId = new ProductId($productId);
-        $this->newQuantity = $quantity;
+        $this->quantity = $quantity;
+        $this->action = new QuantityAction($action);
+        $this->combinationId = $combinationId;
+        $this->customizationId = $customizationId;
     }
 
     /**
@@ -108,60 +113,75 @@ class UpdateProductQuantityInCartCommand
     /**
      * @return int
      */
-    public function getNewQuantity()
+    public function getQuantity()
     {
-        return $this->newQuantity;
+        return $this->quantity;
     }
 
     /**
-     * @return CombinationId|null
+     * @return QuantityAction
      */
-    public function getCombinationId(): ?CombinationId
+    public function getAction()
+    {
+        return $this->action;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getCombinationId()
     {
         return $this->combinationId;
     }
 
     /**
-     * @return CustomizationId|null
+     * @return int|null
      */
-    public function getCustomizationId(): ?CustomizationId
+    public function getCustomizationId()
     {
         return $this->customizationId;
     }
 
     /**
      * @param int|null $combinationId
+     *
+     * @throws CartConstraintException
      */
-    private function setCombinationId(?int $combinationId)
+    private function assertCombinationIdIsPositiveIntOrNull($combinationId)
     {
-        if (null !== $combinationId) {
-            $combinationId = new CombinationId($combinationId);
+        if (null !== $combinationId && (!is_int($combinationId) || 0 >= $combinationId)) {
+            throw new CartConstraintException(sprintf(
+                'Combination id must be of type "int" and positive number, but %s given.',
+                var_export($combinationId, true)
+            ));
         }
-
-        $this->combinationId = $combinationId;
     }
 
     /**
      * @param int|null $customizationId
-     */
-    private function setCustomizationId(?int $customizationId)
-    {
-        if (null !== $customizationId) {
-            $customizationId = new CustomizationId($customizationId);
-        }
-
-        $this->customizationId = $customizationId;
-    }
-
-    /**
-     * @param int $qty
      *
      * @throws CartConstraintException
      */
-    private function assertQuantityIsPositive(int $qty)
+    private function assertCustomizationIdIsPositiveIntOrNull($customizationId)
     {
-        if (0 >= $qty) {
-            throw new CartConstraintException(sprintf('Quantity must be positive integer. "%s" given.', $qty), CartConstraintException::INVALID_QUANTITY);
+        if (null !== $customizationId && (!is_int($customizationId) || 0 >= $customizationId)) {
+            throw new CartConstraintException(sprintf(
+                'Customization id must be of type "int" and positive number, but %s given.',
+                var_export($customizationId, true)
+            ));
+        }
+    }
+
+    /**
+     * @param int $quantity
+     */
+    private function assertQuantityIsPositiveInt($quantity)
+    {
+        if (!is_int($quantity) || 0 > $quantity) {
+            throw new CartConstraintException(sprintf(
+                'Quantity must be of type "int" and positive number, but %s given.',
+                var_export($quantity, true)
+            ));
         }
     }
 }

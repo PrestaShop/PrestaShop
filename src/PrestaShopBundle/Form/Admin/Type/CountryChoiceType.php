@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2020 PrestaShop SA and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,18 +19,16 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShopBundle\Form\Admin\Type;
 
-use PrestaShop\PrestaShop\Core\Form\FormChoiceAttributeProviderInterface;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
@@ -44,42 +42,11 @@ class CountryChoiceType extends AbstractType
     private $countriesChoiceProvider;
 
     /**
-     * @var FormChoiceAttributeProviderInterface
-     */
-    private $countriesAttrChoicesProvider;
-
-    /**
-     * @var array
-     */
-    private $countriesAttr = [];
-
-    /**
-     * @var bool
-     */
-    private $needDni = false;
-
-    /**
-     * @var bool
-     */
-    private $needPostcode = false;
-
-    /**
      * @param FormChoiceProviderInterface $countriesChoiceProvider
      */
-    public function __construct(FormChoiceProviderInterface $countriesChoiceProvider, FormChoiceAttributeProviderInterface $countriesAttrChoicesProvider)
+    public function __construct(FormChoiceProviderInterface $countriesChoiceProvider)
     {
         $this->countriesChoiceProvider = $countriesChoiceProvider;
-        $this->countriesAttrChoicesProvider = $countriesAttrChoicesProvider;
-    }
-
-    public function buildForm(FormBuilderInterface $builder, array $options)
-    {
-        if ($options['withDniAttr'] || $options['withPostcodeAttr']) {
-            $this->needDni = $options['withDniAttr'];
-            $this->needPostcode = $options['withPostcodeAttr'];
-            $this->countriesAttr = $this->countriesAttrChoicesProvider->getChoicesAttributes();
-        }
-        parent::buildForm($builder, $options);
     }
 
     /**
@@ -94,27 +61,7 @@ class CountryChoiceType extends AbstractType
 
         $resolver->setDefaults([
             'choices' => $choices,
-            'choice_attr' => [$this, 'getChoiceAttr'],
-            'withDniAttr' => false,
-            'withPostcodeAttr' => false,
         ]);
-
-        $resolver
-            ->setAllowedTypes('withDniAttr', 'boolean')
-            ->setAllowedTypes('withPostcodeAttr', 'boolean');
-    }
-
-    public function getChoiceAttr($value, $key)
-    {
-        $attr = [];
-        if ($this->needDni && isset($this->countriesAttr[$key], $this->countriesAttr[$key]['need_dni'])) {
-            $attr['need_dni'] = 1;
-        }
-        if ($this->needPostcode && isset($this->countriesAttr[$key], $this->countriesAttr[$key]['need_postcode'])) {
-            $attr['need_postcode'] = 1;
-        }
-
-        return $attr;
     }
 
     /**

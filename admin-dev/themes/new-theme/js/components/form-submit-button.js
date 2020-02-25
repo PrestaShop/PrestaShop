@@ -1,5 +1,5 @@
 /**
- * 2007-2020 PrestaShop SA and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,12 +18,12 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-const {$} = window;
+const $ = window.$;
 
 /**
  * Component which allows submitting very simple forms without having to use <form> element.
@@ -56,20 +56,20 @@ export default class FormSubmitButton {
 
       const $btn = $(this);
 
-      if ($btn.data('form-confirm-message') && window.confirm($btn.data('form-confirm-message')) === false) {
+      if ($btn.data('form-confirm-message') && false === confirm($btn.data('form-confirm-message'))) {
         return;
       }
 
       const $form = $('<form>', {
-        action: $btn.data('form-submit-url'),
-        method: 'POST',
+        'action': $btn.data('form-submit-url'),
+        'method': 'POST',
       });
 
       if ($btn.data('form-csrf-token')) {
         $form.append($('<input>', {
-          type: '_hidden',
-          name: '_csrf_token',
-          value: $btn.data('form-csrf-token'),
+          'type': '_hidden',
+          'name': '_csrf_token',
+          'value': $btn.data('form-csrf-token')
         }));
       }
 

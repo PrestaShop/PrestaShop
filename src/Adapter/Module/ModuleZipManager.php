@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2020 PrestaShop SA and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -43,7 +43,7 @@ class ModuleZipManager
     /*
      * Data
      */
-    private static $sources = [];
+    private static $sources = array();
 
     /*
      * Services
@@ -93,13 +93,27 @@ class ModuleZipManager
         }
 
         if (!file_exists($source)) {
-            throw new Exception($this->translator->trans('Unable to find uploaded module at the following path: %file%', ['%file%' => $source], 'Admin.Modules.Notification'));
+            throw new Exception(
+                $this->translator->trans(
+                    'Unable to find uploaded module at the following path: %file%',
+                    array('%file%' => $source),
+                    'Admin.Modules.Notification'
+                )
+            );
         }
 
         $sandboxPath = $this->getSandboxPath($source);
         $zip = new ZipArchive();
         if ($zip->open($source) === false || !$zip->extractTo($sandboxPath) || !$zip->close()) {
-            throw new Exception($this->translator->trans('Cannot extract module in %path% to get its name. %error%', ['%path%' => $sandboxPath, '%error%' => $zip->getStatusString()], 'Admin.Modules.Notification'));
+            throw new Exception(
+                $this->translator->trans(
+                    'Cannot extract module in %path% to get its name. %error%',
+                    array(
+                        '%path%' => $sandboxPath,
+                        '%error%' => $zip->getStatusString(), ),
+                    'Admin.Modules.Notification'
+                )
+            );
         }
 
         // Check the structure and get the module name
@@ -135,7 +149,11 @@ class ModuleZipManager
         if (!$validModuleStructure) {
             $this->filesystem->remove($sandboxPath);
 
-            throw new Exception($this->translator->trans('This file does not seem to be a valid module zip', [], 'Admin.Modules.Notification'));
+            throw new Exception($this->translator->trans(
+                    'This file does not seem to be a valid module zip',
+                    array(),
+                    'Admin.Modules.Notification'
+            ));
         }
 
         $this->getSource($source)->setName($moduleName);
@@ -159,7 +177,7 @@ class ModuleZipManager
             $sandboxPath . $name,
             $modulePath,
             null,
-            ['override' => true]
+            array('override' => true)
         );
         $this->eventDispatcher
             ->dispatch(

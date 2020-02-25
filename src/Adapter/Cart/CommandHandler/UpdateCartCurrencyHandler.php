@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2020 PrestaShop SA and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -34,7 +34,6 @@ use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
-use PrestaShopException;
 
 /**
  * @internal
@@ -44,23 +43,22 @@ final class UpdateCartCurrencyHandler extends AbstractCartHandler implements Upd
     /**
      * {@inheritdoc}
      */
-    public function handle(UpdateCartCurrencyCommand $command): void
+    public function handle(UpdateCartCurrencyCommand $command)
     {
         $currency = $this->getCurrencyObject($command->getNewCurrencyId());
 
-        $this->assertCurrencyIsNotDeleted($currency);
-        $this->assertCurrencyIsActive($currency);
+        $this->assertCurrencyCantBeUsedInCart($currency);
 
         $cart = $this->getCart($command->getCartId());
         $cart->id_currency = (int) $currency->id;
 
-        try {
-            if (false === $cart->update()) {
-                throw new CartException('Failed to update cart currency.');
-            }
-        } catch (PrestaShopException $e) {
-            throw new CartException(sprintf('An error occurred while trying to update currency for cart with id "%s"', $cart->id));
+        if (false === $cart->save()) {
+            throw new CartException('Failed to update cart currency.');
         }
+
+        // @todo: Should context be changed at controller layer instead?
+        \Context::getContext()->currency = $currency;
+        \Context::getContext()->cart = $cart;
     }
 
     /**
@@ -70,12 +68,14 @@ final class UpdateCartCurrencyHandler extends AbstractCartHandler implements Upd
      *
      * @throws CurrencyNotFoundException
      */
-    private function getCurrencyObject(CurrencyId $currencyId): Currency
+    private function getCurrencyObject(CurrencyId $currencyId)
     {
         $currency = new Currency($currencyId->getValue());
 
         if ($currencyId->getValue() !== $currency->id) {
-            throw new CurrencyNotFoundException(sprintf('Currency with id "%s" was not found', $currencyId->getValue()));
+            throw new CurrencyNotFoundException(
+                sprintf('Currency with id "%s" was not found', $currencyId->getValue())
+            );
         }
 
         return $currency;
@@ -83,25 +83,14 @@ final class UpdateCartCurrencyHandler extends AbstractCartHandler implements Upd
 
     /**
      * @param Currency $currency
-     *
-     * @throws CurrencyException
      */
-    private function assertCurrencyIsActive(Currency $currency): void
+    private function assertCurrencyCantBeUsedInCart(Currency $currency)
     {
-        if (!$currency->active) {
-            throw new CurrencyException(sprintf('Currency "%s" cannot be used in cart because it is disabled', $currency->iso_code), CurrencyException::IS_DISABLED);
-        }
-    }
-
-    /**
-     * @param Currency $currency
-     *
-     * @throws CurrencyException
-     */
-    private function assertCurrencyIsNotDeleted(Currency $currency): void
-    {
-        if ($currency->deleted) {
-            throw new CurrencyException(sprintf('Currency "%s" cannot be used in cart because it is deleted', $currency->iso_code), CurrencyException::IS_DELETED);
+        if ($currency->deleted || !$currency->active) {
+            throw new CurrencyException(sprintf(
+                'Currency "%s" cannot be used in cart because it is either deleted or disabled',
+                $currency->iso_code
+            ));
         }
     }
 }

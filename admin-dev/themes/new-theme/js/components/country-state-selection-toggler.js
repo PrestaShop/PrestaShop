@@ -1,5 +1,5 @@
 /**
- * 2007-2020 PrestaShop SA and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,12 +18,12 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-const {$} = window;
+const $ = window.$;
 
 /**
  * Displays, fills or hides State selection block depending on selected country.
@@ -52,50 +52,47 @@ export default class CountryStateSelectionToggler {
     this.$countryStateSelector = $(countryStateSelector);
     this.$countryInput = $(countryInputSelector);
 
-    this.$countryInput.on('change', () => this.change());
+    this.$countryInput.on('change', () => this._toggle());
 
     // toggle on page load
-    this.toggle();
+    this._toggle(true);
 
     return {};
   }
 
   /**
-   * Change State selection
+   * Toggles State selection
    *
    * @private
    */
-  change() {
-    const countryId = this.$countryInput.val();
-    if (countryId === '') {
-      return;
-    }
-    $.get({
+  _toggle(isFirstToggle = false) {
+    $.ajax({
       url: this.$countryInput.data('states-url'),
+      method: 'GET',
       dataType: 'json',
       data: {
-        id_country: countryId,
-      },
+        id_country: this.$countryInput.val(),
+      }
     }).then((response) => {
-      this.$countryStateSelector.empty();
+      if (response.states.length === 0) {
+        this.$stateSelectionBlock.fadeOut();
 
-      Object.keys(response.states).forEach((value) => {
-        this.$countryStateSelector.append($('<option></option>').attr('value', response.states[value]).text(value));
-      });
+        return;
+      }
 
-      this.toggle();
+      this.$stateSelectionBlock.fadeIn();
+
+      if (isFirstToggle === false) {
+        this.$countryStateSelector.empty();
+        var _this = this;
+        $.each(response.states, function (index, value) {
+          _this.$countryStateSelector.append($('<option></option>').attr('value', value).text(index));
+        })
+      }
     }).catch((response) => {
       if (typeof response.responseJSON !== 'undefined') {
-        window.showErrorMessage(response.responseJSON.message);
+        showErrorMessage(response.responseJSON.message);
       }
     });
-  }
-
-  toggle() {
-    if (this.$countryStateSelector.find('option').length > 0) {
-      this.$stateSelectionBlock.fadeIn();
-    } else {
-      this.$stateSelectionBlock.fadeOut();
-    }
   }
 }

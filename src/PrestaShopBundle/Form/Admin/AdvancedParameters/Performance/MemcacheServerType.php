@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2020 PrestaShop SA and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,21 +19,22 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShopBundle\Form\Admin\AdvancedParameters\Performance;
 
-use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
+use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * This form class generates the "Memcache server" form in Performance page.
  */
-class MemcacheServerType extends TranslatorAwareType
+class MemcacheServerType extends CommonAbstractType
 {
     /**
      * {@inheritdoc}
@@ -42,20 +43,27 @@ class MemcacheServerType extends TranslatorAwareType
     {
         $builder
             ->add('memcache_ip', TextType::class, [
-                'label' => $this->trans('IP Address', 'Admin.Advparameters.Feature'),
-                'empty_data' => '',
                 'required' => false,
+                'empty_data' => '',
             ])
             ->add('memcache_port', TextType::class, [
-                'label' => $this->trans('Port', 'Admin.Advparameters.Feature'),
-                'empty_data' => '',
                 'required' => false,
+                'empty_data' => '',
             ])
             ->add('memcache_weight', TextType::class, [
-                'label' => $this->trans('Weight', 'Admin.Advparameters.Feature'),
-                'empty_data' => '',
                 'required' => false,
+                'empty_data' => '',
             ]);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver->setDefaults([
+            'translation_domain' => 'Admin.Advparameters.Feature',
+        ]);
     }
 
     /**

@@ -1,5 +1,5 @@
 /**
- * 2007-2020 PrestaShop SA and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -29,6 +29,7 @@
  * If password confirmation input is provided, can validate if entered password is matching confirmation.
  */
 export default class PasswordValidator {
+
   /**
    * @param {String} passwordInputSelector selector of the password input.
    * @param {String|null} confirmPasswordInputSelector (optional) selector for the password confirmation input.
@@ -74,7 +75,7 @@ export default class PasswordValidator {
    */
   isPasswordMatchingConfirmation() {
     if (!this.confirmPasswordInput) {
-      throw new Error('Confirm password input is not provided for the password validator.');
+      throw 'Confirm password input is not provided for the password validator.';
     }
 
     if (this.confirmPasswordInput.value === '') {

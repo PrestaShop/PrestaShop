@@ -1,5 +1,5 @@
 /**
- * 2007-2020 PrestaShop SA and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,12 +18,12 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-const {$} = window;
+const $ = window.$;
 
 /**
  * Class is responsible for managing test email sending
@@ -36,7 +36,7 @@ class EmailSendingTest {
     this.$sendEmailBtn = $('.js-send-test-email-btn');
 
     this.$sendEmailBtn.on('click', (event) => {
-      this.handle(event);
+      this._handle(event);
     });
   }
 
@@ -47,7 +47,7 @@ class EmailSendingTest {
    *
    * @private
    */
-  handle(event) {
+  _handle(event) {
     // fill test email sending form with configured values
     $('#test_email_sending_mail_method').val($('input[name="form[email_config][mail_method]"]:checked').val());
     $('#test_email_sending_smtp_server').val($('#form_smtp_config_server').val());
@@ -58,24 +58,24 @@ class EmailSendingTest {
 
     const $testEmailSendingForm = $(event.currentTarget).closest('form');
 
-    this.resetMessages();
+    this._resetMessages();
 
-    this.hideSendEmailButton();
-    this.showLoader();
+    this._hideSendEmailButton();
+    this._showLoader();
 
     $.post({
       url: $testEmailSendingForm.attr('action'),
       data: $testEmailSendingForm.serialize(),
     }).then((response) => {
-      this.hideLoader();
-      this.showSendEmailButton();
+      this._hideLoader();
+      this._showSendEmailButton();
 
-      if (response.errors.length !== 0) {
-        this.showErrors(response.errors);
+      if (0 !== response.errors.length) {
+        this._showErrors(response.errors);
         return;
       }
 
-      this.showSuccess();
+      this._showSuccess();
     });
   }
 
@@ -84,9 +84,9 @@ class EmailSendingTest {
    *
    * @private
    */
-  resetMessages() {
-    this.hideSuccess();
-    this.hideErrors();
+  _resetMessages() {
+    this._hideSuccess();
+    this._hideErrors();
   }
 
   /**
@@ -94,7 +94,7 @@ class EmailSendingTest {
    *
    * @private
    */
-  showSuccess() {
+  _showSuccess() {
     this.$successAlert.removeClass('d-none');
   }
 
@@ -103,7 +103,7 @@ class EmailSendingTest {
    *
    * @private
    */
-  hideSuccess() {
+  _hideSuccess() {
     this.$successAlert.addClass('d-none');
   }
 
@@ -112,7 +112,7 @@ class EmailSendingTest {
    *
    * @private
    */
-  showLoader() {
+  _showLoader() {
     this.$loader.removeClass('d-none');
   }
 
@@ -121,7 +121,7 @@ class EmailSendingTest {
    *
    * @private
    */
-  hideLoader() {
+  _hideLoader() {
     this.$loader.addClass('d-none');
   }
 
@@ -132,9 +132,9 @@ class EmailSendingTest {
    *
    * @private
    */
-  showErrors(errors) {
+  _showErrors(errors) {
     errors.forEach((error) => {
-      this.$errorAlert.append(`<p>${error}</p>`);
+      this.$errorAlert.append('<p>' + error + '</p>');
     });
 
     this.$errorAlert.removeClass('d-none');
@@ -145,7 +145,7 @@ class EmailSendingTest {
    *
    * @private
    */
-  hideErrors() {
+  _hideErrors() {
     this.$errorAlert.addClass('d-none').empty();
   }
 
@@ -154,7 +154,7 @@ class EmailSendingTest {
    *
    * @private
    */
-  showSendEmailButton() {
+  _showSendEmailButton() {
     this.$sendEmailBtn.removeClass('d-none');
   }
 
@@ -163,7 +163,7 @@ class EmailSendingTest {
    *
    * @private
    */
-  hideSendEmailButton() {
+  _hideSendEmailButton() {
     this.$sendEmailBtn.addClass('d-none');
   }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2020 PrestaShop SA and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -93,12 +93,12 @@ class LayoutExtension extends \Twig_Extension implements \Twig_Extension_Globals
             $rootUrl = null;
         }
 
-        return [
+        return array(
             'theme' => $this->context->getContext()->shop->theme,
             'default_currency' => $defaultCurrency,
             'root_url' => $rootUrl,
-            'js_translatable' => [],
-        ];
+            'js_translatable' => array(),
+        );
     }
 
     /**
@@ -108,9 +108,9 @@ class LayoutExtension extends \Twig_Extension implements \Twig_Extension_Globals
      */
     public function getFilters()
     {
-        return [
-            new \Twig_SimpleFilter('configuration', [$this, 'getConfiguration']),
-        ];
+        return array(
+            new \Twig_SimpleFilter('configuration', array($this, 'getConfiguration')),
+        );
     }
 
     /**
@@ -120,11 +120,11 @@ class LayoutExtension extends \Twig_Extension implements \Twig_Extension_Globals
      */
     public function getFunctions()
     {
-        return [
-            new \Twig_SimpleFunction('getLegacyLayout', [$this, 'getLegacyLayout']),
-            new \Twig_SimpleFunction('getAdminLink', [$this, 'getAdminLink']),
-            new \Twig_SimpleFunction('youtube_link', [$this, 'getYoutubeLink']),
-        ];
+        return array(
+            new \Twig_SimpleFunction('getLegacyLayout', array($this, 'getLegacyLayout')),
+            new \Twig_SimpleFunction('getAdminLink', array($this, 'getAdminLink')),
+            new \Twig_SimpleFunction('youtube_link', array($this, 'getYoutubeLink')),
+        );
     }
 
     /**
@@ -163,7 +163,7 @@ class LayoutExtension extends \Twig_Extension implements \Twig_Extension_Globals
     public function getLegacyLayout(
         $controllerName = '',
         $title = '',
-        $headerToolbarBtn = [],
+        $headerToolbarBtn = array(),
         $displayType = '',
         $showContentHeader = true,
         $headerTabContent = '',
@@ -212,13 +212,13 @@ EOF;
         }
 
         $content = str_replace(
-            [
+            array(
                 '{$content}',
                 'var currentIndex = \'index.php\';',
                 '</head>',
                 '</body>',
-            ],
-            [
+            ),
+            array(
                 '{% block content_header %}{% endblock %}
                  {% block content %}{% endblock %}
                  {% block content_footer %}{% endblock %}
@@ -226,7 +226,7 @@ EOF;
                 'var currentIndex = \'' . $this->context->getAdminLink($controllerName) . '\';',
                 '{% block stylesheets %}{% endblock %}{% block extra_stylesheets %}{% endblock %}</head>',
                 '{% block javascripts %}{% endblock %}{% block extra_javascripts %}{% endblock %}{% block translate_javascripts %}{% endblock %}</body>',
-            ],
+            ),
             $layout
         );
 
@@ -242,7 +242,7 @@ EOF;
      *
      * @return string
      */
-    public function getAdminLink($controllerName, $withToken = true, $extraParams = [])
+    public function getAdminLink($controllerName, $withToken = true, $extraParams = array())
     {
         return $this->context->getAdminLink($controllerName, $withToken, $extraParams);
     }
@@ -252,7 +252,7 @@ EOF;
      */
     public function getYoutubeLink($watchUrl)
     {
-        $embedUrl = str_replace(['watch?v=', 'youtu.be/'], ['embed/', 'youtube.com/embed/'], $watchUrl);
+        $embedUrl = str_replace(array('watch?v=', 'youtu.be/'), array('embed/', 'youtube.com/embed/'), $watchUrl);
 
         return '<iframe width="560" height="315" src="' . $embedUrl .
             '" frameborder="0" allowfullscreen class="youtube-iframe m-x-auto"></iframe>';

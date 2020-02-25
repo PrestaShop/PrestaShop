@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2020 PrestaShop SA and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -28,7 +28,6 @@ namespace Tests\Unit\PrestaShopBundle\Entity\Repository;
 
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\ClassMetadata;
-use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Language\LanguageInterface;
 use PrestaShop\PrestaShop\Core\Language\LanguageRepositoryInterface;
@@ -150,14 +149,14 @@ class LangRepositoryTest extends TestCase
     /**
      * @param LanguageInterface|null $language
      *
-     * @return MockObject|LangRepository
+     * @return \PHPUnit_Framework_MockObject_MockObject|LangRepository
      */
 
     /**
      * @param array $expectedCriteria
      * @param LanguageInterface $language
      *
-     * @return MockObject
+     * @return \PHPUnit_Framework_MockObject_MockObject
      */
     private function buildPartialMock(array $expectedCriteria, LanguageInterface $language)
     {
@@ -190,7 +189,7 @@ class LangRepositoryTest extends TestCase
     }
 
     /**
-     * @return MockObject|LanguageInterface
+     * @return \PHPUnit_Framework_MockObject_MockObject|LanguageInterface
      */
     private function buildLanguageMock()
     {

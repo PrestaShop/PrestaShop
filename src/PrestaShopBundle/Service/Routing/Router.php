@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2020 PrestaShop SA and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -44,7 +44,7 @@ class Router extends BaseRouter
     /**
      * {@inheritdoc}
      */
-    public function generate($name, $parameters = [], $referenceType = self::ABSOLUTE_PATH)
+    public function generate($name, $parameters = array(), $referenceType = self::ABSOLUTE_PATH)
     {
         $url = parent::generate($name, $parameters, $referenceType);
         $token = $this->tokenManager->getToken($this->userProvider->getUsername())->getValue();
@@ -69,7 +69,7 @@ class Router extends BaseRouter
         }
         $components = parse_url($url);
         $baseUrl = (isset($components['path']) ? $components['path'] : '');
-        $queryParams = [];
+        $queryParams = array();
         if (isset($components['query'])) {
             $query = $components['query'];
 

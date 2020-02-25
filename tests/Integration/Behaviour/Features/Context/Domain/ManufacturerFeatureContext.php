@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2020 PrestaShop SA and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -153,7 +153,12 @@ class ManufacturerFeatureContext extends AbstractDomainFeatureContext
         $manufacturer = SharedStorage::getStorage()->get($reference);
 
         if ($manufacturer->name !== $name) {
-            throw new RuntimeException(sprintf('Manufacturer "%s" has "%s" name, but "%s" was expected.', $reference, $manufacturer->name, $name));
+            throw new RuntimeException(sprintf(
+                'Manufacturer "%s" has "%s" name, but "%s" was expected.',
+                $reference,
+                $manufacturer->name,
+                $name
+            ));
         }
     }
 
@@ -166,7 +171,13 @@ class ManufacturerFeatureContext extends AbstractDomainFeatureContext
         $manufacturer = SharedStorage::getStorage()->get($reference);
 
         if ($manufacturer->$field[$this->defaultLangId] !== $value) {
-            throw new RuntimeException(sprintf('Manufacturer "%s" has "%s" %s, but "%s" was expected.', $reference, $manufacturer->$field[$this->defaultLangId], $field, $value));
+            throw new RuntimeException(sprintf(
+                'Manufacturer "%s" has "%s" %s, but "%s" was expected.',
+                $reference,
+                $manufacturer->$field[$this->defaultLangId],
+                $field,
+                $value
+            ));
         }
     }
 
@@ -178,7 +189,12 @@ class ManufacturerFeatureContext extends AbstractDomainFeatureContext
         $manufacturer = SharedStorage::getStorage()->get($reference);
 
         if ($manufacturer->$field[$this->defaultLangId] !== '') {
-            throw new RuntimeException(sprintf('Manufacturer "%s" has "%s" %s, but it was expected to be empty', $reference, $manufacturer->$field[$this->defaultLangId], $field));
+            throw new RuntimeException(sprintf(
+                'Manufacturer "%s" has "%s" %s, but it was expected to be empty',
+                $reference,
+                $manufacturer->$field[$this->defaultLangId],
+                $field
+            ));
         }
     }
 
@@ -244,7 +260,12 @@ class ManufacturerFeatureContext extends AbstractDomainFeatureContext
         $actualStatus = (bool) $manufacturer->active;
 
         if ($actualStatus !== $isEnabled) {
-            throw new RuntimeException(sprintf('Manufacturer "%s" is %s, but it was expected to be %s', $manufacturerReference, $actualStatus ? 'enabled' : 'disabled', $expectedStatus));
+            throw new RuntimeException(sprintf(
+                'Manufacturer "%s" is %s, but it was expected to be %s',
+                $manufacturerReference,
+                $actualStatus ? 'enabled' : 'disabled',
+                $expectedStatus
+            ));
         }
     }
 
@@ -260,7 +281,10 @@ class ManufacturerFeatureContext extends AbstractDomainFeatureContext
             $query = new GetManufacturerForEditing((int) $manufacturer->id);
             $this->getQueryBus()->handle($query);
 
-            throw new NoExceptionAlthoughExpectedException(sprintf('Manufacturer %s exists, but it was expected to be deleted', $manufacturerReference));
+            throw new NoExceptionAlthoughExpectedException(sprintf(
+                'Manufacturer %s exists, but it was expected to be deleted',
+                $manufacturerReference
+            ));
         } catch (ManufacturerNotFoundException $e) {
             SharedStorage::getStorage()->clear($manufacturerReference);
         }

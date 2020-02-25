@@ -1,5 +1,5 @@
 /**
- * 2007-2020 PrestaShop SA and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,17 +18,18 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-const {$} = window;
+const $ = global.$;
 
 /**
  * Class ReloadListExtension extends grid with "Column toggling" feature
  */
 export default class ColumnTogglingExtension {
+
   /**
    * Extend grid
    *
@@ -38,7 +39,7 @@ export default class ColumnTogglingExtension {
     const $table = grid.getContainer().find('table.table');
     $table.find('.ps-togglable-row').on('click', (e) => {
       e.preventDefault();
-      this.toggleValue($(e.delegateTarget));
+      this._toggleValue($(e.delegateTarget));
     });
   }
 
@@ -46,10 +47,10 @@ export default class ColumnTogglingExtension {
    * @param {jQuery} row
    * @private
    */
-  toggleValue(row) {
+  _toggleValue(row) {
     const toggleUrl = row.data('toggleUrl');
 
-    this.submitAsForm(toggleUrl);
+    this._submitAsForm(toggleUrl);
   }
 
   /**
@@ -58,7 +59,7 @@ export default class ColumnTogglingExtension {
    * @param {string} toggleUrl
    * @private
    */
-  submitAsForm(toggleUrl) {
+  _submitAsForm(toggleUrl) {
     const $form = $('<form>', {
       action: toggleUrl,
       method: 'POST',

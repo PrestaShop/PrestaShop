@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2020 PrestaShop SA and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -54,11 +54,15 @@ abstract class AbstractTaxRulesGroupHandler
         try {
             $taxRulesGroup = new TaxRulesGroup($taxRulesGroupIdValue);
         } catch (PrestaShopException $e) {
-            throw new TaxRulesGroupNotFoundException(sprintf('Tax rules group with id "%s" was not found.', $taxRulesGroupIdValue));
+            throw new TaxRulesGroupNotFoundException(
+                sprintf('Tax rules group with id "%s" was not found.', $taxRulesGroupIdValue)
+            );
         }
 
         if ($taxRulesGroup->id !== $taxRulesGroupIdValue) {
-            throw new TaxRulesGroupNotFoundException(sprintf('Tax rules group with id "%s" was not found.', $taxRulesGroupIdValue));
+            throw new TaxRulesGroupNotFoundException(
+                sprintf('Tax rules group with id "%s" was not found.', $taxRulesGroupIdValue)
+            );
         }
 
         return $taxRulesGroup;
@@ -78,7 +82,9 @@ abstract class AbstractTaxRulesGroupHandler
         try {
             return $taxRulesGroup->delete();
         } catch (PrestaShopException $e) {
-            throw new CannotDeleteTaxRulesGroupException(sprintf('An error occurred when deleting tax rules group object with id "%s".', $taxRulesGroup->id));
+            throw new CannotDeleteTaxRulesGroupException(
+                sprintf('An error occurred when deleting tax rules group object with id "%s".', $taxRulesGroup->id)
+            );
         }
     }
 
@@ -99,7 +105,10 @@ abstract class AbstractTaxRulesGroupHandler
         try {
             return $taxRulesGroup->save();
         } catch (PrestaShopException $e) {
-            throw new TaxRulesGroupException(sprintf('An error occurred when updating tax rules group status with id "%s"', $taxRulesGroup->id));
+            throw new TaxRulesGroupException(sprintf(
+                'An error occurred when updating tax rules group status with id "%s"',
+                $taxRulesGroup->id
+            ));
         }
     }
 }

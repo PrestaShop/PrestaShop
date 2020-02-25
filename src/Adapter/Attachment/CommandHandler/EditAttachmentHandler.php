@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2020 PrestaShop SA and Contributors
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -75,11 +75,15 @@ final class EditAttachmentHandler extends AbstractAttachmentHandler implements E
         try {
             $attachment = new Attachment($attachmentIdValue);
         } catch (PrestaShopException $e) {
-            throw new AttachmentNotFoundException(sprintf('Attachment with id "%s" was not found.', $attachmentIdValue));
+            throw new AttachmentNotFoundException(
+                sprintf('Attachment with id "%s" was not found.', $attachmentIdValue)
+            );
         }
 
         if ($attachment->id !== $attachmentIdValue) {
-            throw new AttachmentNotFoundException(sprintf('Attachment with id "%s" was not found.', $attachmentIdValue));
+            throw new AttachmentNotFoundException(
+                sprintf('Attachment with id "%s" was not found.', $attachmentIdValue)
+            );
         }
 
         $this->updateAttachmentFromCommandData($attachment, $command);
@@ -98,7 +102,10 @@ final class EditAttachmentHandler extends AbstractAttachmentHandler implements E
     {
         try {
             if (!$attachment->validateFields(false) && !$attachment->validateFieldsLang(false)) {
-                throw new AttachmentConstraintException('Attachment contains invalid field values', AttachmentConstraintException::INVALID_FIELDS);
+                throw new AttachmentConstraintException(
+                    'Attachment contains invalid field values',
+                    AttachmentConstraintException::INVALID_FIELDS
+                );
             }
 
             $this->assertDescriptionContainsCleanHtml($command->getLocalizedDescriptions());

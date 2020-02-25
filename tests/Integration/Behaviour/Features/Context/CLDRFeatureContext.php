@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2020 PrestaShop SA and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,18 +19,18 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace Tests\Integration\Behaviour\Features\Context;
 
-use Currency;
-use Language;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleRepository;
 use PrestaShop\PrestaShop\Core\Localization\Locale\RepositoryInterface;
 use RuntimeException;
+use Currency;
+use Language;
 
 class CLDRFeatureContext extends AbstractPrestaShopFeatureContext
 {
@@ -104,7 +104,11 @@ class CLDRFeatureContext extends AbstractPrestaShopFeatureContext
         $displayedPrice = $locale->formatPrice($price, $currencyIsoCode);
 
         if ($expectedPrice !== $displayedPrice) {
-            throw new RuntimeException(sprintf('Displayed price is "%s" but "%s" was expected', $displayedPrice, $expectedPrice));
+            throw new RuntimeException(sprintf(
+                'Displayed price is "%s" but "%s" was expected',
+                $displayedPrice,
+                $expectedPrice
+            ));
         }
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2020 PrestaShop SA and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -37,11 +37,11 @@ class CurrencyCore extends ObjectModel
     public $name;
 
     /**
-     * Localized names of the currency
+     * Currency's names, indexed by language id.
      *
      * @var string[]
      */
-    protected $localizedNames;
+    private $localizedNames;
 
     /**
      * Alphabetic ISO 4217 code of this currency.
@@ -117,7 +117,7 @@ class CurrencyCore extends ObjectModel
     public $symbol;
 
     /**
-     * Localized Currency's symbol.
+     * Currency's symbols, indexed by language id.
      *
      * @var string[]
      */
@@ -169,52 +169,34 @@ class CurrencyCore extends ObjectModel
     /**
      * @see ObjectModel::$definition
      */
-    public static $definition = [
+    public static $definition = array(
         'table' => 'currency',
         'primary' => 'id_currency',
         'multilang' => true,
-        'fields' => [
-            'iso_code' => ['type' => self::TYPE_STRING, 'validate' => 'isLanguageIsoCode', 'required' => true, 'size' => 3],
-            'numeric_iso_code' => ['type' => self::TYPE_STRING, 'validate' => 'isNumericIsoCode', 'size' => 3],
-            'precision' => ['type' => self::TYPE_INT, 'validate' => 'isInt'],
-            'conversion_rate' => ['type' => self::TYPE_FLOAT, 'validate' => 'isUnsignedFloat', 'required' => true, 'shop' => true],
-            'deleted' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
-            'active' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
-            'unofficial' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
-            'modified' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
+        'fields' => array(
+            'iso_code' => array('type' => self::TYPE_STRING, 'validate' => 'isLanguageIsoCode', 'required' => true, 'size' => 3),
+            'numeric_iso_code' => array('type' => self::TYPE_STRING, 'validate' => 'isNumericIsoCode', 'size' => 3),
+            'precision' => array('type' => self::TYPE_INT, 'validate' => 'isInt'),
+            'conversion_rate' => array('type' => self::TYPE_FLOAT, 'validate' => 'isUnsignedFloat', 'required' => true, 'shop' => true),
+            'deleted' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+            'active' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+            'unofficial' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+            'modified' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 
             /* Lang fields */
-            'name' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 255],
-            'symbol' => ['type' => self::TYPE_STRING, 'lang' => true, 'size' => 255],
-            'pattern' => ['type' => self::TYPE_STRING, 'lang' => true, 'size' => 255],
-        ],
-    ];
+            'name' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 255),
+            'symbol' => array('type' => self::TYPE_STRING, 'lang' => true, 'size' => 255),
+            'pattern' => array('type' => self::TYPE_STRING, 'lang' => true, 'size' => 255),
+        ),
+    );
 
     /** @var array Currency cache */
-    protected static $currencies = [];
-    protected static $countActiveCurrencies = [];
+    protected static $currencies = array();
+    protected static $countActiveCurrencies = array();
 
-    protected $webserviceParameters = [
+    protected $webserviceParameters = array(
         'objectsNodeName' => 'currencies',
-        'fields' => [
-            'name' => [
-                'setter' => false,
-                'getter' => 'getName',
-                'modifier' => [
-                    'http_method' => WebserviceRequest::HTTP_POST | WebserviceRequest::HTTP_PUT,
-                    'modifier' => 'setNameForWebservice',
-                ],
-            ],
-            'symbol' => [
-                'setter' => false,
-                'getter' => 'getSymbol',
-                'modifier' => [
-                    'http_method' => WebserviceRequest::HTTP_POST | WebserviceRequest::HTTP_PUT,
-                    'modifier' => 'setSymbolForWebservice',
-                ],
-            ],
-        ],
-    ];
+    );
 
     /**
      * contains the sign to display before price, according to its format.
@@ -289,36 +271,13 @@ class CurrencyCore extends ObjectModel
         }
     }
 
-    public function getWebserviceParameters($ws_params_attribute_name = null)
-    {
-        $parameters = parent::getWebserviceParameters($ws_params_attribute_name);
-        // name & symbol are i18n fields but casted to single string in the constructor
-        // so we need to force the webservice to consider those fields as non-i18n fields.
-        // Also, in 1.7.5 the field symbol didn't exists and name wasn't an i18n field so in order
-        // to keep 1.7.6 backward compatible we need to make those fields non-i18n.
-        $parameters['fields']['name']['i18n'] = false;
-        $parameters['fields']['symbol']['i18n'] = false;
-
-        return $parameters;
-    }
-
-    public function setNameForWebservice()
-    {
-        $this->name = $this->localizedNames;
-    }
-
-    public function setSymbolForWebservice()
-    {
-        $this->symbol = $this->localizedSymbols;
-    }
-
     /**
      * reset static cache (eg unit testing purpose).
      */
     public static function resetStaticCache()
     {
-        static::$currencies = [];
-        static::$countActiveCurrencies = [];
+        static::$currencies = array();
+        static::$countActiveCurrencies = array();
     }
 
     /**
@@ -386,7 +345,7 @@ class CurrencyCore extends ObjectModel
             return false;
         }
 
-        $res = [];
+        $res = array();
         foreach ($selection as $id) {
             $obj = new Currency((int) $id);
             $res[$id] = $obj->delete();
@@ -484,20 +443,6 @@ class CurrencyCore extends ObjectModel
         }
 
         return Tools::ucfirst($this->name[$id_lang]);
-    }
-
-    public function getSymbol()
-    {
-        if (is_string($this->symbol)) {
-            return $this->symbol;
-        }
-
-        $id_lang = $this->id_lang;
-        if (null === $id_lang) {
-            $id_lang = Configuration::get('PS_LANG_DEFAULT');
-        }
-
-        return Tools::ucfirst($this->symbol[$id_lang]);
     }
 
     /**
@@ -756,7 +701,7 @@ class CurrencyCore extends ObjectModel
     public static function checkPaymentCurrencies($idModule, $idShop = null)
     {
         if (empty($idModule)) {
-            return [];
+            return array();
         }
 
         if (null === $idShop) {
@@ -771,7 +716,7 @@ class CurrencyCore extends ObjectModel
 
         $currencies = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 
-        return $currencies ? $currencies : [];
+        return $currencies ? $currencies : array();
     }
 
     /**
@@ -960,14 +905,14 @@ class CurrencyCore extends ObjectModel
     {
         // Parse
         if (!$feed = Tools::simplexml_load_file(_PS_CURRENCY_FEED_URL_)) {
-            return Context::getContext()->getTranslator()->trans('Cannot parse feed.', [], 'Admin.Notifications.Error');
+            return Context::getContext()->getTranslator()->trans('Cannot parse feed.', array(), 'Admin.Notifications.Error');
         }
 
         // Default feed currency (EUR)
         $isoCodeSource = (string) ($feed->source['iso_code']);
 
         if (!$defaultCurrency = Currency::getDefaultCurrency()) {
-            return Context::getContext()->getTranslator()->trans('No default currency', [], 'Admin.Notifications.Error');
+            return Context::getContext()->getTranslator()->trans('No default currency', array(), 'Admin.Notifications.Error');
         }
 
         $currencies = Currency::getCurrencies(true, false, true);

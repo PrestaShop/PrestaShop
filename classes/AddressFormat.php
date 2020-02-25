@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2020 PrestaShop SA and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -41,31 +41,31 @@ class AddressFormatCore extends ObjectModel
     /** @var string $format Format */
     public $format;
 
-    protected $_errorFormatList = [];
+    protected $_errorFormatList = array();
 
     /**
      * @see ObjectModel::$definition
      */
-    public static $definition = [
+    public static $definition = array(
         'table' => 'address_format',
         'primary' => 'id_country',
-        'fields' => [
-            'format' => ['type' => self::TYPE_HTML, 'validate' => 'isGenericName', 'required' => true],
-            'id_country' => ['type' => self::TYPE_INT],
-        ],
-    ];
+        'fields' => array(
+            'format' => array('type' => self::TYPE_HTML, 'validate' => 'isGenericName', 'required' => true),
+            'id_country' => array('type' => self::TYPE_INT),
+        ),
+    );
 
     /** @var array Default required form fields list */
-    public static $requireFormFieldsList = [
+    public static $requireFormFieldsList = array(
         'firstname',
         'lastname',
         'address1',
         'city',
         'Country:name',
-    ];
+    );
 
     /** @var array Default forbidden property list */
-    public static $forbiddenPropertyList = [
+    public static $forbiddenPropertyList = array(
         'deleted',
         'date_add',
         'alias',
@@ -107,13 +107,13 @@ class AddressFormatCore extends ObjectModel
         'call_prefix',
         'definition',
         'debug_list',
-    ];
+    );
 
     /** @var array Default formbidden class list */
-    public static $forbiddenClassList = [
+    public static $forbiddenClassList = array(
         'Manufacturer',
         'Supplier',
-    ];
+    );
 
     const _CLEANING_REGEX_ = '#([^\w:_]+)#i';
 
@@ -132,7 +132,7 @@ class AddressFormatCore extends ObjectModel
         $isValid = false;
 
         if (!class_exists($className)) {
-            $this->_errorFormatList[] = $this->trans('This class name does not exist.', [], 'Admin.Notifications.Error') .
+            $this->_errorFormatList[] = $this->trans('This class name does not exist.', array(), 'Admin.Notifications.Error') .
             ': ' . $className;
         } else {
             $obj = new $className();
@@ -149,7 +149,7 @@ class AddressFormatCore extends ObjectModel
             }
 
             if (!$isValid) {
-                $this->_errorFormatList[] = $this->trans('This property does not exist in the class or is forbidden.', [], 'Admin.Notifications.Error') .
+                $this->_errorFormatList[] = $this->trans('This property does not exist in the class or is forbidden.', array(), 'Admin.Notifications.Error') .
                 ': ' . $className . ': ' . $fieldName;
             }
 
@@ -178,23 +178,23 @@ class AddressFormatCore extends ObjectModel
         if ($associationName = explode(':', $patternName)) {
             $totalNameUsed = count($associationName);
             if ($totalNameUsed > 2) {
-                $this->_errorFormatList[] = $this->trans('This association has too many elements.', [], 'Admin.Notifications.Error');
+                $this->_errorFormatList[] = $this->trans('This association has too many elements.', array(), 'Admin.Notifications.Error');
             } elseif ($totalNameUsed == 1) {
                 $associationName[0] = strtolower($associationName[0]);
                 if (in_array($associationName[0], self::$forbiddenPropertyList) ||
                     !$this->_checkValidateClassField('Address', $associationName[0], false)) {
-                    $this->_errorFormatList[] = $this->trans('This name is not allowed.', [], 'Admin.Notifications.Error') . ': ' .
+                    $this->_errorFormatList[] = $this->trans('This name is not allowed.', array(), 'Admin.Notifications.Error') . ': ' .
                     $associationName[0];
                 }
             } elseif ($totalNameUsed == 2) {
                 if (empty($associationName[0]) || empty($associationName[1])) {
-                    $this->_errorFormatList[] = $this->trans('Syntax error with this pattern.', [], 'Admin.Notifications.Error') . ': ' . $patternName;
+                    $this->_errorFormatList[] = $this->trans('Syntax error with this pattern.', array(), 'Admin.Notifications.Error') . ': ' . $patternName;
                 } else {
                     $associationName[0] = ucfirst($associationName[0]);
                     $associationName[1] = strtolower($associationName[1]);
 
                     if (in_array($associationName[0], self::$forbiddenClassList)) {
-                        $this->_errorFormatList[] = $this->trans('This name is not allowed.', [], 'Admin.Notifications.Error') . ': ' .
+                        $this->_errorFormatList[] = $this->trans('This name is not allowed.', array(), 'Admin.Notifications.Error') . ': ' .
                         $associationName[0];
                     } else {
                         // Check if the id field name exist in the Address class
@@ -216,9 +216,9 @@ class AddressFormatCore extends ObjectModel
      */
     public function checkFormatFields()
     {
-        $this->_errorFormatList = [];
+        $this->_errorFormatList = array();
         $fieldsValidate = Address::getFieldsValidate();
-        $usedKeyList = [];
+        $usedKeyList = array();
 
         $multipleLineFields = explode(self::FORMAT_NEW_LINE, $this->format);
         if ($multipleLineFields && is_array($multipleLineFields)) {
@@ -230,7 +230,7 @@ class AddressFormatCore extends ObjectModel
                                 $this->_checkLiableAssociation($patternName, $fieldsValidate);
                                 $usedKeyList[] = $patternName;
                             } else {
-                                $this->_errorFormatList[] = $this->trans('This key has already been used.', [], 'Admin.Notifications.Error') .
+                                $this->_errorFormatList[] = $this->trans('This key has already been used.', array(), 'Admin.Notifications.Error') .
                                     ': ' . $patternName;
                             }
                         }
@@ -255,7 +255,7 @@ class AddressFormatCore extends ObjectModel
             if (!in_array($requiredField, $fieldList)) {
                 $this->_errorFormatList[] = $this->trans(
                     'The %s field (in tab %s) is required.',
-                    [$requiredField, $this->getFieldTabName($requiredField)],
+                    array($requiredField, $this->getFieldTabName($requiredField)),
                     'Admin.Notifications.Error');
             }
         }
@@ -379,8 +379,8 @@ class AddressFormatCore extends ObjectModel
         if (!$id_lang) {
             $id_lang = Context::getContext()->language->id;
         }
-        $tab = [];
-        $temporyObject = [];
+        $tab = array();
+        $temporyObject = array();
 
         // Check if $address exist and it's an instanciate object of Address
         if ($address && ($address instanceof Address)) {
@@ -437,7 +437,7 @@ class AddressFormatCore extends ObjectModel
      *
      * @return string
      */
-    public static function generateAddress(Address $address, $patternRules = [], $newLine = self::FORMAT_NEW_LINE, $separator = ' ', $style = [])
+    public static function generateAddress(Address $address, $patternRules = array(), $newLine = self::FORMAT_NEW_LINE, $separator = ' ', $style = array())
     {
         $addressFields = AddressFormat::getOrderedAddressFields($address->id_country);
         $addressFormatedValues = AddressFormat::getFormattedAddressFieldsValues($address, $addressFields);
@@ -478,10 +478,10 @@ class AddressFormatCore extends ObjectModel
     {
         return AddressFormat::generateAddress(
             $params['address'],
-            (isset($params['patternRules']) ? $params['patternRules'] : []),
+            (isset($params['patternRules']) ? $params['patternRules'] : array()),
             (isset($params['newLine']) ? $params['newLine'] : self::FORMAT_NEW_LINE),
             (isset($params['separator']) ? $params['separator'] : ' '),
-            (isset($params['style']) ? $params['style'] : [])
+            (isset($params['style']) ? $params['style'] : array())
         );
     }
 
@@ -492,7 +492,7 @@ class AddressFormatCore extends ObjectModel
      */
     public static function getValidateFields($className)
     {
-        $propertyList = [];
+        $propertyList = array();
 
         if (class_exists($className)) {
             $object = new $className();
@@ -525,7 +525,7 @@ class AddressFormatCore extends ObjectModel
      */
     public static function getLiableClass($className)
     {
-        $objectList = [];
+        $objectList = array();
 
         if (class_exists($className)) {
             $object = new $className();
@@ -563,7 +563,7 @@ class AddressFormatCore extends ObjectModel
      */
     public static function getOrderedAddressFields($idCountry = 0, $splitAll = false, $cleaned = false)
     {
-        $out = [];
+        $out = array();
         $fieldSet = explode(AddressFormat::FORMAT_NEW_LINE, AddressFormat::getAddressCountryFormat($idCountry));
         foreach ($fieldSet as $fieldItem) {
             if ($splitAll) {
@@ -588,12 +588,12 @@ class AddressFormatCore extends ObjectModel
      */
     public static function getFormattedLayoutData($address)
     {
-        $layoutData = [];
+        $layoutData = array();
 
         if ($address && $address instanceof Address) {
             $layoutData['ordered'] = AddressFormat::getOrderedAddressFields((int) $address->id_country);
             $layoutData['formated'] = AddressFormat::getFormattedAddressFieldsValues($address, $layoutData['ordered']);
-            $layoutData['object'] = [];
+            $layoutData['object'] = array();
 
             $reflect = new ReflectionObject($address);
             $publicProperties = $reflect->getProperties(ReflectionProperty::IS_PUBLIC);

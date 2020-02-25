@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2020 PrestaShop SA and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -176,7 +176,10 @@ class TaxFeatureContext extends AbstractDomainFeatureContext
         try {
             $this->getQueryBus()->handle(new GetTaxForEditing($taxId));
 
-            throw new NoExceptionAlthoughExpectedException(sprintf('Tax %s expected to be deleted, but it was found', $taxReference));
+            throw new NoExceptionAlthoughExpectedException(sprintf(
+                'Tax %s expected to be deleted, but it was found',
+                    $taxReference
+            ));
         } catch (TaxNotFoundException $e) {
             SharedStorage::getStorage()->clear($taxReference);
         }
@@ -191,7 +194,12 @@ class TaxFeatureContext extends AbstractDomainFeatureContext
         $tax = SharedStorage::getStorage()->get($taxReference);
 
         if ($tax->name[$this->defaultLangId] !== $name) {
-            throw new RuntimeException(sprintf('Tax "%s" has "%s" name, but "%s" was expected.', $taxReference, $tax->name, $name));
+            throw new RuntimeException(sprintf(
+                'Tax "%s" has "%s" name, but "%s" was expected.',
+                $taxReference,
+                $tax->name,
+                $name
+            ));
         }
     }
 
@@ -204,7 +212,12 @@ class TaxFeatureContext extends AbstractDomainFeatureContext
         $tax = SharedStorage::getStorage()->get($taxReference);
 
         if ($tax->rate !== $rate) {
-            throw new RuntimeException(sprintf('Tax "%s" has "%s" rate, but "%s" was expected.', $taxReference, $tax->rate, $rate));
+            throw new RuntimeException(sprintf(
+                'Tax "%s" has "%s" rate, but "%s" was expected.',
+                $taxReference,
+                $tax->rate,
+                $rate
+            ));
         }
     }
 
@@ -232,7 +245,12 @@ class TaxFeatureContext extends AbstractDomainFeatureContext
         $actualStatus = (bool) $tax->active;
 
         if ($isEnabled !== $actualStatus) {
-            throw new RuntimeException(sprintf('Tax "%s" is %s, but it was expected to be %s', $taxReference, $actualStatus ? 'enabled' : 'disabled', $status));
+            throw new RuntimeException(sprintf(
+                'Tax "%s" is %s, but it was expected to be %s',
+                $taxReference,
+                $actualStatus ? 'enabled' : 'disabled',
+                $status
+            ));
         }
     }
 

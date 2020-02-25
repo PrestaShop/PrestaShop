@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2020 PrestaShop SA and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -182,10 +182,10 @@ class TranslateCore
     ) {
         global $_MODULES, $_MODULE, $_LANGADM;
 
-        static $langCache = [];
+        static $langCache = array();
         // $_MODULES is a cache of translations for all module.
         // $translations_merged is a cache of wether a specific module's translations have already been added to $_MODULES
-        static $translationsMerged = [];
+        static $translationsMerged = array();
 
         $name = $module instanceof Module ? $module->name : $module;
 
@@ -198,7 +198,7 @@ class TranslateCore
         }
 
         if (!isset($translationsMerged[$name][$iso])) {
-            $filesByPriority = [
+            $filesByPriority = array(
                 // PrestaShop 1.5 translations
                 _PS_MODULE_DIR_ . $name . '/translations/' . $iso . '.php',
                 // PrestaShop 1.4 translations
@@ -206,7 +206,7 @@ class TranslateCore
                 // Translations in theme
                 _PS_THEME_DIR_ . 'modules/' . $name . '/translations/' . $iso . '.php',
                 _PS_THEME_DIR_ . 'modules/' . $name . '/' . $iso . '.php',
-            ];
+            );
             foreach ($filesByPriority as $file) {
                 if (file_exists($file)) {
                     include_once $file;
@@ -267,9 +267,9 @@ class TranslateCore
         }
 
         if (!is_array($sprintf) && null !== $sprintf) {
-            $sprintf_for_trans = [$sprintf];
+            $sprintf_for_trans = array($sprintf);
         } elseif (null === $sprintf) {
-            $sprintf_for_trans = [];
+            $sprintf_for_trans = array();
         } else {
             $sprintf_for_trans = $sprintf;
         }
@@ -301,7 +301,7 @@ class TranslateCore
         if (!Validate::isLangIsoCode($iso)) {
             Context::getContext()->getTranslator()->trans(
                 'Invalid language ISO code (%s)',
-                [Tools::safeOutput($iso)],
+                array(Tools::safeOutput($iso)),
                 'Admin.International.Notification'
             );
         }
@@ -356,7 +356,7 @@ class TranslateCore
                 // Make positions start at 1 so that it behaves similar to the %1$d etc. sprintf positional params
                 $position = $index + 1;
                 // extract tag name
-                $match = [];
+                $match = array();
                 if (preg_match('/^\s*<\s*(\w+)/', $tag, $match)) {
                     $opener = $tag;
                     $closer = '</' . $match[1] . '>';
@@ -390,7 +390,7 @@ class TranslateCore
     {
         Tools::displayAsDeprecated();
 
-        return Translate::postProcessTranslation($string, ['tags' => $tags]);
+        return Translate::postProcessTranslation($string, array('tags' => $tags));
     }
 
     /**

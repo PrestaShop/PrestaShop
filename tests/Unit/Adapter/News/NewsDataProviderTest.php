@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2020 PrestaShop SA and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -27,7 +27,6 @@
 namespace Tests\Unit\Adapter\News;
 
 use ContextCore;
-use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\CircuitBreaker\Contract\CircuitBreakerInterface;
 use PrestaShop\PrestaShop\Adapter\Configuration;
@@ -130,7 +129,7 @@ class NewsDataProviderTest extends TestCase
      * @param string|null $locale
      * @param string|null $returnData
      *
-     * @return MockObject|CircuitBreakerInterface
+     * @return \PHPUnit_Framework_MockObject_MockObject|CircuitBreakerInterface
      */
     private function createCircuitBreakerMock($locale = null, $returnData = null)
     {
@@ -154,7 +153,7 @@ class NewsDataProviderTest extends TestCase
     }
 
     /**
-     * @return MockObject|Configuration
+     * @return \PHPUnit_Framework_MockObject_MockObject|Configuration
      */
     private function createConfigurationMock()
     {
@@ -165,7 +164,7 @@ class NewsDataProviderTest extends TestCase
     }
 
     /**
-     * @return MockObject|CountryDataProvider
+     * @return \PHPUnit_Framework_MockObject_MockObject|CountryDataProvider
      */
     private function createCountryDataProviderMock()
     {
@@ -176,7 +175,7 @@ class NewsDataProviderTest extends TestCase
     }
 
     /**
-     * @return MockObject|Tools
+     * @return \PHPUnit_Framework_MockObject_MockObject|Tools
      */
     private function createToolsMock()
     {
@@ -194,7 +193,7 @@ class NewsDataProviderTest extends TestCase
     /**
      * @param bool|null $isCleanHtml
      *
-     * @return MockObject|Validate
+     * @return \PHPUnit_Framework_MockObject_MockObject|Validate
      */
     private function createValidateMock($isCleanHtml = null)
     {

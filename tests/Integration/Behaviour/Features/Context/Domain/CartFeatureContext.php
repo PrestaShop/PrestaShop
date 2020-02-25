@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2020 PrestaShop SA and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -27,26 +27,18 @@
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 use Cart;
-use CartRule;
 use Configuration;
 use Context;
-use Country;
 use Currency;
-use Customer;
-use DateInterval;
-use DateTime;
+use Country;
 use Exception;
-use PrestaShop\PrestaShop\Core\Domain\Cart\Command\AddCartRuleToCartCommand;
-use PrestaShop\PrestaShop\Core\Domain\Cart\Command\AddCustomizationFieldsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\CreateEmptyCustomerCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\SetFreeShippingToCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartAddressesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateProductQuantityInCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\CartId;
-use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationId;
-use PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProducts;
+use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\QuantityAction;
 use Product;
-use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 
 class CartFeatureContext extends AbstractDomainFeatureContext
@@ -68,101 +60,45 @@ class CartFeatureContext extends AbstractDomainFeatureContext
 
     /**
      * @When I create an empty cart :cartReference for customer :customerReference
-     *
-     * @param string $cartReference
-     * @param string $customerReference
      */
-    public function createEmptyCartForCustomer(string $cartReference, string $customerReference)
+    public function createEmptyCartForCustomer($cartReference, $customerReference)
     {
         // Clear static cache each time you create a cart
         Cart::resetStaticCache();
-        /** @var Customer $customer */
         $customer = SharedStorage::getStorage()->get($customerReference);
 
-        /** @var CartId $cartIdObject */
-        $cartIdObject = $this->getCommandBus()->handle(
+        /** @var CartId $cartId */
+        $cartId = $this->getCommandBus()->handle(
             new CreateEmptyCustomerCartCommand(
-                (int) $customer->id
+                (int) $customer->id,
+                (int) Context::getContext()->shop->id
             )
         );
 
-        SharedStorage::getStorage()->set($cartReference, $cartIdObject->getValue());
+        SharedStorage::getStorage()->set($cartReference, new Cart($cartId->getValue()));
     }
 
     /**
-     * @When I add :quantity products :productName to the cart :cartReference
-     *
-     * @param int $quantity
-     * @param string $productName
-     * @param string $cartReference
+     * @When I add :quantity products with reference :productReference to the cart :reference
      */
-    public function addProductsToCarts(int $quantity, string $productName, string $cartReference)
-    {
-        /** @var array $productsMap */
-        $productsMap = $this->getQueryBus()->handle(new SearchProducts($productName, 1, Context::getContext()->currency->iso_code));
-        $productId = array_key_first($productsMap);
-
-        if (!$productId) {
-            throw new RuntimeException(sprintf('Product with name "%s" does not exist', $productName));
-        }
-
-        $this->getCommandBus()->handle(
-            new UpdateProductQuantityInCartCommand(
-                SharedStorage::getStorage()->get($cartReference),
-                $productId,
-                (int) $quantity
-            )
-        );
-        SharedStorage::getStorage()->set($productName, $productId);
-
-        // Clear cart static cache or it will have no products in next calls
-        Cart::resetStaticCache();
-    }
-
-    /**
-     * @When I add :quantity customized products with reference :productReference to the cart :reference
-     */
-    public function addCustomizedProductToCarts(int $quantity, $productReference, $reference)
+    public function addProductToCarts($quantity, $productReference, $reference)
     {
         $productId = (int) Product::getIdByReference($productReference);
-        $product = new Product($productId);
-        $customizationFields = $product->getCustomizationFieldIds();
-        $customizations = [];
-        foreach ($customizationFields as $customizationField) {
-            $customizationFieldId = (int) $customizationField['id_customization_field'];
-            if (Product::CUSTOMIZE_TEXTFIELD == $customizationField['type']) {
-                $customizations[$customizationFieldId] = 'Toto';
-            }
-        }
-
-        $cartId = (int) SharedStorage::getStorage()->get($reference);
-
-        /** @var CustomizationId $customizationId */
-        $customizationId = $this->getCommandBus()->handle(new AddCustomizationFieldsCommand(
-            $cartId,
-            $productId,
-            $customizations
-        ));
 
         $this->getCommandBus()->handle(
             new UpdateProductQuantityInCartCommand(
-                $cartId,
+                (int) SharedStorage::getStorage()->get($reference)->id,
                 $productId,
-                $quantity,
-                null,
-                $customizationId->getValue()
+                (int) $quantity,
+                QuantityAction::INCREASE_PRODUCT_QUANTITY
             )
         );
     }
 
     /**
      * @When I select :countryIsoCode address as delivery and invoice address for customer :customerReference in cart :cartReference
-     *
-     * @param string $countryIsoCode
-     * @param string $customerReference
-     * @param string $cartReference
      */
-    public function selectAddressAsDeliveryAndInvoiceAddress(string $countryIsoCode, string $customerReference, string $cartReference)
+    public function selectAddressAsDeliveryAndInvoiceAddress($countryIsoCode, $customerReference, $cartReference)
     {
         $customer = SharedStorage::getStorage()->get($customerReference);
 
@@ -184,7 +120,7 @@ class CartFeatureContext extends AbstractDomainFeatureContext
 
         $this->getCommandBus()->handle(
             new UpdateCartAddressesCommand(
-                (int) SharedStorage::getStorage()->get($cartReference),
+                (int) SharedStorage::getStorage()->get($cartReference)->id,
                 $addressId,
                 $addressId
             )
@@ -192,55 +128,14 @@ class CartFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @When I set Free shipping to the cart :cartReference
-     *
-     * @param string $cartReference
+     * @When I set Free shipping to the cart :reference
      */
-    public function setFreeShippingToCart(string $cartReference)
+    public function setFreeShippingToCart($reference)
     {
         $this->getCommandBus()->handle(
             new SetFreeShippingToCartCommand(
-                SharedStorage::getStorage()->get($cartReference),
+                (int) SharedStorage::getStorage()->get($reference)->id,
                 true
-            )
-        );
-    }
-
-    /**
-     * @When I use a voucher :voucherCode for a discount of :discountAmount on the cart :cartReference
-     *
-     * @param string $voucherCode
-     * @param float $discountAmount
-     * @param string $cartReference
-     *
-     * @throws \PrestaShopDatabaseException
-     * @throws \PrestaShopException
-     */
-    public function useDiscountVoucherOnCart(string $voucherCode, float $discountAmount, string $cartReference)
-    {
-        $cartRule = new CartRule();
-        $cartRule->reduction_amount = $discountAmount;
-        $cartRule->name = [Configuration::get('PS_LANG_DEFAULT') => $voucherCode];
-        $cartRule->priority = 1;
-        $cartRule->quantity = 1;
-        $cartRule->quantity_per_user = 1;
-        $now = new DateTime();
-        // sub 1s to avoid bad comparisons with strictly greater than
-        $now->sub(new DateInterval('P2D'));
-        $cartRule->date_from = $now->format('Y-m-d H:i:s');
-        $now->add(new DateInterval('P1Y'));
-        $cartRule->date_to = $now->format('Y-m-d H:i:s');
-        $cartRule->active = 1;
-        $cartRule->code = $voucherCode;
-
-        if (!$cartRule->add()) {
-            throw new RuntimeException('Cannot add cart rule to database');
-        }
-
-        $this->getCommandBus()->handle(
-            new AddCartRuleToCartCommand(
-                SharedStorage::getStorage()->get($cartReference),
-                $cartRule->id
             )
         );
     }

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2020 PrestaShop SA and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -28,7 +28,6 @@ namespace Tests\Unit\Adapter;
 
 use Context;
 use Controller;
-use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\ContainerFinder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -66,7 +65,7 @@ class ContainerFinderTest extends TestCase
     }
 
     /**
-     * @return MockObject|Context
+     * @return \PHPUnit_Framework_MockObject_MockObject|Context
      */
     private function getMockContext()
     {
@@ -76,7 +75,7 @@ class ContainerFinderTest extends TestCase
     }
 
     /**
-     * @return MockObject|ContainerInterface
+     * @return \PHPUnit_Framework_MockObject_MockObject|ContainerInterface
      */
     private function getMockContainerInterface()
     {
@@ -86,7 +85,7 @@ class ContainerFinderTest extends TestCase
     }
 
     /**
-     * @return MockObject|Controller
+     * @return \PHPUnit_Framework_MockObject_MockObject|Controller
      */
     private function getMockController()
     {
