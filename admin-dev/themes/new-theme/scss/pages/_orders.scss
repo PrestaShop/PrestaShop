@@ -326,8 +326,15 @@ td.cancel-product-element {
 
     .order-actions {
       #update_order_status_action_form {
-        select {
+        .select-status {
           margin-bottom: 0.9375rem;
+        }
+      }
+
+      .select-status {
+        .select-status-purple {
+          margin-right: 0 !important;
+          max-width: inherit;
         }
       }
 
