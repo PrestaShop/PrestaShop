@@ -75,8 +75,8 @@ class TypeaheadProductCollectionType extends CommonAbstractType
         if (!empty($view->vars['value']) && !empty($view->vars['value']['data'])) {
             $collection = [];
             $langId = (int) $this->configuration->get('PS_LANG_DEFAULT');
-
             $i = 0;
+
             foreach ($view->vars['value']['data'] as $id) {
                 if (!$id) {
                     continue;
