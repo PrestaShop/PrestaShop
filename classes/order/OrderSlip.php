@@ -330,7 +330,7 @@ class OrderSlipCore extends ObjectModel
 
             $address = Address::initialize($order->id_address_invoice, false);
             $id_address = (int) $address->id;
-            $id_tax_rules_group = (int) $order_detail->$id_tax_rules_group;
+            $id_tax_rules_group = (int) $order_detail->id_tax_rules_group;
             $id_order_detail = (int) $product['id_order_detail'];
             $tax_calculator = OrderDetail::getTaxCalculatorStatic($id_order_detail);
 
