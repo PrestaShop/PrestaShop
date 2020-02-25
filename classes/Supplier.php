@@ -347,8 +347,6 @@ class SupplierCore extends ObjectModel
             $alias = 'm.';
         }
 
-        $finalOrderBy = $orderBy;
-
         $sql = 'SELECT p.*, product_shop.*, stock.out_of_stock,
 					IFNULL(stock.quantity, 0) as quantity,
 					pl.`description`,

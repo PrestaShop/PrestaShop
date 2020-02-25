@@ -2620,8 +2620,6 @@ class ProductCore extends ObjectModel
             $order_by = $order_by[1];
         }
 
-        $finalOrderBy = $order_by;
-
         $nb_days_new_product = (int) Configuration::get('PS_NB_DAYS_NEW_PRODUCT');
 
         if ($count) {
@@ -2905,8 +2903,6 @@ class ProductCore extends ObjectModel
             $order_by = explode('.', $order_by);
             $order_by = pSQL($order_by[0]) . '.`' . pSQL($order_by[1]) . '`';
         }
-
-        $finalOrderBy = $order_by;
 
         $sql = '
         SELECT
