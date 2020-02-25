@@ -8,6 +8,21 @@
     }
   }
 
+  .add-product {
+    &-inputs {
+      margin-top: 24px;
+      min-width: 120px;
+    }
+
+    &-quantity,
+    &-buttons {
+      .form-group {
+        margin-bottom: 0;
+        margin-top: 24px;
+      }
+    }
+  }
+
   // Todo: Looks like we don't have any custom select without JS to add in a form
   .select-status {
     position: relative;
