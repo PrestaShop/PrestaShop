@@ -23,8 +23,8 @@
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 
-<div class="col-xs-2 mb-3 row ml-auto">
-  <div class="col-xs-1 d-inline mr-1">
+<div class="order-navigation">
+  <div class="order-navigation-left">
       <a
         href="{{ path('admin_orders_view', {'orderId': previousOrderId}) }}"
         role="button"
@@ -34,7 +34,7 @@
       </a>
   </div>
 
-  <div class="col-xs-1 d-inline">
+  <div class="order-navigation-right">
       <a
         href="{{ path('admin_orders_view', {'orderId': nextOrderId}) }}"
         role="button"
