@@ -97,7 +97,7 @@ final class EmailLogsDefinitionFactory extends AbstractGridDefinitionFactory
      */
     protected function getName()
     {
-        return $this->trans('E-mail', [], 'Admin.Navigation.Menu');
+        return $this->trans('Email', [], 'Admin.Navigation.Menu');
     }
 
     /**
