@@ -28,7 +28,6 @@ namespace PrestaShopBundle\Form\Admin\Configure\ShopParameters\OrderPreferences;
 
 use PrestaShop\PrestaShop\Adapter\CMS\CMSDataProvider;
 use PrestaShop\PrestaShop\Adapter\Order\GeneralConfiguration;
-use PrestaShop\PrestaShop\Adapter\Order\GiftOptionsConfiguration;
 use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
@@ -36,17 +35,12 @@ use Symfony\Component\Translation\TranslatorInterface;
  * Class is responsible of managing the data manipulated using forms
  * in "Configure > Shop Parameters > Order Settings" page.
  */
-class OrderPreferencesFormDataProvider implements FormDataProviderInterface
+class OrderPreferencesGeneralFormDataProvider implements FormDataProviderInterface
 {
     /**
      * @var GeneralConfiguration
      */
     private $generalConfiguration;
-
-    /**
-     * @var GiftOptionsConfiguration
-     */
-    private $giftOptionsConfiguration;
 
     /**
      * @var TranslatorInterface
@@ -60,12 +54,10 @@ class OrderPreferencesFormDataProvider implements FormDataProviderInterface
 
     public function __construct(
         GeneralConfiguration $generalConfiguration,
-        GiftOptionsConfiguration $giftOptionsConfiguration,
         TranslatorInterface $translator,
         CMSDataProvider $cmsDataProvider
     ) {
         $this->generalConfiguration = $generalConfiguration;
-        $this->giftOptionsConfiguration = $giftOptionsConfiguration;
         $this->translator = $translator;
         $this->cmsDataProvider = $cmsDataProvider;
     }
@@ -75,10 +67,7 @@ class OrderPreferencesFormDataProvider implements FormDataProviderInterface
      */
     public function getData()
     {
-        return [
-            'general' => $this->generalConfiguration->getConfiguration(),
-            'gift_options' => $this->giftOptionsConfiguration->getConfiguration(),
-        ];
+        return $this->generalConfiguration->getConfiguration();
     }
 
     /**
@@ -87,23 +76,15 @@ class OrderPreferencesFormDataProvider implements FormDataProviderInterface
     public function setData(array $data)
     {
         // If TOS option is disabled - reset the cms id as well
-        if (!$data['general']['enable_tos']) {
-            $data['general']['tos_cms_id'] = 0;
-        }
-
-        // If gift wrapping tax rules group was not submitted - reset it to 0
-        if (!isset($data['gift_options']['gift_wrapping_tax_rules_group'])) {
-            $data['gift_options']['gift_wrapping_tax_rules_group'] = 0;
+        if (!$data['enable_tos']) {
+            $data['tos_cms_id'] = 0;
         }
 
         if ($errors = $this->validate($data)) {
             return $errors;
         }
 
-        return array_merge(
-            $this->generalConfiguration->updateConfiguration($data['general']),
-            $this->giftOptionsConfiguration->updateConfiguration($data['gift_options'])
-        );
+        return $this->generalConfiguration->updateConfiguration($data);
     }
 
     /**
@@ -116,24 +97,20 @@ class OrderPreferencesFormDataProvider implements FormDataProviderInterface
     protected function validate(array $data)
     {
         $errors = [];
-        $invalidFields = [];
-        $purchaseMinimumValue = $data['general']['purchase_minimum_value'];
-        $giftWrappingPrice = $data['gift_options']['gift_wrapping_price'];
+        $purchaseMinimumValue = $data['purchase_minimum_value'];
 
         // Check if purchase minimum value is a positive number
         if (!is_numeric($purchaseMinimumValue) || $purchaseMinimumValue < 0) {
-            $invalidFields[] = $this->translator->trans(
+            $errors[] = $this->translator->trans(
                 'Minimum purchase total required in order to validate the order',
                 [],
                 'Admin.Shopparameters.Feature'
             );
         }
 
-        $isTosEnabled = $data['general']['enable_tos'];
-
         // If TOS option is enabled - check if the selected CMS page is valid
-        if ($isTosEnabled) {
-            $tosCmsId = $data['general']['tos_cms_id'];
+        if ($data['enable_tos']) {
+            $tosCmsId = $data['tos_cms_id'];
             $tosCms = $this->cmsDataProvider->getCMSById($tosCmsId);
 
             if (!$tosCms->id) {
@@ -143,23 +120,6 @@ class OrderPreferencesFormDataProvider implements FormDataProviderInterface
                     'parameters' => [],
                 ];
             }
-        }
-
-        // Check if purchase minimum value is a positive number
-        if (!empty($giftWrappingPrice) && (!is_numeric($giftWrappingPrice) || $giftWrappingPrice < 0)) {
-            $invalidFields[] = $this->translator->trans(
-                'Gift-wrapping price',
-                [],
-                'Admin.Shopparameters.Feature'
-            );
-        }
-
-        foreach ($invalidFields as $invalidField) {
-            $errors[] = [
-                'key' => 'The %s field is invalid.',
-                'domain' => 'Admin.Notifications.Error',
-                'parameters' => [$invalidField],
-            ];
         }
 
         return $errors;

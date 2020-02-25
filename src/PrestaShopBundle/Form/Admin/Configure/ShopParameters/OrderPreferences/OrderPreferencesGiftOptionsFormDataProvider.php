@@ -1,0 +1,122 @@
+<?php
+/**
+ * 2007-2020 PrestaShop SA and Contributors
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ */
+
+namespace PrestaShopBundle\Form\Admin\Configure\ShopParameters\OrderPreferences;
+
+use PrestaShop\PrestaShop\Adapter\CMS\CMSDataProvider;
+use PrestaShop\PrestaShop\Adapter\Order\GiftOptionsConfiguration;
+use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
+use Symfony\Component\Translation\TranslatorInterface;
+
+/**
+ * Class is responsible of managing the data manipulated using forms
+ * in "Configure > Shop Parameters > Order Settings" page.
+ */
+class OrderPreferencesGiftOptionsFormDataProvider implements FormDataProviderInterface
+{
+    /**
+     * @var GiftOptionsConfiguration
+     */
+    private $giftOptionsConfiguration;
+
+    /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
+    /**
+     * @var CMSDataProvider
+     */
+    private $cmsDataProvider;
+
+    public function __construct(
+        GiftOptionsConfiguration $giftOptionsConfiguration,
+        TranslatorInterface $translator,
+        CMSDataProvider $cmsDataProvider
+    ) {
+        $this->giftOptionsConfiguration = $giftOptionsConfiguration;
+        $this->translator = $translator;
+        $this->cmsDataProvider = $cmsDataProvider;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getData()
+    {
+        return $this->giftOptionsConfiguration->getConfiguration();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setData(array $data)
+    {
+        // If gift wrapping tax rules group was not submitted - reset it to 0
+        if (!isset($data['gift_wrapping_tax_rules_group'])) {
+            $data['gift_wrapping_tax_rules_group'] = 0;
+        }
+
+        if ($errors = $this->validate($data)) {
+            return $errors;
+        }
+
+        return $this->giftOptionsConfiguration->updateConfiguration($data);
+    }
+
+    /**
+     * Perform validation on form data before saving it.
+     *
+     * @param array $data
+     *
+     * @return array Returns array of errors
+     */
+    protected function validate(array $data)
+    {
+        $errors = [];
+        $invalidFields = [];
+        $giftWrappingPrice = $data['gift_wrapping_price'];
+
+        // Check if purchase minimum value is a positive number
+        if (!empty($giftWrappingPrice) && (!is_numeric($giftWrappingPrice) || $giftWrappingPrice < 0)) {
+            $invalidFields[] = $this->translator->trans(
+                'Gift-wrapping price',
+                [],
+                'Admin.Shopparameters.Feature'
+            );
+        }
+
+        foreach ($invalidFields as $invalidField) {
+            $errors[] = [
+                'key' => 'The %s field is invalid.',
+                'domain' => 'Admin.Notifications.Error',
+                'parameters' => [$invalidField],
+            ];
+        }
+
+        return $errors;
+    }
+}
