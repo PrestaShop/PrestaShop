@@ -177,7 +177,6 @@ services:
         class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Email\EmailConfigurationFormDataProvider'
         arguments:
             - '@prestashop.core.email.email_configurator'
-            - '@prestashop.core.email.smtp_configurator'
 
     prestashop.admin.request_sql_settings.form_data_provider:
         class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\RequestSql\SqlRequestSettingsFormDataProvider'
