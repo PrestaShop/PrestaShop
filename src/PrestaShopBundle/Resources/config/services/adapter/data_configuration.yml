@@ -194,11 +194,6 @@ services:
         arguments:
             - '@prestashop.adapter.legacy.configuration'
 
-    prestashop.core.email.smtp_configurator:
-        class: 'PrestaShop\PrestaShop\Core\Email\SmtpDataConfigurator'
-        arguments:
-            - '@prestashop.adapter.legacy.configuration'
-
     prestashop.adapter.webservice.configuration:
         class: 'PrestaShop\PrestaShop\Adapter\Webservice\WebserviceConfiguration'
         arguments:

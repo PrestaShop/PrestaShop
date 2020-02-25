@@ -31,32 +31,10 @@ const {$} = window;
 class SmtpConfigurationToggler {
   constructor() {
     $('.js-email-method').on('change', 'input[type="radio"]', (event) => {
-      const mailMethod = $(event.currentTarget).val();
+      const mailMethod = parseInt($(event.currentTarget).val(), 10);
 
-      if (this.getSmtpMailMethodOption() === mailMethod) {
-        this.showSmtpConfiguration();
-      } else {
-        this.hideSmtpConfiguration();
-      }
+      $('.js-smtp-configuration').toggleClass('d-none', this.getSmtpMailMethodOption() !== mailMethod);
     });
-  }
-
-  /**
-   * Show SMTP configuration form
-   *
-   * @private
-   */
-  showSmtpConfiguration() {
-    $('.js-smtp-configuration').removeClass('d-none');
-  }
-
-  /**
-   * Hide SMTP configuration
-   *
-   * @private
-   */
-  hideSmtpConfiguration() {
-    $('.js-smtp-configuration').addClass('d-none');
   }
 
   /**
