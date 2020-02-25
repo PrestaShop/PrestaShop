@@ -384,6 +384,10 @@ td.cancel-product-element {
 
         button {
           width: 100%;
+
+          &:not(:last-child) {
+            margin-bottom: 10px;
+          }
         }
       }
     }
