@@ -165,16 +165,25 @@ services:
               arguments:
                   - '@prestashop.core.admin.tab.repository'
 
-    prestashop.admin.order_preferences.form_handler:
-        class: 'PrestaShop\PrestaShop\Core\Form\FormHandler'
+    prestashop.admin.order_preferences.general.form_handler:
+        class: 'PrestaShop\PrestaShop\Core\Form\Handler'
         arguments:
-            - '@=service("form.factory").createBuilder()'
+            - '@form.factory'
             - '@prestashop.core.hook.dispatcher'
-            - '@prestashop.admin.order_preferences.data_provider'
-            -
-              'general': 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\OrderPreferences\GeneralType'
-              'gift_options': 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\OrderPreferences\GiftOptionsType'
-            - 'OrderPreferencesPage'
+            - '@prestashop.admin.order_preferences.general.data_provider'
+            - 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\OrderPreferences\GeneralType'
+            - 'OrderPreferencesPageGeneral'
+            - 'general'
+
+    prestashop.admin.order_preferences.gift_options.form_handler:
+        class: 'PrestaShop\PrestaShop\Core\Form\Handler'
+        arguments:
+            - '@form.factory'
+            - '@prestashop.core.hook.dispatcher'
+            - '@prestashop.admin.order_preferences.gift_options.data_provider'
+            - 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\OrderPreferences\GiftOptionsType'
+            - 'OrderPreferencesPageGiftOptions'
+            - 'gift_options'
 
     prestashop.admin.product_preferences.form_handler:
         class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\ProductPreferences\ProductPreferencesFormHandler'
