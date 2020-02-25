@@ -91,6 +91,7 @@ class EmailConfigurationType extends TranslatorAwareType
                     $this->trans('Both', 'Admin.Advparameters.Feature') => MailOption::TYPE_BOTH,
                 ],
             ])
-            ->add('log_emails', SwitchType::class);
+            ->add('log_emails', SwitchType::class)
+            ->add('smtp_config', SmtpConfigurationType::class);
     }
 }
