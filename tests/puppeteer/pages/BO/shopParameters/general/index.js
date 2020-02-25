@@ -9,6 +9,9 @@ module.exports = class shopParamsGeneral extends BOBasePage {
 
     // Selectors
     this.maintenanceNavItemLink = '#subtab-AdminMaintenance';
+    this.configurationForm = '#configuration_form';
+    this.displaySuppliersLabel = 'label[for=\'form_general_display_suppliers_%TOGGLE\']';
+    this.saveFormButton = `${this.configurationForm} .card-footer button`;
   }
 
   /*
@@ -21,5 +24,16 @@ module.exports = class shopParamsGeneral extends BOBasePage {
    */
   async goToSubTabMaintenance() {
     await this.page.click(this.maintenanceNavItemLink, {waitUntil: 'networkidle2'});
+  }
+
+  /**
+   * Enable/Disable display suppliers
+   * @param toEnable
+   * @returns {Promise<string>}
+   */
+  async setDisplaySuppliers(toEnable = true) {
+    await this.waitForSelectorAndClick(this.displaySuppliersLabel.replace('%TOGGLE', toEnable ? 1 : 0));
+    await this.clickAndWaitForNavigation(this.saveFormButton);
+    return this.getTextContent(this.alertSuccessBlock);
   }
 };

@@ -150,4 +150,12 @@ module.exports = class Home extends CommonPage {
   async getCartNotificationsNumber() {
     return this.getNumberFromText(this.cartProductsCount);
   }
+
+  /**
+   * Go to siteMap page
+   * @returns {Promise<void>}
+   */
+  async goToSiteMapPage() {
+    await this.clickAndWaitForNavigation(this.siteMapLink);
+  }
 };
