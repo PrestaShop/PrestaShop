@@ -11,6 +11,7 @@ module.exports = class SiteMap extends FOBasePage {
     this.categoryNameSelect = '#category-page-%ID';
     this.categoryPageNameSelect = '#cms-category-%ID';
     this.suppliersPageLink = '#supplier-page';
+    this.brandsPageLink = '#manufacturer-page';
   }
 
   /*
@@ -49,5 +50,13 @@ module.exports = class SiteMap extends FOBasePage {
    */
   isSuppliersLinkVisible() {
     return this.elementVisible(this.suppliersPageLink, 2000);
+  }
+
+  /**
+   * Is brands link visible
+   * @returns {boolean}
+   */
+  isBrandsLinkVisible() {
+    return this.elementVisible(this.brandsPageLink, 2000);
   }
 };

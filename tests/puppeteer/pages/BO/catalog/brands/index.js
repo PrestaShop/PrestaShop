@@ -457,4 +457,12 @@ module.exports = class Brands extends BOBasePage {
   async sortTableAddresses(sortBy, sortDirection = 'asc') {
     return this.sortTable('manufacturer_address', sortBy, sortDirection);
   }
+
+  /**
+   * Get alert text message
+   * @returns {Promise<string>}
+   */
+  getAlertTextMessage() {
+    return this.getTextContent(this.alertTextBlock);
+  }
 };
