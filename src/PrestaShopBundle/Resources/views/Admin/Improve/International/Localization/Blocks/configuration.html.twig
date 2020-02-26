@@ -91,6 +91,10 @@
             {{ form_widget(configurationForm.timezone, {'attr': {'data-minimumResultsForSearch': '7', 'data-toggle': 'select2'}}) }}
           </div>
         </div>
+
+        {% block localization_settings_configuration_form_rest %}
+          {{ form_rest(configurationForm) }}
+        {% endblock %}
       </div>
     </div>
 
