@@ -374,19 +374,45 @@ services:
             - 'PrestaShopBundle\Form\Admin\Improve\International\Translations\CopyLanguageType'
             - 'TranslationSettingsPageCopyLanguage'
 
-    prestashop.admin.meta_settings.form_handler:
-        class: 'PrestaShop\PrestaShop\Core\Form\FormHandler'
+    prestashop.admin.meta_settings.set_up_urls.form_handler:
+        class: 'PrestaShop\PrestaShop\Core\Form\Handler'
         arguments:
-            - '@=service("form.factory").createBuilder()'
+            - '@form.factory'
             - '@prestashop.core.hook.dispatcher'
-            - '@prestashop.admin.traffic_seo.meta_settings.form_data_provider'
-            -
-              'set_up_urls': 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\TrafficSeo\Meta\SetUpUrlType'
-              'shop_urls': 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\TrafficSeo\Meta\ShopUrlType'
-              'url_schema': 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\TrafficSeo\Meta\UrlSchemaType'
-              'seo_options': 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\TrafficSeo\Meta\SEOOptionsType'
+            - '@prestashop.admin.traffic_seo.meta_settings.set_up_urls.form_data_provider'
+            - 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\TrafficSeo\Meta\SetUpUrlType'
             - 'MetaPage'
-            - 'meta_settings_form'
+            - 'meta_settings_set_up_urls_form'
+
+    prestashop.admin.meta_settings.shop_urls.form_handler:
+        class: 'PrestaShop\PrestaShop\Core\Form\Handler'
+        arguments:
+            - '@form.factory'
+            - '@prestashop.core.hook.dispatcher'
+            - '@prestashop.admin.traffic_seo.meta_settings.shop_urls.form_data_provider'
+            - 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\TrafficSeo\Meta\ShopUrlType'
+            - 'MetaPage'
+            - 'meta_settings_shop_urls_form'
+
+    prestashop.admin.meta_settings.url_schema.form_handler:
+        class: 'PrestaShop\PrestaShop\Core\Form\Handler'
+        arguments:
+            - '@form.factory'
+            - '@prestashop.core.hook.dispatcher'
+            - '@prestashop.admin.traffic_seo.meta_settings.url_schema.form_data_provider'
+            - 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\TrafficSeo\Meta\UrlSchemaType'
+            - 'MetaPage'
+            - 'meta_settings_url_schema_form'
+
+    prestashop.admin.meta_settings.seo_options.form_handler:
+        class: 'PrestaShop\PrestaShop\Core\Form\Handler'
+        arguments:
+            - '@form.factory'
+            - '@prestashop.core.hook.dispatcher'
+            - '@prestashop.admin.traffic_seo.meta_settings.seo_options.form_data_provider'
+            - 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\TrafficSeo\Meta\SEOOptionsType'
+            - 'MetaPage'
+            - 'meta_settings_seo_options_form'
 
     prestashop.admin.employee_options.form_handler:
         class: 'PrestaShop\PrestaShop\Core\Form\Handler'
