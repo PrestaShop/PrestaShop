@@ -89,7 +89,6 @@ class OrderRefundCalculator
         $voucherChosen = false;
         $voucherAmount = 0;
         if ($voucherRefundType === VoucherRefundType::PRODUCT_PRICES_EXCLUDING_VOUCHER_REFUND) {
-            //@todo: Check if it matches order_discount_price in legacy
             $refundedAmount -= $voucherAmount = (float) $order->total_discounts;
         } elseif ($voucherRefundType === VoucherRefundType::SPECIFIC_AMOUNT_REFUND) {
             $voucherChosen = true;
