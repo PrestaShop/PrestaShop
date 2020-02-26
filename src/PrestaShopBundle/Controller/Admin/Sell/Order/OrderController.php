@@ -47,6 +47,7 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Exception\CannotEditDeliveredOrderPr
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\ChangeOrderStatusException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidCancelProductException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidOrderStateException;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\NegativeCartRuleValueException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\NegativePaymentAmountException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderEmailSendException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
@@ -1423,6 +1424,16 @@ class OrderController extends FrameworkBundleAdminController
                 $e->getMessage(),
                 'Admin.Orderscustomers.Notification'
             ),
+            NegativeCartRuleValueException::class => [
+                NegativeCartRuleValueException::NEGATIVE_AMOUNT => $this->trans(
+                    'Reduction amount cannot be lower than zero.',
+                    'Admin.Orderscustomers.Notification'
+                ),
+                NegativeCartRuleValueException::NEGATIVE_PERCENTAGE => $this->trans(
+                    'Reduction percentage must be between 0% and 100%.',
+                    'Admin.Orderscustomers.Notification'
+                ),
+            ],
             InvalidCancelProductException::class => [
                 InvalidCancelProductException::INVALID_QUANTITY => $this->trans(
                     'Please enter a positive quantity.',
