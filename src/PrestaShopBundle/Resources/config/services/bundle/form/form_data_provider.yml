@@ -193,16 +193,30 @@ services:
         arguments:
             - '@prestashop.core.backup.options_configuration'
 
-    prestashop.admin.traffic_seo.meta_settings.form_data_provider:
-        class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\TrafficSeo\Meta\MetaSettingsFormDataProvider'
+    prestashop.admin.traffic_seo.meta_settings.set_up_urls.form_data_provider:
+        class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\TrafficSeo\Meta\MetaSettingsSetUpUrlsFormDataProvider'
         arguments:
             - '@prestashop.adapter.meta.set_up_urls.configuration'
+
+    prestashop.admin.traffic_seo.meta_settings.shop_urls.form_data_provider:
+        class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\TrafficSeo\Meta\MetaSettingsShopUrlsFormDataProvider'
+        arguments:
             - '@prestashop.adapter.meta.shop_url.configuration'
+            - '@translator'
+            - '@prestashop.adapter.validate'
+
+    prestashop.admin.traffic_seo.meta_settings.url_schema.form_data_provider:
+        class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\TrafficSeo\Meta\MetaSettingsUrlSchemaFormDataProvider'
+        arguments:
             - '@prestashop.adapter.meta.url_schema.configuration'
-            - '@prestashop.adapter.meta.seo_options.configuration'
             - '@translator'
             - '@prestashop.adapter.routes.route_validator'
             - '@prestashop.adapter.validate'
+
+    prestashop.admin.traffic_seo.meta_settings.seo_options.form_data_provider:
+        class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\TrafficSeo\Meta\MetaSettingsSeoOptionsFormDataProvider'
+        arguments:
+            - '@prestashop.adapter.meta.seo_options.configuration'
 
     prestashop.admin.employee_options.form_data_provider:
         class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Employee\EmployeeOptionsFormDataProvider'
