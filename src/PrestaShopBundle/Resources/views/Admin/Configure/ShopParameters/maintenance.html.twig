@@ -46,7 +46,7 @@
                   </div>
                 </div>
                 <div class="form-group row">
-                  {{ ps.label_with_help(('Maintenance IP'|trans), ('IP addresses allowed to access the front office even if the shop is disabled. Please use a comma to separate them (e.g. 42.24.4.2,127.0.0.1,99.98.97.96)'|trans({}, 'Admin.Shopparameters.Help'))) }}
+                  {{ ps.label_with_help(('Maintenance IP'|trans), ('IP addresses allowed to access the front office even if the shop is disabled. Please use a comma to separate them (e.g. 42.24.4.2,127.0.0.1,99.98.97.96).'|trans({}, 'Admin.Shopparameters.Help'))) }}
                   <div class="col-sm">
                     {{ form_errors(generalForm.maintenance_ip) }}
                     {{ form_widget(generalForm.maintenance_ip, { 'currentIp': currentIp}) }}
