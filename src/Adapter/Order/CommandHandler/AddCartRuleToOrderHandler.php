@@ -34,6 +34,7 @@ use OrderInvoice;
 use PrestaShop\PrestaShop\Adapter\Order\AbstractOrderHandler;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\AddCartRuleToOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler\AddCartRuleToOrderHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\NegativeCartRuleValueException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\OrderDiscountType;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\ComputingPrecision;
@@ -69,7 +70,7 @@ final class AddCartRuleToOrderHandler extends AbstractOrderHandler implements Ad
         switch ($command->getCartRuleType()) {
             // Percent type
             case OrderDiscountType::DISCOUNT_PERCENT:
-                if ($discountValue < 100) {
+                if ($discountValue < 100 && $discountValue >= 0) {
                     if (isset($orderInvoice)) {
                         $cartRules[$orderInvoice->id]['value_tax_incl'] = Tools::ps_round(
                             $orderInvoice->total_paid_tax_incl * $discountValue / 100,
@@ -117,12 +118,21 @@ final class AddCartRuleToOrderHandler extends AbstractOrderHandler implements Ad
                         );
                     }
                 } else {
-                    throw new OrderException('Percentage discount value cannot be higher than 100%.');
+                    throw new NegativeCartRuleValueException(
+                        'Reduction percentage must be between 0% and 100%.',
+                        NegativeCartRuleValueException::NEGATIVE_PERCENTAGE
+                    );
                 }
 
                 break;
             // Amount type
             case OrderDiscountType::DISCOUNT_AMOUNT:
+                if (0 > $discountValue) {
+                    throw new NegativeCartRuleValueException(
+                        'Reduction amount cannot be lower than zero.',
+                        NegativeCartRuleValueException::NEGATIVE_AMOUNT
+                    );
+                }
                 if (isset($orderInvoice)) {
                     if ($discountValue > $orderInvoice->total_paid_tax_incl) {
                         throw new OrderException('The discount value is greater than the order invoice total.');
