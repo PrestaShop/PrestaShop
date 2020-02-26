@@ -140,11 +140,19 @@ services:
         arguments:
             - '@prestashop.adapter.order.delivery.slip.pdf.configuration'
 
-    prestashop.admin.localization.form_data_provider:
+    prestashop.admin.localization.configuration.form_data_provider:
         class: 'PrestaShopBundle\Form\Admin\Improve\International\Localization\LocalizationFormDataProvider'
         arguments:
             - '@prestashop.adapter.localization.configuration'
+
+    prestashop.admin.localization.local_units.form_data_provider:
+        class: 'PrestaShopBundle\Form\Admin\Improve\International\Localization\LocalizationFormDataProvider'
+        arguments:
             - '@prestashop.adapter.local_units.configuration'
+
+    prestashop.admin.localization.advanced.form_data_provider:
+        class: 'PrestaShopBundle\Form\Admin\Improve\International\Localization\LocalizationFormDataProvider'
+        arguments:
             - '@prestashop.adapter.localization_advanced.configuration'
 
     prestashop.admin.geolocation.by_ip_address.form_data_provider:
