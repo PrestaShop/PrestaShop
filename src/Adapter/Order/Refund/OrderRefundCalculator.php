@@ -40,6 +40,7 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidCancelProductExcept
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderDetailRefund;
 use PrestaShop\PrestaShop\Core\Domain\Order\VoucherRefundType;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\ComputingPrecision;
+use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
 use PrestaShopDatabaseException;
 use PrestaShopException;
 use TaxCalculator;
@@ -81,48 +82,57 @@ class OrderRefundCalculator
             $orderDetailList,
             $precision
         );
-        $refundedAmount = 0;
+        $refundedAmount = new Number('0');
         foreach ($productRefunds as $orderDetailId => $productRefund) {
-            $refundedAmount += $productRefund['amount'];
+            $refundedAmount = $refundedAmount->plus(new Number((string) $productRefund['amount']));
         }
 
         $voucherChosen = false;
-        $voucherAmount = 0;
+        $voucherAmount = new Number('0');
         if ($voucherRefundType === VoucherRefundType::PRODUCT_PRICES_EXCLUDING_VOUCHER_REFUND) {
-            $refundedAmount -= $voucherAmount = (float) $order->total_discounts;
+            $voucherAmount = new Number((string) $order->total_discounts);
+            $refundedAmount = $refundedAmount->minus($voucherAmount);
         } elseif ($voucherRefundType === VoucherRefundType::SPECIFIC_AMOUNT_REFUND) {
             $voucherChosen = true;
             $refundedAmount = $voucherAmount = $chosenVoucherAmount;
         }
 
-        $shippingCostAmount = (float) (string) $shippingRefund;
-        if ($shippingCostAmount > 0) {
-            $shippingMaxRefund = $isTaxIncluded ? $order->total_shipping_tax_incl : $order->total_shipping_tax_excl;
+        $shippingCostAmount = new Number((string) ($shippingRefund ?? 0));
+        if ($shippingCostAmount->isPositive()) {
+            $shippingMaxRefund = new Number(
+                $isTaxIncluded ?
+                    (string) $order->total_shipping_tax_incl :
+                    (string) $order->total_shipping_tax_excl
+            );
+
             $shippingSlipResume = OrderSlip::getShippingSlipResume($order->id);
-            $shippingMaxRefund -= $shippingSlipResume['total_shipping_tax_incl'] ?? 0;
-            if ($shippingCostAmount > $shippingMaxRefund) {
+            $shippingSlipTotalTaxIncl = new Number((string) ($shippingSlipResume['total_shipping_tax_incl'] ?? 0));
+            $shippingMaxRefund = $shippingMaxRefund->minus($shippingSlipTotalTaxIncl);
+
+            if ($shippingCostAmount->isGreaterThan($shippingMaxRefund)) {
                 $shippingCostAmount = $shippingMaxRefund;
             }
             if (!$isTaxIncluded) {
-                // @todo: use https://github.com/PrestaShop/decimal for price computations
                 $taxCalculator = $this->getCarrierTaxCalculatorFromOrder($order);
-                $refundedAmount += $taxCalculator->addTaxes($shippingCostAmount);
+                $taxesAmount = $taxCalculator->addTaxes((float) $shippingCostAmount->toPrecision(CommonAbstractType::PRESTASHOP_DECIMALS));
+                $taxes = new Number((string) $taxesAmount);
+                $refundedAmount = $refundedAmount->plus($taxes);
             } else {
-                $refundedAmount += $shippingCostAmount;
+                $refundedAmount = $refundedAmount->plus($shippingCostAmount);
             }
         }
 
         // Something has to be refunded (check refunds count instead of the sum in case a voucher is implied)
-        if (count($productRefunds) <= 0 && $shippingCostAmount <= 0) {
+        if (count($productRefunds) <= 0 && $refundedAmount->isLowerOrEqualThan(new Number('0'))) {
             throw new InvalidCancelProductException(InvalidCancelProductException::NO_REFUNDS);
         }
 
         return new OrderRefundSummary(
             $orderDetailList,
             $productRefunds,
-            $refundedAmount,
-            $shippingCostAmount,
-            $voucherAmount,
+            (float) $refundedAmount->toPrecision(CommonAbstractType::PRESTASHOP_DECIMALS),
+            (float) $shippingCostAmount->toPrecision(CommonAbstractType::PRESTASHOP_DECIMALS),
+            (float) $voucherAmount->toPrecision(CommonAbstractType::PRESTASHOP_DECIMALS),
             $voucherChosen,
             $isTaxIncluded,
             $precision
