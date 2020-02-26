@@ -25,8 +25,8 @@ module.exports = class Preferences extends BOBasePage {
   async setCurrencyRestriction(paymentModule, valueWanted) {
     await this.page.waitForSelector(this.euroCurrencyRestrictionsCheckbox.replace('%PAYMENTMODULE', paymentModule));
     const isCheckboxSelected = await this.isCheckboxSelected(
-      this.euroCurrencyRestrictionsCheckbox.replace('%PAYMENTMODULE', paymentModule,
-      ));
+      this.euroCurrencyRestrictionsCheckbox.replace('%PAYMENTMODULE', paymentModule),
+    );
     if (valueWanted !== isCheckboxSelected) {
       await this.page.click(`${this.euroCurrencyRestrictionsCheckbox.replace('%PAYMENTMODULE', paymentModule)}+ i`);
     }
