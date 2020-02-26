@@ -15,6 +15,7 @@ module.exports = class Home extends FOBasePage {
     this.totalProducts = '#js-product-list-top .total-products > p';
     this.productPrice = `${this.productArticle} span[aria-label="Price"]`;
     this.newFlag = `${this.productArticle} .product-flag.new`;
+    this.searchInput = '#search_widget input.ui-autocomplete-input';
     // Quick View modal
     this.quickViewModalDiv = 'div[id*=\'quickview-modal\']';
     this.quantityWantedInput = `${this.quickViewModalDiv} input#quantity_wanted`;
@@ -110,5 +111,16 @@ module.exports = class Home extends FOBasePage {
    */
   async isNewFlagVisible(id = 1) {
     return this.elementVisible(this.newFlag.replace('%NUMBER', id), 1000);
+  }
+
+  /**
+   * Search product
+   * @param productName
+   * @returns {Promise<void>}
+   */
+  async searchProduct(productName) {
+    await this.setValue(this.searchInput, productName);
+    await this.page.keyboard.press('Enter');
+    await this.page.waitForNavigation({waitUntil: 'networkidle0'});
   }
 };
