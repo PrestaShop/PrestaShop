@@ -28,15 +28,51 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Type;
 
+use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Form\FormView;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class FileWithImageType extends FileType
+class FileWithImageType extends AbstractType
 {
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver->setDefaults([
+            'file_uri' => null,
+        ]);
+    }
+
+    public function buildForm(FormBuilderInterface $builder, array $options)
+    {
+        $builder->add('file', FileType::class);
+    }
+
     /**
      * {@inheritdoc}
      */
     public function getBlockPrefix()
     {
         return 'file_with_image';
+    }
+
+    public function buildView(FormView $view, FormInterface $form, array $options)
+    {
+        $fileWithImage = $form->get('file');
+
+        if ($fileWithImage && $fileWithImage->getViewData() !== "") {
+            $fileOriginalName = $fileWithImage->getViewData()->getClientOriginalName();
+
+            $view->vars['file_uri'] = ($fileOriginalName === null)
+                ? null
+                : '/img/su/' . $fileOriginalName
+            ;
+        }
+
+        dump('build view');
+        dump($view);
+        dump($form);
+        dump($options);
     }
 }
