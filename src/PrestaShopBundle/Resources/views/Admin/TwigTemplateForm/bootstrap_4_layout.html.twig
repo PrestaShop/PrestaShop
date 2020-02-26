@@ -730,47 +730,17 @@
       {{ attributes.placeholder is defined ?  attributes.placeholder : 'Choose file(s)'|trans({}, 'Admin.Actions') }}
     </label>
   </div>
-{% endblock file_widget %}
-
-{% block file_with_image_widget %}
-  <style>
-    .custom-file-label:after {
-      content: "{{ "Browse"|trans({}, 'Admin.Actions')  }}";
-    }
-  </style>
-  <div class="custom-file">
-    {% set attr = attr|merge({
-      class: (attr.class|default('') ~ ' custom-file-input')|trim,
-      'data-multiple-files-text': '%count% file(s)'|trans({}, 'Admin.Global'),
-      'data-locale': get_context_iso_code()
-    }) -%}
-
-    {% if attr.disabled is defined and attr.disabled %}
-      {% set attr = attr|merge({
-        class: attr.class ~ ' disabled'
-      }) %}
-    {% endif %}
-
-    {{ form_widget(form, {'attr': attr}) }}
-
-    <label class="custom-file-label" for="{{ form.vars.id }}">
-      {% set attributes = form.vars.attr %}
-      {{ attributes.placeholder is defined ?  attributes.placeholder : 'Choose file(s)'|trans({}, 'Admin.Actions') }}
-    </label>
-  </div>
-
-  {% if file_uri is defined and file_uri is not null %}
-    <div class="form-group row">
-      <label class="form-control-label"></label>
+  {# is defined in ImageTypeExtension #}
+  {% if image_url is defined and image_url is not null %}
+    <div class="form-group row mt-3">
       <div class="col-sm">
         <figure class="figure">
-          <img src="{{ file_uri }}" class="figure-img img-fluid img-thumbnail">
-{#          <figcaption class="figure-caption">{{ 'File size'|trans({}, 'Admin.Advparameters.Feature') }} {{ logoImage.size }}</figcaption>#}
+          <img src="{{ image_url }}" class="figure-img img-fluid img-thumbnail">
         </figure>
       </div>
     </div>
   {% endif %}
-{% endblock file_with_image_widget %}
+{% endblock file_widget %}
 
 {% block shop_restriction_checkbox_widget %}
   {% if form.vars.attr.is_allowed_to_display %}

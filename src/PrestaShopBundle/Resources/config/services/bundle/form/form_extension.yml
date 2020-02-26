@@ -27,3 +27,7 @@ services:
       tags:
         - { name: form.type_extension, extended_type: Symfony\Component\Form\Extension\Core\Type\FormType }
 
+    form.extension.image:
+      class: 'PrestaShopBundle\Form\Extension\ImageTypeExtension'
+      tags:
+        - { name: form.type_extension, extended_type: Symfony\Component\Form\Extension\Core\Type\FileType }
