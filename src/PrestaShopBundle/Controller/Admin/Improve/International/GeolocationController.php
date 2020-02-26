@@ -169,7 +169,7 @@ class GeolocationController extends FrameworkBundleAdminController
             $saveErrors = $formHandler->save($data);
 
             if (0 === count($saveErrors)) {
-                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+                $this->addFlash('success', $this->trans('Update successful', 'Admin.Notifications.Success'));
             } else {
                 $this->flashErrors($saveErrors);
             }
