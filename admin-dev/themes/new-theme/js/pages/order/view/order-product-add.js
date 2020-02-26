@@ -173,7 +173,7 @@ export default class OrderProductAdd {
       this.invoiceSelect.prop('disabled', false);
       this.combinationsSelect.prop('disabled', false);
 
-      if (response.responseJSON !== undefined && response.responseJSON.message !== undefined) {
+      if (response.responseJSON && response.responseJSON.message) {
         $.growl.error({message: response.responseJSON.message});
       }
     });
