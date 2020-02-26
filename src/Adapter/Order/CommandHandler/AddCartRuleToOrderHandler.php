@@ -39,7 +39,6 @@ use PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler\AddCartRuleToOrderHan
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\OrderDiscountType;
 use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
-use Tools;
 use Validate;
 
 /**
@@ -104,8 +103,8 @@ final class AddCartRuleToOrderHandler extends AbstractOrderHandler implements Ad
                 break;
             case OrderDiscountType::FREE_SHIPPING:
                 $reductionValues = $this->calculateFreeShippingReduction(
-                    new Number ((string) $order->total_shipping_tax_incl),
-                    new Number ((string) $order->total_shipping_tax_excl)
+                    new Number((string) $order->total_shipping_tax_incl),
+                    new Number((string) $order->total_shipping_tax_excl)
                 );
 
                 break;
