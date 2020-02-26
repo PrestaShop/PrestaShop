@@ -323,6 +323,11 @@ class AttachmentController extends FrameworkBundleAdminController
         ];
     }
 
+    /**
+     * @param Request $request
+     *
+     * @return array
+     */
     private function getBulkAttachmentsFromRequest(Request $request): array
     {
         $attachmentIds = $request->request->get('attachment_files_bulk');
@@ -338,6 +343,9 @@ class AttachmentController extends FrameworkBundleAdminController
         return $attachmentIds;
     }
 
+    /**
+     * @return array
+     */
     private function getAttachmentToolbarButtons(): array
     {
         $toolbarButtons = [];
