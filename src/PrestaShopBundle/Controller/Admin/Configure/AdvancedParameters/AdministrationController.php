@@ -139,7 +139,7 @@ class AdministrationController extends FrameworkBundleAdminController
     }
 
     /**
-     * Process the Performance configuration form.
+     * Process the Administration configuration form.
      *
      * @param Request $request
      * @param FormHandlerInterface $formHandler
