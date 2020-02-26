@@ -15,6 +15,8 @@ module.exports = class Product extends FOBasePage {
     this.productQuantitySpan = '#product-details div.product-quantities label';
     this.productDetail = 'div.product-information  a[href=\'#product-details\']';
     this.productAvailabilityIcon = '#product-availability i';
+    this.productSizeOption = '#group_1 option[title=\'%SIZE\']';
+    this.productColorInput = '#group_2 input[title=\'%COLOR\']';
   }
 
   /**
@@ -53,5 +55,25 @@ module.exports = class Product extends FOBasePage {
    */
   isAvailabilityQuantityDisplayed() {
     return this.elementVisible(this.productAvailabilityIcon, 1000);
+  }
+
+  /**
+   * Is unavailable product size displayed
+   * @param size
+   * @returns {Promise<boolean>}
+   */
+  async isUnavailableProductSizeDisplayed(size) {
+    await this.page.waitFor(2000);
+    const exist = await this.page.$(this.productSizeOption.replace('%SIZE', size)) !== null;
+    return exist;
+  }
+
+  /**
+   * Is unavailable product color displayed
+   * @param color
+   * @returns {boolean}
+   */
+  isUnavailableProductColorDisplayed(color) {
+    return this.elementVisible(this.productColorInput.replace('%COLOR', color), 1000);
   }
 };

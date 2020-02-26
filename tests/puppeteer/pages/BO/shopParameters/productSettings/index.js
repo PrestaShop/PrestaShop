@@ -22,6 +22,7 @@ module.exports = class productSettings extends BOBasePage {
     this.productPageForm = '#configuration_fieldset_fo_product_page';
     this.switchDisplayAvailableQuantities = 'label[for=\'form_page_display_quantities_%TOGGLE\']';
     this.remainingQuantityInput = '#form_page_display_last_quantities';
+    this.displayUnavailableAttributesLabel = 'label[for=\'form_page_display_unavailable_attributes_%TOGGLE\']';
     this.saveProductPageFormButton = `${this.productPageForm} .card-footer button`;
   }
 
@@ -106,8 +107,24 @@ module.exports = class productSettings extends BOBasePage {
     return this.getTextContent(this.alertSuccessBlock);
   }
 
+  /**
+   * Set display remaining quantities
+   * @param quantity
+   * @returns {Promise<string>}
+   */
   async setDisplayRemainingQuantities(quantity) {
     await this.setValue(this.remainingQuantityInput, quantity.toString());
+    await this.clickAndWaitForNavigation(this.saveProductPageFormButton);
+    return this.getTextContent(this.alertSuccessBlock);
+  }
+
+  /**
+   * Set display unavailable product attributes
+   * @param toEnable
+   * @returns {Promise<string>}
+   */
+  async setDisplayUnavailableProductAttributes(toEnable = true) {
+    await this.waitForSelectorAndClick(this.displayUnavailableAttributesLabel.replace('%TOGGLE', toEnable ? 1 : 0));
     await this.clickAndWaitForNavigation(this.saveProductPageFormButton);
     return this.getTextContent(this.alertSuccessBlock);
   }
