@@ -8,6 +8,7 @@ const BOBasePage = require('@pages/BO/BObasePage');
 const LoginPage = require('@pages/BO/login');
 const DashboardPage = require('@pages/BO/dashboard');
 const GeneralPage = require('@pages/BO/shopParameters/general');
+const BrandsPage = require('@pages/BO/catalog/brands');
 const HomePage = require('@pages/FO/home');
 const SiteMapPage = require('@pages/FO/siteMap');
 // Test context imports
@@ -25,6 +26,7 @@ const init = async function () {
     loginPage: new LoginPage(page),
     dashboardPage: new DashboardPage(page),
     generalPage: new GeneralPage(page),
+    brandsPage: new BrandsPage(page),
     homePage: new HomePage(page),
     siteMapPage: new SiteMapPage(page),
   };
@@ -44,26 +46,42 @@ describe('Enable/Disable display brands', async () => {
   // Login into BO and go to general page
   loginCommon.loginBO();
 
-  it('should go to \'Shop parameters > General\' page', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'goToGeneralPage', baseContext);
-    await this.pageObjects.boBasePage.goToSubMenu(
-      this.pageObjects.boBasePage.shopParametersParentLink,
-      this.pageObjects.boBasePage.shopParametersGeneralLink,
-    );
-    await this.pageObjects.boBasePage.closeSfToolBar();
-    const pageTitle = await this.pageObjects.generalPage.getPageTitle();
-    await expect(pageTitle).to.contains(this.pageObjects.generalPage.pageTitle);
-  });
-
   const tests = [
     {args: {action: 'disable', exist: false}},
     {args: {action: 'enable', exist: true}},
   ];
-  tests.forEach((test) => {
+  tests.forEach((test, index) => {
+    it('should go to \'Shop parameters > General\' page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', `goToGeneralPage_${index}`, baseContext);
+      await this.pageObjects.boBasePage.goToSubMenu(
+        this.pageObjects.boBasePage.shopParametersParentLink,
+        this.pageObjects.boBasePage.shopParametersGeneralLink,
+      );
+      await this.pageObjects.boBasePage.closeSfToolBar();
+      const pageTitle = await this.pageObjects.generalPage.getPageTitle();
+      await expect(pageTitle).to.contains(this.pageObjects.generalPage.pageTitle);
+    });
+
     it(`should ${test.args.action} display brands`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}DisplayBrands`, baseContext);
       const result = await this.pageObjects.generalPage.setDisplayBrands(test.args.exist);
       await expect(result).to.contains(this.pageObjects.generalPage.successfulUpdateMessage);
+    });
+
+    it('should go to Brands & Suppliers page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', `goToBrandsPage_${index}`, baseContext);
+      await this.pageObjects.boBasePage.goToSubMenu(
+        this.pageObjects.boBasePage.catalogParentLink,
+        this.pageObjects.boBasePage.brandsAndSuppliersLink,
+      );
+      const pageTitle = await this.pageObjects.brandsPage.getPageTitle();
+      await expect(pageTitle).to.contains(this.pageObjects.brandsPage.pageTitle);
+    });
+
+    it(`should check that the message alert contains '${test.args.action}'`, async function () {
+      await testContext.addContextItem(this, 'testIdentifier', `checkAlertContains_${test.args.action}`, baseContext);
+      const text = await this.pageObjects.brandsPage.getAlertTextMessage();
+      await expect(text).to.contains(test.args.action);
     });
 
     it('should verify the existence of the brands page link in FO', async function () {
