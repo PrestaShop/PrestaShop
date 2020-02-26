@@ -26,7 +26,7 @@
 
 namespace PrestaShopBundle\Controller\Admin\Sell\Customer;
 
-use Exception;
+use PrestaShopException as Exception;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\BulkDeleteCustomerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\BulkDisableCustomerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\BulkEnableCustomerCommand;
