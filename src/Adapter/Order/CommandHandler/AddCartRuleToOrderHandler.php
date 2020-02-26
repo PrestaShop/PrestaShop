@@ -79,6 +79,7 @@ final class AddCartRuleToOrderHandler extends AbstractOrderHandler implements Ad
      * @param Number|null $discountValue
      *
      * @return array
+     *
      * @throws OrderException
      */
     private function getReductionValues(string $cartRuleType, Order $order, ?Number $discountValue): array
@@ -123,7 +124,7 @@ final class AddCartRuleToOrderHandler extends AbstractOrderHandler implements Ad
      */
     private function updateInvoiceDiscount(OrderInvoice $orderInvoice, string $cartRuleType, array $reductionValues): void
     {
-        $orderTotalPaidTaxExcl = new Number((string) $orderInvoice->total_paid_tax_incl);
+        $orderTotalPaidTaxExcl = new Number((string) $orderInvoice->total_paid_tax_excl);
 
         $isAlreadyFreeShipping = OrderDiscountType::FREE_SHIPPING === $cartRuleType && $orderInvoice->total_shipping_tax_incl <= 0;
         $discountAmountIsTooBig = OrderDiscountType::DISCOUNT_AMOUNT === $cartRuleType &&
@@ -155,7 +156,7 @@ final class AddCartRuleToOrderHandler extends AbstractOrderHandler implements Ad
             ->minus($valueTaxIncl)
             ->toPrecision(CommonAbstractType::PRESTASHOP_DECIMALS)
         ;
-        $orderInvoice->total_paid_tax_excl = (float) $orderTotalDiscountTaxExcl
+        $orderInvoice->total_paid_tax_excl = (float) $orderTotalPaidTaxExcl
             ->minus($valueTaxExcl)
             ->toPrecision(CommonAbstractType::PRESTASHOP_DECIMALS)
         ;
