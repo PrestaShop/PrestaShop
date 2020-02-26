@@ -26,7 +26,6 @@
 
 namespace PrestaShopBundle\Form\Admin\Type;
 
-use Configuration;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -41,18 +40,18 @@ class TypeaheadProductCollectionType extends CommonAbstractType
 {
     protected $productAdapter;
     protected $categoryAdapter;
-    private $configuration;
+    protected $configuration;
 
     /**
      * {@inheritdoc}
      *
      * @param object $productAdapter
      */
-    public function __construct($productAdapter, $categoryAdapter)
+    public function __construct($productAdapter, $categoryAdapter, $configuration)
     {
         $this->productAdapter = $productAdapter;
         $this->categoryAdapter = $categoryAdapter;
-        $this->configuration = new Configuration();
+        $this->configuration = $configuration;
     }
 
     /**
