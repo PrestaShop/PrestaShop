@@ -43,6 +43,7 @@ use OrderSlip;
 use PrestaShop\Decimal\Number;
 use PrestaShop\PrestaShop\Adapter\Customer\CustomerDataProvider;
 use PrestaShop\PrestaShop\Adapter\Order\AbstractOrderHandler;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Order\OrderDocumentType;
 use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderForViewing;
@@ -72,6 +73,7 @@ use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderShippingForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderStatusForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
 use PrestaShop\PrestaShop\Core\Image\Parser\ImageTagSourceParserInterface;
+use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
 use State;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -177,9 +179,7 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
             $this->getOrderCustomer($order),
             $this->getOrderShippingAddress($order),
             $this->getOrderInvoiceAddress($order),
-            $this->getOrderProductsForViewingHandler->handle(
-                GetOrderProductsForViewing::all($query->getOrderId()->getValue())
-            ),
+            $this->getOrderProducts($query->getOrderId()),
             $this->getOrderHistory($order),
             $this->getOrderDocuments($order),
             $this->getOrderShipping($order),
@@ -343,6 +343,13 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
         );
     }
 
+    /**
+     * @param Order $order
+     *
+     * @return OrderDocumentsForViewing
+     *
+     * @throws LocalizationException
+     */
     private function getOrderDocuments(Order $order): OrderDocumentsForViewing
     {
         $currency = new Currency($order->id_currency);
@@ -443,6 +450,13 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
         );
     }
 
+    /**
+     * @param Order $order
+     *
+     * @return OrderShippingForViewing
+     *
+     * @throws LocalizationException
+     */
     private function getOrderShipping(Order $order): OrderShippingForViewing
     {
         $taxCalculationMethod = $this->getOrderTaxCalculationMethod($order);
@@ -502,6 +516,11 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
         );
     }
 
+    /**
+     * @param Order $order
+     *
+     * @return OrderReturnsForViewing
+     */
     private function getOrderReturns(Order $order): OrderReturnsForViewing
     {
         $returns = $order->getReturn();
@@ -538,6 +557,13 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
         return new OrderReturnsForViewing($orderReturns);
     }
 
+    /**
+     * @param Order $order
+     *
+     * @return OrderPaymentsForViewing
+     *
+     * @throws LocalizationException
+     */
     private function getOrderPayments(Order $order): OrderPaymentsForViewing
     {
         $currency = new Currency($order->id_currency);
@@ -595,6 +621,11 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
         );
     }
 
+    /**
+     * @param Order $order
+     *
+     * @return OrderMessagesForViewing
+     */
     private function getOrderMessages(Order $order): OrderMessagesForViewing
     {
         $orderMessagesForOrderPage = $this->customerDataProvider->getCustomerMessages(
@@ -628,6 +659,13 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
         return new OrderMessagesForViewing($messages, $orderMessagesForOrderPage['total']);
     }
 
+    /**
+     * @param Order $order
+     *
+     * @return OrderPricesForViewing
+     *
+     * @throws LocalizationException
+     */
     private function getOrderPrices(Order $order): OrderPricesForViewing
     {
         $currency = new Currency($order->id_currency);
@@ -679,6 +717,13 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
         );
     }
 
+    /**
+     * @param Order $order
+     *
+     * @return OrderDiscountsForViewing
+     *
+     * @throws LocalizationException
+     */
     private function getOrderDiscounts(Order $order): OrderDiscountsForViewing
     {
         $currency = new Currency($order->id_currency);
@@ -695,5 +740,19 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
         }
 
         return new OrderDiscountsForViewing($discountsForViewing);
+    }
+
+    /**
+     * @param OrderId $orderId
+     *
+     * @return OrderProductsForViewing
+     *
+     * @throws OrderException
+     */
+    private function getOrderProducts(OrderId $orderId): OrderProductsForViewing
+    {
+        return $this->getOrderProductsForViewingHandler->handle(
+            GetOrderProductsForViewing::all($orderId->getValue())
+        );
     }
 }
