@@ -49,7 +49,6 @@ use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation\CartShipp
 use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation\CartSummary;
 use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation\Customization;
 use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation\CustomizationFieldData;
-use PrestaShop\PrestaShop\Core\Domain\Order\OrderDiscountType;
 use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 use PrestaShop\PrestaShop\Core\Localization\LocaleInterface;
 use PrestaShopException;
