@@ -101,17 +101,17 @@ class GetOrderProductsForViewing
     }
 
     /**
-     * @return int
+     * @return null|int
      */
-    public function getOffset(): int
+    public function getOffset(): ?int
     {
         return $this->offset;
     }
 
     /**
-     * @return int
+     * @return null|int
      */
-    public function getLimit(): int
+    public function getLimit(): ?int
     {
         return $this->limit;
     }
