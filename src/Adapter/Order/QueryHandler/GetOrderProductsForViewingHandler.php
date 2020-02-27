@@ -157,11 +157,6 @@ final class GetOrderProductsForViewingHandler extends AbstractOrderHandler imple
             $pack_items = $product['cache_is_pack'] ? Pack::getItemTable($product['id_product'], $this->contextLanguageId, true) : [];
             foreach ($pack_items as &$pack_item) {
                 $pack_item['current_stock'] = StockAvailable::getQuantityAvailableByProduct($pack_item['id_product'], $pack_item['id_product_attribute'], $pack_item['id_shop']);
-                // if the current stock requires a warning
-                if ($product['current_stock'] <= 0 && $display_out_of_stock_warning) {
-                    // @todo
-                    // $this->displayWarning($this->trans('This product, included in package (' . $product['product_name'] . ') is out of stock: ', array(), 'Admin.Orderscustomers.Notification') . ' ' . $pack_item['product_name']);
-                }
                 $this->setProductImageInformation($pack_item);
                 if ($pack_item['image'] instanceof Image) {
                     $name = 'product_mini_' . (int) $pack_item['id_product'] . (isset($pack_item['id_product_attribute']) ? '_' . (int) $pack_item['id_product_attribute'] : '') . '.jpg';
