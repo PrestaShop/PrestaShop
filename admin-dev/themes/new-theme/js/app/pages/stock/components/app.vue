@@ -83,10 +83,12 @@
       },
       onSearch(keywords) {
         this.$store.dispatch('updateKeywords', keywords);
+        this.resetPagination();
         this.fetch();
       },
       applyFilter(filters) {
         this.filters = filters;
+        this.resetPagination();
         this.fetch();
       },
       resetFilters() {
