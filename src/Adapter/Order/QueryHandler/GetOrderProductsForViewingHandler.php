@@ -266,6 +266,7 @@ final class GetOrderProductsForViewingHandler extends AbstractOrderHandler imple
         $offset = $query->getOffset();
         $limit = $query->getLimit();
 
+        //@todo: its not really paginated, as all products are retrieved from legacy Order::getProducts(). But could be improved in future.
         if (null !== $offset && $limit) {
             $productsForViewing = array_slice($products, (int) $offset, (int) $limit);
         }

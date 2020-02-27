@@ -282,17 +282,6 @@ admin_orders_get_prices:
   options:
     expose: true
 
-admin_orders_get_paginated_products:
-  path: /{orderId}/products
-  methods: [GET]
-  defaults:
-    _controller: PrestaShopBundle:Admin/Sell/Order/Order:getPaginatedProducts
-    _legacy_controller: AdminOrders
-  requirements:
-    orderId: \d+
-  options:
-    expose: true
-
 admin_orders_get_invoices:
   path: /{orderId}/invoices
   methods: [GET]

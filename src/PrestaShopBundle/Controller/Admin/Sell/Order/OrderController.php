@@ -1288,32 +1288,6 @@ class OrderController extends FrameworkBundleAdminController
     }
 
     /**
-     * Returns products for given order
-     *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", redirectRoute="admin_orders_index")
-     *
-     * @param int $orderId
-     * @param Request $request
-     *
-     * @return JsonResponse
-     */
-    public function getPaginatedProductsAction(int $orderId, Request $request): JsonResponse
-    {
-        $offset = $request->get('offset');
-        $limit = $request->get('limit');
-
-        if (isset($offset, $limit)) {
-            $products = $this->getQueryBus()->handle(GetOrderProductsForViewing::paginated($orderId, $offset, $limit));
-        } else {
-            $products = $this->getQueryBus()->handle(GetOrderProductsForViewing::all($orderId));
-        }
-
-        return $this->json([
-            'products' => $products,
-        ]);
-    }
-
-    /**
      * Generates invoice for given order
      *
      * @param int $orderId
