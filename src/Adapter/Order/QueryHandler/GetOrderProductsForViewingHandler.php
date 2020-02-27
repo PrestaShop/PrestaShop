@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Order\QueryHandler;
 
 use Currency;
+use Db;
 use Image;
 use ImageManager;
 use OrderInvoice;
@@ -44,6 +45,7 @@ use PrestaShop\PrestaShop\Core\Image\Parser\ImageTagSourceParserInterface;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\ComputingPrecision;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
 use Product;
+use Shop;
 use StockAvailable;
 use Tools;
 use Warehouse;
