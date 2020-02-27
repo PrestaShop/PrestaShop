@@ -76,9 +76,10 @@ export default class ShippingRenderer {
    * @param {Object} shipping
    */
   _renderFreeShippingSwitch(shipping) {
+    debugger;
     const isFreeShipping = shipping.freeShipping;
     const hasFreeShippingCartRule = shipping.freeShippingCartRule;
-    if (!hasFreeShippingCartRule) {
+    if (isFreeShipping === hasFreeShippingCartRule) {
       $(createOrderMap.freeShippingSwitch).prop('disabled', false);
       $(createOrderMap.freeShippingSwitch).each((key, input) => {
         if (input.value === '1') {
@@ -89,13 +90,13 @@ export default class ShippingRenderer {
       });
       this.hideFreeShippingSwitchHelp();
     } else {
+      // disables the Free Shipping toggle
       $(createOrderMap.freeShippingSwitch).each((key, input) => {
-          input.checked = !isFreeShipping;
+        input.checked = !isFreeShipping;
       });
       this.showNoFreeShippingSwitchHelp();
       $(createOrderMap.freeShippingSwitch).prop('disabled', true);
     }
-
   }
 
   /**
