@@ -57,11 +57,6 @@ class Handler implements FormHandlerInterface
     protected $hookName;
 
     /**
-     * @var array the list of Form Types
-     */
-    protected $formTypes;
-
-    /**
      * @var string the form name
      */
     protected $formName;
@@ -72,7 +67,6 @@ class Handler implements FormHandlerInterface
      * @param FormFactoryInterface $formFactory
      * @param HookDispatcherInterface $hookDispatcher
      * @param FormDataProviderInterface $formDataProvider
-     * @param array $formTypes
      * @param string $hookName
      * @param string $formName
      */
