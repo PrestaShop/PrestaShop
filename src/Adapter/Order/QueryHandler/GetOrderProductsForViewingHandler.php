@@ -263,7 +263,10 @@ final class GetOrderProductsForViewingHandler extends AbstractOrderHandler imple
             );
         }
 
-        if (isset($offset, $limit)) {
+        $offset = $query->getOffset();
+        $limit = $query->getLimit();
+
+        if (null !== $offset && $limit) {
             $productsForViewing = array_slice($products, (int) $offset, (int) $limit);
         }
 
