@@ -24,38 +24,20 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Order\QueryResult;
+namespace PrestaShop\PrestaShop\Core\Domain\Order\QueryHandler;
 
-class OrderProductsForViewing
+use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderProductsForViewing;
+use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderProductsForViewing;
+
+/**
+ * Defines contract for GetOrderProductsForViewing query handler
+ */
+interface GetOrderProductsForViewingHandlerInterface
 {
     /**
-     * @var OrderProductForViewing[]
+     * @param GetOrderProductsForViewing $query
+     *
+     * @return OrderProductsForViewing
      */
-    private $products = [];
-
-    /**
-     * @param OrderProductForViewing[] $products
-     */
-    public function __construct(array $products)
-    {
-        foreach ($products as $product) {
-            $this->addProductForViewing($product);
-        }
-    }
-
-    /**
-     * @param OrderProductForViewing $productForViewing
-     */
-    private function addProductForViewing(OrderProductForViewing $productForViewing): void
-    {
-        $this->products[] = $productForViewing;
-    }
-
-    /**
-     * @return OrderProductForViewing[]
-     */
-    public function getProducts(): array
-    {
-        return $this->products;
-    }
+    public function handle(GetOrderProductsForViewing $query);
 }

@@ -61,6 +61,7 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\DeleteProductFromOrd
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\UpdateProductInOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderPreview;
+use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderProductsForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderPreview;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderProductForViewing;
@@ -1274,13 +1275,10 @@ class OrderController extends FrameworkBundleAdminController
         $offset = $request->get('offset');
         $limit = $request->get('limit');
 
-        /** @var OrderForViewing $orderForViewing */
-        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
-
-        $products = $orderForViewing->getProducts()->getProducts();
-        if (null !== $limit && null !== $offset) {
-            // @todo: Optimize this by using a GetPartialOrderForViewing query which loads only the relevant products
-            $products = array_slice($products, (int) $offset, (int) $limit);
+        if (isset($offset, $limit)) {
+            $products = $this->getQueryBus()->handle(GetOrderProductsForViewing::paginated($orderId, $offset, $limit));
+        } else {
+            $products = $this->getQueryBus()->handle(GetOrderProductsForViewing::all($orderId));
         }
 
         return $this->json([
