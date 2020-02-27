@@ -26,7 +26,6 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Order\QueryHandler;
 
-use Configuration;
 use Currency;
 use Image;
 use ImageManager;
@@ -47,7 +46,6 @@ use PrestaShop\PrestaShop\Core\Localization\Locale;
 use Product;
 use StockAvailable;
 use Tools;
-use Validate;
 use Warehouse;
 use WarehouseProductLocation;
 
