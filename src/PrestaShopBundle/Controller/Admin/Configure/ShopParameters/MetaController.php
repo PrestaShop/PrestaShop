@@ -78,17 +78,18 @@ class MetaController extends FrameworkBundleAdminController
 
         $setUpUrlsForm = $this->getSetUpUrlsFormHandler()->getForm();
         $shopUrlsForm = $this->getShopUrlsFormHandler()->getForm();
-        $urlSchemaForm = $this->getUrlSchemaFormHandler()->getForm();
         $seoOptionsForm = $this->getSeoOptionsFormHandler()->getForm();
 
+        $urlSchemaForm = null;
+        $isRewriteSettingEnabled = $this->get('prestashop.adapter.legacy.configuration')->get('PS_REWRITING_SETTINGS');
+        if ($isRewriteSettingEnabled) {
+            $urlSchemaForm = $this->getUrlSchemaFormHandler()->getForm();
+        }
+
         $tools = $this->get('prestashop.adapter.tools');
-
         $urlFileChecker = $this->get('prestashop.core.util.url.url_file_checker');
-
         $hostingInformation = $this->get('prestashop.adapter.hosting_information');
-
         $defaultRoutesProvider = $this->get('prestashop.adapter.data_provider.default_route');
-
         $helperBlockLinkProvider = $this->get('prestashop.core.util.helper_card.documentation_link_provider');
         $metaDataProvider = $this->get('prestashop.adapter.meta.data_provider');
 
@@ -96,35 +97,37 @@ class MetaController extends FrameworkBundleAdminController
             new GetShowcaseCardIsClosed((int) $this->getContext()->employee->id, ShowcaseCard::SEO_URLS_CARD)
         );
 
-        return $this->render('@PrestaShop/Admin/Configure/ShopParameters/TrafficSeo/Meta/index.html.twig', [
-            'layoutHeaderToolbarBtn' => [
-                'add' => [
-                    'href' => $this->generateUrl('admin_metas_create'),
-                    'desc' => $this->trans('Add a new page', 'Admin.Shopparameters.Feature'),
-                    'icon' => 'add_circle_outline',
+        return $this->render(
+            '@PrestaShop/Admin/Configure/ShopParameters/TrafficSeo/Meta/index.html.twig',
+            [
+                'layoutHeaderToolbarBtn' => [
+                    'add' => [
+                        'href' => $this->generateUrl('admin_metas_create'),
+                        'desc' => $this->trans('Add a new page', 'Admin.Shopparameters.Feature'),
+                        'icon' => 'add_circle_outline',
+                    ],
                 ],
-            ],
-            'grid' => $presentedGrid,
-            'setUpUrlsForm' => $setUpUrlsForm->createView(),
-            'shopUrlsForm' => $shopUrlsForm->createView(),
-            'urlSchemaForm' => $urlSchemaForm->createView(),
-            'seoOptionsForm' => $seoOptionsForm->createView(),
-            'robotsForm' => $this->createFormBuilder()->getForm()->createView(),
-            'routeKeywords' => $defaultRoutesProvider->getKeywords(),
-            'isGridDisplayed' => $isGridDisplayed,
-            'isModRewriteActive' => $tools->isModRewriteActive(),
-            'isShopContext' => $isShopContext,
-            'isHtaccessFileValid' => $urlFileChecker->isHtaccessFileWritable(),
-            'isRobotsTextFileValid' => $urlFileChecker->isRobotsFileWritable(),
-            'isShopFeatureActive' => $isShopFeatureActive,
-            'isHostMode' => $hostingInformation->isHostMode(),
-            'enableSidebar' => true,
-            'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
-            'helperDocLink' => $helperBlockLinkProvider->getLink('meta'),
-            'indexPageId' => $metaDataProvider->getIdByPage('index'),
-            'metaShowcaseCardName' => ShowcaseCard::SEO_URLS_CARD,
-            'showcaseCardIsClosed' => $showcaseCardIsClosed,
-        ]
+                'grid' => $presentedGrid,
+                'setUpUrlsForm' => $setUpUrlsForm->createView(),
+                'shopUrlsForm' => $shopUrlsForm->createView(),
+                'urlSchemaForm' => $urlSchemaForm !== null ? $urlSchemaForm->createView() : null,
+                'seoOptionsForm' => $seoOptionsForm->createView(),
+                'robotsForm' => $this->createFormBuilder()->getForm()->createView(),
+                'routeKeywords' => $defaultRoutesProvider->getKeywords(),
+                'isGridDisplayed' => $isGridDisplayed,
+                'isModRewriteActive' => $tools->isModRewriteActive(),
+                'isShopContext' => $isShopContext,
+                'isHtaccessFileValid' => $urlFileChecker->isHtaccessFileWritable(),
+                'isRobotsTextFileValid' => $urlFileChecker->isRobotsFileWritable(),
+                'isShopFeatureActive' => $isShopFeatureActive,
+                'isHostMode' => $hostingInformation->isHostMode(),
+                'enableSidebar' => true,
+                'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
+                'helperDocLink' => $helperBlockLinkProvider->getLink('meta'),
+                'indexPageId' => $metaDataProvider->getIdByPage('index'),
+                'metaShowcaseCardName' => ShowcaseCard::SEO_URLS_CARD,
+                'showcaseCardIsClosed' => $showcaseCardIsClosed,
+            ]
         );
     }
 
