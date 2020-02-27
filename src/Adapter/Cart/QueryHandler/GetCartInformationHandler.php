@@ -49,6 +49,7 @@ use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation\CartShipp
 use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation\CartSummary;
 use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation\Customization;
 use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation\CustomizationFieldData;
+use PrestaShop\PrestaShop\Core\Domain\Order\OrderDiscountType;
 use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 use PrestaShop\PrestaShop\Core\Localization\LocaleInterface;
 use PrestaShopException;
@@ -125,7 +126,8 @@ final class GetCartInformationHandler extends AbstractCartHandler implements Get
         $cartRules = $this->extractCartRulesFromLegacySummary($legacySummary, $currency);
         $hasFreeShippingCartRule = false;
         foreach ($legacySummary['discounts'] as $discount) {
-            if ((bool) $discount['free_shipping'] && $discount['name'] != self::FREE_SHIPPING_NAME) {
+//            if ((bool) $discount[OrderDiscountType::FREE_SHIPPING] && $discount['name'] != self::FREE_SHIPPING_NAME) {
+            if ((bool) $discount[OrderDiscountType::FREE_SHIPPING]) {
                 $hasFreeShippingCartRule = true;
             }
         }
