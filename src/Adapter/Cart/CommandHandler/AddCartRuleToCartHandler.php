@@ -38,6 +38,7 @@ use PrestaShop\PrestaShop\Core\Domain\Cart\Command\AddCartRuleToCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\CommandHandler\AddCartRuleToCartHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartException;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleValidityException;
+use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\FreeShippingCartRuleAlreadyExistException;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
@@ -72,8 +73,14 @@ final class AddCartRuleToCartHandler extends AbstractCartHandler implements AddC
      */
     public function handle(AddCartRuleToCartCommand $command)
     {
+        /** @var Cart $cart */
         $cart = $this->getCart($command->getCartId());
+
         $cartRule = new CartRule($command->getCartRuleId()->getValue());
+        $freeShippingCartRules = $cart->getCartRules(CartRule::FILTER_ACTION_SHIPPING);
+        if (count($freeShippingCartRules) && $cartRule->getFields()['free_shipping']) {
+            throw new FreeShippingCartRuleAlreadyExistException('Free shipping cart rule already exist!');
+        }
 
         $this->contextStateManager
             ->setCart($cart)
