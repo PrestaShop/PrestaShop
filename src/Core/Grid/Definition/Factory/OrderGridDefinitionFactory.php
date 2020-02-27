@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -45,8 +45,8 @@ use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ChoiceColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\DateTimeColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\IdentifierColumn;
-use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\LinkColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\DisableableLinkColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\OrderPriceColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\PreviewColumn;
 use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
@@ -200,10 +200,11 @@ final class OrderGridDefinitionFactory extends AbstractGridDefinitionFactory
                     'clickable' => true,
                 ])
             )
-            ->add((new LinkColumn('customer'))
+            ->add((new DisableableLinkColumn('customer'))
                 ->setName($this->trans('Customer', [], 'Admin.Global'))
                 ->setOptions([
                     'field' => 'customer',
+                    'disabled_field' => 'deleted_customer',
                     'route' => 'admin_customers_view',
                     'route_param_name' => 'customerId',
                     'route_param_field' => 'id_customer',

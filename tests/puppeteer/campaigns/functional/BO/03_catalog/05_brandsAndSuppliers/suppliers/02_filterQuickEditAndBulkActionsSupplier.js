@@ -11,6 +11,10 @@ const DashboardPage = require('@pages/BO/dashboard');
 const BrandsPage = require('@pages/BO/catalog/brands');
 const SuppliersPage = require('@pages/BO/catalog/suppliers');
 const AddSupplierPage = require('@pages/BO/catalog/suppliers/add');
+// Test context imports
+const testContext = require('@utils/testContext');
+
+const baseContext = 'functional_BO_catalog_brandsAndSuppliers_suppliers_filterQuickEditAndBulkActionsSupplier';
 
 let browser;
 let page;
@@ -51,6 +55,7 @@ describe('Filter, Quick edit and bulk actions suppliers', async () => {
 
   // Go to brands Page
   it('should go to brands page', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'goToBrandsPage', baseContext);
     await this.pageObjects.boBasePage.goToSubMenu(
       this.pageObjects.boBasePage.catalogParentLink,
       this.pageObjects.boBasePage.brandsAndSuppliersLink,
@@ -62,6 +67,7 @@ describe('Filter, Quick edit and bulk actions suppliers', async () => {
 
   // Go to Suppliers Page
   it('should go to suppliers page', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'goToSuppliersPage', baseContext);
     await this.pageObjects.brandsPage.goToSubTabSuppliers();
     const pageTitle = await this.pageObjects.suppliersPage.getPageTitle();
     await expect(pageTitle).to.contains(this.pageObjects.suppliersPage.pageTitle);
@@ -73,20 +79,23 @@ describe('Filter, Quick edit and bulk actions suppliers', async () => {
       {args: {supplierToCreate: secondSupplierData}},
     ];
 
-    tests.forEach((test) => {
+    tests.forEach((test, index) => {
       it('should go to new supplier page', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `goToAddSupplierPage${index + 1}`, baseContext);
         await this.pageObjects.suppliersPage.goToAddNewSupplierPage();
         const pageTitle = await this.pageObjects.addSupplierPage.getPageTitle();
         await expect(pageTitle).to.contains(this.pageObjects.addSupplierPage.pageTitle);
       });
 
       it('should create supplier', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `createSupplier${index + 1}`, baseContext);
         const result = await this.pageObjects.addSupplierPage.createEditSupplier(test.args.supplierToCreate);
         await expect(result).to.equal(this.pageObjects.suppliersPage.successfulCreationMessage);
       });
     });
 
     it('should reset filter and get number of suppliers after creation', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'resetFilterAfterCreation', baseContext);
       numberOfSuppliers = await this.pageObjects.suppliersPage.resetAndGetNumberOfLines();
       await expect(numberOfSuppliers).to.be.at.least(2);
     });
@@ -94,13 +103,39 @@ describe('Filter, Quick edit and bulk actions suppliers', async () => {
   // 2: Filter Suppliers
   describe('Filter suppliers', async () => {
     const tests = [
-      {args: {filterType: 'input', filterBy: 'name', filterValue: firstSupplierData.name}},
-      {args: {filterType: 'input', filterBy: 'products_count', filterValue: firstSupplierData.products.toString()}},
-      {args: {filterType: 'select', filterBy: 'active', filterValue: firstSupplierData.enabled}, expected: 'check'},
+      {
+        args:
+          {
+            testIdentifier: 'filterName',
+            filterType: 'input',
+            filterBy: 'name',
+            filterValue: firstSupplierData.name,
+          },
+      },
+      {
+        args:
+          {
+            testIdentifier: 'filterProductsCount',
+            filterType: 'input',
+            filterBy: 'products_count',
+            filterValue: firstSupplierData.products.toString(),
+          },
+      },
+      {
+        args:
+          {
+            testIdentifier: 'filterActive',
+            filterType: 'select',
+            filterBy: 'active',
+            filterValue: firstSupplierData.enabled,
+          },
+        expected: 'check',
+      },
     ];
 
     tests.forEach((test) => {
       it(`should filter by ${test.args.filterBy} '${test.args.filterValue}'`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
         if (test.args.filterBy === 'active') {
           await this.pageObjects.suppliersPage.filterSupplierEnabled(
             test.args.filterType,
@@ -129,6 +164,7 @@ describe('Filter, Quick edit and bulk actions suppliers', async () => {
       });
 
       it('should reset filter', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}Reset`, baseContext);
         const numberOfSuppliersAfterReset = await this.pageObjects.suppliersPage.resetAndGetNumberOfLines();
         await expect(numberOfSuppliersAfterReset).to.be.equal(numberOfSuppliers);
       });
@@ -137,6 +173,7 @@ describe('Filter, Quick edit and bulk actions suppliers', async () => {
   // 3: Quick Edit Suppliers
   describe('Quick edit first supplier', async () => {
     it('should filter supplier by name', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'filterToQuickEdit', baseContext);
       await this.pageObjects.suppliersPage.filterTable(
         'input',
         'name',
@@ -157,6 +194,7 @@ describe('Filter, Quick edit and bulk actions suppliers', async () => {
 
     tests.forEach((test) => {
       it(`should ${test.args.action} first supplier`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}Supplier`, baseContext);
         const isActionPerformed = await this.pageObjects.suppliersPage.updateEnabledValue(1, test.args.enabledValue);
         if (isActionPerformed) {
           const resultMessage = await this.pageObjects.suppliersPage.getTextContent(
@@ -170,6 +208,7 @@ describe('Filter, Quick edit and bulk actions suppliers', async () => {
     });
 
     it('should reset filter', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'resetFilterAfterQuickEdit', baseContext);
       const numberOfSuppliersAfterReset = await this.pageObjects.suppliersPage.resetAndGetNumberOfLines();
       await expect(numberOfSuppliersAfterReset).to.be.equal(numberOfSuppliers);
     });
@@ -182,6 +221,7 @@ describe('Filter, Quick edit and bulk actions suppliers', async () => {
     ];
     tests.forEach((test) => {
       it(`should ${test.args.action} with bulk actions`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `bulk${test.args.action}Suppliers`, baseContext);
         const disableTextResult = await this.pageObjects.suppliersPage.changeSuppliersEnabledColumnBulkActions(
           test.args.enabledValue,
         );
@@ -197,6 +237,7 @@ describe('Filter, Quick edit and bulk actions suppliers', async () => {
     });
 
     it('should delete with bulk actions', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'bulkDeleteSuppliers', baseContext);
       const deleteTextResult = await this.pageObjects.suppliersPage.deleteWithBulkActions();
       await expect(deleteTextResult).to.be.equal(this.pageObjects.suppliersPage.successfulMultiDeleteMessage);
       // Check that empty row is visible (no elements in table)

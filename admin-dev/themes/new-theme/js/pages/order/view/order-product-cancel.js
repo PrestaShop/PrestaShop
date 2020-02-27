@@ -97,7 +97,7 @@ export default class OrderProductCancel {
     this.updateVoucherRefund();
 
     this.cancelProductForm.prop('action', formAction);
-    this.cancelProductForm.removeClass('standard-refund partial-refund return-product').addClass(formClass);
+    this.cancelProductForm.removeClass('standard-refund partial-refund return-product cancel-product').addClass(formClass);
     $(OrderViewPageMap.cancelProduct.buttons.save).html(actionName);
     $(OrderViewPageMap.cancelProduct.table.header).html(actionName);
     $(OrderViewPageMap.cancelProduct.checkboxes.restock).prop('checked', this.orderDelivered);
@@ -208,5 +208,16 @@ export default class OrderProductCancel {
     // Change the ending text part only to avoid removing the input (the EOL is on purpose for better display)
     $label.get(0).lastChild.nodeValue = `
     ${defaultLabel} ${formattedAmount}`;
+  }
+
+  showCancelProductForm() {
+    const cancelProductRoute = this.router.generate('admin_orders_cancellation', {orderId: this.orderId});
+    this.initForm(
+        $(OrderViewPageMap.cancelProduct.buttons.save).data('cancelLabel'),
+        cancelProductRoute,
+        'cancel-product',
+    );
+    this.hideCancelElements();
+    $(OrderViewPageMap.cancelProduct.toggle.cancelProducts).show();
   }
 }

@@ -28,11 +28,15 @@ module.exports = class Customers extends BOBasePage {
     this.filterSearchButton = `${this.customersListForm} button[name='customer[actions][search]']`;
     this.filterResetButton = `${this.customersListForm} button[name='customer[actions][reset]']`;
     // Bulk Actions
-    this.selectAllRowsLabel = `${this.customersListForm} .md-checkbox label`;
+    this.selectAllRowsLabel = `${this.customersListForm} tr.column-filters .md-checkbox i`;
     this.bulkActionsToggleButton = `${this.customersListForm} button.dropdown-toggle`;
     this.bulkActionsEnableButton = `${this.customersListForm} #customer_grid_bulk_action_enable_selection`;
     this.bulkActionsDisableButton = `${this.customersListForm} #customer_grid_bulk_action_disable_selection`;
     this.bulkActionsDeleteButton = `${this.customersListForm} #customer_grid_bulk_action_delete_selection`;
+    // Sort Selectors
+    this.tableHead = `${this.customersListForm} thead`;
+    this.sortColumnDiv = `${this.tableHead} div.ps-sortable-column[data-sort-col-name='%COLUMN']`;
+    this.sortColumnSpanButton = `${this.sortColumnDiv} span.ps-sort`;
 
 
     // Modal Dialog
@@ -152,6 +156,21 @@ module.exports = class Customers extends BOBasePage {
         .replace('%ROW', row)
         .replace('%COLUMN', column),
     );
+  }
+
+  /**
+   * Get content from all rows
+   * @param column
+   * @return {Promise<[]>}
+   */
+  async getAllRowsColumnContent(column) {
+    const rowsNumber = await this.getNumberOfElementInGrid();
+    const allRowsContentTable = [];
+    for (let i = 1; i <= rowsNumber; i++) {
+      const rowContent = await this.getTextColumnFromTableCustomers(i, column);
+      await allRowsContentTable.push(rowContent);
+    }
+    return allRowsContentTable;
   }
 
   /**
@@ -275,5 +294,23 @@ module.exports = class Customers extends BOBasePage {
     // Click on delete and wait for modal
     await this.clickAndWaitForNavigation(enable ? this.bulkActionsEnableButton : this.bulkActionsDisableButton);
     return this.getTextContent(this.alertSuccessBlockParagraph);
+  }
+
+  /* Sort functions */
+  /**
+   * Sort table by clicking on column name
+   * @param sortBy, column to sort with
+   * @param sortDirection, asc or desc
+   * @return {Promise<void>}
+   */
+  async sortTable(sortBy, sortDirection) {
+    const sortColumnDiv = `${this.sortColumnDiv.replace('%COLUMN', sortBy)}[data-sort-direction='${sortDirection}']`;
+    const sortColumnSpanButton = this.sortColumnSpanButton.replace('%COLUMN', sortBy);
+    let i = 0;
+    while (await this.elementNotVisible(sortColumnDiv, 1000) && i < 2) {
+      await this.clickAndWaitForNavigation(sortColumnSpanButton);
+      i += 1;
+    }
+    await this.page.waitForSelector(sortColumnDiv, {visible: true});
   }
 };

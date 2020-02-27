@@ -1,5 +1,5 @@
 {#**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *#}
@@ -33,10 +33,11 @@
   <div class="card-body">
     <div class="info-block">
       <div class="row">
-        <div class="col-md-7">
+        {% if orderForViewing.customer is not null %}
+        <div class="col-md-6">
           <h2 class="mb-0">
             <i class="material-icons">account_box</i>
-            
+
             {{ orderForViewing.customer.gender }}
             {{ orderForViewing.customer.firstName }}
             {{ orderForViewing.customer.lastName }}
@@ -44,13 +45,19 @@
             <strong class="text-muted ml-2">#{{ orderForViewing.customer.id }}</strong>
           </h2>
         </div>
-        <div class="col-md-5 text-right">
-          <a href="{{ path('admin_customers_view', {'customerId': orderForViewing.customer.id }) }}">
+        <div class="col-md-6 text-right">
+          <a class="d-print-none" href="{{ path('admin_customers_view', {'customerId': orderForViewing.customer.id }) }}">
             {{ 'View full details'|trans({}, 'Admin.Actions') }}
           </a>
         </div>
+        {% else %}
+        <div class="col">
+          <h2 class="mb-0">{{ 'Deleted customer'|trans({}, 'Admin.Global') }}</h2>
+        </div>
+        {% endif %}
       </div>
     </div>
+    {% if orderForViewing.customer is not null %}
     <div class="row mt-3">
       <div class="col-md-6">
         <p class="mb-1">
@@ -83,12 +90,14 @@
         </p>
       </div>
     </div>
+    {% endif %}
     <div class="mt-2 info-block">
       <div class="row">
         <div class="col-md-6">
           <div class="row justify-content-between no-gutters">
             <strong>{{ 'Shipping address'|trans({}, 'Admin.Orderscustomers.Feature') }}</strong>
-            <a class="tooltip-link" href="#" data-toggle="dropdown">
+            {% if orderForViewing.customer is not null %}
+            <a class="tooltip-link d-print-none" href="#" data-toggle="dropdown">
               <i class="material-icons">more_vert</i>
             </a>
 
@@ -96,7 +105,7 @@
               <a class="dropdown-item"
                 href="{{ getAdminLink('AdminAddresses', true, {
                   'realedit': 1,
-                  'addaddress': 1,
+                  'updateaddress': 1,
                   'address_type': 1,
                   'id_order': orderForViewing.id,
                   'id_address': orderForViewing.shippingAddress.addressId,
@@ -115,6 +124,7 @@
                 {{ 'Change address'|trans({}, 'Admin.Actions') }}
               </a>
             </div>
+            {% endif %}
           </div>
 
           <p class="mb-0">{{ orderForViewing.shippingAddress.fullName }}</p>
@@ -142,7 +152,8 @@
           <div class="row justify-content-between no-gutters">
             <strong>{{ 'Invoice address'|trans({}, 'Admin.Orderscustomers.Feature') }}</strong>
 
-            <a class="tooltip-link" href="#" data-toggle="dropdown">
+            {% if orderForViewing.customer is not null %}
+            <a class="tooltip-link d-print-none" href="#" data-toggle="dropdown">
               <i class="material-icons">more_vert</i>
             </a>
 
@@ -150,7 +161,7 @@
               <a class="dropdown-item"
                 href="{{ getAdminLink('AdminAddresses', true, {
                   'realedit': 1,
-                  'addaddress': 1,
+                  'updateaddress': 1,
                   'address_type': 2,
                   'id_order': orderForViewing.id,
                   'id_address': orderForViewing.invoiceAddress.addressId,
@@ -169,6 +180,7 @@
                 {{ 'Change address'|trans({}, 'Admin.Actions') }}
               </a>
             </div>
+            {% endif %}
           </div>
 
           <p class="mb-0">{{ orderForViewing.invoiceAddress.fullName }}</p>
@@ -194,16 +206,17 @@
         </div>
       </div>
     </div>
+    {% if orderForViewing.customer is not null %}
     <div class="mt-2 info-block">
       <div class="row">
+        {% set isPrivateNoteOpen = not orderForViewing.customer.privateNote is empty %}
+
         <div class="col-md-6">
-          <h3 class="mb-0">
+          <h3 class="mb-0{{ not isPrivateNoteOpen ? ' d-print-none': '' }}">
             {{ 'Private note'|trans({}, 'Admin.Orderscustomers.Feature') }}
           </h3>
         </div>
-        <div class="col-md-6 text-right">
-          {% set isPrivateNoteOpen = not orderForViewing.customer.privateNote is empty %}
-
+        <div class="col-md-6 text-right d-print-none">
           <a href="#"
              class="float-right tooltip-link js-private-note-toggle-btn {% if isPrivateNoteOpen %}is-opened{% endif %}"
           >
@@ -240,5 +253,6 @@
         </div>
       </div>
     </div>
+    {% endif %}
   </div>
 </div>

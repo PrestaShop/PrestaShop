@@ -32,7 +32,8 @@ module.exports = class Home extends CommonPage {
    * go to the home page
    */
   async goToHomePage() {
-    await this.waitForSelectorAndClick(this.desktopLogo);
+    await this.page.waitForSelector(this.desktopLogo, {visible: true});
+    await this.clickAndWaitForNavigation(this.desktopLogo);
   }
 
   /**
@@ -140,5 +141,21 @@ module.exports = class Home extends CommonPage {
    */
   async getFooterLinksBlockTitle(position) {
     return this.getTextContent(this.wrapperTitle.replace('%POSITION', position));
+  }
+
+  /**
+   * Get cart notifications number
+   * @returns {Promise<integer>}
+   */
+  async getCartNotificationsNumber() {
+    return this.getNumberFromText(this.cartProductsCount);
+  }
+
+  /**
+   * Go to siteMap page
+   * @returns {Promise<void>}
+   */
+  async goToSiteMapPage() {
+    await this.clickAndWaitForNavigation(this.siteMapLink);
   }
 };

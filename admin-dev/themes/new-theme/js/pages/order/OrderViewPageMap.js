@@ -1,5 +1,5 @@
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,12 +18,13 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 export default {
+  mainDiv: '#order-view-page',
   orderPaymentDetailsBtn: '.js-payment-details-btn',
   orderPaymentFormAmountInput: '#order_payment_amount',
   orderPaymentInvoiceSelect: '#order_payment_id_invoice',
@@ -69,8 +70,8 @@ export default {
   productsTablePaginationLink: '.page-item:not(.d-none):not(#orderProductsTablePaginationNext):not(#orderProductsTablePaginationPrev) .page-link',
   productsTablePaginationActive: '#orderProductsTablePagination .page-item.active span',
   productsTablePaginationTemplate: '#orderProductsTablePagination .page-item.d-none',
-  productsTableRow: productId => `#orderProduct_${productId}`,
-  productsTableRowEdited: productId => `#editOrderProduct_${productId}`,
+  productsTableRow: (productId) => `#orderProduct_${productId}`,
+  productsTableRowEdited: (productId) => `#editOrderProduct_${productId}`,
   productsCellLocation: 'tr .cellProductLocation',
   productsCellLocationDisplayed: 'tr:not(.d-none) .cellProductLocation',
   productsTableCustomizationRows: '#orderProductsTable .order-product-customization',
@@ -142,6 +143,7 @@ export default {
       partialRefund: 'button.partial-refund-display',
       standardRefund: 'button.standard-refund-display',
       returnProduct: 'button.return-product-display',
+      cancelProducts: 'button.cancel-product-display',
     },
     inputs: {
       quantity: '.cancel-product-quantity input',
@@ -169,6 +171,8 @@ export default {
       partialRefund: '.cancel-product-element:not(.hidden):not(.shipping-refund), .cancel-product-amount',
       standardRefund: '.cancel-product-element:not(.hidden):not(.shipping-refund-amount):not(.restock-products), .cancel-product-selector',
       returnProduct: '.cancel-product-element:not(.hidden):not(.shipping-refund-amount), .cancel-product-selector',
+      cancelProducts: '.cancel-product-element:not(.hidden):not(.shipping-refund-amount):not(.shipping-refund):not(.restock-products):not(.refund-credit-slip):not(.refund-voucher), .cancel-product-selector',
     },
   },
+  printOrderViewPageButton: '.js-print-order-view-page',
 };

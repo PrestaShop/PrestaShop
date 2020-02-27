@@ -17,7 +17,7 @@ module.exports = class Suppliers extends BOBasePage {
     this.gridTable = '#supplier_grid_table';
     this.gridHeaderTitle = `${this.gridPanel} h3.card-header-title`;
     // Bulk Actions
-    this.selectAllRowsLabel = `${this.gridPanel} .md-checkbox label`;
+    this.selectAllRowsLabel = `${this.gridPanel} tr.column-filters .md-checkbox i`;
     this.bulkActionsToggleButton = `${this.gridPanel} button.js-bulk-actions-btn`;
     this.bulkActionsEnableButton = `${this.gridPanel} #supplier_grid_bulk_action_suppliers_enable_selection`;
     this.bulkActionsDisableButton = `${this.gridPanel} #supplier_grid_bulk_action_suppliers_disable_selection`;
@@ -255,5 +255,13 @@ module.exports = class Suppliers extends BOBasePage {
     await this.clickAndWaitForNavigation(this.confirmDeleteButton);
     await this.page.waitForSelector(this.alertSuccessBlockParagraph, {visible: true});
     return this.getTextContent(this.alertSuccessBlockParagraph);
+  }
+
+  /**
+   * Get alert text message
+   * @returns {Promise<string>|*}
+   */
+  getAlertTextMessage() {
+    return this.getTextContent(this.alertTextBlock);
   }
 };

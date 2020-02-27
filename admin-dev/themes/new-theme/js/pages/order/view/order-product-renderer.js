@@ -1,5 +1,5 @@
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -46,7 +46,17 @@ export default class OrderProductRenderer {
     $(OrderViewPageMap.productsCount).html(numProducts);
   }
 
-  editProductFromList(orderDetailId, quantity, priceTaxIncl, priceTaxExcl, taxRate, location, availableQuantity, orderInvoiceId) {
+  editProductFromList(
+    orderDetailId,
+    quantity,
+    priceTaxIncl,
+    priceTaxExcl,
+    taxRate,
+    location,
+    availableQuantity,
+    availableOutOfStock,
+    orderInvoiceId,
+  ) {
     const $orderEdit = new OrderProductEdit(orderDetailId);
     $orderEdit.displayProduct({
       price_tax_excl: priceTaxExcl,
@@ -55,6 +65,7 @@ export default class OrderProductRenderer {
       quantity,
       location,
       availableQuantity,
+      availableOutOfStock,
       orderInvoiceId,
     });
     $(OrderViewPageMap.productAddActionBtn).addClass('d-none');

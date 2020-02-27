@@ -13,6 +13,10 @@ const AddCategoryPage = require('@pages/BO/catalog/categories/add');
 const FOBasePage = require('@pages/FO/FObasePage');
 const SiteMapPage = require('@pages/FO/siteMap');
 const CategoryFaker = require('@data/faker/category');
+// Test context imports
+const testContext = require('@utils/testContext');
+
+const baseContext = 'functional_BO_catalog_categories_CRUDCategoriesInBO';
 
 let browser;
 let page;
@@ -58,6 +62,7 @@ describe('Create, Read, Update and Delete Category', async () => {
   loginCommon.loginBO();
 
   it('should go to "Catalog>Categories" page', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'goToCategoriesPage', baseContext);
     await this.pageObjects.boBasePage.goToSubMenu(
       this.pageObjects.boBasePage.catalogParentLink,
       this.pageObjects.boBasePage.categoriesLink,
@@ -68,6 +73,7 @@ describe('Create, Read, Update and Delete Category', async () => {
   });
 
   it('should reset all filters and get number of categories in BO', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'resetFirst', baseContext);
     numberOfCategories = await this.pageObjects.categoriesPage.resetAndGetNumberOfLines();
     await expect(numberOfCategories).to.be.above(0);
   });
@@ -75,14 +81,14 @@ describe('Create, Read, Update and Delete Category', async () => {
   describe('Create Category and subcategory in BO and check it in FO', async () => {
     describe('Create Category and check it in FO', async () => {
       it('should go to add new category page', async function () {
-        await this.pageObjects.categoriesPage.clickAndWaitForNavigation(
-          this.pageObjects.categoriesPage.addNewCategoryLink,
-        );
+        await testContext.addContextItem(this, 'testIdentifier', 'goToNewCategoryPage', baseContext);
+        await this.pageObjects.categoriesPage.goToAddNewCategoryPage();
         const pageTitle = await this.pageObjects.addCategoryPage.getPageTitle();
         await expect(pageTitle).to.contains(this.pageObjects.addCategoryPage.pageTitleCreate);
       });
 
       it('should create category and check the categories number', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'createCategory', baseContext);
         const textResult = await this.pageObjects.addCategoryPage.createEditCategory(createCategoryData);
         await expect(textResult).to.equal(this.pageObjects.categoriesPage.successfulCreationMessage);
         const numberOfCategoriesAfterCreation = await this.pageObjects.categoriesPage.getNumberOfElementInGrid();
@@ -90,6 +96,7 @@ describe('Create, Read, Update and Delete Category', async () => {
       });
 
       it('should search for the new category and check result', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'searchCreatedCategory', baseContext);
         await this.pageObjects.categoriesPage.resetFilter();
         await this.pageObjects.categoriesPage.filterCategories(
           'input',
@@ -105,6 +112,7 @@ describe('Create, Read, Update and Delete Category', async () => {
       });
 
       it('should go to FO and check the created category', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'checkCreatedCategoryFO', baseContext);
         const categoryID = await this.pageObjects.categoriesPage.getTextColumnFromTableCategories(1, 'id_category');
         page = await this.pageObjects.boBasePage.viewMyShop();
         this.pageObjects = await init();
@@ -121,24 +129,27 @@ describe('Create, Read, Update and Delete Category', async () => {
     /* test related to the bug described in this issue https://github.com/PrestaShop/PrestaShop/issues/15588 */
     describe('Create Subcategory and check it in FO', async () => {
       it('should display the subcategories table related to the created category', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'displaySubcategoriesForCreatedCategory', baseContext);
         await this.pageObjects.categoriesPage.goToViewSubCategoriesPage('1');
         const pageTitle = await this.pageObjects.categoriesPage.getPageTitle();
         await expect(pageTitle).to.contains(createCategoryData.name);
       });
 
       it('should go to add new category page', async function () {
-        await this.pageObjects.categoriesPage.clickAndWaitForNavigation(
-          this.pageObjects.categoriesPage.addNewCategoryLink);
+        await testContext.addContextItem(this, 'testIdentifier', 'goToNewSubcategoryPage', baseContext);
+        await this.pageObjects.categoriesPage.goToAddNewCategoryPage();
         const pageTitle = await this.pageObjects.addCategoryPage.getPageTitle();
         await expect(pageTitle).to.contains(this.pageObjects.addCategoryPage.pageTitleCreate);
       });
 
       it('should create a subcategory', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'createSubcategory', baseContext);
         const textResult = await this.pageObjects.addCategoryPage.createEditCategory(createSubCategoryData);
         await expect(textResult).to.equal(this.pageObjects.categoriesPage.successfulCreationMessage);
       });
 
       it.skip('should search for the subcategory and check result', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'searchForCreatedSubcategory', baseContext);
         await this.pageObjects.categoriesPage.resetFilter();
         await this.pageObjects.categoriesPage.filterCategories(
           'input',
@@ -150,6 +161,7 @@ describe('Create, Read, Update and Delete Category', async () => {
       });
 
       it.skip('should go to FO and check the created Subcategory', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'checkCreatedSubcategoryFO', baseContext);
         const categoryID = await this.pageObjects.categoriesPage.getTextColumnFromTableCategories(1, 'id_category');
         page = await this.pageObjects.boBasePage.viewMyShop();
         this.pageObjects = await init();
@@ -167,6 +179,7 @@ describe('Create, Read, Update and Delete Category', async () => {
   // 2 : View Category and check the subcategories related
   describe('View Category Created', async () => {
     it('should go to "Catalog>Categories" page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToCategoriesPageToViewCreatedCategory', baseContext);
       await this.pageObjects.boBasePage.goToSubMenu(
         this.pageObjects.boBasePage.catalogParentLink,
         this.pageObjects.boBasePage.categoriesLink,
@@ -176,6 +189,7 @@ describe('Create, Read, Update and Delete Category', async () => {
     });
 
     it('should filter list by name', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'filterToViewCreatedCategory', baseContext);
       await this.pageObjects.categoriesPage.resetFilter();
       await this.pageObjects.categoriesPage.filterCategories(
         'input',
@@ -187,12 +201,14 @@ describe('Create, Read, Update and Delete Category', async () => {
     });
 
     it('should click on view category', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToViewCreatedCategoryPage', baseContext);
       await this.pageObjects.categoriesPage.goToViewSubCategoriesPage('1');
       const pageTitle = await this.pageObjects.categoriesPage.getPageTitle();
       await expect(pageTitle).to.contains(createCategoryData.name);
     });
 
     it.skip('should check subcategories list', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkSubcategoriesForCreatedCategory', baseContext);
       await this.pageObjects.categoriesPage.resetFilter();
       await this.pageObjects.categoriesPage.filterCategories(
         'input',
@@ -206,6 +222,7 @@ describe('Create, Read, Update and Delete Category', async () => {
   // 3 : Update category and check that category isn't displayed in FO (displayed = false)
   describe('Update Category created', async () => {
     it('should go to "Catalog>Categories" page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToCategoriesPageToUpdate', baseContext);
       await this.pageObjects.boBasePage.goToSubMenu(
         this.pageObjects.boBasePage.catalogParentLink,
         this.pageObjects.boBasePage.categoriesLink,
@@ -215,6 +232,7 @@ describe('Create, Read, Update and Delete Category', async () => {
     });
 
     it('should filter list by name', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'filterToUpdate', baseContext);
       await this.pageObjects.categoriesPage.resetFilter();
       await this.pageObjects.categoriesPage.filterCategories(
         'input',
@@ -226,12 +244,14 @@ describe('Create, Read, Update and Delete Category', async () => {
     });
 
     it('should go to edit category page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToEditCategoryPage', baseContext);
       await this.pageObjects.categoriesPage.goToEditCategoryPage('1');
       const pageTitle = await this.pageObjects.addCategoryPage.getPageTitle();
       await expect(pageTitle).to.contains(this.pageObjects.addCategoryPage.pageTitleEdit + createCategoryData.name);
     });
 
     it('should update the category', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'updateCategory', baseContext);
       const textResult = await this.pageObjects.addCategoryPage.createEditCategory(editCategoryData);
       await expect(textResult).to.equal(this.pageObjects.categoriesPage.successfulUpdateMessage);
       const numberOfCategoriesAfterUpdate = await this.pageObjects.categoriesPage.resetAndGetNumberOfLines();
@@ -239,6 +259,7 @@ describe('Create, Read, Update and Delete Category', async () => {
     });
 
     it('should search for the new category and check result', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'searchForUpdatedCategory', baseContext);
       await this.pageObjects.categoriesPage.resetFilter();
       await this.pageObjects.categoriesPage.filterCategories(
         'input',
@@ -250,6 +271,7 @@ describe('Create, Read, Update and Delete Category', async () => {
     });
 
     it('should go to FO and check that the category does not exist', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkUpdatedCategoryFO', baseContext);
       const categoryID = await this.pageObjects.categoriesPage.getTextColumnFromTableCategories(1, 'id_category');
       page = await this.pageObjects.boBasePage.viewMyShop();
       this.pageObjects = await init();
@@ -266,6 +288,7 @@ describe('Create, Read, Update and Delete Category', async () => {
   // 4 : Delete Category from BO
   describe('Delete Category', async () => {
     it('should go to "Catalog>Categories" page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToCategoriesPageToDelete', baseContext);
       await this.pageObjects.boBasePage.goToSubMenu(
         this.pageObjects.boBasePage.catalogParentLink,
         this.pageObjects.boBasePage.categoriesLink,
@@ -275,6 +298,7 @@ describe('Create, Read, Update and Delete Category', async () => {
     });
 
     it('should filter list by name', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'filterToDelete', baseContext);
       await this.pageObjects.categoriesPage.resetFilter();
       await this.pageObjects.categoriesPage.filterCategories(
         'input',
@@ -286,6 +310,7 @@ describe('Create, Read, Update and Delete Category', async () => {
     });
 
     it('should delete category', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'deleteCategory', baseContext);
       const textResult = await this.pageObjects.categoriesPage.deleteCategory('1');
       await expect(textResult).to.equal(this.pageObjects.categoriesPage.successfulDeleteMessage);
       const numberOfCategoriesAfterDeletion = await this.pageObjects.categoriesPage.resetAndGetNumberOfLines();

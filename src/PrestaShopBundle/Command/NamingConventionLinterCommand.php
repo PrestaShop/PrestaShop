@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -58,25 +58,26 @@ final class NamingConventionLinterCommand extends ContainerAwareCommand
         $namingConventionLinter = $this->getContainer()
             ->get('prestashop.bundle.routing.linter.naming_convention_linter');
 
-        $invalidRoutes = [];
-
+        $ioTableheaders = ['Invalid routes', 'Valid routes suggestions'];
+        $ioTableRows = [];
         /** @var Route $route */
         foreach ($adminRouteProvider->getRoutes() as $routeName => $route) {
             try {
                 $namingConventionLinter->lint($routeName, $route);
             } catch (LinterException $e) {
-                $invalidRoutes[] = $routeName;
+                $ioTableRows[] = [$routeName, $e->getExpectedRouteName()];
             }
         }
 
         $io = new SymfonyStyle($input, $output);
 
-        if (!empty($invalidRoutes)) {
+        if (!empty($ioTableRows)) {
+            $io->title('PrestaShop routes follow admin_{resources}_{action} naming convention structure');
             $io->warning(sprintf(
                 '%s routes are not following naming conventions:',
-                count($invalidRoutes)
+                count($ioTableRows)
             ));
-            $io->listing($invalidRoutes);
+            $io->table($ioTableheaders, $ioTableRows);
 
             return 1;
         }

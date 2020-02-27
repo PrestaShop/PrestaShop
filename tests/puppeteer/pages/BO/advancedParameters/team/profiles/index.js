@@ -25,7 +25,7 @@ module.exports = class Profiles extends BOBasePage {
     this.filterSearchButton = `${this.profilesListForm} button[name='profile[actions][search]']`;
     this.filterResetButton = `${this.profilesListForm} button[name='profile[actions][reset]']`;
     // Bulk Actions
-    this.selectAllRowsLabel = `${this.profilesListForm} .md-checkbox label`;
+    this.selectAllRowsLabel = `${this.profilesListForm} tr.column-filters .md-checkbox i`;
     this.bulkActionsToggleButton = `${this.profilesListForm} button.dropdown-toggle`;
     this.bulkActionsDeleteButton = `${this.profilesListForm} #profile_grid_bulk_action_bulk_delete_profiles`;
   }

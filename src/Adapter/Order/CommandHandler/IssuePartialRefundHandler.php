@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -99,7 +99,10 @@ final class IssuePartialRefundHandler extends AbstractOrderCommandHandler implem
         /** @var Order $order */
         $order = $this->getOrderObject($command->getOrderId());
         if (!$order->hasInvoice()) {
-            throw new InvalidOrderStateException('Can not perform partial refund on order with no invoice');
+            throw new InvalidOrderStateException(
+                InvalidOrderStateException::INVOICE_NOT_FOUND,
+                'Can not perform partial refund on order with no invoice'
+            );
         }
 
         /** @var OrderRefundSummary $orderRefundSummary */
@@ -113,9 +116,10 @@ final class IssuePartialRefundHandler extends AbstractOrderCommandHandler implem
 
         // @todo This part should probably be in a share abstract class as it will probably be common with other handlers
         // Update order details and reinject quantities
+        $shouldReinjectProducts = !$order->hasBeenDelivered() || $command->restockRefundedProducts();
         foreach ($orderRefundSummary->getProductRefunds() as $orderDetailId => $productRefund) {
             $orderDetail = $orderRefundSummary->getOrderDetailById($orderDetailId);
-            if (!$order->hasBeenDelivered() || $command->restockRefundedProducts()) {
+            if ($shouldReinjectProducts) {
                 $this->reinjectQuantity($orderDetail, $productRefund['quantity']);
             }
         }
@@ -136,7 +140,12 @@ final class IssuePartialRefundHandler extends AbstractOrderCommandHandler implem
 
         // Update refund details
         $productsReturned = (int) $this->configuration->get('PS_ORDER_RETURN') === 1 && $order->hasBeenDelivered();
-        $this->refundUpdater->updateRefundData($order, $orderRefundSummary, $productsReturned);
+        $this->refundUpdater->updateRefundData(
+            $order,
+            $orderRefundSummary,
+            $productsReturned,
+            $shouldReinjectProducts
+        );
 
         // Generate voucher if needed
         if ($command->generateVoucher() && $orderRefundSummary->getRefundedAmount() > 0) {
