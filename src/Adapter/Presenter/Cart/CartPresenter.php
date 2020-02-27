@@ -558,7 +558,6 @@ class CartPresenter implements PresenterInterface
                     continue;
                 }
                 else $freeShippingAlreadySet = true;
-
             } else {
                 $freeShippingOnly = false;
                 $totalCartVoucherReduction = $this->includeTaxes() ? $cartVoucher['value_real'] : $cartVoucher['value_tax_exc'];
