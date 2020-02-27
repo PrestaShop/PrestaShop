@@ -150,10 +150,6 @@ final class GetOrderProductsForViewingHandler extends AbstractOrderHandler imple
                 $product['warehouse_location'] = false;
             }
 
-            if (!empty($product['location'])) {
-                $stockLocationIsAvailable = true;
-            }
-
             $pack_items = $product['cache_is_pack'] ? Pack::getItemTable($product['id_product'], $this->contextLanguageId, true) : [];
             foreach ($pack_items as &$pack_item) {
                 $pack_item['current_stock'] = StockAvailable::getQuantityAvailableByProduct($pack_item['id_product'], $pack_item['id_product_attribute'], $pack_item['id_shop']);
