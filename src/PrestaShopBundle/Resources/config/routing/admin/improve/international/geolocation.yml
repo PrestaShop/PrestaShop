@@ -6,24 +6,24 @@ admin_geolocation_index:
         _legacy_controller: AdminGeolocation
         _legacy_link: AdminGeolocation
 
-admin_geolocation_save_by_ip_address:
-    path: /process-form/by-ip-address
+admin_geolocation_by_ip_address_save:
+    path: /by-ip-address
     methods: [POST]
     defaults:
         _controller: PrestaShopBundle:Admin\Improve\International\Geolocation:processByIpAddressForm
         _legacy_controller: AdminGeolocation
         _legacy_link: AdminGeolocation:update
 
-admin_geolocation_save_whitelist:
-    path: /process-form/whitelist
+admin_geolocation_whitelist_save:
+    path: /whitelist
     methods: [POST]
     defaults:
         _controller: PrestaShopBundle:Admin\Improve\International\Geolocation:processWhitelistForm
         _legacy_controller: AdminGeolocation
         _legacy_link: AdminGeolocation:update
 
-admin_geolocation_save_options:
-    path: /process-form/options
+admin_geolocation_options_save:
+    path: /options
     methods: [POST]
     defaults:
         _controller: PrestaShopBundle:Admin\Improve\International\Geolocation:processOptionsForm

@@ -41,19 +41,19 @@
 
   <div class="row justify-content-center">
     <div class="col-xl-10">
-      {{ form_start(geolocationByIpAddressForm, {'action': path('admin_geolocation_save_by_ip_address')}) }}
+      {{ form_start(geolocationByIpAddressForm, {'action': path('admin_geolocation_by_ip_address_save')}) }}
         {% include '@PrestaShop/Admin/Improve/International/Geolocation/Blocks/geolocation_by_ip_address.html.twig' %}
       {{ form_end(geolocationByIpAddressForm) }}
     </div>
 
     <div class="col-xl-10">
-      {{ form_start(geolocationOptionsForm, {'action': path('admin_geolocation_save_options')}) }}
+      {{ form_start(geolocationOptionsForm, {'action': path('admin_geolocation_options_save')}) }}
         {% include '@PrestaShop/Admin/Improve/International/Geolocation/Blocks/geolocation_options.html.twig' %}
       {{ form_end(geolocationOptionsForm) }}
     </div>
 
     <div class="col-xl-10">
-      {{ form_start(geolocationIpAddressWhitelistForm, {'action': path('admin_geolocation_save_whitelist')}) }}
+      {{ form_start(geolocationIpAddressWhitelistForm, {'action': path('admin_geolocation_whitelist_save')}) }}
         {% include '@PrestaShop/Admin/Improve/International/Geolocation/Blocks/geolocation_ip_address_whitelist.html.twig' %}
       {{ form_end(geolocationIpAddressWhitelistForm) }}
     </div>

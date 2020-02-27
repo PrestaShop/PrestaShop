@@ -51,7 +51,7 @@ class LegacyUrlConverterTest extends SymfonyIntegrationTestCase
     {
         return [
             'admin_administration' => ['/configure/advanced/administration/', 'AdminAdminPreferences'],
-            'admin_administration_save' => ['/configure/advanced/administration/', 'AdminAdminPreferences', 'update'],
+            'admin_administration_general_save' => ['/configure/advanced/administration/general', 'AdminAdminPreferences', 'update'],
 
             'admin_backups' => ['/configure/advanced/backups/', 'AdminBackup'],
             'admin_backups_save_options' => ['/configure/advanced/backups/', 'AdminBackup', 'update'],
@@ -117,13 +117,13 @@ class LegacyUrlConverterTest extends SymfonyIntegrationTestCase
             'admin_maintenance_save' => ['/configure/shop/maintenance/', 'AdminMaintenance', 'update'],
 
             'admin_order_preferences' => ['/configure/shop/order-preferences/', 'AdminOrderPreferences'],
-            'admin_order_preferences_save' => ['/configure/shop/order-preferences/', 'AdminOrderPreferences', 'update'],
+            'admin_order_preferences_general_save' => ['/configure/shop/order-preferences/general', 'AdminOrderPreferences', 'update'],
 
             'admin_product_preferences' => ['/configure/shop/product-preferences/', 'AdminPPreferences'],
             'admin_product_preferences_process' => ['/configure/shop/product-preferences/', 'AdminPPreferences', 'update'],
 
             'admin_performance' => ['/configure/advanced/performance/', 'AdminPerformance'],
-            'admin_performance_save' => ['/configure/advanced/performance/', 'AdminPerformance', 'update'],
+            'admin_performance_smarty_save' => ['/configure/advanced/performance/smarty', 'AdminPerformance', 'update'],
             'admin_clear_cache' => ['/configure/advanced/performance/clear-cache', 'AdminPerformance', 'empty_smarty_cache'],
             'admin_servers_add' => ['/configure/advanced/performance/memcache/servers', 'AdminPerformance', 'submitAddServer'],
             'admin_servers_delete' => ['/configure/advanced/performance/memcache/servers', 'AdminPerformance', 'deleteMemcachedServer'],
@@ -132,7 +132,7 @@ class LegacyUrlConverterTest extends SymfonyIntegrationTestCase
             'admin_preferences_save' => ['/configure/shop/preferences/preferences', 'AdminPreferences', 'update'],
 
             'admin_shipping_preferences' => ['/improve/shipping/preferences', 'AdminShipping'],
-            'admin_shipping_preferences_save' => ['/improve/shipping/preferences', 'AdminShipping', 'update'],
+            'admin_shipping_preferences_handling_save' => ['/improve/shipping/preferences/handling', 'AdminShipping', 'update'],
 
             'admin_stock_overview' => ['/sell/stocks/', 'AdminStockManagement'],
 
@@ -143,11 +143,11 @@ class LegacyUrlConverterTest extends SymfonyIntegrationTestCase
             'admin_payment_methods' => ['/improve/payment/payment_methods', 'AdminPayment'],
 
             'admin_localization_index' => ['/improve/international/localization/', 'AdminLocalization'],
-            'admin_localization_save_options' => ['/improve/international/localization/options', 'AdminLocalization', 'update'],
+            'admin_localization_configuration_save' => ['/improve/international/localization/configuration', 'AdminLocalization', 'update'],
             'admin_localization_import_pack' => ['/improve/international/localization/import-pack', 'AdminLocalization', 'submitLocalizationPack'],
 
             'admin_geolocation_index' => ['/improve/international/geolocation/', 'AdminGeolocation'],
-            'admin_geolocation_save_options' => ['/improve/international/geolocation/process_form', 'AdminGeolocation', 'update'],
+            'admin_geolocation_by_ip_address_save' => ['/improve/international/geolocation/by-ip-address', 'AdminGeolocation', 'update'],
 
             'admin_payment_preferences' => ['/improve/payment/preferences', 'AdminPaymentPreferences'],
             'admin_payment_preferences_process' => ['/improve/payment/preferences', 'AdminPaymentPreferences', 'update'],
@@ -170,7 +170,7 @@ class LegacyUrlConverterTest extends SymfonyIntegrationTestCase
             'admin_metas_edit' => ['/configure/shop/seo-urls/1000/edit', 'AdminMeta', 'updatemeta', ['id_meta' => 1000]],
             'admin_metas_delete' => ['/configure/shop/seo-urls/1000/delete', 'AdminMeta', 'deletemeta', ['id_meta' => 1000]],
             'admin_metas_delete_bulk' => ['/configure/shop/seo-urls/delete', 'AdminMeta', 'submitBulkdeletemeta'],
-            'admin_metas_save_options' => ['/configure/shop/seo-urls/options', 'AdminMeta', 'submitOptionsmeta'],
+            'admin_metas_set_up_urls_save' => ['/configure/shop/seo-urls/set-up-urls', 'AdminMeta', 'submitOptionsmeta'],
             'admin_metas_generate_robots_text_file' => ['/configure/shop/seo-urls/generate/robots', 'AdminMeta', 'submitRobots'],
 
             //'admin_module_configure_action' => ['/improve/modules/manage/action/configure/ps_linklist', 'AdminModules', 'configure', ['module_name' => 'ps_linklist']],
