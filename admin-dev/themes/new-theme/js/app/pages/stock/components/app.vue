@@ -44,6 +44,8 @@
   import LowFilter from './header/filters/low-filter';
   import PSPagination from '@app/widgets/ps-pagination';
 
+  const FIRST_PAGE = 1;
+
   export default {
     name: 'app',
     computed: {
@@ -89,6 +91,9 @@
       },
       resetFilters() {
         this.filters = {};
+      },
+      resetPagination() {
+          this.$store.dispatch('updatePageIndex', FIRST_PAGE);
       },
       onLowStockChecked(isChecked) {
         this.filters = Object.assign({}, this.filters, {
