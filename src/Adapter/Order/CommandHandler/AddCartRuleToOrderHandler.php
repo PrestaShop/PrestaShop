@@ -38,7 +38,6 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Command\AddCartRuleToOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler\AddCartRuleToOrderHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\OrderDiscountType;
-use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
 use Validate;
 
 /**
@@ -52,12 +51,9 @@ final class AddCartRuleToOrderHandler extends AbstractOrderHandler implements Ad
     public function handle(AddCartRuleToOrderCommand $command): void
     {
         $order = $this->getOrderObject($command->getOrderId());
-
         $discountValue = $command->getDiscountValue();
-
         $cartRuleType = $command->getCartRuleType();
         $reductionValues = $this->getReductionValues($cartRuleType, $order, $discountValue);
-
         $invoiceId = 0;
         $orderInvoice = $this->getInvoiceForUpdate($order, $command);
 
@@ -143,21 +139,17 @@ final class AddCartRuleToOrderHandler extends AbstractOrderHandler implements Ad
         $valueTaxIncl = $reductionValues['value_tax_incl'];
         $valueTaxExcl = $reductionValues['value_tax_excl'];
 
-        $orderInvoice->total_discount_tax_incl = (float) $orderTotalDiscountTaxIncl
+        $orderInvoice->total_discount_tax_incl = (float) (string) $orderTotalDiscountTaxIncl
             ->plus($valueTaxIncl)
-            ->toPrecision(CommonAbstractType::PRESTASHOP_DECIMALS)
         ;
-        $orderInvoice->total_discount_tax_excl = (float) $orderTotalDiscountTaxExcl
+        $orderInvoice->total_discount_tax_excl = (float) (string) $orderTotalDiscountTaxExcl
             ->plus($valueTaxExcl)
-            ->toPrecision(CommonAbstractType::PRESTASHOP_DECIMALS)
         ;
-        $orderInvoice->total_paid_tax_incl = (float) $orderTotalPaidTaxIncl
+        $orderInvoice->total_paid_tax_incl = (float) (string) $orderTotalPaidTaxIncl
             ->minus($valueTaxIncl)
-            ->toPrecision(CommonAbstractType::PRESTASHOP_DECIMALS)
         ;
-        $orderInvoice->total_paid_tax_excl = (float) $orderTotalPaidTaxExcl
+        $orderInvoice->total_paid_tax_excl = (float) (string) $orderTotalPaidTaxExcl
             ->minus($valueTaxExcl)
-            ->toPrecision(CommonAbstractType::PRESTASHOP_DECIMALS)
         ;
 
         $orderInvoice->update();
@@ -185,9 +177,9 @@ final class AddCartRuleToOrderHandler extends AbstractOrderHandler implements Ad
         $cartRuleObj->quantity_per_user = 1;
 
         if ($command->getCartRuleType() === OrderDiscountType::DISCOUNT_PERCENT) {
-            $cartRuleObj->reduction_percent = (float) $discountValue->toPrecision(CommonAbstractType::PRESTASHOP_DECIMALS);
+            $cartRuleObj->reduction_percent = (float) (string) $discountValue;
         } elseif ($command->getCartRuleType() === OrderDiscountType::DISCOUNT_AMOUNT) {
-            $cartRuleObj->reduction_amount = (float) $reducedValues['value_tax_excl']->toPrecision(CommonAbstractType::PRESTASHOP_DECIMALS);
+            $cartRuleObj->reduction_amount = (float) (string) $reducedValues['value_tax_excl'];
         } elseif ($command->getCartRuleType() === OrderDiscountType::FREE_SHIPPING) {
             $cartRuleObj->free_shipping = 1;
         }
@@ -220,8 +212,8 @@ final class AddCartRuleToOrderHandler extends AbstractOrderHandler implements Ad
         $orderCartRule->id_cart_rule = $cartRuleId;
         $orderCartRule->id_order_invoice = $invoiceId;
         $orderCartRule->name = $cartRuleName;
-        $orderCartRule->value = (float) $reductionValues['value_tax_incl']->toPrecision(CommonAbstractType::PRESTASHOP_DECIMALS);
-        $orderCartRule->value_tax_excl = (float) $reductionValues['value_tax_excl']->toPrecision(CommonAbstractType::PRESTASHOP_DECIMALS);
+        $orderCartRule->value = (float) (string) $reductionValues['value_tax_incl'];
+        $orderCartRule->value_tax_excl = (float) (string) $reductionValues['value_tax_excl'];
 
         if (false === $orderCartRule->add()) {
             throw new OrderException('An error occurred during the OrderCartRule creation');
@@ -343,29 +335,23 @@ final class AddCartRuleToOrderHandler extends AbstractOrderHandler implements Ad
         $orderTotalPaidTaxIncl = new Number((string) $order->total_paid_tax_incl);
         $orderTotalPaidTaxExcl = new Number((string) $order->total_paid_tax_excl);
 
-        $order->total_discounts = (float) $orderTotalDiscounts
+        $order->total_discounts = (float) (string) $orderTotalDiscounts
             ->plus($reductionValues['value_tax_incl'])
-            ->toPrecision(CommonAbstractType::PRESTASHOP_DECIMALS)
         ;
-        $order->total_discounts_tax_incl = (float) $orderTotalDiscountsTaxIncl
+        $order->total_discounts_tax_incl = (float) (string) $orderTotalDiscountsTaxIncl
             ->plus($reductionValues['value_tax_incl'])
-            ->toPrecision(CommonAbstractType::PRESTASHOP_DECIMALS)
         ;
-        $order->total_discounts_tax_excl = (float) $orderTotalDiscountsTaxExcl
+        $order->total_discounts_tax_excl = (float) (string) $orderTotalDiscountsTaxExcl
             ->plus($reductionValues['value_tax_excl'])
-            ->toPrecision(CommonAbstractType::PRESTASHOP_DECIMALS)
         ;
-        $order->total_paid = (float) $orderTotalPaid
+        $order->total_paid = (float) (string) $orderTotalPaid
             ->minus($reductionValues['value_tax_incl'])
-            ->toPrecision(CommonAbstractType::PRESTASHOP_DECIMALS)
         ;
-        $order->total_paid_tax_incl = (float) $orderTotalPaidTaxIncl
+        $order->total_paid_tax_incl = (float) (string) $orderTotalPaidTaxIncl
             ->minus($reductionValues['value_tax_incl'])
-            ->toPrecision(CommonAbstractType::PRESTASHOP_DECIMALS)
         ;
-        $order->total_paid_tax_excl = (float) $orderTotalPaidTaxExcl
+        $order->total_paid_tax_excl = (float) (string) $orderTotalPaidTaxExcl
             ->minus($reductionValues['value_tax_excl'])
-            ->toPrecision(CommonAbstractType::PRESTASHOP_DECIMALS)
         ;
 
         if (false === $order->update()) {
