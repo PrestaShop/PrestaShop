@@ -126,8 +126,7 @@ final class GetCartInformationHandler extends AbstractCartHandler implements Get
         $cartRules = $this->extractCartRulesFromLegacySummary($legacySummary, $currency);
         $hasFreeShippingCartRule = false;
         foreach ($legacySummary['discounts'] as $discount) {
-//            if ((bool) $discount[OrderDiscountType::FREE_SHIPPING] && $discount['name'] != self::FREE_SHIPPING_NAME) {
-            if ((bool) $discount[OrderDiscountType::FREE_SHIPPING]) {
+            if ((bool) $discount['free_shipping']) {
                 $hasFreeShippingCartRule = true;
             }
         }
