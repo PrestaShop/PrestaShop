@@ -40,7 +40,6 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidCancelProductExcept
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderDetailRefund;
 use PrestaShop\PrestaShop\Core\Domain\Order\VoucherRefundType;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\ComputingPrecision;
-use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
 use PrestaShopDatabaseException;
 use PrestaShopException;
 use TaxCalculator;
@@ -82,6 +81,7 @@ class OrderRefundCalculator
             $orderDetailList,
             $precision
         );
+
         $refundedAmount = new Number('0');
         foreach ($productRefunds as $orderDetailId => $productRefund) {
             $refundedAmount = $refundedAmount->plus(new Number((string) $productRefund['amount']));
@@ -114,7 +114,7 @@ class OrderRefundCalculator
             }
             if (!$isTaxIncluded) {
                 $taxCalculator = $this->getCarrierTaxCalculatorFromOrder($order);
-                $taxesAmount = $taxCalculator->addTaxes((float) $shippingCostAmount->toPrecision(CommonAbstractType::PRESTASHOP_DECIMALS));
+                $taxesAmount = $taxCalculator->addTaxes((float) (string) $shippingCostAmount);
                 $taxes = new Number((string) $taxesAmount);
                 $refundedAmount = $refundedAmount->plus($taxes);
             } else {
@@ -130,9 +130,9 @@ class OrderRefundCalculator
         return new OrderRefundSummary(
             $orderDetailList,
             $productRefunds,
-            (float) $refundedAmount->toPrecision(CommonAbstractType::PRESTASHOP_DECIMALS),
-            (float) $shippingCostAmount->toPrecision(CommonAbstractType::PRESTASHOP_DECIMALS),
-            (float) $voucherAmount->toPrecision(CommonAbstractType::PRESTASHOP_DECIMALS),
+            (float) (string) $refundedAmount,
+            (float) (string) $shippingCostAmount,
+            (float) (string) $voucherAmount,
             $voucherChosen,
             $isTaxIncluded,
             $precision
