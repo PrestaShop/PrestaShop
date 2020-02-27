@@ -89,12 +89,6 @@ final class GetOrderProductsForViewingHandler extends AbstractOrderHandler imple
         $products = $order->getProducts();
         $currency = new Currency((int) $order->id_currency);
 
-        $display_out_of_stock_warning = false;
-        $current_order_state = $order->getCurrentOrderState();
-        if (Configuration::get('PS_STOCK_MANAGEMENT') && (!Validate::isLoadedObject($current_order_state) || ($current_order_state->delivery != 1 && $current_order_state->shipped != 1))) {
-            $display_out_of_stock_warning = true;
-        }
-
         foreach ($products as &$product) {
             if ($product['image'] instanceof Image) {
                 $name = 'product_mini_' . (int) $product['product_id'] . (isset($product['product_attribute_id']) ? '_' . (int) $product['product_attribute_id'] : '') . '.jpg';
