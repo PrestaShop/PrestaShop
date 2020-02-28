@@ -44,6 +44,7 @@ use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartInformation;
 use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleValidityException;
+use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\FreeShippingCartRuleAlreadyExistException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Exception\FileUploadException;
 use PrestaShop\PrestaShop\Core\Domain\Language\Exception\LanguageException;
@@ -578,6 +579,10 @@ class CartController extends FrameworkBundleAdminController
                     'Admin.Notifications.Error'
                 ),
             ],
+            FreeShippingCartRuleAlreadyExistException::class => $this->trans(
+                'Free shipping cart rule is already added to this cart!',
+                'Admin.Notifications.Error'
+            ),
         ];
     }
 }
