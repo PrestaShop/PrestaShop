@@ -76,7 +76,6 @@ export default class ShippingRenderer {
    * @param {Object} shipping
    */
   _renderFreeShippingSwitch(shipping) {
-    debugger;
     const isFreeShipping = shipping.freeShipping;
     const hasFreeShippingCartRule = shipping.freeShippingCartRule;
     if (isFreeShipping === hasFreeShippingCartRule) {
