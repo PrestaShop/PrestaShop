@@ -739,6 +739,14 @@
         </figure>
       </div>
     </div>
+    {% if delete_action_route is defined and id is defined %}
+        <button class="btn btn-outline-danger btn-sm"
+                type="submit"
+                formaction="{{ path(delete_action_route, {'id': id}) }}"
+        >
+          <i class="material-icons">delete_forever</i>{{ 'Delete'|trans({}, 'Admin.Actions') }}
+        </button>
+    {% endif %}
   {% endif %}
 {% endblock file_widget %}
 
