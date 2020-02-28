@@ -133,6 +133,7 @@ class CartController extends FrameworkBundleAdminController
         try {
             $customerId = $request->request->getInt('customerId');
             $cartId = $this->getCommandBus()->handle(new CreateEmptyCustomerCartCommand($customerId))->getValue();
+
             return $this->json($this->getCartInfo($cartId));
         } catch (Exception $e) {
             return $this->json(
