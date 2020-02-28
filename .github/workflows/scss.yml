@@ -3,7 +3,7 @@ on: [push, pull_request]
 jobs:
   stylelint:
     runs-on: ubuntu-latest
-    name: StyleLint
+    name: stylelint
     steps:
       - uses: actions/checkout@v1
         with:
