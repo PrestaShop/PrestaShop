@@ -341,19 +341,19 @@ td.cancel-product-element {
 }
 
 .cancel-product-cell {
-  margin-right: 0;
-  padding-right: 0;
   max-width: 400px;
+  padding-right: 0;
+  margin-right: 0;
 
   .cancel-product-cell-elements {
     display: flex;
     flex-direction: row;
-    justify-content: flex-start;
     align-items: flex-start;
+    justify-content: flex-start;
 
     .cancel-product-selector {
-      width: 30px;
       align-self: center;
+      width: 30px;
     }
 
     .form-group {
@@ -362,10 +362,10 @@ td.cancel-product-element {
       margin-bottom: 0;
 
       .form-control-label {
-        line-height: 30px;
         padding: 0;
         margin-bottom: 0;
-        font-weight: bold;
+        font-weight: 600;
+        line-height: 30px;
       }
 
       .input-group {
@@ -373,9 +373,9 @@ td.cancel-product-element {
         max-width: 130px;
 
         .form-control {
-          height: 35px;
           min-width: 30px;
           max-width: 80px;
+          height: 35px;
         }
         .input-group-append {
           height: 35px;
@@ -396,8 +396,8 @@ td.cancel-product-element {
 }
 
 .voucher-refund-type-negative-error {
-  color: $color-error;
   display: none;
+  color: $color-error;
 }
 
 input.refund-quantity {
@@ -413,8 +413,8 @@ input#partial_refund_shipping {
 
 .cellProductActions .btn,
 .discountList .btn {
-  background-color: transparent;
   color: $medium-gray;
+  background-color: transparent;
 }
 
 .cellProductActions .btn:hover,

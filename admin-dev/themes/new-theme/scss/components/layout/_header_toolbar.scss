@@ -5,9 +5,9 @@
   left: $size-navbar-width;
   z-index: 990; // popup menus' z-index is 1000, so it has to be just below that
   background: #fff;
-  border-bottom: 0.0625rem solid $color-separator;
+  border-bottom: .0625rem solid $color-separator;
   @include transition(
-    left 0.5s ease
+    left .5s ease
   ); // transition when collapsing the nav menu
 
   .mobile & {
@@ -20,13 +20,13 @@
 
   @include media-breakpoint-down(sm) {
     top: 3.5rem;
-    padding-top: 0.3rem;
+    padding-top: .3rem;
   }
 
   // page title
   .title {
     float: left;
-    padding: 0.3125rem;
+    padding: .3125rem;
     padding-left: 0;
     margin-bottom: 0;
     font-size: 1.625rem;
@@ -89,7 +89,7 @@
       .notification-counter {
         @include notification_counter();
         top: -1.75rem;
-        right: -0.9375rem;
+        right: -.9375rem;
 
         &:empty {
           border: none;
