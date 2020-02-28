@@ -65,8 +65,6 @@ class OrderPreferencesController extends FrameworkBundleAdminController
     }
 
     /**
-     * Process the General configuration form.
-     *
      * @AdminSecurity("is_granted(['update', 'create', 'delete'], request.get('_legacy_controller'))",
      *     message="You do not have permission to edit this.",
      *     redirectRoute="admin_order_preferences")
@@ -77,20 +75,14 @@ class OrderPreferencesController extends FrameworkBundleAdminController
      */
     public function processGeneralFormAction(Request $request)
     {
-        $this->dispatchHook(
-            'actionAdminAdminPreferencesControllerPostProcessUploadQuotaBefore',
-            ['controller' => $this]
-        );
-
         return $this->processForm(
             $request,
-            $this->getGeneralFormHandler()
+            $this->getGeneralFormHandler(),
+            'General'
         );
     }
 
     /**
-     * Process the Gift Options configuration form.
-     *
      * @AdminSecurity("is_granted(['update', 'create', 'delete'], request.get('_legacy_controller'))",
      *     message="You do not have permission to edit this.",
      *     redirectRoute="admin_order_preferences")
@@ -101,28 +93,30 @@ class OrderPreferencesController extends FrameworkBundleAdminController
      */
     public function processGiftOptionsFormAction(Request $request)
     {
-        $this->dispatchHook(
-            'actionAdminAdminPreferencesControllerPostProcessUploadQuotaBefore',
-            ['controller' => $this]
-        );
-
         return $this->processForm(
             $request,
-            $this->getGiftOptionsFormHandler()
+            $this->getGiftOptionsFormHandler(),
+            'GiftOptions'
         );
     }
 
     /**
-     * Process the Preferences configuration form.
+     * Process the Order Preferences configuration form.
      *
      * @param Request $request
      * @param FormHandlerInterface $formHandler
+     * @param string $hookName
      *
      * @return RedirectResponse
      */
-    protected function processForm(Request $request, FormHandlerInterface $formHandler)
+    protected function processForm(Request $request, FormHandlerInterface $formHandler, string $hookName)
     {
-        $this->dispatchHook('actionAdminOrderPreferencesControllerPostProcessBefore', ['controller' => $this]);
+        $this->dispatchHook(
+            'actionAdminShopParametersOrderPreferencesControllerPostProcess' . $hookName . 'Before',
+            ['controller' => $this]
+        );
+
+        $this->dispatchHook('actionAdminShopParametersOrderPreferencesControllerPostProcessBefore', ['controller' => $this]);
 
         $form = $formHandler->getForm();
         $form->handleRequest($request);

@@ -88,14 +88,10 @@ class LocalizationController extends FrameworkBundleAdminController
      */
     public function processConfigurationFormAction(Request $request)
     {
-        $this->dispatchHook(
-            'actionAdminAdminLocalizationControllerPostProcessConfigurationBefore',
-            ['controller' => $this]
-        );
-
         return $this->processForm(
             $request,
-            $this->getConfigurationFormHandler()
+            $this->getConfigurationFormHandler(),
+            'Configuration'
         );
     }
 
@@ -111,14 +107,10 @@ class LocalizationController extends FrameworkBundleAdminController
      */
     public function processLocalUnitsFormAction(Request $request)
     {
-        $this->dispatchHook(
-            'actionAdminAdminLocalizationControllerPostProcessLocalUnitsBefore',
-            ['controller' => $this]
-        );
-
         return $this->processForm(
             $request,
-            $this->getLocalUnitsFormHandler()
+            $this->getLocalUnitsFormHandler(),
+            'LocalUnits'
         );
     }
 
@@ -134,28 +126,30 @@ class LocalizationController extends FrameworkBundleAdminController
      */
     public function processAdvancedFormAction(Request $request)
     {
-        $this->dispatchHook(
-            'actionAdminAdminLocalizationControllerPostProcessAdvancedBefore',
-            ['controller' => $this]
-        );
-
         return $this->processForm(
             $request,
-            $this->getAdvancedFormHandler()
+            $this->getAdvancedFormHandler(),
+            'Advanced'
         );
     }
 
     /**
-     * Process the Performance configuration form.
+     * Process the Localization configuration form.
      *
      * @param Request $request
      * @param FormHandlerInterface $formHandler
+     * @param string $hookName
      *
      * @return RedirectResponse
      */
-    protected function processForm(Request $request, FormHandlerInterface $formHandler)
+    protected function processForm(Request $request, FormHandlerInterface $formHandler, string $hookName)
     {
-        $this->dispatchHook('actionAdminAdminLocalizationControllerPostProcessBefore', ['controller' => $this]);
+        $this->dispatchHook(
+            'actionAdminInternationalLocalizationControllerPostProcess' . $hookName . 'Before',
+            ['controller' => $this]
+        );
+
+        $this->dispatchHook('actionAdminInternationalLocalizationControllerPostProcessBefore', ['controller' => $this]);
 
         $form = $formHandler->getForm();
         $form->handleRequest($request);
