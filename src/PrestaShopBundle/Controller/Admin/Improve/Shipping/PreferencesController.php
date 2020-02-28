@@ -64,8 +64,6 @@ class PreferencesController extends FrameworkBundleAdminController
     }
 
     /**
-     * Process the Performance Smarty configuration form.
-     *
      * @AdminSecurity("is_granted(['update', 'create', 'delete'], request.get('_legacy_controller'))",
      *     message="You do not have permission to edit this.",
      *     redirectRoute="admin_shipping_preferences")
@@ -76,20 +74,14 @@ class PreferencesController extends FrameworkBundleAdminController
      */
     public function processHandlingFormAction(Request $request)
     {
-        $this->dispatchHook(
-            'actionAdminAdminPreferencesControllerPostProcessHandlingBefore',
-            ['controller' => $this]
-        );
-
         return $this->processForm(
             $request,
-            $this->getHandlingFormHandler()
+            $this->getHandlingFormHandler(),
+            'Handling'
         );
     }
 
     /**
-     * Process the Performance Smarty configuration form.
-     *
      * @AdminSecurity("is_granted(['update', 'create', 'delete'], request.get('_legacy_controller'))",
      *     message="You do not have permission to edit this.",
      *     redirectRoute="admin_shipping_preferences")
@@ -100,28 +92,30 @@ class PreferencesController extends FrameworkBundleAdminController
      */
     public function processCarrierOptionsFormAction(Request $request)
     {
-        $this->dispatchHook(
-            'actionAdminAdminPreferencesControllerPostProcessCarrierOptionsBefore',
-            ['controller' => $this]
-        );
-
         return $this->processForm(
             $request,
-            $this->getCarrierOptionsFormHandler()
+            $this->getCarrierOptionsFormHandler(),
+            'CarrierOptions'
         );
     }
 
     /**
-     * Process the Preferences configuration form.
+     * Process the Shipping Preferences configuration form.
      *
      * @param Request $request
      * @param FormHandlerInterface $formHandler
+     * @param string $hookName
      *
      * @return RedirectResponse
      */
-    protected function processForm(Request $request, FormHandlerInterface $formHandler)
+    protected function processForm(Request $request, FormHandlerInterface $formHandler, string $hookName)
     {
-        $this->dispatchHook('actionAdminAdminPreferencesControllerPostProcessBefore', ['controller' => $this]);
+        $this->dispatchHook(
+            'actionAdminShippingPreferencesControllerPostProcess' . $hookName . 'Before',
+            ['controller' => $this]
+        );
+
+        $this->dispatchHook('actionAdminShippingPreferencesControllerPostProcessBefore', ['controller' => $this]);
 
         $form = $formHandler->getForm();
         $form->handleRequest($request);
