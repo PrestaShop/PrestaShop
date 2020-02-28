@@ -70,7 +70,7 @@ class AdministrationController extends FrameworkBundleAdminController
     }
 
     /**
-     * Process the Performance Smarty configuration form.
+     * Process the Administration general configuration form.
      *
      * @AdminSecurity("is_granted(['update', 'create', 'delete'], request.get('_legacy_controller'))", message="You do not have permission to update this.", redirectRoute="admin_administration")
      * @DemoRestricted(redirectRoute="admin_administration")
@@ -81,19 +81,15 @@ class AdministrationController extends FrameworkBundleAdminController
      */
     public function processGeneralFormAction(Request $request)
     {
-        $this->dispatchHook(
-            'actionAdminAdminPreferencesControllerPostProcessGeneralBefore',
-            ['controller' => $this]
-        );
-
         return $this->processForm(
             $request,
-            $this->getGeneralFormHandler()
+            $this->getGeneralFormHandler(),
+            'General'
         );
     }
 
     /**
-     * Process the Performance Smarty configuration form.
+     * Process the Administration upload quota configuration form.
      *
      * @AdminSecurity("is_granted(['update', 'create', 'delete'], request.get('_legacy_controller'))", message="You do not have permission to update this.", redirectRoute="admin_administration")
      * @DemoRestricted(redirectRoute="admin_administration")
@@ -104,19 +100,15 @@ class AdministrationController extends FrameworkBundleAdminController
      */
     public function processUploadQuotaFormAction(Request $request)
     {
-        $this->dispatchHook(
-            'actionAdminAdminPreferencesControllerPostProcessUploadQuotaBefore',
-            ['controller' => $this]
-        );
-
         return $this->processForm(
             $request,
-            $this->getUploadQuotaFormHandler()
+            $this->getUploadQuotaFormHandler(),
+            'UploadQuota'
         );
     }
 
     /**
-     * Process the Performance Smarty configuration form.
+     * Process the Administration notifications configuration form.
      *
      * @AdminSecurity("is_granted(['update', 'create', 'delete'], request.get('_legacy_controller'))", message="You do not have permission to update this.", redirectRoute="admin_administration")
      * @DemoRestricted(redirectRoute="admin_administration")
@@ -127,14 +119,10 @@ class AdministrationController extends FrameworkBundleAdminController
      */
     public function processNotificationsFormAction(Request $request)
     {
-        $this->dispatchHook(
-            'actionAdminAdminPreferencesControllerPostProcessBefore',
-            ['controller' => $this]
-        );
-
         return $this->processForm(
             $request,
-            $this->getNotificationsFormHandler()
+            $this->getNotificationsFormHandler(),
+            'Notifications'
         );
     }
 
@@ -143,12 +131,18 @@ class AdministrationController extends FrameworkBundleAdminController
      *
      * @param Request $request
      * @param FormHandlerInterface $formHandler
+     * @param string $hookName
      *
      * @return RedirectResponse
      */
-    protected function processForm(Request $request, FormHandlerInterface $formHandler)
+    protected function processForm(Request $request, FormHandlerInterface $formHandler, string $hookName)
     {
-        $this->dispatchHook('actionAdminAdminPreferencesControllerPostProcessBefore', ['controller' => $this]);
+        $this->dispatchHook(
+            'actionAdminAdministrationControllerPostProcess' . $hookName . 'Before',
+            ['controller' => $this]
+        );
+
+        $this->dispatchHook('actionAdminAdministrationControllerPostProcessBefore', ['controller' => $this]);
 
         $form = $formHandler->getForm();
         $form->handleRequest($request);

@@ -40,7 +40,7 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class PerformanceController extends FrameworkBundleAdminController
 {
-    const CONTROLLER_NAME = 'AdminPerformance';
+    const CONTROLLER_NAME = 'AdminAdvancedParametersPerformance';
 
     /**
      * Displays the Performance main page.
@@ -74,7 +74,7 @@ class PerformanceController extends FrameworkBundleAdminController
             'requireBulkActions' => false,
             'showContentHeader' => true,
             'enableSidebar' => true,
-            'help_link' => $this->generateSidebarLink('AdminPerformance'),
+            'help_link' => $this->generateSidebarLink('AdminAdvancedParametersPerformance'),
             'requireFilterStatus' => false,
             'smartyForm' => $smartyForm->createView(),
             'debugModeForm' => $debugModeForm->createView(),
@@ -100,7 +100,7 @@ class PerformanceController extends FrameworkBundleAdminController
     public function processSmartyFormAction(Request $request)
     {
         $this->dispatchHook(
-            'actionAdminPerformanceControllerPostProcessSmartyBefore',
+            'actionAdminAdvancedParametersPerformanceControllerPostProcessSmartyBefore',
             ['controller' => $this]
         );
 
@@ -122,14 +122,10 @@ class PerformanceController extends FrameworkBundleAdminController
      */
     public function processDebugModeFormAction(Request $request)
     {
-        $this->dispatchHook(
-            'actionAdminPerformanceControllerPostProcessDebugModeBefore',
-            ['controller' => $this]
-        );
-
         return $this->processForm(
             $request,
-            $this->getDebugModeFormHandler()
+            $this->getDebugModeFormHandler(),
+            'DebugMode'
         );
     }
 
@@ -145,14 +141,10 @@ class PerformanceController extends FrameworkBundleAdminController
      */
     public function processOptionalFeaturesFormAction(Request $request)
     {
-        $this->dispatchHook(
-            'actionAdminPerformanceControllerPostProcessOptionalFeaturesBefore',
-            ['controller' => $this]
-        );
-
         return $this->processForm(
             $request,
-            $this->getOptionalFeaturesFormHandler()
+            $this->getOptionalFeaturesFormHandler(),
+            'OptionalFeatures'
         );
     }
 
@@ -168,14 +160,10 @@ class PerformanceController extends FrameworkBundleAdminController
      */
     public function processCombineCompressCacheFormAction(Request $request)
     {
-        $this->dispatchHook(
-            'actionAdminPerformanceControllerPostProcessCombineCompressCacheBefore',
-            ['controller' => $this]
-        );
-
         return $this->processForm(
             $request,
-            $this->getCombineCompressCacheFormHandler()
+            $this->getCombineCompressCacheFormHandler(),
+            'CombineCompressCache'
         );
     }
 
@@ -191,14 +179,10 @@ class PerformanceController extends FrameworkBundleAdminController
      */
     public function processMediaServersFormAction(Request $request)
     {
-        $this->dispatchHook(
-            'actionAdminPerformanceControllerPostProcessMediaServersBefore',
-            ['controller' => $this]
-        );
-
         return $this->processForm(
             $request,
-            $this->getMediaServersFormHandler()
+            $this->getMediaServersFormHandler(),
+            'MediaServers'
         );
     }
 
@@ -214,14 +198,10 @@ class PerformanceController extends FrameworkBundleAdminController
      */
     public function processCachingFormAction(Request $request)
     {
-        $this->dispatchHook(
-            'actionAdminPerformanceControllerPostProcessCachingBefore',
-            ['controller' => $this]
-        );
-
         return $this->processForm(
             $request,
-            $this->getCachingFormHandler()
+            $this->getCachingFormHandler(),
+            'Caching'
         );
     }
 
@@ -230,12 +210,19 @@ class PerformanceController extends FrameworkBundleAdminController
      *
      * @param Request $request
      * @param FormHandlerInterface $formHandler
+     * @param string $hookName
      *
      * @return RedirectResponse
      */
-    protected function processForm(Request $request, FormHandlerInterface $formHandler)
+    protected function processForm(Request $request, FormHandlerInterface $formHandler, string $hookName)
     {
-        $this->dispatchHook('actionAdminPerformanceControllerPostProcessBefore', ['controller' => $this]);
+        $this->dispatchHook(
+            'actionAdminAdvancedParametersPerformanceControllerPostProcess' . $hookName . 'Before',
+            ['controller' => $this]
+        );
+
+        $this->dispatchHook('actionAdminAdvancedParametersPerformanceControllerPostProcessBefore', ['controller' => $this]);
+
         $form = $formHandler->getForm();
         $form->handleRequest($request);
 
