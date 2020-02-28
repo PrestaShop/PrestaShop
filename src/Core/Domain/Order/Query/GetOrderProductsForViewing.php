@@ -101,7 +101,7 @@ class GetOrderProductsForViewing
     }
 
     /**
-     * @return null|int
+     * @return int|null
      */
     public function getOffset(): ?int
     {
@@ -109,7 +109,7 @@ class GetOrderProductsForViewing
     }
 
     /**
-     * @return null|int
+     * @return int|null
      */
     public function getLimit(): ?int
     {

@@ -63,7 +63,6 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\DeleteProductFromOrd
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\UpdateProductInOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderPreview;
-use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderProductsForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderPreview;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderProductForViewing;
