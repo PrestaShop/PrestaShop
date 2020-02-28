@@ -292,14 +292,10 @@ class MetaController extends FrameworkBundleAdminController
      */
     public function processSetUpUrlsFormAction(Request $request)
     {
-        $this->dispatchHook(
-            'actionAdminAdminMetaControllerPostProcessSetUpUrlsFormBefore',
-            ['controller' => $this]
-        );
-
         return $this->processForm(
             $request,
-            $this->getSetUpUrlsFormHandler()
+            $this->getSetUpUrlsFormHandler(),
+            'SetUpUrls'
         );
     }
 
@@ -313,14 +309,10 @@ class MetaController extends FrameworkBundleAdminController
      */
     public function processShopUrlsFormAction(Request $request)
     {
-        $this->dispatchHook(
-            'actionAdminAdminMetaControllerPostProcessShopUrlsFormBefore',
-            ['controller' => $this]
-        );
-
         return $this->processForm(
             $request,
-            $this->getShopUrlsFormHandler()
+            $this->getShopUrlsFormHandler(),
+            'ShopUrls'
         );
     }
 
@@ -334,14 +326,10 @@ class MetaController extends FrameworkBundleAdminController
      */
     public function processUrlSchemaFormAction(Request $request)
     {
-        $this->dispatchHook(
-            'actionAdminAdminMetaControllerPostProcessUrlSchemaFormBefore',
-            ['controller' => $this]
-        );
-
         return $this->processForm(
             $request,
-            $this->getUrlSchemaFormHandler()
+            $this->getUrlSchemaFormHandler(),
+            'UrlSchema'
         );
     }
 
@@ -355,28 +343,30 @@ class MetaController extends FrameworkBundleAdminController
      */
     public function processSeoOptionsFormAction(Request $request)
     {
-        $this->dispatchHook(
-            'actionAdminAdminMetaControllerPostProcessSeoOptionsFormBefore',
-            ['controller' => $this]
-        );
-
         return $this->processForm(
             $request,
-            $this->getSeoOptionsFormHandler()
+            $this->getSeoOptionsFormHandler(),
+            'SeoOptions'
         );
     }
 
     /**
-     * Process the Performance configuration form.
+     * Process the Meta configuration form.
      *
      * @param Request $request
      * @param FormHandlerInterface $formHandler
+     * @param string $hookName
      *
      * @return RedirectResponse
      */
-    protected function processForm(Request $request, FormHandlerInterface $formHandler)
+    protected function processForm(Request $request, FormHandlerInterface $formHandler, string $hookName)
     {
-        $this->dispatchHook('actionAdminAdminMetaControllerPostProcessBefore', ['controller' => $this]);
+        $this->dispatchHook(
+            'actionAdminShopParametersMetaControllerPostProcess' . $hookName . 'Before',
+            ['controller' => $this]
+        );
+
+        $this->dispatchHook('actionAdminAdminShopParametersMetaControllerPostProcessBefore', ['controller' => $this]);
 
         $form = $formHandler->getForm();
         $form->handleRequest($request);
