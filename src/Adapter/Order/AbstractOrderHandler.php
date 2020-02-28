@@ -30,6 +30,7 @@ use Customer;
 use Group;
 use Order;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
+use PrestaShop\Decimal\Number;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
 use PrestaShopException;
@@ -79,4 +80,15 @@ abstract class AbstractOrderHandler
 
         return $taxCalculationMethod === PS_TAX_INC;
     }
+
+    /**
+     * @param int|float|string $number
+     *
+     * @return Number
+     */
+    protected function number($number): Number
+    {
+        return new Number((string) $number);
+    }
+
 }

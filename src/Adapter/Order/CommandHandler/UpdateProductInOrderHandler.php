@@ -27,18 +27,24 @@
 namespace PrestaShop\PrestaShop\Adapter\Order\CommandHandler;
 
 use Configuration;
+use Currency;
 use Customization;
 use Hook;
 use Order;
 use OrderCarrier;
 use OrderDetail;
 use OrderInvoice;
+use PrestaShop\Decimal\Number;
+use PrestaShop\PrestaShop\Adapter\Invoice\DTO\InvoiceTotalNumbers;
 use PrestaShop\PrestaShop\Adapter\Order\AbstractOrderHandler;
+use PrestaShop\PrestaShop\Adapter\Order\DTO\OrderTotalNumbers;
+use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\Precision;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\CannotEditDeliveredOrderProductException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\UpdateProductInOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\CommandHandler\UpdateProductInOrderHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductOutOfStockException;
+use PrestaShop\PrestaShop\Core\Localization\CLDR\ComputingPrecision;
 use Product;
 use StockAvailable;
 use Validate;
@@ -58,86 +64,97 @@ final class UpdateProductInOrderHandler extends AbstractOrderHandler implements 
 
         $order = $this->getOrderObject($command->getOrderId());
         $orderDetail = new OrderDetail($command->getOrderDetailId());
-        $orderInvoice = null;
+        $invoice = null;
+
+        $computingPrecision = new ComputingPrecision();
+        $currency = new Currency((int) $order->id_currency);
+        $precision = $computingPrecision->getPrecision($currency->precision);
+
         if (!empty($command->getOrderInvoiceId())) {
-            $orderInvoice = new OrderInvoice($command->getOrderInvoiceId());
+            $invoice = new OrderInvoice($command->getOrderInvoiceId());
         }
 
         // Check fields validity
-        $this->assertProductCanBeUpdated($command, $orderDetail, $order, $orderInvoice);
+        $this->assertProductCanBeUpdated($command, $orderDetail, $order, $invoice);
 
         if (0 < $orderDetail->id_customization) {
             $customization = new Customization($orderDetail->id_customization);
             $customization->quantity = $command->getQuantity();
             $customization->save();
         }
-        $product_quantity = $command->getQuantity();
+        $productQuantity = $command->getQuantity();
+        $productPriceTaxIncl = $this->number($command->getPriceTaxIncluded()->round($precision));
+        $productPriceTaxExcl = $this->number($command->getPriceTaxExcluded()->round($precision));
+        $productQty = $this->number($productQuantity);
 
-        // @todo: use https://github.com/PrestaShop/decimal for price computations
-        $product_price_tax_incl = (float) $command->getPriceTaxIncluded()->round(2);
-        $product_price_tax_excl = (float) $command->getPriceTaxExcluded()->round(2);
-        $total_products_tax_incl = $product_price_tax_incl * $product_quantity;
-        $total_products_tax_excl = $product_price_tax_excl * $product_quantity;
+        $totalProductsTaxIncl = $productPriceTaxIncl->times($productQty);
+        $totalProductsTaxExcl = $productPriceTaxExcl->times($productQty);
 
         // Calculate differences of price (Before / After)
-        $diff_price_tax_incl = $total_products_tax_incl - $orderDetail->total_price_tax_incl;
-        $diff_price_tax_excl = $total_products_tax_excl - $orderDetail->total_price_tax_excl;
+        $diffPriceTaxIncl = $totalProductsTaxIncl->minus($this->number($orderDetail->total_price_tax_incl));
+        $diffPriceTaxExcl = $totalProductsTaxExcl->minus($this->number($orderDetail->total_price_tax_excl));
 
         // Apply change on OrderInvoice
-        if (isset($orderInvoice)) {
+        if (isset($invoice)) {
             // If OrderInvoice to use is different, we update the old invoice and new invoice
-            if ($orderDetail->id_order_invoice != $orderInvoice->id) {
-                $old_order_invoice = new OrderInvoice($orderDetail->id_order_invoice);
+            if ($orderDetail->id_order_invoice != $invoice->id) {
+                $oldInvoice = new OrderInvoice($orderDetail->id_order_invoice);
+
                 // We remove cost of products
-                $old_order_invoice->total_products -= $orderDetail->total_price_tax_excl;
-                $old_order_invoice->total_products_wt -= $orderDetail->total_price_tax_incl;
+                $this->decrementInvoiceTotals(
+                    $oldInvoice,
+                    $this->number($orderDetail->total_price_tax_excl),
+                    $this->number($orderDetail->total_price_tax_incl)
+                );
 
-                $old_order_invoice->total_paid_tax_excl -= $orderDetail->total_price_tax_excl;
-                $old_order_invoice->total_paid_tax_incl -= $orderDetail->total_price_tax_incl;
+                $res &= $oldInvoice->update();
 
-                $res &= $old_order_invoice->update();
+                $this->incrementInvoiceTotals(
+                    $invoice,
+                    $this->number($orderDetail->total_price_tax_excl),
+                    $this->number($orderDetail->total_price_tax_incl)
+                );
 
-                $orderInvoice->total_products += $orderDetail->total_price_tax_excl;
-                $orderInvoice->total_products_wt += $orderDetail->total_price_tax_incl;
-
-                $orderInvoice->total_paid_tax_excl += $orderDetail->total_price_tax_excl;
-                $orderInvoice->total_paid_tax_incl += $orderDetail->total_price_tax_incl;
-
-                $orderDetail->id_order_invoice = $orderInvoice->id;
+                $orderDetail->id_order_invoice = $invoice->id;
             }
         }
 
-        if ($diff_price_tax_incl != 0 && $diff_price_tax_excl != 0) {
-            $orderDetail->unit_price_tax_excl = $product_price_tax_excl;
-            $orderDetail->unit_price_tax_incl = $product_price_tax_incl;
+        $zero = new Number('0');
+        if (!$diffPriceTaxIncl->equals($zero) && !$diffPriceTaxExcl->equals($zero)) {
+            $orderDetail->unit_price_tax_excl = (float) (string) $productPriceTaxExcl;
+            $orderDetail->unit_price_tax_incl = (float) (string) $productPriceTaxIncl;
+            $orderDetail->total_price_tax_incl = (float) (string) $this->number($orderDetail->total_price_tax_incl)
+                ->plus($diffPriceTaxIncl)
+            ;
+            $orderDetail->total_price_tax_excl = (float) (string) $this->number($orderDetail->total_price_tax_excl)
+                ->plus($diffPriceTaxExcl)
+            ;
 
-            $orderDetail->total_price_tax_incl += $diff_price_tax_incl;
-            $orderDetail->total_price_tax_excl += $diff_price_tax_excl;
-
-            if (isset($orderInvoice)) {
+            if (isset($invoice)) {
                 // Apply changes on OrderInvoice
-                $orderInvoice->total_products += $diff_price_tax_excl;
-                $orderInvoice->total_products_wt += $diff_price_tax_incl;
-
-                $orderInvoice->total_paid_tax_excl += $diff_price_tax_excl;
-                $orderInvoice->total_paid_tax_incl += $diff_price_tax_incl;
+                $this->incrementInvoiceTotals(
+                    $invoice,
+                    $diffPriceTaxExcl,
+                    $diffPriceTaxIncl
+                );
             }
 
             // Apply changes on Order
             $order = new Order($orderDetail->id_order);
-            $order->total_products += $diff_price_tax_excl;
-            $order->total_products_wt += $diff_price_tax_incl;
+            $orderTotals = OrderTotalNumbers::buildFromOrder($order);
 
-            $order->total_paid += $diff_price_tax_incl;
-            $order->total_paid_tax_excl += $diff_price_tax_excl;
-            $order->total_paid_tax_incl += $diff_price_tax_incl;
+            $order->total_products = (float) (string) $orderTotals->getTotalProducts()->plus($diffPriceTaxExcl);
+            $order->total_products_wt = (float) (string) $orderTotals->getTotalProductsWt()->plus($diffPriceTaxIncl);
+            $order->total_paid = (float) (string) $orderTotals->getTotalPaid()->plus($diffPriceTaxIncl);
+            $order->total_paid_tax_excl = (float) (string) $orderTotals->getTotalPaidTaxExcl()->plus($diffPriceTaxExcl);
+            $order->total_paid_tax_incl = (float) (string) $orderTotals->getTotalPaidTaxIncl()->plus($diffPriceTaxIncl);
 
             $res &= $order->update();
         }
 
         $old_quantity = $orderDetail->product_quantity;
 
-        $orderDetail->product_quantity = $product_quantity;
+        $orderDetail->product_quantity = $productQuantity;
         $orderDetail->reduction_percent = 0;
 
         // update taxes
@@ -157,8 +174,8 @@ final class UpdateProductInOrderHandler extends AbstractOrderHandler implements 
         }
 
         // Save order invoice
-        if (isset($orderInvoice)) {
-            $res &= $orderInvoice->update();
+        if (isset($invoice)) {
+            $res &= $invoice->update();
         }
 
         // Update product available quantity
@@ -239,5 +256,41 @@ final class UpdateProductInOrderHandler extends AbstractOrderHandler implements 
                 throw new ProductOutOfStockException('Not enough products in stock');
             }
         }
+    }
+
+    /**
+     * @param OrderInvoice $invoice
+     * @param Number $priceTaxExcl
+     * @param Number $priceTaxIncl
+     */
+    private function incrementInvoiceTotals(
+        OrderInvoice $invoice,
+        Number $priceTaxExcl,
+        Number $priceTaxIncl
+    ): void {
+        $invoiceTotals = InvoiceTotalNumbers::buildFromInvoice($invoice);
+
+        $invoice->total_products = (float) (string) $invoiceTotals->getTotalProducts()->plus($priceTaxExcl);
+        $invoice->total_products_wt = (float) (string) $invoiceTotals->getTotalProductsWt()->plus($priceTaxIncl);
+        $invoice->total_paid_tax_excl = (float) (string) $invoiceTotals->getTotalPaidTaxExcl()->plus($priceTaxExcl);
+        $invoice->total_paid_tax_incl = (float) (string) $invoiceTotals->getTotalPaidTaxIncl()->plus($priceTaxIncl);
+    }
+
+    /**
+     * @param OrderInvoice $invoice
+     * @param Number $priceTaxExcl
+     * @param Number $priceTaxIncl
+     */
+    private function decrementInvoiceTotals(
+        OrderInvoice $invoice,
+        Number $priceTaxExcl,
+        Number $priceTaxIncl
+    ): void {
+        $invoiceTotals = InvoiceTotalNumbers::buildFromInvoice($invoice);
+
+        $invoice->total_products = (float) (string) $invoiceTotals->getTotalProducts()->minus($priceTaxExcl);
+        $invoice->total_products_wt = (float) (string) $invoiceTotals->getTotalProductsWt()->minus($priceTaxIncl);
+        $invoice->total_paid_tax_excl = (float) (string) $invoiceTotals->getTotalPaidTaxExcl()->minus($priceTaxExcl);
+        $invoice->total_paid_tax_incl = (float) (string) $invoiceTotals->getTotalPaidTaxIncl()->minus($priceTaxIncl);
     }
 }
