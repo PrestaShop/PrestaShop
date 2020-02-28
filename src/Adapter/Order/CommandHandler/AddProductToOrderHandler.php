@@ -493,7 +493,6 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
         $orderTotals = OrderTotalNumbers::buildFromOrder($order);
 
         // update totals amount of order
-        // @todo: use https://github.com/PrestaShop/decimal for prices computations
         $order->total_products = (float) (string) $orderTotals->getTotalProducts()
             ->plus(new Number((string) $cart->getOrderTotal(true, $totalMethod)))
         ;
