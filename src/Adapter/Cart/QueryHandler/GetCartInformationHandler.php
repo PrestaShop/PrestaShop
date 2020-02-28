@@ -59,8 +59,6 @@ use Product;
  */
 final class GetCartInformationHandler extends AbstractCartHandler implements GetCartInformationHandlerInterface
 {
-    private const FREE_SHIPPING_NAME = 'Free Shipping';
-
     /**
      * @var LocaleInterface
      */
