@@ -44,5 +44,4 @@ $(() => {
   cartGrid.addExtension(new SubmitRowActionExtension());
   cartGrid.addExtension(new LinkRowActionExtension());
   cartGrid.addExtension(new FiltersSubmitButtonEnablerExtension());
-
 });
