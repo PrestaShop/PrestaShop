@@ -47,6 +47,8 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\AddProductToOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\CommandHandler\AddProductToOrderHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\ValueObject\Reduction;
+use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime;
 use Product;
 use Shop;
 use SpecificPrice;
@@ -269,6 +271,9 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
         Product $product,
         $combination
     ) {
+        $customerId = (int) $order->id_customer;
+        $productId = (int) $product->id;
+
         $initialProductPriceTaxIncl = Product::getPriceStatic(
             $product->id,
             true,
@@ -279,35 +284,56 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
             true,
             1,
             false,
-            $order->id_customer,
+            $customerId,
             $cart->id,
             $order->{Configuration::get('PS_TAX_ADDRESS_TYPE', null, null, $order->id_shop)}
         );
-
-        if (!$command->getProductPriceTaxIncluded()->equals(new Number((string) $initialProductPriceTaxIncl))) {
-            // @todo: use private method to create specific price object
-            $specificPrice = new SpecificPrice();
-            $specificPrice->id_shop = 0;
-            $specificPrice->id_shop_group = 0;
-            $specificPrice->id_currency = 0;
-            $specificPrice->id_country = 0;
-            $specificPrice->id_group = 0;
-            $specificPrice->id_customer = $order->id_customer;
-            $specificPrice->id_product = $product->id;
-            $specificPrice->id_product_attribute = $combination ? $combination->id : 0;
-            $specificPrice->price = $command->getProductPriceTaxExcluded();
-            $specificPrice->from_quantity = 1;
-            $specificPrice->reduction = 0;
-            $specificPrice->reduction_type = 'amount';
-            $specificPrice->reduction_tax = 0;
-            $specificPrice->from = '0000-00-00 00:00:00';
-            $specificPrice->to = '0000-00-00 00:00:00';
-            $specificPrice->add();
-
-            return $specificPrice;
+        
+        if ($command->getProductPriceTaxIncluded() != $initialProductPriceTaxIncl) {
+            return $this->createSpecificPrice(
+                $customerId,
+                $productId,
+                $combination ? (int) $combination->id : 0,
+                $command->getProductPriceTaxIncluded()
+            );
         }
 
         return null;
+    }
+
+    /**
+     * @param int $customerId
+     * @param int $productId
+     * @param int $combinationId
+     * @param float $productPriceTaxExcl
+     *
+     * @return SpecificPrice
+     */
+    private function createSpecificPrice(
+        int $customerId,
+        int $productId,
+        int $combinationId,
+        float $productPriceTaxExcl
+    ): SpecificPrice {
+        $specificPrice = new SpecificPrice();
+        $specificPrice->id_shop = 0;
+        $specificPrice->id_shop_group = 0;
+        $specificPrice->id_currency = 0;
+        $specificPrice->id_country = 0;
+        $specificPrice->id_group = 0;
+        $specificPrice->id_customer = $customerId;
+        $specificPrice->id_product = $productId;
+        $specificPrice->id_product_attribute = $combinationId;
+        $specificPrice->price = $productPriceTaxExcl;
+        $specificPrice->from_quantity = 1;
+        $specificPrice->reduction = 0;
+        $specificPrice->reduction_type = Reduction::TYPE_AMOUNT;
+        $specificPrice->reduction_tax = 0;
+        $specificPrice->from = DateTime::NULL_VALUE;
+        $specificPrice->to = DateTime::NULL_VALUE;
+        $specificPrice->add();
+
+        return $specificPrice;
     }
 
     /**
