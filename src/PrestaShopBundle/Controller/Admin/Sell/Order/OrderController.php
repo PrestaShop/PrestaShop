@@ -365,113 +365,120 @@ class OrderController extends FrameworkBundleAdminController
         try {
             /** @var OrderForViewing $orderForViewing */
             $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
-            $addOrderCartRuleForm = $this->createForm(AddOrderCartRuleType::class, [], [
-                'order_id' => $orderId,
-            ]);
-            $updateOrderStatusForm = $this->createForm(UpdateOrderStatusType::class, [
-                'new_order_status_id' => $orderForViewing->getHistory()->getCurrentOrderStatusId(),
-            ]);
-            $updateOrderStatusActionBarForm = $this->createForm(UpdateOrderStatusType::class, [
-                'new_order_status_id' => $orderForViewing->getHistory()->getCurrentOrderStatusId(),
-            ]);
-            $addOrderPaymentForm = $this->createForm(OrderPaymentType::class, [
-                'id_currency' => $orderForViewing->getCurrencyId(),
-            ], [
-                'id_order' => $orderId,
-            ]);
+        } catch (OrderException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
 
-            $orderMessageForm = $this->createForm(OrderMessageType::class, [], [
-                'action' => $this->generateUrl('admin_orders_send_message', ['orderId' => $orderId]),
-            ]);
-            $orderMessageForm->handleRequest($request);
+            return $this->redirectToRoute('admin_orders_index');
+        }
 
-            $changeOrderCurrencyForm = $this->createForm(ChangeOrderCurrencyType::class, [], [
-                'current_currency_id' => $orderForViewing->getCurrencyId(),
-            ]);
+        $addOrderCartRuleForm = $this->createForm(AddOrderCartRuleType::class, [], [
+            'order_id' => $orderId,
+        ]);
+        $updateOrderStatusForm = $this->createForm(UpdateOrderStatusType::class, [
+            'new_order_status_id' => $orderForViewing->getHistory()->getCurrentOrderStatusId(),
+        ]);
+        $updateOrderStatusActionBarForm = $this->createForm(UpdateOrderStatusType::class, [
+            'new_order_status_id' => $orderForViewing->getHistory()->getCurrentOrderStatusId(),
+        ]);
+        $addOrderPaymentForm = $this->createForm(OrderPaymentType::class, [
+            'id_currency' => $orderForViewing->getCurrencyId(),
+        ], [
+            'id_order' => $orderId,
+        ]);
 
-            $changeOrderAddressForm = null;
-            $privateNoteForm = null;
+        $orderMessageForm = $this->createForm(OrderMessageType::class, [], [
+            'action' => $this->generateUrl('admin_orders_send_message', ['orderId' => $orderId]),
+        ]);
+        $orderMessageForm->handleRequest($request);
 
-            if (null !== $orderForViewing->getCustomer()) {
-                $changeOrderAddressForm = $this->createForm(ChangeOrderAddressType::class, [], [
-                    'customer_id' => $orderForViewing->getCustomer()->getId(),
-                ]);
+        $changeOrderCurrencyForm = $this->createForm(ChangeOrderCurrencyType::class, [], [
+            'current_currency_id' => $orderForViewing->getCurrencyId(),
+        ]);
 
-                $privateNoteForm = $this->createForm(PrivateNoteType::class, [
-                    'note' => $orderForViewing->getCustomer()->getPrivateNote(),
-                ]);
-            }
+        $changeOrderAddressForm = null;
+        $privateNoteForm = null;
 
-            $updateOrderShippingForm = $this->createForm(UpdateOrderShippingType::class, [
-                'new_carrier_id' => $orderForViewing->getCarrierId(),
-            ], [
-                'order_id' => $orderId,
+        if (null !== $orderForViewing->getCustomer()) {
+            $changeOrderAddressForm = $this->createForm(ChangeOrderAddressType::class, [], [
+                'customer_id' => $orderForViewing->getCustomer()->getId(),
             ]);
 
-            $currencyDataProvider = $this->container->get('prestashop.adapter.data_provider.currency');
-            $orderCurrency = $currencyDataProvider->getCurrencyById($orderForViewing->getCurrencyId());
-
-            $addProductRowForm = $this->createForm(AddProductRowType::class, [], [
-                'order_id' => $orderId,
-                'symbol' => $orderCurrency->symbol,
+            $privateNoteForm = $this->createForm(PrivateNoteType::class, [
+                'note' => $orderForViewing->getCustomer()->getPrivateNote(),
             ]);
-            $editProductRowForm = $this->createForm(EditProductRowType::class, [], [
-                'order_id' => $orderId,
-                'symbol' => $orderCurrency->symbol,
-            ]);
+        }
 
-            $backOfficeOrderButtons = new ActionsBarButtonsCollection();
-            $hookParameters = [
-                'controller' => $this,
-                'id_order' => $orderId,
-                'actions_bar_buttons_collection' => $backOfficeOrderButtons,
-            ];
+        $updateOrderShippingForm = $this->createForm(UpdateOrderShippingType::class, [
+            'new_carrier_id' => $orderForViewing->getCarrierId(),
+        ], [
+            'order_id' => $orderId,
+        ]);
 
+        $currencyDataProvider = $this->container->get('prestashop.adapter.data_provider.currency');
+        $orderCurrency = $currencyDataProvider->getCurrencyById($orderForViewing->getCurrencyId());
+
+        $addProductRowForm = $this->createForm(AddProductRowType::class, [], [
+            'order_id' => $orderId,
+            'symbol' => $orderCurrency->symbol,
+        ]);
+        $editProductRowForm = $this->createForm(EditProductRowType::class, [], [
+            'order_id' => $orderId,
+            'symbol' => $orderCurrency->symbol,
+        ]);
+
+        $formBuilder = $this->get('prestashop.core.form.identifiable_object.builder.cancel_product_form_builder');
+        $backOfficeOrderButtons = new ActionsBarButtonsCollection();
+        $hookParameters = [
+            'controller' => $this,
+            'id_order' => $orderId,
+            'actions_bar_buttons_collection' => $backOfficeOrderButtons,
+        ];
+
+        try {
             $this->dispatchHook(
                 'actionGetAdminOrderButtons',
                 $hookParameters
             );
 
-            $formBuilder = $this->get('prestashop.core.form.identifiable_object.builder.cancel_product_form_builder');
             $cancelProductForm = $formBuilder->getFormFor($orderId);
-
-            $this->handleOutOfStockProduct($orderForViewing);
-
-            $merchandiseReturnEnabled = (bool) $this->configuration->get('PS_ORDER_RETURN');
-
-            /** @var OrderSiblingProviderInterface $orderSiblingProvider */
-            $orderSiblingProvider = $this->get('prestashop.adapter.order.order_sibling_provider');
-
-            return $this->render('@PrestaShop/Admin/Sell/Order/Order/view.html.twig', [
-                'showContentHeader' => true,
-                'orderCurrency' => $orderCurrency,
-                'meta_title' => $this->trans('Orders', 'Admin.Orderscustomers.Feature'),
-                'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
-                'orderForViewing' => $orderForViewing,
-                'addOrderCartRuleForm' => $addOrderCartRuleForm->createView(),
-                'updateOrderStatusForm' => $updateOrderStatusForm->createView(),
-                'updateOrderStatusActionBarForm' => $updateOrderStatusActionBarForm->createView(),
-                'addOrderPaymentForm' => $addOrderPaymentForm->createView(),
-                'changeOrderCurrencyForm' => $changeOrderCurrencyForm->createView(),
-                'privateNoteForm' => $privateNoteForm ? $privateNoteForm->createView() : null,
-                'updateOrderShippingForm' => $updateOrderShippingForm->createView(),
-                'cancelProductForm' => $cancelProductForm->createView(),
-                'invoiceManagementIsEnabled' => $orderForViewing->isInvoiceManagementIsEnabled(),
-                'changeOrderAddressForm' => $changeOrderAddressForm ? $changeOrderAddressForm->createView() : null,
-                'orderMessageForm' => $orderMessageForm->createView(),
-                'addProductRowForm' => $addProductRowForm->createView(),
-                'editProductRowForm' => $editProductRowForm->createView(),
-                'backOfficeOrderButtons' => $backOfficeOrderButtons,
-                'merchandiseReturnEnabled' => $merchandiseReturnEnabled,
-                'priceSpecification' => $this->getContextLocale()->getPriceSpecification($orderCurrency->iso_code)->toArray(),
-                'previousOrderId' => $orderSiblingProvider->getPreviousOrderId($orderId),
-                'nextOrderId' => $orderSiblingProvider->getNextOrderId($orderId),
-            ]);
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
 
             return $this->redirectToRoute('admin_orders_index');
         }
+
+        $this->handleOutOfStockProduct($orderForViewing);
+
+        $merchandiseReturnEnabled = (bool) $this->configuration->get('PS_ORDER_RETURN');
+
+        /** @var OrderSiblingProviderInterface $orderSiblingProvider */
+        $orderSiblingProvider = $this->get('prestashop.adapter.order.order_sibling_provider');
+
+        return $this->render('@PrestaShop/Admin/Sell/Order/Order/view.html.twig', [
+            'showContentHeader' => true,
+            'orderCurrency' => $orderCurrency,
+            'meta_title' => $this->trans('Orders', 'Admin.Orderscustomers.Feature'),
+            'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
+            'orderForViewing' => $orderForViewing,
+            'addOrderCartRuleForm' => $addOrderCartRuleForm->createView(),
+            'updateOrderStatusForm' => $updateOrderStatusForm->createView(),
+            'updateOrderStatusActionBarForm' => $updateOrderStatusActionBarForm->createView(),
+            'addOrderPaymentForm' => $addOrderPaymentForm->createView(),
+            'changeOrderCurrencyForm' => $changeOrderCurrencyForm->createView(),
+            'privateNoteForm' => $privateNoteForm ? $privateNoteForm->createView() : null,
+            'updateOrderShippingForm' => $updateOrderShippingForm->createView(),
+            'cancelProductForm' => $cancelProductForm->createView(),
+            'invoiceManagementIsEnabled' => $orderForViewing->isInvoiceManagementIsEnabled(),
+            'changeOrderAddressForm' => $changeOrderAddressForm ? $changeOrderAddressForm->createView() : null,
+            'orderMessageForm' => $orderMessageForm->createView(),
+            'addProductRowForm' => $addProductRowForm->createView(),
+            'editProductRowForm' => $editProductRowForm->createView(),
+            'backOfficeOrderButtons' => $backOfficeOrderButtons,
+            'merchandiseReturnEnabled' => $merchandiseReturnEnabled,
+            'priceSpecification' => $this->getContextLocale()->getPriceSpecification($orderCurrency->iso_code)->toArray(),
+            'previousOrderId' => $orderSiblingProvider->getPreviousOrderId($orderId),
+            'nextOrderId' => $orderSiblingProvider->getNextOrderId($orderId),
+        ]);
     }
 
     /**
