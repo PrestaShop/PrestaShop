@@ -222,13 +222,9 @@ final class UpdateProductInOrderHandler extends AbstractOrderHandler implements 
             throw new OrderException('You cannot use this invoice for the order');
         }
 
-        // Clean price
+        $priceIsValid = Validate::isPrice((string) $command->getPriceTaxIncluded()) && Validate::isPrice((string) $command->getPriceTaxExcluded());
 
-        // @todo: make sure clean
-        $product_price_tax_incl = str_replace(',', '.', $command->getPriceTaxIncluded());
-        $product_price_tax_excl = str_replace(',', '.', $command->getPriceTaxExcluded());
-
-        if (!Validate::isPrice($product_price_tax_incl) || !Validate::isPrice($product_price_tax_excl)) {
+        if (!$priceIsValid) {
             throw new OrderException('Invalid price');
         }
 
