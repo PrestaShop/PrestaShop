@@ -314,7 +314,7 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
         int $customerId,
         int $productId,
         int $combinationId,
-        float $productPriceTaxExcl
+        Number $productPriceTaxExcl
     ): SpecificPrice {
         $specificPrice = new SpecificPrice();
         $specificPrice->id_shop = 0;
@@ -325,7 +325,7 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
         $specificPrice->id_customer = $customerId;
         $specificPrice->id_product = $productId;
         $specificPrice->id_product_attribute = $combinationId;
-        $specificPrice->price = $productPriceTaxExcl;
+        $specificPrice->price = (float) (string) $productPriceTaxExcl;
         $specificPrice->from_quantity = 1;
         $specificPrice->reduction = 0;
         $specificPrice->reduction_type = Reduction::TYPE_AMOUNT;
