@@ -85,7 +85,7 @@ final class AddCartRuleToOrderHandler extends AbstractOrderHandler implements Ad
 
         switch ($cartRuleType) {
             case OrderDiscountType::DISCOUNT_PERCENT:
-                if ($discountValue->isGreaterThan(new Number((string) PercentageDiscount::MAX_PERCENTAGE))) {
+                if ($discountValue->isGreaterThan($this->number(PercentageDiscount::MAX_PERCENTAGE))) {
                     throw new OrderException('Percentage discount value cannot be higher than 100%.');
                 }
                 $reductionValues = $this->calculatePercentReduction(
@@ -99,7 +99,7 @@ final class AddCartRuleToOrderHandler extends AbstractOrderHandler implements Ad
                 if ($discountValue->isGreaterThan($orderTotals->getTotalPaidTaxIncl())) {
                     throw new OrderException('The discount value is greater than the order total.');
                 }
-                $reductionValues = $this->calculateAmountReduction($discountValue, new Number((string) $order->getTaxesAverageUsed()));
+                $reductionValues = $this->calculateAmountReduction($discountValue, $this->number($order->getTaxesAverageUsed()));
 
                 break;
             case OrderDiscountType::FREE_SHIPPING:
@@ -253,7 +253,7 @@ final class AddCartRuleToOrderHandler extends AbstractOrderHandler implements Ad
         Number $totalPaidTaxIncl,
         Number $totalPaidTaxExcl
     ): array {
-        $hundredPercent = new Number('100');
+        $hundredPercent = $this->number(100);
 
         $valueTaxIncl = $discountValue
             ->times($totalPaidTaxIncl)
@@ -281,8 +281,8 @@ final class AddCartRuleToOrderHandler extends AbstractOrderHandler implements Ad
         Number $discountValue,
         Number $taxesAverageUsed
     ) {
-        $hundredPercent = new Number('100');
-        $avgTax = (new Number('1'))->plus($taxesAverageUsed->dividedBy($hundredPercent));
+        $hundredPercent = $this->number(100);
+        $avgTax = $this->number(1)->plus($taxesAverageUsed->dividedBy($hundredPercent));
 
         $totalTaxExcl = $discountValue
             ->dividedBy($avgTax)
